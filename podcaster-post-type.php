@@ -35,7 +35,6 @@ class Podcaster_Post_Type {
 			'rewrite'              => true,
 			'capability_type'      => 'post',
 			'has_archive'          => true, 
-			'hierarchical'         => false,
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => array( $this, 'register_post_type_meta_boxes' )
 		); 
@@ -44,6 +43,21 @@ class Podcaster_Post_Type {
 		
 		register_post_type( 'podcast', $args );
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
+		
+		// add custom rss2 feed for iTunes
+		remove_all_actions( 'do_feed_rss2' );
+		add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ), 10, 1 );
+	}
+	
+	/**
+	 * http://your-wordpress-domain.com/feed?post_type=podcast
+	 */
+	public function add_itunes_rss_feed( $default ) {
+		$rss_template = plugin_dir_path( __FILE__ ) . '/feed-rss2.php';
+		if ( get_query_var( 'post_type' ) == 'podcast' && file_exists( $rss_template ) )
+			load_template( $rss_template );
+		else
+			do_feed_rss2( $default );
 	}
 	
 	/**
