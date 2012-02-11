@@ -50,6 +50,19 @@ class Podcaster_Post_Type {
 		
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
 		add_action( 'atom_entry', array( $this, 'add_itunes_atom_fields' ) );
+		
+		// get out the crowbar: enforce atom feed by redirecting all to atom
+		// DISCUSS: cool? not cool?
+		remove_all_actions( 'do_feed_rss2' );
+		add_action( 'do_feed_rss2', array( $this, 'replace_rss_with_atom' ) );
+		remove_all_actions( 'do_feed_rss' );
+		add_action( 'do_feed_rss', array( $this, 'replace_rss_with_atom' ) );
+		remove_all_actions( 'do_feed_rdf' );
+		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
+	}
+	
+	public function replace_rss_with_atom( $is_comment_feed ) {
+		do_feed_atom( $is_comment_feed );
 	}
 	
 	public function add_itunes_atom_fields() {
