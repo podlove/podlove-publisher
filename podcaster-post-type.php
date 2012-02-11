@@ -50,6 +50,7 @@ class Podcaster_Post_Type {
 		
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
 		add_action( 'atom_entry', array( $this, 'add_itunes_atom_fields' ) );
+		add_action( 'atom_ns', array( $this, 'add_itunes_atom_dtd' ) );
 		
 		// get out the crowbar: enforce atom feed by redirecting all to atom
 		// DISCUSS: cool? not cool?
@@ -65,6 +66,12 @@ class Podcaster_Post_Type {
 		do_feed_atom( $is_comment_feed );
 	}
 	
+	public function add_itunes_atom_dtd() {
+		?>
+		xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+		<?php
+	}
+	
 	public function add_itunes_atom_fields() {
 		$meta = $this->get_meta();
 		?>
@@ -72,7 +79,7 @@ class Podcaster_Post_Type {
 			<itunes:duration><?php echo $meta[ 'duration' ]; ?></itunes:duration>
 		<?php endif; ?>
 		<?php if ( $meta[ 'enclosure_url' ] && $meta[ 'byte_length' ] ): ?>
-			<link href="<?php echo $meta[ 'enclosure_url' ]; ?>" rel="enclosure" length="<?php echo (int) $meta[ 'byte_length' ]; ?>" type="audio/mpeg" />
+			<link href="<?php echo $meta[ 'enclosure_url' ]; ?>" rel="enclosure" length="<?php echo (int) $meta[ 'byte_length' ]; ?>" type="audio/mpeg"/>
 		<?php endif; ?>		
 		<?php
 	}
