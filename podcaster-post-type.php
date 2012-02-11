@@ -46,18 +46,44 @@ class Podcaster_Post_Type {
 		
 		// add custom rss2 feed for iTunes
 		remove_all_actions( 'do_feed_rss2' );
-		add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ), 10, 1 );
+		add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
+		
+		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
+	}
+	
+	/**
+	 * Add Custom Post Type to all WordPress Feeds.
+	 * 
+	 * @param array $query_var
+	 * @return array
+	 */
+	function add_post_type_to_feeds( $query_var ) {
+		if ( isset( $query_var[ 'feed' ] ) ) {
+
+			$extend = array(
+				'post' => 'post',
+				'podcast' => 'podcast'
+			);
+
+			if ( empty( $query_var[ 'post_type' ] ) ) {
+				$query_var[ 'post_type' ] = $extend;
+			} else {
+				$query_var[ 'post_type' ] = array_merge( $query_var[ 'post_type' ], $extend );
+			}
+		}
+
+		return $query_var;
 	}
 	
 	/**
 	 * http://your-wordpress-domain.com/feed?post_type=podcast
 	 */
-	public function add_itunes_rss_feed( $default ) {
+	public function add_itunes_rss_feed( $is_comment_feed ) {
 		$rss_template = plugin_dir_path( __FILE__ ) . '/feed-rss2.php';
 		if ( get_query_var( 'post_type' ) == 'podcast' && file_exists( $rss_template ) )
 			load_template( $rss_template );
 		else
-			do_feed_rss2( $default );
+			do_feed_rss2( $is_comment_feed );
 	}
 	
 	/**

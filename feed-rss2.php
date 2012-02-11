@@ -21,7 +21,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 >
 
 <channel>
-	<title>PODCASTER xD <?php bloginfo_rss('name'); wp_title_rss(); ?></title>
+	<title><?php bloginfo_rss('name'); wp_title_rss(); ?></title>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 	<link><?php bloginfo_rss('url') ?></link>
 	<description><?php bloginfo_rss("description") ?></description>
