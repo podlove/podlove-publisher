@@ -45,10 +45,23 @@ class Podcaster_Post_Type {
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
 		
 		// add custom rss2 feed for iTunes
-		remove_all_actions( 'do_feed_rss2' );
-		add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
+		// remove_all_actions( 'do_feed_rss2' );
+		// add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
 		
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
+		add_action( 'atom_entry', array( $this, 'add_itunes_atom_fields' ) );
+	}
+	
+	public function add_itunes_atom_fields() {
+		$meta = $this->get_meta();
+		?>
+		<?php if ( $meta[ 'duration' ] ): ?>
+			<itunes:duration><?php echo $meta[ 'duration' ]; ?></itunes:duration>
+		<?php endif; ?>
+		<?php if ( $meta[ 'enclosure_url' ] && $meta[ 'byte_length' ] ): ?>
+			<link href="<?php echo $meta[ 'enclosure_url' ]; ?>" rel="enclosure" length="<?php echo (int) $meta[ 'byte_length' ]; ?>" type="audio/mpeg" />
+		<?php endif; ?>		
+		<?php
 	}
 	
 	/**
@@ -78,13 +91,13 @@ class Podcaster_Post_Type {
 	/**
 	 * http://your-wordpress-domain.com/feed?post_type=podcast
 	 */
-	public function add_itunes_rss_feed( $is_comment_feed ) {
-		$rss_template = plugin_dir_path( __FILE__ ) . '/feed-rss2.php';
-		if ( get_query_var( 'post_type' ) == 'podcast' && file_exists( $rss_template ) )
-			load_template( $rss_template );
-		else
-			do_feed_rss2( $is_comment_feed );
-	}
+	// public function add_itunes_rss_feed( $is_comment_feed ) {
+	// 	$rss_template = plugin_dir_path( __FILE__ ) . '/feed-rss2.php';
+	// 	if ( get_query_var( 'post_type' ) == 'podcast' && file_exists( $rss_template ) )
+	// 		load_template( $rss_template );
+	// 	else
+	// 		do_feed_rss2( $is_comment_feed );
+	// }
 	
 	/**
 	 * Register post meta boxes.
