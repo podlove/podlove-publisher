@@ -8,16 +8,29 @@ class Podlove_Shows_Taxonomy extends Podlove_Abstract_Taxonomy {
 		$this->taxonomy_slug = 'podcast_shows';
 		$this->field_keys = array(
 			'subtitle' => array(
-				'label'       => Podlove::t( 'Subtitle' ),
+				'label'       => Podlove::t( 'Show Subtitle' ),
 				'description' => Podlove::t( 'The subtitle is used by iTunes.' )
 			),
-			'show_label' => array(
+			'label' => array(
 				'label'       => Podlove::t( 'Show Label' ),
-				'description' => Podlove::t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long.' )
+				'description' => Podlove::t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long. Example: POD' )
+			),
+			// 'slug' => array( ... )
+			'episode_prefix' => array(
+				'label'       => Podlove::t( 'Episode Prefix' ),
+				'description' => Podlove::t( 'Example: pod_' )
+			),
+			'media_file_base_uri' => array(
+				'label'       => Podlove::t( 'Media File Base URI' ),
+				'description' => Podlove::t( 'Example: http://cdn.example.com/pod/' )
+			),
+			'uri_delimiter' => array(
+				'label'       => Podlove::t( 'URI Delimiter' ),
+				'description' => Podlove::t( 'Example: -' )
 			),
 			'episode_number_length' => array(
 				'label'       => Podlove::t( 'Episode Number Length' ),
-				'description' => Podlove::t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes.' )
+				'description' => Podlove::t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes. Example: 3' )
 			)
 		);
 		$this->init();
