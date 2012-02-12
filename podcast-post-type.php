@@ -65,6 +65,13 @@ class Podcast_Post_Type {
 		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
 	}
 	
+	/**
+	 * Taxonomy for Feeds.
+	 * 
+	 * @todo default UI sucks. show_ui => false and add a custom meta box.
+	 * 	- Display all known feeds with checkboxes.
+	 * 	- Default: Select all (?) or configure which is/are default
+	 */
 	private function register_feeds_taxonomy() {
 		$feed_taxonomy_labels = array(
 			'name'                       => Podlove::t( 'Feeds' ),
@@ -97,6 +104,13 @@ class Podcast_Post_Type {
 		register_taxonomy( 'podcast_feeds', array( 'podcast' ), $feed_taxonomy_args );
 	}
 	
+	/**
+	 * Taxonomy for Shows.
+	 * 
+	 * @todo default UI sucks. show_ui => false and add a custom meta box.
+	 * 	- Display all known shows with checkboxes.
+	 * 	- Default: Select all (?) or configure which is/are default
+	 */
 	private function register_shows_taxonomy() {
 		$show_taxonomy_labels = array(
 			'name'                       => Podlove::t( 'Shows' ),
