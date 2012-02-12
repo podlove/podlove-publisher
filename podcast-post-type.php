@@ -145,7 +145,7 @@ class Podcast_Post_Type {
 	public function register_post_type_meta_boxes() {
 		add_meta_box(
 			/* $id            */ 'podlove',
-			/* $title         */ Podlove::t( 'Podcast Metadata' ),
+			/* $title         */ Podlove::t( 'Podcast Episode' ),
 			/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
 			/* $page          */ 'podcast'
 			/* $context       */ 
@@ -168,9 +168,13 @@ class Podcast_Post_Type {
 			$meta = array();
 		
 		$defaults = array(
-			'duration'      => NULL,
-			'byte_length'   => NULL,
-			'enclosure_url' => NULL
+			'id'          => NULL,
+			'title'       => NULL,
+			'slug'        => NULL,
+			'subtitle'    => NULL,
+			'summary'     => NULL,
+			'description' => NULL,
+			'timeline'    => NULL
 		);
 		
 		return array_merge( $defaults, $meta );
@@ -186,30 +190,16 @@ class Podcast_Post_Type {
 		?>
 		
 		<table class="form-table">
-			<tr valign="top">
-				<th scope="row">
-					<label for="duration">Duration</label>
-				</th>
-				<td>
-					<input type="text" name="podlove_meta[duration]" value="<?php echo $meta[ 'duration' ]; ?>" id="duration">
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row">
-					<label for="byte_length">Size in Bytes</label>
-				</th>
-				<td>
-					<input type="text" name="podlove_meta[byte_length]" value="<?php echo $meta[ 'byte_length' ]; ?>" id="byte_length">
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row">
-					<label for="enclosure_url">Enclosure</label>
-				</th>
-				<td>
-					<input type="text" name="podlove_meta[enclosure_url]" value="<?php echo $meta[ 'enclosure_url' ]; ?>" id="enclosure_url">
-				</td>
-			</tr>
+			<?php foreach ( $meta as $key => $value ): ?>
+				<tr valign="top">
+					<th scope="row">
+						<label for="<?php echo $key; ?>"><?php echo Podlove::t( $key ); ?></label>
+					</th>
+					<td>
+						<input type="text" name="podlove_meta[<?php echo $key; ?>]" value="<?php echo $value; ?>" id="<?php echo $key; ?>">
+					</td>
+				</tr>				
+			<?php endforeach; ?>
 		</table>
 		<?php
 	}
