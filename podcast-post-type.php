@@ -65,82 +65,14 @@ class Podcast_Post_Type {
 		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
 	}
 	
-	/**
-	 * Taxonomy for Feeds.
-	 * 
-	 * @todo default UI sucks. show_ui => false and add a custom meta box.
-	 * 	- Display all known feeds with checkboxes.
-	 * 	- Default: Select all (?) or configure which is/are default
-	 */
 	private function register_feeds_taxonomy() {
-		$feed_taxonomy_labels = array(
-			'name'                       => Podlove::t( 'Feeds' ),
-			'all_items'                  => Podlove::t( 'All Feeds' ),
-			'menu_name'                  => Podlove::t( 'Feeds' ),
-			'edit_item'                  => Podlove::t( 'Edit Feed' ),
-			'update_item'                => Podlove::t( 'Update Feed' ),
-			'parent_item'                => Podlove::t( 'Parent Feed' ),
-			'add_new_item'               => Podlove::t( 'Add New Feed' ),
-			'search_items'               => Podlove::t( 'Search Feeds' ),
-			'new_item_name'              => Podlove::t( 'New Feed Name' ),
-			'singular_name'              => Podlove::t( 'Feed' ),
-			'popular_items'              => Podlove::t( 'Popular Feeds' ),
-			'parent_item_colon'          => Podlove::t( 'Popular Feeds' ),
-			'add_or_remove_items'        => Podlove::t( 'Add or remove Feeds' ),
-			'choose_from_most_used'      => Podlove::t( 'Choose from most used' ),
-			'separate_items_with_commas' => Podlove::t( 'Separate Feeds with commas' )
-		);
-		
-		$feed_taxonomy_args = array(
-			'public'            => true,
-			'labels'            => $feed_taxonomy_labels,
-			'show_ui'           => true,
-			'query_var'         => 'podlove',
-			'hierarchical'      => false,
-			'show_tagcloud'     => false,
-			'show_in_nav_menus' => true,
-		);
-
-		register_taxonomy( 'podcast_feeds', array( 'podcast' ), $feed_taxonomy_args );
+		require_once 'feeds-taxonomy.php';
+		new Podlove_Feeds_Taxonomy();
 	}
 	
-	/**
-	 * Taxonomy for Shows.
-	 * 
-	 * @todo default UI sucks. show_ui => false and add a custom meta box.
-	 * 	- Display all known shows with checkboxes.
-	 * 	- Default: Select all (?) or configure which is/are default
-	 */
 	private function register_shows_taxonomy() {
-		$show_taxonomy_labels = array(
-			'name'                       => Podlove::t( 'Shows' ),
-			'all_items'                  => Podlove::t( 'All Shows' ),
-			'menu_name'                  => Podlove::t( 'Shows' ),
-			'edit_item'                  => Podlove::t( 'Edit Show' ),
-			'update_item'                => Podlove::t( 'Update Show' ),
-			'parent_item'                => Podlove::t( 'Parent Show' ),
-			'add_new_item'               => Podlove::t( 'Add New Show' ),
-			'search_items'               => Podlove::t( 'Search Shows' ),
-			'new_item_name'              => Podlove::t( 'New Show Name' ),
-			'singular_name'              => Podlove::t( 'Show' ),
-			'popular_items'              => Podlove::t( 'Popular Shows' ),
-			'parent_item_colon'          => Podlove::t( 'Popular Shows' ),
-			'add_or_remove_items'        => Podlove::t( 'Add or remove Shows' ),
-			'choose_from_most_used'      => Podlove::t( 'Choose from most used' ),
-			'separate_items_with_commas' => Podlove::t( 'Separate Shows with commas' )
-		);
-		
-		$show_taxonomy_args = array(
-			'public'            => true,
-			'labels'            => $show_taxonomy_labels,
-			'show_ui'           => true,
-			'query_var'         => 'podlove',
-			'hierarchical'      => false,
-			'show_tagcloud'     => false,
-			'show_in_nav_menus' => true,
-		);
-
-		register_taxonomy( 'podcast_shows', array( 'podcast' ), $show_taxonomy_args );
+		require_once 'shows-taxonomy.php';
+		new Podlove_Shows_Taxonomy();
 	}
 	
 	public function replace_rss_with_atom( $is_comment_feed ) {

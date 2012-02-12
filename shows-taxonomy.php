@@ -1,0 +1,46 @@
+<?php
+class Podlove_Shows_Taxonomy {
+	
+	function __construct() {
+		$this->register_taxonomy();
+	}
+	
+	/**
+	 * Taxonomy for Shows.
+	 * 
+	 * @todo default UI sucks. show_ui => false and add a custom meta box.
+	 * 	- Display all known shows with checkboxes.
+	 * 	- Default: Select all (?) or configure which is/are default
+	 */
+	private function register_taxonomy() {
+		$show_taxonomy_labels = array(
+			'name'                       => Podlove::t( 'Shows' ),
+			'all_items'                  => Podlove::t( 'All Shows' ),
+			'menu_name'                  => Podlove::t( 'Shows' ),
+			'edit_item'                  => Podlove::t( 'Edit Show' ),
+			'update_item'                => Podlove::t( 'Update Show' ),
+			'parent_item'                => Podlove::t( 'Parent Show' ),
+			'add_new_item'               => Podlove::t( 'Add New Show' ),
+			'search_items'               => Podlove::t( 'Search Shows' ),
+			'new_item_name'              => Podlove::t( 'New Show Name' ),
+			'singular_name'              => Podlove::t( 'Show' ),
+			'popular_items'              => Podlove::t( 'Popular Shows' ),
+			'parent_item_colon'          => Podlove::t( 'Popular Shows' ),
+			'add_or_remove_items'        => Podlove::t( 'Add or remove Shows' ),
+			'choose_from_most_used'      => Podlove::t( 'Choose from most used' ),
+			'separate_items_with_commas' => Podlove::t( 'Separate Shows with commas' )
+		);
+		
+		$show_taxonomy_args = array(
+			'public'            => true,
+			'labels'            => $show_taxonomy_labels,
+			'show_ui'           => true,
+			'query_var'         => 'podlove',
+			'hierarchical'      => false,
+			'show_tagcloud'     => false,
+			'show_in_nav_menus' => true,
+		);
+
+		register_taxonomy( 'podcast_shows', array( 'podcast' ), $show_taxonomy_args );
+	}
+}
