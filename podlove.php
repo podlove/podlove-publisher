@@ -14,6 +14,10 @@ function plove_init() {
 }
 add_action( 'plugins_loaded', 'plove_init' );
 
+function podlove_map_slugs( $term ) {
+	return $term->slug;
+}
+
 class Podlove {
 	
 	function __construct() {

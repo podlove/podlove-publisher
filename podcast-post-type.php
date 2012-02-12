@@ -184,12 +184,54 @@ class Podcast_Post_Type {
 	 * Meta Box Template
 	 */
 	public function post_type_meta_box_callback() {
+		global $post;
+		
 		$meta = $this->get_meta();
 		
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		
 		<table class="form-table">
+			<tr valign="top">
+				<th scope="row">
+					<label for="podcast_shows"><?php echo Podlove::t( 'Show' ); ?></label>
+				</th>
+				<td>
+					<script type="text/javascript" charset="utf-8">
+						jQuery(function($) {
+							$('.podcast_show_checkbox').on('change', function() {
+								var slug = $(this).data("slug").toLowerCase();
+								var old_val = $("#tax-input-podcast_shows").val().toLowerCase().split(",");
+								var new_val = null;
+								
+								if ($(this).is(":checked")) {
+									// add show
+									old_val.push(slug);
+								} else {
+									// remove show
+									index = $.inArray(slug, old_val);
+									old_val.splice(index, 1);
+								}
+								
+								new_val = old_val.join(",");
+								
+								$("#tax-input-podcast_shows").val(new_val);
+							});
+						});
+					</script>
+					<?php
+					$shows        = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
+					$active_shows = get_the_terms( $post->ID, 'podcast_shows' );
+					$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
+					?>
+					<?php foreach ( $shows as $show ): ?>
+						<?php $id = 'podcast_show_' . $show->term_id ?>
+						<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_show_checkbox" data-slug="<?php echo $show->slug; ?>" <?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
+						<label for="<?php echo $id; ?>"><?php echo $show->name; ?></label>
+						<br/>
+					<?php endforeach; ?>
+				</td>
+			</tr>
 			<?php foreach ( $meta as $key => $value ): ?>
 				<tr valign="top">
 					<th scope="row">
