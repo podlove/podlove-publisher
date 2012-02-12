@@ -2,6 +2,8 @@
 
 /**
  * Custom Post Type
+ * 
+ * @todo move formats, feeds, shows menu items into separate menu item
  */
 class Podcast_Post_Type {
 	
@@ -10,8 +12,8 @@ class Podcast_Post_Type {
 	 */
 	public function __construct() {
 		$labels = array(
-			'name'               => Podlove::t( 'Podcast' ),
-			'singular_name'      => Podlove::t( 'Podcast' ),
+			'name'               => Podlove::t( 'Episodes' ),
+			'singular_name'      => Podlove::t( 'Episode' ),
 			'add_new'            => Podlove::t( 'Add New' ),
 			'add_new_item'       => Podlove::t( 'Add New Episode' ),
 			'edit_item'          => Podlove::t( 'Edit Episode' ),
@@ -22,7 +24,7 @@ class Podcast_Post_Type {
 			'not_found'          => Podlove::t( 'No episodes found' ),
 			'not_found_in_trash' => Podlove::t( 'No episodes found in Trash' ),
 			'parent_item_colon'  => '',
-			'menu_name'          => Podlove::t( 'Podcasts' ),
+			'menu_name'          => Podlove::t( 'Episodes' ),
 		);
 		
 		$args = array(
@@ -43,6 +45,7 @@ class Podcast_Post_Type {
 		
 		register_post_type( 'podcast', $args );
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
+		add_action( 'admin_menu', array( $this, 'create_menu' ) );
 		
 		require_once 'abstract-taxonomy.php';
 		$this->register_formats_taxonomy();
@@ -79,6 +82,35 @@ class Podcast_Post_Type {
 		add_action( 'do_feed_rss', array( $this, 'replace_rss_with_atom' ) );
 		remove_all_actions( 'do_feed_rdf' );
 		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
+	}
+	
+	public function create_menu() {
+		// create new top-level menu
+		$hook = add_menu_page(
+			'Podlove Plugin Settings',
+			'Podlove',
+			'administrator',
+			'podlove_settings_handle',
+			array( $this, 'settings_page' ),
+			plugins_url( '/images/podlove-icon-16x16.png', __FILE__ )
+		);
+	}
+	
+	public function settings_page() {
+		require_once 'inc/tabs.php';
+		$tabs = new Podlove_Tabs;
+		$tabs->set_title( Podlove::t( 'Podlove' ) );
+		$tabs->set_tab( 'itunes', Podlove::t( 'iTunes' ) );
+		$tabs->set_tab( 'feeds', Podlove::t( 'Feeds' ) );
+		$tabs->set_tab( 'shows', Podlove::t( 'Shows' ) );
+		$tabs->set_tab( 'formats', Podlove::t( 'Formats' ) );
+		$tabs->set_default( 'itunes' );
+		?>
+		<div class="wrap">
+			<?php screen_icon( 'options-general' ); ?>
+			<?php $tabs->display(); ?>
+		</div>
+		<?php
 	}
 
 	private function register_formats_taxonomy() {

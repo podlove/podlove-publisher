@@ -18,7 +18,7 @@ class Podlove_Shows_Taxonomy extends Podlove_Abstract_Taxonomy {
 			// 'slug' => array( ... )
 			'episode_prefix' => array(
 				'label'       => Podlove::t( 'Episode Prefix' ),
-				'description' => Podlove::t( 'Example: pod_' )
+				'description' => Podlove::t( 'Slug for file URI. Example: pod_' )
 			),
 			'media_file_base_uri' => array(
 				'label'       => Podlove::t( 'Media File Base URI' ),
