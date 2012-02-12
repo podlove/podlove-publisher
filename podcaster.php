@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Podcaster
+Plugin Name: Podlove Podcasting Plugin for WordPress
 Plugin URI: 
 Description: The one and only podcast client. Seriously.
 Version: 1.0
