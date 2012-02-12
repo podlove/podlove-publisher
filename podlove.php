@@ -9,12 +9,12 @@ Author URI: ericteubert@googlemail.com
 License: MIT
 */
 
-function pdcr_init() {
-	new Podcaster;
+function plove_init() {
+	new Podlove;
 }
-add_action( 'plugins_loaded', 'pdcr_init' );
+add_action( 'plugins_loaded', 'plove_init' );
 
-class Podcaster {
+class Podlove {
 	
 	function __construct() {
 		add_action( 'init', array( $this, 'register_post_type' ) );
@@ -31,15 +31,15 @@ class Podcaster {
 	 * @return string
 	 */
 	public static function t( $text ) {
-		return __( $text, 'podcaster' );
+		return __( $text, 'podlove' );
 	}
 	
 	/**
 	 * Register custom post type "podcast".
 	 */
 	public function register_post_type() {
-		require_once 'podcaster-post-type.php';
-		new Podcaster_Post_Type();
+		require_once 'podcast-post-type.php';
+		new Podcast_Post_Type();
 	}
 	
 	/**

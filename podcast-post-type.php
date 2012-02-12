@@ -3,26 +3,26 @@
 /**
  * Custom Post Type
  */
-class Podcaster_Post_Type {
+class Podcast_Post_Type {
 	
 	/**
 	 * Register custom "podcast" post type.
 	 */
 	public function __construct() {
 		$labels = array(
-			'name'               => Podcaster::t( 'Podcast' ),
-			'singular_name'      => Podcaster::t( 'Podcast' ),
-			'add_new'            => Podcaster::t( 'Add New' ),
-			'add_new_item'       => Podcaster::t( 'Add New Episode' ),
-			'edit_item'          => Podcaster::t( 'Edit Episode' ),
-			'new_item'           => Podcaster::t( 'New Episode' ),
-			'all_items'          => Podcaster::t( 'All Episodes' ),
-			'view_item'          => Podcaster::t( 'View Episode' ),
-			'search_items'       => Podcaster::t( 'Search Episodes' ),
-			'not_found'          => Podcaster::t( 'No episodes found' ),
-			'not_found_in_trash' => Podcaster::t( 'No episodes found in Trash' ),
+			'name'               => Podlove::t( 'Podcast' ),
+			'singular_name'      => Podlove::t( 'Podcast' ),
+			'add_new'            => Podlove::t( 'Add New' ),
+			'add_new_item'       => Podlove::t( 'Add New Episode' ),
+			'edit_item'          => Podlove::t( 'Edit Episode' ),
+			'new_item'           => Podlove::t( 'New Episode' ),
+			'all_items'          => Podlove::t( 'All Episodes' ),
+			'view_item'          => Podlove::t( 'View Episode' ),
+			'search_items'       => Podlove::t( 'Search Episodes' ),
+			'not_found'          => Podlove::t( 'No episodes found' ),
+			'not_found_in_trash' => Podlove::t( 'No episodes found in Trash' ),
 			'parent_item_colon'  => '',
-			'menu_name'          => Podcaster::t( 'Podcasts' ),
+			'menu_name'          => Podlove::t( 'Podcasts' ),
 		);
 		
 		$args = array(
@@ -39,7 +39,7 @@ class Podcaster_Post_Type {
 			'register_meta_box_cb' => array( $this, 'register_post_type_meta_boxes' )
 		); 
 		
-		$args = apply_filters( 'podcaster_post_type_args', $args );
+		$args = apply_filters( 'podlove_post_type_args', $args );
 		
 		register_post_type( 'podcast', $args );
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
@@ -124,8 +124,8 @@ class Podcaster_Post_Type {
 	 */
 	public function register_post_type_meta_boxes() {
 		add_meta_box(
-			/* $id            */ 'podcaster',
-			/* $title         */ Podcaster::t( 'Podcast Metadata' ),
+			/* $id            */ 'podlove',
+			/* $title         */ Podlove::t( 'Podcast Metadata' ),
 			/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
 			/* $page          */ 'podcast'
 			/* $context       */ 
@@ -142,7 +142,7 @@ class Podcaster_Post_Type {
 	private function get_meta() {
 		global $post;
 		
-		$meta = get_post_meta( $post->ID, '_podcaster_meta', true );
+		$meta = get_post_meta( $post->ID, '_podlove_meta', true );
 		
 		if ( ! is_array( $meta ) )
 			$meta = array();
@@ -162,7 +162,7 @@ class Podcaster_Post_Type {
 	public function post_type_meta_box_callback() {
 		$meta = $this->get_meta();
 		
-		wp_nonce_field( plugin_basename( __FILE__ ), 'podcaster_noncename' );
+		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		
 		<table class="form-table">
@@ -171,7 +171,7 @@ class Podcaster_Post_Type {
 					<label for="duration">Duration</label>
 				</th>
 				<td>
-					<input type="text" name="podcaster_meta[duration]" value="<?php echo $meta[ 'duration' ]; ?>" id="duration">
+					<input type="text" name="podlove_meta[duration]" value="<?php echo $meta[ 'duration' ]; ?>" id="duration">
 				</td>
 			</tr>
 			<tr valign="top">
@@ -179,7 +179,7 @@ class Podcaster_Post_Type {
 					<label for="byte_length">Size in Bytes</label>
 				</th>
 				<td>
-					<input type="text" name="podcaster_meta[byte_length]" value="<?php echo $meta[ 'byte_length' ]; ?>" id="byte_length">
+					<input type="text" name="podlove_meta[byte_length]" value="<?php echo $meta[ 'byte_length' ]; ?>" id="byte_length">
 				</td>
 			</tr>
 			<tr valign="top">
@@ -187,7 +187,7 @@ class Podcaster_Post_Type {
 					<label for="enclosure_url">Enclosure</label>
 				</th>
 				<td>
-					<input type="text" name="podcaster_meta[enclosure_url]" value="<?php echo $meta[ 'enclosure_url' ]; ?>" id="enclosure_url">
+					<input type="text" name="podlove_meta[enclosure_url]" value="<?php echo $meta[ 'enclosure_url' ]; ?>" id="enclosure_url">
 				</td>
 			</tr>
 		</table>
@@ -198,7 +198,7 @@ class Podcaster_Post_Type {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
 			return;
 		
-		if ( empty( $_POST[ 'podcaster_noncename' ] ) || ! wp_verify_nonce( $_POST[ 'podcaster_noncename' ], plugin_basename( __FILE__ ) ) )
+		if ( empty( $_POST[ 'podlove_noncename' ] ) || ! wp_verify_nonce( $_POST[ 'podlove_noncename' ], plugin_basename( __FILE__ ) ) )
 			return;
 		
 		// Check permissions
@@ -209,6 +209,6 @@ class Podcaster_Post_Type {
 			return;
 		}
 
-		update_post_meta( $post_id, '_podcaster_meta', $_POST[ 'podcaster_meta' ] );
+		update_post_meta( $post_id, '_podlove_meta', $_POST[ 'podlove_meta' ] );
 	}
 }
