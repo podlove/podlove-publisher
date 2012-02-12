@@ -1,4 +1,7 @@
 <?php
+/**
+ * Taxonomy: podcast_feeds
+ */
 class Podlove_Feeds_Taxonomy {
 	
 	function __construct() {
