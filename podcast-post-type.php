@@ -45,6 +45,7 @@ class Podcast_Post_Type {
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
 		
 		require_once 'abstract-taxonomy.php';
+		$this->register_formats_taxonomy();
 		$this->register_feeds_taxonomy();
 		$this->register_shows_taxonomy();
 		
@@ -64,6 +65,11 @@ class Podcast_Post_Type {
 		add_action( 'do_feed_rss', array( $this, 'replace_rss_with_atom' ) );
 		remove_all_actions( 'do_feed_rdf' );
 		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
+	}
+
+	private function register_formats_taxonomy() {
+		require_once 'formats-taxonomy.php';
+		new Podlove_File_Formats_Taxonomy();
 	}
 	
 	private function register_feeds_taxonomy() {
