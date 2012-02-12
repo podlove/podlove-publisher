@@ -23,7 +23,7 @@ abstract class Podlove_Abstract_Taxonomy {
 	 * @param int $term_id
 	 * @return array
 	 */
-	protected final function get_fields( $term_id ) {
+	public final function get_fields( $term_id ) {
 		$fields = $this->get_all_fields();
 			
 		if ( empty( $fields[ $term_id ] ) )

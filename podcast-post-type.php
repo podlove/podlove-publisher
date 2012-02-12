@@ -203,6 +203,8 @@ class Podcast_Post_Type {
 			$active_shows = array();
 			
 		$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
+		
+		$shows_taxonomy = new Podlove_Shows_Taxonomy( false );
 		?>
 		<tr valign="top">
 			<th scope="row">
@@ -210,8 +212,20 @@ class Podcast_Post_Type {
 			</th>
 			<td>
 				<?php foreach ( $shows as $show ): ?>
+					<?php $show_meta = $shows_taxonomy->get_fields( $show->term_id ); ?>
 					<?php $id = 'podcast_show_' . $show->term_id ?>
-					<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_show_checkbox" data-slug="<?php echo $show->name; ?>" <?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
+					<input
+						type="checkbox"
+						name="<?php echo $id; ?>"
+						id="<?php echo $id; ?>"
+						class="podcast_show_checkbox"
+						data-name="<?php echo $show->name; ?>"
+						data-slug="<?php echo $show->slug; ?>"
+						data-episode_prefix="<?php echo $show_meta[ 'episode_prefix' ]; ?>"
+						data-media_file_base_uri="<?php echo $show_meta[ 'media_file_base_uri' ]; ?>"
+						data-uri_delimiter="<?php echo $show_meta[ 'uri_delimiter' ]; ?>"
+						data-episode_number_length="<?php echo $show_meta[ 'episode_number_length' ]; ?>"
+						<?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
 					<label for="<?php echo $id; ?>"><?php echo $show->name; ?></label>
 					<br/>
 				<?php endforeach; ?>
@@ -229,6 +243,8 @@ class Podcast_Post_Type {
 			$active_formats = array();
 			
 		$active_slugs   = array_map( 'podlove_map_slugs', $active_formats );
+		
+		$formats_taxonomy = new Podlove_File_Formats_Taxonomy( false );
 		?>
 		<tr valign="top">
 			<th scope="row">
@@ -236,8 +252,17 @@ class Podcast_Post_Type {
 			</th>
 			<td>
 				<?php foreach ( $formats as $format ): ?>
+					<?php $format_meta = $formats_taxonomy->get_fields( $format->term_id ); ?>
 					<?php $id = 'podcast_format_' . $format->term_id ?>
-					<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_format_checkbox" data-slug="<?php echo $format->name; ?>" <?php if ( in_array( $format->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
+					<input
+						type="checkbox"
+						name="<?php echo $id; ?>"
+						id="<?php echo $id; ?>"
+						class="podcast_format_checkbox"
+						data-name="<?php echo $format->name; ?>"
+						data-slug="<?php echo $format->slug; ?>"
+						data-extension="<?php echo $format_meta[ 'extension' ]; ?>"
+						<?php if ( in_array( $format->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
 					<label for="<?php echo $id; ?>"><?php echo $format->name; ?></label>
 					<br/>
 				<?php endforeach; ?>
@@ -254,18 +279,27 @@ class Podcast_Post_Type {
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		<table class="form-table">
-			<?php do_action( 'podlove_list_shows' ) ?>
-			<?php do_action( 'podlove_list_formats' ) ?>
+			<?php do_action( 'podlove_list_shows' ); ?>
+			<?php do_action( 'podlove_list_formats' ); ?>
 			<?php foreach ( $meta as $key => $value ): ?>
 				<tr valign="top">
 					<th scope="row">
 						<label for="<?php echo $key; ?>"><?php echo Podlove::t( $key ); ?></label>
 					</th>
 					<td>
-						<input type="text" name="podlove_meta[<?php echo $key; ?>]" value="<?php echo $value; ?>" id="<?php echo $key; ?>">
+						<input type="text" name="podlove_meta[<?php echo $key; ?>]" id="podlove_meta_<?php echo $key; ?>" value="<?php echo $value; ?>" id="<?php echo $key; ?>">
 					</td>
 				</tr>				
 			<?php endforeach; ?>
+			<tr valign="top">
+				<th scope="row">
+					<?php echo Podlove::t( "Enclosures" ); ?>
+				</th>
+				<td>
+					<div id="podlove_enclosure_list"></div>
+				</td>
+			</tr>
+			<?php do_action( 'podlove_meta_box_end' ); ?>
 		</table>
 		<?php
 	}

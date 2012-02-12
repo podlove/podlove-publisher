@@ -4,7 +4,7 @@
  */
 class Podlove_Shows_Taxonomy extends Podlove_Abstract_Taxonomy {
 	
-	function __construct() {
+	function __construct( $do_init = true ) {
 		$this->taxonomy_slug = 'podcast_shows';
 		$this->field_keys = array(
 			'subtitle' => array(
@@ -33,7 +33,9 @@ class Podlove_Shows_Taxonomy extends Podlove_Abstract_Taxonomy {
 				'description' => Podlove::t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes. Example: 3' )
 			)
 		);
-		$this->init();
+		
+		if ( $do_init )
+			$this->init();
 	}
 	
 	/**

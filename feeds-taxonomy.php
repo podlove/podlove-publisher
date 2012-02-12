@@ -4,7 +4,7 @@
  */
 class Podlove_Feeds_Taxonomy extends Podlove_Abstract_Taxonomy {
 	
-	function __construct() {
+	function __construct( $do_init = true ) {
 		$this->taxonomy_slug = 'podlove_feeds';
 		$this->field_keys = array(
 			'feedslug' => array(
@@ -12,7 +12,9 @@ class Podlove_Feeds_Taxonomy extends Podlove_Abstract_Taxonomy {
 				'description' => Podlove::t( 'Will be used in Feed URL: /feed/"show slug"/"feed slug"/' )
 			)
 		);
-		$this->init();
+		
+		if ( $do_init )
+			$this->init();
 	}
 	
 	/**

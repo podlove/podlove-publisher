@@ -4,7 +4,7 @@
  */
 class Podlove_File_Formats_Taxonomy extends Podlove_Abstract_Taxonomy {
 	
-	function __construct() {
+	function __construct( $do_init = true ) {
 		$this->taxonomy_slug = 'podcast_file_formats';
 		$this->field_keys = array(
 			// 'name' => array(
@@ -28,7 +28,9 @@ class Podlove_File_Formats_Taxonomy extends Podlove_Abstract_Taxonomy {
 				'description' => Podlove::t( 'Example: m4a' )
 			),
 		);
-		$this->init();
+		
+		if ( $do_init )
+			$this->init();
 	}
 	
 	/**
