@@ -44,6 +44,7 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
 		
+		require_once 'abstract-taxonomy.php';
 		$this->register_feeds_taxonomy();
 		$this->register_shows_taxonomy();
 		

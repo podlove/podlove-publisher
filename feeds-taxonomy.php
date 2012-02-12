@@ -2,10 +2,17 @@
 /**
  * Taxonomy: podcast_feeds
  */
-class Podlove_Feeds_Taxonomy {
+class Podlove_Feeds_Taxonomy extends Podlove_Abstract_Taxonomy {
 	
 	function __construct() {
-		$this->register_taxonomy();
+		$this->taxonomy_slug = 'podlove_feeds';
+		$this->field_keys = array(
+			'feedslug' => array(
+				'label'       => Podlove::t( 'Field Slug' ),
+				'description' => Podlove::t( 'Will be used in Feed URL: /feed/"show slug"/"feed slug"/' )
+			)
+		);
+		$this->init();
 	}
 	
 	/**
@@ -15,7 +22,7 @@ class Podlove_Feeds_Taxonomy {
 	 * 	- Display all known feeds with checkboxes.
 	 * 	- Default: Select all (?) or configure which is/are default
 	 */
-	private function register_taxonomy() {
+	protected function register_taxonomy() {
 		$feed_taxonomy_labels = array(
 			'name'                       => Podlove::t( 'Feeds' ),
 			'all_items'                  => Podlove::t( 'All Feeds' ),
@@ -44,6 +51,6 @@ class Podlove_Feeds_Taxonomy {
 			'show_in_nav_menus' => true,
 		);
 
-		register_taxonomy( 'podcast_feeds', array( 'podcast' ), $feed_taxonomy_args );
+		register_taxonomy( $this->taxonomy_slug, array( 'podcast' ), $feed_taxonomy_args );
 	}
 }
