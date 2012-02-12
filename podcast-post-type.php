@@ -44,6 +44,8 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
 		
+		$this->register_feeds_taxonomy();
+		
 		// add custom rss2 feed for iTunes
 		// remove_all_actions( 'do_feed_rss2' );
 		// add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
@@ -60,6 +62,38 @@ class Podcast_Post_Type {
 		add_action( 'do_feed_rss', array( $this, 'replace_rss_with_atom' ) );
 		remove_all_actions( 'do_feed_rdf' );
 		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
+	}
+	
+	private function register_feeds_taxonomy() {
+		$feed_taxonomy_labels = array(
+			'name'                       => Podlove::t( 'Feeds' ),
+			'all_items'                  => Podlove::t( 'All Feeds' ),
+			'menu_name'                  => Podlove::t( 'Feeds' ),
+			'edit_item'                  => Podlove::t( 'Edit Feed' ),
+			'update_item'                => Podlove::t( 'Update Feed' ),
+			'parent_item'                => Podlove::t( 'Parent Feed' ),
+			'add_new_item'               => Podlove::t( 'Add New Feed' ),
+			'search_items'               => Podlove::t( 'Search Feeds' ),
+			'new_item_name'              => Podlove::t( 'New Feed Name' ),
+			'singular_name'              => Podlove::t( 'Feed' ),
+			'popular_items'              => Podlove::t( 'Popular Feeds' ),
+			'parent_item_colon'          => Podlove::t( 'Popular Feeds' ),
+			'add_or_remove_items'        => Podlove::t( 'Add or remove Feeds' ),
+			'choose_from_most_used'      => Podlove::t( 'Choose from most used' ),
+			'separate_items_with_commas' => Podlove::t( 'Separate Feeds with commas' )
+		);
+		
+		$feed_taxonomy_args = array(
+			'public'            => true,
+			'labels'            => $feed_taxonomy_labels,
+			'show_ui'           => true,
+			'query_var'         => 'podlove',
+			'hierarchical'      => false,
+			'show_tagcloud'     => false,
+			'show_in_nav_menus' => true,
+		);
+
+		register_taxonomy( 'podcast_feeds', array( 'podcast' ), $feed_taxonomy_args );
 	}
 	
 	public function replace_rss_with_atom( $is_comment_feed ) {
