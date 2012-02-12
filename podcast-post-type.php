@@ -53,6 +53,19 @@ class Podcast_Post_Type {
 		// remove_all_actions( 'do_feed_rss2' );
 		// add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
 		
+		if ( is_admin() ) {
+			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
+			
+			wp_register_script(
+				'podlove_admin_script',
+				WP_PLUGIN_URL . 'podlove/js/admin.js',
+				array('jquery'),
+				'1.0' 
+			);
+			wp_enqueue_script( 'podlove_admin_script' );
+		}
+		
+		
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
 		add_action( 'atom_entry', array( $this, 'add_itunes_atom_fields' ) );
 		add_action( 'atom_ns', array( $this, 'add_itunes_atom_dtd' ) );
@@ -180,58 +193,37 @@ class Podcast_Post_Type {
 		return array_merge( $defaults, $meta );
 	}
 	
+	public function list_shows() {
+		global $post;
+		$shows        = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
+		$active_shows = get_the_terms( $post->ID, 'podcast_shows' );
+		$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
+		?>
+		<tr valign="top">
+			<th scope="row">
+				<label for="podcast_shows"><?php echo Podlove::t( 'Show' ); ?></label>
+			</th>
+			<td>
+				<?php foreach ( $shows as $show ): ?>
+					<?php $id = 'podcast_show_' . $show->term_id ?>
+					<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_show_checkbox" data-slug="<?php echo $show->slug; ?>" <?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
+					<label for="<?php echo $id; ?>"><?php echo $show->name; ?></label>
+					<br/>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<?php
+	}
+	
 	/**
 	 * Meta Box Template
 	 */
 	public function post_type_meta_box_callback() {
-		global $post;
-		
 		$meta = $this->get_meta();
-		
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
-		
 		<table class="form-table">
-			<tr valign="top">
-				<th scope="row">
-					<label for="podcast_shows"><?php echo Podlove::t( 'Show' ); ?></label>
-				</th>
-				<td>
-					<script type="text/javascript" charset="utf-8">
-						jQuery(function($) {
-							$('.podcast_show_checkbox').on('change', function() {
-								var slug = $(this).data("slug").toLowerCase();
-								var old_val = $("#tax-input-podcast_shows").val().toLowerCase().split(",");
-								var new_val = null;
-								
-								if ($(this).is(":checked")) {
-									// add show
-									old_val.push(slug);
-								} else {
-									// remove show
-									index = $.inArray(slug, old_val);
-									old_val.splice(index, 1);
-								}
-								
-								new_val = old_val.join(",");
-								
-								$("#tax-input-podcast_shows").val(new_val);
-							});
-						});
-					</script>
-					<?php
-					$shows        = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
-					$active_shows = get_the_terms( $post->ID, 'podcast_shows' );
-					$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
-					?>
-					<?php foreach ( $shows as $show ): ?>
-						<?php $id = 'podcast_show_' . $show->term_id ?>
-						<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_show_checkbox" data-slug="<?php echo $show->slug; ?>" <?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
-						<label for="<?php echo $id; ?>"><?php echo $show->name; ?></label>
-						<br/>
-					<?php endforeach; ?>
-				</td>
-			</tr>
+			<?php do_action( 'podlove_list_shows' ) ?>
 			<?php foreach ( $meta as $key => $value ): ?>
 				<tr valign="top">
 					<th scope="row">
