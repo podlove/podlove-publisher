@@ -23,7 +23,7 @@ abstract class Podlove_Abstract_Taxonomy {
 	 * @param int $term_id
 	 * @return array
 	 */
-	protected function get_fields( $term_id ) {
+	protected final function get_fields( $term_id ) {
 		$fields = $this->get_all_fields();
 			
 		if ( empty( $fields[ $term_id ] ) )
@@ -43,7 +43,7 @@ abstract class Podlove_Abstract_Taxonomy {
 	 * 
 	 * @return array
 	 */
-	protected function get_all_fields() {
+	protected final function get_all_fields() {
 		$fields = get_option( $this->taxonomy_slug . '_taxonomy_fields' );
 
 		if ( empty( $fields ) || ! is_array( $fields ) )
@@ -55,7 +55,7 @@ abstract class Podlove_Abstract_Taxonomy {
 	/**
 	 * Hook: Save a term.
 	 */
-	public function save( $term_id, $tt_id, $taxonomy ) {
+	public final function save( $term_id, $tt_id, $taxonomy ) {
 		global $wpdb;
 
 		if ( $taxonomy != $this->taxonomy_slug )
@@ -67,7 +67,7 @@ abstract class Podlove_Abstract_Taxonomy {
 		update_option( $this->taxonomy_slug . '_taxonomy_fields', $fields );
 	}
 	
-	public function add_form_fields( $taxonomy, $taxonomy_slug ) {
+	public final function add_form_fields( $taxonomy, $taxonomy_slug ) {
 		$fields = $this->get_fields( $taxonomy->term_id );
 		foreach ( $fields as $key => $value ): ?>
 			<tr class="form-field">
