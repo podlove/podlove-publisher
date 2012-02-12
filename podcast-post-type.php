@@ -55,6 +55,7 @@ class Podcast_Post_Type {
 		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
+			add_action( 'podlove_list_formats', array( $this, 'list_formats' ) );
 			
 			wp_register_script(
 				'podlove_admin_script',
@@ -197,17 +198,47 @@ class Podcast_Post_Type {
 		global $post;
 		$shows        = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
 		$active_shows = get_the_terms( $post->ID, 'podcast_shows' );
+		
+		if ( ! $active_shows )
+			$active_shows = array();
+			
 		$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
 		?>
 		<tr valign="top">
 			<th scope="row">
-				<label for="podcast_shows"><?php echo Podlove::t( 'Show' ); ?></label>
+				<label for="podcast_shows"><?php echo Podlove::t( 'Shows' ); ?></label>
 			</th>
 			<td>
 				<?php foreach ( $shows as $show ): ?>
 					<?php $id = 'podcast_show_' . $show->term_id ?>
-					<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_show_checkbox" data-slug="<?php echo $show->slug; ?>" <?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
+					<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_show_checkbox" data-slug="<?php echo $show->name; ?>" <?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
 					<label for="<?php echo $id; ?>"><?php echo $show->name; ?></label>
+					<br/>
+				<?php endforeach; ?>
+			</td>
+		</tr>
+		<?php
+	}
+	
+	public function list_formats() {
+		global $post;
+		$formats        = get_terms( 'podcast_file_formats', array( 'hide_empty' => false ) );
+		$active_formats = get_the_terms( $post->ID, 'podcast_file_formats' );
+
+		if ( ! $active_formats )
+			$active_formats = array();
+			
+		$active_slugs   = array_map( 'podlove_map_slugs', $active_formats );
+		?>
+		<tr valign="top">
+			<th scope="row">
+				<label for="podcast_formats"><?php echo Podlove::t( 'Formats' ); ?></label>
+			</th>
+			<td>
+				<?php foreach ( $formats as $format ): ?>
+					<?php $id = 'podcast_format_' . $format->term_id ?>
+					<input type="checkbox" name="<?php echo $id; ?>" id="<?php echo $id; ?>" class="podcast_format_checkbox" data-slug="<?php echo $format->name; ?>" <?php if ( in_array( $format->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
+					<label for="<?php echo $id; ?>"><?php echo $format->name; ?></label>
 					<br/>
 				<?php endforeach; ?>
 			</td>
@@ -224,6 +255,7 @@ class Podcast_Post_Type {
 		?>
 		<table class="form-table">
 			<?php do_action( 'podlove_list_shows' ) ?>
+			<?php do_action( 'podlove_list_formats' ) ?>
 			<?php foreach ( $meta as $key => $value ): ?>
 				<tr valign="top">
 					<th scope="row">
