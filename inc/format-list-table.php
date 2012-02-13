@@ -42,12 +42,27 @@ class Podlove_Format_List_Table extends WP_List_Table {
 	function column_id( $format ) {
 		return $format->id;
 	}
+	
+	function column_format( $format ) {
+		return $format->type;
+	}
+	
+	function column_mime( $format ) {
+		return $format->mime_type;
+	}
+	
+	function column_extension( $format ) {
+		return $format->extension;
+	}
 
 	function get_columns(){
 		$columns = array(
-			'id'   => 'ID',
-			'name' => 'Name',
-			'slug' => 'Slug'
+			'id'        => 'ID',
+			'name'      => 'Name',
+			'slug'      => 'Slug',
+			'format'    => 'Format',
+			'mime'      => 'MIME Type',
+			'extension' => 'Extension'
 		);
 		return $columns;
 	}

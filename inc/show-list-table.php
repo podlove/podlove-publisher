@@ -17,37 +17,42 @@ class Podlove_Show_List_Table extends WP_List_Table {
 		) );
 	}
 	
-	function column_slug( $format ) {
-		return $format->slug;
+	function column_slug( $show ) {
+		return $show->slug;
 	}
 
-	function column_name( $format ) {
+	function column_name( $show ) {
 		$tab = ( isset( $_REQUEST[ 'tab' ] ) ) ? $_REQUEST[ 'tab' ] : 'shows';
 		$actions = array(
 			'edit' => sprintf(
 				'<a href="?page=%s&action=%s&show=%s&tab=%s">Edit</a>',
 				$_REQUEST['page'],
 				'edit',
-				$format->id,
+				$show->id,
 				$tab
 			)
 		);
 	
 		return sprintf('%1$s %2$s',
-		    /*$1%s*/ $format->name,
+		    /*$1%s*/ $show->name . ' - ' . $show->subtitle,
 		    /*$3%s*/ $this->row_actions( $actions )
 		);
 	}
 	
-	function column_id( $format ) {
-		return $format->id;
+	function column_id( $show ) {
+		return $show->id;
+	}
+	
+	function column_media( $show ) {
+		return $show->media_file_base_uri;
 	}
 
 	function get_columns(){
 		$columns = array(
 			'id'   => 'ID',
 			'name' => 'Name',
-			'slug' => 'Slug'
+			'slug' => 'Slug',
+			'media'=> 'Media File Base URI'
 		);
 		return $columns;
 	}
