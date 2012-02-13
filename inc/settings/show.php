@@ -97,6 +97,16 @@ class Podlove_Show_Settings_Page {
 				$show->{$key} = $value;
 			}
 			$show->save();
+			
+			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
+				$show_formats = get_option( '_podlove_show_formats' );
+				if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
+					$show_formats = array();
+					
+				$show_formats[ $show->id ] = array_keys( $_POST[ 'podlove_show_format' ] );
+				update_option( '_podlove_show_formats', $show_formats );
+			}
+			
 			wp_redirect(
 				admin_url(
 					'admin.php?page=' . $_REQUEST[ 'page' ]
@@ -109,7 +119,16 @@ class Podlove_Show_Settings_Page {
 			if ( ! isset( $_REQUEST[ 'show' ] ) )
 				return;
 				
-			$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] )->delete();
+			$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
+			
+			$show_formats = get_option( '_podlove_show_formats' );
+			if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
+				$show_formats = array();
+				
+			unset( $show_formats[ $show->id ] );
+			update_option( '_podlove_show_formats', $show_formats );
+			
+			$show->delete();
 
 			wp_redirect(
 				admin_url(
