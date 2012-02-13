@@ -69,6 +69,16 @@ class Podlove_Show_Settings_Page {
 				$show->{$key} = $value;
 			}
 			$show->save();
+			
+			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
+				$show_formats = get_option( '_podlove_show_formats' );
+				if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
+					$show_formats = array();
+					
+				$show_formats[ $show->id ] = array_keys( $_POST[ 'podlove_show_format' ] );
+				update_option( '_podlove_show_formats', $show_formats );
+			}
+			
 			wp_redirect(
 				admin_url(
 					'admin.php?page=' . $_REQUEST[ 'page' ]
@@ -153,7 +163,6 @@ class Podlove_Show_Settings_Page {
 		?>
 		<form action="<?php echo admin_url( 'admin.php?page=' . $_REQUEST[ 'page' ] ) ?>" method="post">
 			<input type="hidden" name="show" value="<?php echo $show->id ?>" />
-			<input type="hidden" name="tab" value="<?php echo $_REQUEST[ 'tab' ] ?>" />
 			<input type="hidden" name="action" value="<?php echo $action; ?>" />
 			<table class="form-table">
 				<?php
@@ -171,6 +180,37 @@ class Podlove_Show_Settings_Page {
 				<?php
 				endforeach;
 				?>
+				<tr>
+					<th scope="row" valign="top">
+						<label for="formats"><?php echo Podlove::t( 'Formats' ) ?></label>
+					</th>
+					<td>
+						<?php
+						$formats = Podlove_Format::all();
+						$show_formats = get_option( '_podlove_show_formats' );
+						if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
+							$show_formats = array();
+							
+						if ( isset( $show_formats[ $show->id ] ) )
+							$this_show_formats = $show_formats[ $show->id ];
+						else
+							$this_show_formats = array();
+						
+						?>
+						<?php foreach ( $formats as $format ): ?>
+							<?php $id = 'podlove_show_format_' . $format->id; ?>
+							<label for="<?php echo $id; ?>">
+								<input
+									type="checkbox"
+									name="podlove_show_format[<?php echo $format->id; ?>]"
+									id="<?php echo $id; ?>"
+									<?php if ( in_array( $format->id, $this_show_formats ) ): ?>checked="checked"<?php endif; ?> />
+								<?php echo $format->name; ?>
+							</label>
+							<br/>
+						<?php endforeach; ?>
+					</td>
+				</tr>
 			</table>
 			<?php submit_button( $button_text ); ?>
 		</form>
