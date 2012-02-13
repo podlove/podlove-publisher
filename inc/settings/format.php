@@ -45,6 +45,9 @@ class Podlove_Format_Settings_Page {
 		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 		
 		if ( $action === 'save' ) {
+			if ( ! isset( $_REQUEST[ 'format' ] ) )
+				return;
+				
 			$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
 			
 			if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )

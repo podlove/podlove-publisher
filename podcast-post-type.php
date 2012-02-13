@@ -58,6 +58,7 @@ class Podcast_Post_Type {
 		require_once 'inc/show.php';
 		
 		require_once 'inc/format-list-table.php';
+		require_once 'inc/show-list-table.php';
 		
 		// add custom rss2 feed for iTunes
 		// remove_all_actions( 'do_feed_rss2' );
@@ -107,6 +108,8 @@ class Podcast_Post_Type {
 		
 		require 'inc/settings/format.php';
 		new Podlove_Format_Settings_Page( $handle );
+		require 'inc/settings/show.php';
+		new Podlove_Show_Settings_Page( $handle );
 	}
 	
 	public function settings_page() {
