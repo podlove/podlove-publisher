@@ -1,5 +1,7 @@
 <?php
-class Podlove_Format_Settings_Page {
+namespace Podlove\Settings;
+
+class Format {
 	
 	protected $field_keys;
 	
@@ -7,24 +9,24 @@ class Podlove_Format_Settings_Page {
 		
 		$this->field_keys = array(
 			'name' => array(
-				'label'       => Podlove::t( 'Name' ),
-				'description' => Podlove::t( '' )
+				'label'       => \Podlove\t( 'Name' ),
+				'description' => \Podlove\t( '' )
 			),
 			'slug' => array(
-				'label'       => Podlove::t( 'Slug' ),
-				'description' => Podlove::t( '' )
+				'label'       => \Podlove\t( 'Slug' ),
+				'description' => \Podlove\t( '' )
 			),
 			'type' => array(
-				'label'       => Podlove::t( 'Format Type' ),
-				'description' => Podlove::t( 'Example: audio' )
+				'label'       => \Podlove\t( 'Format Type' ),
+				'description' => \Podlove\t( 'Example: audio' )
 			),
 			'mime_type' => array(
-				'label'       => Podlove::t( 'Format Mime Type' ),
-				'description' => Podlove::t( 'Example: audio/mpeg4' )
+				'label'       => \Podlove\t( 'Format Mime Type' ),
+				'description' => \Podlove\t( 'Example: audio/mpeg4' )
 			),
 			'extension' => array(
-				'label'       => Podlove::t( 'Format Extension' ),
-				'description' => Podlove::t( 'Example: m4a' )
+				'label'       => \Podlove\t( 'Format Extension' ),
+				'description' => \Podlove\t( 'Example: m4a' )
 			),
 		);
 		
@@ -46,7 +48,7 @@ class Podlove_Format_Settings_Page {
 		if ( ! isset( $_REQUEST[ 'format' ] ) )
 			return;
 			
-		$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
+		$format = \Podlove\Model\Format::find_by_id( $_REQUEST[ 'format' ] );
 		
 		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
 			return;
@@ -65,7 +67,7 @@ class Podlove_Format_Settings_Page {
 	private function create() {
 		global $wpdb;
 		
-		$format = new Podlove_Format;
+		$format = new \Podlove\Model\Format;
 		
 		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
 			return;
@@ -85,7 +87,7 @@ class Podlove_Format_Settings_Page {
 		if ( ! isset( $_REQUEST[ 'format' ] ) )
 			return;
 
-		Podlove_Format::find_by_id( $_REQUEST[ 'format' ] )->delete();
+		\Podlove\Model\Format::find_by_id( $_REQUEST[ 'format' ] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -118,7 +120,7 @@ class Podlove_Format_Settings_Page {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo Podlove::t( 'Add New' ); ?></a></h2>
+			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo \Podlove\t( 'Add New' ); ?></a></h2>
 			<?php
 			$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 			switch ( $action ) {
@@ -139,15 +141,15 @@ class Podlove_Format_Settings_Page {
 	}
 	
 	private function new_template() {
-		$format = new Podlove_Format;
+		$format = new \Podlove\Model\Format;
 		?>
-		<h3><?php echo Podlove::t( 'Add New Format' ); ?></h3>
+		<h3><?php echo \Podlove\t( 'Add New Format' ); ?></h3>
 		<?php
-		$this->form_template( $format, 'create', Podlove::t( 'Add New Format' ) );
+		$this->form_template( $format, 'create', \Podlove\t( 'Add New Format' ) );
 	}
 	
 	private function view_template() {
-		$table = new Podlove_Format_List_Table();
+		$table = new \Podlove\Format_List_Table();
 		$table->prepare_items();
 		$table->display();
 	}
@@ -181,7 +183,7 @@ class Podlove_Format_Settings_Page {
 	}
 	
 	private function edit_template() {
-		$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
+		$format = \Podlove\Model\Format::find_by_id( $_REQUEST[ 'format' ] );
 		?>
 		<h3>Edit Format: <?php echo $format->name ?></h3>
 		

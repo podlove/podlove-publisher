@@ -1,5 +1,7 @@
 <?php
 
+namespace Podlove;
+
 /**
  * Custom Post Type
  * 
@@ -12,19 +14,19 @@ class Podcast_Post_Type {
 	 */
 	public function __construct() {
 		$labels = array(
-			'name'               => Podlove::t( 'Episodes' ),
-			'singular_name'      => Podlove::t( 'Episode' ),
-			'add_new'            => Podlove::t( 'Add New' ),
-			'add_new_item'       => Podlove::t( 'Add New Episode' ),
-			'edit_item'          => Podlove::t( 'Edit Episode' ),
-			'new_item'           => Podlove::t( 'New Episode' ),
-			'all_items'          => Podlove::t( 'All Episodes' ),
-			'view_item'          => Podlove::t( 'View Episode' ),
-			'search_items'       => Podlove::t( 'Search Episodes' ),
-			'not_found'          => Podlove::t( 'No episodes found' ),
-			'not_found_in_trash' => Podlove::t( 'No episodes found in Trash' ),
+			'name'               => \Podlove\t( 'Episodes' ),
+			'singular_name'      => \Podlove\t( 'Episode' ),
+			'add_new'            => \Podlove\t( 'Add New' ),
+			'add_new_item'       => \Podlove\t( 'Add New Episode' ),
+			'edit_item'          => \Podlove\t( 'Edit Episode' ),
+			'new_item'           => \Podlove\t( 'New Episode' ),
+			'all_items'          => \Podlove\t( 'All Episodes' ),
+			'view_item'          => \Podlove\t( 'View Episode' ),
+			'search_items'       => \Podlove\t( 'Search Episodes' ),
+			'not_found'          => \Podlove\t( 'No episodes found' ),
+			'not_found_in_trash' => \Podlove\t( 'No episodes found in Trash' ),
 			'parent_item_colon'  => '',
-			'menu_name'          => Podlove::t( 'Episodes' ),
+			'menu_name'          => \Podlove\t( 'Episodes' ),
 		);
 		
 		$args = array(
@@ -46,14 +48,6 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
-		
-		require_once 'inc/table_base.php';
-		require_once 'inc/format.php';
-		require_once 'inc/feed.php';
-		require_once 'inc/show.php';
-		
-		require_once 'inc/format-list-table.php';
-		require_once 'inc/show-list-table.php';
 		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
@@ -97,10 +91,8 @@ class Podcast_Post_Type {
 			/* $position   */
 		);
 		
-		require 'inc/settings/format.php';
-		new Podlove_Format_Settings_Page( $handle );
-		require 'inc/settings/show.php';
-		new Podlove_Show_Settings_Page( $handle );
+		new \Podlove\Settings\Format( $handle );
+		new \Podlove\Settings\Show( $handle );
 	}
 	
 	public function settings_page() {
@@ -164,7 +156,7 @@ class Podcast_Post_Type {
 		// foreach ( $shows as $show ) {
 		// 	add_meta_box(
 		// 		/* $id            */ 'podlove_show_' . $show->slug,
-		// 		/* $title         */ Podlove::t( 'Podcast Episode' ) . ' (' . $show->name . ')',
+		// 		/* $title         */ \Podlove\t( 'Podcast Episode' ) . ' (' . $show->name . ')',
 		// 		/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
 		// 		/* $page          */ 'podcast',
 		// 		/* $context       */ 'advanced',
@@ -208,14 +200,14 @@ class Podcast_Post_Type {
 		if ( ! $active_shows )
 			$active_shows = array();
 			
-		$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
+		$active_slugs = array_map( function ( $s ) { return $s->slug; }, $active_shows );
 		
 		/*
 		$shows_taxonomy = new Podlove_Shows_Taxonomy( false );
 		?>
 		<tr valign="top">
 			<th scope="row">
-				<label for="podcast_shows"><?php echo Podlove::t( 'Shows' ); ?></label>
+				<label for="podcast_shows"><?php echo \Podlove\t( 'Shows' ); ?></label>
 			</th>
 			<td>
 				<?php foreach ( $shows as $show ): ?>
@@ -250,14 +242,14 @@ class Podcast_Post_Type {
 		if ( ! $active_formats )
 			$active_formats = array();
 			
-		$active_slugs   = array_map( 'podlove_map_slugs', $active_formats );
+		$active_slugs   = array_map( function ( $f ) { return $f->slug; }, $active_formats );
 		
 		/*
 		$formats_taxonomy = new Podlove_File_Formats_Taxonomy( false );
 		?>
 		<tr valign="top">
 			<th scope="row">
-				<label for="podcast_formats"><?php echo Podlove::t( 'Formats' ); ?></label>
+				<label for="podcast_formats"><?php echo \Podlove\t( 'Formats' ); ?></label>
 			</th>
 			<td>
 				<?php foreach ( $formats as $format ): ?>
@@ -303,7 +295,7 @@ class Podcast_Post_Type {
 			<?php foreach ( $meta as $key => $value ): ?>
 				<tr valign="top">
 					<th scope="row">
-						<label for="<?php echo $key; ?>"><?php echo Podlove::t( $key ); ?></label>
+						<label for="<?php echo $key; ?>"><?php echo \Podlove\t( $key ); ?></label>
 					</th>
 					<td>
 						<input type="text" name="podlove_meta[<?php echo $key; ?>]" id="podlove_meta_<?php echo $key; ?>" value="<?php echo $value; ?>" id="<?php echo $key; ?>">
@@ -312,7 +304,7 @@ class Podcast_Post_Type {
 			<?php endforeach; ?>
 			<tr valign="top">
 				<th scope="row">
-					<?php echo Podlove::t( "Enclosures" ); ?>
+					<?php echo \Podlove\t( "Enclosures" ); ?>
 				</th>
 				<td>
 					<div id="podlove_enclosure_list"></div>

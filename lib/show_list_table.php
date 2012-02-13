@@ -1,72 +1,63 @@
 <?php
+namespace Podlove;
 
 if( ! class_exists( 'WP_List_Table' ) ){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class Podlove_Format_List_Table extends WP_List_Table {
+class Show_List_Table extends \WP_List_Table {
 	
 	function __construct(){
 		global $status, $page;
 		        
 		// Set parent defaults
 		parent::__construct( array(
-		    'singular'  => 'format',   // singular name of the listed records
-		    'plural'    => 'formats',  // plural name of the listed records
+		    'singular'  => 'show',   // singular name of the listed records
+		    'plural'    => 'shows',  // plural name of the listed records
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
 	
-	function column_slug( $format ) {
-		return $format->slug;
+	function column_slug( $show ) {
+		return $show->slug;
 	}
 
-	function column_name( $format ) {
+	function column_name( $show ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">' . Podlove::t( 'Edit' ) . '</a>',
-				$_REQUEST['page'],
+				'<a href="?page=%s&action=%s&show=%s">' . \Podlove\t( 'Edit' ) . '</a>',
+				$_REQUEST[ 'page' ],
 				'edit',
-				$format->id
+				$show->id
 			),
 			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">' . Podlove::t( 'Delete' ) . '</a>',
+				'<a href="?page=%s&action=%s&show=%s">' . \Podlove\t( 'Delete' ) . '</a>',
 				$_REQUEST[ 'page' ],
 				'delete',
-				$format->id
+				$show->id
 			)
 		);
 	
 		return sprintf('%1$s %2$s',
-		    /*$1%s*/ $format->name,
+		    /*$1%s*/ $show->name . ' - ' . $show->subtitle,
 		    /*$3%s*/ $this->row_actions( $actions )
 		);
 	}
 	
-	function column_id( $format ) {
-		return $format->id;
+	function column_id( $show ) {
+		return $show->id;
 	}
 	
-	function column_format( $format ) {
-		return $format->type;
-	}
-	
-	function column_mime( $format ) {
-		return $format->mime_type;
-	}
-	
-	function column_extension( $format ) {
-		return $format->extension;
+	function column_media( $show ) {
+		return $show->media_file_base_uri;
 	}
 
 	function get_columns(){
 		$columns = array(
-			'id'        => 'ID',
-			'name'      => 'Name',
-			'slug'      => 'Slug',
-			'format'    => 'Format',
-			'mime'      => 'MIME Type',
-			'extension' => 'Extension'
+			'id'   => 'ID',
+			'name' => 'Name',
+			'slug' => 'Slug',
+			'media'=> 'Media File Base URI'
 		);
 		return $columns;
 	}
@@ -83,7 +74,7 @@ class Podlove_Format_List_Table extends WP_List_Table {
 		
 		// retrieve data
 		// TODO select data for current page only
-		$data = Podlove_Format::all();
+		$data = \Podlove\Model\Show::all();
 		
 		// get current page
 		$current_page = $this->get_pagenum();

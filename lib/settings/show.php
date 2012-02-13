@@ -1,5 +1,7 @@
 <?php
-class Podlove_Show_Settings_Page {
+namespace Podlove\Settings;
+
+class Show {
 	
 	protected $field_keys;
 	
@@ -7,36 +9,36 @@ class Podlove_Show_Settings_Page {
 		
 		$this->field_keys = array(
 			'name' => array(
-				'label'       => Podlove::t( 'Name' ),
-				'description' => Podlove::t( '' )
+				'label'       => \Podlove\t( 'Name' ),
+				'description' => \Podlove\t( '' )
 			),
 			'slug' => array(
-				'label'       => Podlove::t( 'Slug' ),
-				'description' => Podlove::t( '' )
+				'label'       => \Podlove\t( 'Slug' ),
+				'description' => \Podlove\t( '' )
 			),
 			'subtitle' => array(
-				'label'       => Podlove::t( 'Show Subtitle' ),
-				'description' => Podlove::t( 'The subtitle is used by iTunes.' )
+				'label'       => \Podlove\t( 'Show Subtitle' ),
+				'description' => \Podlove\t( 'The subtitle is used by iTunes.' )
 			),
 			'label' => array(
-				'label'       => Podlove::t( 'Show Label' ),
-				'description' => Podlove::t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long. Example: POD' )
+				'label'       => \Podlove\t( 'Show Label' ),
+				'description' => \Podlove\t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long. Example: POD' )
 			),
 			'episode_prefix' => array(
-				'label'       => Podlove::t( 'Episode Prefix' ),
-				'description' => Podlove::t( 'Slug for file URI. Example: pod_' )
+				'label'       => \Podlove\t( 'Episode Prefix' ),
+				'description' => \Podlove\t( 'Slug for file URI. Example: pod_' )
 			),
 			'media_file_base_uri' => array(
-				'label'       => Podlove::t( 'Media File Base URI' ),
-				'description' => Podlove::t( 'Example: http://cdn.example.com/pod/' )
+				'label'       => \Podlove\t( 'Media File Base URI' ),
+				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' )
 			),
 			'uri_delimiter' => array(
-				'label'       => Podlove::t( 'URI Delimiter' ),
-				'description' => Podlove::t( 'Example: -' )
+				'label'       => \Podlove\t( 'URI Delimiter' ),
+				'description' => \Podlove\t( 'Example: -' )
 			),
 			'episode_number_length' => array(
-				'label'       => Podlove::t( 'Episode Number Length' ),
-				'description' => Podlove::t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes. Example: 3' )
+				'label'       => \Podlove\t( 'Episode Number Length' ),
+				'description' => \Podlove\t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes. Example: 3' )
 			)
 		);
 		
@@ -58,7 +60,7 @@ class Podlove_Show_Settings_Page {
 		if ( ! isset( $_REQUEST[ 'show' ] ) )
 			return;
 			
-		$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
 		
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
 			return;
@@ -69,7 +71,7 @@ class Podlove_Show_Settings_Page {
 		$show->save();
 		
 		if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-			podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
+			\Podlove\update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
 		}
 		
 		$this->redirect( 'edit', $show->id );
@@ -81,7 +83,7 @@ class Podlove_Show_Settings_Page {
 	private function create() {
 		global $wpdb;
 		
-		$show = new Podlove_Show;
+		$show = new \Podlove\Model\Show;
 		
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
 			return;
@@ -92,7 +94,7 @@ class Podlove_Show_Settings_Page {
 		$show->save();
 		
 		if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-			podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
+			\Podlove\update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
 		}
 		
 		$this->redirect( 'edit', $wpdb->insert_id );
@@ -105,8 +107,8 @@ class Podlove_Show_Settings_Page {
 		if ( ! isset( $_REQUEST[ 'show' ] ) )
 			return;
 			
-		$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
-		podlove_delete_show_formats( $show->id );
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
+		\Podlove\delete_show_formats( $show->id );
 		$show->delete();
 
 		$this->redirect( 'index' );
@@ -140,7 +142,7 @@ class Podlove_Show_Settings_Page {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Shows <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo Podlove::t( 'Add New' ); ?></a></h2>
+			<h2>Podlove Shows <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo \Podlove\t( 'Add New' ); ?></a></h2>
 			<?php
 			$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 			switch ( $action ) {
@@ -161,15 +163,15 @@ class Podlove_Show_Settings_Page {
 	}
 	
 	private function new_template() {
-		$show = new Podlove_Show;
+		$show = new \Podlove\Model\Show;
 		?>
-		<h3><?php echo Podlove::t( 'Add New Show' ); ?></h3>
+		<h3><?php echo \Podlove\t( 'Add New Show' ); ?></h3>
 		<?php
-		$this->form_template( $show, 'create', Podlove::t( 'Add New Show' ) );
+		$this->form_template( $show, 'create', \Podlove\t( 'Add New Show' ) );
 	}
 	
 	private function view_template() {
-		$table = new Podlove_Show_List_Table();
+		$table = new \Podlove\Show_List_Table();
 		$table->prepare_items();
 		$table->display();
 	}
@@ -197,12 +199,12 @@ class Podlove_Show_Settings_Page {
 				?>
 				<tr>
 					<th scope="row" valign="top">
-						<label for="formats"><?php echo Podlove::t( 'Formats' ) ?></label>
+						<label for="formats"><?php echo \Podlove\t( 'Formats' ) ?></label>
 					</th>
 					<td>
 						<?php
-						$formats = Podlove_Format::all();
-						$this_show_formats = podlove_get_show_formats( $show->id );
+						$formats = \Podlove\Model\Format::all();
+						$this_show_formats = \Podlove\get_show_formats( $show->id );
 						?>
 						<?php foreach ( $formats as $format ): ?>
 							<?php $id = 'podlove_show_format_' . $format->id; ?>
@@ -225,9 +227,9 @@ class Podlove_Show_Settings_Page {
 	}
 	
 	private function edit_template() {
-		$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
 		?>
-		<h3><?php echo Podlove::t( 'Edit Show' ); ?>: <?php echo $show->name ?></h3>
+		<h3><?php echo \Podlove\t( 'Edit Show' ); ?>: <?php echo $show->name ?></h3>
 		
 		<?php $this->form_template( $show, 'save' ); ?>
 		<?php

@@ -1,5 +1,7 @@
 <?php
-abstract class Podlove_Table_Base
+namespace Podlove\Model;
+
+abstract class Base
 {
 	/**
 	 * Property dictionary for all tables
@@ -349,7 +351,7 @@ abstract class Podlove_Table_Base
 		// replace backslashes from namespace by underscores
 		$table_name = str_replace( '\\', '_', $table_name );
 		// remove Models subnamespace from name
-		$table_name = str_replace( 'Models_', '', $table_name );
+		$table_name = str_replace( 'Model_', '', $table_name );
 		// all lowercase
 		$table_name = strtolower( $table_name );
 		// prefix with $wpdb prefix
