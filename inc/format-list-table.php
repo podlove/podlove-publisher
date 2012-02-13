@@ -22,14 +22,12 @@ class Podlove_Format_List_Table extends WP_List_Table {
 	}
 
 	function column_name( $format ) {
-		$tab = ( isset( $_REQUEST[ 'tab' ] ) ) ? $_REQUEST[ 'tab' ] : 'formats';
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s&tab=%s">Edit</a>',
+				'<a href="?page=%s&action=%s&format=%s">Edit</a>',
 				$_REQUEST['page'],
 				'edit',
-				$format->id,
-				$tab
+				$format->id
 			)
 		);
 	

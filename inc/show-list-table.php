@@ -22,14 +22,12 @@ class Podlove_Show_List_Table extends WP_List_Table {
 	}
 
 	function column_name( $show ) {
-		$tab = ( isset( $_REQUEST[ 'tab' ] ) ) ? $_REQUEST[ 'tab' ] : 'shows';
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&show=%s&tab=%s">Edit</a>',
+				'<a href="?page=%s&action=%s&show=%s">Edit</a>',
 				$_REQUEST['page'],
 				'edit',
-				$show->id,
-				$tab
+				$show->id
 			)
 		);
 	
