@@ -51,75 +51,88 @@ class Podlove_Show_Settings_Page {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
 	
+	/**
+	 * Process form: save/update a show
+	 */
+	private function save() {
+		if ( ! isset( $_REQUEST[ 'show' ] ) )
+			return;
+			
+		$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
+		
+		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
+			return;
+			
+		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
+			$show->{$key} = $value;
+		}
+		$show->save();
+		
+		if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
+			podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
+		}
+		
+		$this->redirect( 'edit', $show->id );
+	}
+	
+	/**
+	 * Process form: create new show
+	 */
+	private function create() {
+		$show = new Podlove_Show;
+		
+		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
+			return;
+			
+		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
+			$show->{$key} = $value;
+		}
+		$show->save();
+		
+		if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
+			podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
+		}
+		
+		$this->redirect( 'edit', $wpdb->insert_id );
+	}
+	
+	/**
+	 * Process form: delete a show
+	 */
+	private function delete() {
+		if ( ! isset( $_REQUEST[ 'show' ] ) )
+			return;
+			
+		$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
+		podlove_delete_show_formats( $show->id );
+		$show->delete();
+
+		$this->redirect( 'index' );
+	}
+	
+	/**
+	 * Helper method: redirect to a certain page.
+	 */
+	private function redirect( $action, $show_id = NULL ) {
+		$page   = 'admin.php?page=' . $_REQUEST[ 'page' ];
+		$show   = ( $show_id ) ? '&show=' . $show_id : '';
+		$action = '&action=' . $action;
+		
+		wp_redirect( admin_url( $page . $show . $action ) );
+		exit;
+	}
+	
 	public function process_form() {
 		global $wpdb;
 		
 		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 		
 		if ( $action === 'save' ) {
-			if ( ! isset( $_REQUEST[ 'show' ] ) )
-				return;
-				
-			$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
-			
-			if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
-				return;
-				
-			foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
-				$show->{$key} = $value;
-			}
-			$show->save();
-			
-			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-				podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
-			}
-			
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&show=' . $show->id
-					. '&action=edit'
-				)
-			);
-			exit;
+			$this->save();
 		} elseif ( $action === 'create' ) {
-			$show = new Podlove_Show;
-			
-			if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
-				return;
-				
-			foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
-				$show->{$key} = $value;
-			}
-			$show->save();
-			
-			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-				podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
-			}
-			
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&show=' . $wpdb->insert_id
-					. '&action=edit'
-				)
-			);
-			exit;
+			$this->create();
 		} elseif ( $action === 'delete' ) {
-			if ( ! isset( $_REQUEST[ 'show' ] ) )
-				return;
-				
-			$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
-			podlove_delete_show_formats( $show->id );
-			$show->delete();
-
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&action=index'
-				)
-			);
-			exit;
+			$this->delete();
 		}
 	}
 	
