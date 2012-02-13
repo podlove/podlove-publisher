@@ -79,6 +79,8 @@ class Podlove_Show_Settings_Page {
 	 * Process form: create new show
 	 */
 	private function create() {
+		global $wpdb;
+		
 		$show = new Podlove_Show;
 		
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
@@ -123,8 +125,6 @@ class Podlove_Show_Settings_Page {
 	}
 	
 	public function process_form() {
-		global $wpdb;
-		
 		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 		
 		if ( $action === 'save' ) {

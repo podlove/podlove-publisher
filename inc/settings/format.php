@@ -39,63 +39,78 @@ class Podlove_Format_Settings_Page {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
 	
-	public function process_form() {
+	/**
+	 * Process form: save/update a format
+	 */
+	private function save() {
+		if ( ! isset( $_REQUEST[ 'format' ] ) )
+			return;
+			
+		$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
+		
+		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
+			return;
+			
+		foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
+			$format->{$key} = $value;
+		}
+		$format->save();
+		
+		$this->redirect( 'edit', $format->id );
+	}
+	
+	/**
+	 * Process form: create a format
+	 */
+	private function create() {
 		global $wpdb;
 		
+		$format = new Podlove_Format;
+		
+		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
+			return;
+			
+		foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
+			$format->{$key} = $value;
+		}
+		$format->save();
+
+		$this->redirect( 'edit', $wpdb->insert_id );
+	}
+	
+	/**
+	 * Process form: delete a format
+	 */
+	private function delete() {
+		if ( ! isset( $_REQUEST[ 'format' ] ) )
+			return;
+
+		Podlove_Format::find_by_id( $_REQUEST[ 'format' ] )->delete();
+		
+		$this->redirect( 'index' );
+	}
+	
+	/**
+	 * Helper method: redirect to a certain page.
+	 */
+	private function redirect( $action, $format_id = NULL ) {
+		$page   = 'admin.php?page=' . $_REQUEST[ 'page' ];
+		$show   = ( $format_id ) ? '&format=' . $format_id : '';
+		$action = '&action=' . $action;
+		
+		wp_redirect( admin_url( $page . $show . $action ) );
+		exit;
+	}
+	
+	public function process_form() {
 		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 		
 		if ( $action === 'save' ) {
-			if ( ! isset( $_REQUEST[ 'format' ] ) )
-				return;
-				
-			$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
-			
-			if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
-				return;
-				
-			foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
-				$format->{$key} = $value;
-			}
-			$format->save();
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&format=' . $format->id
-					. '&action=edit	'
-				)
-			);
-			exit;
+			$this->save();
 		} elseif ( $action === 'create' ) {
-			$format = new Podlove_Format;
-			
-			if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
-				return;
-				
-			foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
-				$format->{$key} = $value;
-			}
-			$format->save();
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&format=' . $wpdb->insert_id
-					. '&action=edit	'
-				)
-			);
-			exit;
+			$this->create();
 		} elseif ( $action === 'delete' ) {
-			if ( ! isset( $_REQUEST[ 'format' ] ) )
-				return;
-
-			Podlove_Format::find_by_id( $_REQUEST[ 'format' ] )->delete();
-
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&action=index'
-				)
-			);
-			exit;
+			$this->delete();
 		}
 	}
 	
