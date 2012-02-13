@@ -52,6 +52,14 @@ class Podcast_Post_Type {
 		$this->register_feeds_taxonomy();
 		$this->register_shows_taxonomy();
 		
+		require_once 'inc/table_base.php';
+		require_once 'inc/format.php';
+		require_once 'inc/feed.php';
+		require_once 'inc/show.php';
+		
+		require_once 'inc/format-list-table.php';
+		add_action( 'admin_init', array( $this, 'process_forms' ) );
+		
 		// add custom rss2 feed for iTunes
 		// remove_all_actions( 'do_feed_rss2' );
 		// add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
@@ -96,6 +104,30 @@ class Podcast_Post_Type {
 		);
 	}
 	
+	public function process_forms() {
+		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
+		if ( $action === 'save' ) {
+			$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
+			
+			if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
+				return;
+				
+			foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
+				$format->{$key} = $value;
+			}
+			$format->save();
+			wp_redirect(
+				admin_url(
+					'admin.php?page=' . $_REQUEST[ 'page' ]
+					. '&format=' . $format->id
+					. '&tab=' . $_REQUEST[ 'tab' ]
+					. '&action=edit'
+				)
+			);
+			exit;
+		}
+	}
+	
 	public function settings_page() {
 		require_once 'inc/tabs.php';
 		$tabs = new Podlove_Tabs;
@@ -109,6 +141,76 @@ class Podcast_Post_Type {
 		<div class="wrap">
 			<?php screen_icon( 'options-general' ); ?>
 			<?php $tabs->display(); ?>
+			
+			<?php
+			switch ( $tabs->get_current_tab() ) {
+				case 'formats':
+					$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
+					switch ( $action ) {
+						case 'edit':
+							$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
+							$field_keys = array(
+								'name' => array(
+									'label'       => Podlove::t( 'Name' ),
+									'description' => Podlove::t( '' )
+								),
+								'slug' => array(
+									'label'       => Podlove::t( 'Slug' ),
+									'description' => Podlove::t( '' )
+								),
+								'type' => array(
+									'label'       => Podlove::t( 'Format Type' ),
+									'description' => Podlove::t( 'Example: audio' )
+								),
+								'mime_type' => array(
+									'label'       => Podlove::t( 'Format Mime Type' ),
+									'description' => Podlove::t( 'Example: audio/mpeg4' )
+								),
+								'extension' => array(
+									'label'       => Podlove::t( 'Format Extension' ),
+									'description' => Podlove::t( 'Example: m4a' )
+								),
+							);
+							?>
+							<h3>Edit Format: <?php echo $format->name ?></h3>
+							
+							<form action="<?php echo admin_url( 'admin.php?page=' . $_REQUEST[ 'page' ] ) ?>" method="post">
+								<input type="hidden" name="format" value="<?php echo $format->id ?>" />
+								<input type="hidden" name="tab" value="<?php echo $_REQUEST[ 'tab' ] ?>" />
+								<input type="hidden" name="action" value="save" />
+								<table class="form-table">
+									<?php
+									foreach ( $field_keys as $key => $value ): ?>
+										<tr class="form-field">
+											<th scope="row" valign="top">
+												<label for="<?php echo $key; ?>"><?php echo $field_keys[ $key ][ 'label' ]; ?></label>
+											</th>
+											<td>
+												<input type="text" name="podlove_format[<?php echo $key; ?>]" value="<?php echo $format->{$key}; ?>" id="<?php echo $key; ?>">
+												<br />
+												<span class="description"><?php echo $field_keys[ $key ][ 'description' ]; ?></span>
+											</td>
+										</tr>
+									<?php
+									endforeach;
+									?>
+								</table>
+								<?php submit_button(); ?>
+							</form>
+							<?php
+							break;						
+						default:
+							$table = new Podlove_Format_List_Table();
+							$table->prepare_items();
+							$table->display();
+							break;
+					}
+					break;
+				default:
+					# code...
+					break;
+			}
+			?>
 		</div>
 		<?php
 	}
@@ -189,15 +291,19 @@ class Podcast_Post_Type {
 	 * Register post meta boxes.
 	 */
 	public function register_post_type_meta_boxes() {
-		add_meta_box(
-			/* $id            */ 'podlove',
-			/* $title         */ Podlove::t( 'Podcast Episode' ),
-			/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
-			/* $page          */ 'podcast'
-			/* $context       */ 
-			/* $priority      */ 
-			/* $callback_args */ 
-		);
+		$shows = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
+		
+		foreach ( $shows as $show ) {
+			add_meta_box(
+				/* $id            */ 'podlove_show_' . $show->slug,
+				/* $title         */ Podlove::t( 'Podcast Episode' ) . ' (' . $show->name . ')',
+				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
+				/* $page          */ 'podcast',
+				/* $context       */ 'advanced',
+				/* $priority      */ 'default',
+				/* $callback_args */ array( $show )
+			);
+		}
 	}
 	
 	/**
@@ -306,12 +412,21 @@ class Podcast_Post_Type {
 	/**
 	 * Meta Box Template
 	 */
-	public function post_type_meta_box_callback() {
+	public function post_type_meta_box_callback( $post, $args ) {
+		$show = $args[ 'args' ][ 0 ];
 		$meta = $this->get_meta();
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		<table class="form-table">
-			<?php do_action( 'podlove_list_shows' ); ?>
+			<tr valign="top">
+				<th scope="row">
+					<label>Enable Show</label>
+				</th>
+				<td>
+					<input type="checkbox">
+				</td>
+			</tr>
+			<?php // do_action( 'podlove_list_shows' ); ?>
 			<?php do_action( 'podlove_list_formats' ); ?>
 			<?php foreach ( $meta as $key => $value ): ?>
 				<tr valign="top">
