@@ -47,11 +47,6 @@ class Podcast_Post_Type {
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
 		
-		require_once 'abstract-taxonomy.php';
-		$this->register_formats_taxonomy();
-		$this->register_feeds_taxonomy();
-		$this->register_shows_taxonomy();
-		
 		require_once 'inc/table_base.php';
 		require_once 'inc/format.php';
 		require_once 'inc/feed.php';
@@ -59,10 +54,6 @@ class Podcast_Post_Type {
 		
 		require_once 'inc/format-list-table.php';
 		require_once 'inc/show-list-table.php';
-		
-		// add custom rss2 feed for iTunes
-		// remove_all_actions( 'do_feed_rss2' );
-		// add_action( 'do_feed_rss2', array( $this, 'add_itunes_rss_feed' ) );
 		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
@@ -117,21 +108,6 @@ class Podcast_Post_Type {
 		Work in Progress ...
 		<?php
 	}
-
-	private function register_formats_taxonomy() {
-		require_once 'formats-taxonomy.php';
-		new Podlove_File_Formats_Taxonomy();
-	}
-	
-	private function register_feeds_taxonomy() {
-		require_once 'feeds-taxonomy.php';
-		new Podlove_Feeds_Taxonomy();
-	}
-	
-	private function register_shows_taxonomy() {
-		require_once 'shows-taxonomy.php';
-		new Podlove_Shows_Taxonomy();
-	}
 	
 	public function replace_rss_with_atom( $is_comment_feed ) {
 		do_feed_atom( $is_comment_feed );
@@ -180,33 +156,22 @@ class Podcast_Post_Type {
 	}
 	
 	/**
-	 * http://your-wordpress-domain.com/feed?post_type=podcast
-	 */
-	// public function add_itunes_rss_feed( $is_comment_feed ) {
-	// 	$rss_template = plugin_dir_path( __FILE__ ) . '/feed-rss2.php';
-	// 	if ( get_query_var( 'post_type' ) == 'podcast' && file_exists( $rss_template ) )
-	// 		load_template( $rss_template );
-	// 	else
-	// 		do_feed_rss2( $is_comment_feed );
-	// }
-	
-	/**
 	 * Register post meta boxes.
 	 */
 	public function register_post_type_meta_boxes() {
-		$shows = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
-		
-		foreach ( $shows as $show ) {
-			add_meta_box(
-				/* $id            */ 'podlove_show_' . $show->slug,
-				/* $title         */ Podlove::t( 'Podcast Episode' ) . ' (' . $show->name . ')',
-				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
-				/* $page          */ 'podcast',
-				/* $context       */ 'advanced',
-				/* $priority      */ 'default',
-				/* $callback_args */ array( $show )
-			);
-		}
+		// $shows = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
+		// 
+		// foreach ( $shows as $show ) {
+		// 	add_meta_box(
+		// 		/* $id            */ 'podlove_show_' . $show->slug,
+		// 		/* $title         */ Podlove::t( 'Podcast Episode' ) . ' (' . $show->name . ')',
+		// 		/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
+		// 		/* $page          */ 'podcast',
+		// 		/* $context       */ 'advanced',
+		// 		/* $priority      */ 'default',
+		// 		/* $callback_args */ array( $show )
+		// 	);
+		// }
 	}
 	
 	/**
@@ -245,6 +210,7 @@ class Podcast_Post_Type {
 			
 		$active_slugs = array_map( 'podlove_map_slugs', $active_shows );
 		
+		/*
 		$shows_taxonomy = new Podlove_Shows_Taxonomy( false );
 		?>
 		<tr valign="top">
@@ -273,6 +239,7 @@ class Podcast_Post_Type {
 			</td>
 		</tr>
 		<?php
+		*/
 	}
 	
 	public function list_formats() {
@@ -285,6 +252,7 @@ class Podcast_Post_Type {
 			
 		$active_slugs   = array_map( 'podlove_map_slugs', $active_formats );
 		
+		/*
 		$formats_taxonomy = new Podlove_File_Formats_Taxonomy( false );
 		?>
 		<tr valign="top">
@@ -310,6 +278,7 @@ class Podcast_Post_Type {
 			</td>
 		</tr>
 		<?php
+		*/
 	}
 	
 	/**
