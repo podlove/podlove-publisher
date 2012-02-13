@@ -24,9 +24,15 @@ class Podlove_Show_List_Table extends WP_List_Table {
 	function column_name( $show ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&show=%s">Edit</a>',
-				$_REQUEST['page'],
+				'<a href="?page=%s&action=%s&show=%s">' . Podlove::t( 'Edit' ) . '</a>',
+				$_REQUEST[ 'page' ],
 				'edit',
+				$show->id
+			),
+			'delete' => sprintf(
+				'<a href="?page=%s&action=%s&show=%s">' . Podlove::t( 'Delete' ) . '</a>',
+				$_REQUEST[ 'page' ],
+				'delete',
 				$show->id
 			)
 		);

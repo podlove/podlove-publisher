@@ -83,7 +83,19 @@ class Podlove_Format_Settings_Page {
 				)
 			);
 			exit;
-			
+		} elseif ( $action === 'delete' ) {
+			if ( ! isset( $_REQUEST[ 'format' ] ) )
+				return;
+
+			Podlove_Format::find_by_id( $_REQUEST[ 'format' ] )->delete();
+
+			wp_redirect(
+				admin_url(
+					'admin.php?page=' . $_REQUEST[ 'page' ]
+					. '&action=index'
+				)
+			);
+			exit;
 		}
 	}
 	
@@ -101,7 +113,7 @@ class Podlove_Format_Settings_Page {
 				case 'edit':
 					$this->edit_template();
 					break;
-				case 'view':
+				case 'index':
 				default:
 					$this->view_template();
 					break;

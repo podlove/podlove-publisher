@@ -24,9 +24,15 @@ class Podlove_Format_List_Table extends WP_List_Table {
 	function column_name( $format ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">Edit</a>',
+				'<a href="?page=%s&action=%s&format=%s">' . Podlove::t( 'Edit' ) . '</a>',
 				$_REQUEST['page'],
 				'edit',
+				$format->id
+			),
+			'delete' => sprintf(
+				'<a href="?page=%s&action=%s&format=%s">' . Podlove::t( 'Delete' ) . '</a>',
+				$_REQUEST[ 'page' ],
+				'delete',
 				$format->id
 			)
 		);

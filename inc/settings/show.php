@@ -73,7 +73,7 @@ class Podlove_Show_Settings_Page {
 				admin_url(
 					'admin.php?page=' . $_REQUEST[ 'page' ]
 					. '&show=' . $show->id
-					. '&action=edit	'
+					. '&action=edit'
 				)
 			);
 			exit;
@@ -91,11 +91,23 @@ class Podlove_Show_Settings_Page {
 				admin_url(
 					'admin.php?page=' . $_REQUEST[ 'page' ]
 					. '&show=' . $wpdb->insert_id
-					. '&action=edit	'
+					. '&action=edit'
 				)
 			);
 			exit;
-			
+		} elseif ( $action === 'delete' ) {
+			if ( ! isset( $_REQUEST[ 'show' ] ) )
+				return;
+				
+			$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] )->delete();
+
+			wp_redirect(
+				admin_url(
+					'admin.php?page=' . $_REQUEST[ 'page' ]
+					. '&action=index'
+				)
+			);
+			exit;
 		}
 	}
 	
@@ -113,7 +125,7 @@ class Podlove_Show_Settings_Page {
 				case 'edit':
 					$this->edit_template();
 					break;
-				case 'view':
+				case 'index':
 				default:
 					$this->view_template();
 					break;
