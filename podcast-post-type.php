@@ -58,7 +58,6 @@ class Podcast_Post_Type {
 		require_once 'inc/show.php';
 		
 		require_once 'inc/format-list-table.php';
-		add_action( 'admin_init', array( $this, 'process_forms' ) );
 		
 		// add custom rss2 feed for iTunes
 		// remove_all_actions( 'do_feed_rss2' );
@@ -93,125 +92,26 @@ class Podcast_Post_Type {
 	}
 	
 	public function create_menu() {
+		$handle = 'podlove_settings_handle';
+		
 		// create new top-level menu
 		$hook = add_menu_page(
-			'Podlove Plugin Settings',
-			'Podlove',
-			'administrator',
-			'podlove_settings_handle',
-			array( $this, 'settings_page' ),
-			plugins_url( '/images/podlove-icon-16x16.png', __FILE__ )
+			/* $page_title */ 'Podlove Plugin Settings',
+			/* $menu_title */ 'Podlove',
+			/* $capability */ 'administrator',
+			/* $menu_slug  */ $handle,
+			/* $function   */ array( $this, 'settings_page' ),
+			/* $icon_url   */ plugins_url( '/images/podlove-icon-16x16.png', __FILE__ )
+			/* $position   */
 		);
-	}
-	
-	public function process_forms() {
-		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
-		if ( $action === 'save' ) {
-			$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
-			
-			if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
-				return;
-				
-			foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
-				$format->{$key} = $value;
-			}
-			$format->save();
-			wp_redirect(
-				admin_url(
-					'admin.php?page=' . $_REQUEST[ 'page' ]
-					. '&format=' . $format->id
-					. '&tab=' . $_REQUEST[ 'tab' ]
-					. '&action=edit'
-				)
-			);
-			exit;
-		}
+		
+		require 'inc/settings/format.php';
+		new Podlove_Format_Settings_Page( $handle );
 	}
 	
 	public function settings_page() {
-		require_once 'inc/tabs.php';
-		$tabs = new Podlove_Tabs;
-		$tabs->set_title( Podlove::t( 'Podlove' ) );
-		$tabs->set_tab( 'itunes', Podlove::t( 'iTunes' ) );
-		$tabs->set_tab( 'feeds', Podlove::t( 'Feeds' ) );
-		$tabs->set_tab( 'shows', Podlove::t( 'Shows' ) );
-		$tabs->set_tab( 'formats', Podlove::t( 'Formats' ) );
-		$tabs->set_default( 'itunes' );
 		?>
-		<div class="wrap">
-			<?php screen_icon( 'options-general' ); ?>
-			<?php $tabs->display(); ?>
-			
-			<?php
-			switch ( $tabs->get_current_tab() ) {
-				case 'formats':
-					$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
-					switch ( $action ) {
-						case 'edit':
-							$format = Podlove_Format::find_by_id( $_REQUEST[ 'format' ] );
-							$field_keys = array(
-								'name' => array(
-									'label'       => Podlove::t( 'Name' ),
-									'description' => Podlove::t( '' )
-								),
-								'slug' => array(
-									'label'       => Podlove::t( 'Slug' ),
-									'description' => Podlove::t( '' )
-								),
-								'type' => array(
-									'label'       => Podlove::t( 'Format Type' ),
-									'description' => Podlove::t( 'Example: audio' )
-								),
-								'mime_type' => array(
-									'label'       => Podlove::t( 'Format Mime Type' ),
-									'description' => Podlove::t( 'Example: audio/mpeg4' )
-								),
-								'extension' => array(
-									'label'       => Podlove::t( 'Format Extension' ),
-									'description' => Podlove::t( 'Example: m4a' )
-								),
-							);
-							?>
-							<h3>Edit Format: <?php echo $format->name ?></h3>
-							
-							<form action="<?php echo admin_url( 'admin.php?page=' . $_REQUEST[ 'page' ] ) ?>" method="post">
-								<input type="hidden" name="format" value="<?php echo $format->id ?>" />
-								<input type="hidden" name="tab" value="<?php echo $_REQUEST[ 'tab' ] ?>" />
-								<input type="hidden" name="action" value="save" />
-								<table class="form-table">
-									<?php
-									foreach ( $field_keys as $key => $value ): ?>
-										<tr class="form-field">
-											<th scope="row" valign="top">
-												<label for="<?php echo $key; ?>"><?php echo $field_keys[ $key ][ 'label' ]; ?></label>
-											</th>
-											<td>
-												<input type="text" name="podlove_format[<?php echo $key; ?>]" value="<?php echo $format->{$key}; ?>" id="<?php echo $key; ?>">
-												<br />
-												<span class="description"><?php echo $field_keys[ $key ][ 'description' ]; ?></span>
-											</td>
-										</tr>
-									<?php
-									endforeach;
-									?>
-								</table>
-								<?php submit_button(); ?>
-							</form>
-							<?php
-							break;						
-						default:
-							$table = new Podlove_Format_List_Table();
-							$table->prepare_items();
-							$table->display();
-							break;
-					}
-					break;
-				default:
-					# code...
-					break;
-			}
-			?>
-		</div>
+		Work in Progress ...
 		<?php
 	}
 
