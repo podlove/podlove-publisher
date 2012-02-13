@@ -71,10 +71,7 @@ class Podlove_Show_Settings_Page {
 			$show->save();
 			
 			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-				$show_formats = get_option( '_podlove_show_formats' );
-				if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
-					$show_formats = array();
-					
+				$show_formats = podlove_get_show_formats();
 				$show_formats[ $show->id ] = array_keys( $_POST[ 'podlove_show_format' ] );
 				update_option( '_podlove_show_formats', $show_formats );
 			}
@@ -99,10 +96,7 @@ class Podlove_Show_Settings_Page {
 			$show->save();
 			
 			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-				$show_formats = get_option( '_podlove_show_formats' );
-				if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
-					$show_formats = array();
-					
+				$show_formats = podlove_get_show_formats();
 				$show_formats[ $show->id ] = array_keys( $_POST[ 'podlove_show_format' ] );
 				update_option( '_podlove_show_formats', $show_formats );
 			}
@@ -120,14 +114,7 @@ class Podlove_Show_Settings_Page {
 				return;
 				
 			$show = Podlove_Show::find_by_id( $_REQUEST[ 'show' ] );
-			
-			$show_formats = get_option( '_podlove_show_formats' );
-			if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
-				$show_formats = array();
-				
-			unset( $show_formats[ $show->id ] );
-			update_option( '_podlove_show_formats', $show_formats );
-			
+			podlove_delete_show_formats( $show->id );
 			$show->delete();
 
 			wp_redirect(
@@ -206,15 +193,7 @@ class Podlove_Show_Settings_Page {
 					<td>
 						<?php
 						$formats = Podlove_Format::all();
-						$show_formats = get_option( '_podlove_show_formats' );
-						if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
-							$show_formats = array();
-							
-						if ( isset( $show_formats[ $show->id ] ) )
-							$this_show_formats = $show_formats[ $show->id ];
-						else
-							$this_show_formats = array();
-						
+						$this_show_formats = podlove_get_show_formats( $show->id );
 						?>
 						<?php foreach ( $formats as $format ): ?>
 							<?php $id = 'podlove_show_format_' . $format->id; ?>

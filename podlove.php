@@ -18,6 +18,39 @@ function podlove_map_slugs( $term ) {
 	return $term->slug;
 }
 
+/**
+ * Get all show formats or all formats for a given show.
+ * 
+ * @param int $show_id
+ * @return array
+ */
+function podlove_get_show_formats( $show_id = NULL ) {
+	$show_formats = get_option( '_podlove_show_formats' );
+	
+	if ( ! isset( $show_formats ) || ! is_array( $show_formats ) )
+		$show_formats = array();
+		
+	if ( $show_id ) {
+		if ( isset( $show_formats[ $show_id ] ) )
+			return $show_formats[ $show_id ];
+		else
+			return array();
+	} else {
+		return $show_formats;
+	}
+}
+
+/**
+ * Delete all show formats for the given show.
+ * 
+ * @param int $show_id
+ */
+function podlove_delete_show_formats( $show_id = NULL ) {
+	$show_formats = podlove_get_show_formats();
+	unset( $show_formats[ $show_id ] );
+	update_option( '_podlove_show_formats', $show_formats );
+}
+
 class Podlove {
 	
 	function __construct() {
