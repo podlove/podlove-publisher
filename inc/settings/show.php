@@ -71,9 +71,7 @@ class Podlove_Show_Settings_Page {
 			$show->save();
 			
 			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-				$show_formats = podlove_get_show_formats();
-				$show_formats[ $show->id ] = array_keys( $_POST[ 'podlove_show_format' ] );
-				update_option( '_podlove_show_formats', $show_formats );
+				podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
 			}
 			
 			wp_redirect(
@@ -96,9 +94,7 @@ class Podlove_Show_Settings_Page {
 			$show->save();
 			
 			if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-				$show_formats = podlove_get_show_formats();
-				$show_formats[ $show->id ] = array_keys( $_POST[ 'podlove_show_format' ] );
-				update_option( '_podlove_show_formats', $show_formats );
+				podlove_update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
 			}
 			
 			wp_redirect(

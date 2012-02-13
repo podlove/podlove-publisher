@@ -51,6 +51,19 @@ function podlove_delete_show_formats( $show_id = NULL ) {
 	update_option( '_podlove_show_formats', $show_formats );
 }
 
+/**
+ * Set format ids for the given show.
+ * 
+ * @param int $show_id
+ * @param array $format_ids
+ */
+function podlove_update_show_formats( $show_id, $format_ids ) {
+	$show_formats = podlove_get_show_formats();
+	$show_formats[ $show_id ] = $format_ids;
+	update_option( '_podlove_show_formats', $show_formats );
+}
+
+
 class Podlove {
 	
 	function __construct() {
