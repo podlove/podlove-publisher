@@ -47,12 +47,28 @@ class Show {
 				'label'       => \Podlove\t( 'Keywords' ),
 				'description' => \Podlove\t( 'itunes:keywords (separate with commas)' )
 			),
-			'categories' => array(
+			'category_1' => array(
 				'label'       => \Podlove\t( 'Categories' ),
-				'description' => \Podlove\t( '' ),
+				'description' => '',
 				'args' => array(
-					'type'    => 'select',
-					'options' => \Podlove\Itunes\categories()
+					'type'     => 'select',
+					'options'  => \Podlove\Itunes\categories()
+				)
+			),
+			'category_2' => array(
+				'label'       => '',
+				'description' => '',
+				'args' => array(
+					'type'     => 'select',
+					'options'  => \Podlove\Itunes\categories()
+				)
+			),
+			'category_3' => array(
+				'label'       => '',
+				'description' => '',
+				'args' => array(
+					'type'     => 'select',
+					'options'  => \Podlove\Itunes\categories()
 				)
 			),
 			'explicit' => array(

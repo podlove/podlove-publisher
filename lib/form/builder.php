@@ -2,43 +2,53 @@
 namespace Podlove\Form;
 
 class Builder {
-	function form_textarea_input( $context, $object, $field_key, $field_value, $args ) {
+	function form_textarea_input() {
 		?>
-		<textarea name="<?php echo $context; ?>[<?php echo $field_key; ?>]" id="<?php echo $context . '_' . $field_key; ?>"><?php echo $object->{$field_key}; ?></textarea>
+		<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"><?php echo $this->object->{$this->field_key}; ?></textarea>
 		<?php
 	}
 	
-	function form_text_input( $context, $object, $field_key, $field_value, $args ) {
+	function form_text_input() {
 		?>
-		<input type="text" name="<?php echo $context; ?>[<?php echo $field_key; ?>]" value="<?php echo $object->{$field_key}; ?>" id="<?php echo $context . '_' . $field_key; ?>">
+		<input type="text" name="<?php echo $this->field_name; ?>" value="<?php echo $this->object->{$this->field_key}; ?>" id="<?php echo $this->field_id; ?>">
 		<?php
 	}
 
-	function form_select_input( $context, $object, $field_key, $field_value, $args ) {
+	function form_select_input() {
 		?>
-		<select name="<?php echo $context; ?>[<?php echo $field_key; ?>]" id="<?php echo $context . '_' . $field_key; ?>">
-			<?php foreach ( $args[ 'options' ] as $key => $value ): ?>
-				<?php file_put_contents('/tmp/php.log', print_r(array($key, $object->{$field_key}), true), FILE_APPEND | LOCK_EX); ?>
-				<option value="<?php echo $key; ?>"<?php if ( $key == $object->{$field_key} ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
+		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>">
+			<option value=""><?php echo \Podlove\t( 'Please choose ...' ); ?></option>
+			<?php foreach ( $this->args[ 'options' ] as $key => $value ): ?>
+				<option value="<?php echo $key; ?>"<?php if ( $key == $this->object->{$this->field_key} ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
 			<?php endforeach; ?>
 		</select>
 		<?php
 	}
 
-	function input( $context, $object, $field_key, $field_value ) {
-		$args = ( isset( $field_value[ 'args' ] ) ) ? $field_value[ 'args' ] : array();
+	function input( $context, $object, $field_key, $field_values ) {
+		$args = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
 		$type = ( isset( $args[ 'type' ] ) ) ? $args[ 'type' ] : 'text';
 		$function = 'form_' . $type . '_input';
+		
+		$this->context      = $context;
+		$this->object       = $object;
+		$this->field_key    = $field_key;
+		$this->field_values = $field_values;
+		$this->field_value  = $object->{$field_key};
+		$this->field_name   = "{$context}[{$field_key}]";
+		$this->field_id     = "{$context}_{$field_key}";
+		$this->args         = $args;
+
 		?>
 		<tr class="form-field">
 			<th scope="row" valign="top">
-				<label for="<?php echo $context . '_' . $field_key; ?>"><?php echo $field_value[ 'label' ]; ?></label>
+				<label for="<?php echo $this->field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
 			</th>
 			<td>
-				<?php call_user_func_array( array( $this, $function ), array( $context, $object, $field_key, $field_value, $args ) ); ?>
+				<?php call_user_func_array( array( $this, $function ), array() ); ?>
 				<br />
-				<?php if ( $field_value[ 'description' ] ): ?>
-					<span class="description"><?php echo $field_value[ 'description' ]; ?></span>
+				<?php if ( $field_values[ 'description' ] ): ?>
+					<span class="description"><?php echo $field_values[ 'description' ]; ?></span>
 				<?php endif; ?>
 			</td>
 		</tr>
