@@ -42,14 +42,15 @@ function activate() {
 		$show->episode_number_length = 3;
 		$show->save();
 		
-		$feed               = new Model\Feed;
-		$feed->show_id      = $show->id;
-		$feed->format_id    = Model\Format::find_one_by_name( 'MP3 Audio' )->id;
-		$feed->name         = \Podlove\t( 'My Awesome Podcast Feed (MP3)' );
-		$feed->title        = \Podlove\t( 'My Awesome Podcast Feed' );
-		$feed->slug         = \Podlove\t( 'my-awesome-podcast-feed' );
-		$feed->block        = false;
-		$feed->discoverable = true;
+		$feed                   = new Model\Feed;
+		$feed->show_id          = $show->id;
+		$feed->format_id        = Model\Format::find_one_by_name( 'MP3 Audio' )->id;
+		$feed->name             = \Podlove\t( 'My Awesome Podcast Feed (MP3)' );
+		$feed->title            = \Podlove\t( 'My Awesome Podcast Feed' );
+		$feed->slug             = \Podlove\t( 'my-awesome-podcast-feed' );
+		$feed->block            = false;
+		$feed->discoverable     = true;
+		$feed->show_description = true;
 		$feed->save();
 	}
 }
