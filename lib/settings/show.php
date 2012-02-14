@@ -121,6 +121,10 @@ class Show {
 			foreach ( $feeds as $feed ) {
 				new \Podlove\Settings\Feed( $this->pagehook, $feed );
 			}
+			// init one feed so the hooks can be registered
+			if ( count( $feeds ) === 0 )
+				new \Podlove\Settings\Feed( $this->pagehook, NULL );
+			
 		}
 	}
 	
@@ -252,6 +256,8 @@ class Show {
 			<?php submit_button( $button_text ); ?>
 		</form>
 		
+		<h3><?php echo \Podlove\t( 'Feeds for this Show' ); ?></h3>
+		
 		<div class="metabox-holder">
 			<?php
 			if ( is_multisite() && is_plugin_active_for_network( plugin_basename( PLUGIN_FILE ) ) )
@@ -263,6 +269,10 @@ class Show {
 			do_meta_boxes( $this->pagehook, 'additional', $options );
 			?>
 		</div>
+		
+		<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" class="button-primary">
+			<?php echo \Podlove\t( 'Create New Feed' ); ?>
+		</a>
 			
 		<?php
 	}

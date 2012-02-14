@@ -75,6 +75,9 @@ class Feed {
 		
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		
+		if ( ! $feed )
+			return;
+		
 		$this->feed = $feed;
 		
 		if ( isset( $_REQUEST[ 'show' ] ) ) {
@@ -126,6 +129,15 @@ class Feed {
 	 * Process form: create new show
 	 */
 	private function create() {
+		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
+
+		if ( ! $show_id )
+			return;
+			
+		$feed = new \Podlove\Model\Feed;
+		$feed->show_id = $show_id;
+		$feed->save();
+		$this->redirect( 'edit', $show_id );
 	}
 	
 	/**
@@ -161,6 +173,8 @@ class Feed {
 			$this->save();
 		} elseif ( $action == 'delete' ) {
 			$this->delete();
+		} elseif ( $action == 'create' ) {
+			$this->create();
 		}
 	}
 	
@@ -188,8 +202,8 @@ class Feed {
 			
 			<?php submit_button(); ?>
 			<span class="delete">
-				<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $this->show->id; ?>&amp;feed=<?php echo $this->feed->id; ?>">
-					delete
+				<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $this->show->id; ?>&amp;feed=<?php echo $this->feed->id; ?>" style="float: right" class="button-secondary delete">
+					<?php echo \Podlove\t( 'Delete Feed' ); ?>
 				</a>
 			</span>
 			<br class="clear" />
