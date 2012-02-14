@@ -6,7 +6,7 @@ class Show {
 	protected $field_keys;
 	
 	public function __construct( $handle ) {
-		
+
 		$this->field_keys = array(
 			'name' => array(
 				'label'       => \Podlove\t( 'Name' ),
@@ -49,7 +49,11 @@ class Show {
 			),
 			'categories' => array(
 				'label'       => \Podlove\t( 'Categories' ),
-				'description' => \Podlove\t( '' )
+				'description' => \Podlove\t( '' ),
+				'args' => array(
+					'type'    => 'select',
+					'options' => \Podlove\Itunes\categories()
+				)
 			),
 			'explicit' => array(
 				'label'       => \Podlove\t( 'Explicit' ),
@@ -57,8 +61,8 @@ class Show {
 				'args' => array(
 					'type'    => 'select',
 					'options' => array(
-						\Podlove\t( 'yes' ) => 1,
-						\Podlove\t( 'no' )  => 0
+						1 => \Podlove\t( 'yes' ),
+						0 => \Podlove\t( 'no' )
 					)
 				)
 			),
