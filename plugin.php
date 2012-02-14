@@ -67,3 +67,26 @@ function uninstall() {
 add_action( 'init', function () {
 	new Podcast_Post_Type();
 });
+
+// ==============================================
+// = EXPERIMENTAL (UNFUNCTIONAL) BOCKMIST STUFF =
+// ==============================================
+
+add_filter('query_vars', function ( $qv ) {
+	$qv[] = 'show_slug';
+	$qv[] = 'feed_slug';
+	return $qv;
+} );
+
+// FIXME DON'T DO THIS EVERY TIME
+// add_action( 'admin_init', 'flush_rewrite_rules' );
+
+// The following defines a rule that maps URLs like /geostate/oregon to a URL request like ?geostate=oregon
+add_action('generate_rewrite_rules', '\Podlove\add_rewrite_rules');
+
+function add_rewrite_rules( $wp_rewrite ) {
+	$new_rules = array( 
+		'feed/(.+)/(.+)' => 'index.php?show_slug=' . $wp_rewrite->preg_index( 1 ) . '&amp;feed_slug=' . $wp_rewrite->preg_index( 2 )
+	);
+	$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
+}

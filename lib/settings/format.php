@@ -158,7 +158,6 @@ class Format {
 		?>
 		<form action="<?php echo admin_url( 'admin.php?page=' . $_REQUEST[ 'page' ] ) ?>" method="post">
 			<input type="hidden" name="format" value="<?php echo $format->id ?>" />
-			<input type="hidden" name="tab" value="<?php echo $_REQUEST[ 'tab' ] ?>" />
 			<input type="hidden" name="action" value="<?php echo $action; ?>" />
 			<table class="form-table">
 				<?php

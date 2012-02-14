@@ -249,7 +249,7 @@ class Show {
 			<input type="hidden" name="action" value="<?php echo $action; ?>" />
 			<table class="form-table">
 				<?php foreach ( $this->field_keys as $key => $value ): ?>
-					<?php \Podlove\Form\input( 'podlove_show', $show, $key, $value ); ?>
+					<?php \Podlove\Form\input( 'podlove_show', $show->{$key}, $key, $value ); ?>
 				<?php endforeach; ?>
 			</table>
 			

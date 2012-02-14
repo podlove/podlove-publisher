@@ -69,12 +69,18 @@ class Podcast_Post_Type {
 		
 		// get out the crowbar: enforce atom feed by redirecting all to atom
 		// DISCUSS: cool? not cool?
-		remove_all_actions( 'do_feed_rss2' );
-		add_action( 'do_feed_rss2', array( $this, 'replace_rss_with_atom' ) );
+		// remove_all_actions( 'do_feed_rss2' );
+		// add_action( 'do_feed_rss2', array( $this, 'replace_rss_with_atom' ) );
 		remove_all_actions( 'do_feed_rss' );
 		add_action( 'do_feed_rss', array( $this, 'replace_rss_with_atom' ) );
 		remove_all_actions( 'do_feed_rdf' );
 		add_action( 'do_feed_rdf', array( $this, 'replace_rss_with_atom' ) );
+		
+		add_action( 'rss2_head', array( $this, 'extend_rss2_head' ) );
+	}
+	
+	function extend_rss2_head() {
+		# code...
 	}
 	
 	public function create_menu() {
@@ -151,19 +157,15 @@ class Podcast_Post_Type {
 	 * Register post meta boxes.
 	 */
 	public function register_post_type_meta_boxes() {
-		// $shows = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
-		// 
-		// foreach ( $shows as $show ) {
-		// 	add_meta_box(
-		// 		/* $id            */ 'podlove_show_' . $show->slug,
-		// 		/* $title         */ \Podlove\t( 'Podcast Episode' ) . ' (' . $show->name . ')',
-		// 		/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
-		// 		/* $page          */ 'podcast',
-		// 		/* $context       */ 'advanced',
-		// 		/* $priority      */ 'default',
-		// 		/* $callback_args */ array( $show )
-		// 	);
-		// }
+		add_meta_box(
+			/* $id            */ 'podlove_show',
+			/* $title         */ \Podlove\t( 'Podcast Episode' ),
+			/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
+			/* $page          */ 'podcast',
+			/* $context       */ 'advanced',
+			/* $priority      */ 'default'
+			/* $callback_args */ 
+		);
 	}
 	
 	/**
@@ -180,137 +182,40 @@ class Podcast_Post_Type {
 			$meta = array();
 		
 		$defaults = array(
-			'id'          => NULL,
-			'title'       => NULL,
-			'slug'        => NULL,
-			'subtitle'    => NULL,
-			'summary'     => NULL,
-			'description' => NULL,
-			'timeline'    => NULL
+			'show_id' => NULL
 		);
 		
 		return array_merge( $defaults, $meta );
-	}
-	
-	public function list_shows() {
-		global $post;
-		$shows        = get_terms( 'podcast_shows', array( 'hide_empty' => false ) );
-		$active_shows = get_the_terms( $post->ID, 'podcast_shows' );
-		
-		if ( ! $active_shows )
-			$active_shows = array();
-			
-		$active_slugs = array_map( function ( $s ) { return $s->slug; }, $active_shows );
-		
-		/*
-		$shows_taxonomy = new Podlove_Shows_Taxonomy( false );
-		?>
-		<tr valign="top">
-			<th scope="row">
-				<label for="podcast_shows"><?php echo \Podlove\t( 'Shows' ); ?></label>
-			</th>
-			<td>
-				<?php foreach ( $shows as $show ): ?>
-					<?php $show_meta = $shows_taxonomy->get_fields( $show->term_id ); ?>
-					<?php $id = 'podcast_show_' . $show->term_id ?>
-					<input
-						type="checkbox"
-						name="<?php echo $id; ?>"
-						id="<?php echo $id; ?>"
-						class="podcast_show_checkbox"
-						data-name="<?php echo $show->name; ?>"
-						data-slug="<?php echo $show->slug; ?>"
-						data-episode_prefix="<?php echo $show_meta[ 'episode_prefix' ]; ?>"
-						data-media_file_base_uri="<?php echo $show_meta[ 'media_file_base_uri' ]; ?>"
-						data-uri_delimiter="<?php echo $show_meta[ 'uri_delimiter' ]; ?>"
-						data-episode_number_length="<?php echo $show_meta[ 'episode_number_length' ]; ?>"
-						<?php if ( in_array( $show->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
-					<label for="<?php echo $id; ?>"><?php echo $show->name; ?></label>
-					<br/>
-				<?php endforeach; ?>
-			</td>
-		</tr>
-		<?php
-		*/
-	}
-	
-	public function list_formats() {
-		global $post;
-		$formats        = get_terms( 'podcast_file_formats', array( 'hide_empty' => false ) );
-		$active_formats = get_the_terms( $post->ID, 'podcast_file_formats' );
-
-		if ( ! $active_formats )
-			$active_formats = array();
-			
-		$active_slugs   = array_map( function ( $f ) { return $f->slug; }, $active_formats );
-		
-		/*
-		$formats_taxonomy = new Podlove_File_Formats_Taxonomy( false );
-		?>
-		<tr valign="top">
-			<th scope="row">
-				<label for="podcast_formats"><?php echo \Podlove\t( 'Formats' ); ?></label>
-			</th>
-			<td>
-				<?php foreach ( $formats as $format ): ?>
-					<?php $format_meta = $formats_taxonomy->get_fields( $format->term_id ); ?>
-					<?php $id = 'podcast_format_' . $format->term_id ?>
-					<input
-						type="checkbox"
-						name="<?php echo $id; ?>"
-						id="<?php echo $id; ?>"
-						class="podcast_format_checkbox"
-						data-name="<?php echo $format->name; ?>"
-						data-slug="<?php echo $format->slug; ?>"
-						data-extension="<?php echo $format_meta[ 'extension' ]; ?>"
-						<?php if ( in_array( $format->slug, $active_slugs ) ): ?>checked="checked"<?php endif; ?>>
-					<label for="<?php echo $id; ?>"><?php echo $format->name; ?></label>
-					<br/>
-				<?php endforeach; ?>
-			</td>
-		</tr>
-		<?php
-		*/
 	}
 	
 	/**
 	 * Meta Box Template
 	 */
 	public function post_type_meta_box_callback( $post, $args ) {
-		$show = $args[ 'args' ][ 0 ];
 		$meta = $this->get_meta();
+		$raw_shows = \Podlove\Model\Show::all();
+		$shows = array();
+		foreach ( $raw_shows as $show ) {
+			$shows[ $show->id ] = $show->name;
+		}
+		
+		$form_data = array(
+			'show_id' => array(
+				'label'       => \Podlove\t( 'Select Show' ),
+				'description' => '',
+				'args' => array(
+					'type'     => 'select',
+					'options'  => $shows
+				)
+			)
+		);
+		
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		<table class="form-table">
-			<tr valign="top">
-				<th scope="row">
-					<label>Enable Show</label>
-				</th>
-				<td>
-					<input type="checkbox">
-				</td>
-			</tr>
-			<?php // do_action( 'podlove_list_shows' ); ?>
-			<?php do_action( 'podlove_list_formats' ); ?>
-			<?php foreach ( $meta as $key => $value ): ?>
-				<tr valign="top">
-					<th scope="row">
-						<label for="<?php echo $key; ?>"><?php echo \Podlove\t( $key ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="podlove_meta[<?php echo $key; ?>]" id="podlove_meta_<?php echo $key; ?>" value="<?php echo $value; ?>" id="<?php echo $key; ?>">
-					</td>
-				</tr>				
+			<?php foreach ( $form_data as $key => $value ): ?>
+				<?php \Podlove\Form\input( '_podlove_meta', $meta[ $key ], $key, $value ); ?>
 			<?php endforeach; ?>
-			<tr valign="top">
-				<th scope="row">
-					<?php echo \Podlove\t( "Enclosures" ); ?>
-				</th>
-				<td>
-					<div id="podlove_enclosure_list"></div>
-				</td>
-			</tr>
-			<?php do_action( 'podlove_meta_box_end' ); ?>
 		</table>
 		<?php
 	}
@@ -330,6 +235,6 @@ class Podcast_Post_Type {
 			return;
 		}
 
-		update_post_meta( $post_id, '_podlove_meta', $_POST[ 'podlove_meta' ] );
+		update_post_meta( $post_id, '_podlove_meta', $_POST[ '_podlove_meta' ] );
 	}
 }

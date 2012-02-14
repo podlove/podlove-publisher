@@ -199,7 +199,7 @@ class Feed {
 			<input type="hidden" name="action" value="save" />
 			<table class="form-table">
 				<?php foreach ( $this->field_keys as $key => $value ): ?>
-					<?php \Podlove\Form\input( 'podlove_feed', $this->feed, $key, $value ); ?>
+					<?php \Podlove\Form\input( 'podlove_feed', $this->feed->{$key}, $key, $value ); ?>
 				<?php endforeach; ?>
 			</table>
 			
