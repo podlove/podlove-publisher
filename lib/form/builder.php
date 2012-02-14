@@ -2,6 +2,12 @@
 namespace Podlove\Form;
 
 class Builder {
+	function form_textarea_input( $context, $object, $field_key, $field_value, $args ) {
+		?>
+		<textarea name="<?php echo $context; ?>[<?php echo $field_key; ?>]" id="<?php echo $context . '_' . $field_key; ?>"><?php echo $object->{$field_key}; ?></textarea>
+		<?php
+	}
+	
 	function form_text_input( $context, $object, $field_key, $field_value, $args ) {
 		?>
 		<input type="text" name="<?php echo $context; ?>[<?php echo $field_key; ?>]" value="<?php echo $object->{$field_key}; ?>" id="<?php echo $context . '_' . $field_key; ?>">

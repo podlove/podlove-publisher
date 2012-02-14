@@ -26,7 +26,10 @@ class Show {
 			),
 			'summary' => array(
 				'label'       => \Podlove\t( 'Summary' ),
-				'description' => \Podlove\t( 'itunes:summary' )
+				'description' => \Podlove\t( 'itunes:summary' ),
+				'args' => array(
+					'type'    => 'textarea'
+				)
 			),
 			'author_name' => array(
 				'label'       => \Podlove\t( 'Author Name' ),
