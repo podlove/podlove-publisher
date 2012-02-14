@@ -245,37 +245,9 @@ class Show {
 			<input type="hidden" name="show" value="<?php echo $show->id ?>" />
 			<input type="hidden" name="action" value="<?php echo $action; ?>" />
 			<table class="form-table">
-				<?php
-				foreach ( $this->field_keys as $key => $value ): ?>
-					<?php
-					\Podlove\Form\input( 'podlove_show', $show, $key, $value );
-					?>
-				<?php
-				endforeach;
-				?>
-				<tr>
-					<th scope="row" valign="top">
-						<label for="formats"><?php echo \Podlove\t( 'Formats' ) ?></label>
-					</th>
-					<td>
-						<?php
-						$formats = \Podlove\Model\Format::all();
-						$this_show_formats = \Podlove\get_show_formats( $show->id );
-						?>
-						<?php foreach ( $formats as $format ): ?>
-							<?php $id = 'podlove_show_format_' . $format->id; ?>
-							<label for="<?php echo $id; ?>">
-								<input
-									type="checkbox"
-									name="podlove_show_format[<?php echo $format->id; ?>]"
-									id="<?php echo $id; ?>"
-									<?php if ( in_array( $format->id, $this_show_formats ) ): ?>checked="checked"<?php endif; ?> />
-								<?php echo $format->name; ?>
-							</label>
-							<br/>
-						<?php endforeach; ?>
-					</td>
-				</tr>
+				<?php foreach ( $this->field_keys as $key => $value ): ?>
+					<?php \Podlove\Form\input( 'podlove_show', $show, $key, $value ); ?>
+				<?php endforeach; ?>
 			</table>
 			<?php submit_button( $button_text ); ?>
 		</form>
