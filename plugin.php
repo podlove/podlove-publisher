@@ -12,14 +12,14 @@ function activate() {
 	
 	if ( ! Model\Format::has_entries() ) {
 		$default_formats = array(
-			array( 'name' => 'MP3 Audio',  'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
-			array( 'name' => 'MPG Video',  'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
-			array( 'name' => 'MP4 Audio',  'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'mp4' ),
-			array( 'name' => 'MP4 Video',  'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'mp4' ),
-			array( 'name' => 'OGG Audio',  'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'ogg' ),
-			array( 'name' => 'OGG Video',  'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogg' ),
-			array( 'name' => 'WebM Audio', 'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
-			array( 'name' => 'WebM Video', 'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
+			array( 'name' => 'MP3 Audio',  'slug' => 'mp3-audio', 'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
+			array( 'name' => 'MPG Video',  'slug' => 'mpg-video', 'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
+			array( 'name' => 'MP4 Audio',  'slug' => 'mp4-audio', 'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'mp4' ),
+			array( 'name' => 'MP4 Video',  'slug' => 'mp4-video', 'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'mp4' ),
+			array( 'name' => 'OGG Audio',  'slug' => 'ogg-audio', 'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'ogg' ),
+			array( 'name' => 'OGG Video',  'slug' => 'ogg-video', 'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogg' ),
+			array( 'name' => 'WebM Audio', 'slug' => 'wbm-audio', 'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
+			array( 'name' => 'WebM Video', 'slug' => 'wbm-video', 'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
 		);
 		
 		foreach ( $default_formats as $format ) {
@@ -29,6 +29,28 @@ function activate() {
 			}
 			$f->save();
 		}
+	}
+	
+	if ( ! Model\Show::has_entries() ) {
+		$show                        = new Model\Show;
+		$show->name                  = \Podlove\t( 'My Podcast' );
+		$show->slug                  = \Podlove\t( 'my-podcast' );
+		$show->subtitle              = \Podlove\t( 'I can haz listeners?' );
+		$show->owner_email           = get_bloginfo( 'admin_email' );
+		$show->explicit              = false;
+		$show->url_delimiter         = '-';
+		$show->episode_number_length = 3;
+		$show->save();
+		
+		$feed               = new Model\Feed;
+		$feed->show_id      = $show->id;
+		$feed->format_id    = Model\Format::find_one_by_name( 'MP3 Audio' )->id;
+		$feed->name         = \Podlove\t( 'My Awesome Podcast Feed (MP3)' );
+		$feed->title        = \Podlove\t( 'My Awesome Podcast Feed' );
+		$feed->slug         = \Podlove\t( 'my-awesome-podcast-feed' );
+		$feed->block        = false;
+		$feed->discoverable = true;
+		$feed->save();
 	}
 }
 
