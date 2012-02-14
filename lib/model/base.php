@@ -144,6 +144,32 @@ abstract class Base
 		return $model;
 	}
 
+	public static function find_all_by_property( $property, $value ) {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$models = array();
+		
+		$rows = $wpdb->get_results(
+			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\''
+		);
+		
+		if ( ! $rows ) {
+			return array();
+		}
+		
+		foreach ( $rows as $row ) {
+			$model = new $class();
+			$model->flag_as_not_new();
+			foreach ( $row as $property => $value ) {
+				$model->$property = $value;
+			}
+			$models[] = $model;
+		}
+		
+		return $models;
+	}
+
 	public static function find_one_by_property( $property, $value ) {
 		global $wpdb;
 		
@@ -166,26 +192,33 @@ abstract class Base
 		return $model;
 	}
 
-	// mimic ::find_by_<property>
+	// mimic ::find_one_by_<property>
+	// mimic ::find_all_by_<property>
 	public static function __callStatic( $name, $arguments ) {
 		
 		$property = preg_replace_callback(
 			"/^find_one_by_(\w+)$/",
-			array( __CLASS__, 'map_first' ),
+			function ( $p ) { return $p[ 1 ]; },
 			$name
 		);
 		
 		if ( $property !== $name ) {
-			return self::find_one_by_property( $property, $arguments[0] );
-		} else {
-			throw new Exception("Fatal Error: Call to unknown static method $name.");
+			return self::find_one_by_property( $property, $arguments[ 0 ] );
 		}
+		
+		$property = preg_replace_callback(
+			"/^find_all_by_(\w+)$/",
+			function ( $p ) { return $p[ 1 ]; },
+			$name
+		);
+		
+		if ( $property !== $name ) {
+			return self::find_all_by_property( $property, $arguments[ 0 ] );
+		}
+		
+		throw new Exception("Fatal Error: Call to unknown static method $name.");
 	}
-	
-	public function map_first ( $property ) {
-		return $property[ 1 ];
-	}
-	
+
 	/**
 	 * Retrieve first item from the table.
 	 * 

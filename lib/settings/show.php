@@ -4,6 +4,7 @@ namespace Podlove\Settings;
 class Show {
 	
 	protected $field_keys;
+	protected $pagehook;
 	
 	public function __construct( $handle ) {
 
@@ -104,7 +105,7 @@ class Show {
 			)
 		);
 		
-		add_submenu_page(
+		$this->pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ 'Shows',
 			/* $menu_title */ 'Shows',
@@ -113,6 +114,14 @@ class Show {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+		
+		if ( isset( $_REQUEST[ 'show' ] ) ) {
+			$show_id = (int) $_REQUEST[ 'show' ];
+			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $show_id );
+			foreach ( $feeds as $feed ) {
+				new \Podlove\Settings\Feed( $this->pagehook, $feed );
+			}
+		}
 	}
 	
 	/**
@@ -127,15 +136,10 @@ class Show {
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
 			return;
 			
-		file_put_contents('/tmp/php.log', print_r($_POST[ 'podlove_show' ], true), FILE_APPEND | LOCK_EX);
 		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
 			$show->{$key} = $value;
 		}
 		$show->save();
-		
-		if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-			\Podlove\update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
-		}
 		
 		$this->redirect( 'edit', $show->id );
 	}
@@ -156,10 +160,6 @@ class Show {
 		}
 		$show->save();
 		
-		if ( isset( $_POST[ 'podlove_show_format' ] ) && is_array( $_POST[ 'podlove_show_format' ] ) ) {
-			\Podlove\update_show_formats( $show->id, array_keys( $_POST[ 'podlove_show_format' ] ) );
-		}
-		
 		$this->redirect( 'edit', $wpdb->insert_id );
 	}
 	
@@ -171,7 +171,6 @@ class Show {
 			return;
 			
 		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
-		\Podlove\delete_show_formats( $show->id );
 		$show->delete();
 
 		$this->redirect( 'index' );
@@ -249,8 +248,22 @@ class Show {
 					<?php \Podlove\Form\input( 'podlove_show', $show, $key, $value ); ?>
 				<?php endforeach; ?>
 			</table>
+			
 			<?php submit_button( $button_text ); ?>
 		</form>
+		
+		<div class="metabox-holder">
+			<?php
+			if ( is_multisite() && is_plugin_active_for_network( plugin_basename( PLUGIN_FILE ) ) )
+				$options = get_site_option( $_REQUEST[ 'page' ] );
+			else
+				$options = get_option( $_REQUEST[ 'page' ] );
+
+			do_meta_boxes( $this->pagehook, 'normal', $options );
+			do_meta_boxes( $this->pagehook, 'additional', $options );
+			?>
+		</div>
+			
 		<?php
 	}
 	

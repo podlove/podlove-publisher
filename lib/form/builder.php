@@ -24,6 +24,12 @@ class Builder {
 		</select>
 		<?php
 	}
+	
+	function form_checkbox_input() {
+		?>
+		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->object->{$this->field_key} ): ?>checked="checked"<?php endif; ?>>
+		<?php
+	}
 
 	function input( $context, $object, $field_key, $field_values ) {
 		$args = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
@@ -40,7 +46,7 @@ class Builder {
 		$this->args         = $args;
 
 		?>
-		<tr class="form-field">
+		<tr>
 			<th scope="row" valign="top">
 				<label for="<?php echo $this->field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
 			</th>
