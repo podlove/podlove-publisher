@@ -123,7 +123,7 @@ abstract class Base
 		$sql = 'SELECT COUNT(*) FROM ' . self::table_name();
 		return (int) $wpdb->get_var( $wpdb->prepare( $sql ) );
 	}
-	
+
 	public static function find_by_id( $id ) {
 		global $wpdb;
 		
@@ -216,7 +216,7 @@ abstract class Base
 			return self::find_all_by_property( $property, $arguments[ 0 ] );
 		}
 		
-		throw new Exception("Fatal Error: Call to unknown static method $name.");
+		throw new \Exception("Fatal Error: Call to unknown static method $name.");
 	}
 
 	/**

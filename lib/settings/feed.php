@@ -132,6 +132,15 @@ class Feed {
 	 * Process form: delete a show
 	 */
 	private function delete() {
+		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
+		$feed_id = ( isset( $_REQUEST[ 'feed' ] ) ) ? (int) $_REQUEST[ 'feed' ] : NULL;
+		
+		$feed = \Podlove\Model\Feed::find_one_by_show_id( $show_id );
+		
+		if ( $show_id == $feed->show_id )
+			$feed->delete();
+			
+		$this->redirect( 'edit', $show_id );
 	}
 	
 	/**
@@ -150,6 +159,8 @@ class Feed {
 		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 		if ( $action == 'save' ) {
 			$this->save();
+		} elseif ( $action == 'delete' ) {
+			$this->delete();
 		}
 	}
 	
@@ -176,6 +187,11 @@ class Feed {
 			</table>
 			
 			<?php submit_button(); ?>
+			<span class="delete">
+				<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $this->show->id; ?>&amp;feed=<?php echo $this->feed->id; ?>">
+					delete
+				</a>
+			</span>
 			<br class="clear" />
 		</form>
 		<?php

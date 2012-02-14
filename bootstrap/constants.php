@@ -10,6 +10,8 @@ namespace Podlove;
  * 	Plugin Textdomain:	this-is-my-plugin
  * 	Plugin Directory:	this-is-my-plugin
  */
+
+// FIXME: constants are not namespaced!
 define( 'PLUGIN_FILE_NAME', strtolower( preg_replace( '/([a-z])([A-Z])/', '$1-$2', __NAMESPACE__ ) ) . '.php' );
 $dir = dirname( __FILE__ );
 define( 'PLUGIN_DIR' , substr( $dir, 0, strrpos( $dir, '/' ) + 1 ) );

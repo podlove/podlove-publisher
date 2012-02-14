@@ -167,7 +167,7 @@ class Show {
 	 * Process form: delete a show
 	 */
 	private function delete() {
-		if ( ! isset( $_REQUEST[ 'show' ] ) )
+		if ( ! isset( $_REQUEST[ 'show' ] ) || isset( $_REQUEST[ 'feed' ] ) )
 			return;
 			
 		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
