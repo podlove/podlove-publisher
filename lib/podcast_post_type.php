@@ -87,7 +87,7 @@ class Podcast_Post_Type {
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ $handle,
 			/* $function   */ array( $this, 'settings_page' ),
-			/* $icon_url   */ plugins_url( '/images/podlove-icon-16x16.png', __FILE__ )
+			/* $icon_url   */ PLUGIN_URL . '/images/podlove-icon-16x16.png'
 			/* $position   */
 		);
 		
