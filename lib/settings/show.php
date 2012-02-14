@@ -22,7 +22,7 @@ class Show {
 			),
 			'cover_image' => array(
 				'label'       => \Podlove\t( 'Cover Image' ),
-				'description' => \Podlove\t( 'itunes:image ' )
+				'description' => \Podlove\t( 'itunes:image (Cover Image URL, 600x600px)' )
 			),
 			'summary' => array(
 				'label'       => \Podlove\t( 'Summary' ),
