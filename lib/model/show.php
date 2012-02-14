@@ -8,6 +8,14 @@ class Show extends Base {
 Show::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 Show::property( 'name', 'VARCHAR(255)' );
 Show::property( 'subtitle', 'VARCHAR(255)' );
+Show::property( 'cover_image', 'VARCHAR(255)' );
+Show::property( 'summary', 'TEXT' );
+Show::property( 'author_name', 'VARCHAR(255)' );
+Show::property( 'owner_name', 'VARCHAR(255)' );
+Show::property( 'owner_email', 'VARCHAR(255)' );
+Show::property( 'keywords', 'VARCHAR(255)' );
+Show::property( 'categories', 'VARCHAR(255)' );
+Show::property( 'explicit', 'INT' );
 Show::property( 'slug', 'VARCHAR(255)' );
 Show::property( 'label', 'VARCHAR(255)' );
 Show::property( 'episode_prefix', 'VARCHAR(255)' );

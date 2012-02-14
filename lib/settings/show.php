@@ -20,6 +20,45 @@ class Show {
 				'label'       => \Podlove\t( 'Show Subtitle' ),
 				'description' => \Podlove\t( 'The subtitle is used by iTunes.' )
 			),
+			'cover_image' => array(
+				'label'       => \Podlove\t( 'Cover Image' ),
+				'description' => \Podlove\t( 'itunes:image ' )
+			),
+			'summary' => array(
+				'label'       => \Podlove\t( 'Summary' ),
+				'description' => \Podlove\t( 'itunes:summary' )
+			),
+			'author_name' => array(
+				'label'       => \Podlove\t( 'Author Name' ),
+				'description' => \Podlove\t( 'itunes:author (Artist name. Publicly displayed.)' )
+			),
+			'owner_name' => array(
+				'label'       => \Podlove\t( 'Owner Name' ),
+				'description' => \Podlove\t( 'itunes:owner > itunes:name (Used by iTunes to contact you. Not publicly displayed.)' )
+			),
+			'owner_email' => array(
+				'label'       => \Podlove\t( 'Owner Email' ),
+				'description' => \Podlove\t( 'itunes:owner > itunes:email (Used by iTunes to contact you. Not publicly displayed.)' )
+			),
+			'keywords' => array(
+				'label'       => \Podlove\t( 'Keywords' ),
+				'description' => \Podlove\t( 'itunes:keywords (separate with commas)' )
+			),
+			'categories' => array(
+				'label'       => \Podlove\t( 'Categories' ),
+				'description' => \Podlove\t( '' )
+			),
+			'explicit' => array(
+				'label'       => \Podlove\t( 'Explicit' ),
+				'description' => \Podlove\t( 'itunes:explicit' ),
+				'args' => array(
+					'type'    => 'select',
+					'options' => array(
+						\Podlove\t( 'yes' ) => 1,
+						\Podlove\t( 'no' )  => 0
+					)
+				)
+			),
 			'label' => array(
 				'label'       => \Podlove\t( 'Show Label' ),
 				'description' => \Podlove\t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long. Example: POD' )
@@ -65,6 +104,7 @@ class Show {
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
 			return;
 			
+		file_put_contents('/tmp/php.log', print_r($_POST[ 'podlove_show' ], true), FILE_APPEND | LOCK_EX);
 		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
 			$show->{$key} = $value;
 		}
@@ -184,16 +224,9 @@ class Show {
 			<table class="form-table">
 				<?php
 				foreach ( $this->field_keys as $key => $value ): ?>
-					<tr class="form-field">
-						<th scope="row" valign="top">
-							<label for="<?php echo $key; ?>"><?php echo $this->field_keys[ $key ][ 'label' ]; ?></label>
-						</th>
-						<td>
-							<input type="text" name="podlove_show[<?php echo $key; ?>]" value="<?php echo $show->{$key}; ?>" id="<?php echo $key; ?>">
-							<br />
-							<span class="description"><?php echo $this->field_keys[ $key ][ 'description' ]; ?></span>
-						</td>
-					</tr>
+					<?php
+					\Podlove\Form\input( 'podlove_show', $show, $key, $value );
+					?>
 				<?php
 				endforeach;
 				?>
