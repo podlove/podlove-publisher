@@ -147,10 +147,13 @@ class Feed {
 		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
 		$feed_id = ( isset( $_REQUEST[ 'feed' ] ) ) ? (int) $_REQUEST[ 'feed' ] : NULL;
 		
-		$feed = \Podlove\Model\Feed::find_one_by_show_id( $show_id );
+		$feeds = \Podlove\Model\Feed::find_all_by_show_id( $show_id );
 		
-		if ( $show_id == $feed->show_id )
-			$feed->delete();
+		foreach ( $feeds as $feed ) {
+			if ( $feed->id == $feed_id ) {
+				$feed->delete();
+			}
+		}
 			
 		$this->redirect( 'edit', $show_id );
 	}
