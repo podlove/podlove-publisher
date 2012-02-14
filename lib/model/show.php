@@ -24,4 +24,3 @@ Show::property( 'episode_prefix', 'VARCHAR(255)' );
 Show::property( 'media_file_base_uri', 'VARCHAR(255)' );
 Show::property( 'uri_delimiter', 'VARCHAR(255)' );
 Show::property( 'episode_number_length', 'INT' );
-Show::build();

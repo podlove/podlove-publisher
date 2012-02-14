@@ -16,4 +16,3 @@ Feed::property( 'block', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
 Feed::property( 'show_description', 'INT' );
-Feed::build();

@@ -11,4 +11,3 @@ Format::property( 'slug', 'VARCHAR(255)' );
 Format::property( 'type', 'VARCHAR(255)' );
 Format::property( 'mime_type', 'VARCHAR(255)' );
 Format::property( 'extension', 'VARCHAR(255)' );
-Format::build();
