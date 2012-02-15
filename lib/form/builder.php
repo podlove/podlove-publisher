@@ -85,7 +85,9 @@ class Builder {
 			</th>
 			<td>
 				<?php call_user_func_array( array( $this, $function ), array() ); ?>
-				<br />
+				<?php if ( $type !== 'checkbox' ): ?>
+					<br />
+				<?php endif; ?>
 				<?php if ( $field_values[ 'description' ] ): ?>
 					<span class="description"><?php echo $field_values[ 'description' ]; ?></span>
 				<?php endif; ?>
