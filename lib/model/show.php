@@ -2,6 +2,15 @@
 namespace Podlove\Model;
 
 class Show extends Base {
+
+	public function full_title() {
+		$t = $this->name;
+		
+		if ( $this->subtitle )
+			$t = $t . ' - ' . $this->subtitle;
+		
+		return $t;
+	}
 	
 }
 

@@ -157,15 +157,45 @@ class Podcast_Post_Type {
 	 * Register post meta boxes.
 	 */
 	public function register_post_type_meta_boxes() {
-		add_meta_box(
-			/* $id            */ 'podlove_show',
-			/* $title         */ \Podlove\t( 'Podcast Episode' ),
-			/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
-			/* $page          */ 'podcast',
-			/* $context       */ 'advanced',
-			/* $priority      */ 'default'
-			/* $callback_args */ 
+		$shows = \Podlove\Model\Show::all();
+		foreach ( $shows as $show ) {
+			add_meta_box(
+				/* $id            */ 'podlove_show',
+				/* $title         */ \Podlove\t( 'Podcast: ' . $show->full_title() ),
+				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
+				/* $page          */ 'podcast',
+				/* $context       */ 'advanced',
+				/* $priority      */ 'default',
+				/* $callback_args */ array( $show )
+			);
+		}
+	}
+	
+	/**
+	 * Meta Box Template
+	 */
+	public function post_type_meta_box_callback( $post, $args ) {
+		$show = $args[ 'args' ][ 0 ];
+		$meta = $this->get_meta();
+		
+		$form_data = array(
+			'show_id' => array(
+				'label'       => \Podlove\t( 'Enable Show' ),
+				'description' => '',
+				'args' => array(
+					'type'     => 'checkbox'
+				)
+			)
 		);
+		
+		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
+		?>
+		<table class="form-table">
+			<?php foreach ( $form_data as $key => $value ): ?>
+				<?php \Podlove\Form\input( '_podlove_meta', $meta[ $key ], $key, $value ); ?>
+			<?php endforeach; ?>
+		</table>
+		<?php
 	}
 	
 	/**
@@ -186,38 +216,6 @@ class Podcast_Post_Type {
 		);
 		
 		return array_merge( $defaults, $meta );
-	}
-	
-	/**
-	 * Meta Box Template
-	 */
-	public function post_type_meta_box_callback( $post, $args ) {
-		$meta = $this->get_meta();
-		$raw_shows = \Podlove\Model\Show::all();
-		$shows = array();
-		foreach ( $raw_shows as $show ) {
-			$shows[ $show->id ] = $show->name;
-		}
-		
-		$form_data = array(
-			'show_id' => array(
-				'label'       => \Podlove\t( 'Select Show' ),
-				'description' => '',
-				'args' => array(
-					'type'     => 'select',
-					'options'  => $shows
-				)
-			)
-		);
-		
-		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
-		?>
-		<table class="form-table">
-			<?php foreach ( $form_data as $key => $value ): ?>
-				<?php \Podlove\Form\input( '_podlove_meta', $meta[ $key ], $key, $value ); ?>
-			<?php endforeach; ?>
-		</table>
-		<?php
 	}
 	
 	public function save_postdata( $post_id ) {
