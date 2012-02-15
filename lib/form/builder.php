@@ -43,8 +43,18 @@ class Builder {
 				$checked = $this->args[ 'default' ];
 			}
 			
+			$name = $this->field_name . '[' . $key . ']';
+			
+			// generate an id without braces by turning braces into underscores
+			$id = $this->field_id . '_' . $key;
+			$id = str_replace( array( '[', ']' ), '_', $id );
+			$id = str_replace( '__', '_', $id );
+			
 			?>
-			<input type="checkbox" name="<?php echo $this->field_name; ?>[<?php echo $key; ?>]" id="<?php echo $this->field_id; ?>_<?php echo $key; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?>> <?php echo $value; ?><br/>
+			<label for="<?php echo $id; ?>">
+				<input type="checkbox" name="<?php echo $name; ?>]" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?>> <?php echo $value; ?>
+			</label>
+			<br/>
 			<?php
 		}
 	}
