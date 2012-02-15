@@ -160,21 +160,9 @@ class Format {
 			<input type="hidden" name="format" value="<?php echo $format->id ?>" />
 			<input type="hidden" name="action" value="<?php echo $action; ?>" />
 			<table class="form-table">
-				<?php
-				foreach ( $this->field_keys as $key => $value ): ?>
-					<tr class="form-field">
-						<th scope="row" valign="top">
-							<label for="<?php echo $key; ?>"><?php echo $this->field_keys[ $key ][ 'label' ]; ?></label>
-						</th>
-						<td>
-							<input type="text" name="podlove_format[<?php echo $key; ?>]" value="<?php echo $format->{$key}; ?>" id="<?php echo $key; ?>">
-							<br />
-							<span class="description"><?php echo $this->field_keys[ $key ][ 'description' ]; ?></span>
-						</td>
-					</tr>
-				<?php
-				endforeach;
-				?>
+				<?php foreach ( $this->field_keys as $key => $value ): ?>
+					<?php \Podlove\Form\input( 'podlove_format', $format->{$key}, $key, $value ); ?>
+				<?php endforeach; ?>
 			</table>
 			<?php submit_button( $button_text ); ?>
 		</form>
