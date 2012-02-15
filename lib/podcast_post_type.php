@@ -13,6 +13,39 @@ class Podcast_Post_Type {
 	 * Register custom "podcast" post type.
 	 */
 	public function __construct() {
+		
+		$this->form_data = array(
+			'enable_show' => array(
+				'label'       => \Podlove\t( 'Enable Show' ),
+				'description' => '',
+				'args' => array(
+					'type'     => 'checkbox',
+					'default'  => true
+				)
+			),
+			'file_slug' => array(
+				'label'       => \Podlove\t( 'Episode File Slug' ),
+				'description' => ''
+			),
+			'formats' => array(
+				'label'       => \Podlove\t( 'File Formats' ),
+				'description' => '',
+				'args' => array(
+					'type'    => 'multiselect',
+					'options' => NULL, // requires $show context
+					'default' => true
+				)
+			),
+			'block' => array(
+				'label'       => \Podlove\t( 'Block?' ),
+				'description' => \Podlove\t( 'Forbid iTunes to list this episode.' ),
+				'args' => array(
+					'type'     => 'checkbox',
+					'default'  => false
+				)
+			),
+		);
+		
 		$labels = array(
 			'name'               => \Podlove\t( 'Episodes' ),
 			'singular_name'      => \Podlove\t( 'Episode' ),
@@ -160,7 +193,7 @@ class Podcast_Post_Type {
 		$shows = \Podlove\Model\Show::all();
 		foreach ( $shows as $show ) {
 			add_meta_box(
-				/* $id            */ 'podlove_show',
+				/* $id            */ 'podlove_show_' . $show->id,
 				/* $title         */ \Podlove\t( 'Podcast: ' . $show->full_title() ),
 				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
 				/* $page          */ 'podcast',
@@ -176,23 +209,21 @@ class Podcast_Post_Type {
 	 */
 	public function post_type_meta_box_callback( $post, $args ) {
 		$show = $args[ 'args' ][ 0 ];
-		$meta = $this->get_meta();
+		$all_meta = $this->get_meta();
+		$meta = $all_meta[ $show->id ];
 		
-		$form_data = array(
-			'show_id' => array(
-				'label'       => \Podlove\t( 'Enable Show' ),
-				'description' => '',
-				'args' => array(
-					'type'     => 'checkbox'
-				)
-			)
-		);
+		$format_options = array();
+		$feeds = \Podlove\Model\Feed::find_all_by_show_id( $show->id );
+		foreach ( $feeds as $feed ) {
+			$format_options[ $feed->format_id ] = \Podlove\Model\Format::find_by_id( $feed->format_id )->name;
+		}
+		$this->form_data[ 'formats' ][ 'args' ][ 'options' ] = $format_options;
 		
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		<table class="form-table">
-			<?php foreach ( $form_data as $key => $value ): ?>
-				<?php \Podlove\Form\input( '_podlove_meta', $meta[ $key ], $key, $value ); ?>
+			<?php foreach ( $this->form_data as $key => $value ): ?>
+				<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $meta[ $key ], $key, $value ); ?>
 			<?php endforeach; ?>
 		</table>
 		<?php
@@ -206,16 +237,28 @@ class Podcast_Post_Type {
 	private function get_meta() {
 		global $post;
 		
+		$defaults = array();
+		foreach ( $this->form_data as $key => $value ) {
+			$defaults[ $key ] = NULL;
+			if ( isset( $value[ 'args' ] ) && isset( $value[ 'args' ][ 'default' ] ) )
+				$defaults[ $key ] = $value[ 'args' ][ 'default' ];
+		}
+		
 		$meta = get_post_meta( $post->ID, '_podlove_meta', true );
 		
 		if ( ! is_array( $meta ) )
 			$meta = array();
 		
-		$defaults = array(
-			'show_id' => NULL
-		);
+		$shows = \Podlove\Model\Show::all();
+		foreach ( $shows as $show ) {
+			if ( ! isset( $meta[ $show->id ] ) ) {
+				$meta[ $show->id ] = array();
+			}
+				
+			$meta[ $show->id ] = array_merge( $defaults, $meta[ $show->id ] );
+		}
 		
-		return array_merge( $defaults, $meta );
+		return $meta;
 	}
 	
 	public function save_postdata( $post_id ) {
@@ -231,6 +274,26 @@ class Podcast_Post_Type {
 			return;
 		} else {
 			return;
+		}
+
+		if ( ! isset( $_POST[ '_podlove_meta' ] ) || ! is_array( $_POST[ '_podlove_meta' ] ) )
+			return;
+		
+		// What do we needs these loops for?
+		// When you submit a checkbox, the value is "on" when active.
+		// However, when unchecked, nothing is send at all. So, to determine
+		// the difference between "new" and "unchecked", we populate all unset
+		// fields with false manually.
+		$formats = array_map( function( $f ) { return $f->id; }, \Podlove\Model\Format::all() );
+		foreach ( $_POST[ '_podlove_meta' ] as $show_id => $_ ) {
+			foreach ( $this->form_data as $key => $value ) {
+				if ( ! isset( $_POST[ '_podlove_meta' ][ $show_id ][ $key ] ) )
+					$_POST[ '_podlove_meta' ][ $show_id ][ $key ] = false;
+			}
+			foreach ( $formats as $format_id ) {
+				if ( ! isset( $_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] ) )
+					$_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] = false;
+			}
 		}
 
 		update_post_meta( $post_id, '_podlove_meta', $_POST[ '_podlove_meta' ] );

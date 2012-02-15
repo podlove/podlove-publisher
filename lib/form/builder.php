@@ -26,21 +26,44 @@ class Builder {
 	}
 	
 	function form_checkbox_input() {
+		$this->field_value = in_array( $this->field_value, array( 1, '1', true, 'true', 'on' ) );
 		?>
 		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->field_value ): ?>checked="checked"<?php endif; ?>>
 		<?php
 	}
+	
+	function form_multiselect_input() {
+		if ( ! isset( $this->field_value ) || ! is_array( $this->field_value ) )
+			$this->field_value = array();
+			
+		foreach ( $this->args[ 'options' ] as $key => $value ) {
+			if ( isset( $this->field_value[ $key ] ) ) {
+				$checked = $this->field_value[ $key ];
+			} else {
+				$checked = $this->args[ 'default' ];
+			}
+			
+			?>
+			<input type="checkbox" name="<?php echo $this->field_name; ?>[<?php echo $key; ?>]" id="<?php echo $this->field_id; ?>_<?php echo $key; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?>> <?php echo $value; ?><br/>
+			<?php
+		}
+	}
 
 	function input( $context, $value, $field_key, $field_values ) {
-		$args = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
-		$type = ( isset( $args[ 'type' ] ) ) ? $args[ 'type' ] : 'text';
+		$args     = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
+		$type     = ( isset( $args[ 'type' ] ) )         ? $args[ 'type' ]         : 'text';
+		$default  = ( isset( $args[ 'default' ] ) )      ? $args[ 'default' ]      : NULL;
 		$function = 'form_' . $type . '_input';
 		
+		if ( $value !== NULL ) {
+			$this->field_value = $value;
+		} else {
+			$this->field_value = $default;
+		}
+		
 		$this->context      = $context;
-		// $this->object       = $object;
 		$this->field_key    = $field_key;
 		$this->field_values = $field_values;
-		$this->field_value  = $value;
 		$this->field_name   = "{$context}[{$field_key}]";
 		$this->field_id     = "{$context}_{$field_key}";
 		$this->args         = $args;
