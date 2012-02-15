@@ -23,11 +23,11 @@ class Feed {
 		
 		$this->field_keys = array(
 			'name' => array(
-				'label'       => \Podlove\t( 'Name' ),
-				'description' => \Podlove\t( '' )
+				'label'       => \Podlove\t( 'Internal Name' ),
+				'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' )
 			),
 			'title' => array(
-				'label'       => \Podlove\t( 'Title' ),
+				'label'       => \Podlove\t( 'Feed Title' ),
 				'description' => \Podlove\t( '' )
 			),
 			'slug' => array(
@@ -42,34 +42,35 @@ class Feed {
 					'options'  => $formats
 				)
 			),
+			// @todo: add PING url; see feedburner doc
 			'redirect_url' => array(
 				'label'       => \Podlove\t( 'Redirect Url' ),
 				'description' => \Podlove\t( 'e.g. Feedburner URL' )
 			),
 			'block' => array(
-				'label'       => \Podlove\t( 'Block feed' ),
-				'description' => \Podlove\t( 'itunes:block' ),
+				'label'       => \Podlove\t( 'Block feed?' ),
+				'description' => \Podlove\t( 'Forbid iTunes to list this feed.' ),
 				'args' => array(
 					'type'     => 'checkbox'
 				)
 			),
 			'discoverable' => array(
-				'label'       => \Podlove\t( 'Discoverable' ),
-				'description' => \Podlove\t( '' ),
+				'label'       => \Podlove\t( 'Discoverable?' ),
+				'description' => \Podlove\t( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.' ),
+				'args' => array(
+					'type'     => 'checkbox'
+				)
+			),
+			'show_description' => array(
+				'label'       => \Podlove\t( 'Show Description?' ),
+				'description' => \Podlove\t( 'You may want to hide the episode subscriptions to reduce file size.' ),
 				'args' => array(
 					'type'     => 'checkbox'
 				)
 			),
 			'limit_items' => array(
 				'label'       => \Podlove\t( 'Limit Items' ),
-				'description' => \Podlove\t( '' )
-			),
-			'show_description' => array(
-				'label'       => \Podlove\t( 'Show Description' ),
-				'description' => \Podlove\t( 'You may want to hide the episode subscriptions to reduce file size.' ),
-				'args' => array(
-					'type'     => 'checkbox'
-				)
+				'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' )
 			)
 		);
 		

@@ -10,46 +10,46 @@ class Show {
 
 		$this->field_keys = array(
 			'name' => array(
-				'label'       => \Podlove\t( 'Name' ),
-				'description' => \Podlove\t( '' )
-			),
-			'slug' => array(
-				'label'       => \Podlove\t( 'Slug' ),
+				'label'       => \Podlove\t( 'Show Title' ),
 				'description' => \Podlove\t( '' )
 			),
 			'subtitle' => array(
 				'label'       => \Podlove\t( 'Show Subtitle' ),
 				'description' => \Podlove\t( 'The subtitle is used by iTunes.' )
 			),
+			'slug' => array(
+				'label'       => \Podlove\t( 'Slug' ),
+				'description' => \Podlove\t( '' )
+			),
 			'cover_image' => array(
 				'label'       => \Podlove\t( 'Cover Image' ),
-				'description' => \Podlove\t( 'itunes:image (Cover Image URL, 600x600px)' )
+				'description' => \Podlove\t( 'Cover Image URL, 600x600px' )
 			),
 			'summary' => array(
 				'label'       => \Podlove\t( 'Summary' ),
-				'description' => \Podlove\t( 'itunes:summary' ),
+				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
 				'args' => array(
 					'type'    => 'textarea'
 				)
 			),
 			'author_name' => array(
 				'label'       => \Podlove\t( 'Author Name' ),
-				'description' => \Podlove\t( 'itunes:author (Artist name. Publicly displayed.)' )
+				'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' )
 			),
 			'owner_name' => array(
 				'label'       => \Podlove\t( 'Owner Name' ),
-				'description' => \Podlove\t( 'itunes:owner > itunes:name (Used by iTunes to contact you. Not publicly displayed.)' )
+				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' )
 			),
 			'owner_email' => array(
 				'label'       => \Podlove\t( 'Owner Email' ),
-				'description' => \Podlove\t( 'itunes:owner > itunes:email (Used by iTunes to contact you. Not publicly displayed.)' )
+				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' )
 			),
 			'keywords' => array(
 				'label'       => \Podlove\t( 'Keywords' ),
-				'description' => \Podlove\t( 'itunes:keywords (separate with commas)' )
+				'description' => \Podlove\t( 'List of keywords. Separate with commas.' )
 			),
 			'category_1' => array(
-				'label'       => \Podlove\t( 'Categories' ),
+				'label'       => \Podlove\t( 'iTunes Categories' ),
 				'description' => '',
 				'args' => array(
 					'type'     => 'select',
@@ -73,36 +73,32 @@ class Show {
 				)
 			),
 			'explicit' => array(
-				'label'       => \Podlove\t( 'Explicit' ),
-				'description' => \Podlove\t( 'itunes:explicit' ),
+				'label'       => \Podlove\t( 'Explicit Content?' ),
+				'description' => \Podlove\t( '' ),
 				'args' => array(
-					'type'    => 'select',
-					'options' => array(
-						1 => \Podlove\t( 'yes' ),
-						0 => \Podlove\t( 'no' )
-					)
+					'type'    => 'checkbox'
 				)
 			),
-			'label' => array(
-				'label'       => \Podlove\t( 'Show Label' ),
-				'description' => \Podlove\t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long. Example: POD' )
-			),
-			'episode_prefix' => array(
-				'label'       => \Podlove\t( 'Episode Prefix' ),
-				'description' => \Podlove\t( 'Slug for file URI. Example: pod_' )
-			),
+			// 'label' => array(
+			// 	'label'       => \Podlove\t( 'Show Label' ),
+			// 	'description' => \Podlove\t( 'The show label is the prefix for every show title. It should be all caps and 3 or 4 characters long. Example: POD' )
+			// ),
+			// 'episode_prefix' => array(
+			// 	'label'       => \Podlove\t( 'Episode Prefix' ),
+			// 	'description' => \Podlove\t( 'Slug for file URI. Example: pod_' )
+			// ),
 			'media_file_base_uri' => array(
 				'label'       => \Podlove\t( 'Media File Base URI' ),
 				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' )
 			),
-			'uri_delimiter' => array(
-				'label'       => \Podlove\t( 'URI Delimiter' ),
-				'description' => \Podlove\t( 'Example: -' )
-			),
-			'episode_number_length' => array(
-				'label'       => \Podlove\t( 'Episode Number Length' ),
-				'description' => \Podlove\t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes. Example: 3' )
-			)
+			// 'uri_delimiter' => array(
+			// 	'label'       => \Podlove\t( 'URI Delimiter' ),
+			// 	'description' => \Podlove\t( 'Example: -' )
+			// ),
+			// 'episode_number_length' => array(
+			// 	'label'       => \Podlove\t( 'Episode Number Length' ),
+			// 	'description' => \Podlove\t( 'If the episode number has fewer digits than defined here, it will be prefixed with leading zeroes. Example: 3' )
+			// )
 		);
 		
 		$this->pagehook = add_submenu_page(

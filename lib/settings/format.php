@@ -12,10 +12,6 @@ class Format {
 				'label'       => \Podlove\t( 'Name' ),
 				'description' => \Podlove\t( '' )
 			),
-			'slug' => array(
-				'label'       => \Podlove\t( 'Slug' ),
-				'description' => \Podlove\t( '' )
-			),
 			'type' => array(
 				'label'       => \Podlove\t( 'Format Type' ),
 				'description' => \Podlove\t( 'Example: audio' )
@@ -23,6 +19,10 @@ class Format {
 			'mime_type' => array(
 				'label'       => \Podlove\t( 'Format Mime Type' ),
 				'description' => \Podlove\t( 'Example: audio/mpeg4' )
+			),
+			'slug' => array(
+				'label'       => \Podlove\t( 'Slug' ),
+				'description' => \Podlove\t( '' )
 			),
 			'extension' => array(
 				'label'       => \Podlove\t( 'Format Extension' ),
