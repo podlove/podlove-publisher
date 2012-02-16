@@ -158,6 +158,9 @@ add_action( 'wp', function () {
 		
 		$keywords = sprintf( '<itunes:keywords>%s</itunes:keywords>', $show->keywords );
 		echo apply_filters( 'podlove_rss2_itunes_keywords', $keywords );
+		
+		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->block ) ? 'yes' : 'no' );
+		echo apply_filters( 'podlove_rss2_itunes_block', $block );
 	} );
 
 	add_action( 'rss2_item', function () use ( $show, $feed, $format ) {
