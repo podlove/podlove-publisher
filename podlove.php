@@ -19,4 +19,5 @@ if ( ! $correct_php_version ) {
 
 require_once 'bootstrap/bootstrap.php';
 require_once 'lib/helper.php';
+require_once 'lib/feeds.php';
 require_once 'plugin.php';
