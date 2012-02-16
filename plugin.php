@@ -104,7 +104,7 @@ add_action( 'wp', function () {
 	
 	// override feed title
 	add_filter( 'wp_title_rss', function ( $title ) use ( $feed ) {
-		return apply_filters( 'podlove_rss2_title', $feed->title );
+		return apply_filters( 'podlove_rss2_title', htmlspecialchars( $feed->title ) );
 	} );
 
 	add_filter( 'option_rss_language', function ( $language ) use ( $feed ) {
@@ -198,7 +198,7 @@ add_action( 'wp', function () {
 		$author = sprintf( '<itunes:author>%s</itunes:author>', $show->author_name );
 		echo apply_filters( 'podlove_rss2_itunes_author', $author );
 		
-		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', strip_tags( $post->post_excerpt ) );
+		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', htmlspecialchars( strip_tags( $post->post_excerpt ) ) );
 		echo apply_filters( 'podlove_rss2_itunes_summary', $summary );
 		
 		$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
