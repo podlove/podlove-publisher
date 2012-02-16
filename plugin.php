@@ -161,6 +161,10 @@ add_action( 'wp', function () {
 		
 		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->block ) ? 'yes' : 'no' );
 		echo apply_filters( 'podlove_rss2_itunes_block', $block );
+		
+		// @todo support "clean" tag
+		$explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $show->explicit ) ? 'yes' : 'no' );
+		echo apply_filters( 'podlove_rss2_itunes_explicit', $explicit );
 	} );
 
 	add_action( 'rss2_item', function () use ( $show, $feed, $format ) {
