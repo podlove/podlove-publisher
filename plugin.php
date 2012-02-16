@@ -93,14 +93,58 @@ add_action( 'wp', function () {
 		return;
 	
 	// @fixme either slugs are unique or we need to check for id or something
-	$show = \Podlove\Model\Show::find_one_by_slug( $show_slug );
-	$feed = \Podlove\Model\Feed::find_one_by_slug( $feed_slug );
- 
-	add_action( 'rss2_item', function () use ( $show, $feed ) {
+	$show   = \Podlove\Model\Show::find_one_by_slug( $show_slug );
+	$feed   = \Podlove\Model\Feed::find_one_by_slug( $feed_slug );
+	$format = \Podlove\Model\Format::find_by_id( $feed->format_id );
+
+	// mute bloginfo_rss( 'name' ) 
+	add_filter( 'bloginfo_rss', function ( $value, $key ) {
+		return apply_filters( 'podlove_rss2_title_name', ( $key == 'name' ) ? '' : $value );
+	}, 10, 2 );
+	
+	// override feed title
+	add_filter( 'wp_title_rss', function ( $title ) use ( $feed ) {
+		return apply_filters( 'podlove_rss2_title', $feed->title );
+	} );
+
+	add_action( 'rss2_head', function () use ( $show, $feed, $format ) {
+		$author = sprintf( '<itunes:author>%s</itunes:author>', $show->author_name );
+		echo apply_filters( 'podlove_rss2_itunes_author', $author );
+		
+		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $show->summary );
+		echo apply_filters( 'podlove_rss2_itunes_summary', $summary );
+		
+		$categories = \Podlove\Itunes\categories( false );
+		
+		$category_html = '';
+		for ( $i = 1; $i <= 3; $i++ ) { 
+			$category_id = $show->{'category_' . $i};
+			
+			if ( ! $category_id )
+				continue;
+			
+			list( $cat, $subcat ) = explode( '-', $category_id );
+			
+			if ( $subcat == '00' ) {
+				$category_html .= sprintf(
+					'<itunes:category text="%s"></itunes:category>',
+					htmlspecialchars( $categories[ $category_id ] )
+				);
+			} else {
+				$category_html .= sprintf(
+					'<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>',
+					htmlspecialchars( $categories[ $cat . '-00' ] ),
+					htmlspecialchars( $categories[ $category_id ] )
+				);
+			}
+		}
+		echo apply_filters( 'podlove_rss2_itunes_categories', $category_html );
+	} );
+
+	add_action( 'rss2_item', function () use ( $show, $feed, $format ) {
 		global $post;
 		
 		$meta   = get_post_meta( $post->ID, '_podlove_meta', true );
-		$format = \Podlove\Model\Format::find_by_id( $feed->format_id );
 		
 		$url  = $show->media_file_base_uri;
 		$url .= $meta[ $show->id ][ 'file_slug' ];
@@ -125,7 +169,6 @@ add_action( 'admin_init', 'flush_rewrite_rules' );
 
 // The following defines a rule that maps URLs like /geostate/oregon to a URL request like ?geostate=oregon
 add_action( 'generate_rewrite_rules', function ( $wp_rewrite ) {
-	file_put_contents('/tmp/php.log', print_r("\n" . "never?", true), FILE_APPEND | LOCK_EX);
 	$new_rules = array( 
 		'feed/(.+)/(.+)' => 'index.php?show_slug=' . $wp_rewrite->preg_index( 1 ) . '&feed_slug=' . $wp_rewrite->preg_index( 2 )
 	);
