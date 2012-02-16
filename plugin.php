@@ -152,6 +152,12 @@ add_action( 'wp', function () {
 			$show->owner_email
 		);
 		echo apply_filters( 'podlove_rss2_itunes_owner', $owner );
+		
+		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $show->subtitle );
+		echo apply_filters( 'podlove_rss2_itunes_subtitle', $subtitle );
+		
+		$keywords = sprintf( '<itunes:keywords>%s</itunes:keywords>', $show->keywords );
+		echo apply_filters( 'podlove_rss2_itunes_keywords', $keywords );
 	} );
 
 	add_action( 'rss2_item', function () use ( $show, $feed, $format ) {
