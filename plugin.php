@@ -148,16 +148,28 @@ add_action( 'wp', function () {
 	add_action( 'rss2_item', function () use ( $show, $feed, $format ) {
 		global $post;
 		
-		$meta   = get_post_meta( $post->ID, '_podlove_meta', true );
+		$meta      = get_post_meta( $post->ID, '_podlove_meta', true );
+		$show_meta = $meta[ $show->id ];
+
+		$enclosure_file_size = isset( $show_meta[ 'file_size' ] ) ? $show_meta[ 'file_size' ] : 0;
+		$enclosure_duration  = isset( $show_meta[ 'duration' ] ) ? $show_meta[ 'duration' ] : 0;
+		$file_slug           = isset( $show_meta[ 'file_slug' ] ) ? $show_meta[ 'file_slug' ] : NULL;
 		
-		$url  = $show->media_file_base_uri;
-		$url .= $meta[ $show->id ][ 'file_slug' ];
-		$url .= $format->slug;
-		$url .= '.';
-		$url .= $format->extension;
-		?>
-		<enclosure url="<?php echo $url; ?>" length="0" type="<?php echo $format->mime_type; ?>" />
-		<?php
+		if ( ! $file_slug ) {
+			// TODO might be a good idea to notify the podcast admin
+		}
+		
+		$enclosure_url  = $show->media_file_base_uri;
+		$enclosure_url .= $file_slug;
+		$enclosure_url .= $format->slug;
+		$enclosure_url .= '.';
+		$enclosure_url .= $format->extension;
+		
+		$enclosure = sprintf( '<enclosure url="%s" length="%s" type="%s" />', $enclosure_url, $enclosure_file_size, $format->mime_type );
+		echo apply_filters( 'podlove_rss2_enclosure', $enclosure );
+		
+		$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $enclosure_duration );
+		echo apply_filters( 'podlove_rss2_itunes_duration', $duration );
 	} );
 
 	$args = array(

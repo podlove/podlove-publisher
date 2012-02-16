@@ -36,6 +36,14 @@ class Podcast_Post_Type {
 					'default' => true
 				)
 			),
+			'duration' => array(
+				'label'       => \Podlove\t( 'Duration' ),
+				'description' => ''
+			),
+			'file_size' => array(
+				'label'       => \Podlove\t( 'File Size' ),
+				'description' => ''
+			),
 			'block' => array(
 				'label'       => \Podlove\t( 'Block?' ),
 				'description' => \Podlove\t( 'Forbid iTunes to list this episode.' ),
