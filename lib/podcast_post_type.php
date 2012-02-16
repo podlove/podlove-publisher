@@ -44,6 +44,10 @@ class Podcast_Post_Type {
 				'label'       => \Podlove\t( 'File Size' ),
 				'description' => ''
 			),
+			'cover_art_url' => array(
+				'label'       => \Podlove\t( 'Cover Art URL' ),
+				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' )
+			),
 			'block' => array(
 				'label'       => \Podlove\t( 'Block?' ),
 				'description' => \Podlove\t( 'Forbid iTunes to list this episode.' ),

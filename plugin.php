@@ -118,8 +118,7 @@ add_action( 'wp', function () {
 		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $show->summary );
 		echo apply_filters( 'podlove_rss2_itunes_summary', $summary );
 		
-		$categories = \Podlove\Itunes\categories( false );
-		
+		$categories = \Podlove\Itunes\categories( false );	
 		$category_html = '';
 		for ( $i = 1; $i <= 3; $i++ ) { 
 			$category_id = $show->{'category_' . $i};
@@ -143,6 +142,16 @@ add_action( 'wp', function () {
 			}
 		}
 		echo apply_filters( 'podlove_rss2_itunes_categories', $category_html );
+		
+		$owner = sprintf( '
+			<itunes:owner>
+				<itunes:name>%s</itunes:name>
+				<itunes:email>%s</itunes:email>
+			</itunes:owner>',
+			$show->owner_name,
+			$show->owner_email
+		);
+		echo apply_filters( 'podlove_rss2_itunes_owner', $owner );
 	} );
 
 	add_action( 'rss2_item', function () use ( $show, $feed, $format ) {
@@ -151,9 +160,11 @@ add_action( 'wp', function () {
 		$meta      = get_post_meta( $post->ID, '_podlove_meta', true );
 		$show_meta = $meta[ $show->id ];
 
-		$enclosure_file_size = isset( $show_meta[ 'file_size' ] ) ? $show_meta[ 'file_size' ] : 0;
+		// FIXME file size must be file format specific!
 		$enclosure_duration  = isset( $show_meta[ 'duration' ] ) ? $show_meta[ 'duration' ] : 0;
+		$enclosure_file_size = isset( $show_meta[ 'file_size' ] ) ? $show_meta[ 'file_size' ] : 0;
 		$file_slug           = isset( $show_meta[ 'file_slug' ] ) ? $show_meta[ 'file_slug' ] : NULL;
+		$cover_art_url       = isset( $show_meta[ 'cover_art_url' ] ) ? $show_meta[ 'cover_art_url' ] : NULL;
 		
 		if ( ! $file_slug ) {
 			// TODO might be a good idea to notify the podcast admin
@@ -176,6 +187,9 @@ add_action( 'wp', function () {
 		
 		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', strip_tags( $post->post_excerpt ) );
 		echo apply_filters( 'podlove_rss2_itunes_summary', $summary );
+		
+		$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
+		echo apply_filters( 'podlove_rss2_itunes_image', $cover_art );
 	} );
 
 	$args = array(
