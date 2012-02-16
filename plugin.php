@@ -107,6 +107,10 @@ add_action( 'wp', function () {
 		return apply_filters( 'podlove_rss2_title', $feed->title );
 	} );
 
+	add_filter( 'option_rss_language', function ( $language ) use ( $feed ) {
+		return apply_filters( 'podlove_rss2_language', ( $feed->language ) ? $feed->language : $language );
+	} );
+
 	add_action( 'rss2_head', function () use ( $show, $feed, $format ) {
 		$author = sprintf( '<itunes:author>%s</itunes:author>', $show->author_name );
 		echo apply_filters( 'podlove_rss2_itunes_author', $author );

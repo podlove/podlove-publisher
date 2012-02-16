@@ -42,6 +42,13 @@ class Feed {
 					'options'  => $formats
 				)
 			),
+			'language' => array(
+				'label'       => \Podlove\t( 'Language' ),
+				'description' => \Podlove\t( '' ),
+				'args' => array(
+					'default' => get_bloginfo( 'language' )
+				)
+			),
 			// @todo: add PING url; see feedburner doc
 			'redirect_url' => array(
 				'label'       => \Podlove\t( 'Redirect Url' ),
