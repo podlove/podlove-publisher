@@ -136,8 +136,12 @@ class Show {
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
 			return;
 			
-		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
-			$show->{$key} = $value;
+		foreach ( $this->field_keys as $key => $values ) {
+			if ( isset( $values[ 'args' ] ) && isset( $values[ 'args' ][ 'type' ] ) && $values[ 'args' ][ 'type' ] == 'checkbox' ) {
+				$show->{$key} = ( isset( $_POST[ 'podlove_show' ][ $key ] ) &&  $_POST[ 'podlove_show' ][ $key ] === 'on' ) ? 1 : 0;
+			} else {
+				$show->{$key} = $_POST[ 'podlove_show' ][ $key ];
+			}
 		}
 		$show->save();
 		

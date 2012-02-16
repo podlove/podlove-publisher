@@ -117,15 +117,14 @@ class Feed {
 			
 		if ( ! isset( $_POST[ 'podlove_feed' ] ) || ! is_array( $_POST[ 'podlove_feed' ] ) )
 			return;
-			
-		// @fixme: checkbox stuff should not happen here. ideally somewhere in the builder context, maybe?
-		foreach ( $this->field_keys as $key => $field_values ) {
-			$value = isset( $_POST[ 'podlove_feed' ][ $key ] ) ? $_POST[ 'podlove_feed' ][ $key ] : NULL;
-			if ( isset( $field_values[ 'args' ] ) && $field_values[ 'args' ][ 'type' ] == 'checkbox' ) {
-				$feed->{$key} = ( $value == 'on' );
+		
+		foreach ( $this->field_keys as $key => $values ) {
+			if ( isset( $values[ 'args' ] ) && isset( $values[ 'args' ][ 'type' ] ) && $values[ 'args' ][ 'type' ] == 'checkbox' ) {
+				file_put_contents('/tmp/php.log', print_r($key, true), FILE_APPEND | LOCK_EX);
+				$feed->{$key} = ( isset( $_POST[ 'podlove_feed' ][ $key ] ) && $_POST[ 'podlove_feed' ][ $key ] === 'on' ) ? 1 : 0;
 			} else {
-				$feed->{$key} = $value;
-			}	
+				$feed->{$key} = $_POST[ 'podlove_feed' ][ $key ];
+			}
 		}
 		
 		$feed->save();
