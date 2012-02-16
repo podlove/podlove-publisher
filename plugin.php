@@ -170,6 +170,12 @@ add_action( 'wp', function () {
 		
 		$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $enclosure_duration );
 		echo apply_filters( 'podlove_rss2_itunes_duration', $duration );
+		
+		$author = sprintf( '<itunes:author>%s</itunes:author>', $show->author_name );
+		echo apply_filters( 'podlove_rss2_itunes_author', $author );
+		
+		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', strip_tags( $post->post_excerpt ) );
+		echo apply_filters( 'podlove_rss2_itunes_summary', $summary );
 	} );
 
 	$args = array(
