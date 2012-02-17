@@ -1,5 +1,4 @@
 <?php
-
 namespace Podlove\Feeds;
 
 function init() {

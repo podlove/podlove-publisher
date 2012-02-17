@@ -32,7 +32,11 @@ class RSS {
 		);
 		query_posts( $args );
 		
-		do_action( 'do_feed_rss2', $wp_query->is_comment_feed );
+		if ( $wp_query->is_comment_feed )
+			load_template( ABSPATH . WPINC . '/feed-rss2-comments.php');
+		else
+			load_template( ABSPATH . WPINC . '/feed-rss2.php' );
+			
 		exit;
 		
 	}

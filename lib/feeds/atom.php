@@ -37,7 +37,11 @@ class Atom {
 		);
 		query_posts( $args );
 		
-		do_action( 'do_feed_atom', $wp_query->is_comment_feed );
+		if ( $wp_query->is_comment_feed )
+			load_template( ABSPATH . WPINC . '/feed-atom-comments.php');
+		else
+			load_template( ABSPATH . WPINC . '/feed-atom.php' );
+			
 		exit;
 	}
 	
