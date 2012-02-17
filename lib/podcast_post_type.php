@@ -4,8 +4,6 @@ namespace Podlove;
 
 /**
  * Custom Post Type
- * 
- * @todo move formats, feeds, shows menu items into separate menu item
  */
 class Podcast_Post_Type {
 	
