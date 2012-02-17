@@ -55,6 +55,11 @@ function activate() {
 		$feed->save();
 	}
 }
+// Quick Fix: In Multisite installs we need to create tables and seed data for
+// every blog. So, well, simulate a click on every hit. Not nice but works.
+if ( is_admin() ) {
+	activate();
+}
 
 function deactivate() {
 
