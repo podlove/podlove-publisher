@@ -86,7 +86,6 @@ function override_feed_head( $hook, $show, $feed, $format ) {
 		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->block ) ? 'yes' : 'no' );
 		echo apply_filters( 'podlove_feed_itunes_block', $block );
 
-		// @todo support "clean" tag
 		$explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $show->explicit ) ? 'yes' : 'no' );
 		echo apply_filters( 'podlove_feed_itunes_explicit', $explicit );
 	} );
