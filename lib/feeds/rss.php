@@ -35,7 +35,7 @@ class RSS {
 		if ( $wp_query->is_comment_feed )
 			load_template( ABSPATH . WPINC . '/feed-rss2-comments.php');
 		else
-			load_template( ABSPATH . WPINC . '/feed-rss2.php' );
+			load_template( \Podlove\PLUGIN_DIR . 'templates/feed-rss2.php' );
 			
 		exit;
 		

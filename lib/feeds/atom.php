@@ -40,7 +40,7 @@ class Atom {
 		if ( $wp_query->is_comment_feed )
 			load_template( ABSPATH . WPINC . '/feed-atom-comments.php');
 		else
-			load_template( ABSPATH . WPINC . '/feed-atom.php' );
+			load_template( \Podlove\PLUGIN_DIR . 'templates/feed-atom.php' );
 			
 		exit;
 	}
