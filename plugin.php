@@ -4,8 +4,9 @@ namespace Podlove;
 register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 register_uninstall_hook(    PLUGIN_FILE, __NAMESPACE__ . '\uninstall' );
+add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6);
 
-function activate() {
+function activate_for_current_blog() {
 	Model\Feed::build();
 	Model\Format::build();
 	Model\Show::build();
@@ -55,17 +56,83 @@ function activate() {
 		$feed->save();
 	}
 }
-// Quick Fix: In Multisite installs we need to create tables and seed data for
-// every blog. So, well, simulate a click on every hit. Not nice but works.
-if ( is_admin() ) {
-	activate();
+
+/**
+ * Hook: Create a new blog in a multisite environment.
+ * 
+ * When a new blog is created, we have to trigger the activation function
+ * for in the scope of that blog.
+ */
+function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+	global $wpdb;
+	
+	// something like 'podlove/podlove.php'
+	$plugin_file = basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ );
+    
+	if ( is_plugin_active_for_network( $plugin_file ) ) {
+		$current_blog = $wpdb->blogid;
+		switch_to_blog( $blog_id );
+		activate_for_current_blog();
+		switch_to_blog( $current_blog );
+	}
+}
+
+/**
+ * Hook: Activate the plugin.
+ * 
+ * In a single blog install, just call activate_for_current_blog().
+ * However, in a multisite install, iterate over all blogs and call the activate
+ * function for each of them.
+ */
+function activate() {
+	global $wpdb;
+	
+	if ( is_multisite() ) {
+		if ( isset( $_GET[ 'networkwide' ] ) && ( $_GET[ 'networkwide' ] == 1 ) ) {
+            $current_blog = $wpdb->blogid;
+			$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
+			foreach ( $blogids as $blog_id ) {
+				switch_to_blog($blog_id);
+				activate_for_current_blog();
+			}
+			switch_to_blog($current_blog);
+		}
+	} else {
+		activate_for_current_blog();
+	}
+	
 }
 
 function deactivate() {
 
 }
 
+/**
+ * Hook: Uninstall the plugin.
+ * 
+ * In a single blog install, just call uninstall_for_current_blog().
+ * However, in a multisite install, iterate over all blogs and call the 
+ * uninstall function for each of them.
+ */
 function uninstall() {
+	global $wpdb;
+	
+	if ( is_multisite() ) {
+		if ( isset( $_GET[ 'networkwide' ] ) && ( $_GET[ 'networkwide' ] == 1 ) ) {
+            $current_blog = $wpdb->blogid;
+			$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
+			foreach ( $blogids as $blog_id ) {
+				switch_to_blog($blog_id);
+				uninstall_for_current_blog();
+			}
+			switch_to_blog($current_blog);
+		}
+	} else {
+		uninstall_for_current_blog();
+	}
+}
+
+function uninstall_for_current_blog() {
 	Model\Feed::destroy();
 	Model\Format::destroy();
 	Model\Show::destroy();
