@@ -52,8 +52,10 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<?php endif; ?>
 	<?php endif; ?>
 <?php endif; ?>
-		<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
-		<slash:comments><?php echo get_comments_number(); ?></slash:comments>
+<?php if ( apply_filters( 'podlove_feed_show_comments_data', false ) ): ?>
+	<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
+	<slash:comments><?php echo get_comments_number(); ?></slash:comments>
+<?php endif; ?>
 <?php rss_enclosure(); ?>
 	<?php do_action('rss2_item'); ?>
 	</item>
