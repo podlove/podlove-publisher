@@ -42,6 +42,10 @@ class Feed {
 					'options'  => $formats
 				)
 			),
+			'itunes_feed_id' => array(
+				'label'       => \Podlove\t( 'iTunes Feed ID' ),
+				'description' => \Podlove\t( '' )
+			),
 			'language' => array(
 				'label'       => \Podlove\t( 'Language' ),
 				'description' => \Podlove\t( '' ),
