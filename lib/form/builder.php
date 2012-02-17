@@ -50,11 +50,18 @@ class Builder {
 			$id = str_replace( array( '[', ']' ), '_', $id );
 			$id = str_replace( '__', '_', $id );
 			
+			if ( $this->args[ 'form_field_callback' ] ) {
+				$callback = call_user_func( $this->args[ 'form_field_callback' ], $key );
+			} else {
+				$callback = '';
+			}
+			
 			?>
-			<label for="<?php echo $id; ?>">
-				<input type="checkbox" name="<?php echo $name; ?>]" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?>> <?php echo $value; ?>
-			</label>
-			<br/>
+			<div>
+				<label for="<?php echo $id; ?>">
+					<input type="checkbox" name="<?php echo $name; ?>]" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?>> <?php echo $value; ?>
+				</label>
+			</div>
 			<?php
 		}
 	}
@@ -77,9 +84,8 @@ class Builder {
 		$this->field_name   = "{$context}[{$field_key}]";
 		$this->field_id     = "{$context}_{$field_key}";
 		$this->args         = $args;
-
 		?>
-		<tr>
+		<tr class="row_<?php echo $field_key; ?>">
 			<th scope="row" valign="top">
 				<label for="<?php echo $this->field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
 			</th>

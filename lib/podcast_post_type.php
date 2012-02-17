@@ -31,7 +31,11 @@ class Podcast_Post_Type {
 				'args' => array(
 					'type'    => 'multiselect',
 					'options' => NULL, // requires $show context
-					'default' => true
+					'default' => true,
+					'form_field_callback' => function ( $format_id ) {
+						$format = \Podlove\Model\Format::find_by_id( $format_id );
+						return 'data-extension="' . $format->extension . '" data-suffix="' . $format->slug . '"';
+					}
 				)
 			),
 			'duration' => array(
@@ -193,6 +197,7 @@ class Podcast_Post_Type {
 		
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
+		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
 		<table class="form-table">
 			<?php foreach ( $this->form_data as $key => $value ): ?>
 				<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $meta[ $key ], $key, $value ); ?>
