@@ -20,9 +20,9 @@ class Format {
 				'label'       => \Podlove\t( 'Format Mime Type' ),
 				'description' => \Podlove\t( 'Example: audio/mpeg4' )
 			),
-			'slug' => array(
-				'label'       => \Podlove\t( 'Slug' ),
-				'description' => \Podlove\t( '' )
+			'suffix' => array(
+				'label'       => \Podlove\t( 'Suffix' ),
+				'description' => \Podlove\t( 'Is appended to the media file.' )
 			),
 			'extension' => array(
 				'label'       => \Podlove\t( 'Format Extension' ),

@@ -13,15 +13,14 @@ function activate_for_current_blog() {
 	
 	if ( ! Model\Format::has_entries() ) {
 		$default_formats = array(
-			// @TODO slug => format_suffix
-			array( 'name' => 'MP3 Audio',  'slug' => '-legacy',    'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
-			array( 'name' => 'MPG Video',  'slug' => '-legacy',    'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
-			array( 'name' => 'MP4 Audio',  'slug' => '-modern',    'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
-			array( 'name' => 'MP4 Video',  'slug' => '-modern',    'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'm4v' ),
-			array( 'name' => 'OGG Audio',  'slug' => '-oldschool', 'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'oga' ),
-			array( 'name' => 'OGG Video',  'slug' => '-oldschool', 'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogv' ),
-			array( 'name' => 'WebM Audio', 'slug' => '-chrome-audio',    'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
-			array( 'name' => 'WebM Video', 'slug' => '-chrome-video',    'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
+			array( 'name' => 'MP3 Audio',  'suffix' => '-legacy',    'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
+			array( 'name' => 'MPG Video',  'suffix' => '-legacy',    'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
+			array( 'name' => 'MP4 Audio',  'suffix' => '-modern',    'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
+			array( 'name' => 'MP4 Video',  'suffix' => '-modern',    'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'm4v' ),
+			array( 'name' => 'OGG Audio',  'suffix' => '-oldschool', 'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'oga' ),
+			array( 'name' => 'OGG Video',  'suffix' => '-oldschool', 'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogv' ),
+			array( 'name' => 'WebM Audio', 'suffix' => '-chrome-audio',    'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
+			array( 'name' => 'WebM Video', 'suffix' => '-chrome-video',    'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
 		);
 		
 		foreach ( $default_formats as $format ) {

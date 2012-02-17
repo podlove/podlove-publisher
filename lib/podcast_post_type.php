@@ -34,7 +34,7 @@ class Podcast_Post_Type {
 					'default' => true,
 					'form_field_callback' => function ( $format_id ) {
 						$format = \Podlove\Model\Format::find_by_id( $format_id );
-						return 'data-extension="' . $format->extension . '" data-suffix="' . $format->slug . '"';
+						return 'data-extension="' . $format->extension . '" data-suffix="' . $format->suffix . '"';
 					}
 				)
 			),
