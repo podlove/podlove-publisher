@@ -251,9 +251,9 @@ class Podcast_Post_Type {
 		if ( ! isset( $_POST[ '_podlove_meta' ] ) || ! is_array( $_POST[ '_podlove_meta' ] ) )
 			return;
 		
-		// What do we needs these loops for?
+		// What do we need these loops for?
 		// When you submit a checkbox, the value is "on" when active.
-		// However, when unchecked, nothing is send at all. So, to determine
+		// However, when unchecked, nothing is sent at all. So, to determine
 		// the difference between "new" and "unchecked", we populate all unset
 		// fields with false manually.
 		$formats = array_map( function( $f ) { return $f->id; }, \Podlove\Model\Format::all() );
