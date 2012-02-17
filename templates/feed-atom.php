@@ -35,7 +35,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 			<?php endif;
 			do_action('atom_author'); ?>
 		</author>
-		<title type="<?php html_type_rss(); ?>"><![CDATA[<?php the_title_rss() ?>]]></title>
+		<title type="<?php echo apply_filters( 'podlove_feed_title_type', 'text' ); ?>"><?php the_title_rss() ?></title>
 		<link rel="alternate" type="text/html" href="<?php the_permalink_rss() ?>" />
 		<id><?php the_guid() ; ?></id>
 		<updated><?php echo get_post_modified_time('Y-m-d\TH:i:s\Z', true); ?></updated>
