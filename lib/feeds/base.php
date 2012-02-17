@@ -21,6 +21,20 @@ function override_feed_language( $feed ) {
 }
 
 function override_feed_head( $hook, $show, $feed, $format ) {
+	
+	remove_action( $hook, 'the_generator' );
+	add_action( $hook, function () use ( $hook ) {
+		switch ( $hook ) {
+			case 'rss2_head':
+				$gen = '<generator>Podlove v' . \Podlove\get_plugin_header( 'Version' ) . '</generator>';
+				break;
+			case 'atom_head':
+				$gen = '<generator uri="' . \Podlove\get_plugin_header( 'PluginURI' ) . '" version="' . \Podlove\get_plugin_header( 'Version' ) . '">' . \Podlove\get_plugin_header( 'Name' ) . '</generator>';
+				break;
+		}
+		echo $gen;
+	} );
+	
 	add_action( $hook, function () use ( $show, $feed, $format ) {
 		$author = sprintf( '<itunes:author>%s</itunes:author>', $show->author_name );
 		echo apply_filters( 'podlove_feed_itunes_author', $author );

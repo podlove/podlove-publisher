@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Podlove Podcasting Plugin for WordPress
-Plugin URI: 
+Plugin URI: https://github.com/eteubert/podlove
 Description: The one and only podcast client. Seriously.
 Version: 1.0
 Author: Eric Teubert
