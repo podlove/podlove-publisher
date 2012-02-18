@@ -13,28 +13,28 @@ class Show {
 				'label'       => \Podlove\t( 'Show Title' ),
 				'description' => \Podlove\t( '' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'subtitle' => array(
 				'label'       => \Podlove\t( 'Show Subtitle' ),
 				'description' => \Podlove\t( 'The subtitle is used by iTunes.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'slug' => array(
 				'label'       => \Podlove\t( 'Show Slug' ),
 				'description' => \Podlove\t( 'Is part of the feed URL.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'cover_image' => array(
 				'label'       => \Podlove\t( 'Cover Image' ),
 				'description' => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'summary' => array(
@@ -49,28 +49,28 @@ class Show {
 				'label'       => \Podlove\t( 'Author Name' ),
 				'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'owner_name' => array(
 				'label'       => \Podlove\t( 'Owner Name' ),
 				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'owner_email' => array(
 				'label'       => \Podlove\t( 'Owner Email' ),
 				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'keywords' => array(
 				'label'       => \Podlove\t( 'Keywords' ),
 				'description' => \Podlove\t( 'List of keywords. Separate with commas.' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			'category_1' => array(
@@ -116,7 +116,7 @@ class Show {
 				'label'       => \Podlove\t( 'Media File Base URI' ),
 				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
 				'args' => array(
-					'class' => 'regular-text'
+					'html' => array( 'class' => 'regular-text' )
 				)
 			),
 			// 'uri_delimiter' => array(
