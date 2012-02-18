@@ -152,8 +152,6 @@ class Show {
 	 * Process form: create new show
 	 */
 	private function create() {
-		global $wpdb;
-		
 		$show = new \Podlove\Model\Show;
 		
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
@@ -164,7 +162,15 @@ class Show {
 		}
 		$show->save();
 		
-		$this->redirect( 'edit', $wpdb->insert_id );
+		// create feed stub
+		$feed = new \Podlove\Model\Feed;
+		$feed->show_id = $show->id;
+		$feed->discoverable = 1;
+		$feed->show_description = 1;
+		$feed->itunes_block = 0;
+		$feed->save();
+		
+		$this->redirect( 'edit', $show->id );
 	}
 	
 	/**
@@ -256,24 +262,25 @@ class Show {
 			<?php submit_button( $button_text ); ?>
 		</form>
 		
-		<h3><?php echo \Podlove\t( 'Feeds for this Show' ); ?></h3>
-		
-		<div class="metabox-holder">
-			<?php
-			if ( is_multisite() && is_plugin_active_for_network( plugin_basename( PLUGIN_FILE ) ) )
-				$options = get_site_option( $_REQUEST[ 'page' ] );
-			else
-				$options = get_option( $_REQUEST[ 'page' ] );
+		<?php if ( ! $show->is_new() ): ?>
+			<h3><?php echo \Podlove\t( 'Feeds for this Show' ); ?></h3>
 
-			do_meta_boxes( $this->pagehook, 'normal', $options );
-			do_meta_boxes( $this->pagehook, 'additional', $options );
-			?>
-		</div>
-		
-		<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" class="button-primary">
-			<?php echo \Podlove\t( 'Create New Feed' ); ?>
-		</a>
+			<div class="metabox-holder">
+				<?php
+				if ( is_multisite() && is_plugin_active_for_network( plugin_basename( PLUGIN_FILE ) ) )
+					$options = get_site_option( $_REQUEST[ 'page' ] );
+				else
+					$options = get_option( $_REQUEST[ 'page' ] );
+
+				do_meta_boxes( $this->pagehook, 'normal', $options );
+				do_meta_boxes( $this->pagehook, 'additional', $options );
+				?>
+			</div>
 			
+			<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" class="button-primary">
+				<?php echo \Podlove\t( 'Create New Feed' ); ?>
+			</a>			
+		<?php endif; ?>
 		<?php
 	}
 	
