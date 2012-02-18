@@ -290,6 +290,7 @@ class Show {
 			<?php submit_button( $button_text ); ?>
 		</form>
 		
+		<?php // todo: see WordPress settings page for menus. suitable for feed management? ?>
 		<?php if ( ! $show->is_new() ): ?>
 			<h3><?php echo \Podlove\t( 'Feeds' ); ?> <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;show=<?php echo $show->id ?>&amp;action=create" class="add-new-h2" style="font-weight:normal"><?php echo \Podlove\t( 'Add New' ); ?></a></h3>
 
