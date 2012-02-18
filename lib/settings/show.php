@@ -41,8 +41,8 @@ class Show {
 				'label'       => \Podlove\t( 'Summary' ),
 				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
 				'args' => array(
-					'type'    => 'textarea'
-					// todo: 5 rows, 30 cols (allow custom html attributes)
+					'type'    => 'textarea',
+					'html'    => array( 'rows' => 5, 'cols' => 40 )
 				)
 			),
 			'author_name' => array(
