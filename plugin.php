@@ -95,6 +95,8 @@ function activate() {
 				activate_for_current_blog();
 			}
 			switch_to_blog($current_blog);
+		} else {
+			activate_for_current_blog();
 		}
 	} else {
 		activate_for_current_blog();
@@ -125,6 +127,8 @@ function uninstall() {
 				uninstall_for_current_blog();
 			}
 			switch_to_blog($current_blog);
+		} else {
+			activate_for_current_blog();
 		}
 	} else {
 		uninstall_for_current_blog();
