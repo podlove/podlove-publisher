@@ -87,7 +87,8 @@ class Podcast_Post_Type {
 			'capability_type'      => 'post',
 			'has_archive'          => true, 
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'trackbacks' ),
-			'register_meta_box_cb' => array( $this, 'register_post_type_meta_boxes' )
+			'register_meta_box_cb' => array( $this, 'register_post_type_meta_boxes' ),
+			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png'
 		); 
 		
 		$args = apply_filters( 'podlove_post_type_args', $args );

@@ -11,42 +11,67 @@ class Show {
 		$this->field_keys = array(
 			'name' => array(
 				'label'       => \Podlove\t( 'Show Title' ),
-				'description' => \Podlove\t( '' )
+				'description' => \Podlove\t( '' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'subtitle' => array(
 				'label'       => \Podlove\t( 'Show Subtitle' ),
-				'description' => \Podlove\t( 'The subtitle is used by iTunes.' )
+				'description' => \Podlove\t( 'The subtitle is used by iTunes.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'slug' => array(
-				'label'       => \Podlove\t( 'Slug' ),
-				'description' => \Podlove\t( '' )
+				'label'       => \Podlove\t( 'Show Slug' ),
+				'description' => \Podlove\t( 'Is part of the feed URL.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'cover_image' => array(
 				'label'       => \Podlove\t( 'Cover Image' ),
-				'description' => \Podlove\t( 'Cover Image URL, 600x600px' )
+				'description' => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'summary' => array(
 				'label'       => \Podlove\t( 'Summary' ),
 				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
 				'args' => array(
 					'type'    => 'textarea'
+					// todo: 5 rows, 30 cols (allow custom html attributes)
 				)
 			),
 			'author_name' => array(
 				'label'       => \Podlove\t( 'Author Name' ),
-				'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' )
+				'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'owner_name' => array(
 				'label'       => \Podlove\t( 'Owner Name' ),
-				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' )
+				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'owner_email' => array(
 				'label'       => \Podlove\t( 'Owner Email' ),
-				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' )
+				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'keywords' => array(
 				'label'       => \Podlove\t( 'Keywords' ),
-				'description' => \Podlove\t( 'List of keywords. Separate with commas.' )
+				'description' => \Podlove\t( 'List of keywords. Separate with commas.' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			'category_1' => array(
 				'label'       => \Podlove\t( 'iTunes Categories' ),
@@ -89,7 +114,10 @@ class Show {
 			// ),
 			'media_file_base_uri' => array(
 				'label'       => \Podlove\t( 'Media File Base URI' ),
-				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' )
+				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
+				'args' => array(
+					'class' => 'regular-text'
+				)
 			),
 			// 'uri_delimiter' => array(
 			// 	'label'       => \Podlove\t( 'URI Delimiter' ),
@@ -263,7 +291,7 @@ class Show {
 		</form>
 		
 		<?php if ( ! $show->is_new() ): ?>
-			<h3><?php echo \Podlove\t( 'Feeds for this Show' ); ?></h3>
+			<h3><?php echo \Podlove\t( 'Feeds' ); ?> <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;show=<?php echo $show->id ?>&amp;action=create" class="add-new-h2" style="font-weight:normal"><?php echo \Podlove\t( 'Add New' ); ?></a></h3>
 
 			<div class="metabox-holder">
 				<?php
@@ -276,12 +304,10 @@ class Show {
 				do_meta_boxes( $this->pagehook, 'additional', $options );
 				?>
 			</div>
-			
-			<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" class="button-primary">
-				<?php echo \Podlove\t( 'Create New Feed' ); ?>
-			</a>			
 		<?php endif; ?>
 		<?php
+		// todo clean up show/feed form
+		// - "save updates" should update whole page
 	}
 	
 	private function edit_template() {

@@ -4,19 +4,19 @@ namespace Podlove\Form;
 class Builder {
 	function form_textarea_input() {
 		?>
-		<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"><?php echo $this->field_value; ?></textarea>
+		<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->class ): ?>class="<?php echo $this->class; ?>"<?php endif; ?>><?php echo $this->field_value; ?></textarea>
 		<?php
 	}
 	
 	function form_text_input() {
 		?>
-		<input type="text" name="<?php echo $this->field_name; ?>" value="<?php echo $this->field_value; ?>" id="<?php echo $this->field_id; ?>">
+		<input type="text" name="<?php echo $this->field_name; ?>" value="<?php echo $this->field_value; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->class ): ?>class="<?php echo $this->class; ?>"<?php endif; ?>>
 		<?php
 	}
 
 	function form_select_input() {
 		?>
-		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>">
+		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->class ): ?>class="<?php echo $this->class; ?>"<?php endif; ?>>
 			<option value=""><?php echo \Podlove\t( 'Please choose ...' ); ?></option>
 			<?php foreach ( $this->args[ 'options' ] as $key => $value ): ?>
 				<option value="<?php echo $key; ?>"<?php if ( $key == $this->field_value ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
@@ -28,7 +28,7 @@ class Builder {
 	function form_checkbox_input() {
 		$this->field_value = in_array( $this->field_value, array( 1, '1', true, 'true', 'on' ) );
 		?>
-		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->field_value ): ?>checked="checked"<?php endif; ?>>
+		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->field_value ): ?>checked="checked"<?php endif; ?> <?php if ( $this->class ): ?>class="<?php echo $this->class; ?>"<?php endif; ?>>
 		<?php
 	}
 	
@@ -59,7 +59,7 @@ class Builder {
 			?>
 			<div>
 				<label for="<?php echo $id; ?>">
-					<input type="checkbox" name="<?php echo $name; ?>]" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?>> <?php echo $value; ?>
+					<input type="checkbox" name="<?php echo $name; ?>]" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?> <?php if ( $this->class ): ?>class="<?php echo $this->class; ?>"<?php endif; ?>> <?php echo $value; ?>
 				</label>
 			</div>
 			<?php
@@ -70,6 +70,7 @@ class Builder {
 		$args     = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
 		$type     = ( isset( $args[ 'type' ] ) )         ? $args[ 'type' ]         : 'text';
 		$default  = ( isset( $args[ 'default' ] ) )      ? $args[ 'default' ]      : NULL;
+		$class    = ( isset( $args[ 'class' ] ) )        ? $args[ 'class' ]        : NULL;
 		$function = 'form_' . $type . '_input';
 		
 		if ( $value !== NULL ) {
@@ -83,6 +84,7 @@ class Builder {
 		$this->field_values = $field_values;
 		$this->field_name   = "{$context}[{$field_key}]";
 		$this->field_id     = "{$context}_{$field_key}";
+		$this->class        = $class;
 		$this->args         = $args;
 		?>
 		<tr class="row_<?php echo $field_key; ?>">

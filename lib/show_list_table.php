@@ -39,7 +39,7 @@ class Show_List_Table extends \WP_List_Table {
 		);
 	
 		return sprintf('%1$s %2$s',
-		    /*$1%s*/ $show->name . ' - ' . $show->subtitle,
+		    /*$1%s*/ $show->name,
 		    /*$3%s*/ $this->row_actions( $actions )
 		);
 	}
