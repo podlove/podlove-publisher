@@ -11,13 +11,14 @@ class Podcast_Post_Type {
 		
 		$this->form_data = array(
 			'enable_show' => array(
-				'label'       => \Podlove\t( 'Enable Show' ),
+				'label'       => \Podlove\t( 'Include Episode' ), // todo: hide/show rest of the form
 				'description' => '',
 				'args' => array(
 					'type'     => 'checkbox',
 					'default'  => true
 				)
 			),
+			// todo: add subtitle; but as extra metabox
 			'file_slug' => array(
 				'label'       => \Podlove\t( 'Episode File Slug' ),
 				'description' => ''
@@ -43,8 +44,9 @@ class Podcast_Post_Type {
 				'label'       => \Podlove\t( 'File Size' ),
 				'description' => ''
 			),
+			// todo: always fetch file size automatically; do not display here
 			'cover_art_url' => array(
-				'label'       => \Podlove\t( 'Cover Art URL' ),
+				'label'       => \Podlove\t( 'Episode Cover Art URL' ),
 				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' )
 			),
 			'block' => array(
@@ -170,7 +172,7 @@ class Podcast_Post_Type {
 		foreach ( $shows as $show ) {
 			add_meta_box(
 				/* $id            */ 'podlove_show_' . $show->id,
-				/* $title         */ \Podlove\t( 'Podcast: ' . $show->full_title() ),
+				/* $title         */ \Podlove\t( 'Show: ' ) . $show->name,
 				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
 				/* $page          */ 'podcast',
 				/* $context       */ 'advanced',

@@ -20,6 +20,8 @@ function override_feed_language( $feed ) {
 	} );
 }
 
+// todo: new line for each tag
+// todo: hide tags without content
 function override_feed_head( $hook, $show, $feed, $format ) {
 	
 	remove_action( $hook, 'the_generator' );
@@ -125,7 +127,11 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', htmlspecialchars( strip_tags( $post->post_excerpt ) ) );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
 
-		$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
+		if ( $cover_art_url ) {
+			$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
+		} else {
+			$cover_art = '';
+		}
 		echo apply_filters( 'podlove_feed_itunes_image', $cover_art );
 	} );
 }
