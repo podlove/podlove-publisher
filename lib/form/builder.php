@@ -2,19 +2,19 @@
 namespace Podlove\Form;
 
 class Builder {
-	function form_textarea_input() {
+	private function form_textarea_input() {
 		?>
 		<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html; ?>><?php echo $this->field_value; ?></textarea>
 		<?php
 	}
 	
-	function form_text_input() {
+	private function form_text_input() {
 		?>
 		<input type="text" name="<?php echo $this->field_name; ?>" value="<?php echo $this->field_value; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html; ?>>
 		<?php
 	}
 
-	function form_select_input() {
+	private function form_select_input() {
 		?>
 		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html; ?>>
 			<option value=""><?php echo \Podlove\t( 'Please choose ...' ); ?></option>
@@ -25,14 +25,14 @@ class Builder {
 		<?php
 	}
 	
-	function form_checkbox_input() {
+	private function form_checkbox_input() {
 		$this->field_value = in_array( $this->field_value, array( 1, '1', true, 'true', 'on' ) );
 		?>
 		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->field_value ): ?>checked="checked"<?php endif; ?> <?php echo $this->html; ?>>
 		<?php
 	}
 	
-	function form_multiselect_input() {
+	private function form_multiselect_input() {
 		if ( ! isset( $this->field_value ) || ! is_array( $this->field_value ) )
 			$this->field_value = array();
 			
@@ -65,8 +65,23 @@ class Builder {
 			<?php
 		}
 	}
-
-	function input( $context, $value, $field_key, $field_values ) {
+	
+	/**
+	 * Generic input generator.
+	 * 
+	 * @param string $context form field name prefix
+	 * @param mixed $value form field value
+	 * @param string $field_key form field identifier used in name and id
+	 * @param array $field_values
+	 * 	- label			form label text
+	 *  - description	form element description
+	 * 	- args			additional arguments
+	 * 		- type		input type. supported: text, select, textarea, checkbox, multiselect. default: text
+	 * 		- default	default value
+	 * 		- html		array with additional html attributes. e.g. array( 'class' => 'regular-text' )
+	 * 		- options	array with options for select fields
+	 */
+	public function input( $context, $value, $field_key, $field_values ) {
 		$args     = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
 		$type     = ( isset( $args[ 'type' ] ) )         ? $args[ 'type' ]         : 'text';
 		$default  = ( isset( $args[ 'default' ] ) )      ? $args[ 'default' ]      : NULL;

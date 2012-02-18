@@ -134,6 +134,8 @@ class Podcast_Post_Type {
 	}
 	
 	public function settings_page() {
+		// todo: dashboard
+		// validate all settings and notify about trouble
 		?>
 		Work in Progress ...
 		<?php
