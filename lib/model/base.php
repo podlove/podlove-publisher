@@ -5,6 +5,7 @@ abstract class Base
 {
 	/**
 	 * Property dictionary for all tables
+	 * @todo refactor into properties for current table only via late static binding
 	 */
 	private static $properties = array();
 	
@@ -96,11 +97,7 @@ abstract class Base
 	 * @return array property names
 	 */
 	public static function property_names() {
-		return array_map( array( __CLASS__, 'map_name' ) , self::properties() );
-	}
-	
-	public static function map_name( $p ) {
-		return $p[ 'name' ];
+		return array_map( function ( $p ) { return $p[ 'name' ]; } , self::properties() );
 	}
 	
 	/**

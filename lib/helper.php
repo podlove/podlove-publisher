@@ -13,6 +13,11 @@ function t( $text ) {
 
 namespace Podlove\Form;
 
+/**
+ * Convenience wrapper function for Form Builder.
+ * 
+ * @see \Podlove\Form\Builder::input
+ */
 function input( $context, $object, $field_key, $field_value ) {
 	$builder = new Builder;
 	$builder->input( $context, $object, $field_key, $field_value );
@@ -20,6 +25,14 @@ function input( $context, $object, $field_key, $field_value ) {
 
 namespace Podlove\Itunes;
 
+/**
+ * iTunes category generator.
+ * 
+ * Gratefully borrowed from powerpress.
+ * 
+ * @param bool $prefix_subcategories
+ * @return array
+ */
 function categories( $prefix_subcategories = true ) {
 	$temp = array();
 	$temp[ '01-00' ] = 'Arts';

@@ -2,6 +2,15 @@
 namespace Podlove\Form;
 
 class Builder {
+	
+	private $context;
+	private $field_key;
+	private $field_values;
+	private $field_name;
+	private $field_id;
+	private $html;
+	private $args;
+	
 	private function form_textarea_input() {
 		?>
 		<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html; ?>><?php echo $this->field_value; ?></textarea>

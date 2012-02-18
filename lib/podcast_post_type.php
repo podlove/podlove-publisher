@@ -3,13 +3,10 @@
 namespace Podlove;
 
 /**
- * Custom Post Type
+ * Custom Post Type: "podcast"
  */
 class Podcast_Post_Type {
 	
-	/**
-	 * Register custom "podcast" post type.
-	 */
 	public function __construct() {
 		
 		$this->form_data = array(
