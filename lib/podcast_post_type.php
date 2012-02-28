@@ -173,7 +173,33 @@ class Podcast_Post_Type {
 
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 		$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
-		
+
+		// read / generate format data
+		$show_formats = $show->formats();
+
+		$format_values = array();
+		$format_options = array();
+		foreach ( $show_formats as $format ) {
+			// get formats configured for this show
+			$format_options[ $format->id ] = $format->name;
+			// find out which formats are active
+			$format_values[ $format->id ] = \Podlove\Model\File::find_or_create_by_release_id_and_format_id( $release->id, $format->id )->active;
+		}
+
+		$formats_form = array(
+			'label'       => \Podlove\t( 'File Formats' ),
+			'description' => '',
+			'args' => array(
+				'type'    => 'multiselect',
+				'options' => $format_options,
+				'default' => true,
+				'form_field_callback' => function ( $format_id ) {
+					$format = \Podlove\Model\Format::find_by_id( $format_id );
+					return 'data-extension="' . $format->extension . '" data-suffix="' . $format->suffix . '"';
+				}
+			)
+		);
+
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
@@ -181,35 +207,7 @@ class Podcast_Post_Type {
 			<?php foreach ( $this->form_data as $key => $value ): ?>
 				<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $release->{$key}, $key, $value ); ?>
 			<?php endforeach; ?>
-			<?php
-
-
-			$show_formats = $show->formats();
-
-			$format_values = array();
-			$format_options = array();
-			foreach ( $show_formats as $format ) {
-				// get formats configured for this show
-				$format_options[ $format->id ] = $format->name;
-				// find out which formats are active
-				$format_values[ $format->id ] = \Podlove\Model\File::find_or_create_by_release_id_and_format_id( $release->id, $format->id )->active;
-			}
-
-			$formats_form = array(
-				'label'       => \Podlove\t( 'File Formats' ),
-				'description' => '',
-				'args' => array(
-					'type'    => 'multiselect',
-					'options' => $format_options,
-					'default' => true,
-					'form_field_callback' => function ( $format_id ) {
-						$format = \Podlove\Model\Format::find_by_id( $format_id );
-						return 'data-extension="' . $format->extension . '" data-suffix="' . $format->suffix . '"';
-					}
-				)
-			);
-			\Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $format_values, 'formats', $formats_form );
-			?>
+			<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $format_values, 'formats', $formats_form ); ?>
 		</table>
 		<?php
 	}
@@ -260,6 +258,7 @@ class Podcast_Post_Type {
 		foreach ( $_POST[ '_podlove_meta' ] as $show_id => $release_values ) {
 			$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show_id );
 
+			// save generic release fields
 			foreach ( $this->form_data as $release_column => $_ )
 				$release->{$release_column} = $release_values[ $release_column ];
 			
