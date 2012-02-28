@@ -42,8 +42,7 @@ class Feed {
 			),
 			'slug' => array(
 				'label'       => \Podlove\t( 'Slug' ),
-				'description' => \Podlove\t( '' )
-				// todo: display/update feed url
+				'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->subscribe_url() ) : ''
 			),
 			'format_id' => array(
 				'label'       => \Podlove\t( 'File Format' ),

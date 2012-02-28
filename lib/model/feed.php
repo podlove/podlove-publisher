@@ -3,6 +3,28 @@ namespace Podlove\Model;
 
 class Feed extends Base {
 	
+	/**
+	 * Build public url where the feed can be subscribed at.
+	 *
+	 * @return string
+	 */
+	public function subscribe_url() {
+		return sprintf(
+			'%s/feed/%s/%s/',
+			get_bloginfo( 'url' ),
+			$this->show()->slug,
+			$this->slug
+		);
+	}
+
+	/**
+	 * Find the related show model.
+	 *
+	 * return \Podlove\Model\Show|NULL
+	 */
+	public function show() {
+		return Show::find_by_id( $this->show_id );
+	}
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
