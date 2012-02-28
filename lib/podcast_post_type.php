@@ -102,7 +102,7 @@ class Podcast_Post_Type {
 			
 			wp_register_script(
 				'podlove_admin_script',
-				WP_PLUGIN_URL . 'podlove/js/admin.js',
+				WP_PLUGIN_URL . '/podlove/js/admin.js',
 				array( 'jquery' ),
 				'1.0' 
 			);
