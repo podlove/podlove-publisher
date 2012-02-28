@@ -10,6 +10,9 @@ function activate_for_current_blog() {
 	Model\Feed::build();
 	Model\Format::build();
 	Model\Show::build();
+	Model\Episode::build();
+	Model\Release::build();
+	Model\File::build();
 	
 	if ( ! Model\Format::has_entries() ) {
 		$default_formats = array(
@@ -145,6 +148,9 @@ function uninstall_for_current_blog() {
 	Model\Feed::destroy();
 	Model\Format::destroy();
 	Model\Show::destroy();
+	Model\Episode::destroy();
+	Model\Release::destroy();
+	Model\File::destroy();
 }
 
 add_action( 'init', function () {
