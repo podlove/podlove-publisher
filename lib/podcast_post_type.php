@@ -183,7 +183,7 @@ class Podcast_Post_Type {
 			// get formats configured for this show
 			$format_options[ $format->id ] = $format->name;
 			// find out which formats are active
-			$format_values[ $format->id ] = \Podlove\Model\File::find_or_create_by_release_id_and_format_id( $release->id, $format->id )->active;
+			$format_values[ $format->id ] = NULL !== \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format->id );
 		}
 
 		$formats_form = array(
@@ -266,10 +266,17 @@ class Podcast_Post_Type {
 
 			// save files/formats
 			foreach ( $release_values[ 'formats' ] as $format_id => $format_value ) {
-				$file = \Podlove\Model\File::find_or_create_by_release_id_and_format_id( $release->id, $format_id );
-				if ( $file->active != $format_value ) {
-					$file->active = $format_value;
+				$file = \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format_id );
+
+				if ( $file === NULL && $format_value ) {
+					// create file
+					$file = new \Podlove\Model\File();
+					$file->release_id = $release->id;
+					$file->format_id = $format_id;
 					$file->save();
+				} elseif ( $file !== NULL && ! $format_value ) {
+					// delete file
+					$file->delete();
 				}
 			}
 
