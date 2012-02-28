@@ -355,7 +355,7 @@ abstract class Base
 			;
 			$success = $wpdb->query( $sql );
 		}
-		
+
 		$this->is_new = false;
 		
 		return $success;

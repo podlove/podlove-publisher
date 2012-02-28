@@ -1,3 +1,18 @@
+function human_readable_size(size) {
+	if (!size) {
+		return "File Size Missing :(";
+	}
+
+	var kilobytes = size / 1024;
+
+	if (kilobytes < 500) {
+		return kilobytes.toFixed(2) + " kB";
+	}
+
+	var megabytes = kilobytes / 1024
+	return megabytes.toFixed(2) + " MB";
+}
+
 jQuery(function($) {
 	
 	var	update_media_file_path = function() {
@@ -11,10 +26,11 @@ jQuery(function($) {
 				var episode_slug        = $container.find('input[name*="slug"]').val();
 				var format_suffix       = $checkbox.data('suffix');
 				var format_extension    = $checkbox.data('extension');
+				var size                = $checkbox.data('size');
 
 				url = media_file_base_uri + episode_slug + format_suffix + '.' + format_extension;
 
-				output = '(' + url + ')';
+				output = '(' + url + ' [' + human_readable_size( size ) + '])';
 			} else {
 				output = "";
 			}
