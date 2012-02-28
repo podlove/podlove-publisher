@@ -23,28 +23,10 @@ class Podcast_Post_Type {
 				'label'       => \Podlove\t( 'Episode File Slug' ),
 				'description' => ''
 			),
-			// 'formats' => array(
-			// 	'label'       => \Podlove\t( 'File Formats' ),
-			// 	'description' => '',
-			// 	'args' => array(
-			// 		'type'    => 'multiselect',
-			// 		'options' => NULL, // requires $show context
-			// 		'default' => true,
-			// 		'form_field_callback' => function ( $format_id ) {
-			// 			$format = \Podlove\Model\Format::find_by_id( $format_id );
-			// 			return 'data-extension="' . $format->extension . '" data-suffix="' . $format->suffix . '"';
-			// 		}
-			// 	)
-			// ),
 			'duration' => array(
 				'label'       => \Podlove\t( 'Duration' ),
 				'description' => ''
 			),
-			// 'file_size' => array(
-			// 	'label'       => \Podlove\t( 'File Size' ),
-			// 	'description' => ''
-			// ),
-			// todo: always fetch file size automatically; do not display here
 			'cover_art' => array(
 				'label'       => \Podlove\t( 'Episode Cover Art URL' ),
 				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' )
@@ -199,6 +181,35 @@ class Podcast_Post_Type {
 			<?php foreach ( $this->form_data as $key => $value ): ?>
 				<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $release->{$key}, $key, $value ); ?>
 			<?php endforeach; ?>
+			<?php
+
+
+			$show_formats = $show->formats();
+
+			$format_values = array();
+			$format_options = array();
+			foreach ( $show_formats as $format ) {
+				// get formats configured for this show
+				$format_options[ $format->id ] = $format->name;
+				// find out which formats are active
+				$format_values[ $format->id ] = \Podlove\Model\File::find_or_create_by_release_id_and_format_id( $release->id, $format->id )->active;
+			}
+
+			$formats_form = array(
+				'label'       => \Podlove\t( 'File Formats' ),
+				'description' => '',
+				'args' => array(
+					'type'    => 'multiselect',
+					'options' => $format_options,
+					'default' => true,
+					'form_field_callback' => function ( $format_id ) {
+						$format = \Podlove\Model\Format::find_by_id( $format_id );
+						return 'data-extension="' . $format->extension . '" data-suffix="' . $format->suffix . '"';
+					}
+				)
+			);
+			\Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $format_values, 'formats', $formats_form );
+			?>
 		</table>
 		<?php
 	}
@@ -235,8 +246,11 @@ class Podcast_Post_Type {
 					$_POST[ '_podlove_meta' ][ $show_id ][ $key ] = true;
 			}
 			foreach ( $formats as $format_id ) {
-				if ( ! isset( $_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] ) )
+				if ( ! isset( $_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] ) ) {
 					$_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] = false;
+				} elseif ( $_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] === 'on' ) {
+					$_POST[ '_podlove_meta' ][ $show_id ][ 'formats' ][ $format_id ] = true;
+				}
 			}
 		}
 
@@ -250,6 +264,16 @@ class Podcast_Post_Type {
 				$release->{$release_column} = $release_values[ $release_column ];
 			
 			$release->save();
-		}		
+
+			// save files/formats
+			foreach ( $release_values[ 'formats' ] as $format_id => $format_value ) {
+				$file = \Podlove\Model\File::find_or_create_by_release_id_and_format_id( $release->id, $format_id );
+				if ( $file->active != $format_value ) {
+					$file->active = $format_value;
+					$file->save();
+				}
+			}
+
+		}
 	}
 }

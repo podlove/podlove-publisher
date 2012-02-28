@@ -18,6 +18,23 @@ class Show extends Base {
 		
 		return $t;
 	}
+
+	/**
+	 * Return all formats related to this show.
+	 *
+	 * @return array
+	 */
+	public function formats() {
+		$where = sprintf(
+			'id IN ( SELECT format_id FROM `%s` WHERE show_id = "%s" )',
+			Feed::table_name(),
+			$this->id
+		);
+
+		$formats = Format::find_all_by_where( $where );
+
+		return $formats;
+	}
 	
 }
 

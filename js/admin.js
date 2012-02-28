@@ -8,7 +8,7 @@ jQuery(function($) {
 			if ($($checkbox).is(":checked")) {
 				var url = "";
 				var media_file_base_uri = $container.find('input[name="show-media-file-base-uri"]').val();
-				var episode_slug        = $container.find('input[name*="file_slug"]').val();
+				var episode_slug        = $container.find('input[name*="slug"]').val();
 				var format_suffix       = $checkbox.data('suffix');
 				var format_extension    = $checkbox.data('extension');
 
@@ -24,6 +24,6 @@ jQuery(function($) {
 	
 	$("tr.row_formats td label").after('<span class="media_file_path"></span>');
 	update_media_file_path();
-	$('input[name*="file_slug"], input[name*="formats"]').on('change', update_media_file_path);
+	$('input[name*="slug"], input[name*="formats"]').on('change', update_media_file_path);
 	
 });

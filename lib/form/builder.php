@@ -68,7 +68,7 @@ class Builder {
 			?>
 			<div>
 				<label for="<?php echo $id; ?>">
-					<input type="checkbox" name="<?php echo $name; ?>]" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?> <?php echo $this->html; ?>> <?php echo $value; ?>
+					<input type="checkbox" name="<?php echo $name; ?>" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?> <?php echo $this->html; ?>> <?php echo $value; ?>
 				</label>
 			</div>
 			<?php

@@ -188,6 +188,32 @@ abstract class Base
 		
 		return $model;
 	}
+
+	public static function find_all_by_where( $where ) {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$models = array();
+		
+		$rows = $wpdb->get_results(
+			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where
+		);
+		
+		if ( ! $rows ) {
+			return array();
+		}
+		
+		foreach ( $rows as $row ) {
+			$model = new $class();
+			$model->flag_as_not_new();
+			foreach ( $row as $property => $value ) {
+				$model->$property = $value;
+			}
+			$models[] = $model;
+		}
+		
+		return $models;
+	}
 	
 	public static function find_one_by_where( $where ) {
 		global $wpdb;
