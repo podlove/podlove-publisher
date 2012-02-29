@@ -46,10 +46,11 @@ class File extends Base {
 		$release = Release::find_by_id( $this->release_id );
 		$format  = Format::find_by_id( $this->format_id );
 		$show    = Show::find_by_id( $release->show_id );
+		$feed    = Feed::find_by_show_id_and_format_id( $show->id, $format->id );
 
 		$url = $show->media_file_base_uri
 		     . $release->slug
-		     . $format->suffix
+		     . $feed->suffix
 		     . '.'
 		     . $format->extension;
 

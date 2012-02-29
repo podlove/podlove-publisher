@@ -20,10 +20,6 @@ class Format {
 				'label'       => \Podlove\t( 'Format Mime Type' ),
 				'description' => \Podlove\t( 'Example: audio/mpeg4' )
 			),
-			'suffix' => array(
-				'label'       => \Podlove\t( 'Suffix' ),
-				'description' => \Podlove\t( 'Is appended to the media file.' )
-			),
 			'extension' => array(
 				'label'       => \Podlove\t( 'Format Extension' ),
 				'description' => \Podlove\t( 'Example: m4a' )

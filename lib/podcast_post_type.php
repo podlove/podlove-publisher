@@ -193,10 +193,12 @@ class Podcast_Post_Type {
 				'type'    => 'multiselect',
 				'options' => $format_options,
 				'default' => true,
-				'form_field_callback' => function ( $format_id ) use ( $release ) {
+				'form_field_callback' => function ( $format_id ) use ( $release, $show ) {
 					$format = \Podlove\Model\Format::find_by_id( $format_id );
+					$feed   = \Podlove\Model\Feed::find_by_show_id_and_format_id( $show->id, $format_id );
 					$file   = \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format_id );
-					return 'data-extension="' . $format->extension . '" data-suffix="' . $format->suffix . '" data-size="' . $file->size . '"';
+					$filesize = ( is_object( $file ) ) ? $file->size : 0;					
+					return 'data-extension="' . $format->extension . '" data-suffix="' . $feed->suffix . '" data-size="' . $filesize . '"';
 				}
 			)
 		);

@@ -24,11 +24,11 @@ jQuery(function($) {
 				var url = "";
 				var media_file_base_uri = $container.find('input[name="show-media-file-base-uri"]').val();
 				var episode_slug        = $container.find('input[name*="slug"]').val();
-				var format_suffix       = $checkbox.data('suffix');
+				var feed_suffix         = $checkbox.data('suffix');
 				var format_extension    = $checkbox.data('extension');
 				var size                = $checkbox.data('size');
 
-				url = media_file_base_uri + episode_slug + format_suffix + '.' + format_extension;
+				url = media_file_base_uri + episode_slug + feed_suffix + '.' + format_extension;
 
 				output = '(' + url + ' [' + human_readable_size( size ) + '])';
 			} else {

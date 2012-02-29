@@ -44,6 +44,10 @@ class Feed {
 				'label'       => \Podlove\t( 'Slug' ),
 				'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->subscribe_url() ) : ''
 			),
+			'suffix' => array(
+				'label'       => \Podlove\t( 'File Suffix' ),
+				'description' => \Podlove\t( 'Is appended to the media file.' )
+			),			
 			'format_id' => array(
 				'label'       => \Podlove\t( 'File Format' ),
 				'description' => \Podlove\t( '' ),

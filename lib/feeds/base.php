@@ -112,7 +112,7 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 
 		$enclosure_url  = $show->media_file_base_uri;
 		$enclosure_url .= $file_slug;
-		$enclosure_url .= $format->suffix;
+		$enclosure_url .= $feed->suffix;
 		$enclosure_url .= '.';
 		$enclosure_url .= $format->extension;
 		

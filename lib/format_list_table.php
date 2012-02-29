@@ -18,10 +18,6 @@ class Format_List_Table extends \WP_List_Table {
 		) );
 	}
 	
-	function column_suffix( $format ) {
-		return $format->suffix;
-	}
-
 	function column_name( $format ) {
 		$actions = array(
 			'edit' => sprintf(
@@ -64,7 +60,6 @@ class Format_List_Table extends \WP_List_Table {
 		$columns = array(
 			'id'        => 'ID',
 			'name'      => 'Name',
-			'suffix'    => 'Suffix',
 			'format'    => 'Format',
 			'mime'      => 'MIME Type',
 			'extension' => 'Extension'

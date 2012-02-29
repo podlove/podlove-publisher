@@ -4,7 +4,7 @@ namespace Podlove;
 register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 register_uninstall_hook(    PLUGIN_FILE, __NAMESPACE__ . '\uninstall' );
-add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6);
+add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
 
 function activate_for_current_blog() {
 	Model\Feed::build();
@@ -16,19 +16,18 @@ function activate_for_current_blog() {
 	
 	if ( ! Model\Format::has_entries() ) {
 		$default_formats = array(
-			array( 'name' => 'MP3 Audio',              'suffix' => '-legacy',          'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
-			array( 'name' => 'BitTorrent (MP3 Audio)', 'suffix' => '-legacy',          'type' => 'audio', 'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent' ),
-			array( 'name' => 'MPEG-1 Video',           'suffix' => '-legacy',          'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
-			array( 'name' => 'MPEG-4 Audio',           'suffix' => '-modern',          'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
-			array( 'name' => 'MPEG-4 Video',           'suffix' => '-modern',          'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'm4v' ),
-			array( 'name' => 'Ogg Vorbis Audio',       'suffix' => '-oldschool',       'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'oga' ),
-			array( 'name' => 'Ogg Theora Video',       'suffix' => '-oldschool',       'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogv' ),
-			array( 'name' => 'WebM Audio',             'suffix' => '-chrome-audio',    'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
-			array( 'name' => 'WebM Video',             'suffix' => '-chrome-video',    'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
-			array( 'name' => 'Matroska Audio',         'suffix' => '-matroska',        'type' => 'audio', 'mime_type' => 'audio/x-matroska',  'extension' => 'mka' ),
-			array( 'name' => 'Matroska Video',         'suffix' => '-matroska',        'type' => 'video', 'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
+			array( 'name' => 'MP3 Audio',              'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
+			array( 'name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio', 'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent' ),
+			array( 'name' => 'MPEG-1 Video',           'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
+			array( 'name' => 'MPEG-4 Audio',           'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
+			array( 'name' => 'MPEG-4 Video',           'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'm4v' ),
+			array( 'name' => 'Ogg Vorbis Audio',       'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'oga' ),
+			array( 'name' => 'Ogg Theora Video',       'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogv' ),
+			array( 'name' => 'WebM Audio',             'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
+			array( 'name' => 'WebM Video',             'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
+			array( 'name' => 'Matroska Audio',         'type' => 'audio', 'mime_type' => 'audio/x-matroska',  'extension' => 'mka' ),
+			array( 'name' => 'Matroska Video',         'type' => 'video', 'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
 		);
-		// todo: move suffix to feed and make optional.
 		// todo: add flac
 		// todo: pentabarf-ish validation. summary of all conflicts / missing info is dashboard
 		
