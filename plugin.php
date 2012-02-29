@@ -40,29 +40,6 @@ function activate_for_current_blog() {
 			$f->save();
 		}
 	}
-	
-	// if ( ! Model\Show::has_entries() ) {
-	// 	$show                        = new Model\Show;
-	// 	$show->name                  = \Podlove\t( 'My Podcast' );
-	// 	$show->slug                  = \Podlove\t( 'my-podcast' );
-	// 	$show->subtitle              = \Podlove\t( 'I can haz listeners?' );
-	// 	$show->owner_email           = get_bloginfo( 'admin_email' );
-	// 	$show->explicit              = false;
-	// 	$show->url_delimiter         = '-';
-	// 	$show->episode_number_length = 3;
-	// 	$show->save();
-	// 	
-	// 	$feed                   = new Model\Feed;
-	// 	$feed->show_id          = $show->id;
-	// 	$feed->format_id        = Model\Format::find_one_by_name( 'MP3 Audio' )->id;
-	// 	$feed->name             = \Podlove\t( 'My Awesome Podcast Feed (MP3)' );
-	// 	$feed->title            = \Podlove\t( 'My Awesome Podcast Feed' );
-	// 	$feed->slug             = \Podlove\t( 'my-awesome-podcast-feed' );
-	// 	$feed->block            = false;
-	// 	$feed->discoverable     = true;
-	// 	$feed->show_description = true;
-	// 	$feed->save();
-	// }
 }
 
 /**
