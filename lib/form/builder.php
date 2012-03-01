@@ -58,8 +58,8 @@ class Builder {
 			$id = str_replace( array( '[', ']' ), '_', $id );
 			$id = str_replace( '__', '_', $id );
 			
-			if ( $this->field_values[ 'form_field_callback' ] ) {
-				$callback = call_user_func( $this->field_values[ 'form_field_callback' ], $key );
+			if ( isset( $this->field_values[ 'multiselect_callback' ] ) ) {
+				$callback = call_user_func( $this->field_values[ 'multiselect_callback' ], $key );
 			} else {
 				$callback = '';
 			}
@@ -90,8 +90,7 @@ class Builder {
 	 * 	
 	 * 	- before_input_callback lambda called at the beginning of the table cell
 	 * 	- after_input_callback  lambda called at the end of the table cell, after description
-	 * 	- form_field_callback   lambda to add additional attributes to the form field
-	 * 	@todo instead of form_field_callback, use html argument
+	 * 	- multiselect_callback  lambda to add additional attributes to the multiselect form fields
 	 */
 	public function input( $context, $value, $field_key, $field_values ) {
 		$type     = ( isset( $field_values[ 'type' ] ) )    ? $field_values[ 'type' ]    : 'text';

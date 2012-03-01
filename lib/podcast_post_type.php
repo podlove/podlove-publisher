@@ -231,18 +231,16 @@ class Podcast_Post_Type {
 		$formats_form = array(
 			'label'       => \Podlove\t( 'File Formats' ),
 			'description' => '',
-			'args' => array(
-				'type'    => 'multiselect',
-				'options' => $format_options,
-				'default' => true,
-				'form_field_callback' => function ( $format_id ) use ( $release, $show ) {
-					$format = \Podlove\Model\Format::find_by_id( $format_id );
-					$feed   = \Podlove\Model\Feed::find_by_show_id_and_format_id( $show->id, $format_id );
-					$file   = \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format_id );
-					$filesize = ( is_object( $file ) ) ? $file->size : 0;					
-					return 'data-extension="' . $format->extension . '" data-suffix="' . $feed->suffix . '" data-size="' . $filesize . '"';
-				}
-			)
+			'type'    => 'multiselect',
+			'options' => $format_options,
+			'default' => true,
+			'multiselect_callback' => function ( $format_id ) use ( $release, $show ) {
+				$format = \Podlove\Model\Format::find_by_id( $format_id );
+				$feed   = \Podlove\Model\Feed::find_by_show_id_and_format_id( $show->id, $format_id );
+				$file   = \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format_id );
+				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
+				return 'data-extension="' . $format->extension . '" data-suffix="' . $feed->suffix . '" data-size="' . $filesize . '"';
+			}
 		);
 
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
