@@ -32,9 +32,7 @@ class Feed {
 			'discoverable' => array(
 				'label'       => \Podlove\t( 'Discoverable?' ),
 				'description' => \Podlove\t( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.' ),
-				'args' => array(
-					'type'     => 'checkbox'
-				)
+				'type'     => 'checkbox'
 			),
 			'title' => array(
 				'label'       => \Podlove\t( 'Feed Title' ),
@@ -51,10 +49,8 @@ class Feed {
 			'format_id' => array(
 				'label'       => \Podlove\t( 'File Format' ),
 				'description' => \Podlove\t( '' ),
-				'args' => array(
-					'type'     => 'select',
-					'options'  => $formats
-				)
+				'type'     => 'select',
+				'options'  => $formats
 			),
 			'itunes_feed_id' => array(
 				'label'       => \Podlove\t( 'iTunes Feed ID' ),
@@ -63,9 +59,7 @@ class Feed {
 			'language' => array(
 				'label'       => \Podlove\t( 'Language' ),
 				'description' => \Podlove\t( '' ),
-				'args' => array(
-					'default' => get_bloginfo( 'language' )
-				)
+				'default' => get_bloginfo( 'language' )
 			),
 			// todo: select box with localized language names
 			// todo: add PING url; see feedburner doc
@@ -76,16 +70,12 @@ class Feed {
 			'block' => array(
 				'label'       => \Podlove\t( 'Block feed?' ),
 				'description' => \Podlove\t( 'Forbid podcast directories (e.g. iTunes) to list this feed.' ),
-				'args' => array(
-					'type'     => 'checkbox'
-				)
+				'type'     => 'checkbox'
 			),
 			'show_description' => array(
 				'label'       => \Podlove\t( 'Include Description?' ),
 				'description' => \Podlove\t( 'You may want to hide the episode descriptions to reduce the feed file size.' ),
-				'args' => array(
-					'type'     => 'checkbox'
-				)
+				'type'     => 'checkbox'
 			),
 			// todo include summary?
 			'limit_items' => array(
