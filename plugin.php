@@ -129,6 +129,26 @@ function uninstall_for_current_blog() {
 	Model\File::destroy();
 }
 
+/**
+ * Adds feed discover links to WordPress head.
+ *
+ * @todo find a better place for this function
+ */
+function add_feed_discoverability() {
+
+	if ( is_admin() )
+		return;
+
+	$feeds = \Podlove\Model\Feed::find_all_by_discoverable( 1 );
+
+	foreach ( $feeds as $feed )
+		echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->subscribe_url() . "\" />\n";	
+}
+
 add_action( 'init', function () {
 	new Podcast_Post_Type();
+
+	// priority 2 so they are placed below the WordPress default discovery links
+	add_action( 'wp_head', '\Podlove\add_feed_discoverability', 2 );
+
 });

@@ -30,6 +30,13 @@ class Feed extends Base {
 		$where = sprintf( 'show_id = "%s" AND format_id = "%s"', $show_id, $format_id );
 		return Feed::find_one_by_where( $where );
 	}
+
+	/**
+	 * For now, we support just atom.
+	 */
+	public function get_content_type() {
+		return "application/atom+xml";
+	}
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
