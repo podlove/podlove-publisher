@@ -6,6 +6,8 @@ namespace Podlove;
  * Custom Post Type: "podcast"
  */
 class Podcast_Post_Type {
+
+	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
 	
 	public function __construct() {
 		
@@ -97,28 +99,68 @@ class Podcast_Post_Type {
 	}
 		
 	public function create_menu() {
-		$handle = 'podlove_settings_handle';
 		
 		// create new top-level menu
 		$hook = add_menu_page(
 			/* $page_title */ 'Podlove Plugin Settings',
 			/* $menu_title */ 'Podlove',
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ $handle,
+			/* $menu_slug  */ self::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array( $this, 'settings_page' ),
 			/* $icon_url   */ PLUGIN_URL . '/images/podlove-icon-16x16.png'
 			/* $position   */
 		);
 		
-		new \Podlove\Settings\Format( $handle );
-		new \Podlove\Settings\Show( $handle );
+		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
 	}
 	
-	public function settings_page() {
-		// todo: dashboard
-		// validate all settings and notify about trouble
+	public function about_meta() {
 		?>
-		Work in Progress ...
+		Podlove rocks 😸
+		<?php
+	}
+
+	public function feed_overview_meta() {
+		$table = new \Podlove\Feed_List_Table();
+		$table->prepare_for_meta_box();
+		$table->prepare_items();
+		$table->display();
+	}
+
+	public function settings_page() {
+		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', \Podlove\t( 'About' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );
+		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_feeds', \Podlove\t( 'Feed Overview' ), array( $this, 'feed_overview_meta' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
+
+		?>
+		<div class="wrap">
+			<?php screen_icon( 'options-general' ); ?>
+			<h2><?php echo \Podlove\t( 'Podlove Dashboard' ); ?></h2>
+
+			<div id="poststuff" class="metabox-holder has-right-sidebar">
+				
+				<!-- sidebar -->
+				<div id="side-info-column" class="inner-sidebar">
+					<?php do_action( 'podlove_settings_before_sidebar_boxes' ); ?>
+					<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'side', NULL ); ?>
+					<?php do_action( 'podlove_settings_after_sidebar_boxes' ); ?>
+				</div>
+
+				<!-- main -->
+				<div id="post-body" class="has-sidebar">
+					<div id="post-body-content" class="has-sidebar-content">
+						<?php do_action( 'podlove_settings_before_main_boxes' ); ?>
+						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'normal', NULL ); ?>
+						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'additional', NULL ); ?>
+						<?php do_action( 'podlove_settings_after_main_boxes' ); ?>						
+					</div>
+				</div>
+
+				<br class="clear"/>
+
+			</div>
+
+		</div>
 		<?php
 	}
 	
