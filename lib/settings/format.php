@@ -155,18 +155,12 @@ class Format {
 	}
 	
 	private function form_template( $format, $action, $button_text = NULL ) {
-		?>
-		<form action="<?php echo admin_url( 'admin.php?page=' . $_REQUEST[ 'page' ] ) ?>" method="post">
-			<input type="hidden" name="format" value="<?php echo $format->id ?>" />
-			<input type="hidden" name="action" value="<?php echo $action; ?>" />
-			<table class="form-table">
-				<?php foreach ( $this->field_keys as $key => $value ): ?>
-					<?php \Podlove\Form\input( 'podlove_format', $format->{$key}, $key, $value ); ?>
-				<?php endforeach; ?>
-			</table>
-			<?php submit_button( $button_text ); ?>
-		</form>
-		<?php
+		$field_keys = $this->field_keys;
+
+		\Podlove\Form\build_for( $format, array( 'hidden' => array( 'format' => $format->id, 'action' => $action ) ), function ( $format ) use ( $field_keys ) {
+			foreach ( $field_keys as $key => $value )
+				\Podlove\Form\input( 'podlove_format', $format->{$key}, $key, $value );
+		} );
 	}
 	
 	private function edit_template() {
