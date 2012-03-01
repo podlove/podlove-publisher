@@ -17,10 +17,6 @@ class Show_List_Table extends \WP_List_Table {
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
-	
-	function column_slug( $show ) {
-		return $show->slug;
-	}
 
 	function column_name( $show ) {
 		$actions = array(
@@ -48,16 +44,33 @@ class Show_List_Table extends \WP_List_Table {
 		return $show->id;
 	}
 	
+	function column_cover( $show ) {
+		return $show->get_cover( '50' );
+	}
+
+	function column_feeds( $show ) {
+		$feeds = $show->feeds();
+
+		$out = '';
+
+		foreach ( $feeds as $feed ) {
+			$out .= '<div>' . $feed->get_subscribe_link() . '</div>';
+		}
+
+		return $out;
+	}
+
 	function column_media( $show ) {
 		return $show->media_file_base_uri;
 	}
 
 	function get_columns(){
 		$columns = array(
-			'id'   => 'ID',
-			'name' => 'Name',
-			'slug' => 'Slug',
-			'media'=> 'Media File Base URI'
+			'id'    => 'ID',
+			'cover' => 'Cover',
+			'name'  => 'Name',
+			'feeds' => 'Feeds',
+			'media' => 'Media File Base URI'
 		);
 		return $columns;
 	}

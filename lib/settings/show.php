@@ -271,6 +271,16 @@ class Show {
 	}
 	
 	private function view_template() {
+		?>
+		<style type="text/css">
+			.wp-list-table.shows .column-id {
+				width: 40px;
+			}
+			.wp-list-table.shows .column-cover {
+				width: 75px;
+			}
+		</style>
+		<?php
 		$table = new \Podlove\Show_List_Table();
 		$table->prepare_items();
 		$table->display();

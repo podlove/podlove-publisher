@@ -35,6 +35,28 @@ class Show extends Base {
 
 		return $formats;
 	}
+
+	/**
+	 * Return all feeds related to this show.
+	 * 
+	 * @return array
+	 */
+	function feeds() {
+		return Feed::find_all_by_show_id( $this->id );
+	}
+
+	/**
+	 * Get cover image img tag.
+	 * 
+	 * @param  int $dimensions width and height of image. default: 600
+	 * @return string
+	 */
+	public function get_cover( $dimensions = '600' ) {
+		if ( ! $this->cover_image )
+			return '';
+
+		return '<img src="' . $this->cover_image . '" alt="' . esc_attr( $this->name ) . '" width="' . $dimensions . '" height="' . $dimensions . '" />';
+	}
 	
 }
 

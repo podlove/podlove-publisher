@@ -142,7 +142,7 @@ function add_feed_discoverability() {
 	$feeds = \Podlove\Model\Feed::find_all_by_discoverable( 1 );
 
 	foreach ( $feeds as $feed )
-		echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->subscribe_url() . "\" />\n";	
+		echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";	
 }
 
 add_action( 'init', function () {

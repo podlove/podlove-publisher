@@ -42,7 +42,7 @@ class Feed {
 			),
 			'slug' => array(
 				'label'       => \Podlove\t( 'Slug' ),
-				'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->subscribe_url() ) : ''
+				'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
 			),
 			'suffix' => array(
 				'label'       => \Podlove\t( 'File Suffix' ),

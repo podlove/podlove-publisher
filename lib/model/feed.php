@@ -8,13 +8,23 @@ class Feed extends Base {
 	 *
 	 * @return string
 	 */
-	public function subscribe_url() {
+	public function get_subscribe_url() {
 		return sprintf(
 			'%s/feed/%s/%s/',
 			get_bloginfo( 'url' ),
 			$this->show()->slug,
 			$this->slug
 		);
+	}
+
+	/**
+	 * Build html link to subscribe.
+	 * 
+	 * @return string
+	 */
+	public function get_subscribe_link() {
+		$url = $this->get_subscribe_url();
+		return sprintf( '<a href="%s">%s</a>', $url, $url );
 	}
 
 	/**

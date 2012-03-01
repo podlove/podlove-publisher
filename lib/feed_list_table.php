@@ -56,8 +56,7 @@ class Feed_List_Table extends \WP_List_Table {
 	}
 
 	function column_url( $feed ) {
-		$url = $feed->subscribe_url();
-		return sprintf( '<a href="%s">%s</a>', $url, $url );
+		return $feed->get_subscribe_link();
 	}
 
 	function get_columns(){
