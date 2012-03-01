@@ -89,6 +89,11 @@ class Builder {
 	 * 		- default	default value
 	 * 		- html		array with additional html attributes. e.g. array( 'class' => 'regular-text' )
 	 * 		- options	array with options for select fields
+	 * 		
+	 * 		- before_input_callback lambda called at the beginning of the table cell
+	 * 		- after_input_callback  lambda called at the end of the table cell, after description
+	 * 		
+	 * @todo why nested 'args'? move all options to top level
 	 */
 	public function input( $context, $value, $field_key, $field_values ) {
 		$args     = ( isset( $field_values[ 'args' ] ) ) ? $field_values[ 'args' ] : array();
@@ -118,12 +123,18 @@ class Builder {
 		$this->field_id     = "{$context}_{$field_key}";
 		$this->html         = $html;
 		$this->args         = $args;
+
+		$this->before_input_callback = isset( $args[ 'before_input_callback' ] ) ? $args[ 'before_input_callback' ] : NULL;
+		$this->after_input_callback  = isset( $args[ 'after_input_callback' ] )  ? $args[ 'after_input_callback' ]  : NULL;
 		?>
 		<tr class="row_<?php echo $field_key; ?>">
 			<th scope="row" valign="top">
 				<label for="<?php echo $this->field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
 			</th>
 			<td>
+				<?php if ( $this->before_input_callback ): ?>
+					<?php call_user_func( $this->before_input_callback, array( 'value' => $this->field_value ) ); ?>
+				<?php endif ?>
 				<?php call_user_func_array( array( $this, $function ), array() ); ?>
 				<?php if ( $type !== 'checkbox' ): ?>
 					<br />
@@ -131,6 +142,9 @@ class Builder {
 				<?php if ( $field_values[ 'description' ] ): ?>
 					<span class="description"><?php echo $field_values[ 'description' ]; ?></span>
 				<?php endif; ?>
+				<?php if ( $this->after_input_callback ): ?>
+					<?php call_user_func( $this->after_input_callback, array( 'value' => $this->field_value ) ); ?>
+				<?php endif ?>
 			</td>
 		</tr>
 		<?php

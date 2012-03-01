@@ -34,7 +34,14 @@ class Show {
 				'label'       => \Podlove\t( 'Cover Image' ),
 				'description' => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
 				'args' => array(
-					'html' => array( 'class' => 'regular-text' )
+					'html'                  => array( 'class' => 'regular-text' ),
+					'before_input_callback' => function ( $args ) {
+						$src = $args[ 'value' ];
+						if ( ! empty( $src ) ) {
+							echo sprintf( '<img src="%s" width="%s" height="%s">', $src, 300, 300 );
+							echo '<br>';
+						}
+					}
 				)
 			),
 			'summary' => array(
