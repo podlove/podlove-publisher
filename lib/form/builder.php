@@ -1,6 +1,9 @@
 <?php
 namespace Podlove\Form;
 
+/**
+ * @deprecated use the input builder instead
+ */
 class Builder {
 	
 	private $context;
