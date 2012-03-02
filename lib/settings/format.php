@@ -155,11 +155,25 @@ class Format {
 	}
 	
 	private function form_template( $format, $action, $button_text = NULL ) {
-		$field_keys = $this->field_keys;
 
-		\Podlove\Form\build_for( $format, array( 'hidden' => array( 'format' => $format->id, 'action' => $action ) ), function ( $format ) use ( $field_keys ) {
-			foreach ( $field_keys as $key => $value )
-				\Podlove\Form\input( 'podlove_format', $format->{$key}, $key, $value );
+		\Podlove\Form\build_for( $format, array( 'context' => 'podlove_format', 'hidden' => array( 'format' => $format->id, 'action' => $action ) ), function ( $form ) {
+			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+
+	 		$wrapper->string( 'name', array(
+	 			'label'       => \Podlove\t( 'Name' ),
+	 			'description' => '' ) );
+
+	 		$wrapper->string( 'type', array(
+	 			'label'       => \Podlove\t( 'Format Type' ),
+	 			'description' => \Podlove\t( 'Example: audio' ) ) );
+
+	 		$wrapper->string( 'mime_type', array(
+	 			'label'       => \Podlove\t( 'Format Mime Type' ),
+	 			'description' => \Podlove\t( 'Example: audio/mpeg4' ) ) );
+
+	 		$wrapper->string( 'extension', array(
+	 			'label'       => \Podlove\t( 'Format Extension' ),
+	 			'description' => \Podlove\t( 'Example: m4a' ) ) );
 		} );
 	}
 	

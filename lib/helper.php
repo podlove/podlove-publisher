@@ -48,21 +48,8 @@ function build_for( $object, $args, $callback ) {
 	// determine method
 	$method = isset( $args[ 'method' ] ) ? $args[ 'method' ] : 'post';
 
-	/**
-	 * sketch:
-	 * $builder = new Builder( $object );
-	 * ... inside form table:
-	 * 	call_user_func( $callback, $builder );
-	 * ... when calling
-	 * \Podlove\Form\build_for( $object, NULL, function ( $form ) {
-	 *		//$object = $builder->object;
-	 *		$form->input( 'name' );
-	 *		$form->input( 'type' );
-	 *		$form->input( 'mime_type' );
-	 *		$form->input( 'extension', array( ... ) );
-	 * } );
-	 */
-
+	// determine context
+	$context = isset( $args[ 'context' ] ) ? $args[ 'context' ] : ''; 
 	?>
 	<form action="<?php echo $url; ?>" method="<?php echo $method; ?>">
 
@@ -73,7 +60,7 @@ function build_for( $object, $args, $callback ) {
 		<?php endif ?>
 
 		<table class="form-table">
-			<?php call_user_func( $callback, $object ); ?>
+			<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
 		</table>
 		<?php submit_button(); ?>
 	</form>
