@@ -43,6 +43,13 @@ class Builder {
 		return $compiled_html;
 	}
 
+	/**
+	 * Generate values required to build input fields.
+	 * 
+	 * @param  string $object_key name of the model attribute
+	 * @param  array  $arguments  input field options
+	 * @return void
+	 */
 	private function build_input_values( $object_key, $arguments ) {
 		$this->object_key = $object_key;
 		$this->arguments  = $arguments;
