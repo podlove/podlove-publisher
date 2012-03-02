@@ -117,6 +117,9 @@ class Show {
 	
 	/**
 	 * Process form: save/update a show
+	 * 
+	 * @todo we could pass 'podlove_show' as hidden context field. Then most
+	 * of this save logic is exactly the same for most if not all forms.
 	 */
 	private function save() {
 		if ( ! isset( $_REQUEST[ 'show' ] ) )
@@ -126,14 +129,26 @@ class Show {
 		
 		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
 			return;
-			
-		foreach ( $this->field_keys as $key => $values ) {
-			if ( isset( $values[ 'args' ] ) && isset( $values[ 'args' ][ 'type' ] ) && $values[ 'args' ][ 'type' ] == 'checkbox' ) {
-				$show->{$key} = ( isset( $_POST[ 'podlove_show' ][ $key ] ) &&  $_POST[ 'podlove_show' ][ $key ] === 'on' ) ? 1 : 0;
-			} else {
-				$show->{$key} = $_POST[ 'podlove_show' ][ $key ];
+
+		// save form data
+		foreach ( $_POST[ 'podlove_show' ] as $key => $value )
+			$show->{$key} = $value;
+
+		// speacial treatment for checkboxes
+		// reason:	if you uncheck a checkbox and submit the form, there is no
+		// 			data sent at all. That's why there is the extra hidden field
+		// 			"checkboxes". We can iterate over it here and check if the
+		// 			known checkboxes have been set or not.
+		if ( isset( $_POST[ 'checkboxes' ] ) && is_array( $_POST[ 'checkboxes' ] ) ) {
+			foreach ( $_POST[ 'checkboxes' ] as $checkbox_field_name ) {
+				if ( isset( $_POST[ 'podlove_show' ][ $checkbox_field_name ] ) && $_POST[ 'podlove_show' ][ $checkbox_field_name ] === 'on' ) {
+					$show->{$checkbox_field_name} = 1;
+				} else {
+					$show->{$checkbox_field_name} = 0;
+				}
 			}
 		}
+
 		$show->save();
 		
 		$this->redirect( 'edit', $show->id );
@@ -253,97 +268,93 @@ class Show {
 		\Podlove\Form\build_for( $show, array( 'context' => 'podlove_show', 'hidden' => array( 'show' => $show->id, 'action' => $action ) ), function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
-
-		// $this->field_keys = array(
-		// 	'name' => array(
-		// 		'label'       => \Podlove\t( 'Show Title' ),
-		// 		'description' => \Podlove\t( '' ),
-		// 		'html'        => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'subtitle' => array(
-		// 		'label'       => \Podlove\t( 'Show Subtitle' ),
-		// 		'description' => \Podlove\t( 'The subtitle is used by iTunes.' ),
-		// 		'html'        => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'slug' => array(
-		// 		'label'       => \Podlove\t( 'Show Slug' ),
-		// 		'description' => \Podlove\t( 'Is part of the feed URL.' ),
-		// 		'html'        => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'cover_image' => array(
-		// 		'label'       => \Podlove\t( 'Cover Image' ),
-		// 		'description' => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
-		// 		'html'        => array( 'class' => 'regular-text' ),
-		// 		'before_input_callback' => function ( $args ) {
-		// 			$src = $args[ 'value' ];
-		// 			if ( ! empty( $src ) ) {
-		// 				echo sprintf( '<img src="%s" width="%s" height="%s">', $src, 300, 300 );
-		// 				echo '<br>';
-		// 			}
-		// 		}
-		// 	),
-		// 	'summary' => array(
-		// 		'label'       => \Podlove\t( 'Summary' ),
-		// 		'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
-		// 		'type'        => 'textarea',
-		// 		'html'        => array( 'rows' => 5, 'cols' => 40 )
-		// 	),
-		// 	'author_name' => array(
-		// 		'label'       => \Podlove\t( 'Author Name' ),
-		// 		'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'owner_name' => array(
-		// 		'label'       => \Podlove\t( 'Owner Name' ),
-		// 		'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'owner_email' => array(
-		// 		'label'       => \Podlove\t( 'Owner Email' ),
-		// 		'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'keywords' => array(
-		// 		'label'       => \Podlove\t( 'Keywords' ),
-		// 		'description' => \Podlove\t( 'List of keywords. Separate with commas.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'category_1' => array(
-		// 		'label'       => \Podlove\t( 'iTunes Categories' ),
-		// 		'description' => '',
-		// 		'type'     => 'select',
-		// 		'options'  => \Podlove\Itunes\categories()
-		// 	),
-		// 	'category_2' => array(
-		// 		'label'       => '',
-		// 		'description' => '',
-		// 		'type'     => 'select',
-		// 		'options'  => \Podlove\Itunes\categories()
-		// 	),
-		// 	'category_3' => array(
-		// 		'label'       => '',
-		// 		'description' => '',
-		// 		'type'     => 'select',
-		// 		'options'  => \Podlove\Itunes\categories()
-		// 	),
-		// 	'explicit' => array(
-		// 		'label'       => \Podlove\t( 'Explicit Content?' ),
-		// 		'description' => \Podlove\t( '' ),
-		// 		'type'    => 'checkbox'
-		// 	),
-		// 	'media_file_base_uri' => array(
-		// 		'label'       => \Podlove\t( 'Media File Base URI' ),
-		// 		'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// );
-		// 
-		// 
-
 			$wrapper->string( 'name', array(
 				'label'       => \Podlove\t( 'Show Title' ),
 				'description' => \Podlove\t( '' ),
 				'html'        => array( 'class' => 'regular-text' )
+			) );
+
+			$wrapper->string( 'subtitle', array(
+				'label'       => \Podlove\t( 'Show Subtitle' ),
+				'description' => \Podlove\t( 'The subtitle is used by iTunes.' ),
+				'html'        => array( 'class' => 'regular-text' )
+			) );
+
+			$wrapper->string( 'slug', array(
+				'label'       => \Podlove\t( 'Show Slug' ),
+				'description' => \Podlove\t( 'Is part of the feed URL.' ),
+				'html'        => array( 'class' => 'regular-text' )
+			) );
+
+			$wrapper->image( 'cover_image', array(
+				'label'        => \Podlove\t( 'Cover Image' ),
+				'description'  => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
+				'html'         => array( 'class' => 'regular-text' ),
+				'image_width'  => 300,
+				'image_height' => 300
+			) );
+
+			$wrapper->text( 'summary', array(
+				'label'       => \Podlove\t( 'Summary' ),
+				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
+				'html'        => array( 'rows' => 5, 'cols' => 40 )
+			) );
+
+			$wrapper->string( 'author_name', array(
+				'label'       => \Podlove\t( 'Author Name' ),
+				'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' ),
+				'html' => array( 'class' => 'regular-text' )
+			) );
+	
+			$wrapper->string( 'owner_name', array(
+				'label'       => \Podlove\t( 'Owner Name' ),
+				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
+				'html' => array( 'class' => 'regular-text' )
+			) );
+	
+			$wrapper->string( 'owner_email', array(
+				'label'       => \Podlove\t( 'Owner Email' ),
+				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
+				'html' => array( 'class' => 'regular-text' )
+			) );
+	
+			$wrapper->string( 'keywords', array(
+				'label'       => \Podlove\t( 'Keywords' ),
+				'description' => \Podlove\t( 'List of keywords. Separate with commas.' ),
+				'html' => array( 'class' => 'regular-text' )
+			) );
+
+			$wrapper->select( 'category_1', array(
+				'label'       => \Podlove\t( 'iTunes Categories' ),
+				'description' => '',
+				'type'     => 'select',
+				'options'  => \Podlove\Itunes\categories()
+			) );
+
+			$wrapper->select( 'category_2', array(
+				'label'       => '',
+				'description' => '',
+				'type'     => 'select',
+				'options'  => \Podlove\Itunes\categories()
+			) );
+
+			$wrapper->select( 'category_3', array(
+				'label'       => '',
+				'description' => '',
+				'type'     => 'select',
+				'options'  => \Podlove\Itunes\categories()
+			) );
+
+			$wrapper->checkbox( 'explicit', array(
+				'label'       => \Podlove\t( 'Explicit Content?' ),
+				'description' => \Podlove\t( '' ),
+				'type'    => 'checkbox'
+			) );
+
+			$wrapper->string( 'media_file_base_uri', array(
+				'label'       => \Podlove\t( 'Media File Base URI' ),
+				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
+				'html' => array( 'class' => 'regular-text' )
 			) );
 
 		} );

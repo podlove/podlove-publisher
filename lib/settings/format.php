@@ -49,13 +49,9 @@ class Format {
 		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
 			return;
 			
-		foreach ( $this->field_keys as $key => $values ) {
-			if ( isset( $values[ 'args' ] ) && isset( $values[ 'args' ][ 'type' ] ) && $values[ 'args' ][ 'type' ] == 'checkbox' ) {
-				$format->{$key} = ( isset( $_POST[ 'podlove_format' ][ $key ] ) &&  $_POST[ 'podlove_format' ][ $key ] === 'on' ) ? 1 : 0;
-			} else {
-				$format->{$key} = $_POST[ 'podlove_format' ][ $key ];
-			}
-		}
+		foreach ( $_POST[ 'podlove_format' ] as $key => $value )
+			$format->{$key} = $value;
+
 		$format->save();
 		
 		$this->redirect( 'edit', $format->id );
