@@ -20,7 +20,6 @@ class Feed {
 		foreach ( $raw_formats as $format ) {
 			$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
 		}
-		// todo: in brackets: extension
 		
 		$this->field_keys = array(
 			'name' => array(

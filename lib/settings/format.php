@@ -3,28 +3,7 @@ namespace Podlove\Settings;
 
 class Format {
 	
-	protected $field_keys;
-	
 	public function __construct( $handle ) {
-		
-		$this->field_keys = array(
-			'name' => array(
-				'label'       => \Podlove\t( 'Name' ),
-				'description' => \Podlove\t( '' )
-			),
-			'type' => array(
-				'label'       => \Podlove\t( 'Format Type' ),
-				'description' => \Podlove\t( 'Example: audio' )
-			),
-			'mime_type' => array(
-				'label'       => \Podlove\t( 'Format Mime Type' ),
-				'description' => \Podlove\t( 'Example: audio/mpeg4' )
-			),
-			'extension' => array(
-				'label'       => \Podlove\t( 'Format Extension' ),
-				'description' => \Podlove\t( 'Example: m4a' )
-			),
-		);
 		
 		add_submenu_page(
 			/* $parent_slug*/ $handle,

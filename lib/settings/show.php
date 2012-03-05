@@ -3,94 +3,9 @@ namespace Podlove\Settings;
 
 class Show {
 	
-	protected $field_keys;
 	protected $pagehook;
 	
 	public function __construct( $handle ) {
-
-		// $this->field_keys = array(
-		// 	'name' => array(
-		// 		'label'       => \Podlove\t( 'Show Title' ),
-		// 		'description' => \Podlove\t( '' ),
-		// 		'html'        => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'subtitle' => array(
-		// 		'label'       => \Podlove\t( 'Show Subtitle' ),
-		// 		'description' => \Podlove\t( 'The subtitle is used by iTunes.' ),
-		// 		'html'        => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'slug' => array(
-		// 		'label'       => \Podlove\t( 'Show Slug' ),
-		// 		'description' => \Podlove\t( 'Is part of the feed URL.' ),
-		// 		'html'        => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'cover_image' => array(
-		// 		'label'       => \Podlove\t( 'Cover Image' ),
-		// 		'description' => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
-		// 		'html'        => array( 'class' => 'regular-text' ),
-		// 		'before_input_callback' => function ( $args ) {
-		// 			$src = $args[ 'value' ];
-		// 			if ( ! empty( $src ) ) {
-		// 				echo sprintf( '<img src="%s" width="%s" height="%s">', $src, 300, 300 );
-		// 				echo '<br>';
-		// 			}
-		// 		}
-		// 	),
-		// 	'summary' => array(
-		// 		'label'       => \Podlove\t( 'Summary' ),
-		// 		'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
-		// 		'type'        => 'textarea',
-		// 		'html'        => array( 'rows' => 5, 'cols' => 40 )
-		// 	),
-		// 	'author_name' => array(
-		// 		'label'       => \Podlove\t( 'Author Name' ),
-		// 		'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'owner_name' => array(
-		// 		'label'       => \Podlove\t( 'Owner Name' ),
-		// 		'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'owner_email' => array(
-		// 		'label'       => \Podlove\t( 'Owner Email' ),
-		// 		'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'keywords' => array(
-		// 		'label'       => \Podlove\t( 'Keywords' ),
-		// 		'description' => \Podlove\t( 'List of keywords. Separate with commas.' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// 	'category_1' => array(
-		// 		'label'       => \Podlove\t( 'iTunes Categories' ),
-		// 		'description' => '',
-		// 		'type'     => 'select',
-		// 		'options'  => \Podlove\Itunes\categories()
-		// 	),
-		// 	'category_2' => array(
-		// 		'label'       => '',
-		// 		'description' => '',
-		// 		'type'     => 'select',
-		// 		'options'  => \Podlove\Itunes\categories()
-		// 	),
-		// 	'category_3' => array(
-		// 		'label'       => '',
-		// 		'description' => '',
-		// 		'type'     => 'select',
-		// 		'options'  => \Podlove\Itunes\categories()
-		// 	),
-		// 	'explicit' => array(
-		// 		'label'       => \Podlove\t( 'Explicit Content?' ),
-		// 		'description' => \Podlove\t( '' ),
-		// 		'type'    => 'checkbox'
-		// 	),
-		// 	'media_file_base_uri' => array(
-		// 		'label'       => \Podlove\t( 'Media File Base URI' ),
-		// 		'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
-		// 		'html' => array( 'class' => 'regular-text' )
-		// 	),
-		// );
 		
 		$this->pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,

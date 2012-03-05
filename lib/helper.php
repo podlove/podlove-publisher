@@ -32,6 +32,8 @@ function input( $context, $object, $field_key, $field_value ) {
  * 		- hidden dictionary with hidden values
  * @param  function $callback inner form
  * @return void
+ * 
+ * @todo  refactor into a wrapper so the <table> is optional
  */
 function build_for( $object, $args, $callback ) {
 
