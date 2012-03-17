@@ -57,16 +57,27 @@ class Show {
 				foreach ( $feed_data as $key => $value ) {
 					$feed->{$key} = $value;
 				}
+
+				// special treatment for nested checkboxes
+				// FIXME: make this work without hardcoding the field names
+				$checkbox_fields = array( 'discoverable', 'block', 'show_description' );
+				foreach ( $checkbox_fields as $checkbox_field ) {
+					if ( isset( $_POST[ 'podlove_show' ][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] ) && $_POST[ 'podlove_show' ][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] === 'on' ) {
+						$feed->{$checkbox_field} = 1;
+					} else {
+						$feed->{$checkbox_field} = 0;
+					}
+				}
+
 				$feed->save();
 			}
 		}
 			
-		// speacial treatment for checkboxes
+		// special treatment for checkboxes
 		// reason:	if you uncheck a checkbox and submit the form, there is no
 		// 			data sent at all. That's why there is the extra hidden field
 		// 			"checkboxes". We can iterate over it here and check if the
 		// 			known checkboxes have been set or not.
-		// @FIXME: checkboxes for nested models
 		if ( isset( $_POST[ 'checkboxes' ] ) && is_array( $_POST[ 'checkboxes' ] ) ) {
 			foreach ( $_POST[ 'checkboxes' ] as $checkbox_field_name ) {
 				if ( isset( $_POST[ 'podlove_show' ][ $checkbox_field_name ] ) && $_POST[ 'podlove_show' ][ $checkbox_field_name ] === 'on' ) {
