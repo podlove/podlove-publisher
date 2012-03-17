@@ -206,6 +206,7 @@ class Show {
 	private function form_template( $show, $action, $button_text = NULL ) {
 		\Podlove\Form\build_for( $show, array( 'context' => 'podlove_show', 'hidden' => array( 'show' => $show->id, 'action' => $action ) ), function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+			$show = $form->object;
 
 			$wrapper->string( 'name', array(
 				'label'       => \Podlove\t( 'Show Title' ),
@@ -295,6 +296,18 @@ class Show {
 				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
+
+			?>
+			<tr>
+				<td colspan="2">
+					<span class="add">
+						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
+							<?php echo \Podlove\t( 'Add New Feed' ); ?>
+						</a>
+					</span>
+				</td>
+			</tr>
+			<?php
 
 			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
 			if ( $feeds ) {	
@@ -391,7 +404,7 @@ class Show {
 								<tr>
 									<td colspan="2">
 										<span class="delete">
-											<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $feed->show()->id;; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
+											<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $show->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
 												<?php echo \Podlove\t( 'Delete Feed' ); ?>
 											</a>
 										</span>
