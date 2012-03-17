@@ -16,6 +16,9 @@ class Show {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+
+		// init so we can process creation and deletion of feeds
+		new \Podlove\Settings\Feed();
 	}
 	
 	/**
@@ -385,6 +388,15 @@ class Show {
 									// todo: radio 1) wp default (show default) 2) custom 3) all 4) limit feed size (default = 512k = feedburner)						
 								} );
 								?>
+								<tr>
+									<td colspan="2">
+										<span class="delete">
+											<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $feed->show()->id;; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
+												<?php echo \Podlove\t( 'Delete Feed' ); ?>
+											</a>
+										</span>
+									</td>
+								</tr>
 							</table>
 						</td>
 					</tr>
