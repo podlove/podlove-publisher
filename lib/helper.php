@@ -34,6 +34,7 @@ function input( $context, $object, $field_key, $field_value ) {
  * @return void
  * 
  * @todo  refactor into a wrapper so the <table> is optional
+ * @todo  hidden fields should be added via input builders
  */
 function build_for( $object, $args, $callback ) {
 

@@ -46,14 +46,27 @@ class Show {
 			return;
 
 		// save form data
-		foreach ( $_POST[ 'podlove_show' ] as $key => $value )
-			$show->{$key} = $value;
+		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
+			if ( $key !== 'podlove_feed' )
+				$show->{$key} = $value;
+		}
 
+		if ( isset( $_POST[ 'podlove_show' ][ 'podlove_feed' ] ) ) {
+			foreach ( $_POST[ 'podlove_show' ][ 'podlove_feed' ] as $feed_id => $feed_data ) {
+				$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
+				foreach ( $feed_data as $key => $value ) {
+					$feed->{$key} = $value;
+				}
+				$feed->save();
+			}
+		}
+			
 		// speacial treatment for checkboxes
 		// reason:	if you uncheck a checkbox and submit the form, there is no
 		// 			data sent at all. That's why there is the extra hidden field
 		// 			"checkboxes". We can iterate over it here and check if the
 		// 			known checkboxes have been set or not.
+		// @FIXME: checkboxes for nested models
 		if ( isset( $_POST[ 'checkboxes' ] ) && is_array( $_POST[ 'checkboxes' ] ) ) {
 			foreach ( $_POST[ 'checkboxes' ] as $checkbox_field_name ) {
 				if ( isset( $_POST[ 'podlove_show' ][ $checkbox_field_name ] ) && $_POST[ 'podlove_show' ][ $checkbox_field_name ] === 'on' ) {
@@ -272,7 +285,108 @@ class Show {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
+			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
+			if ( $feeds ) {	
+				foreach ( $feeds as $feed ) {
+					?>
+					<tr>
+						<td colspan="2">
+							<table>
+								<tr>
+									<th colspan="2">
+										<h3><?php echo sprintf( __( 'Configure Feed: %s' ), $feed->name ) ; ?></h3>
+									</th>
+								</tr>
+								<?php
+								$wrapper->fields_for( $feed, array( 'context' => 'podlove_feed' ), function ( $feed_form ) {
+									$feed_wrapper = new \Podlove\Form\Input\TableWrapper( $feed_form );
+
+									$feed = $feed_form->object;
+
+									$raw_formats = \Podlove\Model\Format::all();
+									$formats = array();
+									foreach ( $raw_formats as $format ) {
+										$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
+									}									
+
+									$feed_wrapper->string( 'name', array(
+										'label'       => \Podlove\t( 'Internal Name' ),
+										'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' )
+									) );
+
+									$feed_wrapper->checkbox( 'discoverable', array(
+										'label'       => \Podlove\t( 'Discoverable?' ),
+										'description' => \Podlove\t( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.' )
+									) );
+
+									$feed_wrapper->string( 'title', array(
+										'label'       => \Podlove\t( 'Feed Title' ),
+										'description' => \Podlove\t( 'This is how this feed is presented to users of podcast clients.' )
+									) );
+									
+									$feed_wrapper->string( 'slug', array(
+										'label'       => \Podlove\t( 'Slug' ),
+										'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
+									) );
+									
+									$feed_wrapper->string( 'suffix', array(
+										'label'       => \Podlove\t( 'File Suffix' ),
+										'description' => \Podlove\t( 'Is appended to the media file.' )
+									) );
+												
+									$feed_wrapper->select( 'format_id', array(
+										'label'       => \Podlove\t( 'File Format' ),
+										'description' => \Podlove\t( '' ),
+										'options'  => $formats
+									) );
+									
+									$feed_wrapper->string( 'itunes_feed_id', array(
+										'label'       => \Podlove\t( 'iTunes Feed ID' ),
+										'description' => \Podlove\t( 'Is used to generate a link to the iTunes directory.' )
+									) );
+									
+									$feed_wrapper->string( 'language', array(
+										'label'       => \Podlove\t( 'Language' ),
+										'description' => \Podlove\t( '' ),
+										'default' => get_bloginfo( 'language' )
+									) );
+									
+									// todo: select box with localized language names
+									// todo: add PING url; see feedburner doc
+									$feed_wrapper->string( 'redirect_url', array(
+										'label'       => \Podlove\t( 'Redirect Url' ),
+										'description' => \Podlove\t( 'e.g. Feedburner URL' )
+									) );
+									
+									$feed_wrapper->checkbox( 'block', array(
+										'label'       => \Podlove\t( 'Block feed?' ),
+										'description' => \Podlove\t( 'Forbid podcast directories (e.g. iTunes) to list this feed.' )
+									) );
+									
+									$feed_wrapper->checkbox( 'show_description', array(
+										'label'       => \Podlove\t( 'Include Description?' ),
+										'description' => \Podlove\t( 'You may want to hide the episode descriptions to reduce the feed file size.' )
+									) );
+									
+									// todo include summary?
+									$feed_wrapper->string( 'limit_items', array(
+										'label'       => \Podlove\t( 'Limit Items' ),
+										'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' )
+									) );
+									
+									// todo: radio 1) wp default (show default) 2) custom 3) all 4) limit feed size (default = 512k = feedburner)						
+								} );
+								?>
+							</table>
+						</td>
+					</tr>
+					<?php
+				}
+			}
+
 		} );
+
+		/*
 		?>
 		
 		<?php // todo: see WordPress settings page for menus. suitable for feed management? ?>
@@ -292,6 +406,8 @@ class Show {
 			</div>
 		<?php endif; ?>
 		<?php
+		*/
+		
 		// todo clean up show/feed form
 		// - "save updates" should update whole page
 	}

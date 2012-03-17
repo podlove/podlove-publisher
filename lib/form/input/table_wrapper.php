@@ -7,12 +7,14 @@ class TableWrapper extends Wrapper {
 		?>
 		<tr class="row_<?php echo $field_id; ?>">
 			<th scope="row" valign="top">
-				<label for="<?php echo $field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
+				<?php if ( isset( $field_values[ 'label' ] ) && $field_values[ 'label' ] ): ?>
+					<label for="<?php echo $field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
+				<?php endif ?>
 			</th>
 			<td>
 				<?php call_user_func( $block ); ?>
 				<!-- <br /> -->
-				<?php if ( $field_values[ 'description' ] ): ?>
+				<?php if ( isset( $field_values[ 'description' ] ) &&  $field_values[ 'description' ] ): ?>
 					<span class="description"><?php echo $field_values[ 'description' ]; ?></span>
 				<?php endif; ?>
 			</td>

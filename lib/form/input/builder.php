@@ -119,5 +119,21 @@ class Builder {
 		<?php
 	}
 
+	/**
+	 * Build nested form.
+	 * 
+	 * @param  object   $object   object that shall be modified via the form
+	 * @param  array    $args     list of options, all optional
+	 * 		- hidden dictionary with hidden values
+	 * @param  function $callback inner form
+	 * @return void
+	 */
+	function fields_for( $object, $args, $callback ) {
+		// determine context
+		$context = isset( $args[ 'context' ] ) ? $this->context . '[' . $args[ 'context' ] . ']' . "[{$object->id}]" : $this->context; 
+		// build input elements
+		call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) );
+	}
+
 }
 
