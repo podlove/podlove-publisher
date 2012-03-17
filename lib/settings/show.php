@@ -16,18 +16,6 @@ class Show {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		
-		if ( isset( $_REQUEST[ 'show' ] ) ) {
-			$show_id = (int) $_REQUEST[ 'show' ];
-			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $show_id );
-			foreach ( $feeds as $feed ) {
-				new \Podlove\Settings\Feed( $this->pagehook, $feed );
-			}
-			// init one feed so the hooks can be registered
-			if ( count( $feeds ) === 0 )
-				new \Podlove\Settings\Feed( $this->pagehook, NULL );
-			
-		}
 	}
 	
 	/**
@@ -201,6 +189,15 @@ class Show {
 		$table = new \Podlove\Show_List_Table();
 		$table->prepare_items();
 		$table->display();
+	}
+
+	private function edit_template() {
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
+		?>
+		<h3><?php echo \Podlove\t( 'Edit Show' ); ?>: <?php echo $show->name ?></h3>
+		
+		<?php $this->form_template( $show, 'save' ); ?>
+		<?php
 	}
 	
 	private function form_template( $show, $action, $button_text = NULL ) {
@@ -397,39 +394,8 @@ class Show {
 
 		} );
 
-		/*
-		?>
-		
-		<?php // todo: see WordPress settings page for menus. suitable for feed management? ?>
-		<?php if ( ! $show->is_new() ): ?>
-			<h3><?php echo \Podlove\t( 'Feeds' ); ?> <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;show=<?php echo $show->id ?>&amp;action=create" class="add-new-h2" style="font-weight:normal"><?php echo \Podlove\t( 'Add New' ); ?></a></h3>
-
-			<div class="metabox-holder">
-				<?php
-				if ( is_multisite() && is_plugin_active_for_network( plugin_basename( PLUGIN_FILE ) ) )
-					$options = get_site_option( $_REQUEST[ 'page' ] );
-				else
-					$options = get_option( $_REQUEST[ 'page' ] );
-
-				do_meta_boxes( $this->pagehook, 'normal', $options );
-				do_meta_boxes( $this->pagehook, 'additional', $options );
-				?>
-			</div>
-		<?php endif; ?>
-		<?php
-		*/
-		
-		// todo clean up show/feed form
-		// - "save updates" should update whole page
-	}
-	
-	private function edit_template() {
-		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
-		?>
-		<h3><?php echo \Podlove\t( 'Edit Show' ); ?>: <?php echo $show->name ?></h3>
-		
-		<?php $this->form_template( $show, 'save' ); ?>
-		<?php
+		// do_meta_boxes( $this->pagehook, 'normal', array() );
+		// do_meta_boxes( $this->pagehook, 'additional', array() );
 	}
 	
 }
