@@ -15,10 +15,8 @@ class Podcast_Post_Type {
 			'active' => array(
 				'label'       => \Podlove\t( 'Include Episode' ), // todo: hide/show rest of the form
 				'description' => '',
-				'args' => array(
-					'type'     => 'checkbox',
-					'default'  => true
-				)
+				'type'     => 'checkbox',
+				'default'  => true
 			),
 			// todo: add subtitle; but as extra metabox
 			'slug' => array(
@@ -36,10 +34,8 @@ class Podcast_Post_Type {
 			'block' => array(
 				'label'       => \Podlove\t( 'Block?' ),
 				'description' => \Podlove\t( 'Forbid iTunes to list this episode.' ),
-				'args' => array(
-					'type'     => 'checkbox',
-					'default'  => false
-				)
+				'type'     => 'checkbox',
+				'default'  => false
 			),
 		);
 		

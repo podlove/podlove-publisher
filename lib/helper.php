@@ -23,6 +23,53 @@ function input( $context, $object, $field_key, $field_value ) {
 	$builder->input( $context, $object, $field_key, $field_value );
 }
 
+/**
+ * Build whole form
+ * @param  object   $object   object that shall be modified via the form
+ * @param  array    $args     list of options, all optional
+ * 		- action form action url
+ * 		- method get, post
+ * 		- hidden dictionary with hidden values
+ * @param  function $callback inner form
+ * @return void
+ * 
+ * @todo  refactor into a wrapper so the <table> is optional
+ * @todo  hidden fields should be added via input builders
+ */
+function build_for( $object, $args, $callback ) {
+
+	// determine form action url
+	if ( isset( $args[ 'action' ] ) ) {
+		$url = $args[ 'action' ];
+	} else {
+		$url = is_admin() ? 'admin.php' : '';
+		if ( isset( $_REQUEST[ 'page' ] ) ) {
+			$url .= '?page=' . $_REQUEST[ 'page' ];
+		}
+	}
+
+	// determine method
+	$method = isset( $args[ 'method' ] ) ? $args[ 'method' ] : 'post';
+
+	// determine context
+	$context = isset( $args[ 'context' ] ) ? $args[ 'context' ] : ''; 
+	?>
+	<form action="<?php echo $url; ?>" method="<?php echo $method; ?>">
+
+		<?php if ( $args[ 'hidden' ] ): ?>
+			<?php foreach ( $args[ 'hidden' ] as $name => $value ): ?>
+				<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />		
+			<?php endforeach ?>
+		<?php endif ?>
+
+		<table class="form-table">
+			<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
+		</table>
+		<?php submit_button(); ?>
+	</form>
+	<?php
+}
+
 namespace Podlove\Itunes;
 
 /**

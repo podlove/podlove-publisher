@@ -3,28 +3,7 @@ namespace Podlove\Settings;
 
 class Format {
 	
-	protected $field_keys;
-	
 	public function __construct( $handle ) {
-		
-		$this->field_keys = array(
-			'name' => array(
-				'label'       => \Podlove\t( 'Name' ),
-				'description' => \Podlove\t( '' )
-			),
-			'type' => array(
-				'label'       => \Podlove\t( 'Format Type' ),
-				'description' => \Podlove\t( 'Example: audio' )
-			),
-			'mime_type' => array(
-				'label'       => \Podlove\t( 'Format Mime Type' ),
-				'description' => \Podlove\t( 'Example: audio/mpeg4' )
-			),
-			'extension' => array(
-				'label'       => \Podlove\t( 'Format Extension' ),
-				'description' => \Podlove\t( 'Example: m4a' )
-			),
-		);
 		
 		add_submenu_page(
 			/* $parent_slug*/ $handle,
@@ -49,13 +28,9 @@ class Format {
 		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
 			return;
 			
-		foreach ( $this->field_keys as $key => $values ) {
-			if ( isset( $values[ 'args' ] ) && isset( $values[ 'args' ][ 'type' ] ) && $values[ 'args' ][ 'type' ] == 'checkbox' ) {
-				$format->{$key} = ( isset( $_POST[ 'podlove_format' ][ $key ] ) &&  $_POST[ 'podlove_format' ][ $key ] === 'on' ) ? 1 : 0;
-			} else {
-				$format->{$key} = $_POST[ 'podlove_format' ][ $key ];
-			}
-		}
+		foreach ( $_POST[ 'podlove_format' ] as $key => $value )
+			$format->{$key} = $value;
+
 		$format->save();
 		
 		$this->redirect( 'edit', $format->id );
@@ -155,18 +130,26 @@ class Format {
 	}
 	
 	private function form_template( $format, $action, $button_text = NULL ) {
-		?>
-		<form action="<?php echo admin_url( 'admin.php?page=' . $_REQUEST[ 'page' ] ) ?>" method="post">
-			<input type="hidden" name="format" value="<?php echo $format->id ?>" />
-			<input type="hidden" name="action" value="<?php echo $action; ?>" />
-			<table class="form-table">
-				<?php foreach ( $this->field_keys as $key => $value ): ?>
-					<?php \Podlove\Form\input( 'podlove_format', $format->{$key}, $key, $value ); ?>
-				<?php endforeach; ?>
-			</table>
-			<?php submit_button( $button_text ); ?>
-		</form>
-		<?php
+
+		\Podlove\Form\build_for( $format, array( 'context' => 'podlove_format', 'hidden' => array( 'format' => $format->id, 'action' => $action ) ), function ( $form ) {
+			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+
+	 		$wrapper->string( 'name', array(
+	 			'label'       => \Podlove\t( 'Name' ),
+	 			'description' => '' ) );
+
+	 		$wrapper->string( 'type', array(
+	 			'label'       => \Podlove\t( 'Format Type' ),
+	 			'description' => \Podlove\t( 'Example: audio' ) ) );
+
+	 		$wrapper->string( 'mime_type', array(
+	 			'label'       => \Podlove\t( 'Format Mime Type' ),
+	 			'description' => \Podlove\t( 'Example: audio/mpeg4' ) ) );
+
+	 		$wrapper->string( 'extension', array(
+	 			'label'       => \Podlove\t( 'Format Extension' ),
+	 			'description' => \Podlove\t( 'Example: m4a' ) ) );
+		} );
 	}
 	
 	private function edit_template() {
