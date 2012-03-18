@@ -3,11 +3,11 @@ namespace Podlove\Settings;
 
 class Show {
 	
-	protected $pagehook;
+	static $pagehook;
 	
 	public function __construct( $handle ) {
 		
-		$this->pagehook = add_submenu_page(
+		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ 'Shows',
 			/* $menu_title */ 'Shows',
@@ -308,119 +308,130 @@ class Show {
 				</td>
 			</tr>
 			<?php
-
 			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
 			if ( $feeds ) {	
 				foreach ( $feeds as $feed ) {
-					?>
-					<tr>
-						<td colspan="2">
-							<table>
-								<tr>
-									<th colspan="2">
-										<h3><?php echo sprintf( __( 'Configure Feed: %s' ), $feed->name ) ; ?></h3>
-									</th>
-								</tr>
-								<?php
-								$wrapper->fields_for( $feed, array( 'context' => 'podlove_feed' ), function ( $feed_form ) {
-									$feed_wrapper = new \Podlove\Form\Input\TableWrapper( $feed_form );
-
-									$feed = $feed_form->object;
-
-									$raw_formats = \Podlove\Model\Format::all();
-									$formats = array();
-									foreach ( $raw_formats as $format ) {
-										$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
-									}									
-
-									$feed_wrapper->string( 'name', array(
-										'label'       => \Podlove\t( 'Internal Name' ),
-										'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' )
-									) );
-
-									$feed_wrapper->checkbox( 'discoverable', array(
-										'label'       => \Podlove\t( 'Discoverable?' ),
-										'description' => \Podlove\t( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.' )
-									) );
-
-									$feed_wrapper->string( 'title', array(
-										'label'       => \Podlove\t( 'Feed Title' ),
-										'description' => \Podlove\t( 'This is how this feed is presented to users of podcast clients.' )
-									) );
-									
-									$feed_wrapper->string( 'slug', array(
-										'label'       => \Podlove\t( 'Slug' ),
-										'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
-									) );
-									
-									$feed_wrapper->string( 'suffix', array(
-										'label'       => \Podlove\t( 'File Suffix' ),
-										'description' => \Podlove\t( 'Is appended to the media file.' )
-									) );
-												
-									$feed_wrapper->select( 'format_id', array(
-										'label'       => \Podlove\t( 'File Format' ),
-										'description' => \Podlove\t( '' ),
-										'options'  => $formats
-									) );
-									
-									$feed_wrapper->string( 'itunes_feed_id', array(
-										'label'       => \Podlove\t( 'iTunes Feed ID' ),
-										'description' => \Podlove\t( 'Is used to generate a link to the iTunes directory.' )
-									) );
-									
-									$feed_wrapper->string( 'language', array(
-										'label'       => \Podlove\t( 'Language' ),
-										'description' => \Podlove\t( '' ),
-										'default' => get_bloginfo( 'language' )
-									) );
-									
-									// todo: select box with localized language names
-									// todo: add PING url; see feedburner doc
-									$feed_wrapper->string( 'redirect_url', array(
-										'label'       => \Podlove\t( 'Redirect Url' ),
-										'description' => \Podlove\t( 'e.g. Feedburner URL' )
-									) );
-									
-									$feed_wrapper->checkbox( 'block', array(
-										'label'       => \Podlove\t( 'Block feed?' ),
-										'description' => \Podlove\t( 'Forbid podcast directories (e.g. iTunes) to list this feed.' )
-									) );
-									
-									$feed_wrapper->checkbox( 'show_description', array(
-										'label'       => \Podlove\t( 'Include Description?' ),
-										'description' => \Podlove\t( 'You may want to hide the episode descriptions to reduce the feed file size.' )
-									) );
-									
-									// todo include summary?
-									$feed_wrapper->string( 'limit_items', array(
-										'label'       => \Podlove\t( 'Limit Items' ),
-										'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' )
-									) );
-									
-									// todo: radio 1) wp default (show default) 2) custom 3) all 4) limit feed size (default = 512k = feedburner)						
-								} );
-								?>
-								<tr>
-									<td colspan="2">
-										<span class="delete">
-											<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $show->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
-												<?php echo \Podlove\t( 'Delete Feed' ); ?>
-											</a>
-										</span>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<?php
+					add_meta_box(
+						/* $id            */ 'podlove_feed_' . $feed->id,
+						/* $title         */ sprintf( __( 'Configure Feed: %s' ), $feed->name ),
+						/* $callback      */ '\Podlove\Settings\Show::nested_feed_meta_box_callback',
+						/* $page          */ \Podlove\Settings\Show::$pagehook,
+						/* $context       */ 'normal',
+						/* $priority      */ 'default',
+						/* $callback_args */ array( $feed, $wrapper )
+					);
 				}
 			}
+			?>
+			<tr>
+				<td colspan="2" class="metabox-holder">
+					<?php 
+					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'normal', array() );
+					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'additional', array() );
+					?>
+				</td>
+			</tr>
+			<?php
 
 		} );
+	}
 
-		// do_meta_boxes( $this->pagehook, 'normal', array() );
-		// do_meta_boxes( $this->pagehook, 'additional', array() );
+	public static function nested_feed_meta_box_callback( $post, $args ) {
+		$feed    = $args[ 'args' ][ 0 ];
+		$wrapper = $args[ 'args' ][ 1 ];
+		?>
+		<table>
+			<?php
+			$wrapper->fields_for( $feed, array( 'context' => 'podlove_feed' ), function ( $feed_form ) {
+				$feed_wrapper = new \Podlove\Form\Input\TableWrapper( $feed_form );
+
+				$feed = $feed_form->object;
+
+				$raw_formats = \Podlove\Model\Format::all();
+				$formats = array();
+				foreach ( $raw_formats as $format ) {
+					$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
+				}									
+
+				$feed_wrapper->string( 'name', array(
+					'label'       => \Podlove\t( 'Internal Name' ),
+					'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' )
+				) );
+
+				$feed_wrapper->checkbox( 'discoverable', array(
+					'label'       => \Podlove\t( 'Discoverable?' ),
+					'description' => \Podlove\t( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.' )
+				) );
+
+				$feed_wrapper->string( 'title', array(
+					'label'       => \Podlove\t( 'Feed Title' ),
+					'description' => \Podlove\t( 'This is how this feed is presented to users of podcast clients.' )
+				) );
+				
+				$feed_wrapper->string( 'slug', array(
+					'label'       => \Podlove\t( 'Slug' ),
+					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
+				) );
+				
+				$feed_wrapper->string( 'suffix', array(
+					'label'       => \Podlove\t( 'File Suffix' ),
+					'description' => \Podlove\t( 'Is appended to the media file.' )
+				) );
+							
+				$feed_wrapper->select( 'format_id', array(
+					'label'       => \Podlove\t( 'File Format' ),
+					'description' => \Podlove\t( '' ),
+					'options'  => $formats
+				) );
+				
+				$feed_wrapper->string( 'itunes_feed_id', array(
+					'label'       => \Podlove\t( 'iTunes Feed ID' ),
+					'description' => \Podlove\t( 'Is used to generate a link to the iTunes directory.' )
+				) );
+				
+				$feed_wrapper->string( 'language', array(
+					'label'       => \Podlove\t( 'Language' ),
+					'description' => \Podlove\t( '' ),
+					'default' => get_bloginfo( 'language' )
+				) );
+				
+				// todo: select box with localized language names
+				// todo: add PING url; see feedburner doc
+				$feed_wrapper->string( 'redirect_url', array(
+					'label'       => \Podlove\t( 'Redirect Url' ),
+					'description' => \Podlove\t( 'e.g. Feedburner URL' )
+				) );
+				
+				$feed_wrapper->checkbox( 'block', array(
+					'label'       => \Podlove\t( 'Block feed?' ),
+					'description' => \Podlove\t( 'Forbid podcast directories (e.g. iTunes) to list this feed.' )
+				) );
+				
+				$feed_wrapper->checkbox( 'show_description', array(
+					'label'       => \Podlove\t( 'Include Description?' ),
+					'description' => \Podlove\t( 'You may want to hide the episode descriptions to reduce the feed file size.' )
+				) );
+				
+				// todo include summary?
+				$feed_wrapper->string( 'limit_items', array(
+					'label'       => \Podlove\t( 'Limit Items' ),
+					'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' )
+				) );
+				
+				// todo: radio 1) wp default (show default) 2) custom 3) all 4) limit feed size (default = 512k = feedburner)						
+			} );
+			?>
+			<tr>
+				<td colspan="2">
+					<span class="delete">
+						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $show->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
+							<?php echo \Podlove\t( 'Delete Feed' ); ?>
+						</a>
+					</span>
+				</td>
+			</tr>
+		</table>
+		<?php
 	}
 	
 }
