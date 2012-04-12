@@ -134,7 +134,7 @@ class Builder {
 					<?php call_user_func( $this->before_input_callback, array( 'value' => $this->field_value ) ); ?>
 				<?php endif ?>
 				<?php call_user_func_array( array( $this, $function ), array() ); ?>
-				<?php if ( $type !== 'checkbox' ): ?>
+				<?php if ( $type !== 'checkbox' && $type !== 'multiselect' ): ?>
 					<br />
 				<?php endif; ?>
 				<?php if ( $field_values[ 'description' ] ): ?>
