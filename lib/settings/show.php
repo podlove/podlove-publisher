@@ -309,6 +309,7 @@ class Show {
 			</tr>
 			<?php
 			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
+
 			if ( $feeds ) {	
 				foreach ( $feeds as $feed ) {
 					add_meta_box(
@@ -424,7 +425,7 @@ class Show {
 			<tr>
 				<td colspan="2">
 					<span class="delete">
-						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $show->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
+						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $feed->show()->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
 							<?php echo \Podlove\t( 'Delete Feed' ); ?>
 						</a>
 					</span>
