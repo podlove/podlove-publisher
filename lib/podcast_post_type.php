@@ -239,6 +239,12 @@ class Podcast_Post_Type {
 			}
 		);
 
+		if ( empty( $format_options ) ) {
+			$formats_form[ 'description' ] = sprintf( '<span style="color: red">%s</span>', \Podlove\t( 'You need to configure feeds for this show. No feeds, no fun.' ) )
+			                               . ' '
+			                               . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', \Podlove\t( 'Edit this show' ) );
+		}
+			
 		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
 		?>
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
