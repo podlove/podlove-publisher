@@ -220,6 +220,12 @@ class Show {
 				'html'        => array( 'class' => 'regular-text' )
 			) );
 
+			$wrapper->text( 'summary', array(
+				'label'       => \Podlove\t( 'Summary' ),
+				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
+				'html'        => array( 'rows' => 5, 'cols' => 40 )
+			) );
+
 			$wrapper->string( 'slug', array(
 				'label'       => \Podlove\t( 'Show Slug' ),
 				'description' => \Podlove\t( 'Is part of the feed URL.' ),
@@ -232,12 +238,6 @@ class Show {
 				'html'         => array( 'class' => 'regular-text' ),
 				'image_width'  => 300,
 				'image_height' => 300
-			) );
-
-			$wrapper->text( 'summary', array(
-				'label'       => \Podlove\t( 'Summary' ),
-				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
-				'html'        => array( 'rows' => 5, 'cols' => 40 )
 			) );
 
 			$wrapper->string( 'author_name', array(
