@@ -35,19 +35,24 @@ class Feed_List_Table extends \WP_List_Table {
 	}
 	
 	function column_name( $feed ) {
-		$actions = array(
-			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&show=%s&feed=%s">' . \Podlove\t( 'Edit' ) . '</a>',
+
+		$link = function ( $title ) use ( $feed ) {
+			return sprintf(
+				'<a href="?page=%s&action=%s&show=%s#feed_%s">' . $title . '</a>',
 				'podlove_shows_settings_handle',
 				'edit',
 				$feed->show_id,
 				$feed->id
-			)
+			);
+		};
+
+		$actions = array(
+			'edit' => $link( \Podlove\t( 'Edit' ) )
 		);
 	
-		return sprintf('%1$s %2$s',
-		    /*$1%s*/ $feed->name,
-		    /*$3%s*/ $this->row_actions( $actions )
+		return sprintf( '%1$s %2$s',
+		    $link( $feed->name ),
+		    $this->row_actions( $actions )
 		);
 	}
 	
@@ -59,9 +64,31 @@ class Feed_List_Table extends \WP_List_Table {
 		return $feed->get_subscribe_link();
 	}
 
+	function column_show( $feed ) {
+
+		$link = function ( $title ) use ( $feed ) {
+			return sprintf(
+				'<a href="?page=%s&action=%s&show=%s">' . $title . '</a>',
+				'podlove_shows_settings_handle',
+				'edit',
+				$feed->show_id
+			);
+		};
+
+		$actions = array(
+			'edit' => $link( \Podlove\t( 'Edit' ) )
+		);
+
+		return sprintf( '%1$s %2$s',
+		    $link( $feed->show()->name ),
+		    $this->row_actions( $actions )
+		);
+	}
+
 	function get_columns(){
 		$columns = array(
-			'name'        => 'Name',
+			'name'        => 'Feed',
+			'show'        => 'Show',
 			'url'         => 'Subscribe URL',
 			'discoverable'=> 'Discoverable'
 		);

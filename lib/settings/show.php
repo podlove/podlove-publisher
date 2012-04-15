@@ -345,6 +345,7 @@ class Show {
 		$feed    = $args[ 'args' ][ 0 ];
 		$wrapper = $args[ 'args' ][ 1 ];
 		?>
+		<a name="feed_<?php echo $feed->id; ?>"></a>
 		<table>
 			<?php
 			$wrapper->fields_for( $feed, array( 'context' => 'podlove_feed' ), function ( $feed_form ) {
