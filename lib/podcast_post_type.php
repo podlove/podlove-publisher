@@ -140,7 +140,6 @@ class Podcast_Post_Type {
 
 	public function settings_page() {
 		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', \Podlove\t( 'About' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );
-		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_feeds', \Podlove\t( 'Feed Overview' ), array( $this, 'feed_overview_meta' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
 
 		?>
 		<div class="wrap">
@@ -160,6 +159,7 @@ class Podcast_Post_Type {
 				<div id="post-body" class="has-sidebar">
 					<div id="post-body-content" class="has-sidebar-content">
 						<?php do_action( 'podlove_settings_before_main_boxes' ); ?>
+						<?php $this->feed_overview_meta(); ?>
 						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'normal', NULL ); ?>
 						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'additional', NULL ); ?>
 						<?php do_action( 'podlove_settings_after_main_boxes' ); ?>						
