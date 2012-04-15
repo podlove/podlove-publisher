@@ -64,6 +64,7 @@ class Podcast_Post_Type {
 			'publicly_queryable'   => true,
 			'show_ui'              => true, 
 			'show_in_menu'         => true, 
+			'menu_position'        => 5, // below "Posts"
 			'query_var'            => true,
 			'rewrite'              => true,
 			'capability_type'      => 'post',
