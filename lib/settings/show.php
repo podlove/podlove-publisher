@@ -300,11 +300,15 @@ class Show {
 			?>
 			<tr>
 				<td colspan="2">
+					<?php if ( $show->is_new() ): ?>
+						<span><?php echo \Podlove\t( 'After you have saved the show, you can add feeds for it here.' ); ?></span>
+					<?php else: ?>
 					<span class="add">
 						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
 							<?php echo \Podlove\t( 'Add New Feed' ); ?>
 						</a>
 					</span>
+					<?php endif ?>
 				</td>
 			</tr>
 			<?php
