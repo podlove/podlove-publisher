@@ -13,7 +13,7 @@ class Podcast_Post_Type {
 		
 		$this->form_data = array(
 			'active' => array(
-				'label'       => \Podlove\t( 'Include Episode' ), // todo: hide/show rest of the form
+				'label'       => \Podlove\t( 'Post Episode to Show' ), // todo: hide/show rest of the form
 				'description' => '',
 				'type'     => 'checkbox',
 				'default'  => true
