@@ -109,6 +109,16 @@ class Podcast_Post_Type {
 			/* $icon_url   */ PLUGIN_URL . '/images/podlove-icon-16x16.png'
 			/* $position   */
 		);
+
+		// rename first menu entry to "Dashboard"
+		add_submenu_page(
+			/* $parent_slug*/ self::SETTINGS_PAGE_HANDLE,
+			/* $page_title */ \Podlove\t( 'Dashboard' ),
+			/* $menu_title */ \Podlove\t( 'Dashboard' ),
+			/* $capability */ 'administrator',
+			/* $menu_slug  */ self::SETTINGS_PAGE_HANDLE,
+			/* $function   */ array( $this, 'settings_page' )
+		);
 		
 		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
