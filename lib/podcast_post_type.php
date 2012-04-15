@@ -21,15 +21,18 @@ class Podcast_Post_Type {
 			// todo: add subtitle; but as extra metabox
 			'slug' => array(
 				'label'       => \Podlove\t( 'Episode File Slug' ),
-				'description' => ''
+				'description' => '',
+				'html'        => array( 'class' => 'regular-text' )
 			),
 			'duration' => array(
 				'label'       => \Podlove\t( 'Duration' ),
-				'description' => ''
+				'description' => '',
+				'html'        => array( 'class' => 'regular-text' )
 			),
 			'cover_art' => array(
 				'label'       => \Podlove\t( 'Episode Cover Art URL' ),
-				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' )
+				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' ),
+				'html'        => array( 'class' => 'regular-text' )
 			),
 			'block' => array(
 				'label'       => \Podlove\t( 'Block?' ),
