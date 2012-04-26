@@ -1,6 +1,9 @@
 <?php
 namespace Podlove\Model;
 
+/**
+ * We could use simple post_meta instead of a table here
+ */
 class Episode extends Base {
 
 	public function find_or_create_by_post_id( $post_id ) {

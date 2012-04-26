@@ -19,6 +19,7 @@ class Show {
 
 		// init so we can process creation and deletion of feeds
 		new \Podlove\Settings\Feed();
+		new \Podlove\Settings\MediaLocation();
 	}
 	
 	/**
@@ -40,6 +41,16 @@ class Show {
 		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
 			if ( $key !== 'podlove_feed' )
 				$show->{$key} = $value;
+		}
+
+		if ( isset( $_POST[ 'podlove_show' ][ 'podlove_media_location' ] ) ) {
+			foreach ( $_POST[ 'podlove_show' ][ 'podlove_media_location' ] as $media_location_id => $media_location_data ) {
+				$media_location = \Podlove\Model\MediaLocation::find_by_id( $media_location_id );
+				foreach ( $media_location_data as $key => $value ) {
+					$media_location->{$key} = $value;
+				}
+				$media_location->save();
+			}
 		}
 
 		if ( isset( $_POST[ 'podlove_show' ][ 'podlove_feed' ] ) ) {
@@ -113,7 +124,7 @@ class Show {
 	 * Process form: delete a show
 	 */
 	private function delete() {
-		if ( ! isset( $_REQUEST[ 'show' ] ) || isset( $_REQUEST[ 'feed' ] ) )
+		if ( ! isset( $_REQUEST[ 'show' ] ) || isset( $_REQUEST[ 'feed' ] ) || isset( $_REQUEST[ 'media_location' ] ) )
 			return;
 			
 		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
@@ -301,17 +312,44 @@ class Show {
 			<tr>
 				<td colspan="2">
 					<?php if ( $show->is_new() ): ?>
+						<span><?php echo \Podlove\t( 'After you have saved the show, you can add media locations for it here.' ); ?></span>
+					<?php else: ?>
+					<span class="add">
+						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=media_location&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
+							<?php echo \Podlove\t( 'Add New Media Location' ); ?>
+						</a>
+					</span>
+					<?php endif; ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<?php if ( $show->is_new() ): ?>
 						<span><?php echo \Podlove\t( 'After you have saved the show, you can add feeds for it here.' ); ?></span>
 					<?php else: ?>
 					<span class="add">
-						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
+						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=feed&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
 							<?php echo \Podlove\t( 'Add New Feed' ); ?>
 						</a>
 					</span>
-					<?php endif ?>
+					<?php endif; ?>
 				</td>
 			</tr>
-			<?php
+			<?php 
+			$media_locations = \Podlove\Model\MediaLocation::find_all_by_show_id( $form->object->id );
+
+			if ( $media_locations ) {
+					add_meta_box(
+						/* $id            */ 'podlove_media_locations',
+						/* $title         */ __( 'Configure Media Locations' ),
+						/* $callback      */ '\Podlove\Settings\Show::nested_feed_media_locations_callback',
+						/* $page          */ \Podlove\Settings\Show::$pagehook,
+						/* $context       */ 'normal',
+						/* $priority      */ 'default',
+						/* $callback_args */ array( $media_locations, $wrapper )
+					);
+			}
+
 			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
 
 			if ( $feeds ) {	
@@ -341,6 +379,59 @@ class Show {
 		} );
 	}
 
+	public static function nested_feed_media_locations_callback( $post, $args ) {
+		$media_locations = $args[ 'args' ][ 0 ];
+		$wrapper         = $args[ 'args' ][ 1 ];
+		?>
+		<a name="media_locations"></a>
+		<table>
+			<?php
+			$raw_formats = \Podlove\Model\MediaFormat::all();
+			$formats = array();
+			foreach ( $raw_formats as $format ) {
+				$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
+			}
+
+			foreach ( $media_locations as $media_location ) {
+				$wrapper->fields_for( $media_location, array( 'context' => 'podlove_media_location' ), function ( $media_location_form ) use ( $formats ) {
+					$f = new \Podlove\Form\Input\TableWrapper( $media_location_form );
+
+					$media_location = $media_location_form->object;
+
+					$f->select( 'media_format_id', array(
+						'label'       => \Podlove\t( 'File Format' ),
+						'description' => \Podlove\t( '' ),
+						'options'     => $formats
+					) );
+
+					$f->string( 'suffix', array(
+						'label'       => \Podlove\t( 'Suffix' ),
+						'description' => \Podlove\t( 'Is appended to the media file name.' )
+					) );
+
+					$f->string( 'url_template', array(
+						'label'       => \Podlove\t( 'URL Template' ),
+						'description' => sprintf( \Podlove\t( 'Read %sdocumentation%s for help.' ), '<a href="#" target="_blank">', '</a>' )
+					) );
+
+				} );
+				?>
+				<tr>
+					<td colspan="2">
+						<span class="delete">
+							<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=media_location&amp;show=<?php echo $media_location->show()->id; ?>&amp;media_location=<?php echo $media_location->id; ?>" style="float: right" class="button-secondary delete">
+								<?php echo \Podlove\t( 'Delete Media Location' ); ?>
+							</a>
+						</span>
+					</td>
+				</tr>
+				<?php
+			}
+			?>
+		</table>
+		<?php
+	}
+
 	public static function nested_feed_meta_box_callback( $post, $args ) {
 		$feed    = $args[ 'args' ][ 0 ];
 		$wrapper = $args[ 'args' ][ 1 ];
@@ -353,7 +444,7 @@ class Show {
 
 				$feed = $feed_form->object;
 
-				$raw_formats = \Podlove\Model\Format::all();
+				$raw_formats = \Podlove\Model\MediaFormat::all();
 				$formats = array();
 				foreach ( $raw_formats as $format ) {
 					$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
@@ -379,16 +470,16 @@ class Show {
 					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
 				) );
 				
-				$feed_wrapper->string( 'suffix', array(
-					'label'       => \Podlove\t( 'File Suffix' ),
-					'description' => \Podlove\t( 'Is appended to the media file.' )
-				) );
+				// $feed_wrapper->string( 'suffix', array(
+				// 	'label'       => \Podlove\t( 'File Suffix' ),
+				// 	'description' => \Podlove\t( 'Is appended to the media file.' )
+				// ) );
 							
-				$feed_wrapper->select( 'format_id', array(
-					'label'       => \Podlove\t( 'File Format' ),
-					'description' => \Podlove\t( '' ),
-					'options'  => $formats
-				) );
+				// $feed_wrapper->select( 'format_id', array(
+				// 	'label'       => \Podlove\t( 'File Format' ),
+				// 	'description' => \Podlove\t( '' ),
+				// 	'options'  => $formats
+				// ) );
 				
 				$feed_wrapper->string( 'itunes_feed_id', array(
 					'label'       => \Podlove\t( 'iTunes Feed ID' ),
@@ -430,7 +521,7 @@ class Show {
 			<tr>
 				<td colspan="2">
 					<span class="delete">
-						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;show=<?php echo $feed->show()->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
+						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=feed&amp;show=<?php echo $feed->show()->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
 							<?php echo \Podlove\t( 'Delete Feed' ); ?>
 						</a>
 					</span>

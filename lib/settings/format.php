@@ -23,7 +23,7 @@ class Format {
 		if ( ! isset( $_REQUEST[ 'format' ] ) )
 			return;
 			
-		$format = \Podlove\Model\Format::find_by_id( $_REQUEST[ 'format' ] );
+		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST[ 'format' ] );
 		
 		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
 			return;
@@ -42,7 +42,7 @@ class Format {
 	private function create() {
 		global $wpdb;
 		
-		$format = new \Podlove\Model\Format;
+		$format = new \Podlove\Model\MediaFormat;
 		
 		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
 			return;
@@ -62,7 +62,7 @@ class Format {
 		if ( ! isset( $_REQUEST[ 'format' ] ) )
 			return;
 
-		\Podlove\Model\Format::find_by_id( $_REQUEST[ 'format' ] )->delete();
+		\Podlove\Model\MediaFormat::find_by_id( $_REQUEST[ 'format' ] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -116,7 +116,7 @@ class Format {
 	}
 	
 	private function new_template() {
-		$format = new \Podlove\Model\Format;
+		$format = new \Podlove\Model\MediaFormat;
 		?>
 		<h3><?php echo \Podlove\t( 'Add New Format' ); ?></h3>
 		<?php
@@ -153,7 +153,7 @@ class Format {
 	}
 	
 	private function edit_template() {
-		$format = \Podlove\Model\Format::find_by_id( $_REQUEST[ 'format' ] );
+		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST[ 'format' ] );
 		?>
 		<h3>Edit Format: <?php echo $format->name ?></h3>
 		
