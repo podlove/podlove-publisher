@@ -1,50 +1,45 @@
-<?php
+<?php 
 namespace Podlove\Settings;
 
-class Feed {
-	
-	protected $field_keys;
-	protected $show;
-	protected $feed;
+class MediaLocation {
 	
 	public function __construct() {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
-	
+
 	/**
-	 * Process form: create new feed
+	 * Process form: create new media_location
 	 */
 	private function create() {
 		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
-		
 
 		if ( ! $show_id )
 			return;
 			
-		$feed = new \Podlove\Model\Feed;
-		$feed->show_id = $show_id;
-		$feed->save();
+		$media_location = new \Podlove\Model\MediaLocation;
+		$media_location->show_id = $show_id;
+		$media_location->save();
 		$this->redirect( 'edit', $show_id );
 	}
 	
 	/**
-	 * Process form: delete a feed
+	 * Process form: delete a media_location
 	 */
 	private function delete() {
-		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
-		$feed_id = ( isset( $_REQUEST[ 'feed' ] ) ) ? (int) $_REQUEST[ 'feed' ] : NULL;
+		$show_id           = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
+		$media_location_id = ( isset( $_REQUEST[ 'media_location' ] ) ) ? (int) $_REQUEST[ 'media_location' ] : NULL;
 		
-		$feeds = \Podlove\Model\Feed::find_all_by_show_id( $show_id );
+		$media_locations = \Podlove\Model\MediaLocation::find_all_by_id( $media_location_id );
 		
-		foreach ( $feeds as $feed ) {
-			if ( $feed->id == $feed_id ) {
-				$feed->delete();
+		foreach ( $media_locations as $media_location ) {
+			if ( $media_location->id == $media_location_id ) {
+				$media_location->delete();
 			}
 		}
 			
 		$this->redirect( 'edit', $show_id );
 	}
-	
+
 	/**
 	 * Helper method: redirect to a certain page.
 	 */
@@ -55,13 +50,13 @@ class Feed {
 		
 		wp_redirect( admin_url( $page . $show . $action ) );
 		exit;
-	}
-	
+	}	
+
 	public function process_form() {
 		$action  = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 		$subject = ( isset( $_REQUEST[ 'subject' ] ) ) ? $_REQUEST[ 'subject' ] : NULL;
 
-		if ( $subject != 'feed' )
+		if ( $subject != 'media_location' )
 			return;
 
 		if ( $action == 'delete' ) {
@@ -70,5 +65,5 @@ class Feed {
 			$this->create();
 		}
 	}
-	
+
 }

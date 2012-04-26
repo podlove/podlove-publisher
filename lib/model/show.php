@@ -20,20 +20,12 @@ class Show extends Base {
 	}
 
 	/**
-	 * Return all formats related to this show.
+	 * Return all media_locations related to this show.
 	 *
 	 * @return array
 	 */
-	public function formats() {
-		$where = sprintf(
-			'id IN ( SELECT format_id FROM `%s` WHERE show_id = "%s" )',
-			Feed::table_name(),
-			$this->id
-		);
-
-		$formats = Format::find_all_by_where( $where );
-
-		return $formats;
+	public function media_locations() {
+		return MediaLocation::find_all_by_show_id( $this->id );
 	}
 
 	/**

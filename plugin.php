@@ -8,13 +8,14 @@ add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
 
 function activate_for_current_blog() {
 	Model\Feed::build();
-	Model\Format::build();
+	Model\MediaFormat::build();
+	Model\MediaLocation::build();
+	Model\MediaFile::build();
 	Model\Show::build();
 	Model\Episode::build();
 	Model\Release::build();
-	Model\File::build();
 	
-	if ( ! Model\Format::has_entries() ) {
+	if ( ! Model\MediaFormat::has_entries() ) {
 		$default_formats = array(
 			array( 'name' => 'MP3 Audio',              'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
 			array( 'name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio', 'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent' ),
@@ -32,7 +33,7 @@ function activate_for_current_blog() {
 		// todo: pentabarf-ish validation. summary of all conflicts / missing info is dashboard
 		
 		foreach ( $default_formats as $format ) {
-			$f = new Model\Format;
+			$f = new Model\MediaFormat;
 			foreach ( $format as $key => $value ) {
 				$f->{$key} = $value;
 			}
@@ -122,11 +123,12 @@ function uninstall() {
 
 function uninstall_for_current_blog() {
 	Model\Feed::destroy();
-	Model\Format::destroy();
+	Model\MediaFormat::destroy();
+	Model\MediaLocation::destroy();
+	Model\MediaFile::destroy();
 	Model\Show::destroy();
 	Model\Episode::destroy();
 	Model\Release::destroy();
-	Model\File::destroy();
 }
 
 /**

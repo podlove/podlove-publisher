@@ -1,7 +1,7 @@
 <?php
 namespace Podlove\Model;
 
-class File extends Base {
+class MediaFile extends Base {
 
 	/**
 	 * Fetches file size if necessary.
@@ -17,24 +17,24 @@ class File extends Base {
 		return parent::save();
 	}
 
-	public function find_or_create_by_release_id_and_format_id( $release_id, $format_id ) {
+	public function find_or_create_by_release_id_and_media_location_id( $release_id, $media_location_id ) {
 
-		$file = File::find_by_release_id_and_format_id( $release_id, $format_id );
+		$file = File::find_by_release_id_and_media_location_id( $release_id, $media_location_id );
 		
 		if ( $file )
 			return $file;
 
-		$file = new File();
+		$file = new MediaFile();
 		$file->release_id = $release_id;
-		$file->format_id = $format_id;
+		$file->media_location_id = $media_location_id;
 		$file->save();
 
 		return $file;
 	}
 
-	public function find_by_release_id_and_format_id( $release_id, $format_id ) {
-		$where = sprintf( 'release_id = "%s" AND format_id = "%s"', $release_id, $format_id );
-		return File::find_one_by_where( $where );
+	public function find_by_release_id_and_media_location_id( $release_id, $media_location_id ) {
+		$where = sprintf( 'release_id = "%s" AND media_location_id = "%s"', $release_id, $media_location_id );
+		return MediaFile::find_one_by_where( $where );
 	}
 
 	/**
@@ -43,14 +43,15 @@ class File extends Base {
 	 * @return string
 	 */
 	public function get_file_url() {
-		$release = Release::find_by_id( $this->release_id );
-		$format  = Format::find_by_id( $this->format_id );
-		$show    = Show::find_by_id( $release->show_id );
-		$feed    = Feed::find_by_show_id_and_format_id( $show->id, $format->id );
+		$release  = Release::find_by_id( $this->release_id );
+		$location = MediaLocation::find_by_id( $this->media_location_id );
+		$format   = MediaFormat::find_by_id( $location->format_id );
+		$show     = Show::find_by_id( $release->show_id );
+		$feed     = Feed::find_by_show_id_and_format_id( $show->id, $format->id );
 
 		$url = $show->media_file_base_uri
 		     . $release->slug
-		     . $feed->suffix
+		     . $location->suffix
 		     . '.'
 		     . $format->extension;
 
@@ -92,7 +93,7 @@ class File extends Base {
 	
 }
 
-File::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-File::property( 'release_id', 'INT' );
-File::property( 'format_id', 'INT' );
-File::property( 'size', 'INT' );
+MediaFile::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
+MediaFile::property( 'release_id', 'INT' );
+MediaFile::property( 'media_location_id', 'INT' );
+MediaFile::property( 'size', 'INT' );

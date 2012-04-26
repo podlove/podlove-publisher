@@ -227,33 +227,34 @@ class Podcast_Post_Type {
 		$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
 
 		// read / generate format data
-		$show_formats = $show->formats();
+		$media_locations = $show->media_locations();
 
-		$format_values = array();
-		$format_options = array();
-		foreach ( $show_formats as $format ) {
+		$location_values = array();
+		$location_options = array();
+		foreach ( $media_locations as $location ) {
 			// get formats configured for this show
-			$format_options[ $format->id ] = $format->name;
+			$location_options[ $location->id ] = $location->media_format()->name;
 			// find out which formats are active
-			$format_values[ $format->id ] = NULL !== \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format->id );
+			$location_values[ $location->id ] = NULL !== \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $location->id );
 		}
 
 		$formats_form = array(
 			'label'       => \Podlove\t( 'File Formats' ),
 			'description' => '',
 			'type'    => 'multiselect',
-			'options' => $format_options,
+			'options' => $location_options,
 			'default' => true,
-			'multiselect_callback' => function ( $format_id ) use ( $release, $show ) {
-				$format = \Podlove\Model\Format::find_by_id( $format_id );
-				$feed   = \Podlove\Model\Feed::find_by_show_id_and_format_id( $show->id, $format_id );
-				$file   = \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format_id );
+			'multiselect_callback' => function ( $location_id ) use ( $release, $show ) {
+				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
+				$format   = $location->format();
+				$feed     = \Podlove\Model\Feed::find_by_show_id_and_format_id( $show->id, $format->id );
+				$file     = \Podlove\Model\File::find_by_release_id_and_format_id( $release->id, $format->id );
 				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
 				return 'data-extension="' . $format->extension . '" data-suffix="' . $feed->suffix . '" data-size="' . $filesize . '"';
 			}
 		);
 
-		if ( empty( $format_options ) ) {
+		if ( empty( $location_options ) ) {
 			$formats_form[ 'description' ] = sprintf( '<span style="color: red">%s</span>', \Podlove\t( 'You need to configure feeds for this show. No feeds, no fun.' ) )
 			                               . ' '
 			                               . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', \Podlove\t( 'Edit this show' ) );
@@ -294,7 +295,7 @@ class Podcast_Post_Type {
 		// However, when unchecked, nothing is sent at all. So, to determine
 		// the difference between "new" and "unchecked", we populate all unset
 		// fields with false manually.
-		$formats = array_map( function( $f ) { return $f->id; }, \Podlove\Model\Format::all() );
+		$formats = array_map( function( $f ) { return $f->id; }, \Podlove\Model\MediaFormat::all() );
 		foreach ( $_POST[ '_podlove_meta' ] as $show_id => $_ ) {
 			foreach ( $this->form_data as $key => $value ) {
 				if ( ! isset( $_POST[ '_podlove_meta' ][ $show_id ][ $key ] ) )

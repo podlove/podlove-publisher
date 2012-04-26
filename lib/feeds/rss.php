@@ -9,7 +9,7 @@ class RSS {
 		// @fixme either slugs are unique or we need to check for id or something
 		$show   = \Podlove\Model\Show::find_one_by_slug( $show_slug );
 		$feed   = \Podlove\Model\Feed::find_one_by_slug( $feed_slug );
-		$format = \Podlove\Model\Format::find_by_id( $feed->format_id );
+		$format = \Podlove\Model\MediaFormat::find_by_id( $feed->format_id );
 
 		add_filter( 'podlove_feed_enclosure', function ( $enclosure, $enclosure_url, $enclosure_file_size, $mime_type ) {
 			return sprintf( '<enclosure url="%s" length="%s" type="%s" />', $enclosure_url, $enclosure_file_size, $mime_type );

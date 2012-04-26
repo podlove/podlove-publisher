@@ -79,7 +79,7 @@ class Format_List_Table extends \WP_List_Table {
 		
 		// retrieve data
 		// TODO select data for current page only
-		$data = \Podlove\Model\Format::all();
+		$data = \Podlove\Model\MediaFormat::all();
 		
 		// get current page
 		$current_page = $this->get_pagenum();
