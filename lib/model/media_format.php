@@ -3,6 +3,10 @@ namespace Podlove\Model;
 
 class MediaFormat extends Base {
 	
+	public function title() {
+		return $this->name . ' (' . $this->extension . ')';
+	}
+
 }
 
 MediaFormat::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
