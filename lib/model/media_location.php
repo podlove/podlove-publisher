@@ -4,6 +4,17 @@ namespace Podlove\Model;
 class MediaLocation extends Base {
 	
 	/**
+	 * Sets default values.
+	 * 
+	 * @return array
+	 */
+	public function default_values() {
+		return array(
+			'url_template' => '%show_base_uri%%episode_slug%%suffix%.%format_extension%'
+		);
+	}
+
+	/**
 	 * Find the related media format model.
 	 *
 	 * @return \Podlove\Model\MediaFormat|NULL

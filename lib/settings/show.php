@@ -384,7 +384,7 @@ class Show {
 		$wrapper         = $args[ 'args' ][ 1 ];
 		?>
 		<a name="media_locations"></a>
-		<table>
+		<table style="width: 100%">
 			<?php
 			$raw_formats = \Podlove\Model\MediaFormat::all();
 			$formats = array();
@@ -406,12 +406,14 @@ class Show {
 
 					$f->string( 'suffix', array(
 						'label'       => \Podlove\t( 'Suffix' ),
-						'description' => \Podlove\t( 'Is appended to the media file name.' )
+						'description' => \Podlove\t( 'Is appended to the media file name.' ),
+						'html' => array( 'class' => 'regular-text' )
 					) );
 
 					$f->string( 'url_template', array(
 						'label'       => \Podlove\t( 'URL Template' ),
-						'description' => sprintf( \Podlove\t( 'Read %sdocumentation%s for help.' ), '<a href="#" target="_blank">', '</a>' )
+						'description' => sprintf( \Podlove\t( 'Read %sdocumentation%s for help.' ), '<a href="#" target="_blank">', '</a>' ),
+						'html' => array( 'class' => 'large-text' )
 					) );
 
 				} );
@@ -452,7 +454,8 @@ class Show {
 
 				$feed_wrapper->string( 'name', array(
 					'label'       => \Podlove\t( 'Internal Name' ),
-					'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' )
+					'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' ),
+					'html' => array( 'class' => 'regular-text' )
 				) );
 
 				$feed_wrapper->checkbox( 'discoverable', array(
@@ -462,12 +465,14 @@ class Show {
 
 				$feed_wrapper->string( 'title', array(
 					'label'       => \Podlove\t( 'Feed Title' ),
-					'description' => \Podlove\t( 'This is how this feed is presented to users of podcast clients.' )
+					'description' => \Podlove\t( 'This is how this feed is presented to users of podcast clients.' ),
+					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				$feed_wrapper->string( 'slug', array(
 					'label'       => \Podlove\t( 'Slug' ),
-					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
+					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : '',
+					'html' => array( 'class' => 'regular-text' )
 				) );
 							
 				$feed_wrapper->select( 'media_location_id', array(
@@ -478,20 +483,23 @@ class Show {
 				
 				$feed_wrapper->string( 'itunes_feed_id', array(
 					'label'       => \Podlove\t( 'iTunes Feed ID' ),
-					'description' => \Podlove\t( 'Is used to generate a link to the iTunes directory.' )
+					'description' => \Podlove\t( 'Is used to generate a link to the iTunes directory.' ),
+					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				$feed_wrapper->string( 'language', array(
 					'label'       => \Podlove\t( 'Language' ),
 					'description' => \Podlove\t( '' ),
-					'default' => get_bloginfo( 'language' )
+					'default'     => get_bloginfo( 'language' ),
+					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				// todo: select box with localized language names
 				// todo: add PING url; see feedburner doc
 				$feed_wrapper->string( 'redirect_url', array(
 					'label'       => \Podlove\t( 'Redirect Url' ),
-					'description' => \Podlove\t( 'e.g. Feedburner URL' )
+					'description' => \Podlove\t( 'e.g. Feedburner URL' ),
+					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				$feed_wrapper->checkbox( 'block', array(
@@ -507,7 +515,8 @@ class Show {
 				// todo include summary?
 				$feed_wrapper->string( 'limit_items', array(
 					'label'       => \Podlove\t( 'Limit Items' ),
-					'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' )
+					'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' ),
+					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				// todo: radio 1) wp default (show default) 2) custom 3) all 4) limit feed size (default = 512k = feedburner)						

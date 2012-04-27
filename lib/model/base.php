@@ -333,6 +333,9 @@ abstract class Base
 		global $wpdb;
 		
 		if ( $this->is_new() ) {
+
+			$this->set_defaults();
+
 			$sql = 'INSERT INTO '
 			     . self::table_name()
 			     . ' ( '
@@ -359,6 +362,36 @@ abstract class Base
 		$this->is_new = false;
 		
 		return $success;
+	}
+
+	/**
+	 * Sets default values.
+	 * 
+	 * @return array
+	 */
+	private function set_defaults() {
+		
+		$defaults = $this->default_values();
+
+		if ( ! is_array( $defaults ) || empty( $defaults ) )
+			return;
+
+		foreach ( $defaults as $property => $value ) {
+			if ( empty( $this->property ) )
+				$this->$property = $value;
+		}
+
+	}
+
+	/**
+	 * Return default values for properties.
+	 * 
+	 * Can be overridden by inheriting model classes.
+	 * 
+	 * @return array
+	 */
+	public function default_values() {
+		return array();
 	}
 	
 	public function delete() {
