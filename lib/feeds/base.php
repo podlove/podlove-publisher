@@ -85,7 +85,7 @@ function override_feed_head( $hook, $show, $feed, $format ) {
 		$keywords = sprintf( '<itunes:keywords>%s</itunes:keywords>', $show->keywords );
 		echo apply_filters( 'podlove_feed_itunes_keywords', $keywords );
 
-		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->block ) ? 'yes' : 'no' );
+		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->enable ) ? 'no' : 'yes' );
 		echo apply_filters( 'podlove_feed_itunes_block', $block );
 
 		$explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $show->explicit ) ? 'yes' : 'no' );
