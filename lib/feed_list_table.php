@@ -61,10 +61,29 @@ class Feed_List_Table extends \WP_List_Table {
 	}
 
 	function column_url( $feed ) {
+
+		if ( ! $feed->show() ) {
+			return sprintf(
+				'<strong>%s:</strong> %s',
+				\Podlove\t( 'Notice' ),
+				\Podlove\t( 'This feed belongs to no show.' )
+			);
+		}
+
 		return $feed->get_subscribe_link();
 	}
 
 	function column_show( $feed ) {
+
+		$show = $feed->show();
+
+		if ( ! $show ) {
+			return sprintf(
+				'<strong>%s:</strong> %s',
+				\Podlove\t( 'Notice' ),
+				\Podlove\t( 'This feed belongs to no show.' )
+			);
+		}
 
 		$link = function ( $title ) use ( $feed ) {
 			return sprintf(
@@ -80,7 +99,7 @@ class Feed_List_Table extends \WP_List_Table {
 		);
 
 		return sprintf( '%1$s %2$s',
-		    $link( $feed->show()->name ),
+		    $link( $show->name ),
 		    $this->row_actions( $actions )
 		);
 	}
