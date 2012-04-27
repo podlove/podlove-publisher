@@ -444,11 +444,11 @@ class Show {
 
 				$feed = $feed_form->object;
 
-				$raw_formats = \Podlove\Model\MediaFormat::all();
-				$formats = array();
-				foreach ( $raw_formats as $format ) {
-					$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
-				}									
+				$media_locations = $feed->show()->media_locations();
+				$locations = array();
+				foreach ( $media_locations as $location ) {
+					$locations[ $location->id ] = $location->title();
+				}	
 
 				$feed_wrapper->string( 'name', array(
 					'label'       => \Podlove\t( 'Internal Name' ),
@@ -469,17 +469,12 @@ class Show {
 					'label'       => \Podlove\t( 'Slug' ),
 					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : ''
 				) );
-				
-				// $feed_wrapper->string( 'suffix', array(
-				// 	'label'       => \Podlove\t( 'File Suffix' ),
-				// 	'description' => \Podlove\t( 'Is appended to the media file.' )
-				// ) );
 							
-				// $feed_wrapper->select( 'format_id', array(
-				// 	'label'       => \Podlove\t( 'File Format' ),
-				// 	'description' => \Podlove\t( '' ),
-				// 	'options'  => $formats
-				// ) );
+				$feed_wrapper->select( 'media_location_id', array(
+					'label'       => \Podlove\t( 'Media Location' ),
+					'description' => \Podlove\t( 'Choose the file location for this feed.' ),
+					'options'     => $locations
+				) );
 				
 				$feed_wrapper->string( 'itunes_feed_id', array(
 					'label'       => \Podlove\t( 'iTunes Feed ID' ),

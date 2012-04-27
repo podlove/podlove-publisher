@@ -21,6 +21,13 @@ class MediaLocation extends Base {
 		return Show::find_by_id( $this->show_id );
 	}
 
+	public function title() {
+		if ( $this->media_format_id )
+			return $this->media_format()->title();
+		else
+			return \Podlove\t( 'Notice: No file format defined.' );
+	}
+
 }
 
 MediaLocation::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
