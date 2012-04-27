@@ -12,7 +12,7 @@ class Feed extends Base {
 		return array(
 			'discoverable'     => true,
 			'language'         => get_bloginfo( 'language' ),
-			'block'            => false,
+			'enable'           => true,
 			'show_description' => true
 		);
 	}
@@ -81,7 +81,7 @@ Feed::property( 'title', 'VARCHAR(255)' );
 Feed::property( 'slug', 'VARCHAR(255)' );
 Feed::property( 'language', 'VARCHAR(255)' );
 Feed::property( 'redirect_url', 'VARCHAR(255)' );
-Feed::property( 'block', 'INT' );
+Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
 Feed::property( 'show_description', 'INT' );

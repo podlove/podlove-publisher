@@ -34,11 +34,11 @@ class Podcast_Post_Type {
 				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' ),
 				'html'        => array( 'class' => 'regular-text' )
 			),
-			'block' => array(
-				'label'       => \Podlove\t( 'Block?' ),
-				'description' => \Podlove\t( 'Forbid iTunes to list this episode.' ),
-				'type'     => 'checkbox',
-				'default'  => false
+			'enable' => array(
+				'label'       => \Podlove\t( 'Enable?' ),
+				'description' => \Podlove\t( 'Allow this episode to appear in podcast directories.' ),
+				'type'        => 'checkbox',
+				'default'     => true
 			),
 		);
 		

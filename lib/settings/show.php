@@ -62,7 +62,7 @@ class Show {
 
 				// special treatment for nested checkboxes
 				// FIXME: make this work without hardcoding the field names
-				$checkbox_fields = array( 'discoverable', 'block', 'show_description' );
+				$checkbox_fields = array( 'discoverable', 'enable', 'show_description' );
 				foreach ( $checkbox_fields as $checkbox_field ) {
 					if ( isset( $_POST[ 'podlove_show' ][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] ) && $_POST[ 'podlove_show' ][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] === 'on' ) {
 						$feed->{$checkbox_field} = 1;
@@ -109,12 +109,15 @@ class Show {
 		}
 		$show->save();
 		
+		// create media location stub
+		$media_location = new \Podlove\Model\MediaLocation;
+		$media_location->show_id = $show->id;
+		$media_location->save();
+
 		// create feed stub
 		$feed = new \Podlove\Model\Feed;
 		$feed->show_id = $show->id;
-		$feed->discoverable = 1;
-		$feed->show_description = 1;
-		$feed->itunes_block = 0;
+		$feed->media_location_id = $media_location->id;
 		$feed->save();
 		
 		$this->redirect( 'edit', $show->id );
@@ -502,9 +505,9 @@ class Show {
 					'html' => array( 'class' => 'regular-text' )
 				) );
 				
-				$feed_wrapper->checkbox( 'block', array(
-					'label'       => \Podlove\t( 'Block feed?' ),
-					'description' => \Podlove\t( 'Forbid podcast directories (e.g. iTunes) to list this feed.' )
+				$feed_wrapper->checkbox( 'enable', array(
+					'label'       => \Podlove\t( 'Enable feed?' ),
+					'description' => \Podlove\t( 'Allow this feed to appear in podcast directories.' )
 				) );
 				
 				$feed_wrapper->checkbox( 'show_description', array(
