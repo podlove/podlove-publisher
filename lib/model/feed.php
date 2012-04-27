@@ -4,6 +4,20 @@ namespace Podlove\Model;
 class Feed extends Base {
 	
 	/**
+	 * Sets default values.
+	 * 
+	 * @return array
+	 */
+	public function default_values() {
+		return array(
+			'discoverable'     => true,
+			'language'         => get_bloginfo( 'language' ),
+			'block'            => false,
+			'show_description' => true
+		);
+	}
+
+	/**
 	 * Build public url where the feed can be subscribed at.
 	 *
 	 * @return string
