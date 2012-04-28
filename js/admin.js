@@ -16,7 +16,7 @@ function human_readable_size(size) {
 jQuery(function($) {
 	
 	var	update_media_file_path = function() {
-		$("tr.row_formats td .media_file_path").each(function() {
+		$("tr.row_media_locations td .media_file_path").each(function() {
 			$container = $(this).closest('.inside');
 			$checkbox  = $(this).parent().find("input");
 
@@ -38,8 +38,8 @@ jQuery(function($) {
 		});
 	}
 	
-	$("tr.row_formats td label").after('<span class="media_file_path"></span>');
+	$("tr.row_media_locations td label").after('<span class="media_file_path"></span>');
 	update_media_file_path();
-	$('input[name*="slug"], input[name*="formats"]').on('change', update_media_file_path);
+	$('input[name*="slug"], input[name*="media_locations"]').on('change', update_media_file_path);
 	
 });
