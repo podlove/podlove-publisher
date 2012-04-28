@@ -97,15 +97,13 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 	add_action( $hook, function () use ( $show, $feed, $format ) {
 		global $post;
 
-		$meta      = get_post_meta( $post->ID, '_podlove_meta', true );
-		// FIXME if that happens, something went terribly wrong
-		$show_meta = ( is_array( $meta ) && array_key_exists( $show->id, $meta ) ) ? $meta[ $show->id ] : array();
+		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
+		$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
 
-		// FIXME file size must be file format specific!
-		$enclosure_duration  = isset( $show_meta[ 'duration' ] ) ? $show_meta[ 'duration' ] : 0;
-		$enclosure_file_size = isset( $show_meta[ 'file_size' ] ) ? $show_meta[ 'file_size' ] : 0;
-		$file_slug           = isset( $show_meta[ 'file_slug' ] ) ? $show_meta[ 'file_slug' ] : NULL;
-		$cover_art_url       = isset( $show_meta[ 'cover_art_url' ] ) ? $show_meta[ 'cover_art_url' ] : NULL;
+		$enclosure_duration  = $release->duration;
+		$enclosure_file_size = 0; // FIXME file size must be file format specific!
+		$file_slug           = $release->slug;
+		$cover_art_url       = $release->cover_art;
 
 		if ( ! $file_slug ) {
 			// TODO might be a good idea to notify the podcast admin
