@@ -98,7 +98,8 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 		global $post;
 
 		$meta      = get_post_meta( $post->ID, '_podlove_meta', true );
-		$show_meta = $meta[ $show->id ];
+		// FIXME if that happens, something went terribly wrong
+		$show_meta = ( is_array( $meta ) && array_key_exists( $show->id, $meta ) ) ? $meta[ $show->id ] : array();
 
 		// FIXME file size must be file format specific!
 		$enclosure_duration  = isset( $show_meta[ 'duration' ] ) ? $show_meta[ 'duration' ] : 0;
@@ -112,7 +113,7 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 
 		$enclosure_url  = $show->media_file_base_uri;
 		$enclosure_url .= $file_slug;
-		$enclosure_url .= $feed->suffix;
+		$enclosure_url .= $feed->media_location()->suffix;
 		$enclosure_url .= '.';
 		$enclosure_url .= $format->extension;
 		
