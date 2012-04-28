@@ -45,9 +45,9 @@ class MediaFile extends Base {
 	public function get_file_url() {
 		$release  = Release::find_by_id( $this->release_id );
 		$location = MediaLocation::find_by_id( $this->media_location_id );
-		$format   = MediaFormat::find_by_id( $location->format_id );
+		$format   = MediaFormat::find_by_id( $location->media_format_id );
 		$show     = Show::find_by_id( $release->show_id );
-		$feed     = Feed::find_by_show_id_and_format_id( $show->id, $format->id );
+		$feed     = Feed::find_by_show_id_and_media_location_id( $show->id, $location->id );
 
 		$url = $show->media_file_base_uri
 		     . $release->slug

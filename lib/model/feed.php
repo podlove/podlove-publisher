@@ -59,16 +59,16 @@ class Feed extends Base {
 		return ( ! empty( $this->media_location_id ) ) ? MediaLocation::find_by_id( $this->media_location_id ) : NULL;
 	}
 
-	// public function find_by_show_id_and_format_id( $show_id, $format_id ) {
-	// 	$where = sprintf( 'show_id = "%s" AND format_id = "%s"', $show_id, $format_id );
-	// 	return Feed::find_one_by_where( $where );
-	// }
-
 	/**
 	 * For now, we support just atom.
 	 */
 	public function get_content_type() {
 		return "application/atom+xml";
+	}
+
+	public function find_by_show_id_and_media_location_id( $show_id, $media_location_id ) {
+		$where = sprintf( 'show_id = "%s" AND media_location_id = "%s"', $show_id, $media_location_id );
+		return Feed::find_one_by_where( $where );
 	}
 }
 
