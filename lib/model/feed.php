@@ -56,7 +56,7 @@ class Feed extends Base {
 	 * @return \Podlove\Model\MediaLocation|NULL
 	 */
 	public function media_location() {
-		return ( ! empty( $this->media_location_id ) ) ? MediaLocation::find_by_id( $this->media_location_id ) : NULL;
+		return ( $this->media_location_id ) ? MediaLocation::find_by_id( $this->media_location_id ) : NULL;
 	}
 
 	/**
