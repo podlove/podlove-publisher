@@ -29,6 +29,18 @@ class Show extends Base {
 	}
 
 	/**
+	 * Return all media_locations with an associated format.
+	 * 
+	 * @return array
+	 */
+	function valid_media_locations() {
+
+		$where = sprintf( 'show_id = "%s" AND media_format_id > 0', $this->id );
+
+		return MediaLocation::find_all_by_where( $where );
+	}
+
+	/**
 	 * Return all feeds related to this show.
 	 * 
 	 * @return array
