@@ -227,7 +227,7 @@ class Podcast_Post_Type {
 		$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
 
 		// read / generate format data
-		$media_locations = $show->media_locations();
+		$media_locations = $show->valid_media_locations();
 
 		$location_values = array();
 		$location_options = array();
