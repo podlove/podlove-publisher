@@ -60,6 +60,32 @@ class Feed extends Base {
 	}
 
 	/**
+	 * Find all post_ids associated with this feed.
+	 * 
+	 * @return array
+	 */
+	function post_ids() {
+
+		$media_files = $this->media_location()->media_files();
+
+		if ( ! count( $media_files ) )
+			return array();
+
+		// fetch releases
+		$release_ids = array_map( function ( $v ) { return $v->id; }, $media_files );
+		$releases = Release::find_all_by_where( "id IN (" . implode( ',', $release_ids ) . ")" );
+		
+		if ( ! count( $releases ) )
+			return array();
+
+		// fetch episodes
+		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $releases );
+		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids) . ")" );
+
+		return array_map( function ( $v ) { return $v->post_id; }, $episodes );
+	}
+
+	/**
 	 * For now, we support just atom.
 	 */
 	public function get_content_type() {
