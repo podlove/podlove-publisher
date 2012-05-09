@@ -24,6 +24,15 @@ class MediaLocation extends Base {
 	}
 
 	/**
+	 * Fine all media file models in this location.
+	 * 
+	 * @return array|NULL
+	 */
+	function media_files() {
+		return MediaFile::find_all_by_media_location_id( $this->id );
+	}
+
+	/**
 	 * Find the related show model.
 	 * 
 	 * @return \Podlove\Model\Show|NULL
