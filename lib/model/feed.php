@@ -72,15 +72,15 @@ class Feed extends Base {
 			return array();
 
 		// fetch releases
-		$release_ids = array_map( function ( $v ) { return $v->id; }, $media_files );
+		$release_ids = array_map( function ( $v ) { return $v->release_id; }, $media_files );
 		$releases = Release::find_all_by_where( "id IN (" . implode( ',', $release_ids ) . ")" );
-		
+
 		if ( ! count( $releases ) )
 			return array();
 
 		// fetch episodes
 		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $releases );
-		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids) . ")" );
+		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids ) . ")" );
 
 		return array_map( function ( $v ) { return $v->post_id; }, $episodes );
 	}
