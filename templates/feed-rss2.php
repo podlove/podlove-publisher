@@ -40,17 +40,11 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<?php the_category_rss('rss2') ?>
 
 		<guid isPermaLink="false"><?php the_guid(); ?></guid>
-<?php if ( apply_filters( 'podlove_feed_show_summary', false ) ): ?>
-	<?php if (get_option('rss_use_excerpt')) : ?>
+		<?php if ( apply_filters( 'podlove_feed_show_summary', false ) ): ?>
 			<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
-	<?php else : ?>
-			<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
-		<?php if ( strlen( $post->post_content ) > 0 ) : ?>
-			<content:encoded><![CDATA[<?php the_content_feed('rss2') ?>]]></content:encoded>
-		<?php else : ?>
-			<content:encoded><![CDATA[<?php the_excerpt_rss() ?>]]></content:encoded>
 		<?php endif; ?>
-	<?php endif; ?>
+<?php if ( !get_option('rss_use_excerpt')) : ?>
+	<content:encoded><![CDATA[<?php the_content_feed('rss2') ?>]]></content:encoded>
 <?php endif; ?>
 <?php if ( apply_filters( 'podlove_feed_show_comments_data', true ) ): ?>
 	<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
