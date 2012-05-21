@@ -6,6 +6,11 @@ require_once \Podlove\PLUGIN_DIR  . '/lib/feeds/base.php';
 class RSS {
 	
 	public function __construct( $show_slug, $feed_slug ) {
+		
+		add_action( 'rss2_ns', function () {
+			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"';
+		} );
+
 		// @fixme either slugs are unique or we need to check for id or something
 		$show           = \Podlove\Model\Show::find_one_by_slug( $show_slug );
 		$feed           = \Podlove\Model\Feed::find_one_by_slug( $feed_slug );
@@ -45,3 +50,4 @@ class RSS {
 	}
 	
 }
+
