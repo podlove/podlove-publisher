@@ -22,14 +22,16 @@ class RSS {
 		override_feed_head( 'rss2_head', $show, $feed, $format );
 		override_feed_entry( 'rss2_item', $show, $feed, $format );
 
-		$this->do_feed();
+		$this->do_feed( $feed );
 	}
 	
-	function do_feed() {
+	function do_feed( $feed ) {
+
 		global $wp_query;
 		
 		$args = array(
-			'post_type'=> 'podcast'
+			'post_type' => 'podcast',
+			'post__in'   => $feed->post_ids()
 		);
 		query_posts( $args );
 		
