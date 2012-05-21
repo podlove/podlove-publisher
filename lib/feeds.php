@@ -37,5 +37,5 @@ add_action( 'wp', function () {
 	if ( ! $show_slug || ! $feed_slug )
 		return;
 		
-	new	\Podlove\Feeds\Atom( $show_slug, $feed_slug );	
+	new	\Podlove\Feeds\RSS( $show_slug, $feed_slug );	
 } );
