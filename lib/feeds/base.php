@@ -78,6 +78,9 @@ function override_feed_head( $hook, $show, $feed, $format ) {
 			$show->owner_email
 		);
 		echo apply_filters( 'podlove_feed_itunes_owner', $owner );
+		
+		$coverimage = sprintf( '<itunes:image href="%s" />', $show->cover_image );
+		echo apply_filters( 'podlove_feed_itunes_image', $coverimage );
 
 		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $show->subtitle );
 		echo apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
