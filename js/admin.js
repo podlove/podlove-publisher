@@ -1,5 +1,5 @@
 function human_readable_size(size) {
-	if (!size) {
+	if (!size || size < 1) {
 		return "File Size Missing :(";
 	}
 
@@ -21,14 +21,18 @@ jQuery(function($) {
 			$checkbox  = $(this).parent().find("input");
 
 			if ($($checkbox).is(":checked")) {
-				var url = "";
+				var url                 = $checkbox.data('template');
+
 				var media_file_base_uri = $container.find('input[name="show-media-file-base-uri"]').val();
 				var episode_slug        = $container.find('input[name*="slug"]').val();
 				var feed_suffix         = $checkbox.data('suffix');
 				var format_extension    = $checkbox.data('extension');
 				var size                = $checkbox.data('size');
 
-				url = media_file_base_uri + episode_slug + feed_suffix + '.' + format_extension;
+				url = url.replace( '%show_base_uri%', media_file_base_uri );
+				url = url.replace( '%episode_slug%', episode_slug );
+				url = url.replace( '%suffix%', feed_suffix );
+				url = url.replace( '%format_extension%', format_extension );
 
 				output = '(' + url + ' [' + human_readable_size( size ) + '])';
 			} else {

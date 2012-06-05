@@ -248,7 +248,7 @@ class Podcast_Post_Type {
 				$format   = $location->media_format();
 				$file     = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $location->id );
 				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
-				return 'data-extension="' . $format->extension . '" data-suffix="' . $location->suffix . '" data-size="' . $filesize . '"';
+				return 'data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-suffix="' . $location->suffix . '" data-size="' . $filesize . '"';
 			}
 		);
 
