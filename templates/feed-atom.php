@@ -17,7 +17,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
   <?php do_action('atom_ns'); ?>
  >
 	<title type="text"><?php bloginfo_rss('name'); wp_title_rss(); ?></title>
-	<subtitle type="text"><?php bloginfo_rss("description") ?></subtitle>
+	<subtitle type="text"><?php echo apply_filters( 'podlove_atom_feed_subtitle', get_bloginfo_rss("description") ) ?></subtitle>
 
 	<updated><?php echo mysql2date('Y-m-d\TH:i:s\Z', get_lastpostmodified('GMT'), false); ?></updated>
 
