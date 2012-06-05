@@ -49,13 +49,7 @@ class MediaFile extends Base {
 		$show     = Show::find_by_id( $release->show_id );
 		$feed     = Feed::find_by_show_id_and_media_location_id( $show->id, $location->id );
 
-		$url = $show->media_file_base_uri
-		     . $release->slug
-		     . $location->suffix
-		     . '.'
-		     . $format->extension;
-
-		return $url;
+		return $release->enclosure_url( $show, $feed, $format );
 	}
 
 	/**
