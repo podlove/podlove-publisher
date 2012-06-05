@@ -30,7 +30,7 @@ class Podcast_Post_Type {
 			),
 			'cover_art' => array(
 				'label'       => \Podlove\t( 'Episode Cover Art URL' ),
-				'description' => \Podlove\t( 'JPEG or PNG. At least 600 x 600 pixels.' ),
+				'description' => \Podlove\t( 'JPEG or PNG. At least 1400 x 1400 pixels.' ),
 				'html'        => array( 'class' => 'regular-text' )
 			),
 			'enable' => array(

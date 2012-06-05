@@ -247,8 +247,8 @@ class Show {
 			) );
 
 			$wrapper->image( 'cover_image', array(
-				'label'        => \Podlove\t( 'Cover Image' ),
-				'description'  => \Podlove\t( 'Cover Image URL, 600x600px recommended.' ),
+				'label'        => \Podlove\t( 'Cover Art URL' ),
+				'description'  => \Podlove\t( 'JPEG or PNG. At least 1400 x 1400 pixels.' ),
 				'html'         => array( 'class' => 'regular-text' ),
 				'image_width'  => 300,
 				'image_height' => 300
