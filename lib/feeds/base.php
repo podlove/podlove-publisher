@@ -112,11 +112,7 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 			// TODO might be a good idea to notify the podcast admin
 		}
 
-		$enclosure_url  = $show->media_file_base_uri;
-		$enclosure_url .= $file_slug;
-		$enclosure_url .= $feed->media_location()->suffix;
-		$enclosure_url .= '.';
-		$enclosure_url .= $format->extension;
+		$enclosure_url = $release->enclosure_url( $show, $feed, $format );
 		
 		echo apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
 
