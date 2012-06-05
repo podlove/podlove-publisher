@@ -10,7 +10,7 @@ class MediaFile extends Base {
 	 */
 	public function save() {
 
-		if ( ! $this->size ) {
+		if ( ! $this->size || $this->size < 1 ) {
 			$this->determine_file_size();
 		}
 
