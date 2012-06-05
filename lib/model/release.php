@@ -15,6 +15,24 @@ class Release extends Base {
 		);
 	}
 
+	/**
+	 * Find the related show model.
+	 *
+	 * @return \Podlove\Model\Show|NULL
+	 */
+	public function show() {
+		return Show::find_by_id( $this->show_id );
+	}
+
+	/**
+	 * Find the related episode model.
+	 * 
+	 * @return \Podlove\Model\Episode|NULL
+	 */
+	public function episode() {
+		return Episode::find_by_id( $this->episode_id );
+	}
+
 	public function find_or_create_by_episode_id_and_show_id( $episode_id, $show_id ) {
 		$where = sprintf( 'episode_id = "%s" AND show_id = "%s"', $episode_id, $show_id );
 		$release = Release::find_one_by_where( $where );
@@ -28,6 +46,17 @@ class Release extends Base {
 		$release->save();
 
 		return $release;
+	}
+
+	function enclosure_url( $show, $feed, $format ) {
+		$template = $feed->media_location()->url_template;
+
+		$template = str_replace( '%show_base_uri%', $show->media_file_base_uri, $template );
+		$template = str_replace( '%episode_slug%', $this->slug, $template );
+		$template = str_replace( '%suffix%', $feed->media_location()->suffix, $template );
+		$template = str_replace( '%format_extension%', $format->extension, $template );
+
+		return $template;
 	}
 	
 }
