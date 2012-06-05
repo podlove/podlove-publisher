@@ -52,10 +52,10 @@ class Show extends Base {
 	/**
 	 * Get cover image img tag.
 	 * 
-	 * @param  int $dimensions width and height of image. default: 600
+	 * @param  int $dimensions width and height of image. default: 1400
 	 * @return string
 	 */
-	public function get_cover( $dimensions = '600' ) {
+	public function get_cover( $dimensions = '1400' ) {
 		if ( ! $this->cover_image )
 			return '';
 
