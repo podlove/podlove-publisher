@@ -202,6 +202,12 @@ class Podcast_Post_Type {
 	 */
 	public function register_post_type_meta_boxes() {
 		$shows = \Podlove\Model\Show::all();
+
+		if(count($shows) == 0)
+		{
+			add_action('admin_notices', array($this, 'noshow_admin_notice'));
+		}
+
 		foreach ( $shows as $show ) {
 			add_meta_box(
 				/* $id            */ 'podlove_show_' . $show->id,
@@ -268,6 +274,13 @@ class Podcast_Post_Type {
 			<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $location_values, 'media_locations', $media_locations_form ); ?>
 		</table>
 		<?php
+	}
+
+	public function noshow_admin_notice() {
+		echo '<div class="error"><p>';
+		echo \Podlove\t( 'Currently You don\'t have any Shows configured. You need to configure at least one Show to be able to publich an Episode.');
+		echo sprintf( ' <a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle' ) . '">%s</a>', \Podlove\t( 'Edit your Shows' ) );
+		echo '</p></div>';
 	}
 	
 	public function save_postdata( $post_id ) {
