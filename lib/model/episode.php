@@ -19,6 +19,15 @@ class Episode extends Base {
 		return $episode;
 	}
 	
+	/**
+	 * Find the related release model.
+	 * 
+	 * @return \Podlove\Model\Release|NULL
+	 */
+	public function release() {
+		return Release::find_one_by_episode_id( $this->id );
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

@@ -17,6 +17,24 @@ class MediaFile extends Base {
 		return parent::save();
 	}
 
+	/**
+	 * Find the related show model.
+	 *
+	 * @return \Podlove\Model\MediaLocation|NULL
+	 */
+	public function media_location() {
+		return MediaLocation::find_by_id( $this->media_location_id );
+	}
+
+	/**
+	 * Find the related release model.
+	 *
+	 * @return \Podlove\Model\Release|NULL
+	 */
+	public function release() {
+		return Release::find_by_id( $this->release_id );
+	}
+
 	public function find_or_create_by_release_id_and_media_location_id( $release_id, $media_location_id ) {
 
 		$file = File::find_by_release_id_and_media_location_id( $release_id, $media_location_id );
@@ -47,9 +65,21 @@ class MediaFile extends Base {
 		$location = MediaLocation::find_by_id( $this->media_location_id );
 		$format   = MediaFormat::find_by_id( $location->media_format_id );
 		$show     = Show::find_by_id( $release->show_id );
-		$feed     = Feed::find_by_show_id_and_media_location_id( $show->id, $location->id );
 
-		return $release->enclosure_url( $show, $feed, $format );
+		return $release->enclosure_url( $show, $this->media_location(), $format );
+	}
+
+	/**
+	 * Build file name as it appears when you download the file.
+	 * 
+	 * @return string
+	 */
+	function get_download_file_name() {
+		$file_name = $this->release()->slug
+		           . '.'
+		           . $this->media_location()->media_format()->extension;
+		           
+		return apply_filters( 'podlove_download_file_name', $file_name, $this );
 	}
 
 	/**
