@@ -72,3 +72,49 @@ function episode_downloads_shortcode( $options ) {
 	return $html;
 }
 add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcode' );
+
+/**
+ * Provides shortcode to display web player.
+ *
+ * Right now there is only audio support.
+ *
+ * Usage:
+ * 	[podlove-web-player]
+ * 	
+ * @param  array $options
+ * @return string
+ */
+function webplayer_shortcode( $options ) {
+	global $post;
+
+	$episode         = Model\Episode::find_or_create_by_post_id( $post->ID );
+	$release         = $episode->release();
+	$show            = $release->show();
+
+	$all_formats_data = get_option( 'podlove_webplayer_formats' );
+	$formats_data = array();
+
+	if ( isset( $all_formats_data[ $show->id ] ) )
+		$formats_data = $all_formats_data[ $show->id ];
+
+	if ( ! count( $formats_data ) )
+		return;
+
+	$available_formats = array();
+	$audio_formats = array( 'mp3', 'ogg' );
+
+	foreach ( $audio_formats as $audio_format ) {
+		$format_location = Model\MediaLocation::find_by_id( $formats_data[ 'audio' ][ $audio_format ] );
+
+		if ( ! $format_location )
+			continue;
+
+		$format_file = Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $format_location->id );
+
+		if ( $format_file )
+			$available_formats[] = sprintf( '%s="%s"', $audio_format, $format_file->get_file_url() );
+	}
+
+	return do_shortcode( '[audio ' . implode( ' ', $available_formats ) . ']' );
+}
+add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
