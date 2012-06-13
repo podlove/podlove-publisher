@@ -39,7 +39,7 @@ function activate_for_current_blog() {
 			}
 			$f->save();
 		}
-	}
+	}	                    
 }
 
 /**
@@ -152,5 +152,20 @@ add_action( 'init', function () {
 
 	// priority 2 so they are placed below the WordPress default discovery links
 	add_action( 'wp_head', '\Podlove\add_feed_discoverability', 2 );
-
 });
+
+// "activate" podlove-web-player plugin
+// Not an ideal solution as it does not fire activation/deactivation hooks.
+add_action( 'init', function () {
+
+	if ( defined( 'MEDIAELEMENTJS_DIR' ) )
+		return;
+
+	$mediaplayer_plugin_file = PLUGIN_DIR . 'lib'
+	                         . DIRECTORY_SEPARATOR . 'submodules'
+	                         . DIRECTORY_SEPARATOR . 'webplayer'
+	                         . DIRECTORY_SEPARATOR . 'podlove-web-player'
+	                         . DIRECTORY_SEPARATOR . 'podlove-web-player.php';
+
+	require_once $mediaplayer_plugin_file;
+} );
