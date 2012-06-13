@@ -74,6 +74,12 @@ class Show {
 				$feed->save();
 			}
 		}
+
+		if ( isset( $_POST[ 'podlove_webplayer_formats' ] ) ) {
+			$old_options = get_option( 'podlove_webplayer_formats', array() );
+			$old_options[ $show->id ] = $_POST[ 'podlove_webplayer_formats' ];
+			update_option( 'podlove_webplayer_formats', $old_options );
+		}
 			
 		// special treatment for checkboxes
 		// reason:	if you uncheck a checkbox and submit the form, there is no
@@ -311,7 +317,27 @@ class Show {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
+			$media_locations = \Podlove\Model\MediaLocation::find_all_by_show_id( $form->object->id );
+
+			add_meta_box(
+				/* $id            */ 'podlove_webplayer_settings',
+				/* $title         */ __( 'Configure Webplayer' ),
+				/* $callback      */ '\Podlove\Settings\Show::podlove_webplayer_settings_callback',
+				/* $page          */ \Podlove\Settings\Show::$pagehook,
+				/* $context       */ 'webplayer',
+				/* $priority      */ 'default',
+				/* $callback_args */ array( $media_locations, $wrapper )
+			);
+
 			?>
+
+			<tr>
+				<td colspan="2" class="metabox-holder">
+					<?php 
+					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'webplayer', array() );
+					?>
+				</td>
+			</tr>
 			<tr>
 				<td colspan="2">
 					<?php if ( $show->is_new() ): ?>
@@ -339,7 +365,6 @@ class Show {
 				</td>
 			</tr>
 			<?php 
-			$media_locations = \Podlove\Model\MediaLocation::find_all_by_show_id( $form->object->id );
 
 			if ( $media_locations ) {
 					add_meta_box(
@@ -382,6 +407,63 @@ class Show {
 		} );
 	}
 
+	public static function podlove_webplayer_settings_callback( $post, $args ) {
+		$media_locations = $args[ 'args' ][ 0 ];
+		$show            = $media_locations[ 0 ]->show();
+		$wrapper         = $args[ 'args' ][ 1 ];
+
+		$formats = array(
+			'audio' => array(
+				'mp3' => \Podlove\t( 'MP3 Audio' ),
+				'ogg' => \Podlove\t( 'OGG Audio' )
+			),
+			'video' => array(
+				'mp4'  => \Podlove\t( 'MP4 Video' ),
+				'ogg'  => \Podlove\t( 'OGG Video' ),
+				'webm' => \Podlove\t( 'Webm Video' ),
+			)
+		);
+
+		$all_formats_data = get_option( 'podlove_webplayer_formats' );
+		if ( isset( $all_formats_data[ $show->id ] ) )
+			$formats_data = $all_formats_data[ $show->id ];
+		else
+			$formats_data = array();
+
+		?>
+		<a name="webplayer_settings"></a>
+
+		<?php echo \Podlove\t( 'Webplayers are able to provide various media formats depending on context. Try to provide as many as possible.' ); ?>
+
+		<table style="width: 100%">
+			<?php foreach ( $formats as $format => $extensions ): ?>
+				<?php foreach ( $extensions as $extension_key => $extension_label ): ?>
+					<?php
+					$id    = sprintf( 'podlove_webplayer_formats_%s_%s'  , $format, $extension_key );
+					$name  = sprintf( 'podlove_webplayer_formats[%s][%s]', $format, $extension_key );
+					$value = ( isset( $formats_data[$format] ) && isset( $formats_data[$format][$extension_key] ) ) ? $formats_data[$format][$extension_key] : 0;
+					?>
+					<tr>
+						<th scope="row" valign="top">
+							<label for="<?php echo $id ?>"><?php echo $extension_label; ?></label>
+						</th>
+						<td>
+							<div>
+								<select name="<?php echo $name; ?>" id="<?php echo $id; ?>">
+									<option value="0" <?php selected( 0, $value ); ?> ><?php echo \Podlove\t( '-- Select Media Location --' ); ?></option>
+									<?php foreach ($media_locations as $media_location): ?>
+										<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->media_format()->title() ?> (<?php echo \Podlove\t( 'Suffix' ) ?>: <?php echo $media_location->suffix ?>)</option>
+									<?php endforeach ?>
+								</select>
+							</div>
+						</td>
+					</tr>
+				<?php endforeach ?>
+			<?php endforeach ?>
+		</table>
+		<?php
+	}
+
 	public static function nested_feed_media_locations_callback( $post, $args ) {
 		$media_locations = $args[ 'args' ][ 0 ];
 		$wrapper         = $args[ 'args' ][ 1 ];
@@ -392,7 +474,7 @@ class Show {
 			$raw_formats = \Podlove\Model\MediaFormat::all();
 			$formats = array();
 			foreach ( $raw_formats as $format ) {
-				$formats[ $format->id ] = $format->name . ' (' . $format->extension . ')';
+				$formats[ $format->id ] = $format->title();
 			}
 
 			foreach ( $media_locations as $media_location ) {
