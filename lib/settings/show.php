@@ -319,22 +319,55 @@ class Show {
 
 			$media_locations = \Podlove\Model\MediaLocation::find_all_by_show_id( $form->object->id );
 
-			add_meta_box(
-				/* $id            */ 'podlove_webplayer_settings',
-				/* $title         */ __( 'Configure Webplayer' ),
-				/* $callback      */ '\Podlove\Settings\Show::podlove_webplayer_settings_callback',
-				/* $page          */ \Podlove\Settings\Show::$pagehook,
-				/* $context       */ 'webplayer',
-				/* $priority      */ 'default',
-				/* $callback_args */ array( $media_locations, $wrapper )
-			);
+			if ( $media_locations ) {
+					add_meta_box(
+						/* $id            */ 'podlove_webplayer_settings',
+						/* $title         */ __( 'Configure Webplayer' ),
+						/* $callback      */ '\Podlove\Settings\Show::podlove_webplayer_settings_callback',
+						/* $page          */ \Podlove\Settings\Show::$pagehook,
+						/* $context       */ 'webplayer',
+						/* $priority      */ 'default',
+						/* $callback_args */ array( $media_locations, $wrapper )
+					);
+				
+					add_meta_box(
+						/* $id            */ 'podlove_media_locations',
+						/* $title         */ __( 'Configure Media Locations' ),
+						/* $callback      */ '\Podlove\Settings\Show::nested_feed_media_locations_callback',
+						/* $page          */ \Podlove\Settings\Show::$pagehook,
+						/* $context       */ 'media_locations',
+						/* $priority      */ 'default',
+						/* $callback_args */ array( $media_locations, $wrapper )
+					);
+			}
 
+			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
+
+			if ( $feeds ) {	
+				foreach ( $feeds as $feed ) {
+					add_meta_box(
+						/* $id            */ 'podlove_feed_' . $feed->id,
+						/* $title         */ sprintf( __( 'Configure Feed: %s' ), $feed->name ),
+						/* $callback      */ '\Podlove\Settings\Show::nested_feed_meta_box_callback',
+						/* $page          */ \Podlove\Settings\Show::$pagehook,
+						/* $context       */ 'feeds',
+						/* $priority      */ 'default',
+						/* $callback_args */ array( $feed, $wrapper )
+					);
+				}
+			}
 			?>
-
 			<tr>
 				<td colspan="2" class="metabox-holder">
 					<?php 
 					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'webplayer', array() );
+					?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="metabox-holder">
+					<?php 
+					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'media_locations', array() );
 					?>
 				</td>
 			</tr>
@@ -352,6 +385,13 @@ class Show {
 				</td>
 			</tr>
 			<tr>
+				<td colspan="2" class="metabox-holder">
+					<?php 
+					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'feeds', array() );
+					?>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<?php if ( $show->is_new() ): ?>
 						<span><?php echo \Podlove\t( 'After you have saved the show, you can add feeds for it here.' ); ?></span>
@@ -362,44 +402,6 @@ class Show {
 						</a>
 					</span>
 					<?php endif; ?>
-				</td>
-			</tr>
-			<?php 
-
-			if ( $media_locations ) {
-					add_meta_box(
-						/* $id            */ 'podlove_media_locations',
-						/* $title         */ __( 'Configure Media Locations' ),
-						/* $callback      */ '\Podlove\Settings\Show::nested_feed_media_locations_callback',
-						/* $page          */ \Podlove\Settings\Show::$pagehook,
-						/* $context       */ 'normal',
-						/* $priority      */ 'default',
-						/* $callback_args */ array( $media_locations, $wrapper )
-					);
-			}
-
-			$feeds = \Podlove\Model\Feed::find_all_by_show_id( $form->object->id );
-
-			if ( $feeds ) {	
-				foreach ( $feeds as $feed ) {
-					add_meta_box(
-						/* $id            */ 'podlove_feed_' . $feed->id,
-						/* $title         */ sprintf( __( 'Configure Feed: %s' ), $feed->name ),
-						/* $callback      */ '\Podlove\Settings\Show::nested_feed_meta_box_callback',
-						/* $page          */ \Podlove\Settings\Show::$pagehook,
-						/* $context       */ 'normal',
-						/* $priority      */ 'default',
-						/* $callback_args */ array( $feed, $wrapper )
-					);
-				}
-			}
-			?>
-			<tr>
-				<td colspan="2" class="metabox-holder">
-					<?php 
-					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'normal', array() );
-					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'additional', array() );
-					?>
 				</td>
 			</tr>
 			<?php
