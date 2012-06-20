@@ -54,7 +54,13 @@ class Show_List_Table extends \WP_List_Table {
 		$out = '';
 
 		foreach ( $feeds as $feed ) {
-			$out .= '<div>' . $feed->get_subscribe_link() . '</div>';
+			$out .= '<div>';
+			$out .= sprintf( '<strong>%s/%s: </strong>', $show->slug, $feed->slug );
+			$out .= sprintf( '<a href="%s">%s</a>', $feed->get_subscribe_url(), \Podlove\t( 'Public Link' ) );
+			if ( strlen( $feed->redirect_url ) > 0 ) {
+				$out .= sprintf( ' | <a href="%s?redirect=no">%s</a>', $feed->get_subscribe_url(), \Podlove\t( 'Initial/Internal Feed' ) );
+			}
+			$out .= '</div>';
 		}
 
 		return $out;

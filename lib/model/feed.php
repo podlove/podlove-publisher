@@ -96,6 +96,19 @@ class Feed extends Base {
 		$where = sprintf( 'show_id = "%s" AND media_location_id = "%s"', $show_id, $media_location_id );
 		return Feed::find_one_by_where( $where );
 	}
+
+	public function find_by_show_slug_and_feed_slug( $show_slug, $feed_slug ) {
+		$show  = Show::find_one_by_slug( $show_slug );
+		$feeds = $show->feeds();
+		
+		foreach ( $feeds as $feed ) {
+			if ( $feed_slug == $feed->slug ) {
+				return $feed;
+			}
+		}
+
+		return NULL;
+	}
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

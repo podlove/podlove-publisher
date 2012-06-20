@@ -37,13 +37,23 @@ add_action( 'wp', function () {
 	if ( ! $show_slug || ! $feed_slug )
 		return;
 
-	// add "?feed_type=atom" to feed URL for atom
-	$feed_type = ( isset( $_GET[ 'feed_type' ] ) && $_GET[ 'feed_type' ] === "atom" ) ? "atom" : "rss";
+	$feed = \Podlove\Model\Feed::find_by_show_slug_and_feed_slug( $show_slug, $feed_slug );
 
-	if ( $feed_type === "rss" ) {
-		new	\Podlove\Feeds\RSS( $show_slug, $feed_slug );
+	if ( ! $feed )
+		return;
+
+	if ( strlen( $feed->redirect_url ) > 0 && $_REQUEST[ 'redirect' ] != "no" ) {
+		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, 302 );
+		exit;
 	} else {
-		new	\Podlove\Feeds\Atom( $show_slug, $feed_slug );
+		// add "?feed_type=atom" to feed URL for atom
+		$feed_type = ( isset( $_GET[ 'feed_type' ] ) && $_GET[ 'feed_type' ] === "atom" ) ? "atom" : "rss";
+
+		if ( $feed_type === "rss" ) {
+			new	\Podlove\Feeds\RSS( $show_slug, $feed_slug );
+		} else {
+			new	\Podlove\Feeds\Atom( $show_slug, $feed_slug );
+		}
 	}
 	
 } );
