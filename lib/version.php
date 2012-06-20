@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 1 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 2 );
 
 add_action( 'init', function () {
 	
@@ -52,18 +52,23 @@ add_action( 'init', function () {
 		// run one or multiple migrations
 		for ( $i = $database_version+1; $i <= DATABASE_VERSION; $i++ ) { 
 			\Podlove\run_migrations_for_version( $i );
+			update_option( 'podlove_database_version', $i );
 		}
-		update_option( 'podlove_database_version', DATABASE_VERSION );
 	}
 
 } );
 
 function run_migrations_for_version( $version ) {
-	// global $wpdb;
-	// 
-	// switch ( $version ) {
-	// 	case 2:
-	// 		break;
-	// }
+	global $wpdb;
+	
+	switch ( $version ) {
+		case 2:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `chapters` TEXT AFTER `cover_art`',
+				\Podlove\Model\Release::table_name()
+			);
+			$wpdb->query( $sql );
+			break;
+	}
 
 }
