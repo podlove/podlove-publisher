@@ -167,5 +167,6 @@ add_action( 'plugins_loaded', function () {
 	                         . DIRECTORY_SEPARATOR . 'podlove-web-player'
 	                         . DIRECTORY_SEPARATOR . 'podlove-web-player.php';
 
-	require_once $mediaplayer_plugin_file;
+	if ( file_exists( $mediaplayer_plugin_file) )
+		require_once $mediaplayer_plugin_file;
 } );
