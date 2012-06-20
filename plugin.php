@@ -156,7 +156,7 @@ add_action( 'init', function () {
 
 // "activate" podlove-web-player plugin
 // Not an ideal solution as it does not fire activation/deactivation hooks.
-add_action( 'init', function () {
+add_action( 'plugins_loaded', function () {
 
 	if ( defined( 'MEDIAELEMENTJS_DIR' ) )
 		return;
