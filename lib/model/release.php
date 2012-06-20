@@ -79,3 +79,4 @@ Release::property( 'enable', 'INT' ); // listed in podcast directories or not?
 Release::property( 'slug', 'VARCHAR(255)' );
 Release::property( 'duration', 'VARCHAR(255)' );
 Release::property( 'cover_art', 'VARCHAR(255)' );
+Release::property( 'chapters', 'TEXT' );
