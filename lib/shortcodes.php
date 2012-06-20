@@ -115,6 +115,13 @@ function webplayer_shortcode( $options ) {
 			$available_formats[] = sprintf( '%s="%s"', $audio_format, $format_file->get_file_url() );
 	}
 
-	return do_shortcode( '[audio ' . implode( ' ', $available_formats ) . ']' );
+	$chapters = '';
+	if ( $release->chapters ) {
+		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $show->slug );
+	}
+
+	file_put_contents('/tmp/php.log', print_r($chapters, true), FILE_APPEND | LOCK_EX);
+
+	return do_shortcode( '[audio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
