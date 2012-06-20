@@ -33,6 +33,15 @@ class Podcast_Post_Type {
 				'description' => \Podlove\t( 'JPEG or PNG. At least 1400 x 1400 pixels.' ),
 				'html'        => array( 'class' => 'regular-text' )
 			),
+			'chapters' => array(
+				'label'       => \Podlove\t( 'Chapter Marks' ),
+				'description' => \Podlove\t( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.' ),
+				'type'        => 'textarea',
+				'html'        => array(
+					'class'       => 'large-text code',
+					'placeholder' => '00:00:00.000 Intro'
+				)
+			),
 			'enable' => array(
 				'label'       => \Podlove\t( 'Enable?' ),
 				'description' => \Podlove\t( 'Allow this episode to appear in podcast directories.' ),
@@ -267,6 +276,17 @@ class Podcast_Post_Type {
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
 		<table class="form-table">
 			<?php foreach ( $this->form_data as $key => $value ): ?>
+				<?php 
+				// adjust chapter textfield height to its content
+				// TODO: move into form toolkit
+				if ( $key === 'chapters' ) {
+					$rows = count( explode( "\n", $release->chapters ) );
+					if ( $rows < 2 ) {
+						$rows = 2;
+					}
+					$value[ 'html' ][ 'rows' ] = $rows;
+				}
+				?>
 				<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $release->{$key}, $key, $value ); ?>
 			<?php endforeach; ?>
 			<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $location_values, 'media_locations', $media_locations_form ); ?>
@@ -334,6 +354,9 @@ class Podcast_Post_Type {
 				$release->{$release_column} = $release_values[ $release_column ];
 			
 			$release->save();
+
+			// copy chapter info into custom meta for webplayer compatibility
+			update_post_meta( $post_id, sprintf( '_podlove_chapters_%s', $show->slug ), $release->chapters );
 
 			// save files/formats
 			foreach ( $release_values[ 'media_locations' ] as $media_location_id => $media_location_value ) {
