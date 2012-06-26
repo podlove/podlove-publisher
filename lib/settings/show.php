@@ -454,7 +454,9 @@ class Show {
 								<select name="<?php echo $name; ?>" id="<?php echo $id; ?>">
 									<option value="0" <?php selected( 0, $value ); ?> ><?php echo \Podlove\t( '-- Select Media Location --' ); ?></option>
 									<?php foreach ($media_locations as $media_location): ?>
-										<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->media_format()->title() ?> (<?php echo \Podlove\t( 'Suffix' ) ?>: <?php echo $media_location->suffix ?>)</option>
+										<?php if ( $media_location->media_format() ): ?>
+											<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->media_format()->title() ?> (<?php echo \Podlove\t( 'Suffix' ) ?>: <?php echo $media_location->suffix ?>)</option>
+										<?php endif ?>
 									<?php endforeach ?>
 								</select>
 							</div>
