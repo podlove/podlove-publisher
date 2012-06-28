@@ -356,7 +356,7 @@ class Show {
 				
 					add_meta_box(
 						/* $id            */ 'podlove_media_locations',
-						/* $title         */ __( 'Configure Media Locations' ),
+						/* $title         */ __( 'Configure Media Files' ),
 						/* $callback      */ '\Podlove\Settings\Show::nested_feed_media_locations_callback',
 						/* $page          */ \Podlove\Settings\Show::$pagehook,
 						/* $context       */ 'media_locations',
