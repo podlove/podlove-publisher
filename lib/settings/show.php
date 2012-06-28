@@ -7,7 +7,7 @@ class Show {
 	
 	public function __construct( $handle ) {
 		
-		self::$pagehook = add_submenu_page(
+		Show::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ 'Shows',
 			/* $menu_title */ 'Shows',
@@ -16,6 +16,13 @@ class Show {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+
+		add_action( 'load-' . Show::$pagehook, function () {
+			wp_enqueue_script( 'postbox' );
+			add_screen_option( 'layout_columns', array(
+				'max' => 1, 'default' => 1
+			) );
+		} );
 
 		// init so we can process creation and deletion of feeds
 		new \Podlove\Settings\Feed();
@@ -186,6 +193,23 @@ class Show {
 					break;
 			}
 			?>
+
+			<!-- Stuff for opening / closing metaboxes -->
+			<script type="text/javascript">
+			jQuery( document ).ready( function( $ ){
+				// close postboxes that should be closed
+				$( '.if-js-closed' ).removeClass( 'if-js-closed' ).addClass( 'closed' );
+				// postboxes setup
+				postboxes.add_postbox_toggles( '<?php echo Show::$pagehook; ?>' );
+			} );
+			</script>
+
+			<form style='display: none' method='get' action=''>
+				<?php
+				wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+				wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+				?>
+			</form>
 		</div>	
 		<?php
 	}
