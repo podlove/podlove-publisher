@@ -336,7 +336,7 @@ class Show {
 			) );
 
 			$wrapper->string( 'media_file_base_uri', array(
-				'label'       => \Podlove\t( 'Media File Base URI' ),
+				'label'       => \Podlove\t( 'Media File Base URL' ),
 				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
