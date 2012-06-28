@@ -101,7 +101,7 @@ function webplayer_shortcode( $options ) {
 		return;
 
 	$available_formats = array();
-	$audio_formats = array( 'mp3', 'ogg' );
+	$audio_formats = array( 'mp3', 'mp4', 'ogg' );
 
 	foreach ( $audio_formats as $audio_format ) {
 		$format_location = Model\MediaLocation::find_by_id( $formats_data[ 'audio' ][ $audio_format ] );
@@ -119,8 +119,6 @@ function webplayer_shortcode( $options ) {
 	if ( $release->chapters ) {
 		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $show->slug );
 	}
-
-	file_put_contents('/tmp/php.log', print_r($chapters, true), FILE_APPEND | LOCK_EX);
 
 	return do_shortcode( '[audio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
 }
