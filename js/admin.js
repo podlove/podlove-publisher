@@ -29,7 +29,7 @@ jQuery(function($) {
 				var format_extension    = $checkbox.data('extension');
 				var size                = $checkbox.data('size');
 
-				url = url.replace( '%show_base_uri%', media_file_base_uri );
+				url = url.replace( '%media_file_base_url%', media_file_base_uri );
 				url = url.replace( '%episode_slug%', episode_slug );
 				url = url.replace( '%suffix%', feed_suffix );
 				url = url.replace( '%format_extension%', format_extension );

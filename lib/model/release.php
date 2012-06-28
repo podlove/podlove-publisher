@@ -61,7 +61,7 @@ class Release extends Base {
 	function enclosure_url( $show, $media_location, $format ) {
 		$template = $media_location->url_template;
 
-		$template = str_replace( '%show_base_uri%', $show->media_file_base_uri, $template );
+		$template = str_replace( '%media_file_base_url%', $show->media_file_base_uri, $template );
 		$template = str_replace( '%episode_slug%', $this->slug, $template );
 		$template = str_replace( '%suffix%', $media_location->suffix, $template );
 		$template = str_replace( '%format_extension%', $format->extension, $template );

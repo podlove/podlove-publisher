@@ -10,7 +10,7 @@ class MediaLocation extends Base {
 	 */
 	public function default_values() {
 		return array(
-			'url_template' => '%show_base_uri%%episode_slug%%suffix%.%format_extension%'
+			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%'
 		);
 	}
 
