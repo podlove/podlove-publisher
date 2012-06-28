@@ -417,6 +417,7 @@ class Show {
 		$formats = array(
 			'audio' => array(
 				'mp3' => \Podlove\t( 'MP3 Audio' ),
+				'mp4' => \Podlove\t( 'MP4 Audio' ),
 				'ogg' => \Podlove\t( 'OGG Audio' )
 			),
 			'video' => array(
