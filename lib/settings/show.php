@@ -498,7 +498,6 @@ class Show {
 		$wrapper         = $args[ 'args' ][ 1 ];
 		?>
 		<a name="media_locations"></a>
-		<table style="width: 100%">
 			<?php
 			$raw_formats = \Podlove\Model\MediaFormat::all();
 			$formats = array();
@@ -507,6 +506,9 @@ class Show {
 			}
 
 			foreach ( $media_locations as $media_location ) {
+				?>
+				<table style="width: 100%">
+				<?php
 				$wrapper->fields_for( $media_location, array( 'context' => 'podlove_media_location' ), function ( $media_location_form ) use ( $formats ) {
 					$f = new \Podlove\Form\Input\TableWrapper( $media_location_form );
 
@@ -526,7 +528,7 @@ class Show {
 
 					$f->string( 'url_template', array(
 						'label'       => \Podlove\t( 'URL Template' ),
-						'description' => sprintf( \Podlove\t( 'Read %sdocumentation%s for help.' ), '<a href="#" target="_blank">', '</a>' ),
+						'description' => sprintf( \Podlove\t( 'Preview: %s Read %sdocumentation%s for help.' ), '<span class="url_template_preview"></span><br/>', '<a href="#" target="_blank">', '</a>' ),
 						'html' => array( 'class' => 'large-text' )
 					) );
 
@@ -541,10 +543,10 @@ class Show {
 						</span>
 					</td>
 				</tr>
+				</table>
 				<?php
 			}
 			?>
-		</table>
 		<?php
 	}
 
