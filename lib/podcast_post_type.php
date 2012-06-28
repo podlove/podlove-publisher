@@ -9,7 +9,10 @@ class Podcast_Post_Type {
 	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
 	
 	public function __construct() {
-		
+
+		if ( is_admin() && true === apply_filters( 'podlove_custom_guid', true ) )
+			require_once \Podlove\PLUGIN_DIR . 'lib/custom_guid.php';
+
 		$this->form_data = array(
 			'active' => array(
 				'label'       => \Podlove\t( 'Post Episode to Show' ), // todo: hide/show rest of the form
@@ -271,7 +274,7 @@ class Podcast_Post_Type {
 			                                       . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', \Podlove\t( 'Edit this show' ) );
 		}
 			
-		wp_nonce_field( plugin_basename( __FILE__ ), 'podlove_noncename' );
+		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
 		?>
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
 		<table class="form-table">
@@ -302,11 +305,12 @@ class Podcast_Post_Type {
 	}
 	
 	public function save_postdata( $post_id ) {
+		global $wpdb;
 
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
 			return;
 		
-		if ( empty( $_POST[ 'podlove_noncename' ] ) || ! wp_verify_nonce( $_POST[ 'podlove_noncename' ], plugin_basename( __FILE__ ) ) )
+		if ( empty( $_POST[ 'podlove_noncename' ] ) || ! wp_verify_nonce( $_POST[ 'podlove_noncename' ], \Podlove\PLUGIN_FILE ) )
 			return;
 		
 		// Check permissions
@@ -319,7 +323,7 @@ class Podcast_Post_Type {
 
 		if ( ! isset( $_POST[ '_podlove_meta' ] ) || ! is_array( $_POST[ '_podlove_meta' ] ) )
 			return;
-		
+
 		// What do we need these loops for?
 		// When you submit a checkbox, the value is "on" when active.
 		// However, when unchecked, nothing is sent at all. So, to determine
