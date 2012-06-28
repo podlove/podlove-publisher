@@ -360,13 +360,6 @@ class Show {
 			<tr>
 				<td colspan="2" class="metabox-holder">
 					<?php 
-					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'webplayer', array() );
-					?>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" class="metabox-holder">
-					<?php 
 					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'media_locations', array() );
 					?>
 				</td>
@@ -382,6 +375,13 @@ class Show {
 						</a>
 					</span>
 					<?php endif; ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="metabox-holder">
+					<?php 
+					do_meta_boxes( \Podlove\Settings\Show::$pagehook, 'webplayer', array() );
+					?>
 				</td>
 			</tr>
 			<tr>
