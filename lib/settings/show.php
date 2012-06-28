@@ -395,7 +395,7 @@ class Show {
 					<?php else: ?>
 					<span class="add">
 						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=media_location&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
-							<?php echo \Podlove\t( 'Add New Media Location' ); ?>
+							<?php echo \Podlove\t( 'Add New Media File' ); ?>
 						</a>
 					</span>
 					<?php endif; ?>
@@ -538,7 +538,7 @@ class Show {
 					<td colspan="2">
 						<span class="delete">
 							<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=media_location&amp;show=<?php echo $media_location->show()->id; ?>&amp;media_location=<?php echo $media_location->id; ?>" style="float: right" class="button-secondary delete">
-								<?php echo \Podlove\t( 'Delete Media Location' ); ?>
+								<?php echo \Podlove\t( 'Delete Media File' ); ?>
 							</a>
 						</span>
 					</td>
