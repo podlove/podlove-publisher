@@ -158,8 +158,12 @@ add_action( 'init', function () {
 // Not an ideal solution as it does not fire activation/deactivation hooks.
 add_action( 'plugins_loaded', function () {
 
-	if ( defined( 'MEDIAELEMENTJS_DIR' ) )
+	if ( defined( 'MEDIAELEMENTJS_DIR' ) ) {
+		define( 'PODLOVE_MEDIA_PLAYER', 'external' );
 		return;
+	}
+
+	define( 'PODLOVE_MEDIA_PLAYER', 'internal' );
 
 	$mediaplayer_plugin_file = PLUGIN_DIR . 'lib'
 	                         . DIRECTORY_SEPARATOR . 'submodules'
