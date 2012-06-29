@@ -590,6 +590,11 @@ class Show {
 					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : '',
 					'html' => array( 'class' => 'regular-text' )
 				) );
+
+				$feed_wrapper->radio( 'format', array(
+					'label'   => \Podlove\t( 'Format' ),
+					'options' => array( 'atom' => 'Atom', 'rss' => 'RSS' )
+				) );
 							
 				$feed_wrapper->select( 'media_location_id', array(
 					'label'       => \Podlove\t( 'Media Location' ),

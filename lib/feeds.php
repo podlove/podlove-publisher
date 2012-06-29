@@ -42,14 +42,11 @@ add_action( 'wp', function () {
 	if ( ! $feed )
 		return;
 
-	if ( strlen( $feed->redirect_url ) > 0 && $_REQUEST[ 'redirect' ] != "no" ) {
+	if ( strlen( $feed->redirect_url ) > 0 && ( ! isset( $_REQUEST[ 'redirect' ] ) || $_REQUEST[ 'redirect' ] != "no" ) ) {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, 302 );
 		exit;
 	} else {
-		// add "?feed_type=atom" to feed URL for atom
-		$feed_type = ( isset( $_GET[ 'feed_type' ] ) && $_GET[ 'feed_type' ] === "atom" ) ? "atom" : "rss";
-
-		if ( $feed_type === "rss" ) {
+		if ( $feed->format === "rss" ) {
 			new	\Podlove\Feeds\RSS( $show_slug, $feed_slug );
 		} else {
 			new	\Podlove\Feeds\Atom( $show_slug, $feed_slug );
