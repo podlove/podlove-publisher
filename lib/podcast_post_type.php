@@ -7,7 +7,7 @@ namespace Podlove;
 class Podcast_Post_Type {
 
 	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
-	
+
 	public function __construct() {
 
 		if ( is_admin() && true === apply_filters( 'podlove_custom_guid', true ) )
@@ -102,6 +102,8 @@ class Podcast_Post_Type {
 				'1.0' 
 			);
 			wp_enqueue_script( 'podlove_admin_script' );
+
+
 		}
 		
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
@@ -123,7 +125,7 @@ class Podcast_Post_Type {
 		);
 
 		// rename first menu entry to "Dashboard"
-		add_submenu_page(
+		$dashboard_page_hook = add_submenu_page(
 			/* $parent_slug*/ self::SETTINGS_PAGE_HANDLE,
 			/* $page_title */ \Podlove\t( 'Dashboard' ),
 			/* $menu_title */ \Podlove\t( 'Dashboard' ),
@@ -131,7 +133,14 @@ class Podcast_Post_Type {
 			/* $menu_slug  */ self::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array( $this, 'settings_page' )
 		);
-		
+
+		add_action( $dashboard_page_hook, function () {
+			wp_enqueue_script( 'postbox' );
+			add_screen_option( 'layout_columns', array(
+				'max' => 2, 'default' => 2
+			) );
+		} );
+
 		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
 	}
@@ -159,6 +168,15 @@ class Podcast_Post_Type {
 	public function settings_page() {
 		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', \Podlove\t( 'About' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );
 		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_player', \Podlove\t( 'Webplayer' ), array( $this, 'about_player' ), self::SETTINGS_PAGE_HANDLE, 'side' );
+		
+		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_validation', \Podlove\t( 'Validate Podcast Files' ), array( $this, 'validate_podcast_files' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
+
+		global $wp_filter;
+		foreach ( $wp_filter as $key => $value ) {
+			if ( strpos( $key, 'sett') ) {
+				file_put_contents('/tmp/php.log', print_r("\n" . $key, true), FILE_APPEND | LOCK_EX);
+			}
+		}
 
 		?>
 		<div class="wrap">
@@ -178,7 +196,7 @@ class Podcast_Post_Type {
 				<div id="post-body" class="has-sidebar">
 					<div id="post-body-content" class="has-sidebar-content">
 						<?php do_action( 'podlove_settings_before_main_boxes' ); ?>
-						<?php $this->feed_overview_meta(); ?>
+						<?php //$this->feed_overview_meta(); ?>
 						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'normal', NULL ); ?>
 						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'additional', NULL ); ?>
 						<?php do_action( 'podlove_settings_after_main_boxes' ); ?>						
@@ -189,8 +207,29 @@ class Podcast_Post_Type {
 
 			</div>
 
+			<!-- Stuff for opening / closing metaboxes -->
+			<script type="text/javascript">
+			jQuery( document ).ready( function( $ ){
+				// close postboxes that should be closed
+				$( '.if-js-closed' ).removeClass( 'if-js-closed' ).addClass( 'closed' );
+				// postboxes setup
+				postboxes.add_postbox_toggles( '<?php echo Podcast_Post_Type::SETTINGS_PAGE_HANDLE; ?>' );
+			} );
+			</script>
+
+			<form style='display: none' method='get' action=''>
+				<?php
+				wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+				wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+				?>
+			</form>
+
 		</div>
 		<?php
+	}
+
+	function validate_podcast_files() {
+		?>Na dann validiere mal los ...<?php
 	}
 	
 	/**
@@ -389,3 +428,4 @@ class Podcast_Post_Type {
 		}
 	}
 }
+
