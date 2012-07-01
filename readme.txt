@@ -1,6 +1,6 @@
 === Podlove Podcasting Plugin for WordPress ===
 Contributors: eteubert
-Donate link: 
+Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 Tags: podcast, publishing
 Requires at least: 3.0
 Tested up to: 3.3.2
