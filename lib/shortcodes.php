@@ -42,6 +42,9 @@ add_action( 'init', '\Podlove\handle_direct_download' );
 function episode_downloads_shortcode( $options ) {
 	global $post;
 
+	if ( is_feed() )
+		return '';
+
 	$episode     = Model\Episode::find_or_create_by_post_id( $post->ID );
 	$release     = $episode->release();
 	$media_files = $release->media_files();
