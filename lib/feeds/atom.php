@@ -11,6 +11,10 @@ class Atom {
 			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"';
 		} );
 		
+		add_filter( 'feed_link', function ( $output, $feed ) use ( $show_slug, $feed_slug) {
+			return get_bloginfo( 'url' ) . '/feed/' . $show_slug . '/' . $feed_slug . '/';
+		}, 10, 2 );
+		
 		// @fixme either slugs are unique or we need to check for id or something
 		$show           = \Podlove\Model\Show::find_one_by_slug( $show_slug );
 		$feed           = \Podlove\Model\Feed::find_one_by_slug( $feed_slug );
