@@ -211,6 +211,11 @@ add_action( 'plugins_loaded', function () {
  */
 add_filter( 'pre_get_posts', function ( $wp_query ) {
 
+	if ( is_home() && $wp_query->is_main_query() && \Podlove\get_setting( 'merge_episodes' ) === 'on' ) {
+		$wp_query->set( 'post_type', array( 'post', 'podcast' ) );
+		return $wp_query;
+	}
+
 	if ( get_option( 'show_on_front' ) === 'posts' )
 		return $wp_query;
 
