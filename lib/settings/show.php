@@ -597,7 +597,7 @@ class Show {
 				) );
 							
 				$feed_wrapper->select( 'media_location_id', array(
-					'label'       => \Podlove\t( 'Media Location' ),
+					'label'       => \Podlove\t( 'Media File' ),
 					'description' => \Podlove\t( 'Choose the file location for this feed.' ),
 					'options'     => $locations
 				) );
