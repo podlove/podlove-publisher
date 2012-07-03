@@ -405,7 +405,7 @@ abstract class Base
 	}
 
 	private function property_name_to_sql_update_statement( $p ) {
-		if ( $this->$p !== NULL ) {
+		if ( $this->$p !== NULL && $this->$p !== '' ) {
 			return "$p = '{$this->$p}'";
 		} else {
 			return "$p = NULL";
