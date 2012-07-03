@@ -265,6 +265,14 @@ class Show {
 		<h3><?php echo \Podlove\t( 'Edit Show' ); ?>: <?php echo $show->name ?></h3>
 		
 		<?php $this->form_template( $show, 'save' ); ?>
+
+		<!-- highlight show entry in menu -->
+		<script type="text/javascript">
+		jQuery(function($) {
+			$(".wp-submenu a:contains('<?php echo $show->name; ?>')").css({fontWeight: 'bold'});
+		});
+		</script>
+
 		<?php
 	}
 	
