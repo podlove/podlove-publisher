@@ -229,7 +229,53 @@ class Podcast_Post_Type {
 	}
 
 	function validate_podcast_files() {
-		?>Na dann validiere mal los ...<?php
+		$shows = \Podlove\Model\Show::all();
+
+		?>
+		<a href="#" id="validate_everything">
+			<?php echo \Podlove\t( 'Validate Everything' ); ?>
+		</a>
+		<?php
+
+		foreach ( $shows as $show ) {
+			echo "<h4>" . $show->name . "</h4>";
+			$releases = $show->releases();
+			?>
+
+			<?php foreach ( $releases as $release ): ?>
+				<div class="release">
+					<span class="slug">
+						<strong><?php echo $release->slug; ?></strong>
+					</span>
+					<span class="duration">
+						<?php echo sprintf( \Podlove\t( 'Duration: %s' ), $release->duration ); ?>
+					</span>
+					<span class="chapters">
+						<?php echo sprintf( \Podlove\t( 'Chapters: %s' ), strlen( $release->chapters ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( 'empty' ) ); ?>
+					</span>
+					<span class="coverart">
+						<?php echo sprintf( \Podlove\t( 'Cover Art: %s' ), strlen( $release->cover_art ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( 'empty' ) ); ?>
+					</span>
+					<div class="media_files">
+						<?php $media_files = $release->media_files(); ?>
+						<?php foreach ( $media_files as $media_file ): ?>
+							<div class="file" data-id="<?php echo $media_file->id; ?>">
+								<span class="status">
+									<?php if ( $media_file->size <= 0 ): ?>
+										<?php echo \Podlove\t( 'Filesize missing' ); ?>
+									<?php endif ?>
+								</span>
+								<span class="title"><?php echo $media_file->media_location()->title() ?></span>
+								<span class="url">
+									<?php echo $media_file->get_file_url(); ?>
+								</span>
+							</div>
+						<?php endforeach ?>
+					</div>
+				</div>
+			<?php endforeach ?>
+			<?php
+		}
 	}
 	
 	/**
