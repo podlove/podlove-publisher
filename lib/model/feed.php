@@ -24,12 +24,14 @@ class Feed extends Base {
 	 * @return string
 	 */
 	public function get_subscribe_url() {
-		return sprintf(
+		$url = sprintf(
 			'%s/feed/%s/%s/',
 			get_bloginfo( 'url' ),
 			$this->show()->slug,
 			$this->slug
 		);
+
+		return apply_filters( 'podlove_subscribe_url', $url );
 	}
 
 	/**

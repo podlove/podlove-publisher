@@ -190,6 +190,14 @@ add_action( 'init', function () {
 	    wp_enqueue_style( 'podlove-frontend-css' );
 } );
 
+// apply domain mapping plugin where it's essential
+add_action( 'plugins_loaded', function () {
+	if ( function_exists( 'domain_mapping_post_content' ) ) {
+		add_filter( 'feed_link', 'domain_mapping_post_content', 20 );
+		add_filter( 'podlove_subscribe_url', 'domain_mapping_post_content', 20 );
+	}
+} );
+
 namespace Podlove\AJAX;
 
 function validate_file() {
