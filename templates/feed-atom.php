@@ -22,7 +22,10 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 
 	<link rel="alternate" type="text/html" href="<?php bloginfo_rss('url') ?>" />
 	<id><?php bloginfo('atom_url'); ?></id>
-	<link rel="self" type="application/atom+xml" href="<?php self_link(); ?>" />
+	<link rel="self" type="application/atom+xml" title="" href="<?php self_link(); ?>" />
+	<?php 
+	//todo <link rel="alternate" ... /> auf alle anderen enableden atom feeds
+	 ?>
 
 	<?php do_action('atom_head'); ?>
 	<?php while (have_posts()) : the_post(); ?>

@@ -15,7 +15,7 @@ function override_feed_title( $feed ) {
 }
 
 function override_feed_language( $feed ) {
-	add_filter( 'option_rss_language', function ( $language ) use ( $feed ) {
+	add_filter( 'pre_option_rss_language', function ( $language ) use ( $feed ) {
 		return apply_filters( 'podlove_feed_language', ( $feed->language ) ? $feed->language : $language );
 	} );
 }
