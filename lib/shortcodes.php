@@ -58,15 +58,16 @@ function episode_downloads_shortcode( $options ) {
 
 		$html .= '<li class="' . $media_format->extension . '">';
 		$html .= sprintf(
-			'<a href="%s">%s</a>',
+			'<a href="%s">%s%s</a>',
 			apply_filters( 'podlove_download_link_url', $download_link_url, $media_file ),
-			apply_filters( 'podlove_download_link_name', $download_link_name, $media_file )
+			apply_filters( 'podlove_download_link_name', $download_link_name, $media_file ),
+			'<span class="size">' . \Podlove\format_bytes( $media_file->size, 0 ) . '</span>'
 		);
 		$html .= '</li>';
 	}
 	$html .= '</ul>';
 
-	return apply_filters( 'podlove_downloads_before', '<span class="podlove_downloads_title">Downloads:</span>' )
+	return apply_filters( 'podlove_downloads_before', '' )
 	     . $html
 	     . apply_filters( 'podlove_downloads_after', '' );
 }
