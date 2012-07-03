@@ -17,6 +17,18 @@ function format_bytes( $size, $decimals = 2 ) {
     return round( $size, $decimals ) . $units[$i];
 }
 
+function get_setting( $name ) {
+	
+	$defaults = array(
+		'merge_episodes' => 'off' // can't be "on"
+	);
+
+	$options = get_option( 'podlove' );
+	$options = wp_parse_args( $options, $defaults );
+
+	return $options[ $name ];
+}
+
 namespace Podlove\Form;
 
 /**
