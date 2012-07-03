@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 3 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 4 );
 
 add_action( 'init', function () {
 	
@@ -73,6 +73,13 @@ function run_migrations_for_version( $version ) {
 			$sql = sprintf(
 				'ALTER TABLE `%s` ADD COLUMN `format` VARCHAR(255) AFTER `slug`',
 				\Podlove\Model\Feed::table_name()
+			);
+			$wpdb->query( $sql );
+			break;
+		case 4:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `title` VARCHAR(255) AFTER `id`',
+				\Podlove\Model\MediaLocation::table_name()
 			);
 			$wpdb->query( $sql );
 			break;
