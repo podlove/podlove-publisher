@@ -48,6 +48,11 @@ class MediaLocation extends Base {
 			return \Podlove\t( 'Notice: No file format defined.' );
 	}
 
+	public function find_by_show_id_and_media_format_id( $show_id, $media_format_id ) {
+		$where = sprintf( 'show_id = "%s" AND media_format_id = "%s"', $show_id, $media_format_id );
+		return MediaLocation::find_one_by_where( $where );
+	}
+
 }
 
 MediaLocation::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

@@ -100,17 +100,15 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 	add_action( $hook, function () use ( $show, $feed, $format ) {
 		global $post;
 
-		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
-		$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
+		$episode  = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
+		$release  = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
+		$location = \Podlove\Model\MediaLocation::find_by_show_id_and_media_format_id( $show->id, $format->id );
+		$file     = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $location->id );
 
 		$enclosure_duration  = $release->duration;
-		$enclosure_file_size = 0; // FIXME file size must be file format specific!
+		$enclosure_file_size = $file->size;
 		$file_slug           = $release->slug;
 		$cover_art_url       = $release->cover_art;
-
-		if ( ! $file_slug ) {
-			// TODO might be a good idea to notify the podcast admin
-		}
 
 		$enclosure_url = $release->enclosure_url( $show, $feed->media_location(), $format );
 		
