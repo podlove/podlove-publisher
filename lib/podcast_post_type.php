@@ -251,10 +251,10 @@ class Podcast_Post_Type {
 						<?php echo sprintf( \Podlove\t( 'Duration: %s' ), $release->duration ); ?>
 					</span>
 					<span class="chapters">
-						<?php echo sprintf( \Podlove\t( 'Chapters: %s' ), strlen( $release->chapters ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( 'empty' ) ); ?>
+						<?php echo sprintf( \Podlove\t( 'Chapters: %s' ), strlen( $release->chapters ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( '<span style="color:maroon">empty</span>' ) ); ?>
 					</span>
 					<span class="coverart">
-						<?php echo sprintf( \Podlove\t( 'Cover Art: %s' ), strlen( $release->cover_art ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( 'empty' ) ); ?>
+						<?php echo sprintf( \Podlove\t( 'Cover Art: %s' ), strlen( $release->cover_art ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( '<span style="color:maroon">empty</span>' ) ); ?>
 					</span>
 					<div class="media_files">
 						<?php $media_files = $release->media_files(); ?>
@@ -262,7 +262,7 @@ class Podcast_Post_Type {
 							<div class="file" data-id="<?php echo $media_file->id; ?>">
 								<span class="status">
 									<?php if ( $media_file->size <= 0 ): ?>
-										<?php echo \Podlove\t( 'Filesize missing' ); ?>
+										<?php echo \Podlove\t( "<span style='color:red'>filesize missing</span>" ); ?>
 									<?php endif ?>
 								</span>
 								<span class="title"><?php echo $media_file->media_location()->title() ?></span>
