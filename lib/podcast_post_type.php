@@ -22,7 +22,7 @@ class Podcast_Post_Type {
 			),
 			// todo: add subtitle; but as extra metabox
 			'slug' => array(
-				'label'       => \Podlove\t( 'Episode File Slug' ),
+				'label'       => \Podlove\t( 'Episode Media File Slug' ),
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text' )
 			),

@@ -54,10 +54,7 @@ function episode_downloads_shortcode( $options ) {
 		
 		$download_link_url = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
 
-		$download_link_name = sprintf(
-			__( 'Download %s' ),
-			$media_location->title
-		);
+		$download_link_name = $media_location->title;
 
 		$html .= '<li class="' . $media_format->extension . '">';
 		$html .= sprintf(
@@ -69,7 +66,9 @@ function episode_downloads_shortcode( $options ) {
 	}
 	$html .= '</ul>';
 
-	return $html;
+	return apply_filters( 'podlove_downloads_before', '<span class="podlove_downloads_title">Downloads:</span>' )
+	     . $html
+	     . apply_filters( 'podlove_downloads_after', '' );
 }
 add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcode' );
 

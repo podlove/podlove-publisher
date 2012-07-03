@@ -15,6 +15,7 @@ remove_filter( 'post_guid',     'wp_strip_all_tags' );
 remove_filter( 'post_guid',     'esc_url' );
 remove_filter( 'post_guid',     'wp_kses_data' );
 
+// todo: when we import a feed from somewhere, the guid must stay the same
 add_filter( 'post_guid', function ( $guid ) {
 	if ( false === strpos( $guid, 'plv-' ) )
 		$guid = uniqid( 'plv-', true ); 
