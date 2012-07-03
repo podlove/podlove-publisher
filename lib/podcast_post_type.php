@@ -171,13 +171,6 @@ class Podcast_Post_Type {
 		
 		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_validation', \Podlove\t( 'Validate Podcast Files' ), array( $this, 'validate_podcast_files' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
 
-		global $wp_filter;
-		foreach ( $wp_filter as $key => $value ) {
-			if ( strpos( $key, 'sett') ) {
-				file_put_contents('/tmp/php.log', print_r("\n" . $key, true), FILE_APPEND | LOCK_EX);
-			}
-		}
-
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'options-general' ); ?>
