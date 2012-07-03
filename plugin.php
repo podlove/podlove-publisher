@@ -175,6 +175,21 @@ add_action( 'plugins_loaded', function () {
 		require_once $mediaplayer_plugin_file;
 } );
 
+add_action( 'init', function () {
+
+		if ( is_admin() )
+			return;
+
+	    wp_register_style(
+	    	'podlove-frontend-css',
+			plugins_url( 'css/frontend.css', __FILE__ ),
+			array(),
+			'1.0'
+	    );
+
+	    wp_enqueue_style( 'podlove-frontend-css' );
+} );
+
 namespace Podlove\AJAX;
 
 function validate_file() {
