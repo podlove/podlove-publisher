@@ -198,6 +198,36 @@ add_action( 'plugins_loaded', function () {
 	}
 } );
 
+/**
+ * This helps to get your blog tidy.
+ * It's all about "Settings > Reading > Front page displays"
+ *
+ * Default: Check "Your latest posts" and we won't change anything.
+ * However, if you check "A static page", we assume you'd like to separate
+ * blog and podcast by moving your blog away and the podcast directory to "/".
+ * That's what we do here.
+ *
+ * It's magic. Okay, I should probably document this publicly at some point.
+ */
+add_filter( 'pre_get_posts', function ( $wp_query ) {
+
+	if ( get_option( 'show_on_front' ) === 'posts' )
+		return $wp_query;
+
+	if ( $wp_query->get( 'page_id' ) == get_option( 'page_on_front' ) ) {
+		$wp_query->set( 'post_type', array( 'podcast' ) );
+
+		// fix conditional functions
+		$wp_query->set( 'page_id', '' );
+		$wp_query->is_page = 0;
+		$wp_query->is_singular = 0;
+	}
+
+	return $wp_query;
+} );
+
+
+
 namespace Podlove\AJAX;
 
 function validate_file() {
