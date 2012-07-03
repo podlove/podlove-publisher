@@ -29,6 +29,15 @@ class Show extends Base {
 	}
 
 	/**
+	 * Return all releases related to this show.
+	 *
+	 * @return array
+	 */
+	public function releases() {
+		return Release::find_all_by_show_id( $this->id );
+	}
+
+	/**
 	 * Return all media_locations with an associated format.
 	 * 
 	 * @return array

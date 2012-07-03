@@ -75,5 +75,34 @@ jQuery(function($) {
 	$("tr.row_media_locations td label").after('<span class="media_file_path"></span>');
 	update_media_file_path();
 	$('input[name*="slug"], input[name*="media_locations"]').on('change', update_media_file_path);
+
+	$("#validate_everything").click(function(e) {
+		e.preventDefault();
+
+		$(".release .file").each(function() {
+			var file_id = $(this).data('id');
+
+			var data = {
+				action: 'podlove-validate-file',
+				file_id: file_id
+			};
+
+			$.ajax({
+				url: ajaxurl,
+				data: data,
+				dataType: 'json',
+				success: function(result) {
+					$file = $('.file[data-id="' + result.file_id + '"]');
+					console.log(result);
+					if (result.reachable) {
+						$(".status", $file).html("<span style='color:green'>ok</span>");
+					} else {
+						$(".status", $file).html("<span style='color:red'>unreachable</span>");
+					}
+				}
+			});
+
+		});
+	});
 	
 });

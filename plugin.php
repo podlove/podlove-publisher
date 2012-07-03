@@ -174,3 +174,26 @@ add_action( 'plugins_loaded', function () {
 	if ( file_exists( $mediaplayer_plugin_file) )
 		require_once $mediaplayer_plugin_file;
 } );
+
+namespace Podlove\AJAX;
+
+function validate_file() {
+	$file_id = $_REQUEST[ 'file_id' ];
+
+	$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
+	$info = $file->curl_get_header();
+
+	$result = array();
+	$result[ 'file_id' ]   = $file_id;
+	$result[ 'reachable' ] = ( $info[ 'http_code' ] >= 200 && $info[ 'http_code' ] < 300 );
+	$result[ 'file_size' ] = $info[ 'download_content_length' ];
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode($result);
+
+	die();
+}
+
+add_action( 'wp_ajax_podlove-validate-file', '\Podlove\AJAX\validate_file' );
