@@ -11,6 +11,12 @@ function t( $text ) {
 	return __( $text, 'podlove' );
 }
 
+function format_bytes( $size, $decimals = 2 ) {
+    $units = array( ' B', ' KB', ' MB', ' GB', ' TB' );
+    for ( $i = 0; $size >= 1024 && $i < 4; $i++ ) $size /= 1024;
+    return round( $size, $decimals ) . $units[$i];
+}
+
 namespace Podlove\Form;
 
 /**
