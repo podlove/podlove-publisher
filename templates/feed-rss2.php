@@ -39,7 +39,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<dc:creator><?php the_author() ?></dc:creator>
 		<?php the_category_rss('rss2') ?>
 
-		<guid isPermaLink="false"><?php the_guid(); ?></guid>
+		<guid isPermaLink="false"><?php echo get_the_guid(); ?></guid>
 		<?php if ( apply_filters( 'podlove_feed_show_summary', false ) ): ?>
 			<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
 		<?php endif; ?>
