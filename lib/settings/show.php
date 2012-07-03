@@ -15,6 +15,27 @@ class Show {
 			/* $menu_slug  */ 'podlove_shows_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		// submenu entry for each show
+		$shows = \Podlove\Model\Show::all();
+		foreach ( $shows as $show ) {
+			add_submenu_page(
+				/* $parent_slug*/ $handle,
+				/* $page_title */ '&nbsp;&nbsp;' . $show->name,
+				/* $menu_title */ '&nbsp;&nbsp;' . $show->name,
+				/* $capability */ 'administrator',
+				/* $menu_slug  */ 'podlove_show_' . $show->id . '_handle',
+				/* $function   */ function () use ( $show ) {
+					// whatever works, right?
+					?>
+					<script type="text/javascript">
+					window.location = "?page=podlove_shows_settings_handle&action=edit&show=<?php echo $show->id; ?>";
+					</script>
+					<?php
+				}
+			);
+		}
+
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 
 		add_action( 'load-' . Show::$pagehook, function () {
