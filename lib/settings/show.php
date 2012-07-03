@@ -480,7 +480,7 @@ class Show {
 									<option value="0" <?php selected( 0, $value ); ?> ><?php echo \Podlove\t( 'Unused' ); ?></option>
 									<?php foreach ($media_locations as $media_location): ?>
 										<?php if ( $media_location->media_format() ): ?>
-											<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->media_format()->title() ?> (<?php echo \Podlove\t( 'Suffix' ) ?>: <?php echo $media_location->suffix ?>)</option>
+											<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->title ?></option>
 										<?php endif ?>
 									<?php endforeach ?>
 								</select>
@@ -518,6 +518,12 @@ class Show {
 						'label'       => \Podlove\t( 'File Format' ),
 						'description' => \Podlove\t( '' ),
 						'options'     => $formats
+					) );
+
+					$f->string( 'title', array(
+						'label'       => \Podlove\t( 'Title' ),
+						'description' => \Podlove\t( 'Description to identify the media file.' ),
+						'html' => array( 'class' => 'regular-text' )
 					) );
 
 					$f->string( 'suffix', array(
@@ -565,7 +571,7 @@ class Show {
 				$media_locations = $feed->show()->media_locations();
 				$locations = array();
 				foreach ( $media_locations as $location ) {
-					$locations[ $location->id ] = $location->title();
+					$locations[ $location->id ] = $location->title;
 				}	
 
 				$feed_wrapper->string( 'name', array(

@@ -118,7 +118,6 @@ class MediaFile extends Base {
 }
 
 MediaFile::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-MediaFile::property( 'title', 'INT' );
 MediaFile::property( 'release_id', 'INT' );
 MediaFile::property( 'media_location_id', 'INT' );
 MediaFile::property( 'size', 'INT' );

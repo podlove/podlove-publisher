@@ -13,7 +13,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
   xmlns="http://www.w3.org/2005/Atom"
   xmlns:thr="http://purl.org/syndication/thread/1.0"
   xml:lang="<?php echo get_option('rss_language'); ?>"
-  xml:base="<?php bloginfo_rss('url') ?>/wp-atom.php"
   <?php do_action('atom_ns'); ?>
  >
 	<title type="text"><?php bloginfo_rss('name'); wp_title_rss(); ?></title>
@@ -47,7 +46,10 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 <?php if ( !get_option('rss_use_excerpt') ) : ?>
 		<content type="<?php html_type_rss(); ?>" xml:base="<?php the_permalink_rss() ?>"><![CDATA[<?php the_content_feed('atom') ?>]]></content>
 <?php endif; ?>
-<?php atom_enclosure(); ?>
+<?php
+// don't use wordpress function. do it by hand!
+atom_enclosure();
+?>
 <?php do_action('atom_entry'); ?>
 <?php if ( apply_filters( 'podlove_feed_show_comments_data', true ) ): ?>
 	<link rel="replies" type="text/html" href="<?php the_permalink_rss() ?>#comments" thr:count="<?php echo get_comments_number()?>"/>

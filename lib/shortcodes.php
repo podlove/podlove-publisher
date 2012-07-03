@@ -56,7 +56,7 @@ function episode_downloads_shortcode( $options ) {
 
 		$download_link_name = sprintf(
 			__( 'Download %s' ),
-			$media_format->name
+			$media_location->title
 		);
 
 		$html .= '<li class="' . $media_format->extension . '">';
