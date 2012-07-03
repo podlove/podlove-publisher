@@ -21,13 +21,8 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<updated><?php echo mysql2date('Y-m-d\TH:i:s\Z', get_lastpostmodified('GMT'), false); ?></updated>
 
 	<link rel="alternate" type="text/html" href="<?php bloginfo_rss('url') ?>" />
-	<id><?php echo get_bloginfo('atom_url'); ?></id>
-	<link rel="self" type="application/atom+xml" title="" href="<?php self_link(); ?>" />
-	<?php 
-	//todo <link rel="alternate" ... /> auf alle anderen enableden atom feeds
-	 ?>
-
-	<?php do_action('atom_head'); ?>
+	<id><?php echo get_bloginfo( 'atom_url' ); ?></id>
+	<?php do_action( 'atom_head' ); ?>
 	<?php while (have_posts()) : the_post(); ?>
 	<entry>
 		<author>

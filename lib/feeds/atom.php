@@ -31,6 +31,21 @@ class Atom {
 		override_feed_head( 'atom_head', $show, $feed, $format );
 		override_feed_entry( 'atom_entry', $show, $feed, $format );
 
+		add_action( 'atom_head', function () use ( $show, $feed, $format ) {
+			?>
+			<link rel="self" type="application/atom+xml" title="<?php echo $feed->title ?>" href="<?php echo $feed->get_subscribe_url() ?>" />
+			<?php
+			$feeds = $show->feeds();
+			foreach ( $feeds as $other_feed ) {
+				if ( $other_feed->id === $feed->id )
+					continue;
+
+				?>
+				<link rel="alternate" type="application/atom+xml" title="<?php echo $other_feed->title ?>" href="<?php echo $other_feed->get_subscribe_url() ?>" />
+				<?php
+			}
+		}, 9 );
+
 		$this->do_feed( $feed );
 	}
 	
