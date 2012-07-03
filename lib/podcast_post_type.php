@@ -224,6 +224,12 @@ class Podcast_Post_Type {
 	function validate_podcast_files() {
 		$shows = \Podlove\Model\Show::all();
 
+		if ( ! in_array( 'curl', get_loaded_extensions() ) ) {
+			?>
+			<div class="error"><p><strong>ERROR: </strong>You need curl for Podlove to run properly.</p></div>
+			<?php
+		}
+
 		?>
 		<a href="#" id="validate_everything">
 			<?php echo \Podlove\t( 'Validate Everything' ); ?>
