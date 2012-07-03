@@ -46,6 +46,14 @@ add_action( 'wp', function () {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, 302 );
 		exit;
 	} else {
+
+		// make sure is_feed() returns true
+		add_filter( 'the_content', function ( $content ) {
+			global $wp_query;
+			$wp_query->is_feed = true;
+			return $content;
+		} );
+
 		if ( $feed->format === "rss" ) {
 			new	\Podlove\Feeds\RSS( $show_slug, $feed_slug );
 		} else {
