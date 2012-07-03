@@ -3,7 +3,7 @@
 Plugin Name: Podlove Podcasting Plugin for WordPress
 Plugin URI: https://github.com/eteubert/podlove
 Description: The one and only podcast feed generator. Seriously.
-Version: 1.1.5-alpha
+Version: 1.1.6-alpha
 Author: eteubert
 Author URI: ericteubert@googlemail.com
 License: MIT
