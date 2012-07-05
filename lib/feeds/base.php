@@ -23,6 +23,12 @@ function override_feed_language( $feed ) {
 // todo: new line for each tag
 // todo: hide tags without content
 function override_feed_head( $hook, $show, $feed, $format ) {
+
+	add_filter( 'podlove_feed_itunes_author', 'convert_chars' );
+	add_filter( 'podlove_feed_itunes_owner', 'convert_chars' );
+	add_filter( 'podlove_feed_itunes_subtitle', 'convert_chars' );
+	add_filter( 'podlove_feed_itunes_keywords', 'convert_chars' );
+	add_filter( 'podlove_feed_itunes_summary', 'convert_chars' );
 	
 	remove_action( $hook, 'the_generator' );
 	add_action( $hook, function () use ( $hook ) {
