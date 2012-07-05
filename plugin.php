@@ -158,7 +158,7 @@ add_action( 'init', function () {
 // Not an ideal solution as it does not fire activation/deactivation hooks.
 add_action( 'plugins_loaded', function () {
 
-	if ( defined( 'MEDIAELEMENTJS_DIR' ) ) {
+	if ( defined( 'PODLOVEWEBPLAYER_DIR' ) ) {
 		define( 'PODLOVE_MEDIA_PLAYER', 'external' );
 		return;
 	}
