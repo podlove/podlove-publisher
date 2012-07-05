@@ -22,4 +22,5 @@ require_once 'lib/helper.php';
 require_once 'lib/version.php';
 require_once 'lib/feeds.php';
 require_once 'lib/shortcodes.php';
+require_once 'lib/no_enclosure_autodiscovery.php';
 require_once 'plugin.php';
