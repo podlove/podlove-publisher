@@ -406,7 +406,7 @@ abstract class Base
 
 	private function property_name_to_sql_update_statement( $p ) {
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return "$p = '{$this->$p}'";
+			return sprintf( "%s = '%s'", $p, $this->$p );
 		} else {
 			return "$p = NULL";
 		}
@@ -414,7 +414,7 @@ abstract class Base
 	
 	private function property_name_to_sql_value( $p ) {
 		if ( $this->$p ) {
-			return "'{$this->$p}'";
+			return sprintf( "'%s'", $this->$p );
 		} else {
 			return 'NULL';
 		}
