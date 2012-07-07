@@ -9,6 +9,8 @@ Work before progress. Feel free to touch but handle with care.
 3. Develop, develop, develop!
 4. Send me a [pull request](https://help.github.com/articles/using-pull-requests)
 
+If you'd like to add a whole feature with UI and stuff, please consider developing it as a [Podlove Module](https://github.com/eteubert/podlove/blob/master/lib/modules/readme.md).
+
 ## Available Shortcodes
 
 ### Web Player
