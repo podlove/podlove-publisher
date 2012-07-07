@@ -1,4 +1,17 @@
 <?php
+
+function podlove_camelcase_to_snakecase( $string ) {
+	return preg_replace( '/([a-z])([A-Z])/', '$1_$2', $string );
+}
+
+function podlove_camelsnakecase_to_camelcase( $string ) {
+	return str_replace( '_', '', $string );
+}
+
+function podlove_snakecase_to_camelsnakecase( $string ) {
+	return ucwords( preg_replace( '/_\w/e', 'strtoupper("$0")', $string ) );
+}
+
 // autoload all classes in /lib
 function podlove_autoloader( $class_name ) {
 	// get class name without namespace
@@ -13,7 +26,7 @@ function podlove_autoloader( $class_name ) {
 	// class name without namespace
 	$class_name = array_pop( $split );
 	// CamelCase to snake_case
-	$class_name = preg_replace( '/([a-z])([A-Z])/', '$1_$2', $class_name );
+	$class_name = podlove_camelcase_to_snakecase( $class_name );
 
 	// the rest of the namespace, if any
 	$namespaces = $split;
@@ -24,7 +37,7 @@ function podlove_autoloader( $class_name ) {
 	// register all possible paths for the class
 	$possibilities = array();
 	if ( count( $namespaces ) >= 1 ) {
-		$possibilities[] = strtolower( $lib . implode( '/', $namespaces ) . '/' . $class_name . '.php' );
+		$possibilities[] = strtolower( $lib . implode( '/', array_map( 'podlove_camelcase_to_snakecase', $namespaces ) ) . '/' . $class_name . '.php' );
 	} else {
 		$possibilities[] = strtolower( $lib . $class_name . '.php' );
 	}

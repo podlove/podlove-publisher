@@ -154,27 +154,6 @@ add_action( 'init', function () {
 	add_action( 'wp_head', '\Podlove\add_feed_discoverability', 2 );
 });
 
-// "activate" podlove-web-player plugin
-// Not an ideal solution as it does not fire activation/deactivation hooks.
-add_action( 'plugins_loaded', function () {
-
-	if ( defined( 'PODLOVEWEBPLAYER_DIR' ) ) {
-		define( 'PODLOVE_MEDIA_PLAYER', 'external' );
-		return;
-	}
-
-	define( 'PODLOVE_MEDIA_PLAYER', 'internal' );
-
-	$mediaplayer_plugin_file = PLUGIN_DIR . 'lib'
-	                         . DIRECTORY_SEPARATOR . 'submodules'
-	                         . DIRECTORY_SEPARATOR . 'webplayer'
-	                         . DIRECTORY_SEPARATOR . 'podlove-web-player'
-	                         . DIRECTORY_SEPARATOR . 'podlove-web-player.php';
-
-	if ( file_exists( $mediaplayer_plugin_file) )
-		require_once $mediaplayer_plugin_file;
-} );
-
 add_action( 'init', function () {
 
 		if ( is_admin() )
@@ -231,7 +210,35 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 	return $wp_query;
 } );
 
+// init modules
+add_action( 'plugins_loaded', function () {
+	$modules_dir = PLUGIN_DIR . 'lib/modules/';
+	$modules = array();
 
+	if ( $dhandle = opendir( $modules_dir ) ) {
+		while (false !== ( $fname = readdir( $dhandle ) ) ) {
+			if ( ( $fname != '.') && ( $fname != '..' ) && is_dir( $modules_dir . $fname ) ) {
+				$modules[] = array(
+					'path'      => $modules_dir . $fname,
+					'dir_name' => $fname
+				);
+			}
+		}
+		closedir( $dhandle );
+	}
+
+	if ( empty( $modules ) )
+		return;
+
+	foreach ( $modules as $module ) {
+		$class_name     = podlove_snakecase_to_camelsnakecase( $module['dir_name'] );
+		$namespace_name = podlove_camelsnakecase_to_camelcase( $class_name );
+
+		$class = "\Podlove\Modules\\$namespace_name\\$class_name";
+		$m = new $class;
+		$m->load();
+	}
+} );
 
 namespace Podlove\AJAX;
 

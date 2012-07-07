@@ -152,13 +152,6 @@ class Podcast_Post_Type {
 		<?php
 	}
 
-	public function about_player() {
-		if ( PODLOVE_MEDIA_PLAYER === 'external' )
-			echo \Podlove\t( 'It looks like you have installed an <strong>external plugin</strong> using mediaelement.js.<br>That\'s what\'s used.' );
-		else
-			echo \Podlove\t( 'Podlove ships with its <strong>own webplayer</strong>.<br>That\'s what\'s used.' );
-	}
-
 	public function feed_overview_meta() {
 		$table = new \Podlove\Feed_List_Table();
 		$table->prepare_for_meta_box();
@@ -167,10 +160,10 @@ class Podcast_Post_Type {
 	}
 
 	public function settings_page() {
-		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', \Podlove\t( 'About' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );
-		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_player', \Podlove\t( 'Webplayer' ), array( $this, 'about_player' ), self::SETTINGS_PAGE_HANDLE, 'side' );
-		
+		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', \Podlove\t( 'About' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );		
 		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_validation', \Podlove\t( 'Validate Podcast Files' ), array( $this, 'validate_podcast_files' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
+
+		do_action( 'podlove_dashboard_meta_boxes' );
 
 		?>
 		<div class="wrap">
