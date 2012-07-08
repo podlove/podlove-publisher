@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 4 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 5 );
 
 add_action( 'init', function () {
 	
@@ -82,6 +82,9 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\MediaLocation::table_name()
 			);
 			$wpdb->query( $sql );
+			break;
+		case 5:
+			\Podlove\Modules\Base::activate( 'podlove_web_player' );
 			break;
 
 	}

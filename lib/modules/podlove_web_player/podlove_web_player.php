@@ -3,8 +3,8 @@ namespace Podlove\Modules\PodloveWebPlayer;
 
 class Podlove_Web_Player extends \Podlove\Modules\Base {
 
-	private $module_name = 'Podlove Web Player';
-	private $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
+	protected $module_name = 'Podlove Web Player';
+	protected $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
 
 	public function load() {
 

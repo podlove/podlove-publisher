@@ -39,7 +39,12 @@ function activate_for_current_blog() {
 			}
 			$f->save();
 		}
-	}	                    
+	}
+
+	$default_modules = array( 'podlove_web_player' );
+	foreach ( $default_modules as $module ) {
+		\Podlove\Modules\Base::activate( $module );
+	}
 }
 
 /**
@@ -212,7 +217,7 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 
 // init modules
 add_action( 'plugins_loaded', function () {
-	$modules = Modules\Base::get_all_module_names();
+	$modules = Modules\Base::get_active_module_names();
 
 	if ( empty( $modules ) )
 		return;

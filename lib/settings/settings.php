@@ -38,7 +38,41 @@ class Settings {
 			/* $section  */ 'podlove_settings_general'
 		);
 		
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_modules',
+			/* $title 	 */ \Podlove\t( 'Modules' ),	
+			/* $callback */ function () { /* section head html */ }, 		
+			/* $page	 */ Settings::$pagehook	
+		);
+
+		$modules = \Podlove\Modules\Base::get_all_module_names();
+		foreach ( $modules as $module_name ) {
+			$class = \Podlove\Modules\Base::get_class_by_module_name( $module_name );
+			$module = new $class;
+
+			add_settings_field(
+				/* $id       */ 'podlove_setting_module_' . $module_name,
+				/* $title    */ sprintf(
+					'<label for="' . $module_name . '">%s</label>',
+					$module->get_module_name()
+				),
+				/* $callback */ function () use ( $module, $module_name ) {
+					?>
+					<label for="<?php echo $module_name ?>">
+						<input name="podlove_active_modules[<?php echo $module_name ?>]" id="<?php echo $module_name ?>" type="checkbox" <?php checked( \Podlove\Modules\Base::is_active( $module_name ), true ) ?>>
+						<?php echo $module->get_module_description() ?>
+					</label>
+					
+					<?php
+				},
+				/* $page     */ Settings::$pagehook,  
+				/* $section  */ 'podlove_settings_modules'
+			);
+
+		}
+
 		register_setting( Settings::$pagehook, 'podlove' );
+		register_setting( Settings::$pagehook, 'podlove_active_modules' );
 	}
 	
 	function page() {
