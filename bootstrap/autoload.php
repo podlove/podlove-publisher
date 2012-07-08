@@ -17,7 +17,10 @@ function podlove_autoloader( $class_name ) {
 	// get class name without namespace
 	$split  = explode( '\\', $class_name );
 	// remove <Plugin> namespace
-	$plugin = array_shift( $split ); 
+	$plugin = array_shift( $split );
+
+	if ( ! strlen( $plugin ) )
+		$plugin = array_shift( $split );
 	
 	// only load classes prefixed with <Plugin> namespace
 	if ( $plugin != "Podlove" )
