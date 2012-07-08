@@ -212,31 +212,15 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 
 // init modules
 add_action( 'plugins_loaded', function () {
-	$modules_dir = PLUGIN_DIR . 'lib/modules/';
-	$modules = array();
-
-	if ( $dhandle = opendir( $modules_dir ) ) {
-		while (false !== ( $fname = readdir( $dhandle ) ) ) {
-			if ( ( $fname != '.') && ( $fname != '..' ) && is_dir( $modules_dir . $fname ) ) {
-				$modules[] = array(
-					'path'      => $modules_dir . $fname,
-					'dir_name' => $fname
-				);
-			}
-		}
-		closedir( $dhandle );
-	}
+	$modules = Modules\Base::get_all_module_names();
 
 	if ( empty( $modules ) )
 		return;
 
-	foreach ( $modules as $module ) {
-		$class_name     = podlove_snakecase_to_camelsnakecase( $module['dir_name'] );
-		$namespace_name = podlove_camelsnakecase_to_camelcase( $class_name );
-
-		$class = "\Podlove\Modules\\$namespace_name\\$class_name";
-		$m = new $class;
-		$m->load();
+	foreach ( $modules as $module_name ) {
+		$class = Modules\Base::get_class_by_module_name( $module_name );
+		$module = new $class;
+		$module->load();
 	}
 } );
 
