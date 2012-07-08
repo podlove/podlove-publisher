@@ -27,6 +27,19 @@ abstract class Base {
 	}
 
 	/**
+	 * Fetch internal module names for active modules only.
+	 * 
+	 * @return array
+	 */
+	public static function get_active_module_names() {
+		$modules = self::get_all_module_names();
+
+		return array_filter( $modules, function ( $module ) {
+			return Base::is_active( $module );
+		} );
+	}
+
+	/**
 	 * Get full class name for the main module class.
 	 * 
 	 * @param  string $module_name
@@ -37,6 +50,19 @@ abstract class Base {
 		$namespace_name = podlove_camelsnakecase_to_camelcase( $class_name );
 
 		return "\Podlove\Modules\\$namespace_name\\$class_name";
+	}
+
+	public static function is_active( $module_name ) {
+		$options = get_option( 'podlove_active_modules' );
+		return isset( $options[ $module_name ] );
+	}
+
+	public static function activate( $module_name ) {
+		$options = get_option( 'podlove_active_modules' );
+		if ( ! isset( $options[ $module_name ] ) ) {
+			$options[ $module_name ] = 'on';
+			update_option( 'podlove_active_modules', $options );
+		}
 	}
 
 	/**
