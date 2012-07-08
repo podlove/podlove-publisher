@@ -14,7 +14,7 @@ class Feed extends Base {
 			'language'         => get_bloginfo( 'language' ),
 			'enable'           => true,
 			'show_description' => true,
-			'format'           => 'atom'
+			'format'           => 'rss'
 		);
 	}
 
