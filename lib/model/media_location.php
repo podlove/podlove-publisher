@@ -56,7 +56,7 @@ class MediaLocation extends Base {
 }
 
 MediaLocation::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-MediaLocation::property( 'title', 'INT' );
+MediaLocation::property( 'title', 'VARCHAR(255)' );
 MediaLocation::property( 'show_id', 'INT' );
 MediaLocation::property( 'media_format_id', 'INT' );
 MediaLocation::property( 'suffix', 'VARCHAR(255)' );
