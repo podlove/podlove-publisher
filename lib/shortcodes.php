@@ -123,6 +123,6 @@ function webplayer_shortcode( $options ) {
 		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $show->slug );
 	}
 
-	return do_shortcode( '[audio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
+	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
