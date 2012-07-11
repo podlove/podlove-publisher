@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 5 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 6 );
 
 add_action( 'init', function () {
 	
@@ -86,7 +86,26 @@ function run_migrations_for_version( $version ) {
 		case 5:
 			\Podlove\Modules\Base::activate( 'podlove_web_player' );
 			break;
+		case 6:
+			// title column is "int" for some people. this migration fixes that
+			$sql = sprintf(
+				'SHOW COLUMNS FROM `wp_podlove_medialocation` WHERE Field = "title"',
+				\Podlove\Model\MediaLocation::table_name()
+			);
+			$row = $wpdb->get_row( $sql );
+			if ( strtolower(substr($row->Type, 0, 3)) === 'int' ) {
+				$wpdb->query( sprintf(
+					'UPDATE `%s` SET title = NULL',
+					\Podlove\Model\MediaLocation::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` MODIFY COLUMN `title` VARCHAR(255)',
+					\Podlove\Model\MediaLocation::table_name()
+				) );
+			}
+			break;
 
 	}
 
 }
+
