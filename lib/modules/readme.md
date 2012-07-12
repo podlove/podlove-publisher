@@ -10,7 +10,7 @@ Modules can be compared to WordPress plugins. We use modules to keep the code ba
 
 Each module has a `load()` method. This will be called to load the module. Here hooks can be registered, files be loaded etc. The module must not change any behavior before `load()` being called!
 
-There should be private properties `$module_name, $module_description`. They can be accessed from the outside via getters. See Base module.
+There should be protected properties `$module_name, $module_description`. They can be accessed from the outside via getters. See Base module.
 
 ## Naming Conventions
 
