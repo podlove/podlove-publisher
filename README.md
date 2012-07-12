@@ -11,16 +11,10 @@ Work before progress. Feel free to touch but handle with care.
 
 If you'd like to add a whole feature with UI and stuff, please consider developing it as a [Podlove Module](https://github.com/eteubert/podlove/blob/master/lib/modules/readme.md).
 
-## Available Shortcodes
+## Links
 
-### Web Player
-
-`[podlove-web-player]` 
-
-Displays webplayer. Right now there is only support for https://github.com/gerritvanaaken/podlove-web-player.
-
-### Download Links
-
-`[podlove-episode-downloads]`
-
-Displays a list of all episode files to download.
+- official WordPress plugin site: [wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/](wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/)
+- [podlove.org](podlove.org)
+- FAQ: [eteubert.github.com/podlove](eteubert.github.com/podlove)
+- my (german) podcast on the development of this plugin: [http://www.satoripress.com/podcast/](http://www.satoripress.com/podcast/)
+- Trello board (german): [https://trello.com/board/podlove/4fe02928ef1520ac7924d56a](https://trello.com/board/podlove/4fe02928ef1520ac7924d56a)
