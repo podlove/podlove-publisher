@@ -9,6 +9,7 @@ function podlove_camelsnakecase_to_camelcase( $string ) {
 }
 
 function podlove_snakecase_to_camelsnakecase( $string ) {
+	// FIXME: /e is evil. use preg_replace_callback instead
 	return ucwords( preg_replace( '/_\w/e', 'strtoupper("$0")', $string ) );
 }
 
