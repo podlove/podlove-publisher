@@ -116,6 +116,11 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 		$file_slug           = $release->slug;
 		$cover_art_url       = $release->cover_art;
 
+		// fall back to show cover image
+		if ( ! $cover_art_url ) {
+			$cover_art_url = $show->cover_image;
+		}
+
 		$enclosure_url = $release->enclosure_url( $show, $feed->media_location(), $format );
 		
 		echo apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
