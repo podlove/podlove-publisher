@@ -358,10 +358,11 @@ class Show {
 				'options'  => \Podlove\Itunes\categories()
 			) );
 
-			$wrapper->checkbox( 'explicit', array(
+			$wrapper->select( 'explicit', array(
 				'label'       => \Podlove\t( 'Explicit Content?' ),
 				'description' => \Podlove\t( '' ),
-				'type'    => 'checkbox'
+				'type'    => 'checkbox',
+                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 			) );
 
 			$wrapper->string( 'media_file_base_uri', array(
