@@ -96,12 +96,39 @@ class Podcast_Post_Type {
 			add_action( 'podlove_list_formats', array( $this, 'list_formats' ) );
 			
 			wp_register_script(
-				'podlove_admin_script',
-				\Podlove\PLUGIN_URL . '/js/admin.js',
+				'podlove_admin_episode',
+				\Podlove\PLUGIN_URL . '/js/admin/episode.js',
 				array( 'jquery' ),
 				'1.0' 
 			);
-			wp_enqueue_script( 'podlove_admin_script' );
+
+			wp_register_script(
+				'podlove_admin_dashboard_validation',
+				\Podlove\PLUGIN_URL . '/js/admin/dashboard_validation.js',
+				array( 'jquery' ),
+				'1.0' 
+			);
+
+			wp_register_script(
+				'podlove_admin_media_location_settings',
+				\Podlove\PLUGIN_URL . '/js/admin/media_location_settings.js',
+				array( 'jquery' ),
+				'1.0' 
+			);
+
+			wp_register_script(
+				'podlove_admin',
+				\Podlove\PLUGIN_URL . '/js/admin.js',
+				array(
+					'jquery',
+					'podlove_admin_episode',
+					'podlove_admin_dashboard_validation',
+					'podlove_admin_media_location_settings'
+				),
+				'1.0' 
+			);
+
+			wp_enqueue_script( 'podlove_admin' );
 
 
 		}
