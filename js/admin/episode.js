@@ -50,7 +50,6 @@ var Episode = (function ($) {
 				output = "";
 			}
 
-			console.log(output);
 			$(this).html(output);
 		});
 	}
