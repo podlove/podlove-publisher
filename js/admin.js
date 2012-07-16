@@ -15,6 +15,38 @@ function human_readable_size(size) {
 
 jQuery(function($) {
 
+	/**
+	 * Handles all logic in Create/Edit Episode screen.
+	 */
+	var Episode = (function () {
+
+		// private
+		var o = {};
+
+		function enable_all_media_files_by_default() {
+			if (o.slug_field.val().length === 0) {
+				o.slug_field.on('blur', function() {
+					if (o.slug_field.val().length > 0) {
+						// by default, tick all
+						$container.find('input[type="checkbox"][name*="media_locations"]').attr("checked", true);
+					}
+				});
+			}
+		}
+
+		// public
+		o.init = function ($container) {
+			o.container  = $container;
+			o.slug_field = o.container.find("[name*=slug]");
+
+			enable_all_media_files_by_default();
+
+			return o;
+		};
+		
+		return o;
+	}());
+
 	// Media Files: Default title = extension
 	$('select[name*=media_format_id]').on('change', function() {
 		var $container = $(this).closest('table');
@@ -121,6 +153,10 @@ jQuery(function($) {
 			});
 
 		});
+	});
+
+	$(".postbox[id*=podlove_show]").each(function() {
+		Episode.init($(this));
 	});
 	
 });
