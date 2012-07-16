@@ -15,6 +15,20 @@ function human_readable_size(size) {
 
 jQuery(function($) {
 
+	// Media Files: Default title = extension
+	$('select[name*=media_format_id]').on('change', function() {
+		var $container = $(this).closest('table');
+		var $title = $container.find('[name*="title"]');
+
+		var media_format_id = $(this).val();
+		var format = jQuery.parseJSON(jQuery("#media_format_data").html())[media_format_id]
+
+		if ($title.val().length === 0) {
+			$title.val(format['extension']);
+		}
+		
+	});
+
 	// live preview for media file url templates in settings
 	function update_media_file_preview() {
 		$('input[name*="url_template"]').each(function() {
@@ -27,7 +41,11 @@ jQuery(function($) {
 			var feed_suffix         = $container.find('[name*="suffix"]').val();
 
 			var selected_format     = $container.find('[name*="media_format_id"] option:selected').text();
-			var format_extension    = selected_format.match(/\((.*)\)/)[1];
+			var match               = selected_format.match(/\((.*)\)/);
+
+			if (!match) return;
+
+			var format_extension    = match[1];
 
 			template = template.replace( '%media_file_base_url%', media_file_base_uri );
 			template = template.replace( '%episode_slug%', episode_slug );

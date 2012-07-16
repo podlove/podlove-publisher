@@ -526,20 +526,32 @@ class Show {
 	public static function nested_feed_media_locations_callback( $post, $args ) {
 		$media_locations = $args[ 'args' ][ 0 ];
 		$wrapper         = $args[ 'args' ][ 1 ];
+
+		$raw_formats = \Podlove\Model\MediaFormat::all();
+		$formats = array();
+		foreach ( $raw_formats as $format ) {
+			$formats[ $format->id ] = array(
+				'title'     => $format->title(),
+				'extension' => $format->extension
+			);
+		}
 		?>
+
+		<div id="media_format_data" class="hidden">
+			<?php echo json_encode( $formats ); ?>	
+		</div>
+
 		<a name="media_locations"></a>
 			<?php
-			$raw_formats = \Podlove\Model\MediaFormat::all();
-			$formats = array();
-			foreach ( $raw_formats as $format ) {
-				$formats[ $format->id ] = $format->title();
-			}
+			$format_optionlist = array_map( function ( $f ) {
+				return $f['title'];
+			}, $formats );
 
 			foreach ( $media_locations as $media_location ) {
 				?>
 				<table style="width: 100%">
 				<?php
-				$wrapper->fields_for( $media_location, array( 'context' => 'podlove_media_location' ), function ( $media_location_form ) use ( $formats ) {
+				$wrapper->fields_for( $media_location, array( 'context' => 'podlove_media_location' ), function ( $media_location_form ) use ( $format_optionlist ) {
 					$f = new \Podlove\Form\Input\TableWrapper( $media_location_form );
 
 					$media_location = $media_location_form->object;
@@ -547,7 +559,7 @@ class Show {
 					$f->select( 'media_format_id', array(
 						'label'       => \Podlove\t( 'File Format' ),
 						'description' => \Podlove\t( '' ),
-						'options'     => $formats
+						'options'     => $format_optionlist
 					) );
 
 					$f->string( 'title', array(
