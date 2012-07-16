@@ -36,7 +36,7 @@ function podlove_autoloader( $class_name ) {
 	$namespaces = $split;
 
 	// library directory
-	$lib = dirname( __FILE__ ) . '/../lib/';
+	$lib = dirname( dirname( __FILE__ ) ) . '/lib/';
 	
 	// register all possible paths for the class
 	$possibilities = array();
