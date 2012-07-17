@@ -65,6 +65,22 @@ abstract class Base {
 		}
 	}
 
+	protected function get_module_url() {
+		return \Podlove\PLUGIN_URL . '/lib/modules/' . $this->get_module_directory_name();
+	}
+
+	protected function get_module_class_name() {
+		return podlove_snakecase_to_camelsnakecase( $this->module_name );
+	}
+
+	protected function get_module_namespace_name() {
+		return podlove_camelsnakecase_to_camelcase( $this->get_module_class_name() );
+	}
+
+	protected function get_module_directory_name() {
+		return strtolower( str_replace( ' ', '_', $this->module_name ) );
+	}
+
 	/**
 	 * Return public module name.
 	 * 
