@@ -23,3 +23,28 @@ File Name:   podlove_web_player.php
 Class Name:  Podlove_Web_Player
 Namespace:   \Podlove\Modules\PodloveWebPlayer
 ```
+
+### Example Module File
+
+```php
+<?php 
+namespace Podlove\Modules\PodloveWebPlayer;
+
+class Podlove_Web_Player extends \Podlove\Modules\Base {
+
+	protected $module_name = 'Podlove Web Player';
+	protected $module_description = 'An audio player for the web';
+
+	public function load() {
+		// register actions
+		add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_boxes' ) );
+		// require additional module files
+		require_once 'player/podlove-web-player/podlove-web-player.php';
+	}
+
+	public function register_meta_boxes() {
+		// code ...
+	}
+
+}
+```
