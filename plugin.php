@@ -215,22 +215,6 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 	return $wp_query;
 } );
 
-/**
- * Catch loading of missing modules.
- *
- * This will still produce a blank screen once.
- * But on the next page load the plugin recovers.
- */
-register_shutdown_function( function () {
-	$error = error_get_last();
- 	if( $error !== NULL ) {
- 		if ( preg_match( '/Podlove.Modules.(\w+).([\w_]+).* not found/', $error[ 'message' ], $matches ) ) {
- 			$module_name = strtolower( $matches[2] );
- 			Modules\Base::deactivate( $module_name );
- 		}
- 	}
-} );
-
 // init modules
 add_action( 'plugins_loaded', function () {
 	$modules = Modules\Base::get_active_module_names();
@@ -240,8 +224,22 @@ add_action( 'plugins_loaded', function () {
 
 	foreach ( $modules as $module_name ) {
 		$class = Modules\Base::get_class_by_module_name( $module_name );
-		$module = new $class;
-		$module->load();
+		if ( class_exists( $class ) ) {
+			$module = new $class;
+			$module->load();
+		} else {
+			Modules\Base::deactivate( $module_name );
+			add_action( 'admin_notices', function () use ( $module_name ) {
+				?>
+				<div id="message" class="error">
+					<p>
+						<strong><?php echo __( 'Warning' ) ?></strong>
+						<?php echo sprintf( \Podlove\t( 'Podlove Module "%s" could not be found and has been deactivated.' ), $module_name ); ?>
+					</p>
+				</div>
+				<?php
+			} );
+		}
 	}
 } );
 
