@@ -65,6 +65,14 @@ abstract class Base {
 		}
 	}
 
+	public static function deactivate( $module_name ) {
+		$options = get_option( 'podlove_active_modules' );
+		if ( isset( $options[ $module_name ] ) ) {
+			unset( $options[ $module_name ] );
+			update_option( 'podlove_active_modules', $options );
+		}
+	}
+
 	/**
 	 * Return public module name.
 	 * 
