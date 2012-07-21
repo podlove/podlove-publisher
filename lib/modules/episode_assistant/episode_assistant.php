@@ -23,10 +23,10 @@ EOT;
 		) );
 
 		$this->register_option( 'leading_zeros', 'select', array(
-			'label'       => \Podlove\t( 'Leading Zeros' ),
+			'label'       => \Podlove\t( 'Number Digits' ),
 			'description' => \Podlove\t( 'Add leading zeroes to episode number. Example: 003 instead of 3.' ),
 			'default'     => 3,
-			'options'     => array( 0 => 'no', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 )
+			'options'     => array( 'no' => 'no', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 )
 		) );
 
 		if ( is_admin() ) {
