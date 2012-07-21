@@ -52,7 +52,12 @@ class Settings {
 			if ( ! class_exists( $class ) )
 				continue;
 
-			$module = new $class;
+			$module = $class::instance();
+			$module_options = $module->get_registered_options();
+
+			if ( $module_options ) {
+				register_setting( Settings::$pagehook, $module->get_module_options_name() );
+			}
 
 			add_settings_field(
 				/* $id       */ 'podlove_setting_module_' . $module_name,
@@ -60,14 +65,40 @@ class Settings {
 					'<label for="' . $module_name . '">%s</label>',
 					$module->get_module_name()
 				),
-				/* $callback */ function () use ( $module, $module_name ) {
+				/* $callback */ function () use ( $module, $module_name, $module_options ) {
 					?>
 					<label for="<?php echo $module_name ?>">
 						<input name="podlove_active_modules[<?php echo $module_name ?>]" id="<?php echo $module_name ?>" type="checkbox" <?php checked( \Podlove\Modules\Base::is_active( $module_name ), true ) ?>>
 						<?php echo $module->get_module_description() ?>
 					</label>
-					
 					<?php
+					
+
+					if ( $module_options ) {
+
+						?><h4><?php echo __( 'Settings' ) ?></h4><?php
+
+						// prepare settings object because form framework expects an object
+						$settings_object = new \stdClass();
+						foreach ( $module_options as $key => $value ) {
+							$settings_object->$key = $module->get_module_option( $key );
+						}
+
+						\Podlove\Form\build_for( $settings_object, array( 'context' => $module->get_module_options_name(), 'submit_button' => false ), function ( $form ) use ( $module_options ) {
+							$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+
+							foreach ( $module_options as $module_option_name => $args ) {
+								call_user_func_array(
+									array( $wrapper, $args['input_type'] ),
+									array(
+										$module_option_name,
+										$args['args']
+									)
+								);
+							}
+
+						} );
+					}
 				},
 				/* $page     */ Settings::$pagehook,  
 				/* $section  */ 'podlove_settings_modules'

@@ -3,6 +3,13 @@ namespace Podlove\Modules;
 
 abstract class Base {
 
+	/**
+	 * Stores information about module options.
+	 * 
+	 * @var array
+	 */
+	protected $options = array();
+
 	abstract function load();
 
 	/**
@@ -94,7 +101,7 @@ abstract class Base {
 	 * 
 	 * @return string
 	 */
-	function get_module_name() {
+	public function get_module_name() {
 		return $this->module_name;
 	}
 
@@ -103,8 +110,61 @@ abstract class Base {
 	 * 
 	 * @return string
 	 */
-	function get_module_description() {
+	public function get_module_description() {
 		return $this->module_description;
+	}
+
+	/**
+	 * Return option name of the field where module options are stored.
+	 * 
+	 * @return string
+	 */
+	public function get_module_options_name() {
+		return 'podlove_module_' .  $this->get_module_directory_name();
+	}
+
+	/**
+	 * Return field of all module options.
+	 * 
+	 * @return array
+	 */
+	public function get_module_options() {
+		return get_option( $this->get_module_options_name(), array() );
+	}
+
+	/**
+	 * Return value for a single module option.
+	 * 
+	 * @param  string $name
+	 * @param  mixed  $default
+	 * @return mixed
+	 */
+	public function get_module_option( $name, $default = NULL ) {
+		$options = $this->get_module_options();
+		return isset( $options[$name] ) ? $options[$name] : $default;
+	}
+
+	/**
+	 * Set value for a single module option.
+	 * 
+	 * @param string $name
+	 * @param mixed  $value 
+	 */
+	public function update_module_option( $name, $value ) {
+		$options = $this->get_module_options();
+		$options[$name] = $value;
+		update_option( 'podlove_active_modules', $options );
+	}
+
+	public function register_option( $name, $input_type, $args ) {
+		$this->options[$name] = array(
+			'input_type' => $input_type,
+			'args'       => $args
+		);
+	}
+
+	public function get_registered_options() {
+		return $this->options;
 	}
 
 }

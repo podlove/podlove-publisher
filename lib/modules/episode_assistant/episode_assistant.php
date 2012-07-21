@@ -13,7 +13,34 @@ Adds more conventions to episodes and uses them to automate the episode creation
 </ul>
 EOT;
 
+	static private $instance = null;
+
+	static public function instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	private function __construct(){}
+	private function __clone(){}
+
 	public function load() {
+
+		$this->register_option( 'title_template', 'string', array(
+			'label'       => \Podlove\t( 'Title Template' ),
+			'description' => \Podlove\t( 'Placeholders: %show_slug%, %episode_number%, %episode_title%' ),
+			'default'     => '%show_slug%%episode_number% %episode_title%',
+			'html'        => array( 'class' => 'regular-text' )
+		) );
+
+		$this->register_option( 'leading_zeros', 'select', array(
+			'label'       => \Podlove\t( 'Leading Zeros' ),
+			'description' => \Podlove\t( 'Add leading zeroes to episode number. Example: 003 instead of 3.' ),
+			'default'     => 3,
+			'options'     => array( 0 => 'no', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 )
+		) );
+
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 			add_action( 'admin_footer', array( $this, 'modal_box_html' ) );

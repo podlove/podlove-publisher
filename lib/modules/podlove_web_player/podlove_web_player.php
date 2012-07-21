@@ -6,6 +6,18 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	protected $module_name = 'Podlove Web Player';
 	protected $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
 
+	static private $instance = null;
+
+	static public function instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	private function __construct(){}
+	private function __clone(){}
+
 	public function load() {
 
 		add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_boxes' ) );
