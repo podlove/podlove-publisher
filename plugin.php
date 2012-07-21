@@ -229,8 +229,7 @@ add_action( 'plugins_loaded', function () {
 	foreach ( $modules as $module_name ) {
 		$class = Modules\Base::get_class_by_module_name( $module_name );
 		if ( class_exists( $class ) ) {
-			$module = new $class;
-			$module->load();
+			$class::instance()->load();
 		} else {
 			Modules\Base::deactivate( $module_name );
 			add_action( 'admin_notices', function () use ( $module_name ) {

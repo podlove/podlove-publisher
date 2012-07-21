@@ -56,6 +56,11 @@ class Builder {
 
 		$this->field_name      = $this->get_field_name();
 		$this->field_value     = $this->object->{$object_key};
+
+		if ( ! $this->field_value && isset( $arguments['default'] ) && $arguments['default'] ) {
+			$this->field_value = $arguments['default'];
+		}
+		
 		$this->field_id        = $this->get_field_id();
 		$this->html_attributes = $this->get_extra_html_attributes();
 	}
