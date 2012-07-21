@@ -148,8 +148,12 @@ function add_feed_discoverability() {
 
 	$feeds = \Podlove\Model\Feed::find_all_by_discoverable( 1 );
 
-	foreach ( $feeds as $feed )
-		echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";	
+	foreach ( $feeds as $feed ) {
+		if ( $feed->show() ) {
+			echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
+		}
+	}
+		
 }
 
 add_action( 'init', function () {
@@ -224,8 +228,22 @@ add_action( 'plugins_loaded', function () {
 
 	foreach ( $modules as $module_name ) {
 		$class = Modules\Base::get_class_by_module_name( $module_name );
-		$module = new $class;
-		$module->load();
+		if ( class_exists( $class ) ) {
+			$module = new $class;
+			$module->load();
+		} else {
+			Modules\Base::deactivate( $module_name );
+			add_action( 'admin_notices', function () use ( $module_name ) {
+				?>
+				<div id="message" class="error">
+					<p>
+						<strong><?php echo __( 'Warning' ) ?></strong>
+						<?php echo sprintf( \Podlove\t( 'Podlove Module "%s" could not be found and has been deactivated.' ), $module_name ); ?>
+					</p>
+				</div>
+				<?php
+			} );
+		}
 	}
 } );
 

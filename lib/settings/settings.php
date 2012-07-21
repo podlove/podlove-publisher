@@ -48,6 +48,10 @@ class Settings {
 		$modules = \Podlove\Modules\Base::get_all_module_names();
 		foreach ( $modules as $module_name ) {
 			$class = \Podlove\Modules\Base::get_class_by_module_name( $module_name );
+
+			if ( ! class_exists( $class ) )
+				continue;
+
 			$module = new $class;
 
 			add_settings_field(
