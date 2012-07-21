@@ -10,6 +10,29 @@ abstract class Base {
 	 */
 	protected $options = array();
 
+	/**
+	 * All Modules are singletons.
+	 */
+	static public function instance() {
+		static $instances = array();
+
+		 $calledClass = get_called_class();
+
+		 if ( ! isset($instances[$calledClass] ) )
+		     $instances[$calledClass] = new $calledClass();
+
+		 return $instances[$calledClass];
+	}
+
+	protected function __construct(){}
+	final private function __clone(){}
+
+	/**
+	 * This will be called to load the module.
+	 * 
+	 * Here hooks can be registered, files be loaded etc.
+	 * The module must not change any behavior before load() being called!
+	 */
 	abstract function load();
 
 	/**
