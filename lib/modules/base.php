@@ -80,6 +80,14 @@ abstract class Base {
 	protected function get_module_directory_name() {
 		return strtolower( str_replace( ' ', '_', $this->module_name ) );
 	}
+	
+	public static function deactivate( $module_name ) {
+		$options = get_option( 'podlove_active_modules' );
+		if ( isset( $options[ $module_name ] ) ) {
+			unset( $options[ $module_name ] );
+			update_option( 'podlove_active_modules', $options );
+		}
+	}
 
 	/**
 	 * Return public module name.
