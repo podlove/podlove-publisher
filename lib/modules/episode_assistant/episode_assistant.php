@@ -78,7 +78,7 @@ EOT;
 			}
 		}
 
-		return strtoupper( $show->slug ) . $number;
+		return $number;
 	}
 
 	public function modal_box_html() {
@@ -106,6 +106,7 @@ EOT;
 		<div id="new-episode-modal" class="hidden wrap" title="Create New Episode">
 			<div class="hidden" id="new-episode-data"><?php echo json_encode( $data ) ?></div>
 			<input type="hidden" class="show_id" value="<?php echo $show->id; ?>">
+			<input type="hidden" class="show_slug" value="<?php echo $show->slug; ?>">
 			<p>
 				<div id="titlediv">
 					<p>
@@ -122,7 +123,7 @@ EOT;
 					</p>
 					<p class="post_info result">
 						<strong>Post Title</strong>
-						<span class="post_title">Loading ...</span>
+						<span class="post_title" data-template="<?php echo $this->get_module_option( 'title_template', '%show_slug%%number% %episode_title%' ) ?>">Loading ...</span>
 					</p>
 				</div>
 			</p>
