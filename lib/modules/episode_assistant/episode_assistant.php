@@ -71,8 +71,11 @@ EOT;
 
 		$number = (string) ( count( $releases ) + 1 );
 
-		while ( strlen( $number ) < 3 ) {
-			$number = "0$number";
+		$leading_zeros = $this->get_module_option( 'leading_zeros', 3 );
+		if ( $leading_zeros !== 'no' ) {
+			while ( strlen( $number ) < $leading_zeros ) {
+				$number = "0$number";
+			}
 		}
 
 		return strtoupper( $show->slug ) . $number;
