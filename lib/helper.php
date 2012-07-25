@@ -45,9 +45,10 @@ function input( $context, $object, $field_key, $field_value ) {
  * Build whole form
  * @param  object   $object   object that shall be modified via the form
  * @param  array    $args     list of options, all optional
- * 		- action form action url
- * 		- method get, post
- * 		- hidden dictionary with hidden values
+ * 		- action        form action url
+ * 		- method        get, post
+ * 		- hidden        dictionary with hidden values
+ * 		- submit_button set to false to hide the submit button
  * @param  function $callback inner form
  * @return void
  * 
@@ -74,7 +75,7 @@ function build_for( $object, $args, $callback ) {
 	?>
 	<form action="<?php echo $url; ?>" method="<?php echo $method; ?>">
 
-		<?php if ( $args[ 'hidden' ] ): ?>
+		<?php if ( isset( $args[ 'hidden' ] ) && $args[ 'hidden' ] ): ?>
 			<?php foreach ( $args[ 'hidden' ] as $name => $value ): ?>
 				<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />		
 			<?php endforeach ?>
@@ -83,7 +84,9 @@ function build_for( $object, $args, $callback ) {
 		<table class="form-table">
 			<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
 		</table>
-		<?php submit_button(); ?>
+		<?php if ( ! isset( $args[ 'submit_button' ] ) || $args[ 'submit_button' ] === true ): ?>
+			<?php submit_button(); ?>
+		<?php endif ?>
 	</form>
 	<?php
 }
