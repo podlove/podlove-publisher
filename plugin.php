@@ -148,8 +148,12 @@ function add_feed_discoverability() {
 
 	$feeds = \Podlove\Model\Feed::find_all_by_discoverable( 1 );
 
-	foreach ( $feeds as $feed )
-		echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";	
+	foreach ( $feeds as $feed ) {
+		if ( $feed->show() ) {
+			echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
+		}
+	}
+		
 }
 
 add_action( 'init', function () {
@@ -225,8 +229,7 @@ add_action( 'plugins_loaded', function () {
 	foreach ( $modules as $module_name ) {
 		$class = Modules\Base::get_class_by_module_name( $module_name );
 		if ( class_exists( $class ) ) {
-			$module = new $class;
-			$module->load();
+			$class::instance()->load();
 		} else {
 			Modules\Base::deactivate( $module_name );
 			add_action( 'admin_notices', function () use ( $module_name ) {
@@ -265,3 +268,51 @@ function validate_file() {
 }
 
 add_action( 'wp_ajax_podlove-validate-file', '\Podlove\AJAX\validate_file' );
+
+function create_episode() {
+
+	$show_id = isset( $_REQUEST[ 'show_id' ] ) ? $_REQUEST[ 'show_id' ] : NULL;
+	$slug    = isset( $_REQUEST[ 'slug' ] )    ? $_REQUEST[ 'slug' ]    : NULL;
+	$title   = isset( $_REQUEST[ 'title' ] )   ? $_REQUEST[ 'title' ]   : NULL;
+
+	if ( ! $show_id || ! $slug || ! $title )
+		die();
+
+
+	$args = array(
+		'post_type' => 'podcast',
+		'post_title' => $title,
+	);
+
+	// create post
+	$post_id = wp_insert_post( $args );
+
+	// link episode and release
+	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+	$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show_id );
+	$release->slug = $slug;
+	$release->save();
+
+	// activate all media files
+	$show = \Podlove\Model\Show::find_by_id( $show_id );
+	$media_locations = $show->valid_media_locations();
+	foreach ( $media_locations as $media_location ) {
+		$media_file = new \Podlove\Model\MediaFile();
+		$media_file->release_id = $release->id;
+		$media_file->media_location_id = $media_location->id;
+		$media_file->save();
+	}
+
+	// generate response
+	$result = array();
+	$result[ 'post_id' ] = $post_id;
+	$result[ 'post_edit_url' ] = get_edit_post_link( $post_id );
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode($result);
+
+	die();
+}
+add_action( 'wp_ajax_podlove-create-episode', '\Podlove\AJAX\create_episode' );

@@ -31,10 +31,19 @@ class Show extends Base {
 	/**
 	 * Return all releases related to this show.
 	 *
+	 * @param bool $only_actiive Optional. Default: true. Fetch only releases
+	 *                           which are enabled and have a slug.
 	 * @return array
 	 */
-	public function releases() {
-		return Release::find_all_by_show_id( $this->id );
+	public function releases( $only_active = true ) {
+		if ( $only_active ) {
+			$where    = sprintf( 'show_id = "%s" AND enable AND slug IS NOT NULL', $this->id );
+			$releases = Release::find_all_by_where( $where );
+		} else {
+			$releases = Release::find_all_by_show_id( $this->id );
+		}
+
+		return $releases;
 	}
 
 	/**
