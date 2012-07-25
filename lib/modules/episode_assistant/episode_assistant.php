@@ -69,7 +69,14 @@ EOT;
 			return strlen( $r->slug ) > 0;
 		} );
 
-		$number = (string) ( count( $releases ) + 1 );
+		if ( ! count( $releases ) ) {
+			$number = 1;
+		} else {
+			// support shows beginning with episode 0
+			// first show includes a "1"? then the first number was 1, not 0
+			$add = strpos( $releases[0]->slug, '1' ) ? 1 : 0;
+			$number = (string) ( count( $releases ) + $add );			
+		}
 
 		$leading_zeros = $this->get_module_option( 'leading_zeros', 3 );
 		if ( $leading_zeros !== 'no' ) {
