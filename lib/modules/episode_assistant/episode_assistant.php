@@ -89,36 +89,48 @@ EOT;
 	}
 
 	public function modal_box_html() {
-		// TODO right now there is only support for 1 show
-		$show = \Podlove\Model\Show::first();
+		$shows = \Podlove\Model\Show::all();
 
-		if ( ! $show )
+		if ( ! $shows )
 			return;
 
-		$media_locations = $show->media_locations();
-		$media_location  = $media_locations[0];
+		$shows_data = array();
+		foreach ( $shows as $s ) {
+			$media_locations = $s->media_locations();
 
-		if ( ! $media_location )
-			return;
+			if ( ! $media_locations )
+				continue;
 
-		$data = array(
-			'template' => $media_location->url_template,
-			'suffix'   => $media_location->suffix,
-			'base_url' => $show->media_file_base_uri
-		);
+			$media_location  = $media_locations[0];
 
-		$episode_number = $this->guess_next_episode_number_for_show( $show->id );
+			$shows_data[ $s->id ] = array(
+				'slug'        => $s->slug,
+				'name'        => $s->name,
+				'next_number' => $this->guess_next_episode_number_for_show( $s->id ),
+				'base_url'    => $s->media_file_base_uri,
+				'media_location' => array(
+					'template' => $media_location->url_template,
+					'suffix'   => $media_location->suffix
+				)
+			);
+		}
 
 		?>
 		<div id="new-episode-modal" class="hidden wrap" title="Create New Episode">
-			<div class="hidden" id="new-episode-data"><?php echo json_encode( $data ) ?></div>
-			<input type="hidden" class="show_id" value="<?php echo $show->id; ?>">
-			<input type="hidden" class="show_slug" value="<?php echo $show->slug; ?>">
+			<div class="hidden" id="new-episode-shows-data"><?php echo json_encode( $shows_data ) ?></div>
 			<p>
 				<div id="titlediv">
 					<p>
+						<strong>Show</strong>
+						<select name="new_episode_show" id="new_episode_show">
+							<?php foreach ( $shows_data as $show_id => $show ): ?>
+								<option value="<?php echo $show_id ?>"><?php echo $show['name'] ?></option>
+							<?php endforeach ?>
+						</select>
+					</p>
+					<p>
 						<strong>Episode Number</strong>
-						<input type="text" name="episode_number" value="<?php echo $episode_number ?>" class="really-huge-text episode_number" autocomplete="off">
+						<input type="text" name="episode_number" value="" class="really-huge-text episode_number" autocomplete="off">
 					</p>
 					<p>
 						<strong>Episode Title</strong>
