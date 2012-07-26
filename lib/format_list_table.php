@@ -28,7 +28,7 @@ class Format_List_Table extends \WP_List_Table {
 			),
 			'delete' => sprintf(
 				'<a href="?page=%s&action=%s&format=%s">' . __( 'Delete', 'podlove' ) . '</a>',
-				$_REQUEST[ 'page' ],
+				$_REQUEST['page'],
 				'delete',
 				$format->id
 			)

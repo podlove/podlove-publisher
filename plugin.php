@@ -78,7 +78,7 @@ function activate() {
 	global $wpdb;
 	
 	if ( is_multisite() ) {
-		if ( isset( $_GET[ 'networkwide' ] ) && ( $_GET[ 'networkwide' ] == 1 ) ) {
+		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
             		$current_blog = $wpdb->blogid;
 			$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM " . $wpdb->blogs ) );
 			foreach ( $blogids as $blog_id ) {
@@ -110,7 +110,7 @@ function uninstall() {
 	global $wpdb;
 	
 	if ( is_multisite() ) {
-		if ( isset( $_GET[ 'networkwide' ] ) && ( $_GET[ 'networkwide' ] == 1 ) ) {
+		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
             		$current_blog = $wpdb->blogid;
 			$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM " . $wpdb->blogs ) );
 			foreach ( $blogids as $blog_id ) {
@@ -249,15 +249,15 @@ add_action( 'plugins_loaded', function () {
 namespace Podlove\AJAX;
 
 function validate_file() {
-	$file_id = $_REQUEST[ 'file_id' ];
+	$file_id = $_REQUEST['file_id'];
 
 	$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
 	$info = $file->curl_get_header();
 
 	$result = array();
-	$result[ 'file_id' ]   = $file_id;
-	$result[ 'reachable' ] = ( $info[ 'http_code' ] >= 200 && $info[ 'http_code' ] < 300 );
-	$result[ 'file_size' ] = $info[ 'download_content_length' ];
+	$result['file_id']   = $file_id;
+	$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 );
+	$result['file_size'] = $info['download_content_length'];
 
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -271,9 +271,9 @@ add_action( 'wp_ajax_podlove-validate-file', '\Podlove\AJAX\validate_file' );
 
 function create_episode() {
 
-	$show_id = isset( $_REQUEST[ 'show_id' ] ) ? $_REQUEST[ 'show_id' ] : NULL;
-	$slug    = isset( $_REQUEST[ 'slug' ] )    ? $_REQUEST[ 'slug' ]    : NULL;
-	$title   = isset( $_REQUEST[ 'title' ] )   ? $_REQUEST[ 'title' ]   : NULL;
+	$show_id = isset( $_REQUEST['show_id'] ) ? $_REQUEST['show_id'] : NULL;
+	$slug    = isset( $_REQUEST['slug'] )    ? $_REQUEST['slug']    : NULL;
+	$title   = isset( $_REQUEST['title'] )   ? $_REQUEST['title']   : NULL;
 
 	if ( ! $show_id || ! $slug || ! $title )
 		die();
@@ -305,8 +305,8 @@ function create_episode() {
 
 	// generate response
 	$result = array();
-	$result[ 'post_id' ] = $post_id;
-	$result[ 'post_edit_url' ] = get_edit_post_link( $post_id );
+	$result['post_id'] = $post_id;
+	$result['post_edit_url'] = get_edit_post_link( $post_id );
 
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');

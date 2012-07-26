@@ -3,10 +3,10 @@ namespace Podlove;
 
 function handle_direct_download() {
 	
-	if ( ! isset( $_GET[ 'download_media_file' ] ) )
+	if ( ! isset( $_GET['download_media_file'] ) )
 		return;
 
-	$media_file_id = (int) $_GET[ 'download_media_file' ];
+	$media_file_id = (int) $_GET['download_media_file'];
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 
 	if ( ! $media_file )
@@ -107,7 +107,7 @@ function webplayer_shortcode( $options ) {
 	$audio_formats = array( 'mp3', 'mp4', 'ogg' );
 
 	foreach ( $audio_formats as $audio_format ) {
-		$format_location = Model\MediaLocation::find_by_id( $formats_data[ 'audio' ][ $audio_format ] );
+		$format_location = Model\MediaLocation::find_by_id( $formats_data['audio'][ $audio_format ] );
 
 		if ( ! $format_location )
 			continue;

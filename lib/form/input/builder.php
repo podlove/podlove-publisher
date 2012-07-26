@@ -32,12 +32,12 @@ class Builder {
 	}
 
 	public function get_extra_html_attributes() {
-		if ( ! isset( $this->arguments[ 'html' ] ) || ! is_array( $this->arguments[ 'html' ] ) )
+		if ( ! isset( $this->arguments['html'] ) || ! is_array( $this->arguments['html'] ) )
 			return '';
 
 		$compiled_html = '';
 
-		foreach ( $this->arguments[ 'html' ] as $key => $value )
+		foreach ( $this->arguments['html'] as $key => $value )
 			$compiled_html .= "$key=\"$value\" ";
 
 		return $compiled_html;
@@ -96,7 +96,7 @@ class Builder {
 		?>
 		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html_attributes; ?>>
 			<option value=""><?php echo __( 'Please choose ...', 'podlove' ); ?></option>
-			<?php foreach ( $this->arguments[ 'options' ] as $key => $value ): ?>
+			<?php foreach ( $this->arguments['options'] as $key => $value ): ?>
 				<option value="<?php echo $key; ?>"<?php if ( $key == $this->field_value ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
 			<?php endforeach; ?>
 		</select>
@@ -106,7 +106,7 @@ class Builder {
 	public function radio( $object_key, $arguments ) {
 		$this->build_input_values( $object_key, $arguments );
 		?>
-		<?php foreach ( $this->arguments[ 'options' ] as $key => $value ): ?>
+		<?php foreach ( $this->arguments['options'] as $key => $value ): ?>
 			<input type="radio" id="<?php echo $this->field_id . '_' . $key; ?>" name="<?php echo $this->field_name; ?>" value="<?php echo $key; ?>"<?php if ( $key == $this->field_value ): ?> checked="checked"<?php endif; ?>>
 			<label for="<?php echo $this->field_id . '_' . $key; ?>"><?php echo $value; ?></label>
 		<?php endforeach; ?>
@@ -119,11 +119,11 @@ class Builder {
 		// determine image dimensions
 		$img_html_attributes = '';
 
-		if ( isset( $arguments[ 'image_width' ] ) )
-			$img_html_attributes .= ' width="' . $arguments[ 'image_width' ] . '"';
+		if ( isset( $arguments['image_width'] ) )
+			$img_html_attributes .= ' width="' . $arguments['image_width'] . '"';
 
-		if ( isset( $arguments[ 'image_height' ] ) )
-			$img_html_attributes .= ' height="' . $arguments[ 'image_height' ] . '"';
+		if ( isset( $arguments['image_height'] ) )
+			$img_html_attributes .= ' height="' . $arguments['image_height'] . '"';
 
 		?>
 		<div>
@@ -145,7 +145,7 @@ class Builder {
 	 */
 	function fields_for( $object, $args, $callback ) {
 		// determine context
-		$context = isset( $args[ 'context' ] ) ? $this->context . '[' . $args[ 'context' ] . ']' . "[{$object->id}]" : $this->context; 
+		$context = isset( $args['context'] ) ? $this->context . '[' . $args['context'] . ']' . "[{$object->id}]" : $this->context; 
 		// build input elements
 		call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) );
 	}

@@ -97,7 +97,7 @@ abstract class Base
 	 * @return array property names
 	 */
 	public static function property_names() {
-		return array_map( function ( $p ) { return $p[ 'name' ]; } , self::properties() );
+		return array_map( function ( $p ) { return $p['name']; } , self::properties() );
 	}
 	
 	/**

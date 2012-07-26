@@ -57,22 +57,22 @@ class Show {
 	 * of this save logic is exactly the same for most if not all forms.
 	 */
 	private function save() {
-		if ( ! isset( $_REQUEST[ 'show' ] ) )
+		if ( ! isset( $_REQUEST['show'] ) )
 			return;
 			
-		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST['show'] );
 		
-		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
+		if ( ! isset( $_POST['podlove_show'] ) || ! is_array( $_POST['podlove_show'] ) )
 			return;
 
 		// save form data
-		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
+		foreach ( $_POST['podlove_show'] as $key => $value ) {
 			if ( $key !== 'podlove_feed' )
 				$show->{$key} = $value;
 		}
 
-		if ( isset( $_POST[ 'podlove_show' ][ 'podlove_media_location' ] ) ) {
-			foreach ( $_POST[ 'podlove_show' ][ 'podlove_media_location' ] as $media_location_id => $media_location_data ) {
+		if ( isset( $_POST['podlove_show'][ 'podlove_media_location' ] ) ) {
+			foreach ( $_POST['podlove_show'][ 'podlove_media_location' ] as $media_location_id => $media_location_data ) {
 				$media_location = \Podlove\Model\MediaLocation::find_by_id( $media_location_id );
 				foreach ( $media_location_data as $key => $value ) {
 					$media_location->{$key} = $value;
@@ -81,8 +81,8 @@ class Show {
 			}
 		}
 
-		if ( isset( $_POST[ 'podlove_show' ][ 'podlove_feed' ] ) ) {
-			foreach ( $_POST[ 'podlove_show' ][ 'podlove_feed' ] as $feed_id => $feed_data ) {
+		if ( isset( $_POST['podlove_show'][ 'podlove_feed' ] ) ) {
+			foreach ( $_POST['podlove_show'][ 'podlove_feed' ] as $feed_id => $feed_data ) {
 				$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
 				foreach ( $feed_data as $key => $value ) {
 					$feed->{$key} = $value;
@@ -92,7 +92,7 @@ class Show {
 				// FIXME: make this work without hardcoding the field names
 				$checkbox_fields = array( 'discoverable', 'enable', 'show_description' );
 				foreach ( $checkbox_fields as $checkbox_field ) {
-					if ( isset( $_POST[ 'podlove_show' ][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] ) && $_POST[ 'podlove_show' ][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] === 'on' ) {
+					if ( isset( $_POST['podlove_show'][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] ) && $_POST['podlove_show'][ 'podlove_feed' ][ $feed->id ][ $checkbox_field ] === 'on' ) {
 						$feed->{$checkbox_field} = 1;
 					} else {
 						$feed->{$checkbox_field} = 0;
@@ -103,9 +103,9 @@ class Show {
 			}
 		}
 
-		if ( isset( $_POST[ 'podlove_webplayer_formats' ] ) ) {
+		if ( isset( $_POST['podlove_webplayer_formats'] ) ) {
 			$old_options = get_option( 'podlove_webplayer_formats', array() );
-			$old_options[ $show->id ] = $_POST[ 'podlove_webplayer_formats' ];
+			$old_options[ $show->id ] = $_POST['podlove_webplayer_formats'];
 			update_option( 'podlove_webplayer_formats', $old_options );
 		}
 			
@@ -114,9 +114,9 @@ class Show {
 		// 			data sent at all. That's why there is the extra hidden field
 		// 			"checkboxes". We can iterate over it here and check if the
 		// 			known checkboxes have been set or not.
-		if ( isset( $_POST[ 'checkboxes' ] ) && is_array( $_POST[ 'checkboxes' ] ) ) {
-			foreach ( $_POST[ 'checkboxes' ] as $checkbox_field_name ) {
-				if ( isset( $_POST[ 'podlove_show' ][ $checkbox_field_name ] ) && $_POST[ 'podlove_show' ][ $checkbox_field_name ] === 'on' ) {
+		if ( isset( $_POST['checkboxes'] ) && is_array( $_POST['checkboxes'] ) ) {
+			foreach ( $_POST['checkboxes'] as $checkbox_field_name ) {
+				if ( isset( $_POST['podlove_show'][ $checkbox_field_name ] ) && $_POST['podlove_show'][ $checkbox_field_name ] === 'on' ) {
 					$show->{$checkbox_field_name} = 1;
 				} else {
 					$show->{$checkbox_field_name} = 0;
@@ -135,10 +135,10 @@ class Show {
 	private function create() {
 		$show = new \Podlove\Model\Show;
 		
-		if ( ! isset( $_POST[ 'podlove_show' ] ) || ! is_array( $_POST[ 'podlove_show' ] ) )
+		if ( ! isset( $_POST['podlove_show'] ) || ! is_array( $_POST['podlove_show'] ) )
 			return;
 			
-		foreach ( $_POST[ 'podlove_show' ] as $key => $value ) {
+		foreach ( $_POST['podlove_show'] as $key => $value ) {
 			$show->{$key} = $value;
 		}
 		$show->save();
@@ -161,10 +161,10 @@ class Show {
 	 * Process form: delete a show
 	 */
 	private function delete() {
-		if ( ! isset( $_REQUEST[ 'show' ] ) || isset( $_REQUEST[ 'feed' ] ) || isset( $_REQUEST[ 'media_location' ] ) )
+		if ( ! isset( $_REQUEST['show'] ) || isset( $_REQUEST['feed'] ) || isset( $_REQUEST['media_location'] ) )
 			return;
 			
-		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST['show'] );
 		$show->delete();
 
 		$this->redirect( 'index' );
@@ -174,7 +174,7 @@ class Show {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $show_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST[ 'page' ];
+		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $show_id ) ? '&show=' . $show_id : '';
 		$action = '&action=' . $action;
 		
@@ -183,7 +183,7 @@ class Show {
 	}
 	
 	public function process_form() {
-		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
+		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 		
 		if ( $action === 'save' ) {
 			$this->save();
@@ -198,9 +198,9 @@ class Show {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Shows <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2>Podlove Shows <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
-			$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
+			$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
 				case 'new':
 					$this->new_template();
@@ -260,7 +260,7 @@ class Show {
 	}
 
 	private function edit_template() {
-		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
+		$show = \Podlove\Model\Show::find_by_id( $_REQUEST['show'] );
 		?>
 		<h3><?php echo __( 'Edit Show', 'podlove' ); ?>: <?php echo $show->name ?></h3>
 		
@@ -424,7 +424,7 @@ class Show {
 						<span><?php echo __( 'After you have saved the show, you can add media locations for it here.', 'podlove' ); ?></span>
 					<?php else: ?>
 					<span class="add">
-						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=media_location&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
+						<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=create&amp;subject=media_location&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
 							<?php echo __( 'Add New Media File', 'podlove' ); ?>
 						</a>
 					</span>
@@ -451,7 +451,7 @@ class Show {
 						<span><?php echo __( 'After you have saved the show, you can add feeds for it here.', 'podlove' ); ?></span>
 					<?php else: ?>
 					<span class="add">
-						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=feed&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
+						<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=create&amp;subject=feed&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
 							<?php echo __( 'Add New Feed', 'podlove' ); ?>
 						</a>
 					</span>
@@ -464,9 +464,9 @@ class Show {
 	}
 
 	public static function podlove_webplayer_settings_callback( $post, $args ) {
-		$media_locations = $args[ 'args' ][ 0 ];
+		$media_locations = $args['args'][ 0 ];
 		$show            = $media_locations[ 0 ]->show();
-		$wrapper         = $args[ 'args' ][ 1 ];
+		$wrapper         = $args['args'][ 1 ];
 
 		$formats = array(
 			'audio' => array(
@@ -524,8 +524,8 @@ class Show {
 	}
 
 	public static function nested_feed_media_locations_callback( $post, $args ) {
-		$media_locations = $args[ 'args' ][ 0 ];
-		$wrapper         = $args[ 'args' ][ 1 ];
+		$media_locations = $args['args'][ 0 ];
+		$wrapper         = $args['args'][ 1 ];
 
 		$raw_formats = \Podlove\Model\MediaFormat::all();
 		$formats = array();
@@ -585,7 +585,7 @@ class Show {
 				<tr>
 					<td colspan="2">
 						<span class="delete">
-							<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=media_location&amp;show=<?php echo $media_location->show()->id; ?>&amp;media_location=<?php echo $media_location->id; ?>" style="float: right" class="button-secondary delete">
+							<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=delete&amp;subject=media_location&amp;show=<?php echo $media_location->show()->id; ?>&amp;media_location=<?php echo $media_location->id; ?>" style="float: right" class="button-secondary delete">
 								<?php echo __( 'Delete Media File', 'podlove' ); ?>
 							</a>
 						</span>
@@ -599,8 +599,8 @@ class Show {
 	}
 
 	public static function nested_feed_meta_box_callback( $post, $args ) {
-		$feed    = $args[ 'args' ][ 0 ];
-		$wrapper = $args[ 'args' ][ 1 ];
+		$feed    = $args['args'][ 0 ];
+		$wrapper = $args['args'][ 1 ];
 		?>
 		<a name="feed_<?php echo $feed->id; ?>"></a>
 		<table>
@@ -694,7 +694,7 @@ class Show {
 			<tr>
 				<td colspan="2">
 					<span class="delete">
-						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=feed&amp;show=<?php echo $feed->show()->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
+						<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=delete&amp;subject=feed&amp;show=<?php echo $feed->show()->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
 							<?php echo __( 'Delete Feed', 'podlove' ); ?>
 						</a>
 					</span>

@@ -20,15 +20,15 @@ class Format {
 	 * Process form: save/update a format
 	 */
 	private function save() {
-		if ( ! isset( $_REQUEST[ 'format' ] ) )
+		if ( ! isset( $_REQUEST['format'] ) )
 			return;
 			
-		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST[ 'format' ] );
+		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST['format'] );
 		
-		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
+		if ( ! isset( $_POST['podlove_format'] ) || ! is_array( $_POST['podlove_format'] ) )
 			return;
 			
-		foreach ( $_POST[ 'podlove_format' ] as $key => $value )
+		foreach ( $_POST['podlove_format'] as $key => $value )
 			$format->{$key} = $value;
 
 		$format->save();
@@ -44,10 +44,10 @@ class Format {
 		
 		$format = new \Podlove\Model\MediaFormat;
 		
-		if ( ! isset( $_POST[ 'podlove_format' ] ) || ! is_array( $_POST[ 'podlove_format' ] ) )
+		if ( ! isset( $_POST['podlove_format'] ) || ! is_array( $_POST['podlove_format'] ) )
 			return;
 			
-		foreach ( $_POST[ 'podlove_format' ] as $key => $value ) {
+		foreach ( $_POST['podlove_format'] as $key => $value ) {
 			$format->{$key} = $value;
 		}
 		$format->save();
@@ -59,10 +59,10 @@ class Format {
 	 * Process form: delete a format
 	 */
 	private function delete() {
-		if ( ! isset( $_REQUEST[ 'format' ] ) )
+		if ( ! isset( $_REQUEST['format'] ) )
 			return;
 
-		\Podlove\Model\MediaFormat::find_by_id( $_REQUEST[ 'format' ] )->delete();
+		\Podlove\Model\MediaFormat::find_by_id( $_REQUEST['format'] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -71,7 +71,7 @@ class Format {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $format_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST[ 'page' ];
+		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $format_id ) ? '&format=' . $format_id : '';
 		$action = '&action=' . $action;
 		
@@ -80,7 +80,7 @@ class Format {
 	}
 	
 	public function process_form() {
-		$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
+		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 		
 		if ( $action === 'save' ) {
 			$this->save();
@@ -95,9 +95,9 @@ class Format {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
-			$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
+			$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
 				case 'new':
 					$this->new_template();
@@ -153,7 +153,7 @@ class Format {
 	}
 	
 	private function edit_template() {
-		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST[ 'format' ] );
+		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST['format'] );
 		?>
 		<h3>Edit Format: <?php echo $format->name ?></h3>
 		

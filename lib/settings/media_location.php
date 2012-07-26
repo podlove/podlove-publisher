@@ -11,7 +11,7 @@ class MediaLocation {
 	 * Process form: create new media_location
 	 */
 	private function create() {
-		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
+		$show_id = ( isset( $_REQUEST['show'] ) ) ? (int) $_REQUEST['show'] : NULL;
 
 		if ( ! $show_id )
 			return;
@@ -26,8 +26,8 @@ class MediaLocation {
 	 * Process form: delete a media_location
 	 */
 	private function delete() {
-		$show_id           = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
-		$media_location_id = ( isset( $_REQUEST[ 'media_location' ] ) ) ? (int) $_REQUEST[ 'media_location' ] : NULL;
+		$show_id           = ( isset( $_REQUEST['show'] ) ) ? (int) $_REQUEST['show'] : NULL;
+		$media_location_id = ( isset( $_REQUEST['media_location'] ) ) ? (int) $_REQUEST['media_location'] : NULL;
 		
 		$media_locations = \Podlove\Model\MediaLocation::find_all_by_id( $media_location_id );
 		
@@ -44,7 +44,7 @@ class MediaLocation {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $show_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST[ 'page' ];
+		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $show_id ) ? '&show=' . $show_id : '';
 		$action = '&action=' . $action;
 		
@@ -53,8 +53,8 @@ class MediaLocation {
 	}	
 
 	public function process_form() {
-		$action  = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
-		$subject = ( isset( $_REQUEST[ 'subject' ] ) ) ? $_REQUEST[ 'subject' ] : NULL;
+		$action  = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
+		$subject = ( isset( $_REQUEST['subject'] ) ) ? $_REQUEST['subject'] : NULL;
 
 		if ( $subject != 'media_location' )
 			return;
