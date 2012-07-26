@@ -22,16 +22,6 @@ function get_setting( $name ) {
 namespace Podlove\Form;
 
 /**
- * Convenience wrapper function for Form Builder.
- * 
- * @see \Podlove\Form\Builder::input
- */
-function input( $context, $object, $field_key, $field_value ) {
-	$builder = new Builder;
-	$builder->input( $context, $object, $field_key, $field_value );
-}
-
-/**
  * Build whole form
  * @param  object   $object   object that shall be modified via the form
  * @param  array    $args     list of options, all optional

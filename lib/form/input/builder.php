@@ -54,11 +54,15 @@ class Builder {
 		$this->object_key = $object_key;
 		$this->arguments  = $arguments;
 
-		$this->field_name      = $this->get_field_name();
-		$this->field_value     = $this->object->{$object_key};
+		$this->field_name  = $this->get_field_name();
 
-		if ( ! $this->field_value && isset( $arguments['default'] ) && $arguments['default'] ) {
-			$this->field_value = $arguments['default'];
+		// multiselect takes care of its values
+		if ( ! isset( $arguments['type'] ) || $arguments['type'] !== 'multiselect' ) {
+			$this->field_value = $this->object->{$object_key};
+
+			if ( ! $this->field_value && isset( $arguments['default'] ) && $arguments['default'] ) {
+				$this->field_value = $arguments['default'];
+			}
 		}
 		
 		$this->field_id        = $this->get_field_id();
@@ -101,6 +105,39 @@ class Builder {
 			<?php endforeach; ?>
 		</select>
 		<?php
+	}
+
+	public function multiselect( $object_key, $arguments ) {
+		$this->build_input_values( $object_key, $arguments );
+
+		foreach ( $this->arguments['options'] as $key => $value ) {
+			if ( isset( $this->arguments['multi_values'][ $key ] ) ) {
+				$checked = $this->arguments['multi_values'][ $key ];
+			} else {
+				$checked = $this->arguments['default'];
+			}
+			
+			$name = $this->field_name . '[' . $key . ']';
+			
+			// generate an id without braces by turning braces into underscores
+			$id = $this->field_id . '_' . $key;
+			$id = str_replace( array( '[', ']' ), '_', $id );
+			$id = str_replace( '__', '_', $id );
+			
+			if ( isset( $this->arguments['multiselect_callback'] ) ) {
+				$callback = call_user_func( $this->arguments['multiselect_callback'], $key );
+			} else {
+				$callback = '';
+			}
+			
+			?>
+			<div>
+				<label for="<?php echo $id; ?>">
+					<input type="checkbox" name="<?php echo $name; ?>" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?>> <?php echo $value; ?>
+				</label>
+			</div>
+			<?php
+		}
 	}
 
 	public function radio( $object_key, $arguments ) {
