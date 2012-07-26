@@ -29,7 +29,7 @@ class Builder {
 		?>
 		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html; ?>>
 			<option value=""><?php echo __( 'Please choose ...', 'podlove' ); ?></option>
-			<?php foreach ( $this->field_values[ 'options' ] as $key => $value ): ?>
+			<?php foreach ( $this->field_values['options'] as $key => $value ): ?>
 				<option value="<?php echo $key; ?>"<?php if ( $key == $this->field_value ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
 			<?php endforeach; ?>
 		</select>
@@ -47,11 +47,11 @@ class Builder {
 		if ( ! isset( $this->field_value ) || ! is_array( $this->field_value ) )
 			$this->field_value = array();
 			
-		foreach ( $this->field_values[ 'options' ] as $key => $value ) {
+		foreach ( $this->field_values['options'] as $key => $value ) {
 			if ( isset( $this->field_value[ $key ] ) ) {
 				$checked = $this->field_value[ $key ];
 			} else {
-				$checked = $this->field_values[ 'default' ];
+				$checked = $this->field_values['default'];
 			}
 			
 			$name = $this->field_name . '[' . $key . ']';
@@ -61,8 +61,8 @@ class Builder {
 			$id = str_replace( array( '[', ']' ), '_', $id );
 			$id = str_replace( '__', '_', $id );
 			
-			if ( isset( $this->field_values[ 'multiselect_callback' ] ) ) {
-				$callback = call_user_func( $this->field_values[ 'multiselect_callback' ], $key );
+			if ( isset( $this->field_values['multiselect_callback'] ) ) {
+				$callback = call_user_func( $this->field_values['multiselect_callback'], $key );
 			} else {
 				$callback = '';
 			}
@@ -96,9 +96,9 @@ class Builder {
 	 * 	- multiselect_callback  lambda to add additional attributes to the multiselect form fields
 	 */
 	public function input( $context, $value, $field_key, $field_values ) {
-		$type     = ( isset( $field_values[ 'type' ] ) )    ? $field_values[ 'type' ]    : 'text';
-		$default  = ( isset( $field_values[ 'default' ] ) ) ? $field_values[ 'default' ] : NULL;
-		$html     = ( isset( $field_values[ 'html' ] ) )    ? $field_values[ 'html' ]    : NULL;
+		$type     = ( isset( $field_values['type'] ) )    ? $field_values['type']    : 'text';
+		$default  = ( isset( $field_values['default'] ) ) ? $field_values['default'] : NULL;
+		$html     = ( isset( $field_values['html'] ) )    ? $field_values['html']    : NULL;
 		$function = 'form_' . $type . '_input';
 		
 		if ( $value !== NULL ) {
@@ -122,12 +122,12 @@ class Builder {
 		$this->field_id     = "{$context}_{$field_key}";
 		$this->html         = $html;
 
-		$this->before_input_callback = isset( $field_values[ 'before_input_callback' ] ) ? $field_values[ 'before_input_callback' ] : NULL;
-		$this->after_input_callback  = isset( $field_values[ 'after_input_callback' ] )  ? $field_values[ 'after_input_callback' ]  : NULL;
+		$this->before_input_callback = isset( $field_values['before_input_callback'] ) ? $field_values['before_input_callback'] : NULL;
+		$this->after_input_callback  = isset( $field_values['after_input_callback'] )  ? $field_values['after_input_callback']  : NULL;
 		?>
 		<tr class="row_<?php echo $field_key; ?>">
 			<th scope="row" valign="top">
-				<label for="<?php echo $this->field_id; ?>"><?php echo $field_values[ 'label' ]; ?></label>
+				<label for="<?php echo $this->field_id; ?>"><?php echo $field_values['label']; ?></label>
 			</th>
 			<td>
 				<?php if ( $this->before_input_callback ): ?>
@@ -137,8 +137,8 @@ class Builder {
 				<?php if ( $type !== 'checkbox' && $type !== 'multiselect' ): ?>
 					<br />
 				<?php endif; ?>
-				<?php if ( $field_values[ 'description' ] ): ?>
-					<span class="description"><?php echo $field_values[ 'description' ]; ?></span>
+				<?php if ( $field_values['description'] ): ?>
+					<span class="description"><?php echo $field_values['description']; ?></span>
 				<?php endif; ?>
 				<?php if ( $this->after_input_callback ): ?>
 					<?php call_user_func( $this->after_input_callback, array( 'value' => $this->field_value ) ); ?>

@@ -15,7 +15,7 @@ class Feed {
 	 * Process form: create new feed
 	 */
 	private function create() {
-		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
+		$show_id = ( isset( $_REQUEST['show'] ) ) ? (int) $_REQUEST['show'] : NULL;
 		
 
 		if ( ! $show_id )
@@ -31,8 +31,8 @@ class Feed {
 	 * Process form: delete a feed
 	 */
 	private function delete() {
-		$show_id = ( isset( $_REQUEST[ 'show' ] ) ) ? (int) $_REQUEST[ 'show' ] : NULL;
-		$feed_id = ( isset( $_REQUEST[ 'feed' ] ) ) ? (int) $_REQUEST[ 'feed' ] : NULL;
+		$show_id = ( isset( $_REQUEST['show'] ) ) ? (int) $_REQUEST['show'] : NULL;
+		$feed_id = ( isset( $_REQUEST['feed'] ) ) ? (int) $_REQUEST['feed'] : NULL;
 		
 		$feeds = \Podlove\Model\Feed::find_all_by_show_id( $show_id );
 		
@@ -49,7 +49,7 @@ class Feed {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $show_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST[ 'page' ];
+		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $show_id ) ? '&show=' . $show_id : '';
 		$action = '&action=' . $action;
 		
@@ -58,8 +58,8 @@ class Feed {
 	}
 	
 	public function process_form() {
-		$action  = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
-		$subject = ( isset( $_REQUEST[ 'subject' ] ) ) ? $_REQUEST[ 'subject' ] : NULL;
+		$action  = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
+		$subject = ( isset( $_REQUEST['subject'] ) ) ? $_REQUEST['subject'] : NULL;
 
 		if ( $subject != 'feed' )
 			return;
