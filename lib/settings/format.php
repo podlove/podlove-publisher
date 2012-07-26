@@ -95,7 +95,7 @@ class Format {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo \Podlove\t( 'Add New' ); ?></a></h2>
+			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 			$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 			switch ( $action ) {
@@ -118,9 +118,9 @@ class Format {
 	private function new_template() {
 		$format = new \Podlove\Model\MediaFormat;
 		?>
-		<h3><?php echo \Podlove\t( 'Add New Format' ); ?></h3>
+		<h3><?php echo __( 'Add New Format', 'podlove' ); ?></h3>
 		<?php
-		$this->form_template( $format, 'create', \Podlove\t( 'Add New Format' ) );
+		$this->form_template( $format, 'create', __( 'Add New Format', 'podlove' ) );
 	}
 	
 	private function view_template() {
@@ -135,20 +135,20 @@ class Format {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
 	 		$wrapper->string( 'name', array(
-	 			'label'       => \Podlove\t( 'Name' ),
+	 			'label'       => __( 'Name', 'podlove' ),
 	 			'description' => '' ) );
 
 	 		$wrapper->string( 'type', array(
-	 			'label'       => \Podlove\t( 'Format Type' ),
-	 			'description' => \Podlove\t( 'Example: audio' ) ) );
+	 			'label'       => __( 'Format Type', 'podlove' ),
+	 			'description' => __( 'Example: audio', 'podlove' ) ) );
 
 	 		$wrapper->string( 'mime_type', array(
-	 			'label'       => \Podlove\t( 'Format Mime Type' ),
-	 			'description' => \Podlove\t( 'Example: audio/mpeg4' ) ) );
+	 			'label'       => __( 'Format Mime Type', 'podlove' ),
+	 			'description' => __( 'Example: audio/mpeg4', 'podlove' ) ) );
 
 	 		$wrapper->string( 'extension', array(
-	 			'label'       => \Podlove\t( 'Format Extension' ),
-	 			'description' => \Podlove\t( 'Example: m4a' ) ) );
+	 			'label'       => __( 'Format Extension', 'podlove' ),
+	 			'description' => __( 'Example: m4a', 'podlove' ) ) );
 		} );
 	}
 	

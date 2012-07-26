@@ -23,7 +23,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	public function register_meta_boxes() {
 		add_meta_box(
 			\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE . '_player',
-			\Podlove\t( 'Webplayer' ),
+			__( 'Webplayer', 'podlove' ),
 			array( $this, 'about_player_meta_box' ),
 			\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			'side'
@@ -32,9 +32,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 
 	public function about_player_meta_box() {
 		if ( PODLOVE_MEDIA_PLAYER === 'external' )
-			echo \Podlove\t( 'It looks like you have installed an <strong>external plugin</strong> using mediaelement.js.<br>That\'s what\'s used.' );
+			echo __( 'It looks like you have installed an <strong>external plugin</strong> using mediaelement.js.<br>That\'s what\'s used.', 'podlove' );
 		else
-			echo \Podlove\t( 'Podlove ships with its <strong>own webplayer</strong>.<br>That\'s what\'s used.' );
+			echo __( 'Podlove ships with its <strong>own webplayer</strong>.<br>That\'s what\'s used.', 'podlove' );
 	}
 
 }

@@ -21,13 +21,13 @@ class Format_List_Table extends \WP_List_Table {
 	function column_name( $format ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">' . \Podlove\t( 'Edit' ) . '</a>',
+				'<a href="?page=%s&action=%s&format=%s">' . __( 'Edit', 'podlove' ) . '</a>',
 				$_REQUEST['page'],
 				'edit',
 				$format->id
 			),
 			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">' . \Podlove\t( 'Delete' ) . '</a>',
+				'<a href="?page=%s&action=%s&format=%s">' . __( 'Delete', 'podlove' ) . '</a>',
 				$_REQUEST[ 'page' ],
 				'delete',
 				$format->id

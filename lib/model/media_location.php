@@ -45,7 +45,7 @@ class MediaLocation extends Base {
 		if ( $this->media_format_id )
 			return $this->media_format()->title();
 		else
-			return \Podlove\t( 'Notice: No file format defined.' );
+			return __( 'Notice: No file format defined.', 'podlove' );
 	}
 
 	public function find_by_show_id_and_media_format_id( $show_id, $media_format_id ) {

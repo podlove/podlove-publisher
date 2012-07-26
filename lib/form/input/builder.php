@@ -95,7 +95,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<select name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html_attributes; ?>>
-			<option value=""><?php echo \Podlove\t( 'Please choose ...' ); ?></option>
+			<option value=""><?php echo __( 'Please choose ...', 'podlove' ); ?></option>
 			<?php foreach ( $this->arguments[ 'options' ] as $key => $value ): ?>
 				<option value="<?php echo $key; ?>"<?php if ( $key == $this->field_value ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
 			<?php endforeach; ?>

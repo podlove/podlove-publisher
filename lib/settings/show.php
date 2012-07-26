@@ -198,7 +198,7 @@ class Show {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Shows <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo \Podlove\t( 'Add New' ); ?></a></h2>
+			<h2>Podlove Shows <a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 			$action = ( isset( $_REQUEST[ 'action' ] ) ) ? $_REQUEST[ 'action' ] : NULL;
 			switch ( $action ) {
@@ -238,9 +238,9 @@ class Show {
 	private function new_template() {
 		$show = new \Podlove\Model\Show;
 		?>
-		<h3><?php echo \Podlove\t( 'Add New Show' ); ?></h3>
+		<h3><?php echo __( 'Add New Show', 'podlove' ); ?></h3>
 		<?php
-		$this->form_template( $show, 'create', \Podlove\t( 'Add New Show' ) );
+		$this->form_template( $show, 'create', __( 'Add New Show', 'podlove' ) );
 	}
 	
 	private function view_template() {
@@ -262,7 +262,7 @@ class Show {
 	private function edit_template() {
 		$show = \Podlove\Model\Show::find_by_id( $_REQUEST[ 'show' ] );
 		?>
-		<h3><?php echo \Podlove\t( 'Edit Show' ); ?>: <?php echo $show->name ?></h3>
+		<h3><?php echo __( 'Edit Show', 'podlove' ); ?>: <?php echo $show->name ?></h3>
 		
 		<?php $this->form_template( $show, 'save' ); ?>
 
@@ -282,63 +282,63 @@ class Show {
 			$show = $form->object;
 
 			$wrapper->string( 'name', array(
-				'label'       => \Podlove\t( 'Show Title' ),
-				'description' => \Podlove\t( '' ),
+				'label'       => __( 'Show Title', 'podlove' ),
+				'description' => __( '', 'podlove' ),
 				'html'        => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->string( 'subtitle', array(
-				'label'       => \Podlove\t( 'Show Subtitle' ),
-				'description' => \Podlove\t( 'The subtitle is used by iTunes.' ),
+				'label'       => __( 'Show Subtitle', 'podlove' ),
+				'description' => __( 'The subtitle is used by iTunes.', 'podlove' ),
 				'html'        => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->text( 'summary', array(
-				'label'       => \Podlove\t( 'Summary' ),
-				'description' => \Podlove\t( 'A couple of sentences describing the show.' ),
+				'label'       => __( 'Summary', 'podlove' ),
+				'description' => __( 'A couple of sentences describing the show.', 'podlove' ),
 				'html'        => array( 'rows' => 5, 'cols' => 40 )
 			) );
 
 			$wrapper->string( 'slug', array(
-				'label'       => \Podlove\t( 'Show Slug' ),
-				'description' => \Podlove\t( 'Is part of the feed URL.' ),
+				'label'       => __( 'Show Slug', 'podlove' ),
+				'description' => __( 'Is part of the feed URL.', 'podlove' ),
 				'html'        => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->image( 'cover_image', array(
-				'label'        => \Podlove\t( 'Cover Art URL' ),
-				'description'  => \Podlove\t( 'JPEG or PNG. At least 1400 x 1400 pixels.' ),
+				'label'        => __( 'Cover Art URL', 'podlove' ),
+				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
 				'html'         => array( 'class' => 'regular-text' ),
 				'image_width'  => 300,
 				'image_height' => 300
 			) );
 
 			$wrapper->string( 'author_name', array(
-				'label'       => \Podlove\t( 'Author Name' ),
-				'description' => \Podlove\t( 'Publicly displayed in Podcast directories.' ),
+				'label'       => __( 'Author Name', 'podlove' ),
+				'description' => __( 'Publicly displayed in Podcast directories.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 	
 			$wrapper->string( 'owner_name', array(
-				'label'       => \Podlove\t( 'Owner Name' ),
-				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
+				'label'       => __( 'Owner Name', 'podlove' ),
+				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 	
 			$wrapper->string( 'owner_email', array(
-				'label'       => \Podlove\t( 'Owner Email' ),
-				'description' => \Podlove\t( 'Used by iTunes and other Podcast directories to contact you.' ),
+				'label'       => __( 'Owner Email', 'podlove' ),
+				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 	
 			$wrapper->string( 'keywords', array(
-				'label'       => \Podlove\t( 'Keywords' ),
-				'description' => \Podlove\t( 'List of keywords. Separate with commas.' ),
+				'label'       => __( 'Keywords', 'podlove' ),
+				'description' => __( 'List of keywords. Separate with commas.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->select( 'category_1', array(
-				'label'       => \Podlove\t( 'iTunes Categories' ),
+				'label'       => __( 'iTunes Categories', 'podlove' ),
 				'description' => '',
 				'type'     => 'select',
 				'options'  => \Podlove\Itunes\categories()
@@ -359,15 +359,15 @@ class Show {
 			) );
 
 			$wrapper->select( 'explicit', array(
-				'label'       => \Podlove\t( 'Explicit Content?' ),
-				'description' => \Podlove\t( '' ),
+				'label'       => __( 'Explicit Content?', 'podlove' ),
+				'description' => __( '', 'podlove' ),
 				'type'    => 'checkbox',
                 'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 			) );
 
 			$wrapper->string( 'media_file_base_uri', array(
-				'label'       => \Podlove\t( 'Media File Base URL' ),
-				'description' => \Podlove\t( 'Example: http://cdn.example.com/pod/' ),
+				'label'       => __( 'Media File Base URL', 'podlove' ),
+				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
@@ -421,11 +421,11 @@ class Show {
 			<tr>
 				<td colspan="2">
 					<?php if ( $show->is_new() ): ?>
-						<span><?php echo \Podlove\t( 'After you have saved the show, you can add media locations for it here.' ); ?></span>
+						<span><?php echo __( 'After you have saved the show, you can add media locations for it here.', 'podlove' ); ?></span>
 					<?php else: ?>
 					<span class="add">
 						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=media_location&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
-							<?php echo \Podlove\t( 'Add New Media File' ); ?>
+							<?php echo __( 'Add New Media File', 'podlove' ); ?>
 						</a>
 					</span>
 					<?php endif; ?>
@@ -448,11 +448,11 @@ class Show {
 			<tr>
 				<td colspan="2">
 					<?php if ( $show->is_new() ): ?>
-						<span><?php echo \Podlove\t( 'After you have saved the show, you can add feeds for it here.' ); ?></span>
+						<span><?php echo __( 'After you have saved the show, you can add feeds for it here.', 'podlove' ); ?></span>
 					<?php else: ?>
 					<span class="add">
 						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=create&amp;subject=feed&amp;show=<?php echo $show->id; ?>" style="float: left" class="button-primary add">
-							<?php echo \Podlove\t( 'Add New Feed' ); ?>
+							<?php echo __( 'Add New Feed', 'podlove' ); ?>
 						</a>
 					</span>
 					<?php endif; ?>
@@ -470,14 +470,14 @@ class Show {
 
 		$formats = array(
 			'audio' => array(
-				'mp3' => \Podlove\t( 'MP3 Audio' ),
-				'mp4' => \Podlove\t( 'MP4 Audio' ),
-				'ogg' => \Podlove\t( 'OGG Audio' )
+				'mp3' => __( 'MP3 Audio', 'podlove' ),
+				'mp4' => __( 'MP4 Audio', 'podlove' ),
+				'ogg' => __( 'OGG Audio', 'podlove' )
 			),
 			'video' => array(
-				'mp4'  => \Podlove\t( 'MP4 Video' ),
-				'ogg'  => \Podlove\t( 'OGG Video' ),
-				'webm' => \Podlove\t( 'Webm Video' ),
+				'mp4'  => __( 'MP4 Video', 'podlove' ),
+				'ogg'  => __( 'OGG Video', 'podlove' ),
+				'webm' => __( 'Webm Video', 'podlove' ),
 			)
 		);
 
@@ -490,7 +490,7 @@ class Show {
 		?>
 		<a name="webplayer_settings"></a>
 
-		<?php echo \Podlove\t( 'Webplayers are able to provide various media formats depending on context. Try to provide as many as possible.' ); ?>
+		<?php echo __( 'Webplayers are able to provide various media formats depending on context. Try to provide as many as possible.', 'podlove' ); ?>
 
 		<table style="width: 100%">
 			<?php foreach ( $formats as $format => $extensions ): ?>
@@ -507,7 +507,7 @@ class Show {
 						<td>
 							<div>
 								<select name="<?php echo $name; ?>" id="<?php echo $id; ?>">
-									<option value="0" <?php selected( 0, $value ); ?> ><?php echo \Podlove\t( 'Unused' ); ?></option>
+									<option value="0" <?php selected( 0, $value ); ?> ><?php echo __( 'Unused', 'podlove' ); ?></option>
 									<?php foreach ($media_locations as $media_location): ?>
 										<?php if ( $media_location->media_format() ): ?>
 											<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->title ?></option>
@@ -557,26 +557,26 @@ class Show {
 					$media_location = $media_location_form->object;
 
 					$f->select( 'media_format_id', array(
-						'label'       => \Podlove\t( 'File Format' ),
-						'description' => \Podlove\t( '' ),
+						'label'       => __( 'File Format', 'podlove' ),
+						'description' => __( '', 'podlove' ),
 						'options'     => $format_optionlist
 					) );
 
 					$f->string( 'title', array(
-						'label'       => \Podlove\t( 'Title' ),
-						'description' => \Podlove\t( 'Description to identify the media file.' ),
+						'label'       => __( 'Title', 'podlove' ),
+						'description' => __( 'Description to identify the media file.', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' )
 					) );
 
 					$f->string( 'suffix', array(
-						'label'       => \Podlove\t( 'Suffix' ),
-						'description' => \Podlove\t( 'Is appended to the media file name.' ),
+						'label'       => __( 'Suffix', 'podlove' ),
+						'description' => __( 'Is appended to the media file name.', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' )
 					) );
 
 					$f->string( 'url_template', array(
-						'label'       => \Podlove\t( 'URL Template' ),
-						'description' => sprintf( \Podlove\t( 'Preview: %s Read %sdocumentation%s for help.' ), '<span class="url_template_preview"></span><br/>', '<a href="#" target="_blank">', '</a>' ),
+						'label'       => __( 'URL Template', 'podlove' ),
+						'description' => sprintf( __( 'Preview: %s Read %sdocumentation%s for help.' ), '<span class="url_template_preview"></span><br/>', '<a href="#" target="_blank">', '</a>', 'podlove' ),
 						'html' => array( 'class' => 'large-text' )
 					) );
 
@@ -586,7 +586,7 @@ class Show {
 					<td colspan="2">
 						<span class="delete">
 							<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=media_location&amp;show=<?php echo $media_location->show()->id; ?>&amp;media_location=<?php echo $media_location->id; ?>" style="float: right" class="button-secondary delete">
-								<?php echo \Podlove\t( 'Delete Media File' ); ?>
+								<?php echo __( 'Delete Media File', 'podlove' ); ?>
 							</a>
 						</span>
 					</td>
@@ -617,48 +617,48 @@ class Show {
 				}	
 
 				$feed_wrapper->string( 'name', array(
-					'label'       => \Podlove\t( 'Internal Name' ),
-					'description' => \Podlove\t( 'This is how this feed is presented to you within WordPress.' ),
+					'label'       => __( 'Internal Name', 'podlove' ),
+					'description' => __( 'This is how this feed is presented to you within WordPress.', 'podlove' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
 
 				$feed_wrapper->checkbox( 'discoverable', array(
-					'label'       => \Podlove\t( 'Discoverable?' ),
-					'description' => \Podlove\t( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.' )
+					'label'       => __( 'Discoverable?', 'podlove' ),
+					'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' )
 				) );
 
 				$feed_wrapper->string( 'title', array(
-					'label'       => \Podlove\t( 'Feed Title' ),
-					'description' => \Podlove\t( 'This is how this feed is presented to users of podcast clients.' ),
+					'label'       => __( 'Feed Title', 'podlove' ),
+					'description' => __( 'This is how this feed is presented to users of podcast clients.', 'podlove' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				$feed_wrapper->string( 'slug', array(
-					'label'       => \Podlove\t( 'Slug' ),
-					'description' => ( $feed ) ? sprintf( \Podlove\t( 'Feed URL: %s' ), $feed->get_subscribe_url() ) : '',
+					'label'       => __( 'Slug', 'podlove' ),
+					'description' => ( $feed ) ? sprintf( __( 'Feed URL: %s', 'podlove' ), $feed->get_subscribe_url() ) : '',
 					'html' => array( 'class' => 'regular-text' )
 				) );
 
 				$feed_wrapper->radio( 'format', array(
-					'label'   => \Podlove\t( 'Format' ),
+					'label'   => __( 'Format', 'podlove' ),
 					'options' => array( 'atom' => 'Atom', 'rss' => 'RSS' )
 				) );
 							
 				$feed_wrapper->select( 'media_location_id', array(
-					'label'       => \Podlove\t( 'Media File' ),
-					'description' => \Podlove\t( 'Choose the file location for this feed.' ),
+					'label'       => __( 'Media File', 'podlove' ),
+					'description' => __( 'Choose the file location for this feed.', 'podlove' ),
 					'options'     => $locations
 				) );
 				
 				$feed_wrapper->string( 'itunes_feed_id', array(
-					'label'       => \Podlove\t( 'iTunes Feed ID' ),
-					'description' => \Podlove\t( 'Is used to generate a link to the iTunes directory.' ),
+					'label'       => __( 'iTunes Feed ID', 'podlove' ),
+					'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				$feed_wrapper->string( 'language', array(
-					'label'       => \Podlove\t( 'Language' ),
-					'description' => \Podlove\t( '' ),
+					'label'       => __( 'Language', 'podlove' ),
+					'description' => __( '', 'podlove' ),
 					'default'     => get_bloginfo( 'language' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
@@ -666,25 +666,25 @@ class Show {
 				// todo: select box with localized language names
 				// todo: add PING url; see feedburner doc
 				$feed_wrapper->string( 'redirect_url', array(
-					'label'       => \Podlove\t( 'Redirect Url' ),
-					'description' => \Podlove\t( 'e.g. Feedburner URL' ),
+					'label'       => __( 'Redirect Url', 'podlove' ),
+					'description' => __( 'e.g. Feedburner URL', 'podlove' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
 				
 				$feed_wrapper->checkbox( 'enable', array(
-					'label'       => \Podlove\t( 'Enable feed?' ),
-					'description' => \Podlove\t( 'Allow this feed to appear in podcast directories.' )
+					'label'       => __( 'Enable feed?', 'podlove' ),
+					'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove' )
 				) );
 				
 				$feed_wrapper->checkbox( 'show_description', array(
-					'label'       => \Podlove\t( 'Include Description?' ),
-					'description' => \Podlove\t( 'You may want to hide the episode descriptions to reduce the feed file size.' )
+					'label'       => __( 'Include Description?', 'podlove' ),
+					'description' => __( 'You may want to hide the episode descriptions to reduce the feed file size.', 'podlove' )
 				) );
 				
 				// todo include summary?
 				$feed_wrapper->string( 'limit_items', array(
-					'label'       => \Podlove\t( 'Limit Items' ),
-					'description' => \Podlove\t( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.' ),
+					'label'       => __( 'Limit Items', 'podlove' ),
+					'description' => __( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.', 'podlove' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
 				
@@ -695,7 +695,7 @@ class Show {
 				<td colspan="2">
 					<span class="delete">
 						<a href="?page=<?php echo $_REQUEST[ 'page' ]; ?>&amp;action=delete&amp;subject=feed&amp;show=<?php echo $feed->show()->id; ?>&amp;feed=<?php echo $feed->id; ?>" style="float: right" class="button-secondary delete">
-							<?php echo \Podlove\t( 'Delete Feed' ); ?>
+							<?php echo __( 'Delete Feed', 'podlove' ); ?>
 						</a>
 					</span>
 				</td>

@@ -15,30 +15,30 @@ class Podcast_Post_Type {
 
 		$this->form_data = array(
 			'active' => array(
-				'label'       => \Podlove\t( 'Post Episode to Show' ), // todo: hide/show rest of the form
+				'label'       => __( 'Post Episode to Show', 'podlove' ), // todo: hide/show rest of the form
 				'description' => '',
 				'type'     => 'checkbox',
 				'default'  => true
 			),
 			// todo: add subtitle; but as extra metabox
 			'slug' => array(
-				'label'       => \Podlove\t( 'Episode Media File Slug' ),
+				'label'       => __( 'Episode Media File Slug', 'podlove' ),
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text' )
 			),
 			'duration' => array(
-				'label'       => \Podlove\t( 'Duration' ),
+				'label'       => __( 'Duration', 'podlove' ),
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text' )
 			),
 			'cover_art' => array(
-				'label'       => \Podlove\t( 'Episode Cover Art URL' ),
-				'description' => \Podlove\t( 'JPEG or PNG. At least 1400 x 1400 pixels.' ),
+				'label'       => __( 'Episode Cover Art URL', 'podlove' ),
+				'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
 				'html'        => array( 'class' => 'regular-text' )
 			),
 			'chapters' => array(
-				'label'       => \Podlove\t( 'Chapter Marks' ),
-				'description' => \Podlove\t( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.' ),
+				'label'       => __( 'Chapter Marks', 'podlove' ),
+				'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
 				'type'        => 'textarea',
 				'html'        => array(
 					'class'       => 'large-text code',
@@ -46,27 +46,27 @@ class Podcast_Post_Type {
 				)
 			),
 			'enable' => array(
-				'label'       => \Podlove\t( 'Enable?' ),
-				'description' => \Podlove\t( 'Allow this episode to appear in podcast directories.' ),
+				'label'       => __( 'Enable?', 'podlove' ),
+				'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
 				'type'        => 'checkbox',
 				'default'     => true
 			),
 		);
 		
 		$labels = array(
-			'name'               => \Podlove\t( 'Episodes' ),
-			'singular_name'      => \Podlove\t( 'Episode' ),
-			'add_new'            => \Podlove\t( 'Add New' ),
-			'add_new_item'       => \Podlove\t( 'Add New Episode' ),
-			'edit_item'          => \Podlove\t( 'Edit Episode' ),
-			'new_item'           => \Podlove\t( 'New Episode' ),
-			'all_items'          => \Podlove\t( 'All Episodes' ),
-			'view_item'          => \Podlove\t( 'View Episode' ),
-			'search_items'       => \Podlove\t( 'Search Episodes' ),
-			'not_found'          => \Podlove\t( 'No episodes found' ),
-			'not_found_in_trash' => \Podlove\t( 'No episodes found in Trash' ),
+			'name'               => __( 'Episodes', 'podlove' ),
+			'singular_name'      => __( 'Episode', 'podlove' ),
+			'add_new'            => __( 'Add New', 'podlove' ),
+			'add_new_item'       => __( 'Add New Episode', 'podlove' ),
+			'edit_item'          => __( 'Edit Episode', 'podlove' ),
+			'new_item'           => __( 'New Episode', 'podlove' ),
+			'all_items'          => __( 'All Episodes', 'podlove' ),
+			'view_item'          => __( 'View Episode', 'podlove' ),
+			'search_items'       => __( 'Search Episodes', 'podlove' ),
+			'not_found'          => __( 'No episodes found', 'podlove' ),
+			'not_found_in_trash' => __( 'No episodes found in Trash', 'podlove' ),
 			'parent_item_colon'  => '',
-			'menu_name'          => \Podlove\t( 'Episodes' ),
+			'menu_name'          => __( 'Episodes', 'podlove' ),
 		);
 		
 		$args = array(
@@ -154,8 +154,8 @@ class Podcast_Post_Type {
 		// rename first menu entry to "Dashboard"
 		$dashboard_page_hook = add_submenu_page(
 			/* $parent_slug*/ self::SETTINGS_PAGE_HANDLE,
-			/* $page_title */ \Podlove\t( 'Dashboard' ),
-			/* $menu_title */ \Podlove\t( 'Dashboard' ),
+			/* $page_title */ __( 'Dashboard', 'podlove' ),
+			/* $menu_title */ __( 'Dashboard', 'podlove' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ self::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array( $this, 'settings_page' )
@@ -187,15 +187,15 @@ class Podcast_Post_Type {
 	}
 
 	public function settings_page() {
-		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', \Podlove\t( 'About' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );		
-		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_validation', \Podlove\t( 'Validate Podcast Files' ), array( $this, 'validate_podcast_files' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
+		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_about', __( 'About', 'podlove' ), array( $this, 'about_meta' ), self::SETTINGS_PAGE_HANDLE, 'side' );		
+		add_meta_box( self::SETTINGS_PAGE_HANDLE . '_validation', __( 'Validate Podcast Files', 'podlove' ), array( $this, 'validate_podcast_files' ), self::SETTINGS_PAGE_HANDLE, 'normal' );
 
 		do_action( 'podlove_dashboard_meta_boxes' );
 
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'options-general' ); ?>
-			<h2><?php echo \Podlove\t( 'Podlove Dashboard' ); ?></h2>
+			<h2><?php echo __( 'Podlove Dashboard', 'podlove' ); ?></h2>
 
 			<div id="poststuff" class="metabox-holder has-right-sidebar">
 				
@@ -253,7 +253,7 @@ class Podcast_Post_Type {
 
 		?>
 		<a href="#" id="validate_everything">
-			<?php echo \Podlove\t( 'Validate Everything' ); ?>
+			<?php echo __( 'Validate Everything', 'podlove' ); ?>
 		</a>
 		<?php
 
@@ -268,13 +268,13 @@ class Podcast_Post_Type {
 						<strong><?php echo $release->slug; ?></strong>
 					</span>
 					<span class="duration">
-						<?php echo sprintf( \Podlove\t( 'Duration: %s' ), $release->duration ); ?>
+						<?php echo sprintf( __( 'Duration: %s', 'podlove' ), $release->duration ); ?>
 					</span>
 					<span class="chapters">
-						<?php echo sprintf( \Podlove\t( 'Chapters: %s' ), strlen( $release->chapters ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( '<span style="color:maroon">empty</span>' ) ); ?>
+						<?php echo sprintf( __( 'Chapters: %s' ), strlen( $release->chapters ) > 0 ? __( 'existing', 'podlove' ) : __( '<span style="color:maroon">empty</span>', 'podlove' ) ); ?>
 					</span>
 					<span class="coverart">
-						<?php echo sprintf( \Podlove\t( 'Cover Art: %s' ), strlen( $release->cover_art ) > 0 ? \Podlove\t( 'existing' ) : \Podlove\t( '<span style="color:maroon">empty</span>' ) ); ?>
+						<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $release->cover_art ) > 0 ? __( 'existing', 'podlove' ) : __( '<span style="color:maroon">empty</span>', 'podlove' ) ); ?>
 					</span>
 					<div class="media_files">
 						<?php $media_files = $release->media_files(); ?>
@@ -282,7 +282,7 @@ class Podcast_Post_Type {
 							<div class="file" data-id="<?php echo $media_file->id; ?>">
 								<span class="status">
 									<?php if ( $media_file->size <= 0 ): ?>
-										<?php echo \Podlove\t( "<span style='color:red'>filesize missing</span>" ); ?>
+										<?php echo __( "<span style='color:red'>filesize missing</span>", 'podlove' ); ?>
 									<?php endif ?>
 								</span>
 								<span class="title"><?php echo $media_file->media_location()->title() ?></span>
@@ -334,7 +334,7 @@ class Podcast_Post_Type {
 		foreach ( $shows as $show ) {
 			add_meta_box(
 				/* $id            */ 'podlove_show_' . $show->id,
-				/* $title         */ \Podlove\t( 'Show: ' ) . $show->name,
+				/* $title         */ __( 'Show: ', 'podlove' ) . $show->name,
 				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
 				/* $page          */ 'podcast',
 				/* $context       */ 'advanced',
@@ -367,7 +367,7 @@ class Podcast_Post_Type {
 		}
 
 		$media_locations_form = array(
-			'label'       => \Podlove\t( 'Media Files' ),
+			'label'       => __( 'Media Files', 'podlove' ),
 			'description' => '',
 			'type'    => 'multiselect',
 			'options' => $location_options,
@@ -382,9 +382,9 @@ class Podcast_Post_Type {
 		);
 
 		if ( empty( $location_options ) ) {
-			$media_locations_form[ 'description' ] = sprintf( '<span style="color: red">%s</span>', \Podlove\t( 'You need to configure feeds for this show. No feeds, no fun.' ) )
+			$media_locations_form[ 'description' ] = sprintf( '<span style="color: red">%s</span>', __( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' ) )
 			                                       . ' '
-			                                       . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', \Podlove\t( 'Edit this show' ) );
+			                                       . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', __( 'Edit this show', 'podlove' ) );
 		}
 			
 		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
@@ -412,8 +412,8 @@ class Podcast_Post_Type {
 
 	public function noshow_admin_notice() {
 		echo '<div class="error"><p>';
-		echo \Podlove\t( 'Currently You don\'t have any Shows configured. You need to configure at least one Show to be able to publish an Episode.');
-		echo sprintf( ' <a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle' ) . '">%s</a>', \Podlove\t( 'Edit your Shows' ) );
+		echo __( 'Currently You don\'t have any Shows configured. You need to configure at least one Show to be able to publish an Episode.', 'podlove' );
+		echo sprintf( ' <a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle' ) . '">%s</a>', __( 'Edit your Shows', 'podlove' ) );
 		echo '</p></div>';
 	}
 	
