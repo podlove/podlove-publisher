@@ -2,6 +2,11 @@
 
 Work before progress. Feel free to touch but handle with care.
 
+[![Flattr This][2]][1]
+
+  [1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
+  [2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)
+
 ## Wanna help? Cool! Here's how
 
 1. Fork this project
