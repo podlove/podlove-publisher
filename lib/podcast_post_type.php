@@ -39,7 +39,7 @@ class Podcast_Post_Type {
 			'chapters' => array(
 				'label'       => __( 'Chapter Marks', 'podlove' ),
 				'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
-				'type'        => 'textarea',
+				'type'        => 'text',
 				'html'        => array(
 					'class'       => 'large-text code',
 					'placeholder' => '00:00:00.000 Intro'
@@ -372,6 +372,7 @@ class Podcast_Post_Type {
 			'type'    => 'multiselect',
 			'options' => $location_options,
 			'default' => true,
+			'multi_values' => $location_values,
 			'multiselect_callback' => function ( $location_id ) use ( $release, $show ) {
 				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
 				$format   = $location->media_format();
@@ -383,29 +384,43 @@ class Podcast_Post_Type {
 
 		if ( empty( $location_options ) ) {
 			$media_locations_form['description'] = sprintf( '<span style="color: red">%s</span>', __( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' ) )
-			                                       . ' '
-			                                       . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', __( 'Edit this show', 'podlove' ) );
+			                                     . ' '
+			                                     . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', __( 'Edit this show', 'podlove' ) );
 		}
 			
 		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
 		?>
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
 		<table class="form-table">
-			<?php foreach ( $this->form_data as $key => $value ): ?>
-				<?php 
-				// adjust chapter textfield height to its content
-				// TODO: move into form toolkit
-				if ( $key === 'chapters' ) {
-					$rows = count( explode( "\n", $release->chapters ) );
-					if ( $rows < 2 ) {
-						$rows = 2;
+			<?php 
+			$form_data = $this->form_data;
+
+			$form_data['media_locations'] = $media_locations_form;
+
+			\Podlove\Form\build_for( $release, array( 'context' => '_podlove_meta[' . $show->id . ']', 'submit_button' => false ), function ( $form ) use ( $form_data ) {
+				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+				$release = $form->object;
+
+				foreach ( $form_data as $key => $value ) {
+
+					// adjust chapter textfield height to its content
+					// TODO: move into form toolkit
+					if ( $key === 'chapters' ) {
+						$rows = count( explode( "\n", $release->chapters ) );
+						if ( $rows < 2 ) {
+							$rows = 2;
+						}
+						$value['html']['rows'] = $rows;
 					}
-					$value['html'][ 'rows' ] = $rows;
+
+					call_user_func_array(
+						array( $wrapper, isset( $value['type'] ) ? $value['type'] : 'string' ),
+						array( $key, $value )
+					);
 				}
-				?>
-				<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $release->{$key}, $key, $value ); ?>
-			<?php endforeach; ?>
-			<?php \Podlove\Form\input( '_podlove_meta[' . $show->id . ']', $location_values, 'media_locations', $media_locations_form ); ?>
+
+			} );
+			?>
 		</table>
 		<?php
 	}
