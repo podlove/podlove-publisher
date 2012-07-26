@@ -47,7 +47,7 @@ class Feed_List_Table extends \WP_List_Table {
 		};
 
 		$actions = array(
-			'edit' => $link( \Podlove\t( 'Edit' ) )
+			'edit' => $link( __( 'Edit', 'podlove' ) )
 		);
 	
 		return sprintf( '%1$s %2$s',
@@ -65,8 +65,8 @@ class Feed_List_Table extends \WP_List_Table {
 		if ( ! $feed->show() ) {
 			return sprintf(
 				'<strong>%s:</strong> %s',
-				\Podlove\t( 'Notice' ),
-				\Podlove\t( 'This feed belongs to no show.' )
+				__( 'Notice', 'podlove' ),
+				__( 'This feed belongs to no show.', 'podlove' )
 			);
 		}
 
@@ -80,8 +80,8 @@ class Feed_List_Table extends \WP_List_Table {
 		if ( ! $show ) {
 			return sprintf(
 				'<strong>%s:</strong> %s',
-				\Podlove\t( 'Notice' ),
-				\Podlove\t( 'This feed belongs to no show.' )
+				__( 'Notice', 'podlove' ),
+				__( 'This feed belongs to no show.', 'podlove' )
 			);
 		}
 
@@ -95,7 +95,7 @@ class Feed_List_Table extends \WP_List_Table {
 		};
 
 		$actions = array(
-			'edit' => $link( \Podlove\t( 'Edit' ) )
+			'edit' => $link( __( 'Edit', 'podlove' ) )
 		);
 
 		return sprintf( '%1$s %2$s',

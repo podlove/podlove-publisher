@@ -18,7 +18,7 @@ class Settings {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_general',
-			/* $title 	 */ \Podlove\t( 'General Settings' ),	
+			/* $title 	 */ __( 'General Settings', 'podlove' ),	
 			/* $callback */ function () { /* section head html */ }, 		
 			/* $page	 */ Settings::$pagehook	
 		);
@@ -27,7 +27,7 @@ class Settings {
 			/* $id       */ 'podlove_setting_merge_episodes',
 			/* $title    */ sprintf(
 				'<label for="merge_episodes">%s</label>',
-				\Podlove\t( 'Display episodes on front page together with blog posts' )
+				__( 'Display episodes on front page together with blog posts', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
@@ -40,7 +40,7 @@ class Settings {
 		
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',
-			/* $title 	 */ \Podlove\t( 'Modules' ),	
+			/* $title 	 */ __( 'Modules', 'podlove' ),	
 			/* $callback */ function () { /* section head html */ }, 		
 			/* $page	 */ Settings::$pagehook	
 		);

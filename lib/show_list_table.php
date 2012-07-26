@@ -21,13 +21,13 @@ class Show_List_Table extends \WP_List_Table {
 	function column_name( $show ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&show=%s">' . \Podlove\t( 'Edit' ) . '</a>',
+				'<a href="?page=%s&action=%s&show=%s">' . __( 'Edit', 'podlove' ) . '</a>',
 				$_REQUEST[ 'page' ],
 				'edit',
 				$show->id
 			),
 			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&show=%s">' . \Podlove\t( 'Delete' ) . '</a>',
+				'<a href="?page=%s&action=%s&show=%s">' . __( 'Delete', 'podlove' ) . '</a>',
 				$_REQUEST[ 'page' ],
 				'delete',
 				$show->id
@@ -56,9 +56,9 @@ class Show_List_Table extends \WP_List_Table {
 		foreach ( $feeds as $feed ) {
 			$out .= '<div>';
 			$out .= sprintf( '<strong>%s/%s: </strong>', $show->slug, $feed->slug );
-			$out .= sprintf( '<a href="%s">%s</a>', $feed->get_subscribe_url(), \Podlove\t( 'Public Link' ) );
+			$out .= sprintf( '<a href="%s">%s</a>', $feed->get_subscribe_url(), __( 'Public Link', 'podlove' ) );
 			if ( strlen( $feed->redirect_url ) > 0 ) {
-				$out .= sprintf( ' | <a href="%s?redirect=no">%s</a>', $feed->get_subscribe_url(), \Podlove\t( 'Initial/Internal Feed' ) );
+				$out .= sprintf( ' | <a href="%s?redirect=no">%s</a>', $feed->get_subscribe_url(), __( 'Initial/Internal Feed', 'podlove' ) );
 			}
 			$out .= '</div>';
 		}

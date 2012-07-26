@@ -16,15 +16,15 @@ EOT;
 	public function load() {
 
 		$this->register_option( 'title_template', 'string', array(
-			'label'       => \Podlove\t( 'Title Template' ),
-			'description' => \Podlove\t( 'Placeholders: %show_slug%, %episode_number%, %episode_title%' ),
+			'label'       => __( 'Title Template', 'podlove' ),
+			'description' => __( 'Placeholders: %show_slug%, %episode_number%, %episode_title%', 'podlove' ),
 			'default'     => '%show_slug%%episode_number% %episode_title%',
 			'html'        => array( 'class' => 'regular-text' )
 		) );
 
 		$this->register_option( 'leading_zeros', 'select', array(
-			'label'       => \Podlove\t( 'Number Digits' ),
-			'description' => \Podlove\t( 'Add leading zeroes to episode number. Example: 003 instead of 3.' ),
+			'label'       => __( 'Number Digits', 'podlove' ),
+			'description' => __( 'Add leading zeroes to episode number. Example: 003 instead of 3.', 'podlove' ),
 			'default'     => 3,
 			'options'     => array( 'no' => 'no', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 )
 		) );
