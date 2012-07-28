@@ -40,7 +40,7 @@ EOT;
 			'podlove_module_episode_assistant',
 			$this->get_module_url() . '/js/episode_assistant.js',
 			array( 'jquery', 'jquery-ui-core', 'jquery-ui-button', 'jquery-ui-dialog' ),
-			'1.1' 
+			'1.2' 
 		);
 
 		// see http://www.arashkarimzadeh.com/jquery/7-editable-jquery-plugin.html
@@ -142,7 +142,7 @@ EOT;
 					</p>
 					<p class="post_info result">
 						<strong>Post Title</strong>
-						<span class="post_title" data-template="<?php echo $this->get_module_option( 'title_template', '%show_slug%%number% %episode_title%' ) ?>">Loading ...</span>
+						<span class="post_title" data-template="<?php echo $this->get_module_option( 'title_template', '%show_slug%%episode_number% %episode_title%' ) ?>">Loading ...</span>
 					</p>
 				</div>
 			</p>
