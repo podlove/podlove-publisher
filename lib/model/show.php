@@ -67,6 +67,17 @@ class Show extends Base {
 		return Feed::find_all_by_show_id( $this->id );
 	}
 
+	function feed_by_slug( $feed_slug ) {
+		$feeds = $this->feeds();
+
+		foreach ( $feeds as $feed ) {
+			if ( $feed->slug === $feed_slug )
+				return $feed;
+		}
+
+		return NULL;
+	}
+
 	/**
 	 * Get cover image img tag.
 	 * 
