@@ -69,7 +69,12 @@ class Feed extends Base {
 	 */
 	function post_ids() {
 
-		$media_files = $this->media_location()->media_files();
+		$media_location = $this->media_location();
+
+		if ( ! $media_location )
+			return array();
+
+		$media_files = $media_location->media_files();
 
 		if ( ! count( $media_files ) )
 			return array();
