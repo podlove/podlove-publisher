@@ -13,7 +13,7 @@ class RSS {
 
 		// @fixme either slugs are unique or we need to check for id or something
 		$show           = \Podlove\Model\Show::find_one_by_slug( $show_slug );
-		$feed           = \Podlove\Model\Feed::find_one_by_slug( $feed_slug );
+		$feed           = $show->feed_by_slug( $feed_slug );
 		$media_location = $feed->media_location();
 		$format         = $media_location->media_format();
 
