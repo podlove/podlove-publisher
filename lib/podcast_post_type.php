@@ -397,7 +397,7 @@ class Podcast_Post_Type {
 
 			$form_data['media_locations'] = $media_locations_form;
 
-			\Podlove\Form\build_for( $release, array( 'context' => '_podlove_meta[' . $show->id . ']', 'submit_button' => false ), function ( $form ) use ( $form_data ) {
+			\Podlove\Form\build_for( $release, array( 'context' => '_podlove_meta[' . $show->id . '][' . $release->id . ']', 'submit_button' => false, 'form' => false ), function ( $form ) use ( $form_data ) {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				$release = $form->object;
 
@@ -458,18 +458,28 @@ class Podcast_Post_Type {
 		// the difference between "new" and "unchecked", we populate all unset
 		// fields with false manually.
 		$media_locations = array_map( function( $f ) { return $f->id; }, \Podlove\Model\MediaFormat::all() );
-		foreach ( $_POST['_podlove_meta'] as $show_id => $_ ) {
-			foreach ( $this->form_data as $key => $value ) {
-				if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $key ] ) )
-					$_POST['_podlove_meta'][ $show_id ][ $key ] = false;
-				elseif ( $_POST['_podlove_meta'][ $show_id ][ $key ] === 'on' )
-					$_POST['_podlove_meta'][ $show_id ][ $key ] = true;
+		foreach ( $_POST['_podlove_meta'] as $show_id => $show_data ) {
+
+			if ( ! isset( $_POST['_podlove_meta'][ $show_id ] ) ) {
+				$_POST['_podlove_meta'][ $show_id ] = array();
 			}
-			foreach ( $media_locations as $media_location_id ) {
-				if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ 'media_locations' ][ $media_location_id ] ) ) {
-					$_POST['_podlove_meta'][ $show_id ][ 'media_locations' ][ $media_location_id ] = false;
-				} elseif ( $_POST['_podlove_meta'][ $show_id ][ 'media_locations' ][ $media_location_id ] === 'on' ) {
-					$_POST['_podlove_meta'][ $show_id ][ 'media_locations' ][ $media_location_id ] = true;
+
+			foreach ( $show_data as $release_id => $_ ) {
+
+				if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $release_id ] ) ) {
+					$_POST['_podlove_meta'][ $show_id ][ $release_id ] = array();
+				}
+
+				if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ] ) ) {
+					$_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ] = array();
+				}
+
+				foreach ( $media_locations as $media_location_id ) {
+					if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] ) ) {
+						$_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] = false;
+					} elseif ( $_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] === 'on' ) {
+						$_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] = true;
+					}
 				}
 			}
 		}
@@ -477,35 +487,49 @@ class Podcast_Post_Type {
 		// save changes
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
-		foreach ( $_POST['_podlove_meta'] as $show_id => $release_values ) {
-			$show    = \Podlove\Model\Show::find_by_id( $show_id );
-			$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show_id );
+		foreach ( $_POST['_podlove_meta'] as $show_id => $show_values ) {
+			foreach ( $show_values as $release_id => $release_values ) {
+				$show    = \Podlove\Model\Show::find_by_id( $show_id );
+				$release = \Podlove\Model\Release::find_by_id( $release_id );
 
-			// save generic release fields
-			foreach ( $this->form_data as $release_column => $_ )
-				$release->{$release_column} = $release_values[ $release_column ];
-			
-			$release->save();
+				// save generic release fields
+				foreach ( $this->form_data as $release_column => $_ ) {
+					if ( isset( $release_values[ $release_column ] ) ) {
+						$release->{$release_column} = $release_values[ $release_column ];
+					}
+				}
 
-			// copy chapter info into custom meta for webplayer compatibility
-			update_post_meta( $post_id, sprintf( '_podlove_chapters_%s', $show->slug ), $release->chapters );
+				if ( isset( $_POST['checkboxes'] ) && is_array( $_POST['checkboxes'] ) ) {
+					foreach ( $_POST['checkboxes'] as $checkbox_field_name ) {
+						if ( isset( $_POST['_podlove_meta'][ $show_id ][ $release->id ][ $checkbox_field_name ] ) && $_POST['_podlove_meta'][ $show_id ][ $release->id ][ $checkbox_field_name ] === 'on' ) {
+							$release->{$checkbox_field_name} = 1;
+						} else {
+							$release->{$checkbox_field_name} = 0;
+						}
+					}
+				}
 
-			// save files/formats
-			foreach ( $release_values['media_locations'] as $media_location_id => $media_location_value ) {
-				$file = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $media_location_id );
+				$release->save();
 
-				if ( $file === NULL && $media_location_value ) {
-					// create file
-					$file = new \Podlove\Model\MediaFile();
-					$file->release_id = $release->id;
-					$file->media_location_id = $media_location_id;
-					$file->save();
-				} elseif ( $file !== NULL && ! $media_location_value ) {
-					// delete file
-					$file->delete();
+				// copy chapter info into custom meta for webplayer compatibility
+				update_post_meta( $post_id, sprintf( '_podlove_chapters_%s', $show->slug ), $release->chapters );
+
+				// save files/formats
+				foreach ( $release_values['media_locations'] as $media_location_id => $media_location_value ) {
+					$file = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $media_location_id );
+
+					if ( $file === NULL && $media_location_value ) {
+						// create file
+						$file = new \Podlove\Model\MediaFile();
+						$file->release_id = $release->id;
+						$file->media_location_id = $media_location_id;
+						$file->save();
+					} elseif ( $file !== NULL && ! $media_location_value ) {
+						// delete file
+						$file->delete();
+					}
 				}
 			}
-
 		}
 	}
 }

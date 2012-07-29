@@ -29,6 +29,7 @@ namespace Podlove\Form;
  * 		- method        get, post
  * 		- hidden        dictionary with hidden values
  * 		- submit_button set to false to hide the submit button
+ * 		- form          set to false to skip <form> wrapper
  * @param  function $callback inner form
  * @return void
  * 
@@ -51,23 +52,33 @@ function build_for( $object, $args, $callback ) {
 	$method = isset( $args['method'] ) ? $args['method'] : 'post';
 
 	// determine context
-	$context = isset( $args['context'] ) ? $args['context'] : ''; 
+	$context = isset( $args['context'] ) ? $args['context'] : '';
+
+	// check if <form> should be printed
+	$print_form = ! isset( $args['form'] ) || $args['form'] === true;
+
 	?>
-	<form action="<?php echo $url; ?>" method="<?php echo $method; ?>">
+	<?php if ( $print_form ): ?>
+		<form action="<?php echo $url; ?>" method="<?php echo $method; ?>">
+	<?php endif ?>
 
-		<?php if ( isset( $args['hidden'] ) && $args['hidden'] ): ?>
-			<?php foreach ( $args['hidden'] as $name => $value ): ?>
-				<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />		
-			<?php endforeach ?>
-		<?php endif ?>
+	<?php if ( isset( $args['hidden'] ) && $args['hidden'] ): ?>
+		<?php foreach ( $args['hidden'] as $name => $value ): ?>
+			<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />		
+		<?php endforeach ?>
+	<?php endif ?>
 
-		<table class="form-table">
-			<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
-		</table>
-		<?php if ( ! isset( $args['submit_button'] ) || $args['submit_button'] === true ): ?>
-			<?php submit_button(); ?>
-		<?php endif ?>
-	</form>
+	<table class="form-table">
+		<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
+	</table>
+	<?php if ( ! isset( $args['submit_button'] ) || $args['submit_button'] === true ): ?>
+		<?php submit_button(); ?>
+	<?php endif ?>
+
+	<?php if ( $print_form ): ?>
+		</form>
+	<?php endif ?>
+	
 	<?php
 }
 
