@@ -18,8 +18,8 @@ abstract class Base {
 
 		 $calledClass = get_called_class();
 
-		 if ( ! isset($instances[$calledClass] ) )
-		     $instances[$calledClass] = new $calledClass();
+		 if ( ! isset($instances[ $calledClass ] ) )
+		     $instances[ $calledClass ] = new $calledClass();
 
 		 return $instances[$calledClass];
 	}
@@ -46,7 +46,7 @@ abstract class Base {
 
 		if ( $dhandle = opendir( $modules_dir ) ) {
 			while (false !== ( $fname = readdir( $dhandle ) ) ) {
-				if ( ( $fname != '.') && ( $fname != '..' ) && is_dir( $modules_dir . $fname ) ) {
+				if ( ( $fname != '.' ) && ( $fname != '..' ) && is_dir( $modules_dir . $fname ) ) {
 					$modules[] = $fname;
 				}
 			}
