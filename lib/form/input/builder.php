@@ -28,7 +28,16 @@ class Builder {
 	}
 
 	public function get_field_id() {
-		return ( $this->context ) ? "{$this->context}_{$this->object_key}" : $this->object_key;
+		if ( $this->context ) {
+			$id = "{$this->context}_{$this->object_key}";
+		} else {
+			$id = $this->object_key;
+		}
+		
+		$id = str_replace( array( '[', ']' ), '_', $id );
+		$id = str_replace( '__', '_', $id );
+
+		return $id;
 	}
 
 	public function get_extra_html_attributes() {
@@ -60,7 +69,7 @@ class Builder {
 		if ( ! isset( $arguments['type'] ) || $arguments['type'] !== 'multiselect' ) {
 			$this->field_value = $this->object->{$object_key};
 
-			if ( ! $this->field_value && isset( $arguments['default'] ) && $arguments['default'] ) {
+			if ( $this->field_value === NULL && isset( $arguments['default'] ) && $arguments['default'] ) {
 				$this->field_value = $arguments['default'];
 			}
 		}
@@ -90,7 +99,7 @@ class Builder {
 	public function checkbox( $object_key, $arguments ) {
 		$this->build_input_values( $object_key, $arguments );
 		?>
-		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( $this->field_value ): ?>checked="checked"<?php endif; ?> <?php echo $this->html_attributes; ?>>
+		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( in_array( $this->field_value, array( true, 1, 'on' ) ) ): ?>checked="checked"<?php endif; ?> <?php echo $this->html_attributes; ?>>
 		<input type="hidden" name="checkboxes[]" value="<?php echo $this->object_key ?>">
 		<?php
 	}
