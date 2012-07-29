@@ -115,6 +115,9 @@ function override_feed_entry( $hook, $show, $feed, $format ) {
 		$location = \Podlove\Model\MediaLocation::find_by_show_id_and_media_format_id( $show->id, $format->id );
 		$file     = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $location->id );
 
+		if ( ! $file )
+			return;
+
 		$enclosure_duration  = $release->duration;
 		$enclosure_file_size = $file->size;
 		$file_slug           = $release->slug;
