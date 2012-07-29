@@ -42,7 +42,10 @@ add_action( 'wp', function () {
 	if ( ! $feed )
 		return;
 
-	if ( strlen( $feed->redirect_url ) > 0 && ( ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no" ) ) {
+	$is_feedburner_bot = preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
+	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
+
+	if ( strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot ) {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, 302 );
 		exit;
 	} else {
