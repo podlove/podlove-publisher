@@ -22,8 +22,10 @@ abstract class Wrapper {
 	 */
 	public function __call( $name, $arguments = array() ) {
 		$object_key   = $arguments[ 0 ];
-		$field_name   = $this->builder->get_field_name( $object_key );
-		$field_id     = $this->builder->get_field_id( $object_key );
+		$this->builder->object_key = $object_key;
+		
+		$field_name   = $this->builder->get_field_name();
+		$field_id     = $this->builder->get_field_id();
 		$field_values = ( isset( $arguments[ 1 ] ) ) ? $arguments[ 1 ] : array();
 		$builder      = $this->builder;
 		
