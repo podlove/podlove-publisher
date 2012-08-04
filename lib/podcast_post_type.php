@@ -413,10 +413,8 @@ class Podcast_Post_Type {
 						$value['html']['rows'] = $rows;
 					}
 
-					call_user_func_array(
-						array( $wrapper, isset( $value['type'] ) ? $value['type'] : 'string' ),
-						array( $key, $value )
-					);
+					$input_type = isset( $value['type'] ) ? $value['type'] : 'string';
+					$wrapper->$input_type( $key, $value );
 				}
 
 			} );
