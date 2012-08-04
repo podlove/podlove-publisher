@@ -16,15 +16,15 @@ function human_readable_size(size) {
 jQuery(function($) {
 
 	$("#podlove_settings_handle_validation").each(function() {
-		DashboardValidation.init($(this));
+		PODLOVE.DashboardValidation($(this));
 	});
 
-	$(".postbox[id*=podlove_show]").each(function() {
-		Episode.init($(this));
+	$(".postbox[id*='podlove_show']").each(function() {
+		PODLOVE.Episode($(this));
 	});
 
 	$("#podlove_media_locations").each(function() {
-		MediaLocationSettings.init($(this));
+		PODLOVE.MediaLocationSettings($(this));
 	});
 	
 });

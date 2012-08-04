@@ -1,47 +1,46 @@
+var PODLOVE = PODLOVE || {};
+
 /**
  * Handles all logic in Dashboard Validation box.
  */
-var DashboardValidation = (function($) {
+(function($) {
+	PODLOVE.DashboardValidation = function(container) {
+		// private
+		var o = {};
 
-	// private
-	var o = {};
+		function enable_validation() {
+			$("#validate_everything", container).click(function(e) {
+				e.preventDefault();
 
-	function enable_validation() {
-		$("#validate_everything").click(function(e) {
-			e.preventDefault();
+				$(".release .file").each(function() {
+					var file_id = $(this).data('id');
 
-			$(".release .file").each(function() {
-				var file_id = $(this).data('id');
+					var data = {
+						action: 'podlove-validate-file',
+						file_id: file_id
+					};
 
-				var data = {
-					action: 'podlove-validate-file',
-					file_id: file_id
-				};
-
-				$.ajax({
-					url: ajaxurl,
-					data: data,
-					dataType: 'json',
-					success: function(result) {
-						$file = $('.file[data-id="' + result.file_id + '"]');
-						if (result.reachable) {
-							$(".status", $file).html("<span style='color:green'>ok</span>");
-						} else {
-							$(".status", $file).html("<span style='color:red'>unreachable</span>");
+					$.ajax({
+						url: ajaxurl,
+						data: data,
+						dataType: 'json',
+						success: function(result) {
+							$file = $('.file[data-id="' + result.file_id + '"]');
+							if (result.reachable) {
+								$(".status", $file).html("<span style='color:green'>ok</span>");
+							} else {
+								$(".status", $file).html("<span style='color:red'>unreachable</span>");
+							}
 						}
-					}
+					});
+
 				});
-
 			});
-		});
-	}
+		}
 
-	// public
-	o.init = function($container) {
-		o.container = $container;
+		// public
 		enable_validation();
-	};
 
-	return o;
+		return o;		
+	}
 }(jQuery));
-
