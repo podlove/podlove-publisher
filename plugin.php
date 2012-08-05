@@ -41,7 +41,7 @@ function activate_for_current_blog() {
 		}
 	}
 
-	$default_modules = array( 'podlove_web_player' );
+	$default_modules = array( 'podlove_web_player', 'episode_assistant', 'open_graph' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
