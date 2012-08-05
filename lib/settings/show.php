@@ -578,7 +578,7 @@ class Show {
 
 					$f->string( 'url_template', array(
 						'label'       => __( 'URL Template', 'podlove' ),
-						'description' => sprintf( __( 'Preview: %s Read %sdocumentation%s for help.' ), '<span class="url_template_preview"></span><br/>', '<a href="#" target="_blank">', '</a>', 'podlove' ),
+						'description' => sprintf( __( 'Preview: %s' ), '<span class="url_template_preview"></span><br/>', 'podlove' ),
 						'html' => array( 'class' => 'large-text' )
 					) );
 
