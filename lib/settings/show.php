@@ -629,11 +629,13 @@ class Show {
 					'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' )
 				) );
 
-				$feed_wrapper->string( 'title', array(
-					'label'       => __( 'Feed Title', 'podlove' ),
-					'description' => __( 'This is how this feed is presented to users of podcast clients.', 'podlove' ),
-					'html' => array( 'class' => 'regular-text' )
-				) );
+				// This was used for feed discovery before, which is now generated.
+				// TODO: Let the user choose: Default or Custom
+				// $feed_wrapper->string( 'title', array(
+				// 	'label'       => __( 'Feed Title', 'podlove' ),
+				// 	'description' => __( 'This is how this feed is presented to users of podcast clients.', 'podlove' ),
+				// 	'html' => array( 'class' => 'regular-text' )
+				// ) );
 				
 				$feed_wrapper->string( 'slug', array(
 					'label'       => __( 'Slug', 'podlove' ),

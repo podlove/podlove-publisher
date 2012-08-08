@@ -33,7 +33,7 @@ class Atom {
 
 		add_action( 'atom_head', function () use ( $show, $feed, $format ) {
 			?>
-			<link rel="self" type="application/atom+xml" title="<?php echo $feed->title ?>" href="<?php echo $feed->get_subscribe_url() ?>" />
+			<link rel="self" type="application/atom+xml" title="<?php echo $feed->title_for_discovery(); ?>" href="<?php echo $feed->get_subscribe_url() ?>" />
 			<?php
 			$feeds = $show->feeds();
 			foreach ( $feeds as $other_feed ) {
@@ -41,7 +41,7 @@ class Atom {
 					continue;
 
 				?>
-				<link rel="alternate" type="application/atom+xml" title="<?php echo $other_feed->title ?>" href="<?php echo $other_feed->get_subscribe_url() ?>" />
+				<link rel="alternate" type="application/atom+xml" title="<?php echo $other_feed->title_for_discovery(); ?>" href="<?php echo $other_feed->get_subscribe_url() ?>" />
 				<?php
 			}
 		}, 9 );
