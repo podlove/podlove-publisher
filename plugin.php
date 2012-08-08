@@ -76,7 +76,7 @@ function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) 
  */
 function activate() {
 	global $wpdb;
-	
+
 	if ( is_multisite() ) {
 		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
             		$current_blog = $wpdb->blogid;
@@ -92,8 +92,21 @@ function activate() {
 	} else {
 		activate_for_current_blog();
 	}
-	
+
+	set_transient( 'podlove_needs_to_flush_rewrite_rules' );
 }
+
+/**
+ * Hackish workaround to flush rewrite rules.
+ *
+ * flush_rewrite_rules() is expensive, so it should only be called once.
+ * However, calling it on activaton doesn't work. So I add a temporary flag
+ * and call it when the flag exists. Not pretty but it does the job.
+ */
+add_action( 'admin_init', function () {
+	if ( delete_transient( 'podlove_needs_to_flush_rewrite_rules' ) )
+		flush_rewrite_rules();
+} );
 
 function deactivate() {
 
