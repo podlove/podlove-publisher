@@ -93,11 +93,13 @@ class Feed extends Base {
 		return array_map( function ( $v ) { return $v->post_id; }, $episodes );
 	}
 
-	/**
-	 * For now, we support just atom.
-	 */
 	public function get_content_type() {
-		return "application/atom+xml";
+
+		if ( $this->format === 'rss' )
+			return 'application/rss+xml';
+		else
+			return "application/atom+xml";	
+
 	}
 
 	public function find_by_show_id_and_media_location_id( $show_id, $media_location_id ) {
