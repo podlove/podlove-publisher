@@ -6,9 +6,6 @@ function init() {
 }
 
 function add_feed_routes() {
-	// FIXME call the following line when appropriate
-	// workaround: Settings > Permalinks > Save
-	// add_action( 'admin_init', 'flush_rewrite_rules' );
 
 	// The following defines a rule that maps URLs like /geostate/oregon to a URL request like ?geostate=oregon
 	add_action( 'generate_rewrite_rules', function ( $wp_rewrite ) {
@@ -23,6 +20,7 @@ function add_feed_routes() {
 		$qv[] = 'feed_slug';
 		return $qv;
 	} );
+
 }
 
 // Hooks:
