@@ -163,7 +163,7 @@ function add_feed_discoverability() {
 
 	foreach ( $feeds as $feed ) {
 		if ( $feed->show() ) {
-			echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
+			echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . esc_attr( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
 		}
 	}
 		

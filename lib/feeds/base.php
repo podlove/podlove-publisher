@@ -10,7 +10,7 @@ function mute_feed_title() {
 
 function override_feed_title( $feed ) {
 	add_filter( 'wp_title_rss', function ( $title ) use ( $feed ) {
-		return apply_filters( 'podlove_feed_title', htmlspecialchars( $feed->title ) );
+		return apply_filters( 'podlove_feed_title', htmlspecialchars( $feed->show()->full_title() ) );
 	} );
 }
 
