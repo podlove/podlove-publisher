@@ -164,7 +164,6 @@ Feed::property( 'name', 'VARCHAR(255)' );
 Feed::property( 'title', 'VARCHAR(255)' );
 Feed::property( 'slug', 'VARCHAR(255)' );
 Feed::property( 'format', 'VARCHAR(255)' ); // atom, rss
-Feed::property( 'language', 'VARCHAR(255)' );
 Feed::property( 'redirect_url', 'VARCHAR(255)' );
 Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );

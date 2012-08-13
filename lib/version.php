@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 6 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 7 );
 
 add_action( 'init', function () {
 	
@@ -104,6 +104,20 @@ function run_migrations_for_version( $version ) {
 				) );
 			}
 			break;
+		case 7:
+			// move language from feed to show
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `language` VARCHAR(255) AFTER `summary`',
+				\Podlove\Model\Show::table_name()
+			);
+			$wpdb->query( $sql );
+
+			$sql = sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `language`',
+				\Podlove\Model\Feed::table_name()
+			);
+			$wpdb->query( $sql );
+		break;	
 
 	}
 
