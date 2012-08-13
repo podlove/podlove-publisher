@@ -356,8 +356,14 @@ class Show {
 				'description' => '<br>'
 				                 . __( 'For placement within the older, text-based browse system, podcast feeds may list up to 3 category/subcategory pairs. (For example, "Music" counts as 1, as does "Business > Careers.") For placement within the newer browse system based on Category links, however, and for placement within the Top Podcasts and Top Episodes lists that appear in the right column of most podcast pages, only the first category listed in the feed is used.' )
 				                 . ' (<a href="http://www.apple.com/itunes/podcasts/specs.html#category" target="_blank">http://www.apple.com/itunes/podcasts/specs.html#category</a>)',
-				'type'     => 'select',
 				'options'  => \Podlove\Itunes\categories()
+			) );
+
+			$wrapper->select( 'language', array(
+				'label'       => __( 'Language', 'podlove' ),
+				'description' => __( '', 'podlove' ),
+				'default'     => get_bloginfo( 'language' ),
+				'options'  => \Podlove\Locale\locales()
 			) );
 
 			$wrapper->select( 'explicit', array(
@@ -659,14 +665,7 @@ class Show {
 					'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ),
 					'html' => array( 'class' => 'regular-text' )
 				) );
-				
-				$feed_wrapper->string( 'language', array(
-					'label'       => __( 'Language', 'podlove' ),
-					'description' => __( '', 'podlove' ),
-					'default'     => get_bloginfo( 'language' ),
-					'html' => array( 'class' => 'regular-text' )
-				) );
-				
+								
 				// todo: select box with localized language names
 				// todo: add PING url; see feedburner doc
 				$feed_wrapper->string( 'redirect_url', array(
