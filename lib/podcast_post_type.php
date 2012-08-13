@@ -397,6 +397,9 @@ class Podcast_Post_Type {
 
 			$form_data['media_locations'] = $media_locations_form;
 
+			if ( ! $show->supports_cover_art )
+				unset( $form_data['cover_art'] );
+
 			\Podlove\Form\build_for( $release, array( 'context' => '_podlove_meta[' . $show->id . '][' . $release->id . ']', 'submit_button' => false, 'form' => false ), function ( $form ) use ( $form_data ) {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				$release = $form->object;

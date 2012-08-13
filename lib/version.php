@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 7 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 8 );
 
 add_action( 'init', function () {
 	
@@ -117,7 +117,14 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\Feed::table_name()
 			);
 			$wpdb->query( $sql );
-		break;	
+			break;	
+		case 8:
+		$sql = sprintf(
+			'ALTER TABLE `%s` ADD COLUMN `supports_cover_art` INT',
+			\Podlove\Model\Show::table_name()
+		);
+		$wpdb->query( $sql );
+			break;
 
 	}
 
