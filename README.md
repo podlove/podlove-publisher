@@ -18,8 +18,8 @@ If you'd like to add a whole feature with UI and stuff, please consider developi
 
 ## Links
 
-- official WordPress plugin site: [wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/](wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/)
-- [podlove.org](podlove.org)
-- FAQ: [eteubert.github.com/podlove](eteubert.github.com/podlove)
+- official WordPress plugin site: [http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/](http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/)
+- [http://podlove.org](http://podlove.org)
+- FAQ: [http://eteubert.github.com/podlove](http://eteubert.github.com/podlove)
 - my (german) podcast on the development of this plugin: [http://www.satoripress.com/podcast/](http://www.satoripress.com/podcast/)
 - Trello board (german): [https://trello.com/board/podlove/4fe02928ef1520ac7924d56a](https://trello.com/board/podlove/4fe02928ef1520ac7924d56a)
