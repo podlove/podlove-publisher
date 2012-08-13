@@ -93,7 +93,7 @@ function activate() {
 		activate_for_current_blog();
 	}
 
-	set_transient( 'podlove_needs_to_flush_rewrite_rules' );
+	set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 }
 
 /**
