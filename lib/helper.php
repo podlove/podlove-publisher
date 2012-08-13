@@ -287,7 +287,7 @@ function locales() {
 		'hu' => "Hungarian",
 		'vi' => "Vietnamese"
 	);
-	ksort( $locales );
+	asort( $locales );
 	return $locales;
 }
 
