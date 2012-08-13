@@ -379,6 +379,11 @@ class Show {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
+			$wrapper->checkbox( 'supports_cover_art', array(
+				'label'       => __( 'Supports Cover Art', 'podlove' ),
+				'description' => __( 'Lets you provide a URL to a cover image for each episode.', 'podlove' )
+			) );
+
 			$media_locations = \Podlove\Model\MediaLocation::find_all_by_show_id( $form->object->id );
 
 			if ( $media_locations ) {
