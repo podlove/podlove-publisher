@@ -676,7 +676,7 @@ class Show {
 				) );
 				
 				$feed_wrapper->checkbox( 'enable', array(
-					'label'       => __( 'Enable feed?', 'podlove' ),
+					'label'       => __( 'Allow Submission to Directories', 'podlove' ),
 					'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove' )
 				) );
 				
