@@ -39,7 +39,18 @@ class Show {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 
 		add_action( 'load-' . Show::$pagehook, function () {
+			
+			wp_register_script(
+				/* $handle */ 'jquery-validate',
+				/* $src    */ \Podlove\PLUGIN_URL . '/js/jquery.validate.min.js',
+				/* $deps   */ array( 'jquery' ),
+				/* $ver    */ '1.9.0'
+			);
+
+			wp_enqueue_script( 'jquery-validate' );
+
 			wp_enqueue_script( 'postbox' );
+
 			add_screen_option( 'layout_columns', array(
 				'max' => 1, 'default' => 1
 			) );
@@ -225,6 +236,25 @@ class Show {
 			} );
 			</script>
 
+			<!-- jQuery validate -->
+			<script type="text/javascript">
+			jQuery(document).ready(function($){
+				$("#show_form").validate();
+			});
+			</script>
+
+			<!-- css for form validation -->
+			<style type="text/css">
+			form label.error {
+				padding-left: 10px;
+				color: red;
+			}
+
+			form input.error {
+				border: 1px dotted red;
+			}
+			</style>
+
 			<form style='display: none' method='get' action=''>
 				<?php
 				wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -277,14 +307,21 @@ class Show {
 	}
 	
 	private function form_template( $show, $action, $button_text = NULL ) {
-		\Podlove\Form\build_for( $show, array( 'context' => 'podlove_show', 'hidden' => array( 'show' => $show->id, 'action' => $action ) ), function ( $form ) {
+
+		$form_attributes = array(
+			'context'    => 'podlove_show',
+			'attributes' => array( 'id' => 'show_form' ),
+			'hidden'     => array( 'show' => $show->id, 'action' => $action )
+		);
+
+		\Podlove\Form\build_for( $show, $form_attributes, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$show = $form->object;
 
 			$wrapper->string( 'name', array(
 				'label'       => __( 'Show Title', 'podlove' ),
 				'description' => __( '', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text' )
+				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
 			$wrapper->string( 'subtitle', array(
@@ -301,8 +338,8 @@ class Show {
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Show Slug', 'podlove' ),
-				'description' => __( 'Is part of the feed URL.', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text' )
+				'description' => __( 'The abbreviation for your show. Commonly the initials of the title.', 'podlove' ),
+				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
 			$wrapper->image( 'cover_image', array(
@@ -376,7 +413,7 @@ class Show {
 			$wrapper->string( 'media_file_base_uri', array(
 				'label'       => __( 'Media File Base URL', 'podlove' ),
 				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
-				'html' => array( 'class' => 'regular-text' )
+				'html' => array( 'class' => 'regular-text required' )
 			) );
 
 			$wrapper->checkbox( 'supports_cover_art', array(
@@ -578,7 +615,7 @@ class Show {
 					$f->string( 'title', array(
 						'label'       => __( 'Title', 'podlove' ),
 						'description' => __( 'Description to identify the media file.', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' )
+						'html' => array( 'class' => 'regular-text required' )
 					) );
 
 					$f->string( 'suffix', array(
@@ -590,7 +627,7 @@ class Show {
 					$f->string( 'url_template', array(
 						'label'       => __( 'URL Template', 'podlove' ),
 						'description' => sprintf( __( 'Preview: %s' ), '<span class="url_template_preview"></span><br/>', 'podlove' ),
-						'html' => array( 'class' => 'large-text' )
+						'html' => array( 'class' => 'large-text required' )
 					) );
 
 				} );
@@ -632,7 +669,7 @@ class Show {
 				$feed_wrapper->string( 'name', array(
 					'label'       => __( 'Internal Name', 'podlove' ),
 					'description' => __( 'This is how this feed is presented to you within WordPress.', 'podlove' ),
-					'html' => array( 'class' => 'regular-text' )
+					'html' => array( 'class' => 'regular-text required' )
 				) );
 
 				$feed_wrapper->checkbox( 'discoverable', array(
@@ -650,8 +687,8 @@ class Show {
 				
 				$feed_wrapper->string( 'slug', array(
 					'label'       => __( 'Slug', 'podlove' ),
-					'description' => ( $feed ) ? sprintf( __( 'Feed URL: %s', 'podlove' ), $feed->get_subscribe_url() ) : '',
-					'html' => array( 'class' => 'regular-text' )
+					'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL: %s', 'podlove' ), $feed->get_subscribe_url() ) : '',
+					'html'        => array( 'class' => 'regular-text required' )
 				) );
 
 				$feed_wrapper->radio( 'format', array(
@@ -662,13 +699,14 @@ class Show {
 				$feed_wrapper->select( 'media_location_id', array(
 					'label'       => __( 'Media File', 'podlove' ),
 					'description' => __( 'Choose the file location for this feed.', 'podlove' ),
-					'options'     => $locations
+					'options'     => $locations,
+					'html'        => array( 'class' => 'required' )
 				) );
 				
 				$feed_wrapper->string( 'itunes_feed_id', array(
 					'label'       => __( 'iTunes Feed ID', 'podlove' ),
 					'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ),
-					'html' => array( 'class' => 'regular-text' )
+					'html'        => array( 'class' => 'regular-text' )
 				) );
 								
 				// todo: select box with localized language names

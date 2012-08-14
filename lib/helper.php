@@ -30,6 +30,7 @@ namespace Podlove\Form;
  * 		- hidden        dictionary with hidden values
  * 		- submit_button set to false to hide the submit button
  * 		- form          set to false to skip <form> wrapper
+ * 		- attributes    optional html attributes for form tag
  * @param  function $callback inner form
  * @return void
  * 
@@ -48,6 +49,16 @@ function build_for( $object, $args, $callback ) {
 		}
 	}
 
+	// determine form html attributes
+	$attributes_html = '';
+	if ( isset( $args['attributes'] ) ) {
+		$attributes = array();
+		foreach ( $args['attributes'] as $attr_key => $attr_value ) {
+			$attributes[] = sprintf( '%s = "%s"', $attr_key, $attr_value );
+		}
+		$attributes_html = implode( ' ', $attributes );
+	}
+
 	// determine method
 	$method = isset( $args['method'] ) ? $args['method'] : 'post';
 
@@ -59,7 +70,7 @@ function build_for( $object, $args, $callback ) {
 
 	?>
 	<?php if ( $print_form ): ?>
-		<form action="<?php echo $url; ?>" method="<?php echo $method; ?>">
+		<form action="<?php echo $url; ?>" method="<?php echo $method; ?>" <?php echo $attributes_html ?>>
 	<?php endif ?>
 
 	<?php if ( isset( $args['hidden'] ) && $args['hidden'] ): ?>
