@@ -29,6 +29,11 @@ function activate_for_current_blog() {
 			array( 'name' => 'WebM Video',             'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
 			array( 'name' => 'Matroska Audio',         'type' => 'audio', 'mime_type' => 'audio/x-matroska',  'extension' => 'mka' ),
 			array( 'name' => 'Matroska Video',         'type' => 'video', 'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
+			array( 'name' => 'Matroska Video',         'type' => 'video', 'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
+			array( 'name' => 'PDF Document',           'type' => 'ebook', 'mime_type' => 'application/pdf',  'extension' => 'pdf' ),
+			array( 'name' => 'ePub Document',          'type' => 'ebook', 'mime_type' => 'application/epub+zip',  'extension' => 'epub' ),
+			array( 'name' => 'PNG Image',              'type' => 'image', 'mime_type' => 'image/png',   'extension' => 'png' ),
+			array( 'name' => 'JPEG Image',             'type' => 'image', 'mime_type' => 'image/jpeg',  'extension' => 'jpg' ),
 		);
 		// todo: add flac
 		// todo: pentabarf-ish validation. summary of all conflicts / missing info is dashboard
