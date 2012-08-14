@@ -587,6 +587,14 @@ class Show {
 		}
 		?>
 
+		<style type="text/css">
+		.media_file_wrapper {
+			border: 1px solid #CCC;
+			border-radius: 10px;
+			margin: 8px 0px;
+		}
+		</style>
+
 		<div id="media_format_data" class="hidden">
 			<?php echo json_encode( $formats ); ?>	
 		</div>
@@ -599,7 +607,7 @@ class Show {
 
 			foreach ( $media_locations as $media_location ) {
 				?>
-				<table style="width: 100%">
+				<table style="width: 100%" class="media_file_wrapper">
 				<?php
 				$wrapper->fields_for( $media_location, array( 'context' => 'podlove_media_location' ), function ( $media_location_form ) use ( $format_optionlist ) {
 					$f = new \Podlove\Form\Input\TableWrapper( $media_location_form );
@@ -614,13 +622,13 @@ class Show {
 
 					$f->string( 'title', array(
 						'label'       => __( 'Title', 'podlove' ),
-						'description' => __( 'Description to identify the media file.', 'podlove' ),
+						'description' => __( 'Description to identify the media file type to the user in download buttons.', 'podlove' ),
 						'html' => array( 'class' => 'regular-text required' )
 					) );
 
 					$f->string( 'suffix', array(
 						'label'       => __( 'Suffix', 'podlove' ),
-						'description' => __( 'Is appended to the media file name.', 'podlove' ),
+						'description' => __( 'Is appended to the media file name. Use if you have multiple media files with the same extension.', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' )
 					) );
 
@@ -636,7 +644,7 @@ class Show {
 					<td colspan="2">
 						<span class="delete">
 							<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=delete&amp;subject=media_location&amp;show=<?php echo $media_location->show()->id; ?>&amp;media_location=<?php echo $media_location->id; ?>" style="float: right" class="button-secondary delete">
-								<?php echo __( 'Delete Media File', 'podlove' ); ?>
+								<?php echo __( 'Remove Media File Configuration', 'podlove' ); ?>
 							</a>
 						</span>
 					</td>
