@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 8 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 9 );
 
 add_action( 'init', function () {
 	
@@ -119,12 +119,88 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( $sql );
 			break;	
 		case 8:
-		$sql = sprintf(
-			'ALTER TABLE `%s` ADD COLUMN `supports_cover_art` INT',
-			\Podlove\Model\Show::table_name()
-		);
-		$wpdb->query( $sql );
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `supports_cover_art` INT',
+				\Podlove\Model\Show::table_name()
+			);
+			$wpdb->query( $sql );
 			break;
+		case 9:
+			// huge architecture migration
+			
+			// assume first show will be blueprint for the podcast
+			$show  = $wpdb->get_row(
+				sprintf(
+					'SELECT * FROM %s LIMIT 1',
+					$wpdb->prefix . 'podlove_show'
+				),
+				ARRAY_A
+			);
+			$show_id = $show['id'];
+
+			// On my local machine the migration runs twice.
+			// This is a quick fix. caveat: someone who has no show defined
+			// will need to uninstall the plugin. That seems acceptable.
+			if ( ! $show_id )
+				return;
+
+			// all releases of this show will be converted to episodes
+			$releases = $wpdb->get_results(
+				sprintf(
+					'
+					SELECT
+						E.post_id, R.episode_id, R.active, R.enable, R.slug, R.duration, R.cover_art, R.chapters
+					FROM 
+						%s R
+						INNER JOIN %s E ON R.episode_id = E.id
+					WHERE
+						R.show_id = "%s"
+					',
+					$wpdb->prefix . 'podlove_release',
+					$wpdb->prefix . 'podlove_episode',
+					$show_id
+				),
+				ARRAY_A
+			);
+
+			// write show settings to podcast
+			$podcast = \Podlove\Model\Podcast::get_instance();
+			foreach ( $show as $key => $value ) {
+				$podcast->$key = $value;
+			}
+			$podcast->save();
+
+			// rebuild show table
+			\Podlove\Model\Show::destroy();
+			\Podlove\Model\Show::build();
+			
+			// rebuild episodes table
+			\Podlove\Model\Episode::destroy();
+			\Podlove\Model\Episode::build();
+			foreach ( $releases as $release ) {
+				$episode = new \Podlove\Model\Episode();
+				foreach ( $release as $key => $value ) {
+					if ( ! in_array( $key, array( 'episode_id' ) ) ) {
+						$episode->$key = $value;
+					}
+				}
+				$episode->save();
+			}
+
+			// clean feed table
+			$sql = sprintf(
+				'DELETE FROM `%s` WHERE `show_id` != "%s"',
+				\Podlove\Model\Feed::table_name(),
+				$show_id
+			);
+			$wpdb->query( $sql );
+
+			$sql = sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `show_id`',
+				\Podlove\Model\Feed::table_name()
+			);
+			$wpdb->query( $sql );
+		break;
 
 	}
 

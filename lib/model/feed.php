@@ -24,10 +24,13 @@ class Feed extends Base {
 	 * @return string
 	 */
 	public function get_subscribe_url() {
+
+		$podcast = \Podlove\Model\Podcast::get_instance();
+
 		$url = sprintf(
 			'%s/feed/%s/%s/',
 			get_bloginfo( 'url' ),
-			$this->show()->slug,
+			$podcast->slug,
 			$this->slug
 		);
 
@@ -56,10 +59,8 @@ class Feed extends Base {
 	 * @return string
 	 */
 	public function title_for_discovery() {
-		$show = $this->show();
 
-		if ( ! $show )
-			return $this->name;
+		$podcast = Podcast::get_instance();
 
 		$media_location = $this->media_location();
 
@@ -73,19 +74,10 @@ class Feed extends Base {
 
 		$file_extension = $media_format->extension;
 
-		$title = sprintf( '%s (%s)', $show->name, $file_extension );
+		$title = sprintf( '%s (%s)', $podcast->title, $file_extension );
 		$title = apply_filters( 'podlove_feed_title_for_discovery', $title, $this->title, $file_extension, $this->id );
 
 		return $title;
-	}
-
-	/**
-	 * Find the related show model.
-	 *
-	 * @return \Podlove\Model\Show|NULL
-	 */
-	public function show() {
-		return Show::find_by_id( $this->show_id );
 	}
 
 	/**
@@ -115,14 +107,7 @@ class Feed extends Base {
 			return array();
 
 		// fetch releases
-		$release_ids = array_map( function ( $v ) { return $v->release_id; }, $media_files );
-		$releases = Release::find_all_by_where( "id IN (" . implode( ',', $release_ids ) . ")" );
-
-		if ( ! count( $releases ) )
-			return array();
-
-		// fetch episodes
-		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $releases );
+		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $media_files );
 		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids ) . ")" );
 
 		return array_map( function ( $v ) { return $v->post_id; }, $episodes );
@@ -137,27 +122,9 @@ class Feed extends Base {
 
 	}
 
-	public function find_by_show_id_and_media_location_id( $show_id, $media_location_id ) {
-		$where = sprintf( 'show_id = "%s" AND media_location_id = "%s"', $show_id, $media_location_id );
-		return Feed::find_one_by_where( $where );
-	}
-
-	public function find_by_show_slug_and_feed_slug( $show_slug, $feed_slug ) {
-		$show  = Show::find_one_by_slug( $show_slug );
-		$feeds = $show->feeds();
-		
-		foreach ( $feeds as $feed ) {
-			if ( $feed_slug == $feed->slug ) {
-				return $feed;
-			}
-		}
-
-		return NULL;
-	}
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-Feed::property( 'show_id', 'INT' );
 Feed::property( 'media_location_id', 'INT' );
 Feed::property( 'itunes_feed_id', 'INT' );
 Feed::property( 'name', 'VARCHAR(255)' );
@@ -169,3 +136,13 @@ Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
 Feed::property( 'show_description', 'INT' );
+
+
+// media_location_id
+// => für audio
+// => für video
+// => für text
+// => für ... (alle types)
+
+// bitlove support
+// auf feed level aktivieren
