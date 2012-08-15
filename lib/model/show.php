@@ -113,4 +113,4 @@ Show::property( 'media_file_base_uri', 'VARCHAR(255)' );
 Show::property( 'uri_delimiter', 'VARCHAR(255)' );
 Show::property( 'episode_number_length', 'INT' );
 Show::property( 'language', 'VARCHAR(255)' );
-Show::property( 'supports_cover_art', 'INT' );
+Show::property( 'supports_cover_art', 'INT' ); // todo: rename to "Episode Image"
