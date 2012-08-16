@@ -323,6 +323,35 @@ abstract class Base
 	public function flag_as_not_new() {
 		$this->is_new = false;
 	}
+
+	/**
+	 * Rails-ish update_attributes for easy form handling.
+	 *
+	 * Takes an array of form values and takes care of serializing it.
+	 * 
+	 * @param  array $attributes
+	 * @return bool
+	 */
+	public function update_attributes( $attributes ) {
+
+		if ( ! isset( $attributes ) || ! is_array( $attributes ) )
+			return false;
+			
+		foreach ( $attributes as $key => $value )
+			$this->{$key} = $value;
+		
+		if ( isset( $_REQUEST['checkboxes'] ) && is_array( $_REQUEST['checkboxes'] ) ) {
+			foreach ( $_REQUEST['checkboxes'] as $checkbox ) {
+				if ( isset( $attributes[ $checkbox ] ) && $attributes[ $checkbox ] === 'on' ) {
+					$this->$checkbox = 1;
+				} else {
+					$this->$checkbox = 0;
+				}
+			}
+		}
+
+		return $this->save();
+	}
 	
 	/**
 	 * Saves changes to database.
