@@ -170,20 +170,14 @@ class Podcast_Post_Type {
 
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
-		new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );
+		// new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
 	}
 	
 	public function about_meta() {
 		?>
 		Podlove rocks 😸
 		<?php
-	}
-
-	public function feed_overview_meta() {
-		$table = new \Podlove\Feed_List_Table();
-		$table->prepare_for_meta_box();
-		$table->prepare_items();
-		$table->display();
 	}
 
 	public function settings_page() {
@@ -210,7 +204,6 @@ class Podcast_Post_Type {
 				<div id="post-body" class="has-sidebar">
 					<div id="post-body-content" class="has-sidebar-content">
 						<?php do_action( 'podlove_settings_before_main_boxes' ); ?>
-						<?php //$this->feed_overview_meta(); ?>
 						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'normal', NULL ); ?>
 						<?php do_meta_boxes( self::SETTINGS_PAGE_HANDLE, 'additional', NULL ); ?>
 						<?php do_action( 'podlove_settings_after_main_boxes' ); ?>						

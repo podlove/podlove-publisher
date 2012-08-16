@@ -331,7 +331,7 @@ abstract class Base
 	 */
 	public function save() {
 		global $wpdb;
-		
+
 		if ( $this->is_new() ) {
 
 			$this->set_defaults();
@@ -377,7 +377,7 @@ abstract class Base
 			return;
 
 		foreach ( $defaults as $property => $value ) {
-			if ( empty( $this->property ) )
+			if ( $this->$property === NULL )
 				$this->$property = $value;
 		}
 
@@ -413,7 +413,7 @@ abstract class Base
 	}
 	
 	private function property_name_to_sql_value( $p ) {
-		if ( $this->$p ) {
+		if ( $this->$p !== NULL && $this->$p !== '' ) {
 			return sprintf( "'%s'", $this->$p );
 		} else {
 			return 'NULL';
