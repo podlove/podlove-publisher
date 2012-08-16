@@ -2,21 +2,6 @@
 namespace Podlove\Model;
 
 class Feed extends Base {
-	
-	/**
-	 * Sets default values.
-	 * 
-	 * @return array
-	 */
-	public function default_values() {
-		return array(
-			'discoverable'     => true,
-			'language'         => get_bloginfo( 'language' ),
-			'enable'           => true,
-			'show_description' => true,
-			'format'           => 'rss'
-		);
-	}
 
 	/**
 	 * Build public url where the feed can be subscribed at.
@@ -120,6 +105,34 @@ class Feed extends Base {
 		else
 			return "application/atom+xml";	
 
+	}
+
+	/**
+	 * Rails-ish update_attributes for easy form handling.
+	 *
+	 * Takes an array of form values and takes care of serializing it.
+	 * 
+	 * @param  array $attributes
+	 * @return bool
+	 */
+	public function update_attributes( $attributes ) {
+
+		if ( ! isset( $attributes ) || ! is_array( $attributes ) )
+			return false;
+			
+		foreach ( $attributes as $key => $value )
+			$this->{$key} = $value;
+		
+		$checkboxes = array( 'enable', 'discoverable', 'show_description' );
+		foreach ( $checkboxes as $checkbox ) {
+			if ( isset( $attributes[ $checkbox ] ) && $attributes[ $checkbox ] === 'on' ) {
+				$this->$checkbox = 1;
+			} else {
+				$this->$checkbox = 0;
+			}
+		}
+
+		return $this->save();
 	}
 
 }

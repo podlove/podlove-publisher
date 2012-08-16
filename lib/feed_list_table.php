@@ -7,8 +7,6 @@ if( ! class_exists( 'WP_List_Table' ) ){
 
 class Feed_List_Table extends \WP_List_Table {
 	
-	private $is_nested_in_meta_box = false;
-
 	function __construct(){
 		global $status, $page;
 		        
@@ -19,29 +17,14 @@ class Feed_List_Table extends \WP_List_Table {
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
-
-	public function prepare_for_meta_box() {
-		$this->is_nested_in_meta_box = true;
-	}
-
-	/**
-	 * Potentially evil and might backfire as WP_List_Table::display_tablenav
-	 * is marked as @protected. But there are no hooks, so I don't have much choice.
-	 */
-	public function display_tablenav( $which ) {
-		if ( ! $this->is_nested_in_meta_box ) {
-			parent::display_tablenav( $which );
-		}
-	}
 	
-	function column_name( $feed ) {
+	public function column_name( $feed ) {
 
 		$link = function ( $title ) use ( $feed ) {
 			return sprintf(
-				'<a href="?page=%s&action=%s&show=%s#feed_%s">' . $title . '</a>',
-				'podlove_shows_settings_handle',
+				'<a href="?page=%s&action=%s&feed=%s">' . $title . '</a>',
+				$_REQUEST['page'],
 				'edit',
-				$feed->show_id,
 				$feed->id
 			);
 		};
@@ -56,72 +39,38 @@ class Feed_List_Table extends \WP_List_Table {
 		);
 	}
 	
-	function column_discoverable( $feed ) {
+	public function column_discoverable( $feed ) {
 		return $feed->discoverable ? '✓' : '×';
 	}
 
-	function column_url( $feed ) {
-
-		if ( ! $feed->show() ) {
-			return sprintf(
-				'<strong>%s:</strong> %s',
-				__( 'Notice', 'podlove' ),
-				__( 'This feed belongs to no show.', 'podlove' )
-			);
-		}
-
+	public function column_url( $feed ) {
 		return $feed->get_subscribe_link();
 	}
 
-	function column_show( $feed ) {
-
-		$show = $feed->show();
-
-		if ( ! $show ) {
-			return sprintf(
-				'<strong>%s:</strong> %s',
-				__( 'Notice', 'podlove' ),
-				__( 'This feed belongs to no show.', 'podlove' )
-			);
-		}
-
-		$link = function ( $title ) use ( $feed ) {
-			return sprintf(
-				'<a href="?page=%s&action=%s&show=%s">' . $title . '</a>',
-				'podlove_shows_settings_handle',
-				'edit',
-				$feed->show_id
-			);
-		};
-
-		$actions = array(
-			'edit' => $link( __( 'Edit', 'podlove' ) )
-		);
-
-		return sprintf( '%1$s %2$s',
-		    $link( $show->name ),
-		    $this->row_actions( $actions )
-		);
+	public function column_format( $feed ) {
+		return $feed->format;
 	}
 
-	function get_columns(){
+	public function column_media( $feed ) {
+		$media_location = $feed->media_location();
+
+		return ( $media_location ) ? $media_location->title() : __( 'not set', 'podlove' );
+	}
+
+	public function get_columns(){
 		$columns = array(
-			'name'        => 'Feed',
-			'show'        => 'Show',
-			'url'         => 'Subscribe URL',
-			'discoverable'=> 'Discoverable'
+			'name'         => __( 'Feed', 'podlove' ),
+			'url'          => __( 'Subscribe URL', 'podlove' ),
+			'format'       => __( 'Format', 'podlove' ),
+			'media'        => __( 'Media', 'podlove' ),
+			'discoverable' => __( 'Discoverable', 'podlove' )
 		);
 		return $columns;
 	}
 	
-	function prepare_items() {
+	public function prepare_items() {
 		// number of items per page
-		if ( $this->is_nested_in_meta_box ) {
-			$per_page = 10;
-		} else {
-			// no pagination inside a meta box
-			$per_page = 99999;
-		}
+		$per_page = 10;
 		
 		// define column headers
 		$columns = $this->get_columns();
@@ -130,7 +79,6 @@ class Feed_List_Table extends \WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		
 		// retrieve data
-		// TODO select data for current page only
 		$data = \Podlove\Model\Feed::all();
 		
 		// get current page
