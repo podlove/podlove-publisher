@@ -334,7 +334,7 @@ abstract class Base
 	 */
 	public function update_attributes( $attributes ) {
 
-		if ( ! isset( $attributes ) || ! is_array( $attributes ) )
+		if ( ! is_array( $attributes ) )
 			return false;
 			
 		foreach ( $attributes as $key => $value )
