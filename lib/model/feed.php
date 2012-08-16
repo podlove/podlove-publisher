@@ -107,34 +107,6 @@ class Feed extends Base {
 
 	}
 
-	/**
-	 * Rails-ish update_attributes for easy form handling.
-	 *
-	 * Takes an array of form values and takes care of serializing it.
-	 * 
-	 * @param  array $attributes
-	 * @return bool
-	 */
-	public function update_attributes( $attributes ) {
-
-		if ( ! isset( $attributes ) || ! is_array( $attributes ) )
-			return false;
-			
-		foreach ( $attributes as $key => $value )
-			$this->{$key} = $value;
-		
-		$checkboxes = array( 'enable', 'discoverable', 'show_description' );
-		foreach ( $checkboxes as $checkbox ) {
-			if ( isset( $attributes[ $checkbox ] ) && $attributes[ $checkbox ] === 'on' ) {
-				$this->$checkbox = 1;
-			} else {
-				$this->$checkbox = 0;
-			}
-		}
-
-		return $this->save();
-	}
-
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
