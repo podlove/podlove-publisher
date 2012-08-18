@@ -21,7 +21,7 @@ abstract class Wrapper {
 	 * @return void
 	 */
 	public function __call( $name, $arguments = array() ) {
-		$builder      = $this->builder;
+		$builder = $this->builder;
 
 		// special case for nested forms
 		// - the first $arg is an object rather than an object key
@@ -37,7 +37,7 @@ abstract class Wrapper {
 		$field_name   = $this->builder->get_field_name();
 		$field_id     = $this->builder->get_field_id();
 		$field_values = ( isset( $arguments[ 1 ] ) ) ? $arguments[ 1 ] : array();
-		
+
 		$this->do_template( $object_key, $field_name, $field_id, $field_values, function () use ( $builder, $name, $arguments ) {
 			call_user_func_array( array( $builder, $name ), $arguments );
 		} );

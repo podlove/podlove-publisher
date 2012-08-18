@@ -66,7 +66,7 @@ class Builder {
 		$this->field_name  = $this->get_field_name();
 
 		// multiselect takes care of its values
-		if ( ! isset( $arguments['type'] ) || $arguments['type'] !== 'multiselect' ) {
+		if ( ! isset( $arguments['ignore_values'] ) || $arguments['ignore_values'] === false ) {
 			$this->field_value = $this->object->{$object_key};
 
 			if ( $this->field_value === NULL && isset( $arguments['default'] ) && $arguments['default'] ) {
@@ -117,6 +117,7 @@ class Builder {
 	}
 
 	public function multiselect( $object_key, $arguments ) {
+		$arguments['ignore_values'] = true;
 		$this->build_input_values( $object_key, $arguments );
 
 		foreach ( $this->arguments['options'] as $key => $value ) {
