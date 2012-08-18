@@ -1,0 +1,229 @@
+<?php
+namespace Podlove;
+
+/**
+ * Meta Box for Podcase Settings in Post Edit Screen.
+ */
+class Podcast_Post_Meta_Box {
+
+	public function __construct() {
+		add_action( 'save_post', array( $this, 'save_postdata' ) );
+	}
+
+	public static function add_meta_box() {
+		add_meta_box(
+			/* $id       */ 'podlove_podcast',
+			/* $title    */ __( 'Podcast Settings', 'podlove' ),
+			/* $callback */ '\Podlove\Podcast_Post_Meta_Box::post_type_meta_box_callback',
+			/* $page     */ 'podcast',
+			/* $context  */ 'normal',
+			/* $priority */ 'high'
+		);
+	}
+
+	/**
+	 * Meta Box Template
+	 */
+	public static function post_type_meta_box_callback( $post ) {
+		
+		$post_id = $post->ID;
+
+		$podcast = Model\Podcast::get_instance();
+		$episode = Model\Episode::find_or_create_by_post_id( $post_id );
+
+		// read / generate format data
+		$media_locations = Model\MediaLocation::all();
+
+		$location_values = array();
+		$location_options = array();
+		foreach ( $media_locations as $location ) {
+
+			if ( ! $media_format = $location->media_format() )
+				continue;
+
+			// get formats configured for this show
+			$location_options[ $location->id ] = $media_format->name;
+			// find out which formats are active
+			$location_values[ $location->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
+		}
+
+		$media_locations_form = array(
+			'label'       => __( 'Media Files', 'podlove' ),
+			'description' => '',
+			'type'    => 'multiselect',
+			'options' => $location_options,
+			'default' => true,
+			'multi_values' => $location_values,
+			'multiselect_callback' => function ( $location_id ) use ( $episode ) {
+				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
+				$format   = $location->media_format();
+				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
+				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
+				return 'data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-suffix="' . $location->suffix . '" data-size="' . $filesize . '"';
+			}
+		);
+
+		if ( empty( $location_options ) ) {
+			$media_locations_form['description'] = sprintf( '<span style="color: red">%s</span>', __( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' ) )
+			                                     . ' '
+			                                     . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', __( 'Edit this show', 'podlove' ) );
+		}
+			
+		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
+		?>
+		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
+		<table class="form-table">
+			<?php 
+			$form_data = array(
+				'active' => array(
+					'label'       => __( 'Post Episode to Show', 'podlove' ), // todo: hide/show rest of the form
+					'description' => '',
+					'type'     => 'checkbox',
+					'default'  => true
+				),
+				// todo: add subtitle; but as extra metabox
+				'slug' => array(
+					'label'       => __( 'Episode Media File Slug', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
+				),
+				'duration' => array(
+					'label'       => __( 'Duration', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
+				),
+				'cover_art' => array(
+					'label'       => __( 'Episode Cover Art URL', 'podlove' ),
+					'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
+					'html'        => array( 'class' => 'regular-text' )
+				),
+				'chapters' => array(
+					'label'       => __( 'Chapter Marks', 'podlove' ),
+					'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
+					'type'        => 'text',
+					'html'        => array(
+						'class'       => 'large-text code',
+						'placeholder' => '00:00:00.000 Intro'
+					)
+				),
+				'enable' => array(
+					'label'       => __( 'Enable?', 'podlove' ),
+					'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
+					'type'        => 'checkbox',
+					'default'     => true
+				),
+			);
+
+			$form_data['media_locations'] = $media_locations_form;
+
+			if ( ! $podcast->supports_cover_art )
+				unset( $form_data['cover_art'] );
+
+			$form_args = array(
+				'context' => '_podlove_meta',
+				'submit_button' => false,
+				'form' => false
+			);
+
+			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $form_data ) {
+				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+				$episode = $form->object;
+
+				foreach ( $form_data as $key => $value ) {
+
+					// adjust chapter textfield height to its content
+					// TODO: move into form toolkit
+					if ( $key === 'chapters' ) {
+						$rows = count( explode( "\n", $episode->chapters ) );
+						if ( $rows < 2 ) {
+							$rows = 2;
+						}
+						$value['html']['rows'] = $rows;
+					}
+
+					$input_type = isset( $value['type'] ) ? $value['type'] : 'string';
+					$wrapper->$input_type( $key, $value );
+				}
+
+			} );
+			?>
+		</table>
+		<?php
+	}
+
+	public function save_postdata( $post_id ) {
+		global $wpdb;
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+			return;
+		
+		if ( empty( $_POST['podlove_noncename'] ) || ! wp_verify_nonce( $_POST['podlove_noncename'], \Podlove\PLUGIN_FILE ) )
+			return;
+		
+		// Check permissions
+		if ( 'podcast' == $_POST['post_type'] ) {
+		  if ( ! current_user_can( 'edit_post', $post_id ) )
+			return;
+		} else {
+			return;
+		}
+
+		if ( ! isset( $_POST['_podlove_meta'] ) || ! is_array( $_POST['_podlove_meta'] ) )
+			return;
+
+		// save changes
+		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+		$episode->update_attributes( $_POST['_podlove_meta'] );
+
+		// copy chapter info into custom meta for webplayer compatibility
+		update_post_meta( $post_id, sprintf( '_podlove_chapters' ), $episode->chapters );
+
+		if ( isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
+			$this->save_media_locations( $episode, $_REQUEST['_podlove_meta']['media_locations'] );
+		else 
+			$this->save_media_locations( $episode, array() );
+	}
+
+	/**
+	 * Save media locations based on checkbox data.
+	 *
+	 * @param \Podlove\Model\Episode $episode
+	 * @param  array $checkbox_data Raw form data for checkboxes.
+	 *               Contains 'on' for checked boxes and no entry at all for unchecked ones.
+	 */
+	function save_media_locations( $episode, $checkbox_data ) {
+
+		// create array where the keys are location_ids and values false
+		$locations = array_map(
+			function( $_ ){ return false; },
+			array_flip(
+				array_map(
+					function( $l ) { return $l->id; },
+					Model\MediaLocation::all()
+				)
+			)
+		);
+
+		// set those location to true where the checkbox is set
+		foreach ( $locations as $id => $_ ) {
+			if ( isset( $checkbox_data[ $id ] ) && $checkbox_data[ $id ] === 'on' ) {
+				$locations[ $id ] = true;
+			}
+		}
+
+		// create new ones, delete unchecked ones
+		foreach ( $locations as $media_location_id => $media_location_value ) {
+			$file = Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $media_location_id );
+
+			if ( $file === NULL && $media_location_value ) {
+				$file = new Model\MediaFile();
+				$file->episode_id = $episode->id;
+				$file->media_location_id = $media_location_id;
+				$file->save();
+			} elseif ( $file !== NULL && ! $media_location_value ) {
+				$file->delete();
+			}
+		}
+	}
+
+}
