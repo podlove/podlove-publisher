@@ -1,5 +1,6 @@
 <?php
 namespace Podlove;
+use \Podlove\Model;
 
 /**
  * Custom Post Type: "podcast"
@@ -78,7 +79,7 @@ class Podcast_Post_Type {
 			'capability_type'      => 'post',
 			'has_archive'          => true, 
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'trackbacks' ),
-			'register_meta_box_cb' => array( $this, 'register_post_type_meta_boxes' ),
+			'register_meta_box_cb' => array( $this, 'register_post_type_meta_box' ),
 			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png'
 		); 
 		
@@ -348,42 +349,40 @@ class Podcast_Post_Type {
 	/**
 	 * Register post meta boxes.
 	 */
-	public function register_post_type_meta_boxes() {
-		$shows = \Podlove\Model\Show::all();
-
-		foreach ( $shows as $show ) {
-			add_meta_box(
-				/* $id            */ 'podlove_show_' . $show->id,
-				/* $title         */ __( 'Show: ', 'podlove' ) . $show->name,
-				/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
-				/* $page          */ 'podcast',
-				/* $context       */ 'advanced',
-				/* $priority      */ 'default',
-				/* $callback_args */ array( $show )
-			);
-		}
+	public function register_post_type_meta_box() {
+		add_meta_box(
+			/* $id            */ 'podlove_podcast',
+			/* $title         */ __( 'Podcast Settings', 'podlove' ),
+			/* $callback      */ array( $this, 'post_type_meta_box_callback' ),
+			/* $page          */ 'podcast',
+			/* $context       */ 'normal',
+			/* $priority      */ 'high'
+		);
 	}
 	
 	/**
 	 * Meta Box Template
 	 */
-	public function post_type_meta_box_callback( $post, $args ) {
-		$show = $args['args'][ 0 ];
+	public function post_type_meta_box_callback( $post ) {
 		$post_id = $post->ID;
 
-		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-		$release = \Podlove\Model\Release::find_or_create_by_episode_id_and_show_id( $episode->id, $show->id );
+		$podcast = Model\Podcast::get_instance();
+		$episode = Model\Episode::find_or_create_by_post_id( $post_id );
 
 		// read / generate format data
-		$media_locations = $show->valid_media_locations();
+		$media_locations = Model\MediaLocation::all();
 
 		$location_values = array();
 		$location_options = array();
 		foreach ( $media_locations as $location ) {
+
+			if ( ! $media_format = $location->media_format() )
+				continue;
+
 			// get formats configured for this show
-			$location_options[ $location->id ] = $location->media_format()->name;
+			$location_options[ $location->id ] = $media_format->name;
 			// find out which formats are active
-			$location_values[ $location->id ] = NULL !== \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $location->id );
+			$location_values[ $location->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
 		}
 
 		$media_locations_form = array(
@@ -393,10 +392,10 @@ class Podcast_Post_Type {
 			'options' => $location_options,
 			'default' => true,
 			'multi_values' => $location_values,
-			'multiselect_callback' => function ( $location_id ) use ( $release, $show ) {
+			'multiselect_callback' => function ( $location_id ) use ( $episode ) {
 				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
 				$format   = $location->media_format();
-				$file     = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $location->id );
+				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
 				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
 				return 'data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-suffix="' . $location->suffix . '" data-size="' . $filesize . '"';
 			}
@@ -410,26 +409,32 @@ class Podcast_Post_Type {
 			
 		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
 		?>
-		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $show->media_file_base_uri; ?>" />
+		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
 		<table class="form-table">
 			<?php 
 			$form_data = $this->form_data;
 
 			$form_data['media_locations'] = $media_locations_form;
 
-			if ( ! $show->supports_cover_art )
+			if ( ! $podcast->supports_cover_art )
 				unset( $form_data['cover_art'] );
 
-			\Podlove\Form\build_for( $release, array( 'context' => '_podlove_meta[' . $show->id . '][' . $release->id . ']', 'submit_button' => false, 'form' => false ), function ( $form ) use ( $form_data ) {
+			$form_args = array(
+				'context' => '_podlove_meta',
+				'submit_button' => false,
+				'form' => false
+			);
+
+			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $form_data ) {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
-				$release = $form->object;
+				$episode = $form->object;
 
 				foreach ( $form_data as $key => $value ) {
 
 					// adjust chapter textfield height to its content
 					// TODO: move into form toolkit
 					if ( $key === 'chapters' ) {
-						$rows = count( explode( "\n", $release->chapters ) );
+						$rows = count( explode( "\n", $episode->chapters ) );
 						if ( $rows < 2 ) {
 							$rows = 2;
 						}
@@ -466,83 +471,47 @@ class Podcast_Post_Type {
 		if ( ! isset( $_POST['_podlove_meta'] ) || ! is_array( $_POST['_podlove_meta'] ) )
 			return;
 
-		// What do we need these loops for?
-		// When you submit a checkbox, the value is "on" when active.
-		// However, when unchecked, nothing is sent at all. So, to determine
-		// the difference between "new" and "unchecked", we populate all unset
-		// fields with false manually.
-		$media_locations = array_map( function( $f ) { return $f->id; }, \Podlove\Model\MediaFormat::all() );
-		foreach ( $_POST['_podlove_meta'] as $show_id => $show_data ) {
+		// save changes
+		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+		$episode->update_attributes( $_POST['_podlove_meta'] );
 
-			if ( ! isset( $_POST['_podlove_meta'][ $show_id ] ) ) {
-				$_POST['_podlove_meta'][ $show_id ] = array();
-			}
+		// copy chapter info into custom meta for webplayer compatibility
+		update_post_meta( $post_id, sprintf( '_podlove_chapters' ), $episode->chapters );
 
-			foreach ( $show_data as $release_id => $_ ) {
+		// save files/formats
 
-				if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $release_id ] ) ) {
-					$_POST['_podlove_meta'][ $show_id ][ $release_id ] = array();
-				}
+		if ( ! isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
+			return;
 
-				if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ] ) ) {
-					$_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ] = array();
-				}
+		$req_locations = $_REQUEST['_podlove_meta']['media_locations'];
 
-				foreach ( $media_locations as $media_location_id ) {
-					if ( ! isset( $_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] ) ) {
-						$_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] = false;
-					} elseif ( $_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] === 'on' ) {
-						$_POST['_podlove_meta'][ $show_id ][ $release_id ][ 'media_locations' ][ $media_location_id ] = true;
-					}
-				}
+		// create array where the keys are location_ids and values false
+		$locations = array_map(
+			function( $_ ){ return false; },
+			array_flip(
+				array_map(
+					function( $l ) { return $l->id; },
+					Model\MediaLocation::all()
+				)
+			)
+		);
+
+		foreach ( $locations as $id => $_ ) {
+			if ( isset( $req_locations[ $id ] ) && $req_locations[ $id ] === 'on' ) {
+				$locations[ $id ] = true;
 			}
 		}
 
-		// save changes
-		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+		foreach ( $locations as $media_location_id => $media_location_value ) {
+			$file = Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $media_location_id );
 
-		foreach ( $_POST['_podlove_meta'] as $show_id => $show_values ) {
-			foreach ( $show_values as $release_id => $release_values ) {
-				$show    = \Podlove\Model\Show::find_by_id( $show_id );
-				$release = \Podlove\Model\Release::find_by_id( $release_id );
-
-				// save generic release fields
-				foreach ( $this->form_data as $release_column => $_ ) {
-					if ( isset( $release_values[ $release_column ] ) ) {
-						$release->{$release_column} = $release_values[ $release_column ];
-					}
-				}
-
-				if ( isset( $_POST['checkboxes'] ) && is_array( $_POST['checkboxes'] ) ) {
-					foreach ( $_POST['checkboxes'] as $checkbox_field_name ) {
-						if ( isset( $_POST['_podlove_meta'][ $show_id ][ $release->id ][ $checkbox_field_name ] ) && $_POST['_podlove_meta'][ $show_id ][ $release->id ][ $checkbox_field_name ] === 'on' ) {
-							$release->{$checkbox_field_name} = 1;
-						} else {
-							$release->{$checkbox_field_name} = 0;
-						}
-					}
-				}
-
-				$release->save();
-
-				// copy chapter info into custom meta for webplayer compatibility
-				update_post_meta( $post_id, sprintf( '_podlove_chapters_%s', $show->slug ), $release->chapters );
-
-				// save files/formats
-				foreach ( $release_values['media_locations'] as $media_location_id => $media_location_value ) {
-					$file = \Podlove\Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $media_location_id );
-
-					if ( $file === NULL && $media_location_value ) {
-						// create file
-						$file = new \Podlove\Model\MediaFile();
-						$file->release_id = $release->id;
-						$file->media_location_id = $media_location_id;
-						$file->save();
-					} elseif ( $file !== NULL && ! $media_location_value ) {
-						// delete file
-						$file->delete();
-					}
-				}
+			if ( $file === NULL && $media_location_value ) {
+				$file = new Model\MediaFile();
+				$file->episode_id = $episode->id;
+				$file->media_location_id = $media_location_id;
+				$file->save();
+			} elseif ( $file !== NULL && ! $media_location_value ) {
+				$file->delete();
 			}
 		}
 	}

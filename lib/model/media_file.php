@@ -26,6 +26,17 @@ class MediaFile extends Base {
 		return MediaLocation::find_by_id( $this->media_location_id );
 	}
 
+	public function find_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) {
+		
+		$where = sprintf(
+			'episode_id = "%s" AND media_location_id = "%s"',
+			$episode_id,
+			$media_location_id
+		);
+
+		return MediaFile::find_one_by_where( $where );
+	}
+
 	/**
 	 * Dynamically return file url from release, format and show.
 	 *
@@ -37,7 +48,7 @@ class MediaFile extends Base {
 
 		$episode        = Episode::find_by_id( $this->episode_id );
 		$media_location = MediaLocation::find_by_id( $this->media_location_id );
-		$media_format   = MediaFormat::find_by_id( $location->media_format_id );
+		$media_format   = MediaFormat::find_by_id( $media_location->media_format_id );
 
 		$template = $media_location->url_template;
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );

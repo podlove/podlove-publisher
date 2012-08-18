@@ -58,6 +58,13 @@ add_action( 'init', function () {
 
 } );
 
+/**
+ * Find and run migration for given version number.
+ *
+ * @todo  move migrations into separate files
+ * 
+ * @param  int $version
+ */
 function run_migrations_for_version( $version ) {
 	global $wpdb;
 	
@@ -198,6 +205,13 @@ function run_migrations_for_version( $version ) {
 			$sql = sprintf(
 				'ALTER TABLE `%s` DROP COLUMN `show_id`',
 				\Podlove\Model\Feed::table_name()
+			);
+			$wpdb->query( $sql );
+
+			// fix mediafile table
+			$sql = sprintf(
+				'ALTER TABLE `%s` CHANGE `release_id` `episode_id` INT',
+				\Podlove\Model\MediaFile::table_name()
 			);
 			$wpdb->query( $sql );
 		break;
