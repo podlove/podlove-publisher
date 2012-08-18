@@ -478,12 +478,20 @@ class Podcast_Post_Type {
 		// copy chapter info into custom meta for webplayer compatibility
 		update_post_meta( $post_id, sprintf( '_podlove_chapters' ), $episode->chapters );
 
-		// save files/formats
+		if ( isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
+			$this->save_media_locations( $episode, $_REQUEST['_podlove_meta']['media_locations'] );
+		else 
+			$this->save_media_locations( $episode, array() );
+	}
 
-		if ( ! isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
-			return;
-
-		$req_locations = $_REQUEST['_podlove_meta']['media_locations'];
+	/**
+	 * Save media locations based on checkbox data.
+	 *
+	 * @param \Podlove\Model\Episode $episode
+	 * @param  array $checkbox_data Raw form data for checkboxes.
+	 *               Contains 'on' for checked boxes and no entry at all for unchecked ones.
+	 */
+	function save_media_locations( $episode, $checkbox_data ) {
 
 		// create array where the keys are location_ids and values false
 		$locations = array_map(
@@ -496,12 +504,14 @@ class Podcast_Post_Type {
 			)
 		);
 
+		// set those location to true where the checkbox is set
 		foreach ( $locations as $id => $_ ) {
-			if ( isset( $req_locations[ $id ] ) && $req_locations[ $id ] === 'on' ) {
+			if ( isset( $checkbox_data[ $id ] ) && $checkbox_data[ $id ] === 'on' ) {
 				$locations[ $id ] = true;
 			}
 		}
 
+		// create new ones, delete unchecked ones
 		foreach ( $locations as $media_location_id => $media_location_value ) {
 			$file = Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $media_location_id );
 
