@@ -20,17 +20,18 @@ class Feed_List_Table extends \WP_List_Table {
 	
 	public function column_name( $feed ) {
 
-		$link = function ( $title ) use ( $feed ) {
+		$link = function ( $title, $action = 'edit' ) use ( $feed ) {
 			return sprintf(
 				'<a href="?page=%s&action=%s&feed=%s">' . $title . '</a>',
 				$_REQUEST['page'],
-				'edit',
+				$action,
 				$feed->id
 			);
 		};
 
 		$actions = array(
-			'edit' => $link( __( 'Edit', 'podlove' ) )
+			'edit'   => $link( __( 'Edit', 'podlove' ) ),
+			'delete' => $link( __( 'Delete', 'podlove' ), 'delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
