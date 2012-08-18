@@ -25,17 +25,91 @@ class Podcast_Post_Meta_Box {
 	 * Meta Box Template
 	 */
 	public static function post_type_meta_box_callback( $post ) {
-		
+
 		$post_id = $post->ID;
 
 		$podcast = Model\Podcast::get_instance();
 		$episode = Model\Episode::find_or_create_by_post_id( $post_id );
+			
+		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
+		?>
+		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
+		<table class="form-table">
+			<?php 
+			$form_args = array(
+				'context' => '_podlove_meta',
+				'submit_button' => false,
+				'form' => false
+			);
 
-		// read / generate format data
+			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $podcast ) {
+				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+				$episode = $form->object;
+
+				$wrapper->checkbox( 'active', array(
+					'label'       => __( 'Post Episode to Show', 'podlove' ), // todo: hide/show rest of the form
+					'description' => '',
+					'default'  => true
+				));
+
+				$wrapper->string( 'slug', array(
+					'label'       => __( 'Episode Media File Slug', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
+				));
+
+				$wrapper->string( 'duration', array(
+					'label'       => __( 'Duration', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
+				));
+
+				if ( $podcast->supports_cover_art ) {
+					$wrapper->string( 'cover_art', array(
+						'label'       => __( 'Episode Cover Art URL', 'podlove' ),
+						'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
+						'html'        => array( 'class' => 'regular-text' )
+					));
+				}
+
+				$wrapper->text( 'chapters', array(
+					'label'       => __( 'Chapter Marks', 'podlove' ),
+					'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
+					'html'        => array(
+						'class'       => 'large-text code',
+						'placeholder' => '00:00:00.000 Intro',
+						'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
+					)
+				));
+
+				$wrapper->checkbox( 'enable', array(
+					'label'       => __( 'Enable?', 'podlove' ),
+					'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
+					'default'     => true
+				));
+
+				$wrapper->multiselect( 'media_locations', Podcast_Post_Meta_Box::media_locations_form( $episode ) );
+
+			} );
+			?>
+		</table>
+		<?php
+	}
+
+	/**
+	 * Fetch form data for MediaLocations multiselect.
+	 * 
+	 * @param  \Podlove\Model\Episode $episode
+	 * @return array
+	 */
+	public static function media_locations_form( $episode ) {
 		$media_locations = Model\MediaLocation::all();
 
-		$location_values = array();
+		// field to generate option list
 		$location_options = array();
+		// values for option list
+		$location_values = array();
+
 		foreach ( $media_locations as $location ) {
 
 			if ( ! $media_format = $location->media_format() )
@@ -50,9 +124,8 @@ class Podcast_Post_Meta_Box {
 		$media_locations_form = array(
 			'label'       => __( 'Media Files', 'podlove' ),
 			'description' => '',
-			'type'    => 'multiselect',
-			'options' => $location_options,
-			'default' => true,
+			'options'     => $location_options,
+			'default'      => true,
 			'multi_values' => $location_values,
 			'multiselect_callback' => function ( $location_id ) use ( $episode ) {
 				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
@@ -64,93 +137,27 @@ class Podcast_Post_Meta_Box {
 		);
 
 		if ( empty( $location_options ) ) {
-			$media_locations_form['description'] = sprintf( '<span style="color: red">%s</span>', __( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' ) )
-			                                     . ' '
-			                                     . sprintf( '<a href="' . admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ) . '">%s</a>', __( 'Edit this show', 'podlove' ) );
+			$media_locations_form['description'] =
+				sprintf(
+					'<span style="color: red">%s</span>',
+					__( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' )
+				)
+				. ' '
+			    . sprintf(
+			    	'<a href="%s">%s</a>',
+			    	admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ),
+			    	__( 'Edit this show', 'podlove' )
+			    );
 		}
-			
-		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
-		?>
-		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
-		<table class="form-table">
-			<?php 
-			$form_data = array(
-				'active' => array(
-					'label'       => __( 'Post Episode to Show', 'podlove' ), // todo: hide/show rest of the form
-					'description' => '',
-					'type'     => 'checkbox',
-					'default'  => true
-				),
-				// todo: add subtitle; but as extra metabox
-				'slug' => array(
-					'label'       => __( 'Episode Media File Slug', 'podlove' ),
-					'description' => '',
-					'html'        => array( 'class' => 'regular-text' )
-				),
-				'duration' => array(
-					'label'       => __( 'Duration', 'podlove' ),
-					'description' => '',
-					'html'        => array( 'class' => 'regular-text' )
-				),
-				'cover_art' => array(
-					'label'       => __( 'Episode Cover Art URL', 'podlove' ),
-					'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
-					'html'        => array( 'class' => 'regular-text' )
-				),
-				'chapters' => array(
-					'label'       => __( 'Chapter Marks', 'podlove' ),
-					'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
-					'type'        => 'text',
-					'html'        => array(
-						'class'       => 'large-text code',
-						'placeholder' => '00:00:00.000 Intro'
-					)
-				),
-				'enable' => array(
-					'label'       => __( 'Enable?', 'podlove' ),
-					'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
-					'type'        => 'checkbox',
-					'default'     => true
-				),
-			);
 
-			$form_data['media_locations'] = $media_locations_form;
-
-			if ( ! $podcast->supports_cover_art )
-				unset( $form_data['cover_art'] );
-
-			$form_args = array(
-				'context' => '_podlove_meta',
-				'submit_button' => false,
-				'form' => false
-			);
-
-			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $form_data ) {
-				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
-				$episode = $form->object;
-
-				foreach ( $form_data as $key => $value ) {
-
-					// adjust chapter textfield height to its content
-					// TODO: move into form toolkit
-					if ( $key === 'chapters' ) {
-						$rows = count( explode( "\n", $episode->chapters ) );
-						if ( $rows < 2 ) {
-							$rows = 2;
-						}
-						$value['html']['rows'] = $rows;
-					}
-
-					$input_type = isset( $value['type'] ) ? $value['type'] : 'string';
-					$wrapper->$input_type( $key, $value );
-				}
-
-			} );
-			?>
-		</table>
-		<?php
+		return $media_locations_form;
 	}
 
+	/**
+	 * Save post data on WordPress callback.
+	 * 
+	 * @param  int $post_id
+	 */
 	public function save_postdata( $post_id ) {
 		global $wpdb;
 
