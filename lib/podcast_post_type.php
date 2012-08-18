@@ -10,9 +10,6 @@ class Podcast_Post_Type {
 
 	public function __construct() {
 
-		if ( is_admin() && true === apply_filters( 'podlove_custom_guid', true ) )
-			require_once \Podlove\PLUGIN_DIR . 'lib/custom_guid.php';
-
 		$this->form_data = array(
 			'active' => array(
 				'label'       => __( 'Post Episode to Show', 'podlove' ), // todo: hide/show rest of the form
