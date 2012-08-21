@@ -221,6 +221,22 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\MediaLocation::table_name()
 			);
 			$wpdb->query( $sql );
+
+			// add more default formats
+			$default_formats = array(
+				array( 'name' => 'PDF Document',  'type' => 'ebook', 'mime_type' => 'application/pdf',  'extension' => 'pdf' ),
+				array( 'name' => 'ePub Document', 'type' => 'ebook', 'mime_type' => 'application/epub+zip',  'extension' => 'epub' ),
+				array( 'name' => 'PNG Image',     'type' => 'image', 'mime_type' => 'image/png',   'extension' => 'png' ),
+				array( 'name' => 'JPEG Image',    'type' => 'image', 'mime_type' => 'image/jpeg',  'extension' => 'jpg' ),
+			);
+			
+			foreach ( $default_formats as $format ) {
+				$f = new Model\MediaFormat;
+				foreach ( $format as $key => $value ) {
+					$f->{$key} = $value;
+				}
+				$f->save();
+			}
 		break;
 
 	}

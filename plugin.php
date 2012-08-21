@@ -35,8 +35,6 @@ function activate_for_current_blog() {
 			array( 'name' => 'PNG Image',              'type' => 'image', 'mime_type' => 'image/png',   'extension' => 'png' ),
 			array( 'name' => 'JPEG Image',             'type' => 'image', 'mime_type' => 'image/jpeg',  'extension' => 'jpg' ),
 		);
-		// todo: add flac
-		// todo: pentabarf-ish validation. summary of all conflicts / missing info is dashboard
 		
 		foreach ( $default_formats as $format ) {
 			$f = new Model\MediaFormat;
