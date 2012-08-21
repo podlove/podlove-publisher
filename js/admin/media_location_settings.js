@@ -42,7 +42,6 @@ var PODLOVE = PODLOVE || {};
 
 				var media_file_base_uri = $('#podlove_show_media_file_base_uri').val();
 				var episode_slug        = 'example-episode';
-				var feed_suffix         = $container.find('[name*="suffix"]').val();
 
 				var selected_format     = $container.find('[name*="media_format_id"] option:selected').text();
 				var match               = selected_format.match(/\((.*)\)/);
@@ -53,7 +52,6 @@ var PODLOVE = PODLOVE || {};
 
 				template = template.replace( '%media_file_base_url%', media_file_base_uri );
 				template = template.replace( '%episode_slug%', episode_slug );
-				template = template.replace( '%suffix%', feed_suffix );
 				template = template.replace( '%format_extension%', format_extension );
 
 				$preview.html(template);	

@@ -113,6 +113,7 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Podcast( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\MediaLocation( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );
 		// new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
 	}

@@ -132,7 +132,7 @@ class Podcast_Post_Meta_Box {
 				$format   = $location->media_format();
 				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
 				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
-				return 'data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-suffix="' . $location->suffix . '" data-size="' . $filesize . '"';
+				return 'data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-size="' . $filesize . '"';
 			}
 		);
 
