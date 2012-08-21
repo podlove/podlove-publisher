@@ -19,7 +19,7 @@ jQuery(function($) {
 		PODLOVE.DashboardValidation($(this));
 	});
 
-	$(".postbox[id*='podlove_show']").each(function() {
+	$("#podlove_podcast").each(function() {
 		PODLOVE.Episode($(this));
 	});
 
