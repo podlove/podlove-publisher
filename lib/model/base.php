@@ -289,6 +289,26 @@ abstract class Base
 		return $model;
 	}
 	
+	public static function last() {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$model = new $class();
+		$model->flag_as_not_new();
+		
+		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' ORDER BY id DESC LIMIT 0,1' );
+		
+		if ( ! $row ) {
+			return NULL;
+		}
+		
+		foreach ( $row as $property => $value ) {
+			$model->$property = $value;
+		}
+
+		return $model;
+	}
+
 	/**
 	 * Retrieve all entries from the table.
 	 * 

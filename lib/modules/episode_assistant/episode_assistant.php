@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Modules\EpisodeAssistant;
+use \Podlove\Model;
 
 class Episode_Assistant extends \Podlove\Modules\Base {
 
@@ -18,7 +19,7 @@ EOT;
 		$this->register_option( 'title_template', 'string', array(
 			'label'       => __( 'Title Template', 'podlove' ),
 			'description' => __( 'Placeholders: %show_slug%, %episode_number%, %episode_title%', 'podlove' ),
-			'default'     => '%show_slug%%episode_number% %episode_title%',
+			'default'     => '%podcast_slug%%episode_number% %episode_title%',
 			'html'        => array( 'class' => 'regular-text' )
 		) );
 
@@ -59,25 +60,28 @@ EOT;
 		wp_enqueue_style( 'jquery-style' );
 	}
 
-	public function guess_next_episode_number_for_show( $show_id ) {
-		$show = \Podlove\Model\Show::find_by_id( $show_id );
+	/**
+	 * Try to guess next episode number/id from previous slug.
+	 *
+	 * The slug is expected to consist of the podcast slug and the episode number.
+	 * Something like these: cre162, ppp000, wrint42
+	 * I am looking for the first number and add one. If there is no episode,
+	 * start with number 1.
+	 * 
+	 * Add leading zeroes if it is configured.
+	 * 
+	 * @return string episode number/id with or without leading zeroes
+	 */
+	public function guess_next_episode_id_for_show() {
 
-		if ( ! $show )
-			return;
-
-		$releases = array_filter( $show->releases(), function ( $r ) {
-			return strlen( $r->slug ) > 0;
-		} );
-
-		if ( ! count( $releases ) ) {
-			$number = 1;
-		} else {
-			// support shows beginning with episode 0
-			// first show includes a "1"? then the first number was 1, not 0
-			$add = strpos( $releases[0]->slug, '1' ) ? 1 : 0;
-			$number = (string) ( count( $releases ) + $add );			
+		// try to derive next number from previous episode slug
+		$number = 1;
+		if ( preg_match( "/\d+/", Model\Episode::last()->slug, $matches ) ) {
+			$number = (int) $matches[0] + 1;
 		}
+		$number = "$number";
 
+		// add leading zeros
 		$leading_zeros = $this->get_module_option( 'leading_zeros', 3 );
 		if ( $leading_zeros !== 'no' ) {
 			while ( strlen( $number ) < $leading_zeros ) {
@@ -89,48 +93,28 @@ EOT;
 	}
 
 	public function modal_box_html() {
-		$shows = \Podlove\Model\Show::all();
 
-		if ( ! $shows )
-			return;
+		$podcast = Model\Podcast::get_instance();
+		$media_locations = Model\MediaLocation::all();
+		$media_location = $media_locations[0];
 
-		$shows_data = array();
-		foreach ( $shows as $s ) {
-			$media_locations = $s->media_locations();
-
-			if ( ! $media_locations )
-				continue;
-
-			$media_location  = $media_locations[0];
-
-			$shows_data[ $s->id ] = array(
-				'slug'        => $s->slug,
-				'name'        => $s->name,
-				'next_number' => $this->guess_next_episode_number_for_show( $s->id ),
-				'base_url'    => $s->media_file_base_uri,
-				'media_location' => array(
-					'template' => $media_location->url_template,
-					'suffix'   => $media_location->suffix
-				)
-			);
-		}
-
+		$podcast_data = array(
+			'slug'        => $podcast->slug,
+			'name'        => $podcast->title,
+			'next_number' => $this->guess_next_episode_id_for_show(),
+			'base_url'    => $podcast->media_file_base_uri,
+			'media_location' => array(
+				'template' => $media_location->url_template
+			)
+		);
 		?>
 		<div id="new-episode-modal" class="hidden wrap" title="Create New Episode">
-			<div class="hidden" id="new-episode-shows-data"><?php echo json_encode( $shows_data ) ?></div>
+			<div class="hidden" id="new-episode-podcast-data"><?php echo json_encode( $podcast_data ) ?></div>
 			<p>
 				<div id="titlediv">
 					<p>
-						<strong>Show</strong>
-						<select name="new_episode_show" id="new_episode_show">
-							<?php foreach ( $shows_data as $show_id => $show ): ?>
-								<option value="<?php echo $show_id ?>"><?php echo $show['name'] ?></option>
-							<?php endforeach ?>
-						</select>
-					</p>
-					<p>
 						<strong>Episode Number</strong>
-						<input type="text" name="episode_number" value="" class="really-huge-text episode_number" autocomplete="off">
+						<input type="text" name="episode_number" value="<?php echo $this->guess_next_episode_id_for_show(); ?>" class="really-huge-text episode_number" autocomplete="off">
 					</p>
 					<p>
 						<strong>Episode Title</strong>
@@ -142,7 +126,7 @@ EOT;
 					</p>
 					<p class="post_info result">
 						<strong>Post Title</strong>
-						<span class="post_title" data-template="<?php echo $this->get_module_option( 'title_template', '%show_slug%%episode_number% %episode_title%' ) ?>">Loading ...</span>
+						<span class="post_title" data-template="<?php echo $this->get_module_option( 'title_template', '%podcast_slug%%episode_number% %episode_title%' ) ?>">Loading ...</span>
 					</p>
 				</div>
 			</p>
