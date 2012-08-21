@@ -6,6 +6,29 @@ namespace Podlove\Model;
  */
 class Episode extends Base {
 
+	/**
+	 * Generate a human readable title.
+	 * 
+	 * Return name and, if available, the subtitle. Separated by a dash.
+	 * 
+	 * @return string
+	 */
+	public function full_title() {
+		
+		$post = get_post( $this->post_id );
+
+		$t = $post->title;
+		
+		if ( $this->subtitle )
+			$t = $t . ' - ' . $this->subtitle;
+		
+		return $t;
+	}
+
+	public function media_files() {
+		return MediaFile::find_all_by_episode_id( $this->id );
+	}
+
 	public function find_or_create_by_post_id( $post_id ) {
 		$episode = Episode::find_one_by_property( 'post_id', $post_id );
 

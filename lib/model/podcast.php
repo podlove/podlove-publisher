@@ -133,6 +133,22 @@ class Podcast {
 	private function fetch() {
 		$this->data = get_option( 'podlove_podcast', array() );
 	}
+
+	/**
+	 * Generate a human readable title.
+	 * 
+	 * Return name and, if available, the subtitle. Separated by a dash.
+	 * 
+	 * @return string
+	 */
+	public function full_title() {
+		$t = $this->title;
+		
+		if ( $this->subtitle )
+			$t = $t . ' - ' . $this->subtitle;
+		
+		return $t;
+	}
 }
 
 $podcast = Podcast::get_instance();
