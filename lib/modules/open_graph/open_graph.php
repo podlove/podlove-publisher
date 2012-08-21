@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Modules\OpenGraph;
+use \Podlove\Model;
 
 class Open_Graph extends \Podlove\Modules\Base {
 
@@ -45,27 +46,22 @@ class Open_Graph extends \Podlove\Modules\Base {
 			if ( ! $episode )
 				return;
 
-			// assumes that there is only one active release per episode
-			$release = \Podlove\Model\Release::find_one_by_where( sprintf( '`episode_id` = "%s" AND `active` = "1"', $episode->id ) );
-			if ( ! $release )
-				return;
-
-			$show = $release->show();
+			$podcast = Model\Podcast::get_instance();
 
 			// determine image
-			$cover_art_url = $release->cover_art;
+			$cover_art_url = $episode->cover_art;
 			if ( ! $cover_art_url )
-				$cover_art_url = $show->cover_image;
+				$cover_art_url = $podcast->cover_image;
 			
 			?>
 			<meta property="og:type" content="website" />
-			<meta property="og:site_name" content="<?php echo $show->full_title(); ?>" />
+			<meta property="og:site_name" content="<?php echo $episode->full_title(); ?>" />
 			<meta property="og:title" content="<?php the_title(); ?>" />
 			<?php if ( $cover_art_url ): ?>
 				<meta property="og:image" content="<?php echo $cover_art_url; ?>" />
 			<?php endif ?>
 			<meta property="og:url" content="<?php the_permalink(); ?>" />
-			<?php $media_files = $release->media_files(); ?>
+			<?php $media_files = $episode->media_files(); ?>
 			<?php foreach ( $media_files as $media_file ): ?>
 				<meta property="og:audio" content="<?php echo $media_file->get_file_url(); ?>" />
 				<meta property="og:audio:type" content="<?php echo $media_file->media_location()->media_format()->mime_type ?>" />

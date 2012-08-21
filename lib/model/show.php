@@ -4,22 +4,6 @@ namespace Podlove\Model;
 class Show extends Base {
 
 	/**
-	 * Generate a human readable title.
-	 * 
-	 * Return name and, if available, the subtitle. Separated by a dash.
-	 * 
-	 * @return string
-	 */
-	public function full_title() {
-		$t = $this->name;
-		
-		if ( $this->subtitle )
-			$t = $t . ' - ' . $this->subtitle;
-		
-		return $t;
-	}
-
-	/**
 	 * Return all media_locations related to this show.
 	 *
 	 * @return array
