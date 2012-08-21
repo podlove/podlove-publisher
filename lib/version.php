@@ -214,6 +214,13 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\MediaFile::table_name()
 			);
 			$wpdb->query( $sql );
+
+			// remove suffix
+			$sql = sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `suffix`',
+				\Podlove\Model\MediaLocation::table_name()
+			);
+			$wpdb->query( $sql );
 		break;
 
 	}

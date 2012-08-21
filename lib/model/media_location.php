@@ -10,7 +10,7 @@ class MediaLocation extends Base {
 	 */
 	public function default_values() {
 		return array(
-			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%'
+			'url_template' => '%media_file_base_url%%episode_slug%.%format_extension%'
 		);
 	}
 
@@ -44,5 +44,4 @@ class MediaLocation extends Base {
 MediaLocation::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 MediaLocation::property( 'title', 'VARCHAR(255)' );
 MediaLocation::property( 'media_format_id', 'INT' );
-MediaLocation::property( 'suffix', 'VARCHAR(255)' );
 MediaLocation::property( 'url_template', 'VARCHAR(255)' );

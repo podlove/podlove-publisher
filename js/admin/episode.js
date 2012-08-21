@@ -38,13 +38,11 @@ var PODLOVE = PODLOVE || {};
 
  					var media_file_base_uri = $container.find('input[name="show-media-file-base-uri"]').val();
  					var episode_slug        = $container.find('input[name*="slug"]').val();
- 					var feed_suffix         = $checkbox.data('suffix');
  					var format_extension    = $checkbox.data('extension');
  					var size                = $checkbox.data('size');
 
  					url = url.replace( '%media_file_base_url%', media_file_base_uri );
  					url = url.replace( '%episode_slug%', episode_slug );
- 					url = url.replace( '%suffix%', feed_suffix );
  					url = url.replace( '%format_extension%', format_extension );
 
  					output = '(' + url + ' [' + human_readable_size( size ) + '])';

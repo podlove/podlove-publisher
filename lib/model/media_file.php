@@ -53,7 +53,6 @@ class MediaFile extends Base {
 		$template = $media_location->url_template;
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );
 		$template = str_replace( '%episode_slug%',        $episode->slug, $template );
-		$template = str_replace( '%suffix%',              $media_location->suffix, $template );
 		$template = str_replace( '%format_extension%',    $media_format->extension, $template );
 
 		return $template;
