@@ -176,7 +176,7 @@ abstract class Base {
 	public function update_module_option( $name, $value ) {
 		$options = $this->get_module_options();
 		$options[$name] = $value;
-		update_option( 'podlove_active_modules', $options );
+		update_option( $this->get_module_options_name(), $options );
 	}
 
 	public function register_option( $name, $input_type, $args ) {
