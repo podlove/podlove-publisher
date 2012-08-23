@@ -13,9 +13,8 @@ class Feed extends Base {
 		$podcast = \Podlove\Model\Podcast::get_instance();
 
 		$url = sprintf(
-			'%s/feed/%s/%s/',
+			'%s/feed/%s/',
 			get_bloginfo( 'url' ),
-			$podcast->slug,
 			$this->slug
 		);
 

@@ -7,10 +7,9 @@ function init() {
 
 function add_feed_routes() {
 
-	// The following defines a rule that maps URLs like /geostate/oregon to a URL request like ?geostate=oregon
 	add_action( 'generate_rewrite_rules', function ( $wp_rewrite ) {
 		$new_rules = array( 
-			'feed/(.+)/(.+)' => 'index.php?show_slug=' . $wp_rewrite->preg_index( 1 ) . '&feed_slug=' . $wp_rewrite->preg_index( 2 )
+			'feed/(.+)' => 'index.php?feed_slug=' . $wp_rewrite->preg_index( 1 )
 		);
 		$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
 	} );
@@ -29,15 +28,10 @@ function add_feed_routes() {
 add_action( 'wp', function () {
 	global $wp_query;
 	
-	$show_slug = get_query_var( 'show_slug' );
-	$feed_slug = get_query_var( 'feed_slug' );
-	
-	if ( ! $show_slug || ! $feed_slug )
+	if ( ! $feed_slug = get_query_var( 'feed_slug' ) )
 		return;
 
-	$feed = \Podlove\Model\Feed::find_by_show_slug_and_feed_slug( $show_slug, $feed_slug );
-
-	if ( ! $feed )
+	if ( ! $feed = \Podlove\Model\Feed::find_one_by_slug( $feed_slug ) )
 		return;
 
 	$is_feedburner_bot = preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
@@ -56,9 +50,9 @@ add_action( 'wp', function () {
 		} );
 
 		if ( $feed->format === "rss" ) {
-			new	\Podlove\Feeds\RSS( $show_slug, $feed_slug );
+			new	\Podlove\Feeds\RSS( $feed_slug );
 		} else {
-			new	\Podlove\Feeds\Atom( $show_slug, $feed_slug );
+			new	\Podlove\Feeds\Atom( $feed_slug );
 		}
 	}
 	
