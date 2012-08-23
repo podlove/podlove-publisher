@@ -237,6 +237,12 @@ function run_migrations_for_version( $version ) {
 				}
 				$f->save();
 			}
+
+			// update assistant
+			$assistant = \Podlove\Modules\EpisodeAssistant\Episode_Assistant::instance();
+			$template = $assistant->get_module_option( 'title_template' );
+			$template = str_replace( '%show_slug%', '%podcast_slug%', $template );
+			$assistant->update_module_option( 'title_template', $template );
 		break;
 
 	}

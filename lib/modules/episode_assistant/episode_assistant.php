@@ -18,7 +18,7 @@ EOT;
 
 		$this->register_option( 'title_template', 'string', array(
 			'label'       => __( 'Title Template', 'podlove' ),
-			'description' => __( 'Placeholders: %show_slug%, %episode_number%, %episode_title%', 'podlove' ),
+			'description' => __( 'Placeholders: %podcast_slug%, %episode_number%, %episode_title%', 'podlove' ),
 			'default'     => '%podcast_slug%%episode_number% %episode_title%',
 			'html'        => array( 'class' => 'regular-text' )
 		) );
