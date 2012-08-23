@@ -42,6 +42,11 @@ class Episode extends Base {
 		return $episode;
 	}
 
+	public function enclosure_url( $media_location ) {
+		$media_file = MediaFile::find_by_episode_id_and_media_location_id( $this->id, $media_location->id );
+		return $media_file->get_file_url();
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

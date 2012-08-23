@@ -2,10 +2,12 @@
 namespace Podlove\Settings;
 
 class Feed {
+
+	static $pagehook;
 	
 	public function __construct( $handle ) {
 		
-		add_submenu_page(
+		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ 'Feeds',
 			/* $menu_title */ 'Feeds',
@@ -66,6 +68,10 @@ class Feed {
 	}
 	
 	public function process_form() {
+
+		if ( ! isset( $_REQUEST['feed'] ) )
+			return;
+
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 		
 		if ( $action === 'save' ) {
