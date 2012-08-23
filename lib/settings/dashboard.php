@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Settings;
+use \Podlove\Model;
 
 class Dashboard {
 
@@ -73,7 +74,7 @@ class Dashboard {
 				// close postboxes that should be closed
 				$( '.if-js-closed' ).removeClass( 'if-js-closed' ).addClass( 'closed' );
 				// postboxes setup
-				postboxes.add_postbox_toggles( '<?php echo Podcast_Post_Type::SETTINGS_PAGE_HANDLE; ?>' );
+				postboxes.add_postbox_toggles( '<?php echo \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE; ?>' );
 			} );
 			</script>
 
@@ -89,7 +90,8 @@ class Dashboard {
 	}
 
 	public static function validate_podcast_files() {
-		$shows = \Podlove\Model\Show::all();
+		
+		$podcast = Model\Podcast::get_instance();
 
 		if ( ! in_array( 'curl', get_loaded_extensions() ) ) {
 			?>
@@ -104,51 +106,50 @@ class Dashboard {
 				<?php echo __( 'Validate Everything', 'podlove' ); ?>
 			</a>
 
-			<?php foreach ( $shows as $show ): ?>
-				<?php
-				echo "<h4>" . $show->name . "</h4>";
-				$releases = $show->releases();
-				?>
+			<?php
+			echo "<h4>" . $podcast->title . "</h4>";
+			$episodes = Model\Episode::all();
+			?>
 
-				<?php foreach ( $releases as $release ): ?>
-					<?php
-					$episode = $release->episode();
-					$post_id = $episode->post_id;
-					?>
-					<div class="release">
-						<div class="slug">
-							<strong><?php echo sprintf( "%s (%s)", get_the_title( $post_id ), $release->slug ); ?></strong>
-						</div>
-						<div class="duration">
-							<?php echo sprintf( __( 'Duration: %s', 'podlove' ), ( $release->duration ) ? $release->duration : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
-						</div>
-						<div class="chapters">
-							<?php echo sprintf( __( 'Chapters: %s' ), strlen( $release->chapters ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
-						</div>
-						<?php if ( $show->supports_cover_art ): ?>
-							<div class="coverart">
-								<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $release->cover_art ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
-							</div>
-						<?php endif; ?>
-						<div class="media_files">
-							<?php $media_files = $release->media_files(); ?>
-							<?php foreach ( $media_files as $media_file ): ?>
-								<div class="file" data-id="<?php echo $media_file->id; ?>">
-									<span class="status">
-										<?php if ( $media_file->size <= 0 ): ?>
-											<?php echo __( "<span class=\"error\">filesize missing</span>", 'podlove' ); ?>
-										<?php endif ?>
-									</span>
-									<span class="title"><?php echo $media_file->media_location()->title() ?></span>
-									<span class="url">
-										<?php echo $media_file->get_file_url(); ?>
-									</span>
-								</div>
-							<?php endforeach ?>
-						</div>
+			<?php foreach ( $episodes as $episode ): ?>
+				<?php
+				$post_id = $episode->post_id;
+				?>
+				<div class="episode">
+					<div class="slug">
+						<strong><?php echo sprintf( "%s (%s)", get_the_title( $post_id ), $episode->slug ); ?></strong>
 					</div>
-				<?php endforeach ?>
-			<?php endforeach ?>			
+					<div class="duration">
+						<?php echo sprintf( __( 'Duration: %s', 'podlove' ), ( $episode->duration ) ? $episode->duration : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
+					</div>
+					<div class="chapters">
+						<?php echo sprintf( __( 'Chapters: %s' ), strlen( $episode->chapters ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
+					</div>
+					<?php if ( $podcast->supports_cover_art ): ?>
+						<div class="coverart">
+							<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $episode->cover_art ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
+						</div>
+					<?php endif; ?>
+					<div class="media_files">
+						<?php $media_files = $episode->media_files(); ?>
+						<?php foreach ( $media_files as $media_file ): ?>
+							<div class="file" data-id="<?php echo $media_file->id; ?>">
+								<span class="status">
+									<?php if ( $media_file->size <= 0 ): ?>
+										<?php echo __( "<span class=\"error\">filesize missing</span>", 'podlove' ); ?>
+									<?php endif ?>
+								</span>
+								<?php if ( $media_location = $media_file->media_location() ): ?>
+									<span class="title"><?php echo $media_location->title() ?></span>
+								<?php endif; ?>
+								<span class="url">
+									<?php echo $media_file->get_file_url(); ?>
+								</span>
+							</div>
+						<?php endforeach ?>
+					</div>
+				</div>
+			<?php endforeach ?>
 		</div>
 
 		<style type="text/css">
@@ -156,7 +157,7 @@ class Dashboard {
 			font-size: 20px;
 		}
 
-		#validation .release {
+		#validation .episode {
 			margin: 0 0 15px 0;
 		}
 

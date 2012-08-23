@@ -106,7 +106,7 @@ class Podcast_Post_Type {
 			/* $menu_title */ 'Podlove',
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ self::SETTINGS_PAGE_HANDLE,
-			/* $function   */ '\Podlove\Settings\Dashboard::settings_page',
+			/* $function   */ function () { /* see \Podlove\Settings\Dashboard */ },
 			/* $icon_url   */ PLUGIN_URL . '/images/podlove-icon-16x16.png'
 			/* $position   */
 		);
