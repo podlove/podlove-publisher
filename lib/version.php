@@ -243,6 +243,13 @@ function run_migrations_for_version( $version ) {
 			$template = $assistant->get_module_option( 'title_template' );
 			$template = str_replace( '%show_slug%', '%podcast_slug%', $template );
 			$assistant->update_module_option( 'title_template', $template );
+
+			// update media locations
+			$media_locations = \Podlove\Model\MediaLocation::all();
+			foreach ( $media_locations as $media_location ) {
+				$media_location->url_template = str_replace( '%suffix%', '', $media_location->url_template );
+				$media_location->save();
+			}
 		break;
 
 	}
