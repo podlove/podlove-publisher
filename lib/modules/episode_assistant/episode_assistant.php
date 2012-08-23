@@ -76,7 +76,8 @@ EOT;
 
 		// try to derive next number from previous episode slug
 		$number = 1;
-		if ( preg_match( "/\d+/", Model\Episode::last()->slug, $matches ) ) {
+		$episode = Model\Episode::last();
+		if ( $episode && preg_match( "/\d+/", $episode->slug, $matches ) ) {
 			$number = (int) $matches[0] + 1;
 		}
 		$number = "$number";
