@@ -17,3 +17,8 @@ Development of the plugin is an open process. The current version is available o
 http://github.com/eteubert/podlove
 
 Feel free to contribute and to fix errors or send improvements via github.
+
+== Upgrade Notice ==
+
+= 1.2.0-alpha =
+Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change! 
