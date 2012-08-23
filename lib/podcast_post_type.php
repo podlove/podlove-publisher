@@ -50,6 +50,7 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 		
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
+		add_action( 'default_content', array( $this, 'set_default_episode_content' ), 10, 2 );	
 		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
@@ -144,6 +145,20 @@ class Podcast_Post_Type {
 
 		return $query_var;
 	}
-	
+
+	function set_default_episode_content( $post_content, $post ) {
+
+		if ( $post->post_type !== 'podcast' )
+			return $post_content;
+
+		$post_content = $post_content . <<<EOT
+
+[podlove-web-player]
+
+[podlove-episode-downloads]
+EOT;
+
+		return $post_content;
+	}
 }
 
