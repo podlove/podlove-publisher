@@ -287,8 +287,8 @@ add_action( 'wp_ajax_podlove-validate-file', '\Podlove\AJAX\validate_file' );
 
 function create_episode() {
 
-	$slug    = isset( $_REQUEST['slug'] )    ? $_REQUEST['slug']    : NULL;
-	$title   = isset( $_REQUEST['title'] )   ? $_REQUEST['title']   : NULL;
+	$slug  = isset( $_REQUEST['slug'] )  ? $_REQUEST['slug']  : NULL;
+	$title = isset( $_REQUEST['title'] ) ? $_REQUEST['title'] : NULL;
 
 	if ( ! $slug || ! $title )
 		die();
