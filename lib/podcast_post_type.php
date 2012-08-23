@@ -51,6 +51,7 @@ class Podcast_Post_Type {
 		
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
 		add_action( 'default_content', array( $this, 'set_default_episode_content' ), 10, 2 );	
+		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );	
 		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
@@ -159,6 +160,27 @@ class Podcast_Post_Type {
 EOT;
 
 		return $post_content;
+	}
+
+	/**
+	 * Hook into post deletion and remove associated episode.
+	 * 
+	 * @param int $post_id
+	 */
+	public function delete_trashed_episodes( $post_id ) {
+		
+		$episode = Model\Episode::find_one_by_post_id( $post_id );
+
+		if ( ! $episode )
+			return;
+		
+		if ( $media_files = Model\MediaFile::find_all_by_episode_id( $episode->id ) ) {
+			foreach ( $media_files as $media_file ) {
+				$media_file->delete();
+			}
+		}
+
+		$episode->delete();
 	}
 }
 
