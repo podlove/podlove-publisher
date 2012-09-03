@@ -160,7 +160,8 @@ class MediaLocation {
 			$f->string( 'url_template', array(
 				'label'       => __( 'URL Template', 'podlove' ),
 				'description' => sprintf( __( 'Preview: %s' ), '<span class="url_template_preview"></span><br/>', 'podlove' ),
-				'html' => array( 'class' => 'large-text required' )
+				'html' => array( 'class' => 'large-text required' ),
+				'default' => '%media_file_base_url%%episode_slug%.%format_extension%'
 			) );
 
 		} );
