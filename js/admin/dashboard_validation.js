@@ -12,7 +12,7 @@ var PODLOVE = PODLOVE || {};
 			$("#validate_everything", container).click(function(e) {
 				e.preventDefault();
 
-				$(".release .file").each(function() {
+				$(".episode .file").each(function() {
 					var file_id = $(this).data('id');
 
 					var data = {
