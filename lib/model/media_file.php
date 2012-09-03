@@ -50,6 +50,9 @@ class MediaFile extends Base {
 		$media_location = MediaLocation::find_by_id( $this->media_location_id );
 		$media_format   = MediaFormat::find_by_id( $media_location->media_format_id );
 
+		if ( ! $media_location || ! $media_format || ! $episode->slug )
+			return '';
+
 		$template = $media_location->url_template;
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );
 		$template = str_replace( '%episode_slug%',        $episode->slug, $template );

@@ -14,7 +14,7 @@ function activate_for_current_blog() {
 	Model\Show::build();
 	Model\Episode::build();
 	Model\Release::build();
-	
+
 	if ( ! Model\MediaFormat::has_entries() ) {
 		$default_formats = array(
 			array( 'name' => 'MP3 Audio',              'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
