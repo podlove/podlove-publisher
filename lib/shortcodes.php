@@ -1,5 +1,6 @@
 <?php
 namespace Podlove;
+use \Podlove\Model;
 
 function handle_direct_download() {
 	
@@ -45,9 +46,8 @@ function episode_downloads_shortcode( $options ) {
 	if ( is_feed() )
 		return '';
 
-	$episode     = Model\Episode::find_or_create_by_post_id( $post->ID );
-	$release     = $episode->release();
-	$media_files = $release->media_files();
+	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
+	$media_files = $episode->media_files();
 
 	$html = '<ul class="episode_download_list">';
 	foreach ( $media_files as $media_file ) {
@@ -55,8 +55,7 @@ function episode_downloads_shortcode( $options ) {
 		$media_location = $media_file->media_location();
 		$media_format   = $media_location->media_format();
 		
-		$download_link_url = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
-
+		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
 		$download_link_name = $media_location->title;
 
 		$html .= '<li class="' . $media_format->extension . '">';
@@ -90,15 +89,10 @@ add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcod
 function webplayer_shortcode( $options ) {
 	global $post;
 
-	$episode         = Model\Episode::find_or_create_by_post_id( $post->ID );
-	$release         = $episode->release();
-	$show            = $release->show();
+	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
+	$podcast = Model\Podcast::get_instance();
 
-	$all_formats_data = get_option( 'podlove_webplayer_formats' );
-	$formats_data = array();
-
-	if ( isset( $all_formats_data[ $show->id ] ) )
-		$formats_data = $all_formats_data[ $show->id ];
+	$formats_data = get_option( 'podlove_webplayer_formats' );
 
 	if ( ! count( $formats_data ) )
 		return;
@@ -107,20 +101,20 @@ function webplayer_shortcode( $options ) {
 	$audio_formats = array( 'mp3', 'mp4', 'ogg' );
 
 	foreach ( $audio_formats as $audio_format ) {
-		$format_location = Model\MediaLocation::find_by_id( $formats_data['audio'][ $audio_format ] );
+		$media_location = Model\MediaLocation::find_by_id( $formats_data['audio'][ $audio_format ] );
 
-		if ( ! $format_location )
+		if ( ! $media_location )
 			continue;
 
-		$format_file = Model\MediaFile::find_by_release_id_and_media_location_id( $release->id, $format_location->id );
+		$media_file = Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $media_location->id );
 
-		if ( $format_file )
-			$available_formats[] = sprintf( '%s="%s"', $audio_format, $format_file->get_file_url() );
+		if ( $media_file )
+			$available_formats[] = sprintf( '%s="%s"', $audio_format, $media_file->get_file_url() );
 	}
 
 	$chapters = '';
-	if ( $release->chapters ) {
-		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $show->slug );
+	if ( $episode->chapters ) {
+		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $podcast->slug );
 	}
 
 	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
