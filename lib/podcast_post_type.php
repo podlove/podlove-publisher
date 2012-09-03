@@ -130,6 +130,7 @@ class Podcast_Post_Type {
 	 * @return array
 	 */
 	function add_post_type_to_feeds( $query_var ) {
+
 		if ( isset( $query_var['feed'] ) ) {
 
 			$extend = array(
@@ -147,7 +148,7 @@ class Podcast_Post_Type {
 		return $query_var;
 	}
 
-	function set_default_episode_content( $post_content, $post ) {
+	public function set_default_episode_content( $post_content, $post ) {
 
 		if ( $post->post_type !== 'podcast' )
 			return $post_content;
