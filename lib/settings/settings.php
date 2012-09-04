@@ -38,6 +38,21 @@ class Settings {
 			/* $section  */ 'podlove_settings_general'
 		);
 		
+		add_settings_field(
+			/* $id       */ 'podlove_setting_hide_wp_feed_discovery',
+			/* $title    */ sprintf(
+				'<label for="hide_wp_feed_discovery">%s</label>',
+				__( 'Hide default WordPress Feeds for blog and comments (no auto-discovery).', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove[hide_wp_feed_discovery]" id="hide_wp_feed_discovery" type="checkbox" <?php checked( \Podlove\get_setting( 'hide_wp_feed_discovery' ), 'on' ) ?>>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
+		
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',
 			/* $title 	 */ __( 'Modules', 'podlove' ),	

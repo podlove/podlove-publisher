@@ -10,7 +10,8 @@ function format_bytes( $size, $decimals = 2 ) {
 function get_setting( $name ) {
 	
 	$defaults = array(
-		'merge_episodes' => 'off' // can't be "on"
+		'merge_episodes' => 'off', // can't be "on"
+		'hide_wp_feed_discovery' => 'off'
 	);
 
 	$options = get_option( 'podlove' );

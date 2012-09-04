@@ -176,6 +176,12 @@ add_action( 'init', function () {
 
 	// priority 2 so they are placed below the WordPress default discovery links
 	add_action( 'wp_head', '\Podlove\add_feed_discoverability', 2 );
+
+	// hide WordPress default link discovery
+	if ( \Podlove\get_setting( 'hide_wp_feed_discovery' ) === 'on' ) {
+		remove_action( 'wp_head', 'feed_links',       2 );
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
+	}
 });
 
 add_action( 'init', function () {
