@@ -53,6 +53,24 @@ class Settings {
 			/* $section  */ 'podlove_settings_general'
 		);
 		
+		add_settings_field(
+			/* $id       */ 'podlove_setting_custom_episode_slug',
+			/* $title    */ sprintf(
+				'<label for="custom_episode_slug">%s</label>',
+				__( 'URL segment prefix for podcast episode posts.', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo \Podlove\get_setting( 'custom_episode_slug' ) ?>">
+				<p>
+					<span class="description"><?php echo __( 'Must be a suitable URL part: lowercase characters, numbers and hyphens.', 'podlove' ); ?></span>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
+		
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',
 			/* $title 	 */ __( 'Modules', 'podlove' ),	
@@ -126,6 +144,8 @@ class Settings {
 	}
 	
 	function page() {
+		// hack: always flush rewrite rules here for custom_episode_slug setting
+		flush_rewrite_rules();
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
