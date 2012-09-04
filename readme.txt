@@ -20,5 +20,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Upgrade Notice ==
 
+= 1.2.1-alpha =
+- support for alternate URLs https://github.com/eteubert/podlove/commit/e98c16ce318ce9841c79969456bd8bae2b93449e
+- add option for episode url prefix slug (in settings, "/podcast/" can be renamed)
+
 = 1.2.0-alpha =
 Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change! 
