@@ -1,6 +1,6 @@
 function human_readable_size(size) {
 	if (!size || size < 1) {
-		return "File Size Missing :(";
+		return "???";
 	}
 
 	var kilobytes = size / 1024;

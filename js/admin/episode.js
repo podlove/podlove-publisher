@@ -45,7 +45,15 @@ var PODLOVE = PODLOVE || {};
  					url = url.replace( '%episode_slug%', episode_slug );
  					url = url.replace( '%format_extension%', format_extension );
 
- 					output = '(' + url + ' [' + human_readable_size( size ) + '])';
+ 					var readable_size = human_readable_size( size );
+
+ 					output = ' ';
+ 					if (readable_size === "???") {
+ 						output += '<span style="color:red">Filesize Missing!</span>';
+ 					} else {
+ 						output += '<span title="' + url + '">' + size + ' Bytes (' + readable_size + ')</span>';	
+ 					}
+ 					output += ' <a href="#" class="update_media_file">update</a>';
  				} else {
  					output = "";
  				}
@@ -57,6 +65,33 @@ var PODLOVE = PODLOVE || {};
  		o.slug_field = container.find("[name*=slug]");
  		enable_all_media_files_by_default();
  		generate_live_preview();
+
+ 		$(document).on("click", ".update_media_file", function(e) {
+ 			e.preventDefault();
+
+ 			var container = $(this).closest("div");
+ 			var file = container.find("input").data();
+
+ 			var data = {
+ 				action: 'podlove-update-file',
+ 				file_id: file.id
+ 			};
+
+ 			$(this).parent().html("updating ...");
+
+ 			$.ajax({
+ 				url: ajaxurl,
+ 				data: data,
+ 				dataType: 'json',
+ 				success: function(result) {
+ 					console.log(result);
+ 					container.find("input").data('size', result.file_size);
+ 					o.update_preview();
+ 				}
+ 			});
+
+ 			return false;
+ 		});
 
 	 	return o;
 
