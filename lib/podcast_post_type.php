@@ -9,6 +9,13 @@ class Podcast_Post_Type {
 
 	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
 
+	public static $default_post_content = <<<EOT
+
+[podlove-web-player]
+
+[podlove-episode-downloads]
+EOT;
+
 	public function __construct() {
 		
 		$labels = array(
@@ -50,7 +57,7 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 		
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
-		add_action( 'default_content', array( $this, 'set_default_episode_content' ), 10, 2 );	
+		add_filter( 'default_content', array( $this, 'set_default_episode_content' ), 20, 2 );	
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );	
 		
 		if ( is_admin() ) {
@@ -153,12 +160,7 @@ class Podcast_Post_Type {
 		if ( $post->post_type !== 'podcast' )
 			return $post_content;
 
-		$post_content = $post_content . <<<EOT
-
-[podlove-web-player]
-
-[podlove-episode-downloads]
-EOT;
+		$post_content = $post_content . self::$default_post_content;
 
 		return $post_content;
 	}
