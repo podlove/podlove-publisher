@@ -47,7 +47,11 @@ EOT;
 			'has_archive'          => true, 
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
-			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png'
+			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
+			'rewrite' => array(
+				'slug'       => \Podlove\get_setting( 'custom_episode_slug' ),
+				'with_front' => false
+			)
 		); 
 		
 		new \Podlove\Podcast_Post_Meta_Box();
