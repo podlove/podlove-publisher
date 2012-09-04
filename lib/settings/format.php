@@ -138,13 +138,19 @@ class Format {
 	 			'label'       => __( 'Name', 'podlove' ),
 	 			'description' => '' ) );
 
-	 		$wrapper->string( 'type', array(
-	 			'label'       => __( 'Format Type', 'podlove' ),
-	 			'description' => __( 'Example: audio', 'podlove' ) ) );
+	 		$wrapper->select( 'type', array(
+	 			'label'       => __( 'Document Type', 'podlove' ),
+		 		'options'     => array(
+		 			'audio' => __( 'Audio', 'podlove' ),
+		 			'video' => __( 'Video', 'podlove' ),
+		 			'ebook' => __( 'eBook', 'podlove' ),
+		 			'image' => __( 'Image', 'podlove' )
+		 		)
+	 		) );
 
 	 		$wrapper->string( 'mime_type', array(
 	 			'label'       => __( 'Format Mime Type', 'podlove' ),
-	 			'description' => __( 'Example: audio/mpeg4', 'podlove' ) ) );
+	 			'description' => __( 'Example: audio/mp4', 'podlove' ) ) );
 
 	 		$wrapper->string( 'extension', array(
 	 			'label'       => __( 'Format Extension', 'podlove' ),

@@ -66,7 +66,7 @@ class Podcast {
 					) );
 
 					$wrapper->string( 'slug', array(
-						'label'       => __( 'Slug', 'podlove' ),
+						'label'       => __( 'Mnemonic', 'podlove' ),
 						'description' => __( 'The abbreviation for your podcast. Commonly the initials of the title.', 'podlove' ),
 						'html'        => array( 'class' => 'regular-text required' )
 					) );
@@ -146,8 +146,8 @@ class Podcast {
 					) );
 
 					$wrapper->checkbox( 'supports_cover_art', array(
-						'label'       => __( 'Supports Cover Art', 'podlove' ),
-						'description' => __( 'Lets you provide a URL to a cover image for each episode.', 'podlove' )
+						'label'       => __( 'Enable Episode Artwork', 'podlove' ),
+						'description' => __( 'Lets you provide a URL to an image for each episode.', 'podlove' )
 					) );
 				});
 				?>

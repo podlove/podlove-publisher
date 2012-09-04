@@ -13,7 +13,7 @@ class Podcast_Post_Meta_Box {
 	public static function add_meta_box() {
 		add_meta_box(
 			/* $id       */ 'podlove_podcast',
-			/* $title    */ __( 'Podcast Settings', 'podlove' ),
+			/* $title    */ __( 'Podcast Episode', 'podlove' ),
 			/* $callback */ '\Podlove\Podcast_Post_Meta_Box::post_type_meta_box_callback',
 			/* $page     */ 'podcast',
 			/* $context  */ 'normal',
@@ -58,6 +58,7 @@ class Podcast_Post_Meta_Box {
 					'html'        => array( 'class' => 'regular-text' )
 				));
 
+				// TODO: validate and parse
 				$wrapper->string( 'duration', array(
 					'label'       => __( 'Duration', 'podlove' ),
 					'description' => '',
@@ -88,6 +89,9 @@ class Podcast_Post_Meta_Box {
 					'default'     => true
 				));
 
+				// TODO: button to update
+				// TODO: pretty display
+				// TODO: don't display link
 				$wrapper->multiselect( 'media_locations', Podcast_Post_Meta_Box::media_locations_form( $episode ) );
 
 			} );
@@ -183,7 +187,7 @@ class Podcast_Post_Meta_Box {
 		$episode->update_attributes( $_POST['_podlove_meta'] );
 
 		// copy chapter info into custom meta for webplayer compatibility
-		update_post_meta( $post_id, sprintf( '_podlove_chapters' ), $episode->chapters );
+		update_post_meta( $post_id, '_podlove_chapters', $episode->chapters );
 
 		if ( isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
 			$this->save_media_locations( $episode, $_REQUEST['_podlove_meta']['media_locations'] );
