@@ -114,7 +114,7 @@ function webplayer_shortcode( $options ) {
 
 	$chapters = '';
 	if ( $episode->chapters ) {
-		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $podcast->slug );
+		$chapters = 'chapters="_podlove_chapters"';
 	}
 
 	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
