@@ -296,6 +296,7 @@ function create_episode() {
 	$args = array(
 		'post_type' => 'podcast',
 		'post_title' => $title,
+		'post_content' => \Podlove\Podcast_Post_Type::$default_post_content
 	);
 
 	// create post
