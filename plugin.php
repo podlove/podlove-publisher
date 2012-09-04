@@ -267,6 +267,38 @@ add_action( 'plugins_loaded', function () {
 	}
 } );
 
+/**
+ * Simple method to allow support for multiple urls per post.
+ *
+ * Add custom post meta 'podlove_alternate_url' with old url part to match.
+ */
+function override404() {
+	global $wpdb, $wp_query;
+
+	if ( ! $wp_query->is_404 )
+		return;
+
+	$rows = $wpdb->get_results( "
+		SELECT
+			post_id, meta_value url
+		FROM
+			" . $wpdb->postmeta . "
+		WHERE
+			meta_key = 'podlove_alternate_url'
+	", ARRAY_A );
+
+	foreach ( $rows as $row ) {
+		if ( false !== stripos( $_SERVER['REQUEST_URI'], $row['url'] ) ) {
+			status_header( 301 );
+			$wp_query->is_404 = false;
+			\wp_redirect( \get_permalink( $row['post_id'] ), 301 );
+			exit;
+		}
+	}
+
+}
+add_filter( 'template_redirect', '\Podlove\override404' );
+
 namespace Podlove\AJAX;
 use \Podlove\Model;
 
