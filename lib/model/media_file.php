@@ -79,9 +79,11 @@ class MediaFile extends Base {
 	 *
 	 * @return void
 	 */
-	private function determine_file_size() {
+	public function determine_file_size() {
 		$header     = $this->curl_get_header();
 		$this->size = $header['download_content_length'];
+
+		return $header;
 	}
 
 	/**
