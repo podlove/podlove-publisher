@@ -68,7 +68,7 @@ class Podcast_Post_Meta_Box {
 				$wrapper->string( 'subtitle', array(
 					'label'       => __( 'Subtitle', 'podlove' ),
 					'description' => '',
-					'html'        => array( 'class' => 'regular-text' )
+					'html'        => array( 'class' => 'large-text' )
 				));
 
 				$wrapper->text( 'summary', array(
