@@ -26,6 +26,18 @@ class MediaFile extends Base {
 		return MediaLocation::find_by_id( $this->media_location_id );
 	}
 
+	public function find_or_create_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) {
+		
+		if ( ! $file = self::find_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) ) {
+			$file = new MediaFile();
+			$file->episode_id = $episode_id;
+			$file->media_location_id = $media_location_id;
+			$file->save();
+		}
+
+		return $file;
+	}
+
 	public function find_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) {
 		
 		$where = sprintf(
