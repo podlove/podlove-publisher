@@ -141,10 +141,11 @@ class Format {
 	 		$wrapper->select( 'type', array(
 	 			'label'       => __( 'Document Type', 'podlove' ),
 		 		'options'     => array(
-		 			'audio' => __( 'Audio', 'podlove' ),
-		 			'video' => __( 'Video', 'podlove' ),
-		 			'ebook' => __( 'eBook', 'podlove' ),
-		 			'image' => __( 'Image', 'podlove' )
+		 			'audio'    => __( 'Audio', 'podlove' ),
+		 			'video'    => __( 'Video', 'podlove' ),
+		 			'ebook'    => __( 'eBook', 'podlove' ),
+		 			'image'    => __( 'Image', 'podlove' ),
+		 			'chapters' => __( 'Chapters', 'podlove' )
 		 		)
 	 		) );
 

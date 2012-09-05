@@ -136,12 +136,11 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$enclosure_duration  = $episode->duration;
 		$enclosure_file_size = $file->size;
 		$file_slug           = $episode->slug;
-		$cover_art_url       = $episode->cover_art;
+		$cover_art_url       = $episode->get_cover_art();
 
 		// fall back to podcast cover image
-		if ( ! $cover_art_url ) {
+		if ( ! $cover_art_url )
 			$cover_art_url = $podcast->cover_image;
-		}
 
 		$enclosure_url = $episode->enclosure_url( $feed->media_location() );
 		

@@ -47,6 +47,26 @@ class Episode extends Base {
 		return $media_file->get_file_url();
 	}
 
+	public function get_cover_art() {
+		
+		$podcast = Podcast::get_instance();
+
+		if ( $podcast->supports_cover_art == 0 )
+			return;
+
+		if ( $podcast->supports_cover_art == 'manual' )
+			return $this->cover_art;
+
+		$cover_art_file_id = $podcast->supports_cover_art;
+		if ( ! $location = MediaLocation::find_one_by_id( $cover_art_file_id ) )
+			return false;
+
+		if ( ! $file = MediaFile::find_by_episode_id_and_media_location_id( $this->id, $location->id ) )
+			return false;
+
+		return $file->get_file_url();
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

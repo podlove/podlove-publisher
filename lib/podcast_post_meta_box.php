@@ -58,6 +58,13 @@ class Podcast_Post_Meta_Box {
 					'html'        => array( 'class' => 'regular-text' )
 				));
 
+				// TODO: validate and parse
+				$wrapper->string( 'duration', array(
+					'label'       => __( 'Duration', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
+				));
+
 				$wrapper->string( 'subtitle', array(
 					'label'       => __( 'Subtitle', 'podlove' ),
 					'description' => '',
@@ -73,14 +80,7 @@ class Podcast_Post_Meta_Box {
 					)
 				));
 
-				// TODO: validate and parse
-				$wrapper->string( 'duration', array(
-					'label'       => __( 'Duration', 'podlove' ),
-					'description' => '',
-					'html'        => array( 'class' => 'regular-text' )
-				));
-
-				if ( $podcast->supports_cover_art ) {
+				if ( $podcast->supports_cover_art === 'manual' ) {
 					$wrapper->string( 'cover_art', array(
 						'label'       => __( 'Episode Cover Art URL', 'podlove' ),
 						'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
@@ -141,6 +141,8 @@ class Podcast_Post_Meta_Box {
 			$location_values[ $location->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
 		}
 
+		// FIXME: empty checkbox -> no file id
+		// solution: when one checks the box, an AJAX request has to create and validate the file
 		$media_locations_form = array(
 			'label'       => __( 'Media Files', 'podlove' ),
 			'description' => '',

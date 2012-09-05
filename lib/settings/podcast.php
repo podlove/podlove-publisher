@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Settings;
+use \Podlove\Model;
 
 class Podcast {
 
@@ -145,9 +146,21 @@ class Podcast {
 						'html' => array( 'class' => 'regular-text required' )
 					) );
 
-					$wrapper->checkbox( 'supports_cover_art', array(
-						'label'       => __( 'Enable Episode Artwork', 'podlove' ),
-						'description' => __( 'Lets you provide a URL to an image for each episode.', 'podlove' )
+					$artwork_options = array(
+						'0'      => __( 'None', 'podlove' ),
+						'manual' => __( 'Manual Entry', 'podlove' ),
+					);
+					$media_locations = Model\MediaLocation::all();
+					foreach ( $media_locations as $media_location ) {
+						$media_format = $media_location->media_format();
+						if ( $media_format && $media_format->type === 'image' ) {
+							$artwork_options[ $media_location->id ] = sprintf( __( 'Media File: %s', 'podlove' ), $media_location->title );
+						}
+					}
+
+					$wrapper->select( 'supports_cover_art', array(
+						'label'   => __( 'Episode Artwork Media File', 'podlove' ),
+						'options' => $artwork_options
 					) );
 				});
 				?>
