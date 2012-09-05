@@ -10,9 +10,139 @@ class Contributors extends \Podlove\Modules\Base {
 	public static $taxonomy_name = 'podlove-contributors';
 
 	public function load() {
+
+		// register taxonomy
 		add_action( 'init', array( $this, 'register_taxonomy' ) );
+
+		// add custom fields
 		add_action( self::$taxonomy_name . '_edit_form_fields', array( $this, 'custom_fields' ), 10, 2 );
 		add_action( 'edited_' . self::$taxonomy_name , array( $this, 'save' ), 10, 2 );
+
+		// add custom meta box to manage taxonomy
+		add_action( 'admin_menu', function () {
+			remove_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, 'podcast', 'normal' ); 
+		} );
+
+		add_action( 'add_meta_boxes', function () {
+			add_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, __( 'Contributors', 'podlove' ), array( '\Podlove\Modules\Contributors\Contributors', 'metabox' ), 'podcast', 'side', 'default' );  
+		});
+
+		add_action( 'admin_init', function () {
+			wp_enqueue_script( 'jquery-ui-autocomplete' );
+		} );
+	}
+
+	public function metabox( $post ) {
+		
+		$contributors = get_the_terms( $post->ID, self::$taxonomy_name );
+		?>
+		<div id="add_contributors" class="tagsdiv">
+			<p>
+				<input type="text" class="newtag" id="add_contributors_input">
+				<input type="button" class="button tagadd" value="Add">
+			</p>
+		</div>
+		<div id="contributors" class="tagchecklist">
+			<?php foreach ( $contributors as $contributor ): ?>
+				<?php $settings = self::get_additional_settings( $contributor->term_id ) ?>
+				<div class="contributor" data-term-id="<?php echo $contributor->term_id ?>">
+					<span>
+						<a href="#" class="ntdelbutton">x</a>
+						<div class="avatar">
+							<?php echo get_avatar( $settings['contributor_email'], 24 ); ?>
+						</div>
+						<div class="name">
+							<?php echo $contributor->name ?>
+						</div>
+					</span>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<style type="text/css">
+		.contributor {
+			clear: both;
+			height: 24px;
+			padding: 4px 0px;
+		}
+		.contributor > span {
+			line-height: 24px;
+		}
+		.contributor > span a {
+			margin-top: 8px;
+		}
+		.contributor .avatar {
+			width:24px;
+			height:24px;
+			margin: 0px 4px;
+			float: left;
+			/*overflow: hidden;*/
+		}
+		.contributor .avatar img {
+			border:1px solid #999;
+		}
+		.contributor .name {
+			font-size: 14px;
+			float: left;
+			margin-left: 8px;
+		}
+		</style>
+		<script type="text/javascript">
+			jQuery(function($){
+
+				$("#contributors").on("click", ".contributor a.ntdelbutton", function(e) {
+					e.preventDefault();
+					$(this).closest(".contributor").remove();
+					return false;
+				});
+
+				var people = [
+					{
+						value: "eric-teubert",
+						label: "Eric Teubert",
+						id: 5,
+						avatar: "http://0.gravatar.com/avatar/4cd08b6372aec4ca88d2decef27ea991?s=24&d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D24&r=G"
+					},
+					{
+						value: "tim-pritlove",
+						label: "Tim Pritlove",
+						id: 4,
+						avatar: "http://1.gravatar.com/avatar/97391367796db965d19e63b690e72b3d?s=24&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D24&r=G"
+					}
+				];
+
+				$("#add_contributors_input").autocomplete({
+					minLength: 0,
+					source: people,
+					focus: function(event, ui) {
+						$("#add_contributors_input").val(ui.item.label);
+
+						return false;
+					},
+					select: function(event, ui) {
+
+						$("#add_contributors_input").val('');
+
+						var tpl = '';
+						tpl += '<div class="contributor" data-term-id="' + ui.item.id + '">';
+						tpl += '	<span>';
+						tpl += '		<a href="#" class="ntdelbutton">x</a>';
+						tpl += '		<div class="avatar">';
+						tpl += '			<img src="' + ui.item.avatar + '" class="avatar avatar-24 photo" height="24" width="24">';
+						tpl += '		</div>';
+						tpl += '		<div class="name">';
+						tpl += '			' + ui.item.label;
+						tpl += '		</div>';
+						tpl += '	</span>';
+						tpl += '</div>';
+
+						$("#contributors").append(tpl);
+
+						return false;
+					}
+				});
+			});
+		</script>
+		<?php
 	}
 
 	public function register_taxonomy() {
@@ -43,6 +173,16 @@ class Contributors extends \Podlove\Modules\Base {
 		);
 
 		register_taxonomy( self::$taxonomy_name, 'podcast', $args );
+	}
+
+	public static function get_additional_settings( $term_id ) {
+
+		$all_contributor_settings = get_option( 'podlove_contributors', array() );
+		
+		if ( ! isset( $all_contributor_settings[ $term_id ] ) )
+			$all_contributor_settings[ $term_id ] = array();
+
+		return $all_contributor_settings[ $term_id ];
 	}
 
 	public function custom_fields( $contributor, $taxonomy ) {
