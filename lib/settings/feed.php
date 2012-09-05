@@ -137,8 +137,8 @@ class Feed {
 			}	
 
 			$wrapper->string( 'name', array(
-				'label'       => __( 'Internal Name', 'podlove' ),
-				'description' => __( 'This is how this feed is presented to you within WordPress.', 'podlove' ),
+				'label'       => __( 'Feed Title', 'podlove' ),
+				'description' => __( 'Some podcast clients may display this title to describe the feed content.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
