@@ -51,7 +51,7 @@ var PODLOVE = PODLOVE || {};
  					if (readable_size === "???") {
  						output += '<span title="' + url + '" style="color:red">File not found!</span>';
  					} else {
- 						output += '<span title="' + url + '">' + size + ' Bytes (' + readable_size + ')</span>';	
+ 						output += '<span title="' + url + '" style="color:#0a0b0b">' + size + ' Bytes (' + readable_size + ')</span>';	
  					}
  					output += ' <a href="#" class="update_media_file">update</a>';
  				} else {
