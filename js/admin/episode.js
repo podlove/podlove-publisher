@@ -49,7 +49,7 @@ var PODLOVE = PODLOVE || {};
 
  					output = ' ';
  					if (readable_size === "???") {
- 						output += '<span style="color:red">Filesize Missing!</span>';
+ 						output += '<span style="color:red">File not found!</span>';
  					} else {
  						output += '<span title="' + url + '">' + size + ' Bytes (' + readable_size + ')</span>';	
  					}
