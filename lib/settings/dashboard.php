@@ -127,7 +127,7 @@ class Dashboard {
 					</div>
 					<?php if ( $podcast->supports_cover_art ): ?>
 						<div class="coverart">
-							<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $episode->cover_art ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
+							<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $episode->get_cover_art() ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
 						</div>
 					<?php endif; ?>
 					<div class="media_files">
