@@ -354,10 +354,7 @@ function create_file() {
 	if ( ! $episode_id || ! $media_location_id )
 		die();
 
-	$file = new Model\MediaFile();
-	$file->episode_id = $episode_id;
-	$file->media_location_id = $media_location_id;
-	$file->save();
+	$file = Model\MediaFile::find_or_create_by_episode_id_and_media_location_id( $episode_id, $media_location_id );
 
 	$result = array();
 	$result['file_id']   = $file->id;
