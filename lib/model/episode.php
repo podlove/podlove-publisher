@@ -59,6 +59,8 @@ Episode::property( 'slug', 'VARCHAR(255)' );
 Episode::property( 'duration', 'VARCHAR(255)' );
 Episode::property( 'cover_art', 'VARCHAR(255)' );
 Episode::property( 'chapters', 'TEXT' );
+// todo: add summary
+
 // episode_number
 // season_number
 // episode_id nach template, virtual attribute
