@@ -56,7 +56,7 @@ function episode_downloads_shortcode( $options ) {
 		$media_format   = $media_location->media_format();
 		
 		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
-		$download_link_name = $media_location->title;
+		$download_link_name = str_replace( " ", "&nbsp;", $media_location->title );
 
 		$html .= '<li class="' . $media_format->extension . '">';
 		$html .= sprintf(
