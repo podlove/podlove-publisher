@@ -46,7 +46,7 @@ class MediaFile extends Base {
 
 		$podcast  = Podcast::get_instance();
 
-		$episode        = Episode::find_by_id( $this->episode_id );
+		$episode        = $this->episode();
 		$media_location = MediaLocation::find_by_id( $this->media_location_id );
 		$media_format   = MediaFormat::find_by_id( $media_location->media_format_id );
 
@@ -61,12 +61,17 @@ class MediaFile extends Base {
 		return $template;
 	}
 
+	public function episode() {
+		return Episode::find_by_id( $this->episode_id );
+	}
+
 	/**
 	 * Build file name as it appears when you download the file.
 	 * 
 	 * @return string
 	 */
 	function get_download_file_name() {
+
 		$file_name = $this->episode()->slug
 		           . '.'
 		           . $this->media_location()->media_format()->extension;
