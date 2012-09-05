@@ -58,6 +58,21 @@ class Podcast_Post_Meta_Box {
 					'html'        => array( 'class' => 'regular-text' )
 				));
 
+				$wrapper->string( 'subtitle', array(
+					'label'       => __( 'Subtitle', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
+				));
+
+				$wrapper->text( 'summary', array(
+					'label'       => __( 'Summary', 'podlove' ),
+					'description' => '',
+					'html'        => array(
+						'class' => 'large-text',
+						'rows'  => max( 2, count( explode( "\n", $episode->summary ) ) )
+					)
+				));
+
 				// TODO: validate and parse
 				$wrapper->string( 'duration', array(
 					'label'       => __( 'Duration', 'podlove' ),
@@ -121,7 +136,7 @@ class Podcast_Post_Meta_Box {
 				continue;
 
 			// get formats configured for this show
-			$location_options[ $location->id ] = $media_format->name;
+			$location_options[ $location->id ] = $location->title;
 			// find out which formats are active
 			$location_values[ $location->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
 		}
