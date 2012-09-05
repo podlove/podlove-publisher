@@ -153,8 +153,24 @@ class Podcast_Post_Meta_Box {
 				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
 				$format   = $location->media_format();
 				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
-				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
-				return 'data-id="' . $file->id . '" data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-size="' . $filesize . '"';
+				
+				$attributes = array(
+					'data-template'  => $location->url_template,
+					'data-extension' => $format->extension,
+					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
+					'data-media-location-id' => $location->id,
+					'data-episode-id' => $episode->id
+				);
+
+				if ( $file )
+					$attributes['data-id'] = $file->id;
+
+				$out = '';
+				foreach ( $attributes as $key => $value ) {
+					$out .= sprintf( '%s="%s" ', $key, $value );
+				}
+
+				return $out;
 			}
 		);
 

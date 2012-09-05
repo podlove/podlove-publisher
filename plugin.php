@@ -347,6 +347,31 @@ function update_file() {
 }
 add_action( 'wp_ajax_podlove-update-file', '\Podlove\AJAX\update_file' );
 
+function create_file() {
+	$episode_id        = $_REQUEST['episode_id'];
+	$media_location_id = $_REQUEST['media_location_id'];
+
+	if ( ! $episode_id || ! $media_location_id )
+		die();
+
+	$file = new Model\MediaFile();
+	$file->episode_id = $episode_id;
+	$file->media_location_id = $media_location_id;
+	$file->save();
+
+	$result = array();
+	$result['file_id']   = $file->id;
+	$result['file_size'] = $file->size;
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode($result);
+
+	die();
+}
+add_action( 'wp_ajax_podlove-create-file', '\Podlove\AJAX\create_file' );
+
 function create_episode() {
 
 	$slug  = isset( $_REQUEST['slug'] )  ? $_REQUEST['slug']  : NULL;
