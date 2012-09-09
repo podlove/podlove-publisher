@@ -10,8 +10,17 @@ function handle_direct_download() {
 	$media_file_id = (int) $_GET['download_media_file'];
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 
-	if ( ! $media_file )
-		return;
+	if ( ! $media_file ) {
+		status_header( 404 );
+		exit;
+	}
+
+	$media_location = $media_file->media_location();
+
+	if ( ! $media_location || ! $media_location->downloadable ) {
+		status_header( 404 );
+		exit;
+	}
 
 	header( "Expires: 0" );
 	header( 'Cache-Control: must-revalidate' );
@@ -53,6 +62,10 @@ function episode_downloads_shortcode( $options ) {
 	foreach ( $media_files as $media_file ) {
 
 		$media_location = $media_file->media_location();
+
+		if ( ! $media_location->downloadable )
+			continue;
+
 		$media_format   = $media_location->media_format();
 		
 		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
