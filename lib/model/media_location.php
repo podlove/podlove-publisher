@@ -45,3 +45,4 @@ MediaLocation::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 MediaLocation::property( 'title', 'VARCHAR(255)' );
 MediaLocation::property( 'media_format_id', 'INT' );
 MediaLocation::property( 'url_template', 'VARCHAR(255)' );
+MediaLocation::property( 'downloadable', 'INT' );
