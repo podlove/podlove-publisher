@@ -17,42 +17,44 @@ add_filter( 'post_type_link', function ( $permalink, $post, $leavename, $sample 
 	return $permalink;
 }, 10, 4 );
 
-function add_routes_for_episodes( &$wp_query ) {
-
-	// only intervene if WordPress can't figure out the URL
-	if ( ! $wp_query->is_404() )
-		return;
+function custom_episodes_request( $query ) {
 
 	$url = get_current_url_data();
-	$url_plain = $url['scheme'] . '://' . $url['domain'] . $url['path'];
-	$maybe_slug = trim( str_replace( home_url(), '', $url_plain ), '/' );
 
-	remove_action( 'parse_query', '\Podlove\add_routes_for_episodes' );
+	// redirect original URL to new URL
+	if ( stripos( $url['url'], '/podcast/' ) ) {
+		$new_url = str_replace( '/podcast/', '/', $url['url'] );
+		wp_redirect( $new_url, 301 );
+		exit;
+	}
 
-	$query = new \WP_Query( array(
-		'name'           => $maybe_slug,
-		'post_type'      => 'podcast',
-		'posts_per_page' => 1
-	) );
+	// For all unknown pages, prepend podcast prefix to see if this post exists.
+	// If WordPress finds a post — hurray! If not, another 404 will be thrown.
+	if	(
+			( isset( $query['page'] ) && isset( $query['pagename'] ) && ! strlen( $query['page'] ) ) // a page, but empty
+		||	( isset( $query['error'] ) && $query['error'] == '404' ) // or page not found
+		) {
+		$home_url = home_url();
+		$base = str_replace( $url['scheme'] . '://' . $url['domain'], '', $home_url );
+		$permapart = substr( $_SERVER['REQUEST_URI'], strlen( $base ) );
+		$simulated_url = trailingslashit( $base ) . trailingslashit( 'podcast' ) . trim( $permapart, '/' );
 
-	// no podcast episode found? 
-	if ( ! $query->have_posts() )
-		return false;
+		// show WordPress the URL it needs to see to find the custom post type entry
+		$_SERVER['REQUEST_URI'] = $simulated_url;
 
-	// got a post? fix query object
-	$post = $query->next_post();
+		remove_filter( 'request', '\Podlove\custom_episodes_request', 10, 1 );
+		global $wp;
+		$wp->parse_request();
+		$query = $wp->query_vars;
+		add_filter( 'request', '\Podlove\custom_episodes_request', 10, 1 );
 
-	$wp_query->set( 'p', $post->ID );
-	$wp_query->set( 'post_type', 'podcast' );
+		// restore original URL
+		$_SERVER['REQUEST_URI'] = $url['path'];
+	}
 
-	$wp_query->is_single = true;
-	$wp_query->is_404 = false;
-	$wp_query->is_home = false;
-	$wp_query->is_singular = true;
-	$wp_query->query_vars_changed = true;
+	return $query;
 }
-
-add_action( 'parse_query', '\Podlove\add_routes_for_episodes' );
+add_filter( 'request', '\Podlove\custom_episodes_request', 10, 1 );
 
 function get_current_url_data() {
     $url_data = array();
