@@ -6,6 +6,89 @@ register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 register_uninstall_hook(    PLUGIN_FILE, __NAMESPACE__ . '\uninstall' );
 add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
 
+add_filter( 'post_type_link', function ( $permalink, $post, $leavename, $sample ) {
+
+	if ( $post->post_type !== 'podcast' )
+		return $permalink;
+
+	// fixme: modularize
+	$permalink = str_replace( '/podcast/' , '/', $permalink );
+
+	return $permalink;
+}, 10, 4 );
+
+function add_routes_for_episodes( &$wp_query ) {
+
+	// only intervene if WordPress can't figure out the URL
+	if ( ! $wp_query->is_404() )
+		return;
+
+	$url = get_current_url_data();
+	$url_plain = $url['scheme'] . '://' . $url['domain'] . $url['path'];
+	$maybe_slug = trim( str_replace( home_url(), '', $url_plain ), '/' );
+
+	remove_action( 'parse_query', '\Podlove\add_routes_for_episodes' );
+
+	$query = new \WP_Query( array(
+		'name'           => $maybe_slug,
+		'post_type'      => 'podcast',
+		'posts_per_page' => 1
+	) );
+
+	// no podcast episode found? 
+	if ( ! $query->have_posts() )
+		return false;
+
+	// got a post? fix query object
+	$post = $query->next_post();
+
+	$wp_query->set( 'p', $post->ID );
+	$wp_query->set( 'post_type', 'podcast' );
+
+	$wp_query->is_single = true;
+	$wp_query->is_404 = false;
+	$wp_query->is_home = false;
+	$wp_query->is_singular = true;
+	$wp_query->query_vars_changed = true;
+}
+
+add_action( 'parse_query', '\Podlove\add_routes_for_episodes' );
+
+function get_current_url_data() {
+    $url_data = array();
+    $uri = $_SERVER['REQUEST_URI'];
+
+    // query
+    $x = array_pad( explode( '?', $uri ), 2, false );
+    $url_data['query'] = ( $x[1] )? $x[1] : '' ;
+
+    // resource
+    $x = array_pad( explode( '/', $x[0] ), 2, false );
+    $x_last = array_pop( $x );
+    if ( strpos( $x_last, '.' ) === false ) {
+        $url_data['resource'] = '';
+        $x[] = $x_last;
+    } else {
+        $url_data['resource'] = $x_last;
+    }
+
+    // path    
+    $url_data['path'] = implode( '/', $x );
+    if( substr( $url_data['path'], -1 ) !== '/' ) $url_data['path'] .= '/';
+
+    // domain
+    $url_data['domain'] = $_SERVER['SERVER_NAME'];
+
+    // scheme
+    $server_prt = explode( '/', $_SERVER['SERVER_PROTOCOL'] );
+    $url_data['scheme'] = strtolower( $server_prt[0] );
+
+    // url
+    $url_data['url'] = $url_data['scheme'] . '://' . $url_data['domain'] . $uri;
+
+    return $url_data;
+}
+
 function activate_for_current_blog() {
 	Model\Feed::build();
 	Model\MediaFormat::build();
