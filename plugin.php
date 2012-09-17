@@ -34,10 +34,10 @@ function custom_episodes_request( $query ) {
 			( isset( $query['page'] ) && isset( $query['pagename'] ) && ! strlen( $query['page'] ) ) // a page, but empty
 		||	( isset( $query['error'] ) && $query['error'] == '404' ) // or page not found
 		) {
-		$home_url = home_url();
-		$base = str_replace( $url['scheme'] . '://' . $url['domain'], '', $home_url );
-		$permapart = substr( $_SERVER['REQUEST_URI'], strlen( $base ) );
-		$simulated_url = trailingslashit( $base ) . trailingslashit( 'podcast' ) . trim( $permapart, '/' );
+		
+		$url_base      = str_replace( $url['scheme'] . '://' . $url['domain'], '', home_url() );
+		$permapart     = substr( $_SERVER['REQUEST_URI'], strlen( $url_base ) );
+		$simulated_url = trailingslashit( $url_base ) . trailingslashit( 'podcast' ) . trim( $permapart, '/' );
 
 		// show WordPress the URL it needs to see to find the custom post type entry
 		$_SERVER['REQUEST_URI'] = $simulated_url;
