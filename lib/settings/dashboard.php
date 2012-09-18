@@ -95,7 +95,13 @@ class Dashboard {
 
 		if ( ! in_array( 'curl', get_loaded_extensions() ) ) {
 			?>
-			<div class="error"><p><strong>ERROR: </strong>You need curl for Podlove to run properly.</p></div>
+			<div class="error">
+				<p>
+					<strong>ERROR: </strong>You need the <strong>curl PHP extension</strong> for Podlove to run properly.
+					<br>
+					If you think you can do it yourself, have a look at <a href="http://stackoverflow.com/questions/1347146/how-to-enable-curl-in-php">these instructions on how to enable curl in PHP</a>.
+				</p>
+			</div>
 			<?php
 		}
 
