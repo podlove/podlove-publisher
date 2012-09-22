@@ -39,7 +39,7 @@ class Contributors extends \Podlove\Modules\Base {
 		<div id="add_contributors" class="tagsdiv">
 			<p>
 				<input type="text" class="newtag" id="add_contributors_input">
-				<input type="button" class="button tagadd" value="Add">
+				<input type="button" class="button tagadd" id="add_contributors_submit" value="Add">
 			</p>
 		</div>
 		<div id="contributors" class="tagchecklist">
@@ -56,12 +56,18 @@ class Contributors extends \Podlove\Modules\Base {
 					<?php $settings = self::get_additional_settings( $contributor->term_id ) ?>
 					<div class="contributor" data-term-slug="<?php echo $contributor->slug ?>" data-term-id="<?php echo $contributor->term_id ?>">
 						<span>
-							<a href="#" class="ntdelbutton">x</a>
+							<a href="#" class="ntdelbutton" title="<?php echo __( 'remove', 'podlove' ) ?>">x</a>
 							<div class="avatar">
-								<?php echo get_avatar( $settings['contributor_email'], 24 ); ?>
+								<?php if ( isset( $settings['contributor_email'] ) ): ?>
+									<?php echo get_avatar( $settings['contributor_email'], 24 ); ?>
+								<?php else: ?>
+									<?php echo get_avatar( null, 24 ); ?>
+								<?php endif; ?>
 							</div>
 							<div class="name">
-								<?php echo $contributor->name ?>
+								<a href="<?php echo get_edit_term_link( $contributor->term_id, self::$taxonomy_name, 'podcast' ) ?>" target="_blank" title="<?php echo __( 'edit', 'podlove' ) ?>">
+									<?php echo $contributor->name ?>
+								</a>
 							</div>
 						</span>
 					</div>
@@ -69,15 +75,33 @@ class Contributors extends \Podlove\Modules\Base {
 			<?php endif; ?>
 		</div>
 		<style type="text/css">
+		.tagchecklist div.name a {
+			margin: 0;
+			display: inline;
+			float: none;
+			text-indent: 0px;
+			overflow: hidden;
+			position: relative;
+			background: none;
+			color: #333;
+			text-decoration: none;
+		}
+		.tagchecklist div.name a:hover {
+			color: #21759B;
+			text-decoration: underline;
+		}
 		.contributor {
 			clear: both;
 			height: 24px;
 			padding: 4px 0px;
 		}
+		.autocomplete.autocomplete {
+			padding: 1px 0px;
+		}
 		.contributor > span {
 			line-height: 24px;
 		}
-		.contributor > span a {
+		.contributor > span a.ntdelbutton {
 			margin-top: 8px;
 		}
 		.contributor .avatar {
@@ -85,7 +109,9 @@ class Contributors extends \Podlove\Modules\Base {
 			height:24px;
 			margin: 0px 4px;
 			float: left;
-			/*overflow: hidden;*/
+		}
+		.autocomplete.autocomplete .avatar {
+			margin-left: 0px;
 		}
 		.contributor .avatar img {
 			border:1px solid #999;
@@ -98,6 +124,24 @@ class Contributors extends \Podlove\Modules\Base {
 		</style>
 		<script type="text/javascript">
 			jQuery(function($){
+
+				$("#add_contributors_submit").on("click", function(e) {
+					e.preventDefault();
+
+					var $add_contributors_input = $("#add_contributors_input");
+					var new_contributor = $add_contributors_input.val();
+
+					if (!new_contributor.length) return false;
+
+					podlove_add_contributor({
+						slug: new_contributor,
+						id: 0,
+						avatar: null,
+						name: new_contributor
+					});
+
+					return false;
+				});
 
 				$("#contributors").on("click", ".contributor a.ntdelbutton", function(e) {
 					e.preventDefault();
@@ -120,20 +164,23 @@ class Contributors extends \Podlove\Modules\Base {
 					return false;
 				});
 
-				var people = [
-					{
-						value: "eric-teubert",
-						label: "Eric Teubert",
-						id: 5,
-						avatar: "http://0.gravatar.com/avatar/4cd08b6372aec4ca88d2decef27ea991?s=24&d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D24&r=G"
-					},
-					{
-						value: "tim-pritlove",
-						label: "Tim Pritlove",
-						id: 4,
-						avatar: "http://1.gravatar.com/avatar/97391367796db965d19e63b690e72b3d?s=24&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D24&r=G"
-					}
-				];
+				<?php 
+				$people = get_terms(self::$taxonomy_name, array('hide_empty' => false) );
+				$people = array_map( function( $person ) {
+					$settings = \Podlove\Modules\Contributors\Contributors::get_additional_settings( $person->term_id );
+					$email = isset( $settings['contributor_email'] ) ? $settings['contributor_email'] : null;
+					return array(
+						'value'  => $person->slug,
+						'label'  => $person->name,
+						'id'     => $person->term_id,
+						'avatar' => \Podlove\Modules\Contributors\Contributors::get_gravatar_url( $email, 24 )
+					);
+				}, $people );
+				if ( ! $people )
+					$people = array();
+				?>
+
+				var people = <?php echo json_encode($people); ?>;
 
 				$("#add_contributors_input").autocomplete({
 					minLength: 0,
@@ -145,40 +192,86 @@ class Contributors extends \Podlove\Modules\Base {
 					},
 					select: function(event, ui) {
 
-						// visually add contributor
-						$("#add_contributors_input").val('');
-
-						var tpl = '';
-						tpl += '<div class="contributor" data-term-slug="' + ui.item.value + '" data-term-id="' + ui.item.id + '">';
-						tpl += '	<span>';
-						tpl += '		<a href="#" class="ntdelbutton">x</a>';
-						tpl += '		<div class="avatar">';
-						tpl += '			<img src="' + ui.item.avatar + '" class="avatar avatar-24 photo" height="24" width="24">';
-						tpl += '		</div>';
-						tpl += '		<div class="name">';
-						tpl += '			' + ui.item.label;
-						tpl += '		</div>';
-						tpl += '	</span>';
-						tpl += '</div>';
-
-						$("#contributors").append(tpl);
-
-						// actually add contributor
-						var $data_field = $("#tax-input-podlove-contributors");
-						var contributors = $data_field.val();
-
-						if (!contributors.length) {
-							contributors = ui.item.value;
-						} else {
-							contributors = contributors + "," + ui.item.value;	
-						}
-						
-						$data_field.val(contributors);
+						podlove_add_contributor({
+							slug: ui.item.value,
+							id: ui.item.id,
+							avatar: ui.item.avatar,
+							name: ui.item.label
+						});
 
 						return false;
 					}
-				});
+				}).data('autocomplete')._renderItem = function(ul, item) {
+
+					var template = podlove_contributor_template({
+						avatar: item.avatar,
+						name: item.label,
+						display_delete: false,
+						display_data: false,
+						"class": "contributor autocomplete"
+					});
+
+					return $( "<li></li>" )
+					    .data( "item.autocomplete", item )
+					    .append( "<a>" + template + "</a>" )
+					    .appendTo( ul );
+				};
+
+				function podlove_add_contributor(options) {
+
+					if (!options.avatar) {
+						options.avatar = 'http://www.gravatar.com/avatar?d=mm';
+					}
+
+					// visually add contributor
+					$("#add_contributors_input").val('');
+					$("#contributors").append(podlove_contributor_template(options));
+
+					// actually add contributor
+					var $data_field = $("#tax-input-podlove-contributors");
+					var contributors = $data_field.val();
+
+					if (!contributors.length) {
+						contributors = options.slug;
+					} else {
+						contributors = contributors + "," + options.slug;	
+					}
+					
+					$data_field.val(contributors);
+				}
+
+				function podlove_contributor_template(options) {
+
+					var defaults = {
+						"display_data": true,
+						"display_delete": true,
+						"class": "contributor"
+					};
+					var options = $.extend({}, defaults, options); 
+
+					var tpl = '';
+					if (options.display_data) {
+						tpl += '<div class="' + options["class"] + '" data-term-slug="' + options.slug + '" data-term-id="' + options.id + '">';
+					} else {
+						tpl += '<div class="' + options["class"] + '">';
+					}
+					tpl += '	<span>';
+					if (options.display_delete) {
+						tpl += '		<a href="#" class="ntdelbutton">x</a>';
+					}
+					tpl += '		<div class="avatar">';
+					tpl += '			<img src="' + options.avatar + '" class="avatar avatar-24 photo" height="24" width="24">';
+					tpl += '		</div>';
+					tpl += '		<div class="name">';
+					tpl += '			' + options.name;
+					tpl += '		</div>';
+					tpl += '	</span>';
+					tpl += '</div>';
+
+					return tpl;
+				}
 			});
+
 		</script>
 		<?php
 	}
@@ -268,6 +361,26 @@ class Contributors extends \Podlove\Modules\Base {
 		$all_contributor_settings[ $term_id ]['contributor_email'] = $_POST['contributor_email'];
 
 		update_option( 'podlove_contributors', $all_contributor_settings );
+	}
+
+	/**
+	 * Get Gravatar URL for a specified email address.
+	 *
+	 * Yes, I know there is get_avatar() but that returns the img tag and I need the URL.
+	 *
+	 * @param string $email The email address
+	 * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+	 * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
+	 * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
+	 * @param array $atts Optional, additional key/value attributes to include in the IMG tag
+	 * @return String containing either just a URL or a complete image tag
+	 * @source http://gravatar.com/site/implement/images/php/
+	 */
+	function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
+		$url = 'http://www.gravatar.com/avatar/';
+		$url .= md5( strtolower( trim( $email ) ) );
+		$url .= "?s=$s&d=$d&r=$r";
+		return $url;
 	}
 
 }
