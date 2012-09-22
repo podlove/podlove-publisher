@@ -137,8 +137,8 @@ class Feed {
 			}	
 
 			$wrapper->string( 'name', array(
-				'label'       => __( 'Internal Name', 'podlove' ),
-				'description' => __( 'This is how this feed is presented to you within WordPress.', 'podlove' ),
+				'label'       => __( 'Feed Title', 'podlove' ),
+				'description' => __( 'Some podcast clients may display this title to describe the feed content.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
@@ -148,6 +148,7 @@ class Feed {
 				'default'     => true
 			) );
 			
+			// TODO: update url
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove' ),
 				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL: %s', 'podlove' ), $feed->get_subscribe_url() ) : '',
@@ -161,8 +162,7 @@ class Feed {
 			) );
 						
 			$wrapper->select( 'media_location_id', array(
-				'label'       => __( 'Media File', 'podlove' ),
-				'description' => __( 'Choose the file location for this feed.', 'podlove' ),
+				'label'       => __( 'Episode Media File', 'podlove' ),
 				'options'     => $locations,
 				'html'        => array( 'class' => 'required' )
 			) );
@@ -186,6 +186,7 @@ class Feed {
 				'default'     => true
 			) );
 			
+			// TODO: choose description format: empty, simple, full-force
 			$wrapper->checkbox( 'show_description', array(
 				'label'       => __( 'Include Description?', 'podlove' ),
 				'description' => __( 'You may want to hide the episode descriptions to reduce the feed file size.', 'podlove' ),

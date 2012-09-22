@@ -95,7 +95,13 @@ class Dashboard {
 
 		if ( ! in_array( 'curl', get_loaded_extensions() ) ) {
 			?>
-			<div class="error"><p><strong>ERROR: </strong>You need curl for Podlove to run properly.</p></div>
+			<div class="error">
+				<p>
+					<strong>ERROR: </strong>You need the <strong>curl PHP extension</strong> for Podlove to run properly.
+					<br>
+					If you think you can do it yourself, have a look at <a href="http://stackoverflow.com/questions/1347146/how-to-enable-curl-in-php">these instructions on how to enable curl in PHP</a>.
+				</p>
+			</div>
 			<?php
 		}
 
@@ -127,7 +133,7 @@ class Dashboard {
 					</div>
 					<?php if ( $podcast->supports_cover_art ): ?>
 						<div class="coverart">
-							<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $episode->cover_art ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
+							<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $episode->get_cover_art() ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
 						</div>
 					<?php endif; ?>
 					<div class="media_files">

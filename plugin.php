@@ -17,23 +17,26 @@ function activate_for_current_blog() {
 
 	if ( ! Model\MediaFormat::has_entries() ) {
 		$default_formats = array(
-			array( 'name' => 'MP3 Audio',              'type' => 'audio', 'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
-			array( 'name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio', 'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent' ),
-			array( 'name' => 'MPEG-1 Video',           'type' => 'video', 'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
-			array( 'name' => 'MPEG-4 Audio',           'type' => 'audio', 'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
-			array( 'name' => 'MPEG-4 Video',           'type' => 'video', 'mime_type' => 'video/mp4',   'extension' => 'm4v' ),
-			array( 'name' => 'Ogg Vorbis Audio',       'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'oga' ),
-			array( 'name' => 'Ogg Vorbis Audio',       'type' => 'audio', 'mime_type' => 'audio/ogg',   'extension' => 'ogg' ),
-			array( 'name' => 'Ogg Theora Video',       'type' => 'video', 'mime_type' => 'video/ogg',   'extension' => 'ogv' ),
-			array( 'name' => 'WebM Audio',             'type' => 'audio', 'mime_type' => 'audio/webm',  'extension' => 'webm' ),
-			array( 'name' => 'WebM Video',             'type' => 'video', 'mime_type' => 'video/webm',  'extension' => 'webm' ),
-			array( 'name' => 'Matroska Audio',         'type' => 'audio', 'mime_type' => 'audio/x-matroska',  'extension' => 'mka' ),
-			array( 'name' => 'Matroska Video',         'type' => 'video', 'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
-			array( 'name' => 'Matroska Video',         'type' => 'video', 'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
-			array( 'name' => 'PDF Document',           'type' => 'ebook', 'mime_type' => 'application/pdf',  'extension' => 'pdf' ),
-			array( 'name' => 'ePub Document',          'type' => 'ebook', 'mime_type' => 'application/epub+zip',  'extension' => 'epub' ),
-			array( 'name' => 'PNG Image',              'type' => 'image', 'mime_type' => 'image/png',   'extension' => 'png' ),
-			array( 'name' => 'JPEG Image',             'type' => 'image', 'mime_type' => 'image/jpeg',  'extension' => 'jpg' ),
+			array( 'name' => 'MP3 Audio',              'type' => 'audio',    'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
+			array( 'name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio',    'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent' ),
+			array( 'name' => 'MPEG-1 Video',           'type' => 'video',    'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
+			array( 'name' => 'MPEG-4 AAC Audio',       'type' => 'audio',    'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
+			array( 'name' => 'MPEG-4 ALAC Audio',      'type' => 'audio',    'mime_type' => 'audio/mp4',   'extension' => 'm4a' ),
+			array( 'name' => 'MPEG-4 Video',           'type' => 'video',    'mime_type' => 'video/mp4',   'extension' => 'm4v' ),
+			array( 'name' => 'Ogg Vorbis Audio',       'type' => 'audio',    'mime_type' => 'audio/ogg',   'extension' => 'oga' ),
+			array( 'name' => 'Ogg Vorbis Audio',       'type' => 'audio',    'mime_type' => 'audio/ogg',   'extension' => 'ogg' ),
+			array( 'name' => 'Ogg Theora Video',       'type' => 'video',    'mime_type' => 'video/ogg',   'extension' => 'ogv' ),
+			array( 'name' => 'WebM Audio',             'type' => 'audio',    'mime_type' => 'audio/webm',  'extension' => 'webm' ),
+			array( 'name' => 'WebM Video',             'type' => 'video',    'mime_type' => 'video/webm',  'extension' => 'webm' ),
+			array( 'name' => 'FLAC Audio',             'type' => 'audio',    'mime_type' => 'audio/flac',  'extension' => 'flac' ),
+			array( 'name' => 'Matroska Audio',         'type' => 'audio',    'mime_type' => 'audio/x-matroska',  'extension' => 'mka' ),
+			array( 'name' => 'Matroska Video',         'type' => 'video',    'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
+			array( 'name' => 'Matroska Video',         'type' => 'video',    'mime_type' => 'video/x-matroska',  'extension' => 'mkv' ),
+			array( 'name' => 'PDF Document',           'type' => 'ebook',    'mime_type' => 'application/pdf',  'extension' => 'pdf' ),
+			array( 'name' => 'ePub Document',          'type' => 'ebook',    'mime_type' => 'application/epub+zip',  'extension' => 'epub' ),
+			array( 'name' => 'PNG Image',              'type' => 'image',    'mime_type' => 'image/png',   'extension' => 'png' ),
+			array( 'name' => 'JPEG Image',             'type' => 'image',    'mime_type' => 'image/jpeg',  'extension' => 'jpg' ),
+			array( 'name' => 'mp4chaps Chapter File',  'type' => 'chapters', 'mime_type' => 'text/plain',  'extension' => 'txt' ),
 		);
 		
 		foreach ( $default_formats as $format ) {
@@ -299,6 +302,14 @@ function override404() {
 }
 add_filter( 'template_redirect', '\Podlove\override404' );
 
+
+function clear_all_caches() {
+
+	// clear WP Super Cache
+	if ( function_exists( 'wp_cache_clear_cache' ) )
+		wp_cache_clear_cache();
+}
+
 namespace Podlove\AJAX;
 use \Podlove\Model;
 
@@ -322,6 +333,49 @@ function validate_file() {
 }
 
 add_action( 'wp_ajax_podlove-validate-file', '\Podlove\AJAX\validate_file' );
+
+function update_file() {
+	$file_id = $_REQUEST['file_id'];
+
+	$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
+	$info = $file->determine_file_size();
+	$file->save();
+
+	$result = array();
+	$result['file_id']   = $file_id;
+	$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 );
+	$result['file_size'] = $info['download_content_length'];
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode($result);
+
+	die();
+}
+add_action( 'wp_ajax_podlove-update-file', '\Podlove\AJAX\update_file' );
+
+function create_file() {
+	$episode_id        = $_REQUEST['episode_id'];
+	$media_location_id = $_REQUEST['media_location_id'];
+
+	if ( ! $episode_id || ! $media_location_id )
+		die();
+
+	$file = Model\MediaFile::find_or_create_by_episode_id_and_media_location_id( $episode_id, $media_location_id );
+
+	$result = array();
+	$result['file_id']   = $file->id;
+	$result['file_size'] = $file->size;
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode($result);
+
+	die();
+}
+add_action( 'wp_ajax_podlove-create-file', '\Podlove\AJAX\create_file' );
 
 function create_episode() {
 

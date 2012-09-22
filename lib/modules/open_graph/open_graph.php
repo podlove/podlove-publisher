@@ -49,7 +49,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 			$podcast = Model\Podcast::get_instance();
 
 			// determine image
-			$cover_art_url = $episode->cover_art;
+			$cover_art_url = $episode->get_cover_art();
 			if ( ! $cover_art_url )
 				$cover_art_url = $podcast->cover_image;
 			

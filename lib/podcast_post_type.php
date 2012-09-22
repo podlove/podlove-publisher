@@ -33,7 +33,9 @@ EOT;
 			'parent_item_colon'  => '',
 			'menu_name'          => __( 'Episodes', 'podlove' ),
 		);
-		
+			
+		$slug = trim( \Podlove\get_setting( 'custom_episode_slug' ) );
+
 		$args = array(
 			'labels'               => $labels,
 			'public'               => true,
@@ -49,10 +51,13 @@ EOT;
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
 			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
 			'rewrite' => array(
-				'slug'       => \Podlove\get_setting( 'custom_episode_slug' ),
+				'slug'       => strlen( $slug ) ? $slug : 'podcast',
 				'with_front' => false
 			)
-		); 
+		);
+
+		if ( strlen( $slug ) === 0 )
+			\Podlove\Episode_Routing::init();
 		
 		new \Podlove\Podcast_Post_Meta_Box();
 
