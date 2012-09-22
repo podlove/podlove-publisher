@@ -227,6 +227,8 @@ class Podcast_Post_Meta_Box {
 			$this->save_media_locations( $episode, $_REQUEST['_podlove_meta']['media_locations'] );
 		else 
 			$this->save_media_locations( $episode, array() );
+
+		\Podlove\clear_all_caches(); // mainly for feeds
 	}
 
 	/**

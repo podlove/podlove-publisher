@@ -387,6 +387,14 @@ function override404() {
 }
 add_filter( 'template_redirect', '\Podlove\override404' );
 
+
+function clear_all_caches() {
+
+	// clear WP Super Cache
+	if ( function_exists( 'wp_cache_clear_cache' ) )
+		wp_cache_clear_cache();
+}
+
 namespace Podlove\AJAX;
 use \Podlove\Model;
 
