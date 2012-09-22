@@ -20,6 +20,14 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Upgrade Notice ==
 
+= 1.2.9-alpha =
+- prefixless episode permalinks as setting
+- Merge branch 'master' into episode-routing
+- add itunes:subtitle to podcast feed entries
+- fix feed caching problems
+- fix download links for wp super cache
+- better curl error description
+
 = 1.2.1-alpha =
 - support for alternate URLs https://github.com/eteubert/podlove/commit/e98c16ce318ce9841c79969456bd8bae2b93449e
 - add option for episode url prefix slug (in settings, "/podcast/" can be renamed)
