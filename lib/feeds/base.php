@@ -10,7 +10,7 @@ function mute_feed_title() {
 
 function override_feed_title( $feed ) {
 	add_filter( 'wp_title_rss', function ( $title ) use ( $feed ) {
-		return apply_filters( 'podlove_feed_title', htmlspecialchars( Model\Podcast::get_instance()->full_title() ) );
+		return apply_filters( 'podlove_feed_title', htmlspecialchars( Model\Podcast::get_instance()->title ) );
 	} );
 }
 
@@ -20,6 +20,10 @@ function override_feed_language( $feed ) {
 		return apply_filters( 'podlove_feed_language', ( $podcast->language ) ? $podcast->language : $language );
 	} );
 }
+
+// todo: description
+// podlove_rss_feed_description
+// description = summary; fallback: subtitle; fallback: title
 
 // todo: new line for each tag
 // todo: hide tags without content
@@ -35,7 +39,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function () use ( $hook ) {
 		switch ( $hook ) {
 			case 'rss2_head':
-				$gen = '<generator>Podlove v' . \Podlove\get_plugin_header( 'Version' ) . '</generator>';
+				$gen = '<generator>Podlove Publishing Plugin for WordPress v' . \Podlove\get_plugin_header( 'Version' ) . '</generator>';
 				break;
 			case 'atom_head':
 				$gen = '<generator uri="' . \Podlove\get_plugin_header( 'PluginURI' ) . '" version="' . \Podlove\get_plugin_header( 'Version' ) . '">' . \Podlove\get_plugin_header( 'Name' ) . '</generator>';
@@ -45,11 +49,15 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	} );
 	
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
-		$author = sprintf( '<itunes:author>%s</itunes:author>', $podcast->author_name );
-		echo apply_filters( 'podlove_feed_itunes_author', $author );
+		echo PHP_EOL;
 
-		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $podcast->summary );
+		$author = "\t" . sprintf( '<itunes:author>%s</itunes:author>', $podcast->author_name );
+		echo apply_filters( 'podlove_feed_itunes_author', $author );
+		echo PHP_EOL;
+
+		$summary = "\t" . sprintf( '<itunes:summary>%s</itunes:summary>', $podcast->summary );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
+		echo PHP_EOL;
 
 		$categories = \Podlove\Itunes\categories( false );	
 		$category_html = '';
@@ -75,35 +83,42 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 			}
 		}
 		echo apply_filters( 'podlove_feed_itunes_categories', $category_html );
+		echo PHP_EOL;
 
 		$owner = sprintf( '
-			<itunes:owner>
-				<itunes:name>%s</itunes:name>
-				<itunes:email>%s</itunes:email>
-			</itunes:owner>',
+	<itunes:owner>
+		<itunes:name>%s</itunes:name>
+		<itunes:email>%s</itunes:email>
+	</itunes:owner>',
 			$podcast->owner_name,
 			$podcast->owner_email
 		);
-		echo apply_filters( 'podlove_feed_itunes_owner', $owner );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_owner', $owner );
+		echo PHP_EOL;
 		
 		if ( $podcast->cover_image ) {
 			$coverimage = sprintf( '<itunes:image href="%s" />', $podcast->cover_image );
 		} else {
 			$coverimage = '';
 		}
-		echo apply_filters( 'podlove_feed_itunes_image', $coverimage );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_image', $coverimage );
+		echo PHP_EOL;
 
 		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $podcast->subtitle );
-		echo apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
+		echo PHP_EOL;
 
 		$keywords = sprintf( '<itunes:keywords>%s</itunes:keywords>', $podcast->keywords );
-		echo apply_filters( 'podlove_feed_itunes_keywords', $keywords );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_keywords', $keywords );
+		echo PHP_EOL;
 
 		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->enable ) ? 'no' : 'yes' );
-		echo apply_filters( 'podlove_feed_itunes_block', $block );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_block', $block );
+		echo PHP_EOL;
 
         $explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $podcast->explicit == 2) ? 'clean' : ( ( $podcast->explicit ) ? 'yes' : 'no' ) );
-		echo apply_filters( 'podlove_feed_itunes_explicit', $explicit );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_explicit', $explicit );
+		echo PHP_EOL;
 	} );
 }
 
@@ -121,12 +136,11 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$enclosure_duration  = $episode->duration;
 		$enclosure_file_size = $file->size;
 		$file_slug           = $episode->slug;
-		$cover_art_url       = $episode->cover_art;
+		$cover_art_url       = $episode->get_cover_art();
 
 		// fall back to podcast cover image
-		if ( ! $cover_art_url ) {
+		if ( ! $cover_art_url )
 			$cover_art_url = $podcast->cover_image;
-		}
 
 		$enclosure_url = $episode->enclosure_url( $feed->media_location() );
 		
@@ -138,7 +152,10 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$author = sprintf( '<itunes:author>%s</itunes:author>', $podcast->author_name );
 		echo apply_filters( 'podlove_feed_itunes_author', $author );
 
-		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', htmlspecialchars( strip_tags( $post->post_excerpt ) ) );
+		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', htmlspecialchars( strip_tags( $episode->subtitle ) ) );
+		echo apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
+
+		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', htmlspecialchars( strip_tags( $episode->summary ) ) );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
 
 		if ( $cover_art_url ) {

@@ -10,8 +10,21 @@ function handle_direct_download() {
 	$media_file_id = (int) $_GET['download_media_file'];
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 
-	if ( ! $media_file )
-		return;
+	if ( ! $media_file ) {
+		status_header( 404 );
+		exit;
+	}
+
+	$media_location = $media_file->media_location();
+
+	if ( ! $media_location || ! $media_location->downloadable ) {
+		status_header( 404 );
+		exit;
+	}
+
+	// tell WP Super Cache to not cache download links
+	if ( ! defined( 'DONOTCACHEPAGE' ) )
+		define( 'DONOTCACHEPAGE', true );
 
 	header( "Expires: 0" );
 	header( 'Cache-Control: must-revalidate' );
@@ -53,10 +66,14 @@ function episode_downloads_shortcode( $options ) {
 	foreach ( $media_files as $media_file ) {
 
 		$media_location = $media_file->media_location();
+
+		if ( ! $media_location->downloadable )
+			continue;
+
 		$media_format   = $media_location->media_format();
 		
 		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
-		$download_link_name = $media_location->title;
+		$download_link_name = str_replace( " ", "&nbsp;", $media_location->title );
 
 		$html .= '<li class="' . $media_format->extension . '">';
 		$html .= sprintf(
@@ -114,7 +131,7 @@ function webplayer_shortcode( $options ) {
 
 	$chapters = '';
 	if ( $episode->chapters ) {
-		$chapters = sprintf( 'chapters="_podlove_chapters_%s"', $podcast->slug );
+		$chapters = 'chapters="_podlove_chapters"';
 	}
 
 	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );

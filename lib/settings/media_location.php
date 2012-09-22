@@ -164,6 +164,12 @@ class MediaLocation {
 				'default' => '%media_file_base_url%%episode_slug%.%format_extension%'
 			) );
 
+			$f->checkbox( 'downloadable', array(
+				'label'       => __( 'Downloadable', 'podlove' ),
+				'description' => sprintf( 'Allow downloads for users.', 'podlove' ),
+				'default' => true
+			) );
+
 		} );
 
 		// hidden fields for JavaScript

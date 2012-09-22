@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 9 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 12 );
 
 add_action( 'init', function () {
 	
@@ -250,8 +250,28 @@ function run_migrations_for_version( $version ) {
 				$media_location->url_template = str_replace( '%suffix%', '', $media_location->url_template );
 				$media_location->save();
 			}
+		break;	
+		case 10:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `summary` TEXT',
+				\Podlove\Model\Episode::table_name()
+			);
+			$wpdb->query( $sql );
+		break;	
+		case 11:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `downloadable` INT',
+				\Podlove\Model\MediaLocation::table_name()
+			);
+			$wpdb->query( $sql );
 		break;
-
+		case 12:
+			$sql = sprintf(
+				'UPDATE `%s` SET `downloadable` = 1',
+				\Podlove\Model\MediaLocation::table_name()
+			);
+			$wpdb->query( $sql );
+		break;
 	}
 
 }

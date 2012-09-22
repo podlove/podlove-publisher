@@ -13,7 +13,7 @@ class Podcast_Post_Meta_Box {
 	public static function add_meta_box() {
 		add_meta_box(
 			/* $id       */ 'podlove_podcast',
-			/* $title    */ __( 'Podcast Settings', 'podlove' ),
+			/* $title    */ __( 'Podcast Episode', 'podlove' ),
 			/* $callback */ '\Podlove\Podcast_Post_Meta_Box::post_type_meta_box_callback',
 			/* $page     */ 'podcast',
 			/* $context  */ 'normal',
@@ -58,13 +58,29 @@ class Podcast_Post_Meta_Box {
 					'html'        => array( 'class' => 'regular-text' )
 				));
 
+				// TODO: validate and parse
 				$wrapper->string( 'duration', array(
 					'label'       => __( 'Duration', 'podlove' ),
 					'description' => '',
 					'html'        => array( 'class' => 'regular-text' )
 				));
 
-				if ( $podcast->supports_cover_art ) {
+				$wrapper->string( 'subtitle', array(
+					'label'       => __( 'Subtitle', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'large-text' )
+				));
+
+				$wrapper->text( 'summary', array(
+					'label'       => __( 'Summary', 'podlove' ),
+					'description' => '',
+					'html'        => array(
+						'class' => 'large-text',
+						'rows'  => max( 2, count( explode( "\n", $episode->summary ) ) )
+					)
+				));
+
+				if ( $podcast->supports_cover_art === 'manual' ) {
 					$wrapper->string( 'cover_art', array(
 						'label'       => __( 'Episode Cover Art URL', 'podlove' ),
 						'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
@@ -88,6 +104,10 @@ class Podcast_Post_Meta_Box {
 					'default'     => true
 				));
 
+				// TODO: button to update
+				// TODO: pretty display
+				// TODO: don't display link
+				// TODO: display last modified from header
 				$wrapper->multiselect( 'media_locations', Podcast_Post_Meta_Box::media_locations_form( $episode ) );
 
 			} );
@@ -116,11 +136,13 @@ class Podcast_Post_Meta_Box {
 				continue;
 
 			// get formats configured for this show
-			$location_options[ $location->id ] = $media_format->name;
+			$location_options[ $location->id ] = $location->title;
 			// find out which formats are active
 			$location_values[ $location->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
 		}
 
+		// FIXME: empty checkbox -> no file id
+		// solution: when one checks the box, an AJAX request has to create and validate the file
 		$media_locations_form = array(
 			'label'       => __( 'Media Files', 'podlove' ),
 			'description' => '',
@@ -131,8 +153,24 @@ class Podcast_Post_Meta_Box {
 				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
 				$format   = $location->media_format();
 				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
-				$filesize = ( is_object( $file ) ) ? $file->size : 0;					
-				return 'data-template="' . $location->url_template . '" data-extension="' . $format->extension . '" data-size="' . $filesize . '"';
+				
+				$attributes = array(
+					'data-template'  => $location->url_template,
+					'data-extension' => $format->extension,
+					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
+					'data-media-location-id' => $location->id,
+					'data-episode-id' => $episode->id
+				);
+
+				if ( $file )
+					$attributes['data-id'] = $file->id;
+
+				$out = '';
+				foreach ( $attributes as $key => $value ) {
+					$out .= sprintf( '%s="%s" ', $key, $value );
+				}
+
+				return $out;
 			}
 		);
 
@@ -183,12 +221,14 @@ class Podcast_Post_Meta_Box {
 		$episode->update_attributes( $_POST['_podlove_meta'] );
 
 		// copy chapter info into custom meta for webplayer compatibility
-		update_post_meta( $post_id, sprintf( '_podlove_chapters' ), $episode->chapters );
+		update_post_meta( $post_id, '_podlove_chapters', $episode->chapters );
 
 		if ( isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
 			$this->save_media_locations( $episode, $_REQUEST['_podlove_meta']['media_locations'] );
 		else 
 			$this->save_media_locations( $episode, array() );
+
+		\Podlove\clear_all_caches(); // mainly for feeds
 	}
 
 	/**
