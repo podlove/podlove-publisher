@@ -57,7 +57,7 @@ class Settings {
 			/* $id       */ 'podlove_setting_custom_episode_slug',
 			/* $title    */ sprintf(
 				'<label for="custom_episode_slug">%s</label>',
-				__( 'URL segment prefix for podcast episode posts.', 'podlove' )
+				__( 'URL segment prefix for podcast episode posts. Leave empty to remove the prefix.', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
