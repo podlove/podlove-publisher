@@ -22,6 +22,10 @@ function handle_direct_download() {
 		exit;
 	}
 
+	// tell WP Super Cache to not cache download links
+	if ( ! defined( 'DONOTCACHEPAGE' ) )
+		define( 'DONOTCACHEPAGE', true );
+
 	header( "Expires: 0" );
 	header( 'Cache-Control: must-revalidate' );
     header( 'Pragma: public' );

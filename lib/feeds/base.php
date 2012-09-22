@@ -152,7 +152,10 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$author = sprintf( '<itunes:author>%s</itunes:author>', $podcast->author_name );
 		echo apply_filters( 'podlove_feed_itunes_author', $author );
 
-		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', htmlspecialchars( strip_tags( $post->post_excerpt ) ) );
+		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', htmlspecialchars( strip_tags( $episode->subtitle ) ) );
+		echo apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
+
+		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', htmlspecialchars( strip_tags( $episode->summary ) ) );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
 
 		if ( $cover_art_url ) {
