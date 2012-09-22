@@ -44,7 +44,9 @@ class Episode_Routing {
 		$url = self::get_current_url_data();
 
 		// redirect original URL to new URL
-		if ( stripos( $url['url'], '/podcast/' ) ) {
+		$prefix_position = stripos( $url['url'], '/podcast/' );
+		// URL must contain but not end with /podcast/
+		if ( $prefix_position && strlen( $url['url'] ) !== $prefix_position + strlen( '/podcast/' ) ) {
 			$new_url = str_replace( '/podcast/', '/', $url['url'] );
 			wp_redirect( $new_url, 301 );
 			exit;
