@@ -43,20 +43,30 @@ class Contributors extends \Podlove\Modules\Base {
 			</p>
 		</div>
 		<div id="contributors" class="tagchecklist">
-			<?php foreach ( $contributors as $contributor ): ?>
-				<?php $settings = self::get_additional_settings( $contributor->term_id ) ?>
-				<div class="contributor" data-term-id="<?php echo $contributor->term_id ?>">
-					<span>
-						<a href="#" class="ntdelbutton">x</a>
-						<div class="avatar">
-							<?php echo get_avatar( $settings['contributor_email'], 24 ); ?>
-						</div>
-						<div class="name">
-							<?php echo $contributor->name ?>
-						</div>
-					</span>
-				</div>
-			<?php endforeach; ?>
+			<div class="nojs-tags hide-if-js">
+				<p><?php echo __( 'Add or remove contributors', 'podlove' ) ?></p>
+				<textarea name="tax_input[<?php echo self::$taxonomy_name ?>]" rows="3" cols="20" class="the-contributors" id="tax-input-podlove-contributors"><?php 
+				if ( $contributors && count( $contributors ) ) {
+					echo implode( ',', array_map(function($c){return $c->slug;}, $contributors) );
+				}
+				?></textarea>
+			</div>
+			<?php if ( $contributors && count( $contributors ) ): ?>
+				<?php foreach ( $contributors as $contributor ): ?>
+					<?php $settings = self::get_additional_settings( $contributor->term_id ) ?>
+					<div class="contributor" data-term-slug="<?php echo $contributor->slug ?>" data-term-id="<?php echo $contributor->term_id ?>">
+						<span>
+							<a href="#" class="ntdelbutton">x</a>
+							<div class="avatar">
+								<?php echo get_avatar( $settings['contributor_email'], 24 ); ?>
+							</div>
+							<div class="name">
+								<?php echo $contributor->name ?>
+							</div>
+						</span>
+					</div>
+				<?php endforeach; ?>
+			<?php endif; ?>
 		</div>
 		<style type="text/css">
 		.contributor {
@@ -91,7 +101,22 @@ class Contributors extends \Podlove\Modules\Base {
 
 				$("#contributors").on("click", ".contributor a.ntdelbutton", function(e) {
 					e.preventDefault();
-					$(this).closest(".contributor").remove();
+
+					var $contributor = $(this).closest(".contributor");
+
+					// actually remove contributor
+					var slug = $contributor.data('termSlug');
+
+					var $data_field = $("#tax-input-podlove-contributors");
+					var contributors = $data_field.val().split(",");
+
+					// remove by slug
+					contributors.splice(contributors.indexOf(slug),1);
+					$data_field.val(contributors.join(","));
+
+					// visurally remove contributor
+					$contributor.remove();
+
 					return false;
 				});
 
@@ -120,10 +145,11 @@ class Contributors extends \Podlove\Modules\Base {
 					},
 					select: function(event, ui) {
 
+						// visually add contributor
 						$("#add_contributors_input").val('');
 
 						var tpl = '';
-						tpl += '<div class="contributor" data-term-id="' + ui.item.id + '">';
+						tpl += '<div class="contributor" data-term-slug="' + ui.item.value + '" data-term-id="' + ui.item.id + '">';
 						tpl += '	<span>';
 						tpl += '		<a href="#" class="ntdelbutton">x</a>';
 						tpl += '		<div class="avatar">';
@@ -136,6 +162,18 @@ class Contributors extends \Podlove\Modules\Base {
 						tpl += '</div>';
 
 						$("#contributors").append(tpl);
+
+						// actually add contributor
+						var $data_field = $("#tax-input-podlove-contributors");
+						var contributors = $data_field.val();
+
+						if (!contributors.length) {
+							contributors = ui.item.value;
+						} else {
+							contributors = contributors + "," + ui.item.value;	
+						}
+						
+						$data_field.val(contributors);
 
 						return false;
 					}
@@ -211,6 +249,12 @@ class Contributors extends \Podlove\Modules\Base {
 		<?php
 	}
 
+	/**
+	 * Save settings for a single contributor.
+	 * 
+	 * @param  int $term_id    
+	 * @param  int $taxonomy_id
+	 */
 	public function save( $term_id, $taxonomy_id ) {
 
 		if ( ! isset( $_POST['contributor_email'] ) )
