@@ -18,19 +18,14 @@ http://github.com/eteubert/podlove
 
 Feel free to contribute and to fix errors or send improvements via github.
 
+== Changelog ==
+
+= 1.2.10-alpha =
+* Feature: Add Shortcodes to display episode data: `[podlove-episode-subtitle] [podlove-episode-summary] [podlove-episode-slug] [podlove-episode-duration] [podlove-episode-chapters]`
+* Feature: Add Opus File Format ([see Auphonic blog for more info](http://auphonic.com/blog/2012/09/26/opus-revolutionary-open-audio-codec-podcasts-and-internet-audio/))
+* Enhancement: Remove pagination from formats settings page
+
 == Upgrade Notice ==
-
-= 1.2.9-alpha =
-- prefixless episode permalinks as setting
-- Merge branch 'master' into episode-routing
-- add itunes:subtitle to podcast feed entries
-- fix feed caching problems
-- fix download links for wp super cache
-- better curl error description
-
-= 1.2.1-alpha =
-- support for alternate URLs https://github.com/eteubert/podlove/commit/e98c16ce318ce9841c79969456bd8bae2b93449e
-- add option for episode url prefix slug (in settings, "/podcast/" can be renamed)
 
 = 1.2.0-alpha =
 Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change! 
