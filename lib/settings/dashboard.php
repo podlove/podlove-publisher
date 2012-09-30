@@ -89,9 +89,35 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Look for errors in podcast settings.
+	 * 
+	 * @return array list of error messages
+	 */
+	public static function get_podcast_setting_warnings() {
+		
+		$warnings = array();
+		$podcast = Model\Podcast::get_instance();
+
+		$required_attributes = array(
+			'title'               => __( 'Your podcast needs a title.', 'podlove' ),
+			'slug'                => __( 'Your podcast needs a mnemonic.', 'podlove' ),
+			'media_file_base_uri' => __( 'Your podcast needs a base URL for file storage.', 'podlove' ),
+		);
+		$required_attributes = apply_filters( 'podlove_podcast_required_attributes', $required_attributes );
+
+		foreach ( $required_attributes as $attribute => $error_text ) {
+			if ( ! $podcast->$attribute )
+				$warnings[] = $error_text;
+		}
+
+		return $warnings;
+	}
+
 	public static function validate_podcast_files() {
 		
 		$podcast = Model\Podcast::get_instance();
+		$podcast_warnings = self::get_podcast_setting_warnings();
 
 		if ( ! in_array( 'curl', get_loaded_extensions() ) ) {
 			?>
@@ -107,6 +133,33 @@ class Dashboard {
 
 		?>
 		<div id="validation">
+
+			<?php if ( count( $podcast_warnings ) ): ?>
+				<style type="text/css">
+				#podcast_warnings {
+					color: #333333;
+					background-color: #FFEBE8;
+					border: 1px solid #CC0000;
+					border-radius: 3px;
+					padding: 0.4em 1.0em;
+					margin: 10px 0px;
+				}
+				#podcast_warnings h4 {
+					margin: 10px 0px;
+				}
+				</style>
+				<div id="podcast_warnings">
+					<h4><?php echo __( 'Critical Notes' ) ?></h4>
+					<?php foreach ( $podcast_warnings as $warning ): ?>
+						<div class="line">
+							<?php echo $warning ?>
+							<a href="<?php echo admin_url( 'admin.php?page=podlove_settings_podcast_handle' ) ?>">
+								<?php echo __( 'go fix it', 'podlove' ) ?>
+							</a>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 
 			<a href="#" id="validate_everything">
 				<?php echo __( 'Validate Everything', 'podlove' ); ?>

@@ -23,6 +23,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 = 1.2.10-alpha =
 * Feature: Add Shortcodes to display episode data: `[podlove-episode-subtitle] [podlove-episode-summary] [podlove-episode-slug] [podlove-episode-duration] [podlove-episode-chapters]`
 * Feature: Add Opus File Format ([see Auphonic blog for more info](http://auphonic.com/blog/2012/09/26/opus-revolutionary-open-audio-codec-podcasts-and-internet-audio/))
+* Feature: Show red warning in dashboard if one of the following podlove settings is missing: `title`, `mnemonic`, `base url`
 * Enhancement: Remove pagination from formats settings page
 
 == Upgrade Notice ==
