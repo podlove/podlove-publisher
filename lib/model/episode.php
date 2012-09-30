@@ -15,14 +15,14 @@ class Episode extends Base {
 	 */
 	public function full_title() {
 		
-		$post = get_post( $this->post_id );
-
-		$t = $post->title;
+		$post_id = $this->post_id;
+		$post    = get_post( $post_id );
+		$title   = $post->post_title;
 		
 		if ( $this->subtitle )
-			$t = $t . ' - ' . $this->subtitle;
+			$title = $title . ' - ' . $this->subtitle;
 		
-		return $t;
+		return $title;
 	}
 
 	public function media_files() {
