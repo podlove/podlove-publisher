@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 12 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 13 );
 
 add_action( 'init', function () {
 	
@@ -271,6 +271,14 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\MediaLocation::table_name()
 			);
 			$wpdb->query( $sql );
+		break;
+		case 13:
+			$opus = array( 'name' => 'Opus Audio', 'type' => 'audio', 'mime_type' => 'audio/opus', 'extension' => 'opus' );
+			$f = new \Podlove\Model\MediaFormat;
+			foreach ( $opus as $key => $value ) {
+				$f->{$key} = $value;
+			}
+			$f->save();
 		break;
 	}
 
