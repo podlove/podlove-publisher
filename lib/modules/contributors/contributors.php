@@ -30,6 +30,46 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'admin_init', function () {
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 		} );
+
+		add_shortcode( 'podlove-contributors', array( $this, 'shortcode' ) );
+	}
+
+	public function shortcode( $attributes ) {
+
+		$post_id = get_the_ID();
+		$contributors = get_the_terms( $post_id, self::$taxonomy_name );
+		
+		if ( ! $contributors )
+			return;
+
+		$defaults = array(
+			'separator' => ', '
+		);
+
+		$attributes = shortcode_atts( $defaults, $attributes );
+
+		$html  = '';
+		$html .= '<span class="podlove-contributors">';
+		$html .= implode( $attributes['separator'], array_map( function ( $contributor ) {
+			$settings = \Podlove\Modules\Contributors\Contributors::get_additional_settings( $contributor->term_id );
+			$avatar = isset( $settings['contributor_email'] ) ? get_avatar( $settings['contributor_email'], 18 ) : get_avatar( null, 18 );
+			return
+				'<span class="contributor">'
+				. $avatar
+				. ' '
+				. $contributor->name
+				. '</span>';
+		}, $contributors ) );
+		$html .= '</span>';
+
+		$html .= '<style type="text/css">';
+		$html .= '.podlove-contributors .contributor img {';
+		$html .= '	margin: 0px;';
+		$html .= '	vertical-align: text-bottom;';
+		$html .= '}';
+		$html .= '</style>';
+		
+		return apply_filters( 'podlove_contributors_shortcode', $html );
 	}
 
 	public function metabox( $post ) {
