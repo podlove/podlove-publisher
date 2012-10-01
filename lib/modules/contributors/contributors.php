@@ -37,6 +37,7 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function scripts_and_styles() {
+
 		wp_register_script( 'podlove-contributors-admin-script', $this->get_module_url() . '/js/admin.js', array( 'jquery-ui-autocomplete' ) );
 		wp_enqueue_script( 'podlove-contributors-admin-script' );
 
@@ -248,6 +249,7 @@ class Contributors extends \Podlove\Modules\Base {
 	 * @source http://gravatar.com/site/implement/images/php/
 	 */
 	function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
+		
 		$url = 'http://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
 		$url .= "?s=$s&d=$d&r=$r";
