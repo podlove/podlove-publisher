@@ -20,6 +20,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.12-alpha =
+* Bugfix: Minor JavaScript glitch
+
 = 1.2.11-alpha =
 * New Module: Contributors Taxonomy — display with shortcode `[podlove-contributors]` (go to `Podlove > Settings` to activate the module)
 
