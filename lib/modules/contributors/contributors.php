@@ -31,7 +31,17 @@ class Contributors extends \Podlove\Modules\Base {
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 		} );
 
+		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
+
 		add_shortcode( 'podlove-contributors', array( $this, 'shortcode' ) );
+	}
+
+	public function scripts_and_styles() {
+		wp_register_script( 'podlove-contributors-admin-script', $this->get_module_url() . '/js/admin.js', array( 'jquery-ui-autocomplete' ) );
+		wp_enqueue_script( 'podlove-contributors-admin-script' );
+
+		wp_register_style( 'podlove-contributors-admin-style', $this->get_module_url() . '/css/admin.css' );
+		wp_enqueue_style( 'podlove-contributors-admin-style' );
 	}
 
 	public function shortcode( $attributes ) {
@@ -114,204 +124,25 @@ class Contributors extends \Podlove\Modules\Base {
 				<?php endforeach; ?>
 			<?php endif; ?>
 		</div>
-		<style type="text/css">
-		.tagchecklist div.name a {
-			margin: 0;
-			display: inline;
-			float: none;
-			text-indent: 0px;
-			overflow: hidden;
-			position: relative;
-			background: none;
-			color: #333;
-			text-decoration: none;
-		}
-		.tagchecklist div.name a:hover {
-			color: #21759B;
-			text-decoration: underline;
-		}
-		.contributor {
-			clear: both;
-			height: 24px;
-			padding: 4px 0px;
-		}
-		.autocomplete.autocomplete {
-			padding: 1px 0px;
-		}
-		.contributor > span {
-			line-height: 24px;
-		}
-		.contributor > span a.ntdelbutton {
-			margin-top: 8px;
-		}
-		.contributor .avatar {
-			width:24px;
-			height:24px;
-			margin: 0px 4px;
-			float: left;
-		}
-		.autocomplete.autocomplete .avatar {
-			margin-left: 0px;
-		}
-		.contributor .avatar img {
-			border:1px solid #999;
-		}
-		.contributor .name {
-			font-size: 14px;
-			float: left;
-			margin-left: 8px;
-		}
-		</style>
 		<script type="text/javascript">
-			jQuery(function($){
+		<?php 
+		$people = get_terms(self::$taxonomy_name, array('hide_empty' => false) );
+		$people = array_map( function( $person ) {
+			$settings = \Podlove\Modules\Contributors\Contributors::get_additional_settings( $person->term_id );
+			$email = isset( $settings['contributor_email'] ) ? $settings['contributor_email'] : null;
+			return array(
+				'value'  => $person->slug,
+				'label'  => $person->name,
+				'id'     => $person->term_id,
+				'avatar' => \Podlove\Modules\Contributors\Contributors::get_gravatar_url( $email, 24 )
+			);
+		}, $people );
+		if ( ! $people )
+			$people = array();
+		?>
 
-				$("#add_contributors_submit").on("click", function(e) {
-					e.preventDefault();
-
-					var $add_contributors_input = $("#add_contributors_input");
-					var new_contributor = $add_contributors_input.val();
-
-					if (!new_contributor.length) return false;
-
-					podlove_add_contributor({
-						slug: new_contributor,
-						id: 0,
-						avatar: null,
-						name: new_contributor
-					});
-
-					return false;
-				});
-
-				$("#contributors").on("click", ".contributor a.ntdelbutton", function(e) {
-					e.preventDefault();
-
-					var $contributor = $(this).closest(".contributor");
-
-					// actually remove contributor
-					var slug = $contributor.data('termSlug');
-
-					var $data_field = $("#tax-input-podlove-contributors");
-					var contributors = $data_field.val().split(",");
-
-					// remove by slug
-					contributors.splice(contributors.indexOf(slug),1);
-					$data_field.val(contributors.join(","));
-
-					// visurally remove contributor
-					$contributor.remove();
-
-					return false;
-				});
-
-				<?php 
-				$people = get_terms(self::$taxonomy_name, array('hide_empty' => false) );
-				$people = array_map( function( $person ) {
-					$settings = \Podlove\Modules\Contributors\Contributors::get_additional_settings( $person->term_id );
-					$email = isset( $settings['contributor_email'] ) ? $settings['contributor_email'] : null;
-					return array(
-						'value'  => $person->slug,
-						'label'  => $person->name,
-						'id'     => $person->term_id,
-						'avatar' => \Podlove\Modules\Contributors\Contributors::get_gravatar_url( $email, 24 )
-					);
-				}, $people );
-				if ( ! $people )
-					$people = array();
-				?>
-
-				var people = <?php echo json_encode($people); ?>;
-
-				$("#add_contributors_input").autocomplete({
-					minLength: 0,
-					source: people,
-					focus: function(event, ui) {
-						$("#add_contributors_input").val(ui.item.label);
-
-						return false;
-					},
-					select: function(event, ui) {
-
-						podlove_add_contributor({
-							slug: ui.item.value,
-							id: ui.item.id,
-							avatar: ui.item.avatar,
-							name: ui.item.label
-						});
-
-						return false;
-					}
-				}).data('autocomplete')._renderItem = function(ul, item) {
-
-					var template = podlove_contributor_template({
-						avatar: item.avatar,
-						name: item.label,
-						display_delete: false,
-						display_data: false,
-						"class": "contributor autocomplete"
-					});
-
-					return $( "<li></li>" )
-					    .data( "item.autocomplete", item )
-					    .append( "<a>" + template + "</a>" )
-					    .appendTo( ul );
-				};
-
-				function podlove_add_contributor(options) {
-
-					if (!options.avatar) {
-						options.avatar = 'http://www.gravatar.com/avatar?d=mm';
-					}
-
-					// visually add contributor
-					$("#add_contributors_input").val('');
-					$("#contributors").append(podlove_contributor_template(options));
-
-					// actually add contributor
-					var $data_field = $("#tax-input-podlove-contributors");
-					var contributors = $data_field.val();
-
-					if (!contributors.length) {
-						contributors = options.slug;
-					} else {
-						contributors = contributors + "," + options.slug;	
-					}
-					
-					$data_field.val(contributors);
-				}
-
-				function podlove_contributor_template(options) {
-
-					var defaults = {
-						"display_data": true,
-						"display_delete": true,
-						"class": "contributor"
-					};
-					var options = $.extend({}, defaults, options); 
-
-					var tpl = '';
-					if (options.display_data) {
-						tpl += '<div class="' + options["class"] + '" data-term-slug="' + options.slug + '" data-term-id="' + options.id + '">';
-					} else {
-						tpl += '<div class="' + options["class"] + '">';
-					}
-					tpl += '	<span>';
-					if (options.display_delete) {
-						tpl += '		<a href="#" class="ntdelbutton">x</a>';
-					}
-					tpl += '		<div class="avatar">';
-					tpl += '			<img src="' + options.avatar + '" class="avatar avatar-24 photo" height="24" width="24">';
-					tpl += '		</div>';
-					tpl += '		<div class="name">';
-					tpl += '			' + options.name;
-					tpl += '		</div>';
-					tpl += '	</span>';
-					tpl += '</div>';
-
-					return tpl;
-				}
-			});
-
+		var PODLOVE = PODLOVE || {};
+		PODLOVE.people = <?php echo json_encode($people); ?>;
 		</script>
 		<?php
 	}
