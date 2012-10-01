@@ -137,3 +137,11 @@ function webplayer_shortcode( $options ) {
 	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
+
+$podlove_public_episode_attributes = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
+foreach ( $podlove_public_episode_attributes as $attr ) {
+	add_shortcode( 'podlove-episode-' . $attr, function() use ( $attr ) {
+		global $post;
+		return nl2br( Model\Episode::find_or_create_by_post_id( $post->ID )->$attr );
+	} );
+}

@@ -69,7 +69,7 @@ class Format_List_Table extends \WP_List_Table {
 	
 	function prepare_items() {
 		// number of items per page
-		$per_page = 10;
+		$per_page = 1000;
 		
 		// define column headers
 		$columns = $this->get_columns();
