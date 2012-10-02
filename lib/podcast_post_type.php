@@ -110,8 +110,17 @@ EOT;
 		}
 		
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
+
+		add_filter( 'get_the_excerpt', array( $this, 'default_excerpt_to_episode_summary' ) );
 		
 		\Podlove\Feeds\init();
+	}
+
+	public function default_excerpt_to_episode_summary( $excerpt ) {
+		global $post;
+
+		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
+		return $episode && strlen( $episode->summary ) > 0 ? $episode->summary : $excerpt;
 	}
 		
 	public function create_menu() {
