@@ -10,6 +10,8 @@ Podcast plugin. Still in early stages of development. Don't use for production u
 
 == Description ==
 
+"The Mac OS X, 10.0, of podcasting. The Podcasting Plugin for the next decade." — Tim Pritlove & map
+
 Podlove Podcasting Plugin for WordPress is a full-features podcast publishing system — well, it will be at some point. It is still in early development, so please handle with care. Feel free to use it in the real world but don't be surprised if something breaks until we reach a stable release. We already try to not break stuff with updates but there is no guarantee.
 
 Development of the plugin is an open process. The current version is available on github:
