@@ -20,6 +20,10 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.13-alpha =
+* Enhancement: use episode summary as excerpt if available
+* Bugfix: episode assistant file slugs respect mnemonic case
+
 = 1.2.12-alpha =
 * Bugfix: Minor JavaScript glitch
 
