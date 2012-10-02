@@ -23,6 +23,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 = 1.2.13-alpha =
 * Enhancement: use episode summary as excerpt if available
 * Bugfix: episode assistant file slugs respect mnemonic case
+* Bugfix: solve 404 issue with pages
 
 = 1.2.12-alpha =
 * Bugfix: Minor JavaScript glitch

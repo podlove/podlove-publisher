@@ -52,12 +52,22 @@ class Episode_Routing {
 			exit;
 		}
 
+		// make sure it's not a known page
+		if ( isset( $query['page'] ) && isset( $query['pagename'] ) ) {
+			global $wpdb;
+
+			$sql = $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $wpdb->posts . ' WHERE post_type = "page" AND post_name = "' . $query['pagename'] . '"' );
+			$found_posts = $wpdb->get_var( $sql );
+			if ( $found_posts > 0 ) {
+				return $query; // found a page, don't interrupt
+			} else {
+				$query['error'] = '404'; // nope, that's not a known page. proceed.
+			}
+		}
+
 		// For all unknown pages, prepend podcast prefix to see if this post exists.
 		// If WordPress finds a post — hurray! If not, another 404 will be thrown.
-		if	(
-				( isset( $query['page'] ) && isset( $query['pagename'] ) && ! strlen( $query['page'] ) ) // a page, but empty
-			||	( isset( $query['error'] ) && $query['error'] == '404' ) // or page not found
-			) {
+		if	( isset( $query['error'] ) && $query['error'] == '404' ) { // page not found
 			
 			$url_base      = str_replace( $url['scheme'] . '://' . $url['domain'], '', home_url() );
 			$permapart     = substr( $_SERVER['REQUEST_URI'], strlen( $url_base ) );
