@@ -67,6 +67,15 @@ class Episode extends Base {
 		return $file->get_file_url();
 	}
 
+	public function refetch_files() {
+		foreach ( EpisodeAsset::all() as $asset ) {
+			if ( $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) ) {
+				$file->determine_file_size();
+				$file->save();
+			}
+		}
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

@@ -216,9 +216,14 @@ class Podcast_Post_Meta_Box {
 		if ( ! isset( $_POST['_podlove_meta'] ) || ! is_array( $_POST['_podlove_meta'] ) )
 			return;
 
+
 		// save changes
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+		$episode_slug_has_changed = isset( $_POST['_podlove_meta']['slug'] ) && $_POST['_podlove_meta']['slug'] != $episode->slug;
 		$episode->update_attributes( $_POST['_podlove_meta'] );
+
+		if ( $episode_slug_has_changed )
+			$episode->refetch_files();
 
 		// copy chapter info into custom meta for webplayer compatibility
 		update_post_meta( $post_id, '_podlove_chapters', $episode->chapters );
