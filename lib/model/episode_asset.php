@@ -34,7 +34,7 @@ class EpisodeAsset extends Base {
 
 	public function title() {
 		if ( $this->file_type_id )
-			return $this->media_format()->title();
+			return $this->file_type()->title();
 		else
 			return __( 'Notice: No file format defined.', 'podlove' );
 	}
