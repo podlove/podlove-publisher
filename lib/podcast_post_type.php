@@ -139,7 +139,7 @@ EOT;
 		new \Podlove\Settings\Dashboard( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Podcast( self::SETTINGS_PAGE_HANDLE );
-		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\FileType( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\EpisodeAsset( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\WebPlayer( self::SETTINGS_PAGE_HANDLE );

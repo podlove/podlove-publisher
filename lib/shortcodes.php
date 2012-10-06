@@ -70,12 +70,12 @@ function episode_downloads_shortcode( $options ) {
 		if ( ! $episode_asset->downloadable )
 			continue;
 
-		$media_format   = $episode_asset->media_format();
+		$file_type = $episode_asset->file_type();
 		
 		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
 		$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
 
-		$html .= '<li class="' . $media_format->extension . '">';
+		$html .= '<li class="' . $file_type->extension . '">';
 		$html .= sprintf(
 			'<a href="%s">%s%s</a>',
 			apply_filters( 'podlove_download_link_url', $download_link_url, $media_file ),

@@ -51,12 +51,12 @@ class Feed extends Base {
 		if ( ! $episode_asset )
 			return $this->name;
 
-		$media_format = $episode_asset->media_format();
+		$file_type = $episode_asset->file_type();
 
-		if ( ! $media_format )
+		if ( ! $file_type )
 			return $this->name;
 
-		$file_extension = $media_format->extension;
+		$file_extension = $file_type->extension;
 
 		$title = sprintf( __( 'Podcast Feed: %s (%s)', 'podcast' ), $podcast->title, $this->name );
 		$title = apply_filters( 'podlove_feed_title_for_discovery', $title, $this->title, $file_extension, $this->id );

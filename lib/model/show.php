@@ -37,7 +37,7 @@ class Show extends Base {
 	 */
 	function valid_episode_assets() {
 
-		$where = sprintf( 'show_id = "%s" AND media_format_id > 0', $this->id );
+		$where = sprintf( 'show_id = "%s" AND file_type_id > 0', $this->id );
 
 		return EpisodeAsset::find_all_by_where( $where );
 	}

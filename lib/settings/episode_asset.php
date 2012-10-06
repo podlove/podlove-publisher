@@ -118,7 +118,7 @@ class EpisodeAsset {
 	
 	private function form_template( $episode_asset, $action, $button_text = NULL ) {
 
-		$raw_formats = \Podlove\Model\MediaFormat::all();
+		$raw_formats = \Podlove\Model\FileType::all();
 		$formats = array();
 		foreach ( $raw_formats as $format ) {
 			$formats[ $format->id ] = array(
@@ -145,7 +145,7 @@ class EpisodeAsset {
 		\Podlove\Form\build_for( $episode_asset, $form_args, function ( $form ) use ( $format_optionlist ) {
 			$f = new \Podlove\Form\Input\TableWrapper( $form );
 
-			$f->select( 'media_format_id', array(
+			$f->select( 'file_type_id', array(
 				'label'       => __( 'File Format', 'podlove' ),
 				'description' => __( '', 'podlove' ),
 				'options'     => $format_optionlist

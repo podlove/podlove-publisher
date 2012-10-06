@@ -132,7 +132,7 @@ class Podcast_Post_Meta_Box {
 
 		foreach ( $episode_assets as $asset ) {
 
-			if ( ! $media_format = $asset->media_format() )
+			if ( ! $file_type = $asset->file_type() )
 				continue;
 
 			// get formats configured for this show
@@ -151,7 +151,7 @@ class Podcast_Post_Meta_Box {
 			'multi_values' => $asset_values,
 			'multiselect_callback' => function ( $asset_id ) use ( $episode ) {
 				$asset = \Podlove\Model\EpisodeAsset::find_by_id( $asset_id );
-				$format   = $asset->media_format();
+				$format   = $asset->file_type();
 				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
 				
 				$attributes = array(

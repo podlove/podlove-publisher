@@ -1,16 +1,16 @@
 <?php
 namespace Podlove\Settings;
 
-class Format {
+class FileType {
 	
 	public function __construct( $handle ) {
 		
 		add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Formats',
-			/* $menu_title */ 'Formats',
+			/* $page_title */ __( 'File Types', 'podlove' ),
+			/* $menu_title */ __( 'File Types', 'podlove' ),
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_formats_settings_handle',
+			/* $menu_slug  */ 'podlove_file_types_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
@@ -20,15 +20,15 @@ class Format {
 	 * Process form: save/update a format
 	 */
 	private function save() {
-		if ( ! isset( $_REQUEST['format'] ) )
+		if ( ! isset( $_REQUEST['file_type'] ) )
 			return;
 			
-		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST['format'] );
+		$format = \Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] );
 		
-		if ( ! isset( $_POST['podlove_format'] ) || ! is_array( $_POST['podlove_format'] ) )
+		if ( ! isset( $_POST['podlove_file_type'] ) || ! is_array( $_POST['podlove_file_type'] ) )
 			return;
 			
-		foreach ( $_POST['podlove_format'] as $key => $value )
+		foreach ( $_POST['podlove_file_type'] as $key => $value )
 			$format->{$key} = $value;
 
 		$format->save();
@@ -42,12 +42,12 @@ class Format {
 	private function create() {
 		global $wpdb;
 		
-		$format = new \Podlove\Model\MediaFormat;
+		$format = new \Podlove\Model\FileType;
 		
-		if ( ! isset( $_POST['podlove_format'] ) || ! is_array( $_POST['podlove_format'] ) )
+		if ( ! isset( $_POST['podlove_file_type'] ) || ! is_array( $_POST['podlove_file_type'] ) )
 			return;
 			
-		foreach ( $_POST['podlove_format'] as $key => $value ) {
+		foreach ( $_POST['podlove_file_type'] as $key => $value ) {
 			$format->{$key} = $value;
 		}
 		$format->save();
@@ -59,10 +59,10 @@ class Format {
 	 * Process form: delete a format
 	 */
 	private function delete() {
-		if ( ! isset( $_REQUEST['format'] ) )
+		if ( ! isset( $_REQUEST['file_type'] ) )
 			return;
 
-		\Podlove\Model\MediaFormat::find_by_id( $_REQUEST['format'] )->delete();
+		\Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -95,7 +95,7 @@ class Format {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2>Podlove Formats <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'File Types', 'podlove' ) ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 			$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
@@ -116,7 +116,7 @@ class Format {
 	}
 	
 	private function new_template() {
-		$format = new \Podlove\Model\MediaFormat;
+		$format = new \Podlove\Model\FileType;
 		?>
 		<h3><?php echo __( 'Add New Format', 'podlove' ); ?></h3>
 		<?php
@@ -124,14 +124,14 @@ class Format {
 	}
 	
 	private function view_template() {
-		$table = new \Podlove\Format_List_Table();
+		$table = new \Podlove\File_Type_List_Table();
 		$table->prepare_items();
 		$table->display();
 	}
 	
 	private function form_template( $format, $action, $button_text = NULL ) {
 
-		\Podlove\Form\build_for( $format, array( 'context' => 'podlove_format', 'hidden' => array( 'format' => $format->id, 'action' => $action ) ), function ( $form ) {
+		\Podlove\Form\build_for( $format, array( 'context' => 'podlove_file_type', 'hidden' => array( 'file_type' => $format->id, 'action' => $action ) ), function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
 	 		$wrapper->string( 'name', array(
@@ -160,7 +160,7 @@ class Format {
 	}
 	
 	private function edit_template() {
-		$format = \Podlove\Model\MediaFormat::find_by_id( $_REQUEST['format'] );
+		$format = \Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] );
 		?>
 		<h3>Edit Format: <?php echo $format->name ?></h3>
 		

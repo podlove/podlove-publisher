@@ -60,15 +60,15 @@ class MediaFile extends Base {
 
 		$episode       = $this->episode();
 		$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
-		$media_format  = MediaFormat::find_by_id( $episode_asset->media_format_id );
+		$file_type     = FileType::find_by_id( $episode_asset->file_type_id );
 
-		if ( ! $episode_asset || ! $media_format || ! $episode->slug )
+		if ( ! $episode_asset || ! $file_type || ! $episode->slug )
 			return '';
 
 		$template = $episode_asset->url_template;
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );
 		$template = str_replace( '%episode_slug%',        $episode->slug, $template );
-		$template = str_replace( '%format_extension%',    $media_format->extension, $template );
+		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
 		return $template;
 	}
@@ -86,7 +86,7 @@ class MediaFile extends Base {
 
 		$file_name = $this->episode()->slug
 		           . '.'
-		           . $this->episode_asset()->media_format()->extension;
+		           . $this->episode_asset()->file_type()->extension;
 		           
 		return apply_filters( 'podlove_download_file_name', $file_name, $this );
 	}
