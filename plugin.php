@@ -9,7 +9,7 @@ add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
 function activate_for_current_blog() {
 	Model\Feed::build();
 	Model\MediaFormat::build();
-	Model\MediaLocation::build();
+	Model\EpisodeAsset::build();
 	Model\MediaFile::build();
 	Model\Show::build();
 	Model\Episode::build();
@@ -150,7 +150,7 @@ function uninstall() {
 function uninstall_for_current_blog() {
 	Model\Feed::destroy();
 	Model\MediaFormat::destroy();
-	Model\MediaLocation::destroy();
+	Model\EpisodeAsset::destroy();
 	Model\MediaFile::destroy();
 	Model\Show::destroy();
 	Model\Episode::destroy();
@@ -358,12 +358,12 @@ add_action( 'wp_ajax_podlove-update-file', '\Podlove\AJAX\update_file' );
 
 function create_file() {
 	$episode_id        = $_REQUEST['episode_id'];
-	$media_location_id = $_REQUEST['media_location_id'];
+	$episode_asset_id  = $_REQUEST['episode_asset_id'];
 
-	if ( ! $episode_id || ! $media_location_id )
+	if ( ! $episode_id || ! $episode_asset_id )
 		die();
 
-	$file = Model\MediaFile::find_or_create_by_episode_id_and_media_location_id( $episode_id, $media_location_id );
+	$file = Model\MediaFile::find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id );
 
 	$result = array();
 	$result['file_id']   = $file->id;
@@ -403,11 +403,11 @@ function create_episode() {
 	$episode->save();
 
 	// activate all media files
-	$media_locations = Model\MediaLocation::all();
-	foreach ( $media_locations as $media_location ) {
+	$episode_assets = Model\EpisodeAsset::all();
+	foreach ( $episode_assets as $episode_asset ) {
 		$media_file = new \Podlove\Model\MediaFile();
 		$media_file->episode_id = $episode->id;
-		$media_file->media_location_id = $media_location->id;
+		$media_file->episode_asset_id = $episode_asset->id;
 		$media_file->save();
 	}
 

@@ -2,7 +2,7 @@
 namespace Podlove\Settings;
 use \Podlove\Model;
 
-class MediaLocation {
+class EpisodeAsset {
 
 	static $pagehook;
 	
@@ -10,10 +10,10 @@ class MediaLocation {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Media Locations',
-			/* $menu_title */ 'Media Locations',
+			/* $page_title */ __( 'Episode Assets', 'podlove' ),
+			/* $menu_title */ __( 'Episode Assets', 'podlove' ),
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_media_locations_settings_handle',
+			/* $menu_slug  */ 'podlove_episode_assets_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
@@ -23,13 +23,13 @@ class MediaLocation {
 	 * Process form: save/update a format
 	 */
 	private function save() {
-		if ( ! isset( $_REQUEST['media_location'] ) )
+		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
 			
-		$media_location = \Podlove\Model\MediaLocation::find_by_id( $_REQUEST['media_location'] );
-		$media_location->update_attributes( $_POST['podlove_media_location'] );
+		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
+		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 		
-		$this->redirect( 'edit', $media_location->id );
+		$this->redirect( 'edit', $episode_asset->id );
 	}
 	
 	/**
@@ -38,8 +38,8 @@ class MediaLocation {
 	private function create() {
 		global $wpdb;
 		
-		$media_location = new \Podlove\Model\MediaLocation;
-		$media_location->update_attributes( $_POST['podlove_media_location'] );
+		$episode_asset = new \Podlove\Model\EpisodeAsset;
+		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 
 		$this->redirect( 'edit', $wpdb->insert_id );
 	}
@@ -48,10 +48,10 @@ class MediaLocation {
 	 * Process form: delete a format
 	 */
 	private function delete() {
-		if ( ! isset( $_REQUEST['media_location'] ) )
+		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
 
-		\Podlove\Model\MediaLocation::find_by_id( $_REQUEST['media_location'] )->delete();
+		\Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -59,9 +59,9 @@ class MediaLocation {
 	/**
 	 * Helper method: redirect to a certain page.
 	 */
-	private function redirect( $action, $media_location_id = NULL ) {
+	private function redirect( $action, $episode_asset_id = NULL ) {
 		$page   = 'admin.php?page=' . $_REQUEST['page'];
-		$show   = ( $media_location_id ) ? '&media_location=' . $media_location_id : '';
+		$show   = ( $episode_asset_id ) ? '&episode_asset=' . $episode_asset_id : '';
 		$action = '&action=' . $action;
 		
 		wp_redirect( admin_url( $page . $show . $action ) );
@@ -70,7 +70,7 @@ class MediaLocation {
 	
 	public function process_form() {
 
-		if ( ! isset( $_REQUEST['media_location'] ) )
+		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
 
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
@@ -88,7 +88,7 @@ class MediaLocation {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2><?php echo __( 'Media Locations', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
@@ -103,20 +103,20 @@ class MediaLocation {
 	}
 	
 	private function new_template() {
-		$media_location = new \Podlove\Model\MediaLocation;
+		$episode_asset = new \Podlove\Model\EpisodeAsset;
 		?>
-		<h3><?php echo __( 'Add New media_location', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New Apisode Asset', 'podlove' ); ?></h3>
 		<?php
-		$this->form_template( $media_location, 'create', __( 'Add New Media Location', 'podlove' ) );
+		$this->form_template( $episode_asset, 'create', __( 'Add New Episode Asset', 'podlove' ) );
 	}
 	
 	private function view_template() {
-		$table = new \Podlove\Media_Location_List_Table();
+		$table = new \Podlove\Episode_Asset_List_Table();
 		$table->prepare_items();
 		$table->display();
 	}
 	
-	private function form_template( $media_location, $action, $button_text = NULL ) {
+	private function form_template( $episode_asset, $action, $button_text = NULL ) {
 
 		$raw_formats = \Podlove\Model\MediaFormat::all();
 		$formats = array();
@@ -132,17 +132,17 @@ class MediaLocation {
 		}, $formats );
 
 		$form_args = array(
-			'context' => 'podlove_media_location',
+			'context' => 'podlove_episode_asset',
 			'hidden'  => array(
-				'media_location' => $media_location->id,
+				'episode_asset' => $episode_asset->id,
 				'action' => $action
 			),
 			'attributes' => array(
-				'id' => 'podlove_media_locations'
+				'id' => 'podlove_episode_assets'
 			)
 		);
 
-		\Podlove\Form\build_for( $media_location, $form_args, function ( $form ) use ( $format_optionlist ) {
+		\Podlove\Form\build_for( $episode_asset, $form_args, function ( $form ) use ( $format_optionlist ) {
 			$f = new \Podlove\Form\Input\TableWrapper( $form );
 
 			$f->select( 'media_format_id', array(
@@ -179,9 +179,9 @@ class MediaLocation {
 	}
 	
 	private function edit_template() {
-		$media_location = \Podlove\Model\MediaLocation::find_by_id( $_REQUEST['media_location'] );
-		echo '<h3>' . sprintf( __( 'Edit Media Location: %s', 'podlove' ), $media_location->title ) . '</h3>';
-		$this->form_template( $media_location, 'save' );
+		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
+		echo '<h3>' . sprintf( __( 'Edit Episode Asset: %s', 'podlove' ), $episode_asset->title ) . '</h3>';
+		$this->form_template( $episode_asset, 'save' );
 	}
 
 }

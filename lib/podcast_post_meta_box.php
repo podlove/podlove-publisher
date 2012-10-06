@@ -108,7 +108,7 @@ class Podcast_Post_Meta_Box {
 				// TODO: pretty display
 				// TODO: don't display link
 				// TODO: display last modified from header
-				$wrapper->multiselect( 'media_locations', Podcast_Post_Meta_Box::media_locations_form( $episode ) );
+				$wrapper->multiselect( 'episode_assets', Podcast_Post_Meta_Box::episode_assets_form( $episode ) );
 
 			} );
 			?>
@@ -117,48 +117,48 @@ class Podcast_Post_Meta_Box {
 	}
 
 	/**
-	 * Fetch form data for MediaLocations multiselect.
+	 * Fetch form data for EpisodeAssets multiselect.
 	 * 
 	 * @param  \Podlove\Model\Episode $episode
 	 * @return array
 	 */
-	public static function media_locations_form( $episode ) {
-		$media_locations = Model\MediaLocation::all();
+	public static function episode_assets_form( $episode ) {
+		$episode_assets = Model\EpisodeAsset::all();
 
 		// field to generate option list
-		$location_options = array();
+		$asset_options = array();
 		// values for option list
-		$location_values = array();
+		$asset_values = array();
 
-		foreach ( $media_locations as $location ) {
+		foreach ( $episode_assets as $asset ) {
 
-			if ( ! $media_format = $location->media_format() )
+			if ( ! $media_format = $asset->media_format() )
 				continue;
 
 			// get formats configured for this show
-			$location_options[ $location->id ] = $location->title;
+			$asset_options[ $asset->id ] = $asset->title;
 			// find out which formats are active
-			$location_values[ $location->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
+			$asset_values[ $asset->id ] = NULL !== Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
 		}
 
 		// FIXME: empty checkbox -> no file id
 		// solution: when one checks the box, an AJAX request has to create and validate the file
-		$media_locations_form = array(
+		$episode_assets_form = array(
 			'label'       => __( 'Media Files', 'podlove' ),
 			'description' => '',
-			'options'     => $location_options,
+			'options'     => $asset_options,
 			'default'      => true,
-			'multi_values' => $location_values,
-			'multiselect_callback' => function ( $location_id ) use ( $episode ) {
-				$location = \Podlove\Model\MediaLocation::find_by_id( $location_id );
-				$format   = $location->media_format();
-				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
+			'multi_values' => $asset_values,
+			'multiselect_callback' => function ( $asset_id ) use ( $episode ) {
+				$asset = \Podlove\Model\EpisodeAsset::find_by_id( $asset_id );
+				$format   = $asset->media_format();
+				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
 				
 				$attributes = array(
-					'data-template'  => $location->url_template,
+					'data-template'  => $asset->url_template,
 					'data-extension' => $format->extension,
 					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
-					'data-media-location-id' => $location->id,
+					'data-episode-asset-id' => $asset->id,
 					'data-episode-id' => $episode->id
 				);
 
@@ -174,8 +174,8 @@ class Podcast_Post_Meta_Box {
 			}
 		);
 
-		if ( empty( $location_options ) ) {
-			$media_locations_form['description'] =
+		if ( empty( $asset_options ) ) {
+			$episode_assets_form['description'] =
 				sprintf(
 					'<span style="color: red">%s</span>',
 					__( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' )
@@ -188,7 +188,7 @@ class Podcast_Post_Meta_Box {
 			    );
 		}
 
-		return $media_locations_form;
+		return $episode_assets_form;
 	}
 
 	/**
@@ -223,51 +223,51 @@ class Podcast_Post_Meta_Box {
 		// copy chapter info into custom meta for webplayer compatibility
 		update_post_meta( $post_id, '_podlove_chapters', $episode->chapters );
 
-		if ( isset( $_REQUEST['_podlove_meta']['media_locations'] ) )
-			$this->save_media_locations( $episode, $_REQUEST['_podlove_meta']['media_locations'] );
+		if ( isset( $_REQUEST['_podlove_meta']['episode_assets'] ) )
+			$this->save_episode_assets( $episode, $_REQUEST['_podlove_meta']['episode_assets'] );
 		else 
-			$this->save_media_locations( $episode, array() );
+			$this->save_episode_assets( $episode, array() );
 
 		\Podlove\clear_all_caches(); // mainly for feeds
 	}
 
 	/**
-	 * Save media locations based on checkbox data.
+	 * Save episode assets based on checkbox data.
 	 *
 	 * @param \Podlove\Model\Episode $episode
 	 * @param  array $checkbox_data Raw form data for checkboxes.
 	 *               Contains 'on' for checked boxes and no entry at all for unchecked ones.
 	 */
-	function save_media_locations( $episode, $checkbox_data ) {
+	function save_episode_assets( $episode, $checkbox_data ) {
 
-		// create array where the keys are location_ids and values false
-		$locations = array_map(
+		// create array where the keys are asset_ids and values false
+		$assets = array_map(
 			function( $_ ){ return false; },
 			array_flip(
 				array_map(
 					function( $l ) { return $l->id; },
-					Model\MediaLocation::all()
+					Model\EpisodeAsset::all()
 				)
 			)
 		);
 
-		// set those location to true where the checkbox is set
-		foreach ( $locations as $id => $_ ) {
+		// set those assets to true where the checkbox is set
+		foreach ( $assets as $id => $_ ) {
 			if ( isset( $checkbox_data[ $id ] ) && $checkbox_data[ $id ] === 'on' ) {
-				$locations[ $id ] = true;
+				$assets[ $id ] = true;
 			}
 		}
 
 		// create new ones, delete unchecked ones
-		foreach ( $locations as $media_location_id => $media_location_value ) {
-			$file = Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $media_location_id );
+		foreach ( $assets as $episode_asset_id => $episode_asset_value ) {
+			$file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $episode_asset_id );
 
-			if ( $file === NULL && $media_location_value ) {
+			if ( $file === NULL && $episode_asset_value ) {
 				$file = new Model\MediaFile();
 				$file->episode_id = $episode->id;
-				$file->media_location_id = $media_location_id;
+				$file->episode_asset_id = $episode_asset_id;
 				$file->save();
-			} elseif ( $file !== NULL && ! $media_location_value ) {
+			} elseif ( $file !== NULL && ! $episode_asset_value ) {
 				$file->delete();
 			}
 		}

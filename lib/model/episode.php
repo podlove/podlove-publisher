@@ -42,8 +42,8 @@ class Episode extends Base {
 		return $episode;
 	}
 
-	public function enclosure_url( $media_location ) {
-		$media_file = MediaFile::find_by_episode_id_and_media_location_id( $this->id, $media_location->id );
+	public function enclosure_url( $episode_asset ) {
+		$media_file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $episode_asset->id );
 		return $media_file->get_file_url();
 	}
 
@@ -58,10 +58,10 @@ class Episode extends Base {
 			return $this->cover_art;
 
 		$cover_art_file_id = $podcast->supports_cover_art;
-		if ( ! $location = MediaLocation::find_one_by_id( $cover_art_file_id ) )
+		if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
 			return false;
 
-		if ( ! $file = MediaFile::find_by_episode_id_and_media_location_id( $this->id, $location->id ) )
+		if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
 			return false;
 
 		return $file->get_file_url();

@@ -88,8 +88,8 @@ EOT;
 			);
 
 			wp_register_script(
-				'podlove_admin_media_location_settings',
-				\Podlove\PLUGIN_URL . '/js/admin/media_location_settings.js',
+				'podlove_admin_episode_asset_settings',
+				\Podlove\PLUGIN_URL . '/js/admin/episode_asset_settings.js',
 				array( 'jquery' ),
 				'1.1' 
 			);
@@ -101,7 +101,7 @@ EOT;
 					'jquery',
 					'podlove_admin_episode',
 					'podlove_admin_dashboard_validation',
-					'podlove_admin_media_location_settings'
+					'podlove_admin_episode_asset_settings'
 				),
 				'1.0' 
 			);
@@ -140,7 +140,7 @@ EOT;
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Podcast( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Format( self::SETTINGS_PAGE_HANDLE );
-		new \Podlove\Settings\MediaLocation( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\EpisodeAsset( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\WebPlayer( self::SETTINGS_PAGE_HANDLE );
 		// new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );

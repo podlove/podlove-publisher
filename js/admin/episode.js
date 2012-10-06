@@ -14,7 +14,7 @@ var PODLOVE = PODLOVE || {};
 	 			o.slug_field.on('blur', function() {
 	 				if (o.slug_field.val().length > 0) {
 	 					// by default, tick all
-	 					$container.find('input[type="checkbox"][name*="media_locations"]')
+	 					$container.find('input[type="checkbox"][name*="episode_assets"]')
 	 						.attr("checked", true)
 	 						.change();
 	 				}
@@ -23,16 +23,16 @@ var PODLOVE = PODLOVE || {};
 	 	}
 
 	 	function generate_live_preview() {
-	 		$("tr[class*='media_locations'] td label", container).after('<span class="media_file_path"></span>');
+	 		$("tr[class*='episode_assets'] td label", container).after('<span class="media_file_path"></span>');
 	 		o.update_preview();
-	 		$('input[name*="slug"], input[name*="media_locations"]', container).on('change', o.update_preview);
+	 		$('input[name*="slug"], input[name*="episode_assets"]', container).on('change', o.update_preview);
 	 	};
 
 	 	function create_file(args) {
 	 		var data = {
 	 			action: 'podlove-create-file',
 	 			episode_id: args.episode_id,
-	 			media_location_id: args.media_location_id
+	 			episode_asset_id: args.episode_asset_id
 	 		};
 
 	 		$.ajax({
@@ -50,7 +50,7 @@ var PODLOVE = PODLOVE || {};
 	 	};
 
  		o.update_preview = function() {
- 			$("tr[class*='media_locations'] td .media_file_path", o.container).each(function() {
+ 			$("tr[class*='episode_assets'] td .media_file_path", o.container).each(function() {
  				$container = $(this).closest('.inside');
  				$checkbox  = $(this).parent().find("input");
  				var output = '';
@@ -62,7 +62,7 @@ var PODLOVE = PODLOVE || {};
  						// create file
  						create_file({
  							episode_id: $checkbox.data('episode-id'),
- 							media_location_id: $checkbox.data('media-location-id'),
+ 							episode_asset_id: $checkbox.data('episode-asset-id'),
  							checkbox: $checkbox
  						});
  					} else {
@@ -118,7 +118,6 @@ var PODLOVE = PODLOVE || {};
  				data: data,
  				dataType: 'json',
  				success: function(result) {
- 					console.log(result);
  					container.find("input").data('size', result.file_size);
  					o.update_preview();
  				}

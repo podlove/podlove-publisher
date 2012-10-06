@@ -198,8 +198,8 @@ class Dashboard {
 										<?php echo __( "<span class=\"error\">filesize missing</span>", 'podlove' ); ?>
 									<?php endif ?>
 								</span>
-								<?php if ( $media_location = $media_file->media_location() ): ?>
-									<span class="title"><?php echo $media_location->title() ?></span>
+								<?php if ( $episode_asset = $media_file->episode_asset() ): ?>
+									<span class="title"><?php echo $episode_asset->title() ?></span>
 								<?php endif; ?>
 								<span class="url">
 									<?php echo $media_file->get_file_url(); ?>

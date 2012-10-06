@@ -126,9 +126,9 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		global $post;
 
-		$episode  = \Podlove\Model\Episode::find_one_by_post_id( $post->ID );
-		$location = $feed->media_location();
-		$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $location->id );
+		$episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID );
+		$asset   = $feed->episode_asset();
+		$file    = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
 
 		if ( ! $file )
 			return;
@@ -142,7 +142,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		if ( ! $cover_art_url )
 			$cover_art_url = $podcast->cover_image;
 
-		$enclosure_url = $episode->enclosure_url( $feed->media_location() );
+		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
 		
 		echo apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
 

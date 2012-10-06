@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.14-alpha =
+* Enhancement: rename "media locations" to "episode assets" for clarity
+
 = 1.2.13-alpha =
 * Enhancement: use episode summary as excerpt if available
 * Bugfix: episode assistant file slugs respect mnemonic case
