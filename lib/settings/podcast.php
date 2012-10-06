@@ -152,8 +152,8 @@ class Podcast {
 					);
 					$episode_assets = Model\EpisodeAsset::all();
 					foreach ( $episode_assets as $episode_asset ) {
-						$media_format = $episode_asset->media_format();
-						if ( $media_format && $media_format->type === 'image' ) {
+						$file_type = $episode_asset->file_type();
+						if ( $file_type && $file_type->type === 'image' ) {
 							$artwork_options[ $episode_asset->id ] = sprintf( __( 'Media File: %s', 'podlove' ), $episode_asset->title );
 						}
 					}
