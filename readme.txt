@@ -26,6 +26,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: rename "media locations" to "episode assets" for clarity
 * Enhancement: rename "podlove formats" to "file types" for clarity
 * Enhancement: start to rework validation section
+* Enhancement: check for episode files when slug changes
 
 = 1.2.13-alpha =
 * Enhancement: use episode summary as excerpt if available
