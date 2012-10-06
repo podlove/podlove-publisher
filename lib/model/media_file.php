@@ -20,30 +20,30 @@ class MediaFile extends Base {
 	/**
 	 * Find the related show model.
 	 *
-	 * @return \Podlove\Model\MediaLocation|NULL
+	 * @return \Podlove\Model\EpisodeAsset|NULL
 	 */
-	public function media_location() {
-		return MediaLocation::find_by_id( $this->media_location_id );
+	public function episode_asset() {
+		return EpisodeAsset::find_by_id( $this->episode_asset_id );
 	}
 
-	public function find_or_create_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) {
+	public function find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
 		
-		if ( ! $file = self::find_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) ) {
+		if ( ! $file = self::find_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) ) {
 			$file = new MediaFile();
 			$file->episode_id = $episode_id;
-			$file->media_location_id = $media_location_id;
+			$file->episode_asset_id = $episode_asset_id;
 			$file->save();
 		}
 
 		return $file;
 	}
 
-	public function find_by_episode_id_and_media_location_id( $episode_id, $media_location_id ) {
+	public function find_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
 		
 		$where = sprintf(
-			'episode_id = "%s" AND media_location_id = "%s"',
+			'episode_id = "%s" AND episode_asset_id = "%s"',
 			$episode_id,
-			$media_location_id
+			$episode_asset_id
 		);
 
 		return MediaFile::find_one_by_where( $where );
@@ -58,14 +58,14 @@ class MediaFile extends Base {
 
 		$podcast  = Podcast::get_instance();
 
-		$episode        = $this->episode();
-		$media_location = MediaLocation::find_by_id( $this->media_location_id );
-		$media_format   = MediaFormat::find_by_id( $media_location->media_format_id );
+		$episode       = $this->episode();
+		$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
+		$media_format  = MediaFormat::find_by_id( $episode_asset->media_format_id );
 
-		if ( ! $media_location || ! $media_format || ! $episode->slug )
+		if ( ! $episode_asset || ! $media_format || ! $episode->slug )
 			return '';
 
-		$template = $media_location->url_template;
+		$template = $episode_asset->url_template;
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );
 		$template = str_replace( '%episode_slug%',        $episode->slug, $template );
 		$template = str_replace( '%format_extension%',    $media_format->extension, $template );
@@ -86,7 +86,7 @@ class MediaFile extends Base {
 
 		$file_name = $this->episode()->slug
 		           . '.'
-		           . $this->media_location()->media_format()->extension;
+		           . $this->episode_asset()->media_format()->extension;
 		           
 		return apply_filters( 'podlove_download_file_name', $file_name, $this );
 	}
@@ -130,5 +130,5 @@ class MediaFile extends Base {
 
 MediaFile::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 MediaFile::property( 'episode_id', 'INT' );
-MediaFile::property( 'media_location_id', 'INT' );
+MediaFile::property( 'episode_asset_id', 'INT' );
 MediaFile::property( 'size', 'INT' );

@@ -23,8 +23,8 @@ jQuery(function($) {
 		PODLOVE.Episode($(this));
 	});
 
-	$("#podlove_media_locations").each(function() {
-		PODLOVE.MediaLocationSettings($(this));
+	$("#podlove_episode_assets").each(function() {
+		PODLOVE.EpisodeAssetSettings($(this));
 	});
 	
 });

@@ -1,7 +1,7 @@
 <?php
 namespace Podlove\Model;
 
-class MediaLocation extends Base {
+class EpisodeAsset extends Base {
 	
 	/**
 	 * Sets default values.
@@ -29,7 +29,7 @@ class MediaLocation extends Base {
 	 * @return array|NULL
 	 */
 	function media_files() {
-		return MediaFile::find_all_by_media_location_id( $this->id );
+		return MediaFile::find_all_by_episode_asset_id( $this->id );
 	}
 
 	public function title() {
@@ -41,8 +41,8 @@ class MediaLocation extends Base {
 
 }
 
-MediaLocation::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-MediaLocation::property( 'title', 'VARCHAR(255)' );
-MediaLocation::property( 'media_format_id', 'INT' );
-MediaLocation::property( 'url_template', 'VARCHAR(255)' );
-MediaLocation::property( 'downloadable', 'INT' );
+EpisodeAsset::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
+EpisodeAsset::property( 'title', 'VARCHAR(255)' );
+EpisodeAsset::property( 'media_format_id', 'INT' );
+EpisodeAsset::property( 'url_template', 'VARCHAR(255)' );
+EpisodeAsset::property( 'downloadable', 'INT' );

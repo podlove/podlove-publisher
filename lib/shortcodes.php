@@ -15,9 +15,9 @@ function handle_direct_download() {
 		exit;
 	}
 
-	$media_location = $media_file->media_location();
+	$episode_asset = $media_file->episode_asset();
 
-	if ( ! $media_location || ! $media_location->downloadable ) {
+	if ( ! $episode_asset || ! $episode_asset->downloadable ) {
 		status_header( 404 );
 		exit;
 	}
@@ -65,15 +65,15 @@ function episode_downloads_shortcode( $options ) {
 	$html = '<ul class="episode_download_list">';
 	foreach ( $media_files as $media_file ) {
 
-		$media_location = $media_file->media_location();
+		$episode_asset = $media_file->episode_asset();
 
-		if ( ! $media_location->downloadable )
+		if ( ! $episode_asset->downloadable )
 			continue;
 
-		$media_format   = $media_location->media_format();
+		$media_format   = $episode_asset->media_format();
 		
 		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
-		$download_link_name = str_replace( " ", "&nbsp;", $media_location->title );
+		$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
 
 		$html .= '<li class="' . $media_format->extension . '">';
 		$html .= sprintf(
@@ -118,12 +118,12 @@ function webplayer_shortcode( $options ) {
 	$audio_formats = array( 'mp3', 'mp4', 'ogg' );
 
 	foreach ( $audio_formats as $audio_format ) {
-		$media_location = Model\MediaLocation::find_by_id( $formats_data['audio'][ $audio_format ] );
+		$episode_asset = Model\EpisodeAsset::find_by_id( $formats_data['audio'][ $audio_format ] );
 
-		if ( ! $media_location )
+		if ( ! $episode_asset )
 			continue;
 
-		$media_file = Model\MediaFile::find_by_episode_id_and_media_location_id( $episode->id, $media_location->id );
+		$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $episode_asset->id );
 
 		if ( $media_file )
 			$available_formats[] = sprintf( '%s="%s"', $audio_format, $media_file->get_file_url() );

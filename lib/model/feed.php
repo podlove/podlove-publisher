@@ -46,12 +46,12 @@ class Feed extends Base {
 
 		$podcast = Podcast::get_instance();
 
-		$media_location = $this->media_location();
+		$episode_asset = $this->episode_asset();
 
-		if ( ! $media_location )
+		if ( ! $episode_asset )
 			return $this->name;
 
-		$media_format = $media_location->media_format();
+		$media_format = $episode_asset->media_format();
 
 		if ( ! $media_format )
 			return $this->name;
@@ -65,12 +65,12 @@ class Feed extends Base {
 	}
 
 	/**
-	 * Find the related media location model.
+	 * Find the related episode asset model.
 	 * 
-	 * @return \Podlove\Model\MediaLocation|NULL
+	 * @return \Podlove\Model\EpisodeAsset|NULL
 	 */
-	public function media_location() {
-		return ( $this->media_location_id ) ? MediaLocation::find_by_id( $this->media_location_id ) : NULL;
+	public function episode_asset() {
+		return ( $this->episode_asset_id ) ? EpisodeAsset::find_by_id( $this->episode_asset_id ) : NULL;
 	}
 
 	/**
@@ -80,12 +80,12 @@ class Feed extends Base {
 	 */
 	function post_ids() {
 
-		$media_location = $this->media_location();
+		$episode_asset = $this->episode_asset();
 
-		if ( ! $media_location )
+		if ( ! $episode_asset )
 			return array();
 
-		$media_files = $media_location->media_files();
+		$media_files = $episode_asset->media_files();
 
 		if ( ! count( $media_files ) )
 			return array();
@@ -109,7 +109,7 @@ class Feed extends Base {
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-Feed::property( 'media_location_id', 'INT' );
+Feed::property( 'episode_asset_id', 'INT' );
 Feed::property( 'itunes_feed_id', 'INT' );
 Feed::property( 'name', 'VARCHAR(255)' );
 Feed::property( 'title', 'VARCHAR(255)' );
@@ -122,7 +122,7 @@ Feed::property( 'limit_items', 'INT' );
 Feed::property( 'show_description', 'INT' );
 
 
-// media_location_id
+// episode_asset_id
 // => für audio
 // => für video
 // => für text

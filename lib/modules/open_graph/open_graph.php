@@ -64,7 +64,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 			<?php $media_files = $episode->media_files(); ?>
 			<?php foreach ( $media_files as $media_file ): ?>
 				<meta property="og:audio" content="<?php echo $media_file->get_file_url(); ?>" />
-				<meta property="og:audio:type" content="<?php echo $media_file->media_location()->media_format()->mime_type ?>" />
+				<meta property="og:audio:type" content="<?php echo $media_file->episode_asset()->media_format()->mime_type ?>" />
 			<?php endforeach ?>
 			<?php
 		}		

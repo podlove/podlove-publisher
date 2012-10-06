@@ -19,8 +19,8 @@ class Atom {
 		
 		$podcast        = Model\Podcast::get_instance();
 		$feed           = Model\Feed::find_one_by_slug( $feed_slug );
-		$media_location = $feed->media_location();
-		$format         = $media_location->media_format();
+		$episode_asset  = $feed->episode_asset();
+		$format         = $episode_asset->media_format();
 
 		add_filter( 'podlove_feed_enclosure', function ( $enclosure, $enclosure_url, $enclosure_file_size, $mime_type ) {
 			return sprintf( '<link rel="enclosure" href="%s" length="%s" type="%s"/>', $enclosure_url, $enclosure_file_size, $mime_type );

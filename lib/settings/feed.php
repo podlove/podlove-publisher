@@ -130,10 +130,10 @@ class Feed {
 
 			$feed = $form->object;
 
-			$media_locations = \Podlove\Model\MediaLocation::all();
-			$locations = array();
-			foreach ( $media_locations as $location ) {
-				$locations[ $location->id ] = $location->title;
+			$episode_assets = \Podlove\Model\EpisodeAsset::all();
+			$assets = array();
+			foreach ( $episode_assets as $asset ) {
+				$assets[ $asset->id ] = $asset->title;
 			}	
 
 			$wrapper->string( 'name', array(
@@ -161,9 +161,9 @@ class Feed {
 				'default' => 'rss'
 			) );
 						
-			$wrapper->select( 'media_location_id', array(
+			$wrapper->select( 'episode_asset_id', array(
 				'label'       => __( 'Episode Media File', 'podlove' ),
-				'options'     => $locations,
+				'options'     => $assets,
 				'html'        => array( 'class' => 'required' )
 			) );
 			

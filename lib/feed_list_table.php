@@ -53,9 +53,9 @@ class Feed_List_Table extends \WP_List_Table {
 	}
 
 	public function column_media( $feed ) {
-		$media_location = $feed->media_location();
+		$episode_asset = $feed->episode_asset();
 
-		return ( $media_location ) ? $media_location->title() : __( 'not set', 'podlove' );
+		return ( $episode_asset ) ? $episode_asset->title() : __( 'not set', 'podlove' );
 	}
 
 	public function get_columns(){

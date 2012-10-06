@@ -77,7 +77,7 @@ class WebPlayer {
 		);
 
 		$formats_data = get_option( 'podlove_webplayer_formats', array() );
-		$media_locations = Model\MediaLocation::all();
+		$episode_assets = Model\EpisodeAsset::all();
 
 		foreach ( $formats as $format => $extensions ) {
 			foreach ( $extensions as $extension => $extension_data ) {
@@ -96,10 +96,10 @@ class WebPlayer {
 						<div>
 							<select name="<?php echo $name; ?>" id="<?php echo $id; ?>">
 								<option value="0" <?php selected( 0, $value ); ?> ><?php echo __( 'Unused', 'podlove' ); ?></option>
-								<?php foreach ( $media_locations as $media_location ): ?>
-									<?php $media_format = $media_location->media_format(); ?>
+								<?php foreach ( $episode_assets as $episode_asset ): ?>
+									<?php $media_format = $episode_asset->media_format(); ?>
 									<?php if ( $media_format && $media_format->mime_type === $mime_type ): ?>
-										<option value="<?php echo $media_location->id; ?>" <?php selected( $media_location->id, $value ); ?>><?php echo $media_location->title ?></option>
+										<option value="<?php echo $episode_asset->id; ?>" <?php selected( $episode_asset->id, $value ); ?>><?php echo $episode_asset->title ?></option>
 									<?php endif ?>
 								<?php endforeach ?>
 							</select>

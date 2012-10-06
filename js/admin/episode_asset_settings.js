@@ -4,7 +4,7 @@ var PODLOVE = PODLOVE || {};
  * Handles all logic in Show Settings Screen.
  */
 (function($) {
-	PODLOVE.MediaLocationSettings = function(container) {
+	PODLOVE.EpisodeAssetSettings = function(container) {
 		// private
 		var o = {};
 

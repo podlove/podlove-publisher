@@ -4,12 +4,12 @@ namespace Podlove\Model;
 class Show extends Base {
 
 	/**
-	 * Return all media_locations related to this show.
+	 * Return all episode_assets related to this show.
 	 *
 	 * @return array
 	 */
-	public function media_locations() {
-		return MediaLocation::find_all_by_show_id( $this->id );
+	public function episode_assets() {
+		return EpisodeAsset::find_all_by_show_id( $this->id );
 	}
 
 	/**
@@ -31,15 +31,15 @@ class Show extends Base {
 	}
 
 	/**
-	 * Return all media_locations with an associated format.
+	 * Return all episode_assets with an associated format.
 	 * 
 	 * @return array
 	 */
-	function valid_media_locations() {
+	function valid_episode_assets() {
 
 		$where = sprintf( 'show_id = "%s" AND media_format_id > 0', $this->id );
 
-		return MediaLocation::find_all_by_where( $where );
+		return EpisodeAsset::find_all_by_where( $where );
 	}
 
 	/**

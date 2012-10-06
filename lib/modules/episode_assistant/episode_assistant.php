@@ -96,16 +96,16 @@ EOT;
 	public function modal_box_html() {
 
 		$podcast = Model\Podcast::get_instance();
-		$media_locations = Model\MediaLocation::all();
-		$media_location = $media_locations[0];
+		$episode_assets = Model\EpisodeAsset::all();
+		$episode_asset  = $episode_assets[0];
 
 		$podcast_data = array(
 			'slug'        => $podcast->slug,
 			'name'        => $podcast->title,
 			'next_number' => $this->guess_next_episode_id_for_show(),
 			'base_url'    => $podcast->media_file_base_uri,
-			'media_location' => array(
-				'template' => $media_location->url_template
+			'episode_asset' => array(
+				'template' => $episode_asset->url_template
 			)
 		);
 		?>
