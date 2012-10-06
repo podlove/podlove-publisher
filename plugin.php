@@ -8,15 +8,15 @@ add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
 
 function activate_for_current_blog() {
 	Model\Feed::build();
-	Model\MediaFormat::build();
+	Model\FileType::build();
 	Model\EpisodeAsset::build();
 	Model\MediaFile::build();
 	Model\Show::build();
 	Model\Episode::build();
 	Model\Release::build();
 
-	if ( ! Model\MediaFormat::has_entries() ) {
-		$default_formats = array(
+	if ( ! Model\FileType::has_entries() ) {
+		$default_types = array(
 			array( 'name' => 'MP3 Audio',              'type' => 'audio',    'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
 			array( 'name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio',    'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent' ),
 			array( 'name' => 'MPEG-1 Video',           'type' => 'video',    'mime_type' => 'video/mpeg',  'extension' => 'mpg' ),
@@ -40,9 +40,9 @@ function activate_for_current_blog() {
 			array( 'name' => 'mp4chaps Chapter File',  'type' => 'chapters', 'mime_type' => 'text/plain',  'extension' => 'txt' ),
 		);
 		
-		foreach ( $default_formats as $format ) {
-			$f = new Model\MediaFormat;
-			foreach ( $format as $key => $value ) {
+		foreach ( $default_types as $file_type ) {
+			$f = new Model\FileType;
+			foreach ( $file_type as $key => $value ) {
 				$f->{$key} = $value;
 			}
 			$f->save();
@@ -149,7 +149,7 @@ function uninstall() {
 
 function uninstall_for_current_blog() {
 	Model\Feed::destroy();
-	Model\MediaFormat::destroy();
+	Model\FileType::destroy();
 	Model\EpisodeAsset::destroy();
 	Model\MediaFile::destroy();
 	Model\Show::destroy();

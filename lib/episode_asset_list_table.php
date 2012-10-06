@@ -42,17 +42,16 @@ class Episode_Asset_List_Table extends \WP_List_Table {
 		);
 	}
 	
-	public function column_media_format( $episode_asset ) {
-		$format = $episode_asset->media_format();
+	public function column_file_type( $episode_asset ) {
+		$format = $episode_asset->file_type();
 		return ( $format ) ? $format->title() : "-";
 	}
 
 	public function get_columns(){
-		$columns = array(
-			'title'        => __( 'Episode Asset', 'podlove' ),
-			'media_format' => __( 'Media Format', 'podlove' ),
+		return array(
+			'title'     => __( 'Episode Asset', 'podlove' ),
+			'file_type' => __( 'File Type', 'podlove' ),
 		);
-		return $columns;
 	}
 	
 	public function prepare_items() {

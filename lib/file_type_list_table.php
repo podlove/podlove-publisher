@@ -5,66 +5,65 @@ if( ! class_exists( 'WP_List_Table' ) ){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class Format_List_Table extends \WP_List_Table {
+class File_Type_List_Table extends \WP_List_Table {
 	
 	function __construct(){
 		global $status, $page;
 		        
 		// Set parent defaults
 		parent::__construct( array(
-		    'singular'  => 'format',   // singular name of the listed records
-		    'plural'    => 'formats',  // plural name of the listed records
+		    'singular'  => 'file_type',   // singular name of the listed records
+		    'plural'    => 'file_types',  // plural name of the listed records
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
 	
-	function column_name( $format ) {
+	function column_name( $file_type ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">' . __( 'Edit', 'podlove' ) . '</a>',
+				'<a href="?page=%s&action=%s&file_type=%s">' . __( 'Edit', 'podlove' ) . '</a>',
 				$_REQUEST['page'],
 				'edit',
-				$format->id
+				$file_type->id
 			),
 			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&format=%s">' . __( 'Delete', 'podlove' ) . '</a>',
+				'<a href="?page=%s&action=%s&file_type=%s">' . __( 'Delete', 'podlove' ) . '</a>',
 				$_REQUEST['page'],
 				'delete',
-				$format->id
+				$file_type->id
 			)
 		);
 	
 		return sprintf('%1$s %2$s',
-		    /*$1%s*/ $format->name,
+		    /*$1%s*/ $file_type->name,
 		    /*$3%s*/ $this->row_actions( $actions )
 		);
 	}
 	
-	function column_id( $format ) {
-		return $format->id;
+	function column_id( $file_type ) {
+		return $file_type->id;
 	}
 	
-	function column_format( $format ) {
-		return $format->type;
+	function column_file_type( $file_type ) {
+		return $file_type->type;
 	}
 	
-	function column_mime( $format ) {
-		return $format->mime_type;
+	function column_mime( $file_type ) {
+		return $file_type->mime_type;
 	}
 	
-	function column_extension( $format ) {
-		return $format->extension;
+	function column_extension( $file_type ) {
+		return $file_type->extension;
 	}
 
 	function get_columns(){
-		$columns = array(
-			'id'        => 'ID',
-			'name'      => 'Name',
-			'format'    => 'Format',
-			'mime'      => 'MIME Type',
-			'extension' => 'Extension'
+		return array(
+			'id'        => __( 'ID', 'podlove' ),
+			'name'      => __( 'Name', 'podlove' ),
+			'file_type' => __( 'File Type', 'podlove' ),
+			'mime'      => __( 'MIME Type', 'podlove' ),
+			'extension' => __( 'Extension', 'podlove' )
 		);
-		return $columns;
 	}
 	
 	function prepare_items() {
@@ -79,7 +78,7 @@ class Format_List_Table extends \WP_List_Table {
 		
 		// retrieve data
 		// TODO select data for current page only
-		$data = \Podlove\Model\MediaFormat::all();
+		$data = \Podlove\Model\FileType::all();
 		
 		// get current page
 		$current_page = $this->get_pagenum();

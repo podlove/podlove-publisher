@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 16 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 18 );
 
 add_action( 'init', function () {
 	
@@ -231,7 +231,7 @@ function run_migrations_for_version( $version ) {
 			);
 			
 			foreach ( $default_formats as $format ) {
-				$f = new Model\MediaFormat;
+				$f = new Model\FileType;
 				foreach ( $format as $key => $value ) {
 					$f->{$key} = $value;
 				}
@@ -274,7 +274,7 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 13:
 			$opus = array( 'name' => 'Opus Audio', 'type' => 'audio', 'mime_type' => 'audio/opus', 'extension' => 'opus' );
-			$f = new \Podlove\Model\MediaFormat;
+			$f = new \Podlove\Model\FileType;
 			foreach ( $opus as $key => $value ) {
 				$f->{$key} = $value;
 			}
@@ -299,6 +299,21 @@ function run_migrations_for_version( $version ) {
 			$sql = sprintf(
 				'ALTER TABLE `%s` CHANGE `media_location_id` `episode_asset_id` INT',
 				\Podlove\Model\Feed::table_name()
+			);
+			$wpdb->query( $sql );
+		break;
+		case 17:
+			$sql = sprintf(
+				'ALTER TABLE `%s` RENAME TO `%s`',
+				$wpdb->prefix . 'podlove_mediaformat',
+				\Podlove\Model\FileType::table_name()
+			);
+			$wpdb->query( $sql );
+		break;
+		case 18:
+			$sql = sprintf(
+				'ALTER TABLE `%s` CHANGE `media_format_id` `file_type_id` INT',
+				\Podlove\Model\EpisodeAsset::table_name()
 			);
 			$wpdb->query( $sql );
 		break;

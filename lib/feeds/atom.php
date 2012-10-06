@@ -20,7 +20,7 @@ class Atom {
 		$podcast        = Model\Podcast::get_instance();
 		$feed           = Model\Feed::find_one_by_slug( $feed_slug );
 		$episode_asset  = $feed->episode_asset();
-		$format         = $episode_asset->media_format();
+		$file_type      = $episode_asset->file_type();
 
 		add_filter( 'podlove_feed_enclosure', function ( $enclosure, $enclosure_url, $enclosure_file_size, $mime_type ) {
 			return sprintf( '<link rel="enclosure" href="%s" length="%s" type="%s"/>', $enclosure_url, $enclosure_file_size, $mime_type );
@@ -29,10 +29,10 @@ class Atom {
 		mute_feed_title();
 		override_feed_title( $feed );
 		override_feed_language( $feed );
-		override_feed_head( 'atom_head', $podcast, $feed, $format );
-		override_feed_entry( 'atom_entry', $podcast, $feed, $format );
+		override_feed_head( 'atom_head', $podcast, $feed, $file_type );
+		override_feed_entry( 'atom_entry', $podcast, $feed, $file_type );
 
-		add_action( 'atom_head', function () use ( $podcast, $feed, $format ) {
+		add_action( 'atom_head', function () use ( $podcast, $feed, $file_type ) {
 			?>
 			<link rel="self" type="application/atom+xml" title="<?php echo $feed->title_for_discovery(); ?>" href="<?php echo $feed->get_subscribe_url() ?>" />
 			<?php

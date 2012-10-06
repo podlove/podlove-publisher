@@ -17,10 +17,10 @@ class EpisodeAsset extends Base {
 	/**
 	 * Find the related media format model.
 	 *
-	 * @return \Podlove\Model\MediaFormat|NULL
+	 * @return \Podlove\Model\FileType|NULL
 	 */
-	public function media_format() {
-		return MediaFormat::find_by_id( $this->media_format_id );
+	public function file_type() {
+		return FileType::find_by_id( $this->file_type_id );
 	}
 
 	/**
@@ -33,7 +33,7 @@ class EpisodeAsset extends Base {
 	}
 
 	public function title() {
-		if ( $this->media_format_id )
+		if ( $this->file_type_id )
 			return $this->media_format()->title();
 		else
 			return __( 'Notice: No file format defined.', 'podlove' );
@@ -43,6 +43,6 @@ class EpisodeAsset extends Base {
 
 EpisodeAsset::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 EpisodeAsset::property( 'title', 'VARCHAR(255)' );
-EpisodeAsset::property( 'media_format_id', 'INT' );
+EpisodeAsset::property( 'file_type_id', 'INT' );
 EpisodeAsset::property( 'url_template', 'VARCHAR(255)' );
 EpisodeAsset::property( 'downloadable', 'INT' );
