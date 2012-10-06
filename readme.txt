@@ -25,6 +25,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 = 1.2.14-alpha =
 * Enhancement: rename "media locations" to "episode assets" for clarity
 * Enhancement: rename "podlove formats" to "file types" for clarity
+* Enhancement: start to rework validation section
 
 = 1.2.13-alpha =
 * Enhancement: use episode summary as excerpt if available

@@ -161,54 +161,78 @@ class Dashboard {
 				</div>
 			<?php endif; ?>
 
-			<a href="#" id="validate_everything">
-				<?php echo __( 'Validate Everything', 'podlove' ); ?>
-			</a>
-
 			<?php
-			echo "<h4>" . $podcast->title . "</h4>";
 			$episodes = Model\Episode::all();
+			$assets   = Model\EpisodeAsset::all();
+
+			$header = array( __( 'Episode', 'podlove' ) );
+			foreach ( $assets as $asset ) {
+				$header[] = $asset->title;
+			}
+			$header[] = __( 'Status', 'podlove' );
+			// $header[] = ''; // buttons
+
+			define( 'ASSET_STATUS_OK', '<span style="color: green">✓</span>' );
+			define( 'ASSET_STATUS_INACTIVE', '—' );
+			define( 'ASSET_STATUS_ERROR', '<span style="color: red">!!!</span>' );
 			?>
 
-			<?php foreach ( $episodes as $episode ): ?>
-				<?php
-				$post_id = $episode->post_id;
-				?>
-				<div class="episode">
-					<div class="slug">
-						<strong><?php echo sprintf( "%s (%s)", get_the_title( $post_id ), $episode->slug ); ?></strong>
-					</div>
-					<div class="duration">
-						<?php echo sprintf( __( 'Duration: %s', 'podlove' ), ( $episode->duration ) ? $episode->duration : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
-					</div>
-					<div class="chapters">
-						<?php echo sprintf( __( 'Chapters: %s' ), strlen( $episode->chapters ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
-					</div>
-					<?php if ( $podcast->supports_cover_art ): ?>
-						<div class="coverart">
-							<?php echo sprintf( __( 'Cover Art: %s' ), strlen( $episode->get_cover_art() ) > 0 ? __( 'existing', 'podlove' ) : __( '<span class="warning">empty</span>', 'podlove' ) ); ?>
-						</div>
-					<?php endif; ?>
-					<div class="media_files">
-						<?php $media_files = $episode->media_files(); ?>
-						<?php foreach ( $media_files as $media_file ): ?>
-							<div class="file" data-id="<?php echo $media_file->id; ?>">
-								<span class="status">
-									<?php if ( $media_file->size <= 0 ): ?>
-										<?php echo __( "<span class=\"error\">filesize missing</span>", 'podlove' ); ?>
-									<?php endif ?>
-								</span>
-								<?php if ( $episode_asset = $media_file->episode_asset() ): ?>
-									<span class="title"><?php echo $episode_asset->title() ?></span>
-								<?php endif; ?>
-								<span class="url">
-									<?php echo $media_file->get_file_url(); ?>
-								</span>
-							</div>
-						<?php endforeach ?>
-					</div>
-				</div>
-			<?php endforeach ?>
+			<h4><?php echo $podcast->title ?></h4>
+
+			<table>
+				<thead>
+					<tr>
+						<?php foreach ( $header as $column_head ): ?>
+							<th><?php echo $column_head ?></th>
+						<?php endforeach; ?>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ( $episodes as $episode ): ?>
+						<?php 
+						$post_id = $episode->post_id;
+						$post = get_post( $post_id );
+
+						// skip deleted podcasts
+						if ( ! in_array( $post->post_status, array( 'draft', 'publish' ) ) )
+							continue;
+
+						// skip versions
+						if ( $post->post_type != 'podcast' )
+							continue;
+
+						?>
+						<tr>
+							<td>
+								<a href="<?php echo get_edit_post_link( $episode->post_id ) ?>"><?php echo $episode->slug ?></a>
+							</td>
+							<?php $media_files = $episode->media_files(); ?>
+							<?php foreach ( $assets as $asset ): ?>
+								<td style="text-align: center; font-weight: bold; font-size: 20px">
+									<?php
+									$files = array_filter( $media_files, function ( $file ) use ( $asset ) {
+										return $file->episode_asset_id == $asset->id;
+									} );
+									$file = array_pop( $files );
+
+									if ( ! $file ) {
+										echo ASSET_STATUS_INACTIVE;
+									} elseif ( $file->size > 0 ) {
+										echo ASSET_STATUS_OK;
+									} else {
+										echo ASSET_STATUS_ERROR;
+									}
+									?>
+								</td>
+							<?php endforeach; ?>
+							<td>
+								<?php echo $post->post_status ?>
+							</td>
+							<!-- <td>buttons</td> -->
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
 		</div>
 
 		<style type="text/css">
