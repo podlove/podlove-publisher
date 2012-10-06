@@ -97,8 +97,8 @@ class WebPlayer {
 							<select name="<?php echo $name; ?>" id="<?php echo $id; ?>">
 								<option value="0" <?php selected( 0, $value ); ?> ><?php echo __( 'Unused', 'podlove' ); ?></option>
 								<?php foreach ( $episode_assets as $episode_asset ): ?>
-									<?php $media_format = $episode_asset->media_format(); ?>
-									<?php if ( $media_format && $media_format->mime_type === $mime_type ): ?>
+									<?php $file_type = $episode_asset->file_type(); ?>
+									<?php if ( $file_type && $file_type->mime_type === $mime_type ): ?>
 										<option value="<?php echo $episode_asset->id; ?>" <?php selected( $episode_asset->id, $value ); ?>><?php echo $episode_asset->title ?></option>
 									<?php endif ?>
 								<?php endforeach ?>
