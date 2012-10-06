@@ -30,7 +30,32 @@ class Dashboard {
 
 	public static function about_meta() {
 		?>
-		Podlove rocks 😸
+		<ul>
+			<li>
+				<a target="_blank" href="https://github.com/eteubert/podlove/issues">Report Bugs</a>
+			</li>
+			<li>
+				<a target="_blank" href="https://trello.com/card/enclosure-validierung-im-dashboard/4fe02928ef1520ac7924d56a/14">See what I'm working on</a>
+			</li>
+			<li>
+				<a target="_blank" href="http://www.satoripress.com/podcast/">Podcast about development (german)</a>
+			</li>
+			<li>
+				<script type="text/javascript">
+				/* <![CDATA[ */
+				    (function() {
+				        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+				        s.type = 'text/javascript';
+				        s.async = true;
+				        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+				        t.parentNode.insertBefore(s, t);
+				    })();
+				/* ]]> */</script>
+				<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/"></a>
+				<noscript><a href="http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress" target="_blank">
+				<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+			</li>
+		</ul>
 		<?php
 	}
 
