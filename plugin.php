@@ -11,7 +11,6 @@ function activate_for_current_blog() {
 	Model\FileType::build();
 	Model\EpisodeAsset::build();
 	Model\MediaFile::build();
-	Model\Show::build();
 	Model\Episode::build();
 	Model\Release::build();
 
@@ -152,7 +151,6 @@ function uninstall_for_current_blog() {
 	Model\FileType::destroy();
 	Model\EpisodeAsset::destroy();
 	Model\MediaFile::destroy();
-	Model\Show::destroy();
 	Model\Episode::destroy();
 	Model\Release::destroy();
 }

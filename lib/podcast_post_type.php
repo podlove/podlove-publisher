@@ -143,7 +143,6 @@ EOT;
 		new \Podlove\Settings\EpisodeAsset( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\WebPlayer( self::SETTINGS_PAGE_HANDLE );
-		// new \Podlove\Settings\Show( self::SETTINGS_PAGE_HANDLE );
 	}
 	
 	/**

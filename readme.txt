@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.15-alpha =
+* Bugfix: remove all Show model references for now
+
 = 1.2.14-alpha =
 * Enhancement: rename "media locations" to "episode assets" for clarity
 * Enhancement: rename "podlove formats" to "file types" for clarity
