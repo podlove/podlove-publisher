@@ -47,7 +47,7 @@ EOT;
 			'rewrite'              => true,
 			'capability_type'      => 'post',
 			'has_archive'          => true, 
-			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'trackbacks' ),
+			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'comments', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
 			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
 			'rewrite' => array(
