@@ -27,6 +27,14 @@ class RSS {
 		override_feed_head( 'rss2_head', $podcast, $feed, $file_type );
 		override_feed_entry( 'rss2_item', $podcast, $feed, $file_type );
 
+		add_action( 'rss2_item', function () {
+			if ( apply_filters( 'podlove_feed_show_summary', true ) ) {
+				echo "<description><![CDATA[";
+				\Podlove\Feeds\the_description();
+				echo "]]></description>";
+			}
+		} );
+
 		$this->do_feed( $feed );
 	}
 	

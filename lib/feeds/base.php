@@ -2,6 +2,27 @@
 namespace Podlove\Feeds;
 use Podlove\Model;
 
+function the_description() {
+	global $post;
+
+	$episode  = \Podlove\Model\Episode::find_one_by_post_id( $post->ID );
+
+	$summary  = trim( $episode->summary );
+	$subtitle = trim( $episode->subtitle );
+	$title    = trim( $post->post_title );
+
+	$description = '';
+
+	if ( strlen( $summary ) )
+		$description = $summary;
+	else if ( strlen( $subtitle ) )
+		$description = $subtitle;
+	else
+		$description = $title;
+
+	echo apply_filters( 'podlove_feed_item_description', $description );
+}
+
 function mute_feed_title() {
 	add_filter( 'bloginfo_rss', function ( $value, $key ) {
 		return apply_filters( 'podlove_feed_title_name', ( $key == 'name' ) ? '' : $value );

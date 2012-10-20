@@ -30,9 +30,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<comments><?php comments_link_feed(); ?></comments>
 		<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
 		<guid isPermaLink="false"><?php echo get_the_guid(); ?></guid>
-		<?php if ( apply_filters( 'podlove_feed_show_summary', false ) ): ?>
-			<description><![CDATA[<?php the_excerpt_rss() ?>]]></description>
-		<?php endif; ?>
 	<?php rss_enclosure(); ?>
 	<?php do_action('rss2_item'); ?>
 	</item>

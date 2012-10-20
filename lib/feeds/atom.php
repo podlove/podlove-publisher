@@ -16,7 +16,6 @@ class Atom {
 			return get_bloginfo( 'url' ) . '/feed/' . $feed_slug . '/';
 		}, 10, 2 );
 		
-		
 		$podcast        = Model\Podcast::get_instance();
 		$feed           = Model\Feed::find_one_by_slug( $feed_slug );
 		$episode_asset  = $feed->episode_asset();
@@ -45,6 +44,14 @@ class Atom {
 				endif;
 			}
 		}, 9 );
+
+		add_action( 'atom_entry', function () {
+			if ( apply_filters( 'podlove_feed_show_summary', true ) ) {
+				echo "<summary><![CDATA[";
+				\Podlove\Feeds\the_description();
+				echo "]]></summary>";
+			}
+		} );
 
 		$this->do_feed( $feed );
 	}

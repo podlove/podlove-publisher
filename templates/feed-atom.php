@@ -37,9 +37,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<id><?php the_guid() ; ?></id>
 		<updated><?php echo get_post_modified_time('Y-m-d\TH:i:s\Z', true); ?></updated>
 		<published><?php echo get_post_time('Y-m-d\TH:i:s\Z', true); ?></published>
-		<?php if ( apply_filters( 'podlove_feed_show_summary', false ) ): ?>
-			<summary type="<?php html_type_rss(); ?>"><![CDATA[<?php the_excerpt_rss(); ?>]]></summary>
-		<?php endif; ?>
 <?php atom_enclosure(); ?>
 <?php do_action('atom_entry'); ?>
 <?php if ( apply_filters( 'podlove_feed_show_comments_data', true ) ): ?>
