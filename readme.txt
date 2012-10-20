@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.16-alpha =
+* Enhancement: remove episode excerpt support in favor of episode summary
+
 = 1.2.15-alpha =
 * Bugfix: remove all Show model references for now
 * Enhancement: proper summary/description feed elements
