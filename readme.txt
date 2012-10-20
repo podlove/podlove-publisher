@@ -24,6 +24,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.2.15-alpha =
 * Bugfix: remove all Show model references for now
+* Enhancement: proper summary/description feed elements
 
 = 1.2.14-alpha =
 * Enhancement: rename "media locations" to "episode assets" for clarity
