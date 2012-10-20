@@ -35,7 +35,7 @@ class Dashboard {
 				<a target="_blank" href="https://github.com/eteubert/podlove/issues">Report Bugs</a>
 			</li>
 			<li>
-				<a target="_blank" href="https://trello.com/card/enclosure-validierung-im-dashboard/4fe02928ef1520ac7924d56a/14">See what I'm working on</a>
+				<a target="_blank" href="https://trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">See what I'm working on</a>
 			</li>
 			<li>
 				<a target="_blank" href="http://www.satoripress.com/podcast/">Podcast about development (german)</a>

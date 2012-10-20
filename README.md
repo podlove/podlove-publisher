@@ -22,4 +22,4 @@ If you'd like to add a whole feature with UI and stuff, please consider developi
 - [http://podlove.org](http://podlove.org)
 - FAQ: [http://eteubert.github.com/podlove](http://eteubert.github.com/podlove)
 - my (german) podcast on the development of this plugin: [http://www.satoripress.com/podcast/](http://www.satoripress.com/podcast/)
-- Trello board (german): [https://trello.com/board/podlove/4fe02928ef1520ac7924d56a](https://trello.com/board/podlove/4fe02928ef1520ac7924d56a)
+- Trello board (german): [https://trello.com/board/podlove-publisher/508293f65573fa3f62004e0a](https://trello.com/board/podlove-publisher/508293f65573fa3f62004e0a)
