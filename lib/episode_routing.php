@@ -52,6 +52,11 @@ class Episode_Routing {
 			exit;
 		}
 
+		// compatibility
+		if ( isset( $query['name'] ) && ! isset( $query['pagename'] ) ) {
+			$query['pagename'] = $query['name'];
+		}
+
 		// make sure it's not a known page
 		if ( isset( $query['page'] ) && isset( $query['pagename'] ) ) {
 			global $wpdb;
