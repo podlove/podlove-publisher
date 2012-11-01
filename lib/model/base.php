@@ -31,8 +31,10 @@ abstract class Base
 	public function __get( $name ) {
 		if ( self::has_property( $name ) ) {
 			return $this->get_property( $name );
-		} else {
+		} elseif ( property_exists( $this, $name ) ) {
 			return $this->$name;
+		} else {
+			return NULL;
 		}
 	}
 	
