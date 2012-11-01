@@ -98,6 +98,8 @@ class Podcast_Post_Meta_Box {
 					)
 				));
 
+				do_action( 'podlove_episode_form', $wrapper, $episode );
+
 				$wrapper->checkbox( 'enable', array(
 					'label'       => __( 'Enable?', 'podlove' ),
 					'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
@@ -216,6 +218,7 @@ class Podcast_Post_Meta_Box {
 		if ( ! isset( $_POST['_podlove_meta'] ) || ! is_array( $_POST['_podlove_meta'] ) )
 			return;
 
+		do_action( 'podlove_save_episode', $post_id, $_POST['_podlove_meta'] );
 
 		// save changes
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );

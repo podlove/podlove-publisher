@@ -156,9 +156,14 @@ function uninstall_for_current_blog() {
 }
 
 /**
+ * Activate internal modules.
+ */
+add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
+
+/**
  * Adds feed discover links to WordPress head.
  *
- * @todo find a better place for this function
+ * @todo move into \Podlove\Feed_Discoverability and load like \Podlove\Custom_Guid
  */
 function add_feed_discoverability() {
 
