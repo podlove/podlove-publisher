@@ -13,6 +13,7 @@ function activate_for_current_blog() {
 	Model\MediaFile::build();
 	Model\Episode::build();
 	Model\Release::build();
+	Model\Template::build();
 
 	if ( ! Model\FileType::has_entries() ) {
 		$default_types = array(
@@ -153,6 +154,7 @@ function uninstall_for_current_blog() {
 	Model\MediaFile::destroy();
 	Model\Episode::destroy();
 	Model\Release::destroy();
+	Model\Template::destroy();
 }
 
 /**
@@ -392,7 +394,7 @@ function create_episode() {
 	$args = array(
 		'post_type' => 'podcast',
 		'post_title' => $title,
-		'post_content' => \Podlove\Podcast_Post_Type::$default_post_content
+		'post_content' => \Podlove\Podcast_Post_Type::get_default_post_content()
 	);
 
 	// create post

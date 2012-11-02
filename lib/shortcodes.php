@@ -145,3 +145,40 @@ foreach ( $podlove_public_episode_attributes as $attr ) {
 		return nl2br( Model\Episode::find_or_create_by_post_id( $post->ID )->$attr );
 	} );
 }
+
+/**
+ * Provides shortcode to display episode template.
+ *
+ * Usage:
+ * 	
+ * 	[podlove-template title="Template Title"]
+ *
+ * 	Parameters:
+ * 		title: (required) Title of template to render.
+ * 		autop: (optional) Wraps blocks of text in p tags. 'yes' or 'no'. Default: 'yes'
+ * 	
+ * @param  array $attributes
+ * @return string
+ */
+function template_shortcode( $attributes ) {
+
+	$defaults = array(
+		'title' => '',
+		'autop' => 'yes'
+	);
+
+	$attributes = shortcode_atts( $defaults, $attributes );
+
+	if ( ! $template = Model\Template::find_one_by_title( $attributes['title'] ) )
+		return sprintf( __( 'Podlove Error: Whoops, there is no template called "%s"', 'podlove' ), $attributes['title'] );
+
+	$html = $template->content;
+
+	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
+		$html = wpautop( $html );
+
+	$html = do_shortcode( $html );
+
+	return $html;
+}
+add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );

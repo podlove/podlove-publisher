@@ -23,8 +23,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 == Changelog ==
 
 = 1.2.16-alpha =
-* Enhancement: remove episode excerpt support in favor of episode summary
+* Feature: Episode templates. Go to `Podlove > Templates` to find out more. See [Shortcode Documentation](https://github.com/eteubert/podlove/wiki/Shortcodes) for more details.
 * Feature: Custom GUID for episodes. A GUID in the form of "podlove-`time`-`hash`" is generated for each new episode. It removes the ambiguity of the permalink-ish looking WordPress GUID. Bonus: If you need podcatchers to redownload all media files (maybe you detected a glitch in your files and fixed it), you are now able to change the GUID to achieve that.
+* Enhancement: remove episode excerpt support in favor of episode summary
 * Bugfix: Short Episode Routing compatibility
 
 = 1.2.15-alpha =

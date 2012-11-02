@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 18 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 19 );
 
 add_action( 'init', function () {
 	
@@ -316,6 +316,9 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\EpisodeAsset::table_name()
 			);
 			$wpdb->query( $sql );
+		break;
+		case 19:
+			\Podlove\Model\Template::build();
 		break;
 	}
 
