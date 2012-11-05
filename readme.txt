@@ -25,6 +25,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 = 1.2.18-alpha =
 * Feature: 4 new podcast fields: publisher_name, publisher_url, license_name, license_url
 * Feature: Shortcode `[podlove-podcast-data]` to access podcast data. See [Shortcode Documentation](https://github.com/eteubert/podlove/wiki/Shortcodes) for more details.
+* Feature: Add support for tags and categories in episodes
 * Enhancement: Minor template editor enhancements and updated default template.
 
 = 1.2.17-alpha =
