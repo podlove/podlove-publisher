@@ -236,6 +236,8 @@ Example Template:
 
 [podlove-web-player]
 [podlove-episode-downloads]
+
+Published by <a href="[podlove-podcast-data field="publisher_url"]" target="_blank">[podlove-podcast-data field="publisher_name"]</a> under <a href="[podlove-podcast-data field="license_url"]" target="_blank">[podlove-podcast-data field="license_name"]</a>.
 EOT
 			) );
 
@@ -254,6 +256,7 @@ EOT
 			lineNumbers: true,
 			theme: "default",
 			indentUnit: 4,
+			lineWrapping: true,
 			extraKeys: {
 				"'>'": function(cm) { cm.closeTag(cm, '>'); },
 				"'/'": function(cm) { cm.closeTag(cm, '/'); },
@@ -268,6 +271,7 @@ EOT
 								"[podlove-episode-slug]",
 								"[podlove-episode-duration]",
 								"[podlove-episode-chapters]",
+								"[podlove-podcast-data field=\"\"]",
 								"[podlove-contributors]"
 							],
 							from: cm.getCursor()
@@ -279,6 +283,8 @@ EOT
 				podlove_template_editor.matchHighlight("CodeMirror-matchhighlight");
 			}
 		});		
+
+		podlove_template_editor.setSize(null, "350");
 
 		jQuery(function($){
 			$("#podlove_template_title").bind("keyup", function(e) {
