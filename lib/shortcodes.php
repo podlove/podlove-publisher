@@ -146,12 +146,25 @@ foreach ( $podlove_public_episode_attributes as $attr ) {
 	} );
 }
 
+function episode_data_shortcode( $attributes ) {
+	global $post;
+
+	$defaults = array( 'field' => '' );
+	$attributes = shortcode_atts( $defaults, $attributes );
+
+	$allowed_fields = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
+
+	if ( in_array( $attributes['field'], $allowed_fields ) ) {
+		return nl2br( Model\Episode::find_or_create_by_post_id( $post->ID )->$attributes['field'] );
+	} else {
+		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
+	}
+}
+add_shortcode( 'podlove-episode-data', '\Podlove\episode_data_shortcode' );
+
 function podcast_data_shortcode( $attributes ) {
 
-	$defaults = array(
-		'field' => 'title'
-	);
-
+	$defaults = array( 'field' => '' );
 	$attributes = shortcode_atts( $defaults, $attributes );
 
 	$podcast = Model\Podcast::get_instance();
@@ -162,7 +175,6 @@ function podcast_data_shortcode( $attributes ) {
 		return sprintf( __( 'Podlove Error: Unknown podcast field "%s"', 'podcast' ), $attributes['field'] );
 	}
 }
-
 add_shortcode( 'podlove-podcast-data', '\Podlove\podcast_data_shortcode' );
 
 /**
