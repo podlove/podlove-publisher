@@ -222,15 +222,15 @@ class Templates {
 
 			$f->text( 'content', array(
 				'label'       => __( 'HTML Template', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => __( 'Have a look at the <a href="https://github.com/eteubert/podlove/wiki/Shortcodes" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
 				'default' => <<<EOT
 Type "[" to see a list of available shortcodes. HTML is allowed.
 Example Template:
 
-<h4 class="podlove-subtitle">[podlove-episode-subtitle]</h4>
+<h4 class="podlove-subtitle">[podlove-episode-data field="subtitle"]</h4>
 
-<span class="podlove-duration">Duration: [podlove-episode-duration]</span>
+<span class="podlove-duration">Duration: [podlove-episode-data field="duration"]</span>
 
 [podlove-episode-summary]
 
@@ -266,11 +266,7 @@ EOT
 							list:[
 								"[podlove-episode-downloads]",
 								"[podlove-web-player]",
-								"[podlove-episode-subtitle]",
-								"[podlove-episode-summary]",
-								"[podlove-episode-slug]",
-								"[podlove-episode-duration]",
-								"[podlove-episode-chapters]",
+								"[podlove-episode-data field=\"\"]",
 								"[podlove-podcast-data field=\"\"]",
 								"[podlove-contributors]"
 							],
