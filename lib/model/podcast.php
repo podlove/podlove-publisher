@@ -154,19 +154,16 @@ class Podcast {
 $podcast = Podcast::get_instance();
 $podcast->property( 'title' );
 $podcast->property( 'slug' ); // identifier
-
-// Identifiers
-// nsfw    - slug (url/file)
-// NSFW    - podcast id / short name
-// NSFW002 - episode id
-// 2       - episode number
-
 $podcast->property( 'subtitle' );
 $podcast->property( 'cover_image' );
 $podcast->property( 'summary' );
 $podcast->property( 'author_name' );
 $podcast->property( 'owner_name' );
 $podcast->property( 'owner_email' );
+$podcast->property( 'publisher_name' );
+$podcast->property( 'publisher_url' );
+$podcast->property( 'license_name' );
+$podcast->property( 'license_url' );
 $podcast->property( 'keywords' );
 $podcast->property( 'category_1' );
 $podcast->property( 'category_2' );

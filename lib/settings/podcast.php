@@ -85,6 +85,30 @@ class Podcast {
 						'description' => __( 'Publicly displayed in Podcast directories.', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' )
 					) );
+
+					$wrapper->string( 'publisher_name', array(
+						'label'       => __( 'Publisher Name', 'podlove' ),
+						'description' => __( '', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
+					) );
+
+					$wrapper->string( 'publisher_url', array(
+						'label'       => __( 'Publisher URL', 'podlove' ),
+						'description' => __( '', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
+					) );
+
+					$wrapper->string( 'license_name', array(
+						'label'       => __( 'License Name', 'podlove' ),
+						'description' => __( 'Example: CC BY 3.0', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
+					) );
+
+					$wrapper->string( 'license_url', array(
+						'label'       => __( 'License URL', 'podlove' ),
+						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
+					) );
 			
 					$wrapper->string( 'owner_name', array(
 						'label'       => __( 'Owner Name', 'podlove' ),
