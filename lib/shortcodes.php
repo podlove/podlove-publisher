@@ -146,6 +146,25 @@ foreach ( $podlove_public_episode_attributes as $attr ) {
 	} );
 }
 
+function podcast_data_shortcode( $attributes ) {
+
+	$defaults = array(
+		'field' => 'title'
+	);
+
+	$attributes = shortcode_atts( $defaults, $attributes );
+
+	$podcast = Model\Podcast::get_instance();
+
+	if ( $podcast->has_property( $attributes['field'] ) ) {
+		return $podcast->$attributes['field'];
+	} else {
+		return sprintf( __( 'Podlove Error: Unknown podcast field "%s"', 'podcast' ), $attributes['field'] );
+	}
+}
+
+add_shortcode( 'podlove-podcast-data', '\Podlove\podcast_data_shortcode' );
+
 /**
  * Provides shortcode to display episode template.
  *
