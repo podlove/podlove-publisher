@@ -138,6 +138,9 @@ function webplayer_shortcode( $options ) {
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
 
+/**
+ * @deprecated since 1.2.18-alpha
+ */
 $podlove_public_episode_attributes = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
 foreach ( $podlove_public_episode_attributes as $attr ) {
 	add_shortcode( 'podlove-episode-' . $attr, function() use ( $attr ) {
