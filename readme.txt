@@ -28,6 +28,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Feature: Shortcode `[podlove-episode-data]` to access episode data. *all previous episode accessors are deprecated!* See [Shortcode Documentation](https://github.com/eteubert/podlove/wiki/Shortcodes) for more details.
 * Feature: Add support for tags and categories in episodes.
 * Enhancement: Minor template editor enhancements and updated default template.
+* Enhancement: Enable revisions for episodes.
 
 = 1.2.17-alpha =
 * Nothing. Just some WordPress-Plugin-Directory-Thingamajig-Version-Foobar.
