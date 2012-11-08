@@ -29,6 +29,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Feature: Add support for tags and categories in episodes.
 * Enhancement: Minor template editor enhancements and updated default template.
 * Enhancement: Enable revisions for episodes.
+* Enhancement: RSS/Atom cleanup. Less WordPress, more Podlove.
 
 = 1.2.17-alpha =
 * Nothing. Just some WordPress-Plugin-Directory-Thingamajig-Version-Foobar.
