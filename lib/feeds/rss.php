@@ -21,7 +21,6 @@ class RSS {
 			return sprintf( '<enclosure url="%s" length="%s" type="%s" />', $enclosure_url, $enclosure_file_size, $mime_type );
 		}, 10, 4 );
 
-		mute_feed_title();
 		override_feed_title( $feed );
 		override_feed_language( $feed );
 		override_feed_head( 'rss2_head', $podcast, $feed, $file_type );

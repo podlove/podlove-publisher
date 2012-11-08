@@ -25,7 +25,6 @@ class Atom {
 			return sprintf( '<link rel="enclosure" href="%s" length="%s" type="%s"/>', $enclosure_url, $enclosure_file_size, $mime_type );
 		}, 10, 4 );
 
-		mute_feed_title();
 		override_feed_title( $feed );
 		override_feed_language( $feed );
 		override_feed_head( 'atom_head', $podcast, $feed, $file_type );
@@ -51,6 +50,24 @@ class Atom {
 				\Podlove\Feeds\the_description();
 				echo "]]></summary>";
 			}
+		} );
+
+		add_action( 'atom_author', function() use ( $podcast ) {
+
+			$author = $podcast->author_name;
+			if ( ! $author ) $author = $podcast->publisher_name;
+			if ( ! $author ) $author = get_the_author();
+			$author = apply_filters( 'podlove_feed_author_name', $author );
+
+			$author_url = $podcast->publisher_url;
+			if ( ! $author_url ) $author_url = get_the_author_meta( 'url' );
+			$author_url = apply_filters( 'podlove_feed_author_url', $author_url );
+
+			?>
+			<name><?php echo $author; ?></name>
+			<?php  if ( ! empty( $author_url ) ): ?>
+				<uri><?php echo $author_url; ?></uri>
+			<?php endif;
 		} );
 
 		$this->do_feed( $feed );
