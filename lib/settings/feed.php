@@ -179,6 +179,17 @@ class Feed {
 				'description' => __( 'e.g. Feedburner URL', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
+
+			$wrapper->select( 'redirect_http_status', array(
+				'label'       => __( 'Redirect Method', 'podlove' ),
+				'description' => __( '', 'podlove' ),
+				'options' => array(
+					'0'   => 'Don\'t redirect', 
+					'307' => 'Temporary Redirect (HTTP Status 307)',
+					'301' => 'Permanent Redirect (HTTP Status 301)'
+				),
+				'default' => 0
+			) );
 			
 			$wrapper->checkbox( 'enable', array(
 				'label'       => __( 'Allow Submission to Directories', 'podlove' ),

@@ -28,6 +28,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Feature: Shortcode `[podlove-episode]` to access episode data. *all previous episode accessors are deprecated!* See [Shortcode Documentation](https://github.com/eteubert/podlove/wiki/Shortcodes) for more details.
 * Feature: Add support for tags and categories in episodes.
 * Feature: Chapter File (txt and psc) as episode asset
+* Feature: Feed redirects can be a) turned off and b) permanent c) temporary
 * Enhancement: Minor template editor enhancements and updated default template.
 * Enhancement: Enable revisions for episodes.
 * Enhancement: RSS/Atom cleanup. Less WordPress, more Podlove.
