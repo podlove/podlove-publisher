@@ -65,9 +65,10 @@ class MediaFile extends Base {
 		if ( ! $episode_asset || ! $file_type || ! $episode->slug )
 			return '';
 
-		$template = $episode_asset->url_template;
+		$template = $podcast->url_template;
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );
 		$template = str_replace( '%episode_slug%',        $episode->slug, $template );
+		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
 		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
 		return $template;

@@ -71,9 +71,11 @@ var PODLOVE = PODLOVE || {};
 	 					var episode_slug        = $container.find('input[name*="slug"]').val();
 	 					var format_extension    = $checkbox.data('extension');
 	 					var size                = $checkbox.data('size');
+	 					var suffix                = $checkbox.data('suffix');
 
 	 					url = url.replace( '%media_file_base_url%', media_file_base_uri );
 	 					url = url.replace( '%episode_slug%', episode_slug );
+	 					url = url.replace( '%suffix%', suffix );
 	 					url = url.replace( '%format_extension%', format_extension );
 
 	 					var readable_size = human_readable_size( size );

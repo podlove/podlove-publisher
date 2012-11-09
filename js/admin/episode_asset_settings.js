@@ -41,13 +41,14 @@ var PODLOVE = PODLOVE || {};
 
 		// public
 		o.update_preview = function () {
-			$('input[name*="url_template"]', container).each(function() {
-				var template = $(this).val();
-				var $preview = $(this).closest('td').find('.url_template_preview');
+			$('#url_preview', container).each(function() {
+				var template = $("#url_template").html();
+				var $preview = $("#url_preview");
 				var $container = $(this).closest('table');
 
 				var media_file_base_uri = $('#podlove_show_media_file_base_uri').val();
 				var episode_slug        = 'example-episode';
+				var suffix              = $('input[name*="suffix"]').val();
 
 				var selected_file_type  = $container.find('[name*="file_type_id"] option:selected').text();
 				var match               = selected_file_type.match(/\((.*)\)/);
@@ -58,6 +59,7 @@ var PODLOVE = PODLOVE || {};
 
 				template = template.replace( '%media_file_base_url%', media_file_base_uri );
 				template = template.replace( '%episode_slug%', episode_slug );
+				template = template.replace( '%suffix%', suffix );
 				template = template.replace( '%format_extension%', format_extension );
 
 				$preview.html(template);	

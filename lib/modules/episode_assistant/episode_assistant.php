@@ -105,7 +105,7 @@ EOT;
 			'next_number' => $this->guess_next_episode_id_for_show(),
 			'base_url'    => $podcast->media_file_base_uri,
 			'episode_asset' => array(
-				'template' => $episode_asset->url_template
+				'template' => $podcast->url_template
 			)
 		);
 		?>
