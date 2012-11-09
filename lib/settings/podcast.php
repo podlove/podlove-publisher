@@ -178,7 +178,7 @@ class Podcast {
 					foreach ( $episode_assets as $episode_asset ) {
 						$file_type = $episode_asset->file_type();
 						if ( $file_type && $file_type->type === 'image' ) {
-							$artwork_options[ $episode_asset->id ] = sprintf( __( 'Media File: %s', 'podlove' ), $episode_asset->title );
+							$artwork_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
 						}
 					}
 
