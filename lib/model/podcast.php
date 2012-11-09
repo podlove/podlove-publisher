@@ -176,3 +176,4 @@ $podcast->property( 'uri_delimiter' );
 $podcast->property( 'episode_number_length' );
 $podcast->property( 'language' );
 $podcast->property( 'supports_cover_art' );
+$podcast->property( 'chapter_file' );
