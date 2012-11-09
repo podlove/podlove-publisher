@@ -163,7 +163,7 @@ function episode_data_shortcode( $attributes ) {
 		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
 	}
 }
-add_shortcode( 'podlove-episode-data', '\Podlove\episode_data_shortcode' );
+add_shortcode( 'podlove-episode', '\Podlove\episode_data_shortcode' );
 
 function podcast_data_shortcode( $attributes ) {
 
@@ -178,7 +178,8 @@ function podcast_data_shortcode( $attributes ) {
 		return sprintf( __( 'Podlove Error: Unknown podcast field "%s"', 'podcast' ), $attributes['field'] );
 	}
 }
-add_shortcode( 'podlove-podcast-data', '\Podlove\podcast_data_shortcode' );
+add_shortcode( 'podlove-podcast', '\Podlove\podcast_data_shortcode' );
+add_shortcode( 'podlove-show', '\Podlove\podcast_data_shortcode' );
 
 /**
  * Provides shortcode to display episode template.
