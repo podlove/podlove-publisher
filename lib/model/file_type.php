@@ -7,6 +7,11 @@ class FileType extends Base {
 		return $this->name . ' (' . $this->extension . ')';
 	}
 
+	public function get_types() {
+		global $wpdb;
+		return $wpdb->get_col( "SELECT DISTINCT `type` FROM wp_podlove_filetype" );
+	}
+
 }
 
 FileType::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

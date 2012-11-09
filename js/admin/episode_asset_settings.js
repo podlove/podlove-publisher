@@ -8,6 +8,15 @@ var PODLOVE = PODLOVE || {};
 		// private
 		var o = {};
 
+		function filter_file_formats_by_asset_type() {
+			$('select[name=podlove_episode_asset_type]', container).on('change', function() {
+				var $container = $(this).closest('table');
+			
+				$("#option_storage option").remove().appendTo($("#podlove_episode_asset_file_type_id"));
+				$("#podlove_episode_asset_file_type_id option[data-type!='" + $(this).val() + "']").remove().appendTo($("#option_storage"));
+			});
+		}
+
 		// default title = extension
 		// only set if title is empty
 		function generate_default_episode_asset_title() {
@@ -56,6 +65,7 @@ var PODLOVE = PODLOVE || {};
 		}
 
 		generate_default_episode_asset_title();
+		filter_file_formats_by_asset_type();
 		generate_live_preview();
 
 		return o;

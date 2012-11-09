@@ -123,12 +123,16 @@ class EpisodeAsset {
 		foreach ( $raw_formats as $format ) {
 			$formats[ $format->id ] = array(
 				'title'     => $format->title(),
-				'extension' => $format->extension
+				'extension' => $format->extension,
+				'type'      => $format->type
 			);
 		}
 
 		$format_optionlist = array_map( function ( $f ) {
-			return $f['title'];
+			return array(
+				'value'      => $f['title'],
+				'attributes' => 'data-type="' . $f['type'] . '"'
+			);
 		}, $formats );
 
 		$form_args = array(
@@ -144,6 +148,23 @@ class EpisodeAsset {
 
 		\Podlove\Form\build_for( $episode_asset, $form_args, function ( $form ) use ( $format_optionlist ) {
 			$f = new \Podlove\Form\Input\TableWrapper( $form );
+			$current_file_type = Model\FileType::find_by_id( $form->object->file_type_id )->type;
+			?>
+			<tr class="row_podlove_episode_asset_type">
+				<th scope="row" valign="top">
+					<label for="podlove_episode_asset_type"><?php echo __( 'Asset Type', 'podlove' ); ?></label>
+				</th>
+				<td>
+					<select name="podlove_episode_asset_type" id="podlove_episode_asset_type">
+						<option><?php echo __( 'Please choose ...', 'podlove' ); ?></option>
+						<?php foreach ( Model\FileType::get_types() as $type ): ?>
+							<option value="<?php echo $type ?>" <?php selected( $type, $current_file_type ) ?>><?php echo $type ?></option>	
+						<?php endforeach; ?>
+					</select>
+					<div id="option_storage"></div>
+				</td>
+			</tr>
+			<?php
 
 			$f->select( 'file_type_id', array(
 				'label'       => __( 'File Format', 'podlove' ),
