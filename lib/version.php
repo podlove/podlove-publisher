@@ -39,7 +39,7 @@
 
 namespace Podlove;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 21 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 22 );
 
 add_action( 'init', function () {
 	
@@ -336,7 +336,13 @@ function run_migrations_for_version( $version ) {
 			$podcast = Model\Podcast::get_instance();
 			$podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
 		break;
+		case 22:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `redirect_http_status` INT AFTER `redirect_url`',
+				\Podlove\Model\Feed::table_name()
+			);
+			$wpdb->query( $sql );
+		break;
 	}
 
 }
-
