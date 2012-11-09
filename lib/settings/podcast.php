@@ -183,8 +183,24 @@ class Podcast {
 					}
 
 					$wrapper->select( 'supports_cover_art', array(
-						'label'   => __( 'Episode Artwork Media File', 'podlove' ),
+						'label'   => __( 'Episode Image', 'podlove' ),
 						'options' => $artwork_options
+					) );
+
+					$chapter_file_options = array(
+						'0'      => __( 'None', 'podlove' ),
+						'manual' => __( 'Manual Entry', 'podlove' )
+					);
+					$episode_assets = Model\EpisodeAsset::all();
+					foreach ( $episode_assets as $episode_asset ) {
+						$file_type = $episode_asset->file_type();
+						if ( $file_type && $file_type->type === 'chapters' ) {
+							$chapter_file_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
+						}
+					}
+					$wrapper->select( 'chapter_file', array(
+						'label'   => __( 'Episode Chapters', 'podlove' ),
+						'options' => $chapter_file_options
 					) );
 				});
 				?>

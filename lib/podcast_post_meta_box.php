@@ -88,15 +88,17 @@ class Podcast_Post_Meta_Box {
 					));
 				}
 
-				$wrapper->text( 'chapters', array(
-					'label'       => __( 'Chapter Marks', 'podlove' ),
-					'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
-					'html'        => array(
-						'class'       => 'large-text code',
-						'placeholder' => '00:00:00.000 Intro',
-						'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
-					)
-				));
+				if ( $podcast->chapter_file === 'manual' ) {
+					$wrapper->text( 'chapters', array(
+						'label'       => __( 'Chapter Marks', 'podlove' ),
+						'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
+						'html'        => array(
+							'class'       => 'large-text code',
+							'placeholder' => '00:00:00.000 Intro',
+							'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
+						)
+					));
+				}
 
 				do_action( 'podlove_episode_form', $wrapper, $episode );
 

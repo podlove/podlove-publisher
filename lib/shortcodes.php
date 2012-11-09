@@ -130,8 +130,12 @@ function webplayer_shortcode( $options ) {
 	}
 
 	$chapters = '';
-	if ( $episode->chapters ) {
+	if ( $podcast->chapter_file === 'manual' && $episode->chapters ) {
 		$chapters = 'chapters="_podlove_chapters"';
+	} elseif ( $podcast->chapter_file > 0 ) {
+		$chapter_asset = Model\EpisodeAsset::find_by_id( $podcast->chapter_file );
+		$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapter_asset->id );
+		$chapters = 'chapters="' . $media_file->get_file_url() . '"';
 	}
 
 	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );

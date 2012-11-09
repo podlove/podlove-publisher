@@ -105,7 +105,7 @@ class EpisodeAsset {
 	private function new_template() {
 		$episode_asset = new \Podlove\Model\EpisodeAsset;
 		?>
-		<h3><?php echo __( 'Add New Apisode Asset', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New Episode Asset', 'podlove' ); ?></h3>
 		<?php
 		$this->form_template( $episode_asset, 'create', __( 'Add New Episode Asset', 'podlove' ) );
 	}
