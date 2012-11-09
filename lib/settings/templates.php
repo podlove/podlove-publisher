@@ -266,8 +266,8 @@ EOT
 							list:[
 								"[podlove-episode-downloads]",
 								"[podlove-web-player]",
-								"[podlove-episode-data field=\"\"]",
-								"[podlove-podcast-data field=\"\"]",
+								"[podlove-episode field=\"\"]",
+								"[podlove-podcast field=\"\"]",
 								"[podlove-contributors]"
 							],
 							from: cm.getCursor()
