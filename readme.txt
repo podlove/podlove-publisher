@@ -31,6 +31,8 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: Minor template editor enhancements and updated default template.
 * Enhancement: Enable revisions for episodes.
 * Enhancement: RSS/Atom cleanup. Less WordPress, more Podlove.
+* Enhancement: UI improvements in episode asset forms
+* Enhancement: Menu reorganisation. Moved important stuff up, expert stuff down. Separate site for modules.
 
 = 1.2.17-alpha =
 * Nothing. Just some WordPress-Plugin-Directory-Thingamajig-Version-Foobar.
