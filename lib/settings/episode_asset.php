@@ -178,12 +178,23 @@ class EpisodeAsset {
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
-			$f->string( 'url_template', array(
-				'label'       => __( 'URL Template', 'podlove' ),
-				'description' => sprintf( __( 'Preview: %s' ), '<span class="url_template_preview"></span><br/>', 'podlove' ),
-				'html' => array( 'class' => 'large-text required' ),
-				'default' => '%media_file_base_url%%episode_slug%.%format_extension%'
+			$f->string( 'suffix', array(
+				'label'       => __( 'Suffix', 'podlove' ),
+				'description' => __( 'Optional. Is appended to file name after episode slug.', 'podlove' ),
+				'html' => array( 'class' => 'regular-text required' )
 			) );
+
+			?>
+			<tr class="row_podlove_asset_url_preview">
+				<th scope="row" valign="top">
+					<label for="podlove_asset_url_preview"><?php echo __( 'URL Preview', 'podlove' ); ?></label>
+				</th>
+				<td>
+					<div id="url_preview" style="font-size: 1.5em">trollolo</div>
+					<div id="url_template" style="display: none;"><?php echo Model\Podcast::get_instance()->url_template ?></div>
+				</td>
+			</tr>
+			<?php
 
 			$f->checkbox( 'downloadable', array(
 				'label'       => __( 'Downloadable', 'podlove' ),

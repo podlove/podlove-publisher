@@ -72,6 +72,12 @@ class Podcast {
 						'html'        => array( 'class' => 'regular-text required' )
 					) );
 
+					$wrapper->string( 'media_file_base_uri', array(
+						'label'       => __( 'Media File Base URL', 'podlove' ),
+						'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
+						'html' => array( 'class' => 'regular-text required' )
+					) );
+
 					$wrapper->image( 'cover_image', array(
 						'label'        => __( 'Cover Art URL', 'podlove' ),
 						'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
@@ -164,10 +170,10 @@ class Podcast {
 		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 					) );
 
-					$wrapper->string( 'media_file_base_uri', array(
-						'label'       => __( 'Media File Base URL', 'podlove' ),
-						'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
-						'html' => array( 'class' => 'regular-text required' )
+					$wrapper->string( 'url_template', array(
+						'label'       => __( 'Episode Asset URL Template', 'podlove' ),
+						'description' => __( 'You probably don\'t want to change this.', 'podlove' ),
+						'html' => array( 'class' => 'large-text required' )
 					) );
 
 					$artwork_options = array(

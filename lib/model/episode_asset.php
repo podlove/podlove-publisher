@@ -2,17 +2,6 @@
 namespace Podlove\Model;
 
 class EpisodeAsset extends Base {
-	
-	/**
-	 * Sets default values.
-	 * 
-	 * @return array
-	 */
-	public function default_values() {
-		return array(
-			'url_template' => '%media_file_base_url%%episode_slug%.%format_extension%'
-		);
-	}
 
 	/**
 	 * Find the related media format model.
@@ -44,5 +33,5 @@ class EpisodeAsset extends Base {
 EpisodeAsset::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 EpisodeAsset::property( 'title', 'VARCHAR(255)' );
 EpisodeAsset::property( 'file_type_id', 'INT' );
-EpisodeAsset::property( 'url_template', 'VARCHAR(255)' );
+EpisodeAsset::property( 'suffix', 'VARCHAR(255)' );
 EpisodeAsset::property( 'downloadable', 'INT' );
