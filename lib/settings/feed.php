@@ -9,8 +9,8 @@ class Feed {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Feeds',
-			/* $menu_title */ 'Feeds',
+			/* $page_title */ 'Podcast Feeds',
+			/* $menu_title */ 'Podcast Feeds',
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_feeds_settings_handle',
 			/* $function   */ array( $this, 'page' )
