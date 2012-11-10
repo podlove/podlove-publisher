@@ -12,7 +12,6 @@ function activate_for_current_blog() {
 	Model\EpisodeAsset::build();
 	Model\MediaFile::build();
 	Model\Episode::build();
-	Model\Release::build();
 	Model\Template::build();
 
 	$podcast = Model\Podcast::get_instance();
@@ -157,7 +156,6 @@ function uninstall_for_current_blog() {
 	Model\EpisodeAsset::destroy();
 	Model\MediaFile::destroy();
 	Model\Episode::destroy();
-	Model\Release::destroy();
 	Model\Template::destroy();
 }
 
