@@ -335,6 +335,7 @@ function run_migrations_for_version( $version ) {
 		case 21:
 			$podcast = Model\Podcast::get_instance();
 			$podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
+			$podcast->save();
 		break;
 		case 22:
 			$sql = sprintf(
