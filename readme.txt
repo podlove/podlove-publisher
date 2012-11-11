@@ -29,6 +29,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Feature: Add support for tags and categories in episodes.
 * Feature: Chapter File (txt and psc) as episode asset
 * Feature: Feed redirects can be a) turned off and b) permanent c) temporary
+* Feature: Module for Twitter Card support
 * Enhancement: Minor template editor enhancements and updated default template.
 * Enhancement: Enable revisions for episodes.
 * Enhancement: RSS/Atom cleanup. Less WordPress, more Podlove.

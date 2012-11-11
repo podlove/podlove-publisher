@@ -63,7 +63,7 @@ class Modules {
 							$settings_object->$key = $module->get_module_option( $key );
 						}
 
-						\Podlove\Form\build_for( $settings_object, array( 'context' => $module->get_module_options_name(), 'submit_button' => false ), function ( $form ) use ( $module_options ) {
+						\Podlove\Form\build_for( $settings_object, array( 'context' => $module->get_module_options_name(), 'submit_button' => false, 'form' => false ), function ( $form ) use ( $module_options ) {
 							$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
 							foreach ( $module_options as $module_option_name => $args ) {
