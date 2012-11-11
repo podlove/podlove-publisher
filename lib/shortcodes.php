@@ -61,8 +61,8 @@ function episode_downloads_shortcode( $options ) {
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 	$media_files = $episode->media_files();
+	$downloads = array();
 
-	$html = '<ul class="episode_download_list">';
 	foreach ( $media_files as $media_file ) {
 
 		$episode_asset = $media_file->episode_asset();
@@ -75,14 +75,24 @@ function episode_downloads_shortcode( $options ) {
 		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
 		$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
 
-		$html .= '<li class="' . $file_type->extension . '">';
+		$downloads[] = array(
+			'url'  => $download_link_url,
+			'name' => $download_link_name,
+			'size' => \Podlove\format_bytes( $media_file->size, 0 ),
+			'file' => $media_file
+		);
+	}
+
+	$html  = '<ul class="episode_download_list">';
+	foreach ( $downloads as $download ) {
+		$html .= '  <li>';
 		$html .= sprintf(
 			'<a href="%s">%s%s</a>',
-			apply_filters( 'podlove_download_link_url', $download_link_url, $media_file ),
-			apply_filters( 'podlove_download_link_name', $download_link_name, $media_file ),
-			'<span class="size">' . \Podlove\format_bytes( $media_file->size, 0 ) . '</span>'
+			apply_filters( 'podlove_download_link_url', $download['url'], $download['file'] ),
+			apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
+			'<span class="size">' . $download['size'] . '</span>'
 		);
-		$html .= '</li>';
+		$html .= '  </li>';
 	}
 	$html .= '</ul>';
 
