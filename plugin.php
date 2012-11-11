@@ -322,6 +322,24 @@ function clear_all_caches() {
 namespace Podlove\AJAX;
 use \Podlove\Model;
 
+function get_new_guid() {
+	$post_id = $_REQUEST['post_id'];
+
+	$post = get_post( $post_id );
+	$guid = \Podlove\Custom_Guid::guid_for_post( $post );
+
+	$result = array( 'guid' => $guid );
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode($result);
+
+	die();
+}
+
+add_action( 'wp_ajax_podlove-get-new-guid', '\Podlove\AJAX\get_new_guid' );
+
 function validate_file() {
 	$file_id = $_REQUEST['file_id'];
 
