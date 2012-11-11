@@ -5,7 +5,7 @@ use \Podlove\Model;
 class Twitter_Summary_Card extends \Podlove\Modules\Base {
 
 		protected $module_name = 'Twitter Card Integration';
-		protected $module_description = 'Adds Twitter summary card metadata to episodes. <a href="https://dev.twitter.com/docs/card" target="_blank">See documentation</a>';
+		protected $module_description = 'Adds Twitter summary card metadata to episodes. <a href="https://dev.twitter.com/form/participate-twitter-cards" target="_blank">Right now, you need to apply here to make it work.</a>';
 
 		public function load() {
 			add_action( 'wp', array( $this, 'register_hooks' ) );
