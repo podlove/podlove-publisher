@@ -52,7 +52,7 @@ class FileType {
 		}
 		$format->save();
 
-		$this->redirect( 'edit', $wpdb->insert_id );
+		$this->redirect( 'index' );
 	}
 	
 	/**

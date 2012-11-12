@@ -41,7 +41,7 @@ class EpisodeAsset {
 		$episode_asset = new \Podlove\Model\EpisodeAsset;
 		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 
-		$this->redirect( 'edit', $wpdb->insert_id );
+		$this->redirect( 'index' );
 	}
 	
 	/**
