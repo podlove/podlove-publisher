@@ -35,6 +35,7 @@ var PODLOVE = PODLOVE || {};
 			$('input[name*="url_template"]', container).on( 'keyup', o.update_preview );
 			$('input[name*="suffix"]', container).on( 'keyup', o.update_preview );
 			$('#podlove_show_media_file_base_uri', container).on( 'keyup', o.update_preview );
+			$('select[name="podlove_episode_asset_type"]', container).on( 'change', o.update_preview );
 			$('[name*="file_type_id"]', container).on( 'change', o.update_preview );
 			o.update_preview();
 		}
@@ -53,7 +54,10 @@ var PODLOVE = PODLOVE || {};
 				var selected_file_type  = $container.find('[name*="file_type_id"] option:selected').text();
 				var match               = selected_file_type.match(/\((.*)\)/);
 
-				if (!match) return;
+				if (!match) {
+					$preview.html('Please select file format');
+					return;
+				}
 
 				var format_extension    = match[1];
 

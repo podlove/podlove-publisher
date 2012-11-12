@@ -148,7 +148,11 @@ class EpisodeAsset {
 
 		\Podlove\Form\build_for( $episode_asset, $form_args, function ( $form ) use ( $format_optionlist ) {
 			$f = new \Podlove\Form\Input\TableWrapper( $form );
-			$current_file_type = Model\FileType::find_by_id( $form->object->file_type_id )->type;
+			if ( $form->object->file_type_id ) {
+				$current_file_type = Model\FileType::find_by_id( $form->object->file_type_id )->type;
+			} else {
+				$current_file_type = '';
+			}
 			?>
 			<tr class="row_podlove_episode_asset_type">
 				<th scope="row" valign="top">
@@ -190,7 +194,7 @@ class EpisodeAsset {
 					<label for="podlove_asset_url_preview"><?php echo __( 'URL Preview', 'podlove' ); ?></label>
 				</th>
 				<td>
-					<div id="url_preview" style="font-size: 1.5em">trollolo</div>
+					<div id="url_preview" style="font-size: 1.5em"></div>
 					<div id="url_template" style="display: none;"><?php echo Model\Podcast::get_instance()->url_template ?></div>
 				</td>
 			</tr>
