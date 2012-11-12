@@ -9,7 +9,7 @@ class FileType extends Base {
 
 	public function get_types() {
 		global $wpdb;
-		return $wpdb->get_col( "SELECT DISTINCT `type` FROM wp_podlove_filetype" );
+		return $wpdb->get_col( "SELECT DISTINCT `type` FROM " . static::table_name() );
 	}
 
 }
