@@ -107,7 +107,7 @@ class Templates {
 		$template = new \Podlove\Model\Template;
 		$template->update_attributes( $_POST['podlove_template'] );
 
-		$this->redirect( 'edit', $wpdb->insert_id );
+		$this->redirect( 'index' );
 	}
 	
 	/**

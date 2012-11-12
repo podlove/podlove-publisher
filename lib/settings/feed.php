@@ -40,7 +40,7 @@ class Feed {
 		$feed = new \Podlove\Model\Feed;
 		$feed->update_attributes( $_POST['podlove_feed'] );
 
-		$this->redirect( 'edit', $wpdb->insert_id );
+		$this->redirect( 'index' );
 	}
 	
 	/**
