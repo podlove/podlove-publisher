@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.20-alpha =
+* Bugfix: forbid deletion of episode assets referenced by existing media files
+
 = 1.2.19-alpha =
 * Feature: add episode image shortcode `[podlove-episode field="image"]`
 * Bugfix: fix some bugs

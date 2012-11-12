@@ -51,20 +51,26 @@ class EpisodeAsset {
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
 
-		\Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] )->delete();
+		$asset = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
+		if ( count( $asset->media_files() ) === 0 ) {
+			$asset->delete();
+			$this->redirect( 'index' );
+		} else {
+			$this->redirect( 'index', NULL, 'media_file_relation_warning' );
+		}
 		
-		$this->redirect( 'index' );
 	}
 	
 	/**
 	 * Helper method: redirect to a certain page.
 	 */
-	private function redirect( $action, $episode_asset_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
-		$show   = ( $episode_asset_id ) ? '&episode_asset=' . $episode_asset_id : '';
-		$action = '&action=' . $action;
+	private function redirect( $action, $episode_asset_id = NULL, $message = NULL ) {
+		$page    = 'admin.php?page=' . $_REQUEST['page'];
+		$show    = ( $episode_asset_id ) ? '&episode_asset=' . $episode_asset_id : '';
+		$action  = '&action=' . $action;
+		$message = $message ? '&message=' . $message : '';
 		
-		wp_redirect( admin_url( $page . $show . $action ) );
+		wp_redirect( admin_url( $page . $show . $action . $message ) );
 		exit;
 	}
 	
@@ -85,6 +91,15 @@ class EpisodeAsset {
 	}
 	
 	public function page() {
+		if ( isset( $_REQUEST['message'] ) ) {
+			if ( $_REQUEST['message'] == 'media_file_relation_warning' ) {
+				?>
+				<div class="error">
+					<p><?php echo __( '<strong>Asset can\'t be deleted.</strong> It is used by at least one media file.' ) ?></p>
+				</div>
+				<?php
+			}
+		}
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
