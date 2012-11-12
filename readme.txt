@@ -22,6 +22,11 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.19-alpha =
+* Feature: add episode image shortcode `[podlove-episode field="image"]`
+* Bugfix: fix some bugs
+* Enhancement: when creating new form entries, the user is now redirected to the index page rather than the edit form
+
 = 1.2.18-alpha =
 * Feature: 4 new podcast fields: publisher_name, publisher_url, license_name, license_url
 * Feature: Shortcode `[podlove-podcast]` to access podcast data. See [Shortcode Documentation](https://github.com/eteubert/podlove/wiki/Shortcodes) for more details.

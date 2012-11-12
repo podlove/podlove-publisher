@@ -171,10 +171,16 @@ function episode_data_shortcode( $attributes ) {
 	$defaults = array( 'field' => '' );
 	$attributes = shortcode_atts( $defaults, $attributes );
 
+	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
+	if ( ! $episode )
+		return;
+
 	$allowed_fields = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
 
 	if ( in_array( $attributes['field'], $allowed_fields ) ) {
-		return nl2br( Model\Episode::find_or_create_by_post_id( $post->ID )->$attributes['field'] );
+		return nl2br( $episode->$attributes['field'] );
+	} elseif ( $attributes['field'] == 'image' ) {
+		return $episode->get_cover_art();
 	} else {
 		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
 	}
