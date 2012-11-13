@@ -7,6 +7,10 @@ function handle_direct_download() {
 	if ( ! isset( $_GET['download_media_file'] ) )
 		return;
 
+	// tell WP Super Cache to not cache download links
+	if ( ! defined( 'DONOTCACHEPAGE' ) )
+		define( 'DONOTCACHEPAGE', true );
+
 	$media_file_id = (int) $_GET['download_media_file'];
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 
@@ -21,10 +25,6 @@ function handle_direct_download() {
 		status_header( 404 );
 		exit;
 	}
-
-	// tell WP Super Cache to not cache download links
-	if ( ! defined( 'DONOTCACHEPAGE' ) )
-		define( 'DONOTCACHEPAGE', true );
 
 	header( "Expires: 0" );
 	header( 'Cache-Control: must-revalidate' );
