@@ -111,6 +111,7 @@ class MediaFile extends Base {
 	 */
 	function curl_get_header() {
 		$curl = curl_init();
+		$curl_version = curl_version();
 
 		curl_setopt( $curl, CURLOPT_URL, $this->get_file_url() );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); // make curl_exec() return the result
@@ -119,6 +120,20 @@ class MediaFile extends Base {
 		curl_setopt( $curl, CURLOPT_FAILONERROR, true );
 		curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
 		curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
+		curl_setopt(
+			$curl,
+			CURLOPT_USERAGENT,
+			sprintf(
+				'PHP/%s (; ) cURL/%s(OpenSSL/%s; zlib/%s) Wordpress/%s (; ) %s/%s (; )',
+				phpversion(),
+				$curl_version['version'],
+				$curl_version['ssl_version'],
+				$curl_version['libz_version'],
+				$wp_version,
+				\Podlove\get_plugin_header( 'Name' ),
+				\Podlove\get_plugin_header( 'Version' ),
+			)
+		);
 		
 		curl_exec( $curl );
 		$info = curl_getinfo( $curl );
