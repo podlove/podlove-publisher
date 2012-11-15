@@ -76,13 +76,9 @@ class Episode extends Base {
 		}
 	}
 
-	public function __get( $name ) {
-		if ( $name === 'duration' ) {
-			$duration = new \Podlove\Duration( parent::__get( 'duration' ) );
-			return $duration->get( 'HH:MM:SS' );
-		} else {
-			return parent::__get( $name );
-		}
+	public function get_duration( $format = 'HH:MM:SS' ) {
+		$duration = new \Podlove\Duration( $this->duration );
+		return $duration->get( $format );
 	}
 
 }
