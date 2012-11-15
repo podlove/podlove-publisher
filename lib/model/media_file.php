@@ -129,9 +129,9 @@ class MediaFile extends Base {
 				$curl_version['version'],
 				$curl_version['ssl_version'],
 				$curl_version['libz_version'],
-				$wp_version,
+				get_bloginfo( 'version' ),
 				\Podlove\get_plugin_header( 'Name' ),
-				\Podlove\get_plugin_header( 'Version' ),
+				\Podlove\get_plugin_header( 'Version' )
 			)
 		);
 		
