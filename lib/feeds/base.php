@@ -180,7 +180,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		
 		echo apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
 
-		$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $episode->get_duration( 'full' ) );
+		$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $episode->get_duration( 'HH:MM:SS' ) );
 		echo apply_filters( 'podlove_feed_itunes_duration', $duration );
 
 		$author = apply_filters( 'podlove_feed_content', $podcast->author_name );
