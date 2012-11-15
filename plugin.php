@@ -240,6 +240,8 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 	if ( get_option( 'show_on_front' ) === 'posts' )
 		return $wp_query;
 
+	/*
+	// deactivated as it defeats the ability to use static pages as front page
 	if ( $wp_query->get( 'page_id' ) == get_option( 'page_on_front' ) ) {
 		$wp_query->set( 'post_type', array( 'podcast' ) );
 
@@ -248,6 +250,7 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 		$wp_query->is_page = 0;
 		$wp_query->is_singular = 0;
 	}
+	*/
 
 	return $wp_query;
 } );
