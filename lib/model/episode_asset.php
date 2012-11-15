@@ -13,7 +13,7 @@ class EpisodeAsset extends Base {
 	}
 
 	/**
-	 * Fine all media file models in this location.
+	 * Find all media file models in this location.
 	 * 
 	 * @return array|NULL
 	 */
