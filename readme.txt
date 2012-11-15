@@ -27,6 +27,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Bugfix: asset form can handle file types using brackets now
 * Bugfix: There was an undocumented way to just show episodes on the front page. However, this made using static pages as front page unusable. So for now, this functionality has been deactivated. The expert option to display both episodes and articles on the front page is not affected and will continue to work.
 * Enhancement: duration is now normalized and can be printed full (HH:MM:SS.mmm) or HH:MM:SS using `[podlove-episode field="duration" format="full/HH:MM:SS"]`
+* Enhancement: curl requests set user agent
 
 = 1.2.20-alpha =
 * Bugfix: forbid deletion of episode assets referenced by existing media files
