@@ -34,10 +34,8 @@ class FileType {
 			$format->{$key} = $value;
 		}
 			
-
 		$format->save();
-		
-		$this->redirect( 'edit', $format->id );
+		$this->redirect( 'index', $format->id );
 	}
 	
 	/**
