@@ -14,6 +14,7 @@ var PODLOVE = PODLOVE || {};
 			
 				$("#option_storage option").remove().appendTo($("#podlove_episode_asset_file_type_id"));
 				$("#podlove_episode_asset_file_type_id option[data-type!='" + $(this).val() + "']").remove().appendTo($("#option_storage"));
+				$('select[name*=file_type_id]').change();
 			});
 		}
 
@@ -24,7 +25,7 @@ var PODLOVE = PODLOVE || {};
 				var $container = $(this).closest('table');
 				var $title = $container.find('[name*="title"]');
 				if ($title.val().length === 0) {
-					var extension = $("option:selected", this).text().match(/\((.*)\)/)[1];
+					var extension = $("option:selected", this).data('extension');
 					$title.val(extension);
 				}
 			});
@@ -52,14 +53,12 @@ var PODLOVE = PODLOVE || {};
 				var suffix              = $('input[name*="suffix"]').val();
 
 				var selected_file_type  = $container.find('[name*="file_type_id"] option:selected').text();
-				var match               = selected_file_type.match(/\((.*)\)/);
+				var format_extension    = $container.find('[name*="file_type_id"] option:selected').data('extension');
 
-				if (!match) {
+				if (!format_extension) {
 					$preview.html('Please select file format');
 					return;
 				}
-
-				var format_extension    = match[1];
 
 				template = template.replace( '%media_file_base_url%', media_file_base_uri );
 				template = template.replace( '%episode_slug%', episode_slug );
