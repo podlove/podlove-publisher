@@ -28,8 +28,12 @@ class FileType {
 		if ( ! isset( $_POST['podlove_file_type'] ) || ! is_array( $_POST['podlove_file_type'] ) )
 			return;
 			
-		foreach ( $_POST['podlove_file_type'] as $key => $value )
+		foreach ( $_POST['podlove_file_type'] as $key => $value ) {
+			$value = trim( $value );
+			$value = $key === 'extension' ? trim( $value, '.' ) : $value;
 			$format->{$key} = $value;
+		}
+			
 
 		$format->save();
 		
