@@ -33,10 +33,10 @@ class Duration {
 	 */
 	private function normalize() {
 		if ( preg_match( '/^(:?\d+:)?(\d+:)(\d+)\.?(:?\d+)?$/', $this->duration, $matches ) ) {
-			$this->hours        = (int) $matches[1];
-			$this->minutes      = (int) $matches[2];
-			$this->seconds      = (int) $matches[3];
-			$this->milliseconds = (int) $matches[4];
+			$this->hours        = isset( $matches[1] ) ? (int) $matches[1] : 0;
+			$this->minutes      = isset( $matches[2] ) ? (int) $matches[2] : 0;
+			$this->seconds      = isset( $matches[3] ) ? (int) $matches[3] : 0;
+			$this->milliseconds = isset( $matches[4] ) ? (int) $matches[4] : 0;
 
 			if ( $this->minutes > 59 || $this->seconds > 59 || $this->milliseconds > 999 ) {
 				$this->valid = false;

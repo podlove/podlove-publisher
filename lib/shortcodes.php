@@ -168,19 +168,21 @@ foreach ( $podlove_public_episode_attributes as $attr ) {
 function episode_data_shortcode( $attributes ) {
 	global $post;
 
-	$defaults = array( 'field' => '' );
+	$defaults = array( 'field' => '', 'format' => 'HH:MM:SS' );
 	$attributes = shortcode_atts( $defaults, $attributes );
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 	if ( ! $episode )
 		return;
 
-	$allowed_fields = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
+	$allowed_fields = array( 'subtitle', 'summary', 'slug', 'chapters' );
 
 	if ( in_array( $attributes['field'], $allowed_fields ) ) {
 		return nl2br( $episode->$attributes['field'] );
 	} elseif ( $attributes['field'] == 'image' ) {
 		return $episode->get_cover_art();
+	} elseif ( $attributes['field'] == 'duration' ) {
+		return $episode->get_duration( $attributes['format'] );
 	} else {
 		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
 	}
