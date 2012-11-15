@@ -76,6 +76,15 @@ class Episode extends Base {
 		}
 	}
 
+	public function __get( $name ) {
+		if ( $name === 'duration' ) {
+			$duration = new \Podlove\Duration( parent::__get( 'duration' ) );
+			return $duration->get( 'HH:MM:SS' );
+		} else {
+			return parent::__get( $name );
+		}
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
