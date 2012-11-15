@@ -152,7 +152,7 @@ class EpisodeAsset {
 		$format_optionlist = array_map( function ( $f ) {
 			return array(
 				'value'      => $f['title'],
-				'attributes' => 'data-type="' . $f['type'] . '"'
+				'attributes' => 'data-type="' . $f['type'] . '" data-extension="' . $f['extension'] . '"'
 			);
 		}, $formats );
 
