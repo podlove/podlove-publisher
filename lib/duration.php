@@ -54,8 +54,17 @@ class Duration {
 	 */
 	public function get( $format = 'full' ) {
 
-		if ( ! $this->valid ) 
-			return '00:00:00.000';
+		if ( ! $this->valid ) {
+			switch ( $format ) {
+				case 'HH:MM:SS':
+					return '00:00:00';
+					break;
+				case 'full': /* full is default */
+				default:
+					return '00:00:00.000';
+					break;
+			}			
+		}
 
 		switch ( $format ) {
 			case 'HH:MM:SS':
