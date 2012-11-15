@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.21-alpha =
+* Bugfix: check for asset relations (not just media file relations) when trying to delete assets
+
 = 1.2.20-alpha =
 * Bugfix: forbid deletion of episode assets referenced by existing media files
 * Bugfix: fix episode asset type selector
