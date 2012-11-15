@@ -76,7 +76,7 @@ class FileType {
 	 */
 	private function redirect( $action, $format_id = NULL ) {
 		$page   = 'admin.php?page=' . $_REQUEST['page'];
-		$show   = ( $format_id ) ? '&format=' . $format_id : '';
+		$show   = ( $format_id ) ? '&file_type=' . $format_id : '';
 		$action = '&action=' . $action;
 		
 		wp_redirect( admin_url( $page . $show . $action ) );
