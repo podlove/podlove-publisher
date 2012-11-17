@@ -106,6 +106,11 @@ class Feed extends Base {
 
 	}
 
+	public function save() {
+		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		parent::save();
+	}
+
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

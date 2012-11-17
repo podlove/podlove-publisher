@@ -27,6 +27,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Bugfix: Feed item limit setting works now
 * Bugfix: avoid rare curl warning
 * Enhancement: remove unused feed setting `show description`
+* Enhancement: Podlove feeds don't override /feed/* WordPress feeds any more
 
 = 1.2.24-alpha =
 * Bugfix: don't show milliseconds in feed so feedvalidator.org stops complaining
