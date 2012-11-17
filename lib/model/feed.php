@@ -120,7 +120,6 @@ Feed::property( 'redirect_http_status', 'INT' );
 Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
-Feed::property( 'show_description', 'INT' );
 
 
 // episode_asset_id
