@@ -17,7 +17,7 @@ class Podcast_Post_Type {
 EOT;
 
 	public function __construct() {
-		
+
 		$labels = array(
 			'name'               => __( 'Episodes', 'podlove' ),
 			'singular_name'      => __( 'Episode', 'podlove' ),
@@ -33,20 +33,20 @@ EOT;
 			'parent_item_colon'  => '',
 			'menu_name'          => __( 'Episodes', 'podlove' ),
 		);
-			
+
 		$slug = trim( \Podlove\get_setting( 'custom_episode_slug' ) );
 
 		$args = array(
 			'labels'               => $labels,
 			'public'               => true,
 			'publicly_queryable'   => true,
-			'show_ui'              => true, 
-			'show_in_menu'         => true, 
+			'show_ui'              => true,
+			'show_in_menu'         => true,
 			'menu_position'        => 5, // below "Posts"
 			'query_var'            => true,
 			'rewrite'              => true,
 			'capability_type'      => 'post',
-			'has_archive'          => true, 
+			'has_archive'          => true,
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
 			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
@@ -59,40 +59,41 @@ EOT;
 
 		if ( strlen( $slug ) === 0 )
 			\Podlove\Episode_Routing::init();
-		
+
 		new \Podlove\Podcast_Post_Meta_Box();
 
 		$args = apply_filters( 'podlove_post_type_args', $args );
-		
+
 		register_post_type( 'podcast', $args );
-		
+
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
-		add_filter( 'default_content', array( $this, 'set_default_episode_content' ), 20, 2 );	
-		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );	
-		
+		add_filter( 'default_content', array( $this, 'set_default_episode_content' ), 20, 2 );
+		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
+		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
+
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
 			add_action( 'podlove_list_formats', array( $this, 'list_formats' ) );
-			
+
 			wp_register_script(
 				'podlove_admin_episode',
 				\Podlove\PLUGIN_URL . '/js/admin/episode.js',
 				array( 'jquery' ),
-				'1.1' 
+				'1.1'
 			);
 
 			wp_register_script(
 				'podlove_admin_dashboard_validation',
 				\Podlove\PLUGIN_URL . '/js/admin/dashboard_validation.js',
 				array( 'jquery' ),
-				'1.1' 
+				'1.1'
 			);
 
 			wp_register_script(
 				'podlove_admin_episode_asset_settings',
 				\Podlove\PLUGIN_URL . '/js/admin/episode_asset_settings.js',
 				array( 'jquery' ),
-				'1.1' 
+				'1.1'
 			);
 
 			wp_register_script(
@@ -104,17 +105,34 @@ EOT;
 					'podlove_admin_dashboard_validation',
 					'podlove_admin_episode_asset_settings'
 				),
-				'1.0' 
+				'1.0'
 			);
 
 			wp_enqueue_script( 'podlove_admin' );
 		}
-		
+
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
 
 		add_filter( 'get_the_excerpt', array( $this, 'default_excerpt_to_episode_summary' ) );
 
 		\Podlove\Feeds\init();
+	}
+
+	/**
+	 * Enable tag and category search results for all post types.
+	 *
+	 * @param  mixed $query
+	 * @return mixed
+	 */
+	public function enable_tag_and_category_search( $query ) {
+
+		if ( is_category() || is_tag() || is_home() && empty( $query->query_vars['suppress_filters'] ) ) {
+			$post_type = get_query_var( 'post_type' );
+
+			$query->set( 'post_type', $post_type ? $post_type : get_post_types() );
+
+			return $query;
+		}
 	}
 
 	public function default_excerpt_to_episode_summary( $excerpt ) {
@@ -123,9 +141,9 @@ EOT;
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
 		return $episode && strlen( $episode->summary ) > 0 ? $episode->summary : $excerpt;
 	}
-		
+
 	public function create_menu() {
-		
+
 		// create new top-level menu
 		$hook = add_menu_page(
 			/* $page_title */ 'Podlove Plugin Settings',
@@ -147,12 +165,12 @@ EOT;
 		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 	}
-	
+
 	/**
 	 * Add Custom Post Type to all WordPress Feeds.
 	 *
 	 * @todo  is this a good idea at all?
-	 * 
+	 *
 	 * @param array $query_var
 	 * @return array
 	 */
@@ -201,16 +219,16 @@ EOT;
 
 	/**
 	 * Hook into post deletion and remove associated episode.
-	 * 
+	 *
 	 * @param int $post_id
 	 */
 	public function delete_trashed_episodes( $post_id ) {
-		
+
 		$episode = Model\Episode::find_one_by_post_id( $post_id );
 
 		if ( ! $episode )
 			return;
-		
+
 		if ( $media_files = Model\MediaFile::find_all_by_episode_id( $episode->id ) ) {
 			foreach ( $media_files as $media_file ) {
 				$media_file->delete();

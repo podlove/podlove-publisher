@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.2.25-alpha =
+* Bugfix: enable tag and category search results for all post types
+
 = 1.2.24-alpha =
 * Bugfix: don't show milliseconds in feed so feedvalidator.org stops complaining
 
@@ -97,4 +100,4 @@ Feel free to contribute and to fix errors or send improvements via github.
 == Upgrade Notice ==
 
 = 1.2.0-alpha =
-Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change! 
+Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change!
