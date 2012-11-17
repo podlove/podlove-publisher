@@ -9,17 +9,21 @@ function init() {
 function add_feed_routes() {
 
 	add_action( 'generate_rewrite_rules', function ( $wp_rewrite ) {
-		$new_rules = array( 
-			'feed/(.+)' => 'index.php?feed_slug=' . $wp_rewrite->preg_index( 1 )
-		);
-		$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
+		
+		if ( ! $feeds = Model\Feed::all() )
+			return;
+
+		foreach ( $feeds as $feed ) {
+			$rule = "feed/" . $feed->slug;
+			$new_rules = array( $rule => 'index.php?feed_slug=' . $feed->slug );
+			$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
+		}
 	} );
 
 	add_filter( 'query_vars', function ( $qv ) {
 		$qv[] = 'feed_slug';
 		return $qv;
 	} );
-
 }
 
 // set `is_feed()` correctly
