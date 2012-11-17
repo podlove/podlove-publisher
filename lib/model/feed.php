@@ -103,7 +103,25 @@ class Feed extends Base {
 			return 'application/rss+xml';
 		else
 			return "application/atom+xml";	
+	}
 
+	public function get_self_link() {
+		return '<link rel="self" type="' . $this->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $this->title_for_discovery() ) . '" href="' . $this->get_subscribe_url() . '" />';
+	}
+
+	public function get_alternate_links() {
+
+		$html = '';
+
+		$feeds = self::find_all_by_discoverable(1);
+		foreach ( $feeds as $feed ) {
+			if ( $feed->id !== $this->id ) {
+				$html .= '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . '" />';
+				$html .= "\n\t";
+			}
+		}
+
+		return $html;
 	}
 
 	public function save() {

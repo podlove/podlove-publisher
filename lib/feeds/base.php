@@ -81,6 +81,11 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		}
 		echo $gen;
 	} );
+
+	add_action( $hook, function () use ( $feed ) {
+		echo $feed->get_self_link();
+		echo $feed->get_alternate_links();
+	}, 9 );
 	
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		echo PHP_EOL;

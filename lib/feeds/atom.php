@@ -30,20 +30,6 @@ class Atom {
 		override_feed_head( 'atom_head', $podcast, $feed, $file_type );
 		override_feed_entry( 'atom_entry', $podcast, $feed, $file_type );
 
-		add_action( 'atom_head', function () use ( $podcast, $feed, $file_type ) {
-			?>
-			<link rel="self" type="application/atom+xml" title="<?php echo $feed->title_for_discovery(); ?>" href="<?php echo $feed->get_subscribe_url() ?>" />
-			<?php
-			$feeds = Model\Feed::all();
-			foreach ( $feeds as $other_feed ) {
-				if ( $other_feed->id !== $feed->id ):
-					?>
-					<link rel="alternate" type="application/atom+xml" title="<?php echo $other_feed->title_for_discovery(); ?>" href="<?php echo $other_feed->get_subscribe_url() ?>" />
-					<?php
-				endif;
-			}
-		}, 9 );
-
 		add_action( 'atom_entry', function () {
 			if ( apply_filters( 'podlove_feed_show_summary', true ) ) {
 				echo "<summary><![CDATA[";
