@@ -118,8 +118,10 @@ class MediaFile extends Base {
 		curl_setopt( $curl, CURLOPT_HEADER, true );         // header only
 		curl_setopt( $curl, CURLOPT_NOBODY, true );         // return no body; HTTP request method: HEAD
 		curl_setopt( $curl, CURLOPT_FAILONERROR, true );
-		curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
-		curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
+		if( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
+			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
+			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
+		}
 		curl_setopt(
 			$curl,
 			CURLOPT_USERAGENT,
