@@ -197,13 +197,6 @@ class Feed {
 				'default'     => true
 			) );
 			
-			// TODO: choose description format: empty, simple, full-force
-			$wrapper->checkbox( 'show_description', array(
-				'label'       => __( 'Include Description?', 'podlove' ),
-				'description' => __( 'You may want to hide the episode descriptions to reduce the feed file size.', 'podlove' ),
-				'default'     => true
-			) );
-			
 			// todo include summary?
 			$wrapper->string( 'limit_items', array(
 				'label'       => __( 'Limit Items', 'podlove' ),

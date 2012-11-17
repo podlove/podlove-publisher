@@ -24,6 +24,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.2.25-alpha =
 * Bugfix: enable tag and category search results for all post types
+* Enhancement: remove unused feed setting `show description`
 
 = 1.2.24-alpha =
 * Bugfix: don't show milliseconds in feed so feedvalidator.org stops complaining
