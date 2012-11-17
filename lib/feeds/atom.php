@@ -81,6 +81,7 @@ class Atom {
 			'post_type' => 'podcast',
 			'post__in'   => $feed->post_ids()
 		);
+		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );
 		
 		if ( $wp_query->is_comment_feed )
