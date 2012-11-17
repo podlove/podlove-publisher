@@ -24,6 +24,8 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.2.25-alpha =
 * Bugfix: enable tag and category search results for all post types
+* Bugfix: Feed item limit setting works now
+* Bugfix: avoid rare curl warning
 * Enhancement: remove unused feed setting `show description`
 
 = 1.2.24-alpha =
