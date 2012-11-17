@@ -1,4 +1,4 @@
-=== Podlove Podcasting Plugin for WordPress ===
+=== Podlove Podcast Publisher ===
 Contributors: eteubert
 Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 Tags: podcast, publishing
@@ -28,6 +28,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Bugfix: avoid rare curl warning
 * Enhancement: remove unused feed setting `show description`
 * Enhancement: Podlove feeds don't override /feed/* WordPress feeds any more
+* Enhancement: Rename plugin to "Podlove Podcast Publisher"
 
 = 1.2.24-alpha =
 * Bugfix: don't show milliseconds in feed so feedvalidator.org stops complaining
