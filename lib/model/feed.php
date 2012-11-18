@@ -106,22 +106,54 @@ class Feed extends Base {
 	}
 
 	public function get_self_link() {
-		return '<link rel="self" type="' . $this->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $this->title_for_discovery() ) . '" href="' . $this->get_subscribe_url() . '" />';
+		return self::get_link_tag( array(
+			'prefix' => ( $this->format === 'rss' ) ? 'atom' : NULL,
+			'rel'    => 'self',
+			'type'   => $this->get_content_type(),
+			'title'  => \Podlove\Feeds\prepare_for_feed( $this->title_for_discovery() ),
+			'href'   => $this->get_subscribe_url()
+		) );
 	}
 
 	public function get_alternate_links() {
 
 		$html = '';
-
-		$feeds = self::find_all_by_discoverable(1);
-		foreach ( $feeds as $feed ) {
+		foreach ( self::find_all_by_discoverable(1) as $feed ) {
 			if ( $feed->id !== $this->id ) {
-				$html .= '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . '" />';
-				$html .= "\n\t";
+				$html .= "\n\t" . self::get_link_tag( array(
+					'prefix' => ( $this->format === 'rss' ) ? 'atom' : NULL,
+					'rel'    => 'alternate',
+					'type'   => $feed->get_content_type(),
+					'title'  => \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ),
+					'href'   => $feed->get_subscribe_url()
+				) );
 			}
 		}
 
 		return $html;
+	}
+
+	public static function get_link_tag( $args = array() ) {
+		
+		$defaults = array(
+			'prefix' => NULL,
+			'rel'    => 'alternate',
+			'type'   => 'application/atom+xml',
+			'title'  => '',
+			'href'   => ''
+		);
+		$args = wp_parse_args( $args, $defaults );
+
+		$tag_name = $args['prefix'] ? $args['prefix'] . ':link' : 'link';
+
+		return sprintf(
+			'<%s rel="%s" type="%s" title="%s" href="%s" />',
+			$tag_name,
+			$args['rel'],
+			$args['type'],
+			$args['title'],
+			$args['href']
+		);
 	}
 
 	public function save() {
