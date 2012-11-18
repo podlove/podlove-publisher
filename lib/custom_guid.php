@@ -114,7 +114,7 @@ class Custom_Guid {
 		$hash = substr( sha1( $post->ID . $post->post_title . time() ), 0, 15 );
 		$segments[] = apply_filters( 'podlove_guid_hash', $hash );
 
-		return apply_filters( 'podlove_guid', implode( '-', $segments ) );
+		return apply_filters( 'podlove_guid', strtolower( implode( '-', $segments ) ) );
 	}
 
 	/**
