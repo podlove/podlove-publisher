@@ -147,11 +147,11 @@ class Feed extends Base {
 		$tag_name = $args['prefix'] ? $args['prefix'] . ':link' : 'link';
 
 		return sprintf(
-			'<%s rel="%s" type="%s" title="%s" href="%s" />',
+			'<%s%s%s%s href="%s" />',
 			$tag_name,
-			$args['rel'],
-			$args['type'],
-			$args['title'],
+			$args['rel']   ? ' rel="'   . $args['rel']   . '"' : '',
+			$args['type']  ? ' type="'  . $args['type']  . '"' : '',
+			$args['title'] ? ' title="' . $args['title'] . '"' : '',
 			$args['href']
 		);
 	}
