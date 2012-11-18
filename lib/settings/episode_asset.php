@@ -17,6 +17,8 @@ class EpisodeAsset {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+
+		register_setting( EpisodeAsset::$pagehook, 'podlove_asset_assignment' );
 	}
 	
 	/**
@@ -26,7 +28,7 @@ class EpisodeAsset {
 
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
-		
+
 		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 		
@@ -55,9 +57,11 @@ class EpisodeAsset {
 
 		$podcast = Model\Podcast::get_instance();
 		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
+		$asset_assignment = Model\AssetAssignment::get_instance();
+
 		$can_delete =	count( $asset->media_files() ) === 0
-					&&	$podcast->supports_cover_art != $asset->id
-					&&	$podcast->chapter_file != $asset->id;
+					&&	$asset_assignment->image != $asset->id
+					&&	$asset_assignment->chapters != $asset->id;
 
 		if ( $can_delete ) {
 			$asset->delete();
@@ -140,17 +144,17 @@ class EpisodeAsset {
 		?>
 		<h3><?php echo __( 'Assign Assets', 'podlove' ) ?></h3>
 		<form method="post" action="options.php">
-			<?php settings_fields( Podcast::$pagehook );
-			$podcast = \Podlove\Model\Podcast::get_instance();
+			<?php settings_fields( EpisodeAsset::$pagehook );
+			$asset_assignment = Model\AssetAssignment::get_instance();
 
 			$form_attributes = array(
-				'context'    => 'podlove_podcast',
+				'context'    => 'podlove_asset_assignment',
 				'form'       => false
 			);
 
-			\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
+			\Podlove\Form\build_for( $asset_assignment, $form_attributes, function ( $form ) {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
-				$podcast = $form->object;
+				$asset_assignment = $form->object;
 				$artwork_options = array(
 					'0'      => __( 'None', 'podlove' ),
 					'manual' => __( 'Manual Entry', 'podlove' ),
@@ -163,7 +167,7 @@ class EpisodeAsset {
 					}
 				}
 
-				$wrapper->select( 'supports_cover_art', array(
+				$wrapper->select( 'image', array(
 					'label'   => __( 'Episode Image', 'podlove' ),
 					'options' => $artwork_options
 				) );
@@ -179,7 +183,7 @@ class EpisodeAsset {
 						$chapter_file_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
 					}
 				}
-				$wrapper->select( 'chapter_file', array(
+				$wrapper->select( 'chapters', array(
 					'label'   => __( 'Episode Chapters', 'podlove' ),
 					'options' => $chapter_file_options
 				) );
