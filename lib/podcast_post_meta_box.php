@@ -80,7 +80,8 @@ class Podcast_Post_Meta_Box {
 					)
 				));
 
-				if ( $podcast->supports_cover_art === 'manual' ) {
+				$asset_assignments = Model\AssetAssignment::get_instance();
+				if ( $asset_assignments->image === 'manual' ) {
 					$wrapper->string( 'cover_art', array(
 						'label'       => __( 'Episode Cover Art URL', 'podlove' ),
 						'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
@@ -88,7 +89,7 @@ class Podcast_Post_Meta_Box {
 					));
 				}
 
-				if ( $podcast->chapter_file === 'manual' ) {
+				if ( $asset_assignments->chapters === 'manual' ) {
 					$wrapper->text( 'chapters', array(
 						'label'       => __( 'Chapter Marks', 'podlove' ),
 						'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),

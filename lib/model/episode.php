@@ -50,14 +50,15 @@ class Episode extends Base {
 	public function get_cover_art() {
 		
 		$podcast = Podcast::get_instance();
+		$asset_assignment = AssetAssignment::get_instance();
 
-		if ( $podcast->supports_cover_art == 0 )
+		if ( $asset_assignment->image == 0 )
 			return;
 
-		if ( $podcast->supports_cover_art == 'manual' )
+		if ( $asset_assignment->image == 'manual' )
 			return $this->cover_art;
 
-		$cover_art_file_id = $podcast->supports_cover_art;
+		$cover_art_file_id = $asset_assignment->image;
 		if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
 			return false;
 

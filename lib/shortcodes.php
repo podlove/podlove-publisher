@@ -118,6 +118,7 @@ function webplayer_shortcode( $options ) {
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 	$podcast = Model\Podcast::get_instance();
+	$asset_assignment = Model\AssetAssignment::get_instance();
 
 	$formats_data = get_option( 'podlove_webplayer_formats' );
 
@@ -140,10 +141,10 @@ function webplayer_shortcode( $options ) {
 	}
 
 	$chapters = '';
-	if ( $podcast->chapter_file === 'manual' && $episode->chapters ) {
+	if ( $asset_assignment->chapters === 'manual' && $episode->chapters ) {
 		$chapters = 'chapters="_podlove_chapters"';
-	} elseif ( $podcast->chapter_file > 0 ) {
-		$chapter_asset = Model\EpisodeAsset::find_by_id( $podcast->chapter_file );
+	} elseif ( $asset_assignment->chapters > 0 ) {
+		$chapter_asset = Model\EpisodeAsset::find_by_id( $asset_assignment->chapters );
 		$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapter_asset->id );
 		if ( $media_file ) {
 			$chapters = 'chapters="' . $media_file->get_file_url() . '"';

@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 23 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 24 );
 
 add_action( 'init', function () {
 	
@@ -351,7 +351,15 @@ function run_migrations_for_version( $version ) {
 				Model\Feed::table_name()
 			);
 			$wpdb->query( $sql );
-			break;
+		break;
+		case 24:
+			$podcast = Model\Podcast::get_instance();
+			update_option( 'podlove_asset_assignment', array(
+				'image'    => $podcast->supports_cover_art,
+				'chapters' => $podcast->chapter_file
+			) );
+		break;
+
 	}
 
 }

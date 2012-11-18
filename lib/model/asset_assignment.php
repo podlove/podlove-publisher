@@ -1,18 +1,14 @@
 <?php
-
 namespace Podlove\Model;
 
 /**
- * Simplified Singleton model for podcast data.
- *
- * There is only one podcast, that's why this is a singleton.
- * Data handling is still similar to the other models. Storage is different.
+ * Simplified Singleton model for episode assignmrnt data.
  */
-class Podcast {
+class AssetAssignment {
 
 	/**
 	 * Singleton instance container.
-	 * @var \Podlove\Model\Podcast|NULL
+	 * @var \Podlove\Model\AssetAssignment|NULL
 	 */
 	private static $instance = NULL;
 
@@ -31,7 +27,7 @@ class Podcast {
 	/**
 	 * Singleton.
 	 * 
-	 * @return \Podlove\Model\Podcast
+	 * @return \Podlove\Model\AssetAssignment
 	 */
 	static public function get_instance() {
 
@@ -124,14 +120,14 @@ class Podcast {
 	 * Save current state to database.
 	 */
 	public function save() {
-		update_option( 'podlove_podcast', $this->data );
+		update_option( 'podlove_asset_assignment', $this->data );
 	}
 
 	/**
 	 * Load podcast data.
 	 */
 	private function fetch() {
-		$this->data = get_option( 'podlove_podcast', array() );
+		$this->data = get_option( 'podlove_asset_assignment', array() );
 	}
 
 	/**
@@ -151,28 +147,6 @@ class Podcast {
 	}
 }
 
-$podcast = Podcast::get_instance();
-$podcast->property( 'title' );
-$podcast->property( 'slug' ); // identifier
-$podcast->property( 'subtitle' );
-$podcast->property( 'cover_image' );
-$podcast->property( 'summary' );
-$podcast->property( 'author_name' );
-$podcast->property( 'owner_name' );
-$podcast->property( 'owner_email' );
-$podcast->property( 'publisher_name' );
-$podcast->property( 'publisher_url' );
-$podcast->property( 'license_name' );
-$podcast->property( 'license_url' );
-$podcast->property( 'keywords' );
-$podcast->property( 'category_1' );
-$podcast->property( 'category_2' );
-$podcast->property( 'category_3' );
-$podcast->property( 'explicit' );
-$podcast->property( 'label' );
-$podcast->property( 'episode_prefix' );
-$podcast->property( 'media_file_base_uri' );
-$podcast->property( 'uri_delimiter' );
-$podcast->property( 'episode_number_length' );
-$podcast->property( 'language' );
-$podcast->property( 'url_template' );
+$asset_assignment = AssetAssignment::get_instance();
+$asset_assignment->property( 'image' );
+$asset_assignment->property( 'chapters' );
