@@ -22,6 +22,10 @@ class Atom {
 		$file_type      = $episode_asset->file_type();
 
 		add_filter( 'podlove_feed_enclosure', function ( $enclosure, $enclosure_url, $enclosure_file_size, $mime_type ) {
+			
+			if ( $enclosure_file_size < 0 )
+				$enclosure_file_size = 0;
+
 			return sprintf( '<link rel="enclosure" href="%s" length="%s" type="%s"/>', $enclosure_url, $enclosure_file_size, $mime_type );
 		}, 10, 4 );
 

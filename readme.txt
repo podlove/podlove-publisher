@@ -27,6 +27,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Bugfix: enable tag and category search results for all post types
 * Bugfix: Feed item limit setting works now
 * Bugfix: avoid rare curl warning
+* Bugfix: improve feed validity
 * Enhancement: remove unused feed setting `show description`
 * Enhancement: Podlove feeds don't override /feed/* WordPress feeds any more
 * Enhancement: Rename plugin to "Podlove Podcast Publisher"
