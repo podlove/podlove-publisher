@@ -30,6 +30,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: remove unused feed setting `show description`
 * Enhancement: Podlove feeds don't override /feed/* WordPress feeds any more
 * Enhancement: Rename plugin to "Podlove Podcast Publisher"
+* Enhancement: Move asset assignments from podcast settings to asset settings
 
 = 1.2.24-alpha =
 * Bugfix: don't show milliseconds in feed so feedvalidator.org stops complaining
