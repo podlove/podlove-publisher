@@ -182,6 +182,15 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$cover_art_url = $podcast->cover_image;
 
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
+
+		$deep_link = Model\Feed::get_link_tag(array(
+			'prefix' => ( $feed->format === 'rss' ) ? 'atom' : NULL,
+			'rel'    => 'http://podlove.org/deep-link',
+			'type'   => '',
+			'title'  => '',
+			'href'   => get_permalink() . "#"
+		));
+		echo apply_filters( 'podlove_deep_link', $deep_link, $feed );
 		
 		echo apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
 
