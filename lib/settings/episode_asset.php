@@ -23,9 +23,10 @@ class EpisodeAsset {
 	 * Process form: save/update a format
 	 */
 	private function save() {
+
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
-			
+		
 		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 		
@@ -135,6 +136,57 @@ class EpisodeAsset {
 		$table = new \Podlove\Episode_Asset_List_Table();
 		$table->prepare_items();
 		$table->display();
+
+		?>
+		<h3><?php echo __( 'Assign Assets', 'podlove' ) ?></h3>
+		<form method="post" action="options.php">
+			<?php settings_fields( Podcast::$pagehook );
+			$podcast = \Podlove\Model\Podcast::get_instance();
+
+			$form_attributes = array(
+				'context'    => 'podlove_podcast',
+				'form'       => false
+			);
+
+			\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
+				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+				$podcast = $form->object;
+				$artwork_options = array(
+					'0'      => __( 'None', 'podlove' ),
+					'manual' => __( 'Manual Entry', 'podlove' ),
+				);
+				$episode_assets = Model\EpisodeAsset::all();
+				foreach ( $episode_assets as $episode_asset ) {
+					$file_type = $episode_asset->file_type();
+					if ( $file_type && $file_type->type === 'image' ) {
+						$artwork_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
+					}
+				}
+
+				$wrapper->select( 'supports_cover_art', array(
+					'label'   => __( 'Episode Image', 'podlove' ),
+					'options' => $artwork_options
+				) );
+
+				$chapter_file_options = array(
+					'0'      => __( 'None', 'podlove' ),
+					'manual' => __( 'Manual Entry', 'podlove' )
+				);
+				$episode_assets = Model\EpisodeAsset::all();
+				foreach ( $episode_assets as $episode_asset ) {
+					$file_type = $episode_asset->file_type();
+					if ( $file_type && $file_type->type === 'chapters' ) {
+						$chapter_file_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
+					}
+				}
+				$wrapper->select( 'chapter_file', array(
+					'label'   => __( 'Episode Chapters', 'podlove' ),
+					'options' => $chapter_file_options
+				) );
+			});
+		?>
+		</form>
+		<?php
 	}
 	
 	private function form_template( $episode_asset, $action, $button_text = NULL ) {
