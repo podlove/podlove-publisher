@@ -22,8 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
-= 1.2.25-alpha =
-* Feature: [Podlove Deep Linking](http://podlove.org/deep-link/) support 
+= 1.3.0-alpha =
+* Feature: [Podlove Deep Linking](http://podlove.org/deep-link/) support
+* Feature: support for new web player
 * Bugfix: enable tag and category search results for all post types
 * Bugfix: Feed item limit setting works now
 * Bugfix: avoid rare curl warning
