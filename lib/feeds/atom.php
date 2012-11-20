@@ -9,7 +9,8 @@ class Atom {
 	public function __construct( $feed_slug ) {
 		
 		add_action( 'atom_ns', function () {
-			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"';
+			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" ';
+			echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
 		} );
 		
 		add_filter( 'feed_link', function ( $output, $feed ) use ( $feed_slug ) {

@@ -185,12 +185,10 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
 
 		if ( $asset_assignment->chapters == 'manual' ) {
-			// PENDING: not yet implemented
-			// $chapters = new \Podlove\Chapters( $episode->chapters );
-			// $chapters->is_valid();
-			// $chapters->get_with_format( 'psc' );
-			// $chapters->get_with_format( 'mp4chaps' );
-			
+			$chapters = \Podlove\Chapters::from_mp4chaps( $episode->chapters );
+			if ( ! $chapters->is_empty() ) {
+				echo $chapters->render_as_psc();
+			}
 		} elseif ( $asset_assignment->chapters > 0 ) {
 			if ( $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) ) {
 				if ( $chapters_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapters_asset->id ) ) {

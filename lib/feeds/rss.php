@@ -9,7 +9,8 @@ class RSS {
 	public function __construct( $feed_slug ) {
 		
 		add_action( 'rss2_ns', function () {
-			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"';
+			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" ';
+			echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
 		} );
 
 		$podcast        = Model\Podcast::get_instance();
