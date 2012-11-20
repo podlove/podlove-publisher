@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.1-alpha =
+* update web player to 1.2.1
+
 = 1.3.0-alpha =
 * Feature: [Podlove Deep Linking](http://podlove.org/deep-link/) support
 * Feature: support for new web player
