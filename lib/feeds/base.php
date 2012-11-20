@@ -165,9 +165,10 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		global $post;
 
-		$episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID );
+		$episode = Model\Episode::find_one_by_post_id( $post->ID );
 		$asset   = $feed->episode_asset();
-		$file    = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
+		$file    = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
+		$asset_assignment = Model\AssetAssignment::get_instance();
 
 		if ( ! $file )
 			return;
@@ -182,6 +183,28 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$cover_art_url = $podcast->cover_image;
 
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
+
+		if ( $asset_assignment->chapters == 'manual' ) {
+			// PENDING: not yet implemented
+			// $chapters = new \Podlove\Chapters( $episode->chapters );
+			// $chapters->is_valid();
+			// $chapters->get_with_format( 'psc' );
+			// $chapters->get_with_format( 'mp4chaps' );
+			
+		} elseif ( $asset_assignment->chapters > 0 ) {
+			if ( $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) ) {
+				if ( $chapters_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapters_asset->id ) ) {
+					$chapters_link = Model\Feed::get_link_tag(array(
+						'prefix' => ( $feed->format === 'rss' ) ? 'atom' : NULL,
+						'rel'    => 'http://podlove.org/simple-chapters',
+						'type'   => '',
+						'title'  => '',
+						'href'   => $chapters_file->get_file_url()
+					));
+					echo apply_filters( 'podlove_simple_chapters_link', $chapters_link, $feed );			
+				}
+			}
+		}
 
 		$deep_link = Model\Feed::get_link_tag(array(
 			'prefix' => ( $feed->format === 'rss' ) ? 'atom' : NULL,
