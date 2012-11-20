@@ -151,7 +151,19 @@ function webplayer_shortcode( $options ) {
 		}
 	}
 
-	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ']' );
+	$attributes = array(
+		'permalink'  => get_permalink(),
+		'title'      => get_the_title(),
+		'subtitle'   => $episode->subtitle,
+		'summary'    => $episode->summary,
+		'poster'     => $episode->get_cover_art()
+	);
+	$attr_string = '';
+	foreach ( $attributes as $key => $value ) {
+		$attr_string .= "$key=\"$value\" ";
+	}
+
+	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ' ' . $attr_string . ']' );
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
 

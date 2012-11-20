@@ -175,6 +175,9 @@ function add_feed_discoverability() {
 	if ( is_admin() )
 		return;
 
+	if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
+		require_once \PODLOVE\PLUGIN_DIR . 'lib/feeds/base.php';
+
 	$feeds = \Podlove\Model\Feed::find_all_by_discoverable( 1 );
 
 	foreach ( $feeds as $feed ) {
