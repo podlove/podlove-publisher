@@ -1,4 +1,4 @@
-# Podlove Podcasting Plugin for WordPress
+# Podlove Podcast Publisher
 
 Work before progress. Feel free to touch but handle with care.
 
