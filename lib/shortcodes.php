@@ -156,7 +156,7 @@ function webplayer_shortcode( $options ) {
 		'title'      => get_the_title(),
 		'subtitle'   => $episode->subtitle,
 		'summary'    => $episode->summary,
-		'poster'     => $episode->get_cover_art()
+		'poster'     => $episode->get_cover_art_with_fallback()
 	);
 	$attr_string = '';
 	foreach ( $attributes as $key => $value ) {
