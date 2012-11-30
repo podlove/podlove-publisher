@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.4-alpha =
+* Hotfix: fix asset creation issue
+
 = 1.3.3-alpha =
 * Enhancement: Use episode image fallback to podcast image in webplayer.
 
