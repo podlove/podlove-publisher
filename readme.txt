@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.5-alpha =
+* Bugfix: pages and menu items don't appear unexpectedly in main loop any more
+
 = 1.3.4-alpha =
 * Hotfix: fix asset creation issue
 

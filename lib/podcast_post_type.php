@@ -126,7 +126,7 @@ EOT;
 	 */
 	public function enable_tag_and_category_search( $query ) {
 
-		if ( is_category() || is_tag() || is_home() && empty( $query->query_vars['suppress_filters'] ) ) {
+		if ( ( is_category() || is_tag() ) && empty( $query->query_vars['suppress_filters'] ) ) {
 			$post_type = get_query_var( 'post_type' );
 
 			$query->set( 'post_type', $post_type ? $post_type : get_post_types() );
