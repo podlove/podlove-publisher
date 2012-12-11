@@ -61,7 +61,7 @@ class Episode_Routing {
 		if ( isset( $query['page'] ) && isset( $query['pagename'] ) ) {
 			global $wpdb;
 
-			$sql = $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $wpdb->posts . ' WHERE post_type = "page" AND post_name = "' . $query['pagename'] . '"' );
+			$sql = $wpdb->prepare( 'SELECT COUNT(*) FROM %s WHERE post_type = "page" AND post_name = "%s"', $wpdb->posts, $query['pagename'] );
 			$found_posts = $wpdb->get_var( $sql );
 			if ( $found_posts > 0 ) {
 				return $query; // found a page, don't interrupt
