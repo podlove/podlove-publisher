@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 24 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 25 );
 
 add_action( 'init', function () {
 	
@@ -358,6 +358,15 @@ function run_migrations_for_version( $version ) {
 				'image'    => $podcast->supports_cover_art,
 				'chapters' => $podcast->chapter_file
 			) );
+		break;
+		case 25:
+			// rename meta podlove_guid to _podlove_guid
+			$episodes = Model\Episode::all();
+			foreach ( $episodes as $episode ) {
+				$guid = get_post_meta( $episode->post_id, 'podlove_guid', true );
+				delete_post_meta( $episode->post_id, 'podlove_guid' );
+				update_post_meta( $episode->post_id, '_podlove_guid', $guid );
+			}
 		break;
 
 	}

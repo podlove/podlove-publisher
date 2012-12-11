@@ -331,10 +331,10 @@ function clear_all_caches() {
 // the previous one.
 add_action( 'added_post_meta', function ( $meta_id, $post_id, $meta_key, $_meta_value ) {
 	
-	if ( $meta_key !== 'podlove_guid' )
+	if ( $meta_key !== '_podlove_guid' )
 		return;
 
-	$metas = get_post_meta( $post_id, 'podlove_guid' );
+	$metas = get_post_meta( $post_id, '_podlove_guid' );
 	if ( count( $metas ) > 1 ) {
 		foreach ( $metas as $meta ) {
 			if ( $meta !== $_meta_value ) {
