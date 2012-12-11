@@ -20,6 +20,11 @@ var PODLOVE = PODLOVE || {};
 	 				}
 	 			});
 	 		}
+
+	 		o.slug_field.on('blur', function() {
+	 			$(".update_media_file").click();
+	 		});
+
 	 	}
 
 	 	function generate_live_preview() {
@@ -110,7 +115,8 @@ var PODLOVE = PODLOVE || {};
 
  			var data = {
  				action: 'podlove-update-file',
- 				file_id: file.id
+ 				file_id: file.id,
+ 				slug: $("#_podlove_meta_slug").val()
  			};
 
  			$(this).parent().html("updating ...");

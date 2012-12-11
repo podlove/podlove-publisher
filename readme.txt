@@ -26,6 +26,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Bugfix: Minor WordPress 3.5 compatibility issue
 * Bugfix: Use correct shortcodes in default template
 * Enhancement: Add support for `[podlove-episode field="title"]`
+* Enhancement: Improve auto-updating of media files. It will now work correctly without the need to save the post after changing the media file slug. It updates every time you change the slug and lose focus of the input field.
 
 = 1.3.5-alpha =
 * Bugfix: pages and menu items don't appear unexpectedly in main loop any more
