@@ -22,6 +22,11 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.6-alpha =
+* Bugfix: Minor WordPress 3.5 compatibility issue
+* Bugfix: Use correct shortcodes in default template
+* Enhancement: Add support for `[podlove-episode field="title"]`
+
 = 1.3.5-alpha =
 * Bugfix: pages and menu items don't appear unexpectedly in main loop any more
 * Bugfix: when using the WordPress importer, don't create new GUIDs

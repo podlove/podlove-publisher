@@ -228,16 +228,16 @@ class Templates {
 Type "[" to see a list of available shortcodes. HTML is allowed.
 Example Template:
 
-<h4 class="podlove-subtitle">[podlove-episode-data field="subtitle"]</h4>
+<h4 class="podlove-subtitle">[podlove-episode field="subtitle"]</h4>
 
-<span class="podlove-duration">Duration: [podlove-episode-data field="duration"]</span>
+<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
 
 [podlove-episode-summary]
 
 [podlove-web-player]
 [podlove-episode-downloads]
 
-Published by <a href="[podlove-podcast-data field="publisher_url"]" target="_blank">[podlove-podcast-data field="publisher_name"]</a> under <a href="[podlove-podcast-data field="license_url"]" target="_blank">[podlove-podcast-data field="license_name"]</a>.
+Published by <a href="[podlove-podcast field="publisher_url"]" target="_blank">[podlove-podcast field="publisher_name"]</a> under <a href="[podlove-podcast field="license_url"]" target="_blank">[podlove-podcast field="license_name"]</a>.
 EOT
 			) );
 

@@ -196,6 +196,8 @@ function episode_data_shortcode( $attributes ) {
 		return $episode->get_cover_art();
 	} elseif ( $attributes['field'] == 'duration' ) {
 		return $episode->get_duration( $attributes['format'] );
+	} elseif ( $attributes['field'] == 'title' ) {
+		return get_the_title( $episode->post_id );
 	} else {
 		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
 	}
