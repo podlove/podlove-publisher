@@ -77,7 +77,7 @@ class Custom_Guid {
 	public static function save_form( $post_id, $form_data ) {
 		
 		if ( isset( $form_data[ 'guid' ] ) )
-			update_post_meta( $post_id, 'podlove_guid', $form_data[ 'guid' ] );
+			update_post_meta( $post_id, '_podlove_guid', $form_data[ 'guid' ] );
 	}
 
 	/**
@@ -92,11 +92,11 @@ class Custom_Guid {
 		if ( $post->post_type !== 'podcast' )
 			return;
 
-		if ( get_post_meta( $post->ID, 'podlove_guid', true ) )
+		if ( get_post_meta( $post->ID, '_podlove_guid', true ) )
 			return;
 
 		$guid = self::guid_for_post( $post );
-		update_post_meta( $post->ID, 'podlove_guid', $guid );
+		update_post_meta( $post->ID, '_podlove_guid', $guid );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Custom_Guid {
 	public static function override_wordpress_guid( $guid ) {
 		global $post;
 
-		if ( $podlove_guid = get_post_meta( $post->ID, 'podlove_guid', true ) )
+		if ( $podlove_guid = get_post_meta( $post->ID, '_podlove_guid', true ) )
 			return $podlove_guid;
 
 		return $guid;
