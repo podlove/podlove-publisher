@@ -391,6 +391,14 @@ function update_file() {
 	$file_id = $_REQUEST['file_id'];
 
 	$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
+
+	if ( isset( $_REQUEST['slug'] ) ) {
+		// simulate a not-saved-yet slug
+		add_filter( 'podlove_file_url_template', function ( $template ) {
+			return str_replace( '%episode_slug%', $_REQUEST['slug'], $template );;
+		} );
+	}
+
 	$info = $file->determine_file_size();
 	$file->save();
 
