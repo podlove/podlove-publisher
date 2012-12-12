@@ -24,7 +24,9 @@ var PODLOVE = PODLOVE || {};
 			$("#feed_subscribe_url_preview").html(url + "/" + $("#podlove_feed_slug").val() + "/");
 		}
 
-		generate_live_preview();
+		if ($("#feed_subscribe_url_preview").length && $("#podlove_feed_slug").length) {
+			generate_live_preview();
+		}
 
 		return o;
 	};

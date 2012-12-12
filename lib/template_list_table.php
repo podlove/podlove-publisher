@@ -41,7 +41,7 @@ class Template_List_Table extends \Podlove\List_Table {
 	}
 	
 	function column_content( $template ) {
-		return "<textarea id='highlight-readonly'>$template->content</textarea>";
+		return "<textarea class='highlight-readonly'>$template->content</textarea>";
 	}
 
 	function get_columns(){
