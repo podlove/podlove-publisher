@@ -8,11 +8,10 @@
 header( 'Content-Type: ' . feed_content_type( 'atom' ) . '; charset=' . get_option( 'blog_charset' ), true );
 $more = 1;
 
-echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
+echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?>'; ?>
 <feed
   xmlns="http://www.w3.org/2005/Atom"
   xmlns:thr="http://purl.org/syndication/thread/1.0"
-  xml:lang="<?php echo get_option('rss_language'); ?>"
   <?php do_action('atom_ns'); ?>
  >
 	<title type="text"><?php echo apply_filters( 'podlove_feed_title', '' ); ?></title>

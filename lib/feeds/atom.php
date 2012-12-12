@@ -9,6 +9,11 @@ class Atom {
 	public function __construct( $feed_slug ) {
 		
 		add_action( 'atom_ns', function () {
+
+			$podcast = Model\Podcast::get_instance();
+			if ( $podcast->language )
+				echo 'xml:lang="' . $podcast->language . '" ';
+
 			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" ';
 			echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
 		} );
