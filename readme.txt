@@ -28,6 +28,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: display `<language>` tag in RSS channel
 * Bugfix: Templates list view highlights template preview correctly now for more than one entry
 * Bugfix: remove duplicate rel="self" entry from RSS feeds
+* Bugfix: correct escaping for all input fields
 
 = 1.3.6-alpha =
 * Bugfix: Minor WordPress 3.5 compatibility issue
