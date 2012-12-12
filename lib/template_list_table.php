@@ -1,11 +1,7 @@
 <?php
 namespace Podlove;
 
-if( ! class_exists( 'WP_List_Table' ) ){
-    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-}
-
-class Template_List_Table extends \WP_List_Table {
+class Template_List_Table extends \Podlove\List_Table {
 	
 	function __construct(){
 		global $status, $page;
