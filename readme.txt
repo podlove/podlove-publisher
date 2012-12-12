@@ -24,6 +24,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.3.7-alpha =
 * Enhancement: In feed settings, URL preview updates live now
+* Enhancement: "Add New" button in blank list table views
 
 = 1.3.6-alpha =
 * Bugfix: Minor WordPress 3.5 compatibility issue
