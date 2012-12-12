@@ -25,7 +25,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 = 1.3.7-alpha =
 * Enhancement: In feed settings, URL preview updates live now
 * Enhancement: "Add New" button in blank list table views
-* Enhancement: display `<language>` tag in RSS channel
+* Enhancement: display `<language>` tag in RSS channel and correct xml:lang in ATOM
 * Enhancement: forbid asset deletion when used in feed or web player
 * Bugfix: Templates list view highlights template preview correctly now for more than one entry
 * Bugfix: remove duplicate rel="self" entry from RSS feeds
