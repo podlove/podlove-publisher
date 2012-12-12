@@ -151,7 +151,7 @@ class Feed {
 			// TODO: update url
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove' ),
-				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL: %s', 'podlove' ), $feed->get_subscribe_url() ) : '',
+				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() .  '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
