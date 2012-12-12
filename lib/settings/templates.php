@@ -177,15 +177,20 @@ class Templates {
 		$table->display();
 		?>
 		<script type="text/javascript">
-		var readonly_textarea = document.getElementById("highlight-readonly");
-		var podlove_code_highlight = CodeMirror.fromTextArea(readonly_textarea, {
-			mode: "htmlmixed",
-			lineNumbers: false,
-			theme: "default",
-			indentUnit: 4,
-			readOnly: "nocursor"
+		jQuery(function($) {
+			var readonly_textareas = $(".highlight-readonly");
+			readonly_textareas.each(function() {
+				var podlove_code_highlight = CodeMirror.fromTextArea(this, {
+					mode: "htmlmixed",
+					lineNumbers: false,
+					theme: "default",
+					indentUnit: 4,
+					readOnly: "nocursor",
+					lineWrapping: true,
+				});
+				podlove_code_highlight.setSize(null, "150");
+			});
 		});
-		podlove_code_highlight.setSize(null, "150");
 		</script>
 		<style type="text/css">
 		.column-name { width: 33%; }
