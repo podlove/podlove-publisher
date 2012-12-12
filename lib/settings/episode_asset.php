@@ -58,10 +58,24 @@ class EpisodeAsset {
 		$podcast = Model\Podcast::get_instance();
 		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 		$asset_assignment = Model\AssetAssignment::get_instance();
+		$feed_exists      = (bool) Model\Feed::find_one_by_episode_asset_id( $_REQUEST['episode_asset'] );
+
+		$connected_to_web_player = false;
+		$web_player_formats = get_option( 'podlove_webplayer_formats', array() );
+		foreach ( $web_player_formats as $_ => $media_types ) {
+			foreach ( $media_types as $asset_id ) {
+				if ( $asset_id == $_REQUEST['episode_asset'] ) {
+					$connected_to_web_player = true;
+					break;
+				}
+			}
+		}
 
 		$can_delete =	count( $asset->media_files() ) === 0
 					&&	$asset_assignment->image != $asset->id
-					&&	$asset_assignment->chapters != $asset->id;
+					&&	$asset_assignment->chapters != $asset->id
+					&&  ! $feed_exists
+					&&  ! $connected_to_web_player;
 
 		if ( $can_delete ) {
 			$asset->delete();
@@ -106,7 +120,7 @@ class EpisodeAsset {
 			if ( $_REQUEST['message'] == 'media_file_relation_warning' ) {
 				?>
 				<div class="error">
-					<p><?php echo __( '<strong>Asset can\'t be deleted.</strong> It is used by at least one media file.' ) ?></p>
+					<p><?php echo __( '<strong>Asset can\'t be deleted.</strong> It is used by at least one media file or feed or the web player.' ) ?></p>
 				</div>
 				<?php
 			}

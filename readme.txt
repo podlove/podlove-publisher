@@ -26,6 +26,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: In feed settings, URL preview updates live now
 * Enhancement: "Add New" button in blank list table views
 * Enhancement: display `<language>` tag in RSS channel
+* Enhancement: forbid asset deletion when used in feed or web player
 * Bugfix: Templates list view highlights template preview correctly now for more than one entry
 * Bugfix: remove duplicate rel="self" entry from RSS feeds
 * Bugfix: correct escaping for all input fields
