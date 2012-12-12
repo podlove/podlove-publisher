@@ -26,5 +26,9 @@ jQuery(function($) {
 	$("#podlove_episode_assets").each(function() {
 		PODLOVE.EpisodeAssetSettings($(this));
 	});
+
+	$(".wrap").each(function() {
+		PODLOVE.FeedSettings($(this));
+	});
 	
 });

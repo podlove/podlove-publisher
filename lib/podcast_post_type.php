@@ -97,15 +97,23 @@ EOT;
 			);
 
 			wp_register_script(
+				'podlove_admin_episode_feed_settings',
+				\Podlove\PLUGIN_URL . '/js/admin/feed_settings.js',
+				array( 'jquery' ),
+				'1.0'
+			);
+
+			wp_register_script(
 				'podlove_admin',
 				\Podlove\PLUGIN_URL . '/js/admin.js',
 				array(
 					'jquery',
 					'podlove_admin_episode',
 					'podlove_admin_dashboard_validation',
-					'podlove_admin_episode_asset_settings'
+					'podlove_admin_episode_asset_settings',
+					'podlove_admin_episode_feed_settings'
 				),
-				'1.0'
+				'1.1'
 			);
 
 			wp_enqueue_script( 'podlove_admin' );
