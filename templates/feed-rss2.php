@@ -20,7 +20,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<link><?php bloginfo_rss( 'url' ) ?></link>
 	<description><?php echo apply_filters( 'podlove_rss_feed_description', get_bloginfo_rss( 'description' ) ) ?></description>
 	<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_lastpostmodified( 'GMT' ), false ); ?></lastBuildDate>
-	<?php do_action('rss2_head'); ?>
+	<?php do_action( 'rss2_head' ); ?>
 	<?php while( have_posts()) : the_post(); ?>
 	<item>
 		<title><?php the_title_rss() ?></title>

@@ -39,6 +39,11 @@ class RSS {
 			}
 		} );
 
+		add_action( 'rss2_head', function () use ( $podcast ) {
+			if ( $podcast->language )
+				echo "\t" . '<language>' . $podcast->language . '</language>';
+		}, 100 );
+
 		$this->do_feed( $feed );
 	}
 	
