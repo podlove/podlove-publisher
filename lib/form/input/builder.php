@@ -82,7 +82,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo $this->field_value; ?>" <?php echo $this->html_attributes; ?>>
+			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
 		</div>
 		<?php
 	}
@@ -91,7 +91,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<div>
-			<input type="hidden" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo $this->field_value; ?>" <?php echo $this->html_attributes; ?>>
+			<input type="hidden" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
 		</div>
 		<?php
 	}
@@ -109,7 +109,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if ( in_array( $this->field_value, array( true, 1, 'on' ) ) ): ?>checked="checked"<?php endif; ?> <?php echo $this->html_attributes; ?>>
-		<input type="hidden" name="checkboxes[]" value="<?php echo $this->object_key ?>">
+		<input type="hidden" name="checkboxes[]" value="<?php echo esc_attr( $this->object_key ) ?>">
 		<?php
 	}
 
@@ -127,7 +127,7 @@ class Builder {
 					$attributes = '';
 				}
 				?>
-				<option value="<?php echo $key; ?>" <?php echo $attributes ?> <?php if ( $key == $this->field_value ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
+				<option value="<?php echo esc_attr( $key ); ?>" <?php echo $attributes ?> <?php if ( $key == $this->field_value ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
 			<?php endforeach; ?>
 		</select>
 		<?php
@@ -171,7 +171,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<?php foreach ( $this->arguments['options'] as $key => $value ): ?>
-			<input type="radio" id="<?php echo $this->field_id . '_' . $key; ?>" name="<?php echo $this->field_name; ?>" value="<?php echo $key; ?>"<?php if ( $key == $this->field_value ): ?> checked="checked"<?php endif; ?>>
+			<input type="radio" id="<?php echo $this->field_id . '_' . $key; ?>" name="<?php echo $this->field_name; ?>" value="<?php echo esc_attr( $key ); ?>"<?php if ( $key == $this->field_value ): ?> checked="checked"<?php endif; ?>>
 			<label for="<?php echo $this->field_id . '_' . $key; ?>"><?php echo $value; ?></label>
 		<?php endforeach; ?>
 		<?php
@@ -193,7 +193,7 @@ class Builder {
 		<div>
 			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?>>
 			<br>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo $this->field_value; ?>" <?php echo $this->html_attributes; ?>>
+			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
 		</div>
 		<?php
 	}
