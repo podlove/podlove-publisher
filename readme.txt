@@ -30,6 +30,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Bugfix: Templates list view highlights template preview correctly now for more than one entry
 * Bugfix: remove duplicate rel="self" entry from RSS feeds
 * Bugfix: correct escaping for all input fields
+* Bugfix: fix 404s when using an empty episode url prefix
 
 = 1.3.6-alpha =
 * Bugfix: Minor WordPress 3.5 compatibility issue
