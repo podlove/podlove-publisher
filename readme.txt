@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.8-alpha =
+* Bugfix: fix episode image fallback to podcast image
+
 = 1.3.7-alpha =
 * Enhancement: In feed settings, URL preview updates live now
 * Enhancement: "Add New" button in blank list table views
