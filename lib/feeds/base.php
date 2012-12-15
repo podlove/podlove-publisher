@@ -73,7 +73,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function () use ( $hook ) {
 		switch ( $hook ) {
 			case 'rss2_head':
-				$gen = '<generator>Podlove Publishing Plugin for WordPress v' . \Podlove\get_plugin_header( 'Version' ) . '</generator>';
+				$gen = '<generator>' . \Podlove\get_plugin_header( 'Name' ) . ' v' . \Podlove\get_plugin_header( 'Version' ) . '</generator>';
 				break;
 			case 'atom_head':
 				$gen = '<generator uri="' . \Podlove\get_plugin_header( 'PluginURI' ) . '" version="' . \Podlove\get_plugin_header( 'Version' ) . '">' . \Podlove\get_plugin_header( 'Name' ) . '</generator>';
