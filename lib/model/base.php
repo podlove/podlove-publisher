@@ -456,8 +456,10 @@ abstract class Base
 	}
 
 	private function property_name_to_sql_update_statement( $p ) {
+		global $wpdb;
+
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "%s = '%s'", $p, $this->$p );
+			return sprintf( "%s = '%s'", $p, $wpdb->escape( $this->$p ) );
 		} else {
 			return "$p = NULL";
 		}
