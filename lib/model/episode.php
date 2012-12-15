@@ -49,10 +49,8 @@ class Episode extends Base {
 
 	public function get_cover_art_with_fallback() {
 
-		$image = $this->get_cover_art();
-
-		if ( ! $image )
-			$cover_art_url = Podcast::get_instance()->cover_image;
+		if ( ! $image = $this->get_cover_art() )
+			$image = Podcast::get_instance()->cover_image;
 
 		return $image;
 	}
