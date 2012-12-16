@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.10-alpha =
+* Hotfix: too much escaping when `get_magic_quotes` is on
+
 = 1.3.9-alpha =
 * Enhancement: rectify feed generator title
 * Bugfix: add missing sql escaping

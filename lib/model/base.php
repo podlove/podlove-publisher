@@ -411,7 +411,7 @@ abstract class Base
 		}
 
 		$this->is_new = false;
-		
+
 		return $success;
 	}
 
@@ -458,8 +458,10 @@ abstract class Base
 	private function property_name_to_sql_update_statement( $p ) {
 		global $wpdb;
 
+
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "%s = '%s'", $p, $wpdb->escape( $this->$p ) );
+			$value = get_magic_quotes_gpc() ? $this->$p : $wpdb->escape( $this->$p );
+			return sprintf( "%s = '%s'", $p, $value );
 		} else {
 			return "$p = NULL";
 		}
@@ -469,7 +471,8 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "'%s'", $wpdb->escape( $this->$p ) );
+			$value = get_magic_quotes_gpc() ? $this->$p : $wpdb->escape( $this->$p );
+			return sprintf( "'%s'", $value );
 		} else {
 			return 'NULL';
 		}
