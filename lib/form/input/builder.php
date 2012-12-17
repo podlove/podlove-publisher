@@ -191,10 +191,18 @@ class Builder {
 
 		?>
 		<div>
-			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?>>
-			<br>
 			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
+			<br>
+			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?>>
 		</div>
+		<script type="text/javascript">
+		(function($) {
+			$("#<?php echo $this->field_id ?>").on( 'keyup', function() {
+				url = $(this).val();
+				$(this).parent().find("img").attr("src", url);
+			} );
+		})(jQuery);
+		</script>
 		<?php
 	}
 
