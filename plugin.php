@@ -423,6 +423,13 @@ function create_file() {
 	if ( ! $episode_id || ! $episode_asset_id )
 		die();
 
+	if ( isset( $_REQUEST['slug'] ) ) {
+		// simulate a not-saved-yet slug
+		add_filter( 'podlove_file_url_template', function ( $template ) {
+			return str_replace( '%episode_slug%', $_REQUEST['slug'], $template );;
+		} );
+	}
+
 	$file = Model\MediaFile::find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id );
 
 	$result = array();
