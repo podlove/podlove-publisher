@@ -24,6 +24,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.3.11-alpha =
 * Enhancement: Image input fields try to show pasted image immediately
+* Enhancement: remove unused "post episode to show" setting
 * Bugfix: fix asset preview glitch when changing the episode slug
 
 = 1.3.10-alpha =
