@@ -46,12 +46,6 @@ class Podcast_Post_Meta_Box {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				$episode = $form->object;
 
-				$wrapper->checkbox( 'active', array(
-					'label'       => __( 'Post Episode to Show', 'podlove' ), // todo: hide/show rest of the form
-					'description' => '',
-					'default'  => true
-				));
-
 				$wrapper->string( 'slug', array(
 					'label'       => __( 'Episode Media File Slug', 'podlove' ),
 					'description' => '',
