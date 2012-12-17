@@ -37,7 +37,8 @@ var PODLOVE = PODLOVE || {};
 	 		var data = {
 	 			action: 'podlove-create-file',
 	 			episode_id: args.episode_id,
-	 			episode_asset_id: args.episode_asset_id
+	 			episode_asset_id: args.episode_asset_id,
+	 			slug: $("#_podlove_meta_slug").val()
 	 		};
 
 	 		$.ajax({

@@ -79,7 +79,7 @@ EOT;
 				'podlove_admin_episode',
 				\Podlove\PLUGIN_URL . '/js/admin/episode.js',
 				array( 'jquery' ),
-				'1.2'
+				'1.3'
 			);
 
 			wp_register_script(
