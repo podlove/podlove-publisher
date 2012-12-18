@@ -363,7 +363,17 @@ function run_migrations_for_version( $version ) {
 			// rename meta podlove_guid to _podlove_guid
 			$episodes = Model\Episode::all();
 			foreach ( $episodes as $episode ) {
+				$post = get_post( $episode->post_id );
+
+				// skip revisions
+				if ( $post->post_status == 'inherit' )
+					continue;
+
 				$guid = get_post_meta( $episode->post_id, 'podlove_guid', true );
+
+				if ( ! $guid )
+					$guid = $post->guid;
+				
 				delete_post_meta( $episode->post_id, 'podlove_guid' );
 				update_post_meta( $episode->post_id, '_podlove_guid', $guid );
 			}
