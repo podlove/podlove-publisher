@@ -26,6 +26,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: Image input fields try to show pasted image immediately
 * Enhancement: remove unused "post episode to show" setting
 * Bugfix: fix asset preview glitch when changing the episode slug
+* Bugfix: fix GUID upgrade migration
 
 = 1.3.10-alpha =
 * Hotfix: too much escaping when `get_magic_quotes` is on
