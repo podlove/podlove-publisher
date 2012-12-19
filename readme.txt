@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.12-alpha =
+* Enhancement: don't embed cover image fallback in feed as episode image when there is no episode image
+
 = 1.3.11-alpha =
 * Enhancement: Image input fields try to show pasted image immediately
 * Enhancement: remove unused "post episode to show" setting

@@ -176,7 +176,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$enclosure_duration  = $episode->duration;
 		$enclosure_file_size = $file->size;
 		$file_slug           = $episode->slug;
-		$cover_art_url       = $episode->get_cover_art_with_fallback();
+		$cover_art_url       = $episode->get_cover_art();
 
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
 
