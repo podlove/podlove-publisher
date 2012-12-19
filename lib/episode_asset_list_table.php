@@ -26,8 +26,9 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 		};
 
 		$actions = array(
-			'edit'   => $link( __( 'Edit', 'podlove' ) ),
-			'delete' => $link( __( 'Delete', 'podlove' ), 'delete' )
+			'edit'         => $link( __( 'Edit', 'podlove' ) ),
+			'batch_enable' => $link( __( 'Activate for all existing Episodes', 'podlove' ), 'batch_enable' ),
+			'delete'       => $link( __( 'Delete', 'podlove' ), 'delete' )
 		);
 	
 		$title = ( $episode_asset->title ) ? $episode_asset->title : __( '- title missing -', 'podlove' );

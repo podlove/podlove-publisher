@@ -86,6 +86,41 @@ class EpisodeAsset {
 		
 	}
 	
+	public function batch_enable() {
+
+		if ( ! isset( $_REQUEST['episode_asset'] ) )
+			return;
+
+		$podcast = Model\Podcast::get_instance();
+		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
+
+		$episodes = Model\Episode::all();
+		foreach ( $episodes as $episode ) {
+
+			$post_id = $episode->post_id;
+			$post = get_post( $post_id );
+
+			// skip deleted podcasts
+			if ( ! in_array( $post->post_status, array( 'draft', 'publish' ) ) )
+				continue;
+
+			// skip versions
+			if ( $post->post_type != 'podcast' )
+				continue;
+
+			$file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
+
+			if ( $file === NULL ) {
+				$file = new Model\MediaFile();
+				$file->episode_id = $episode->id;
+				$file->episode_asset_id = $asset->id;
+				$file->save();
+			}
+		}
+
+		$this->redirect( 'index', NULL, 'media_file_batch_enabled_notice' );
+	}
+
 	/**
 	 * Helper method: redirect to a certain page.
 	 */
@@ -112,11 +147,20 @@ class EpisodeAsset {
 			$this->create();
 		} elseif ( $action === 'delete' ) {
 			$this->delete();
+		} elseif ( $action === 'batch_enable' ) {
+			$this->batch_enable();
 		}
 	}
 	
 	public function page() {
 		if ( isset( $_REQUEST['message'] ) ) {
+			if ( $_REQUEST['message'] == 'media_file_batch_enabled_notice' ) {
+				?>
+				<div class="updated">
+					<p><?php echo __( '<strong>Media Files enabled.</strong> These Media Files have been enabled for all existing episodes.' ) ?></p>
+				</div>
+				<?php
+			}
 			if ( $_REQUEST['message'] == 'media_file_relation_warning' ) {
 				?>
 				<div class="error">
