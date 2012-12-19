@@ -226,6 +226,11 @@ class Dashboard {
 						if ( $post->post_type != 'podcast' )
 							continue;
 
+						if ( isset( $_REQUEST['refetch_files'] ) ) {
+							$episode->refetch_files();
+							flush();
+						}
+
 						?>
 						<tr>
 							<td>
