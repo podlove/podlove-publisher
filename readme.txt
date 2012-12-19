@@ -24,6 +24,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.3.12-alpha =
 * Enhancement: don't embed cover image fallback in feed as episode image when there is no episode image
+* Feature: add action link for assets to enable it for all existing episodes. useful when adding a new asset for an existing podcast
 
 = 1.3.11-alpha =
 * Enhancement: Image input fields try to show pasted image immediately
