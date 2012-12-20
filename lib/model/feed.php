@@ -15,7 +15,7 @@ class Feed extends Base {
 		$url = sprintf(
 			'%s/feed/%s/',
 			get_bloginfo( 'url' ),
-			$this->slug
+			\Podlove\slugify( $this->slug )
 		);
 
 		return apply_filters( 'podlove_subscribe_url', $url );

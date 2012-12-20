@@ -14,6 +14,23 @@ var PODLOVE = PODLOVE || {};
 			o.update_preview();
 		}
 
+		function slugify( text ) {
+
+			// replace non letter or digits by -
+			text = text.replace(/[^-\w]+/, '-');
+
+			// trim
+			text = text.replace(/^-+|-+$/g, '');
+
+			// lowercase
+			text = text.toLowerCase();
+
+			// remove unwanted characters
+			text = text.replace(/[^-\w]+/, '');
+
+			return text ? text : 'n-a';
+		}
+
 		// public
 		o.update_preview = function () {
 			// remove trailing slash
@@ -21,7 +38,7 @@ var PODLOVE = PODLOVE || {};
 			// remove slug
 			url = url.substr(0, url.lastIndexOf("/"));
 
-			$("#feed_subscribe_url_preview").html(url + "/" + $("#podlove_feed_slug").val() + "/");
+			$("#feed_subscribe_url_preview").html(url + "/" + slugify( $("#podlove_feed_slug").val() ) + "/");
 		}
 
 		if ($("#feed_subscribe_url_preview").length && $("#podlove_feed_slug").length) {
