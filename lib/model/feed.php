@@ -54,7 +54,9 @@ class Feed extends Base {
 
 		$file_extension = $file_type->extension;
 
-		$title = sprintf( __( 'Podcast Feed: %s (%s)', 'podcast' ), $podcast->title, $this->name );
+		$title_template = is_feed() ? '%s (%s)' : __( 'Podcast Feed: %s (%s)', 'podcast' );
+
+		$title = sprintf( $title_template, $podcast->title, $this->name );
 		$title = apply_filters( 'podlove_feed_title_for_discovery', $title, $this->title, $file_extension, $this->id );
 
 		return $title;
