@@ -46,14 +46,10 @@ class Feed extends Base {
 
 		$podcast = Podcast::get_instance();
 
-		$episode_asset = $this->episode_asset();
-
-		if ( ! $episode_asset )
+		if ( ! $episode_asset = $this->episode_asset() )
 			return $this->name;
 
-		$file_type = $episode_asset->file_type();
-
-		if ( ! $file_type )
+		if ( ! $file_type = $episode_asset->file_type() )
 			return $this->name;
 
 		$file_extension = $file_type->extension;
