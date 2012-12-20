@@ -220,8 +220,8 @@ class Templates {
 			$f = new \Podlove\Form\Input\TableWrapper( $form );
 
 			$f->string( 'title', array(
-				'label'       => __( 'Title', 'podlove' ),
-				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template title="<span id=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
+				'label'       => __( 'ID', 'podlove' ),
+				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span id=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
