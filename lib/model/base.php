@@ -120,7 +120,7 @@ abstract class Base
 		global $wpdb;
 		
 		$sql = 'SELECT COUNT(*) FROM ' . self::table_name();
-		return (int) $wpdb->get_var( $wpdb->prepare( $sql ) );
+		return (int) $wpdb->get_var( $sql );
 	}
 
 	public static function find_by_id( $id ) {

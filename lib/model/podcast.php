@@ -26,7 +26,9 @@ class Podcast {
 	 * Contains property names.
 	 * @var array
 	 */
-	private $properties;
+	protected $properties = array();
+
+	private $blog_id = NULL;
 
 	/**
 	 * Singleton.
@@ -35,13 +37,23 @@ class Podcast {
 	 */
 	static public function get_instance() {
 
-		 if ( ! isset( self::$instance ) )
-		     self::$instance = new self;
+		// whenever the blog is switched, we need to reload all podcast data
+		if ( ! isset( self::$instance ) || self::$instance->blog_id != get_current_blog_id() ) {
 
-		 return self::$instance;
+			$properties = isset( self::$instance ) ? self::$instance->properties : false;
+			self::$instance = new self;
+			self::$instance->blog_id = get_current_blog_id();
+
+			// only take properties from preexisting instances
+			if ( $properties )
+				self::$instance->properties = $properties;
+		}
+
+		return self::$instance;
 	}
 
 	protected function __construct() {
+		$this->data = array();
 		$this->fetch();
 	}
 
