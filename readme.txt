@@ -22,6 +22,9 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 == Changelog ==
 
+= 1.3.13-alpha =
+* Bugfix: Podcast model work with `switch_to_blog` now
+
 = 1.3.12-alpha =
 * Enhancement: don't embed cover image fallback in feed as episode image when there is no episode image
 * Feature: add action link for assets to enable it for all existing episodes. useful when adding a new asset for an existing podcast
