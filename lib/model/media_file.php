@@ -68,7 +68,7 @@ class MediaFile extends Base {
 		$template = $podcast->url_template;
 		$template = apply_filters( 'podlove_file_url_template', $podcast->url_template );
 		$template = str_replace( '%media_file_base_url%', $podcast->media_file_base_uri, $template );
-		$template = str_replace( '%episode_slug%',        $episode->slug, $template );
+		$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
 		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
 		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
