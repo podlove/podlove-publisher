@@ -59,6 +59,10 @@ class WebPlayer {
 					'title'     => __( 'OGG Audio', 'podlove' ),
 					'mime_type' => 'audio/ogg'
 				),
+				'opus' => array(
+					'title'     => __( 'Opus Audio', 'podlove' ),
+					'mime_type' => 'audio/opus'
+				),
 			),
 			'video' => array(
 				'mp4'  => array(
@@ -80,6 +84,13 @@ class WebPlayer {
 		$episode_assets = Model\EpisodeAsset::all();
 
 		foreach ( $formats as $format => $extensions ) {
+			?>
+			<tr valign="top">
+				<th scope="row" valign="top" colspan="2">
+					<h3><?php echo ucfirst( $format ); ?></h3>
+				</th>
+			</tr>
+			<?php
 			foreach ( $extensions as $extension => $extension_data ) {
 				$label = $extension_data['title'];
 				$mime_type = $extension_data['mime_type'];

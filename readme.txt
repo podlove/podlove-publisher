@@ -24,6 +24,8 @@ Feel free to contribute and to fix errors or send improvements via github.
 
 = 1.3.14-alpha =
 * Feature: duration support for web player
+* Feature: add option to provide web players with opus format
+* Enhancement: slightly improved web player settings pane
 
 = 1.3.13-alpha =
 * Bugfix: Podcast model works with `switch_to_blog` now
