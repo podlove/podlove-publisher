@@ -54,7 +54,7 @@ EOT;
 				'slug'       => strlen( $slug ) ? $slug : 'podcast',
 				'with_front' => false
 			),
-			'taxonomies' => array( 'category', 'post_tag' )
+			'taxonomies' => array( 'post_tag' )
 		);
 
 		if ( strlen( $slug ) === 0 )

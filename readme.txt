@@ -27,6 +27,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Feature: add option to provide web players with opus format
 * Enhancement: slightly improved web player settings pane
 * Enhancement: deprecate [podlove-template title=""] in favor of [podlove-template id=""] for clarity
+* Enhancement: move category support for episodes into a module
 
 = 1.3.13-alpha =
 * Bugfix: Podcast model works with `switch_to_blog` now
