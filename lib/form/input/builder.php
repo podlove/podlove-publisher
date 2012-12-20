@@ -206,6 +206,10 @@ class Builder {
 		<?php
 	}
 
+	public function callback( $object_key, $arguments ) {
+		call_user_func( $arguments['callback'] );
+	}
+
 	/**
 	 * Build nested form.
 	 * 
