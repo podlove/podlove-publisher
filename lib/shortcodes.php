@@ -126,9 +126,13 @@ function webplayer_shortcode( $options ) {
 		return;
 
 	$available_formats = array();
-	$audio_formats = array( 'mp3', 'mp4', 'ogg' );
+	$audio_formats = array( 'mp3', 'mp4', 'ogg', 'opus' );
 
 	foreach ( $audio_formats as $audio_format ) {
+
+		if ( ! isset( $formats_data['audio'][ $audio_format ] ) )
+			continue;
+
 		$episode_asset = Model\EpisodeAsset::find_by_id( $formats_data['audio'][ $audio_format ] );
 
 		if ( ! $episode_asset )
