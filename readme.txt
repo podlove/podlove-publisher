@@ -23,7 +23,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 == Changelog ==
 
 = 1.3.13-alpha =
-* Bugfix: Podcast model work with `switch_to_blog` now
+* Bugfix: Podcast model works with `switch_to_blog` now
 
 = 1.3.12-alpha =
 * Enhancement: don't embed cover image fallback in feed as episode image when there is no episode image
