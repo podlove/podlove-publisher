@@ -23,6 +23,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 == Changelog ==
 
 = 1.3.14-alpha =
+* Feature: ajaxy asset revalidation in dashboard
 * Feature: duration support for web player
 * Feature: add option to provide web players with opus format
 * Enhancement: slightly improved web player settings pane

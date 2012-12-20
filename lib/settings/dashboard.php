@@ -195,7 +195,6 @@ class Dashboard {
 				$header[] = $asset->title;
 			}
 			$header[] = __( 'Status', 'podlove' );
-			// $header[] = ''; // buttons
 
 			define( 'ASSET_STATUS_OK', '<span style="color: green">✓</span>' );
 			define( 'ASSET_STATUS_INACTIVE', '—' );
@@ -204,7 +203,48 @@ class Dashboard {
 
 			<h4><?php echo $podcast->title ?></h4>
 
-			<table>
+			<input id="revalidate_assets" type="button" class="button button-primary" value="<?php echo __( 'Revalidate Assets', 'podlove' ); ?>">
+
+			<script type="text/javascript">
+			(function($) {
+				$("#revalidate_assets").click(function(e) {
+					e.preventDefault();
+
+					$("#asset_status_dashboard td[data-media-file-id]").each(function() {
+						var media_file_id = $(this).data("media-file-id");
+
+						if (!media_file_id)
+							return;
+
+						var $that = $(this);
+						var data = {
+							action: 'podlove-update-file',
+							file_id: media_file_id
+						};
+
+						$(this).html('...');
+
+						$.ajax({
+							url: ajaxurl,
+							data: data,
+							dataType: 'json',
+							success: function(result) {
+								if (result.file_size > 0) {
+									$that.html('<?php echo ASSET_STATUS_OK ?>');
+								} else {
+									$that.html('<?php echo ASSET_STATUS_ERROR ?>');
+								}
+							}
+						});
+
+					});
+
+					return false;
+				});
+			})(jQuery);
+			</script>
+
+			<table id="asset_status_dashboard">
 				<thead>
 					<tr>
 						<?php foreach ( $header as $column_head ): ?>
@@ -225,12 +265,6 @@ class Dashboard {
 						// skip versions
 						if ( $post->post_type != 'podcast' )
 							continue;
-
-						if ( isset( $_REQUEST['refetch_files'] ) ) {
-							$episode->refetch_files();
-							flush();
-						}
-
 						?>
 						<tr>
 							<td>
@@ -238,13 +272,14 @@ class Dashboard {
 							</td>
 							<?php $media_files = $episode->media_files(); ?>
 							<?php foreach ( $assets as $asset ): ?>
-								<td style="text-align: center; font-weight: bold; font-size: 20px">
+								<?php 
+								$files = array_filter( $media_files, function ( $file ) use ( $asset ) {
+									return $file->episode_asset_id == $asset->id;
+								} );
+								$file = array_pop( $files );
+								?>
+								<td style="text-align: center; font-weight: bold; font-size: 20px" data-media-file-id="<?php echo $file ? $file->id : '' ?>">
 									<?php
-									$files = array_filter( $media_files, function ( $file ) use ( $asset ) {
-										return $file->episode_asset_id == $asset->id;
-									} );
-									$file = array_pop( $files );
-
 									if ( ! $file ) {
 										echo ASSET_STATUS_INACTIVE;
 									} elseif ( $file->size > 0 ) {
