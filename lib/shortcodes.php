@@ -243,13 +243,20 @@ function template_shortcode( $attributes ) {
 
 	$defaults = array(
 		'title' => '',
+		'id' => '',
 		'autop' => 'yes'
 	);
 
 	$attributes = shortcode_atts( $defaults, $attributes );
 
-	if ( ! $template = Model\Template::find_one_by_title( $attributes['title'] ) )
-		return sprintf( __( 'Podlove Error: Whoops, there is no template called "%s"', 'podlove' ), $attributes['title'] );
+	if ( $attributes['title'] !== '' )
+		_deprecated_argument( __FUNCTION__, '1.3.14-alpha', 'The "title" attribute for [podlove-template] shortcode is deprecated. Use "id" instead.' );
+
+	// backward compatibility
+	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
+
+	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
+		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
 	$html = $template->content;
 
