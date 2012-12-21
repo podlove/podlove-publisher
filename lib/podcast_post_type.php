@@ -104,6 +104,13 @@ EOT;
 			);
 
 			wp_register_script(
+				'podlove_admin_autogrow',
+				\Podlove\PLUGIN_URL . '/js/admin/jquery.autogrow.js',
+				array( 'jquery' ),
+				'1.0'
+			);
+
+			wp_register_script(
 				'podlove_admin',
 				\Podlove\PLUGIN_URL . '/js/admin.js',
 				array(
@@ -111,7 +118,8 @@ EOT;
 					'podlove_admin_episode',
 					'podlove_admin_dashboard_validation',
 					'podlove_admin_episode_asset_settings',
-					'podlove_admin_episode_feed_settings'
+					'podlove_admin_episode_feed_settings',
+					'podlove_admin_autogrow'
 				),
 				'1.1'
 			);

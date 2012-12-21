@@ -111,6 +111,8 @@ var PODLOVE = PODLOVE || {};
  		enable_all_media_files_by_default();
  		generate_live_preview();
 
+ 		$("#_podlove_meta_subtitle, #_podlove_meta_summary").autogrow();
+
  		$(".media_file_row").each(function() {
  			$(".enable", this).html($(".asset input", this));
  		});

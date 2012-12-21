@@ -56,10 +56,13 @@ class Podcast_Post_Meta_Box {
 				$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
 				$episode = $form->object;
 
-				$wrapper->string( 'subtitle', array(
+				$wrapper->text( 'subtitle', array(
 					'label'       => __( 'Subtitle', 'podlove' ),
 					'description' => '',
-					'html'        => array( 'class' => 'large-text' )
+					'html'        => array(
+						'class' => 'large-text',
+						'rows'  => max( 1, count( explode( "\n", $episode->subtitle ) ) )
+					)
 				));
 
 				$wrapper->text( 'summary', array(
