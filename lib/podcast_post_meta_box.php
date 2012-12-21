@@ -154,6 +154,14 @@ class Podcast_Post_Meta_Box {
 		.media_file_row .enable {
 			text-align: center;
 		}
+		.subtitle_warning {
+			float: left;
+			font-weight: bold;
+			padding-right: 10px;
+		}
+		.subtitle_warning .close {
+			cursor: pointer;
+		}
 		</style>
 		<?php
 	}
