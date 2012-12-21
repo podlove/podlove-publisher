@@ -42,6 +42,10 @@ class Podcast_Post_Meta_Box {
 		}
 		.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input, .podlove-div-wrapper-form select {
 			margin: 0px;
+			width: 100%;
+		}
+		.podlove-div-wrapper-form .character_counter {
+			text-align: right;
 		}
 		</style>
 		<div class="podlove-div-wrapper-form">
