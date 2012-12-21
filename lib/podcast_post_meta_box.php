@@ -65,7 +65,7 @@ class Podcast_Post_Meta_Box {
 					'description' => '',
 					'html'        => array(
 						'class' => 'large-text',
-						'rows'  => max( 1, count( explode( "\n", $episode->subtitle ) ) )
+						'rows'  => 1
 					)
 				));
 
@@ -74,7 +74,7 @@ class Podcast_Post_Meta_Box {
 					'description' => '',
 					'html'        => array(
 						'class' => 'large-text',
-						'rows'  => max( 2, count( explode( "\n", $episode->summary ) ) )
+						'rows'  => 3
 					)
 				));
 

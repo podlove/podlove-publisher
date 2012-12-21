@@ -101,7 +101,7 @@ var PODLOVE = PODLOVE || {};
 
  				} else {
  					$checkbox.data('id', null);
- 					$checkbox.closest(".media_file_row").find(".size, .url, .update").html('');
+ 					$checkbox.closest(".media_file_row").find(".size, .url, .update, .status").html('');
  				}
 
  			});
@@ -157,7 +157,7 @@ var PODLOVE = PODLOVE || {};
  			};
 
  			container.find('.update').html("updating ...");
- 			container.find(".size, .url").html('');
+ 			container.find(".size, .url, .status").html('');
 
  			$.ajax({
  				url: ajaxurl,
