@@ -115,6 +115,23 @@ var PODLOVE = PODLOVE || {};
  		$("#_podlove_meta_subtitle").count_characters( { limit: 255,  title: 'recommended maximum length: 255' } );
  		$("#_podlove_meta_summary").count_characters(  { limit: 4000, title: 'recommended maximum length: 4000' } );
 
+ 		$(document).on("click", ".subtitle_warning .close", function() {
+ 			$(this).closest(".subtitle_warning").remove();
+ 		});
+
+ 		$("#_podlove_meta_subtitle").keydown(function(e) {
+ 			// forbid return key
+ 			if (e.keyCode == 13) {
+ 				e.preventDefault();
+
+ 				if (!$(".subtitle_warning").length) {
+	 				$(this).after('<span class="subtitle_warning">The subtitle has to be a single line. <span class="close">(hide)</span></span>');
+ 				}
+
+ 				return false;
+ 			}
+ 		});
+
  		$(".media_file_row").each(function() {
  			$(".enable", this).html($(".asset input", this));
  		});
