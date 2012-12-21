@@ -28,7 +28,6 @@ var PODLOVE = PODLOVE || {};
 	 	}
 
 	 	function generate_live_preview() {
-	 		$("tr[class*='episode_assets'] td label", container).after('<span class="media_file_path"></span>');
 	 		o.update_preview();
 	 		$('input[name*="slug"], input[name*="episode_assets"]', container).on('change', o.update_preview);
 	 	};
@@ -56,9 +55,9 @@ var PODLOVE = PODLOVE || {};
 	 	};
 
  		o.update_preview = function() {
- 			$("tr[class*='episode_assets'] td .media_file_path", o.container).each(function() {
+ 			$(".media_file_row", o.container).each(function() {
  				$container = $(this).closest('.inside');
- 				$checkbox  = $(this).parent().find("input");
+ 				$checkbox  = $(this).find("input");
  				var output = '';
 
  				if ($($checkbox).is(":checked")) {
@@ -77,7 +76,7 @@ var PODLOVE = PODLOVE || {};
 	 					var episode_slug        = $container.find('input[name*="slug"]').val();
 	 					var format_extension    = $checkbox.data('extension');
 	 					var size                = $checkbox.data('size');
-	 					var suffix                = $checkbox.data('suffix');
+	 					var suffix              = $checkbox.data('suffix');
 
 	 					url = url.replace( '%media_file_base_url%', media_file_base_uri );
 	 					url = url.replace( '%episode_slug%', episode_slug );
@@ -85,22 +84,26 @@ var PODLOVE = PODLOVE || {};
 	 					url = url.replace( '%format_extension%', format_extension );
 
 	 					var readable_size = human_readable_size( size );
+	 					var filename      = url.replace(media_file_base_uri, "");
+	 					var $row          = $checkbox.closest(".media_file_row");
 
-	 					output = ' ';
 	 					if (readable_size === "???") {
-	 						output += '<span title="' + url + '" style="color:red">File not found!</span>';
+	 						size_html = '<span style="color:red">File not found!</span>';
+	 						$row.find(".status").html('<span style="color: red">!!!</span>');
 	 					} else {
-	 						output += '<span title="' + url + '" style="color:#0a0b0b">' + size + ' Bytes (' + readable_size + ')</span>';	
+	 						size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
+	 						$row.find(".status").html('<span style="color: green">✓</span>');
 	 					}
-	 					output += ' <a href="#" class="update_media_file">update</a>';
+	 					$row.find(".size").html(size_html);
+	 					$row.find(".url").html('<span title="' + url + '">' + filename + '</span>');
+	 					$row.find(".update").html('<a href="#" class="update_media_file">update</a>');
  					}
 
  				} else {
  					$checkbox.data('id', null);
- 					output = "";
+ 					$checkbox.closest(".media_file_row").find(".size, .url, .update").html('');
  				}
 
- 				$(this).html(output);
  			});
  		}
 
@@ -108,10 +111,22 @@ var PODLOVE = PODLOVE || {};
  		enable_all_media_files_by_default();
  		generate_live_preview();
 
+ 		$(".media_file_row").each(function() {
+ 			$(".enable", this).html($(".asset input", this));
+ 		});
+
+ 		$(".row__podlove_meta_episode_assets > span > label").after(" <a href='#' id='update_all_media_files'>update all media files</a>")
+
+ 		$(document).on("click", "#update_all_media_files", function(e) {
+ 			e.preventDefault();
+ 			$(".update_media_file").click();
+ 			return false;
+ 		});
+
  		$(document).on("click", ".update_media_file", function(e) {
  			e.preventDefault();
 
- 			var container = $(this).closest("div");
+ 			var container = $(this).closest(".media_file_row");
  			var file = container.find("input").data();
 
  			var data = {
@@ -120,7 +135,8 @@ var PODLOVE = PODLOVE || {};
  				slug: $("#_podlove_meta_slug").val()
  			};
 
- 			$(this).parent().html("updating ...");
+ 			container.find('.update').html("updating ...");
+ 			container.find(".size, .url").html('');
 
  			$.ajax({
  				url: ajaxurl,
