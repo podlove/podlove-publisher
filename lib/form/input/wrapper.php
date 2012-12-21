@@ -38,9 +38,15 @@ abstract class Wrapper {
 		$field_id     = $this->builder->get_field_id();
 		$field_values = ( isset( $arguments[ 1 ] ) ) ? $arguments[ 1 ] : array();
 
+		if ( isset( $field_values['before'] ) && is_callable( $field_values['before'] ) )
+			$field_values['before']();
+
 		$this->do_template( $object_key, $field_name, $field_id, $field_values, function () use ( $builder, $name, $arguments ) {
 			call_user_func_array( array( $builder, $name ), $arguments );
 		} );
+
+		if ( isset( $field_values['after'] ) && is_callable( $field_values['after'] ) )
+			$field_values['after']();
 	}
 
 	public abstract function do_template( $object_key, $field_name, $field_id, $field_values, $block );
