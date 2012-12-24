@@ -30,37 +30,35 @@ http://github.com/eteubert/podlove
 
 Feel free to contribute and to fix errors or send improvements via github.
 
-== FAQ ==
 
 
-Why do my episodes look the same as my normal posts/missing some information?
+== Frequently Asked Questions ==
+
+### Why do my episodes look the same as my normal posts/missing some information?
 
 The Podlove Podcast Publisher (PPP) uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
 
 Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. PPP does work together will all templates that come with WordPress.
 
 
-
-My episodes do not show up on the home page. What's wrong?
+### My episodes do not show up on the home page. What's wrong?
 
 Episodes are kep separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
 
 
-
-Episodes do not show up with the configured permalink URL. What's wrong?
+### Episodes do not show up with the configured permalink URL. What's wrong?
 
 Episodes are custom posts and are dealt with differently by WordPress. They show up under a common URL prefix. You can define the result URL with the "URL segment prefix for podcast episode posts" setting in the Expert Settings panel. This is set to "episode" by default resulting in an episode to show up under "/episode/<episode-slug>".
 
 
-
-Where do I put the URL of my media files?
+### Where do I put the URL of my media files?
 
 You don't. The plugin assembles the media file URL by combining various components that you have configured in the Podlove settings. All media files have to reside under a base URL that you specify in the "Podcast Settings" pane. This basically defines which directory all files have to be uploaded to.
 
 The exact media file name is made up of a) the Episode Media File Flug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
 
 
-Where is the Web Player / Download list?
+### Where is the Web Player / Download list?
 
 Right now, these have to be inserted manually via so called shortcodes. They are [podlove-web-player] and [podlove-episode-downloads].
 
@@ -70,14 +68,14 @@ You can use the plugin's templates to make sure you have the proper shortcodes i
 
 
 
-A feed link directs me to a blog page. What's wrong?
+### A feed link directs me to a blog page. What's wrong?
 
 This is an issue that sometimes arises out of the weirdness that is WordPress. Your settings might be totally okay but there  is some kind of amnesia going on in the WordPress core.
 
 In order to free WordPress from its amnesia go to Settings > Permalinks, hit Save and try again.
 
 
-How do I add Flattr integration to my episodes?
+### How do I add Flattr integration to my episodes?
 
 If you haven't already, get the official Flattr plugin here:
 
