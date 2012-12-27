@@ -160,6 +160,48 @@ function uninstall_for_current_blog() {
 	Model\Template::destroy();
 }
 
+add_action( 'admin_head', '\Podlove\custom_post_type_icon' );
+
+function custom_post_type_icon() {
+    ?>
+    <style>
+        /* Admin Menu - 16px */
+        #menu-posts-podcast .wp-menu-image {
+            background: url(<?php echo \Podlove\PLUGIN_URL ?>/images/episoden/icon-adminmenu16-sprite.png) no-repeat 6px 6px !important;
+        }
+		#menu-posts-podcast:hover .wp-menu-image, #menu-posts-podcast.wp-has-current-submenu .wp-menu-image {
+            background-position: 6px -24px !important;
+        }
+        /* Post Screen - 32px */
+        .icon32-posts-podcast {
+        	background: url(<?php echo \Podlove\PLUGIN_URL ?>/images/episoden/icon-adminpage32.png) no-repeat 0px 0px !important;
+        }
+        @media
+        only screen and (-webkit-min-device-pixel-ratio: 1.5),
+        only screen and (   min--moz-device-pixel-ratio: 1.5),
+        only screen and (     -o-min-device-pixel-ratio: 3/2),
+        only screen and (        min-device-pixel-ratio: 1.5),
+        only screen and (        		 min-resolution: 1.5dppx) {
+        	
+        	/* Admin Menu - 16px @2x */
+        	#menu-posts-podcast .wp-menu-image {
+        		background-image: url('<?php echo \Podlove\PLUGIN_URL ?>/images/episoden/icon-adminmenu16-sprite_2x.png') !important;
+        		-webkit-background-size: 16px 48px;
+        		-moz-background-size:    16px 48px;
+        		background-size:         16px 48px;
+        	}
+        	/* Post Screen - 32px @2x */
+        	.icon32-posts-podcast {
+        		background-image: url('<?php echo \Podlove\PLUGIN_URL ?>/images/episoden/icon-adminpage32_2x.png') no-repeat center !important;
+        		-webkit-background-size: 32px 32px !important;
+        		-moz-background-size:    32px 32px !important;
+        		background-size:         32px 32px !important;
+        	}         
+        }
+    </style>
+<?php } 
+
+
 /**
  * Activate internal modules.
  */
