@@ -10,15 +10,79 @@ Podcast plugin. Still in early stages of development. Don't use for production u
 
 == Description ==
 
-"The Mac OS X, 10.0, of podcasting. The Podcasting Plugin for the next decade." — Tim Pritlove & map
+The Podlove Podcast Publisher is a workflow-oriented solution for serious podcasters that want to save time and get full control over their Podcast publishing process, their feeds and the integrity of their publication.
 
-Podlove Podcasting Plugin for WordPress is a full-features podcast publishing system — well, it will be at some point. It is still in early development, so please handle with care. Feel free to use it in the real world but don't be surprised if something breaks until we reach a stable release. We already try to not break stuff with updates but there is no guarantee.
+The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behaviour (e.g. GUID control to replace faulty episodes and fore clients to reload) supporting all important meta data.
+
+The Publisher also makes multi-format publishing - embracing all modern and legacy audio and video codecs - a snap. By adopting simple file name conventions, the plugin allows the podcaster to provide individual feeds for certain use cases or audiences without adding work for the podcaster during the publishing process.
+
+The Publisher also comes with integrated with the Podlove  Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+
+The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+
+To round it all up, a flexible template system enables you to published Podcasts in a defined fashion and change the style at any time without having to touch your individual postings later on.
+
+And this is just the beginning. We have a rich roadmap that will bring even more interesting features: integration with helpful services, much improved timeline metadata support (show notes) and much more.
 
 Development of the plugin is an open process. The current version is available on github:
 
 http://github.com/eteubert/podlove
 
 Feel free to contribute and to fix errors or send improvements via github.
+
+
+
+== Frequently Asked Questions ==
+
+### Why do my episodes look the same as my normal posts/missing some information?
+
+The Podlove Podcast Publisher (PPP) uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
+
+Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. PPP does work together will all templates that come with WordPress.
+
+
+### My episodes do not show up on the home page. What's wrong?
+
+Episodes are kep separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
+
+
+### Episodes do not show up with the configured permalink URL. What's wrong?
+
+Episodes are custom posts and are dealt with differently by WordPress. They show up under a common URL prefix. You can define the result URL with the "URL segment prefix for podcast episode posts" setting in the Expert Settings panel. This is set to "episode" by default resulting in an episode to show up under "/episode/<episode-slug>".
+
+
+### Where do I put the URL of my media files?
+
+You don't. The plugin assembles the media file URL by combining various components that you have configured in the Podlove settings. All media files have to reside under a base URL that you specify in the "Podcast Settings" pane. This basically defines which directory all files have to be uploaded to.
+
+The exact media file name is made up of a) the Episode Media File Flug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
+
+
+### Where is the Web Player / Download list?
+
+Right now, these have to be inserted manually via so called shortcodes. They are [podlove-web-player] and [podlove-episode-downloads].
+
+There are compatibility issues with the "Jetpack" plugin. If you use it, you might need to turn it off.
+
+You can use the plugin's templates to make sure you have the proper shortcodes in every episode.
+
+
+
+### A feed link directs me to a blog page. What's wrong?
+
+This is an issue that sometimes arises out of the weirdness that is WordPress. Your settings might be totally okay but there  is some kind of amnesia going on in the WordPress core.
+
+In order to free WordPress from its amnesia go to Settings > Permalinks, hit Save and try again.
+
+
+### How do I add Flattr integration to my episodes?
+
+If you haven't already, get the official Flattr plugin here:
+
+   http://wordpress.org/extend/plugins/flattr/
+
+Find the setting Flattr > Advanced Settings > Flattrable content > Post Types and check "podcast". Save changes. There is no step 3 ;)
+
 
 == Changelog ==
 
@@ -30,6 +94,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 * Enhancement: deprecate [podlove-template title=""] in favor of [podlove-template id=""] for clarity
 * Enhancement: move category support for episodes into a module
 * Enhancement: force feed & episode slugs into url conformity
+* update plugin description and add a FAQ section
 
 = 1.3.13-alpha =
 * Bugfix: Podcast model works with `switch_to_blog` now
