@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.15-alpha =
+* Hotfix: fix 404 issue concerning episode prefixes and posts
+
 = 1.3.14-alpha =
 * Feature: ajaxy asset revalidation in dashboard
 * Feature: duration support for web player
