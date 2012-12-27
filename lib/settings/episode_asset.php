@@ -32,7 +32,7 @@ class EpisodeAsset {
 		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 		
-		$this->redirect( 'edit', $episode_asset->id );
+		$this->redirect( 'index', $episode_asset->id );
 	}
 	
 	/**

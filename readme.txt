@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 ** ensure validity on save
 ** support non-pretty url format
 * Enhancement: un-default some modules: episode assistant, twitter card summary
+* Enhancement: fix asset setting redirect issue
 
 = 1.3.15-alpha =
 * Hotfix: fix 404 issue concerning episode prefixes and posts
