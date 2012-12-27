@@ -34,7 +34,21 @@ class Podcast_Post_Meta_Box {
 		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
 		?>
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
-		<table class="form-table">
+		<style type="text/css">
+		.podlove-div-wrapper-form > div > span > label {
+			display: inline-block;
+			padding: 15px 0 6px 0;
+			font-size: 1.2em;
+		}
+		.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input, .podlove-div-wrapper-form select {
+			margin: 0px;
+			width: 100%;
+		}
+		.podlove-div-wrapper-form .character_counter {
+			text-align: right;
+		}
+		</style>
+		<div class="podlove-div-wrapper-form">
 			<?php 
 			$form_args = array(
 				'context' => '_podlove_meta',
@@ -43,26 +57,16 @@ class Podcast_Post_Meta_Box {
 			);
 
 			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $podcast ) {
-				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+				$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
 				$episode = $form->object;
 
-				$wrapper->string( 'slug', array(
-					'label'       => __( 'Episode Media File Slug', 'podlove' ),
-					'description' => '',
-					'html'        => array( 'class' => 'regular-text' )
-				));
-
-				// TODO: validate and parse
-				$wrapper->string( 'duration', array(
-					'label'       => __( 'Duration', 'podlove' ),
-					'description' => '',
-					'html'        => array( 'class' => 'regular-text' )
-				));
-
-				$wrapper->string( 'subtitle', array(
+				$wrapper->text( 'subtitle', array(
 					'label'       => __( 'Subtitle', 'podlove' ),
 					'description' => '',
-					'html'        => array( 'class' => 'large-text' )
+					'html'        => array(
+						'class' => 'large-text',
+						'rows'  => 1
+					)
 				));
 
 				$wrapper->text( 'summary', array(
@@ -70,8 +74,15 @@ class Podcast_Post_Meta_Box {
 					'description' => '',
 					'html'        => array(
 						'class' => 'large-text',
-						'rows'  => max( 2, count( explode( "\n", $episode->summary ) ) )
+						'rows'  => 3
 					)
+				));
+
+				// TODO: validate and parse
+				$wrapper->string( 'duration', array(
+					'label'       => __( 'Duration', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
 				));
 
 				$asset_assignments = Model\AssetAssignment::get_instance();
@@ -95,23 +106,63 @@ class Podcast_Post_Meta_Box {
 					));
 				}
 
-				do_action( 'podlove_episode_form', $wrapper, $episode );
-
-				$wrapper->checkbox( 'enable', array(
-					'label'       => __( 'Enable?', 'podlove' ),
-					'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
-					'default'     => true
+				$wrapper->string( 'slug', array(
+					'label'       => __( 'Episode Media File Slug', 'podlove' ),
+					'description' => '',
+					'html'        => array( 'class' => 'regular-text' )
 				));
 
-				// TODO: button to update
-				// TODO: pretty display
-				// TODO: don't display link
-				// TODO: display last modified from header
+				// inactive until there is a way to deactivate it
+				// $wrapper->checkbox( 'enable', array(
+				// 	'label'       => __( 'Enable?', 'podlove' ),
+				// 	'description' => __( 'Allow this episode to appear in podcast directories.', 'podlove' ),
+				// 	'default'     => true
+				// ));
+
 				$wrapper->multiselect( 'episode_assets', Podcast_Post_Meta_Box::episode_assets_form( $episode ) );
+
+				do_action( 'podlove_episode_form', $wrapper, $episode );
 
 			} );
 			?>
-		</table>
+		</div>
+
+		<style type="text/css">
+		.media_file_table {
+			width: 100%;
+			border-bottom: 1px solid #999;
+		}
+		.media_file_table th {
+			text-align: left;
+			border-bottom: 1px solid #999;
+		}
+		.media_file_table td {
+			padding: 5px;
+		}
+		.media_file_table tr:nth-child(even) {
+			background: #EAEAEA;
+		}
+		#update_all_media_files {
+			display: inline-block;
+			vertical-align: middle;
+			padding: 15px 0 6px 0;
+		}
+		.base_url {
+			color: #777;
+			font-size: 0.9em;
+		}
+		.media_file_row .enable {
+			text-align: center;
+		}
+		.subtitle_warning {
+			float: left;
+			font-weight: bold;
+			padding-right: 10px;
+		}
+		.subtitle_warning .close {
+			cursor: pointer;
+		}
+		</style>
 		<?php
 	}
 
@@ -148,6 +199,44 @@ class Podcast_Post_Meta_Box {
 			'options'     => $asset_options,
 			'default'      => true,
 			'multi_values' => $asset_values,
+			'before' => function() {
+				?>
+				<table class='media_file_table' border="0" cellspacing="0">
+					<tr>
+						<th><?php echo __( 'Enable', 'podlove' ) ?></th>
+						<th><?php echo __( 'Asset', 'podlove' ) ?></th>
+						<th><?php echo __( 'Asset File Name', 'podlove' ) ?></th>
+						<th><?php echo __( 'Filesize', 'podlove' ) ?></th>
+						<th><?php echo __( 'Status', 'podlove' ) ?></th>
+						<th></th>
+					</tr>
+				<?php
+			},
+			'after' => function() {
+				?>
+				</table>
+				<p>
+					<span class="description">
+						<?php echo __( 'Media File Base URL', 'podlove' ) . ': ' . \Podlove\Model\Podcast::get_instance()->media_file_base_uri; ?>
+					</span>
+				</p>
+				<?php
+			},
+			'around_each' => function ( $callback ) {
+				?>
+				<tr class="media_file_row">
+					<td class="enable">
+					</td>
+					<td class="asset">
+						<?php call_user_func( $callback ); ?>
+					</td>
+					<td class="url"></td>
+					<td class="size"></td>
+					<td class="status"></td>
+					<td class="update"></td>
+				</tr>
+				<?php
+			},
 			'multiselect_callback' => function ( $asset_id ) use ( $episode ) {
 				$asset = \Podlove\Model\EpisodeAsset::find_by_id( $asset_id );
 				$format   = $asset->file_type();
