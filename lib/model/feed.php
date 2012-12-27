@@ -12,11 +12,16 @@ class Feed extends Base {
 
 		$podcast = \Podlove\Model\Podcast::get_instance();
 
-		$url = sprintf(
-			'%s/feed/%s/',
-			get_bloginfo( 'url' ),
-			\Podlove\slugify( $this->slug )
-		);
+		if ( '' != get_option( 'permalink_structure' ) && ! in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft') ) ) {
+			$url = sprintf(
+				'%s/feed/%s/',
+				get_bloginfo( 'url' ),
+				\Podlove\slugify( $this->slug )
+			);
+		} else {
+			$url = home_url( '?feed_slug=' . \Podlove\slugify( $this->slug ) );
+		}
+
 
 		return apply_filters( 'podlove_subscribe_url', $url );
 	}
@@ -156,6 +161,7 @@ class Feed extends Base {
 
 	public function save() {
 		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		$this->slug = \Podlove\slugify( $this->slug );
 		parent::save();
 	}
 
