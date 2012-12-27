@@ -17,14 +17,14 @@
 	    this.filter('textarea').each(function() {
 
 	    	var title = settings.title ? 'title="' + settings.title + '"' : '';
-	        $(this).after("<div class='character_counter' " + title + ">...</div>")
+	        $(this).after("<div class='character_counter'><span " + title + "></span></div>")
 
 	        $(this).keyup(function(e) {
 	            var characters = $(this).val().length,
 	                characters_left = settings.limit - characters,
 	                $counter_div = $(this).next("div");
 
-	            $counter_div.html(characters_left);
+	            $counter_div.find("span").html(characters_left);
 
 	            if (characters_left < 0) {
 	                if (settings.on_negative)
