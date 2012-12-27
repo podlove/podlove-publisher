@@ -28,7 +28,7 @@ class Feed {
 		$feed = \Podlove\Model\Feed::find_by_id( $_REQUEST['feed'] );
 		$feed->update_attributes( $_POST['podlove_feed'] );
 		
-		$this->redirect( 'edit', $feed->id );
+		$this->redirect( 'index', $feed->id );
 	}
 	
 	/**
