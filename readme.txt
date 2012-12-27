@@ -92,6 +92,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 ** support non-pretty url format
 * Enhancement: un-default some modules: episode assistant, twitter card summary
 * Enhancement: fix asset & feed setting redirect issue
+* Bugfix: fix issue with multiple backslash-escapings
 
 = 1.3.15-alpha =
 * Hotfix: fix 404 issue concerning episode prefixes and posts
