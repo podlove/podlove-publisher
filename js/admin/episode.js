@@ -7,6 +7,7 @@ var PODLOVE = PODLOVE || {};
 	 PODLOVE.Episode = function (container) {
 
 	 	var o = {};
+	 	var ajax_requests = [];
 
 	 	// private
 	 	function enable_all_media_files_by_default() {
@@ -21,11 +22,42 @@ var PODLOVE = PODLOVE || {};
 	 			});
 	 		}
 
-	 		o.slug_field.on('blur', function() {
-	 			$(".update_media_file").click();
-	 		});
+			var typewatch = (function() {
+				var timer = 0;
+				return function(callback, ms) {
+					clearTimeout (timer);
+					timer = setTimeout(callback, ms);
+				}
+			})();
+
+	 		o.slug_field
+	 			.on('blur', function() {
+	 				maybe_update_media_files();
+	 			})
+	 			.on('keyup', function() {
+					typewatch(
+						function() { maybe_update_media_files() },
+						500
+					);
+				});
 
 	 	}
+
+	 	function maybe_update_media_files() {
+	 		var current_slug = o.slug_field.val(),
+	 		    prev_slug = o.slug_field.data('prev-slug');
+
+	 		if (current_slug !== prev_slug) {
+	 			// abort all current requests if any are running
+	 			$.each(
+	 				ajax_requests,
+	 				function(index, request){ request.abort(); });
+	 			// then trigger new requests
+	 			$(".update_media_file").click();
+	 		}
+
+	 		o.slug_field.data('prev-slug', current_slug);
+	 	};
 
 	 	function generate_live_preview() {
 	 		o.update_preview();
@@ -159,15 +191,17 @@ var PODLOVE = PODLOVE || {};
  			container.find('.update').html("updating ...");
  			container.find(".size, .url, .status").html('');
 
- 			$.ajax({
+ 			var request = $.ajax({
  				url: ajaxurl,
  				data: data,
  				dataType: 'json',
  				success: function(result) {
  					container.find("input").data('size', result.file_size);
  					o.update_preview();
+ 					ajax_requests.pop();
  				}
  			});
+ 			ajax_requests.push(request);
 
  			return false;
  		});
