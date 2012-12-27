@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.5
 Stable tag: 1.0
 
-Podcast plugin. Still in early stages of development. Don't use for production unless you know what you're doing.
+The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
 
 == Description ==
 
