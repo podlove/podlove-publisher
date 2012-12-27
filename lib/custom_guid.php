@@ -28,7 +28,7 @@ class Custom_Guid {
 				<a href="#" id="regenerate_guid"><?php echo __( 'regenerate', 'podlove' ) ?></a>
 			</div>
 			<span class="description">
-				<?php echo __( 'Identifier for this episode. Change it to force podcatchers to redownload media files.', 'podlove' ) ?>
+				<?php echo __( 'Identifier for this episode. Change it to force podcatchers to redownload media files for this episode.', 'podlove' ) ?>
 			</span>
 			<?php
 			$form_wrapper->builder->hidden( 'guid', array(

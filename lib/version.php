@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 25 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 26 );
 
 add_action( 'init', function () {
 	
@@ -377,6 +377,12 @@ function run_migrations_for_version( $version ) {
 				delete_post_meta( $episode->post_id, 'podlove_guid' );
 				update_post_meta( $episode->post_id, '_podlove_guid', $guid );
 			}
+		break;
+		case 26:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` MODIFY COLUMN `subtitle` TEXT',
+				Model\Episode::table_name()
+			) );
 		break;
 
 	}

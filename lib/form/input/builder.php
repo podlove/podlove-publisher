@@ -157,13 +157,22 @@ class Builder {
 				$callback = '';
 			}
 			
-			?>
-			<div>
-				<label for="<?php echo $id; ?>">
-					<input type="checkbox" name="<?php echo $name; ?>" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?>> <?php echo $value; ?>
-				</label>
-			</div>
-			<?php
+			$html = function() use ( $id, $name, $checked, $callback, $value ) {
+				?>
+				<div>
+					<label for="<?php echo $id; ?>">
+						<input type="checkbox" name="<?php echo $name; ?>" id="<?php echo $id; ?>" <?php if ( $checked ): ?>checked="checked"<?php endif; ?> <?php echo $callback; ?>> <?php echo $value; ?>
+					</label>
+				</div>
+				<?php
+			};
+
+			if ( isset( $this->arguments['around_each'] ) && is_callable( $this->arguments['around_each'] ) ) {
+				$this->arguments['around_each']( $html );
+			} else {
+				call_user_func( $html );
+			}
+
 		}
 	}
 
