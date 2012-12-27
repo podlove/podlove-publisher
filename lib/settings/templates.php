@@ -237,7 +237,7 @@ Example Template:
 
 <span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
 
-[podlove-episode-summary]
+[podlove-episode field="summary"]
 
 [podlove-web-player]
 [podlove-episode-downloads]

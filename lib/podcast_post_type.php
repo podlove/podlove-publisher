@@ -49,7 +49,7 @@ EOT;
 			'has_archive'          => true,
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
-			'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
+			// 'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
 			'rewrite' => array(
 				'slug'       => strlen( $slug ) ? $slug : 'podcast',
 				'with_front' => false
