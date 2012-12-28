@@ -49,6 +49,10 @@ add_action( 'init', '\Podlove\handle_direct_download' );
  *
  * Usage:
  *	[podlove-episode-downloads]
+ *
+ *  Attributes:
+ *    style  "buttons" (default) - list of buttons
+ *           "select" - html select list
  * 
  * @param  array $options
  * @return string
@@ -58,6 +62,9 @@ function episode_downloads_shortcode( $options ) {
 
 	if ( is_feed() )
 		return '';
+
+	$defaults = array( 'style' => 'buttons' );
+	$attributes = shortcode_atts( $defaults, $options );
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 	$media_files = $episode->media_files();
@@ -83,18 +90,37 @@ function episode_downloads_shortcode( $options ) {
 		);
 	}
 
-	$html  = '<ul class="episode_download_list">';
-	foreach ( $downloads as $download ) {
-		$html .= '  <li>';
-		$html .= sprintf(
-			'<a href="%s">%s%s</a>',
-			apply_filters( 'podlove_download_link_url', $download['url'], $download['file'] ),
-			apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
-			'<span class="size">' . $download['size'] . '</span>'
-		);
-		$html .= '  </li>';
+	if ( $attributes['style'] === 'buttons' ) {
+		$html = '<ul class="episode_download_list">';
+		foreach ( $downloads as $download ) {
+			$html .= '  <li>';
+			$html .= sprintf(
+				'<a href="%s">%s%s</a>',
+				apply_filters( 'podlove_download_link_url', $download['url'], $download['file'] ),
+				apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
+				'<span class="size">' . $download['size'] . '</span>'
+			);
+			$html .= '  </li>';
+		}
+		$html .= '</ul>';
+	} else {
+		$html = '<div class="episode_downloads">';
+		$html.= 	'<select name="podlove_downloads">';
+		foreach ( $downloads as $download ) {
+			$html .= sprintf(
+				'<option value="%s" data-raw-url="%s">%s [%s]</option>',
+				apply_filters( 'podlove_download_link_url', $download['url'], $download['file'] ),
+				$download['file']->get_file_url(),
+				apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
+				$download['size']
+			);
+		}
+		$html.= 	'</select>';
+		$html.= 	'<button class="primary">Download</button>';
+		$html.= 	'<button class="secondary">Show URL</button>';
+		// $html.= 	'<a href="#">Show URL</a>';
+		$html.= '</div>';
 	}
-	$html .= '</ul>';
 
 	return apply_filters( 'podlove_downloads_before', '' )
 	     . $html
