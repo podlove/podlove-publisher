@@ -171,7 +171,7 @@ class EpisodeAsset {
 		}
 		?>
 		<div class="wrap">
-			<div id="icon-options-general" class="icon32"></div>
+			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;

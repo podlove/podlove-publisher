@@ -90,7 +90,7 @@ class Modules {
 	function page() {
 		?>
 		<div class="wrap">
-			<div id="icon-options-general" class="icon32"></div>
+			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Podlove Publisher Modules' ) ?></h2>
 
 			<form method="post" action="options.php">
