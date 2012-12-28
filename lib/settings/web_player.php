@@ -23,7 +23,7 @@ class WebPlayer {
 	public function page() {
 		?>
 		<div class="wrap">
-			<div id="icon-options-general" class="icon32"></div>
+			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Web Player', 'podlove' ); ?></h2>
 
 			<?php echo __( 'Webplayers are able to provide various media formats depending on context. Try to provide as many as possible to maximize compatibility with all browsers.', 'podlove' ); ?>

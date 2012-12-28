@@ -174,8 +174,8 @@ EOT;
 			/* $menu_title */ 'Podlove',
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ self::SETTINGS_PAGE_HANDLE,
-			/* $function   */ function () { /* see \Podlove\Settings\Dashboard */ },
-			/* $icon_url   */ PLUGIN_URL . '/images/podlove-icon-16x16.png'
+			/* $function   */ function () { /* see \Podlove\Settings\Dashboard */ }
+			/* $icon_url   */ //PLUGIN_URL . '/images/podlove-icon-16x16.png'
 			/* $position   */
 		);
 

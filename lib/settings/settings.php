@@ -80,7 +80,7 @@ class Settings {
 		flush_rewrite_rules();
 		?>
 		<div class="wrap">
-			<div id="icon-options-general" class="icon32"></div>
+			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Expert Settings' ) ?></h2>
 
 			<form method="post" action="options.php">
