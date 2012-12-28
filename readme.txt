@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.3.16-alpha =
+* Feature: new style for file downloads `[podlove-episode-downloads style="select"]`
 * Enhancement: Solve feed url issues:
 ** ensure validity on save
 ** support non-pretty url format

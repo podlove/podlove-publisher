@@ -133,6 +133,17 @@ EOT;
 			);
 
 			wp_enqueue_script( 'podlove_admin' );
+		} else {
+			wp_register_script(
+				'podlove_frontend',
+				\Podlove\PLUGIN_URL . '/js/frontend.js',
+				array(
+					'jquery'
+				),
+				'1.0'
+			);
+
+			wp_enqueue_script( 'podlove_frontend' );
 		}
 
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
