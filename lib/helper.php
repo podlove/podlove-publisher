@@ -24,7 +24,7 @@ function get_setting( $name ) {
 function slugify( $text ) {
 
 	// replace non letter or digits by -
-	$text = preg_replace( '~[^\\pL\d]+~u', '-', $text );
+	$text = preg_replace( '~[^\\pL\d_]+~u', '-', $text );
 
 	// trim
 	$text = trim( $text, '-' );
