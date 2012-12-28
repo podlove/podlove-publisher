@@ -23,8 +23,8 @@ function get_setting( $name ) {
 
 function slugify( $text ) {
 
-	// replace non letter or digits by -
-	$text = preg_replace( '~[^\\pL\d_]+~u', '-', $text );
+	// replace everything but unreserved characters (RFC 3986 section 2.3) by a hyphen
+	$text = preg_replace( '~[^\\pL\d_\.~]+~u', '-', $text );
 
 	// trim
 	$text = trim( $text, '-' );
