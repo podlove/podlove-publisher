@@ -94,6 +94,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: fix asset & feed setting redirect issue
 * Enhancement: add caption file types
 * Enhancement: new icons!
+* Enhancement: allow underscores in slugs
 * Bugfix: fix issue with multiple backslash-escapings
 
 = 1.3.15-alpha =
