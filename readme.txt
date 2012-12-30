@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.3.17-alpha =
 * Bugfix: fix issue with 3rd party custom post types
+* Enhancement: improve Feed Settings screen
 
 = 1.3.16-alpha =
 * Feature: new style for file downloads `[podlove-episode-downloads style="select"]`
