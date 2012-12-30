@@ -14,6 +14,16 @@ var PODLOVE = PODLOVE || {};
 			o.update_preview();
 		}
 
+		function manage_redirect_url_display() {
+			var http_status = $("#podlove_feed_redirect_http_status").val();
+
+			if (http_status > 0) {
+				$(".row_podlove_feed_redirect_url").show();
+			} else {
+				$(".row_podlove_feed_redirect_url").hide();
+			}
+		}
+
 		function slugify( text ) {
 
 			// replace non letter or digits by -
@@ -44,6 +54,11 @@ var PODLOVE = PODLOVE || {};
 		if ($("#feed_subscribe_url_preview").length && $("#podlove_feed_slug").length) {
 			generate_live_preview();
 		}
+
+		$("#podlove_feed_redirect_http_status").on("change", function(){
+			manage_redirect_url_display();
+		});
+		manage_redirect_url_display();
 
 		return o;
 	};

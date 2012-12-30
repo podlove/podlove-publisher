@@ -134,7 +134,15 @@ class Feed {
 			$assets = array();
 			foreach ( $episode_assets as $asset ) {
 				$assets[ $asset->id ] = $asset->title;
-			}	
+			}
+
+			$wrapper->subheader( __( 'Basic Settings', 'podlove' ) );
+
+			$wrapper->select( 'episode_asset_id', array(
+				'label'       => __( 'Episode Media File', 'podlove' ),
+				'options'     => $assets,
+				'html'        => array( 'class' => 'required' )
+			) );
 
 			$wrapper->string( 'name', array(
 				'label'       => __( 'Feed Title', 'podlove' ),
@@ -142,29 +150,24 @@ class Feed {
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
-			$wrapper->checkbox( 'discoverable', array(
-				'label'       => __( 'Discoverable?', 'podlove' ),
-				'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' ),
-				'default'     => true
-			) );
-			
-			// TODO: update url
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove' ),
 				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() .  '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
-			$wrapper->radio( 'format', array(
-				'label'   => __( 'Format', 'podlove' ),
-				'options' => array( 'rss' => 'RSS', 'atom' => 'Atom' ),
-				'default' => 'rss'
+			$wrapper->checkbox( 'discoverable', array(
+				'label'       => __( 'Discoverable?', 'podlove' ),
+				'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' ),
+				'default'     => true
 			) );
-						
-			$wrapper->select( 'episode_asset_id', array(
-				'label'       => __( 'Episode Media File', 'podlove' ),
-				'options'     => $assets,
-				'html'        => array( 'class' => 'required' )
+
+			$wrapper->subheader( __( 'Directory Settings', 'podlove' ) );
+			
+			$wrapper->checkbox( 'enable', array(
+				'label'       => __( 'Allow Submission to Directories', 'podlove' ),
+				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove' ),
+				'default'     => true
 			) );
 			
 			$wrapper->string( 'itunes_feed_id', array(
@@ -172,13 +175,8 @@ class Feed {
 				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ),
 				'html'        => array( 'class' => 'regular-text' )
 			) );
-							
-			// todo: add PING url; see feedburner doc
-			$wrapper->string( 'redirect_url', array(
-				'label'       => __( 'Redirect Url', 'podlove' ),
-				'description' => __( 'e.g. Feedburner URL', 'podlove' ),
-				'html' => array( 'class' => 'regular-text' )
-			) );
+
+			$wrapper->subheader( __( 'Advanced Settings', 'podlove' ) );
 
 			$wrapper->select( 'redirect_http_status', array(
 				'label'       => __( 'Redirect Method', 'podlove' ),
@@ -188,20 +186,26 @@ class Feed {
 					'307' => 'Temporary Redirect (HTTP Status 307)',
 					'301' => 'Permanent Redirect (HTTP Status 301)'
 				),
-				'default' => 0
+				'default' => 0,
+				'please_choose' => false
 			) );
 			
-			$wrapper->checkbox( 'enable', array(
-				'label'       => __( 'Allow Submission to Directories', 'podlove' ),
-				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove' ),
-				'default'     => true
+			$wrapper->string( 'redirect_url', array(
+				'label'       => __( 'Redirect Url', 'podlove' ),
+				'description' => __( 'e.g. Feedburner URL', 'podlove' ),
+				'html' => array( 'class' => 'regular-text' )
 			) );
-			
-			// todo include summary?
+
 			$wrapper->string( 'limit_items', array(
 				'label'       => __( 'Limit Items', 'podlove' ),
 				'description' => __( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
+			) );
+			
+			$wrapper->radio( 'format', array(
+				'label'   => __( 'Format', 'podlove' ),
+				'options' => array( 'rss' => 'RSS', 'atom' => 'Atom' ),
+				'default' => 'rss'
 			) );
 		} );
 	}

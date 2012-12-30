@@ -22,4 +22,14 @@ class TableWrapper extends Wrapper {
 		<?php
 	}
 
+	public function subheader( $title ) {
+		?>
+		<tr>
+			<th scope="row" valign="top" colspan="2">
+				<h3><?php echo $title ?></h3>
+			</th>
+		</tr>
+		<?php
+	}
+
 }

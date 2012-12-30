@@ -21,4 +21,12 @@ class DivWrapper extends Wrapper {
 		<?php
 	}
 
+	public function subheader( $title ) {
+		?>
+		<div>
+			<h3><?php echo $title ?></h3>
+		</div>
+		<?php
+	}
+
 }
