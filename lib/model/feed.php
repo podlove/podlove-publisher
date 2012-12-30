@@ -12,7 +12,7 @@ class Feed extends Base {
 
 		$podcast = \Podlove\Model\Podcast::get_instance();
 
-		if ( '' != get_option( 'permalink_structure' ) && ! in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft') ) ) {
+		if ( '' != get_option( 'permalink_structure' ) ) {
 			$url = sprintf(
 				'%s/feed/%s/',
 				get_bloginfo( 'url' ),
