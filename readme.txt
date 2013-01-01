@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: fix a (possibly rare) memory bug when downloading files
 * Enhancement: enable episodes on home page by default
 * Bugfix: summary escaping/backslash issue
+* Bugfix: fix feed warning
 
 = 1.3.17-alpha =
 * Bugfix: fix issue with 3rd party custom post types

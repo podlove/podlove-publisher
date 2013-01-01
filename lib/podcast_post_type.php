@@ -218,7 +218,7 @@ EOT;
 				'podcast' => 'podcast'
 			);
 
-			if ( empty( $query_var['post_type'] ) ) {
+			if ( empty( $query_var['post_type'] ) || ! is_array( $query_var['post_type'] ) ) {
 				$query_var['post_type'] = $extend;
 			} else {
 				$query_var['post_type'] = array_merge( $query_var['post_type'], $extend );
