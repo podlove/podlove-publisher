@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.0-alpha =
+* Feature: Module for Bitlove.org support! Adds links to torrent-files to the downloads-section of your episodes.
+
 = 1.3.17-alpha =
 * Bugfix: fix issue with 3rd party custom post types
 * Enhancement: improve Feed Settings screen
