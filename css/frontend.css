@@ -105,6 +105,7 @@ ul.episode_download_list a .size {
 
 .episode_downloads select {
   font-size: 2em;
+  display: inline;
 }
 
 .episode_downloads button.primary {
