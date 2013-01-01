@@ -52,8 +52,8 @@ add_action( 'init', '\Podlove\handle_direct_download' );
  *	[podlove-episode-downloads]
  *
  *  Attributes:
- *    style  "buttons" (default) - list of buttons
- *           "select" - html select list
+ *    style  "buttons" - list of buttons
+ *           "select" (default) - html select list
  * 
  * @param  array $options
  * @return string
@@ -64,7 +64,7 @@ function episode_downloads_shortcode( $options ) {
 	if ( is_feed() )
 		return '';
 
-	$defaults = array( 'style' => 'buttons' );
+	$defaults = array( 'style' => 'select' );
 	$attributes = shortcode_atts( $defaults, $options );
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
