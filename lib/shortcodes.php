@@ -39,6 +39,7 @@ function handle_direct_download() {
 	
 	ob_clean();
 	flush();
+	while ( @ob_end_flush() ); // flush and end all output buffers
 	readfile( $media_file->get_file_url() );
 	exit;
 }
