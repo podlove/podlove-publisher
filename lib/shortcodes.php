@@ -152,23 +152,42 @@ function webplayer_shortcode( $options ) {
 	if ( ! count( $formats_data ) )
 		return;
 
-	$available_formats = array();
-	$audio_formats = array( 'mp3', 'mp4', 'ogg', 'opus' );
+	/**
+	 * Look into the media files of an episode and return formats matching criteria:
+	 * - the corresponding asset is configured in the web player
+	 * - the file exists
+	 * 
+	 * @param   $formats array of format names like 'mp4', 'ogg'
+	 * @param   $format_type 'audio' or 'video'
+	 */
+	$get_available_formats = function ( $formats, $format_type ) use ( $episode, $formats_data ) {
 
-	foreach ( $audio_formats as $audio_format ) {
+		$available_formats = array();
 
-		if ( ! isset( $formats_data['audio'][ $audio_format ] ) )
-			continue;
+		foreach ( $formats as $format ) {
 
-		$episode_asset = Model\EpisodeAsset::find_by_id( $formats_data['audio'][ $audio_format ] );
+			if ( ! isset( $formats_data[ $format_type ][ $format ] ) )
+				continue;
 
-		if ( ! $episode_asset )
-			continue;
+			$episode_asset = Model\EpisodeAsset::find_by_id( $formats_data[ $format_type ][ $format ] );
+			if ( ! $episode_asset )
+				continue;
 
-		$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $episode_asset->id );
+			$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $episode_asset->id );
+			if ( $media_file )
+				$available_formats[] = sprintf( '%s="%s"', $format, $media_file->get_file_url() );
+		}
 
-		if ( $media_file )
-			$available_formats[] = sprintf( '%s="%s"', $audio_format, $media_file->get_file_url() );
+		return $available_formats;
+	};
+
+	$is_video = true;
+	$available_formats = $get_available_formats( array( 'mp4', 'ogg', 'webm' ), 'video' );
+	
+	// only look for audio if there is no video file
+	if ( count( $available_formats ) === 0 ) {
+		$is_video = false;
+		$available_formats = $get_available_formats( array( 'mp3', 'mp4', 'ogg', 'opus' ), 'audio' );
 	}
 
 	$chapters = '';
@@ -195,7 +214,9 @@ function webplayer_shortcode( $options ) {
 		$attr_string .= "$key=\"$value\" ";
 	}
 
-	return do_shortcode( '[podloveaudio ' . implode( ' ', $available_formats ) . ' ' . $chapters . ' ' . $attr_string . ']' );
+	$shortcode_name = $is_video ? 'podlovevideo' : 'podloveaudio';
+
+	return do_shortcode( '[' . $shortcode_name . ' ' . implode( ' ', $available_formats ) . ' ' . $chapters . ' ' . $attr_string . ']' );
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
 
