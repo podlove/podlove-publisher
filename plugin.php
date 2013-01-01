@@ -55,10 +55,23 @@ function activate_for_current_blog() {
 		}
 	}
 
+	// set default modules
 	$default_modules = array( 'podlove_web_player', 'open_graph' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
+
+	// set default expert settings
+	$settings = get_option( 'podlove', array() );
+	if ( $settings === array() ) {
+		$settings = array(
+			'merge_episodes'         => 'on',
+			'hide_wp_feed_discovery' => 'off',
+			'custom_episode_slug'    => ''
+		);
+		update_option( 'podlove', $settings );
+	}
+
 }
 
 /**
