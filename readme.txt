@@ -92,7 +92,6 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: fix a (possibly rare) memory bug when downloading files
 * Enhancement: enable episodes on home page by default
 * Enhancement: change default download widget style to the select-thingy
-* Bugfix: summary escaping/backslash issue
 * Bugfix: fix feed warning
 
 = 1.3.17-alpha =

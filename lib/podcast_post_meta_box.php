@@ -305,10 +305,6 @@ class Podcast_Post_Meta_Box {
 		if ( ! isset( $_POST['_podlove_meta'] ) || ! is_array( $_POST['_podlove_meta'] ) )
 			return;
 
-		// fix issue with multiple backslash-escapings
-		$_REQUEST = array_map( 'stripslashes_deep', $_REQUEST );
-		$_POST    = array_map( 'stripslashes_deep', $_POST );
-
 		do_action( 'podlove_save_episode', $post_id, $_POST['_podlove_meta'] );
 
 		// save changes
