@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.4.0-alpha =
 * Feature: Module for Bitlove.org support! Adds links to torrent-files to the downloads-section of your episodes.
+* Feature: add video support for web player
 * Enhancement: fix a (possibly rare) memory bug when downloading files
 * Enhancement: enable episodes on home page by default
 * Enhancement: change default download widget style to the select-thingy
