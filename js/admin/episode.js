@@ -104,7 +104,7 @@ var PODLOVE = PODLOVE || {};
  						});
  					} else {
 	 					var url                 = $checkbox.data('template');
-	 					var media_file_base_uri = $container.find('input[name="show-media-file-base-uri"]').val();
+	 					var media_file_base_uri = PODLOVE.trailingslashit($container.find('input[name="show-media-file-base-uri"]').val());
 	 					var episode_slug        = $container.find('input[name*="slug"]').val();
 	 					var format_extension    = $checkbox.data('extension');
 	 					var size                = $checkbox.data('size');

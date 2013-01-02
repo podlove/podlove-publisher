@@ -87,6 +87,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.3.19-alpha =
+* Enhancement: always add a trailing slash to media file base url
+
+= 1.3.19-alpha =
 * Hotfix: slugs are not forced into lowercase any more
 
 = 1.3.18-alpha =

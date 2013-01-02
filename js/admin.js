@@ -1,3 +1,18 @@
+var PODLOVE = PODLOVE || {};
+
+PODLOVE.rtrim = function (string, thechar) {
+	var re = new RegExp(thechar + "+$","g");
+	return string.replace(re, '');
+}
+
+PODLOVE.untrailingslashit = function (url) {
+	return PODLOVE.rtrim(url, '/');
+}
+
+PODLOVE.trailingslashit = function (url) {
+	return PODLOVE.untrailingslashit(url) + '/';
+}
+
 function human_readable_size(size) {
 	if (!size || size < 1) {
 		return "???";
