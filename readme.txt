@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.19-alpha =
+* Hotfix: slugs are not forced into lowercase any more
+
 = 1.3.18-alpha =
 * Feature: Module for Bitlove.org support! Adds links to torrent-files to the downloads-section of your episodes.
 * Feature: add video support for web player
