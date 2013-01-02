@@ -141,10 +141,6 @@ class Templates {
 
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 
-		// fix issue with multiple backslash-escapings
-		$_REQUEST = array_map( 'stripslashes_deep', $_REQUEST );
-		$_POST    = array_map( 'stripslashes_deep', $_POST );
-		
 		if ( $action === 'save' ) {
 			$this->save();
 		} elseif ( $action === 'create' ) {
