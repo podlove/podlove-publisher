@@ -32,9 +32,6 @@ function slugify( $text ) {
 	// transliterate
 	$text = iconv( 'utf-8', 'us-ascii//TRANSLIT', $text );
 
-	// lowercase
-	$text = strtolower( $text );
-
 	// remove unwanted characters
 	$text = preg_replace( '~[^-\w]+~', '', $text );
 

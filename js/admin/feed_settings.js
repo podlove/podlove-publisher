@@ -32,9 +32,6 @@ var PODLOVE = PODLOVE || {};
 			// trim
 			text = text.replace(/^-+|-+$/g, '');
 
-			// lowercase
-			text = text.toLowerCase();
-
 			// remove unwanted characters
 			text = text.replace(/[^-\w]+/, '');
 
