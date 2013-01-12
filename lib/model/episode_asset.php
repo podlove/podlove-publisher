@@ -24,11 +24,16 @@ class EpisodeAsset extends Base {
 	/**
 	 * Find all media files with a size > 0.
 	 *
-	 * @todo join into post/episode, ignore inactive ones
+	 * @todo performance (1+n)
 	 * @return array|NULL
 	 */
 	public function active_media_files() {
-		return array_filter( $this->media_files(), function( $f ) { return $f->size > 0; } );
+		return array_filter( $this->media_files(), function( $file ) {
+			if ( $file->size <= 0 )
+				return false;
+
+			return in_array( get_post( $file->episode()->post_id )->post_status, array( 'publish', 'private', 'draft' ) );
+		} );
 	}
 
 	public function title() {
