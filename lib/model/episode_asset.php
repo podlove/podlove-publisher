@@ -28,6 +28,16 @@ class EpisodeAsset extends Base {
 			return __( 'Notice: No file format defined.', 'podlove' );
 	}
 
+	/**
+	 * @override \Podlove\Model\Base::delete();
+	 */
+	public function delete() {
+		foreach ( $this->media_files() as $media_file ) {
+			$media_file->delete();
+		}
+		parent::delete();
+	}
+
 }
 
 EpisodeAsset::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
