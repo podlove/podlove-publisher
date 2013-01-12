@@ -57,30 +57,8 @@ class EpisodeAsset {
 
 		$podcast = Model\Podcast::get_instance();
 		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
-		$asset_assignment = Model\AssetAssignment::get_instance();
-		$feed_exists      = (bool) Model\Feed::find_one_by_episode_asset_id( $_REQUEST['episode_asset'] );
 
-		$connected_to_web_player = false;
-		$web_player_formats = get_option( 'podlove_webplayer_formats', array() );
-		foreach ( $web_player_formats as $_ => $media_types ) {
-			foreach ( $media_types as $asset_id ) {
-				if ( $asset_id == $_REQUEST['episode_asset'] ) {
-					$connected_to_web_player = true;
-					break;
-				}
-			}
-		}
-
-		$media_files = $asset->media_files();
-		$active_media_files = array_filter( $media_files, function( $f ) { return $f->size > 0; } );
-
-		$can_delete =	count( $active_media_files ) === 0
-					&&	$asset_assignment->image != $asset->id
-					&&	$asset_assignment->chapters != $asset->id
-					&&  ! $feed_exists
-					&&  ! $connected_to_web_player;
-
-		if ( $can_delete ) {
+		if ( $asset->is_deletable() ) {
 			$asset->delete();
 			$this->redirect( 'index' );
 		} else {

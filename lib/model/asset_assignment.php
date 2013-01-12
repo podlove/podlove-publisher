@@ -2,7 +2,7 @@
 namespace Podlove\Model;
 
 /**
- * Simplified Singleton model for episode assignmrnt data.
+ * Simplified Singleton model for episode assignment data.
  */
 class AssetAssignment {
 
