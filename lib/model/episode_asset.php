@@ -21,6 +21,16 @@ class EpisodeAsset extends Base {
 		return MediaFile::find_all_by_episode_asset_id( $this->id );
 	}
 
+	/**
+	 * Find all media files with a size > 0.
+	 *
+	 * @todo join into post/episode, ignore inactive ones
+	 * @return array|NULL
+	 */
+	public function active_media_files() {
+		return array_filter( $this->media_files(), function( $f ) { return $f->size > 0; } );
+	}
+
 	public function title() {
 		if ( $this->file_type_id )
 			return $this->file_type()->title();
@@ -60,9 +70,7 @@ class EpisodeAsset extends Base {
 	 * @return boolean true if any media file has a size > 0, otherwise false.
 	 */
 	public function has_active_media_files() {
-		$media_files        = $this->media_files();
-		$active_media_files = array_filter( $media_files, function( $f ) { return $f->size > 0; } );
-		return count( $active_media_files ) > 0;
+		return count( $this->active_media_files() ) > 0;
 	}
 
 	/**

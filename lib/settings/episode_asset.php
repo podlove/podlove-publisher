@@ -62,7 +62,7 @@ class EpisodeAsset {
 			$asset->delete();
 			$this->redirect( 'index' );
 		} else {
-			$this->redirect( 'index', NULL, 'media_file_relation_warning' );
+			$this->redirect( 'index', NULL, array( 'message' => 'media_file_relation_warning', 'deleted_id' => $asset->id ) );
 		}
 		
 	}
@@ -99,19 +99,20 @@ class EpisodeAsset {
 			}
 		}
 
-		$this->redirect( 'index', NULL, 'media_file_batch_enabled_notice' );
+		$this->redirect( 'index', NULL, array( 'message' => 'media_file_batch_enabled_notice' ) );
 	}
 
 	/**
 	 * Helper method: redirect to a certain page.
 	 */
-	private function redirect( $action, $episode_asset_id = NULL, $message = NULL ) {
+	private function redirect( $action, $episode_asset_id = NULL, $params = array() ) {
 		$page    = 'admin.php?page=' . $_REQUEST['page'];
 		$show    = ( $episode_asset_id ) ? '&episode_asset=' . $episode_asset_id : '';
 		$action  = '&action=' . $action;
-		$message = $message ? '&message=' . $message : '';
+
+		array_walk( &$params, function(&$value, $key) { $value = "&$key=$value"; } );
 		
-		wp_redirect( admin_url( $page . $show . $action . $message ) );
+		wp_redirect( admin_url( $page . $show . $action . implode( '', $params ) ) );
 		exit;
 	}
 	
@@ -143,9 +144,34 @@ class EpisodeAsset {
 				<?php
 			}
 			if ( $_REQUEST['message'] == 'media_file_relation_warning' ) {
+				$asset = Model\EpisodeAsset::find_one_by_id( (int) $_REQUEST['deleted_id'] );
 				?>
 				<div class="error">
-					<p><?php echo __( '<strong>Asset can\'t be deleted.</strong> It is used by at least one media file or feed or the web player.' ) ?></p>
+					<p>
+						<?php echo __( '<strong>Asset can\'t be deleted for the following reasons:</strong>', 'podlove' ) ?>
+						<ul class="ul-disc">
+							<?php if ( $asset->has_active_media_files() ): ?>
+								<li>
+									<?php echo sprintf( __( 'There are still %s active media files. You need to deactivate them.', 'podlove' ), count( $asset->active_media_files() ) ) ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( $asset->has_asset_assignments() ): ?>
+								<li>
+									<?php echo __( 'This asset is still assigned to episode images or episode chapters. You need to remove the assignment.', 'podlove' ) ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( $asset->is_connected_to_feed() ): ?>
+								<li>
+									<?php echo __( 'A feed uses this asset. Delete the feed or remove the asset relationship.', 'podlove' ) ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( $asset->is_connected_to_web_player() ): ?>
+								<li>
+									<?php echo __( 'The web player uses this asset. Remove the relationship.', 'podlove' ) ?>
+								</li>
+							<?php endif; ?>
+						</ul>
+					</p>
 				</div>
 				<?php
 			}
