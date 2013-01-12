@@ -58,7 +58,7 @@ class EpisodeAsset {
 		$podcast = Model\Podcast::get_instance();
 		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 
-		if ( $asset->is_deletable() ) {
+		if ( isset( $_REQUEST['force'] ) && $_REQUEST['force'] || $asset->is_deletable() ) {
 			$asset->delete();
 			$this->redirect( 'index' );
 		} else {
@@ -148,29 +148,32 @@ class EpisodeAsset {
 				?>
 				<div class="error">
 					<p>
-						<?php echo __( '<strong>Asset can\'t be deleted for the following reasons:</strong>', 'podlove' ) ?>
+						<?php echo __( '<strong>The asset has not been deleted. Are you aware that the asset is still in use?</strong>', 'podlove' ) ?>
 						<ul class="ul-disc">
 							<?php if ( $asset->has_active_media_files() ): ?>
 								<li>
-									<?php echo sprintf( __( 'There are still %s active media files. You need to deactivate them.', 'podlove' ), count( $asset->active_media_files() ) ) ?>
+									<?php echo sprintf( __( 'There are %s connected media files.', 'podlove' ), count( $asset->active_media_files() ) ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->has_asset_assignments() ): ?>
 								<li>
-									<?php echo __( 'This asset is still assigned to episode images or episode chapters. You need to remove the assignment.', 'podlove' ) ?>
+									<?php echo __( 'This asset is assigned to episode images or episode chapters.', 'podlove' ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->is_connected_to_feed() ): ?>
 								<li>
-									<?php echo __( 'A feed uses this asset. Delete the feed or remove the asset relationship.', 'podlove' ) ?>
+									<?php echo __( 'A feed uses this asset.', 'podlove' ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->is_connected_to_web_player() ): ?>
 								<li>
-									<?php echo __( 'The web player uses this asset. Remove the relationship.', 'podlove' ) ?>
+									<?php echo __( 'The web player uses this asset.', 'podlove' ) ?>
 								</li>
 							<?php endif; ?>
 						</ul>
+						<a href="?page=<?php echo $_REQUEST['page'] ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id ?>&amp;force=1">
+							<?php echo __( 'delete anyway', 'podlove' ) ?>
+						</a>
 					</p>
 				</div>
 				<?php

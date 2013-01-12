@@ -88,7 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.3.21-alpha =
 * Bugfix: allow deletion of unused assets
-* Enhancement: if an asset can't be deleted, display the exact reasons
+* Enhancement: if an asset shouldn't be deleted, display where it's in use (allow deletion anyway)
 
 = 1.3.20-alpha =
 * Enhancement: always add a trailing slash to media file base url
