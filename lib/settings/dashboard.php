@@ -258,6 +258,9 @@ class Dashboard {
 						$post_id = $episode->post_id;
 						$post = get_post( $post_id );
 
+						if ( ! $post )
+							continue;
+
 						// skip deleted podcasts
 						if ( ! in_array( $post->post_status, array( 'draft', 'publish' ) ) )
 							continue;

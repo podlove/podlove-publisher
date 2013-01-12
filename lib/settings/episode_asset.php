@@ -71,7 +71,10 @@ class EpisodeAsset {
 			}
 		}
 
-		$can_delete =	count( $asset->media_files() ) === 0
+		$media_files = $asset->media_files();
+		$active_media_files = array_filter( $media_files, function( $f ) { return $f->size > 0; } );
+
+		$can_delete =	count( $active_media_files ) === 0
 					&&	$asset_assignment->image != $asset->id
 					&&	$asset_assignment->chapters != $asset->id
 					&&  ! $feed_exists

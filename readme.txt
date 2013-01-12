@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.21-alpha =
+* Bugfix: allow deletion of unused assets
+
 = 1.3.20-alpha =
 * Enhancement: always add a trailing slash to media file base url
 * Bugfix: trying to fix escaping part whatnotsoever
