@@ -26,22 +26,27 @@ function handle_direct_download() {
 		exit;
 	}
 
-	header( "Expires: 0" );
-	header( 'Cache-Control: must-revalidate' );
-    header( 'Pragma: public' );
-	header( "Content-Type: application/force-download" );
-	header( "Content-Description: File Transfer" );
-	header( "Content-Disposition: attachment; filename=" . $media_file->get_download_file_name() );
-	header( "Content-Transfer-Encoding: binary" );
+	if ( in_array( strtolower( ini_get( 'allow_url_fopen' ) ), array( "1", "on", "true" ) ) ) {
+		header( "Expires: 0" );
+		header( 'Cache-Control: must-revalidate' );
+	    header( 'Pragma: public' );
+		header( "Content-Type: application/force-download" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Disposition: attachment; filename=" . $media_file->get_download_file_name() );
+		header( "Content-Transfer-Encoding: binary" );
 
-	if ( $media_file->size > 0 )
-		header( 'Content-Length: ' . $media_file->size );
-	
-	ob_clean();
-	flush();
-	while ( @ob_end_flush() ); // flush and end all output buffers
-	readfile( $media_file->get_file_url() );
-	exit;
+		if ( $media_file->size > 0 )
+			header( 'Content-Length: ' . $media_file->size );
+		
+		ob_clean();
+		flush();
+		while ( @ob_end_flush() ); // flush and end all output buffers
+		readfile( $media_file->get_file_url() );
+		exit;
+	} else {
+		header( "Location: " . $media_file->get_file_url() );
+		exit;
+	}
 }
 add_action( 'init', '\Podlove\handle_direct_download' );
 
