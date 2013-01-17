@@ -110,7 +110,7 @@ class EpisodeAsset {
 		$show    = ( $episode_asset_id ) ? '&episode_asset=' . $episode_asset_id : '';
 		$action  = '&action=' . $action;
 
-		array_walk( &$params, function(&$value, $key) { $value = "&$key=$value"; } );
+		array_walk( $params, function(&$value, $key) { $value = "&$key=$value"; } );
 		
 		wp_redirect( admin_url( $page . $show . $action . implode( '', $params ) ) );
 		exit;
