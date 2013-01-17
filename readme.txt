@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.22-alpha =
+* Hotfix: solve White Screen of Death issue for PHP 5.4
+
 = 1.3.21-alpha =
 * Bugfix: allow deletion of unused assets
 * Enhancement: if an asset shouldn't be deleted, display where it's in use (allow deletion anyway)
