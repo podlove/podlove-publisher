@@ -56,7 +56,7 @@ function activate_for_current_blog() {
 	}
 
 	// set default modules
-	$default_modules = array( 'podlove_web_player', 'open_graph' );
+	$default_modules = array( 'podlove_web_player', 'open_graph', 'migration' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
