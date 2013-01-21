@@ -243,6 +243,17 @@ class Assistant {
 
 		<div class="row-fluid">
 			<div class="span12">
+				<div class="well">
+					I searched your posts for entries with enclosures.
+					I also looked into them for their mime type.
+					<br>
+					Please select which files and which episodes you'd like to migrate.
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span12">
 				<form action="" method="POST">
 
 					<input type="hidden" name="step" value="3">
