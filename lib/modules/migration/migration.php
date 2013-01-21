@@ -97,7 +97,23 @@ class Assistant {
 		return sprintf( '?page=%s&step=%s', 'podlove_settings_migration_handle', $step );
 	}
 
+	public function process_request() {
+		
+		if ( ! isset( $_REQUEST['podlove_migration'] ) )
+			return;
+
+		$migration_settings = get_option( 'podlove_migration', array() );
+
+		foreach ( $_REQUEST['podlove_migration'] as $setting_key => $setting_value ) {
+			$migration_settings[ $setting_key ] = $setting_value;
+		}
+
+		update_option( 'podlove_migration', $migration_settings );
+	}
+
 	public function page() {
+
+		$this->process_request();
 
 		$steps = array(
 			1 => __( 'Welcome', 'podlove' ),
@@ -200,7 +216,11 @@ class Assistant {
 
 				$file_type = Model\FileType::find_one_by_mime_type( $enclosure->mime_type );
 				if ( $file_type ) {
-					$file_types[ $file_type->id ] = $file_type;
+					if ( isset( $file_types[ $file_type->id ] ) ) {
+						$file_types[ $file_type->id ]['count'] += 1;
+					} else {
+						$file_types[ $file_type->id ] = array( 'file_type' => $file_type, 'count' => 1 );
+					}					
 				} else {
 					$errors[] = sprintf(
 						__( '<strong>Unknown mime type "%s"</strong> in post %s If you want to migrate files with this mime type, you need to create your own %sfile type%s', 'podlove' ),
@@ -218,89 +238,106 @@ class Assistant {
 		if ( ! count( $episodes ) )
 			$errors[] = __( '<strong>No Episodes Found!</strong> I only know how to migrate episodes with enclosures. However, I could\'t find any. Sorry!' , 'podlove' );
 
+		$migration_settings = get_option( 'podlove_migration', array() );
 		?>
+
 		<div class="row-fluid">
 			<div class="span12">
+				<form action="" method="POST">
 
-				<?php if ( count( $errors ) ): ?>
-					<h3>Errors</h3>
-					<?php foreach ( $errors as $error ): ?>
-						<div class="alert alert-error">
-							<?php echo $error ?>
-						</div>
-					<?php endforeach; ?>
-				<?php endif; ?>
+					<input type="hidden" name="step" value="3">
+					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 
-				<h3><?php echo __( 'File Types', 'podlove' ) ?></h3>
-				<table class="table table-striped">
-					<thead>
-						<tr>
-					 		<th>
-					 			<input type="checkbox" checked="checked">
-					 		</th>
-					 		<th>
-					 			<?php echo __( 'Title', 'podlove' ) ?>
-					 		</th>
-					 		<th>
-					 			<?php echo __( 'Mime Type', 'podlove' ) ?>
-					 		</th>
-					 		<th>
-					 			<?php echo __( 'Extension', 'podlove' ) ?>
-					 		</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ( $file_types as $file_type ): ?>
+					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
+
+					<?php if ( count( $errors ) ): ?>
+						<h3>Errors</h3>
+						<?php foreach ( $errors as $error ): ?>
+							<div class="alert alert-error">
+								<?php echo $error ?>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+
+					<h3><?php echo __( 'File Types', 'podlove' ) ?></h3>
+					<table class="table table-striped">
+						<thead>
 							<tr>
-								<td>
-									<input type="checkbox" checked="checked">
-								</td>
-								<td>
-									<?php echo $file_type->name ?>
-								</td>
-								<td>
-									<?php echo $file_type->mime_type ?>
-								</td>
-								<td>
-									<?php echo $file_type->extension ?>
-								</td>
+						 		<th>
+						 			<input type="checkbox" checked="checked">
+						 		</th>
+						 		<th>
+						 			<?php echo __( 'Title', 'podlove' ) ?>
+						 		</th>
+						 		<th>
+						 			<?php echo __( 'Mime Type', 'podlove' ) ?>
+						 		</th>
+						 		<th>
+						 			<?php echo __( 'Extension', 'podlove' ) ?>
+						 		</th>
+						 		<th>
+						 			<?php echo __( 'Matching Episodes', 'podlove' ) ?>
+						 		</th>
 							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<?php foreach ( $file_types as $file_type ): ?>
+								<tr>
+									<td>
+										<input type="checkbox" <?php checked( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ) ?> name="podlove_migration[file_types][<?php echo $file_type['file_type']->id ?>]">
+									</td>
+									<td>
+										<?php echo $file_type['file_type']->name ?>
+									</td>
+									<td>
+										<?php echo $file_type['file_type']->mime_type ?>
+									</td>
+									<td>
+										<?php echo $file_type['file_type']->extension ?>
+									</td>
+									<td>
+										<?php echo $file_type['count'] ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
 
-				<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
-				<table class="table table-striped">
-					 <thead>
-					 	<tr>
-					 		<th>
-					 			<input type="checkbox" checked="checked">
-					 		</th>
-					 		<th>#</th>
-					 		<th>
-					 			<?php echo __( 'Title', 'podlove' ) ?>
-					 		</th>
-					 	</tr>
-					 </thead>
-					 <tbody>
-					 	<?php foreach ( $episodes as $episode_post ): ?>
-					 		<tr>
-					 			<td>
-					 				<input type="checkbox" checked="checked">
-					 			</td>
-					 			<td>
-					 				<?php echo $episode_post->ID ?>
-					 			</td>
-					 			<td>
-					 				<a href="<?php echo get_edit_post_link( $episode_post->ID ) ?>" target="_blank">
-						 				<?php echo \get_the_title( $episode_post->ID ) ?>
-					 				</a>
-					 			</td>
-					 		</tr>
-						<?php endforeach; ?>
-					 </tbody>
-				</table>
-				
+					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
+					<table class="table table-striped">
+						 <thead>
+						 	<tr>
+						 		<th>
+						 			<input type="checkbox" checked="checked">
+						 		</th>
+						 		<th>#</th>
+						 		<th>
+						 			<?php echo __( 'Title', 'podlove' ) ?>
+						 		</th>
+						 	</tr>
+						 </thead>
+						 <tbody>
+						 	<?php foreach ( $episodes as $episode_post ): ?>
+						 		<tr>
+						 			<td>
+						 				<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
+						 			</td>
+						 			<td>
+						 				<?php echo $episode_post->ID ?>
+						 			</td>
+						 			<td>
+						 				<a href="<?php echo get_edit_post_link( $episode_post->ID ) ?>" target="_blank">
+							 				<?php echo \get_the_title( $episode_post->ID ) ?>
+						 				</a>
+						 			</td>
+						 		</tr>
+							<?php endforeach; ?>
+						 </tbody>
+					</table>
+
+					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
+					
+				</form>
 			</div>
 		</div>
 		<?php
