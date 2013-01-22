@@ -207,6 +207,34 @@ class Assistant {
 			$query->next_post();
 			$episodes[] = $query->post;
 
+			// look for the cover
+			$metas = get_post_meta( $query->post->ID, '', true );
+			$metas = array_map( function($m) { return $m[0]; }, $metas );
+			foreach ( $metas as $key => $value ) {
+				if ( filter_var( $value, FILTER_VALIDATE_URL ) !== false  ) {
+					$extension = pathinfo( $value, PATHINFO_EXTENSION );
+					if ( in_array( $extension, array( 'gif', 'jpg', 'jpeg', 'png' ) ) ) {
+						$file_type = Model\FileType::find_one_by_extension( $extension );
+						if ( $file_type ) {
+							if ( isset( $file_types[ $file_type->id ] ) ) {
+								$file_types[ $file_type->id ]['count'] += 1;
+							} else {
+								$file_types[ $file_type->id ] = array( 'file_type' => $file_type, 'count' => 1 );
+							}					
+						} else {
+							$errors[] = sprintf(
+								__( '<strong>Unknown extension "%s"</strong> in post %s If you want to migrate files with this extension, you need to create your own %sfile type%s', 'podlove' ),
+								$extension,
+								sprintf( '<a href="%s" target="_blank">%s</a>', get_edit_post_link( $query->post->ID ), get_the_title( $query->post->ID ) ),
+								'<a href="?page=podlove_file_types_settings_handle" target="_blank">',
+								'</a>'
+							);
+						}
+					}
+				}
+			}
+
+			// process enclosures
 			$enclosures = get_post_meta( $query->post->ID, 'enclosure', false );
 			foreach ( $enclosures as $enclosure_data ) {
 				$enclosure = new Enclosure( $enclosure_data );
@@ -231,7 +259,6 @@ class Assistant {
 					);
 				}
 
-				// $file_types[] = array( $url, $length, $mime_type, $duration );
 			}
 		}
 
