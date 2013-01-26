@@ -56,7 +56,6 @@ class StepPosts extends Step {
 				} else {
 					$file_types[ $enclosure->file_type->id ] = array( 'file_type' => $enclosure->file_type, 'count' => 1 );
 				}
-
 			}
 		}
 
@@ -139,6 +138,20 @@ class StepPosts extends Step {
 						</tbody>
 					</table>
 
+					<?php 
+					$slug_type = ! isset( $migration_settings['slug'] ) || $migration_settings['slug'] == 'wordpress' ? 'wordpress' : 'number';
+					?>
+
+					<h3><?php echo __( 'Slug', 'podlove' ); ?></h3>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[slug]" value="wordpress" <?php checked( $slug_type == 'wordpress' ) ?>>
+						WordPress Slug
+					</label>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[slug]" value="number" <?php checked( $slug_type == 'number' ) ?>>
+						Number Slug
+					</label>
+
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
 					<table class="table table-striped">
 						<thead>
@@ -153,10 +166,21 @@ class StepPosts extends Step {
 								<th>
 									<?php echo __( 'WordPress Slug', 'podlove' ) ?>
 								</th>
+								<th>
+									<?php echo __( 'Number Slug', 'podlove' ) ?>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php foreach ( $episodes as $episode_post ): ?>
+								<?php
+								$title = \get_the_title( $episode_post->ID );
+								if ( preg_match( "/\d+/", $title, $matches ) ) {
+									$number_slug = $matches[0];
+								} else {
+									$number_slug = '';
+								}
+								?>
 								<tr>
 									<td>
 										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
@@ -166,21 +190,24 @@ class StepPosts extends Step {
 									</td>
 									<td>
 										<a href="<?php echo get_edit_post_link( $episode_post->ID ) ?>" target="_blank">
-							 				<?php echo \get_the_title( $episode_post->ID ) ?>
+							 				<?php echo $title ?>
 										</a>
 									</td>
 									<td>
 										<?php echo $episode_post->post_name ?>
+									</td>
+									<td>
+										<?php echo $number_slug ?>
 									</td>
 								</tr>
 								<?php foreach ( $file_types as $file_type ): ?>
 									<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
 										<tr>
 											<td colspan="2"></td>
-											<td colspan="2">
+											<td colspan="3">
 												<?php echo sprintf( "%s%s.%s",
 													$migration_settings['podcast']['media_file_base_url'],
-													$episode_post->post_name,
+													$slug_type == 'wordpress' ? $episode_post->post_name : $number_slug,
 													$file_type['file_type']->extension
 												 ); ?>
 											</td>
