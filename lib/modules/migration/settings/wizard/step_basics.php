@@ -10,9 +10,9 @@ class StepBasics extends Step {
 		<div class="row-fluid">
 			<div class="span12">
 				<div class="well">
-					<p>
+					<!-- <p>
 						<?php echo __( 'Now, please tell me about your podcast. What is it about?', 'podlove' ); ?>
-					</p>
+					</p> -->
 					<p>
 						Here's the tricky part.
 						Please read carefully, I will now describe core concept of the Podlove Publisher.
@@ -49,31 +49,40 @@ class StepBasics extends Step {
 			</div>
 		</div>
 
+		<?php 
+		$migration_settings = get_option( 'podlove_migration', array() );
+		if ( isset( $migration_settings['podcast'] ) ) {
+			$podcast = $migration_settings['podcast'];
+		} else {
+			$podcast = array();
+		}
+		?>
+
 		<div class="row-fluid">
 			<div class="span12">
 				<form action="" class="form-horizontal">
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Title', 'podlove' ); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xlarge">
+							<input type="text" class="input-xlarge" name="podlove_migration[podcast][title]" value="<?php echo $podcast['title'] ?>">
 						</div>
 					</div>
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Subtitle', 'podlove' ); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xlarge">
+							<input type="text" class="input-xlarge" name="podlove_migration[podcast][subtitle]" value="<?php echo $podcast['subtitle'] ?>">
 						</div>
 					</div>
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Summary', 'podlove' ); ?></label>
 						<div class="controls">
-							<textarea name="" rows="3" class="input-xlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove' ); ?>"></textarea>
+							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove' ); ?>"><?php echo $podcast['summary'] ?></textarea>
 						</div>
 					</div>
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Media File Base URL', 'podlove' ); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xlarge" placeholder="http://cdn.example.com/pod/">
+							<input type="text" name="podlove_migration[podcast][media_file_base_url]" value="<?php echo $podcast['media_file_base_url'] ?>" class="input-xlarge" placeholder="http://cdn.example.com/pod/">
 						</div>
 					</div>
 					<div class="control-group">
@@ -82,7 +91,7 @@ class StepBasics extends Step {
 						</div>
 					</div>
 
-					<input type="hidden" name="step" value="4">
+					<input type="hidden" name="step" value="3">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 
 				</form>

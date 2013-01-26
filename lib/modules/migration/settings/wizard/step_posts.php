@@ -141,40 +141,54 @@ class StepPosts extends Step {
 
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
 					<table class="table table-striped">
-						 <thead>
-						 	<tr>
-						 		<th>
-						 			<input type="checkbox" checked="checked">
-						 		</th>
-						 		<th>#</th>
-						 		<th>
-						 			<?php echo __( 'Title', 'podlove' ) ?>
-						 		</th>
-						 		<th>
-						 			<?php echo __( 'WordPress Slug', 'podlove' ) ?>
-						 		</th>
-						 	</tr>
-						 </thead>
-						 <tbody>
-						 	<?php foreach ( $episodes as $episode_post ): ?>
-						 		<tr>
-						 			<td>
-						 				<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
-						 			</td>
-						 			<td>
-						 				<?php echo $episode_post->ID ?>
-						 			</td>
-						 			<td>
-						 				<a href="<?php echo get_edit_post_link( $episode_post->ID ) ?>" target="_blank">
+						<thead>
+							<tr>
+								<th>
+									<input type="checkbox" checked="checked">
+								</th>
+								<th>#</th>
+								<th>
+									<?php echo __( 'Title', 'podlove' ) ?>
+								</th>
+								<th>
+									<?php echo __( 'WordPress Slug', 'podlove' ) ?>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ( $episodes as $episode_post ): ?>
+								<tr>
+									<td>
+										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
+									</td>
+									<td>
+										<?php echo $episode_post->ID ?>
+									</td>
+									<td>
+										<a href="<?php echo get_edit_post_link( $episode_post->ID ) ?>" target="_blank">
 							 				<?php echo \get_the_title( $episode_post->ID ) ?>
-						 				</a>
-						 			</td>
-						 			<td>
-						 				<?php echo $episode_post->post_name ?>
-						 			</td>
-						 		</tr>
+										</a>
+									</td>
+									<td>
+										<?php echo $episode_post->post_name ?>
+									</td>
+								</tr>
+								<?php foreach ( $file_types as $file_type ): ?>
+									<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
+										<tr>
+											<td colspan="2"></td>
+											<td colspan="2">
+												<?php echo sprintf( "%s%s.%s",
+													$migration_settings['podcast']['media_file_base_url'],
+													$episode_post->post_name,
+													$file_type['file_type']->extension
+												 ); ?>
+											</td>
+										</tr>
+									<?php endif; ?>
+								<?php endforeach; ?>
 							<?php endforeach; ?>
-						 </tbody>
+						</tbody>
 					</table>
 
 					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
