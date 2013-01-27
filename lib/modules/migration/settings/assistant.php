@@ -44,7 +44,8 @@ class Assistant {
 		$wizard = array(
 			new Wizard\StepWelcome,
 			new Wizard\StepBasics,
-			new Wizard\StepPosts
+			new Wizard\StepPosts,
+			new Wizard\StepMigrate
 		);
 
 		// start-index must be 1, not 0
@@ -86,6 +87,44 @@ class Assistant {
 			?>
 		</div>	
 		<?php
+	}
+
+	public static function get_episode_slug( $post, $slug_type = 'wordpress' ) {
+
+		switch ( $slug_type ) {
+			case 'wordpress':
+				return $post->post_name;
+				break;
+			case 'number':
+				return self::get_number_slug( $post );
+				break;
+			case 'file':
+				return self::get_file_slug( $post );
+				break;
+
+		}
+	}
+
+	public static function get_number_slug( $post ) {
+
+		if ( preg_match( "/\d+/", \get_the_title( $post->ID ), $matches ) )
+			return $matches[0];
+		else
+			return '';
+	}
+
+	public static function get_file_slug( $post ) {
+
+		$enclosures = get_post_meta( $post->ID, 'enclosure', false );
+		foreach ( $enclosures as $enclosure_data ) {
+			$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $post->ID );
+
+			if ( ! $enclosure->errors ) {
+				$file_name = end( explode( "/", $enclosure->url ) );
+				return current( explode( ".", $file_name ) );
+			}
+		}
+
 	}
 
 }

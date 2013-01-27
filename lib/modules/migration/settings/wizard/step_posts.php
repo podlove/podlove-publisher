@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Modules\Migration\Settings\Wizard;
 use Podlove\Modules\Migration\Enclosure;
+use Podlove\Modules\Migration\Settings\Assistant;
 
 class StepPosts extends Step {
 
@@ -79,11 +80,17 @@ class StepPosts extends Step {
 		<div class="row-fluid">
 			<div class="span12">
 				<form action="" method="POST">
+					<input type="hidden" name="step" value="4">
+					<input type="hidden" name="page" value="podlove_settings_migration_handle">
+					<input type="submit" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
+				</form>
+
+				<form action="" method="POST">
 
 					<input type="hidden" name="step" value="3">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 
-					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
+					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Refresh', 'podlove' ) ?>">
 
 					<?php if ( count( $errors ) ): ?>
 						<h3>Errors</h3>
@@ -139,7 +146,9 @@ class StepPosts extends Step {
 					</table>
 
 					<?php 
-					$slug_type = ! isset( $migration_settings['slug'] ) || $migration_settings['slug'] == 'wordpress' ? 'wordpress' : 'number';
+					if ( ! $slug_type = $migration_settings['slug'] ) {
+						$slug_type = 'wordpress';
+					}
 					?>
 
 					<h3><?php echo __( 'Slug', 'podlove' ); ?></h3>
@@ -150,6 +159,10 @@ class StepPosts extends Step {
 					<label class="radio">
 						<input type="radio" name="podlove_migration[slug]" value="number" <?php checked( $slug_type == 'number' ) ?>>
 						Number Slug
+					</label>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[slug]" value="file" <?php checked( $slug_type == 'file' ) ?>>
+						File Slug
 					</label>
 
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
@@ -169,18 +182,13 @@ class StepPosts extends Step {
 								<th>
 									<?php echo __( 'Number Slug', 'podlove' ) ?>
 								</th>
+								<th>
+									<?php echo __( 'File Slug', 'podlove' ) ?>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php foreach ( $episodes as $episode_post ): ?>
-								<?php
-								$title = \get_the_title( $episode_post->ID );
-								if ( preg_match( "/\d+/", $title, $matches ) ) {
-									$number_slug = $matches[0];
-								} else {
-									$number_slug = '';
-								}
-								?>
 								<tr>
 									<td>
 										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
@@ -190,24 +198,27 @@ class StepPosts extends Step {
 									</td>
 									<td>
 										<a href="<?php echo get_edit_post_link( $episode_post->ID ) ?>" target="_blank">
-							 				<?php echo $title ?>
+							 				<?php echo get_the_title( $episode_post->ID ) ?>
 										</a>
 									</td>
 									<td>
 										<?php echo $episode_post->post_name ?>
 									</td>
 									<td>
-										<?php echo $number_slug ?>
+										<?php echo Assistant::get_number_slug( $episode_post ) ?>
+									</td>
+									<td>
+										<?php echo Assistant::get_file_slug( $episode_post ) ?>
 									</td>
 								</tr>
 								<?php foreach ( $file_types as $file_type ): ?>
 									<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
 										<tr>
 											<td colspan="2"></td>
-											<td colspan="3">
+											<td colspan="4">
 												<?php echo sprintf( "%s%s.%s",
 													$migration_settings['podcast']['media_file_base_url'],
-													$slug_type == 'wordpress' ? $episode_post->post_name : $number_slug,
+													Assistant::get_episode_slug( $episode_post, $slug_type ),
 													$file_type['file_type']->extension
 												 ); ?>
 											</td>
