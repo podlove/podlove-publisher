@@ -17,6 +17,11 @@ class StepMigrate extends Step {
 			</div>
 		</div>
 		<?php
+		// default to preview-page
+		$current_step = (int) $_REQUEST['step'];
+		\Podlove\Modules\Migration\Migration::instance()->update_module_option( 'current_step', $current_step - 1 );
+
+		// then begin to migrate
 		$migration_settings = get_option( 'podlove_migration', array() );
 
 		// Basic Podcast Settings
