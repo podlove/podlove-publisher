@@ -8,7 +8,6 @@ class Migration extends \Podlove\Modules\Base {
 		protected $module_description = 'Helps you migrate from PodPress/PowerPress/... to Podlove.';
 
 		public function load() {
-			add_action( 'wp', array( $this, 'register_hooks' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );
 			add_action( 'admin_menu', array( $this, 'register_menu' ), 20 );
 		}
@@ -23,22 +22,4 @@ class Migration extends \Podlove\Modules\Base {
 		public function register_menu() {
 			new Settings\Assistant( \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE );
 		}
-
-		/**
-		 * Register hooks on episode pages only.
-		 */
-		public function register_hooks() {
-			
-			if ( ! is_single() )
-				return;
-
-			if ( 'podcast' !== get_post_type() )
-				return;
-
-			add_filter( 'language_attributes', function ( $output = '' ) {
-				return $output . ' prefix="og: http://ogp.me/ns#"';
-			} );
-
-			add_action( 'wp_head', array( $this, 'insert_migration_metadata' ) );
-		}	
 }
