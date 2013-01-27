@@ -147,11 +147,15 @@ class StepPosts extends Step {
 
 					<?php 
 					if ( ! $slug_type = $migration_settings['slug'] ) {
-						$slug_type = 'wordpress';
+						$slug_type = 'file';
 					}
 					?>
 
 					<h3><?php echo __( 'Slug', 'podlove' ); ?></h3>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[slug]" value="file" <?php checked( $slug_type == 'file' ) ?>>
+						File Slug
+					</label>
 					<label class="radio">
 						<input type="radio" name="podlove_migration[slug]" value="wordpress" <?php checked( $slug_type == 'wordpress' ) ?>>
 						WordPress Slug
@@ -159,10 +163,6 @@ class StepPosts extends Step {
 					<label class="radio">
 						<input type="radio" name="podlove_migration[slug]" value="number" <?php checked( $slug_type == 'number' ) ?>>
 						Number Slug
-					</label>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[slug]" value="file" <?php checked( $slug_type == 'file' ) ?>>
-						File Slug
 					</label>
 
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
@@ -176,15 +176,15 @@ class StepPosts extends Step {
 								<th>
 									<?php echo __( 'Title', 'podlove' ) ?>
 								</th>
+								</th>
+								<th>
+									<?php echo __( 'File Slug', 'podlove' ) ?>
+								</th>
 								<th>
 									<?php echo __( 'WordPress Slug', 'podlove' ) ?>
 								</th>
 								<th>
 									<?php echo __( 'Number Slug', 'podlove' ) ?>
-								</th>
-								<th>
-									<?php echo __( 'File Slug', 'podlove' ) ?>
-								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -202,13 +202,13 @@ class StepPosts extends Step {
 										</a>
 									</td>
 									<td>
+										<?php echo Assistant::get_file_slug( $episode_post ) ?>
+									</td>
+									<td>
 										<?php echo $episode_post->post_name ?>
 									</td>
 									<td>
 										<?php echo Assistant::get_number_slug( $episode_post ) ?>
-									</td>
-									<td>
-										<?php echo Assistant::get_file_slug( $episode_post ) ?>
 									</td>
 								</tr>
 								<?php foreach ( $file_types as $file_type ): ?>
