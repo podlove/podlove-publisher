@@ -86,6 +86,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.23-alpha =
+* Enhancement: upgrade Podlove Web Player
+* Enhancement: improve handling of url_fopen setting
+
 = 1.3.22-alpha =
 * Hotfix: solve White Screen of Death issue for PHP 5.4
 
