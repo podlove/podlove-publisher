@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.24-alpha =
+* Enhancement: remove mediaelementjs demo files
+
 = 1.3.23-alpha =
 * Enhancement: upgrade Podlove Web Player
 * Enhancement: improve handling of url_fopen setting
