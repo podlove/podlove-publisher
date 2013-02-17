@@ -156,6 +156,18 @@ class Dashboard {
 			<?php
 		}
 
+		if ( ini_get( 'allow_url_fopen' ) == '0' ) {
+			?>
+			<div class="error">
+				<p>
+					<strong>allow_url_fopen</strong> is disabled by your PHP configuration.
+					<br>
+					If you experience download problems with all query URLs of format <em>?download_media_file=</em> you need to change this.
+				</p>
+			</div>
+			<?php
+		}
+
 		?>
 		<div id="validation">
 
