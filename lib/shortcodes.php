@@ -284,7 +284,7 @@ add_shortcode( 'podlove-show', '\Podlove\podcast_data_shortcode' );
  *
  * Usage:
  * 	
- * 	[podlove-template title="Template Title"]
+ * 	[podlove-template id="Template Title"]
  *
  * 	Parameters:
  * 		title: (required) Title of template to render.

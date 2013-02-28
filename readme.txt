@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.3.25-alpha =
 * Feature: Setting for Web Player to show or hide chapters by default
 * Enhancement: Open Graph now correctly excludes non-audio assets
+* Bugfix: Generated Template shortcodes now use the "id" attribute rather than "title"
 
 = 1.3.24-alpha =
 * Enhancement: remove mediaelementjs demo files
