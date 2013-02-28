@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.25-alpha =
+* Feature: Setting for Web Player to show or hide chapters by default
+
 = 1.3.24-alpha =
 * Enhancement: remove mediaelementjs demo files
 

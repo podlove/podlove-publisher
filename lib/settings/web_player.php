@@ -18,6 +18,7 @@ class WebPlayer {
 		);
 
 		register_setting( WebPlayer::$pagehook, 'podlove_webplayer_formats' );
+		register_setting( WebPlayer::$pagehook, 'podlove_webplayer_settings' );
 	}
 
 	public function page() {
@@ -120,6 +121,45 @@ class WebPlayer {
 				<?php 
 			}
 		}
+
+		// advanced settings
+
+		$settings = array(
+			'chaptersVisible'     => array(
+				'label'   => __( 'Chapters Visibility', 'podlove' ),
+				'options' => array(
+					'true' => __( 'Visible when player loads', 'podlove' ),
+					'false' => __( 'Hidden when player loads', 'podlove' )
+				)
+			),
+		);
+
+		?>
+		<tr valign="top">
+			<th scope="row" valign="top" colspan="2">
+				<h3><?php echo __( 'Settings', 'podlove' ); ?></h3>
+			</th>
+		</tr>
+		<?php foreach ( $settings as $setting_key => $field_values ): ?>
+			<tr class="row_<?php echo $setting_key; ?>">
+				<th scope="row" valign="top">
+					<?php if ( isset( $field_values['label'] ) && $field_values['label'] ): ?>
+						<label for="<?php echo $setting_key; ?>"><?php echo $field_values['label']; ?></label>
+					<?php endif ?>
+				</th>
+				<td>
+					<select name="podlove_webplayer_settings[<?php echo $setting_key; ?>]" id="<?php echo $setting_key; ?>">
+						<?php foreach ( $field_values['options'] as $key => $value ): ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php if ( $key == \Podlove\get_webplayer_setting( $setting_key ) ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
+						<?php endforeach; ?>
+					</select>
+					<?php if ( isset( $field_values['description'] ) &&  $field_values['description'] ): ?>
+						<span class="description"><?php echo $field_values['description']; ?></span>
+					<?php endif; ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		<?php
 	}
 
 }

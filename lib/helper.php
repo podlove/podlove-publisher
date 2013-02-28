@@ -21,6 +21,18 @@ function get_setting( $name ) {
 	return $options[ $name ];
 }
 
+function get_webplayer_setting( $name ) {
+
+	$defaults = array(
+		'chaptersVisible' => 'false'
+	);
+	
+	$settings = get_option( 'podlove_webplayer_settings', array() );
+	$settings = wp_parse_args( $settings, $defaults );
+
+	return $settings[ $name ];
+}
+
 function slugify( $text ) {
 
 	// replace everything but unreserved characters (RFC 3986 section 2.3) by a hyphen
