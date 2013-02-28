@@ -31,7 +31,7 @@ class Template_List_Table extends \Podlove\List_Table {
 		);
 	
 		return sprintf('%1$s %2$s',
-		    /*$1%s*/ $template->title . '<br><code>[podlove-template title="' . $template->title . '"]</code>',
+		    /*$1%s*/ $template->title . '<br><code>[podlove-template id="' . $template->title . '"]</code>',
 		    /*$3%s*/ $this->row_actions( $actions )
 		);
 	}
