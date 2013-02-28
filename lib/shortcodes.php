@@ -212,7 +212,8 @@ function webplayer_shortcode( $options ) {
 		'subtitle'   => $episode->subtitle,
 		'summary'    => $episode->summary,
 		'poster'     => $episode->get_cover_art_with_fallback(),
-		'duration'   => $episode->get_duration()
+		'duration'   => $episode->get_duration(),
+		'chaptersVisible' => \Podlove\get_webplayer_setting( 'chaptersVisible' )
 	);
 	$attr_string = '';
 	foreach ( $attributes as $key => $value ) {
