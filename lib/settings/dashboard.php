@@ -32,7 +32,7 @@ class Dashboard {
 		?>
 		<ul>
 			<li>
-				<a target="_blank" href="https://github.com/eteubert/podlove/issues">Report Bugs</a>
+				<a target="_blank" href="https://github.com/podlove/podlove-publisher/issues">Report Bugs</a>
 			</li>
 			<li>
 				<a target="_blank" href="https://trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">See what I'm working on</a>
