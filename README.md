@@ -50,7 +50,7 @@ Nothing :) Go to `Settings > Permalinks`, hit save and try again.
 <IfModule mod_security.c>
 SecFilterEngine Off
 SecFilterScanPOST Off
-</IfModule>z
+</IfModule>
 ```
 
 # Shortcodes
