@@ -502,6 +502,18 @@ function update_file() {
 	$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 );
 	$result['file_size'] = $info['download_content_length'];
 
+	if ( ! $result['reachable'] ) {
+		unset( $info['certinfo'] );
+		$info['php_open_basedir'] = ini_get( 'open_basedir' );
+		$info['php_safe_mode'] = ini_get( 'safe_mode' );
+		$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
+		$result['message'] = "--- # Can't reach {$file->get_file_url()}\n";
+		$result['message'].= "--- # Please include this output when you report a bug\n";
+		foreach ( $info as $key => $value ) {
+			$result['message'] .= "$key: $value\n";
+		}
+	}
+
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Content-type: application/json');
