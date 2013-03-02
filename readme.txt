@@ -90,6 +90,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Setting for Web Player to show or hide chapters by default
 * Enhancement: Open Graph now correctly excludes non-audio assets
 * Enhancement: "File not found" errors now result in some debug output which may help tracing the issue
+* Enhancement: upgrade Podlove Web Player
 * Bugfix: Generated Template shortcodes now use the "id" attribute rather than "title"
 
 = 1.3.24-alpha =
