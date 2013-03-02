@@ -26,20 +26,32 @@ If you'd like to add a whole feature with UI and stuff, please consider developi
 
 # FAQ
 
-## Where is the Webplayer / Download list?
+### Where is the Webplayer / Download list?
 
 Right now, these have to be inserted manually via shortcodes.
 They are `[podlove-web-player]` and `[podlove-episode-downloads]`.
 
-## A Feed link directs me to a Blog page — What did I do wrong?
+### A Feed link directs me to a Blog page — What did I do wrong?
 
 Nothing :) Go to `Settings > Permalinks`, hit save and try again.
 
-## How do I add Flattr Integration to my episodes?
+### How do I add Flattr Integration to my episodes?
 
 1. If you haven't already, get the official Flattr plugin here: http://wordpress.org/extend/plugins/flattr/
 2. Find the setting `Flattr > Advanced Settings > Flattrable content > Post Types` and check `podcast`. Save changes.
 3. There is no step 3 ;)
+
+### My files are not found. What am I doing wrong?
+
+1. Look at the debug output and doublecheck that the generated URLs are correct.
+2. Look at the debug output and look for the http_code. Is it 200? Great! Maybe it's 406? Not so great. That means the server where your files are stored doesn't like WordPress. Try adding the following to the .htaccess file of the server where your files are:
+
+```
+<IfModule mod_security.c>
+SecFilterEngine Off
+SecFilterScanPOST Off
+</IfModule>z
+```
 
 # Shortcodes
 
