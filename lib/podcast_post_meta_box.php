@@ -26,6 +26,8 @@ class Podcast_Post_Meta_Box {
 	 */
 	public static function post_type_meta_box_callback( $post ) {
 
+		\Podlove\require_code_mirror();
+		
 		$post_id = $post->ID;
 
 		$podcast = Model\Podcast::get_instance();
