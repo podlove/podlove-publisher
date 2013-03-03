@@ -86,6 +86,8 @@ class StepMigrate extends Step {
 			$episode = Model\Episode::find_or_create_by_post_id( $new_post_id );
 			$episode->slug = Assistant::get_episode_slug( $post, $migration_settings['slug'] );
 			$episode->duration = $post_data->get_duration();
+			$episode->subtitle = $post_data->get_subtitle();
+			$episode->summary = $post_data->get_summary();
 			$episode->save();
 
 			foreach ( $assets as $asset ) {
