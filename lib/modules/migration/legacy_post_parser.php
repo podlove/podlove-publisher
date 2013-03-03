@@ -33,4 +33,12 @@ class Legacy_Post_Parser {
 		return $this->duration;
 	}
 
+	function get_subtitle() {
+		return get_post_meta( $this->post_id, 'subtitle', true );
+	}
+
+	function get_summary() {
+		return get_post_meta( $this->post_id, 'summary', true );
+	}
+
 }

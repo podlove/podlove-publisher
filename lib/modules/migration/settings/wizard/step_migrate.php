@@ -95,6 +95,14 @@ class StepMigrate extends Step {
 				echo $file->get_file_url() . "<br>";
 				flush();
 			}
+
+			// copy all meta
+			$meta = get_post_meta( $post_id );
+			foreach ( $meta as $key => $values ) {
+				foreach ( $values as $value ) {
+					add_post_meta( $new_post_id, $key, $value );
+				}
+			}
 		}
 	}
 
