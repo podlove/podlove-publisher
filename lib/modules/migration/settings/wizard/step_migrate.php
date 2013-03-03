@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Modules\Migration\Settings\Wizard;
 use Podlove\Modules\Migration\Settings\Assistant;
+use Podlove\Modules\Migration\Enclosure;
 use Podlove\Model;
 
 class StepMigrate extends Step {
@@ -79,8 +80,19 @@ class StepMigrate extends Step {
 			echo "<strong>" . $new_post->post_title . "</strong><br>";
 			flush();
 
+			// process enclosures
+			$duration = '';
+			$enclosures = get_post_meta( $post_id, 'enclosure', false );
+			foreach ( $enclosures as $enclosure_data ) {
+				$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $post_id );
+
+				if ( $enclosure->duration )
+					$duration = $enclosure->duration;
+			}
+
 			$episode = Model\Episode::find_or_create_by_post_id( $new_post_id );
 			$episode->slug = Assistant::get_episode_slug( $post, $migration_settings['slug'] );
+			$episode->duration = $duration;
 			$episode->save();
 
 			foreach ( $assets as $asset ) {

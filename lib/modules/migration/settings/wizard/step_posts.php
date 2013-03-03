@@ -50,6 +50,9 @@ class StepPosts extends Step {
 			foreach ( $enclosures as $enclosure_data ) {
 				$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $query->post->ID );
 
+				if ( $enclosure->duration )
+					current( $episodes )->duration = $enclosure->duration;
+
 				if ( $enclosure->errors ) {
 					$errors = array_merge( $enclosure->errors, $errors );
 				} elseif ( isset( $file_types[ $enclosure->file_type->id ] ) ) {
@@ -185,6 +188,10 @@ class StepPosts extends Step {
 								</th>
 								<th>
 									<?php echo __( 'Number Slug', 'podlove' ) ?>
+								</th>
+								<th>
+									<?php echo __( 'Duration', 'podlove' ) ?>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -210,12 +217,15 @@ class StepPosts extends Step {
 									<td>
 										<?php echo Assistant::get_number_slug( $episode_post ) ?>
 									</td>
+									<td>
+										<?php echo $episode_post->duration ?>
+									</td>
 								</tr>
 								<?php foreach ( $file_types as $file_type ): ?>
 									<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
 										<tr>
 											<td colspan="2"></td>
-											<td colspan="4">
+											<td colspan="5">
 												<?php echo sprintf( "%s%s.%s",
 													$migration_settings['podcast']['media_file_base_url'],
 													Assistant::get_episode_slug( $episode_post, $slug_type ),
