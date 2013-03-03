@@ -66,6 +66,22 @@ class StepMigrate extends Step {
 				$feed->limit_items  = -1;
 				$feed->save();
 			}
+
+			// set web player settings
+			$webplayer_formats = get_option( 'podlove_webplayer_formats', array() );
+			if ( ! isset( $webplayer_formats['audio'] ) ) 
+				$webplayer_formats['audio'] = array();
+
+			if ( stripos( $file_type->mime_type, 'audio/mpeg' ) !== false ) {
+				$webplayer_formats['audio']['mp3'] = $asset->id;
+			} elseif ( stripos( $file_type->mime_type, 'audio/mp4' ) !== false ) {
+				$webplayer_formats['audio']['mp4'] = $asset->id;
+			} elseif ( stripos( $file_type->mime_type, 'audio/ogg' ) !== false ) {
+				$webplayer_formats['audio']['ogg'] = $asset->id;
+			} elseif ( stripos( $file_type->mime_type, 'audio/opus' ) !== false ) {
+				$webplayer_formats['audio']['opus'] = $asset->id;
+			}
+			update_option( 'podlove_webplayer_formats', $webplayer_formats );
 		}
 
 		// Create Episodes
