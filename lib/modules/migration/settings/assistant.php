@@ -63,6 +63,10 @@ class Assistant {
 			$current_step = Migration::instance()->get_module_option( 'current_step', 1 );
 		}
 
+		if ( $current_step < 1 ) {
+			$current_step = 1;
+		}
+
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
