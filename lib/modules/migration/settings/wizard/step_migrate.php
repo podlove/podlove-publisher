@@ -78,6 +78,9 @@ class StepMigrate extends Step {
 			$new_post_id = wp_insert_post( $new_post );
 			$new_post = get_post( $new_post_id );
 
+			// update guid
+			update_post_meta( $new_post_id, '_podlove_guid', $post->guid );
+
 			echo "<strong>" . $new_post->post_title . "</strong><br>";
 			flush();
 
