@@ -52,6 +52,20 @@ class StepMigrate extends Step {
 				$asset_assignments['image'] = $asset->id;
 				update_option( 'podlove_asset_assignment', $asset_assignments );
 			}
+
+			// create feeds
+			if ( stripos( $file_type->mime_type, 'audio' ) !== false ) {
+				$feed = new Model\Feed();
+				$feed->episode_asset_id = $asset->id;
+				$feed->name         = $file_type->extension . ' Feed';
+				$feed->title        = $file_type->extension . ' Feed';
+				$feed->slug         = $file_type->extension;
+				$feed->format       = 'rss';
+				$feed->enable       = true;
+				$feed->discoverable = true;
+				$feed->limit_items  = -1;
+				$feed->save();
+			}
 		}
 
 		// Create Episodes
