@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Modules\Migration\Settings\Wizard;
 use Podlove\Modules\Migration\Enclosure;
+use Podlove\Modules\Migration\Legacy_Post_Parser;
 use Podlove\Modules\Migration\Settings\Assistant;
 
 class StepPosts extends Step {
@@ -49,9 +50,6 @@ class StepPosts extends Step {
 			$enclosures = get_post_meta( $query->post->ID, 'enclosure', false );
 			foreach ( $enclosures as $enclosure_data ) {
 				$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $query->post->ID );
-
-				if ( $enclosure->duration )
-					current( $episodes )->duration = $enclosure->duration;
 
 				if ( $enclosure->errors ) {
 					$errors = array_merge( $enclosure->errors, $errors );
@@ -196,6 +194,7 @@ class StepPosts extends Step {
 						</thead>
 						<tbody>
 							<?php foreach ( $episodes as $episode_post ): ?>
+								<?php $post_data = new Legacy_Post_Parser( $episode_post->ID ); ?>
 								<tr>
 									<td>
 										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
@@ -218,7 +217,7 @@ class StepPosts extends Step {
 										<?php echo Assistant::get_number_slug( $episode_post ) ?>
 									</td>
 									<td>
-										<?php echo $episode_post->duration ?>
+										<?php echo $post_data->get_duration() ?>
 									</td>
 								</tr>
 								<?php foreach ( $file_types as $file_type ): ?>
