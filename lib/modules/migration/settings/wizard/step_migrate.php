@@ -106,6 +106,12 @@ class StepMigrate extends Step {
 					add_post_meta( $new_post_id, $key, $value );
 				}
 			}
+
+			// copy all comments
+			foreach ( get_comments( array( 'post_id' => $post_id ) ) as $comment ) {
+				$comment->comment_post_ID = $new_post_id;
+				wp_insert_comment( (array) $comment );
+			}
 		}
 	}
 
