@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.26-alpha =
+* Enhancement: upgrade Podlove Web Player to 2.0.4
+
 = 1.3.25-alpha =
 * Feature: Setting for Web Player to show or hide chapters by default
 * Enhancement: Open Graph now correctly excludes non-audio assets
