@@ -24,7 +24,10 @@ class Podcast {
 			/* $page	 */ Podcast::$pagehook	
 		);
 
-		register_setting( Podcast::$pagehook, 'podlove_podcast' );
+		register_setting( Podcast::$pagehook, 'podlove_podcast', function( $podcast ) {
+			$podcast['media_file_base_uri'] = trailingslashit( $podcast['media_file_base_uri'] );
+			return $podcast;
+		} );
 	}
 	
 	function page() {
