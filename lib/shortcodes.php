@@ -188,7 +188,7 @@ function webplayer_shortcode( $options ) {
 
 	$is_video = true;
 	$available_formats = $get_available_formats( array( 'mp4', 'ogg', 'webm' ), 'video' );
-	
+
 	// only look for audio if there is no video file
 	if ( count( $available_formats ) === 0 ) {
 		$is_video = false;
@@ -208,9 +208,9 @@ function webplayer_shortcode( $options ) {
 
 	$attributes = array(
 		'permalink'  => get_permalink(),
-		'title'      => get_the_title(),
-		'subtitle'   => $episode->subtitle,
-		'summary'    => $episode->summary,
+		'title'      => htmlspecialchars( get_the_title(), ENT_COMPAT ),
+		'subtitle'   => htmlspecialchars( $episode->subtitle, ENT_COMPAT ),
+		'summary'    => htmlspecialchars( $episode->summary, ENT_COMPAT ),
 		'poster'     => $episode->get_cover_art_with_fallback(),
 		'duration'   => $episode->get_duration(),
 		'chaptersVisible' => \Podlove\get_webplayer_setting( 'chaptersVisible' )
@@ -221,8 +221,9 @@ function webplayer_shortcode( $options ) {
 	}
 
 	$shortcode_name = $is_video ? 'podlovevideo' : 'podloveaudio';
+	$shortcode = '[' . $shortcode_name . ' ' . implode( ' ', $available_formats ) . ' ' . $chapters . ' ' . $attr_string . ']';
 
-	return do_shortcode( '[' . $shortcode_name . ' ' . implode( ' ', $available_formats ) . ' ' . $chapters . ' ' . $attr_string . ']' );
+	return do_shortcode( $shortcode );
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
 

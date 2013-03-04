@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.3.27-alpha =
 * Enhancement: enforce trailing slash at the end media file base url
+* Bugfix: double quote escaping for Web Player title, subtitle and summary
 
 = 1.3.26-alpha =
 * Enhancement: upgrade Podlove Web Player to 2.0.4
