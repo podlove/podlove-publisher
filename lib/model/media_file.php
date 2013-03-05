@@ -123,6 +123,10 @@ class MediaFile extends Base {
 	 * @return array
 	 */
 	function curl_get_header() {
+
+		if ( ! function_exists( 'curl_exec' ) )
+			return false;
+
 		$curl = curl_init();
 		$curl_version = curl_version();
 
