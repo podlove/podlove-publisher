@@ -164,6 +164,20 @@ class Dashboard {
 				</p>
 			</div>
 			<?php
+		} elseif ( stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false ) {
+			?>
+			<div class="error">
+				<p>
+					<strong>ERROR: </strong>The PHP function <strong>curl_exec</strong> is not available.
+					However, it is required for Podlove to run properly.
+					<br>
+					<strong>SOLUTION: </strong>In your <em>php.ini</em>, look for <em>disable_functions</em>. 
+					<strong>curl_exec</strong> should be listed there. 
+					Remove it. 
+					If you can't or don't know how, please contact your system administrator or hoster.
+				</p>
+			</div>
+			<?php
 		}
 
 		if ( ini_get( 'allow_url_fopen' ) == '0' ) {

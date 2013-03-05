@@ -508,6 +508,7 @@ function update_file() {
 		$info['php_open_basedir'] = ini_get( 'open_basedir' );
 		$info['php_safe_mode'] = ini_get( 'safe_mode' );
 		$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
+		$info['curl_exec'] = function_exists( 'curl_exec' );
 		$result['message'] = "--- # Can't reach {$file->get_file_url()}\n";
 		$result['message'].= "--- # Please include this output when you report a bug\n";
 		foreach ( $info as $key => $value ) {
