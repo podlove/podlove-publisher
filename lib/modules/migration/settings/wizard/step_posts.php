@@ -47,7 +47,6 @@ class StepPosts extends Step {
 
 			$enclosures = Enclosure::all_for_post( $query->post->ID );
 			foreach ( $enclosures as $enclosure ) {
-
 				if ( $enclosure->errors ) {
 					$errors = array_merge( $enclosure->errors, $errors );
 				} elseif ( isset( $file_types[ $enclosure->file_type->id ] ) ) {
@@ -55,7 +54,6 @@ class StepPosts extends Step {
 				} else {
 					$file_types[ $enclosure->file_type->id ] = array( 'file_type' => $enclosure->file_type, 'count' => 1 );
 				}
-
 			}
 
 			if ( count( $enclosures ) )
@@ -67,6 +65,16 @@ class StepPosts extends Step {
 			$errors[] = __( '<strong>No Episodes Found!</strong> I only know how to migrate episodes with enclosures. However, I could\'t find any. Sorry!' , 'podlove' );
 
 		$migration_settings = get_option( 'podlove_migration', array() );
+
+		// educated guess: activate all audio files by default
+		if ( ! isset( $migration_settings['file_types'] ) ) {
+			$migration_settings['file_types'] = array();
+			foreach ( $file_types as $file_type ) {
+				if ( stripos( $file_type['file_type']->mime_type, 'audio' ) !== false ) {
+					$migration_settings['file_types'][ $file_type['file_type']->id  ] = 'on';
+				}
+			}
+		}
 		?>
 
 		<div class="row-fluid">
@@ -82,7 +90,7 @@ class StepPosts extends Step {
 
 		<div class="row-fluid">
 			<div class="span12">
-				<form action="" method="POST">
+				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
 					<input type="hidden" name="step" value="4">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 					<input type="submit" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
@@ -94,6 +102,8 @@ class StepPosts extends Step {
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 
 					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Refresh', 'podlove' ) ?>">
+
+					<div class="clearfix"></div>
 
 					<?php if ( count( $errors ) ): ?>
 						<h3>Errors</h3>
