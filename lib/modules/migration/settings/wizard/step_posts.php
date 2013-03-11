@@ -209,7 +209,7 @@ class StepPosts extends Step {
 								<?php $post_data = new Legacy_Post_Parser( $episode_post->ID ); ?>
 								<tr>
 									<td>
-										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
+										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) || ! isset( $migration_settings['episodes'] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
 									</td>
 									<td>
 										<?php echo $episode_post->ID ?>
