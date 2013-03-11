@@ -53,6 +53,24 @@ function override_feed_item_limit( $limits ) {
 }
 add_filter( 'post_limits', '\Podlove\Feeds\override_feed_item_limit', 20, 1 );
 
+/**
+ * Make sure that PodPress doesn't vomit anything into our precious feeds
+ * in case it is still active.
+ */
+function remove_podPress_hooks() {
+	remove_filter( 'option_blogname', 'podPress_feedblogname' );
+	remove_filter( 'option_blogdescription', 'podPress_feedblogdescription' );
+	remove_filter( 'option_rss_language', 'podPress_feedblogrsslanguage' );
+	remove_filter( 'option_rss_image', 'podPress_feedblogrssimage' );
+	remove_action( 'rss2_ns', 'podPress_rss2_ns' );
+	remove_action( 'rss2_head', 'podPress_rss2_head' );
+	remove_filter( 'rss_enclosure', 'podPress_dont_print_nonpodpress_enclosures' );
+	remove_action( 'rss2_item', 'podPress_rss2_item' );
+	remove_action( 'atom_head', 'podPress_atom_head' );
+	remove_filter( 'atom_enclosure', 'podPress_dont_print_nonpodpress_enclosures' );
+	remove_action( 'atom_entry', 'podPress_atom_entry' );
+}
+
 // Hooks:
 // parse_query => query vars available
 // wp => query_posts done
@@ -70,12 +88,13 @@ add_action( 'wp', function () {
 		exit;
 	} else {
 
+		remove_podPress_hooks();
+
 		if ( $feed->format === "rss" ) {
 			new	\Podlove\Feeds\RSS( $feed->slug );
 		} else {
 			new	\Podlove\Feeds\Atom( $feed->slug );
 		}
 	}
-
 	
 } );
