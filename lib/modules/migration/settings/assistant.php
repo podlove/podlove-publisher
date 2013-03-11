@@ -119,16 +119,15 @@ class Assistant {
 
 	public static function get_file_slug( $post ) {
 
-		$enclosures = get_post_meta( $post->ID, 'enclosure', false );
-		foreach ( $enclosures as $enclosure_data ) {
-			$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $post->ID );
-
+		$enclosures = Enclosure::all_for_post( $post->ID );
+		foreach ( $enclosures as $enclosure ) {
 			if ( ! $enclosure->errors ) {
 				$file_name = end( explode( "/", $enclosure->url ) );
 				return current( explode( ".", $file_name ) );
 			}
 		}
 
+		return NULL;
 	}
 
 }

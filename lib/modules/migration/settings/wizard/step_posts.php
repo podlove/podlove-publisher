@@ -11,7 +11,7 @@ class StepPosts extends Step {
 	public function template() {
 
 		$args = array(
-			'meta_key'       => 'enclosure',
+			// 'meta_key'       => 'enclosure',
 			'posts_per_page' => -1
 		);
 
@@ -22,8 +22,7 @@ class StepPosts extends Step {
 		$query = new \WP_Query( $args );
 		while( $query->have_posts() ) {
 			$query->next_post();
-			$episodes[] = $query->post;
-
+			
 			// look for the cover
 			$metas = get_post_meta( $query->post->ID, '', true );
 			$metas = array_map( function($m) { return $m[0]; }, $metas );
@@ -46,10 +45,8 @@ class StepPosts extends Step {
 				}
 			}
 
-			// process enclosures
-			$enclosures = get_post_meta( $query->post->ID, 'enclosure', false );
-			foreach ( $enclosures as $enclosure_data ) {
-				$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $query->post->ID );
+			$enclosures = Enclosure::all_for_post( $query->post->ID );
+			foreach ( $enclosures as $enclosure ) {
 
 				if ( $enclosure->errors ) {
 					$errors = array_merge( $enclosure->errors, $errors );
@@ -58,7 +55,12 @@ class StepPosts extends Step {
 				} else {
 					$file_types[ $enclosure->file_type->id ] = array( 'file_type' => $enclosure->file_type, 'count' => 1 );
 				}
+
 			}
+
+			if ( count( $enclosures ) )
+				$episodes[] = $query->post;
+			
 		}
 
 		if ( ! count( $episodes ) )
