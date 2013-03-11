@@ -91,17 +91,9 @@ class StepPosts extends Step {
 		<div class="row-fluid">
 			<div class="span12">
 				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
-					<input type="hidden" name="step" value="4">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
-					<input type="submit" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
-				</form>
-
-				<form action="" method="POST">
-
-					<input type="hidden" name="step" value="3">
-					<input type="hidden" name="page" value="podlove_settings_migration_handle">
-
-					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Refresh', 'podlove' ) ?>">
+					<input type="submit" name="next" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
+					<input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save and Refresh', 'podlove' ) ?>">
 
 					<div class="clearfix"></div>
 
