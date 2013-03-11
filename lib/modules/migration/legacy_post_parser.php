@@ -19,11 +19,7 @@ class Legacy_Post_Parser {
 
 	private function parse() {
 
-		// parse enclosures
-		$enclosures = get_post_meta( $this->post_id, 'enclosure', false );
-		foreach ( $enclosures as $enclosure_data ) {
-			$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $this->post_id );
-
+		foreach ( Enclosure::all_for_post( $this->post_id ) as $enclosure ) {
 			if ( $enclosure->duration )
 				$this->duration = $enclosure->duration;
 		}

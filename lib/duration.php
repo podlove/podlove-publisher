@@ -38,7 +38,12 @@ class Duration {
 			$this->seconds      = isset( $matches[3] ) ? (int) $matches[3] : 0;
 			$this->milliseconds = isset( $matches[4] ) ? (int) $matches[4] : 0;
 
-			if ( $this->minutes > 59 || $this->seconds > 59 || $this->milliseconds > 999 ) {
+			while ( $this->minutes > 59 ) {
+				$this->minutes -= 60;
+				$this->hours++;
+			}
+
+			if ( ( $this->minutes > 59 && $this->hours > 0 ) || $this->seconds > 59 || $this->milliseconds > 999 ) {
 				$this->valid = false;
 			}
 		} else {
@@ -140,36 +145,36 @@ function lfill( $string, $length, $fillchar = ' ' ) {
 	return $string;
 }
 
-/*
-// Testcases
-$durations = array(
-	'08:22.12:'    => '00:00:00.000', // invalid format
-	'08:222.12'    => '00:00:00.000', // invalid seconds
-	'98:22.12'     => '00:00:00.000', // invalid minutes
-	'10:22.1234'   => '00:00:00.000', // invalid milliseconds
-	'00:08:22.117' => '00:08:22.117', // full qualified
-	'08:22'        => '00:08:22.000', // MM:SS
-	'08:22.12'     => '00:08:22.120', // MM:SS.mm (missing 0)
-	'8:22.12'      => '00:08:22.120', // MM:SS.mm (missing 0)
-	'8:2.12'       => '00:08:02.120', // MM:SS.mm (missing 0)
-	'123:18:12.12' => '123:18:12.120', // HH:MM:SS.mm (long hours)
-);
 
-foreach ( $durations as $test_case => $expected ) {
-	$d = new Duration( $test_case );
-	$duration = $d->get();
-	if ( $duration == $expected ) {
-		echo ".";
-	} else {
-		echo "\n$duration != $expected\n";
-	}
-}
-// check formatting
-$d = new Duration( '00:08:22.117' );
-if ( $d->get('HH:MM:SS') == '00:08:22' ) {
-	echo '.';
-} else {
-	echo "ERROR";
-}
-echo "\n";
-*/
+// // Testcases
+// $durations = array(
+// 	'08:22.12:'    => '00:00:00.000', // invalid format
+// 	'08:222.12'    => '00:00:00.000', // invalid seconds
+// 	'98:22.12'     => '01:38:22.120', // long minutes
+// 	'10:22.1234'   => '00:00:00.000', // invalid milliseconds
+// 	'00:08:22.117' => '00:08:22.117', // full qualified
+// 	'08:22'        => '00:08:22.000', // MM:SS
+// 	'08:22.12'     => '00:08:22.120', // MM:SS.mm (missing 0)
+// 	'8:22.12'      => '00:08:22.120', // MM:SS.mm (missing 0)
+// 	'8:2.12'       => '00:08:02.120', // MM:SS.mm (missing 0)
+// 	'123:18:12.12' => '123:18:12.120', // HH:MM:SS.mm (long hours)
+// 	'207:31'       => '03:27:31.000'
+// );
+
+// foreach ( $durations as $test_case => $expected ) {
+// 	$d = new Duration( $test_case );
+// 	$duration = $d->get();
+// 	if ( $duration == $expected ) {
+// 		echo ".";
+// 	} else {
+// 		echo "\n$duration != $expected\n";
+// 	}
+// }
+// // check formatting
+// $d = new Duration( '00:08:22.117' );
+// if ( $d->get('HH:MM:SS') == '00:08:22' ) {
+// 	echo '.';
+// } else {
+// 	echo "ERROR";
+// }
+// echo "\n";

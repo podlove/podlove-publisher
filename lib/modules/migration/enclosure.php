@@ -1,6 +1,7 @@
 <?php 
 namespace Podlove\Modules\Migration;
 use \Podlove\Model;
+use \Podlove\Duration;
 
 class Enclosure {
 
@@ -72,8 +73,10 @@ class Enclosure {
 		$mime_data  = preg_split('/[ \t]/', trim( $enc_data[2] ) );
 		$extra_data = ( isset( $enc_data[3] ) ) ? unserialize( $enc_data[3] ) : array();
 
-		if ( is_array( $extra_data ) && array_key_exists( 'duration', $extra_data ) )
-			$enclosure->duration  = trim( $extra_data['duration'] );
+		if ( is_array( $extra_data ) && array_key_exists( 'duration', $extra_data ) ) {
+			$duration = new Duration( $extra_data['duration'] );
+			$enclosure->duration  = $duration->get();
+		}
 
 		$enclosure->post_id        = $post_id;
 		$enclosure->url            = trim( $enc_data[0] );
@@ -107,11 +110,15 @@ class Enclosure {
 
 		$enclosure = new self();
 
+
 		$enclosure->post_id        = $post_id;
 		$enclosure->url            = $file['URI'];
 		$enclosure->content_length = $file['size'];
 		$enclosure->mime_type      = $mime_type;
 		$enclosure->file_type      = Model\FileType::find_one_by_mime_type( $enclosure->mime_type );
+
+		$duration = new Duration( $file['duration'] );
+		$enclosure->duration       = $duration->get();
 
 		$enclosure->extension      = pathinfo( $enclosure->url, PATHINFO_EXTENSION );
 
