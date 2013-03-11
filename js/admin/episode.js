@@ -196,9 +196,18 @@ var PODLOVE = PODLOVE || {};
  				data: data,
  				dataType: 'json',
  				success: function(result) {
+ 					ajax_requests.pop();
  					container.find("input").data('size', result.file_size);
  					o.update_preview();
- 					ajax_requests.pop();
+ 					if (result.message) {
+ 						if ( !$("#debug_info").length ) {
+ 							$("table.media_file_table").after("<div id='debug_info'></div>");
+ 						}
+ 						CodeMirror(
+ 							document.getElementById("debug_info"),
+ 							{ value: result.message, mode: "yaml" }
+ 						);
+ 					}
  				}
  			});
  			ajax_requests.push(request);

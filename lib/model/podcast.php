@@ -136,6 +136,7 @@ class Podcast {
 	 * Save current state to database.
 	 */
 	public function save() {
+		$this->set_property( 'media_file_base_uri', trailingslashit( $this->media_file_base_uri ) );
 		update_option( 'podlove_podcast', $this->data );
 	}
 

@@ -20,11 +20,20 @@ class Dashboard {
 		);
 
 		add_action( Dashboard::$pagehook, function () {
+
 			wp_enqueue_script( 'postbox' );
 			add_screen_option( 'layout_columns', array(
 				'max' => 2, 'default' => 2
 			) );
+
+			wp_register_script(
+				'cornify-js',
+				\Podlove\PLUGIN_URL . '/js/admin/cornify.js'
+			);
+			wp_enqueue_script( 'cornify-js' );
 		} );
+
+
 
 	}
 
@@ -32,7 +41,7 @@ class Dashboard {
 		?>
 		<ul>
 			<li>
-				<a target="_blank" href="https://github.com/eteubert/podlove/issues">Report Bugs</a>
+				<a target="_blank" href="https://github.com/podlove/podlove-publisher/issues">Report Bugs</a>
 			</li>
 			<li>
 				<a target="_blank" href="https://trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">See what I'm working on</a>
@@ -52,6 +61,7 @@ class Dashboard {
 				    })();
 				/* ]]> */</script>
 				<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/"></a>
+				<a href="http://www.cornify.com" onclick="cornify_add();return false;" style="text-decoration: none; color: #A7A7A7; float: right; font-size: 20px; line-height: 20px;">♥</a>
 				<noscript><a href="http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress" target="_blank">
 				<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
 			</li>
@@ -151,6 +161,32 @@ class Dashboard {
 					<strong>ERROR: </strong>You need the <strong>curl PHP extension</strong> for Podlove to run properly.
 					<br>
 					If you think you can do it yourself, have a look at <a href="http://stackoverflow.com/questions/1347146/how-to-enable-curl-in-php">these instructions on how to enable curl in PHP</a>.
+				</p>
+			</div>
+			<?php
+		} elseif ( stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false ) {
+			?>
+			<div class="error">
+				<p>
+					<strong>ERROR: </strong>The PHP function <strong>curl_exec</strong> is not available.
+					However, it is required for Podlove to run properly.
+					<br>
+					<strong>SOLUTION: </strong>In your <em>php.ini</em>, look for <em>disable_functions</em>. 
+					<strong>curl_exec</strong> should be listed there. 
+					Remove it. 
+					If you can't or don't know how, please contact your system administrator or hoster.
+				</p>
+			</div>
+			<?php
+		}
+
+		if ( ini_get( 'allow_url_fopen' ) == '0' ) {
+			?>
+			<div class="error">
+				<p>
+					<strong>allow_url_fopen</strong> is disabled by your PHP configuration.
+					<br>
+					If you experience download problems with all query URLs of format <em>?download_media_file=</em> you need to change this.
 				</p>
 			</div>
 			<?php

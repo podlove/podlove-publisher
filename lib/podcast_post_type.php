@@ -243,7 +243,7 @@ EOT;
 		$default_templates = Model\Template::find_all_by_autoinsert(1);
 		if ( count( $default_templates ) > 0 ) {
 			foreach ( $default_templates as $template ) {
-				$post_content .= '[podlove-template title="' . $template->title . '"]';
+				$post_content .= '[podlove-template id="' . $template->title . '"]';
 			}
 		} else {
 			$post_content .= self::$default_post_content;

@@ -97,6 +97,10 @@ EOT;
 
 		$podcast = Model\Podcast::get_instance();
 		$episode_assets = Model\EpisodeAsset::all();
+
+		if ( ! $episode_assets )
+			return;
+
 		$episode_asset  = $episode_assets[0];
 
 		$podcast_data = array(
