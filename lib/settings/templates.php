@@ -28,61 +28,7 @@ class Templates {
 		if ( $_REQUEST['page'] != 'podlove_templates_settings_handle' )
 			return;
 
-		$codemirror_path = \Podlove\PLUGIN_URL . '/js/admin/codemirror/';
-
-		wp_register_script( 'podlove-codemirror-mode-css-js', $codemirror_path . 'modes/css/css.js', array( 'podlove-codemirror-js' ) );
-		wp_register_script( 'podlove-codemirror-mode-javascript-js', $codemirror_path . 'modes/javascript/javascript.js', array( 'podlove-codemirror-js' ) );
-		wp_register_script( 'podlove-codemirror-mode-xml-js', $codemirror_path . 'modes/xml/xml.js', array( 'podlove-codemirror-js' ) );
-		wp_register_script( 'podlove-codemirror-mode-htmlmixed-js', $codemirror_path . 'modes/htmlmixed/htmlmixed.js', array(
-			'podlove-codemirror-mode-css-js',
-			'podlove-codemirror-mode-javascript-js',
-			'podlove-codemirror-mode-xml-js'
-		) );
-
-		wp_register_script(
-			'podlove-codemirror-util-hint-js',
-			$codemirror_path . 'util/simple-hint.js'
-		);
-
-		wp_register_script(
-			'podlove-codemirror-util-cursor-js',
-			$codemirror_path . 'util/searchcursor.js'
-		);
-
-		wp_register_script(
-			'podlove-codemirror-util-match-js',
-			$codemirror_path . 'util/match-highlighter.js',
-			array( 'podlove-codemirror-util-cursor-js' )
-		);
-
-		wp_register_script(
-			'podlove-codemirror-util-close-js',
-			$codemirror_path . 'util/closetag.js'
-		);
-
-		wp_register_script(
-			'podlove-codemirror-js',
-			$codemirror_path . 'codemirror.js'
-		);
-
-		wp_enqueue_script( 'podlove-codemirror-js' );
-		wp_enqueue_script( 'podlove-codemirror-mode-htmlmixed-js' );
-		wp_enqueue_script( 'podlove-codemirror-util-close-js' );
-		wp_enqueue_script( 'podlove-codemirror-util-match-js' );
-		wp_enqueue_script( 'podlove-codemirror-util-hint-js' );
-
-	    wp_register_style(
-	    	'podlove-codemirror-css',
-			\Podlove\PLUGIN_URL . '/css/codemirror.css'
-	    );
-
-	    wp_register_style(
-	    	'podlove-codemirror-hint-css',
-			$codemirror_path . 'util/simple-hint.css'
-	    );
-
-	    wp_enqueue_style( 'podlove-codemirror-css' );
-	    wp_enqueue_style( 'podlove-codemirror-hint-css' );
+		\Podlove\require_code_mirror();
 	}
 
 	/**

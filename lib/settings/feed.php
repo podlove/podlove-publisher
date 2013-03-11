@@ -196,10 +196,20 @@ class Feed {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
-			$wrapper->string( 'limit_items', array(
+			$limit_options = array(
+				'-1' => __( "No limit. Include all items.", 'podlove' ),
+				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+			);
+			for( $i = 1; $i*5 <= 100; $i++ ) {
+				$limit_options[ $i*5 ] = $i*5;
+			}
+
+			$wrapper->select( 'limit_items', array(
 				'label'       => __( 'Limit Items', 'podlove' ),
-				'description' => __( 'A feed only displays the most recent episodes. Define the amount. Leave empty to use the WordPress default.', 'podlove' ),
-				'html' => array( 'class' => 'regular-text' )
+				'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size.', 'podlove' ),
+				'options' => $limit_options,
+				'please_choose' => false,
+				'default' => '-1'
 			) );
 			
 			$wrapper->radio( 'format', array(

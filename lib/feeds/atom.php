@@ -74,8 +74,9 @@ class Atom {
 		global $wp_query;
 
 		$args = array(
-			'post_type' => 'podcast',
-			'post__in'   => $feed->post_ids()
+			'post_type'      => 'podcast',
+			'post__in'       => $feed->post_ids(),
+			'posts_per_page' => $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items
 		);
 		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );

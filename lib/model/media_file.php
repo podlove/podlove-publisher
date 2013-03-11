@@ -75,6 +75,18 @@ class MediaFile extends Base {
 		return $template;
 	}
 
+	/**
+	 * Dynamically return file path from release, format and show.
+	 *
+	 * @return string
+	 */
+	public function get_file_path() {
+		
+		$url_data  = parse_url( $this->get_file_url() );
+		
+		return trim( $url_data['path'], '/' );
+	}
+
 	public function episode() {
 		return Episode::find_by_id( $this->episode_id );
 	}
@@ -111,6 +123,10 @@ class MediaFile extends Base {
 	 * @return array
 	 */
 	function curl_get_header() {
+
+		if ( ! function_exists( 'curl_exec' ) )
+			return false;
+
 		$curl = curl_init();
 		$curl_version = curl_version();
 

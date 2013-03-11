@@ -17,7 +17,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 			define( 'PODLOVE_MEDIA_PLAYER', 'internal' );
 		}
 
-		require_once 'player/podlove-web-player/podlove-web-player.php';
+		include_once 'player/podlove-web-player/podlove-web-player.php';
 	}
 
 	public function register_meta_boxes() {

@@ -26,6 +26,8 @@ class Podcast_Post_Meta_Box {
 	 */
 	public static function post_type_meta_box_callback( $post ) {
 
+		\Podlove\require_code_mirror();
+		
 		$post_id = $post->ID;
 
 		$podcast = Model\Podcast::get_instance();
@@ -267,13 +269,13 @@ class Podcast_Post_Meta_Box {
 			$episode_assets_form['description'] =
 				sprintf(
 					'<span style="color: red">%s</span>',
-					__( 'You need to configure feeds for this show. No feeds, no fun.', 'podlove' )
+					__( 'You need to configure assets for this show. No assets, no fun.', 'podlove' )
 				)
 				. ' '
 			    . sprintf(
 			    	'<a href="%s">%s</a>',
-			    	admin_url( 'admin.php?page=podlove_shows_settings_handle&action=edit&show=' . $show->id ),
-			    	__( 'Edit this show', 'podlove' )
+			    	admin_url( 'admin.php?page=podlove_episode_assets_settings_handle' ),
+			    	__( 'Configure Assets', 'podlove' )
 			    );
 		}
 

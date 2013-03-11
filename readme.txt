@@ -86,6 +86,30 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.27-alpha =
+* Enhancement: enforce trailing slash at the end media file base url
+* Enhancement: fix huge download-select-font
+* Enhancement: doublecheck curl availablity
+* Bugfix: double quote escaping for Web Player title, subtitle and summary
+
+= 1.3.26-alpha =
+* Enhancement: upgrade Podlove Web Player to 2.0.4
+
+= 1.3.25-alpha =
+* Feature: Setting for Web Player to show or hide chapters by default
+* Enhancement: Open Graph now correctly excludes non-audio assets
+* Enhancement: "File not found" errors now result in some debug output which may help tracing the issue
+* Enhancement: upgrade Podlove Web Player
+* Bugfix: Generated Template shortcodes now use the "id" attribute rather than "title"
+
+= 1.3.24-alpha =
+* Enhancement: remove mediaelementjs demo files
+
+= 1.3.23-alpha =
+* Enhancement: upgrade Podlove Web Player
+* Enhancement: improve handling of url_fopen setting
+* Enhancement: feed item limit is now a select box. default is now "all" instead of "WordPress Default"
+
 = 1.3.22-alpha =
 * Hotfix: solve White Screen of Death issue for PHP 5.4
 

@@ -63,8 +63,11 @@ class Open_Graph extends \Podlove\Modules\Base {
 			<meta property="og:url" content="<?php the_permalink(); ?>" />
 			<?php $media_files = $episode->media_files(); ?>
 			<?php foreach ( $media_files as $media_file ): ?>
-				<meta property="og:audio" content="<?php echo $media_file->get_file_url(); ?>" />
-				<meta property="og:audio:type" content="<?php echo $media_file->episode_asset()->file_type()->mime_type ?>" />
+				<?php $mime_type = $media_file->episode_asset()->file_type()->mime_type; ?>
+				<?php if ( stripos( $mime_type, 'audio' ) !== false ): ?>
+					<meta property="og:audio" content="<?php echo $media_file->get_file_url(); ?>" />
+					<meta property="og:audio:type" content="<?php echo $mime_type ?>" />
+				<?php endif; ?>
 			<?php endforeach ?>
 			<?php
 		}		
