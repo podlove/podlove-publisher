@@ -113,6 +113,9 @@ class StepMigrate extends Step {
 			// update guid
 			update_post_meta( $new_post_id, '_podlove_guid', $post->guid );
 
+			// add redirect from previous url
+			add_post_meta( $new_post_id, 'podlove_alternate_url', get_permalink( $post_id ) );
+
 			echo "<strong>" . $new_post->post_title . "</strong><br>";
 			flush();
 
