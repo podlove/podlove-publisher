@@ -174,7 +174,7 @@ class StepPosts extends Step {
 					?>
 
 					<?php 
-					if ( ! $post_slug_type = $migration_settings['post_slug'] ) {
+					if ( ! isset( $migration_settings['post_slug'] ) || ! $post_slug_type = $migration_settings['post_slug'] ) {
 						$post_slug_type = 'wordpress';
 					}
 					?>
