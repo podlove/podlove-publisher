@@ -106,7 +106,30 @@ class StepMigrate extends Step {
 				'post_date_gmt'  => get_gmt_from_date( $post->post_date )
 			);
 
+			$new_slug = NULL;
+			switch ( $migration_settings['post_slug'] ) {
+				case 'wordpress':
+					$new_slug = $post->post_name;
+					break;
+				case 'file':
+					$new_slug = Assistant::get_file_slug( $post );
+					break;
+				case 'number':
+					$new_slug = Assistant::get_number_slug( $post );
+					break;
+			}
+
+			$override_slug = function( $data, $postarr ) use ( $new_slug ) {
+				if ( $new_slug ) {
+					$data['post_name'] = $new_slug;
+				}
+				return $data;
+			};
+
+			add_filter( 'wp_insert_post_data', $override_slug, 10, 2 );
 			$new_post_id = wp_insert_post( $new_post );
+			remove_filter( 'wp_insert_post_data', $override_slug, 10, 2 );
+
 			$new_post = get_post( $new_post_id );
 
 			// update guid
