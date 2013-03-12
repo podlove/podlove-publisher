@@ -110,9 +110,7 @@ class StepPosts extends Step {
 					<table class="table table-striped">
 						<thead>
 							<tr>
-						 		<th>
-						 			<input type="checkbox" checked="checked">
-						 		</th>
+						 		<th></th>
 						 		<th>
 						 			<?php echo __( 'Title', 'podlove' ) ?>
 						 		</th>
@@ -200,7 +198,7 @@ class StepPosts extends Step {
 						<thead>
 							<tr>
 								<th>
-									<input type="checkbox" checked="checked">
+									<input type="checkbox" checked="checked" id="toggle_all_episodes">
 								</th>
 								<th>#</th>
 								<th>
@@ -208,7 +206,7 @@ class StepPosts extends Step {
 								</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="episodes_to_migrate">
 							<?php foreach ( $episodes as $episode_post ): ?>
 								<?php $post_data = new Legacy_Post_Parser( $episode_post->ID ); ?>
 								<tr>
@@ -321,6 +319,11 @@ class StepPosts extends Step {
 
 					<script type="text/javascript">
 					jQuery(function($) {
+
+						$("#toggle_all_episodes").on("click", function() {
+							var checked = $(this).attr("checked") == "checked";
+							$("#episodes_to_migrate input[type='checkbox']").attr("checked", checked);
+						});
 
 						$(".verify_migration_asset").on("click", function(e) {
 							e.preventDefault();
