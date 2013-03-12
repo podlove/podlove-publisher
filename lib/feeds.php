@@ -71,6 +71,12 @@ function remove_podPress_hooks() {
 	remove_action( 'atom_entry', 'podPress_atom_entry' );
 }
 
+function remove_powerPress_hooks() {
+	remove_action( 'rss2_ns', 'powerpress_rss2_ns' );
+	remove_action( 'rss2_head', 'powerpress_rss2_head' );
+	remove_action( 'rss2_item', 'powerpress_rss2_item' );
+}
+
 // Hooks:
 // parse_query => query vars available
 // wp => query_posts done
@@ -89,6 +95,7 @@ add_action( 'wp', function () {
 	} else {
 
 		remove_podPress_hooks();
+		remove_powerPress_hooks();
 
 		if ( $feed->format === "rss" ) {
 			new	\Podlove\Feeds\RSS( $feed->slug );
