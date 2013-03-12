@@ -271,7 +271,7 @@ class StepPosts extends Step {
 																	<?php
 																	$asset_name = $file_type['file_type']->name;
 																	$asset_url = sprintf( "%s%s.%s",
-																		$migration_settings['podcast']['media_file_base_url'],
+																		\Podlove\Modules\Migration\get_media_file_base_url(),
 																		Assistant::get_episode_slug( $episode_post, $slug_type ),
 																		$file_type['file_type']->extension
 																	 );
