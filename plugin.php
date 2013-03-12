@@ -476,12 +476,31 @@ function validate_file() {
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Content-type: application/json');
-	echo json_encode($result);
+	echo json_encode( $result );
 
 	die();
 }
 
 add_action( 'wp_ajax_podlove-validate-file', '\Podlove\AJAX\validate_file' );
+
+function validate_url() {
+	$file_url = $_REQUEST['file_url'];
+
+	$info = \Podlove\Model\MediaFile::curl_get_header_for_url( $file_url );
+
+	$result = array();
+	$result['file_url']  = $file_url;
+	$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 );
+	$result['file_size'] = $info['download_content_length'];
+
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+	echo json_encode( $result );
+
+	die();
+}
+add_action( 'wp_ajax_podlove-validate-url', '\Podlove\AJAX\validate_url' );
 
 function update_file() {
 	$file_id = $_REQUEST['file_id'];
