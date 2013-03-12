@@ -115,6 +115,19 @@ class StepMigrate extends Step {
 			// add redirect from previous url
 			add_post_meta( $new_post_id, 'podlove_alternate_url', get_permalink( $post_id ) );
 
+			// migrate taxonomies
+			$taxonomies = get_object_taxonomies( get_post_type( $post_id ) );
+
+			foreach( $taxonomies AS $tax ) {
+				$terms = wp_get_object_terms( $post_id, $tax );
+				$term = array();
+				foreach( $terms AS $t ) {
+					$term[] = $t->slug;
+				} 
+				
+				wp_set_object_terms( $new_post_id, $term, $tax );
+			}
+
 			echo "<strong>" . $new_post->post_title . "</strong><br>";
 			flush();
 
