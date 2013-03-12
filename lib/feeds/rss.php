@@ -11,6 +11,7 @@ class RSS {
 		add_action( 'rss2_ns', function () {
 			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" ';
 			echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
+			echo 'xmlns:content="http://purl.org/rss/1.0/modules/content/" ';
 		} );
 
 		$podcast        = Model\Podcast::get_instance();

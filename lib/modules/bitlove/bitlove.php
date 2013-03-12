@@ -30,6 +30,9 @@ class Bitlove extends \Podlove\Modules\Base {
 		if ( 'podcast' !== get_post_type() )
 			return $content;
 
+		if ( is_feed() )
+			return $content;
+
 		$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 		$media_files = $episode->media_files();
 		$downloads = array();

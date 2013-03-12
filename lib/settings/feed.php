@@ -217,6 +217,12 @@ class Feed {
 				'options' => array( 'rss' => 'RSS', 'atom' => 'Atom' ),
 				'default' => 'rss'
 			) );
+
+			$wrapper->checkbox( 'embed_content_encoded', array(
+				'label'       => __( 'Include HTML Content', 'podlove' ),
+				'description' => __( 'Warning: Potentially creates huge feeds.', 'podlove' ),
+				'default'     => false
+			) );
 		} );
 	}
 	

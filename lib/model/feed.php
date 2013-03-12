@@ -179,13 +179,4 @@ Feed::property( 'redirect_http_status', 'INT' );
 Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
-
-
-// episode_asset_id
-// => für audio
-// => für video
-// => für text
-// => für ... (alle types)
-
-// bitlove support
-// auf feed level aktivieren
+Feed::property( 'embed_content_encoded', 'INT' );

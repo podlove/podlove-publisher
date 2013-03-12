@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 27 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 28 );
 
 add_action( 'init', function () {
 	
@@ -211,6 +211,12 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` ADD COLUMN `publication_date` DATETIME AFTER `record_date`',
 				Model\Episode::table_name()
 			) );
+		break;
+		case 28:
+		$wpdb->query( sprintf(
+			'ALTER TABLE `%s` ADD COLUMN `embed_content_encoded` INT AFTER `limit_items`',
+			Model\Feed::table_name()
+		) );
 		break;
 	}
 
