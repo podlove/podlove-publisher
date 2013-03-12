@@ -291,11 +291,21 @@ class StepPosts extends Step {
 																);
 																?>
 															</td>
-															<td>
-																<span style="color: green">✓</span>
+															<td class="status">
+																<div class="success" style="display: none">
+																	<span style="color: green">✓</span>
+																</div>
+																<div class="failure" style="display: none">
+																	<span style="color: red">!!!</span>
+																</div>
 															</td>
-															<td>
-																<button class="button">verify</button>
+															<td class="update">
+																<div style="display: none">
+																	updating ...
+																</div>
+																<div>
+																	<button class="button verify_migration_asset">verify</button>
+																</div>
 															</td>
 														</tr>
 														<?php endforeach; ?>
@@ -308,6 +318,47 @@ class StepPosts extends Step {
 							<?php endforeach; ?>
 						</tbody>
 					</table>
+
+					<script type="text/javascript">
+					jQuery(function($) {
+
+						$(".verify_migration_asset").on("click", function(e) {
+							e.preventDefault();
+
+							var container = $(this).closest("tr");
+
+							var data = {
+								action: 'podlove-validate-url',
+								file_url: container.find("a").attr("href")
+							};
+
+							container.find('.update div').toggle();
+
+							var request = $.ajax({
+								url: ajaxurl,
+								data: data,
+								dataType: 'json',
+								success: function(result) {
+									if ( result.file_size > 0) {
+										$('.success', container).show();
+										$('.failure', container).hide();
+									} else {
+										$('.success', container).hide();
+										$('.failure', container).show();
+									}
+									container.find('.update div').toggle();
+								}
+							});
+
+							return false;
+						});
+
+						$(document).ready(function(){
+							$(".verify_migration_asset").click();
+						});
+						
+					});
+					</script>
 
 					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
 					
