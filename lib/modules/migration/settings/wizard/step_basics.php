@@ -78,19 +78,19 @@ class StepBasics extends Step {
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Title', 'podlove' ); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xlarge" name="podlove_migration[podcast][title]" value="<?php echo $podcast['title'] ?>">
+							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][title]" value="<?php echo $podcast['title'] ?>">
 						</div>
 					</div>
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Subtitle', 'podlove' ); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xlarge" name="podlove_migration[podcast][subtitle]" value="<?php echo $podcast['subtitle'] ?>">
+							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][subtitle]" value="<?php echo $podcast['subtitle'] ?>">
 						</div>
 					</div>
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Summary', 'podlove' ); ?></label>
 						<div class="controls">
-							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove' ); ?>"><?php echo $podcast['summary'] ?></textarea>
+							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xxlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove' ); ?>"><?php echo $podcast['summary'] ?></textarea>
 						</div>
 					</div>
 					<div class="control-group">
@@ -101,7 +101,7 @@ class StepBasics extends Step {
 								<select class="input-xxlarge" name="podlove_migration[podcast][media_file_base_url_preset]">
 									<?php foreach ( $base_urls as $base_url => $count ): ?>
 										<option value="<?php echo $base_url ?>" <?php echo selected( $podcast['media_file_base_url_preset'], $base_url ) ?>>
-											<?php echo $base_url ?> (used in <?php echo $count ?> Enclosures)
+											<?php echo $base_url ?> (used in <?php echo $count ?> enclosures)
 										</option>
 									<?php endforeach; ?>
 								</select>
