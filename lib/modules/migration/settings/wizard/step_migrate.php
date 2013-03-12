@@ -58,7 +58,7 @@ class StepMigrate extends Step {
 				$feed = new Model\Feed();
 				$feed->episode_asset_id = $asset->id;
 				$feed->name         = $file_type->extension . ' Feed';
-				$feed->title        = $file_type->extension . ' Feed';
+				$feed->title        = $file_type->name;
 				$feed->slug         = $file_type->extension;
 				$feed->format       = 'rss';
 				$feed->enable       = true;
