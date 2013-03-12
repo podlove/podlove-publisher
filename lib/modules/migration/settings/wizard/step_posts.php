@@ -106,7 +106,7 @@ class StepPosts extends Step {
 						<?php endforeach; ?>
 					<?php endif; ?>
 
-					<h3><?php echo __( 'File Types', 'podlove' ) ?></h3>
+					<h3><?php echo __( 'Episode Assets', 'podlove' ) ?></h3>
 					<table class="table table-striped">
 						<thead>
 							<tr>
@@ -150,13 +150,16 @@ class StepPosts extends Step {
 						</tbody>
 					</table>
 
+					<?php $slug_type = 'file'; ?>
+					<input type="hidden" name="podlove_migration[slug]" value="file"/>
+
+					<?php /*
 					<?php 
 					if ( ! $slug_type = $migration_settings['slug'] ) {
 						$slug_type = 'file';
 					}
 					?>
-
-					<h3><?php echo __( 'Slug', 'podlove' ); ?></h3>
+					<h3><?php echo __( 'Episode Media File Slug', 'podlove' ); ?></h3>
 					<label class="radio">
 						<input type="radio" name="podlove_migration[slug]" value="file" <?php checked( $slug_type == 'file' ) ?>>
 						File Slug
@@ -169,6 +172,28 @@ class StepPosts extends Step {
 						<input type="radio" name="podlove_migration[slug]" value="number" <?php checked( $slug_type == 'number' ) ?>>
 						Number Slug
 					</label>
+					*/
+					?>
+
+					<?php 
+					if ( ! $post_slug_type = $migration_settings['post_slug'] ) {
+						$post_slug_type = 'wordpress';
+					}
+					?>
+
+					<h3><?php echo __( 'Post Slug', 'podlove' ); ?></h3>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[post_slug]" value="wordpress" <?php checked( $post_slug_type == 'wordpress' ) ?>>
+						Reuse previous WordPress post slug.
+					</label>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[post_slug]" value="file" <?php checked( $post_slug_type == 'file' ) ?>>
+						Extract slug from file name. Use file basename.
+					</label>
+					<label class="radio">
+						<input type="radio" name="podlove_migration[post_slug]" value="number" <?php checked( $post_slug_type == 'number' ) ?>>
+						Number Slug: This is the number of your episode with leading zeros.
+					</label>
 
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
 					<table class="table table-striped">
@@ -179,20 +204,7 @@ class StepPosts extends Step {
 								</th>
 								<th>#</th>
 								<th>
-									<?php echo __( 'Title', 'podlove' ) ?>
-								</th>
-								</th>
-								<th>
-									<?php echo __( 'File Slug', 'podlove' ) ?>
-								</th>
-								<th>
-									<?php echo __( 'WordPress Slug', 'podlove' ) ?>
-								</th>
-								<th>
-									<?php echo __( 'Number Slug', 'podlove' ) ?>
-								</th>
-								<th>
-									<?php echo __( 'Duration', 'podlove' ) ?>
+									<?php echo __( 'Detected Episode', 'podlove' ) ?>
 								</th>
 							</tr>
 						</thead>
@@ -211,33 +223,88 @@ class StepPosts extends Step {
 							 				<?php echo get_the_title( $episode_post->ID ) ?>
 										</a>
 									</td>
+								</tr>
+								<tr>
+									<td colspan="2"></td>
 									<td>
-										<?php echo Assistant::get_file_slug( $episode_post ) ?>
-									</td>
-									<td>
-										<?php echo $episode_post->post_name ?>
-									</td>
-									<td>
-										<?php echo Assistant::get_number_slug( $episode_post ) ?>
-									</td>
-									<td>
-										<?php echo $post_data->get_duration() ?>
+										<table class="table table-condensed table-bordered">
+											<tr>
+												<th>Post Slug</th>
+												<td>
+													<?php 
+													switch ( $post_slug_type ) {
+														case 'wordpress':
+															echo $episode_post->post_name;
+															break;
+														case 'file':
+															echo Assistant::get_file_slug( $episode_post );
+															break;
+														case 'number':
+															echo Assistant::get_number_slug( $episode_post );
+															break;
+													}
+													?>
+												</td>
+											</tr>
+											<tr>
+												<th>Subtitle</th>
+												<td><?php echo $post_data->get_subtitle() ?></td>
+											</tr>
+											<tr>
+												<th>Summary</th>
+												<td><?php echo $post_data->get_summary() ?></td>
+											</tr>
+											<tr>
+												<th>Duration</th>
+												<td><?php echo $post_data->get_duration() ?></td>
+											</tr>
+											<tr>
+												<th>Episode Media File Slug</th>
+												<td><?php echo Assistant::get_file_slug( $episode_post ) ?></td>
+											</tr>
+											<tr>
+												<th>Assets</th>
+												<td>
+													<table class="table table-condensed table-bordered">
+														<?php foreach ( $file_types as $file_type ): ?>
+														<tr>
+															<td>
+																<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
+																	<?php
+																	$asset_name = $file_type['file_type']->name;
+																	$asset_url = sprintf( "%s%s.%s",
+																		$migration_settings['podcast']['media_file_base_url'],
+																		Assistant::get_episode_slug( $episode_post, $slug_type ),
+																		$file_type['file_type']->extension
+																	 );
+
+																	echo $asset_name;
+																	?>
+																<?php endif; ?>
+															</td>
+															<td>
+																<?php 
+																echo sprintf(
+																	'<a href="%s" target="_blank">%s</a>',
+																	$asset_url,
+																	Assistant::get_episode_slug( $episode_post, $slug_type ) . '.' . $file_type['file_type']->extension
+																);
+																?>
+															</td>
+															<td>
+																<span style="color: green">✓</span>
+															</td>
+															<td>
+																<button class="button">verify</button>
+															</td>
+														</tr>
+														<?php endforeach; ?>
+													</table>
+												</td>
+											</tr>
+										</table>
 									</td>
 								</tr>
-								<?php foreach ( $file_types as $file_type ): ?>
-									<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
-										<tr>
-											<td colspan="2"></td>
-											<td colspan="5">
-												<?php echo sprintf( "%s%s.%s",
-													$migration_settings['podcast']['media_file_base_url'],
-													Assistant::get_episode_slug( $episode_post, $slug_type ),
-													$file_type['file_type']->extension
-												 ); ?>
-											</td>
-										</tr>
-									<?php endif; ?>
-								<?php endforeach; ?>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
