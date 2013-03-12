@@ -93,14 +93,14 @@ class StepPosts extends Step {
 				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 					<input type="submit" name="next" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
-					<input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save and Refresh', 'podlove' ) ?>">
+					<input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save', 'podlove' ) ?>">
 
 					<div class="clearfix"></div>
 
 					<?php if ( count( $errors ) ): ?>
-						<h3>Errors</h3>
+						<h3>Warnings</h3>
 						<?php foreach ( $errors as $error ): ?>
-							<div class="alert alert-error">
+							<div class="alert">
 								<?php echo $error ?>
 							</div>
 						<?php endforeach; ?>
@@ -363,7 +363,8 @@ class StepPosts extends Step {
 					});
 					</script>
 
-					<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
+					<input type="submit" name="next" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
+					<input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save', 'podlove' ) ?>">
 					
 				</form>
 			</div>
