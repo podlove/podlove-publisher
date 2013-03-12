@@ -70,10 +70,11 @@ Use these in an episode post:
 **Parameters**
 - field: (required) Name of the data field. Possible values:
 ```
-title, subtitle, summary, slug, duration, chapters, image
+title, subtitle, summary, slug, duration, chapters, image, record_date, publication_date
 ```
 
 - format: (optional) used by `duration` field. Possible values: `full`, `HH:MM:SS`. Default: `HH:MM:SS`
+- date_format: (optional) used by `record_date` and `publication_date`. For options, see (date manual)[http://php.net/manual/en/function.date.php]. Defaults to WordPress settings.
 
 ```
 [podlove-episode field="subtitle"]
