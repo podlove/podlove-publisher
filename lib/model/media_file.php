@@ -123,14 +123,18 @@ class MediaFile extends Base {
 	 * @return array
 	 */
 	function curl_get_header() {
+		return self::curl_get_header_for_url( $this->get_file_url() );
+	}
 
+	public static function curl_get_header_for_url( $url ) {
+		
 		if ( ! function_exists( 'curl_exec' ) )
 			return false;
 
 		$curl = curl_init();
 		$curl_version = curl_version();
 
-		curl_setopt( $curl, CURLOPT_URL, $this->get_file_url() );
+		curl_setopt( $curl, CURLOPT_URL, $url );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); // make curl_exec() return the result
 		curl_setopt( $curl, CURLOPT_HEADER, true );         // header only
 		curl_setopt( $curl, CURLOPT_NOBODY, true );         // return no body; HTTP request method: HEAD
