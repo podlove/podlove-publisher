@@ -19,7 +19,7 @@ class Settings {
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_general',
 			/* $title 	 */ __( '', 'podlove' ),	
-			/* $callback */ function () { /* section head html */ }, 		
+			/* $callback */ function () { echo '<h3>' . __( 'General', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 		
@@ -69,6 +69,53 @@ class Settings {
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
+		);
+
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_episode',
+			/* $title 	 */ __( '', 'podlove' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Episodes', 'podlove' ) . '</h3>'; },
+			/* $page	 */ Settings::$pagehook	
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_episode_record_date',
+			/* $title    */ sprintf(
+				'<label for="enable_episode_record_date">%s</label>',
+				__( 'Enable record date field.', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<label>
+					<input name="podlove[enable_episode_record_date]" id="enable_episode_record_date" type="radio" value="1" <?php checked( \Podlove\get_setting( 'enable_episode_record_date' ), 1 ) ?> /> <?php echo __( 'enable', 'podlove' ) ?>
+				</label>
+				<label>
+					<input name="podlove[enable_episode_record_date]" id="enable_episode_record_date" type="radio" value="0" <?php checked( \Podlove\get_setting( 'enable_episode_record_date' ), 0 ) ?> /> <?php echo __( 'disable', 'podlove' ) ?>
+				</label>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_episode_publication_date',
+			/* $title    */ sprintf(
+				'<label for="enable_episode_publication_date">%s</label>',
+				__( 'Enable publication date field.', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<label>
+					<input name="podlove[enable_episode_publication_date]" id="enable_episode_publication_date" type="radio" value="1" <?php checked( \Podlove\get_setting( 'enable_episode_publication_date' ), 1 ) ?> /> <?php echo __( 'enable', 'podlove' ) ?>
+				</label>
+				<label>
+					<input name="podlove[enable_episode_publication_date]" id="enable_episode_publication_date" type="radio" value="0" <?php checked( \Podlove\get_setting( 'enable_episode_publication_date' ), 0 ) ?> /> <?php echo __( 'disable', 'podlove' ) ?>
+				</label>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
 		);
 		
 		register_setting( Settings::$pagehook, 'podlove' );
