@@ -26,7 +26,7 @@ And this is just the beginning. We have a rich roadmap that will bring even more
 
 Development of the plugin is an open process. The current version is available on github:
 
-http://github.com/eteubert/podlove
+https://github.com/podlove/podlove-publisher
 
 Feel free to contribute and to fix errors or send improvements via github.
 
