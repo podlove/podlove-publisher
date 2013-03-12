@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.3.28-alpha =
 * Feature: Two new episode fields `publication_date` and `record_date`. Accessible via episode shortcode. Must be enabled in expert settings.
+* Bugfix: fix "No More Enclosures" feature. I was using a deprecated hook
 
 = 1.3.27-alpha =
 * Enhancement: enforce trailing slash at the end media file base url
