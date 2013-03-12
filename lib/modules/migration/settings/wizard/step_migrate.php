@@ -31,7 +31,7 @@ class StepMigrate extends Step {
 		$podcast->title                = $migration_settings['podcast']['title'];
 		$podcast->subtitle             = $migration_settings['podcast']['subtitle'];
 		$podcast->summary              = $migration_settings['podcast']['summary'];
-		$podcast->media_file_base_uri  = $migration_settings['podcast']['media_file_base_url'];
+		$podcast->media_file_base_uri  = \Podlove\Modules\Migration\get_media_file_base_url();
 		$podcast->save();
 
 		// Create Assets

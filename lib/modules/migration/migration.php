@@ -23,3 +23,28 @@ class Migration extends \Podlove\Modules\Base {
 			new Settings\Assistant( \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE );
 		}
 }
+
+function get_podcast_settings() {
+
+	$migration_settings = get_option( 'podlove_migration', array() );
+
+	if ( isset( $migration_settings['podcast'] ) )
+		return $migration_settings['podcast'];
+	else
+		return array(
+			'title'    => get_bloginfo('name'),
+			'subtitle' => get_bloginfo('description'),
+			'media_file_base_url_option' => 'preset'
+		);
+}
+
+function get_media_file_base_url() {
+
+	$podcast = get_podcast_settings();
+
+	if ( isset( $podcast['media_file_base_url_option'] ) && $podcast['media_file_base_url_option'] == 'preset' )
+		return $podcast['media_file_base_url_preset'];
+	else
+		return $podcast['media_file_base_url_custom'];
+	
+}

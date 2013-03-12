@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Modules\Migration\Settings\Wizard;
+use Podlove\Modules\Migration\Enclosure;
 
 class StepBasics extends Step {
 
@@ -50,12 +51,25 @@ class StepBasics extends Step {
 		</div>
 
 		<?php 
-		$migration_settings = get_option( 'podlove_migration', array() );
-		if ( isset( $migration_settings['podcast'] ) ) {
-			$podcast = $migration_settings['podcast'];
-		} else {
-			$podcast = array();
+		$base_urls = array();
+		$args = array( 'posts_per_page' => -1 );
+		$query = new \WP_Query( $args );
+		while( $query->have_posts() ) {
+			$query->next_post();
+			$enclosures = Enclosure::all_for_post( $query->post->ID );
+			foreach ( $enclosures as $enclosure ) {
+				$base_url = substr( $enclosure->url , 0, strrpos( $enclosure->url , "/" ) + 1 );
+				if ( isset( $base_urls[ $base_url ] ) ) {
+					$base_urls[ $base_url ]++;
+				} else {
+					$base_urls[ $base_url ] = 1;
+				}
+			}
 		}
+
+		arsort( $base_urls );
+
+		$podcast = \Podlove\Modules\Migration\get_podcast_settings();
 		?>
 
 		<div class="row-fluid">
@@ -82,8 +96,22 @@ class StepBasics extends Step {
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Media File Base URL', 'podlove' ); ?></label>
 						<div class="controls">
-							<input type="text" name="podlove_migration[podcast][media_file_base_url]" value="<?php echo $podcast['media_file_base_url'] ?>" class="input-xlarge" placeholder="http://cdn.example.com/pod/">
+							<label class="radio">
+								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="preset" <?php checked( $podcast['media_file_base_url_option'], 'preset' ) ?>> 
+								<select class="input-xxlarge" name="podlove_migration[podcast][media_file_base_url_preset]">
+									<?php foreach ( $base_urls as $base_url => $count ): ?>
+										<option value="<?php echo $base_url ?>" <?php echo selected( $podcast['media_file_base_url_preset'], $base_url ) ?>>
+											<?php echo $base_url ?> (used in <?php echo $count ?> Enclosures)
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</label>
+							<label class="radio">
+								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="custom" <?php checked( $podcast['media_file_base_url_option'], 'custom' ) ?>>
+								<input type="text"  name="podlove_migration[podcast][media_file_base_url_custom]" value="<?php echo ( isset( $podcast['media_file_base_url_custom'] ) ? $podcast['media_file_base_url_custom'] : '' ) ?>" class="input-xxlarge" placeholder="http://cdn.example.com/pod/">
+							</label>
 						</div>
+
 					</div>
 					<div class="control-group">
 						<div class="controls">
