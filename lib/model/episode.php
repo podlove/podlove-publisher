@@ -94,7 +94,6 @@ class Episode extends Base {
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 Episode::property( 'post_id', 'INT' );
-Episode::property( 'show_id', 'INT' );
 Episode::property( 'subtitle', 'TEXT' );
 Episode::property( 'summary', 'TEXT' );
 Episode::property( 'enable', 'INT' ); // listed in podcast directories or not?
@@ -102,3 +101,5 @@ Episode::property( 'slug', 'VARCHAR(255)' );
 Episode::property( 'duration', 'VARCHAR(255)' );
 Episode::property( 'cover_art', 'VARCHAR(255)' );
 Episode::property( 'chapters', 'TEXT' );
+Episode::property( 'record_date', 'DATETIME' );
+Episode::property( 'publication_date', 'DATETIME' );
