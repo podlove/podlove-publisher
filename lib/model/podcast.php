@@ -166,7 +166,6 @@ class Podcast {
 
 $podcast = Podcast::get_instance();
 $podcast->property( 'title' );
-$podcast->property( 'slug' ); // identifier
 $podcast->property( 'subtitle' );
 $podcast->property( 'cover_image' );
 $podcast->property( 'summary' );

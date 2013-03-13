@@ -136,7 +136,6 @@ class Dashboard {
 
 		$required_attributes = array(
 			'title'               => __( 'Your podcast needs a title.', 'podlove' ),
-			'slug'                => __( 'Your podcast needs a mnemonic.', 'podlove' ),
 			'media_file_base_uri' => __( 'Your podcast needs a base URL for file storage.', 'podlove' ),
 		);
 		$required_attributes = apply_filters( 'podlove_podcast_required_attributes', $required_attributes );
