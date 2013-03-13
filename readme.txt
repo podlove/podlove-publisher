@@ -88,8 +88,19 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.3.28-alpha =
 * Feature: Two new episode fields `publication_date` and `record_date`. Accessible via episode shortcode. Must be enabled in expert settings.
-* Enhancement: upgrade Podlove Web Player to 2.0.5
 * Bugfix: fix "No More Enclosures" feature. I was using a deprecated hook
+* Enhancement: upgrade Podlove Web Player to 2.0.5
+* Change: Remove support for mnemonic and Episode Assistant module
+
+In the beginning, everything evolved around the episode numbers and the
+mnemonic. Then, it made sense to support this concept by something like the
+episode assistant.
+
+Now, the mnemonic is merely an afterthought. It's used by no part of
+the system except the episode assistant. And this doesn't do a lot that
+can't be done without it either. So we decided to drop both for now.
+
+A similar concept might return once we tackle stuff like seasons.
 
 = 1.3.27-alpha =
 * Enhancement: enforce trailing slash at the end media file base url

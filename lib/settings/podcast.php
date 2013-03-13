@@ -69,12 +69,6 @@ class Podcast {
 						'html'        => array( 'rows' => 5, 'cols' => 40 )
 					) );
 
-					$wrapper->string( 'slug', array(
-						'label'       => __( 'Mnemonic', 'podlove' ),
-						'description' => __( 'The abbreviation for your podcast. Commonly the initials of the title.', 'podlove' ),
-						'html'        => array( 'class' => 'regular-text required' )
-					) );
-
 					$wrapper->string( 'media_file_base_uri', array(
 						'label'       => __( 'Media File Base URL', 'podlove' ),
 						'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
