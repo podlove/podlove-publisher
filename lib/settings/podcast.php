@@ -166,12 +166,6 @@ class Podcast {
 						'type'    => 'checkbox',
 		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 					) );
-
-					$wrapper->string( 'url_template', array(
-						'label'       => __( 'Episode Asset URL Template', 'podlove' ),
-						'description' => __( 'You probably don\'t want to change this.', 'podlove' ),
-						'html' => array( 'class' => 'large-text required' )
-					) );
 				});
 				?>
 				

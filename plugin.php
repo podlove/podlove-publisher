@@ -14,10 +14,6 @@ function activate_for_current_blog() {
 	Model\Episode::build();
 	Model\Template::build();
 
-	$podcast = Model\Podcast::get_instance();
-	$podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
-	$podcast->save();
-
 	if ( ! Model\FileType::has_entries() ) {
 		$default_types = array(
 			array( 'name' => 'MP3 Audio',              'type' => 'audio',    'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),

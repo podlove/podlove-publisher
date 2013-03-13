@@ -14,7 +14,8 @@ function get_setting( $name ) {
 		'hide_wp_feed_discovery' => 'off',
 		'custom_episode_slug'    => 'podcast',
 		'enable_episode_record_date'      => 0,
-		'enable_episode_publication_date' => 0
+		'enable_episode_publication_date' => 0,
+		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%'
 	);
 
 	$options = get_option( 'podlove' );

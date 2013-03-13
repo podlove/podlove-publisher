@@ -162,6 +162,10 @@ class Podcast {
 		
 		return $t;
 	}
+
+	public function get_url_template() {
+		return \Podlove\get_setting( 'url_template' );
+	}
 }
 
 $podcast = Podcast::get_instance();
@@ -187,4 +191,4 @@ $podcast->property( 'media_file_base_uri' );
 $podcast->property( 'uri_delimiter' );
 $podcast->property( 'episode_number_length' );
 $podcast->property( 'language' );
-$podcast->property( 'url_template' );
+// $podcast->property( 'url_template' );
