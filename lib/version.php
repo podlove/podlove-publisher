@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 27 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 28 );
 
 add_action( 'init', function () {
 	
@@ -210,6 +210,16 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( sprintf(
 				'ALTER TABLE `%s` ADD COLUMN `publication_date` DATETIME AFTER `record_date`',
 				Model\Episode::table_name()
+			) );
+		break;
+		case 28:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `position` FLOAT AFTER `downloadable`',
+				Model\EpisodeAsset::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'UPDATE `%s` SET position = id',
+				Model\EpisodeAsset::table_name()
 			) );
 		break;
 	}

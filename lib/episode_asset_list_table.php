@@ -22,7 +22,8 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 				$_REQUEST['page'],
 				$action,
 				$episode_asset->id
-			);
+			) . '<input type="hidden" class="position" value="' . $episode_asset->position . '">'
+			  . '<input type="hidden" class="asset_id" value="' . $episode_asset->id . '">';
 		};
 
 		$actions = array(
@@ -62,8 +63,8 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		
 		// retrieve data
-		$data = \Podlove\Model\EpisodeAsset::all();
-		
+		$data = \Podlove\Model\EpisodeAsset::all( 'ORDER BY position ASC' );
+
 		// get current page
 		$current_page = $this->get_pagenum();
 		// get total items

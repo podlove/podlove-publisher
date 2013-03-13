@@ -38,7 +38,7 @@ jQuery(function($) {
 		PODLOVE.Episode($(this));
 	});
 
-	$("#podlove_episode_assets").each(function() {
+	$("#podlove_episode_assets, table.episode_assets").each(function() {
 		PODLOVE.EpisodeAssetSettings($(this));
 	});
 

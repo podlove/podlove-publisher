@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.3.28-alpha =
 * Feature: Two new episode fields `publication_date` and `record_date`. Accessible via episode shortcode. Must be enabled in expert settings.
+* Feature: Assets can be sorted via drag'n'drop. Influences download button/list order.
 * Bugfix: fix "No More Enclosures" feature. I was using a deprecated hook
 * Enhancement: upgrade Podlove Web Player to 2.0.5
 * Enhancement: move episode asset url to expert settings

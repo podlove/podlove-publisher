@@ -313,16 +313,17 @@ abstract class Base
 
 	/**
 	 * Retrieve all entries from the table.
-	 * 
+	 *
+	 * @param  string $sql_suffix optional SQL, appended after FROM clause
 	 * @return array list of model objects
 	 */
-	public static function all() {
+	public static function all( $sql_suffix = '' ) {
 		global $wpdb;
 		
 		$class = get_called_class();
 		$models = array();
 		
-		$rows = $wpdb->get_results( 'SELECT * FROM ' . self::table_name() );
+		$rows = $wpdb->get_results( 'SELECT * FROM ' . self::table_name() . ' ' . $sql_suffix );
 		foreach ( $rows as $row ) {
 			$model = new $class();
 			$model->flag_as_not_new();
