@@ -340,7 +340,7 @@ class EpisodeAsset {
 				</th>
 				<td>
 					<div id="url_preview" style="font-size: 1.5em"></div>
-					<div id="url_template" style="display: none;"><?php echo Model\Podcast::get_instance()->url_template ?></div>
+					<div id="url_template" style="display: none;"><?php echo Model\Podcast::get_instance()->get_url_template() ?></div>
 				</td>
 			</tr>
 			<?php

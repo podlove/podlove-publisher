@@ -65,8 +65,8 @@ class MediaFile extends Base {
 		if ( ! $episode_asset || ! $file_type )
 			return '';
 
-		$template = $podcast->url_template;
-		$template = apply_filters( 'podlove_file_url_template', $podcast->url_template );
+		$template = $podcast->get_url_template();
+		$template = apply_filters( 'podlove_file_url_template', $template );
 		$template = str_replace( '%media_file_base_url%', trailingslashit( $podcast->media_file_base_uri ), $template );
 		$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
 		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
