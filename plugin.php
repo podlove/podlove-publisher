@@ -596,3 +596,18 @@ function create_episode() {
 	die();
 }
 add_action( 'wp_ajax_podlove-create-episode', '\Podlove\AJAX\create_episode' );
+
+function update_asset_position() {
+
+	$asset_id = (int)   $_REQUEST['asset_id'];
+	$position = (float) $_REQUEST['position'];
+
+	$asset = Model\EpisodeAsset::find_by_id( $asset_id );
+	if ( $asset ) {
+		$asset->position = $position;
+		$asset->save();
+	}
+
+	die();
+}
+add_action( 'wp_ajax_podlove-update-asset-position', '\Podlove\AJAX\update_asset_position' );
