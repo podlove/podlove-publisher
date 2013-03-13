@@ -69,12 +69,6 @@ class Podcast {
 						'html'        => array( 'rows' => 5, 'cols' => 40 )
 					) );
 
-					$wrapper->string( 'slug', array(
-						'label'       => __( 'Mnemonic', 'podlove' ),
-						'description' => __( 'The abbreviation for your podcast. Commonly the initials of the title.', 'podlove' ),
-						'html'        => array( 'class' => 'regular-text required' )
-					) );
-
 					$wrapper->string( 'media_file_base_uri', array(
 						'label'       => __( 'Media File Base URL', 'podlove' ),
 						'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
@@ -171,12 +165,6 @@ class Podcast {
 						'description' => __( '', 'podlove' ),
 						'type'    => 'checkbox',
 		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
-					) );
-
-					$wrapper->string( 'url_template', array(
-						'label'       => __( 'Episode Asset URL Template', 'podlove' ),
-						'description' => __( 'You probably don\'t want to change this.', 'podlove' ),
-						'html' => array( 'class' => 'large-text required' )
 					) );
 				});
 				?>

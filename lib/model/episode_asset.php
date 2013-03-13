@@ -3,6 +3,16 @@ namespace Podlove\Model;
 
 class EpisodeAsset extends Base {
 
+	public function save() {
+		global $wpdb;
+
+		if ( ! $this->position ) {
+			$this->position = $wpdb->get_var( sprintf( 'SELECT MAX(position)+1 FROM %s', self::table_name() ) );
+		}
+
+		parent::save();
+	}
+
 	/**
 	 * Find the related media format model.
 	 *
@@ -123,3 +133,4 @@ EpisodeAsset::property( 'title', 'VARCHAR(255)' );
 EpisodeAsset::property( 'file_type_id', 'INT' );
 EpisodeAsset::property( 'suffix', 'VARCHAR(255)' );
 EpisodeAsset::property( 'downloadable', 'INT' );
+EpisodeAsset::property( 'position', 'FLOAT' );

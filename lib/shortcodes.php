@@ -206,11 +206,13 @@ function webplayer_shortcode( $options ) {
 		}
 	}
 
+	
+
 	$attributes = array(
 		'permalink'  => get_permalink(),
-		'title'      => htmlspecialchars( get_the_title(), ENT_COMPAT ),
-		'subtitle'   => htmlspecialchars( $episode->subtitle, ENT_COMPAT ),
-		'summary'    => htmlspecialchars( $episode->summary, ENT_COMPAT ),
+		'title'      => get_the_title(),
+		'subtitle'   => wptexturize( convert_chars( trim( $episode->subtitle ) ) ),
+		'summary'    => wptexturize( convert_chars( trim( $episode->summary ) ) ),
 		'poster'     => $episode->get_cover_art_with_fallback(),
 		'duration'   => $episode->get_duration(),
 		'chaptersVisible' => \Podlove\get_webplayer_setting( 'chaptersVisible' )

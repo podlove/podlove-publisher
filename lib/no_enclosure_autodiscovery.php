@@ -30,4 +30,6 @@ function no_enclosure_autodiscovery( $meta_id, $post_id, $meta_key, $meta_value 
 
 	$wpdb->query( $sql );
 }
+add_action( 'added_post_meta', '\Podlove\no_enclosure_autodiscovery', 10, 4 );
+// legacy support
 add_action( 'added_postmeta', '\Podlove\no_enclosure_autodiscovery', 10, 4 );

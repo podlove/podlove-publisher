@@ -125,10 +125,7 @@ class Custom_Guid {
 	public static function override_wordpress_guid( $guid ) {
 		global $post;
 
-		if ( ! $post )
-			return;
-
-		if ( $podlove_guid = get_post_meta( $post->ID, '_podlove_guid', true ) )
+		if ( is_object( $post ) && $podlove_guid = get_post_meta( $post->ID, '_podlove_guid', true ) )
 			return $podlove_guid;
 
 		return $guid;

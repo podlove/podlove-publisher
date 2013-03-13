@@ -44,10 +44,6 @@ class Feed_List_Table extends \Podlove\List_Table {
 		return $feed->get_subscribe_link();
 	}
 
-	public function column_format( $feed ) {
-		return $feed->format;
-	}
-
 	public function column_media( $feed ) {
 		$episode_asset = $feed->episode_asset();
 
@@ -58,7 +54,6 @@ class Feed_List_Table extends \Podlove\List_Table {
 		$columns = array(
 			'name'         => __( 'Feed', 'podlove' ),
 			'url'          => __( 'Subscribe URL', 'podlove' ),
-			'format'       => __( 'Format', 'podlove' ),
 			'media'        => __( 'Media', 'podlove' ),
 			'discoverable' => __( 'Discoverable', 'podlove' )
 		);

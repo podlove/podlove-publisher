@@ -71,6 +71,8 @@ EOT;
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 
+		$version = \Podlove\get_plugin_header( 'Version' );
+		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
 			add_action( 'podlove_list_formats', array( $this, 'list_formats' ) );
@@ -79,42 +81,42 @@ EOT;
 				'podlove_admin_episode',
 				\Podlove\PLUGIN_URL . '/js/admin/episode.js',
 				array( 'jquery' ),
-				'1.4'
+				$version
 			);
 
 			wp_register_script(
 				'podlove_admin_dashboard_validation',
 				\Podlove\PLUGIN_URL . '/js/admin/dashboard_validation.js',
 				array( 'jquery' ),
-				'1.1'
+				$version
 			);
 
 			wp_register_script(
 				'podlove_admin_episode_asset_settings',
 				\Podlove\PLUGIN_URL . '/js/admin/episode_asset_settings.js',
-				array( 'jquery' ),
-				'1.1'
+				array( 'jquery', 'jquery-ui-sortable' ),
+				$version
 			);
 
 			wp_register_script(
 				'podlove_admin_episode_feed_settings',
 				\Podlove\PLUGIN_URL . '/js/admin/feed_settings.js',
 				array( 'jquery' ),
-				'1.0'
+				$version
 			);
 
 			wp_register_script(
 				'podlove_admin_autogrow',
 				\Podlove\PLUGIN_URL . '/js/admin/jquery.autogrow.js',
 				array( 'jquery' ),
-				'1.0'
+				$version
 			);
 
 			wp_register_script(
 				'podlove_admin_count_characters',
 				\Podlove\PLUGIN_URL . '/js/admin/jquery.count_characters.js',
 				array( 'jquery' ),
-				'1.0'
+				$version
 			);
 
 			wp_register_script(
@@ -129,7 +131,7 @@ EOT;
 					'podlove_admin_autogrow',
 					'podlove_admin_count_characters'
 				),
-				'1.2'
+				$version
 			);
 
 			wp_enqueue_script( 'podlove_admin' );
@@ -140,7 +142,7 @@ EOT;
 				array(
 					'jquery'
 				),
-				'1.0'
+				$version
 			);
 
 			wp_enqueue_script( 'podlove_frontend' );
