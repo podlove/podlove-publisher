@@ -97,11 +97,13 @@ add_action( 'wp', function () {
 		remove_podPress_hooks();
 		remove_powerPress_hooks();
 
-		if ( $feed->format === "rss" ) {
-			new	\Podlove\Feeds\RSS( $feed->slug );
-		} else {
-			new	\Podlove\Feeds\Atom( $feed->slug );
-		}
+		new \Podlove\Feeds\RSS( $feed->slug );
+
+		// if ( $feed->format === "rss" ) {
+		// 	new	\Podlove\Feeds\RSS( $feed->slug );
+		// } else {
+		// 	new	\Podlove\Feeds\Atom( $feed->slug );
+		// }
 	}
 	
 } );

@@ -71,6 +71,26 @@ class Settings {
 			/* $section  */ 'podlove_settings_general'
 		);
 
+		add_settings_field(
+			/* $id       */ 'podlove_setting_url_template',
+			/* $title    */ sprintf(
+				'<label for="url_template">%s</label>',
+				__( 'Episode Asset URL Template.', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove[url_template]" id="url_template" type="text" value="<?php echo \Podlove\get_setting( 'url_template' ) ?>" class="large-text">
+				<p>
+					<span class="description">
+						<?php echo __( 'Is used to generate URLs. You probably don\'t want to change this.', 'podlove' ); ?>
+					</span>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
+
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_episode',
 			/* $title 	 */ __( '', 'podlove' ),	

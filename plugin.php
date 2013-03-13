@@ -14,10 +14,6 @@ function activate_for_current_blog() {
 	Model\Episode::build();
 	Model\Template::build();
 
-	$podcast = Model\Podcast::get_instance();
-	$podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
-	$podcast->save();
-
 	if ( ! Model\FileType::has_entries() ) {
 		$default_types = array(
 			array( 'name' => 'MP3 Audio',              'type' => 'audio',    'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
@@ -619,3 +615,18 @@ function create_episode() {
 	die();
 }
 add_action( 'wp_ajax_podlove-create-episode', '\Podlove\AJAX\create_episode' );
+
+function update_asset_position() {
+
+	$asset_id = (int)   $_REQUEST['asset_id'];
+	$position = (float) $_REQUEST['position'];
+
+	$asset = Model\EpisodeAsset::find_by_id( $asset_id );
+	if ( $asset ) {
+		$asset->position = $position;
+		$asset->save();
+	}
+
+	die();
+}
+add_action( 'wp_ajax_podlove-update-asset-position', '\Podlove\AJAX\update_asset_position' );

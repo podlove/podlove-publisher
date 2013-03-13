@@ -26,7 +26,34 @@ class Episode extends Base {
 	}
 
 	public function media_files() {
-		return MediaFile::find_all_by_episode_id( $this->id );
+		global $wpdb;
+		
+		$media_files = array();
+		
+		$sql = '
+			SELECT *
+			FROM ' . MediaFile::table_name() . ' M
+				JOIN ' . EpisodeAsset::table_name() . ' A ON A.id = M.episode_asset_id
+			WHERE M.episode_id = \'' . $this->id . '\'
+			ORDER BY A.position ASC
+		';
+
+		$rows = $wpdb->get_results( $sql );
+		
+		if ( ! $rows ) {
+			return array();
+		}
+		
+		foreach ( $rows as $row ) {
+			$model = new MediaFile();
+			$model->flag_as_not_new();
+			foreach ( $row as $property => $value ) {
+				$model->$property = $value;
+			}
+			$media_files[] = $model;
+		}
+		
+		return $media_files;
 	}
 
 	public function find_or_create_by_post_id( $post_id ) {

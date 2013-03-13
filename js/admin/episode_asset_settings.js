@@ -8,6 +8,50 @@ var PODLOVE = PODLOVE || {};
 		// private
 		var o = {};
 
+		function make_asset_list_table_sortable() {
+			$("table.episode_assets tbody").sortable({
+				helper: function(event, el) {
+					
+					helper = $("<div></div>");
+					helper.append( el.find(".title").html() );
+					helper.css({
+						width: $("table.episode_assets").width(),
+						background: 'rgba(255,255,255,0.66)',
+						boxSizing: 'border-box',
+						padding: 5
+					});
+
+					return helper;
+				},
+				update: function( event, ui ) {
+					// console.log(ui);
+					var prev = parseFloat(ui.item.prev().find(".position").val()),
+					    next = parseFloat(ui.item.next().find(".position").val()),
+					    new_position = 0;
+
+					if ( ! prev ) {
+						new_position = next / 2;
+					} else if ( ! next ) {
+						new_position = prev + 1;
+					} else {
+						new_position = prev + (next - prev) / 2
+					}
+
+					// update UI
+					ui.item.find(".position").val(new_position);
+
+					// persist
+					var data = {
+						action: 'podlove-update-asset-position',
+						asset_id: ui.item.find(".asset_id").val(),
+						position: new_position
+					};
+
+					$.ajax({ url: ajaxurl, data: data, dataType: 'json'	});
+				}
+			});
+		}
+
 		function filter_file_formats_by_asset_type() {
 			$('select[name=podlove_episode_asset_type]', container).on('change', function() {
 				var $container = $(this).closest('table');
@@ -72,6 +116,7 @@ var PODLOVE = PODLOVE || {};
 		generate_default_episode_asset_title();
 		filter_file_formats_by_asset_type();
 		generate_live_preview();
+		make_asset_list_table_sortable();
 
 		return o;
 	};
