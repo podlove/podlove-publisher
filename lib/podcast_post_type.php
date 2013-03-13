@@ -71,11 +71,11 @@ EOT;
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 
+		$version = \Podlove\get_plugin_header( 'Version' );
+		
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
 			add_action( 'podlove_list_formats', array( $this, 'list_formats' ) );
-
-			$version = \Podlove\get_plugin_header( 'Version' );
 
 			wp_register_script(
 				'podlove_admin_episode',
