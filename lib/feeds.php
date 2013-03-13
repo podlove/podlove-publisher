@@ -70,11 +70,13 @@ add_action( 'wp', function () {
 		exit;
 	} else {
 
-		if ( $feed->format === "rss" ) {
-			new	\Podlove\Feeds\RSS( $feed->slug );
-		} else {
-			new	\Podlove\Feeds\Atom( $feed->slug );
-		}
+		new \Podlove\Feeds\RSS( $feed->slug );
+
+		// if ( $feed->format === "rss" ) {
+		// 	new	\Podlove\Feeds\RSS( $feed->slug );
+		// } else {
+		// 	new	\Podlove\Feeds\Atom( $feed->slug );
+		// }
 	}
 
 	

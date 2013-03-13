@@ -212,11 +212,6 @@ class Feed {
 				'default' => '-1'
 			) );
 			
-			$wrapper->radio( 'format', array(
-				'label'   => __( 'Format', 'podlove' ),
-				'options' => array( 'rss' => 'RSS', 'atom' => 'Atom' ),
-				'default' => 'rss'
-			) );
 		} );
 	}
 	
