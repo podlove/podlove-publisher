@@ -32,9 +32,6 @@ class Dashboard {
 			);
 			wp_enqueue_script( 'cornify-js' );
 		} );
-
-
-
 	}
 
 	public static function about_meta() {
@@ -297,7 +294,7 @@ class Dashboard {
 							continue;
 
 						// skip deleted podcasts
-						if ( ! in_array( $post->post_status, array( 'draft', 'publish' ) ) )
+						if ( ! in_array( $post->post_status, array( 'draft', 'publish', 'pending' ) ) )
 							continue;
 
 						// skip versions
