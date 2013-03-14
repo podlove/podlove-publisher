@@ -279,47 +279,47 @@ class StepPosts extends Step {
 												<td>
 													<table class="table table-condensed table-bordered">
 														<?php foreach ( $file_types as $file_type ): ?>
-														<tr>
-															<td>
-																<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
-																	<?php
-																	$asset_name = $file_type['file_type']->name;
-																	$asset_url = sprintf( "%s%s.%s",
-																		\Podlove\Modules\Migration\get_media_file_base_url(),
-																		Assistant::get_episode_slug( $episode_post, $slug_type ),
-																		$file_type['file_type']->extension
-																	 );
+															<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
+																<tr>
+																	<td>
+																			<?php
+																			$asset_name = $file_type['file_type']->name;
+																			$asset_url = sprintf( "%s%s.%s",
+																				\Podlove\Modules\Migration\get_media_file_base_url(),
+																				Assistant::get_episode_slug( $episode_post, $slug_type ),
+																				$file_type['file_type']->extension
+																			 );
 
-																	echo $asset_name;
-																	?>
-																<?php endif; ?>
-															</td>
-															<td>
-																<?php 
-																echo sprintf(
-																	'<a href="%s" target="_blank">%s</a>',
-																	$asset_url,
-																	Assistant::get_episode_slug( $episode_post, $slug_type ) . '.' . $file_type['file_type']->extension
-																);
-																?>
-															</td>
-															<td class="status">
-																<div class="success" style="display: none">
-																	<span style="color: green">✓</span>
-																</div>
-																<div class="failure" style="display: none">
-																	<span style="color: red">!!!</span>
-																</div>
-															</td>
-															<td class="update">
-																<div style="display: none">
-																	updating ...
-																</div>
-																<div>
-																	<button class="button verify_migration_asset">verify</button>
-																</div>
-															</td>
-														</tr>
+																			echo $asset_name;
+																			?>
+																	</td>
+																	<td>
+																		<?php 
+																		echo sprintf(
+																			'<a href="%s" target="_blank">%s</a>',
+																			$asset_url,
+																			Assistant::get_episode_slug( $episode_post, $slug_type ) . '.' . $file_type['file_type']->extension
+																		);
+																		?>
+																	</td>
+																	<td class="status">
+																		<div class="success" style="display: none">
+																			<span style="color: green">✓</span>
+																		</div>
+																		<div class="failure" style="display: none">
+																			<span style="color: red">!!!</span>
+																		</div>
+																	</td>
+																	<td class="update">
+																		<div style="display: none">
+																			updating ...
+																		</div>
+																		<div>
+																			<button class="button verify_migration_asset">verify</button>
+																		</div>
+																	</td>
+																</tr>
+															<?php endif; ?>
 														<?php endforeach; ?>
 													</table>
 												</td>
