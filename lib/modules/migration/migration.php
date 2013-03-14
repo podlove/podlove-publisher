@@ -17,6 +17,9 @@ class Migration extends \Podlove\Modules\Base {
 
 		public function register_admin_styles() {
 			if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === 'podlove_settings_migration_handle' ) {
+				wp_register_script( 'twitter-bootstrap-script', $this->get_module_url() . '/js/bootstrap.min.js' );
+				wp_enqueue_script( 'twitter-bootstrap-script', 'jquery' );
+
 				wp_register_style( 'twitter-bootstrap-style', $this->get_module_url() . '/css/bootstrap.min.css' );
 				wp_enqueue_style( 'twitter-bootstrap-style' );
 			}

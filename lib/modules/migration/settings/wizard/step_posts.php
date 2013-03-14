@@ -207,6 +207,13 @@ class StepPosts extends Step {
 
 					</div>
 
+					<h3><?php echo __( 'Episode Verification Status', 'podlove' ); ?></h3>
+					<div class="progress progress-striped" id="verification-status">
+					  <div class="bar bar-success" style="width:0%;" data-toggle="tooltip" title="All assets for these episodes are valid."></div>
+					  <div class="bar bar-warning" style="width:0%;" data-toggle="tooltip" title="Some, but not all assets for these episodes are valid. Not necessarily dealbraking."></div>
+					  <div class="bar bar-danger" style="width:0%;" data-toggle="tooltip" title="All assets for these episodes are invalid!"></div>
+					</div>
+
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
 					<table class="table table-striped">
 						<thead>
@@ -339,6 +346,9 @@ class StepPosts extends Step {
 
 					<script type="text/javascript">
 					jQuery(function($) {
+						$(".progress .bar").tooltip();
+
+						var episodes_to_check = $(".migration_assets").length;
 
 						$("#toggle_all_episodes").on("click", function() {
 							var checked = $(this).attr("checked") == "checked";
@@ -347,15 +357,24 @@ class StepPosts extends Step {
 
 						$(".verify_migration_asset").on("click", function(e) {
 							e.preventDefault();
+							podlove_validate_one_asset($(this), false);
+							return false;
+						});
 
-							var container = $(this).closest("tr");
+						function podlove_validate_one_asset(button, continue_validation) {
+
+							var container = button.closest("tr");
 
 							var data = {
 								action: 'podlove-validate-url',
 								file_url: container.find("a").attr("href")
 							};
 
+							// toggle status
 							container.find('.update div').toggle();
+
+							// mark button as once clicked
+							button.addClass("visited");
 
 							var request = $.ajax({
 								url: ajaxurl,
@@ -370,15 +389,56 @@ class StepPosts extends Step {
 										$('.failure', container).show();
 									}
 									container.find('.update div').toggle();
+									podlove_migration_update_progress_bar();
+
+									if (continue_validation) {
+										podlove_validate_one_asset($(".verify_migration_asset:not(.visited):first"), true);
+									}
+								}
+							});
+						}
+
+						$(document).ready(function(){
+							podlove_validate_one_asset($(".verify_migration_asset:not(.visited):first"), true);
+						});
+
+						function podlove_migration_update_progress_bar() {
+
+							var all_valid = 0,
+							    some_valid = 0,
+							    none_valid = 0;
+
+							$(".migration_assets").each(function(){
+								var successes = $(".success:visible", this).length,
+								    failures  = $(".failure:visible", this).length;
+
+								if (successes + failures === $(".status", this).length) {
+									if (successes > 0 && failures > 0) {
+										some_valid++;
+									} else if (failures > 0) {
+										none_valid++;
+									} else if (successes > 0) {
+										all_valid++;
+									}
 								}
 							});
 
-							return false;
-						});
+							var success_percent = Math.round(all_valid / episodes_to_check * 1000) / 10,
+							    warning_percent = Math.round(some_valid / episodes_to_check * 1000) / 10,
+							    failed_percent = Math.round(none_valid / episodes_to_check * 1000) / 10;
 
-						$(document).ready(function(){
-							$(".verify_migration_asset").click();
-						});
+						    $("#verification-status .bar-success")
+						    	.css("width", success_percent + "%")
+						    	.html(all_valid);
+
+					    	$("#verification-status .bar-warning")
+						    	.css("width", warning_percent + "%")
+						    	.html(some_valid);
+
+					    	$("#verification-status .bar-danger")
+						    	.css("width", failed_percent + "%")
+						    	.html(none_valid);
+						}
 						
 					});
 					</script>
