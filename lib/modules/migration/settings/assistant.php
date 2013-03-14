@@ -83,7 +83,9 @@ class Assistant {
 				<?php foreach ( $steps as $index => $title ): ?>
 					<?php
 					$class = $index === $current_step ? 'active' : ( $current_step < $index ? 'disabled' : '' );
-					$title = sprintf( __( 'Step %s:', 'podlove' ), $index ) . ' ' . $title;
+					if ( $index > 1 ) {
+						$title = sprintf( __( 'Step %s:', 'podlove' ), $index - 1 ) . ' ' . $title;
+					}
 					$link  = ( $class == 'disabled' ) ? "#" : self::get_page_link( $index );
 					?>
 					<li class="<?php echo $class ?>">
