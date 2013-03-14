@@ -389,8 +389,6 @@ class StepPosts extends Step {
 								$('.migration_assets tr[data-filetype-id="' + filetype_id + '"]').addClass("hidden");
 							}
 
-							podlove_migration_update_progress_bar();
-
 							$.ajax({
 								url: ajaxurl,
 								data: {
@@ -399,6 +397,8 @@ class StepPosts extends Step {
 								},
 								dataType: 'json'
 							});
+
+							podlove_migration_update_progress_bar();
 						});
 
 						$("#post_slug_select input").on("click", function(){
@@ -510,6 +510,8 @@ class StepPosts extends Step {
 							    	.css("width", success_percent + "%")
 							    	.html(all_valid)
 							    	.show();
+							} else {
+								$("#verification-status .bar-success").hide();
 							}
 
 							if (warning_percent) {
@@ -517,6 +519,8 @@ class StepPosts extends Step {
 							    	.css("width", warning_percent + "%")
 							    	.html(some_valid)
 							    	.show();
+							} else {
+								$("#verification-status .bar-warning").hide();
 							}
 
 							if (failed_percent) {
@@ -524,6 +528,13 @@ class StepPosts extends Step {
 							    	.css("width", failed_percent + "%")
 							    	.html(none_valid)
 							    	.show();
+							} else {
+								$("#verification-status .bar-danger").hide();
+							}
+
+							if (!success_percent && !warning_percent && !failed_percent) {
+						    	$("#verification-status .bar-danger")
+							    	.css("width", "100%").html(episodes_to_check).show();
 							}
 						};
 						
