@@ -277,7 +277,7 @@ class StepPosts extends Step {
 											<tr>
 												<th>Assets</th>
 												<td>
-													<table class="table table-condensed table-bordered">
+													<table class="table table-condensed table-bordered migration_assets">
 														<?php foreach ( $file_types as $file_type ): ?>
 															<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
 																<tr>
@@ -301,21 +301,21 @@ class StepPosts extends Step {
 																			Assistant::get_episode_slug( $episode_post, $slug_type ) . '.' . $file_type['file_type']->extension
 																		);
 																		?>
-																	</td>
-																	<td class="status">
-																		<div class="success" style="display: none">
-																			<span style="color: green">✓</span>
+																		<div class="update pull-right">
+																			<div style="display: none">
+																				updating ...
+																			</div>
+																			<div>
+																				<button class="button verify_migration_asset">verify</button>
+																			</div>
 																		</div>
-																		<div class="failure" style="display: none">
-																			<span style="color: red">!!!</span>
-																		</div>
-																	</td>
-																	<td class="update">
-																		<div style="display: none">
-																			updating ...
-																		</div>
-																		<div>
-																			<button class="button verify_migration_asset">verify</button>
+																		<div class="status pull-right">
+																			<div class="success" style="display: none">
+																				<span style="color: green">✓</span>
+																			</div>
+																			<div class="failure" style="display: none">
+																				<span style="color: red">!!!</span>
+																			</div>
 																		</div>
 																	</td>
 																</tr>
@@ -330,6 +330,12 @@ class StepPosts extends Step {
 							<?php endforeach; ?>
 						</tbody>
 					</table>
+
+					<style type="text/css">
+					.migration_assets .update, .migration_assets .status {
+						margin-left: 10px;
+					}
+					</style>
 
 					<script type="text/javascript">
 					jQuery(function($) {
