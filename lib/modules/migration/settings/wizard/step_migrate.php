@@ -125,7 +125,7 @@ class StepMigrate extends Step {
 		jQuery(function($) {
 			var posts_to_migrate = $("#posts_to_migrate tbody tr").length;
 
-			function podlove_migrate_one_post() {
+			(function podlove_migrate_one_post() {
 				$("#posts_to_migrate tbody tr:not(.done):first").each(function() {
 					var post_id = $(this).data("post-id")
 					    that = $(this);
@@ -173,8 +173,7 @@ class StepMigrate extends Step {
 						}
 					});
 				});
-			}
-			podlove_migrate_one_post();
+			})();
 		});
 		</script>
 		<?php
