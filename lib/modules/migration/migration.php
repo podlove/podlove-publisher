@@ -167,10 +167,14 @@ function ajax_migrate_post() {
 
 	$new_post_id = migrate_post( (int) $_REQUEST['post_id'] );
 
+	$migration_cache = get_option( 'podlove_migrated_posts_cache', array() );
+	$migration_cache[ (int) $_REQUEST['post_id'] ] = (int) $new_post_id;
+	update_option( 'podlove_migrated_posts_cache', $migration_cache );
+
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Content-type: application/json');
-	echo json_encode( array( 'url' => get_permalink( $new_post_id ) ) );
+	echo json_encode( array( 'url' => get_edit_post_link( $new_post_id ) ) );
 
 	die();
 }
