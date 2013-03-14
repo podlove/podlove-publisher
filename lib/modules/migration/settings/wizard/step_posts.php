@@ -286,7 +286,7 @@ class StepPosts extends Step {
 											<tr>
 												<th>Assets</th>
 												<td>
-													<table class="table table-condensed table-bordered migration_assets">
+													<table class="table table-condensed table-bordered migration_assets" style="margin-bottom:0">
 														<?php foreach ( $file_types as $file_type ): ?>
 															<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
 																<tr>
