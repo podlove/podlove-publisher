@@ -489,6 +489,10 @@ function validate_url() {
 	$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 );
 	$result['file_size'] = $info['download_content_length'];
 
+	$validation_cache = get_option( 'podlove_migration_validation_cache', array() );
+	$validation_cache[ $file_url ] = $result['reachable'];
+	update_option( 'podlove_migration_validation_cache', $validation_cache );
+
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Content-type: application/json');
