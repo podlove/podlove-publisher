@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.30-alpha =
+* Feature: Option to autoinsert web player at beginning or end of post
+
 = 1.3.29-alpha =
 * Bugfix: Fix some media file mixups
 
