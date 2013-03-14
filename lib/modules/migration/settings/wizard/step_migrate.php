@@ -40,31 +40,39 @@ class StepMigrate extends Step {
 			$file_type = Model\FileType::find_one_by_id( $file_type_id );
 			$is_image = in_array( $file_type->extension, array( 'png', 'jpg', 'jpeg', 'gif' ) );
 
-			$asset = new Model\EpisodeAsset();
-			$asset->title = $file_type->name;
-			$asset->file_type_id = $file_type_id;
-			$asset->downloadable = !$is_image;
-			$asset->save();
+			$asset = Model\EpisodeAsset::find_one_by_file_type_id( $file_type_id );
+			if ( ! $asset ) {
+				$asset = new Model\EpisodeAsset();
+				$asset->title = $file_type->name;
+				$asset->file_type_id = $file_type_id;
+				$asset->downloadable = !$is_image;
+				$asset->save();
+			}
 			$assets[] = $asset;
 
 			if ( $is_image ) {
 				$asset_assignments = get_option( 'podlove_asset_assignment', array() );
-				$asset_assignments['image'] = $asset->id;
-				update_option( 'podlove_asset_assignment', $asset_assignments );
+				if ( ! $asset_assignments['image'] ) {
+					$asset_assignments['image'] = $asset->id;
+					update_option( 'podlove_asset_assignment', $asset_assignments );
+				}
 			}
 
 			// create feeds
 			if ( stripos( $file_type->mime_type, 'audio' ) !== false ) {
-				$feed = new Model\Feed();
-				$feed->episode_asset_id = $asset->id;
-				$feed->name         = $file_type->extension . ' Feed';
-				$feed->title        = $file_type->name;
-				$feed->slug         = $file_type->extension;
-				$feed->format       = 'rss';
-				$feed->enable       = true;
-				$feed->discoverable = true;
-				$feed->limit_items  = -1;
-				$feed->save();
+				$feed = Model\Feed::find_one_by_episode_asset_id( $asset->id );
+				if ( ! $feed ) {
+					$feed = new Model\Feed();
+					$feed->episode_asset_id = $asset->id;
+					$feed->name         = $file_type->extension . ' Feed';
+					$feed->title        = $file_type->name;
+					$feed->slug         = $file_type->extension;
+					$feed->format       = 'rss';
+					$feed->enable       = true;
+					$feed->discoverable = true;
+					$feed->limit_items  = -1;
+					$feed->save();
+				}
 			}
 
 			// set web player settings
@@ -105,7 +113,6 @@ class StepMigrate extends Step {
 				'post_parent'    => $post_id,
 				'post_password'  => $post->post_password,
 				'post_status'    => 'pending',
-				// 'post_status'    => $post->post_status,
 				'post_title'     => $post->post_title,
 				'post_type'      => 'podcast',
 				'post_date'      => $post->post_date,
