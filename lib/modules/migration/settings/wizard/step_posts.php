@@ -142,7 +142,7 @@ class StepPosts extends Step {
 									<td>
 										<input type="checkbox"
 											data-filetype-id="<?php echo $file_type['file_type']->id ?>"
-											<?php checked( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ) ?>
+											<?php checked( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) && $migration_settings['file_types'][ $file_type['file_type']->id ] == 'on' ) ?>
 											name="podlove_migration[file_types][<?php echo $file_type['file_type']->id ?>]"
 											class="asset_checkbox"
 										>
@@ -390,6 +390,15 @@ class StepPosts extends Step {
 							}
 
 							podlove_migration_update_progress_bar();
+
+							$.ajax({
+								url: ajaxurl,
+								data: {
+									action: 'podlove-update-migration-settings',
+									file_types: [ filetype_id, checked ]
+								},
+								dataType: 'json'
+							});
 						});
 
 						$("#post_slug_select input").on("click", function(){
