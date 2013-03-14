@@ -27,15 +27,18 @@ class Migration extends \Podlove\Modules\Base {
 function get_podcast_settings() {
 
 	$migration_settings = get_option( 'podlove_migration', array() );
+	$migration_settings = ( isset( $migration_settings['podcast'] ) ) ? $migration_settings['podcast'] : array();
 
-	if ( isset( $migration_settings['podcast'] ) )
-		return $migration_settings['podcast'];
-	else
-		return array(
-			'title'    => get_bloginfo('name'),
-			'subtitle' => get_bloginfo('description'),
-			'media_file_base_url_option' => 'preset'
-		);
+	$defaults = array(
+		'title'    => get_bloginfo('name'),
+		'subtitle' => get_bloginfo('description'),
+		'summary'  => '',
+		'media_file_base_url_option' => 'preset',
+		'media_file_base_url_preset' => NULL,
+		'media_file_base_url_custom' => ''
+	);
+
+	return wp_parse_args( $migration_settings, $defaults );
 }
 
 function get_media_file_base_url() {
