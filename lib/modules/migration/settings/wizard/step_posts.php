@@ -161,53 +161,62 @@ class StepPosts extends Step {
 
 					<input type="hidden" name="podlove_migration[slug]" value="file"/>
 
-					<h3><?php echo __( 'Post Slug', 'podlove' ); ?></h3>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[post_slug]" value="wordpress" <?php checked( $post_slug_type == 'wordpress' ) ?>>
-						Reuse previous WordPress post slug.
-					</label>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[post_slug]" value="file" <?php checked( $post_slug_type == 'file' ) ?>>
-						Extract slug from file name. Use file basename.
-					</label>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[post_slug]" value="number" <?php checked( $post_slug_type == 'number' ) ?>>
-						Number Slug: This is the number of your episode with leading zeros.
-					</label>
+					<div class="row-fluid">
 
-					<h3><?php echo __( 'Clean up migrated Episodes', 'podlove' ); ?></h3>
-
-					<div class="form-horizontal">
-
-						<div class="control-group">
-							<label class="control-label">Enclosures</label>
-							<div class="controls">
-								<label class="radio">
-									<input type="radio" name="podlove_migration[cleanup][enclosures]" value="1" <?php checked( $migration_settings['cleanup']['enclosures'], 1 ) ?>>
-									remove all enclosures
-								</label>
-								<label class="radio">
-									<input type="radio" name="podlove_migration[cleanup][enclosures]" value="0" <?php checked( $migration_settings['cleanup']['enclosures'], 0 ) ?>>
-									keep all enclosures
-								</label>
-							</div>
+						<div class="span6">
+							<h3><?php echo __( 'Post Slug', 'podlove' ); ?></h3>
+							<label class="radio">
+								<input type="radio" name="podlove_migration[post_slug]" value="wordpress" <?php checked( $post_slug_type == 'wordpress' ) ?>>
+								Reuse previous WordPress post slug.
+							</label>
+							<label class="radio">
+								<input type="radio" name="podlove_migration[post_slug]" value="file" <?php checked( $post_slug_type == 'file' ) ?>>
+								Extract slug from file name. Use file basename.
+							</label>
+							<label class="radio">
+								<input type="radio" name="podlove_migration[post_slug]" value="number" <?php checked( $post_slug_type == 'number' ) ?>>
+								Number Slug: This is the number of your episode with leading zeros.
+							</label>
 						</div>
 
-						<div class="control-group">
-							<label class="control-label">Player Codes</label>
-							<div class="controls">
-								<label class="radio">
-									<input type="radio" name="podlove_migration[cleanup][player]" value="1" <?php checked( $migration_settings['cleanup']['player'], 1 ) ?>>
-									remove all player codes
-								</label>
-								<label class="radio">
-									<input type="radio" name="podlove_migration[cleanup][player]" value="0" <?php checked( $migration_settings['cleanup']['player'], 0 ) ?>>
-									keep all player codes
-								</label>
+						<div class="span6">
+							<h3><?php echo __( 'Clean up migrated Episodes', 'podlove' ); ?></h3>
+
+							<div class="form-horizontal">
+
+								<div class="control-group">
+									<label class="control-label">Enclosures</label>
+									<div class="controls">
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][enclosures]" value="1" <?php checked( $migration_settings['cleanup']['enclosures'], 1 ) ?>>
+											remove all enclosures
+										</label>
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][enclosures]" value="0" <?php checked( $migration_settings['cleanup']['enclosures'], 0 ) ?>>
+											keep all enclosures
+										</label>
+									</div>
+								</div>
+
+								<div class="control-group">
+									<label class="control-label">Player Codes</label>
+									<div class="controls">
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][player]" value="1" <?php checked( $migration_settings['cleanup']['player'], 1 ) ?>>
+											remove all player codes
+										</label>
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][player]" value="0" <?php checked( $migration_settings['cleanup']['player'], 0 ) ?>>
+											keep all player codes
+										</label>
+									</div>
+								</div>
+
 							</div>
 						</div>
-
+						
 					</div>
+
 
 					<h3><?php echo __( 'Episode Verification Status', 'podlove' ); ?></h3>
 					<div class="progress progress-striped" id="verification-status">
