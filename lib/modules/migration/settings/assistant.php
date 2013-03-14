@@ -56,11 +56,14 @@ class Assistant {
 		
 		$steps = array_map( function($step){ return $step->title; }, $wizard );
 
-		if ( isset( $_REQUEST['next'] ) || isset( $_REQUEST['stay'] ) ) {
+		if ( isset( $_REQUEST['prev'] ) || isset( $_REQUEST['next'] ) || isset( $_REQUEST['stay'] ) ) {
 			$current_step = Migration::instance()->get_module_option( 'current_step', 1 );
 			if ( isset( $_REQUEST['next'] ) ) {
 				$current_step++;
-				Migration::instance()->update_module_option( 'current_step', $current_step );	
+				Migration::instance()->update_module_option( 'current_step', $current_step );
+			} elseif ( isset( $_REQUEST['prev'] ) ) {
+				$current_step--;
+				Migration::instance()->update_module_option( 'current_step', $current_step );
 			}
 		} elseif ( isset( $_REQUEST['step'] ) && $_REQUEST['step'] > 0 && $_REQUEST['step'] <= count( $steps ) ) {
 			$current_step = (int) $_REQUEST['step'];
