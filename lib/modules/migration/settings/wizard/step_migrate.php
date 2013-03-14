@@ -3,6 +3,7 @@ namespace Podlove\Modules\Migration\Settings\Wizard;
 use Podlove\Modules\Migration\Settings\Assistant;
 use Podlove\Modules\Migration\Enclosure;
 use Podlove\Modules\Migration\Legacy_Post_Parser;
+use Podlove\Modules\Migration;
 use Podlove\Model;
 
 class StepMigrate extends Step {
@@ -20,8 +21,7 @@ class StepMigrate extends Step {
 		</div>
 		<?php
 		// default to preview-page
-		$current_step = (int) $_REQUEST['step'];
-		\Podlove\Modules\Migration\Migration::instance()->update_module_option( 'current_step', $current_step - 1 );
+		Migration\Migration::instance()->update_module_option( 'current_step', Migration\Migration::instance()->get_module_option( 'current_step', 1 ) - 1 );
 
 		// then begin to migrate
 		$migration_settings = get_option( 'podlove_migration', array() );
@@ -88,12 +88,18 @@ class StepMigrate extends Step {
 		foreach ( $migration_settings['episodes'] as $post_id => $_ ) {
 			$post = get_post( $post_id );
 
+			$post_content = $post->post_content;
+
+			if ( $migration_settings['cleanup']['player'] ) {
+				$post_content = preg_replace( '/\[(powerpress|podloveaudio|podlovevideo|display_podcast)[^\]]*\]/', '', $post_content );
+			}
+
 			$new_post = array(
 				'menu_order'     => $post->menu_order,
 				'comment_status' => $post->comment_status,
 				'ping_status'    => $post->ping_status,
 				'post_author'    => $post->post_author,
-				'post_content'   => $post->post_content,
+				'post_content'   => $post_content,
 				'post_excerpt'   => $post->post_excerpt,
 				'post_mime_type' => $post->post_mime_type,
 				'post_parent'    => $post_id,
@@ -172,8 +178,10 @@ class StepMigrate extends Step {
 			// copy all meta
 			$meta = get_post_meta( $post_id );
 			foreach ( $meta as $key => $values ) {
-				foreach ( $values as $value ) {
-					add_post_meta( $new_post_id, $key, $value );
+				if ( $key != 'enclosure' || ! $migration_settings['cleanup']['enclosures'] ) {
+					foreach ( $values as $value ) {
+						add_post_meta( $new_post_id, $key, $value );
+					}
 				}
 			}
 

@@ -10,10 +10,7 @@ class StepPosts extends Step {
 	
 	public function template() {
 
-		$args = array(
-			// 'meta_key'       => 'enclosure',
-			'posts_per_page' => -1
-		);
+		$args = array( 'posts_per_page' => -1 );
 
 		$episodes   = array();
 		$file_types = array();
@@ -74,6 +71,18 @@ class StepPosts extends Step {
 					$migration_settings['file_types'][ $file_type['file_type']->id  ] = 'on';
 				}
 			}
+		}
+
+		$slug_type = 'file';
+		if ( ! isset( $migration_settings['post_slug'] ) || ! $post_slug_type = $migration_settings['post_slug'] ) {
+			$post_slug_type = 'wordpress';
+		}
+
+		if ( ! isset( $migration_settings['cleanup'] ) ) {
+			$migration_settings['cleanup'] = array(
+				'enclosures' => 1,
+				'player' => 1
+			);
 		}
 		?>
 
@@ -148,36 +157,7 @@ class StepPosts extends Step {
 						</tbody>
 					</table>
 
-					<?php $slug_type = 'file'; ?>
 					<input type="hidden" name="podlove_migration[slug]" value="file"/>
-
-					<?php /*
-					<?php 
-					if ( ! $slug_type = $migration_settings['slug'] ) {
-						$slug_type = 'file';
-					}
-					?>
-					<h3><?php echo __( 'Episode Media File Slug', 'podlove' ); ?></h3>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[slug]" value="file" <?php checked( $slug_type == 'file' ) ?>>
-						File Slug
-					</label>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[slug]" value="wordpress" <?php checked( $slug_type == 'wordpress' ) ?>>
-						WordPress Slug
-					</label>
-					<label class="radio">
-						<input type="radio" name="podlove_migration[slug]" value="number" <?php checked( $slug_type == 'number' ) ?>>
-						Number Slug
-					</label>
-					*/
-					?>
-
-					<?php 
-					if ( ! isset( $migration_settings['post_slug'] ) || ! $post_slug_type = $migration_settings['post_slug'] ) {
-						$post_slug_type = 'wordpress';
-					}
-					?>
 
 					<h3><?php echo __( 'Post Slug', 'podlove' ); ?></h3>
 					<label class="radio">
@@ -192,6 +172,40 @@ class StepPosts extends Step {
 						<input type="radio" name="podlove_migration[post_slug]" value="number" <?php checked( $post_slug_type == 'number' ) ?>>
 						Number Slug: This is the number of your episode with leading zeros.
 					</label>
+
+					<h3><?php echo __( 'Clean up migrated Episodes', 'podlove' ); ?></h3>
+
+					<div class="form-horizontal">
+
+						<div class="control-group">
+							<label class="control-label">Enclosures</label>
+							<div class="controls">
+								<label class="radio">
+									<input type="radio" name="podlove_migration[cleanup][enclosures]" value="1" <?php checked( $migration_settings['cleanup']['enclosures'], 1 ) ?>>
+									remove all enclosures
+								</label>
+								<label class="radio">
+									<input type="radio" name="podlove_migration[cleanup][enclosures]" value="0" <?php checked( $migration_settings['cleanup']['enclosures'], 0 ) ?>>
+									keep all enclosures
+								</label>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label">Player Codes</label>
+							<div class="controls">
+								<label class="radio">
+									<input type="radio" name="podlove_migration[cleanup][player]" value="1" <?php checked( $migration_settings['cleanup']['player'], 1 ) ?>>
+									remove all player codes
+								</label>
+								<label class="radio">
+									<input type="radio" name="podlove_migration[cleanup][player]" value="0" <?php checked( $migration_settings['cleanup']['player'], 0 ) ?>>
+									keep all player codes
+								</label>
+							</div>
+						</div>
+
+					</div>
 
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
 					<table class="table table-striped">
