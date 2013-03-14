@@ -115,7 +115,8 @@ class StepBasics extends Step {
 					</div>
 					<div class="control-group">
 						<div class="controls">
-							<input type="submit" class="btn btn-primary" value="<?php echo __( 'Save and Continue', 'podlove' ) ?>">
+							<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
+							<input type="submit" class="btn btn-primary" value="<?php echo __( 'Continue', 'podlove' ) ?>">
 						</div>
 					</div>
 

@@ -88,6 +88,8 @@ class StepMigrate extends Step {
 		}
 
 		?>
+		
+		<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
 
 		<div class="row-fluid">
 			<div class="span12">
