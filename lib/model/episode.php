@@ -31,7 +31,7 @@ class Episode extends Base {
 		$media_files = array();
 		
 		$sql = '
-			SELECT *
+			SELECT M.*
 			FROM ' . MediaFile::table_name() . ' M
 				JOIN ' . EpisodeAsset::table_name() . ' A ON A.id = M.episode_asset_id
 			WHERE M.episode_id = \'' . $this->id . '\'

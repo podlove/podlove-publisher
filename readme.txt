@@ -86,6 +86,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.29-alpha =
+* Bugfix: Fix some media file mixups
+
 = 1.3.28-alpha =
 * Feature: Two new episode fields `publication_date` and `record_date`. Accessible via episode shortcode. Must be enabled in expert settings.
 * Feature: Assets can be sorted via drag'n'drop. Influences download button/list order.
