@@ -187,9 +187,9 @@ class StepPosts extends Step {
 						<div class="span6">
 							<h3><?php echo __( 'Clean up migrated Episodes', 'podlove' ); ?></h3>
 
-							<div class="form-horizontal">
+							<div class="form-horizontal" id="cleanup_settings">
 
-								<div class="control-group">
+								<div class="control-group enclosures">
 									<label class="control-label">Enclosures</label>
 									<div class="controls">
 										<label class="radio">
@@ -203,7 +203,7 @@ class StepPosts extends Step {
 									</div>
 								</div>
 
-								<div class="control-group">
+								<div class="control-group player">
 									<label class="control-label">Player Codes</label>
 									<div class="controls">
 										<label class="radio">
@@ -412,6 +412,28 @@ class StepPosts extends Step {
 								data: {
 									action: 'podlove-update-migration-settings',
 									post_slug: slug_type
+								},
+								dataType: 'json'
+							});
+						});
+
+						$("#cleanup_settings .enclosures input").on("click", function(){
+							$.ajax({
+								url: ajaxurl,
+								data: {
+									action: 'podlove-update-migration-settings',
+									cleanup: [ 'enclosures', $(this).val() ]
+								},
+								dataType: 'json'
+							});
+						});
+
+						$("#cleanup_settings .player input").on("click", function(){
+							$.ajax({
+								url: ajaxurl,
+								data: {
+									action: 'podlove-update-migration-settings',
+									cleanup: [ 'player', $(this).val() ]
 								},
 								dataType: 'json'
 							});

@@ -202,6 +202,17 @@ function update_migration_settings() {
 		$migration_settings['post_slug'] = $_REQUEST['post_slug'];
 	}
 
+	if ( isset( $_REQUEST['cleanup'] ) ) {
+		$cleanup_key = $_REQUEST['cleanup'][0];
+		$cleanup_val = $_REQUEST['cleanup'][1];
+
+		if ( ! isset( $migration_settings['cleanup'] ) ) {
+			$migration_settings['cleanup'] = array();
+		}
+
+		$migration_settings['cleanup'][ $cleanup_key ] = $cleanup_val;
+	}
+
 	update_option( 'podlove_migration', $migration_settings );
 	die();
 }
