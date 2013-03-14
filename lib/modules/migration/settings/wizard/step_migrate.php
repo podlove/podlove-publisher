@@ -11,17 +11,12 @@ class StepMigrate extends Step {
 	public $title = 'Migrate';
 	
 	public function template() {
-		?>
-		<div class="row-fluid">
-			<div class="span12">
-				<div class="well">
-					Migrating ...
-				</div>
-			</div>
-		</div>
-		<?php
+
 		// default to preview-page
 		Migration\Migration::instance()->update_module_option( 'current_step', Migration\Migration::instance()->get_module_option( 'current_step', 1 ) - 1 );
+
+		// load already migrated posts
+		$migrated_posts_cache = get_option( 'podlove_migrated_posts_cache', array() );
 
 		// then begin to migrate
 		$migration_settings = get_option( 'podlove_migration', array() );
@@ -94,6 +89,12 @@ class StepMigrate extends Step {
 
 		?>
 
+		<div class="row-fluid">
+			<div class="span12">
+				<h3>Migrating ...</h3>
+			</div>
+		</div>
+
 		<div class="progress progress-striped active" id="migration_progress">
 			<div class="bar" style="width:0%"></div>
 		</div>
@@ -106,15 +107,23 @@ class StepMigrate extends Step {
 				</tr>
 			</thead>
 			<tbody>
+				<?php $migrated_post_ids = array_keys( $migrated_posts_cache ); ?>
 				<?php foreach ( $migration_settings['episodes'] as $post_id => $_ ): ?>
-					<tr data-post-id="<?php echo $post_id ?>">
+					<?php $done = in_array($post_id, $migrated_post_ids); ?>
+					<tr data-post-id="<?php echo $post_id ?>" <?php echo ($done) ? 'class="done"' : '' ?>>
 						<td class="status">
-							<span class="waiting">waiting ...</span>
+							<span class="waiting" <?php echo (!$done) ? '' : 'style="display:none"' ?>>waiting ...</span>
 							<span class="migrating" style="display:none">migrating ...</span>
-							<span class="done" style="display:none"><span style="color: green">✓</span></span>
+							<span class="done" <?php echo ($done) ? '' : 'style="display:none"' ?>><span style="color: green">✓</span></span>
 						</td>
 						<td class="episode">
-							<?php echo get_the_title( $post_id ); ?>
+							<?php if ( $done ): ?>
+								<a href="<?php echo get_edit_post_link( $migrated_posts_cache[ $post_id ] ) ?>" target="_blank">
+									<?php echo get_the_title( $post_id ); ?>
+								</a>
+							<?php else: ?>
+								<?php echo get_the_title( $post_id ); ?>
+							<?php endif; ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -124,6 +133,21 @@ class StepMigrate extends Step {
 		<script type="text/javascript">
 		jQuery(function($) {
 			var posts_to_migrate = $("#posts_to_migrate tbody tr").length;
+
+			(function update_migration_progress_bar() {
+				var posts_done = $("#posts_to_migrate tbody tr.done").length;
+				progress = Math.round(posts_done / posts_to_migrate * 100)
+				$("#migration_progress .bar")
+					.css("width", progress + "%")
+					.html(posts_done + " / " + posts_to_migrate);
+
+				if ( progress == 100 ) {
+					$("#migration_progress")
+						.removeClass("active")
+						.addClass("progress-success")
+						.find(".bar").html("Done! Whoop whoop!");
+				}
+			})();
 
 			(function podlove_migrate_one_post() {
 				$("#posts_to_migrate tbody tr:not(.done):first").each(function() {
@@ -155,18 +179,7 @@ class StepMigrate extends Step {
 							$(".episode", that).html('<a href="' + episode_url + '" target="_blank">' + episode_title + '</a>')
 
 							// update progress bar
-							var posts_done = $("#posts_to_migrate tbody tr.done").length;
-							progress = Math.round(posts_done / posts_to_migrate * 100)
-							$("#migration_progress .bar")
-								.css("width", progress + "%")
-								.html(posts_done + " / " + posts_to_migrate);
-
-							if ( progress == 100 ) {
-								$("#migration_progress")
-									.removeClass("active")
-									.addClass("progress-success")
-									.find(".bar").html("Done! Whoop whoop!");
-							}
+							update_migration_progress_bar();
 
 							// continue
 							podlove_migrate_one_post();
