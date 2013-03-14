@@ -407,6 +407,14 @@ class StepPosts extends Step {
 							$(".slug span." + slug_type).removeClass("hidden");
 							$(".slug span:not(." + slug_type + ")").addClass("hidden");
 
+							$.ajax({
+								url: ajaxurl,
+								data: {
+									action: 'podlove-update-migration-settings',
+									post_slug: slug_type
+								},
+								dataType: 'json'
+							});
 						});
 
 						function podlove_validate_one_asset(button, continue_validation) {
