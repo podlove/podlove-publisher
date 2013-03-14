@@ -179,3 +179,28 @@ function ajax_migrate_post() {
 	die();
 }
 add_action( 'wp_ajax_podlove-migrate-post', '\Podlove\Modules\Migration\ajax_migrate_post' );
+
+function update_migration_settings() {
+
+	if ( isset( $_REQUEST['file_types'] ) ) {
+		$file_type_id = (int) $_REQUEST['file_types'][0];
+		$is_checked = $_REQUEST['file_types'][1] == "true";
+
+		$migration_settings = get_option( 'podlove_migration', array() );
+		
+		if ( ! isset( $migration_settings['file_types'] ) ) {
+			$migration_settings['file_types'] = array();
+		}
+
+		if ( $is_checked ) {
+			$migration_settings['file_types'][ $file_type_id ] = 'on';
+		} else {
+			unset( $migration_settings['file_types'][ $file_type_id ] );
+		}
+
+		update_option( 'podlove_migration', $migration_settings );
+	}
+
+	die();
+}
+add_action( 'wp_ajax_podlove-update-migration-settings', '\Podlove\Modules\Migration\update_migration_settings' );
