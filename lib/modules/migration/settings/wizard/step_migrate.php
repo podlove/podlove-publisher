@@ -92,112 +92,92 @@ class StepMigrate extends Step {
 			update_option( 'podlove_webplayer_formats', $webplayer_formats );
 		}
 
-		// Create Episodes
-		foreach ( $migration_settings['episodes'] as $post_id => $_ ) {
-			$post = get_post( $post_id );
+		?>
 
-			$post_content = $post->post_content;
+		<div class="progress progress-striped active" id="migration_progress">
+			<div class="bar" style="width:0%"></div>
+		</div>
 
-			if ( $migration_settings['cleanup']['player'] ) {
-				$post_content = preg_replace( '/\[(powerpress|podloveaudio|podlovevideo|display_podcast)[^\]]*\]/', '', $post_content );
+		<table class="table table-condensed" id="posts_to_migrate">
+			<thead>
+				<tr>
+					<th>Status</th>
+					<th>Episode</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $migration_settings['episodes'] as $post_id => $_ ): ?>
+					<tr data-post-id="<?php echo $post_id ?>">
+						<td class="status">
+							<span class="waiting">waiting ...</span>
+							<span class="migrating" style="display:none">migrating ...</span>
+							<span class="done" style="display:none"><span style="color: green">✓</span></span>
+						</td>
+						<td class="episode">
+							<?php echo get_the_title( $post_id ); ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+
+		<script type="text/javascript">
+		jQuery(function($) {
+			var posts_to_migrate = $("#posts_to_migrate tbody tr").length;
+
+			function podlove_migrate_one_post() {
+				$("#posts_to_migrate tbody tr:not(.done):first").each(function() {
+					var post_id = $(this).data("post-id")
+					    that = $(this);
+
+					var data = {
+						action: 'podlove-migrate-post',
+						post_id: post_id
+					};
+
+					$.ajax({
+						url: ajaxurl,
+						data: data,
+						dataType: 'json',
+						beforeSend: function(jqXHR, settings) {
+							$(".waiting, .done", that).hide();
+							$(".migrating", that).show();
+						},
+						success: function(result) {
+							var episode_title = $(".episode", that).html(),
+							    episode_url = result.url;
+
+							$(".waiting, .migrating", that).hide();
+							$(".done", that).show();
+							that.addClass("done");
+
+							// add link
+							$(".episode", that).html('<a href="' + episode_url + '" target="_blank">' + episode_title + '</a>')
+
+							// update progress bar
+							var posts_done = $("#posts_to_migrate tbody tr.done").length;
+							progress = Math.round(posts_done / posts_to_migrate * 100)
+							$("#migration_progress .bar")
+								.css("width", progress + "%")
+								.html(posts_done + " / " + posts_to_migrate);
+
+							if ( progress == 100 ) {
+								$("#migration_progress")
+									.removeClass("active")
+									.addClass("progress-success")
+									.find(".bar").html("Done! Whoop whoop!");
+							}
+
+							// continue
+							podlove_migrate_one_post();
+						}
+					});
+				});
 			}
-
-			$new_post = array(
-				'menu_order'     => $post->menu_order,
-				'comment_status' => $post->comment_status,
-				'ping_status'    => $post->ping_status,
-				'post_author'    => $post->post_author,
-				'post_content'   => $post_content,
-				'post_excerpt'   => $post->post_excerpt,
-				'post_mime_type' => $post->post_mime_type,
-				'post_parent'    => $post_id,
-				'post_password'  => $post->post_password,
-				'post_status'    => 'pending',
-				'post_title'     => $post->post_title,
-				'post_type'      => 'podcast',
-				'post_date'      => $post->post_date,
-				'post_date_gmt'  => get_gmt_from_date( $post->post_date )
-			);
-
-			$new_slug = NULL;
-			switch ( $migration_settings['post_slug'] ) {
-				case 'wordpress':
-					$new_slug = $post->post_name;
-					break;
-				case 'file':
-					$new_slug = Assistant::get_file_slug( $post );
-					break;
-				case 'number':
-					$new_slug = Assistant::get_number_slug( $post );
-					break;
-			}
-
-			$override_slug = function( $data, $postarr ) use ( $new_slug ) {
-				if ( $new_slug ) {
-					$data['post_name'] = $new_slug;
-				}
-				return $data;
-			};
-
-			add_filter( 'wp_insert_post_data', $override_slug, 10, 2 );
-			$new_post_id = wp_insert_post( $new_post );
-			remove_filter( 'wp_insert_post_data', $override_slug, 10, 2 );
-
-			$new_post = get_post( $new_post_id );
-
-			// update guid
-			update_post_meta( $new_post_id, '_podlove_guid', $post->guid );
-
-			// add redirect from previous url
-			add_post_meta( $new_post_id, 'podlove_alternate_url', get_permalink( $post_id ) );
-
-			// migrate taxonomies
-			$taxonomies = get_object_taxonomies( get_post_type( $post_id ) );
-
-			foreach( $taxonomies AS $tax ) {
-				$terms = wp_get_object_terms( $post_id, $tax );
-				$term = array();
-				foreach( $terms AS $t ) {
-					$term[] = $t->slug;
-				} 
-				
-				wp_set_object_terms( $new_post_id, $term, $tax );
-			}
-
-			echo "<strong>" . $new_post->post_title . "</strong><br>";
-			flush();
-
-			$post_data = new Legacy_Post_Parser( $post_id );
-
-			$episode = Model\Episode::find_or_create_by_post_id( $new_post_id );
-			$episode->slug = Assistant::get_episode_slug( $post, $migration_settings['slug'] );
-			$episode->duration = $post_data->get_duration();
-			$episode->subtitle = $post_data->get_subtitle();
-			$episode->summary = $post_data->get_summary();
-			$episode->save();
-
-			foreach ( $assets as $asset ) {
-				$file = Model\MediaFile::find_or_create_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
-				echo $file->get_file_url() . "<br>";
-				flush();
-			}
-
-			// copy all meta
-			$meta = get_post_meta( $post_id );
-			foreach ( $meta as $key => $values ) {
-				if ( $key != 'enclosure' || ! $migration_settings['cleanup']['enclosures'] ) {
-					foreach ( $values as $value ) {
-						add_post_meta( $new_post_id, $key, $value );
-					}
-				}
-			}
-
-			// copy all comments
-			foreach ( get_comments( array( 'post_id' => $post_id ) ) as $comment ) {
-				$comment->comment_post_ID = $new_post_id;
-				wp_insert_comment( (array) $comment );
-			}
-		}
+			podlove_migrate_one_post();
+		});
+		</script>
+		<?php
 	}
 
 }
