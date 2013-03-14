@@ -88,23 +88,22 @@ class StepPosts extends Step {
 		$validation_cache = get_option( 'podlove_migration_validation_cache', array() );
 		?>
 
-		<div class="row-fluid">
-			<div class="span12">
-				<div class="well">
-					I searched your posts for entries with enclosures.
-					I also looked into them for their mime type.
-					<br>
-					Please select which files and which episodes you'd like to migrate.
-				</div>
-			</div>
-		</div>
 
 		<div class="row-fluid">
 			<div class="span12">
 				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 					<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
-					<input type="submit" name="next" class="btn btn-primary" value="<?php echo __( 'Continue to Migration', 'podlove' ) ?>">
+					<input type="submit" name="next" class="btn btn-primary pull-right" value="<?php echo __( 'Continue to Migration', 'podlove' ) ?>">
+
+					<div class="clearfix"></div>
+
+					<div class="well" style="margin-top: 15px">
+						I searched your posts for entries with enclosures.
+						I also looked into them for their mime type.
+						<br>
+						Please select which files and which episodes you'd like to migrate.
+					</div>
 
 					<div class="clearfix"></div>
 
@@ -543,7 +542,7 @@ class StepPosts extends Step {
 					</script>
 
 					<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
-					<input type="submit" name="next" class="btn btn-primary" value="<?php echo __( 'Continue to Migration', 'podlove' ) ?>">
+					<input type="submit" name="next" class="btn btn-primary pull-right" value="<?php echo __( 'Continue to Migration', 'podlove' ) ?>">
 					
 				</form>
 			</div>
