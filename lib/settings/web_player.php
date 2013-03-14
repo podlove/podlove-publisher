@@ -125,13 +125,22 @@ class WebPlayer {
 		// advanced settings
 
 		$settings = array(
+			'inject' => array(
+				'label'       => __( 'Insert automatically', 'podlove' ),
+				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-web-player]</code>.', 'podlove' ),
+				'options'     => array(
+					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
+					'beginning' => __( 'insert at the beginning', 'podlove' ),
+					'end'       => __( 'insert at the end', 'podlove' )
+				)
+			),
 			'chaptersVisible'     => array(
 				'label'   => __( 'Chapters Visibility', 'podlove' ),
 				'options' => array(
 					'true' => __( 'Visible when player loads', 'podlove' ),
 					'false' => __( 'Hidden when player loads', 'podlove' )
 				)
-			),
+			)
 		);
 
 		?>
@@ -154,7 +163,7 @@ class WebPlayer {
 						<?php endforeach; ?>
 					</select>
 					<?php if ( isset( $field_values['description'] ) &&  $field_values['description'] ): ?>
-						<span class="description"><?php echo $field_values['description']; ?></span>
+						<div class="description"><?php echo $field_values['description']; ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>

@@ -27,7 +27,8 @@ function get_setting( $name ) {
 function get_webplayer_setting( $name ) {
 
 	$defaults = array(
-		'chaptersVisible' => 'false'
+		'chaptersVisible' => 'false',
+		'inject'          => 'manually'
 	);
 	
 	$settings = get_option( 'podlove_webplayer_settings', array() );
