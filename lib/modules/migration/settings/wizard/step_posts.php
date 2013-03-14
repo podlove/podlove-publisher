@@ -104,7 +104,7 @@ class StepPosts extends Step {
 				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
 					<input type="submit" name="next" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
-					<input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save', 'podlove' ) ?>">
+					<!-- <input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save', 'podlove' ) ?>"> -->
 
 					<div class="clearfix"></div>
 
@@ -140,7 +140,12 @@ class StepPosts extends Step {
 							<?php foreach ( $file_types as $file_type ): ?>
 								<tr>
 									<td>
-										<input type="checkbox" <?php checked( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ) ?> name="podlove_migration[file_types][<?php echo $file_type['file_type']->id ?>]">
+										<input type="checkbox"
+											data-filetype-id="<?php echo $file_type['file_type']->id ?>"
+											<?php checked( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ) ?>
+											name="podlove_migration[file_types][<?php echo $file_type['file_type']->id ?>]"
+											class="asset_checkbox"
+										>
 									</td>
 									<td>
 										<?php echo $file_type['file_type']->name ?>
@@ -163,7 +168,7 @@ class StepPosts extends Step {
 
 					<div class="row-fluid">
 
-						<div class="span6">
+						<div class="span6" id="post_slug_select">
 							<h3><?php echo __( 'Post Slug', 'podlove' ); ?></h3>
 							<label class="radio">
 								<input type="radio" name="podlove_migration[post_slug]" value="wordpress" <?php checked( $post_slug_type == 'wordpress' ) ?>>
@@ -260,19 +265,18 @@ class StepPosts extends Step {
 										<table class="table table-condensed table-bordered">
 											<tr>
 												<th>Post Slug</th>
-												<td>
+												<td class="slug">
 													<?php 
-													switch ( $post_slug_type ) {
-														case 'wordpress':
-															echo $episode_post->post_name;
-															break;
-														case 'file':
-															echo Assistant::get_file_slug( $episode_post );
-															break;
-														case 'number':
-															echo Assistant::get_number_slug( $episode_post );
-															break;
-													}
+													$slugs = array(
+														'wordpress' => $episode_post->post_name,
+														'file'      => Assistant::get_file_slug( $episode_post ),
+														'number'    => Assistant::get_number_slug( $episode_post )
+ 													);
+
+ 													foreach ( $slugs as $slug_key => $slug_value ) {
+ 														$class = $post_slug_type == $slug_key ? '' : 'hidden';
+ 														echo "<span class='$slug_key $class'>" . $slug_value . "</span>";
+ 													}
 													?>
 												</td>
 											</tr>
@@ -297,52 +301,50 @@ class StepPosts extends Step {
 												<td>
 													<table class="table table-condensed table-bordered migration_assets" style="margin-bottom:0">
 														<?php foreach ( $file_types as $file_type ): ?>
-															<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
-																<tr>
-																	<td>
-																		<?php
-																		$asset_name = $file_type['file_type']->name;
-																		$asset_url = sprintf( "%s%s.%s",
-																			\Podlove\Modules\Migration\get_media_file_base_url(),
-																			Assistant::get_episode_slug( $episode_post, $slug_type ),
-																			$file_type['file_type']->extension
-																		 );
+															<?php 
+															$is_asset_active = isset( $migration_settings['file_types'][ $file_type['file_type']->id ] );
+															$asset_name = $file_type['file_type']->name;
+															$asset_url = sprintf( "%s%s.%s",
+																\Podlove\Modules\Migration\get_media_file_base_url(),
+																Assistant::get_episode_slug( $episode_post, $slug_type ),
+																$file_type['file_type']->extension
+															 );
 
-																		$status = 'unknown';
-																		if ( isset( $validation_cache[ $asset_url ] ) ) {
-																			$status = $validation_cache[ $asset_url ] ? 'success' : 'failure';
-																		}
-
-																		echo $asset_name;
-																		?>
-																	</td>
-																	<td>
-																		<?php 
-																		echo sprintf(
-																			'<a href="%s" target="_blank">%s</a>',
-																			$asset_url,
-																			Assistant::get_episode_slug( $episode_post, $slug_type ) . '.' . $file_type['file_type']->extension
-																		);
-																		?>
-																		<div class="update pull-right">
-																			<div style="display: none">
-																				updating ...
-																			</div>
-																			<div>
-																				<button class="button verify_migration_asset <?php echo ($status != 'unknown') ? 'visited' : '' ?>">verify</button>
-																			</div>
+															$status = 'unknown';
+															if ( isset( $validation_cache[ $asset_url ] ) ) {
+																$status = $validation_cache[ $asset_url ] ? 'success' : 'failure';
+															}
+															?>
+															<tr data-filetype-id="<?php echo $file_type['file_type']->id ?>" <?php echo (!$is_asset_active) ? 'class="hidden"' : '' ?>>
+																<td>
+																	<?php echo $asset_name;	?>
+																</td>
+																<td>
+																	<?php 
+																	echo sprintf(
+																		'<a href="%s" target="_blank">%s</a>',
+																		$asset_url,
+																		Assistant::get_episode_slug( $episode_post, $slug_type ) . '.' . $file_type['file_type']->extension
+																	);
+																	?>
+																	<div class="update pull-right">
+																		<div style="display: none">
+																			updating ...
 																		</div>
-																		<div class="status pull-right">
-																			<div class="success" <?php echo ($status == 'success') ? '' : 'style="display: none"' ?>>
-																				<span style="color: green">✓</span>
-																			</div>
-																			<div class="failure" <?php echo ($status == 'failure') ? '' : 'style="display: none"' ?>>
-																				<span style="color: red">!!!</span>
-																			</div>
+																		<div>
+																			<button class="button verify_migration_asset <?php echo ($status != 'unknown') ? 'visited' : '' ?>">verify</button>
 																		</div>
-																	</td>
-																</tr>
-															<?php endif; ?>
+																	</div>
+																	<div class="status pull-right">
+																		<div class="success" <?php echo ($status == 'success') ? '' : 'style="display: none"' ?>>
+																			<span style="color: green">✓</span>
+																		</div>
+																		<div class="failure" <?php echo ($status == 'failure') ? '' : 'style="display: none"' ?>>
+																			<span style="color: red">!!!</span>
+																		</div>
+																	</div>
+																</td>
+															</tr>
 														<?php endforeach; ?>
 													</table>
 												</td>
@@ -375,6 +377,27 @@ class StepPosts extends Step {
 							e.preventDefault();
 							podlove_validate_one_asset($(this), false);
 							return false;
+						});
+
+						$(".asset_checkbox").on("click", function(){
+							var checked = $(this).prop("checked"),
+							    filetype_id = $(this).data("filetype-id");
+
+							if (checked) {
+								$('.migration_assets tr[data-filetype-id="' + filetype_id + '"]').removeClass("hidden");
+							} else {
+								$('.migration_assets tr[data-filetype-id="' + filetype_id + '"]').addClass("hidden");
+							}
+
+							podlove_migration_update_progress_bar();
+						});
+
+						$("#post_slug_select input").on("click", function(){
+							var slug_type = $(this).val();
+
+							$(".slug span." + slug_type).removeClass("hidden");
+							$(".slug span:not(." + slug_type + ")").addClass("hidden");
+
 						});
 
 						function podlove_validate_one_asset(button, continue_validation) {
@@ -418,17 +441,17 @@ class StepPosts extends Step {
 							podlove_validate_one_asset($(".verify_migration_asset:not(.visited):first"), true);
 						});
 
-						(function podlove_migration_update_progress_bar() {
+						function podlove_migration_update_progress_bar() {
 
 							var all_valid = 0,
 							    some_valid = 0,
 							    none_valid = 0;
 
 							$(".migration_assets").each(function(){
-								var successes = $(".success:visible", this).length,
-								    failures  = $(".failure:visible", this).length;
+								var successes = $("tr:not(.hidden) .success:visible", this).length,
+								    failures  = $("tr:not(.hidden) .failure:visible", this).length;
 
-								if (successes + failures === $(".status", this).length) {
+								if (successes + failures === $("tr:not(.hidden) .status", this).length) {
 									if (successes > 0 && failures > 0) {
 										some_valid++;
 									} else if (failures > 0) {
@@ -463,13 +486,14 @@ class StepPosts extends Step {
 							    	.html(none_valid)
 							    	.show();
 							}
-						})();
+						};
 						
+						podlove_migration_update_progress_bar();
 					});
 					</script>
 
 					<input type="submit" name="next" class="btn btn-warning" value="<?php echo __( 'Save and Migrate', 'podlove' ) ?>">
-					<input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save', 'podlove' ) ?>">
+					<!-- <input type="submit" name="stay" class="btn btn-primary" value="<?php echo __( 'Save', 'podlove' ) ?>"> -->
 					
 				</form>
 			</div>
