@@ -84,6 +84,8 @@ class StepPosts extends Step {
 				'player' => 1
 			);
 		}
+
+		$validation_cache = get_option( 'podlove_migration_validation_cache', array() );
 		?>
 
 		<div class="row-fluid">
@@ -209,9 +211,9 @@ class StepPosts extends Step {
 
 					<h3><?php echo __( 'Episode Verification Status', 'podlove' ); ?></h3>
 					<div class="progress progress-striped" id="verification-status">
-					  <div class="bar bar-success" style="width:0%;" data-toggle="tooltip" title="All assets for these episodes are valid."></div>
-					  <div class="bar bar-warning" style="width:0%;" data-toggle="tooltip" title="Some, but not all assets for these episodes are valid. Not necessarily dealbraking."></div>
-					  <div class="bar bar-danger" style="width:0%;" data-toggle="tooltip" title="All assets for these episodes are invalid!"></div>
+					  <div class="bar bar-success" style="width:0%;display:none" data-toggle="tooltip" title="All assets for these episodes are valid."></div>
+					  <div class="bar bar-warning" style="width:0%;display:none" data-toggle="tooltip" title="Some, but not all assets for these episodes are valid. Not necessarily dealbraking."></div>
+					  <div class="bar bar-danger" style="width:0%;display:none" data-toggle="tooltip" title="All assets for these episodes are invalid!"></div>
 					</div>
 
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
@@ -289,16 +291,21 @@ class StepPosts extends Step {
 															<?php if ( isset( $migration_settings['file_types'][ $file_type['file_type']->id ] ) ): ?>
 																<tr>
 																	<td>
-																			<?php
-																			$asset_name = $file_type['file_type']->name;
-																			$asset_url = sprintf( "%s%s.%s",
-																				\Podlove\Modules\Migration\get_media_file_base_url(),
-																				Assistant::get_episode_slug( $episode_post, $slug_type ),
-																				$file_type['file_type']->extension
-																			 );
+																		<?php
+																		$asset_name = $file_type['file_type']->name;
+																		$asset_url = sprintf( "%s%s.%s",
+																			\Podlove\Modules\Migration\get_media_file_base_url(),
+																			Assistant::get_episode_slug( $episode_post, $slug_type ),
+																			$file_type['file_type']->extension
+																		 );
 
-																			echo $asset_name;
-																			?>
+																		$status = 'unknown';
+																		if ( isset( $validation_cache[ $asset_url ] ) ) {
+																			$status = $validation_cache[ $asset_url ] ? 'success' : 'failure';
+																		}
+
+																		echo $asset_name;
+																		?>
 																	</td>
 																	<td>
 																		<?php 
@@ -313,14 +320,14 @@ class StepPosts extends Step {
 																				updating ...
 																			</div>
 																			<div>
-																				<button class="button verify_migration_asset">verify</button>
+																				<button class="button verify_migration_asset <?php echo ($status != 'unknown') ? 'visited' : '' ?>">verify</button>
 																			</div>
 																		</div>
 																		<div class="status pull-right">
-																			<div class="success" style="display: none">
+																			<div class="success" <?php echo ($status == 'success') ? '' : 'style="display: none"' ?>>
 																				<span style="color: green">✓</span>
 																			</div>
-																			<div class="failure" style="display: none">
+																			<div class="failure" <?php echo ($status == 'failure') ? '' : 'style="display: none"' ?>>
 																				<span style="color: red">!!!</span>
 																			</div>
 																		</div>
@@ -402,7 +409,7 @@ class StepPosts extends Step {
 							podlove_validate_one_asset($(".verify_migration_asset:not(.visited):first"), true);
 						});
 
-						function podlove_migration_update_progress_bar() {
+						(function podlove_migration_update_progress_bar() {
 
 							var all_valid = 0,
 							    some_valid = 0,
@@ -427,18 +434,27 @@ class StepPosts extends Step {
 							    warning_percent = Math.round(some_valid / episodes_to_check * 1000) / 10,
 							    failed_percent = Math.round(none_valid / episodes_to_check * 1000) / 10;
 
-						    $("#verification-status .bar-success")
-						    	.css("width", success_percent + "%")
-						    	.html(all_valid);
+							if (success_percent) {
+							    $("#verification-status .bar-success")
+							    	.css("width", success_percent + "%")
+							    	.html(all_valid)
+							    	.show();
+							}
 
-					    	$("#verification-status .bar-warning")
-						    	.css("width", warning_percent + "%")
-						    	.html(some_valid);
+							if (warning_percent) {
+						    	$("#verification-status .bar-warning")
+							    	.css("width", warning_percent + "%")
+							    	.html(some_valid)
+							    	.show();
+							}
 
-					    	$("#verification-status .bar-danger")
-						    	.css("width", failed_percent + "%")
-						    	.html(none_valid);
-						}
+							if (failed_percent) {
+						    	$("#verification-status .bar-danger")
+							    	.css("width", failed_percent + "%")
+							    	.html(none_valid)
+							    	.show();
+							}
+						})();
 						
 					});
 					</script>
