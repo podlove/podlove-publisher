@@ -20,8 +20,11 @@ class StepWelcome extends Step {
 				I won\'t edit or delete any of your existing data but, you know, nobody has ever lost any data by backing up. Play it safe.', 'podlove' ); ?>
 			</p>
 			<p>
+				<?php echo __( 'Don\'t know how to do a backup? Try ' ) . '<a href="' . admin_url( 'plugin-install.php?tab=search&s=BackWPup' ) . '" target="_blank">BackWPup</a>.' ?>
+			</p>
+			<p>
 				<a href="<?php echo self::get_page_link( 2 ) ?>" class="btn btn-primary btn-large">
-					<?php echo __( 'Let\'s do This!', 'podlove' ); ?>
+					<?php echo __( 'Let\'s do this!', 'podlove' ); ?>
 				</a>
 			</p>
 		</div>
