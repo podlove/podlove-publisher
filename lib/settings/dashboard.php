@@ -237,45 +237,6 @@ class Dashboard {
 
 			<input id="revalidate_assets" type="button" class="button button-primary" value="<?php echo __( 'Revalidate Assets', 'podlove' ); ?>">
 
-			<script type="text/javascript">
-			(function($) {
-				$("#revalidate_assets").click(function(e) {
-					e.preventDefault();
-
-					$("#asset_status_dashboard td[data-media-file-id]").each(function() {
-						var media_file_id = $(this).data("media-file-id");
-
-						if (!media_file_id)
-							return;
-
-						var $that = $(this);
-						var data = {
-							action: 'podlove-update-file',
-							file_id: media_file_id
-						};
-
-						$(this).html('...');
-
-						$.ajax({
-							url: ajaxurl,
-							data: data,
-							dataType: 'json',
-							success: function(result) {
-								if (result.file_size > 0) {
-									$that.html('<?php echo ASSET_STATUS_OK ?>');
-								} else {
-									$that.html('<?php echo ASSET_STATUS_ERROR ?>');
-								}
-							}
-						});
-
-					});
-
-					return false;
-				});
-			})(jQuery);
-			</script>
-
 			<table id="asset_status_dashboard">
 				<thead>
 					<tr>

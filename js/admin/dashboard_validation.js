@@ -9,32 +9,39 @@ var PODLOVE = PODLOVE || {};
 		var o = {};
 
 		function enable_validation() {
-			$("#validate_everything", container).click(function(e) {
+			$("#revalidate_assets").click(function(e) {
 				e.preventDefault();
 
-				$(".episode .file").each(function() {
-					var file_id = $(this).data('id');
+				$("#asset_status_dashboard td[data-media-file-id]").each(function() {
+					var media_file_id = $(this).data("media-file-id");
 
+					if (!media_file_id)
+						return;
+
+					var $that = $(this);
 					var data = {
-						action: 'podlove-validate-file',
-						file_id: file_id
+						action: 'podlove-update-file',
+						file_id: media_file_id
 					};
+
+					$(this).html('...');
 
 					$.ajax({
 						url: ajaxurl,
 						data: data,
 						dataType: 'json',
 						success: function(result) {
-							$file = $('.file[data-id="' + result.file_id + '"]');
-							if (result.reachable) {
-								$(".status", $file).html("<span style='color:green'>ok</span>");
+							if (result.file_size > 0) {
+								$that.html('<span style="color: green">✓</span>');
 							} else {
-								$(".status", $file).html("<span style='color:red'>unreachable</span>");
+								$that.html('<span style="color: red">!!!</span>');
 							}
 						}
 					});
 
 				});
+
+				return false;
 			});
 		}
 
