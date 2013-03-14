@@ -6,7 +6,7 @@ use Podlove\Modules\Migration\Settings\Assistant;
 
 class StepPosts extends Step {
 
-	public $title = 'Post Selection';
+	public $title = 'Episode Setup';
 	
 	public function template() {
 
