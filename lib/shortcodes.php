@@ -206,8 +206,6 @@ function webplayer_shortcode( $options ) {
 		}
 	}
 
-	
-
 	$attributes = array(
 		'permalink'  => get_permalink(),
 		'title'      => get_the_title(),

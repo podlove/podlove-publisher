@@ -23,6 +23,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 
 	public function autoinsert_into_content( $content ) {
 
+		if ( get_post_type() !== 'podcast' )
+			return $content;
+
 		$inject = \Podlove\get_webplayer_setting( 'inject' );
 
 		if ( $inject == 'beginning' ) {
