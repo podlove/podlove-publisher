@@ -26,6 +26,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 		if ( get_post_type() !== 'podcast' )
 			return $content;
 
+		if ( self::there_is_a_player_in_the_content( $content ) )
+			return $content;
+
 		$inject = \Podlove\get_webplayer_setting( 'inject' );
 
 		if ( $inject == 'beginning' ) {
@@ -52,6 +55,16 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 			echo __( 'It looks like you have installed an <strong>external plugin</strong> using mediaelement.js.<br>That\'s what\'s used.', 'podlove' );
 		else
 			echo __( 'Podlove ships with its <strong>own webplayer</strong>.<br>That\'s what\'s used.', 'podlove' );
+	}
+
+	public static function there_is_a_player_in_the_content( $content ) {
+		return (
+			stripos( $content, '[podloveaudio' ) !== false OR 
+			stripos( $content, '[podlovevideo' ) !== false OR
+			stripos( $content, '[audio' ) !== false OR 
+			stripos( $content, '[video' ) !== false OR
+			stripos( $content, '[podlove-web-player' ) !== false
+		);
 	}
 
 }
