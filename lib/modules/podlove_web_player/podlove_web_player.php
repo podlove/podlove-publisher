@@ -63,7 +63,8 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 			stripos( $content, '[podlovevideo' ) !== false OR
 			stripos( $content, '[audio' ) !== false OR 
 			stripos( $content, '[video' ) !== false OR
-			stripos( $content, '[podlove-web-player' ) !== false
+			stripos( $content, '[podlove-web-player' ) !== false OR
+			stripos( $content, '[podlove-template' ) !== false
 		);
 	}
 
