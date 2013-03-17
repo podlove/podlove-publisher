@@ -70,6 +70,7 @@ EOT;
 		add_filter( 'default_content', array( $this, 'set_default_episode_content' ), 20, 2 );
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
+		add_filter( 'post_class', array( $this, 'add_post_class' ) );
 
 		$version = \Podlove\get_plugin_header( 'Version' );
 		
@@ -153,6 +154,21 @@ EOT;
 		add_filter( 'get_the_excerpt', array( $this, 'default_excerpt_to_episode_summary' ) );
 
 		\Podlove\Feeds\init();
+	}
+
+	/**
+	 * Add .post CSS class to post-classes to work around themes using the
+	 * .post class to style articles.
+	 * 
+	 * @param array $classes
+	 */
+	function add_post_class( $classes ) {
+
+		if ( get_post_type() == 'podcast' ) {
+			$classes[] = 'post';
+		}
+
+		return $classes;
 	}
 
 	/**
