@@ -440,11 +440,15 @@ class StepPosts extends Step {
 
 						function podlove_validate_one_asset(button, continue_validation) {
 
-							var container = button.closest("tr");
+							var container = button.closest("tr"),
+							    file_url  = container.find("a").attr("href");
+
+							if (!file_url) 
+								return;
 
 							var data = {
 								action: 'podlove-validate-url',
-								file_url: container.find("a").attr("href")
+								file_url: file_url
 							};
 
 							// toggle status
@@ -453,7 +457,7 @@ class StepPosts extends Step {
 							// mark button as once clicked
 							button.addClass("visited");
 
-							var request = $.ajax({
+							$.ajax({
 								url: ajaxurl,
 								data: data,
 								dataType: 'json',
