@@ -88,6 +88,8 @@ class StepMigrate extends Step {
 		
 		<form action="" method="POST">
 			<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
+			<input type="button" id="start_migration_button" class="btn btn-primary" value="<?php echo __( 'Start Migration', 'podlove' ) ?>">
+			<input type="submit" name="next" id="continue_to_finish_button" class="btn btn-primary disabled" value="<?php echo __( 'Continue to last step', 'podlove' ) ?>">
 		</form>
 
 		<div class="row-fluid">
@@ -147,10 +149,14 @@ class StepMigrate extends Step {
 						.removeClass("active")
 						.addClass("progress-success")
 						.find(".bar").html("Done! Whoop whoop!");
+
+					$("#migration-header small").html('');
+					$("#start_migration_button").addClass("disabled");
+					$("#continue_to_finish_button").removeClass("disabled");
 				}
 			};
 
-			(function podlove_migrate_one_post() {
+			function podlove_migrate_one_post() {
 				$("#posts_to_migrate tbody tr:not(.done):first").each(function() {
 					var post_id = $(this).data("post-id")
 					    that = $(this),
@@ -189,7 +195,15 @@ class StepMigrate extends Step {
 						}
 					});
 				});
-			})();
+			}
+
+			$("#start_migration_button").on("click", function(){
+				if (!$(this).hasClass("disabled")) {
+					$(this).addClass("disabled");
+					podlove_migrate_one_post();
+				}
+			});
+			update_migration_progress_bar();
 		});
 		</script>
 		<?php
