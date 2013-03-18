@@ -12,9 +12,6 @@ class StepMigrate extends Step {
 	
 	public function template() {
 
-		// default to preview-page
-		Migration\Migration::instance()->update_module_option( 'current_step', Migration\Migration::instance()->get_module_option( 'current_step', 1 ) - 1 );
-
 		// load already migrated posts
 		$migrated_posts_cache = get_option( 'podlove_migrated_posts_cache', array() );
 
@@ -89,11 +86,13 @@ class StepMigrate extends Step {
 
 		?>
 		
-		<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
+		<form action="" method="POST">
+			<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
+		</form>
 
 		<div class="row-fluid">
 			<div class="span12">
-				<h3>Migrating ...</h3>
+				<h3 id="migration-header">Migrating <small></small></h3>
 			</div>
 		</div>
 
@@ -136,7 +135,7 @@ class StepMigrate extends Step {
 		jQuery(function($) {
 			var posts_to_migrate = $("#posts_to_migrate tbody tr").length;
 
-			(function update_migration_progress_bar() {
+			function update_migration_progress_bar() {
 				var posts_done = $("#posts_to_migrate tbody tr.done").length;
 				progress = Math.round(posts_done / posts_to_migrate * 100)
 				$("#migration_progress .bar")
@@ -149,12 +148,15 @@ class StepMigrate extends Step {
 						.addClass("progress-success")
 						.find(".bar").html("Done! Whoop whoop!");
 				}
-			})();
+			};
 
 			(function podlove_migrate_one_post() {
 				$("#posts_to_migrate tbody tr:not(.done):first").each(function() {
 					var post_id = $(this).data("post-id")
-					    that = $(this);
+					    that = $(this),
+					    episode_title = $(".episode", that).html();
+
+					$("#migration-header small").html(episode_title);
 
 					var data = {
 						action: 'podlove-migrate-post',
@@ -170,8 +172,7 @@ class StepMigrate extends Step {
 							$(".migrating", that).show();
 						},
 						success: function(result) {
-							var episode_title = $(".episode", that).html(),
-							    episode_url = result.url;
+							var episode_url = result.url;
 
 							$(".waiting, .migrating", that).hide();
 							$(".done", that).show();
