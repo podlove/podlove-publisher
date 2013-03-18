@@ -490,10 +490,11 @@ class StepPosts extends Step {
 							    none_valid = 0;
 
 							$(".migration_assets").each(function(){
-								var successes = $("tr:not(.hidden) .success:visible", this).length,
-								    failures  = $("tr:not(.hidden) .failure:visible", this).length;
+								var visible_tr = $("tr:not(.hidden)", this),
+									successes  = $(".success", visible_tr).filter(":visible").length,
+								    failures   = $(".failure", visible_tr).filter(":visible").length;
 
-								if (successes + failures === $("tr:not(.hidden) .status", this).length) {
+								if (successes + failures === $(".status", visible_tr).length) {
 									if (successes > 0 && failures > 0) {
 										some_valid++;
 									} else if (failures > 0) {
