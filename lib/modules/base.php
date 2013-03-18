@@ -95,7 +95,7 @@ abstract class Base {
 		}
 	}
 
-	protected function get_module_url() {
+	public function get_module_url() {
 		return \Podlove\PLUGIN_URL . '/lib/modules/' . $this->get_module_directory_name();
 	}
 
