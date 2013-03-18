@@ -45,7 +45,8 @@ class Assistant {
 			new Wizard\StepWelcome,
 			new Wizard\StepBasics,
 			new Wizard\StepPosts,
-			new Wizard\StepMigrate
+			new Wizard\StepMigrate,
+			new Wizard\StepFinalize
 		);
 
 		// start-index must be 1, not 0
