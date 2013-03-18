@@ -89,7 +89,7 @@ class StepMigrate extends Step {
 		<form action="" method="POST">
 			<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
 			<input type="button" id="start_migration_button" class="btn btn-primary" value="<?php echo __( 'Start Migration', 'podlove' ) ?>">
-			<input type="submit" name="next" id="continue_to_finish_button" class="btn btn-primary disabled" value="<?php echo __( 'Continue to last step', 'podlove' ) ?>">
+			<input type="submit" name="next" id="continue_to_finish_button" class="btn btn-primary disabled pull-right" value="<?php echo __( 'Continue to last step', 'podlove' ) ?>">
 		</form>
 
 		<div class="row-fluid">
