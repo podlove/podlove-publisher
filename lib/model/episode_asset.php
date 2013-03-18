@@ -42,7 +42,7 @@ class EpisodeAsset extends Base {
 			if ( $file->size <= 0 )
 				return false;
 
-			return in_array( get_post( $file->episode()->post_id )->post_status, array( 'publish', 'private', 'draft' ) );
+			return in_array( get_post( $file->episode()->post_id )->post_status, array( 'publish', 'private', 'draft', 'future' ) );
 		} );
 	}
 

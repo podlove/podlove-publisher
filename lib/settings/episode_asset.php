@@ -82,7 +82,7 @@ class EpisodeAsset {
 			$post = get_post( $post_id );
 
 			// skip deleted podcasts
-			if ( ! in_array( $post->post_status, array( 'draft', 'publish' ) ) )
+			if ( ! in_array( $post->post_status, array( 'draft', 'publish', 'future' ) ) )
 				continue;
 
 			// skip versions
