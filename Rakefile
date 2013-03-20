@@ -2,3 +2,7 @@ desc "update all submodules"
 task :update_submodules do
 	`git submodule update --recursive`
 end
+
+task :cloc do
+	puts `cloc --by-file-by-lang --exclude-dir=lib/modules/podlove_web_player/player,.git,js/admin/codemirror --not-match-f=".*.min.(js|css)|cornify.js" *`
+end	
