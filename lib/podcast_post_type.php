@@ -217,6 +217,7 @@ EOT;
 		new \Podlove\Settings\FileType( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\Support( self::SETTINGS_PAGE_HANDLE );
 	}
 
 	/**
