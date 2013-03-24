@@ -35,6 +35,12 @@ class StepFinalize extends Step {
 			}
 
 			wp_reset_postdata();
+
+			// cleanup temporary migration settings
+			// delete_option( 'podlove_module_migration' );
+			delete_option( 'podlove_migration' );
+			delete_option( 'podlove_migration_validation_cache' );
+			delete_option( 'podlove_migrated_posts_cache' );
 		}
 
 		$unpublished_episodes = $wpdb->get_var("

@@ -363,8 +363,6 @@ class StepPosts extends Step {
 
 					<script type="text/javascript">
 					jQuery(function($) {
-						$(".progress .bar").tooltip();
-
 						var episodes_to_check = $(".migration_assets").length;
 
 						$("#toggle_all_episodes").on("click", function() {

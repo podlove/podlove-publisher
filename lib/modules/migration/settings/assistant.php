@@ -19,6 +19,12 @@ class Assistant {
 			/* $function   */ array( $this, 'page' )
 		);
 
+
+		if ( isset( $_REQUEST['reset_migration'] ) && $_REQUEST['reset_migration'] ) {
+			$this->reset_migration();
+			wp_redirect( admin_url( 'admin.php?page=' . $_REQUEST['page'] ) );
+		}
+
 	}
 
 	public static function get_page_link( $step = 1 ) {
@@ -26,7 +32,7 @@ class Assistant {
 	}
 
 	public function process_request() {
-		
+
 		if ( ! isset( $_REQUEST['podlove_migration'] ) )
 			return;
 
@@ -37,6 +43,35 @@ class Assistant {
 		}
 
 		update_option( 'podlove_migration', $migration_settings );
+	}
+
+	private function reset_migration() {
+		delete_option( 'podlove_module_migration' );
+		delete_option( 'podlove_migration' );
+		delete_option( 'podlove_migration_validation_cache' );
+		delete_option( 'podlove_asset_assignment' );
+		delete_option( 'podlove_migrated_posts_cache' );
+
+		$args = array(
+			'post_type'      => 'podcast',
+			'posts_per_page' => -1
+		);
+		$query = new \WP_Query( $args );
+
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			wp_delete_post( get_the_ID() );
+		}
+
+		wp_reset_postdata();
+
+		foreach ( Model\EpisodeAsset::all() as $asset ) {
+			$asset->delete();
+		}
+
+		foreach ( Model\Feed::all() as $feed ) {
+			$feed->delete();
+		}
 	}
 
 	public function page() {
@@ -76,11 +111,38 @@ class Assistant {
 		if ( $current_step < 1 ) {
 			$current_step = 1;
 		}
-
 		?>
+
+		<style type="text/css">
+			.wrap h2 .tooltip {
+				text-shadow: none;
+				white-space: normal;
+				line-height: 20px;
+			}
+		</style>
+
+		<script type="text/javascript">
+		jQuery(function($) {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		</script>
+
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Migration Assistant' ) ?></h2>
+			<h2>
+				<?php echo __( 'Migration Assistant' ) ?>
+				<span class="btn-group">
+					<a href="<?php echo admin_url( 'admin.php?page=' . $_REQUEST['page'] . '&step=1&reset_migration=1' ) ?>"
+					   class="btn btn-small"
+					   data-placement="bottom"
+					   data-toggle="tooltip"
+					   title="<?php echo __( "Deletes all episodes, assets, feeds and migration settings.", 'podlove' ) ?>"
+					   >
+						<?php echo __( 'reset migration and start from scratch', 'podlove' ) ?>
+					</a>
+				</span>
+			</h2>
+
 			<hr>
 
 			<ul class="nav nav-pills">
