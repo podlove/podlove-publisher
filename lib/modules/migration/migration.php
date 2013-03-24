@@ -35,10 +35,23 @@ function get_podcast_settings() {
 	$migration_settings = get_option( 'podlove_migration', array() );
 	$migration_settings = ( isset( $migration_settings['podcast'] ) ) ? $migration_settings['podcast'] : array();
 
+	$itunes_summary_default = '';
+	$itunes_subtitle_default = get_bloginfo('description');
+
+	// harvest low hanging podPress fruits
+	if ( $podPress_config = get_option( 'podPress_config' ) ) {
+		if ( isset( $podPress_config['iTunes']['summary'] ) && $podPress_config['iTunes']['summary'] ) {
+			$itunes_summary_default = $podPress_config['iTunes']['summary'];
+		}
+		if ( isset( $podPress_config['iTunes']['subtitle'] ) && $podPress_config['iTunes']['subtitle'] ) {
+			$itunes_subtitle_default = $podPress_config['iTunes']['subtitle'];
+		}
+	}
+
 	$defaults = array(
 		'title'    => get_bloginfo('name'),
-		'subtitle' => get_bloginfo('description'),
-		'summary'  => '',
+		'subtitle' => $itunes_subtitle_default,
+		'summary'  => $itunes_summary_default,
 		'media_file_base_url_option' => 'preset',
 		'media_file_base_url_preset' => NULL,
 		'media_file_base_url_custom' => ''

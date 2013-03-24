@@ -11,9 +11,6 @@ class StepBasics extends Step {
 		<div class="row-fluid">
 			<div class="span12">
 				<div class="well">
-					<!-- <p>
-						<?php echo __( 'Now, please tell me about your podcast. What is it about?', 'podlove' ); ?>
-					</p> -->
 					<p>
 						Here's the tricky part.
 						Please read carefully, I will now describe core concept of the Podlove Publisher.
