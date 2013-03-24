@@ -503,11 +503,19 @@ class StepPosts extends Step {
 								}
 							});
 
-							var success_percent = Math.round(all_valid / episodes_to_check * 1000) / 10,
-							    warning_percent = Math.round(some_valid / episodes_to_check * 1000) / 10,
-							    failed_percent = Math.round(none_valid / episodes_to_check * 1000) / 10;
+							console.log(all_valid,some_valid,none_valid);
 
-							if (success_percent) {
+							var success_percent = Math.round(all_valid / episodes_to_check * 10000) / 100,
+							    warning_percent = Math.round(some_valid / episodes_to_check * 10000) / 100,
+							    failed_percent = Math.round(none_valid / episodes_to_check * 10000) / 100;
+
+							if (success_percent + warning_percent + failed_percent > 100) {
+								success_percent -= 0.01;
+								warning_percent -= 0.01;
+								failed_percent  -= 0.01;
+							}
+
+							if (success_percent > 0) {
 							    $("#verification-status .bar-success")
 							    	.css("width", success_percent + "%")
 							    	.html(all_valid)
@@ -516,7 +524,7 @@ class StepPosts extends Step {
 								$("#verification-status .bar-success").hide();
 							}
 
-							if (warning_percent) {
+							if (warning_percent > 0) {
 						    	$("#verification-status .bar-warning")
 							    	.css("width", warning_percent + "%")
 							    	.html(some_valid)
@@ -525,7 +533,7 @@ class StepPosts extends Step {
 								$("#verification-status .bar-warning").hide();
 							}
 
-							if (failed_percent) {
+							if (failed_percent > 0) {
 						    	$("#verification-status .bar-danger")
 							    	.css("width", failed_percent + "%")
 							    	.html(none_valid)
