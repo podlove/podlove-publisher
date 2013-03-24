@@ -18,12 +18,21 @@ class StepMigrate extends Step {
 		// then begin to migrate
 		$migration_settings = get_option( 'podlove_migration', array() );
 
+
 		// Basic Podcast Settings
 		$podcast = Model\Podcast::get_instance();
 		$podcast->title                = $migration_settings['podcast']['title'];
 		$podcast->subtitle             = $migration_settings['podcast']['subtitle'];
 		$podcast->summary              = $migration_settings['podcast']['summary'];
 		$podcast->media_file_base_uri  = \Podlove\Modules\Migration\get_media_file_base_url();
+
+		// harvest low hanging podPress fruits
+		if ( $podPress_config = get_option( 'podPress_config' ) ) {
+			if ( isset( $podPress_config['iTunes']['image'] ) && ! $podcast->cover_image ) {
+				$podcast->cover_image = $podPress_config['iTunes']['image'];
+			}
+		}
+
 		$podcast->save();
 
 		// Create Assets
