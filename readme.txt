@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Add "Support" page including a system report
 * Enhancement: Add .post class to article-classes list to improve theme compatibility
 * Bugfix: Fix feed validation mixup
+* Bugfix: Support "future publishing" of episodes (thanks Marc!)
 
 = 1.3.29-alpha =
 * Bugfix: Fix some media file mixups
