@@ -297,7 +297,7 @@ class Dashboard {
 							continue;
 
 						// skip deleted podcasts
-						if ( ! in_array( $post->post_status, array( 'draft', 'publish' ) ) )
+						if ( ! in_array( $post->post_status, array( 'draft', 'publish', 'future' ) ) )
 							continue;
 
 						// skip versions
