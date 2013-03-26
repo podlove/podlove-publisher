@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 28 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 30 );
 
 add_action( 'init', function () {
 	
@@ -220,6 +220,18 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( sprintf(
 				'UPDATE `%s` SET position = id',
 				Model\EpisodeAsset::table_name()
+			) );
+		break;
+		case 29:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `embed_content_encoded` INT AFTER `limit_items`',
+				Model\Feed::table_name()
+			) );
+		break;
+		case 30:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` MODIFY `autoinsert` VARCHAR(255)',
+				Model\Template::table_name()
 			) );
 		break;
 	}

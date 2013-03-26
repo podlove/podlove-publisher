@@ -17,7 +17,7 @@ class Templates {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );
+		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 	}
 
 	public function scripts_and_styles() {
@@ -167,7 +167,7 @@ class Templates {
 
 			$f->string( 'title', array(
 				'label'       => __( 'ID', 'podlove' ),
-				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span id=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
+				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
@@ -185,10 +185,15 @@ Published by <a href="[podlove-podcast field="publisher_url"]" target="_blank">[
 EOT
 			) );
 
-			$f->checkbox( 'autoinsert', array(
-				'label'       => __( 'Insert Automatically', 'podlove' ),
-				'description' => __( 'Use this template when creating new episodes.' ),
-				'default'     => false
+			$f->select( 'autoinsert', array(
+				'label'       => __( 'Insert automatically', 'podlove' ),
+				'description' => __( 'Automatically insert template shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>.', 'podlove' ),
+				'options'     => array(
+					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
+					'beginning' => __( 'insert at the beginning', 'podlove' ),
+					'end'       => __( 'insert at the end', 'podlove' )
+				),
+				'default' => 'manually'
 			) );
 
 		} );
@@ -228,7 +233,7 @@ EOT
 
 		jQuery(function($){
 			$("#podlove_template_title").bind("keyup", function(e) {
-				$("#template_title_preview").html($(this).val());
+				$(".template_title_preview").html($(this).val());
 			});
 		});
 		</script>
