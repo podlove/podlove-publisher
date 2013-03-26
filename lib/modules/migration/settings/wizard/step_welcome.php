@@ -8,7 +8,7 @@ class StepWelcome extends Step {
 	public function template() {
 		?>
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span3">
 				<h3>Is this for you?</h3>
 				<p>
 					This tool is for you if you are using this WordPress setup to publish a podcast right now.
@@ -16,7 +16,7 @@ class StepWelcome extends Step {
 					work with anything that relies on WordPress enclosures.
 				</p>
 			</div>
-			<div class="span6">
+			<div class="span3">
 				<h3>Preparation</h3>
 				<p>
 					Before you start, <strong><em>please backup your database!</em></strong>.
@@ -24,6 +24,15 @@ class StepWelcome extends Step {
 				</p>
 				<p>
 					<?php echo __( 'Don\'t know how to do a backup? Try ' ) . '<a href="' . admin_url( 'plugin-install.php?tab=search&s=BackWPup' ) . '" target="_blank">BackWPup</a>.' ?>
+				</p>
+			</div>
+			<div class="span6">
+				<h3>System Check</h3>
+				<p>
+					<?php 
+					$r = new \Podlove\SystemReport;
+					echo $r->render();
+					?>
 				</p>
 			</div>
 		</div>
