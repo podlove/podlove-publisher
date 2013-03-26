@@ -437,6 +437,26 @@ add_action( 'added_post_meta', function ( $meta_id, $post_id, $meta_key, $_meta_
 
 }, 10, 4 );
 
+function autoinsert_templates_into_content( $content ) {
+
+	if ( get_post_type() !== 'podcast' )
+		return $content;
+
+	if ( stripos( $content, '[podlove-template' ) !== false )
+		return $content;
+
+	foreach ( Model\Template::all() as $template ) {
+		if ( $template->autoinsert == 'beginning' ) {
+			$content = '[podlove-template id="' . $template->title . '"]' . $content;
+		} elseif ( $template->autoinsert == 'end' ) {
+			$content = $content . '[podlove-template id="' . $template->title . '"]';
+		}
+	}
+
+	return $content;
+}
+add_filter( 'the_content', '\Podlove\autoinsert_templates_into_content' );
+
 namespace Podlove\AJAX;
 use \Podlove\Model;
 
