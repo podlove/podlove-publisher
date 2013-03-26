@@ -116,7 +116,7 @@ class Templates {
 
 	private function view_template() {
 
-		echo __( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed <a href="https://github.com/eteubert/podlove/wiki/Shortcodes" target="_blank">Shortcode</a> as the episode content.', 'podlove' );
+		echo __( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed <a href="https://github.com/podlove/podlove-publisher#shortcodes" target="_blank">Shortcode</a> as the episode content.', 'podlove' );
 
 		$table = new \Podlove\Template_List_Table();
 		$table->prepare_items();
@@ -176,17 +176,10 @@ class Templates {
 				'description' => __( 'Have a look at the <a href="https://github.com/eteubert/podlove/wiki/Shortcodes" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
 				'default' => <<<EOT
-Type "[" to see a list of available shortcodes. HTML is allowed.
-Example Template:
-
-<h4 class="podlove-subtitle">[podlove-episode field="subtitle"]</h4>
-
-<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
-
-[podlove-episode field="summary"]
-
 [podlove-web-player]
 [podlove-episode-downloads]
+
+<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
 
 Published by <a href="[podlove-podcast field="publisher_url"]" target="_blank">[podlove-podcast field="publisher_name"]</a> under <a href="[podlove-podcast field="license_url"]" target="_blank">[podlove-podcast field="license_name"]</a>.
 EOT
