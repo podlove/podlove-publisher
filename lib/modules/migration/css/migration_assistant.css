@@ -1,0 +1,53 @@
+#podlove_welcome {
+	position: relative;
+	height: 210px;
+	width: 98%;
+	background: #1a1a19 url(../../../../images/podlove_header.jpg) top left no-repeat;
+	background-size: auto 100%;
+
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	color: #E7E7E7;
+	font-size: 14px;
+	font-weight: 300;
+
+	margin-top: 15px;
+	padding-top: 15px;
+	padding-right: 10px;
+	padding-left: 185px;
+	box-sizing: border-box;
+	font-weight: lighter;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#podlove_welcome .dismiss {
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+}
+
+#podlove_welcome a {
+	color: #9BA7B5;
+	text-decoration: none;
+	line-height: 20px;
+}
+
+#podlove_welcome a:visited {
+	color: #9BA7B5;
+}
+
+#podlove_welcome h3 {
+	line-height: 22px;
+	font-size: 1.6em;
+	font-weight: lighter;
+	margin: 10px 0px;
+	text-rendering: optimizelegibility;
+}
+
+#podlove_welcome p {
+	font-size: 1.3em;
+	line-height: 20px;
+	margin: 0 0 10px 0;
+}

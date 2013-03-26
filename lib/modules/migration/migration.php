@@ -13,16 +13,74 @@ class Migration extends \Podlove\Modules\Base {
 		public function load() {
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );
 			add_action( 'admin_menu', array( $this, 'register_menu' ), 20 );
+
+			add_action( 'admin_notices', array( $this, 'migration_teaser' ) );
+		}
+
+		public function migration_teaser() {
+
+			if ( $_COOKIE && isset( $_COOKIE['podlove_hide_teaser'] ) )
+				return;
+
+			?>
+			<div id="podlove_welcome">
+				<h3>
+					<?php echo __( 'This is the Podlove Publisher. Welcome!', 'podlove' ); ?>
+				</h3>
+				<p>
+					<?php
+					echo sprintf(
+						__( 'Do you have an existing podcast here which you\'d like to convert to the Publisher?%sPlease use the %sMigration Assistant%s.', 'podlove' ),
+						'<br>',
+						'<a href="' . admin_url( 'admin.php' . \Podlove\Modules\Migration\Settings\Assistant::get_page_link() ) . '">',
+						'</a>'
+					);
+					?>
+				</p>
+				<p>
+					<?php echo __( 'Have fun!', 'podlove' ); ?>
+				</p>
+				<div class="dismiss">
+					<a href="#">
+						<?php echo __( 'Dismiss this message', 'podlove' ); ?>
+					</a>
+				</div>
+			</div>
+
+			<script type="text/javascript">
+				jQuery(function($){
+					$("#podlove_welcome .dismiss a").on("click", function(e) {
+						e.preventDefault();
+
+						var date = new Date(),
+						    hour = 1000 * 60 * 60,
+						    year = hour * 24 * 365;
+
+						date.setTime(date.getTime() + year);
+						document.cookie = 'podlove_hide_teaser=1; expires=' + date.toGMTString() + '; path=/'
+
+						$("#podlove_welcome").slideUp();
+
+						return false;
+					});
+				});
+			</script>
+			<?php
 		}
 
 		public function register_admin_styles() {
+
 			if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === 'podlove_settings_migration_handle' ) {
 				wp_register_script( 'twitter-bootstrap-script', $this->get_module_url() . '/js/bootstrap.min.js' );
 				wp_enqueue_script( 'twitter-bootstrap-script', 'jquery' );
 
 				wp_register_style( 'twitter-bootstrap-style', $this->get_module_url() . '/css/bootstrap.min.css' );
 				wp_enqueue_style( 'twitter-bootstrap-style' );
+
 			}
+
+			wp_register_style( 'podlove-migration-style', $this->get_module_url() . '/css/migration_assistant.css' );
+			wp_enqueue_style( 'podlove-migration-style' );
 		}
 
 		public function register_menu() {
