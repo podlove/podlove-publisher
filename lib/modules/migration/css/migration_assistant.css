@@ -52,10 +52,15 @@
 	margin: 0 0 10px 0;
 }
 
-.bootstrap .wrap h2 .tooltip {
+.bootstrap.wrap {
+	margin-right: 15px;
+}
+
+.bootstrap.wrap h2 .tooltip {
 	text-shadow: none;
 	white-space: normal;
 	line-height: 20px;
+	width: 200px;
 }
 
 .bootstrap #migration_header {

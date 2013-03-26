@@ -59,7 +59,7 @@ class StepPosts extends Step {
 		}
 
 		if ( ! count( $episodes ) )
-			$errors[] = __( '<strong>No Episodes Found!</strong> I only know how to migrate episodes with enclosures. However, I could\'t find any. Sorry!' , 'podlove' );
+			$errors[] = __( '<strong>No Episodes Found!</strong> You can only migrate posts with enclosures. However, there don\'t seem to be any. Sorry!' , 'podlove' );
 
 		$migration_settings = get_option( 'podlove_migration', array() );
 
@@ -88,7 +88,6 @@ class StepPosts extends Step {
 		$validation_cache = get_option( 'podlove_migration_validation_cache', array() );
 		?>
 
-
 		<div class="row-fluid">
 			<div class="span12">
 				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
@@ -98,11 +97,19 @@ class StepPosts extends Step {
 
 					<div class="clearfix"></div>
 
-					<div class="well" style="margin-top: 15px">
-						I searched your posts for entries with enclosures.
-						I also looked into them for their mime type.
-						<br>
-						Please select which files and which episodes you'd like to migrate.
+					<div class="row-fluid">
+						<div class="span12">
+							<h3>About Episodes and Assets</h3>
+							<p>
+								A single podcast recording is called <em>episode</em>. Below are all posts identified as episodes. Please check that the results match your expectations.
+							</p>
+							<p>
+								Podlove knows about the <em>assets</em> you distribute for each episode. Assets are audio/video files but also images, chapter files, subtitle files etc. Please check that <strong>Episode Assets</strong> lists your desired assets only.
+							</p>
+							<p>
+								When everything looks good and the verification bar is green (and maybe yellow, but not red), <em>continue to migration</em>.
+							</p>
+						</div>
 					</div>
 
 					<div class="clearfix"></div>
