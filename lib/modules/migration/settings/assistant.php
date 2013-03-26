@@ -113,34 +113,32 @@ class Assistant {
 		}
 		?>
 
-		<style type="text/css">
-			.wrap h2 .tooltip {
-				text-shadow: none;
-				white-space: normal;
-				line-height: 20px;
-			}
-		</style>
-
 		<script type="text/javascript">
 		jQuery(function($) {
 			$('[data-toggle="tooltip"]').tooltip();
 		});
 		</script>
 
-		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2>
+		<div class="wrap bootstrap">
+			<h2 id="migration_header">
 				<?php echo __( 'Migration Assistant' ) ?>
-				<span class="btn-group">
-					<a href="<?php echo admin_url( 'admin.php?page=' . $_REQUEST['page'] . '&step=1&reset_migration=1' ) ?>"
-					   class="btn btn-small"
-					   data-placement="bottom"
-					   data-toggle="tooltip"
-					   title="<?php echo __( "Deletes all episodes, assets, feeds and migration settings.", 'podlove' ) ?>"
-					   >
-						<?php echo __( 'reset migration and start from scratch', 'podlove' ) ?>
-					</a>
-				</span>
+				<p class="lead">
+					Migrate your existing episodes to the Podlove Publisher.
+					<br>
+					If you get stuck, feel free to reset the migration and
+					<span class="btn-group">
+						<a href="<?php echo admin_url( 'admin.php?page=' . $_REQUEST['page'] . '&step=1&reset_migration=1' ) ?>"
+						   class="btn btn-small"
+						   data-placement="bottom"
+						   data-toggle="tooltip"
+						   title="<?php echo __( "Deletes all episodes, assets, feeds and migration settings.", 'podlove' ) ?>"
+						   >
+							<?php echo __( 'start from scratch', 'podlove' ) ?>
+						</a>
+					</span>.
+					<br>
+					There's also <a href="#">documentation</a> if you'd like to get into details.
+				</p>
 			</h2>
 
 			<hr>
