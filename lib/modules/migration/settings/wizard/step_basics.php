@@ -9,41 +9,37 @@ class StepBasics extends Step {
 	public function template() {
 		?>
 		<div class="row-fluid">
-			<div class="span12">
-				<div class="well">
-					<p>
-						Here's the tricky part.
-						Please read carefully, I will now describe core concept of the Podlove Publisher.
-					</p>
-					<p>
-						The Publisher assumes all your media files are in the same directory and follow
-						a certain naming scheme.
-						All your files must be accessible via http and start with what I call the
-						<strong>Media File Base URL</strong> — that might be <em>http://cdn.example.com/pod/</em>.
-						Every episode is identified by a unique <strong>slug</strong>.
-						A common pattern is to use the episode number (001, 002 etc.) or the number prefixed with
-						the podcast mnemonic (ms001, ms002 etc. if you podcasts name is "MacSmack").
-						A media file can be accessed by combining the media file base url, slug and <strong>file extension</strong>.
-						So a complete example URL might look like this: <em>http://cdn.example.com/pod/ms001.mp3</em>
-					</p>
-					<p>
-						So here's a checklist for you to make sure the migration works smoothly:
-
-						<ol>
-							<li>
-								Copy all your files into the same directory and make sure they are accessible.
-							</li>
-							<li>
-								Depending on your current naming scheme you might or might not have a slug.
-								If your slug is either part of the file url or blog post url, I can find it automatically.
-								Otherwise you will have to write the slug into all episodes manually after the migration.
-							</li>
-							<li>
-								Case sensitivity matters! To avoid all conflicts, just write everything in small letters.
-							</li>
-						</ol>
-					</p>
-				</div>
+			<div class="span6">
+				<h3>The Podlove Mindset</h3>
+				<p>
+					The Publisher assumes all your media files are in the same directory and follow
+					a certain naming scheme.
+					All your files must be accessible via http and start with the same
+					<strong>Media File Base URL</strong> (e.g. <code>http://cdn.example.com/pod/</code>).
+				</p>
+				<p>
+					Every episode is identified by a unique <strong>slug</strong>.
+					A common pattern is to use the episode number (<code>001</code>, <code>002</code> etc.) or the number prefixed with
+					the podcast mnemonic (<code>ms001</code>, <code>ms002</code> etc. if your podcast is "MacSmack").
+					A media file can be accessed by combining the media file base url, slug and <strong>file extension</strong>.
+				</p>
+				<p>
+					Complete example: <code>http://cdn.example.com/pod/ms001.mp3</code>
+				</p>
+			</div>
+			<div class="span6">
+				<h3>Checklist</h3>
+				<ol>
+					<li>
+						Copy all your files into the same publicly accessible directory.
+					</li>
+					<li>
+						Depending on your current naming scheme you might or might not have to rename your files. If you are not sure, don't worry. It will be more obvious in the next step.
+					</li>
+					<li>
+						Case sensitivity matters! To avoid conflicts, write everything in small letters.
+					</li>
+				</ol>
 			</div>
 		</div>
 
@@ -71,6 +67,7 @@ class StepBasics extends Step {
 
 		<div class="row-fluid">
 			<div class="span12">
+				<h3>Basic Settings</h3>
 				<form action="" class="form-horizontal">
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Podcast Title', 'podlove' ); ?></label>
