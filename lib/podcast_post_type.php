@@ -60,6 +60,7 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
+		add_action( 'admin_menu', array( $this, 'create_support_menu_entry' ), 100 ); // make sure it's at the bottom
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 		add_filter( 'post_class', array( $this, 'add_post_class' ) );
@@ -209,6 +210,10 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\FileType( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
+		
+	}
+
+	public function create_support_menu_entry() {
 		new \Podlove\Settings\Support( self::SETTINGS_PAGE_HANDLE );
 	}
 
