@@ -9,13 +9,6 @@ class Podcast_Post_Type {
 
 	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
 
-	public static $default_post_content = <<<EOT
-
-[podlove-web-player]
-
-[podlove-episode-downloads]
-EOT;
-
 	public function __construct() {
 
 		$labels = array(
@@ -67,7 +60,6 @@ EOT;
 		register_post_type( 'podcast', $args );
 
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
-		add_filter( 'default_content', array( $this, 'set_default_episode_content' ), 20, 2 );
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 		add_filter( 'post_class', array( $this, 'add_post_class' ) );
@@ -245,30 +237,6 @@ EOT;
 		}
 
 		return $query_var;
-	}
-
-	public function set_default_episode_content( $post_content, $post ) {
-
-		if ( $post->post_type !== 'podcast' )
-			return $post_content;
-
-		$post_content = self::get_default_post_content();
-
-		return $post_content;
-	}
-
-	public static function get_default_post_content( $post_content = '' ) {
-
-		$default_templates = Model\Template::find_all_by_autoinsert(1);
-		if ( count( $default_templates ) > 0 ) {
-			foreach ( $default_templates as $template ) {
-				$post_content .= '[podlove-template id="' . $template->title . '"]';
-			}
-		} else {
-			$post_content .= self::$default_post_content;
-		}
-
-		return $post_content;
 	}
 
 	/**

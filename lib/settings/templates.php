@@ -17,7 +17,7 @@ class Templates {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );
+		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 	}
 
 	public function scripts_and_styles() {
@@ -116,7 +116,7 @@ class Templates {
 
 	private function view_template() {
 
-		echo __( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed <a href="https://github.com/eteubert/podlove/wiki/Shortcodes" target="_blank">Shortcode</a> as the episode content.', 'podlove' );
+		echo __( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed <a href="https://github.com/podlove/podlove-publisher#shortcodes" target="_blank">Shortcode</a> as the episode content.', 'podlove' );
 
 		$table = new \Podlove\Template_List_Table();
 		$table->prepare_items();
@@ -167,7 +167,7 @@ class Templates {
 
 			$f->string( 'title', array(
 				'label'       => __( 'ID', 'podlove' ),
-				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span id=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
+				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
@@ -176,26 +176,24 @@ class Templates {
 				'description' => __( 'Have a look at the <a href="https://github.com/eteubert/podlove/wiki/Shortcodes" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
 				'default' => <<<EOT
-Type "[" to see a list of available shortcodes. HTML is allowed.
-Example Template:
-
-<h4 class="podlove-subtitle">[podlove-episode field="subtitle"]</h4>
-
-<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
-
-[podlove-episode field="summary"]
-
 [podlove-web-player]
 [podlove-episode-downloads]
+
+<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
 
 Published by <a href="[podlove-podcast field="publisher_url"]" target="_blank">[podlove-podcast field="publisher_name"]</a> under <a href="[podlove-podcast field="license_url"]" target="_blank">[podlove-podcast field="license_name"]</a>.
 EOT
 			) );
 
-			$f->checkbox( 'autoinsert', array(
-				'label'       => __( 'Insert Automatically', 'podlove' ),
-				'description' => __( 'Use this template when creating new episodes.' ),
-				'default'     => false
+			$f->select( 'autoinsert', array(
+				'label'       => __( 'Insert automatically', 'podlove' ),
+				'description' => __( 'Automatically insert template shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>.', 'podlove' ),
+				'options'     => array(
+					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
+					'beginning' => __( 'insert at the beginning', 'podlove' ),
+					'end'       => __( 'insert at the end', 'podlove' )
+				),
+				'default' => 'manually'
 			) );
 
 		} );
@@ -235,7 +233,7 @@ EOT
 
 		jQuery(function($){
 			$("#podlove_template_title").bind("keyup", function(e) {
-				$("#template_title_preview").html($(this).val());
+				$(".template_title_preview").html($(this).val());
 			});
 		});
 		</script>
