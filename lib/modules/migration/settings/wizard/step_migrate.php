@@ -33,6 +33,22 @@ class StepMigrate extends Step {
 			}
 		}
 
+		// harvest low hanging PowerPress fruits
+		if ( $powerPress_config = get_option( 'powerpress_feed' ) ) {
+			if ( isset( $powerPress_config['itunes_image'] ) && ! $podcast->cover_image ) {
+				$podcast->cover_image = $powerPress_config['itunes_image'];
+			}
+			if ( isset( $powerPress_config['itunes_cat_1'] ) && ! $podcast->category_1 ) {
+				$podcast->category_1 = $powerPress_config['itunes_cat_1'];
+			}
+			if ( isset( $powerPress_config['itunes_cat_2'] ) && ! $podcast->category_2 ) {
+				$podcast->category_2 = $powerPress_config['itunes_cat_2'];
+			}
+			if ( isset( $powerPress_config['itunes_cat_3'] ) && ! $podcast->category_3 ) {
+				$podcast->category_3 = $powerPress_config['itunes_cat_3'];
+			}
+		}
+
 		$podcast->save();
 
 		// Create Assets

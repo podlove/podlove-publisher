@@ -106,6 +106,16 @@ function get_podcast_settings() {
 		}
 	}
 
+	// harvest low hanging podPress fruits
+	if ( $powerPress_config = get_option( 'powerpress_feed' ) ) {
+		if ( isset( $powerPress_config['itunes_summary'] ) && $powerPress_config['itunes_summary'] ) {
+			$itunes_summary_default = $powerPress_config['itunes_summary'];
+		}
+		if ( isset( $powerPress_config['itunes_subtitle'] ) && $powerPress_config['itunes_subtitle'] ) {
+			$itunes_subtitle_default = $powerPress_config['itunes_subtitle'];
+		}
+	}
+
 	$defaults = array(
 		'title'    => get_bloginfo('name'),
 		'subtitle' => $itunes_subtitle_default,
