@@ -18,7 +18,6 @@ class StepMigrate extends Step {
 		// then begin to migrate
 		$migration_settings = get_option( 'podlove_migration', array() );
 
-
 		// Basic Podcast Settings
 		$podcast = Model\Podcast::get_instance();
 		$podcast->title                = $migration_settings['podcast']['title'];
@@ -50,6 +49,19 @@ class StepMigrate extends Step {
 		}
 
 		$podcast->save();
+
+		// Create Template
+		$template = Model\Template::find_one_by_title('default');
+		if ( ! $template ) {
+			$template = new Model\Template();
+			$template->title = 'default';
+			$template->content = <<<EOT
+[podlove-web-player]
+[podlove-episode-downloads]
+EOT;
+			$template->autoinsert = $migration_settings['cleanup']['template'];
+			$template->save();
+		}
 
 		// Create Assets
 		$assets = array();
