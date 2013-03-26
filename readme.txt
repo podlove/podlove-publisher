@@ -86,10 +86,15 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.3.31-alpha =
+* Feature/Change: Similar to the web player setting, you now can insert templates automatically at the beginning or end of a post. You could even create multiple templates, one to append and one to prepend. This replaces the previous template-autoinsert feature.
+
 = 1.3.30-alpha =
 * Feature: Option to autoinsert web player at beginning or end of post
 * Feature: Add "Support" page including a system report
 * Enhancement: Add .post class to article-classes list to improve theme compatibility
+* Bugfix: Fix feed validation mixup
+* Bugfix: Support "future publishing" of episodes (thanks Marc!)
 
 = 1.3.29-alpha =
 * Bugfix: Fix some media file mixups

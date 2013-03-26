@@ -101,16 +101,12 @@ class Feed extends Base {
 	}
 
 	public function get_content_type() {
-
-		if ( $this->format === 'rss' )
-			return 'application/rss+xml';
-		else
-			return "application/atom+xml";	
+		return 'application/rss+xml';
 	}
 
 	public function get_self_link() {
 		return self::get_link_tag( array(
-			'prefix' => ( $this->format === 'rss' ) ? 'atom' : NULL,
+			'prefix' => 'atom',
 			'rel'    => 'self',
 			'type'   => $this->get_content_type(),
 			'title'  => \Podlove\Feeds\prepare_for_feed( $this->title_for_discovery() ),
@@ -124,7 +120,7 @@ class Feed extends Base {
 		foreach ( self::find_all_by_discoverable(1) as $feed ) {
 			if ( $feed->id !== $this->id ) {
 				$html .= "\n\t" . self::get_link_tag( array(
-					'prefix' => ( $this->format === 'rss' ) ? 'atom' : NULL,
+					'prefix' => 'atom',
 					'rel'    => 'alternate',
 					'type'   => $feed->get_content_type(),
 					'title'  => \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ),
@@ -173,7 +169,6 @@ Feed::property( 'itunes_feed_id', 'INT' );
 Feed::property( 'name', 'VARCHAR(255)' );
 Feed::property( 'title', 'VARCHAR(255)' );
 Feed::property( 'slug', 'VARCHAR(255)' );
-// Feed::property( 'format', 'VARCHAR(255)' ); // atom, rss
 Feed::property( 'redirect_url', 'VARCHAR(255)' );
 Feed::property( 'redirect_http_status', 'INT' );
 Feed::property( 'enable', 'INT' );
