@@ -79,11 +79,13 @@ class StepPosts extends Step {
 		}
 
 		if ( ! isset( $migration_settings['cleanup'] ) ) {
-			$migration_settings['cleanup'] = array(
-				'enclosures' => 1,
-				'player' => 1
-			);
+			$migration_settings['cleanup'] = array();
 		}
+		$migration_settings['cleanup'] = wp_parse_args( $migration_settings['cleanup'], array(
+			'enclosures' => 1,
+			'player' => 1,
+			'template' => 'end'
+		) );
 
 		$validation_cache = get_option( 'podlove_migration_validation_cache', array() );
 		?>
@@ -219,6 +221,24 @@ class StepPosts extends Step {
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][player]" value="0" <?php checked( $migration_settings['cleanup']['player'], 0 ) ?>>
 											keep all player codes
+										</label>
+									</div>
+								</div>
+
+								<div class="control-group template">
+									<label class="control-label">Add template containing web player and download buttons</label>
+									<div class="controls">
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][template]" value="end" <?php checked( $migration_settings['cleanup']['template'], "end" ) ?>>
+											display at the end of each episode
+										</label>
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][template]" value="beginning" <?php checked( $migration_settings['cleanup']['template'], "beginning" ) ?>>
+											display at the beginning of each episode
+										</label>
+										<label class="radio">
+											<input type="radio" name="podlove_migration[cleanup][template]" value="manually" <?php checked( $migration_settings['cleanup']['template'], "manually" ) ?>>
+											don't insert automatically
 										</label>
 									</div>
 								</div>
@@ -438,6 +458,17 @@ class StepPosts extends Step {
 								data: {
 									action: 'podlove-update-migration-settings',
 									cleanup: [ 'player', $(this).val() ]
+								},
+								dataType: 'json'
+							});
+						});
+
+						$("#cleanup_settings .template input").on("click", function(){
+							$.ajax({
+								url: ajaxurl,
+								data: {
+									action: 'podlove-update-migration-settings',
+									cleanup: [ 'template', $(this).val() ]
 								},
 								dataType: 'json'
 							});
