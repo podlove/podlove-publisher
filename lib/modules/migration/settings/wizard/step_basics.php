@@ -18,13 +18,14 @@ class StepBasics extends Step {
 					<strong>Media File Base URL</strong> (e.g. <code>http://cdn.example.com/pod/</code>).
 				</p>
 				<p>
-					Every episode is identified by a unique <strong>slug</strong>.
+					Every episode is identified by a unique <strong>episode slug</strong>.
+					This is an identifying lowercase name for an episode which is part of the media file url.
 					A common pattern is to use the episode number (<code>001</code>, <code>002</code> etc.) or the number prefixed with
-					the podcast mnemonic (<code>ms001</code>, <code>ms002</code> etc. if your podcast is "MacSmack").
-					A media file can be accessed by combining the media file base url, slug and <strong>file extension</strong>.
+					the podcast mnemonic (<code>lh001</code>, <code>lh002</code> etc. if your podcast is "LoveHounds").
+					A media file will be accessed by combining the media file base url, slug and <strong>file extension</strong>.
 				</p>
 				<p>
-					Complete example: <code>http://cdn.example.com/pod/ms001.mp3</code>
+					Complete example: <code>http://cdn.example.com/pod/lh001.mp3</code>
 				</p>
 			</div>
 			<div class="span6">
@@ -37,7 +38,7 @@ class StepBasics extends Step {
 						Depending on your current naming scheme you might or might not have to rename your files. If you are not sure, don't worry. It will be more obvious in the next step.
 					</li>
 					<li>
-						Case sensitivity matters! To avoid conflicts, write everything in small letters.
+						Case sensitivity matters! To avoid conflicts, stick to one naming scheme.
 					</li>
 				</ol>
 			</div>

@@ -92,6 +92,10 @@ class SystemReport {
 			$out .= "0 notices\n";
 		}
 
+		if ( count( $this->errors ) + count( $this->notices ) === 0 ) {
+			$out .= "Nice, Everything looks fine!";
+		}
+
 		return '<pre>' . $out . '</pre>';
 	}
 
