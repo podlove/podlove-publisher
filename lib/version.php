@@ -239,7 +239,7 @@ function run_migrations_for_version( $version ) {
 			if ( $url_slug ) {
 				$url_slug = trailingslashit( $url_slug ) . '%postname%';
 			} else {
-				$url_slug = '%postname%';
+				$url_slug = '%podcast%';
 			}
 
 			$options = get_option( 'podlove' );
