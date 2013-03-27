@@ -48,8 +48,6 @@ class Podcast_Post_Type {
 			'taxonomies' => array( 'post_tag' )
 		);
 
-		\Podlove\Episode_Routing::init();
-
 		new \Podlove\Podcast_Post_Meta_Box();
 
 		$args = apply_filters( 'podlove_post_type_args', $args );
