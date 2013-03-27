@@ -258,14 +258,14 @@ class StepPosts extends Step {
 
 					<h3><?php echo __( 'Episode Verification Status', 'podlove' ); ?></h3>
 					<div class="progress progress-striped" id="verification-status">
-					  <div class="bar bar-success" style="width:0%;display:none" data-toggle="tooltip" title="All assets for these episodes are valid."></div>
+					  <div class="bar bar-success" style="width:0%;display:none" data-toggle="tooltip" title="All media files for these episodes are valid."></div>
 					  <div class="bar bar-warning" style="width:0%;display:none" data-toggle="tooltip" title="Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker."></div>
 					  <div class="bar bar-danger" style="width:0%;display:none" data-toggle="tooltip" title="No media files for these episodes exist!"></div>
 					</div>
 
 					<ul>
 						<li>
-							<span style="color: #00CE62">Green: All assets for these episodes are valid.</span>
+							<span style="color: #00CE62">Green: All media files for these episodes are valid.</span>
 						</li>
 						<li>
 							<span style="color: #FDB339">Yellow: Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker.</span>
