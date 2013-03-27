@@ -442,14 +442,14 @@ function autoinsert_templates_into_content( $content ) {
 	if ( get_post_type() !== 'podcast' )
 		return $content;
 
-	if ( stripos( $content, '[podlove-template id="' . $template->title . '"]' ) !== false )
-		return $content;
-
 	foreach ( Model\Template::all() as $template ) {
-		if ( $template->autoinsert == 'beginning' ) {
-			$content = '[podlove-template id="' . $template->title . '"]' . $content;
-		} elseif ( $template->autoinsert == 'end' ) {
-			$content = $content . '[podlove-template id="' . $template->title . '"]';
+		$shortcode = '[podlove-template id="' . $template->title . '"]';
+		if ( stripos( $content, $shortcode ) === false ) {
+			if ( $template->autoinsert == 'beginning' ) {
+				$content = $shortcode . $content;
+			} elseif ( $template->autoinsert == 'end' ) {
+				$content = $content . $shortcode;
+			}
 		}
 	}
 

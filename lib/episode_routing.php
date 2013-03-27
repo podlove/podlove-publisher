@@ -16,8 +16,10 @@ class Episode_Routing {
 			foreach ( $wp_post_types as $post_type => $options ) {
 				if ( $post_type != "podcast" ) continue;
 
-				// $custom_episode_slug = \Podlove\get_setting('custom_episode_slug') . "/%$post_type%";
-				$custom_episode_slug = trailingslashit( \Podlove\get_setting('custom_episode_slug') );
+				$custom_episode_slug = untrailingslashit( \Podlove\get_setting('custom_episode_slug') );
+				if ( stristr( $custom_episode_slug, '%podcast%' ) === false ) {
+					$custom_episode_slug .= '/%podcast%';
+				}
 				
 				$wp_rewrite->add_rewrite_tag( "%$post_type%", '([^/]+)', "post_type=$post_type&name=" );
 				$wp_rewrite->add_permastruct( $post_type, $custom_episode_slug, false, EP_PERMALINK );

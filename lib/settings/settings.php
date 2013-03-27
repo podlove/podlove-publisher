@@ -63,7 +63,7 @@ class Settings {
 				?>
 				<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo \Podlove\get_setting( 'custom_episode_slug' ) ?>">
 				<p>
-					<span class="description"><?php echo __( 'Placeholders: %postname%, %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%', 'podlove' ); ?></span>
+					<span class="description"><?php echo __( 'Placeholders: %podcast% (mandatory), %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%', 'podlove' ); ?></span>
 				</p>
 				<?php
 			},
