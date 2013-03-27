@@ -93,7 +93,7 @@ EOT;
 				if ( ! $feed ) {
 					$feed = new Model\Feed();
 					$feed->episode_asset_id = $asset->id;
-					$feed->name         = $asset->title();
+					$feed->name         = $file_type->name;
 					$feed->title        = $file_type->name;
 					$feed->slug         = $file_type->extension;
 					$feed->format       = 'rss';

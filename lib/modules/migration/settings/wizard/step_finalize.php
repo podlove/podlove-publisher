@@ -26,12 +26,8 @@ class StepFinalize extends Step {
 					'post_status' => 'publish'
 				) );
 
-				// depublicize legacy post
-				wp_update_post( array(
-					'ID'          => $post->post_parent,
-					'post_status' => 'draft'
-				) );
-				
+				// put legacy post in trash
+				wp_delete_post( $post->post_parent );
 			}
 
 			wp_reset_postdata();
