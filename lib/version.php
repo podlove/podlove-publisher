@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 30 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 31 );
 
 add_action( 'init', function () {
 	
@@ -233,6 +233,18 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` MODIFY `autoinsert` VARCHAR(255)',
 				Model\Template::table_name()
 			) );
+		break;
+		case 31:
+			$url_slug = \Podlove\get_setting('custom_episode_slug');
+			if ( $url_slug ) {
+				$url_slug = trailingslashit( $url_slug ) . '%postname%';
+			} else {
+				$url_slug = '%postname%';
+			}
+
+			$options = get_option( 'podlove' );
+			$options['custom_episode_slug'] = $url_slug;
+			update_option( 'podlove', $options );
 		break;
 	}
 

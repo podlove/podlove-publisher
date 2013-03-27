@@ -57,13 +57,13 @@ class Settings {
 			/* $id       */ 'podlove_setting_custom_episode_slug',
 			/* $title    */ sprintf(
 				'<label for="custom_episode_slug">%s</label>',
-				__( 'URL segment prefix for podcast episode posts. Leave empty to remove the prefix.', 'podlove' )
+				__( 'URL scheme for episodes', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo \Podlove\get_setting( 'custom_episode_slug' ) ?>">
 				<p>
-					<span class="description"><?php echo __( 'Must be a suitable URL part: lowercase characters, numbers and hyphens.', 'podlove' ); ?></span>
+					<span class="description"><?php echo __( 'Placeholders: %postname%, %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%', 'podlove' ); ?></span>
 				</p>
 				<?php
 			},

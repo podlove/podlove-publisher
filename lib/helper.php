@@ -12,7 +12,7 @@ function get_setting( $name ) {
 	$defaults = array(
 		'merge_episodes'         => 'off', // can't be "on"
 		'hide_wp_feed_discovery' => 'off',
-		'custom_episode_slug'    => 'podcast',
+		'custom_episode_slug'    => '%postname%',
 		'enable_episode_record_date'      => 0,
 		'enable_episode_publication_date' => 0,
 		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%'
