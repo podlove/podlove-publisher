@@ -202,21 +202,25 @@ class StepPosts extends Step {
 							<div class="form-horizontal" id="cleanup_settings">
 
 								<div class="control-group enclosures">
-									<label class="control-label">Enclosures</label>
+									<label class="control-label" data-toggle="tooltip" title="You probably want to remove all enclosures stored in custom post meta. The Podlove Publisher imports and stores them separately.">
+										Enclosures
+									</label>
 									<div class="controls">
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][enclosures]" value="1" <?php checked( $migration_settings['cleanup']['enclosures'], 1 ) ?>>
-											remove all enclosures
+											remove all enclosure custom fields
 										</label>
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][enclosures]" value="0" <?php checked( $migration_settings['cleanup']['enclosures'], 0 ) ?>>
-											keep all enclosures
+											keep all enclosures custom fields
 										</label>
 									</div>
 								</div>
 
 								<div class="control-group player">
-									<label class="control-label">Player Codes</label>
+									<label class="control-label" data-toggle="tooltip" title="You probably want to get rid of your old players.">
+										Web Player Shortcodes
+									</label>
 									<div class="controls">
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][player]" value="1" <?php checked( $migration_settings['cleanup']['player'], 1 ) ?>>
@@ -234,11 +238,11 @@ class StepPosts extends Step {
 									<div class="controls">
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][template]" value="end" <?php checked( $migration_settings['cleanup']['template'], "end" ) ?>>
-											display at the end of each episode
+											insert at the end of the content
 										</label>
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][template]" value="beginning" <?php checked( $migration_settings['cleanup']['template'], "beginning" ) ?>>
-											display at the beginning of each episode
+											insert at the beginning of the content
 										</label>
 										<label class="radio">
 											<input type="radio" name="podlove_migration[cleanup][template]" value="manually" <?php checked( $migration_settings['cleanup']['template'], "manually" ) ?>>
@@ -252,15 +256,29 @@ class StepPosts extends Step {
 						
 					</div>
 
-
 					<h3><?php echo __( 'Episode Verification Status', 'podlove' ); ?></h3>
 					<div class="progress progress-striped" id="verification-status">
 					  <div class="bar bar-success" style="width:0%;display:none" data-toggle="tooltip" title="All assets for these episodes are valid."></div>
-					  <div class="bar bar-warning" style="width:0%;display:none" data-toggle="tooltip" title="Some, but not all assets for these episodes are valid. Not necessarily dealbraking."></div>
-					  <div class="bar bar-danger" style="width:0%;display:none" data-toggle="tooltip" title="All assets for these episodes are invalid!"></div>
+					  <div class="bar bar-warning" style="width:0%;display:none" data-toggle="tooltip" title="Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker."></div>
+					  <div class="bar bar-danger" style="width:0%;display:none" data-toggle="tooltip" title="No media files for these episodes exist!"></div>
 					</div>
 
+					<ul>
+						<li>
+							<span style="color: #00CE62">Green: All assets for these episodes are valid.</span>
+						</li>
+						<li>
+							<span style="color: #FDB339">Yellow: Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker.</span>
+						</li>
+						<li>
+							<span style="color: #FF484C">Red: No media for these episodes exist!</span>
+						</li>
+					</ul>
+
 					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
+					<p>
+						Select the episodes to migrate. Use the rest of the displayed data to verify the extracted data.
+					</p>
 					<table class="table table-striped">
 						<thead>
 							<tr>
@@ -278,7 +296,7 @@ class StepPosts extends Step {
 								<?php $post_data = new Legacy_Post_Parser( $episode_post->ID ); ?>
 								<tr>
 									<td>
-										<input type="checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) || ! isset( $migration_settings['episodes'] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
+										<input type="checkbox" class="episode_checkbox" <?php checked( isset( $migration_settings['episodes'][ $episode_post->ID ] ) || ! isset( $migration_settings['episodes'] ) ) ?> name="podlove_migration[episodes][<?php echo $episode_post->ID ?>]">
 									</td>
 									<td>
 										<?php echo $episode_post->ID ?>
@@ -399,12 +417,17 @@ class StepPosts extends Step {
 						$("#toggle_all_episodes").on("click", function() {
 							var checked = $(this).attr("checked") == "checked";
 							$("#episodes_to_migrate input[type='checkbox']").attr("checked", checked);
+							podlove_migration_update_progress_bar();
 						});
 
 						$(".verify_migration_asset").on("click", function(e) {
 							e.preventDefault();
 							podlove_validate_one_asset($(this), false);
 							return false;
+						});
+
+						$(".episode_checkbox").on("click", function() {
+							podlove_migration_update_progress_bar();
 						});
 
 						$(".asset_checkbox").on("click", function(){
@@ -529,7 +552,8 @@ class StepPosts extends Step {
 							    some_valid = 0,
 							    none_valid = 0;
 
-							$(".migration_assets").each(function(){
+							$('.episode_checkbox').filter(":checked").closest("tr").next().find(".migration_assets")
+								.each(function(){
 								var visible_tr = $("tr:not(.hidden)", this),
 									successes  = $(".success", visible_tr).filter(":visible").length,
 								    failures   = $(".failure", visible_tr).filter(":visible").length;

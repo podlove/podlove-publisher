@@ -442,7 +442,7 @@ function autoinsert_templates_into_content( $content ) {
 	if ( get_post_type() !== 'podcast' )
 		return $content;
 
-	if ( stripos( $content, '[podlove-template' ) !== false )
+	if ( stripos( $content, '[podlove-template id="' . $template->title . '"]' ) !== false )
 		return $content;
 
 	foreach ( Model\Template::all() as $template ) {

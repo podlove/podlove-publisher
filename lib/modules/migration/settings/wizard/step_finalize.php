@@ -54,7 +54,8 @@ class StepFinalize extends Step {
 					<?php echo __( 'Nearly done!', 'podlove' ); ?>
 				</h1>
 				<p>
-					All your episodes are migrated as <em>pending</em>. Your posts are still <em>published</em>. You can now preview your episodes and adjust them to your liking. Then it's time to pull the trigger.
+					All your episodes are migrated and marked as <em>pending</em>. Your original posts are still <em>published</em>.
+					You can now <a href="<?php echo admin_url( 'edit.php?post_type=podcast' ) ?>">preview your episodes</a> and adjust them to your liking. Then it's time to pull the trigger.
 				</p>
 				<p>
 					Pushing this button depublicizes all migrated posts and publishes all episodes at once.
