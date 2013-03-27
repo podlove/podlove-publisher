@@ -504,13 +504,18 @@ add_action( 'wp', function() {
 /**
  * Replace placeholders in permalinks with the correct values
  */
-function generate_custom_post_link( $post_link, $id ) {
+function generate_custom_post_link( $post_link, $id, $leavename = false, $sample = false ) {
 	// Get post
 	$post = &get_post($id);
+	$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
+	
+	// Sample
+	if ( $sample )
+		$post->post_name = "%pagename%";
 	
 	// Only post_name in URL
 	$permastruct = untrailingslashit( \Podlove\get_setting( 'custom_episode_slug' ) );
-	if ( "%podcast%" == $permastruct )
+	if ( "%podcast%" == $permastruct && ( !$draft_or_pending || $sample ) )
 		return home_url( user_trailingslashit( $post->post_name ) );
 	
 	//
@@ -553,7 +558,7 @@ function generate_custom_post_link( $post_link, $id ) {
 	return $post_link;
 }
 		
-add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 2 );
+add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
 
 namespace Podlove\AJAX;
 use \Podlove\Model;
