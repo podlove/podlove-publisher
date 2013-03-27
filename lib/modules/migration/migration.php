@@ -228,7 +228,7 @@ function migrate_post( $post_id ) {
 	// copy all meta
 	$meta = get_post_meta( $post_id );
 	foreach ( $meta as $key => $values ) {
-		if ( ! in_array( $key , array( 'enclosure', '_podPressPostSpecific' ) ) || ! $migration_settings['cleanup']['enclosures'] ) {
+		if ( ! in_array( $key , array( 'enclosure', '_podPressPostSpecific', '_podPressMedia' ) ) || ! $migration_settings['cleanup']['enclosures'] ) {
 			foreach ( $values as $value ) {
 				add_post_meta( $new_post_id, $key, $value );
 			}
