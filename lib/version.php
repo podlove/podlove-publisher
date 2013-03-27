@@ -235,18 +235,6 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 31:
-			$url_slug = \Podlove\get_setting('custom_episode_slug');
-			if ( $url_slug ) {
-				$url_slug = trailingslashit( $url_slug ) . '%postname%';
-			} else {
-				$url_slug = '%podcast%';
-			}
-
-			$options = get_option( 'podlove' );
-			$options['custom_episode_slug'] = $url_slug;
-			update_option( 'podlove', $options );
-			flush_rewrite_rules();
-			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 		break;
 	}
 
