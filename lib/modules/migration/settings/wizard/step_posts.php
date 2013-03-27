@@ -265,13 +265,13 @@ class StepPosts extends Step {
 
 					<ul>
 						<li>
-							<span style="color: #00CE62">Green: All media files for these episodes are valid.</span>
+							<span style="color: #00CE62">Green:</span> All media files for these episodes are valid.
 						</li>
 						<li>
-							<span style="color: #FDB339">Yellow: Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker.</span>
+							<span style="color: #FDB339">Yellow:</span> Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker.
 						</li>
 						<li>
-							<span style="color: #FF484C">Red: No media for these episodes exist!</span>
+							<span style="color: #FF484C">Red:</span> No media for these episodes exist!
 						</li>
 					</ul>
 
