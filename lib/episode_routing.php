@@ -10,7 +10,7 @@ class Episode_Routing {
 		 * @uses $wp_post_types
 		 * @uses $wp_rewrite
 		 */
-		add_action( 'delete_option_rewrite_rules', function () {
+		add_action( 'init', function () {
 			global $wp_post_types, $wp_rewrite;
 
 			foreach ( $wp_post_types as $post_type => $options ) {
@@ -21,7 +21,7 @@ class Episode_Routing {
 					$custom_episode_slug .= '/%podcast%';
 				}
 				
-				$wp_rewrite->use_verbose_page_rules = true;
+				// $wp_rewrite->use_verbose_page_rules = true;
 				$wp_rewrite->add_rewrite_tag( "%$post_type%", '([^/][^/]*)', "post_type=$post_type&name=" );
 				$wp_rewrite->add_permastruct( $post_type, $custom_episode_slug, false, EP_PERMALINK );
 			}
