@@ -21,7 +21,7 @@ class Episode_Routing {
 					$custom_episode_slug .= '/%podcast%';
 				}
 				
-				$wp_rewrite->add_rewrite_tag( "%$post_type%", '([^/]+)', "post_type=$post_type&name=" );
+				$wp_rewrite->add_rewrite_tag( "%$post_type%", '([^/][^/]*)', "post_type=$post_type&name=" );
 				$wp_rewrite->add_permastruct( $post_type, $custom_episode_slug, false, EP_PERMALINK );
 			}
 		}, 99 );
