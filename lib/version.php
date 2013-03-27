@@ -245,6 +245,8 @@ function run_migrations_for_version( $version ) {
 			$options = get_option( 'podlove' );
 			$options['custom_episode_slug'] = $url_slug;
 			update_option( 'podlove', $options );
+			flush_rewrite_rules();
+			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 		break;
 	}
 
