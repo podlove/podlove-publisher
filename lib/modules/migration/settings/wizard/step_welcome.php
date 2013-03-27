@@ -12,7 +12,7 @@ class StepWelcome extends Step {
 				<h3>Is this for you?</h3>
 				<p>
 					This tool is for you if you are using this WordPress setup to publish a podcast right now.
-					The assistant has explicit support for podPress and PowerPress setups but it will 
+					The assistant has explicit support for <a href="http://wordpress.org/extend/plugins/podpress/" target="_blank">podPress</a> and <a href="http://wordpress.org/extend/plugins/powerpress/" target="_blank">PowerPress</a> setups but it will 
 					work with anything that relies on WordPress enclosures.
 				</p>
 			</div>

@@ -104,9 +104,7 @@ class StepPosts extends Step {
 							<h3>About Episodes and Assets</h3>
 							<p>
 								A single podcast recording is called <em>episode</em>. Below are all posts identified as episodes. Please check that the results match your expectations.
-							</p>
-							<p>
-								Podlove knows about the <em>assets</em> you distribute for each episode. Assets are audio/video files but also images, chapter files, subtitle files etc. Please check that <strong>Episode Assets</strong> lists your desired assets only.
+								Podlove knows about the <em>assets</em> you distribute for each episode. Assets are audio/video files but also images, chapter files, subtitle files etc.
 							</p>
 							<p>
 								When everything looks good and the verification bar is green (and maybe yellow, but not red), <em>continue to migration</em>.
@@ -125,11 +123,17 @@ class StepPosts extends Step {
 						<?php endforeach; ?>
 					<?php endif; ?>
 
-					<h3><?php echo __( 'Episode Assets', 'podlove' ) ?></h3>
+					<h3><?php echo __( 'Episode Assets', 'podlove' ) ?> <small>choose assets to use in your podcast</small></h3>
+					<p>
+						These are all detected assets. Please choose those that you want to use in your podcast.
+						For each asset, a feed will be created and users will be able to download those files (you can change this after the migration).
+					</p>
 					<table class="table table-striped">
 						<thead>
 							<tr>
-						 		<th></th>
+						 		<th>
+						 			<?php echo __( 'Use', 'podlove' ) ?>
+						 		</th>
 						 		<th>
 						 			<?php echo __( 'Title', 'podlove' ) ?>
 						 		</th>
@@ -177,7 +181,7 @@ class StepPosts extends Step {
 					<div class="row-fluid">
 
 						<div class="span6" id="post_slug_select">
-							<h3><?php echo __( 'Post Slug', 'podlove' ); ?></h3>
+							<h3><?php echo __( 'WordPress Post Slug', 'podlove' ); ?> <small>Url slug for the WordPress page</small></h3>
 							<label class="radio">
 								<input type="radio" name="podlove_migration[post_slug]" value="wordpress" <?php checked( $post_slug_type == 'wordpress' ) ?>>
 								Reuse previous WordPress post slug.
