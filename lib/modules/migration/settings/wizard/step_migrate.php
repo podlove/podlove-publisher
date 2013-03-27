@@ -125,7 +125,6 @@ EOT;
 		
 		<form action="" method="POST">
 			<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
-			<input type="button" id="start_migration_button" class="btn btn-primary" value="<?php echo __( 'Start Migration', 'podlove' ) ?>">
 			<input type="submit" name="next" id="continue_to_finish_button" class="btn btn-primary disabled pull-right" value="<?php echo __( 'Continue to last step', 'podlove' ) ?>">
 		</form>
 
@@ -138,6 +137,11 @@ EOT;
 		<div class="progress progress-striped active" id="migration_progress">
 			<div class="bar" style="width:0%"></div>
 		</div>
+
+		<p>
+			<input type="button" id="start_migration_button" class="btn btn-primary" value="<?php echo __( 'Start Migration', 'podlove' ) ?>">
+			Starting the migration creates the actual episodes one by one.			
+		</p>
 
 		<table class="table table-condensed" id="posts_to_migrate">
 			<thead>
@@ -152,7 +156,7 @@ EOT;
 					<?php $done = in_array($post_id, $migrated_post_ids); ?>
 					<tr data-post-id="<?php echo $post_id ?>" <?php echo ($done) ? 'class="done"' : '' ?>>
 						<td class="status">
-							<span class="waiting" <?php echo (!$done) ? '' : 'style="display:none"' ?>>waiting ...</span>
+							<span class="waiting" <?php echo (!$done) ? '' : 'style="display:none"' ?>>not yet migrated</span>
 							<span class="migrating" style="display:none">migrating ...</span>
 							<span class="done" <?php echo ($done) ? '' : 'style="display:none"' ?>><span style="color: green">✓</span></span>
 						</td>
