@@ -457,6 +457,104 @@ function autoinsert_templates_into_content( $content ) {
 }
 add_filter( 'the_content', '\Podlove\autoinsert_templates_into_content' );
 
+/**
+ * Changes the permalink for a custom post type
+ *
+ * @uses $wp_rewrite
+ */
+add_action( 'after_setup_theme', function() {
+	global $wp_rewrite;
+	
+	// Get permalink structure
+	$permastruct = untrailingslashit( \Podlove\get_setting( 'custom_episode_slug' ) );
+	
+	// Add %podcast% if missing
+	if ( stristr( $permastruct, '%podcast%' ) === false ) {
+		$permastruct .= '/%podcast%';
+	}
+
+	// Add rewrite tag
+	$wp_rewrite->add_rewrite_tag( "%podcast%", '([^/]+)', "post_type=podcast&name=" );
+
+	// Enable generic rules for pages if permalink structure doesn't begin with a wildcard
+	if ( "%podcast%" == $permastruct ) {
+		// Generate custom rewrite rules
+		$wp_rewrite->matches = 'matches';
+		$wp_rewrite->extra_rules = array_merge( $wp_rewrite->extra_rules, $wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true ) );
+		$wp_rewrite->matches = '';
+		
+		// Add for WP_Query
+		$wp_rewrite->use_verbose_page_rules = true;
+	// Use standard mode
+	} else {
+		$wp_rewrite->add_permastruct( "podcast", $permastruct, false, EP_PERMALINK );
+	}
+}, 99 );
+
+/**
+ * Disable verbose page rules mode after startup
+ *
+ * @uses $wp_rewrite
+ */
+add_action( 'wp', function() {
+	global $wp_rewrite;	
+	$wp_rewrite->use_verbose_page_rules = false;
+} );
+
+/**
+ * Replace placeholders in permalinks with the correct values
+ */
+function generate_custom_post_link( $post_link, $id ) {
+	// Get post
+	$post = &get_post($id);
+	
+	// Only post_name in URL
+	$permastruct = untrailingslashit( \Podlove\get_setting( 'custom_episode_slug' ) );
+	if ( "%podcast%" == $permastruct )
+		return home_url( user_trailingslashit( $post->post_name ) );
+	
+	//
+	$unixtime = strtotime( $post->post_date );
+	$post_link = str_replace( '%year%', date( 'Y', $unixtime ), $post_link );
+	$post_link = str_replace( '%monthnum%', date( 'm', $unixtime ), $post_link );
+	$post_link = str_replace( '%day%', date( 'd', $unixtime ), $post_link );
+	$post_link = str_replace( '%hour%', date( 'H', $unixtime ), $post_link );
+	$post_link = str_replace( '%minute%', date( 'i', $unixtime ), $post_link );
+	$post_link = str_replace( '%second%', date( 's', $unixtime ), $post_link );
+	$post_link = str_replace( '%post_id%', $post->ID, $post_link );
+	$post_link = str_replace( '%podcast%', $post->post_name, $post_link );
+
+	// category and author replacement copied from WordPress core
+	if ( strpos($post_link, '%category%') !== false ) {
+
+	$cats = get_the_category($post->ID);
+	if ( $cats ) {
+		usort($cats, '_usort_terms_by_ID'); // order by ID
+		$category_object = apply_filters( 'post_link_category', $cats[0], $cats, $post );
+		$category_object = get_term( $category_object, 'category' );
+		$category = $category_object->slug;
+		if ( $parent = $category_object->parent )
+			$category = get_category_parents($parent, false, '/', true) . $category;
+		}
+
+		if ( empty($category) ) {
+			$default_category = get_category( get_option( 'default_category' ) );
+			$category = is_wp_error( $default_category ) ? '' : $default_category->slug;
+		}
+
+		$post_link = str_replace( '%category%', $category, $post_link );
+	}
+
+	if ( strpos($post_link, '%author%') !== false ) {
+		$authordata = get_userdata($post->post_author);
+		$post_link = str_replace( '%author%', $authordata->user_nicename, $post_link );
+	}
+
+	return $post_link;
+}
+		
+add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 2 );
+
 namespace Podlove\AJAX;
 use \Podlove\Model;
 
