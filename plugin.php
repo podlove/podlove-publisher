@@ -466,12 +466,7 @@ add_action( 'after_setup_theme', function() {
 	global $wp_rewrite;
 	
 	// Get permalink structure
-	$permastruct = untrailingslashit( \Podlove\get_setting( 'custom_episode_slug' ) );
-	
-	// Add %podcast% if missing
-	if ( stristr( $permastruct, '%podcast%' ) === false ) {
-		$permastruct .= '/%podcast%';
-	}
+	$permastruct = \Podlove\get_setting( 'custom_episode_slug' );
 
 	// Add rewrite tag
 	$wp_rewrite->add_rewrite_tag( "%podcast%", '([^/]+)', "post_type=podcast&name=" );
@@ -514,7 +509,7 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 		$post->post_name = "%pagename%";
 	
 	// Only post_name in URL
-	$permastruct = untrailingslashit( \Podlove\get_setting( 'custom_episode_slug' ) );
+	$permastruct = \Podlove\get_setting( 'custom_episode_slug' );
 	if ( "%podcast%" == $permastruct && ( !$draft_or_pending || $sample ) )
 		return home_url( user_trailingslashit( $post->post_name ) );
 	
