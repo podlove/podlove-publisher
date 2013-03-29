@@ -33,6 +33,19 @@ class SystemReport {
 
 				return $out;
 			} ),
+			'permalinks' => array( 'title' => 'Permalinks', 'callback' => function() {
+				$wordpress_permastruct = trim( get_option( 'permalink_structure' ), "/ ");
+				$podlove_permastruct   = trim( \Podlove\get_setting( 'custom_episode_slug' ), "/ ");
+
+				if ( $wordpress_permastruct == str_replace( '%podcast%', '%postname%', $podlove_permastruct ) ) {
+					$this->errors[] = 'Your permalinks for posts and episodes MUST NOT be identical.
+Solution: prefix your posts with "/blog/" or your episodes with "/episode/".
+<a href="' . admin_url( 'admin.php?page=podlove_settings_settings_handle' ) . '">edit episode scheme</a> or <a href="' . admin_url( 'options-permalink.php' ) . '">edit post scheme</a>';
+					return 'URL SCHEME CONFLICT';
+				} else {
+					return 'ok';
+				}
+			} ),
 			'allow_url_fopen'     => array( 'callback' => function() { return ini_get( 'allow_url_fopen' ); } ),
 			'max_execution_time'  => array( 'callback' => function() { return ini_get( 'max_execution_time' ); } ),
 			'upload_max_filesize' => array( 'callback' => function() { return ini_get( 'upload_max_filesize' ); } ),
