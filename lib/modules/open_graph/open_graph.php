@@ -53,10 +53,11 @@ class Open_Graph extends \Podlove\Modules\Base {
 			if ( ! $cover_art_url )
 				$cover_art_url = $podcast->cover_image;
 			
+			$og_title = ( $podcast->title ) ? $podcast->title : get_the_title();
 			?>
 			<meta property="og:type" content="website" />
-			<meta property="og:site_name" content="<?php echo $episode->full_title(); ?>" />
-			<meta property="og:title" content="<?php the_title(); ?>" />
+			<meta property="og:site_name" content="<?php echo $og_title; ?>" />
+			<meta property="og:title" content="<?php echo $episode->full_title(); ?>" />
 			<?php if ( $cover_art_url ): ?>
 				<meta property="og:image" content="<?php echo $cover_art_url; ?>" />
 			<?php endif ?>
