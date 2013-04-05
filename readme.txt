@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.3.31-alpha =
+* Feature: "Soft Launch" for migration tool. It isn't activated by default but if you are adventurous, feel free to give it a try. Any feedback is greatly appreciated!
 * Feature/Change: Similar to the web player setting, you now can insert templates automatically at the beginning or end of a post. You could even create multiple templates, one to append and one to prepend. This replaces the previous template-autoinsert feature.
 
 = 1.3.30-alpha =
