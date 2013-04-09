@@ -156,6 +156,7 @@ class Podcast_Post_Meta_Box {
 		}
 		.media_file_table td {
 			padding: 5px;
+			height: 24px;
 		}
 		.media_file_table tr:nth-child(even) {
 			background: #EAEAEA;
@@ -180,6 +181,10 @@ class Podcast_Post_Meta_Box {
 		.subtitle_warning .close {
 			cursor: pointer;
 		}
+
+		.media_file_row .enable { width: 45px; }
+		.media_file_row .size   { width: 130px; }
+		.media_file_row .update { width: 90px; }
 		</style>
 		<?php
 	}

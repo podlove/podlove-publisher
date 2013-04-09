@@ -129,7 +129,7 @@ var PODLOVE = PODLOVE || {};
 	 					}
 	 					$row.find(".size").html(size_html);
 	 					$row.find(".url").html('<a href="' + url + '" target="_blank">' + filename + '</a>');
-	 					$row.find(".update").html('<a href="#" class="update_media_file">update</a>');
+	 					$row.find(".update").html('<a href="#" class="button update_media_file">update</a>');
  					}
 
  				} else {
