@@ -4,7 +4,7 @@ var PODLOVE = PODLOVE || {};
  * Handles all logic in Create/Edit Episode screen.
  */
 (function($){
-	 PODLOVE.Episode = function (container) {
+	PODLOVE.Episode = function (container) {
 
 	 	var o = {};
 	 	var ajax_requests = [];
@@ -57,6 +57,7 @@ var PODLOVE = PODLOVE || {};
 	 		}
 
 	 		o.slug_field.data('prev-slug', current_slug);
+	 		o.slug_field.trigger('slugHasChanged');
 	 	};
 
 	 	function generate_live_preview() {
