@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 31 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 32 );
 
 add_action( 'init', function () {
 	
@@ -234,7 +234,8 @@ function run_migrations_for_version( $version ) {
 				Model\Template::table_name()
 			) );
 		break;
-		case 31:
+		case 32:
+			flush_rewrite_rules();
 		break;
 	}
 

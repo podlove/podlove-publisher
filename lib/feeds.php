@@ -2,34 +2,32 @@
 namespace Podlove\Feeds;
 use \Podlove\Model;
 
-function init() {
-	add_feed_routes();
+function generate_podcast_feed() {
+	
+	$is_feedburner_bot = preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
+	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
+	$feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) );
+
+	if ( strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $feed->redirect_http_status > 0 ) {
+		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $feed->redirect_http_status );
+		exit;
+	} else {
+		remove_podPress_hooks();
+		remove_powerPress_hooks();
+		new \Podlove\Feeds\RSS( $feed->slug );
+	}
 }
 
-function add_feed_routes() {
+add_action( 'init', function() {
 
-	add_action( 'generate_rewrite_rules', function ( $wp_rewrite ) {
-		
-		if ( ! $feeds = Model\Feed::all() )
-			return;
+	foreach ( Model\Feed::all() as $feed ) {
+		add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
+	}
 
-		foreach ( $feeds as $feed ) {
-			$rule = "feed/" . $feed->slug;
-			$new_rules = array( $rule => 'index.php?feed_slug=' . $feed->slug );
-			$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
-		}
-	} );
+	if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'podlove_feeds_settings_handle' ) {
+		flush_rewrite_rules();
+	}
 
-	add_filter( 'query_vars', function ( $qv ) {
-		$qv[] = 'feed_slug';
-		return $qv;
-	} );
-}
-
-// set `is_feed()` correctly
-add_action( 'parse_query', function ( $wp_query ) {
-	if ( $feed = Model\Feed::find_one_by_slug( get_query_var( 'feed_slug' ) ) )
-		$wp_query->is_feed = true;
 } );
 
 function override_feed_item_limit( $limits ) {
@@ -76,34 +74,3 @@ function remove_powerPress_hooks() {
 	remove_action( 'rss2_head', 'powerpress_rss2_head' );
 	remove_action( 'rss2_item', 'powerpress_rss2_item' );
 }
-
-// Hooks:
-// parse_query => query vars available
-// wp => query_posts done
-add_action( 'wp', function () {
-	global $wp_query;
-
-	if ( ! $feed = Model\Feed::find_one_by_slug( get_query_var( 'feed_slug' ) ) )
-		return;
-
-	$is_feedburner_bot = preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
-	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
-
-	if ( strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $feed->redirect_http_status > 0 ) {
-		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $feed->redirect_http_status );
-		exit;
-	} else {
-
-		remove_podPress_hooks();
-		remove_powerPress_hooks();
-
-		new \Podlove\Feeds\RSS( $feed->slug );
-
-		// if ( $feed->format === "rss" ) {
-		// 	new	\Podlove\Feeds\RSS( $feed->slug );
-		// } else {
-		// 	new	\Podlove\Feeds\Atom( $feed->slug );
-		// }
-	}
-	
-} );
