@@ -12,6 +12,7 @@ class RSS {
 			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" ';
 			echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
 			echo 'xmlns:content="http://purl.org/rss/1.0/modules/content/" ';
+			echo 'xmlns:fh="http://purl.org/syndication/history/1.0" ';
 		} );
 
 		$podcast        = Model\Podcast::get_instance();
@@ -40,10 +41,30 @@ class RSS {
 			}
 		} );
 
-		add_action( 'rss2_head', function () use ( $podcast ) {
+		add_action( 'rss2_head', function () use ( $podcast, $feed ) {
+			global $wp_query;
+
+			$current_page = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+
+			if ( $current_page < $wp_query->max_num_pages )
+				echo "\t" . sprintf( '<atom:link rel="next" href="%s?paged=%s" />', $feed->get_subscribe_url(), $current_page+1 );
+
+			if ( $current_page > 2 ) {
+				echo "\t" . sprintf( '<atom:link rel="prev" href="%s?paged=%s" />', $feed->get_subscribe_url(), $current_page-1 );
+			} elseif ( $current_page == 2 ) {
+				echo "\t" . sprintf( '<atom:link rel="prev" href="%s" />', $feed->get_subscribe_url() );
+			}
+
+			echo "\t" . sprintf( '<atom:link rel="first" href="%s" />', $feed->get_subscribe_url() );
+
+
+			if ( $wp_query->max_num_pages > 1 )
+				echo "\t" . sprintf( '<atom:link rel="last" href="%s?paged=%s" />', $feed->get_subscribe_url(), $wp_query->max_num_pages );
+
 			if ( $podcast->language )
 				echo "\t" . '<language>' . $podcast->language . '</language>';
-		}, 100 );
+
+		}, 9 );
 
 		$this->do_feed( $feed );
 	}

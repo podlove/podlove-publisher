@@ -3,7 +3,7 @@ namespace Podlove\Feeds;
 use \Podlove\Model;
 
 function generate_podcast_feed() {
-	
+
 	$is_feedburner_bot = preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
 	$feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) );

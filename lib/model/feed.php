@@ -106,12 +106,20 @@ class Feed extends Base {
 	}
 
 	public function get_self_link() {
+
+		$href = $this->get_subscribe_url();
+
+		$current_page = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+		if ( $current_page > 1 ) {
+			$href .= "?paged=" . $current_page;
+		}
+
 		return self::get_link_tag( array(
 			'prefix' => 'atom',
 			'rel'    => 'self',
 			'type'   => $this->get_content_type(),
 			'title'  => \Podlove\Feeds\prepare_for_feed( $this->title_for_discovery() ),
-			'href'   => $this->get_subscribe_url()
+			'href'   => $href
 		) );
 	}
 
