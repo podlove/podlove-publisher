@@ -71,8 +71,13 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 		$asset_assignment = Model\AssetAssignment::get_instance();
 
 		$url = NULL;
+		$valid_file_types = array();
 		foreach ( $episode->media_files() as $media_file ) {
-			if ( $media_file->episode_asset()->id == $asset_assignment->metadata ) {
+
+			$asset = $media_file->episode_asset();
+			$valid_file_types[] = $asset->file_type()->type;
+
+			if ( $asset->id == $asset_assignment->metadata ) {
 				$url = $media_file->get_file_url();
 			}
 		}
@@ -84,11 +89,21 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 		if ( $url ) {
 			echo wp_remote_retrieve_body( wp_remote_get( $url ));
 		} else {
-			$assets_url = admin_url( 'admin.php?page=podlove_episode_assets_settings_handle' );
-			$message = "--- Can't read file from Auphonic\n";
-			$message.= "--- > Have you created an episode asset of type \"metadata\"?\n";
-			$message.= "--- > Have you assigned the asset as \"Episode Metadata\"?\n";
-			echo json_encode( array( 'message' => $message ) );
+
+			$is_file_type_registered = array_map( function($asset){ return $asset->file_type()->type;}, Model\EpisodeAsset::all() );
+			$is_asset_assigned = Model\AssetAssignment::get_instance()->metadata > 0;
+
+			if ( ! $is_file_type_registered || ! $is_asset_assigned ) {
+				$message = "--- # Can't read file from Auphonic\n";
+
+				if ( ! $is_file_type_registered )
+					$message .= "--- ## There is no episode asset of type \"metadata\"\n";
+
+				if ( ! $is_asset_assigned )
+					$message .= "--- ## There is no asset assigned as \"Episode Metadata\"\n";
+
+				echo json_encode( array( 'message' => $message ) );
+			}
 		}
 		die();
 	}
