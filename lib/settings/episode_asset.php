@@ -255,6 +255,8 @@ class EpisodeAsset {
 					'label'   => __( 'Episode Chapters', 'podlove' ),
 					'options' => $chapter_file_options
 				) );
+
+				do_action( 'podlove_asset_assignment_form', $wrapper, $asset_assignment );
 			});
 		?>
 		</form>

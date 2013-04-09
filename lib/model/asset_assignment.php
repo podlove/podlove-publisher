@@ -150,3 +150,5 @@ class AssetAssignment {
 $asset_assignment = AssetAssignment::get_instance();
 $asset_assignment->property( 'image' );
 $asset_assignment->property( 'chapters' );
+
+$asset_assignment = apply_filters( 'podlove_model_asset_assignment_schema', $asset_assignment );

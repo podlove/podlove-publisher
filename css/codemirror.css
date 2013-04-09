@@ -8,15 +8,19 @@
   /* This prevents unwanted scrollbars from showing up on the body and wrapper in IE. */
   overflow: hidden;
   max-width: 100% !important;
+  height: auto;
 }
 
 .CodeMirror-scroll {
-  overflow: auto;
-  height: 300px;
+  /*overflow: auto;*/
+  /*height: 300px;*/
   /* This is needed to prevent an IE[67] bug where the scrolled content
      is visible outside of the scrolling box. */
   position: relative;
   outline: none;
+
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 /* Vertical scrollbar */
