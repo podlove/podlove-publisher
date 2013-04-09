@@ -18,7 +18,12 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 		if ( 'podcast' !== get_post_type() ) 
 			return;	
 
-		wp_register_script('auphonic-production-data-script', $this->get_module_url() . '/js/auphonic_production_data.js');
+		wp_register_script(
+			'auphonic-production-data-script',
+			$this->get_module_url() . '/js/auphonic_production_data.js',
+			array( 'jquery' ),
+			"6"
+		);
 		wp_enqueue_script('auphonic-production-data-script', array('jquery'));
 
 	}
