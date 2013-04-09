@@ -127,7 +127,7 @@ var PODLOVE = PODLOVE || {};
 	 						$row.find(".status").html('<span style="color: green">✓</span>');
 	 					}
 	 					$row.find(".size").html(size_html);
-	 					$row.find(".url").html('<span title="' + url + '">' + filename + '</span>');
+	 					$row.find(".url").html('<a href="' + url + '" target="_blank">' + filename + '</a>');
 	 					$row.find(".update").html('<a href="#" class="update_media_file">update</a>');
  					}
 
