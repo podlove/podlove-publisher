@@ -140,8 +140,6 @@ class Podcast_Post_Type {
 		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
 
 		add_filter( 'get_the_excerpt', array( $this, 'default_excerpt_to_episode_summary' ) );
-
-		\Podlove\Feeds\init();
 	}
 
 	/**

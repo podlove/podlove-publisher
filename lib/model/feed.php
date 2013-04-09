@@ -94,6 +94,7 @@ class Feed extends Base {
 			return array();
 
 		// fetch releases
+		$media_files = array_filter( $media_files, function($mf){ return $mf->size > 0; });
 		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $media_files );
 		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids ) . ")" );
 
