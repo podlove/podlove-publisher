@@ -86,9 +86,13 @@ class RSS {
 		 * and overrides it with the 'posts_per_rss' option. So we need to
 		 * override that option.
 		 */
-		add_filter( 'pre_option_posts_per_rss', function ( $_ ) use ( $posts_per_page ) {
-			return $posts_per_page;
-		} );
+		if ( $posts_per_page > -1 ) {
+			add_filter( 'pre_option_posts_per_rss', function ( $_ ) use ( $posts_per_page ) {
+				return $posts_per_page;
+			} );
+		} else {
+			add_filter( 'post_limits', function( $limits ) { return ''; } );
+		}
 
 		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );
