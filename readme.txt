@@ -78,6 +78,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.4.3-alpha =
 * Bugfix: fix system report issue
+* Bugfix: fix feed setting "No limit. Include all items."
 
 = 1.4.2-alpha =
 * Bugfix: add auphonic metadata file type
