@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 32 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 33 );
 
 add_action( 'init', function () {
 	
@@ -236,6 +236,14 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 32:
 			flush_rewrite_rules();
+		break;
+		case 33:
+			$apd = array( 'name' => 'Auphonic Production Description', 'type' => 'metadata', 'mime_type' => 'application/json',  'extension' => 'json' );
+			$f = new \Podlove\Model\FileType;
+			foreach ( $apd as $key => $value ) {
+				$f->{$key} = $value;
+			}
+			$f->save();
 		break;
 	}
 
