@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.3-alpha =
+* Bugfix: fix system report issue
+
 = 1.4.2-alpha =
 * Bugfix: add auphonic metadata file type
 * Bugfix: fix bug regarding limiting feed items
