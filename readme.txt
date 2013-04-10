@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.1-alpha =
+* Bugfix: reactivate /podcast url
+
 = 1.4.0-alpha =
 * Feature: "Soft Launch" for migration tool. It isn't activated by default but if you are adventurous, feel free to give it a try. Any feedback is greatly appreciated!
 * Feature: Support paged feeds (RFC5005) so clients may always fetch all episodes even if the default feed only contains the most recent episodes
