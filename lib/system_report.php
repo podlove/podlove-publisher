@@ -8,12 +8,14 @@ class SystemReport {
 	private $errors = array();
 
 	public function __construct() {
+
+		$errors =& $this->errors;
 		
 		$this->fields = array(
 			'site'        => array( 'title' => 'Website',           'callback' => function() { return get_site_url(); } ),
 			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() { return phpversion(); } ),
 			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
-			'curl'        => array( 'title' => 'curl Version',      'callback' => function() {
+			'curl'        => array( 'title' => 'curl Version',      'callback' => function() use ( &$errors ) {
 				$module_loaded = in_array( 'curl', get_loaded_extensions() );
 				$function_disabled = stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false;
 				$out = '';
@@ -23,22 +25,22 @@ class SystemReport {
 					$out .= $curl['version'];
 				} else {
 					$out .= 'EXTENSION MISSING';
-					$this->errors[] = 'curl extension is not loaded';
+					$errors[] = 'curl extension is not loaded';
 				}
 
 				if ( $function_disabled ) {
 					$out = ' | curl_exec is disabled';
-					$this->errors[] = 'curl_exec is disabled';
+					$errors[] = 'curl_exec is disabled';
 				}
 
 				return $out;
 			} ),
-			'permalinks' => array( 'title' => 'Permalinks', 'callback' => function() {
+			'permalinks' => array( 'title' => 'Permalinks', 'callback' => function() use ( &$errors ) {
 				$wordpress_permastruct = trim( get_option( 'permalink_structure' ), "/ ");
 				$podlove_permastruct   = trim( \Podlove\get_setting( 'custom_episode_slug' ), "/ ");
 
 				if ( $wordpress_permastruct == str_replace( '%podcast%', '%postname%', $podlove_permastruct ) ) {
-					$this->errors[] = 'Your permalinks for posts and episodes MUST NOT be identical.
+					$errors[] = 'Your permalinks for posts and episodes MUST NOT be identical.
 Solution: prefix your posts with "/blog/" or your episodes with "/episode/".
 <a href="' . admin_url( 'admin.php?page=podlove_settings_settings_handle' ) . '">edit episode scheme</a> or <a href="' . admin_url( 'options-permalink.php' ) . '">edit post scheme</a>';
 					return 'URL SCHEME CONFLICT';
