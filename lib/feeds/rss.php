@@ -73,11 +73,23 @@ class RSS {
 
 		global $wp_query;
 		
+		$posts_per_page = $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items;
+
 		$args = array(
 			'post_type'      => 'podcast',
 			'post__in'       => $feed->post_ids(),
-			'posts_per_page' => $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items
+			'posts_per_page' => $posts_per_page
 		);
+
+		/**
+		 * In feeds, WordPress ignores the 'posts_per_page' parameter 
+		 * and overrides it with the 'posts_per_rss' option. So we need to
+		 * override that option.
+		 */
+		add_filter( 'pre_option_posts_per_rss', function ( $_ ) use ( $posts_per_page ) {
+			return $posts_per_page;
+		} );
+
 		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );
 		

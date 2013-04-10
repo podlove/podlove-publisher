@@ -78,6 +78,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.4.2-alpha =
 * Bugfix: add auphonic metadata file type
+* Bugfix: fix bug regarding limiting feed items
 
 = 1.4.1-alpha =
 * Bugfix: reactivate /podcast url
