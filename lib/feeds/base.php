@@ -189,7 +189,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			if ( $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) ) {
 				if ( $chapters_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapters_asset->id ) ) {
 					$chapters_link = Model\Feed::get_link_tag(array(
-						'prefix' => ( $feed->format === 'rss' ) ? 'atom' : NULL,
+						'prefix' => 'atom',
 						'rel'    => 'http://podlove.org/simple-chapters',
 						'type'   => '',
 						'title'  => '',
@@ -201,7 +201,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		}
 
 		$deep_link = Model\Feed::get_link_tag(array(
-			'prefix' => ( $feed->format === 'rss' ) ? 'atom' : NULL,
+			'prefix' => 'atom',
 			'rel'    => 'http://podlove.org/deep-link',
 			'type'   => '',
 			'title'  => '',
