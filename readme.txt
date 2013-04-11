@@ -79,6 +79,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.4.4-alpha =
 * Bugfix: fix feed url generation for "default style" permalinks
 * Bugfix: migration assistant shows enclosure errors/warnings
+* Bugfix: add missing atom prefix in feed link elements
 
 = 1.4.3-alpha =
 * Bugfix: fix system report issue
