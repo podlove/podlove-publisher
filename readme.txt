@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Bugfix: fix feed url generation for "default style" permalinks
 * Bugfix: migration assistant shows enclosure errors/warnings
 * Bugfix: add missing atom prefix in feed link elements
+* Bugfix: generate valid episode permalinks for "Default"/"Not Pretty" permalink settings
 
 = 1.4.3-alpha =
 * Bugfix: fix system report issue
