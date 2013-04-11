@@ -19,7 +19,7 @@ class Feed extends Base {
 				\Podlove\slugify( $this->slug )
 			);
 		} else {
-			$url = home_url( '?feed_slug=' . \Podlove\slugify( $this->slug ) );
+			$url = get_feed_link( $this->slug );
 		}
 
 
