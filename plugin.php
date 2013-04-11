@@ -463,7 +463,7 @@ add_filter( 'the_content', '\Podlove\autoinsert_templates_into_content' );
  *
  * @uses $wp_rewrite
  */
-add_action( 'after_setup_theme', function() {
+function modify_permalink_for_podcast_post_type() {
 	global $wp_rewrite;
 	
 	// Get permalink structure
@@ -485,22 +485,23 @@ add_action( 'after_setup_theme', function() {
 	} else {
 		$wp_rewrite->add_permastruct( "podcast", $permastruct, false, EP_PERMALINK );
 	}
-}, 99 );
+}
 
 /**
  * Disable verbose page rules mode after startup
  *
  * @uses $wp_rewrite
  */
-add_action( 'wp', function() {
-	global $wp_rewrite;	
+function no_verbose_page_rules() {
+	global $wp_rewrite;
 	$wp_rewrite->use_verbose_page_rules = false;
-} );
+}
 
 /**
  * Replace placeholders in permalinks with the correct values
  */
 function generate_custom_post_link( $post_link, $id, $leavename = false, $sample = false ) {
+
 	// Get post
 	$post = &get_post($id);
 	$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
@@ -553,8 +554,12 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 
 	return $post_link;
 }
-		
-add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
+
+if ( get_option( 'permalink_structure' ) != '' ) {
+	add_action( 'after_setup_theme', '\Podlove\modify_permalink_for_podcast_post_type', 99 );
+	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
+	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
+}
 
 namespace Podlove\AJAX;
 use \Podlove\Model;
