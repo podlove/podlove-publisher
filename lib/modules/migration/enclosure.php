@@ -26,10 +26,10 @@ class Enclosure {
 		foreach ( $wordpress_enclosures as $enclosure_data ) {
 			$enclosure = Enclosure::from_enclosure_meta( $enclosure_data, $post_id );
 
-			if ( ! $enclosure->file_type || in_array( $enclosure->file_type->id, $file_types_for_this_episode ) )
-				continue;
+			if ( $enclosure->file_type && ! in_array( $enclosure->file_type->id, $file_types_for_this_episode ) ) {
+				$file_types_for_this_episode[] = $enclosure->file_type->id;
+			}
 
-			$file_types_for_this_episode[] = $enclosure->file_type->id;
 			$enclosures[] = $enclosure;
 		}
 
