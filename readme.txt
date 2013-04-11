@@ -81,6 +81,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Bugfix: migration assistant shows enclosure errors/warnings
 * Bugfix: add missing atom prefix in feed link elements
 * Bugfix: generate valid episode permalinks for "Default"/"Not Pretty" permalink settings
+* Bugfix: change default episode permalink structure from `%podcast%` to `podcast/%podcast%` to avoid conflicts with those setups using %postname% as WordPress permalink — which is quite common.
 
 = 1.4.3-alpha =
 * Bugfix: fix system report issue
