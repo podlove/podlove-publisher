@@ -53,8 +53,14 @@ class StepPosts extends Step {
 				}
 			}
 
-			if ( count( $enclosures ) )
-				$episodes[] = $query->post;
+			if ( count( $enclosures ) ) {
+				foreach ( $enclosures as $enclosure ) {
+					if ( empty( $enclosure->errors ) ) {
+						$episodes[] = $query->post;
+						break;
+					}
+				}
+			}
 			
 		}
 
