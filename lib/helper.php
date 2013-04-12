@@ -15,7 +15,8 @@ function get_setting( $name ) {
 		'custom_episode_slug'    => 'podcast/%podcast%',
 		'enable_episode_record_date'      => 0,
 		'enable_episode_publication_date' => 0,
-		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%'
+		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
+		'podlove_setting_redirect' => array()
 	);
 
 	$options = get_option( 'podlove' );
