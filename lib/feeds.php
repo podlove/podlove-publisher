@@ -8,6 +8,9 @@ function handle_feed_proxy_redirects() {
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
 	$feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) );
 
+	if ( ! $feed )
+		return;
+
 	if ( strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $feed->redirect_http_status > 0 ) {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $feed->redirect_http_status );
 		exit;
