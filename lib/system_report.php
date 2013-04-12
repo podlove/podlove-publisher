@@ -67,6 +67,8 @@ Solution: prefix your posts with "/blog/" or your episodes with "/episode/".
 		foreach ( $this->fields as $field_key => $field ) {
 			$this->fields[ $field_key ]['value'] = call_user_func( $field['callback'] );
 		}
+
+		update_option( 'podlove_global_messages', array( 'errors' => $this->errors, 'notices' => $this->notices ) );
 	}
 
 	public function render() {
