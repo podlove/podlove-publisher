@@ -121,6 +121,8 @@ EOT;
 			update_option( 'podlove_webplayer_formats', $webplayer_formats );
 		}
 
+		// flush rules after migration
+		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 		?>
 		
 		<form action="" method="POST">
