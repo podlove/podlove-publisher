@@ -76,6 +76,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.5-alpha =
+* Enhancement: flush rewrite rules after migration and feed changes
+* Enhancement: redirect settings support URL parameters
+
 = 1.4.4-alpha =
 * Feature: configure permanent redirects in Expert Settings
 * Bugfix: fix feed url generation for "default style" permalinks
