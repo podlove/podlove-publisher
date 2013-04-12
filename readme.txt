@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.8-alpha =
+* Bugfix: `HEAD` requests for paged feeds return correct responses
+
 = 1.4.7-alpha =
 * Hotfix: ignore empty redirect rules
 

@@ -2,7 +2,7 @@
 namespace Podlove\Feeds;
 use \Podlove\Model;
 
-function generate_podcast_feed() {
+function handle_feed_proxy_redirects() {
 
 	$is_feedburner_bot = preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
@@ -11,11 +11,18 @@ function generate_podcast_feed() {
 	if ( strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $feed->redirect_http_status > 0 ) {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $feed->redirect_http_status );
 		exit;
-	} else {
-		remove_podPress_hooks();
-		remove_powerPress_hooks();
-		new \Podlove\Feeds\RSS( $feed->slug );
+	} else { // don't redirect; prepare feed
+		RSS::prepare_feed( $feed->slug );
 	}
+
+}
+
+add_action( 'wp', '\Podlove\Feeds\handle_feed_proxy_redirects' );
+
+function generate_podcast_feed() {	
+	remove_podPress_hooks();
+	remove_powerPress_hooks();
+	RSS::render();
 }
 
 add_action( 'init', function() {
