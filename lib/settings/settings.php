@@ -209,6 +209,9 @@ class Settings {
 				<p>
 					<a href="#" id="podlove_add_new_rule" class="button"><?php echo __( 'Add new rule' ); ?></a>
 				</p>
+				<p class="description">
+					<?php echo __( 'Create custom permanent redirects. URLs can be absolute like <code>http://example.com/feed</code> or relative to the website like <code>/feed</code>.', 'podlove' ) ?>
+				</p>
 
 				<script type="text/javascript">
 				jQuery(function($) {
