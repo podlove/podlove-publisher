@@ -390,9 +390,11 @@ function override404() {
 		return;
 
 	// check for global redirects
+	$parsed_request = parse_url($_SERVER['REQUEST_URI']);
+
 	foreach ( \Podlove\get_setting( 'podlove_setting_redirect' ) as $redirect ) {
 		$parsed_url = parse_url($redirect['from']);
-		if ( $parsed_url['path'] && false !== stripos( $_SERVER['REQUEST_URI'], $parsed_url['path'] ) ) {
+		if ( untrailingslashit( $parsed_url['path'] ) === untrailingslashit( $parsed_request['path'] ) ) {
 			status_header( 301 );
 			$wp_query->is_404 = false;
 			\wp_redirect( $redirect['to'], 301 );
