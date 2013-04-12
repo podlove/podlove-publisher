@@ -35,16 +35,12 @@ class Podcast_Post_Type {
 			'show_in_menu'         => true,
 			'menu_position'        => 5, // below "Posts"
 			'query_var'            => true,
-			'rewrite'              => true,
+			'rewrite'              => false, // we create our own permastructs
+			'has_archive'          => false, // we create our own permastructs
 			'capability_type'      => 'post',
-			'has_archive'          => true,
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
 			// 'menu_icon'            => PLUGIN_URL . '/images/episodes-icon-16x16.png',
-			'rewrite' => array(
-				'slug'       => '',
-				'with_front' => false
-			),
 			'taxonomies' => array( 'post_tag' )
 		);
 

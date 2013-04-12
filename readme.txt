@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.6-alpha =
+* Bugfix: The podcast archive is available via `/podcast` again.
+
 = 1.4.5-alpha =
 * Enhancement: always show critical errors found by system report
 * Enhancement: flush rewrite rules after migration and feed changes
