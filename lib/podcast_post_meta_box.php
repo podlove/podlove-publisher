@@ -125,7 +125,7 @@ class Podcast_Post_Meta_Box {
 
 				if ( \Podlove\get_setting( 'enable_episode_record_date' ) ) {
 					$wrapper->string( 'record_date', array(
-						'label'       => __( 'Record Date', 'podlove' ),
+						'label'       => __( 'Recording Date', 'podlove' ),
 						'description' => '',
 						'html'        => array( 'class' => 'regular-text' )
 					));

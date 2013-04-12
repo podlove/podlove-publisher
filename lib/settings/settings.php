@@ -107,7 +107,7 @@ class Settings {
 			/* $id       */ 'podlove_setting_episode_record_date',
 			/* $title    */ sprintf(
 				'<label for="enable_episode_record_date">%s</label>',
-				__( 'Enable record date field.', 'podlove' )
+				__( 'Enable recording date field.', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
