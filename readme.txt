@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.7-alpha =
+* Hotfix: ignore empty redirect rules
+
 = 1.4.6-alpha =
 * Bugfix: The podcast archive is available via `/podcast` again.
 
