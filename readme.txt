@@ -77,6 +77,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.4.4-alpha =
+* Feature: configure permanent redirects in Expert Settings
 * Bugfix: fix feed url generation for "default style" permalinks
 * Bugfix: migration assistant shows enclosure errors/warnings
 * Bugfix: add missing atom prefix in feed link elements

@@ -142,7 +142,120 @@ class Settings {
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_episode'
 		);
-		
+
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_redirects',
+			/* $title 	 */ __( '', 'podlove' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Redirects', 'podlove' ) . '</h3>'; },
+			/* $page	 */ Settings::$pagehook	
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_redirect',
+			/* $title    */ sprintf(
+				'<label for="podlove_setting_redirect">%s</label>',
+				__( 'Permanent URL Redirects', 'podlove' )
+			),
+			/* $callback */ function () {
+				$redirect_settings = \Podlove\get_setting( 'podlove_setting_redirect' );
+
+				if ( ! is_array( $redirect_settings ) )
+					$redirect_settings = array();
+
+				?>
+				<table class="wp-list-table widefat podlove_redirects">
+					<thead>
+						<tr>
+							<th><?php echo __( 'From URL', 'podlove' ) ?></th>
+							<th><?php echo __( 'To URL', 'podlove' ) ?></th>
+							<th class="delete"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						$index = 0;
+						foreach ( $redirect_settings as $index => $redirect_setting ) {
+							if ( $redirect_setting['from'] || $redirect_setting['to'] ) {
+								?>
+								<tr data-index="<?php echo $index ?>">
+									<td>
+										<input type="text" name="podlove[podlove_setting_redirect][<?php echo $index ?>][from]" value="<?php echo $redirect_setting['from'] ?>">
+									</td>
+									<td>
+										<input type="text" name="podlove[podlove_setting_redirect][<?php echo $index ?>][to]" value="<?php echo $redirect_setting['to'] ?>">
+									</td>
+									<td class="delete">
+										<a href="#" class="button delete"><?php echo __( 'delete', 'podlove' ) ?></a>
+									</td>
+								</tr>
+								<?php
+							}
+						}
+						?>
+						<tr data-index="<?php echo $index + 1 ?>">
+							<td>
+								<input type="text" name="podlove[podlove_setting_redirect][<?php echo $index + 1 ?>][from]">
+							</td>
+							<td>
+								<input type="text" name="podlove[podlove_setting_redirect][<?php echo $index + 1 ?>][to]">
+							</td>
+							<td class="delete">
+								<a href="#" class="button delete"><?php echo __( 'delete', 'podlove' ) ?></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p>
+					<a href="#" id="podlove_add_new_rule" class="button"><?php echo __( 'Add new rule' ); ?></a>
+				</p>
+
+				<script type="text/javascript">
+				jQuery(function($) {
+					$(document).ready(function() {
+
+						$(".podlove_redirects").on("click", "td.delete a", function(e) {
+							e.preventDefault();
+							$(this).closest("tr").remove();
+							return false;
+						});
+
+						$("#podlove_add_new_rule").on("click", function(e) {
+							e.preventDefault();
+
+							var index = $(".podlove_redirects tr:last").data("index") + 1,
+							    html = '';
+
+							html += "<tr data-index=\"" + index + "\">";
+							html += "<td><input type=\"text\" name=\"podlove[podlove_setting_redirect][" + index + "][from]\"></td>";
+							html += "<td><input type=\"text\" name=\"podlove[podlove_setting_redirect][" + index + "][to]\"></td>";
+							html += "<td class=\"delete\"><a href=\"#\" class=\"button\"><?php echo __( 'delete', 'podlove' ) ?></a></td>";
+							html += "</tr>";
+
+
+							$(".podlove_redirects tbody").append(html);
+
+							return false;
+						});
+					});
+				});
+				</script>
+
+				<style type="text/css">
+				.podlove_redirects th.delete, .podlove_redirects td.delete {
+					width: 60px;
+					text-align: right;
+				}
+				.podlove_redirects td input {
+					width: 100%;
+				}
+				</style>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_redirects'
+		);
+
 		register_setting( Settings::$pagehook, 'podlove' );
 		
 	}

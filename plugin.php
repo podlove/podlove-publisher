@@ -386,9 +386,24 @@ add_action( 'plugins_loaded', function () {
 function override404() {
 	global $wpdb, $wp_query;
 
+	if ( is_admin() )
+		return;
+
+	// check for global redirects
+	foreach ( \Podlove\get_setting( 'podlove_setting_redirect' ) as $redirect ) {
+		$parsed_url = parse_url($redirect['from']);
+		if ( $parsed_url['path'] && false !== stripos( $_SERVER['REQUEST_URI'], $parsed_url['path'] ) ) {
+			status_header( 301 );
+			$wp_query->is_404 = false;
+			\wp_redirect( $redirect['to'], 301 );
+			exit;
+		}
+	}
+
 	if ( ! $wp_query->is_404 )
 		return;
 
+	// check for episode redirects
 	$rows = $wpdb->get_results( "
 		SELECT
 			post_id, meta_value url
