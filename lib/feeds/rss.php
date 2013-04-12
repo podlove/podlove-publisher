@@ -6,8 +6,9 @@ require_once \Podlove\PLUGIN_DIR  . '/lib/feeds/base.php';
 
 class RSS {
 	
-	public function __construct( $feed_slug ) {
-		
+	public static function prepare_feed( $feed_slug ) {
+		global $wp_query;
+
 		add_action( 'rss2_ns', function () {
 			echo 'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" ';
 			echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
@@ -66,13 +67,6 @@ class RSS {
 
 		}, 9 );
 
-		$this->do_feed( $feed );
-	}
-	
-	function do_feed( $feed ) {
-
-		global $wp_query;
-		
 		$posts_per_page = $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items;
 
 		$args = array(
@@ -96,14 +90,25 @@ class RSS {
 
 		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );
-		
+
+		if ( ! have_posts() ) {
+			$wp_query->set_404();
+			status_header( 404 );
+			nocache_headers();
+			exit;
+		}
+
+	}
+
+	public static function render() {
+		global $wp_query;
+
 		if ( $wp_query->is_comment_feed )
 			load_template( ABSPATH . WPINC . '/feed-rss2-comments.php');
 		else
 			load_template( \Podlove\PLUGIN_DIR . 'templates/feed-rss2.php' );
-			
+
 		exit;
-		
 	}
 	
 }
