@@ -73,6 +73,8 @@ class Feed {
 			return;
 
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
+
+		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 		
 		if ( $action === 'save' ) {
 			$this->save();
