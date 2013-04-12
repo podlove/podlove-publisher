@@ -624,10 +624,17 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	return $post_link;
 }
 
+function custom_podcast_archive_page( $rules ) {
+    $custom_rules = array();
+    $custom_rules['podcast/?$'] = 'index.php?post_type=podcast';
+    return $custom_rules + $rules;
+}
+
 if ( get_option( 'permalink_structure' ) != '' ) {
 	add_action( 'after_setup_theme', '\Podlove\modify_permalink_for_podcast_post_type', 99 );
 	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
 	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
+	add_filter( 'rewrite_rules_array', '\Podlove\custom_podcast_archive_page' );
 }
 
 namespace Podlove\AJAX;
