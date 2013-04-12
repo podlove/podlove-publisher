@@ -77,6 +77,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.4.5-alpha =
+* Enhancement: always show critical errors found by system report
 * Enhancement: flush rewrite rules after migration and feed changes
 * Enhancement: redirect settings support URL parameters
 
