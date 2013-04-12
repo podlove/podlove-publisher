@@ -440,6 +440,10 @@ function override404() {
 		$parsed_request_url .= "?" . $parsed_request['query'];
 
 	foreach ( \Podlove\get_setting( 'podlove_setting_redirect' ) as $redirect ) {
+
+		if ( ! strlen( trim( $redirect['from'] ) ) || ! strlen( trim( $redirect['to'] ) ) )
+			continue;
+
 		$parsed_url = parse_url($redirect['from']);
 		
 		$parsed_redirect_url = $parsed_url['path'];
