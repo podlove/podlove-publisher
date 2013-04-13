@@ -15,7 +15,6 @@ class Ajax {
 			'validate-url',
 			'update-file',
 			'create-file',
-			'create-episode',
 			'update-asset-position'
 		);
 
@@ -126,47 +125,6 @@ class Ajax {
 		$result = array();
 		$result['file_id']   = $file->id;
 		$result['file_size'] = $file->size;
-
-		$this->respond_with_json( $result );
-	}
-
-	public function create_episode() {
-
-		$slug  = isset( $_REQUEST['slug'] )  ? $_REQUEST['slug']  : NULL;
-		$title = isset( $_REQUEST['title'] ) ? $_REQUEST['title'] : NULL;
-
-		if ( ! $slug || ! $title )
-			die();
-
-		$args = array(
-			'post_type' => 'podcast',
-			'post_title' => $title,
-			'post_content' => \Podlove\Podcast_Post_Type::get_default_post_content()
-		);
-
-		// create post
-		$post_id = wp_insert_post( $args );
-
-		// link episode and release
-		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-		$episode->slug = $slug;
-		$episode->enable = true;
-		$episode->active = true;
-		$episode->save();
-
-		// activate all media files
-		$episode_assets = Model\EpisodeAsset::all();
-		foreach ( $episode_assets as $episode_asset ) {
-			$media_file = new \Podlove\Model\MediaFile();
-			$media_file->episode_id = $episode->id;
-			$media_file->episode_asset_id = $episode_asset->id;
-			$media_file->save();
-		}
-
-		// generate response
-		$result = array();
-		$result['post_id'] = $post_id;
-		$result['post_edit_url'] = get_edit_post_link( $post_id );
 
 		$this->respond_with_json( $result );
 	}
