@@ -49,7 +49,7 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 			'auphonic-production-data-script',
 			$this->get_module_url() . '/js/auphonic_production_data.js',
 			array( 'jquery' ),
-			"6"
+			\Podlove\get_plugin_header( 'Version' )
 		);
 		wp_enqueue_script('auphonic-production-data-script', array('jquery'));
 
@@ -65,6 +65,12 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 	}
 
 	function get_auphonic_data_callback() {
+
+		if ( isset( $_REQUEST['slug'] ) ) { // use unsaved episode slug
+			add_filter( 'podlove_file_url_template', function ( $template ) {
+				return str_replace( '%episode_slug%', $_REQUEST['slug'], $template );;
+			} );
+		}
 
 		$post_id = (int) $_GET['post_id'];
 		$episode = Model\Episode::find_or_create_by_post_id( $post_id );

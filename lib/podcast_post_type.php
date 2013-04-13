@@ -66,7 +66,7 @@ class Podcast_Post_Type {
 				'podlove_admin_episode',
 				\Podlove\PLUGIN_URL . '/js/admin/episode.js',
 				array( 'jquery' ),
-				$version
+				$version . "b"
 			);
 
 			wp_register_script(
