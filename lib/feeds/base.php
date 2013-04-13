@@ -49,12 +49,6 @@ function prepare_for_feed( $content ) {
 	return trim( htmlspecialchars( $content ) );
 }
 
-// todo: description
-// podlove_rss_feed_description
-// description = summary; fallback: subtitle; fallback: title
-
-// todo: new line for each tag
-// todo: hide tags without content
 function override_feed_head( $hook, $podcast, $feed, $format ) {
 
 	$filter_hooks = array(
@@ -238,5 +232,5 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			echo apply_filters( 'podlove_feed_content_encoded', $content_encoded );
 		}
 
-	} );
+	}, 11 );
 }
