@@ -40,7 +40,7 @@ class RSS {
 				\Podlove\Feeds\the_description();
 				echo "]]></description>";
 			}
-		} );
+		}, 9 );
 
 		add_action( 'rss2_head', function () use ( $podcast, $feed ) {
 			global $wp_query;
