@@ -77,7 +77,16 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.4.8-alpha =
-* Bugfix: `HEAD` requests for paged feeds return correct responses
+
+Minor fixes and improvements:
+
+* feed: remove style tags from content:encoded (feedvalidator.org warning)
+* feed: ensure description precedes content:encoded (feedvalidator.org warning)
+* prevent feed proxy issue
+* `HEAD` requests for paged feeds return correct responses
+* enable paging for `/podcast` archives
+* add description to redirect settings
+* rename "record date" to "recording date"
 
 = 1.4.7-alpha =
 * Hotfix: ignore empty redirect rules
