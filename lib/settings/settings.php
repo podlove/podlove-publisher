@@ -62,15 +62,17 @@ class Settings {
 			/* $callback */ function () {
 				$blog_prefix = '';
 				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $blog_prefix = '/blog';
-				$use_post_permastruct = \Podlove\get_setting( 'use_post_permastruct' ); ?>
+				$use_post_permastruct = \Podlove\get_setting( 'use_post_permastruct' );
+				$custom_episode_slug = \Podlove\get_setting( 'custom_episode_slug' );
+				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $custom_episode_slug = preg_replace( '|^/?blog|', '', $custom_episode_slug ); ?>
 				<input name="podlove[use_post_permastruct]" id="use_post_permastruct" type="checkbox" <?php checked( $use_post_permastruct, 'on' ) ?>> <?php _e( 'Use the same permalink structure as posts', 'podlove' ); ?>
 				<div id="custom_podcast_permastruct"<?php if ( $use_post_permastruct ) echo ' style="display:none;"' ?>>
-					<code><?php echo get_option('home') . $blog_prefix; ?>/</code>
-					<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo \Podlove\get_setting( 'custom_episode_slug' ) ?>">
+					<code><?php echo get_option('home') . $blog_prefix; ?></code>
+					<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo $custom_episode_slug ?>">
 					<p><span class="description">
 						<?php echo __( '
 							Placeholders: %podcast% (post name slug), %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%<br>
-							Example schemes: <code>%podcast%</code>, <code>episode/%podcast%</code>, <code>%year%/%monthnum%/%podcast%</code>', 'podlove' );
+							Example schemes: <code>/%podcast%</code>, <code>/episode/%podcast%</code>, <code>/%year%/%monthnum%/%podcast%</code>', 'podlove' );
 						?>
 					</span></p>
 				</div>
@@ -98,6 +100,48 @@ class Settings {
 
 				<style type="text/css">
 				#custom_podcast_permastruct {
+					margin-top: 10px;
+				}
+				</style>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
+		
+		add_settings_field(
+			/* $id       */ 'podlove_setting_episode_archive',
+			/* $title    */ sprintf(
+				'<label for="episode_archive">%s</label>',
+				__( 'Episode archive', 'podlove' )
+			),
+			/* $callback */ function () {
+				$blog_prefix = '';
+				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $blog_prefix = '/blog';
+				$enable_episode_archive = \Podlove\get_setting( 'episode_archive' );
+				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $enable_episode_archive = preg_replace( '|^/?blog|', '', $enable_episode_archive ); ?>
+				<input name="podlove[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode archive', 'podlove' ); ?>
+				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
+					<code><?php echo get_option('home') . $blog_prefix; ?></code>
+					<input name="podlove[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo \Podlove\get_setting( 'episode_archive_slug' ) ?>">
+				</div>
+				
+				<script type="text/javascript">
+				jQuery(function($) {
+					$(document).ready(function() {
+						$("#episode_archive").on("click", function(e) {
+							if ( $(this).is( ':checked' ) ) {
+								$("#episode_archive_slug_edit").slideDown();
+							} else {
+								$("#episode_archive_slug_edit").slideUp();
+							}
+						});
+					});
+				});
+				</script>
+
+				<style type="text/css">
+				#episode_archive_slug_edit {
 					margin-top: 10px;
 				}
 				</style>
@@ -290,7 +334,37 @@ class Settings {
 			/* $section  */ 'podlove_settings_redirects'
 		);
 
-		register_setting( Settings::$pagehook, 'podlove' );
+		register_setting( Settings::$pagehook, 'podlove', function($options) {
+			$prefix = $blog_prefix = '';
+			if ( ! got_mod_rewrite() && ! $iis7_permalinks )
+				$prefix = '/index.php';
+			if ( is_multisite() && !is_subdomain_install() && is_main_site() )
+				$blog_prefix = '/blog';
+		
+			// Episode permastruct
+			if ( array_key_exists( 'custom_episode_slug', $options ) ) {
+				$options['custom_episode_slug'] = preg_replace( '#/+#', '/', '/' . str_replace( '#', '', $options['custom_episode_slug'] ) );
+				
+				if ( $prefix && $blog_prefix ) {
+					$options['custom_episode_slug'] = $prefix . preg_replace( '#^/?index\.php#', '', $options['custom_episode_slug'] );
+				} else {
+					$options['custom_episode_slug'] = $blog_prefix . $options['custom_episode_slug'];
+				}
+			}
+				
+			// Archive slug
+			if ( array_key_exists( 'episode_archive_slug', $options ) ) {
+				$options['episode_archive_slug'] = preg_replace( '#/+#', '/', '/' . str_replace( '#', '', $options['episode_archive_slug'] ) );
+			
+				if ( $prefix && $blog_prefix ) {
+					$options['episode_archive_slug'] = $prefix . preg_replace( '#^/?index\.php#', '', $options['episode_archive_slug'] );
+				} else {
+					$options['episode_archive_slug'] = $blog_prefix . $options['episode_archive_slug'];
+				}
+			}
+			
+			return $options;
+		} );
 		
 	}
 	
