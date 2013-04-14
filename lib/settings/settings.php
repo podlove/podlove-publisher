@@ -57,19 +57,50 @@ class Settings {
 			/* $id       */ 'podlove_setting_custom_episode_slug',
 			/* $title    */ sprintf(
 				'<label for="custom_episode_slug">%s</label>',
-				__( 'URL scheme for episodes', 'podlove' )
+				__( 'Permalink structure for episodes', 'podlove' )
 			),
 			/* $callback */ function () {
-				?>
-				<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo \Podlove\get_setting( 'custom_episode_slug' ) ?>">
-				<p>
-					<span class="description">
+				$blog_prefix = '';
+				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $blog_prefix = '/blog';
+				$use_post_permastruct = \Podlove\get_setting( 'use_post_permastruct' ); ?>
+				<input name="podlove[use_post_permastruct]" id="use_post_permastruct" type="checkbox" <?php checked( $use_post_permastruct, 'on' ) ?>> <?php _e( 'Use the same permalink structure as posts', 'podlove' ); ?>
+				<div id="custom_podcast_permastruct"<?php if ( $use_post_permastruct ) echo ' style="display:none;"' ?>>
+					<code><?php echo get_option('home') . $blog_prefix; ?>/</code>
+					<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo \Podlove\get_setting( 'custom_episode_slug' ) ?>">
+					<p><span class="description">
 						<?php echo __( '
 							Placeholders: %podcast% (post name slug), %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%<br>
 							Example schemes: <code>%podcast%</code>, <code>episode/%podcast%</code>, <code>%year%/%monthnum%/%podcast%</code>', 'podlove' );
 						?>
-					</span>
-				</p>
+					</span></p>
+				</div>
+				
+				<script type="text/javascript">
+				jQuery(function($) {
+					$(document).ready(function() {
+
+						function handle_permastruct_settings() {
+							if ( $("#use_post_permastruct").is( ':checked' ) ) {
+								$("#custom_podcast_permastruct").slideUp();
+							} else {
+								$("#custom_podcast_permastruct").slideDown();
+							}
+						}
+
+						$("#use_post_permastruct").on("click", function(e) {
+							handle_permastruct_settings();
+						});
+
+						handle_permastruct_settings();
+					});
+				});
+				</script>
+
+				<style type="text/css">
+				#custom_podcast_permastruct {
+					margin-top: 10px;
+				}
+				</style>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  

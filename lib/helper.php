@@ -16,7 +16,8 @@ function get_setting( $name ) {
 		'enable_episode_record_date'      => 0,
 		'enable_episode_publication_date' => 0,
 		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
-		'podlove_setting_redirect' => array()
+		'podlove_setting_redirect' => array(),
+		'use_post_permastruct' => 'off'
 	);
 
 	$options = get_option( 'podlove' );
