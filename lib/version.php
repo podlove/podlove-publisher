@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 33 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 34 );
 
 add_action( 'init', function () {
 	
@@ -244,6 +244,14 @@ function run_migrations_for_version( $version ) {
 				$f->{$key} = $value;
 			}
 			$f->save();
+		case 34:
+			$options = get_option( 'podlove', array() );
+			if ( !array_key_exists( 'episode_archive', $options ) ) $options['episode_archive'] = 'on';
+			if ( !array_key_exists( 'episode_archive_slug', $options ) ) $options['episode_archive_slug'] = '/podcast/';
+			if ( !array_key_exists( 'use_post_permastruct', $options ) ) $options['use_post_permastruct'] = 'off';
+			if ( !array_key_exists( 'custom_episode_slug', $options ) ) $options['custom_episode_slug'] = '/podcast/%podcast%/';
+			else $options['custom_episode_slug'] = preg_replace( '#/+#', '/', '/' . str_replace( '#', '', $options['custom_episode_slug'] ) );
+			update_option( 'podlove', $options );
 		break;
 	}
 

@@ -66,7 +66,9 @@ function activate_for_current_blog() {
 			'merge_episodes'         => 'on',
 			'hide_wp_feed_discovery' => 'off',
 			'use_post_permastruct'   => 'on',
-			'custom_episode_slug'    => ''
+			'episode_archive'        => 'on',
+			'episode_archive_slug'   => '/podcast/',
+			'custom_episode_slug'    => '/podcast/%podcast%/'
 		);
 		update_option( 'podlove', $settings );
 	}
@@ -552,7 +554,7 @@ function add_podcast_rewrite_rules() {
 		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 
 	// Enable generic rules for pages if permalink structure doesn't begin with a wildcard
-	if ( "%podcast%" == $permastruct && 'on' != $use_post_permastruct ) {
+	if ( "/%podcast%" == $permastruct && 'on' != $use_post_permastruct ) {
 		// Generate custom rewrite rules
 		$wp_rewrite->matches = 'matches';
 		$wp_rewrite->extra_rules = array_merge( $wp_rewrite->extra_rules, $wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true ) );
@@ -566,8 +568,11 @@ function add_podcast_rewrite_rules() {
 	}
 	
 	// Add archive pages
-	$wp_rewrite->add_rule( "podcast/?$", "index.php?post_type=podcast", 'top' );
-	$wp_rewrite->add_rule( "podcast/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
+	if ( 'on' == \Podlove\get_setting( 'episode_archive' ) ) {
+		$archive_slug = trim( \Podlove\get_setting( 'episode_archive_slug' ), '/' );
+		$wp_rewrite->add_rule( "{$archive_slug}/?$", "index.php?post_type=podcast", 'top' );
+		$wp_rewrite->add_rule( "{$archive_slug}/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
+	}
 }
 
 /**
