@@ -17,11 +17,8 @@ function get_setting( $name ) {
 		'enable_episode_publication_date' => 0,
 		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
 		'podlove_setting_redirect' => array(),
-<<<<<<< HEAD
-		'use_post_permastruct' => 'off'
-=======
+		'use_post_permastruct' => 'off',
 		'episode_archive_slug' => '/podcast/',
->>>>>>> Normalize permastruct settings, allow change of archive slug
 	);
 
 	$options = get_option( 'podlove' );
