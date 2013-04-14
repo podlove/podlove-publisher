@@ -65,6 +65,7 @@ function activate_for_current_blog() {
 		$settings = array(
 			'merge_episodes'         => 'on',
 			'hide_wp_feed_discovery' => 'off',
+			'use_post_permastruct'   => 'on',
 			'custom_episode_slug'    => ''
 		);
 		update_option( 'podlove', $settings );
@@ -329,7 +330,7 @@ add_action( 'plugins_loaded', function () {
  */
 add_filter( 'pre_get_posts', function ( $wp_query ) {
 
-	if ( is_home() && $wp_query->is_main_query() && \Podlove\get_setting( 'merge_episodes' ) === 'on' ) {
+	if ( is_home() && $wp_query->is_main_query() && \Podlove\get_setting( 'merge_episodes' ) === 'on' && !isset( $wp_query->query_vars["post_type"] ) ) {
 		$wp_query->set( 'post_type', array( 'post', 'podcast' ) );
 		return $wp_query;
 	}
@@ -536,7 +537,7 @@ add_filter( 'the_content', '\Podlove\autoinsert_templates_into_content' );
  *
  * @uses $wp_rewrite
  */
-function modify_permalink_for_podcast_post_type() {
+function add_podcast_rewrite_rules() {
 	global $wp_rewrite;
 	
 	// Get permalink structure
@@ -544,9 +545,14 @@ function modify_permalink_for_podcast_post_type() {
 
 	// Add rewrite tag
 	$wp_rewrite->add_rewrite_tag( "%podcast%", '([^/]+)', "post_type=podcast&name=" );
+	
+	// Use same permastruct as post_type 'post'
+	$use_post_permastruct = \Podlove\get_setting( 'use_post_permastruct' );
+	if ( 'on' == $use_post_permastruct )
+		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 
 	// Enable generic rules for pages if permalink structure doesn't begin with a wildcard
-	if ( "%podcast%" == $permastruct ) {
+	if ( "%podcast%" == $permastruct && 'on' != $use_post_permastruct ) {
 		// Generate custom rewrite rules
 		$wp_rewrite->matches = 'matches';
 		$wp_rewrite->extra_rules = array_merge( $wp_rewrite->extra_rules, $wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true ) );
@@ -558,6 +564,22 @@ function modify_permalink_for_podcast_post_type() {
 	} else {
 		$wp_rewrite->add_permastruct( "podcast", $permastruct, false, EP_PERMALINK );
 	}
+	
+	// Add archive pages
+	$wp_rewrite->add_rule( "podcast/?$", "index.php?post_type=podcast", 'top' );
+	$wp_rewrite->add_rule( "podcast/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
+}
+
+/**
+ * Filters the request query vars to search for posts with type 'post' and 'podcast'
+ */
+function podcast_permalink_proxy($query_vars) {
+	// No post request
+	if ( false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
+		return $query_vars;
+		
+	$query_vars["post_type"] = array("post", "podcast");
+	return $query_vars;
 }
 
 /**
@@ -574,7 +596,6 @@ function no_verbose_page_rules() {
  * Replace placeholders in permalinks with the correct values
  */
 function generate_custom_post_link( $post_link, $id, $leavename = false, $sample = false ) {
-
 	// Get post
 	$post = &get_post($id);
 	$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
@@ -583,8 +604,12 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	if ( $sample )
 		$post->post_name = "%pagename%";
 	
-	// Only post_name in URL
+	// Get permastruct
 	$permastruct = \Podlove\get_setting( 'custom_episode_slug' );
+	if ( 'on' == \Podlove\get_setting( 'use_post_permastruct' ) )
+		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
+	
+	// Only post_name in URL
 	if ( "%podcast%" == $permastruct && ( !$draft_or_pending || $sample ) )
 		return home_url( user_trailingslashit( $post->post_name ) );
 	
@@ -628,19 +653,15 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	return $post_link;
 }
 
-function custom_podcast_archive_page( $rules ) {
-    $custom_rules = array();
-    $custom_rules['podcast/?$'] = 'index.php?post_type=podcast';
-    $custom_rules['podcast/page/?([0-9]{1,})/?$'] = 'index.php?post_type=podcast&paged=$matches[1]';
-
-    return $custom_rules + $rules;
-}
-
 if ( get_option( 'permalink_structure' ) != '' ) {
-	add_action( 'after_setup_theme', '\Podlove\modify_permalink_for_podcast_post_type', 99 );
+	add_action( 'after_setup_theme', '\Podlove\add_podcast_rewrite_rules', 99 );
+	add_action( 'permalink_structure_changed', '\Podlove\add_podcast_rewrite_rules' );
 	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
 	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
-	add_filter( 'rewrite_rules_array', '\Podlove\custom_podcast_archive_page' );
+
+	if ( 'on' == \Podlove\get_setting( 'use_post_permastruct' ) ) {
+		add_filter( 'request', '\Podlove\podcast_permalink_proxy' );
+	}
 }
 
 // register ajax actions
