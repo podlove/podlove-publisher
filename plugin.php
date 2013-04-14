@@ -330,7 +330,7 @@ add_action( 'plugins_loaded', function () {
  */
 add_filter( 'pre_get_posts', function ( $wp_query ) {
 
-	if ( is_home() && $wp_query->is_main_query() && \Podlove\get_setting( 'merge_episodes' ) === 'on' ) {
+	if ( is_home() && $wp_query->is_main_query() && \Podlove\get_setting( 'merge_episodes' ) === 'on' && !isset( $wp_query->query_vars["post_type"] ) ) {
 		$wp_query->set( 'post_type', array( 'post', 'podcast' ) );
 		return $wp_query;
 	}
@@ -537,7 +537,7 @@ add_filter( 'the_content', '\Podlove\autoinsert_templates_into_content' );
  *
  * @uses $wp_rewrite
  */
-function modify_permalink_for_podcast_post_type() {
+function add_podcast_rewrite_rules() {
 	global $wp_rewrite;
 	
 	// Get permalink structure
@@ -564,6 +564,10 @@ function modify_permalink_for_podcast_post_type() {
 	} else {
 		$wp_rewrite->add_permastruct( "podcast", $permastruct, false, EP_PERMALINK );
 	}
+	
+	// Add archive pages
+	$wp_rewrite->add_rule( "podcast/?$", "index.php?post_type=podcast", 'top' );
+	$wp_rewrite->add_rule( "podcast/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
 }
 
 /**
@@ -649,20 +653,11 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	return $post_link;
 }
 
-function custom_podcast_archive_page( $rules ) {
-    $custom_rules = array();
-    $custom_rules['podcast/?$'] = 'index.php?post_type=podcast';
-    $custom_rules['podcast/page/?([0-9]{1,})/?$'] = 'index.php?post_type=podcast&paged=$matches[1]';
-
-    return $custom_rules + $rules;
-}
-
 if ( get_option( 'permalink_structure' ) != '' ) {
-	add_action( 'after_setup_theme', '\Podlove\modify_permalink_for_podcast_post_type', 99 );
-	add_action( 'permalink_structure_changed', '\Podlove\modify_permalink_for_podcast_post_type' );
+	add_action( 'after_setup_theme', '\Podlove\add_podcast_rewrite_rules', 99 );
+	add_action( 'permalink_structure_changed', '\Podlove\add_podcast_rewrite_rules' );
 	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
 	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
-	add_filter( 'rewrite_rules_array', '\Podlove\custom_podcast_archive_page' );
 
 	if ( 'on' == \Podlove\get_setting( 'use_post_permastruct' ) ) {
 		add_filter( 'request', '\Podlove\podcast_permalink_proxy' );
