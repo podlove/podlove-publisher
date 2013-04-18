@@ -343,6 +343,23 @@ class Settings {
 
 		register_setting( Settings::$pagehook, 'podlove', function($options) {
 
+			/**
+			 * handle checkboxes
+			 */
+			$checkboxes = array(
+				'merge_episodes',
+				'hide_wp_feed_discovery',
+				'use_post_permastruct',
+				'episode_archive'
+			);
+			foreach ( $checkboxes as $checkbox_key ) {
+				if ( ! isset( $options[ $checkbox_key ] ) )
+					$options[ $checkbox_key ] = 'off';
+			}
+
+			/**
+			 * handle permastructs
+			 */
 			$prefix = $blog_prefix = '';
 			$iis7_permalinks = iis7_supports_permalinks();
 
