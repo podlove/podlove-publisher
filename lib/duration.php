@@ -1,6 +1,8 @@
 <?php
 namespace Podlove;
 
+require_once 'parse_normal_play_time.php';
+
 /**
  * Helper class to manage duration string.
  * @see http://podlove.org/simple-chapters/#Time
@@ -32,20 +34,11 @@ class Duration {
 	 * - extracts hours, minutes, seconds, milliseconds
 	 */
 	private function normalize() {
-		if ( preg_match( '/^(:?\d+:)?(\d+:)(\d+)\.?(:?\d+)?$/', $this->duration, $matches ) ) {
-			$this->hours        = isset( $matches[1] ) ? (int) $matches[1] : 0;
-			$this->minutes      = isset( $matches[2] ) ? (int) $matches[2] : 0;
-			$this->seconds      = isset( $matches[3] ) ? (int) $matches[3] : 0;
-			$this->milliseconds = isset( $matches[4] ) ? (int) $matches[4] : 0;
-
-			while ( $this->minutes > 59 ) {
-				$this->minutes -= 60;
-				$this->hours++;
-			}
-
-			if ( ( $this->minutes > 59 && $this->hours > 0 ) || $this->seconds > 59 || $this->milliseconds > 999 ) {
-				$this->valid = false;
-			}
+		if ( $milliseconds = parse_npt( $this->duration, 'ms' ) ) {
+			$this->hours        = floor((($milliseconds / 1000) / 60) / 60);
+			$this->minutes      = floor(($milliseconds / 1000) / 60) % 60;
+			$this->seconds      = floor($milliseconds / 1000) % 60;
+			$this->milliseconds = $milliseconds % 1000;
 		} else {
 			$this->valid = false;
 		}
@@ -145,20 +138,19 @@ function lfill( $string, $length, $fillchar = ' ' ) {
 	return $string;
 }
 
-
 // // Testcases
 // $durations = array(
 // 	'08:22.12:'    => '00:00:00.000', // invalid format
 // 	'08:222.12'    => '00:00:00.000', // invalid seconds
 // 	'98:22.12'     => '01:38:22.120', // long minutes
-// 	'10:22.1234'   => '00:00:00.000', // invalid milliseconds
+// 	'10:22.1234'   => '00:10:22.123', // long milliseconds
 // 	'00:08:22.117' => '00:08:22.117', // full qualified
 // 	'08:22'        => '00:08:22.000', // MM:SS
 // 	'08:22.12'     => '00:08:22.120', // MM:SS.mm (missing 0)
 // 	'8:22.12'      => '00:08:22.120', // MM:SS.mm (missing 0)
 // 	'8:2.12'       => '00:08:02.120', // MM:SS.mm (missing 0)
 // 	'123:18:12.12' => '123:18:12.120', // HH:MM:SS.mm (long hours)
-// 	'207:31'       => '03:27:31.000'
+// 	'207:31'       => '00:00:00.000' // invalid minutes
 // );
 
 // foreach ( $durations as $test_case => $expected ) {

@@ -83,6 +83,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Auphonic module works more smoothly for new episodes
 * Enhancement: Fallback to 302 redirects for HTTP/1.0 clients
 * Enhancement: Confirm before deleting feeds and templates
+* Enhancement: Parse time strictly following the NPT specification: http://www.w3.org/TR/media-frags/#npttimedef
 * Bugfix: don't use feed redirect when a feed archive page is specified
 
 = 1.4.8-alpha =
