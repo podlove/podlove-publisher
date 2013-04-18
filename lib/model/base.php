@@ -486,10 +486,8 @@ abstract class Base
 		global $wpdb;
 		
 		$property_sql = array();
-		$properties = self::properties();
-		foreach ( $properties as $property ) {
+		foreach ( self::properties() as $property )
 			$property_sql[] = "`{$property['name']}` {$property['type']}";
-		}
 		
 		$sql = 'CREATE TABLE IF NOT EXISTS '
 		     . self::table_name()
@@ -499,6 +497,8 @@ abstract class Base
 		;
 		
 		$wpdb->query( $sql );
+
+		self::build_indices();
 	}
 	
 	/**
