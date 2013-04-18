@@ -9,21 +9,10 @@ class Feed extends Base {
 	 * @return string
 	 */
 	public function get_subscribe_url() {
-
-		$podcast = \Podlove\Model\Podcast::get_instance();
-
-		if ( '' != get_option( 'permalink_structure' ) ) {
-			$url = sprintf(
-				'%s/feed/%s/',
-				get_bloginfo( 'url' ),
-				\Podlove\slugify( $this->slug )
-			);
-		} else {
-			$url = get_feed_link( $this->slug );
-		}
-
-
-		return apply_filters( 'podlove_subscribe_url', $url );
+		return apply_filters(
+			'podlove_subscribe_url',
+			untrailingslashit( get_feed_link( $this->slug ) )
+		);
 	}
 
 	/**
