@@ -392,6 +392,8 @@ function show_critical_errors() {
 	if ( count( $errors['errors'] ) + count( $errors['notices'] ) === 0 )
 		return;
 
+	// if there are errors, always run the system report to see if they are gone
+	run_system_report();
     ?>
     <div class="error">
         

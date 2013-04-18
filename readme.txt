@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.4.9-alpha =
+* Enhancement: run system report more intelligently
+
 = 1.4.8-alpha =
 
 Minor fixes and improvements:
