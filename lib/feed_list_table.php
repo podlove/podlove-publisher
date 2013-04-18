@@ -16,22 +16,13 @@ class Feed_List_Table extends \Podlove\List_Table {
 	
 	public function column_name( $feed ) {
 
-		$link = function ( $title, $action = 'edit' ) use ( $feed ) {
-			return sprintf(
-				'<a href="?page=%s&action=%s&feed=%s">' . $title . '</a>',
-				$_REQUEST['page'],
-				$action,
-				$feed->id
-			);
-		};
-
 		$actions = array(
-			'edit'   => $link( __( 'Edit', 'podlove' ) ),
-			'delete' => $link( __( 'Delete', 'podlove' ), 'delete' )
+			'edit'   => Settings\Feed::get_action_link( $feed, __( 'Edit', 'podlove' ) ),
+			'delete' => Settings\Feed::get_action_link( $feed, __( 'Delete', 'podlove' ), 'confirm_delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
-		    $link( $feed->name ),
+		    Settings\Feed::get_action_link( $feed, $feed->name ),
 		    $this->row_actions( $actions )
 		);
 	}

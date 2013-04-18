@@ -17,6 +17,16 @@ class Feed {
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
+
+	public static function get_action_link( $feed, $title, $action = 'edit', $type = 'link' ) {
+		return sprintf(
+			'<a href="?page=%s&action=%s&feed=%s"%s>' . $title . '</a>',
+			$_REQUEST['page'],
+			$action,
+			$feed->id,
+			$type == 'button' ? ' class="button"' : ''
+		);
+	}
 	
 	/**
 	 * Process form: save/update a format
@@ -66,7 +76,7 @@ class Feed {
 		wp_redirect( admin_url( $page . $show . $action ) );
 		exit;
 	}
-	
+
 	public function process_form() {
 
 		if ( ! isset( $_REQUEST['feed'] ) )
@@ -86,12 +96,32 @@ class Feed {
 	}
 	
 	public function page() {
+
+		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
+
+		if ( $action == 'confirm_delete' && isset( $_REQUEST['feed'] ) ) {
+			?>
+			<div class="updated">
+				<p>
+					<strong>
+						<?php echo __( 'Are you sure you want do delete this feed?', 'podlove' ) ?>
+					</strong>
+				</p>
+				<p>
+					<?php echo __( 'Clients subscribing to this feed will no longer receive updates. If you are moving your feed, you must inform your subscribers.', 'podlove' ) ?>
+				</p>
+				<p>
+					<?php echo self::get_action_link( \Podlove\Model\Feed::find_by_id( (int) $_REQUEST['feed'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
+				</p>
+			</div>
+			<?php
+		}
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Feeds', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
-			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
+			
 			switch ( $action ) {
 				case 'new':   $this->new_template();  break;
 				case 'edit':  $this->edit_template(); break;
