@@ -15,19 +15,10 @@ class Template_List_Table extends \Podlove\List_Table {
 	}
 	
 	function column_name( $template ) {
+
 		$actions = array(
-			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&template=%s">' . __( 'Edit', 'podlove' ) . '</a>',
-				$_REQUEST['page'],
-				'edit',
-				$template->id
-			),
-			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&template=%s">' . __( 'Delete', 'podlove' ) . '</a>',
-				$_REQUEST['page'],
-				'delete',
-				$template->id
-			)
+			'edit'   => Settings\Templates::get_action_link( $template, __( 'Edit', 'podlove' ), 'edit' ),
+			'delete' => Settings\Templates::get_action_link( $template, __( 'Delete', 'podlove' ), 'confirm_delete' )
 		);
 	
 		return sprintf('%1$s %2$s',
