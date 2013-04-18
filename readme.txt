@@ -82,6 +82,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: run system report more intelligently
 * Enhancement: Auphonic module works more smoothly for new episodes
 * Enhancement: Fallback to 302 redirects for HTTP/1.0 clients
+* Enhancement: Confirm before deleting feeds
 * Bugfix: don't use feed redirect when a feed archive page is specified
 
 = 1.4.8-alpha =
