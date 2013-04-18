@@ -60,14 +60,17 @@ class Settings {
 				__( 'Permalink structure for episodes', 'podlove' )
 			),
 			/* $callback */ function () {
-				$blog_prefix = '';
-				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $blog_prefix = '/blog';
+
 				$use_post_permastruct = \Podlove\get_setting( 'use_post_permastruct' );
-				$custom_episode_slug = \Podlove\get_setting( 'custom_episode_slug' );
-				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $custom_episode_slug = preg_replace( '|^/?blog|', '', $custom_episode_slug ); ?>
+				$custom_episode_slug  = \Podlove\get_setting( 'custom_episode_slug' );
+
+				if ( $blog_prefix = \Podlove\get_blog_prefix() ) {
+					$custom_episode_slug = preg_replace( '|^/?blog|', '', $custom_episode_slug );
+				}
+				?>
 				<input name="podlove[use_post_permastruct]" id="use_post_permastruct" type="checkbox" <?php checked( $use_post_permastruct, 'on' ) ?>> <?php _e( 'Use the same permalink structure as posts', 'podlove' ); ?>
 				<div id="custom_podcast_permastruct"<?php if ( $use_post_permastruct ) echo ' style="display:none;"' ?>>
-					<code><?php echo get_option('home') . $blog_prefix; ?></code>
+					<code><?php echo get_option('home'); ?></code>
 					<input name="podlove[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo $custom_episode_slug ?>">
 					<p><span class="description">
 						<?php echo __( '
@@ -116,14 +119,18 @@ class Settings {
 				__( 'Episode archive', 'podlove' )
 			),
 			/* $callback */ function () {
-				$blog_prefix = '';
-				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $blog_prefix = '/blog';
+
 				$enable_episode_archive = \Podlove\get_setting( 'episode_archive' );
-				if ( is_multisite() && !is_subdomain_install() && is_main_site() ) $enable_episode_archive = preg_replace( '|^/?blog|', '', $enable_episode_archive ); ?>
+				$episode_archive_slug   = \Podlove\get_setting( 'episode_archive_slug' );
+
+				if ( $blog_prefix = \Podlove\get_blog_prefix() ) {
+					$episode_archive_slug = preg_replace( '|^/?blog|', '', $episode_archive_slug );
+				}
+				?>
 				<input name="podlove[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode archive', 'podlove' ); ?>
 				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
 					<code><?php echo get_option('home') . $blog_prefix; ?></code>
-					<input name="podlove[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo \Podlove\get_setting( 'episode_archive_slug' ) ?>">
+					<input name="podlove[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
 				</div>
 				
 				<script type="text/javascript">
@@ -335,11 +342,16 @@ class Settings {
 		);
 
 		register_setting( Settings::$pagehook, 'podlove', function($options) {
+
 			$prefix = $blog_prefix = '';
+			$iis7_permalinks = iis7_supports_permalinks();
+
 			if ( ! got_mod_rewrite() && ! $iis7_permalinks )
 				$prefix = '/index.php';
-			if ( is_multisite() && !is_subdomain_install() && is_main_site() )
-				$blog_prefix = '/blog';
+
+			if ( is_multisite() && ! is_subdomain_install() && is_main_site() )
+				$blog_prefix = '';
+				// $blog_prefix = '/blog';
 		
 			// Episode permastruct
 			if ( array_key_exists( 'custom_episode_slug', $options ) ) {

@@ -244,6 +244,7 @@ function run_migrations_for_version( $version ) {
 				$f->{$key} = $value;
 			}
 			$f->save();
+		break;
 		case 34:
 			$options = get_option( 'podlove', array() );
 			if ( !array_key_exists( 'episode_archive', $options ) ) $options['episode_archive'] = 'on';
