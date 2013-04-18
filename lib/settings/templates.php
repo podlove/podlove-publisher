@@ -20,6 +20,16 @@ class Templates {
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 	}
 
+	public static function get_action_link( $template, $title, $action = 'edit', $type = 'link' ) {
+		return sprintf(
+			'<a href="?page=%s&action=%s&template=%s"%s>' . $title . '</a>',
+			$_REQUEST['page'],
+			$action,
+			$template->id,
+			$type == 'button' ? ' class="button"' : ''
+		);
+	}
+
 	public function scripts_and_styles() {
 
 		if ( ! isset( $_REQUEST['page'] ) )
@@ -97,6 +107,26 @@ class Templates {
 	}
 
 	public function page() {
+
+		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
+
+		if ( $action == 'confirm_delete' && isset( $_REQUEST['template'] ) ) {
+			?>
+			<div class="updated">
+				<p>
+					<strong>
+						<?php echo __( 'Are you sure you want do delete this template?', 'podlove' ) ?>
+					</strong>
+				</p>
+				<p>
+					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove' ) ?>
+				</p>
+				<p>
+					<?php echo self::get_action_link( \Podlove\Model\Template::find_by_id( (int) $_REQUEST['template'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
+				</p>
+			</div>
+			<?php
+		}
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
