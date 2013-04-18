@@ -78,6 +78,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.4.9-alpha =
 * Enhancement: run system report more intelligently
+* Bugfix: don't use feed redirect when a feed archive page is specified
 
 = 1.4.8-alpha =
 
