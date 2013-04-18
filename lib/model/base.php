@@ -502,6 +502,28 @@ abstract class Base
 	}
 	
 	/**
+	 * Convention based index generation.
+	 *
+	 * Creates default indices for all columns matching both:
+	 * - equals "id" or contains "_id"
+	 * - doesn't have an index yet
+	 */
+	public static function build_indices() {
+		global $wpdb;
+
+		$indices_sql = 'SHOW INDEX FROM `' . self::table_name() . '`';
+		$indices = $wpdb->get_results( $indices_sql );
+		$index_columns = array_map( function($index){ return $index->Column_name; }, $indices );
+
+		foreach ( self::properties() as $property ) {
+			if ( ($property['name'] == 'id' || stripos( $property['name'], '_id' )) && ! in_array( $property['name'], $index_columns ) ) {
+				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD INDEX `' . $property['name'] . '` (`' . $property['name'] . '`)';
+				$wpdb->query( $sql );
+			}
+		}
+	}
+
+	/**
 	 * Retrieves the database table name.
 	 * 
 	 * The name is derived from the namespace an class name. Additionally, it
