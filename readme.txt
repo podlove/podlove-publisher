@@ -77,10 +77,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.4.9-alpha =
-* Enhancement: run system report more intelligently
 * Enhancement: episodes may share the same permalink structure with WordPress posts
 * Enhancement: episode archive url can be configured
+* Enhancement: run system report more intelligently
 * Enhancement: Auphonic module works more smoothly for new episodes
+* Enhancement: Fallback to 302 redirects for HTTP/1.0 clients
 * Bugfix: don't use feed redirect when a feed archive page is specified
 
 = 1.4.8-alpha =

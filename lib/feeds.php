@@ -14,8 +14,11 @@ function handle_feed_proxy_redirects() {
 	if ( ! $feed )
 		return;
 
-	if ( ! $is_feed_page && strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $feed->redirect_http_status > 0 ) {
-		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $feed->redirect_http_status );
+	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
+	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;
+
+	if ( ! $is_feed_page && strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $http_status_code > 0 ) {
+		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $http_status_code );
 		exit;
 	} else { // don't redirect; prepare feed
 		RSS::prepare_feed( $feed->slug );
