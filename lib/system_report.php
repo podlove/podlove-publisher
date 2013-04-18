@@ -29,7 +29,7 @@ class SystemReport {
 				}
 
 				if ( $function_disabled ) {
-					$out = ' | curl_exec is disabled';
+					$out .= ' | curl_exec is disabled';
 					$errors[] = 'curl_exec is disabled';
 				}
 
