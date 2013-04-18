@@ -572,8 +572,12 @@ function add_podcast_rewrite_rules() {
 	// Add archive pages
 	if ( 'on' == \Podlove\get_setting( 'episode_archive' ) ) {
 		$archive_slug = trim( \Podlove\get_setting( 'episode_archive_slug' ), '/' );
-		$wp_rewrite->add_rule( "{$archive_slug}/?$", "index.php?post_type=podcast", 'top' );
-		$wp_rewrite->add_rule( "{$archive_slug}/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
+
+		$blog_prefix = \Podlove\get_blog_prefix();
+		$blog_prefix = $blog_prefix ? trim( $blog_prefix, '/' ) . '/' : '';
+
+		$wp_rewrite->add_rule( "{$blog_prefix}{$archive_slug}/?$", "index.php?post_type=podcast", 'top' );
+		$wp_rewrite->add_rule( "{$blog_prefix}{$archive_slug}/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
 	}
 }
 
