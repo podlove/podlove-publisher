@@ -4,7 +4,7 @@ Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPr
 Tags: podcast, publishing
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 1.0
+Stable tag: 1.4.8-alpha
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
 
@@ -76,7 +76,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.4.9-alpha =
+= 1.5.0-alpha =
 * Enhancement: episodes may share the same permalink structure with WordPress posts
 * Enhancement: episode archive url can be configured
 * Enhancement: run system report more intelligently
