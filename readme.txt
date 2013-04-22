@@ -76,7 +76,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.5.0-alpha =
+= 1.5.1-alpha =
 * Enhancement: episodes may share the same permalink structure with WordPress posts
 * Enhancement: episode archive url can be configured
 * Enhancement: run system report more intelligently
