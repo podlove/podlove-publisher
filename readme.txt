@@ -4,7 +4,7 @@ Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPr
 Tags: podcast, publishing
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 1.4.8-alpha
+Stable tag: trunk
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
 
