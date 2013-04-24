@@ -76,6 +76,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.5.2-alpha =
+
+* Bugfix: Fix using the same permalink structure / 404 on pages
+
 = 1.5.1-alpha =
 * Enhancement: episodes may share the same permalink structure with WordPress posts
 * Enhancement: episode archive url can be configured
