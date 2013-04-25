@@ -556,7 +556,7 @@ function add_podcast_rewrite_rules() {
 		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 
 	// Enable generic rules for pages if permalink structure doesn't begin with a wildcard
-	if ( "/%podcast%" == $permastruct ) {
+	if ( "/%podcast%" == untrailingslashit( $permastruct ) ) {
 		// Generate custom rewrite rules
 		$wp_rewrite->matches = 'matches';
 		$wp_rewrite->extra_rules = array_merge( $wp_rewrite->extra_rules, $wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true ) );
