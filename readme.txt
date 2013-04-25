@@ -76,8 +76,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.5.2-alpha =
+= 1.5.3-alpha =
+* Bugfix: more robust permalink fix
 
+= 1.5.2-alpha =
 * Bugfix: Fix using the same permalink structure / 404 on pages
 
 = 1.5.1-alpha =
