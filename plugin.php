@@ -536,6 +536,15 @@ function autoinsert_templates_into_content( $content ) {
 }
 add_filter( 'the_content', '\Podlove\autoinsert_templates_into_content' );
 
+
+function podlove_and_wordpress_permastructs_are_equal() {
+
+	if ( \Podlove\get_setting( 'use_post_permastruct' ) == 'on' )
+		return true;
+
+	return untrailingslashit( \Podlove\get_setting( 'custom_episode_slug' ) ) == untrailingslashit( str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) ) );
+}
+
 /**
  * Changes the permalink for a custom post type
  *
@@ -551,8 +560,7 @@ function add_podcast_rewrite_rules() {
 	$wp_rewrite->add_rewrite_tag( "%podcast%", '([^/]+)', "post_type=podcast&name=" );
 	
 	// Use same permastruct as post_type 'post'
-	$use_post_permastruct = \Podlove\get_setting( 'use_post_permastruct' );
-	if ( 'on' == $use_post_permastruct )
+	if ( podlove_and_wordpress_permastructs_are_equal() )
 		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 
 	// Enable generic rules for pages if permalink structure doesn't begin with a wildcard
@@ -617,7 +625,8 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	
 	// Get permastruct
 	$permastruct = \Podlove\get_setting( 'custom_episode_slug' );
-	if ( 'on' == \Podlove\get_setting( 'use_post_permastruct' ) )
+
+	if ( podlove_and_wordpress_permastructs_are_equal() )
 		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 	
 	// Only post_name in URL
