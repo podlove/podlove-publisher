@@ -65,6 +65,8 @@ class RSS {
 			if ( $podcast->language )
 				echo "\t" . '<language>' . $podcast->language . '</language>';
 
+			do_action( 'podlove_rss2_head', $feed );
+
 		}, 9 );
 
 		$posts_per_page = $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items;
