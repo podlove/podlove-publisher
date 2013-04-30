@@ -35,6 +35,15 @@ class SystemReport {
 
 				return $out;
 			} ),
+			'iconv' => array( 'callback' => function() {	
+				$iconv_available = function_exists( 'iconv' );
+
+				if ( ! $iconv_available ) {
+					$errors[] = 'You need to install/activate php5-iconv';
+				}
+
+				return $iconv_available ? "available" : "MISSING";
+			} ),
 			'allow_url_fopen'     => array( 'callback' => function() { return ini_get( 'allow_url_fopen' ); } ),
 			'max_execution_time'  => array( 'callback' => function() { return ini_get( 'max_execution_time' ); } ),
 			'upload_max_filesize' => array( 'callback' => function() { return ini_get( 'upload_max_filesize' ); } ),
