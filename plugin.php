@@ -630,7 +630,7 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 	
 	// Only post_name in URL
-	if ( "/%podcast%" == $permastruct && ( !$draft_or_pending || $sample ) )
+	if ( "/%podcast%" == untrailingslashit( $permastruct ) && ( !$draft_or_pending || $sample ) )
 		return home_url( user_trailingslashit( $post->post_name ) );
 	
 	//
