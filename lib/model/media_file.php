@@ -126,6 +126,9 @@ class MediaFile extends Base {
 		return self::curl_get_header_for_url( $this->get_file_url() );
 	}
 
+	/**
+	 * @todo  use \Podlove\Http\Curl	
+	 */
 	public static function curl_get_header_for_url( $url ) {
 		
 		if ( ! function_exists( 'curl_exec' ) )
