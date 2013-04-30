@@ -563,8 +563,8 @@ function add_podcast_rewrite_rules() {
 	if ( podlove_and_wordpress_permastructs_are_equal() )
 		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
 
-	// Enable CGI-style routes if permalink structure doesn't contain a wildcard
-	if ( stristr( $permastruct, '%podcast%' ) === FALSE ) {
+	// Enable generic rules for pages if permalink structure doesn't begin with a wildcard
+	if ( "/%podcast%" == untrailingslashit( $permastruct ) ) {
 		// Generate custom rewrite rules
 		$wp_rewrite->matches = 'matches';
 		$wp_rewrite->extra_rules = array_merge( $wp_rewrite->extra_rules, $wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true ) );
@@ -597,7 +597,7 @@ function podcast_permalink_proxy($query_vars) {
 	if ( false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
 		return $query_vars;
 		
-	$query_vars["post_type"] = array("page", "post", "podcast");
+	$query_vars["post_type"] = array("post", "podcast");
 	return $query_vars;
 }
 
@@ -633,6 +633,7 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	if ( "/%podcast%" == $permastruct && ( !$draft_or_pending || $sample ) )
 		return home_url( user_trailingslashit( $post->post_name ) );
 	
+	//
 	$unixtime = strtotime( $post->post_date );
 	$post_link = str_replace( '%year%', date( 'Y', $unixtime ), $post_link );
 	$post_link = str_replace( '%monthnum%', date( 'm', $unixtime ), $post_link );
@@ -678,7 +679,7 @@ if ( get_option( 'permalink_structure' ) != '' ) {
 	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
 	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
 
-	if ( podlove_and_wordpress_permastructs_are_equal() ) {
+	if ( 'on' == \Podlove\get_setting( 'use_post_permastruct' ) ) {
 		add_filter( 'request', '\Podlove\podcast_permalink_proxy' );
 	}
 }
