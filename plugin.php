@@ -594,7 +594,7 @@ function add_podcast_rewrite_rules() {
  */
 function podcast_permalink_proxy($query_vars) {
 	// No post request
-	if ( false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
+	if ( isset( $query_vars["preview"] ) || false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
 		return $query_vars;
 		
 	$query_vars["post_type"] = array("post", "podcast");
