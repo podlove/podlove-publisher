@@ -679,7 +679,7 @@ if ( get_option( 'permalink_structure' ) != '' ) {
 	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
 	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
 
-	if ( 'on' == \Podlove\get_setting( 'use_post_permastruct' ) ) {
+	if ( podlove_and_wordpress_permastructs_are_equal() ) {
 		add_filter( 'request', '\Podlove\podcast_permalink_proxy' );
 	}
 }
