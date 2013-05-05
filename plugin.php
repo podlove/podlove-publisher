@@ -382,6 +382,20 @@ add_action( 'plugins_loaded', function () {
 	}
 } );
 
+// fire activation and deactivation hooks for modules
+add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val ) {
+	$deactivated_module = current( array_keys( array_diff_assoc( $old_val, $new_val ) ) );
+	$activated_module   = current( array_keys( array_diff_assoc( $new_val, $old_val ) ) );
+
+	if ( $deactivated_module ) {
+		do_action( 'podlove_module_was_deactivated', $deactivated_module );
+		do_action( 'podlove_module_was_deactivated_' . $deactivated_module );
+	} elseif ( $activated_module ) {
+		do_action( 'podlove_module_was_activated', $activated_module );
+		do_action( 'podlove_module_was_activated_' . $activated_module );
+	}
+}, 10, 2 );
+
 function show_critical_errors() {
 
 	$errors = get_option( 'podlove_global_messages', array() );
