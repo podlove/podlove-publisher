@@ -1,0 +1,6 @@
+{
+    "require": {
+        "php": ">=5.3.0",
+        "podlove/podlove-timeline": ">=1.0.0"
+    }
+}

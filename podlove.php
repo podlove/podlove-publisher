@@ -19,6 +19,7 @@ if ( ! $correct_php_version ) {
 	exit;
 }
 
+require_once 'vendor/autoload.php'; # composer autoloader
 require_once 'bootstrap/bootstrap.php';
 require_once 'lib/helper.php';
 require_once 'lib/version.php';
