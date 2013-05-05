@@ -1,0 +1,108 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "019754316a404362ef8149773358967c",
+    "packages": [
+        {
+            "name": "podlove/normalplaytime",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/podlove/normalplaytime.git",
+                "reference": "v1.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/podlove/normalplaytime/zipball/v1.0.1",
+                "reference": "v1.0.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Podlove\\NormalPlayTime": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP parser for Normal Play Time (RFC 2326)",
+            "homepage": "http://github.com/podlove/normalplaytime",
+            "keywords": [
+                "npt",
+                "parser",
+                "rfc",
+                "time"
+            ],
+            "time": "2013-04-30 17:07:26"
+        },
+        {
+            "name": "podlove/podlove-timeline",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/podlove/podlove-timeline.git",
+                "reference": "v1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/v1.0.0",
+                "reference": "v1.0.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "podlove/normalplaytime": "1.0.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Podlove\\Chapters": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Convert from one chapter format to another. Supported: mp4chaps, psc, WebVTT",
+            "keywords": [
+                "chapter",
+                "converter",
+                "mp4chaps",
+                "parser",
+                "podlove",
+                "psc",
+                "webvtt"
+            ],
+            "time": "2013-05-05 09:45:30"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": [
+
+    ],
+    "platform": {
+        "php": ">=5.3.0"
+    },
+    "platform-dev": [
+
+    ]
+}

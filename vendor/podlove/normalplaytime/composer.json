@@ -1,0 +1,16 @@
+{
+    "name": "podlove/normalplaytime",
+    "description": "PHP parser for Normal Play Time (RFC 2326)",
+    "keywords": ["parser","rfc","npt","time"],
+    "homepage": "http://github.com/podlove/normalplaytime",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": { "Podlove\\NormalPlayTime": "src/" }
+    }
+}

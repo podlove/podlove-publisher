@@ -73,8 +73,17 @@ class Chapters {
 		$this->chapters[] = $chapter;
 	}
 
-	public function is_empty() {
-		return count( $this->chapters ) === 0;
-	}
-
 }
+
+// echo Chapters::from_mp4chaps("
+// 3.45 Intro
+// 125 This & That
+// invalid line
+// 12:05:35.3    Third valid chapter <http://podlove.org>!
+// ")->render_as_psc();
+
+// <psc:chapters version="1.1" xmlns:psc="http://podlove.org/simple-chapters">
+//     <psc:chapter start="3.45" title="Intro" />
+//     <psc:chapter start="125" title="This &amp; That" />
+//     <psc:chapter start="12:05:35.3" title="Third valid chapter !" link="http://podlove.org" />
+// </psc:chapters>
