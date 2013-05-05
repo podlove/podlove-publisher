@@ -100,7 +100,7 @@ class Episode extends Base {
 		if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
 			return false;
 
-		return $file->get_file_url();
+		return ( $file->size > 0 ) ? $file->get_file_url() : false;
 	}
 
 	public function refetch_files() {
