@@ -27,13 +27,13 @@ var PODLOVE = PODLOVE || {};
 		function slugify( text ) {
 
 			// replace non letter or digits by -
-			text = text.replace(/[^-\w]+/, '-');
+			text = text.replace(/[^-\w]+/g, '-');
 
 			// trim
 			text = text.replace(/^-+|-+$/g, '');
 
 			// remove unwanted characters
-			text = text.replace(/[^-\w]+/, '');
+			text = text.replace(/[^-\w]+/g, '');
 
 			return text ? text : 'n-a';
 		}
