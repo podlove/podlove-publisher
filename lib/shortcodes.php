@@ -201,7 +201,7 @@ function webplayer_shortcode( $options ) {
 	} elseif ( $asset_assignment->chapters > 0 ) {
 		$chapter_asset = Model\EpisodeAsset::find_by_id( $asset_assignment->chapters );
 		$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapter_asset->id );
-		if ( $media_file ) {
+		if ( $media_file && $media_file->size > 0 ) {
 			$chapters = 'chapters="' . $media_file->get_file_url() . '"';
 		}
 	}
