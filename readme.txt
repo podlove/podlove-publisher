@@ -76,6 +76,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.5.5-alpha =
+* Feature: always print PSC in feed if any chapter format is available (psc, mp4chaps, json)
+* Enhancement: correctly fall back to podcast image when episode image is activated but missing
+* Enhancement: various UI fixes (thanks @MaZderMind)
+* Bugfix: solve permalink issue after migrations
+
 = 1.5.4-alpha =
 * Feature: PubSubHubbub support via new module
 * Enhancement: Check for iconv availability in system report
