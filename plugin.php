@@ -320,37 +320,19 @@ add_action( 'plugins_loaded', function () {
 } );
 
 /**
- * This helps to get your blog tidy.
- * It's all about "Settings > Reading > Front page displays"
- *
- * Default: Check "Your latest posts" and we won't change anything.
- * However, if you check "A static page", we assume you'd like to separate
- * blog and podcast by moving your blog away and the podcast directory to "/".
- * That's what we do here.
- *
- * It's magic. Okay, I should probably document this publicly at some point.
+ * Checking "merge_episodes" allows to see episodes on the front page.
  */
 add_filter( 'pre_get_posts', function ( $wp_query ) {
 
-	if ( is_home() && $wp_query->is_main_query() && \Podlove\get_setting( 'merge_episodes' ) === 'on' && !isset( $wp_query->query_vars["post_type"] ) ) {
-		$wp_query->set( 'post_type', array( 'post', 'podcast' ) );
-		return $wp_query;
-	}
-
-	if ( get_option( 'show_on_front' ) === 'posts' )
+	if ( \Podlove\get_setting( 'merge_episodes' ) !== 'on' )
 		return $wp_query;
 
-	/*
-	// deactivated as it defeats the ability to use static pages as front page
-	if ( $wp_query->get( 'page_id' ) == get_option( 'page_on_front' ) ) {
-		$wp_query->set( 'post_type', array( 'podcast' ) );
-
-		// fix conditional functions
-		$wp_query->set( 'page_id', '' );
-		$wp_query->is_page = 0;
-		$wp_query->is_singular = 0;
+	if ( is_home() && $wp_query->is_main_query() && ! isset( $wp_query->query_vars["post_type"] ) ) {
+		$wp_query->set(
+			'post_type',
+			array_merge( (array) $wp_query->get( 'post_type' ), array( 'podcast' ) )
+		);
 	}
-	*/
 
 	return $wp_query;
 } );
