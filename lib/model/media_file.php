@@ -202,7 +202,7 @@ class MediaFile extends Base {
 				'If-None-Match: "' . $etag . '"'
 			) );
 		}
-		if( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
+		if ( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
 			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
 			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
 		}
