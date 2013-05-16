@@ -164,7 +164,8 @@ class MediaFile extends Base {
 			Log::get()->addInfo(
 				'Change of media file content length detected.',
 				array( 'media_file_id' => $this->id, 'old_size' => $this->size, 'new_size' => $header['download_content_length'] )
-			 );
+			);
+			do_action( 'podlove_media_file_content_has_changed', $this->id );
 		}
 
 		// check if mime type matches asset mime type
