@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Model;
+use Podlove\Log;
 
 class MediaFile extends Base {
 
@@ -112,7 +113,9 @@ class MediaFile extends Base {
 	 */
 	public function determine_file_size() {
 		$header     = $this->curl_get_header();
-		$this->size = $header['download_content_length'];
+
+		if ( (int) $header["http_code"] !== 304 )
+			$this->size = $header['download_content_length'];
 
 		return $header;
 	}
@@ -123,13 +126,61 @@ class MediaFile extends Base {
 	 * @return array
 	 */
 	function curl_get_header() {
-		return self::curl_get_header_for_url( $this->get_file_url() );
+		$response = self::curl_get_header_for_url( $this->get_file_url(), $this->etag );
+		$this->validate_request_header( $response );
+		return $response['header'];
+	}
+
+	/**
+	 * Validate media file headers.
+	 * 
+	 * @param  array $response curl response
+	 */
+	private function validate_request_header( $response ) {
+
+		$header = $response['header'];
+
+		// look for ETag and safe for later
+		if ( preg_match( '/ETag:\s*"([^"]+)"/i', $response['response'], $matches ) ) {
+			$this->etag = $matches[1];
+		}
+
+		// skip validation if ETag did not change
+		if ( (int) $header["http_code"] === 304 ) {
+			Log::get()->addInfo( "304 Not Modified :)" );
+			return;
+		}
+
+		// verify HTTP header
+		if ( ! preg_match( "/^[23]\d\d$/", $header["http_code"] ) ) {
+			Log::get()->addError(
+				'Unexpected http response when trying to access remote media file.',
+				array( 'media_file_id' => $this->id, 'http_code' => $header["http_code"] )
+			);
+		}
+
+		// check if content length has changed
+		if ( $header['download_content_length'] != $this->size ) {
+			Log::get()->addInfo(
+				'Change of media file content length detected.',
+				array( 'media_file_id' => $this->id, 'old_size' => $this->size, 'new_size' => $header['download_content_length'] )
+			 );
+		}
+
+		// check if mime type matches asset mime type
+		$mime_type = $this->episode_asset()->file_type()->mime_type;
+		if ( $header['content_type'] != $mime_type ) {
+			Log::get()->addWarning(
+				'Media file mime type does not match expected asset mime type.',
+				array( 'media_file_id' => $this->id, 'mime_type' => $header['content_type'], 'expected_mime_type' => $mime_type )
+			);
+		}
 	}
 
 	/**
 	 * @todo  use \Podlove\Http\Curl	
 	 */
-	public static function curl_get_header_for_url( $url ) {
+	public static function curl_get_header_for_url( $url, $etag = NULL ) {
 		
 		if ( ! function_exists( 'curl_exec' ) )
 			return false;
@@ -142,6 +193,11 @@ class MediaFile extends Base {
 		curl_setopt( $curl, CURLOPT_HEADER, true );         // header only
 		curl_setopt( $curl, CURLOPT_NOBODY, true );         // return no body; HTTP request method: HEAD
 		curl_setopt( $curl, CURLOPT_FAILONERROR, true );
+		if ( $etag ) {
+			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
+				'If-None-Match: "' . $etag . '"'
+			) );
+		}
 		if( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
 			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
 			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
@@ -161,11 +217,11 @@ class MediaFile extends Base {
 			)
 		);
 		
-		curl_exec( $curl );
-		$info = curl_getinfo( $curl );
+		$response = curl_exec( $curl );
+		$response_header = curl_getinfo( $curl );
 		curl_close( $curl );
 		
-		return $info;
+		return array( 'header' => $response_header, 'response' => $response );
 	}
 	
 }
@@ -174,3 +230,4 @@ MediaFile::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 MediaFile::property( 'episode_id', 'INT' );
 MediaFile::property( 'episode_asset_id', 'INT' );
 MediaFile::property( 'size', 'INT' );
+MediaFile::property( 'etag', 'VARCHAR(255)' );
