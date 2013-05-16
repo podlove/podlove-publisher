@@ -9,6 +9,14 @@ use Monolog\Handler\StreamHandler;
  *
  * @see  https://github.com/Seldaek/monolog for documentation
  *
+ * When to use what kind of log message?
+ * - DEBUG: Detailed debug information.
+ * - INFO: Interesting events. Examples: User logs in, SQL logs.
+ * - WARNING: Exceptional occurrences that are not errors. Examples: Use of deprecated APIs, poor use of an API, undesirable things that are not necessarily wrong.
+ * - ERROR: Runtime errors that do not require immediate action but should typically be logged and monitored.
+ * - CRITICAL: Critical conditions. Example: Application component unavailable, unexpected exception.
+ * - ALERT: Action must be taken immediately. Example: Entire website down, database unavailable, etc. This should trigger the SMS alerts and wake you up.
+ * 
  * Example usage:
  *   use Podlove\Log;
  *   
