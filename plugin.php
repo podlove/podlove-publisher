@@ -680,5 +680,13 @@ if ( get_option( 'permalink_structure' ) != '' ) {
 	}
 }
 
+// devalidate caches when media file has changed
+add_action( 'podlove_media_file_content_has_changed', function ( $media_file_id ) {
+	$media_file = Model\MediaFile::find_by_id( $media_file_id );
+	$episode = $media_file->episode();
+
+	delete_transient( 'podlove_chapters_string_' . $episode->id );
+} );
+
 // register ajax actions
 new \Podlove\AJAX\Ajax;
