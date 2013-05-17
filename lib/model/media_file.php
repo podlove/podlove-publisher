@@ -161,6 +161,7 @@ class MediaFile extends Base {
 				'Unexpected http response when trying to access remote media file.',
 				array( 'media_file_id' => $this->id, 'http_code' => $header["http_code"] )
 			);
+			return;
 		}
 
 		// check if content length has changed
