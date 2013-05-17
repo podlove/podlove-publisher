@@ -688,5 +688,23 @@ add_action( 'podlove_media_file_content_has_changed', function ( $media_file_id 
 	delete_transient( 'podlove_chapters_string_' . $episode->id );
 } );
 
+// enable chapters pages
+add_action( 'wp', function() {
+
+	if ( ! isset( $_REQUEST['chapters_format'] ) )
+		return;
+
+	if ( ! $episode = Model\Episode::find_or_create_by_post_id( get_the_ID() ) )
+		return;
+
+	header( "Content-Type: application/xml" );
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+	$chapters = new \Podlove\Feeds\Chapters( $episode );
+	$chapters->render( 'inline' );
+
+	exit;
+} );
+
 // register ajax actions
 new \Podlove\AJAX\Ajax;
