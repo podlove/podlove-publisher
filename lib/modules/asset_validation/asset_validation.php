@@ -12,6 +12,20 @@ class Asset_Validation extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_activated_asset_validation', array( $this, 'was_activated' ) );
 		add_action( 'podlove_module_was_deactivated_asset_validation', array( $this, 'was_deactivated' ) );
 		add_action( 'podlove_asset_validation', array( $this, 'do_valiations' ) );
+		add_action( 'podlove_module_before_settings_asset_validation', function () {
+			?>
+			<div>
+				<em>
+					<?php
+					echo sprintf(
+						__( 'Next scheduled validation: %s' ),
+						date( get_option('date_format') . ' ' . get_option( 'time_format' ), wp_next_scheduled( 'podlove_asset_validation' ) )
+					);
+					?>
+				</em>
+			</div>
+			<?php
+		} );
 	}
 
 	public function was_activated( $module_name ) {
