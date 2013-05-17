@@ -133,7 +133,8 @@ class MediaFile extends Base {
 
 	/**
 	 * Validate media file headers.
-	 * 
+	 *
+	 * @todo  $this->id not available for first validation before media_file has been saved
 	 * @param  array $response curl response
 	 */
 	private function validate_request_header( $response ) {
