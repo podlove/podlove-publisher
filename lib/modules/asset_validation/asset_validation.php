@@ -37,6 +37,16 @@ class Asset_Validation extends \Podlove\Modules\Base {
 			$this->validate_post( $new_posts_query->next_post() );
 		}
 
+		$adolescent_posts_query = $this->get_adolescent_posts_needing_validation();
+		while ( $adolescent_posts_query->have_posts() ) {
+			$this->validate_post( $adolescent_posts_query->next_post() );
+		}
+
+		$aged_posts_query = $this->get_aged_posts_needing_validation();
+		while ( $aged_posts_query->have_posts() ) {
+			$this->validate_post( $aged_posts_query->next_post() );
+		}
+
 		Log::get()->addInfo( 'End scheduled asset validation.' );
 	}
 
@@ -48,13 +58,90 @@ class Asset_Validation extends \Podlove\Modules\Base {
 	}
 
 	/**
+	 * Get posts of quite some age needing validation
+	 *
+	 * - "quite some age" meaning older than 4 weeks
+	 * - "needing validation" meaning "not validated within 1 day"
+	 * 
+	 * @return WP_Query
+	 */
+	private function get_aged_posts_needing_validation() {
+
+		$age_filter = function ( $where = '' ) {
+			$where .= " AND post_date < '" . date( 'Y-m-d', strtotime( '-4 weeks' ) ) . "'";
+			return $where;
+		};
+		 
+		add_filter( 'posts_where', $age_filter );
+		$query = new \WP_Query( array(
+			'post_type' => 'podcast',
+			'posts_per_page' => -1,
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key' => 'last_validated_at',
+					'value' => 1, // nonsensical but required
+					'compare' => 'NOT EXISTS'
+				),
+				array(
+					'type' => 'NUMERIC',
+					'key' => 'last_validated_at',
+					'compare' => '<=',
+					'value' => strtotime( '-6 hours' )
+				)
+			)
+		) );
+		remove_filter( 'posts_where', $age_filter );
+
+		return $query;
+	}
+
+	/**
+	 * Get posts of intermediate age needing validation
+	 *
+	 * - "intermediate age" meaning older than 24h but younger than 4 weeks
+	 * - "needing validation" meaning "not validated within 6 hours"
+	 * 
+	 * @return WP_Query
+	 */
+	private function get_adolescent_posts_needing_validation() {
+
+		$age_filter = function ( $where = '' ) {
+			$where .= " AND post_date BETWEEN '" . date( 'Y-m-d', strtotime( '-4 weeks' ) ) . "' AND '" . date( 'Y-m-d', strtotime( '-1 day' ) ) . "'";
+			return $where;
+		};
+		 
+		add_filter( 'posts_where', $age_filter );
+		$query = new \WP_Query( array(
+			'post_type' => 'podcast',
+			'posts_per_page' => -1,
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key' => 'last_validated_at',
+					'value' => 1, // nonsensical but required
+					'compare' => 'NOT EXISTS'
+				),
+				array(
+					'type' => 'NUMERIC',
+					'key' => 'last_validated_at',
+					'compare' => '<=',
+					'value' => strtotime( '-6 hours' )
+				)
+			)
+		) );
+		remove_filter( 'posts_where', $age_filter );
+
+		return $query;
+	}
+
+	/**
 	 * Get new posts needing validation.
 	 *
 	 * - "new" meaning "published within last 24 hours"
-	 * - "needing validation" meaning "not validated within last 6 hours"
+	 * - "needing validation" meaning "not validated within last hour"
 	 * 
-	 * @param  string $value [description]
-	 * @return array        [description]
+	 * @return WP_Query
 	 */
 	private function get_new_posts_needing_validation() {
 
@@ -78,7 +165,7 @@ class Asset_Validation extends \Podlove\Modules\Base {
 					'type' => 'NUMERIC',
 					'key' => 'last_validated_at',
 					'compare' => '<=',
-					'value' => strtotime("-6 hours")
+					'value' => strtotime( '-1 hour' )
 				)
 			)
 		) );
