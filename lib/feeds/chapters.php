@@ -13,15 +13,34 @@ class Chapters {
 		$this->episode = $episode;
 	}
 
-	public function render() {
+	/**
+	 * Render chapters into feed.
+	 * 
+	 * @param  string $style 'inline' or 'link'. Default: link
+	 */
+	public function render( $style = 'link' ) {
 		$asset_assignment = Model\AssetAssignment::get_instance();
 		$chapters_string  = $this->get_raw_chapters_string();
 		$chapters_asset   = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters );
+		$chapters = $this->get_chapters_object_from_string( $chapters_string, $chapters_asset );
 
-		if ( $chapters = $this->get_chapters_object_from_string( $chapters_string, $chapters_asset ) ) {
-			$chapters->setPrinter( new \Podlove\Chapters\Printer\PSC() );
-			echo $chapters;
-		}
+		if ( $chapters )
+			call_user_method_array( "render_$style", $this, array( $chapters ) );
+	}
+
+	public function render_inline( $chapters ) {
+		$chapters->setPrinter( new \Podlove\Chapters\Printer\PSC() );
+		echo $chapters;
+	}
+
+	public function render_link( $chapters ) {
+		echo Model\Feed::get_link_tag(array(
+			'prefix' => 'atom',
+			'rel'    => 'http://podlove.org/simple-chapters',
+			'type'   => '',
+			'title'  => '',
+			'href'   => get_permalink() . "?chapters_format=psc"
+		));
 	}
 
 	private function get_raw_chapters_string() {
