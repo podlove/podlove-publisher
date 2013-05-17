@@ -173,7 +173,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
 
 		$chapters = new \Podlove\Feeds\Chapters( $episode );
-		$chapters->render();
+		$chapters->render( 'inline' );
 
 		$deep_link = Model\Feed::get_link_tag(array(
 			'prefix' => 'atom',
