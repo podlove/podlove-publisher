@@ -155,63 +155,6 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	} );
 }
 
-function get_raw_chapters_string( $asset_assignment, $episode ) {
-
-	$cache_key = 'podlove_chapters_string_' . $episode->id;
-	if ( ( $chapters_string = get_transient( $cache_key ) ) !== FALSE ) {
-		return $chapters_string;
-	} else {
-		if ( $asset_assignment->chapters == 'manual' ) {
-			return $episode->chapters;
-		} else {
-			if ( ! $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) )
-				return '';
-
-			if ( ! $chapters_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapters_asset->id ) )
-				return '';
-
-			$chapters_string = wp_remote_get( $chapters_file->get_file_url() );
-
-			if ( is_wp_error( $chapters_string ) )
-				return '';
-
-			set_transient( $cache_key, $chapters_string['body'], 60*60*24*365 ); // 1 year, we devalidate manually
-			return $chapters_string['body'];
-		}
-	}	
-
-}
-
-function get_chapters_object_from_string( $chapters_string, $chapters_asset ) {
-
-	$mime_type = $chapters_asset->file_type()->mime_type;
-	$chapters  = false;
-
-	switch ( $mime_type ) {
-		case 'application/xml':
-			$chapters = \Podlove\Chapters\Parser\PSC::parse( $chapters_string );
-		break;
-		case 'application/json':
-			$chapters = \Podlove\Chapters\Parser\JSON::parse( $chapters_string );
-			break;
-		case 'text/plain':
-			$chapters = \Podlove\Chapters\Parser\Mp4chaps::parse( $chapters_string );
-			break;
-	}
-
-	return $chapters;
-}
-
-function print_chapters( $asset_assignment, $episode ) {
-	$chapters_string = get_raw_chapters_string( $asset_assignment, $episode );
-	$chapters_asset  = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters );
-
-	if ( $chapters = get_chapters_object_from_string( $chapters_string, $chapters_asset ) ) {
-		$chapters->setPrinter( new \Podlove\Chapters\Printer\PSC() );
-		echo $chapters;
-	}
-}
-
 function override_feed_entry( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		global $post;
@@ -229,7 +172,8 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
 
-		print_chapters( $asset_assignment, $episode );
+		$chapters = new \Podlove\Feeds\Chapters( $episode );
+		$chapters->render();
 
 		$deep_link = Model\Feed::get_link_tag(array(
 			'prefix' => 'atom',
