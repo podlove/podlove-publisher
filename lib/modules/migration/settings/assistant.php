@@ -76,6 +76,8 @@ class Assistant {
 
 	public function page() {
 
+		set_time_limit( 1800 ); // increase max_execution_time for migration actions
+
 		$wizard = array(
 			new Wizard\StepWelcome,
 			new Wizard\StepBasics,
