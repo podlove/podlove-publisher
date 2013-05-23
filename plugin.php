@@ -592,8 +592,10 @@ function podcast_permalink_proxy($query_vars) {
 	// No post request
 	if ( isset( $query_vars["preview"] ) || false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
 		return $query_vars;
-		
-	$query_vars["post_type"] = array("podcast", "post");
+	
+	if ( ! isset( $query_vars["post_type"] ) || $query_vars["post_type"] == "post" )
+		$query_vars["post_type"] = array( "podcast", "post" );
+
 	return $query_vars;
 }
 
