@@ -17,7 +17,8 @@ class WPDBHandler extends AbstractProcessingHandler {
 		$row = new LogTable();
 		$row->channel = $record['channel'];
 		$row->level   = $record['level'];
-		$row->message = $record['formatted'];
+		$row->message = $record['message'];
+		$row->context = json_encode( $record['context'] );
 		$row->time    = $record['datetime']->format('U');
 		$row->save();
 	}

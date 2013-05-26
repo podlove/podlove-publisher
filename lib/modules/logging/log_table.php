@@ -11,4 +11,5 @@ LogTable::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 LogTable::property( 'channel', 'VARCHAR(255)' );
 LogTable::property( 'level', 'INTEGER' );
 LogTable::property( 'message', 'LONGTEXT' );
+LogTable::property( 'context', 'LONGTEXT' );
 LogTable::property( 'time', 'INTEGER UNSIGNED' );
