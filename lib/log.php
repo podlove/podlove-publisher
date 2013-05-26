@@ -30,7 +30,7 @@ class Log {
 
 	private function __construct() {
 		$log = new Logger( 'Podlove' );
-		$log->pushHandler( new StreamHandler( 'php://stderr', WP_DEBUG ? Logger::DEBUG : Logger::INFO ) );
+		$log->pushHandler( new StreamHandler( 'php://stderr', $this->get_log_level() ) );
 		$this->log = $log;
 	}
 
@@ -40,6 +40,10 @@ class Log {
 	        self::$instance = new self;
 
 	    return self::$instance;
+	}
+
+	public function get_log_level() {
+		return WP_DEBUG ? Logger::DEBUG : Logger::INFO;
 	}
 
 	/**
