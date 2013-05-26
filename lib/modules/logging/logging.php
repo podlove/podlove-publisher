@@ -13,7 +13,7 @@ class Logging extends \Podlove\Modules\Base {
 	}
 
 	public function was_activated( $module_name ) {
-		WPDBHandler::initialize();
+		LogTable::build();
 	}
 
 	public function register_database_logger() {
