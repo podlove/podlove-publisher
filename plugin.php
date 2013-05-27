@@ -707,12 +707,23 @@ add_action( 'wp', function() {
 	if ( ! $episode = Model\Episode::find_or_create_by_post_id( get_the_ID() ) )
 		return;
 
-	header( "Content-Type: application/xml" );
+	if ( ! in_array( $_REQUEST['chapters_format'], array( 'psc', 'json', 'mp4chaps' ) ) )
+		$_REQUEST['chapters_format'] = 'psc';
 
-	echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-	$chapters = new \Podlove\Feeds\Chapters( $episode );
-	$chapters->render( 'inline' );
-
+	switch ( $_REQUEST['chapters_format'] ) {
+		case 'psc':
+			header( "Content-Type: application/xml" );
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+			break;
+		case 'mp4chaps':
+			header( "Content-Type: text/plain" );
+			break;
+		case 'json':
+			header( "Content-Type: application/json" );
+			break;
+	}	
+	
+	echo $episode->get_chapters( $_REQUEST['chapters_format'] );
 	exit;
 } );
 

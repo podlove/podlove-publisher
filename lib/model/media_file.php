@@ -121,7 +121,7 @@ class MediaFile extends Base {
 	 * @return void
 	 */
 	public function determine_file_size() {
-		$header     = $this->curl_get_header();
+		$header = $this->curl_get_header();
 
 		if ( (int) $header["http_code"] !== 304 )
 			$this->size = $header['download_content_length'];
@@ -147,6 +147,11 @@ class MediaFile extends Base {
 	 * @param  array $response curl response
 	 */
 	private function validate_request_header( $response ) {
+
+		if ( $this->is_new() ) {
+			$this->size = -1; // avoid infinite loop
+			$this->save();    // we need an id to log properly
+		}
 
 		$header = $response['header'];
 
