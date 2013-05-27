@@ -114,7 +114,6 @@ class Episode extends Base {
 	public function get_chapters( $format = 'object' ) {
 		$chapters_manager = new ChaptersManager( $this );
 		return $chapters_manager->get( $format );
-
 	}
 
 	public function refetch_files() {

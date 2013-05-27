@@ -149,81 +149,8 @@ function webplayer_shortcode( $options ) {
 	global $post;
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	$podcast = Model\Podcast::get_instance();
-	$asset_assignment = Model\AssetAssignment::get_instance();
-
-	$formats_data = get_option( 'podlove_webplayer_formats' );
-
-	if ( ! count( $formats_data ) )
-		return;
-
-	/**
-	 * Look into the media files of an episode and return formats matching criteria:
-	 * - the corresponding asset is configured in the web player
-	 * - the file exists
-	 * 
-	 * @param   $formats array of format names like 'mp4', 'ogg'
-	 * @param   $format_type 'audio' or 'video'
-	 */
-	$get_available_formats = function ( $formats, $format_type ) use ( $episode, $formats_data ) {
-
-		$available_formats = array();
-
-		foreach ( $formats as $format ) {
-
-			if ( ! isset( $formats_data[ $format_type ][ $format ] ) )
-				continue;
-
-			$episode_asset = Model\EpisodeAsset::find_by_id( $formats_data[ $format_type ][ $format ] );
-			if ( ! $episode_asset )
-				continue;
-
-			$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $episode_asset->id );
-			if ( $media_file )
-				$available_formats[] = sprintf( '%s="%s"', $format, $media_file->get_file_url() );
-		}
-
-		return $available_formats;
-	};
-
-	$is_video = true;
-	$available_formats = $get_available_formats( array( 'mp4', 'ogg', 'webm' ), 'video' );
-
-	// only look for audio if there is no video file
-	if ( count( $available_formats ) === 0 ) {
-		$is_video = false;
-		$available_formats = $get_available_formats( array( 'mp3', 'mp4', 'ogg', 'opus' ), 'audio' );
-	}
-
-	$chapters = '';
-	if ( $asset_assignment->chapters === 'manual' && $episode->chapters ) {
-		$chapters = 'chapters="_podlove_chapters"';
-	} elseif ( $asset_assignment->chapters > 0 ) {
-		$chapter_asset = Model\EpisodeAsset::find_by_id( $asset_assignment->chapters );
-		$media_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapter_asset->id );
-		if ( $media_file && $media_file->size > 0 ) {
-			$chapters = 'chapters="' . $media_file->get_file_url() . '"';
-		}
-	}
-
-	$attributes = array(
-		'permalink'  => get_permalink(),
-		'title'      => get_the_title(),
-		'subtitle'   => wptexturize( convert_chars( trim( $episode->subtitle ) ) ),
-		'summary'    => wptexturize( convert_chars( trim( $episode->summary ) ) ),
-		'poster'     => $episode->get_cover_art_with_fallback(),
-		'duration'   => $episode->get_duration(),
-		'chaptersVisible' => \Podlove\get_webplayer_setting( 'chaptersVisible' )
-	);
-	$attr_string = '';
-	foreach ( $attributes as $key => $value ) {
-		$attr_string .= "$key=\"$value\" ";
-	}
-
-	$shortcode_name = $is_video ? 'podlovevideo' : 'podloveaudio';
-	$shortcode = '[' . $shortcode_name . ' ' . implode( ' ', $available_formats ) . ' ' . $chapters . ' ' . $attr_string . ']';
-
-	return do_shortcode( $shortcode );
+	$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $episode );
+	return $printer->render();
 }
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
 
