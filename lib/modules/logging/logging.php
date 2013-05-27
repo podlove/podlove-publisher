@@ -58,7 +58,8 @@ class Logging extends \Podlove\Modules\Base {
 		<script type="text/javascript">
 		jQuery(function($) {
 			$(document).ready(function() {
-				$("#podlove-log").scrollTop(1000000);
+				// scroll down
+				$("#podlove-log").scrollTop($("#podlove-log")[0].scrollHeight);
 			});
 		});
 		</script>

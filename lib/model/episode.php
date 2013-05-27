@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Model;
 use Podlove\Log;
+use Podlove\ChaptersManager;
 
 /**
  * We could use simple post_meta instead of a table here
@@ -102,6 +103,18 @@ class Episode extends Base {
 			return false;
 
 		return ( $file->size > 0 ) ? $file->get_file_url() : false;
+	}
+
+	/**
+	 * Get episode chapters.
+	 * 
+	 * @param  string $format object, psc, mp4chaps, json. Default: object
+	 * @return mixed
+	 */
+	public function get_chapters( $format = 'object' ) {
+		$chapters_manager = new ChaptersManager( $this );
+		return $chapters_manager->get( $format );
+
 	}
 
 	public function refetch_files() {
