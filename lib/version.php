@@ -271,6 +271,9 @@ function run_migrations_for_version( $version ) {
 		case 37:
 			\Podlove\Modules\Base::activate( 'asset_validation' );
 		break;
+		case 38:
+			\Podlove\Modules\Base::activate( 'logging' );
+		break;
 	}
 
 }
