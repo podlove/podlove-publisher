@@ -42,7 +42,6 @@ class WPMailHandler extends MailHandler {
 
         if ( isset( $record['context']['episode_id'] ) ) {
             $episode = Model\Episode::find_by_id( $record['context']['episode_id'] );
-            file_put_contents('/tmp/php.log', print_r($episode, true), FILE_APPEND | LOCK_EX);
             $content .= "\n\n" . wp_specialchars_decode( get_edit_post_link( $episode->post_id ) );
         }
 
