@@ -51,6 +51,15 @@ class MediaFile extends Base {
 	}
 
 	/**
+	 * Is this media file valid?
+	 * 
+	 * @return boolean
+	 */
+	public function is_valid() {
+		$this->size > 0;
+	}
+
+	/**
 	 * Dynamically return file url from release, format and show.
 	 *
 	 * @return string
@@ -97,7 +106,7 @@ class MediaFile extends Base {
 	 * 
 	 * @return string
 	 */
-	function get_download_file_name() {
+	public function get_download_file_name() {
 
 		$file_name = $this->episode()->slug
 		           . '.'
@@ -125,7 +134,7 @@ class MediaFile extends Base {
 	 *
 	 * @return array
 	 */
-	function curl_get_header() {
+	public function curl_get_header() {
 		$response = self::curl_get_header_for_url( $this->get_file_url(), $this->etag );
 		$this->validate_request_header( $response );
 		return $response['header'];
