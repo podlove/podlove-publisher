@@ -37,7 +37,7 @@ class Logging extends \Podlove\Modules\Base {
 		<?php foreach ( LogTable::all() as $log_entry ): ?>
 			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
 				<span class="log-date">
-					<?php echo date( 'r', $log_entry->time ); ?>
+					[<?php echo date( 'Y-m-d H:i:s', $log_entry->time ); ?>]
 				</span>
 				<span class="log-message">
 					<?php echo $log_entry->message; ?>
@@ -49,6 +49,10 @@ class Logging extends \Podlove\Modules\Base {
 						$media_file = Model\MediaFile::find_by_id( $data->media_file_id );
 						$episode = $media_file->episode();
 						echo sprintf( '<a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug );
+					}
+					if ( isset( $data->episode_id ) ) {
+						$episode = Model\Episode::find_by_id( $data->episode_id );
+						echo sprintf( '<a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
 					}
 					?>
 				</span>
