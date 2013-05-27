@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 35 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 37 );
 
 add_action( 'init', function () {
 	
@@ -261,6 +261,15 @@ function run_migrations_for_version( $version ) {
 			Model\MediaFile::build_indices();
 			Model\Episode::build_indices();
 			Model\Template::build_indices();
+		break;
+		case 36:
+		$wpdb->query( sprintf(
+			'ALTER TABLE `%s` ADD COLUMN `etag` VARCHAR(255)',
+			Model\MediaFile::table_name()
+		) );
+		break;
+		case 37:
+			\Podlove\Modules\Base::activate( 'asset_validation' );
 		break;
 	}
 

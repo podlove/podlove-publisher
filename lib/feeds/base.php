@@ -172,48 +172,8 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 
 		$enclosure_url = $episode->enclosure_url( $feed->episode_asset() );
 
-		if ( $asset_assignment->chapters == 'manual' ) {
-			if ( $chapters = \Podlove\Chapters\Parser\Mp4chaps::parse( $episode->chapters ) ) {
-				$chapters->setPrinter( new \Podlove\Chapters\Printer\PSC() );
-				echo $chapters;
-			}
-		} elseif ( $asset_assignment->chapters > 0 ) {
-			if ( $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) ) {
-				if ( $chapters_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $chapters_asset->id ) ) {
-					$chapters_link = Model\Feed::get_link_tag(array(
-						'prefix' => 'atom',
-						'rel'    => 'http://podlove.org/simple-chapters',
-						'type'   => '',
-						'title'  => '',
-						'href'   => $chapters_file->get_file_url()
-					));
-					echo apply_filters( 'podlove_simple_chapters_link', $chapters_link, $feed );			
-
-					// print as PSC if external file isn't PSC
-					$mime_type = $chapters_asset->file_type()->mime_type;
-					if ( $mime_type != 'application/xml' ) {
-						$chapters_string = wp_remote_get( $chapters_file->get_file_url() );
-
-						if ( ! is_wp_error( $chapters_string ) && $mime_type == $chapters_string['headers']['content-type'] ) {
-
-							$chapters = false;
-							switch ( $mime_type ) {
-								case 'application/json':
-									$chapters = \Podlove\Chapters\Parser\JSON::parse( $chapters_string['body'] );
-									break;
-								case 'text/plain':
-									$chapters = \Podlove\Chapters\Parser\Mp4chaps::parse( $chapters_string['body'] );
-									break;
-							}
-							if ( $chapters ) {
-								$chapters->setPrinter( new \Podlove\Chapters\Printer\PSC() );
-								echo $chapters;
-							}
-						}
-					}
-				}
-			}
-		}
+		$chapters = new \Podlove\Feeds\Chapters( $episode );
+		$chapters->render( 'inline' );
 
 		$deep_link = Model\Feed::get_link_tag(array(
 			'prefix' => 'atom',

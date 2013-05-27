@@ -91,8 +91,8 @@ class Ajax {
 
 		$result = array();
 		$result['file_id']   = $file_id;
-		$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 );
-		$result['file_size'] = $info['download_content_length'];
+		$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 || $info['http_code'] == 304 );
+		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];
 
 		if ( ! $result['reachable'] ) {
 			unset( $info['certinfo'] );
