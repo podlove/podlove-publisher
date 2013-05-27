@@ -10,7 +10,7 @@ use Podlove\Settings\Dashboard;
 class Logging extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Logging';
-	protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
+	protected $module_description = 'Get an email when all episode assets are unavailable. View podlove related logs in dashboard. (writes logs to database)';
 
 	public function load() {
 		add_action( 'podlove_module_was_activated_logging', array( $this, 'was_activated' ) );
@@ -60,7 +60,7 @@ class Logging extends \Podlove\Modules\Base {
 			});
 		});
 		</script>
-		
+
 		<div id="podlove-log">
 		<?php foreach ( LogTable::all() as $log_entry ): ?>
 			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
