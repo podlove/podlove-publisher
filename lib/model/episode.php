@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\Model;
+use Podlove\Log;
 
 /**
  * We could use simple post_meta instead of a table here
@@ -104,12 +105,20 @@ class Episode extends Base {
 	}
 
 	public function refetch_files() {
+
+		$valid_files = array();
 		foreach ( EpisodeAsset::all() as $asset ) {
 			if ( $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) ) {
 				$file->determine_file_size();
 				$file->save();
+				
+				if ( $file->is_valid() )
+					$valid_files[] = $file->id;
 			}
 		}
+
+		if ( empty( $valid_files ) && get_post_status( $this->post_id ) == 'publish' )
+			Log::get()->addAlert( 'All assets for this episode are invalid!', array( 'episode_id' => $this->id ) );
 	}
 
 	public function get_duration( $format = 'HH:MM:SS' ) {
