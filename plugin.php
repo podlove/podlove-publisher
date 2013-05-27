@@ -54,7 +54,7 @@ function activate_for_current_blog() {
 	}
 
 	// set default modules
-	$default_modules = array( 'podlove_web_player', 'open_graph' );
+	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
@@ -370,9 +370,17 @@ add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val
 	$activated_module   = current( array_keys( array_diff_assoc( $new_val, $old_val ) ) );
 
 	if ( $deactivated_module ) {
+		Log::get()->addInfo( 'Deactivate module "' . $deactivated_module . '"' );
 		do_action( 'podlove_module_was_deactivated', $deactivated_module );
 		do_action( 'podlove_module_was_deactivated_' . $deactivated_module );
 	} elseif ( $activated_module ) {
+		Log::get()->addInfo( 'Activate module "' . $activated_module . '"' );
+
+		// init module before firing hooks
+		$class = Modules\Base::get_class_by_module_name( $activated_module );
+		if ( class_exists( $class ) )
+			$class::instance()->load();
+
 		do_action( 'podlove_module_was_activated', $activated_module );
 		do_action( 'podlove_module_was_activated_' . $activated_module );
 	}
@@ -681,6 +689,32 @@ if ( get_option( 'permalink_structure' ) != '' ) {
 		add_filter( 'request', '\Podlove\podcast_permalink_proxy' );
 	}
 }
+
+// devalidate caches when media file has changed
+add_action( 'podlove_media_file_content_has_changed', function ( $media_file_id ) {
+	if ( $media_file = Model\MediaFile::find_by_id( $media_file_id ) ) {
+		$episode = $media_file->episode();
+		delete_transient( 'podlove_chapters_string_' . $episode->id );
+	}
+} );
+
+// enable chapters pages
+add_action( 'wp', function() {
+
+	if ( ! isset( $_REQUEST['chapters_format'] ) )
+		return;
+
+	if ( ! $episode = Model\Episode::find_or_create_by_post_id( get_the_ID() ) )
+		return;
+
+	header( "Content-Type: application/xml" );
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+	$chapters = new \Podlove\Feeds\Chapters( $episode );
+	$chapters->render( 'inline' );
+
+	exit;
+} );
 
 // register ajax actions
 new \Podlove\AJAX\Ajax;

@@ -52,6 +52,7 @@ class Modules {
 					</label>
 					<?php
 					
+					do_action( 'podlove_module_before_settings_' . $module_name );
 
 					if ( $module_options ) {
 
@@ -78,6 +79,8 @@ class Modules {
 
 						} );
 					}
+
+					do_action( 'podlove_module_after_settings_' . $module_name );
 				},
 				/* $page     */ Modules::$pagehook,  
 				/* $section  */ 'podlove_settings_modules'
