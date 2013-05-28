@@ -87,6 +87,9 @@ class ChaptersManager {
 		$asset_assignment = Model\AssetAssignment::get_instance();
 		$chapters_asset   = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters );
 
+		if ( ! $chapters_asset )
+			return NULL;
+
 		$mime_type = $chapters_asset->file_type()->mime_type;
 		$chapters  = false;
 

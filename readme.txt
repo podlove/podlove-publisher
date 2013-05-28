@@ -84,6 +84,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: correctly fall back to podcast image when episode image is activated but missing
 * Enhancement: various UI fixes (thanks @MaZderMind)
 * Bugfix: solve permalink issue after migrations
+* Bugfix: migrate comment hierarchy correctly
 
 = 1.5.4-alpha =
 * Feature: PubSubHubbub support via new module
