@@ -120,10 +120,12 @@ class Printer {
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
 			'duration'            => $this->episode->get_duration(),
-			'chapters'            => json_decode( $this->episode->get_chapters( 'json' ) ),
 			'chaptersVisible'     => \Podlove\get_webplayer_setting( 'chaptersVisible' ),
 			'features'            => array( "current", "progress", "duration", "tracks", "fullscreen", "volume" )
 		);
+
+		if ( $chapters = $this->episode->get_chapters( 'json' ) )
+			$init_options['chapters'] = json_decode( $chapters );
 
 		$xml_string .= "\n"
 		             . "\n<script>\n"
