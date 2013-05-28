@@ -151,6 +151,10 @@ class MediaFile extends Base {
 	 */
 	private function validate_request_header( $response ) {
 
+		// skip unsaved media files
+		if ( ! $this->id )
+			return;
+
 		$header = $response['header'];
 
 		// look for ETag and safe for later
@@ -167,6 +171,8 @@ class MediaFile extends Base {
 			return;
 		}
 
+		do_action( 'podlove_media_file_content_has_changed', $this->id );
+
 		// verify HTTP header
 		if ( ! preg_match( "/^[23]\d\d$/", $header["http_code"] ) ) {
 			Log::get()->addError(
@@ -182,7 +188,6 @@ class MediaFile extends Base {
 				'Change of media file content length detected.',
 				array( 'media_file_id' => $this->id, 'old_size' => $this->size, 'new_size' => $header['download_content_length'] )
 			);
-			do_action( 'podlove_media_file_content_has_changed', $this->id );
 		}
 
 		// check if mime type matches asset mime type

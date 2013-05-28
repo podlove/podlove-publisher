@@ -698,6 +698,10 @@ add_action( 'podlove_media_file_content_has_changed', function ( $media_file_id 
 	}
 } );
 
+add_action( 'podlove_episode_content_has_changed', function( $episode_id ) {
+	delete_transient( 'podlove_chapters_string_' . $episode_id );
+} );
+
 // enable chapters pages
 add_action( 'wp', function() {
 
