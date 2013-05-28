@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 37 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 39 );
 
 add_action( 'init', function () {
 	
@@ -273,6 +273,30 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 38:
 			\Podlove\Modules\Base::activate( 'logging' );
+		break;
+		case 39:
+			// migrate previous template autoinsert settings
+			$assignments = Model\TemplateAssignment::get_instance();
+			$results = $wpdb->get_results(
+				sprintf( 'SELECT * FROM `%s`', Model\Template::table_name() )
+			);
+
+			foreach ( $results as $template ) {
+				if ( $template->autoinsert == 'end' ) {
+					$assignments->top = $template->id;
+				} elseif ( $template->autoinsert == 'beginning' ) {
+					$assignments->bottom = $template->id;
+				}
+			}
+
+			$assignments->save();
+
+			// remove template autoinsert column
+			$sql = sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `autoinsert`',
+				\Podlove\Model\Template::table_name()
+			);
+			$wpdb->query( $sql );
 		break;
 	}
 

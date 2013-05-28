@@ -18,6 +18,8 @@ class Templates {
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
+
+		register_setting( Templates::$pagehook, 'podlove_template_assignment' );
 	}
 
 	public static function get_action_link( $template, $title, $action = 'edit', $type = 'link' ) {
@@ -171,6 +173,40 @@ class Templates {
 		<style type="text/css">
 		.column-name { width: 33%; }
 		</style>
+
+		<h3><?php echo __( 'Insert templates to content automatically', 'podlove' ) ?></h3>
+		<form method="post" action="options.php">
+			<?php settings_fields( Templates::$pagehook );
+			$template_assignment = Model\TemplateAssignment::get_instance();
+
+			$form_attributes = array(
+				'context'    => 'podlove_template_assignment',
+				'form'       => false
+			);
+
+			\Podlove\Form\build_for( $template_assignment, $form_attributes, function ( $form ) {
+				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+				
+				$templates = array( 0 => __( 'Don\'t insert automatically', 'podlove' ) );
+				foreach ( Model\Template::all() as $template ) {
+					$templates[ $template->id ] = $template->title;
+				}
+
+				$wrapper->select( 'top', array(
+					'label'   => __( 'Insert at top', 'podlove' ),
+					'options' => $templates,
+					'please_choose' => false
+				) );
+
+				$wrapper->select( 'bottom', array(
+					'label'   => __( 'Insert at bottom', 'podlove' ),
+					'options' => $templates,
+					'please_choose' => false
+				) );
+
+			});
+		?>
+		</form>
 		<?php
 	}
 
@@ -213,17 +249,6 @@ class Templates {
 
 Published by <a href="[podlove-podcast field="publisher_url"]" target="_blank">[podlove-podcast field="publisher_name"]</a> under <a href="[podlove-podcast field="license_url"]" target="_blank">[podlove-podcast field="license_name"]</a>.
 EOT
-			) );
-
-			$f->select( 'autoinsert', array(
-				'label'       => __( 'Insert automatically', 'podlove' ),
-				'description' => __( 'Automatically insert template shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>.', 'podlove' ),
-				'options'     => array(
-					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
-					'beginning' => __( 'insert at the beginning', 'podlove' ),
-					'end'       => __( 'insert at the end', 'podlove' )
-				),
-				'default' => 'manually'
 			) );
 
 		} );
