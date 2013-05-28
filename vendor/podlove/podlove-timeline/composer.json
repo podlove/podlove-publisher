@@ -1,6 +1,6 @@
 {
-	"name": "podlove/chapterformat-converter",
-	"description": "Convert from one chapter format to another. Supported: mp4chaps, psc, WebVTT",
+	"name": "podlove/podlove-timeline",
+	"description": "PHP library providing a toolkit to handle various timeline/chapter formats.",
 	"keywords": ["podlove", "parser","converter","mp4chaps","psc","webvtt","chapter"],
 	"license": "MIT",
     "require": {
