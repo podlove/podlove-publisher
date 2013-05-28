@@ -77,10 +77,11 @@ class Logging extends \Podlove\Modules\Base {
 					<?php
 					$data = json_decode( $log_entry->context );
 					if ( isset( $data->media_file_id ) ) {
-						$media_file = Model\MediaFile::find_by_id( $data->media_file_id );
-						$episode = $media_file->episode();
-						$asset = $media_file->episode_asset();
-						echo sprintf( '<a href="%s">%s / %s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
+						if ( $media_file = Model\MediaFile::find_by_id( $data->media_file_id ) ) {
+							$episode = $media_file->episode();
+							$asset = $media_file->episode_asset();
+							echo sprintf( '<a href="%s">%s/%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
+						}
 					}
 					if ( isset( $data->episode_id ) ) {
 						$episode = Model\Episode::find_by_id( $data->episode_id );
