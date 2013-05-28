@@ -9,10 +9,19 @@ function handle_feed_proxy_redirects() {
 	$is_feedburner_bot = isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
 	$is_feed_page = $paged > 1;
-	$feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) );
 
-	if ( ! $feed )
+	if ( ! $feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) ) )
 		return;
+
+	$ends_with = function ( $haystack, $needle ) {
+		return $haystack[ strlen( $haystack ) - 1 ] === $needle;
+	};
+
+	// permanently redirect feed URLs without slash to
+	if ( $_SERVER["REQUEST_URI"] && $ends_with( $_SERVER["REQUEST_URI"], '/' ) ) {
+		header( sprintf( "Location: %s", $feed->get_subscribe_url() ), TRUE, 301 );
+		exit;
+	}
 
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
 	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;
