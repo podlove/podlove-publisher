@@ -338,15 +338,13 @@ class Podcast_Post_Meta_Box {
 		if ( $episode_slug_has_changed )
 			$episode->refetch_files();
 
-		// copy chapter info into custom meta for webplayer compatibility
-		update_post_meta( $post_id, '_podlove_chapters', $episode->chapters );
-
 		if ( isset( $_REQUEST['_podlove_meta']['episode_assets'] ) )
 			$this->save_episode_assets( $episode, $_REQUEST['_podlove_meta']['episode_assets'] );
 		else 
 			$this->save_episode_assets( $episode, array() );
 
 		\Podlove\clear_all_caches(); // mainly for feeds
+		do_action( 'podlove_episode_content_has_changed', $episode->id );
 	}
 
 	/**
