@@ -236,9 +236,17 @@ function migrate_post( $post_id ) {
 	}
 
 	// copy all comments
-	foreach ( get_comments( array( 'post_id' => $post_id ) ) as $comment ) {
+	$comments_map = array(); // map old comment IDs to new comment IDs
+	foreach ( get_comments( array( 'post_id' => $post_id, 'order' => 'ASC' ) ) as $comment ) {
+		$old_comment_id = $comment->comment_ID;
 		$comment->comment_post_ID = $new_post_id;
-		wp_insert_comment( (array) $comment );
+
+		if ( $comment->comment_parent && isset( $comments_map[ $comment->comment_parent ] ) ) {
+			$comment->comment_parent = $comments_map[ $comment->comment_parent ];
+		}
+
+		$new_comment_id = wp_insert_comment( (array) $comment );
+		$comments_map[ $old_comment_id ] = $new_comment_id;
 	}
 
 	return $new_post_id;
