@@ -44,7 +44,7 @@ class SystemReport {
 
 				return $iconv_available ? "available" : "MISSING";
 			} ),
-			'allow_url_fopen'     => array( 'callback' => function() {
+			'allow_url_fopen' => array( 'callback' => function() {
 
 				if ( ! $allow_url_fopen = ini_get( 'allow_url_fopen' ) )
 					$errors[] = 'allow_url_fopen must be activated in your php.ini';
@@ -55,7 +55,19 @@ class SystemReport {
 			'upload_max_filesize' => array( 'callback' => function() { return ini_get( 'upload_max_filesize' ); } ),
 			'memory_limit'        => array( 'callback' => function() { return ini_get( 'memory_limit' ); } ),
 			'disable_classes'     => array( 'callback' => function() { return ini_get( 'disable_classes' ); } ),
-			'disable_functions'   => array( 'callback' => function() { return ini_get( 'disable_functions' ); } )
+			'disable_functions'   => array( 'callback' => function() { return ini_get( 'disable_functions' ); } ),
+			'permalinks' => array( 'callback' => function() use ( &$errors ) {
+
+				if ( \Podlove\get_setting( 'use_post_permastruct' ) == 'on' )
+					return 'ok';
+
+				if ( stristr( \Podlove\get_setting( 'custom_episode_slug' ), '%podcast%' ) === FALSE ) {
+					$errors[] = 'The episode permastruct is missing the "%podcast%" segment!';
+					return '%podcast% placeholder missing!';
+				}
+
+				return 'ok';
+			} )
 		);
 
 		$this->run();
