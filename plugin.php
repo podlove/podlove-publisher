@@ -525,14 +525,19 @@ function autoinsert_templates_into_content( $content ) {
 	if ( get_post_type() !== 'podcast' )
 		return $content;
 
-	foreach ( Model\Template::all() as $template ) {
-		$shortcode = '[podlove-template id="' . $template->title . '"]';
+	$template_assignments = Model\TemplateAssignment::get_instance();
+
+	if ( $template_assignments->top ) {
+		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->top )->title . '"]';
 		if ( stripos( $content, $shortcode ) === false ) {
-			if ( $template->autoinsert == 'beginning' ) {
-				$content = $shortcode . $content;
-			} elseif ( $template->autoinsert == 'end' ) {
-				$content = $content . $shortcode;
-			}
+			$content = $shortcode . $content;
+		}
+	}
+
+	if ( $template_assignments->bottom ) {
+		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->bottom )->title . '"]';
+		if ( stripos( $content, $shortcode ) === false ) {
+			$content = $content . $shortcode;
 		}
 	}
 

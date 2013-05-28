@@ -243,11 +243,11 @@ class StepPosts extends Step {
 									<label class="control-label">Add template containing web player and download buttons</label>
 									<div class="controls">
 										<label class="radio">
-											<input type="radio" name="podlove_migration[cleanup][template]" value="end" <?php checked( $migration_settings['cleanup']['template'], "end" ) ?>>
+											<input type="radio" name="podlove_migration[cleanup][template]" value="bottom" <?php checked( $migration_settings['cleanup']['template'], "end" ) ?>>
 											insert at the end of the content
 										</label>
 										<label class="radio">
-											<input type="radio" name="podlove_migration[cleanup][template]" value="beginning" <?php checked( $migration_settings['cleanup']['template'], "beginning" ) ?>>
+											<input type="radio" name="podlove_migration[cleanup][template]" value="top" <?php checked( $migration_settings['cleanup']['template'], "beginning" ) ?>>
 											insert at the beginning of the content
 										</label>
 										<label class="radio">
