@@ -62,7 +62,7 @@ EOT;
 			$template->save();
 		}
 
-		$template_assignment = TemplateAssignment::get_instance();
+		$template_assignment = Model\TemplateAssignment::get_instance();
 		if ( $template_assignment->has_property( $migration_settings['cleanup']['template'] ) ) {
 			$template_assignment->$migration_settings['cleanup']['template'] = $template->id;
 			$template_assignment->save();
@@ -185,6 +185,8 @@ EOT;
 		jQuery(function($) {
 			var posts_to_migrate = $("#posts_to_migrate tbody tr").length;
 
+			$("#continue_to_finish_button").hide();
+
 			function update_migration_progress_bar() {
 				var posts_done = $("#posts_to_migrate tbody tr.done").length;
 				progress = Math.round(posts_done / posts_to_migrate * 100)
@@ -200,7 +202,7 @@ EOT;
 
 					$("#migration-header small").html('');
 					$("#start_migration_button").addClass("disabled");
-					$("#continue_to_finish_button").removeClass("disabled");
+					$("#continue_to_finish_button").removeClass("disabled").show();
 				}
 			};
 

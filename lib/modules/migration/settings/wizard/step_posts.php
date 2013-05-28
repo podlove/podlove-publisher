@@ -90,7 +90,7 @@ class StepPosts extends Step {
 		$migration_settings['cleanup'] = wp_parse_args( $migration_settings['cleanup'], array(
 			'enclosures' => 1,
 			'player' => 1,
-			'template' => 'end'
+			'template' => 'bottom'
 		) );
 
 		$validation_cache = get_option( 'podlove_migration_validation_cache', array() );
@@ -243,11 +243,11 @@ class StepPosts extends Step {
 									<label class="control-label">Add template containing web player and download buttons</label>
 									<div class="controls">
 										<label class="radio">
-											<input type="radio" name="podlove_migration[cleanup][template]" value="bottom" <?php checked( $migration_settings['cleanup']['template'], "end" ) ?>>
+											<input type="radio" name="podlove_migration[cleanup][template]" value="bottom" <?php checked( $migration_settings['cleanup']['template'], "bottom" ) ?>>
 											insert at the end of the content
 										</label>
 										<label class="radio">
-											<input type="radio" name="podlove_migration[cleanup][template]" value="top" <?php checked( $migration_settings['cleanup']['template'], "beginning" ) ?>>
+											<input type="radio" name="podlove_migration[cleanup][template]" value="top" <?php checked( $migration_settings['cleanup']['template'], "top" ) ?>>
 											insert at the beginning of the content
 										</label>
 										<label class="radio">
