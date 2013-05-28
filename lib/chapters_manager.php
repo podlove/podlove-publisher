@@ -30,6 +30,9 @@ class ChaptersManager {
 		if ( ! $this->chapters_object )
 			$this->chapters_object = $this->get_chapters_object();
 
+		if ( ! $this->chapters_object )
+			return '';
+
 		switch ( $format ) {
 			case 'psc':
 				$this->chapters_object->setPrinter( new Printer\PSC() );
