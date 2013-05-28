@@ -42,51 +42,6 @@
         ]
     },
     {
-        "name": "podlove/podlove-timeline",
-        "version": "v1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/podlove/podlove-timeline.git",
-            "reference": "v1.0.0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/v1.0.0",
-            "reference": "v1.0.0",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "podlove/normalplaytime": "1.0.*"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*"
-        },
-        "time": "2013-05-05 09:45:30",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Podlove\\Chapters": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Convert from one chapter format to another. Supported: mp4chaps, psc, WebVTT",
-        "keywords": [
-            "chapter",
-            "converter",
-            "mp4chaps",
-            "parser",
-            "podlove",
-            "psc",
-            "webvtt"
-        ]
-    },
-    {
         "name": "psr/log",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -133,12 +88,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "ae8500e5b1604963ee63d7bccd6c85808bfea974"
+            "reference": "bda5757cdecae6e280f5914be18812d8c5db7756"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ae8500e5b1604963ee63d7bccd6c85808bfea974",
-            "reference": "ae8500e5b1604963ee63d7bccd6c85808bfea974",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bda5757cdecae6e280f5914be18812d8c5db7756",
+            "reference": "bda5757cdecae6e280f5914be18812d8c5db7756",
             "shasum": ""
         },
         "require": {
@@ -157,11 +112,11 @@
             "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
             "raven/raven": "Allow sending log messages to a Sentry server"
         },
-        "time": "2013-05-13 14:29:58",
+        "time": "2013-05-21 19:11:01",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.5.x-dev"
+                "dev-master": "1.6.x-dev"
             }
         },
         "installation-source": "source",
@@ -188,6 +143,51 @@
             "log",
             "logging",
             "psr-3"
+        ]
+    },
+    {
+        "name": "podlove/podlove-timeline",
+        "version": "v1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/podlove/podlove-timeline.git",
+            "reference": "v1.1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/v1.1.0",
+            "reference": "v1.1.0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "podlove/normalplaytime": "1.0.*"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2013-05-28 10:22:27",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Podlove\\Chapters": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "PHP library providing a toolkit to handle various timeline/chapter formats.",
+        "keywords": [
+            "chapter",
+            "converter",
+            "mp4chaps",
+            "parser",
+            "podlove",
+            "psc",
+            "webvtt"
         ]
     }
 ]

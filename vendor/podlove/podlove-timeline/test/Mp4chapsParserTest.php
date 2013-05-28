@@ -72,4 +72,14 @@ class Mp4chapsParserTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $chapters, $result );
     }
 
+    public function testRejectInvalidFilesWithSomeMatchingLines() {
+        $result = Mp4chaps::parse("\n
+            \n
+            \n3.45 Intro
+            A line without timestamp
+            <p>yet another invalid line</p>
+            \n\n");
+        $this->assertNull( $result );
+    }
+
 }

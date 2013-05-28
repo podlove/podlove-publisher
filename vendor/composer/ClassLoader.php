@@ -98,7 +98,8 @@ class ClassLoader
 
             return;
         }
-        $first = substr($prefix, 0, 1);
+
+        $first = $prefix[0];
         if (!isset($this->prefixes[$first][$prefix])) {
             $this->prefixes[$first][$prefix] = (array) $paths;
 
@@ -196,6 +197,7 @@ class ClassLoader
      */
     public function findFile($class)
     {
+        // work around for PHP 5.3.0 - 5.3.2 https://bugs.php.net/50731
         if ('\\' == $class[0]) {
             $class = substr($class, 1);
         }
@@ -216,7 +218,7 @@ class ClassLoader
 
         $classPath .= strtr($className, '_', DIRECTORY_SEPARATOR) . '.php';
 
-        $first = substr($class, 0, 1);
+        $first = $class[0];
         if (isset($this->prefixes[$first])) {
             foreach ($this->prefixes[$first] as $prefix => $dirs) {
                 if (0 === strpos($class, $prefix)) {

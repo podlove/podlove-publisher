@@ -8,15 +8,21 @@ class Mp4chaps {
 
 	public static function parse( $chapters_string ) {
 
+		$chapters_string = trim( $chapters_string );
+
 		if ( ! strlen( $chapters_string ) )
 			return NULL;
 
 		$chapters = new Chapters();
+		$invalid_lines = 0;
 
 		foreach( preg_split( "/((\r?\n)|(\r\n?))/", $chapters_string ) as $line ) {
 		    $valid = preg_match( '/^([\d.:]+)\W+(.*)$/', trim( $line ), $matches );
 
-		    if ( ! $valid ) continue;
+		    if ( ! $valid ) {
+		    	$invalid_lines++;
+		    	continue;
+		    }
 
 		    $time_string = $matches[1];
 			$title       = $matches[2];
@@ -31,9 +37,9 @@ class Mp4chaps {
 			}, $title );
 
 			$chapters->addChapter( new Chapter( $timestamp_milliseconds, trim( $title ), $link ) );
-		} 
+		}
 
-		return $chapters;
+		return $invalid_lines <= count( $chapters ) ? $chapters : NULL;
 	}
 
 }
