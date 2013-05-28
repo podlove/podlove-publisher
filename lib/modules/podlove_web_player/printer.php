@@ -64,11 +64,36 @@ class Printer {
 		}
 
 		// add all sources
+		$flash_fallback_func = function( &$xml ) {};
 		foreach ( $this->files as $file ) {
+			$mime_type = $file->episode_asset()->file_type()->mime_type;
+
 			$source = $xml->addChild('source');
 			$source->addAttribute( 'src', $file->get_file_url() );
-			$source->addAttribute( 'type', $file->episode_asset()->file_type()->mime_type );
+			$source->addAttribute( 'type', $mime_type );
+
+			if ( $mime_type == 'audio/mpeg' ) {
+				$flash_fallback_func = function( &$xml ) use ( $file ) {
+					$flash_fallback = $xml->addChild('object');
+					$flash_fallback->addAttribute( 'type', 'application/x-shockwave-flash' );
+					$flash_fallback->addAttribute( 'data', 'flashmediaelement.swf' );
+
+					$params = array(
+						array( 'name' => 'movie', 'value' => 'flashmediaelement.swf' ),
+						array( 'name' => 'flashvars', 'value' => 'controls=true&file=' . $file->get_file_url() )
+					);
+
+					foreach ( $params as $param ) {
+						$p = $flash_fallback->addChild( 'param' );
+						$p->addAttribute( 'name', $param['name'] );
+						$p->addAttribute( 'value', $param['value'] );
+					}
+					
+				};
+			}
 		}
+		// add flash fallback after all <source>s
+		$flash_fallback_func( &$xml );
 
 		// prettify and prepare to render
 		$xml_string = $xml->asXML();
@@ -78,6 +103,7 @@ class Printer {
 		// set JavaScript options
 		$truthy = array( true, 'true', 'on', 1, "1" );
 		$init_options = array(
+			'pluginPath'          => plugins_url( 'player/podlove-web-player/static/', __FILE__),
 			'alwaysShowHours'     => true,
 			'alwaysShowControls'  => true,
 			'timecontrolsVisible' => false,
