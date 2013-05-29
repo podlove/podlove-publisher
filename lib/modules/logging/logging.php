@@ -64,6 +64,11 @@ class Logging extends \Podlove\Modules\Base {
 		});
 		</script>
 
+		<?php
+		if ( $timezone = get_option( 'timezone_string' ) )
+			date_default_timezone_set( $timezone );
+		?>
+
 		<div id="podlove-log">
 		<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-1 week") ) as $log_entry ): ?>
 			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
