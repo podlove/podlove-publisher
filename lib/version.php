@@ -282,9 +282,9 @@ function run_migrations_for_version( $version ) {
 			);
 
 			foreach ( $results as $template ) {
-				if ( $template->autoinsert == 'end' ) {
+				if ( $template->autoinsert == 'beginning' ) {
 					$assignments->top = $template->id;
-				} elseif ( $template->autoinsert == 'beginning' ) {
+				} elseif ( $template->autoinsert == 'end' ) {
 					$assignments->bottom = $template->id;
 				}
 			}
