@@ -148,6 +148,9 @@ add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcod
 function webplayer_shortcode( $options ) {
 	global $post;
 
+	if ( is_feed() )
+		return '';
+
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 	$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $episode );
 	return $printer->render();
