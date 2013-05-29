@@ -56,7 +56,7 @@ class MediaFile extends Base {
 	 * @return boolean
 	 */
 	public function is_valid() {
-		$this->size > 0;
+		return $this->size > 0;
 	}
 
 	/**
