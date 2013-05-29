@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.3-alpha =
+* Bugfix: remove player from feed
+
 = 1.6.2-alpha =
 * Bugfix: fix template autoinsert migration issue
 
