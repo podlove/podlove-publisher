@@ -30,7 +30,7 @@ class Logging extends \Podlove\Modules\Base {
 		// write logs to database
 		$log->pushHandler( new WPDBHandler( $wpdb, $log->get_log_level() ) );
 		// send critical logs via email
-		$log->pushHandler( new WPMailHandler( get_option( 'admin_email' ), "Podlove | Critical notice for " . get_option( 'blogname' ), Logger::CRITICAL ) );
+		// $log->pushHandler( new WPMailHandler( get_option( 'admin_email' ), "Podlove | Critical notice for " . get_option( 'blogname' ), Logger::CRITICAL ) );
 	}
 
 	public function register_meta_box() {
