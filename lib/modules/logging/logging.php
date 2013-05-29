@@ -68,7 +68,7 @@ class Logging extends \Podlove\Modules\Base {
 		<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-1 week") ) as $log_entry ): ?>
 			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
 				<span class="log-date">
-					[<?php echo date( 'Y-m-d H:i:s', $log_entry->time ); ?>]
+					[<?php echo date( 'Y-m-d H:i:s', $log_entry->time ) ?>]
 				</span>
 				<span class="log-message">
 					<?php echo $log_entry->message; ?>
