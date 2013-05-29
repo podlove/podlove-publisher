@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.1-alpha =
+* Bugfix: fix call-time pass-by-reference
+
 = 1.6.0-alpha =
 * Feature: New modules "Asset Validation" and "Logging". Automatically verify assets once in a while (fresh posts will be validated more often than old posts). Detailed logging in Podlove dashboard. Receive an email when all episode assets are unavailable.
 * Feature: always print PSC in feed if any chapter format is available (psc, mp4chaps, json)

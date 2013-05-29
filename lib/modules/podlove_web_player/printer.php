@@ -93,7 +93,7 @@ class Printer {
 			}
 		}
 		// add flash fallback after all <source>s
-		$flash_fallback_func( &$xml );
+		$flash_fallback_func( $xml );
 
 		// prettify and prepare to render
 		$xml_string = $xml->asXML();
