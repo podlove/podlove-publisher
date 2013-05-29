@@ -18,13 +18,13 @@ class Feed {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
 
-	public static function get_action_link( $feed, $title, $action = 'edit', $type = 'link' ) {
+	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {
 		return sprintf(
-			'<a href="?page=%s&action=%s&feed=%s"%s>' . $title . '</a>',
+			'<a href="?page=%s&action=%s&feed=%s" class="%s">' . $title . '</a>',
 			$_REQUEST['page'],
 			$action,
 			$feed->id,
-			$type == 'button' ? ' class="button"' : ''
+			$class
 		);
 	}
 	
@@ -100,18 +100,20 @@ class Feed {
 		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 
 		if ( $action == 'confirm_delete' && isset( $_REQUEST['feed'] ) ) {
+			$feed = \Podlove\Model\Feed::find_by_id( (int) $_REQUEST['feed'] );
 			?>
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo __( 'Are you sure you want do delete this feed?', 'podlove' ) ?>
+						<?php echo sprintf( __( 'You selected to delete the feed "%s". Please confirm this action.', 'podlove' ), $feed->title ) ?>
 					</strong>
 				</p>
 				<p>
 					<?php echo __( 'Clients subscribing to this feed will no longer receive updates. If you are moving your feed, you must inform your subscribers.', 'podlove' ) ?>
 				</p>
 				<p>
-					<?php echo self::get_action_link( \Podlove\Model\Feed::find_by_id( (int) $_REQUEST['feed'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( $feed, __( 'Delete feed permanently', 'podlove' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( $feed, __( 'Don\'t change anything', 'podlove' ), 'keep', 'button-primary' ) ?>
 				</p>
 			</div>
 			<?php

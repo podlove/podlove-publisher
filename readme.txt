@@ -83,6 +83,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: template autoinsert settings are on templates page now
 * Enhancement: correctly fall back to podcast image when episode image is activated but missing
 * Enhancement: various UI fixes (thanks @MaZderMind)
+* Enhancement: improve feed deletion dialogue
 * Bugfix: solve permalink issue after migrations
 * Bugfix: migrate comment hierarchy correctly
 
