@@ -62,16 +62,14 @@ var PODLOVE = PODLOVE || {};
 			});
 		}
 
-		// default title = extension
-		// only set if title is empty
+		// set default asset title
 		function generate_default_episode_asset_title() {
 			$('select[name*=file_type_id]', container).on('change', function() {
 				var $container = $(this).closest('table');
 				var $title = $container.find('[name*="title"]');
-				if ($title.val().length === 0) {
-					var extension = $("option:selected", this).data('extension');
-					$title.val(extension);
-				}
+				// if ($title.val().length === 0) {
+					$title.val($("option:selected", this).data('name'));
+				// }
 			});
 		}
 

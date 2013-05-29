@@ -270,6 +270,7 @@ class EpisodeAsset {
 		foreach ( $raw_formats as $format ) {
 			$formats[ $format->id ] = array(
 				'title'     => $format->title(),
+				'name'      => $format->name,
 				'extension' => $format->extension,
 				'type'      => $format->type
 			);
@@ -278,7 +279,7 @@ class EpisodeAsset {
 		$format_optionlist = array_map( function ( $f ) {
 			return array(
 				'value'      => $f['title'],
-				'attributes' => 'data-type="' . $f['type'] . '" data-extension="' . $f['extension'] . '"'
+				'attributes' => 'data-type="' . $f['type'] . '" data-extension="' . $f['extension'] . '" data-name="' . $f['name'] . '"'
 			);
 		}, $formats );
 

@@ -84,6 +84,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: correctly fall back to podcast image when episode image is activated but missing
 * Enhancement: various UI fixes (thanks @MaZderMind)
 * Enhancement: improve feed deletion dialogue
+* Enhancement: default title for episode assets is file format title
 * Bugfix: solve permalink issue after migrations
 * Bugfix: migrate comment hierarchy correctly
 
