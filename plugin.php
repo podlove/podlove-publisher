@@ -330,7 +330,7 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 	if ( is_home() && $wp_query->is_main_query() && ! isset( $wp_query->query_vars["post_type"] ) ) {
 		$wp_query->set(
 			'post_type',
-			array_merge( (array) $wp_query->get( 'post_type' ), array( 'podcast' ) )
+			array_merge( array( 'post', 'podcast' ), (array) $wp_query->get( 'post_type' ) )
 		);
 	}
 
