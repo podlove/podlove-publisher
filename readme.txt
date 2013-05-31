@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.4-alpha =
+* Bugfix: "Display episodes on front page together with blog posts" works again
+
 = 1.6.3-alpha =
 * Bugfix: remove player from feed
 * Bugfix: fix false negatives in error log; reenable logging-mails
