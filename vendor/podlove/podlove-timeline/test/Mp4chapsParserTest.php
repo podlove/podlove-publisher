@@ -82,4 +82,11 @@ class Mp4chapsParserTest extends PHPUnit_Framework_TestCase {
         $this->assertNull( $result );
     }
 
+    public function testChapterWithZeroTime() {
+        $result = Mp4chaps::parse("00:00:00.000 Intro
+00:00:19.000 Wochenrückblick");
+
+        $this->assertEquals( 2, count( $result->toArray() ) );
+    }
+
 }
