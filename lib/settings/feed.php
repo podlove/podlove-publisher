@@ -105,7 +105,7 @@ class Feed {
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo sprintf( __( 'You selected to delete the feed "%s". Please confirm this action.', 'podlove' ), $feed->title ) ?>
+						<?php echo sprintf( __( 'You selected to delete the feed "%s". Please confirm this action.', 'podlove' ), $feed->name ) ?>
 					</strong>
 				</p>
 				<p>
