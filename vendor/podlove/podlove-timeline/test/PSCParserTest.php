@@ -27,4 +27,8 @@ class PSCParserTest extends PHPUnit_Framework_TestCase {
 	    $this->assertEquals( $chapters, Parser\PSC::parse( $chapters_string ) );
 	}
 
+	public function testInvalidXML() {
+		$this->assertEquals( NULL, Parser\PSC::parse( "<heydo>invalid xml" ) );
+	}
+
 }

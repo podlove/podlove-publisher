@@ -84,6 +84,9 @@ class ChaptersManager {
 		if ( ! $this->chapters_raw )
 			$this->chapters_raw = $this->get_raw_chapters_string();
 
+		if ( ! $this->chapters_raw )
+			return NULL;
+
 		$asset_assignment = Model\AssetAssignment::get_instance();
 		$chapters_asset   = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters );
 
@@ -96,7 +99,7 @@ class ChaptersManager {
 		switch ( $mime_type ) {
 			case 'application/xml':
 				$chapters = \Podlove\Chapters\Parser\PSC::parse( $this->chapters_raw );
-			break;
+				break;
 			case 'application/json':
 				$chapters = \Podlove\Chapters\Parser\JSON::parse( $this->chapters_raw );
 				break;
