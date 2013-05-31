@@ -76,13 +76,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.6.4-alpha =
+= 1.6.3-alpha =
 * Bugfix: "Display episodes on front page together with blog posts" works again
 * Bugfix: chapters at 0 seconds are not ignored any more
 * Bugfix: correctly show feed title in deletion confirmation
 * Bugfix: handle missing/invalid PSC file with appropriate grace
-
-= 1.6.3-alpha =
 * Bugfix: remove player from feed
 * Bugfix: fix false negatives in error log; reenable logging-mails
 * Bugfix: fix timezone in logs
