@@ -37,7 +37,7 @@ class Parser {
 	 * 
 	 * @param  string $time_string
 	 * @param  string $output      'ms' for milliseconds, 's' for seconds. default: 'ms'
-	 * @return int
+	 * @return int or false if not parsable
 	 */
 	public static function parse( $time_string, $output = 'ms' ) {
 
@@ -59,6 +59,8 @@ class Parser {
 			if ( $matches[2] >= 60 || $matches[3] >= 60 ) return NULL;
 			$ms = ( ( $matches[1] * 60 + $matches[2] ) * 60 + $matches[3]) * 1000;
 			if ( isset( $matches[4] ) ) $ms += self::parse_ms_string($matches[4]);
+		} else {
+			return false;
 		}
 
 		return $output == 'ms' ? $ms : floor( $ms / 1000 );

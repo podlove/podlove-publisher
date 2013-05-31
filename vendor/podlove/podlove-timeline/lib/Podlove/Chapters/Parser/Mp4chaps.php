@@ -28,7 +28,7 @@ class Mp4chaps {
 			$title       = $matches[2];
 		    $timestamp_milliseconds = NormalPlayTime\Parser::parse( $time_string );
 
-		    if ( ! $timestamp_milliseconds ) continue;
+		    if ( $timestamp_milliseconds === false ) continue;
 
 			$link = '';
 			$title = preg_replace_callback( '/\s?<[^>]+>\s?/' , function ( $matches ) use ( &$link ) {

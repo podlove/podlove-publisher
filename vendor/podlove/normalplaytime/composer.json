@@ -1,7 +1,7 @@
 {
     "name": "podlove/normalplaytime",
     "description": "PHP parser for Normal Play Time (RFC 2326)",
-    "keywords": ["parser","rfc","npt","time"],
+    "keywords": ["podlove", "parser","rfc","npt","time"],
     "homepage": "http://github.com/podlove/normalplaytime",
     "license": "MIT",
     "require": {
