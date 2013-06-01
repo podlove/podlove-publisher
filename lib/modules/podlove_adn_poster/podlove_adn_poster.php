@@ -13,12 +13,8 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	//add_action( 'wp', array( $this, 'bla' ) );
     	
     	if($this->get_module_option('adn_poster_auth') !== "") {
-			add_action('new_to_publish', array( $this, 'post_to_adn' ));
-			add_action('draft_to_publish', array( $this, 'post_to_adn' ));
-			add_action('auto-draft_to_publish', array( $this, 'post_to_adn' ));
-			add_action('pending_to_publish', array( $this, 'post_to_adn' ));
-			add_action('private_to_publish', array( $this, 'post_to_adn' ));
-			add_action('future_to_publish', array( $this, 'post_to_adn' ));
+			add_action('publish_podcast', array( $this, 'post_to_adn' ));
+
 		}
         
         // Register Key
@@ -55,7 +51,11 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     }
     
 	public function bla() {
-		//$this->form_annotations("4");
+		global $wpdb;
+		$feeds = $wpdb->get_results( "SELECT * FROM `".$wpdb->prefix."podlove_feed`" );
+		foreach($feeds as $key => $feed) {
+			//get_subscribe_url();
+		}
 	}    
     
     public function form_annotations($get_id) {
@@ -69,21 +69,21 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	$episode_assets = \Podlove\Model\EpisodeAsset::all(); //find_one_by_id($episode->id)
     	
     	// Genutze Filetypes abfragen
-    	foreach($episode_assets as $key => $value) {
-    		$filetypes[] = $value->file_type_id;
+    	foreach($episode_assets as $episode_asset => $episode_asset_value) {
+    		$filetypes[] = $episode_asset_value->file_type_id;
     	}
     	
     	// Array, welcher vorhandene Dateien sammelt
     	$episode_files = array();
     	
     	foreach($filetypes as $type) {
-    		foreach($filetypes_db as $key => $value) {
-    			if($value->id !== $type) {
-    				if(file_exists($_SERVER["DOCUMENT_ROOT"]."/podlove/wp-content/audio/".$episode->slug.".".$value->extension)) {
-    					if(!in_array($_SERVER["DOCUMENT_ROOT"]."/podlove/wp-content/audio/".$episode->slug.".".$value->extension, $episode_files)) {
-    						$episode_files[] = array(	"file-title" => $value->name, 
-    													"file-url" => $podcast->media_file_base_uri.$episode->slug.".".$value->extension,
-    													"file-mime-type" => $value->mime_type);
+    		foreach($filetypes_db as $filetype => $filetype_value) {
+    			if($filetype_value->id !== $type) {
+    				if(file_exists($_SERVER["DOCUMENT_ROOT"]."/podlove/wp-content/audio/".$episode->slug.".".$filetype_value->extension)) {
+    					if(!in_array($_SERVER["DOCUMENT_ROOT"]."/podlove/wp-content/audio/".$episode->slug.".".$filetype_value->extension, $episode_files)) {
+    						$episode_files[] = array(	"file-title" => $filetype_value->name, 
+    													"file-url" => $podcast->media_file_base_uri.$episode->slug.".".$filetype_value->extension,
+    													"file-mime-type" => $filetype_value->mime_type);
     						
     					}	
     				}
@@ -103,16 +103,16 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	
     	$feed_urls = array();
     	
-    	foreach ($feeds as $key => $value) {
-    		$asset = \Podlove\Model\EpisodeAsset::find_one_by_id($value->episode_asset_id);
-    		foreach($filetypes_db as $keye => $valuee) {
-    			if($valuee->id == $asset->file_type_id) {
-    				$feed_mime_type = $valuee->mime_type;
+    	foreach ($feeds as $feed => $feed_value) {
+    		$asset = \Podlove\Model\EpisodeAsset::find_one_by_id($feed_value->episode_asset_id);
+    		foreach($filetypes_db as $filetype => $filetype_value) {
+    			if($filetype_value->id == $asset->file_type_id) {
+    				$feed_mime_type = $filetype_value->mime_type;
     			}
     		}
     		$feeds_urls[] = array(
     								"feed-title" => $value->name,
-    								"feed-url" => get_bloginfo("wpurl")."/".$value->slug."/",
+    								"feed-url" => get_bloginfo("wpurl")."/".$feed_value->slug."/",
     								"file-mime-type" => $feed_mime_type);    			
     									
     		unset($feed_mime_type);
