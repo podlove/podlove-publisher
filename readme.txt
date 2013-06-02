@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.4-alpha =
+* Bugfix: deactivate preload in web player
+
 = 1.6.3-alpha =
 * Bugfix: "Display episodes on front page together with blog posts" works again
 * Bugfix: chapters at 0 seconds are not ignored any more
