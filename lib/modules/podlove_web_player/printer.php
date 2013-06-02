@@ -44,6 +44,7 @@ class Printer {
 		$xml = new \SimpleXMLElement( '<' . $this->get_media_tag() . '/>' );
 		$xml->addAttribute( 'id', $this->get_html_id() );
 		$xml->addAttribute( 'controls', 'controls' );
+		$xml->addAttribute( 'preload', 'none' );
 
 		$width  = strtolower( trim( $this->get_webplayer_setting( $this->get_media_tag(), 'width' ) ) );
 		$height = strtolower( trim( $this->get_webplayer_setting( $this->get_media_tag(), 'height' ) ) );
