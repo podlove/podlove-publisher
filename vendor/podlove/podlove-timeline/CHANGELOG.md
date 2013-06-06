@@ -1,3 +1,7 @@
+### 1.1.5 (2013-06-07)
+
+* PSC parser more robust against invalid xml
+
 ### 1.1.4 (2013-06-06)
 
 * fix PSC parser bug where title would not be a string

@@ -8,10 +8,18 @@ class PSC {
 
 	public static function parse( $chapters_string ) {
 		
-		$chapters_string = trim( $chapters_string );
+		$chapters_string = trim( (string) $chapters_string );
+
+		if ( ! $chapters_string )
+			return NULL;
+
 		$chapters = new Chapters();
 
 		$xml = self::get_simplexml( $chapters_string );
+
+		if ( ! $xml )
+			return NULL;
+
 		$xml->registerXPathNamespace( 'psc', 'http://podlove.org/simple-chapters' );
 		$chapters_xpath = $xml->xpath("//psc:chapter");
 
@@ -38,15 +46,17 @@ class PSC {
 
 	private static function get_simplexml( $string ) {
 
-		libxml_use_internal_errors(true);
-		$dom = new \DOMDocument("1.0", "UTF-8");
+		libxml_use_internal_errors( true );
+		$dom = new \DOMDocument( "1.0", "UTF-8" );
 		$dom->strictErrorChecking = false;
 		$dom->validateOnParse = false;
-		$dom->recover = true;
-		$dom->loadXML($string);
-		$xml = simplexml_import_dom($dom);
+		
+		if ( ! $dom->loadXML( $string ) )
+			return false;
+
+		$xml = simplexml_import_dom( $dom );
 		libxml_clear_errors();
-		libxml_use_internal_errors(false);
+		libxml_use_internal_errors( false );
 
 		return $xml;
 	}

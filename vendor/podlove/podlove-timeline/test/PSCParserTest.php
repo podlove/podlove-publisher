@@ -44,6 +44,9 @@ class PSCParserTest extends PHPUnit_Framework_TestCase {
 
 	public function testInvalidXML() {
 		$this->assertEquals( NULL, Parser\PSC::parse( "<heydo>invalid xml" ) );
+		$this->assertEquals( NULL, Parser\PSC::parse( "more invalid stuff" ) );
+		$this->assertEquals( NULL, Parser\PSC::parse( NULL ) );
+		$this->assertEquals( NULL, Parser\PSC::parse( array( 1,2,3 ) ) );
 	}
 
 }
