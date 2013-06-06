@@ -78,6 +78,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.6.5 =
 * Bugfix: use manual chapter entries if available
+* Bugfix: PSC assets work properly
 
 = 1.6.4-alpha =
 * Bugfix: deactivate preload in web player
