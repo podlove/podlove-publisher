@@ -1,3 +1,7 @@
+### 1.1.4 (2013-06-06)
+
+* fix PSC parser bug where title would not be a string
+
 ### 1.1.1 - 1.1.3 (2013-05-31)
 
 * allow chapters at 0 seconds

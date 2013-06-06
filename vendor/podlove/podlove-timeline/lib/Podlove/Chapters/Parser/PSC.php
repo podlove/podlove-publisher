@@ -19,12 +19,16 @@ class PSC {
 			return NULL;
 
 		foreach ( $chapters_xpath as $chapter ) {
+
+			$simplexml_attributes = (array) $chapter->attributes();
+			$attributes = $simplexml_attributes['@attributes'];
+
 			$chapters->addChapter(
 				new Chapter(
-					NormalPlayTime\Parser::parse( $chapter->attributes()->start ),
-					$chapter->attributes()->title,
-					$chapter->attributes()->href,
-					$chapter->attributes()->image
+					NormalPlayTime\Parser::parse( $attributes['start'] ),
+					isset( $attributes['title'] ) ? $attributes['title'] : '',
+					isset( $attributes['href'] )  ? $attributes['href']  : '',
+					isset( $attributes['image'] ) ? $attributes['image'] : ''
 				)
 			);
 		}

@@ -37,7 +37,7 @@ use \Podlove\Chapters\Printer;
 $chapters = new Chapters();
 $chapters->addChapter( new Chapter( 1234, 'Intro', 'http://example.com' ) );
 $chapters->addChapter( new Chapter( 1235, 'Second Chapter' ) );
-$chapters->addPrinter( new Printer\PSC() );
+$chapters->setPrinter( new Printer\PSC() );
 echo (string) $chapters;
 /* =>
 <psc:chapters xmlns:psc="http://podlove.org/simple-chapters" version="1.2">

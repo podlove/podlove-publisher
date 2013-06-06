@@ -3,6 +3,7 @@ namespace Podlove;
 
 use Podlove\Model;
 use Podlove\Chapters\Printer;
+use Podlove\Chapters\Parser;
 
 /**
  * Convenience wrapper for episode chapters.
@@ -89,7 +90,7 @@ class ChaptersManager {
 		$asset_assignment = Model\AssetAssignment::get_instance();
 
 		if ( $asset_assignment->chapters == 'manual' )
-			return \Podlove\Chapters\Parser\Mp4chaps::parse( $this->chapters_raw );
+			return Parser\Mp4chaps::parse( $this->chapters_raw );
 
 		if ( ! $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) )
 			return NULL;
@@ -99,13 +100,24 @@ class ChaptersManager {
 
 		switch ( $mime_type ) {
 			case 'application/xml':
-				$chapters = \Podlove\Chapters\Parser\PSC::parse( $this->chapters_raw );
+				$chapters = Parser\PSC::parse( $this->chapters_raw );
 				break;
 			case 'application/json':
-				$chapters = \Podlove\Chapters\Parser\JSON::parse( $this->chapters_raw );
+				$chapters = Parser\JSON::parse( $this->chapters_raw );
 				break;
 			case 'text/plain':
-				$chapters = \Podlove\Chapters\Parser\Mp4chaps::parse( $this->chapters_raw );
+				switch ( $this->chapters_raw[0] ) {
+					case '[':
+					case '{':
+						$chapters = Parser\JSON::parse( $this->chapters_raw );
+						break;
+					case '<':
+						$chapters = Parser\PSC::parse( $this->chapters_raw );
+						break;
+					default:
+						$chapters = Parser\Mp4chaps::parse( $this->chapters_raw );
+						break;
+				}
 				break;
 		}
 
