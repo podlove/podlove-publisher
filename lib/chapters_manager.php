@@ -52,7 +52,6 @@ class ChaptersManager {
 	}
 
 	private function get_raw_chapters_string() {
-
 		$asset_assignment = Model\AssetAssignment::get_instance();
 		$cache_key = 'podlove_chapters_string_' . $this->episode->id;
 		if ( ( $chapters_string = get_transient( $cache_key ) ) !== FALSE ) {
@@ -88,9 +87,11 @@ class ChaptersManager {
 			return NULL;
 
 		$asset_assignment = Model\AssetAssignment::get_instance();
-		$chapters_asset   = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters );
 
-		if ( ! $chapters_asset )
+		if ( $asset_assignment->chapters == 'manual' )
+			return \Podlove\Chapters\Parser\Mp4chaps::parse( $this->chapters_raw );
+
+		if ( ! $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) )
 			return NULL;
 
 		$mime_type = $chapters_asset->file_type()->mime_type;
