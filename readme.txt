@@ -76,7 +76,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.6.4 =
+= 1.6.4-alpha =
 * Bugfix: use manual chapter entries if available
 * Bugfix: PSC assets work properly
 * Bugfix: URL magic doesn't interfere with other post types
