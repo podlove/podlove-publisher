@@ -19,7 +19,7 @@ class Chapters {
 	 * @param  string $style 'inline' or 'link'. Default: link
 	 */
 	public function render( $style = 'link' ) {
-		call_user_method( "render_$style", $this );
+		call_user_func( "render_$style", $this );
 	}
 
 	public function render_inline() {
