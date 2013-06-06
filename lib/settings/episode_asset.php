@@ -330,16 +330,27 @@ class EpisodeAsset {
 				'html' => array( 'class' => 'regular-text required' )
 			) );
 
+			$f->checkbox( 'downloadable', array(
+				'label'       => __( 'Downloadable', 'podlove' ),
+				'description' => sprintf( 'Allow downloads for users.', 'podlove' ),
+				'default' => true
+			) );
+			?>
+			<tr>
+				<th colspan="2">
+					<h3><?php echo __( 'Asset File Name', 'podlove' ); ?></h3>
+				</th>
+			</tr>
+			<?php 
 			$f->string( 'suffix', array(
-				'label'       => __( 'Suffix', 'podlove' ),
+				'label'       => __( 'File Name Suffix', 'podlove' ),
 				'description' => __( 'Optional. Is appended to file name after episode slug.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
 			) );
-
 			?>
 			<tr class="row_podlove_asset_url_preview">
-				<th scope="row" valign="top">
-					<label for="podlove_asset_url_preview"><?php echo __( 'URL Preview', 'podlove' ); ?></label>
+				<th>
+					<?php echo __( 'URL Preview', 'podlove' ); ?>
 				</th>
 				<td>
 					<div id="url_preview" style="font-size: 1.5em"></div>
@@ -347,12 +358,6 @@ class EpisodeAsset {
 				</td>
 			</tr>
 			<?php
-
-			$f->checkbox( 'downloadable', array(
-				'label'       => __( 'Downloadable', 'podlove' ),
-				'description' => sprintf( 'Allow downloads for users.', 'podlove' ),
-				'default' => true
-			) );
 
 		} );
 
