@@ -626,10 +626,16 @@ function no_verbose_page_rules() {
  * Replace placeholders in permalinks with the correct values
  */
 function generate_custom_post_link( $post_link, $id, $leavename = false, $sample = false ) {
+
 	// Get post
 	$post = &get_post($id);
+
+	// only change Podlove URLs
+	if ( $post->post_type != 'podcast' )
+		return $post_link;
+
 	$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
-	
+
 	// Sample
 	if ( $sample )
 		$post->post_name = "%pagename%";
