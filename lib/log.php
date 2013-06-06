@@ -55,7 +55,7 @@ class Log {
 	public function __call( $name, $arguments ) {
 
 		if ( method_exists( $this->log, $name ) )
-			call_user_func_array( $name, $this->log, $arguments );
+			call_user_func_array( array( $this->log, $name ), $arguments );
 	}
 
 	public function __clone() {
