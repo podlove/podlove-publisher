@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 39 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 40 );
 
 add_action( 'init', function () {
 	
@@ -297,6 +297,12 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\Template::table_name()
 			);
 			$wpdb->query( $sql );
+		break;
+		case 40:
+			$wpdb->query( sprintf(
+				'UPDATE `%s` SET position = id WHERE position IS NULL',
+				Model\EpisodeAsset::table_name()
+			) );
 		break;
 	}
 
