@@ -164,7 +164,7 @@ class FileType {
 	private function edit_template() {
 		$format = \Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] );
 		?>
-		<h3>Edit Format: <?php echo $format->name ?></h3>
+		<h3><?php echo __( 'Edit File Type', 'podlove' ) ?>: <?php echo $format->name ?></h3>
 		
 		<?php $this->form_template( $format, 'save' ); ?>
 		<?php

@@ -91,7 +91,7 @@ var PODLOVE = PODLOVE || {};
 				var $container = $(this).closest('table');
 
 				var media_file_base_uri = $('#podlove_show_media_file_base_uri').val();
-				var episode_slug        = 'example-episode';
+				var episode_slug        = '<span style="font-style:italic; font-weight:100">episode-slug</span>';
 				var suffix              = $('input[name*="suffix"]').val();
 
 				var selected_file_type  = $container.find('[name*="file_type_id"] option:selected').text();
@@ -102,8 +102,8 @@ var PODLOVE = PODLOVE || {};
 					return;
 				}
 
-				template = template.replace( '%media_file_base_url%', media_file_base_uri );
-				template = template.replace( '%episode_slug%', episode_slug );
+				template = template.replace( '%media_file_base_url%', '<span style="color:grey">' + media_file_base_uri );
+				template = template.replace( '%episode_slug%', episode_slug + "</span>" );
 				template = template.replace( '%suffix%', suffix );
 				template = template.replace( '%format_extension%', format_extension );
 
