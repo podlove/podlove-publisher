@@ -1,6 +1,7 @@
-### 1.1.5 (2013-06-07)
+### 1.1.5 - 1.1.6 (2013-06-07)
 
 * PSC parser more robust against invalid xml
+* solve PSC parser regression bug
 
 ### 1.1.4 (2013-06-06)
 
