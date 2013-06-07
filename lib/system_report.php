@@ -15,6 +15,20 @@ class SystemReport {
 			'site'        => array( 'title' => 'Website',           'callback' => function() { return get_site_url(); } ),
 			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() { return phpversion(); } ),
 			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
+			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
+			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
+
+				if ( ! defined( 'PODLOVEWEBPLAYER_DIR' ) )
+					return 'no web player found';
+
+				$pwp_file = PODLOVEWEBPLAYER_DIR . 'podlove-web-player.php';
+				if ( ! is_readable( $pwp_file ) )
+					return 'not readable';
+
+				$plugin_data = \get_plugin_data( $pwp_file );
+
+				return $plugin_data['Version'];
+			} ),
 			'curl'        => array( 'title' => 'curl Version',      'callback' => function() use ( &$errors ) {
 				$module_loaded = in_array( 'curl', get_loaded_extensions() );
 				$function_disabled = stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false;
