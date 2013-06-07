@@ -8,24 +8,21 @@ class PSC {
 
 	public static function parse( $chapters_string ) {
 		
-		$chapters_string = trim( (string) $chapters_string );
-
-		if ( ! $chapters_string )
+		if ( ! is_string( $chapters_string ) )
 			return NULL;
 
-		$chapters = new Chapters();
+		if ( ! $chapters_string = trim( $chapters_string ) )
+			return NULL;
 
-		$xml = self::get_simplexml( $chapters_string );
-
-		if ( ! $xml )
+		if ( ! $xml = self::get_simplexml( $chapters_string ) )
 			return NULL;
 
 		$xml->registerXPathNamespace( 'psc', 'http://podlove.org/simple-chapters' );
-		$chapters_xpath = $xml->xpath("//psc:chapter");
 
-		if ( ! $chapters_xpath )
+		if ( ! $chapters_xpath = $xml->xpath("//psc:chapter") )
 			return NULL;
 
+		$chapters = new Chapters();
 		foreach ( $chapters_xpath as $chapter ) {
 
 			$simplexml_attributes = (array) $chapter->attributes();
