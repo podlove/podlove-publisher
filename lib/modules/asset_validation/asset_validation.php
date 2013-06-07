@@ -13,6 +13,8 @@ class Asset_Validation extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_deactivated_asset_validation', array( $this, 'was_deactivated' ) );
 		add_action( 'podlove_asset_validation', array( $this, 'do_valiations' ) );
 		add_action( 'podlove_module_before_settings_asset_validation', function () {
+			if ( $timezone = get_option( 'timezone_string' ) )
+				date_default_timezone_set( $timezone );
 			?>
 			<div>
 				<em>
