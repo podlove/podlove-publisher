@@ -1,0 +1,19 @@
+/* generic */
+.reorder-handle {
+	font-size: 20px;
+	cursor: move;
+	color: gray;
+	float: right;
+}
+
+.reorder-handle:hover {
+	color: rgb(51, 51, 51);
+}
+
+/* Settings: Assets */
+.episode_assets.wp-list-table .column-move {
+	width: 50px;
+}
+.episode_assets.wp-list-table .column-downloadable {
+	width: 100px;
+}

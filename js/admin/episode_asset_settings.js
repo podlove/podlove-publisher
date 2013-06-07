@@ -10,6 +10,7 @@ var PODLOVE = PODLOVE || {};
 
 		function make_asset_list_table_sortable() {
 			$("table.episode_assets tbody").sortable({
+				handle: '.reorder-handle',
 				helper: function(event, el) {
 					
 					helper = $("<div></div>");
