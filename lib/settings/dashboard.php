@@ -219,7 +219,7 @@ class Dashboard {
 			<?php endif; ?>
 
 			<?php
-			$episodes = Model\Episode::all();
+			$episodes = Model\Episode::all( 'ORDER BY slug DESC' );
 			$assets   = Model\EpisodeAsset::all();
 
 			$header = array( __( 'Episode', 'podlove' ) );
