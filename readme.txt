@@ -77,7 +77,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.6.5-alpha =
+* Feature: Feeds are sortable
+* Enhancement: Add "sortable handle" for asset and feed lists, so the sortability feature is more discoverable
 * Enhancement: Add "Podlove" entry to WordPress toolbar
+* Other small UI changes in various places
 
 = 1.6.4-alpha =
 * Bugfix: use manual chapter entries if available
