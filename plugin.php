@@ -755,3 +755,10 @@ add_action( 'admin_bar_menu', function ( $wp_admin_bar ) {
 	) );
 }, 50 );
 
+add_action( 'admin_print_styles', function () {
+	wp_register_style( 'podlove-admin', \Podlove\PLUGIN_URL . '/css/admin.css', array(), \Podlove\get_plugin_header( 'Version' ) );
+	wp_enqueue_style( 'podlove-admin' );
+
+	wp_register_style( 'podlove-admin-font', \Podlove\PLUGIN_URL . '/css/admin-font.css', array(), \Podlove\get_plugin_header( 'Version' ) );
+	wp_enqueue_style( 'podlove-admin-font' );
+} );

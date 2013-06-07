@@ -7,7 +7,8 @@ class EpisodeAsset extends Base {
 		global $wpdb;
 
 		if ( ! $this->position ) {
-			$this->position = $wpdb->get_var( sprintf( 'SELECT MAX(position)+1 FROM %s', self::table_name() ) );
+			$pos = $wpdb->get_var( sprintf( 'SELECT MAX(position)+1 FROM %s', self::table_name() ) );
+			$this->position = $pos ? $pos : 1;
 		}
 
 		parent::save();

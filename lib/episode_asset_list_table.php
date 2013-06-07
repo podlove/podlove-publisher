@@ -45,10 +45,20 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 		return ( $format ) ? $format->title() : "-";
 	}
 
+	public function column_downloadable( $episode_asset ) {
+		return $episode_asset->downloadable ? '✓' : '×';
+	}
+
+	public function column_move( $episode_asset ) {
+		return '<i class="reorder-handle podlove-icon-reorder"></i>';
+	}
+
 	public function get_columns(){
 		return array(
 			'title'     => __( 'Episode Asset', 'podlove' ),
 			'file_type' => __( 'File Type', 'podlove' ),
+			'downloadable' => __( 'Downloadable', 'podlove' ),
+			'move' => '',
 		);
 	}
 	
