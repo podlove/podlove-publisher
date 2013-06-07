@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.5-alpha =
+* Enhancement: Add "Podlove" entry to WordPress toolbar
+
 = 1.6.4-alpha =
 * Bugfix: use manual chapter entries if available
 * Bugfix: PSC assets work properly
