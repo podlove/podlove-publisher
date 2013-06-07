@@ -17,3 +17,10 @@
 .episode_assets.wp-list-table .column-downloadable {
 	width: 100px;
 }
+
+.feeds.wp-list-table .column-move {
+	width: 50px;
+}
+.feeds.wp-list-table .column-discoverable {
+	width: 100px;
+}

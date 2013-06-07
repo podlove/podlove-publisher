@@ -3,6 +3,20 @@ namespace Podlove\Model;
 
 class Feed extends Base {
 
+	public function save() {
+		global $wpdb;
+		
+		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		$this->slug = \Podlove\slugify( $this->slug );
+
+		if ( ! $this->position ) {
+			$pos = $wpdb->get_var( sprintf( 'SELECT MAX(position)+1 FROM %s', self::table_name() ) );
+			$this->position = $pos ? $pos : 1;
+		}
+		
+		parent::save();
+	}
+
 	/**
 	 * Build public url where the feed can be subscribed at.
 	 *
@@ -164,12 +178,6 @@ class Feed extends Base {
 		);
 	}
 
-	public function save() {
-		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
-		$this->slug = \Podlove\slugify( $this->slug );
-		parent::save();
-	}
-
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
@@ -178,6 +186,7 @@ Feed::property( 'itunes_feed_id', 'INT' );
 Feed::property( 'name', 'VARCHAR(255)' );
 Feed::property( 'title', 'VARCHAR(255)' );
 Feed::property( 'slug', 'VARCHAR(255)' );
+Feed::property( 'position', 'FLOAT' );
 Feed::property( 'redirect_url', 'VARCHAR(255)' );
 Feed::property( 'redirect_http_status', 'INT' );
 Feed::property( 'enable', 'INT' );
