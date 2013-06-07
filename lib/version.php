@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 40 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 41 );
 
 add_action( 'init', function () {
 	
@@ -302,6 +302,16 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( sprintf(
 				'UPDATE `%s` SET position = id WHERE position IS NULL',
 				Model\EpisodeAsset::table_name()
+			) );
+		break;
+		case 41:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `position` FLOAT AFTER `slug`',
+				Model\Feed::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'UPDATE `%s` SET position = id',
+				Model\Feed::table_name()
 			) );
 		break;
 	}

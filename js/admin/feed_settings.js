@@ -8,6 +8,51 @@ var PODLOVE = PODLOVE || {};
 		// private
 		var o = {};
 
+		function make_feed_list_table_sortable() {
+			$("table.feeds tbody").sortable({
+				handle: '.reorder-handle',
+				helper: function(event, el) {
+					
+					helper = $("<div></div>");
+					helper.append( el.find(".title").html() );
+					helper.css({
+						width: $("table.feeds").width(),
+						background: 'rgba(255,255,255,0.66)',
+						boxSizing: 'border-box',
+						padding: 5
+					});
+
+					return helper;
+				},
+				update: function( event, ui ) {
+					// console.log(ui);
+					var prev = parseFloat(ui.item.prev().find(".position").val()),
+					    next = parseFloat(ui.item.next().find(".position").val()),
+					    new_position = 0;
+
+					if ( ! prev ) {
+						new_position = next / 2;
+					} else if ( ! next ) {
+						new_position = prev + 1;
+					} else {
+						new_position = prev + (next - prev) / 2
+					}
+
+					// update UI
+					ui.item.find(".position").val(new_position);
+
+					// persist
+					var data = {
+						action: 'podlove-update-feed-position',
+						feed_id: ui.item.find(".feed_id").val(),
+						position: new_position
+					};
+
+					$.ajax({ url: ajaxurl, data: data, dataType: 'json'	});
+				}
+			});
+		}
+
 		function generate_live_preview() {
 			// handle preview updates
 			$('#podlove_feed_slug', container).on( 'keyup', o.update_preview );
@@ -56,6 +101,7 @@ var PODLOVE = PODLOVE || {};
 			manage_redirect_url_display();
 		});
 		manage_redirect_url_display();
+		make_feed_list_table_sortable();
 
 		return o;
 	};

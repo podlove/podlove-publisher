@@ -17,7 +17,8 @@ class Ajax {
 			'validate-url',
 			'update-file',
 			'create-file',
-			'update-asset-position'
+			'update-asset-position',
+			'update-feed-position'
 		);
 
 		foreach ( $actions as $action )
@@ -136,6 +137,17 @@ class Ajax {
 		$position = (float) $_REQUEST['position'];
 
 		Model\EpisodeAsset::find_by_id( $asset_id )
+			->update_attributes( array( 'position' => $position ) );
+
+		die();
+	}
+
+	public function update_feed_position() {
+
+		$feed_id = (int)   $_REQUEST['feed_id'];
+		$position = (float) $_REQUEST['position'];
+
+		Model\Feed::find_by_id( $feed_id )
 			->update_attributes( array( 'position' => $position ) );
 
 		die();
