@@ -610,6 +610,9 @@ function podcast_permalink_proxy($query_vars) {
 	if ( ! isset( $query_vars["post_type"] ) || $query_vars["post_type"] == "post" )
 		$query_vars["post_type"] = array( "podcast", "post" );
 
+	if ( ! isset( $query_vars["post_status"] ) )
+		$query_vars["post_status"] = "publish";
+
 	return $query_vars;
 }
 
