@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Feeds are sortable
 * Enhancement: Add "sortable handle" for asset and feed lists, so the sortability feature is more discoverable
 * Enhancement: Add "Podlove" entry to WordPress toolbar
+* Bugfix: Activate feature "Activate asset for all existing episodes" for pending episodes
 * Other small UI changes in various places
 
 = 1.6.4-alpha =
