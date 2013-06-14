@@ -22,13 +22,20 @@ class TableWrapper extends Wrapper {
 		<?php
 	}
 
-	public function subheader( $title ) {
+	public function subheader( $title, $description = '' ) {
 		?>
 		<tr>
 			<th scope="row" valign="top" colspan="2">
-				<h3><?php echo $title ?></h3>
+				<h3 style="margin-bottom: 0"><?php echo $title ?></h3>
 			</th>
 		</tr>
+		<?php if ( $description ): ?>
+			<tr>
+				<td colspan="2">
+					<?php echo $description ?>
+				</td>
+			</tr>
+		<?php endif; ?>
 		<?php
 	}
 

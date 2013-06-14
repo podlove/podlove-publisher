@@ -50,7 +50,7 @@ abstract class Wrapper {
 	}
 
 	public abstract function do_template( $object_key, $field_name, $field_id, $field_values, $block );
-	public abstract function subheader( $title );
+	public abstract function subheader( $title, $description = '' );
 }
 
 
