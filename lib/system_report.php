@@ -72,10 +72,10 @@ class SystemReport {
 			'disable_functions'   => array( 'callback' => function() { return ini_get( 'disable_functions' ); } ),
 			'permalinks' => array( 'callback' => function() use ( &$errors ) {
 
-				if ( \Podlove\get_setting( 'use_post_permastruct' ) == 'on' )
+				if ( \Podlove\get_setting( 'website', 'use_post_permastruct' ) == 'on' )
 					return 'ok';
 
-				if ( stristr( \Podlove\get_setting( 'custom_episode_slug' ), '%podcast%' ) === FALSE ) {
+				if ( stristr( \Podlove\get_setting( 'website', 'custom_episode_slug' ), '%podcast%' ) === FALSE ) {
 					$errors[] = 'The episode permastruct is missing the "%podcast%" segment!';
 					return '%podcast% placeholder missing!';
 				}
