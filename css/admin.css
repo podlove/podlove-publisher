@@ -10,6 +10,41 @@
 	color: rgb(51, 51, 51);
 }
 
+i.rotate {
+	display: inline-block;
+	-webkit-animation: Rotate 500ms infinite linear;
+	-moz-animation: Rotate 500ms infinite linear;
+	-ms-animation: Rotate 500ms infinite linear;
+	-o-animation: Rotate 500ms infinite linear;
+	animation: Rotate 500ms infinite linear;
+}
+@-o-keyframes Rotate {
+  from {-o-transform:rotate(0deg);}
+  to {-o-transform:rotate(360deg);}
+}
+@-moz-keyframes Rotate {
+ from {-moz-transform:rotate(0deg);}
+ to {-moz-transform:rotate(360deg);}
+}
+@-ms-keyframes Rotate {
+  from {-ms-transform:rotate(0deg);}
+  to {-ms-transform:rotate(360deg);}
+}
+@-webkit-keyframes Rotate {
+  from {-webkit-transform:rotate(0deg);}
+  to {-webkit-transform:rotate(360deg);}
+}
+@-keyframes Rotate {
+  from { transform:rotate(0deg);}
+  to { transform:rotate(360deg);}
+}
+
+.clickable { cursor: pointer; }
+
+.podlove-icon-ok     { color: green; }
+.podlove-icon-remove { color: red; }
+.podlove-icon-minus  { color: #999; }
+
 /* Settings: Assets */
 .episode_assets.wp-list-table .column-move {
 	width: 50px;

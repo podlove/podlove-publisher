@@ -164,8 +164,8 @@ EOT;
 					<tr data-post-id="<?php echo $post_id ?>" <?php echo ($done) ? 'class="done"' : '' ?>>
 						<td class="status">
 							<span class="waiting" <?php echo (!$done) ? '' : 'style="display:none"' ?>>not yet migrated</span>
-							<span class="migrating" style="display:none">migrating ...</span>
-							<span class="done" <?php echo ($done) ? '' : 'style="display:none"' ?>><span style="color: green">✓</span></span>
+							<span class="migrating" style="display:none"><i class="podlove-icon-spinner rotate"></i></span>
+							<span class="done" <?php echo ($done) ? '' : 'style="display:none"' ?>><i class="podlove-icon-ok"></i></span>
 						</td>
 						<td class="episode">
 							<?php if ( $done ): ?>

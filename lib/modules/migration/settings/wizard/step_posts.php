@@ -391,10 +391,10 @@ class StepPosts extends Step {
 																	</div>
 																	<div class="status pull-right">
 																		<div class="success" <?php echo ($status == 'success') ? '' : 'style="display: none"' ?>>
-																			<span style="color: green">✓</span>
+																			<i class="podlove-icon-ok"></i>
 																		</div>
 																		<div class="failure" <?php echo ($status == 'failure') ? '' : 'style="display: none"' ?>>
-																			<span style="color: red">!!!</span>
+																			<i class="podlove-icon-remove"></i>
 																		</div>
 																	</div>
 																</td>
