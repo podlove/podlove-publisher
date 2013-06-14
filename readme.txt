@@ -78,6 +78,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.6.5-alpha =
 * Feature: Feeds are sortable
+* Feature: You can revalidate single media files in the dashboard
+* Enhancement: Use pretty status icons
 * Enhancement: Add "sortable handle" for asset and feed lists, so the sortability feature is more discoverable
 * Enhancement: Add "Podlove" entry to WordPress toolbar
 * Bugfix: Activate feature "Activate asset for all existing episodes" for pending episodes

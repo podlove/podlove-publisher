@@ -228,9 +228,9 @@ class Dashboard {
 			}
 			$header[] = __( 'Status', 'podlove' );
 
-			define( 'ASSET_STATUS_OK', '<span style="color: green">✓</span>' );
-			define( 'ASSET_STATUS_INACTIVE', '—' );
-			define( 'ASSET_STATUS_ERROR', '<span style="color: red">!!!</span>' );
+			define( 'ASSET_STATUS_OK', '<i class="clickable podlove-icon-ok"></i>' );
+			define( 'ASSET_STATUS_INACTIVE', '<i class="podlove-icon-minus"></i>' );
+			define( 'ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>' );
 			?>
 
 			<h4><?php echo $podcast->title ?></h4>

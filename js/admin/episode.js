@@ -103,10 +103,10 @@ var PODLOVE = PODLOVE || {};
 
 	 				if (readable_size === "???") {
 	 					size_html = '<span style="color:red">File not found!</span>';
-	 					$row.find(".status").html('<span style="color: red">!!!</span>');
+	 					$row.find(".status").html('<i class="podlove-icon-remove"></i>');
 	 				} else {
 	 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
-	 					$row.find(".status").html('<span style="color: green">✓</span>');
+	 					$row.find(".status").html('<i class="podlove-icon-ok"></i>');
 	 				}
 	 				$row.find(".size").html(size_html);
 	 				$row.find(".url").html('<a href="' + url + '" target="_blank">' + filename + '</a>');
@@ -177,7 +177,7 @@ var PODLOVE = PODLOVE || {};
  				slug: $("#_podlove_meta_slug").val()
  			};
 
- 			container.find('.update').html("updating ...");
+ 			container.find('.update').html('<i class="podlove-icon-spinner rotate"></i>');
  			container.find(".size, .url, .status").html('');
 
  			var request = $.ajax({
