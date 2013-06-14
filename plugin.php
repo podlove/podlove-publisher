@@ -707,14 +707,14 @@ if ( get_option( 'permalink_structure' ) != '' ) {
 
 // devalidate caches when media file has changed
 add_action( 'podlove_media_file_content_has_changed', function ( $media_file_id ) {
-	if ( $media_file = Model\MediaFile::find_by_id( $media_file_id ) ) {
-		$episode = $media_file->episode();
-		delete_transient( 'podlove_chapters_string_' . $episode->id );
-	}
+	if ( $media_file = Model\MediaFile::find_by_id( $media_file_id ) )
+		if ( $episode = $media_file->episode() )
+			$episode->delete_caches();
 } );
 
 add_action( 'podlove_episode_content_has_changed', function( $episode_id ) {
-	delete_transient( 'podlove_chapters_string_' . $episode_id );
+	if ( $episode = Model\Episode::find_by_id( $episode_id ) )
+		$episode->delete_caches();
 } );
 
 // enable chapters pages
