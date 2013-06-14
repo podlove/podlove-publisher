@@ -1,7 +1,7 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert
 Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
-Tags: podcast, publishing
+Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
 Tested up to: 3.5
 Stable tag: trunk
