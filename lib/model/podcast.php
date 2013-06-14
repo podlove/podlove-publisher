@@ -164,7 +164,7 @@ class Podcast {
 	}
 
 	public function get_url_template() {
-		return \Podlove\get_setting( 'url_template' );
+		return \Podlove\get_setting( 'website', 'url_template' );
 	}
 }
 

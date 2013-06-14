@@ -16,23 +16,29 @@ function get_blog_prefix() {
 	return $blog_prefix;
 }
 
-function get_setting( $name ) {
+function get_setting( $namespace, $name ) {
 	
 	$defaults = array(
-		'merge_episodes'         => 'on',
-		'hide_wp_feed_discovery' => 'off',
-		'custom_episode_slug'    => '/podcast/%podcast%/',
-		'enable_episode_record_date'      => 0,
-		'enable_episode_publication_date' => 0,
-		'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
-		'podlove_setting_redirect' => array(),
-		'use_post_permastruct' => 'on',
-		'episode_archive' => 'on',
-		'episode_archive_slug' => '/podcast/',
+		'website' => array(
+			'merge_episodes'         => 'on',
+			'hide_wp_feed_discovery' => 'off',
+			'use_post_permastruct' => 'on',
+			'custom_episode_slug'    => '/podcast/%podcast%/',
+			'episode_archive' => 'on',
+			'episode_archive_slug' => '/podcast/',
+			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%'
+		),
+		'metadata' => array(
+			'enable_episode_record_date'      => 0,
+			'enable_episode_publication_date' => 0
+		),
+		'redirects' => array(
+			'podlove_setting_redirect' => array(),
+		)
 	);
 
-	$options = get_option( 'podlove' );
-	$options = wp_parse_args( $options, $defaults );
+	$options = get_option( 'podlove_' . $namespace );
+	$options = wp_parse_args( $options, $defaults[ $namespace ] );
 
 	return $options[ $name ];
 }

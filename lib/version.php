@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 42 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 43 );
 
 add_action( 'init', function () {
 	
@@ -315,9 +315,33 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 42:
-		$wpdb->query(
-			'DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove_chapters_string_%"'
-		);
+			$wpdb->query(
+				'DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove_chapters_string_%"'
+			);
+		break;
+		case 43:
+			$podlove_options = get_option( 'podlove', array() );
+
+			$podlove_website = array(
+				'merge_episodes'         => isset( $podlove_options['merge_episodes'] ) ? $podlove_options['merge_episodes'] : false,
+				'hide_wp_feed_discovery' => isset( $podlove_options['hide_wp_feed_discovery'] ) ? $podlove_options['hide_wp_feed_discovery'] : false,
+				'use_post_permastruct'   => isset( $podlove_options['use_post_permastruct'] ) ? $podlove_options['use_post_permastruct'] : false,
+				'custom_episode_slug'    => isset( $podlove_options['custom_episode_slug'] ) ? $podlove_options['custom_episode_slug'] : false,
+				'episode_archive'        => isset( $podlove_options['episode_archive'] ) ? $podlove_options['episode_archive'] : false,
+				'episode_archive_slug'   => isset( $podlove_options['episode_archive_slug'] ) ? $podlove_options['episode_archive_slug'] : false,
+				'url_template'           => isset( $podlove_options['url_template'] ) ? $podlove_options['url_template'] : false
+			);
+			$podlove_metadata = array(
+				'enable_episode_record_date'      => isset( $podlove_options['enable_episode_record_date'] ) ? $podlove_options['enable_episode_record_date'] : false,
+				'enable_episode_publication_date' => isset( $podlove_options['enable_episode_publication_date'] ) ? $podlove_options['enable_episode_publication_date'] : false
+			);
+			$podlove_redirects = array(
+				'podlove_setting_redirect' => isset( $podlove_options['podlove_setting_redirect'] ) ? $podlove_options['podlove_setting_redirect'] : array(),
+			);
+
+			add_option( 'podlove_website', $podlove_website );
+			add_option( 'podlove_metadata', $podlove_metadata );
+			add_option( 'podlove_redirects', $podlove_redirects );
 		break;
 	}
 
