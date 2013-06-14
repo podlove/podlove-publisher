@@ -138,6 +138,22 @@ class Episode extends Base {
 		return $duration->get( $format );
 	}
 
+	public function delete_caches() {
+
+		// delete caches for current episode
+		delete_transient( 'podlove_chapters_string_' . $this->id );
+
+		// delete caches for revisions of this episode
+		if ( $revisions = wp_get_post_revisions( $this->post_id ) ) {
+			foreach ( $revisions as $revision ) {
+				if ( $revision_episode = Episode::find_one_by_post_id( $revision->ID ) ) {
+					delete_transient( 'podlove_chapters_string_' . $revision_episode->id );
+				}
+			}
+		}
+
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

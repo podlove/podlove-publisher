@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 41 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 42 );
 
 add_action( 'init', function () {
 	
@@ -313,6 +313,11 @@ function run_migrations_for_version( $version ) {
 				'UPDATE `%s` SET position = id',
 				Model\Feed::table_name()
 			) );
+		break;
+		case 42:
+		$wpdb->query(
+			'DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove_chapters_string_%"'
+		);
 		break;
 	}
 
