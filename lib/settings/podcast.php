@@ -51,26 +51,40 @@ class Podcast {
 					$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 					$podcast = $form->object;
 
+					$wrapper->subheader(
+						__( 'Description', 'podlove' ),
+						__( 'These are the three most important fields describing your podcast.
+							<strong>Title</strong> is the title of the podcast that is the primary field to be used to represent the podcast in directories, lists and other uses.
+							The <strong>subtitle</strong> is an extension to the title. The subtitle is meant to clarify what the podcast is about. While a title can be anything, a subtitle should be more descriptive in what the content actually wants to convey and what the most important information is, you want everybody want to know about the offering.
+							A <strong>summary</strong> is a much more precise and elaborate description of the podcast\'s content. While title and subtitle are rather concise, a summary is meant to consist of one or more sentences that form a paragraph or more.', 'podlove' )
+					);
+
 					$wrapper->string( 'title', array(
 						'label'       => __( 'Title', 'podlove' ),
-						'description' => __( '', 'podlove' ),
 						'html'        => array( 'class' => 'regular-text required' )
 					) );
 
 					$wrapper->string( 'subtitle', array(
 						'label'       => __( 'Subtitle', 'podlove' ),
-						'description' => __( 'The subtitle is used by iTunes.', 'podlove' ),
+						'description' => __( 'Extension to the title. Clarify what the podcast is about.', 'podlove' ),
 						'html'        => array( 'class' => 'regular-text' )
 					) );
 
 					$wrapper->text( 'summary', array(
 						'label'       => __( 'Summary', 'podlove' ),
-						'description' => __( 'A couple of sentences describing the podcast.', 'podlove' ),
+						'description' => __( 'Elaborate description of the podcast\'s content.', 'podlove' ),
 						'html'        => array( 'rows' => 5, 'cols' => 40 )
 					) );
 
+					$wrapper->subheader(
+						__( 'Media', 'podlove' ),
+						__( 'The Podlove Publisher expects all your media files to be in the same <strong>Upload Location</strong>.
+							It should be a publicly readable directory containing all media files.
+							You should not create a separate directory for each episode.', 'podlove' )
+					);
+
 					$wrapper->string( 'media_file_base_uri', array(
-						'label'       => __( 'Media File Base URL', 'podlove' ),
+						'label'       => __( 'Upload Location', 'podlove' ),
 						'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
 						'html' => array( 'class' => 'regular-text required' )
 					) );
@@ -82,6 +96,27 @@ class Podcast {
 						'image_width'  => 300,
 						'image_height' => 300
 					) );
+
+					$wrapper->subheader(
+						__( 'License', 'podlove' )
+					);
+
+					$wrapper->string( 'license_name', array(
+						'label'       => __( 'License Name', 'podlove' ),
+						'description' => __( 'Example: CC BY 3.0', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
+					) );
+
+					$wrapper->string( 'license_url', array(
+						'label'       => __( 'License URL', 'podlove' ),
+						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
+					) );
+
+					$wrapper->subheader(
+						__( 'Directory', 'podlove' ),
+						__( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove' )
+					);
 
 					$wrapper->string( 'author_name', array(
 						'label'       => __( 'Author Name', 'podlove' ),
@@ -98,18 +133,6 @@ class Podcast {
 					$wrapper->string( 'publisher_url', array(
 						'label'       => __( 'Publisher URL', 'podlove' ),
 						'description' => __( '', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' )
-					) );
-
-					$wrapper->string( 'license_name', array(
-						'label'       => __( 'License Name', 'podlove' ),
-						'description' => __( 'Example: CC BY 3.0', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' )
-					) );
-
-					$wrapper->string( 'license_url', array(
-						'label'       => __( 'License URL', 'podlove' ),
-						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' )
 					) );
 			
