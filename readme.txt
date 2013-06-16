@@ -85,6 +85,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Organize "Expert Settings" into tabs
 * Bugfix: Activate feature "Activate asset for all existing episodes" for pending episodes
 * Bugfix: Solve issue with chapter asset cache invalidation
+* Bugfix: Solve chapter encoding issue when chapters start with umlauts
 * Other small UI changes in various places
 
 = 1.6.4-alpha =

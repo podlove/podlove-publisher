@@ -1,3 +1,7 @@
+### 1.1.7 (2013-06-16)
+
+* solve rare encoding issue in mp4chaps parser
+
 ### 1.1.5 - 1.1.6 (2013-06-07)
 
 * PSC parser more robust against invalid xml
