@@ -83,6 +83,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Add "sortable handle" for asset and feed lists, so the sortability feature is more discoverable
 * Enhancement: Add "Podlove" entry to WordPress toolbar
 * Enhancement: Organize "Expert Settings" into tabs
+* Enhancement: Don't log "File not Modified"
 * Bugfix: Activate feature "Activate asset for all existing episodes" for pending episodes
 * Bugfix: Solve issue with chapter asset cache invalidation
 * Bugfix: Solve chapter encoding issue when chapters start with umlauts
