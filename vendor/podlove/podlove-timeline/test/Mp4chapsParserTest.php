@@ -89,4 +89,11 @@ class Mp4chapsParserTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( 2, count( $result->toArray() ) );
     }
 
+    public function testChapterStartingWithUmlaut() {
+        $result = Mp4chaps::parse("00:00:00.000 Intro
+00:00:19.000 Übermensch");
+
+        $this->assertEquals( "Übermensch", $result[1]->get_title() );
+    }
+
 }

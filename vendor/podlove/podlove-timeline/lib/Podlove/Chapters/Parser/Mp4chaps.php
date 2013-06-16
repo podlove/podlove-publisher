@@ -17,7 +17,7 @@ class Mp4chaps {
 		$invalid_lines = 0;
 
 		foreach( preg_split( "/((\r?\n)|(\r\n?))/", $chapters_string ) as $line ) {
-		    $valid = preg_match( '/^([\d.:]+)\W+(.*)$/', trim( $line ), $matches );
+		    $valid = preg_match( '/^([\d.:]+)(.*)$/', trim( $line ), $matches );
 
 		    if ( ! $valid ) {
 		    	$invalid_lines++;

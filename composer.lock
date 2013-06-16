@@ -110,16 +110,16 @@
         },
         {
             "name": "podlove/podlove-timeline",
-            "version": "v1.1.6",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/podlove/podlove-timeline.git",
-                "reference": "v1.1.6"
+                "reference": "v1.1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/v1.1.6",
-                "reference": "v1.1.6",
+                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/v1.1.7",
+                "reference": "v1.1.7",
                 "shasum": ""
             },
             "require": {
@@ -149,7 +149,7 @@
                 "psc",
                 "webvtt"
             ],
-            "time": "2013-06-07 13:23:54"
+            "time": "2013-06-16 09:21:23"
         },
         {
             "name": "psr/log",
