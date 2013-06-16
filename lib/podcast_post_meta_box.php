@@ -123,7 +123,7 @@ class Podcast_Post_Meta_Box {
 
 				$wrapper->multiselect( 'episode_assets', Podcast_Post_Meta_Box::episode_assets_form( $episode ) );
 
-				if ( \Podlove\get_setting( 'enable_episode_record_date' ) ) {
+				if ( \Podlove\get_setting( 'metadata', 'enable_episode_record_date' ) ) {
 					$wrapper->string( 'record_date', array(
 						'label'       => __( 'Recording Date', 'podlove' ),
 						'description' => '',
@@ -131,7 +131,7 @@ class Podcast_Post_Meta_Box {
 					));
 				}
 
-				if ( \Podlove\get_setting( 'enable_episode_publication_date' ) ) {
+				if ( \Podlove\get_setting( 'metadata', 'enable_episode_publication_date' ) ) {
 					$wrapper->string( 'publication_date', array(
 						'label'       => __( 'Publication Date', 'podlove' ),
 						'description' => '',
