@@ -164,10 +164,10 @@ class MediaFile extends Base {
 
 		// skip validation if ETag did not change
 		if ( (int) $header["http_code"] === 304 ) {
-			Log::get()->addInfo(
-				'Validating media file: File Not Modified.',
-				array( 'media_file_id' => $this->id )
-			);
+			// Log::get()->addInfo(
+			// 	'Validating media file: File Not Modified.',
+			// 	array( 'media_file_id' => $this->id )
+			// );
 			return;
 		}
 
