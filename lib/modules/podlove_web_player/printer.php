@@ -140,13 +140,19 @@ class Printer {
 
 		$options = get_option( 'podlovewebplayer_options', array() );
 
-		if ( isset( $options[ $key ] ) ) {
-			if ( $subkey ) {
-				if ( isset( $options[ $key ][ $subkey ] ) )
-					return $options[ $key ][ $subkey ];
-			} else {
-				return $options[ $key ];
-			}
+		// try simple key
+		if ( isset( $options[ $key ] ) )
+			return $options[ $key ];
+
+		// try complex key
+		$key2 = "{$key}_{$subkey}";
+		if ( isset( $options[ $key2 ] ) )
+			return $options[ $key2 ];
+
+		// set some defaults
+		switch ($key2) {
+			case 'video_width':  return '640'; break;
+			case 'video_height': return '270'; break;
 		}
 
 		return NULL;

@@ -86,6 +86,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Bugfix: Activate feature "Activate asset for all existing episodes" for pending episodes
 * Bugfix: Solve issue with chapter asset cache invalidation
 * Bugfix: Solve chapter encoding issue when chapters start with umlauts
+* Bugfix: Fix video display in some themes
 * Other small UI changes in various places
 
 = 1.6.4-alpha =
