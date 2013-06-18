@@ -78,6 +78,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.6.6-alpha =
 * Enhancement: When validating, ignore timeouts (so files don't disappear from feeds just because one request took too long)
+* Enhancement: When episode permalinks are invalid, try to autoresolve by switching to "Use Post Permastruct"
 
 = 1.6.5-alpha =
 * Feature: Feeds are sortable
