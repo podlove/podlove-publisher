@@ -76,8 +76,9 @@ class SystemReport {
 					return 'ok';
 
 				if ( stristr( \Podlove\get_setting( 'website', 'custom_episode_slug' ), '%podcast%' ) === FALSE ) {
-					$errors[] = 'The episode permastruct is missing the "%podcast%" segment!';
-					return '%podcast% placeholder missing!';
+					$website_options = get_option( 'podlove_website' );
+					$website_options['use_post_permastruct'] = 'on';
+					update_option( 'podlove_website', $website_options );
 				}
 
 				return 'ok';
