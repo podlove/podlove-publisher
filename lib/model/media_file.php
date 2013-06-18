@@ -139,7 +139,7 @@ class MediaFile extends Base {
 	 */
 	public function curl_get_header() {
 		$response = self::curl_get_header_for_url( $this->get_file_url(), $this->etag );
-		$this->validate_request_header( $response );
+		$this->validate_request( $response );
 		return $response['header'];
 	}
 
@@ -149,13 +149,20 @@ class MediaFile extends Base {
 	 * @todo  $this->id not available for first validation before media_file has been saved
 	 * @param  array $response curl response
 	 */
-	private function validate_request_header( $response ) {
+	private function validate_request( $response ) {
 
 		// skip unsaved media files
 		if ( ! $this->id )
 			return;
 
 		$header = $response['header'];
+
+		if ( $response['error'] ) {
+			Log::get()->addError(
+				'Curl Error: ' . $response['error'],
+				array( 'media_file_id' => $this->id )
+			);
+		}
 
 		// look for ETag and safe for later
 		if ( preg_match( '/ETag:\s*"([^"]+)"/i', $response['response'], $matches ) ) {
@@ -244,11 +251,16 @@ class MediaFile extends Base {
 			)
 		);
 		
-		$response = curl_exec( $curl );
+		$response        = curl_exec( $curl );
 		$response_header = curl_getinfo( $curl );
+		$error           = curl_error( $curl );
 		curl_close( $curl );
 		
-		return array( 'header' => $response_header, 'response' => $response );
+		return array(
+			'header'   => $response_header,
+			'response' => $response,
+			'error'    => $error
+		);
 	}
 	
 }
