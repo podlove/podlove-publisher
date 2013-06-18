@@ -123,7 +123,11 @@ class MediaFile extends Base {
 	public function determine_file_size() {
 		$header = $this->curl_get_header();
 
-		if ( (int) $header["http_code"] !== 304 )
+		$http_code = (int) $header["http_code"];
+		// do not change the filesize if http_code = 0
+		// aka "an error occured I don't know how to deal with" (probably timeout)
+		// => change to proper handling once "Conflicts" are introduced
+		if ( $http_code && $http_code !== 304 )
 			$this->size = $header['download_content_length'];
 
 		if ( $this->size <= 0 )

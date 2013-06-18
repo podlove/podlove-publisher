@@ -76,6 +76,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.6-alpha =
+* Enhancement: When validating, ignore timeouts (so files don't disappear from feeds just because one request took too long)
+
 = 1.6.5-alpha =
 * Feature: Feeds are sortable
 * Feature: You can revalidate single media files in the dashboard
