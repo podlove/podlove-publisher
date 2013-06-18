@@ -223,7 +223,7 @@ class MediaFile extends Base {
 		curl_setopt( $curl, CURLOPT_HEADER, true );         // header only
 		curl_setopt( $curl, CURLOPT_NOBODY, true );         // return no body; HTTP request method: HEAD
 		curl_setopt( $curl, CURLOPT_FAILONERROR, true );
-		curl_setopt( $curl, CURLOPT_TIMEOUT, 2 );          // HEAD requests shouldn't take > 2 seconds
+		curl_setopt( $curl, CURLOPT_TIMEOUT, 3 );          // HEAD requests shouldn't take > 2 seconds
 
 		if ( $etag ) {
 			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
