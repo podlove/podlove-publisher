@@ -78,10 +78,13 @@ function episode_downloads_shortcode( $options ) {
 
 	foreach ( $media_files as $media_file ) {
 
-		$episode_asset = $media_file->episode_asset();
+		if ( ! $media_file->is_valid() )
+			continue;
 
+		$episode_asset = $media_file->episode_asset();
 		if ( ! $episode_asset->downloadable )
 			continue;
+
 
 		$file_type = $episode_asset->file_type();
 		
