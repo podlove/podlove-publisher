@@ -28,7 +28,7 @@ class PermalinkSettingsTest extends PHPUnit_Extensions_Selenium2TestCase {
     protected function setUp() {
         // setup selenium
         $this->setBrowser('firefox');
-        $this->setBrowserUrl('http://localhost/Sites/wordpress-podlove-test/');
+        $this->setBrowserUrl(TEST_WORDPRESS_ROOT);
     }
 
     private function login() {

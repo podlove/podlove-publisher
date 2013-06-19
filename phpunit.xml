@@ -24,6 +24,7 @@
     </filter>
 
     <php>
+        <const name="TEST_WORDPRESS_ROOT" value="http://localhost/Sites/wordpress-podlove-test/"/>
         <const name="TEST_DATABASE_USERNAME" value="root"/>
         <const name="TEST_DATABASE_PASSWORD" value="root"/>
         <const name="TEST_DATABASE_DATABASE" value="wordpress-podlove-test"/>
