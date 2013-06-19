@@ -27,7 +27,7 @@ class BasicSetupWorkflowTest extends PHPUnit_Extensions_Selenium2TestCase {
 
     	// setup selenium
         $this->setBrowser('firefox');
-        $this->setBrowserUrl('http://localhost/Sites/wordpress-podlove-test/');
+        $this->setBrowserUrl(TEST_WORDPRESS_ROOT);
     }
 
     private function save_and_open_screenshot() {
