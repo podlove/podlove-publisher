@@ -25,6 +25,8 @@ class Tab {
 	 */
 	private $is_default;
 
+	protected $page_type = 'settings api';
+
 	public function __construct( $title, $is_default = false ) {
 		$this->set_title( $title );
 		$this->is_default = $is_default;
@@ -53,17 +55,21 @@ class Tab {
 	}
 
 	public function page() {
-		?>
-		<form method="post" action="options.php">
-			<?php if ( isset( $_REQUEST['podlove_tab'] ) ): ?>
-				<input type="hidden" name="podlove_tab" value="<?php echo $_REQUEST['podlove_tab'] ?>" />
-			<?php endif; ?>
-			<?php settings_fields( Settings::$pagehook ); ?>
-			<?php do_settings_sections( Settings::$pagehook ); ?>
-			
-			<?php submit_button( __( 'Save Changes' ), 'button-primary', 'submit', TRUE ); ?>
-		</form>
-		<?php
+		if ( $this->page_type == 'settings api' ) {
+			?>
+			<form method="post" action="options.php">
+				<?php if ( isset( $_REQUEST['podlove_tab'] ) ): ?>
+					<input type="hidden" name="podlove_tab" value="<?php echo $_REQUEST['podlove_tab'] ?>" />
+				<?php endif; ?>
+				<?php settings_fields( Settings::$pagehook ); ?>
+				<?php do_settings_sections( Settings::$pagehook ); ?>
+				
+				<?php submit_button( __( 'Save Changes' ), 'button-primary', 'submit', TRUE ); ?>
+			</form>
+			<?php
+		} else {
+			do_action( 'podlove_expert_settings_page' );
+		}
 	}
 
 	public function init() {

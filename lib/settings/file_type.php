@@ -4,15 +4,6 @@ namespace Podlove\Settings;
 class FileType {
 	
 	public function __construct( $handle ) {
-		
-		add_submenu_page(
-			/* $parent_slug*/ $handle,
-			/* $page_title */ __( 'File Types', 'podlove' ),
-			/* $menu_title */ __( 'File Types', 'podlove' ),
-			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_file_types_settings_handle',
-			/* $function   */ array( $this, 'page' )
-		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
 	
@@ -73,7 +64,7 @@ class FileType {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $format_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
+		$page   = 'admin.php?page=' . $_REQUEST['page'] . '&podlove_tab=' . $_REQUEST['podlove_tab'];
 		$show   = ( $format_id ) ? '&file_type=' . $format_id : '';
 		$action = '&action=' . $action;
 		
@@ -96,8 +87,6 @@ class FileType {
 	public function page() {
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'File Types', 'podlove' ) ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 			$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
@@ -120,12 +109,20 @@ class FileType {
 	private function new_template() {
 		$format = new \Podlove\Model\FileType;
 		?>
-		<h3><?php echo __( 'Add New Format', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New File Type', 'podlove' ); ?></h3>
 		<?php
 		$this->form_template( $format, 'create', __( 'Add New Format', 'podlove' ) );
 	}
 	
 	private function view_template() {
+		?>
+		<h2>
+			<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;podlove_tab=<?php echo $_REQUEST['podlove_tab'] ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a>
+		</h2>
+		<p>
+			<?php echo __( 'This is a list of all file types the publisher knows about. If you would like to serve assets of an unknown file type, you must add it here before you can create the asset.', 'podlove' ); ?>
+		</p>
+		<?php
 		$table = new \Podlove\File_Type_List_Table();
 		$table->prepare_items();
 		$table->display();
@@ -133,7 +130,15 @@ class FileType {
 	
 	private function form_template( $format, $action, $button_text = NULL ) {
 
-		\Podlove\Form\build_for( $format, array( 'context' => 'podlove_file_type', 'hidden' => array( 'file_type' => $format->id, 'action' => $action ) ), function ( $form ) {
+		$form_args = array(
+			'context' => 'podlove_file_type',
+			'hidden'  => array(
+				'file_type'   => $format->id,
+				'action'      => $action,
+				'podlove_tab' => $_REQUEST['podlove_tab']
+		));
+
+		\Podlove\Form\build_for( $format, $form_args, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
 	 		$wrapper->string( 'name', array(

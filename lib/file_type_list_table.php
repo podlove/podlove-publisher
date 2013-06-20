@@ -17,14 +17,16 @@ class File_Type_List_Table extends \Podlove\List_Table {
 	function column_name( $file_type ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&action=%s&file_type=%s">' . __( 'Edit', 'podlove' ) . '</a>',
+				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Edit', 'podlove' ) . '</a>',
 				$_REQUEST['page'],
+				$_REQUEST['podlove_tab'],
 				'edit',
 				$file_type->id
 			),
 			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&file_type=%s">' . __( 'Delete', 'podlove' ) . '</a>',
+				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Delete', 'podlove' ) . '</a>',
 				$_REQUEST['page'],
+				$_REQUEST['podlove_tab'],
 				'delete',
 				$file_type->id
 			)
