@@ -78,6 +78,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.6.7-alpha =
 * Enhancement: Move file types settings to expert settings
+* Enhancement: Saving a template redirects to template list
 * Bugfix: Fix "Chapters Visibility" setting
 
 = 1.6.6-alpha =
