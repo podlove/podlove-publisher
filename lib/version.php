@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 43 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 44 );
 
 add_action( 'init', function () {
 	
@@ -342,6 +342,11 @@ function run_migrations_for_version( $version ) {
 			add_option( 'podlove_website', $podlove_website );
 			add_option( 'podlove_metadata', $podlove_metadata );
 			add_option( 'podlove_redirects', $podlove_redirects );
+		break;
+		case 44:
+			$wpdb->query(
+				'DELETE FROM `' . $wpdb->postmeta . '` WHERE meta_key = "last_validated_at"'
+			);
 		break;
 	}
 
