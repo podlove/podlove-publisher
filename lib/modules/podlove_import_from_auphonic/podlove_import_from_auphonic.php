@@ -174,7 +174,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     	
     	} else {
     		if($this->get_module_option('auphonic_api_key') == "") {
-				$ch = curl_init('http://www2.synthx.de/auphonic_auth_extern.php');                                                                      
+				$ch = curl_init('http://auth.podlove.org/auphonic.php');                                                                      
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
 				curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
 				curl_setopt($ch, CURLOPT_POSTFIELDS, array(  

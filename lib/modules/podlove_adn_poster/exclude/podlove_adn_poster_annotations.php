@@ -9,16 +9,18 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
 	
 	
     public function load() {
+    
+    	//add_action( 'wp', array( $this, 'adn_testumgebung' ) );
     	
-    		if($this->get_module_option('adn_poster_auth') !== "") {
-				add_action('publish_podcast', array( $this, 'post_to_adn' ));
+    	if($this->get_module_option('adn_poster_auth') !== "") {
+			add_action('publish_podcast', array( $this, 'post_to_adn' ));
 
-			}
+		}
         
 			if($this->get_module_option('adn_poster_auth') == "") {
 				$this->register_option( 'adn_poster_auth', 'string', array(
 					'label'       => __( 'Auth Key', 'podlove' ),
-					'description' => __( '<strong style="color: red;">You need to authorize Podlove to use your App.net account.</strong> To do so please start the authorization process <a target="_blank" href="http://auth.podlove.org/adn.php?step=1">here</a>.', 'podlove' ),
+					'description' => __( '<strong style="color: red;">You need to authorize Podlove to use your App.net account.</strong> To do so please start the authorization process <a target="_blank" href="http://www2.synthx.de/adnauth.php?step=1">here</a>.', 'podlove' ),
 					'html'        => array( 'class' => 'regular-text' )
 				) );	
 			} else {
@@ -45,10 +47,62 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
 
     }
     
+	public function adn_testumgebung() {
+			
+		//print_r(json_encode($this->form_annotations("4")));
+								
+	}    
+    
+    public function form_annotations($get_id) {
+    	
+    	$feeds = \Podlove\Model\Feed::all();  
+    	$episode = \Podlove\Model\Episode::find_one_by_post_id($get_id);  	
+    	$podcast = \Podlove\Model\Podcast::get_instance();
+    	
+    	$episode_files = array();
+    	$feed_urls = array(); 	
+    	
+    	foreach($episode->media_files() as $media_file) {
+			$episode_asset = \Podlove\Model\EpisodeAsset::find_one_by_id($media_file->episode_asset_id);
+			$episode_files[] = array(	"file-title" => $episode_asset->file_type()->name, 
+    									"file-url" => $media_file->get_file_url(),
+    									"file-mime-type" => $episode_asset->file_type()->mime_type);
+		}
+    	
+    	$episode_entry = array(
+    			"title" => get_the_title($get_id),
+    			"subtitle" => $episode->subtitle,
+    			"summary" => $episode->summary,
+    			"homepage" => $podcast->publisher_url,
+    			"media-files" => $episode_files
+    	);
+    	
+    	foreach ($feeds as $feed) {
+    		$feeds_urls[] = array(
+	    		"feed-title" => $feed->episode_asset()->file_type()->name,
+    			"feed-url" => $feed->get_subscribe_url(),
+    			"file-mime-type" => $feed->episode_asset()->file_type()->mime_type);    			
+    	}
+    	
+    	$podcast_entry = array(
+    			"title" => $podcast->title,
+    			"subtitle" => $podcast->subtitle,
+    			"summary" => $podcast->summary,
+    			"link" => $podcast->publisher_url,
+    			"feeds" => $feeds_urls
+    	);
+    	
+    	$annotation = array(array("type" => "org.podlove.podcast-description", "value" => $podcast_entry), array("type" => "org.podlove.episode-description", "value" => $episode_entry));
+    	
+    	return $annotation;
+    	
+    }   
+    
     public function post_to_adn() {
     
     	$episode = \Podlove\Model\Episode::find_one_by_post_id($_POST['post_ID']);
     	$podcast = \Podlove\Model\Podcast::get_instance();
+    	$annotations = $this->form_annotations($_POST['post_ID']);
     	
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
     	$posted_text = str_replace("%p", $podcast->title, $posted_text);
@@ -56,7 +110,7 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	$posted_text = str_replace("%u", get_permalink($_POST['post_ID']), $posted_text);
     	$posted_text = str_replace("%s", $episode->subtitle, $posted_text);
     
-    	$data = array("text" => $posted_text);                                                  
+    	$data = array("text" => $posted_text, "annotations" => $annotations);                                                  
 		$data_string = json_encode($data);                                                                                   
 
 		$ch = curl_init('https://alpha-api.app.net/stream/0/posts?access_token='.$this->get_module_option('adn_poster_auth').'');                                                                      
