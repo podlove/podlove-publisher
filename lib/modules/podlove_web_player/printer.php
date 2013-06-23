@@ -121,7 +121,7 @@ class Printer {
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
 			'duration'            => $this->episode->get_duration(),
-			'chaptersVisible'     => \Podlove\get_webplayer_setting( 'chaptersVisible' ),
+			'chaptersVisible'     => in_array( \Podlove\get_webplayer_setting( 'chaptersVisible' ), $truthy, true ),
 			'features'            => array( "current", "progress", "duration", "tracks", "fullscreen", "volume" )
 		);
 
