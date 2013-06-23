@@ -70,7 +70,7 @@ class Asset_Validation extends \Podlove\Modules\Base {
 		$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 		Log::get()->addInfo( 'Validate episode', array( 'episode_id' => $episode->id ) );
 		$episode->refetch_files();
-		update_post_meta( $post->ID, 'last_validated_at', time() );
+		update_post_meta( $post->ID, '_podlove_last_validated_at', time() );
 	}
 
 	/**
@@ -95,13 +95,13 @@ class Asset_Validation extends \Podlove\Modules\Base {
 			'meta_query' => array(
 				'relation' => 'OR',
 				array(
-					'key' => 'last_validated_at',
+					'key' => '_podlove_last_validated_at',
 					'value' => 1, // nonsensical but required
 					'compare' => 'NOT EXISTS'
 				),
 				array(
 					'type' => 'NUMERIC',
-					'key' => 'last_validated_at',
+					'key' => '_podlove_last_validated_at',
 					'compare' => '<=',
 					'value' => strtotime( '-6 hours' )
 				)
@@ -134,13 +134,13 @@ class Asset_Validation extends \Podlove\Modules\Base {
 			'meta_query' => array(
 				'relation' => 'OR',
 				array(
-					'key' => 'last_validated_at',
+					'key' => '_podlove_last_validated_at',
 					'value' => 1, // nonsensical but required
 					'compare' => 'NOT EXISTS'
 				),
 				array(
 					'type' => 'NUMERIC',
-					'key' => 'last_validated_at',
+					'key' => '_podlove_last_validated_at',
 					'compare' => '<=',
 					'value' => strtotime( '-6 hours' )
 				)
@@ -173,13 +173,13 @@ class Asset_Validation extends \Podlove\Modules\Base {
 			'meta_query' => array(
 				'relation' => 'OR',
 				array(
-					'key' => 'last_validated_at',
+					'key' => '_podlove_last_validated_at',
 					'value' => 1, // nonsensical but required
 					'compare' => 'NOT EXISTS'
 				),
 				array(
 					'type' => 'NUMERIC',
-					'key' => 'last_validated_at',
+					'key' => '_podlove_last_validated_at',
 					'compare' => '<=',
 					'value' => strtotime( '-1 hour' )
 				)
