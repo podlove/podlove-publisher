@@ -53,7 +53,7 @@ class Templates {
 		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
 		$template->update_attributes( $_POST['podlove_template'] );
 		
-		$this->redirect( 'edit', $template->id );
+		$this->redirect( 'index', $template->id );
 	}
 	
 	/**
