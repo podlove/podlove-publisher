@@ -142,7 +142,7 @@ class SystemReport {
 			$out .= "Nice, Everything looks fine!";
 		}
 
-		return '<pre>' . $out . '</pre>';
+		return $out;
 	}
 
 }

@@ -59,3 +59,9 @@ i.rotate {
 .feeds.wp-list-table .column-discoverable {
 	width: 100px;
 }
+
+/* Support */
+.podlove_system_report {
+	font-family: monospace;
+	resize: none;
+}

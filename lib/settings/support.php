@@ -31,8 +31,9 @@ class Support {
 			<p>
 				<?php 
 				$r = new \Podlove\SystemReport;
-				echo $r->render();
+				$report = $r->render();
 				?>
+				<textarea class="podlove_system_report" readonly cols="100" rows="<?php echo substr_count( $report, "\n" )+1; ?>"><?php echo $report ?></textarea>
 			</p>
 
 			<!--
