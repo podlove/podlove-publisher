@@ -102,6 +102,20 @@ class SystemReport {
 
 				return $out;
 			} ),
+			'web_player' => array( 'callback' => function() use ( &$errors ) {
+
+				foreach ( get_option( 'podlove_webplayer_formats', array() ) as $_ => $media_types ) {
+					foreach ( $media_types as $extension => $asset_id ) {
+						if ( $asset_id ) {
+							return "ok";
+						}
+					}
+				}
+
+				$error = __( 'You need to assign at least one asset to the web player.', 'podlove' );
+				$errors[] = $error;
+				return $error;
+			} )
 		);
 
 		$this->run();
