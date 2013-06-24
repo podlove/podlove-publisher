@@ -138,6 +138,15 @@ abstract class Base {
 	}
 
 	/**
+	 * Return public module group key.
+	 * 
+	 * @return string
+	 */
+	public function get_module_group() {
+		return isset( $this->module_group ) ? $this->module_group : "";
+	}
+
+	/**
 	 * Return option name of the field where module options are stored.
 	 * 
 	 * @return string

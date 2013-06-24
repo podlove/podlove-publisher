@@ -11,6 +11,7 @@ class Logging extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Logging';
 	protected $module_description = 'Get an email when all episode assets are unavailable. View podlove related logs in dashboard. (writes logs to database)';
+	protected $module_group = 'system';
 
 	public function load() {
 		add_action( 'podlove_module_was_activated_logging', array( $this, 'was_activated' ) );

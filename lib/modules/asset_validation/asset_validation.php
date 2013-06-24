@@ -7,6 +7,7 @@ class Asset_Validation extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Asset Validation';
 	protected $module_description = 'Automatically validate assets once in a while. Fresh posts will be validated more often than old posts.';
+	protected $module_group = 'system';
 
 	public function load() {
 		add_action( 'podlove_module_was_activated_asset_validation', array( $this, 'was_activated' ) );

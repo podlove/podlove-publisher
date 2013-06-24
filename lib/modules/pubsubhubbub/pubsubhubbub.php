@@ -6,6 +6,7 @@ class Pubsubhubbub extends \Podlove\Modules\Base {
 
 		protected $module_name = 'PubSubHubbub Support';
 		protected $module_description = 'Adds PubSubHubbub discovery to your feeds. Ping services on feed updates.';
+		protected $module_group = 'web publishing';
 
 		public function load() {
 

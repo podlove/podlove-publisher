@@ -6,6 +6,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 
 		protected $module_name = 'Open Graph Integration';
 		protected $module_description = 'Adds Open Graph metadata to episodes. Useful for third party services.';
+		protected $module_group = 'web publishing';
 
 		public function load() {
 			add_action( 'wp', array( $this, 'register_hooks' ) );
