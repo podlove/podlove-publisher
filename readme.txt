@@ -82,6 +82,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: System Report is a readonly textarea
 * Enhancement: Group modules
 * Enhancement: When creating an asset: if that web player slot is not taken yet, assign it automatically
+* Enhancement: Accept time formats with minutes > 59 if no hours are given
 * Bugfix: Fix "Chapters Visibility" setting
 
 = 1.6.6-alpha =
