@@ -44,9 +44,14 @@ class WebPlayer {
 		<?php
 	}
 
-	public function form_fields() {
-
-		$formats = array(
+	/**
+	 * Config array containing list of supported web player assets.
+	 * Each type (audio, video) lists supported extensions with their title and mime_type.
+	 * 
+	 * @return array
+	 */
+	public static function formats() {
+		return array(
 			'audio' => array(
 				'mp3' => array(
 					'title'     => __( 'MP3 Audio', 'podlove' ),
@@ -80,11 +85,14 @@ class WebPlayer {
 				),
 			)
 		);
+	}
+
+	public function form_fields() {
 
 		$formats_data = get_option( 'podlove_webplayer_formats', array() );
 		$episode_assets = Model\EpisodeAsset::all();
 
-		foreach ( $formats as $format => $extensions ) {
+		foreach ( self::formats() as $format => $extensions ) {
 			?>
 			<tr valign="top">
 				<th scope="row" valign="top" colspan="2">
