@@ -9,6 +9,7 @@ class Migration extends \Podlove\Modules\Base {
 
 		protected $module_name = 'Migration';
 		protected $module_description = 'Helps you migrate from PodPress/PowerPress/... to Podlove.';
+		protected $module_group = 'system';
 
 		public function load() {
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_styles' ) );

@@ -6,6 +6,7 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Auphonic Production Data';
 	protected $module_description = 'Use <a href="http://auphonic.com/" target="_blank">Auphonic</a> production description file to automatically fill in episode title, subtitle, summary and duration.<br>In the Auphonic production, you need to add JSON "Production Description".';
+	protected $module_group = 'external services';
 
 	public function load() {
 		add_action( 'admin_print_styles', array( $this, 'add_jquery_auphonicdata' ) );

@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Move file types settings to expert settings
 * Enhancement: Saving a template redirects to template list
 * Enhancement: System Report is a readonly textarea
+* Enhancement: Group modules
 * Bugfix: Fix "Chapters Visibility" setting
 
 = 1.6.6-alpha =

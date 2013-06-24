@@ -6,6 +6,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Contributors';
 	protected $module_description = 'Manage contributors for each episode.';
+	protected $module_group = 'metadata';
 
 	public static $taxonomy_name = 'podlove-contributors';
 

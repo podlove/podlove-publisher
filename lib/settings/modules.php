@@ -24,6 +24,7 @@ class Modules {
 			/* $page	 */ Modules::$pagehook	
 		);
 
+		$grouped_modules = array();
 		$modules = \Podlove\Modules\Base::get_all_module_names();
 		foreach ( $modules as $module_name ) {
 			$class = \Podlove\Modules\Base::get_class_by_module_name( $module_name );
@@ -33,6 +34,14 @@ class Modules {
 
 			$module = $class::instance();
 			$module_options = $module->get_registered_options();
+
+			if ( $group = $module->get_module_group() ) {
+				add_settings_section( 
+					'podlove_setting_module_group_' . $group,
+					ucwords( $group ),
+					function () {},
+					Modules::$pagehook );
+			}
 
 			if ( $module_options ) {
 				register_setting( Modules::$pagehook, $module->get_module_options_name() );
@@ -83,7 +92,7 @@ class Modules {
 					do_action( 'podlove_module_after_settings_' . $module_name );
 				},
 				/* $page     */ Modules::$pagehook,  
-				/* $section  */ 'podlove_settings_modules'
+				/* $section  */ $group ? 'podlove_setting_module_group_' . $group : 'podlove_settings_modules'
 			);
 		}
 

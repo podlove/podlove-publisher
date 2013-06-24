@@ -6,6 +6,7 @@ class Bitlove extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Bitlove';
 	protected $module_description = 'Enable support for <a href="http://bitlove.org/" target="_blank">Bitlove</a>. Bitlove creates Torrents for all enclosures of an RSS/ATOM feed and seeds them.';
+	protected $module_group = 'external services';
 
 	public function load() {
 		add_action( 'wp_footer', array( $this, 'inject_base' ) );
