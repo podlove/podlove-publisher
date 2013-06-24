@@ -77,7 +77,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.6.8-alpha =
+= 1.6.9-alpha =
 * Fix release issues
 
 = 1.6.7-alpha =
