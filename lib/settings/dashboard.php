@@ -145,76 +145,8 @@ class Dashboard {
 	public static function validate_podcast_files() {
 		
 		$podcast = Model\Podcast::get_instance();
-		$podcast_warnings = self::get_podcast_setting_warnings();
-
-		if ( ! in_array( 'curl', get_loaded_extensions() ) ) {
-			?>
-			<div class="error">
-				<p>
-					<strong>ERROR: </strong>You need the <strong>curl PHP extension</strong> for Podlove to run properly.
-					<br>
-					If you think you can do it yourself, have a look at <a href="http://stackoverflow.com/questions/1347146/how-to-enable-curl-in-php">these instructions on how to enable curl in PHP</a>.
-				</p>
-			</div>
-			<?php
-		} elseif ( stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false ) {
-			?>
-			<div class="error">
-				<p>
-					<strong>ERROR: </strong>The PHP function <strong>curl_exec</strong> is not available.
-					However, it is required for Podlove to run properly.
-					<br>
-					<strong>SOLUTION: </strong>In your <em>php.ini</em>, look for <em>disable_functions</em>. 
-					<strong>curl_exec</strong> should be listed there. 
-					Remove it. 
-					If you can't or don't know how, please contact your system administrator or hoster.
-				</p>
-			</div>
-			<?php
-		}
-
-		if ( ini_get( 'allow_url_fopen' ) == '0' ) {
-			?>
-			<div class="error">
-				<p>
-					<strong>allow_url_fopen</strong> is disabled by your PHP configuration.
-					<br>
-					If you experience download problems with all query URLs of format <em>?download_media_file=</em> you need to change this.
-				</p>
-			</div>
-			<?php
-		}
-
 		?>
 		<div id="validation">
-
-			<?php if ( count( $podcast_warnings ) ): ?>
-				<style type="text/css">
-				#podcast_warnings {
-					color: #333333;
-					background-color: #FFEBE8;
-					border: 1px solid #CC0000;
-					border-radius: 3px;
-					padding: 0.4em 1.0em;
-					margin: 10px 0px;
-				}
-				#podcast_warnings h4 {
-					margin: 10px 0px;
-				}
-				</style>
-				<div id="podcast_warnings">
-					<h4><?php echo __( 'Critical Notes' ) ?></h4>
-					<?php foreach ( $podcast_warnings as $warning ): ?>
-						<div class="line">
-							<?php echo $warning ?>
-							<a href="<?php echo admin_url( 'admin.php?page=podlove_settings_podcast_handle' ) ?>">
-								<?php echo __( 'go fix it', 'podlove' ) ?>
-							</a>
-						</div>
-					<?php endforeach; ?>
-				</div>
-			<?php endif; ?>
-
 			<?php
 			$episodes = Model\Episode::all( 'ORDER BY slug DESC' );
 			$assets   = Model\EpisodeAsset::all();
