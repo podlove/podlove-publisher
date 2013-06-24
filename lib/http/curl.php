@@ -21,7 +21,7 @@ class Curl {
 	public function request( $url, $params ) {
 
 		$defaults = array(
-			'user-agent' => $this->get_user_agent(),
+			'user-agent' => self::user_agent(),
 			'stream'     => false,
 			'decompress' => false,
 			'filename'   => null
@@ -36,7 +36,12 @@ class Curl {
 		return $this->response;
 	}
 
-	private function get_user_agent() {
+	/**
+	 * Podlove User Agent for cURL requests.
+	 * 
+	 * @return string
+	 */
+	public static function user_agent() {
 
 		$curl_version = curl_version();
 
