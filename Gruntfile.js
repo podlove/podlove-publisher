@@ -17,7 +17,6 @@ module.exports = function(grunt) {
           "podlove.sublime-workspace",
           "podlove.sublime-project",
           "vendor/bin",
-          "vendor/composer",
           "vendor/phpunit",
           "vendor/symfony",
           "node_modules",
