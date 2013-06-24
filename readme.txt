@@ -5,6 +5,7 @@ Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, 
 Requires at least: 3.0
 Tested up to: 3.5
 Stable tag: trunk
+License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
 
