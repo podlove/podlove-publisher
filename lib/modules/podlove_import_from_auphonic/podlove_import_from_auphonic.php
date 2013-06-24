@@ -41,7 +41,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     	echo "<div><span><label>Import Episode data from Auphonic</label></span></div>";
     			$ch = curl_init('https://auphonic.com/api/productions.json?limit=10');                                                                      
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
-				curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
+				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
 					'Content-type: application/json',                                     
 					'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
@@ -52,32 +52,32 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 				
 				$asset_assignments = Model\AssetAssignment::get_instance();
 				
-				echo "<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'></script><script>
+				echo "<script type='text/javascript'>
 					
 					function fetch_production_data(token) {
-						var uuid = $(\"#import_from_auphonic option:selected\").val();
+						var uuid = jQuery(\"#import_from_auphonic option:selected\").val();
 						
-						$.getJSON('".get_site_url()."/wp-content/plugins/podlove-publisher/lib/modules/podlove_import_from_auphonic/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
+						jQuery.getJSON('".get_site_url()."/wp-content/plugins/podlove-publisher/lib/modules/podlove_import_from_auphonic/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
 						
 						if (document.getElementById('force_import_from_auphonic').checked){
 
-							document.getElementById('title').value = data.data.metadata.title;
+							jQuery('#title').val(data.data.metadata.title);
 
-							document.getElementById('_podlove_meta_subtitle').value = data.data.metadata.subtitle;
+							jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
 
-							document.getElementById('_podlove_meta_summary').value = data.data.metadata.summary;
+							jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
 
-							document.getElementById('_podlove_meta_duration').value = data.data.length_timestring;
+							jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
 
-							document.getElementById('_podlove_meta_slug').value = data.data.output_basename;
+							jQuery('#_podlove_meta_slug').val(data.data.output_basename);
 
-							document.getElementById('new-tag-post_tag').value = data.data.metadata.tags.join(\", \");";
+							jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));";
 
 							if ( $asset_assignments->chapters == 'manual' ) {
 				
 									echo "
 											var chapters_entry = \"\";
-											$.each(data.data.chapters, function(index, value) {
+											jQuery.each(data.data.chapters, function(index, value) {
 												chapters_entry = chapters_entry + value.start + \" \" + value.title;
 												if(value.url == \"\") {
 									
@@ -86,44 +86,44 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 												}
 												chapters_entry = chapters_entry + '\\n';
 											});							
-											document.getElementById('_podlove_meta_chapters').value = chapters_entry;						
+											jQuery('#_podlove_meta_chapters').val(chapters_entry);						
 									";
 						
 							}													
 						
 							echo "} else {
-								if($(\"#title\").val() == \"\") {
-									document.getElementById('title').value = data.data.metadata.title;
+								if(jQuery(\"#title\").val() == \"\") {
+									jQuery('#title').val(data.data.metadata.title);
 								}
 						
-								if($(\"#_podlove_meta_subtitle\").val() == \"\") {
-									document.getElementById('_podlove_meta_subtitle').value = data.data.metadata.subtitle;
+								if(jQuery(\"#_podlove_meta_subtitle\").val() == \"\") {
+									jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
 								}
 						
-								if($(\"#_podlove_meta_summary\").val() == \"\") {
-									document.getElementById('_podlove_meta_summary').value = data.data.metadata.summary;
+								if(jQuery(\"#_podlove_meta_summary\").val() == \"\") {
+									jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
 								}
 						
-								if($(\"#_podlove_meta_duration\").val() == \"\") {
-									document.getElementById('_podlove_meta_duration').value = data.data.length_timestring;
+								if(jQuery(\"#_podlove_meta_duration\").val() == \"\") {
+									jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
 								}
 						
-								if($(\"#_podlove_meta_slug\").val() == \"\") {
-									document.getElementById('_podlove_meta_slug').value = data.data.output_basename;
+								if(jQuery(\"#_podlove_meta_slug\").val() == \"\") {
+									jQuery('#_podlove_meta_slug').val(data.data.output_basename);
 								}
 						
-								if($(\"#new-tag-post_tag\").val() == \"\") {
-									document.getElementById('new-tag-post_tag').value = data.data.metadata.tags.join(\", \");
+								if(jQuery(\"#new-tag-post_tag\").val() == \"\") {
+									jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));
 								}						
 							";
 				
 							if ( $asset_assignments->chapters == 'manual' ) {
 				
 									echo "
-										if($(\"#_podlove_meta_chapters\").val() == \"\") {
+										if(jQuery(\"#_podlove_meta_chapters\").val() == \"\") {
 											var chapters_entry = \"\";
 							
-											$.each(data.data.chapters, function(index, value) {
+											jQuery.each(data.data.chapters, function(index, value) {
 												chapters_entry = chapters_entry + value.start + \" \" + value.title;
 												if(value.url == \"\") {
 									
@@ -133,7 +133,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 												chapters_entry = chapters_entry + '\\n';
 											});
 							
-											document.getElementById('_podlove_meta_chapters').value = chapters_entry;
+											jQuery('#_podlove_meta_chapters').val(chapters_entry);
 										}
 						
 									";
@@ -155,7 +155,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 					$displayed_name = "";
 				}
 				
-				echo "</select><input type='button' class='button' style='width: 150px;' onclick='fetch_production_data(\"".$this->get_module_option('auphonic_api_key')."\")' value=\"Import from Auphonic\"/>
+				echo "</select>\n<input type='button' class='button' style='width: 150px;' onclick='fetch_production_data(\"".$this->get_module_option('auphonic_api_key')."\")' value=\"Import from Auphonic\"/>
 							<input type='checkbox' style='width: 20px;' id='force_import_from_auphonic'/><label for='force_import_from_auphonic'>Force import (overwrites all fields, even if filled out)</label>
 							<p><span class='description'>";
 							
@@ -176,7 +176,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     		if($this->get_module_option('auphonic_api_key') == "") {
 				$ch = curl_init('http://auth.podlove.org/auphonic.php');                                                                      
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
-				curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
+				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
 				curl_setopt($ch, CURLOPT_POSTFIELDS, array(  
 					   "redirect_uri" => get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle',                                                                      
 					   "code" => $_GET["code"]));                                                              
