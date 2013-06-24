@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.8-alpha =
+* Fix release issues
+
 = 1.6.7-alpha =
 * Enhancement: Move file types settings to expert settings
 * Enhancement: Saving a template redirects to template list

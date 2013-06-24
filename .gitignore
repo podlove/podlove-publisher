@@ -3,3 +3,5 @@
 podlove.sublime-*
 wprelease.yml
 composer.phar
+node_modules/*
+vendor/*
