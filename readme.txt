@@ -81,6 +81,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Saving a template redirects to template list
 * Enhancement: System Report is a readonly textarea
 * Enhancement: Group modules
+* Enhancement: When creating an asset: if that web player slot is not taken yet, assign it automatically
 * Bugfix: Fix "Chapters Visibility" setting
 
 = 1.6.6-alpha =

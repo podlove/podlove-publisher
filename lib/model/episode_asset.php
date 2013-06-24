@@ -12,6 +12,8 @@ class EpisodeAsset extends Base {
 		}
 
 		parent::save();
+		
+		$this->maybe_connect_to_web_player();
 	}
 
 	/**
@@ -67,6 +69,30 @@ class EpisodeAsset extends Base {
 					return true;
 
 		return false;
+	}
+
+	/**
+	 * Use for web player if this web player slot is not yet taken.
+	 */
+	public function maybe_connect_to_web_player() {
+		$webplayer_formats = get_option( 'podlove_webplayer_formats', array() );
+		$allowed_formats = \Podlove\Settings\WebPlayer::formats();
+		$asset_type = $this->file_type()->mime_type;
+		$type = substr( $asset_type, 0, stripos( $asset_type, '/' ) );
+
+		if ( isset( $allowed_formats[ $type ] ) ) {
+			foreach ( $allowed_formats[ $type ] as $extension => $format_data ) {
+				if ( $format_data['mime_type'] == $asset_type ) {
+					
+					if ( ! $webplayer_formats[ $type ][ $extension ] ) {
+						$webplayer_formats[ $type ][ $extension ] = $this->id;
+						update_option( 'podlove_webplayer_formats', $webplayer_formats );
+					}
+
+					break;
+				}
+			}
+		}
 	}
 
 	/**
