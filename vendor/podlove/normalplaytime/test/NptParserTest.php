@@ -24,6 +24,11 @@ class NptParserTest extends PHPUnit_Framework_TestCase {
 			"1:2:3" => 3723000,
 			"1:2:3.4" => 3723400,
 			"123:4:5" => 443045000,
+
+			// no hours, minutes > 59. not exactly NPT but common
+			"62:3" => 3723000,
+			"102:3" => 6123000,
+			"102:3.123" => 6123123,
 			 
 			// invalid
 			"abc" => NULL,

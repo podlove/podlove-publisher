@@ -45,7 +45,7 @@ class Parser {
 		$time_string = trim( $time_string );
 
 		$npt_sec    =                 "/^(\d+)(?:\.(\d+))?$/";
-		$npt_mmss   =       "/^(\d\d?):(\d\d?)(?:\.(\d+))?$/";
+		$npt_mmss   =         "/^(\d+):(\d\d?)(?:\.(\d+))?$/";
 		$npt_hhmmss = "/^(\d+):(\d\d?):(\d\d?)(?:\.(\d+))?$/";
 
 		if ( preg_match( $npt_sec, $time_string, $matches ) ) {
