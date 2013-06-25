@@ -16,6 +16,7 @@ module.exports = function(grunt) {
           "wprelease.yml",
           "podlove.sublime-workspace",
           "podlove.sublime-project",
+          "lib/modules/podlove_web_player/player/podlove-web-player/libs",
           "vendor/bin",
           "vendor/phpunit",
           "vendor/symfony",
