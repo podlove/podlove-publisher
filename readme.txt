@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.6.11-alpha =
+* Bugfix: use NPT library
+
 = 1.6.10-alpha =
 * Fix release issues
 
