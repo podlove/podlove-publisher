@@ -60,79 +60,95 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 
 		?>
 		<script type='text/javascript'>
+		var PODLOVE = PODLOVE || {};
 
-		function get_chapters_string_from_data (data) {
-			var chapters_entry = "";
+		(function($){
 
-			jQuery.each(data.data.chapters, function(index, value) {
-				chapters_entry = chapters_entry + value.start + " " + value.title;
-				if (value.url == "") {
-			
-				} else {
-					chapters_entry = chapters_entry + " <" + value.url + ">";
+			PODLOVE.AuphonicImport = function () {
+
+				function get_chapters_string_from_data (data) {
+					var chapters_entry = "";
+
+					$.each(data.data.chapters, function(index, value) {
+						chapters_entry = chapters_entry + value.start + " " + value.title;
+						if (value.url == "") {
+					
+						} else {
+							chapters_entry = chapters_entry + " <" + value.url + ">";
+						}
+						chapters_entry = chapters_entry + '\n';
+					});
+
+					return chapters_entry;
 				}
-				chapters_entry = chapters_entry + '\n';
-			});
 
-			return chapters_entry;
-		}
+				function get_fields_to_update(data, chapter_asset_assignment) {
+					var fields = [
+						{ field: '#title'                 , value: data.data.metadata.title },
+						{ field: '#_podlove_meta_subtitle', value: data.data.metadata.subtitle },
+						{ field: '#_podlove_meta_summary' , value: data.data.metadata.summary },
+						{ field: '#_podlove_meta_duration', value: data.data.length_timestring },
+						{ field: '#_podlove_meta_slug'    , value: data.data.output_basename },
+						{ field: '#new-tag-post_tag'      , value: data.data.metadata.tags.join(" , ") },
+					];
 
-		function get_fields_to_update(data, chapter_asset_assignment) {
-			var fields = [
-				{ field: '#title'                 , value: data.data.metadata.title },
-				{ field: '#_podlove_meta_subtitle', value: data.data.metadata.subtitle },
-				{ field: '#_podlove_meta_summary' , value: data.data.metadata.summary },
-				{ field: '#_podlove_meta_duration', value: data.data.length_timestring },
-				{ field: '#_podlove_meta_slug'    , value: data.data.output_basename },
-				{ field: '#new-tag-post_tag'      , value: data.data.metadata.tags.join(" , ") },
-			];
+					if (chapter_asset_assignment == 'manual') {
+						fields.push({ field: '#_podlove_meta_chapters', value: get_chapters_string_from_data(data) });
+					}
 
-			if (chapter_asset_assignment == 'manual') {
-				fields.push({ field: '#_podlove_meta_chapters', value: get_chapters_string_from_data(data) });
+					return fields;
+				}
+
+				/**
+				 * Import and override existing fields.
+				 */
+				function do_force_import(data, chapter_asset_assignment) {
+					var fields = get_fields_to_update(data, chapter_asset_assignment);
+					$.each(fields, function (index, field) {
+						$(field.field).val(field.value);
+					});
+				}
+
+				/**
+				 * Import but do not override existing fields.
+				 */
+				function do_simple_import(data, chapter_asset_assignment) {
+					var fields = get_fields_to_update(data, chapter_asset_assignment);
+					$.each(fields, function (index, field) {
+						if ($(field.field).val() == "") {
+							$(field.field).val(field.value);
+						}
+					});
+				}
+
+				function fetch_production_data(token) {
+					var uuid = $("#import_from_auphonic option:selected").val(),
+					    module_url = "<?php echo $this->get_module_url(); ?>",
+					    chapter_asset_assignment = "<?php echo $asset_assignments->chapters ?>";
+
+					$.getJSON(module_url + '/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
+
+						// hide prompt label which usually is placed above the title field
+						$('#title-prompt-text').addClass('screen-reader-text');
+
+						if (document.getElementById('force_import_from_auphonic').checked) {
+							do_force_import(data, chapter_asset_assignment);
+						} else {
+							do_simple_import(data, chapter_asset_assignment);
+						}
+					});
+				}
+
+				$("#fetch_production_data_button").click(function () {
+					fetch_production_data($(this).data('token'));
+				});
+
 			}
+		}(jQuery));
 
-			return fields;
-		}
-
-		/**
-		 * Import and override existing fields.
-		 */
-		function do_force_import(data, chapter_asset_assignment) {
-			var fields = get_fields_to_update(data, chapter_asset_assignment);
-			jQuery.each(fields, function (index, field) {
-				jQuery(field.field).val(field.value);
-			});
-		}
-
-		/**
-		 * Import but do not override existing fields.
-		 */
-		function do_simple_import(data, chapter_asset_assignment) {
-			var fields = get_fields_to_update(data, chapter_asset_assignment);
-			jQuery.each(fields, function (index, field) {
-				if (jQuery(field.field).val() == "") {
-					jQuery(field.field).val(field.value);
-				}
-			});
-		}
-
-		function fetch_production_data(token) {
-			var uuid = jQuery("#import_from_auphonic option:selected").val(),
-			    module_url = "<?php echo $this->get_module_url(); ?>",
-			    chapter_asset_assignment = "<?php echo $asset_assignments->chapters ?>";
-
-			jQuery.getJSON(module_url + '/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
-
-				// hide prompt label which usually is placed above the title field
-				jQuery('#title-prompt-text').addClass('screen-reader-text');
-
-				if (document.getElementById('force_import_from_auphonic').checked) {
-					do_force_import(data, chapter_asset_assignment);
-				} else {
-					do_simple_import(data, chapter_asset_assignment);
-				}
-			});
-		}
+		jQuery(function($) {
+			PODLOVE.AuphonicImport();
+		});
 		</script>
 		<?php												
 						
@@ -147,7 +163,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 			$displayed_name = "";
 		}
 
-		echo "</select>\n<input type='button' class='button' style='width: 150px;' onclick='fetch_production_data(\"".$this->get_module_option('auphonic_api_key')."\")' value=\"Import from Auphonic\"/>
+		echo "</select>\n<input type='button' id='fetch_production_data_button' class='button' style='width: 150px;' value=\"Import from Auphonic\" data-token='{$this->get_module_option('auphonic_api_key')}' />
 					<input type='checkbox' style='width: 20px;' id='force_import_from_auphonic'/><label for='force_import_from_auphonic'>Force import (overwrites all fields, even if filled out)</label>
 					<p><span class='description'>";
 					
