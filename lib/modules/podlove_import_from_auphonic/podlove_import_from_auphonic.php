@@ -168,9 +168,19 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 		});
 		</script>
 
-		<div style="line-height: 24px;">
-			<div style="float: left; width:200px">Select Production</div>
-			<div style="float: left;">
+		<span class='description'>
+		<?php	
+		if ( $asset_assignments->chapters == 'manual' ) {
+			echo __( "Title, subtitle, summary, tags, duration, episode media file slug and chapters will be imported from Auphonic.", 'podlove' );
+		} else {
+			echo __( "Title, subtitle, summary, tags, duration and episode media file slug will be imported from Auphonic.", 'podlove' );
+		}
+		?>
+		</span>
+
+		<div style="line-height: 24px; padding-top: 5px">
+			<!-- <div style="float: left; width:200px">Select Production</div> -->
+			<div style="float: left; margin-right: 10px;">
 				<select name="import_from_auphonic" id="import_from_auphonic">
 				<?php												
 				foreach(json_decode($result)->data as $production_key => $production_data) {
@@ -181,7 +191,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 					}
 					?>
 					<option value="<?php echo $production_data->uuid ?>">
-						<?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")"; ?>
+						Production: <?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")"; ?>
 					</option>
 					<?php
 				}
@@ -189,33 +199,21 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 				</select>
 			</div>
 
-			<div style="clear: both"></div>
-
-			<div style="float: left; width: 200px">
-				<input type='button' id='fetch_production_data_button' class='button' style='width: 150px;' value="Import from Auphonic" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>' />
-				<span id="fetch_production_status"></span>
+			<div style="float: left">
+				<a class='button' style="padding-left: 15px; margin-right: 5px;" id='fetch_production_data_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
+					Import from Auphonic
+					<div style="display: inline-block; width: 5px">
+						<span id="fetch_production_status"></span>
+					</div>
+				</a>
 			</div>
-			<div style="float: left; text-align: left;">
+
+			<div style="float: left; text-align: left; margin-right: 10px; vertical-align: baseline">
 				<input type='checkbox' style='width: 18px' id='force_import_from_auphonic'/>
-				<label for='force_import_from_auphonic' title="<?php echo __( 'Overwrite all fields, even if they are already filled out.', 'podlove' ) ?>"><?php echo __( 'Force import', 'podlove' ) ?></label>
+				<label style="vertical-align: baseline;" for='force_import_from_auphonic' title="<?php echo __( 'Overwrite all fields, even if they are already filled out.', 'podlove' ) ?>"><?php echo __( 'Force import', 'podlove' ) ?></label>
 			</div>
-
 			<div style="clear: both"></div>
 		</div>
-
-
-		
-		<p>
-			<span class='description'>
-			<?php	
-			if ( $asset_assignments->chapters == 'manual' ) {
-				echo __( "Title, subtitle, summary, tags, duration, episode media file slug and chapters will be imported from Auphonic.", 'podlove' );
-			} else {
-				echo __( "Title, subtitle, summary, tags, duration and episode media file slug will be imported from Auphonic.", 'podlove' );
-			}
-			?>
-			</span>
-		</p>
 		<?php
     }
     
