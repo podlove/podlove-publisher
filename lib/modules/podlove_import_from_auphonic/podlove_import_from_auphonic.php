@@ -58,101 +58,88 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 
 		$asset_assignments = Model\AssetAssignment::get_instance();
 
-		echo "<script type='text/javascript'>
-			
-			function fetch_production_data(token) {
-				var uuid = jQuery(\"#import_from_auphonic option:selected\").val();
-				
-				jQuery.getJSON('".$this->get_module_url()."/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
-					
+		?>
+		<script type='text/javascript'>
+		function fetch_production_data(token) {
+			var uuid = jQuery("#import_from_auphonic option:selected").val(),
+			    module_url = "<?php echo $this->get_module_url(); ?>",
+			    chapter_asset_assignment = "<?php echo $asset_assignments->chapters ?>";
+
+			jQuery.getJSON(module_url + '/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
+
 				// hide prompt label which usually is placed above the title field
 				jQuery('#title-prompt-text').addClass('screen-reader-text');
-				
-				if (document.getElementById('force_import_from_auphonic').checked){
 
+				if (document.getElementById('force_import_from_auphonic').checked) {
 					jQuery('#title').val(data.data.metadata.title);
-
 					jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-
 					jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-
 					jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-
 					jQuery('#_podlove_meta_slug').val(data.data.output_basename);
+					jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
 
-					jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));";
-
-					if ( $asset_assignments->chapters == 'manual' ) {
-
-							echo "
-									var chapters_entry = \"\";
-									jQuery.each(data.data.chapters, function(index, value) {
-										chapters_entry = chapters_entry + value.start + \" \" + value.title;
-										if(value.url == \"\") {
-							
-										} else {
-											chapters_entry = chapters_entry + \" <\" + value.url + \">\";
-										}
-										chapters_entry = chapters_entry + '\\n';
-									});							
-									jQuery('#_podlove_meta_chapters').val(chapters_entry);						
-							";
-				
-					}													
-				
-					echo "} else {
-						if(jQuery(\"#title\").val() == \"\") {
-							jQuery('#title').val(data.data.metadata.title);
-						}
-				
-						if(jQuery(\"#_podlove_meta_subtitle\").val() == \"\") {
-							jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-						}
-				
-						if(jQuery(\"#_podlove_meta_summary\").val() == \"\") {
-							jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-						}
-				
-						if(jQuery(\"#_podlove_meta_duration\").val() == \"\") {
-							jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-						}
-				
-						if(jQuery(\"#_podlove_meta_slug\").val() == \"\") {
-							jQuery('#_podlove_meta_slug').val(data.data.output_basename);
-						}
-				
-						if(jQuery(\"#new-tag-post_tag\").val() == \"\") {
-							jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));
-						}						
-					";
-
-					if ( $asset_assignments->chapters == 'manual' ) {
-
-							echo "
-								if(jQuery(\"#_podlove_meta_chapters\").val() == \"\") {
-									var chapters_entry = \"\";
-					
-									jQuery.each(data.data.chapters, function(index, value) {
-										chapters_entry = chapters_entry + value.start + \" \" + value.title;
-										if(value.url == \"\") {
-							
-										} else {
-											chapters_entry = chapters_entry + \" <\" + value.url + \">\";
-										}
-										chapters_entry = chapters_entry + '\\n';
-									});
-					
-									jQuery('#_podlove_meta_chapters').val(chapters_entry);
-								}
-				
-							";
-				
-					}
+					if (chapter_asset_assignment == 'manual') {
+						var chapters_entry = "";
+						jQuery.each(data.data.chapters, function(index, value) {
+							chapters_entry = chapters_entry + value.start + " " + value.title;
+							if (value.url == "") {
 						
-			echo "}});
-				}</script>
-			";
+							} else {
+								chapters_entry = chapters_entry + " <" + value.url + ">";
+							}
+							chapters_entry = chapters_entry + '\n';
+						});							
+						jQuery('#_podlove_meta_chapters').val(chapters_entry);	
+					}
 
+				} else {
+					if (jQuery("#title").val() == "") {
+						jQuery('#title').val(data.data.metadata.title);
+					}
+			
+					if (jQuery("#_podlove_meta_subtitle").val() == "") {
+						jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
+					}
+			
+					if (jQuery("#_podlove_meta_summary").val() == "") {
+						jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
+					}
+			
+					if (jQuery("#_podlove_meta_duration").val() == "") {
+						jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
+					}
+			
+					if (jQuery("#_podlove_meta_slug").val() == "") {
+						jQuery('#_podlove_meta_slug').val(data.data.output_basename);
+					}
+			
+					if (jQuery("#new-tag-post_tag").val() == "") {
+						jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
+					}
+
+					if (chapter_asset_assignment == 'manual') {
+						if (jQuery("#_podlove_meta_chapters").val() == "") {
+							var chapters_entry = "";
+						
+							jQuery.each(data.data.chapters, function(index, value) {
+								chapters_entry = chapters_entry + value.start + " " + value.title;
+								if (value.url == "") {
+						
+								} else {
+									chapters_entry = chapters_entry + " <" + value.url + ">";
+								}
+								chapters_entry = chapters_entry + '\n';
+							});
+						
+							jQuery('#_podlove_meta_chapters').val(chapters_entry);
+						}
+					}
+				}
+			});
+		}
+		</script>
+		<?php												
+						
 		echo "<select name=\"import_from_auphonic\" id=\"import_from_auphonic\">\n";
 		foreach(json_decode($result)->data as $production_key => $production_data) {
 			if($production_data->output_basename == "") {
