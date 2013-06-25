@@ -178,9 +178,43 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 		?>
 		</span>
 
-		<div style="line-height: 24px; padding-top: 5px">
-			<!-- <div style="float: left; width:200px">Select Production</div> -->
-			<div style="float: left; margin-right: 10px;">
+		<style type="text/css">
+		#auphonic-import-form {
+			line-height: 24px;
+			padding-top: 5px
+		}
+
+		.auphonic-select-wrapper {
+			float: left;
+			margin-right: 10px;
+		}
+
+		.auphonic-button-wrapper { float: left;	}
+
+		#fetch_production_data_button {
+			padding-left: 15px;
+			margin-right: 5px;
+		}
+
+		#fetch_production_data_button > div {
+			display: inline-block;
+			width: 5px;
+		}
+
+		.auphonic-checkbox-wrapper {
+			float: left;
+			text-align: left;
+			margin-right: 10px;
+			vertical-align: baseline;
+		}
+
+		.auphonic-checkbox-wrapper label { vertical-align: baseline; }
+		.auphonic-checkbox-wrapper input { width: 18px; }
+		</style>
+
+		<div id="auphonic-import-form">
+
+			<div class="auphonic-select-wrapper">
 				<select name="import_from_auphonic" id="import_from_auphonic">
 				<?php												
 				foreach(json_decode($result)->data as $production_key => $production_data) {
@@ -199,19 +233,20 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 				</select>
 			</div>
 
-			<div style="float: left">
-				<a class='button' style="padding-left: 15px; margin-right: 5px;" id='fetch_production_data_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
+			<div class="auphonic-button-wrapper" style="float: left">
+				<a class='button' id='fetch_production_data_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
 					Import from Auphonic
-					<div style="display: inline-block; width: 5px">
+					<div>
 						<span id="fetch_production_status"></span>
 					</div>
 				</a>
 			</div>
 
-			<div style="float: left; text-align: left; margin-right: 10px; vertical-align: baseline">
-				<input type='checkbox' style='width: 18px' id='force_import_from_auphonic'/>
-				<label style="vertical-align: baseline;" for='force_import_from_auphonic' title="<?php echo __( 'Overwrite all fields, even if they are already filled out.', 'podlove' ) ?>"><?php echo __( 'Force import', 'podlove' ) ?></label>
+			<div class="auphonic-checkbox-wrapper">
+				<input type='checkbox' id='force_import_from_auphonic'/>
+				<label for='force_import_from_auphonic' title="<?php echo __( 'Overwrite all fields, even if they are already filled out.', 'podlove' ) ?>"><?php echo __( 'Force import', 'podlove' ) ?></label>
 			</div>
+
 			<div style="clear: both"></div>
 		</div>
 		<?php
