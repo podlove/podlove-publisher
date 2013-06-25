@@ -6,6 +6,7 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
 
     protected $module_name = 'Podlove ADN Poster';
     protected $module_description = 'Broadcasts new podcast episodes on App.net';
+    protected $module_group = 'external services';
 	
 	
     public function load() {
@@ -49,16 +50,26 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     
     	$episode = \Podlove\Model\Episode::find_one_by_post_id($_POST['post_ID']);
     	$podcast = \Podlove\Model\Podcast::get_instance();
-    	
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
+    	
+    	$posted_linked_title = array();
+    	$start_position=0;
+    	
+    	while(($position = strpos($posted_text, "%tu", $start_position)) !== FALSE) {
+        	$episode_entry = array("url" => get_permalink($_POST['post_ID']), "text" => get_the_title($_POST['post_ID']), "pos" => $position, "len" => strlen(get_the_title($_POST['post_ID'])));
+        	array_push($posted_linked_title, $episode_entry);
+        	$start_position = $position+1;
+		}
+    	
     	$posted_text = str_replace("%p", $podcast->title, $posted_text);
+    	$posted_text = str_replace("%tu", get_the_title($_POST['post_ID']), $posted_text);
     	$posted_text = str_replace("%t", get_the_title($_POST['post_ID']), $posted_text);
     	$posted_text = str_replace("%u", get_permalink($_POST['post_ID']), $posted_text);
     	$posted_text = str_replace("%s", $episode->subtitle, $posted_text);
     
-    	$data = array("text" => $posted_text);                                                  
-		$data_string = json_encode($data);                                                                                   
-
+    	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
+		$data_string = json_encode($data);        
+		
 		$ch = curl_init('https://alpha-api.app.net/stream/0/posts?access_token='.$this->get_module_option('adn_poster_auth').'');                                                                      
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
@@ -70,7 +81,6 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
 		);                                                                                                                   
 
 		$result = curl_exec($ch);
-
     }
     
     
