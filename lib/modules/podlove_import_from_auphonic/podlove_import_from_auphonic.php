@@ -20,20 +20,26 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
     			add_action('admin_bar_init', array( $this, 'check_code'));
     		}  
-    		
-    		if($this->get_module_option('auphonic_api_key') == "") {
-    			$this->register_option( 'auphonic_api_key', 'hidden', array(
-					'label'       => __( 'Podlove can access your Auphonic account?', 'podlove' ),
-					'description' => __( '<span style="font-weight: bold; color: red !important;">!!!</span> You need to allow Podlove to access your Auphonic account. This can be done <a href="https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri='.urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle').'&response_type=code" target="_self">here</a> (you will be redirected to this page, once the auth process completed).', 'podlove' ),
-					'html'        => array( 'class' => 'regular-text' )
-				) );
+
+    		if ( $this->get_module_option('auphonic_api_key') == "" ) {
+    			$auth_url = "https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
+	    		$description = '<i class="podlove-icon-remove"></i> '
+	    		             . __( 'You need to allow Podlove to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
+	    		             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove' ) . '</a>';
     		} else {
-    			$this->register_option( 'auphonic_api_key', 'hidden', array(
-					'label'       => __( 'Podlove can access your Auphonic account?', 'podlove' ),
-					'description' => __( '<span style="font-weight: bold; color: green !important;">✓</span> If you want to reset your connection with Auphonic click <a href="'.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1'.'">here</a>.', 'podlove' ),
-					'html'        => array( 'class' => 'regular-text' )
-				) );
+    			$description = '<i class="podlove-icon-ok"></i> '
+    			             . sprintf(
+    			             	__( 'Great! You are authorized to access Auphonic. If you want to reset your connection with Auphonic click %shere%s', 'podlove' ),
+    			             	'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
+    			             	'</a>'
+			             	);
     		}
+
+			$this->register_option( 'auphonic_api_key', 'hidden', array(
+				'label'       => __( 'Authorize Podlove to access Auphonic', 'podlove' ),
+				'description' => $description,
+				'html'        => array( 'class' => 'regular-text' )
+			) );
 
     }
     
@@ -126,6 +132,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 					    module_url = "<?php echo $this->get_module_url(); ?>",
 					    chapter_asset_assignment = "<?php echo $asset_assignments->chapters ?>";
 
+					$("#fetch_production_status").html('<i class="podlove-icon-spinner rotate"></i>').show();
 					$.getJSON(module_url + '/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
 
 						// hide prompt label which usually is placed above the title field
@@ -136,6 +143,10 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 						} else {
 							do_simple_import(data, chapter_asset_assignment);
 						}
+						$("#fetch_production_status")
+							.html('<i class="podlove-icon-ok"></i>')
+							.delay(250)
+							.fadeOut(500);
 					});
 				}
 
@@ -150,30 +161,56 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 			PODLOVE.AuphonicImport();
 		});
 		</script>
-		<?php												
-						
-		echo "<select name=\"import_from_auphonic\" id=\"import_from_auphonic\">\n";
-		foreach(json_decode($result)->data as $production_key => $production_data) {
-			if($production_data->output_basename == "") {
-				$displayed_name = $production_data->metadata->title;
-			} else {
-				$displayed_name = $production_data->output_basename;
-			}
-			echo "	<option value=\"".$production_data->uuid."\">".$displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")</option>\n";
-			$displayed_name = "";
-		}
 
-		echo "</select>\n<input type='button' id='fetch_production_data_button' class='button' style='width: 150px;' value=\"Import from Auphonic\" data-token='{$this->get_module_option('auphonic_api_key')}' />
-					<input type='checkbox' style='width: 20px;' id='force_import_from_auphonic'/><label for='force_import_from_auphonic'>Force import (overwrites all fields, even if filled out)</label>
-					<p><span class='description'>";
-					
-					if ( $asset_assignments->chapters == 'manual' ) {
-						echo "Title, subtitle, summary, tags, duration, mediafile slug and Chapters";
+		<div style="line-height: 24px;">
+			<div style="float: left; width:200px">Select Production</div>
+			<div style="float: left;">
+				<select name="import_from_auphonic" id="import_from_auphonic">
+				<?php												
+				foreach(json_decode($result)->data as $production_key => $production_data) {
+					if($production_data->output_basename == "") {
+						$displayed_name = $production_data->metadata->title;
 					} else {
-						echo "Title, subtitle, summary, tags, duration and mediafile slug";
+						$displayed_name = $production_data->output_basename;
 					}
-					
-		echo "		will be imported from Auphonic.</span></p>\n";	
+					?>
+					<option value="<?php echo $production_data->uuid ?>">
+						<?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")"; ?>
+					</option>
+					<?php
+				}
+				?>
+				</select>
+			</div>
+
+			<div style="clear: both"></div>
+
+			<div style="float: left; width: 200px">
+				<input type='button' id='fetch_production_data_button' class='button' style='width: 150px;' value="Import from Auphonic" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>' />
+				<span id="fetch_production_status"></span>
+			</div>
+			<div style="float: left; text-align: left;">
+				<input type='checkbox' style='width: 18px' id='force_import_from_auphonic'/>
+				<label for='force_import_from_auphonic' title="<?php echo __( 'Overwrite all fields, even if they are already filled out.', 'podlove' ) ?>"><?php echo __( 'Force import', 'podlove' ) ?></label>
+			</div>
+
+			<div style="clear: both"></div>
+		</div>
+
+
+		
+		<p>
+			<span class='description'>
+			<?php	
+			if ( $asset_assignments->chapters == 'manual' ) {
+				echo __( "Title, subtitle, summary, tags, duration, episode media file slug and chapters will be imported from Auphonic.", 'podlove' );
+			} else {
+				echo __( "Title, subtitle, summary, tags, duration and episode media file slug will be imported from Auphonic.", 'podlove' );
+			}
+			?>
+			</span>
+		</p>
+		<?php
     }
     
     public function check_code() { 
