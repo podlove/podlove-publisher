@@ -64,6 +64,9 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 				var uuid = jQuery(\"#import_from_auphonic option:selected\").val();
 				
 				jQuery.getJSON('".$this->get_module_url()."/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
+					
+				// hide prompt label which usually is placed above the title field
+				jQuery('#title-prompt-text').addClass('screen-reader-text');
 				
 				if (document.getElementById('force_import_from_auphonic').checked){
 
