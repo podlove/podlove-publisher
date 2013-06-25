@@ -62,6 +62,8 @@ class Podcast_Post_Meta_Box {
 				$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
 				$episode = $form->object;
 
+				do_action( 'podlove_episode_form_beginning', $wrapper, $episode );
+
 				$wrapper->text( 'subtitle', array(
 					'label'       => __( 'Subtitle', 'podlove' ),
 					'description' => '',

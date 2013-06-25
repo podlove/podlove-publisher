@@ -10,7 +10,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     public function load() {
     		
     		if($this->get_module_option('auphonic_api_key') == "") { } else {
-    			add_action( 'podlove_episode_form', array( $this, 'auphonic_episodes' ), 10, 3 );
+    			add_action( 'podlove_episode_form_beginning', array( $this, 'auphonic_episodes' ), 10, 2 );
     		}
     		
 			if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
@@ -37,136 +37,141 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 
     }
     
-    public function auphonic_episodes() {
-    	echo "<div><span><label>Import Episode data from Auphonic</label></span></div>";
-    			$ch = curl_init('https://auphonic.com/api/productions.json?limit=10');                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
-				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
-					'Content-type: application/json',                                     
-					'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
-				);                                                              
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
+    public function auphonic_episodes( $wrapper, $episode ) {
+    	$wrapper->callback( 'import_from_auphonic_form', array(
+			'label'    => __( 'Import Episode data from Auphonic', 'podlove' ),
+			'callback' => array( $this, 'auphonic_episodes_form' )
+		) );			
+    }
+
+    public function auphonic_episodes_form() {
+		$ch = curl_init('https://auphonic.com/api/productions.json?limit=10');                                                                      
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
+		curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
+			'Content-type: application/json',                                     
+			'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
+		);                                                              
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
+
+		$result = curl_exec($ch);
+
+		$asset_assignments = Model\AssetAssignment::get_instance();
+
+		echo "<script type='text/javascript'>
 			
-				$result = curl_exec($ch);
+			function fetch_production_data(token) {
+				var uuid = jQuery(\"#import_from_auphonic option:selected\").val();
 				
-				$asset_assignments = Model\AssetAssignment::get_instance();
+				jQuery.getJSON('".$this->get_module_url()."/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
 				
-				echo "<script type='text/javascript'>
-					
-					function fetch_production_data(token) {
-						var uuid = jQuery(\"#import_from_auphonic option:selected\").val();
-						
-						jQuery.getJSON('".$this->get_module_url()."/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
-						
-						if (document.getElementById('force_import_from_auphonic').checked){
+				if (document.getElementById('force_import_from_auphonic').checked){
 
-							jQuery('#title').val(data.data.metadata.title);
+					jQuery('#title').val(data.data.metadata.title);
 
-							jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
+					jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
 
-							jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
+					jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
 
-							jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
+					jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
 
-							jQuery('#_podlove_meta_slug').val(data.data.output_basename);
+					jQuery('#_podlove_meta_slug').val(data.data.output_basename);
 
-							jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));";
+					jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));";
 
-							if ( $asset_assignments->chapters == 'manual' ) {
-				
-									echo "
-											var chapters_entry = \"\";
-											jQuery.each(data.data.chapters, function(index, value) {
-												chapters_entry = chapters_entry + value.start + \" \" + value.title;
-												if(value.url == \"\") {
-									
-												} else {
-													chapters_entry = chapters_entry + \" <\" + value.url + \">\";
-												}
-												chapters_entry = chapters_entry + '\\n';
-											});							
-											jQuery('#_podlove_meta_chapters').val(chapters_entry);						
-									";
-						
-							}													
-						
-							echo "} else {
-								if(jQuery(\"#title\").val() == \"\") {
-									jQuery('#title').val(data.data.metadata.title);
-								}
-						
-								if(jQuery(\"#_podlove_meta_subtitle\").val() == \"\") {
-									jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-								}
-						
-								if(jQuery(\"#_podlove_meta_summary\").val() == \"\") {
-									jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-								}
-						
-								if(jQuery(\"#_podlove_meta_duration\").val() == \"\") {
-									jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-								}
-						
-								if(jQuery(\"#_podlove_meta_slug\").val() == \"\") {
-									jQuery('#_podlove_meta_slug').val(data.data.output_basename);
-								}
-						
-								if(jQuery(\"#new-tag-post_tag\").val() == \"\") {
-									jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));
-								}						
+					if ( $asset_assignments->chapters == 'manual' ) {
+
+							echo "
+									var chapters_entry = \"\";
+									jQuery.each(data.data.chapters, function(index, value) {
+										chapters_entry = chapters_entry + value.start + \" \" + value.title;
+										if(value.url == \"\") {
+							
+										} else {
+											chapters_entry = chapters_entry + \" <\" + value.url + \">\";
+										}
+										chapters_entry = chapters_entry + '\\n';
+									});							
+									jQuery('#_podlove_meta_chapters').val(chapters_entry);						
 							";
 				
-							if ( $asset_assignments->chapters == 'manual' ) {
+					}													
 				
-									echo "
-										if(jQuery(\"#_podlove_meta_chapters\").val() == \"\") {
-											var chapters_entry = \"\";
-							
-											jQuery.each(data.data.chapters, function(index, value) {
-												chapters_entry = chapters_entry + value.start + \" \" + value.title;
-												if(value.url == \"\") {
-									
-												} else {
-													chapters_entry = chapters_entry + \" <\" + value.url + \">\";
-												}
-												chapters_entry = chapters_entry + '\\n';
-											});
-							
-											jQuery('#_podlove_meta_chapters').val(chapters_entry);
-										}
-						
-									";
-						
-							}
-								
-					echo "}});
-						}</script>
+					echo "} else {
+						if(jQuery(\"#title\").val() == \"\") {
+							jQuery('#title').val(data.data.metadata.title);
+						}
+				
+						if(jQuery(\"#_podlove_meta_subtitle\").val() == \"\") {
+							jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
+						}
+				
+						if(jQuery(\"#_podlove_meta_summary\").val() == \"\") {
+							jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
+						}
+				
+						if(jQuery(\"#_podlove_meta_duration\").val() == \"\") {
+							jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
+						}
+				
+						if(jQuery(\"#_podlove_meta_slug\").val() == \"\") {
+							jQuery('#_podlove_meta_slug').val(data.data.output_basename);
+						}
+				
+						if(jQuery(\"#new-tag-post_tag\").val() == \"\") {
+							jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(\", \"));
+						}						
 					";
+
+					if ( $asset_assignments->chapters == 'manual' ) {
+
+							echo "
+								if(jQuery(\"#_podlove_meta_chapters\").val() == \"\") {
+									var chapters_entry = \"\";
+					
+									jQuery.each(data.data.chapters, function(index, value) {
+										chapters_entry = chapters_entry + value.start + \" \" + value.title;
+										if(value.url == \"\") {
+							
+										} else {
+											chapters_entry = chapters_entry + \" <\" + value.url + \">\";
+										}
+										chapters_entry = chapters_entry + '\\n';
+									});
+					
+									jQuery('#_podlove_meta_chapters').val(chapters_entry);
+								}
 				
-				echo "<form name='import_from_auphonic_form'><select name=\"import_from_auphonic\" id=\"import_from_auphonic\">\n";
-				foreach(json_decode($result)->data as $production_key => $production_data) {
-					if($production_data->output_basename == "") {
-						$displayed_name = $production_data->metadata->title;
-					} else {
-						$displayed_name = $production_data->output_basename;
+							";
+				
 					}
-					echo "	<option value=\"".$production_data->uuid."\">".$displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")</option>\n";
-					$displayed_name = "";
-				}
-				
-				echo "</select>\n<input type='button' class='button' style='width: 150px;' onclick='fetch_production_data(\"".$this->get_module_option('auphonic_api_key')."\")' value=\"Import from Auphonic\"/>
-							<input type='checkbox' style='width: 20px;' id='force_import_from_auphonic'/><label for='force_import_from_auphonic'>Force import (overwrites all fields, even if filled out)</label>
-							<p><span class='description'>";
-							
-							if ( $asset_assignments->chapters == 'manual' ) {
-								echo "Title, subtitle, summary, tags, duration, mediafile slug and Chapters";
-							} else {
-								echo "Title, subtitle, summary, tags, duration and mediafile slug";
-							}
-							
-				echo "		will be imported from Auphonic.</span></p>
-							</form>\n";				
+						
+			echo "}});
+				}</script>
+			";
+
+		echo "<select name=\"import_from_auphonic\" id=\"import_from_auphonic\">\n";
+		foreach(json_decode($result)->data as $production_key => $production_data) {
+			if($production_data->output_basename == "") {
+				$displayed_name = $production_data->metadata->title;
+			} else {
+				$displayed_name = $production_data->output_basename;
+			}
+			echo "	<option value=\"".$production_data->uuid."\">".$displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")</option>\n";
+			$displayed_name = "";
+		}
+
+		echo "</select>\n<input type='button' class='button' style='width: 150px;' onclick='fetch_production_data(\"".$this->get_module_option('auphonic_api_key')."\")' value=\"Import from Auphonic\"/>
+					<input type='checkbox' style='width: 20px;' id='force_import_from_auphonic'/><label for='force_import_from_auphonic'>Force import (overwrites all fields, even if filled out)</label>
+					<p><span class='description'>";
+					
+					if ( $asset_assignments->chapters == 'manual' ) {
+						echo "Title, subtitle, summary, tags, duration, mediafile slug and Chapters";
+					} else {
+						echo "Title, subtitle, summary, tags, duration and mediafile slug";
+					}
+					
+		echo "		will be imported from Auphonic.</span></p>\n";	
     }
     
     public function check_code() { 
