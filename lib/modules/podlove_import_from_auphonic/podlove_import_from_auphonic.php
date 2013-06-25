@@ -6,6 +6,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 
     protected $module_name = 'Podlove Import From Auphonic';
     protected $module_description = 'Import Episode data from an Auphonic production';
+    protected $module_group = 'external services';
 	
     public function load() {
     		
