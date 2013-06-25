@@ -4,7 +4,7 @@ use \Podlove\Model;
 
 class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 
-    protected $module_name = 'Podlove Auphonic Importer';
+    protected $module_name = 'Podlove Import From Auphonic';
     protected $module_description = 'Import Episode data from an Auphonic production';
 	
     public function load() {
@@ -57,7 +57,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 					function fetch_production_data(token) {
 						var uuid = jQuery(\"#import_from_auphonic option:selected\").val();
 						
-						jQuery.getJSON('".get_site_url()."/wp-content/plugins/podlove-publisher/lib/modules/podlove_import_from_auphonic/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
+						jQuery.getJSON('".$this->get_module_url()."/fetch_episode.php?uuid=' + uuid + '&access_token=' + token, function(data) {
 						
 						if (document.getElementById('force_import_from_auphonic').checked){
 
