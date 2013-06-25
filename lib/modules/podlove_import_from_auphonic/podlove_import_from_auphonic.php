@@ -13,11 +13,11 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     			add_action( 'podlove_episode_form', array( $this, 'auphonic_episodes' ), 10, 3 );
     		}
     		
-			if($_GET["page"] == "podlove_settings_modules_handle") {
+			if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
     			add_action('admin_bar_init', array( $this, 'check_code'));
     		}    		
     		
-    		if($_GET["page"] == "podlove_settings_modules_handle") {
+    		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
     			add_action('admin_bar_init', array( $this, 'check_code'));
     		}  
     		
@@ -170,9 +170,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
     }
     
     public function check_code() { 
-    	if($_GET["code"] == "") {
-    	
-    	} else {
+    	if( isset( $_GET["code"] ) && $_GET["code"] ) {
     		if($this->get_module_option('auphonic_api_key') == "") {
 				$ch = curl_init('http://auth.podlove.org/auphonic.php');                                                                      
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
@@ -189,7 +187,7 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 			}
     	}
     	
-    	if($_GET["reset_auphonic_auth_code"] == "1") {
+    	if ( isset( $_GET["reset_auphonic_auth_code"] ) && $_GET["reset_auphonic_auth_code"] == "1" ) {
     		$this->update_module_option('auphonic_api_key', "");
     		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');
     	}
