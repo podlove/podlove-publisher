@@ -60,6 +60,68 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 
 		?>
 		<script type='text/javascript'>
+
+		function get_chapters_string_from_data (data) {
+			var chapters_entry = "";
+
+			jQuery.each(data.data.chapters, function(index, value) {
+				chapters_entry = chapters_entry + value.start + " " + value.title;
+				if (value.url == "") {
+			
+				} else {
+					chapters_entry = chapters_entry + " <" + value.url + ">";
+				}
+				chapters_entry = chapters_entry + '\n';
+			});
+
+			return chapters_entry;
+		}
+
+		function do_force_import (data, chapter_asset_assignment) {
+			jQuery('#title').val(data.data.metadata.title);
+			jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
+			jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
+			jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
+			jQuery('#_podlove_meta_slug').val(data.data.output_basename);
+			jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
+
+			if (chapter_asset_assignment == 'manual') {
+				jQuery('#_podlove_meta_chapters').val(get_chapters_string_from_data(data));	
+			}
+		}
+
+		function do_simple_import (data, chapter_asset_assignment) {
+			if (jQuery("#title").val() == "") {
+				jQuery('#title').val(data.data.metadata.title);
+			}
+			
+			if (jQuery("#_podlove_meta_subtitle").val() == "") {
+				jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
+			}
+			
+			if (jQuery("#_podlove_meta_summary").val() == "") {
+				jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
+			}
+			
+			if (jQuery("#_podlove_meta_duration").val() == "") {
+				jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
+			}
+			
+			if (jQuery("#_podlove_meta_slug").val() == "") {
+				jQuery('#_podlove_meta_slug').val(data.data.output_basename);
+			}
+			
+			if (jQuery("#new-tag-post_tag").val() == "") {
+				jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
+			}
+
+			if (chapter_asset_assignment == 'manual') {
+				if (jQuery("#_podlove_meta_chapters").val() == "") {
+					jQuery('#_podlove_meta_chapters').val(get_chapters_string_from_data(data));
+				}
+			}
+		}
+
 		function fetch_production_data(token) {
 			var uuid = jQuery("#import_from_auphonic option:selected").val(),
 			    module_url = "<?php echo $this->get_module_url(); ?>",
@@ -71,69 +133,9 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 				jQuery('#title-prompt-text').addClass('screen-reader-text');
 
 				if (document.getElementById('force_import_from_auphonic').checked) {
-					jQuery('#title').val(data.data.metadata.title);
-					jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-					jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-					jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-					jQuery('#_podlove_meta_slug').val(data.data.output_basename);
-					jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
-
-					if (chapter_asset_assignment == 'manual') {
-						var chapters_entry = "";
-						jQuery.each(data.data.chapters, function(index, value) {
-							chapters_entry = chapters_entry + value.start + " " + value.title;
-							if (value.url == "") {
-						
-							} else {
-								chapters_entry = chapters_entry + " <" + value.url + ">";
-							}
-							chapters_entry = chapters_entry + '\n';
-						});							
-						jQuery('#_podlove_meta_chapters').val(chapters_entry);	
-					}
-
+					do_force_import(data, chapter_asset_assignment);
 				} else {
-					if (jQuery("#title").val() == "") {
-						jQuery('#title').val(data.data.metadata.title);
-					}
-			
-					if (jQuery("#_podlove_meta_subtitle").val() == "") {
-						jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-					}
-			
-					if (jQuery("#_podlove_meta_summary").val() == "") {
-						jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-					}
-			
-					if (jQuery("#_podlove_meta_duration").val() == "") {
-						jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-					}
-			
-					if (jQuery("#_podlove_meta_slug").val() == "") {
-						jQuery('#_podlove_meta_slug').val(data.data.output_basename);
-					}
-			
-					if (jQuery("#new-tag-post_tag").val() == "") {
-						jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
-					}
-
-					if (chapter_asset_assignment == 'manual') {
-						if (jQuery("#_podlove_meta_chapters").val() == "") {
-							var chapters_entry = "";
-						
-							jQuery.each(data.data.chapters, function(index, value) {
-								chapters_entry = chapters_entry + value.start + " " + value.title;
-								if (value.url == "") {
-						
-								} else {
-									chapters_entry = chapters_entry + " <" + value.url + ">";
-								}
-								chapters_entry = chapters_entry + '\n';
-							});
-						
-							jQuery('#_podlove_meta_chapters').val(chapters_entry);
-						}
-					}
+					do_simple_import(data, chapter_asset_assignment);
 				}
 			});
 		}
