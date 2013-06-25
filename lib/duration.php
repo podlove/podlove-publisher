@@ -1,8 +1,6 @@
 <?php
 namespace Podlove;
 
-require_once 'parse_normal_play_time.php';
-
 /**
  * Helper class to manage duration string.
  * @see http://podlove.org/simple-chapters/#Time
@@ -34,7 +32,7 @@ class Duration {
 	 * - extracts hours, minutes, seconds, milliseconds
 	 */
 	private function normalize() {
-		if ( $milliseconds = parse_npt( $this->duration, 'ms' ) ) {
+		if ( $milliseconds = \Podlove\NormalPlayTime\Parser::parse( $this->duration, 'ms' ) ) {
 			$this->hours        = floor((($milliseconds / 1000) / 60) / 60);
 			$this->minutes      = floor(($milliseconds / 1000) / 60) % 60;
 			$this->seconds      = floor($milliseconds / 1000) % 60;
@@ -137,36 +135,3 @@ function lfill( $string, $length, $fillchar = ' ' ) {
 	}
 	return $string;
 }
-
-// // Testcases
-// $durations = array(
-// 	'08:22.12:'    => '00:00:00.000', // invalid format
-// 	'08:222.12'    => '00:00:00.000', // invalid seconds
-// 	'98:22.12'     => '01:38:22.120', // long minutes
-// 	'10:22.1234'   => '00:10:22.123', // long milliseconds
-// 	'00:08:22.117' => '00:08:22.117', // full qualified
-// 	'08:22'        => '00:08:22.000', // MM:SS
-// 	'08:22.12'     => '00:08:22.120', // MM:SS.mm (missing 0)
-// 	'8:22.12'      => '00:08:22.120', // MM:SS.mm (missing 0)
-// 	'8:2.12'       => '00:08:02.120', // MM:SS.mm (missing 0)
-// 	'123:18:12.12' => '123:18:12.120', // HH:MM:SS.mm (long hours)
-// 	'207:31'       => '00:00:00.000' // invalid minutes
-// );
-
-// foreach ( $durations as $test_case => $expected ) {
-// 	$d = new Duration( $test_case );
-// 	$duration = $d->get();
-// 	if ( $duration == $expected ) {
-// 		echo ".";
-// 	} else {
-// 		echo "\n$duration != $expected\n";
-// 	}
-// }
-// // check formatting
-// $d = new Duration( '00:08:22.117' );
-// if ( $d->get('HH:MM:SS') == '00:08:22' ) {
-// 	echo '.';
-// } else {
-// 	echo "ERROR";
-// }
-// echo "\n";
