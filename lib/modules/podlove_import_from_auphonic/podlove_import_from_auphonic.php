@@ -143,6 +143,12 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 						} else {
 							do_simple_import(data, chapter_asset_assignment);
 						}
+
+						// activate all assets if no asset is active
+						if ($(".media_file_row input[type=checkbox]:checked").length === 0) {
+							$(".media_file_row input[type=checkbox]:not(:checked)").click();
+						}
+
 						$("#fetch_production_status")
 							.html('<i class="podlove-icon-ok"></i>')
 							.delay(250)
