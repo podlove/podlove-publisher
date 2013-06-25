@@ -77,49 +77,43 @@ class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
 			return chapters_entry;
 		}
 
-		function do_force_import (data, chapter_asset_assignment) {
-			jQuery('#title').val(data.data.metadata.title);
-			jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-			jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-			jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-			jQuery('#_podlove_meta_slug').val(data.data.output_basename);
-			jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
+		function get_fields_to_update(data, chapter_asset_assignment) {
+			var fields = [
+				{ field: '#title'                 , value: data.data.metadata.title },
+				{ field: '#_podlove_meta_subtitle', value: data.data.metadata.subtitle },
+				{ field: '#_podlove_meta_summary' , value: data.data.metadata.summary },
+				{ field: '#_podlove_meta_duration', value: data.data.length_timestring },
+				{ field: '#_podlove_meta_slug'    , value: data.data.output_basename },
+				{ field: '#new-tag-post_tag'      , value: data.data.metadata.tags.join(" , ") },
+			];
 
 			if (chapter_asset_assignment == 'manual') {
-				jQuery('#_podlove_meta_chapters').val(get_chapters_string_from_data(data));	
+				fields.push({ field: '#_podlove_meta_chapters', value: get_chapters_string_from_data(data) });
 			}
+
+			return fields;
 		}
 
-		function do_simple_import (data, chapter_asset_assignment) {
-			if (jQuery("#title").val() == "") {
-				jQuery('#title').val(data.data.metadata.title);
-			}
-			
-			if (jQuery("#_podlove_meta_subtitle").val() == "") {
-				jQuery('#_podlove_meta_subtitle').val(data.data.metadata.subtitle);
-			}
-			
-			if (jQuery("#_podlove_meta_summary").val() == "") {
-				jQuery('#_podlove_meta_summary').val(data.data.metadata.summary);
-			}
-			
-			if (jQuery("#_podlove_meta_duration").val() == "") {
-				jQuery('#_podlove_meta_duration').val(data.data.length_timestring);
-			}
-			
-			if (jQuery("#_podlove_meta_slug").val() == "") {
-				jQuery('#_podlove_meta_slug').val(data.data.output_basename);
-			}
-			
-			if (jQuery("#new-tag-post_tag").val() == "") {
-				jQuery('#new-tag-post_tag').val(data.data.metadata.tags.join(", "));
-			}
+		/**
+		 * Import and override existing fields.
+		 */
+		function do_force_import(data, chapter_asset_assignment) {
+			var fields = get_fields_to_update(data, chapter_asset_assignment);
+			jQuery.each(fields, function (index, field) {
+				jQuery(field.field).val(field.value);
+			});
+		}
 
-			if (chapter_asset_assignment == 'manual') {
-				if (jQuery("#_podlove_meta_chapters").val() == "") {
-					jQuery('#_podlove_meta_chapters').val(get_chapters_string_from_data(data));
+		/**
+		 * Import but do not override existing fields.
+		 */
+		function do_simple_import(data, chapter_asset_assignment) {
+			var fields = get_fields_to_update(data, chapter_asset_assignment);
+			jQuery.each(fields, function (index, field) {
+				if (jQuery(field.field).val() == "") {
+					jQuery(field.field).val(field.value);
 				}
-			}
+			});
 		}
 
 		function fetch_production_data(token) {
