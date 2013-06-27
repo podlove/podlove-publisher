@@ -33,13 +33,13 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
 			if($this->get_module_option('adn_poster_announcement_text') == "") {			
 				$this->register_option( 'adn_poster_announcement_text', 'text', array(
 					'label'       => __( 'Broadcast text', 'podlove' ),
-					'description' => __( '<strong style="color: red;">You need to set a text, Podlove uses to broadcast new episodes.</strong><p>Feel free to to use this keys, in order to customize your post:</p><ul><li><code>%p</code> The title of your podcast</li><li><code>%t</code> The title of the episode</li><li><code>%s</code> The subtitle of the episode</li><li><code>%u</code> The permalink of the current episode</li></ul><p>E.g. <em>Hey guys! Check out the new episode from %p with the name %t right here: %u</em></p>', 'podlove' ),
+					'description' => __( '<strong style="color: red;">You need to set a text, Podlove uses to broadcast new episodes.</strong><p>Feel free to to use this keys, in order to customize your post:</p><ul><li><code>{podcastTitle}</code> The title of your podcast</li><li><code>{episodeTitle}</code> The title of the episode</li><li><code>{episodeSubtitle}</code> The subtitle of the episode</li><li><code>{episodeLink}</code> The permalink of the current episode</li></ul><p>E.g. <em>Hey guys! Check out the new episode from {podcastTitle} with the name {episodeTitle} right here: {episodeLink}</em></p>', 'podlove' ),
 					'html'        => array( 'cols' => '40', 'rows' => '6' )
 				) );
 			} else {
 				$this->register_option( 'adn_poster_announcement_text', 'text', array(
 					'label'       => __( 'Broadcast text', 'podlove' ),
-					'description' => __( 'The text that will be displayed on App.net. <p>Feel free to to use this keys, in order to customize your post:</p><ul><li><code>%p</code> The title of your podcast</li><li><code>%t</code> The title of the episode</li><li><code>%s</code> The subtitle of the episode</li><li><code>%u</code> The permalink of the current episode</li></ul><p>E.g. <em>Hey guys! Check out the new episode from %p with the name %t right here: %u</em></p>', 'podlove' ),
+					'description' => __( 'The text that will be displayed on App.net. <p>Feel free to to use this keys, in order to customize your post:</p><ul><li><code>{podcastTitle}</code> The title of your podcast</li><li><code>{episodeTitle}</code> The title of the episode</li><li><code>{episodeSubtitle}</code> The subtitle of the episode</li><li><code>{episodeLink}</code> The permalink of the current episode</li></ul><p>E.g. <em>Hey guys! Check out the new episode from {podcastTitle} with the name {episodeTitle} right here: {episodeLink}</em></p>', 'podlove' ),
 					'html'        => array( 'cols' => '40', 'rows' => '6' )
 				) );		
 			}
@@ -55,17 +55,17 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	$posted_linked_title = array();
     	$start_position=0;
     	
-    	while(($position = strpos($posted_text, "%tu", $start_position)) !== FALSE) {
+    	while(($position = strpos($posted_text, "{linkedEpisodeTitle}", $start_position)) !== FALSE) {
         	$episode_entry = array("url" => get_permalink($_POST['post_ID']), "text" => get_the_title($_POST['post_ID']), "pos" => $position, "len" => strlen(get_the_title($_POST['post_ID'])));
         	array_push($posted_linked_title, $episode_entry);
         	$start_position = $position+1;
 		}
     	
-    	$posted_text = str_replace("%p", $podcast->title, $posted_text);
-    	$posted_text = str_replace("%tu", get_the_title($_POST['post_ID']), $posted_text);
-    	$posted_text = str_replace("%t", get_the_title($_POST['post_ID']), $posted_text);
-    	$posted_text = str_replace("%u", get_permalink($_POST['post_ID']), $posted_text);
-    	$posted_text = str_replace("%s", $episode->subtitle, $posted_text);
+    	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
+    	$posted_text = str_replace("{episodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{linkedEpisodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{episodeLink}", get_permalink($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{episodeSubtitle}", $episode->subtitle, $posted_text);
     
     	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
 		$data_string = json_encode($data);        
