@@ -5,7 +5,7 @@ use \Podlove\Model;
 class Auphonic_Production_Data extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Auphonic Production Data';
-	protected $module_description = 'Use <a href="http://auphonic.com/" target="_blank">Auphonic</a> production description file to automatically fill in episode title, subtitle, summary and duration.<br>In the Auphonic production, you need to add JSON "Production Description".';
+	protected $module_description = '(DEPRECATED: Use "Auphonic" plugin instead. It\'s a rewrite using the Auphonic API and doesn\'t require the production description file.) Use <a href="http://auphonic.com/" target="_blank">Auphonic</a> production description file to automatically fill in episode title, subtitle, summary and duration.<br>In the Auphonic production, you need to add JSON "Production Description".';
 	protected $module_group = 'external services';
 
 	public function load() {
