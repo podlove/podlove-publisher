@@ -52,20 +52,26 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	$podcast = \Podlove\Model\Podcast::get_instance();
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
     	
-    	$posted_linked_title = array();
-    	$start_position=0;
-    	
-    	while(($position = strpos($posted_text, "{linkedEpisodeTitle}", $start_position)) !== FALSE) {
-        	$episode_entry = array("url" => get_permalink($_POST['post_ID']), "text" => get_the_title($_POST['post_ID']), "pos" => $position, "len" => strlen(get_the_title($_POST['post_ID'])));
-        	array_push($posted_linked_title, $episode_entry);
-        	$start_position = $position+1;
-		}
-    	
     	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
     	$posted_text = str_replace("{episodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
-    	$posted_text = str_replace("{linkedEpisodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
     	$posted_text = str_replace("{episodeLink}", get_permalink($_POST['post_ID']), $posted_text);
     	$posted_text = str_replace("{episodeSubtitle}", $episode->subtitle, $posted_text);
+    	
+    	$posted_linked_title = array();
+    	$start_position = 0;
+    	
+    	while(($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE) {
+        	$episode_entry = array(
+        		"url"  => get_permalink($_POST['post_ID']), 
+        		"text" => get_the_title($_POST['post_ID']), 
+        		"pos"  => $position, 
+        		"len"  => mb_strlen( get_the_title($_POST['post_ID']), "UTF-8" )
+        	);
+        	array_push( $posted_linked_title, $episode_entry );
+        	$start_position = $position + 1;
+		}
+    	
+    	$posted_text = str_replace("{linkedEpisodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
     
     	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
 		$data_string = json_encode($data);        
