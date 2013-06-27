@@ -13,36 +13,52 @@ class Podlove_adn_poster extends \Podlove\Modules\Base {
     	
     		if($this->get_module_option('adn_poster_auth') !== "") {
 				add_action('publish_podcast', array( $this, 'post_to_adn' ));
-
 			}
         
 			if($this->get_module_option('adn_poster_auth') == "") {
-				$this->register_option( 'adn_poster_auth', 'string', array(
-					'label'       => __( 'Auth Key', 'podlove' ),
-					'description' => __( '<strong style="color: red;">You need to authorize Podlove to use your App.net account.</strong> To do so please start the authorization process <a target="_blank" href="http://auth.podlove.org/adn.php?step=1">here</a>.', 'podlove' ),
-					'html'        => array( 'class' => 'regular-text' )
-				) );	
+				$description = __( '<strong style="color: red;">You need to authorize Podlove to use your App.net account.</strong> To do so please start the authorization process <a target="_blank" href="http://auth.podlove.org/adn.php?step=1">here</a>.', 'podlove' );
 			} else {
-				$this->register_option( 'adn_poster_auth', 'string', array(
-					'label'       => __( 'Auth Key', 'podlove' ),
-					'description' => __( 'Your App.net auth key', 'podlove' ),
-					'html'        => array( 'class' => 'regular-text' )
-				) );			
+				$description = __( 'Your App.net auth key', 'podlove' );
 			}
+			$this->register_option( 'adn_poster_auth', 'string', array(
+				'label'       => __( 'Auth Key', 'podlove' ),
+				'description' => $description,
+				'html'        => array( 'class' => 'regular-text' )
+			) );			
 
 			if($this->get_module_option('adn_poster_announcement_text') == "") {			
-				$this->register_option( 'adn_poster_announcement_text', 'text', array(
-					'label'       => __( 'Broadcast text', 'podlove' ),
-					'description' => __( '<strong style="color: red;">You need to set a text, Podlove uses to broadcast new episodes.</strong><p>Feel free to to use this keys, in order to customize your post:</p><ul><li><code>{podcastTitle}</code> The title of your podcast</li><li><code>{episodeTitle}</code> The title of the episode</li><li><code>{episodeSubtitle}</code> The subtitle of the episode</li><li><code>{episodeLink}</code> The permalink of the current episode</li></ul><p>E.g. <em>Hey guys! Check out the new episode from {podcastTitle} with the name {episodeTitle} right here: {episodeLink}</em></p>', 'podlove' ),
-					'html'        => array( 'cols' => '40', 'rows' => '6' )
-				) );
+				$description = '<strong style="color: red;">' . __( 'You need to set a text to broadcast new episodes.', 'podlove' ) . '</strong>';
 			} else {
-				$this->register_option( 'adn_poster_announcement_text', 'text', array(
-					'label'       => __( 'Broadcast text', 'podlove' ),
-					'description' => __( 'The text that will be displayed on App.net. <p>Feel free to to use this keys, in order to customize your post:</p><ul><li><code>{podcastTitle}</code> The title of your podcast</li><li><code>{episodeTitle}</code> The title of the episode</li><li><code>{episodeSubtitle}</code> The subtitle of the episode</li><li><code>{episodeLink}</code> The permalink of the current episode</li></ul><p>E.g. <em>Hey guys! Check out the new episode from {podcastTitle} with the name {episodeTitle} right here: {episodeLink}</em></p>', 'podlove' ),
-					'html'        => array( 'cols' => '40', 'rows' => '6' )
-				) );		
+				$description = __( 'The text that will be displayed on App.net.', 'podlove' );
 			}
+			$description .= __( '
+				<p>
+					Feel free to to use this keys, in order to customize your post:
+				</p>
+				<ul>
+					<li>
+						<code>{podcastTitle}</code> The title of your podcast
+					</li>
+					<li>
+						<code>{linkedEpisodeTitle}</code> The title of your episode, linking to it
+					</li>
+					<li>
+						<code>{episodeTitle}</code> The title of the episode
+					</li>
+					<li>
+						<code>{episodeLink}</code> The permalink of the current episode
+					</li>
+					</li>
+					<li>
+						<code>{episodeSubtitle}</code> The subtitle of the episode
+					</li>
+				</ul>', 'podlove' );		
+
+			$this->register_option( 'adn_poster_announcement_text', 'text', array(
+				'label'       => __( 'Broadcast text', 'podlove' ),
+				'description' => $description,
+				'html'        => array( 'cols' => '40', 'rows' => '6', 'placeholder' => 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}' )
+			) );
 
     }
     
