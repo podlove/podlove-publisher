@@ -32,7 +32,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			}
 			$description .= __( '
 				<p>
-					Feel free to to use this keys, in order to customize your post:
+					Use these placeholders to customize your post:
 				</p>
 				<ul>
 					<li>
