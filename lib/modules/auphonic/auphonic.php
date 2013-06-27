@@ -1,10 +1,10 @@
 <?php 
-namespace Podlove\Modules\PodloveImportFromAuphonic;
+namespace Podlove\Modules\Auphonic;
 use \Podlove\Model;
 
-class Podlove_import_from_auphonic extends \Podlove\Modules\Base {
+class Auphonic extends \Podlove\Modules\Base {
 
-    protected $module_name = 'Podlove Import From Auphonic';
+    protected $module_name = 'Auphonic';
     protected $module_description = 'Import Episode data from an Auphonic production';
     protected $module_group = 'external services';
 	
