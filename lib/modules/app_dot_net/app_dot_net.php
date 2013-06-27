@@ -1,13 +1,12 @@
 <?php 
-namespace Podlove\Modules\PodloveADNPoster;
+namespace Podlove\Modules\AppDotNet;
 use \Podlove\Model;
 
-class Podlove_adn_poster extends \Podlove\Modules\Base {
+class App_Dot_Net extends \Podlove\Modules\Base {
 
-    protected $module_name = 'Podlove ADN Poster';
+    protected $module_name = 'App.net';
     protected $module_description = 'Broadcasts new podcast episodes on App.net';
     protected $module_group = 'external services';
-	
 	
     public function load() {
     	
