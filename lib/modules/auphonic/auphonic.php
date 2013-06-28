@@ -249,7 +249,7 @@ class Auphonic extends \Podlove\Modules\Base {
 					}
 					?>
 					<option value="<?php echo $production_data->uuid ?>">
-						Production: <?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).")"; ?>
+						Production: <?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).") [".$production_data->status_string."]"; ?>
 					</option>
 					<?php
 				}
