@@ -59,28 +59,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			} else {
 				$description = __( 'The text that will be displayed on App.net.', 'podlove' );
 			}
-			$description .= __( '
-				<p>
-					Use these placeholders to customize your announcement:
-				</p>
-				<ul>
-					<li>
-						<code>{podcastTitle}</code> The title of your podcast
-					</li>
-					<li>
-						<code>{linkedEpisodeTitle}</code> The title of your episode, linking to it
-					</li>
-					<li>
-						<code>{episodeTitle}</code> The title of the episode
-					</li>
-					<li>
-						<code>{episodeLink}</code> The permalink of the current episode
-					</li>
-					</li>
-					<li>
-						<code>{episodeSubtitle}</code> The subtitle of the episode
-					</li>
-				</ul>', 'podlove' );		
+			$description .= '
+				' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
+				<code title="' . __( 'The title of your podcast', 'podlove' ) . '">{podcastTitle}</code>
+				<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
+				<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
+				<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
+				<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';		
 
 			$this->register_option( 'adn_poster_announcement_text', 'text', array(
 				'label'       => __( 'Announcement text', 'podlove' ),
