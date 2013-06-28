@@ -56,8 +56,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			if($this->get_module_option('adn_poster_announcement_text') == "") {			
 				$description = '<i class="podlove-icon-remove"></i>' . __( 'You need to set a text to announce new episodes.', 'podlove' );
 			} else {
-				$description = __( 'The text that will be displayed on App.net.', 'podlove' );
+				$description = '';
 			}
+
 			$description .= '
 				' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
 				<code title="' . __( 'The title of your podcast', 'podlove' ) . '">{podcastTitle}</code>
@@ -70,6 +71,141 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				'label'       => __( 'Announcement text', 'podlove' ),
 				'description' => $description,
 				'html'        => array( 'cols' => '40', 'rows' => '6', 'placeholder' => 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}' )
+			) );
+
+			$this->register_option( 'adn_preview', 'callback', array(
+				'label' => __( 'Announcement preview', 'podlove' ),
+				'callback' => function() use ( $user ) {
+
+					if ( ! $user )
+						return;
+
+					?>
+					<style type="text/css">
+					#podlove_adn_post_preview {
+						border: 1px solid #ddd;
+						background: white;
+						padding: 15px 15px 5px 15px;
+						font-style: normal;
+						color: #333;
+						font-size: 14px;
+						font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+					}
+
+					.adn.avatar {
+						display: block;
+						width: 57px;
+						height: 57px;
+						background-size: 57px 57px;
+						float: left;
+					}
+
+					.adn.username {
+						font-weight: bold;
+					}
+
+					.adn.content {
+						margin-left: 67px;
+					}
+
+					.adn.body {
+						min-height: 39px;
+						line-height: 18px;
+						margin-bottom: 10px;
+					}
+
+					.adn.footer {
+						font-size: 12px;
+						color: #524f54;
+						text-align: left;
+						line-height: 18px;
+					}
+
+					.adn.footer ul {
+						color: rgb(111, 116, 119);
+						margin: 0 0 0px 0px;
+					}
+
+					.adn.footer li {
+						display: inline-block;
+						margin-right: 10px;
+					}
+					</style>
+					
+					<?php
+					$podcast = Model\Podcast::get_instance();
+					$episode = Model\Episode::last();
+					?>
+					<div id="podlove_adn_post_preview"
+							data-podcast="<?php echo $podcast->title ?>"
+							data-episode="<?php echo get_the_title( $episode->post_id ) ?>"
+							data-episode-link="<?php echo get_permalink( $episode->post_id ) ?>"
+							data-episode-subtitle="<?php echo get_permalink( $episode->subtitle ) ?>">
+						<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
+						<div class="adn content">
+							<div class="adn username"><?php echo $user->username ?></div>
+							<div class="adn body">Lorem ipsum dolor ...</div>
+					
+							<div class="adn footer">
+								<ul>
+									<li>
+										<i class="podlove-icon-time"></i> now
+									</li>
+									<li>
+										<i class="podlove-icon-reply"></i> Reply
+									</li>
+									<li>
+										<i class="podlove-icon-share"></i> via Podlove Publisher
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div style="clear: both"></div>
+					</div>
+
+					<script type="text/javascript">
+					var PODLOVE = PODLOVE || {};
+
+					(function($){
+
+						PODLOVE.AppDotNet = function () {
+							var $textarea = $("#podlove_module_app_dot_net_adn_poster_announcement_text"),
+							    $preview = $("#podlove_adn_post_preview");
+
+
+							var nl2br = function (str, is_xhtml) {
+							    var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+							    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+							}
+
+							var update_preview = function() {
+								var text = $textarea.val();
+
+								text = text.replace("{podcastTitle}", $preview.data('podcast'));
+								text = text.replace("{episodeTitle}", $preview.data('episode'));
+								text = text.replace("{episodeLink}",  $preview.data('episode-link'));
+								text = text.replace("{episodeSubtitle}", $preview.data('episode-subtitle'));
+
+								$(".adn.body", $preview).html(nl2br(text));
+							};
+
+							$textarea.keyup(function() {
+								update_preview();
+							});
+
+							update_preview();
+						}
+
+					}(jQuery));
+
+
+					jQuery(function($) {
+						PODLOVE.AppDotNet();
+					});
+					</script>
+					<?php
+				}
 			) );
 
     }
