@@ -25,23 +25,46 @@ class Auphonic extends \Podlove\Modules\Base {
     		if ( $this->get_module_option('auphonic_api_key') == "" ) {
     			$auth_url = "https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
 	    		$description = '<i class="podlove-icon-remove"></i> '
-	    		             . __( 'You need to allow Podlove to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
+	    		             . __( 'You need to allow Podlove Publisher to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
 	    		             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove' ) . '</a>';
-    		} else {
-    			$description = '<i class="podlove-icon-ok"></i> '
-    			             . sprintf(
-    			             	__( 'Great! You are authorized to access Auphonic. If you want to reset your connection with Auphonic click %shere%s', 'podlove' ),
-    			             	'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
-    			             	'</a>'
-			             	);
-    		}
-
-			$this->register_option( 'auphonic_api_key', 'hidden', array(
-				'label'       => __( 'Authorize Podlove to access Auphonic', 'podlove' ),
+				$this->register_option( 'auphonic_api_key', 'hidden', array(
+				'label'       => __( 'Authorization', 'podlove' ),
 				'description' => $description,
 				'html'        => array( 'class' => 'regular-text' )
-			) );
+				) );	
+    		} else {
+    			$ch = curl_init('https://auphonic.com/api/user.json');                                                                      
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
+				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
+					'Content-type: application/json',                                     
+					'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
+				);                                                              
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
 
+				$decoded_result = json_decode(curl_exec($ch));
+    		
+    			if(isset($decoded_result) AND $decoded_result !== "") {
+					$description = '<i class="podlove-icon-ok"></i> '
+								 . sprintf(
+									__( 'You are logged in as <strong>'.$decoded_result->data->username.'</strong>. If you want to logout, click %shere%s.', 'podlove' ),
+									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
+									'</a>'
+								);
+				} else {
+					$description = '<i class="podlove-icon-remove"></i> '
+								 . sprintf(
+									__( 'Something went wrong with the Auphonic connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove' ),
+									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
+									'</a>'
+								);			
+				}
+				$this->register_option( 'auphonic_api_key', 'hidden', array(
+				'label'       => __( 'Authorization', 'podlove' ),
+				'description' => $description,
+				'html'        => array( 'class' => 'regular-text' )
+				) );	
+    		}
     }
     
     public function auphonic_episodes( $wrapper, $episode ) {
