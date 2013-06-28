@@ -30,7 +30,7 @@ function handle_direct_download() {
 		header( "Expires: 0" );
 		header( 'Cache-Control: must-revalidate' );
 	    header( 'Pragma: public' );
-		header( "Content-Type: application/force-download" );
+		header( "Content-Type: audio/mpeg" );
 		header( "Content-Description: File Transfer" );
 		header( "Content-Disposition: attachment; filename=" . $media_file->get_download_file_name() );
 		header( "Content-Transfer-Encoding: binary" );
