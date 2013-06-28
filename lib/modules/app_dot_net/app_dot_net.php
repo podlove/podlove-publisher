@@ -25,14 +25,15 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$this->register_option( 'adn_auth_key', 'string', array(
 				'label'       => __( 'Authorization', 'podlove' ),
 				'description' => $description,
-				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net auth code' )
+				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net authentication code' )
 				) );
 			} else {
 				
-				if ( $username = $this->fetch_authorized_username() ) { 
+				if ( $user = $this->fetch_authorized_user() ) { 
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
-									__( 'You are logged in as <strong>' . $username . '</strong>. If you want to logout, click %shere%s.', 'podlove' ),
+									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
+									'<strong>' . $user->username . '</strong>',
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_appnet_auth_code=1' ) . '">',
 									'</a>'
 								);
@@ -51,8 +52,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				'html'        => array( 'class' => 'regular-text' )
 				) );		
 			}
-			
-						
 
 			if($this->get_module_option('adn_poster_announcement_text') == "") {			
 				$description = '<i class="podlove-icon-remove"></i>' . __( 'You need to set a text to announce new episodes.', 'podlove' );
@@ -82,12 +81,12 @@ class App_Dot_Net extends \Podlove\Modules\Base {
      * 
      * @return string
      */
-    public function fetch_authorized_username() {
+    public function fetch_authorized_user() {
 
-    	$cache_key = 'podlove_adn_username';
+    	$cache_key = 'podlove_adn_user';
 
-    	if ( ( $username = get_transient( $cache_key ) ) !== FALSE ) {
-    		return $username;
+    	if ( ( $user = get_transient( $cache_key ) ) !== FALSE ) {
+    		return $user;
     	} else {
 	    	if ( ! ( $token = $this->get_module_option('adn_auth_key') ) )
 	    		return "";
@@ -97,9 +96,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	    	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
 	    	$decoded_result = json_decode( curl_exec( $ch ) );
 
-	    	$username = $decoded_result ? $decoded_result->data->user->username : "";
-	    	set_transient( $cache_key, $username, 60*60*24*365 ); // 1 year, we devalidate manually
-	    	return $username;
+	    	$user = $decoded_result ? $decoded_result->data->user : FALSE;
+	    	set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
+	    	return $user;
     	}
 
     }
@@ -150,7 +149,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     public function reset_adn_auth() {
     	if(isset( $_GET["reset_appnet_auth_code"] ) && $_GET["reset_appnet_auth_code"] == "1") {
 				$this->update_module_option('adn_auth_key', "");
-				delete_transient('podlove_adn_username');
+				delete_transient('podlove_adn_user');
     			header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');    
     	}
     }
