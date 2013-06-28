@@ -28,16 +28,11 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net auth code' )
 				) );
 			} else {
-				$ch = curl_init('https://alpha-api.app.net/stream/0/token?access_token='.$this->get_module_option('adn_auth_key').'');                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                                                                                  
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                                                                                                                                  
-
-				$decoded_result = json_decode(curl_exec($ch)); 
 				
-				if(isset($decoded_result) AND $decoded_result !== "") { 
+				if ( $username = $this->fetch_authorized_username() ) { 
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
-									__( 'You are logged in as <strong>'.$decoded_result->data->user->username.'</strong>. If you want to logout, click %shere%s.', 'podlove' ),
+									__( 'You are logged in as <strong>' . $username . '</strong>. If you want to logout, click %shere%s.', 'podlove' ),
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_appnet_auth_code=1' ) . '">',
 									'</a>'
 								);
@@ -94,6 +89,35 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			) );
 
     }
+
+    /**
+     * Fetch name of logged in user via ADN API.
+     *
+     * Cached in transient "podlove_adn_username".
+     * 
+     * @return string
+     */
+    public function fetch_authorized_username() {
+
+    	$cache_key = 'podlove_adn_username';
+
+    	if ( ( $username = get_transient( $cache_key ) ) !== FALSE ) {
+    		return $username;
+    	} else {
+	    	if ( ! ( $token = $this->get_module_option('adn_auth_key') ) )
+	    		return "";
+
+	    	$ch = curl_init( 'https://alpha-api.app.net/stream/0/token?access_token=' . $token );                                                                      
+	    	curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "GET");
+	    	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
+	    	$decoded_result = json_decode( curl_exec( $ch ) );
+
+	    	$username = $decoded_result ? $decoded_result->data->user->username : "";
+	    	set_transient( $cache_key, $username, 60*60*24*365 ); // 1 year, we devalidate manually
+	    	return $username;
+    	}
+
+    }
     
     public function post_to_adn() {
     
@@ -141,6 +165,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     public function reset_adn_auth() {
     	if(isset( $_GET["reset_appnet_auth_code"] ) && $_GET["reset_appnet_auth_code"] == "1") {
 				$this->update_module_option('adn_auth_key', "");
+				delete_transient('podlove_adn_username');
     			header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');    
     	}
     }
