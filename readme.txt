@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.7.0-alpha =
+* Enhancement: Return the correct content type when initiating a download so devices may choose intelligently whether to save the file or open it in a certain application. 
+
 = 1.6.11-alpha =
 * Bugfix: use NPT library
 
