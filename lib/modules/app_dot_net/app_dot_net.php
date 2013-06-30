@@ -53,11 +53,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );		
 			}
 
-			if($this->get_module_option('adn_poster_announcement_text') == "") {			
-				$description = '<i class="podlove-icon-remove"></i>' . __( 'You need to set a text to announce new episodes.', 'podlove' );
-			} else {
-				$description = '';
+			$description = '';
+			if ( $this->get_module_option('adn_poster_announcement_text') == "" ) {			
+				$description = '<i class="podlove-icon-remove"></i>'
+				             . __( 'You need to set a text to announce new episodes.', 'podlove' );
 			}
+
+			$description .= __( 'App.net allows 256 characters per post. Try to keep the announcement text short. Your episode titles will need more space than the placeholders.', 'podlove' );
 
 			$description .= '
 				' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
@@ -70,7 +72,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			$this->register_option( 'adn_poster_announcement_text', 'text', array(
 				'label'       => __( 'Announcement text', 'podlove' ),
 				'description' => $description,
-				'html'        => array( 'cols' => '40', 'rows' => '6', 'placeholder' => 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}' )
+				'html'        => array(
+					'cols' => '40',
+					'rows' => '6',
+					'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' ) )
 			) );
 
 			$this->register_option( 'adn_preview', 'callback', array(
@@ -134,13 +139,25 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					
 					<?php
 					$podcast = Model\Podcast::get_instance();
-					$episode = Model\Episode::last();
+					if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
+						$example_data = array(
+							'episode'      => get_the_title( $episode->post_id ),
+							'episode-link' => get_permalink( $episode->post_id ),
+							'subtitle'     => $episode->subtitle
+						);
+					} else {
+						$example_data = array(
+							'episode'      => 'My Example Episode',
+							'episode-link' => 'http://www.example.com/episode/001',
+							'subtitle'     => 'My Example Subtitle'
+						);
+					}
 					?>
 					<div id="podlove_adn_post_preview"
 							data-podcast="<?php echo $podcast->title ?>"
-							data-episode="<?php echo get_the_title( $episode->post_id ) ?>"
-							data-episode-link="<?php echo get_permalink( $episode->post_id ) ?>"
-							data-episode-subtitle="<?php echo get_permalink( $episode->subtitle ) ?>">
+							data-episode="<?php echo $example_data['episode'] ?>"
+							data-episode-link="<?php echo $example_data['episode-link'] ?>"
+							data-episode-subtitle="<?php echo $example_data['subtitle'] ?>">
 						<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
 						<div class="adn content">
 							<div class="adn username"><?php echo $user->username ?></div>
@@ -173,6 +190,34 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 							var $textarea = $("#podlove_module_app_dot_net_adn_poster_announcement_text"),
 							    $preview = $("#podlove_adn_post_preview");
 
+							var parseUri = function (str) {
+								var	o   = parseUri.options,
+									m   = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+									uri = {},
+									i   = 14;
+
+								while (i--) uri[o.key[i]] = m[i] || "";
+
+								uri[o.q.name] = {};
+								uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
+									if ($1) uri[o.q.name][$1] = $2;
+								});
+
+								return uri;
+							};
+
+							parseUri.options = {
+								strictMode: false,
+								key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
+								q:   {
+									name:   "queryKey",
+									parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+								},
+								parser: {
+									strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+									loose:  /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+								}
+							};
 
 							var nl2br = function (str, is_xhtml) {
 							    var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
@@ -186,6 +231,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								text = text.replace("{episodeTitle}", $preview.data('episode'));
 								text = text.replace("{episodeLink}",  $preview.data('episode-link'));
 								text = text.replace("{episodeSubtitle}", $preview.data('episode-subtitle'));
+								text = text.replace("{linkedEpisodeTitle}", '<a href="' + $preview.data('episode-link') + '">' + $preview.data('episode') + '</a> [' + parseUri($preview.data('episode-link'))['host'] + ']')
 
 								$(".adn.body", $preview).html(nl2br(text));
 							};
