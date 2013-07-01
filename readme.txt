@@ -78,7 +78,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.7.0-alpha =
-* Enhancement: Return the correct content type when initiating a download so devices may choose intelligently whether to save the file or open it in a certain application. 
+* Enhancement: Return the correct content type when initiating a download so devices may choose intelligently whether to save the file or open it in a certain application.
+* Enhancement: Remove download button styles so the style adjusts based on used browser and theme
 * Bugfix: Fix incompatibility to some file name schemes
 
 = 1.6.11-alpha =
