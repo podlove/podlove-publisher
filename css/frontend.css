@@ -108,39 +108,7 @@ ul.episode_download_list a .size {
   display: inline;
 }
 
-.episode_downloads button.primary {
-  font-size: 1em;
-  font-weight: bold;
-  padding: 6px 12px;
+
+.episode_downloads button {
   margin-left: 10px;
-  color: #333;
-  background: #eeeeee; /* Old browsers */
-  background: -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#aaaaaa)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #eeeeee 0%,#aaaaaa 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #eeeeee 0%,#aaaaaa 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #eeeeee 0%,#aaaaaa 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #eeeeee 0%,#aaaaaa 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#aaaaaa',GradientType=0 ); /* IE6-9 */
-}
-
-.episode_downloads button.secondary {
-  font-size: 1em;
-  font-weight: bold;
-  padding: 6px 12px;
-  margin-left: 10px;
-  color: #666;
-  background: #f8f8f8; /* Old browsers */
-  background: -moz-linear-gradient(top, #f8f8f8 0%, #dddddd 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f8f8f8 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f8f8f8 0%,#dddddd 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f8f8f8 0%,#dddddd 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #f8f8f8 0%,#dddddd 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
-}
-
-.episode_downloads button:active {
-  border: 1px solid #CCC;
-
 }
