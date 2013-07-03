@@ -224,14 +224,39 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 							    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 							}
 
-							var update_preview = function() {
-								var text = $textarea.val();
+							var endsWith = function (str, suffix) {
+							    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+							}
 
-								text = text.replace("{podcastTitle}", $preview.data('podcast'));
-								text = text.replace("{episodeTitle}", $preview.data('episode'));
-								text = text.replace("{episodeLink}",  $preview.data('episode-link'));
-								text = text.replace("{episodeSubtitle}", $preview.data('episode-subtitle'));
-								text = text.replace("{linkedEpisodeTitle}", '<a href="' + $preview.data('episode-link') + '">' + $preview.data('episode') + '</a> [' + parseUri($preview.data('episode-link'))['host'] + ']')
+							var update_preview = function() {
+								var text = $textarea.val(),
+									podcast = $preview.data('podcast'),
+								    episode_link = $preview.data('episode-link'),
+								    episode_subtitle = $preview.data('episode-subtitle'),
+								    episode = $preview.data('episode');
+
+								text = text.replace("{podcastTitle}", podcast);
+								text = text.replace("{episodeTitle}", episode);
+								text = text.replace("{episodeLink}",  episode_link);
+								text = text.replace("{episodeSubtitle}", episode_subtitle);
+
+								safetyNet = 0;
+								shortened = false;
+								while (safetyNet < 1000 && text.replace(/\{linkedEpisodeTitle\}/g, episode).length > 255) {
+									safetyNet++;
+									if (endsWith(text, "{linkedEpisodeTitle}") && episode.length > 0) {
+										episode = episode.slice(0,-1); // shorten episode title by one character at a time
+									} else {
+										text = text.slice(0,-1); // shorten text by one character at a time
+									}
+									shortened = true;
+								}
+
+								text = text.replace(/\{linkedEpisodeTitle\}/g, '<a href="' + episode_link + '">' + episode + '</a> [' + parseUri(episode_link)['host'] + ']')
+
+								if (shortened) {
+									text = text + "…";
+								}
 
 								$(".adn.body", $preview).html(nl2br(text));
 							};
