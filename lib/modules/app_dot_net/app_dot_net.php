@@ -242,7 +242,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 								safetyNet = 0;
 								shortened = false;
-								while (safetyNet < 1000 && text.replace(/\{linkedEpisodeTitle\}/g, episode).length > 255) {
+								while (safetyNet < 1000 && text.replace(/\{linkedEpisodeTitle\}/g, episode).length > 256) {
 									safetyNet++;
 									if (endsWith(text, "{linkedEpisodeTitle}") && episode.length > 0) {
 										episode = episode.slice(0,-1); // shorten episode title by one character at a time
@@ -325,17 +325,24 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$start_position = 0;
     	
     	while(($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE) {
-        	$episode_entry = array(
-        		"url"  => get_permalink($_POST['post_ID']), 
-        		"text" => get_the_title($_POST['post_ID']), 
-        		"pos"  => $position, 
-        		"len"  => mb_strlen( get_the_title($_POST['post_ID']), "UTF-8" )
-        	);
+    		if ( $position < 256 ) {
+    			$length = mb_strlen( get_the_title($_POST['post_ID']), "UTF-8" );
+	        	$episode_entry = array(
+	        		"url"  => get_permalink($_POST['post_ID']), 
+	        		"text" => get_the_title($_POST['post_ID']), 
+	        		"pos"  => $position, 
+	        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
+	        	);
+    		}
         	array_push( $posted_linked_title, $episode_entry );
         	$start_position = $position + 1;
 		}
     	
     	$posted_text = str_replace("{linkedEpisodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
+
+    	if ( strlen( $posted_text ) > 256 ) {
+    		$posted_text = substr( $posted_text, 0, 255 ) . "…";
+    	}
     
     	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
 		$data_string = json_encode($data);        
