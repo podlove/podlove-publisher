@@ -83,6 +83,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Return the correct content type when initiating a download so devices may choose intelligently whether to save the file or open it in a certain application.
 * Enhancement: Remove download button styles so the style adjusts based on used browser and theme
 * Bugfix: Fix incompatibility to some file name schemes
+* Bugfix: Fix 404 status for paged feedburner feeds
 
 = 1.6.11-alpha =
 * Bugfix: use NPT library
