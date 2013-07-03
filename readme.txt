@@ -77,7 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.7.0-alpha =
+= 1.7.0-alpha (2013-07-03) =
+* New Module: App.net. Right now, it lets you announce new podcast episodes on ADN whenever you publish a new one. It's the groundwork for more ADN integrations. (Thanks @chemiker!)
+* New Module: Auphonic. We did not shy away from writing a completely new module to present to you the best Auphonic integration the world has seen in a WordPress plugin. It replaces the previous one ("Auphonic Production Data"). You are now able to import Auphonic production data without the need for a production description file. Like the ADN module, this lays the groundwork for much deeper Auphonic integration. (Thanks @chemiker!)
 * Enhancement: Return the correct content type when initiating a download so devices may choose intelligently whether to save the file or open it in a certain application.
 * Enhancement: Remove download button styles so the style adjusts based on used browser and theme
 * Bugfix: Fix incompatibility to some file name schemes
