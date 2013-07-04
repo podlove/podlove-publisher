@@ -311,34 +311,35 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     }
     
     public function post_to_adn() {
-    
-    	$episode = \Podlove\Model\Episode::find_one_by_post_id($_POST['post_ID']);
+
+    	$post_id = $_POST['post_ID'];
+    	$post_title = $_POST['post_title'];
+
+    	$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
     	$podcast = \Podlove\Model\Podcast::get_instance();
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
     	
     	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
-    	$posted_text = str_replace("{episodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
-    	$posted_text = str_replace("{episodeLink}", get_permalink($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{episodeTitle}", $post_title, $posted_text);
+    	$posted_text = str_replace("{episodeLink}", get_permalink( $post_id ), $posted_text);
     	$posted_text = str_replace("{episodeSubtitle}", $episode->subtitle, $posted_text);
     	
     	$posted_linked_title = array();
     	$start_position = 0;
     	
-    	while(($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE) {
-    		if ( $position < 256 ) {
-    			$length = mb_strlen( get_the_title($_POST['post_ID']), "UTF-8" );
-	        	$episode_entry = array(
-	        		"url"  => get_permalink($_POST['post_ID']), 
-	        		"text" => get_the_title($_POST['post_ID']), 
-	        		"pos"  => $position, 
-	        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
-	        	);
-    		}
+    	while( ($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+			$length = mb_strlen( $post_title, "UTF-8" );
+        	$episode_entry = array(
+        		"url"  => get_permalink( $post_id ), 
+        		"text" => $post_title, 
+        		"pos"  => $position, 
+        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
+        	);
         	array_push( $posted_linked_title, $episode_entry );
         	$start_position = $position + 1;
 		}
     	
-    	$posted_text = str_replace("{linkedEpisodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{linkedEpisodeTitle}", $post_title, $posted_text);
 
     	if ( strlen( $posted_text ) > 256 ) {
     		$posted_text = substr( $posted_text, 0, 255 ) . "…";
