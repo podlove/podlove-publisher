@@ -35,7 +35,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				) );	
     		} else {
     			$ch = curl_init('https://auphonic.com/api/user.json');                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
 					'Content-type: application/json',                                     
@@ -89,7 +89,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				'description' => 'This preset will be used, if you create Auphonic production from an Episode.',
 				'html'        => array( 'class' => 'regular-text' ),
 				'options'	  => $preset_list
-				) );	
+				) );
     		
     		}
     }
@@ -140,16 +140,6 @@ class Auphonic extends \Podlove\Modules\Base {
     }
 
     public function auphonic_episodes_form() {
-		$ch = curl_init('https://auphonic.com/api/productions.json?limit=10');                                                                      
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
-		curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
-			'Content-type: application/json',                                     
-			'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
-		);                                                              
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
-
-		$result = curl_exec($ch);
 
 		$asset_assignments = Model\AssetAssignment::get_instance();
 
@@ -323,9 +313,8 @@ class Auphonic extends \Podlove\Modules\Base {
 						var auphonic_productions = data.data;
 						$("#import_from_auphonic").empty();
 						$(auphonic_productions).each(function(key, value) {				
-							var date = new Date(value.change_time);
-							
-							$("#import_from_auphonic").append('<option value="' + value.uuid + '">' + value.output_basename + ' (' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + (date.getDay() + 1)).slice(-2) + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ') [' + value.status_string + ']</option>');
+							var date = new Date(value.change_time);				
+							$("#import_from_auphonic").append('<option value="' + value.uuid + '">' + value.output_basename + ' (' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + (date.getDay() + 1)).slice(-2) + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ') [' + value.status_string + ']</option>\n');
 						});
 						
 						delete auphonic_productions;
@@ -333,7 +322,7 @@ class Auphonic extends \Podlove\Modules\Base {
 						$("#reload_episodes_status")
 							.html('<i class="podlove-icon-ok"></i>')
 							.delay(250)
-							.fadeOut(500);;
+							.fadeOut(500);
 					});
 				}
 
@@ -351,6 +340,10 @@ class Auphonic extends \Podlove\Modules\Base {
 				
 				$("#open_production_button").click(function () {
 					window.open('https://auphonic.com/engine/upload/edit/' + $("#import_from_auphonic").find(":selected").val());
+				});
+				
+				$(document).ready(function() {
+					fetch_episodes('<?php echo $this->get_module_option('auphonic_api_key') ?>');
 				});
 
 			}
@@ -420,20 +413,9 @@ class Auphonic extends \Podlove\Modules\Base {
 			<div class="auphonic-select-wrapper">
 				<label for="import_from_auphonic">Production</label>
 				<select name="import_from_auphonic" id="import_from_auphonic">
-				<?php												
-				foreach(json_decode($result)->data as $production_key => $production_data) {
-					if($production_data->output_basename == "") {
-						$displayed_name = $production_data->metadata->title;
-					} else {
-						$displayed_name = $production_data->output_basename;
-					}
-					?>
 					<option value="<?php echo $production_data->uuid ?>">
-						<?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).") [".$production_data->status_string."]"; ?>
+
 					</option>
-					<?php
-				}
-				?>
 				</select>
 			</div>
 			
