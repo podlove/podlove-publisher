@@ -1,0 +1,41 @@
+#auphonic-import-form, #create-auphonic-production-form {
+	line-height: 24px;
+	padding-top: 5px;
+}
+
+.auphonic-select-wrapper {
+	float: left;
+	margin-right: 10px;
+}
+
+.auphonic-select-wrapper label {
+	display: inline-block;
+	margin-right: 5px;
+	vertical-align: baseline;
+}
+
+#import_from_auphonic {
+	width: 280px;
+}
+
+.auphonic-button-wrapper { float: left;	}
+
+#fetch_production_data_button, #create_auphonic_production_button {
+	padding-left: 15px;
+	margin-right: 5px;
+}
+
+#fetch_production_data_button > div, #create_auphonic_production_button > div {
+	display: inline-block;
+	width: 5px;
+}
+
+.auphonic-checkbox-wrapper {
+	float: left;
+	text-align: left;
+	margin-right: 10px;
+	vertical-align: baseline;
+}
+
+.auphonic-checkbox-wrapper label { vertical-align: baseline; }
+.auphonic-checkbox-wrapper input { width: 18px; }
