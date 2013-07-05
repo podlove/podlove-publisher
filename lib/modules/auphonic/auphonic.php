@@ -96,7 +96,7 @@ class Auphonic extends \Podlove\Modules\Base {
     
     public function auphonic_episodes( $wrapper, $episode ) {
     	$wrapper->callback( 'import_from_auphonic_form', array(
-			'label'    => __( 'Import Episode data from Auphonic', 'podlove' ),
+			'label'    => __( 'Auphonic', 'podlove' ),
 			'callback' => array( $this, 'auphonic_episodes_form' )
 		) );			
     }
@@ -341,7 +341,6 @@ class Auphonic extends \Podlove\Modules\Base {
 				$("#open_production_button").click(function () {
 					window.open('https://auphonic.com/engine/upload/edit/' + $("#import_from_auphonic").find(":selected").val());
 				});
-				
 				$(document).ready(function() {
 					fetch_episodes('<?php echo $this->get_module_option('auphonic_api_key') ?>');
 				});
@@ -355,12 +354,14 @@ class Auphonic extends \Podlove\Modules\Base {
 		</script>
 
 		<span class='description'>
-		<?php	
+		<?php
+		/*	
 		if ( $asset_assignments->chapters == 'manual' ) {
 			echo __( "Title, subtitle, summary, tags, duration, episode media file slug and chapters will be imported from Auphonic.", 'podlove' );
 		} else {
 			echo __( "Title, subtitle, summary, tags, duration and episode media file slug will be imported from Auphonic.", 'podlove' );
 		}
+		*/
 		?>
 		</span>
 
@@ -409,12 +410,29 @@ class Auphonic extends \Podlove\Modules\Base {
 		</style>
 
 		<div id="auphonic-import-form">
+		
+			<div id="create-auphonic-production-form" style="margin-bottom: 5px">
+				<div class="auphonic-select-wrapper">
+					<div class="auphonic-button-wrapper">
+						<a class='button' id='create_auphonic_production_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>' data-presetuuid='<?php echo $this->get_module_option('auphonic_production_preset') ?>'>
+							<i class="podlove-icon-plus">
+								&nbsp;Create new production from episode data
+							</i>
+							<div>
+								<span id="fetch_create_production_status"></span>
+							</div>
+						</a>
+					</div>
+					<span id="new_created_episode_data"></span>
+				</div>
+				<div style="clear: both"></div>
+			</div>
 
 			<div class="auphonic-select-wrapper">
 				<label for="import_from_auphonic">Production</label>
 				<select name="import_from_auphonic" id="import_from_auphonic">
 					<option value="<?php echo $production_data->uuid ?>">
-
+						<?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).") [".$production_data->status_string."]"; ?>
 					</option>
 				</select>
 			</div>
@@ -447,6 +465,8 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			<div style="clear: both"></div>
 		</div>
+		
+		
 		<?php
     }
     
