@@ -109,7 +109,7 @@ class Auphonic extends \Podlove\Modules\Base {
     	wp_register_script(
     		'podlove_auphonic_admin_script',
     		$this->get_module_url() . '/admin.js',
-    		array( 'jquery' ),
+    		array( 'jquery', 'jquery-ui-tabs' ),
     		\Podlove\get_plugin_header( 'Version' )
     	);
     	wp_enqueue_script('podlove_auphonic_admin_script');
@@ -120,44 +120,6 @@ class Auphonic extends \Podlove\Modules\Base {
 			'label'    => __( 'Auphonic', 'podlove' ),
 			'callback' => array( $this, 'auphonic_episodes_form' )
 		) );			
-    }
-    
-    public function create_auphonic_production( $wrapper ) {
-    	$wrapper->callback( 'create_auphonic_production_form', array(
-			'label'    => __( 'Create Auphonic production from Episode', 'podlove' ),
-			'callback' => array( $this, 'create_auphonic_production_form' )
-		) );			
-    }
-    
-    public function create_auphonic_production_form() {
-    	$asset_assignments = Model\AssetAssignment::get_instance();
-    ?>
-    
-    	<span class='description'>
-		<?php	
-		if ( $asset_assignments->chapters == 'manual' ) {
-			echo __( "Title, subtitle, summary, duration, year, episode media file slug and chapters will be will be added to the created Auphonic production.", 'podlove' );
-		} else {
-			echo __( "Title, subtitle, summary, duration, year and episode media file slug will be will be added to the created Auphonic production.", 'podlove' );
-		}
-		?>
-		</span>
-		
-		<div id="create-auphonic-production-form">
-			<div class="auphonic-select-wrapper">
-				<div class="auphonic-button-wrapper">
-					<a class='button' id='create_auphonic_production_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>' data-presetuuid='<?php echo $this->get_module_option('auphonic_production_preset') ?>'>
-						Create Auphonic Production
-						<div>
-							<span id="fetch_create_production_status"></span>
-						</div>
-					</a>
-				</div>
-				<span id="new_created_episode_data"></span>
-			</div>
-			<div style="clear: both"></div>
-		</div>
-	<?php
     }
 
     public function auphonic_episodes_form() {
@@ -170,6 +132,61 @@ class Auphonic extends \Podlove\Modules\Base {
 			data-assignment-image="<?php echo $asset_assignments->image ?>"
 			data-module-url="<?php echo $this->get_module_url() ?>"
 			/>
+
+		<div id="auphonic-box">
+			
+			<ul>
+				<li><a href="#auphonic-box-create">Create new Production</a></li>
+				<li><a href="#auphonic-box-import">Import from Production</a></li>
+			</ul>
+
+			<div id="auphonic-box-create" class="tab-page">
+				<label>
+					<span>Service</span>
+					<select>
+						<option>Dropbox</option>
+					</select>
+				</label>
+
+				<label>
+					<span>Master Audio File</span> <i class="podlove-icon-repeat"></i>
+					<select>
+						<option>cre194-bier.mp3</option>
+					</select>
+				</label>
+
+				<button class="button">
+					<i class="podlove-icon-plus">
+						&nbsp;Create new production from episode data
+					</i>
+				</button>
+			</div>
+
+			<div id="auphonic-box-import" class="tab-page">
+
+				<label>
+					<span>Production</span> <i class="podlove-icon-repeat"></i> <i class="podlove-icon-external-link"></i>
+					<select>
+						<option>testaudio (3 days ago) [Production Not Started Yet]</option>
+					</select>
+				</label>
+
+				<label>
+					<input type="checkbox" style="width: auto"> <?php echo __( 'Overwrite existing content', 'podlove' ) ?>
+				</label>
+
+				<div style="clear: both"></div>
+
+				<button class="button">
+					<i class="podlove-icon-cloud-download">
+						&nbsp;Import episode data from production
+					</i>
+				</button>
+			</div>
+
+		</div>
+
+		<!-- YE OLDE STUFF BELOW -->
 
 		<div id="auphonic-import-form">
 		
