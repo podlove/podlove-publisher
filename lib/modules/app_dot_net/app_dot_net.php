@@ -25,19 +25,15 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$this->register_option( 'adn_auth_key', 'string', array(
 				'label'       => __( 'Authorization', 'podlove' ),
 				'description' => $description,
-				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net auth code' )
+				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net authentication code' )
 				) );
 			} else {
-				$ch = curl_init('https://alpha-api.app.net/stream/0/token?access_token='.$this->get_module_option('adn_auth_key').'');                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                                                                                  
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                                                                                                                                  
-
-				$decoded_result = json_decode(curl_exec($ch)); 
 				
-				if(isset($decoded_result) AND $decoded_result !== "") { 
+				if ( $user = $this->fetch_authorized_user() ) { 
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
-									__( 'You are logged in as <strong>'.$decoded_result->data->user->username.'</strong>. If you want to logout, click %shere%s.', 'podlove' ),
+									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
+									'<strong>' . $user->username . '</strong>',
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_appnet_auth_code=1' ) . '">',
 									'</a>'
 								);
@@ -56,71 +52,298 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				'html'        => array( 'class' => 'regular-text' )
 				) );		
 			}
-			
-						
 
-			if($this->get_module_option('adn_poster_announcement_text') == "") {			
-				$description = '<i class="podlove-icon-remove"></i>' . __( 'You need to set a text to announce new episodes.', 'podlove' );
-			} else {
-				$description = __( 'The text that will be displayed on App.net.', 'podlove' );
+			$description = '';
+			if ( $this->get_module_option('adn_poster_announcement_text') == "" ) {			
+				$description = '<i class="podlove-icon-remove"></i>'
+				             . __( 'You need to set a text to announce new episodes.', 'podlove' );
 			}
-			$description .= __( '
-				<p>
-					Use these placeholders to customize your announcement:
-				</p>
-				<ul>
-					<li>
-						<code>{podcastTitle}</code> The title of your podcast
-					</li>
-					<li>
-						<code>{linkedEpisodeTitle}</code> The title of your episode, linking to it
-					</li>
-					<li>
-						<code>{episodeTitle}</code> The title of the episode
-					</li>
-					<li>
-						<code>{episodeLink}</code> The permalink of the current episode
-					</li>
-					</li>
-					<li>
-						<code>{episodeSubtitle}</code> The subtitle of the episode
-					</li>
-				</ul>', 'podlove' );		
+
+			$description .= __( 'App.net allows 256 characters per post. Try to keep the announcement text short. Your episode titles will need more space than the placeholders.', 'podlove' );
+
+			$description .= '
+				' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
+				<code title="' . __( 'The title of your podcast', 'podlove' ) . '">{podcastTitle}</code>
+				<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
+				<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
+				<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
+				<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';		
 
 			$this->register_option( 'adn_poster_announcement_text', 'text', array(
 				'label'       => __( 'Announcement text', 'podlove' ),
 				'description' => $description,
-				'html'        => array( 'cols' => '40', 'rows' => '6', 'placeholder' => 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}' )
+				'html'        => array(
+					'cols' => '40',
+					'rows' => '6',
+					'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' ) )
 			) );
+
+			$this->register_option( 'adn_preview', 'callback', array(
+				'label' => __( 'Announcement preview', 'podlove' ),
+				'callback' => function() use ( $user ) {
+
+					if ( ! $user )
+						return;
+
+					?>
+					<style type="text/css">
+					#podlove_adn_post_preview {
+						border: 1px solid #ddd;
+						background: white;
+						padding: 15px 15px 5px 15px;
+						font-style: normal;
+						color: #333;
+						font-size: 14px;
+						font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+					}
+
+					.adn.avatar {
+						display: block;
+						width: 57px;
+						height: 57px;
+						background-size: 57px 57px;
+						float: left;
+					}
+
+					.adn.username {
+						font-weight: bold;
+					}
+
+					.adn.content {
+						margin-left: 67px;
+					}
+
+					.adn.body {
+						min-height: 39px;
+						line-height: 18px;
+						margin-bottom: 10px;
+					}
+
+					.adn.footer {
+						font-size: 12px;
+						color: #524f54;
+						text-align: left;
+						line-height: 18px;
+					}
+
+					.adn.footer ul {
+						color: rgb(111, 116, 119);
+						margin: 0 0 0px 0px;
+					}
+
+					.adn.footer li {
+						display: inline-block;
+						margin-right: 10px;
+					}
+					</style>
+					
+					<?php
+					$podcast = Model\Podcast::get_instance();
+					if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
+						$example_data = array(
+							'episode'      => get_the_title( $episode->post_id ),
+							'episode-link' => get_permalink( $episode->post_id ),
+							'subtitle'     => $episode->subtitle
+						);
+					} else {
+						$example_data = array(
+							'episode'      => 'My Example Episode',
+							'episode-link' => 'http://www.example.com/episode/001',
+							'subtitle'     => 'My Example Subtitle'
+						);
+					}
+					?>
+					<div id="podlove_adn_post_preview"
+							data-podcast="<?php echo $podcast->title ?>"
+							data-episode="<?php echo $example_data['episode'] ?>"
+							data-episode-link="<?php echo $example_data['episode-link'] ?>"
+							data-episode-subtitle="<?php echo $example_data['subtitle'] ?>">
+						<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
+						<div class="adn content">
+							<div class="adn username"><?php echo $user->username ?></div>
+							<div class="adn body">Lorem ipsum dolor ...</div>
+					
+							<div class="adn footer">
+								<ul>
+									<li>
+										<i class="podlove-icon-time"></i> now
+									</li>
+									<li>
+										<i class="podlove-icon-reply"></i> Reply
+									</li>
+									<li>
+										<i class="podlove-icon-share"></i> via Podlove Publisher
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div style="clear: both"></div>
+					</div>
+
+					<script type="text/javascript">
+					var PODLOVE = PODLOVE || {};
+
+					(function($){
+
+						PODLOVE.AppDotNet = function () {
+							var $textarea = $("#podlove_module_app_dot_net_adn_poster_announcement_text"),
+							    $preview = $("#podlove_adn_post_preview");
+
+							var parseUri = function (str) {
+								var	o   = parseUri.options,
+									m   = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+									uri = {},
+									i   = 14;
+
+								while (i--) uri[o.key[i]] = m[i] || "";
+
+								uri[o.q.name] = {};
+								uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
+									if ($1) uri[o.q.name][$1] = $2;
+								});
+
+								return uri;
+							};
+
+							parseUri.options = {
+								strictMode: false,
+								key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
+								q:   {
+									name:   "queryKey",
+									parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+								},
+								parser: {
+									strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+									loose:  /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+								}
+							};
+
+							var nl2br = function (str, is_xhtml) {
+							    var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+							    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+							}
+
+							var endsWith = function (str, suffix) {
+							    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+							}
+
+							var update_preview = function() {
+								var text = $textarea.val(),
+									podcast = $preview.data('podcast'),
+								    episode_link = $preview.data('episode-link'),
+								    episode_subtitle = $preview.data('episode-subtitle'),
+								    episode = $preview.data('episode');
+
+								text = text.replace("{podcastTitle}", podcast);
+								text = text.replace("{episodeTitle}", episode);
+								text = text.replace("{episodeLink}",  episode_link);
+								text = text.replace("{episodeSubtitle}", episode_subtitle);
+
+								safetyNet = 0;
+								shortened = false;
+								while (safetyNet < 1000 && text.replace(/\{linkedEpisodeTitle\}/g, episode).length > 256) {
+									safetyNet++;
+									if (endsWith(text, "{linkedEpisodeTitle}") && episode.length > 0) {
+										episode = episode.slice(0,-1); // shorten episode title by one character at a time
+									} else {
+										text = text.slice(0,-1); // shorten text by one character at a time
+									}
+									shortened = true;
+								}
+
+								text = text.replace(/\{linkedEpisodeTitle\}/g, '<a href="' + episode_link + '">' + episode + '</a> [' + parseUri(episode_link)['host'] + ']')
+
+								if (shortened) {
+									text = text + "…";
+								}
+
+								$(".adn.body", $preview).html(nl2br(text));
+							};
+
+							$textarea.keyup(function() {
+								update_preview();
+							});
+
+							update_preview();
+						}
+
+					}(jQuery));
+
+
+					jQuery(function($) {
+						PODLOVE.AppDotNet();
+					});
+					</script>
+					<?php
+				}
+			) );
+
+    }
+
+    /**
+     * Fetch name of logged in user via ADN API.
+     *
+     * Cached in transient "podlove_adn_username".
+     * 
+     * @return string
+     */
+    public function fetch_authorized_user() {
+
+    	$cache_key = 'podlove_adn_user';
+
+    	if ( ( $user = get_transient( $cache_key ) ) !== FALSE ) {
+    		return $user;
+    	} else {
+	    	if ( ! ( $token = $this->get_module_option('adn_auth_key') ) )
+	    		return "";
+
+	    	$ch = curl_init( 'https://alpha-api.app.net/stream/0/token?access_token=' . $token );                                                                      
+	    	curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "GET");
+	    	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
+	    	$decoded_result = json_decode( curl_exec( $ch ) );
+
+	    	$user = $decoded_result ? $decoded_result->data->user : FALSE;
+	    	set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
+	    	return $user;
+    	}
 
     }
     
     public function post_to_adn() {
-    
-    	$episode = \Podlove\Model\Episode::find_one_by_post_id($_POST['post_ID']);
+
+    	$post_id = $_POST['post_ID'];
+    	$post_title = $_POST['post_title'];
+
+    	$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
     	$podcast = \Podlove\Model\Podcast::get_instance();
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
     	
     	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
-    	$posted_text = str_replace("{episodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
-    	$posted_text = str_replace("{episodeLink}", get_permalink($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{episodeTitle}", $post_title, $posted_text);
+    	$posted_text = str_replace("{episodeLink}", get_permalink( $post_id ), $posted_text);
     	$posted_text = str_replace("{episodeSubtitle}", $episode->subtitle, $posted_text);
     	
     	$posted_linked_title = array();
     	$start_position = 0;
     	
-    	while(($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE) {
+    	while( ($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+			$length = mb_strlen( $post_title, "UTF-8" );
         	$episode_entry = array(
-        		"url"  => get_permalink($_POST['post_ID']), 
-        		"text" => get_the_title($_POST['post_ID']), 
+        		"url"  => get_permalink( $post_id ), 
+        		"text" => $post_title, 
         		"pos"  => $position, 
-        		"len"  => mb_strlen( get_the_title($_POST['post_ID']), "UTF-8" )
+        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
         	);
         	array_push( $posted_linked_title, $episode_entry );
         	$start_position = $position + 1;
 		}
     	
-    	$posted_text = str_replace("{linkedEpisodeTitle}", get_the_title($_POST['post_ID']), $posted_text);
+    	$posted_text = str_replace("{linkedEpisodeTitle}", $post_title, $posted_text);
+
+    	if ( strlen( $posted_text ) > 256 ) {
+    		$posted_text = substr( $posted_text, 0, 255 ) . "…";
+    	}
     
     	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
 		$data_string = json_encode($data);        
@@ -141,6 +364,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     public function reset_adn_auth() {
     	if(isset( $_GET["reset_appnet_auth_code"] ) && $_GET["reset_appnet_auth_code"] == "1") {
 				$this->update_module_option('adn_auth_key', "");
+				delete_transient('podlove_adn_user');
     			header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');    
     	}
     }
