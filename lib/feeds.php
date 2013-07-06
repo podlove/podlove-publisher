@@ -21,6 +21,7 @@ function handle_feed_proxy_redirects() {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $http_status_code );
 		exit;
 	} else { // don't redirect; prepare feed
+		status_header(200);
 		RSS::prepare_feed( $feed->slug );
 	}
 
