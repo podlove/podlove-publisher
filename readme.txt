@@ -77,7 +77,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.7.1 =
+= 1.7.1 (2013-07-06) =
+* Logging Module: Deactivate sending of mails until we figure out what causes some misbehaviours
 * Bugfix: ADN Announcements should work with all kinds of templates now
 
 = 1.7.0-alpha (2013-07-03) =
