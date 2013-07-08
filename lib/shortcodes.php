@@ -113,12 +113,13 @@ function episode_downloads_shortcode( $options ) {
 		}
 		$html .= '</ul>';
 	} else {
-		$html = '<div class="episode_downloads">';
-		$html.= 	'<select name="podlove_downloads">';
+		$html = '<form action="' . get_bloginfo( 'url' ) . '">';
+		$html.= '<div class="episode_downloads">';
+		$html.= 	'<select name="download_media_file">';
 		foreach ( $downloads as $download ) {
 			$html .= sprintf(
-				'<option value="%s" data-raw-url="%s">%s [%s]</option>',
-				apply_filters( 'podlove_download_link_url', $download['url'], $download['file'] ),
+				'<option value="%d" data-raw-url="%s">%s [%s]</option>',
+				$download['file']->id,
 				$download['file']->get_file_url(),
 				apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
 				$download['size']
@@ -129,6 +130,7 @@ function episode_downloads_shortcode( $options ) {
 		$html.= 	'<button class="secondary">Show URL</button>';
 		// $html.= 	'<a href="#">Show URL</a>';
 		$html.= '</div>';
+		$html.= '</form>';
 	}
 
 	return apply_filters( 'podlove_downloads_before', '' )
