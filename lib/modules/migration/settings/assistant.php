@@ -197,7 +197,7 @@ class Assistant {
 		foreach ( $enclosures as $enclosure ) {
 			if ( ! $enclosure->errors ) {
 				$file_name = end( explode( "/", $enclosure->url ) );
-				return current( explode( ".", $file_name ) );
+				return substr( $file_name, 0, strrpos( $file_name, '.' ) );
 			}
 		}
 
