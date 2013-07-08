@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.7.2 =
+* Bugfix: Feed web player with existing/valid files only
+
 = 1.7.1 (2013-07-06) =
 * Logging Module: Deactivate sending of mails until we figure out what causes some misbehaviours
 * Enhancement: System Report: check for SimpleXML availability

@@ -213,7 +213,7 @@ class Printer {
 				continue;
 
 			$media_file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->episode->id, $episode_asset->id );
-			if ( $media_file )
+			if ( $media_file && $media_file->is_valid() )
 				$playable_files[] = $media_file;
 		}
 
