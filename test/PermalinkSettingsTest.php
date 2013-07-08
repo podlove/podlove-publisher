@@ -1,6 +1,4 @@
 <?php
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-
 class PermalinkSettingsTest extends PHPUnit_Extensions_Selenium2TestCase {
 
 	// before first test
