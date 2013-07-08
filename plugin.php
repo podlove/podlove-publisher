@@ -603,6 +603,21 @@ function add_podcast_rewrite_rules() {
  * Filters the request query vars to search for posts with type 'post' and 'podcast'
  */
 function podcast_permalink_proxy($query_vars) {
+	global $wpdb;
+
+	// Previews default to post type "post" which is unfortunate.
+	// However, when there is a name, we can determine the post_type anyway.
+	// I don't think this is 100% bulletproof but seems to work well enough.
+	if ( isset( $query_vars["preview"] ) && ! isset( $query_vars["post_type"] ) && isset( $query_vars["name"] ) ) {
+		$query_vars["post_type"] = $wpdb->get_var(
+			sprintf(
+				'SELECT post_type FROM %s WHERE post_name = "%s"',
+				$wpdb->posts,
+				$wpdb->escape( $query_vars['name'] )
+			)
+		);
+	}
+
 	// No post request
 	if ( isset( $query_vars["preview"] ) || false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
 		return $query_vars;
