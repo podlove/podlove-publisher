@@ -481,8 +481,9 @@ function override404() {
 			meta_key = 'podlove_alternate_url'
 	", ARRAY_A );
 
+	$request_uri = untrailingslashit( $_SERVER['REQUEST_URI'] );
 	foreach ( $rows as $row ) {
-		if ( false !== stripos( $_SERVER['REQUEST_URI'], $row['url'] ) ) {
+		if ( false !== stripos( $row['url'], $request_uri ) ) {
 			status_header( 301 );
 			$wp_query->is_404 = false;
 			\wp_redirect( \get_permalink( $row['post_id'] ), 301 );
