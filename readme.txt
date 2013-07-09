@@ -82,6 +82,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Bugfix: Downloads work without JavaScript enabled
 * Bugfix: Episode previews should work now
 * Bugfix: Migration Assistant: you are now able to import file slugs containing dots
+* Bugfix: Fix podlove_alternate_url issue
 
 = 1.7.1 (2013-07-06) =
 * Logging Module: Deactivate sending of mails until we figure out what causes some misbehaviours
