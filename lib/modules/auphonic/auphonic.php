@@ -149,7 +149,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				</label>
 
 				<label>
-					<span>Master Audio File</span> <i class="podlove-icon-repeat"></i>
+					<span>Master Audio File</span> <i class="podlove-icon-repeat" title="fetch available audio files"></i>
 					<select>
 						<option>cre194-bier.mp3</option>
 					</select>
@@ -165,7 +165,7 @@ class Auphonic extends \Podlove\Modules\Base {
 			<div id="auphonic-box-import" class="tab-page">
 
 				<label>
-					<span>Production</span> <i class="podlove-icon-repeat"></i> <i class="podlove-icon-external-link"></i>
+					<span>Production</span> <i class="podlove-icon-repeat" title="fetch available productions"></i> <i class="podlove-icon-external-link" title="open in Auphonic"></i>
 					<select>
 						<option>testaudio (3 days ago) [Production Not Started Yet]</option>
 					</select>
@@ -186,7 +186,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 		</div>
 
-		<!-- YE OLDE STUFF BELOW -->
+		<!-- YE OLDE STUFF BELOW 
 
 		<div id="auphonic-import-form">
 		
@@ -253,7 +253,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			<div style="clear: both"></div>
 		</div>
-		
+		-->
 		
 		<?php
     }
