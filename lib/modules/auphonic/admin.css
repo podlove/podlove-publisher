@@ -69,6 +69,21 @@
 	padding: 0 10px 10px 0;
 }
 
+#reload_productions_button {
+	width: 14px;
+	height: 12px;
+	display: inline-block;
+	position: relative;
+}
+
+.state_idle, .state_working, .state_success {
+	position: absolute;
+}
+
+.state_working, .state_success {
+	display: none;
+}
+
 /* jQuery UI */
 
 .ui-tabs .ui-tabs-nav {
