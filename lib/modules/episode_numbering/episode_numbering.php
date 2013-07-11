@@ -58,9 +58,9 @@ class episode_numbering extends \Podlove\Modules\Base {
 	}
 	
 	public function update_episode_numbering() {
-		add_post_meta( $_POST["post_ID"], '_podlove_episode_season_number', $_POST["_podlove_episode_season_number"] ) || update_post_meta( $_POST["post_ID"], '_podlove_episode_season_number', $_POST["_podlove_episode_season_number"] );
-		add_post_meta( $_POST["post_ID"], '_podlove_episode_number', $_POST["_podlove_episode_number"] ) || update_post_meta( $_POST["post_ID"], '_podlove_episode_number', $_POST["_podlove_episode_number"] );
-		add_post_meta( $_POST["post_ID"], '_podlove_episode_mnemomic', $_POST["_podlove_episode_mnemomic"] ) || update_post_meta( $_POST["post_ID"], '_podlove_episode_mnemomic', $_POST["_podlove_episode_mnemomic"] );
+		update_post_meta( $_POST["post_ID"], '_podlove_episode_season_number', $_POST["_podlove_episode_season_number"] );
+		update_post_meta( $_POST["post_ID"], '_podlove_episode_number', $_POST["_podlove_episode_number"] );
+		update_post_meta( $_POST["post_ID"], '_podlove_episode_mnemomic', $_POST["_podlove_episode_mnemomic"] );
 	}
 
 }
