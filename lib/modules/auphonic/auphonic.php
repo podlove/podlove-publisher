@@ -165,26 +165,32 @@ class Auphonic extends \Podlove\Modules\Base {
 			<div id="auphonic-box-import" class="tab-page">
 
 				<label>
-					<span>Production</span>
-					<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
-						<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
-						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-						<span class="state_success"><i class="podlove-icon-ok"></i></span>
-					</span>
-					
-					<i class="podlove-icon-external-link" title="open in Auphonic"></i>
-					<select name="import_from_auphonic" id="import_from_auphonic">
-						<option>testaudio (3 days ago) [Production Not Started Yet]</option>
-					</select>
+					<div class="auphonic_production_head">
+						<span>Production</span>
+						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
+							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
+							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+						</span>
+						<i class="podlove-icon-external-link" title="open in Auphonic"></i>
+					</div>
+
+					<div>
+						<select name="import_from_auphonic" id="import_from_auphonic">
+							<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
+						</select>
+					</div>
 				</label>
 
-				<label>
-					<input type="checkbox" style="width: auto"> <?php echo __( 'Overwrite existing content', 'podlove' ) ?>
-				</label>
+				<div>
+					<label>
+						<input type="checkbox" id="force_import_from_auphonic" style="width: auto"> <?php echo __( 'Overwrite existing content', 'podlove' ) ?>
+					</label>
+				</div>
 
 				<div style="clear: both"></div>
 
-				<button class="button">
+				<button id="fetch_production_data_button" class="button">
 					<i class="podlove-icon-cloud-download">
 						&nbsp;Import episode data from production
 					</i>
