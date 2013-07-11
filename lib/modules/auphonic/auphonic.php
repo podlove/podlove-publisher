@@ -165,8 +165,15 @@ class Auphonic extends \Podlove\Modules\Base {
 			<div id="auphonic-box-import" class="tab-page">
 
 				<label>
-					<span>Production</span> <i class="podlove-icon-repeat" title="fetch available productions"></i> <i class="podlove-icon-external-link" title="open in Auphonic"></i>
-					<select>
+					<span>Production</span>
+					<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
+						<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
+						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+						<span class="state_success"><i class="podlove-icon-ok"></i></span>
+					</span>
+					
+					<i class="podlove-icon-external-link" title="open in Auphonic"></i>
+					<select name="import_from_auphonic" id="import_from_auphonic">
 						<option>testaudio (3 days ago) [Production Not Started Yet]</option>
 					</select>
 				</label>
@@ -186,6 +193,8 @@ class Auphonic extends \Podlove\Modules\Base {
 
 		</div>
 
+		<?php
+		/*
 		<!-- YE OLDE STUFF BELOW 
 
 		<div id="auphonic-import-form">
@@ -256,6 +265,7 @@ class Auphonic extends \Podlove\Modules\Base {
 		-->
 		
 		<?php
+		*/
     }
     
     public function check_code() { 
