@@ -162,7 +162,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			
 			$this->register_option( 'adn_patter_room', 'select', array(
 			'label'       => __( 'Patter room', 'podlove' ),
-			'description' => 'The Patter room of your Podcast.',
+			'description' => 'The <a href="http://patter-app.net/faq.html" target="_blank">Patter room</a> of your Podcast.',
 			'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 			'options'	  => $patter_rooms
 			) );
