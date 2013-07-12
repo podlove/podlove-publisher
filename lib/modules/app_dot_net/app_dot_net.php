@@ -512,9 +512,17 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 			'Content-Type: application/json',                                                                                
 			'Content-Length: ' . strlen($data_string))                                                                       
-		);                                                                                                                   
-
-		$result = curl_exec($ch);
+		);       
+		
+		$post_custom = get_post_custom($post_id);                                                                                                            
+		if(isset($post_custom["_podlove_episode_was_published"])) {
+			if($post_custom["_podlove_episode_was_published"][count($post_custom["_podlove_episode_was_published"]) - 1] !== "1") {
+				$result = curl_exec($ch);
+			}
+		} else {
+			$result = curl_exec($ch);
+		}
+		
 		
 		if($this->get_module_option('adn_patter_room_announcement') == "on") {
 			if($this->get_module_option('adn_language_annotation') !== "") {
@@ -533,10 +541,18 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 				'Content-Type: application/json',                                                                                
 				'Content-Length: ' . strlen($data_string))                                                                       
-			);                                                                                                                   
+			);                                                                                                                  
 
-			$result = curl_exec($ch);	
+			if(isset($post_custom["_podlove_episode_was_published"])) {
+				if($post_custom["_podlove_episode_was_published"][count($post_custom["_podlove_episode_was_published"]) - 1] !== "1") {
+					$result = curl_exec($ch);
+				}
+			} else {
+				$result = curl_exec($ch);
+			}
 		}
+		
+		 update_post_meta( $post_id, '_podlove_episode_was_published', true );
     }
     
     public function reset_adn_auth() {
