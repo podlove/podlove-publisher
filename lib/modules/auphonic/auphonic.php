@@ -128,6 +128,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 		<input type="hidden" id="auphonic" value="1"
 			data-api-key="<?php echo $this->get_module_option('auphonic_api_key') ?>"
+			data-presetuuid="<?php echo $this->get_module_option('presetuuid') ?>"
 			data-assignment-chapter="<?php echo $asset_assignments->chapters ?>"
 			data-assignment-image="<?php echo $asset_assignments->image ?>"
 			data-module-url="<?php echo $this->get_module_url() ?>"
@@ -143,22 +144,25 @@ class Auphonic extends \Podlove\Modules\Base {
 			<div id="auphonic-box-create" class="tab-page">
 				<label>
 					<span>Service</span>
-					<select>
-						<option>Dropbox</option>
+					<select id="auphonic_services">
+						<option><?php echo __( 'Loading services ...' ) ?></option>
 					</select>
 				</label>
 
 				<label>
 					<span>Master Audio File</span> <i class="podlove-icon-repeat" title="fetch available audio files"></i>
-					<select>
+					<select id="create_auphonic_production">
 						<option>cre194-bier.mp3</option>
 					</select>
 				</label>
 
-				<button class="button">
-					<i class="podlove-icon-plus">
-						&nbsp;Create new production from episode data
-					</i>
+				<button class="button" id="create_auphonic_production_button">
+					<span class="indicating_button_wrapper">
+						<span class="state_idle"><i class="podlove-icon-plus"></i></span>
+						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+						<span class="state_success"><i class="podlove-icon-ok"></i></span>
+					</span>
+					Create new production from episode data
 				</button>
 			</div>
 
@@ -191,90 +195,17 @@ class Auphonic extends \Podlove\Modules\Base {
 				<div style="clear: both"></div>
 
 				<button id="fetch_production_data_button" class="button">
-					<span>
+					<span class="indicating_button_wrapper">
 						<span class="state_idle"><i class="podlove-icon-cloud-download"></i></span>
 						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 						<span class="state_success"><i class="podlove-icon-ok"></i></span>
 					</span>
-					&nbsp;Import episode data from production
+					Import episode data from production
 				</button>
 			</div>
 
 		</div>
-
 		<?php
-		/*
-		<!-- YE OLDE STUFF BELOW 
-
-		<div id="auphonic-import-form">
-		
-			<div id="create-auphonic-production-form" style="margin-bottom: 5px">
-				<div class="auphonic-select-wrapper">
-					<div class="auphonic-button-wrapper">
-						<a class='button' id='create_auphonic_production_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>' data-presetuuid='<?php echo $this->get_module_option('auphonic_production_preset') ?>'>
-							<i class="podlove-icon-plus">
-								&nbsp;Create new production from episode data
-							</i>
-							<div>
-								<span id="fetch_create_production_status"></span>
-							</div>
-						</a>
-					</div>
-					<span id="new_created_episode_data"></span>
-				</div>
-				<div style="clear: both"></div>
-			</div>
-
-			<div class="auphonic-select-wrapper">
-				<label for="import_from_auphonic">Production</label>
-				<select name="import_from_auphonic" id="import_from_auphonic">
-					<option value="<?php echo $production_data->uuid ?>">
-						<?php echo $displayed_name." (".date( "Y-m-d H:i:s", strtotime($production_data->creation_time)).") [".$production_data->status_string."]"; ?>
-					</option>
-				</select>
-			</div>
-			
-			<div class="auphonic-button-wrapper" style="float: left; margin-right: 10px;">
-				<a class='button' id='reload_productions_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
-					<i class="podlove-icon-repeat"></i> <span id="reload_episodes_status"></span>
-				</a>
-			</div>
-			
-			<div class="auphonic-button-wrapper" style="float: left; margin-right: 10px;">
-				<a class='button' id='open_production_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
-					<i class="podlove-icon-external-link">
-						&nbsp;Open in Auphonic
-					</i>
-				</a>
-			</div>
-			
-			<div style="clear: both"></div>
-			
-			<div style="margin: 5px 0px 0px 0px;">
-				<div class="auphonic-button-wrapper">
-					<a class='button' id='fetch_production_data_button' class='button' data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
-						<i class="podlove-icon-cloud-download">
-							&nbsp;Import episode data from production
-						</i>
-						<div>
-							<span id="fetch_production_status"></span>
-						</div>
-					</a>
-				</div>
-
-				<div class="auphonic-checkbox-wrapper">
-					<input type='checkbox' id='force_import_from_auphonic'/>
-					<label for='force_import_from_auphonic' title="<?php echo __( 'Overwrite all fields, even if they are already filled out.', 'podlove' ) ?>"><?php echo __( 'Overwrite existing content', 'podlove' ) ?></label>
-				</div>
-				<div style="clear: both"></div>
-			</div>
-
-			<div style="clear: both"></div>
-		</div>
-		-->
-		
-		<?php
-		*/
     }
     
     public function check_code() { 

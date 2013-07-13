@@ -49,11 +49,7 @@
 	display: none;
 }
 
-#fetch_production_data_button {
-
-}
-
-#fetch_production_data_button > span {
+.indicating_button_wrapper {
 	position: relative;
 	display: inline-block;
 	height: 14px;
