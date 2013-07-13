@@ -77,6 +77,19 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.7.2 (2013-07-11) =
+* Feature: Update Web Player to 2.0.13
+* Bugfix: Feed web player with existing/valid files only
+* Bugfix: Downloads work without JavaScript enabled
+* Bugfix: Episode previews should work now
+* Bugfix: Migration Assistant: you are now able to import file slugs containing dots
+* Bugfix: Fix podlove_alternate_url issue
+
+= 1.7.1 (2013-07-06) =
+* Logging Module: Deactivate sending of mails until we figure out what causes some misbehaviours
+* Enhancement: System Report: check for SimpleXML availability
+* Bugfix: ADN Announcements should work with all kinds of templates now
+
 = 1.7.0-alpha (2013-07-03) =
 * New Module: App.net. Right now, it lets you announce new podcast episodes on ADN whenever you publish a new one. It's the groundwork for more ADN integrations. (Thanks @chemiker!)
 * New Module: Auphonic. We did not shy away from writing a completely new module to present to you the best Auphonic integration the world has seen in a WordPress plugin. It replaces the previous one ("Auphonic Production Data"). You are now able to import Auphonic production data without the need for a production description file. Like the ADN module, this lays the groundwork for much deeper Auphonic integration. (Thanks @chemiker!)

@@ -49,7 +49,7 @@ class SystemReport {
 
 				return $out;
 			} ),
-			'iconv' => array( 'callback' => function() {	
+			'iconv' => array( 'callback' => function() use ( &$errors ) {	
 				$iconv_available = function_exists( 'iconv' );
 
 				if ( ! $iconv_available ) {
@@ -58,12 +58,19 @@ class SystemReport {
 
 				return $iconv_available ? "available" : "MISSING";
 			} ),
-			'allow_url_fopen' => array( 'callback' => function() {
+			'allow_url_fopen' => array( 'callback' => function() use ( &$errors ) {
 
 				if ( ! $allow_url_fopen = ini_get( 'allow_url_fopen' ) )
 					$errors[] = 'allow_url_fopen must be activated in your php.ini';
 
 				return $allow_url_fopen;
+			} ),
+			'simplexml' => array( 'callback' => function() use ( &$errors ) {
+				
+				if ( ! $simplexml = in_array('SimpleXML', get_loaded_extensions()) )
+					$errors[] = 'You need to install/activate the PHP SimpleXML module';
+
+				return $simplexml ? 'ok' : 'missing!';
 			} ),
 			'max_execution_time'  => array( 'callback' => function() { return ini_get( 'max_execution_time' ); } ),
 			'upload_max_filesize' => array( 'callback' => function() { return ini_get( 'upload_max_filesize' ); } ),
