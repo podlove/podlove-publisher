@@ -44,9 +44,15 @@ class episode_numbering extends \Podlove\Modules\Base {
 				AND isset($episode_custom_values["_podlove_episode_number"])
 				AND count($episode_custom_values["_podlove_episode_number"]) > 0) {
 				
-				$current_season = $episode_custom_values["_podlove_episode_season_number"][count($episode_custom_values["_podlove_episode_season_number"]) - 1];
-				$current_episode = $episode_custom_values["_podlove_episode_number"][count($episode_custom_values["_podlove_episode_number"]) - 1];
-				$current_mnenomic = $episode_custom_values["_podlove_episode_mnenomic"][count($episode_custom_values["_podlove_episode_mnenomic"]) - 1];
+				if(isset($episode_custom_values["_podlove_episode_season_number"])) {
+					$current_season = $episode_custom_values["_podlove_episode_season_number"][count($episode_custom_values["_podlove_episode_season_number"]) - 1];
+				}
+				if(isset($episode_custom_values["_podlove_episode_number"])) {
+					$current_episode = $episode_custom_values["_podlove_episode_number"][count($episode_custom_values["_podlove_episode_number"]) - 1];
+				}
+				if(isset($episode_custom_values["_podlove_episode_mnenomic"])) {
+					$current_mnenomic = $episode_custom_values["_podlove_episode_mnenomic"][count($episode_custom_values["_podlove_episode_mnenomic"]) - 1];
+				}
 				
 				if(get_query_var("episode") !== ""
 				   AND get_query_var("season") !== "") {
@@ -81,15 +87,15 @@ class episode_numbering extends \Podlove\Modules\Base {
 		?>
 			<div id="_podlove_meta_episode_numbering_form_field">
 				<div>
-					<input type="text" class="regular-text" id="_podlove_episode_season_number" name="_podlove_episode_season_number" <?php if(isset($custom_fields["_podlove_episode_season_number"][count($custom_fields["_podlove_episode_mnenomic"]) - 1])) { echo "value=\"".$custom_fields["_podlove_episode_season_number"][count($custom_fields["_podlove_episode_mnenomic"]) - 1]."\""; } ?> />
+					<input type="text" class="regular-text" id="_podlove_episode_season_number" name="_podlove_episode_season_number" <?php if(isset($custom_fields["_podlove_episode_season_number"])) { echo "value=\"".$custom_fields["_podlove_episode_season_number"][count($custom_fields["_podlove_episode_mnenomic"]) - 1]."\""; } ?> />
 					<label for="_podlove_episode_season_number" class="description">Season number</label>
 				</div>
 				<div>
-					<input type="text" class="regular-text" id="_podlove_episode_number" name="_podlove_episode_number" <?php if(isset($custom_fields["_podlove_episode_number"][count($custom_fields["_podlove_episode_mnenomic"]) - 1])) { echo "value=\"".$custom_fields["_podlove_episode_number"][count($custom_fields["_podlove_episode_mnenomic"]) - 1]."\""; } ?> />
+					<input type="text" class="regular-text" id="_podlove_episode_number" name="_podlove_episode_number" <?php if(isset($custom_fields["_podlove_episode_number"])) { echo "value=\"".$custom_fields["_podlove_episode_number"][count($custom_fields["_podlove_episode_mnenomic"]) - 1]."\""; } ?> />
 					<label for="_podlove_episode_number" class="description">Episode number</label>
 				</div>
 				<div>
-					<input type="text" class="regular-text" id="_podlove_episode_mnenomic" name="_podlove_episode_mnenomic" <?php if(isset($custom_fields["_podlove_episode_mnenomic"][count($custom_fields["_podlove_episode_mnenomic"]) - 1])) { echo "value=\"".$custom_fields["_podlove_episode_mnenomic"][count($custom_fields["_podlove_episode_mnenomic"]) - 1]."\""; } ?> />
+					<input type="text" class="regular-text" id="_podlove_episode_mnenomic" name="_podlove_episode_mnenomic" <?php if(isset($custom_fields["_podlove_episode_mnenomic"])) { echo "value=\"".$custom_fields["_podlove_episode_mnenomic"][count($custom_fields["_podlove_episode_mnenomic"]) - 1]."\""; } ?> />
 					<label for="_podlove_episode_mnenomic" class="description">Mnenomic</label>
 				</div>
 			</div>
@@ -108,9 +114,11 @@ class episode_numbering extends \Podlove\Modules\Base {
 	}
 	
 	public function update_episode_numbering() {
-		update_post_meta( $_POST["post_ID"], '_podlove_episode_season_number', $_POST["_podlove_episode_season_number"] );
-		update_post_meta( $_POST["post_ID"], '_podlove_episode_number', $_POST["_podlove_episode_number"] );
-		update_post_meta( $_POST["post_ID"], '_podlove_episode_mnenomic', $_POST["_podlove_episode_mnenomic"] );
+		if(isset($_POST["post_ID"])) {
+			update_post_meta( $_POST["post_ID"], '_podlove_episode_season_number', $_POST["_podlove_episode_season_number"] );
+			update_post_meta( $_POST["post_ID"], '_podlove_episode_number', $_POST["_podlove_episode_number"] );
+			update_post_meta( $_POST["post_ID"], '_podlove_episode_mnenomic', $_POST["_podlove_episode_mnenomic"] );
+		}
 	}
 
 }
