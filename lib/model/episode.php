@@ -154,6 +154,33 @@ class Episode extends Base {
 
 	}
 
+	/**
+	 * Check for basic validity.
+	 *
+	 * - MUST have an existing associated post
+	 * - associated post MUST be of type 'podcast'
+	 * - MUST NOT be deleted/trashed
+	 * 
+	 * @return boolean
+	 */
+	public function is_valid() {
+
+		$post = get_post( $this->post_id );
+
+		if ( ! $post )
+			return false;
+
+		// skip deleted podcasts
+		if ( ! in_array( $post->post_status, array( 'draft', 'publish', 'pending', 'future' ) ) )
+			return false;
+
+		// skip versions
+		if ( $post->post_type != 'podcast' )
+			return false;
+
+		return true;
+	}
+
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
