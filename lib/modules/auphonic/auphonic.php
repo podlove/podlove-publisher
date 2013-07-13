@@ -172,7 +172,7 @@ class Auphonic extends \Podlove\Modules\Base {
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
 						</span>
-						<i class="podlove-icon-external-link" title="open in Auphonic"></i>
+						<i id="open_production_button" class="podlove-icon-external-link" title="open in Auphonic"></i>
 					</div>
 
 					<div>
@@ -191,9 +191,12 @@ class Auphonic extends \Podlove\Modules\Base {
 				<div style="clear: both"></div>
 
 				<button id="fetch_production_data_button" class="button">
-					<i class="podlove-icon-cloud-download">
-						&nbsp;Import episode data from production
-					</i>
+					<span>
+						<span class="state_idle"><i class="podlove-icon-cloud-download"></i></span>
+						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+						<span class="state_success"><i class="podlove-icon-ok"></i></span>
+					</span>
+					&nbsp;Import episode data from production
 				</button>
 			</div>
 
