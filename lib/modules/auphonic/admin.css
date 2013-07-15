@@ -27,7 +27,7 @@
 	padding: 0 10px 10px 0;
 }
 
-#reload_productions_button {
+#fetch_auphonic_production_files, #reload_productions_button {
 	width: 14px;
 	height: 13px;
 	display: inline-block;
@@ -39,6 +39,7 @@
 	margin-bottom: 5px;
 	line-height: 14px;
 	vertical-align: middle;
+	position: relative;
 }
 
 .state_idle, .state_working, .state_success {

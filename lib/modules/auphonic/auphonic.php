@@ -143,16 +143,25 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			<div id="auphonic-box-create" class="tab-page">
 				<label>
-					<span>Service</span>
+					<div class="auphonic_production_head">
+						<span>Service</span>
+					</div>
 					<select id="auphonic_services">
 						<option><?php echo __( 'Loading services ...' ) ?></option>
 					</select>
 				</label>
 
 				<label>
-					<span>Master Audio File</span> <i class="podlove-icon-repeat" title="fetch available audio files"></i>
-					<select id="create_auphonic_production">
-						<option>cre194-bier.mp3</option>
+					<div class="auphonic_production_head">
+						<span>Master Audio File</span>
+						<span id="fetch_auphonic_production_files" title="fetch available audio files">
+							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
+							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+						</span>
+					</div>
+					<select id="auphonic_production_files">
+						<option><?php echo __( 'Loading files ...' ) ?></option>
 					</select>
 				</label>
 
