@@ -513,10 +513,14 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		
 		
 		if($this->get_module_option('adn_patter_room_announcement') == "on") {
+			$crosspost_annotation = array("type" => "net.app.core.crosspost", "value" => array("canonical_url" => "http://patter-app.net/room.html?channel=".$this->get_module_option('adn_patter_room')));
+			$invite_annotation = array("type" => "net.app.core.channel.invite", "value" => array("channel_id" => $this->get_module_option('adn_patter_room')));
+
+		
 			if($this->get_module_option('adn_language_annotation') !== "") {
-				$data = array("text" => $posted_text, "annotations" => array($language_annotation), "entities" => array("links" => $posted_linked_title,"parse_links" => true), "channel_id" => $this->get_module_option('adn_patter_room'));  
+				$data = array("text" => $posted_text, "annotations" => array($language_annotation, $crosspost_annotation, $invite_annotation), "entities" => array("links" => $posted_linked_title,"parse_links" => true), "channel_id" => $this->get_module_option('adn_patter_room'));  
 			} else {
-				$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true), "channel_id" => $this->get_module_option('adn_patter_room'));  
+				$data = array("text" => $posted_text, "annotations" => array($crosspost_annotation, $invite_annotation),  "entities" => array("links" => $posted_linked_title,"parse_links" => true), "channel_id" => $this->get_module_option('adn_patter_room'));  
 			
 			}
 			$data_string = json_encode($data);  
