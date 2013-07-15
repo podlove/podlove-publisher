@@ -313,7 +313,7 @@ class EpisodeAsset {
 							<option value="<?php echo $type ?>" <?php selected( $type, $current_file_type ) ?>><?php echo $type ?></option>	
 						<?php endforeach; ?>
 					</select>
-					<div id="option_storage"></div>
+					<div id="option_storage" style="display:none"></div>
 				</td>
 			</tr>
 			<?php
