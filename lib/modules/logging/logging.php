@@ -98,6 +98,9 @@ class Logging extends \Podlove\Modules\Base {
 					if ( isset( $data->http_code ) ) {
 						echo " HTTP Status: " . $data->http_code;
 					}
+					if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
+						echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+					}
 					?>
 				</span>
 			</div>
