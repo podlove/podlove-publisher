@@ -24,7 +24,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 
 	public function autoinsert_into_content( $content ) {
 
-		if ( get_post_type() !== 'podcast' )
+		if ( get_post_type() !== 'podcast' || post_password_required() )
 			return $content;
 
 		if ( self::there_is_a_player_in_the_content( $content ) )

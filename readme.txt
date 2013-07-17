@@ -78,7 +78,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.7.3 =
+* Enhancement: Show expected and actual mime type in log when an error occurs
 * Bugfix: Fix Bitlove integration
+* Bugfix: Correctly hide content in password protected posts
 * Fix some PHP 5.4 Strict warnings
 
 = 1.7.2 (2013-07-11) =
