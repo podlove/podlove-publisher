@@ -648,7 +648,7 @@ function no_verbose_page_rules() {
 function generate_custom_post_link( $post_link, $id, $leavename = false, $sample = false ) {
 
 	// Get post
-	$post = &get_post($id);
+	$post = get_post($id);
 
 	// only change Podlove URLs
 	if ( $post->post_type != 'podcast' )

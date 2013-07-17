@@ -27,7 +27,7 @@ class MediaFile extends Base {
 		return EpisodeAsset::find_by_id( $this->episode_asset_id );
 	}
 
-	public function find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
+	public static function find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
 		
 		if ( ! $file = self::find_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) ) {
 			$file = new MediaFile();
@@ -39,7 +39,7 @@ class MediaFile extends Base {
 		return $file;
 	}
 
-	public function find_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
+	public static function find_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
 		
 		$where = sprintf(
 			'episode_id = "%s" AND episode_asset_id = "%s"',
