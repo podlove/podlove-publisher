@@ -68,7 +68,7 @@ jQuery(function($) {
 	    var url   = info.sources[0].torrent,
 	        title = "Torrent:&nbsp;${download['name']}";
 	    // select-style download-widget
-	    jQuery("#post-$post->ID [name='podlove_downloads']").append("<option value='" + url + "' data-raw-url='" + url + "'>" + title + "</option>")
+	    jQuery("#post-$post->ID [name='download_media_file']").append("<option value='" + url + "' data-raw-url='" + url + "'>" + title + "</option>")
 	    // button-stile download-widget
 	    jQuery("#post-$post->ID .episode_download_list").append("<li><a href='" + url + "'>" + title + "<span class='size'></span></a></li>")
 	  }

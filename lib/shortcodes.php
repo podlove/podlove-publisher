@@ -11,6 +11,24 @@ function handle_direct_download() {
 	if ( ! defined( 'DONOTCACHEPAGE' ) )
 		define( 'DONOTCACHEPAGE', true );
 
+	// if download_media_file is a URL, download directly
+	if ( filter_var( $_GET['download_media_file'], FILTER_VALIDATE_URL ) ) {
+		$parsed_url = parse_url($_GET['download_media_file']);
+		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
+		header( "Expires: 0" );
+		header( 'Cache-Control: must-revalidate' );
+	    header( 'Pragma: public' );
+		header( "Content-Type: application/x-bittorrent" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Disposition: attachment; filename=$file_name" );
+		header( "Content-Transfer-Encoding: binary" );
+		ob_clean();
+		flush();
+		while ( @ob_end_flush() ); // flush and end all output buffers
+		readfile( $_GET['download_media_file'] );
+		exit;
+	}
+
 	$media_file_id = (int) $_GET['download_media_file'];
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 

@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.7.3 =
+* Bugfix: Fix Bitlove integration
+
 = 1.7.2 (2013-07-11) =
 * Feature: Update Web Player to 2.0.13
 * Bugfix: Feed web player with existing/valid files only
