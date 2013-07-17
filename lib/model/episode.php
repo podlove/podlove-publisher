@@ -58,7 +58,7 @@ class Episode extends Base {
 		return $media_files;
 	}
 
-	public function find_or_create_by_post_id( $post_id ) {
+	public static function find_or_create_by_post_id( $post_id ) {
 		$episode = Episode::find_one_by_property( 'post_id', $post_id );
 
 		if ( $episode )
