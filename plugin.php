@@ -524,7 +524,7 @@ add_action( 'added_post_meta', function ( $meta_id, $post_id, $meta_key, $_meta_
 
 function autoinsert_templates_into_content( $content ) {
 
-	if ( get_post_type() !== 'podcast' )
+	if ( get_post_type() !== 'podcast' || post_password_required() )
 		return $content;
 
 	$template_assignments = Model\TemplateAssignment::get_instance();
