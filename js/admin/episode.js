@@ -132,7 +132,6 @@ var PODLOVE = PODLOVE || {};
  		enable_all_media_files_by_default();
  		generate_live_preview();
 
- 		$("#_podlove_meta_subtitle, #_podlove_meta_summary").autogrow();
  		$("#_podlove_meta_subtitle").count_characters( { limit: 255,  title: 'recommended maximum length: 255' } );
  		$("#_podlove_meta_summary").count_characters(  { limit: 4000, title: 'recommended maximum length: 4000' } );
 
