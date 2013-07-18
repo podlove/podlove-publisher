@@ -13,5 +13,9 @@
 	
 		$result = curl_exec($ch);
 		
-		print_r($result);
-?>
+		if ( curl_errno( $ch ) ) {
+			header("HTTP/1.1 503 Service Temporarily Unavailable");
+			header("Status: 503 Service Temporarily Unavailable");
+		} else {
+			print_r( $result );
+		}
