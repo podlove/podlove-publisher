@@ -94,6 +94,8 @@ class Auphonic extends \Podlove\Modules\Base {
 				) );
     		
     		}
+
+    		add_action( 'wp_ajax_podlove-auphonic-create-production', array( $this, 'auphonic_create_production' ) );
     }
 
     public function admin_print_styles() {
@@ -128,7 +130,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 		<input type="hidden" id="auphonic" value="1"
 			data-api-key="<?php echo $this->get_module_option('auphonic_api_key') ?>"
-			data-presetuuid="<?php echo $this->get_module_option('presetuuid') ?>"
+			data-presetuuid="<?php echo $this->get_module_option('auphonic_production_preset') ?>"
 			data-assignment-chapter="<?php echo $asset_assignments->chapters ?>"
 			data-assignment-image="<?php echo $asset_assignments->image ?>"
 			data-module-url="<?php echo $this->get_module_url() ?>"
@@ -146,11 +148,11 @@ class Auphonic extends \Podlove\Modules\Base {
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_services">
-							Service
+							Source
 						</label>
 					</div>
 					<select id="auphonic_services">
-						<option><?php echo __( 'Loading services ...' ) ?></option>
+						<option><?php echo __( 'Loading sources ...' ) ?></option>
 					</select>
 				</div>
 				
@@ -169,17 +171,46 @@ class Auphonic extends \Podlove\Modules\Base {
 					<select id="auphonic_production_files">
 						<option>-</option>
 					</select>
+					<input type="text" id="auphonic_http_upload_url" name="auphonic_http_upload_url" style="display:none" class="large-text" />
 				</div>
 
-				<button class="button" id="create_auphonic_production_button">
-					<span class="indicating_button_wrapper">
-						<span class="state_idle"><i class="podlove-icon-plus"></i></span>
-						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-						<span class="state_success"><i class="podlove-icon-ok"></i></span>
-						<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-					</span>
-					Create new production from episode data
-				</button>
+				<div>
+					<button class="button" id="create_auphonic_production_button">
+						<span class="indicating_button_wrapper">
+							<span class="state_idle"><i class="podlove-icon-plus"></i></span>
+							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
+						</span>
+						Create new production from episode data
+					</button>
+				</div>
+
+				<div id="auphonic-production-segment" style="display:none; margin-top: 15px">
+					<div class="auphonic-segment">
+						<h2 style="margin: 0; margin-right: 3px; vertical-align:baseline; display: inline">Production: <span id="auphonic-creation-title"></span></h2>
+						<i id="open_production_button" class="podlove-icon-external-link" title="open in Auphonic"></i>
+					</div>
+
+					<div>
+						<div class="auphonic-segment">
+							<button class="button" id="start_auphonic_production_button">
+								<span class="indicating_button_wrapper">
+									<span class="state_idle"><i class="podlove-icon-cogs"></i></span>
+									<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+									<span class="state_success"><i class="podlove-icon-ok"></i></span>
+									<span class="state_fail"><i class="podlove-icon-remove"></i></span>
+								</span>
+								Start Production
+							</button>
+
+							<span style="font-style: italic">
+								Auphonic Status: <span id="auphonic-creation-status" ></span>
+							</span>
+						</div>
+					</div>
+
+				</div>
 			</div>
 
 			<div id="auphonic-box-import" class="tab-page">
@@ -250,5 +281,30 @@ class Auphonic extends \Podlove\Modules\Base {
     	}
     	
     }
-    
+ 
+    public function auphonic_create_production() {
+    	header('Content-type: application/json');
+
+    	$callurl = 'https://auphonic.com/api/productions.json?bearer_token=' . $this->get_module_option('auphonic_api_key');
+
+    	$ch = curl_init($callurl);                                                                      
+    	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
+    	curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');  
+    	curl_setopt($ch, CURLOPT_POSTFIELDS, stripslashes(urldecode($_POST["data"])));
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
+    		'Content-type: application/json')                                                                      
+    	);                                                              
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
+
+    	$result = curl_exec( $ch );
+
+    	if ( curl_errno( $ch ) ) {
+    		header("HTTP/1.1 503 Service Temporarily Unavailable");
+    		header("Status: 503 Service Temporarily Unavailable");
+    	} else {
+    		print_r( $result );
+    	}
+    	exit;
+    }
+
 }

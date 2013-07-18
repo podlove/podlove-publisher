@@ -27,7 +27,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="podlove-icon-"] {
 */
-.podlove-icon-reorder, .podlove-icon-ok, .podlove-icon-remove, .podlove-icon-minus, .podlove-icon-spinner, .podlove-icon-heart, .podlove-icon-reply, .podlove-icon-share, .podlove-icon-time, .podlove-icon-repeat, .podlove-icon-plus, .podlove-icon-cloud-download, .podlove-icon-external-link {
+.podlove-icon-reorder, .podlove-icon-ok, .podlove-icon-remove, .podlove-icon-minus, .podlove-icon-spinner, .podlove-icon-heart, .podlove-icon-reply, .podlove-icon-share, .podlove-icon-time, .podlove-icon-repeat, .podlove-icon-plus, .podlove-icon-cloud-download, .podlove-icon-external-link, .podlove-icon-circle, .podlove-icon-cogs {
 	font-family: 'Podlove';
 	speak: none;
 	font-style: normal;
@@ -75,4 +75,10 @@ you can use the generic selector below, but it's slower:
 }
 .podlove-icon-external-link:before {
 	content: "\f08e";
+}
+.podlove-icon-circle:before {
+	content: "\f111";
+}
+.podlove-icon-cogs:before {
+	content: "\f085";
 }

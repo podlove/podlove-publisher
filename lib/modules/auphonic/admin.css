@@ -43,14 +43,15 @@
 	position: relative;
 }
 
-.auphonic_production_head span {
-}
-
-#auphonic-box i {
+#auphonic-box button i, #auphonic-box .indicating_button_wrapper i {
 	position: absolute;
 	top: 1px;
 	cursor: pointer;
 }
+
+#auphonic-box .status-ok { color: #2ecc71; }
+#auphonic-box .status-warning { color: #e67e22; }
+#auphonic-box .status-error { color: #c0392b; }
 
 .state_working, .state_success, .state_fail {
 	display: none;
