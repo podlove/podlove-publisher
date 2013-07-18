@@ -68,7 +68,7 @@ class Podcast_Post_Meta_Box {
 					'label'       => __( 'Subtitle', 'podlove' ),
 					'description' => '',
 					'html'        => array(
-						'class' => 'large-text',
+						'class' => 'large-text autogrow',
 						'rows'  => 1
 					)
 				));
@@ -77,7 +77,7 @@ class Podcast_Post_Meta_Box {
 					'label'       => __( 'Summary', 'podlove' ),
 					'description' => '',
 					'html'        => array(
-						'class' => 'large-text',
+						'class' => 'large-text autogrow',
 						'rows'  => 3
 					)
 				));
