@@ -45,5 +45,7 @@ jQuery(function($) {
 	$(".wrap").each(function() {
 		PODLOVE.FeedSettings($(this));
 	});
+
+	$(".autogrow").autogrow();
 	
 });
