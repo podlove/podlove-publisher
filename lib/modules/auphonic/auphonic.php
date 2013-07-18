@@ -289,7 +289,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
     	$ch = curl_init($callurl);                                                                      
     	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
-    	curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');  
+    	curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());  
     	curl_setopt($ch, CURLOPT_POSTFIELDS, stripslashes(urldecode($_POST["data"])));
     	curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
     		'Content-type: application/json')                                                                      
