@@ -141,19 +141,18 @@ class FileType {
 		\Podlove\Form\build_for( $format, $form_args, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
+			$types = array();
+			foreach ( \Podlove\Model\FileType::get_types() as $type ) {
+				$types[ $type ] = $type;
+			}
+
 	 		$wrapper->string( 'name', array(
 	 			'label'       => __( 'Name', 'podlove' ),
 	 			'description' => '' ) );
 
 	 		$wrapper->select( 'type', array(
 	 			'label'       => __( 'Document Type', 'podlove' ),
-		 		'options'     => array(
-		 			'audio'    => __( 'Audio', 'podlove' ),
-		 			'video'    => __( 'Video', 'podlove' ),
-		 			'ebook'    => __( 'eBook', 'podlove' ),
-		 			'image'    => __( 'Image', 'podlove' ),
-		 			'chapters' => __( 'Chapters', 'podlove' )
-		 		)
+		 		'options'     => $types
 	 		) );
 
 	 		$wrapper->string( 'mime_type', array(
