@@ -206,7 +206,7 @@ class Feed {
 			
 			$wrapper->string( 'itunes_feed_id', array(
 				'label'       => __( 'iTunes Feed ID', 'podlove' ),
-				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ),
+				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ) . (($feed->itunes_feed_id) ? ' <a href="http://itunes.apple.com/podcast/id' . $feed->itunes_feed_id . '" target="_blank">' . __( 'Open in iTunes directory') . '</a>' : ''),
 				'html'        => array( 'class' => 'regular-text' )
 			) );
 
