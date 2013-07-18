@@ -22,28 +22,34 @@
 	padding: 0.9em;
 }
 
-#auphonic-box .tab-page label {
+#auphonic-box .tab-page .auphonic-segment {
 	display: inline-block;
 	padding: 0 10px 10px 0;
 }
 
 #fetch_auphonic_production_files, #reload_productions_button {
 	width: 14px;
-	height: 13px;
+	height: 12px;
+	padding-right: 4px;
 	display: inline-block;
 	position: relative;
 }
 
 .auphonic_production_head {
-	font-size: 14px;
 	margin-bottom: 5px;
+	font-size: 14px;
 	line-height: 14px;
 	vertical-align: middle;
 	position: relative;
 }
 
-.state_idle, .state_working, .state_success {
+.auphonic_production_head span {
+}
+
+#auphonic-box i {
 	position: absolute;
+	top: 1px;
+	cursor: pointer;
 }
 
 .state_working, .state_success, .state_fail {
@@ -57,6 +63,10 @@
 	padding: 0;
 	padding-right: 14px;
 	margin: 0;
+}
+
+button .indicating_button_wrapper {
+	vertical-align: middle
 }
 
 /* jQuery UI */
