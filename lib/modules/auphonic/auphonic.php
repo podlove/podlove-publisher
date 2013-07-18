@@ -142,18 +142,23 @@ class Auphonic extends \Podlove\Modules\Base {
 			</ul>
 
 			<div id="auphonic-box-create" class="tab-page">
-				<label>
+
+				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
-						<span>Service</span>
+						<label for="auphonic_services">
+							Service
+						</label>
 					</div>
 					<select id="auphonic_services">
 						<option><?php echo __( 'Loading services ...' ) ?></option>
 					</select>
-				</label>
-
-				<label>
+				</div>
+				
+				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
-						<span>Master Audio File</span>
+						<label for="auphonic_production_files">
+							Master Audio File
+						</label>
 						<span id="fetch_auphonic_production_files" title="fetch available audio files">
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
@@ -164,7 +169,7 @@ class Auphonic extends \Podlove\Modules\Base {
 					<select id="auphonic_production_files">
 						<option>-</option>
 					</select>
-				</label>
+				</div>
 
 				<button class="button" id="create_auphonic_production_button">
 					<span class="indicating_button_wrapper">
@@ -179,9 +184,9 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			<div id="auphonic-box-import" class="tab-page">
 
-				<label>
+				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
-						<span>Production</span>
+						<label for="import_from_auphonic">Production</label>
 						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
@@ -196,9 +201,9 @@ class Auphonic extends \Podlove\Modules\Base {
 							<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
 						</select>
 					</div>
-				</label>
+				</div>
 
-				<div>
+				<div class="auphonic-segment">
 					<label>
 						<input type="checkbox" id="force_import_from_auphonic" style="width: auto"> <?php echo __( 'Overwrite existing content', 'podlove' ) ?>
 					</label>
