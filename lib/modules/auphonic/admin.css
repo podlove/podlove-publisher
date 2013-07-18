@@ -46,7 +46,7 @@
 	position: absolute;
 }
 
-.state_working, .state_success {
+.state_working, .state_success, .state_fail {
 	display: none;
 }
 

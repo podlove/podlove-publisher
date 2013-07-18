@@ -158,10 +158,11 @@ class Auphonic extends \Podlove\Modules\Base {
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 						</span>
 					</div>
 					<select id="auphonic_production_files">
-						<option><?php echo __( 'Loading files ...' ) ?></option>
+						<option>-</option>
 					</select>
 				</label>
 
@@ -170,6 +171,7 @@ class Auphonic extends \Podlove\Modules\Base {
 						<span class="state_idle"><i class="podlove-icon-plus"></i></span>
 						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 						<span class="state_success"><i class="podlove-icon-ok"></i></span>
+						<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 					</span>
 					Create new production from episode data
 				</button>
@@ -184,6 +186,7 @@ class Auphonic extends \Podlove\Modules\Base {
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 						</span>
 						<i id="open_production_button" class="podlove-icon-external-link" title="open in Auphonic"></i>
 					</div>
@@ -208,6 +211,7 @@ class Auphonic extends \Podlove\Modules\Base {
 						<span class="state_idle"><i class="podlove-icon-cloud-download"></i></span>
 						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 						<span class="state_success"><i class="podlove-icon-ok"></i></span>
+						<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 					</span>
 					Import episode data from production
 				</button>
