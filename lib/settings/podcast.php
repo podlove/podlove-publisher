@@ -76,7 +76,7 @@ class Podcast {
 					$wrapper->text( 'summary', array(
 						'label'       => __( 'Summary', 'podlove' ),
 						'description' => __( 'Elaborate description of the podcast\'s content.', 'podlove' ),
-						'html'        => array( 'rows' => 5, 'cols' => 40 )
+						'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
 					) );
 
 					$wrapper->subheader(
