@@ -96,6 +96,7 @@ class Auphonic extends \Podlove\Modules\Base {
     		}
 
     		add_action( 'wp_ajax_podlove-auphonic-create-production', array( $this, 'auphonic_create_production' ) );
+    		add_action( 'wp_ajax_podlove-auphonic-start-production', array( $this, 'auphonic_start_production' ) );
     }
 
     public function admin_print_styles() {
@@ -291,6 +292,30 @@ class Auphonic extends \Podlove\Modules\Base {
     	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
     	curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());  
     	curl_setopt($ch, CURLOPT_POSTFIELDS, stripslashes(urldecode($_POST["data"])));
+    	curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
+    		'Content-type: application/json')                                                                      
+    	);                                                              
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
+
+    	$result = curl_exec( $ch );
+
+    	if ( curl_errno( $ch ) ) {
+    		header("HTTP/1.1 503 Service Temporarily Unavailable");
+    		header("Status: 503 Service Temporarily Unavailable");
+    	} else {
+    		print_r( $result );
+    	}
+    	exit;
+    }
+
+    public function auphonic_start_production() {
+    	header('Content-type: application/json');
+
+    	$callurl = 'https://auphonic.com/api/production/' . $_REQUEST['production'] . '/start.json?bearer_token=' . $this->get_module_option('auphonic_api_key');
+
+    	$ch = curl_init($callurl);                                                                      
+    	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
+    	curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());  
     	curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
     		'Content-type: application/json')                                                                      
     	);                                                              
