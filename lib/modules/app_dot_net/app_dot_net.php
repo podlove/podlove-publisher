@@ -315,50 +315,54 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$post_id = $_POST['post_ID'];
     	$post_title = $_POST['post_title'];
 
-    	$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
-    	$podcast = \Podlove\Model\Podcast::get_instance();
-    	$posted_text = $this->get_module_option('adn_poster_announcement_text');
-    	
-    	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
-    	$posted_text = str_replace("{episodeTitle}", $post_title, $posted_text);
-    	$posted_text = str_replace("{episodeLink}", get_permalink( $post_id ), $posted_text);
-    	$posted_text = str_replace("{episodeSubtitle}", $episode->subtitle, $posted_text);
-    	
-    	$posted_linked_title = array();
-    	$start_position = 0;
-    	
-    	while( ($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
-			$length = mb_strlen( $post_title, "UTF-8" );
-        	$episode_entry = array(
-        		"url"  => get_permalink( $post_id ), 
-        		"text" => $post_title, 
-        		"pos"  => $position, 
-        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
-        	);
-        	array_push( $posted_linked_title, $episode_entry );
-        	$start_position = $position + 1;
-		}
-    	
-    	$posted_text = str_replace("{linkedEpisodeTitle}", $post_title, $posted_text);
+    	if ( ! get_post_meta( $post_id, '_podlove_episode_was_published', true ) ) {
+	    	$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
+	    	$podcast = \Podlove\Model\Podcast::get_instance();
+	    	$posted_text = $this->get_module_option('adn_poster_announcement_text');
+	    	
+	    	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
+	    	$posted_text = str_replace("{episodeTitle}", $post_title, $posted_text);
+	    	$posted_text = str_replace("{episodeLink}", get_permalink( $post_id ), $posted_text);
+	    	$posted_text = str_replace("{episodeSubtitle}", $episode->subtitle, $posted_text);
+	    	
+	    	$posted_linked_title = array();
+	    	$start_position = 0;
+	    	
+	    	while( ($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+				$length = mb_strlen( $post_title, "UTF-8" );
+	        	$episode_entry = array(
+	        		"url"  => get_permalink( $post_id ), 
+	        		"text" => $post_title, 
+	        		"pos"  => $position, 
+	        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
+	        	);
+	        	array_push( $posted_linked_title, $episode_entry );
+	        	$start_position = $position + 1;
+			}
+	    	
+	    	$posted_text = str_replace("{linkedEpisodeTitle}", $post_title, $posted_text);
 
-    	if ( strlen( $posted_text ) > 256 ) {
-    		$posted_text = substr( $posted_text, 0, 255 ) . "…";
+	    	if ( strlen( $posted_text ) > 256 ) {
+	    		$posted_text = substr( $posted_text, 0, 255 ) . "…";
+	    	}
+	    
+	    	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
+			$data_string = json_encode($data);        
+			
+			$ch = curl_init('https://alpha-api.app.net/stream/0/posts?access_token='.$this->get_module_option('adn_auth_key').'');                                                                      
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
+			curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+				'Content-Type: application/json',                                                                                
+				'Content-Length: ' . strlen($data_string))                                                                       
+			);                                                                                                                   
+
+			$result = curl_exec($ch);
     	}
-    
-    	$data = array("text" => $posted_text, "entities" => array("links" => $posted_linked_title,"parse_links" => true));                                                  
-		$data_string = json_encode($data);        
-		
-		$ch = curl_init('https://alpha-api.app.net/stream/0/posts?access_token='.$this->get_module_option('adn_auth_key').'');                                                                      
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-			'Content-Type: application/json',                                                                                
-			'Content-Length: ' . strlen($data_string))                                                                       
-		);                                                                                                                   
 
-		$result = curl_exec($ch);
+		update_post_meta( $post_id, '_podlove_episode_was_published', true );
     }
     
     public function reset_adn_auth() {
