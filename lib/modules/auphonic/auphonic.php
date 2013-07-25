@@ -191,7 +191,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			<div id="auphonic-the-production">
 				<div class="auphonic-row">
-					<select name="import_from_auphonic" id="import_from_auphonic">
+					<select name="import_from_auphonic" id="auphonic_productions">
 						<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
 					</select>
 					<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>

@@ -1,21 +1,3 @@
-#auphonic-box {
-
-}
-
-#auphonic-box ul li {
-	background: #F8F8F8;
-	border: 1px solid #dfdfdf;
-	border-bottom-width: 0px;
-}
-
-#auphonic-box ul li.ui-tabs-active {
-	background: white;
-}
-
-#auphonic-box ul li a {
-	color: #333;
-}
-
 .auphonic-segment {
 	display: inline-block;
 	padding: 0 10px 0px 0;
@@ -25,7 +7,7 @@
 	margin: 8px 0 8px 0;
 }
 
-#import_from_auphonic {
+#auphonic_productions {
 	display: inline-block;
 	width: auto;
 }
@@ -83,13 +65,9 @@
 	padding: 0;
 	padding-right: 14px;
 	margin: 0;
-}
-
-button .indicating_button_wrapper {
 	vertical-align: middle
 }
 
-/* New Stuff */
 #auphonic-the-production, #auphonic-box-create {
 	background: white;
 	border: 1px solid #ddd;
@@ -113,39 +91,4 @@ button .indicating_button_wrapper {
 
 #auphonic-selected-production {
 	display: none;
-}
-
-/* jQuery UI */
-
-.ui-tabs .ui-tabs-nav {
-	margin: 0;
-	padding: .2em .2em 0;
-}
-.ui-tabs .ui-tabs-nav li {
-	list-style: none;
-	float: left;
-	position: relative;
-	top: 0;
-	margin: 1px .2em 0 0;
-	border-bottom-width: 0;
-	padding: 0;
-	white-space: nowrap;
-}
-.ui-tabs .ui-tabs-nav li a {
-	float: left;
-	padding: .5em 1em;
-	text-decoration: none;
-}
-.ui-tabs .ui-tabs-nav li.ui-tabs-active {
-	margin-bottom: -1px;
-	padding-bottom: 1px;
-}
-.ui-tabs .ui-tabs-nav li.ui-tabs-active a,
-.ui-tabs .ui-tabs-nav li.ui-state-disabled a,
-.ui-tabs .ui-tabs-nav li.ui-tabs-loading a {
-	cursor: text;
-}
-.ui-tabs .ui-tabs-nav li a, /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active a {
-	cursor: pointer;
 }
