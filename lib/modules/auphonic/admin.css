@@ -16,21 +16,24 @@
 	color: #333;
 }
 
-#auphonic-box > div {
-	background: white;
-	border: 1px solid #dfdfdf;
-	padding: 0.9em;
+.auphonic-segment {
+	display: inline-block;
+	padding: 0 10px 0px 0;
 }
 
-#auphonic-box .tab-page .auphonic-segment {
+.auphonic-row {
+	margin: 8px 0 8px 0;
+}
+
+#import_from_auphonic {
 	display: inline-block;
-	padding: 0 10px 10px 0;
+	width: auto;
 }
 
 #fetch_auphonic_production_files, #reload_productions_button {
 	width: 14px;
 	height: 12px;
-	padding-right: 4px;
+	padding: 0px 4px;
 	display: inline-block;
 	position: relative;
 }
@@ -49,12 +52,28 @@
 	cursor: pointer;
 }
 
-#auphonic-box .status-ok { color: #2ecc71; }
-#auphonic-box .status-warning { color: #e67e22; }
-#auphonic-box .status-error { color: #c0392b; }
+#reload_productions_button, #fetch_auphonic_production_files {
+	font-size: 14px;
+	cursor: pointer;
+}
+
+#auphonic-production-creation-status {
+	font-weight: bold;
+	margin-left: 8px;
+}
+
+.status-error { color: #c0392b; }
+.status-progress { color: #2980b9; }
+.status-ok { color: #2ecc71; }
+.status-info { color: #e67e22; }
+
+.state_idle {
+	position: absolute;
+}
 
 .state_working, .state_success, .state_fail {
 	display: none;
+	position: absolute;
 }
 
 .indicating_button_wrapper {
@@ -68,6 +87,32 @@
 
 button .indicating_button_wrapper {
 	vertical-align: middle
+}
+
+/* New Stuff */
+#auphonic-the-production, #auphonic-box-create {
+	background: white;
+	border: 1px solid #ddd;
+	margin: 8px 0px;
+	padding: 0px 8px;
+	color: #333;
+}
+
+#auphonic-the-production h2 {
+	margin: 10px 0 0 0;
+	font-size: 18px;
+	line-height: 22px;
+	display: inline-block;
+}
+
+#auphonic-the-production h4 {
+	margin: 0;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+#auphonic-selected-production {
+	display: none;
 }
 
 /* jQuery UI */
