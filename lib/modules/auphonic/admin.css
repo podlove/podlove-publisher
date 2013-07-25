@@ -40,12 +40,11 @@
 }
 
 #auphonic-production-creation-status {
-	font-weight: bold;
-	margin-left: 8px;
+	display: none;
 }
 
 .status-error { color: #c0392b; }
-.status-progress { color: #2980b9; }
+.status-progress { color: #3498db; }
 .status-ok { color: #2ecc71; }
 .status-info { color: #e67e22; }
 
@@ -77,7 +76,7 @@
 }
 
 #auphonic-the-production h2 {
-	margin: 10px 0 0 0;
+	margin: 0px 0 0px 0;
 	font-size: 18px;
 	line-height: 22px;
 	display: inline-block;
@@ -91,4 +90,27 @@
 
 #auphonic-selected-production {
 	display: none;
+}
+
+#auphonic-selected-production h2 {
+	margin-right: 8px;
+}
+
+#fetch_production_data_button {
+	margin-right: 8px;
+}
+
+.auphonic-status {
+	text-align: center;
+	font-size: 40px;
+	line-height: 1;
+	font-weight: bold;
+	font-family: Impact, sans-serif;
+	padding: 4px 16px;
+	background: #2c3e50;
+	letter-spacing: 1px;
+	border-radius: 3px;
+	border: 1px solid #34495e;
+	text-transform: uppercase;
+	display: block;
 }

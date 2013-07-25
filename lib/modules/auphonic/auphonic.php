@@ -183,9 +183,10 @@ class Auphonic extends \Podlove\Modules\Base {
 						</span>
 						Create production from episode data
 					</button>
-					<span id="auphonic-production-creation-status-wrapper">
-						<span id="auphonic-production-creation-status" class="status-progress"></span>
-					</span>
+					<div style="clear: both"></div>
+				</div>
+				<div class="auphonic-row">
+					<span id="auphonic-production-creation-status" class="auphonic-status status-progress"></span>
 				</div>
 			</div>
 
@@ -200,9 +201,6 @@ class Auphonic extends \Podlove\Modules\Base {
 						<span class="state_success"><i class="podlove-icon-ok"></i></span>
 						<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 					</span>
-					<span id="auphonic-creation-status-wrapper">
-						<span id="auphonic-creation-status" class="status-ok" style="font-weight:bold"></span>
-					</span>
 
 					<div style="clear: both"></div>
 
@@ -210,11 +208,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 				<div id="auphonic-selected-production">
 					<div class="auphonic-row">
-						<div class="production" style="display: none">
-							<h2>&ldquo;<span id="auphonic-production-title"></span>&rdquo; <small>created <span id="auphonic-production-ago"></span></small></h2>
-						</div>
-					</div>
-					<div class="auphonic-row">
+						<h2>&ldquo;<span id="auphonic-production-title"></span>&rdquo; <small>created <span id="auphonic-production-ago"></span></small></h2>
 						<button class="button" id="start_auphonic_production_button">
 							<span class="indicating_button_wrapper">
 								<span class="state_idle"><i class="podlove-icon-cogs"></i></span>
@@ -240,6 +234,10 @@ class Auphonic extends \Podlove\Modules\Base {
 						<label>
 							<input type="checkbox" id="force_import_from_auphonic" style="width: auto"> <?php echo __( 'Overwrite existing content', 'podlove' ) ?>
 						</label>
+					</div>
+
+					<div class="auphonic-row">
+						<div id="auphonic-production-status" class="auphonic-status"></div>
 					</div>
 				</div>
 				
