@@ -239,6 +239,16 @@ class Auphonic extends \Podlove\Modules\Base {
 							</span>
 							Start Production
 						</button>
+
+						<button class="button" id="stop_auphonic_production_button">
+							<span class="indicating_button_wrapper">
+								<span class="state_idle"><i class="podlove-icon-ban-circle"></i></span>
+								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+								<span class="state_success"><i class="podlove-icon-ok"></i></span>
+								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
+							</span>
+							Stop Production
+						</button>
 					</div>
 
 					<div class="auphonic-row">
