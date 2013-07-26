@@ -114,3 +114,8 @@
 	text-transform: uppercase;
 	display: block;
 }
+
+#open_production_button {
+	padding: 0px 4px 0px 7px;
+	/*margin-right: 7px;*/
+}
