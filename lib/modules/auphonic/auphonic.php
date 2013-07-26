@@ -114,6 +114,10 @@ class Auphonic extends \Podlove\Modules\Base {
 
     public function admin_print_styles() {
 
+    	$screen = get_current_screen();
+    	if ( $screen->base != 'post' || $screen->post_type != 'podcast' )
+    		return;
+
     	wp_register_style(
     		'podlove_auphonic_admin_style',
     		$this->get_module_url() . '/admin.css',
