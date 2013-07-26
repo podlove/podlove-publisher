@@ -96,6 +96,10 @@
 	display: none;
 }
 
+#stop_auphonic_production_button {
+	display: none;
+}
+
 #auphonic-selected-production h2 {
 	margin-right: 8px;
 }
