@@ -209,6 +209,13 @@ class Auphonic extends \Podlove\Modules\Base {
 				<div id="auphonic-selected-production">
 					<div class="auphonic-row">
 						<h2>&ldquo;<span id="auphonic-production-title"></span>&rdquo; <small>created <span id="auphonic-production-ago"></span></small></h2>
+
+						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove') ?>">
+							<span class="indicating_button_wrapper">
+								<i class="podlove-icon-share"></i>
+							</span>
+						</button>
+
 						<button class="button" id="start_auphonic_production_button">
 							<span class="indicating_button_wrapper">
 								<span class="state_idle"><i class="podlove-icon-cogs"></i></span>
