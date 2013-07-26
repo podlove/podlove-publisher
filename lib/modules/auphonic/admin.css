@@ -75,6 +75,10 @@
 	color: #333;
 }
 
+#auphonic-box-create > .auphonic-segment {
+	padding-top: 8px;
+}
+
 #auphonic-the-production h2 {
 	margin: 0px 0 0px 0;
 	font-size: 18px;
