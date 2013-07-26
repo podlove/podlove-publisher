@@ -157,47 +157,45 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			<div id="auphonic-box-create">
 
-				<div class="auphonic-row">
-					<div class="auphonic-segment">
-						<div class="auphonic_production_head">
-							<label for="auphonic_services">
-								Source
-							</label>
-						</div>
-						<select id="auphonic_services">
-							<option><?php echo __( 'Loading sources ...' ) ?></option>
-						</select>
+				<div class="auphonic-segment">
+					<div class="auphonic_production_head">
+						<label for="auphonic_services">
+							Source
+						</label>
 					</div>
-					
-					<div class="auphonic-segment">
-						<div class="auphonic_production_head">
-							<label for="auphonic_production_files">
-								Master Audio File
-							</label>
-							<span id="fetch_auphonic_production_files" title="fetch available audio files">
-								<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
-								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-								<span class="state_success"><i class="podlove-icon-ok"></i></span>
-								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-							</span>
-						</div>
-						<select id="auphonic_production_files" name="input_file">
-							<option>-</option>
-						</select>
-						<input type="text" id="auphonic_http_upload_url" name="auphonic_http_upload_url" style="display:none" class="large-text" />
-						<input type="file" id="auphonic_local_upload_url" name="auphonic_local_upload_url" style="display:none" class="large-text" />
+					<select id="auphonic_services">
+						<option><?php echo __( 'Loading sources ...' ) ?></option>
+					</select>
+				</div>
+				
+				<div class="auphonic-segment">
+					<div class="auphonic_production_head">
+						<label for="auphonic_production_files">
+							Master Audio File
+						</label>
+						<span id="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>">
+							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
+							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
+						</span>
 					</div>
+					<select id="auphonic_production_files" name="input_file">
+						<option>-</option>
+					</select>
+					<input type="text" id="auphonic_http_upload_url" name="auphonic_http_upload_url" style="display:none" class="large-text" />
+					<input type="file" id="auphonic_local_upload_url" name="auphonic_local_upload_url" style="display:none" class="large-text" />
 				</div>
 
-				<div class="auphonic-row">
-					<button class="button" id="create_auphonic_production_button">
+				<div class="auphonic-segment">
+					<button class="button" id="create_auphonic_production_button" title="<?php echo __( 'Create a production for the selected file.', 'podlove' ) ?>">
 						<span class="indicating_button_wrapper">
 							<span class="state_idle"><i class="podlove-icon-plus"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
 							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 						</span>
-						Create production from episode data
+						Create Production
 					</button>
 					<div style="clear: both"></div>
 				</div>
