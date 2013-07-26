@@ -97,6 +97,19 @@ class Auphonic extends \Podlove\Modules\Base {
 
     		// add_action( 'wp_ajax_podlove-auphonic-create-production', array( $this, 'auphonic_create_production' ) );
     		add_action( 'wp_ajax_podlove-auphonic-start-production', array( $this, 'auphonic_start_production' ) );
+    		add_action( 'save_post', array( $this, 'save_post' ) );
+    }
+
+    public function save_post( $post_id ) {
+    	
+    	if ( get_post_type( $post_id ) !== 'podcast' )
+    		return;
+
+    	if ( ! current_user_can( 'edit_post', $post_id ) )
+	        return;
+
+	    if ( isset( $_REQUEST['_auphonic_production'] ) )
+	    	update_post_meta( $post_id, '_auphonic_production', $_REQUEST['_auphonic_production'] );
     }
 
     public function admin_print_styles() {
@@ -129,6 +142,7 @@ class Auphonic extends \Podlove\Modules\Base {
 		$asset_assignments = Model\AssetAssignment::get_instance();
 		?>
 
+		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta( get_the_ID(), '_auphonic_production', true ) ?>" />
 		<input type="hidden" id="auphonic" value="1"
 			data-api-key="<?php echo $this->get_module_option('auphonic_api_key') ?>"
 			data-presetuuid="<?php echo $this->get_module_option('auphonic_production_preset') ?>"
