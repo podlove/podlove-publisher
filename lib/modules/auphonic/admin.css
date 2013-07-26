@@ -1,0 +1,116 @@
+.auphonic-segment {
+	display: inline-block;
+	padding: 0 10px 0px 0;
+}
+
+.auphonic-row {
+	margin: 8px 0 8px 0;
+}
+
+#auphonic_productions {
+	display: inline-block;
+	width: auto;
+}
+
+#fetch_auphonic_production_files, #reload_productions_button {
+	width: 14px;
+	height: 12px;
+	padding: 0px 4px;
+	display: inline-block;
+	position: relative;
+}
+
+.auphonic_production_head {
+	margin-bottom: 5px;
+	font-size: 14px;
+	line-height: 14px;
+	vertical-align: middle;
+	position: relative;
+}
+
+#auphonic-box button i, #auphonic-box .indicating_button_wrapper i {
+	position: absolute;
+	top: 1px;
+	cursor: pointer;
+}
+
+#reload_productions_button, #fetch_auphonic_production_files {
+	font-size: 14px;
+	cursor: pointer;
+}
+
+#auphonic-production-creation-status {
+	display: none;
+}
+
+.status-error { color: #c0392b; }
+.status-progress { color: #3498db; }
+.status-ok { color: #2ecc71; }
+.status-info { color: #e67e22; }
+
+.state_idle {
+	position: absolute;
+}
+
+.state_working, .state_success, .state_fail {
+	display: none;
+	position: absolute;
+}
+
+.indicating_button_wrapper {
+	position: relative;
+	display: inline-block;
+	height: 14px;
+	padding: 0;
+	padding-right: 14px;
+	margin: 0;
+	vertical-align: middle
+}
+
+#auphonic-the-production, #auphonic-box-create {
+	background: white;
+	border: 1px solid #ddd;
+	margin: 8px 0px;
+	padding: 0px 8px;
+	color: #333;
+}
+
+#auphonic-the-production h2 {
+	margin: 0px 0 0px 0;
+	font-size: 18px;
+	line-height: 22px;
+	display: inline-block;
+}
+
+#auphonic-the-production h4 {
+	margin: 0;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+#auphonic-selected-production {
+	display: none;
+}
+
+#auphonic-selected-production h2 {
+	margin-right: 8px;
+}
+
+#fetch_production_data_button {
+	margin-right: 8px;
+}
+
+.auphonic-status {
+	text-align: center;
+	font-size: 40px;
+	line-height: 1;
+	font-weight: bold;
+	font-family: Impact, sans-serif;
+	padding: 4px 16px;
+	background: #2c3e50;
+	letter-spacing: 1px;
+	border-radius: 3px;
+	border: 1px solid #34495e;
+	text-transform: uppercase;
+	display: block;
+}
