@@ -18,7 +18,8 @@ class Ajax {
 			'update-file',
 			'create-file',
 			'update-asset-position',
-			'update-feed-position'
+			'update-feed-position',
+			'podcast'
 		);
 
 		foreach ( $actions as $action )
@@ -37,6 +38,16 @@ class Ajax {
 		add_filter( 'podlove_file_url_template', function ( $template ) use ( $slug ) {
 			return str_replace( '%episode_slug%', $slug, $template );;
 		} );
+	}
+
+	public function podcast() {
+		$podcast = Model\Podcast::get_instance();
+		$podcast_data = array();
+		foreach ( $podcast->property_names() as $property ) {
+			$podcast_data[ $property ] = $podcast->$property;
+		}
+		
+		$this->respond_with_json( $podcast_data );
 	}
 
 	public function get_new_guid() {
