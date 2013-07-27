@@ -79,6 +79,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.8.3 =
 * Enhancement: dates with leading zeros in Auphonic module
+* Enhancement: Auphonic UI smoothifications
 
 = 1.8.2 (2013-07-27) =
 Auphonic integration Enhancements
