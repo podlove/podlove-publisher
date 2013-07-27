@@ -1,5 +1,22 @@
 var PODLOVE = PODLOVE || {};
 
+// jQuery Tiny Pub/Sub
+// https://github.com/cowboy/jquery-tiny-pubsub
+(function($) {
+	var o = $({});
+	$.subscribe = function() {
+		o.on.apply(o, arguments);
+	};
+
+	$.unsubscribe = function() {
+		o.off.apply(o, arguments);
+	};
+
+	$.publish = function() {
+		o.trigger.apply(o, arguments);
+	};
+}(jQuery));
+
 PODLOVE.rtrim = function (string, thechar) {
 	var re = new RegExp(thechar + "+$","g");
 	return string.replace(re, '');

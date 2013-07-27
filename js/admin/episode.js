@@ -158,11 +158,13 @@ var PODLOVE = PODLOVE || {};
 
  		$(".row__podlove_meta_episode_assets > span > label").after(" <a href='#' id='update_all_media_files'>update all media files</a>")
 
- 		$(document).on("click", "#update_all_media_files", function(e) {
+ 		var update_all_media_files = function(e) {
  			e.preventDefault();
  			$(".update_media_file").click();
- 			return false;
- 		});
+ 		};
+
+ 		$.subscribe("/auphonic/production/status/done", update_all_media_files);
+ 		$(document).on("click", "#update_all_media_files", update_all_media_files);
 
  		$(document).on("click", ".update_media_file", function(e) {
  			e.preventDefault();
