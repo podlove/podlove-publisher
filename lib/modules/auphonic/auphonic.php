@@ -62,12 +62,15 @@ class Auphonic extends \Podlove\Modules\Base {
 				
 				// Fetch Auphonic presets
 				$presets = $this->fetch_presets();
-				$preset_list = array();
-				
-				foreach( $presets->data as $preset_id => $preset ) {
-					$preset_list[ $preset->uuid ] = $preset->preset_name;
+				if ( $presets && is_array( $presets->data ) ) {
+					$preset_list = array();
+					foreach( $presets->data as $preset_id => $preset ) {
+						$preset_list[ $preset->uuid ] = $preset->preset_name;
+					}
+				} else {
+					$preset_list[] = __( 'Presets could not be loaded', 'podlove' );
 				}
-				
+					
 				$this->register_option( 'auphonic_production_preset', 'select', array(
 					'label'       => __( 'Auphonic production preset', 'podlove' ),
 					'description' => 'This preset will be used, if you create Auphonic production from an Episode.',
