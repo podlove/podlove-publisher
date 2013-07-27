@@ -228,9 +228,10 @@ class Auphonic extends \Podlove\Modules\Base {
 							<span class="indicating_button_wrapper">
 								<i class="podlove-icon-share"></i>
 							</span>
+							Open Production
 						</button>
 
-						<button class="button" id="start_auphonic_production_button">
+						<button class="button button-primary" id="start_auphonic_production_button">
 							<span class="indicating_button_wrapper">
 								<span class="state_idle"><i class="podlove-icon-cogs"></i></span>
 								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
