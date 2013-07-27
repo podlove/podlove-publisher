@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.7.4 (2013-07-26) =
 * Auphonic Module Update. You are now able to manage productions directly from within the Publisher without visiting Auphonic at all. As always, any feedback is more than welcome.
 * App.net Module Update. Support for Patter, language annotations and delayed posting.
+* Enhancement: Control sequence in which audio elements are printed in the web player. This encourages browsers to use superior codecs (rather than mp3).
 
 = 1.7.3 (2013-07-18) =
 * Enhancement: Show expected and actual mime type in log when an error occurs

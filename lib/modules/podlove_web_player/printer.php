@@ -64,13 +64,37 @@ class Printer {
 			);
 		}
 
+		// get all relevant info about media files
+		$media_files = array();
+		foreach ( $this->files as $file ) {
+			$mime = $file->episode_asset()->file_type()->mime_type;
+			$media_files[ $mime ] = array(
+				'file'      => $file,
+				'mime_type' => $mime,
+				'url'       => $file->get_file_url()
+			);
+		}
+
+		// sort files bases on mime type so preferred get output first
+		$sorted_files = array();
+		$preferred_order = array( 'audio/mp4', 'audio/aac', 'audio/opus', 'audio/ogg', 'audio/vorbis' );
+		foreach ( $preferred_order as $order_key ) {
+			if ( $media_files[ $order_key ] ) {
+				$sorted_files[] = $media_files[ $order_key ];
+				unset($media_files[ $order_key ]);
+			}
+		}
+		foreach ( $media_files as $file ) {
+			$sorted_files[] = $file;
+		}
+
 		// add all sources
 		$flash_fallback_func = function( &$xml ) {};
-		foreach ( $this->files as $file ) {
-			$mime_type = $file->episode_asset()->file_type()->mime_type;
+		foreach ( $sorted_files as $file ) {
+			$mime_type = $file['mime_type'];
 
 			$source = $xml->addChild('source');
-			$source->addAttribute( 'src', $file->get_file_url() );
+			$source->addAttribute( 'src', $file['url'] );
 			$source->addAttribute( 'type', $mime_type );
 
 			if ( $mime_type == 'audio/mpeg' ) {
@@ -81,7 +105,7 @@ class Printer {
 
 					$params = array(
 						array( 'name' => 'movie', 'value' => 'flashmediaelement.swf' ),
-						array( 'name' => 'flashvars', 'value' => 'controls=true&file=' . $file->get_file_url() )
+						array( 'name' => 'flashvars', 'value' => 'controls=true&file=' . $file['url'] )
 					);
 
 					foreach ( $params as $param ) {
