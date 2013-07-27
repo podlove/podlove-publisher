@@ -46,7 +46,7 @@
 .status-error { color: #c0392b; }
 .status-progress { color: #3498db; }
 .status-ok { color: #2ecc71; }
-.status-info { color: #e67e22; }
+.status-info { color: #F9F9F9; }
 
 .state_idle {
 	position: absolute;
@@ -67,41 +67,12 @@
 	vertical-align: middle
 }
 
-#auphonic-the-production, #auphonic-box-create {
-	background: white;
-	border: 1px solid #ddd;
-	margin: 8px 0px;
-	padding: 0px 8px;
-	color: #333;
-}
-
-#auphonic-box-create > .auphonic-segment {
-	padding-top: 8px;
-}
-
-#auphonic-the-production h2 {
-	margin: 0px 0 0px 0;
-	font-size: 18px;
-	line-height: 22px;
-	display: inline-block;
-}
-
-#auphonic-the-production h4 {
-	margin: 0;
-	font-size: 14px;
-	line-height: 24px;
-}
-
-#auphonic-selected-production {
-	display: none;
-}
-
 #stop_auphonic_production_button {
 	display: none;
 }
 
-#auphonic-selected-production h2 {
-	margin-right: 8px;
+#auphonic-selected-production {
+	display: none;
 }
 
 #fetch_production_data_button {
@@ -126,4 +97,17 @@
 #open_production_button {
 	padding: 0px 4px 0px 7px;
 	/*margin-right: 7px;*/
+}
+
+fieldset {
+	background: white;
+	border: 1px solid #ddd;
+	margin: 8px 0px;
+	padding: 0px 8px;
+	color: #333;
+}
+
+legend {
+	background: white;
+	font-size: 14px;
 }
