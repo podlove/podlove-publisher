@@ -31,26 +31,17 @@ class Auphonic extends \Podlove\Modules\Base {
 	    		             . __( 'You need to allow Podlove Publisher to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
 	    		             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove' ) . '</a>';
 				$this->register_option( 'auphonic_api_key', 'hidden', array(
-				'label'       => __( 'Authorization', 'podlove' ),
-				'description' => $description,
-				'html'        => array( 'class' => 'regular-text' )
+					'label'       => __( 'Authorization', 'podlove' ),
+					'description' => $description,
+					'html'        => array( 'class' => 'regular-text' )
 				) );	
     		} else {
-    			$ch = curl_init('https://auphonic.com/api/user.json');                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
-					'Content-type: application/json',                                     
-					'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
-				);                                                              
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
-
-				$decoded_user_information = json_decode(curl_exec($ch));
-    		
-    			if(isset($decoded_user_information) AND $decoded_user_information !== "") {
+				$user = $this->fetch_authorized_user();
+    			if( isset($user) AND $user !== "" ) {
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
-									__( 'You are logged in as <strong>'.$decoded_user_information->data->username.'</strong>. If you want to logout, click %shere%s.', 'podlove' ),
+									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
+									'<strong>' . $user->data->username . '</strong>',
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
 									'</a>'
 								);
@@ -60,42 +51,98 @@ class Auphonic extends \Podlove\Modules\Base {
 									__( 'Something went wrong with the Auphonic connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove' ),
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
 									'</a>'
-								);			
+								);
 				}
+
 				$this->register_option( 'auphonic_api_key', 'hidden', array(
-				'label'       => __( 'Authorization', 'podlove' ),
-				'description' => $description,
-				'html'        => array( 'class' => 'regular-text' )
+					'label'       => __( 'Authorization', 'podlove' ),
+					'description' => $description,
+					'html'        => array( 'class' => 'regular-text' )
 				) );	
 				
 				// Fetch Auphonic presets
-				
-    			$ch = curl_init('https://auphonic.com/api/presets.json');                                                                      
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");       
-				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                     
-					'Content-type: application/json',                                     
-					'Authorization: Bearer '.$this->get_module_option('auphonic_api_key'))                                                                       
-				);                                                              
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  	
-				
-				$decoded_presets = json_decode(curl_exec($ch));
+				$presets = $this->fetch_presets();
 				$preset_list = array();
 				
-				foreach($decoded_presets->data as $preset_id => $preset_information) {
-					$preset_list[$preset_information->uuid] = $preset_information->preset_name;
+				foreach( $presets->data as $preset_id => $preset ) {
+					$preset_list[ $preset->uuid ] = $preset->preset_name;
 				}
 				
 				$this->register_option( 'auphonic_production_preset', 'select', array(
-				'label'       => __( 'Auphonic production preset', 'podlove' ),
-				'description' => 'This preset will be used, if you create Auphonic production from an Episode.',
-				'html'        => array( 'class' => 'regular-text' ),
-				'options'	  => $preset_list
+					'label'       => __( 'Auphonic production preset', 'podlove' ),
+					'description' => 'This preset will be used, if you create Auphonic production from an Episode.',
+					'html'        => array( 'class' => 'regular-text' ),
+					'options'	  => $preset_list
 				) );
     		
     		}
 
     		add_action( 'save_post', array( $this, 'save_post' ) );
+    }
+
+    /**
+     * Fetch name of logged in user via Auphonic API.
+     *
+     * Cached in transient "podlove_auphonic_user".
+     * 
+     * @return string
+     */
+    public function fetch_authorized_user() {
+    	$cache_key = 'podlove_auphonic_user';
+
+    	if ( ( $user = get_transient( $cache_key ) ) !== FALSE ) {
+    		return $user;
+    	} else {
+	    	if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
+	    		return "";
+
+    			$ch = curl_init( 'https://auphonic.com/api/user.json' );
+				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "GET" );
+				curl_setopt( $ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
+				curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
+					'Content-type: application/json',
+					'Authorization: Bearer ' . $this->get_module_option('auphonic_api_key') )
+				);                                                              
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );        
+				$decoded_user = json_decode( curl_exec( $ch ) );
+
+	    	$user = $decoded_user ? $decoded_user : FALSE;
+	    	set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
+	    	return $user;
+    	}
+    }
+
+    /**
+     * Fetch list of presets via Auphonic APU.
+     *
+     * Cached in transient "podlove_auphonic_presets".
+     * 
+     * @return string
+     */
+    public function fetch_presets() {
+    	$cache_key = 'podlove_auphonic_presets';
+
+    	if ( ( $presets = get_transient( $cache_key ) ) !== FALSE ) {
+    		return $presets;
+    	} else {
+	    	if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
+	    		return "";
+
+    			$ch = curl_init( 'https://auphonic.com/api/presets.json' );
+				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "GET" );
+				curl_setopt( $ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
+				curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
+					'Content-type: application/json',
+					'Authorization: Bearer ' . $this->get_module_option('auphonic_api_key') )
+				);
+				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+				
+				$decoded_presets = json_decode( curl_exec( $ch ) );
+
+	    	$presets = $decoded_presets ? $decoded_presets : FALSE;
+	    	set_transient( $cache_key, $presets, 60*60*24*365 ); // 1 year, we devalidate manually
+	    	return $presets;
+    	}
     }
 
     public function save_post( $post_id ) {
@@ -297,6 +344,8 @@ class Auphonic extends \Podlove\Modules\Base {
     	
     	if ( isset( $_GET["reset_auphonic_auth_code"] ) && $_GET["reset_auphonic_auth_code"] == "1" ) {
     		$this->update_module_option('auphonic_api_key', "");
+    		delete_transient('podlove_auphonic_user');
+    		delete_transient('podlove_auphonic_presets');
     		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');
     	}
     	

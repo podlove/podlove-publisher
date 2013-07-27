@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.4 (2013-07-27) =
+* Fix: Performance issue in Auphonic plugin
+
 = 1.8.3 (2013-07-27) =
 * Enhancement: dates with leading zeros in Auphonic module
 * Enhancement: Auphonic UI smoothifications
