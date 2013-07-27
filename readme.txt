@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.1 (2013-07-27) =
+* Fix Release
+
 = 1.8.0 (2013-07-27) =
 * Auphonic Module Update. You are now able to manage productions directly from within the Publisher without visiting Auphonic at all. As always, any feedback is more than welcome.
 * App.net Module Update. Support for Patter, language annotations and delayed posting.
