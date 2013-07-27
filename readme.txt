@@ -77,6 +77,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.2 (2013-07-27) =
+Auphonic integration Enhancements
+- Preset is only applied once
+- Add Text for "Open Production" button
+- "Start Production" button more prominent
+
 = 1.8.1 (2013-07-27) =
 * Fix Release
 
