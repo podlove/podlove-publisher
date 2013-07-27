@@ -155,8 +155,8 @@ class Auphonic extends \Podlove\Modules\Base {
 
 		<div id="auphonic-box">
 
-			<div id="auphonic-box-create">
-
+			<fieldset>
+				<legend>File Selection</legend>
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_services">
@@ -202,19 +202,20 @@ class Auphonic extends \Podlove\Modules\Base {
 				<div class="auphonic-row">
 					<span id="auphonic-production-creation-status" class="auphonic-status status-progress"></span>
 				</div>
-			</div>
+			</fieldset>
 
-			<div id="auphonic-the-production">
+			<fieldset>
+				<legend>Production</legend>
 				<div class="auphonic-row">
-					<select name="import_from_auphonic" id="auphonic_productions">
-						<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
-					</select>
-					<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
-						<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
-						<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-						<span class="state_success"><i class="podlove-icon-ok"></i></span>
-						<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-					</span>
+						<select name="import_from_auphonic" id="auphonic_productions">
+							<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
+						</select>
+						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
+							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
+							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+							<span class="state_success"><i class="podlove-icon-ok"></i></span>
+							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
+						</span>
 
 					<div style="clear: both"></div>
 
@@ -222,8 +223,6 @@ class Auphonic extends \Podlove\Modules\Base {
 
 				<div id="auphonic-selected-production">
 					<div class="auphonic-row">
-						<h2>&ldquo;<span id="auphonic-production-title"></span>&rdquo; <small>created <span id="auphonic-production-ago"></span></small></h2>
-
 						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove') ?>">
 							<span class="indicating_button_wrapper">
 								<i class="podlove-icon-share"></i>
@@ -253,6 +252,10 @@ class Auphonic extends \Podlove\Modules\Base {
 					</div>
 
 					<div class="auphonic-row">
+						<div id="auphonic-production-status" class="auphonic-status"></div>
+					</div>
+
+					<div class="auphonic-row">
 						<button id="fetch_production_data_button" class="button">
 							<span class="indicating_button_wrapper">
 								<span class="state_idle"><i class="podlove-icon-cloud-download"></i></span>
@@ -267,13 +270,8 @@ class Auphonic extends \Podlove\Modules\Base {
 							<input type="checkbox" id="force_import_from_auphonic" style="width: auto"> <?php echo __( 'Overwrite existing content', 'podlove' ) ?>
 						</label>
 					</div>
-
-					<div class="auphonic-row">
-						<div id="auphonic-production-status" class="auphonic-status"></div>
-					</div>
 				</div>
-				
-			</div>
+			</fieldset>
 
 		</div>
 		<?php
