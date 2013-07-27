@@ -315,8 +315,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						<div style="clear: both"></div>
 					</div>
 
-					<link rel="stylesheet" href="<?php echo $module_url; ?>/chosen.min.css" />
-					<script type="text/javascript" src="<?php echo $module_url; ?>/chosen.jquery.min.js"></script>
 					<script type="text/javascript">
 					var PODLOVE = PODLOVE || {};
 
