@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.5 (2013-08-11) =
+* Fix: JavaScript issue preventing certain UI elements from working correctly (Tagging, Auphonic, …)
+
 = 1.8.4 (2013-07-27) =
 * Fix: Performance issue in Auphonic plugin
 
