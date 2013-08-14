@@ -39,10 +39,10 @@ class Contributors extends \Podlove\Modules\Base {
 
 	public function scripts_and_styles() {
 
-		wp_register_script( 'podlove-contributors-admin-script', $this->get_module_url() . '/js/admin.js', array( 'jquery-ui-autocomplete' ) );
+		wp_register_script( 'podlove-contributors-admin-script', $this->get_module_url() . '/js/admin.js', array( 'jquery-ui-autocomplete' ), \Podlove\get_plugin_header( 'Version' ) );
 		wp_enqueue_script( 'podlove-contributors-admin-script' );
 
-		wp_register_style( 'podlove-contributors-admin-style', $this->get_module_url() . '/css/admin.css' );
+		wp_register_style( 'podlove-contributors-admin-style', $this->get_module_url() . '/css/admin.css', array(), \Podlove\get_plugin_header( 'Version' ) );
 		wp_enqueue_style( 'podlove-contributors-admin-style' );
 	}
 
