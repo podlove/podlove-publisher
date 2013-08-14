@@ -56,84 +56,83 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );		
 				
 				$languages = array("ar" => "Arabic",
+					"sq" => "Albanian",
 					"az" => "Azerbaijani",
+					"eu" => "Basque",
 					"bg" => "Bulgarian",
 					"bn" => "Bengali",
 					"bs" => "Bosnian",
 					"ca" => "Catalan",
+					"zh_CN" => "Chinese, China",
+					"zh_TW" => "Chinese, Taiwan",
+					"hr" => "Croatian",
 					"cs" => "Czech",
-					"cy" => "Welsh",
 					"da" => "Danish",
-					"de" => "German",
-					"el" => "Greek, Modern",
+					"nl" => "Dutch",
 					"en" => "English",
 					"en_GB" => "English, British",
-					"es" => "Spanish",
-					"es_AR" => "Spanish, Argentina",
-					"es_MX" => "Spanish, Mexico",
-					"es_NI" => "Spanish, Nicaragua",
 					"et" => "Estonian",
-					"eu" => "Basque",
-					"fa" => "Persian",
 					"fi" => "Finnish",
 					"fr" => "French",
-					"fy_NL" => "Western Frisian, Netherlands",
-					"ga" => "Irish",
 					"gl" => "Galician",
+					"ka" => "Georgian",
+					"de" => "German",
+					"el" => "Greek, Modern",
 					"he" => "Hebrew, Modern",
 					"hi" => "Hindi",
-					"hr" => "Croatian",
 					"hu" => "Hungarian",
-					"id" => "Indonesian",
 					"is" => "Icelandic",
+					"id" => "Indonesian",
+					"ga" => "Irish",
 					"it" => "Italian",
 					"ja" => "Japanese",
-					"ka" => "Georgian",
+					"kn" => "Kannada",
 					"kk" => "Kazakh",
 					"km" => "Khmer",
-					"kn" => "Kannada",
 					"ko" => "Korean",
-					"lt" => "Lithuanian",
 					"lv" => "Latvian",
+					"lt" => "Lithuanian",
 					"mk" => "Macedonian",
 					"ml" => "Malayalam",
 					"mn" => "Mongolian",
 					"nb" => "Norwegian Bokmål",
 					"ne" => "Nepali",
-					"nl" => "Dutch",
 					"nn" => "Norwegian Nynorks",
 					"no" => "Norwegian",
 					"pa" => "Panjabi",
+					"fa" => "Persian",
 					"pl" => "Polish",
 					"pt" => "Portuguese",
 					"pt_BR" => "Portuguese, Brazil",
 					"ro" => "Romanian",
 					"ru" => "Russian",
-					"sk" => "Slovak",
-					"sl" => "Slovene",
-					"sq" => "Albanian",
+					"es" => "Spanish",
 					"sr" => "Serbian",
 					"sr_Latn" => "Serbian, Latin",
-					"sv" => "Swedish",
+					"sk" => "Slovak",
+					"sl" => "Slovene",
+					"es_AR" => "Spanish, Argentina",
+					"es_MX" => "Spanish, Mexico",
+					"es_NI" => "Spanish, Nicaragua",
 					"sw" => "Swahili",
+					"sv" => "Swedish",
 					"ta" => "Tamil",
+					"tt" => "Tatar",
 					"te" => "Telugu",
 					"th" => "Thai",
 					"tr" => "Turkish",
-					"tt" => "Tatar",
 					"uk" => "Ukrainian",
 					"ur" => "Urdu",
 					"vi" => "Vietnamese",
-					"zh_CN" => "Chinese, China",
-					"zh_TW" => "Chinese, Taiwan"
+					"cy" => "Welsh",
+					"fy_NL" => "Western Frisian, Netherlands"
 				);
-				asort($languages);
 			
 				$this->register_option( 'adn_language_annotation', 'select', array(
-				'label'       => __( 'Language of Announcement', 'podlove' ),
-				'description' => 'Selecting the language of the Announcement, will include an <a href="http://developers.app.net/docs/meta/annotations/" target="_blank">App.net language annotation</a>.',
-				'html'        => array( 'class' => 'regular-text adn-dropdown' ),
-				'options'	  => $languages
+					'label'       => __( 'Language of Announcement', 'podlove' ),
+					'description' => 'Selecting the language of the Announcement, will include an <a href="http://developers.app.net/docs/meta/annotations/" target="_blank">App.net language annotation</a>.',
+					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
+					'options'	  => $languages
 				) );
 
 				$ch = curl_init('https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token='.$this->get_module_option('adn_auth_key'));                                                                      
@@ -163,23 +162,23 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				}
 
 				$this->register_option( 'adn_patter_room', 'select', array(
-				'label'       => __( 'Patter room', 'podlove' ),
-				'description' => 'From the list of subscribed <a href="http://patter-app.net/faq.html" target="_blank">Patter rooms</a>, choose the one related to your Podcast.',
-				'html'        => array( 'class' => 'regular-text adn-dropdown' ),
-				'options'	  => $patter_rooms
+					'label'       => __( 'Patter room', 'podlove' ),
+					'description' => 'From the list of subscribed <a href="http://patter-app.net/faq.html" target="_blank">Patter rooms</a>, choose the one related to your Podcast.',
+					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
+					'options'	  => $patter_rooms
 				) );
 			
 				$this->register_option( 'adn_patter_room_announcement', 'checkbox', array(
-				'label'       => __( 'Announcement in Patter room', 'podlove' ),
-				'description' => 'The Announcement text will be posted in the chosen Patter room, too.'
+					'label'       => __( 'Announcement in Patter room', 'podlove' ),
+					'description' => 'The Announcement text will be posted in the chosen Patter room, too.'
 				) );
 				
 			}
 			
 			$this->register_option( 'adn_post_delay', 'string', array(
-			'label'       => __( 'Post delay', 'podlove' ),
-			'description' => 'The new Episode will be announced with a delay of HH:MM:SS.',
-			'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00:00' )
+				'label'       => __( 'Post delay', 'podlove' ),
+				'description' => 'The new Episode will be announced with a delay of HH:MM:SS.',
+				'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00:00' )
 			) );
 
 			$description = '';
@@ -204,7 +203,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				'html'        => array(
 					'cols' => '50',
 					'rows' => '4',
-					'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' ) )
+					'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' )
+				)
 			) );
 			
 
@@ -449,6 +449,33 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     
     public function post_to_adn($post_id, $post_title) {
 
+    	/**
+    	 * String helper functions.
+    	 *
+    	 * Default to multibyte-functions but fall back to simple
+    	 * ones if multibyte module is not available.
+    	 */
+    	$strpos_fun = function($haystack, $needle, $offset = 0, $encoding = 'UTF-8') {
+    		if (function_exists('mb_strpos'))
+    			return mb_strpos($haystack, $needle, $offset, $encoding);
+    		else
+    			return strpos($haystack, $needle, $offset);
+    	};
+
+    	$strlen_fun = function($str, $encoding = 'UTF-8') {
+    		if (function_exists('mb_strlen'))
+    			return mb_strlen($str, $encoding);
+    		else
+    			return strlen($str);
+    	};
+
+    	$substr_fun = function($str, $start, $length = NULL, $encoding = 'UTF-8') {
+    		if (function_exists('mb_substr'))
+    			return mb_substr($str, $start, $length, $encoding);
+    		else
+    			return substr($str, $start, $length);
+    	};
+
     	$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
     	$podcast = \Podlove\Model\Podcast::get_instance();
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
@@ -461,8 +488,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$posted_linked_title = array();
     	$start_position = 0;
     	
-    	while( ($position = mb_strpos( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
-			$length = mb_strlen( $post_title, "UTF-8" );
+    	while ( ($position = $strpos_fun( $posted_text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+			$length = $strlen_fun( $post_title, "UTF-8" );
         	$episode_entry = array(
         		"url"  => get_permalink( $post_id ), 
         		"text" => $post_title, 
@@ -475,8 +502,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	
     	$posted_text = str_replace("{linkedEpisodeTitle}", $post_title, $posted_text);
 
-    	if ( strlen( $posted_text ) > 256 ) {
-    		$posted_text = substr( $posted_text, 0, 255 ) . "…";
+    	if ( $strlen_fun( $posted_text ) > 256 ) {
+    		$posted_text = $substr_fun( $posted_text, 0, 255 ) . "…";
     	}
     	
     	if($this->get_module_option('adn_language_annotation') !== "") {
@@ -497,19 +524,22 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 			'Content-Type: application/json',                                                                                
-			'Content-Length: ' . strlen($data_string))                                                                       
+			'Content-Length: ' . $strlen_fun($data_string))                                                                       
 		);       
 		
-		$post_custom = get_post_custom($post_id);                                                                                                            
-		if(isset($post_custom["_podlove_episode_was_published"])) {
-			if($post_custom["_podlove_episode_was_published"][count($post_custom["_podlove_episode_was_published"]) - 1] !== "1") {
-				$result = curl_exec($ch);
-			}
-		} else {
+		$is_already_published = get_post_meta($post_id, '_podlove_episode_was_published', true);                                                                                                            
+
+		if(!$is_already_published) {
 			$result = curl_exec($ch);
+			$parsed_result = json_decode($result);
+			if (isset($parsed_result->meta) && isset($parsed_result->meta->error_message) && $parsed_result->meta->error_message) {
+				\Podlove\Log::get()->addError( 'Failed to post to ADN', array(
+					'episode_id' => $episode->id,
+					'error' => $parsed_result->meta->error_message
+				) );
+			}
 		}
-		
-		
+
 		if($this->get_module_option('adn_patter_room_announcement') == "on") {
 			$crosspost_annotation = array("type" => "net.app.core.crosspost", "value" => array("canonical_url" => "http://patter-app.net/room.html?channel=".$this->get_module_option('adn_patter_room')));
 			$invite_annotation = array("type" => "net.app.core.channel.invite", "value" => array("channel_id" => $this->get_module_option('adn_patter_room')));
@@ -530,15 +560,18 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 				'Content-Type: application/json',                                                                                
-				'Content-Length: ' . strlen($data_string))                                                                       
+				'Content-Length: ' . $strlen_fun($data_string))                                                                       
 			);                                                                                                                  
 
-			if(isset($post_custom["_podlove_episode_was_published"])) {
-				if($post_custom["_podlove_episode_was_published"][count($post_custom["_podlove_episode_was_published"]) - 1] !== "1") {
-					$result = curl_exec($ch);
-				}
-			} else {
+			if(!$is_already_published) {
 				$result = curl_exec($ch);
+				$parsed_result = json_decode($result);
+				if (isset($parsed_result->meta) && isset($parsed_result->meta->error_message) && $parsed_result->meta->error_message) {
+					\Podlove\Log::get()->addError( 'Failed to post to ADN Patter Room', array(
+						'episode_id' => $episode->id,
+						'error' => $parsed_result->meta->error_message
+					) );
+				}
 			}
 		}
 		
