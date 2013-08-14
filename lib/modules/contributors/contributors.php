@@ -25,7 +25,7 @@ class Contributors extends \Podlove\Modules\Base {
 		} );
 
 		add_action( 'add_meta_boxes', function () {
-			add_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, __( 'Contributors', 'podlove' ), array( '\Podlove\Modules\Contributors\Contributors', 'metabox' ), 'podcast', 'side', 'default' );  
+			add_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, __( 'Contributors', 'podlove' ), array( $this, 'metabox' ), 'podcast', 'side', 'default' );  
 		});
 
 		add_action( 'admin_init', function () {
@@ -249,7 +249,7 @@ class Contributors extends \Podlove\Modules\Base {
 	 * @return String containing either just a URL or a complete image tag
 	 * @source http://gravatar.com/site/implement/images/php/
 	 */
-	function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
+	public static function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
 		
 		$url = 'http://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
