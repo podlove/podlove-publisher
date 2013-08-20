@@ -27,7 +27,10 @@ function handle_feed_proxy_redirects() {
 
 }
 
-add_action( 'wp', '\Podlove\Feeds\handle_feed_proxy_redirects' );
+# Prio 11 so it hooks *after* the domain mapping plugin.
+# This is important when one moves a domain. That way the domain gets
+# remapped/redirected correctly by the domain mapper before being redirected by us.
+add_action( 'template_redirect', '\Podlove\Feeds\handle_feed_proxy_redirects', 11 );
 
 function generate_podcast_feed() {	
 	remove_podPress_hooks();
