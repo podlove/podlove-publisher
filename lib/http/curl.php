@@ -20,7 +20,7 @@ class Curl {
 		$this->curl = new \WP_Http_Curl();
 	}
 
-	public function request( $url, $params ) {
+	public function request( $url, $params = array() ) {
 
 		$defaults = array(
 			'user-agent' => self::user_agent(),
@@ -43,6 +43,7 @@ class Curl {
 				'url' => $url,
 				'response code' => $this->response['response']['code']
 			) );
+			Log::get()->addDebug(print_r($this->response, true));
 		}
 	}
 
