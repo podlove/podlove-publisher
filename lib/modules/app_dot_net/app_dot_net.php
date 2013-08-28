@@ -476,8 +476,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     			return substr($str, $start, $length);
     	};
 
-    	$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
-    	$podcast = \Podlove\Model\Podcast::get_instance();
+    	$episode = Model\Episode::find_one_by_post_id( $post_id );
+    	$podcast = Model\Podcast::get_instance();
     	$posted_text = $this->get_module_option('adn_poster_announcement_text');
     	
     	$posted_text = str_replace("{podcastTitle}", $podcast->title, $posted_text);
