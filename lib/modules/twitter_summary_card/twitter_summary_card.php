@@ -60,14 +60,7 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 				$cover_art_url = $podcast->cover_image;
 
 			// determine description
-			if ( $episode->summary ) {
-				$description = $episode->summary;
-			} elseif ( $episode->subtitle ) {
-				$description = $episode->subtitle;
-			} else {
-				$description = get_the_title();
-			}
-			$description = htmlspecialchars( trim( $description ) );
+			$description = $episode->description();
 			
 			?>
 			<meta name="twitter:card" content="summary">
