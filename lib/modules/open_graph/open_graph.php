@@ -43,7 +43,6 @@ class Open_Graph extends \Podlove\Modules\Base {
 			if ( ! $post_id )
 				return;
 
-			/** @var \Podlove\Model\Episode $episode */
 			$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
 			if ( ! $episode )
 				return;
@@ -56,23 +55,15 @@ class Open_Graph extends \Podlove\Modules\Base {
 				$cover_art_url = $podcast->cover_image;
 
 			// determine description
-			if ( $episode->summary ) {
-				$description = $episode->summary;
-			} elseif ( $episode->subtitle ) {
-				$description = $episode->subtitle;
-			} else {
-				$description = get_the_title();
-			}
-			$description = htmlspecialchars( trim( $description ) );
+			$description = $episode->description();
 
 			// determine featured image (thumbnail)
 			$thumbnail = NULL;
 			if ( has_post_thumbnail() ) {
 				$post_thumbnail_id = get_post_thumbnail_id( $post_id );
-				$thumbnailInfo = wp_get_attachment_image_src($post_thumbnail_id);
-				if ( is_array($thumbnailInfo )) {
-					list($thumbnail, $width, $height) = $thumbnailInfo;
-				}
+				$thumbnailInfo = wp_get_attachment_image_src( $post_thumbnail_id );
+				if ( is_array( $thumbnailInfo ) )
+					list( $thumbnail, $width, $height ) = $thumbnailInfo;
 			}
 
 			$og_title = ( $podcast->title ) ? $podcast->title : get_the_title();
