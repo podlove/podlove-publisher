@@ -460,7 +460,7 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "%s = '%s'", $p, $this->$p );
+			return sprintf( "%s = '%s'", $p, str_replace("'", "\'", $this->$p) );
 		} else {
 			return "$p = NULL";
 		}
@@ -470,7 +470,7 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "'%s'", $this->$p );
+			return sprintf( "'%s'", str_replace("'", "\'", $this->$p) );
 		} else {
 			return 'NULL';
 		}

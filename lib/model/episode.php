@@ -27,6 +27,19 @@ class Episode extends Base {
 		return $title;
 	}
 
+	public function description() {
+
+		if ( $this->summary ) {
+			$description = $this->summary;
+		} elseif ( $this->subtitle ) {
+			$description = $this->subtitle;
+		} else {
+			$description = get_the_title();
+		}
+
+		return htmlspecialchars( trim( $description ) );
+	}
+
 	public function media_files() {
 		global $wpdb;
 		
