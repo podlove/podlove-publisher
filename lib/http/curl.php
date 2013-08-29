@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Http;
 
+use Podlove\Log;
+
 /**
  * Wrapper for WordPress' WP_Http_Curl class.
  */
@@ -18,7 +20,7 @@ class Curl {
 		$this->curl = new \WP_Http_Curl();
 	}
 
-	public function request( $url, $params ) {
+	public function request( $url, $params = array() ) {
 
 		$defaults = array(
 			'user-agent' => self::user_agent(),
@@ -30,6 +32,27 @@ class Curl {
 		$params = wp_parse_args( $params, $defaults );
 
 		$this->response = $this->curl->request( $url, $params );
+
+		if ( is_wp_error($this->response) ) {
+			Log::get()->addError( 'Curl error', array(
+				'url' => $url,
+				'error' => $this->response->get_error_message()
+			) );
+		} elseif (substr($this->response['response']['code'], 0, 1) >= 4) {
+			Log::get()->addError( 'Curl error', array(
+				'url' => $url,
+				'response code' => $this->response['response']['code']
+			) );
+			Log::get()->addDebug(print_r($this->response, true));
+		}
+	}
+
+	public function isSuccessful()
+	{
+		return
+			$this->response &&               // request has been made
+			!is_wp_error($this->response) && // there was no error
+			substr($this->response['response']['code'], 0, 1) < 4; // 1xx 2xx or 3xx
 	}
 
 	public function get_response() {

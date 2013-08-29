@@ -79,7 +79,7 @@ class Printer {
 		$sorted_files = array();
 		$preferred_order = array( 'audio/mp4', 'audio/aac', 'audio/opus', 'audio/ogg', 'audio/vorbis' );
 		foreach ( $preferred_order as $order_key ) {
-			if ( $media_files[ $order_key ] ) {
+			if ( isset($media_files[ $order_key ]) && $media_files[ $order_key ] ) {
 				$sorted_files[] = $media_files[ $order_key ];
 				unset($media_files[ $order_key ]);
 			}
