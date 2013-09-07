@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.8.6 =
 * Enhancement: Change feed redirect hook and priority so it works better with Domain Mapping plugin
 * Enhancement: Extend OpenGraph metadata by post thumbnail and episode description (thanks smichaelsen!)
+* Feature: Update Web Player to 2.0.15
 
 = 1.8.5 (2013-08-11) =
 * Fix: JavaScript issue preventing certain UI elements from working correctly (Tagging, Auphonic, …)
