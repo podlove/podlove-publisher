@@ -91,7 +91,7 @@ class StepBasics extends Step {
 					<div class="control-group">
 						<label for="" class="control-label"><?php echo __( 'Media File Base URL', 'podlove' ); ?></label>
 						<div class="controls">
-							<label class="radio">
+							<div class="radio">
 								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="preset" <?php checked( $podcast['media_file_base_url_option'], 'preset' ) ?>> 
 								<select class="input-xxlarge" name="podlove_migration[podcast][media_file_base_url_preset]">
 									<?php foreach ( $base_urls as $base_url => $count ): ?>
@@ -100,11 +100,11 @@ class StepBasics extends Step {
 										</option>
 									<?php endforeach; ?>
 								</select>
-							</label>
-							<label class="radio">
+							</div>
+							<div class="radio">
 								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="custom" <?php checked( $podcast['media_file_base_url_option'], 'custom' ) ?>>
 								<input type="text"  name="podlove_migration[podcast][media_file_base_url_custom]" value="<?php echo ( isset( $podcast['media_file_base_url_custom'] ) ? $podcast['media_file_base_url_custom'] : '' ) ?>" class="input-xxlarge" placeholder="http://cdn.example.com/pod/">
-							</label>
+							</div>
 						</div>
 
 					</div>
