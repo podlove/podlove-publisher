@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.7 =
+* Enhancement: Refined Auphonic Workflow: Always import duration and slug; new option to automatically start productions after creation; new option to automatically publish episodes as soon as the production is ready
+
 = 1.8.6 =
 * Enhancement: Change feed redirect hook and priority so it works better with Domain Mapping plugin
 * Enhancement: Extend OpenGraph metadata by post thumbnail and episode description (thanks smichaelsen!)
