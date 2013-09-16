@@ -25,7 +25,7 @@ class Contributors extends \Podlove\Modules\Base {
 		} );
 
 		add_action( 'add_meta_boxes', function () {
-			add_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, __( 'Contributors', 'podlove' ), array( $this, 'metabox' ), 'podcast', 'side', 'default' );  
+			add_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, __( 'Contributors', 'podlove' ), 'Podlove\\Modules\\Contributors\\Contributors::metabox', 'podcast', 'side', 'default' );
 		});
 
 		add_action( 'admin_init', function () {
@@ -84,7 +84,7 @@ class Contributors extends \Podlove\Modules\Base {
 		return apply_filters( 'podlove_contributors_shortcode', $html );
 	}
 
-	public function metabox( $post ) {
+	public static function metabox( $post ) {
 		
 		$contributors = get_the_terms( $post->ID, self::$taxonomy_name );
 		?>
