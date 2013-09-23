@@ -61,6 +61,8 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 
 			// determine description
 			$description = $episode->description();
+			// remove all potential tags from description
+			$description = strip_tags(html_entity_decode($description));
 			
 			?>
 			<meta name="twitter:card" content="summary">
@@ -71,8 +73,8 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 				<meta name="twitter:creator" content="<?php echo $this->get_module_option( 'creator' ) ?>">
 			<?php endif; ?>
 			<meta name="twitter:url" content="<?php the_permalink(); ?>">
-			<meta name="twitter:title" content="<?php the_title(); ?>">
-			<meta name="twitter:description" content="<?php echo $description ?>">
+			<meta name="twitter:title" content="<?php htmlspecialchars(str_replace('"', "'", the_title())); ?>">
+			<meta name="twitter:description" content="<?php echo htmlspecialchars(str_replace('"', "'", $description)); ?>">
 			<?php if ( $cover_art_url ): ?>
 				<meta name="twitter:image" content="<?php echo $cover_art_url ?>">
 			<?php endif; ?>
