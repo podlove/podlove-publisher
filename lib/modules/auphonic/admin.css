@@ -7,6 +7,10 @@
 	margin: 8px 0 8px 0;
 }
 
+.auphonic-row input[type=checkbox] {
+	width: auto;
+}
+
 #auphonic_productions {
 	display: inline-block;
 	width: auto;
@@ -39,7 +43,7 @@
 	cursor: pointer;
 }
 
-#auphonic-production-creation-status {
+#auphonic-production-status {
 	display: none;
 }
 
@@ -68,10 +72,6 @@
 }
 
 #stop_auphonic_production_button {
-	display: none;
-}
-
-#auphonic-selected-production {
 	display: none;
 }
 

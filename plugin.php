@@ -626,8 +626,13 @@ function podcast_permalink_proxy($query_vars) {
 	if ( ! isset( $query_vars["post_type"] ) || $query_vars["post_type"] == "post" )
 		$query_vars["post_type"] = array( "podcast", "post" );
 
-	if ( ! isset( $query_vars["post_status"] ) )
+	// When migrating, there are two posts with the same slug (old post and new episode post).
+	// WP_Query uses the first one it finds. Sometimes it's the correct one, sometimes it's
+	// the trashed post.
+	// To avoid conflicts with other plugins however, only filter when migration module is on.
+	if (\Podlove\Modules\Base::is_active('migration') && !isset($query_vars["post_status"])) {
 		$query_vars["post_status"] = "publish";
+	}
 
 	return $query_vars;
 }

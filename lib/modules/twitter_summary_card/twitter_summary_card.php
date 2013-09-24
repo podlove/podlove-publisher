@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Modules\TwitterSummaryCard;
+
 use \Podlove\Model;
+use Podlove\DomDocumentFragment;
 
 class Twitter_Summary_Card extends \Podlove\Modules\Base {
 
@@ -59,23 +61,58 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 			if ( ! $cover_art_url )
 				$cover_art_url = $podcast->cover_image;
 
-			// determine description
-			$description = $episode->description();
-			
-			?>
-			<meta name="twitter:card" content="summary">
-			<?php if ( $this->get_module_option( 'site' ) ): ?>
-				<meta name="twitter:site" content="<?php echo $this->get_module_option( 'site' ) ?>">
-			<?php endif; ?>
-			<?php if ( $this->get_module_option( 'creator' ) ): ?>
-				<meta name="twitter:creator" content="<?php echo $this->get_module_option( 'creator' ) ?>">
-			<?php endif; ?>
-			<meta name="twitter:url" content="<?php the_permalink(); ?>">
-			<meta name="twitter:title" content="<?php the_title(); ?>">
-			<meta name="twitter:description" content="<?php echo $description ?>">
-			<?php if ( $cover_art_url ): ?>
-				<meta name="twitter:image" content="<?php echo $cover_art_url ?>">
-			<?php endif; ?>
-			<?php
+			// define meta tags
+			$data = array(
+				array(
+					'name' => 'twitter:card',
+					'content' => 'summary'
+				),
+				array(
+					'name' => 'twitter:url',
+					'content' => get_permalink()
+				),
+				array(
+					'name' => 'twitter:title',
+					'content' => get_the_title()
+				),
+				array(
+					'name' => 'twitter:description',
+					'content' => $episode->description()
+				),
+			);
+
+			if ($site = $this->get_module_option('site')) {
+				$data[] = array(
+					'name' => 'twitter:site',
+					'content' => $site
+				);
+			}
+
+			if ($creator = $this->get_module_option('creator')) {
+				$data[] = array(
+					'name' => 'twitter:creator',
+					'content' => $creator
+				);
+			}
+
+			if ($cover_art_url) {
+				$data[] = array(
+					'name' => 'twitter:image',
+					'content' => $cover_art_url
+				);
+			}
+
+			// print meta tags
+			$dom = new DomDocumentFragment;
+
+			foreach ($data as $meta_element) {
+				$element = $dom->createElement('meta');
+				foreach ($meta_element as $attribute => $value) {
+					$element->setAttribute($attribute,$value);
+				}
+				$dom->appendChild($element);
+			}
+
+			echo $dom;
 		}		
 }
