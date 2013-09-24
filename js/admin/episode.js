@@ -217,6 +217,10 @@ var PODLOVE = PODLOVE || {};
 			}
 		})();
 
+		$.subscribe("/auphonic/production/status/results_imported", function(e, production) {
+			o.slug_field.trigger('slugHasChanged');
+		});
+
  		o.slug_field
  			.on('blur', function() {
  				o.slug_field.trigger('slugHasChanged');
