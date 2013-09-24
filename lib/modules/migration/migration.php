@@ -200,6 +200,9 @@ function migrate_post( $post_id ) {
 	// add redirect from previous url
 	add_post_meta( $new_post_id, 'podlove_alternate_url', get_permalink( $post_id ) );
 
+	// prevent adn module from triggering a post
+	update_post_meta( $new_post_id, '_podlove_episode_was_published', true );
+
 	// migrate taxonomies
 	$taxonomies = get_object_taxonomies( get_post_type( $post_id ) );
 
