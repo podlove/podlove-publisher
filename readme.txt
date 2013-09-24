@@ -77,9 +77,16 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.7 / 1.8.8 =
+* Enhancement: Refined Auphonic Workflow: Always import duration and slug; new option to automatically start productions after creation; new option to automatically publish episodes as soon as the production is ready
+* Hotfix: escaping issue
+
 = 1.8.6 =
 * Enhancement: Change feed redirect hook and priority so it works better with Domain Mapping plugin
 * Enhancement: Extend OpenGraph metadata by post thumbnail and episode description (thanks smichaelsen!)
+* Feature: Update Web Player to 2.0.15
+* Fix: Solve rare issue where first chapter line would be ignored
+* Fix: Firefox display issue in migration assistant
 
 = 1.8.5 (2013-08-11) =
 * Fix: JavaScript issue preventing certain UI elements from working correctly (Tagging, Auphonic, …)

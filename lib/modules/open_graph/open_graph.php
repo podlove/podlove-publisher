@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Modules\OpenGraph;
-use \Podlove\Model;
+
+use Podlove\Model;
+use Podlove\DomDocumentFragment;
 
 class Open_Graph extends \Podlove\Modules\Base {
 
@@ -54,9 +56,6 @@ class Open_Graph extends \Podlove\Modules\Base {
 			if ( ! $cover_art_url )
 				$cover_art_url = $podcast->cover_image;
 
-			// determine description
-			$description = $episode->description();
-
 			// determine featured image (thumbnail)
 			$thumbnail = NULL;
 			if ( has_post_thumbnail() ) {
@@ -66,27 +65,63 @@ class Open_Graph extends \Podlove\Modules\Base {
 					list( $thumbnail, $width, $height ) = $thumbnailInfo;
 			}
 
-			$og_title = ( $podcast->title ) ? $podcast->title : get_the_title();
-			?>
-			<meta property="og:type" content="website" />
-			<meta property="og:site_name" content="<?php echo $og_title; ?>" />
-			<meta property="og:title" content="<?php echo $episode->full_title(); ?>" />
-			<?php if ( $cover_art_url ): ?>
-				<meta property="og:image" content="<?php echo $cover_art_url; ?>" />
-			<?php endif; ?>
-			<?php if ( isset( $thumbnail ) ): ?>
-				<meta property="og:image" content="<?php echo $thumbnail; ?>" />
-			<?php endif; ?>
-			<meta property="og:url" content="<?php the_permalink(); ?>" />
-			<meta property="og:description" content="<?php echo $description?>" />
-			<?php $media_files = $episode->media_files(); ?>
-			<?php foreach ( $media_files as $media_file ): ?>
-				<?php $mime_type = $media_file->episode_asset()->file_type()->mime_type; ?>
-				<?php if ( stripos( $mime_type, 'audio' ) !== false ): ?>
-					<meta property="og:audio" content="<?php echo $media_file->get_file_url(); ?>" />
-					<meta property="og:audio:type" content="<?php echo $mime_type ?>" />
-				<?php endif; ?>
-			<?php endforeach ?>
-			<?php
+			// define meta tags
+			$data = array(
+				array(
+					'property' => 'og:type',
+					'content'  => 'website'
+				),
+				array(
+					'property' => 'og:site_name',
+					'content'  => ( $podcast->title ) ? $podcast->title : get_the_title()
+				),
+				array(
+					'property' => 'og:title',
+					'content'  => $episode->full_title()
+				),
+				array(
+					'property' => 'og:url',
+					'content'  => get_permalink()
+				),
+				array(
+					'property' => 'og:description',
+					'content'  => $episode->description()
+				)
+			);
+			
+			if ($cover_art_url) {
+				$data[] = array(
+					'property' => 'og:image',
+					'content'  => $cover_art_url
+				);
+			}
+
+			if (isset($thumbnail)) {
+				$data[] = array(
+					'property' => 'og:image',
+					'content'  => $thumbnail
+				);
+			}
+
+			foreach ($episode->media_files() as $media_file) {
+				$mime_type = $media_file->episode_asset()->file_type()->mime_type;
+				if (stripos($mime_type, 'audio') !== false) {
+					$data[] = array( 'property' => 'og:audio', 'content' => $media_file->get_file_url() );
+					$data[] = array( 'property' => 'og:audio:type', 'content' => $mime_type );
+				}
+			}
+
+			// print meta tags
+			$dom = new DomDocumentFragment;
+
+			foreach ($data as $meta_element) {
+				$element = $dom->createElement('meta');
+				foreach ($meta_element as $attribute => $value) {
+					$element->setAttribute($attribute,$value);
+				}
+				$dom->appendChild($element);
+			}
+
+			echo $dom;
 		}		
 }
