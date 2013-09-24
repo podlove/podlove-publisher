@@ -56,6 +56,8 @@ class Open_Graph extends \Podlove\Modules\Base {
 
 			// determine description
 			$description = $episode->description();
+			// remove all potential tags from description
+			$description = strip_tags(html_entity_decode($description));
 
 			// determine featured image (thumbnail)
 			$thumbnail = NULL;
@@ -70,7 +72,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 			?>
 			<meta property="og:type" content="website" />
 			<meta property="og:site_name" content="<?php echo $og_title; ?>" />
-			<meta property="og:title" content="<?php echo $episode->full_title(); ?>" />
+			<meta property="og:title" content="<?php echo htmlspecialchars(str_replace('"', "'", $episode->full_title())); ?>" />
 			<?php if ( $cover_art_url ): ?>
 				<meta property="og:image" content="<?php echo $cover_art_url; ?>" />
 			<?php endif; ?>
@@ -78,7 +80,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 				<meta property="og:image" content="<?php echo $thumbnail; ?>" />
 			<?php endif; ?>
 			<meta property="og:url" content="<?php the_permalink(); ?>" />
-			<meta property="og:description" content="<?php echo $description?>" />
+			<meta property="og:description" content="<?php echo htmlspecialchars(str_replace('"', "'", $description)); ?>" />
 			<?php $media_files = $episode->media_files(); ?>
 			<?php foreach ( $media_files as $media_file ): ?>
 				<?php $mime_type = $media_file->episode_asset()->file_type()->mime_type; ?>
