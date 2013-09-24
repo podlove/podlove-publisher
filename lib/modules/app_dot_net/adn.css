@@ -1,0 +1,52 @@
+#podlove_adn_post_preview {
+	border: 1px solid #ddd;
+	background: white;
+	padding: 15px 15px 5px 15px;
+	font-style: normal;
+	color: #333;
+	font-size: 14px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.adn.avatar {
+	display: block;
+	width: 57px;
+	height: 57px;
+	background-size: 57px 57px;
+	float: left;
+}
+
+.adn.username {
+	font-weight: bold;
+}
+
+.adn.content {
+	margin-left: 67px;
+}
+
+.adn.body {
+	min-height: 39px;
+	line-height: 18px;
+	margin-bottom: 10px;
+}
+
+.adn.footer {
+	font-size: 12px;
+	color: #524f54;
+	text-align: left;
+	line-height: 18px;
+}
+
+.adn.footer ul {
+	color: rgb(111, 116, 119);
+	margin: 0 0 0px 0px;
+}
+
+.adn.footer li {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.adn-dropdown {
+	width: 180px;
+}

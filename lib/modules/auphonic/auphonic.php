@@ -1,6 +1,7 @@
 <?php 
 namespace Podlove\Modules\Auphonic;
 use \Podlove\Model;
+use \Podlove\Http;
 
 class Auphonic extends \Podlove\Modules\Base {
 
@@ -99,19 +100,23 @@ class Auphonic extends \Podlove\Modules\Base {
 	    	if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
 	    		return "";
 
-    			$ch = curl_init( 'https://auphonic.com/api/user.json' );
-				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "GET" );
-				curl_setopt( $ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
-				curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
-					'Content-type: application/json',
-					'Authorization: Bearer ' . $this->get_module_option('auphonic_api_key') )
-				);                                                              
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );        
-				$decoded_user = json_decode( curl_exec( $ch ) );
+	    	$curl = new Http\Curl();
+	    	$curl->request( 'https://auphonic.com/api/user.json', array(
+	    		'headers' => array(
+	    			'Content-type'  => 'application/json',
+	    			'Authorization' => 'Bearer ' . $this->get_module_option('auphonic_api_key')
+	    		)
+	    	) );
+	    	$response = $curl->get_response();
 
-	    	$user = $decoded_user ? $decoded_user : FALSE;
-	    	set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
-	    	return $user;
+    		if ($curl->isSuccessful()) {
+				$decoded_user = json_decode( $response['body'] );
+				$user = $decoded_user ? $decoded_user : FALSE;
+				set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
+    	    	return $user;
+    		} else {
+    			return false;
+    		}
     	}
     }
 
@@ -131,20 +136,23 @@ class Auphonic extends \Podlove\Modules\Base {
 	    	if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
 	    		return "";
 
-    			$ch = curl_init( 'https://auphonic.com/api/presets.json' );
-				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "GET" );
-				curl_setopt( $ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
-				curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
-					'Content-type: application/json',
-					'Authorization: Bearer ' . $this->get_module_option('auphonic_api_key') )
-				);
-				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-				
-				$decoded_presets = json_decode( curl_exec( $ch ) );
+    		$curl = new Http\Curl();
+    		$curl->request( 'https://auphonic.com/api/presets.json', array(
+    			'headers' => array(
+    				'Content-type'  => 'application/json',
+    				'Authorization' => 'Bearer ' . $this->get_module_option('auphonic_api_key')
+    			)
+    		) );
+			$response = $curl->get_response();
 
-	    	$presets = $decoded_presets ? $decoded_presets : FALSE;
-	    	set_transient( $cache_key, $presets, 60*60*24*365 ); // 1 year, we devalidate manually
-	    	return $presets;
+			if ($curl->isSuccessful()) {
+		    	$presets = json_decode( $response['body'] );
+		    	set_transient( $cache_key, $presets, 60*60*24*365 ); // 1 year, we devalidate manually
+		    	return $presets;
+			} else {
+				return array();
+			}
+
     	}
     }
 

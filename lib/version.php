@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 44 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 45 );
 
 add_action( 'init', function () {
 	
@@ -347,6 +347,10 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query(
 				'DELETE FROM `' . $wpdb->postmeta . '` WHERE meta_key = "last_validated_at"'
 			);
+		break;
+		case 45:
+			delete_transient('podlove_auphonic_user');
+			delete_transient('podlove_auphonic_presets');
 		break;
 	}
 

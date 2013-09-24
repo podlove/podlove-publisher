@@ -91,9 +91,12 @@ class Logging extends \Podlove\Modules\Base {
 							}
 						}
 					}
+					if ( isset( $data->error ) ) {
+						echo sprintf(' "%s"', $data->error);
+					}
 					if ( isset( $data->episode_id ) ) {
 						if ( $episode = Model\Episode::find_by_id( $data->episode_id ) )
-							echo sprintf( '<a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
+							echo sprintf( ' <a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
 					}
 					if ( isset( $data->http_code ) ) {
 						echo " HTTP Status: " . $data->http_code;
