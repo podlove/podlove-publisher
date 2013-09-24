@@ -20,6 +20,78 @@ class Contributors extends \Podlove\Modules\Base {
 		Contributor::build();
 	}
 
+	public function migrate_contributors( $module_name ) {
+
+		$episodes = \Podlove\Model\Episode::all();
+		$posted_contributors = array();
+
+		$labels = array(
+		   'name'                       => __( 'Contributors', 'podlove' ),
+		   'singular_name'              => __( 'Contributor', 'podlove' ),
+		   'search_items'               => __( 'Search Contributors', 'podlove' ),
+		   'popular_items'              => __( 'Popular Contributors', 'podlove' ),
+		   'all_items'                  => __( 'All Contributors', 'podlove' ),
+		   'edit_item'                  => __( 'Edit Contributor' , 'podlove'), 
+		   'update_item'                => __( 'Update Contributor', 'podlove' ),
+		   'add_new_item'               => __( 'Add New Contributor', 'podlove' ),
+		   'new_item_name'              => __( 'New Contributor Name', 'podlove' ),
+		   'separate_items_with_commas' => __( 'Separate Contributors with commas', 'podlove' ),
+		   'add_or_remove_items'        => __( 'Add or remove Contributors', 'podlove' ),
+		   'choose_from_most_used'      => __( 'Choose from the most used Contributors', 'podlove' ),
+		   'menu_name'                  => __( 'Contributors', 'podlove' ),
+		 ); 
+
+		$args = array(
+			'hierarchical'  => false,
+			'labels'        => $labels,
+			'show_ui'       => true,
+			'show_tagcloud' => true,
+			'query_var'     => true,
+			'rewrite'       => array( 'slug' => 'contributor' ),
+		);
+
+		register_taxonomy( 'podlove-contributors', 'podcast', $args );
+
+		foreach(get_terms('podlove-contributors', 'orderby=count&hide_empty=0') as $contributorid => $contributor) {
+			$settings = $this->get_additional_settings_for_migration($contributor->term_id);
+
+			if(isset($settings["contributor_email"])) {
+				$privateemail = $settings["contributor_email"];
+			} else {
+				$privateemail = "";
+			}
+
+			$contributor_infos = array( "realname" => $contributor->name,
+										"publicname" => $contributor->name,
+										"slug" => $contributor->slug,
+										"id" => $contributor->term_id,
+										"showpublic" => 1,
+										"privateemail" => $privateemail);
+
+			$contributor_entry = new \Podlove\Modules\Contributors\Contributor;
+			$contributor_entry->update_attributes($contributor_infos);
+		}
+
+		foreach($episodes as $episode_id => $episode_details) {
+			$terms = get_the_terms($episode_details->post_id, 'podlove-contributors');
+			if(isset($terms) AND !empty($terms)) {
+				foreach($terms as $term_id => $term_details) {
+					$posted_contributors[] = array('id' => $term_details->term_id, 'slug' => $term_details->slug);
+				}
+			}
+			if(!empty($posted_contributors)) {
+				update_post_meta( $episode_details->post_id, '_podlove_episode_contributors', json_encode($posted_contributors));
+			}
+		}
+	}
+
+	public static function get_additional_settings_for_migration( $term_id ) {
+		$all_contributor_settings = get_option( 'podlove_contributors', array() );		
+		if ( ! isset( $all_contributor_settings[ $term_id ] ) )
+			$all_contributor_settings[ $term_id ] = array();
+		return $all_contributor_settings[ $term_id ];
+	}
+
 	public function contributors_form( $wrapper ) {
 		$wrapper->callback( 'contributors_form_table', array(
 			'label'    => __( 'Contributors', 'podlove' ),
@@ -48,7 +120,8 @@ class Contributors extends \Podlove\Modules\Base {
 		"."\n";
 		$output = $output.'<div class="contributor_container">'."\n";
 
-		$contributors = json_decode(get_post_meta(get_the_ID(), '_podlove_episode_contributors')[0]);
+		$contributors_raw = get_post_meta(get_the_ID(), '_podlove_episode_contributors');
+		$contributors = json_decode($contributors_raw[0]);
 		$objectnumbercount = 1;
 
 		if(isset($attributes["delimiter"])) {
@@ -139,7 +212,7 @@ class Contributors extends \Podlove\Modules\Base {
 			$output = $output."<tbody>";
 		}
 
-		if($contributor->showpublic == 1) {
+		if(isset($contributor) AND $contributor->showpublic == 1) {
 			$output = $output."<tr>\n";
 			$output = $output."	<td> </td>\n";
 			$output = $output."	<td>".$contributor->publicname."</td>\n";
@@ -182,7 +255,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 	public function display_contributor_plaintext($id, $numberofobjects, $objectnumber, $delimiter) {
 		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if($contributor->showpublic == 1) {
+		if(isset($contributor) AND $contributor->showpublic == 1) {
 			if($objectnumber <= $numberofobjects) {
 				return $contributor->publicname;
 			} else {
@@ -193,7 +266,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 	public function display_contributor_linkedtext($id, $numberofobjects, $objectnumber, $delimiter) {
 		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if($contributor->showpublic == 1) {
+		if(isset($contributor) AND $contributor->showpublic == 1) {
 			if($objectnumber <= $numberofobjects) {
 				if($contributor->wwww !== NULL) {
 					return "<a href=\"".$contributor->www."\">".$contributor->publicname."</a>";
@@ -213,7 +286,7 @@ class Contributors extends \Podlove\Modules\Base {
 	public function display_contributor_card($id) {
 		$output = "";
 		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if($contributor->showpublic == 1) {
+		if(isset($contributor) AND $contributor->showpublic == 1) {
 			$output = $output.'<div class="contributor">'."\n";
 			$output = $output.'<h1>'.$contributor->publicname.'</h1>'."\n";
 			if($contributor->avatar !== NULL AND strpos($contributor->avatar, "@") === FALSE) {
@@ -258,7 +331,7 @@ class Contributors extends \Podlove\Modules\Base {
 	public function display_light_contributor_card($id) {
 		$output = "";
 		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if($contributor->showpublic == 1) {
+		if(isset($contributor) AND $contributor->showpublic == 1) {
 			$output = $output.'<div class="contributor-light">'."\n";
 			$output = $output.'<h1>'.$contributor->publicname.'</h1>'."\n";
 			if($contributor->avatar !== NULL AND strpos($contributor->avatar, "@") === FALSE) {
@@ -371,41 +444,49 @@ class Contributors extends \Podlove\Modules\Base {
 
 						if($current_page->action == "add") {
 							$contributors = \Podlove\Modules\Contributors\Contributor::find_all_by_property("permanentcontributor", "1");
-							foreach ($contributors as $contributor => $contributor_details) {
-								echo '<tr class="media_file_row">';
-								echo '	<td>'.$contributor_details->realname.'</td>';
-								echo '	<td><select id="'.$contributor_details->id.'-role" name="'.$contributor_details->id.'-role">';
-								foreach ($contributors_roles as $contributors_roles_key => $contributors_roles_value) {
-									if($contributors_roles_key == $contributor_details->role) {
-										echo "<option value=\"".$contributors_roles_key."\" selected>".$contributors_roles_value."</option>";
-									} else {
-										echo "<option value=\"".$contributors_roles_key."\">".$contributors_roles_value."</option>";									
+							if(isset($contributors)) {
+								foreach ($contributors as $contributor => $contributor_details) {
+									echo '<tr class="media_file_row">';
+									echo '	<td>'.$contributor_details->realname.'</td>';
+									echo '	<td><select id="'.$contributor_details->id.'-role" name="'.$contributor_details->id.'-role">';
+									foreach ($contributors_roles as $contributors_roles_key => $contributors_roles_value) {
+										if($contributors_roles_key == $contributor_details->role) {
+											echo "<option value=\"".$contributors_roles_key."\" selected>".$contributors_roles_value."</option>";
+										} else {
+											echo "<option value=\"".$contributors_roles_key."\">".$contributors_roles_value."</option>";									
+										}
 									}
+									echo '	</select></td>';
+									echo '	<td><span class="contributor_remove" data-realname="'.$contributor_details->realname.'" data-contributordefaultrole="'.$contributor_details->role.'" data-contributorid="'.$contributor_details->id.'"><i class="clickable podlove-icon-remove"></i></span></td>';
+									echo '</tr>';
+									$list_of_added_contributors = $list_of_added_contributors.$contributor_details->id." ";
+									$contributor_chosen = $contributor_chosen.'jQuery("#'.$contributor_details->id.'-role").chosen();'."\n";
 								}
-								echo '	</select></td>';
-								echo '	<td><span class="contributor_remove" data-realname="'.$contributor_details->realname.'" data-contributordefaultrole="'.$contributor_details->role.'" data-contributorid="'.$contributor_details->id.'"><i class="clickable podlove-icon-remove"></i></span></td>';
-								echo '</tr>';
-								$list_of_added_contributors = $list_of_added_contributors.$contributor_details->id." ";
-								$contributor_chosen = $contributor_chosen.'jQuery("#'.$contributor_details->id.'-role").chosen();'."\n";
 							}
 						} else {
 							foreach(json_decode($contributor_data[count($contributor_data) - 1]) as $contributor => $contributor_details) {
 								$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($contributor_details->id);
-								echo '<tr class="media_file_row">';
-								echo '	<td>'.$contributor->realname.'</td>';
-								echo '	<td><select id="'.$contributor->id.'-role" name="'.$contributor->id.'-role">';
-								foreach ($contributors_roles as $contributors_roles_key => $contributors_roles_value) {
-									if($contributors_roles_key == $contributor_details->role) {
-										echo "<option value=\"".$contributors_roles_key."\" selected>".$contributors_roles_value."</option>";
-									} else {
-										echo "<option value=\"".$contributors_roles_key."\">".$contributors_roles_value."</option>";									
+								if(isset($contributor)) {
+									echo '<tr class="media_file_row">';
+									echo '	<td>'.$contributor->realname.'</td>';
+									echo '	<td><select id="'.$contributor->id.'-role" name="'.$contributor->id.'-role">';
+									foreach ($contributors_roles as $contributors_roles_key => $contributors_roles_value) {
+										if($contributors_roles_key == $contributor_details->role) {
+											echo "<option value=\"".$contributors_roles_key."\" selected>".$contributors_roles_value."</option>";
+										} else {
+											echo "<option value=\"".$contributors_roles_key."\">".$contributors_roles_value."</option>";									
+										}
 									}
+									echo '	</select></td>';
+									if(isset($contributor_details->role) AND $contributor_details->role !== "") { 
+										echo '	<td><span class="contributor_remove" data-realname="'.$contributor->realname.'" data-contributordefaultrole="'.$contributor_details->role.'" data-contributorid="'.$contributor_details->id.'"><i class="clickable podlove-icon-remove"></i></span></td>';
+									} else {
+										echo '	<td><span class="contributor_remove" data-realname="'.$contributor->realname.'" data-contributordefaultrole="" data-contributorid="'.$contributor_details->id.'"><i class="clickable podlove-icon-remove"></i></span></td>';
+									}
+									echo '</tr>';
+									$list_of_added_contributors = $list_of_added_contributors.$contributor_details->id." ";
+									$contributor_chosen = $contributor_chosen.'jQuery("#'.$contributor->id.'-role").chosen();'."\n";
 								}
-								echo '	</select></td>';
-								echo '	<td><span class="contributor_remove" data-realname="'.$contributor->realname.'" data-contributordefaultrole="'.$contributor_details->role.'" data-contributorid="'.$contributor_details->id.'"><i class="clickable podlove-icon-remove"></i></span></td>';
-								echo '</tr>';
-								$list_of_added_contributors = $list_of_added_contributors.$contributor_details->id." ";
-								$contributor_chosen = $contributor_chosen.'jQuery("#'.$contributor->id.'-role").chosen();'."\n";
 							} 
 						}
 					?>
