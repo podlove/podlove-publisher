@@ -291,7 +291,7 @@ class Contributors {
 		
 	}
 	
-	public function metabox( $post ) {
+	public static function metabox($post) {
 		?>
 		<div id="add_contributors" class="tagsdiv">
 			<p>
@@ -312,12 +312,12 @@ class Contributors {
 			$contributors = \Podlove\Modules\Contributors\Contributor::all();
 			$people = Array();
 			
-			foreach($contributors as $contributor_id => $contributer_values) {
+			foreach($contributors as $contributor_id => $contributor) {
 				$people[$contributor_id] = array(
-							'value'  => $contributer_values->slug,
-							'label'  => $contributer_values->realname,
-							'id'     => $contributer_values->id,
-							'avatar' => \Podlove\Settings\Contributors::get_gravatar_url($contributer_values->privateemail, 24)
+							'value'  => $contributor->slug,
+							'label'  => $contributor->realname,
+							'id'     => $contributor->id,
+							'avatar' => \Podlove\Settings\Contributors::get_gravatar_url($contributor->privateemail, 24)
 				);
 			}			
 			
@@ -336,7 +336,7 @@ class Contributors {
 		wp_enqueue_style( 'podlove-contributors-admin-style' );
 	}
 	
-	public function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
+	public static function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
 		
 		$url = 'http://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
