@@ -389,11 +389,13 @@ class Contributors extends \Podlove\Modules\Base {
 			$contribution->delete();
 		}
 
+		$position = 0;
 		foreach ($_POST["episode_contributor"] as $contributor_id => $contributor) {
 			$c = new EpisodeContribution;
 			$c->role_id = ContributorRole::find_one_by_slug($contributor['role'])->id;
 			$c->episode_id = $episode->id;
 			$c->contributor_id = $contributor_id;
+			$c->position = $position++;
 			$c->save();
 		}
 	}
@@ -436,7 +438,8 @@ class Contributors extends \Podlove\Modules\Base {
 					<tr>
 						<th>Contributor</th>
 						<th>Role</th>
-						<th>Remove</th>
+						<th style="width: 60px">Remove</th>
+						<th style="width: 30px"></th>
 					</tr>
 				</thead>
 				<tbody id="contributors_table_body" style="min-height: 50px;">
@@ -462,7 +465,7 @@ class Contributors extends \Podlove\Modules\Base {
 							$contributions[] = $contrib;
 						}
 					} else {
-						$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+						$contributions = EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
 					}
 					?>
 
@@ -484,6 +487,7 @@ class Contributors extends \Podlove\Modules\Base {
 									<i class="clickable podlove-icon-remove"></i>
 								</span>
 							</td>
+							<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -517,6 +521,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<i class="clickable podlove-icon-remove"></i>
 					</span>
 				</td>
+				<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
 			</tr>
 			</script>
 
@@ -550,7 +555,7 @@ class Contributors extends \Podlove\Modules\Base {
 					}
 
 					function determine_contributor_selector_visibility() {
-						var contributor_selector = $("#add_new_contributor_selector, #add_new_contributor_selector_chzn, #add_new_contributor_button");
+						var contributor_selector = $("#add_new_contributor_selector_chzn, #add_new_contributor_button");
 
 						if ($('#add_new_contributor_selector option').size() == 0) {
 							contributor_selector.hide();
@@ -605,6 +610,23 @@ class Contributors extends \Podlove\Modules\Base {
 
 					$(document).ready(function() {
 						update_contributor_list();
+
+						$("#contributors_table_body td").each(function(){
+						    $(this).css('width', $(this).width() +'px');
+						});
+
+						$("#contributors_table_body").sortable({
+							handle: ".reorder-handle",
+							helper: function(e, tr) {
+							    var $originals = tr.children();
+							    var $helper = tr.clone();
+							    $helper.children().each(function(index) {
+							    	// Set helper cell sizes to match the original sizes
+							    	$(this).width($originals.eq(index).width());
+							    });
+							    return $helper;
+							}
+						});
 					});
 				}(jQuery));
 
