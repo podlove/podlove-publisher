@@ -192,6 +192,8 @@ class Podcast {
 						'type'    => 'checkbox',
 		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 					) );
+
+					do_action( 'podlove_podcast_form', $wrapper, $podcast );
 				});
 				?>
 				
