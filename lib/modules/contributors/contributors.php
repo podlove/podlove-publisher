@@ -298,9 +298,9 @@ class Contributors extends \Podlove\Modules\Base {
 				$output = $output.'<img src="'.$contributor->avatar.'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
 			} else {
 				if ($contributor->avatar === NULL) {
-					$output = $output.'<img src="'.$this->get_gravatar_url("foo@foo.de", 100).'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
+					$output = $output.'<img src="'.self::get_gravatar_url("foo@foo.de", 100).'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
 				} else {
-					$output = $output.'<img src="'.$this->get_gravatar_url($contributor->avatar, 100).'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";				
+					$output = $output.'<img src="'.self::get_gravatar_url($contributor->avatar, 100).'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";				
 				}		
 			}
 			$output = $output.'<ul class="contributor-contact">'."\n";
@@ -343,9 +343,9 @@ class Contributors extends \Podlove\Modules\Base {
 				$output = $output.'<img src="'.$contributor->avatar.'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
 			} else {
 				if ($contributor->avatar === NULL) {
-					$output = $output.'<img src="'.$this->get_gravatar_url("foo@foo.de", 100).'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
+					$output = $output.'<img src="'.self::get_gravatar_url("foo@foo.de", 100).'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
 				} else {
-					$output = $output.'<img src="'.$this->get_gravatar_url($contributor->avatar, 100).'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";				
+					$output = $output.'<img src="'.self::get_gravatar_url($contributor->avatar, 100).'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";				
 				}		
 			}
 			$output = $output.'<ul class="contributor-contact-light">'."\n";
@@ -649,7 +649,7 @@ class Contributors extends \Podlove\Modules\Base {
 	 * @return String containing either just a URL or a complete image tag
 	 * @source http://gravatar.com/site/implement/images/php/
 	 */
-	public function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
+	public static function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
 		$url = 'http://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
 		$url .= "?s=$s&d=$d&r=$r";
