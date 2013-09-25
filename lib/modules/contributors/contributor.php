@@ -1,13 +1,15 @@
 <?php 
 namespace Podlove\Modules\Contributors;
-use \Podlove\Model;
 
-class Contributor extends Model\Base {
+use \Podlove\Model\Base;
 
+class Contributor extends Base
+{
+	
 }
 
 Contributor::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-Contributor::property( 'slug', 'VARCHAR(255)' ); // auf ID umstellen
+Contributor::property( 'slug', 'VARCHAR(255)' );
 Contributor::property( 'gender', 'VARCHAR(255)' );
 Contributor::property( 'organisation', 'TEXT' );
 Contributor::property( 'department', 'TEXT' );
