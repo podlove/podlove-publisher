@@ -444,54 +444,32 @@ class Contributors extends \Podlove\Modules\Base {
 				</thead>
 				<tbody id="contributors_table_body" style="min-height: 50px;">
 					<tr class="contributors_table_body_placeholder" style="display: none;">
-						<td><em>No contributors were added yet.</em></td>
+						<td><em><?php echo __('No contributors were added yet.', 'podlove') ?></em></td>
 					</tr>
-					<?php
-					$contributors = Contributor::all();
-					$contributors_roles = ContributorRole::selectOptions();
-
-					$current_page = get_current_screen();
-					$episode = Model\Episode::find_one_by_post_id(get_the_ID());
-					
-					// determine existing contributions
-					$contributions = array();
-					if ($current_page->action == "add") {
-						$permanent_contributors = Contributor::find_all_by_property("permanentcontributor", "1");
-						foreach ($permanent_contributors as $permanent_contributor) {
-							$contrib = new EpisodeContribution;
-							$contrib->contributor_id = $permanent_contributor->id;
-							$contrib->episode_id = $episode->id;
-							$contrib->role_id = ContributorRole::find_one_by_slug($permanent_contributor->role)->id;
-							$contributions[] = $contrib;
-						}
-					} else {
-						$contributions = EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
-					}
-					?>
-
-					<?php foreach ( $contributions as $contribution ): ?>
-						<?php $contributor = Contributor::find_by_id($contribution->contributor_id); ?>
-						<tr class="media_file_row" data-contributor-id="<?php echo $contributor->id ?>">
-							<td>
-								<?php echo $contributor->realname; ?>
-							</td>
-							<td>
-								<select name="episode_contributor[<?php echo $contributor->id ?>][role]" class="chosen">
-									<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
-										<option value="<?php echo $role_slug ?>" <?php echo ($contribution->getRole()->slug == $role_slug) ? 'selected' : '' ?>><?php echo $role_title ?></option>
-									<?php endforeach; ?>
-								</select>
-							</td>
-							<td>
-								<span class="contributor_remove">
-									<i class="clickable podlove-icon-remove"></i>
-								</span>
-							</td>
-							<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
-						</tr>
-					<?php endforeach; ?>
 				</tbody>
 			</table>
+
+			<?php
+			$contributors = Contributor::all();
+			$contributors_roles = ContributorRole::selectOptions();
+
+			$current_page = get_current_screen();
+			$episode = Model\Episode::find_one_by_post_id(get_the_ID());
+			
+			// determine existing contributions
+			$contributions = array();
+			if ($current_page->action == "add") {
+				$permanent_contributors = Contributor::find_all_by_property("permanentcontributor", "1");
+				foreach ($permanent_contributors as $permanent_contributor) {
+					$contrib = new EpisodeContribution;
+					$contrib->contributor_id = $permanent_contributor->id;
+					$contributions[] = $contrib;
+				}
+			} else {
+				$contributions = EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
+			}
+			?>
+
 			<div id="add_new_contributor_wrapper">
 				<select id="add_new_contributor_selector" class="contributor-dropdown chosen">
 					<?php $current_contribution_ids = array_map(function($c){ return $c->contributor_id; }, $contributions); ?>
@@ -527,11 +505,13 @@ class Contributors extends \Podlove\Modules\Base {
 
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
+				var existing_contributions = [<?php echo implode(",",array_map(function($c) { return $c->contributor_id; }, $contributions)) ?>];
 
 				<?php 
 				$cjson = array();
 				foreach (Contributor::all() as $contributor) {
 					$cjson[$contributor->id] = array(
+						'id'   => $contributor->id,
 						'slug' => $contributor->slug,
 						'role' => $contributor->role,
 						'realname' => $contributor->realname,
@@ -565,27 +545,32 @@ class Contributors extends \Podlove\Modules\Base {
 					}
 
 					function update_contributor_list() {
-						$(".chosen").chosen();
+						$(".chosen").chosen().trigger("liszt:updated");
 						determine_blank_slate_visibility();
 						determine_contributor_selector_visibility();
 					}
 
-					$(document).on('click', "#add_new_contributor_button", function() {
-						var selected_contributor = $("#add_new_contributor_selector :selected"),
-							contributor_id = selected_contributor.val(),
-							contributor = PODLOVE.Contributors[contributor_id],
-							row = '';
+					function add_contributor_row(contributor) {
+						var row = '';
 
 						// add contributor to table
 						row = $("#contributor-row-template").html();
 						row = row.replace(/\{\{contributor-name\}\}/g, contributor.realname);
-						row = row.replace(/\{\{contributor-id\}\}/g, contributor_id);
+						row = row.replace(/\{\{contributor-id\}\}/g, contributor.id);
 						el = $("#contributors_table_body").append(row);
 						
 						var new_row = $("#contributors_table_body tr:last");
 
 						// select default role
 						new_row.find('select option[value="' + contributor.role + '"]').attr('selected',true);
+					}
+
+					$(document).on('click', "#add_new_contributor_button", function() {
+						var selected_contributor = $("#add_new_contributor_selector :selected"),
+							contributor_id = selected_contributor.val(),
+							contributor = PODLOVE.Contributors[contributor_id];
+
+						add_contributor_row(contributor);
 
 						// remove contributor from select
 						selected_contributor.remove();
@@ -611,6 +596,10 @@ class Contributors extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 						update_contributor_list();
 
+						$.each(existing_contributions, function(index, contributor_id) {
+							add_contributor_row(PODLOVE.Contributors[contributor_id]);
+						});
+
 						$("#contributors_table_body td").each(function(){
 						    $(this).css('width', $(this).width() +'px');
 						});
@@ -624,7 +613,9 @@ class Contributors extends \Podlove\Modules\Base {
 							    	// Set helper cell sizes to match the original sizes
 							    	$(this).width($originals.eq(index).width());
 							    });
-							    return $helper;
+							    return $helper.css({
+							    	background: '#EAEAEA'
+							    });
 							}
 						});
 					});
