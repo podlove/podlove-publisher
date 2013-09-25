@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Settings;
-use \Podlove\Model;
+
+use Podlove\Model;
+use Podlove\Modules\Contributors\ContributorRole;
 
 class Contributors {
 
@@ -141,7 +143,7 @@ class Contributors {
 	}
 	
 	private function new_template() {
-		$contributor = new \Podlove\Modules\Contributors\Contributor
+		$contributor = new \Podlove\Modules\Contributors\Contributor;
 		?>
 		<h3><?php echo __( 'Add New Contributor', 'podlove' ); ?></h3>
 		<?php
@@ -216,12 +218,7 @@ class Contributors {
 			$wrapper->select( 'role', array(
 				'label'       => __( 'Default role', 'podlove' ),
 				'description' => 'The default role of the conributor.',
-				'options'     => array( 'moderator' => 'Moderator',
-										'comoderator' => 'Co-Moderator',
-										'guest' => 'Guest',
-										'camera' => 'Camera',
-										'chatmoderator' => 'Chat-Moderator',
-										'shownoter' => 'Shownoter')
+				'options'     => ContributorRole::selectOptions()
 			) );
 
 			$wrapper->string( 'avatar', array(
