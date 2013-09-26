@@ -417,7 +417,9 @@ class Contributors extends \Podlove\Modules\Base {
 					$contributions = EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
 				}
 
+				echo '</table>';
 				$this->contributors_form_table($contributions);
+				echo '<table class="form-table">';
 			}
 		) );		
 	}
@@ -469,38 +471,26 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function contributors_form_table($current_contributions = array(), $form_base_name = 'episode_contributor') {
+		$contributors_roles = ContributorRole::selectOptions();
+
+		$cjson = array();
+		foreach (Contributor::all() as $contributor) {
+			$cjson[$contributor->id] = array(
+				'id'   => $contributor->id,
+				'slug' => $contributor->slug,
+				'role' => $contributor->role,
+				'realname' => $contributor->realname,
+				'permanentcontributor' => $contributor->permanentcontributor
+			);
+		}
+
+		// override contributor roles with scoped roles
+		foreach ($current_contributions as $current_contribution) {
+			$cjson[$current_contribution->contributor_id]['role'] = $current_contribution->getRole()->slug;
+		}
 		?>
-		</table>
-		<style type="text/css">
-			#add_new_contributor_selector {
-				width: 250px;
-			}
-
-			#add_new_contributor_button {
-				width: 30px;
-				height: 25px;
-				font-size: 1.5em;
-			}
-
-			#add_new_contributor_selector, #add_new_contributor_button {
-				float: right;
-			}
-
-			#add_new_contributor_wrapper {
-				width: 285px;
-				margin: 5px 0px 0px 0px;
-			}
-
-			#contributors_table_body select {
-				width: 180px;
-			}	
-
-			span.contributor_remove {
-				font-size: 1.6em;
-			}		
-		</style>
 		<div id="contributors-form">
-			<table class="media_file_table" style="margin-top: 1em;" border="0" cellspacing="0">
+			<table class="podlove_alternating" style="margin-top: 1em;" border="0" cellspacing="0">
 				<thead>
 					<tr>
 						<th>Contributor</th>
@@ -515,10 +505,6 @@ class Contributors extends \Podlove\Modules\Base {
 					</tr>
 				</tbody>
 			</table>
-
-			<?php
-			$contributors_roles = ContributorRole::selectOptions();
-			?>
 
 			<div id="add_new_contributor_wrapper">
 				<select id="add_new_contributor_selector" class="contributor-dropdown chosen">
@@ -555,24 +541,6 @@ class Contributors extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
 				var existing_contributions = [<?php echo implode(",", array_map(function($c){ return $c->contributor_id; }, $current_contributions)) ?>];
-
-				<?php 
-				$cjson = array();
-				foreach (Contributor::all() as $contributor) {
-					$cjson[$contributor->id] = array(
-						'id'   => $contributor->id,
-						'slug' => $contributor->slug,
-						'role' => $contributor->role,
-						'realname' => $contributor->realname,
-						'permanentcontributor' => $contributor->permanentcontributor
-					);
-				}
-
-				// override contributor roles with scoped roles
-				foreach ($current_contributions as $current_contribution) {
-					$cjson[$current_contribution->contributor_id]['role'] = $current_contribution->getRole()->slug;
-				}
-				?>
 
 				PODLOVE.Contributors = <?php echo json_encode($cjson); ?>;
 
@@ -677,7 +645,6 @@ class Contributors extends \Podlove\Modules\Base {
 
 			</script>
 		</div>
-		<table class="form-table">
 		<?php		
 	}
 

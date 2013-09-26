@@ -146,48 +146,6 @@ class Podcast_Post_Meta_Box {
 			} );
 			?>
 		</div>
-
-		<style type="text/css">
-		.media_file_table {
-			width: 100%;
-			border-bottom: 1px solid #999;
-		}
-		.media_file_table th {
-			text-align: left;
-			border-bottom: 1px solid #999;
-		}
-		.media_file_table td {
-			padding: 5px;
-			height: 24px;
-		}
-		.media_file_table tr:nth-child(even) {
-			background: #EAEAEA;
-		}
-		#update_all_media_files {
-			display: inline-block;
-			vertical-align: middle;
-			padding: 15px 0 6px 0;
-		}
-		.base_url {
-			color: #777;
-			font-size: 0.9em;
-		}
-		.media_file_row .enable {
-			text-align: center;
-		}
-		.subtitle_warning {
-			float: left;
-			font-weight: bold;
-			padding-right: 10px;
-		}
-		.subtitle_warning .close {
-			cursor: pointer;
-		}
-
-		.media_file_row .enable { width: 45px; }
-		.media_file_row .size   { width: 130px; }
-		.media_file_row .update { width: 90px; }
-		</style>
 		<?php
 	}
 
