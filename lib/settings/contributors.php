@@ -19,7 +19,6 @@ class Contributors {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( 'add_meta_boxes', array( $this, 'register_metabox' ) );
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 	}
 	
@@ -172,6 +171,32 @@ class Contributors {
 			$contributor = $form->object;
 
 
+			$wrapper->subheader( __( 'Personal', 'podlove' ) );
+
+			$wrapper->string( 'realname', array(
+				'label'       => __( 'Real name', 'podlove' ),
+				'html'        => array( 'class' => 'required' )
+			) );
+
+			$wrapper->string( 'nickname', array(
+				'label'       => __( 'Nickname', 'podlove' )
+			) );
+
+			$wrapper->string( 'publicname', array(
+				'label'       => __( 'Public name', 'podlove' ),
+				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player.'
+			) );
+			
+			$wrapper->select( 'gender', array(
+				'label'       => __( 'Gender', 'podlove' ),
+				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
+			) );
+			
+			$wrapper->string( 'avatar', array(
+				'label'       => __( 'Avatar', 'podlove' ),
+				'description' => 'Either a Gravatar E-mail adress or a URL.'
+			) );
+
 			$wrapper->subheader( __( 'General', 'podlove' ) );
 			
 			$wrapper->checkbox( 'showpublic', array(
@@ -188,32 +213,9 @@ class Contributors {
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'ID', 'podlove' ),
-				'description' => 'The ID will be used as in internal identifier for e.g. shorttags.',
+				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
 				'html'        => array( 'class' => 'required' )
 			) );	
-
-			$wrapper->string( 'realname', array(
-				'label'       => __( 'Real name', 'podlove' ),
-				'html'        => array( 'class' => 'required' )
-			) );
-
-			$wrapper->string( 'publicname', array(
-				'label'       => __( 'Public name', 'podlove' ),
-				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player.'
-			) );
-
-			$wrapper->string( 'nickname', array(
-				'label'       => __( 'Nickname', 'podlove' )
-			) );
-
-			$wrapper->string( 'guid', array(
-				'label'       => __( 'GUID/URI', 'podlove' )
-			) );		
-			
-			$wrapper->select( 'gender', array(
-				'label'       => __( 'Gender', 'podlove' ),
-				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
-			) );
 			
 			$wrapper->select( 'role', array(
 				'label'       => __( 'Default role', 'podlove' ),
@@ -221,11 +223,10 @@ class Contributors {
 				'options'     => ContributorRole::selectOptions()
 			) );
 
-			$wrapper->string( 'avatar', array(
-				'label'       => __( 'Avatar', 'podlove' ),
-				'description' => 'Either a Gravatar E-mail adress or a URL.'
-			) );
-			
+			$wrapper->string( 'guid', array(
+				'label'       => __( 'URI', 'podlove' )
+			) );		
+
 			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );
 			
 			$wrapper->string( 'organisation', array(
@@ -273,59 +274,12 @@ class Contributors {
 				'description' => 'Facebook URL.'
 			) );	
 			
-			$wrapper->string( 'wishlist', array(
+			$wrapper->string( 'amazonwishlist', array(
 				'label'       => __( 'Wishlist', 'podlove' ),
 				'description' => 'URL of the contributors wishlist (e.g. Amazon).'
 			) );	
 
 		} );
-	}
-	
-	public function register_metabox() {		
-		add_meta_box(  'tagsdiv-podlove-contributors-hide',
-						 __( 'Contributors', 'podlove' ), 
-						array( '\Podlove\Settings\Contributors', 'metabox' ), 
-						'podcast', 
-						'side', 
-						'default' );  
-		
-	}
-	
-	public static function metabox($post) {
-		?>
-		<div id="add_contributors" class="tagsdiv">
-			<p>
-				<input type="text" class="newtag" id="add_contributors_input">
-				<input type="button" class="button tagadd" id="add_contributors_submit" value="Add">
-			</p>
-		</div>
-		<div id="contributors" class="tagchecklist">
-			<div class="nojs-tags hide-if-js">
-				<p><?php echo __( 'Add or remove contributors', 'podlove' ) ?></p>
-				<textarea name="tax_input[podlove-contributors]" rows="3" cols="20" class="the-contributors" id="tax-input-podlove-contributors">
-				</textarea>
-				<input type="hidden" name="_podlove_contributors" id="_podlove_contributors" />
-			</div>
-		</div>
-		<script type="text/javascript">
-		<?php
-			$contributors = \Podlove\Modules\Contributors\Contributor::all();
-			$people = Array();
-			
-			foreach($contributors as $contributor_id => $contributor) {
-				$people[$contributor_id] = array(
-							'value'  => $contributor->slug,
-							'label'  => $contributor->realname,
-							'id'     => $contributor->id,
-							'avatar' => \Podlove\Settings\Contributors::get_gravatar_url($contributor->privateemail, 24)
-				);
-			}			
-			
-		?>
-		var PODLOVE = PODLOVE || {};
-		PODLOVE.people = <?php echo json_encode($people); ?>;
-		</script>
-		<?php
 	}
 	
 	public function scripts_and_styles() {
@@ -334,13 +288,5 @@ class Contributors {
 
 		wp_register_style( 'podlove-contributors-admin-style', get_bloginfo('url') . '/wp-content/plugins/podlove-publisher/lib/modules/contributors/css/admin.css' );
 		wp_enqueue_style( 'podlove-contributors-admin-style' );
-	}
-	
-	public static function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
-		
-		$url = 'http://www.gravatar.com/avatar/';
-		$url .= md5( strtolower( trim( $email ) ) );
-		$url .= "?s=$s&d=$d&r=$r";
-		return $url;
 	}
 }

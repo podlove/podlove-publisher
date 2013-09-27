@@ -13,10 +13,12 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
 		add_action( 'podlove_episode_form_beginning', array( $this, 'contributors_form_for_episode' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'scripts_and_styles' ) );
 		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
-		add_shortcode( 'podlove-contributors', array( $this, 'display_contributors') );
+	
+		// FIXME: avoid to load one css/js file per module in frontend
+		add_action( 'wp_enqueue_scripts', array( $this, 'scripts_and_styles' ) );
+		new Shortcodes;	
 	}
 	
 	public function was_activated( $module_name ) {
@@ -99,283 +101,14 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function scripts_and_styles() {
-		$module_url = $this->get_module_url();
-		wp_register_style( 'podlove-contributors-style', $module_url . '/css/display_contributor.css' );
-		wp_enqueue_style( 'podlove-contributors-style' );
-	}
-
-	public function display_contributors ( $attributes ) {
-		$output = "";
-		$output = $output."<script type=\"text/javascript\">
-			/* <![CDATA[ */
-		    (function() {
-  		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-  		     s.type = 'text/javascript';
-   		     s.async = true;
-    		    s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-    		    t.parentNode.insertBefore(s, t);
-   			 })();
-			/* ]]> */</script>
-		"."\n";
-		$output = $output.'<div class="contributor_container">'."\n";
-
-		$contributors_raw = get_post_meta(get_the_ID(), '_podlove_episode_contributors');
-		$contributors = json_decode($contributors_raw[0]);
-		$objectnumbercount = 1;
-
-		if (isset($attributes["delimiter"])) {
-			$delimiter = $attributes["delimiter"];
-		} else {
-			$delimiter = ", ";
-		}
-
-		if (count($contributors) > 0) {
-			if (isset($attributes["id"])) {
-				foreach($contributors as $contributorid => $contributor_details) {
-					if (strtoupper($contributor_details->slug) == strtoupper($attributes["id"])) {
-						if (isset($attributes["style"])) {
-							$output = $output.$this->display_contributor_style_identifier($contributor_details->id, $attributes["style"], 1, 1, $delimiter);
-						} else {
-							$output = $output.$this->display_contributor_card($contributor_details->id);
-						}						
-					}
-				}
-			} else {
-				$sorted_contributors = array();
-				foreach($contributors as $contributorid => $contributor_details) {
-					if (isset($attributes["roles"]) AND strpos($attributes["roles"], $contributor_details->role) !== FALSE) {
-						$sorted_contributors[] = $contributor_details->id;
-					}
-					if (!isset($attributes["roles"]) ) {
-						$sorted_contributors[] = $contributor_details->id;
-					}
-				}
-
-				if (isset($attributes["style"])) {
-					foreach($sorted_contributors as $sorted_contributor_id => $sorted_contributor) {
-						$output = $output.$this->display_contributor_style_identifier($sorted_contributor, $attributes["style"], $objectnumbercount, count($sorted_contributors), $delimiter);
-						$objectnumbercount++;
-					}		
-					$table_header_included = 0;
-				} else {
-					foreach($sorted_contributors as $sorted_contributor_id => $sorted_contributor) {
-						$output = $output.$this->display_contributor_card($sorted_contributor);
-					}
-				}
-				unset($sorted_contributors);
-			}
-		} else {
-			return "";
-		}
-		$output = $output.'</div>'."\n";
-		return $output;
-	}
-
-	public function display_contributor_style_identifier($id, $style, $numberofobjects, $objectnumber, $delimiter) {
-		$output = "";
-		switch($style) {
-			case "plaintext" :
-				$output = $this->display_contributor_plaintext($id, $numberofobjects, $objectnumber, $delimiter);
-			break;
-			case "linkedtext" :
-				$output = $this->display_contributor_linkedtext($id, $numberofobjects, $objectnumber, $delimiter);
-			break;
-			case "cards" :
-				$output = $this->display_contributor_card($id);
-			break;
-			case "light-cards" :
-				$output = $this->display_light_contributor_card($id);
-			break;
-			case "table" :
-				$output = $this->display_contributors_table($id, $objectnumber, $numberofobjects);
-			break;
-			default :
-				$output = $this->display_contributor_card($id);
-		}
-
-		return $output;
-	}
-
-	public function display_contributors_table($id, $objectnumber, $numberofobjects) {
-		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		$output = "";
-		if ($numberofobjects == 1) {
-			$output = $output."<table class=\"contributors_table\">";
-			$output = $output."	<thead>";
-			$output = $output."		<tr>";
-			$output = $output."			<th></th>";	
-			$output = $output."			<th>Contributor</th>";
-			$output = $output."			<th>Contact/Social</th>";
-			$output = $output."			<th>Donations</th>";
-			$output = $output."		</tr>";
-			$output = $output."	<thead>";
-			$output = $output."<tbody>";
-		}
-
-		if (isset($contributor) AND $contributor->showpublic == 1) {
-			$output = $output."<tr>\n";
-			$output = $output."	<td> </td>\n";
-			$output = $output."	<td>".$contributor->publicname."</td>\n";
-			$output = $output."	<td>\n";
-				if ($contributor->publicemail !== NULL) {
-					$output = $output.'<a class="contributor-contact email" href="mailto:'.$contributor->publicemail.'">E-mail</a>'."\n";
-				}
-				if ($contributor->www !== NULL) {
-					$output = $output.'<a class="contributor-contact www" href="'.$contributor->www.'">Homepage</a>'."\n";
-				}
-				if ($contributor->adn !== NULL) {
-					$output = $output.'<a class="contributor-contact adn" href="http://app.net/'.$contributor->adn.'">App.net</a>'."\n";
-				}
-				if ($contributor->twitter !== NULL) {
-				$output = $output.'<a class="contributor-contact twitter" href="http://twitter.com/'.$contributor->twitter.'">Twitter</a>'."\n";
-				}
-				if ($contributor->facebook !== NULL) {
-					$output = $output.'<a class="contributor-contact facebook" href="'.$contributor->facebook.'">Facebook</a>'."\n";
-				}
-				if ($contributor->wishlist !== NULL) {
-					$output = $output.'<a class="contributor-contact wishlist" href="'.$contributor->wishlist.'">Wishlist</a>'."\n";
-				}	
-			$output = $output." </td>\n";	
-			$output = $output."	<td>\n";				
-				if ($contributor->flattr !== NULL) {
-					$output = $output.'<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="https://flattr.com/profile/'.$contributor->flattr.'"></a>'."\n";
-				}
-			$output = $output." </td>\n";
-			$output = $output."</tr>\n" ;
-		}
-
-		if ($objectnumber == $numberofobjects) {
-			$output = $output."</tbody>";
-			$output = $output."</table>";
-		}
-
-
-		return $output;
-	}
-
-	public function display_contributor_plaintext($id, $numberofobjects, $objectnumber, $delimiter) {
-		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if (isset($contributor) AND $contributor->showpublic == 1) {
-			if ($objectnumber <= $numberofobjects) {
-				return $contributor->publicname;
-			} else {
-				return $contributor->publicname.$delimiter;
-			}
-		}
-	}
-
-	public function display_contributor_linkedtext($id, $numberofobjects, $objectnumber, $delimiter) {
-		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if (isset($contributor) AND $contributor->showpublic == 1) {
-			if ($objectnumber <= $numberofobjects) {
-				if ($contributor->wwww !== NULL) {
-					return "<a href=\"".$contributor->www."\">".$contributor->publicname."</a>";
-				} else {
-					return $contributor->publicname;
-				}
-			} else {
-				if ($contributor->www !== NULL) {
-					return "<a href=\"".$contributor->www."\">".$contributor->publicname."</a>".$delimiter;
-				} else {
-					return $contributor->publicname.$delimiter;
-				}
-			}
-		}
-	}
-
-	public function display_contributor_card($id) {
-		$output = "";
-		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if (isset($contributor) AND $contributor->showpublic == 1) {
-			$output = $output.'<div class="contributor">'."\n";
-			$output = $output.'<h1>'.$contributor->publicname.'</h1>'."\n";
-			if ($contributor->avatar !== NULL AND strpos($contributor->avatar, "@") === FALSE) {
-				$output = $output.'<img src="'.$contributor->avatar.'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
-			} else {
-				if ($contributor->avatar === NULL) {
-					$output = $output.'<img src="'.self::get_gravatar_url("foo@foo.de", 100).'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
-				} else {
-					$output = $output.'<img src="'.self::get_gravatar_url($contributor->avatar, 100).'" class="biopic" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";				
-				}		
-			}
-			$output = $output.'<ul class="contributor-contact">'."\n";
-			if ($contributor->publicemail !== NULL) {
-				$output = $output.'<li><a class="contributor-contact email" href="mailto:'.$contributor->publicemail.'">E-mail</a></li>'."\n";
-			}
-			if ($contributor->www !== NULL) {
-				$output = $output.'<li><a class="contributor-contact www" href="'.$contributor->www.'">Homepage</a></li>'."\n";
-			}
-			if ($contributor->adn !== NULL) {
-				$output = $output.'<li><a class="contributor-contact adn" href="http://app.net/'.$contributor->adn.'">App.net</a></li>'."\n";
-			}
-			if ($contributor->twitter !== NULL) {
-				$output = $output.'<li><a class="contributor-contact twitter" href="http://twitter.com/'.$contributor->twitter.'">Twitter</a></li>'."\n";
-			}
-			if ($contributor->facebook !== NULL) {
-				$output = $output.'<li><a class="contributor-contact facebook" href="'.$contributor->facebook.'">Facebook</a></li>'."\n";
-			}
-			if ($contributor->wishlist !== NULL) {
-				$output = $output.'<li><a class="contributor-contact wishlist" href="'.$contributor->wishlist.'">Wishlist</a></li>'."\n";
-			}						
-			$output = $output.'</ul>'."\n";
-			$output = $output.'<div class="FlattrWrapper">'."\n";
-			if ($contributor->flattr !== NULL) {
-				$output = $output.'	<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="https://flattr.com/profile/'.$contributor->flattr.'"></a>'."\n";
-			}
-			$output = $output.'</div>'."\n";
-			$output = $output.'</div>'."\n";	
-			return $output;
-		}
-	}
-
-	public function display_light_contributor_card($id) {
-		$output = "";
-		$contributor = \Podlove\Modules\Contributors\Contributor::find_by_id($id);
-		if (isset($contributor) AND $contributor->showpublic == 1) {
-			$output = $output.'<div class="contributor-light">'."\n";
-			$output = $output.'<h1>'.$contributor->publicname.'</h1>'."\n";
-			if ($contributor->avatar !== NULL AND strpos($contributor->avatar, "@") === FALSE) {
-				$output = $output.'<img src="'.$contributor->avatar.'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
-			} else {
-				if ($contributor->avatar === NULL) {
-					$output = $output.'<img src="'.self::get_gravatar_url("foo@foo.de", 100).'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";
-				} else {
-					$output = $output.'<img src="'.self::get_gravatar_url($contributor->avatar, 100).'" class="biopic-light" alt="'.$contributor->publicname.'" title="'.$contributor->publicname.'" />'."\n";				
-				}		
-			}
-			$output = $output.'<ul class="contributor-contact-light">'."\n";
-			if ($contributor->publicemail !== NULL) {
-				$output = $output.'<li><a class="contributor-contact-light email" href="mailto:'.$contributor->publicemail.'">E-mail</a></li>'."\n";
-			}
-			if ($contributor->www !== NULL) {
-				$output = $output.'<li><a class="contributor-contact-light www" href="'.$contributor->www.'">Homepage</a></li>'."\n";
-			}
-			if ($contributor->adn !== NULL) {
-				$output = $output.'<li><a class="contributor-contact-light adn" href="http://app.net/'.$contributor->adn.'">App.net</a></li>'."\n";
-			}
-			if ($contributor->twitter !== NULL) {
-				$output = $output.'<li><a class="contributor-contact-light twitter" href="http://twitter.com/'.$contributor->twitter.'">Twitter</a></li>'."\n";
-			}
-			if ($contributor->facebook !== NULL) {
-				$output = $output.'<li><a class="contributor-contact-light facebook" href="'.$contributor->facebook.'">Facebook</a></li>'."\n";
-			}
-			if ($contributor->wishlist !== NULL) {
-				$output = $output.'<li><a class="contributor-contact-light wishlist" href="'.$contributor->wishlist.'">Wishlist</a></li>'."\n";
-			}						
-			$output = $output.'</ul>'."\n";
-			$output = $output.'<div class="FlattrWrapper">'."\n";
-			if ($contributor->flattr !== NULL) {
-				$output = $output.'	<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="https://flattr.com/profile/'.$contributor->flattr.'"></a>'."\n";
-			}
-			$output = $output.'</div>'."\n";
-			$output = $output.'</div>'."\n";	
-			return $output;
-		}
+		// $module_url = $this->get_module_url();
+		// wp_register_style( 'podlove-contributors-style', $module_url . '/css/display_contributor.css' );
+		// wp_enqueue_style( 'podlove-contributors-style' );
 	}
 
 	public function update_contributors($post_id)
 	{
-		if (!isset($_POST["episode_contributor"]))
+		if (!$post_id || !isset($_POST["episode_contributor"]))
 			return;
 		
 		$episode = Model\Episode::find_one_by_post_id($post_id);
@@ -646,26 +379,6 @@ class Contributors extends \Podlove\Modules\Base {
 			</script>
 		</div>
 		<?php		
-	}
-
-	/**
-	 * Get Gravatar URL for a specified email address.
-	 *
-	 * Yes, I know there is get_avatar() but that returns the img tag and I need the URL.
-	 *
-	 * @param string $email The email address
-	 * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
-	 * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
-	 * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
-	 * @param array $atts Optional, additional key/value attributes to include in the IMG tag
-	 * @return String containing either just a URL or a complete image tag
-	 * @source http://gravatar.com/site/implement/images/php/
-	 */
-	public static function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
-		$url = 'http://www.gravatar.com/avatar/';
-		$url .= md5( strtolower( trim( $email ) ) );
-		$url .= "?s=$s&d=$d&r=$r";
-		return $url;
 	}
 
 }

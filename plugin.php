@@ -310,6 +310,9 @@ add_action( 'init', function () {
 	    );
 
 	    wp_enqueue_style( 'podlove-frontend-css' );
+
+	    wp_register_style( 'podlove-admin-font', \Podlove\PLUGIN_URL . '/css/admin-font.css', array(), \Podlove\get_plugin_header( 'Version' ) );
+	    wp_enqueue_style( 'podlove-admin-font' );
 } );
 
 // apply domain mapping plugin where it's essential

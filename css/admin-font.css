@@ -19,6 +19,7 @@
 	text-transform: none;
 	line-height: 1;
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 /* Use the following CSS code if you want to have a class per icon */
@@ -27,7 +28,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="podlove-icon-"] {
 */
-.podlove-icon-reorder, .podlove-icon-ok, .podlove-icon-remove, .podlove-icon-minus, .podlove-icon-spinner, .podlove-icon-heart, .podlove-icon-reply, .podlove-icon-share, .podlove-icon-time, .podlove-icon-repeat, .podlove-icon-plus, .podlove-icon-cloud-download, .podlove-icon-external-link, .podlove-icon-circle, .podlove-icon-cogs, .podlove-icon-ban-circle {
+.podlove-icon-reorder, .podlove-icon-ok, .podlove-icon-remove, .podlove-icon-minus, .podlove-icon-spinner, .podlove-icon-reply, .podlove-icon-share, .podlove-icon-time, .podlove-icon-repeat, .podlove-icon-plus, .podlove-icon-cloud-download, .podlove-icon-external-link, .podlove-icon-circle, .podlove-icon-cogs, .podlove-icon-ban-circle, .podlove-icon-heart, .podlove-icon-appdotnet, .podlove-icon-github, .podlove-icon-twitter, .podlove-icon-facebook, .podlove-icon-googleplus, .podlove-icon-pinterest, .podlove-icon-flattr, .podlove-icon-house, .podlove-icon-mail, .podlove-icon-cart {
 	font-family: 'Podlove';
 	speak: none;
 	font-style: normal;
@@ -51,9 +52,6 @@ you can use the generic selector below, but it's slower:
 }
 .podlove-icon-spinner:before {
 	content: "\f110";
-}
-.podlove-icon-heart:before {
-	content: "\f004";
 }
 .podlove-icon-reply:before {
 	content: "\f112";
@@ -84,4 +82,37 @@ you can use the generic selector below, but it's slower:
 }
 .podlove-icon-ban-circle:before {
 	content: "\f05e";
+}
+.podlove-icon-heart:before {
+	content: "\f004";
+}
+.podlove-icon-appdotnet:before {
+	content: "\e000";
+}
+.podlove-icon-github:before {
+	content: "\e001";
+}
+.podlove-icon-twitter:before {
+	content: "\e002";
+}
+.podlove-icon-facebook:before {
+	content: "\e003";
+}
+.podlove-icon-googleplus:before {
+	content: "\e004";
+}
+.podlove-icon-pinterest:before {
+	content: "\e005";
+}
+.podlove-icon-flattr:before {
+	content: "\e006";
+}
+.podlove-icon-house:before {
+	content: "\e007";
+}
+.podlove-icon-mail:before {
+	content: "\e008";
+}
+.podlove-icon-cart:before {
+	content: "\e009";
 }
