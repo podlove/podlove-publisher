@@ -5,7 +5,28 @@ use \Podlove\Model\Base;
 
 class Contributor extends Base
 {
-	
+	public function getAvatar($size) {
+		return '<img alt="avatar" src="' . $this->getGravatarUrl($this->publicemail, $size) . '" class="avatar avatar-18 photo" height="' . $size . '" width="' . $size . '">';
+	}
+
+	/**
+	 * Get Gravatar URL for a specified email address.
+	 *
+	 * Yes, I know there is get_avatar() but that returns the img tag and I need the URL.
+	 *
+	 * @param string $email The email address
+	 * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+	 * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
+	 * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
+	 * @param array $atts Optional, additional key/value attributes to include in the IMG tag
+	 * @source http://gravatar.com/site/implement/images/php/
+	 */
+	private function getGravatarUrl( $email, $s = 80, $d = 'mm', $r = 'g' ) {
+		$url = 'http://www.gravatar.com/avatar/';
+		$url .= md5( strtolower( trim( $email ) ) );
+		$url .= "?s=$s&d=$d&r=$r";
+		return $url;
+	}	
 }
 
 Contributor::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

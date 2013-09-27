@@ -7,8 +7,13 @@ use \Podlove\Model\Base;
  * A contributor contributes to an episode.
  */
 class EpisodeContribution extends Base {
+	
 	public function getRole() {
 		return ContributorRole::find_by_id($this->role_id);
+	}
+
+	public function getContributor() {
+		return Contributor::find_by_id($this->contributor_id);
 	}
 }
 
