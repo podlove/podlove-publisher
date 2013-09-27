@@ -105,6 +105,9 @@ class Contributors extends \Podlove\Modules\Base {
 		
 		$episode = Model\Episode::find_one_by_post_id($post_id);
 
+		if (!$episode)
+			return;
+
 		foreach (EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
 			$contribution->delete();
 		}
