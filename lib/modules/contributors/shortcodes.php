@@ -25,7 +25,11 @@ class Shortcodes {
 	/**
 	 * Parameters:
 	 *
-	 *	style - On of 'table', 'list'. Default: 'table'
+	 *	style       - One of 'table', 'list'. Default: 'table'
+	 *	id          - Specify a contributor id to display a specific contributor avatar.
+	 *	avatar_size - Specify avatar size in pixel for single contributors. Default: 50
+	 *	align       - One of 'left', 'right', 'none'. Align contributor. Default: none
+	 *	caption     - Optional caption for contributor avatars.
 	 * 
 	 * Examples:
 	 *
@@ -38,17 +42,49 @@ class Shortcodes {
 	public function shortcode($attributes)
 	{
 		$defaults = array(
-			'style' => 'table'
+			'style' => 'table',
+			'id' => null,
+			'avatar_size' => 50,
+			'align' => 'none'
 		);
 		$this->settings = array_merge($defaults, $attributes);
 
+		if ($this->settings['id'] !== null)
+			return $this->renderSingleContributor($this->settings['id']);
+		else
+			return $this->renderListOfContributors();
+	}
+
+	private function renderSingleContributor($contributor_id)
+	{
+		$contributor = Contributor::find_one_by_slug($contributor_id);
+
+		if (!$contributor)
+			return "";
+
+		// determine alignment
+		$alignclass = '';
+		
+		if ($this->settings['align'] == 'left')
+			$alignclass = 'alignleft';
+
+		if ($this->settings['align'] == 'right')
+			$alignclass = 'alignright';
+
+		return '<div class="wp-caption ' . $alignclass . '" style="width: ' . $this->settings['avatar_size'] . 'px">
+				' . $contributor->getAvatar($this->settings['avatar_size']) . '
+			<p class="wp-caption-text">' . $this->settings['caption'] . '</p>
+		</div>';
+	}
+
+	private function renderListOfContributors() {
 		// fetch contributions
 		$episode = Model\Episode::get_current();
 		$this->contributions = EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
 
 		if (count($this->contributions) == 0)
 			return "";
-	
+		
 		return $this->getFlattrScript()
 			 . $this->renderByStyle($this->settings['style']);
 	}
