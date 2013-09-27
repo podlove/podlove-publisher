@@ -27,6 +27,7 @@ class Shortcodes {
 	 *
 	 *	style       - One of 'table', 'list'. Default: 'table'
 	 *	id          - Specify a contributor id to display a specific contributor avatar.
+	 *	avatars     - One of 'yes', 'no'. Display avatars in list views or not. Default: 'yes'
 	 *	avatar_size - Specify avatar size in pixel for single contributors. Default: 50
 	 *	align       - One of 'left', 'right', 'none'. Align contributor. Default: none
 	 *	caption     - Optional caption for contributor avatars.
@@ -45,7 +46,8 @@ class Shortcodes {
 			'style' => 'table',
 			'id' => null,
 			'avatar_size' => 50,
-			'align' => 'none'
+			'align' => 'none',
+			'avatars' => 'yes'
 		);
 		$this->settings = array_merge($defaults, $attributes);
 
@@ -107,8 +109,7 @@ class Shortcodes {
 		     . implode(", ", array_map(function($contribution) {
 				$contributor = $contribution->getContributor();
 				return '<span class="contributor">'
-				     . $contributor->getAvatar(18)
-				     . ' '
+				     . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '')
 				     . $contributor->publicname
 				     . '</span>';
 		}, $this->contributions)) . '</span>';
@@ -137,7 +138,7 @@ EOD;
 		foreach ($this->contributions as $contribution) {
 			$contributor = $contribution->getContributor();
 			$body .= "<tr>";
-			$body .= "  <td>" . $contributor->publicname . "</td>";
+			$body .= "  <td>" . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '') . $contributor->publicname . "</td>";
 			$body .= "  <td>" . $this->getSocialButtons($contributor) . "</td>";
 			$body .= "  <td>" . $this->getDonationButton($contributor) . "</td>";
 			$body .= "</tr>";
