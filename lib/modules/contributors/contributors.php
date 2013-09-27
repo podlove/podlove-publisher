@@ -16,8 +16,6 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
 	
-		// FIXME: avoid to load one css/js file per module in frontend
-		add_action( 'wp_enqueue_scripts', array( $this, 'scripts_and_styles' ) );
 		new Shortcodes;	
 	}
 	
@@ -98,12 +96,6 @@ class Contributors extends \Podlove\Modules\Base {
 		if ( ! isset( $all_contributor_settings[ $term_id ] ) )
 			$all_contributor_settings[ $term_id ] = array();
 		return $all_contributor_settings[ $term_id ];
-	}
-
-	public function scripts_and_styles() {
-		// $module_url = $this->get_module_url();
-		// wp_register_style( 'podlove-contributors-style', $module_url . '/css/display_contributor.css' );
-		// wp_enqueue_style( 'podlove-contributors-style' );
 	}
 
 	public function update_contributors($post_id)
