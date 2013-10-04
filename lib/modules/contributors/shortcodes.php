@@ -55,6 +55,10 @@ class Shortcodes {
 			'linkto' => 'none',
 			'role' => 'all'
 		);
+
+		if (!is_array($attributes))
+			$attributes = array();
+
 		$this->settings = array_merge($defaults, $attributes);
 
 		if ($this->settings['id'] !== null)
@@ -106,8 +110,11 @@ class Shortcodes {
 
 	private function renderListOfContributors() {
 		// fetch contributions
-		$episode = Model\Episode::get_current();
-		$this->contributions = EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
+		if ($episode = Model\Episode::get_current()) {
+			$this->contributions = EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
+		} else {
+			$this->contributions = EpisodeContribution::all('GROUP BY contributor_id ORDER BY `position` ASC');
+		}
 
 		if ($this->settings['role'] != 'all') {
 			$this->contributions = array_filter($this->contributions, function($c) {

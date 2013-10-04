@@ -244,9 +244,7 @@ class Contributors extends \Podlove\Modules\Base {
 				<select id="add_new_contributor_selector" class="contributor-dropdown chosen">
 					<?php foreach ( Contributor::all() as $contributor ): ?>
 						<?php if (!in_array($contributor->id, array_map(function($c){ return $c->contributor_id; }, $current_contributions), true)): ?>
-							<option value="<?php echo $contributor->id ?>" data-contributordefaultrole="<?php echo $contributor->role ?>">
-								<?php echo $contributor->realname; ?>
-							</option>
+							<option value="<?php echo $contributor->id ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->realname; ?></option>
 						<?php endif; ?>
 					<?php endforeach; ?>
 				</select>
