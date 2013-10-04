@@ -16,7 +16,13 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
 	
+		// register shortcodes
 		new Shortcodes;	
+
+		// register settings page
+		add_action('podlove_register_settings_pages', function($settings_parent) {
+			new Settings\Contributors($settings_parent);
+		});
 	}
 	
 	public function was_activated( $module_name ) {

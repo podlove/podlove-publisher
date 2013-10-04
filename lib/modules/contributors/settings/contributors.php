@@ -1,5 +1,5 @@
 <?php
-namespace Podlove\Settings;
+namespace Podlove\Modules\Contributors\Settings;
 
 use Podlove\Model;
 use Podlove\Modules\Contributors\ContributorRole;
@@ -136,7 +136,7 @@ class Contributors {
 	}
 	
 	private function view_template() {
-		$table = new \Podlove\Contributor_List_Table();
+		$table = new \Podlove\Modules\Contributors\Contributor_List_Table();
 		$table->prepare_items();
 		$table->display();
 	}

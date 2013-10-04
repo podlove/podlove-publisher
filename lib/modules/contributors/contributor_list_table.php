@@ -1,5 +1,5 @@
 <?php
-namespace Podlove;
+namespace Podlove\Modules\Contributors;
 
 class Contributor_List_Table extends \Podlove\List_Table {
 	
