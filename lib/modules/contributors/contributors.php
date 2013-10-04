@@ -220,7 +220,9 @@ class Contributors extends \Podlove\Modules\Base {
 
 		// override contributor roles with scoped roles
 		foreach ($current_contributions as $current_contribution) {
-			$cjson[$current_contribution->contributor_id]['role'] = $current_contribution->getRole()->slug;
+			if ($role = $current_contribution->getRole()) {
+				$cjson[$current_contribution->contributor_id]['role'] = $role->slug;
+			}
 		}
 		?>
 		<div id="contributors-form">
