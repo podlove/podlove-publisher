@@ -152,7 +152,7 @@ class Contributors extends \Podlove\Modules\Base {
 				}
 
 				echo '</table>';
-				$this->contributors_form_table($contributions);
+				\Podlove\Modules\Contributors\Contributors::contributors_form_table($contributions);
 				echo '<table class="form-table">';
 			}
 		) );		
@@ -180,7 +180,7 @@ class Contributors extends \Podlove\Modules\Base {
 	public function podcast_form_extension_form()
 	{
 		$contributions = ShowContribution::all();
-		$this->contributors_form_table($contributions, 'podlove_podcast[contributor]');
+		self::ontributors_form_table($contributions, 'podlove_podcast[contributor]');
 	}
 
 	public function save_setting($old, $new)
@@ -204,7 +204,7 @@ class Contributors extends \Podlove\Modules\Base {
 		}
 	}
 
-	public function contributors_form_table($current_contributions = array(), $form_base_name = 'episode_contributor') {
+	public static function contributors_form_table($current_contributions = array(), $form_base_name = 'episode_contributor') {
 		$contributors_roles = ContributorRole::selectOptions();
 
 		$cjson = array();
