@@ -90,31 +90,25 @@ PODLOVE.license = function() {
 }
 
 function podlove_license_cc_get_image(allow_modifications, commercial_use) {
+	var banner_identifier_allowed_modification, banner_identifier_commercial_use;
+
 	switch (allow_modifications) {
 		case "yes" :
-			var banner_identifier_allowed_modification = 1;
+			banner_identifier_allowed_modification = 1;
 		break;
 		case "yesbutshare" :
-			var banner_identifier_allowed_modification = 10;
+			banner_identifier_allowed_modification = 10;
 		break;
 		case "no" :
-			var banner_identifier_allowed_modification = 0;
+			banner_identifier_allowed_modification = 0;
 		break;
 		default :
-			var banner_identifier_allowed_modification = 1;
+			banner_identifier_allowed_modification = 1;
 		break;
 	}
-	switch (commercial_use) {
-		case "yes" :
-			var banner_identifier_commercial_use = 1;
-		break;
-		case "no" :
-			var banner_identifier_commercial_use = 0;
-		break;
-		default :
-			var banner_identifier_commercial_use = 1;
-		break;
-	}
+
+	banner_identifier_commercial_use = (commercial_use == "no") ? "0" : "1";
+
 	return banner_identifier_allowed_modification + "_" + banner_identifier_commercial_use;
 }
 
@@ -139,7 +133,7 @@ function podlove_check_license_form(license_type) {
 					var name = locales[jQuery(license.form_cc_jurisdiction).val()];
 				}
 				jQuery(license.status).html("<i class=\"podlove-icon-ok\"></i> All license parameter are set. You can <a href=\"javascript:podlove_toggle_license_form('cc')\">edit</a> the license parameters.");			
-				jQuery(license.image).html("<div class=\"podlove_cc_license\"><img src=\"" + plugin_url + "/podlove-publisher/images/cc/" + podlove_license_cc_get_image(jQuery(license.form_cc_modification).val(), jQuery(license.form_cc_commercial_use).val()) + ".png\" /> <p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/"+version_and_name.version+"/"+country+"deed.en\">Creative Commons Attribution "+version_and_name.version+" "+name+" License</a>.</p></div>");
+				jQuery(license.image).html("<div class=\"podlove_cc_license\"><img src=\"" + plugin_url + "/images/cc/" + podlove_license_cc_get_image(jQuery(license.form_cc_modification).val(), jQuery(license.form_cc_commercial_use).val()) + ".png\" /> <p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/"+version_and_name.version+"/"+country+"deed.en\">Creative Commons Attribution "+version_and_name.version+" "+name+" License</a>.</p></div>");
 			}
 		break;
 		case "other" :

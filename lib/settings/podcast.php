@@ -230,7 +230,7 @@ class Podcast {
 			</form>
 		</div>	
 		<script type="text/javascript">
-			var plugin_url = "<?php echo plugins_url(); ?>";
+			var plugin_url = "<?php echo \Podlove\PLUGIN_URL; ?>";
 			var license = new Object();
 			license.type = '<?php echo $podcast->license_type; ?>';
 			license.status = '.podlove_podcast_license_status';

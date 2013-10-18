@@ -27,6 +27,19 @@ class Episode extends Base {
 		return $title;
 	}
 
+	public function description() {
+	
+	  if ( $this->summary ) {
+	    $description = $this->summary;
+	  } elseif ( $this->subtitle ) {
+	    $description = $this->subtitle;
+	  } else {
+	    $description = get_the_title();
+	  }
+	
+	  return htmlspecialchars( trim( $description ) );
+	}
+
 	public function media_files() {
 		global $wpdb;
 		
@@ -181,19 +194,25 @@ class Episode extends Base {
 		return true;
 	}
 
-		public function get_license() {
+	public function get_license() {
 		$license_type = $this->license_type;
 		switch ($license_type) {
 			case 'cc':
-				return array('license_type' => $license_type, 'license_attributes' => array(	'license_name' => "Creative Commons 3.0",
-																								'license_url' => "http://creativecommons.org/licenses/by/3.0/",
-																								'allow_modifications' => $this->license_cc_allow_modifications,
-																								'allow_commercial_use' =>$this->license_cc_allow_commercial_use,
-																								'jurisdiction' => $this->license_cc_license_jurisdiction));
+				return array(
+					'license_type' => $license_type,
+					'license_attributes' => array(	'license_name' => "Creative Commons 3.0",
+													'license_url' => "http://creativecommons.org/licenses/by/3.0/",
+													'allow_modifications' => $this->license_cc_allow_modifications,
+													'allow_commercial_use' =>$this->license_cc_allow_commercial_use,
+													'jurisdiction' => $this->license_cc_license_jurisdiction)
+											);
 			break;
 			default :
-				return array('license_type' => $license_type, 'license_attributes' => array(	'license_name' => $this->license_other_name,
-																								'license_url' => $this->license_other_url));
+				return array(
+					'license_type' => $license_type, 
+					'license_attributes' => array(	'license_name' => $this->license_other_name,
+													'license_url' => $this->license_other_url)
+											);
 			break;
 		}
 	}
@@ -214,18 +233,10 @@ class Episode extends Base {
 					$banner_identifier_allowed_modification = 1;
 				break;
 			}
-			switch ($this->license_cc_allow_commercial_use) {
-				case "yes" :
-					$banner_identifier_commercial_use = 1;
-				break;
-				case "no" :
-					$banner_identifier_commercial_use = 0;
-				break;
-				default :
-					$banner_identifier_commercial_use = 1;
-				break;
-			}
-			return plugins_url()."/podlove-publisher/images/cc/".$banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
+
+			$banner_identifier_commercial_use = ($this->license_cc_allow_commercial_use == "no") ? "0" : "1";
+
+			return \Podlove\PLUGIN_URL . "/images/cc/" . $banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
 		} 
 	}
 
