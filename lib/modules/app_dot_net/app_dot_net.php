@@ -160,8 +160,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						<div style="clear: both"></div>
 					</div>
 
-					<script type="text/javascript" src="<?php echo $this->get_module_url() ?>/adn.js"></script>
-					<link rel="stylesheet" type="text/css" href="<?php echo $this->get_module_url() ?>/adn.css" />
+					<script type="text/javascript" src="<?php echo $module_url ?>/adn.js"></script>
+					<link rel="stylesheet" type="text/css" href="<?php echo $module_url ?>/adn.css" />
 					<?php
 				}
 			) );
