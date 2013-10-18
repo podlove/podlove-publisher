@@ -347,7 +347,7 @@ class Auphonic extends \Podlove\Modules\Base {
     public function check_code() { 
     	if( isset( $_GET["code"] ) && $_GET["code"] ) {
     		if($this->get_module_option('auphonic_api_key') == "") {
-				$ch = curl_init('http://auth.podlove.org/auphonic.php');                                                                      
+				$ch = curl_init('https://auth.podlove.org/auphonic.php');                                                                      
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
 				curl_setopt($ch, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent());                                                              
 				curl_setopt($ch, CURLOPT_POSTFIELDS, array(  
