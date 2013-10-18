@@ -82,7 +82,7 @@ class EpisodeAsset extends Base {
 
 		if ( isset( $allowed_formats[ $type ] ) ) {
 			foreach ( $allowed_formats[ $type ] as $extension => $format_data ) {
-				if ( $format_data['mime_type'] == $asset_type ) {
+				if ( in_array($asset_type, $format_data['mime_types']) ) {
 					
 					if ( ! isset( $webplayer_formats[ $type ] ) )
 						$webplayer_formats[ $type ] = array();
