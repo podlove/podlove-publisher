@@ -54,7 +54,7 @@ class Template_List_Table extends \Podlove\List_Table {
 		
 		// retrieve data
 		// TODO select data for current page only
-		$data = \Podlove\Model\Template::all();
+		$data = \Podlove\Model\Template::find_all_by_where('readonly=0');
 		
 		// get current page
 		$current_page = $this->get_pagenum();

@@ -202,6 +202,7 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\Podcast( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\EpisodeAsset( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\Contributors( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\WebPlayer( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Templates( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\FileType( self::SETTINGS_PAGE_HANDLE );
