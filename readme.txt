@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.8.9 =
 * Enhancement: Render Twitter and OpenGraph tags using a DOM-Generator to avoid all possible escaping issues.
 * Enhancement: Allow multiple mime types for web player config slots. Fixes an issue with Firefox and Opus.
+* Enhancement: I CAN HAZ SECURETEH?! auth.podlove.org haz https nao.
 * Bugfix: Module settings screen rendering issue with PHP 5.3
 * Bugfix: Fix link to shortcode documentation
 
