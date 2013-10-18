@@ -80,6 +80,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.8.9 =
 * Enhancement: Render Twitter and OpenGraph tags using a DOM-Generator to avoid all possible escaping issues.
 * Bugfix: Module settings screen rendering issue with PHP 5.3
+* Bugfix: Fix link to shortcode documentation
 
 = 1.8.7 / 1.8.8 =
 * Enhancement: Refined Auphonic Workflow: Always import duration and slug; new option to automatically start productions after creation; new option to automatically publish episodes as soon as the production is ready
