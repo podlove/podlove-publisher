@@ -55,33 +55,33 @@ class WebPlayer {
 			'audio' => array(
 				'mp3' => array(
 					'title'     => __( 'MP3 Audio', 'podlove' ),
-					'mime_type' => 'audio/mpeg'
+					'mime_types' => array('audio/mpeg')
 				),
 				'mp4' => array(
 					'title'     => __( 'MP4 Audio', 'podlove' ),
-					'mime_type' => 'audio/mp4'
+					'mime_types' => array('audio/mp4')
 				),
 				'ogg' => array(
 					'title'     => __( 'OGG Audio', 'podlove' ),
-					'mime_type' => 'audio/ogg'
+					'mime_types' => array('audio/ogg')
 				),
 				'opus' => array(
 					'title'     => __( 'Opus Audio', 'podlove' ),
-					'mime_type' => 'audio/opus'
+					'mime_types' => array('audio/ogg;codecs=opus', 'audio/opus')
 				),
 			),
 			'video' => array(
 				'mp4'  => array(
 					'title'     => __( 'MP4 Video', 'podlove' ),
-					'mime_type' => 'video/mp4'
+					'mime_types' => array('video/mp4')
 				),
 				'ogg'  => array(
 					'title'     => __( 'OGG Video', 'podlove' ),
-					'mime_type' => 'video/ogg'
+					'mime_types' => array('video/ogg')
 				),
 				'webm' => array(
 					'title'     => __( 'Webm Video', 'podlove' ),
-					'mime_type' => 'video/webm'
+					'mime_types' => array('video/webm')
 				),
 			)
 		);
@@ -102,7 +102,7 @@ class WebPlayer {
 			<?php
 			foreach ( $extensions as $extension => $extension_data ) {
 				$label = $extension_data['title'];
-				$mime_type = $extension_data['mime_type'];
+				$mime_types = $extension_data['mime_types'];
 
 				$id    = sprintf( 'podlove_webplayer_formats_%s_%s'  , $format, $extension );
 				$name  = sprintf( 'podlove_webplayer_formats[%s][%s]', $format, $extension );
@@ -118,7 +118,7 @@ class WebPlayer {
 								<option value="0" <?php selected( 0, $value ); ?> ><?php echo __( 'Unused', 'podlove' ); ?></option>
 								<?php foreach ( $episode_assets as $episode_asset ): ?>
 									<?php $file_type = $episode_asset->file_type(); ?>
-									<?php if ( $file_type && $file_type->mime_type === $mime_type ): ?>
+									<?php if ( $file_type && in_array($file_type->mime_type, $mime_types) ): ?>
 										<option value="<?php echo $episode_asset->id; ?>" <?php selected( $episode_asset->id, $value ); ?>><?php echo $episode_asset->title ?></option>
 									<?php endif ?>
 								<?php endforeach ?>
