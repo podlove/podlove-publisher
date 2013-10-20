@@ -136,10 +136,11 @@ class Templates {
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
-				case 'new':   $this->new_template();  break;
-				case 'edit':  $this->edit_template(); break;
-				case 'index': $this->view_template(); break;
-				default:      $this->view_template(); break;
+				case 'new':        $this->new_template();  break;
+				case 'edit':       $this->edit_template(); break;
+				case 'duplicate':  $this->duplicate_template(); break;
+				case 'index':      $this->view_template(); break;
+				default:           $this->view_template(); break;
 			}
 			?>
 		</div>	
@@ -274,6 +275,8 @@ EOT
 						return {
 							list:[
 								"[podlove-episode-downloads]",
+								"[podlove-feed-list]",
+								"[podlove-episode-list]",
 								"[podlove-web-player]",
 								"[podlove-episode field=\"\"]",
 								"[podlove-podcast field=\"\"]",
@@ -315,6 +318,12 @@ EOT
 		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
 		echo '<h3>' . sprintf( __( 'Edit Template: %s', 'podlove' ), $template->title ) . '</h3>';
 		$this->form_template( $template, 'save' );
+	}
+
+	private function duplicate_template() {
+		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
+		echo '<h3>' . sprintf( __( 'Add New Template (duplicated from %s)', 'podlove' ), $template->title ) . '</h3>';
+		$this->form_template( $template, 'create' );
 	}
 
 }
