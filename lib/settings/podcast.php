@@ -111,50 +111,17 @@ class Podcast {
 						__( 'License', 'podlove' )
 					);
 
-					$podcast = \Podlove\Model\Podcast::get_instance();
-
-					$wrapper->select( 'license_type', array(
-						'label'       => __( 'License', 'podlove' ),
-						'options' 	  => array('cc' => 'Creative Commons', 'other' => 'Other'),
-						'description' => __( "<p class=\"podlove_podcast_license_status\"></p>", 'podlove' )
+					$wrapper->string( 'license_name', array(
+						'label'       => __( 'License Name', 'podlove' ),
+						'description' => __( 'Example: CC BY 3.0', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
 					) );
 
-					$wrapper->string( 'license_other_name', array(
-						'label'       => __( 'License Name', 'podlove' )
-					) );
-
-					$wrapper->string( 'license_other_url', array(
+					$wrapper->string( 'license_url', array(
 						'label'       => __( 'License URL', 'podlove' ),
-						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
+						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
+						'html' => array( 'class' => 'regular-text' )
 					) );
-
-					$wrapper->select( 'license_cc_allow_modifications', array(
-						'label'       => __( 'Modification', 'podlove' ),
-						'description' => __( 'Allow modifications of your work?', 'podlove' ),
-						'options' => array('yes' => 'Yes', 'yesbutshare' => 'Yes, as long as others share alike', 'no' => 'No')
-					) );
-
-					$wrapper->select( 'license_cc_allow_commercial_use', array(
-						'label'       => __( 'Commercial Use', 'podlove' ),
-						'description' => __( 'Allow commercial uses of your work?', 'podlove' ),
-						'options' => array('yes' => 'Yes', 'no' => 'No')
-					) );
-
-					$wrapper->select( 'license_cc_license_jurisdiction', array(
-						'label'       => __( 'License Jurisdiction', 'podlove' ),
-						'options' => \Podlove\License\locales_cc()
-					) );
-
-					?>
-						<tr class="row_podlove_podcast_license_preview">
-							<th scope="row" valign="top">
-									<label for="podlove_podcast_subtitle">License Preview</label>
-							</th>
-							<td>
-								<p class="podlove_podcast_license_image"></p>
-							</td>
-						</tr>
-					<?php
 
 					$wrapper->subheader(
 						__( 'Directory', 'podlove' ),
@@ -227,38 +194,9 @@ class Podcast {
 					) );
 				});
 				?>
+				
 			</form>
 		</div>	
-		<script type="text/javascript">
-			var plugin_url = "<?php echo plugins_url(); ?>";
-			var license = new Object();
-			license.type = '<?php echo $podcast->license_type; ?>';
-			license.status = '.podlove_podcast_license_status';
-			license.image = '.podlove_podcast_license_image';
-			license.image_row = 'tr.podlove_podcast_license_image';
-			license.form_row_cc_preview = 'tr.row_podlove_podcast_license_preview';
-
-			license.form_type = '#podlove_podcast_license_type';
-			license.form_other_name = '#podlove_podcast_license_other_name';
-			license.form_other_url = '#podlove_podcast_license_other_url';
-			license.form_cc_commercial_use = '#podlove_podcast_license_cc_allow_commercial_use';
-			license.form_cc_modification = '#podlove_podcast_license_cc_allow_modifications';
-			license.form_cc_jurisdiction = '#podlove_podcast_license_cc_license_jurisdiction'
-			license.form_cc_preview = '#podlove_podcast_license_preview';
-
-			license.form_row_other_name = 'tr.row_podlove_podcast_license_other_name';
-			license.form_row_other_url = 'tr.row_podlove_podcast_license_other_url';
-			license.form_row_cc_commercial_use = 'tr.row_podlove_podcast_license_cc_allow_commercial_use';
-			license.form_row_cc_modification = 'tr.row_podlove_podcast_license_cc_allow_modifications';
-			license.form_row_cc_jurisdiction = 'tr.row_podlove_podcast_license_cc_license_jurisdiction'
-
-			license.form_row_cc = license.form_row_cc_modification+","+license.form_row_cc_commercial_use+","+license.form_row_cc_jurisdiction;
-			license.form_row_other = license.form_row_other_name+","+license.form_row_other_url;
-
-			var locales = JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>');
-			var versions = JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>');
-		</script>
-
 		<?php
 	}
 	

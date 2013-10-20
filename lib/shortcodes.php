@@ -282,22 +282,3 @@ function template_shortcode( $attributes ) {
 	return $html;
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
-
-function podcast_license() {
-	$podcast = Model\Podcast::get_instance();
-		return $podcast->license();
-}
-add_shortcode( 'podlove-podcast-license', '\Podlove\podcast_license' );
-
-
-function episode_license() {
-	global $post;
-
-	if ( is_feed() )
-		return '';
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	return $episode->license();
-}
-add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
-
