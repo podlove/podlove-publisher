@@ -207,7 +207,7 @@ class Podcast {
 					$banner_identifier_commercial_use = 1;
 				break;
 			}
-			return \Podlove\PLUGIN_URL . "/images/cc/" . $banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
+			return plugins_url()."/podlove-publisher/images/cc/".$banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
 		} 
 	}
 

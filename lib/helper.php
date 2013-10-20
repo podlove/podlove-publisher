@@ -1,36 +1,6 @@
 <?php
 namespace Podlove;
 
-/**
- * strpos wrapper that prefers mb_strpos but falls back to strpos.
- */
-function strpos($haystack, $needle, $offset = 0, $encoding = 'UTF-8') {
-  if (function_exists('mb_strpos'))
-    return mb_strpos($haystack, $needle, $offset, $encoding);
-  else
-    return strpos($haystack, $needle, $offset);
-}
-
-/**
- * strlen wrapper that prefers mb_strlen but falls back to strlen.
- */
-function strlen($str, $encoding = 'UTF-8') {
-  if (function_exists('mb_strlen'))
-    return mb_strlen($str, $encoding);
-  else
-    return strlen($str);
-}
-
-/**
- * substr wrapper that prefers mb_substr but falls back to substr.
- */
-function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
-  if (function_exists('mb_substr'))
-    return mb_substr($str, $start, $length, $encoding);
-  else
-    return substr($str, $start, $length);
-}
-
 function format_bytes( $size, $decimals = 2 ) {
     $units = array( ' B', ' KB', ' MB', ' GB', ' TB' );
     for ( $i = 0; $size >= 1024 && $i < 4; $i++ ) $size /= 1024;
