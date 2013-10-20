@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.10 =
+* Hotfix: Removes incompletely updated license feature which wasn't supposed to be in that release in the first place. Sorry!
+
 = 1.8.9 =
 * Feature: Update Web Player to 2.0.16
 * Enhancement: Render Twitter and OpenGraph tags using a DOM-Generator to avoid all possible escaping issues.
