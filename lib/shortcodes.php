@@ -301,3 +301,81 @@ function episode_license() {
 }
 add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
 
+function template_list( $attributes , $whatkindof) {
+        
+        // Setting limit. Default is 10
+        if(isset($attributes["limit"]) AND is_integer($attributes["limit"])) {
+                $numberofobjectstocall = $attributes["limit"];
+        } else {
+                $numberofobjectstocall = 10;
+        }
+
+        // Setting orderby. Default is ID
+        if(isset($attributes["orderby"]) AND is_string($attributes["orderby"])) {
+                $objectsorderedby = $attributes["orderby"];
+        } else {
+                $objectsorderedby = "ID";
+        }
+
+        // Setting order. Default is DESC
+        if(isset($attributes["order"]) AND is_string($attributes["order"])) {
+                $objectsordered = $attributes["order"];
+        } else {
+                $objectsordered = "DESC";
+        }
+
+        switch ($whatkindof) {
+            case 'feeds' :
+                    // Not sorted by ID. Position flag is avaible.
+                    if($objectsordered == "ID") { $objectsordered = "position"; }
+                    $feeds = \Podlove\Model\Feed::all( 'ORDER BY '.$objectsorderedby.' '.$objectsordered );
+                    $template = Model\Template::find_one_by_title("feed-list");
+                    $output = $template->before;
+                    foreach($feeds as $feed_number => $feed) {
+                            $output = $output.$template->content;
+                            $tobereplaced = array(	"%feed-id%" => $feed->id,
+                                                    "%feed-title%" => $feed->name,
+                                                    "%feed-mediafile%" => $feed->episode_asset()->title,
+                                                    "%feed-url%" => $feed->get_subscribe_url(),
+                                                    "%feed-slug%" => $feed->slug);
+                            $output = str_replace(array_keys($tobereplaced), array_values($tobereplaced), $output);
+                    }
+                    $output = $output.$template->after;
+                    return $output;
+            break;
+            case 'episodes' :
+                    $episodes =  new \WP_Query( array( 'post_type' => 'podcast', 'orderby' => $objectsorderedby, 'order' => $objectsordered ) );
+                    $template = Model\Template::find_one_by_title("episode-list");
+                    $output = $template->before;
+                    foreach($episodes->posts as $episode_number => $episode) {
+                            $episode_details = Model\Episode::find_one_by_post_id( $episode->ID );
+                            $output = $output.$template->content;                            
+                            $tobereplaced = array(	"%episode-id%" => $episode_details->id,
+                                                    "%episode-title%" => $episode->post_title,
+                                                    "%episode-subtitle%" => $episode_details->subtitle,
+                                                    "%episode-url%" => get_permalink($episode->ID),
+                                                    "%episode-content%" => $episode->post_content,
+                                                    "%episode-cover%" => $episode_details->get_cover_art_with_fallback(),
+                                                    "%episode-duration%" => $episode_details->duration,
+                                                    "%episode-summary%" => $episode_details->summary,
+                                                    "%episode-date%" => date('d.m.Y', strtotime($episode->post_date)),
+                                                    "%episode-slug%" => $episode_details->slug);
+                            $output = str_replace(array_keys($tobereplaced), array_values($tobereplaced), $output);
+                    }
+                    $output = $output.$template->after;
+                    return $output;                
+            break;
+            default :
+                    $template = Model\Template::find_one_by_title($attributes["id"]);
+                    return $template->content;
+            break;
+        }        
+}
+
+add_shortcode( "podlove-feed-list", function ( $attributes ) {
+        return template_list( $attributes, "feeds");
+});
+
+add_shortcode( "podlove-episode-list", function ( $attributes ) {
+        return template_list( $attributes, "episodes");
+});

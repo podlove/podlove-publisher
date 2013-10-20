@@ -18,6 +18,7 @@ class Template_List_Table extends \Podlove\List_Table {
 
 		$actions = array(
 			'edit'   => Settings\Templates::get_action_link( $template, __( 'Edit', 'podlove' ), 'edit' ),
+			'duplicate'   => Settings\Templates::get_action_link( $template, __( 'Duplicate', 'podlove' ), 'duplicate' ),
 			'delete' => Settings\Templates::get_action_link( $template, __( 'Delete', 'podlove' ), 'confirm_delete' )
 		);
 	
@@ -54,7 +55,7 @@ class Template_List_Table extends \Podlove\List_Table {
 		
 		// retrieve data
 		// TODO select data for current page only
-		$data = \Podlove\Model\Template::all();
+		$data = \Podlove\Model\Template::find_all_by_where('readonly=0');
 		
 		// get current page
 		$current_page = $this->get_pagenum();

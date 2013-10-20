@@ -390,9 +390,9 @@ abstract class Base
 
 			$sql = 'INSERT INTO '
 			     . self::table_name()
-			     . ' ( '
-			     . implode( ',', self::property_names() )
-			     . ' ) '
+			     . ' ( `'
+			     . implode( '`,`', self::property_names() )
+			     . '` ) '
 			     . 'VALUES'
 			     . ' ( '
 			     . implode( ',', array_map( array( $this, 'property_name_to_sql_value' ), self::property_names() ) )
@@ -405,8 +405,8 @@ abstract class Base
 		} else {
 			$sql = 'UPDATE ' . self::table_name()
 			     . ' SET '
-			     . implode( ',', array_map( array( $this, 'property_name_to_sql_update_statement' ), self::property_names() ) )
-			     . ' WHERE id = ' . $this->id
+			     . implode( '`,`', array_map( array( $this, 'property_name_to_sql_update_statement' ), self::property_names() ) )
+			     . ' WHERE `id` = ' . $this->id
 			;
 			$success = $wpdb->query( $sql );
 		}
