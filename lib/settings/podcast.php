@@ -119,11 +119,11 @@ class Podcast {
 						'description' => __( "<p class=\"podlove_podcast_license_status\"></p>", 'podlove' )
 					) );
 
-					$wrapper->string( 'license_other_name', array(
+					$wrapper->string( 'license_name', array(
 						'label'       => __( 'License Name', 'podlove' )
 					) );
 
-					$wrapper->string( 'license_other_url', array(
+					$wrapper->string( 'license_url', array(
 						'label'       => __( 'License URL', 'podlove' ),
 						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
 					) );
@@ -239,15 +239,15 @@ class Podcast {
 			license.form_row_cc_preview = 'tr.row_podlove_podcast_license_preview';
 
 			license.form_type = '#podlove_podcast_license_type';
-			license.form_other_name = '#podlove_podcast_license_other_name';
-			license.form_other_url = '#podlove_podcast_license_other_url';
+			license.form_other_name = '#podlove_podcast_license_name';
+			license.form_other_url = '#podlove_podcast_license_url';
 			license.form_cc_commercial_use = '#podlove_podcast_license_cc_allow_commercial_use';
 			license.form_cc_modification = '#podlove_podcast_license_cc_allow_modifications';
 			license.form_cc_jurisdiction = '#podlove_podcast_license_cc_license_jurisdiction'
 			license.form_cc_preview = '#podlove_podcast_license_preview';
 
-			license.form_row_other_name = 'tr.row_podlove_podcast_license_other_name';
-			license.form_row_other_url = 'tr.row_podlove_podcast_license_other_url';
+			license.form_row_other_name = 'tr.row_podlove_podcast_license_name';
+			license.form_row_other_url = 'tr.row_podlove_podcast_license_url';
 			license.form_row_cc_commercial_use = 'tr.row_podlove_podcast_license_cc_allow_commercial_use';
 			license.form_row_cc_modification = 'tr.row_podlove_podcast_license_cc_allow_modifications';
 			license.form_row_cc_jurisdiction = 'tr.row_podlove_podcast_license_cc_license_jurisdiction'
