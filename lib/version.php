@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 45 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 46 );
 
 add_action( 'init', function () {
 	
@@ -351,6 +351,36 @@ function run_migrations_for_version( $version ) {
 		case 45:
 			delete_transient('podlove_auphonic_user');
 			delete_transient('podlove_auphonic_presets');
+		break;
+		case 46:
+			$podcast = Model\Podcast::get_instance();
+			$podcast->license_type = 'other';
+			$podcast->save();
+
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_type` VARCHAR(255) AFTER `publication_date`',
+				Model\Episode::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_name` TEXT AFTER `license_type`',
+				Model\Episode::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_url` TEXT AFTER `license_name`',
+				Model\Episode::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_cc_allow_modifications` TEXT AFTER `license_url`',
+				Model\Episode::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_cc_allow_commercial_use` TEXT AFTER `license_cc_allow_modifications`',
+				Model\Episode::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_cc_license_jurisdiction` TEXT AFTER `license_cc_allow_commercial_use`',
+				Model\Episode::table_name()
+			) );
 		break;
 	}
 

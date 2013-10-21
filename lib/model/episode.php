@@ -262,22 +262,22 @@ class Episode extends Base {
 					<p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/".$version."/".$locale."deed.en\">Creative Commons Attribution ".$version." ".$name." License</a>.</p>
 					</div>";
 				} else {
-					return "<span style='color: red;'>This work is (not yet) licensed under a Creative Commons Attribution license, because some license parameters are missing!</span>";
+					$podcast = Podcast::get_instance();
+					return $podcast->license();						
 				}
 			break;
 			case 'other' :
-				if($this->license_other_name != "" AND $this->license_other_url != "") {
+				if($this->license_name != "" AND $this->license_url != "") {
 					return "<div class=\"podlove_license\">
-								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_other_url."\">".$this->license_other_name."</a> license.</p>
+								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_url."\">".$this->license_name."</a> license.</p>
 							</div>";
 				} else {
 					return "<span style='color: red;'>This work is (not yet) licensed, as license parameters are missing!</span>";
 				}
 			break;
 			default :
-				return "<div class=\"podlove_license\">
-							<p><span style='color: red;'>This work is (not yet) licensed, as no license was chosen.</span></p>
-						</div>";
+					$podcast = Podcast::get_instance();
+					return $podcast->license();		
 			break;
 		}
 	}	
@@ -295,8 +295,8 @@ Episode::property( 'chapters', 'TEXT' );
 Episode::property( 'record_date', 'DATETIME' );
 Episode::property( 'publication_date', 'DATETIME' );
 Episode::property( 'license_type', 'VARCHAR(255)' );
-Episode::property( 'license_other_name', 'TEXT' );
-Episode::property( 'license_other_url', 'TEXT' );
+Episode::property( 'license_name', 'TEXT' );
+Episode::property( 'license_url', 'TEXT' );
 Episode::property( 'license_cc_allow_modifications', 'TEXT' );
 Episode::property( 'license_cc_allow_commercial_use', 'TEXT' );
 Episode::property( 'license_cc_license_jurisdiction', 'TEXT' );
