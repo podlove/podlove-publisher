@@ -789,3 +789,17 @@ add_action( 'admin_print_styles', function () {
 	wp_register_style( 'podlove-admin-font', \Podlove\PLUGIN_URL . '/css/admin-font.css', array(), \Podlove\get_plugin_header( 'Version' ) );
 	wp_enqueue_style( 'podlove-admin-font' );
 } );
+
+// hook into export feature
+add_action('init', function() {
+
+	if (!is_admin())
+		return;
+
+	if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
+		$exporter = new Exporter;
+		$exporter->download();
+		exit;
+	}
+
+});
