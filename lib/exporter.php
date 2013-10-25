@@ -12,6 +12,7 @@ class Exporter {
 		add_action('podlove_xml_export', array($this, 'exportFileType'));
 		add_action('podlove_xml_export', array($this, 'exportMediaFile'));
 		add_action('podlove_xml_export', array($this, 'exportTemplates'));
+		add_action('podlove_xml_export', array($this, 'exportOptions'));
 	}
 
 	public function download() {
@@ -42,6 +43,32 @@ class Exporter {
 
 	public function exportTemplates(\SimpleXMLElement $xml) {
 		$this->exportTable($xml, 'templates', 'template', '\Podlove\Model\Template');
+	}
+
+	public function exportOptions(\SimpleXMLElement $xml)
+	{
+		$options = array(
+			'podlove',
+			'podlove_active_modules',
+			'podlove_asset_assignment',
+			'podlove_metadata',
+			'podlove_podcast',
+			'podlove_template_assignment',
+			'podlove_webplayer_formats',
+			'podlove_webplayer_settings'
+		);
+
+		$xml_group = $xml->addChild('options');
+		foreach ($options as $option_name) {
+			$value = get_option($option_name);
+			if ($value !== false) {
+				if (is_array($value)) {
+					$xml_group->addChild($option_name, serialize($value));
+				} else {
+					$xml_group->addChild($option_name, $value);
+				}
+			}
+		}
 	}
 
 	private function exportTable(\SimpleXMLElement $xml, $group_name, $item_name, $table_class)
