@@ -5,6 +5,8 @@ use Podlove\Model;
 
 class Exporter {
 
+	const XML_NAMESPACE = 'http://podlove.org/dtd/wordpress-publisher-export/1.0';
+
 	public function __construct() {
 		add_action('podlove_xml_export', array($this, 'exportEpisodes'));
 		add_action('podlove_xml_export', array($this, 'exportAssets'));
@@ -58,14 +60,14 @@ class Exporter {
 			'podlove_webplayer_settings'
 		);
 
-		$xml_group = $xml->addChild('options');
+		$xml_group = $xml->addChild('xmlns:wpe:options');
 		foreach ($options as $option_name) {
 			$value = get_option($option_name);
 			if ($value !== false) {
 				if (is_array($value)) {
-					$xml_group->addChild($option_name, serialize($value));
+					$xml_group->addChild("xmlns:wpe:$option_name", serialize($value));
 				} else {
-					$xml_group->addChild($option_name, $value);
+					$xml_group->addChild("xmlns:wpe:$option_name", $value);
 				}
 			}
 		}
@@ -73,11 +75,11 @@ class Exporter {
 
 	private function exportTable(\SimpleXMLElement $xml, $group_name, $item_name, $table_class)
 	{
-		$xml_group = $xml->addChild($group_name);
+		$xml_group = $xml->addChild("xmlns:wpe:$group_name");
 		foreach ($table_class::all() as $mediafile) {
-			$xml_item = $xml_group->addChild($item_name);
+			$xml_item = $xml_group->addChild("xmlns:wpe:$item_name");
 			foreach ($table_class::property_names() as $property_name) {
-				$xml_item->addChild($property_name, $mediafile->$property_name);
+				$xml_item->addChild("xmlns:wpe:$property_name", $mediafile->$property_name);
 			}
 		}
 	}
@@ -102,6 +104,10 @@ class Exporter {
 
 	public function getXml() {
 		$xml = new \SimpleXMLElement('<xml/>');
+		// Double xmlns looks strange but is intentionally/required.
+		// See http://stackoverflow.com/a/9391673/72448
+		$xml->addAttribute('xmlns:xmlns:wpe', self::XML_NAMESPACE);
+
 		do_action('podlove_xml_export', $xml);
 		return $xml->asXML();
 	}
