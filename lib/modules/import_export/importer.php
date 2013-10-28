@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Modules\ImportExport;
 
+use Podlove\Model;
+
 class Importer {
 
 	// path to import file
@@ -21,15 +23,16 @@ class Importer {
 		// TODO: clean podlove tables beforehand?
 
 		$this->importEpisodes();
+		$this->importTemplates();
 	}
 
 	private function importEpisodes()
 	{
 		global $wpdb;
-		
+
 		$episodes = $this->xml->xpath('//wpe:episode');
 		foreach ($episodes as $episode) {
-			$new_episode = new \Podlove\Model\Episode;
+			$new_episode = new Model\Episode;
 
 			foreach ($episode->children('wpe', true) as $attribute) {
 				$value = (string) $attribute;
@@ -43,6 +46,24 @@ class Importer {
 			} else {
 				// no matching post found
 			}
+		}
+	}
+
+	private function importTemplates()
+	{
+		global $wpdb;
+
+		$templates = $this->xml->xpath('//wpe:template');
+		foreach ($templates as $template) {
+			$new_template = new Model\Template;
+
+			foreach ($template->children('wpe', true) as $attribute) {
+				$value = (string) $attribute;
+				$wpdb->escape_by_ref($value);
+				$new_template->{$attribute->getName()} = $value;
+			}
+
+			$new_template->save();
 		}
 	}
 
