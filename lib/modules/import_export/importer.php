@@ -24,6 +24,7 @@ class Importer {
 
 		$this->importEpisodes();
 		$this->importOptions();
+		$this->importMediaFiles();
 		$this->importTemplates();
 	}
 
@@ -51,6 +52,20 @@ class Importer {
 		$options = $this->xml->xpath('//wpe:options')[0]->children('wpe', true);
 		foreach ($options as $option) {
 			update_option($option->getName(), maybe_unserialize((string) $option));
+		}
+	}
+
+	private function importMediaFiles()
+	{
+		$mediafiles = $this->xml->xpath('//wpe:mediafile');
+		foreach ($mediafiles as $mediafile) {
+			$new_mediafile = new Model\MediaFile;
+
+			foreach ($mediafile->children('wpe', true) as $attribute) {
+				$new_mediafile->{$attribute->getName()} = self::escape((string) $attribute);
+			}
+
+			$new_mediafile->save();
 		}
 	}
 
