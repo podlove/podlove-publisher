@@ -78,7 +78,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.8.11 =
-* Hotfix: Bundle crt file to avoid StartSSL trust issues.
+* Feature: New module for Import/Export. Now you can easily move all your podcast data to another WordPress instance.
+* Bugfix: Bundle crt file to avoid StartSSL trust issues.
 
 = 1.8.10 =
 * Hotfix: Removes incompletely updated license feature which wasn't supposed to be in that release in the first place. Sorry!
