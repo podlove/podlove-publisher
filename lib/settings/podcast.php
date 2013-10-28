@@ -192,6 +192,14 @@ class Podcast {
 						'type'    => 'checkbox',
 		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 					) );
+
+					$wrapper->checkbox( 'complete', array(
+						'label'       => __( 'Podcast complete?', 'podlove' ),
+						'description' => __( 'Shows that this Podcast is finished and no further episodes will be added.', 'podlove' ),
+						'default'     => false
+					) );
+
+
 				});
 				?>
 				
