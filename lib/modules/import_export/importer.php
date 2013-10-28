@@ -20,8 +20,6 @@ class Importer {
 		$this->xml = simplexml_load_file($this->file);
 		$this->xml->registerXPathNamespace('wpe', \Podlove\Exporter::XML_NAMESPACE);
 
-		// TODO: clean podlove tables beforehand?
-
 		$this->importEpisodes();
 		$this->importOptions();
 		$this->importFileTypes();
@@ -31,6 +29,8 @@ class Importer {
 
 	private function importEpisodes()
 	{
+		Model\Episode::delete_all();
+		
 		$episodes = $this->xml->xpath('//wpe:episode');
 		foreach ($episodes as $episode) {
 			$new_episode = new Model\Episode;
@@ -59,7 +59,7 @@ class Importer {
 	private function importFileTypes()
 	{
 		Model\FileType::delete_all();
-		
+
 		$filetypes = $this->xml->xpath('//wpe:filetype');
 		foreach ($filetypes as $filetype) {
 			$new_filetype = new Model\FileType;
@@ -74,6 +74,8 @@ class Importer {
 
 	private function importMediaFiles()
 	{
+		Model\MediaFile::delete_all();
+
 		$mediafiles = $this->xml->xpath('//wpe:mediafile');
 		foreach ($mediafiles as $mediafile) {
 			$new_mediafile = new Model\MediaFile;
@@ -88,6 +90,8 @@ class Importer {
 
 	private function importTemplates()
 	{
+		Model\Template::delete_all();
+
 		$templates = $this->xml->xpath('//wpe:template');
 		foreach ($templates as $template) {
 			$new_template = new Model\Template;
