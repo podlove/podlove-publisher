@@ -28,16 +28,12 @@ class Importer {
 
 	private function importEpisodes()
 	{
-		global $wpdb;
-
 		$episodes = $this->xml->xpath('//wpe:episode');
 		foreach ($episodes as $episode) {
 			$new_episode = new Model\Episode;
 
 			foreach ($episode->children('wpe', true) as $attribute) {
-				$value = (string) $attribute;
-				$wpdb->escape_by_ref($value);
-				$new_episode->{$attribute->getName()} = $value;
+				$new_episode->{$attribute->getName()} = self::escape((string) $attribute);
 			}
 
 			if ($new_post_id = $this->getNewPostId($new_episode->post_id)) {
@@ -51,20 +47,22 @@ class Importer {
 
 	private function importTemplates()
 	{
-		global $wpdb;
-
 		$templates = $this->xml->xpath('//wpe:template');
 		foreach ($templates as $template) {
 			$new_template = new Model\Template;
 
 			foreach ($template->children('wpe', true) as $attribute) {
-				$value = (string) $attribute;
-				$wpdb->escape_by_ref($value);
-				$new_template->{$attribute->getName()} = $value;
+				$new_template->{$attribute->getName()} = self::escape((string) $attribute);
 			}
 
 			$new_template->save();
 		}
+	}
+
+	private static function escape($value) {
+		global $wpdb;
+		$wpdb->escape_by_ref($value);
+		return $value;
 	}
 
 	/**
