@@ -1,5 +1,5 @@
 <?php
-namespace Podlove;
+namespace Podlove\Modules\ImportExport;
 
 use Podlove\Model;
 

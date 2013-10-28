@@ -10,12 +10,29 @@ class Settings {
 	public function __construct( $handle ) {
 		Settings::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Import / Export',
-			/* $menu_title */ 'Import / Export',
+			/* $page_title */ 'Import &amp; Export',
+			/* $menu_title */ 'Import &amp; Export',
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_imexport_migration_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		add_action('admin_notices', function() {
+
+			if ($_GET['page'] != 'podlove_imexport_migration_handle')
+				return false;
+
+			if (!isset($_GET['status']) || $_GET['status'] != 'success')
+				return false;
+
+			?>
+			<div class="updated">
+				<p>
+					<?php echo __('Import successful. Happy podcasting!') ?>
+				</p>
+			</div>
+			<?php
+		});
 
 		if (isset($_FILES['podlove_import'])) {
 
@@ -81,6 +98,11 @@ class Settings {
 					<th scope="row" valign="top" colspan="2">
 						<h3 style="margin-bottom: 0px"><?php echo __('Import', 'podlove') ?></h3>
 					</th>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<?php echo __('Heads up: Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove'); ?>
+					</td>
 				</tr>
 				<tr>
 					<td><?php echo __('Import File', 'podlove') ?></td>

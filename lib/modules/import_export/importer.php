@@ -2,6 +2,7 @@
 namespace Podlove\Modules\ImportExport;
 
 use Podlove\Model;
+use Podlove\Modules\ImportExport\Exporter;
 
 class Importer {
 
@@ -18,7 +19,7 @@ class Importer {
 	public function import() {
 
 		$this->xml = simplexml_load_file($this->file);
-		$this->xml->registerXPathNamespace('wpe', \Podlove\Exporter::XML_NAMESPACE);
+		$this->xml->registerXPathNamespace('wpe', Exporter::XML_NAMESPACE);
 
 		$this->importEpisodes();
 		$this->importOptions();
@@ -27,6 +28,11 @@ class Importer {
 		$this->importFileTypes();
 		$this->importMediaFiles();
 		$this->importTemplates();
+
+		do_action('podlove_xml_import', $this->xml);
+
+		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
+		exit;
 	}
 
 	private function importEpisodes()
