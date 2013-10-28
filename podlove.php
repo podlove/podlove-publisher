@@ -5,7 +5,7 @@
  * Description: The one and only next generation podcast feed generator. Seriously. It's magical and sparkles a lot.
  * Version:     1.8.11-alpha
  * Author:      eteubert
- * Author URI:  eric@ericteubert.de
+ * Author URI:  http://podlove.org
  * License:     MIT
  * License URI: license.txt
  * Text Domain: podlove
