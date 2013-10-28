@@ -23,6 +23,7 @@ class Importer {
 		// TODO: clean podlove tables beforehand?
 
 		$this->importEpisodes();
+		$this->importOptions();
 		$this->importTemplates();
 	}
 
@@ -42,6 +43,14 @@ class Importer {
 			} else {
 				// no matching post found
 			}
+		}
+	}
+
+	private function importOptions()
+	{
+		$options = $this->xml->xpath('//wpe:options')[0]->children('wpe', true);
+		foreach ($options as $option) {
+			update_option($option->getName(), maybe_unserialize((string) $option));
 		}
 	}
 
