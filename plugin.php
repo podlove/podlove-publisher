@@ -790,25 +790,3 @@ add_action( 'admin_print_styles', function () {
 	wp_enqueue_style( 'podlove-admin-font' );
 } );
 
-// hook into export feature
-add_action('init', function() {
-
-	if (!is_admin())
-		return;
-
-	if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
-		$exporter = new Exporter;
-		$exporter->download();
-		exit;
-	}
-
-});
-
-// ensure the importer keeps the mapping id for old<->new post id
-add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
-	$postmetas[] = array(
-		'key' => 'import_id',
-		'value' => $post_id
-	);
-	return $postmetas;
-}, 10, 3 );
