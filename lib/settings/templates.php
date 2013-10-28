@@ -148,7 +148,12 @@ class Templates {
 
 	private function view_template() {
 
-		echo __( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed <a href="https://github.com/podlove/podlove-publisher#shortcodes" target="_blank">Shortcode</a> as the episode content.', 'podlove' );
+		echo sprintf(
+			__( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed %sShortcode%s as the episode content.', 'podlove' ),
+			'<a href="http://docs.podlove.org/publisher/shortcodes/" target="_blank">',
+			'</a>'
+			)
+		;
 
 		$table = new \Podlove\Template_List_Table();
 		$table->prepare_items();

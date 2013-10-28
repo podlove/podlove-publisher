@@ -25,7 +25,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			if($this->get_module_option('adn_auth_key') == "") {
 				$description = '<i class="podlove-icon-remove"></i> '
 	    		             . __( 'You need to allow Podlove Publisher to access your App.net account. To do so please start the authorization process, follow the instructions and paste the obtained code in the field above.', 'podlove' )
-	    		             . '<br><a href="http://auth.podlove.org/adn.php?step=1" class="button button-primary" target="_blank">' . __( 'Start authorization process now', 'podlove' ) . '</a>';
+	    		             . '<br><a href="https://auth.podlove.org/adn.php?step=1" class="button button-primary" target="_blank">' . __( 'Start authorization process now', 'podlove' ) . '</a>';
 				$this->register_option( 'adn_auth_key', 'string', array(
 				'label'       => __( 'Authorization', 'podlove' ),
 				'description' => $description,
@@ -160,8 +160,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						<div style="clear: both"></div>
 					</div>
 
-					<script type="text/javascript" src="<?php echo $this->get_module_url() ?>/adn.js"></script>
-					<link rel="stylesheet" type="text/css" href="<?php echo $this->get_module_url() ?>/adn.css" />
+					<script type="text/javascript" src="<?php echo $module_url ?>/adn.js"></script>
+					<link rel="stylesheet" type="text/css" href="<?php echo $module_url ?>/adn.css" />
 					<?php
 				}
 			) );
