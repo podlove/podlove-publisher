@@ -79,6 +79,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.8.11 =
 * Feature: New module for Import/Export. Now you can easily move all your podcast data to another WordPress instance.
+* Feature: Add support for `<itunes:complete>` tag. If there won't be any additional episodes, you can go to `Podlove > Podcast Settings` and activate this setting.
 * Bugfix: Bundle crt file to avoid StartSSL trust issues.
 
 = 1.8.10 =
