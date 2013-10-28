@@ -22,6 +22,7 @@ class Importer {
 
 		$this->importEpisodes();
 		$this->importOptions();
+		$this->importAssets();
 		$this->importFeeds();
 		$this->importFileTypes();
 		$this->importMediaFiles();
@@ -55,6 +56,22 @@ class Importer {
 		foreach ($options as $option) {
 			update_option($option->getName(), maybe_unserialize((string) $option));
 		}
+	}
+
+	private function importAssets()
+	{
+		Model\EpisodeAsset::delete_all();
+
+		$assets = $this->xml->xpath('//wpe:asset');
+		foreach ($assets as $asset) {
+			$new_asset = new Model\EpisodeAsset;
+
+			foreach ($asset->children('wpe', true) as $attribute) {
+				$new_asset->{$attribute->getName()} = self::escape((string) $attribute);
+			}
+
+			$new_asset->save();
+		}		
 	}
 
 	private function importFeeds()
