@@ -22,6 +22,7 @@ class Importer {
 
 		$this->importEpisodes();
 		$this->importOptions();
+		$this->importFeeds();
 		$this->importFileTypes();
 		$this->importMediaFiles();
 		$this->importTemplates();
@@ -30,7 +31,7 @@ class Importer {
 	private function importEpisodes()
 	{
 		Model\Episode::delete_all();
-		
+
 		$episodes = $this->xml->xpath('//wpe:episode');
 		foreach ($episodes as $episode) {
 			$new_episode = new Model\Episode;
@@ -54,6 +55,22 @@ class Importer {
 		foreach ($options as $option) {
 			update_option($option->getName(), maybe_unserialize((string) $option));
 		}
+	}
+
+	private function importFeeds()
+	{
+		Model\Feed::delete_all();
+
+		$feeds = $this->xml->xpath('//wpe:feed');
+		foreach ($feeds as $feed) {
+			$new_feed = new Model\Feed;
+
+			foreach ($feed->children('wpe', true) as $attribute) {
+				$new_feed->{$attribute->getName()} = self::escape((string) $attribute);
+			}
+
+			$new_feed->save();
+		}		
 	}
 
 	private function importFileTypes()
