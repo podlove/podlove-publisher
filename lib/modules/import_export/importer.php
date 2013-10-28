@@ -58,7 +58,8 @@ class Importer {
 
 	private function importOptions()
 	{
-		$options = $this->xml->xpath('//wpe:options')[0]->children('wpe', true);
+		$wpe_options = $this->xml->xpath('//wpe:options');
+		$options = $wpe_options[0]->children('wpe', true);
 		foreach ($options as $option) {
 			update_option($option->getName(), maybe_unserialize((string) $option));
 		}
