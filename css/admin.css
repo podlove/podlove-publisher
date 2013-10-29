@@ -65,3 +65,61 @@ i.rotate {
 	font-family: monospace;
 	resize: none;
 }
+
+/* Podlove Podcast License */
+
+tr.row_podlove_podcast_license_other_url,
+tr.row_podlove_podcast_license_other_name,
+tr.row_podlove_podcast_license_cc_allow_modifications,
+tr.row_podlove_podcast_license_cc_allow_commercial_use,
+tr.row_podlove_podcast_license_cc_license_jurisdiction,
+tr.row_podlove_podcast_license_preview {
+	display: none;
+}
+
+div.podlove_cc_license, div.podlove_license {
+	display: block;
+	width: 300px;
+	border: 1px solid #DDD;
+	text-align: center;
+	padding: 10px;
+}
+
+div.row__podlove_meta_license_other_name,
+div.row__podlove_meta_license_other_url,
+div.row__podlove_meta_license_cc_allow_modifications,
+div.row__podlove_meta_license_cc_allow_commercial_use,
+div.row__podlove_meta_license_cc_license_jurisdiction {
+	display: none;
+}
+
+div.row__podlove_meta_license_other_name input,
+div.row__podlove_meta_license_other_url input,
+div.row__podlove_meta_license_cc_allow_modifications select,
+div.row__podlove_meta_license_cc_allow_commercial_use select,
+div.row__podlove_meta_license_cc_license_jurisdiction select {
+	width: 240px;
+}
+
+div.row__podlove_meta_license_other_name div,
+div.row__podlove_meta_license_other_url div,
+div.row__podlove_meta_license_cc_allow_modifications div,
+div.row__podlove_meta_license_cc_allow_commercial_use div,
+div.row__podlove_meta_license_cc_license_jurisdiction div {
+	display: inline-block;
+	margin: 0px 0px 0.5em 0px;
+}
+
+div.row__podlove_meta_license_other_name label,
+div.row__podlove_meta_license_other_url label,
+div.row__podlove_meta_license_cc_allow_modifications label,
+div.row__podlove_meta_license_cc_allow_commercial_use label,
+div.row__podlove_meta_license_cc_license_jurisdiction label {
+	width: 130px;
+	display: inline-block;
+	margin-left: 1em;
+}
+
+div.row__podlove_meta_license_type {
+	margin: 0px 0px 1em 0px;
+}

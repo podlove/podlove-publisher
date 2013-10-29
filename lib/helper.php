@@ -5,30 +5,30 @@ namespace Podlove;
  * strpos wrapper that prefers mb_strpos but falls back to strpos.
  */
 function strpos($haystack, $needle, $offset = 0, $encoding = 'UTF-8') {
-	if (function_exists('mb_strpos'))
-		return mb_strpos($haystack, $needle, $offset, $encoding);
-	else
-		return strpos($haystack, $needle, $offset);
+  if (function_exists('mb_strpos'))
+    return mb_strpos($haystack, $needle, $offset, $encoding);
+  else
+    return strpos($haystack, $needle, $offset);
 }
 
 /**
  * strlen wrapper that prefers mb_strlen but falls back to strlen.
  */
 function strlen($str, $encoding = 'UTF-8') {
-	if (function_exists('mb_strlen'))
-		return mb_strlen($str, $encoding);
-	else
-		return strlen($str);
+  if (function_exists('mb_strlen'))
+    return mb_strlen($str, $encoding);
+  else
+    return strlen($str);
 }
 
 /**
  * substr wrapper that prefers mb_substr but falls back to substr.
  */
 function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
-	if (function_exists('mb_substr'))
-		return mb_substr($str, $start, $length, $encoding);
-	else
-		return substr($str, $start, $length);
+  if (function_exists('mb_substr'))
+    return mb_substr($str, $start, $length, $encoding);
+  else
+    return substr($str, $start, $length);
 }
 
 function format_bytes( $size, $decimals = 2 ) {
@@ -229,6 +229,142 @@ function build_for( $object, $args, $callback ) {
 	<?php endif ?>
 	
 	<?php
+}
+
+namespace Podlove\License;
+
+function version_per_country_cc() {
+	$version_per_country_cc = array(
+		'international' => array("version" => "3.0", "name" => "Unported"),
+		'ar' => array("version" => "2.5"),
+		'au' => array("version" => "3.0"),
+		'at' => array("version" => "3.0"),
+		'be' => array("version" => "2.0"),
+		'br' => array("version" => "3.0"),
+		'bg' => array("version" => "2.5"),
+		'ca' => array("version" => "2.5"),
+		'cl' => array("version" => "3.0"),
+		'cn' => array("version" => "3.0"),
+		'co' => array("version" => "2.5"),
+		'cr' => array("version" => "3.0"),
+		'hr' => array("version" => "3.0"),
+		'cz' => array("version" => "3.0"),
+		'dk' => array("version" => "2.5"),
+		'ec' => array("version" => "3.0"),
+		'eg' => array("version" => "3.0"),
+		'ee' => array("version" => "3.0"),
+		'fi' => array("version" => "1.0"),
+		'fr' => array("version" => "3.0"),
+		'de' => array("version" => "3.0"),
+		'gr' => array("version" => "3.0"),
+		'gt' => array("version" => "3.0"),
+		'hk' => array("version" => "3.0"),
+		'hu' => array("version" => "2.5"),
+		'igo' => array("version" => "3.0"),
+		'in' => array("version" => "2.5"),
+		'ie' => array("version" => "3.0"),
+		'il' => array("version" => "2.5"),
+		'it' => array("version" => "3.0"),
+		'jp' => array("version" => "2.1"),
+		'lu' => array("version" => "3.0"),
+		'mk' => array("version" => "2.5"),
+		'my' => array("version" => "2.5"),
+		'mt' => array("version" => "2.5"),
+		'mx' => array("version" => "2.5"),
+		'nl' => array("version" => "3.0"),
+		'nz' => array("version" => "3.0"),
+		'no' => array("version" => "3.0"),
+		'pe' => array("version" => "2.5"),
+		'ph' => array("version" => "3.0"),
+		'pl' => array("version" => "3.0"),
+		'pt' => array("version" => "3.0"),
+		'pr' => array("version" => "3.0"),
+		'ro' => array("version" => "3.0"),
+		'rs' => array("version" => "3.0"),
+		'sg' => array("version" => "3.0"),
+		'si' => array("version" => "2.5"),
+		'za' => array("version" => "2.5"),
+		'kp' => array("version" => "2.0"),
+		'es' => array("version" => "3.0"),
+		'se' => array("version" => "2.5"),
+		'ch' => array("version" => "3.0"),
+		'tw' => array("version" => "3.0"),
+		'th' => array("version" => "3.0"),
+		'gb' => array("version" => "2.0"),
+		'gb_sc' => array("version" => "2.5"),
+		'ug' => array("version" => "3.0"),
+		'us' => array("version" => "3.0"),
+		'vn' => array("version" => "3.0")		
+	);
+	asort( $version_per_country_cc );
+	return $version_per_country_cc;
+}
+
+function locales_cc() {
+	$locales = array(
+		'international' => "International",
+		'ar' => "Argentina",
+		'au' => "Australia",
+		'at' => "Austria",
+		'be' => "Belgium",
+		'br' => "Brazil",
+		'bg' => "Bulgaria",
+		'ca' => "Canada",
+		'cl' => "Chile",
+		'cn' => "China Mainland",
+		'co' => "Colombia",
+		'cr' => "Costa Rica",
+		'hr' => "Croatia",
+		'cz' => "Czech Republic",
+		'dk' => "Denmark",
+		'ec' => "Ecuador",
+		'eg' => "Egypt",
+		'ee' => "Estonia",
+		'fi' => "Finland",
+		'fr' => "France",
+		'de' => "Germany",
+		'gr' => "Greece",
+		'gt' => "Guatemala",
+		'hk' => "Hong Kong",
+		'hu' => "Hungary",
+		'igo' => "IGO",
+		'in' => "India",
+		'ie' => "Ireland",
+		'il' => "Israel",
+		'it' => "Italy",
+		'jp' => "Japan",
+		'lu' => "Luxembourg",
+		'mk' => "Macedonia",
+		'my' => "Malaysia",
+		'mt' => "Malta",
+		'mx' => "Mexico",
+		'nl' => "Netherlands",
+		'nz' => "New Zealand",
+		'no' => "Norway",
+		'pe' => "Peru",
+		'ph' => "Philippines",
+		'pl' => "Poland",
+		'pt' => "Portugal",
+		'pr' => "Puerto Rico",
+		'ro' => "Romania",
+		'rs' => "Serbia",
+		'sg' => "Singapore",
+		'si' => "Slovenia",
+		'za' => "South Africa",
+		'kp' => "South Korea",
+		'es' => "Spain",
+		'se' => "Sweden",
+		'ch' => "Switzerland",
+		'tw' => "Taiwan",
+		'th' => "Thailand",
+		'gb' => "UK: England & Wales",
+		'gb_sc' => "UK: Scotland",
+		'ug' => "Uganda",
+		'us' => "United States",
+		'vn' => "Vietnam"
+	);
+	asort( $locales );
+	return $locales;
 }
 
 namespace Podlove\Locale;
