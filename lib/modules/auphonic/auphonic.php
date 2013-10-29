@@ -353,7 +353,12 @@ class Auphonic extends \Podlove\Modules\Base {
 				curl_setopt($ch, CURLOPT_POSTFIELDS, array(  
 					   "redirect_uri" => get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle',                                                                      
 					   "code" => $_GET["code"]));                                                              
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+
+				// verify against startssl crt
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+				curl_setopt($ch, CURLOPT_CAINFO, \Podlove\PLUGIN_DIR . '/cert/podlove.crt');
 			
 				$result = curl_exec($ch);
 						
