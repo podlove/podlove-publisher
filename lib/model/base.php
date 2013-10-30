@@ -551,4 +551,9 @@ abstract class Base
 		global $wpdb;
 		$wpdb->query( 'DROP TABLE ' . self::table_name() );
 	}
+
+	public static function delete_all() {
+	    global $wpdb;
+	    $wpdb->query( 'TRUNCATE ' . self::table_name() );  
+	}
 }
