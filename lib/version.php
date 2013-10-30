@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 46 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 47 );
 
 add_action( 'init', function () {
 	
@@ -352,7 +352,7 @@ function run_migrations_for_version( $version ) {
 			delete_transient('podlove_auphonic_user');
 			delete_transient('podlove_auphonic_presets');
 		break;
-		case 46:
+		case 47:
             $table_name = \Podlove\Model\template::table_name();
             // Preliminary work (Update Table Structure) for the furture template system
             $sql_add_type_to_template_table = sprintf(
