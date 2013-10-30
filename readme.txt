@@ -79,6 +79,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.8.12 =
 * Feature: Update Web Player to 2.0.17
+* Bugfix: Fix PHP 5.3 issue in import module
 
 = 1.8.11 =
 * Feature: New module for Import/Export. Now you can easily move all your podcast data to another WordPress instance.
