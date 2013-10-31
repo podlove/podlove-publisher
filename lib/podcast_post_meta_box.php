@@ -157,11 +157,11 @@ class Podcast_Post_Meta_Box {
 							$podlove_license = array('cc' => 'Creative Commons', 'other' => $podcast_license_informations['license_attributes']['license_name'].' (Standard)');
 						break;
 						default :
-							$podlove_license = FALSE;
+							$podlove_license = array('cc' => 'Creative Commons', 'other' => 'Other');
 						break;
 					}
 
-					if(is_array($podlove_license)) {
+					if($podcast_license_informations['license_type'] !== "") {
 						$wrapper->select( 'license_type', array(
 							'label'       => __( 'License', 'podlove' ),
 							'options' 	  => $podlove_license,
@@ -171,7 +171,14 @@ class Podcast_Post_Meta_Box {
 							'description' => '<span id="podlove_podcast_license_status"><a href="javascript:podlove_toggle_license_form(\''.$podcast_license_informations['license_type'].'\')">Edit</a> the selected license for the current episode.</span>'
  						));
 					} else {
-						echo "<i class=\"podlove-icon-remove\"></i>  You need to setup your license properly.";
+						$wrapper->select( 'license_type', array(
+							'label'       => __( 'License', 'podlove' ),
+							'options' 	  => $podlove_license,
+							'html' => array( 'style' => 'width: 300px;'),
+							'please_choose' => true,
+							'default' => $podcast_license_informations['license_type'],
+							'description' => '<span id="podlove_podcast_license_status"></span>'
+ 						));						
 					}
 
 					echo "<div id=\"podlove_episode_license_wrapper\">";
@@ -207,13 +214,13 @@ class Podcast_Post_Meta_Box {
 						$episode_license_url = FALSE;
 					}
 
-					$wrapper->string( 'license_other_name', array(
+					$wrapper->string( 'license_name', array(
 						'label'       => __( 'License Name', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' ),
 						'default' => $episode_license_name
 					) );
 
-					$wrapper->string( 'license_other_url', array(
+					$wrapper->string( 'license_url', array(
 						'label'       => __( 'License URL', 'podlove' ),
 						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' ),
@@ -277,15 +284,15 @@ class Podcast_Post_Meta_Box {
 			license.form_row_cc_preview = 'div.row__podlove_podcast_license_preview';
 
 			license.form_type = '#_podlove_meta_license_type';
-			license.form_other_name = '#_podlove_meta_license_other_name';
-			license.form_other_url = '#_podlove_meta_license_other_url';
+			license.form_other_name = '#_podlove_meta_license_name';
+			license.form_other_url = '#_podlove_meta_license_url';
 			license.form_cc_commercial_use = '#_podlove_meta_license_cc_allow_commercial_use';
 			license.form_cc_modification = '#_podlove_meta_license_cc_allow_modifications';
 			license.form_cc_jurisdiction = '#_podlove_meta_license_cc_license_jurisdiction';
 			license.form_cc_preview = '#podlove_podcast_license_preview';
 
-			license.form_row_other_name = 'div.row__podlove_meta_license_other_name';
-			license.form_row_other_url = 'div.row__podlove_meta_license_other_url';
+			license.form_row_other_name = 'div.row__podlove_meta_license_name';
+			license.form_row_other_url = 'div.row__podlove_meta_license_url';
 			license.form_row_cc_commercial_use = 'div.row__podlove_meta_license_cc_allow_commercial_use';
 			license.form_row_cc_modification = 'div.row__podlove_meta_license_cc_allow_modifications';
 			license.form_row_cc_jurisdiction = 'div.row__podlove_meta_license_cc_license_jurisdiction';

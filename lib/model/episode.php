@@ -210,8 +210,8 @@ class Episode extends Base {
 			default :
 				return array(
 					'license_type' => $license_type, 
-					'license_attributes' => array(	'license_name' => $this->license_other_name,
-													'license_url' => $this->license_other_url)
+					'license_attributes' => array(	'license_name' => $this->license_name,
+													'license_url' => $this->license_url)
 											);
 			break;
 		}
@@ -266,18 +266,18 @@ class Episode extends Base {
 				}
 			break;
 			case 'other' :
-				if($this->license_other_name != "" AND $this->license_other_url != "") {
+				if($this->license_name != "" AND $this->license_url != "") {
 					return "<div class=\"podlove_license\">
-								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_other_url."\">".$this->license_other_name."</a> license.</p>
+								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_url."\">".$this->license_name."</a> license.</p>
 							</div>";
 				} else {
-					return "<span style='color: red;'>This work is (not yet) licensed, as license parameters are missing!</span>";
+					$podcast = \Podlove\Model\Podcast::get_instance();
+					return $podcast->license();
 				}
 			break;
 			default :
-				return "<div class=\"podlove_license\">
-							<p><span style='color: red;'>This work is (not yet) licensed, as no license was chosen.</span></p>
-						</div>";
+				$podcast = \Podlove\Model\Podcast::get_instance();
+				return $podcast->license();
 			break;
 		}
 	}	
@@ -295,8 +295,8 @@ Episode::property( 'chapters', 'TEXT' );
 Episode::property( 'record_date', 'DATETIME' );
 Episode::property( 'publication_date', 'DATETIME' );
 Episode::property( 'license_type', 'VARCHAR(255)' );
-Episode::property( 'license_other_name', 'TEXT' );
-Episode::property( 'license_other_url', 'TEXT' );
+Episode::property( 'license_name', 'TEXT' );
+Episode::property( 'license_url', 'TEXT' );
 Episode::property( 'license_cc_allow_modifications', 'TEXT' );
 Episode::property( 'license_cc_allow_commercial_use', 'TEXT' );
 Episode::property( 'license_cc_license_jurisdiction', 'TEXT' );

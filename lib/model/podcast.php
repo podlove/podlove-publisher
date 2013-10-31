@@ -174,8 +174,8 @@ class Podcast {
 																								'jurisdiction' => $this->license_cc_license_jurisdiction));
 			break;
 			default :
-				return array('license_type' => $license_type, 'license_attributes' => array(	'license_name' => $this->license_other_name,
-																								'license_url' => $this->license_other_url));
+				return array('license_type' => $license_type, 'license_attributes' => array(	'license_name' => $this->license_name,
+																								'license_url' => $this->license_url));
 			break;
 		}
 	}
@@ -237,9 +237,9 @@ class Podcast {
 				}
 			break;
 			case 'other' :
-				if($this->license_other_name != "" AND $this->license_other_url != "") {
+				if($this->license_name != "" AND $this->license_url != "") {
 					return "<div class=\"podlove_license\">
-								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_other_url."\">".$this->license_other_name."</a> license.</p>
+								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_url."\">".$this->license_name."</a> license.</p>
 							</div>";
 				} else {
 					return "<span style='color: red;'>This work is (not yet) licensed, as license parameters are missing!</span>";
@@ -269,8 +269,8 @@ $podcast->property( 'owner_email' );
 $podcast->property( 'publisher_name' );
 $podcast->property( 'publisher_url' );
 $podcast->property( 'license_type' );
-$podcast->property( 'license_other_name' );
-$podcast->property( 'license_other_url' );
+$podcast->property( 'license_name' );
+$podcast->property( 'license_url' );
 $podcast->property( 'license_cc_allow_modifications' );
 $podcast->property( 'license_cc_allow_commercial_use' );
 $podcast->property( 'license_cc_license_jurisdiction' );
