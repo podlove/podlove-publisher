@@ -16,6 +16,10 @@ class Feed {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+		
+		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_feeds_settings_handle" && isset( $_GET["update_settings"] ) && $_GET["update_settings"] == "true") {
+		   	add_action('admin_bar_init', array( $this, 'save_global_feed_setting'));
+		}  
 	}
 
 	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {
@@ -149,7 +153,7 @@ class Feed {
 		$table->display();
 		?>
 
-			<form method="post" action="options.php">
+			<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_settings=true">
 				<?php settings_fields( Podcast::$pagehook ); ?>
 
 				<?php
@@ -185,6 +189,13 @@ class Feed {
 				?>
 			</form>
 		<?php
+	}
+
+	public function save_global_feed_setting() {
+  		$podcast_settings = get_option('podlove_podcast');
+  		$podcast_settings['limit_items'] = $_REQUEST['podlove_podcast']['limit_items'];
+  		update_option('podlove_podcast', $podcast_settings);
+		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
 	}
 	
 	private function form_template( $feed, $action, $button_text = NULL ) {
