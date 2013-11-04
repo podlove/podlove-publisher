@@ -220,7 +220,8 @@ class Contributors {
 			$wrapper->select( 'role', array(
 				'label'       => __( 'Default role', 'podlove' ),
 				'description' => 'The default role of the conributor.',
-				'options'     => ContributorRole::selectOptions()
+				'options'     => ContributorRole::selectOptions(),
+				'please_choose_text' => __( '- none -', 'podlove' )
 			) );
 
 			$wrapper->string( 'guid', array(

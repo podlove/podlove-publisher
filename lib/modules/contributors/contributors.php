@@ -258,6 +258,7 @@ class Contributors extends \Podlove\Modules\Base {
 				<td>{{contributor-name}}</td>
 				<td>
 					<select name="<?php echo $form_base_name ?>[{{contributor-id}}][role]" class="chosen">
+						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
 						<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
 							<option value="<?php echo $role_slug ?>"><?php echo $role_title ?></option>
 						<?php endforeach; ?>
