@@ -352,11 +352,12 @@ class Contributors extends \Podlove\Modules\Base {
 					});
 
 					$(document).ready(function() {
-						update_contributor_list();
 
 						$.each(existing_contributions, function(index, contributor_id) {
 							add_contributor_row(PODLOVE.Contributors[contributor_id]);
 						});
+						
+						update_contributor_list();
 
 						$("#contributors_table_body td").each(function(){
 						    $(this).css('width', $(this).width() +'px');
