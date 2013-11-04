@@ -252,7 +252,7 @@ class Templates {
 
 <span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
 
-Published by <a href="[podlove-podcast field="publisher_url"]" target="_blank">[podlove-podcast field="publisher_name"]</a> under <a href="[podlove-podcast field="license_url"]" target="_blank">[podlove-podcast field="license_name"]</a>.
+[podlove-podcast-license]
 EOT
 			) );
 

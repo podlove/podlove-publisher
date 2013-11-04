@@ -87,7 +87,15 @@ class RSS {
 				return $posts_per_page;
 			} );
 		} else {
-			add_filter( 'post_limits', function( $limits ) { return ''; } );
+			switch ($posts_per_page) {
+				case '-2' :
+					add_filter( 'post_limits', function( $limits ) use ( $podcast ) { return 'LIMIT '.$podcast->limit_items; } );
+				break;
+				case '-1' :
+					add_filter( 'post_limits', function( $limits ) { return ''; } );
+				break;
+			}
+			
 		}
 
 		$args = array_merge( $wp_query->query_vars, $args );
