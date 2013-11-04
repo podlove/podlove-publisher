@@ -74,7 +74,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$columns = array(
 			'realname'         => __( 'Real Name', 'podlove' ),
 			'publicname'         => __( 'Public Name', 'podlove' ),
-			'role'         	=> __( 'Role', 'podlove' ),
+			'role'         	=> __( 'Default Role', 'podlove' ),
 			'slug'         	=> __( 'ID', 'podlove' ),
 			'privateemail'         	=> __( 'Private E-mail', 'podlove' ),
 			'permanentcontributor'	=> __( 'Permanent Contributor', 'podlove' ),
