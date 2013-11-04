@@ -199,6 +199,7 @@ class Podcast {
 						'default'     => false
 					) );
 
+					$wrapper->hidden( 'limit_items', array() );
 
 				});
 				?>
