@@ -180,7 +180,7 @@ class Contributors extends \Podlove\Modules\Base {
 	public function podcast_form_extension_form()
 	{
 		$contributions = ShowContribution::all();
-		self::ontributors_form_table($contributions, 'podlove_podcast[contributor]');
+		self::contributors_form_table($contributions, 'podlove_podcast[contributor]');
 	}
 
 	public function save_setting($old, $new)
