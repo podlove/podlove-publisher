@@ -207,8 +207,8 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
 
-		$itunes_explicit = apply_filters( 'podlove_feed_content', strip_tags( $episode->explicit ) );
-		$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $episode->explicit == 2) ? 'clean' : ( ( $episode->explicit ) ? 'yes' : 'no' ) );
+		$itunes_explicit = apply_filters( 'podlove_feed_content', ( $episode->explicit == 2) ? 'clean' : ( ( $episode->explicit ) ? 'yes' : 'no' ) ) );
+		$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', $itunes_explicit );
 		echo apply_filters( 'podlove_feed_itunes_explicit', $itunes_explicit );
 
 		if ( $cover_art_url ) {
