@@ -207,3 +207,4 @@ Episode::property( 'cover_art', 'VARCHAR(255)' );
 Episode::property( 'chapters', 'TEXT' );
 Episode::property( 'record_date', 'DATETIME' );
 Episode::property( 'publication_date', 'DATETIME' );
+Episode::property( 'explicit', 'TINYINT' ); // listed in podcast directories or not?
