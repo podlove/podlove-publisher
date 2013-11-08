@@ -134,7 +134,7 @@ class WebPlayer {
 
 		$settings = array(
 			'inject' => array(
-				'label'       => __( 'Insert automatically', 'podlove' ),
+				'label'       => __( 'Insert player automatically', 'podlove' ),
 				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-web-player]</code>.', 'podlove' ),
 				'options'     => array(
 					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
