@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.8.13 =
+* Feature: Update Web Player to 2.0.17 (for realsies). It fixes an issue with icon/font display.
+
 = 1.8.12 =
 * Feature: Update Web Player to 2.0.17
 * Bugfix: Fix PHP 5.3 issue in import module
