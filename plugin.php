@@ -460,10 +460,26 @@ function override404() {
 			$parsed_redirect_url .= "?" . $parsed_url['query'];
 
 		if ( untrailingslashit( $parsed_redirect_url ) === untrailingslashit( $parsed_request_url ) ) {
-			status_header( 301 );
-			$wp_query->is_404 = false;
-			\wp_redirect( $redirect['to'], 301 );
-			exit;
+			switch ($redirect['code']) {
+				case '301' :
+					status_header( 301 );
+					$wp_query->is_404 = false;
+					\wp_redirect( $redirect['to'], 301 );
+					exit;
+				break;
+				case '307' :
+					status_header( 307 );
+					$wp_query->is_404 = false;
+					\wp_redirect( $redirect['to'], 307 );
+					exit;
+				break;
+				default :
+					status_header( 301 );
+					$wp_query->is_404 = false;
+					\wp_redirect( $redirect['to'], 301 );
+					exit;
+				break;
+			}
 		}
 	}
 
