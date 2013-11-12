@@ -22,6 +22,7 @@ class Contributors extends \Podlove\Modules\Base {
 		// register settings page
 		add_action('podlove_register_settings_pages', function($settings_parent) {
 			new Settings\Contributors($settings_parent);
+			new Settings\ContributorRoles($settings_parent);
 		});
 	}
 	
