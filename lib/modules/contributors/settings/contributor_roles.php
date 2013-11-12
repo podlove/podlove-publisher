@@ -2,7 +2,7 @@
 namespace Podlove\Modules\Contributors\Settings;
 
 use Podlove\Model;
-use Podlove\Modules\Contributors\ContributorRole;
+use Podlove\Modules\Contributors\Model\ContributorRole;
 
 class ContributorRoles {
 

@@ -1,7 +1,11 @@
 <?php 
 namespace Podlove\Modules\Contributors;
 
-use \Podlove\Model;
+use \Podlove\Model\Episode;
+use Model\Contributor;
+use Model\ContributorRole;
+use Model\EpisodeContribution;
+use Model\ShowContribution;
 
 class Contributors extends \Podlove\Modules\Base {
 
@@ -51,7 +55,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 	public function migrate_contributors( $module_name ) {
 
-		$episodes = \Podlove\Model\Episode::all();
+		$episodes = \Podlove\Episode::all();
 		$posted_contributors = array();
 
 		$args = array(
@@ -110,19 +114,19 @@ class Contributors extends \Podlove\Modules\Base {
 		if (!$post_id || !isset($_POST["episode_contributor"]))
 			return;
 		
-		$episode = Model\Episode::find_one_by_post_id($post_id);
+		$episode = Episode::find_one_by_post_id($post_id);
 
 		if (!$episode)
 			return;
 
-		foreach (EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
+		foreach (\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
 			$contribution->delete();
 		}
 
 		$position = 0;
 		foreach ($_POST["episode_contributor"] as $contributor_id => $contributor) {
-			$c = new EpisodeContribution;
-			$c->role_id = ContributorRole::find_one_by_slug($contributor['role'])->id;
+			$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
+			$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
 			$c->episode_id = $episode->id;
 			$c->contributor_id = $contributor_id;
 			$c->position = $position++;
@@ -136,20 +140,20 @@ class Contributors extends \Podlove\Modules\Base {
 			'callback' => function() {
 
 				$current_page = get_current_screen();
-				$episode = Model\Episode::find_one_by_post_id(get_the_ID());
+				$episode = Episode::find_one_by_post_id(get_the_ID());
 				
 				// determine existing contributions
 				$contributions = array();
 				if ($current_page->action == "add") {
-					$permanent_contributors = Contributor::find_all_by_property("permanentcontributor", "1");
+					$permanent_contributors = \Podlove\Modules\Contributors\Model\Contributor::find_all_by_property("permanentcontributor", "1");
 					foreach ($permanent_contributors as $permanent_contributor) {
-						$contrib = new EpisodeContribution;
+						$contrib = new \Podlove\Modules\Contributors\EpisodeContribution;
 						$contrib->contributor_id = $permanent_contributor->id;
-						$contrib->role = ContributorRole::find_by_id($permanent_contributor->role_id);
+						$contrib->role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id($permanent_contributor->role_id);
 						$contributions[] = $contrib;
 					}
 				} else {
-					$contributions = EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
+					$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
 				}
 
 				echo '</table>';
@@ -206,10 +210,10 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public static function contributors_form_table($current_contributions = array(), $form_base_name = 'episode_contributor') {
-		$contributors_roles = ContributorRole::selectOptions();
+		$contributors_roles = \Podlove\Modules\Contributors\Model\ContributorRole::selectOptions();
 
 		$cjson = array();
-		foreach (Contributor::all() as $contributor) {
+		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
 			$cjson[$contributor->id] = array(
 				'id'   => $contributor->id,
 				'slug' => $contributor->slug,
@@ -246,7 +250,7 @@ class Contributors extends \Podlove\Modules\Base {
 			<div id="add_new_contributor_wrapper">
 				<select id="add_new_contributor_selector" class="contributor-dropdown chosen">
 					<option value="0"><?php echo __('Choose Contributor', 'podlove') ?></option>
-					<?php foreach ( Contributor::all() as $contributor ): ?>
+					<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
 						<?php if (!in_array($contributor->id, array_map(function($c){ return $c->contributor_id; }, $current_contributions), true)): ?>
 							<option value="<?php echo $contributor->id ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->realname; ?></option>
 						<?php endif; ?>
