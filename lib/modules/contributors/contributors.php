@@ -42,7 +42,6 @@ class Contributors extends \Podlove\Modules\Base {
 				'comoderator' => 'Co-Moderator',
 				'guest' => 'Guest',
 				'shownotes' => 'Shownotes',
-				'camera' => 'Camera',
 				'chatmod' => 'Chat Moderator'
 			);
 			foreach ($default_contributors as $slug => $title) {
