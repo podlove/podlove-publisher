@@ -373,6 +373,16 @@ abstract class Base
 			}
 		}
 
+		if ( isset( $_REQUEST['passwords'] ) && is_array( $_REQUEST['passwords'] ) ) {
+			foreach ( $_REQUEST['passwords'] as $password ) {
+				if ( isset( $attributes[ $password ] ) && $attributes[ $password ] !== $_REQUEST[ 'field_filler_podlove_feed' ][ $password ] ) {
+					$this->$password = crypt($attributes[ $password ], SECURE_AUTH_SALT);
+				} else {
+					$feed = \Podlove\Model\Feed::find_one_by_id($this->id);
+					$this->$password = $feed->protection_password;
+				}
+			}
+		}
 		return $this->save();
 	}
 	
