@@ -279,8 +279,9 @@ class Feed {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
+			$podcast_settings = get_option('podlove_podcast');
 			$limit_options = array(
-				'-2' => __( "Use Podlove default", 'podlove' ),
+				'-2' => __( "Use Podlove default (".$podcast_settings['limit_items'].")", 'podlove' ),
 				'-1' => __( "No limit. Include all items.", 'podlove' ),
 				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
 			);
