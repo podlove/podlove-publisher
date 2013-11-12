@@ -468,9 +468,15 @@ function override404() {
 					exit;
 				break;
 				case '307' :
-					status_header( 307 );
-					$wp_query->is_404 = false;
-					\wp_redirect( $redirect['to'], 307 );
+					if( $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ) { // Fallback for HTTP 1.0
+						status_header( 302 );
+						$wp_query->is_404 = false;
+						\wp_redirect( $redirect['to'], 302 );	
+					} else {
+						status_header( 307 );
+						$wp_query->is_404 = false;
+						\wp_redirect( $redirect['to'], 307 );
+					}
 					exit;
 				break;
 				default :

@@ -78,8 +78,8 @@ class Redirects extends Tab {
 							</td>
 							<td>
 								<select name="podlove_redirects[podlove_setting_redirect][<?php echo $index + 1 ?>][code]">
-									<option value="301" selected>Permanent Redirect (HTTP Status 301)</option>
-									<option value="307">Temporary Redirect (HTTP Status 307)</option>
+									<option value="301">Permanent Redirect (HTTP Status 301)</option>
+									<option value="307" selected>Temporary Redirect (HTTP Status 307)</option>
 								</select>
 							</td>
 							<td class="delete">
