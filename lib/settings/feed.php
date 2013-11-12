@@ -251,6 +251,38 @@ class Feed {
 				'description' => __( 'Warning: Potentially creates huge feeds.', 'podlove' ),
 				'default'     => false
 			) );
+
+			$wrapper->subheader( __( 'Protection', 'podlove' ) );
+
+			$wrapper->checkbox( 'protected', array(
+				'label'       => __( 'Protect feed ', 'podlove' ),
+				'description' => __( 'The feed will be protected by HTTP Basic Authentication.', 'podlove' ),
+				'default'     => false
+			) );
+
+			$wrapper->select( 'protection_type', array(
+				'label'       => __( 'Method', 'podlove' ),
+				'description' => __( '', 'podlove' ),
+				'options' => array(
+					'0'   => 'Custom Login',
+					'1' => 'WordPress User database'
+				),
+				'default' => -1,
+				'please_choose' => true
+			) );
+
+			$wrapper->string( 'protection_user', array(
+				'label'       => __( 'Username', 'podlove' ),
+				'description' => '',
+				'html'        => array( 'class' => 'regular-text required' )
+			) );
+
+			$wrapper->password( 'protection_password', array(
+				'label'       => __( 'Password', 'podlove' ),
+				'description' => '',
+				'html'        => array( 'class' => 'regular-text required' )
+			) );
+
 		} );
 	}
 	

@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 45 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 46 );
 
 add_action( 'init', function () {
 	
@@ -351,6 +351,24 @@ function run_migrations_for_version( $version ) {
 		case 45:
 			delete_transient('podlove_auphonic_user');
 			delete_transient('podlove_auphonic_presets');
+		break;
+		case 46:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `protected` TINYINT(1) NULL',
+				\Podlove\Model\Feed::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `protection_type` TINYINT(1)',
+				\Podlove\Model\Feed::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `protection_user` VARCHAR(60)',
+				\Podlove\Model\Feed::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `protection_password` VARCHAR(64)',
+				\Podlove\Model\Feed::table_name()
+			) );
 		break;
 	}
 

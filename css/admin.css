@@ -65,3 +65,9 @@ i.rotate {
 	font-family: monospace;
 	resize: none;
 }
+
+tr.row_podlove_feed_protection_password,
+tr.row_podlove_feed_protection_user,
+tr.row_podlove_feed_protection_type {
+	display: none;
+}
