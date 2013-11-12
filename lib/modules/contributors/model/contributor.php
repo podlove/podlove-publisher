@@ -1,5 +1,5 @@
 <?php 
-namespace Podlove\Modules\Contributors;
+namespace Podlove\Modules\Contributors\Model;
 
 use \Podlove\Model\Base;
 

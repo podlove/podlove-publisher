@@ -50,7 +50,7 @@ class Contributor_Role_List_Table extends \Podlove\List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		
 		// retrieve data
-		$data = \Podlove\Modules\Contributors\ContributorRole::all( 'ORDER BY title ASC' );
+		$data = \Podlove\Modules\Contributors\Model\ContributorRole::all( 'ORDER BY title ASC' );
 		
 		// get current page
 		$current_page = $this->get_pagenum();
