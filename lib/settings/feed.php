@@ -280,8 +280,13 @@ class Feed {
 			) );
 
 			$podcast_settings = get_option('podlove_podcast');
+			if( $podcast_settings['limit_items'] < 0 ) {
+				$limit_default = 'No limit';
+			} else {
+				$limit_default = $podcast_settings['limit_items'];
+			}
 			$limit_options = array(
-				'-2' => __( "Use Podlove default (".$podcast_settings['limit_items'].")", 'podlove' ),
+				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove' ),
 				'-1' => __( "No limit. Include all items.", 'podlove' ),
 				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
 			);
