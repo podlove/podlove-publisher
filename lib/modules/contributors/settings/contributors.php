@@ -73,17 +73,19 @@ class Contributors {
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Contributors', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<?php
+				if(isset($_GET["action"])) {
+					switch ( $_GET["action"] ) {
+						case 'new':   $this->new_template();  break;
+						case 'edit':  $this->edit_template(); break;
+						default:      $this->view_template(); break;
+					}
+				} else {
+					$this->view_template();
+				}
+			?>
 		</div>	
 		<?php
-			if(isset($_GET["action"])) {
-				switch ( $_GET["action"] ) {
-					case 'new':   $this->new_template();  break;
-					case 'edit':  $this->edit_template(); break;
-					default:      $this->view_template(); break;
-				}
-			} else {
-				$this->view_template();
-			}
 	}
 	
 	/**
