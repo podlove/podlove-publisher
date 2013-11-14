@@ -77,16 +77,20 @@ function feed_authentication() {
 	exit;
 }
 
-function check_for_and_do_compression() {
-	if( strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE) {
-		// gzip not supported. Continue without compression
-	} else {
-		if ( !in_array('ob_gzhandler', ob_list_handlers()) ) {
-			ob_start("ob_gzhandler");
-		} else {
-			ob_start();
-		}
-	}
+function check_for_and_do_compression()
+{
+	// don't gzip if client doesn't accept it
+	if ( strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE)
+		return false;
+
+	// don't gzip if gzipping is already active
+	if (in_array('ob_gzhandler', ob_list_handlers()))
+		return false;
+
+	// ensure content type headers are set
+	header('Content-type: application/rss+xml');
+	// start gzipping
+	ob_start("ob_gzhandler");
 }
 
 add_action('pre_get_posts', function ( ) {
