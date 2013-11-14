@@ -77,8 +77,20 @@ function feed_authentication() {
 	exit;
 }
 
+function check_for_and_do_compression() {
+	if( strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE) {
+		// gzip not supported. Continue without compression
+	} else {
+		if ( !in_array('ob_gzhandler', ob_list_handlers()) ) {
+			ob_start("ob_gzhandler");
+		} else {
+			ob_start();
+		}
+	}
+}
+
 add_action('pre_get_posts', function ( ) {
-	global $wp_query;
+	global $wp_query;	
 	if( is_feed() ) {
 		$feedname = get_query_var('feed');
 		$feed = \Podlove\Model\Feed::find_one_by_property('slug', $feedname);
@@ -92,6 +104,7 @@ add_action('pre_get_posts', function ( ) {
 						// A local User/PW combination is set
 						if( $_SERVER['PHP_AUTH_USER'] == $feed->protection_user && crypt($_SERVER['PHP_AUTH_PW'], SECURE_AUTH_SALT) == $feed->protection_password) {
 							// let the script continue
+							check_for_and_do_compression();
 						} else {
 							feed_authentication();
 						}
@@ -104,6 +117,7 @@ add_action('pre_get_posts', function ( ) {
 							$userinfo = get_user_by( 'login', $_SERVER['PHP_AUTH_USER'] );
 							if( wp_check_password( $_SERVER['PHP_AUTH_PW'], $userinfo->data->user_pass, $userinfo->ID ) ) {
 								// let the script continue
+								check_for_and_do_compression();
 							} else {
 								feed_authentication();
 							}
