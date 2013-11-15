@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 47 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 48 );
 
 add_action( 'init', function () {
 	
@@ -410,6 +410,11 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` ADD COLUMN `protection_password` VARCHAR(64)',
 				\Podlove\Model\Feed::table_name()
 			) );
+		break;
+		case 48:
+			$podcast = Model\Podcast::get_instance();
+			$podcast->limit_items = '-1';
+			$podcast->save();
 		break;
 	}
 

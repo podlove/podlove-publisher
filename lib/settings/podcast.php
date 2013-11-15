@@ -201,6 +201,8 @@ class Podcast {
 					
 					do_action( 'podlove_podcast_form', $wrapper, $podcast );
 
+					$wrapper->hidden( 'limit_items', array() );
+
 				});
 				?>
 				
