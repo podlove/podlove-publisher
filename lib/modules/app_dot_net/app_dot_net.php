@@ -13,16 +13,25 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     
     		$module_url = $this->get_module_url();
     	
-    		if($this->get_module_option('adn_auth_key') !== "") {
+    		if ($this->get_module_option('adn_auth_key') !== "") {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
 				add_action('delayed_adn_post', array( $this, 'post_to_adn_delayer' ), 10, 2);
 			}
 			
-			if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
+			if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
     			add_action('admin_bar_init', array( $this, 'reset_adn_auth'));
     		}   
         
-			if($this->get_module_option('adn_auth_key') == "") {
+    		// Import all posts as already published
+    		add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
+    			$postmetas[] = array(
+    				'key' => '_podlove_episode_was_published',
+    				'value' => true
+    			);
+    			return $postmetas;
+    		}, 10, 3 );
+
+			if ($this->get_module_option('adn_auth_key') == "") {
 				$description = '<i class="podlove-icon-remove"></i> '
 	    		             . __( 'You need to allow Podlove Publisher to access your App.net account. To do so please start the authorization process, follow the instructions and paste the obtained code in the field above.', 'podlove' )
 	    		             . '<br><a href="https://auth.podlove.org/adn.php?step=1" class="button button-primary" target="_blank">' . __( 'Start authorization process now', 'podlove' ) . '</a>';
