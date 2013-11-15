@@ -28,6 +28,24 @@ class Feed_List_Table extends \Podlove\List_Table {
 		  . '<input type="hidden" class="feed_id" value="' . $feed->id . '">';;
 	}
 	
+	public function column_limit( $feed ) {
+		// FIXME: Feeds verschwinden beim Speichern!!!
+		switch ($feed->limit_items) {
+			case '0':
+				return get_option( 'posts_per_rss' ) . ' (WordPress default)';
+				break;
+			case '-1':
+				return 'unlimited';
+				break;
+			case '-2':
+				return \Podlove\Model\Podcast::get_instance()->limit_items . ' (global default)';
+				break;
+			default:
+				return $feed->limit_items;
+				break;
+		}
+	}
+
 	public function column_discoverable( $feed ) {
 		return $feed->discoverable ? '✓' : '×';
 	}
@@ -55,6 +73,7 @@ class Feed_List_Table extends \Podlove\List_Table {
 			'name'         => __( 'Feed', 'podlove' ),
 			'url'          => __( 'Subscribe URL', 'podlove' ),
 			'media'        => __( 'Media', 'podlove' ),
+			'limit'        => __( 'Item Limit', 'podlove' ),
 			'discoverable' => __( 'Discoverable', 'podlove' ),
 			'protected' => __( 'Protected', 'podlove' ),
 			'move'         => ''
