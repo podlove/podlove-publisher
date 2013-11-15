@@ -134,3 +134,9 @@ table.podlove_alternating tr:nth-child(even) {
 span.contributor_remove {
 	font-size: 1.6em;
 }	
+
+tr.row_podlove_feed_protection_password,
+tr.row_podlove_feed_protection_user,
+tr.row_podlove_feed_protection_type {
+	display: none;
+}
