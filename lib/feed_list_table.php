@@ -32,6 +32,10 @@ class Feed_List_Table extends \Podlove\List_Table {
 		return $feed->discoverable ? '✓' : '×';
 	}
 
+	public function column_protected( $feed ) {
+		return $feed->protected ? '✓' : '×';
+	}
+
 	public function column_url( $feed ) {
 		return $feed->get_subscribe_link();
 	}
@@ -52,6 +56,7 @@ class Feed_List_Table extends \Podlove\List_Table {
 			'url'          => __( 'Subscribe URL', 'podlove' ),
 			'media'        => __( 'Media', 'podlove' ),
 			'discoverable' => __( 'Discoverable', 'podlove' ),
+			'protected' => __( 'Protected', 'podlove' ),
 			'move'         => ''
 		);
 		return $columns;

@@ -63,6 +63,37 @@ jQuery(function($) {
 		PODLOVE.FeedSettings($(this));
 	});
 
+	$(".row_podlove_feed_protected").each(function() {
+		PODLOVE.ProtectFeed();
+	});
+
 	$(".autogrow").autogrow();
 	
 });
+
+
+PODLOVE.ProtectFeed = function() {
+	if( jQuery("#podlove_feed_protected:checked").val() == "on" ) {
+		jQuery("tr.row_podlove_feed_protection_type").show();
+	}
+	if( jQuery("#podlove_feed_protection_type").val() == "0" && jQuery("#podlove_feed_protected:checked").val() == "on" ) {
+		jQuery("tr.row_podlove_feed_protection_password,tr.row_podlove_feed_protection_user").show();
+	}
+	jQuery("#podlove_feed_protected").change(function() {
+		if( jQuery("#podlove_feed_protected:checked").val() == "on" ) {
+			jQuery("tr.row_podlove_feed_protection_type").show();
+			if( jQuery("#podlove_feed_protection_type").val() == "0" ) {
+				jQuery("tr.row_podlove_feed_protection_password,tr.row_podlove_feed_protection_user").show();
+			} 
+		} else {
+			jQuery("tr.row_podlove_feed_protection_type,tr.row_podlove_feed_protection_password,tr.row_podlove_feed_protection_user").hide();
+		}
+	});	
+	jQuery("#podlove_feed_protection_type").change(function() {
+		if( jQuery("#podlove_feed_protection_type").val() == "0" && jQuery("#podlove_feed_protected:checked").val() == "on" ) {
+			jQuery("tr.row_podlove_feed_protection_password,tr.row_podlove_feed_protection_user").show();
+		} else {
+			jQuery("tr.row_podlove_feed_protection_password,tr.row_podlove_feed_protection_user").hide();
+		}
+	});
+}
