@@ -379,7 +379,9 @@ function run_migrations_for_version( $version ) {
 					foreach ($contributors as $contributor) {
 						$new = new \Podlove\Modules\Contributors\Model\Contributor();
 						$new->publicname = $contributor->name;
+						$new->realname = $contributor->name;
 						$new->slug = $contributor->slug;
+						$new->showpublic = true;
 
 						$email = $contributor_settings[$contributor->term_id]['contributor_email'];
 						if ($email) {
