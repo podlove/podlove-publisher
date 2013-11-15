@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 45 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 46 );
 
 add_action( 'init', function () {
 	
@@ -351,6 +351,47 @@ function run_migrations_for_version( $version ) {
 		case 45:
 			delete_transient('podlove_auphonic_user');
 			delete_transient('podlove_auphonic_presets');
+		break;
+		case 46:
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+
+				// manually trigger activation if the old module was active
+				$module = \Podlove\Modules\Contributors\Contributors::instance();
+				$module->was_activated('contributors');
+
+				// then, migrate existing contributors
+				// register old taxonomy so it can be queried
+				$args = array(
+					'hierarchical'  => false,
+					'labels'        => array(),
+					'show_ui'       => true,
+					'show_tagcloud' => true,
+					'query_var'     => true,
+					'rewrite'       => array( 'slug' => 'contributor' ),
+				);
+
+				register_taxonomy( 'podlove-contributors', 'podcast', $args );
+				$contributor_settings = get_option( 'podlove_contributors', array() );
+
+				$contributors = get_terms( 'podlove-contributors', array( 'hide_empty' => 0 ) );
+
+				if ($contributors && !is_wp_error($contributors)) {
+					foreach ($contributors as $contributor) {
+						$new = new \Podlove\Modules\Contributors\Model\Contributor();
+						$new->publicname = $contributor->name;
+						$new->realname = $contributor->name;
+						$new->slug = $contributor->slug;
+						$new->showpublic = true;
+
+						$email = $contributor_settings[$contributor->term_id]['contributor_email'];
+						if ($email) {
+							$new->privateemail = $email;
+							$new->avatar = $email;
+						}
+						$new->save();
+					}
+				}
+			}
 		break;
 	}
 

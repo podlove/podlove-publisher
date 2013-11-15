@@ -1,6 +1,11 @@
 <?php 
 namespace Podlove\Modules\Contributors;
-use \Podlove\Model;
+
+use \Podlove\Model\Episode;
+use \Podlove\Modules\Contributors\Model\Contributor;
+use \Podlove\Modules\Contributors\Model\ContributorRole;
+use \Podlove\Modules\Contributors\Model\EpisodeContribution;
+use \Podlove\Modules\Contributors\Model\ShowContribution;
 
 class Contributors extends \Podlove\Modules\Base {
 
@@ -8,253 +13,380 @@ class Contributors extends \Podlove\Modules\Base {
 	protected $module_description = 'Manage contributors for each episode.';
 	protected $module_group = 'metadata';
 
-	public static $taxonomy_name = 'podlove-contributors';
-
 	public function load() {
+		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
+		add_action( 'podlove_episode_form_beginning', array( $this, 'contributors_form_for_episode' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
+		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
+		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
+	
+		// register shortcodes
+		new Shortcodes;	
 
-		// register taxonomy
-		add_action( 'init', array( $this, 'register_taxonomy' ) );
-
-		// add custom fields
-		add_action( self::$taxonomy_name . '_edit_form_fields', array( $this, 'custom_fields' ), 10, 2 );
-		add_action( 'edited_' . self::$taxonomy_name , array( $this, 'save' ), 10, 2 );
-
-		// add custom meta box to manage taxonomy
-		add_action( 'admin_menu', function () {
-			remove_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, 'podcast', 'normal' ); 
-		} );
-
-		add_action( 'add_meta_boxes', function () {
-			add_meta_box( 'tagsdiv-' . \Podlove\Modules\Contributors\Contributors::$taxonomy_name, __( 'Contributors', 'podlove' ), 'Podlove\\Modules\\Contributors\\Contributors::metabox', 'podcast', 'side', 'default' );
+		// register settings page
+		add_action('podlove_register_settings_pages', function($settings_parent) {
+			new Settings\Contributors($settings_parent);
+			new Settings\ContributorRoles($settings_parent);
 		});
-
-		add_action( 'admin_init', function () {
-			wp_enqueue_script( 'jquery-ui-autocomplete' );
-		} );
-
-		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
-
-		add_shortcode( 'podlove-contributors', array( $this, 'shortcode' ) );
 	}
+	
+	public function was_activated( $module_name ) {
+		Contributor::build();
+		ContributorRole::build();
+		EpisodeContribution::build();
+		ShowContribution::build();
 
-	public function scripts_and_styles() {
-
-		wp_register_script( 'podlove-contributors-admin-script', $this->get_module_url() . '/js/admin.js', array( 'jquery-ui-autocomplete' ), \Podlove\get_plugin_header( 'Version' ) );
-		wp_enqueue_script( 'podlove-contributors-admin-script' );
-
-		wp_register_style( 'podlove-contributors-admin-style', $this->get_module_url() . '/css/admin.css', array(), \Podlove\get_plugin_header( 'Version' ) );
-		wp_enqueue_style( 'podlove-contributors-admin-style' );
-	}
-
-	public function shortcode( $attributes ) {
-
-		$post_id = get_the_ID();
-		$contributors = get_the_terms( $post_id, self::$taxonomy_name );
-		
-		if ( ! $contributors )
-			return;
-
-		$defaults = array(
-			'separator' => ', '
-		);
-
-		$attributes = shortcode_atts( $defaults, $attributes );
-
-		$html  = '';
-		$html .= '<span class="podlove-contributors">';
-		$html .= implode( $attributes['separator'], array_map( function ( $contributor ) {
-			$settings = \Podlove\Modules\Contributors\Contributors::get_additional_settings( $contributor->term_id );
-			$avatar = isset( $settings['contributor_email'] ) ? get_avatar( $settings['contributor_email'], 18 ) : get_avatar( null, 18 );
-			return
-				'<span class="contributor">'
-				. $avatar
-				. ' '
-				. $contributor->name
-				. '</span>';
-		}, $contributors ) );
-		$html .= '</span>';
-
-		$html .= '<style type="text/css">';
-		$html .= '.podlove-contributors .contributor img {';
-		$html .= '	margin: 0px;';
-		$html .= '	vertical-align: text-bottom;';
-		$html .= '}';
-		$html .= '</style>';
-		
-		return apply_filters( 'podlove_contributors_shortcode', $html );
-	}
-
-	public static function metabox( $post ) {
-		
-		$contributors = get_the_terms( $post->ID, self::$taxonomy_name );
-		?>
-		<div id="add_contributors" class="tagsdiv">
-			<p>
-				<input type="text" class="newtag" id="add_contributors_input">
-				<input type="button" class="button tagadd" id="add_contributors_submit" value="Add">
-			</p>
-		</div>
-		<div id="contributors" class="tagchecklist">
-			<div class="nojs-tags hide-if-js">
-				<p><?php echo __( 'Add or remove contributors', 'podlove' ) ?></p>
-				<textarea name="tax_input[<?php echo self::$taxonomy_name ?>]" rows="3" cols="20" class="the-contributors" id="tax-input-podlove-contributors"><?php 
-				if ( $contributors && count( $contributors ) ) {
-					echo implode( ',', array_map(function($c){return $c->slug;}, $contributors) );
-				}
-				?></textarea>
-			</div>
-			<?php if ( $contributors && count( $contributors ) ): ?>
-				<?php foreach ( $contributors as $contributor ): ?>
-					<?php $settings = self::get_additional_settings( $contributor->term_id ) ?>
-					<div class="contributor" data-term-slug="<?php echo $contributor->slug ?>" data-term-id="<?php echo $contributor->term_id ?>">
-						<span>
-							<a href="#" class="ntdelbutton" title="<?php echo __( 'remove', 'podlove' ) ?>">x</a>
-							<div class="avatar">
-								<?php if ( isset( $settings['contributor_email'] ) ): ?>
-									<?php echo get_avatar( $settings['contributor_email'], 24 ); ?>
-								<?php else: ?>
-									<?php echo get_avatar( null, 24 ); ?>
-								<?php endif; ?>
-							</div>
-							<div class="name">
-								<a href="<?php echo get_edit_term_link( $contributor->term_id, self::$taxonomy_name, 'podcast' ) ?>" target="_blank" title="<?php echo __( 'edit', 'podlove' ) ?>">
-									<?php echo $contributor->name ?>
-								</a>
-							</div>
-						</span>
-					</div>
-				<?php endforeach; ?>
-			<?php endif; ?>
-		</div>
-		<script type="text/javascript">
-		<?php 
-		$people = get_terms(self::$taxonomy_name, array('hide_empty' => false) );
-		$people = array_map( function( $person ) {
-			$settings = \Podlove\Modules\Contributors\Contributors::get_additional_settings( $person->term_id );
-			$email = isset( $settings['contributor_email'] ) ? $settings['contributor_email'] : null;
-			return array(
-				'value'  => $person->slug,
-				'label'  => $person->name,
-				'id'     => $person->term_id,
-				'avatar' => \Podlove\Modules\Contributors\Contributors::get_gravatar_url( $email, 24 )
+		if (!ContributorRole::count()) {
+			$default_contributors = array(
+				'moderator' => 'Moderator',
+				'comoderator' => 'Co-Moderator',
+				'guest' => 'Guest',
+				'shownotes' => 'Shownotes',
+				'chatmod' => 'Chat Moderator'
 			);
-		}, $people );
-		if ( ! $people )
-			$people = array();
-		?>
-
-		var PODLOVE = PODLOVE || {};
-		PODLOVE.people = <?php echo json_encode($people); ?>;
-		</script>
-		<?php
+			foreach ($default_contributors as $slug => $title) {
+				$c = new ContributorRole;
+				$c->update_attributes(array('slug' => $slug, 'title' => $title));
+				$c->save();
+			}
+		}
 	}
 
-	public function register_taxonomy() {
+	public function migrate_contributors( $module_name ) {
 
-		$labels = array(
-		   'name'                       => __( 'Contributors', 'podlove' ),
-		   'singular_name'              => __( 'Contributor', 'podlove' ),
-		   'search_items'               => __( 'Search Contributors', 'podlove' ),
-		   'popular_items'              => __( 'Popular Contributors', 'podlove' ),
-		   'all_items'                  => __( 'All Contributors', 'podlove' ),
-		   'edit_item'                  => __( 'Edit Contributor' , 'podlove'), 
-		   'update_item'                => __( 'Update Contributor', 'podlove' ),
-		   'add_new_item'               => __( 'Add New Contributor', 'podlove' ),
-		   'new_item_name'              => __( 'New Contributor Name', 'podlove' ),
-		   'separate_items_with_commas' => __( 'Separate Contributors with commas', 'podlove' ),
-		   'add_or_remove_items'        => __( 'Add or remove Contributors', 'podlove' ),
-		   'choose_from_most_used'      => __( 'Choose from the most used Contributors', 'podlove' ),
-		   'menu_name'                  => __( 'Contributors', 'podlove' ),
-		 ); 
+		$episodes = \Podlove\Episode::all();
+		$posted_contributors = array();
 
 		$args = array(
 			'hierarchical'  => false,
-			'labels'        => $labels,
+			'labels'        => array(),
 			'show_ui'       => true,
 			'show_tagcloud' => true,
 			'query_var'     => true,
 			'rewrite'       => array( 'slug' => 'contributor' ),
 		);
 
-		register_taxonomy( self::$taxonomy_name, 'podcast', $args );
+		register_taxonomy( 'podlove-contributors', 'podcast', $args );
+
+		foreach(get_terms('podlove-contributors', 'orderby=count&hide_empty=0') as $contributorid => $contributor) {
+			$settings = $this->get_additional_settings_for_migration($contributor->term_id);
+
+			if (isset($settings["contributor_email"])) {
+				$privateemail = $settings["contributor_email"];
+			} else {
+				$privateemail = "";
+			}
+
+			$contributor_infos = array( "realname" => $contributor->name,
+										"publicname" => $contributor->name,
+										"slug" => $contributor->slug,
+										"id" => $contributor->term_id,
+										"showpublic" => 1,
+										"privateemail" => $privateemail);
+
+			$contributor_entry = new \Podlove\Modules\Contributors\Contributor;
+			$contributor_entry->update_attributes($contributor_infos);
+		}
+
+		foreach($episodes as $episode_id => $episode_details) {
+			$terms = get_the_terms($episode_details->post_id, 'podlove-contributors');
+			if (isset($terms) AND !empty($terms)) {
+				foreach($terms as $term_id => $term_details) {
+					$posted_contributors[] = array('id' => $term_details->term_id, 'slug' => $term_details->slug);
+				}
+			}
+			if (!empty($posted_contributors)) {
+				update_post_meta( $episode_details->post_id, '_podlove_episode_contributors', json_encode($posted_contributors));
+			}
+		}
 	}
 
-	public static function get_additional_settings( $term_id ) {
-
-		$all_contributor_settings = get_option( 'podlove_contributors', array() );
-		
+	public static function get_additional_settings_for_migration( $term_id ) {
+		$all_contributor_settings = get_option( 'podlove_contributors', array() );		
 		if ( ! isset( $all_contributor_settings[ $term_id ] ) )
 			$all_contributor_settings[ $term_id ] = array();
-
 		return $all_contributor_settings[ $term_id ];
 	}
 
-	public function custom_fields( $contributor, $taxonomy ) {
-
-		$all_contributor_settings = get_option( 'podlove_contributors', array() );
+	public function update_contributors($post_id)
+	{
+		if (!$post_id || !isset($_POST["episode_contributor"]))
+			return;
 		
-		if ( ! isset( $all_contributor_settings[ $contributor->term_id ] ) )
-			$all_contributor_settings[ $contributor->term_id ] = array();
+		$episode = Episode::find_one_by_post_id($post_id);
 
-		$settings = $all_contributor_settings[ $contributor->term_id ];
-		$settings = wp_parse_args( $settings, array(
-			'contributor_email' => ''
-		) );
-		
-		?>
-		<tr class="form-field">
-			<th scope="row" valign="top">
-				<label for="contributor_email">
-					<?php echo __( 'E-Mail', 'podlove' ); ?>
-				</label>
-			</th>
-			<td>
-				<input type="text" value="<?php echo $settings['contributor_email'] ?>" class="large-text" id="contributor_email" name="contributor_email">
-			</td>
-		</tr>
-		<?php
-	}
-
-	/**
-	 * Save settings for a single contributor.
-	 * 
-	 * @param  int $term_id    
-	 * @param  int $taxonomy_id
-	 */
-	public function save( $term_id, $taxonomy_id ) {
-
-		if ( ! isset( $_POST['contributor_email'] ) )
+		if (!$episode)
 			return;
 
-		$all_contributor_settings = get_option( 'podlove_contributors', array() );
-		
-		if ( ! isset( $all_contributor_settings[ $term_id ] ) )
-			$all_contributor_settings[ $term_id ] = array();
+		foreach (\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
+			$contribution->delete();
+		}
 
-		$all_contributor_settings[ $term_id ]['contributor_email'] = $_POST['contributor_email'];
+		$position = 0;
+		foreach ($_POST["episode_contributor"] as $contributor_id => $contributor) {
+			$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
+			$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
+			$c->episode_id = $episode->id;
+			$c->contributor_id = $contributor_id;
+			$c->position = $position++;
+			$c->save();
+		}
+	}
 
-		update_option( 'podlove_contributors', $all_contributor_settings );
+	public function contributors_form_for_episode( $wrapper ) {
+		$wrapper->callback( 'contributors_form_table', array(
+			'label'    => __( 'Contributors', 'podlove' ),
+			'callback' => function() {
+
+				$current_page = get_current_screen();
+				$episode = Episode::find_one_by_post_id(get_the_ID());
+				
+				// determine existing contributions
+				$contributions = array();
+				if ($current_page->action == "add") {
+					$permanent_contributors = \Podlove\Modules\Contributors\Model\Contributor::find_all_by_property("permanentcontributor", "1");
+					foreach ($permanent_contributors as $permanent_contributor) {
+						$contrib = new \Podlove\Modules\Contributors\EpisodeContribution;
+						$contrib->contributor_id = $permanent_contributor->id;
+						$contrib->role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id($permanent_contributor->role_id);
+						$contributions[] = $contrib;
+					}
+				} else {
+					$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
+				}
+
+				echo '</table>';
+				\Podlove\Modules\Contributors\Contributors::contributors_form_table($contributions);
+				echo '<table class="form-table">';
+			}
+		) );		
 	}
 
 	/**
-	 * Get Gravatar URL for a specified email address.
-	 *
-	 * Yes, I know there is get_avatar() but that returns the img tag and I need the URL.
-	 *
-	 * @param string $email The email address
-	 * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
-	 * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
-	 * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
-	 * @param array $atts Optional, additional key/value attributes to include in the IMG tag
-	 * @return String containing either just a URL or a complete image tag
-	 * @source http://gravatar.com/site/implement/images/php/
+	 * Contributors extension for podcast settings screen.
+	 * 
+	 * @param  TableWrapper $wrapper form wrapper
+	 * @param  Podcast      $podcast podcast model
 	 */
-	public static function get_gravatar_url( $email, $s = 80, $d = 'mm', $r = 'g', $atts = array() ) {
-		
-		$url = 'http://www.gravatar.com/avatar/';
-		$url .= md5( strtolower( trim( $email ) ) );
-		$url .= "?s=$s&d=$d&r=$r";
-		return $url;
+	public function podcast_form_extension($wrapper, $podcast)
+	{
+		$wrapper->subheader(
+			__( 'Contributors', 'podlove' ),
+			__( 'You may define contributors for the whole podcast.', 'podlove' )
+		);
+
+    	$wrapper->callback( 'contributors', array(
+			'label'    => __( 'Contributors', 'podlove' ),
+			'callback' => array( $this, 'podcast_form_extension_form' )
+		) );
+	}
+
+	public function podcast_form_extension_form()
+	{
+		$contributions = ShowContribution::all();
+		self::contributors_form_table($contributions, 'podlove_podcast[contributor]');
+	}
+
+	public function save_setting($old, $new)
+	{
+		if (!isset($new['contributor']))
+			return;
+
+		$contributors = $new['contributor'];
+
+		foreach (ShowContribution::all() as $contribution) {
+			$contribution->delete();
+		}
+
+		$position = 0;
+		foreach ($contributors as $contributor_id => $contributor) {
+			$c = new ShowContribution;
+			$c->role_id = ContributorRole::find_one_by_slug($contributor['role'])->id;
+			$c->contributor_id = $contributor_id;
+			$c->position = $position++;
+			$c->save();
+		}
+	}
+
+	public static function contributors_form_table($current_contributions = array(), $form_base_name = 'episode_contributor') {
+		$contributors_roles = \Podlove\Modules\Contributors\Model\ContributorRole::selectOptions();
+
+		$cjson = array();
+		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
+			$cjson[$contributor->id] = array(
+				'id'   => $contributor->id,
+				'slug' => $contributor->slug,
+				'role' => $contributor->role,
+				'realname' => $contributor->realname,
+				'permanentcontributor' => $contributor->permanentcontributor
+			);
+		}
+
+		// override contributor roles with scoped roles
+		foreach ($current_contributions as $current_contribution) {
+			if ($role = $current_contribution->getRole()) {
+				$cjson[$current_contribution->contributor_id]['role'] = $role->slug;
+			}
+		}
+		?>
+		<div id="contributors-form">
+			<table class="podlove_alternating" style="margin-top: 1em;" border="0" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Contributor</th>
+						<th>Role</th>
+						<th style="width: 60px">Remove</th>
+						<th style="width: 30px"></th>
+					</tr>
+				</thead>
+				<tbody id="contributors_table_body" style="min-height: 50px;">
+					<tr class="contributors_table_body_placeholder" style="display: none;">
+						<td><em><?php echo __('No contributors were added yet.', 'podlove') ?></em></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div id="add_new_contributor_wrapper">
+				<select id="add_new_contributor_selector" class="contributor-dropdown chosen">
+					<option value="0"><?php echo __('Choose Contributor', 'podlove') ?></option>
+					<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
+						<?php if (!in_array($contributor->id, array_map(function($c){ return $c->contributor_id; }, $current_contributions), true)): ?>
+							<option value="<?php echo $contributor->id ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->realname; ?></option>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</select>
+				<input class="button" id="add_new_contributor_button" value="+" type="button" />
+			</div>
+
+			<script type="text/template" id="contributor-row-template">
+			<tr class="media_file_row" data-contributor-id="{{contributor-id}}">
+				<td>{{contributor-name}}</td>
+				<td>
+					<select name="<?php echo $form_base_name ?>[{{contributor-id}}][role]" class="chosen">
+						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
+						<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
+							<option value="<?php echo $role_slug ?>"><?php echo $role_title ?></option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+				<td>
+					<span class="contributor_remove">
+						<i class="clickable podlove-icon-remove"></i>
+					</span>
+				</td>
+				<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
+			</tr>
+			</script>
+
+			<script type="text/javascript">
+				var PODLOVE = PODLOVE || {};
+				var existing_contributions = [<?php echo implode(",", array_map(function($c){ return $c->contributor_id; }, $current_contributions)) ?>];
+
+				PODLOVE.Contributors = <?php echo json_encode($cjson); ?>;
+
+				(function($) {
+
+					function determine_blank_slate_visibility() {
+						var placeholder = $(".contributors_table_body_placeholder");
+
+						if ($('#contributors_table_body tr').size() > 0) {
+							placeholder.hide();
+						} else {
+							placeholder.show();
+						}
+					}
+
+					function determine_contributor_selector_visibility() {
+						var contributor_selector = $("#add_new_contributor_selector_chzn, #add_new_contributor_button");
+
+						if ($('#add_new_contributor_selector option').size() == 0) {
+							contributor_selector.hide();
+						} else {
+							contributor_selector.show();
+						}
+					}
+
+					function update_contributor_list() {
+						$(".chosen").chosen().trigger("liszt:updated");
+						determine_blank_slate_visibility();
+						determine_contributor_selector_visibility();
+					}
+
+					function add_contributor_row(contributor) {
+						var row = '';
+
+						// add contributor to table
+						row = $("#contributor-row-template").html();
+						row = row.replace(/\{\{contributor-name\}\}/g, contributor.realname);
+						row = row.replace(/\{\{contributor-id\}\}/g, contributor.id);
+						el = $("#contributors_table_body").append(row);
+						
+						var new_row = $("#contributors_table_body tr:last");
+
+						// select default role
+						new_row.find('select option[value="' + contributor.role + '"]').attr('selected',true);
+					}
+
+					$(document).on('click', "#add_new_contributor_button", function() {
+						var selected_contributor = $("#add_new_contributor_selector :selected"),
+							contributor_id = selected_contributor.val(),
+							contributor = PODLOVE.Contributors[contributor_id];
+
+						add_contributor_row(contributor);
+
+						// remove contributor from select
+						selected_contributor.remove();
+
+						update_contributor_list();
+					});
+
+					$(document).on('click', '.contributor_remove',  function() {
+						var contributor_id = $(this).closest("tr").data('contributor-id'),
+							contributor = PODLOVE.Contributors[contributor_id];
+
+						// remove this contributor row
+						$(this).closest("tr").remove();
+
+						// add to list of available contributors
+						var option = '<option value="' + contributor_id + '">' + contributor.realname + '</option>';
+
+						$("#add_new_contributor_selector").append(option);
+
+						update_contributor_list();
+					});
+
+					$(document).ready(function() {
+
+						$.each(existing_contributions, function(index, contributor_id) {
+							add_contributor_row(PODLOVE.Contributors[contributor_id]);
+						});
+						
+						update_contributor_list();
+
+						$("#contributors_table_body td").each(function(){
+						    $(this).css('width', $(this).width() +'px');
+						});
+
+						$("#contributors_table_body").sortable({
+							handle: ".reorder-handle",
+							helper: function(e, tr) {
+							    var $originals = tr.children();
+							    var $helper = tr.clone();
+							    $helper.children().each(function(index) {
+							    	// Set helper cell sizes to match the original sizes
+							    	$(this).width($originals.eq(index).width());
+							    });
+							    return $helper.css({
+							    	background: '#EAEAEA'
+							    });
+							}
+						});
+					});
+				}(jQuery));
+
+			</script>
+		</div>
+		<?php		
 	}
 
 }
