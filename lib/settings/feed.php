@@ -16,6 +16,10 @@ class Feed {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+		
+		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_feeds_settings_handle" && isset( $_GET["update_settings"] ) && $_GET["update_settings"] == "true") {
+		   	add_action('admin_bar_init', array( $this, 'save_global_feed_setting'));
+		}  
 	}
 
 	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {
@@ -147,6 +151,51 @@ class Feed {
 		$table = new \Podlove\Feed_List_Table();
 		$table->prepare_items();
 		$table->display();
+		?>
+
+			<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_settings=true">
+				<?php settings_fields( Podcast::$pagehook ); ?>
+
+				<?php
+				$podcast = \Podlove\Model\Podcast::get_instance();
+
+				$form_attributes = array(
+					'context'    => 'podlove_podcast',
+					'form'       => false
+				);
+
+				\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
+					$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+					$podcast = $form->object;
+
+					$wrapper->subheader( __( 'Settings', 'podlove' ) );
+
+					$limit_options = array(
+						'-1' => __( "No limit. Include all items.", 'podlove' ),
+						'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+					);
+					for( $i = 1; $i*5 <= 100; $i++ ) {
+						$limit_options[ $i*5 ] = $i*5;
+					}
+
+					$wrapper->select( 'limit_items', array(
+						'label'       => __( 'Limit Items', 'podlove' ),
+						'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size. Additional limits can be set for the feeds individually.', 'podlove' ),
+						'options' => $limit_options,
+						'please_choose' => false,
+						'default' => '-1'
+					) );
+				});
+				?>
+			</form>
+		<?php
+	}
+
+	public function save_global_feed_setting() {
+  		$podcast_settings = get_option('podlove_podcast');
+  		$podcast_settings['limit_items'] = $_REQUEST['podlove_podcast']['limit_items'];
+  		update_option('podlove_podcast', $podcast_settings);
+		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
 	}
 	
 	private function form_template( $feed, $action, $button_text = NULL ) {
@@ -230,7 +279,14 @@ class Feed {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
+			$podcast_settings = get_option('podlove_podcast');
+			if( $podcast_settings['limit_items'] < 0 ) {
+				$limit_default = 'No limit';
+			} else {
+				$limit_default = $podcast_settings['limit_items'];
+			}
 			$limit_options = array(
+				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove' ),
 				'-1' => __( "No limit. Include all items.", 'podlove' ),
 				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
 			);
@@ -243,7 +299,7 @@ class Feed {
 				'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size.', 'podlove' ),
 				'options' => $limit_options,
 				'please_choose' => false,
-				'default' => '-1'
+				'default' => '-2'
 			) );
 			
 			$wrapper->checkbox( 'embed_content_encoded', array(

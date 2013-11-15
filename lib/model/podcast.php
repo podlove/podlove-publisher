@@ -189,7 +189,7 @@ $podcast->property( 'label' );
 $podcast->property( 'episode_prefix' );
 $podcast->property( 'media_file_base_uri' );
 $podcast->property( 'uri_delimiter' );
-$podcast->property( 'episode_number_length' );
+$podcast->property( 'limit_items' );
 $podcast->property( 'language' );
 $podcast->property( 'complete' );
 // $podcast->property( 'url_template' );
