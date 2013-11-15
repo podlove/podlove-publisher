@@ -208,6 +208,7 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		
+		do_action( 'podlove_register_settings_pages', self::SETTINGS_PAGE_HANDLE );
 	}
 
 	public function create_support_menu_entry() {

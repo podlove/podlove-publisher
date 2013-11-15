@@ -198,7 +198,8 @@ class Podcast {
 						'description' => __( 'Shows that this Podcast is finished and no further episodes will be added.', 'podlove' ),
 						'default'     => false
 					) );
-
+					
+					do_action( 'podlove_podcast_form', $wrapper, $podcast );
 
 				});
 				?>
