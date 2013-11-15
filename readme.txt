@@ -77,6 +77,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.0 =
+* Fix: Importing episodes no longer causes floods of ADN posts.
+
 = 1.8.13 =
 * Feature: Update Web Player to 2.0.17 (for realsies). It fixes an issue with icon/font display.
 
