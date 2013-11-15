@@ -463,32 +463,22 @@ function override404() {
 			$parsed_redirect_url .= "?" . $parsed_url['query'];
 
 		if ( untrailingslashit( $parsed_redirect_url ) === untrailingslashit( $parsed_request_url ) ) {
-			switch ($redirect['code']) {
-				case '301' :
-					status_header( 301 );
-					$wp_query->is_404 = false;
-					\wp_redirect( $redirect['to'], 301 );
-					exit;
-				break;
-				case '307' :
-					if( $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ) { // Fallback for HTTP 1.0
-						status_header( 302 );
-						$wp_query->is_404 = false;
-						\wp_redirect( $redirect['to'], 302 );	
-					} else {
-						status_header( 307 );
-						$wp_query->is_404 = false;
-						\wp_redirect( $redirect['to'], 307 );
-					}
-					exit;
-				break;
-				default :
-					status_header( 301 );
-					$wp_query->is_404 = false;
-					\wp_redirect( $redirect['to'], 301 );
-					exit;
-				break;
+			
+			if ($redirect['code']) {
+				$http_code = (int) $redirect['code'];
+			} else {
+				$http_code = 301; // default to permanent
 			}
+
+			// fallback for HTTP/1.0 clients
+			if ($http_code == 307 && $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0") {
+				$http_code = 302;
+			}
+
+			status_header( $http_code );
+			$wp_query->is_404 = false;
+			\wp_redirect( $redirect['to'], $http_code );
+			exit;
 		}
 	}
 
