@@ -2,10 +2,10 @@
 namespace Podlove\Modules\Contributors;
 
 use \Podlove\Model\Episode;
-use Model\Contributor;
-use Model\ContributorRole;
-use Model\EpisodeContribution;
-use Model\ShowContribution;
+use \Podlove\Modules\Contributors\Model\Contributor;
+use \Podlove\Modules\Contributors\Model\ContributorRole;
+use \Podlove\Modules\Contributors\Model\EpisodeContribution;
+use \Podlove\Modules\Contributors\Model\ShowContribution;
 
 class Contributors extends \Podlove\Modules\Base {
 
