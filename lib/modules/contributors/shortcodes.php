@@ -111,9 +111,9 @@ class Shortcodes {
 	private function renderListOfContributors() {
 		// fetch contributions
 		if ($episode = Model\Episode::get_current()) {
-			$this->contributions = EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
+			$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
 		} else {
-			$this->contributions = EpisodeContribution::all('GROUP BY contributor_id ORDER BY `position` ASC');
+			$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('GROUP BY contributor_id ORDER BY `position` ASC');
 		}
 
 		if ($this->settings['role'] != 'all') {
