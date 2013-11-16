@@ -53,6 +53,26 @@ class Metadata extends Tab {
 			/* $section  */ 'podlove_settings_episode'
 		);
 
+		add_settings_field(
+			/* $id       */ 'podlove_setting_episode_explicit',
+			/* $title    */ sprintf(
+				'<label for="enable_episode_explicit">%s</label>',
+				__( 'Enable Explicit field.', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<label>
+					<input name="podlove_metadata[enable_episode_explicit]" id="enable_episode_explicit" type="radio" value="1" <?php checked( \Podlove\get_setting( 'metadata', 'enable_episode_explicit' ), 1 ) ?> /> <?php echo __( 'enable', 'podlove' ) ?>
+				</label>
+				<label>
+					<input name="podlove_metadata[enable_episode_explicit]" id="enable_episode_explicit" type="radio" value="0" <?php checked( \Podlove\get_setting( 'metadata', 'enable_episode_explicit' ), 0 ) ?> /> <?php echo __( 'disable', 'podlove' ) ?>
+				</label>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);
+
 		register_setting( Settings::$pagehook, 'podlove_metadata' );
 	}
 }

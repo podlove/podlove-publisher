@@ -141,6 +141,16 @@ class Podcast_Post_Meta_Box {
 					));
 				}
 
+				if ( \Podlove\get_setting( 'metadata', 'enable_episode_explicit' ) ) {
+					$wrapper->select( 'explicit', array(
+						'label'       => __( 'Explicit Content?', 'podlove' ),
+						'type'    => 'checkbox',
+						'html'        => array( 'style' => 'width: 200px;' ),
+						'default'	=> '-1',
+		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
+					));
+				}
+
 				do_action( 'podlove_episode_form', $wrapper, $episode );
 
 			} );

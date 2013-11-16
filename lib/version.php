@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 48 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 49 );
 
 add_action( 'init', function () {
 	
@@ -415,6 +415,12 @@ function run_migrations_for_version( $version ) {
 			$podcast = Model\Podcast::get_instance();
 			$podcast->limit_items = '-1';
 			$podcast->save();
+		break;
+		case 49:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `explicit` TINYINT',
+				Model\Episode::table_name()
+			) );
 		break;
 	}
 
