@@ -12,6 +12,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     public function load() {
     
     		$module_url = $this->get_module_url();
+    		$user = null;
     	
     		if ($this->get_module_option('adn_auth_key') !== "") {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
