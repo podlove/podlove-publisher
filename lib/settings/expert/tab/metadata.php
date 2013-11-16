@@ -57,7 +57,7 @@ class Metadata extends Tab {
 			/* $id       */ 'podlove_setting_episode_explicit',
 			/* $title    */ sprintf(
 				'<label for="enable_episode_explicit">%s</label>',
-				__( 'Enable Explicit field.', 'podlove' )
+				__( 'Enable explicit content field.', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
