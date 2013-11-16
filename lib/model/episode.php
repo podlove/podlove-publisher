@@ -40,6 +40,14 @@ class Episode extends Base {
 		return htmlspecialchars( trim( $description ) );
 	}
 
+	public function explicitText() {
+
+		if ($this->explicit == 2)
+			return 'clean';
+
+		return $this->explicit ? 'yes' : 'no';
+	}
+
 	public function media_files() {
 		global $wpdb;
 		
