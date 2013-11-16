@@ -422,6 +422,38 @@ function run_migrations_for_version( $version ) {
 				Model\Episode::table_name()
 			) );
 		break;
+		case 50:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_type` VARCHAR(255) NULL',
+				\Podlove\Model\Episode::table_name()
+			) );	
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_name` TEXT',
+				\Podlove\Model\Episode::table_name()
+			) );	
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_url` TEXT',
+				\Podlove\Model\Episode::table_name()
+			) );	
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_cc_allow_modifications` TEXT',
+				\Podlove\Model\Episode::table_name()
+			) );	
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_cc_allow_commercial_use` TEXT',
+				\Podlove\Model\Episode::table_name()
+			) );
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `license_cc_license_jurisdiction` TEXT',
+				\Podlove\Model\Episode::table_name()
+			) );	
+
+			$podcast = Model\Podcast::get_instance();
+			if($podcast->license_name !== "") {
+				$podcast->license_type = 'other';
+				$podcast->save();
+			}
+		break;
 	}
 
 }

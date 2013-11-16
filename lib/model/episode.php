@@ -28,16 +28,16 @@ class Episode extends Base {
 	}
 
 	public function description() {
-
-		if ( $this->summary ) {
-			$description = $this->summary;
-		} elseif ( $this->subtitle ) {
-			$description = $this->subtitle;
-		} else {
-			$description = get_the_title();
-		}
-
-		return htmlspecialchars( trim( $description ) );
+	
+	  if ( $this->summary ) {
+	    $description = $this->summary;
+	  } elseif ( $this->subtitle ) {
+	    $description = $this->subtitle;
+	  } else {
+	    $description = get_the_title();
+	  }
+	
+	  return htmlspecialchars( trim( $description ) );
 	}
 
 	public function explicitText() {
@@ -209,6 +209,93 @@ class Episode extends Base {
 		return true;
 	}
 
+	public function get_license() {
+		$license_type = $this->license_type;
+		switch ($license_type) {
+			case 'cc':
+				return array(
+					'license_type' => $license_type,
+					'license_attributes' => array(	'license_name' => "Creative Commons 3.0",
+													'license_url' => "http://creativecommons.org/licenses/by/3.0/",
+													'allow_modifications' => $this->license_cc_allow_modifications,
+													'allow_commercial_use' =>$this->license_cc_allow_commercial_use,
+													'jurisdiction' => $this->license_cc_license_jurisdiction)
+											);
+			break;
+			default :
+				return array(
+					'license_type' => $license_type, 
+					'license_attributes' => array(	'license_name' => $this->license_name,
+													'license_url' => $this->license_url)
+											);
+			break;
+		}
+	}
+
+	public function get_license_picture_url() {
+		if($this->license_type == "cc") {
+			switch ($this->license_cc_allow_modifications) {
+				case "yes" :
+					$banner_identifier_allowed_modification = 1;
+				break;
+				case "yesbutshare" :
+					$banner_identifier_allowed_modification = 10;
+				break;
+				case "no" :
+					$banner_identifier_allowed_modification = 0;
+				break;
+				default :
+					$banner_identifier_allowed_modification = 1;
+				break;
+			}
+
+			$banner_identifier_commercial_use = ($this->license_cc_allow_commercial_use == "no") ? "0" : "1";
+
+			return \Podlove\PLUGIN_URL . "/images/cc/" . $banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
+		} 
+	}
+
+	public function license() {
+		$locales = \Podlove\License\locales_cc();
+		$versions = \Podlove\License\version_per_country_cc();
+		switch ($this->license_type) {
+			case 'cc' :
+				if($this->license_cc_license_jurisdiction != "" AND
+					$this->license_cc_allow_modifications != "" AND
+					$this->license_cc_allow_commercial_use != "")  {
+					if($this->license_cc_license_jurisdiction == "international") {
+						$locale = "";
+						$version = $versions["international"]["version"];
+						$name = $versions["international"]["name"];
+					} else {
+						$locale = $this->license_cc_license_jurisdiction."/";
+						$version = $versions[$this->license_cc_license_jurisdiction]["version"];
+						$name = $locales[$this->license_cc_license_jurisdiction];
+					}
+					return "<div class=\"podlove_cc_license\">
+					<img src=\"".$this->get_license_picture_url()."\" />
+					<p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/".$version."/".$locale."deed.en\">Creative Commons Attribution ".$version." ".$name." License</a>.</p>
+					</div>";
+				} else {
+					return "<span style='color: red;'>This work is (not yet) licensed under a Creative Commons Attribution license, because some license parameters are missing!</span>";
+				}
+			break;
+			case 'other' :
+				if($this->license_name != "" AND $this->license_url != "") {
+					return "<div class=\"podlove_license\">
+								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_url."\">".$this->license_name."</a> license.</p>
+							</div>";
+				} else {
+					$podcast = \Podlove\Model\Podcast::get_instance();
+					return $podcast->license();
+				}
+			break;
+			default :
+				$podcast = \Podlove\Model\Podcast::get_instance();
+				return $podcast->license();
+			break;
+		}
+	}	
 }
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
@@ -223,3 +310,9 @@ Episode::property( 'chapters', 'TEXT' );
 Episode::property( 'record_date', 'DATETIME' );
 Episode::property( 'publication_date', 'DATETIME' );
 Episode::property( 'explicit', 'TINYINT' ); // listed in podcast directories or not?
+Episode::property( 'license_type', 'VARCHAR(255)' );
+Episode::property( 'license_name', 'TEXT' );
+Episode::property( 'license_url', 'TEXT' );
+Episode::property( 'license_cc_allow_modifications', 'TEXT' );
+Episode::property( 'license_cc_allow_commercial_use', 'TEXT' );
+Episode::property( 'license_cc_license_jurisdiction', 'TEXT' );

@@ -154,10 +154,6 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
         $explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $podcast->explicit == 2) ? 'clean' : ( ( $podcast->explicit ) ? 'yes' : 'no' ) );
 		echo "\t" . apply_filters( 'podlove_feed_itunes_explicit', $explicit );
 		echo PHP_EOL;
-
-		$keywords = sprintf( '<itunes:complete>%s</itunes:complete>', ( $podcast->complete ) ? 'yes' : 'no' );
-		echo "\t" . apply_filters( 'podlove_feed_itunes_complete', $keywords );
-		echo PHP_EOL;
 	} );
 }
 

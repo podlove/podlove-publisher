@@ -563,7 +563,7 @@ abstract class Base
 	}
 
 	public static function delete_all() {
-		global $wpdb;
-		$wpdb->query( 'TRUNCATE ' . self::table_name() );	
+	    global $wpdb;
+	    $wpdb->query( 'TRUNCATE ' . self::table_name() );  
 	}
 }
