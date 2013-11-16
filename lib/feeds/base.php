@@ -57,7 +57,8 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		'podlove_feed_itunes_subtitle',
 		'podlove_feed_itunes_keywords',
 		'podlove_feed_itunes_summary' ,
-		'podlove_feed_itunes_complete'
+		'podlove_feed_itunes_complete',
+		'podlove_feed_itunes_explicit'
 	);
 	foreach ( $filter_hooks as $filter ) {
 		add_filter( $filter, 'convert_chars' );
@@ -205,6 +206,10 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		$summary = apply_filters( 'podlove_feed_content', strip_tags( $episode->summary ) );
 		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
+
+		$itunes_explicit = apply_filters( 'podlove_feed_content', ( $episode->explicit == 2) ? 'clean' : ( ( $episode->explicit ) ? 'yes' : 'no' ) ) );
+		$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', $itunes_explicit );
+		echo apply_filters( 'podlove_feed_itunes_explicit', $itunes_explicit );
 
 		if ( $cover_art_url ) {
 			$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
