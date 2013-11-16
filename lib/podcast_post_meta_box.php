@@ -165,7 +165,7 @@ class Podcast_Post_Meta_Box {
 							$podlove_license = array('cc' => 'Creative Commons (Standard)', 'other' => 'Other');
 						break;
 						case 'other' :
-							$podlove_license = array('cc' => 'Creative Commons', 'other' => $podcast_license_informations['license_attributes']['license_name'].' (Standard)');
+							$podlove_license = array('cc' => 'Creative Commons', 'other' => 'Other (Standard)');
 						break;
 						default :
 							$podlove_license = array('cc' => 'Creative Commons', 'other' => 'Other');
@@ -288,7 +288,7 @@ class Podcast_Post_Meta_Box {
 		<script type="text/javascript">
 			var plugin_url = "<?php echo \Podlove\PLUGIN_URL; ?>";
 			var license = new Object();
-			license.type = 'other';
+			license.type = '<?php echo $podcast->get_license_type(); ?>';
 			license.status = '#podlove_podcast_license_status';
 			license.image = '.podlove_podcast_license_image';
 			license.image_row = 'div.row__podlove_podcast_license_preview';
@@ -357,7 +357,6 @@ class Podcast_Post_Meta_Box {
 		.media_file_row .size   { width: 130px; }
 		.media_file_row .update { width: 90px; }
 		</style>
->>>>>>> podlove/license_selector
 		<?php
 	}
 

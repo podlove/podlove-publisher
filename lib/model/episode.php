@@ -277,7 +277,8 @@ class Episode extends Base {
 					<p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/".$version."/".$locale."deed.en\">Creative Commons Attribution ".$version." ".$name." License</a>.</p>
 					</div>";
 				} else {
-					return "<span style='color: red;'>This work is (not yet) licensed under a Creative Commons Attribution license, because some license parameters are missing!</span>";
+					$podcast = Podcast::get_instance();
+					return $podcast->license();						
 				}
 			break;
 			case 'other' :
