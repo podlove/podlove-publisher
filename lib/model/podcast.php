@@ -163,6 +163,10 @@ class Podcast {
 		return $t;
 	}
 
+	public function get_license_type() {
+		return $this->license_type;
+	}
+
 	public function get_license() {
 		$license_type = $this->license_type;
 		switch ($license_type) {
@@ -285,4 +289,6 @@ $podcast->property( 'media_file_base_uri' );
 $podcast->property( 'uri_delimiter' );
 $podcast->property( 'limit_items' );
 $podcast->property( 'language' );
+$podcast->property( 'license_name' );
+$podcast->property( 'license_url' );
 // $podcast->property( 'url_template' );
