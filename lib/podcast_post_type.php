@@ -112,6 +112,13 @@ class Podcast_Post_Type {
 			);
 
 			wp_register_script(
+				'podlove_admin_license',
+				\Podlove\PLUGIN_URL . '/js/admin/license.js',
+				array( 'jquery' ),
+				$version
+			);
+
+			wp_register_script(
 				'podlove_admin',
 				\Podlove\PLUGIN_URL . '/js/admin.js',
 				array(
@@ -122,7 +129,8 @@ class Podcast_Post_Type {
 					'podlove_admin_episode_feed_settings',
 					'podlove_admin_autogrow',
 					'podlove_admin_count_characters',
-					'podlove_admin_chosen'
+					'podlove_admin_chosen',
+					'podlove_admin_license'
 				),
 				$version
 			);
