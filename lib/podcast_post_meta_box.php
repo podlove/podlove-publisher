@@ -286,33 +286,33 @@ class Podcast_Post_Meta_Box {
 		if ( \Podlove\get_setting( 'metadata', 'enable_episode_license' ) ) :
 		?>
 		<script type="text/javascript">
-			var plugin_url = "<?php echo \Podlove\PLUGIN_URL; ?>";
-			var license = new Object();
-			license.type = '<?php echo $podcast->get_license()->type; ?>';
-			license.status = '#podlove_podcast_license_status';
-			license.image = '.podlove_podcast_license_image';
-			license.image_row = 'div.row__podlove_podcast_license_preview';
-			license.form_row_cc_preview = 'div.row__podlove_podcast_license_preview';
+			PODLOVE.License({
+				plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
 
-			license.form_type = '#_podlove_meta_license_type';
-			license.form_other_name = '#_podlove_meta_license_name';
-			license.form_other_url = '#_podlove_meta_license_url';
-			license.form_cc_commercial_use = '#_podlove_meta_license_cc_allow_commercial_use';
-			license.form_cc_modification = '#_podlove_meta_license_cc_allow_modifications';
-			license.form_cc_jurisdiction = '#_podlove_meta_license_cc_license_jurisdiction';
-			license.form_cc_preview = '#podlove_podcast_license_preview';
+				locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
+				versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
 
-			license.form_row_other_name = 'div.row__podlove_meta_license_name';
-			license.form_row_other_url = 'div.row__podlove_meta_license_url';
-			license.form_row_cc_commercial_use = 'div.row__podlove_meta_license_cc_allow_commercial_use';
-			license.form_row_cc_modification = 'div.row__podlove_meta_license_cc_allow_modifications';
-			license.form_row_cc_jurisdiction = 'div.row__podlove_meta_license_cc_license_jurisdiction';
+				container: ".row__podlove_meta_license_type",
+				type: '<?php echo $podcast->get_license()->type; ?>',
+				status: '#podlove_podcast_license_status',
+				image: '.podlove_podcast_license_image',
+				image_row: 'div.row__podlove_podcast_license_preview',
+				form_row_cc_preview: 'div.row__podlove_podcast_license_preview',
 
-			license.form_row_cc = license.form_row_cc_modification+","+license.form_row_cc_commercial_use+","+license.form_row_cc_jurisdiction;
-			license.form_row_other = license.form_row_other_name+","+license.form_row_other_url;
+				form_type: '#_podlove_meta_license_type',
+				form_other_name: '#_podlove_meta_license_name',
+				form_other_url: '#_podlove_meta_license_url',
+				form_cc_commercial_use: '#_podlove_meta_license_cc_allow_commercial_use',
+				form_cc_modification: '#_podlove_meta_license_cc_allow_modifications',
+				form_cc_jurisdiction: '#_podlove_meta_license_cc_license_jurisdiction',
+				form_cc_preview: '#podlove_podcast_license_preview',
 
-			var locales = JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>');
-			var versions = JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>');
+				form_row_other_name: 'div.row__podlove_meta_license_name',
+				form_row_other_url: 'div.row__podlove_meta_license_url',
+				form_row_cc_commercial_use: 'div.row__podlove_meta_license_cc_allow_commercial_use',
+				form_row_cc_modification: 'div.row__podlove_meta_license_cc_allow_modifications',
+				form_row_cc_jurisdiction: 'div.row__podlove_meta_license_cc_license_jurisdiction',
+			});
 		</script>
 		<?php endif; ?>
 

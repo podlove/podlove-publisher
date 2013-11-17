@@ -241,33 +241,33 @@ class Podcast {
 			</form>
 		</div>	
 		<script type="text/javascript">
-			var plugin_url = "<?php echo \Podlove\PLUGIN_URL; ?>";
-			var license = new Object();
-			license.type = '<?php echo $podcast->license_type; ?>';
-			license.status = '.podlove_podcast_license_status';
-			license.image = '.podlove_podcast_license_image';
-			license.image_row = 'tr.podlove_podcast_license_image';
-			license.form_row_cc_preview = 'tr.row_podlove_podcast_license_preview';
+			PODLOVE.License({
+				plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
 
-			license.form_type = '#podlove_podcast_license_type';
-			license.form_other_name = '#podlove_podcast_license_name';
-			license.form_other_url = '#podlove_podcast_license_url';
-			license.form_cc_commercial_use = '#podlove_podcast_license_cc_allow_commercial_use';
-			license.form_cc_modification = '#podlove_podcast_license_cc_allow_modifications';
-			license.form_cc_jurisdiction = '#podlove_podcast_license_cc_license_jurisdiction'
-			license.form_cc_preview = '#podlove_podcast_license_preview';
+				locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
+				versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
 
-			license.form_row_other_name = 'tr.row_podlove_podcast_license_name';
-			license.form_row_other_url = 'tr.row_podlove_podcast_license_url';
-			license.form_row_cc_commercial_use = 'tr.row_podlove_podcast_license_cc_allow_commercial_use';
-			license.form_row_cc_modification = 'tr.row_podlove_podcast_license_cc_allow_modifications';
-			license.form_row_cc_jurisdiction = 'tr.row_podlove_podcast_license_cc_license_jurisdiction'
+				container: '.row_podlove_podcast_license_type',
+				type: '<?php echo $podcast->license_type; ?>',
+				status: '.podlove_podcast_license_status',
+				image: '.podlove_podcast_license_image',
+				image_row: 'tr.podlove_podcast_license_image',
+				form_row_cc_preview: 'tr.row_podlove_podcast_license_preview',
 
-			license.form_row_cc = license.form_row_cc_modification+","+license.form_row_cc_commercial_use+","+license.form_row_cc_jurisdiction;
-			license.form_row_other = license.form_row_other_name+","+license.form_row_other_url;
+				form_type: '#podlove_podcast_license_type',
+				form_other_name: '#podlove_podcast_license_name',
+				form_other_url: '#podlove_podcast_license_url',
+				form_cc_commercial_use: '#podlove_podcast_license_cc_allow_commercial_use',
+				form_cc_modification: '#podlove_podcast_license_cc_allow_modifications',
+				form_cc_jurisdiction: '#podlove_podcast_license_cc_license_jurisdiction',
+				form_cc_preview: '#podlove_podcast_license_preview',
 
-			var locales = JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>');
-			var versions = JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>');
+				form_row_other_name: 'tr.row_podlove_podcast_license_name',
+				form_row_other_url: 'tr.row_podlove_podcast_license_url',
+				form_row_cc_commercial_use: 'tr.row_podlove_podcast_license_cc_allow_commercial_use',
+				form_row_cc_modification: 'tr.row_podlove_podcast_license_cc_allow_modifications',
+				form_row_cc_jurisdiction: 'tr.row_podlove_podcast_license_cc_license_jurisdiction'
+			});
 		</script>
 
 		<?php
