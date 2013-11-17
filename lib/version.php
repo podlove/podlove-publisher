@@ -383,10 +383,12 @@ function run_migrations_for_version( $version ) {
 						$new->slug = $contributor->slug;
 						$new->showpublic = true;
 
-						$email = $contributor_settings[$contributor->term_id]['contributor_email'];
-						if ($email) {
-							$new->privateemail = $email;
-							$new->avatar = $email;
+						if (isset($contributor_settings[$contributor->term_id]['contributor_email'])) {
+							$email = $contributor_settings[$contributor->term_id]['contributor_email'];
+							if ($email) {
+								$new->privateemail = $email;
+								$new->avatar = $email;
+							}
 						}
 						$new->save();
 					}
