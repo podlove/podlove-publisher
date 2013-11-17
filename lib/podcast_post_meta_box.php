@@ -268,7 +268,7 @@ class Podcast_Post_Meta_Box {
 		if ( \Podlove\get_setting( 'metadata', 'enable_episode_license' ) ) :
 		?>
 		<script type="text/javascript">
-			var plugin_url = "<?php echo \Podlove\PLUGIN_URL; ?>";
+			var plugin_url = "<?php echo plugins_url(); ?>";
 			var license = new Object();
 			license.type = 'other';
 			license.status = '#podlove_podcast_license_status';
