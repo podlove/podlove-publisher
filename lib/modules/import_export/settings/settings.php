@@ -19,6 +19,9 @@ class Settings {
 
 		add_action('admin_notices', function() {
 
+			if (!isset($_GET['page']))
+				return false;
+
 			if ($_GET['page'] != 'podlove_imexport_migration_handle')
 				return false;
 

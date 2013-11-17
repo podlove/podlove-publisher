@@ -2,7 +2,6 @@
 namespace Podlove\Modules\Contributors\Settings;
 
 use Podlove\Model;
-use Podlove\Modules\Contributors\Model\ContributorRole;
 
 class ContributorRoles {
 
@@ -50,7 +49,7 @@ class ContributorRoles {
 
 	public function page() {
 		if ( isset($_GET["action"]) AND $_GET["action"] == 'confirm_delete' AND isset( $_REQUEST['role'] ) ) {
-			 $role = \Podlove\Modules\Contributors\ContributorRole::find_by_id( $_REQUEST['role'] );
+			 $role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] );
 			?>
 			<div class="updated">
 				<p>
@@ -93,7 +92,7 @@ class ContributorRoles {
 		if ( ! isset( $_REQUEST['role'] ) )
 			return;
 			
-		$role = \Podlove\Modules\Contributors\ContributorRole::find_by_id( $_REQUEST['role'] );
+		$role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] );
 		$role->update_attributes( $_POST['podlove_contributor_role'] );
 		
 		$this->redirect( 'index', $role->id );
@@ -105,7 +104,7 @@ class ContributorRoles {
 	private function create() {
 		global $wpdb;
 		
-		$contributor = new \Podlove\Modules\Contributors\ContributorRole;
+		$contributor = new \Podlove\Modules\Contributors\Model\ContributorRole;
 		$contributor->update_attributes( $_POST['podlove_contributor_role'] );
 
 		$this->redirect( 'index' );
@@ -118,7 +117,7 @@ class ContributorRoles {
 		if ( ! isset( $_REQUEST['role'] ) )
 			return;
 
-		\Podlove\Modules\Contributors\ContributorRole::find_by_id( $_REQUEST['role'] )->delete();
+		\Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -142,7 +141,7 @@ class ContributorRoles {
 	}
 	
 	private function new_template() {
-		$role = new \Podlove\Modules\Contributors\ContributorRole;
+		$role = new \Podlove\Modules\Contributors\Model\ContributorRole;
 		?>
 		<h3><?php echo __( 'Add New role', 'podlove' ); ?></h3>
 		<?php
@@ -150,7 +149,7 @@ class ContributorRoles {
 	}
 	
 	private function edit_template() {
-		$role = \Podlove\Modules\Contributors\ContributorRole::find_by_id( $_REQUEST['role'] );
+		$role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] );
 		echo '<h3>' . sprintf( __( 'Edit Role: %s', 'podlove' ), $role->title ) . '</h3>';
 		$this->form_template( $role, 'save' );
 	}

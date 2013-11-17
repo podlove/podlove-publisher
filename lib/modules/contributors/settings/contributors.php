@@ -3,6 +3,7 @@ namespace Podlove\Modules\Contributors\Settings;
 
 use Podlove\Model;
 use Podlove\Modules\Contributors\Model\ContributorRole;
+use Podlove\Modules\Contributors\Model\Contributor;
 
 class Contributors {
 
@@ -52,7 +53,7 @@ class Contributors {
 
 	public function page() {
 		if ( isset($_GET["action"]) AND $_GET["action"] == 'confirm_delete' AND isset( $_REQUEST['contributor'] ) ) {
-			 $contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $_REQUEST['contributor'] );
+			 $contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 			?>
 			<div class="updated">
 				<p>
@@ -95,7 +96,7 @@ class Contributors {
 		if ( ! isset( $_REQUEST['contributor'] ) )
 			return;
 			
-		$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $_REQUEST['contributor'] );
+		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
 		
 		$this->redirect( 'index', $contributor->id );
@@ -107,7 +108,7 @@ class Contributors {
 	private function create() {
 		global $wpdb;
 		
-		$contributor = new \Podlove\Modules\Contributors\Model\Contributor;
+		$contributor = new Contributor;
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
 
 		$this->redirect( 'index' );
@@ -120,7 +121,7 @@ class Contributors {
 		if ( ! isset( $_REQUEST['contributor'] ) )
 			return;
 
-		\Podlove\Modules\Contributors\Model\Contributor::find_by_id( $_REQUEST['contributor'] )->delete();
+		Contributor::find_by_id( $_REQUEST['contributor'] )->delete();
 		
 		$this->redirect( 'index' );
 	}
@@ -144,7 +145,7 @@ class Contributors {
 	}
 	
 	private function new_template() {
-		$contributor = new \Podlove\Modules\Contributors\Contributor;
+		$contributor = new Contributor;
 		?>
 		<h3><?php echo __( 'Add New Contributor', 'podlove' ); ?></h3>
 		<?php
@@ -152,7 +153,7 @@ class Contributors {
 	}
 	
 	private function edit_template() {
-		$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $_REQUEST['contributor'] );
+		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 		echo '<h3>' . sprintf( __( 'Edit Contributor: %s', 'podlove' ), $contributor->realname ) . '</h3>';
 		$this->form_template( $contributor, 'save' );
 	}
