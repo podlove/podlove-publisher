@@ -1,5 +1,4 @@
 <?php
-
 namespace Podlove\Model;
 
 /**
@@ -8,7 +7,7 @@ namespace Podlove\Model;
  * There is only one podcast, that's why this is a singleton.
  * Data handling is still similar to the other models. Storage is different.
  */
-class Podcast {
+class Podcast implements Licensable {
 
 	/**
 	 * Singleton instance container.
@@ -163,98 +162,26 @@ class Podcast {
 		return $t;
 	}
 
-	public function get_license_type() {
-		return $this->license_type;
-	}
+	public function get_license()
+	{
+		$license = new License('podcast', array(
+			'type'                 => $this->license_type,
+			'license_name'         => $this->license_name,
+			'license_url'          => $this->license_url,
+			'allow_modifications'  => $this->license_cc_allow_modifications,
+			'allow_commercial_use' => $this->license_cc_allow_commercial_use,
+			'jurisdiction'         => $this->license_cc_license_jurisdiction
+		));
 
-	public function get_license() {
-		$license_type = $this->license_type;
-		switch ($license_type) {
-			case 'cc':
-				return array('license_type' => $license_type, 'license_attributes' => array(	'license_name' => "Creative Commons 3.0",
-																								'license_url' => "http://creativecommons.org/licenses/by/3.0/",
-																								'allow_modifications' => $this->license_cc_allow_modifications,
-																								'allow_commercial_use' =>$this->license_cc_allow_commercial_use,
-																								'jurisdiction' => $this->license_cc_license_jurisdiction));
-			break;
-			default :
-				return array('license_type' => $license_type, 'license_attributes' => array(	'license_name' => $this->license_name,
-																								'license_url' => $this->license_url));
-			break;
-		}
+		return $license;
 	}
 
 	public function get_license_picture_url() {
-		if($this->license_type == "cc") {
-			switch ($this->license_cc_allow_modifications) {
-				case "yes" :
-					$banner_identifier_allowed_modification = 1;
-				break;
-				case "yesbutshare" :
-					$banner_identifier_allowed_modification = 10;
-				break;
-				case "no" :
-					$banner_identifier_allowed_modification = 0;
-				break;
-				default :
-					$banner_identifier_allowed_modification = 1;
-				break;
-			}
-			switch ($this->license_cc_allow_commercial_use) {
-				case "yes" :
-					$banner_identifier_commercial_use = 1;
-				break;
-				case "no" :
-					$banner_identifier_commercial_use = 0;
-				break;
-				default :
-					$banner_identifier_commercial_use = 1;
-				break;
-			}
-			return \Podlove\PLUGIN_URL . "/images/cc/" . $banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
-		} 
+		return $this->get_license()->getPictureUrl();
 	}
 
-	public function license() {
-		$locales = \Podlove\License\locales_cc();
-		$versions = \Podlove\License\version_per_country_cc();
-		switch ($this->license_type) {
-			case 'cc' :
-				if($this->license_cc_license_jurisdiction != "" AND
-					$this->license_cc_allow_modifications != "" AND
-					$this->license_cc_allow_commercial_use != "")  {
-					if($this->license_cc_license_jurisdiction == "international") {
-						$locale = "";
-						$version = $versions["international"]["version"];
-						$name = $versions["international"]["name"];
-					} else {
-						$locale = $this->license_cc_license_jurisdiction."/";
-						$version = $versions[$this->license_cc_license_jurisdiction]["version"];
-						$name = $locales[$this->license_cc_license_jurisdiction];
-					}
-					return "<div class=\"podlove_cc_license\">
-					<img src=\"".$this->get_license_picture_url()."\" />
-					<p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/".$version."/".$locale."deed.en\">Creative Commons Attribution ".$version." ".$name." License</a>.</p>
-					</div>";
-				} else {
-					return "<span style='color: red;'>This work is (not yet) licensed under a Creative Commons Attribution license, because some license parameters are missing!</span>";
-				}
-			break;
-			case 'other' :
-				if($this->license_name != "" AND $this->license_url != "") {
-					return "<div class=\"podlove_license\">
-								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_url."\">".$this->license_name."</a> license.</p>
-							</div>";
-				} else {
-					return "<span style='color: red;'>This work is (not yet) licensed, as license parameters are missing!</span>";
-				}
-			break;
-			default :
-				return "<div class=\"podlove_license\">
-							<p><span style='color: red;'>This work is (not yet) licensed, as no license was chosen.</span></p>
-						</div>";
-			break;
-		}
+	public function get_license_html() {
+		return $this->get_license()->getHtml();
 	}
 
 	public function get_url_template() {
@@ -289,6 +216,4 @@ $podcast->property( 'media_file_base_uri' );
 $podcast->property( 'uri_delimiter' );
 $podcast->property( 'limit_items' );
 $podcast->property( 'language' );
-$podcast->property( 'license_name' );
-$podcast->property( 'license_url' );
-// $podcast->property( 'url_template' );
+$podcast->property( 'complete' );

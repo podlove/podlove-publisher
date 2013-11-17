@@ -285,7 +285,7 @@ add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 
 function podcast_license() {
 	$podcast = Model\Podcast::get_instance();
-		return $podcast->license();
+		return $podcast->get_license_html();
 }
 add_shortcode( 'podlove-podcast-license', '\Podlove\podcast_license' );
 
@@ -297,7 +297,7 @@ function episode_license() {
 		return '';
 
 	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	return $episode->license();
+	return $episode->get_license_html();
 }
 add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
 
