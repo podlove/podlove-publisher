@@ -6,7 +6,7 @@ use Podlove\ChaptersManager;
 /**
  * We could use simple post_meta instead of a table here
  */
-class Episode extends Base {
+class Episode extends Base implements Licensable {
 
 	/**
 	 * Generate a human readable title.
@@ -209,93 +209,26 @@ class Episode extends Base {
 		return true;
 	}
 
-	public function get_license() {
-		$license_type = $this->license_type;
-		switch ($license_type) {
-			case 'cc':
-				return array(
-					'license_type' => $license_type,
-					'license_attributes' => array(	'license_name' => "Creative Commons 3.0",
-													'license_url' => "http://creativecommons.org/licenses/by/3.0/",
-													'allow_modifications' => $this->license_cc_allow_modifications,
-													'allow_commercial_use' =>$this->license_cc_allow_commercial_use,
-													'jurisdiction' => $this->license_cc_license_jurisdiction)
-											);
-			break;
-			default :
-				return array(
-					'license_type' => $license_type, 
-					'license_attributes' => array(	'license_name' => $this->license_name,
-													'license_url' => $this->license_url)
-											);
-			break;
-		}
+	public function get_license()
+	{
+		$license = new License('episode', array(
+			'type'                 => $this->license_type,
+			'license_name'         => $this->license_name,
+			'license_url'          => $this->license_url,
+			'allow_modifications'  => $this->license_cc_allow_modifications,
+			'allow_commercial_use' => $this->license_cc_allow_commercial_use,
+			'jurisdiction'         => $this->license_cc_license_jurisdiction
+		));
+
+		return $license;
 	}
 
 	public function get_license_picture_url() {
-		if($this->license_type == "cc") {
-			switch ($this->license_cc_allow_modifications) {
-				case "yes" :
-					$banner_identifier_allowed_modification = 1;
-				break;
-				case "yesbutshare" :
-					$banner_identifier_allowed_modification = 10;
-				break;
-				case "no" :
-					$banner_identifier_allowed_modification = 0;
-				break;
-				default :
-					$banner_identifier_allowed_modification = 1;
-				break;
-			}
-
-			$banner_identifier_commercial_use = ($this->license_cc_allow_commercial_use == "no") ? "0" : "1";
-
-			return \Podlove\PLUGIN_URL . "/images/cc/" . $banner_identifier_allowed_modification."_".$banner_identifier_commercial_use.".png";
-		} 
+		return $this->get_license()->getPictureUrl();
 	}
 
-	public function license() {
-		$locales = \Podlove\License\locales_cc();
-		$versions = \Podlove\License\version_per_country_cc();
-		switch ($this->license_type) {
-			case 'cc' :
-				if($this->license_cc_license_jurisdiction != "" AND
-					$this->license_cc_allow_modifications != "" AND
-					$this->license_cc_allow_commercial_use != "")  {
-					if($this->license_cc_license_jurisdiction == "international") {
-						$locale = "";
-						$version = $versions["international"]["version"];
-						$name = $versions["international"]["name"];
-					} else {
-						$locale = $this->license_cc_license_jurisdiction."/";
-						$version = $versions[$this->license_cc_license_jurisdiction]["version"];
-						$name = $locales[$this->license_cc_license_jurisdiction];
-					}
-					return "<div class=\"podlove_cc_license\">
-					<img src=\"".$this->get_license_picture_url()."\" />
-					<p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/".$version."/".$locale."deed.en\">Creative Commons Attribution ".$version." ".$name." License</a>.</p>
-					</div>";
-				} else {
-					$podcast = Podcast::get_instance();
-					return $podcast->license();						
-				}
-			break;
-			case 'other' :
-				if($this->license_name != "" AND $this->license_url != "") {
-					return "<div class=\"podlove_license\">
-								<p>This work is licensed under the <a rel=\"license\" href=\"".$this->license_url."\">".$this->license_name."</a> license.</p>
-							</div>";
-				} else {
-					$podcast = \Podlove\Model\Podcast::get_instance();
-					return $podcast->license();
-				}
-			break;
-			default :
-				$podcast = \Podlove\Model\Podcast::get_instance();
-				return $podcast->license();
-			break;
-		}
+	public function get_license_html() {
+		return $this->get_license()->getHtml();
 	}	
 }
 

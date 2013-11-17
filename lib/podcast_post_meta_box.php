@@ -157,7 +157,7 @@ class Podcast_Post_Meta_Box {
 					if(isset($episode->license_type) AND $episode->license_type !== "") {
 						$podcast_license_informations = $episode->license_type;
 					} else {
-						$podcast_license_informations = $podcast->get_license();
+						$podcast_license_informations = $podcast->get_license()->getAttributes();
 					}
 
 					switch ($podcast_license_informations['license_type']) {
@@ -288,7 +288,7 @@ class Podcast_Post_Meta_Box {
 		<script type="text/javascript">
 			var plugin_url = "<?php echo \Podlove\PLUGIN_URL; ?>";
 			var license = new Object();
-			license.type = '<?php echo $podcast->get_license_type(); ?>';
+			license.type = '<?php echo $podcast->get_license()->type; ?>';
 			license.status = '#podlove_podcast_license_status';
 			license.image = '.podlove_podcast_license_image';
 			license.image_row = 'div.row__podlove_podcast_license_preview';

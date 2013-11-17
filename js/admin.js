@@ -121,11 +121,11 @@ jQuery(function($) {
 });
 
 PODLOVE.license = function() {
-		jQuery(license.form_type).change(function() {
+	jQuery(license.form_type).change(function() {
 		if(jQuery(license.form_type).val() !== "") {
 			podlove_toggle_license_form(jQuery(license.form_type).val());
 			podlove_check_license_form(jQuery(license.form_type).val());
-			jQuery(license.status).show();						
+			jQuery(license.status).show();
 		} else {
 			jQuery(license.form_row_other+","+license.form_row_cc_preview).hide();
 			jQuery(license.form_row_cc).hide();										
