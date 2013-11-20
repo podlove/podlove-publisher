@@ -90,7 +90,19 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		</form>
 		<?php
 	}
-		
+
+	public function get_sortable_columns() {
+	  $sortable_columns = array(
+	    'realname'  => array('realname',false),
+	    'publicname'  => array('publicname',false),
+	    'role'  => array('role',false),
+	    'slug'  => array('slug',false),
+	    'privateemail'  => array('privateemail',false),
+	    'permanentcontributor'  => array('permanentcontributor',false),
+	    'showpublic'  => array('showpublic',false)
+	  );
+	  return $sortable_columns;
+	}		
 
 	public function prepare_items() {
 
@@ -105,12 +117,26 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+
+		// look for order options
+		if( isset($_GET['orderby'])  ) {
+			$orderby = 'ORDER BY ' . $_GET['orderby'];
+		} else{
+			$orderby = 'ORDER BY realname';
+		}
+
+		// look how to sort
+		if( isset($_GET['order'])  ) {
+			$order = $_GET['order'];
+		} else{
+			$order = 'ASC';
+		}
 		
 		// retrieve data
-		if( !isset($_POST['s'] ) ) {
-			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'ORDER BY realname ASC' );
+		if( !isset($_POST['s']) ) {
+			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else if ( empty($_POST['s']) ) {
-			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'ORDER BY realname ASC' );
+			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else {
 			$foo = $_POST['s'];
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'WHERE 
@@ -130,7 +156,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 																			`publicname` LIKE \'%'.$foo.'%\' OR
 																			`guid` LIKE \'%'.$foo.'%\' OR
 																			`www` LIKE \'%'.$foo.'%\'
-																			ORDER BY realname ASC' );
+																			'.$orderby.' '.$order );
 		}
 		
 		// get current page
