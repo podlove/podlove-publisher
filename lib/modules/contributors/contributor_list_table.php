@@ -82,11 +82,24 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		);
 		return $columns;
 	}
-	
-	public function prepare_items() {
-		// number of items per page
-		$per_page = 10;
+
+	public function search_form() {
+		?>
+		<form method="post">
+		  <?php $this->search_box('search', 'search_id'); ?>
+		</form>
+		<?php
+	}
 		
+
+	public function prepare_items() {
+
+		// number of items per page
+		$per_page = get_user_meta( get_current_user_id(), 'podlove_contributors_per_page', true);
+		if( empty($per_page) ) {
+			$per_page = 10;
+		}
+
 		// define column headers
 		$columns = $this->get_columns();
 		$hidden = array();
@@ -94,7 +107,31 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		
 		// retrieve data
-		$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'ORDER BY realname ASC' );
+		if( !isset($_POST['s'] ) ) {
+			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'ORDER BY realname ASC' );
+		} else if ( empty($_POST['s']) ) {
+			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'ORDER BY realname ASC' );
+		} else {
+			$foo = $_POST['s'];
+			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'WHERE 
+																			`slug` LIKE \'%'.$foo.'%\' OR
+																			`gender` LIKE \'%'.$foo.'%\' OR
+																			`organisation` LIKE \'%'.$foo.'%\' OR
+																			`slug` LIKE \'%'.$foo.'%\' OR
+																			`department` LIKE \'%'.$foo.'%\' OR
+																			`twitter` LIKE \'%'.$foo.'%\' OR
+																			`adn` LIKE \'%'.$foo.'%\' OR
+																			`facebook` LIKE \'%'.$foo.'%\' OR
+																			`flattr` LIKE \'%'.$foo.'%\' OR
+																			`publicemail` LIKE \'%'.$foo.'%\' OR
+																			`privateemail` LIKE \'%'.$foo.'%\' OR
+																			`role` LIKE \'%'.$foo.'%\' OR
+																			`realname` LIKE \'%'.$foo.'%\' OR
+																			`publicname` LIKE \'%'.$foo.'%\' OR
+																			`guid` LIKE \'%'.$foo.'%\' OR
+																			`www` LIKE \'%'.$foo.'%\'
+																			ORDER BY realname ASC' );
+		}
 		
 		// get current page
 		$current_page = $this->get_pagenum();
@@ -111,7 +148,8 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		    'per_page'    => $per_page,
 		    'total_pages' => ceil( $total_items / $per_page )
 		) );
+
+		// Search box
+		$this->search_form();
 	}
-
-
 }
