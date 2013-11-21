@@ -32,10 +32,10 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 			foreach ($contributors as $list_number => $contributor) {
 				$contributor_details = $contributor->getContributor("showpublic=1");
 				if($contributor_details->showpublic == 1) {
-					echo "		<contributor>\n";
-					echo "			<name>".$contributor_details->publicname."</name>\n";
-					echo "			<uri>".$contributor_details->guid."</uri>\n";
-					echo "		</contributor>\n";
+					echo "		<atom:contributor>\n";
+					echo "			<atom:name>".$contributor_details->publicname."</atom:name>\n";
+					echo "			<atom:uri>".$contributor_details->guid."</atom:uri>\n";
+					echo "		</atom:contributor>\n";
 				}
 			}
 		?>
