@@ -85,10 +85,10 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		$contributors = \Podlove\Modules\Contributors\Contributor::find_all_by_where("showpublic=1 AND permanentcontributor=1");
 		echo "\n\n";
 		foreach ($contributors as $list_number => $contributor) {
-			echo "	<contributor>\n";
-			echo "		<name>".$contributor->publicname."</name>\n";
-			echo "		<uri>".$contributor->guid."</uri>\n";		
-			echo "	</contributor>\n";
+			echo "	<atom:contributor>\n"
+			. "		<atom:name>".$contributor->publicname."</atom:name>\n"
+			. "		<atom:uri>".$contributor->guid."</atom:uri>\n"
+			. "	</atom:contributor>\n";
 		}		
 	});
  	
