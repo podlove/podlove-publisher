@@ -198,7 +198,8 @@ class Website extends Tab {
 				'merge_episodes',
 				'hide_wp_feed_discovery',
 				'use_post_permastruct',
-				'episode_archive'
+				'episode_archive',
+				'force_download'
 			);
 			foreach ( $checkboxes as $checkbox_key ) {
 				if ( ! isset( $options[ $checkbox_key ] ) )
