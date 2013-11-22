@@ -256,7 +256,6 @@ class Podcast_Post_Meta_Box {
 
 					$wrapper->select( 'license_cc_license_jurisdiction', array(
 						'label'       => __( 'License Jurisdiction', 'podlove' ),
-						'html' => array( 'class' => 'chosen' ),
 						'options' => \Podlove\License\locales_cc(),
 						'default' => $episode_jurisdiction
 					) );
