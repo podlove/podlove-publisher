@@ -18,7 +18,6 @@ class ContributorRoles {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 	}
 	
 	public static function get_action_link( $role, $title, $action = 'edit', $class = 'link' ) {
@@ -180,13 +179,5 @@ class ContributorRoles {
 			) );
 
 		} );
-	}
-	
-	public function scripts_and_styles() {
-		// wp_register_script( 'podlove-contributors-admin-script', get_bloginfo('url') . '/wp-content/plugins/podlove-publisher/lib/modules/contributors/js/admin.js', array( 'jquery-ui-autocomplete' ) );
-		// wp_enqueue_script( 'podlove-contributors-admin-script' );
-
-		// wp_register_style( 'podlove-contributors-admin-style', get_bloginfo('url') . '/wp-content/plugins/podlove-publisher/lib/modules/contributors/css/admin.css' );
-		// wp_enqueue_style( 'podlove-contributors-admin-style' );
 	}
 }
