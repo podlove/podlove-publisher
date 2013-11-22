@@ -36,6 +36,13 @@ class License {
 		);
 	}
 
+	public function getSelectOptions() {
+		return array(
+			'cc'    => 'Creative Commons',
+			'other' => __('Other', 'podlove')
+		);
+	}
+
 	public function getName() {
 		if ($this->type == 'cc') {
 			return "Creative Commons 3.0";

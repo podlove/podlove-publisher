@@ -155,7 +155,6 @@ tr.row_podlove_podcast_license_preview {
 div.podlove_cc_license, div.podlove_license {
 	display: block;
 	width: 300px;
-	border: 1px solid #DDD;
 	text-align: center;
 	padding: 10px;
 }
