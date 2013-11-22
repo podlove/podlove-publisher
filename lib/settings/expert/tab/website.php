@@ -11,6 +11,13 @@ class Website extends Tab {
 			/* $callback */ function () { echo '<h3>' . __( 'Website Settings', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
+
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_files',
+			/* $title 	 */ __( '', 'podlove' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Files & Downloads', 'podlove' ) . '</h3>'; },
+			/* $page	 */ Settings::$pagehook	
+		);
 		
 		add_settings_field(
 			/* $id       */ 'podlove_setting_merge_episodes',
@@ -164,7 +171,23 @@ class Website extends Tab {
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
-			/* $section  */ 'podlove_settings_general'
+			/* $section  */ 'podlove_settings_files'
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_download_header',
+			/* $title    */ sprintf(
+				'<label for="force_download">%s</label>',
+				__( 'Force browsers to download files', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove_website[force_download]" id="force_download" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'force_download' ), 'on' ) ?>>
+				<?php echo __('By default, browsers try to play files directly instead of downloading them. Check this to enforce a download. Warning: This creates extra traffic for your web server!', 'podlove') ?>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_files'
 		);
 
 		register_setting( Settings::$pagehook, 'podlove_website', function($options) {

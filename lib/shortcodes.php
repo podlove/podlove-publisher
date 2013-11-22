@@ -44,7 +44,7 @@ function handle_direct_download() {
 		exit;
 	}
 
-	if ( in_array( strtolower( ini_get( 'allow_url_fopen' ) ), array( "1", "on", "true" ) ) ) {
+	if ( \Podlove\get_setting('website', 'force_download') == 'on' && in_array( strtolower( ini_get( 'allow_url_fopen' ) ), array( "1", "on", "true" ) ) ) {
 		header( "Expires: 0" );
 		header( 'Cache-Control: must-revalidate' );
 	    header( 'Pragma: public' );
