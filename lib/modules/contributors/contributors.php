@@ -23,6 +23,14 @@ class Contributors extends \Podlove\Modules\Base {
 		// register shortcodes
 		new Shortcodes;	
 
+		// on settings screen, save per_page option
+		add_filter( "set-screen-option", function($status, $option, $value) {
+			if ($option == 'podlove_contributors_per_page')
+				return $value;
+			
+			return $status;
+		}, 10, 3 );
+
 		// register settings page
 		add_action('podlove_register_settings_pages', function($settings_parent) {
 			new Settings\Contributors($settings_parent);

@@ -130,26 +130,15 @@ class Contributors {
 		$this->redirect( 'index' );
 	}
 
-	/**
-	 * Add screen option to set the Contributors per page
-	 */
-
-	public function set_contributors_screen_options( $status, $option, $value ) {
-		apply_filters('set-screen-option', false, $option, $value);
-	}
-
 	public function add_contributors_screen_options() {
-	  $option = 'per_page';
-	  $args = array(
-	         'label' => 'Contributors',
-	         'default' => 10,
-	         'option' => 'podlove_contributors_per_page'
-	         );
+		$option = 'per_page';
+		$args = array(
+	       'label'   => 'Contributors',
+	       'default' => 10,
+	       'option'  => 'podlove_contributors_per_page'
+		);
 
-	  if( !isset($_GET['action']) ) {
-	  	add_screen_option( $option, $args );
-	  	add_filter( "set-screen-option", array( $this, 'set_contributors_screen_options' ) );
-	  }
+		add_screen_option( $option, $args );
 	}
 
 	/**
