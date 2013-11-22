@@ -26,19 +26,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<link><?php the_permalink() ?></link>
 		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
 		<guid isPermaLink="false"><?php echo htmlspecialchars( get_the_guid() ); ?></guid>
-		<?php 
-			$episode =  \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
-			$contributors = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
-			foreach ($contributors as $list_number => $contributor) {
-				$contributor_details = $contributor->getContributor("showpublic=1");
-				if($contributor_details->showpublic == 1) {
-					echo "		<atom:contributor>\n";
-					echo "			<atom:name>".$contributor_details->publicname."</atom:name>\n";
-					echo "			<atom:uri>".$contributor_details->guid."</atom:uri>\n";
-					echo "		</atom:contributor>\n";
-				}
-			}
-		?>
 	<?php rss_enclosure(); ?>
 	<?php do_action( 'rss2_item' ); ?>
 	</item>
