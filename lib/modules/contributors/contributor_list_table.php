@@ -14,21 +14,24 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		) );
 	}
 	
-
 	public function column_realname( $contributor ) {
 		$actions = array(
 			'edit'   => Settings\Contributors::get_action_link( $contributor, __( 'Edit', 'podlove' ) ),
 			'delete' => Settings\Contributors::get_action_link( $contributor, __( 'Delete', 'podlove' ), 'confirm_delete' ),
-			'list'   => sprintf('<a href="%s">%s</a>',
-				admin_url( 'edit.php?post_type=podcast&contributor=' . $contributor->slug ),
-				__('Show Episodes', 'podlove')
-			)
+			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove'))
 		);
 	
 		return sprintf( '%1$s %2$s',
 		    Settings\Contributors::get_action_link( $contributor, $contributor->realname ),
 		    $this->row_actions( $actions )
 		) . '<input type="hidden" class="contributor_id" value="' . $contributor->id . '">';;
+	}
+
+	private function get_episodes_link($contributor, $title) {
+		return sprintf('<a href="%s">%s</a>',
+			admin_url( 'edit.php?post_type=podcast&contributor=' . $contributor->slug ),
+			$title
+		);
 	}
 
 	public function column_publicname( $contributor ) {
@@ -74,15 +77,20 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		return $contributor->permanentcontributor ? '✓' : '×';
 	}
 
+	public function column_episodes( $contributor ) {
+		return $this->get_episodes_link($contributor, $contributor->contributioncount);
+	}
+
 	public function get_columns(){
 		$columns = array(
-			'realname'         => __( 'Real Name', 'podlove' ),
-			'publicname'         => __( 'Public Name', 'podlove' ),
-			'role'         	=> __( 'Default Role', 'podlove' ),
-			'slug'         	=> __( 'ID', 'podlove' ),
-			'privateemail'         	=> __( 'Private E-mail', 'podlove' ),
-			'permanentcontributor'	=> __( 'Permanent Contributor', 'podlove' ),
-			'showpublic'         	=> __( 'Public Profile?', 'podlove' )
+			'realname'             => __( 'Real Name', 'podlove' ),
+			'publicname'           => __( 'Public Name', 'podlove' ),
+			'role'                 => __( 'Default Role', 'podlove' ),
+			'episodes'             => __( 'Episodes', 'podlove' ),
+			'slug'                 => __( 'ID', 'podlove' ),
+			'privateemail'         => __( 'Private E-mail', 'podlove' ),
+			'permanentcontributor' => __( 'Permanent Contributor', 'podlove' ),
+			'showpublic'           => __( 'Public Profile?', 'podlove' )
 		);
 		return $columns;
 	}
@@ -97,13 +105,14 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	public function get_sortable_columns() {
 	  $sortable_columns = array(
-	    'realname'  => array('realname',false),
-	    'publicname'  => array('publicname',false),
-	    'role'  => array('role',false),
-	    'slug'  => array('slug',false),
-	    'privateemail'  => array('privateemail',false),
-	    'permanentcontributor'  => array('permanentcontributor',false),
-	    'showpublic'  => array('showpublic',false)
+	    'realname'             => array('realname',false),
+	    'publicname'           => array('publicname',false),
+	    'role'                 => array('role',false),
+	    'episodes'             => array('contributioncount',true),
+	    'slug'                 => array('slug',false),
+	    'privateemail'         => array('privateemail',false),
+	    'permanentcontributor' => array('permanentcontributor',false),
+	    'showpublic'           => array('showpublic',false)
 	  );
 	  return $sortable_columns;
 	}		
@@ -126,14 +135,14 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		if( isset($_GET['orderby'])  ) {
 			$orderby = 'ORDER BY ' . $_GET['orderby'];
 		} else{
-			$orderby = 'ORDER BY realname';
+			$orderby = 'ORDER BY contributioncount';
 		}
 
 		// look how to sort
 		if( isset($_GET['order'])  ) {
 			$order = $_GET['order'];
 		} else{
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 		
 		// retrieve data
