@@ -62,7 +62,8 @@ function get_setting( $namespace, $name ) {
 		'metadata' => array(
 			'enable_episode_record_date'      => 0,
 			'enable_episode_publication_date' => 0,
-			'enable_episode_explicit' => 0
+			'enable_episode_explicit' => 0,
+			'enable_episode_license' => 0
 		),
 		'redirects' => array(
 			'podlove_setting_redirect' => array(),
