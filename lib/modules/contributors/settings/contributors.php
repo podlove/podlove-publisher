@@ -304,8 +304,5 @@ class Contributors {
 	public function scripts_and_styles() {
 		wp_register_script( 'podlove-contributors-admin-script', \Podlove\PLUGIN_URL . '/lib/modules/contributors/js/admin.js', array( 'jquery-ui-autocomplete' ) );
 		wp_enqueue_script( 'podlove-contributors-admin-script' );
-
-		wp_register_style( 'podlove-contributors-admin-style', \Podlove\PLUGIN_URL . '/lib/modules/contributors/css/admin.css' );
-		wp_enqueue_style( 'podlove-contributors-admin-style' );
 	}
 }
