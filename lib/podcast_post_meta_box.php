@@ -154,88 +154,30 @@ class Podcast_Post_Meta_Box {
 
 				if ( \Podlove\get_setting( 'metadata', 'enable_episode_license' ) ) {
 					$podcast = Model\Podcast::get_instance();
-					if(isset($episode->license_type) AND $episode->license_type !== "") {
-						$podcast_license_informations = $episode->license_type;
-					} else {
-						$podcast_license_informations = $podcast->get_license()->getAttributes();
-					}
+					$license = $podcast->get_license();
 
-					switch ($podcast_license_informations['license_type']) {
-						case 'cc' :
-							$podlove_license = array('cc' => 'Creative Commons (Standard)', 'other' => 'Other');
-						break;
-						case 'other' :
-							$podlove_license = array('cc' => 'Creative Commons', 'other' => 'Other (Standard)');
-						break;
-						default :
-							$podlove_license = array('cc' => 'Creative Commons', 'other' => 'Other');
-						break;
-					}
-
-					if($podcast_license_informations['license_type'] !== "") {
-						$wrapper->select( 'license_type', array(
-							'label'       => __( 'License', 'podlove' ),
-							'options' 	  => $podlove_license,
-							'html' => array( 'style' => 'width: 300px;'),
-							'please_choose' => false,
-							'default' => $podcast_license_informations['license_type'],
-							'description' => '<span id="podlove_podcast_license_status"><a href="javascript:podlove_toggle_license_form(\''.$podcast_license_informations['license_type'].'\')">Edit</a> the selected license for the current episode.</span>'
- 						));
-					} else {
-						$wrapper->select( 'license_type', array(
-							'label'       => __( 'License', 'podlove' ),
-							'options' 	  => $podlove_license,
-							'html' => array( 'style' => 'width: 300px;'),
-							'please_choose' => true,
-							'default' => $podcast_license_informations['license_type'],
-							'description' => '<span id="podlove_podcast_license_status"></span>'
- 						));						
-					}
+					$wrapper->select( 'license_type', array(
+						'label'       => __( 'License', 'podlove' ),
+						'options' 	  => $license->getSelectOptions(),
+						'html' => array( 'style' => 'width: 300px;'),
+						'please_choose' => false,
+						'default' => $license->type,
+						'description' => '<span id="podlove_podcast_license_status"><a href="javascript:podlove_toggle_license_form(\''.$license->type.'\')">Edit</a> the selected license for the current episode.</span>'
+						));
 
 					echo "<div id=\"podlove_episode_license_wrapper\">";
-
-					if(isset($podcast_license_informations['license_attributes']['allow_modifications']) AND 
-						$podcast_license_informations['license_attributes']['allow_modifications'] !== "") {
-						$episode_allow_modification = $podcast_license_informations['license_attributes']['allow_modifications'];
-					} else {
-						$episode_allow_modification = FALSE;
-					}
-					if(isset($podcast_license_informations['license_attributes']['allow_commercial_use']) AND 
-						$podcast_license_informations['license_attributes']['allow_commercial_use'] !== "") {
-						$episode_allow_commercial_use = $podcast_license_informations['license_attributes']['allow_commercial_use'];
-					} else {
-						$episode_allow_commercial_use = FALSE;
-					}
-					if(isset($podcast_license_informations['license_attributes']['jurisdiction']) AND 
-						$podcast_license_informations['license_attributes']['jurisdiction'] !== "") {
-						$episode_jurisdiction = $podcast_license_informations['license_attributes']['jurisdiction'];
-					} else {
-						$episode_jurisdiction = FALSE;
-					}
-					if(isset($podcast_license_informations['license_attributes']['license_name']) AND 
-						$podcast_license_informations['license_attributes']['license_name'] !== "") {
-						$episode_license_name = $podcast_license_informations['license_attributes']['license_name'];
-					} else {
-						$episode_license_name = FALSE;
-					}
-					if(isset($podcast_license_informations['license_attributes']['license_url']) AND 
-						$podcast_license_informations['license_attributes']['license_url'] !== "") {
-						$episode_license_url = $podcast_license_informations['license_attributes']['license_url'];
-					} else {
-						$episode_license_url = FALSE;
-					}
 
 					$wrapper->string( 'license_name', array(
 						'label'       => __( 'License Name', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' ),
-						'default' => $episode_license_name
+						'default' => $license->name
 					) );
 
 					$wrapper->string( 'license_url', array(
 						'label'       => __( 'License URL', 'podlove' ),
 						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' ),
-						'default' => $episode_license_url
+						'default' => $license->url
 					) );
 
 					$wrapper->select( 'license_cc_allow_modifications', array(
@@ -243,7 +185,7 @@ class Podcast_Post_Meta_Box {
 						'description' => __( 'Allow modifications of your work?', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' ),
 						'options' => array('yes' => 'Yes', 'yesbutshare' => 'Yes, as long as others share alike', 'no' => 'No'),
-						'default' => $episode_allow_modification
+						'default' => $license->cc_allow_modifications
 					) );
 
 					$wrapper->select( 'license_cc_allow_commercial_use', array(
@@ -251,13 +193,13 @@ class Podcast_Post_Meta_Box {
 						'description' => __( 'Allow commercial uses of your work?', 'podlove' ),
 						'html' => array( 'class' => 'regular-text' ),
 						'options' => array('yes' => 'Yes', 'no' => 'No'),
-						'default' => $episode_allow_commercial_use
+						'default' => $license->cc_allow_commercial_use
 					) );
 
 					$wrapper->select( 'license_cc_license_jurisdiction', array(
 						'label'       => __( 'License Jurisdiction', 'podlove' ),
 						'options' => \Podlove\License\locales_cc(),
-						'default' => $episode_jurisdiction
+						'default' => $license->cc_license_jurisdiction
 					) );
 
 					?>
