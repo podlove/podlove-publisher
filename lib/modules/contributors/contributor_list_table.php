@@ -18,7 +18,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	public function column_realname( $contributor ) {
 		$actions = array(
 			'edit'   => Settings\Contributors::get_action_link( $contributor, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\Contributors::get_action_link( $contributor, __( 'Delete', 'podlove' ), 'confirm_delete' )
+			'delete' => Settings\Contributors::get_action_link( $contributor, __( 'Delete', 'podlove' ), 'confirm_delete' ),
+			'list'   => sprintf('<a href="%s">%s</a>',
+				admin_url( 'edit.php?post_type=podcast&contributor=' . $contributor->slug ),
+				__('Show Episodes', 'podlove')
+			)
 		);
 	
 		return sprintf( '%1$s %2$s',
