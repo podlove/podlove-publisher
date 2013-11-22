@@ -28,7 +28,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		<guid isPermaLink="false"><?php echo htmlspecialchars( get_the_guid() ); ?></guid>
 		<?php 
 			$episode =  \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
-			$contributors = \Podlove\Modules\Contributors\EpisodeContribution::find_all_by_episode_id($episode->id);
+			$contributors = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
 			foreach ($contributors as $list_number => $contributor) {
 				$contributor_details = $contributor->getContributor("showpublic=1");
 				if($contributor_details->showpublic == 1) {
