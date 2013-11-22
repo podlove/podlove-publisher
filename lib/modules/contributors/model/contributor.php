@@ -21,6 +21,11 @@ class Contributor extends Base
 		return EpisodeContribution::find_all_by_contributor_id($this->id);
 	}
 
+	public function calcContributioncount() {
+		$this->contributioncount = count($this->getContributions());
+		$this->save();
+	}
+
 	/**
 	 * Get Gravatar URL for a specified email address.
 	 *
@@ -61,3 +66,4 @@ Contributor::property( 'showpublic', 'VARCHAR(255)' );
 Contributor::property( 'permanentcontributor', 'VARCHAR(255)' );
 Contributor::property( 'guid', 'TEXT' );
 Contributor::property( 'www', 'TEXT' );
+Contributor::property( 'contributioncount', 'INT' );

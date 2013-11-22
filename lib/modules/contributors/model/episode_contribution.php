@@ -19,6 +19,16 @@ class EpisodeContribution extends Base {
 	public function getEpisode() {
 		return \Podlove\Model\Episode::find_one_by_id($this->episode_id);
 	}
+
+	public function save() {
+		parent::save();
+		$this->getContributor()->calcContributioncount();
+	}
+
+	public function delete() {
+		parent::delete();
+		$this->getContributor()->calcContributioncount();
+	}
 }
 
 EpisodeContribution::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
