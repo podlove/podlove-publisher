@@ -7,10 +7,6 @@ use \Podlove\Model;
  */
 class Podcast_Post_Type {
 
-	public function foo() {
-		echo "foo";
-	}
-
 	public function __construct() {
 
 		$labels = array(
