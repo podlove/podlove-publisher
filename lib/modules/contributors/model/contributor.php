@@ -17,6 +17,10 @@ class Contributor extends Base
 			return $this->getGravatarUrl($size);
 	}
 
+	public function getContributions() {
+		return EpisodeContribution::find_all_by_contributor_id($this->id);
+	}
+
 	/**
 	 * Get Gravatar URL for a specified email address.
 	 *

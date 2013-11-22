@@ -19,6 +19,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
 		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
+		add_filter( 'parse_query', array($this, 'filter_by_contributor') );
 	
 		// register shortcodes
 		new Shortcodes;	
@@ -36,6 +37,26 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorRoles($settings_parent);
 		});
+	}
+
+	/**
+	 * Allow to filter post list by contributor slug.
+	 */
+	function filter_by_contributor( $query )
+	{
+		if (!isset($_GET['post_type']) || $_GET['post_type'] !== 'podcast')
+			return;
+
+		if (!isset($_GET['contributor']) || empty($_GET['contributor']))
+			return;
+
+		if (!$contributor = Contributor::find_one_by_slug($_GET['contributor']))
+			return;
+
+		$contributions = $contributor->getContributions();
+		$query->query_vars['post__in'] = array_map(function($c) {
+			return $c->getEpisode()->post_id;
+		}, $contributions);
 	}
 	
 	public function was_activated( $module_name ) {

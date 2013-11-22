@@ -15,6 +15,10 @@ class EpisodeContribution extends Base {
 	public function getContributor() {
 		return Contributor::find_by_id($this->contributor_id);
 	}
+
+	public function getEpisode() {
+		return \Podlove\Model\Episode::find_one_by_id($this->episode_id);
+	}
 }
 
 EpisodeContribution::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
