@@ -10,7 +10,7 @@ class ContributorRoles {
 	public function __construct( $handle ) {
 		
 		ContributorRoles::$pagehook = add_submenu_page(
-			/* $parent_slug*/ $handle,
+			/* $parent_slug*/ 'edit.php?post_type=podcast',
 			/* $page_title */ 'Contributor Roles',
 			/* $menu_title */ 'Contributor Roles',
 			/* $capability */ 'administrator',
@@ -23,7 +23,7 @@ class ContributorRoles {
 	
 	public static function get_action_link( $role, $title, $action = 'edit', $class = 'link' ) {
 		return sprintf(
-			'<a href="?page=%s&action=%s&role=%s" class="%s">' . $title . '</a>',
+			'<a href="?post_type=podcast&amp;page=%s&amp;action=%s&amp;role=%s" class="%s">' . $title . '</a>',
 			$_REQUEST['page'],
 			$action,
 			$role->id,
@@ -54,7 +54,7 @@ class ContributorRoles {
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo sprintf( __( 'You selected to delete the role "%s". Please confirm this action.', 'podlove' ), $role->realname ) ?>
+						<?php echo sprintf( __( 'You selected to delete the role "%s". Please confirm this action.', 'podlove' ), $role->title ) ?>
 					</strong>
 				</p>
 				<p>
@@ -69,7 +69,7 @@ class ContributorRoles {
 
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Contributor Roles', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Contributor Roles', 'podlove' ); ?> <a href="?post_type=podcast&amp;page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {
@@ -126,7 +126,7 @@ class ContributorRoles {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $role_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
+		$page   = 'edit.php?post_type=podcast&page=' . $_REQUEST['page'];
 		$show   = ( $role_id ) ? '&role=' . $role_id : '';
 		$action = '&action=' . $action;
 		

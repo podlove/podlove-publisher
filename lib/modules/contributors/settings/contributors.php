@@ -12,7 +12,7 @@ class Contributors {
 	public function __construct( $handle ) {
 		
 		Contributors::$pagehook = add_submenu_page(
-			/* $parent_slug*/ $handle,
+			/* $parent_slug*/ 'edit.php?post_type=podcast',
 			/* $page_title */ 'Contributors',
 			/* $menu_title */ 'Contributors',
 			/* $capability */ 'administrator',
@@ -29,7 +29,7 @@ class Contributors {
 	
 	public static function get_action_link( $contributor, $title, $action = 'edit', $class = 'link' ) {
 		return sprintf(
-			'<a href="?page=%s&action=%s&contributor=%s" class="%s">' . $title . '</a>',
+			'<a href="?post_type=podcast&amp;page=%s&amp;action=%s&amp;contributor=%s" class="%s">' . $title . '</a>',
 			$_REQUEST['page'],
 			$action,
 			$contributor->id,
@@ -77,7 +77,7 @@ class Contributors {
 
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Contributors', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Contributors', 'podlove' ); ?> <a href="?post_type=podcast&amp;page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {
@@ -145,7 +145,7 @@ class Contributors {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $contributor_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
+		$page   = 'edit.php?post_type=podcast&page=' . $_REQUEST['page'];
 		$show   = ( $contributor_id ) ? '&contributor=' . $contributor_id : '';
 		$action = '&action=' . $action;
 		
