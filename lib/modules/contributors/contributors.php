@@ -175,7 +175,7 @@ class Contributors extends \Podlove\Modules\Base {
 				if ($current_page->action == "add") {
 					$permanent_contributors = \Podlove\Modules\Contributors\Model\Contributor::find_all_by_property("permanentcontributor", "1");
 					foreach ($permanent_contributors as $permanent_contributor) {
-						$contrib = new \Podlove\Modules\Contributors\EpisodeContribution;
+						$contrib = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
 						$contrib->contributor_id = $permanent_contributor->id;
 						$contrib->role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id($permanent_contributor->role_id);
 						$contributions[] = $contrib;
