@@ -82,7 +82,18 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo $feed->get_self_link();
 		echo $feed->get_alternate_links();
 	}, 9 );
-	
+
+	add_action( $hook, function () {
+		$contributors = \Podlove\Modules\Contributors\Contributor::find_all_by_where("showpublic=1 AND permanentcontributor=1");
+		echo "\n\n";
+		foreach ($contributors as $list_number => $contributor) {
+			echo "	<atom:contributor>\n"
+			. "		<atom:name>".$contributor->publicname."</atom:name>\n"
+			. "		<atom:uri>".$contributor->guid."</atom:uri>\n"
+			. "	</atom:contributor>\n";
+		}		
+	});
+ 	
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		echo PHP_EOL;
 
