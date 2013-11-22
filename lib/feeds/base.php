@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Feeds;
 use Podlove\Model;
+use Podlove\Modules\Contributors\Model\EpisodeContribution;
 
 function the_description() {
 	global $post;
@@ -234,6 +235,22 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$content_encoded = '<content:encoded><![CDATA[' . get_the_content_feed( 'rss2' ) . ']]></content:encoded>';
 			echo apply_filters( 'podlove_feed_content_encoded', $content_encoded );
 		}
+
+		$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+		$contributor_xml = '';
+		foreach ($contributions as $contribution) {
+			$contributor = $contribution->getContributor("showpublic=1");
+			if($contributor->showpublic == 1 && $contributor->publicname) {
+				$contributor_xml .= "<atom:contributor>\n";
+				$contributor_xml .= "	<atom:name>".$contributor->publicname."</atom:name>\n";
+
+				if ($contributor->guid)
+					$contributor_xml .= "	<atom:uri>".$contributor->guid."</atom:uri>\n";
+
+				$contributor_xml .= "</atom:contributor>\n";
+			}
+		}
+		echo apply_filters( 'podlove_feed_contributors', $contributor_xml );
 
 	}, 11 );
 }
