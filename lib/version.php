@@ -377,6 +377,8 @@ function run_migrations_for_version( $version ) {
 
 				if ($contributors && !is_wp_error($contributors)) {
 					foreach ($contributors as $contributor) {
+
+						// create new contributor
 						$new = new \Podlove\Modules\Contributors\Model\Contributor();
 						$new->publicname = $contributor->name;
 						$new->realname = $contributor->name;
@@ -391,6 +393,26 @@ function run_migrations_for_version( $version ) {
 							}
 						}
 						$new->save();
+
+						// create contributions
+						$query = new \WP_Query(array(
+							'posts_per_page' => -1,
+							'post_type' => 'podcast',
+							'tax_query' => array(
+								array(
+									'taxonomy' => 'podlove-contributors',
+									'field' => 'slug',
+									'terms' => $contributor->slug
+								)
+							)
+						));
+						while ($query->have_posts()) {
+							$post = $query->next_post();
+							$contribution = new \Podlove\Modules\Contributors\Model\EpisodeContribution();
+							$contribution->contributor_id = $new->id;
+							$contribution->episode_id = Model\Episode::find_one_by_post_id($post->ID)->id;
+							$contribution->save();
+						}
 					}
 				}
 			}
