@@ -259,7 +259,7 @@ class Contributors extends \Podlove\Modules\Base {
 		}
 		?>
 		<div id="contributors-form">
-			<table class="podlove_alternating" style="margin-top: 1em;" border="0" cellspacing="0">
+			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
 						<th>Contributor</th>
