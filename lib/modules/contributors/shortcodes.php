@@ -187,8 +187,8 @@ EOD;
 		foreach ($this->contributions as $contribution) {
 			$contributor = $contribution->getContributor();
 			$body .= "<tr>";
-			$body .= "  <td>" . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '') . $this->wrapWithLink($contributor, $contributor->publicname) . "</td>";
-			$body .= "  <td>" . $this->getSocialButtons($contributor) . "</td>";
+			$body .= "  <td>" . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(50) . ' ' : '') . $this->wrapWithLink($contributor, $contributor->publicname) . "</td>";
+			$body .= "  <td style='font-size: 1.7em'>" . $this->getSocialButtons($contributor) . "</td>";
 
 			if ($this->settings['donations'] == 'yes')
 				$body .= "  <td>" . $this->getDonationButton($contributor) . "</td>";
