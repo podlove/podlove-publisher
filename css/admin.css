@@ -67,6 +67,11 @@ i.rotate {
 }
 
 /* Media files */
+table.podlove_alternating th {
+	font-weight: bold;
+	padding: 1px;
+}
+
 table.podlove_alternating {
 	width: 100%;
 	border-bottom: 1px solid #999;
