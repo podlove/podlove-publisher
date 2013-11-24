@@ -89,7 +89,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'episodes'             => __( 'Episodes', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
-			'permanentcontributor' => __( 'Permanent Contributor', 'podlove' ),
+			'permanentcontributor' => __( 'Regular Contributor', 'podlove' ),
 			'showpublic'           => __( 'Public Profile?', 'podlove' )
 		);
 		return $columns;

@@ -224,7 +224,7 @@ class Contributors {
 			) );
 
 			$wrapper->checkbox( 'permanentcontributor', array(
-				'label'       => __( 'Permanent Contributor', 'podlove' ),
+				'label'       => __( 'Regular Contributor', 'podlove' ),
 				'description' => 'Check this, if you want the contributor to be added to each episode per default.',
 				'default'     => false
 			) );
