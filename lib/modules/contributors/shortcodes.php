@@ -142,15 +142,22 @@ class Shortcodes {
 		}
 	}
 
-	private function renderAsList() {
-		return '<span class="podlove-contributors">'
-		     . implode(", ", array_map(function($contribution) {
-				$contributor = $contribution->getContributor();
-				return '<span class="contributor">'
-				     . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '')
-				     . $this->wrapWithLink($contributor, $contributor->publicname)
-				     . '</span>';
-		}, $this->contributions)) . '</span>';
+	private function renderAsList()
+	{
+		$list = array();
+		foreach ($this->contributions as $contribution) {
+			$contributor = $contribution->getContributor();
+			$list[] = '<span class="contributor">'
+			     . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '')
+			     . $this->wrapWithLink($contributor, $contributor->publicname)
+			     . '</span>';
+		}
+
+		$html = '<span class="podlove-contributors">';
+		$html.= implode(', ', $list);
+		$html.= '</span>';
+
+		return $html;
 	}
 
 	private function renderAsTable() {
