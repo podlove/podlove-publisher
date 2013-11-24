@@ -33,12 +33,13 @@ class Shortcodes {
 	 *	avatars     - One of 'yes', 'no'. Display avatars in list views or not. Default: 'yes'
 	 *	donations   - One of 'yes', 'no'. Display flattr column in list view or not. Default: 'no'
 	 *	avatarsize  - Specify avatar size in pixel for single contributors. Default: 50
-	 *	round_avatars - One of 'yes', 'no'. Circular avatars instead od default squared. Default: 'no'
+	 *	round_avatars - One of 'yes', 'no'. Circular avatars instead of default squared. Default: 'no'
 	 *	align       - One of 'left', 'right', 'none'. Align contributor. Default: none
 	 *	caption     - Optional caption for contributor avatars.
 	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
 	 *	              Links contributor name to the service if available. Default: 'none'
 	 *	role        - Filter lists by role. Default: 'all'
+	 *	show_role   - One of 'yes', 'no'. Display role in table view or not. Default: 'yes'
 	 * 
 	 * Examples:
 	 *
@@ -59,7 +60,8 @@ class Shortcodes {
 			'avatars' => 'yes',
 			'donations' => 'no',
 			'linkto' => 'none',
-			'role' => 'all'
+			'role' => 'all',
+			'show_role' => 'yes'
 		);
 
 		$this->id = null; // reset id
@@ -249,7 +251,7 @@ EOD;
 			$body .= '<td class="title_cell">';
 			$body .= $this->wrapWithLink($contributor, $contributor->publicname);
 
-			if ($role = $contribution->getRole())
+			if (($role = $contribution->getRole()) && $this->settings['show_role'] == 'yes')
 				$body .= '<br><em>' . $role->title . '</em>';
 
 			$body .= "</td>";
