@@ -94,6 +94,7 @@ We built an interface to generate a Creative Commons license for your podcast an
 **Other Changes**
 
 * Feature: Add "Expert Settings" option to always redirect to media files instead of forcing a browser download. This is interesting for you if you want to minimize traffic on your server hosting the Publisher.
+* Feature: add global setting to configure feed item limits
 * Feature: Set "itunes:explicit" tag per episode if you want to (you have to activate the feature in the expert settings)
 * Enhancement: Feeds are delivered with gzip compression if possible
 * Enhancement: Support for temporary redirects in expert settings
