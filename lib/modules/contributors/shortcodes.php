@@ -13,6 +13,8 @@ class Shortcodes {
 	 */
 	private $contributions = array();
 
+	private $id;
+
 	/**
 	 * Shortcode settings.
 	 */
@@ -31,6 +33,7 @@ class Shortcodes {
 	 *	avatars     - One of 'yes', 'no'. Display avatars in list views or not. Default: 'yes'
 	 *	donations   - One of 'yes', 'no'. Display flattr column in list view or not. Default: 'no'
 	 *	avatarsize  - Specify avatar size in pixel for single contributors. Default: 50
+	 *	round_avatars - One of 'yes', 'no'. Circular avatars instead od default squared. Default: 'no'
 	 *	align       - One of 'left', 'right', 'none'. Align contributor. Default: none
 	 *	caption     - Optional caption for contributor avatars.
 	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
@@ -51,12 +54,15 @@ class Shortcodes {
 			'style' => 'table',
 			'id' => null,
 			'avatarsize' => 50,
+			'round_avatars' => 'no',
 			'align' => 'none',
 			'avatars' => 'yes',
 			'donations' => 'no',
 			'linkto' => 'none',
 			'role' => 'all'
 		);
+
+		$this->id = null; // reset id
 
 		if (!is_array($attributes))
 			$attributes = array();
@@ -88,10 +94,19 @@ class Shortcodes {
 		$avatar = $contributor->getAvatar($this->settings['avatarsize']);
 		$avatar = $this->wrapWithLink($contributor, $avatar);
 
-		return '<div class="wp-caption ' . $alignclass . '" style="width: ' . $this->settings['avatarsize'] . 'px">
+		return '<div id="' . $this->getId() . '" class="wp-caption ' . $alignclass . '" style="width: ' . $this->settings['avatarsize'] . 'px">
 				' . $avatar . '
 			<p class="wp-caption-text">' . $this->settings['caption'] . '</p>
 		</div>';
+	}
+
+	private function getId() {
+		if ($this->id) {
+			return $this->id;
+		} else {
+			$this->id = 'contrib_' . substr(md5(mt_rand()),0,8);
+			return $this->id;
+		}
 	}
 
 	/**
@@ -128,6 +143,7 @@ class Shortcodes {
 			return "";
 		
 		return $this->getFlattrScript()
+			 . $this->roundAvatarStyle()
 			 . $this->renderByStyle($this->settings['style']);
 	}
 
@@ -144,6 +160,23 @@ class Shortcodes {
 		}
 	}
 
+	private function roundAvatarStyle() {
+		ob_start();
+		?>
+		<style type="text/css">
+		#<?php echo $this->getId(); ?> img.avatar {
+			-webkit-border-radius: 50%;
+			-moz-border-radius: 50%;
+			border-radius: 50%;
+		}
+		</style>
+		<?php
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $this->settings['round_avatars'] == 'yes' ? $html : '';
+	}
+
 	private function renderAsList()
 	{
 		$list = array();
@@ -155,7 +188,7 @@ class Shortcodes {
 			     . '</span>';
 		}
 
-		$html = '<span class="podlove-contributors">';
+		$html = '<span id="' . $this->getId() . '" class="podlove-contributors">';
 		$html.= implode(', ', $list);
 		$html.= '</span>';
 
@@ -165,9 +198,10 @@ class Shortcodes {
 	private function renderAsTable() {
 
 		$donations = $this->settings['donations'] == 'yes' ? '<th>Donations</th>' : '';
+		$id = $this->getId();
 
 		$before = <<<EOD
-<table class="contributors_table">
+<table id="$id" class="contributors_table">
 	<thead>
 		<tr>
 			<th>Contributor</th>
