@@ -286,20 +286,17 @@ class Podcast_Post_Type {
 
 	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
 
-	public function add_new_podcast_columns() {
-			$new_columns['cb'] = '<input type="checkbox" />';
-		     
-		    $new_columns['title'] = __('Title');
-		    $new_columns['author'] = __('Author');
+	public function add_new_podcast_columns($columns)
+	{
+			$keys = array_keys($columns);
+		    $insertIndex = array_search('author', $keys) + 1; // after author column
 
-		    $new_columns['contributors'] = __('Contributors');
-		     
-		    $new_columns['tags'] = __('Tags');
-		    $new_columns['comments'] = __('Comments');
-		 
-		    $new_columns['date'] = __('Date');
-		 
-		    return $new_columns;
+		    // insert contributors at that index
+		    $columns = array_slice($columns, 0, $insertIndex, true) +
+		           array("contributors" => __('Contributors', 'podlove')) +
+			       array_slice($columns, $insertIndex, count($columns) - 1, true);
+
+		    return $columns;
 	}
 
 	function manage_podcast_columns( $column_name ) {
