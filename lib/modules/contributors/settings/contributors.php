@@ -243,7 +243,8 @@ class Contributors {
 			) );
 
 			$wrapper->string( 'guid', array(
-				'label'       => __( 'URI', 'podlove' )
+				'label'       => __( 'URI', 'podlove' ),
+				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove')
 			) );		
 
 			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );
