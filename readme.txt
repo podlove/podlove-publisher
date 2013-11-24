@@ -78,8 +78,27 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.9.0 =
+
+**New Module: Contributors**
+
+Podcasts are not possible without their active communities. Huge contributions are being made behind the scenes and nobody notices except the podcaster. The contributors module shines light on all those diligent people. It's now easy to manage contributors of an episode and list them on the blog. The list contains references to their social profiles and the donation service Flattr. Shortcode to display them in an episode post: [`[podlove-contributors]`](http://docs.podlove.org/publisher/shortcodes/#contributors).
+
+**Simple Protected Feeds**
+
+You can now protect some or all of your feeds using HTTP authentication. Authenticate via a defined username and password or use the WordPress user database as backend.
+
+**License Selector**
+
+We built an interface to generate a Creative Commons license for your podcast and episodes. You can still use a custom URL and name if you don't want a CC license. Use `[podlove-podcast-license]` and `[podlove-episode-license]` to display them in your episode posts.
+
+**Other Changes**
+
 * Feature: Add "Expert Settings" option to always redirect to media files instead of forcing a browser download. This is interesting for you if you want to minimize traffic on your server hosting the Publisher.
+* Feature: Set "itunes:explicit" tag per episode if you want to (you have to activate the feature in the expert settings)
+* Enhancement: Feeds are delivered with gzip compression if possible
+* Enhancement: Support for temporary redirects in expert settings
 * Fix: Importing episodes no longer causes floods of ADN posts.
+* Fix: respect Auphonic chapter offset
 
 = 1.8.13 =
 * Feature: Update Web Player to 2.0.17 (for realsies). It fixes an issue with icon/font display.
