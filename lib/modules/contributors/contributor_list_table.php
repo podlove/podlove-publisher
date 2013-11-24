@@ -117,6 +117,19 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	  return $sortable_columns;
 	}		
 
+	/**
+	 * @override
+	 */
+	public function display() {
+		parent::display();
+		?>
+		<style type="text/css">
+		/* avoid mouseover jumping */
+		#permanentcontributor { width: 160px; }
+		</style>
+		<?php
+	}
+
 	public function prepare_items() {
 
 		// number of items per page
