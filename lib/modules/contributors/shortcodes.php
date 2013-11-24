@@ -219,7 +219,7 @@ EOD;
 			class=\"FlattrButton\"
 			style=\"display:none;\"
     		title=\"Flattr {$contributor->publicname}\"
-    		rel=\"flattr;button:compact\"
+    		rel=\"flattr;button:compact;popout:0\"
     		href=\"https://flattr.com/profile/{$contributor->flattr}\">
 		    	Flattr {$contributor->publicname}
 		</a>";
