@@ -204,7 +204,7 @@ class Shortcodes {
 <table id="$id" class="contributors_table">
 	<thead>
 		<tr>
-			<th>Contributor</th>
+			<th colspan="2">Contributor</th>
 			<th>Contact/Social</th>
 			$donations
 		</tr>
@@ -215,17 +215,51 @@ EOD;
 		$after = <<<EOD
 	</tbody>
 </table>
+
+<style type="text/css">
+.contributors_table .avatar_cell {
+	width: 60px
+}
+
+.contributors_table .title_cell {
+	line-height: 1em
+}
+
+.contributors_table .social_cell {
+	font-size: 1.7em
+}
+
+.contributors_table .social_cell a {
+	margin-right: 4px
+}
+</style>
 EOD;
 
 		$body = "";
 		foreach ($this->contributions as $contribution) {
 			$contributor = $contribution->getContributor();
 			$body .= "<tr>";
-			$body .= "  <td>" . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(50) . ' ' : '') . $this->wrapWithLink($contributor, $contributor->publicname) . "</td>";
-			$body .= "  <td style='font-size: 1.7em'>" . $this->getSocialButtons($contributor) . "</td>";
 
+			// avatar
+			$body .= '<td class="avatar_cell">';
+			$body .= ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(50) . ' ' : '');
+			$body .= "</td>";
+
+			// name and role
+			$body .= '<td class="title_cell">';
+			$body .= $this->wrapWithLink($contributor, $contributor->publicname);
+
+			if ($role = $contribution->getRole())
+				$body .= '<br><em>' . $role->title . '</em>';
+
+			$body .= "</td>";
+
+			// social
+			$body .= '<td class="social_cell">' . $this->getSocialButtons($contributor) . "</td>";
+
+			// donations
 			if ($this->settings['donations'] == 'yes')
-				$body .= "  <td>" . $this->getDonationButton($contributor) . "</td>";
+				$body .= '<td class="docation_cell">' . $this->getDonationButton($contributor) . "</td>";
 
 			$body .= "</tr>";
 		}
