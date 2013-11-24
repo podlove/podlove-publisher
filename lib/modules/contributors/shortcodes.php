@@ -29,6 +29,7 @@ class Shortcodes {
 	 *	style       - One of 'table', 'list'. Default: 'table'
 	 *	id          - Specify a contributor id to display a specific contributor avatar.
 	 *	avatars     - One of 'yes', 'no'. Display avatars in list views or not. Default: 'yes'
+	 *	donations   - One of 'yes', 'no'. Display flattr column in list view or not. Default: 'no'
 	 *	avatarsize  - Specify avatar size in pixel for single contributors. Default: 50
 	 *	align       - One of 'left', 'right', 'none'. Align contributor. Default: none
 	 *	caption     - Optional caption for contributor avatars.
@@ -52,6 +53,7 @@ class Shortcodes {
 			'avatarsize' => 50,
 			'align' => 'none',
 			'avatars' => 'yes',
+			'donations' => 'no',
 			'linkto' => 'none',
 			'role' => 'all'
 		);
@@ -162,13 +164,15 @@ class Shortcodes {
 
 	private function renderAsTable() {
 
+		$donations = $this->settings['donations'] == 'yes' ? '<th>Donations</th>' : '';
+
 		$before = <<<EOD
 <table class="contributors_table">
 	<thead>
 		<tr>
 			<th>Contributor</th>
 			<th>Contact/Social</th>
-			<th>Donations</th>
+			$donations
 		</tr>
 	<thead>
 	<tbody>
@@ -185,7 +189,10 @@ EOD;
 			$body .= "<tr>";
 			$body .= "  <td>" . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '') . $this->wrapWithLink($contributor, $contributor->publicname) . "</td>";
 			$body .= "  <td>" . $this->getSocialButtons($contributor) . "</td>";
-			$body .= "  <td>" . $this->getDonationButton($contributor) . "</td>";
+
+			if ($this->settings['donations'] == 'yes')
+				$body .= "  <td>" . $this->getDonationButton($contributor) . "</td>";
+
 			$body .= "</tr>";
 		}
 
