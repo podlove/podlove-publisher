@@ -205,7 +205,7 @@ EOD;
 		foreach ($this->getServices() as $service) {
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
-					'<a href="%s" class="contributor-contact %s" title="%s"><i class="%s"></i></a>',
+					'<a href="%s" target="_blank" class="contributor-contact %s" title="%s"><i class="%s"></i></a>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
 					$service['key'],
 					$service['title'],
