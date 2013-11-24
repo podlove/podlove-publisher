@@ -223,13 +223,16 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\WebPlayer( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Templates( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\FileType( self::SETTINGS_PAGE_HANDLE );
-		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
-		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		
 		do_action( 'podlove_register_settings_pages', self::SETTINGS_PAGE_HANDLE );
 	}
 
+	/**
+	 * Make sure those are at the bottom of the list.
+	 */
 	public function create_support_menu_entry() {
+		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Support( self::SETTINGS_PAGE_HANDLE );
 	}
 
