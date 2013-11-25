@@ -9,6 +9,8 @@
  * License:     MIT
  * License URI: license.txt
  * Text Domain: podlove
+ * GitHub Plugin URI: podlove/podlove-publisher
+ * GitHub Branch:     release-candidate
  */
 
 $correct_php_version = version_compare( phpversion(), "5.3", ">=" );
