@@ -47,23 +47,38 @@ class RSS {
 
 			$current_page = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 
+			$feed_url_for_page = function($page) use ($feed)
+			{
+				$url = $feed->get_subscribe_url();
+
+				if ($page > 0) {
+					$url .= '?paged=' . $page;
+				}
+
+				if (isset($_GET['redirect'])) {
+					$op = $page > 0 ? '&' : '?';
+					$url .= $op . "redirect=" . $_GET['redirect'];
+				}		
+
+				return $url;		
+			};
+
 			if ( $current_page < $wp_query->max_num_pages )
-				echo "\t" . sprintf( '<atom:link rel="next" href="%s?paged=%s" />', $feed->get_subscribe_url(), $current_page+1 );
+				echo "\n\t" . sprintf( '<atom:link rel="next" href="%s" />', $feed_url_for_page($current_page+1) );
 
 			if ( $current_page > 2 ) {
-				echo "\t" . sprintf( '<atom:link rel="prev" href="%s?paged=%s" />', $feed->get_subscribe_url(), $current_page-1 );
+				echo "\n\t" . sprintf( '<atom:link rel="prev" href="%s" />', $feed_url_for_page($current_page-1) );
 			} elseif ( $current_page == 2 ) {
-				echo "\t" . sprintf( '<atom:link rel="prev" href="%s" />', $feed->get_subscribe_url() );
+				echo "\n\t" . sprintf( '<atom:link rel="prev" href="%s" />', $feed_url_for_page(0) );
 			}
 
-			echo "\t" . sprintf( '<atom:link rel="first" href="%s" />', $feed->get_subscribe_url() );
-
+			echo "\n\t" . sprintf( '<atom:link rel="first" href="%s" />', $feed_url_for_page(0) );
 
 			if ( $wp_query->max_num_pages > 1 )
-				echo "\t" . sprintf( '<atom:link rel="last" href="%s?paged=%s" />', $feed->get_subscribe_url(), $wp_query->max_num_pages );
+				echo "\n\t" . sprintf( '<atom:link rel="last" href="%s" />', $feed_url_for_page($wp_query->max_num_pages) );
 
 			if ( $podcast->language )
-				echo "\t" . '<language>' . $podcast->language . '</language>';
+				echo "\n\t" . '<language>' . $podcast->language . '</language>';
 
 			do_action( 'podlove_rss2_head', $feed );
 
