@@ -100,6 +100,7 @@ We built an interface to generate a Creative Commons license for your podcast an
 * Enhancement: Support for temporary redirects in expert settings
 * Fix: Importing episodes no longer causes floods of ADN posts.
 * Fix: respect Auphonic chapter offset
+* Fix: keep ?redirect=no flag in paged feeds
 
 = 1.8.13 =
 * Feature: Update Web Player to 2.0.17 (for realsies). It fixes an issue with icon/font display.

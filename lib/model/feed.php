@@ -168,6 +168,11 @@ class Feed extends Base {
 
 		$tag_name = $args['prefix'] ? $args['prefix'] . ':link' : 'link';
 
+		if (isset($_GET['redirect'])) {
+			$op = parse_url($args['href'], PHP_URL_QUERY) ? '&' : '?';
+			$args['href'] .= $op . "redirect=" . $_GET['redirect'];
+		}
+
 		return sprintf(
 			'<%s%s%s%s href="%s" />',
 			$tag_name,
