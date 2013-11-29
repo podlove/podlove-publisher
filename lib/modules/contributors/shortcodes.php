@@ -21,47 +21,64 @@ class Shortcodes {
 	private $settings = array();
 
 	public function __construct() {
-		add_shortcode( 'podlove-contributors', array( $this, 'shortcode') );
+		// legacy shortcode. deprecate?
+		add_shortcode( 'podlove-contributors', array( $this, 'podlove_contributors') );
+		// display a table/list of contributors
+		add_shortcode( 'podlove-contributor-list', array( $this, 'podlove_contributor_list') );
 	}
 
-		
 	/**
-	 * Parameters:
-	 *
-	 *	style       - One of 'table', 'list'. Default: 'table'
-	 *	id          - Specify a contributor id to display a specific contributor avatar.
-	 *	avatars     - One of 'yes', 'no'. Display avatars in list views or not. Default: 'yes'
-	 *	donations   - One of 'yes', 'no'. Display flattr column in list view or not. Default: 'no'
-	 *	avatarsize  - Specify avatar size in pixel for single contributors. Default: 50
-	 *	round_avatars - One of 'yes', 'no'. Circular avatars instead of default squared. Default: 'no'
-	 *	align       - One of 'left', 'right', 'none'. Align contributor. Default: none
-	 *	caption     - Optional caption for contributor avatars.
-	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
-	 *	              Links contributor name to the service if available. Default: 'none'
-	 *	role        - Filter lists by role. Default: 'all'
-	 *	show_role   - One of 'yes', 'no'. Display role in table view or not. Default: 'yes'
+	 * Legacy Contributors Shortcode.
 	 * 
 	 * Examples:
 	 *
 	 *	[podlove-contributors]
 	 * 
-	 * @todo  ShowContributions
+	 * @return string
+	 */
+	public function podlove_contributors($attributes) {
+		
+		$defaults = array(
+			'preset'  => 'comma separated',
+			'linkto'  => 'none',
+			'role'    => 'all',
+			'avatars' => 'yes',
+		);
+
+		if (!is_array($attributes))
+			$attributes = array();
+
+		$this->settings = array_merge($defaults, $attributes);
+
+		return $this->renderListOfContributors();
+	}
+
+	/**
+	 * Parameters:
+	 *
+	 *	preset      - One of 'table', 'list', 'comma separated'. Default: 'table'
+	 *	title       - Optional table header title. Default: none
+	 *	avatars     - One of 'yes', 'no'. Display avatars. Default: 'yes'
+	 *	role        - Filter lists by role. Default: 'all'
+	 *	donations   - One of 'yes', 'no'. Display donation column. Default: 'no'
+	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
+	 *	              Links contributor name to the service if available. Default: 'none'
+	 * 
+	 * Examples:
+	 *
+	 *	[podlove-contributor-list]
 	 * 
 	 * @return string
 	 */
-	public function shortcode($attributes)
+	public function podlove_contributor_list($attributes)
 	{
 		$defaults = array(
-			'style' => 'table',
-			'id' => null,
-			'avatarsize' => 50,
-			'round_avatars' => 'no',
-			'align' => 'none',
-			'avatars' => 'yes',
+			'preset'    => 'table',
+			'avatars'   => 'yes',
+			'role'      => 'all',
 			'donations' => 'no',
-			'linkto' => 'none',
-			'role' => 'all',
-			'show_role' => 'yes'
+			'linkto'    => 'none',
+			'title'     => ''
 		);
 
 		$this->id = null; // reset id
@@ -71,35 +88,7 @@ class Shortcodes {
 
 		$this->settings = array_merge($defaults, $attributes);
 
-		if ($this->settings['id'] !== null)
-			return $this->renderSingleContributor($this->settings['id']);
-		else
-			return $this->renderListOfContributors();
-	}
-
-	private function renderSingleContributor($contributor_id)
-	{
-		$contributor = Contributor::find_one_by_slug($contributor_id);
-
-		if (!$contributor)
-			return "";
-
-		// determine alignment
-		$alignclass = '';
-		
-		if ($this->settings['align'] == 'left')
-			$alignclass = 'alignleft';
-
-		if ($this->settings['align'] == 'right')
-			$alignclass = 'alignright';
-
-		$avatar = $contributor->getAvatar($this->settings['avatarsize']);
-		$avatar = $this->wrapWithLink($contributor, $avatar);
-
-		return '<div id="' . $this->getId() . '" class="wp-caption ' . $alignclass . '" style="width: ' . $this->settings['avatarsize'] . 'px">
-				' . $avatar . '
-			<p class="wp-caption-text">' . $this->settings['caption'] . '</p>
-		</div>';
+		return $this->renderListOfContributors();
 	}
 
 	private function getId() {
@@ -121,13 +110,16 @@ class Shortcodes {
 		if (!$service || !$contributor->{$service['key']})
 			return $linktext;
 
-		return sprintf('<a href="%s">%s</a>',
+		return sprintf('<a href="%s" target="_blank">%s</a>',
 			sprintf($service['url_template'], $contributor->{$service['key']}),
 			$linktext
 		);
 	}
 
 	private function renderListOfContributors() {
+
+		$this->id = null; // reset id
+
 		// fetch contributions
 		if ($episode = Model\Episode::get_current()) {
 			$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
@@ -136,8 +128,9 @@ class Shortcodes {
 		}
 
 		if ($this->settings['role'] != 'all') {
-			$this->contributions = array_filter($this->contributions, function($c) {
-				return strtolower($this->settings['role']) == $c->getRole()->slug;
+			$role = $this->settings['role'];
+			$this->contributions = array_filter($this->contributions, function($c) use ($role) {
+				return strtolower($role) == $c->getRole()->slug;
 			});
 		}
 
@@ -145,38 +138,24 @@ class Shortcodes {
 			return "";
 		
 		return $this->getFlattrScript()
-			 . $this->roundAvatarStyle()
-			 . $this->renderByStyle($this->settings['style']);
+			 . $this->renderByStyle($this->settings['preset']);
 	}
 
-	private function renderByStyle($style)
+	private function renderByStyle($preset)
 	{
-		switch ($style) {
+		switch ($preset) {
 			case 'list':
 				return $this->renderAsList();
+				break;
+			case 'comma separated':
+				return $this->renderAsCommaSeparated();
 				break;
 			case 'table': // table is default
 			default:
 				return $this->renderAsTable();
+
 				break;
 		}
-	}
-
-	private function roundAvatarStyle() {
-		ob_start();
-		?>
-		<style type="text/css">
-		#<?php echo $this->getId(); ?> img.avatar {
-			-webkit-border-radius: 50%;
-			-moz-border-radius: 50%;
-			border-radius: 50%;
-		}
-		</style>
-		<?php
-		$html = ob_get_contents();
-		ob_end_clean();
-
-		return $this->settings['round_avatars'] == 'yes' ? $html : '';
 	}
 
 	private function renderAsList()
@@ -184,14 +163,32 @@ class Shortcodes {
 		$list = array();
 		foreach ($this->contributions as $contribution) {
 			$contributor = $contribution->getContributor();
-			$list[] = '<span class="contributor">'
-			     . ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(18) . ' ' : '')
-			     . $this->wrapWithLink($contributor, $contributor->publicname)
+			$list[] = '<li>'
+			     . (($this->settings['avatars'] == 'yes') ? '<span class="avatar">' . $contributor->getAvatar(18) . '</span>' : '')
+			     . ' <span class="name">' . $this->wrapWithLink($contributor, $contributor->publicname) . '</span>'
+			     . '</li>';
+		}
+
+		$html = '<ul id="' . $this->getId() . '" class="podlove-contributors">';
+		$html.= implode("\n\t", $list);
+		$html.= '</ul>';
+
+		return $html;
+	}
+
+	private function renderAsCommaSeparated()
+	{
+		$list = array();
+		foreach ($this->contributions as $contribution) {
+			$contributor = $contribution->getContributor();
+			$list[] = '<span>'
+			     . (($this->settings['avatars'] == 'yes') ? '<span class="avatar">' . $contributor->getAvatar(18) . '</span>' : '')
+			     . ' <span class="name">' . $this->wrapWithLink($contributor, $contributor->publicname) . '</span>'
 			     . '</span>';
 		}
 
 		$html = '<span id="' . $this->getId() . '" class="podlove-contributors">';
-		$html.= implode(', ', $list);
+		$html.= implode(", ", $list);
 		$html.= '</span>';
 
 		return $html;
@@ -199,15 +196,15 @@ class Shortcodes {
 
 	private function renderAsTable() {
 
-		$donations = $this->settings['donations'] == 'yes' ? '<th>Donations</th>' : '';
+		$donations = $this->settings['donations'] == 'yes' ? '<th></th>' : '';
+		$title = $this->settings['title'];
 		$id = $this->getId();
 
 		$before = <<<EOD
-<table id="$id" class="contributors_table">
+<table id="$id" class="podlove-contributors-table">
 	<thead>
 		<tr>
-			<th colspan="2">Contributor</th>
-			<th>Contact/Social</th>
+			<th colspan="3">$title</th>
 			$donations
 		</tr>
 	<thead>
@@ -219,19 +216,19 @@ EOD;
 </table>
 
 <style type="text/css">
-.contributors_table .avatar_cell {
-	width: 60px
+.podlove-contributors-table .avatar_cell {
+	width: 60px;
 }
 
-.contributors_table .title_cell {
-	line-height: 1em
+.podlove-contributors-table .title_cell {
+	line-height: 1em;
 }
 
-.contributors_table .social_cell {
-	font-size: 1.7em
+.podlove-contributors-table .social_cell {
+	font-size: 1.7em;
 }
 
-.contributors_table .social_cell a {
+.podlove-contributors-table .social_cell a {
 	margin-right: 4px
 }
 </style>
@@ -251,7 +248,7 @@ EOD;
 			$body .= '<td class="title_cell">';
 			$body .= $this->wrapWithLink($contributor, $contributor->publicname);
 
-			if (($role = $contribution->getRole()) && $this->settings['show_role'] == 'yes')
+			if ($role = $contribution->getRole())
 				$body .= '<br><em>' . $role->title . '</em>';
 
 			$body .= "</td>";
