@@ -7,6 +7,8 @@ use \Podlove\Modules\Contributors\Model\ContributorRole;
 use \Podlove\Modules\Contributors\Model\EpisodeContribution;
 use \Podlove\Modules\Contributors\Model\ShowContribution;
 
+use Podlove\DomDocumentFragment;
+
 class Contributors extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Contributors';
@@ -20,7 +22,13 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
 		add_filter( 'parse_query', array($this, 'filter_by_contributor') );
+
+		add_filter('manage_edit-podcast_columns', array( $this, 'add_new_podcast_columns' ) );
+		add_action('manage_podcast_posts_custom_column', array( $this, 'manage_podcast_columns' ) );
 	
+		add_action('rss2_head', array($this, 'feed_head_contributors'));
+		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
+
 		// register shortcodes
 		new Shortcodes;	
 
@@ -37,6 +45,39 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorRoles($settings_parent);
 		});
+	}
+
+	function feed_head_contributors() {
+		$contributor_xml = '';
+		foreach (ShowContribution::all() as $contribution) {
+			$contributor_xml .= $this->getContributorXML($contribution->getContributor());
+		}	
+		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );	
+	}
+
+	function feed_item_contributors($podcast, $episode, $feed, $format) {
+		$contributor_xml = '';
+		foreach (EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
+			$contributor_xml .= $this->getContributorXML($contribution->getContributor());
+		}
+		echo apply_filters( 'podlove_feed_contributors', $contributor_xml );
+	}
+
+	private function getContributorXML(Contributor $contributor)
+	{
+		$contributor_xml = '';
+
+		if ($contributor->showpublic == 1 && $contributor->publicname) {
+			$contributor_xml .= "<atom:contributor>\n";
+			$contributor_xml .= "	<atom:name>" . $contributor->publicname . "</atom:name>\n";
+
+			if ($contributor->guid)
+				$contributor_xml .= "	<atom:uri>" . $contributor->guid . "</atom:uri>\n";
+
+			$contributor_xml .= "</atom:contributor>\n";
+		}
+
+		return $contributor_xml;
 	}
 
 	/**
@@ -417,5 +458,37 @@ class Contributors extends \Podlove\Modules\Base {
 		</div>
 		<?php		
 	}
+
+	public function add_new_podcast_columns($columns)
+	{
+			$keys = array_keys($columns);
+		    $insertIndex = array_search('author', $keys) + 1; // after author column
+
+		    // insert contributors at that index
+		    $columns = array_slice($columns, 0, $insertIndex, true) +
+		           array("contributors" => __('Contributors', 'podlove')) +
+			       array_slice($columns, $insertIndex, count($columns) - 1, true);
+
+		    return $columns;
+	}
+
+	function manage_podcast_columns($column_name) {
+	    switch ($column_name) {
+	    	case 'contributors':
+	    		$episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
+	        	$contributors = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
+	        	$contributor_list = "";
+	        	
+	        	foreach ($contributors as $contributor_id => $contributor) {
+	        		$contributor_details = $contributor->getContributor();
+
+	        		$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->publicname."</a>, ";
+	        	}
+
+	        	echo substr($contributor_list, 0, -2);
+
+	    	break;
+	    }
+	} 
 
 }
