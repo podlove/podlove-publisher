@@ -43,25 +43,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 	
 	public function column_role( $contributor ) {
-		switch($contributor->role) {
-			case "moderator" :
-				return "Moderator";
-			break;
-			case "comoderator" :
-				return "Co-Moderator";
-			break;
-			case "camera" :
-				return "Camera";
-			break;
-			case "chatmoderator" :
-				return "Chat-Moderator";
-			break;		
-			case "shownoter" :
-				return "Shownoter";
-			break;			
-			case "guest" :
-				return "Guest";
-			break;
+		if ($role = $contributor->getRole()) {
+			return $role->title;
+		} else {
+			return '';
 		}
 	}
 	

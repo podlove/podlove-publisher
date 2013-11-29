@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.2 =
+* Fix: _Module: Contributors_ Fix faulty default roles
+
 = 1.9.0 / 1.9.1 =
 
 **New Module: Contributors**
