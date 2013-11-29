@@ -12,7 +12,11 @@ class Contributor extends Base
 	private function getAvatarUrl($size) {
 
 		if ($this->avatar)
-			return $this->avatar;
+			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
+				return $this->avatar;
+			} else {
+				return $this->getGravatarUrl($size, $this->avatar);
+			}
 		else
 			return $this->getGravatarUrl($size);
 	}
@@ -32,15 +36,15 @@ class Contributor extends Base
 	 * Yes, I know there is get_avatar() but that returns the img tag and I need the URL.
 	 *
 	 * @param string $s Size in pixels, defaults to 80px [ 1 - 2048 ]
-	 * @param string $d Default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
-	 * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
-	 * @param array $atts Optional, additional key/value attributes to include in the IMG tag
 	 * @source http://gravatar.com/site/implement/images/php/
 	 */
-	private function getGravatarUrl( $s = 80, $d = 'mm', $r = 'g' ) {
+	private function getGravatarUrl( $s = 80, $email = null ) {
+
+		$email = $email ? $email : $this->publicemail;
+
 		$url = 'http://www.gravatar.com/avatar/';
-		$url .= md5( strtolower( trim( $this->publicemail ) ) );
-		$url .= "?s=$s&d=$d&r=$r";
+		$url .= md5( strtolower( trim( $email ) ) );
+		$url .= "?s=$s&d=mm&r=g";
 		return $url;
 	}	
 }
