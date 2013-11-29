@@ -75,6 +75,14 @@ If you haven't already, get the official Flattr plugin here:
 
 Find the setting Flattr > Advanced Settings > Flattrable content > Post Types and check "podcast". Save changes. There is no step 3 ;)
 
+== Installation ==
+
+1. Download the Podlove Publisher Plugin to your desktop.
+1. If downloaded as a zip archive, extract the Plugin folder to your desktop.
+1. With your FTP program, upload the Plugin folder to the wp-content/plugins folder in your WordPress directory online.
+1. Go to Plugins screen and find the newly uploaded Plugin in the list.
+1. Click Activate Plugin to activate it.
+
 == Changelog ==
 
 = 1.9.0 =
