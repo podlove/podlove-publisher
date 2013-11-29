@@ -85,7 +85,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
-= 1.9.0 =
+= 1.9.0 / 1.9.1 =
 
 **New Module: Contributors**
 
