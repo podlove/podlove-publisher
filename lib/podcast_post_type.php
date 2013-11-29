@@ -7,6 +7,8 @@ use \Podlove\Model;
  */
 class Podcast_Post_Type {
 
+	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle'; 
+
 	public function __construct() {
 
 		$labels = array(
@@ -53,9 +55,6 @@ class Podcast_Post_Type {
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 		add_filter( 'post_class', array( $this, 'add_post_class' ) );
-
-		add_filter('manage_edit-podcast_columns', array( $this, 'add_new_podcast_columns' ) );
-		add_action('manage_podcast_posts_custom_column', array( $this, 'manage_podcast_columns' ) );
 
 		$version = \Podlove\get_plugin_header( 'Version' );
 		
@@ -283,40 +282,6 @@ class Podcast_Post_Type {
 
 		$episode->delete();
 	}
-
-	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
-
-	public function add_new_podcast_columns($columns)
-	{
-			$keys = array_keys($columns);
-		    $insertIndex = array_search('author', $keys) + 1; // after author column
-
-		    // insert contributors at that index
-		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("contributors" => __('Contributors', 'podlove')) +
-			       array_slice($columns, $insertIndex, count($columns) - 1, true);
-
-		    return $columns;
-	}
-
-	function manage_podcast_columns( $column_name ) {
-	    global $wpdb;
-	    switch ($column_name) {
-	    	case 'contributors':
-	    		$episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
-	        	$contributors = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
-	        	$contributor_list = "";
-	        	
-	        	foreach ($contributors as $contributor_id => $contributor) {
-	        		$contributor_details = $contributor->getContributor();
-
-	        		$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->publicname."</a>, ";
-	        	}
-
-	        	echo substr($contributor_list, 0, -2);
-
-	    	break;
-	    }
-	}   
+ 
 }
 
