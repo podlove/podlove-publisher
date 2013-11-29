@@ -56,7 +56,7 @@ class RSS {
 				}
 
 				if (isset($_GET['redirect'])) {
-					$op = $page > 0 ? '&' : '?';
+					$op = $page > 0 ? '&amp;' : '?';
 					$url .= $op . "redirect=" . $_GET['redirect'];
 				}		
 
