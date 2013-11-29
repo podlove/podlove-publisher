@@ -98,9 +98,9 @@ We built an interface to generate a Creative Commons license for your podcast an
 * Feature: Set "itunes:explicit" tag per episode if you want to (you have to activate the feature in the expert settings)
 * Enhancement: Feeds are delivered with gzip compression if possible
 * Enhancement: Support for temporary redirects in expert settings
-* Fix: Importing episodes no longer causes floods of ADN posts.
-* Fix: respect Auphonic chapter offset
 * Fix: keep ?redirect=no flag in paged feeds
+* Fix: _Module: Import/Export_ Importing episodes no longer causes floods of ADN posts.
+* Fix: _Module: Auphonic_ respect Auphonic chapter offset
 
 = 1.8.13 =
 * Feature: Update Web Player to 2.0.17 (for realsies). It fixes an issue with icon/font display.
