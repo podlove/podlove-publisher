@@ -133,6 +133,9 @@ add_action('pre_get_posts', function ( ) {
 					
 				}
 			}
+		} else {
+			// compress unprotected feeds
+			check_for_and_do_compression();
 		}
 	}
 });
