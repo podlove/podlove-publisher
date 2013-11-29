@@ -375,7 +375,7 @@ function run_migrations_for_version( $version ) {
 
 				$contributors = get_terms( 'podlove-contributors', array( 'hide_empty' => 0 ) );
 
-				if ($contributors && !is_wp_error($contributors)) {
+				if ($contributors && !is_wp_error($contributors) && \Podlove\Modules\Contributors\Model\Contributor::count() == 0) {
 					foreach ($contributors as $contributor) {
 
 						// create new contributor
