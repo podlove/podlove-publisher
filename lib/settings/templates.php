@@ -277,7 +277,7 @@ EOT
 								"[podlove-web-player]",
 								"[podlove-episode field=\"\"]",
 								"[podlove-podcast field=\"\"]",
-								"[podlove-contributors]",
+								"[podlove-contributor-list]",
 								"[podlove-episode-license]",
 								"[podlove-podcast-license]"
 							],

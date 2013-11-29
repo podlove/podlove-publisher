@@ -81,7 +81,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 **New Module: Contributors**
 
-Podcasts are not possible without their active communities. Huge contributions are being made behind the scenes and nobody notices except the podcaster. The contributors module shines light on all those diligent people. It's now easy to manage contributors of an episode and list them on the blog. The list contains references to their social profiles and the donation service Flattr. Shortcode to display them in an episode post: [`[podlove-contributors]`](http://docs.podlove.org/publisher/shortcodes/#contributors).
+Podcasts are not possible without their active communities. Huge contributions are being made behind the scenes and nobody notices except the podcaster. The contributors module shines light on all those diligent people. It's now easy to manage contributors of an episode and list them on the blog. The list contains references to their social profiles and the donation service Flattr. Shortcode to display them in an episode post: [`[podlove-contributor-list]`](http://docs.podlove.org/publisher/shortcodes/#contributors).
 
 **Simple Protected Feeds**
 
