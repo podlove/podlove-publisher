@@ -9,6 +9,10 @@ class Contributor extends Base
 		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
 	}
 
+	public function getRole() {
+		return ContributorRole::find_one_by_slug($this->role);
+	}
+
 	private function getAvatarUrl($size) {
 
 		if ($this->avatar)
