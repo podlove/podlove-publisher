@@ -274,6 +274,24 @@ function template_shortcode( $attributes ) {
 
 	$html = $template->content;
 
+	// apply twig
+	$loader = new \Twig_Loader_String();
+	$twig = new \Twig_Environment($loader);
+
+	$context = array();
+
+	$episode = Model\Episode::find_one_by_property('post_id', get_the_ID());
+	if ($episode) {
+		$context['episode'] = new Template\Episode($episode);
+	}
+
+	$context['feeds'] = array_map(function ($feed) {
+		return new Template\Feed($feed);
+	}, Model\Feed::all());
+
+	$html = $twig->render($html, $context);
+
+	// apply autop and shortcodes
 	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
 		$html = wpautop( $html );
 
