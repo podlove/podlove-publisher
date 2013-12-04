@@ -31,6 +31,26 @@ class Episode {
 		return $this->post->post_content;
 	}
 
+	/**
+	 * Episode URL
+	 * 
+	 * @accessor
+	 */
+	public function url() {
+		return get_permalink($this->post->ID);
+	}
+
+	/**
+	 * Episode Duration
+	 *
+	 * This is the duration of an episode.
+	 *
+	 * 	- foo
+	 * 	- bar
+	 * 
+	 * @accessor
+	 * @accessor2 asd
+	 */
 	public function duration() {
 		return $this->episode->get_duration();
 	}

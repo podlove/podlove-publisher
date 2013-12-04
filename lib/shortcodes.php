@@ -258,7 +258,7 @@ function template_shortcode( $attributes ) {
 	$defaults = array(
 		'title' => '',
 		'id' => '',
-		'autop' => 'yes'
+		'autop' => false
 	);
 
 	$attributes = shortcode_atts( $defaults, $attributes );
@@ -277,6 +277,18 @@ function template_shortcode( $attributes ) {
 	// apply twig
 	$loader = new \Twig_Loader_String();
 	$twig = new \Twig_Environment($loader);
+
+	$templateFilter = new \Twig_SimpleFilter('template', function ($context, $contributor, $template_id) use ($twig) {
+		// TODO $contributor is actually any context changing object. Find out via reflection what it is and set it correctly.
+		$context['contributor'] = $contributor;
+
+		if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
+			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
+
+	    return $twig->render($template->content, $context);
+	}, array('needs_context' => true));
+
+	$twig->addFilter($templateFilter);
 
 	$context = array();
 

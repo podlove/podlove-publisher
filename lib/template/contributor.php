@@ -35,4 +35,16 @@ class Contributor {
 		return $this->contributor->www;
 	}
 
+	public function episodes() {
+		$episodes = array();
+
+		foreach ($this->contributor->getContributions() as $contribution) {
+			if ($episode = $contribution->getEpisode()) {
+				$episodes[] = new Episode($episode);
+			}
+		}
+
+		return $episodes;
+	}
+
 }
