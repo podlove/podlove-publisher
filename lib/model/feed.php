@@ -3,6 +3,10 @@ namespace Podlove\Model;
 
 class Feed extends Base {
 
+	const ITEMS_WP_LIMIT = 0;
+	const ITEMS_NO_LIMIT = -1;
+	const ITEMS_GLOBAL_LIMIT = -2;
+
 	public function save() {
 		global $wpdb;
 		
@@ -183,6 +187,38 @@ class Feed extends Base {
 		);
 	}
 
+	/**
+	 * Get the SQL LIMIT segment for this feed.
+	 *
+	 * Depending on settings it can be LIMIT <num> or empty.
+	 * 
+	 * @return string
+	 */
+	public function get_post_limit_sql($posts_per_page = false)
+	{
+		if ($posts_per_page === false)
+			$posts_per_page = (int) $this->limit_items;
+
+		if ($posts_per_page === self::ITEMS_WP_LIMIT)
+			$posts_per_page = (int) get_option('posts_per_rss');
+
+		if ($posts_per_page > 0)
+			return 'LIMIT ' . $posts_per_page;
+
+		// no limit
+		if ($posts_per_page === self::ITEMS_NO_LIMIT)
+			return '';
+
+		if ($posts_per_page === self::ITEMS_GLOBAL_LIMIT) {
+			$podcast = Podcast::get_instance();
+			if ((int) $podcast->limit_items !== self::ITEMS_GLOBAL_LIMIT) {
+				return $this->get_post_limit_sql($podcast->limit_items);
+			}
+		}
+
+		// default to no limit; however, this should never happen
+		return '';
+	}
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
