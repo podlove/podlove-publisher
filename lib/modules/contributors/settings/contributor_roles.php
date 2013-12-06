@@ -125,7 +125,7 @@ class ContributorRoles {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $role_id = NULL ) {
-		$page   = 'edit.php?page=' . $_REQUEST['page'];
+		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $role_id ) ? '&role=' . $role_id : '';
 		$action = '&action=' . $action;
 		
