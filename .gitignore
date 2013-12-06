@@ -5,3 +5,4 @@ wprelease.yml
 composer.phar
 node_modules/*
 vendor/*
+test/config.yml

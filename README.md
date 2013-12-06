@@ -31,12 +31,20 @@ php composer.phar --dev install
 
 ## Running the test suite
 
-There is a test suite validating some Publisher functionality. It is based on PHPUnit and Selenium. You can get most dependencies via Composer.
-
-You need a Selenium Server. If you are on a Mac, get it via Homebrew (`brew install selenium-server-standalone`). Otherwise, go there: http://docs.seleniumhq.org/download/
+There is a test suite validating some Publisher functionality. It is based on Ruby/Mechanize. You need Ruby 2.0 or higher.
 
 You need a local WordPress instance for tests. **The tests will override the database! DO NOT use the same database as for development or production!**.
 
-Open `phpunit.xml` and configure the php constants.
+*Preparations*
 
-Run the suite: `./vendor/bin/phpunit`.
+```
+gem install mechanize
+gem install rspec
+cp test/config.example.yml test/config.yml 
+```
+
+*Run*
+
+```
+rspec test
+```
