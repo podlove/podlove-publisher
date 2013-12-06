@@ -52,6 +52,12 @@ function activate_for_current_blog() {
 		}
 	}
 
+	$podcast = Model\Podcast::get_instance();
+	if (!$podcast->limit_items) {
+		$podcast->limit_items = Model\Feed::ITEMS_NO_LIMIT;
+	}
+	$podcast->save();
+
 	// set default modules
 	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging' );
 	foreach ( $default_modules as $module ) {
