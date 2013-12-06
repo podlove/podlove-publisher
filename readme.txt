@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.3 =
+* Fix: provide global feed limit default on setup
+
 = 1.9.2 =
 * Fix: _Module: Contributors_ prevent initial migration to import duplicate contributors
 * Fix: _Module: Contributors_ Fix faulty default roles
