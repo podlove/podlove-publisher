@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: provide global feed limit default on setup
 * Fix: managing contributor roles no longer outputs permission issues
 * Fix: corrected a faulty "Add New" contributor link
+* Fix: paged feeds were broken
 
 = 1.9.2 =
 * Fix: _Module: Contributors_ prevent initial migration to import duplicate contributors

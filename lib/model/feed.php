@@ -203,7 +203,7 @@ class Feed extends Base {
 			$posts_per_page = (int) get_option('posts_per_rss');
 
 		if ($posts_per_page > 0)
-			return 'LIMIT ' . $posts_per_page;
+			return $posts_per_page;
 
 		// no limit
 		if ($posts_per_page === self::ITEMS_NO_LIMIT)
