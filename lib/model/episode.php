@@ -266,7 +266,7 @@ Episode::property( 'cover_art', 'VARCHAR(255)' );
 Episode::property( 'chapters', 'TEXT' );
 Episode::property( 'record_date', 'DATETIME' );
 Episode::property( 'publication_date', 'DATETIME' );
-Episode::property( 'explicit', 'TINYINT' ); // listed in podcast directories or not?
+Episode::property( 'explicit', 'TINYINT' );
 Episode::property( 'license_type', 'VARCHAR(255)' );
 Episode::property( 'license_name', 'TEXT' );
 Episode::property( 'license_url', 'TEXT' );

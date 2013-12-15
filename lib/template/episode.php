@@ -27,8 +27,37 @@ class Episode {
 		return $this->post->post_title;
 	}
 
+	public function subtitle() {
+		return $this->episode->subtitle;
+	}
+
+	public function summary() {
+		return $this->episode->summary;
+	}
+
+	public function slug() {
+		return $this->episode->slug;
+	}
+
 	public function content() {
 		return $this->post->post_content;
+	}
+
+	public function chapters() {
+		return array_map(function($chapter) {
+			return new Chapter($chapter);
+		}, $this->episode->get_chapters()->toArray());
+	}
+
+	/**
+	 * Explicit Status.
+	 *
+	 * "yes", "no" or "clean"
+	 * 
+	 * @accessor
+	 */
+	public function explicit() {
+		return $this->episode->explicitText();
 	}
 
 	/**
@@ -43,20 +72,19 @@ class Episode {
 	/**
 	 * Episode Duration
 	 *
-	 * This is the duration of an episode.
-	 *
-	 * 	- foo
-	 * 	- bar
+	 * Use duration("full") to include milliseconds.
 	 * 
 	 * @accessor
-	 * @accessor2 asd
 	 */
-	public function duration() {
-		return $this->episode->get_duration();
+	public function duration($format = 'HH:MM:SS') {
+		return $this->episode->get_duration($format);
 	}
 
 	/**
+	 * List of episode contributors
+	 * 
 	 * @FIXME this will break without contributor module
+	 * @accessor
 	 */
 	public function contributors() {
 		return array_map(function($contribution) {
