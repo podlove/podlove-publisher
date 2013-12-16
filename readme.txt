@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.9.4 =
 * Fix: gzip feeds on compatible systems only (avoids failing feed generation)
+* Fix: Feed paging (again)
 
 = 1.9.3 =
 * Fix: provide global feed limit default on setup

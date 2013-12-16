@@ -98,10 +98,10 @@ class RSS {
 		 * override that option.
 		 */
 		add_filter( 'post_limits', function($limits) use ($feed, $posts_per_page) {
-			$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+			$page = get_query_var( 'paged' ) ? (int) get_query_var( 'paged' ) : 1;
 
-			$start = $posts_per_page * ($page - 1);
 			$max = $feed->get_post_limit_sql();
+			$start = $max * ($page - 1);
 
 			if ($max > 0) {
 				return 'LIMIT ' . $start . ', ' . $max;
