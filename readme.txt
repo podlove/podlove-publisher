@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.4 =
+* Fix: gzip feeds on compatible systems only (avoids failing feed generation)
+
 = 1.9.3 =
 * Fix: provide global feed limit default on setup
 * Fix: managing contributor roles no longer outputs permission issues

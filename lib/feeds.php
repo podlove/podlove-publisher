@@ -79,6 +79,10 @@ function feed_authentication() {
 
 function check_for_and_do_compression()
 {
+	// gzip requires zlib extension
+	if (!extension_loaded('zlib'))
+		return false;
+
 	// don't gzip if client doesn't accept it
 	if ( strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE)
 		return false;
