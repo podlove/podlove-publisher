@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 50 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 51 );
 
 add_action( 'init', function () {
 	
@@ -475,6 +475,16 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` ADD COLUMN `license_cc_license_jurisdiction` TEXT AFTER `license_cc_allow_commercial_use`',
 				Model\Episode::table_name()
 			) );
+		break;
+		case 51:
+			// set all Episode as published (for ADN Module)
+			$episodes = Model\Episode::all();
+			foreach ( $episodes as $episode ) {
+				$post = get_post( $episode->post_id );
+
+				if ( $post->post_status == 'published' )
+					update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+			}
 		break;
 	}
 
