@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.5 =
+* Web Player Update: compatible with WordPress theme "Twenty Fourteen"
+
 = 1.9.4 =
 * Fix: gzip feeds on compatible systems only (avoids failing feed generation)
 * Fix: Feed paging (again)
