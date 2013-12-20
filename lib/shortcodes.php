@@ -292,6 +292,8 @@ function template_shortcode( $attributes ) {
 
 	$context = array();
 
+	$context['podcast'] = new Template\Podcast(Model\Podcast::get_instance());
+
 	$episode = Model\Episode::find_one_by_property('post_id', get_the_ID());
 	if ($episode) {
 		$context['episode'] = new Template\Episode($episode);
