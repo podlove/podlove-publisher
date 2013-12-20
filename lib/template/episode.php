@@ -49,6 +49,22 @@ class Episode {
 		}, $this->episode->get_chapters()->toArray());
 	}
 
+	public function license() {
+		return new License(
+			new \Podlove\Model\License(
+				"episode",
+				array(
+					'type'                 => $this->episode->license_type,
+					'license_name'         => $this->episode->license_name,
+					'license_url'          => $this->episode->license_url,
+					'allow_modifications'  => $this->episode->license_cc_allow_modifications,
+					'allow_commercial_use' => $this->episode->license_cc_allow_commercial_use,
+					'jurisdiction'         => $this->episode->license_cc_license_jurisdiction,
+				)
+			)
+		);
+	}
+
 	/**
 	 * Explicit Status.
 	 *
