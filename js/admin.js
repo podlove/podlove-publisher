@@ -49,10 +49,10 @@ function convert_to_slug(string) {
 	string = string.toLowerCase();
 	string = string.replace(/\s+/g, '-');
 	string = string.replace(/[^\w\-]+/g, '');
-	string = string.replace(/ä/g, 'ae');
-	string = string.replace(/ö/g, 'oe');
-	string = string.replace(/ü/g, 'ue');
-	string = string.replace(/ß/g, 'ss');
+	string = string.replace(/\u00e4/g, 'ae');
+	string = string.replace(/\u00f6/g, 'oe');
+	string = string.replace(/\u00fc/g, 'ue');
+	string = string.replace(/\u00df/g, 'ss');
 	string = escape(string);
 
 	return string;
