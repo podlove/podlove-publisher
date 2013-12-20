@@ -83,8 +83,15 @@ function check_for_and_do_compression()
 	if (!extension_loaded('zlib'))
 		return false;
 
+	// if zlib output compression is already active, don't gzip
+	// (both cannot be active at the same time)
+	$ob_status = ob_get_status();
+	if ($ob_status['name'] == 'zlib output compression') {
+		return false;
+	}
+
 	// don't gzip if client doesn't accept it
-	if ( strpos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE)
+	if ( isset($_SERVER['HTTP_ACCEPT_ENCODING']) && stripos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE)
 		return false;
 
 	// don't gzip if gzipping is already active

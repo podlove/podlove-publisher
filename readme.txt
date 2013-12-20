@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.9.5 =
 * Web Player Update: compatible with WordPress theme "Twenty Fourteen"
+* Fix: don't gzip feeds when zlib compression is active
 
 = 1.9.4 =
 * Fix: gzip feeds on compatible systems only (avoids failing feed generation)
