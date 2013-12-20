@@ -93,6 +93,36 @@ class Episode {
 	}
 
 	/**
+	 * Access a single meta value
+	 * 
+	 * @accessor
+	 */
+	public function meta($meta_key) {
+		return get_post_meta($this->post->ID, $meta_key, true);
+	}
+
+	/**
+	 * Access a list of meta values
+	 *
+	 * Example:
+	 * 
+	 *   <ul>
+	 *     {% for meta in episode.metas("mymetakey") %}
+	 *       <li>{{ meta }}</li>
+	 *     {% endfor %}
+	 *   </ul>
+	 *
+	 *   {% for meta in episode.metas("mymetakey") %}
+	 *     {{ meta }}{% if not loop.last %}, {% endif %}
+	 *   {% endfor %}
+	 *   
+	 * @accessor
+	 */
+	public function metas($meta_key) {
+		return get_post_meta($this->post->ID, $meta_key, false);
+	}
+
+	/**
 	 * List of episode contributors
 	 * 
 	 * @FIXME this will break without contributor module
