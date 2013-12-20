@@ -192,4 +192,18 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		// Search box
 		$this->search_form();
 	}
+
+	function no_items() {
+		$url = sprintf( '?page=%s&action=%s&post_type=podcast', $_REQUEST['page'], 'new' );
+		?>
+		<div style="margin: 20px 10px 10px 5px">
+	 		<span class="add-new-h2" style="background: transparent">
+			<?php _e( 'No items found.' ); ?>
+			</span>
+			<a href="<?php echo $url ?>" class="add-new-h2">
+	 		<?php _e( 'Add New' ) ?>
+	 		</a>
+	 	</div>
+	 	<?php
+	 }
 }
