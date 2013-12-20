@@ -23,7 +23,7 @@ class ContributorRoles {
 		);
 	}
 	
-	public function process_form() {
+	public static function process_form() {
 
 		if ( ! isset( $_REQUEST['role'] ) )
 			return;

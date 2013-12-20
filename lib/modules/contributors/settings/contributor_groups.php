@@ -23,7 +23,7 @@ class ContributorGroups {
 		);
 	}
 
-	public function process_form() {
+	public static function process_form() {
 
 		if ( ! isset( $_REQUEST['group'] ) )
 			return;
