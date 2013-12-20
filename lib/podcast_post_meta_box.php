@@ -42,7 +42,7 @@ class Podcast_Post_Meta_Box {
 			padding: 15px 0 6px 0;
 			font-size: 1.2em;
 		}
-		.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input, .podlove-div-wrapper-form select {
+		.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input[type=text], .podlove-div-wrapper-form select {
 			margin: 0px;
 			width: 100%;
 		}
