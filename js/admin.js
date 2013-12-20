@@ -46,14 +46,16 @@ function human_readable_size(size) {
 }
 
 function convert_to_slug(string) {
-	string = string.replace(' ', '-');
-	string = string.replace('ä', 'ae');
-	string = string.replace('ö', 'oe');
-	string = string.replace('ü', 'ue');
-	string = string.replace('ß', 'ss');
+	string = string.toLowerCase();
+	string = string.replace(/\s+/g, '-');
+	string = string.replace(/[^\w\-]+/g, '');
+	string = string.replace(/ä/g, 'ae');
+	string = string.replace(/ö/g, 'oe');
+	string = string.replace(/ü/g, 'ue');
+	string = string.replace(/ß/g, 'ss');
 	string = escape(string);
 
-	return string.toLowerCase();
+	return string;
 }
 
 function auto_fill_in_contributor(id) {
