@@ -86,8 +86,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.9.5 =
+* Contributor Module improvements
 * Web Player Update: compatible with WordPress theme "Twenty Fourteen"
 * Fix: don't gzip feeds when zlib compression is active
+* Fix: episode media file checkbox width for WP3.8
+* Fix: menu icons for WP3.8
 
 = 1.9.4 =
 * Fix: gzip feeds on compatible systems only (avoids failing feed generation)

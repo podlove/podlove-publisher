@@ -190,12 +190,19 @@ function custom_admin_icons() {
 
     	/* PODLOVE EPISODE ICON */
 
+    	/* deactivate WP3.8 font icons */
+    	#toplevel_page_podlove_settings_handle a.menu-top div.wp-menu-image:before,
+    	#menu-posts-podcast a.menu-top div.wp-menu-image:before {
+    		content: none;
+    	}
+
         /* Admin Menu - 16px */
         #menu-posts-podcast .wp-menu-image {
-            background: url(<?php echo \Podlove\PLUGIN_URL ?>/images/episoden/icon-adminmenu16-sprite.png) no-repeat 6px 6px !important;
+            background: url(<?php echo \Podlove\PLUGIN_URL ?>/images/episoden/icon-adminmenu16-sprite.png) no-repeat 10px 10px !important;
         }
-		#menu-posts-podcast:hover .wp-menu-image, #menu-posts-podcast.wp-has-current-submenu .wp-menu-image {
-            background-position: 6px -24px !important;
+		#menu-posts-podcast:hover .wp-menu-image,
+		#menu-posts-podcast.wp-has-current-submenu .wp-menu-image {
+            background-position: 10px -20px !important;
         }
         /* Post Screen - 32px */
         .icon32-posts-podcast {
@@ -228,10 +235,11 @@ function custom_admin_icons() {
 
         /* Admin Menu - 16px */
         #toplevel_page_podlove_settings_handle .wp-menu-image {
-            background: url(<?php echo \Podlove\PLUGIN_URL ?>/images/podlove/icon-adminmenu16-sprite.png) no-repeat 6px 6px !important;
+            background: url(<?php echo \Podlove\PLUGIN_URL ?>/images/podlove/icon-adminmenu16-sprite.png) no-repeat 10px 10px !important;
         }
-		#toplevel_page_podlove_settings_handle:hover .wp-menu-image, #toplevel_page_podlove_settings_handle.wp-has-current-submenu .wp-menu-image {
-            background-position: 6px -26px !important;
+		#toplevel_page_podlove_settings_handle:hover .wp-menu-image,
+		#toplevel_page_podlove_settings_handle.wp-has-current-submenu .wp-menu-image {
+            background-position: 10px -22px !important;
         }
         /* Post Screen - 32px */
         #icon-podlove-podcast {
