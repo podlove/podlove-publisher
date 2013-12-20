@@ -28,5 +28,13 @@ class Feed {
 		return $this->feed->get_subscribe_url();
 	}
 
+	public function discoverable() {
+		return (bool) $this->feed->discoverable;
+	}
+
+	public function protected() {
+		return (bool) $this->feed->protected;
+	}
+
 
 }
