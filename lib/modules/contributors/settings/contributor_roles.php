@@ -8,22 +8,15 @@ class ContributorRoles {
 	static $pagehook;
 	
 	public function __construct( $handle ) {
-		
-		ContributorRoles::$pagehook = add_submenu_page(
-			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Contributor Roles',
-			/* $menu_title */ 'Contributor Roles',
-			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_contributor_roles',
-			/* $function   */ array( $this, 'page' )
-		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 	}
 	
 	public static function get_action_link( $role, $title, $action = 'edit', $class = 'link' ) {
+		$request = ( isset( $_REQUEST['podlove_tab'] ) ? "&amp;podlove_tab=".$_REQUEST['podlove_tab'] : '' );
 		return sprintf(
-			'<a href="?page=%s&amp;action=%s&amp;role=%s" class="%s">' . $title . '</a>',
+			'<a href="?page=%s%s&amp;action=%s&amp;role=%s" class="%s">' . $title . '</a>',
 			$_REQUEST['page'],
+			$request,
 			$action,
 			$role->id,
 			$class
@@ -38,11 +31,11 @@ class ContributorRoles {
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 
 		if ( $action === 'save' ) {
-			$this->save();
+			self::save();
 		} elseif ( $action === 'create' ) {
-			$this->create();
+			self::create();
 		} elseif ( $action === 'delete' ) {
-			$this->delete();
+			self::delete();
 		}
 	}
 
@@ -65,10 +58,7 @@ class ContributorRoles {
 		}
 		
 		?>
-
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Contributor Roles', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {
@@ -94,7 +84,7 @@ class ContributorRoles {
 		$role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] );
 		$role->update_attributes( $_POST['podlove_contributor_role'] );
 		
-		$this->redirect( 'index', $role->id );
+		self::redirect( 'index', $role->id );
 	}
 	
 	/**
@@ -106,7 +96,7 @@ class ContributorRoles {
 		$contributor = new \Podlove\Modules\Contributors\Model\ContributorRole;
 		$contributor->update_attributes( $_POST['podlove_contributor_role'] );
 
-		$this->redirect( 'index' );
+		self::redirect( 'index' );
 	}
 	
 	/**
@@ -118,7 +108,7 @@ class ContributorRoles {
 
 		\Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] )->delete();
 		
-		$this->redirect( 'index' );
+		self::redirect( 'index' );
 	}
 	
 	/**
@@ -128,12 +118,18 @@ class ContributorRoles {
 		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $role_id ) ? '&role=' . $role_id : '';
 		$action = '&action=' . $action;
+		$tab = '&podlove_tab=roles';
 		
-		wp_redirect( admin_url( $page . $show . $action ) );
+		wp_redirect( admin_url( $page . $show . $action . $tab ) );
 		exit;
 	}
 	
 	private function view_template() {
+		?>
+		<h2>
+			<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;podlove_tab=roles&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a>
+		</h2>
+		<?php
 		$table = new \Podlove\Modules\Contributors\Contributor_Role_List_Table();
 		$table->prepare_items();
 		$table->display();

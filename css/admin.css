@@ -44,6 +44,9 @@ i.rotate {
 .podlove-icon-ok     { color: green; }
 .podlove-icon-remove { color: red; }
 .podlove-icon-minus  { color: #999; }
+.podlove-icon-edit   { text-decoration: none; margin-left: 6px; }
+
+.podlove-contributor-edit { display: none; }
 
 /* Settings: Assets */
 .episode_assets.wp-list-table .column-move {
@@ -123,10 +126,6 @@ table.podlove_alternating tr:nth-child(even) {
 	font-size: 1.5em;
 }
 
-#add_new_contributor_selector, #add_new_contributor_button {
-	float: right;
-}
-
 #add_new_contributor_wrapper {
 	width: 285px;
 	margin: 5px 0px 0px 0px;
@@ -135,6 +134,10 @@ table.podlove_alternating tr:nth-child(even) {
 #contributors_table_body select {
 	width: 180px;
 }	
+
+#contributors_table_body td {
+	height: 40px !important;
+}
 
 span.contributor_remove {
 	font-size: 1.6em;
@@ -202,4 +205,12 @@ div.row__podlove_meta_license_cc_license_jurisdiction label {
 
 div.row__podlove_meta_license_type {
 	margin: 0px 0px 1em 0px;
+}
+
+td.podlove-avatar-column, th.podlove-avatar-column {
+	width: 45px;
+}
+
+td.podlove-contributor-column {
+	white-space: nowrap;
 }

@@ -60,6 +60,7 @@ class Shortcodes {
 	 *	title       - Optional table header title. Default: none
 	 *	avatars     - One of 'yes', 'no'. Display avatars. Default: 'yes'
 	 *	role        - Filter lists by role. Default: 'all'
+	 *	group       - Filter lists by group. Default: 'all'
 	 *	donations   - One of 'yes', 'no'. Display donation column. Default: 'no'
 	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
 	 *	              Links contributor name to the service if available. Default: 'none'
@@ -76,6 +77,7 @@ class Shortcodes {
 			'preset'    => 'table',
 			'avatars'   => 'yes',
 			'role'      => 'all',
+			'group'		=> 'all',
 			'donations' => 'no',
 			'linkto'    => 'none',
 			'title'     => ''
@@ -131,6 +133,13 @@ class Shortcodes {
 			$role = $this->settings['role'];
 			$this->contributions = array_filter($this->contributions, function($c) use ($role) {
 				return strtolower($role) == $c->getRole()->slug;
+			});
+		}
+
+		if ($this->settings['group'] != 'all') {
+			$group = $this->settings['group'];
+			$this->contributions = array_filter($this->contributions, function($c) use ($group) {
+				return strtolower($group) == $c->getGroup()->slug;
 			});
 		}
 
@@ -258,7 +267,11 @@ EOD;
 
 			// donations
 			if ($this->settings['donations'] == 'yes')
-				$body .= '<td class="docation_cell">' . $this->getDonationButton($contributor) . "</td>";
+				$body .= '<td class="docation_cell"><ul class="podlove-donations-list">'
+			    . ( is_page() ? $this->getFlattrButton( $contributor ) : $this->getRelatedFlattrButton( $contributor, get_the_ID() ) )
+			    . $this->getXcoinButton($contributor, 'bitcoin')
+			    . $this->getXcoinButton($contributor, 'litecoin')
+			    . $this->getPayPalButton($contributor) . "</ul></td>";
 
 			$body .= "</tr>";
 		}
@@ -284,19 +297,58 @@ EOD;
 		return $html;
 	}
 
-	private function getDonationButton($contributor)
+	private function getRelatedFlattrButton($contributor, $postid)
 	{
 		if (!$contributor->flattr)
 			return "";
 
-		return "<a
+		return "<li><a
+			class=\"FlattrButton\"
+			style=\"display:none;\"
+    		title=\"{$contributor->publicname}@" . get_the_title( $postid ) . "\"
+    		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
+    		href=\"".get_permalink( $postid )."#podlove-contributor={$contributor->slug}\">
+		    	Flattr {$contributor->publicname}@" . get_the_title( $postid ) . "
+		</a></li>";
+	}
+
+	private function getFlattrButton($contributor)
+	{
+		if (!$contributor->flattr)
+			return "";
+
+		return "<li><a
 			class=\"FlattrButton\"
 			style=\"display:none;\"
     		title=\"Flattr {$contributor->publicname}\"
-    		rel=\"flattr;button:compact;popout:0\"
+    		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
     		href=\"https://flattr.com/profile/{$contributor->flattr}\">
 		    	Flattr {$contributor->publicname}
-		</a>";
+		</a></li>";
+	}
+
+	private function getPayPalButton($contributor)
+	{
+		if (!$contributor->paypal)
+			return "";
+
+		return "<li><a
+			class=\"PayPalButton\"
+    		title=\"Donate with PayPal\"
+    		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
+    		<i class=\"podlove-icon-paypal\"></i>
+		</a></li>";
+	}
+
+	private function getXcoinButton($contributor, $currency)
+	{
+		if (!$contributor->$currency)
+			return "";
+
+		return '<li><a href="' . $currency . ':' . $contributor->$currency . '">
+						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/' . $currency . '.png" />
+					</a>
+				</li>';
 	}
 
 	private function getFlattrScript() {

@@ -48,7 +48,9 @@ class Tabs {
 	}
 
 	public function initCurrentTab() {
-		return $this->getCurrentTab()->init();
+		if( is_object( $this->getCurrentTab() ) ) {
+			return $this->getCurrentTab()->init();
+		} 		
 	}
 
 	public function initAllTabs() {

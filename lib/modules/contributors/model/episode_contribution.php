@@ -12,6 +12,10 @@ class EpisodeContribution extends Base {
 		return ContributorRole::find_by_id($this->role_id);
 	}
 
+	public function getGroup() {
+		return ContributorGroup::find_by_id($this->group_id);
+	}
+
 	public function getContributor() {
 		return Contributor::find_by_id($this->contributor_id);
 	}
@@ -35,4 +39,5 @@ EpisodeContribution::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' )
 EpisodeContribution::property( 'contributor_id', 'INT' );
 EpisodeContribution::property( 'episode_id', 'INT' );
 EpisodeContribution::property( 'role_id', 'INT' );
+EpisodeContribution::property( 'group_id', 'INT' );
 EpisodeContribution::property( 'position', 'FLOAT' );

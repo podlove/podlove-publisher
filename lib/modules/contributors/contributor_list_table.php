@@ -13,6 +13,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
+
+	public function column_avatar( $contributor ) {
+		
+		return $contributor->getAvatar("45px");
+	}
 	
 	public function column_realname( $contributor ) {
 		$actions = array(
@@ -41,16 +46,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		return $contributor->publicname;
 	}
 
+	public function column_nickname( $contributor ) {
+		return $contributor->nickname;
+	}
+
 	public function column_slug( $contributor ) {
 		return $contributor->slug;
-	}
-	
-	public function column_role( $contributor ) {
-		if ($role = $contributor->getRole()) {
-			return $role->title;
-		} else {
-			return '';
-		}
 	}
 	
 	public function column_privateemail( $contributor ) {
@@ -61,23 +62,19 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		return $contributor->showpublic ? '✓' : '×';
 	}
 
-	public function column_permanentcontributor( $contributor ) {
-		return $contributor->permanentcontributor ? '✓' : '×';
-	}
-
 	public function column_episodes( $contributor ) {
 		return $this->get_episodes_link($contributor, $contributor->contributioncount);
 	}
 
 	public function get_columns(){
 		$columns = array(
+			'avatar'             => __( '', 'podlove' ),
 			'realname'             => __( 'Contributor', 'podlove' ),
 			'publicname'           => __( 'Public Name', 'podlove' ),
-			'role'                 => __( 'Default Role', 'podlove' ),
+			'nickname'           => __( 'Nickname', 'podlove' ),
 			'episodes'             => __( 'Episodes', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
-			'permanentcontributor' => __( 'Regular Contributor', 'podlove' ),
 			'showpublic'           => __( 'Public Profile?', 'podlove' )
 		);
 		return $columns;
@@ -95,11 +92,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	  $sortable_columns = array(
 	    'realname'             => array('realname',false),
 	    'publicname'           => array('publicname',false),
-	    'role'                 => array('role',false),
+	    'nickname'             => array('nickname',false),
 	    'episodes'             => array('contributioncount',true),
 	    'slug'                 => array('slug',false),
 	    'privateemail'         => array('privateemail',false),
-	    'permanentcontributor' => array('permanentcontributor',false),
 	    'showpublic'           => array('showpublic',false)
 	  );
 	  return $sortable_columns;
@@ -114,6 +110,8 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		<style type="text/css">
 		/* avoid mouseover jumping */
 		#permanentcontributor { width: 160px; }
+		td.column-avatar, th.column-avatar { width: 50px; }
+		td.column-slug, th.column-slug { width: 12% !important; }
 		</style>
 		<?php
 	}
@@ -163,9 +161,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 																			`adn` LIKE \'%'.$foo.'%\' OR
 																			`facebook` LIKE \'%'.$foo.'%\' OR
 																			`flattr` LIKE \'%'.$foo.'%\' OR
+																			`paypal` LIKE \'%'.$foo.'%\' OR
+																			`bitcoin` LIKE \'%'.$foo.'%\' OR
+																			`litecoin` LIKE \'%'.$foo.'%\' OR
 																			`publicemail` LIKE \'%'.$foo.'%\' OR
 																			`privateemail` LIKE \'%'.$foo.'%\' OR
-																			`role` LIKE \'%'.$foo.'%\' OR
 																			`realname` LIKE \'%'.$foo.'%\' OR
 																			`publicname` LIKE \'%'.$foo.'%\' OR
 																			`guid` LIKE \'%'.$foo.'%\' OR
@@ -191,19 +191,5 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 		// Search box
 		$this->search_form();
-	}
-
-	function no_items() {
-		$url = sprintf( '?page=%s&action=%s&post_type=podcast', $_REQUEST['page'], 'new' );
-		?>
-		<div style="margin: 20px 10px 10px 5px">
-			<span class="add-new-h2" style="background: transparent">
-				<?php _e( 'No items found.' ); ?>
-			</span>
-			<a href="<?php echo $url ?>" class="add-new-h2">
-				<?php _e( 'Add New' ) ?>
-			</a>
-		</div>
-		<?php
 	}
 }

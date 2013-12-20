@@ -4,6 +4,7 @@ namespace Podlove\Modules\Contributors;
 use \Podlove\Model\Episode;
 use \Podlove\Modules\Contributors\Model\Contributor;
 use \Podlove\Modules\Contributors\Model\ContributorRole;
+use \Podlove\Modules\Contributors\Model\ContributorGroup;
 use \Podlove\Modules\Contributors\Model\EpisodeContribution;
 use \Podlove\Modules\Contributors\Model\ShowContribution;
 
@@ -43,7 +44,7 @@ class Contributors extends \Podlove\Modules\Base {
 		// register settings page
 		add_action('podlove_register_settings_pages', function($settings_parent) {
 			new Settings\Contributors($settings_parent);
-			new Settings\ContributorRoles($settings_parent);
+			new Settings\ContributorSettings($settings_parent);
 		});
 	}
 
@@ -103,23 +104,9 @@ class Contributors extends \Podlove\Modules\Base {
 	public function was_activated( $module_name ) {
 		Contributor::build();
 		ContributorRole::build();
+		ContributorGroup::build();
 		EpisodeContribution::build();
 		ShowContribution::build();
-
-		if (!ContributorRole::count()) {
-			$default_contributors = array(
-				'moderator' => 'Moderator',
-				'comoderator' => 'Co-Moderator',
-				'guest' => 'Guest',
-				'shownotes' => 'Shownotes',
-				'chatmod' => 'Chat Moderator'
-			);
-			foreach ($default_contributors as $slug => $title) {
-				$c = new ContributorRole;
-				$c->update_attributes(array('slug' => $slug, 'title' => $title));
-				$c->save();
-			}
-		}
 	}
 
 	public function migrate_contributors( $module_name ) {
@@ -193,13 +180,16 @@ class Contributors extends \Podlove\Modules\Base {
 		}
 
 		$position = 0;
-		foreach ($_POST["episode_contributor"] as $contributor_id => $contributor) {
-			$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-			$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
-			$c->episode_id = $episode->id;
-			$c->contributor_id = $contributor_id;
-			$c->position = $position++;
-			$c->save();
+		foreach ($_POST["episode_contributor"] as $contributor_appearance) {
+			foreach ($contributor_appearance as $contributor_id => $contributor) {
+				$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
+				$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
+				$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
+				$c->episode_id = $episode->id;
+				$c->contributor_id = $contributor_id;
+				$c->position = $position++;
+				$c->save();				
+			}
 		}
 	}
 
@@ -214,13 +204,22 @@ class Contributors extends \Podlove\Modules\Base {
 				// determine existing contributions
 				$contributions = array();
 				if ($current_page->action == "add") {
-					$permanent_contributors = \Podlove\Modules\Contributors\Model\Contributor::find_all_by_property("permanentcontributor", "1");
-					foreach ($permanent_contributors as $permanent_contributor) {
-						$contrib = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-						$contrib->contributor_id = $permanent_contributor->id;
-						$contrib->role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id($permanent_contributor->role_id);
-						$contributions[] = $contrib;
+					$i = 0;
+					$permanent_contributors = array();
+					foreach ( ShowContribution::all() as $contribution_key => $contribution ) {
+						$permanent_contributors[$contribution_key]['contributor'] = $contribution->getContributor();
+						$permanent_contributors[$contribution_key]['role'] = $contribution->getRole();
+						$permanent_contributors[$contribution_key]['group'] = $contribution->getGroup();
 					}
+
+					foreach ($permanent_contributors as $permanent_contributor) {
+							$contrib = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
+							$contrib->contributor_id = $permanent_contributor['contributor']->id;
+							$contrib->role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $permanent_contributor['role']->id );
+							$contrib->group = \Podlove\Modules\Contributors\Model\ContributorGroup::find_by_id( $permanent_contributor['group']->id );
+							$contributions[] = $contrib;						
+					}
+
 				} else {
 					$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
 				}
@@ -262,40 +261,67 @@ class Contributors extends \Podlove\Modules\Base {
 		if (!isset($new['contributor']))
 			return;
 
-		$contributors = $new['contributor'];
+		$contributor_appearances = $new['contributor'];
 
 		foreach (ShowContribution::all() as $contribution) {
 			$contribution->delete();
 		}
 
 		$position = 0;
-		foreach ($contributors as $contributor_id => $contributor) {
-			$c = new ShowContribution;
-			$c->role_id = ContributorRole::find_one_by_slug($contributor['role'])->id;
-			$c->contributor_id = $contributor_id;
-			$c->position = $position++;
-			$c->save();
+		foreach ($contributor_appearances as $contributor_appearance) {
+			foreach ($contributor_appearance as $contributor_id => $contributor) {
+				$c = new ShowContribution;
+				$c->role_id = ContributorRole::find_one_by_slug( $contributor['role'] )->id;
+				$c->group_id = ContributorGroup::find_one_by_slug( $contributor['group'] )->id;
+				$c->contributor_id = $contributor_id;
+				$c->position = $position++;
+				$c->save();
+			}
 		}
 	}
 
 	public static function contributors_form_table($current_contributions = array(), $form_base_name = 'episode_contributor') {
 		$contributors_roles = \Podlove\Modules\Contributors\Model\ContributorRole::selectOptions();
-
+		$contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::selectOptions();
 		$cjson = array();
+
 		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
-			$cjson[$contributor->id] = array(
-				'id'   => $contributor->id,
-				'slug' => $contributor->slug,
-				'role' => $contributor->role,
-				'realname' => $contributor->realname,
-				'permanentcontributor' => $contributor->permanentcontributor
-			);
+			$show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all( "WHERE `contributor_id` = " . $contributor->id );
+			if( empty( $show_contributions ) ) { 
+				$cjson[] = array(
+					'id'   => $contributor->id,
+					'slug' => $contributor->slug,
+					'role' => '',
+					'group' => '',
+					'realname' => $contributor->realname,
+					'avatar' => $contributor->getAvatar("35px")
+				);
+			} else {
+				foreach($show_contributions as $show_contribution) {
+					$role_data = ContributorRole::find_one_by_id($show_contribution->role_id);
+						($role_data == "" ? $role = '' : $role = $role_data->id );
+					$group_data = ContributorGroup::find_one_by_id($show_contribution->group_id);
+						($group_data == "" ? $group = '' : $group = $group_data->id );
+					$cjson[] = array(
+						'id'   => $contributor->id,
+						'slug' => $contributor->slug,
+						'role' => $role,
+						'group' => $group,
+						'realname' => $contributor->realname,
+						'avatar' => $contributor->getAvatar("35px")
+					);
+				}
+			} 
+			
 		}
 
-		// override contributor roles with scoped roles
-		foreach ($current_contributions as $current_contribution) {
+		// override contributor roles and groups with scoped roles
+		foreach ($current_contributions as $contribution_key => $current_contribution) {
 			if ($role = $current_contribution->getRole()) {
 				$cjson[$current_contribution->contributor_id]['role'] = $role->slug;
+			}
+			if ($group = $current_contribution->getGroup()) {
+				$cjson[$current_contribution->contributor_id]['group'] = $group->slug;
 			}
 		}
 		?>
@@ -303,7 +329,9 @@ class Contributors extends \Podlove\Modules\Base {
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th>Contributor</th>
+						<th class="podlove-avatar-column" colspand="2">Contributor</th>
+						<th></th>
+						<th>Group</th>
 						<th>Role</th>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
@@ -317,22 +345,31 @@ class Contributors extends \Podlove\Modules\Base {
 			</table>
 
 			<div id="add_new_contributor_wrapper">
-				<select id="add_new_contributor_selector" class="contributor-dropdown chosen">
-					<option value="0"><?php echo __('Choose Contributor', 'podlove') ?></option>
-					<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
-						<?php if (!in_array($contributor->id, array_map(function($c){ return $c->contributor_id; }, $current_contributions), true)): ?>
-							<option value="<?php echo $contributor->id ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->realname; ?></option>
-						<?php endif; ?>
-					<?php endforeach; ?>
-				</select>
 				<input class="button" id="add_new_contributor_button" value="+" type="button" />
 			</div>
 
 			<script type="text/template" id="contributor-row-template">
-			<tr class="media_file_row" data-contributor-id="{{contributor-id}}">
-				<td>{{contributor-name}}</td>
+			<tr class="media_file_row podlove-contributor-table" data-contributor-id="{{contributor-id}}">
+				<td class="podlove-avatar-column"></td>
+				<td class="podlove-contributor-column">
+					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
+						<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
+						<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
+							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->avatar ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->realname .( $contributor->nickname == "" ? '' : " (" . trim($contributor->nickname) . ")" ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
+				</td>
 				<td>
-					<select name="<?php echo $form_base_name ?>[{{contributor-id}}][role]" class="chosen">
+					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
+						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
+						<?php foreach ( $contributors_groups as $group_slug => $group_title ): ?>
+							<option value="<?php echo $group_slug ?>"><?php echo $group_title ?></option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+				<td>
+					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
 						<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
 							<option value="<?php echo $role_slug ?>"><?php echo $role_title ?></option>
@@ -350,88 +387,121 @@ class Contributors extends \Podlove\Modules\Base {
 
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
-				var existing_contributions = [<?php echo implode(",", array_map(function($c){ return $c->contributor_id; }, $current_contributions)) ?>];
+				var i = 0;
+				var existing_contributions = <?php
+				echo json_encode(array_map(function($c){
+					// Set default role
+					$role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $c->role_id );
+					if ( isset( $role_data ) ) {
+						$role = $role_data->slug;
+					} else {
+						if ( empty( $c->role ) ) {
+							$role = '';
+						} else {
+							$role = $c->role->slug;
+						}						
+					}
+
+					// Set default group
+					$group_data = \Podlove\Modules\Contributors\Model\ContributorGroup::find_by_id( $c->group_id );
+					if ( isset( $group_data ) ) {
+						$group = $group_data->slug;
+					} else {
+						if ( empty( $c->group ) ) {
+							$group = '';
+						} else {
+							$group = $c->group->slug;
+						}
+					}
+
+					return array( 'id' => $c->contributor_id, 'role' => $role, 'group' => $group );
+				}, $current_contributions)); ?>;
 
 				PODLOVE.Contributors = <?php echo json_encode($cjson); ?>;
+				PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";
 
 				(function($) {
 
-					function determine_blank_slate_visibility() {
-						var placeholder = $(".contributors_table_body_placeholder");
-
-						if ($('#contributors_table_body tr').size() > 0) {
-							placeholder.hide();
-						} else {
-							placeholder.show();
-						}
+					function update_chosen() {
+						$(".chosen").chosen();
+						$(".chosen-image").chosenImage();
 					}
 
-					function determine_contributor_selector_visibility() {
-						var contributor_selector = $("#add_new_contributor_selector_chzn, #add_new_contributor_button");
-
-						if ($('#add_new_contributor_selector option').size() == 0) {
-							contributor_selector.hide();
-						} else {
-							contributor_selector.show();
-						}
+					function fetch_contributor(contributor_id) {
+						return $.grep(PODLOVE.Contributors, function(contributor, index) {
+								return contributor.id == contributor_id;
+						})[0]; // Using [0] as the returned element has multiple indexes
 					}
 
-					function update_contributor_list() {
-						$(".chosen").chosen().trigger("liszt:updated");
-						determine_blank_slate_visibility();
-						determine_contributor_selector_visibility();
+					function add_new_contributor() {
+						var row = '';
+						row = $("#contributor-row-template").html();
+						$("#contributors_table_body").append(row);
+						contributor_dropdown_handler();
+						update_chosen();
 					}
 
-					function add_contributor_row(contributor) {
+					function add_contributor_row(contributor, role, group) {
 						var row = '';
 
 						// add contributor to table
 						row = $("#contributor-row-template").html();
-						row = row.replace(/\{\{contributor-name\}\}/g, contributor.realname);
 						row = row.replace(/\{\{contributor-id\}\}/g, contributor.id);
-						el = $("#contributors_table_body").append(row);
+						row = row.replace(/\{\{id\}\}/g, i);
+						$("#contributors_table_body").append(row);
+						i++;
 						
 						var new_row = $("#contributors_table_body tr:last");
 
+						new_row.find('td.podlove-avatar-column').html(contributor.avatar);
+						// select contributor in contributor-dropdown
+						new_row.find('select.podlove-contributor-dropdown option[value="' + contributor.id + '"]').attr('selected',true);
 						// select default role
-						new_row.find('select option[value="' + contributor.role + '"]').attr('selected',true);
+						new_row.find('select.podlove-role option[value="' + role + '"]').attr('selected',true);
+						// select default group
+						new_row.find('select.podlove-group option[value="' + group + '"]').attr('selected',true);
 					}
 
+					function contributor_dropdown_handler() {
+						$('select.podlove-contributor-dropdown').change(function() {
+							contributor = fetch_contributor(this.value);
+							row = $(this).parent().parent();
+
+							// Check for empty contributors / for new field
+							if( typeof contributor === 'undefined' ) {
+								row.find(".podlove-avatar-column").html(""); // Empty avatar column and hide edit button
+								row.find(".podlove-contributor-edit").hide();
+								return;
+							}
+
+							// Setting data attribute and avatar field
+							row.data("contributor-id", contributor.id);
+							row.find(".podlove-avatar-column").html( contributor.avatar );
+							// Renaming all corresponding elements after the contributor has changed 
+							row.find(".podlove-contributor-dropdown").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[id]");
+							row.find(".podlove-group").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[group]");
+							row.find(".podlove-role").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[role]");
+							row.find(".podlove-contributor-edit").attr("href", "<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&page=podlove_contributors_settings_handle&action=edit&contributor=" + contributor.id);
+							row.find(".podlove-contributor-edit").show(); // Show Edit Button
+							i++; // continue using "i" which was already used to add the existing contributions
+						});
+					}	
+
+					
+
 					$(document).on('click', "#add_new_contributor_button", function() {
-						var selected_contributor = $("#add_new_contributor_selector :selected"),
-							contributor_id = selected_contributor.val(),
-							contributor = PODLOVE.Contributors[contributor_id];
-
-						add_contributor_row(contributor);
-
-						// remove contributor from select
-						selected_contributor.remove();
-
-						update_contributor_list();
+						add_new_contributor();
 					});
 
 					$(document).on('click', '.contributor_remove',  function() {
-						var contributor_id = $(this).closest("tr").data('contributor-id'),
-							contributor = PODLOVE.Contributors[contributor_id];
-
-						// remove this contributor row
 						$(this).closest("tr").remove();
-
-						// add to list of available contributors
-						var option = '<option value="' + contributor_id + '">' + contributor.realname + '</option>';
-
-						$("#add_new_contributor_selector").append(option);
-
-						update_contributor_list();
-					});
+					});	
 
 					$(document).ready(function() {
 
-						$.each(existing_contributions, function(index, contributor_id) {
-							add_contributor_row(PODLOVE.Contributors[contributor_id]);
+						$.each(existing_contributions, function(index, contributor) {
+							add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group);
 						});
-						
-						update_contributor_list();
 
 						$("#contributors_table_body td").each(function(){
 						    $(this).css('width', $(this).width() +'px');
@@ -451,6 +521,9 @@ class Contributors extends \Podlove\Modules\Base {
 							    });
 							}
 						});
+
+						contributor_dropdown_handler();
+						update_chosen();
 					});
 				}(jQuery));
 

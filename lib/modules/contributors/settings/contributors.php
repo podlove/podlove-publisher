@@ -3,6 +3,7 @@ namespace Podlove\Modules\Contributors\Settings;
 
 use Podlove\Model;
 use Podlove\Modules\Contributors\Model\ContributorRole;
+use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\Contributor;
 
 class Contributors {
@@ -220,26 +221,13 @@ class Contributors {
 			$wrapper->checkbox( 'showpublic', array(
 				'label'       => __( 'Public Profile', 'podlove' ),
 				'description' => 'Check this, if you want the contributor\'s profile to appear e.g. in the Web Player.',
-				'default'     => false
-			) );
-
-			$wrapper->checkbox( 'permanentcontributor', array(
-				'label'       => __( 'Regular Contributor', 'podlove' ),
-				'description' => 'Check this, if you want the contributor to be added to each episode per default.',
-				'default'     => false
+				'default'     => true
 			) );
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'ID', 'podlove' ),
 				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
 				'html'        => array( 'class' => 'required' )
-			) );	
-			
-			$wrapper->select( 'role', array(
-				'label'       => __( 'Default role', 'podlove' ),
-				'description' => 'The default role of the conributor.',
-				'options'     => ContributorRole::selectOptions(),
-				'please_choose_text' => __( '- none -', 'podlove' )
 			) );
 
 			$wrapper->string( 'guid', array(
@@ -283,16 +271,33 @@ class Contributors {
 				'label'       => __( 'Twitter', 'podlove' ),
 				'description' => 'Twitter username.'
 			) );				
-				
-			$wrapper->string( 'flattr', array(
-				'label'       => __( 'Flattr', 'podlove' ),
-				'description' => 'Flattr username.'
-			) );	
 			
 			$wrapper->string( 'facebook', array(
 				'label'       => __( 'Facebook', 'podlove' ),
 				'description' => 'Facebook URL.'
 			) );	
+
+			$wrapper->subheader( __( 'Donations', 'podlove' ) );
+
+			$wrapper->string( 'flattr', array(
+				'label'       => __( 'Flattr', 'podlove' ),
+				'description' => 'Flattr username.'
+			) );	
+
+			$wrapper->string( 'paypal', array(
+				'label'       => __( 'Paypal', 'podlove' ),
+				'description' => 'Paypal button id.'
+			) );	
+
+			$wrapper->string( 'bitcoin', array(
+				'label'       => __( 'Bitcoin', 'podlove' ),
+				'description' => 'Bitcoin Address.'
+			) );
+
+			$wrapper->string( 'litecoin', array(
+				'label'       => __( 'Litecoin', 'podlove' ),
+				'description' => 'Litecoin Address.'
+			) );
 			
 			$wrapper->string( 'amazonwishlist', array(
 				'label'       => __( 'Wishlist', 'podlove' ),

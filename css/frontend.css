@@ -117,3 +117,20 @@ div.podlove_cc_license {
   display: block;
   text-align: center;
 }
+
+ul.podlove-donations-list li a {
+  display: block;
+  margin-top: -3px;
+}
+
+ul.podlove-donations-list li img {
+  margin-top: -5px;
+}
+
+ul.podlove-donations-list li {
+  display: inline-block;
+  height: 15px;
+  vertical-align: middle;
+  list-style-type: none;
+  margin-right: 5px;
+}

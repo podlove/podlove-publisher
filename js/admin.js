@@ -45,6 +45,28 @@ function human_readable_size(size) {
 	return megabytes.toFixed(2) + " MB";
 }
 
+function convert_to_slug(string) {
+	string = string.replace(' ', '-');
+	string = string.replace('ä', 'ae');
+	string = string.replace('ö', 'oe');
+	string = string.replace('ü', 'ue');
+	string = string.replace('ß', 'ss');
+	string = escape(string);
+
+	return string.toLowerCase();
+}
+
+function auto_fill_in_contributor(id) {
+	(function($) {
+		if( $("#podlove_contributor_slug").val() == "" ) {
+			$("#podlove_contributor_slug").val( convert_to_slug( $("#podlove_contributor_" + id).val() ) );
+		}
+		if( $("#podlove_contributor_publicname").val() == "" ) {
+			$("#podlove_contributor_publicname").val( $("#podlove_contributor_" + id).val() );
+		}
+	}(jQuery));
+}
+
 jQuery(function($) {
 
 	$("#validation").each(function() {
@@ -68,6 +90,14 @@ jQuery(function($) {
 	});
 
 	$(".autogrow").autogrow();
+
+	$("#podlove_contributor_realname").change(function() {
+		auto_fill_in_contributor('realname');
+	});
+
+	$("#podlove_contributor_nickname").change(function() {
+		auto_fill_in_contributor('nickname');
+	});
 	
 });
 
