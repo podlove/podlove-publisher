@@ -226,8 +226,12 @@ class Builder {
 		</div>
 		<script type="text/javascript">
 		(function($) {
-			$("#<?php echo $this->field_id ?>").on( 'keyup', function() {
-				url = $(this).val();
+			$("#<?php echo $this->field_id ?>").on( 'change', function() {
+				if( $(this).val().indexOf("@") == -1 ) {
+					url = $(this).val();
+				} else {
+					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(this).val() );
+				}				
 				$(this).parent().find("img").attr("src", url);
 			} );
 		})(jQuery);
