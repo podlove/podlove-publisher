@@ -36,6 +36,9 @@ class Contributors {
 
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 
+		if ( ! is_object( $contributor ) )
+			return $title;
+
 		return str_replace('Contributor', $contributor->publicname . ' &lsaquo; Contributor', $title);
 	}
 	
