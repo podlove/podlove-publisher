@@ -7,14 +7,6 @@ require_once  getenv('WPBASE') . '/wp-load.php';
 require_once  dirname(__FILE__) . '/../vendor/autoload.php';
 require_once  dirname(__FILE__) . '/../bootstrap/bootstrap.php';
 
-$episode = new ReflectionClass('\Podlove\Template\Episode');
-$methods = $episode->getMethods();
-
-$accessors = array_filter($methods, function($method) {
-	$comment = $method->getDocComment();
-	return stripos($comment, '@accessor') !== false;
-});
-
 class MyComment {
 
 	// the original comment text
@@ -36,7 +28,7 @@ class MyComment {
 		$c = $this->removeFirstLine($c);
 		$c = $this->removeLastLine($c);
 		$c = $this->removeLeadingStars($c);
-		$c = $this->ltrimLines($c);
+		$c = $this->removeOneLeadingWhitespace($c);
 
 		$this->lines = explode("\n", $c);
 
@@ -73,9 +65,9 @@ class MyComment {
 		return $new;
 	}
 
-	private function ltrimLines($c) {
+	private function removeOneLeadingWhitespace($c) {
 		return preg_replace_callback("/^.*$/m", function ($m) {
-			return ltrim($m[0]);
+			return preg_replace("/^\s/", '', $m[0], 1);
 		}, $c);
 	}
 
@@ -121,16 +113,44 @@ class MyComment {
 	public function getTags() {
 		return $this->tags;
 	}
-
 }
 
-print_r(array_map(function($method) {
+$episode = new ReflectionClass('\Podlove\Template\Episode');
+$methods = $episode->getMethods();
+
+$accessors = array_filter($methods, function($method) {
+	$comment = $method->getDocComment();
+	return stripos($comment, '@accessor') !== false;
+});
+
+$parsedMethods = array_map(function($method) {
 	$c = new MyComment($method->getDocComment());
 	$c->parse();
 
 	return [
-		$c->getTitle(),
-		$c->getDescription(),
-		$c->getTags()
+		'method' => $method->name,
+		'title' => $c->getTitle(),
+		'description' => $c->getDescription(),
+		'tags' => $c->getTags()
 	];
-}, $accessors));
+}, $accessors);
+
+echo "## Episode\n";
+
+foreach ($parsedMethods as $method) {
+	?>
+
+<div>
+	<h2>
+		episode.<?php echo $method['method'] ?>
+	</h2>
+	<h3>
+		<?php echo $method['title']; ?>
+	</h3>
+	<p>
+		<?php echo $method['description']; ?>
+	</p>
+</div>
+
+	<?php
+}
