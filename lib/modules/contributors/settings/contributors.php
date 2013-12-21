@@ -225,7 +225,7 @@ class Contributors {
 				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
 			) );
 			
-			$wrapper->image( 'avatar', array(
+			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
 				'description' => 'Either a Gravatar E-mail adress or a URL.'
 			) );

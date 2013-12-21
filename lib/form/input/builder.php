@@ -222,7 +222,27 @@ class Builder {
 		<div>
 			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
 			<br>
-			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?> class="podlove-avatar" />
+			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?> />
+		</div>
+		<script type="text/javascript">
+		(function($) {
+			$("#<?php echo $this->field_id ?>").on( 'change', function() {
+				url = $(this).val();
+				$(this).parent().find("img").attr("src", url);
+			} );
+		})(jQuery);
+		</script>
+		<?php
+	}
+
+	public function avatar( $object_key, $arguments ) {
+		$this->build_input_values( $object_key, $arguments );
+
+		?>
+		<div>
+			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
+			<br>
+			<img src="<?php echo $this->field_value; ?>" class="podlove-avatar" />
 		</div>
 		<script type="text/javascript">
 		(function($) {
@@ -232,13 +252,14 @@ class Builder {
 				} else {
 					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(this).val() ) + '&amp;s=50';
 
-				}				
+				}	
 				$(this).parent().find("img").attr("src", url);
 			} );
 		})(jQuery);
 		</script>
 		<?php
-	}
+	}	
+
 
 	public function callback( $object_key, $arguments ) {
 		call_user_func( $arguments['callback'] );
