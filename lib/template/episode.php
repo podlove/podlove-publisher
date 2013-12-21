@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * Episode Template Wrapper
+ *
+ * @templatetag episode
+ */
 class Episode {
 
 	/**
@@ -52,7 +57,7 @@ class Episode {
 	}
 
 	/**
-	 * Explicit Status.
+	 * Explicit status
 	 *
 	 * "yes", "no" or "clean"
 	 * 
@@ -72,12 +77,11 @@ class Episode {
 	}
 
 	/**
-	 * Episode Duration
+	 * Episode duration
 	 *
-	 * Use duration("full") to include milliseconds.
+	 * Use `duration("full")` to include milliseconds.
 	 *
 	 * @todo  support custom formatstrings
-	 * 
 	 * @accessor
 	 */
 	public function duration($format = 'HH:MM:SS') {
@@ -105,16 +109,18 @@ class Episode {
 	 * Access a list of meta values
 	 *
 	 * Example:
-	 * 
-	 *   <ul>
-	 *     {% for meta in episode.metas("mymetakey") %}
-	 *       <li>{{ meta }}</li>
-	 *     {% endfor %}
-	 *   </ul>
 	 *
+	 * ```html
+	 * <ul>
 	 *   {% for meta in episode.metas("mymetakey") %}
-	 *     {{ meta }}{% if not loop.last %}, {% endif %}
+	 *     <li>{{ meta }}</li>
 	 *   {% endfor %}
+	 * </ul>
+	 *
+	 * {% for meta in episode.metas("mymetakey") %}
+	 *   {{ meta }}{% if not loop.last %}, {% endif %}
+	 * {% endfor %}
+	 * ```
 	 *   
 	 * @accessor
 	 */
@@ -122,6 +128,12 @@ class Episode {
 		return get_post_meta($this->post->ID, $meta_key, false);
 	}
 
+	/**
+	 * List of episode files
+	 *
+	 * @see  file
+	 * @accessor
+	 */
 	public function files() {
 		return array_map(function($file) {
 			return new File($file);
@@ -130,7 +142,8 @@ class Episode {
 
 	/**
 	 * List of episode contributors
-	 * 
+	 *
+	 * @see  contributor
 	 * @FIXME this will break without contributor module
 	 * @accessor
 	 */
@@ -140,12 +153,24 @@ class Episode {
 		}, \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($this->episode->id));
 	}
 
+	/**
+	 * List of episode chapters
+	 *
+	 * @see  chapter
+	 * @accessor
+	 */
 	public function chapters() {
 		return array_map(function($chapter) {
 			return new Chapter($chapter);
 		}, $this->episode->get_chapters()->toArray());
 	}
 
+	/**
+	 * Episode license
+	 * 
+	 * @see  license
+	 * @accessor
+	 */
 	public function license() {
 		return new License(
 			new \Podlove\Model\License(

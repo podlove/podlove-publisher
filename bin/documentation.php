@@ -77,7 +77,7 @@ class MyComment {
 
 		do {
 			$line = $this->lines[$lineNo];
-			if (!!preg_match("/^@(\w+)(\s+(.*))?$/", $line, $matches)) {
+			if (!!preg_match("/^@(\w+)(\s+(.*))?$/i", $line, $matches)) {
 				$this->tags[] = [
 					'name' => $matches[1],
 					'description' => isset($matches[3]) ? $matches[3] : '',
@@ -99,7 +99,9 @@ class MyComment {
 			$endLine = count($this->lines) - 1;
 		}
 
-		$this->description = implode("\n", array_splice($this->lines, $startLine, $endLine - $startLine));
+		if ($endLine - $startLine > 0) {
+			$this->description = implode("\n", array_splice($this->lines, $startLine, $endLine - $startLine));
+		}
 	}
 
 	public function getTitle() {
@@ -115,42 +117,48 @@ class MyComment {
 	}
 }
 
-$episode = new ReflectionClass('\Podlove\Template\Episode');
-$methods = $episode->getMethods();
+$output_dir = '/Users/ericteubert/code/podlove.github.com/sources/template';
 
-$accessors = array_filter($methods, function($method) {
-	$comment = $method->getDocComment();
-	return stripos($comment, '@accessor') !== false;
-});
+$classes = [
+	'\Podlove\Template\Episode',
+	'\Podlove\Template\Chapter',
+];
 
-$parsedMethods = array_map(function($method) {
-	$c = new MyComment($method->getDocComment());
-	$c->parse();
+foreach ($classes as $class) {
+	$reflectionClass = new ReflectionClass($class);
+	$methods = $reflectionClass->getMethods();
 
-	return [
-		'method' => $method->name,
-		'title' => $c->getTitle(),
-		'description' => $c->getDescription(),
-		'tags' => $c->getTags()
+	$accessors = array_filter($methods, function($method) {
+		$comment = $method->getDocComment();
+		return stripos($comment, '@accessor') !== false;
+	});
+
+	$parsedMethods = array_map(function($method) {
+		$c = new MyComment($method->getDocComment());
+		$c->parse();
+
+		return [
+			'methodname' => $method->name,
+			'title' => $c->getTitle(),
+			'description' => $c->getDescription(),
+			'tags' => $c->getTags()
+		];
+	}, $accessors);
+
+	$classComment = new MyComment($reflectionClass->getDocComment());
+	$classComment->parse();
+	$templatetag = $classComment->getTags()[0]['description'];
+	 
+	assert(strlen($templatetag) > 0, 'templatetag must not be empty');
+
+	$classdoc = [
+		'class' => [
+			'classname' => $reflectionClass->getShortName(),
+			'templatetag' => $templatetag,
+			'description' => $classComment->getDescription()
+		],
+		'methods' => array_values($parsedMethods)
 	];
-}, $accessors);
 
-echo "## Episode\n";
-
-foreach ($parsedMethods as $method) {
-	?>
-
-<div>
-	<h2>
-		episode.<?php echo $method['method'] ?>
-	</h2>
-	<h3>
-		<?php echo $method['title']; ?>
-	</h3>
-	<p>
-		<?php echo $method['description']; ?>
-	</p>
-</div>
-
-	<?php
+	file_put_contents($output_dir . '/' . $templatetag . '.json', json_encode($classdoc), LOCK_EX);
 }
