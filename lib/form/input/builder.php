@@ -222,7 +222,7 @@ class Builder {
 		<div>
 			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
 			<br>
-			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?>>
+			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?> class="podlove-avatar" />
 		</div>
 		<script type="text/javascript">
 		(function($) {
@@ -230,7 +230,8 @@ class Builder {
 				if( $(this).val().indexOf("@") == -1 ) {
 					url = $(this).val();
 				} else {
-					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(this).val() );
+					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(this).val() ) + '&amp;s=50';
+
 				}				
 				$(this).parent().find("img").attr("src", url);
 			} );
