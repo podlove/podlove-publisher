@@ -122,6 +122,12 @@ class Episode {
 		return get_post_meta($this->post->ID, $meta_key, false);
 	}
 
+	public function files() {
+		return array_map(function($file) {
+			return new File($file);
+		}, $this->episode->media_files());
+	}
+
 	/**
 	 * List of episode contributors
 	 * 

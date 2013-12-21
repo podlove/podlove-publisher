@@ -32,9 +32,12 @@ class Feed {
 		return (bool) $this->feed->discoverable;
 	}
 
-	public function protected() {
+	public function passwordProtected() {
 		return (bool) $this->feed->protected;
 	}
 
+	public function asset() {
+		return new Asset($this->feed->episode_asset());
+	}
 
 }
