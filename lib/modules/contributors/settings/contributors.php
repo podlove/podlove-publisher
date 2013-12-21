@@ -26,6 +26,20 @@ class Contributors {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( "load-$pagehook",  array( $this, 'add_contributors_screen_options' ) );
+		add_filter('admin_title', array( $this, 'add_contributor_to_title' ), 10, 2);
+	}
+
+	public function add_contributor_to_title( $title ) {
+
+		if ( ! isset( $_REQUEST['contributor'] ) )
+			return $title;
+
+		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
+
+		if ( ! is_object( $contributor ) )
+			return $title;
+
+		return str_replace('Contributor', $contributor->publicname . ' &lsaquo; Contributor', $title);
 	}
 	
 	public static function get_action_link( $contributor, $title, $action = 'edit', $class = 'link' ) {
@@ -211,7 +225,7 @@ class Contributors {
 				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
 			) );
 			
-			$wrapper->string( 'avatar', array(
+			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
 				'description' => 'Either a Gravatar E-mail adress or a URL.'
 			) );
