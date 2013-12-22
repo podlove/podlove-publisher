@@ -51,6 +51,22 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	public function column_gender( $contributor ) {
 		return ucfirst( $contributor->gender );
 	}
+
+	public function column_social( $contributor ) {
+		$social = '';
+		( $contributor->adn == "" ? "" : $social = $social . '<i class="podlove-icon-appdotnet"></i> <a target="_blank" href="http://alpha.app.net/' . $contributor->adn . '">' . $contributor->adn . '</a><br />' );
+		( $contributor->twitter == "" ? "" : $social = $social . '<i class="podlove-icon-twitter"></i> <a target="_blank" href="http://twitter.com/' . $contributor->twitter . '">' . $contributor->twitter . '</a><br />' );
+		( $contributor->facebook == "" ? "" : $social = $social . '<i class="podlove-icon-facebook"></i> <a target="_blank" href="http://facebook.com/' . $contributor->facebook . '">' . $contributor->facebook . '</a><br />' );
+
+		return $social;
+	}
+
+	public function column_affiliation( $contributor ) {
+		$affiliation = '';
+		( $contributor->organisation == "" ? "" : $affiliation = $affiliation . $contributor->organisation . '<br />' );
+		( $contributor->department == "" ? "" : $affiliation = $affiliation . '<em>' . $contributor->department . '</em><br />' );
+		return $affiliation;
+	}
 	
 	public function column_privateemail( $contributor ) {
 		return "<a href='mailto:".$contributor->privateemail."'>".$contributor->privateemail."</a>";
@@ -70,9 +86,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'realname'             => __( 'Contributor', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
 			'gender'             => __( 'Gender', 'podlove' ),
-			'episodes'             => __( 'Episodes', 'podlove' ),
+			'affiliation'             => __( 'Affiliation', 'podlove' ),
+			'social'             => __( 'Social', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
-			'showpublic'           => __( 'Public Profile?', 'podlove' )
+			'episodes'             => __( 'Episodes', 'podlove' ),
+			'showpublic'           => __( 'Public', 'podlove' )
 		);
 		return $columns;
 	}
@@ -89,9 +107,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	  $sortable_columns = array(
 	    'realname'             => array('realname',false),
 	    'slug'                 => array('slug',false),
-	    'gender'                 => array('gender',false),
-	    'episodes'             => array('contributioncount',true),
+	    'gender'               => array('gender',false),
+	    'affiliation'          => array('organisation',false),
 	    'privateemail'         => array('privateemail',false),
+	    'episodes'             => array('contributioncount',true),
 	    'showpublic'           => array('showpublic',false)
 	  );
 	  return $sortable_columns;
@@ -108,6 +127,9 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		#permanentcontributor { width: 160px; }
 		td.column-avatar, th.column-avatar { width: 50px; }
 		td.column-slug, th.column-slug { width: 12% !important; }
+		td.column-showpublic, th.column-showpublic { width: 5% !important; }
+		td.column-gender, th.column-gender { width: 5% !important; }
+		td.column-episodes, th.column-episodes { width: 6% !important; }
 		</style>
 		<?php
 	}
@@ -153,6 +175,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 																			`organisation` LIKE \'%'.$foo.'%\' OR
 																			`slug` LIKE \'%'.$foo.'%\' OR
 																			`department` LIKE \'%'.$foo.'%\' OR
+																			`jobtitle` LIKE \'%'.$foo.'%\' OR
 																			`twitter` LIKE \'%'.$foo.'%\' OR
 																			`adn` LIKE \'%'.$foo.'%\' OR
 																			`facebook` LIKE \'%'.$foo.'%\' OR
