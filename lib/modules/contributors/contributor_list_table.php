@@ -29,8 +29,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		if (!($name = $contributor->realname))
 			$name = $contributor->publicname;
 
-		return sprintf( '%1$s %2$s',
+		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
 		    Settings\Contributors::get_action_link( $contributor, $name ),
+		    $contributor->publicname,
+		    ( $contributor->nickname == "" ? "" : " (" . $contributor->nickname . ")"  ),
 		    $this->row_actions( $actions )
 		) . '<input type="hidden" class="contributor_id" value="' . $contributor->id . '">';;
 	}
@@ -42,16 +44,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		);
 	}
 
-	public function column_publicname( $contributor ) {
-		return $contributor->publicname;
-	}
-
-	public function column_nickname( $contributor ) {
-		return $contributor->nickname;
-	}
-
 	public function column_slug( $contributor ) {
 		return $contributor->slug;
+	}
+
+	public function column_gender( $contributor ) {
+		return ucfirst( $contributor->gender );
 	}
 	
 	public function column_privateemail( $contributor ) {
@@ -70,10 +68,9 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$columns = array(
 			'avatar'             => __( '', 'podlove' ),
 			'realname'             => __( 'Contributor', 'podlove' ),
-			'publicname'           => __( 'Public Name', 'podlove' ),
-			'nickname'           => __( 'Nickname', 'podlove' ),
-			'episodes'             => __( 'Episodes', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
+			'gender'             => __( 'Gender', 'podlove' ),
+			'episodes'             => __( 'Episodes', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
 			'showpublic'           => __( 'Public Profile?', 'podlove' )
 		);
@@ -91,10 +88,9 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	public function get_sortable_columns() {
 	  $sortable_columns = array(
 	    'realname'             => array('realname',false),
-	    'publicname'           => array('publicname',false),
-	    'nickname'             => array('nickname',false),
-	    'episodes'             => array('contributioncount',true),
 	    'slug'                 => array('slug',false),
+	    'gender'                 => array('gender',false),
+	    'episodes'             => array('contributioncount',true),
 	    'privateemail'         => array('privateemail',false),
 	    'showpublic'           => array('showpublic',false)
 	  );

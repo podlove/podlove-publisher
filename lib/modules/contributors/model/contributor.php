@@ -13,7 +13,7 @@ class Contributor extends Base
 		return ContributorRole::find_one_by_slug($this->role);
 	}
 
-	private function getAvatarUrl($size) {
+	public function getAvatarUrl($size) {
 
 		if ($this->avatar)
 			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {

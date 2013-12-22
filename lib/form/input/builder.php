@@ -246,15 +246,23 @@ class Builder {
 		</div>
 		<script type="text/javascript">
 		(function($) {
-			$("#<?php echo $this->field_id ?>").on( 'change', function() {
-				if( $(this).val().indexOf("@") == -1 ) {
-					url = $(this).val();
+			function get_gravatar(field) {
+				if( $(field).val().indexOf("@") == -1 ) {
+					url = $(field).val();
 				} else {
-					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(this).val() ) + '&amp;s=50';
+					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(field).val() ) + '&amp;s=50';
 
 				}	
-				$(this).parent().find("img").attr("src", url);
+				$(field).parent().find("img").attr("src", url);
+			}
+
+			$("#<?php echo $this->field_id ?>").on( 'change', function() {
+				get_gravatar(this);
 			} );
+
+			$( document ).ready(function() {
+				get_gravatar( $("#<?php echo $this->field_id ?>") );
+			});
 		})(jQuery);
 		</script>
 		<?php
