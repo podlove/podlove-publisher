@@ -58,6 +58,7 @@ Contributor::property( 'slug', 'VARCHAR(255)' );
 Contributor::property( 'gender', 'VARCHAR(255)' );
 Contributor::property( 'organisation', 'TEXT' );
 Contributor::property( 'department', 'TEXT' );
+Contributor::property( 'jobtitle', 'TEXT' );
 Contributor::property( 'avatar', 'TEXT' );
 Contributor::property( 'twitter', 'VARCHAR(255)' );
 Contributor::property( 'adn', 'VARCHAR(255)' );

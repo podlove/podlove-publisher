@@ -49,22 +49,30 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_gender( $contributor ) {
-		return ucfirst( $contributor->gender );
+		switch ($contributor->gender) {
+			case 'none':
+				return 'Not set';
+			break;
+			default:
+				return ucfirst($contributor->gender);	
+			break;
+		}
 	}
 
 	public function column_social( $contributor ) {
 		$social = '';
-		( $contributor->adn == "" ? "" : $social = $social . '<i class="podlove-icon-appdotnet"></i> <a target="_blank" href="http://alpha.app.net/' . $contributor->adn . '">' . $contributor->adn . '</a><br />' );
-		( $contributor->twitter == "" ? "" : $social = $social . '<i class="podlove-icon-twitter"></i> <a target="_blank" href="http://twitter.com/' . $contributor->twitter . '">' . $contributor->twitter . '</a><br />' );
-		( $contributor->facebook == "" ? "" : $social = $social . '<i class="podlove-icon-facebook"></i> <a target="_blank" href="http://facebook.com/' . $contributor->facebook . '">' . $contributor->facebook . '</a><br />' );
+		( $contributor->adn == "" ? "" : $social = $social . '<i class="podlove-icon-appdotnet" title="App.net"></i> <a target="_blank" href="http://alpha.app.net/' . $contributor->adn . '">' . $contributor->adn . '</a><br />' );
+		( $contributor->twitter == "" ? "" : $social = $social . '<i class="podlove-icon-twitter" title="Twitter"></i> <a target="_blank" href="http://twitter.com/' . $contributor->twitter . '">' . $contributor->twitter . '</a><br />' );
+		( $contributor->facebook == "" ? "" : $social = $social . '<i class="podlove-icon-facebook" title="Facebook"></i> <a target="_blank" href="http://facebook.com/' . $contributor->facebook . '">' . $contributor->facebook . '</a><br />' );
 
 		return $social;
 	}
 
 	public function column_affiliation( $contributor ) {
 		$affiliation = '';
-		( $contributor->organisation == "" ? "" : $affiliation = $affiliation . $contributor->organisation . '<br />' );
-		( $contributor->department == "" ? "" : $affiliation = $affiliation . '<em>' . $contributor->department . '</em><br />' );
+		( $contributor->organisation == "" ? "" : $affiliation = $affiliation . '<strong>' . $contributor->organisation . '</strong><br />' );
+		( $contributor->department == "" ? "" : $affiliation = $affiliation .$contributor->department . '<br />' );
+		( $contributor->jobtitle == "" ? "" : $affiliation = $affiliation . '<em>' .  $contributor->jobtitle . '</em><br />' );
 		return $affiliation;
 	}
 	
@@ -127,9 +135,9 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		#permanentcontributor { width: 160px; }
 		td.column-avatar, th.column-avatar { width: 50px; }
 		td.column-slug, th.column-slug { width: 12% !important; }
-		td.column-showpublic, th.column-showpublic { width: 5% !important; }
-		td.column-gender, th.column-gender { width: 5% !important; }
-		td.column-episodes, th.column-episodes { width: 6% !important; }
+		td.column-showpublic, th.column-showpublic { width: 7% !important; }
+		td.column-gender, th.column-gender { width: 7% !important; }
+		td.column-episodes, th.column-episodes { width: 8% !important; }
 		</style>
 		<?php
 	}

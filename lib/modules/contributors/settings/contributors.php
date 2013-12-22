@@ -258,6 +258,10 @@ class Contributors {
 			$wrapper->string( 'department', array(
 				'label'       => __( 'Department', 'podlove' )
 			) );
+
+			$wrapper->string( 'jobtitle', array(
+				'label'       => __( 'Job Title', 'podlove' )
+			) );
 			
 			$wrapper->subheader( __( 'Contact &amp; Social', 'podlove' ) );
 			
