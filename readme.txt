@@ -87,14 +87,14 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.9.5 =
 * Contributor Module improvements
-** New icon graphics
-** "Contributor Groups" as a new way to divide contributors by participation. For example, you might want to have a "Team" group and one for supporting contributions.
-** No more default roles. It's just not possible to provide a sensible default set. So just add the ones you need :) (existing roles will *not* be deleted)
-** The contributors defined in `Podcast Settings > Contributors` are now the default contributors for new episodes
-** Reworked contributor management table. Better use of space, hideable columns, avatars and more.
-** Reworked episode contributor table. Avatars, edit links and more.
-** Support for more services
-** ... and a bunch of other tweaks
+  * New icon graphics
+  * "Contributor Groups" as a new way to divide contributors by participation. For example, you might want to have a "Team" group and one for supporting contributions.
+  * No more default roles. It's just not possible to provide a sensible default set. So just add the ones you need :) (existing roles will *not* be deleted)
+  * The contributors defined in `Podcast Settings > Contributors` are now the default contributors for new episodes
+  * Reworked contributor management table. Better use of space, hideable columns, avatars and more.
+  * Reworked episode contributor table. Avatars, edit links and more.
+  * Support for more services
+  * ... and a bunch of other tweaks
 * Web Player Update: compatible with WordPress theme "Twenty Fourteen"
 * Fix: don't gzip feeds when zlib compression is active
 * Fix: episode media file checkbox width for WP3.8
