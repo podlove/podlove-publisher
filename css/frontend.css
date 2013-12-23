@@ -118,19 +118,22 @@ div.podlove_cc_license {
   text-align: center;
 }
 
-ul.podlove-donations-list li a {
+ul.podlove-donations-list, ul.podlove-social-list {
+  margin: auto 0px auto 0px;
+}
+
+ul.podlove-donations-list li a, ul.podlove-social-list li a, img.podlove-contributor-button, ul.podlove-donations-list li, ul.podlove-social-list li {
+  width: 20px;
+  height: 20px;
+}
+
+ul.podlove-donations-list li a, ul.podlove-social-list li a {
   display: block;
-  margin-top: -3px;
 }
 
-ul.podlove-donations-list li img {
-  margin-top: -5px;
-}
-
-ul.podlove-donations-list li {
+ul.podlove-donations-list li, ul.podlove-social-list li {
   display: inline-block;
-  height: 15px;
-  vertical-align: middle;
+  line-height: 20px;
   list-style-type: none;
   margin-right: 5px;
 }

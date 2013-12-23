@@ -67,6 +67,7 @@ class Shortcodes {
 	 *	group       - Filter lists by group. Default: 'all'
 	 *	groups      - One of 'yes', 'no'. Display group. Default: 'no' 
 	 *	donations   - One of 'yes', 'no'. Display donation column. Default: 'no'
+	 *	flattr      - One of 'yes', 'no'. Display Flattr column. Default: 'yes'
 	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
 	 *	              Links contributor name to the service if available. Default: 'none'
 	 * 
@@ -86,6 +87,7 @@ class Shortcodes {
 			'group'		=> 'all',
 			'groups'	=> 'no',
 			'donations' => 'no',
+			'flattr'    => 'yes',
 			'linkto'    => 'none',
 			'title'     => ''
 		);
@@ -213,6 +215,7 @@ class Shortcodes {
 	private function renderAsTable() {
 
 		$donations = $this->settings['donations'] == 'yes' ? '<th></th>' : '';
+		$flattr = $this->settings['flattr'] == 'yes' ? '<th></th>' : '';
 		$title = $this->settings['title'];
 		$id = $this->getId();
 
@@ -222,6 +225,7 @@ class Shortcodes {
 		<tr>
 			<th colspan="3">$title</th>
 			$donations
+			$flattr
 		</tr>
 	<thead>
 	<tbody>
@@ -278,11 +282,17 @@ EOD;
 			// donations
 			if ($this->settings['donations'] == 'yes')
 				$body .= '<td class="docation_cell"><ul class="podlove-donations-list">'
-			    . ( is_page() ? $this->getFlattrButton( $contributor ) : $this->getRelatedFlattrButton( $contributor, get_the_ID() ) )
 			    . $this->getXcoinButton($contributor, 'bitcoin')
 			    . $this->getXcoinButton($contributor, 'litecoin')
 			    . $this->getPayPalButton($contributor)
-			    . $this->getAmazonWishlistButton($contributor) . "</ul></td>";
+			    . $this->getAmazonWishlistButton($contributor)
+			    . "</ul></td>";
+
+			// flattr
+			if ($this->settings['flattr'] == 'yes')
+				$body .= '<td class="flattr_cell">'
+				. ( is_page() ? $this->getFlattrButton( $contributor ) : $this->getRelatedFlattrButton( $contributor, get_the_ID() ) )
+				. "</td>";
 
 			$body .= "</tr>";
 		}
@@ -292,18 +302,22 @@ EOD;
 
 	private function getSocialButtons($contributor)
 	{
-		$html = '';
+		$html = '<ul class="podlove-social-list">';
 		foreach ($this->getServices() as $service) {
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
-					'<a href="%s" target="_blank" class="contributor-contact %s" title="%s"><i class="%s"></i></a>',
+					'<li><a href="%s" target="_blank" title="%s on %s">
+						<img src="%s/lib/modules/contributors/images/icons/%s" class="podlove-contributor-button" />
+					</a></li>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
-					$service['key'],
+					( $contributor->publicname == "" ? $contributor->nickname : $contributor->publicname ),
 					$service['title'],
+					\Podlove\PLUGIN_URL,
 					$service['icon']
 				);
 			}
 		}
+		$html .= '</ul>';
 
 		return $html;
 	}
@@ -317,7 +331,7 @@ EOD;
 			target=\"_blank\"
     		title=\"Support {$contributor->publicname} by buying things from an Amazon Wishlist\"
     		href=\"{$contributor->amazonwishlist}\">
-    		<i class=\"podlove-icon-cart\"></i>
+    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" />
 		</a></li>";
 	}
 
@@ -326,7 +340,7 @@ EOD;
 		if (!$contributor->flattr)
 			return "";
 
-		return "<li><a 
+		return "<a 
 		    target=\"_blank\"
 			class=\"FlattrButton\"
 			style=\"display:none;\"
@@ -334,7 +348,7 @@ EOD;
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
     		href=\"".get_permalink( $postid )."#podlove-contributor={$contributor->slug}\">
 		    	Flattr {$contributor->publicname}@" . get_the_title( $postid ) . "
-		</a></li>";
+		</a>";
 	}
 
 	private function getFlattrButton($contributor)
@@ -342,7 +356,7 @@ EOD;
 		if (!$contributor->flattr)
 			return "";
 
-		return "<li><a 
+		return "<a 
 		    target=\"_blank\"
 			class=\"FlattrButton\"
 			style=\"display:none;\"
@@ -350,7 +364,7 @@ EOD;
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
     		href=\"https://flattr.com/profile/{$contributor->flattr}\">
 		    	Flattr {$contributor->publicname}
-		</a></li>";
+		</a>";
 	}
 
 	private function getPayPalButton($contributor)
@@ -363,7 +377,7 @@ EOD;
 			class=\"PayPalButton\"
     		title=\"Support {$contributor->publicname} by donating with PayPal\"
     		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
-    		<i class=\"podlove-icon-paypal\"></i>
+    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" />
 		</a></li>";
 	}
 
@@ -374,7 +388,7 @@ EOD;
 
 		return '<li><a href="' . $currency . ':' . $contributor->$currency . '"
 					 title="Support ' . $contributor->publicname . ' by donating with ' . ucfirst($currency) .'">
-						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/' . $currency . '.png" />
+						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" />
 					</a>
 				</li>';
 	}
@@ -398,31 +412,31 @@ EOD;
 				'key' => 'publicemail',
 				'url_template' => 'mailto:%s',
 				'title' => 'E-Mail',
-				'icon' => 'podlove-icon-mail'
+				'icon' => 'email-128.png'
 			),
 			array(
 				'key' => 'www',
 				'url_template' => '%s',
 				'title' => 'Homepage',
-				'icon' => 'podlove-icon-house'
+				'icon' => 'www-128.png'
 			),
 			array(
 				'key' => 'adn',
 				'url_template' => 'http://app.net/%s',
 				'title' => 'ADN',
-				'icon' => 'podlove-icon-appdotnet'
+				'icon' => 'adn-128.png'
 			),
 			array(
 				'key' => 'twitter',
 				'url_template' => 'http://twitter.com/%s',
 				'title' => 'Twitter',
-				'icon' => 'podlove-icon-twitter'
+				'icon' => 'twitter-128.png'
 			),
 			array(
 				'key' => 'facebook',
 				'url_template' => '%s',
 				'title' => 'Facebook',
-				'icon' => 'podlove-icon-facebook'
+				'icon' => 'facebook-128.png'
 			)
 		);
 	}

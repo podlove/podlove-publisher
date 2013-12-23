@@ -49,21 +49,30 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_gender( $contributor ) {
-		switch ($contributor->gender) {
-			case 'none':
-				return 'Not set';
-			break;
-			default:
-				return ucfirst($contributor->gender);	
-			break;
+		if( $contributor->gender == 'none' ) {
+			return 'Not set';
+		} else {
+			return ucfirst($contributor->gender);	
 		}
 	}
 
 	public function column_social( $contributor ) {
+		$social_services = array(
+				'appdotnet'	=> array('title' => 'App.net',
+									 'url_template' => 'http://alpha.app.net/',
+									 'account' => $contributor->adn ),
+				'twitter'  => array( 'title' => 'Twitter',
+									 'url_template' => 'http://twitter.com/',
+									 'account' => $contributor->twitter ),
+				'facebook' => array( 'title' => 'Facebook',
+									 'url_template' => '',
+									 'account' => $contributor->facebook ),
+		);
+
 		$social = '';
-		( $contributor->adn == "" ? "" : $social = $social . '<i class="podlove-icon-appdotnet" title="App.net"></i> <a target="_blank" href="http://alpha.app.net/' . $contributor->adn . '">' . $contributor->adn . '</a><br />' );
-		( $contributor->twitter == "" ? "" : $social = $social . '<i class="podlove-icon-twitter" title="Twitter"></i> <a target="_blank" href="http://twitter.com/' . $contributor->twitter . '">' . $contributor->twitter . '</a><br />' );
-		( $contributor->facebook == "" ? "" : $social = $social . '<i class="podlove-icon-facebook" title="Facebook"></i> <a target="_blank" href="http://facebook.com/' . $contributor->facebook . '">' . $contributor->facebook . '</a><br />' );
+		foreach ( $social_services as $service => $details ) {
+			( $details['account'] == "" ? "" : $social = $social . '<i class="podlove-icon-' . $service .'" title="' . $details['title'] . '"></i> <a target="_blank" href="' . $details['url_template'] . $details['account'] . '">' . $details['account'] . '</a><br />' );
+		}
 
 		return $social;
 	}

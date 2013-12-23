@@ -318,8 +318,8 @@ class Contributors {
 			) );
 			
 			$wrapper->string( 'amazonwishlist', array(
-				'label'       => __( 'Wishlist', 'podlove' ),
-				'description' => 'URL of the contributors wishlist (e.g. Amazon).'
+				'label'       => __( 'Amazon Wishlist', 'podlove' ),
+				'description' => 'URL of the contributors Amazon wishlist.'
 			) );	
 
 		} );
