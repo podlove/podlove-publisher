@@ -130,6 +130,7 @@ class ContributorRoles {
 			<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;podlove_tab=roles&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a>
 		</h2>
 		<?php
+		echo __('Use roles to assign a certain type of activity to a single contributor independent of any assigned group. A role might be helpful to mark somebody as being the main presenter of a show or a guest. Use roles sparingly as most of the times, groups might the more valuable way to structure contributors.', 'podlove');
 		$table = new \Podlove\Modules\Contributors\Contributor_Role_List_Table();
 		$table->prepare_items();
 		$table->display();

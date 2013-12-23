@@ -130,6 +130,11 @@ class ContributorGroups {
 			<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;podlove_tab=groups&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a>
 		</h2>
 		<?php
+		echo sprintf(
+			__('Use groups to divide contributors by type of participation. Create a group for teams working together or for a supporting community. Team members can be displayed separately by using the %sappropriate option%s to select a group.', 'podlove'),
+			'<a href="http://docs.podlove.org/publisher/shortcodes/#contributors" target="_blank">',
+			'</a>'
+		);
 		$table = new \Podlove\Modules\Contributors\Contributor_Group_List_Table();
 		$table->prepare_items();
 		$table->display();
