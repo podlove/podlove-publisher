@@ -26,8 +26,9 @@ class ContributorSettings {
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 
-		add_action( 'admin_init', array( '\Podlove\Modules\Contributors\Settings\ContributorGroups', 'process_form' ) );
-		add_action( 'admin_init', array( '\Podlove\Modules\Contributors\Settings\ContributorRoles', 'process_form' ) );
+		foreach ($this->tabs->getTabs() as $tab) {
+			add_action( 'admin_init', array( $tab->getObject(), 'process_form' ) );
+		}
 	}
 	
 	function page() {

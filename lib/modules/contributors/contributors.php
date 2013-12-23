@@ -215,8 +215,15 @@ class Contributors extends \Podlove\Modules\Base {
 					foreach ($permanent_contributors as $permanent_contributor) {
 							$contrib = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
 							$contrib->contributor_id = $permanent_contributor['contributor']->id;
-							$contrib->role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $permanent_contributor['role']->id );
-							$contrib->group = \Podlove\Modules\Contributors\Model\ContributorGroup::find_by_id( $permanent_contributor['group']->id );
+
+							if (isset($permanent_contributor['role'])) {
+								$contrib->role = ContributorRole::find_by_id( $permanent_contributor['role']->id );
+							}
+							
+							if (isset($permanent_contributor['group'])) {
+								$contrib->group = ContributorGroup::find_by_id( $permanent_contributor['group']->id );
+							}
+
 							$contributions[] = $contrib;						
 					}
 
@@ -271,8 +278,15 @@ class Contributors extends \Podlove\Modules\Base {
 		foreach ($contributor_appearances as $contributor_appearance) {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
 				$c = new ShowContribution;
-				$c->role_id = ContributorRole::find_one_by_slug( $contributor['role'] )->id;
-				$c->group_id = ContributorGroup::find_one_by_slug( $contributor['group'] )->id;
+
+				if ($role = ContributorRole::find_one_by_slug( $contributor['role'] )) {
+					$c->role_id = $role->id;
+				}
+
+				if ($group = ContributorGroup::find_one_by_slug( $contributor['group'] )) {
+					$c->group_id = $group->id;
+				}
+
 				$c->contributor_id = $contributor_id;
 				$c->position = $position++;
 				$c->save();

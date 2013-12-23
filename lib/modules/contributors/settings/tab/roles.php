@@ -11,8 +11,11 @@ class Roles extends Tab {
 	}
 
 	public function register_page() {
-		$file_type = new \Podlove\Modules\Contributors\Settings\ContributorRoles( 'podlove_contributor_settings' );
-		$file_type->page();
+		$this->object = $this->getObject();
+		$this->object->page();
 	}
 
+	public function getObject() {
+		return new \Podlove\Modules\Contributors\Settings\ContributorRoles( 'podlove_contributor_settings' );
+	}
 }

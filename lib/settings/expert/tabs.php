@@ -65,4 +65,8 @@ class Tabs {
 				return $tab;
 	}
 
+	public function getTabs() {
+		return $this->tabs;
+	}
+
 }

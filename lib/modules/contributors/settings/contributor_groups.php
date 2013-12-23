@@ -23,7 +23,7 @@ class ContributorGroups {
 		);
 	}
 
-	public static function process_form() {
+	public function process_form() {
 
 		if ( ! isset( $_REQUEST['group'] ) )
 			return;
@@ -31,11 +31,11 @@ class ContributorGroups {
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 
 		if ( $action === 'save' ) {
-			self::save();
+			$this->save();
 		} elseif ( $action === 'create' ) {
-			self::create();
+			$this->create();
 		} elseif ( $action === 'delete' ) {
-			self::delete();
+			$this->delete();
 		}
 	}
 
