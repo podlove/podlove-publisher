@@ -479,7 +479,7 @@ function run_migrations_for_version( $version ) {
 		case 51:
 			if (\Podlove\Modules\Base::is_active('contributors')) {
 				
-				\Podlove\Model\ContributorGroup::build();
+				\Podlove\Modules\Contributors\Model\ContributorGroup::build();
 
 				$wpdb->query( sprintf(
 					'ALTER TABLE `%s` ADD COLUMN `group_id` VARCHAR(255) AFTER `role_id`',
