@@ -121,7 +121,6 @@ table.podlove_alternating tr:nth-child(even) {
 }
 
 #add_new_contributor_button {
-	width: 30px;
 	height: 25px;
 	font-size: 1.5em;
 }
