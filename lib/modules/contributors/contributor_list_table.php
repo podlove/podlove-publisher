@@ -188,28 +188,30 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		} else if ( empty($_POST['s']) ) {
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else {
-			$foo = $_POST['s'];
-			$data = \Podlove\Modules\Contributors\Model\Contributor::all( 'WHERE 
-																			`slug` LIKE \'%'.$foo.'%\' OR
-																			`gender` LIKE \'%'.$foo.'%\' OR
-																			`organisation` LIKE \'%'.$foo.'%\' OR
-																			`slug` LIKE \'%'.$foo.'%\' OR
-																			`department` LIKE \'%'.$foo.'%\' OR
-																			`jobtitle` LIKE \'%'.$foo.'%\' OR
-																			`twitter` LIKE \'%'.$foo.'%\' OR
-																			`adn` LIKE \'%'.$foo.'%\' OR
-																			`facebook` LIKE \'%'.$foo.'%\' OR
-																			`flattr` LIKE \'%'.$foo.'%\' OR
-																			`paypal` LIKE \'%'.$foo.'%\' OR
-																			`bitcoin` LIKE \'%'.$foo.'%\' OR
-																			`litecoin` LIKE \'%'.$foo.'%\' OR
-																			`publicemail` LIKE \'%'.$foo.'%\' OR
-																			`privateemail` LIKE \'%'.$foo.'%\' OR
-																			`realname` LIKE \'%'.$foo.'%\' OR
-																			`publicname` LIKE \'%'.$foo.'%\' OR
-																			`guid` LIKE \'%'.$foo.'%\' OR
-																			`www` LIKE \'%'.$foo.'%\'
-																			'.$orderby.' '.$order );
+	 	 	$search   = $_POST['s'];
+			$data = \Podlove\Modules\Contributors\Model\Contributor::all(
+				'WHERE 
+				`slug` LIKE \'%' . $search . '%\' OR
+				`gender` LIKE \'%' . $search . '%\' OR
+				`organisation` LIKE \'%' . $search . '%\' OR
+				`slug` LIKE \'%' . $search . '%\' OR
+				`department` LIKE \'%' . $search . '%\' OR
+				`jobtitle` LIKE \'%' . $search . '%\' OR
+				`twitter` LIKE \'%' . $search . '%\' OR
+				`adn` LIKE \'%' . $search . '%\' OR
+				`facebook` LIKE \'%' . $search . '%\' OR
+				`flattr` LIKE \'%' . $search . '%\' OR
+				`paypal` LIKE \'%' . $search . '%\' OR
+				`bitcoin` LIKE \'%' . $search . '%\' OR
+				`litecoin` LIKE \'%' . $search . '%\' OR
+				`publicemail` LIKE \'%' . $search . '%\' OR
+				`privateemail` LIKE \'%' . $search . '%\' OR
+				`realname` LIKE \'%' . $search . '%\' OR
+				`publicname` LIKE \'%' . $search . '%\' OR
+				`guid` LIKE \'%' . $search . '%\' OR
+				`www` LIKE \'%' . $search . '%\'
+				' . $orderby . ' ' . $order
+			);
 		}
 		
 		// get current page
