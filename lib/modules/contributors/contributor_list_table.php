@@ -58,15 +58,21 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	public function column_social( $contributor ) {
 		$social_services = array(
-				'appdotnet'	=> array('title' => 'App.net',
-									 'url_template' => 'http://alpha.app.net/',
-									 'account' => $contributor->adn ),
-				'twitter'  => array( 'title' => 'Twitter',
-									 'url_template' => 'http://twitter.com/',
-									 'account' => $contributor->twitter ),
-				'facebook' => array( 'title' => 'Facebook',
-									 'url_template' => '',
-									 'account' => $contributor->facebook ),
+				'appdotnet'	=> array(
+								'title' => 'App.net',
+								'url_template' => 'http://alpha.app.net/',
+								'account' => $contributor->adn 
+							   ),
+				'twitter'  => array( 
+								'title' => 'Twitter',
+								'url_template' => 'http://twitter.com/',
+								'account' => $contributor->twitter
+							  ),
+				'facebook' => array(
+								'title' => 'Facebook',
+								'url_template' => '',
+								'account' => $contributor->facebook
+							  )
 		);
 
 		$social = '';
