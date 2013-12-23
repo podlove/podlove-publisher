@@ -5,6 +5,7 @@ use Podlove\Model;
 use Podlove\Modules\Contributors\Model\ContributorRole;
 use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\Contributor;
+use Podlove\Modules\Contributors\Contributor_List_Table;
 
 class Contributors {
 
@@ -146,14 +147,14 @@ class Contributors {
 	}
 
 	public function add_contributors_screen_options() {
-		$option = 'per_page';
-		$args = array(
+
+		add_screen_option( 'per_page', array(
 	       'label'   => 'Contributors',
 	       'default' => 10,
 	       'option'  => 'podlove_contributors_per_page'
-		);
+		) );
 
-		add_screen_option( $option, $args );
+		$this->table = new Contributor_List_Table();
 	}
 
 	/**
@@ -169,9 +170,8 @@ class Contributors {
 	}
 	
 	private function view_template() {
-		$table = new \Podlove\Modules\Contributors\Contributor_List_Table();
-		$table->prepare_items();
-		$table->display();
+		$this->table->prepare_items();
+		$this->table->display();
 	}
 	
 	private function new_template() {
