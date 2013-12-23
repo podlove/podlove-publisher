@@ -151,10 +151,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		}
 
 		// define column headers
-		$columns = $this->get_columns();
-		$hidden = array();
-		$sortable = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = $this->get_column_info();
 
 		// look for order options
 		if( isset($_GET['orderby'])  ) {
