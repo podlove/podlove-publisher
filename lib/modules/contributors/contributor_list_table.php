@@ -29,8 +29,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		if (!($name = $contributor->realname))
 			$name = $contributor->publicname;
 
-		return sprintf( '%1$s %2$s',
+		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
 		    Settings\Contributors::get_action_link( $contributor, $name ),
+		    $contributor->publicname,
+		    ( $contributor->nickname == "" ? "" : " (" . $contributor->nickname . ")"  ),
 		    $this->row_actions( $actions )
 		) . '<input type="hidden" class="contributor_id" value="' . $contributor->id . '">';;
 	}
@@ -42,16 +44,51 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		);
 	}
 
-	public function column_publicname( $contributor ) {
-		return $contributor->publicname;
-	}
-
-	public function column_nickname( $contributor ) {
-		return $contributor->nickname;
-	}
-
 	public function column_slug( $contributor ) {
 		return $contributor->slug;
+	}
+
+	public function column_gender( $contributor ) {
+		if( $contributor->gender == 'none' ) {
+			return 'Not set';
+		} else {
+			return ucfirst($contributor->gender);	
+		}
+	}
+
+	public function column_social( $contributor ) {
+		$social_services = array(
+				'appdotnet'	=> array(
+								'title' => 'App.net',
+								'url_template' => 'http://alpha.app.net/',
+								'account' => $contributor->adn 
+							   ),
+				'twitter'  => array( 
+								'title' => 'Twitter',
+								'url_template' => 'http://twitter.com/',
+								'account' => $contributor->twitter
+							  ),
+				'facebook' => array(
+								'title' => 'Facebook',
+								'url_template' => '',
+								'account' => $contributor->facebook
+							  )
+		);
+
+		$social = '';
+		foreach ( $social_services as $service => $details ) {
+			( $details['account'] == "" ? "" : $social = $social . '<i class="podlove-icon-' . $service .'" title="' . $details['title'] . '"></i> <a target="_blank" href="' . $details['url_template'] . $details['account'] . '">' . $details['account'] . '</a><br />' );
+		}
+
+		return $social;
+	}
+
+	public function column_affiliation( $contributor ) {
+		$affiliation = '';
+		( $contributor->organisation == "" ? "" : $affiliation = $affiliation . '<strong>' . $contributor->organisation . '</strong><br />' );
+		( $contributor->department == "" ? "" : $affiliation = $affiliation .$contributor->department . '<br />' );
+		( $contributor->jobtitle == "" ? "" : $affiliation = $affiliation . '<em>' .  $contributor->jobtitle . '</em><br />' );
+		return $affiliation;
 	}
 	
 	public function column_privateemail( $contributor ) {
@@ -70,12 +107,13 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$columns = array(
 			'avatar'             => __( '', 'podlove' ),
 			'realname'             => __( 'Contributor', 'podlove' ),
-			'publicname'           => __( 'Public Name', 'podlove' ),
-			'nickname'           => __( 'Nickname', 'podlove' ),
-			'episodes'             => __( 'Episodes', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
+			'gender'             => __( 'Gender', 'podlove' ),
+			'affiliation'             => __( 'Affiliation', 'podlove' ),
+			'social'             => __( 'Social', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
-			'showpublic'           => __( 'Public Profile?', 'podlove' )
+			'episodes'             => __( 'Episodes', 'podlove' ),
+			'showpublic'           => __( 'Public', 'podlove' )
 		);
 		return $columns;
 	}
@@ -91,11 +129,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	public function get_sortable_columns() {
 	  $sortable_columns = array(
 	    'realname'             => array('realname',false),
-	    'publicname'           => array('publicname',false),
-	    'nickname'             => array('nickname',false),
-	    'episodes'             => array('contributioncount',true),
 	    'slug'                 => array('slug',false),
+	    'gender'               => array('gender',false),
+	    'affiliation'          => array('organisation',false),
 	    'privateemail'         => array('privateemail',false),
+	    'episodes'             => array('contributioncount',true),
 	    'showpublic'           => array('showpublic',false)
 	  );
 	  return $sortable_columns;
@@ -112,6 +150,9 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		#permanentcontributor { width: 160px; }
 		td.column-avatar, th.column-avatar { width: 50px; }
 		td.column-slug, th.column-slug { width: 12% !important; }
+		td.column-showpublic, th.column-showpublic { width: 7% !important; }
+		td.column-gender, th.column-gender { width: 7% !important; }
+		td.column-episodes, th.column-episodes { width: 8% !important; }
 		</style>
 		<?php
 	}
@@ -157,6 +198,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 																			`organisation` LIKE \'%'.$foo.'%\' OR
 																			`slug` LIKE \'%'.$foo.'%\' OR
 																			`department` LIKE \'%'.$foo.'%\' OR
+																			`jobtitle` LIKE \'%'.$foo.'%\' OR
 																			`twitter` LIKE \'%'.$foo.'%\' OR
 																			`adn` LIKE \'%'.$foo.'%\' OR
 																			`facebook` LIKE \'%'.$foo.'%\' OR

@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 51 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 52 );
 
 add_action( 'init', function () {
 	
@@ -477,34 +477,47 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 51:
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `group_id` VARCHAR(255) AFTER `role_id`',
-				\Podlove\Modules\Contributors\Model\EpisodeContribution::table_name()
-			) );
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `group_id` VARCHAR(255) AFTER `role_id`',
-				\Podlove\Modules\Contributors\Model\ShowContribution::table_name()
-			) );
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `paypal` VARCHAR(255) AFTER `flattr`',
-				\Podlove\Modules\Contributors\Model\Contributor::table_name()
-			) );
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `bitcoin` VARCHAR(255) AFTER `paypal`',
-				\Podlove\Modules\Contributors\Model\Contributor::table_name()
-			) );
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `litecoin` VARCHAR(255) AFTER `bitcoin`',
-				\Podlove\Modules\Contributors\Model\Contributor::table_name()
-			) );
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` DROP COLUMN `permanentcontributor`',
-				\Podlove\Modules\Contributors\Model\Contributor::table_name()
-			) );
-			$wpdb->query( sprintf(
-				'ALTER TABLE `%s` DROP COLUMN `role`',
-				\Podlove\Modules\Contributors\Model\Contributor::table_name()
-			) );
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				
+				\Podlove\Model\ContributorGroup::build();
+
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `group_id` VARCHAR(255) AFTER `role_id`',
+					\Podlove\Modules\Contributors\Model\EpisodeContribution::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `group_id` VARCHAR(255) AFTER `role_id`',
+					\Podlove\Modules\Contributors\Model\ShowContribution::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `paypal` VARCHAR(255) AFTER `flattr`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `bitcoin` VARCHAR(255) AFTER `paypal`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `litecoin` VARCHAR(255) AFTER `bitcoin`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` DROP COLUMN `permanentcontributor`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` DROP COLUMN `role`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+			}
+		break;
+		case 52:
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `jobtitle` VARCHAR(255) AFTER `department`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+			}
 		break;
 	}
 

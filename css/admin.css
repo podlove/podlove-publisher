@@ -149,6 +149,10 @@ tr.row_podlove_feed_protection_type {
 	display: none;
 }
 
+img.podlove-avatar {
+	width: 50px;
+}
+
 /* Podlove Podcast License */
 
 tr.row_podlove_podcast_license_url,

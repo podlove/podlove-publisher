@@ -13,7 +13,7 @@ class Contributor extends Base
 		return ContributorRole::find_one_by_slug($this->role);
 	}
 
-	private function getAvatarUrl($size) {
+	public function getAvatarUrl($size) {
 
 		if ($this->avatar)
 			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
@@ -58,6 +58,7 @@ Contributor::property( 'slug', 'VARCHAR(255)' );
 Contributor::property( 'gender', 'VARCHAR(255)' );
 Contributor::property( 'organisation', 'TEXT' );
 Contributor::property( 'department', 'TEXT' );
+Contributor::property( 'jobtitle', 'TEXT' );
 Contributor::property( 'avatar', 'TEXT' );
 Contributor::property( 'twitter', 'VARCHAR(255)' );
 Contributor::property( 'adn', 'VARCHAR(255)' );
