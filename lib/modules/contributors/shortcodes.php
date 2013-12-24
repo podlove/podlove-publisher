@@ -306,13 +306,12 @@ EOD;
 		foreach ($this->getServices() as $service) {
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
-					'<li><a href="%1$s" target="_blank" title="%2$s%3$s %4$s">
-						<img src="%5$s/lib/modules/contributors/images/icons/%6$s" class="podlove-contributor-button" 
-						alt="%2$s%3$s %4$s" />
+					'<li><a href="%1$s" target="_blank" title="%3$s">
+						<img src="%4$s/lib/modules/contributors/images/icons/%5$s" class="podlove-contributor-button" 
+						alt="%3$s" />
 					</a></li>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
 					( $contributor->publicname == "" ? $contributor->nickname : $contributor->publicname ),
-					$service['copula'],
 					$service['title'],
 					\Podlove\PLUGIN_URL,
 					$service['icon']
@@ -334,7 +333,7 @@ EOD;
     		title=\"Support {$contributor->publicname} by buying things from an Amazon Wishlist\"
     		href=\"{$contributor->amazonwishlist}\">
     		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" 
-    		alt=\"Support {$contributor->publicname} by buying things from an Amazon Wishlist\" />
+    		alt=\"" . sprintf( __('Support %s by buying things from an Amazon Wishlist'),  $contributor->publicname ) . "\" />
 		</a></li>";
 	}
 
@@ -381,7 +380,7 @@ EOD;
     		title=\"Support {$contributor->publicname} by donating with PayPal\"
     		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
     		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" 
-    		alt=\"Support {$contributor->publicname} by donating with PayPal\" />
+    		alt=\"" . sprintf( __('Support %s by donating with PayPal'), $contributor->publicname ) ."\" />
 		</a></li>";
 	}
 
@@ -393,7 +392,7 @@ EOD;
 		return '<li><a href="' . $currency . ':' . $contributor->$currency . '"
 					 title="Support ' . $contributor->publicname . ' by donating with ' . ucfirst($currency) .'">
 						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" 
-						alt="Support ' . $contributor->publicname . ' by donating with ' . ucfirst($currency) .'" />
+						alt=\"' . sprintf( __('Support %s by donating with %s'), $contributor->publicname, ucfirst($currency) ) . '\" />
 					</a>
 				</li>';
 	}
@@ -417,35 +416,30 @@ EOD;
 				'key' => 'publicemail',
 				'url_template' => 'mailto:%s',
 				'title' => 'E-Mail',
-				'copula' => 's',
 				'icon' => 'email-128.png'
 			),
 			array(
 				'key' => 'www',
 				'url_template' => '%s',
 				'title' => 'Homepage',
-				'copula' => 's',
 				'icon' => 'www-128.png'
 			),
 			array(
 				'key' => 'adn',
 				'url_template' => 'http://app.net/%s',
-				'title' => 'ADN',
-				'copula' => ' on',
+				'title' => 'App.net',
 				'icon' => 'adn-128.png'
 			),
 			array(
 				'key' => 'twitter',
 				'url_template' => 'http://twitter.com/%s',
 				'title' => 'Twitter',
-				'copula' => ' on',
 				'icon' => 'twitter-128.png'
 			),
 			array(
 				'key' => 'facebook',
 				'url_template' => '%s',
 				'title' => 'Facebook',
-				'copula' => ' on',
 				'icon' => 'facebook-128.png'
 			)
 		);
