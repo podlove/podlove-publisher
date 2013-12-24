@@ -27,7 +27,7 @@ class Contributors {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( "load-$pagehook",  array( $this, 'add_contributors_screen_options' ) );
-		add_filter('admin_title', array( $this, 'add_contributor_to_title' ), 10, 2);
+		add_filter( 'admin_title', array( $this, 'add_contributor_to_title' ), 10, 2 );
 	}
 
 	public function add_contributor_to_title( $title ) {
@@ -38,6 +38,9 @@ class Contributors {
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 
 		if ( ! is_object( $contributor ) )
+			return $title;
+
+		if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'edit' )
 			return $title;
 
 		return str_replace('Contributor', $contributor->publicname . ' &lsaquo; Contributor', $title);
