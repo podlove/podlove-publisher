@@ -156,7 +156,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo PHP_EOL;
 
 		$complete = sprintf( '<itunes:complete>%s</itunes:complete>', ( $podcast->complete ) ? 'yes' : 'no' );
-		echo "\t" . apply_filters( 'podlove_feed_itunes_complete', $complete );
+		echo ( $podcast->complete ? "\t" . apply_filters( 'podlove_feed_itunes_complete', $complete ) : '' );
 		echo PHP_EOL;
 	} );
 }
