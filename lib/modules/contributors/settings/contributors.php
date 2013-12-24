@@ -307,7 +307,7 @@ class Contributors {
 
 			$wrapper->string( 'paypal', array(
 				'label'       => __( 'Paypal', 'podlove' ),
-				'description' => 'Paypal button id.'
+				'description' => '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donate-intro-outside" target="_blank">Paypal button</a> id.'
 			) );	
 
 			$wrapper->string( 'bitcoin', array(
