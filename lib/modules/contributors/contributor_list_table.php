@@ -26,12 +26,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove'))
 		);
 	
-		if (!($name = $contributor->realname))
-			$name = $contributor->publicname;
+		if (!($name = $contributor->publicname))
+			$name = $contributor->realname;
 
 		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
 		    Settings\Contributors::get_action_link( $contributor, $name ),
-		    $contributor->publicname,
+		    $contributor->realname,
 		    ( $contributor->nickname == "" ? "" : " (" . $contributor->nickname . ")"  ),
 		    $this->row_actions( $actions )
 		) . '<input type="hidden" class="contributor_id" value="' . $contributor->id . '">';;
