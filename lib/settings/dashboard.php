@@ -314,10 +314,10 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php echo substr( $episodes_average_episode_length / 3600 / 24, 0, 4 ); ?>
+							<?php echo substr( $episodes_length / 3600 / 24, 0, strpos( $episodes_length / 3600 / 24, "." ) + 2 ); ?>
 						</td>
 						<td>
-							<?php echo ( round( $episodes_average_episode_length / 3600 / 24 ) == 1 ? "Day" : "Days" ) ?>, is the total playback time of all episodes.
+							<?php echo ( round( $episodes_length / 3600 / 24 ) == 1 ? "Day" : "Days" ) ?>, is the total playback time of all episodes.
 						</td>
 					</tr>
 					<tr>
