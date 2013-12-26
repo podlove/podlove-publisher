@@ -314,6 +314,14 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
+							<?php echo substr( $episodes_average_episode_length / 3600 / 24, 0, 4 ); ?>
+						</td>
+						<td>
+							<?php echo ( round( $episodes_average_episode_length / 3600 / 24 ) == 1 ? "Day" : "Days" ) ?>, is the total playback time of all episodes.
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
 							0<?php //echo $mediafiles_average_size; ?>
 						</td>
 						<td>
@@ -325,17 +333,17 @@ class Dashboard {
 							<?php echo $timestamp_days_until_next_release_average; ?>
 						</td>
 						<td>
-							Days, is the average interval until a new episode is released.
+							<?php echo ( $timestamp_days_until_next_release_average == 1 ? "Day" : "Days" ) ?>, is the average interval until a new episode is released.
 						</td>
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
 							<?php
-								echo $gender_return_array[0]['percentage'];
-							?>
+								echo $gender_return_array[0]['percentage'].'%';
+							?>							
 						</td>
 						<td>
-							% <?php echo $gender_return_array[0]['gender']; ?>,
+							<?php echo $gender_return_array[0]['gender']; ?>,
 							<?php echo $gender_return_array[1]['percentage']; ?>% <?php echo $gender_return_array[1]['gender']; ?> and
 							<?php echo $gender_return_array[2]['percentage']; ?>% <?php echo $gender_return_array[2]['gender']; ?> contributors.
 						</td>
