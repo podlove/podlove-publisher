@@ -240,7 +240,7 @@ class Dashboard {
 		$contributor_gender_distribution = array(
 													'female' => $contributor_female / $counted_genders * 100,
 													'male' => $contributor_male / $counted_genders * 100,
-													'unknown' => $contributor_unknown / $counted_genders * 100
+													'sexless' => $contributor_unknown / $counted_genders * 100
 												);
 
 		$gender_percentages = $contributor_gender_distribution;
