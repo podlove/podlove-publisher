@@ -143,17 +143,40 @@ class Dashboard {
 		return $warnings;
 	}
 
+	public static function duration_to_seconds( $timestring ) {
+		$time 		= strtotime($timestring);
+		$seconds    = date( "s", $time);
+		$minutes    = date( "i", $time);
+		$hours	    = date( "H", $time);
+
+		return $seconds + $minutes * 60 + $hours * 3600;
+	}
+
 	public static function statistics() {
 
 		$episodes = \Podlove\Model\Episode::all();
+		$media_files = \Podlove\Model\MediaFile::all();
 
 		$episodes_published = 0;
 		$episodes_draft		= 0;
 		$episodes_future	= 0;
 		$episodes_private	= 0;
 
+		$episodes_length	= 0;
+
+		$mediafile_size		= 0;
+
+		$time_between_episode = 0;
+		$timestamp_days_until_next_release = 0;
+
 		foreach ( $episodes as $episode_key => $episode ) {
 			$post = get_post( $episode->post_id );
+
+			$next_episode = ( $episode_key > 0 ? $episodes[$episode_key - 1] : $episodes[$episode_key] );
+			$next_post = get_post( $next_episode->post_id );
+
+			// Average Episode length
+			$episodes_length = $episodes_length + self::duration_to_seconds( $episode->duration );
 
 			// Collect Episode status
 			switch ( $post->post_status ) {
@@ -171,10 +194,21 @@ class Dashboard {
 				break;
 			}
 
+			// Calculate time between release of current and next episode
+			$timestamp_current_episode = new \DateTime( $post->post_date );
+			$timestamp_next_episode = new \DateTime( $next_post->post_date );
+			$time_stamp_difference = $timestamp_current_episode->diff($timestamp_next_episode);
+			if ( $time_stamp_difference->days > 0 )
+				$timestamp_days_until_next_release = $timestamp_days_until_next_release + $time_stamp_difference->days;
 		}
 
+		// Calculating average episode in seconds 
+		$episodes_average_episode_length = ceil( $episodes_length / count( $episodes ) );
+		// Calculate average tim until next release in days
+		$timestamp_days_until_next_release_average = ceil( $timestamp_days_until_next_release / count( $episodes ) );
+
 		?>
-			<div style="display: inline-block; width: 49%">
+			<div class="podlove-dashboard-statistics-wrapper">
 				<h4>Episodes</h4>
 				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 					<tr>
@@ -215,6 +249,35 @@ class Dashboard {
 						</td>
 						<td class="podlove-dashboard-total-number">
 							Total
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="podlove-dashboard-statistics-wrapper">
+				<h4>Statistics</h4>
+				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<?php echo gmdate("H:i:s", $episodes_average_episode_length ); // gmdate only works for time up to 24h ?>
+						</td>
+						<td>
+							is the average length of an episode.
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							0<?php //echo $mediafiles_average_size; ?>
+						</td>
+						<td>
+							Average Media File size
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<?php echo $timestamp_days_until_next_release_average; ?>
+						</td>
+						<td>
+							Days, is the average interval until a new episode is released.
 						</td>
 					</tr>
 				</table>

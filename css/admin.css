@@ -50,6 +50,11 @@ i.rotate {
 
 /* Dashboard */
 
+div.podlove-dashboard-statistics-wrapper {
+	width: 49%;
+	display: inline-block;
+}
+
 td.podlove-dashboard-number-column {
 	width: 30px;
 	font-size: 1.2em;
