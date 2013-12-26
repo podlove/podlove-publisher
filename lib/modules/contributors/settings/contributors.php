@@ -174,6 +174,7 @@ class Contributors {
 	
 	private function view_template() {
 		$this->table->prepare_items();
+		echo \Podlove\Modules\Contributors\getFlattrScript(); // Display Flattr script
 		$this->table->display();
 	}
 	
@@ -307,7 +308,7 @@ class Contributors {
 			
 			$wrapper->string( 'facebook', array(
 				'label'       => __( 'Facebook', 'podlove' ),
-				'description' => 'Facebook URL.',
+				'description' => 'Facebook username.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );	
 
@@ -345,7 +346,7 @@ class Contributors {
 
 		} );
 	}
-	
+
 	public function scripts_and_styles() {
 		wp_register_script( 'podlove-contributors-admin-script', \Podlove\PLUGIN_URL . '/lib/modules/contributors/js/admin.js', array( 'jquery-ui-autocomplete' ) );
 		wp_enqueue_script( 'podlove-contributors-admin-script' );

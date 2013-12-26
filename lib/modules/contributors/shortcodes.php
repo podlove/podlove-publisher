@@ -155,7 +155,7 @@ class Shortcodes {
 		if (count($this->contributions) == 0)
 			return "";
 		
-		return $this->getFlattrScript()
+		return getFlattrScript()
 			 . $this->renderByStyle($this->settings['preset']);
 	}
 
@@ -397,19 +397,6 @@ EOD;
 				</li>';
 	}
 
-	private function getFlattrScript() {
-		return "<script type=\"text/javascript\">\n
-			/* <![CDATA[ */
-		    (function() {
-  		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-  		     s.type = 'text/javascript';
-   		     s.async = true;
-    		    s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-    		    t.parentNode.insertBefore(s, t);
-   			 })();
-			/* ]]> */</script>\n";
-	}
-
 	private function getServices() {
 		return array(
 			array(
@@ -438,7 +425,7 @@ EOD;
 			),
 			array(
 				'key' => 'facebook',
-				'url_template' => '%s',
+				'url_template' => 'http://facebook.com/%s',
 				'title' => 'Facebook',
 				'icon' => 'facebook-128.png'
 			)
