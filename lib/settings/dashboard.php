@@ -65,6 +65,7 @@ class Dashboard {
 
 	public static function settings_page() {
 		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
+		add_meta_box( Dashboard::$pagehook . '_statistics', __( 'At a glance', 'podlove' ), '\Podlove\Settings\Dashboard::statistics', Dashboard::$pagehook, 'normal' );
 		add_meta_box( Dashboard::$pagehook . '_validation', __( 'Validate Podcast Files', 'podlove' ), '\Podlove\Settings\Dashboard::validate_podcast_files', Dashboard::$pagehook, 'normal' );
 
 		do_action( 'podlove_dashboard_meta_boxes' );
@@ -140,6 +141,89 @@ class Dashboard {
 		}
 
 		return $warnings;
+	}
+
+	public static function statistics() {
+
+		$episodes = \Podlove\Model\Episode::all();
+
+		$episodes_published = 0;
+		$episodes_draft		= 0;
+		$episodes_future	= 0;
+		$episodes_private	= 0;
+
+		foreach ( $episodes as $episode_key => $episode ) {
+			$post = get_post( $episode->post_id );
+
+			// Collect Episode status
+			switch ( $post->post_status ) {
+				case 'publish':
+					$episodes_published++;
+				break;
+				case 'draft':
+					$episodes_draft++;
+				break;
+				case 'future':
+					$episodes_future++;
+				break;
+				case 'private':
+					$episodes_private++;
+				break;
+			}
+
+		}
+
+		?>
+			<div style="display: inline-block; width: 49%">
+				<h4>Episodes</h4>
+				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=publish"><?php echo $episodes_published; ?></a>
+						</td>
+						<td>
+							<span style="color: #2c6e36;">Published</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=private"><?php echo $episodes_private; ?></a>
+						</td>
+						<td>
+							<span style="color: #b43f56;">Private</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=future"><?php echo $episodes_future; ?></a>
+						</td>
+						<td>
+							<span style="color: #a8a8a8;">To be published</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=draft"><?php echo $episodes_draft; ?></a>
+						</td>
+						<td>
+							<span style="color: #c0844c;">Drafts</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column podlove-dashboard-total-number">
+							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast"><?php echo count( $episodes ); ?></a>
+						</td>
+						<td class="podlove-dashboard-total-number">
+							Total
+						</td>
+					</tr>
+				</table>
+			</div>
+			<p>
+				You are using <strong>Podlove Publisher <?php echo \Podlove\get_plugin_header( 'Version' ); ?></strong>.
+			</p>
+		<?php
+
 	}
 
 	public static function validate_podcast_files() {

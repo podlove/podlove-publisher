@@ -48,6 +48,27 @@ i.rotate {
 
 .podlove-contributor-edit { display: none; }
 
+/* Dashboard */
+
+td.podlove-dashboard-number-column {
+	width: 30px;
+	font-size: 1.2em;
+	text-align: right;
+	padding-right: 10px;
+}
+
+td.podlove-dashboard-number-column a, td.podlove-dashboard-number-column a:visited {
+	text-decoration: none;
+}
+
+td.podlove-dashboard-total-number {
+	border-top: 1px solid #bcbcbc;
+}
+
+table.podlove-dashboard-statistics td {
+	padding: 3px;
+}
+
 /* Settings: Assets */
 .episode_assets.wp-list-table .column-move {
 	width: 50px;
