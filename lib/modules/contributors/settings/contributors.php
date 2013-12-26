@@ -27,7 +27,7 @@ class Contributors {
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( "load-$pagehook",  array( $this, 'add_contributors_screen_options' ) );
-		add_filter('admin_title', array( $this, 'add_contributor_to_title' ), 10, 2);
+		add_filter( 'admin_title', array( $this, 'add_contributor_to_title' ), 10, 2 );
 	}
 
 	public function add_contributor_to_title( $title ) {
@@ -38,6 +38,9 @@ class Contributors {
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 
 		if ( ! is_object( $contributor ) )
+			return $title;
+
+		if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'edit' )
 			return $title;
 
 		return str_replace('Contributor', $contributor->publicname . ' &lsaquo; Contributor', $title);
@@ -171,6 +174,7 @@ class Contributors {
 	
 	private function view_template() {
 		$this->table->prepare_items();
+		echo \Podlove\Modules\Contributors\getFlattrScript(); // Display Flattr script
 		$this->table->display();
 	}
 	
@@ -208,16 +212,18 @@ class Contributors {
 
 			$wrapper->string( 'realname', array(
 				'label'       => __( 'Real name', 'podlove' ),
-				'html'        => array( 'class' => 'required' )
+				'html'        => array( 'class' => 'required podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'nickname', array(
-				'label'       => __( 'Nickname', 'podlove' )
+				'label'       => __( 'Nickname', 'podlove' ),
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'publicname', array(
 				'label'       => __( 'Public name', 'podlove' ),
-				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player.'
+				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
 			$wrapper->select( 'gender', array(
@@ -227,7 +233,8 @@ class Contributors {
 			
 			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
-				'description' => 'Either a Gravatar E-mail adress or a URL.'
+				'description' => 'Either a Gravatar E-mail adress or a URL.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
 			$wrapper->subheader( __( 'General', 'podlove' ) );
@@ -241,26 +248,30 @@ class Contributors {
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'ID', 'podlove' ),
 				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
-				'html'        => array( 'class' => 'required' )
+				'html'        => array( 'class' => 'required podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'guid', array(
 				'label'       => __( 'URI', 'podlove' ),
-				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove')
+				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove'),
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );		
 
 			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );
 			
 			$wrapper->string( 'organisation', array(
-				'label'       => __( 'Organisation', 'podlove' )
+				'label'       => __( 'Organisation', 'podlove' ),
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
 			$wrapper->string( 'department', array(
-				'label'       => __( 'Department', 'podlove' )
+				'label'       => __( 'Department', 'podlove' ),
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'jobtitle', array(
-				'label'       => __( 'Job Title', 'podlove' )
+				'label'       => __( 'Job Title', 'podlove' ),
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
 			$wrapper->subheader( __( 'Contact &amp; Social', 'podlove' ) );
@@ -268,63 +279,74 @@ class Contributors {
 			$wrapper->string( 'privateemail', array(
 				'label'       => __( 'Private E-mail', 'podlove' ),
 				'description' => 'The provided E-mail will be used for internal purposes only.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
 			$wrapper->string( 'publicemail', array(
 				'label'       => __( 'Public E-mail', 'podlove' ),
-				'description' => 'This E-mail will be displayed for public purposes.'
+				'description' => 'This E-mail will be displayed for public purposes.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );		
 
 			$wrapper->string( 'www', array(
 				'label'       => __( 'Homepage', 'podlove' ),
-				'description' => 'The contributors homepage.'
+				'description' => 'The contributors homepage.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'adn', array(
 				'label'       => __( 'App.net', 'podlove' ),
-				'description' => 'App.net username.'
+				'description' => 'App.net username.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );	
 			
 			$wrapper->string( 'twitter', array(
 				'label'       => __( 'Twitter', 'podlove' ),
-				'description' => 'Twitter username.'
+				'description' => 'Twitter username.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );				
 			
 			$wrapper->string( 'facebook', array(
 				'label'       => __( 'Facebook', 'podlove' ),
-				'description' => 'Facebook URL.'
+				'description' => 'Facebook username.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );	
 
 			$wrapper->subheader( __( 'Donations', 'podlove' ) );
 
 			$wrapper->string( 'flattr', array(
 				'label'       => __( 'Flattr', 'podlove' ),
-				'description' => 'Flattr username.'
+				'description' => 'Flattr username.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );	
 
 			$wrapper->string( 'paypal', array(
 				'label'       => __( 'Paypal', 'podlove' ),
-				'description' => 'Paypal button id.'
+				'description' => '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donate-intro-outside" target="_blank">Paypal button</a> id.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );	
 
 			$wrapper->string( 'bitcoin', array(
 				'label'       => __( 'Bitcoin', 'podlove' ),
-				'description' => 'Bitcoin Address.'
+				'description' => 'Bitcoin Address.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'litecoin', array(
 				'label'       => __( 'Litecoin', 'podlove' ),
-				'description' => 'Litecoin Address.'
+				'description' => 'Litecoin Address.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
 			$wrapper->string( 'amazonwishlist', array(
 				'label'       => __( 'Amazon Wishlist', 'podlove' ),
-				'description' => 'URL of the contributors Amazon wishlist.'
+				'description' => 'URL of the contributors Amazon wishlist.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );	
 
 		} );
 	}
-	
+
 	public function scripts_and_styles() {
 		wp_register_script( 'podlove-contributors-admin-script', \Podlove\PLUGIN_URL . '/lib/modules/contributors/js/admin.js', array( 'jquery-ui-autocomplete' ) );
 		wp_enqueue_script( 'podlove-contributors-admin-script' );

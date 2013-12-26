@@ -152,6 +152,10 @@ img.podlove-avatar {
 	width: 50px;
 }
 
+input.podlove-contributor-field {
+	width: 350px;
+}
+
 /* Podlove Podcast License */
 
 tr.row_podlove_podcast_license_url,

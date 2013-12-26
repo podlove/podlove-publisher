@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 52 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 53 );
 
 add_action( 'init', function () {
 	
@@ -517,6 +517,15 @@ function run_migrations_for_version( $version ) {
 					'ALTER TABLE `%s` ADD COLUMN `jobtitle` VARCHAR(255) AFTER `department`',
 					\Podlove\Modules\Contributors\Model\Contributor::table_name()
 				) );
+			}
+		break;
+		case 53:
+			// set all Episode as published (fix for cheeky ADN Module)
+			$episodes = Model\Episode::all();
+			foreach ( $episodes as $episode ) {
+				$post = get_post( $episode->post_id );
+				if ( $post->post_status == 'publish' )
+					update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
 			}
 		break;
 	}
