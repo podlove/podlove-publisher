@@ -28,26 +28,58 @@ class Episode {
 	// Accessors
 	// /////////
 
+	/**
+	 * Episode title
+	 * 
+	 * @accessor
+	 */
 	public function title() {
 		return $this->post->post_title;
 	}
 
+	/**
+	 * Episode subtitle
+	 * 
+	 * @accessor
+	 */
 	public function subtitle() {
 		return $this->episode->subtitle;
 	}
 
+	/**
+	 * Episode summary
+	 * 
+	 * @accessor
+	 */
 	public function summary() {
 		return $this->episode->summary;
 	}
 
+	/**
+	 * Episode slug
+	 * 
+	 * @accessor
+	 */
 	public function slug() {
 		return $this->episode->slug;
 	}
 
+	/**
+	 * Episode post content
+	 * 
+	 * @accessor
+	 */
 	public function content() {
 		return $this->post->post_content;
 	}
 
+	/**
+	 * Episode post publication date
+	 *
+	 * Uses WordPress date format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
+	 * 
+	 * @accessor
+	 */
 	public function publicationDate($format = '') {
 
 		if ($format === '')
@@ -88,10 +120,22 @@ class Episode {
 		return $this->episode->get_duration($format);
 	}
 
+	/**
+	 * Episode image URL
+	 * 
+	 * @accessor
+	 */
 	public function imageUrl() {
 		return $this->episode->get_cover_art();
 	}
 
+	/**
+	 * Episode image URL with fallback
+	 *
+	 * Returns podcast image if no episode image is available.
+	 * 
+	 * @accessor
+	 */
 	public function imageUrlWithFallback() {
 		return $this->episode->get_cover_art_with_fallback();
 	}

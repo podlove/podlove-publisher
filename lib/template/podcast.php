@@ -16,42 +16,93 @@ class Podcast {
 	// Accessors
 	// /////////
 
+	/**
+	 * Podcast title
+	 *
+	 * @accessor
+	 */
 	public function title() {
 		return $this->podcast->title;
 	}
 
+	/**
+	 * Podcast subtitle
+	 *
+	 * @accessor
+	 */
 	public function subtitle() {
 		return $this->podcast->subtitle;
 	}
 
+	/**
+	 * Podcast summary
+	 *
+	 * @accessor
+	 */
 	public function summary() {
 		return $this->podcast->summary;
 	}
 
+	/**
+	 * Podcast image URL
+	 *
+	 * @accessor
+	 */
 	public function imageUrl() {
 		return $this->podcast->cover_image;
 	}
 
+	/**
+	 * Podcast author name
+	 *
+	 * @accessor
+	 */
 	public function authorName() {
 		return $this->podcast->author_name;
 	}
 
+	/**
+	 * Podcast owner name
+	 *
+	 * @accessor
+	 */
 	public function ownerName() {
 		return $this->podcast->owner_name;
 	}
 
+	/**
+	 * Podcast owner email
+	 *
+	 * @accessor
+	 */
 	public function ownerEmail() {
 		return $this->podcast->owner_email;
 	}
 
+	/**
+	 * Podcast publisher name
+	 *
+	 * @accessor
+	 */
 	public function publisherName() {
 		return $this->podcast->publisher_name;
 	}
 
+	/**
+	 * Podcast publisher url
+	 *
+	 * @accessor
+	 */
 	public function publisherUrl() {
 		return $this->podcast->publisher_url;
 	}
 
+	/**
+	 * Podcast license
+	 *
+	 * @see  license
+	 * @accessor
+	 */
 	public function license() {
 		return new License(
 			new \Podlove\Model\License(
