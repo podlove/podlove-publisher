@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.6 =
+* fix legacy ADN module publishing issue
+
 = 1.9.5 =
 * Contributor Module improvements
   * New icon graphics
