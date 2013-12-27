@@ -29,8 +29,8 @@ describe "Permalink Settings" do
 
     verifyPageContainsText      '/?p=1', "Hello world"
     verifyPageContainsText      '/?page_id=2', "Sample Page"
-    verifyPageContainsText      '/?podcast=ppp001-the-title', "PPP001 The Title"
-    verifyPageContainsEnclosure '/?feed=mp3', "ppp001.mp3"
+    verifyPageContainsText      '/?podcast=cre204-geocaching', "CRE204 Geocaching"
+    verifyPageContainsEnclosure '/?feed=mp3', "cre204-geocaching.mp3"
   end
 
   it "PostnamePretty" do
@@ -42,8 +42,8 @@ describe "Permalink Settings" do
 
     verifyPageContainsText      '/hello-world/', 'Hello world!'
     verifyPageContainsText      '/sample-page/', 'Sample Page'
-    verifyPageContainsText      '/ppp001-the-title/', 'PPP001 The Title'
-    verifyPageContainsEnclosure '/feed/mp3', 'ppp001.mp3'
+    verifyPageContainsText      '/cre204-geocaching/', 'CRE204 Geocaching'
+    verifyPageContainsEnclosure '/feed/mp3', 'cre204-geocaching.mp3'
   end
 
   it "PostnamePrettyAndEpisodeCustom" do
@@ -61,8 +61,8 @@ describe "Permalink Settings" do
 
     verifyPageContainsText      '/hello-world/', 'Hello world!'
     verifyPageContainsText      '/sample-page/', 'Sample Page'
-    verifyPageContainsText      '/episode/ppp001-the-title/', 'PPP001 The Title'
-    verifyPageContainsEnclosure '/feed/mp3', 'ppp001.mp3' 
+    verifyPageContainsText      '/episode/cre204-geocaching/', 'CRE204 Geocaching'
+    verifyPageContainsEnclosure '/feed/mp3', 'cre204-geocaching.mp3' 
   end
 
   def verifyPageContainsText(url, text)
