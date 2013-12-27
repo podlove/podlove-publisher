@@ -291,7 +291,7 @@ class Dashboard {
 			$mediafile_counted++;
 		}
 
-		$formated_mediafile_average_size = $mediafile_total_size / $mediafile_counted / 1000000; // [Megabyte]
+		$formated_mediafile_average_size = ( $mediafile_counted > 0 ? $mediafile_total_size / $mediafile_counted / 1000000 : 0 ); // [Megabyte]
 		$formated_mediafile_total_size = $mediafile_total_size / 1000000000; // [Gigabyte]
 
 		?>
