@@ -251,7 +251,7 @@ class Dashboard {
 		foreach ( $gender_percentages as $gender => $percentage ) {
 			$gender_return_array[] =   array(
 												'gender' => $gender,
-												'percentage' => $percentage
+												'percentage' => round( $percentage )
 											);
 		}		
 
@@ -317,15 +317,23 @@ class Dashboard {
 							<?php echo substr( $episodes_length / 3600 / 24, 0, strpos( $episodes_length / 3600 / 24, "." ) + 2 ); ?>
 						</td>
 						<td>
-							<?php echo ( round( $episodes_length / 3600 / 24 ) == 1 ? "Day" : "Days" ) ?>, is the total playback time of all episodes.
+							Days, is the total playback time of all episodes.
 						</td>
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							0<?php //echo $mediafiles_average_size; ?>
+							0
 						</td>
 						<td>
-							Bytes is the average media file size.
+							Megabyte is the average media file size.
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							0
+						</td>
+						<td>
+							Megabyte is the total media file size.
 						</td>
 					</tr>
 					<tr>
