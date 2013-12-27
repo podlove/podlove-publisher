@@ -120,8 +120,14 @@ class MyComment {
 $output_dir = '/Users/ericteubert/code/podlove.github.com/sources/template';
 
 $classes = [
+	'\Podlove\Template\Podcast',
+	'\Podlove\Template\Feed',
 	'\Podlove\Template\Episode',
+	'\Podlove\Template\Asset',
+	'\Podlove\Template\File',
 	'\Podlove\Template\Chapter',
+	'\Podlove\Template\License',
+	'\Podlove\Template\FileType',
 ];
 
 foreach ($classes as $class) {

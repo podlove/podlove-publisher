@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * Podcast Template Wrapper
+ *
+ * @templatetag podcast
+ */
 class Podcast {
 
 	/**

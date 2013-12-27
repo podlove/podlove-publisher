@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * Contributor Template Wrapper
+ *
+ * @templatetag contributor
+ */
 class Contributor {
 
 	private $contributor;

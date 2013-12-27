@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * Asset Template Wrapper
+ *
+ * @templatetag asset
+ */
 class Asset {
 
 	/**

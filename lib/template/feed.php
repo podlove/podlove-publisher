@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * Feed Template Wrapper
+ *
+ * @templatetag feed
+ */
 class Feed {
 
 	/**

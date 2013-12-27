@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * File Template Wrapper
+ *
+ * @templatetag file
+ */
 class File {
 
 	/**

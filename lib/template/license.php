@@ -1,6 +1,11 @@
 <?php
 namespace Podlove\Template;
 
+/**
+ * License Template Wrapper
+ *
+ * @templatetag license
+ */
 class License {
 
 	/**
