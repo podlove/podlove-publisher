@@ -303,7 +303,7 @@ class Dashboard {
 							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episodes_published; ?></a>
 						</td>
 						<td>
-							<span style="color: #2c6e36;">Published</span>
+							<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
 						</td>
 					</tr>
 					<tr>
@@ -311,7 +311,7 @@ class Dashboard {
 							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episodes_private; ?></a>
 						</td>
 						<td>
-							<span style="color: #b43f56;">Private</span>
+							<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
 						</td>
 					</tr>
 					<tr>
@@ -319,7 +319,7 @@ class Dashboard {
 							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episodes_future; ?></a>
 						</td>
 						<td>
-							<span style="color: #a8a8a8;">To be published</span>
+							<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
 						</td>
 					</tr>
 					<tr>
@@ -327,7 +327,7 @@ class Dashboard {
 							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episodes_draft; ?></a>
 						</td>
 						<td>
-							<span style="color: #c0844c;">Drafts</span>
+							<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
 						</td>
 					</tr>
 					<tr>
@@ -335,7 +335,7 @@ class Dashboard {
 							<a href="<?php echo $episode_edit_url; ?>"><?php echo $counted_episodes; ?></a>
 						</td>
 						<td class="podlove-dashboard-total-number">
-							Total
+							<?php echo __( 'Total', 'podlove' ); ?>
 						</td>
 					</tr>
 				</table>
@@ -348,7 +348,7 @@ class Dashboard {
 							<?php echo gmdate("H:i:s", $episodes_average_episode_length ); ?>
 						</td>
 						<td>
-							is the average length of an episode.
+							<?php echo __( 'is the average length of an episode', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<tr>
@@ -359,7 +359,7 @@ class Dashboard {
 							?>
 						</td>
 						<td>
-							Days, is the total playback time of all episodes.
+							<?php echo __( 'Days, is the total playback time of all episodes', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<tr>
@@ -370,7 +370,7 @@ class Dashboard {
 							?>
 						</td>
 						<td>
-							Megabyte is the average media file size.
+							<?php echo __( 'Megabyte is the average media file size', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<tr>
@@ -381,7 +381,7 @@ class Dashboard {
 							?>
 						</td>
 						<td>
-							Gigabyte is the total media file size.
+							<?php echo __( 'Gigabyte is the total media file size', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<tr>
@@ -389,7 +389,7 @@ class Dashboard {
 							<?php echo $episodes_days_until_next_release; ?>
 						</td>
 						<td>
-							Days, is the average interval until a new episode is released.
+							<?php echo __( 'Days, is the average interval until a new episode is released', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<?php if (\Podlove\Modules\Base::is_active('contributors')) : ?>
@@ -400,16 +400,16 @@ class Dashboard {
 							?>							
 						</td>
 						<td>
-							<?php echo $gender_return_array[0]['gender']; ?>,
-							<?php echo $gender_return_array[1]['percentage']; ?>% <?php echo $gender_return_array[1]['gender']; ?> and
-							<?php echo $gender_return_array[2]['percentage']; ?>% <?php echo $gender_return_array[2]['gender']; ?> contributors.
+							<?php echo  __( $gender_return_array[0]['gender'], 'podlove' ); ?>,
+							<?php echo $gender_return_array[1]['percentage']; ?>% <?php echo __( $gender_return_array[1]['gender'] ); ?> <?php echo __( 'and', 'podlove' ); ?>
+							<?php echo $gender_return_array[2]['percentage']; ?>% <?php echo  __( $gender_return_array[2]['gender'] ); ?> <?php echo __( 'contributors', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<?php endif; ?>
 				</table>
 			</div>
 			<p>
-				You are using <strong>Podlove Publisher <?php echo \Podlove\get_plugin_header( 'Version' ); ?></strong>.
+				<?php echo  __('You are using', 'podlove'); ?> <strong>Podlove Publisher <?php echo \Podlove\get_plugin_header( 'Version' ); ?></strong>.
 			</p>
 		<?php
 	}
