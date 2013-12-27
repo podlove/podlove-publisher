@@ -285,7 +285,7 @@ class Dashboard {
 
 		foreach ( $media_files as $media_file_key => $media_file) {
 			if ( $media_file->size <= 0 ) // Neglect empty files
-				break;
+				continue;
 
 			$mediafile_total_size = $mediafile_total_size + $media_file->size;
 			$mediafile_counted++;
