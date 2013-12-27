@@ -231,10 +231,10 @@ class Dashboard {
 				$episodes_days_until_next_release = $episodes_days_until_next_release + $time_stamp_difference->days;			
 		}
 
-		// Calculating average episode in seconds 
-		$episodes_average_episode_length = round( $episodes_total_length / $counted_episodes_length );
+		// Calculating average episode in seconds
+		$episodes_average_episode_length = ( $counted_episodes_length > 0 ? round( $episodes_total_length / $counted_episodes_length ) : 0 );
 		// Calculate average tim until next release in days
-		$episodes_days_until_next_release = round( $episodes_days_until_next_release / $counted_episodes );
+		$episodes_days_until_next_release = ( $counted_episodes > 0 ? round( $episodes_days_until_next_release / $counted_episodes ) : 0 );
 
 
 		/*
@@ -259,9 +259,9 @@ class Dashboard {
 
 			// Calculate gender distribution for contributors
 			$contributor_gender_distribution = array(
-														'female' => $contributor_female / $counted_total_genders * 100,
-														'male' => $contributor_male / $counted_total_genders * 100,
-														'sexless' => $contributor_unknown / $counted_total_genders * 100
+														'female' => ( $counted_total_genders > 0 ? $contributor_female / $counted_total_genders * 100 : 0 ),
+														'male' => ( $counted_total_genders > 0 ? $contributor_male / $counted_total_genders * 100 : 0 ),
+														'sexless' => ( $counted_total_genders > 0 ? $contributor_unknown / $counted_total_genders * 100 : 0 )
 													);
 
 			$gender_percentages = $contributor_gender_distribution;
