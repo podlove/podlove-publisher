@@ -170,7 +170,8 @@ class Dashboard {
 		$contributor_unknown = 0;
 		$counted_genders	 = count( $contributors ); // Every contributor has a gender!
 
-		$mediafile_size		 = 0;
+		$mediafile_total_size = 0;
+		$mediafile_counted 	  = 0;
 
 		$time_between_episode = 0;
 		$timestamp_days_until_next_release = 0;
@@ -229,6 +230,14 @@ class Dashboard {
 			$time_stamp_difference = $timestamp_current_episode->diff($timestamp_next_episode);
 			if ( $time_stamp_difference->days > 0 ) // Filter first episode, as no previous episode is available here
 				$timestamp_days_until_next_release = $timestamp_days_until_next_release + $time_stamp_difference->days;			
+		}
+
+		foreach ( $media_files as $media_file_key => $media_file) {
+			if ( $media_file->size <= 0 )
+				break;
+
+			$mediafile_total_size = $mediafile_total_size + $media_file->size;
+			$mediafile_counted++;
 		}
 
 		// Calculating average episode in seconds 
@@ -322,7 +331,10 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							0
+							<?php 
+								$formated_mediafile_average_size = $mediafile_total_size / $mediafile_counted / 1000000; // Megabyte
+								echo substr( $formated_mediafile_average_size , 0, strpos($formated_mediafile_average_size, "." ) + 2 ); 
+							?>
 						</td>
 						<td>
 							Megabyte is the average media file size.
@@ -330,10 +342,13 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							0
+							<?php 
+								$formated_mediafile_total_size =$mediafile_total_size / 1000000000; // Gigabyte
+								echo substr( $formated_mediafile_total_size , 0, strpos($formated_mediafile_total_size, "." ) + 2 ); 
+							?>
 						</td>
 						<td>
-							Megabyte is the total media file size.
+							Gigabyte is the total media file size.
 						</td>
 					</tr>
 					<tr>
