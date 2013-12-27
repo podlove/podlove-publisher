@@ -158,67 +158,65 @@ class Dashboard {
 		$contributors = \Podlove\Modules\Contributors\Model\Contributor::all();
 		$media_files = \Podlove\Model\MediaFile::all();
 
-		$episodes_published  = 0;
-		$episodes_draft		 = 0;
-		$episodes_future	 = 0;
-		$episodes_private	 = 0;
+		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
 
-		$episodes_length	 = 0;
+		// For Episodes, status and length will be calculated
 
-		$contributor_male	 = 0;
-		$contributor_female	 = 0;
-		$contributor_unknown = 0;
-		$counted_genders	 = count( $contributors ); // Every contributor has a gender!
+		$episodes_published 			  = 0;
+		$episodes_draft					  = 0;
+		$episodes_future				  = 0;
+		$episodes_private				  = 0;
 
-		$mediafile_total_size = 0;
-		$mediafile_counted 	  = 0;
+		$episodes_total_length	 		  = 0;
 
-		$time_between_episode = 0;
-		$timestamp_days_until_next_release = 0;
+		$episodes_days_until_next_release = 0;
 
-		$counted_episodes = 0;
-		$counted_length_episodes = 0;
+		$counted_episodes 		 		  = 0;
+		$counted_episodes_length 		  = 0;
 
-		foreach ( $contributors as $contributor_key => $contributor ) {
-			switch ( $contributor->gender ) {
-				case 'male' :
-					$contributor_male++;
-				break;
-				case 'female' :
-					$contributor_female++;
-				break;				
-				default :
-					$contributor_unknown++;
-				break;
-			}
-		}
+		// For Contributors (if activated) genders will be calculated
+
+		$contributor_male	 			  = 0;
+		$contributor_female	 			  = 0;
+		$contributor_unknown 			  = 0;
+		$counted_total_genders			  = count( $contributors ); // Every contributor has a gender - even if not attributed!
+
+		// For Media Files the total and average file size will be calculated
+
+		$mediafile_total_size 		 	  = 0;
+		$mediafile_counted 	  			  = 0;
+
+		/*
+         *	Episode Statistics
+		 */
 
 		foreach ( $episodes as $episode_key => $episode ) {
-			$post = get_post( $episode->post_id );
 
-			$next_episode = ( $episode_key > 0 ? $episodes[$episode_key - 1] : $episodes[$episode_key] ); // Setting first episode to 0
+			$post = get_post( $episode->post_id );
+			// Setting the first episode to 0 -> neglected (as there is no reference episode)
+			$next_episode = ( $episode_key > 0 ? $episodes[$episode_key - 1] : $episodes[$episode_key] );
 			$next_post = get_post( $next_episode->post_id );
 
 			// Average Episode length
-			$episodes_length = $episodes_length + self::duration_to_seconds( $episode->duration );
-			if ( self::duration_to_seconds( $episode->duration ) > 0 ) 
-				$counted_length_episodes++;
+			$episodes_total_length = $episodes_total_length + self::duration_to_seconds( $episode->duration );
+			if ( self::duration_to_seconds( $episode->duration ) > 0 ) // Only count episodes with a larger episode duration than 0 
+				$counted_episodes_length++;
 
-			// Collect Episode status
+			// Count Episode status (neglect trash and inherit)
 			switch ( $post->post_status ) {
-				case 'publish':
+				case 'publish' :
 					$episodes_published++;
 					$counted_episodes++;
 				break;
-				case 'draft':
+				case 'draft' :
 					$episodes_draft++;
 					$counted_episodes++;
 				break;
-				case 'future':
+				case 'future' :
 					$episodes_future++;
 					$counted_episodes++;
 				break;
-				case 'private':
+				case 'private' :
 					$episodes_private++;
 					$counted_episodes++;
 				break;
@@ -228,41 +226,73 @@ class Dashboard {
 			$timestamp_current_episode = new \DateTime( $post->post_date );
 			$timestamp_next_episode = new \DateTime( $next_post->post_date );
 			$time_stamp_difference = $timestamp_current_episode->diff($timestamp_next_episode);
-			if ( $time_stamp_difference->days > 0 ) // Filter first episode, as no previous episode is available here
-				$timestamp_days_until_next_release = $timestamp_days_until_next_release + $time_stamp_difference->days;			
+
+			if ( $time_stamp_difference->days > 0 ) // Filter first episode, as no reference episode is available here!
+				$episodes_days_until_next_release = $episodes_days_until_next_release + $time_stamp_difference->days;			
 		}
 
+		// Calculating average episode in seconds 
+		$episodes_average_episode_length = round( $episodes_total_length / $counted_episodes_length );
+		// Calculate average tim until next release in days
+		$episodes_days_until_next_release = round( $episodes_days_until_next_release / $counted_episodes );
+
+
+		/*
+         *	Contributors
+		 */
+
+		if (\Podlove\Modules\Base::is_active('contributors')) {
+			// Count contributor gender
+			foreach ( $contributors as $contributor_key => $contributor ) {
+				switch ( $contributor->gender ) {
+					case 'male' :
+						$contributor_male++;
+					break;
+					case 'female' :
+						$contributor_female++;
+					break;				
+					default :
+						$contributor_unknown++;
+					break;
+				}
+			}
+
+			// Calculate gender distribution for contributors
+			$contributor_gender_distribution = array(
+														'female' => $contributor_female / $counted_total_genders * 100,
+														'male' => $contributor_male / $counted_total_genders * 100,
+														'sexless' => $contributor_unknown / $counted_total_genders * 100
+													);
+
+			$gender_percentages = $contributor_gender_distribution;
+			// Sort Gender by Percentage (High to low)
+			arsort( $gender_percentages );
+
+			// Create new array for later use (Were adding keys here to make the call for each element easier)
+			$gender_return_array = array();
+			foreach ( $gender_percentages as $gender => $percentage ) {
+				$gender_return_array[] =   array(
+													'gender' => $gender,
+													'percentage' => round( $percentage )
+												);
+			}
+		}
+
+
+		/*
+         *	Media Files
+		 */
+
 		foreach ( $media_files as $media_file_key => $media_file) {
-			if ( $media_file->size <= 0 )
+			if ( $media_file->size <= 0 ) // Neglect empty files
 				break;
 
 			$mediafile_total_size = $mediafile_total_size + $media_file->size;
 			$mediafile_counted++;
 		}
 
-		// Calculating average episode in seconds 
-		$episodes_average_episode_length = ceil( $episodes_length / $counted_length_episodes );
-		// Calculate average tim until next release in days
-		$timestamp_days_until_next_release_average = ceil( $timestamp_days_until_next_release / $counted_episodes );
-
-		// Calculate gender distribution for contributors
-		$contributor_gender_distribution = array(
-													'female' => $contributor_female / $counted_genders * 100,
-													'male' => $contributor_male / $counted_genders * 100,
-													'sexless' => $contributor_unknown / $counted_genders * 100
-												);
-
-		$gender_percentages = $contributor_gender_distribution;
-		$gender = $contributor_gender_distribution;
-		$gender_return_array = array();
-		arsort( $gender_percentages );
-
-		foreach ( $gender_percentages as $gender => $percentage ) {
-			$gender_return_array[] =   array(
-												'gender' => $gender,
-												'percentage' => round( $percentage )
-											);
-		}		
+		$formated_mediafile_average_size = $mediafile_total_size / $mediafile_counted / 1000000; // [Megabyte]
+		$formated_mediafile_total_size = $mediafile_total_size / 1000000000; // [Gigabyte]
 
 		?>
 			<div class="podlove-dashboard-statistics-wrapper">
@@ -270,7 +300,7 @@ class Dashboard {
 				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=publish"><?php echo $episodes_published; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episodes_published; ?></a>
 						</td>
 						<td>
 							<span style="color: #2c6e36;">Published</span>
@@ -278,7 +308,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=private"><?php echo $episodes_private; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episodes_private; ?></a>
 						</td>
 						<td>
 							<span style="color: #b43f56;">Private</span>
@@ -286,7 +316,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=future"><?php echo $episodes_future; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episodes_future; ?></a>
 						</td>
 						<td>
 							<span style="color: #a8a8a8;">To be published</span>
@@ -294,7 +324,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&post_status=draft"><?php echo $episodes_draft; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episodes_draft; ?></a>
 						</td>
 						<td>
 							<span style="color: #c0844c;">Drafts</span>
@@ -302,7 +332,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column podlove-dashboard-total-number">
-							<a href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast"><?php echo $counted_episodes; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>"><?php echo $counted_episodes; ?></a>
 						</td>
 						<td class="podlove-dashboard-total-number">
 							Total
@@ -315,7 +345,7 @@ class Dashboard {
 				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php echo gmdate("H:i:s", $episodes_average_episode_length ); // gmdate only works for time up to 24h ?>
+							<?php echo gmdate("H:i:s", $episodes_average_episode_length ); ?>
 						</td>
 						<td>
 							is the average length of an episode.
@@ -323,7 +353,10 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php echo substr( $episodes_length / 3600 / 24, 0, strpos( $episodes_length / 3600 / 24, "." ) + 2 ); ?>
+							<?php 
+								// Cut after the first decimal place [Days]
+								echo substr( $episodes_total_length / 3600 / 24, 0, strpos( $episodes_total_length / 3600 / 24, "." ) + 2 );
+							?>
 						</td>
 						<td>
 							Days, is the total playback time of all episodes.
@@ -332,7 +365,7 @@ class Dashboard {
 					<tr>
 						<td class="podlove-dashboard-number-column">
 							<?php 
-								$formated_mediafile_average_size = $mediafile_total_size / $mediafile_counted / 1000000; // Megabyte
+								// Cut after the first decimal place [Megabyte]
 								echo substr( $formated_mediafile_average_size , 0, strpos($formated_mediafile_average_size, "." ) + 2 ); 
 							?>
 						</td>
@@ -342,8 +375,8 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php 
-								$formated_mediafile_total_size =$mediafile_total_size / 1000000000; // Gigabyte
+							<?php
+								// Cut after the first decimal place [Gigabyte]
 								echo substr( $formated_mediafile_total_size , 0, strpos($formated_mediafile_total_size, "." ) + 2 ); 
 							?>
 						</td>
@@ -353,12 +386,13 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php echo $timestamp_days_until_next_release_average; ?>
+							<?php echo $episodes_days_until_next_release; ?>
 						</td>
 						<td>
-							<?php echo ( $timestamp_days_until_next_release_average == 1 ? "Day" : "Days" ) ?>, is the average interval until a new episode is released.
+							Days, is the average interval until a new episode is released.
 						</td>
 					</tr>
+					<?php if (\Podlove\Modules\Base::is_active('contributors')) : ?>
 					<tr>
 						<td class="podlove-dashboard-number-column">
 							<?php
@@ -371,13 +405,13 @@ class Dashboard {
 							<?php echo $gender_return_array[2]['percentage']; ?>% <?php echo $gender_return_array[2]['gender']; ?> contributors.
 						</td>
 					</tr>
+					<?php endif; ?>
 				</table>
 			</div>
 			<p>
 				You are using <strong>Podlove Publisher <?php echo \Podlove\get_plugin_header( 'Version' ); ?></strong>.
 			</p>
 		<?php
-
 	}
 
 	public static function validate_podcast_files() {
