@@ -566,16 +566,40 @@ function podcast_permalink_proxy($query_vars) {
 	if ( ! isset( $query_vars["post_type"] ) || $query_vars["post_type"] == "post" )
 		$query_vars["post_type"] = array( "podcast", "post" );
 
-	// When migrating, there are two posts with the same slug (old post and new episode post).
-	// WP_Query uses the first one it finds. Sometimes it's the correct one, sometimes it's
-	// the trashed post.
-	// To avoid conflicts with other plugins however, only filter when migration module is on.
-	if (\Podlove\Modules\Base::is_active('migration') && !isset($query_vars["post_status"])) {
-		$query_vars["post_status"] = "publish";
-	}
-
 	return $query_vars;
 }
+
+/**
+ * Filters trashed, imported posts from our posts out
+ */
+function remove_trash_posts_from_the_posts($posts, $wp_query) {
+	global $wp_the_query;
+
+	// Apply filter not in the backend and only on the main query
+	if ( $wp_query->is_admin && $wp_the_query == $wp_query )
+		return $posts;
+
+	// No post request
+	if ( isset( $wp_query->query["preview"] ) || false == ( isset( $wp_query->query["name"] ) || isset( $wp_query->query["p"] ) ) )
+		return $posts;
+
+	// Only check if we found more than 2 posts
+	if ( 2 > count( $posts ) )
+		return $posts;
+
+	// Remove trashed posts
+	foreach ( $posts as $index => $post ) {
+		if ( 'trash' == $post->post_status ) {
+			unset( $posts[$index] );
+		}
+	}
+
+	// Resets array keys
+	$posts = array_values( $posts );
+	
+	return $posts;
+}
+add_filter('posts_results', '\Podlove\remove_trash_posts_from_the_posts', 10, 2);
 
 /**
  * Disable verbose page rules mode after startup
