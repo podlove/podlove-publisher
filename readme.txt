@@ -87,6 +87,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.9.6 =
 * fix legacy ADN module publishing issue
+* only show `itunes:complete` in feeds if it is set avoid a feedvalidator.org bug
+* add PayPal Button link in contributor settings
+* other contributor admin enhancements
 
 = 1.9.5 =
 * Contributor Module improvements

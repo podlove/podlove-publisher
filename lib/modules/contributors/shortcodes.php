@@ -155,7 +155,7 @@ class Shortcodes {
 		if (count($this->contributions) == 0)
 			return "";
 		
-		return $this->getFlattrScript()
+		return \Podlove\Flattr\getFlattrScript()
 			 . $this->renderByStyle($this->settings['preset']);
 	}
 
@@ -306,8 +306,9 @@ EOD;
 		foreach ($this->getServices() as $service) {
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
-					'<li><a href="%s" target="_blank" title="%s on %s">
-						<img src="%s/lib/modules/contributors/images/icons/%s" class="podlove-contributor-button" />
+					'<li><a href="%1$s" target="_blank" title="%3$s">
+						<img src="%4$s/lib/modules/contributors/images/icons/%5$s" class="podlove-contributor-button" 
+						alt="%3$s" />
 					</a></li>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
 					( $contributor->publicname == "" ? $contributor->nickname : $contributor->publicname ),
@@ -331,7 +332,8 @@ EOD;
 			target=\"_blank\"
     		title=\"Support {$contributor->publicname} by buying things from an Amazon Wishlist\"
     		href=\"{$contributor->amazonwishlist}\">
-    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" />
+    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" 
+    		alt=\"" . sprintf( __('Support %s by buying things from an Amazon Wishlist'),  $contributor->publicname ) . "\" />
 		</a></li>";
 	}
 
@@ -377,7 +379,8 @@ EOD;
 			class=\"PayPalButton\"
     		title=\"Support {$contributor->publicname} by donating with PayPal\"
     		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
-    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" />
+    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" 
+    		alt=\"" . sprintf( __('Support %s by donating with PayPal'), $contributor->publicname ) ."\" />
 		</a></li>";
 	}
 
@@ -388,22 +391,10 @@ EOD;
 
 		return '<li><a href="' . $currency . ':' . $contributor->$currency . '"
 					 title="Support ' . $contributor->publicname . ' by donating with ' . ucfirst($currency) .'">
-						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" />
+						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" 
+						alt=\"' . sprintf( __('Support %s by donating with %s'), $contributor->publicname, ucfirst($currency) ) . '\" />
 					</a>
 				</li>';
-	}
-
-	private function getFlattrScript() {
-		return "<script type=\"text/javascript\">\n
-			/* <![CDATA[ */
-		    (function() {
-  		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-  		     s.type = 'text/javascript';
-   		     s.async = true;
-    		    s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-    		    t.parentNode.insertBefore(s, t);
-   			 })();
-			/* ]]> */</script>\n";
 	}
 
 	private function getServices() {
@@ -423,7 +414,7 @@ EOD;
 			array(
 				'key' => 'adn',
 				'url_template' => 'http://app.net/%s',
-				'title' => 'ADN',
+				'title' => 'App.net',
 				'icon' => 'adn-128.png'
 			),
 			array(
@@ -434,7 +425,7 @@ EOD;
 			),
 			array(
 				'key' => 'facebook',
-				'url_template' => '%s',
+				'url_template' => 'http://facebook.com/%s',
 				'title' => 'Facebook',
 				'icon' => 'facebook-128.png'
 			)

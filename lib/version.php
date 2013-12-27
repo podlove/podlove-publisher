@@ -520,12 +520,11 @@ function run_migrations_for_version( $version ) {
 			}
 		break;
 		case 53:
-			// set all Episode as published (for ADN Module)
+			// set all Episode as published (fix for ADN Module)
 			$episodes = Model\Episode::all();
 			foreach ( $episodes as $episode ) {
 				$post = get_post( $episode->post_id );
-
-				if ( $post->post_status == 'published' )
+				if ( $post->post_status == 'publish' )
 					update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
 			}
 		break;
