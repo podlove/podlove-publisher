@@ -154,79 +154,66 @@ class Dashboard {
 
 	public static function statistics() {
 
-		$episodes     = Model\Episode::all();
+		$episodes     = Model\Episode::allByTime();
 		$media_files  = Model\MediaFile::all();
 
 		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
 
-		// For Episodes, status and length will be calculated
-
-		$episodes_published 			  = 0;
-		$episodes_draft					  = 0;
-		$episodes_future				  = 0;
-		$episodes_private				  = 0;
-
-		$episodes_total_length	 		  = 0;
-
-		$episodes_days_until_next_release = 0;
-
-		$counted_episodes 		 		  = 0;
-		$counted_episodes_length 		  = 0;
-
 		// For Media Files the total and average file size will be calculated
-
-		$mediafile_total_size 		 	  = 0;
-		$mediafile_counted 	  			  = 0;
+		$mediafile_total_size = 0;
+		$mediafile_counted = 0;
 
 		/*
          *	Episode Statistics
 		 */
+		$prev_post = null;
+		$counted_episodes = 0;
+		$time_stamp_differences = array();
+		$episode_durations = array();
+		$episode_status_count = array(
+			'publish' => 0,
+			'private' => 0,
+			'future' => 0,
+			'draft' => 0,
+		);
 
 		foreach ( $episodes as $episode_key => $episode ) {
 
+			if ( !$episode->is_valid() )
+				continue;
+
+			if (in_array($post->post_status, array('trash', 'inherit')))
+				continue;
+
 			$post = get_post( $episode->post_id );
-			// Setting the first episode to 0 -> neglected (as there is no reference episode)
-			$next_episode = ( $episode_key > 0 ? $episodes[$episode_key - 1] : $episodes[$episode_key] );
-			$next_post = get_post( $next_episode->post_id );
+			$counted_episodes++;
 
-			// Average Episode length
-			$episodes_total_length = $episodes_total_length + self::duration_to_seconds( $episode->duration );
-			if ( self::duration_to_seconds( $episode->duration ) > 0 ) // Only count episodes with a larger episode duration than 0 
-				$counted_episodes_length++;
+			// duration in seconds
+			if ( self::duration_to_seconds( $episode->duration ) > 0 )
+				$episode_durations[$post->ID] = self::duration_to_seconds( $episode->duration );
 
-			// Count Episode status (neglect trash and inherit)
-			switch ( $post->post_status ) {
-				case 'publish' :
-					$episodes_published++;
-					$counted_episodes++;
-				break;
-				case 'draft' :
-					$episodes_draft++;
-					$counted_episodes++;
-				break;
-				case 'future' :
-					$episodes_future++;
-					$counted_episodes++;
-				break;
-				case 'private' :
-					$episodes_private++;
-					$counted_episodes++;
-				break;
+			// count by post status
+			if (!isset($episode_status_count[$post->post_status])) {
+				$episode_status_count[$post->post_status] = 1;
+			} else {
+				$episode_status_count[$post->post_status]++;
 			}
 
-			// Calculate time between release of current and next episode
-			$timestamp_current_episode = new \DateTime( $post->post_date );
-			$timestamp_next_episode = new \DateTime( $next_post->post_date );
-			$time_stamp_difference = $timestamp_current_episode->diff($timestamp_next_episode);
+			// determine time in days since last publication
+			if ($prev_post) {
+				$timestamp_current_episode = new \DateTime( $post->post_date );
+				$timestamp_next_episode = new \DateTime( $prev_post->post_date );
+				$time_stamp_differences[$post->ID] = $timestamp_current_episode->diff($timestamp_next_episode)->days;
+			}
 
-			if ( $time_stamp_difference->days > 0 ) // Filter first episode, as no reference episode is available here!
-				$episodes_days_until_next_release = $episodes_days_until_next_release + $time_stamp_difference->days;			
+			$prev_post = $post;
 		}
 
+		$episodes_total_length = array_sum($episode_durations);
 		// Calculating average episode in seconds
-		$episodes_average_episode_length = ( $counted_episodes_length > 0 ? round( $episodes_total_length / $counted_episodes_length ) : 0 );
+		$episodes_average_episode_length = ( $counted_episodes > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0 );
 		// Calculate average tim until next release in days
-		$episodes_days_until_next_release = ( $counted_episodes > 0 ? round( $episodes_days_until_next_release / $counted_episodes ) : 0 );
+		$average_days_between_releases = ( $counted_episodes > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0 );
 
 		/*
          *	Media Files
@@ -239,16 +226,14 @@ class Dashboard {
 			$mediafile_counted++;
 		}
 
-		$formated_mediafile_average_size = ( $mediafile_counted > 0 ? $mediafile_total_size / $mediafile_counted / 1000000 : 0 ); // [Megabyte]
-		$formated_mediafile_total_size = $mediafile_total_size / 1000000000; // [Gigabyte]
-
+		$mediafile_average_size = ( $mediafile_counted > 0 ? $mediafile_total_size / $mediafile_counted : 0 );
 		?>
 			<div class="podlove-dashboard-statistics-wrapper">
 				<h4>Episodes</h4>
 				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episodes_published; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episode_status_count['publish']; ?></a>
 						</td>
 						<td>
 							<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
@@ -256,7 +241,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episodes_private; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episode_status_count['private']; ?></a>
 						</td>
 						<td>
 							<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
@@ -264,7 +249,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episodes_future; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episode_status_count['future']; ?></a>
 						</td>
 						<td>
 							<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
@@ -272,7 +257,7 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episodes_draft; ?></a>
+							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episode_status_count['draft']; ?></a>
 						</td>
 						<td>
 							<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
@@ -289,7 +274,7 @@ class Dashboard {
 				</table>
 			</div>
 			<div class="podlove-dashboard-statistics-wrapper">
-				<h4>Statistics</h4>
+				<h4><?php echo __('Statistics', 'podlove') ?></h4>
 				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 					<tr>
 						<td class="podlove-dashboard-number-column">
@@ -301,43 +286,37 @@ class Dashboard {
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php 
-								// Cut after the first decimal place [Days]
-								echo substr( $episodes_total_length / 3600 / 24, 0, strpos( $episodes_total_length / 3600 / 24, "." ) + 2 );
-							?>
-						</td>
-						<td>
-							<?php echo __( 'Days, is the total playback time of all episodes', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php 
-								// Cut after the first decimal place [Megabyte]
-								echo substr( $formated_mediafile_average_size , 0, strpos($formated_mediafile_average_size, "." ) + 2 ); 
-							?>
-						</td>
-						<td>
-							<?php echo __( 'Megabyte is the average media file size', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
 							<?php
-								// Cut after the first decimal place [Gigabyte]
-								echo substr( $formated_mediafile_total_size , 0, strpos($formated_mediafile_total_size, "." ) + 2 ); 
+								$days =  substr( $episodes_total_length / 3600 / 24, 0, strpos( $episodes_total_length / 3600 / 24, "." ) + 2 );
+								echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
 							?>
 						</td>
 						<td>
-							<?php echo __( 'Gigabyte is the total media file size', 'podlove' ); ?>.
+							<?php echo __( 'is the total playback time of all episodes', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<tr>
 						<td class="podlove-dashboard-number-column">
-							<?php echo $episodes_days_until_next_release; ?>
+							<?php echo \Podlove\format_bytes($mediafile_average_size, 1); ?>
 						</td>
 						<td>
-							<?php echo __( 'Days, is the average interval until a new episode is released', 'podlove' ); ?>.
+							<?php echo __( 'is the average media file size', 'podlove' ); ?>.
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<?php echo \Podlove\format_bytes($mediafile_total_size, 1); ?>
+						</td>
+						<td>
+							<?php echo __( 'is the total media file size', 'podlove' ); ?>.
+						</td>
+					</tr>
+					<tr>
+						<td class="podlove-dashboard-number-column">
+							<?php echo sprintf(_n('%s day', '%s days', $average_days_between_releases, 'podlove'), $average_days_between_releases); ?>
+						</td>
+						<td>
+							<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
 						</td>
 					</tr>
 					<?php do_action('podlove_dashboard_statistics'); ?>
