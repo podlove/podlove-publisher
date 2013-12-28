@@ -102,9 +102,9 @@ class Contributors extends \Podlove\Modules\Base {
 	{
 		$contributor_xml = '';
 
-		if ($contributor->showpublic == 1 && $contributor->publicname) {
+		if ($contributor->showpublic == 1) {
 			$contributor_xml .= "<atom:contributor>\n";
-			$contributor_xml .= "	<atom:name>" . $contributor->publicname . "</atom:name>\n";
+			$contributor_xml .= "	<atom:name>" . $contributor->getName() . "</atom:name>\n";
 
 			if ($contributor->guid)
 				$contributor_xml .= "	<atom:uri>" . $contributor->guid . "</atom:uri>\n";
@@ -603,7 +603,7 @@ class Contributors extends \Podlove\Modules\Base {
 	        	foreach ($contributors as $contributor_id => $contributor) {
 	        		$contributor_details = $contributor->getContributor();
 
-	        		$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->publicname."</a>, ";
+	        		$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->getName()."</a>, ";
 	        	}
 
 	        	echo substr($contributor_list, 0, -2);

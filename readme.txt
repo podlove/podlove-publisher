@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * only show `itunes:complete` in feeds if it is set avoid a feedvalidator.org bug
 * add PayPal Button link in contributor settings
 * other contributor admin enhancements
+* contributor public name defaults to real name now
 
 = 1.9.5 =
 * Contributor Module improvements

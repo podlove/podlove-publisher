@@ -208,7 +208,7 @@ class Contributors {
 			$contributor = $form->object;
 
 
-			$wrapper->subheader( __( 'Personal', 'podlove' ) );
+			$wrapper->subheader( __( 'General', 'podlove' ) );
 
 			$wrapper->string( 'realname', array(
 				'label'       => __( 'Real name', 'podlove' ),
@@ -222,10 +222,16 @@ class Contributors {
 
 			$wrapper->string( 'publicname', array(
 				'label'       => __( 'Public name', 'podlove' ),
-				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player.',
+				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
+			$wrapper->string( 'slug', array(
+				'label'       => __( 'ID', 'podlove' ),
+				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
+				'html'        => array( 'class' => 'required podlove-contributor-field' )
+			) );
+
 			$wrapper->select( 'gender', array(
 				'label'       => __( 'Gender', 'podlove' ),
 				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
@@ -233,22 +239,8 @@ class Contributors {
 			
 			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
-				'description' => 'Either a Gravatar E-mail adress or a URL.',
+				'description' => 'Either a Gravatar email adress or a URL.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );
-
-			$wrapper->subheader( __( 'General', 'podlove' ) );
-			
-			$wrapper->checkbox( 'showpublic', array(
-				'label'       => __( 'Public Profile', 'podlove' ),
-				'description' => 'Check this, if you want the contributor\'s profile to appear e.g. in the Web Player.',
-				'default'     => true
-			) );
-
-			$wrapper->string( 'slug', array(
-				'label'       => __( 'ID', 'podlove' ),
-				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
-				'html'        => array( 'class' => 'required podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'guid', array(
@@ -256,6 +248,12 @@ class Contributors {
 				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove'),
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );		
+
+			$wrapper->checkbox( 'showpublic', array(
+				'label'       => __( 'Public Profile', 'podlove' ),
+				'description' => 'Check this, if you want the contributor\'s profile to appear e.g. in the Web Player.',
+				'default'     => true
+			) );
 
 			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );
 			
@@ -277,14 +275,14 @@ class Contributors {
 			$wrapper->subheader( __( 'Contact &amp; Social', 'podlove' ) );
 			
 			$wrapper->string( 'privateemail', array(
-				'label'       => __( 'Private E-mail', 'podlove' ),
-				'description' => 'The provided E-mail will be used for internal purposes only.',
+				'label'       => __( 'Contact email', 'podlove' ),
+				'description' => 'The provided email will be used for internal purposes only.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
 			$wrapper->string( 'publicemail', array(
-				'label'       => __( 'Public E-mail', 'podlove' ),
-				'description' => 'This E-mail will be displayed for public purposes.',
+				'label'       => __( 'Public email', 'podlove' ),
+				'description' => 'This email will be displayed for public purposes.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );		
 

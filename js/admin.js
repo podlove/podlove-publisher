@@ -64,9 +64,6 @@ function auto_fill_form(id, title_id) {
 				if( $("#podlove_contributor_slug").val() == "" ) {
 					$("#podlove_contributor_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
 				}
-				if( $("#podlove_contributor_publicname").val() == "" ) {
-					$("#podlove_contributor_publicname").val( $("#podlove_contributor_" + title_id).val() );
-				}
 			break;
 			case 'contributor_group':
 			console.log('f');
