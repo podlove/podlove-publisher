@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix redirect issue after podcast migrations
 * fix legacy ADN module publishing issue
 * only show `itunes:complete` in feeds if it is set avoid a feedvalidator.org bug
+* add experimental episode fun facts in dashboard
 * add PayPal Button link in contributor settings
 * other contributor admin enhancements
 * contributor public name defaults to real name now
