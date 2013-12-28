@@ -86,6 +86,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.9.6 =
+* fix and enhance dashboard statistics
+* gender statistics: use episode contributions instead of contributors for counting
+
+= 1.9.6 =
 * fix redirect issue after podcast migrations
 * fix legacy ADN module publishing issue
 * only show `itunes:complete` in feeds if it is set avoid a feedvalidator.org bug

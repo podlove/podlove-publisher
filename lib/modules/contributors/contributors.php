@@ -51,17 +51,16 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function dashboard_statistics_row() {
-		$contributors = Contributor::all();
-		$contributor_count = count($contributors);
+		$contributions = EpisodeContribution::all();
+		$contributions_count = count($contributions);
 
 		$absolute_gender_numbers = array(
-			'female' => count(array_filter($contributors, function($c) { return $c->gender == 'female'; })),
-			'male'   => count(array_filter($contributors, function($c) { return $c->gender == 'male'; }))
+			'female' => count(array_filter($contributions, function($c) { return $c->getContributor()->gender == 'female'; })),
+			'male'   => count(array_filter($contributions, function($c) { return $c->getContributor()->gender == 'male'; }))
 		);
-		$absolute_gender_numbers['sexless'] = $contributor_count - $absolute_gender_numbers['female'] - $absolute_gender_numbers['male'];
 
-		$relative_gender_numbers = array_map(function($abs) use ($contributor_count) {
-			return $contributor_count > 0 ? $abs / $contributor_count * 100 : 0;
+		$relative_gender_numbers = array_map(function($abs) use ($contributions_count) {
+			return $contributions_count > 0 ? $abs / $contributions_count * 100 : 0;
 		}, $absolute_gender_numbers);
 
 		// sort by percentage (high to low)

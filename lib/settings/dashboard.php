@@ -287,7 +287,7 @@ class Dashboard {
 				<tr>
 					<td class="podlove-dashboard-number-column">
 						<?php
-							$days =  substr( $episodes_total_length / 3600 / 24, 0, strpos( $episodes_total_length / 3600 / 24, "." ) + 2 );
+							$days = round($episodes_total_length / 3600 / 24, 1);
 							echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
 						?>
 					</td>
