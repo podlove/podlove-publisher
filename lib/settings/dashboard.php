@@ -228,103 +228,103 @@ class Dashboard {
 
 		$mediafile_average_size = ( $mediafile_counted > 0 ? $mediafile_total_size / $mediafile_counted : 0 );
 		?>
-			<div class="podlove-dashboard-statistics-wrapper">
-				<h4>Episodes</h4>
-				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episode_status_count['publish']; ?></a>
-						</td>
-						<td>
-							<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episode_status_count['private']; ?></a>
-						</td>
-						<td>
-							<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episode_status_count['future']; ?></a>
-						</td>
-						<td>
-							<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episode_status_count['draft']; ?></a>
-						</td>
-						<td>
-							<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column podlove-dashboard-total-number">
-							<a href="<?php echo $episode_edit_url; ?>"><?php echo $counted_episodes; ?></a>
-						</td>
-						<td class="podlove-dashboard-total-number">
-							<?php echo __( 'Total', 'podlove' ); ?>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="podlove-dashboard-statistics-wrapper">
-				<h4><?php echo __('Statistics', 'podlove') ?></h4>
-				<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php echo gmdate("H:i:s", $episodes_average_episode_length ); ?>
-						</td>
-						<td>
-							<?php echo __( 'is the average length of an episode', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php
-								$days =  substr( $episodes_total_length / 3600 / 24, 0, strpos( $episodes_total_length / 3600 / 24, "." ) + 2 );
-								echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
-							?>
-						</td>
-						<td>
-							<?php echo __( 'is the total playback time of all episodes', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php echo \Podlove\format_bytes($mediafile_average_size, 1); ?>
-						</td>
-						<td>
-							<?php echo __( 'is the average media file size', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php echo \Podlove\format_bytes($mediafile_total_size, 1); ?>
-						</td>
-						<td>
-							<?php echo __( 'is the total media file size', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php echo sprintf(_n('%s day', '%s days', $average_days_between_releases, 'podlove'), $average_days_between_releases); ?>
-						</td>
-						<td>
-							<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<?php do_action('podlove_dashboard_statistics'); ?>
-				</table>
-			</div>
-			<p>
-				<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
-			</p>
+		<div class="podlove-dashboard-statistics-wrapper">
+			<h4>Episodes</h4>
+			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episode_status_count['publish']; ?></a>
+					</td>
+					<td>
+						<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episode_status_count['private']; ?></a>
+					</td>
+					<td>
+						<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episode_status_count['future']; ?></a>
+					</td>
+					<td>
+						<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episode_status_count['draft']; ?></a>
+					</td>
+					<td>
+						<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column podlove-dashboard-total-number">
+						<a href="<?php echo $episode_edit_url; ?>"><?php echo $counted_episodes; ?></a>
+					</td>
+					<td class="podlove-dashboard-total-number">
+						<?php echo __( 'Total', 'podlove' ); ?>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="podlove-dashboard-statistics-wrapper">
+			<h4><?php echo __('Statistics', 'podlove') ?></h4>
+			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo gmdate("H:i:s", $episodes_average_episode_length ); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the average length of an episode', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php
+							$days =  substr( $episodes_total_length / 3600 / 24, 0, strpos( $episodes_total_length / 3600 / 24, "." ) + 2 );
+							echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
+						?>
+					</td>
+					<td>
+						<?php echo __( 'is the total playback time of all episodes', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo \Podlove\format_bytes($mediafile_average_size, 1); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the average media file size', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo \Podlove\format_bytes($mediafile_total_size, 1); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the total media file size', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo sprintf(_n('%s day', '%s days', $average_days_between_releases, 'podlove'), $average_days_between_releases); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<?php do_action('podlove_dashboard_statistics'); ?>
+			</table>
+		</div>
+		<p>
+			<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
+		</p>
 		<?php
 	}
 
