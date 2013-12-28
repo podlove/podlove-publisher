@@ -154,9 +154,8 @@ class Dashboard {
 
 	public static function statistics() {
 
-		$episodes = \Podlove\Model\Episode::all();
-		$contributors = \Podlove\Modules\Contributors\Model\Contributor::all();
-		$media_files = \Podlove\Model\MediaFile::all();
+		$episodes     = Model\Episode::all();
+		$media_files  = Model\MediaFile::all();
 
 		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
 
@@ -173,13 +172,6 @@ class Dashboard {
 
 		$counted_episodes 		 		  = 0;
 		$counted_episodes_length 		  = 0;
-
-		// For Contributors (if activated) genders will be calculated
-
-		$contributor_male	 			  = 0;
-		$contributor_female	 			  = 0;
-		$contributor_unknown 			  = 0;
-		$counted_total_genders			  = count( $contributors ); // Every contributor has a gender - even if not attributed!
 
 		// For Media Files the total and average file size will be calculated
 
@@ -236,53 +228,9 @@ class Dashboard {
 		// Calculate average tim until next release in days
 		$episodes_days_until_next_release = ( $counted_episodes > 0 ? round( $episodes_days_until_next_release / $counted_episodes ) : 0 );
 
-
-		/*
-         *	Contributors
-		 */
-
-		if (\Podlove\Modules\Base::is_active('contributors')) {
-			// Count contributor gender
-			foreach ( $contributors as $contributor_key => $contributor ) {
-				switch ( $contributor->gender ) {
-					case 'male' :
-						$contributor_male++;
-					break;
-					case 'female' :
-						$contributor_female++;
-					break;				
-					default :
-						$contributor_unknown++;
-					break;
-				}
-			}
-
-			// Calculate gender distribution for contributors
-			$contributor_gender_distribution = array(
-														'female' => ( $counted_total_genders > 0 ? $contributor_female / $counted_total_genders * 100 : 0 ),
-														'male' => ( $counted_total_genders > 0 ? $contributor_male / $counted_total_genders * 100 : 0 ),
-														'sexless' => ( $counted_total_genders > 0 ? $contributor_unknown / $counted_total_genders * 100 : 0 )
-													);
-
-			$gender_percentages = $contributor_gender_distribution;
-			// Sort Gender by Percentage (High to low)
-			arsort( $gender_percentages );
-
-			// Create new array for later use (Were adding keys here to make the call for each element easier)
-			$gender_return_array = array();
-			foreach ( $gender_percentages as $gender => $percentage ) {
-				$gender_return_array[] =   array(
-													'gender' => $gender,
-													'percentage' => round( $percentage )
-												);
-			}
-		}
-
-
 		/*
          *	Media Files
 		 */
-
 		foreach ( $media_files as $media_file_key => $media_file) {
 			if ( $media_file->size <= 0 ) // Neglect empty files
 				continue;
@@ -392,20 +340,7 @@ class Dashboard {
 							<?php echo __( 'Days, is the average interval until a new episode is released', 'podlove' ); ?>.
 						</td>
 					</tr>
-					<?php if (\Podlove\Modules\Base::is_active('contributors')) : ?>
-					<tr>
-						<td class="podlove-dashboard-number-column">
-							<?php
-								echo $gender_return_array[0]['percentage'].'%';
-							?>							
-						</td>
-						<td>
-							<?php echo  __( $gender_return_array[0]['gender'], 'podlove' ); ?>,
-							<?php echo $gender_return_array[1]['percentage']; ?>% <?php echo __( $gender_return_array[1]['gender'] ); ?> <?php echo __( 'and', 'podlove' ); ?>
-							<?php echo $gender_return_array[2]['percentage']; ?>% <?php echo  __( $gender_return_array[2]['gender'] ); ?> <?php echo __( 'contributors', 'podlove' ); ?>.
-						</td>
-					</tr>
-					<?php endif; ?>
+					<?php do_action('podlove_dashboard_statistics'); ?>
 				</table>
 			</div>
 			<p>

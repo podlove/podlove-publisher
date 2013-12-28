@@ -30,6 +30,8 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('rss2_head', array($this, 'feed_head_contributors'));
 		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
 
+		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
+
 		// register shortcodes
 		new Shortcodes;	
 
@@ -46,6 +48,38 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorSettings($settings_parent);
 		});
+	}
+
+	public function dashboard_statistics_row() {
+		$contributors = Contributor::all();
+		$contributor_count = count($contributors);
+
+		$absolute_gender_numbers = array(
+			'female' => count(array_filter($contributors, function($c) { return $c->gender == 'female'; })),
+			'male'   => count(array_filter($contributors, function($c) { return $c->gender == 'male'; }))
+		);
+		$absolute_gender_numbers['sexless'] = $contributor_count - $absolute_gender_numbers['female'] - $absolute_gender_numbers['male'];
+
+		$relative_gender_numbers = array_map(function($abs) use ($contributor_count) {
+			return $contributor_count > 0 ? $abs / $contributor_count * 100 : 0;
+		}, $absolute_gender_numbers);
+
+		// sort by percentage (high to low)
+		arsort( $relative_gender_numbers );
+		?>
+		<tr>
+			<td class="podlove-dashboard-number-column">
+				<?php echo __('Genders', 'podlove') ?>
+			</td>
+			<td>
+				<?php
+				echo implode(', ', array_map(function($percent, $gender) {
+					return round($percent) . "% " . $gender;
+				}, $relative_gender_numbers, array_keys($relative_gender_numbers)));
+				?>
+			</td>
+		</tr>
+		<?php
 	}
 
 	function feed_head_contributors() {
