@@ -182,9 +182,6 @@ class Dashboard {
 			if ( !$episode->is_valid() )
 				continue;
 
-			if (in_array($post->post_status, array('trash', 'inherit')))
-				continue;
-
 			$post = get_post( $episode->post_id );
 			$counted_episodes++;
 
