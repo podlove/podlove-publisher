@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
-Tested up to: 3.7.1
+Tested up to: 3.8
 Stable tag: trunk
 License: MIT
 
@@ -85,16 +85,29 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.7 =
+* fix and enhance dashboard statistics
+* gender statistics: use episode contributions instead of contributors for counting
+
+= 1.9.6 =
+* fix redirect issue after podcast migrations
+* fix legacy ADN module publishing issue
+* only show `itunes:complete` in feeds if it is set avoid a feedvalidator.org bug
+* add experimental episode fun facts in dashboard
+* add PayPal Button link in contributor settings
+* other contributor admin enhancements
+* contributor public name defaults to real name now
+
 = 1.9.5 =
 * Contributor Module improvements
-** New icon graphics
-** "Contributor Groups" as a new way to divide contributors by participation. For example, you might want to have a "Team" group and one for supporting contributions.
-** No more default roles. It's just not possible to provide a sensible default set. So just add the ones you need :) (existing roles will *not* be deleted)
-** The contributors defined in `Podcast Settings > Contributors` are now the default contributors for new episodes
-** Reworked contributor management table. Better use of space, hideable columns, avatars and more.
-** Reworked episode contributor table. Avatars, edit links and more.
-** Support for more services
-** ... and a bunch of other tweaks
+  * New icon graphics
+  * "Contributor Groups" as a new way to divide contributors by participation. For example, you might want to have a "Team" group and one for supporting contributions.
+  * No more default roles. It's just not possible to provide a sensible default set. So just add the ones you need :) (existing roles will *not* be deleted)
+  * The contributors defined in `Podcast Settings > Contributors` are now the default contributors for new episodes
+  * Reworked contributor management table. Better use of space, hideable columns, avatars and more.
+  * Reworked episode contributor table. Avatars, edit links and more.
+  * Support for more services
+  * ... and a bunch of other tweaks
 * Web Player Update: compatible with WordPress theme "Twenty Fourteen"
 * Fix: don't gzip feeds when zlib compression is active
 * Fix: episode media file checkbox width for WP3.8

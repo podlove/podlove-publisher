@@ -5,6 +5,14 @@ use \Podlove\Model\Base;
 
 class Contributor extends Base
 {	
+	public function getName() {
+		if ($this->publicname) {
+			return $this->publicname;
+		} else {
+			return $this->realname;
+		}
+	}
+
 	public function getAvatar($size) {
 		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
 	}

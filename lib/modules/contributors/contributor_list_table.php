@@ -26,12 +26,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove'))
 		);
 	
-		if (!($name = $contributor->realname))
-			$name = $contributor->publicname;
+		if (!($name = $contributor->publicname))
+			$name = $contributor->realname;
 
 		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
 		    Settings\Contributors::get_action_link( $contributor, $name ),
-		    $contributor->publicname,
+		    $contributor->realname,
 		    ( $contributor->nickname == "" ? "" : " (" . $contributor->nickname . ")"  ),
 		    $this->row_actions( $actions )
 		) . '<input type="hidden" class="contributor_id" value="' . $contributor->id . '">';;
@@ -94,6 +94,23 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	public function column_privateemail( $contributor ) {
 		return "<a href='mailto:".$contributor->privateemail."'>".$contributor->privateemail."</a>";
 	}
+
+	public function column_flattr( $contributor ) {
+		if ( $contributor->flattr == "" ) 
+			return;
+
+		return "<a 
+				    target=\"_blank\"
+					class=\"FlattrButton\"
+					style=\"display:none;\"
+		    		title=\"Flattr {$contributor->publicname}\"
+		    		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
+		    		href=\"https://flattr.com/profile/{$contributor->flattr}\">
+				    	Flattr {$contributor->publicname}
+				</a>
+				<br />
+				<a href='http://flattr.com/profile/".$contributor->flattr."'>".$contributor->flattr."</a>";
+	}
 	
 	public function column_showpublic( $contributor ) {
 		return $contributor->showpublic ? '✓' : '×';
@@ -105,12 +122,13 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		$columns = array(
-			'avatar'             => __( '', 'podlove' ),
+			'avatar'               => __( '', 'podlove' ),
 			'realname'             => __( 'Contributor', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
-			'gender'             => __( 'Gender', 'podlove' ),
-			'affiliation'             => __( 'Affiliation', 'podlove' ),
-			'social'             => __( 'Social', 'podlove' ),
+			'gender'               => __( 'Gender', 'podlove' ),
+			'affiliation'          => __( 'Affiliation', 'podlove' ),
+			'social'               => __( 'Social', 'podlove' ),
+			'flattr'        	   => __( 'Flattr', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
 			'episodes'             => __( 'Episodes', 'podlove' ),
 			'showpublic'           => __( 'Public', 'podlove' )
@@ -132,6 +150,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	    'slug'                 => array('slug',false),
 	    'gender'               => array('gender',false),
 	    'affiliation'          => array('organisation',false),
+	    'flattr'     		   => array('privateemail',false),
 	    'privateemail'         => array('privateemail',false),
 	    'episodes'             => array('contributioncount',true),
 	    'showpublic'           => array('showpublic',false)

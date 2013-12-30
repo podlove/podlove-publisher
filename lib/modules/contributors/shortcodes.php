@@ -155,7 +155,7 @@ class Shortcodes {
 		if (count($this->contributions) == 0)
 			return "";
 		
-		return $this->getFlattrScript()
+		return \Podlove\Flattr\getFlattrScript()
 			 . $this->renderByStyle($this->settings['preset']);
 	}
 
@@ -183,7 +183,7 @@ class Shortcodes {
 			$contributor = $contribution->getContributor();
 			$list[] = '<li>'
 			     . (($this->settings['avatars'] == 'yes') ? '<span class="avatar">' . $contributor->getAvatar(18) . '</span>' : '')
-			     . ' <span class="name">' . $this->wrapWithLink($contributor, $contributor->publicname) . '</span>'
+			     . ' <span class="name">' . $this->wrapWithLink($contributor, $contributor->getName()) . '</span>'
 			     . '</li>';
 		}
 
@@ -201,7 +201,7 @@ class Shortcodes {
 			$contributor = $contribution->getContributor();
 			$list[] = '<span>'
 			     . (($this->settings['avatars'] == 'yes') ? '<span class="avatar">' . $contributor->getAvatar(18) . '</span>' : '')
-			     . ' <span class="name">' . $this->wrapWithLink($contributor, $contributor->publicname) . '</span>'
+			     . ' <span class="name">' . $this->wrapWithLink($contributor, $contributor->getName()) . '</span>'
 			     . '</span>';
 		}
 
@@ -266,7 +266,7 @@ EOD;
 
 			// name, role and group
 			$body .= '<td class="title_cell">';
-			$body .= $this->wrapWithLink($contributor, $contributor->publicname);
+			$body .= $this->wrapWithLink($contributor, $contributor->getName());
 
 			if ($this->settings['roles'] == 'yes' && $role = $contribution->getRole())
 				$body .= '<br /><em>' . $role->title . '</em>';
@@ -306,11 +306,12 @@ EOD;
 		foreach ($this->getServices() as $service) {
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
-					'<li><a href="%s" target="_blank" title="%s on %s">
-						<img src="%s/lib/modules/contributors/images/icons/%s" class="podlove-contributor-button" />
+					'<li><a href="%1$s" target="_blank" title="%3$s">
+						<img src="%4$s/lib/modules/contributors/images/icons/%5$s" class="podlove-contributor-button" 
+						alt="%3$s" />
 					</a></li>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
-					( $contributor->publicname == "" ? $contributor->nickname : $contributor->publicname ),
+					( $contributor->getName() == "" ? $contributor->nickname : $contributor->getName() ),
 					$service['title'],
 					\Podlove\PLUGIN_URL,
 					$service['icon']
@@ -329,9 +330,10 @@ EOD;
 
 		return "<li><a
 			target=\"_blank\"
-    		title=\"Support {$contributor->publicname} by buying things from an Amazon Wishlist\"
+    		title=\"Support {$contributor->getName()} by buying things from an Amazon Wishlist\"
     		href=\"{$contributor->amazonwishlist}\">
-    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" />
+    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" 
+    		alt=\"" . sprintf( __('Support %s by buying things from an Amazon Wishlist'),  $contributor->getName() ) . "\" />
 		</a></li>";
 	}
 
@@ -344,10 +346,10 @@ EOD;
 		    target=\"_blank\"
 			class=\"FlattrButton\"
 			style=\"display:none;\"
-    		title=\"{$contributor->publicname}@" . get_the_title( $postid ) . "\"
+    		title=\"{$contributor->getName()}@" . get_the_title( $postid ) . "\"
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
     		href=\"".get_permalink( $postid )."#podlove-contributor={$contributor->slug}\">
-		    	Flattr {$contributor->publicname}@" . get_the_title( $postid ) . "
+		    	Flattr {$contributor->getName()}@" . get_the_title( $postid ) . "
 		</a>";
 	}
 
@@ -360,10 +362,10 @@ EOD;
 		    target=\"_blank\"
 			class=\"FlattrButton\"
 			style=\"display:none;\"
-    		title=\"Flattr {$contributor->publicname}\"
+    		title=\"Flattr {$contributor->getName()}\"
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
     		href=\"https://flattr.com/profile/{$contributor->flattr}\">
-		    	Flattr {$contributor->publicname}
+		    	Flattr {$contributor->getName()}
 		</a>";
 	}
 
@@ -375,9 +377,10 @@ EOD;
 		return "<li><a
 			target=\"_blank\"
 			class=\"PayPalButton\"
-    		title=\"Support {$contributor->publicname} by donating with PayPal\"
+    		title=\"Support {$contributor->getName()} by donating with PayPal\"
     		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
-    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" />
+    		<img src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" 
+    		alt=\"" . sprintf( __('Support %s by donating with PayPal'), $contributor->getName() ) ."\" />
 		</a></li>";
 	}
 
@@ -387,23 +390,11 @@ EOD;
 			return "";
 
 		return '<li><a href="' . $currency . ':' . $contributor->$currency . '"
-					 title="Support ' . $contributor->publicname . ' by donating with ' . ucfirst($currency) .'">
-						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" />
+					 title="Support ' . $contributor->getName() . ' by donating with ' . ucfirst($currency) .'">
+						<img src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" 
+						alt=\"' . sprintf( __('Support %s by donating with %s'), $contributor->getName(), ucfirst($currency) ) . '\" />
 					</a>
 				</li>';
-	}
-
-	private function getFlattrScript() {
-		return "<script type=\"text/javascript\">\n
-			/* <![CDATA[ */
-		    (function() {
-  		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-  		     s.type = 'text/javascript';
-   		     s.async = true;
-    		    s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-    		    t.parentNode.insertBefore(s, t);
-   			 })();
-			/* ]]> */</script>\n";
 	}
 
 	private function getServices() {
@@ -423,7 +414,7 @@ EOD;
 			array(
 				'key' => 'adn',
 				'url_template' => 'http://app.net/%s',
-				'title' => 'ADN',
+				'title' => 'App.net',
 				'icon' => 'adn-128.png'
 			),
 			array(
@@ -434,7 +425,7 @@ EOD;
 			),
 			array(
 				'key' => 'facebook',
-				'url_template' => '%s',
+				'url_template' => 'http://facebook.com/%s',
 				'title' => 'Facebook',
 				'icon' => 'facebook-128.png'
 			)

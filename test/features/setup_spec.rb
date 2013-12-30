@@ -26,7 +26,7 @@ describe "Basic Setup Workflow" do
   	@page = @page.form_with(action: 'options.php') do |f|
   		f['podlove_podcast[title]'] = 'Test Podcast'
   		f['podlove_podcast[subtitle]'] = 'the one and only'
-  		f['podlove_podcast[media_file_base_uri]'] = 'http://satoripress.com/wp-content/ppp/'
+  		f['podlove_podcast[media_file_base_uri]'] = 'http://meta.metaebene.me/media/cre/'
   	end.submit
 
   	# assets
@@ -50,18 +50,18 @@ describe "Basic Setup Workflow" do
   	@page = @agent.get(base_url + '/wp-admin/post-new.php?post_type=podcast')
 
   	form = @page.form_with(action: 'post.php') do |f|
-  		f['post_title'] = 'PPP001 The Title'
-  		f['_podlove_meta[slug]'] = 'ppp001'
+  		f['post_title'] = 'CRE204 Geocaching'
+  		f['_podlove_meta[slug]'] = 'cre204-geocaching'
   		f.checkboxes.first.check
   	end
   	@page = @agent.submit(form, form.buttons.keep_if { |b| b.name == 'publish' }.first)
 
   	# view episode
-  	@page = @agent.get(base_url + '/?podcast=ppp001-the-title')
-  	@page.search('[text()*="PPP001 The Title"]').length.should > 0
+  	@page = @agent.get(base_url + '/?podcast=cre204-geocaching')
+  	@page.search('[text()*="CRE204 Geocaching"]').length.should > 0
 
   	# view feed
   	@page = @agent.get(base_url + '/?feed=mp3')
-  	@page.search('enclosure')[0].attr('url').should == 'http://satoripress.com/wp-content/ppp/ppp001.mp3'
+  	@page.search('enclosure')[0].attr('url').should == 'http://meta.metaebene.me/media/cre/cre204-geocaching.mp3'
   end
 end

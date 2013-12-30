@@ -8,6 +8,29 @@ use Podlove\ChaptersManager;
  */
 class Episode extends Base implements Licensable {
 
+	public static function allByTime() {
+		global $wpdb;
+
+		$sql = 'SELECT * FROM `' . self::table_name() . '` e JOIN `' . $wpdb->prefix . 'posts` p ON e.post_id = p.ID ORDER BY p.post_date DESC';
+		$rows = $wpdb->get_results($sql);
+
+		if ( ! $rows ) {
+			return array();
+		}
+
+		$episodes = array();
+		foreach ( $rows as $row ) {
+			$episode = new self();
+			$episode->flag_as_not_new();
+			foreach (self::property_names() as $property) {
+				$episode->$property = $row->$property;
+			}
+			$episodes[] = $episode;
+		}
+		
+		return $episodes;
+	}
+
 	/**
 	 * Generate a human readable title.
 	 * 
@@ -199,7 +222,7 @@ class Episode extends Base implements Licensable {
 			return false;
 
 		// skip deleted podcasts
-		if ( ! in_array( $post->post_status, array( 'draft', 'publish', 'pending', 'future' ) ) )
+		if ( ! in_array( $post->post_status, array( 'private', 'draft', 'publish', 'pending', 'future' ) ) )
 			return false;
 
 		// skip versions
