@@ -1,5 +1,5 @@
 <?php
-namespace Podlove\Template;
+namespace Podlove\Modules\Contributors\Template;
 
 /**
  * Contributor Template Wrapper
@@ -21,7 +21,7 @@ class Contributor {
 	// /////////
 
 	public function name() {
-		return $this->contributor->publicname;
+		return $this->contributor->getName();
 	}
 
 	public function role() {

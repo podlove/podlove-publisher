@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag episode
  */
-class Episode {
+class Episode extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\Episode
@@ -21,7 +21,10 @@ class Episode {
 	public function __construct(\Podlove\Model\Episode $episode) {
 		$this->episode = $episode;
 		$this->post = get_post($episode->post_id);
+	}
 
+	protected function getExtraFilterArgs() {
+		return array($this->episode, $this->post);
 	}
 
 	// /////////
@@ -182,19 +185,6 @@ class Episode {
 		return array_map(function($file) {
 			return new File($file);
 		}, $this->episode->media_files());
-	}
-
-	/**
-	 * List of episode contributors
-	 *
-	 * @see  contributor
-	 * @FIXME this will break without contributor module
-	 * @accessor
-	 */
-	public function contributors() {
-		return array_map(function($contribution) {
-			return new Contributor($contribution->getContributor(), $contribution);
-		}, \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($this->episode->id));
 	}
 
 	/**

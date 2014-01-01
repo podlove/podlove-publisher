@@ -38,6 +38,16 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
+		\Podlove\Template\Episode::add_accessor(
+			'contributors',
+			function($return, $method_name, $episode, $post) {
+				return array_map(function($contribution) {
+					return new Template\Contributor($contribution->getContributor(), $contribution);
+				}, EpisodeContribution::find_all_by_episode_id($episode->id));
+			},
+			4
+		);
+
 		// register shortcodes
 		new Shortcodes;	
 
