@@ -4,6 +4,12 @@ namespace Podlove\Template;
 abstract class Wrapper {
 
 	/**
+	 * List of accessors that were added dynamically
+	 * @var array
+	 */
+	public static $dynamicAccessors = array();
+
+	/**
 	 * Dynamically add accessors to template wrappers.
 	 *
 	 * Example:
@@ -25,13 +31,6 @@ abstract class Wrapper {
 	 */
 	public static function add_accessor($name, $method, $extraFilterArgs = 2) {
 
-		// let __isset return true on this accessor so Twig knows it exists
-		add_filter(
-			static::get_magic_isset_filter_name(),
-			function($return, $method_name) use ($name) {
-				return $method_name == $name ? true : $return;
-		}, 10, 2);
-
 		// implement the actual accessor
 		add_filter(
 			static::get_magic_getter_filter_name(),
@@ -40,19 +39,13 @@ abstract class Wrapper {
 			$extraFilterArgs
 		);
 
+		static::$dynamicAccessors[] = $name;
 	}
 
-	public function __get($name) {
+	public function __call($name, $arguments) {
 		return apply_filters_ref_array(
 			static::get_magic_getter_filter_name(),
 			array_merge(array(null, $name), $this->getExtraFilterArgs()) 
-		);
-	}
-
-	public function __isset($name) {
-		return apply_filters_ref_array(
-			static::get_magic_isset_filter_name(),
-			array_merge(array(false, $name), $this->getExtraFilterArgs()) 
 		);
 	}
 
@@ -66,16 +59,11 @@ abstract class Wrapper {
 		return 'podlove_template_' . static::get_class_slug() . '_method';
 	}
 
-	public static function get_magic_isset_filter_name() {
-		return 'podlove_template_' . static::get_class_slug() . '_method_isset';
-	}
-
 	/**
 	 * Override to pass extra arguments to filter methods.
 	 *
 	 * Adds arguments to the following filters:
 	 * 	- podlove_template_<wrapper>_method
-	 * 	- podlove_template_<wrapper>_method_isset
 	 * 
 	 * @return array
 	 */

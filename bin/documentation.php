@@ -144,10 +144,10 @@ foreach ($classes as $class) {
 		$c->parse();
 
 		return [
-			'methodname' => $method->name,
-			'title' => $c->getTitle(),
+			'methodname'  => $method->name,
+			'title'       => $c->getTitle(),
 			'description' => $c->getDescription(),
-			'tags' => $c->getTags()
+			'tags'        => $c->getTags()
 		];
 	}, $accessors);
 
@@ -156,6 +156,19 @@ foreach ($classes as $class) {
 	$templatetag = $classComment->getTags()[0]['description'];
 	 
 	assert(strlen($templatetag) > 0, 'templatetag must not be empty');
+
+	// Simply list dynamically added methods.
+	// Here we can't parse function doc (or can we?) so we need to find another way to get docs.
+	if (isset($class::$dynamicAccessors)) {
+		foreach ($class::$dynamicAccessors as $dynamicAccessor) {
+			$parsedMethods[] = [
+				'methodname'  => $dynamicAccessor,
+				'title'       => '',
+				'description' => '',
+				'tags'        => array()
+			];
+		}
+	}
 
 	$classdoc = [
 		'class' => [
