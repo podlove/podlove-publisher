@@ -108,7 +108,7 @@ class Ajax {
 		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];
 
 		if ( ! $result['reachable'] ) {
-			unset( $info['certinfo'] );
+			$info['certinfo'] = print_r($info['certinfo'], true);
 			$info['php_open_basedir'] = ini_get( 'open_basedir' );
 			$info['php_safe_mode'] = ini_get( 'safe_mode' );
 			$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );

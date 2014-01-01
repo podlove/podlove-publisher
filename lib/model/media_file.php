@@ -226,6 +226,7 @@ class MediaFile extends Base {
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); // make curl_exec() return the result
 		curl_setopt( $curl, CURLOPT_HEADER, true );         // header only
 		curl_setopt( $curl, CURLOPT_NOBODY, true );         // return no body; HTTP request method: HEAD
+		curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, FALSE); // Don't check SSL certificate in order to be able to use self signed certificates
 		curl_setopt( $curl, CURLOPT_FAILONERROR, true );
 		curl_setopt( $curl, CURLOPT_TIMEOUT, 3 );          // HEAD requests shouldn't take > 2 seconds
 
