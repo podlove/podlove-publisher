@@ -70,7 +70,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 							  ),
 				'facebook' => array(
 								'title' => 'Facebook',
-								'url_template' => '',
+								'url_template' => 'http://facebook.com/',
 								'account' => $contributor->facebook
 							  )
 		);
