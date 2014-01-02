@@ -227,7 +227,7 @@ class Shortcodes {
 			$donations
 			$flattr
 		</tr>
-	<thead>
+	</thead>
 	<tbody>
 EOD;
 
@@ -281,7 +281,7 @@ EOD;
 
 			// donations
 			if ($this->settings['donations'] == 'yes')
-				$body .= '<td class="docation_cell"><ul class="podlove-donations-list">'
+				$body .= '<td class="donation_cell"><ul class="podlove-donations-list">'
 			    . $this->getXcoinButton($contributor, 'bitcoin')
 			    . $this->getXcoinButton($contributor, 'litecoin')
 			    . $this->getPayPalButton($contributor)

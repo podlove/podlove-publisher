@@ -402,7 +402,7 @@ class Contributors extends \Podlove\Modules\Base {
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
 						<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
-							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->getAvatarUrl("10px") ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->realname .( $contributor->nickname == "" ? '' : " (" . trim($contributor->nickname) . ")" ); ?></option>
+							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->getAvatarUrl("10px") ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName() .( $contributor->nickname == "" ? '' : " (" . trim($contributor->nickname) . ")" ); ?></option>
 						<?php endforeach; ?>
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
@@ -483,9 +483,16 @@ class Contributors extends \Podlove\Modules\Base {
 					function add_new_contributor() {
 						var row = '';
 						row = $("#contributor-row-template").html();
-						$("#contributors_table_body").append(row);
-						contributor_dropdown_handler();
+						var new_row = $("#contributors_table_body");
+						new_row.append(row);
+						
+						// Update Chosen before we focus on the new contributor
 						update_chosen();
+						var new_row_id = new_row.find('select.podlove-contributor-dropdown').last().attr('id');	
+						contributor_dropdown_handler();
+						
+						// Focus new contributor
+						$("#" + new_row_id + "_chzn").find("a").focus();
 					}
 
 					function add_contributor_row(contributor, role, group) {
