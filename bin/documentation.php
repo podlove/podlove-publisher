@@ -128,6 +128,7 @@ $classes = [
 	'\Podlove\Template\Chapter',
 	'\Podlove\Template\License',
 	'\Podlove\Template\FileType',
+	'\Podlove\Modules\Contributors\Template\Contributor'
 ];
 
 foreach ($classes as $class) {
@@ -159,8 +160,8 @@ foreach ($classes as $class) {
 
 	// Simply list dynamically added methods.
 	// Here we can't parse function doc (or can we?) so we need to find another way to get docs.
-	if (isset($class::$dynamicAccessors)) {
-		foreach ($class::$dynamicAccessors as $dynamicAccessor) {
+	if (isset($class::$dynamicAccessors[$class::get_class_slug()])) {
+		foreach ($class::$dynamicAccessors[$class::get_class_slug()] as $dynamicAccessor) {
 			$parsedMethods[] = [
 				'methodname'  => $dynamicAccessor,
 				'title'       => '',

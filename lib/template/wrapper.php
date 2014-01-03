@@ -39,7 +39,11 @@ abstract class Wrapper {
 			$extraFilterArgs
 		);
 
-		static::$dynamicAccessors[] = $name;
+		if (!isset(static::$dynamicAccessors[static::get_class_slug()])) {
+			static::$dynamicAccessors[static::get_class_slug()] = array();
+		}
+
+		static::$dynamicAccessors[static::get_class_slug()][] = $name;
 	}
 
 	public function __call($name, $arguments) {
