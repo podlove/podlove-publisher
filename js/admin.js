@@ -66,7 +66,6 @@ function auto_fill_form(id, title_id) {
 				}
 			break;
 			case 'contributor_group':
-			console.log('f');
 				if( $("#podlove_contributor_group_slug").val() == "" ) {
 					$("#podlove_contributor_group_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
 				}
@@ -106,12 +105,8 @@ jQuery(function($) {
 
 	$(".autogrow").autogrow();
 
-	$("#podlove_contributor_realname").change(function() {
-		auto_fill_form('contributor', 'realname');
-	});
-
-	$("#podlove_contributor_nickname").change(function() {
-		auto_fill_form('contributor', 'nickname');
+	$("#podlove_contributor_publicname").change(function() {
+		auto_fill_form('contributor', 'publicname');
 	});
 
 	$("#podlove_contributor_group_title").change(function() {
