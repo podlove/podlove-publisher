@@ -26,7 +26,7 @@ class FileType extends Wrapper {
 	// /////////
 
 	/**
-	 * Filetype name
+	 * Name
 	 *
 	 * @accessor
 	 */
@@ -35,7 +35,7 @@ class FileType extends Wrapper {
 	}
 
 	/**
-	 * Filetype type / group
+	 * Type / group
 	 *
 	 * One of those: audio, captions, chapters, ebook, image, metadata, video
 	 *
@@ -46,7 +46,7 @@ class FileType extends Wrapper {
 	}
 	
 	/**
-	 * Filetype Mimetype
+	 * Mimetype
 	 *
 	 * @accessor
 	 */
@@ -55,7 +55,7 @@ class FileType extends Wrapper {
 	}
 
 	/**
-	 * Filetype extension
+	 * Extension
 	 *
 	 * @accessor
 	 */

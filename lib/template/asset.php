@@ -26,7 +26,7 @@ class Asset extends Wrapper {
 	// /////////
 
 	/**
-	 * Asset title
+	 * Title
 	 * 
 	 * @accessor
 	 */
@@ -44,7 +44,7 @@ class Asset extends Wrapper {
 	}
 
 	/**
-	 * Asset file type
+	 * File type
 	 * 
 	 * @see  file_type
 	 * @accessor

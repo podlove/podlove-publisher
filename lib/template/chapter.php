@@ -26,7 +26,7 @@ class Chapter extends Wrapper {
 	// /////////
 
 	/**
-	 * Chapter title
+	 * Title
 	 * 
 	 * @accessor
 	 */
@@ -35,7 +35,7 @@ class Chapter extends Wrapper {
 	}
 
 	/**
-	 * Chapter link
+	 * Link
 	 * 
 	 * @accessor
 	 */
@@ -44,7 +44,7 @@ class Chapter extends Wrapper {
 	}
 
 	/**
-	 * Chapter image
+	 * Image
 	 * 
 	 * @accessor
 	 */
@@ -53,7 +53,7 @@ class Chapter extends Wrapper {
 	}
 
 	/**
-	 * Chapter time
+	 * Time
 	 * 
 	 * @accessor
 	 */

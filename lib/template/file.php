@@ -46,7 +46,7 @@ class File extends Wrapper {
 	}
 
 	/**
-	 * File size in bytes
+	 * Size in bytes
 	 *
 	 * @accessor
 	 */
@@ -55,7 +55,7 @@ class File extends Wrapper {
 	}
 
 	/**
-	 * File url
+	 * URL
 	 *
 	 * @accessor
 	 */

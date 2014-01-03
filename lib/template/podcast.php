@@ -26,7 +26,7 @@ class Podcast extends Wrapper {
 	// /////////
 
 	/**
-	 * Podcast title
+	 * Title
 	 *
 	 * @accessor
 	 */
@@ -35,7 +35,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast subtitle
+	 * Subtitle
 	 *
 	 * @accessor
 	 */
@@ -44,7 +44,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast summary
+	 * Summary
 	 *
 	 * @accessor
 	 */
@@ -53,7 +53,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast image URL
+	 * Image URL
 	 *
 	 * @accessor
 	 */
@@ -62,7 +62,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast author name
+	 * Author name
 	 *
 	 * @accessor
 	 */
@@ -71,7 +71,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast owner name
+	 * Owner name
 	 *
 	 * @accessor
 	 */
@@ -80,7 +80,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast owner email
+	 * Owner email
 	 *
 	 * @accessor
 	 */
@@ -89,7 +89,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast publisher name
+	 * Publisher name
 	 *
 	 * @accessor
 	 */
@@ -98,7 +98,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast publisher url
+	 * Publisher URL
 	 *
 	 * @accessor
 	 */
@@ -107,7 +107,7 @@ class Podcast extends Wrapper {
 	}
 
 	/**
-	 * Podcast license
+	 * License
 	 *
 	 * @see  license
 	 * @accessor

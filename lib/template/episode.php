@@ -32,7 +32,7 @@ class Episode extends Wrapper {
 	// /////////
 
 	/**
-	 * Episode title
+	 * Title
 	 * 
 	 * @accessor
 	 */
@@ -41,7 +41,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode subtitle
+	 * Subtitle
 	 * 
 	 * @accessor
 	 */
@@ -50,7 +50,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode summary
+	 * Summary
 	 * 
 	 * @accessor
 	 */
@@ -59,7 +59,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode slug
+	 * Slug
 	 * 
 	 * @accessor
 	 */
@@ -68,7 +68,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode post content
+	 * Post content
 	 * 
 	 * @accessor
 	 */
@@ -77,7 +77,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode post publication date
+	 * Post publication date
 	 *
 	 * Uses WordPress date format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
 	 * 
@@ -103,7 +103,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode URL
+	 * URL
 	 * 
 	 * @accessor
 	 */
@@ -112,7 +112,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode duration
+	 * Duration
 	 *
 	 * Use `duration("full")` to include milliseconds.
 	 *
@@ -124,7 +124,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode image URL
+	 * Image URL
 	 * 
 	 * @accessor
 	 */
@@ -133,7 +133,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode image URL with fallback
+	 * Image URL with fallback
 	 *
 	 * Returns podcast image if no episode image is available.
 	 * 
@@ -200,7 +200,7 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Episode license
+	 * License
 	 * 
 	 * @see  license
 	 * @accessor

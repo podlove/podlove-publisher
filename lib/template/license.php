@@ -26,7 +26,7 @@ class License extends Wrapper {
 	// /////////
 
 	/**
-	 * License name
+	 * Name
 	 *
 	 * @accessor
 	 */
@@ -35,7 +35,7 @@ class License extends Wrapper {
 	}
 
 	/**
-	 * License url
+	 * URL
 	 *
 	 * @accessor
 	 */
@@ -44,7 +44,7 @@ class License extends Wrapper {
 	}
 
 	/**
-	 * License image URL
+	 * Image URL
 	 *
 	 * @accessor
 	 */
@@ -53,7 +53,7 @@ class License extends Wrapper {
 	}
 
 	/**
-	 * License HTML
+	 * HTML
 	 *
 	 * @accessor
 	 */

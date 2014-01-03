@@ -26,7 +26,7 @@ class Feed extends Wrapper {
 	// /////////
 
 	/**
-	 * Feed title
+	 * Title
 	 * 
 	 * @accessor
 	 */
@@ -39,7 +39,7 @@ class Feed extends Wrapper {
 	}
 
 	/**
-	 * Feed url
+	 * URL
 	 * 
 	 * @accessor
 	 */
@@ -66,7 +66,7 @@ class Feed extends Wrapper {
 	}
 
 	/**
-	 * Feed asset
+	 * Asset
 	 *
 	 * @see asset
 	 * @accessor
