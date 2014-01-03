@@ -107,6 +107,23 @@ class Podcast extends Wrapper {
 	}
 
 	/**
+	 * Episodes
+	 * 
+	 * @see episode
+	 * @accessor
+	 */
+	public function episodes() {
+		$episodes = array();
+
+		foreach (\Podlove\Model\Episode::allByTime() as $episode) {
+			if ($episode->is_valid())
+				$episodes[] = new Episode($episode);
+		}
+
+		return $episodes;
+	}
+
+	/**
 	 * License
 	 *
 	 * @see  license

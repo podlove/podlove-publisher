@@ -278,11 +278,22 @@ function template_shortcode( $attributes ) {
 	$loader = new \Twig_Loader_String();
 	$twig = new \Twig_Environment($loader);
 
-	$templateFilter = new \Twig_SimpleFilter('template', function ($context, $contributor, $template_id) use ($twig) {
-		// TODO $contributor is actually any context changing object. Find out via reflection what it is and set it correctly.
-		$context['contributor'] = $contributor;
+	$templateFilter = new \Twig_SimpleFilter('template', function ($context, $wrapperClass, $template_id) use ($twig) {
 
-		if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
+		$reflectionClass = new \ReflectionClass($wrapperClass);
+		// todo use same comment class as in bin/documentation.php
+		preg_match('/@templatetag\s+(\w+)/', $reflectionClass->getDocComment(), $matches);
+
+		$templatetag = null;
+		if (isset($matches[1]))
+			$templatetag = trim($matches[1]);
+
+		if (!$templatetag)
+			return sprintf( __( 'Podlove Error: No subtemplating possible for wrapper class "%s"', 'podlove' ), $reflectionClass->name );
+
+		$context[$templatetag] = $wrapperClass;
+
+		if (!$template = Model\Template::find_one_by_title($template_id))
 			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
 	    return $twig->render($template->content, $context);
