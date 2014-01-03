@@ -310,10 +310,6 @@ function template_shortcode( $attributes ) {
 		$context['episode'] = new Template\Episode($episode);
 	}
 
-	$context['feeds'] = array_map(function ($feed) {
-		return new Template\Feed($feed);
-	}, Model\Feed::all());
-
 	$html = $twig->render($html, $context);
 
 	// apply autop and shortcodes

@@ -124,6 +124,18 @@ class Podcast extends Wrapper {
 	}
 
 	/**
+	 * Feeds
+	 *
+	 * @see  feed
+	 * @accessor
+	 */
+	public function feeds() {
+		return array_map(function ($feed) {
+			return new Feed($feed);
+		}, \Podlove\Model\Feed::all());
+	}
+
+	/**
 	 * License
 	 *
 	 * @see  license
