@@ -31,11 +31,8 @@ class Contributor extends Wrapper {
 	}
 
 	public function role() {
-		if ($this->contribution) {
-			return $this->contribution->getRole()->title;
-		} else {
-			return $this->contributor->getRole()->title;
-		}
+		return ($this->contribution) ? $this->contribution->getRole()->title : '';
+	}
 	}
 
 	public function avatar($size = 50) {
