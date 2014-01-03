@@ -6,7 +6,7 @@ namespace Podlove\Template;
  * 
  * @templatetag chapter
  */
-class Chapter {
+class Chapter extends Wrapper {
 
 	/**
 	 * @var \Podlove\Chapters\Chapter
@@ -15,9 +15,12 @@ class Chapter {
 
 	public function __construct(\Podlove\Chapters\Chapter $chapter) {
 		$this->chapter = $chapter;
-
 	}
 
+	protected function getExtraFilterArgs() {
+		return array($this->chapter);
+	}
+	
 	// /////////
 	// Accessors
 	// /////////

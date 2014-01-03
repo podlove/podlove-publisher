@@ -1,12 +1,14 @@
 <?php
 namespace Podlove\Modules\Contributors\Template;
 
+use Podlove\Template\Wrapper;
+
 /**
  * Contributor Template Wrapper
  *
  * @templatetag contributor
  */
-class Contributor {
+class Contributor extends Wrapper {
 
 	private $contributor;
 	private $contribution;
@@ -14,6 +16,10 @@ class Contributor {
 	public function __construct($contributor, $contribution = null) {
 		$this->contributor = $contributor;
 		$this->contribution = $contribution;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->contributor, $this->contribution);
 	}
 
 	// /////////

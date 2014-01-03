@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag podcast
  */
-class Podcast {
+class Podcast extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\Podcast
@@ -15,6 +15,10 @@ class Podcast {
 
 	public function __construct(\Podlove\Model\Podcast $podcast) {
 		$this->podcast = $podcast;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->podcast);
 	}
 
 	// /////////

@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag file
  */
-class File {
+class File extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\MediaFile
@@ -15,6 +15,10 @@ class File {
 
 	public function __construct(\Podlove\Model\MediaFile $file) {
 		$this->file = $file;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->file);
 	}
 
 	// /////////

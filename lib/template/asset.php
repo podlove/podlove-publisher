@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag asset
  */
-class Asset {
+class Asset extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\EpisodeAsset
@@ -15,6 +15,10 @@ class Asset {
 
 	public function __construct(\Podlove\Model\EpisodeAsset $asset) {
 		$this->asset = $asset;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->asset);
 	}
 
 	// /////////

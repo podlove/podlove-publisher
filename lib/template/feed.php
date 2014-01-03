@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag feed
  */
-class Feed {
+class Feed extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\Feed
@@ -15,6 +15,10 @@ class Feed {
 
 	public function __construct(\Podlove\Model\Feed $feed) {
 		$this->feed = $feed;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->feed);
 	}
 
 	// /////////

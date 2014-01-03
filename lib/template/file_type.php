@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag file_type
  */
-class FileType {
+class FileType extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\FileType
@@ -15,6 +15,10 @@ class FileType {
 
 	public function __construct(\Podlove\Model\FileType $fileType) {
 		$this->fileType = $fileType;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->fileType);
 	}
 
 	// /////////

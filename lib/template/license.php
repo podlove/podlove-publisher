@@ -6,7 +6,7 @@ namespace Podlove\Template;
  *
  * @templatetag license
  */
-class License {
+class License extends Wrapper {
 
 	/**
 	 * @var Podlove\Model\License
@@ -15,6 +15,10 @@ class License {
 
 	public function __construct(\Podlove\Model\License $license) {
 		$this->license = $license;
+	}
+
+	protected function getExtraFilterArgs() {
+		return array($this->license);
 	}
 
 	// /////////
