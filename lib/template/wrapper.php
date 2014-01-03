@@ -67,7 +67,5 @@ abstract class Wrapper {
 	 * 
 	 * @return array
 	 */
-	protected function getExtraFilterArgs() {
-		return array();
-	}
+	protected abstract function getExtraFilterArgs();
 }
