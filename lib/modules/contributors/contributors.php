@@ -48,6 +48,16 @@ class Contributors extends \Podlove\Modules\Base {
 			4
 		);
 
+		\Podlove\Template\Podcast::add_accessor(
+			'contributors',
+			function($return, $method_name, $podcast) {
+				return array_map(function($contribution) {
+					return new Template\Contributor($contribution->getContributor(), $contribution);
+				}, ShowContribution::all());
+			},
+			3
+		);
+
 		// register shortcodes
 		new Shortcodes;	
 
