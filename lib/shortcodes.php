@@ -276,7 +276,7 @@ function template_shortcode( $attributes ) {
 
 	// apply twig
 	$loader = new \Twig_Loader_String();
-	$twig = new \Twig_Environment($loader);
+	$twig = new \Twig_Environment($loader, array('autoescape' => false));
 
 	$templateFilter = new \Twig_SimpleFilter('template', function ($context, $wrapperClass, $template_id) use ($twig) {
 
