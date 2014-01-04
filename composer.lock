@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6532e475a1d8402a2d23d5a4133f8ee7",
+    "hash": "ae6cbbf1895d2fd8b8d0d0855d990829",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -662,6 +662,46 @@
             "time": "2013-11-22 08:54:11"
         },
         {
+            "name": "podlove/comment-introspection",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/podlove/podlove-comment-introspection.git",
+                "reference": "08ce9985f132a28a4bba5b65c1eef00acafe9ba0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/podlove/podlove-comment-introspection/zipball/08ce9985f132a28a4bba5b65c1eef00acafe9ba0",
+                "reference": "08ce9985f132a28a4bba5b65c1eef00acafe9ba0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Podlove\\Comment": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP library providing a toolkit to parse class and method comments.",
+            "keywords": [
+                "comment",
+                "introspection",
+                "parser",
+                "podlove",
+                "reflection"
+            ],
+            "time": "2014-01-04 11:28:17"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v2.4.0",
             "target-dir": "Symfony/Component/Yaml",
@@ -714,7 +754,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "monolog/monolog": 20
+        "monolog/monolog": 20,
+        "podlove/comment-introspection": 20
     },
     "platform": {
         "php": ">=5.3.0"
