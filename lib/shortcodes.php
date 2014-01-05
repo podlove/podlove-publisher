@@ -272,45 +272,7 @@ function template_shortcode( $attributes ) {
 	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
 		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-	$html = $template->content;
-
-	// apply twig
-	$loader = new \Twig_Loader_String();
-	$twig = new \Twig_Environment($loader, array('autoescape' => false));
-
-	$templateFilter = new \Twig_SimpleFilter('template', function ($context, $wrapperClass, $template_id) use ($twig) {
-
-		$reflectionClass = new \ReflectionClass($wrapperClass);
-		// todo use same comment class as in bin/documentation.php
-		preg_match('/@templatetag\s+(\w+)/', $reflectionClass->getDocComment(), $matches);
-
-		$templatetag = null;
-		if (isset($matches[1]))
-			$templatetag = trim($matches[1]);
-
-		if (!$templatetag)
-			return sprintf( __( 'Podlove Error: No subtemplating possible for wrapper class "%s"', 'podlove' ), $reflectionClass->name );
-
-		$context[$templatetag] = $wrapperClass;
-
-		if (!$template = Model\Template::find_one_by_title($template_id))
-			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
-
-	    return $twig->render($template->content, $context);
-	}, array('needs_context' => true));
-
-	$twig->addFilter($templateFilter);
-
-	$context = array();
-
-	$context['podcast'] = new Template\Podcast(Model\Podcast::get_instance());
-
-	$episode = Model\Episode::find_one_by_property('post_id', get_the_ID());
-	if ($episode) {
-		$context['episode'] = new Template\Episode($episode);
-	}
-
-	$html = $twig->render($html, $context);
+	$html = apply_filters('podlove_template_raw', $template->content);
 
 	// apply autop and shortcodes
 	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
@@ -321,6 +283,8 @@ function template_shortcode( $attributes ) {
 	return $html;
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
+
+add_filter('podlove_template_raw', array('\Podlove\Template\TwigFilter', 'apply_to_html'));
 
 function podcast_license() {
 	$podcast = Model\Podcast::get_instance();
