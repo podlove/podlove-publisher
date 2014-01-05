@@ -53,6 +53,8 @@ var PODLOVE = PODLOVE || {};
 		var podlove_check_license_form = function (license_type) {
 			switch (license_type) {
 				case "cc" :
+					var modification_url_slug, commercial_use_url_slug;
+					
 					$(settings.form_row_cc_preview).show();
 					if($(settings.form_cc_modification).val() == "" ||
 					   $(settings.form_cc_commercial_use).val() == "" ||
@@ -70,8 +72,31 @@ var PODLOVE = PODLOVE || {};
 							var version_and_name = settings.versions[$(settings.form_cc_jurisdiction).val()];
 							var name = settings.locales[$(settings.form_cc_jurisdiction).val()];
 						}
+
+						// Setting URL slugs to build the correct url
+						switch ( $(settings.form_cc_modification).val() ) {
+							case "yes" :
+								modification_url_slug = "";
+							break;
+							case "yesbutshare" :
+								modification_url_slug = "-sa";
+							break;
+							case "no" :
+								modification_url_slug = "-nd";
+							break;
+						}
+						switch( $(settings.form_cc_commercial_use).val() ) {
+							case "yes" :
+								commercial_use_url_slug = "";
+							break;
+							case "no" :
+								commercial_use_url_slug = "-nc";
+							break;
+						}
+
+
 						$(settings.status).html("<i class=\"podlove-icon-ok\"></i> All license parameter are set. You can <a href=\"#\" class=\"toggle_license\" data-type=\"cc\">edit</a> the license parameters.");			
-						$(settings.image).html("<div class=\"podlove_cc_license\"><img src=\"" + settings.plugin_url + "/images/cc/" + podlove_license_cc_get_image($(settings.form_cc_modification).val(), $(settings.form_cc_commercial_use).val()) + ".png\" /> <p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/"+version_and_name.version+"/"+country+"deed.en\">Creative Commons Attribution "+version_and_name.version+" "+name+" License</a>.</p></div>");
+						$(settings.image).html("<div class=\"podlove_cc_license\"><img src=\"" + settings.plugin_url + "/images/cc/" + podlove_license_cc_get_image($(settings.form_cc_modification).val(), $(settings.form_cc_commercial_use).val()) + ".png\" /> <p>This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by"+commercial_use_url_slug+modification_url_slug+"/"+version_and_name.version+"/"+country+"deed.en\">Creative Commons Attribution "+version_and_name.version+" "+name+" License</a>.</p></div>");
 					}
 				break;
 				case "other" :

@@ -75,6 +75,8 @@ class License {
 		$podcast  = Podcast::get_instance();
 
 		if ($this->type == 'cc' && $this->hasCompleteCCData()) {
+			$url_slugs = $this->getURLSlug( $this->cc_allow_modifications, $this->cc_allow_commercial_use );
+
 			if($this->cc_license_jurisdiction == "international") {
 				$locale = "";
 				$version = $versions["international"]["version"];
@@ -84,11 +86,12 @@ class License {
 				$version = $versions[$this->cc_license_jurisdiction]["version"];
 				$name = $locales[$this->cc_license_jurisdiction];
 			}
+			
 			return "
 			<div class=\"podlove_cc_license\">
 				<img src=\"" . $this->getPictureUrl() . "\" />
 				<p>
-					This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/" . $version . "/" . $locale . "deed.en\">Creative Commons Attribution " . $version . " " . $name . " License</a>.
+					This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by" . $url_slugs['allow_commercial_use'] . $url_slugs['allow_modifications'] . "/" . $version . "/" . $locale . "deed.en\">Creative Commons Attribution " . $version . " " . $name . " License</a>.
 				</p>
 			</div>";
 		}
@@ -129,6 +132,32 @@ class License {
 			. "_"
 			. $this->getAlloCommercialUseId() 
 			. ".png";		
+	}
+
+	private function getURLSlug( $allow_modifications, $allow_commercial_use ) {
+			switch ( $allow_modifications ) {
+				case "yes" :
+					$modification_url_slug = "";
+				break;
+				case "yesbutshare" :
+					$modification_url_slug = "-sa";
+				break;
+				case "no" :
+					$modification_url_slug = "-nd";
+				break;
+			}
+			switch( $allow_commercial_use ) {
+				case "yes" :
+					$commercial_use_url_slug = "";
+				break;
+				case "no" :
+					$commercial_use_url_slug = "-nc";
+				break;
+			}
+			return array(
+							'allow_modifications' => $modification_url_slug,
+							'allow_commercial_use' => $commercial_use_url_slug
+						);
 	}
 
 	private function getAllowModificationId() {
