@@ -303,4 +303,3 @@ function episode_license() {
 	return $episode->get_license_html();
 }
 add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
-

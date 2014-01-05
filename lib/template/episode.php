@@ -76,6 +76,11 @@ class Episode extends Wrapper {
 		return $this->post->post_content;
 	}
 
+	public function player() {
+		$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $this->episode );
+		return $printer->render();
+	}
+
 	/**
 	 * Post publication date
 	 *
