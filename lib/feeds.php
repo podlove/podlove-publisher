@@ -79,6 +79,9 @@ function feed_authentication() {
 
 function check_for_and_do_compression()
 {
+	if (!apply_filters('podlove_enable_gzip_for_feeds', true))
+		return false;
+	
 	// gzip requires zlib extension
 	if (!extension_loaded('zlib'))
 		return false;
