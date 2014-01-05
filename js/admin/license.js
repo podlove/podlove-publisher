@@ -53,6 +53,8 @@ var PODLOVE = PODLOVE || {};
 		var podlove_check_license_form = function (license_type) {
 			switch (license_type) {
 				case "cc" :
+					var modification_url_slug, commercial_use_url_slug;
+					
 					$(settings.form_row_cc_preview).show();
 					if($(settings.form_cc_modification).val() == "" ||
 					   $(settings.form_cc_commercial_use).val() == "" ||
@@ -70,7 +72,6 @@ var PODLOVE = PODLOVE || {};
 							var version_and_name = settings.versions[$(settings.form_cc_jurisdiction).val()];
 							var name = settings.locales[$(settings.form_cc_jurisdiction).val()];
 						}
-						var modification_url_slug, commercial_use_url_slug;
 
 						// Setting URL slugs to build the correct url
 						switch ( $(settings.form_cc_modification).val() ) {
