@@ -348,7 +348,7 @@ EOD;
 			style=\"display:none;\"
     		title=\"{$contributor->getName()}@" . get_the_title( $postid ) . "\"
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
-    		href=\"".get_permalink( $postid )."#podlove-contributor={$contributor->slug}\">
+    		href=\"".get_permalink( $postid )."#" . md5( $contributor->id . '-' .$contributor->flattr ) . "\">
 		    	Flattr {$contributor->getName()}@" . get_the_title( $postid ) . "
 		</a>";
 	}
