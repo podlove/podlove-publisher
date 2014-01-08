@@ -86,6 +86,11 @@ class RSS {
 
 		$posts_per_page = $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items;
 
+		// now override the option so WP core functions accessing the option get the "correct" value
+		add_filter('pre_option_posts_per_rss', function($_) use ($posts_per_page) {
+			return $posts_per_page;
+		});
+
 		$args = array(
 			'post_type'      => 'podcast',
 			'post__in'       => $feed->post_ids(),
