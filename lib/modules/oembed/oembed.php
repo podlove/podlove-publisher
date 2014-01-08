@@ -59,7 +59,7 @@ class oembed extends \Podlove\Modules\Base {
 							'author_name'	=> $podcast->full_title(),
 							'author_url'	=> site_url(),
 							'thumbnail_url'	=> $episode->get_cover_art_with_fallback(),
-							'html'			=> '<iframe src="' . $permalink . ( !strpos( $permalink, '?' ) ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
+							'html'			=> '<iframe src="' . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
 	}
 
 	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
@@ -69,10 +69,10 @@ class oembed extends \Podlove\Modules\Base {
 
 		if( is_single() && get_post_type( $post_id ) == 'podcast' ) {
 			echo "	<link rel='alternate' type='application/json+oembed'
- 						href='" . $permalink . ( !strpos( $permalink, '?' ) ? "?" : "&amp;" ) . "service=podlove-oembed&amp;format=json'
+ 						href='" . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) . "service=podlove-oembed&amp;format=json'
  						title='" . $title . " oEmbed Profile' />\n
 					<link rel='alternate' type='text/xml+oembed'
-  						href='" . $permalink . ( !strpos( $permalink, '?' ) ? "?" : "&amp;" ) . "service=podlove-oembed&amp;format=xml'
+  						href='" . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) . "service=podlove-oembed&amp;format=xml'
   						title='" . $title . " oEmbed Profile' />\n";
   		}
 	}
