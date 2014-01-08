@@ -153,15 +153,8 @@ class Dashboard {
 	}
 
 	public static function statistics() {
-
-		$episodes     = Model\Episode::allByTime();
-		$media_files  = Model\MediaFile::all();
-
+		$episodes = Model\Episode::allByTime();
 		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
-
-		// For Media Files the total and average file size will be calculated
-		$mediafile_total_size = 0;
-		$mediafile_counted = 0;
 
 		/*
          *	Episode Statistics
@@ -212,15 +205,20 @@ class Dashboard {
 		// Calculate average tim until next release in days
 		$average_days_between_releases = ( $counted_episodes > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0 );
 
-		/*
+		/**
          *	Media Files
 		 */
-		foreach ( $media_files as $media_file_key => $media_file) {
-			if ( $media_file->size <= 0 ) // Neglect empty files
-				continue;
+		$mediafile_total_size = 0;
+		$mediafile_counted = 0;
+		
+		foreach ($episodes as $episode) {
+			foreach ($episode->media_files() as $media_file) {
+				if ($media_file->size <= 0 ) // Neglect empty files
+					continue;
 
-			$mediafile_total_size = $mediafile_total_size + $media_file->size;
-			$mediafile_counted++;
+				$mediafile_total_size = $mediafile_total_size + $media_file->size;
+				$mediafile_counted++;
+			}
 		}
 
 		$mediafile_average_size = ( $mediafile_counted > 0 ? $mediafile_total_size / $mediafile_counted : 0 );
