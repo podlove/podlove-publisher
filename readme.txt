@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.8 =
+* fix license URLs
+
 = 1.9.7 =
 * fix and enhance dashboard statistics
 * gender statistics: use episode contributions instead of contributors for counting
