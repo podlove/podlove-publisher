@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.9.8 =
 * fix license URLs
+* add filter "podlove_enable_gzip_for_feeds" to disable gzip feed compression
 
 = 1.9.7 =
 * fix and enhance dashboard statistics
