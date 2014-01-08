@@ -55,6 +55,7 @@ class Podcast_Post_Type {
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 		add_filter( 'post_class', array( $this, 'add_post_class' ) );
+		add_filter( 'close_comments_for_post_types', array( $this, 'compatibility_with_auto_comment_closing' ) );
 
 		$version = \Podlove\get_plugin_header( 'Version' );
 		
@@ -184,6 +185,21 @@ class Podcast_Post_Type {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Add compatibility for automatic comment closing.
+	 *
+	 * WordPress has an option to automatically close commenting after some time.
+	 * By default, it only works for "post" post types. But there is a hook to
+	 * add post types.
+	 * 
+	 * @param  array $post_types
+	 * @return array            
+	 */
+	public function compatibility_with_auto_comment_closing($post_types) {
+		$post_types[] = 'podcast';
+		return $post_types;
 	}
 
 	/**

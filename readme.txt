@@ -86,6 +86,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 == Changelog ==
 
 = 1.9.8 =
+* Enhancement: WordPress has an option to close commenting for posts after a certain amount of days. This now also applies to podcast episodes.
 * fix license URLs
 * add filter "podlove_enable_gzip_for_feeds" to disable gzip feed compression
 
