@@ -81,7 +81,7 @@ class Contributors {
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo sprintf( __( 'You selected to delete the contributor "%s". Please confirm this action.', 'podlove' ), $contributor->realname ) ?>
+						<?php echo sprintf( __( 'You selected to delete the contributor "%s". Please confirm this action.', 'podlove' ), $contributor->getName() ) ?>
 					</strong>
 				</p>
 				<p>
@@ -188,7 +188,7 @@ class Contributors {
 	
 	private function edit_template() {
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
-		echo '<h3>' . sprintf( __( 'Edit Contributor: %s', 'podlove' ), $contributor->realname ) . '</h3>';
+		echo '<h3>' . sprintf( __( 'Edit Contributor: %s', 'podlove' ), $contributor->getName() ) . '</h3>';
 		$this->form_template( $contributor, 'save' );
 	}
 	
