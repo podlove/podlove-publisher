@@ -227,7 +227,7 @@ class Shortcodes {
 			$donations
 			$flattr
 		</tr>
-	<thead>
+	</thead>
 	<tbody>
 EOD;
 
@@ -281,7 +281,7 @@ EOD;
 
 			// donations
 			if ($this->settings['donations'] == 'yes')
-				$body .= '<td class="docation_cell"><ul class="podlove-donations-list">'
+				$body .= '<td class="donation_cell"><ul class="podlove-donations-list">'
 			    . $this->getXcoinButton($contributor, 'bitcoin')
 			    . $this->getXcoinButton($contributor, 'litecoin')
 			    . $this->getPayPalButton($contributor)
@@ -348,7 +348,7 @@ EOD;
 			style=\"display:none;\"
     		title=\"{$contributor->getName()}@" . get_the_title( $postid ) . "\"
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
-    		href=\"".get_permalink( $postid )."#podlove-contributor={$contributor->slug}\">
+    		href=\"".get_permalink( $postid )."#" . md5( $contributor->id . '-' .$contributor->flattr ) . "\">
 		    	Flattr {$contributor->getName()}@" . get_the_title( $postid ) . "
 		</a>";
 	}

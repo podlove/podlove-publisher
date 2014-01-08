@@ -43,7 +43,7 @@ class Contributors {
 		if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'edit' )
 			return $title;
 
-		return str_replace('Contributor', $contributor->publicname . ' &lsaquo; Contributor', $title);
+		return str_replace('Contributor', $contributor->getName() . ' &lsaquo; Contributor', $title);
 	}
 	
 	public static function get_action_link( $contributor, $title, $action = 'edit', $class = 'link' ) {
