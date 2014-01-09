@@ -240,7 +240,7 @@ div.row__podlove_meta_license_type {
 }
 
 td.podlove-avatar-column, th.podlove-avatar-column {
-	width: 45px;
+	width: 45px !important;
 }
 
 td.podlove-contributor-column {
