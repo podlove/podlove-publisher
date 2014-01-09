@@ -257,6 +257,10 @@ EOD;
 		$body = "";
 		foreach ($this->contributions as $contribution) {
 			$contributor = $contribution->getContributor();
+
+			if( !is_object( $contributor ) )
+				continue;
+
 			$body .= "<tr>";
 
 			// avatar
