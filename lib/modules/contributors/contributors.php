@@ -393,8 +393,8 @@ class Contributors extends \Podlove\Modules\Base {
 					<tr>
 						<th class="podlove-avatar-column" colspand="2">Contributor</th>
 						<th></th>
-						<th <?php echo ( $number_of_contributor_groups > 0 ? ''  : 'class="podlove-hide"' ); ?>>Group</th>
-						<th <?php echo ( $number_of_contributor_roles > 0 ? ''  : 'class="podlove-hide"' ); ?>>Role</th>
+						<?php echo ( $number_of_contributor_groups > 0 ? '<th>Group</th>'  : '' ); ?>
+						<?php echo ( $number_of_contributor_roles > 0 ? '<th>Role</th>'  : '' ); ?>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
 					</tr>
@@ -422,7 +422,8 @@ class Contributors extends \Podlove\Modules\Base {
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
 				</td>
-				<td <?php echo ( $number_of_contributor_groups > 0 ? ''  : 'class="podlove-hide"' ); ?>>
+				<?php if( $number_of_contributor_groups > 0 ) : ?>
+				<td>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
 						<?php foreach ( $contributors_groups as $group_slug => $group_title ): ?>
@@ -430,7 +431,9 @@ class Contributors extends \Podlove\Modules\Base {
 						<?php endforeach; ?>
 					</select>
 				</td>
-				<td <?php echo ( $number_of_contributor_roles > 0 ? ''  : 'class="podlove-hide"' ); ?>>
+				<?php endif; ?>
+				<?php if( $number_of_contributor_roles > 0 ) : ?>
+				<td>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
 						<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
@@ -438,6 +441,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<?php endforeach; ?>
 					</select>
 				</td>
+				<?php endif; ?>
 				<td>
 					<span class="contributor_remove">
 						<i class="clickable podlove-icon-remove"></i>
