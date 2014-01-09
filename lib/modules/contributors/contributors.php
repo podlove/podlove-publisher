@@ -84,7 +84,12 @@ class Contributors extends \Podlove\Modules\Base {
 	function feed_head_contributors() {
 		$contributor_xml = '';
 		foreach (ShowContribution::all() as $contribution) {
-			$contributor_xml .= $this->getContributorXML($contribution->getContributor());
+			$contributor = $contribution->getContributor();
+
+			if( !is_object( $contributor ) )
+				return;
+
+			$contributor_xml .= $this->getContributorXML( $contributor );
 		}	
 		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );	
 	}
@@ -92,7 +97,12 @@ class Contributors extends \Podlove\Modules\Base {
 	function feed_item_contributors($podcast, $episode, $feed, $format) {
 		$contributor_xml = '';
 		foreach (EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
-			$contributor_xml .= $this->getContributorXML($contribution->getContributor());
+			$contributor = $contribution->getContributor();
+
+			if( !is_object( $contributor ) )
+				return;
+
+			$contributor_xml .= $this->getContributorXML( $contributor );
 		}
 		echo apply_filters( 'podlove_feed_contributors', $contributor_xml );
 	}
