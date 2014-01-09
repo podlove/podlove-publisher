@@ -476,7 +476,11 @@ class Contributors extends \Podlove\Modules\Base {
 						}
 					}
 
-					return array( 'id' => $c->contributor_id, 'role' => $role, 'group' => $group );
+					if( is_object( \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $c->contributor_id ) ) )
+						return array( 'id' => $c->contributor_id, 'role' => $role, 'group' => $group );
+
+					return '';
+
 				}, $current_contributions)); ?>;
 
 				PODLOVE.Contributors = <?php echo json_encode($cjson); ?>;
@@ -569,7 +573,8 @@ class Contributors extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 
 						$.each(existing_contributions, function(index, contributor) {
-							add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group);
+							if( contributor !== '' )
+								add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group);
 						});
 
 						$("#contributors_table_body td").each(function(){
