@@ -48,6 +48,10 @@ i.rotate {
 
 .podlove-contributor-edit { display: none; }
 
+.podlove-hide {
+  display: none !important;
+}
+
 /* Dashboard */
 
 div.podlove-dashboard-statistics-wrapper {

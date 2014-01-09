@@ -216,12 +216,14 @@ class Contributors extends \Podlove\Modules\Base {
 		foreach ($_POST["episode_contributor"] as $contributor_appearance) {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
 				$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-				$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
-				$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
+				if( !empty( $contributor['role'] ) )
+					$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
+				if( !empty( $contributor['group'] ) )
+					$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
 				$c->episode_id = $episode->id;
 				$c->contributor_id = $contributor_id;
 				$c->position = $position++;
-				$c->save();				
+				$c->save();		
 			}
 		}
 	}
@@ -332,6 +334,9 @@ class Contributors extends \Podlove\Modules\Base {
 		$contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::selectOptions();
 		$cjson = array();
 
+		$number_of_contributor_roles = count( $contributors_roles );
+		$number_of_contributor_groups = count( $contributors_groups );
+
 		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
 			$show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all( "WHERE `contributor_id` = " . $contributor->id );
 			if( empty( $show_contributions ) ) { 
@@ -378,8 +383,8 @@ class Contributors extends \Podlove\Modules\Base {
 					<tr>
 						<th class="podlove-avatar-column" colspand="2">Contributor</th>
 						<th></th>
-						<th>Group</th>
-						<th>Role</th>
+						<th <?php echo ( $number_of_contributor_groups > 0 ? ''  : 'class="podlove-hide"' ); ?>>Group</th>
+						<th <?php echo ( $number_of_contributor_roles > 0 ? ''  : 'class="podlove-hide"' ); ?>>Role</th>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
 					</tr>
@@ -407,7 +412,7 @@ class Contributors extends \Podlove\Modules\Base {
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
 				</td>
-				<td>
+				<td <?php echo ( $number_of_contributor_groups > 0 ? ''  : 'class="podlove-hide"' ); ?>>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
 						<?php foreach ( $contributors_groups as $group_slug => $group_title ): ?>
@@ -415,7 +420,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<?php endforeach; ?>
 					</select>
 				</td>
-				<td>
+				<td <?php echo ( $number_of_contributor_roles > 0 ? ''  : 'class="podlove-hide"' ); ?>>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
 						<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
