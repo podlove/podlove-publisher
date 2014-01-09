@@ -629,7 +629,8 @@ class Contributors extends \Podlove\Modules\Base {
 	        	foreach ($contributors as $contributor_id => $contributor) {
 	        		$contributor_details = $contributor->getContributor();
 
-	        		$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->getName()."</a>, ";
+	        		if( is_object( $contributor_details ) )
+	        			$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->getName()."</a>, ";
 	        	}
 
 	        	echo substr($contributor_list, 0, -2);
