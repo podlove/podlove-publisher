@@ -89,7 +89,7 @@ class License {
 			
 			return "
 			<div class=\"podlove_cc_license\">
-				<img src=\"" . $this->getPictureUrl() . "\" />
+				<img src=\"" . $this->getPictureUrl() . "\" alt=\"License\" />
 				<p>
 					This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by" . $url_slugs['allow_commercial_use'] . $url_slugs['allow_modifications'] . "/" . $version . "/" . $locale . "deed.en\">Creative Commons Attribution " . $version . " " . $name . " License</a>.
 				</p>
