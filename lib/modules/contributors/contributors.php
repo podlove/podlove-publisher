@@ -55,8 +55,8 @@ class Contributors extends \Podlove\Modules\Base {
 		$contributions_count = count($contributions);
 
 		$absolute_gender_numbers = array(
-			'female' => count(array_filter($contributions, function($c) { return is_object($c->getContributor()) ? $c->getContributor()->gender == 'female' : false })),
-			'male'   => count(array_filter($contributions, function($c) { return is_object($c->getContributor()) ? $c->getContributor()->gender == 'male' : false }))
+			'female' => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'female'); })),
+			'male'   => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'male'); }))
 		);
 
 		$relative_gender_numbers = array_map(function($abs) use ($contributions_count) {
