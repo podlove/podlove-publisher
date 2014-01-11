@@ -270,7 +270,7 @@ EOD;
 
 			// name, role and group
 			$body .= '<td class="title_cell">';
-			$body .= $this->wrapWithLink($contributor, $contributor->getPublicName());
+			$body .= $this->wrapWithLink($contributor, $contributor->getName());
 
 			if ($this->settings['roles'] == 'yes' && $role = $contribution->getRole())
 				$body .= '<br /><em>' . $role->title . '</em>';

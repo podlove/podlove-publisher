@@ -17,14 +17,6 @@ class Contributor extends Base
 		}
 	}
 
-	public function getPublicName() {
-		if ($this->publicname) {
-			return $this->publicname;
-		} else {
-			return $this->nickname;
-		}
-	}
-
 	public function getAvatar($size) {
 		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
 	}
