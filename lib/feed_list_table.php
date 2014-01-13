@@ -30,6 +30,7 @@ class Feed_List_Table extends \Podlove\List_Table {
 	
 	public function column_limit( $feed ) {
 		// FIXME: Feeds verschwinden beim Speichern!!!
+		$podlove_feed_limit = \Podlove\Model\Podcast::get_instance()->limit_items;
 		switch ($feed->limit_items) {
 			case '0':
 				return get_option( 'posts_per_rss' ) . ' (WordPress default)';
@@ -38,7 +39,8 @@ class Feed_List_Table extends \Podlove\List_Table {
 				return 'unlimited';
 				break;
 			case '-2':
-				return \Podlove\Model\Podcast::get_instance()->limit_items . ' (global default)';
+				return ( $podlove_feed_limit == '-1' ? 'unlimited' : ( $podlove_feed_limit == '0' ? get_option( 'posts_per_rss' ) . ' (WordPress default)' : $podlove_feed_limit ) )  
+				 	   . ' (global default)';
 				break;
 			default:
 				return $feed->limit_items;

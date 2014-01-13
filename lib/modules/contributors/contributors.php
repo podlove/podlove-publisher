@@ -55,8 +55,8 @@ class Contributors extends \Podlove\Modules\Base {
 		$contributions_count = count($contributions);
 
 		$absolute_gender_numbers = array(
-			'female' => count(array_filter($contributions, function($c) { return $c->getContributor()->gender == 'female'; })),
-			'male'   => count(array_filter($contributions, function($c) { return $c->getContributor()->gender == 'male'; }))
+			'female' => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'female'); })),
+			'male'   => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'male'); }))
 		);
 
 		$relative_gender_numbers = array_map(function($abs) use ($contributions_count) {
@@ -84,7 +84,12 @@ class Contributors extends \Podlove\Modules\Base {
 	function feed_head_contributors() {
 		$contributor_xml = '';
 		foreach (ShowContribution::all() as $contribution) {
-			$contributor_xml .= $this->getContributorXML($contribution->getContributor());
+			$contributor = $contribution->getContributor();
+
+			if( !is_object( $contributor ) )
+				return;
+
+			$contributor_xml .= $this->getContributorXML( $contributor );
 		}	
 		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );	
 	}
@@ -92,7 +97,12 @@ class Contributors extends \Podlove\Modules\Base {
 	function feed_item_contributors($podcast, $episode, $feed, $format) {
 		$contributor_xml = '';
 		foreach (EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
-			$contributor_xml .= $this->getContributorXML($contribution->getContributor());
+			$contributor = $contribution->getContributor();
+
+			if( !is_object( $contributor ) )
+				return;
+
+			$contributor_xml .= $this->getContributorXML( $contributor );
 		}
 		echo apply_filters( 'podlove_feed_contributors', $contributor_xml );
 	}
@@ -216,12 +226,14 @@ class Contributors extends \Podlove\Modules\Base {
 		foreach ($_POST["episode_contributor"] as $contributor_appearance) {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
 				$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-				$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
-				$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
+				if( !empty( $contributor['role'] ) )
+					$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
+				if( !empty( $contributor['group'] ) )
+					$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
 				$c->episode_id = $episode->id;
 				$c->contributor_id = $contributor_id;
 				$c->position = $position++;
-				$c->save();				
+				$c->save();		
 			}
 		}
 	}
@@ -332,6 +344,9 @@ class Contributors extends \Podlove\Modules\Base {
 		$contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::selectOptions();
 		$cjson = array();
 
+		$has_roles = count( $contributors_roles );
+		$has_groups = count( $contributors_groups );
+
 		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
 			$show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all( "WHERE `contributor_id` = " . $contributor->id );
 			if( empty( $show_contributions ) ) { 
@@ -378,8 +393,8 @@ class Contributors extends \Podlove\Modules\Base {
 					<tr>
 						<th class="podlove-avatar-column" colspand="2">Contributor</th>
 						<th></th>
-						<th>Group</th>
-						<th>Role</th>
+						<?php echo ( $has_groups > 0 ? '<th>Group</th>'  : '' ); ?>
+						<?php echo ( $has_roles > 0 ? '<th>Role</th>'  : '' ); ?>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
 					</tr>
@@ -407,6 +422,7 @@ class Contributors extends \Podlove\Modules\Base {
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
 				</td>
+				<?php if( $has_groups > 0 ) : ?>
 				<td>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
@@ -415,6 +431,8 @@ class Contributors extends \Podlove\Modules\Base {
 						<?php endforeach; ?>
 					</select>
 				</td>
+				<?php endif; ?>
+				<?php if( $has_roles > 0 ) : ?>
 				<td>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
@@ -423,6 +441,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<?php endforeach; ?>
 					</select>
 				</td>
+				<?php endif; ?>
 				<td>
 					<span class="contributor_remove">
 						<i class="clickable podlove-icon-remove"></i>
@@ -461,7 +480,11 @@ class Contributors extends \Podlove\Modules\Base {
 						}
 					}
 
-					return array( 'id' => $c->contributor_id, 'role' => $role, 'group' => $group );
+					if( is_object( \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $c->contributor_id ) ) )
+						return array( 'id' => $c->contributor_id, 'role' => $role, 'group' => $group );
+
+					return '';
+
 				}, $current_contributions)); ?>;
 
 				PODLOVE.Contributors = <?php echo json_encode($cjson); ?>;
@@ -554,7 +577,8 @@ class Contributors extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 
 						$.each(existing_contributions, function(index, contributor) {
-							add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group);
+							if( contributor !== '' )
+								add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group);
 						});
 
 						$("#contributors_table_body td").each(function(){
@@ -609,7 +633,8 @@ class Contributors extends \Podlove\Modules\Base {
 	        	foreach ($contributors as $contributor_id => $contributor) {
 	        		$contributor_details = $contributor->getContributor();
 
-	        		$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->getName()."</a>, ";
+	        		if( is_object( $contributor_details ) )
+	        			$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->getName()."</a>, ";
 	        	}
 
 	        	echo substr($contributor_list, 0, -2);

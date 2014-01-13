@@ -9,7 +9,11 @@ class Contributor extends Base
 		if ($this->publicname) {
 			return $this->publicname;
 		} else {
-			return $this->realname;
+			if ($this->realname) {
+				return $this->realname;
+			} else {
+				return $this->nickname;
+			}
 		}
 	}
 
