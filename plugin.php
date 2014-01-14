@@ -295,23 +295,27 @@ add_action( 'plugins_loaded', function () {
 
 // fire activation and deactivation hooks for modules
 add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val ) {
-	$deactivated_module = current( array_keys( array_diff_assoc( $old_val, $new_val ) ) );
-	$activated_module   = current( array_keys( array_diff_assoc( $new_val, $old_val ) ) );
+	$deactivated_modules = array_keys( array_diff_assoc( $old_val, $new_val ) );
+	$activated_modules   = array_keys( array_diff_assoc( $new_val, $old_val ) );
 
-	if ( $deactivated_module ) {
-		Log::get()->addInfo( 'Deactivate module "' . $deactivated_module . '"' );
-		do_action( 'podlove_module_was_deactivated', $deactivated_module );
-		do_action( 'podlove_module_was_deactivated_' . $deactivated_module );
-	} elseif ( $activated_module ) {
-		Log::get()->addInfo( 'Activate module "' . $activated_module . '"' );
+	if ( $deactivated_modules ) {
+		foreach ($deactivated_modules as $deactivated_module) {
+			Log::get()->addInfo( 'Deactivate module "' . $deactivated_module . '"' );
+			do_action( 'podlove_module_was_deactivated', $deactivated_module );
+			do_action( 'podlove_module_was_deactivated_' . $deactivated_module );
+		}
+	} elseif ( $activated_modules ) {
+		foreach ($activated_modules as $activated_module) {
+			Log::get()->addInfo( 'Activate module "' . $activated_module . '"' );
 
-		// init module before firing hooks
-		$class = Modules\Base::get_class_by_module_name( $activated_module );
-		if ( class_exists( $class ) )
-			$class::instance()->load();
+			// init module before firing hooks
+			$class = Modules\Base::get_class_by_module_name( $activated_module );
+			if ( class_exists( $class ) )
+				$class::instance()->load();
 
-		do_action( 'podlove_module_was_activated', $activated_module );
-		do_action( 'podlove_module_was_activated_' . $activated_module );
+			do_action( 'podlove_module_was_activated', $activated_module );
+			do_action( 'podlove_module_was_activated_' . $activated_module );
+		}
 	}
 }, 10, 2 );
 
