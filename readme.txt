@@ -93,6 +93,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix feed paging issue
 * Fix: Feed Item Limit is now displayed correctly
 * Fix: Ignore deleted contributors if they were assigned to an Episode or Podcast
+* Fix: activation / deactivation of multiple modules at once works as expected now
 * add filter "podlove_enable_gzip_for_feeds" to disable gzip feed compression
 * Contributor role and group columns will be hidden if no roles or groups were added
 
