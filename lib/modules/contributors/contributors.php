@@ -344,8 +344,8 @@ class Contributors extends \Podlove\Modules\Base {
 		$contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::selectOptions();
 		$cjson = array();
 
-		$has_roles = count( $contributors_roles );
-		$has_groups = count( $contributors_groups );
+		$has_roles  = count( $contributors_roles ) > 0;
+		$has_groups = count( $contributors_groups ) > 0;
 
 		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
 			$show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all( "WHERE `contributor_id` = " . $contributor->id );
@@ -393,8 +393,8 @@ class Contributors extends \Podlove\Modules\Base {
 					<tr>
 						<th class="podlove-avatar-column" colspand="2">Contributor</th>
 						<th></th>
-						<?php echo ( $has_groups > 0 ? '<th>Group</th>'  : '' ); ?>
-						<?php echo ( $has_roles > 0 ? '<th>Role</th>'  : '' ); ?>
+						<?php echo ( $has_groups ? '<th>Group</th>'  : '' ); ?>
+						<?php echo ( $has_roles ? '<th>Role</th>'  : '' ); ?>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
 					</tr>
@@ -422,7 +422,7 @@ class Contributors extends \Podlove\Modules\Base {
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
 				</td>
-				<?php if( $has_groups > 0 ) : ?>
+				<?php if( $has_groups ) : ?>
 				<td>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
@@ -432,7 +432,7 @@ class Contributors extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<?php endif; ?>
-				<?php if( $has_roles > 0 ) : ?>
+				<?php if( $has_roles ) : ?>
 				<td>
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 						<option value=""><?php echo __( '- none -', 'podlove' ) ?></option>
