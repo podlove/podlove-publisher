@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.9 =
+* Fix: several contributor episode form bugs
+* Fix: sum of all media file sizes in dashboard statistics
+
 = 1.9.8 =
 * Enhancement: WordPress has an option to close commenting for posts after a certain amount of days. This now also applies to podcast episodes.
 * Enhancement: Fallback for Contributor Names.
