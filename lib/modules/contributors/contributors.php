@@ -350,7 +350,7 @@ class Contributors extends \Podlove\Modules\Base {
 		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
 			$show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all( "WHERE `contributor_id` = " . $contributor->id );
 			if( empty( $show_contributions ) ) { 
-				$cjson[] = array(
+				$cjson[$contributor->id] = array(
 					'id'   => $contributor->id,
 					'slug' => $contributor->slug,
 					'role' => '',
@@ -364,7 +364,7 @@ class Contributors extends \Podlove\Modules\Base {
 						($role_data == "" ? $role = '' : $role = $role_data->id );
 					$group_data = ContributorGroup::find_one_by_id($show_contribution->group_id);
 						($group_data == "" ? $group = '' : $group = $group_data->id );
-					$cjson[] = array(
+					$cjson[$contributor->id] = array(
 						'id'   => $contributor->id,
 						'slug' => $contributor->slug,
 						'role' => $role,
@@ -487,7 +487,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 				}, $current_contributions)); ?>;
 
-				PODLOVE.Contributors = <?php echo json_encode($cjson); ?>;
+				PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
 				PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";
 
 				(function($) {
@@ -498,8 +498,10 @@ class Contributors extends \Podlove\Modules\Base {
 					}
 
 					function fetch_contributor(contributor_id) {
+						contributor_id = parseInt(contributor_id, 10);
+
 						return $.grep(PODLOVE.Contributors, function(contributor, index) {
-								return contributor.id == contributor_id;
+							return parseInt(contributor.id, 10) === contributor_id;
 						})[0]; // Using [0] as the returned element has multiple indexes
 					}
 
@@ -577,7 +579,7 @@ class Contributors extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 
 						$.each(existing_contributions, function(index, contributor) {
-							if( contributor !== '' )
+							if (contributor)
 								add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group);
 						});
 
