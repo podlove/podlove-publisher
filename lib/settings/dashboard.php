@@ -154,6 +154,7 @@ class Dashboard {
 
 	public static function statistics() {
 		$episodes = Model\Episode::allByTime();
+		$valid_episodes = array_filter($episodes, function($e) { return $e->is_valid(); });
 		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
 
 		/*
@@ -170,10 +171,7 @@ class Dashboard {
 			'draft' => 0,
 		);
 
-		foreach ( $episodes as $episode_key => $episode ) {
-
-			if ( !$episode->is_valid() )
-				continue;
+		foreach ( $valid_episodes as $episode_key => $episode ) {
 
 			$post = get_post( $episode->post_id );
 			$counted_episodes++;
@@ -208,24 +206,19 @@ class Dashboard {
 		/**
          *	Media Files
 		 */
-		$mediafile_total_size = 0;
-		$mediafile_counted = 0;
-		
-		foreach ($episodes as $episode) {
+		$episodes_to_media_files = function ($media_files, $episode) {
+			return array_merge($media_files, $episode->media_files());
+		};
+		$media_files       = array_reduce($valid_episodes, $episodes_to_media_files, array());
+		$valid_media_files = array_filter($media_files, function($m) { return $m->size > 0; });
 
-			if ( !$episode->is_valid() )
-				continue;
+		$sum_mediafile_sizes = function ($result, $media_file) {
+	        return $result + $media_file->size;
+	    };
+		$mediafile_total_size = array_reduce( $valid_media_files, $sum_mediafile_sizes, 0 );
+		$mediafile_count      = count($valid_media_files);
 
-			foreach ($episode->media_files() as $media_file) {
-				if ($media_file->size <= 0 ) // Neglect empty files
-					continue;
-
-				$mediafile_total_size = $mediafile_total_size + $media_file->size;
-				$mediafile_counted++;
-			}
-		}
-
-		$mediafile_average_size = ( $mediafile_counted > 0 ? $mediafile_total_size / $mediafile_counted : 0 );
+		$mediafile_average_size = $mediafile_count > 0 ? $mediafile_total_size / $mediafile_count : 0;
 		?>
 		<div class="podlove-dashboard-statistics-wrapper">
 			<h4>Episodes</h4>
