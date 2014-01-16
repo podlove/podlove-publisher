@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.9.9 =
 * Fix: several contributor episode form bugs
 * Fix: sum of all media file sizes in dashboard statistics
+* Add lost bugfix: Bundle crt file to avoid StartSSL trust issues.
 
 = 1.9.8 =
 * Enhancement: WordPress has an option to close commenting for posts after a certain amount of days. This now also applies to podcast episodes.
