@@ -212,6 +212,10 @@ class Dashboard {
 		$mediafile_counted = 0;
 		
 		foreach ($episodes as $episode) {
+
+			if ( !$episode->is_valid() )
+				continue;
+
 			foreach ($episode->media_files() as $media_file) {
 				if ($media_file->size <= 0 ) // Neglect empty files
 					continue;
