@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.9.10 =
 * Fix: episode images when using manual entry
+* Fix: do not include episodes in blog feed
 
 = 1.9.9 =
 * Fix: several contributor episode form bugs

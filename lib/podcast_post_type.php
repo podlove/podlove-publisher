@@ -166,9 +166,6 @@ class Podcast_Post_Type {
 			wp_enqueue_script( 'podlove_frontend' );
 		}
 
-		add_filter( 'request', array( $this, 'add_post_type_to_feeds' ) );
-		
-
 		add_filter( 'get_the_excerpt', array( $this, 'default_excerpt_to_episode_summary' ) );
 	}
 
@@ -257,33 +254,6 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Support( self::SETTINGS_PAGE_HANDLE );
-	}
-
-	/**
-	 * Add Custom Post Type to all WordPress Feeds.
-	 *
-	 * @todo  is this a good idea at all?
-	 *
-	 * @param array $query_var
-	 * @return array
-	 */
-	function add_post_type_to_feeds( $query_var ) {
-
-		if ( isset( $query_var['feed'] ) ) {
-
-			$extend = array(
-				'post' => 'post',
-				'podcast' => 'podcast'
-			);
-
-			if ( empty( $query_var['post_type'] ) || ! is_array( $query_var['post_type'] ) ) {
-				$query_var['post_type'] = $extend;
-			} else {
-				$query_var['post_type'] = array_merge( $query_var['post_type'], $extend );
-			}
-		}
-
-		return $query_var;
 	}
 
 	/**
