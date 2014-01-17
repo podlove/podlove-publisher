@@ -204,7 +204,7 @@ class Dashboard {
 		$average_days_between_releases = ( $counted_episodes > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0 );
 
 		/**
-         *	Media Files
+		 *	Media Files
 		 */
 		$episodes_to_media_files = function ($media_files, $episode) {
 			return array_merge($media_files, $episode->media_files());
@@ -213,8 +213,8 @@ class Dashboard {
 		$valid_media_files = array_filter($media_files, function($m) { return $m->size > 0; });
 
 		$sum_mediafile_sizes = function ($result, $media_file) {
-	        return $result + $media_file->size;
-	    };
+			return $result + $media_file->size;
+		};
 		$mediafile_total_size = array_reduce( $valid_media_files, $sum_mediafile_sizes, 0 );
 		$mediafile_count      = count($valid_media_files);
 
