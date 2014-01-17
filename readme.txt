@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.10 =
+* Fix: episode images when using manual entry
+
 = 1.9.9 =
 * Fix: several contributor episode form bugs
 * Fix: sum of all media file sizes in dashboard statistics

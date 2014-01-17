@@ -140,9 +140,9 @@ class Episode extends Base implements Licensable {
 		$podcast = Podcast::get_instance();
 		$asset_assignment = AssetAssignment::get_instance();
 
-		if ( $asset_assignment->image == 0 )
+		if ( ! $asset_assignment->image )
 			return;
-
+		
 		if ( $asset_assignment->image == 'manual' )
 			return $this->cover_art;
 
