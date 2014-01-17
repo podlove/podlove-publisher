@@ -305,11 +305,11 @@ function episode_license() {
 add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
 
 function feed_list() {
-	return \Podlove\Template\TwigFilter::apply_to_html(\Podlove\load_template('defaults/feed-list.twig'));
+	return \Podlove\Template\TwigFilter::apply_to_html(\Podlove\load_template('shortcode/feed-list.twig'));
 }
 add_shortcode( 'podlove-feed-list', '\Podlove\feed_list' );
 
 function episode_list() {
-	return \Podlove\Template\TwigFilter::apply_to_html(\Podlove\load_template('defaults/episode-list.twig'));
+	return \Podlove\Template\TwigFilter::apply_to_html(\Podlove\load_template('shortcode/episode-list.twig'));
 }
 add_shortcode( 'podlove-episode-list', '\Podlove\episode_list' );
