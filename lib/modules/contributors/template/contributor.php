@@ -33,7 +33,7 @@ class Contributor extends Wrapper {
 	 * 
 	 * @accessor
 	 */
-	public function public() {
+	public function isPublic() {
 		return (bool) $this->contributor->public;
 	}
 

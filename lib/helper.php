@@ -166,6 +166,15 @@ function require_code_mirror() {
     wp_enqueue_style( 'podlove-codemirror-hint-css' );
 }
 
+function load_template($path) {
+	$full_path = trailingslashit(\Podlove\PLUGIN_DIR) . 'templates/' . $path;
+	if (file_exists($full_path)) {
+		return file_get_contents($full_path);
+	} else {
+		return false;
+	}
+}
+
 namespace Podlove\Form;
 
 /**

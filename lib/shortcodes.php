@@ -303,3 +303,13 @@ function episode_license() {
 	return $episode->get_license_html();
 }
 add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
+
+function feed_list() {
+	return \Podlove\Template\TwigFilter::apply_to_html(\Podlove\load_template('defaults/feed-list.twig'));
+}
+add_shortcode( 'podlove-feed-list', '\Podlove\feed_list' );
+
+function episode_list() {
+	return \Podlove\Template\TwigFilter::apply_to_html(\Podlove\load_template('defaults/episode-list.twig'));
+}
+add_shortcode( 'podlove-episode-list', '\Podlove\episode_list' );
