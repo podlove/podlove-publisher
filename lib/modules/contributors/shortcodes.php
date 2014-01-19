@@ -13,8 +13,6 @@ class Shortcodes {
 	 */
 	private $contributions = array();
 
-	private $id;
-
 	/**
 	 * Shortcode settings.
 	 */
@@ -92,23 +90,12 @@ class Shortcodes {
 			'title'     => ''
 		);
 
-		$this->id = null; // reset id
-
 		if (!is_array($attributes))
 			$attributes = array();
 
 		$this->settings = array_merge($defaults, $attributes);
 
 		return $this->renderListOfContributors();
-	}
-
-	private function getId() {
-		if ($this->id) {
-			return $this->id;
-		} else {
-			$this->id = 'contrib_' . substr(md5(mt_rand()),0,8);
-			return $this->id;
-		}
 	}
 
 	/**
@@ -128,8 +115,6 @@ class Shortcodes {
 	}
 
 	private function renderListOfContributors() {
-
-		$this->id = null; // reset id
 
 		// fetch contributions
 		if ($episode = Model\Episode::get_current()) {
@@ -187,7 +172,7 @@ class Shortcodes {
 			     . '</li>';
 		}
 
-		$html = '<ul id="' . $this->getId() . '" class="podlove-contributors">';
+		$html = '<ul class="podlove-contributors">';
 		$html.= implode("\n\t", $list);
 		$html.= '</ul>';
 
@@ -205,7 +190,7 @@ class Shortcodes {
 			     . '</span>';
 		}
 
-		$html = '<span id="' . $this->getId() . '" class="podlove-contributors">';
+		$html = '<span class="podlove-contributors">';
 		$html.= implode(", ", $list);
 		$html.= '</span>';
 
@@ -217,10 +202,9 @@ class Shortcodes {
 		$donations = $this->settings['donations'] == 'yes' ? '<th></th>' : '';
 		$flattr = $this->settings['flattr'] == 'yes' ? '<th></th>' : '';
 		$title = $this->settings['title'];
-		$id = $this->getId();
 
 		$before = <<<EOD
-<table id="$id" class="podlove-contributors-table">
+<table class="podlove-contributors-table">
 	<thead>
 		<tr>
 			<th colspan="3">$title</th>
