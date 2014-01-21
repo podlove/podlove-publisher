@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: episode images when using manual entry
 * Fix: do not include episodes in blog feed
 * Fix: paged feed calculation of number of pages when using global Publisher default
+* Fix: remove unused IDs from contributor lists
 
 = 1.9.9 =
 * Fix: several contributor episode form bugs
