@@ -166,10 +166,18 @@ function require_code_mirror() {
     wp_enqueue_style( 'podlove-codemirror-hint-css' );
 }
 
+/**
+ * Load template file.
+ * 
+ * @param  string $path absolute or path relative to /templates
+ * @return string       file contents
+ */
 function load_template($path) {
-	$full_path = trailingslashit(\Podlove\PLUGIN_DIR) . 'templates/' . $path;
-	if (file_exists($full_path)) {
-		return file_get_contents($full_path);
+	if (!file_exists($path))
+		$path = trailingslashit(\Podlove\PLUGIN_DIR) . 'templates/' . $path;
+
+	if (file_exists($path)) {
+		return file_get_contents($path);
 	} else {
 		return false;
 	}

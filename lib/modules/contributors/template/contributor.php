@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Contributors\Template;
 
 use Podlove\Template\Wrapper;
+use Podlove\Template\Episode;
 
 /**
  * Contributor Template Wrapper
@@ -34,7 +35,7 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function isPublic() {
-		return (bool) $this->contributor->public;
+		return (bool) $this->contributor->showpublic;
 	}
 
 	/**
@@ -246,12 +247,13 @@ class Contributor extends Wrapper {
 		$episodes = array();
 
 		foreach ($this->contributor->getContributions() as $contribution) {
-			if ($episode = $contribution->getEpisode()) {
-				$episodes[] = new Episode($episode);
+			$episode = $contribution->getEpisode();
+			if ($episode && !in_array($episode->id, array_keys($episodes))) {
+				$episodes[$episode->id] = new Episode($episode);
 			}
 		}
 
-		return $episodes;
+		return array_values($episodes);
 	}
 
 }

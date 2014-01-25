@@ -16,6 +16,8 @@ class TwigFilter {
 		$twig   = new \Twig_Environment($loader, array('autoescape' => false));
 		$twig->addFilter(self::subtemplating_filter($twig));
 
+		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
+
 		// add podcast to global context
 		$context = array(
 			'podcast' => new Podcast(Model\Podcast::get_instance())

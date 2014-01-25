@@ -25,6 +25,13 @@ class Shortcodes {
 		add_shortcode( 'podlove-contributor-list', array( $this, 'podlove_contributor_list') );
 		// display a table/list of podcast contributors
 		add_shortcode( 'podlove-podcast-contributor-list', array( $this, 'podlove_podcast_contributor_list') );
+
+		add_shortcode( 'podlove-global-contributor-list', array( $this, 'global_contributor_list') );
+	}
+
+	public function global_contributor_list() {
+		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-list.twig');
+		return \Podlove\Template\TwigFilter::apply_to_html($tpl);
 	}
 
 	/**

@@ -1,0 +1,94 @@
+{% macro social(href, title, icon) %}
+    <li>
+    	<a href="{{ href }}" target="_blank" title="{{ title }}">
+    		<img width="32" height="32" src="{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}" class="podlove-contributor-button" alt="{{ title }}" />
+    	</a>
+    </li>
+{% endmacro %}
+
+{# imports the macro above #}
+{% import _self as helper %}
+
+<table class="podlove-global-contributors">
+	<thead>
+		<tr>
+			<th colspan="4"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for contributor in podcast.contributors %}
+			{% if contributor.public %}
+				<tr>
+					<td class="avatar-cell">
+						{{ contributor.avatar }}
+					</td>
+					<td>
+						{{ contributor.name }}
+						{% if contributor.role %}
+							<br><em>{{ contributor.role }}</em>
+						{% endif %}
+					</td>
+					<td class="social_cell">
+						<ul class="podlove-social-list">
+							{% if contributor.publicemail %}
+								{{ helper.social("mailto:" ~ contributor.publicemail, "E-Mail", "email-128.png") }}
+							{% endif %}
+							{% if contributor.website %}
+								{{ helper.social(contributor.website, "Homepage", "www-128.png") }}
+							{% endif %}
+							{% if contributor.adn %}
+								{{ helper.social(contributor.adn, "App.net", "adn-128.png") }}
+							{% endif %}
+							{% if contributor.twitter %}
+								{{ helper.social(contributor.twitter, "Twitter", "twitter-128.png") }}
+							{% endif %}
+							{% if contributor.facebook %}
+								{{ helper.social(contributor.facebook, "Facebook", "facebook-128.png") }}
+							{% endif %}
+						<ul>
+					</td>
+					<td class="episodes-cell">
+						{% set episodeCount = contributor.episodes|length %}
+						{% trans %}
+						    {{ episodeCount }} Episode:
+						{% plural episodeCount %}
+						    {{ episodeCount }} Episodes:
+						{% endtrans %}
+						
+						<ul>
+						{% for episode in contributor.episodes %}
+							<li>
+								<a href="{{ episode.url }}">{{ episode.title }}</a>
+							</li>
+						{% endfor %}
+						</ul>
+					</td>
+				</tr>
+			{% endif %}
+		{% endfor %}
+	</tbody>
+</table>
+
+<style type="text/css">
+.podlove-global-contributors td {
+	vertical-align: top;
+	line-height: 1.3em;
+}
+
+.podlove-global-contributors .avatar-cell {
+	width: 50px;
+}
+
+.podlove-global-contributors td ul {
+	margin: 0;
+}
+
+.podlove-global-contributors .social_cell li {
+	margin: 0;
+}
+
+.podlove-global-contributors .episodes-cell li {
+	display: inline-block;
+	margin: 0;
+}
+</style>
