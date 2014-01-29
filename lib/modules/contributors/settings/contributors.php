@@ -226,12 +226,6 @@ class Contributors {
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
-			$wrapper->string( 'slug', array(
-				'label'       => __( 'ID', 'podlove' ),
-				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
-				'html'        => array( 'class' => 'required podlove-contributor-field' )
-			) );
-
 			$wrapper->select( 'gender', array(
 				'label'       => __( 'Gender', 'podlove' ),
 				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
@@ -243,16 +237,22 @@ class Contributors {
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
+			$wrapper->string( 'slug', array(
+				'label'       => __( 'ID', 'podlove' ),
+				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
+				'html'        => array( 'class' => 'required podlove-contributor-field' )
+			) );
+
 			$wrapper->string( 'guid', array(
 				'label'       => __( 'URI', 'podlove' ),
 				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove'),
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );		
 
-			$wrapper->checkbox( 'showpublic', array(
-				'label'       => __( 'Public Profile', 'podlove' ),
-				'description' => 'Check this, if you want the contributor\'s profile to appear e.g. in the Web Player.',
-				'default'     => true
+			$wrapper->radio( 'visibility', array(
+				'label'       => __( 'Visibility', 'podlove' ),
+				'description' => '<br />Check this, if you want the contributor\'s profile to appear e.g. in the Web Player.',
+				'options'	  => array( '1' => 'Yes', '0' => 'No' )
 			) );
 
 			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );
@@ -302,7 +302,13 @@ class Contributors {
 				'label'       => __( 'Twitter', 'podlove' ),
 				'description' => 'Twitter username.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );				
+			) );	
+
+			$wrapper->string( 'googleplus', array(
+				'label'       => __( 'Google+', 'podlove' ),
+				'description' => 'Google+ URL.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
+			) );			
 			
 			$wrapper->string( 'facebook', array(
 				'label'       => __( 'Facebook', 'podlove' ),

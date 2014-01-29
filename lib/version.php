@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 53 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 54 );
 
 add_action( 'init', function () {
 	
@@ -526,6 +526,18 @@ function run_migrations_for_version( $version ) {
 				$post = get_post( $episode->post_id );
 				if ( $post->post_status == 'publish' )
 					update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+			}
+		break;
+		case 54:
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `googleplus` TEXT AFTER `ADN`',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` CHANGE COLUMN `showpublic` `visibility` TINYINT(1)',
+					\Podlove\Modules\Contributors\Model\Contributor::table_name()
+				) );
 			}
 		break;
 	}

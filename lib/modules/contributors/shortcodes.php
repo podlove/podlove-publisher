@@ -416,6 +416,12 @@ EOD;
 				'url_template' => 'http://facebook.com/%s',
 				'title' => 'Facebook',
 				'icon' => 'facebook-128.png'
+			),
+			array(
+				'key' => 'googleplus',
+				'url_template' => '%s',
+				'title' => 'Google+',
+				'icon' => 'googleplus-128.png'
 			)
 		);
 	}

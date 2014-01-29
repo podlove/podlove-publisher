@@ -26,3 +26,4 @@ ShowContribution::property( 'show_id', 'INT' );
 ShowContribution::property( 'role_id', 'INT' );
 ShowContribution::property( 'group_id', 'INT' );
 ShowContribution::property( 'position', 'FLOAT' );
+ShowContribution::property( 'comment', 'TEXT' );

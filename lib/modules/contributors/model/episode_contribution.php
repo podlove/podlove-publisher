@@ -41,3 +41,4 @@ EpisodeContribution::property( 'episode_id', 'INT' );
 EpisodeContribution::property( 'role_id', 'INT' );
 EpisodeContribution::property( 'group_id', 'INT' );
 EpisodeContribution::property( 'position', 'FLOAT' );
+EpisodeContribution::property( 'comment', 'TEXT' );
