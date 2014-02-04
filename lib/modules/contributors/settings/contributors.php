@@ -252,7 +252,8 @@ class Contributors {
 			$wrapper->radio( 'visibility', array(
 				'label'       => __( 'Visibility', 'podlove' ),
 				'description' => '<br />Check this, if you want the contributor\'s profile to appear e.g. in the Web Player.',
-				'options'	  => array( '1' => 'Yes', '0' => 'No' )
+				'options'	  => array( '1' => 'Yes', '0' => 'No' ),
+				'default'	  => '1'
 			) );
 
 			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );

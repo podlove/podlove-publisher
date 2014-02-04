@@ -114,8 +114,8 @@ class Contributor_List_Table extends \Podlove\List_Table {
 				<a href='http://flattr.com/profile/".$contributor->flattr."'>".$contributor->flattr."</a>";
 	}
 	
-	public function column_showpublic( $contributor ) {
-		return $contributor->showpublic ? '✓' : '×';
+	public function column_visibility( $contributor ) {
+		return $contributor->visibility ? '✓' : '×';
 	}
 
 	public function column_episodes( $contributor ) {
@@ -133,7 +133,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'flattr'        	   => __( 'Flattr', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
 			'episodes'             => __( 'Episodes', 'podlove' ),
-			'showpublic'           => __( 'Public', 'podlove' )
+			'visibility'           => __( 'Visiblity', 'podlove' )
 		);
 		return $columns;
 	}
@@ -155,7 +155,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	    'flattr'     		   => array('privateemail',false),
 	    'privateemail'         => array('privateemail',false),
 	    'episodes'             => array('contributioncount',true),
-	    'showpublic'           => array('showpublic',false)
+	    'visibility'           => array('visibility',false)
 	  );
 	  return $sortable_columns;
 	}		
@@ -171,7 +171,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		#permanentcontributor { width: 160px; }
 		td.column-avatar, th.column-avatar { width: 50px; }
 		td.column-slug, th.column-slug { width: 12% !important; }
-		td.column-showpublic, th.column-showpublic { width: 7% !important; }
+		td.column-visibility, th.column-visibility { width: 7% !important; }
 		td.column-gender, th.column-gender { width: 7% !important; }
 		td.column-episodes, th.column-episodes { width: 8% !important; }
 		</style>
