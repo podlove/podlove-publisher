@@ -114,7 +114,7 @@ class Contributors extends \Podlove\Modules\Base {
 	{
 		$contributor_xml = '';
 
-		if ($contributor->showpublic == 1) {
+		if ($contributor->visibility == 1) {
 			$contributor_xml .= "<atom:contributor>\n";
 			$contributor_xml .= "	<atom:name>" . $contributor->getName() . "</atom:name>\n";
 
@@ -185,7 +185,7 @@ class Contributors extends \Podlove\Modules\Base {
 										"publicname" => $contributor->name,
 										"slug" => $contributor->slug,
 										"id" => $contributor->term_id,
-										"showpublic" => 1,
+										"visibility" => 1,
 										"privateemail" => $privateemail);
 
 			$contributor_entry = new \Podlove\Modules\Contributors\Contributor;
