@@ -71,12 +71,12 @@ function auto_fill_form(id, title_id) {
 			break;
 			case 'contributor_group':
 				if( $("#podlove_contributor_group_slug").val() == "" ) {
-					$("#podlove_contributor_group_slug").attr( 'placeholder', convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
+					$("#podlove_contributor_group_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
 				}
 			break;
 			case 'contributor_role':
 				if( $("#podlove_contributor_role_slug").val() == "" ) {
-					$("#podlove_contributor_role_slug").attr( 'placeholder', convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
+					$("#podlove_contributor_role_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
 				}
 			break;
 		}

@@ -14,7 +14,7 @@ class ContributorGroups {
 	public static function get_action_link( $group, $title, $action = 'edit', $class = 'link' ) {
 		$request = ( isset( $_REQUEST['podlove_tab'] ) ? "&amp;podlove_tab=".$_REQUEST['podlove_tab'] : '' );
 		return sprintf(
-			'<a href="?page=%s%s&amp;action=%s&amp;group=%s" class="%s">' . $title . '</a>',
+			'<a href="?page=%s%s&amp;podlove_tab='.$_REQUEST['podlove_tab'].'&amp;action=%s&amp;group=%s" class="%s">' . $title . '</a>',
 			$_REQUEST['page'],
 			$request,
 			$action,
