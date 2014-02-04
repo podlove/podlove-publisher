@@ -7,6 +7,7 @@ use \Podlove\Modules\Contributors\Model\ContributorRole;
 use \Podlove\Modules\Contributors\Model\ContributorGroup;
 use \Podlove\Modules\Contributors\Model\EpisodeContribution;
 use \Podlove\Modules\Contributors\Model\ShowContribution;
+use \Podlove\Modules\Contributors\Model\DefaultContribution;
 
 use Podlove\DomDocumentFragment;
 
@@ -31,6 +32,8 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
 
 		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
+
+		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
 		// register shortcodes
 		new Shortcodes;	
@@ -150,6 +153,7 @@ class Contributors extends \Podlove\Modules\Base {
 		ContributorGroup::build();
 		EpisodeContribution::build();
 		ShowContribution::build();
+		DefaultContribution::build();
 	}
 
 	public function migrate_contributors( $module_name ) {
@@ -253,7 +257,7 @@ class Contributors extends \Podlove\Modules\Base {
 				if ($current_page->action == "add") {
 					$i = 0;
 					$permanent_contributors = array();
-					foreach ( ShowContribution::all() as $contribution_key => $contribution ) {
+					foreach ( DefaultContribution::all() as $contribution_key => $contribution ) {
 						$permanent_contributors[$contribution_key]['contributor'] = $contribution->getContributor();
 						$permanent_contributors[$contribution_key]['role'] = $contribution->getRole();
 						$permanent_contributors[$contribution_key]['group'] = $contribution->getGroup();
@@ -466,6 +470,7 @@ class Contributors extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
+				var populated_contributor_form = false;
 				var existing_contributions = <?php
 				echo json_encode(array_map(function($c){
 					// Set default role
@@ -579,9 +584,12 @@ class Contributors extends \Podlove\Modules\Base {
 							row.find(".podlove-contributor-edit").show(); // Show Edit Button
 							i++; // continue using "i" which was already used to add the existing contributions
 						});
-					}	
+					}
 
-					
+					function add_contribution( contributor ) {
+						add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group, contributor.comment);
+
+					}
 
 					$(document).on('click', "#add_new_contributor_button", function() {
 						add_new_contributor();
@@ -591,11 +599,28 @@ class Contributors extends \Podlove\Modules\Base {
 						$(this).closest("tr").remove();
 					});	
 
+					$(document).on('click', 'h3.hndle',  function() {
+						if( populated_contributor_form == false )
+							$.each(existing_contributions, function(index, contributor) {
+								if ( contributor )
+									add_contribution( contributor );
+								update_chosen();
+							});
+						populated_contributor_form = true;
+					});	
+
 					$(document).ready(function() {
 
 						$.each(existing_contributions, function(index, contributor) {
-							if (contributor)
-								add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group, contributor.comment);
+							if( $("#contributors-form").visible() == false ) { // false means that the form is visible here!
+								add_contribution( contributor );
+								populated_contributor_form = true;
+							} else {
+								if( $("#contributor_default_form").length > 0 ) {
+									add_contribution( contributor );
+									populated_contributor_form = true;
+								}
+							}
 						});
 
 						$("#contributors_table_body td").each(function(){
@@ -658,6 +683,15 @@ class Contributors extends \Podlove\Modules\Base {
 
 	    	break;
 	    }
-	} 
+	}
 
+	public function admin_print_styles() {
+		wp_register_script(
+			'podlove_contributor_jquery_visible',
+			$this->get_module_url() . '/js/jquery.visible.min.js',
+			array( 'jquery', 'jquery-ui-tabs' ),
+			\Podlove\get_plugin_header( 'Version' )
+		);
+		wp_enqueue_script('podlove_contributor_jquery_visible');
+	}
 }

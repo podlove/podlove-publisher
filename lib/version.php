@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 54 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 55 );
 
 add_action( 'init', function () {
 	
@@ -538,6 +538,12 @@ function run_migrations_for_version( $version ) {
 					'ALTER TABLE `%s` CHANGE COLUMN `showpublic` `visibility` TINYINT(1)',
 					\Podlove\Modules\Contributors\Model\Contributor::table_name()
 				) );
+			}
+		break;
+		case 55:
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				
+				\Podlove\Modules\Contributors\Model\DefaultContribution::build();
 			}
 		break;
 	}
