@@ -60,9 +60,7 @@ class ContributorDefaults {
 		?>
 		<div class="wrap">
 			<p>
-				Use groups to divide contributors by type of participation. Create a group for teams working together 
-				or for a supporting community. Team members can be displayed separately by using the appropriate option 
-				to select a group.
+				Default Contributors will be automatically added to the list of contributors for new episodes.
 			</p>
 			<form method="post" action="admin.php?page=podlove_contributor_settings&action=save" id="contributor_default_form">
 			<?php

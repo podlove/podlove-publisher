@@ -358,6 +358,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		$has_roles  = count( $contributors_roles ) > 0;
 		$has_groups = count( $contributors_groups ) > 0;
+		$can_be_commented = $form_base_name == 'episode_contributor' ? 1 : 0;
 
 		foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
 			$show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all( "WHERE `contributor_id` = " . $contributor->id );
@@ -407,7 +408,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<th></th>
 						<?php echo ( $has_groups ? '<th>Group</th>'  : '' ); ?>
 						<?php echo ( $has_roles ? '<th>Role</th>'  : '' ); ?>
-						<th>Public Comment</th>
+						<?php echo ( $can_be_commented ? '<th>Public Comment</th>'  : '' ); ?>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
 					</tr>
@@ -455,9 +456,11 @@ class Contributors extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<?php endif; ?>
+				<?php if( $can_be_commented ) : ?>
 				<td>
 					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][comment]" class="podlove-comment" />
 				</td>
+				<?php endif; ?>
 				<td>
 					<span class="contributor_remove">
 						<i class="clickable podlove-icon-remove"></i>

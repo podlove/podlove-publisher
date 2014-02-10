@@ -70,6 +70,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 								'url_template' => 'http://facebook.com/',
 								'account' => $contributor->facebook
 							  ),
+				'googleplus' => array(
+								'title' => 'Google+',
+								'url_template' => '',
+								'account' => $contributor->googleplus
+							  ),
 				'house' => array(
 								'title' => 'Homepage',
 								'url_template' => '',

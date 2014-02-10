@@ -119,8 +119,9 @@ class ContributorGroups {
 		$page   = 'admin.php?page=' . $_REQUEST['page'];
 		$show   = ( $group_id ) ? '&group=' . $group_id : '';
 		$action = '&action=' . $action;
+		$tab = '&podlove_tab=groups';
 		
-		wp_redirect( admin_url( $page . $show . $action ) );
+		wp_redirect( admin_url( $page . $show . $action . $tab ) );
 		exit;
 	}
 	

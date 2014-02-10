@@ -199,19 +199,11 @@ class Shortcodes {
 
 	private function renderAsTable() {
 
-		$donations = $this->settings['donations'] == 'yes' ? '<th></th>' : '';
-		$flattr = $this->settings['flattr'] == 'yes' ? '<th></th>' : '';
-		$title = $this->settings['title'];
+		$title = $this->settings['title'] == '' ? '' : '<caption>' . $this->settings['title'] . '</caption>';
 
 		$before = <<<EOD
 <table class="podlove-contributors-table">
-	<thead>
-		<tr>
-			<th colspan="3">$title</th>
-			$donations
-			$flattr
-		</tr>
-	</thead>
+	$title
 	<tbody>
 EOD;
 
@@ -252,17 +244,19 @@ EOD;
 			$body .= ($this->settings['avatars'] == 'yes' ? $contributor->getAvatar(50) . ' ' : '');
 			$body .= "</td>";
 
-			// name, role and group
+			// name and comment
 			$body .= '<td class="title_cell">';
 			$body .= $this->wrapWithLink($contributor, $contributor->getName());
+			$body .= $contribution->comment == '' ? '' :'<br /><em>' . $contribution->comment . '</em>';
+			$body .= '</td>';
 
-			if ($this->settings['roles'] == 'yes' && $role = $contribution->getRole())
-				$body .= '<br /><em>' . $role->title . '</em>';
-
+			// group
 			if ($this->settings['groups'] == 'yes' && $group = $contribution->getGroup())
-				$body .= '<br /><em>' . $group->title . '</em>';
+				$body .= '<td>' . $group->title . '</td>';
 
-			$body .= "</td>";
+			// role
+			if ($this->settings['roles'] == 'yes' && $role = $contribution->getRole())
+				$body .= '<td>' . $role->title . '</td>';
 
 			// social
 			$body .= '<td class="social_cell">' . $this->getSocialButtons($contributor) . "</td>";
