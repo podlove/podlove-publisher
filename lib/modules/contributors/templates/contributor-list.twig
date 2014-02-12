@@ -12,21 +12,20 @@
 <table class="podlove-global-contributors">
 	<thead>
 		<tr>
-			<th colspan="4"></th>
+			<th colspan="2"></th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for contributor in podcast.contributors %}
 			{% if contributor.public %}
 				<tr>
-					<td class="avatar-cell">
-						{{ contributor.avatar }}
+					<td colspan="2">
+						<strong style="font-size: 14px">{{ contributor.name }}</strong>
 					</td>
-					<td>
-						{{ contributor.name }}
-						{% if contributor.role %}
-							<br><em>{{ contributor.role }}</em>
-						{% endif %}
+				</tr>
+				<tr>
+					<td rowspan="2" class="avatar-cell">
+						{{ contributor.avatar }}
 					</td>
 					<td class="social_cell">
 						<ul class="podlove-social-list">
@@ -47,14 +46,17 @@
 							{% endif %}
 						<ul>
 					</td>
+				</tr>
+				<tr class="episode-row">
 					<td class="episodes-cell">
+						{#
 						{% set episodeCount = contributor.episodes|length %}
 						{% trans %}
 						    {{ episodeCount }} Episode:
 						{% plural episodeCount %}
 						    {{ episodeCount }} Episodes:
 						{% endtrans %}
-						
+						#}
 						<ul>
 						{% for episode in contributor.episodes %}
 							<li>
@@ -76,7 +78,16 @@
 }
 
 .podlove-global-contributors .avatar-cell {
-	width: 50px;
+	max-width: 100px;
+	text-align: center;
+}
+
+.podlove-global-contributors td {
+	border-top-width: 0px;
+}
+
+.podlove-global-contributors .episode-row {
+	/*margin-bottom: 10px;*/
 }
 
 .podlove-global-contributors td ul {
@@ -85,6 +96,10 @@
 
 .podlove-global-contributors .social_cell li {
 	margin: 0;
+}
+
+.podlove-global-contributors .episodes-cell {
+	padding-top: 0px;
 }
 
 .podlove-global-contributors .episodes-cell li {
