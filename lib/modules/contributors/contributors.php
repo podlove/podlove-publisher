@@ -32,6 +32,8 @@ class Contributors extends \Podlove\Modules\Base {
 
 		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
 
+		add_action('podlove_xml_export', array($this, 'expandExportFile'));
+
 		// register shortcodes
 		new Shortcodes;	
 
@@ -48,6 +50,13 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorSettings($settings_parent);
 		});
+	}
+
+	/**
+	 * Expands "Import/Export" module
+	 */
+	public function expandExportFile(\SimpleXMLElement $xml) {
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributors', 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
 	}
 
 	public function dashboard_statistics_row() {
