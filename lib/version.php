@@ -542,8 +542,12 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 55:
 			if (\Podlove\Modules\Base::is_active('contributors')) {
-				
 				\Podlove\Modules\Contributors\Model\DefaultContribution::build();
+
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `comment` TEXT AFTER `position`',
+					\Podlove\Modules\Contributors\Model\EpisodeContribution::table_name()
+				) );
 			}
 		break;
 	}
