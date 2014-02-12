@@ -80,6 +80,10 @@ class Exporter {
 		foreach ($table_class::all() as $mediafile) {
 			$xml_item = $xml_group->addChild("xmlns:wpe:$item_name");
 			foreach ($table_class::property_names() as $property_name) {
+				
+				if (strlen($mediafile->$property_name) === 0)
+					continue;
+
 				// This weird syntax is intentional. It is the only way to make
 				// SimpleXML escape ampersands. 
 				// See http://stackoverflow.com/a/12640393/72448
