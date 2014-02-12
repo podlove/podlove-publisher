@@ -562,8 +562,11 @@ abstract class Base
 		$wpdb->query( 'DROP TABLE ' . self::table_name() );
 	}
 
-	public static function delete_all() {
+	public static function delete_all($reset_autoincrement = true) {
 	    global $wpdb;
 	    $wpdb->query( 'TRUNCATE ' . self::table_name() );  
+
+	    if ($reset_autoincrement)
+	    	$wpdb->query( 'ALTER TABLE ' . self::table_name() . ' AUTO_INCREMENT = 1' );  
 	}
 }
