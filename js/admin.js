@@ -61,8 +61,12 @@ function auto_fill_form(id, title_id) {
 	(function($) {
 		switch( id ) {
 			case 'contributor':
-				if( $("#podlove_contributor_slug").val() == "" ) {
-					$("#podlove_contributor_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
+				if( $("#podlove_contributor_publicname").val() == "" ) {
+					if( $("#podlove_contributor_realname").val() == "" ) {
+						$("#podlove_contributor_publicname").attr( 'placeholder', $("#podlove_contributor_nickname").val() );
+					} else {
+						$("#podlove_contributor_publicname").attr( 'placeholder', $("#podlove_contributor_realname").val() );
+					}											
 				}
 			break;
 			case 'contributor_group':
@@ -106,7 +110,15 @@ jQuery(function($) {
 	$(".autogrow").autogrow();
 
 	$("#podlove_contributor_publicname").change(function() {
-		auto_fill_form('contributor', 'publicname');
+		auto_fill_form('contributor', 'realname');
+	});
+
+	$("#podlove_contributor_realname").change(function() {
+		auto_fill_form('contributor', 'realname');
+	});
+
+	$("#podlove_contributor_nickname").change(function() {
+		auto_fill_form('contributor', 'realname');
 	});
 
 	$("#podlove_contributor_group_title").change(function() {
@@ -115,6 +127,10 @@ jQuery(function($) {
 
 	$("#podlove_contributor_role_title").change(function() {
 		auto_fill_form('contributor_role', 'role_title');
+	});
+
+	$(document).ready(function() {
+		auto_fill_form('contributor', 'realname');
 	});
 	
 });

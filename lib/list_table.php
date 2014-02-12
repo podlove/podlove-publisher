@@ -16,7 +16,8 @@ class List_Table extends \WP_List_Table {
 	 * Display "Add New" link directly in the table.
 	 */
 	function no_items() {
-		$url = sprintf( '?page=%s&action=%s', $_REQUEST['page'], 'new' );
+		$url  = sprintf( '?page=%s&action=%s', $_REQUEST['page'], 'new' );
+		$url .= ( isset( $_REQUEST['podlove_tab'] ) ? "&amp;podlove_tab=".$_REQUEST['podlove_tab'] : '' )
 		?>
 		<div style="margin: 20px 10px 10px 5px">
 			<span class="add-new-h2" style="background: transparent">
