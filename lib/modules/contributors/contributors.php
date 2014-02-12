@@ -34,6 +34,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
+		add_action('podlove_xml_import', array($this, 'expandImport'));
 
 		// register shortcodes
 		new Shortcodes;	
@@ -54,14 +55,25 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	/**
-	 * Expands "Import/Export" module
+	 * Expands "Import/Export" module: export logic
 	 */
 	public function expandExportFile(\SimpleXMLElement $xml) {
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributors', 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-groups', 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-roles', 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-episode-contributions', 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-show-contributions', 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
+		Modules\ImportExport\Exporter::exportTable($xml, 'contributors', 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
+		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-groups', 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
+		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-roles', 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
+		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-episode-contributions', 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
+		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-show-contributions', 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
+	}
+
+	/**
+	 * Expands "Import/Export" module: import logic
+	 */
+	public function expandImport($xml) {
+		Modules\ImportExport\Importer::importTable($xml, 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
+		Modules\ImportExport\Importer::importTable($xml, 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
+		Modules\ImportExport\Importer::importTable($xml, 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
+		Modules\ImportExport\Importer::importTable($xml, 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
+		Modules\ImportExport\Importer::importTable($xml, 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
 	}
 
 	public function dashboard_statistics_row() {

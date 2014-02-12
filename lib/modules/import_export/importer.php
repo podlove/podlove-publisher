@@ -145,6 +145,22 @@ class Importer {
 		}
 	}
 
+	public static function importTable($xml, $item_name, $table_class) {
+		$table_class::delete_all();
+
+		$group = $xml->xpath('//wpe:' . $item_name);
+
+		foreach ($group as $item) {
+			$new_item = new $table_class;
+
+			foreach ($item->children('wpe', true) as $attribute) {
+				$new_item->{$attribute->getName()} = self::escape((string) $attribute);
+			}
+
+			$new_item->save();
+		}	
+	}
+
 	private static function escape($value) {
 		global $wpdb;
 		$wpdb->escape_by_ref($value);
