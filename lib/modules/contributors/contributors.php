@@ -2,11 +2,12 @@
 namespace Podlove\Modules\Contributors;
 
 use \Podlove\Model\Episode;
-use \Podlove\Modules\Contributors\Model\Contributor;
-use \Podlove\Modules\Contributors\Model\ContributorRole;
-use \Podlove\Modules\Contributors\Model\ContributorGroup;
-use \Podlove\Modules\Contributors\Model\EpisodeContribution;
-use \Podlove\Modules\Contributors\Model\ShowContribution;
+use \Podlove\Modules;
+use Modules\Contributors\Model\Contributor;
+use Modules\Contributors\Model\ContributorRole;
+use Modules\Contributors\Model\ContributorGroup;
+use Modules\Contributors\Model\EpisodeContribution;
+use Modules\Contributors\Model\ShowContribution;
 
 use Podlove\DomDocumentFragment;
 
@@ -317,7 +318,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 	public function podcast_form_extension_form()
 	{
-		$contributions = ShowContribution::all();
+		$contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all();
 		self::contributors_form_table($contributions, 'podlove_podcast[contributor]');
 	}
 
@@ -328,20 +329,20 @@ class Contributors extends \Podlove\Modules\Base {
 
 		$contributor_appearances = $new['contributor'];
 
-		foreach (ShowContribution::all() as $contribution) {
+		foreach (\Podlove\Modules\Contributors\Model\ShowContribution::all() as $contribution) {
 			$contribution->delete();
 		}
 
 		$position = 0;
 		foreach ($contributor_appearances as $contributor_appearance) {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
-				$c = new ShowContribution;
+				$c = new \Podlove\Modules\Contributors\Model\ShowContribution;
 
-				if ($role = ContributorRole::find_one_by_slug( $contributor['role'] )) {
+				if ($role = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug( $contributor['role'] )) {
 					$c->role_id = $role->id;
 				}
 
-				if ($group = ContributorGroup::find_one_by_slug( $contributor['group'] )) {
+				if ($group = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug( $contributor['group'] )) {
 					$c->group_id = $group->id;
 				}
 
@@ -373,9 +374,9 @@ class Contributors extends \Podlove\Modules\Base {
 				);
 			} else {
 				foreach($show_contributions as $show_contribution) {
-					$role_data = ContributorRole::find_one_by_id($show_contribution->role_id);
+					$role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_id($show_contribution->role_id);
 						($role_data == "" ? $role = '' : $role = $role_data->id );
-					$group_data = ContributorGroup::find_one_by_id($show_contribution->group_id);
+					$group_data = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_id($show_contribution->group_id);
 						($group_data == "" ? $group = '' : $group = $group_data->id );
 					$cjson[$contributor->id] = array(
 						'id'   => $contributor->id,
