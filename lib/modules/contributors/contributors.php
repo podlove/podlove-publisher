@@ -3,12 +3,12 @@ namespace Podlove\Modules\Contributors;
 
 use \Podlove\Model\Episode;
 use \Podlove\Modules;
-use Modules\Contributors\Model\Contributor;
-use Modules\Contributors\Model\ContributorRole;
-use Modules\Contributors\Model\ContributorGroup;
-use Modules\Contributors\Model\EpisodeContribution;
-use Modules\Contributors\Model\ShowContribution;
-use Modules\Contributors\Model\DefaultContribution;
+use \Podlove\Modules\Contributors\Model\Contributor;
+use \Podlove\Modules\Contributors\Model\ContributorRole;
+use \Podlove\Modules\Contributors\Model\ContributorGroup;
+use \Podlove\Modules\Contributors\Model\EpisodeContribution;
+use \Podlove\Modules\Contributors\Model\ShowContribution;
+use \Podlove\Modules\Contributors\Model\DefaultContribution;
 
 use Podlove\DomDocumentFragment;
 
