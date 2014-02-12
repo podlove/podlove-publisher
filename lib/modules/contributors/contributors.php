@@ -57,6 +57,10 @@ class Contributors extends \Podlove\Modules\Base {
 	 */
 	public function expandExportFile(\SimpleXMLElement $xml) {
 		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributors', 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-groups', 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-roles', 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-episode-contributions', 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributor-show-contributions', 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
 	}
 
 	public function dashboard_statistics_row() {
