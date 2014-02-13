@@ -36,7 +36,7 @@ class PodcastSettingsTab extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'You may define contributors for the whole podcast.', 'podlove' ); ?>
+			<?php echo __( 'This is the current team of your podcast.', 'podlove' ); ?>
 		</p>
 		<?php
 
