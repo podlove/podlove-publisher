@@ -23,6 +23,8 @@ class Shortcodes {
 		add_shortcode( 'podlove-contributors', array( $this, 'podlove_contributors') );
 		// display a table/list of contributors
 		add_shortcode( 'podlove-contributor-list', array( $this, 'podlove_contributor_list') );
+		// display a table/list of podcast contributors
+		add_shortcode( 'podlove-podcast-contributor-list', array( $this, 'podlove_podcast_contributor_list') );
 	}
 
 	/**
@@ -71,7 +73,7 @@ class Shortcodes {
 	 * 
 	 * Examples:
 	 *
-	 *	[podlove-contributor-list]
+	 *	[podlove-contributor-list] / [podlove-podcast-contributor-list]
 	 * 
 	 * @return string
 	 */
@@ -98,6 +100,29 @@ class Shortcodes {
 		return $this->renderListOfContributors();
 	}
 
+	public function podlove_podcast_contributor_list($attributes)
+	{
+		$defaults = array(
+			'preset'    => 'table',
+			'avatars'   => 'yes',
+			'role'      => 'all',
+			'roles'		=> 'no',
+			'group'		=> 'all',
+			'groups'	=> 'no',
+			'donations' => 'no',
+			'flattr'    => 'yes',
+			'linkto'    => 'none',
+			'title'     => ''
+		);
+
+		if (!is_array($attributes))
+			$attributes = array();
+
+		$this->settings = array_merge($defaults, $attributes);
+
+		return $this->renderListOfContributors('podcast');
+	}
+
 	/**
 	 * Maybe link text to named service.
 	 */
@@ -114,13 +139,20 @@ class Shortcodes {
 		);
 	}
 
-	private function renderListOfContributors() {
+	private function renderListOfContributors( $relation='episode' ) {
 
-		// fetch contributions
-		if ($episode = Model\Episode::get_current()) {
-			$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
-		} else {
-			$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('GROUP BY contributor_id ORDER BY `position` ASC');
+		// fetch contributors
+		switch ( $relation ) {
+			case 'episode' :
+				if ($episode = Model\Episode::get_current()) {
+					$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
+				} else {
+					$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('GROUP BY contributor_id ORDER BY `position` ASC');
+				}
+			break;
+			case 'podcast' :
+				$this->contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all();
+			break;
 		}
 
 		if ($this->settings['role'] != 'all') {

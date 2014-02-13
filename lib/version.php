@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 55 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 56 );
 
 add_action( 'init', function () {
 	
@@ -548,6 +548,24 @@ function run_migrations_for_version( $version ) {
 					'ALTER TABLE `%s` ADD COLUMN `comment` TEXT AFTER `position`',
 					\Podlove\Modules\Contributors\Model\EpisodeContribution::table_name()
 				) );
+				$wpdb->query( sprintf(
+					'ALTER TABLE `%s` ADD COLUMN `comment` TEXT AFTER `position`',
+					\Podlove\Modules\Contributors\Model\ShowContribution::table_name()
+				) );
+			}
+		break;
+		case 57:
+			// migrate Podcast Contributors to Default Contributors
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$podcast_contributors = \Podlove\Modules\Contributors\Model\ShowContribution::all();
+				foreach ($podcast_contributors as $podcast_contributor_key => $podcast_contributor) {
+					$new = new \Podlove\Modules\Contributors\Model\DefaultContribution();
+					$new->contributor_id = $podcast_contributor->contributor_id;
+					$new->group_id = $podcast_contributor->group_id;
+					$new->role_id = $podcast_contributor->role_id;
+					$new->position = $podcast_contributor->positon;
+					$new->save();
+				}
 			}
 		break;
 	}
