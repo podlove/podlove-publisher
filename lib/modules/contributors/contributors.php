@@ -492,7 +492,6 @@ class Contributors extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
-				var populated_contributor_form = false;
 				var existing_contributions = <?php
 				echo json_encode(array_map(function($c){
 					// Set default role
@@ -621,21 +620,18 @@ class Contributors extends \Podlove\Modules\Base {
 						$(this).closest("tr").remove();
 					});	
 
-					$(document).on('click', 'h3.hndle',  function() {
-						if( populated_contributor_form == false )
-							$.each(existing_contributions, function(index, contributor) {
-								if ( contributor )
-									add_contribution( contributor );
-								update_chosen();
-							});
-						populated_contributor_form = true;
+					$("#podlove_podcast").on('click', 'h3.hndle',  function() {
+						$("#contributors_table_body").empty();
+						$.each(existing_contributions, function(index, contributor) {
+							add_contribution(contributor);
+						});
+						update_chosen();
 					});	
 
 					$(document).ready(function() {
 
 						$.each(existing_contributions, function(index, contributor) {
-							add_contribution( contributor );
-							populated_contributor_form = true;
+							add_contribution(contributor);
 						});
 
 						$("#contributors_table_body td").each(function(){
