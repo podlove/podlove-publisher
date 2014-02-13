@@ -20,7 +20,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
 		add_action( 'podlove_episode_form_beginning', array( $this, 'contributors_form_for_episode' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
-		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
+		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_tab' ) );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
 		add_filter( 'parse_query', array($this, 'filter_by_contributor') );
 
@@ -289,23 +289,10 @@ class Contributors extends \Podlove\Modules\Base {
 	 * @param  TableWrapper $wrapper form wrapper
 	 * @param  Podcast      $podcast podcast model
 	 */
-	public function podcast_form_extension($wrapper, $podcast)
+	public function podcast_settings_tab($tabs)
 	{
-		$wrapper->subheader(
-			__( 'Contributors', 'podlove' ),
-			__( 'You may define contributors for the whole podcast.', 'podlove' )
-		);
-
-    	$wrapper->callback( 'contributors', array(
-			'label'    => __( 'Contributors', 'podlove' ),
-			'callback' => array( $this, 'podcast_form_extension_form' )
-		) );
-	}
-
-	public function podcast_form_extension_form()
-	{
-		$contributions = ShowContribution::all();
-		self::contributors_form_table($contributions, 'podlove_podcast[contributor]');
+		$tabs->addTab( new Settings\PodcastSettingsTab( __( 'Contributors', 'podlove' ) ) );
+		return $tabs;
 	}
 
 	public function save_setting($old, $new)
