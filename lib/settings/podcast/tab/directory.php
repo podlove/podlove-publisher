@@ -6,6 +6,33 @@ class Directory extends Tab {
 
 	public function init() {
 		add_action( $this->page_hook, array( $this, 'register_page' ) );
+		add_action( 'admin_init', array( $this, 'process_form' ) );
+	}
+
+	public function process_form() {
+		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
+			return;
+
+		$formKeys = array(
+			'author_name',
+			'publisher_name',
+			'publisher_url',
+			'owner_name',
+			'owner_email',
+			'keywords',
+			'category_1',
+			'category_2',
+			'category_3',
+			'explicit',
+			'complete',
+		);
+
+		$settings = get_option('podlove_podcast');
+		foreach ($formKeys as $key) {
+			$settings[$key] = $_POST['podlove_podcast'][$key];
+		}
+		update_option('podlove_podcast', $settings);
+		header('Location: ' . $this->get_url());
 	}
 
 	public function register_page() {
