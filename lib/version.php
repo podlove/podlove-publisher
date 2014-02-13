@@ -554,7 +554,7 @@ function run_migrations_for_version( $version ) {
 				) );
 			}
 		break;
-		case 57:
+		case 56:
 			// migrate Podcast Contributors to Default Contributors
 			if (\Podlove\Modules\Base::is_active('contributors')) {
 				$podcast_contributors = \Podlove\Modules\Contributors\Model\ShowContribution::all();
