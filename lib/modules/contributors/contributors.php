@@ -22,7 +22,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
 		add_action( 'podlove_episode_form_beginning', array( $this, 'contributors_form_for_episode' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
-		add_action( 'podlove_podcast_form', array( $this, 'podcast_form_extension' ), 10, 2 );
+		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_tab' ) );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
 		add_filter( 'parse_query', array($this, 'filter_by_contributor') );
 
@@ -325,25 +325,15 @@ class Contributors extends \Podlove\Modules\Base {
 	 * @param  TableWrapper $wrapper form wrapper
 	 * @param  Podcast      $podcast podcast model
 	 */
-	public function podcast_form_extension($wrapper, $podcast)
+	public function podcast_settings_tab($tabs)
 	{
-		$wrapper->subheader(
-			__( 'Contributors', 'podlove' ),
-			__( 'You may define contributors for the whole podcast.', 'podlove' )
-		);
-
-    	$wrapper->callback( 'contributors', array(
-			'label'    => __( 'Contributors', 'podlove' ),
-			'callback' => array( $this, 'podcast_form_extension_form' )
-		) );
+		$tabs->addTab( new Settings\PodcastSettingsTab( __( 'Contributors', 'podlove' ) ) );
+		return $tabs;
 	}
 
-	public function podcast_form_extension_form()
-	{
-		$contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all();
-		self::contributors_form_table($contributions, 'podlove_podcast[contributor]');
-	}
-
+	/**
+	 * @todo  this save logic belongs into the tab class
+	 */
 	public function save_setting($old, $new)
 	{
 		if (!isset($new['contributor']))
@@ -360,12 +350,16 @@ class Contributors extends \Podlove\Modules\Base {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
 				$c = new \Podlove\Modules\Contributors\Model\ShowContribution;
 
-				if ($role = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug( $contributor['role'] )) {
-					$c->role_id = $role->id;
+				if (isset($contributor['role'])) {
+					if ($role = ContributorRole::find_one_by_slug( $contributor['role'] )) {
+						$c->role_id = $role->id;
+					}
 				}
 
-				if ($group = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug( $contributor['group'] )) {
-					$c->group_id = $group->id;
+				if (isset($contributor['group'])) {
+					if ($group = ContributorGroup::find_one_by_slug( $contributor['group'] )) {
+						$c->group_id = $group->id;
+					}
 				}
 
 				$c->contributor_id = $contributor_id;
@@ -640,15 +634,8 @@ class Contributors extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 
 						$.each(existing_contributions, function(index, contributor) {
-							if( $("#contributors-form").visible() == false ) { // false means that the form is visible here!
-								add_contribution( contributor );
-								populated_contributor_form = true;
-							} else {
-								if( $("#contributor_default_form").length > 0 ) {
-									add_contribution( contributor );
-									populated_contributor_form = true;
-								}
-							}
+							add_contribution( contributor );
+							populated_contributor_form = true;
 						});
 
 						$("#contributors_table_body td").each(function(){

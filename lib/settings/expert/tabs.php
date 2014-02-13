@@ -22,7 +22,7 @@ class Tabs {
 		$this->title = $title;
 	}
 
-	public function addTab( Tab $tab ) {
+	public function addTab( $tab ) {
 		$this->tabs[] = $tab;
 	}
 
