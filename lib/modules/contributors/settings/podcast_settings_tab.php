@@ -36,7 +36,10 @@ class PodcastSettingsTab extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'This is the current team of your podcast.', 'podlove' ); ?>
+			<?php echo sprintf(
+				__( 'This is the current team of your podcast. Display this list using the shortcode %s', 'podlove' ),
+				'<code>[podlove-podcast-contributor-list]</code>'
+			); ?>
 		</p>
 		<?php
 
