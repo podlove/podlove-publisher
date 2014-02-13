@@ -155,6 +155,11 @@ class Shortcodes {
 			break;
 		}
 
+		// Remove all contributions with missing contributors.
+		$this->contributions = array_filter($this->contributions, function($c) {
+			return (bool) $c->getContributor();
+		});
+
 		if ($this->settings['role'] != 'all') {
 			$role = $this->settings['role'];
 			$this->contributions = array_filter($this->contributions, function($c) use ($role) {
