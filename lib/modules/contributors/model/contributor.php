@@ -41,6 +41,14 @@ class Contributor extends Base
 		return EpisodeContribution::find_all_by_contributor_id($this->id);
 	}
 
+	public function getShowContributions() {
+		return ShowContribution::find_all_by_contributor_id($this->id);
+	}
+
+	public function getDefaultContributions() {
+		return DefaultContribution::find_all_by_contributor_id($this->id);
+	}
+
 	public function calcContributioncount() {
 		$this->contributioncount = count($this->getContributions());
 		$this->save();
@@ -63,6 +71,22 @@ class Contributor extends Base
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;
 	}	
+
+	/**
+	 * @override \Podlove\Model\Base::delete();
+	 */
+	public function delete() {
+		foreach ( $this->getContributions() as $contribution )
+			$contribution->delete();
+
+		foreach ( $this->getShowContributions() as $contribution )
+			$contribution->delete();
+
+		foreach ( $this->getDefaultContributions() as $contribution )
+			$contribution->delete();
+
+		parent::delete();
+	}
 }
 
 Contributor::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
