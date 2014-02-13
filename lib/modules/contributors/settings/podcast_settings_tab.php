@@ -15,20 +15,22 @@ class PodcastSettingsTab extends Tab {
 		
 		$form_attributes = array(
 			'context' => 'podlove_podcast',
-			'action'  => $this->get_url()
+			'action'  => $this->get_url(),
+			'is_table' => false
 		);
 
+		?>
+		<p>
+			<?php echo __( 'You may define contributors for the whole podcast.', 'podlove' ); ?>
+		</p>
+		<?php
+
 		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
-			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+			$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
 			$podcast = $form->object;
-			
-			$wrapper->subheader(
-				__( 'Contributors', 'podlove' ),
-				__( 'You may define contributors for the whole podcast.', 'podlove' )
-			);
 
 	    	$wrapper->callback( 'contributors', array(
-				'label'    => __( 'Contributors', 'podlove' ),
+				// 'label'    => __( 'Contributors', 'podlove' ),
 				'callback' => array( __CLASS__, 'podcast_form_extension_form' )
 			) );
 		});

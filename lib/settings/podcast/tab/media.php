@@ -16,16 +16,17 @@ class Media extends Tab {
 			'action'  => $this->get_url()
 		);
 
+		?>
+		<p>
+			<?php echo __( 'The Podlove Publisher expects all your media files to be in the same <strong>Upload Location</strong>.
+					It should be a publicly readable directory containing all media files.
+					You should not create a separate directory for each episode.', 'podlove' ); ?>
+		</p>
+		<?php
+
 		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
-			
-			$wrapper->subheader(
-				__( 'Media', 'podlove' ),
-				__( 'The Podlove Publisher expects all your media files to be in the same <strong>Upload Location</strong>.
-					It should be a publicly readable directory containing all media files.
-					You should not create a separate directory for each episode.', 'podlove' )
-			);
 
 			$wrapper->string( 'media_file_base_uri', array(
 				'label'       => __( 'Upload Location', 'podlove' ),

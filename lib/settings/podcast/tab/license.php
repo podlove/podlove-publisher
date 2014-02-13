@@ -20,10 +20,6 @@ class License extends Tab {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
 			
-			$wrapper->subheader(
-				__( 'License', 'podlove' )
-			);
-
 			$podcast = \Podlove\Model\Podcast::get_instance();
 
 			$wrapper->select( 'license_type', array(

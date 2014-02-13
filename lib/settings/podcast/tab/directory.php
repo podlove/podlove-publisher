@@ -16,14 +16,15 @@ class Directory extends Tab {
 			'action'  => $this->get_url()
 		);
 
+		?>
+		<p>
+			<?php echo __( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove' ); ?>
+		</p>
+		<?php
+
 		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
-			
-			$wrapper->subheader(
-				__( 'Directory', 'podlove' ),
-				__( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove' )
-			);
 
 			$wrapper->string( 'author_name', array(
 				'label'       => __( 'Author Name', 'podlove' ),

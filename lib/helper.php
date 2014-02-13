@@ -172,6 +172,7 @@ namespace Podlove\Form;
  * 		- submit_button set to false to hide the submit button
  * 		- form          set to false to skip <form> wrapper
  * 		- attributes    optional html attributes for form tag
+ * 		- is_table      is it a table form? defaults to true
  * @param  function $callback inner form
  * @return void
  * 
@@ -220,9 +221,14 @@ function build_for( $object, $args, $callback ) {
 		<?php endforeach ?>
 	<?php endif ?>
 
-	<table class="form-table">
-		<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
-	</table>
+	<?php if ( !isset($args['is_table']) || $args['is_table'] !== false ): ?>
+		<table class="form-table">
+	<?php endif; ?>
+	<?php call_user_func( $callback, new \Podlove\Form\Input\Builder( $object, $context ) ); ?>
+	<?php if ( !isset($args['is_table']) || $args['is_table'] !== false ): ?>
+		</table>
+	<?php endif; ?>
+
 	<?php if ( ! isset( $args['submit_button'] ) || $args['submit_button'] === true ): ?>
 		<?php submit_button(); ?>
 	<?php endif ?>
