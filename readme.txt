@@ -90,7 +90,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Import/Export module supports contributors and contributions
 * Enhancement: Separate "default contributors" and "podcast contributors". You can configure default contributors in "Contributor Settings > Defaults" and podcast contributors in "Podcast Settings > Contributors". Display podcast contributors using the shortcode `[podlove-podcast-contributor-list]`.
 * Enhancements: Plethora of adjustments in contributor interfaces to avoid confusions and smoothen workflows
-* Feature: Contributions may have a public comment (to describe the context of the person), which can be displayed in contributor lists
+* Feature: Contributions may have a public comment (to describe the context of the person), which can be displayed in contributor lists.
+* Fix: Skip contributions with missing contributors.
 
 = 1.9.10 =
 * Fix: episode images when using manual entry
