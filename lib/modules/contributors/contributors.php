@@ -295,6 +295,9 @@ class Contributors extends \Podlove\Modules\Base {
 		return $tabs;
 	}
 
+	/**
+	 * @todo  this save logic belongs into the tab class
+	 */
 	public function save_setting($old, $new)
 	{
 		if (!isset($new['contributor']))
@@ -311,12 +314,16 @@ class Contributors extends \Podlove\Modules\Base {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
 				$c = new ShowContribution;
 
-				if ($role = ContributorRole::find_one_by_slug( $contributor['role'] )) {
-					$c->role_id = $role->id;
+				if (isset($contributor['role'])) {
+					if ($role = ContributorRole::find_one_by_slug( $contributor['role'] )) {
+						$c->role_id = $role->id;
+					}
 				}
 
-				if ($group = ContributorGroup::find_one_by_slug( $contributor['group'] )) {
-					$c->group_id = $group->id;
+				if (isset($contributor['group'])) {
+					if ($group = ContributorGroup::find_one_by_slug( $contributor['group'] )) {
+						$c->group_id = $group->id;
+					}
 				}
 
 				$c->contributor_id = $contributor_id;
