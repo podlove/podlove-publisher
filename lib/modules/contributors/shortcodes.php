@@ -257,12 +257,18 @@ EOD;
 	line-height: 1em;
 }
 
-.podlove-contributors-table .social_cell {
-	font-size: 1.7em;
+.podlove-contributors-table .social_cell a, .podlove-contributors-table .donation_cell a {
+	margin-right: 4px;
+	background: none;
+	text-decoration: none;
 }
 
-.podlove-contributors-table .social_cell a {
-	margin-right: 4px
+.podlove-contributors-table .flattr_cell iframe {
+	margin-bottom: 0px;
+}
+
+.podlove-contributors-table td {
+	vertical-align: middle;
 }
 </style>
 EOD;
@@ -300,12 +306,12 @@ EOD;
 
 			// donations
 			if ($this->settings['donations'] == 'yes')
-				$body .= '<td class="donation_cell"><ul class="podlove-donations-list">'
+				$body .= '<td class="donation_cell">'
 			    . $this->getXcoinButton($contributor, 'bitcoin')
 			    . $this->getXcoinButton($contributor, 'litecoin')
 			    . $this->getPayPalButton($contributor)
 			    . $this->getAmazonWishlistButton($contributor)
-			    . "</ul></td>";
+			    . "</td>";
 
 			// flattr
 			if ($this->settings['flattr'] == 'yes')
@@ -321,14 +327,14 @@ EOD;
 
 	private function getSocialButtons($contributor)
 	{
-		$html = '<ul class="podlove-social-list">';
+		$html = '';
 		foreach ($this->getServices() as $service) {
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
-					'<li><a href="%1$s" target="_blank" title="%3$s">
+					'<a href="%1$s" target="_blank" title="%3$s">
 						<img width="32" height="32" src="%4$s/lib/modules/contributors/images/icons/%5$s" class="podlove-contributor-button" 
 						alt="%3$s" />
-					</a></li>',
+					</a>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
 					( $contributor->getName() == "" ? $contributor->nickname : $contributor->getName() ),
 					$service['title'],
@@ -337,7 +343,6 @@ EOD;
 				);
 			}
 		}
-		$html .= '</ul>';
 
 		return $html;
 	}
@@ -347,13 +352,13 @@ EOD;
 		if (!$contributor->amazonwishlist)
 			return "";
 
-		return "<li><a
+		return "<a
 			target=\"_blank\"
     		title=\"Support {$contributor->getName()} by buying things from an Amazon Wishlist\"
     		href=\"{$contributor->amazonwishlist}\">
     		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" 
     		alt=\"" . sprintf( __('Support %s by buying things from an Amazon Wishlist'),  $contributor->getName() ) . "\" />
-		</a></li>";
+		</a>";
 	}
 
 	private function getRelatedFlattrButton($contributor, $postid)
@@ -393,14 +398,14 @@ EOD;
 		if (!$contributor->paypal)
 			return "";
 
-		return "<li><a
+		return "<a
 			target=\"_blank\"
 			class=\"PayPalButton\"
     		title=\"Support {$contributor->getName()} by donating with PayPal\"
     		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
     		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" 
     		alt=\"" . sprintf( __('Support %s by donating with PayPal'), $contributor->getName() ) ."\" />
-		</a></li>";
+		</a>";
 	}
 
 	private function getXcoinButton($contributor, $currency)
@@ -408,12 +413,12 @@ EOD;
 		if (!$contributor->$currency)
 			return "";
 
-		return '<li><a href="' . $currency . ':' . $contributor->$currency . '"
+		return '<a href="' . $currency . ':' . $contributor->$currency . '"
 					 title="Support ' . $contributor->getName() . ' by donating with ' . ucfirst($currency) .'">
 						<img width="32" height="32" src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" 
 						alt="' . sprintf( __('Support %s by donating with %s'), $contributor->getName(), ucfirst($currency) ) . '" />
 					</a>
-				</li>';
+				';
 	}
 
 	private function getServices() {
