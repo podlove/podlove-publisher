@@ -1,5 +1,5 @@
 <?php
-require_once 'vendor/autoload.php'; # composer autoloader
+require_once 'vendor/autoload.php';
 
 use Podlove\Comment\Comment;
 
@@ -7,9 +7,8 @@ if (!getenv('WPBASE')) {
 	die("You need to set the environment variable WPBASE to your WordPress root\n");
 }
 
-require_once  getenv('WPBASE') . '/wp-load.php';
-require_once  dirname(__FILE__) . '/../vendor/autoload.php';
-require_once  dirname(__FILE__) . '/../bootstrap/bootstrap.php';
+require_once getenv('WPBASE') . '/wp-load.php';
+require_once dirname(__FILE__) . '/../bootstrap/bootstrap.php';
 
 $output_dir = '/Users/ericteubert/code/podlove.github.com/sources/template';
 
