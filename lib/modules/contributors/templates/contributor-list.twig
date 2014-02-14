@@ -17,14 +17,14 @@
 	</thead>
 	<tbody>
 		{% for contributor in podcast.contributors %}
-			{% if contributor.public %}
+			{% if contributor.visible %}
 				<tr>
 					<td colspan="2">
 						<strong style="font-size: 14px">{{ contributor.name }}</strong>
 					</td>
 				</tr>
 				<tr>
-					<td rowspan="2" class="avatar-cell">
+					<td rowspan="2" class="avatar-cell" width="60">
 						{{ contributor.avatar }}
 					</td>
 					<td class="social_cell">
@@ -49,14 +49,6 @@
 				</tr>
 				<tr class="episode-row">
 					<td class="episodes-cell">
-						{#
-						{% set episodeCount = contributor.episodes|length %}
-						{% trans %}
-						    {{ episodeCount }} Episode:
-						{% plural episodeCount %}
-						    {{ episodeCount }} Episodes:
-						{% endtrans %}
-						#}
 						<ul>
 						{% for episode in contributor.episodes %}
 							<li>

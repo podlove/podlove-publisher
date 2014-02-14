@@ -34,8 +34,8 @@ class Contributor extends Wrapper {
 	 * 
 	 * @accessor
 	 */
-	public function isPublic() {
-		return (bool) $this->contributor->showpublic;
+	public function visible() {
+		return (bool) $this->contributor->visibility;
 	}
 
 	/**
