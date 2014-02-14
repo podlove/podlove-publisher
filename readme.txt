@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.12 =
+* Enhancement: Take over chapters when switching from chapter asset to manual
+
 = 1.9.11 =
 * Enhancement: Split podcast settings into tabs.
 * Enhancement: Import/Export module supports contributors and contributions

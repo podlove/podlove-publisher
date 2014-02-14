@@ -373,6 +373,7 @@ abstract class Base
 			}
 		}
 
+		// @todo this is the wrong place to do this!
 		if ( isset( $_REQUEST['passwords'] ) && is_array( $_REQUEST['passwords'] ) ) {
 			foreach ( $_REQUEST['passwords'] as $password ) {
 				if ( isset( $attributes[ $password ] ) && $attributes[ $password ] !== $_REQUEST[ 'field_filler_podlove_feed' ][ $password ] ) {
@@ -384,6 +385,29 @@ abstract class Base
 			}
 		}
 		return $this->save();
+	}
+
+	/**
+	 * Update and save a single attribute.
+	 * 	
+	 * @param  string $attribute attribute name
+	 * @param  mixed  $value
+	 * @return (bool) query success
+	 */
+	public function update_attribute($attribute, $value) {
+		global $wpdb;
+
+		$this->$attribute = $value;
+
+		$sql = sprintf(
+			"UPDATE %s SET %s = '%s' WHERE id = %s",
+			self::table_name(),
+			$attribute,
+			$value,
+			$this->id
+		);
+
+		return $wpdb->query( $sql );
 	}
 	
 	/**

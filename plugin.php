@@ -735,6 +735,34 @@ add_action( 'wp', function() {
 	exit;
 } );
 
+/**
+ * When changing from an external chapter asset to 'manual', copy external 
+ * contents into local field.
+ */
+add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
+	if (!isset($old['chapters']) || !isset($new['chapters']))
+		return $new;
+
+	if ($new['chapters'] != 'manual')  // just changes to manual
+		return $new;
+
+	if (((int) $old['chapters']) <= 0) // just changes from an asset
+		return $new;
+
+	$episodes = Model\Episode::allByTime();
+
+	// 10 seconds per episode or 30 seconds since 1 request per asset 
+	// is required if it is not cached
+	set_time_limit(max(30, count($episodes) * 10));
+
+	foreach ($episodes as $episode) {
+		if ($chapters = $episode->get_chapters('mp4chaps'))
+			$episode->update_attribute('chapters', mysql_real_escape_string($chapters));
+	}
+
+	return $new;
+}, 10, 2);
+
 // register ajax actions
 new \Podlove\AJAX\Ajax;
 
