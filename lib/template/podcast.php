@@ -116,7 +116,7 @@ class Podcast extends Wrapper {
 		$episodes = array();
 
 		foreach (\Podlove\Model\Episode::allByTime() as $episode) {
-			if ($episode->is_valid())
+			if ($episode->is_valid() && get_post($episode->post_id)->post_status == 'publish')
 				$episodes[] = new Episode($episode);
 		}
 
