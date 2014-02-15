@@ -740,6 +740,8 @@ add_action( 'wp', function() {
  * contents into local field.
  */
 add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
+	global $wpdb;
+
 	if (!isset($old['chapters']) || !isset($new['chapters']))
 		return $new;
 
@@ -759,6 +761,9 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 		if ($chapters = $episode->get_chapters('mp4chaps'))
 			$episode->update_attribute('chapters', mysql_real_escape_string($chapters));
 	}
+
+	// delete chapters caches
+	$wpdb->query('DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove_chapters_string_%"');
 
 	return $new;
 }, 10, 2);

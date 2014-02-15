@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.9.13 =
+* Fix: When setting the chapter asset to manual, delete all chapter caches to avoid hiccups
+
 = 1.9.12 =
 * Enhancement: Take over chapters when switching from chapter asset to manual
 * Enhancement: Contributor tables look better in a wider range of themes
