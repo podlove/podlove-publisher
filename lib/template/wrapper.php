@@ -49,7 +49,7 @@ abstract class Wrapper {
 	public function __call($name, $arguments) {
 		return apply_filters_ref_array(
 			static::get_magic_getter_filter_name(),
-			array_merge(array(null, $name), $this->getExtraFilterArgs()) 
+			array_merge(array(null, $name), $this->getExtraFilterArgs(), $arguments) 
 		);
 	}
 

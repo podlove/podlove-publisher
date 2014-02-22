@@ -5,6 +5,27 @@ use \Podlove\Model\Base;
 
 class Contributor extends Base
 {	
+	public static function byGroup($groupSlug) {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				group_id = (SELECT id FROM ' . ContributorGroup::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $groupSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
 	public function getName() {
 		if ($this->publicname) {
 			return $this->publicname;

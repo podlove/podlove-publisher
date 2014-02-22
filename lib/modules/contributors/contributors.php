@@ -48,14 +48,29 @@ class Contributors extends \Podlove\Modules\Base {
 			4
 		);
 
+		/**
+		 * List of podcast contributors.
+		 *
+		 * Options:
+		 * 	group: (optional) group slug. If none is given, show all contributors.
+		 * 
+		 * @var string
+		 */
 		\Podlove\Template\Podcast::add_accessor(
 			'contributors',
-			function($return, $method_name, $podcast) {
-				return array_map(function($contribution) {
-					return new Template\Contributor($contribution->getContributor(), $contribution);
-				}, ShowContribution::all());
+			function($return, $method_name, $podcast, $args = array()) {
+
+				if (isset($args['group'])) {
+					$contributors = Contributor::byGroup($args['group']);
+				} else {
+					$contributors = Contributor::all();
+				}
+
+				return array_map(function($contributor) {
+					return new Template\Contributor($contributor);
+				}, $contributors);
 			},
-			3
+			4
 		);
 
 		// register shortcodes
