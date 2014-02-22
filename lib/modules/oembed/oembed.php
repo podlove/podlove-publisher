@@ -51,16 +51,19 @@ class oembed extends \Podlove\Modules\Base {
 		$podcast = \Podlove\Model\Podcast::get_instance();
 		$permalink = get_permalink( $post_id );
 
+		$player_width = "560px";
+		$play_height =  "140px";
+
 		return array(		'version'		=> '1.0',
 							'type'			=> 'rich',
-							'width'			=> '600px',
-							'height'		=> '200px',
+							'width'			=> $player_width,
+							'height'		=> $play_height,
 							'title'			=> $episode->full_title(),
 							'url'			=> get_permalink( $post_id ),
 							'author_name'	=> $podcast->full_title(),
 							'author_url'	=> site_url(),
 							'thumbnail_url'	=> $episode->get_cover_art_with_fallback(),
-							'html'			=> '<iframe src="' . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
+							'html'			=> '<iframe width="' . $player_width .'" height="' . $play_height . '" src="' . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
 	}
 
 	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
