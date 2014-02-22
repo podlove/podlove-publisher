@@ -1,9 +1,7 @@
 {% macro social(href, title, icon) %}
-    <li>
     	<a href="{{ href }}" target="_blank" title="{{ title }}">
     		<img width="32" height="32" src="{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}" class="podlove-contributor-button" alt="{{ title }}" />
     	</a>
-    </li>
 {% endmacro %}
 
 {# imports the macro above #}
@@ -19,32 +17,26 @@
 		{% for contributor in podcast.contributors %}
 			{% if contributor.visible %}
 				<tr>
-					<td colspan="2">
-						<strong style="font-size: 14px">{{ contributor.name }}</strong>
-					</td>
-				</tr>
-				<tr>
 					<td rowspan="2" class="avatar-cell" width="60">
 						{{ contributor.avatar }}
 					</td>
-					<td class="social_cell">
-						<ul class="podlove-social-list">
-							{% if contributor.publicemail %}
-								{{ helper.social("mailto:" ~ contributor.publicemail, "E-Mail", "email-128.png") }}
-							{% endif %}
-							{% if contributor.website %}
-								{{ helper.social(contributor.website, "Homepage", "www-128.png") }}
-							{% endif %}
-							{% if contributor.adn %}
-								{{ helper.social(contributor.adn, "App.net", "adn-128.png") }}
-							{% endif %}
-							{% if contributor.twitter %}
-								{{ helper.social(contributor.twitter, "Twitter", "twitter-128.png") }}
-							{% endif %}
-							{% if contributor.facebook %}
-								{{ helper.social(contributor.facebook, "Facebook", "facebook-128.png") }}
-							{% endif %}
-						<ul>
+					<td class="social-cell">
+						<strong class="contributor-name">{{ contributor.name }}</strong>
+						{% if contributor.publicemail %}
+							{{ helper.social("mailto:" ~ contributor.publicemail, "E-Mail", "email-128.png") }}
+						{% endif %}
+						{% if contributor.website %}
+							{{ helper.social(contributor.website, "Homepage", "www-128.png") }}
+						{% endif %}
+						{% if contributor.adn %}
+							{{ helper.social(contributor.adn, "App.net", "adn-128.png") }}
+						{% endif %}
+						{% if contributor.twitter %}
+							{{ helper.social(contributor.twitter, "Twitter", "twitter-128.png") }}
+						{% endif %}
+						{% if contributor.facebook %}
+							{{ helper.social(contributor.facebook, "Facebook", "facebook-128.png") }}
+						{% endif %}
 					</td>
 				</tr>
 				<tr class="episode-row">
@@ -86,7 +78,7 @@
 	margin: 0;
 }
 
-.podlove-global-contributors .social_cell li {
+.podlove-global-contributors .social-cell li {
 	margin: 0;
 }
 
