@@ -103,7 +103,7 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Chapter Marks', 'podlove' ),
 						'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
 						'html'        => array(
-							'class'       => 'large-text code',
+							'class'       => 'large-text code autogrow',
 							'placeholder' => '00:00:00.000 Intro',
 							'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
 						)
