@@ -24,8 +24,8 @@ function the_description() {
 }
 
 function override_feed_title( $feed ) {
-	add_filter( 'podlove_feed_title', function ( $title ) {
-		return htmlspecialchars( Model\Podcast::get_instance()->title );
+	add_filter( 'podlove_feed_title', function ( $title ) use ( $feed ) {
+		return htmlspecialchars( $feed->get_title() );
 	} );
 }
 

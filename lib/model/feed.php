@@ -55,6 +55,21 @@ class Feed extends Base {
 	}
 
 	/**
+	 * Build the title of the feed
+	 *
+	 */
+	public function get_title() {
+
+		$podcast = Podcast::get_instance();
+
+		if( $this->append_name_to_podcast_title )
+			return $podcast->title . ' (' . $this->name . ')';
+
+		return $podcast->title;
+
+	}
+
+	/**
 	 * Get title for browser feed discovery.
 	 *
 	 * This title is used by clients to show the user the subscribe option he
@@ -234,7 +249,8 @@ Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
 Feed::property( 'embed_content_encoded', 'INT' );
-Feed::property( 'protected', 'TINYINT(1)' ); 
+Feed::property( 'append_name_to_podcast_title', 'TINYINT(1)' );
+Feed::property( 'protected', 'TINYINT(1)' );
 Feed::property( 'protection_type', 'TINYINT(1)' ); // Protection type: 0: local, 1: WordPress User
 Feed::property( 'protection_user', 'VARCHAR(60)' );
 Feed::property( 'protection_password', 'VARCHAR(64)' );

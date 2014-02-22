@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 56 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 57 );
 
 add_action( 'init', function () {
 	
@@ -567,6 +567,12 @@ function run_migrations_for_version( $version ) {
 					$new->save();
 				}
 			}
+		break;
+		case 57:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `append_name_to_podcast_title` TINYINT(1) NULL AFTER `embed_content_encoded`',
+				\Podlove\Model\Feed::table_name()
+			) );
 		break;
 	}
 
