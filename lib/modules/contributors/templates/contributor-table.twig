@@ -13,10 +13,27 @@
 		{% for contributor in contributors %}
 			{% if contributor.visible %}
 				<tr>
-					<td class="avatar_cell">
-						{{ contributor.avatar }}
+					{% if avatars == "yes" %}
+						<td class="avatar_cell">
+							{{ contributor.avatar }}
+						</td>
+					{% endif %}
+					<td class="title_cell">
+						{{ contributor.name }}
+						{% if contributor.comment %}
+							<br><em>{{ contributor.comment }}</em>
+						{% endif %}
 					</td>
-					<td class="title_cell">{{ contributor.name }}</td>
+					{% if groups == "yes" %}
+						<td>
+							{{ contributor.group }}
+						</td>
+					{% endif %}
+					{% if roles == "yes" %}
+						<td>
+							{{ contributor.role }}
+						</td>
+					{% endif %}
 					<td class="social_cell">
 						{% if contributor.publicemail %}
 							{{ _self.social("mailto:" ~ contributor.publicemail, "E-Mail", "email") }}
@@ -51,12 +68,8 @@
 								</a>
 							{% endif %}
 							{% if contributor.paypal %}
-							<a target="_blank"
-								class="PayPalButton"
-								title="Support {{ contributor.name }} by donating with PayPal"
-								href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id={{ contributor.paypal }}">
-								<img width="32" height="32" src="{{ _self.iconSrc("paypal") }}" class="podlove-contributor-button" 
-								alt="Support {{ contributor.name }} by donating with PayPal" />
+							<a target="_blank" class="PayPalButton" title="Support {{ contributor.name }} by donating with PayPal" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id={{ contributor.paypal }}">
+								<img width="32" height="32" src="{{ _self.iconSrc("paypal") }}" class="podlove-contributor-button" alt="Support {{ contributor.name }} by donating with PayPal" />
 							</a>
 							{% endif %}
 							{% if contributor.amazon_wishlist %}

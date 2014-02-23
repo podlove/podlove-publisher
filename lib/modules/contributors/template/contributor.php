@@ -107,6 +107,15 @@ class Contributor extends Wrapper {
 	}
 
 	/**
+	 * Contribution comment
+	 * 
+	 * @accessor
+	 */
+	public function comment() {
+		return ($this->contribution) ? $this->contribution->comment : '';
+	}
+
+	/**
 	 * Avatar image
 	 *
 	 * Dimensions default to 50x50px.

@@ -122,7 +122,7 @@ class Shortcodes {
 		$this->fetchContributions('episode');
 
 		$this->settings['contributors'] = array_map(function($contribution) {
-			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor());
+			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor(), $contribution);
 		}, $this->contributions);
 
 		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-table.twig');
