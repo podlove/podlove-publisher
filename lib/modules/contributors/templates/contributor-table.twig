@@ -2,14 +2,8 @@
 	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
 {% endmacro %}
 
-{% macro donationLink(title, icon, href) %}
+{% macro iconLink(title, icon, href) %}
 	<a target="_blank" title="{{ title }}" href="{{ href }}">
-		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
-	</a>
-{% endmacro %}
-
-{% macro social(href, title, icon) %}
-	<a href="{{ href }}" target="_blank" title="{{ title }}">
 		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
 	</a>
 {% endmacro %}
@@ -42,34 +36,34 @@
 					{% endif %}
 					<td class="social_cell">
 						{% if contributor.publicemail %}
-							{{ _self.social("mailto:" ~ contributor.publicemail, "E-Mail", "email") }}
+							{{ _self.iconLink("E-Mail", "email", "mailto:" ~ contributor.publicemail) }}
 						{% endif %}
 						{% if contributor.website %}
-							{{ _self.social(contributor.website, "Homepage", "www") }}
+							{{ _self.iconLink("Homepage", "www", contributor.website) }}
 						{% endif %}
 						{% if contributor.adn %}
-							{{ _self.social(contributor.adn, "App.net", "adn") }}
+							{{ _self.iconLink("App.net", "adn", contributor.adn) }}
 						{% endif %}
 						{% if contributor.twitter %}
-							{{ _self.social(contributor.twitter, "Twitter", "twitter") }}
+							{{ _self.iconLink("Twitter", "twitter", contributor.twitter) }}
 						{% endif %}
 						{% if contributor.facebook %}
-							{{ _self.social(contributor.facebook, "Facebook", "facebook") }}
+							{{ _self.iconLink("Facebook", "facebook", contributor.facebook) }}
 						{% endif %}
 					</td>
 					{% if donations == "yes" %}
 						<td class="donation_cell">
 							{% if contributor.bitcoin %}
-								{{ _self.donationLink("Support " ~ contributor.name ~ " by donating with Bitcoin", "bitcoin", contributor.bitcoin) }}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Bitcoin", "bitcoin", contributor.bitcoin) }}
 							{% endif %}
 							{% if contributor.litecoin %}
-								{{ _self.donationLink("Support " ~ contributor.name ~ " by donating with Litecoin", "litecoin", contributor.litecoin) }}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Litecoin", "litecoin", contributor.litecoin) }}
 							{% endif %}
 							{% if contributor.paypal %}
-								{{ _self.donationLink("Support " ~ contributor.name ~ " by donating with PayPal", "paypal", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=" ~ contributor.paypal) }}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with PayPal", "paypal", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=" ~ contributor.paypal) }}
 							{% endif %}
 							{% if contributor.amazon_wishlist %}
-								{{ _self.donationLink("Support " ~ contributor.name ~ " by buying things from an Amazon Wishlist", "amazonwishlist", contributor.amazon_wishlist) }}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by buying things from an Amazon Wishlist", "amazonwishlist", contributor.amazon_wishlist) }}
 							{% endif %}
 						</td>
 					{% endif %}
