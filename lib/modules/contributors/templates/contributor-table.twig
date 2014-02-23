@@ -1,0 +1,124 @@
+{% macro iconSrc(icon) %}
+	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
+{% endmacro %}
+
+{% macro social(href, title, icon) %}
+	<a href="{{ href }}" target="_blank" title="{{ title }}">
+		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
+	</a>
+{% endmacro %}
+
+<table class="podlove-contributors-table">
+	<tbody>
+		{% for contributor in contributors %}
+			{% if contributor.visible %}
+				<tr>
+					<td class="avatar_cell">
+						{{ contributor.avatar }}
+					</td>
+					<td class="title_cell">{{ contributor.name }}</td>
+					<td class="social_cell">
+						{% if contributor.publicemail %}
+							{{ _self.social("mailto:" ~ contributor.publicemail, "E-Mail", "email") }}
+						{% endif %}
+						{% if contributor.website %}
+							{{ _self.social(contributor.website, "Homepage", "www") }}
+						{% endif %}
+						{% if contributor.adn %}
+							{{ _self.social(contributor.adn, "App.net", "adn") }}
+						{% endif %}
+						{% if contributor.twitter %}
+							{{ _self.social(contributor.twitter, "Twitter", "twitter") }}
+						{% endif %}
+						{% if contributor.facebook %}
+							{{ _self.social(contributor.facebook, "Facebook", "facebook") }}
+						{% endif %}
+					</td>
+					{% if donations == "yes" %}
+						<td class="donation_cell">
+							{% if contributor.bitcoin %}
+								{% set dTitle = "Support " ~ contributor.name ~ " by donating with Bitcoin" %}
+								<a href="bitcoin:{{ contributor.bitcoin }}" title="{{ dtitle }}">
+									<img width="32" height="32" src="{{ _self.iconSrc("bitcoin") }}" class="podlove-contributor-button" 
+									alt="{{ dtitle }}" />
+								</a>
+							{% endif %}
+							{% if contributor.litecoin %}
+								{% set dTitle = "Support " ~ contributor.name ~ " by donating with Litecoin" %}
+								<a href="litecoin:{{ contributor.litecoin }}" title="{{ dtitle }}">
+									<img width="32" height="32" src="{{ _self.iconSrc("litecoin") }}" class="podlove-contributor-button" 
+									alt="{{ dtitle }}" />
+								</a>
+							{% endif %}
+							{% if contributor.paypal %}
+							<a target="_blank"
+								class="PayPalButton"
+								title="Support {{ contributor.name }} by donating with PayPal"
+								href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id={{ contributor.paypal }}">
+								<img width="32" height="32" src="{{ _self.iconSrc("paypal") }}" class="podlove-contributor-button" 
+								alt="Support {{ contributor.name }} by donating with PayPal" />
+							</a>
+							{% endif %}
+							{% if contributor.amazon_wishlist %}
+								<a target="_blank" title="Support {{ contributor.name }} by buying things from an Amazon Wishlist" href="{{ contributor.amazon_wishlist }}">
+									<img width="32" height="32" src="{{ _self.iconSrc("amazonwishlist") }}" class="podlove-contributor-button" alt="Support {{ contributor.name }} by buying things from an Amazon Wishlist" />
+								</a>
+							{% endif %}
+						</td>
+					{% endif %}
+					{% if flattr == "yes" and contributor.flattr %}
+						<td class="flattr_cell">
+							{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}
+							<a target="_blank"
+							   class="FlattrButton"
+							   style="display:none;"
+							   title="Flattr {{ cTitle }}"
+							   rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
+							   href="{{ contributor.flattr_url }}">
+							   	Flattr {{ cTitle }}
+							</a>
+						</td>
+					{% endif %}
+				</tr>
+			{% endif %}
+		{% endfor %}
+	</tbody>
+</table>
+
+{% if flattr == "yes" %}
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+	var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+	s.type = 'text/javascript';
+	s.async = true;
+	s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+	t.parentNode.insertBefore(s, t);
+})();
+/* ]]> */
+</script>
+{% endif %}
+
+<style type="text/css">
+.podlove-contributors-table .avatar_cell {
+	width: 60px;
+}
+
+.podlove-contributors-table .title_cell {
+	line-height: 1em;
+}
+
+.podlove-contributors-table .social_cell a, .podlove-contributors-table .donation_cell a {
+	margin-right: 4px;
+	background: none;
+	text-decoration: none;
+}
+
+.podlove-contributors-table .flattr_cell iframe {
+	margin-bottom: 0px;
+}
+
+.podlove-contributors-table td {
+	vertical-align: middle;
+}
+</style>

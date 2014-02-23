@@ -117,7 +117,16 @@ class Shortcodes {
 
 		$this->settings = array_merge($defaults, $attributes);
 
-		return $this->renderListOfContributors();
+		// return $this->renderListOfContributors();
+
+		$this->fetchContributions('episode');
+
+		$this->settings['contributors'] = array_map(function($contribution) {
+			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor());
+		}, $this->contributions);
+
+		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-table.twig');
+		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $this->settings);
 	}
 
 	public function podlove_podcast_contributor_list($attributes)
@@ -159,7 +168,8 @@ class Shortcodes {
 		);
 	}
 
-	private function renderListOfContributors( $relation='episode' ) {
+	private function fetchContributions($relation='episode') {
+
 
 		// fetch contributors
 		switch ( $relation ) {
@@ -193,6 +203,11 @@ class Shortcodes {
 				return strtolower($group) == $c->getGroup()->slug;
 			});
 		}
+	}
+
+	private function renderListOfContributors( $relation='episode' ) {
+
+		$this->fetchContributions($relation);
 
 		if (count($this->contributions) == 0)
 			return "";
