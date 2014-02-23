@@ -14,7 +14,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for contributor in podcast.contributors %}
+		{% for contributor in contributors %}
 			{% if contributor.visible %}
 				<tr>
 					<td rowspan="2" class="avatar-cell" width="60">
@@ -71,12 +71,11 @@
 		});
 
 		$(".podlove-global-contributors").on("click", ".show-all-episodes a", function(e) {
-			var ul = $(this).closest("ul");
-
 			e.preventDefault();
 
-			$("li", ul).show();
-			$("li.show-all-episodes", ul).hide();
+			$(this).closest(".episodes-cell")
+				.find("li").show().end()
+				.find(".show-all-episodes").hide();
 		});
 	});
 }(jQuery));

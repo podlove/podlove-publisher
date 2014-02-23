@@ -1,6 +1,8 @@
 <?php 
 namespace Podlove\Modules\Contributors;
 
+use \Podlove\Modules\Contributors\Model\Contributor;
+
 use \Podlove\Model;
 
 /**
@@ -30,6 +32,17 @@ class Shortcodes {
 	}
 
 	public function global_contributor_list($atts) {
+
+		if (isset($atts['group'])) {
+			$contributors = Contributor::byGroup($atts['group']);
+		} else {
+			$contributors = Contributor::all();
+		}
+
+		$atts['contributors'] = array_map(function($contributor) {
+			return new \Podlove\Modules\Contributors\Template\Contributor($contributor);
+		}, $contributors);
+
 		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-list.twig');
 		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $atts);
 	}
