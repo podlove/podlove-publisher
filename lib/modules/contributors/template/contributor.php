@@ -3,6 +3,7 @@ namespace Podlove\Modules\Contributors\Template;
 
 use Podlove\Template\Wrapper;
 use Podlove\Template\Episode;
+use Podlove\Modules\Contributors\Model\EpisodeContribution;
 
 /**
  * Contributor Template Wrapper
@@ -244,13 +245,30 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function episodes() {
-		$episodes = array();
+		global $wpdb;
 
-		foreach ($this->contributor->getContributions() as $contribution) {
-			$episode = $contribution->getEpisode();
-			if ($episode && !in_array($episode->id, array_keys($episodes))) {
-				$episodes[$episode->id] = new Episode($episode);
-			}
+		$sql = '
+			SELECT
+				ec.episode_id
+			FROM
+				' . EpisodeContribution::table_name() . ' ec
+				INNER JOIN ' . \Podlove\Model\Episode::table_name() . ' e ON e.id = ec.episode_id
+				INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
+			WHERE
+				ec.contributor_id = %d
+			GROUP BY
+				ec.episode_id
+			ORDER BY
+				p.post_date DESC
+		';
+
+		$episode_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $this->contributor->id)
+		);
+
+		$episodes = array();
+		foreach ($episode_ids as $episode_id) {
+			$episodes[$episode_id] = new Episode(\Podlove\Model\Episode::find_one_by_id($episode_id));
 		}
 
 		return array_values($episodes);
