@@ -57,6 +57,31 @@
 	</tbody>
 </table>
 
+<script type="text/javascript">
+(function ($) {
+	$(document).ready(function() {
+		$(".podlove-global-contributors .episodes-cell").each(function() {
+			var items = $("li", this);
+
+
+			if (items.length > 5) {
+				$("li:gt(4)", this).hide();
+				$('<span class="show-all-episodes"><a href="#">… show all episodes</a><span>').insertAfter($("ul", this));
+			}
+		});
+
+		$(".podlove-global-contributors").on("click", ".show-all-episodes a", function(e) {
+			var ul = $(this).closest("ul");
+
+			e.preventDefault();
+
+			$("li", ul).show();
+			$("li.show-all-episodes", ul).hide();
+		});
+	});
+}(jQuery));
+</script>
+
 <style type="text/css">
 .podlove-global-contributors td {
 	vertical-align: top;
@@ -92,4 +117,12 @@
 	display: inline-block;
 	margin: 0;
 }
+
+.podlove-global-contributors .episodes-cell li a {
+	background: #eee;
+	padding: 2px 10px;
+	line-height: 170%;
+	border-radius: 10px;
+}
+
 </style>
