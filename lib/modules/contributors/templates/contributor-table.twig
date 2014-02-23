@@ -2,6 +2,12 @@
 	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
 {% endmacro %}
 
+{% macro donationLink(title, icon, href) %}
+	<a target="_blank" title="{{ title }}" href="{{ href }}">
+		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
+	</a>
+{% endmacro %}
+
 {% macro social(href, title, icon) %}
 	<a href="{{ href }}" target="_blank" title="{{ title }}">
 		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
@@ -54,28 +60,16 @@
 					{% if donations == "yes" %}
 						<td class="donation_cell">
 							{% if contributor.bitcoin %}
-								{% set dTitle = "Support " ~ contributor.name ~ " by donating with Bitcoin" %}
-								<a href="bitcoin:{{ contributor.bitcoin }}" title="{{ dtitle }}">
-									<img width="32" height="32" src="{{ _self.iconSrc("bitcoin") }}" class="podlove-contributor-button" 
-									alt="{{ dtitle }}" />
-								</a>
+								{{ _self.donationLink("Support " ~ contributor.name ~ " by donating with Bitcoin", "bitcoin", contributor.bitcoin) }}
 							{% endif %}
 							{% if contributor.litecoin %}
-								{% set dTitle = "Support " ~ contributor.name ~ " by donating with Litecoin" %}
-								<a href="litecoin:{{ contributor.litecoin }}" title="{{ dtitle }}">
-									<img width="32" height="32" src="{{ _self.iconSrc("litecoin") }}" class="podlove-contributor-button" 
-									alt="{{ dtitle }}" />
-								</a>
+								{{ _self.donationLink("Support " ~ contributor.name ~ " by donating with Litecoin", "litecoin", contributor.litecoin) }}
 							{% endif %}
 							{% if contributor.paypal %}
-							<a target="_blank" class="PayPalButton" title="Support {{ contributor.name }} by donating with PayPal" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id={{ contributor.paypal }}">
-								<img width="32" height="32" src="{{ _self.iconSrc("paypal") }}" class="podlove-contributor-button" alt="Support {{ contributor.name }} by donating with PayPal" />
-							</a>
+								{{ _self.donationLink("Support " ~ contributor.name ~ " by donating with PayPal", "paypal", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=" ~ contributor.paypal) }}
 							{% endif %}
 							{% if contributor.amazon_wishlist %}
-								<a target="_blank" title="Support {{ contributor.name }} by buying things from an Amazon Wishlist" href="{{ contributor.amazon_wishlist }}">
-									<img width="32" height="32" src="{{ _self.iconSrc("amazonwishlist") }}" class="podlove-contributor-button" alt="Support {{ contributor.name }} by buying things from an Amazon Wishlist" />
-								</a>
+								{{ _self.donationLink("Support " ~ contributor.name ~ " by buying things from an Amazon Wishlist", "amazonwishlist", contributor.amazon_wishlist) }}
 							{% endif %}
 						</td>
 					{% endif %}
