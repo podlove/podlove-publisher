@@ -57,23 +57,7 @@ class Shortcodes {
 	 * @return string
 	 */
 	public function podlove_contributors($attributes) {
-		
-		$defaults = array(
-			'preset'  => 'comma separated',
-			'linkto'  => 'none',
-			'role'    => 'all',
-			'roles'		=> 'no',
-			'group'		=> 'all',
-			'groups'	=> 'no',
-			'avatars' => 'yes',
-		);
-
-		if (!is_array($attributes))
-			$attributes = array();
-
-		$this->settings = array_merge($defaults, $attributes);
-
-		return $this->renderListOfContributors();
+		$this->podlove_contributor_list($attributes);
 	}
 
 	/**
@@ -117,8 +101,6 @@ class Shortcodes {
 
 		$this->settings = array_merge($defaults, $attributes);
 
-		// return $this->renderListOfContributors();
-
 		$this->fetchContributions('episode');
 
 		$this->settings['contributors'] = array_map(function($contribution) {
@@ -149,7 +131,14 @@ class Shortcodes {
 
 		$this->settings = array_merge($defaults, $attributes);
 
-		return $this->renderListOfContributors('podcast');
+		$this->fetchContributions('podcast');
+
+		$this->settings['contributors'] = array_map(function($contribution) {
+			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor(), $contribution);
+		}, $this->contributions);
+
+		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-table.twig');
+		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $this->settings);
 	}
 
 	/**
@@ -169,8 +158,6 @@ class Shortcodes {
 	}
 
 	private function fetchContributions($relation='episode') {
-
-
 		// fetch contributors
 		switch ( $relation ) {
 			case 'episode' :
