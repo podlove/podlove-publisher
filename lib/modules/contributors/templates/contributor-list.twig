@@ -22,21 +22,23 @@
 					</td>
 					<td class="social-cell">
 						<strong class="contributor-name">{{ contributor.name }}</strong>
-						{% if contributor.publicemail %}
-							{{ helper.social("mailto:" ~ contributor.publicemail, "E-Mail", "email-128.png") }}
-						{% endif %}
-						{% if contributor.website %}
-							{{ helper.social(contributor.website, "Homepage", "www-128.png") }}
-						{% endif %}
-						{% if contributor.adn %}
-							{{ helper.social(contributor.adn, "App.net", "adn-128.png") }}
-						{% endif %}
-						{% if contributor.twitter %}
-							{{ helper.social(contributor.twitter, "Twitter", "twitter-128.png") }}
-						{% endif %}
-						{% if contributor.facebook %}
-							{{ helper.social(contributor.facebook, "Facebook", "facebook-128.png") }}
-						{% endif %}
+						<div class="social-icons">
+							{% if contributor.publicemail %}
+								{{ helper.social("mailto:" ~ contributor.publicemail, "E-Mail", "email-128.png") }}
+							{% endif %}
+							{% if contributor.website %}
+								{{ helper.social(contributor.website, "Homepage", "www-128.png") }}
+							{% endif %}
+							{% if contributor.adn %}
+								{{ helper.social(contributor.adn, "App.net", "adn-128.png") }}
+							{% endif %}
+							{% if contributor.twitter %}
+								{{ helper.social(contributor.twitter, "Twitter", "twitter-128.png") }}
+							{% endif %}
+							{% if contributor.facebook %}
+								{{ helper.social(contributor.facebook, "Facebook", "facebook-128.png") }}
+							{% endif %}
+						</div>
 					</td>
 				</tr>
 				<tr class="episode-row">
