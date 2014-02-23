@@ -84,14 +84,14 @@ class Episode extends Wrapper {
 	/**
 	 * Post publication date
 	 *
-	 * Uses WordPress date format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
 	 * 
 	 * @accessor
 	 */
 	public function publicationDate($format = '') {
 
 		if ($format === '')
-			$format = get_option('date_format');
+			$format = get_option('date_format') . ' ' . get_option('time_format');
 
 		return mysql2date($format, $this->post->post_date);
 	}
