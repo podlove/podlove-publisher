@@ -29,9 +29,9 @@ class Shortcodes {
 		add_shortcode( 'podlove-global-contributor-list', array( $this, 'global_contributor_list') );
 	}
 
-	public function global_contributor_list() {
+	public function global_contributor_list($atts) {
 		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-list.twig');
-		return \Podlove\Template\TwigFilter::apply_to_html($tpl);
+		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $atts);
 	}
 
 	/**

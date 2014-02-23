@@ -7,25 +7,27 @@ use \Podlove\Model;
  *
  * Example:
  * 	add_filter('some_filter_for_a_string', array('\Podlove\Template\TwigFilter', 'apply_to_html'));
+ *
+ * @param string $html HTML string
+ * @param array  $vars optional map of template variables
  */
 class TwigFilter {
 
-	public static function apply_to_html($html) {
+	public static function apply_to_html($html, $vars = array()) {
 		$loader = new \Twig_Loader_String();
 
 		$twig   = new \Twig_Environment($loader, array('autoescape' => false));
 		$twig->addFilter(self::subtemplating_filter($twig));
-
 		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
 
+		$context = $vars;
+
 		// add podcast to global context
-		$context = array(
-			'podcast' => new Podcast(Model\Podcast::get_instance())
-		);
+		$context = array_merge($context, array('podcast' => new Podcast(Model\Podcast::get_instance())));
 
 		// add podcast to global context if we are in an episode
 		if ($episode = Model\Episode::find_one_by_property('post_id', get_the_ID())) {
-			$context['episode'] = new Episode($episode);
+			$context = array_merge($context, array('episode' => new Episode($episode)));
 		}
 
 		return $twig->render($html, $context);
