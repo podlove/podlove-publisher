@@ -38,6 +38,10 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
+		/**
+		 * @todo  order by position
+		 * @todo  filter by group
+		 */
 		\Podlove\Template\Episode::add_accessor(
 			'contributors',
 			function($return, $method_name, $episode, $post) {
