@@ -107,7 +107,19 @@ class Shortcodes {
 			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor(), $contribution);
 		}, $this->contributions);
 
-		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-table.twig');
+		switch ($this->settings['preset']) {
+			case 'comma separated':
+				$file = 'contributor-comma-separated.twig';
+				break;
+			case 'table':
+				$file = 'contributor-table.twig';
+				break;
+			default:
+				$file = 'contributor-table.twig';
+				break;
+		}
+
+		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/' . $file);
 		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $this->settings);
 	}
 
