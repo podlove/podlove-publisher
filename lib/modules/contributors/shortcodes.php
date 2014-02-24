@@ -111,6 +111,9 @@ class Shortcodes {
 			case 'comma separated':
 				$file = 'contributor-comma-separated.twig';
 				break;
+			case 'list':
+				$file = 'contributor-simple-list.twig';
+				break;
 			case 'table':
 				$file = 'contributor-table.twig';
 				break;
