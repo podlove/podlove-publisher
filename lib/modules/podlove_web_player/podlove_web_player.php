@@ -39,8 +39,8 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 		?>
 <!DOCTYPE html>
     <head>
-        <script type="text/javascript" src="<?php echo $this->get_module_url() ?>/player/podlove-web-player/libs/html5shiv.js"></script>
-        <script type="text/javascript" src="<?php echo $this->get_module_url() ?>/player/podlove-web-player/libs/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="<?php echo $this->get_module_url() ?>/js/html5shiv.js"></script>
+        <script type="text/javascript" src="<?php echo $this->get_module_url() ?>/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="<?php echo $this->get_module_url() ?>/player/podlove-web-player/static/podlove-web-player.js"></script>
         <link rel="stylesheet" href="<?php echo $this->get_module_url() ?>/player/podlove-web-player/static/podlove-web-player.css" />
     </head>
