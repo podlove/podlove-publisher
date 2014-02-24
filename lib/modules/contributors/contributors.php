@@ -57,8 +57,6 @@ class Contributors extends \Podlove\Modules\Base {
 		 *
 		 * Options:
 		 * 	group: (optional) group slug. If none is given, show all contributors.
-		 * 
-		 * @var string
 		 */
 		\Podlove\Template\Podcast::add_accessor(
 			'contributors',

@@ -85,6 +85,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.0 =
+* Feature: All-new, mighty Templating system. You can now use the [Twig Template Syntax](http://twig.sensiolabs.org/documentation) in all templates. Access all podcast/episode data via the new template API. Please read the [Template Guide](http://docs.podlove.org/guides/understanding-templates/) to get started.
+
 = 1.9.12 =
 * Enhancement: Take over chapters when switching from chapter asset to manual
 * Enhancement: Contributor tables look better in a wider range of themes
