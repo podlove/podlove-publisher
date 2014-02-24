@@ -69,7 +69,8 @@ class oembed extends \Podlove\Modules\Base {
 
 	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
 		$post_id = get_the_ID();
-		$permalink_template = get_permalink( $post_id ) . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&" );
+		$permalink = get_permalink( $post_id );
+		$permalink_template = $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&" );
 		$title =  get_the_title( $post_id );
 
 		$embed_elements = array(
