@@ -2,12 +2,15 @@
 namespace Podlove\Modules\Social\Model;
 
 use \Podlove\Model\Base;
+use \Podlove\Modules;
+
+use Podlove\DomDocumentFragment;
 
 class Service extends Base
 {
 
-	public function get_log() {
-		return $this->get_module_url() . '/images/icons/' . $this->logo;
+	public function get_logo() {
+		return \Podlove\PLUGIN_URL . '/lib/modules/Social/images/icons/' . $this->logo;
 	}
 
 }

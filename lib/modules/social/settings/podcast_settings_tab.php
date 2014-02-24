@@ -56,7 +56,7 @@ class PodcastSettingsTab extends Tab {
 
 	public static function podcast_form_extension_form()
 	{
-		$contributions = ShowContribution::all();
-		\Podlove\Modules\Contributors\Contributors::contributors_form_table($contributions, 'podlove_podcast[contributor]');
+		$services = \Podlove\Modules\Social\Model\Service::all();
+		\Podlove\Modules\Social\Social::services_form_table($services);
 	}
 }
