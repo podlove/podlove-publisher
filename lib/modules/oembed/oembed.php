@@ -2,10 +2,11 @@
 namespace Podlove\Modules\oembed;
 
 use \Podlove\Modules\Base;
+use Podlove\DomDocumentFragment;
 
 class oembed extends \Podlove\Modules\Base {
 
-	protected $module_name = '<a href="http://oembed.com/">oEmbed</a> Support';
+	protected $module_name = 'oEmbed Support';
 	protected $module_description = 'Allows an embedded representation of a URL on third party sites.';
 	protected $module_group = 'metadata';
 
@@ -68,16 +69,36 @@ class oembed extends \Podlove\Modules\Base {
 
 	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
 		$post_id = get_the_ID();
-		$permalink = get_permalink( $post_id );
+		$permalink_template = get_permalink( $post_id ) . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" );
 		$title =  get_the_title( $post_id );
 
+		$embed_elements = array(
+									array(
+											'rel'	=> 'alternate',
+											'type'	=> 'application/json+oembed',
+											'href'	=> $permalink_template . "service=podlove-oembed&amp;format=json",
+											'title'	=> $title . " oEmbed Profile"
+										),
+									array(
+											'rel'	=> 'alternate',
+											'type'	=> 'application/xml+oembed',
+											'href'	=> $permalink_template . "service=podlove-oembed&amp;format=xml",
+											'title'	=> $title . " oEmbed Profile"
+										),
+								);
+
 		if( is_single() && get_post_type( $post_id ) == 'podcast' ) {
-			echo "	<link rel='alternate' type='application/json+oembed'
- 						href='" . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) . "service=podlove-oembed&amp;format=json'
- 						title='" . $title . " oEmbed Profile' />\n
-					<link rel='alternate' type='text/xml+oembed'
-  						href='" . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) . "service=podlove-oembed&amp;format=xml'
-  						title='" . $title . " oEmbed Profile' />\n";
+			$dom = new DomDocumentFragment;
+
+			foreach ($embed_elements as $link_element) {
+				$element = $dom->createElement('link');
+				foreach ($link_element as $attribute => $value) {
+					$element->setAttribute($attribute,$value);
+				}
+				$dom->appendChild($element);
+			}
+
+			echo $dom;
   		}
 	}
 
