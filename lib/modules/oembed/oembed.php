@@ -6,7 +6,7 @@ use Podlove\DomDocumentFragment;
 
 class oembed extends \Podlove\Modules\Base {
 
-	protected $module_name = '<a href="http://oembed.com/">oEmbed</a> Support';
+	protected $module_name = 'oEmbed Support';
 	protected $module_description = 'Allows an embedded representation of a URL on third party sites.';
 	protected $module_group = 'metadata';
 
