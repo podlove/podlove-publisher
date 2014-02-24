@@ -1,0 +1,42 @@
+<table>
+    <thead>
+        <th></th>
+        <th>Date</th>
+        <th>Title</th>
+        <th>Duration</th>
+    </thead>
+    <tbody>
+    {% for episode in podcast.episodes %}
+        <tr class="podcast_archive_element">
+            <td class="thumbnail">
+                <img src="{{ episode.imageUrlWithFallback }}" width="64" height="64">
+            </td>
+            <td class="date">
+                <span class="release_date">
+                    {{ episode.publicationDate }}
+                </span>
+            </td>
+            <td class="title">
+                <a href="{{ episode.url }}">
+                    <strong>{{ episode.title }}</strong><br>
+                    {{ episode.subtitle }}
+                </a>
+            </td>
+            <td class="duration">
+                {{ episode.duration }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<style type="text/css">
+.podcast_archive_element .thumbnail {
+    width: 64px;
+    padding: 5px !important;
+}
+
+.podcast_archive_element td {
+    vertical-align: top;
+}
+</style>

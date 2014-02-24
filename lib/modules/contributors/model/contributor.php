@@ -5,6 +5,27 @@ use \Podlove\Model\Base;
 
 class Contributor extends Base
 {	
+	public static function byGroup($groupSlug) {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				group_id = (SELECT id FROM ' . ContributorGroup::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $groupSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
 	public function getName() {
 		if ($this->publicname) {
 			return $this->publicname;
@@ -19,10 +40,6 @@ class Contributor extends Base
 
 	public function getAvatar($size) {
 		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
-	}
-
-	public function getRole() {
-		return ContributorRole::find_one_by_slug($this->role);
 	}
 
 	public function getAvatarUrl($size) {

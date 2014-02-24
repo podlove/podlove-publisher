@@ -107,11 +107,16 @@ function require_code_mirror() {
 	wp_register_script( 'podlove-codemirror-mode-javascript-js', $codemirror_path . 'modes/javascript/javascript.js', array( 'podlove-codemirror-js' ) );
 	wp_register_script( 'podlove-codemirror-mode-xml-js', $codemirror_path . 'modes/xml/xml.js', array( 'podlove-codemirror-js' ) );
 	wp_register_script( 'podlove-codemirror-mode-yaml-js', $codemirror_path . 'modes/yaml/yaml.js', array( 'podlove-codemirror-js' ) );
+	wp_register_script( 'podlove-codemirror-mode-twig-js', $codemirror_path . 'modes/twig/twig.js', array( 'podlove-codemirror-js' ) );
 	wp_register_script( 'podlove-codemirror-mode-htmlmixed-js', $codemirror_path . 'modes/htmlmixed/htmlmixed.js', array(
 		'podlove-codemirror-mode-css-js',
 		'podlove-codemirror-mode-javascript-js',
 		'podlove-codemirror-mode-yaml-js',
 		'podlove-codemirror-mode-xml-js'
+	) );
+	wp_register_script( 'podlove-codemirror-mode-twigmixed-js', $codemirror_path . 'modes/twigmixed/twigmixed.js', array(
+		'podlove-codemirror-mode-htmlmixed-js',
+		'podlove-codemirror-mode-twig-js'
 	) );
 
 	wp_register_script(
@@ -142,6 +147,7 @@ function require_code_mirror() {
 
 	wp_enqueue_script( 'podlove-codemirror-js' );
 	wp_enqueue_script( 'podlove-codemirror-mode-htmlmixed-js' );
+	wp_enqueue_script( 'podlove-codemirror-mode-twigmixed-js' );
 	wp_enqueue_script( 'podlove-codemirror-util-close-js' );
 	wp_enqueue_script( 'podlove-codemirror-util-match-js' );
 	wp_enqueue_script( 'podlove-codemirror-util-hint-js' );
@@ -158,6 +164,23 @@ function require_code_mirror() {
 
     wp_enqueue_style( 'podlove-codemirror-css' );
     wp_enqueue_style( 'podlove-codemirror-hint-css' );
+}
+
+/**
+ * Load template file.
+ * 
+ * @param  string $path absolute or path relative to /templates
+ * @return string       file contents
+ */
+function load_template($path) {
+	if (!file_exists($path))
+		$path = trailingslashit(\Podlove\PLUGIN_DIR) . 'templates/' . $path;
+
+	if (file_exists($path)) {
+		return file_get_contents($path);
+	} else {
+		return false;
+	}
 }
 
 namespace Podlove\Form;
