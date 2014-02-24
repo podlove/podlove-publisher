@@ -2,7 +2,7 @@
 namespace Podlove\Modules\Social\Settings;
 
 use \Podlove\Settings\Podcast\Tab;
-use \Podlove\Modules\Contributors\Model\ShowContribution;
+use \Podlove\Modules\Social\Model\ShowService;
 
 class PodcastSettingsTab extends Tab {
 
@@ -15,13 +15,14 @@ class PodcastSettingsTab extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
-		$formKeys = array('contributor');
+		$formKeys = array('services');
 
 		$settings = get_option('podlove_podcast');
 		foreach ($formKeys as $key) {
 			$settings[$key] = $_POST['podlove_podcast'][$key];
 		}
 		update_option('podlove_podcast', $settings);
+		
 		header('Location: ' . $this->get_url());
 	}
 
@@ -37,8 +38,8 @@ class PodcastSettingsTab extends Tab {
 		?>
 		<p>
 			<?php echo sprintf(
-				__( 'This is the current team of your podcast. Display this list using the shortcode %s', 'podlove' ),
-				'<code>[podlove-podcast-contributor-list]</code>'
+				__( 'These are the current social media acccount of your podcast. Display this list using the shortcode %s', 'podlove' ),
+				'<code>[podlove-podcast-social-media-list]</code>'
 			); ?>
 		</p>
 		<?php
@@ -47,7 +48,7 @@ class PodcastSettingsTab extends Tab {
 			$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
 			$podcast = $form->object;
 
-	    	$wrapper->callback( 'contributors', array(
+	    	$wrapper->callback( 'services', array(
 				// 'label'    => __( 'Contributors', 'podlove' ),
 				'callback' => array( __CLASS__, 'podcast_form_extension_form' )
 			) );
@@ -56,7 +57,7 @@ class PodcastSettingsTab extends Tab {
 
 	public static function podcast_form_extension_form()
 	{
-		$services = \Podlove\Modules\Social\Model\Service::all();
-		\Podlove\Modules\Social\Social::services_form_table($services);
+		$services = \Podlove\Modules\Social\Model\ShowService::all();
+		\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_podcast[services]');
 	}
 }

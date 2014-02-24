@@ -3,6 +3,7 @@ namespace Podlove\Modules\Social;
 
 use \Podlove\Modules\Social\Model\Service;
 use \Podlove\Modules\Social\Model\ShowService;
+use \Podlove\Modules\Social\Model\ContributorService;
 
 use \Podlove\Modules\Social\Settings\PodcastSettingsTab;
 
@@ -22,18 +23,15 @@ class Social extends \Podlove\Modules\Base {
 	public function was_activated( $module_name ) {
 		Service::build();
 		ShowService::build();
+		ContributorService::build();
 	}
 
 	public function save_setting($old, $new)
 	{
-		echo "fuuu";
-		print_r($_POST);
-		print_r($new);
-		exit();
-		if (!isset($new['service']))
+		if (!isset($new['services']))
 			return;
 
-		$services_appearances = $new['service'];
+		$services_appearances = $new['services'];
 
 		foreach (\Podlove\Modules\Social\Model\ShowService::all() as $service) {
 			$service->delete();
@@ -66,6 +64,7 @@ class Social extends \Podlove\Modules\Base {
 
 	public static function services_form_table($current_services = array(), $form_base_name = 'episode_services') {
 		$cjson = array();
+		$converted_services = array();
 
 		foreach (\Podlove\Modules\Social\Model\Service::all() as $service) {
 			$cjson[$service->id] = array(
@@ -75,6 +74,14 @@ class Social extends \Podlove\Modules\Base {
 				'logo'   		=> "<img src='" . $service->get_logo() . "' width='38px' />",
 				'url_scheme'   	=> $service->url_scheme				
 			);			
+		}
+
+		foreach ($current_services as $current_service_key => $service) {
+			$converted_services[$service->id] = array(
+				'id'   			=> $service->service_id,
+				'value'   		=> $service->value,
+				'title'   		=> $service->title
+			);
 		}
 
 		?>
@@ -113,7 +120,7 @@ class Social extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="service-value" />
+					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
 				</td>
 				<td>
 					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][title]" class="podlove-service-title" />
@@ -130,7 +137,7 @@ class Social extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
-				var existing_services = "";
+				var existing_services = <?php echo json_encode($converted_services); ?>;
 
 				PODLOVE.Services = <?php echo json_encode(array_values($cjson)); ?>;
 				PODLOVE.Services_form_base_name = "<?php echo $form_base_name ?>";
@@ -165,7 +172,7 @@ class Social extends \Podlove\Modules\Base {
 						$("#" + new_row_id + "_chzn").find("a").focus();
 					}
 
-					function add_service_row(service, title) {
+					function add_service_row(service, value, title) {
 						var row = '';
 
 						// add service to table
@@ -180,6 +187,8 @@ class Social extends \Podlove\Modules\Base {
 						new_row.find('td.podlove-avatar-column').html(service.logo);
 						// select service in service-dropdown
 						new_row.find('select.podlove-service-dropdown option[value="' + service.id + '"]').attr('selected',true);
+						// set value
+						new_row.find('input.podlove-service-value').val(value);
 						// set title
 						new_row.find('input.podlove-service-title').val(title);
 					}
@@ -201,6 +210,7 @@ class Social extends \Podlove\Modules\Base {
 							row.find(".podlove-logo-column").html( service.logo );
 							// Renaming all corresponding elements after the contributor has changed 
 							row.find(".podlove-service-dropdown").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
+							row.find(".podlove-service-value").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
 							row.find(".podlove-service-title").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
 							row.find(".podlove-service-edit").show(); // Show Edit Button
 							i++; // continue using "i" which was already used to add the existing contributions
@@ -208,8 +218,7 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					function add_service( service ) {
-						add_contributor_row(fetch_service(service.id), service.title);
-
+						add_service_row(fetch_service(service.id), service.value, service.title);
 					}
 
 					$(document).on('click', "#add_new_service_button", function() {

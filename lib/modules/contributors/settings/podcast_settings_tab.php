@@ -13,7 +13,7 @@ class PodcastSettingsTab extends Tab {
 
 	public function process_form() {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
-			return;
+			return;			
 
 		$formKeys = array('contributor');
 
