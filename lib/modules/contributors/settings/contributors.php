@@ -118,6 +118,8 @@ class Contributors {
 	private function save() {
 		if ( ! isset( $_REQUEST['contributor'] ) )
 			return;
+
+		do_action( 'update_podlove_contributor', $wrapper, $episode );
 			
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
@@ -130,6 +132,8 @@ class Contributors {
 	 */
 	private function create() {
 		global $wpdb;
+
+		do_action( 'update_podlove_contributor', $wrapper, $episode );
 		
 		$contributor = new Contributor;
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
@@ -207,6 +211,7 @@ class Contributors {
 
 			$contributor = $form->object;
 
+			do_action( 'podlove_contributors_form_beginning', $wrapper, $episode );
 
 			$wrapper->subheader( __( 'General', 'podlove' ) );
 
@@ -347,7 +352,9 @@ class Contributors {
 				'label'       => __( 'Amazon Wishlist', 'podlove' ),
 				'description' => 'URL of the contributors Amazon wishlist.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
+			) );
+
+			do_action( 'podlove_contributors_form_end', $wrapper, $episode );
 
 		} );
 	}

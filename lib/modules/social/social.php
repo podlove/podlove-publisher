@@ -18,12 +18,56 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_tab' ) );
 
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
+		add_action( 'update_podlove_contributor', array( $this, 'save_contributor' ), 10, 2 );
+
+		add_action( 'podlove_contributors_form_end', array( $this, 'services_form_for_contributors' ), 10, 2 );
+	}
+
+	public function services_form_for_contributors($wrapper) {
+
+		$wrapper->subheader( __( 'Social', 'podlove' ) );
+
+		$wrapper->callback( 'services_form_table', array(
+			'callback' => function() {
+
+				$services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_GET['contributor'] . " ORDER BY `position` ASC");
+
+				echo '</table>';
+				\Podlove\Modules\Social\Social::services_form_table($services);
+				echo '<table class="form-table">';
+			}
+		) );
 	}
 
 	public function was_activated( $module_name ) {
 		Service::build();
 		ShowService::build();
 		ContributorService::build();
+	}
+
+	public function save_contributor() {
+		if (!isset($_POST['podlove_contributor']) || !isset($_POST['contributor']))
+			return;
+
+		$services_appearances = $_POST['podlove_contributor']['services'];
+		$contributor = $_POST['contributor'];
+
+		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_POST['contributor']) as $service) {
+			$service->delete();
+		}
+
+		foreach ($services_appearances as $service_appearance) {
+			foreach ($service_appearance as $service_id => $service) {
+				$c = new \Podlove\Modules\Social\Model\ContributorService;
+				$c->position = $position;
+				$c->contributor_id = $contributor;
+				$c->service_id = $service_id;
+				$c->value = $service['value'];
+				$c->title = $service['title'];
+				$c->save();
+			}
+			$position++;
+		}
 	}
 
 	public function save_setting($old, $new)
@@ -41,12 +85,13 @@ class Social extends \Podlove\Modules\Base {
 		foreach ($services_appearances as $service_appearance) {
 			foreach ($service_appearance as $service_id => $service) {
 				$c = new \Podlove\Modules\Social\Model\ShowService;
-
+				$c->position = $position;
 				$c->service_id = $service_id;
 				$c->value = $service['value'];
 				$c->title = $service['title'];
 				$c->save();
 			}
+			$position++;
 		}
 	}
 
@@ -62,7 +107,7 @@ class Social extends \Podlove\Modules\Base {
 		return $tabs;
 	}
 
-	public static function services_form_table($current_services = array(), $form_base_name = 'episode_services') {
+	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]') {
 		$cjson = array();
 		$converted_services = array();
 
