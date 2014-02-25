@@ -21,6 +21,8 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'update_podlove_contributor', array( $this, 'save_contributor' ), 10, 2 );
 
 		add_action( 'podlove_contributors_form_end', array( $this, 'services_form_for_contributors' ), 10, 2 );
+
+		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 	}
 
 	public function services_form_for_contributors($wrapper) {
@@ -43,6 +45,198 @@ class Social extends \Podlove\Modules\Base {
 		Service::build();
 		ShowService::build();
 		ContributorService::build();
+
+		$services = array(
+			array(
+					'title' 		=> 'App.net',
+					'description'	=> 'App.net Account',
+					'logo'			=> 'adn-128.png',
+					'url_scheme'	=> 'http://alpha.app.net/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Bandcamp',
+					'description'	=> 'Bandcamp URL',
+					'logo'			=> 'bandcamp-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Bitbucket',
+					'description'	=> 'Bitbucket Account',
+					'logo'			=> 'bitbucket-128.png',
+					'url_scheme'	=> 'http://bitbucket.org/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'DeviantART',
+					'description'	=> 'DeviantART Account',
+					'logo'			=> 'deviantart-128.png',
+					'url_scheme'	=> 'http://%account-placeholder%.deviantart.com/'
+				),
+			array(
+					'title' 		=> 'Dribbble',
+					'description'	=> 'Dribbble Account',
+					'logo'			=> 'dribbble-128.png',
+					'url_scheme'	=> 'http://dribbble.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Facebook',
+					'description'	=> 'Facebook Account',
+					'logo'			=> 'facebook-128.png',
+					'url_scheme'	=> 'http://facebook.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Flickr',
+					'description'	=> 'Flickr Account',
+					'logo'			=> 'flickr-128.png',
+					'url_scheme'	=> 'http://flickr.com/photos/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'GitHub',
+					'description'	=> 'GitHub Account',
+					'logo'			=> 'github-128.png',
+					'url_scheme'	=> 'http://github.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Google+',
+					'description'	=> 'Google+ URL',
+					'logo'			=> 'googleplus-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Instagram',
+					'description'	=> 'Instagram Account',
+					'logo'			=> 'instagram-128.png',
+					'url_scheme'	=> 'http://http://instagram.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Linkedin',
+					'description'	=> 'Linkedin URL',
+					'logo'			=> 'linkedin-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Pinterest',
+					'description'	=> 'Pinterest Account',
+					'logo'			=> 'pinterest-128.png',
+					'url_scheme'	=> 'http://www.pinterest.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Soundcloud',
+					'description'	=> 'Soundcloud Account',
+					'logo'			=> 'soundcloud-128.png',
+					'url_scheme'	=> 'http://soundcloud.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Tumblr',
+					'description'	=> 'Tumblr Account',
+					'logo'			=> 'tumblr-128.png',
+					'url_scheme'	=> 'http://%account-placeholder%.tumblr.com/'
+				),
+			array(
+					'title' 		=> 'Twitter',
+					'description'	=> 'Twitter Account',
+					'logo'			=> 'twitter-128.png',
+					'url_scheme'	=> 'http://twitter.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'WWW',
+					'description'	=> 'Website URL',
+					'logo'			=> 'www-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Xing',
+					'description'	=> 'Xing URL',
+					'logo'			=> 'xing-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'YouTube',
+					'description'	=> 'YouTube Account',
+					'logo'			=> 'youtube-128.png',
+					'url_scheme'	=> 'http://www.youtube.com/user/%account-placeholder%'
+				)
+		);
+
+		if( count(Service::all()) == 0 ) {
+			foreach ($services as $service_key => $service) {
+				$c = new \Podlove\Modules\Social\Model\Service;
+				$c->title = $service['title'];
+				$c->description = $service['description'];
+				$c->logo = $service['logo'];
+				$c->url_scheme = $service['url_scheme'];
+				$c->save();
+			}
+		}
+
+		if( count(ContributorService::all()) == 0 ) {
+
+			$www_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'WWW'");
+			$adn_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'App.net'");
+			$twitter_service		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Twitter'");
+			$googleplus_service 	= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Google+'");
+			$facebook_service		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Facebook'");
+
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$contributors = \Podlove\Modules\Contributors\Model\Contributor::all();
+
+				foreach ($contributors as $contributor) {
+
+					$position = 0;
+					
+					if( $contributor->www !== '' ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $www_service->id;
+						$c->value = $contributor->www;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( $contributor->adn !== '' ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $adn_service->id;
+						$c->value = $contributor->adn;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( $contributor->twitter !== '' ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $twitter_service->id;
+						$c->value = $contributor->twitter;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( $contributor->googleplus !== '' ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $googleplus_service->id;
+						$c->value = $contributor->googleplus;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( $contributor->facebook !== '' ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $facebook_service->id;
+						$c->value = $contributor->facebook;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}				
+
+				}
+			}
+		}
+
 	}
 
 	public function save_contributor() {
@@ -134,9 +328,9 @@ class Social extends \Podlove\Modules\Base {
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th class="podlove-logo-column" colspand="2"></th>
+						
 						<th>Service</th>
-						<th>Account</th>
+						<th>Account/URL</th>
 						<th>Title</th>
 						<th style="width: 60px">Remove</th>
 						<th style="width: 30px"></th>
@@ -155,7 +349,7 @@ class Social extends \Podlove\Modules\Base {
 
 			<script type="text/template" id="service-row-template">
 			<tr class="media_file_row podlove-service-table" data-contributor-id="{{service-id}}">
-				<td class="podlove-logo-column"></td>
+				
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
@@ -166,6 +360,7 @@ class Social extends \Podlove\Modules\Base {
 				</td>
 				<td>
 					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
+					<i class="podlove-icon-share podlove-service-link"></i>
 				</td>
 				<td>
 					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][title]" class="podlove-service-title" />
@@ -229,13 +424,17 @@ class Social extends \Podlove\Modules\Base {
 						
 						var new_row = $("#services_table_body tr:last");
 
-						new_row.find('td.podlove-avatar-column').html(service.logo);
 						// select service in service-dropdown
 						new_row.find('select.podlove-service-dropdown option[value="' + service.id + '"]').attr('selected',true);
+						// set service description
+						new_row.find('label.podlove-service-description').html(service.description);
 						// set value
 						new_row.find('input.podlove-service-value').val(value);
 						// set title
 						new_row.find('input.podlove-service-title').val(title);
+						// Show account/URL if not empty
+						if( new_row.find('input.podlove-service-value').val() !== '' )
+							new_row.find('input.podlove-service-value').parent().find(".podlove-service-link").show();
 					}
 
 					function service_dropdown_handler() {
@@ -252,10 +451,12 @@ class Social extends \Podlove\Modules\Base {
 
 							// Setting data attribute and avatar field
 							row.data("service-id", service.id);
-							row.find(".podlove-logo-column").html( service.logo );
 							// Renaming all corresponding elements after the contributor has changed 
 							row.find(".podlove-service-dropdown").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
 							row.find(".podlove-service-value").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
+							row.find(".podlove-service-value").attr("placeholder", service.description);
+							row.find(".podlove-service-value").attr("title", service.description);
+							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
 							row.find(".podlove-service-title").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
 							row.find(".podlove-service-edit").show(); // Show Edit Button
 							i++; // continue using "i" which was already used to add the existing contributions
@@ -270,8 +471,22 @@ class Social extends \Podlove\Modules\Base {
 						add_new_service();
 					});
 
+					$(document).on('click', '.podlove-service-link',  function() {
+						if( $(this).parent().find(".podlove-service-value").val() !== '' )
+							window.open( $(this).data("service-url-scheme").replace( '%account-placeholder%', $(this).parent().find(".podlove-service-value").val() ) );
+					});	
+
 					$(document).on('click', '.service_remove',  function() {
 						$(this).closest("tr").remove();
+					});
+
+					$(document).on('keydown', '.podlove-service-value',  function() {
+						$(this).parent().find(".podlove-service-link").show();
+					});
+
+					$(document).on('focusout', '.podlove-service-value',  function() {
+						if( $(this).val() == '' )
+							$(this).parent().find(".podlove-service-link").hide();
 					});	
 
 					$("#podlove_podcast").on('click', 'h3.hndle',  function() {
@@ -315,6 +530,17 @@ class Social extends \Podlove\Modules\Base {
 			</script>
 		</div>
 		<?php		
+	}
+
+	public function admin_print_styles() {
+
+		wp_register_style(
+			'podlove_social_admin_style',
+			$this->get_module_url() . '/admin.css',
+			false,
+			\Podlove\get_plugin_header( 'Version' )
+		);
+		wp_enqueue_style('podlove_social_admin_style');
 	}
 
 }

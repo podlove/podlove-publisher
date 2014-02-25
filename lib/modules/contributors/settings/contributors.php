@@ -211,7 +211,7 @@ class Contributors {
 
 			$contributor = $form->object;
 
-			do_action( 'podlove_contributors_form_beginning', $wrapper, $episode );
+			do_action( 'podlove_contributors_form_beginning', $wrapper );
 
 			$wrapper->subheader( __( 'General', 'podlove' ) );
 
@@ -278,7 +278,7 @@ class Contributors {
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
-			$wrapper->subheader( __( 'Contact &amp; Social', 'podlove' ) );
+			$wrapper->subheader( __( 'Contact', 'podlove' ) );
 			
 			$wrapper->string( 'privateemail', array(
 				'label'       => __( 'Contact email', 'podlove' ),
@@ -291,36 +291,6 @@ class Contributors {
 				'description' => 'This email will be displayed for public purposes.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );		
-
-			$wrapper->string( 'www', array(
-				'label'       => __( 'Homepage', 'podlove' ),
-				'description' => 'The contributors homepage.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'adn', array(
-				'label'       => __( 'App.net', 'podlove' ),
-				'description' => 'App.net username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-			
-			$wrapper->string( 'twitter', array(
-				'label'       => __( 'Twitter', 'podlove' ),
-				'description' => 'Twitter username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->string( 'googleplus', array(
-				'label'       => __( 'Google+', 'podlove' ),
-				'description' => 'Google+ URL.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );			
-			
-			$wrapper->string( 'facebook', array(
-				'label'       => __( 'Facebook', 'podlove' ),
-				'description' => 'Facebook username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
 
 			$wrapper->subheader( __( 'Donations', 'podlove' ) );
 
@@ -354,7 +324,7 @@ class Contributors {
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
-			do_action( 'podlove_contributors_form_end', $wrapper, $episode );
+			do_action( 'podlove_contributors_form_end', $wrapper );
 
 		} );
 	}
