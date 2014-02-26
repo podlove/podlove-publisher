@@ -10,7 +10,7 @@
 
 <table class="podlove-contributors-table">
 	<tbody>
-		{% for contributor in podcast.contributors %}
+		{% for contributor in podcast.contributors({group: 'all', role: 'all'}) %}
 			{% if contributor.visible %}
 				<tr>
 					{% if avatars == "yes" %}

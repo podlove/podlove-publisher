@@ -26,6 +26,59 @@ class Contributor extends Base
 		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
 	}
 
+	public static function byRole($roleSlug) {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				role_id = (SELECT id FROM ' . ContributorRole::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $roleSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
+	public static function byGroupAndRole($groupSlug = null, $roleSlug = null) {
+		global $wpdb;
+
+		if (!$groupSlug && !$roleSlug)
+			return self::all();
+
+		if ($groupSlug && !$roleSlug)
+			return self::byGroup($groupSlug);
+
+		if (!$groupSlug && $roleSlug)
+			return self::byRole($roleSlug);
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				role_id = (SELECT id FROM ' . ContributorRole::table_name() . ' WHERE slug = %s)
+				AND
+				group_id = (SELECT id FROM ' . ContributorGroup::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $roleSlug, $groupSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
 	public function getName() {
 		if ($this->publicname) {
 			return $this->publicname;

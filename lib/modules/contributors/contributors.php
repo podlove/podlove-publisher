@@ -93,16 +93,17 @@ class Contributors extends \Podlove\Modules\Base {
 		 *
 		 * Options:
 		 * 	group: (optional) group slug. If none is given, show all contributors.
+		 * 	role:  (optional) role slug. If none is given, show all contributors.
 		 */
 		\Podlove\Template\Podcast::add_accessor(
 			'contributors',
 			function($return, $method_name, $podcast, $args = array()) {
 
-				if (isset($args['group'])) {
-					$contributors = Contributor::byGroup($args['group']);
-				} else {
-					$contributors = Contributor::all();
-				}
+				// fetch by group and/or role. defaults to *all* contributors
+				// if no role or group are given
+				$group = isset($args['group']) && $args['group'] !== 'all' ? $args['group'] : null;
+				$role  = isset($args['role'])  && $args['role']  !== 'all' ? $args['role']  : null;
+				$contributors = Contributor::byGroupAndRole($group, $role);
 
 				return array_map(function($contributor) {
 					return new Template\Contributor($contributor);
