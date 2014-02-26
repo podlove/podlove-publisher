@@ -13,7 +13,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
-
+	
 	public function column_avatar( $contributor ) {
 		
 		return $contributor->getAvatar("45px");
@@ -88,6 +88,24 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	public function column_episodes( $contributor ) {
 		return $this->get_episodes_link($contributor, $contributor->contributioncount);
+	}
+
+	public function column_social( $contributor ) {
+		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_all_by_contributor($contributor->id);
+		$source = '';
+
+		foreach ($contributor_services as $contributor_service) {
+			$service = $contributor_service->get_service();
+
+			$source .= "<li>
+						<img class='podlove-contributor-list-social-logo' src='"
+						. $service->get_logo() . "' /> <a href='"
+						. $contributor_service->get_service_url() . "'>"
+						. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) . "</a>
+						</li>\n";
+		}
+
+		return '<ul class="podlove-contributor-social-list">' . $source . '</ul>';
 	}
 
 	public function get_columns(){

@@ -23,22 +23,8 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'podlove_contributors_form_end', array( $this, 'services_form_for_contributors' ), 10, 2 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
-	}
 
-	public function services_form_for_contributors($wrapper) {
-
-		$wrapper->subheader( __( 'Social', 'podlove' ) );
-
-		$wrapper->callback( 'services_form_table', array(
-			'callback' => function() {
-
-				$services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_GET['contributor'] . " ORDER BY `position` ASC");
-
-				echo '</table>';
-				\Podlove\Modules\Social\Social::services_form_table($services);
-				echo '<table class="form-table">';
-			}
-		) );
+		add_filter( "manage_podcast_page_podlove_contributors_settings_handle_columns", array( $this, 'add_new_contributor_column' ) );
 	}
 
 	public function was_activated( $module_name ) {
@@ -51,7 +37,7 @@ class Social extends \Podlove\Modules\Base {
 					'title' 		=> 'App.net',
 					'description'	=> 'App.net Account',
 					'logo'			=> 'adn-128.png',
-					'url_scheme'	=> 'http://alpha.app.net/%account-placeholder%'
+					'url_scheme'	=> 'https://alpha.app.net/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bandcamp',
@@ -63,37 +49,37 @@ class Social extends \Podlove\Modules\Base {
 					'title' 		=> 'Bitbucket',
 					'description'	=> 'Bitbucket Account',
 					'logo'			=> 'bitbucket-128.png',
-					'url_scheme'	=> 'http://bitbucket.org/%account-placeholder%'
+					'url_scheme'	=> 'https://bitbucket.org/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'DeviantART',
 					'description'	=> 'DeviantART Account',
 					'logo'			=> 'deviantart-128.png',
-					'url_scheme'	=> 'http://%account-placeholder%.deviantart.com/'
+					'url_scheme'	=> 'https://%account-placeholder%.deviantart.com/'
 				),
 			array(
 					'title' 		=> 'Dribbble',
 					'description'	=> 'Dribbble Account',
 					'logo'			=> 'dribbble-128.png',
-					'url_scheme'	=> 'http://dribbble.com/%account-placeholder%'
+					'url_scheme'	=> 'https://dribbble.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Facebook',
 					'description'	=> 'Facebook Account',
 					'logo'			=> 'facebook-128.png',
-					'url_scheme'	=> 'http://facebook.com/%account-placeholder%'
+					'url_scheme'	=> 'https://facebook.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flickr',
 					'description'	=> 'Flickr Account',
 					'logo'			=> 'flickr-128.png',
-					'url_scheme'	=> 'http://flickr.com/photos/%account-placeholder%'
+					'url_scheme'	=> 'https://secure.flickr.com/photos/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'GitHub',
 					'description'	=> 'GitHub Account',
 					'logo'			=> 'github-128.png',
-					'url_scheme'	=> 'http://github.com/%account-placeholder%'
+					'url_scheme'	=> 'https://github.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Google+',
@@ -105,7 +91,7 @@ class Social extends \Podlove\Modules\Base {
 					'title' 		=> 'Instagram',
 					'description'	=> 'Instagram Account',
 					'logo'			=> 'instagram-128.png',
-					'url_scheme'	=> 'http://http://instagram.com/%account-placeholder%'
+					'url_scheme'	=> 'https://http://instagram.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Linkedin',
@@ -114,28 +100,34 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Pinboard',
+					'description'	=> 'Pinboard Account',
+					'logo'			=> 'pinboard-128.png',
+					'url_scheme'	=> 'https://pinboard.in/u:%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Pinterest',
 					'description'	=> 'Pinterest Account',
 					'logo'			=> 'pinterest-128.png',
-					'url_scheme'	=> 'http://www.pinterest.com/%account-placeholder%'
+					'url_scheme'	=> 'https://www.pinterest.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Soundcloud',
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
-					'url_scheme'	=> 'http://soundcloud.com/%account-placeholder%'
+					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Tumblr',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
-					'url_scheme'	=> 'http://%account-placeholder%.tumblr.com/'
+					'url_scheme'	=> 'https://%account-placeholder%.tumblr.com/'
 				),
 			array(
 					'title' 		=> 'Twitter',
 					'description'	=> 'Twitter Account',
 					'logo'			=> 'twitter-128.png',
-					'url_scheme'	=> 'http://twitter.com/%account-placeholder%'
+					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'WWW',
@@ -153,7 +145,7 @@ class Social extends \Podlove\Modules\Base {
 					'title' 		=> 'YouTube',
 					'description'	=> 'YouTube Account',
 					'logo'			=> 'youtube-128.png',
-					'url_scheme'	=> 'http://www.youtube.com/user/%account-placeholder%'
+					'url_scheme'	=> 'https://www.youtube.com/user/%account-placeholder%'
 				)
 		);
 
@@ -289,16 +281,39 @@ class Social extends \Podlove\Modules\Base {
 		}
 	}
 
-	/**
-	 * Social extension for podcast settings screen.
-	 * 
-	 * @param  TableWrapper $wrapper form wrapper
-	 * @param  Podcast      $podcast podcast model
-	 */
 	public function podcast_settings_tab($tabs)
 	{
 		$tabs->addTab( new Settings\PodcastSettingsTab( __( 'Social', 'podlove' ) ) );
 		return $tabs;
+	}
+
+	public function add_new_contributor_column($columns)
+	{
+			$keys = array_keys($columns);
+		    $insertIndex = array_search('gender', $keys) + 1; // after author column
+
+		    // insert contributors at that index
+		    $columns = array_slice($columns, 0, $insertIndex, true) +
+		           array("social" => __('Social', 'podlove')) +
+			       array_slice($columns, $insertIndex, count($columns) - 1, true);
+
+		    return $columns;
+	}
+
+	public function services_form_for_contributors($wrapper) {
+
+		$wrapper->subheader( __( 'Social', 'podlove' ) );
+
+		$wrapper->callback( 'services_form_table', array(
+			'callback' => function() {
+
+				$services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_GET['contributor'] . " ORDER BY `position` ASC");
+
+				echo '</table>';
+				\Podlove\Modules\Social\Social::services_form_table($services);
+				echo '<table class="form-table">';
+			}
+		) );
 	}
 
 	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]') {
@@ -310,7 +325,6 @@ class Social extends \Podlove\Modules\Base {
 				'id'   			=> $service->id,
 				'title'   		=> $service->title,
 				'description'   => $service->description,
-				'logo'   		=> "<img src='" . $service->get_logo() . "' width='38px' />",
 				'url_scheme'   	=> $service->url_scheme				
 			);			
 		}
