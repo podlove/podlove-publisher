@@ -38,52 +38,40 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
+		/**
+		 * List of episode contributors.
+		 *
+		 * Examples:
+		 * 
+		 * 	{# iterating over a list of contributors #}
+		 * 	{% for contributor in episode.contributors({scope: "podcast"}) %}
+		 *  	{{ contributor.name }}
+		 *  	{% if not loop.last %}, {% endif %}
+		 *  {% endfor %}
+		 *
+		 * 	{# iterating over a grouped list of contributors #}
+		 * 	{% for contributorGroup in episode.contributors({scope: "podcast", groupby: "group"}) %}
+		 * 		<strong>{{ contributorGroup.group.title }}:</strong> 
+		 * 		{% for contributor in contributorGroup.contributors %}
+		 *  		{{ contributor.name }}
+		 *  		{% if not loop.last %}, {% endif %}
+		 *  	{% endfor %}
+		 *  {% endfor %}
+		 * 
+		 * Options:
+		 * 	group:   (optional) group slug. If none is given, show all contributors.
+		 * 	role:    (optional) role slug. If none is given, show all contributors.
+		 * 	groupby: (optional) group or role slug. Group by "group" or "role".
+		 * 	         If used, the returned data is has another layer for the groups.
+		 * 	         See examples for more details.
+		 *
+		 * @accessor
+		 */
 		\Podlove\Template\Episode::add_accessor(
 			'contributors',
 			function($return, $method_name, $episode, $post, $args = array()) {
-
 				$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
-
-				// Remove all contributions with missing contributors.
-				$contributions = array_filter($contributions, function($c) {
-					return (bool) $c->getContributor();
-				});
-
-				// filter by role
-				if (isset($args['role']) && $args['role'] != 'all') {
-					$role = $args['role'];
-					$contributions = array_filter($contributions, function($c) use ($role) {
-						return strtolower($role) == $c->getRole()->slug;
-					});
-				}
-
-				// filter by group
-				if (isset($args['group']) && $args['group'] != 'all') {
-					$group = $args['group'];
-					$contributions = array_filter($contributions, function($c) use ($group) {
-						return strtolower($group) == $c->getGroup()->slug;
-					});
-				}
-
-				if (isset($args['groupby']) && $args['groupby'] == 'group') {
-					$groups = array();
-					foreach ($contributions as $contribution) {
-						$group = $contribution->getGroup();
-						if (isset($groups[$group->id])) {
-							$groups[$group->id]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
-						} else {
-							$groups[$group->id] = array(
-								'group'        => new Template\ContributorGroup($group, array($contribution)),
-								'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
-							);
-						}
-					}
-					return $groups;
-				} else {
-					return array_map(function($contribution) {
-						return new Template\Contributor($contribution->getContributor(), $contribution);
-					}, $contributions);
-				}
+				return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
 			},
 			5
 		);
@@ -91,23 +79,55 @@ class Contributors extends \Podlove\Modules\Base {
 		/**
 		 * List of podcast contributors.
 		 *
+		 * Examples:
+		 * 
+		 * 	{# iterating over a list of contributors #}
+		 * 	{% for contributor in podcast.contributors({scope: "podcast"}) %}
+		 *  	{{ contributor.name }}
+		 *  	{% if not loop.last %}, {% endif %}
+		 *  {% endfor %}
+		 *
+		 * 	{# iterating over a grouped list of contributors #}
+		 * 	{% for contributorGroup in podcast.contributors({scope: "podcast", groupby: "group"}) %}
+		 * 		<strong>{{ contributorGroup.group.title }}:</strong> 
+		 * 		{% for contributor in contributorGroup.contributors %}
+		 *  		{{ contributor.name }}
+		 *  		{% if not loop.last %}, {% endif %}
+		 *  	{% endfor %}
+		 *  {% endfor %}
+		 * 
 		 * Options:
-		 * 	group: (optional) group slug. If none is given, show all contributors.
-		 * 	role:  (optional) role slug. If none is given, show all contributors.
+		 * 	scope:   Either "global" or "podcast". "global" returns *all* contributors.
+		 * 	         "podcast" returns the contributors configured in podcast settings.
+		 * 	         Default: "global".
+		 * 	group:   (optional) filter by group slug. Defaults to "all", which does not filter.
+		 * 	role:    (optional) filter by role slug. Defaults to "all", which does not filter.
+		 * 	groupby: (optional) group or role slug. Group by "group" or "role".
+		 * 	         If used, the returned data is has another layer for the groups.
+		 * 	         See examples for more details.
+		 *
+		 * @accessor
 		 */
 		\Podlove\Template\Podcast::add_accessor(
 			'contributors',
 			function($return, $method_name, $podcast, $args = array()) {
 
-				// fetch by group and/or role. defaults to *all* contributors
-				// if no role or group are given
-				$group = isset($args['group']) && $args['group'] !== 'all' ? $args['group'] : null;
-				$role  = isset($args['role'])  && $args['role']  !== 'all' ? $args['role']  : null;
-				$contributors = Contributor::byGroupAndRole($group, $role);
+				$scope = isset($args['scope']) && in_array($args['scope'], array('global', 'podcast')) ? $args['scope'] : 'global';
 
-				return array_map(function($contributor) {
-					return new Template\Contributor($contributor);
-				}, $contributors);
+				if ($scope == 'global') {
+					// fetch by group and/or role. defaults to *all* contributors
+					// if no role or group are given
+					$group = isset($args['group']) && $args['group'] !== 'all' ? $args['group'] : null;
+					$role  = isset($args['role'])  && $args['role']  !== 'all' ? $args['role']  : null;
+					$contributors = Contributor::byGroupAndRole($group, $role);
+
+					return array_map(function($contributor) {
+						return new Template\Contributor($contributor);
+					}, $contributors);
+				} else {
+					$contributions = ShowContribution::all();
+					return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
+				}
 			},
 			4
 		);
@@ -128,6 +148,63 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorSettings($settings_parent);
 		});
+	}
+
+	/**
+	 * Filter contributions.
+	 *
+	 * @fixme {groupby: "role"} is missing
+	 * 
+	 * @param  array $contributions List of contributions
+	 * @param  array $args          List of arguments. Keys: role, group, groupby
+	 * @return array Return format depends on `groupby` option. If it is not set,
+	 *               a list of contributors is returned. Otherwise, a list of 
+	 *               hashes is returned. These hashes have one key `contributors`,
+	 *               which contains the contributors. Depending on the `groupby`
+	 *               setting there is also a `group` or `role` key, which contains
+	 *               the expected object.
+	 */
+	public static function filterContributions($contributions, $args) {
+		// Remove all contributions with missing contributors.
+		$contributions = array_filter($contributions, function($c) {
+			return (bool) $c->getContributor();
+		});
+
+		// filter by role
+		if (isset($args['role']) && $args['role'] != 'all') {
+			$role = $args['role'];
+			$contributions = array_filter($contributions, function($c) use ($role) {
+				return strtolower($role) == $c->getRole()->slug;
+			});
+		}
+
+		// filter by group
+		if (isset($args['group']) && $args['group'] != 'all') {
+			$group = $args['group'];
+			$contributions = array_filter($contributions, function($c) use ($group) {
+				return strtolower($group) == $c->getGroup()->slug;
+			});
+		}
+
+		if (isset($args['groupby']) && $args['groupby'] == 'group') {
+			$groups = array();
+			foreach ($contributions as $contribution) {
+				$group = $contribution->getGroup();
+				if (isset($groups[$group->id])) {
+					$groups[$group->id]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
+				} else {
+					$groups[$group->id] = array(
+						'group'        => new Template\ContributorGroup($group, array($contribution)),
+						'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
+					);
+				}
+			}
+			return $groups;
+		} else {
+			return array_map(function($contribution) {
+				return new Template\Contributor($contribution->getContributor(), $contribution);
+			}, $contributions);
+		}
 	}
 
 	/**
