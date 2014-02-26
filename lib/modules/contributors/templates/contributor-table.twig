@@ -12,7 +12,13 @@
 	<tbody>
 		{% for contributorGroup in episode.contributors({groupby:'group'}) %}
 			<tr>
-				<th colspan="5" class="contributor-group">
+				{% set colspan = 2 %}
+				{% if avatars == "yes"   %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if groups == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if roles == "yes"     %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if donations == "yes" %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+				<th colspan="{{ colspan }}" class="contributor-group">
 					{{ contributorGroup.group.title }}
 				</th>
 			</tr>
