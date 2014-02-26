@@ -84,6 +84,18 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					'label'       => __( 'Announcement in Patter room', 'podlove' ),
 					'description' => 'The Announcement text will be posted in the chosen Patter room, too.'
 				) );
+
+				$this->register_option( 'adn_broadcast', 'checkbox', array(
+					'label'       => __( 'Broadcast', 'podlove' ),
+					'description' => 'Enables functionality for App.net Broadcasts.'
+				) );
+
+				$this->register_option( 'adn_broadcast_channel', 'select', array(
+					'label'       => __( 'Broadcast channel', 'podlove' ),
+					'description' => 'From the list of your Broadcast channels, choose the one related to your Podcast.',
+					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
+					'options'	  => $this->get_broadcast_channels()
+				) );
 				
 			}
 			
@@ -243,7 +255,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     private function post_to_patter($data) {
 
     	if ( $this->get_module_option('adn_patter_room_announcement') !== "on" )
-    		return
+    		return;
 
 		$data['channel_id'] = $this->get_module_option('adn_patter_room');
 		$data['annotations'][] = $this->get_crosspost_annotation();
@@ -256,6 +268,43 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		);
 
 		$this->send_data_to_adn($url, $data);
+    }
+
+    private function broadcast($data) {
+
+    	if ( $this->get_module_option('adn_broadcast') !== "on" )
+    		return;
+
+    	$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
+    	$data['annotations'][] = $this->get_broadcast_metadata( $_POST['post_title'] );
+    	$data['annotations'][] = $this->get_read_more_link(  get_permalink($_POST['post_ID']) );
+
+    	$url = sprintf(
+    		'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
+    		$this->get_module_option('adn_broadcast_channel'),
+    		$this->get_module_option('adn_auth_key')
+    	);
+
+    	$this->send_data_to_adn($url, $data);
+
+    }
+
+    private function get_broadcast_metadata($subject) {
+    	return array(
+    		"type" => "net.app.core.broadcast.message.metadata",
+    		"value" => array(
+    			"subject" => $subject
+    		)
+    	);
+    }
+
+    private function get_read_more_link($read_more_link) {
+    	return array(
+    		"type" => "net.app.core.crosspost",
+    		"value" => array(
+    			"canonical_url" => $read_more_link
+    		)
+    	);
     }
 
     public function post_to_adn($post_id, $post_title) {
@@ -283,6 +332,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
         $this->post_to_alpha($data);
         $this->post_to_patter($data);
+        $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
     }
@@ -410,6 +460,43 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 			set_transient( $cache_key, $patter_rooms, 60*60*24*365 ); // 1 year, we devalidate manually
 			return $patter_rooms;
+		}
+	}
+
+	public function get_broadcast_channels() {
+		$cache_key = 'podlove_adn_broadcast_channels';
+
+		if ( ( $broadcast_channels = get_transient( $cache_key ) ) !== FALSE ) {
+			return $broadcast_channels;
+		} else {
+			$url = 'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . $this->get_module_option('adn_auth_key');
+
+			$curl = new Http\Curl();
+			$curl->request( $url, array(
+				'headers' => array( 'Content-type'  => 'application/json' )
+			) );
+			$response = $curl->get_response();
+
+			if (!$curl->isSuccessful())
+				return array();
+			
+			$broadcast_channels = array();
+			
+			foreach ( json_decode($response['body'])->data as $channel ) {
+
+				if ( $channel->type == "net.app.core.broadcast" && $channel->you_can_edit == 1 ) {
+					$title = '';
+					foreach ($channel->annotations as $annotation) {
+						if( $annotation->type == "net.app.core.broadcast.metadata" )
+							$title = $annotation->value->title;
+					}
+
+					$broadcast_channels[$channel->id] = $title;
+				}	
+			}
+
+			set_transient( $cache_key, $broadcast_channels, 60*60*24*365 ); // 1 year, we devalidate manually
+			return $broadcast_channels;
 		}
 	}
 
