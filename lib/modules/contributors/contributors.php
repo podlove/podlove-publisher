@@ -38,20 +38,32 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
-		/**
-		 * @todo  order by position
-		 * @todo  filter by group
-		 *
-		 * @todo some kind of grouping API is required. example:
-		 * {% for group, contributors in episode.contributor-groups %}
-		 *    <h1>{{group.title}}</h1>
-		 *    {% for contributor in contributors %}
-		 */
 		\Podlove\Template\Episode::add_accessor(
 			'contributors',
 			function($return, $method_name, $episode, $post, $args = array()) {
 
 				$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+
+				// Remove all contributions with missing contributors.
+				$contributions = array_filter($contributions, function($c) {
+					return (bool) $c->getContributor();
+				});
+
+				// filter by role
+				if (isset($args['role']) && $args['role'] != 'all') {
+					$role = $args['role'];
+					$contributions = array_filter($contributions, function($c) use ($role) {
+						return strtolower($role) == $c->getRole()->slug;
+					});
+				}
+
+				// filter by group
+				if (isset($args['group']) && $args['group'] != 'all') {
+					$group = $args['group'];
+					$contributions = array_filter($contributions, function($c) use ($group) {
+						return strtolower($group) == $c->getGroup()->slug;
+					});
+				}
 
 				if (isset($args['groupby']) && $args['groupby'] == 'group') {
 					$groups = array();

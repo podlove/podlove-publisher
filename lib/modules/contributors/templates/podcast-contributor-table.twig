@@ -1,0 +1,127 @@
+{% macro iconSrc(icon) %}
+	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
+{% endmacro %}
+
+{% macro iconLink(title, icon, href) %}
+	<a target="_blank" title="{{ title }}" href="{{ href }}">
+		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
+	</a>
+{% endmacro %}
+
+<table class="podlove-contributors-table">
+	<tbody>
+		{% for contributor in podcast.contributors %}
+			{% if contributor.visible %}
+				<tr>
+					{% if avatars == "yes" %}
+						<td class="avatar_cell">
+							{{ contributor.avatar }}
+						</td>
+					{% endif %}
+					<td class="title_cell">
+						{{ contributor.name }}
+						{% if contributor.comment %}
+							<br><em>{{ contributor.comment }}</em>
+						{% endif %}
+					</td>
+					{% if groups == "yes" %}
+						<td>
+							{{ contributor.group }}
+						</td>
+					{% endif %}
+					{% if roles == "yes" %}
+						<td>
+							{{ contributor.role }}
+						</td>
+					{% endif %}
+					<td class="social_cell">
+						{% if contributor.publicemail %}
+							{{ _self.iconLink("E-Mail", "email", "mailto:" ~ contributor.publicemail) }}
+						{% endif %}
+						{% if contributor.website %}
+							{{ _self.iconLink("Homepage", "www", contributor.website) }}
+						{% endif %}
+						{% if contributor.adn %}
+							{{ _self.iconLink("App.net", "adn", contributor.adn) }}
+						{% endif %}
+						{% if contributor.twitter %}
+							{{ _self.iconLink("Twitter", "twitter", contributor.twitter) }}
+						{% endif %}
+						{% if contributor.facebook %}
+							{{ _self.iconLink("Facebook", "facebook", contributor.facebook) }}
+						{% endif %}
+					</td>
+					{% if donations == "yes" %}
+						<td class="donation_cell">
+							{% if contributor.bitcoin %}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Bitcoin", "bitcoin", contributor.bitcoin) }}
+							{% endif %}
+							{% if contributor.litecoin %}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Litecoin", "litecoin", contributor.litecoin) }}
+							{% endif %}
+							{% if contributor.paypal %}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with PayPal", "paypal", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=" ~ contributor.paypal) }}
+							{% endif %}
+							{% if contributor.amazon_wishlist %}
+								{{ _self.iconLink("Support " ~ contributor.name ~ " by buying things from an Amazon Wishlist", "amazonwishlist", contributor.amazon_wishlist) }}
+							{% endif %}
+						</td>
+					{% endif %}
+					{% if flattr == "yes" %}
+						<td class="flattr_cell">
+							{% if contributor.flattr %}
+								{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}
+								<a target="_blank"
+								   class="FlattrButton"
+								   style="display:none;"
+								   title="Flattr {{ cTitle }}"
+								   rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
+								   href="{{ contributor.flattr_url }}">
+								   	Flattr {{ cTitle }}
+								</a>
+							{% endif %}
+						</td>
+					{% endif %}
+				</tr>
+			{% endif %}
+		{% endfor %}
+	</tbody>
+</table>
+
+{% if flattr == "yes" %}
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+	var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+	s.type = 'text/javascript';
+	s.async = true;
+	s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+	t.parentNode.insertBefore(s, t);
+})();
+/* ]]> */
+</script>
+{% endif %}
+
+<style type="text/css">
+.podlove-contributors-table .avatar_cell {
+	width: 60px;
+}
+
+.podlove-contributors-table .title_cell {
+	line-height: 1em;
+}
+
+.podlove-contributors-table .social_cell a, .podlove-contributors-table .donation_cell a {
+	margin-right: 4px;
+	background: none;
+	text-decoration: none;
+}
+
+.podlove-contributors-table .flattr_cell iframe {
+	margin-bottom: 0px;
+}
+
+.podlove-contributors-table td {
+	vertical-align: middle;
+}
+</style>

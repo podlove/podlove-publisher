@@ -43,20 +43,13 @@ class Shortcodes {
 		add_shortcode( 'podlove-global-contributor-list', array( $this, 'global_contributor_list') );
 	}
 
-	public function global_contributor_list($atts) {
+	public function global_contributor_list($attributes)
+	{
+		if (!is_array($attributes))
+			$attributes = array();
 
-		if (isset($atts['group'])) {
-			$contributors = Contributor::byGroup($atts['group']);
-		} else {
-			$contributors = Contributor::all();
-		}
-
-		$atts['contributors'] = array_map(function($contributor) {
-			return new \Podlove\Modules\Contributors\Template\Contributor($contributor);
-		}, $contributors);
-
-		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-list.twig');
-		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $atts);
+		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/podcast-contributor-list.twig');
+		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $attributes);
 	}
 
 	/**
@@ -99,18 +92,12 @@ class Shortcodes {
 
 		$this->settings = array_merge(self::$shortcode_defaults, $attributes);
 
-		$this->fetchContributions('episode');
-
-		$this->settings['contributors'] = array_map(function($contribution) {
-			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor(), $contribution);
-		}, $this->contributions);
-
 		switch ($this->settings['preset']) {
 			case 'comma separated':
 				$file = 'contributor-comma-separated.twig';
 				break;
 			case 'list':
-				$file = 'contributor-simple-list.twig';
+				$file = 'contributor-list.twig';
 				break;
 			case 'table':
 				$file = 'contributor-table.twig';
@@ -131,48 +118,7 @@ class Shortcodes {
 
 		$this->settings = array_merge(self::$shortcode_defaults, $attributes);
 
-		$this->fetchContributions('podcast');
-
-		$this->settings['contributors'] = array_map(function($contribution) {
-			return new \Podlove\Modules\Contributors\Template\Contributor($contribution->getContributor(), $contribution);
-		}, $this->contributions);
-
-		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/contributor-table.twig');
+		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/podcast-contributor-table.twig');
 		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $this->settings);
-	}
-
-	private function fetchContributions($relation='episode') {
-		// fetch contributors
-		switch ( $relation ) {
-			case 'episode' :
-				if ($episode = Model\Episode::get_current()) {
-					$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('WHERE `episode_id` = "' . $episode->id . '" ORDER BY `position` ASC');
-				} else {
-					$this->contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('GROUP BY contributor_id ORDER BY `position` ASC');
-				}
-			break;
-			case 'podcast' :
-				$this->contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all();
-			break;
-		}
-
-		// Remove all contributions with missing contributors.
-		$this->contributions = array_filter($this->contributions, function($c) {
-			return (bool) $c->getContributor();
-		});
-
-		if ($this->settings['role'] != 'all') {
-			$role = $this->settings['role'];
-			$this->contributions = array_filter($this->contributions, function($c) use ($role) {
-				return strtolower($role) == $c->getRole()->slug;
-			});
-		}
-
-		if ($this->settings['group'] != 'all') {
-			$group = $this->settings['group'];
-			$this->contributions = array_filter($this->contributions, function($c) use ($group) {
-				return strtolower($group) == $c->getGroup()->slug;
-			});
-		}
 	}
 }
