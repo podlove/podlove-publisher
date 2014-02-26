@@ -29,6 +29,12 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
 
+To use the git repository as Wordpress plugin, you need to add the [podlove web player](https://github.com/podlove/podlove-web-player).
+
+```
+git clone git@github.com:podlove/podlove-web-player.git lib/modules/podlove_web_player/player
+```
+
 ## Running the test suite
 
 There is a test suite validating some Publisher functionality. It is based on Ruby/Mechanize. You need Ruby 2.0 or higher.
