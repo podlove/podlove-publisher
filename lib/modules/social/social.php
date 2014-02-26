@@ -322,7 +322,7 @@ class Social extends \Podlove\Modules\Base {
 				'title'   		=> $service->title
 			);
 		}
-
+		
 		?>
 		<div id="services-form">
 			<table class="podlove_alternating" border="0" cellspacing="0">

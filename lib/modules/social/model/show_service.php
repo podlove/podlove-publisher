@@ -8,6 +8,10 @@ use \Podlove\Model\Base;
  */
 class ShowService extends Base {
 
+	public function get_service() {
+		return \Podlove\Modules\Social\Model\Service::find_one_by_id($this->service_id);
+	}
+
 }
 
 ShowService::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
