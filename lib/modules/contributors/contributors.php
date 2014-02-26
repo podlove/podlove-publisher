@@ -41,15 +41,39 @@ class Contributors extends \Podlove\Modules\Base {
 		/**
 		 * @todo  order by position
 		 * @todo  filter by group
+		 *
+		 * @todo some kind of grouping API is required. example:
+		 * {% for group, contributors in episode.contributor-groups %}
+		 *    <h1>{{group.title}}</h1>
+		 *    {% for contributor in contributors %}
 		 */
 		\Podlove\Template\Episode::add_accessor(
 			'contributors',
-			function($return, $method_name, $episode, $post) {
-				return array_map(function($contribution) {
-					return new Template\Contributor($contribution->getContributor(), $contribution);
-				}, EpisodeContribution::find_all_by_episode_id($episode->id));
+			function($return, $method_name, $episode, $post, $args = array()) {
+
+				$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+
+				if (isset($args['groupby']) && $args['groupby'] == 'group') {
+					$groups = array();
+					foreach ($contributions as $contribution) {
+						$group = $contribution->getGroup();
+						if (isset($groups[$group->id])) {
+							$groups[$group->id]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
+						} else {
+							$groups[$group->id] = array(
+								'group'        => new Template\ContributorGroup($group, array($contribution)),
+								'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
+							);
+						}
+					}
+					return $groups;
+				} else {
+					return array_map(function($contribution) {
+						return new Template\Contributor($contribution->getContributor(), $contribution);
+					}, $contributions);
+				}
 			},
-			4
+			5
 		);
 
 		/**
