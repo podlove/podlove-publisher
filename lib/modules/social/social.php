@@ -183,7 +183,7 @@ class Social extends \Podlove\Modules\Base {
 
 					$position = 0;
 					
-					if( $contributor->www !== '' ) {
+					if( !is_null($contributor->www) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
 						$c->service_id = $www_service->id;
@@ -193,7 +193,7 @@ class Social extends \Podlove\Modules\Base {
 						$position++;
 					}
 
-					if( $contributor->adn !== '' ) {
+					if( !is_null($contributor->adn) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
 						$c->service_id = $adn_service->id;
@@ -203,7 +203,7 @@ class Social extends \Podlove\Modules\Base {
 						$position++;
 					}
 
-					if( $contributor->twitter !== '' ) {
+					if( !is_null($contributor->twitter) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
 						$c->service_id = $twitter_service->id;
@@ -213,7 +213,7 @@ class Social extends \Podlove\Modules\Base {
 						$position++;
 					}
 
-					if( $contributor->googleplus !== '' ) {
+					if( !is_null($contributor->googleplus) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
 						$c->service_id = $googleplus_service->id;
@@ -223,7 +223,7 @@ class Social extends \Podlove\Modules\Base {
 						$position++;
 					}
 
-					if( $contributor->facebook !== '' ) {
+					if( !is_null($contributor->facebook) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
 						$c->service_id = $facebook_service->id;
