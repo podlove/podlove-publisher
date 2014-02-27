@@ -322,7 +322,7 @@ EOD;
                         if (is_feed()) {
                              $body .= $this->getStaticRelatedFlattrButton( $contributor, get_the_ID() );
                         } else {
-                             $body .= $this->getStaticRelatedFlattrButton( $contributor, get_the_ID() );
+                             $body .= $this->getRelatedFlattrButton( $contributor, get_the_ID() );
                         }
                     }
                 $body .=  "</td>";
