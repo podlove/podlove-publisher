@@ -322,7 +322,7 @@ EOD;
                         if (is_feed()) {
                              $body .= $this->getStaticRelatedFlattrButton( $contributor, get_the_ID() );
                         } else {
-                             $body .= $this->getRelatedFlattrButton( $contributor, get_the_ID() );
+                             $body .= $this->getStaticRelatedFlattrButton( $contributor, get_the_ID() );
                         }
                     }
                 $body .=  "</td>";
@@ -377,12 +377,13 @@ EOD;
 
         return "<a
 		    target=\"_blank\"
-    		title=\"{$contributor->getName()}@" . get_the_title( $postid ) . "\"
+    		title=\"Support {$contributor->getName()} by donating with Flattr\"
     		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
     		href=\"https://flattr.com/submit/auto?user_id={$contributor->flattr}&url=". urlencode(get_permalink( $postid )."#" .
             md5( $contributor->id . '-' .$contributor->flattr )) . "&title={$contributor->getName()}@" .
-            get_the_title( $postid ) . "&description={FLATTR_BUTTON_DESCRIPTION}&tags={FLATTR_BUTTON_TAGS}&hidden=0
-    		&category=audio\"> Flattr {$contributor->getName()} hart
+            get_the_title( $postid ) . "&description=&tags=&hidden=0
+    		&category=audio\"><img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/flattr-128.png\"
+    		class=\"podlove-contributor-button\" alt=\"" . sprintf( __('Support %s by donating with Flattr'), $contributor->getName() ) ."\" />
 		</a>";
     }
 
