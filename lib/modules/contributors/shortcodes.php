@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Podlove\Modules\Contributors;
 
 use \Podlove\Model;
@@ -29,15 +29,15 @@ class Shortcodes {
 
 	/**
 	 * Legacy Contributors Shortcode.
-	 * 
+	 *
 	 * Examples:
 	 *
 	 *	[podlove-contributors]
-	 * 
+	 *
 	 * @return string
 	 */
 	public function podlove_contributors($attributes) {
-		
+
 		$defaults = array(
 			'preset'  => 'comma separated',
 			'linkto'  => 'none',
@@ -63,18 +63,18 @@ class Shortcodes {
 	 *	title       - Optional table header title. Default: none
 	 *	avatars     - One of 'yes', 'no'. Display avatars. Default: 'yes'
 	 *	role        - Filter lists by role. Default: 'all'
-	 *	roles       - One of 'yes', 'no'. Display role. Default: 'no' 
+	 *	roles       - One of 'yes', 'no'. Display role. Default: 'no'
 	 *	group       - Filter lists by group. Default: 'all'
-	 *	groups      - One of 'yes', 'no'. Display group. Default: 'no' 
+	 *	groups      - One of 'yes', 'no'. Display group. Default: 'no'
 	 *	donations   - One of 'yes', 'no'. Display donation column. Default: 'no'
 	 *	flattr      - One of 'yes', 'no'. Display Flattr column. Default: 'yes'
 	 *	linkto      - One of 'none', 'publicemail', 'www', 'adn', 'twitter', 'facebook', 'amazonwishlist'.
 	 *	              Links contributor name to the service if available. Default: 'none'
-	 * 
+	 *
 	 * Examples:
 	 *
 	 *	[podlove-contributor-list] / [podlove-podcast-contributor-list]
-	 * 
+	 *
 	 * @return string
 	 */
 	public function podlove_contributor_list($attributes)
@@ -176,7 +176,7 @@ class Shortcodes {
 
 		if (count($this->contributions) == 0)
 			return "";
-		
+
 		return \Podlove\Flattr\getFlattrScript()
 			 . $this->renderByStyle($this->settings['preset']);
 	}
@@ -314,10 +314,19 @@ EOD;
 			    . "</td>";
 
 			// flattr
-			if ($this->settings['flattr'] == 'yes')
-				$body .= '<td class="flattr_cell">'
-				. ( is_page() ? $this->getFlattrButton( $contributor ) : $this->getRelatedFlattrButton( $contributor, get_the_ID() ) )
-				. "</td>";
+			if ($this->settings['flattr'] == 'yes') {
+                $body .= '<td class="flattr_cell">';
+                    if (is_page()) {
+                        $body .= $this->getFlattrButton( $contributor );
+                    } else {
+                        if (is_feed()) {
+                             $body .= $this->getStaticRelatedFlattrButton( $contributor, get_the_ID() );
+                        } else {
+                             $body .= $this->getRelatedFlattrButton( $contributor, get_the_ID() );
+                        }
+                    }
+                $body .=  "</td>";
+            }
 
 			$body .= "</tr>";
 		}
@@ -332,7 +341,7 @@ EOD;
 			if ($contributor->{$service['key']}) {
 				$html .= sprintf(
 					'<a href="%1$s" target="_blank" title="%3$s">
-						<img width="32" height="32" src="%4$s/lib/modules/contributors/images/icons/%5$s" class="podlove-contributor-button" 
+						<img width="32" height="32" src="%4$s/lib/modules/contributors/images/icons/%5$s" class="podlove-contributor-button"
 						alt="%3$s" />
 					</a>',
 					sprintf($service['url_template'], $contributor->{$service['key']}),
@@ -356,17 +365,33 @@ EOD;
 			target=\"_blank\"
     		title=\"Support {$contributor->getName()} by buying things from an Amazon Wishlist\"
     		href=\"{$contributor->amazonwishlist}\">
-    		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\" 
+    		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/amazonwishlist-128.png\" class=\"podlove-contributor-button\"
     		alt=\"" . sprintf( __('Support %s by buying things from an Amazon Wishlist'),  $contributor->getName() ) . "\" />
 		</a>";
 	}
+
+    private function getStaticRelatedFlattrButton($contributor, $postid)
+    {
+        if (!$contributor->flattr)
+            return "";
+
+        return "<a
+		    target=\"_blank\"
+    		title=\"{$contributor->getName()}@" . get_the_title( $postid ) . "\"
+    		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
+    		href=\"https://flattr.com/submit/auto?user_id={$contributor->flattr}&url=". urlencode(get_permalink( $postid )."#" .
+            md5( $contributor->id . '-' .$contributor->flattr )) . "&title={$contributor->getName()}@" .
+            get_the_title( $postid ) . "&description={FLATTR_BUTTON_DESCRIPTION}&tags={FLATTR_BUTTON_TAGS}&hidden=0
+    		&category=audio\"> Flattr {$contributor->getName()} hart
+		</a>";
+    }
 
 	private function getRelatedFlattrButton($contributor, $postid)
 	{
 		if (!$contributor->flattr)
 			return "";
 
-		return "<a 
+		return "<a
 		    target=\"_blank\"
 			class=\"FlattrButton\"
 			style=\"display:none;\"
@@ -382,7 +407,7 @@ EOD;
 		if (!$contributor->flattr)
 			return "";
 
-		return "<a 
+		return "<a
 		    target=\"_blank\"
 			class=\"FlattrButton\"
 			style=\"display:none;\"
@@ -403,7 +428,7 @@ EOD;
 			class=\"PayPalButton\"
     		title=\"Support {$contributor->getName()} by donating with PayPal\"
     		href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id={$contributor->paypal}\">
-    		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\" 
+    		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/paypal-128.png\" class=\"podlove-contributor-button\"
     		alt=\"" . sprintf( __('Support %s by donating with PayPal'), $contributor->getName() ) ."\" />
 		</a>";
 	}
@@ -415,7 +440,7 @@ EOD;
 
 		return '<a href="' . $currency . ':' . $contributor->$currency . '"
 					 title="Support ' . $contributor->getName() . ' by donating with ' . ucfirst($currency) .'">
-						<img width="32" height="32" src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button" 
+						<img width="32" height="32" src="' . \Podlove\PLUGIN_URL  . '/lib/modules/contributors/images/icons/' . $currency . '-128.png" class="podlove-contributor-button"
 						alt="' . sprintf( __('Support %s by donating with %s'), $contributor->getName(), ucfirst($currency) ) . '" />
 					</a>
 				';
