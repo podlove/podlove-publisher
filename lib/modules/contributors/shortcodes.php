@@ -48,8 +48,7 @@ class Shortcodes {
 		if (!is_array($attributes))
 			$attributes = array();
 
-		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/podcast-contributor-list.twig');
-		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $attributes);
+		return \Podlove\Template\TwigFilter::apply_to_html('podcast-contributor-list.twig', $attributes);
 	}
 
 	/**
@@ -107,8 +106,7 @@ class Shortcodes {
 				break;
 		}
 
-		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/' . $file);
-		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $this->settings);
+		return \Podlove\Template\TwigFilter::apply_to_html($file, $this->settings);
 	}
 
 	public function podlove_podcast_contributor_list($attributes)
@@ -118,7 +116,6 @@ class Shortcodes {
 
 		$this->settings = array_merge(self::$shortcode_defaults, $attributes);
 
-		$tpl = \Podlove\load_template( trailingslashit(dirname(__FILE__)) . 'templates/podcast-contributor-table.twig');
-		return \Podlove\Template\TwigFilter::apply_to_html($tpl, $this->settings);
+		return \Podlove\Template\TwigFilter::apply_to_html('podcast-contributor-table.twig', $this->settings);
 	}
 }

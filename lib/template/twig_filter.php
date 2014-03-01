@@ -14,9 +14,19 @@ use \Podlove\Model;
 class TwigFilter {
 
 	public static function apply_to_html($html, $vars = array()) {
-		$loader = new \Twig_Loader_String();
 
-		$twig   = new \Twig_Environment($loader, array('autoescape' => false));
+		$template_directories = array(
+			implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'templates'))
+		);
+
+		$template_directories = apply_filters('podlove_twig_template_directories', $template_directories);
+
+		$file_loader = new \Twig_Loader_Filesystem($template_directories);
+		$string_loader = new \Twig_Loader_String();
+
+		$loader = new \Twig_Loader_Chain(array($file_loader, $string_loader));
+
+		$twig = new \Twig_Environment($loader, array('autoescape' => false));
 		$twig->addFilter(self::subtemplating_filter($twig));
 		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
 
