@@ -272,7 +272,7 @@ function template_shortcode( $attributes ) {
 	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
 		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-	$html = apply_filters('podlove_template_raw', $template->content, $attributes);
+	$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
 	// apply autop and shortcodes
 	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )

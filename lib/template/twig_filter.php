@@ -22,19 +22,20 @@ class TwigFilter {
 	 */
 	public static function apply_to_html($html, $vars = array()) {
 
+		// file loader for internal use
 		$file_loader = new \Twig_Loader_Filesystem();
 		$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'templates')), 'core');
 
 		// other modules can register their own template directories/namespaces
 		$file_loader = apply_filters('podlove_twig_file_loader', $file_loader);
 
-		$string_loader = new \Twig_Loader_String();
+		// database loader for user templates
+		$db_loader = new TwigLoaderPodloveDatabase;
 
-		$loaders = array($file_loader);
+		$loaders = array($file_loader, $db_loader);
 		$loaders = apply_filters('podlove_twig_loaders', $loaders);
 
-		// First matching loader is used => string loader must always be the last loader
-		$loader = new \Twig_Loader_Chain(array_merge($loaders, array($string_loader)));
+		$loader = new \Twig_Loader_Chain($loaders);
 
 		$twig = new \Twig_Environment($loader, array('autoescape' => false));
 		$twig->addFilter(self::subtemplating_filter($twig));
