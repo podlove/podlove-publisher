@@ -38,9 +38,9 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
-		add_filter('podlove_twig_template_directories', function($template_directories) {
-			$template_directories[] = implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates'));
-			return $template_directories;
+		add_filter('podlove_twig_file_loader', function($file_loader) {
+			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates')), 'contributors');
+			return $file_loader;
 		});
 
 		\Podlove\Template\Episode::add_accessor(

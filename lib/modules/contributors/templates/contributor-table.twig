@@ -14,7 +14,7 @@
 			</tr>
 			{% for contributor in contributorGroup.contributors %}
 				{% if contributor.visible %}
-					{% include '_contributor-table-row.twig' %}
+					{% include '@contributors/_contributor-table-row.twig' %}
 				{% endif %}
 			{% endfor %}
 		{% endfor %}
@@ -22,7 +22,7 @@
 </table>
 
 {% if flattr == "yes" %}
-	{% include '_contributor-table-flattr.twig' %}
+	{% include '@contributors/_contributor-table-flattr.twig' %}
 {% endif %}
 
-{% include '_contributor-table-css.twig' %}
+{% include '@contributors/_contributor-table-css.twig' %}

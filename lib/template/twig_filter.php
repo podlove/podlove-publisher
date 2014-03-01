@@ -13,18 +13,28 @@ use \Podlove\Model;
  */
 class TwigFilter {
 
+	/**
+	 * Apply Twig to given template
+	 * 
+	 * @param  string $html File path or HTML string.
+	 * @param  array  $vars optional variables for Twig context
+	 * @return string       rendered template string
+	 */
 	public static function apply_to_html($html, $vars = array()) {
 
-		$template_directories = array(
-			implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'templates'))
-		);
+		$file_loader = new \Twig_Loader_Filesystem();
+		$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'templates')), 'core');
 
-		$template_directories = apply_filters('podlove_twig_template_directories', $template_directories);
+		// other modules can register their own template directories/namespaces
+		$file_loader = apply_filters('podlove_twig_file_loader', $file_loader);
 
-		$file_loader = new \Twig_Loader_Filesystem($template_directories);
 		$string_loader = new \Twig_Loader_String();
 
-		$loader = new \Twig_Loader_Chain(array($file_loader, $string_loader));
+		$loaders = array($file_loader);
+		$loaders = apply_filters('podlove_twig_loaders', $loaders);
+
+		// First matching loader is used => string loader must always be the last loader
+		$loader = new \Twig_Loader_Chain(array_merge($loaders, array($string_loader)));
 
 		$twig = new \Twig_Environment($loader, array('autoescape' => false));
 		$twig->addFilter(self::subtemplating_filter($twig));

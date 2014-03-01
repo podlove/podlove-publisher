@@ -48,7 +48,7 @@ class Shortcodes {
 		if (!is_array($attributes))
 			$attributes = array();
 
-		return \Podlove\Template\TwigFilter::apply_to_html('podcast-contributor-list.twig', $attributes);
+		return \Podlove\Template\TwigFilter::apply_to_html('@contributors/podcast-contributor-list.twig', $attributes);
 	}
 
 	/**
@@ -93,16 +93,16 @@ class Shortcodes {
 
 		switch ($this->settings['preset']) {
 			case 'comma separated':
-				$file = 'contributor-comma-separated.twig';
+				$file = '@contributors/contributor-comma-separated.twig';
 				break;
 			case 'list':
-				$file = 'contributor-list.twig';
+				$file = '@contributors/contributor-list.twig';
 				break;
 			case 'table':
-				$file = 'contributor-table.twig';
+				$file = '@contributors/contributor-table.twig';
 				break;
 			default:
-				$file = 'contributor-table.twig';
+				$file = '@contributors/contributor-table.twig';
 				break;
 		}
 
@@ -116,6 +116,6 @@ class Shortcodes {
 
 		$this->settings = array_merge(self::$shortcode_defaults, $attributes);
 
-		return \Podlove\Template\TwigFilter::apply_to_html('podcast-contributor-table.twig', $this->settings);
+		return \Podlove\Template\TwigFilter::apply_to_html('@contributors/podcast-contributor-table.twig', $this->settings);
 	}
 }

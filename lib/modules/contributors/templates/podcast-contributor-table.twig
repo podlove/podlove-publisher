@@ -12,14 +12,14 @@
 	<tbody>
 		{% for contributor in podcast.contributors({group: 'all', role: 'all', scope: 'global'}) %}
 			{% if contributor.visible %}
-				{% include '_contributor-table-row.twig' %}
+				{% include '@contributors/_contributor-table-row.twig' %}
 			{% endif %}
 		{% endfor %}
 	</tbody>
 </table>
 
 {% if flattr == "yes" %}
-	{% include '_contributor-table-flattr.twig' %}
+	{% include '@contributors/_contributor-table-flattr.twig' %}
 {% endif %}
 
-{% include '_contributor-table-css.twig' %}
+{% include '@contributors/_contributor-table-css.twig' %}
