@@ -15,7 +15,7 @@ $output_dir = '/Users/ericteubert/code/podlove.github.com/sources/template';
 
 // classes containing dynamic accessors
 $dynamicAccessorClasses = [
-	'\Podlove\Modules\Contributors\Contributors'
+	'\Podlove\Modules\Contributors\TemplateExtensions'
 ];
 
 $classes = [
