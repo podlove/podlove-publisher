@@ -91,7 +91,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_social( $contributor ) {
-		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_all_by_contributor($contributor->id);
+		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_all_by_property('contributor_id', $contributor->id);
 		$source = '';
 
 		foreach ($contributor_services as $contributor_service) {

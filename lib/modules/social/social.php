@@ -231,14 +231,13 @@ class Social extends \Podlove\Modules\Base {
 
 	}
 
-	public function save_contributor() {
-		if (!isset($_POST['podlove_contributor']) || !isset($_POST['contributor']))
+	public function save_contributor( $contributor ) {
+		if (!isset($_POST['podlove_contributor']) )
 			return;
 
 		$services_appearances = $_POST['podlove_contributor']['services'];
-		$contributor = $_POST['contributor'];
 
-		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_POST['contributor']) as $service) {
+		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $contributor->id) as $service) {
 			$service->delete();
 		}
 
@@ -246,7 +245,7 @@ class Social extends \Podlove\Modules\Base {
 			foreach ($service_appearance as $service_id => $service) {
 				$c = new \Podlove\Modules\Social\Model\ContributorService;
 				$c->position = $position;
-				$c->contributor_id = $contributor;
+				$c->contributor_id = $contributor->id;
 				$c->service_id = $service_id;
 				$c->value = $service['value'];
 				$c->title = $service['title'];

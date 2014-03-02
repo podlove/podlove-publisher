@@ -118,11 +118,11 @@ class Contributors {
 	private function save() {
 		if ( ! isset( $_REQUEST['contributor'] ) )
 			return;
-
-		do_action( 'update_podlove_contributor', $wrapper, $episode );
 			
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
+
+		do_action( 'update_podlove_contributor', $contributor );
 		
 		$this->redirect( 'index', $contributor->id );
 	}
@@ -132,11 +132,11 @@ class Contributors {
 	 */
 	private function create() {
 		global $wpdb;
-
-		do_action( 'update_podlove_contributor', $wrapper, $episode );
 		
 		$contributor = new Contributor;
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
+
+		do_action( 'update_podlove_contributor', $contributor );
 
 		$this->redirect( 'index' );
 	}

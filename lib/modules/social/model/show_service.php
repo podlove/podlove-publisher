@@ -18,4 +18,4 @@ ShowService::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 ShowService::property( 'service_id', 'INT' );
 ShowService::property( 'value', 'TEXT' );
 ShowService::property( 'title', 'TEXT' );
-ShowService::property( 'position', 'INT' );
+ShowService::property( 'position', 'FLOAT' );
