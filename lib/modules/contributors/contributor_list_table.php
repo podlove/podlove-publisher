@@ -36,7 +36,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	private function get_episodes_link($contributor, $title) {
 		return sprintf('<a href="%s">%s</a>',
-			admin_url( 'edit.php?post_type=podcast&contributor=' . $contributor->slug ),
+			admin_url( 'edit.php?post_type=podcast&contributor=' . $contributor->id ),
 			$title
 		);
 	}

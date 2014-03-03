@@ -163,12 +163,13 @@ class Contributors extends \Podlove\Modules\Base {
 		if (!isset($_GET['contributor']) || empty($_GET['contributor']))
 			return;
 
-		if (!$contributor = Contributor::find_one_by_slug($_GET['contributor']))
+		if (!$contributor = Contributor::find_one_by_id($_GET['contributor']))
 			return;
 
 		$contributions = $contributor->getContributions();
 		$query->query_vars['post__in'] = array_map(function($c) {
-			return $c->getEpisode()->post_id;
+			if( is_object( $c->getEpisode() ) )
+				return $c->getEpisode()->post_id;
 		}, $contributions);
 	}
 	
@@ -687,7 +688,7 @@ class Contributors extends \Podlove\Modules\Base {
 	        		$contributor_details = $contributor->getContributor();
 
 	        		if( is_object( $contributor_details ) )
-	        			$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->slug."\">".$contributor_details->getName()."</a>, ";
+	        			$contributor_list = $contributor_list."<a href=\"".site_url()."/wp-admin/edit.php?post_type=podcast&contributor=".$contributor_details->id."\">".$contributor_details->getName()."</a>, ";
 	        	}
 
 	        	echo substr($contributor_list, 0, -2);
