@@ -4,7 +4,7 @@ namespace Podlove\Modules\Social\Settings;
 use \Podlove\Settings\Podcast\Tab;
 use \Podlove\Modules\Social\Model\ShowService;
 
-class PodcastSettingsTab extends Tab {
+class PodcastSettingsDonationTab extends Tab {
 
 	public function init() {
 		add_action( $this->page_hook, array( $this, 'register_page' ) );
@@ -15,7 +15,7 @@ class PodcastSettingsTab extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
-		$formKeys = array('services');
+		$formKeys = array('donations');
 
 		$settings = get_option('podlove_podcast');
 		foreach ($formKeys as $key) {
@@ -38,8 +38,8 @@ class PodcastSettingsTab extends Tab {
 		?>
 		<p>
 			<?php echo sprintf(
-				__( 'These are the current social media acccount of your podcast. Display this list using the shortcode %s', 'podlove' ),
-				'<code>[podlove-podcast-social-media-list]</code>'
+				__( 'These are the possibilities to donate for your Podcast. Display this list using the shortcode %s', 'podlove' ),
+				'<code>[podlove-podcast-donations-list]</code>'
 			); ?>
 		</p>
 		<?php
@@ -57,7 +57,7 @@ class PodcastSettingsTab extends Tab {
 
 	public static function podcast_form_extension_form()
 	{
-		$services = \Podlove\Modules\Social\Model\ShowService::all();
-		\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_podcast[services]');
+		$services = \Podlove\Modules\Social\Model\ShowDonation::all();
+		\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_podcast[donations]', 'donation');
 	}
 }

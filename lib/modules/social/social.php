@@ -4,23 +4,29 @@ namespace Podlove\Modules\Social;
 use \Podlove\Modules\Social\Model\Service;
 use \Podlove\Modules\Social\Model\ShowService;
 use \Podlove\Modules\Social\Model\ContributorService;
+use \Podlove\Modules\Social\Model\ShowDonation;
+use \Podlove\Modules\Social\Model\ContributorDonation;
 
-use \Podlove\Modules\Social\Settings\PodcastSettingsTab;
+use \Podlove\Modules\Social\Settings\PodcastSettingsSocialTab;
+use \Podlove\Modules\Social\Settings\PodcastSettingsDonationTab;
 
 class Social extends \Podlove\Modules\Base {
 
-	protected $module_name = 'Social';
-	protected $module_description = 'Manage social media accounts.';
+	protected $module_name = 'Social & Donations';
+	protected $module_description = 'Manage social media accounts and donations.';
 	protected $module_group = 'metadata';
 
 	public function load() {
 		add_action( 'podlove_module_was_activated_social', array( $this, 'was_activated' ) );
-		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_tab' ) );
+		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_social_tab' ) );
+		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_donation_tab' ) );
 
-		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
+		add_action( 'update_option_podlove_podcast', array( $this, 'save_social_setting' ), 10, 2 );
+		add_action( 'update_option_podlove_podcast', array( $this, 'save_donation_setting' ), 10, 2 );
 		add_action( 'update_podlove_contributor', array( $this, 'save_contributor' ), 10, 2 );
 
 		add_action( 'podlove_contributors_form_end', array( $this, 'services_form_for_contributors' ), 10, 2 );
+		add_action( 'podlove_contributors_form_end', array( $this, 'donations_form_for_contributors' ), 10, 2 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
@@ -39,121 +45,198 @@ class Social extends \Podlove\Modules\Base {
 		Service::build();
 		ShowService::build();
 		ContributorService::build();
+		ShowDonation::build();
+		ContributorDonation::build();
 
 		$services = array(
 			array(
 					'title' 		=> 'App.net',
+					'type'			=> 'social',
 					'description'	=> 'App.net Account',
 					'logo'			=> 'adn-128.png',
 					'url_scheme'	=> 'https://alpha.app.net/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bandcamp',
+					'type'			=> 'social',
 					'description'	=> 'Bandcamp URL',
 					'logo'			=> 'bandcamp-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bitbucket',
+					'type'			=> 'social',
 					'description'	=> 'Bitbucket Account',
 					'logo'			=> 'bitbucket-128.png',
 					'url_scheme'	=> 'https://bitbucket.org/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'DeviantART',
+					'type'			=> 'social',
 					'description'	=> 'DeviantART Account',
 					'logo'			=> 'deviantart-128.png',
 					'url_scheme'	=> 'https://%account-placeholder%.deviantart.com/'
 				),
 			array(
 					'title' 		=> 'Dribbble',
+					'type'			=> 'social',
 					'description'	=> 'Dribbble Account',
 					'logo'			=> 'dribbble-128.png',
 					'url_scheme'	=> 'https://dribbble.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Facebook',
+					'type'			=> 'social',
 					'description'	=> 'Facebook Account',
 					'logo'			=> 'facebook-128.png',
 					'url_scheme'	=> 'https://facebook.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flickr',
+					'type'			=> 'social',
 					'description'	=> 'Flickr Account',
 					'logo'			=> 'flickr-128.png',
 					'url_scheme'	=> 'https://secure.flickr.com/photos/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'GitHub',
+					'type'			=> 'social',
 					'description'	=> 'GitHub Account',
 					'logo'			=> 'github-128.png',
 					'url_scheme'	=> 'https://github.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Google+',
+					'type'			=> 'social',
 					'description'	=> 'Google+ URL',
 					'logo'			=> 'googleplus-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Instagram',
+					'type'			=> 'social',
 					'description'	=> 'Instagram Account',
 					'logo'			=> 'instagram-128.png',
 					'url_scheme'	=> 'https://http://instagram.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Linkedin',
+					'type'			=> 'social',
 					'description'	=> 'Linkedin URL',
 					'logo'			=> 'linkedin-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Pinboard',
+					'type'			=> 'social',
 					'description'	=> 'Pinboard Account',
 					'logo'			=> 'pinboard-128.png',
 					'url_scheme'	=> 'https://pinboard.in/u:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Pinterest',
+					'type'			=> 'social',
 					'description'	=> 'Pinterest Account',
 					'logo'			=> 'pinterest-128.png',
 					'url_scheme'	=> 'https://www.pinterest.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Soundcloud',
+					'type'			=> 'social',
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Tumblr',
+					'type'			=> 'social',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
 					'url_scheme'	=> 'https://%account-placeholder%.tumblr.com/'
 				),
 			array(
 					'title' 		=> 'Twitter',
+					'type'			=> 'social',
 					'description'	=> 'Twitter Account',
 					'logo'			=> 'twitter-128.png',
 					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Website',
+					'type'			=> 'social',
 					'description'	=> 'Website URL',
 					'logo'			=> 'www-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Xing',
+					'type'			=> 'social',
 					'description'	=> 'Xing URL',
 					'logo'			=> 'xing-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'YouTube',
+					'type'			=> 'social',
 					'description'	=> 'YouTube Account',
 					'logo'			=> 'youtube-128.png',
 					'url_scheme'	=> 'https://www.youtube.com/user/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Amazon Wishlist',
+					'type'			=> 'donation',
+					'description'	=> 'Amazon Wishlist URL',
+					'logo'			=> 'amazonwishlist-128',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Bitcoin',
+					'type'			=> 'donation',
+					'description'	=> 'Bitcoin Wallet Address',
+					'logo'			=> 'bitcoin-128.png',
+					'url_scheme'	=> 'bitcoin:%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Dogecoin',
+					'type'			=> 'donation',
+					'description'	=> 'Dogecoin Wallet Address',
+					'logo'			=> 'dogecoin-128.png',
+					'url_scheme'	=> 'dogecoin:%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Flattr',
+					'type'			=> 'donation',
+					'description'	=> 'Flattr Account',
+					'logo'			=> 'flattr-128.png',
+					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Generic Wishlist',
+					'type'			=> 'donation',
+					'description'	=> 'Wishlist URL',
+					'logo'			=> 'genericwishlist-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Litecoin',
+					'type'			=> 'donation',
+					'description'	=> 'Litecoin Wallet Address',
+					'logo'			=> 'litecoin-128.png',
+					'url_scheme'	=> 'litecoin:%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Paypal',
+					'type'			=> 'donation',
+					'description'	=> 'Paypal Button ID',
+					'logo'			=> 'paypal-128.png',
+					'url_scheme'	=> 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Thomann Wishtlist',
+					'type'			=> 'donation',
+					'description'	=> 'Thomann Wishlist URL',
+					'logo'			=> 'thomann-128.png',
+					'url_scheme'	=> '%account-placeholder%'
 				)
 		);
 
@@ -161,6 +244,7 @@ class Social extends \Podlove\Modules\Base {
 			foreach ($services as $service_key => $service) {
 				$c = new \Podlove\Modules\Social\Model\Service;
 				$c->title = $service['title'];
+				$c->type = $service['type'];
 				$c->description = $service['description'];
 				$c->logo = $service['logo'];
 				$c->url_scheme = $service['url_scheme'];
@@ -170,11 +254,17 @@ class Social extends \Podlove\Modules\Base {
 
 		if( count(ContributorService::all()) == 0 ) {
 
-			$www_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'WWW'");
-			$adn_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'App.net'");
-			$twitter_service		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Twitter'");
-			$googleplus_service 	= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Google+'");
-			$facebook_service		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Facebook'");
+			$www_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Website'");
+			$adn_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'App.net'");
+			$twitter_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Twitter'");
+			$googleplus_service 		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Google+'");
+			$facebook_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Facebook'");
+
+			$flattr_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Flattr'");
+			$paypal_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Paypal'");
+			$litecoin_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Litecoin'");
+			$bitcoin_service 			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Bitcoin'");
+			$amazon_wishlist_service	= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Amazon Wishlist'");
 
 			if (\Podlove\Modules\Base::is_active('contributors')) {
 				$contributors = \Podlove\Modules\Contributors\Model\Contributor::all();
@@ -231,8 +321,57 @@ class Social extends \Podlove\Modules\Base {
 						$c->position = $position;
 						$c->save();
 						$position++;
-					}				
+					}			
 
+					if( !is_null($contributor->flattr) ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $flattr_service->id;
+						$c->value = $contributor->flattr;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( !is_null($contributor->paypal) ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $paypal_service->id;
+						$c->value = $contributor->paypal;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( !is_null($contributor->litecoin) ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $litecoin_service->id;
+						$c->value = $contributor->litecoin;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( !is_null($contributor->bitcoin) ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $bitcoin_service->id;
+						$c->value = $contributor->bitcoin;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
+
+					if( !is_null($contributor->amazonwishlist) ) {
+						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $amazon_wishlist_service->id;
+						$c->value = $contributor->amazonwishlist;
+						$c->position = $position;
+						$c->save();
+						$position++;
+					}
 				}
 			}
 		}
@@ -240,13 +379,18 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function save_contributor( $contributor ) {
+
 		if (!isset($_POST['podlove_contributor']) )
 			return;
 
 		$services_appearances = $_POST['podlove_contributor']['services'];
+		$donations_appearances = $_POST['podlove_contributor']['donations'];
 
 		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $contributor->id) as $service) {
 			$service->delete();
+		}
+		foreach (\Podlove\Modules\Social\Model\ContributorDonation::all("WHERE `contributor_id` = " . $contributor->id) as $donation) {
+			$donation->delete();
 		}
 
 		foreach ($services_appearances as $service_appearance) {
@@ -261,9 +405,24 @@ class Social extends \Podlove\Modules\Base {
 			}
 			$position++;
 		}
+
+		$position = 0;
+
+		foreach ($donations_appearances as $donation_appearances) {
+			foreach ($donation_appearances as $donation_id => $donation) {
+				$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+				$c->position = $position;
+				$c->contributor_id = $contributor->id;
+				$c->service_id = $donation_id;
+				$c->value = $donation['value'];
+				$c->title = $donation['title'];
+				$c->save();
+			}
+			$position++;
+		}
 	}
 
-	public function save_setting($old, $new)
+	public function save_social_setting($old, $new)
 	{
 		if (!isset($new['services']))
 			return;
@@ -288,9 +447,40 @@ class Social extends \Podlove\Modules\Base {
 		}
 	}
 
-	public function podcast_settings_tab($tabs)
+	public function save_donation_setting($old, $new)
 	{
-		$tabs->addTab( new Settings\PodcastSettingsTab( __( 'Social', 'podlove' ) ) );
+		if (!isset($new['donations']))
+			return;
+
+		$services_appearances = $new['donations'];
+
+		foreach (\Podlove\Modules\Social\Model\ShowDonation::all() as $service) {
+			$service->delete();
+		}
+
+		$position = 0;
+		foreach ($services_appearances as $service_appearance) {
+			foreach ($service_appearance as $service_id => $service) {
+				$c = new \Podlove\Modules\Social\Model\ShowDonation;
+				$c->position = $position;
+				$c->service_id = $service_id;
+				$c->value = $service['value'];
+				$c->title = $service['title'];
+				$c->save();
+			}
+			$position++;
+		}
+	}
+
+	public function podcast_settings_social_tab($tabs)
+	{
+		$tabs->addTab( new Settings\PodcastSettingsSocialTab( __( 'Social', 'podlove' ) ) );
+		return $tabs;
+	}
+
+	public function podcast_settings_donation_tab($tabs)
+	{
+		$tabs->addTab( new Settings\PodcastSettingsDonationTab( __( 'Donations', 'podlove' ) ) );
 		return $tabs;
 	}
 
@@ -323,11 +513,27 @@ class Social extends \Podlove\Modules\Base {
 		) );
 	}
 
-	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]') {
+	public function donations_form_for_contributors($wrapper) {
+
+		$wrapper->subheader( __( 'Donations', 'podlove' ) );
+
+		$wrapper->callback( 'services_form_table', array(
+			'callback' => function() {
+
+				$services = \Podlove\Modules\Social\Model\ContributorDonation::all("WHERE `contributor_id` = " . $_GET['contributor'] . " ORDER BY `position` ASC");
+
+				echo '</table>';
+				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );
+				echo '<table class="form-table">';
+			}
+		) );
+	}
+
+	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $type = 'social') {
 		$cjson = array();
 		$converted_services = array();
 
-		foreach (\Podlove\Modules\Social\Model\Service::all() as $service) {
+		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service) {
 			$cjson[$service->id] = array(
 				'id'   			=> $service->id,
 				'title'   		=> $service->title,
@@ -357,7 +563,7 @@ class Social extends \Podlove\Modules\Base {
 						<th style="width: 30px"></th>
 					</tr>
 				</thead>
-				<tbody id="services_table_body" style="min-height: 50px;">
+				<tbody class="services_<?php echo $type; ?>_table_body" style="min-height: 50px;">
 					<tr class="services_table_body_placeholder" style="display: none;">
 						<td><em><?php echo __('No Services were added yet.', 'podlove') ?></em></td>
 					</tr>
@@ -365,26 +571,26 @@ class Social extends \Podlove\Modules\Base {
 			</table>
 
 			<div id="add_new_contributor_wrapper">
-				<input class="button" id="add_new_service_button" value="+" type="button" />
+				<input class="button" id="add_new_service_<?php echo $type; ?>_button" value="+" type="button" />
 			</div>
 
-			<script type="text/template" id="service-row-template">
+			<script type="text/template" id="service-<?php echo $type; ?>-row-template">
 			<tr class="media_file_row podlove-service-table" data-contributor-id="{{service-id}}">
 				
 				<td class="podlove-service-column">
-					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
+					<select name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-<?php echo $type; ?>-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
-						<?php foreach ( \Podlove\Modules\Social\Model\Service::all() as $service ): ?>
+						<?php foreach ( \Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
-					<i class="podlove-icon-share podlove-service-link"></i>
+					<input type="text" name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-<?php echo $type; ?>-value" />
+					<i class="podlove-icon-share podlove-service-<?php echo $type; ?>-link"></i>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][title]" class="podlove-service-title" />
+					<input type="text" name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][title]" class="podlove-service-<?php echo $type; ?>-title" />
 				</td>
 				<td>
 					<span class="service_remove">
@@ -398,10 +604,10 @@ class Social extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
-				var existing_services = <?php echo json_encode($converted_services); ?>;
+				var existing_<?php echo $type; ?>_services = <?php echo json_encode($converted_services); ?>;
 
-				PODLOVE.Services = <?php echo json_encode(array_values($cjson)); ?>;
-				PODLOVE.Services_form_base_name = "<?php echo $form_base_name ?>";
+				PODLOVE.<?php echo $type; ?>_services = <?php echo json_encode(array_values($cjson)); ?>;
+				PODLOVE.<?php echo $type; ?>_services_form_base_name = "<?php echo $form_base_name ?>";
 
 				(function($) {
 
@@ -413,20 +619,20 @@ class Social extends \Podlove\Modules\Base {
 					function fetch_service(service_id) {
 						service_id = parseInt(service_id, 10);
 
-						return $.grep(PODLOVE.Services, function(service, index) {
+						return $.grep(PODLOVE.<?php echo $type; ?>_services, function(service, index) {
 							return parseInt(service.id, 10) === service_id;
 						})[0]; // Using [0] as the returned element has multiple indexes
 					}
 
 					function add_new_service() {
 						var row = '';
-						row = $("#service-row-template").html();
-						var new_row = $("#services_table_body");
+						row = $("#service-<?php echo $type; ?>-row-template").html();
+						var new_row = $(".services_<?php echo $type; ?>_table_body");
 						new_row.append(row);
 						
 						// Update Chosen before we focus on the new service
 						update_chosen();
-						var new_row_id = new_row.find('select.podlove-service-dropdown').last().attr('id');	
+						var new_row_id = new_row.find('select.podlove-service-<?php echo $type; ?>-dropdown').last().attr('id');	
 						service_dropdown_handler();
 						
 						// Focus new service
@@ -437,49 +643,47 @@ class Social extends \Podlove\Modules\Base {
 						var row = '';
 
 						// add service to table
-						row = $("#service-row-template").html();
+						row = $("#service-<?php echo $type; ?>-row-template").html();
 						row = row.replace(/\{\{service-id\}\}/g, service.id);
 						row = row.replace(/\{\{id\}\}/g, i);
-						$("#services_table_body").append(row);
+						$(".services_<?php echo $type; ?>_table_body").append(row);
 						i++;
 						
-						var new_row = $("#services_table_body tr:last");
+						var new_row = $(".services_<?php echo $type; ?>_table_body tr:last");
 
 						// select service in service-dropdown
-						new_row.find('select.podlove-service-dropdown option[value="' + service.id + '"]').attr('selected',true);
-						// set service description
-						new_row.find('label.podlove-service-description').html(service.description);
+						new_row.find('select.podlove-service-<?php echo $type; ?>-dropdown option[value="' + service.id + '"]').attr('selected',true);
 						// set value
-						new_row.find('input.podlove-service-value').val(value);
+						new_row.find('input.podlove-service-<?php echo $type; ?>-value').val(value);
 						// set title
-						new_row.find('input.podlove-service-title').val(title);
+						new_row.find('input.podlove-service-<?php echo $type; ?>-title').val(title);
 						// Show account/URL if not empty
-						if( new_row.find('input.podlove-service-value').val() !== '' )
-							new_row.find('input.podlove-service-value').parent().find(".podlove-service-link").show();
+						if( new_row.find('input.podlove-service-<?php echo $type; ?>-value').val() !== '' )
+							new_row.find('input.podlove-service-<?php echo $type; ?>-value').parent().find(".podlove-service-<?php echo $type; ?>-link").show();
 					}
 
 					function service_dropdown_handler() {
-						$('select.podlove-service-dropdown').change(function() {
+						$('select.podlove-service-<?php echo $type; ?>-dropdown').change(function() {
 							service = fetch_service(this.value);
 							row = $(this).parent().parent();
 
 							// Check for empty contributors / for new field
 							if( typeof service === 'undefined' ) {
 								row.find(".podlove-logo-column").html(""); // Empty avatar column and hide edit button
-								row.find(".podlove-service-edit").hide();
+								row.find(".podlove-service-<?php echo $type; ?>-edit").hide();
 								return;
 							}
 
 							// Setting data attribute and avatar field
 							row.data("service-id", service.id);
 							// Renaming all corresponding elements after the contributor has changed 
-							row.find(".podlove-service-dropdown").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
-							row.find(".podlove-service-value").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
-							row.find(".podlove-service-value").attr("placeholder", service.description);
-							row.find(".podlove-service-value").attr("title", service.description);
-							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
-							row.find(".podlove-service-title").attr("name", PODLOVE.Services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
-							row.find(".podlove-service-edit").show(); // Show Edit Button
+							row.find(".podlove-service-<?php echo $type; ?>-dropdown").attr("name", PODLOVE.<?php echo $type; ?>_services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
+							row.find(".podlove-service-<?php echo $type; ?>-value").attr("name", PODLOVE.<?php echo $type; ?>_services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
+							row.find(".podlove-service-<?php echo $type; ?>-value").attr("placeholder", service.description);
+							row.find(".podlove-service-<?php echo $type; ?>-value").attr("title", service.description);
+							row.find(".podlove-service-<?php echo $type; ?>-link").data("service-url-scheme", service.url_scheme);
+							row.find(".podlove-service-<?php echo $type; ?>-title").attr("name", PODLOVE.<?php echo $type; ?>_services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
+							row.find(".podlove-service-<?php echo $type; ?>-edit").show(); // Show Edit Button
 							i++; // continue using "i" which was already used to add the existing contributions
 						});
 					}
@@ -488,47 +692,39 @@ class Social extends \Podlove\Modules\Base {
 						add_service_row(fetch_service(service.id), service.value, service.title);
 					}
 
-					$(document).on('click', "#add_new_service_button", function() {
+					$(document).on('click', "#add_new_service_<?php echo $type; ?>_button", function() {
 						add_new_service();
 					});
 
-					$(document).on('click', '.podlove-service-link',  function() {
-						if( $(this).parent().find(".podlove-service-value").val() !== '' )
-							window.open( $(this).data("service-url-scheme").replace( '%account-placeholder%', $(this).parent().find(".podlove-service-value").val() ) );
+					$(document).on('click', '.podlove-service-<?php echo $type; ?>-link',  function() {
+						if( $(this).parent().find(".podlove-service-<?php echo $type; ?>-value").val() !== '' )
+							window.open( $(this).data("service-url-scheme").replace( '%account-placeholder%', $(this).parent().find(".podlove-service-<?php echo $type; ?>-value").val() ) );
 					});	
 
 					$(document).on('click', '.service_remove',  function() {
 						$(this).closest("tr").remove();
 					});
 
-					$(document).on('keydown', '.podlove-service-value',  function() {
-						$(this).parent().find(".podlove-service-link").show();
+					$(document).on('keydown', '.podlove-service-<?php echo $type; ?>-value',  function() {
+						$(this).parent().find(".podlove-service-<?php echo $type; ?>-link").show();
 					});
 
-					$(document).on('focusout', '.podlove-service-value',  function() {
+					$(document).on('focusout', '.podlove-service-<?php echo $type; ?>-value',  function() {
 						if( $(this).val() == '' )
-							$(this).parent().find(".podlove-service-link").hide();
-					});	
-
-					$("#podlove_podcast").on('click', 'h3.hndle',  function() {
-						$("#contributors_table_body").empty();
-						$.each(existing_services, function(index, service) {
-							add_service(service);
-						});
-						update_chosen();
-					});	
+							$(this).parent().find(".podlove-service-<?php echo $type; ?>-link").hide();
+					});
 
 					$(document).ready(function() {
 
-						$.each(existing_services, function(index, service) {
+						$.each(existing_<?php echo $type; ?>_services, function(index, service) {
 							add_service(service);
 						});
 
-						$("#services_table_body td").each(function(){
+						$(".services_<?php echo $type; ?>_table_body td").each(function(){
 						    $(this).css('width', $(this).width() +'px');
 						});
 
-						$("#services_table_body").sortable({
+						$(".services_<?php echo $type; ?>_table_body").sortable({
 							handle: ".reorder-handle",
 							helper: function(e, tr) {
 							    var $originals = tr.children();
