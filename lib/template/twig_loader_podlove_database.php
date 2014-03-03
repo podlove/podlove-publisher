@@ -13,7 +13,6 @@ class TwigLoaderPodloveDatabase implements \Twig_LoaderInterface {
 	 * @return string The template source code
 	 */
 	function getSource($name) {
-		file_put_contents('/tmp/php.log', print_r($name, true), FILE_APPEND | LOCK_EX);
 		if ($template = Template::find_one_by_title($name)) {
 			return $template->content;
 		} else {
