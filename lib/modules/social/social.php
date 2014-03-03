@@ -380,12 +380,6 @@ class Social extends \Podlove\Modules\Base {
 
 	public function save_contributor( $contributor ) {
 
-		if (!isset($_POST['podlove_contributor']) )
-			return;
-
-		$services_appearances = $_POST['podlove_contributor']['services'];
-		$donations_appearances = $_POST['podlove_contributor']['donations'];
-
 		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $contributor->id) as $service) {
 			$service->delete();
 		}
@@ -393,45 +387,54 @@ class Social extends \Podlove\Modules\Base {
 			$donation->delete();
 		}
 
-		foreach ($services_appearances as $service_appearance) {
-			foreach ($service_appearance as $service_id => $service) {
-				$c = new \Podlove\Modules\Social\Model\ContributorService;
-				$c->position = $position;
-				$c->contributor_id = $contributor->id;
-				$c->service_id = $service_id;
-				$c->value = $service['value'];
-				$c->title = $service['title'];
-				$c->save();
+		if (!isset($_POST['podlove_contributor']) )
+			return;
+
+		$services_appearances = $_POST['podlove_contributor']['services'];
+		$donations_appearances = $_POST['podlove_contributor']['donations'];
+
+		if (isset($services_appearances) )
+			foreach ($services_appearances as $service_appearance) {
+				foreach ($service_appearance as $service_id => $service) {
+					$c = new \Podlove\Modules\Social\Model\ContributorService;
+					$c->position = $position;
+					$c->contributor_id = $contributor->id;
+					$c->service_id = $service_id;
+					$c->value = $service['value'];
+					$c->title = $service['title'];
+					$c->save();
+				}
+				$position++;
 			}
-			$position++;
-		}
 
 		$position = 0;
 
-		foreach ($donations_appearances as $donation_appearances) {
-			foreach ($donation_appearances as $donation_id => $donation) {
-				$c = new \Podlove\Modules\Social\Model\ContributorDonation;
-				$c->position = $position;
-				$c->contributor_id = $contributor->id;
-				$c->service_id = $donation_id;
-				$c->value = $donation['value'];
-				$c->title = $donation['title'];
-				$c->save();
+		if (isset($donations_appearances) )
+			foreach ($donations_appearances as $donation_appearances) {
+				foreach ($donation_appearances as $donation_id => $donation) {
+					$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+					$c->position = $position;
+					$c->contributor_id = $contributor->id;
+					$c->service_id = $donation_id;
+					$c->value = $donation['value'];
+					$c->title = $donation['title'];
+					$c->save();
+				}
+				$position++;
 			}
-			$position++;
-		}
 	}
 
 	public function save_social_setting($old, $new)
 	{
-		if (!isset($new['services']))
-			return;
-
-		$services_appearances = $new['services'];
 
 		foreach (\Podlove\Modules\Social\Model\ShowService::all() as $service) {
 			$service->delete();
 		}
+
+		if (!isset($new['services']))
+			return;
+
+		$services_appearances = $new['services'];
 
 		$position = 0;
 		foreach ($services_appearances as $service_appearance) {
@@ -449,14 +452,15 @@ class Social extends \Podlove\Modules\Base {
 
 	public function save_donation_setting($old, $new)
 	{
-		if (!isset($new['donations']))
-			return;
-
-		$services_appearances = $new['donations'];
 
 		foreach (\Podlove\Modules\Social\Model\ShowDonation::all() as $service) {
 			$service->delete();
 		}
+
+		if (!isset($new['donations']))
+			return;
+
+		$services_appearances = $new['donations'];
 
 		$position = 0;
 		foreach ($services_appearances as $service_appearance) {
