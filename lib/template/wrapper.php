@@ -33,7 +33,7 @@ abstract class Wrapper {
 
 		// implement the actual accessor
 		add_filter(
-			static::get_magic_getter_filter_name(),
+			static::get_magic_getter_filter_name($name),
 			$method,
 			10,
 			$extraFilterArgs
@@ -48,7 +48,7 @@ abstract class Wrapper {
 
 	public function __call($name, $arguments) {
 		return apply_filters_ref_array(
-			static::get_magic_getter_filter_name(),
+			static::get_magic_getter_filter_name($name),
 			array_merge(array(null, $name), $this->getExtraFilterArgs(), $arguments) 
 		);
 	}
@@ -59,8 +59,8 @@ abstract class Wrapper {
 		return strtolower(end($split));
 	}
 
-	public static function get_magic_getter_filter_name() {
-		return 'podlove_template_' . static::get_class_slug() . '_method';
+	public static function get_magic_getter_filter_name($name) {
+		return 'podlove_template_' . static::get_class_slug() . '_method_' . $name;
 	}
 
 	/**
