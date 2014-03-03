@@ -1,12 +1,3 @@
-{% macro social(href, title, icon) %}
-    	<a href="{{ href }}" target="_blank" title="{{ title }}">
-    		<img width="32" height="32" src="{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}" class="podlove-contributor-button" alt="{{ title }}" />
-    	</a>
-{% endmacro %}
-
-{# imports the macro above #}
-{% import _self as helper %}
-
 <table class="podlove-global-contributors">
 	{% if title %}
 		<thead>
@@ -25,21 +16,11 @@
 					<td class="social-cell">
 						<strong class="contributor-name">{{ contributor.name }}</strong>
 						<div class="social-icons">
-							{% if contributor.publicemail %}
-								{{ helper.social("mailto:" ~ contributor.publicemail, "E-Mail", "email-128.png") }}
-							{% endif %}
-							{% if contributor.website %}
-								{{ helper.social(contributor.website, "Homepage", "www-128.png") }}
-							{% endif %}
-							{% if contributor.adn %}
-								{{ helper.social(contributor.adn, "App.net", "adn-128.png") }}
-							{% endif %}
-							{% if contributor.twitter %}
-								{{ helper.social(contributor.twitter, "Twitter", "twitter-128.png") }}
-							{% endif %}
-							{% if contributor.facebook %}
-								{{ helper.social(contributor.facebook, "Facebook", "facebook-128.png") }}
-							{% endif %}
+							{% for service in contributor.socialServices %}
+								<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+									<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+								</a>
+							{% endfor %}
 						</div>
 					</td>
 				</tr>

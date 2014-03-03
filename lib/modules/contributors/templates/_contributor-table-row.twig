@@ -31,21 +31,11 @@
 		</td>
 	{% endif %}
 	<td class="social_cell">
-		{% if contributor.publicemail %}
-			{{ _self.iconLink("E-Mail", "email", "mailto:" ~ contributor.publicemail) }}
-		{% endif %}
-		{% if contributor.website %}
-			{{ _self.iconLink("Homepage", "www", contributor.website) }}
-		{% endif %}
-		{% if contributor.adn %}
-			{{ _self.iconLink("App.net", "adn", contributor.adn) }}
-		{% endif %}
-		{% if contributor.twitter %}
-			{{ _self.iconLink("Twitter", "twitter", contributor.twitter) }}
-		{% endif %}
-		{% if contributor.facebook %}
-			{{ _self.iconLink("Facebook", "facebook", contributor.facebook) }}
-		{% endif %}
+		{% for service in contributor.socialServices %}
+			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+		    	<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+		    </a>
+		{% endfor %}
 	</td>
 	{% if donations == "yes" %}
 		<td class="donation_cell">
