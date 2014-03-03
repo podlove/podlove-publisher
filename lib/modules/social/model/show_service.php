@@ -12,6 +12,11 @@ class ShowService extends Base {
 		return \Podlove\Modules\Social\Model\Service::find_one_by_id($this->service_id);
 	}
 
+	public function get_service_url() {
+		$service = $this->get_service();
+		return str_replace( '%account-placeholder%', $this->value, $service->url_scheme);
+	}
+
 }
 
 ShowService::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

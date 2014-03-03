@@ -27,7 +27,11 @@ class Social extends \Podlove\Modules\Base {
 		add_filter( "manage_podcast_page_podlove_contributors_settings_handle_columns", array( $this, 'add_new_contributor_column' ) );
 
 		\Podlove\Modules\Contributors\Template\Contributor::add_accessor(
-			'socialServices', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorContributorSocialProfiles'), 5
+			'socialServices', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorContributorSocialServices'), 5
+		);
+
+		\Podlove\Template\Podcast::add_accessor(
+			'socialServices', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorPodcastSocialServices'), 4
 		);
 	}
 
