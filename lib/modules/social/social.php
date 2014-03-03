@@ -134,7 +134,7 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
-					'title' 		=> 'WWW',
+					'title' 		=> 'Website',
 					'description'	=> 'Website URL',
 					'logo'			=> 'www-128.png',
 					'url_scheme'	=> '%account-placeholder%'
