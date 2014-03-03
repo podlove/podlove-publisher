@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 57 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 58 );
 
 add_action( 'init', function () {
 	
@@ -573,6 +573,12 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` ADD COLUMN `append_name_to_podcast_title` TINYINT(1) NULL AFTER `embed_content_encoded`',
 				\Podlove\Model\Feed::table_name()
 			) );
+		break;
+		case 58:
+			// if contributors module is active, activate social module
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				\Podlove\Modules\Base::activate('social');
+			}
 		break;
 	}
 
