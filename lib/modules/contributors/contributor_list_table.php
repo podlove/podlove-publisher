@@ -66,7 +66,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_flattr( $contributor ) {
-		if ( $contributor->flattr == "" ) 
+		$flattr_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'Flattr' );
+		$contributor_flattr = \Podlove\Modules\Social\Model\ContributorService::find_one_by_where("`service_id` = " . $flattr_service->id . " AND `contributor_id` = " . $contributor->id);
+
+		if ( $contributor_flattr->value == "" ) 
 			return;
 
 		return "<a 
@@ -74,12 +77,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 					class=\"FlattrButton\"
 					style=\"display:none;\"
 		    		title=\"Flattr {$contributor->publicname}\"
-		    		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
-		    		href=\"https://flattr.com/profile/{$contributor->flattr}\">
+		    		rel=\"flattr;uid:{$contributor_flattr->value};button:compact;popout:0\"
+		    		href=\"https://flattr.com/profile/{$contributor_flattr->value}\">
 				    	Flattr {$contributor->publicname}
 				</a>
 				<br />
-				<a href='http://flattr.com/profile/".$contributor->flattr."'>".$contributor->flattr."</a>";
+				<a href='http://flattr.com/profile/".$contributor_flattr->value."'>".$contributor_flattr->value."</a>";
 	}
 	
 	public function column_visibility( $contributor ) {
@@ -91,7 +94,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_social( $contributor ) {
-		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_all_by_property('contributor_id', $contributor->id);
+		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `type` = 'social' AND `contributor_id` = " . $contributor->id);
 		$source = '';
 
 		foreach ($contributor_services as $contributor_service) {
@@ -115,7 +118,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'slug'                 => __( 'ID', 'podlove' ),
 			'gender'               => __( 'Gender', 'podlove' ),
 			'affiliation'          => __( 'Affiliation', 'podlove' ),
-			'flattr'        	   => __( 'Flattr', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
 			'episodes'             => __( 'Episodes', 'podlove' ),
 			'visibility'           => __( 'Visiblity', 'podlove' )
@@ -137,7 +139,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	    'slug'                 => array('slug',false),
 	    'gender'               => array('gender',false),
 	    'affiliation'          => array('organisation',false),
-	    'flattr'     		   => array('privateemail',false),
 	    'privateemail'         => array('privateemail',false),
 	    'episodes'             => array('contributioncount',true),
 	    'visibility'           => array('visibility',false)
@@ -203,13 +204,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 				`slug` LIKE \'%' . $search . '%\' OR
 				`department` LIKE \'%' . $search . '%\' OR
 				`jobtitle` LIKE \'%' . $search . '%\' OR
-				`twitter` LIKE \'%' . $search . '%\' OR
-				`adn` LIKE \'%' . $search . '%\' OR
-				`facebook` LIKE \'%' . $search . '%\' OR
-				`flattr` LIKE \'%' . $search . '%\' OR
-				`paypal` LIKE \'%' . $search . '%\' OR
-				`bitcoin` LIKE \'%' . $search . '%\' OR
-				`litecoin` LIKE \'%' . $search . '%\' OR
 				`publicemail` LIKE \'%' . $search . '%\' OR
 				`privateemail` LIKE \'%' . $search . '%\' OR
 				`realname` LIKE \'%' . $search . '%\' OR

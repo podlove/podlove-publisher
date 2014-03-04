@@ -20,6 +20,7 @@ class ShowService extends Base {
 }
 
 ShowService::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
+ShowService::property( 'type', 'VARCHAR(255)' );
 ShowService::property( 'service_id', 'INT' );
 ShowService::property( 'value', 'TEXT' );
 ShowService::property( 'title', 'TEXT' );

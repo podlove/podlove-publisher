@@ -4,8 +4,6 @@ namespace Podlove\Modules\Social;
 use \Podlove\Modules\Social\Model\Service;
 use \Podlove\Modules\Social\Model\ShowService;
 use \Podlove\Modules\Social\Model\ContributorService;
-use \Podlove\Modules\Social\Model\ShowDonation;
-use \Podlove\Modules\Social\Model\ContributorDonation;
 
 use \Podlove\Modules\Social\Settings\PodcastSettingsSocialTab;
 use \Podlove\Modules\Social\Settings\PodcastSettingsDonationTab;
@@ -45,8 +43,6 @@ class Social extends \Podlove\Modules\Base {
 		Service::build();
 		ShowService::build();
 		ContributorService::build();
-		ShowDonation::build();
-		ContributorDonation::build();
 
 		$services = array(
 			array(
@@ -276,6 +272,7 @@ class Social extends \Podlove\Modules\Base {
 					if( !is_null($contributor->www) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'social';
 						$c->service_id = $www_service->id;
 						$c->value = $contributor->www;
 						$c->position = $position;
@@ -286,6 +283,7 @@ class Social extends \Podlove\Modules\Base {
 					if( !is_null($contributor->adn) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'social';
 						$c->service_id = $adn_service->id;
 						$c->value = $contributor->adn;
 						$c->position = $position;
@@ -296,6 +294,7 @@ class Social extends \Podlove\Modules\Base {
 					if( !is_null($contributor->twitter) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'social';
 						$c->service_id = $twitter_service->id;
 						$c->value = $contributor->twitter;
 						$c->position = $position;
@@ -306,6 +305,7 @@ class Social extends \Podlove\Modules\Base {
 					if( !is_null($contributor->googleplus) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'social';
 						$c->service_id = $googleplus_service->id;
 						$c->value = $contributor->googleplus;
 						$c->position = $position;
@@ -316,6 +316,7 @@ class Social extends \Podlove\Modules\Base {
 					if( !is_null($contributor->facebook) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'social';
 						$c->service_id = $facebook_service->id;
 						$c->value = $contributor->facebook;
 						$c->position = $position;
@@ -324,8 +325,9 @@ class Social extends \Podlove\Modules\Base {
 					}			
 
 					if( !is_null($contributor->flattr) ) {
-						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'donation';
 						$c->service_id = $flattr_service->id;
 						$c->value = $contributor->flattr;
 						$c->position = $position;
@@ -334,8 +336,9 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					if( !is_null($contributor->paypal) ) {
-						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'donation';
 						$c->service_id = $paypal_service->id;
 						$c->value = $contributor->paypal;
 						$c->position = $position;
@@ -344,8 +347,9 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					if( !is_null($contributor->litecoin) ) {
-						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'donation';
 						$c->service_id = $litecoin_service->id;
 						$c->value = $contributor->litecoin;
 						$c->position = $position;
@@ -354,8 +358,9 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					if( !is_null($contributor->bitcoin) ) {
-						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'donation';
 						$c->service_id = $bitcoin_service->id;
 						$c->value = $contributor->bitcoin;
 						$c->position = $position;
@@ -364,8 +369,9 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					if( !is_null($contributor->amazonwishlist) ) {
-						$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
+						$c->type = 'donation';
 						$c->service_id = $amazon_wishlist_service->id;
 						$c->value = $contributor->amazonwishlist;
 						$c->position = $position;
@@ -383,9 +389,6 @@ class Social extends \Podlove\Modules\Base {
 		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $contributor->id) as $service) {
 			$service->delete();
 		}
-		foreach (\Podlove\Modules\Social\Model\ContributorDonation::all("WHERE `contributor_id` = " . $contributor->id) as $donation) {
-			$donation->delete();
-		}
 
 		if (!isset($_POST['podlove_contributor']) )
 			return;
@@ -399,6 +402,7 @@ class Social extends \Podlove\Modules\Base {
 					$c = new \Podlove\Modules\Social\Model\ContributorService;
 					$c->position = $position;
 					$c->contributor_id = $contributor->id;
+					$c->type = 'social';
 					$c->service_id = $service_id;
 					$c->value = $service['value'];
 					$c->title = $service['title'];
@@ -412,9 +416,10 @@ class Social extends \Podlove\Modules\Base {
 		if (isset($donations_appearances) )
 			foreach ($donations_appearances as $donation_appearances) {
 				foreach ($donation_appearances as $donation_id => $donation) {
-					$c = new \Podlove\Modules\Social\Model\ContributorDonation;
+					$c = new \Podlove\Modules\Social\Model\ContributorService;
 					$c->position = $position;
 					$c->contributor_id = $contributor->id;
+					$c->type = 'donation';
 					$c->service_id = $donation_id;
 					$c->value = $donation['value'];
 					$c->title = $donation['title'];
@@ -424,17 +429,15 @@ class Social extends \Podlove\Modules\Base {
 			}
 	}
 
-	public function save_social_setting($old, $new)
-	{
-
-		foreach (\Podlove\Modules\Social\Model\ShowService::all() as $service) {
+	public function save_service_setting($old, $new, $form_key='services', $type='social') {
+		foreach (\Podlove\Modules\Social\Model\ShowService::find_all_by_property( 'type', $type ) as $service) {
 			$service->delete();
 		}
 
-		if (!isset($new['services']))
+		if (!isset($new[$form_key]))
 			return;
 
-		$services_appearances = $new['services'];
+		$services_appearances = $new[$form_key];
 
 		$position = 0;
 		foreach ($services_appearances as $service_appearance) {
@@ -442,6 +445,7 @@ class Social extends \Podlove\Modules\Base {
 				$c = new \Podlove\Modules\Social\Model\ShowService;
 				$c->position = $position;
 				$c->service_id = $service_id;
+				$c->type = $type;
 				$c->value = $service['value'];
 				$c->title = $service['title'];
 				$c->save();
@@ -450,30 +454,14 @@ class Social extends \Podlove\Modules\Base {
 		}
 	}
 
+	public function save_social_setting($old, $new)
+	{
+		$this->save_service_setting($old, $new);
+	}
+
 	public function save_donation_setting($old, $new)
 	{
-
-		foreach (\Podlove\Modules\Social\Model\ShowDonation::all() as $service) {
-			$service->delete();
-		}
-
-		if (!isset($new['donations']))
-			return;
-
-		$services_appearances = $new['donations'];
-
-		$position = 0;
-		foreach ($services_appearances as $service_appearance) {
-			foreach ($service_appearance as $service_id => $service) {
-				$c = new \Podlove\Modules\Social\Model\ShowDonation;
-				$c->position = $position;
-				$c->service_id = $service_id;
-				$c->value = $service['value'];
-				$c->title = $service['title'];
-				$c->save();
-			}
-			$position++;
-		}
+		$this->save_service_setting($old, $new, 'donations', 'donation');
 	}
 
 	public function podcast_settings_social_tab($tabs)
@@ -495,7 +483,8 @@ class Social extends \Podlove\Modules\Base {
 
 		    // insert contributors at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("social" => __('Social', 'podlove')) +
+		           array("social" => __('Social', 'podlove'),
+		           		 "flattr" => __('Flattr', 'podlove')) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
 		    return $columns;
@@ -508,7 +497,7 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->callback( 'services_form_table', array(
 			'callback' => function() {
 
-				$services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_GET['contributor'] . " ORDER BY `position` ASC");
+				$services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_GET['contributor'] . " AND `type` = 'social' ORDER BY `position` ASC");
 
 				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table($services);
@@ -524,7 +513,7 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->callback( 'services_form_table', array(
 			'callback' => function() {
 
-				$services = \Podlove\Modules\Social\Model\ContributorDonation::all("WHERE `contributor_id` = " . $_GET['contributor'] . " ORDER BY `position` ASC");
+				$services = \Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $_GET['contributor'] . " AND `type` = 'donation' ORDER BY `position` ASC");
 
 				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );

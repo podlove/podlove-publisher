@@ -21,6 +21,7 @@ class ContributorService extends Base {
 }
 
 ContributorService::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
+ContributorService::property( 'type', 'VARCHAR(255)' );
 ContributorService::property( 'contributor_id', 'INT' );
 ContributorService::property( 'service_id', 'INT' );
 ContributorService::property( 'value', 'TEXT' );
