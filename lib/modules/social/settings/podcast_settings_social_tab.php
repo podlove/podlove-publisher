@@ -57,7 +57,7 @@ class PodcastSettingsSocialTab extends Tab {
 
 	public static function podcast_form_extension_form()
 	{
-		$services = \Podlove\Modules\Social\Model\ShowService::all( "WHERE `type` = 'social'" );
+		$services = \Podlove\Modules\Social\Model\ShowService::find_by_type();
 		\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_podcast[services]');
 	}
 }

@@ -18,10 +18,13 @@ class ContributorService extends Base {
 		return str_replace( '%account-placeholder%', $this->value, $service->url_scheme);
 	}
 
+	public static function find_by_contributor_id_and_type( $contributor_id, $type='social' ) {
+		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `type` = '" . $type . "' ) AND `contributor_id` = " . $contributor_id );
+	}
+
 }
 
 ContributorService::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-ContributorService::property( 'type', 'VARCHAR(255)' );
 ContributorService::property( 'contributor_id', 'INT' );
 ContributorService::property( 'service_id', 'INT' );
 ContributorService::property( 'value', 'TEXT' );
