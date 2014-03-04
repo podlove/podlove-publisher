@@ -258,10 +258,10 @@ function template_shortcode( $attributes ) {
 	$defaults = array(
 		'title' => '',
 		'id' => '',
-		'autop' => 'yes'
+		'autop' => false
 	);
 
-	$attributes = shortcode_atts( $defaults, $attributes );
+	$attributes = array_merge( $defaults, $attributes );
 
 	if ( $attributes['title'] !== '' )
 		_deprecated_argument( __FUNCTION__, '1.3.14-alpha', 'The "title" attribute for [podlove-template] shortcode is deprecated. Use "id" instead.' );
@@ -272,8 +272,9 @@ function template_shortcode( $attributes ) {
 	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
 		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-	$html = $template->content;
+	$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
+	// apply autop and shortcodes
 	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
 		$html = wpautop( $html );
 
@@ -282,6 +283,8 @@ function template_shortcode( $attributes ) {
 	return $html;
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
+
+add_filter('podlove_template_raw', array('\Podlove\Template\TwigFilter', 'apply_to_html'), 10, 2);
 
 function podcast_license() {
 	$podcast = Model\Podcast::get_instance();
@@ -301,3 +304,12 @@ function episode_license() {
 }
 add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
 
+function feed_list() {
+	return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/feed-list.twig');
+}
+add_shortcode( 'podlove-feed-list', '\Podlove\feed_list' );
+
+function episode_list() {
+	return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/episode-list.twig');
+}
+add_shortcode( 'podlove-episode-list', '\Podlove\episode_list' );

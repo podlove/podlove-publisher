@@ -1,0 +1,28 @@
+<table class="podlove-contributors-table">
+	<tbody>
+		{% for contributorGroup in episode.contributors({groupby: 'group'}) %}
+			<tr>
+				{% set colspan = 2 %}
+				{% if avatars == "yes"   %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if groups == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if roles == "yes"     %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if donations == "yes" %}{% set colspan = colspan + 1 %}{% endif %}
+				{% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+				<th colspan="{{ colspan }}" class="contributor-group">
+					{{ contributorGroup.group.title }}
+				</th>
+			</tr>
+			{% for contributor in contributorGroup.contributors %}
+				{% if contributor.visible %}
+					{% include '@contributors/_contributor-table-row.twig' %}
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
+	</tbody>
+</table>
+
+{% if flattr == "yes" %}
+	{% include '@contributors/_contributor-table-flattr.twig' %}
+{% endif %}
+
+{% include '@contributors/_contributor-table-css.twig' %}

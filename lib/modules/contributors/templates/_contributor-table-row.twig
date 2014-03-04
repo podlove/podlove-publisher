@@ -1,0 +1,71 @@
+{% macro iconSrc(icon) %}
+	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
+{% endmacro %}
+
+{% macro iconLink(title, icon, href) %}
+	<a target="_blank" title="{{ title }}" href="{{ href }}">
+		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
+	</a>
+{% endmacro %}
+
+<tr>
+	{% if avatars == "yes" %}
+		<td class="avatar_cell">
+			{{ contributor.avatar }}
+		</td>
+	{% endif %}
+	<td class="title_cell">
+		{{ contributor.name }}
+		{% if contributor.comment %}
+			<br><em>{{ contributor.comment }}</em>
+		{% endif %}
+	</td>
+	{% if groups == "yes" %}
+		<td>
+			{{ contributor.group }}
+		</td>
+	{% endif %}
+	{% if roles == "yes" %}
+		<td>
+			{{ contributor.role }}
+		</td>
+	{% endif %}
+	<td class="social_cell">
+		{% for service in contributor.socialServices %}
+			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+		    	<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+		    </a>
+		{% endfor %}
+	</td>
+	{% if donations == "yes" %}
+		<td class="donation_cell">
+			{% if contributor.bitcoin %}
+				{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Bitcoin", "bitcoin", contributor.bitcoin) }}
+			{% endif %}
+			{% if contributor.litecoin %}
+				{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Litecoin", "litecoin", contributor.litecoin) }}
+			{% endif %}
+			{% if contributor.paypal %}
+				{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with PayPal", "paypal", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=" ~ contributor.paypal) }}
+			{% endif %}
+			{% if contributor.amazon_wishlist %}
+				{{ _self.iconLink("Support " ~ contributor.name ~ " by buying things from an Amazon Wishlist", "amazonwishlist", contributor.amazon_wishlist) }}
+			{% endif %}
+		</td>
+	{% endif %}
+	{% if flattr == "yes" %}
+		<td class="flattr_cell">
+			{% if contributor.flattr %}
+				{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}
+				<a target="_blank"
+				   class="FlattrButton"
+				   style="display:none;"
+				   title="Flattr {{ cTitle }}"
+				   rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
+				   href="{{ contributor.flattr_url }}">
+				   	Flattr {{ cTitle }}
+				</a>
+			{% endif %}
+		</td>
+	{% endif %}
+</tr>

@@ -212,6 +212,8 @@ class Feed {
 
 			$feed = $form->object;
 
+			$podcast = \Podlove\Model\Podcast::get_instance();
+
 			$episode_assets = \Podlove\Model\EpisodeAsset::all();
 			$assets = array();
 			foreach ( $episode_assets as $asset ) {
@@ -227,14 +229,20 @@ class Feed {
 			) );
 
 			$wrapper->string( 'name', array(
-				'label'       => __( 'Feed Title', 'podlove' ),
+				'label'       => __( 'Feed Name', 'podlove' ),
 				'description' => __( 'Some podcast clients may display this title to describe the feed content.', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required' )
+			) );
+			
+			$wrapper->checkbox( 'append_name_to_podcast_title', array(
+				'label'       => __( 'Append Feed Name to Podcast title', 'podlove' ),
+				'description' => sprintf( __( 'Structure of the feed title. Preview: %s', 'podlove' ), $podcast->title . '<span id="feed_title_preview_append"></span>' ),
+				'default'     => false
 			) );
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove' ),
-				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() .  '</span>' ) : '',
+				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 

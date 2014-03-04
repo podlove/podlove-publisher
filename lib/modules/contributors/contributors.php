@@ -38,6 +38,19 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
+		add_filter('podlove_twig_file_loader', function($file_loader) {
+			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates')), 'contributors');
+			return $file_loader;
+		});
+
+		\Podlove\Template\Episode::add_accessor(
+			'contributors', array('\Podlove\Modules\Contributors\TemplateExtensions', 'accessorEpisodeContributors'), 5
+		);
+
+		\Podlove\Template\Podcast::add_accessor(
+			'contributors',	array('\Podlove\Modules\Contributors\TemplateExtensions', 'accessorPodcastContributors'), 4
+		);
+
 		// register shortcodes
 		new Shortcodes;	
 
@@ -54,6 +67,63 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorSettings($settings_parent);
 		});
+	}
+
+	/**
+	 * Filter contributions.
+	 *
+	 * @fixme {groupby: "role"} is missing
+	 * 
+	 * @param  array $contributions List of contributions
+	 * @param  array $args          List of arguments. Keys: role, group, groupby
+	 * @return array Return format depends on `groupby` option. If it is not set,
+	 *               a list of contributors is returned. Otherwise, a list of 
+	 *               hashes is returned. These hashes have one key `contributors`,
+	 *               which contains the contributors. Depending on the `groupby`
+	 *               setting there is also a `group` or `role` key, which contains
+	 *               the expected object.
+	 */
+	public static function filterContributions($contributions, $args) {
+		// Remove all contributions with missing contributors.
+		$contributions = array_filter($contributions, function($c) {
+			return (bool) $c->getContributor();
+		});
+
+		// filter by role
+		if (isset($args['role']) && $args['role'] != 'all') {
+			$role = $args['role'];
+			$contributions = array_filter($contributions, function($c) use ($role) {
+				return strtolower($role) == $c->getRole()->slug;
+			});
+		}
+
+		// filter by group
+		if (isset($args['group']) && $args['group'] != 'all') {
+			$group = $args['group'];
+			$contributions = array_filter($contributions, function($c) use ($group) {
+				return strtolower($group) == $c->getGroup()->slug;
+			});
+		}
+
+		if (isset($args['groupby']) && $args['groupby'] == 'group') {
+			$groups = array();
+			foreach ($contributions as $contribution) {
+				$group = $contribution->getGroup();
+				if (isset($groups[$group->id])) {
+					$groups[$group->id]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
+				} else {
+					$groups[$group->id] = array(
+						'group'        => new Template\ContributorGroup($group, array($contribution)),
+						'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
+					);
+				}
+			}
+			return $groups;
+		} else {
+			return array_map(function($contribution) {
+				return new Template\Contributor($contribution->getContributor(), $contribution);
+			}, $contributions);
+		}
 	}
 
 	/**

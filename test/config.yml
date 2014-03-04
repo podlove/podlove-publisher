@@ -1,0 +1,6 @@
+web:
+  base: "http://localhost/Sites/wordpress-podlove-test"
+database:
+  user:     root
+  password: root
+  database: "wordpress-podlove-test"

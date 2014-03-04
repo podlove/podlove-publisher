@@ -1,0 +1,11 @@
+<span class="podlove-contributors">
+	{% for contributor in episode.contributors %}
+		{% if contributor.visible %}
+			<span>
+				{% if avatars == "yes" %}
+					{{ contributor.avatar(18) }}
+				{% endif %}
+				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% endif %}
+		{% endif %}
+	{% endfor %}
+</span>

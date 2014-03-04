@@ -5,6 +5,80 @@ use \Podlove\Model\Base;
 
 class Contributor extends Base
 {	
+	public static function byGroup($groupSlug) {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				group_id = (SELECT id FROM ' . ContributorGroup::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $groupSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
+	public static function byRole($roleSlug) {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				role_id = (SELECT id FROM ' . ContributorRole::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $roleSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
+	public static function byGroupAndRole($groupSlug = null, $roleSlug = null) {
+		global $wpdb;
+
+		if (!$groupSlug && !$roleSlug)
+			return self::all();
+
+		if ($groupSlug && !$roleSlug)
+			return self::byGroup($groupSlug);
+
+		if (!$groupSlug && $roleSlug)
+			return self::byRole($roleSlug);
+
+		$sql = '
+			SELECT
+				contributor_id
+			FROM
+				' . EpisodeContribution::table_name() . '
+			WHERE
+				role_id = (SELECT id FROM ' . ContributorRole::table_name() . ' WHERE slug = %s)
+				AND
+				group_id = (SELECT id FROM ' . ContributorGroup::table_name() . ' WHERE slug = %s)
+			GROUP BY
+				contributor_id
+		';
+
+		$contributor_ids = $wpdb->get_col(
+			$wpdb->prepare($sql, $roleSlug, $groupSlug)
+		);
+
+		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+	}
+
 	public function getName() {
 		if ($this->publicname) {
 			return $this->publicname;
@@ -19,10 +93,6 @@ class Contributor extends Base
 
 	public function getAvatar($size) {
 		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
-	}
-
-	public function getRole() {
-		return ContributorRole::find_one_by_slug($this->role);
 	}
 
 	public function getAvatarUrl($size) {

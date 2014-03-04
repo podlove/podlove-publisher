@@ -361,7 +361,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     
 	public function post_to_adn_handler($postid) {
 	    $post_id = $_POST['post_ID'];
-    	$post_title = $_POST['post_title'];
+    	$post_title = stripcslashes($_POST['post_title']);
     
     	if($this->get_module_option('adn_post_delay') !== "" AND $this->get_module_option('adn_post_delay') !== "00:00:00") {
     		$delayed_time = strtotime($this->get_module_option('adn_post_delay'));

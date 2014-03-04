@@ -13,7 +13,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
-
+	
 	public function column_avatar( $contributor ) {
 		
 		return $contributor->getAvatar("45px");
@@ -53,48 +53,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		}
 	}
 
-	public function column_social( $contributor ) {
-		$social_services = array(
-				'appdotnet'	=> array(
-								'title' => 'App.net',
-								'url_template' => 'http://alpha.app.net/',
-								'account' => $contributor->adn,
-								'text' => '%s'
-							   ),
-				'twitter'  => array( 
-								'title' => 'Twitter',
-								'url_template' => 'http://twitter.com/',
-								'account' => $contributor->twitter,
-								'text' => '%s'
-							  ),
-				'facebook' => array(
-								'title' => 'Facebook',
-								'url_template' => 'http://facebook.com/',
-								'account' => $contributor->facebook,
-								'text' => '%s'
-							  ),
-				'googleplus' => array(
-								'title' => 'Google+',
-								'url_template' => '',
-								'account' => $contributor->googleplus,
-								'text' => 'Link'
-							  ),
-				'house' => array(
-								'title' => 'Homepage',
-								'url_template' => '',
-								'account' => $contributor->www,
-								'text' => 'Link'
-							  )
-		);
-
-		$social = '';
-		foreach ( $social_services as $service => $details ) {
-			( $details['account'] == "" ? "" : $social = $social . '<i class="podlove-icon-' . $service .'" title="' . $details['title'] . '"></i> <a target="_blank" href="' . $details['url_template'] . $details['account'] . '" title="' . $details['account'] .'">' . str_replace( '%s', $details['account'], $details['text']) . '</a><br />' );
-		}
-
-		return $social;
-	}
-
 	public function column_affiliation( $contributor ) {
 		$affiliation = '';
 		( $contributor->organisation == "" ? "" : $affiliation = $affiliation . '<strong>' . $contributor->organisation . '</strong><br />' );
@@ -132,6 +90,24 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		return $this->get_episodes_link($contributor, $contributor->contributioncount);
 	}
 
+	public function column_social( $contributor ) {
+		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_all_by_property('contributor_id', $contributor->id);
+		$source = '';
+
+		foreach ($contributor_services as $contributor_service) {
+			$service = $contributor_service->get_service();
+
+			$source .= "<li>
+						<img class='podlove-contributor-list-social-logo' src='"
+						. $service->get_logo() . "' /> <a href='"
+						. $contributor_service->get_service_url() . "'>"
+						. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) . "</a>
+						</li>\n";
+		}
+
+		return '<ul class="podlove-contributor-social-list">' . $source . '</ul>';
+	}
+
 	public function get_columns(){
 		$columns = array(
 			'avatar'               => __( '', 'podlove' ),
@@ -139,7 +115,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'slug'                 => __( 'ID', 'podlove' ),
 			'gender'               => __( 'Gender', 'podlove' ),
 			'affiliation'          => __( 'Affiliation', 'podlove' ),
-			'social'               => __( 'Social', 'podlove' ),
 			'flattr'        	   => __( 'Flattr', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
 			'episodes'             => __( 'Episodes', 'podlove' ),

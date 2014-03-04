@@ -1,0 +1,24 @@
+<table>
+	<thead>
+    	<tr>
+            <th>Feed</th>
+        	<th>Enclosure</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for feed in podcast.feeds %}
+		{% if feed.discoverable %}
+		    <tr>
+            	<td>
+                    <a href="{{ feed.url }}">{{ feed.title }}</a>
+                </td>
+                <td>
+                    <span title="{{ feed.asset.fileType.mimeType }} ({{ feed.asset.fileType.extension }})">
+                        {{ feed.asset.title }}
+                    </span>
+                </td>
+            </tr>
+    	{% endif %}
+	{% endfor %}
+    </tbody>
+</table>
