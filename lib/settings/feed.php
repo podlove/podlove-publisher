@@ -259,6 +259,8 @@ class Feed {
 				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove' ),
 				'default'     => true
 			) );
+
+			do_action( 'podlove_feeds_directories', $wrapper );
 			
 			$wrapper->string( 'itunes_feed_id', array(
 				'label'       => __( 'iTunes Feed ID', 'podlove' ),
