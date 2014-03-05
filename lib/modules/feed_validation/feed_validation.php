@@ -63,11 +63,15 @@ class Feed_Validation extends \Podlove\Modules\Base {
 	public function renewFeedTransients()
 	{
 		foreach ( \Podlove\Model\Feed::all() as $feed_key => $feed ) {
+			// Delete transients
+			delete_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
+			delete_transient( 'podlove_dashboard_feed_source_' . $feed->id );
+
 			// Performing validation and log the errors
 			$errors_and_warnings = $feed->getValidationErrorsandWarnings();
 			
 			if( $errors_and_warnings )
-				$feed->logValidation();
+				$feed->logValidation( $errors_and_warnings );
 			// Refresh the transient
 			set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
 											  $feed->getValidationIcon(),
