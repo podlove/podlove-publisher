@@ -246,7 +246,7 @@ class Feed extends Base {
 
 	public function getSource() {
 		$curl = new \Podlove\Http\Curl();
-		$curl->request( $this->get_subscribe_url(), array(
+		$curl->request( $this->get_subscribe_url() . ( strpos( $this->get_subscribe_url(), "?" ) ? "&redirect=no" : "?redirect=no" ), array(
 			'headers' => array( 'Content-type'  => 'application/json' ),
 			'timeout' => 10,
 			'compress' => true,
