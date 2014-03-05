@@ -71,9 +71,16 @@ class Podcast_Post_Type {
 			);
 
 			wp_register_script(
-				'podlove_admin_dashboard_validation',
-				\Podlove\PLUGIN_URL . '/js/admin/dashboard_validation.js',
+				'podlove_admin_dashboard_asset_validation',
+				\Podlove\PLUGIN_URL . '/js/admin/dashboard_asset_validation.js',
 				array( 'jquery' ),
+				$version
+			);
+
+			wp_register_script(
+				'podlove_admin_dashboard_feed_validation',
+				\Podlove\PLUGIN_URL . '/js/admin/dashboard_feed_validation.js',
+			 	array( 'jquery' ),
 				$version
 			);
 
@@ -139,7 +146,8 @@ class Podcast_Post_Type {
 				array(
 					'jquery',
 					'podlove_admin_episode',
-					'podlove_admin_dashboard_validation',
+					'podlove_admin_dashboard_asset_validation',
+					'podlove_admin_dashboard_feed_validation',
 					'podlove_admin_episode_asset_settings',
 					'podlove_admin_episode_feed_settings',
 					'podlove_admin_autogrow',

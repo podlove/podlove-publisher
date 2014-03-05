@@ -170,7 +170,7 @@ class Social extends \Podlove\Modules\Base {
 
 		if( count(ContributorService::all()) == 0 ) {
 
-			$www_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'WWW'");
+			$www_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Website'");
 			$adn_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'App.net'");
 			$twitter_service		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Twitter'");
 			$googleplus_service 	= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Google+'");

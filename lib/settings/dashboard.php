@@ -66,6 +66,7 @@ class Dashboard {
 	public static function settings_page() {
 		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
 		add_meta_box( Dashboard::$pagehook . '_statistics', __( 'At a glance', 'podlove' ), '\Podlove\Settings\Dashboard::statistics', Dashboard::$pagehook, 'normal' );
+		add_meta_box( Dashboard::$pagehook . '_feeds', __( 'Podcast feeds', 'podlove' ), '\Podlove\Settings\Dashboard::feeds', Dashboard::$pagehook, 'normal' );
 		add_meta_box( Dashboard::$pagehook . '_validation', __( 'Validate Podcast Files', 'podlove' ), '\Podlove\Settings\Dashboard::validate_podcast_files', Dashboard::$pagehook, 'normal' );
 
 		do_action( 'podlove_dashboard_meta_boxes' );
@@ -320,11 +321,73 @@ class Dashboard {
 		<?php
 	}
 
+	public static function feeds() {
+			$feeds = \Podlove\Model\Feed::all();
+			?>
+
+				<input id="revalidate_feeds" type="button" class="button button-primary" value="<?php _e( 'Revalidate Feeds', 'podlove' ); ?>">
+
+				<table id="dashboard_feed_info">
+					<thead>
+						<tr>
+							<th><?php _e( 'Name', 'podlove' ); ?></th>
+							<th><?php _e( 'Slug', 'podlove' ); ?></th>
+							<th><?php _e( 'Last Modification', 'podlove' ); ?></th>
+							<th><?php _e( 'Entries', 'podlove' ); ?></th>
+							<th><?php _e( 'Size (compressed)', 'podlove'); ?></th>
+							<th><?php _e( 'Protected', 'podlove'); ?></th>
+							<th><?php _e( 'Validation', 'podlove' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							foreach ($feeds as $feed_key => $feed) {
+
+								$feed_request = get_transient( 'podlove_dashboard_feed_source_' . $feed->id );
+								if ( false === $feed_request ) {
+									$feed_request = $feed->getSource();
+									set_transient( 'podlove_dashboard_feed_source_' . $feed->id, 
+												  $feed_request,
+												  3600*24 );
+								}
+
+								$feed_validation = get_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
+								if ( false === $feed_validation ) {
+									$feed_validation = $feed->getValidationIcon();
+									set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
+												  $feed_validation,
+												  3600*24 );
+								}							 
+
+								$feed_header = $feed_request['headers'];
+								$feed_body = $feed_request['body'];
+
+								$number_of_items = count( $feed->post_ids() );
+								$last_modification = date( get_option('date_format') . ' ' . get_option( 'time_format' ), strtotime( $feed_header['last-modified'] ) );
+								$size = \Podlove\format_bytes(strlen( $feed_body )) . " (" .  \Podlove\format_bytes(strlen( gzdeflate( $feed_body , 9 ) )) . ")";
+
+								$source  = "<tr>\n";
+								$source .= "<td><a href='" . $feed->get_subscribe_url() . "'>" . $feed->name ."</a></td>";
+								$source .= "<td class='center'>" . $feed->slug . "</td>";
+								$source .= "<td class='center'>" . $last_modification ."</td>";
+								$source .= "<td class='center'>" . $number_of_items ."</td>";
+								$source .= "<td class='center'>" . $size . "</td>";
+								$source .= "<td class='center'>" . ( $feed->protected ? '<i class="clickable podlove-icon-ok"></i>' : '<i class="podlove-icon-minus"></i>' ) . "</td>";
+								$source .= "<td class='center' data-feed-id='" . $feed->id . "'>" . $feed_validation . "</td>";
+								$source .= "</tr>\n";
+								echo $source;
+							}
+						?>
+					</tbody>
+				</table>
+			<?php
+	}
+
 	public static function validate_podcast_files() {
 		
 		$podcast = Model\Podcast::get_instance();
 		?>
-		<div id="validation">
+		<div id="asset_validation">
 			<?php
 			$episodes = Model\Episode::all( 'ORDER BY slug DESC' );
 			$assets   = Model\EpisodeAsset::all();

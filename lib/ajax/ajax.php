@@ -13,6 +13,7 @@ class Ajax {
 
 		$actions = array(
 			'get-new-guid',
+			'validate-feed',
 			'validate-file',
 			'validate-url',
 			'update-file',
@@ -58,6 +59,18 @@ class Ajax {
 
 		$this->respond_with_json( array( 'guid' => $guid ) );
 	}
+
+	public function validate_feed() {
+		$feed_id = $_REQUEST['feed_id'];
+	 
+	 	$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
+	 	// Renew transient
+	 	set_transient( 'podlove_dashboard_feed_validation_' . $feed_id, 
+	 														  $feed->getValidationIcon(),
+															  3600*24 );
+	 	
+	 	$this->respond_with_json( array( 'validation_icon' => $feed->getValidationIcon() ) );
+	 }
 
 	public function validate_file() {
 		$file_id = $_REQUEST['file_id'];
