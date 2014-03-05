@@ -20,7 +20,8 @@ class Ajax {
 			'create-file',
 			'update-asset-position',
 			'update-feed-position',
-			'podcast'
+			'podcast',
+			'fetch-bitlove-url'
 		);
 
 		foreach ( $actions as $action )
@@ -175,6 +176,12 @@ class Ajax {
 			->update_attributes( array( 'position' => $position ) );
 
 		die();
+	}
+
+	public function fetch_bitlove_url() {
+		$this->respond_with_json( array(
+			'bitlove_url'   => \Podlove\Modules\Bitlove\Bitlove::get_bitlove_feed_url($_REQUEST['feed_id'])
+		) );
 	}
 	
 }

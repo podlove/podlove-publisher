@@ -19,6 +19,25 @@ class Bitlove extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_deactivated_bitlove', array( $this, 'was_deactivated' ) );
 
 		add_action( 'admin_init', array( $this, 'add_feed_model_extension' ) );
+
+		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+
+		add_action( 'rss2_head', array( $this, 'add_bitlove_feeds' ) );
+	}
+
+	public function add_bitlove_feeds() {
+		
+	}
+
+	public function admin_print_styles() {
+
+		wp_register_script(
+			'podlove_bitlove_admin_script',
+			$this->get_module_url() . '/js/admin.js',
+			array( 'jquery', 'jquery-ui-tabs' ),
+			\Podlove\get_plugin_header( 'Version' )
+		);
+		wp_enqueue_script('podlove_bitlove_admin_script');
 	}
 
 	public static function get_bitlove_feed_url( $feed_id ) {
@@ -28,8 +47,8 @@ class Bitlove extends \Podlove\Modules\Base {
 		if ( ( $bitlove_feed_url = get_transient( $cache_key ) ) !== FALSE ) {
 			return $bitlove_feed_url;
 		} else {
-			$subscribe_url = $feed->get_subscribe_url();
-			$url = 'http://api.bitlove.org/feed-lookup.json?url=' . $subscribe_url;
+			$subscribe_url = 'http://cre.fm/feed/mp3/'; //$feed->get_subscribe_url();
+			$url = 'http://api.bitlove.org/feed-lookup.json?url=http://cre.fm/feed/mp3/';
 
 			$curl = new \Podlove\Http\Curl();
 			$curl->request( $url, array(
@@ -74,9 +93,11 @@ class Bitlove extends \Podlove\Modules\Base {
 
 		if( get_option("_podlove_added_bitlove_to_feed_model") !== 1 )
 			$wrapper->checkbox( 'bitlove', array(
-				'label'       => __( 'Feed is available via Bitlove?', 'podlove' ),
-				'description' => __( 'If checked, the BitTorrent-Feed-URL will be added to the feed (and the list of feeds).', 'podlove' ),
-				'default'     => true
+				'label'       	=> __( 'Feed is available via Bitlove?', 'podlove' ),
+				'description' 	=> __( 'If checked, the BitTorrent-Feed-URL will be added to the feed (and the list of feeds).
+									  <p class="podlove-bitlove-status"></p>', 'podlove' ),
+				'default'     	=> true,
+				'html' 	=> array( 'data-feed-id' => $_GET['feed'] )
 			) );
 		
 		update_option( "_podlove_added_bitlove_to_feed_model", 1 );
