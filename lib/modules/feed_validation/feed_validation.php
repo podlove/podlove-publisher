@@ -77,5 +77,22 @@ class Feed_Validation extends \Podlove\Modules\Base {
 											  3600*24 );
 		}
 	}
+
+public static function relative_time_steps($time) {
+    $time_diff = time() - $time;
+    $formated_time_string = date('Y-m-d h:i:s', $time);
+
+    if($time_diff == 0) {
+        return 'Now';
+    } else {   
+        if($time_diff < 60)		return "<span title='" . $formated_time_string . "'>" . __( 'Just now', 'podlove' ) . "</span>";
+        if($time_diff < 120)	return "<span title='" . $formated_time_string . "'>" . __( '1 minute ago', 'podlove' ) . "</span>";
+        if($time_diff < 3600)	return "<span title='" . $formated_time_string . "'>" . floor($time_diff / 60) . __( ' minutes ago', 'podlove' ) . "</span>";
+        if($time_diff < 7200)	return "<span title='" . $formated_time_string . "'>" . __( '1 hour ago', 'podlove' ) . "</span>";
+        if($time_diff < 86400)	return "<span title='" . $formated_time_string . "'>" . floor($time_diff / 3600) . __( ' hours ago', 'podlove' ) . "</span>";
+
+        return $formated_time_string;      
+    }
+}
 	
 }
