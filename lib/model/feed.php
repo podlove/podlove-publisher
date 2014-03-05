@@ -176,7 +176,7 @@ class Feed extends Base {
 			}
 		}
 
-		return $html;
+		return apply_filters( 'podlove_feed_alternate_links', $html );
 	}
 
 	public static function get_link_tag( $args = array() ) {

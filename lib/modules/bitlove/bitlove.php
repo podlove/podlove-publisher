@@ -22,11 +22,20 @@ class Bitlove extends \Podlove\Modules\Base {
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
-		add_action( 'rss2_head', array( $this, 'add_bitlove_feeds' ) );
+		add_filter( 'podlove_feed_alternate_links', array( $this, 'add_bitlove_feeds' ), 10, 1 );
 	}
 
-	public function add_bitlove_feeds() {
-		
+	public function add_bitlove_feeds( $html ) {
+		foreach ( \Podlove\Model\Feed::all("WHERE `bitlove` = 1") as $feed ) {
+			$html .= "\n\t" . \Podlove\Model\Feed::get_link_tag( array(
+				'prefix' => 'atom',
+				'rel'    => 'alternate',
+				'type'   => $feed->get_content_type(),
+				'title'  => \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . "(Bittorent)",
+				'href'   => self::get_bitlove_feed_url($feed->id)
+			) );
+		}
+		return $html;
 	}
 
 	public function admin_print_styles() {
@@ -47,8 +56,8 @@ class Bitlove extends \Podlove\Modules\Base {
 		if ( ( $bitlove_feed_url = get_transient( $cache_key ) ) !== FALSE ) {
 			return $bitlove_feed_url;
 		} else {
-			$subscribe_url = 'http://cre.fm/feed/mp3/'; //$feed->get_subscribe_url();
-			$url = 'http://api.bitlove.org/feed-lookup.json?url=http://cre.fm/feed/mp3/';
+			$subscribe_url = $feed->get_subscribe_url();
+			$url = 'http://api.bitlove.org/feed-lookup.json?url=' . $subscribe_url;
 
 			$curl = new \Podlove\Http\Curl();
 			$curl->request( $url, array(
@@ -93,8 +102,8 @@ class Bitlove extends \Podlove\Modules\Base {
 
 		if( get_option("_podlove_added_bitlove_to_feed_model") !== 1 )
 			$wrapper->checkbox( 'bitlove', array(
-				'label'       	=> __( 'Feed is available via Bitlove?', 'podlove' ),
-				'description' 	=> __( 'If checked, the BitTorrent-Feed-URL will be added to the feed (and the list of feeds).
+				'label'       	=> __( 'Available via Bitlove?', 'podlove' ),
+				'description' 	=> __( 'The Bitlove feed will be added to your list of feeds.
 									  <p class="podlove-bitlove-status"></p>', 'podlove' ),
 				'default'     	=> true,
 				'html' 	=> array( 'data-feed-id' => $_GET['feed'] )
