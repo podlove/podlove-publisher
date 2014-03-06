@@ -74,6 +74,13 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://%account-placeholder%.deviantart.com/'
 				),
 			array(
+					'title' 		=> 'Diaspora',
+					'type'			=> 'social',
+					'description'	=> 'Diaspora URL',
+					'logo'			=> 'diaspora-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Dribbble',
 					'type'			=> 'social',
 					'description'	=> 'Dribbble Account',
@@ -86,6 +93,13 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Facebook Account',
 					'logo'			=> 'facebook-128.png',
 					'url_scheme'	=> 'https://facebook.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Flattr',
+					'type'			=> 'social',
+					'description'	=> 'Flattr Account',
+					'logo'			=> 'flattr-128.png',
+					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flickr',
@@ -116,6 +130,13 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://http://instagram.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Jabber',
+					'type'			=> 'social',
+					'description'	=> 'Jabber ID',
+					'logo'			=> 'jabber-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Linkedin',
 					'type'			=> 'social',
 					'description'	=> 'Linkedin URL',
@@ -137,11 +158,32 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://www.pinterest.com/%account-placeholder%'
 				),
 			array(
+			 		'title' 		=> 'Playstation Network',
+			 		'type'			=> 'social',
+			 		'description'	=> 'Playstation Network Account',
+			 		'logo'			=> 'psn-128.png',
+			 		'url_scheme'	=> 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
+			 	),
+			 array(
+			 		'title' 		=> 'Skype',
+			 		'type'			=> 'social',
+			 		'description'	=> 'Skype Account',
+			 		'logo'			=> 'skype-128.png',
+			 		'url_scheme'	=> 'skype:%account-placeholder%'
+			 	),
+			array(
 					'title' 		=> 'Soundcloud',
 					'type'			=> 'social',
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
+				),
+			array(
+			 		'title' 		=> 'Steam',
+			 		'type'			=> 'social',
+			 		'description'	=> 'Steam Account',
+			 		'logo'			=> 'steam-128.png',
+			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Tumblr',
@@ -163,6 +205,13 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Website URL',
 					'logo'			=> 'www-128.png',
 					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+			 		'title' 		=> 'Xbox Live',
+			 		'type'			=> 'social',
+					'description'	=> 'Xbox Live Account',
+					'logo'			=> 'xbox-128.png',
+					'url_scheme'	=> 'https://live.xbox.com/profile?gamertag=%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Xing',
@@ -228,6 +277,13 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=%account-placeholder%'
 				),
 			array(
+			 		'title' 		=> 'Steam Wishlist',
+			 		'type'			=> 'donation',
+			 		'description'	=> 'Steam Account',
+			 		'logo'			=> 'steam-128.png',
+			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%/wishlist'
+				),
+			array(
 					'title' 		=> 'Thomann Wishtlist',
 					'type'			=> 'donation',
 					'description'	=> 'Thomann Wishlist URL',
@@ -235,6 +291,7 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> '%account-placeholder%'
 				)
 		);
+
 
 		if( count(Service::all()) == 0 ) {
 			foreach ($services as $service_key => $service) {
