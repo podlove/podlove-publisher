@@ -698,14 +698,19 @@ function categories( $prefix_subcategories = true ) {
 namespace Podlove\Flattr;
 
 function getFlattrScript() {
-	return "<script type=\"text/javascript\">\n
-		/* <![CDATA[ */
-	    (function() {
-		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-		     s.type = 'text/javascript';
-		     s.async = true;
-		    s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-		    t.parentNode.insertBefore(s, t);
-			 })();
-		/* ]]> */</script>\n";
+    // Only return JS if not for Feed
+    if (!is_feed()) {
+        return "<script type=\"text/javascript\">\n
+            /* <![CDATA[ */
+            (function() {
+                 var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+                 s.type = 'text/javascript';
+                 s.async = true;
+                s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+                t.parentNode.insertBefore(s, t);
+                 })();
+            /* ]]> */</script>\n";
+    } else {
+        return "";
+    }
 }
