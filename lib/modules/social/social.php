@@ -313,7 +313,7 @@ class Social extends \Podlove\Modules\Base {
 			$googleplus_service 		= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Google+'");
 			$facebook_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Facebook'");
 
-			$flattr_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Flattr'");
+			$flattr_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Flattr' AND `type` = 'donation'");
 			$paypal_service				= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Paypal'");
 			$litecoin_service			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Litecoin'");
 			$bitcoin_service 			= \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Bitcoin'");
