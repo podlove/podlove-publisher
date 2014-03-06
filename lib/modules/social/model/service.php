@@ -10,7 +10,7 @@ class Service extends Base
 {
 
 	public function get_logo() {
-		return \Podlove\PLUGIN_URL . '/lib/modules/social/images/icons/' . $this->logo;
+		return \Podlove\PLUGIN_URL . '/lib/modules/Social/images/icons/' . $this->logo;
 	}
 
 }
