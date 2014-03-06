@@ -47,192 +47,147 @@ class Social extends \Podlove\Modules\Base {
 		$services = array(
 			array(
 					'title' 		=> 'App.net',
-					'type'			=> 'social',
 					'description'	=> 'App.net Account',
 					'logo'			=> 'adn-128.png',
 					'url_scheme'	=> 'https://alpha.app.net/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bandcamp',
-					'type'			=> 'social',
 					'description'	=> 'Bandcamp URL',
 					'logo'			=> 'bandcamp-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bitbucket',
-					'type'			=> 'social',
 					'description'	=> 'Bitbucket Account',
 					'logo'			=> 'bitbucket-128.png',
 					'url_scheme'	=> 'https://bitbucket.org/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'DeviantART',
-					'type'			=> 'social',
 					'description'	=> 'DeviantART Account',
 					'logo'			=> 'deviantart-128.png',
 					'url_scheme'	=> 'https://%account-placeholder%.deviantart.com/'
 				),
 			array(
 					'title' 		=> 'Dribbble',
-					'type'			=> 'social',
 					'description'	=> 'Dribbble Account',
 					'logo'			=> 'dribbble-128.png',
 					'url_scheme'	=> 'https://dribbble.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Facebook',
-					'type'			=> 'social',
 					'description'	=> 'Facebook Account',
 					'logo'			=> 'facebook-128.png',
 					'url_scheme'	=> 'https://facebook.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flickr',
-					'type'			=> 'social',
 					'description'	=> 'Flickr Account',
 					'logo'			=> 'flickr-128.png',
 					'url_scheme'	=> 'https://secure.flickr.com/photos/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'GitHub',
-					'type'			=> 'social',
 					'description'	=> 'GitHub Account',
 					'logo'			=> 'github-128.png',
 					'url_scheme'	=> 'https://github.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Google+',
-					'type'			=> 'social',
 					'description'	=> 'Google+ URL',
 					'logo'			=> 'googleplus-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Instagram',
-					'type'			=> 'social',
 					'description'	=> 'Instagram Account',
 					'logo'			=> 'instagram-128.png',
 					'url_scheme'	=> 'https://http://instagram.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Jabber',
+					'description'	=> 'Jabber ID',
+					'logo'			=> 'jabber-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Linkedin',
-					'type'			=> 'social',
 					'description'	=> 'Linkedin URL',
 					'logo'			=> 'linkedin-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Pinboard',
-					'type'			=> 'social',
 					'description'	=> 'Pinboard Account',
 					'logo'			=> 'pinboard-128.png',
 					'url_scheme'	=> 'https://pinboard.in/u:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Pinterest',
-					'type'			=> 'social',
 					'description'	=> 'Pinterest Account',
 					'logo'			=> 'pinterest-128.png',
 					'url_scheme'	=> 'https://www.pinterest.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Playstation Network',
+					'description'	=> 'Playstation Network Account',
+					'logo'			=> 'psn-128.png',
+					'url_scheme'	=> 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Skype',
+					'description'	=> 'Skype Account',
+					'logo'			=> 'skype-128.png',
+					'url_scheme'	=> 'skype:%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Soundcloud',
-					'type'			=> 'social',
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Steam',
+					'description'	=> 'Steam Account',
+					'logo'			=> 'steam-128.png',
+					'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Tumblr',
-					'type'			=> 'social',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
 					'url_scheme'	=> 'https://%account-placeholder%.tumblr.com/'
 				),
 			array(
 					'title' 		=> 'Twitter',
-					'type'			=> 'social',
 					'description'	=> 'Twitter Account',
 					'logo'			=> 'twitter-128.png',
 					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Website',
-					'type'			=> 'social',
 					'description'	=> 'Website URL',
 					'logo'			=> 'www-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Xbox Live',
+					'description'	=> 'Xbox Live Account',
+					'logo'			=> 'xbox-128.png',
+					'url_scheme'	=> 'https://live.xbox.com/profile?gamertag=%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Xing',
-					'type'			=> 'social',
 					'description'	=> 'Xing URL',
 					'logo'			=> 'xing-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'YouTube',
-					'type'			=> 'social',
 					'description'	=> 'YouTube Account',
 					'logo'			=> 'youtube-128.png',
 					'url_scheme'	=> 'https://www.youtube.com/user/%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Amazon Wishlist',
-					'type'			=> 'donation',
-					'description'	=> 'Amazon Wishlist URL',
-					'logo'			=> 'amazonwishlist-128',
-					'url_scheme'	=> '%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Bitcoin',
-					'type'			=> 'donation',
-					'description'	=> 'Bitcoin Wallet Address',
-					'logo'			=> 'bitcoin-128.png',
-					'url_scheme'	=> 'bitcoin:%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Dogecoin',
-					'type'			=> 'donation',
-					'description'	=> 'Dogecoin Wallet Address',
-					'logo'			=> 'dogecoin-128.png',
-					'url_scheme'	=> 'dogecoin:%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Flattr',
-					'type'			=> 'donation',
-					'description'	=> 'Flattr Account',
-					'logo'			=> 'flattr-128.png',
-					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Generic Wishlist',
-					'type'			=> 'donation',
-					'description'	=> 'Wishlist URL',
-					'logo'			=> 'genericwishlist-128.png',
-					'url_scheme'	=> '%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Litecoin',
-					'type'			=> 'donation',
-					'description'	=> 'Litecoin Wallet Address',
-					'logo'			=> 'litecoin-128.png',
-					'url_scheme'	=> 'litecoin:%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Paypal',
-					'type'			=> 'donation',
-					'description'	=> 'Paypal Button ID',
-					'logo'			=> 'paypal-128.png',
-					'url_scheme'	=> 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=%account-placeholder%'
-				),
-			array(
-					'title' 		=> 'Thomann Wishtlist',
-					'type'			=> 'donation',
-					'description'	=> 'Thomann Wishlist URL',
-					'logo'			=> 'thomann-128.png',
-					'url_scheme'	=> '%account-placeholder%'
 				)
 		);
 
