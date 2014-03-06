@@ -19,7 +19,8 @@ class Ajax {
 			'create-file',
 			'update-asset-position',
 			'update-feed-position',
-			'podcast'
+			'podcast',
+			'hide-teaser'
 		);
 
 		foreach ( $actions as $action )
@@ -162,6 +163,10 @@ class Ajax {
 			->update_attributes( array( 'position' => $position ) );
 
 		die();
+	}
+
+	public function hide_teaser() {
+		update_option( '_podlove_hide_teaser', TRUE );
 	}
 	
 }

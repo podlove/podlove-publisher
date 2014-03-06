@@ -20,7 +20,7 @@ class Migration extends \Podlove\Modules\Base {
 
 		public function migration_teaser() {
 
-			if ( $_COOKIE && isset( $_COOKIE['podlove_hide_teaser'] ) )
+			if ( get_option('_podlove_hide_teaser') )
 				return;
 
 			?>
@@ -51,14 +51,16 @@ class Migration extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 				jQuery(function($){
 					$("#podlove_welcome .dismiss a").on("click", function(e) {
-						e.preventDefault();
 
-						var date = new Date(),
-						    hour = 1000 * 60 * 60,
-						    year = hour * 24 * 365;
+						var data = {
+							action: 'podlove-hide-teaser'
+						};
 
-						date.setTime(date.getTime() + year);
-						document.cookie = 'podlove_hide_teaser=1; expires=' + date.toGMTString() + '; path=/'
+						$.ajax({
+							url: ajaxurl,
+							data: data,
+							dataType: 'json'
+						});
 
 						$("#podlove_welcome").slideUp();
 
