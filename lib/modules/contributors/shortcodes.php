@@ -313,13 +313,27 @@ EOD;
 			    . $this->getAmazonWishlistButton($contributor)
 			    . "</td>";
 
-			// flattr
-			if ($this->settings['flattr'] == 'yes')
-				$body .= '<td class="flattr_cell">'
-				. ( is_page() ? $this->getFlattrButton( $contributor ) : $this->getRelatedFlattrButton( $contributor, get_the_ID() ) )
-				. "</td>";
+            // flattr
+            if ($this->settings['flattr'] == 'yes') {
+                $body .= '<td class="flattr_cell">';
+                // select general or post related button
+                if (is_page()) {
+                    // general contributor button
+                    $body .= $this->getFlattrButton( $contributor );
+                } else {
+                    // select post related button type depending if in feed or not
+                    if (is_feed()) {
+                        // static image based button
+                        $body .= $this->getRelatedFlattrStaticButton( $contributor, get_the_ID() );
+                    } else {
+                        // JavaScript based button
+                        $body .= $this->getRelatedFlattrButton( $contributor, get_the_ID() );
+                    }
+                }
+                $body .=  "</td>";
+            }
 
-			$body .= "</tr>";
+            $body .= "</tr>";
 		}
 
 		return $before . $body . $after;
@@ -361,6 +375,28 @@ EOD;
 		</a>";
 	}
 
+    // Static image based Flattr Button without JavaScript
+    private function getRelatedFlattrStaticButton($contributor, $postid)
+    {
+        if (!$contributor->flattr)
+            return "";
+
+        return "<a
+		    target=\"_blank\"
+    		title=\"Support {$contributor->getName()} by donating with Flattr\"
+    		href=\"https://flattr.com/submit/auto?user_id={$contributor->flattr}&url=". urlencode(get_permalink( $postid )."#" .
+            md5( $contributor->id . '-' .$contributor->flattr )) . "&title={$contributor->getName()}@" .
+        get_the_title( $postid ) . "&description=\"Flattr {$contributor->getName()}@" . get_the_title( $postid ) . "\"
+    		    &category=audio\">
+    		<img width=\"32\" height=\"32\" src=\"" . \Podlove\PLUGIN_URL  . "/lib/modules/contributors/images/icons/flattr-128.png\"
+    		alt=\"" . sprintf( __('Support %s by donating with Flattr'), $contributor->getName() ) ."\"
+    		title=\"" . sprintf( __('Support %s by donating with Flattr'), $contributor->getName() ) ."\"
+    		class=\"podlove-contributor-button\"
+    		 />
+		</a>";
+    }
+
+    // JavaScript based Flattr Button related to post
 	private function getRelatedFlattrButton($contributor, $postid)
 	{
 		if (!$contributor->flattr)
@@ -377,6 +413,7 @@ EOD;
 		</a>";
 	}
 
+    // JavaScript based general Flattr Button for contributor
 	private function getFlattrButton($contributor)
 	{
 		if (!$contributor->flattr)
