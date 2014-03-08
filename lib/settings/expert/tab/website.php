@@ -190,6 +190,22 @@ class Website extends Tab {
 			/* $section  */ 'podlove_settings_files'
 		);
 
+		add_settings_field(
+			/* $id       */ 'podlove_setting_ssl_verify_peer',
+			/* $title    */ sprintf(
+				'<label for="ssl_verify_peer">%s</label>',
+				__( 'Check for Assets with SSL-peer-verification.', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove_website[ssl_verify_peer]" id="ssl_verify_peer" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'ssl_verify_peer' ), 'on' ) ?>>
+				<?php echo __('If you provide your assets via https with a self-signed or not verifiable SSL-certificate, podlove should display your assets as non exiting. You might solve this by deactivating the ssl peer verification for asset checking. (Detailed: This sets "CURLOPT_SSL_VERIFYPEER" to FALSE.)', 'podlove') ?>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_files'
+		);
+
 		register_setting( Settings::$pagehook, 'podlove_website', function($options) {
 			/**
 			 * handle checkboxes
@@ -199,7 +215,8 @@ class Website extends Tab {
 				'hide_wp_feed_discovery',
 				'use_post_permastruct',
 				'episode_archive',
-				'force_download'
+				'force_download',
+				'ssl_verify_peer'
 			);
 			foreach ( $checkboxes as $checkbox_key ) {
 				if ( ! isset( $options[ $checkbox_key ] ) )
