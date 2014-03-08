@@ -20,7 +20,14 @@ class Bitlove extends \Podlove\Modules\Base {
 
 		add_action( 'admin_init', array( $this, 'add_feed_model_extension' ) );
 
+		add_filter( 'podlove_bitlove_feed_url_', array( $this, 'pass_bitlove_url_to_ajax' ), 10, 1 );
+
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+	}
+
+
+	public function pass_bitlove_url_to_ajax($feed_id) {
+		return \Podlove\Modules\Bitlove\Bitlove::get_bitlove_feed_url($feed_id);
 	}
 
 	public function admin_print_styles() {

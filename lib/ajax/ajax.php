@@ -179,8 +179,9 @@ class Ajax {
 	}
 
 	public function fetch_bitlove_url() {
+		$bitlove_url = '';
 		$this->respond_with_json( array(
-			'bitlove_url'   => \Podlove\Modules\Bitlove\Bitlove::get_bitlove_feed_url($_REQUEST['feed_id'])
+			'bitlove_url'   => apply_filters( 'podlove_feed_bitlove_url', $bitlove_url, $_REQUEST['feed_id'] )
 		) );
 	}
 	
