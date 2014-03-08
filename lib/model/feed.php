@@ -255,7 +255,7 @@ class Feed extends Base {
 			'_redirection' => ''
 		) );
 
-		if( is_object( $response ) )
+		if( is_wp_error( $response ) )
 			return FALSE; // Return FALSE if Error occured
 
 		return $curl->get_response();
@@ -278,7 +278,7 @@ class Feed extends Base {
 		) );
 		$response = $curl->get_response();
 
-		if( is_object( $response ) )
+		if( is_wp_error( $response ) )
 			return FALSE; // Return FALSE if Error occured
 
 		if( strpos( $response['body'], 'faultcode' ) )
