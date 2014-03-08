@@ -16,30 +16,33 @@ class oembed extends \Podlove\Modules\Base {
 	}
 
 	public function load_oembed() {
-		if( isset( $_GET['service'] ) && strtoupper( $_GET['service'] ) == "PODLOVE-OEMBED" &&
-			isset( $_GET['format'] ) ) {
-			if( is_single() ) {
-				switch ( strtoupper( $_GET['format'] ) ) {
-					case 'JSON' :
-						header('Content-type: application/json; charset=utf-8');
-						print_r( json_encode( $this->get_current_episode( get_the_ID() ) ) );
-					break;
-					case 'XML' :
-						header('Content-Type: application/xml; charset=utf-8');
-						$xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ' . 'standalone="yes"?><oembed/>');
-						$episode = array_flip( $this->get_current_episode( get_the_ID() ) );
-						array_walk_recursive( 
-										$episode,
-										array( $xml_source, 'addChild' ) );
-						print $xml_source->asXML();
-					break;
-					default :
-						status_header( 404 );
-					break;
-				}
-				exit();
-			}
+
+		if (!is_single())
+			return;
+
+		if (!isset($_GET['service']) || strtoupper($_GET['service']) != "PODLOVE-OEMBED" || !isset($_GET['format']))
+			return;
+
+		switch ( strtoupper( $_GET['format'] ) ) {
+			case 'JSON' :
+				header('Content-type: application/json; charset=utf-8');
+				print_r( json_encode( $this->get_current_episode( get_the_ID() ) ) );
+			break;
+			case 'XML' :
+				header('Content-Type: application/xml; charset=utf-8');
+				$xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ' . 'standalone="yes"?><oembed/>');
+				$episode = array_flip( $this->get_current_episode( get_the_ID() ) );
+				array_walk_recursive( 
+								$episode,
+								array( $xml_source, 'addChild' ) );
+				print $xml_source->asXML();
+			break;
+			default :
+				status_header( 404 );
+			break;
 		}
+		
+		exit();
 	}
 
 	public function get_current_episode( $post_id ) {
@@ -71,7 +74,7 @@ class oembed extends \Podlove\Modules\Base {
 
 		if (!is_single())
 			return;
-		
+
 		$post_id = get_the_ID();
 
 		if (get_post_type( $post_id ) !== 'podcast')
