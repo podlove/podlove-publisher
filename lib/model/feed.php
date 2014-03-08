@@ -120,23 +120,23 @@ class Feed extends Base {
 	 * @return array
 	 */
 	function post_ids() {
+		global $wpdb;
 
-		$episode_asset = $this->episode_asset();
+		$sql = "
+			SELECT
+				p.ID
+			FROM
+				" . $wpdb->posts . " p
+				INNER JOIN " . Episode::table_name() .  " e ON e.post_id = p.ID
+				INNER JOIN " . MediaFile::table_name() .  " mf ON mf.`episode_id` = e.id
+				INNER JOIN " . EpisodeAsset::table_name() .  " a ON a.id = mf.`episode_asset_id`
+			WHERE
+				a.id = %d
+				AND
+				p.post_status IN ('publish', 'private')
+		";
 
-		if ( ! $episode_asset )
-			return array();
-
-		$media_files = $episode_asset->media_files();
-
-		if ( ! count( $media_files ) )
-			return array();
-
-		// fetch releases
-		$media_files = array_filter( $media_files, function($mf){ return $mf->size > 0; });
-		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $media_files );
-		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids ) . ")" );
-
-		return array_map( function ( $v ) { return $v->post_id; }, $episodes );
+		return $wpdb->get_col($wpdb->prepare($sql, $this->episode_asset()->id));
 	}
 
 	public function get_content_type() {
