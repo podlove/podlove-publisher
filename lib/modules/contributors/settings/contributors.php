@@ -290,38 +290,6 @@ class Contributors {
 				'label'       => __( 'Public email', 'podlove' ),
 				'description' => 'This email will be displayed for public purposes.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );		
-
-			$wrapper->subheader( __( 'Donations', 'podlove' ) );
-
-			$wrapper->string( 'flattr', array(
-				'label'       => __( 'Flattr', 'podlove' ),
-				'description' => 'Flattr username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->string( 'paypal', array(
-				'label'       => __( 'Paypal', 'podlove' ),
-				'description' => '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donate-intro-outside" target="_blank">Paypal button</a> id.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->string( 'bitcoin', array(
-				'label'       => __( 'Bitcoin', 'podlove' ),
-				'description' => 'Bitcoin Address.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'litecoin', array(
-				'label'       => __( 'Litecoin', 'podlove' ),
-				'description' => 'Litecoin Address.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );
-			
-			$wrapper->string( 'amazonwishlist', array(
-				'label'       => __( 'Amazon Wishlist', 'podlove' ),
-				'description' => 'URL of the contributors Amazon wishlist.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
 			do_action( 'podlove_contributors_form_end', $wrapper );

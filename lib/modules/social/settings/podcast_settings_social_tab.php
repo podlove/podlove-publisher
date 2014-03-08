@@ -4,7 +4,7 @@ namespace Podlove\Modules\Social\Settings;
 use \Podlove\Settings\Podcast\Tab;
 use \Podlove\Modules\Social\Model\ShowService;
 
-class PodcastSettingsTab extends Tab {
+class PodcastSettingsSocialTab extends Tab {
 
 	public function init() {
 		add_action( $this->page_hook, array( $this, 'register_page' ) );
@@ -57,7 +57,7 @@ class PodcastSettingsTab extends Tab {
 
 	public static function podcast_form_extension_form()
 	{
-		$services = \Podlove\Modules\Social\Model\ShowService::all();
+		$services = \Podlove\Modules\Social\Model\ShowService::find_by_type();
 		\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_podcast[services]');
 	}
 }
