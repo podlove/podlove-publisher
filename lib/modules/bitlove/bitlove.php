@@ -75,10 +75,13 @@ class Bitlove extends \Podlove\Modules\Base {
 	public function was_activated() {
 		global $wpdb;
 
-		$wpdb->query( sprintf(
-			"ALTER TABLE `%s` ADD COLUMN `bitlove` TINYINT(1) DEFAULT '0'",
-			\Podlove\Model\Feed::table_name()
-		) );
+		if( get_option("_podlove_added_bitlove_to_feed_model") !== 1 ) {
+			$wpdb->query( sprintf(
+				"ALTER TABLE `%s` ADD COLUMN `bitlove` TINYINT(1) DEFAULT '0'",
+				\Podlove\Model\Feed::table_name()
+			) );
+			update_option( "_podlove_added_bitlove_to_feed_model", 1 );
+		}
 	}
 
 	public function was_deactivated() {
@@ -91,18 +94,13 @@ class Bitlove extends \Podlove\Modules\Base {
 	}
 
 	public function enable_bitlove_flag_for_feed( $wrapper ) {
-
-		if( get_option("_podlove_added_bitlove_to_feed_model") == 1 ) {
-			$wrapper->checkbox( 'bitlove', array(
-				'label'       	=> __( 'Available via Bitlove?', 'podlove' ),
-				'description' 	=> __( 'The Bitlove feed will be added to your list of feeds.
+		$wrapper->checkbox( 'bitlove', array(
+			'label'       	=> __( 'Available via Bitlove?', 'podlove' ),
+			'description' 	=> __( 'The Bitlove feed will be added to your list of feeds.
 									  <p class="podlove-bitlove-status"></p>', 'podlove' ),
-				'default'     	=> true,
-				'html' 	=> array( 'data-feed-id' => $_GET['feed'] )
-			) );
-		} else {
-			update_option( "_podlove_added_bitlove_to_feed_model", 1 );
-		}
+			'default'     	=> false,
+			'html' 	=> array( 'data-feed-id' => $_GET['feed'] )
+		) );
 	}
 
 	public function require_jquery() {
