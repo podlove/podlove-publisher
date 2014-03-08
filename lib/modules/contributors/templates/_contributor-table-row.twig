@@ -33,16 +33,16 @@
 	<td class="social_cell">
 		{% for service in contributor.services({type: "social"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-		    	<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
-		    </a>
+				<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+			</a>
 		{% endfor %}
 	</td>
 	{% if donations == "yes" %}
 		<td class="donation_cell">
 		{% for service in contributor.services({type: "donation"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-		    	<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
-		    </a>
+				<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+			</a>
 		{% endfor %}
 		</td>
 	{% endif %}
@@ -51,12 +51,12 @@
 			{% if contributor.flattr %}
 				{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}
 				<a target="_blank"
-				   class="FlattrButton"
-				   style="display:none;"
-				   title="Flattr {{ cTitle }}"
-				   rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
-				   href="{{ contributor.flattr_url }}">
-				   	Flattr {{ cTitle }}
+					class="FlattrButton"
+					style="display:none;"
+					title="Flattr {{ cTitle }}"
+					rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
+					href="{{ contributor.flattr_url }}">
+						Flattr {{ cTitle }}
 				</a>
 			{% endif %}
 		</td>
