@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.0 =
 * Feature: All-new, mighty Templating system. You can now use the [Twig Template Syntax](http://twig.sensiolabs.org/documentation) in all templates. Access all podcast/episode data via the new template API. Please read the [Template Guide](http://docs.podlove.org/guides/understanding-templates/) to get started.
 * Feature: Support for the oEmbed format
+* Feature: The Podlove dashboard includes a section for feeds now. It is intended as an overview for the state of your feeds. It shows the latest modification date, the number of entries, compressed and uncompressed size and the latest item. Additionally, you can validate your feeds against the w3c feed validator right from the dashboard.
 * Enhancement: The feed title may now include the asset title for easier discovery. This setting can be found at `Podlove > Feed Settings`
 * Enhancement: add "autogrow" feature to chaptermarks text field
 * Enhancement: globally hide the migration-tool banner once dismissed rather than per-client via cookie
