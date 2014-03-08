@@ -255,10 +255,12 @@ class Feed extends Base {
 			'_redirection' => ''
 		) );
 
+		$response = $curl->get_response();
+
 		if( is_wp_error( $response ) )
 			return FALSE; // Return FALSE if Error occured
 
-		return $curl->get_response();
+		return $response;
 	}
 
 	/**
