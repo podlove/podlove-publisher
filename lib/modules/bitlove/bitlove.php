@@ -23,11 +23,14 @@ class Bitlove extends \Podlove\Modules\Base {
 		add_filter( 'podlove_bitlove_feed_url_', array( $this, 'pass_bitlove_url_to_ajax' ), 10, 1 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+
+		add_action( 'wp_ajax_podlove-fetch-bitlove-url', array( $this, 'fetch_bitlove_url' ) );
 	}
 
-
-	public function pass_bitlove_url_to_ajax($feed_id) {
-		return \Podlove\Modules\Bitlove\Bitlove::get_bitlove_feed_url($feed_id);
+	public function fetch_bitlove_url() {
+		\Podlove\AJAX\Ajax::respond_with_json( array(
+			'bitlove_url'   => self::get_bitlove_feed_url( $_REQUEST['feed_id'] )
+		) );
 	}
 
 	public function admin_print_styles() {
