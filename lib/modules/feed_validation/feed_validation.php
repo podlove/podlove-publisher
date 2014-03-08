@@ -31,6 +31,18 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			</div>
 			<?php
 		} );
+
+		
+
+		add_action('podlove_dashboard_meta_boxes', function() {
+			add_meta_box(
+				\Podlove\Settings\Dashboard::$pagehook . '_feeds',
+				__( 'Podcast feeds', 'podlove' ),
+				'Podlove\Modules\FeedValidation\Feed_Validation::meta_box',
+				\Podlove\Settings\Dashboard::$pagehook,
+				'normal'
+			);
+		});
 	}
 
 	public function was_activated( $module_name ) {
@@ -40,6 +52,68 @@ class Feed_Validation extends \Podlove\Modules\Base {
 
 	public function was_deactivated( $module_name ) {
 		wp_clear_scheduled_hook( 'podlove_feed_validation' );
+	}
+
+	public function meta_box() {
+		$feeds = \Podlove\Model\Feed::all();
+		?>
+		<input id="revalidate_feeds" type="button" class="button button-primary" value="<?php _e( 'Revalidate Feeds', 'podlove' ); ?>">
+
+		<table id="dashboard_feed_info">
+			<thead>
+				<tr>
+					<th><?php _e( 'Name', 'podlove' ); ?></th>
+					<th><?php _e( 'Slug', 'podlove' ); ?></th>
+					<th><?php _e( 'Last Modification', 'podlove' ); ?></th>
+					<th><?php _e( 'Entries', 'podlove' ); ?></th>
+					<th><?php _e( 'Size (compressed)', 'podlove'); ?></th>
+					<th><?php _e( 'Latest item', 'podlove'); ?></th>
+					<th><?php _e( 'Validation', 'podlove' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+					foreach ($feeds as $feed_key => $feed) {
+
+						$feed_request = get_transient( 'podlove_dashboard_feed_source_' . $feed->id );
+						if ( false === $feed_request ) {
+							$feed_request = $feed->getSource();
+							set_transient( 'podlove_dashboard_feed_source_' . $feed->id, 
+										  $feed_request,
+										  3600*24 );
+						}
+
+						$feed_validation = get_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
+						if ( false === $feed_validation ) {
+							$feed_validation = $feed->getValidationIcon();
+							set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
+										  $feed_validation,
+										  3600*24 );
+						}							 
+
+						$feed_header = $feed_request['headers'];
+						$feed_body = $feed_request['body'];
+						$feed_items = $feed->post_ids();
+
+						$number_of_items = count( $feed->post_ids() );
+						$last_modification = \Podlove\Modules\FeedValidation\Feed_Validation::relative_time_steps(strtotime( isset($feed_header['last-modified']) ? $feed_header['last-modified'] : 0 ));
+						$size = \Podlove\format_bytes(strlen( $feed_body )) . " (" .  \Podlove\format_bytes(strlen( gzdeflate( $feed_body , 9 ) )) . ")";
+
+						$source  = "<tr>\n";
+						$source .= "<td><a href='" . admin_url() . "admin.php?page=podlove_feeds_settings_handle&action=edit&feed=" . $feed->id . "'>" . $feed->name ."</a></td>";
+						$source .= "<td class='center'><a href='" . $feed->get_subscribe_url() . "'>" . $feed->slug ."</a></td>";
+						$source .= "<td class='center'>" . $last_modification ."</td>";
+						$source .= "<td class='center'>" . $number_of_items ."</td>";
+						$source .= "<td class='center'>" . $size . "</td>";
+						$source .= "<td class='center'><a href=\"" . get_permalink( $feed_items[0] ) . "\">". get_the_title( $feed_items[0] ) ."</a></td>";
+						$source .= "<td class='center' data-feed-id='" . $feed->id . "'>" . $feed_validation . "</td>";
+						$source .= "</tr>\n";
+						echo $source;
+					}
+				?>
+			</tbody>
+		</table>
+		<?php
 	}
 
 	/**
