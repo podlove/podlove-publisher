@@ -4,7 +4,7 @@ var PODLOVE = PODLOVE || {};
  * Handles all logic in Dashboard Validation box.
  */
 (function($) {
-	PODLOVE.DashboardValidation = function(container) {
+	PODLOVE.DashboardAssetValidation = function(container) {
 		// private
 		var o = {};
 

@@ -87,8 +87,12 @@ function auto_fill_form(id, title_id) {
 
 jQuery(function($) {
 
-	$("#validation").each(function() {
-		PODLOVE.DashboardValidation($(this));
+	$("#dashboard_feed_info").each(function() {
+		PODLOVE.DashboardFeedValidation($(this));
+	});
+	
+	$("#asset_validation").each(function() {
+		PODLOVE.DashboardAssetValidation($(this));
 	});
 
 	$("#podlove_podcast").each(function() {
@@ -105,6 +109,10 @@ jQuery(function($) {
 
 	$(".row_podlove_feed_protected").each(function() {
 		PODLOVE.ProtectFeed();
+	});
+
+	$("#podlove_feed_bitlove").each(function() {
+		PODLOVE.Bitlove();
 	});
 
 	$(".autogrow").autogrow();

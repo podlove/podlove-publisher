@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 58 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 59 );
 
 add_action( 'init', function () {
 	
@@ -578,6 +578,14 @@ function run_migrations_for_version( $version ) {
 			// if contributors module is active, activate social module
 			if (\Podlove\Modules\Base::is_active('contributors')) {
 				\Podlove\Modules\Base::activate('social');
+			}
+		break;
+		case 59:
+			if (\Podlove\Modules\Base::is_active('bitlove')) {
+				$wpdb->query( sprintf(
+					"ALTER TABLE `%s` ADD COLUMN `bitlove` TINYINT(1) DEFAULT '0'",
+					\Podlove\Model\Feed::table_name()
+				) );
 			}
 		break;
 	}
