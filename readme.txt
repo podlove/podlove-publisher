@@ -90,6 +90,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Support for the oEmbed format
 * Enhancement: The feed title may now include the asset title for easier discovery. This setting can be found at `Podlove > Feed Settings`
 * Enhancement: add "autogrow" feature to chaptermarks text field
+* Enhancement: globally hide the migration-tool banner once dismissed rather than per-client via cookie
 * Fix: When setting the chapter asset to manual, delete all chapter caches to avoid hiccups
 * Fix: Contributor links in the backend use an ID now rather than the contributor slug. That way they work when no slug is set.
 
