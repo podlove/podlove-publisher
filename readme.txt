@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: All-new, mighty Templating system. You can now use the [Twig Template Syntax](http://twig.sensiolabs.org/documentation) in all templates. Access all podcast/episode data via the new template API. Please read the [Template Guide](http://docs.podlove.org/guides/understanding-templates/) to get started.
 * Feature: Support for the oEmbed format
 * Enhancement: The feed title may now include the asset title for easier discovery. This setting can be found at `Podlove > Feed Settings`
+* Enhancement: add "autogrow" feature to chaptermarks text field
 * Fix: When setting the chapter asset to manual, delete all chapter caches to avoid hiccups
 * Fix: Contributor links in the backend use an ID now rather than the contributor slug. That way they work when no slug is set.
 
