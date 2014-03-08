@@ -109,13 +109,15 @@ class Contributors extends \Podlove\Modules\Base {
 			$groups = array();
 			foreach ($contributions as $contribution) {
 				$group = $contribution->getGroup();
-				if (isset($groups[$group->id])) {
-					$groups[$group->id]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
-				} else {
-					$groups[$group->id] = array(
-						'group'        => new Template\ContributorGroup($group, array($contribution)),
-						'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
-					);
+				if (is_object($group)) {
+					if (isset($groups[$group->id])) {
+						$groups[$group->id]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
+					} else {
+						$groups[$group->id] = array(
+							'group'        => new Template\ContributorGroup($group, array($contribution)),
+							'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
+						);
+					}
 				}
 			}
 			return $groups;
