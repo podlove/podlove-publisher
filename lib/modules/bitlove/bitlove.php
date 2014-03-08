@@ -92,7 +92,7 @@ class Bitlove extends \Podlove\Modules\Base {
 
 	public function enable_bitlove_flag_for_feed( $wrapper ) {
 
-		if( get_option("_podlove_added_bitlove_to_feed_model") !== 1 )
+		if( get_option("_podlove_added_bitlove_to_feed_model") !== 1 ) {
 			$wrapper->checkbox( 'bitlove', array(
 				'label'       	=> __( 'Available via Bitlove?', 'podlove' ),
 				'description' 	=> __( 'The Bitlove feed will be added to your list of feeds.
@@ -100,8 +100,9 @@ class Bitlove extends \Podlove\Modules\Base {
 				'default'     	=> true,
 				'html' 	=> array( 'data-feed-id' => $_GET['feed'] )
 			) );
-		
-		update_option( "_podlove_added_bitlove_to_feed_model", 1 );
+		} else {
+			update_option( "_podlove_added_bitlove_to_feed_model", 1 );
+		}
 	}
 
 	public function require_jquery() {
