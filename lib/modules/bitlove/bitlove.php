@@ -21,21 +21,6 @@ class Bitlove extends \Podlove\Modules\Base {
 		add_action( 'admin_init', array( $this, 'add_feed_model_extension' ) );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
-
-		add_filter( 'podlove_feed_alternate_links', array( $this, 'add_bitlove_feeds' ), 10, 1 );
-	}
-
-	public function add_bitlove_feeds( $html ) {
-		foreach ( \Podlove\Model\Feed::all("WHERE `bitlove` = 1") as $feed ) {
-			$html .= "\n\t" . \Podlove\Model\Feed::get_link_tag( array(
-				'prefix' => 'atom',
-				'rel'    => 'alternate',
-				'type'   => $feed->get_content_type(),
-				'title'  => \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . "(Bittorent)",
-				'href'   => self::get_bitlove_feed_url($feed->id)
-			) );
-		}
-		return $html;
 	}
 
 	public function admin_print_styles() {
