@@ -238,8 +238,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		$contributions = $contributor->getContributions();
 		$query->query_vars['post__in'] = array_map(function($c) {
-			if( is_object( $c->getEpisode() ) )
-				return $c->getEpisode()->post_id;
+			return is_object( $c->getEpisode() ) ? $c->getEpisode()->post_id : 0;
 		}, $contributions);
 	}
 	
