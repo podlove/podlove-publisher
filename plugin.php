@@ -709,6 +709,9 @@ add_action( 'podlove_episode_content_has_changed', function( $episode_id ) {
 // enable chapters pages
 add_action( 'wp', function() {
 
+	if ( ! is_single() )
+		return;
+
 	if ( ! isset( $_REQUEST['chapters_format'] ) )
 		return;
 

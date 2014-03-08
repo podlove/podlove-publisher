@@ -68,39 +68,45 @@ class oembed extends \Podlove\Modules\Base {
 	}
 
 	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
+
+		if (!is_single())
+			return;
+		
 		$post_id = get_the_ID();
+
+		if (get_post_type( $post_id ) !== 'podcast')
+			return;
+
 		$permalink = get_permalink( $post_id );
 		$permalink_template = $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&" );
 		$title =  get_the_title( $post_id );
 
 		$embed_elements = array(
-									array(
-											'rel'	=> 'alternate',
-											'type'	=> 'application/json+oembed',
-											'href'	=> $permalink_template . "service=podlove-oembed&format=json",
-											'title'	=> $title . " oEmbed Profile"
-										),
-									array(
-											'rel'	=> 'alternate',
-											'type'	=> 'application/xml+oembed',
-											'href'	=> $permalink_template . "service=podlove-oembed&format=xml",
-											'title'	=> $title . " oEmbed Profile"
-										),
-								);
+			array(
+					'rel'	=> 'alternate',
+					'type'	=> 'application/json+oembed',
+					'href'	=> $permalink_template . "service=podlove-oembed&format=json",
+					'title'	=> $title . " oEmbed Profile"
+			),
+			array(
+					'rel'	=> 'alternate',
+					'type'	=> 'application/xml+oembed',
+					'href'	=> $permalink_template . "service=podlove-oembed&format=xml",
+					'title'	=> $title . " oEmbed Profile"
+			),
+		);
 
-		if( is_single() && get_post_type( $post_id ) == 'podcast' ) {
-			$dom = new DomDocumentFragment;
+		$dom = new DomDocumentFragment;
 
-			foreach ($embed_elements as $link_element) {
-				$element = $dom->createElement('link');
-				foreach ($link_element as $attribute => $value) {
-					$element->setAttribute($attribute,$value);
-				}
-				$dom->appendChild($element);
+		foreach ($embed_elements as $link_element) {
+			$element = $dom->createElement('link');
+			foreach ($link_element as $attribute => $value) {
+				$element->setAttribute($attribute,$value);
 			}
+			$dom->appendChild($element);
+		}
 
-			echo $dom;
-  		}
+		echo $dom;
 	}
 
 }
