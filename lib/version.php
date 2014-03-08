@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 59 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 60 );
 
 add_action( 'init', function () {
 	
@@ -587,6 +587,10 @@ function run_migrations_for_version( $version ) {
 					\Podlove\Model\Feed::table_name()
 				) );
 			}
+		break;
+		case 60:
+			\Podlove\Modules\Base::activate('oembed');
+			\Podlove\Modules\Base::activate('feed_validation');
 		break;
 	}
 
