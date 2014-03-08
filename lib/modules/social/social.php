@@ -231,7 +231,7 @@ class Social extends \Podlove\Modules\Base {
 					'title' 		=> 'Amazon Wishlist',
 					'type'			=> 'donation',
 					'description'	=> 'Amazon Wishlist URL',
-					'logo'			=> 'amazonwishlist-128',
+					'logo'			=> 'amazonwishlist-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
