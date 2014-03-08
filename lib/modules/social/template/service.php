@@ -53,7 +53,7 @@ class Service extends Wrapper {
 	 * @accessor
 	 */
 	public function profileUrl() {
-		$this->contributor_service->get_service_url();
+		return $this->contributor_service->get_service_url();
 	}
 
 	/**

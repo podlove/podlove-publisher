@@ -18,7 +18,7 @@ class ShowService extends Base {
 	}
 
 	public static function find_by_type( $type='social' ) {
-		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `type` = '" . $type . "' )" );
+		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `type` = '" . $type . "' ) ORDER BY position ASC" );
 	}
 
 }

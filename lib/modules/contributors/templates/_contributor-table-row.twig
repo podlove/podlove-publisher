@@ -31,7 +31,7 @@
 		</td>
 	{% endif %}
 	<td class="social_cell">
-		{% for service in contributor.socialServices %}
+		{% for service in contributor.services({type: "social"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
 		    	<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
 		    </a>
@@ -39,18 +39,11 @@
 	</td>
 	{% if donations == "yes" %}
 		<td class="donation_cell">
-			{% if contributor.bitcoin %}
-				{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Bitcoin", "bitcoin", contributor.bitcoin) }}
-			{% endif %}
-			{% if contributor.litecoin %}
-				{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with Litecoin", "litecoin", contributor.litecoin) }}
-			{% endif %}
-			{% if contributor.paypal %}
-				{{ _self.iconLink("Support " ~ contributor.name ~ " by donating with PayPal", "paypal", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=" ~ contributor.paypal) }}
-			{% endif %}
-			{% if contributor.amazon_wishlist %}
-				{{ _self.iconLink("Support " ~ contributor.name ~ " by buying things from an Amazon Wishlist", "amazonwishlist", contributor.amazon_wishlist) }}
-			{% endif %}
+		{% for service in contributor.services({type: "donation"}) %}
+			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+		    	<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+		    </a>
+		{% endfor %}
 		</td>
 	{% endif %}
 	{% if flattr == "yes" %}
