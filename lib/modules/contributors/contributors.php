@@ -118,6 +118,14 @@ class Contributors extends \Podlove\Modules\Base {
 							'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
 						);
 					}
+				} else { // handle contributors without a group
+					if (isset($groups[0])) {
+						$groups[0]['contributors'][] = new Template\Contributor($contribution->getContributor(), $contribution);
+					} else {
+						$groups[0] = array(
+							'contributors' => array(new Template\Contributor($contribution->getContributor(), $contribution))
+						);
+					}
 				}
 			}
 			return $groups;

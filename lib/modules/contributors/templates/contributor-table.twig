@@ -9,7 +9,11 @@
 				{% if donations == "yes" %}{% set colspan = colspan + 1 %}{% endif %}
 				{% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
 				<th colspan="{{ colspan }}" class="contributor-group">
-					{{ contributorGroup.group.title }}
+					{% if contributorGroup.group %}
+						{{ contributorGroup.group.title }}
+					{% else %}
+						&nbsp;    
+					{% endif %}
 				</th>
 			</tr>
 			{% for contributor in contributorGroup.contributors %}
