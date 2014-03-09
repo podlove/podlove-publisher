@@ -141,6 +141,13 @@ class Podcast_Post_Type {
 			);
 
 			wp_register_script(
+				'podlove_admin_data_table',
+				\Podlove\PLUGIN_URL . '/js/admin/podlove_data_table.js',
+				array( 'jquery' ),
+				$version
+			);
+
+			wp_register_script(
 				'podlove_admin',
 				\Podlove\PLUGIN_URL . '/js/admin.js',
 				array(
@@ -155,7 +162,8 @@ class Podcast_Post_Type {
 					'podlove_admin_chosen',
 					'podlove_admin_chosen_image',
 					'podlove_admin_license',
-					'podlove_admin_protected_feed'
+					'podlove_admin_protected_feed',
+					'podlove_admin_data_table'
 				),
 				$version
 			);

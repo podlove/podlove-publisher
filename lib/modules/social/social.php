@@ -639,6 +639,7 @@ class Social extends \Podlove\Modules\Base {
 			</script>
 
 			<script type="text/javascript">
+
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
 				var existing_services = <?php echo json_encode($converted_services); ?>;
@@ -659,46 +660,6 @@ class Social extends \Podlove\Modules\Base {
 						return $.grep(PODLOVE.services, function(service, index) {
 							return parseInt(service.id, 10) === service_id;
 						})[0]; // Using [0] as the returned element has multiple indexes
-					}
-
-					function add_new_service() {
-						var row = '';
-						row = $("#service-row-template").html();
-						row = row.replace(/\{\{service-id\}\}/g, "");
-						row = row.replace(/\{\{id\}\}/g, "");
-						var new_row = $(".services_table_body");
-						new_row.append(row);
-						
-						// Update Chosen before we focus on the new service
-						update_chosen();
-						var new_row_id = new_row.find('select.podlove-service-dropdown').last().attr('id');	
-						service_dropdown_handler();
-						
-						// Focus new service
-						$("#" + new_row_id + "_chzn").find("a").focus();
-					}
-
-					function add_service_row(service, value, title) {
-						var row = '';
-
-						// add service to table
-						row = $("#service-row-template").html();
-						row = row.replace(/\{\{service-id\}\}/g, service.id);
-						row = row.replace(/\{\{id\}\}/g, i);
-						$(".services_table_body").append(row);
-						i++;
-						
-						var new_row = $(".services_table_body tr:last");
-
-						// select service in service-dropdown
-						new_row.find('select.podlove-service-dropdown option[value="' + service.id + '"]').attr('selected',true);
-						// set value
-						new_row.find('input.podlove-service-value').val(value);
-						// set title
-						new_row.find('input.podlove-service-title').val(title);
-						// Show account/URL if not empty
-						if( new_row.find('input.podlove-service-value').val() !== '' )
-							new_row.find('input.podlove-service-value').parent().find(".podlove-service-link").show();
 					}
 
 					function service_dropdown_handler() {
@@ -726,22 +687,10 @@ class Social extends \Podlove\Modules\Base {
 						});
 					}
 
-					function add_service( service ) {
-						add_service_row(fetch_service(service.id), service.value, service.title);
-					}
-
-					$(document).on('click', "#add_new_service_button", function() {
-						add_new_service();
-					});
-
 					$(document).on('click', '.podlove-service-link',  function() {
 						if( $(this).parent().find(".podlove-service-value").val() !== '' )
 							window.open( $(this).data("service-url-scheme").replace( '%account-placeholder%', $(this).parent().find(".podlove-service-value").val() ) );
 					});	
-
-					$(document).on('click', '.service_remove',  function() {
-						$(this).closest("tr").remove();
-					});
 
 					$(document).on('keydown', '.podlove-service-value',  function() {
 						$(this).parent().find(".podlove-service-link").show();
@@ -753,32 +702,43 @@ class Social extends \Podlove\Modules\Base {
 					});
 
 					$(document).ready(function() {
+						var i = 0;
 
-						$.each(existing_services, function(index, service) {
-							add_service(service);
-						});
+						$("#services-form table").podloveDataTable({
+							rowTemplate: "#service-row-template",
+							deleteHandle: ".service_remove",
+							sortableHandle: ".reorder-handle",
+							addRowHandle: "#add_new_service_button",
+							data: existing_services,
+							dataPresets: PODLOVE.services,
+							onRowLoad: function(o) {
+								o.row = o.row.replace(/\{\{service-id\}\}/g, o.object.id);
+								o.row = o.row.replace(/\{\{id\}\}/g, i);
+								i++;
+							},
+							onRowAdd: function(o) {
+								var row = $(".services_table_body tr:last");
 
-						$(".services_table_body td").each(function(){
-						    $(this).css('width', $(this).width() +'px');
-						});
+								// select object in object-dropdown
+								row.find('select.podlove-service-dropdown option[value="' + o.object.id + '"]').attr('selected',true);
+								// set value
+								row.find('input.podlove-service-value').val(o.entry.value);
+								// set title
+								row.find('input.podlove-service-title').val(o.entry.title);
+								// Show account/URL if not empty
+								if( row.find('input.podlove-service-value').val() !== '' )
+									row.find('input.podlove-service-value').parent().find(".podlove-service-link").show();
 
-						$(".services_table_body").sortable({
-							handle: ".reorder-handle",
-							helper: function(e, tr) {
-							    var $originals = tr.children();
-							    var $helper = tr.clone();
-							    $helper.children().each(function(index) {
-							    	// Set helper cell sizes to match the original sizes
-							    	$(this).width($originals.eq(index).width());
-							    });
-							    return $helper.css({
-							    	background: '#EAEAEA'
-							    });
+								// Update Chosen before we focus on the new service
+								update_chosen();
+								var new_row_id = row.find('select.podlove-service-dropdown').last().attr('id');	
+								service_dropdown_handler();
+								
+								// Focus new service
+								$("#" + new_row_id + "_chzn").find("a").focus();
 							}
 						});
 
-						service_dropdown_handler();
-						update_chosen();
 					});
 				}(jQuery));
 
