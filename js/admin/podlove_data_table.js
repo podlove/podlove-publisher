@@ -61,7 +61,8 @@
 				    return $helper.css({
 				    	background: '#EAEAEA'
 				    });
-				}
+				},
+				update: settings.onRowMove
 			});
 		};
 
