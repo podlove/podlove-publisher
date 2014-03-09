@@ -98,6 +98,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: When setting the chapter asset to manual, delete all chapter caches to avoid hiccups
 * Fix: Contributor links in the backend use an ID now rather than the contributor slug. That way they work when no slug is set.
 * Fix ADN backslash escaping issue in post titles
+* Fix: all contributions can be deleted
 
 = 1.9.12 =
 * Enhancement: Take over chapters when switching from chapter asset to manual
