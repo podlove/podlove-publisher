@@ -122,6 +122,9 @@ class Feed extends Base {
 	function post_ids() {
 		global $wpdb;
 
+		$allowed_status = array("publish");
+		$allowed_status = apply_filters("podlove_feed_post_ids_allowed_status", $allowed_status);
+
 		$sql = "
 			SELECT
 				p.ID
@@ -133,10 +136,16 @@ class Feed extends Base {
 			WHERE
 				a.id = %d
 				AND
-				p.post_status IN ('publish', 'private')
+				p.post_status IN (%s)
 		";
 
-		return $wpdb->get_col($wpdb->prepare($sql, $this->episode_asset()->id));
+		return $wpdb->get_col(
+			$wpdb->prepare(
+				$sql,
+				$this->episode_asset()->id,
+				implode(',', array_map(function($s) { return "'$s'"; }, $allowed_status))
+			)
+		);
 	}
 
 	public function get_content_type() {
