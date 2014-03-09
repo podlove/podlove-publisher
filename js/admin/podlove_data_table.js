@@ -20,7 +20,7 @@
 			var obj = {row: row, object: object, entry: entry};
 
 			settings.onRowLoad.call(this, obj);
-			$(".services_table_body").append(obj.row);
+			$("tbody", $this).append(obj.row);
 			settings.onRowAdd.call(this, obj);
 		}
 

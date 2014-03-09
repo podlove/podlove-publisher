@@ -623,44 +623,6 @@ class Contributors extends \Podlove\Modules\Base {
 						})[0]; // Using [0] as the returned element has multiple indexes
 					}
 
-					function add_new_contributor() {
-						var row = '';
-						row = $("#contributor-row-template").html();
-						var new_row = $("#contributors_table_body");
-						new_row.append(row);
-						
-						// Update Chosen before we focus on the new contributor
-						update_chosen();
-						var new_row_id = new_row.find('select.podlove-contributor-dropdown').last().attr('id');	
-						contributor_dropdown_handler();
-						
-						// Focus new contributor
-						$("#" + new_row_id + "_chzn").find("a").focus();
-					}
-
-					function add_contributor_row(contributor, role, group, comment) {
-						var row = '';
-
-						// add contributor to table
-						row = $("#contributor-row-template").html();
-						row = row.replace(/\{\{contributor-id\}\}/g, contributor.id);
-						row = row.replace(/\{\{id\}\}/g, i);
-						$("#contributors_table_body").append(row);
-						i++;
-						
-						var new_row = $("#contributors_table_body tr:last");
-
-						new_row.find('td.podlove-avatar-column').html(contributor.avatar);
-						// select contributor in contributor-dropdown
-						new_row.find('select.podlove-contributor-dropdown option[value="' + contributor.id + '"]').attr('selected',true);
-						// select default role
-						new_row.find('select.podlove-role option[value="' + role + '"]').attr('selected',true);
-						// select default group
-						new_row.find('select.podlove-group option[value="' + group + '"]').attr('selected',true);
-						// set comment
-						new_row.find('input.podlove-comment').val(comment);
-					}
-
 					function contributor_dropdown_handler() {
 						$('select.podlove-contributor-dropdown').change(function() {
 							contributor = fetch_contributor(this.value);
@@ -687,54 +649,43 @@ class Contributors extends \Podlove\Modules\Base {
 						});
 					}
 
-					function add_contribution( contributor ) {
-						add_contributor_row(fetch_contributor(contributor.id), contributor.role, contributor.group, contributor.comment);
-
-					}
-
-					$(document).on('click', "#add_new_contributor_button", function() {
-						add_new_contributor();
-					});
-
-					$(document).on('click', '.contributor_remove',  function() {
-						$(this).closest("tr").remove();
-					});	
-
-					$("#podlove_podcast").on('click', 'h3.hndle',  function() {
-						$("#contributors_table_body").empty();
-						$.each(existing_contributions, function(index, contributor) {
-							add_contribution(contributor);
-						});
-						update_chosen();
-					});	
-
 					$(document).ready(function() {
+						var i = 0;
 
-						$.each(existing_contributions, function(index, contributor) {
-							add_contribution(contributor);
-						});
+						$("#contributors-form table").podloveDataTable({
+							rowTemplate: "#contributor-row-template",
+							data: existing_contributions,
+							dataPresets: PODLOVE.Contributors,
+							sortableHandle: ".reorder-handle",
+							addRowHandle: "#add_new_contributor_button",
+							deleteHandle: ".contributor_remove",
+							onRowLoad: function(o) {
+								o.row = o.row.replace(/\{\{contributor-id\}\}/g, o.object.id);
+								o.row = o.row.replace(/\{\{id\}\}/g, i);
+								i++;
+							},
+							onRowAdd: function(o) {
+								var row = $("#contributors_table_body tr:last");
 
-						$("#contributors_table_body td").each(function(){
-						    $(this).css('width', $(this).width() +'px');
-						});
+								row.find('td.podlove-avatar-column').html(o.object.avatar);
+								// select contributor in contributor-dropdown
+								row.find('select.podlove-contributor-dropdown option[value="' + o.object.id + '"]').attr('selected',true);
+								// select default role
+								row.find('select.podlove-role option[value="' + o.entry.role + '"]').attr('selected',true);
+								// select default group
+								row.find('select.podlove-group option[value="' + o.entry.group + '"]').attr('selected',true);
+								// set comment
+								row.find('input.podlove-comment').val(o.entry.comment);
 
-						$("#contributors_table_body").sortable({
-							handle: ".reorder-handle",
-							helper: function(e, tr) {
-							    var $originals = tr.children();
-							    var $helper = tr.clone();
-							    $helper.children().each(function(index) {
-							    	// Set helper cell sizes to match the original sizes
-							    	$(this).width($originals.eq(index).width());
-							    });
-							    return $helper.css({
-							    	background: '#EAEAEA'
-							    });
+								// Update Chosen before we focus on the new contributor
+								update_chosen();
+								var new_row_id = row.find('select.podlove-contributor-dropdown').last().attr('id');	
+								contributor_dropdown_handler();
+								
+								// Focus new contributor
+								$("#" + new_row_id + "_chzn").find("a").focus();
 							}
 						});
-
-						contributor_dropdown_handler();
-						update_chosen();
 					});
 				}(jQuery));
 
