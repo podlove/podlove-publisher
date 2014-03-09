@@ -1,5 +1,25 @@
 (function($) {
 
+	/**
+	 * Podlove Data Table.
+	 *
+	 * jQuery plugin for dynamic data tables.
+	 *
+	 * Usage:
+	 * 	$(selector).podloveDataTable(options);
+	 *
+	 * Options:
+	 * 	rowTemplate:    selector for html row template, e.g."#podlove-table-template"
+	 *	deleteHandle:   selector for row delete element
+	 *	sortableHandle: selector for row move/sort element
+	 *	addRowHandle:   selector for "add row" element
+	 *	dataPresets:    list of objects, must have an id attribute, e.g. [{id: 1, title: "foo"}]
+	 *	data:           list of objects, representing existing rows in the table, must have an id attribute
+	 *	onRowLoad:      callback function. called when rowTemplate is loaded
+	 *	onRowAdd:       callback function. called after rowTemplate was added to the DOM
+	 *	onRowDelete:    callback function. called when a row was deleted from the DOM
+	 *	onRowMove:      callback function. called when the position of a row has changed
+	 */
 	$.fn.podloveDataTable = function(options) {
 
 		var $this = $(this);
