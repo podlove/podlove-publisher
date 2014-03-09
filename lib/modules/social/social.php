@@ -30,6 +30,9 @@ class Social extends \Podlove\Modules\Base {
 
 		add_filter( "manage_podcast_page_podlove_contributors_settings_handle_columns", array( $this, 'add_new_contributor_column' ) );
 
+		add_action( 'wp_ajax_podlove-services-delete-contributor-services', array($this, 'delete_contributor_services') );
+		add_action( 'wp_ajax_podlove-services-delete-podcast-services', array($this, 'delete_podcast_services') );
+
 		\Podlove\Modules\Contributors\Template\Contributor::add_accessor(
 			'services', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorContributorServices'), 5
 		);
@@ -719,8 +722,6 @@ class Social extends \Podlove\Modules\Base {
 							onRowAdd: function(o) {
 								var row = $("#<?php echo $wrapper_id ?> .services_table_body tr:last");
 
-								console.log(row);
-
 								// select object in object-dropdown
 								row.find('select.podlove-service-dropdown option[value="' + o.object.id + '"]').attr('selected',true);
 								// set value
@@ -740,7 +741,32 @@ class Social extends \Podlove\Modules\Base {
 								$("#" + new_row_id + "_chzn").find("a").focus();
 							},
 							onRowDelete: function(tr) {
-								console.log(this, tr);
+								var object_id = tr.data("object-id"),
+								    ajax_action = "podlove-services-delete-";
+
+								switch(services_form_base_name) {
+									case "podlove_contributor[donations]": /* fall through */
+									case "podlove_contributor[services]":
+										ajax_action += "contributor-services";
+										break;
+									case "podlove_podcast[donations]": /* fall through */
+									case "podlove_podcast[services]":
+										ajax_action += "podcast-services";
+										break;
+									default:
+										console.log("Error when deleting social/donation entry: unknows form type");
+								}
+
+								var data = {
+									action: ajax_action,
+									object_id: object_id
+								};
+
+								$.ajax({
+									url: ajaxurl,
+									data: data,
+									dataType: 'json'
+								});
 							}
 						});
 
@@ -763,4 +789,23 @@ class Social extends \Podlove\Modules\Base {
 		wp_enqueue_style('podlove_social_admin_style');
 	}
 
+	public function delete_contributor_services() {
+		$object_id = (int) $_REQUEST['object_id'];
+
+		if (!$object_id)
+			return;
+
+		if ($service = ContributorService::find_by_id($object_id))
+			$service->delete();
+	}
+
+	public function delete_podcast_services() {
+		$object_id = (int) $_REQUEST['object_id'];
+
+		if (!$object_id)
+			return;
+
+		if ($service = ShowService::find_by_id($object_id))
+			$service->delete();
+	}
 }

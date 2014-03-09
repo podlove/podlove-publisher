@@ -35,18 +35,18 @@
 			})[0]; // Using [0] as the returned element has multiple indexes
 		}
 
-		function add_object_row(object, entry) {
+		function add_object_row(object_index, object, entry) {
 			var row = $(settings.rowTemplate).html();
 			var obj = {row: row, object: object, entry: entry};
 
 			settings.onRowLoad.call(this, obj);
-			$("tbody", $this).append(obj.row);
+			$("tbody", $this).append($(obj.row).data('object-id', object_index));
 			settings.onRowAdd.call(this, obj);
 		}
 
 		// add existing data
 		$.each(settings.data, function(index, entry) {
-			add_object_row(fetch_object(entry.id), entry);
+			add_object_row(index, fetch_object(entry.id), entry);
 		});
 
 		// fix td width
@@ -56,7 +56,7 @@
 
 		if (settings.addRowHandle) {
 			$(document).on('click', settings.addRowHandle, function() {
-				add_object_row({}, "", "");
+				add_object_row(0, {}, "", "");
 			});
 		}
 
