@@ -33,13 +33,15 @@ class Shortcodes {
 	private $settings = array();
 
 	public function __construct() {
-		// legacy shortcode. deprecate?
+		// legacy shortcodes
 		add_shortcode( 'podlove-contributors', array( $this, 'podlove_contributors') );
-		// display a table/list of contributors
 		add_shortcode( 'podlove-contributor-list', array( $this, 'podlove_contributor_list') );
+
+		// display a table/list of episode contributors
+		add_shortcode( 'podlove-episode-contributor-list', array( $this, 'podlove_contributor_list') );
 		// display a table/list of podcast contributors
 		add_shortcode( 'podlove-podcast-contributor-list', array( $this, 'podlove_podcast_contributor_list') );
-
+		// display a table/list of all contributors
 		add_shortcode( 'podlove-global-contributor-list', array( $this, 'global_contributor_list') );
 	}
 
@@ -80,7 +82,7 @@ class Shortcodes {
 	 * 
 	 * Examples:
 	 *
-	 *	[podlove-contributor-list] / [podlove-podcast-contributor-list]
+	 *	[podlove-episode-contributor-list]
 	 * 
 	 * @return string
 	 */
