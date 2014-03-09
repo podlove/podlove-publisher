@@ -38,6 +38,10 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
+		add_action( 'wp_ajax_podlove-contributors-delete-podcast', array($this, 'delete_podcast_contributor') );
+		add_action( 'wp_ajax_podlove-contributors-delete-default', array($this, 'delete_default_contributor') );
+		add_action( 'wp_ajax_podlove-contributors-delete-episode', array($this, 'delete_episode_contributor') );
+
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates')), 'contributors');
 			return $file_loader;
@@ -392,8 +396,14 @@ class Contributors extends \Podlove\Modules\Base {
 					$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
 				}
 
+				// map indices to IDs
+				$map = array();
+				foreach ($contributions as $c) {
+					$map[$c->id] = $c;
+				}
+
 				echo '</table>';
-				\Podlove\Modules\Contributors\Contributors::contributors_form_table($contributions);
+				\Podlove\Modules\Contributors\Contributors::contributors_form_table($map);
 				echo '<table class="form-table">';
 			}
 		) );		
@@ -608,7 +618,9 @@ class Contributors extends \Podlove\Modules\Base {
 				PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
 				PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";
 
+
 				(function($) {
+					var form_base_name = "<?php echo $form_base_name ?>";
 
 					function update_chosen() {
 						$(".chosen").chosen();
@@ -684,6 +696,37 @@ class Contributors extends \Podlove\Modules\Base {
 								
 								// Focus new contributor
 								$("#" + new_row_id + "_chzn").find("a").focus();
+							},
+							onRowDelete: function(tr) {
+								var object_id = tr.data("object-id"),
+								    ajax_action = "podlove-contributors-delete-";
+
+								switch (form_base_name) {
+									case "podlove_podcast[contributor]":
+										ajax_action += "podcast";
+										break;
+									case "podlove_contributor_defaults[contributor]":
+										ajax_action += "default";
+										break;
+									case "episode_contributor":
+										ajax_action += "episode";
+										break;
+									default:
+										console.log("Error when deleting social/donation entry: unknows form type '" + form_base_name + "'");
+								}
+								
+								var data = {
+									action: ajax_action,
+									object_id: object_id
+								};
+
+								console.log("delete", data);
+
+								$.ajax({
+									url: ajaxurl,
+									data: data,
+									dataType: 'json'
+								});
 							}
 						});
 					});
@@ -735,5 +778,35 @@ class Contributors extends \Podlove\Modules\Base {
 			\Podlove\get_plugin_header( 'Version' )
 		);
 		wp_enqueue_script('podlove_contributor_jquery_visible');
+	}
+
+	public function delete_podcast_contributor() {
+		$object_id = (int) $_REQUEST['object_id'];
+
+		if (!$object_id)
+			return;
+
+		if ($service = ShowContribution::find_by_id($object_id))
+			$service->delete();
+	}
+
+	public function delete_default_contributor() {
+		$object_id = (int) $_REQUEST['object_id'];
+
+		if (!$object_id)
+			return;
+
+		if ($service = DefaultContribution::find_by_id($object_id))
+			$service->delete();
+	}
+
+	public function delete_episode_contributor() {
+		$object_id = (int) $_REQUEST['object_id'];
+
+		if (!$object_id)
+			return;
+
+		if ($service = EpisodeContribution::find_by_id($object_id))
+			$service->delete();
 	}
 }
