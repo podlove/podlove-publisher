@@ -569,6 +569,7 @@ class Social extends \Podlove\Modules\Base {
 	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $type = 'social') {
 		$cjson = array();
 		$converted_services = array();
+		$wrapper_id = "services-form-$type";
 
 		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service) {
 			$cjson[$service->id] = array(
@@ -588,7 +589,7 @@ class Social extends \Podlove\Modules\Base {
 		}
 		
 		?>
-		<div id="services-form">
+		<div id="<?php echo $wrapper_id ?>">
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
@@ -608,11 +609,11 @@ class Social extends \Podlove\Modules\Base {
 			</table>
 
 			<div id="add_new_contributor_wrapper">
-				<input class="button" id="add_new_service_button" value="+" type="button" />
+				<input class="button" id="add_new_service_button-<?php echo $type ?>" value="+" type="button" />
 			</div>
 
-			<script type="text/template" id="service-row-template">
-			<tr class="media_file_row podlove-service-table" data-contributor-id="{{service-id}}">
+			<script type="text/template" id="service-row-template-<?php echo $type ?>">
+			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
 				
 				<td class="podlove-service-column">
 					<select name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
@@ -641,13 +642,12 @@ class Social extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 
 				var PODLOVE = PODLOVE || {};
-				var i = 0;
-				var existing_services = <?php echo json_encode($converted_services); ?>;
-
-				PODLOVE.services = <?php echo json_encode(array_values($cjson)); ?>;
-				PODLOVE.services_form_base_name = "<?php echo $form_base_name ?>";
 
 				(function($) {
+					var i = 0;
+					var existing_services = <?php echo json_encode($converted_services); ?>;
+					var services = <?php echo json_encode(array_values($cjson)); ?>;
+					var services_form_base_name = "<?php echo $form_base_name ?>";
 
 					function update_chosen() {
 						$(".chosen").chosen();
@@ -657,7 +657,7 @@ class Social extends \Podlove\Modules\Base {
 					function fetch_service(service_id) {
 						service_id = parseInt(service_id, 10);
 
-						return $.grep(PODLOVE.services, function(service, index) {
+						return $.grep(services, function(service, index) {
 							return parseInt(service.id, 10) === service_id;
 						})[0]; // Using [0] as the returned element has multiple indexes
 					}
@@ -665,7 +665,7 @@ class Social extends \Podlove\Modules\Base {
 					function service_dropdown_handler() {
 						$('select.podlove-service-dropdown').change(function() {
 							service = fetch_service(this.value);
-							row = $(this).parent().parent();
+							row = $(this).closest("tr");
 
 							// Check for empty contributors / for new field
 							if( typeof service === 'undefined' ) {
@@ -677,12 +677,12 @@ class Social extends \Podlove\Modules\Base {
 							// Setting data attribute and avatar field
 							row.data("service-id", service.id);
 							// Renaming all corresponding elements after the contributor has changed 
-							row.find(".podlove-service-dropdown").attr("name", PODLOVE.services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
-							row.find(".podlove-service-value").attr("name", PODLOVE.services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
+							row.find(".podlove-service-dropdown").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
+							row.find(".podlove-service-value").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
 							row.find(".podlove-service-value").attr("placeholder", service.description);
 							row.find(".podlove-service-value").attr("title", service.description);
 							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
-							row.find(".podlove-service-title").attr("name", PODLOVE.services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
+							row.find(".podlove-service-title").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
 							i++; // continue using "i" which was already used to add the existing contributions
 						});
 					}
@@ -704,20 +704,22 @@ class Social extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 						var i = 0;
 
-						$("#services-form table").podloveDataTable({
-							rowTemplate: "#service-row-template",
+						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
+							rowTemplate: "#service-row-template-<?php echo $type; ?>",
 							deleteHandle: ".service_remove",
 							sortableHandle: ".reorder-handle",
-							addRowHandle: "#add_new_service_button",
+							addRowHandle: "#add_new_service_button-<?php echo $type ?>",
 							data: existing_services,
-							dataPresets: PODLOVE.services,
+							dataPresets: services,
 							onRowLoad: function(o) {
 								o.row = o.row.replace(/\{\{service-id\}\}/g, o.object.id);
 								o.row = o.row.replace(/\{\{id\}\}/g, i);
 								i++;
 							},
 							onRowAdd: function(o) {
-								var row = $(".services_table_body tr:last");
+								var row = $("#<?php echo $wrapper_id ?> .services_table_body tr:last");
+
+								console.log(row);
 
 								// select object in object-dropdown
 								row.find('select.podlove-service-dropdown option[value="' + o.object.id + '"]').attr('selected',true);
@@ -736,6 +738,9 @@ class Social extends \Podlove\Modules\Base {
 								
 								// Focus new service
 								$("#" + new_row_id + "_chzn").find("a").focus();
+							},
+							onRowDelete: function(tr) {
+								console.log(this, tr);
 							}
 						});
 
