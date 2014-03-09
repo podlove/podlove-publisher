@@ -33,8 +33,14 @@ class Shortcodes {
 	private $settings = array();
 
 	public function __construct() {
-		// legacy shortcodes
+		/**
+		 * @deprecated since ???, use [podlove-episode-contributor-list] instead
+		 */
 		add_shortcode( 'podlove-contributors', array( $this, 'podlove_contributors') );
+
+		/**
+		 * @deprecated since 1.10.0, use [podlove-episode-contributor-list] instead
+		 */
 		add_shortcode( 'podlove-contributor-list', array( $this, 'podlove_contributor_list') );
 
 		// display a table/list of episode contributors

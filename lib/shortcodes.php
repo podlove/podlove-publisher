@@ -164,7 +164,8 @@ add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcod
  *
  * Usage:
  * 	[podlove-web-player]
- * 	
+ *
+ * @deprecated since 1.10.0 use {{ episode.player }} instead
  * @param  array $options
  * @return string
  */
@@ -191,6 +192,9 @@ foreach ( $podlove_public_episode_attributes as $attr ) {
 	} );
 }
 
+/**
+ * @deprecated since 1.10.0, use {{ episode.<attribute> }} instead
+ */
 function episode_data_shortcode( $attributes ) {
 	global $post;
 
@@ -223,6 +227,9 @@ function episode_data_shortcode( $attributes ) {
 }
 add_shortcode( 'podlove-episode', '\Podlove\episode_data_shortcode' );
 
+/**
+ * @deprecated since 1.10.0, use {{ podcast.<attribute> instead }}
+ */
 function podcast_data_shortcode( $attributes ) {
 
 	$defaults = array( 'field' => '' );
@@ -286,13 +293,18 @@ add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 
 add_filter('podlove_template_raw', array('\Podlove\Template\TwigFilter', 'apply_to_html'), 10, 2);
 
+/**
+ * @deprecated since 1.10.0, use {{ episode.license }} or {{ podcast.license }} instead
+ */
 function podcast_license() {
 	$podcast = Model\Podcast::get_instance();
 		return $podcast->get_license_html();
 }
 add_shortcode( 'podlove-podcast-license', '\Podlove\podcast_license' );
 
-
+/**
+ * @deprecated since 1.10.0, use {{ episode.license }} or {{ podcast.license }} instead
+ */
 function episode_license() {
 	global $post;
 
