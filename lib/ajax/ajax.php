@@ -21,7 +21,10 @@ class Ajax {
 			'update-asset-position',
 			'update-feed-position',
 			'podcast',
-			'hide-teaser'
+			'hide-teaser',
+			'get-license-url',
+			'get-license-name',
+			'get-license-parameters-from-url'
 		);
 
 		foreach ( $actions as $action )
@@ -180,6 +183,18 @@ class Ajax {
 
 	public function hide_teaser() {
 		update_option( '_podlove_hide_teaser', TRUE );
+	}
+
+	public function get_license_url() {
+		self::respond_with_json( \Podlove\Model\License::get_url_from_license( json_decode( $_POST['license'] ) ) );
+	}
+
+	public function get_license_name() {
+		self::respond_with_json( \Podlove\Model\License::get_name_from_license( json_decode( $_POST['license'] ) ) );
+	}
+
+	public function get_license_parameters_form_url() {
+		self::respond_with_json( \Podlove\Model\License::get_license_from_url( json_decode( $_POST['license'] ) ) );
 	}
 	
 }

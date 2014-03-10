@@ -16,7 +16,6 @@ class License {
 	}
 
 	public static function get_license_from_url( $url=NULL ) {
-
 		if( is_null($url) )
 			return;
 
@@ -42,7 +41,6 @@ class License {
 	}
 
 	public static function get_url_from_license( $license ) {
-
 		if( !is_array($license) )
 			return;
 
