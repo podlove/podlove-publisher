@@ -3,6 +3,7 @@ namespace Podlove\Modules\PodloveWebPlayer;
 
 use Podlove\Model;
 use Podlove\Model\Episode;
+use Podlove\Model\Podcast;
 use Podlove\Model\EpisodeAsset;
 use Podlove\Model\MediaFile;
 
@@ -125,6 +126,9 @@ class Printer {
 		$xml_string = $this->format_xml( $xml_string );
 		$xml_string = $this->remove_xml_header( $xml_string );
 
+		// get podcast object
+		$podcast = Podcast::get_instance();
+
 		// set JavaScript options
 		$truthy = array( true, 'true', 'on', 1, "1" );
 		$init_options = array(
@@ -144,6 +148,10 @@ class Printer {
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
+			'showTitle'           => $podcast->title,
+			'showSubtitle'        => $podcast->subtitle,
+			'showSummary'         => $podcast->summary,
+			'showPoster'          => $podcast->cover_image,
 			'duration'            => $this->episode->get_duration(),
 			'chaptersVisible'     => in_array( \Podlove\get_webplayer_setting( 'chaptersVisible' ), $truthy, true ),
 			'features'            => array( "current", "progress", "duration", "tracks", "fullscreen", "volume" )
