@@ -69,7 +69,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$flattr_service = \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Flattr' AND `type` = 'donation'");
 		$contributor_flattr = \Podlove\Modules\Social\Model\ContributorService::find_one_by_where("`service_id` = " . $flattr_service->id . " AND `contributor_id` = " . $contributor->id);
 
-		if ( $contributor_flattr->value == "" ) 
+		if ( !is_object($contributor_flattr) || $contributor_flattr->value == "" ) 
 			return;
 
 		return "<a 
