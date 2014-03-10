@@ -3,6 +3,13 @@ namespace Podlove\Modules\Social\Template;
 
 use Podlove\Template\Wrapper;
 
+/**
+ * Service Template Wrapper
+ *
+ * Requires the "Social" module.
+ *
+ * @templatetag service
+ */
 class Service extends Wrapper {
 
 	/**

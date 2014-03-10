@@ -27,7 +27,9 @@ $classes = [
 	'\Podlove\Template\Chapter',
 	'\Podlove\Template\License',
 	'\Podlove\Template\FileType',
-	'\Podlove\Modules\Contributors\Template\Contributor'
+	'\Podlove\Modules\Contributors\Template\Contributor',
+	'\Podlove\Modules\Contributors\Template\ContributorGroup',
+	'\Podlove\Modules\Social\Template\Service'
 ];
 
 // first, parse dynamic accessors
