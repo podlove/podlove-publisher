@@ -66,7 +66,7 @@ class Feed_Validation extends \Podlove\Modules\Base {
 					<th><?php _e( 'Slug', 'podlove' ); ?></th>
 					<th><?php _e( 'Last Modification', 'podlove' ); ?></th>
 					<th><?php _e( 'Entries', 'podlove' ); ?></th>
-					<th><?php _e( 'Size (compressed)', 'podlove'); ?></th>
+					<th><?php echo extension_loaded('zlib') ? __( 'Size (compressed)', 'podlove') : __( 'Size', 'podlove'); ?></th>
 					<th><?php _e( 'Latest item', 'podlove'); ?></th>
 					<th><?php _e( 'Validation', 'podlove' ); ?></th>
 				</tr>
@@ -97,7 +97,11 @@ class Feed_Validation extends \Podlove\Modules\Base {
 
 						$number_of_items = count( $feed->post_ids() );
 						$last_modification = \Podlove\Modules\FeedValidation\Feed_Validation::relative_time_steps(strtotime( isset($feed_header['last-modified']) ? $feed_header['last-modified'] : 0 ));
-						$size = \Podlove\format_bytes(strlen( $feed_body )) . " (" .  \Podlove\format_bytes(strlen( gzdeflate( $feed_body , 9 ) )) . ")";
+						$size = \Podlove\format_bytes(strlen( $feed_body ));
+
+						if (extension_loaded('zlib')) {
+							$size .= " (" .  \Podlove\format_bytes(strlen( gzdeflate( $feed_body , 9 ) )) . ")";
+						}
 
 						$source  = "<tr>\n";
 						$source .= "<td><a href='" . admin_url() . "admin.php?page=podlove_feeds_settings_handle&action=edit&feed=" . $feed->id . "'>" . $feed->name ."</a></td>";
