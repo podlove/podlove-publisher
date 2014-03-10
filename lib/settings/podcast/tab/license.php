@@ -39,6 +39,7 @@ class License extends Tab {
 		);
 
 		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
+
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
 			
