@@ -140,51 +140,6 @@ class Contributor extends Wrapper {
 	}
 
 	/**
-	 * Website
-	 * 
-	 * @accessor
-	 */
-	public function website() {
-		return $this->contributor->www;
-	}
-
-	/**
-	 * URI (unique identifier)
-	 * 
-	 * @accessor
-	 */
-	public function uri() {
-		return $this->contributor->guid;
-	}
-
-	/**
-	 * Facebook name
-	 * 
-	 * @accessor
-	 */
-	public function facebook() {
-		return $this->contributor->facebook;
-	}
-
-	/**
-	 * Twitter name
-	 * 
-	 * @accessor
-	 */
-	public function twitter() {
-		return $this->contributor->twitter;
-	}
-
-	/**
-	 * ADN name
-	 * 
-	 * @accessor
-	 */
-	public function adn() {
-		return $this->contributor->adn;
-	}
-
-	/**
 	 * Email address for public use
 	 * 
 	 * @accessor
@@ -200,68 +155,6 @@ class Contributor extends Wrapper {
 	 */
 	public function contactemail() {
 		return $this->contributor->contactemail;
-	}
-
-	/**
-	 * Flattr username
-	 * 
-	 * @accessor
-	 */
-	public function flattr() {
-		return $this->contributor->flattr;
-	}
-
-	/**
-	 * Flattr URL.
-	 *
-	 * When on a WordPress page, it returns the URL for the person. Otherwise a
-	 * URL for that person _in this specific episode_ is generated.
-	 * 
-	 * @accessor
-	 */
-	public function flattr_url() {
-
-		if (is_page()) {
-			return "https://flattr.com/profile/" . $this->flattr();
-		} else {
-			return get_permalink( get_the_ID() ) . "#" . md5( $this->contributor->id . '-' . $this->flattr() );
-		}
-	}
-
-	/**
-	 * PayPal button id
-	 * 
-	 * @accessor
-	 */
-	public function paypal() {
-		return $this->contributor->paypal;
-	}
-
-	/**
-	 * Bitcoin address
-	 * 
-	 * @accessor
-	 */
-	public function bitcoin() {
-		return $this->contributor->bitcoin;
-	}
-
-	/**
-	 * Litecoin address
-	 * 
-	 * @accessor
-	 */
-	public function litecoin() {
-		return $this->contributor->litecoin;
-	}
-
-	/**
-	 * Amazon wishlist URL
-	 * 
-	 * @accessor
-	 */
-	public function amazon_wishlist() {
-		return $this->contributor->amazonwishlist;
 	}
 
 	/**
