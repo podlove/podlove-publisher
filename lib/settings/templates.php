@@ -164,7 +164,7 @@ class Templates {
 			var readonly_textareas = $(".highlight-readonly");
 			readonly_textareas.each(function() {
 				var podlove_code_highlight = CodeMirror.fromTextArea(this, {
-					mode: "htmlmixed",
+					mode: "application/x-twig",
 					lineNumbers: false,
 					theme: "default",
 					indentUnit: 4,
