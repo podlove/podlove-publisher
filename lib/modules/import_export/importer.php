@@ -23,9 +23,9 @@ class Importer {
 
 		$this->importEpisodes();
 		$this->importOptions();
+		$this->importFileTypes();
 		$this->importAssets();
 		$this->importFeeds();
-		$this->importFileTypes();
 		$this->importMediaFiles();
 		$this->importTemplates();
 
