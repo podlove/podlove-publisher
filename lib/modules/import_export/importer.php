@@ -16,6 +16,15 @@ class Importer {
 		$this->file = $file;
 	}
 
+	/**
+	 * Import podcast metadata.
+	 *
+	 * A note on modules:
+	 * Active modules are stored in wp_options "podlove_active_modules". When importing,
+	 * we do not need special handling since module activation and deactivation is hooked
+	 * to the "update_option_podlove_active_modules" filter. We only need to make sure
+	 * options/modules are imported early enough.
+	 */
 	public function import() {
 
 		$this->xml = simplexml_load_file($this->file);
