@@ -136,14 +136,13 @@ class Feed extends Base {
 			WHERE
 				a.id = %d
 				AND
-				p.post_status IN (%s)
+				p.post_status IN (" . implode(',', array_map(function($s) { return "'$s'"; }, $allowed_status)) . ")
 		";
 
 		return $wpdb->get_col(
 			$wpdb->prepare(
 				$sql,
-				$this->episode_asset()->id,
-				implode(',', array_map(function($s) { return "'$s'"; }, $allowed_status))
+				$this->episode_asset()->id
 			)
 		);
 	}
