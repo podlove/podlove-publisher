@@ -137,6 +137,8 @@ class Feed extends Base {
 				a.id = %d
 				AND
 				p.post_status IN (" . implode(',', array_map(function($s) { return "'$s'"; }, $allowed_status)) . ")
+			ORDER BY
+				p.post_date DESC
 		";
 
 		return $wpdb->get_col(
