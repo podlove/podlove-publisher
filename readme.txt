@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.1 =
 
 * Fix: podlove-episode-contributor-list shortcode: add support for "group" and "role" attributes
+* Fix: podlove-episode-contributor-list shortcode: fix broken flattr button
 
 = 1.10.0 =
 
