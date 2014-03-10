@@ -10,7 +10,7 @@
 
 <table class="podlove-contributors-table">
 	<tbody>
-		{% for contributor in podcast.contributors({group: 'all', role: 'all', scope: 'global'}) %}
+		{% for contributor in podcast.contributors({group: group, role: group, scope: 'global'}) %}
 			{% if contributor.visible %}
 				{% include '@contributors/_contributor-table-row.twig' %}
 			{% endif %}

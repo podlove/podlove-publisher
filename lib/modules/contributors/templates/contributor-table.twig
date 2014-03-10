@@ -1,6 +1,6 @@
 <table class="podlove-contributors-table">
 	<tbody>
-		{% for contributorGroup in episode.contributors({groupby: 'group'}) %}
+		{% for contributorGroup in episode.contributors({groupby: 'group', group: group, role: role}) %}
 			<tr>
 				{% set colspan = 2 %}
 				{% if avatars == "yes"   %}{% set colspan = colspan + 1 %}{% endif %}
