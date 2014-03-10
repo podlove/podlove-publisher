@@ -754,6 +754,10 @@ class Contributors extends \Podlove\Modules\Base {
 	    switch ($column_name) {
 	    	case 'contributors':
 	    		$episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
+
+	    		if (!$episode)
+	    			return;
+
 	        	$contributors = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
 	        	$contributor_list = "";
 	        	
