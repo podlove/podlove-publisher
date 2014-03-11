@@ -201,9 +201,9 @@ class Dashboard {
 
 		$episodes_total_length = array_sum($episode_durations);
 		// Calculating average episode in seconds
-		$episodes_average_episode_length = ( $counted_episodes > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0 );
+		$episodes_average_episode_length = count($episode_durations) > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0;
 		// Calculate average tim until next release in days
-		$average_days_between_releases = ( $counted_episodes > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0 );
+		$average_days_between_releases   = count($time_stamp_differences) > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0;
 
 		/**
 		 *	Media Files
