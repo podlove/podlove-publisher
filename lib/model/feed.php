@@ -251,12 +251,59 @@ class Feed extends Base {
 	}
 
 	/**
+	 * Get Feed Information (Size (gzip) and Last Modifcation)
+	 */
+
+	public function getInformation( $redirected=FALSE ) {
+		$source = $this->getSource( $redirected );
+		$feed_header = $source['headers'];
+		$feed_body = $source['body'];
+		$feed_items = $this->post_ids();
+
+		$last_modification = \Podlove\Modules\FeedValidation\Feed_Validation::relative_time_steps(strtotime( isset($feed_header['last-modified']) ? $feed_header['last-modified'] : 0 ));
+		$size = \Podlove\format_bytes(strlen( $feed_body ));
+
+		if ( extension_loaded('zlib') ) {
+			$size .= " (" .  \Podlove\format_bytes(strlen( gzdeflate( $feed_body , 9 ) )) . ")";
+		}
+
+		if ( $redirected === FALSE ) {
+			$latest_item = "<a href=\"" . get_permalink( $feed_items[0] ) . "\">". get_the_title( $feed_items[0] ) ."</a>";
+		} else {
+			// Fetch latest item from source of redirected feed
+			$start_item_tag  = strpos($feed_body, '<item');
+			$end_item_tag	 = strpos($feed_body, '</item>');
+
+			$first_item = substr($feed_body, $start_item_tag + 7, $end_item_tag - $start_item_tag);
+
+			$start_title_tag = strpos($first_item, '<title');
+			$end_title_tag = strpos($first_item, '</title>');
+
+			$start_link_tag = strpos($first_item, '<link');
+			$end_link_tag = strpos($first_item, '</link>');
+
+			$title = substr($first_item, $start_title_tag + 7, $end_title_tag - $start_title_tag - 7 );
+			$permalink = substr($first_item, $start_link_tag + 6, $end_link_tag - $start_link_tag - 7);
+
+			$latest_item = "<a href=\"" . $permalink . "\">". $title ."</a>";
+		}
+		
+		return array(
+						'size'				=>	$size,
+						'last_modification'	=>	$last_modification,
+						'latest_item'		=>  $latest_item
+					);
+	}
+
+	/**
 	 * Fetch feed source
 	 */
 
-	public function getSource() {
+	public function getSource( $redirected=FALSE ) {
+		$url = ( $redirected === FALSE ? $this->get_subscribe_url() . "?redirect=no" : $this->redirect_url );
+
 		$curl = new \Podlove\Http\Curl();
-		$curl->request( $this->get_subscribe_url() . ( strpos( $this->get_subscribe_url(), "?" ) ? "&redirect=no" : "?redirect=no" ), array(
+		$curl->request( $url, array(
 			'headers' => array( 'Content-type'  => 'application/json' ),
 			'timeout' => 10,
 			'compress' => true,
@@ -277,10 +324,12 @@ class Feed extends Base {
 	 * Feed Validation via w3c validator API (http://validator.w3.org/feed/)
 	 */
 
-	public function getValidation()
+	public function getValidation( $redirected=FALSE )
 	{
+		$url = ( $redirected === FALSE ? $this->get_subscribe_url() . "?redirect=no" : $this->redirect_url );
+
 		$curl = new \Podlove\Http\Curl();
-		$curl->request( "http://validator.w3.org/feed/check.cgi?output=soap12&url=" . $this->get_subscribe_url(), array(
+		$curl->request( "http://validator.w3.org/feed/check.cgi?output=soap12&url=" . $url, array(
 			'headers' => array( 'Content-type'  => 'application/soap+xml' ),
 			'timeout' => 20,
 			'compress' => true,
@@ -304,9 +353,9 @@ class Feed extends Base {
 		return $soap->Body->children( $namespaces['m'] )->children( $namespaces['m'] ); // Return errors and warnings
 	}
 
-	public function getValidationErrorsandWarnings()
+	public function getValidationErrorsandWarnings( $redirected=FALSE )
 	{
-		$warning_and_error_list = $this->getValidation();
+		$warning_and_error_list = $this->getValidation( $redirected );
 
 		if( !$warning_and_error_list ) 
 			return FALSE;
@@ -332,13 +381,16 @@ class Feed extends Base {
 					);
 	}
 
-	public function getValidationIcon()
+	public function getValidationIcon( $redirected=FALSE )
 	{
 
-		$errors_and_warnings = $this->getValidationErrorsandWarnings();
-		$feed_subscribe_url = $this->get_subscribe_url();
+		$errors_and_warnings = $this->getValidationErrorsandWarnings( $redirected );
+		$feed_subscribe_url = ( $redirected === FALSE ? $this->get_subscribe_url() : $this->redirect_url );
 
-		\Podlove\Log::get()->addInfo( 'Validate feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a>.' );
+		if( $redirected === TRUE )
+			$redirected = ' (Redirected)';
+
+		\Podlove\Log::get()->addInfo( 'Validate feed <a href="' . $feed_subscribe_url . '">' . $this->name . $redirected . '</a>.' );
 
 		if( !$errors_and_warnings ) {
 			\Podlove\Log::get()->addInfo( 'Feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a> is not accessible for validation.' );
@@ -346,21 +398,24 @@ class Feed extends Base {
 		}
 
 		// Log Warnings and errors
-		$this->logValidation( $errors_and_warnings );
+		$this->logValidation( $errors_and_warnings, $redirected );
 
 		return ( $errors_and_warnings['validity'] == 'true' ? self::FEED_VALIDATION_OK : self::FEED_VALIDATION_ERROR );
 	}
 
-	public function logValidation( $errors_and_warnings )
+	public function logValidation( $errors_and_warnings, $redirected=FALSE )
 	{
-		$feed_subscribe_url = $this->get_subscribe_url();
+		$feed_subscribe_url = ( $redirected === FALSE ? $this->get_subscribe_url() : $this->redirect_url );
+
+		if( $redirected === TRUE )
+			$redirected = ' (Redirected)';
 
 		foreach ( $errors_and_warnings['warnings'] as $warning_key => $warning ) {
-			\Podlove\Log::get()->addInfo( 'Warning: ' . $warning['text'] . ', line ' . $warning['line'] . ' in Feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a>.'   );	
+			\Podlove\Log::get()->addInfo( 'Warning: ' . $warning['text'] . ', line ' . $warning['line'] . ' in Feed <a href="' . $feed_subscribe_url . '">' . $this->name . $redirected .'</a>.'   );	
 		}
 
 		foreach ( $errors_and_warnings['errors'] as $error_key => $error ) {
-			\Podlove\Log::get()->addError( 'Error: ' . $error['text'] . ', line ' . $error['line'] . ' in Feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a>.'   );	
+			\Podlove\Log::get()->addError( 'Error: ' . $error['text'] . ', line ' . $error['line'] . ' in Feed <a href="' . $feed_subscribe_url . '">' . $this->name .  $redirected .'</a>.'   );	
 		}
 	}
 
