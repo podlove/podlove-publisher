@@ -443,11 +443,8 @@ class Social extends \Podlove\Modules\Base {
 		if (!isset($_POST['podlove_contributor']) )
 			return;
 
-		$services_appearances = $_POST['podlove_contributor']['services'];
-		$donations_appearances = $_POST['podlove_contributor']['donations'];
-
-		if (isset($services_appearances) )
-			foreach ($services_appearances as $service_appearance) {
+		if (isset($_POST['podlove_contributor']['services']) )
+			foreach ($_POST['podlove_contributor']['services'] as $service_appearance) {
 				foreach ($service_appearance as $service_id => $service) {
 					$c = new \Podlove\Modules\Social\Model\ContributorService;
 					$c->position = $position;
@@ -462,8 +459,8 @@ class Social extends \Podlove\Modules\Base {
 
 		$position = 0;
 
-		if (isset($donations_appearances) )
-			foreach ($donations_appearances as $donation_appearances) {
+		if (isset($_POST['podlove_contributor']['donations']) )
+			foreach ($_POST['podlove_contributor']['donations'] as $donation_appearances) {
 				foreach ($donation_appearances as $donation_id => $donation) {
 					$c = new \Podlove\Modules\Social\Model\ContributorService;
 					$c->position = $position;
@@ -544,7 +541,11 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->callback( 'services_form_table', array(
 			'callback' => function() {
 
-				$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'] );
+				if (isset($_GET['contributor'])) {
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'] );
+				} else {
+					$services = array();
+				}
 
 				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table($services);
@@ -560,7 +561,11 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->callback( 'services_form_table', array(
 			'callback' => function() {
 
-				$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'], 'donation' );
+				if (isset($_GET['contributor'])) {
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'], 'donation' );
+				} else {
+					$services = array();
+				}
 
 				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );
