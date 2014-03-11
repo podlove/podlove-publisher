@@ -287,7 +287,7 @@ class Social extends \Podlove\Modules\Base {
 			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%/wishlist'
 				),
 			array(
-					'title' 		=> 'Thomann Wishtlist',
+					'title' 		=> 'Thomann Wishlist',
 					'type'			=> 'donation',
 					'description'	=> 'Thomann Wishlist URL',
 					'logo'			=> 'thomann-128.png',
