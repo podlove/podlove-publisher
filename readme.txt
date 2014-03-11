@@ -101,9 +101,9 @@ If you have used templates before, please note that some shortcodes are now _DEP
 
 Instead of `[podlove-web-player]`, write `{{ episode.player }}`.
 
-Instead of `[podlove-podcast-license]`, write `{{ podcast.license }}`.
+Instead of `[podlove-podcast-license]`, write `{{ podcast.license.html }}`.
 
-Instead of `[podlove-episode-license]`, write `{{ episode.license }}`.
+Instead of `[podlove-episode-license]`, write `{{ episode.license.html }}`.
 
 Instead of `[podlove-episode field="subtitle"]`, write `{{ episode.subtitle }}`. Instead of `[podlove-episode field="summary"]`, write `{{ episode.summary }}` etc. When in doubt, look at the [Episode Template Reference](http://docs.podlove.org/publisher/template-reference/#episode).
 
