@@ -24,7 +24,8 @@ class Shortcodes {
 		'groups'	=> 'no',
 		'donations' => 'no',
 		'flattr'    => 'yes',
-		'title'     => ''
+		'title'     => '',
+		'groupby'   => 'none'
 	);
 
 	/**
@@ -82,6 +83,7 @@ class Shortcodes {
 	 *	roles       - One of 'yes', 'no'. Display role. Default: 'no' 
 	 *	group       - Filter lists by group. Default: 'all'
 	 *	groups      - One of 'yes', 'no'. Display group. Default: 'no' 
+	 *	groupby     - Set to 'group' to group contributors by their contributor group. Default: 'none'
 	 *	donations   - One of 'yes', 'no'. Display donation column. Default: 'no'
 	 *	flattr      - One of 'yes', 'no'. Display Flattr column. Default: 'yes'
 	 *	              Links contributor name to the service if available. Default: 'none'
