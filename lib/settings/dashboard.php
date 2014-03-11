@@ -146,12 +146,7 @@ class Dashboard {
 	}
 
 	public static function duration_to_seconds( $timestring ) {
-		$time 		= strtotime($timestring);
-		$seconds    = date( "s", $time);
-		$minutes    = date( "i", $time);
-		$hours	    = date( "H", $time);
-
-		return $seconds + $minutes * 60 + $hours * 3600;
+		return \Podlove\NormalPlayTime\Parser::parse( $timestring, 's' );
 	}
 
 	public static function statistics() {

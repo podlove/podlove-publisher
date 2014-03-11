@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.2 =
 
 * Fix: division by zero bug in statistics dashboard
+* Fix: parse time in statistics dashboard correctly as normalplaytime
 
 = 1.10.1 =
 
