@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 60 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 61 );
 
 add_action( 'init', function () {
 	
@@ -591,6 +591,12 @@ function run_migrations_for_version( $version ) {
 		case 60:
 			\Podlove\Modules\Base::activate('oembed');
 			\Podlove\Modules\Base::activate('feed_validation');
+		break;
+		case 61:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `publication_date`',
+				Model\Episode::table_name()
+			) );
 		break;
 	}
 

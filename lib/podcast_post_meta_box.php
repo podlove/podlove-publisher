@@ -133,15 +133,6 @@ class Podcast_Post_Meta_Box {
 					));
 				}
 
-				if ( \Podlove\get_setting( 'metadata', 'enable_episode_publication_date' ) ) {
-					$wrapper->string( 'publication_date', array(
-						'label'       => __( 'Publication Date', 'podlove' ),
-						'description' => '',
-						'html'        => array( 'class' => 'regular-text' )
-					));
-				}
-
-
 				if ( \Podlove\get_setting( 'metadata', 'enable_episode_explicit' ) ) {
 					$wrapper->select( 'explicit', array(
 						'label'       => __( 'Explicit Content?', 'podlove' ),
