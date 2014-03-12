@@ -97,6 +97,21 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Post recording date
+	 *
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate('Y-m-d') }}`
+	 *
+	 * @accessor
+	 */
+	public function recordingDate($format = '') {
+
+		if ($format === '')
+			$format = get_option('date_format') . ' ' . get_option('time_format');
+
+		return mysql2date($format, $this->episode->record_date);
+	}
+
+	/**
 	 * Explicit status
 	 *
 	 * "yes", "no" or "clean"
