@@ -144,8 +144,8 @@ function episode_downloads_shortcode( $options ) {
 			);
 		}
 		$html.= 	'</select>';
-		$html.= 	'<button class="primary">Download</button>';
-		$html.= 	'<button class="secondary">Show URL</button>';
+		$html.= 	'<p><button class="primary">Download</button>';
+		$html.= 	'<button class="secondary">Show URL</button></p>';
 		// $html.= 	'<a href="#">Show URL</a>';
 		$html.= '</div>';
 		$html.= '</form>';
