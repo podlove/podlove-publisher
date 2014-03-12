@@ -61,7 +61,7 @@ function get_setting( $namespace, $name ) {
 			'ssl_verify_peer' => 'on'
 		),
 		'metadata' => array(
-			'enable_episode_record_date' => 0,
+			'enable_episode_recording_date' => 0,
 			'enable_episode_explicit' => 0,
 			'enable_episode_license' => 0
 		),

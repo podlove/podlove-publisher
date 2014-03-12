@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 61 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 62 );
 
 add_action( 'init', function () {
 	
@@ -597,6 +597,27 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` DROP COLUMN `publication_date`',
 				Model\Episode::table_name()
 			) );
+		break;
+		case 62:
+			// rename column
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` CHANGE COLUMN `record_date` `recording_date` DATETIME',
+				Model\Episode::table_name()
+			) );
+
+			// update settings
+			$meta = get_option( 'podlove_metadata' );
+
+			if (isset($meta['enable_episode_publication_date'])) {
+				unset($meta['enable_episode_publication_date']);
+			}
+
+			if (isset($meta['enable_episode_record_date'])) {
+				$meta['enable_episode_recording_date'] = $meta['enable_episode_record_date'];
+				unset($meta['enable_episode_record_date']);
+			}
+
+			update_option('podlove_metadata', $meta);
 		break;
 	}
 

@@ -108,7 +108,7 @@ class Episode extends Wrapper {
 		if ($format === '')
 			$format = get_option('date_format') . ' ' . get_option('time_format');
 
-		return mysql2date($format, $this->episode->record_date);
+		return mysql2date($format, $this->episode->recording_date);
 	}
 
 	/**
