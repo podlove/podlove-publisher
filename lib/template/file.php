@@ -26,6 +26,15 @@ class File extends Wrapper {
 	// /////////
 
 	/**
+	 * File id
+	 * 
+	 * @accessor
+	 */
+	public function id() {
+		return $this->file->id;
+	}
+
+	/**
 	 * Episode related to this file
 	 *
 	 * @see  episode
