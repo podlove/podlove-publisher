@@ -85,7 +85,6 @@ class Feed_Validation extends \Podlove\Modules\Base {
 						$feed_validation = get_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
 						if ( false === $feed_validation ) {
 							$feed_validation = $feed->getValidationIcon();
-							echo $feed_id;
 							set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
 										  $feed_validation,
 										  3600*24 );
