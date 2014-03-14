@@ -636,7 +636,7 @@ class Contributors extends \Podlove\Modules\Base {
 					}
 
 					function contributor_dropdown_handler() {
-						$('select.podlove-contributor-dropdown').change(function() {
+						$('table').on('change', 'select.podlove-contributor-dropdown', function() {
 							contributor = fetch_contributor(this.value);
 							row = $(this).parent().parent();
 
@@ -663,6 +663,8 @@ class Contributors extends \Podlove\Modules\Base {
 
 					$(document).ready(function() {
 						var i = 0;
+
+						contributor_dropdown_handler();
 
 						$("#contributors-form table").podloveDataTable({
 							rowTemplate: "#contributor-row-template",
@@ -692,7 +694,6 @@ class Contributors extends \Podlove\Modules\Base {
 								// Update Chosen before we focus on the new contributor
 								update_chosen();
 								var new_row_id = row.find('select.podlove-contributor-dropdown').last().attr('id');	
-								contributor_dropdown_handler();
 								
 								// Focus new contributor
 								$("#" + new_row_id + "_chzn").find("a").focus();
@@ -719,8 +720,6 @@ class Contributors extends \Podlove\Modules\Base {
 									action: ajax_action,
 									object_id: object_id
 								};
-
-								console.log("delete", data);
 
 								$.ajax({
 									url: ajaxurl,

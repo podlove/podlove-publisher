@@ -94,6 +94,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: parse time in statistics dashboard correctly as normalplaytime
 * Fix: add missing template accessor `{{ episode.recordingDate }}`
 * Remove separate "publication date" field in episodes. Instead, use the episode post publication date maintained by WordPress. It can be accessed via `{{ episode.publicationDate }}`
+* Fix: missing contributor-edit-icon on last entries
 
 = 1.10.1 =
 
