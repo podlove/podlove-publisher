@@ -193,7 +193,7 @@ class Social extends \Podlove\Modules\Base {
 					'type'			=> 'social',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
-					'url_scheme'	=> 'https://%account-placeholder%.tumblr.com/'
+					'url_scheme'	=> 'http://%account-placeholder%.tumblr.com/'
 				),
 			array(
 					'title' 		=> 'Twitter',
