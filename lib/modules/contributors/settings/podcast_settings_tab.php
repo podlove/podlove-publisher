@@ -61,7 +61,7 @@ class PodcastSettingsTab extends Tab {
 		// map indices to IDs
 		$map = array();
 		foreach ($contributions as $c) {
-			$map[$c->contributor_id] = $c;
+			$map[$c->id] = $c;
 		}
 
 		\Podlove\Modules\Contributors\Contributors::contributors_form_table($map, 'podlove_podcast[contributor]');

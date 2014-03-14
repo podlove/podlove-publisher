@@ -399,7 +399,7 @@ class Contributors extends \Podlove\Modules\Base {
 				// map indices to IDs
 				$map = array();
 				foreach ($contributions as $c) {
-					$map[$c->contributor_id] = $c;
+					$map[$c->id] = $c;
 				}
 
 				echo '</table>';
