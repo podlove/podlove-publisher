@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.3 =
+
+* Fix: all default contributors appear in new episodes again
+
 = 1.10.2 =
 
 * Feature: add template filter `formatBytes` to format an integer as kilobytes, megabytes etc. Example: `{{ file.size|formatBytes }}`
