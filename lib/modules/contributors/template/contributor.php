@@ -124,19 +124,8 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function avatar($size = 50) {
-		return $this->contributor->getAvatar($size);
-	}
-
-	/**
-	 * Avatar image URL
-	 *
-	 * Dimensions default to 50x50px.
-	 * Change it via parameter: `contributor.avatarUrl(32)`
-	 * 
-	 * @accessor
-	 */
-	public function avatarUrl($size = 50) {
-		return $this->contributor->getAvatarUrl($size);
+		// return $this->contributor->getAvatar($size);
+		return new Avatar($this->contributor, $size);
 	}
 
 	/**
