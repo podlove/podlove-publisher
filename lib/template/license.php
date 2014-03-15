@@ -25,6 +25,14 @@ class License extends Wrapper {
 	// Accessors
 	// /////////
 
+
+	/**
+	 * Alias for `html` accessor
+	 */
+	public function __toString() {
+		return $this->html();
+	}
+
 	/**
 	 * Name
 	 *
