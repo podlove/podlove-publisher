@@ -4,7 +4,7 @@ namespace Podlove\Modules\Contributors\Settings;
 use \Podlove\Settings\Podcast\Tab;
 use \Podlove\Modules\Contributors\Model\ShowContribution;
 
-class PodcastSettingsTab extends Tab {
+class PodcastContributorsSettingsTab extends Tab {
 
 	public function init() {
 		add_action( $this->page_hook, array( $this, 'register_page' ) );

@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 63 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 64 );
 
 add_action( 'init', function () {
 	
@@ -624,6 +624,26 @@ function run_migrations_for_version( $version ) {
 				$tumblr_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'Tumblr' );
 				$tumblr_service->url_scheme = 'http://%account-placeholder%.tumblr.com/';
 				$tumblr_service->save();
+			}
+		break;
+		case 64:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$flattr_service = \Podlove\Modules\Social\Model\Service::find_one_by_where( "`title` = 'Flattr' AND `type` = 'donation'" );
+				$contributor_flattr_donations_accounts = \Podlove\Modules\Social\Model\ContributorService::find_all_by_property( 'service_id', $flattr_service->id );
+
+				foreach ( $contributor_flattr_donations_accounts as $contributor_flattr_donations_account ) {
+					$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $contributor_flattr_donations_account->contributor_id );
+					
+					if( is_null( $contributor->flattr ) ) {
+						$contributor->flattr = $contributor_flattr_donations_account->value;
+						$contributor->save();
+					}
+
+					$contributor_flattr_donations_account->delete();
+
+				}
+
+				$flattr_service->delete();
 			}
 		break;
 	}

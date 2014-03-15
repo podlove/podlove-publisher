@@ -527,8 +527,7 @@ class Social extends \Podlove\Modules\Base {
 
 		    // insert contributors at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("social" => __('Social', 'podlove'),
-		           		 "flattr" => __('Flattr', 'podlove')) +
+		           array("social" => __('Social', 'podlove')) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
 		    return $columns;
