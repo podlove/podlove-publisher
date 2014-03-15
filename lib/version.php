@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 62 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 63 );
 
 add_action( 'init', function () {
 	
@@ -618,6 +618,13 @@ function run_migrations_for_version( $version ) {
 			}
 
 			update_option('podlove_metadata', $meta);
+		break;
+		case 63:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$tumblr_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'Tumblr' );
+				$tumblr_service->url_scheme = 'http://%account-placeholder%.tumblr.com/';
+				$tumblr_service->save();
+			}
 		break;
 	}
 
