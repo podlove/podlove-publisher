@@ -132,15 +132,16 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Duration
+	 * Duration Object
 	 *
-	 * Use `duration("full")` to include milliseconds.
+	 * Use `duration` to display formatted hours, minutes and seconds.
+	 * Alternatively, use the duration accessors for custom rendering.
 	 *
-	 * @todo  support custom formatstrings
+	 * @see duration
 	 * @accessor
 	 */
-	public function duration($format = 'HH:MM:SS') {
-		return $this->episode->get_duration($format);
+	public function duration() {
+		return new Duration($this->episode);
 	}
 
 	/**

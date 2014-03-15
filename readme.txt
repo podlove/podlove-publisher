@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * For consistency `{{ contributor.avatar }}` is now an object with accessors `{{ avatar.html }}` and `{{ avatar.url }}`. For ease of use, `{{ contributor.avatar }}` is an alias for `{{ contributor.avatar.html }}`.
 * `{{ episode.license }}` and `{{ podcast.license }}` are aliases for `{{ episode.license.html }}` and `{{ podcast.license.html }}` now.
+* `{{ episode.duration }}` has been turned into an object to enable custom time renderings. The duration object has the following accessors: hours, minutes, seconds, milliseconds, time, accurateTime and totalMilliseconds. For convenience, `{{ episode.duration }}` is an alias for `{{ episode.duration.time }}`
 
 **Other Changes**
 
