@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.3 =
 
 * Enhancement: Contributor shortcode defaults to `donations="yes"` to avoid confusion
+* Enhancement: `[podlove-episode-downloads]` now uses templates internally
 * Fix: all default contributors appear in new episodes again
 * Fix: change Tumblr URLs from https to http since Tumblr does not support them
 
