@@ -335,6 +335,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
         $this->post_to_alpha($data);
         $this->post_to_patter($data);
+
+        // Change Announcement text for broadcast
+
+        $data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
         $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
@@ -405,7 +409,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     private function get_episode_cover( $post_id ) {
     	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-    	$cover = $episode->get_cover_art_with_fallback();
+
+    	if( !empty( $_POST['_podlove_meta']['cover_art'] ) ) {
+    		$cover = $_POST['_podlove_meta']['cover_art'];
+    	} else {
+    		$cover = $episode->get_cover_art_with_fallback();
+    	}
+    	
     	$cover_info = getimagesize( $cover );
 
     	return array(
