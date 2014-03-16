@@ -260,6 +260,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$data['channel_id'] = $this->get_module_option('adn_patter_room');
 		$data['annotations'][] = $this->get_crosspost_annotation();
 		$data['annotations'][] = $this->get_invite_annotation();
+    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
 		$url = sprintf(
 			'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
@@ -277,7 +278,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     	$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
     	$data['annotations'][] = $this->get_broadcast_metadata( $_POST['post_title'] );
-    	$data['annotations'][] = $this->get_read_more_link(  get_permalink($_POST['post_ID']) );
+    	$data['annotations'][] = $this->get_read_more_link( get_permalink($_POST['post_ID']) );
+    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
     	$url = sprintf(
     		'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
@@ -286,7 +288,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	);
 
     	$this->send_data_to_adn($url, $data);
-
     }
 
     private function get_broadcast_metadata($subject) {
@@ -329,6 +330,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
         if ($this->get_module_option('adn_language_annotation') !== "")
         	$data['annotations'][] = $this->get_language_annotation();
+
+    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
         $this->post_to_alpha($data);
         $this->post_to_patter($data);
@@ -396,6 +399,26 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		"type" => "net.app.core.language",
     		"value" => array(
     			"language" => $this->get_module_option('adn_language_annotation')
+    		)
+    	);
+    }
+
+    private function get_episode_cover( $post_id ) {
+    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+    	$cover = $episode->get_cover_art_with_fallback();
+    	$cover_info = getimagesize( $cover );
+
+    	return array(
+    		"type" => "net.app.core.oembed",
+    		"value" => array(
+				"type" => "photo",
+				"version" => "1.0",
+				"width" => $cover_info[0],
+				"height" => $cover_info[1],
+				"url" => $cover,
+				"thumbnail_width" => $cover_info[0],
+				"thumbnail_height" => $cover_info[1],
+				"thumbnail_url" => $cover
     		)
     	);
     }
