@@ -75,7 +75,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			
 				$this->register_option( 'adn_patter_room_announcement', 'checkbox', array(
 					'label'       => __( 'Announcement in Patter room', 'podlove' ),
-					'description' => 'The Announcement text will be posted in the chosen Patter room, too.'
+					'description' => 'Post announcement to Patter room, too.'
 				) );
 
 				$this->register_option( 'adn_patter_room', 'select', array(
@@ -96,98 +96,97 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 					'options'	  => $this->get_broadcast_channels()
 				) );
+
+
+				$this->register_option( 'adn_post_delay', 'string', array(
+					'label'       => __( 'Post delay', 'podlove' ),
+					'description' => 'The new Episode will be announced with a delay of HH:MM:SS.',
+					'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00:00' )
+				) );
+
+				$description = '';
+				if ( $this->get_module_option('adn_poster_announcement_text') == "" ) {			
+					$description = '<i class="podlove-icon-remove"></i>'
+					             . __( 'You need to set a text to announce new episodes.', 'podlove' );
+				}
+
+				$description .= __( 'App.net allows 256 characters per post. Try to keep the announcement text short. Your episode titles will need more space than the placeholders.', 'podlove' );
+
+				$description .= '
+					' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
+					<code title="' . __( 'The title of your podcast', 'podlove' ) . '">{podcastTitle}</code>
+					<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
+					<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
+					<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
+					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';		
+
+				$this->register_option( 'adn_poster_announcement_text', 'text', array(
+					'label'       => __( 'Announcement text', 'podlove' ),
+					'description' => $description,
+					'html'        => array(
+						'cols' => '50',
+						'rows' => '4',
+						'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' )
+					)
+				) );
 				
-			}
-			
-			$this->register_option( 'adn_post_delay', 'string', array(
-				'label'       => __( 'Post delay', 'podlove' ),
-				'description' => 'The new Episode will be announced with a delay of HH:MM:SS.',
-				'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00:00' )
-			) );
+				$this->register_option( 'adn_preview', 'callback', array(
+					'label' => __( 'Announcement preview', 'podlove' ),
+					'callback' => function() use ( $user, $module_url ) {
 
-			$description = '';
-			if ( $this->get_module_option('adn_poster_announcement_text') == "" ) {			
-				$description = '<i class="podlove-icon-remove"></i>'
-				             . __( 'You need to set a text to announce new episodes.', 'podlove' );
-			}
+						if ( ! $user )
+							return;
 
-			$description .= __( 'App.net allows 256 characters per post. Try to keep the announcement text short. Your episode titles will need more space than the placeholders.', 'podlove' );
-
-			$description .= '
-				' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
-				<code title="' . __( 'The title of your podcast', 'podlove' ) . '">{podcastTitle}</code>
-				<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
-				<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
-				<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
-				<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';		
-
-			$this->register_option( 'adn_poster_announcement_text', 'text', array(
-				'label'       => __( 'Announcement text', 'podlove' ),
-				'description' => $description,
-				'html'        => array(
-					'cols' => '50',
-					'rows' => '4',
-					'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' )
-				)
-			) );
-			
-
-			$this->register_option( 'adn_preview', 'callback', array(
-				'label' => __( 'Announcement preview', 'podlove' ),
-				'callback' => function() use ( $user, $module_url ) {
-
-					if ( ! $user )
-						return;
-
-					$podcast = Model\Podcast::get_instance();
-					if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
-						$example_data = array(
-							'episode'      => get_the_title( $episode->post_id ),
-							'episode-link' => get_permalink( $episode->post_id ),
-							'subtitle'     => $episode->subtitle
-						);
-					} else {
-						$example_data = array(
-							'episode'      => 'My Example Episode',
-							'episode-link' => 'http://www.example.com/episode/001',
-							'subtitle'     => 'My Example Subtitle'
-						);
-					}
-					?>
-					<div id="podlove_adn_post_preview"
-							data-podcast="<?php echo $podcast->title ?>"
-							data-episode="<?php echo $example_data['episode'] ?>"
-							data-episode-link="<?php echo $example_data['episode-link'] ?>"
-							data-episode-subtitle="<?php echo $example_data['subtitle'] ?>">
-						<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
-						<div class="adn content">
-							<div class="adn username"><?php echo $user->username ?></div>
-							<div class="adn body">Lorem ipsum dolor ...</div>
-					
-							<div class="adn footer">
-								<ul>
-									<li>
-										<i class="podlove-icon-time"></i> now
-									</li>
-									<li>
-										<i class="podlove-icon-reply"></i> Reply
-									</li>
-									<li>
-										<i class="podlove-icon-share"></i> via Podlove Publisher
-									</li>
-								</ul>
+						$podcast = Model\Podcast::get_instance();
+						if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
+							$example_data = array(
+								'episode'      => get_the_title( $episode->post_id ),
+								'episode-link' => get_permalink( $episode->post_id ),
+								'subtitle'     => $episode->subtitle
+							);
+						} else {
+							$example_data = array(
+								'episode'      => 'My Example Episode',
+								'episode-link' => 'http://www.example.com/episode/001',
+								'subtitle'     => 'My Example Subtitle'
+							);
+						}
+						?>
+						<div id="podlove_adn_post_preview"
+								data-podcast="<?php echo $podcast->title ?>"
+								data-episode="<?php echo $example_data['episode'] ?>"
+								data-episode-link="<?php echo $example_data['episode-link'] ?>"
+								data-episode-subtitle="<?php echo $example_data['subtitle'] ?>">
+							<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
+							<div class="adn content">
+								<div class="adn username"><?php echo $user->username ?></div>
+								<div class="adn body">Lorem ipsum dolor ...</div>
+						
+								<div class="adn footer">
+									<ul>
+										<li>
+											<i class="podlove-icon-time"></i> now
+										</li>
+										<li>
+											<i class="podlove-icon-reply"></i> Reply
+										</li>
+										<li>
+											<i class="podlove-icon-share"></i> via Podlove Publisher
+										</li>
+									</ul>
+								</div>
 							</div>
+
+							<div style="clear: both"></div>
 						</div>
 
-						<div style="clear: both"></div>
-					</div>
-
-					<script type="text/javascript" src="<?php echo $module_url ?>/adn.js"></script>
-					<link rel="stylesheet" type="text/css" href="<?php echo $module_url ?>/adn.css" />
-					<?php
-				}
-			) );
-
+						<script type="text/javascript" src="<?php echo $module_url ?>/adn.js"></script>
+						<link rel="stylesheet" type="text/css" href="<?php echo $module_url ?>/adn.css" />
+						<?php
+					}
+				) );
+				
+			}
     }
 
     /**
