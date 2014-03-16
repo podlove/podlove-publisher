@@ -86,7 +86,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 				$this->register_option( 'adn_broadcast', 'checkbox', array(
 					'label'       => __( 'Broadcast', 'podlove' ),
-					'description' => 'Enables functionality for App.net Broadcasts.'
+					'description' => 'Send announcement via App.net Broadcast Channel.'
 				) );
 
 				$this->register_option( 'adn_broadcast_channel', 'select', array(
