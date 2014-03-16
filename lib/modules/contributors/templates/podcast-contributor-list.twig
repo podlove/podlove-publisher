@@ -11,7 +11,7 @@
 			{% if contributor.visible %}
 				<tr>
 					<td rowspan="2" class="avatar-cell" width="60">
-						{{ contributor.avatar }}
+						{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}
 					</td>
 					<td class="social-cell">
 						<strong class="contributor-name">{{ contributor.name }}</strong>

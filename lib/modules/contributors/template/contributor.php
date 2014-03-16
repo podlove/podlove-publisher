@@ -124,7 +124,6 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function avatar($size = 50) {
-		// return $this->contributor->getAvatar($size);
 		return new Avatar($this->contributor, $size);
 	}
 

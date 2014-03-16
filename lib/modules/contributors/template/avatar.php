@@ -13,32 +13,18 @@ use Podlove\Template\Wrapper;
 class Avatar extends Wrapper {
 
 	private $contributor;
-	private $size;
 	
-	public function __construct($contributor, $size = 50) {
+	public function __construct($contributor) {
 		$this->contributor = $contributor;
-		$this->size = $size;
 	}
 
 	protected function getExtraFilterArgs() {
-		return array($this->contributor, $this->size);
+		return array($this->contributor);
 	}
 
 	// /////////
 	// Accessors
 	// /////////
-
-	/**
-	 * Avatar image HTML
-	 *
-	 * Dimensions default to 50x50px.
-	 * Change it via parameter: `avatar.html(32)`
-	 * 
-	 * @accessor
-	 */
-	public function html($size = null) {
-		return $this->contributor->getAvatar(isset($size) && $size > 0 ? $size : $this->size);
-	}
 
 	/**
 	 * Avatar image URL
@@ -48,8 +34,8 @@ class Avatar extends Wrapper {
 	 * 
 	 * @accessor
 	 */
-	public function url($size = null) {
-		return $this->contributor->getAvatarUrl(isset($size) && $size > 0 ? $size : $this->size);
+	public function url($size = 50) {
+		return $this->contributor->getAvatarUrl($size);
 	}
 
 }
