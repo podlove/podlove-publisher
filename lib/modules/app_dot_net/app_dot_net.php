@@ -74,12 +74,11 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 			
 				$this->register_option( 'adn_patter_room_announcement', 'checkbox', array(
-					'label'       => __( 'Announcement in Patter room', 'podlove' ),
+					'label'       => __( 'Patter', 'podlove' ),
 					'description' => 'Post announcement to Patter room, too.'
 				) );
 
 				$this->register_option( 'adn_patter_room', 'select', array(
-					'label'       => __( 'Patter room', 'podlove' ),
 					'description' => 'From the list of subscribed <a href="http://patter-app.net/faq.html" target="_blank">Patter rooms</a>, choose the one related to your Podcast.',
 					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 					'options'	  => $this->get_patter_rooms()
@@ -91,7 +90,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_broadcast_channel', 'select', array(
-					'label'       => __( 'Broadcast channel', 'podlove' ),
 					'description' => 'From the list of your Broadcast channels, choose the one related to your Podcast.',
 					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 					'options'	  => $this->get_broadcast_channels()
