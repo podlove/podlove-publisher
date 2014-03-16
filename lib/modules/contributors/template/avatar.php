@@ -29,13 +29,6 @@ class Avatar extends Wrapper {
 	// /////////
 
 	/**
-	 * Alias for `html` accessor
-	 */
-	public function __toString() {
-		return $this->html($this->size);
-	}
-
-	/**
 	 * Avatar image HTML
 	 *
 	 * Dimensions default to 50x50px.

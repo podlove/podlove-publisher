@@ -23,13 +23,6 @@ class Duration extends Wrapper {
 	// /////////
 
 	/**
-	 * Alias for `time` accessor
-	 */
-	public function __toString() {
-		return $this->time();
-	}
-
-	/**
 	 * Hours
 	 *
 	 * 0,1,2,…
