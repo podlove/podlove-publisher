@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 63 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 64 );
 
 add_action( 'init', function () {
 	
@@ -624,6 +624,50 @@ function run_migrations_for_version( $version ) {
 				$tumblr_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'Tumblr' );
 				$tumblr_service->url_scheme = 'http://%account-placeholder%.tumblr.com/';
 				$tumblr_service->save();
+			}
+		break;
+		case 64:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$services = array(
+					array(
+							'title' 		=> '500px',
+							'type'			=> 'social',
+							'description'	=> '500px Account',
+							'logo'			=> '500px-128.png',
+							'url_scheme'	=> 'https://500px.com/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'Last.fm',
+							'type'			=> 'social',
+							'description'	=> 'Last.fm Account',
+							'logo'			=> 'lastfm-128.png',
+							'url_scheme'	=> 'https://www.lastfm.de/user/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'OpenStreetMap',
+							'type'			=> 'social',
+							'description'	=> 'OpenStreetMap Account',
+							'logo'			=> 'openstreetmap-128.png',
+							'url_scheme'	=> 'https://www.openstreetmap.org/user/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'Soup',
+							'type'			=> 'social',
+							'description'	=> 'Soup Account',
+							'logo'			=> 'soup-128.png',
+							'url_scheme'	=> 'http://%account-placeholder%.soup.io'
+						)
+				);
+
+				foreach ($services as $service_key => $service) {
+					$c = new \Podlove\Modules\Social\Model\Service;
+					$c->title = $service['title'];
+					$c->type = $service['type'];
+					$c->description = $service['description'];
+					$c->logo = $service['logo'];
+					$c->url_scheme = $service['url_scheme'];
+					$c->save();
+				}
 			}
 		break;
 	}
