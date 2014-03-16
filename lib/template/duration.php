@@ -67,32 +67,6 @@ class Duration extends Wrapper {
 	}
 
 	/**
-	 * Time (accurate to the second, no milliseconds)
-	 *
-	 * Hours, minutes and seconds contain a leading zero.
-	 *
-	 * Example: 03:20:03
-	 * 
-	 * @accessor
-	 */
-	public function time() {
-		return $this->episode->get_duration('HH:MM:SS');
-	}
-
-	/**
-	 * Time, including milliseconds
-	 *
-	 * Hours, minutes, seconds and milliseconds contain leading zeroes.
-	 *
-	 * Example: 03:20:03.004
-	 * 
-	 * @accessor
-	 */
-	public function accurateTime() {
-		return $this->episode->get_duration('full');
-	}
-
-	/**
 	 * The total duration in milliseconds
 	 *
 	 * 0,1,2,…
