@@ -23,7 +23,8 @@
                 </a>
             </td>
             <td class="duration">
-                {{ episode.duration }}
+                {% set duration = episode.duration %}
+                {{ duration.hours }}:{{ duration.minutes|padLeft("0",2) }}:{{ duration.seconds|padLeft("0",2) }}
             </td>
         </tr>
     {% endfor %}
