@@ -98,8 +98,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 				$this->register_option( 'adn_post_delay', 'string', array(
 					'label'       => __( 'Post delay', 'podlove' ),
-					'description' => 'The new Episode will be announced with a delay of HH:MM:SS.',
-					'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00:00' )
+					'description' => 'The new Episode will be announced with a delay of HH:MM.',
+					'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00' )
 				) );
 
 				$description = '';
@@ -443,9 +443,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	    $post_id = $_POST['post_ID'];
     	$post_title = $_POST['post_title'];
     
-    	if($this->get_module_option('adn_post_delay') !== "" AND $this->get_module_option('adn_post_delay') !== "00:00:00") {
+    	if($this->get_module_option('adn_post_delay') !== "" AND $this->get_module_option('adn_post_delay') !== "00:00") {
     		$delayed_time = strtotime($this->get_module_option('adn_post_delay'));
-    		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60 + date("s", $delayed_time);
+    		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 			wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array($post_id, $post_title));
 		} else {
 			$this->post_to_adn($post_id, $post_title);
