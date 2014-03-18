@@ -67,8 +67,8 @@ class License extends Wrapper {
 	 * @accessor
 	 */
 	public function valid() {
-		return strlen($this->url()) > 0
-		    && strlen($this->name()) > 0;
+		return $this->creativeCommons() && $this->license->hasCompleteCCData()
+		    || !$this->creativeCommons() && $this->license->hasCompleteOtherData();
 	}
 
 	/**

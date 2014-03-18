@@ -87,13 +87,13 @@ class License {
 		}
 	}
 
-	private function hasCompleteCCData() {
+	public function hasCompleteCCData() {
 		return $this->cc_license_jurisdiction != ""
 		    && $this->cc_allow_modifications  != ""
 		    && $this->cc_allow_commercial_use != "";
 	}
 
-	private function hasCompleteOtherData() {
+	public function hasCompleteOtherData() {
 		return $this->name != "" && $this->url != "";
 	}
 

@@ -13,13 +13,21 @@
 	{% endif %}
 {% endif %}
 
-{% if license.creativeCommons %}
-	<div class="podlove_cc_license">
-		<img src="{{ license.imageUrl }}" alt="License" />
-		<p>
-			This work is licensed under a <a rel="license" href="{{ license.url }}">{{ license.name }}</a>
-		</p>
-	</div>
+{% if license.valid %}
+	{% if license.creativeCommons %}
+		<div class="podlove_cc_license">
+			<img src="{{ license.imageUrl }}" alt="License" />
+			<p>
+				This work is licensed under a <a rel="license" href="{{ license.url }}">{{ license.name }}</a>
+			</p>
+		</div>
+	{% else %}
+	    This work is licensed under the <a href="{{ license.url }}">{{ license.name }}</a> license.
+	{% endif %}
 {% else %}
-    This work is licensed under the <a href="{{ license.url }}">{{ license.name }}</a> license.
+    <div class="podlove_license">
+		<p style="color: red;">
+			This work is (not yet) licensed, as no license was chosen.
+		</p>
+    </div>
 {% endif %}
