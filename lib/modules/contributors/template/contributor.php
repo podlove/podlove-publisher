@@ -120,6 +120,11 @@ class Contributor extends Wrapper {
 	 *
 	 * Dimensions default to 50x50px.
 	 * Change it via parameter: `contributor.avatar(32)`
+	 *
+	 * To render an HTML image tag:
+	 * `{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}`
+	 * or
+	 * `{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 150} only %}`
 	 * 
 	 * @accessor
 	 */
