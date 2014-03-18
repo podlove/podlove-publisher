@@ -222,6 +222,11 @@ class Episode extends Wrapper {
 
 	/**
 	 * License
+	 *
+	 * To render an HTML license, use `{% include '@core/license.twig' %}` for
+	 * a license with fallback to the podcast license or 
+	 * `{% include '@core/license.twig' with {'license': episode.license} %}`
+	 * for the episode license only.
 	 * 
 	 * @see  license
 	 * @accessor
