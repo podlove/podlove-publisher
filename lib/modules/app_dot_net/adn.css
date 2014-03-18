@@ -58,3 +58,9 @@
 .chzn-container {
 	width: 150px !important;
 }
+
+#podlove_module_app_dot_net_adn_post_delay_hours, 
+#podlove_module_app_dot_net_adn_post_delay_minutes {
+	width: 40px;
+	text-align: center;
+}

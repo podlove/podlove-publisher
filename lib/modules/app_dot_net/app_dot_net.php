@@ -95,11 +95,19 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					'options'	  => $this->get_broadcast_channels()
 				) );
 
+				$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
+				$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
 
-				$this->register_option( 'adn_post_delay', 'string', array(
-					'label'       => __( 'Post delay', 'podlove' ),
-					'description' => 'The new Episode will be announced with a delay of HH:MM.',
-					'html'        => array( 'class' => 'regular-text', 'placeholder' => '00:00' )
+				$this->register_option( 'adn_post_delay', 'callback', array(
+					'label' => __( 'Post delay', 'podlove' ),
+					'callback' => function() use ( $adn_post_delay_hours, $adn_post_delay_minutes ) {
+						?>
+							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_hours]" id="podlove_module_app_dot_net_adn_post_delay_hours" value="<?php echo( $adn_post_delay_hours ? $adn_post_delay_hours : '' ); ?>" class="regular-text" placeholder="00" >
+								<label for="podlove_module_app_dot_net_adn_post_delay_hours">Hours</label>
+							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_minutes]" id="podlove_module_app_dot_net_adn_post_delay_minutes" value="<?php echo( $adn_post_delay_minutes ? $adn_post_delay_minutes : '' ); ?>" class="regular-text" placeholder="00" >
+								<label for="podlove_module_app_dot_net_adn_post_delay_minutes">Minutes</label>				
+						<?php
+					}
 				) );
 
 				$description = '';
@@ -442,9 +450,12 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	public function post_to_adn_handler($postid) {
 	    $post_id = $_POST['post_ID'];
     	$post_title = $_POST['post_title'];
+
+    	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
+    	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
     
     	if($this->get_module_option('adn_post_delay') !== "" AND $this->get_module_option('adn_post_delay') !== "00:00") {
-    		$delayed_time = strtotime($this->get_module_option('adn_post_delay'));
+    		$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
     		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 			wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array($post_id, $post_title));
 		} else {
