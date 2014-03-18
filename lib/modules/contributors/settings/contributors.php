@@ -292,6 +292,14 @@ class Contributors {
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
+			$wrapper->subheader( __( 'Flattr', 'podlove' ) );
+			
+			$wrapper->string( 'flattr', array(
+				'label'       => __( 'Flattr Account', 'podlove' ),
+				'description' => 'The provided flattr account will be used to generate episode specific Flattr buttons.',
+				'html'        => array( 'class' => 'podlove-contributor-field' )
+			) );
+
 			do_action( 'podlove_contributors_form_end', $wrapper );
 
 		} );
