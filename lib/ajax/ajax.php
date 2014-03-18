@@ -13,8 +13,6 @@ class Ajax {
 
 		$actions = array(
 			'get-new-guid',
-			'feed-info',
-			'validate-feed',
 			'validate-file',
 			'validate-url',
 			'update-file',
@@ -61,42 +59,6 @@ class Ajax {
 
 		self::respond_with_json( array( 'guid' => $guid ) );
 	}
-
-	public function feed_info() {
-		$feed_id = $_REQUEST['feed_id'];
-		$redirect = ( $_REQUEST['redirect'] == '0' ? FALSE : TRUE );
-
-		$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
-
-		self::respond_with_json( $feed->getInformation( $redirect ) );
-	}
-
-	public function validate_feed() {
-		$feed_id = $_REQUEST['feed_id'];
-		$redirect = ( $_REQUEST['redirect'] == '0' ? FALSE : TRUE );
-	 
-	 	$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
-	 	// Delete feed source transient
-			$errors_and_warnings = $feed->getValidationErrorsandWarnings( $redirect );
-		// renew transients
-	 	set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
-											  $feed->getValidationIcon( $redirect ),
-											  3600*24 );
-		set_transient( 'podlove_dashboard_feed_information_' . $feed->id,
-											  $feed->getInformation( $redirect ),
-											  3600*24 );
-
-		if ( $redirect === TRUE ) {
-			 	set_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id, 
-													  $feed->getValidationIcon( $redirect ),
-													  3600*24 );
-				set_transient( 'podlove_dashboard_feed_r_information_' . $feed->id,
-													  $feed->getInformation( $redirect ),
-													  3600*24 );
-		}
-	 	
-	 	self::respond_with_json( array( 'validation_icon' => $feed->getValidationIcon( $redirect ) ) );
-	 }
 
 	public function validate_file() {
 		$file_id = $_REQUEST['file_id'];
