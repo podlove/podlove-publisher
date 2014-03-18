@@ -102,6 +102,7 @@ __DEPRECATIONS/WARNINGS__
 
 * Enhancement: Contributor shortcode defaults to `donations="yes"` to avoid confusion
 * Enhancement: `[podlove-episode-downloads]` now uses templates internally
+* Enhancement: Added 500px, Last.fm, OpenStreetMap and Soup to Services
 * Fix: all default contributors appear in new episodes again
 * Fix: change Tumblr URLs from https to http since Tumblr does not support them
 
