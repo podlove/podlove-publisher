@@ -1,0 +1,10 @@
+<ul class="episode_download_list">
+	{% for file in episode.files %}
+	    {% set asset = file.asset %}
+	    {% if asset.downloadable %}
+			<li>
+				<a href="?download_media_file={{ file.id }}">{{ asset.title }}<span class="size">{{ file.size|formatBytes }}</span></a>
+			</li>
+	    {% endif %}
+	{% endfor %}
+</ul>

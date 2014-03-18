@@ -49,6 +49,13 @@ class Social extends \Podlove\Modules\Base {
 
 		$services = array(
 			array(
+					'title' 		=> '500px',
+					'type'			=> 'social',
+					'description'	=> '500px Account',
+					'logo'			=> '500px-128.png',
+					'url_scheme'	=> 'https://500px.com/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'App.net',
 					'type'			=> 'social',
 					'description'	=> 'App.net Account',
@@ -140,6 +147,20 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Last.fm',
+					'type'			=> 'social',
+					'description'	=> 'Last.fm Account',
+					'logo'			=> 'lastfm-128.png',
+					'url_scheme'	=> 'https://www.lastfm.de/user/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'OpenStreetMap',
+					'type'			=> 'social',
+					'description'	=> 'OpenStreetMap Account',
+					'logo'			=> 'openstreetmap-128.png',
+					'url_scheme'	=> 'https://www.openstreetmap.org/user/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Linkedin',
 					'type'			=> 'social',
 					'description'	=> 'Linkedin URL',
@@ -180,6 +201,13 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Soup',
+					'type'			=> 'social',
+					'description'	=> 'Soup Account',
+					'logo'			=> 'soup-128.png',
+					'url_scheme'	=> 'http://%account-placeholder%.soup.io'
 				),
 			array(
 			 		'title' 		=> 'Steam',
@@ -625,7 +653,7 @@ class Social extends \Podlove\Modules\Base {
 				<td class="podlove-service-column">
 					<select name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
-						<?php foreach ( \Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service ): ?>
+						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `type` = \'' . $type . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>

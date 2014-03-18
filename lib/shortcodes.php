@@ -90,70 +90,11 @@ function episode_downloads_shortcode( $options ) {
 	$defaults = array( 'style' => 'select' );
 	$attributes = shortcode_atts( $defaults, $options );
 
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	$media_files = $episode->media_files();
-	$downloads = array();
-
-	foreach ( $media_files as $media_file ) {
-
-		if ( ! $media_file->is_valid() )
-			continue;
-
-		$episode_asset = $media_file->episode_asset();
-		if ( ! $episode_asset->downloadable )
-			continue;
-
-
-		$file_type = $episode_asset->file_type();
-		
-		$download_link_url  = get_bloginfo( 'url' ) . '?download_media_file=' . $media_file->id;
-		$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
-
-		$downloads[] = array(
-			'url'  => $download_link_url,
-			'name' => $download_link_name,
-			'size' => \Podlove\format_bytes( $media_file->size, 0 ),
-			'file' => $media_file
-		);
-	}
-
 	if ( $attributes['style'] === 'buttons' ) {
-		$html = '<ul class="episode_download_list">';
-		foreach ( $downloads as $download ) {
-			$html .= '  <li>';
-			$html .= sprintf(
-				'<a href="%s">%s%s</a>',
-				apply_filters( 'podlove_download_link_url', $download['url'], $download['file'] ),
-				apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
-				'<span class="size">' . $download['size'] . '</span>'
-			);
-			$html .= '  </li>';
-		}
-		$html .= '</ul>';
+		return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/downloads-buttons.twig');
 	} else {
-		$html = '<form action="' . get_bloginfo( 'url' ) . '">';
-		$html.= '<div class="episode_downloads">';
-		$html.= 	'<select name="download_media_file">';
-		foreach ( $downloads as $download ) {
-			$html .= sprintf(
-				'<option value="%d" data-raw-url="%s">%s [%s]</option>',
-				$download['file']->id,
-				$download['file']->get_file_url(),
-				apply_filters( 'podlove_download_link_name', $download['name'], $download['file'] ),
-				$download['size']
-			);
-		}
-		$html.= 	'</select>';
-		$html.= 	'<button class="primary">Download</button>';
-		$html.= 	'<button class="secondary">Show URL</button>';
-		// $html.= 	'<a href="#">Show URL</a>';
-		$html.= '</div>';
-		$html.= '</form>';
+		return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/downloads-select.twig');
 	}
-
-	return apply_filters( 'podlove_downloads_before', '' )
-	     . $html
-	     . apply_filters( 'podlove_downloads_after', '' );
 }
 add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcode' );
 

@@ -87,7 +87,25 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.3 =
 
+**Changes to the Templating System**
+
+* New filter: `padLeft(padCharacter, padLength)` can be used to append a character to the left of the given string until a certain length is reached. Example: `{{ "4"|padLeft("0",2) }}` returns "04";
+* For consistency `{{ contributor.avatar }}` is now an object. To render an HTML image tag, use `{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}`.
+* `{{ episode.duration }}` has been turned into an object to enable custom time renderings. The duration object has the following accessors: hours, minutes, seconds, milliseconds and totalMilliseconds.
+
+__DEPRECATIONS/WARNINGS__
+
+* `{{ episode.duration }}` is not a valid accessor any more. The default templates are updated but if you have used it in a custom template, you must replace it. Example: `{{ episode.duration.hours }}:{{ episode.duration.minutes|padLeft("0",2) }}:{{ episode.duration.seconds|padLeft("0",2) }}`
+* `{{ episode.license.html }}` and `{{ podcast.license.html }}` are deprecated. Use `{% include '@core/license.twig' %}` for the previous behaviour of choosing the correct license based on context. If you want to be more specific, use `{% include '@core/license.twig' with {'license': episode.license} %}` or `{% include '@core/license.twig' with {'license': podcast.license} %}`.
+
+**Other Changes**
+
+* Enhancement: Contributor shortcode defaults to `donations="yes"` to avoid confusion
+* Enhancement: `[podlove-episode-downloads]` now uses templates internally
+* Enhancement: Added 500px, Last.fm, OpenStreetMap and Soup to Services
 * Fix: all default contributors appear in new episodes again
+* Fix: change Tumblr URLs from https to http since Tumblr does not support them
+* Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
 
 = 1.10.2 =
 

@@ -44,7 +44,15 @@ class TwigFilter {
 		    return \Podlove\format_bytes($string, 0);
 		});
 
+		$padLeftFilter = new \Twig_SimpleFilter('padLeft', function ($string, $padChar, $length) {
+		    while ( strlen($string) < $length ) {
+		    	$string = $padChar . $string;
+		    }
+		    return $string;
+		});
+
 		$twig->addFilter($formatBytesFilter);
+		$twig->addFilter($padLeftFilter);
 
 		$context = $vars;
 

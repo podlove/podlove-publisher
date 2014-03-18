@@ -22,7 +22,7 @@ class Shortcodes {
 		'roles'		=> 'no',
 		'group'		=> 'all',
 		'groups'	=> 'no',
-		'donations' => 'no',
+		'donations' => 'yes',
 		'flattr'    => 'yes',
 		'title'     => '',
 		'groupby'   => 'none'

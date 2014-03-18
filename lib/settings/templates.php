@@ -247,12 +247,17 @@ class Templates {
 				'description' => __( 'Have a look at the <a href="http://docs.podlove.org/publisher/shortcodes/" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
 				'default' => <<<EOT
-[podlove-web-player]
+{# display the web player #}
+{{ episode.player }}
+
+{# display the download section #}
 [podlove-episode-downloads]
 
-<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
+{# display the duration of the episode #}
+<span class="podlove-duration">Duration: {{ episode.duration.hours }}:{{ episode.duration.minutes|padLeft("0",2) }}:{{ episode.duration.seconds|padLeft("0",2) }}</span>
 
-[podlove-podcast-license]
+{# display the license #}
+{% include '@core/license.twig' %}
 EOT
 			) );
 

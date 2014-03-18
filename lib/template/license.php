@@ -53,8 +53,28 @@ class License extends Wrapper {
 	}
 
 	/**
+	 * Is this a creative commons license?
+	 * 
+	 * @accessor
+	 */
+	public function creativeCommons() {
+		return $this->license->isCreativeCommons();
+	}
+
+	/**
+	 * Is the license valid? Is all required data available?
+	 * 
+	 * @accessor
+	 */
+	public function valid() {
+		return $this->creativeCommons() && $this->license->hasCompleteCCData()
+		    || !$this->creativeCommons() && $this->license->hasCompleteOtherData();
+	}
+
+	/**
 	 * HTML
 	 *
+	 * @deprecated use `{% include '@core/license.twig' %}` instead
 	 * @accessor
 	 */
 	public function html() {
