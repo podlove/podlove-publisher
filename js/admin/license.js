@@ -122,10 +122,12 @@ var PODLOVE = PODLOVE || {};
 				$(".podlove-license-link").html( $(settings.license_name_field_id).val() );
 				$(".podlove-license-link").attr("href", $(this).val() );
 			}
+			$(".row_podlove_podcast_license_preview").show();
 		});
 
 		$(settings.license_name_field_id).on( 'change', function() {
 			$(".podlove-license-link").html( $(this).val() );
+			$(".row_podlove_podcast_license_preview").show();
 		});
 
 		$("#license_cc_allow_modifications, #license_cc_allow_commercial_use, #license_cc_license_jurisdiction").on( 'change', function() {
@@ -137,7 +139,10 @@ var PODLOVE = PODLOVE || {};
 		});
 
 		$(document).ready(function() {
-			podlove_populate_license_form( settings.license.modification, settings.license.commercial_use, settings.license.jurisdiction );
+			if( $(settings.license_name_field_id).val() !== '' || $(settings.license_url_field_id).val() !== '' )
+				podlove_populate_license_form( settings.license.modification, settings.license.commercial_use, settings.license.jurisdiction );
+			if( $(settings.license_name_field_id).val() == '' || $(settings.license_url_field_id).val() == '' )
+				$(".row_podlove_podcast_license_preview").hide();
 		});
 	}
 
