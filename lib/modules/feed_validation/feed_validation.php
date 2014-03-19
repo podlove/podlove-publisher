@@ -84,56 +84,45 @@ class Feed_Validation extends \Podlove\Modules\Base {
 				<?php
 					foreach ($feeds as $feed_key => $feed) {
 
-						$feed_request = get_transient( 'podlove_dashboard_feed_information_' . $feed->id );
-						if ( false === $feed_request ) {
-							$feed_request = \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id );
-							set_transient( 'podlove_dashboard_feed_information_' . $feed->id, 
-										  $feed_request,
-										  3600*24 );
-						}
-
+						$feed_request    = get_transient( 'podlove_dashboard_feed_information_' . $feed->id );
 						$feed_validation = get_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
-						if ( false === $feed_validation ) {
-							$feed_validation = \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id );
-							set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
-										  $feed_validation,
-										  3600*24 );
-						}							 
 
 						$source  = "<tr>\n";
 						$source .= "<td><a href='" . admin_url() . "admin.php?page=podlove_feeds_settings_handle&action=edit&feed=" . $feed->id . "'>" . $feed->name ."</a></td>";
 						$source .= "<td class='center'><a href='" . $feed->get_subscribe_url() . "'>" . $feed->slug ."</a></td>";
-						$source .= "<td class='center'>" . $feed_request['last_modification'] ."</td>";
-						$source .= "<td class='center'>" . $feed_request['size'] . "</td>";
-						$source .= "<td class='center'>" . $feed_request['latest_item'] ."</td>";
-						$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='0'>" . $feed_validation . "</td>";
+						if ($feed_request === false || $feed_validation === false) {
+							$source .= "<td class='center'></td>";
+							$source .= "<td class='center'></td>";
+							$source .= "<td class='center'></td>";
+							$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='0' data-needs-validation>" . \Podlove\Modules\FeedValidation\Model\FeedValidator::FEED_VALIDATION_INACTIVE . "</td>";
+						} else {
+							$source .= "<td class='center'>" . $feed_request['last_modification'] ."</td>";
+							$source .= "<td class='center'>" . $feed_request['size'] . "</td>";
+							$source .= "<td class='center'>" . $feed_request['latest_item'] ."</td>";
+							$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='0'>" . $feed_validation . "</td>";
+						}							 
 						$source .= "</tr>\n";
 
 						if ( $feed->redirect_http_status == '403' || $feed->redirect_http_status == '307' ) {
 
-							$feed_request_redirected = get_transient( 'podlove_dashboard_feed_r_information_' . $feed->id );
-							if ( false === $feed_request_redirected ) {
-								$feed_request_redirected = \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id, TRUE );
-								set_transient( 'podlove_dashboard_feed_r_information_' . $feed->id, 
-											  $feed_request_redirected,
-											  3600*24 );
-							}
-
+							$feed_request_redirected    = get_transient( 'podlove_dashboard_feed_r_information_' . $feed->id );
 							$feed_validation_redirected = get_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id );
-							if ( false === $feed_validation_redirected ) {
-								$feed_validation_redirected = \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id, TRUE );
-								set_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id, 
-											  $feed_validation_redirected,
-											  3600*24 );
-							}							 
 
 							$source .= "<tr>\n";
 							$source .= "<td></td>";
 							$source .= "<td class='center'><a href='" . $feed->redirect_url . "'>" . $feed->slug ."</a></td>";
-							$source .= "<td class='center'>" . $feed_request_redirected['last_modification'] ."</td>";
-							$source .= "<td class='center'>" . $feed_request_redirected['size'] . "</td>";
-							$source .= "<td class='center'>" . $feed_request_redirected['latest_item'] ."</td>";
-							$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='1'>" . $feed_validation_redirected . "</td>";
+							if ( false === $feed_request_redirected || $feed_validation_redirected === false ) {
+								$source .= "<td class='center'></td>";
+								$source .= "<td class='center'></td>";
+								$source .= "<td class='center'></td>";
+								$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='1' data-needs-validation>" . \Podlove\Modules\FeedValidation\Model\FeedValidator::FEED_VALIDATION_INACTIVE . "</td>";
+							} else {
+								$source .= "<td class='center'>" . $feed_request_redirected['last_modification'] ."</td>";
+								$source .= "<td class='center'>" . $feed_request_redirected['size'] . "</td>";
+								$source .= "<td class='center'>" . $feed_request_redirected['latest_item'] ."</td>";
+								$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='1'>" . $feed_validation_redirected . "</td>";
+
+							}						 
 							$source .= "</tr>\n";						
 
 						}

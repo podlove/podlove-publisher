@@ -10,7 +10,7 @@ var PODLOVE = PODLOVE || {};
 
 		function enable_validation() {
 
-			$("#dashboard_feed_info td[data-feed-id]").click(function() {
+			$("#dashboard_feed_info").on('click', 'td[data-feed-id]', function() {
 				var feed_id = $(this).data("feed-id");
 				var redirect = $(this).data("feed-redirect");
 
@@ -43,14 +43,12 @@ var PODLOVE = PODLOVE || {};
 				$("#dashboard_feed_info td[data-feed-id]").each(function() {
 					$(this).click();
 				});
-
-				return false;
 			});
 		}
 
 		function enable_information() {
 
-			$("#dashboard_feed_info td[data-feed-id]").click(function() {
+			$("#dashboard_feed_info").on('click', 'td[data-feed-id]', function() {
 				var feed_id = $(this).data("feed-id");
 				var redirect = $(this).data("feed-redirect");
 
@@ -85,9 +83,13 @@ var PODLOVE = PODLOVE || {};
 			});
 		}
 
-		// public
 		enable_validation();
 		enable_information();
+
+		// fetch missing data on page load
+		$("#dashboard_feed_info [data-needs-validation]").each(function() {
+			$(this).removeAttr('data-needs-validation').click();
+		});
 
 		return o;		
 	}
