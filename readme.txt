@@ -107,6 +107,7 @@ __DEPRECATIONS/WARNINGS__
 * Fix: all default contributors appear in new episodes again
 * Fix: change Tumblr URLs from https to http since Tumblr does not support them
 * Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
+* Fix: internal template warning when accessing empty contributor roles or groups
 
 = 1.10.2 =
 
