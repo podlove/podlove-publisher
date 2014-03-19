@@ -100,6 +100,7 @@ __DEPRECATIONS/WARNINGS__
 
 **Other Changes**
 
+* Feature: ADN Module supports broadcasts
 * Enhancement: Contributor shortcode defaults to `donations="yes"` to avoid confusion
 * Enhancement: `[podlove-episode-downloads]` now uses templates internally
 * Enhancement: Added 500px, Last.fm, OpenStreetMap and Soup to Services
