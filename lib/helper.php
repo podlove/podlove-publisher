@@ -239,6 +239,10 @@ function build_for( $object, $args, $callback ) {
 		<?php submit_button(); ?>
 	<?php endif ?>
 
+	<?php if ( isset($args['form_end']) && is_callable($args['form_end'])): ?>
+		<?php call_user_func( $args['form_end'] ); ?>
+	<?php endif; ?>
+
 	<?php if ( $print_form ): ?>
 		</form>
 	<?php endif ?>

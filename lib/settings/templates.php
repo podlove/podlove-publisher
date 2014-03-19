@@ -52,8 +52,12 @@ class Templates {
 			
 		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
 		$template->update_attributes( $_POST['podlove_template'] );
-		
-		$this->redirect( 'index', $template->id );
+
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $template->id );
+		} else {
+			$this->redirect( 'index', $template->id );
+		}
 	}
 	
 	/**
@@ -230,7 +234,15 @@ class Templates {
 			'hidden'  => array(
 				'template' => $template->id,
 				'action' => $action
-			)
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
 		);
 
 		\Podlove\Form\build_for( $template, $form_args, function ( $form ) {
