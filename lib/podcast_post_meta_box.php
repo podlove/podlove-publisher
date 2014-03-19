@@ -194,7 +194,7 @@ class Podcast_Post_Meta_Box {
 										foreach ( \Podlove\License\locales_cc() as $locale_key => $locale_description) {
 											echo "<option value='" . $locale_key . "' " . ( $locale_key == 'international' ? "selected='selected'" : '' ) . ">" . $locale_description . "</option>\n";
 										}
-									?>			
+									?>
 								</select>
 							</div>
 						</div>
@@ -226,7 +226,7 @@ class Podcast_Post_Meta_Box {
 
 			locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
 			versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
-			license: JSON.parse('<?php echo json_encode(\Podlove\Model\License::get_license_from_url($podcast->license_url)); ?>'),
+			license: JSON.parse('<?php echo json_encode(\Podlove\Model\License::get_license_from_url($episode->license_url)); ?>'),
 
 			license_name_field_id: '#_podlove_meta_license_name',
 			license_url_field_id: '#_podlove_meta_license_url'
