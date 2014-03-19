@@ -1,0 +1,48 @@
+{% set colspan = 2 %}
+{% if avatars == "yes"   %}{% set colspan = colspan + 1 %}{% endif %}
+{% if groups == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+{% if roles == "yes"     %}{% set colspan = colspan + 1 %}{% endif %}
+{% if donations == "yes" %}{% set colspan = colspan + 1 %}{% endif %}
+{% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+
+<table class="podlove-contributors-table">
+	{% if title %}
+		<thead>
+			<tr>
+				<th colspan="{{ colspan }}">{{ title }}</th>
+			</tr>
+		</thead>
+	{% endif %}
+	<tbody>
+		{% if groupby == "group" %}
+			{% for contributorGroup in episode.contributors({groupby: 'group', group: group, role: role}) %}
+				<tr>
+					<th colspan="{{ colspan }}" class="contributor-group">
+						{% if contributorGroup.group %}
+							{{ contributorGroup.group.title }}
+						{% else %}
+							&nbsp;
+						{% endif %}
+					</th>
+				</tr>
+				{% for contributor in contributorGroup.contributors %}
+					{% if contributor.visible %}
+						{% include '@contributors/_contributor-table-row.twig' %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		{% else %}
+		    {% for contributor in episode.contributors({group: group, role: role}) %}
+		    	{% if contributor.visible %}
+		    		{% include '@contributors/_contributor-table-row.twig' %}
+		    	{% endif %}
+		    {% endfor %}
+		{% endif %}
+	</tbody>
+</table>
+
+{% if flattr == "yes" %}
+	{% include '@contributors/_contributor-table-flattr.twig' %}
+{% endif %}
+
+{% include '@contributors/_contributor-table-css.twig' %}

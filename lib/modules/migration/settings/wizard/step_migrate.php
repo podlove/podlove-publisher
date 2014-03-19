@@ -56,7 +56,7 @@ class StepMigrate extends Step {
 			$template = new Model\Template();
 			$template->title = 'default';
 			$template->content = <<<EOT
-[podlove-web-player]
+{{ episode.player }}
 [podlove-episode-downloads]
 EOT;
 			$template->save();

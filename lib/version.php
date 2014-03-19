@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 56 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 65 );
 
 add_action( 'init', function () {
 	
@@ -565,6 +565,130 @@ function run_migrations_for_version( $version ) {
 					$new->role_id = $podcast_contributor->role_id;
 					$new->position = $podcast_contributor->positon;
 					$new->save();
+				}
+			}
+		break;
+		case 57:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `append_name_to_podcast_title` TINYINT(1) NULL AFTER `embed_content_encoded`',
+				\Podlove\Model\Feed::table_name()
+			) );
+		break;
+		case 58:
+			// if contributors module is active, activate social module
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				\Podlove\Modules\Base::activate('social');
+			}
+		break;
+		case 59:
+			if (\Podlove\Modules\Base::is_active('bitlove')) {
+				$wpdb->query( sprintf(
+					"ALTER TABLE `%s` ADD COLUMN `bitlove` TINYINT(1) DEFAULT '0'",
+					\Podlove\Model\Feed::table_name()
+				) );
+			}
+		break;
+		case 60:
+			\Podlove\Modules\Base::activate('oembed');
+			\Podlove\Modules\Base::activate('feed_validation');
+		break;
+		case 61:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `publication_date`',
+				Model\Episode::table_name()
+			) );
+		break;
+		case 62:
+			// rename column
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` CHANGE COLUMN `record_date` `recording_date` DATETIME',
+				Model\Episode::table_name()
+			) );
+
+			// update settings
+			$meta = get_option( 'podlove_metadata' );
+
+			if (isset($meta['enable_episode_publication_date'])) {
+				unset($meta['enable_episode_publication_date']);
+			}
+
+			if (isset($meta['enable_episode_record_date'])) {
+				$meta['enable_episode_recording_date'] = $meta['enable_episode_record_date'];
+				unset($meta['enable_episode_record_date']);
+			}
+
+			update_option('podlove_metadata', $meta);
+		break;
+		case 63:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$tumblr_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'Tumblr' );
+				$tumblr_service->url_scheme = 'http://%account-placeholder%.tumblr.com/';
+				$tumblr_service->save();
+			}
+		break;
+		case 64:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$services = array(
+					array(
+							'title' 		=> '500px',
+							'type'			=> 'social',
+							'description'	=> '500px Account',
+							'logo'			=> '500px-128.png',
+							'url_scheme'	=> 'https://500px.com/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'Last.fm',
+							'type'			=> 'social',
+							'description'	=> 'Last.fm Account',
+							'logo'			=> 'lastfm-128.png',
+							'url_scheme'	=> 'https://www.lastfm.de/user/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'OpenStreetMap',
+							'type'			=> 'social',
+							'description'	=> 'OpenStreetMap Account',
+							'logo'			=> 'openstreetmap-128.png',
+							'url_scheme'	=> 'https://www.openstreetmap.org/user/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'Soup',
+							'type'			=> 'social',
+							'description'	=> 'Soup Account',
+							'logo'			=> 'soup-128.png',
+							'url_scheme'	=> 'http://%account-placeholder%.soup.io'
+						)
+				);
+
+				foreach ($services as $service_key => $service) {
+					$c = new \Podlove\Modules\Social\Model\Service;
+					$c->title = $service['title'];
+					$c->type = $service['type'];
+					$c->description = $service['description'];
+					$c->logo = $service['logo'];
+					$c->url_scheme = $service['url_scheme'];
+					$c->save();
+				}
+			}
+		break;
+		case 65:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$flattr_service = \Podlove\Modules\Social\Model\Service::find_one_by_where( "`title` = 'Flattr' AND `type` = 'donation'" );
+				if ($flattr_service) {
+					$contributor_flattr_donations_accounts = \Podlove\Modules\Social\Model\ContributorService::find_all_by_property( 'service_id', $flattr_service->id );
+
+					foreach ( $contributor_flattr_donations_accounts as $contributor_flattr_donations_account ) {
+						$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $contributor_flattr_donations_account->contributor_id );
+						
+						if( is_null( $contributor->flattr ) ) {
+							$contributor->flattr = $contributor_flattr_donations_account->value;
+							$contributor->save();
+						}
+
+						$contributor_flattr_donations_account->delete();
+
+					}
+
+					$flattr_service->delete();
 				}
 			}
 		break;

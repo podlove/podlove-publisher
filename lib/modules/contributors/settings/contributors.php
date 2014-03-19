@@ -121,6 +121,8 @@ class Contributors {
 			
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
+
+		do_action( 'update_podlove_contributor', $contributor );
 		
 		$this->redirect( 'index', $contributor->id );
 	}
@@ -133,6 +135,8 @@ class Contributors {
 		
 		$contributor = new Contributor;
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
+
+		do_action( 'update_podlove_contributor', $contributor );
 
 		$this->redirect( 'index' );
 	}
@@ -207,6 +211,7 @@ class Contributors {
 
 			$contributor = $form->object;
 
+			do_action( 'podlove_contributors_form_beginning', $wrapper );
 
 			$wrapper->subheader( __( 'General', 'podlove' ) );
 
@@ -273,7 +278,7 @@ class Contributors {
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 			
-			$wrapper->subheader( __( 'Contact &amp; Social', 'podlove' ) );
+			$wrapper->subheader( __( 'Contact', 'podlove' ) );
 			
 			$wrapper->string( 'privateemail', array(
 				'label'       => __( 'Contact email', 'podlove' ),
@@ -285,69 +290,17 @@ class Contributors {
 				'label'       => __( 'Public email', 'podlove' ),
 				'description' => 'This email will be displayed for public purposes.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );		
-
-			$wrapper->string( 'www', array(
-				'label'       => __( 'Homepage', 'podlove' ),
-				'description' => 'The contributors homepage.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
-			$wrapper->string( 'adn', array(
-				'label'       => __( 'App.net', 'podlove' ),
-				'description' => 'App.net username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
+			$wrapper->subheader( __( 'Flattr', 'podlove' ) );
 			
-			$wrapper->string( 'twitter', array(
-				'label'       => __( 'Twitter', 'podlove' ),
-				'description' => 'Twitter username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->string( 'googleplus', array(
-				'label'       => __( 'Google+', 'podlove' ),
-				'description' => 'Google+ URL.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );			
-			
-			$wrapper->string( 'facebook', array(
-				'label'       => __( 'Facebook', 'podlove' ),
-				'description' => 'Facebook username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->subheader( __( 'Donations', 'podlove' ) );
-
 			$wrapper->string( 'flattr', array(
-				'label'       => __( 'Flattr', 'podlove' ),
-				'description' => 'Flattr username.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->string( 'paypal', array(
-				'label'       => __( 'Paypal', 'podlove' ),
-				'description' => '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donate-intro-outside" target="_blank">Paypal button</a> id.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
-
-			$wrapper->string( 'bitcoin', array(
-				'label'       => __( 'Bitcoin', 'podlove' ),
-				'description' => 'Bitcoin Address.',
+				'label'       => __( 'Flattr Account', 'podlove' ),
+				'description' => 'The provided flattr account will be used to generate episode specific Flattr buttons.',
 				'html'        => array( 'class' => 'podlove-contributor-field' )
 			) );
 
-			$wrapper->string( 'litecoin', array(
-				'label'       => __( 'Litecoin', 'podlove' ),
-				'description' => 'Litecoin Address.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );
-			
-			$wrapper->string( 'amazonwishlist', array(
-				'label'       => __( 'Amazon Wishlist', 'podlove' ),
-				'description' => 'URL of the contributors Amazon wishlist.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
-			) );	
+			do_action( 'podlove_contributors_form_end', $wrapper );
 
 		} );
 	}

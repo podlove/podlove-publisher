@@ -66,9 +66,11 @@ class Dashboard {
 	public static function settings_page() {
 		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
 		add_meta_box( Dashboard::$pagehook . '_statistics', __( 'At a glance', 'podlove' ), '\Podlove\Settings\Dashboard::statistics', Dashboard::$pagehook, 'normal' );
+		
+		do_action( 'podlove_dashboard_meta_boxes' );
+
 		add_meta_box( Dashboard::$pagehook . '_validation', __( 'Validate Podcast Files', 'podlove' ), '\Podlove\Settings\Dashboard::validate_podcast_files', Dashboard::$pagehook, 'normal' );
 
-		do_action( 'podlove_dashboard_meta_boxes' );
 
 		?>
 		<div class="wrap">
@@ -144,12 +146,7 @@ class Dashboard {
 	}
 
 	public static function duration_to_seconds( $timestring ) {
-		$time 		= strtotime($timestring);
-		$seconds    = date( "s", $time);
-		$minutes    = date( "i", $time);
-		$hours	    = date( "H", $time);
-
-		return $seconds + $minutes * 60 + $hours * 3600;
+		return \Podlove\NormalPlayTime\Parser::parse( $timestring, 's' );
 	}
 
 	public static function statistics() {
@@ -199,9 +196,9 @@ class Dashboard {
 
 		$episodes_total_length = array_sum($episode_durations);
 		// Calculating average episode in seconds
-		$episodes_average_episode_length = ( $counted_episodes > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0 );
+		$episodes_average_episode_length = count($episode_durations) > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0;
 		// Calculate average tim until next release in days
-		$average_days_between_releases = ( $counted_episodes > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0 );
+		$average_days_between_releases   = count($time_stamp_differences) > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0;
 
 		/**
 		 *	Media Files
@@ -324,7 +321,7 @@ class Dashboard {
 		
 		$podcast = Model\Podcast::get_instance();
 		?>
-		<div id="validation">
+		<div id="asset_validation">
 			<?php
 			$episodes = Model\Episode::all( 'ORDER BY slug DESC' );
 			$assets   = Model\EpisodeAsset::all();

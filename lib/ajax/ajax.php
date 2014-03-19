@@ -13,20 +13,22 @@ class Ajax {
 
 		$actions = array(
 			'get-new-guid',
+			'validate-feed',
 			'validate-file',
 			'validate-url',
 			'update-file',
 			'create-file',
 			'update-asset-position',
 			'update-feed-position',
-			'podcast'
+			'podcast',
+			'hide-teaser'
 		);
 
 		foreach ( $actions as $action )
 			add_action( 'wp_ajax_podlove-' . $action, array( $this, str_replace( '-', '_', $action ) ) );
 	}
 
-	private function respond_with_json( $result ) {
+	public static function respond_with_json( $result ) {
 		header( 'Cache-Control: no-cache, must-revalidate' );
 		header( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' );
 		header( 'Content-type: application/json' );
@@ -47,7 +49,7 @@ class Ajax {
 			$podcast_data[ $property ] = $podcast->$property;
 		}
 		
-		$this->respond_with_json( $podcast_data );
+		self::respond_with_json( $podcast_data );
 	}
 
 	public function get_new_guid() {
@@ -56,8 +58,20 @@ class Ajax {
 		$post = get_post( $post_id );
 		$guid = \Podlove\Custom_Guid::guid_for_post( $post );
 
-		$this->respond_with_json( array( 'guid' => $guid ) );
+		self::respond_with_json( array( 'guid' => $guid ) );
 	}
+
+	public function validate_feed() {
+		$feed_id = $_REQUEST['feed_id'];
+	 
+	 	$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
+	 	// Renew transient
+	 	set_transient( 'podlove_dashboard_feed_validation_' . $feed_id, 
+	 														  $feed->getValidationIcon(),
+															  3600*24 );
+	 	
+	 	self::respond_with_json( array( 'validation_icon' => $feed->getValidationIcon() ) );
+	 }
 
 	public function validate_file() {
 		$file_id = $_REQUEST['file_id'];
@@ -66,7 +80,7 @@ class Ajax {
 		$info = $file->curl_get_header();
 		$reachable = $info['http_code'] >= 200 && $info['http_code'] < 300;
 
-		$this->respond_with_json( array(
+		self::respond_with_json( array(
 			'file_url'	=> $file_url,
 			'reachable'	=> $reachable,
 			'file_size'	=> $info['download_content_length']
@@ -84,7 +98,7 @@ class Ajax {
 		$validation_cache[ $file_url ] = $reachable;
 		update_option( 'podlove_migration_validation_cache', $validation_cache );
 
-		$this->respond_with_json( array(
+		self::respond_with_json( array(
 			'file_url'	=> $file_url,
 			'reachable'	=> $reachable,
 			'file_size'	=> $header['download_content_length']
@@ -120,7 +134,7 @@ class Ajax {
 			}
 		}
 
-		$this->respond_with_json( $result );
+		self::respond_with_json( $result );
 	}
 
 	public function create_file() {
@@ -136,7 +150,7 @@ class Ajax {
 
 		$file = Model\MediaFile::find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id );
 
-		$this->respond_with_json( array(
+		self::respond_with_json( array(
 			'file_id'   => $file->id,
 			'file_size' => $file->size
 		) );
@@ -162,6 +176,10 @@ class Ajax {
 			->update_attributes( array( 'position' => $position ) );
 
 		die();
+	}
+
+	public function hide_teaser() {
+		update_option( '_podlove_hide_teaser', TRUE );
 	}
 	
 }

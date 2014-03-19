@@ -26,7 +26,8 @@ class Curl {
 			'user-agent' => self::user_agent(),
 			'stream'     => false,
 			'decompress' => false,
-			'filename'   => null
+			'filename'   => null,
+			'sslcertificates' => ABSPATH . WPINC . '/certificates/ca-bundle.crt'  // i guess this is just a missing default in the current wp curl lib
 		);
 
 		$params = wp_parse_args( $params, $defaults );

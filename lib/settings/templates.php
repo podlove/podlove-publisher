@@ -164,7 +164,7 @@ class Templates {
 			var readonly_textareas = $(".highlight-readonly");
 			readonly_textareas.each(function() {
 				var podlove_code_highlight = CodeMirror.fromTextArea(this, {
-					mode: "htmlmixed",
+					mode: "application/x-twig",
 					lineNumbers: false,
 					theme: "default",
 					indentUnit: 4,
@@ -247,12 +247,17 @@ class Templates {
 				'description' => __( 'Have a look at the <a href="http://docs.podlove.org/publisher/shortcodes/" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
 				'default' => <<<EOT
-[podlove-web-player]
+{# display the web player #}
+{{ episode.player }}
+
+{# display the download section #}
 [podlove-episode-downloads]
 
-<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
+{# display the duration of the episode #}
+<span class="podlove-duration">Duration: {{ episode.duration.hours }}:{{ episode.duration.minutes|padLeft("0",2) }}:{{ episode.duration.seconds|padLeft("0",2) }}</span>
 
-[podlove-podcast-license]
+{# display the license #}
+{% include '@core/license.twig' %}
 EOT
 			) );
 
@@ -261,31 +266,12 @@ EOT
 		<script type="text/javascript">
 		var podlove_template_content = document.getElementById("podlove_template_content");
 		var podlove_template_editor = CodeMirror.fromTextArea(podlove_template_content, {
-			mode: "htmlmixed",
+			mode: "application/x-twig",
 			lineNumbers: true,
 			theme: "default",
 			indentUnit: 4,
 			lineWrapping: true,
-			extraKeys: {
-				"'>'": function(cm) { cm.closeTag(cm, '>'); },
-				"'/'": function(cm) { cm.closeTag(cm, '/'); },
-				"'['": function(cm) {
-					CodeMirror.simpleHint(cm, function(cm) {
-						return {
-							list:[
-								"[podlove-episode-downloads]",
-								"[podlove-web-player]",
-								"[podlove-episode field=\"\"]",
-								"[podlove-podcast field=\"\"]",
-								"[podlove-contributor-list]",
-								"[podlove-episode-license]",
-								"[podlove-podcast-license]"
-							],
-							from: cm.getCursor()
-						};
-					});
-				}
-			},
+			autoCloseTags: true,
 			onCursorActivity: function() {
 				podlove_template_editor.matchHighlight("CodeMirror-matchhighlight");
 			}

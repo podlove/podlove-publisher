@@ -7,6 +7,11 @@ class Feed extends Base {
 	const ITEMS_NO_LIMIT = -1;
 	const ITEMS_GLOBAL_LIMIT = -2;
 
+	// Define Icons for validation
+	const FEED_VALIDATION_OK = '<i class="clickable podlove-icon-ok"></i>';
+	const FEED_VALIDATION_INACTIVE = '<i class="podlove-icon-minus"></i>';
+	const FEED_VALIDATION_ERROR = '<i class="clickable podlove-icon-remove"></i>';
+
 	public function save() {
 		global $wpdb;
 		
@@ -55,6 +60,21 @@ class Feed extends Base {
 	}
 
 	/**
+	 * Build the title of the feed
+	 *
+	 */
+	public function get_title() {
+
+		$podcast = Podcast::get_instance();
+
+		if( $this->append_name_to_podcast_title )
+			return $podcast->title . ' (' . $this->name . ')';
+
+		return $podcast->title;
+
+	}
+
+	/**
 	 * Get title for browser feed discovery.
 	 *
 	 * This title is used by clients to show the user the subscribe option he
@@ -100,23 +120,33 @@ class Feed extends Base {
 	 * @return array
 	 */
 	function post_ids() {
+		global $wpdb;
 
-		$episode_asset = $this->episode_asset();
+		$allowed_status = array("publish");
+		$allowed_status = apply_filters("podlove_feed_post_ids_allowed_status", $allowed_status);
 
-		if ( ! $episode_asset )
-			return array();
+		$sql = "
+			SELECT
+				p.ID
+			FROM
+				" . $wpdb->posts . " p
+				INNER JOIN " . Episode::table_name() .  " e ON e.post_id = p.ID
+				INNER JOIN " . MediaFile::table_name() .  " mf ON mf.`episode_id` = e.id
+				INNER JOIN " . EpisodeAsset::table_name() .  " a ON a.id = mf.`episode_asset_id`
+			WHERE
+				a.id = %d
+				AND
+				p.post_status IN (" . implode(',', array_map(function($s) { return "'$s'"; }, $allowed_status)) . ")
+			ORDER BY
+				p.post_date DESC
+		";
 
-		$media_files = $episode_asset->media_files();
-
-		if ( ! count( $media_files ) )
-			return array();
-
-		// fetch releases
-		$media_files = array_filter( $media_files, function($mf){ return $mf->size > 0; });
-		$episode_ids = array_map( function ( $v ) { return $v->episode_id; }, $media_files );
-		$episodes = Episode::find_all_by_where( "id IN (" . implode( ',', $episode_ids ) . ")" );
-
-		return array_map( function ( $v ) { return $v->post_id; }, $episodes );
+		return $wpdb->get_col(
+			$wpdb->prepare(
+				$sql,
+				$this->episode_asset()->id
+			)
+		);
 	}
 
 	public function get_content_type() {
@@ -156,7 +186,7 @@ class Feed extends Base {
 			}
 		}
 
-		return $html;
+		return apply_filters( 'podlove_feed_alternate_links', $html );
 	}
 
 	public static function get_link_tag( $args = array() ) {
@@ -219,6 +249,121 @@ class Feed extends Base {
 		// default to no limit; however, this should never happen
 		return '';
 	}
+
+	/**
+	 * Fetch feed source
+	 */
+
+	public function getSource() {
+		$curl = new \Podlove\Http\Curl();
+		$curl->request( $this->get_subscribe_url() . ( strpos( $this->get_subscribe_url(), "?" ) ? "&redirect=no" : "?redirect=no" ), array(
+			'headers' => array( 'Content-type'  => 'application/json' ),
+			'timeout' => 10,
+			'compress' => true,
+			'decompress' => false,
+			'sslcertificates' => '',
+			'_redirection' => ''
+		) );
+
+		$response = $curl->get_response();
+
+		if( is_wp_error( $response ) )
+			return FALSE; // Return FALSE if Error occured
+
+		return $response;
+	}
+
+	/**
+	 * Feed Validation via w3c validator API (http://validator.w3.org/feed/)
+	 */
+
+	public function getValidation()
+	{
+		$curl = new \Podlove\Http\Curl();
+		$curl->request( "http://validator.w3.org/feed/check.cgi?output=soap12&url=" . $this->get_subscribe_url(), array(
+			'headers' => array( 'Content-type'  => 'application/soap+xml' ),
+			'timeout' => 20,
+			'compress' => true,
+			'decompress' => false,
+			'sslcertificates' => '',
+			'_redirection' => ''
+		) );
+		$response = $curl->get_response();
+
+		if( is_wp_error( $response ) )
+			return FALSE; // Return FALSE if Error occured
+
+		if( strpos( $response['body'], 'faultcode' ) )
+			return FALSE; // Returning FALSE if feed is not recheable
+
+		$xml = simplexml_load_string( $response['body'] ); 
+
+		$namespaces = $xml->getNamespaces( true );
+		$soap = $xml->children( $namespaces['env'] ); // Strip SOAP environment
+
+		return $soap->Body->children( $namespaces['m'] )->children( $namespaces['m'] ); // Return errors and warnings
+	}
+
+	public function getValidationErrorsandWarnings()
+	{
+		$warning_and_error_list = $this->getValidation();
+
+		if( !$warning_and_error_list ) 
+			return FALSE;
+
+		$warning_list = array();
+		$error_list = array();
+
+		// Getting Warnings
+		foreach ( $warning_and_error_list->warnings->warninglist->children()  as $warning_key => $warning  ) {
+			$warning_list[] = get_object_vars( $warning ); // Converting object to array here to have a consistent data structure
+		}
+
+		foreach ( $warning_and_error_list->errors->errorlist->children()  as $error_key => $error  ) {
+			$error_list[] = get_object_vars( $error ); // Converting object to array here to have a consistent data structure
+		}
+
+		return array(
+						'validity'				=> $warning_and_error_list->validity->__toString(),
+						'number_of_errors' 		=> $warning_and_error_list->errors->errorcount->__toString(),
+						'number_of_warnings'	=> $warning_and_error_list->warnings->warningcount->__toString(),
+						'errors'				=> $error_list,
+						'warnings'				=> $warning_list
+					);
+	}
+
+	public function getValidationIcon()
+	{
+
+		$errors_and_warnings = $this->getValidationErrorsandWarnings();
+		$feed_subscribe_url = $this->get_subscribe_url();
+
+		\Podlove\Log::get()->addInfo( 'Validate feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a>.' );
+
+		if( !$errors_and_warnings ) {
+			\Podlove\Log::get()->addInfo( 'Feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a> is not accessible for validation.' );
+			return self::FEED_VALIDATION_INACTIVE;
+		}
+
+		// Log Warnings and errors
+		$this->logValidation( $errors_and_warnings );
+
+		return ( $errors_and_warnings['validity'] == 'true' ? self::FEED_VALIDATION_OK : self::FEED_VALIDATION_ERROR );
+	}
+
+	public function logValidation( $errors_and_warnings )
+	{
+		$feed_subscribe_url = $this->get_subscribe_url();
+
+		foreach ( $errors_and_warnings['warnings'] as $warning_key => $warning ) {
+			\Podlove\Log::get()->addInfo( 'Warning: ' . $warning['text'] . ', line ' . $warning['line'] . ' in Feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a>.'   );	
+		}
+
+		foreach ( $errors_and_warnings['errors'] as $error_key => $error ) {
+			\Podlove\Log::get()->addError( 'Error: ' . $error['text'] . ', line ' . $error['line'] . ' in Feed <a href="' . $feed_subscribe_url . '">' . $this->name . '</a>.'   );	
+		}
+	}
+
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
@@ -234,7 +379,8 @@ Feed::property( 'enable', 'INT' );
 Feed::property( 'discoverable', 'INT' );
 Feed::property( 'limit_items', 'INT' );
 Feed::property( 'embed_content_encoded', 'INT' );
-Feed::property( 'protected', 'TINYINT(1)' ); 
+Feed::property( 'append_name_to_podcast_title', 'TINYINT(1)' );
+Feed::property( 'protected', 'TINYINT(1)' );
 Feed::property( 'protection_type', 'TINYINT(1)' ); // Protection type: 0: local, 1: WordPress User
 Feed::property( 'protection_user', 'VARCHAR(60)' );
 Feed::property( 'protection_password', 'VARCHAR(64)' );

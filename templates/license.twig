@@ -1,0 +1,33 @@
+{#
+	Include example:
+	{% include '@core/license.twig' %}
+
+	You can pass in a license to determine which one is displayed:
+	{% include '@core/license.twig' with {'license': podcast.license} %}	
+#}
+{% if license is not defined %}
+	{% if episode is not null and episode.license.valid %}
+		{% set license = episode.license %}
+	{% else %}
+	    {% set license = podcast.license %}
+	{% endif %}
+{% endif %}
+
+{% if license.valid %}
+	{% if license.creativeCommons %}
+		<div class="podlove_cc_license">
+			<img src="{{ license.imageUrl }}" alt="License" />
+			<p>
+				This work is licensed under a <a rel="license" href="{{ license.url }}">{{ license.name }}</a>
+			</p>
+		</div>
+	{% else %}
+	    This work is licensed under the <a href="{{ license.url }}">{{ license.name }}</a> license.
+	{% endif %}
+{% else %}
+    <div class="podlove_license">
+		<p style="color: red;">
+			This work is (not yet) licensed, as no license was chosen.
+		</p>
+    </div>
+{% endif %}

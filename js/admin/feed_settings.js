@@ -53,10 +53,21 @@ var PODLOVE = PODLOVE || {};
 			});
 		}
 
-		function generate_live_preview() {
+		function generate_slug_live_preview() {
 			// handle preview updates
-			$('#podlove_feed_slug', container).on( 'keyup', o.update_preview );
-			o.update_preview();
+			$('#podlove_feed_slug', container).on( 'keyup', o.update_url_preview );
+			o.update_url_preview();
+		}
+
+		function generate_title_live_preview() {
+			// handle preview updates
+			$('#podlove_feed_append_name_to_podcast_title', container).change( function () {
+				o.update_title_preview();
+			});
+			$('#podlove_feed_name', container).change( function () {
+				o.update_title_preview();
+			});
+			o.update_title_preview();
 		}
 
 		function manage_redirect_url_display() {
@@ -78,7 +89,7 @@ var PODLOVE = PODLOVE || {};
 		}
 
 		// public
-		o.update_preview = function () {
+		o.update_url_preview = function () {
 			// remove trailing slash
 			var url = $("#feed_subscribe_url_preview").html().substr(0, $("#feed_subscribe_url_preview").html().length - 1);
 			// remove slug
@@ -87,8 +98,20 @@ var PODLOVE = PODLOVE || {};
 			$("#feed_subscribe_url_preview").html(url + "/" + slugify( $("#podlove_feed_slug").val() ) + "/");
 		}
 
+		o.update_title_preview = function () {
+			if( $("#podlove_feed_append_name_to_podcast_title").prop('checked') ) {
+				$("#feed_title_preview_append").html( ' (' + $("#podlove_feed_name").val() + ')' );
+			} else {
+				$("#feed_title_preview_append").html('');
+			}
+		}
+
+		if ($("#feed_title_preview_append").length && $("#podlove_feed_append_name_to_podcast_title").length) {
+			generate_title_live_preview();
+		}
+
 		if ($("#feed_subscribe_url_preview").length && $("#podlove_feed_slug").length) {
-			generate_live_preview();
+			generate_slug_live_preview();
 		}
 
 		$("#podlove_feed_redirect_http_status").on("change", function(){

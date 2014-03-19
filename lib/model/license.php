@@ -45,7 +45,18 @@ class License {
 
 	public function getName() {
 		if ($this->type == 'cc') {
-			return "Creative Commons 3.0";
+			$locales  = \Podlove\License\locales_cc();
+			$versions = \Podlove\License\version_per_country_cc();
+
+			if($this->cc_license_jurisdiction == "international") {
+				$version = $versions["international"]["version"];
+				$name = $versions["international"]["name"];
+			} else {
+				$version = $versions[$this->cc_license_jurisdiction]["version"];
+				$name = $locales[$this->cc_license_jurisdiction];
+			}
+
+			return "Creative Commons Attribution " . $version . " " . $name . " License";
 		} else {
 			return $this->name;
 		}
@@ -53,45 +64,51 @@ class License {
 
 	public function getUrl() {
 		if ($this->type == 'cc') {
-			return "http://creativecommons.org/licenses/by/3.0/";
-		} else {
-			return $this->name;
-		}
-	}
-
-	private function hasCompleteCCData() {
-		return $this->cc_license_jurisdiction != ""
-		    && $this->cc_allow_modifications  != ""
-		    && $this->cc_allow_commercial_use != "";
-	}
-
-	private function hasCompleteOtherData() {
-		return $this->name != "" && $this->url != "";
-	}
-
-	public function getHtml() {
-		$locales  = \Podlove\License\locales_cc();
-		$versions = \Podlove\License\version_per_country_cc();
-		$podcast  = Podcast::get_instance();
-
-		if ($this->type == 'cc' && $this->hasCompleteCCData()) {
+			$locales  = \Podlove\License\locales_cc();
+			$versions = \Podlove\License\version_per_country_cc();
 			$url_slugs = $this->getURLSlug( $this->cc_allow_modifications, $this->cc_allow_commercial_use );
 
 			if($this->cc_license_jurisdiction == "international") {
 				$locale = "";
 				$version = $versions["international"]["version"];
-				$name = $versions["international"]["name"];
 			} else {
 				$locale = $this->cc_license_jurisdiction."/";
 				$version = $versions[$this->cc_license_jurisdiction]["version"];
-				$name = $locales[$this->cc_license_jurisdiction];
 			}
-			
+
+			return "http://creativecommons.org/licenses/by"
+			     . $url_slugs['allow_commercial_use']
+			     . $url_slugs['allow_modifications']
+			     . "/" . $version
+			     . "/" . $locale
+			     . "deed.en";
+		} else {
+			return $this->url;
+		}
+	}
+
+	public function hasCompleteCCData() {
+		return $this->cc_license_jurisdiction != ""
+		    && $this->cc_allow_modifications  != ""
+		    && $this->cc_allow_commercial_use != "";
+	}
+
+	public function hasCompleteOtherData() {
+		return $this->name != "" && $this->url != "";
+	}
+
+	public function isCreativeCommons() {
+		return $this->type == 'cc';
+	}
+
+	public function getHtml() {
+
+		if ($this->type == 'cc' && $this->hasCompleteCCData()) {
 			return "
 			<div class=\"podlove_cc_license\">
 				<img src=\"" . $this->getPictureUrl() . "\" alt=\"License\" />
 				<p>
-					This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by" . $url_slugs['allow_commercial_use'] . $url_slugs['allow_modifications'] . "/" . $version . "/" . $locale . "deed.en\">Creative Commons Attribution " . $version . " " . $name . " License</a>.
+					This work is licensed under a <a rel=\"license\" href=\"" . $this->getUrl() . "\">" . $this->getName() . "</a>.
 				</p>
 			</div>";
 		}
@@ -110,7 +127,7 @@ class License {
 
 		// episodes fall back to podcast licenses
 		if ($this->scope == 'episode')
-			return $podcast->get_license_html();
+			return Podcast::get_instance()->get_license_html();
 
 		// ... otherwise, a license is missing
 		return "

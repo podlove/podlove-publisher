@@ -49,7 +49,11 @@ class ContributorDefaults {
 				}
 
 				$c->contributor_id = $contributor_id;
-				$c->comment = $contributor['comment'];
+
+				if (isset($contributor['comment'])) {
+					$c->comment = $contributor['comment'];
+				}
+
 				$c->position = $position++;
 				$c->save();
 			}
@@ -76,7 +80,14 @@ class ContributorDefaults {
 	
 	private function default_contrib_form() {
 		$contributions = DefaultContribution::all();
-		\Podlove\Modules\Contributors\Contributors::contributors_form_table($contributions, 'podlove_contributor_defaults[contributor]');
+
+		// map indices to IDs
+		$map = array();
+		foreach ($contributions as $c) {
+			$map[$c->id] = $c;
+		}
+
+		\Podlove\Modules\Contributors\Contributors::contributors_form_table($map, 'podlove_contributor_defaults[contributor]');
 	}
 
 }
