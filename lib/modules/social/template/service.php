@@ -42,7 +42,11 @@ class Service extends Wrapper {
 	 * @accessor
 	 */
 	public function title() {
-		return $this->service->title;
+		if ($this->contributor_service && $this->contributor_service->title) {
+			return $this->contributor_service->title;
+		} else {
+			return $this->service->title;
+		}
 	}
 
 	/**
