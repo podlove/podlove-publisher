@@ -29,7 +29,7 @@ class License {
 							'version'			=>	$raw_extract[1],
 							'commercial_use'	=>	( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
 							'modification'		=>	self::get_modification_state( $raw_extract[0] ),
-							'jurisdiction'		=>	( $raw_extract[2] !== 'deed.en' ? $raw_extract[2] : 'international' )
+							'jurisdiction'		=>	( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
 						);
 
 		return $license;
@@ -37,7 +37,19 @@ class License {
 
 	public static function get_name_from_license( $license ) {
 		$locales = \Podlove\License\locales_cc();
-		return 'Creative Commons Attribution ' . $license['version'] . ' ' .  ( $license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']] ) . ' License';
+
+		$license_attributions = '';
+
+		if( $license['commercial_use'] == 'no' )
+			$license_attributions .= '-NonCommercial';
+
+		if( $license['modification'] == 'no' )
+			$license_attributions .= '-NoDerivatives';
+
+		if( $license['modification'] == 'yesbutshare' )
+			$license_attributions .= '-ShareAlike';
+
+		return 'Creative Commons Attribution' . $license_attributions . ' ' . $license['version'] . ' ' .  ( $license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']] ) . ' License';
 	}
 
 	public static function get_url_from_license( $license ) {

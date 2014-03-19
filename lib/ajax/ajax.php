@@ -185,16 +185,25 @@ class Ajax {
 		update_option( '_podlove_hide_teaser', TRUE );
 	}
 
+	private function parse_get_parameter_into_url_array() {
+		return array(
+						'version'		 => '3.0',
+						'modification'	 => $_REQUEST['modification'],
+						'commercial_use' => $_REQUEST['commercial_use'],
+						'jurisdiction'	 => $_REQUEST['jurisdiction']
+					);
+	}
+
 	public function get_license_url() {
-		self::respond_with_json( \Podlove\Model\License::get_url_from_license( json_decode( $_POST['license'] ) ) );
+		self::respond_with_json( \Podlove\Model\License::get_url_from_license( self::parse_get_parameter_into_url_array() ) );
 	}
 
 	public function get_license_name() {
-		self::respond_with_json( \Podlove\Model\License::get_name_from_license( json_decode( $_POST['license'] ) ) );
+		self::respond_with_json( \Podlove\Model\License::get_name_from_license( self::parse_get_parameter_into_url_array() ) );
 	}
 
 	public function get_license_parameters_form_url() {
-		self::respond_with_json( \Podlove\Model\License::get_license_from_url( json_decode( $_POST['license'] ) ) );
+		self::respond_with_json( \Podlove\Model\License::get_license_from_url( self::parse_get_parameter_into_url_array() ) );
 	}
 	
 }
