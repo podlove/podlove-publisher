@@ -106,6 +106,7 @@ __DEPRECATIONS/WARNINGS__
 * Enhancement: Added 500px, Last.fm, OpenStreetMap and Soup to Services
 * Enhancement: Use custom contributor social/donation titles as icon titles
 * Enhancement: Template form has a "Save Changes and Continue Editing" button now
+* Enhancement: feed validation is asynchronous now and has improved performance
 * Fix: all default contributors appear in new episodes again
 * Fix: change Tumblr URLs from https to http since Tumblr does not support them
 * Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
