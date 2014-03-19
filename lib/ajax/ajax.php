@@ -202,8 +202,8 @@ class Ajax {
 		self::respond_with_json( \Podlove\Model\License::get_name_from_license( self::parse_get_parameter_into_url_array() ) );
 	}
 
-	public function get_license_parameters_form_url() {
-		self::respond_with_json( \Podlove\Model\License::get_license_from_url( self::parse_get_parameter_into_url_array() ) );
+	public function get_license_parameters_from_url() {
+		self::respond_with_json( \Podlove\Model\License::get_license_from_url( $_REQUEST['url'] ) );
 	}
 	
 }

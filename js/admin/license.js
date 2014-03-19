@@ -98,6 +98,36 @@ var PODLOVE = PODLOVE || {};
 			$(".row_podlove_cc_license_selector").toggle();
 		});
 
+		$(settings.license_url_field_id).on( 'change', function() {
+			if( $(this).val().indexOf('creativecommons.org') !== -1 ) {
+				var data = {
+					action: 'podlove-get-license-parameters-from-url',
+					url: $(this).val()
+				};
+
+				$.ajax({
+					url: ajaxurl,
+					data: data,
+					dataType: 'json',
+					success: function(result) {
+						podlove_populate_license_form(
+														result.modification,
+														result.commercial_use,
+														result.jurisdiction
+													);
+					}
+				});
+			} else {
+				$(".podlove_podcast_license_image").html('');
+				$(".podlove-license-link").html( $(settings.license_name_field_id).val() );
+				$(".podlove-license-link").attr("href", $(this).val() );
+			}
+		});
+
+		$(settings.license_name_field_id).on( 'change', function() {
+			$(".podlove-license-link").html( $(this).val() );
+		});
+
 		$("#license_cc_allow_modifications, #license_cc_allow_commercial_use, #license_cc_license_jurisdiction").on( 'change', function() {
 			podlove_change_url_preview_and_name_from_form(
 															$("#license_cc_allow_modifications").val(),
