@@ -2,6 +2,7 @@
 namespace Podlove\Modules\FeedValidation;
 use Podlove\Log;
 use Podlove\Model;
+use Podlove\Modules\FeedValidation\Model\FeedValidator;
 
 class Feed_Validation extends \Podlove\Modules\Base {
 
@@ -13,8 +14,11 @@ class Feed_Validation extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_activated_feed_validation', array( $this, 'was_activated' ) );
 		add_action( 'podlove_module_was_deactivated_feed_validation', array( $this, 'was_deactivated' ) );
 		add_action( 'podlove_feed_validation', array( $this, 'do_validations' ) );
-		add_action( 'publish_podcast', array( $this, 'renewFeedTransients' ) );
-		add_action( 'delete_post', array( $this, 'renewFeedTransients' ) );
+		add_action( 'publish_podcast', array( $this, 'set_renewFeedTransients_cron' ) );
+		add_action( 'delete_post', array( $this, 'set_renewFeedTransients_cron' ) );
+		add_action( 'wp_ajax_podlove-validate-feed', array( $this, 'ajax_validate_feed' ) );
+		add_action( 'wp_ajax_podlove-feed-info', array( $this, 'ajax_feed_info' ) );
+
 		add_action( 'podlove_module_before_settings_feed_validation', function () {
 			if ( $timezone = get_option( 'timezone_string' ) )
 				date_default_timezone_set( $timezone );
@@ -31,8 +35,6 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			</div>
 			<?php
 		} );
-
-		
 
 		add_action('podlove_dashboard_meta_boxes', function() {
 			add_meta_box(
@@ -54,6 +56,14 @@ class Feed_Validation extends \Podlove\Modules\Base {
 		wp_clear_scheduled_hook( 'podlove_feed_validation' );
 	}
 
+	/**
+	 * Set Cron event for NOW after episode is deleted or published.
+	 */
+
+	public function set_renewFeedTransients_cron() {
+		wp_schedule_single_event( time(), 'renewFeedTransients' );
+	}
+
 	public function meta_box() {
 		$feeds = \Podlove\Model\Feed::all();
 		?>
@@ -63,9 +73,8 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			<thead>
 				<tr>
 					<th><?php _e( 'Name', 'podlove' ); ?></th>
-					<th><?php _e( 'Slug', 'podlove' ); ?></th>
+					<th><?php _e( 'Slug/URL', 'podlove' ); ?></th>
 					<th><?php _e( 'Last Modification', 'podlove' ); ?></th>
-					<th><?php _e( 'Entries', 'podlove' ); ?></th>
 					<th><?php echo extension_loaded('zlib') ? __( 'Size (compressed)', 'podlove') : __( 'Size', 'podlove'); ?></th>
 					<th><?php _e( 'Latest item', 'podlove'); ?></th>
 					<th><?php _e( 'Validation', 'podlove' ); ?></th>
@@ -75,43 +84,60 @@ class Feed_Validation extends \Podlove\Modules\Base {
 				<?php
 					foreach ($feeds as $feed_key => $feed) {
 
-						$feed_request = get_transient( 'podlove_dashboard_feed_source_' . $feed->id );
+						$feed_request = get_transient( 'podlove_dashboard_feed_information_' . $feed->id );
 						if ( false === $feed_request ) {
-							$feed_request = $feed->getSource();
-							set_transient( 'podlove_dashboard_feed_source_' . $feed->id, 
+							$feed_request = \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id );
+							set_transient( 'podlove_dashboard_feed_information_' . $feed->id, 
 										  $feed_request,
 										  3600*24 );
 						}
 
 						$feed_validation = get_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
 						if ( false === $feed_validation ) {
-							$feed_validation = $feed->getValidationIcon();
+							$feed_validation = \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id );
 							set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
 										  $feed_validation,
 										  3600*24 );
 						}							 
 
-						$feed_header = $feed_request['headers'];
-						$feed_body = $feed_request['body'];
-						$feed_items = $feed->post_ids();
-
-						$number_of_items = count( $feed->post_ids() );
-						$last_modification = \Podlove\Modules\FeedValidation\Feed_Validation::relative_time_steps(strtotime( isset($feed_header['last-modified']) ? $feed_header['last-modified'] : 0 ));
-						$size = \Podlove\format_bytes(strlen( $feed_body ));
-
-						if (extension_loaded('zlib')) {
-							$size .= " (" .  \Podlove\format_bytes(strlen( gzdeflate( $feed_body , 9 ) )) . ")";
-						}
-
 						$source  = "<tr>\n";
 						$source .= "<td><a href='" . admin_url() . "admin.php?page=podlove_feeds_settings_handle&action=edit&feed=" . $feed->id . "'>" . $feed->name ."</a></td>";
 						$source .= "<td class='center'><a href='" . $feed->get_subscribe_url() . "'>" . $feed->slug ."</a></td>";
-						$source .= "<td class='center'>" . $last_modification ."</td>";
-						$source .= "<td class='center'>" . $number_of_items ."</td>";
-						$source .= "<td class='center'>" . $size . "</td>";
-						$source .= "<td class='center'><a href=\"" . get_permalink( $feed_items[0] ) . "\">". get_the_title( $feed_items[0] ) ."</a></td>";
-						$source .= "<td class='center' data-feed-id='" . $feed->id . "'>" . $feed_validation . "</td>";
+						$source .= "<td class='center'>" . $feed_request['last_modification'] ."</td>";
+						$source .= "<td class='center'>" . $feed_request['size'] . "</td>";
+						$source .= "<td class='center'>" . $feed_request['latest_item'] ."</td>";
+						$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='0'>" . $feed_validation . "</td>";
 						$source .= "</tr>\n";
+
+						if ( $feed->redirect_http_status == '403' || $feed->redirect_http_status == '307' ) {
+
+							$feed_request_redirected = get_transient( 'podlove_dashboard_feed_r_information_' . $feed->id );
+							if ( false === $feed_request_redirected ) {
+								$feed_request_redirected = \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id, TRUE );
+								set_transient( 'podlove_dashboard_feed_r_information_' . $feed->id, 
+											  $feed_request_redirected,
+											  3600*24 );
+							}
+
+							$feed_validation_redirected = get_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id );
+							if ( false === $feed_validation_redirected ) {
+								$feed_validation_redirected = \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id, TRUE );
+								set_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id, 
+											  $feed_validation_redirected,
+											  3600*24 );
+							}							 
+
+							$source .= "<tr>\n";
+							$source .= "<td></td>";
+							$source .= "<td class='center'><a href='" . $feed->redirect_url . "'>" . $feed->slug ."</a></td>";
+							$source .= "<td class='center'>" . $feed_request_redirected['last_modification'] ."</td>";
+							$source .= "<td class='center'>" . $feed_request_redirected['size'] . "</td>";
+							$source .= "<td class='center'>" . $feed_request_redirected['latest_item'] ."</td>";
+							$source .= "<td class='center' data-feed-id='" . $feed->id . "' data-feed-redirect='1'>" . $feed_validation_redirected . "</td>";
+							$source .= "</tr>\n";						
+
+						}
+
 						echo $source;
 					}
 				?>
@@ -141,22 +167,26 @@ class Feed_Validation extends \Podlove\Modules\Base {
 	public function renewFeedTransients()
 	{
 		foreach ( \Podlove\Model\Feed::all() as $feed_key => $feed ) {
-			// Delete transients
-			delete_transient( 'podlove_dashboard_feed_validation_' . $feed->id );
-			delete_transient( 'podlove_dashboard_feed_source_' . $feed->id );
 
-			// Performing validation and log the errors
-			$errors_and_warnings = $feed->getValidationErrorsandWarnings();
-			
-			if( $errors_and_warnings )
-				$feed->logValidation( $errors_and_warnings );
-			// Refresh the transient
+			set_transient( 'podlove_dashboard_feed_information_' . $feed->id, 
+						  \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id ),
+						  3600*24 );
+
 			set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
-											  $feed->getValidationIcon(),
-											  3600*24 );
-			set_transient( 'podlove_dashboard_feed_source_' . $feed->id, 
-											  $feed->getSource(),
-											  3600*24 );
+						  \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id ),
+						  3600*24 );
+			
+			if ( $feed->redirect_http_status == '403' || $feed->redirect_http_status == '307' ) {
+
+					set_transient( 'podlove_dashboard_feed_r_information_' . $feed->id, 
+							  \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id, TRUE ),
+							  3600*24 );
+
+					set_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id, 
+							  \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id, TRUE ),
+							  3600*24 );
+			}
+
 		}
 	}
 
@@ -176,5 +206,41 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			return $formated_time_string;      
 		}
 	}
+
+	public function ajax_feed_info() {
+		$feed_id = $_REQUEST['feed_id'];
+		$redirect = ( $_REQUEST['redirect'] == '0' ? FALSE : TRUE );
+
+		$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
+
+		\Podlove\AJAX\Ajax::respond_with_json( \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed_id, $redirect ) );
+	}
+
+	public function ajax_validate_feed() {
+		$feed_id = $_REQUEST['feed_id'];
+		$redirect = ( $_REQUEST['redirect'] == '0' ? FALSE : TRUE );
+	 
+	 	$feed = \Podlove\Model\Feed::find_by_id( $feed_id );
+	 	// Delete feed source transient
+			$errors_and_warnings = \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationErrorsandWarnings( $feed->id, $redirect );
+		// renew transients
+	 	set_transient( 'podlove_dashboard_feed_validation_' . $feed->id, 
+											  \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id, $redirect ),
+											  3600*24 );
+		set_transient( 'podlove_dashboard_feed_information_' . $feed->id,
+											  \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id, $redirect ),
+											  3600*24 );
+
+		if ( $redirect === TRUE ) {
+			 	set_transient( 'podlove_dashboard_feed_r_validation_' . $feed->id, 
+													  \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id, $redirect ),
+													  3600*24 );
+				set_transient( 'podlove_dashboard_feed_r_information_' . $feed->id,
+													  \Podlove\Modules\FeedValidation\Model\FeedValidator::getInformation( $feed->id, $redirect ),
+													  3600*24 );
+		}
+	 	
+	 	\Podlove\AJAX\Ajax::respond_with_json( array( 'validation_icon' => \Podlove\Modules\FeedValidation\Model\FeedValidator::getValidationIcon( $feed->id, $redirect ) ) );
+	 }
 	
 }
