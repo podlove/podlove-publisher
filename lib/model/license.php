@@ -5,11 +5,149 @@ use \Podlove\Model\Podcast;
 
 class License {
 
-	public static function is_cc_license( $license_url ) {
+	// "podcast" or "episode"
+	public $scope;
+
+	public $type;
+	public $name;
+	public $url;
+	public $modifcation;
+	public $commercial_use;
+	public $jurisdiction;
+
+	public function __construct($scope, $attributes) {
+
+		$license = self::get_license_from_url( $attributes['license_url'] );
+
+		$this->scope 			 = $scope;
+		$this->type  			 = self::getLicenseType( $attributes['license_url'], $attributes['license_name'] );
+		$this->name  			 = $attributes['license_name'];
+		$this->url  			 = $attributes['license_url'];
+		$this->modification  	 = $license['modification'] ;
+		$this->commercial_use  	 = $license['commercial_use'];
+		$this->jurisdiction   	 = $license['jurisdiction'];
+	}	
+
+	public function getLicenseType( $url, $name ) {
+
+		if( empty($url) || empty($name) )
+			return;
+
+		if( self::is_cc_license( $url, $name ) )
+			return 'cc';
+
+		return 'other';
+	}
+
+	public function getName() {
+		return $this->name;
+	}
+
+	public function getUrl() {
+		return $this->url;
+	}
+
+	public function getHtml() {
+		if ($this->type == 'cc') {
+			return "
+			<div class=\"podlove_cc_license\">
+				<img src=\"" . $this->getPictureUrl() . "\" alt=\"License\" />
+				<p>
+					This work is licensed under a <a rel=\"license\" href=\"" . $this->url . "\">" . $this->name . "</a>.
+				</p>
+			</div>";
+		}
+
+		if ($this->type == 'other') {
+			return "
+			<div class=\"podlove_license\">
+				<p>
+					" . sprintf(
+						__('This work is licensed under the %s license.', 'podlove'),
+						'<a rel="license" href="' . $this->url . '">' . $this->name . '</a>'
+					) . "
+				</p>
+			</div>";
+		}
+
+		// episodes fall back to podcast licenses
+		if ($this->scope == 'episode')
+			return Podcast::get_instance()->get_license_html();
+
+		// ... otherwise, a license is missing
+		return "
+		<div class=\"podlove_license\">
+				<p style='color: red;'>
+					" . __('This work is (not yet) licensed, as no license was chosen.', 'podlove') . "
+				</p>
+		</div>";
+	}
+
+	public function getPictureUrl() {
+
+		if ($this->type != 'cc')
+			throw new Exception("Only cc licenses have pictures");
+
+		return \Podlove\PLUGIN_URL
+			. "/images/cc/"
+			. $this->getAllowModificationId() 
+			. "_"
+			. $this->getAlloCommercialUseId() 
+			. ".png";		
+	}
+
+	private function getAllowModificationId() {
+		switch ($this->modification) {
+			case "yes" :
+				return 1;
+			break;
+			case "yesbutshare" :
+				return 10;
+			break;
+			case "no" :
+				return 0;
+			break;
+			default :
+				return 1;
+			break;
+		}
+	}
+
+	private function getAlloCommercialUseId() {
+		return $this->commercial_use == "no" ? "0" : "1";
+	}
+
+	private function getURLSlug( $allow_modifications, $allow_commercial_use ) {
+			switch ( $allow_modifications ) {
+				case "yes" :
+					$modification_url_slug = "";
+				break;
+				case "yesbutshare" :
+					$modification_url_slug = "-sa";
+				break;
+				case "no" :
+					$modification_url_slug = "-nd";
+				break;
+			}
+			switch( $allow_commercial_use ) {
+				case "yes" :
+					$commercial_use_url_slug = "";
+				break;
+				case "no" :
+					$commercial_use_url_slug = "-nc";
+				break;
+			}
+			return array(
+							'allow_modifications' => $modification_url_slug,
+							'allow_commercial_use' => $commercial_use_url_slug
+						);
+	}
+
+	public static function is_cc_license( $license_url, $license_name ) {
 		if( !is_string( $license_url ) )
 			return;
 
-		if ( strpos( $license_url, 'creativecommons.org' ) === FALSE)
+		if ( strpos( $license_url, 'creativecommons.org' ) === FALSE || strpos( $license_name, 'Creative Commons' ) === FALSE  )
 			return FALSE;
 
 		return TRUE;
@@ -36,6 +174,7 @@ class License {
 	}
 
 	public static function get_name_from_license( $license ) {
+
 		$locales = \Podlove\License\locales_cc();
 
 		$license_attributions = '';

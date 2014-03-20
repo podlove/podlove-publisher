@@ -168,7 +168,7 @@ class Podcast implements Licensable {
 			'license_name'         => $this->license_name,
 			'license_url'          => $this->license_url
 		));
-
+		
 		return $license;
 	}
 

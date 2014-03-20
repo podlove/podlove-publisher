@@ -146,12 +146,8 @@ class Podcast extends Wrapper {
 			new \Podlove\Model\License(
 				"podcast",
 				array(
-					'type'                 => $this->podcast->license_type,
 					'license_name'         => $this->podcast->license_name,
-					'license_url'          => $this->podcast->license_url,
-					'allow_modifications'  => $this->podcast->license_cc_allow_modifications,
-					'allow_commercial_use' => $this->podcast->license_cc_allow_commercial_use,
-					'jurisdiction'         => $this->podcast->license_cc_license_jurisdiction,
+					'license_url'          => $this->podcast->license_url
 				)
 			)
 		);
