@@ -112,6 +112,7 @@ __DEPRECATIONS/WARNINGS__
 * Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
 * Fix: internal template warning when accessing empty contributor roles or groups
 * Fix: episode rendering when no files are available
+* Fix: flattr script in rss feeds
 
 = 1.10.2 =
 
