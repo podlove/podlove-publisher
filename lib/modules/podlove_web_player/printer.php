@@ -76,6 +76,9 @@ class Printer {
 			);
 		}
 
+		if (!count($media_files))
+			return "";
+
 		// sort files bases on mime type so preferred get output first
 		$sorted_files = array();
 		$preferred_order = array( 'audio/mp4', 'audio/aac', 'audio/opus', 'audio/ogg', 'audio/vorbis' );

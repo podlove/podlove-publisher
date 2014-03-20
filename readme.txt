@@ -111,6 +111,7 @@ __DEPRECATIONS/WARNINGS__
 * Fix: change Tumblr URLs from https to http since Tumblr does not support them
 * Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
 * Fix: internal template warning when accessing empty contributor roles or groups
+* Fix: episode rendering when no files are available
 
 = 1.10.2 =
 
