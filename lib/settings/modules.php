@@ -19,7 +19,7 @@ class Modules {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ '',	
 			/* $callback */ function () { /* section head html */ }, 		
 			/* $page	 */ Modules::$pagehook	
 		);

@@ -272,7 +272,7 @@ class Feed {
 
 			$wrapper->select( 'redirect_http_status', array(
 				'label'       => __( 'Redirect Method', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'options' => array(
 					'0'   => 'Don\'t redirect', 
 					'307' => 'Temporary Redirect (HTTP Status 307)',
@@ -327,7 +327,7 @@ class Feed {
 
 			$wrapper->select( 'protection_type', array(
 				'label'       => __( 'Method', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'options' => array(
 					'0'   => 'Custom Login',
 					'1' => 'WordPress User database'

@@ -61,13 +61,13 @@ class Directory extends Tab {
 
 			$wrapper->string( 'publisher_name', array(
 				'label'       => __( 'Publisher Name', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->string( 'publisher_url', array(
 				'label'       => __( 'Publisher URL', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'html' => array( 'class' => 'regular-text' )
 			) );
 	
@@ -113,7 +113,7 @@ class Directory extends Tab {
 
 			$wrapper->select( 'explicit', array(
 				'label'       => __( 'Explicit Content?', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'type'    => 'checkbox',
                 'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 			) );

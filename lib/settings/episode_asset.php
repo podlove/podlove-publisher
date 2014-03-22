@@ -320,7 +320,7 @@ class EpisodeAsset {
 
 			$f->select( 'file_type_id', array(
 				'label'       => __( 'File Format', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'options'     => $format_optionlist
 			) );
 
