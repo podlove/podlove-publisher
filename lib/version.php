@@ -703,8 +703,8 @@ function run_migrations_for_version( $version ) {
 			$episodes = \Podlove\Model\Episode::all();
 
 			// Migration for Podcast
-			if( $episodes->license_type  == 'cc' && $episode->license_cc_allow_commercial_use !== '' &&
-				$episode->license_cc_allow_modifications !== '' && $episode->license_cc_license_jurisdiction !== '' ) {
+			if( $podcast->license_type  == 'cc' && $podcast->license_cc_allow_commercial_use !== '' &&
+				$podcast->license_cc_allow_modifications !== '' && $podcast->license_cc_license_jurisdiction !== '' ) {
 					$license = array(
 							'version'		=>	'3.0',
 							'commercial_use'=>	$podcast->license_cc_allow_commercial_use,
@@ -720,7 +720,7 @@ function run_migrations_for_version( $version ) {
 
 			// Migration for Episodes
 			foreach ( $episodes as $episode ) {
-				if( $episodes->license_type  == 'other' || $episode->license_cc_allow_commercial_use == '' ||
+				if( $episode->license_type  == 'other' || $episode->license_cc_allow_commercial_use == '' ||
 					$episode->license_cc_allow_modifications == '' || $episode->license_cc_license_jurisdiction == '' ) {
 					continue;
 				}
