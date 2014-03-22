@@ -1,27 +1,43 @@
+{% set colspan = 2 %}
+{% if avatars == "yes"   %}{% set colspan = colspan + 1 %}{% endif %}
+{% if groups == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+{% if roles == "yes"     %}{% set colspan = colspan + 1 %}{% endif %}
+{% if donations == "yes" %}{% set colspan = colspan + 1 %}{% endif %}
+{% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
+
 <table class="podlove-contributors-table">
-	<tbody>
-		{% for contributorGroup in episode.contributors({groupby: 'group', group: group, role: role}) %}
+	{% if title %}
+		<thead>
 			<tr>
-				{% set colspan = 2 %}
-				{% if avatars == "yes"   %}{% set colspan = colspan + 1 %}{% endif %}
-				{% if groups == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
-				{% if roles == "yes"     %}{% set colspan = colspan + 1 %}{% endif %}
-				{% if donations == "yes" %}{% set colspan = colspan + 1 %}{% endif %}
-				{% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
-				<th colspan="{{ colspan }}" class="contributor-group">
-					{% if contributorGroup.group %}
-						{{ contributorGroup.group.title }}
-					{% else %}
-						&nbsp;    
-					{% endif %}
-				</th>
+				<th colspan="{{ colspan }}">{{ title }}</th>
 			</tr>
-			{% for contributor in contributorGroup.contributors %}
-				{% if contributor.visible %}
-					{% include '@contributors/_contributor-table-row.twig' %}
-				{% endif %}
+		</thead>
+	{% endif %}
+	<tbody>
+		{% if groupby == "group" %}
+			{% for contributorGroup in episode.contributors({groupby: 'group', group: group, role: role}) %}
+				<tr>
+					<th colspan="{{ colspan }}" class="contributor-group">
+						{% if contributorGroup.group %}
+							{{ contributorGroup.group.title }}
+						{% else %}
+							&nbsp;
+						{% endif %}
+					</th>
+				</tr>
+				{% for contributor in contributorGroup.contributors %}
+					{% if contributor.visible %}
+						{% include '@contributors/_contributor-table-row.twig' %}
+					{% endif %}
+				{% endfor %}
 			{% endfor %}
-		{% endfor %}
+		{% else %}
+		    {% for contributor in episode.contributors({group: group, role: role}) %}
+		    	{% if contributor.visible %}
+		    		{% include '@contributors/_contributor-table-row.twig' %}
+		    	{% endif %}
+		    {% endfor %}
+		{% endif %}
 	</tbody>
 </table>
 

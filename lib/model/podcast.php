@@ -213,3 +213,4 @@ $podcast->property( 'uri_delimiter' );
 $podcast->property( 'limit_items' );
 $podcast->property( 'language' );
 $podcast->property( 'complete' );
+$podcast->property( 'flattr' );

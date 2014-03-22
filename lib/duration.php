@@ -45,7 +45,9 @@ class Duration {
 	/**
 	 * Get duration in a certain format.
 	 * 
-	 * @param  string $format (optional) Time format. Possibilities: full, second-accuracy. Default: full.
+	 * @param  string $format (optional) Time format.
+	 *         Possibilities: full, HH:MM:SS, hours, minutes, seconds, milliseconds.
+	 *         Default: full
 	 * @return string
 	 */
 	public function get( $format = 'full' ) {
@@ -63,6 +65,18 @@ class Duration {
 		}
 
 		switch ( $format ) {
+			case 'hours':
+				return $this->hours;
+				break;
+			case 'minutes':
+				return $this->minutes;
+				break;
+			case 'seconds':
+				return $this->seconds;
+				break;
+			case 'milliseconds':
+				return $this->milliseconds;
+				break;
 			case 'HH:MM:SS':
 				return $this->format( true, true, true, false );
 				break;
@@ -99,11 +113,6 @@ class Duration {
 			
 		return $duration;
 	}
-
-	public function is_valid() {
-		return (bool) $valid;
-	}
-
 }
 
 /**

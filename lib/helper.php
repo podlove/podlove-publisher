@@ -61,8 +61,7 @@ function get_setting( $namespace, $name ) {
 			'ssl_verify_peer' => 'on'
 		),
 		'metadata' => array(
-			'enable_episode_record_date'      => 0,
-			'enable_episode_publication_date' => 0,
+			'enable_episode_recording_date' => 0,
 			'enable_episode_explicit' => 0,
 			'enable_episode_license' => 0
 		),
@@ -239,6 +238,10 @@ function build_for( $object, $args, $callback ) {
 	<?php if ( ! isset( $args['submit_button'] ) || $args['submit_button'] === true ): ?>
 		<?php submit_button(); ?>
 	<?php endif ?>
+
+	<?php if ( isset($args['form_end']) && is_callable($args['form_end'])): ?>
+		<?php call_user_func( $args['form_end'] ); ?>
+	<?php endif; ?>
 
 	<?php if ( $print_form ): ?>
 		</form>

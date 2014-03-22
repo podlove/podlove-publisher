@@ -47,13 +47,17 @@ class License {
 		return $this->url;
 	}
 
+	public function isCreativeCommons() {
+		return $this->type == 'cc';
+	}
+
 	public function getHtml() {
 		if ($this->type == 'cc') {
 			return "
 			<div class=\"podlove_cc_license\">
 				<img src=\"" . $this->getPictureUrl() . "\" alt=\"License\" />
 				<p>
-					This work is licensed under a <a rel=\"license\" href=\"" . $this->url . "\">" . $this->name . "</a>.
+					This work is licensed under a <a rel=\"license\" href=\"" . $this->getUrl() . "\">" . $this->getName() . "</a>.
 				</p>
 			</div>";
 		}
@@ -86,7 +90,7 @@ class License {
 	public function getPictureUrl() {
 
 		if ($this->type != 'cc')
-			throw new Exception("Only cc licenses have pictures");
+			throw new \Exception("Only cc licenses have pictures");
 
 		return \Podlove\PLUGIN_URL
 			. "/images/cc/"

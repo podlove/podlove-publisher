@@ -11,7 +11,7 @@
 <tr>
 	{% if avatars == "yes" %}
 		<td class="avatar_cell">
-			{{ contributor.avatar }}
+			{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}
 		</td>
 	{% endif %}
 	<td class="title_cell">

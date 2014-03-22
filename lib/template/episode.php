@@ -97,6 +97,21 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Post recording date
+	 *
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate('Y-m-d') }}`
+	 *
+	 * @accessor
+	 */
+	public function recordingDate($format = '') {
+
+		if ($format === '')
+			$format = get_option('date_format') . ' ' . get_option('time_format');
+
+		return mysql2date($format, $this->episode->recording_date);
+	}
+
+	/**
 	 * Explicit status
 	 *
 	 * "yes", "no" or "clean"
@@ -117,15 +132,16 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Duration
+	 * Duration Object
 	 *
-	 * Use `duration("full")` to include milliseconds.
+	 * Use `duration` to display formatted hours, minutes and seconds.
+	 * Alternatively, use the duration accessors for custom rendering.
 	 *
-	 * @todo  support custom formatstrings
+	 * @see duration
 	 * @accessor
 	 */
-	public function duration($format = 'HH:MM:SS') {
-		return $this->episode->get_duration($format);
+	public function duration() {
+		return new Duration($this->episode);
 	}
 
 	/**
@@ -206,6 +222,11 @@ class Episode extends Wrapper {
 
 	/**
 	 * License
+	 *
+	 * To render an HTML license, use `{% include '@core/license.twig' %}` for
+	 * a license with fallback to the podcast license or 
+	 * `{% include '@core/license.twig' with {'license': episode.license} %}`
+	 * for the episode license only.
 	 * 
 	 * @see  license
 	 * @accessor

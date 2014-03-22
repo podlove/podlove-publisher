@@ -49,12 +49,35 @@ class License extends Wrapper {
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->license->getPictureUrl();
+		if ($this->license->isCreativeCommons() == 'cc') {
+			return $this->license->getPictureUrl();
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * Is this a creative commons license?
+	 * 
+	 * @accessor
+	 */
+	public function creativeCommons() {
+		return $this->license->isCreativeCommons();
+	}
+
+	/**
+	 * Is the license valid? Is all required data available?
+	 * 
+	 * @accessor
+	 */
+	public function valid() {
+		return $this->url() && $this->name();
 	}
 
 	/**
 	 * HTML
 	 *
+	 * @deprecated use `{% include '@core/license.twig' %}` instead
 	 * @accessor
 	 */
 	public function html() {

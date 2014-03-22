@@ -85,6 +85,46 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.3 =
+
+**Changes to the Templating System**
+
+* New filter: `padLeft(padCharacter, padLength)` can be used to append a character to the left of the given string until a certain length is reached. Example: `{{ "4"|padLeft("0",2) }}` returns "04";
+* For consistency `{{ contributor.avatar }}` is now an object. To render an HTML image tag, use `{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}`.
+* `{{ episode.duration }}` has been turned into an object to enable custom time renderings. The duration object has the following accessors: hours, minutes, seconds, milliseconds and totalMilliseconds.
+
+__DEPRECATIONS/WARNINGS__
+
+* `{{ episode.duration }}` is not a valid accessor any more. The default templates are updated but if you have used it in a custom template, you must replace it. Example: `{{ episode.duration.hours }}:{{ episode.duration.minutes|padLeft("0",2) }}:{{ episode.duration.seconds|padLeft("0",2) }}`
+* `{{ episode.license.html }}` and `{{ podcast.license.html }}` are deprecated. Use `{% include '@core/license.twig' %}` for the previous behaviour of choosing the correct license based on context. If you want to be more specific, use `{% include '@core/license.twig' with {'license': episode.license} %}` or `{% include '@core/license.twig' with {'license': podcast.license} %}`.
+
+**Other Changes**
+
+* Feature: ADN Module supports broadcasts
+* Enhancement: Contributor shortcode defaults to `donations="yes"` to avoid confusion
+* Enhancement: `[podlove-episode-downloads]` now uses templates internally
+* Enhancement: Added 500px, Last.fm, OpenStreetMap and Soup to Services
+* Enhancement: Use custom contributor social/donation titles as icon titles
+* Enhancement: Template form has a "Save Changes and Continue Editing" button now
+* Enhancement: feed validation is asynchronous now and has improved performance
+* Fix: all default contributors appear in new episodes again
+* Fix: change Tumblr URLs from https to http since Tumblr does not support them
+* Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
+* Fix: internal template warning when accessing empty contributor roles or groups
+* Fix: episode rendering when no files are available
+* Fix: flattr script in rss feeds
+
+= 1.10.2 =
+
+* Feature: add template filter `formatBytes` to format an integer as kilobytes, megabytes etc. Example: `{{ file.size|formatBytes }}`
+* Feature: New accessor `{{ file.id }}`. This is required to generate download forms.
+* Fix: `[podlove-episode-contributor-list]` shortcode: Firstly, the "title" attribute works again. Secondly, output by group is optional now and defaults to "not grouped" (as it was before 1.10). If you are using contributor groups and would like grouped output, use `[podlove-episode-contributor-list groupby="group"]`
+* Fix: division by zero bug in statistics dashboard
+* Fix: parse time in statistics dashboard correctly as normalplaytime
+* Fix: add missing template accessor `{{ episode.recordingDate }}`
+* Remove separate "publication date" field in episodes. Instead, use the episode post publication date maintained by WordPress. It can be accessed via `{{ episode.publicationDate }}`
+* Fix: missing contributor-edit-icon on last entries
+
 = 1.10.1 =
 
 * Fix: podlove-episode-contributor-list shortcode: add support for "group" and "role" attributes
@@ -101,9 +141,9 @@ If you have used templates before, please note that some shortcodes are now _DEP
 
 Instead of `[podlove-web-player]`, write `{{ episode.player }}`.
 
-Instead of `[podlove-podcast-license]`, write `{{ podcast.license }}`.
+Instead of `[podlove-podcast-license]`, write `{{ podcast.license.html }}`.
 
-Instead of `[podlove-episode-license]`, write `{{ episode.license }}`.
+Instead of `[podlove-episode-license]`, write `{{ episode.license.html }}`.
 
 Instead of `[podlove-episode field="subtitle"]`, write `{{ episode.subtitle }}`. Instead of `[podlove-episode field="summary"]`, write `{{ episode.summary }}` etc. When in doubt, look at the [Episode Template Reference](http://docs.podlove.org/publisher/template-reference/#episode).
 

@@ -1,0 +1,9 @@
+{#
+Display a contributor avatar.
+
+Usage examples:
+	{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}
+	{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 150} only %} 
+#}
+{% set size = size|default(50) %}
+<img alt="avatar" src="{{ avatar.url(size) }}" class="avatar avatar-{{ size }} photo" height="{{ size }}" width="{{ size }}" />

@@ -138,6 +138,9 @@ class Podcast extends Wrapper {
 	/**
 	 * License
 	 *
+	 * To render an HTML license, use 
+	 * `{% include '@core/license.twig' with {'license': podcast.license} %}`
+	 *
 	 * @see  license
 	 * @accessor
 	 */

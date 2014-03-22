@@ -3,7 +3,7 @@
 		{% if contributor.visible %}
 			<span>
 				{% if avatars == "yes" %}
-					{{ contributor.avatar(18) }}
+					{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 18} only %}
 				{% endif %}
 				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% endif %}
 		{% endif %}

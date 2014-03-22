@@ -25,6 +25,7 @@ $classes = [
 	'\Podlove\Template\Episode',
 	'\Podlove\Template\Asset',
 	'\Podlove\Template\File',
+	'\Podlove\Template\Duration',
 	'\Podlove\Template\Chapter',
 	'\Podlove\Template\License',
 	'\Podlove\Template\FileType',

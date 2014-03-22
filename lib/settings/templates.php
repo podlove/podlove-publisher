@@ -52,8 +52,12 @@ class Templates {
 			
 		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
 		$template->update_attributes( $_POST['podlove_template'] );
-		
-		$this->redirect( 'index', $template->id );
+
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $template->id );
+		} else {
+			$this->redirect( 'index', $template->id );
+		}
 	}
 	
 	/**
@@ -230,7 +234,15 @@ class Templates {
 			'hidden'  => array(
 				'template' => $template->id,
 				'action' => $action
-			)
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
 		);
 
 		\Podlove\Form\build_for( $template, $form_args, function ( $form ) {
@@ -247,12 +259,17 @@ class Templates {
 				'description' => __( 'Have a look at the <a href="http://docs.podlove.org/publisher/shortcodes/" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
 				'default' => <<<EOT
-[podlove-web-player]
+{# display the web player #}
+{{ episode.player }}
+
+{# display the download section #}
 [podlove-episode-downloads]
 
-<span class="podlove-duration">Duration: [podlove-episode field="duration"]</span>
+{# display the duration of the episode #}
+<span class="podlove-duration">Duration: {{ episode.duration.hours }}:{{ episode.duration.minutes|padLeft("0",2) }}:{{ episode.duration.seconds|padLeft("0",2) }}</span>
 
-[podlove-podcast-license]
+{# display the license #}
+{% include '@core/license.twig' %}
 EOT
 			) );
 

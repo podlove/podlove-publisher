@@ -49,6 +49,13 @@ class Social extends \Podlove\Modules\Base {
 
 		$services = array(
 			array(
+					'title' 		=> '500px',
+					'type'			=> 'social',
+					'description'	=> '500px Account',
+					'logo'			=> '500px-128.png',
+					'url_scheme'	=> 'https://500px.com/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'App.net',
 					'type'			=> 'social',
 					'description'	=> 'App.net Account',
@@ -140,6 +147,20 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Last.fm',
+					'type'			=> 'social',
+					'description'	=> 'Last.fm Account',
+					'logo'			=> 'lastfm-128.png',
+					'url_scheme'	=> 'https://www.lastfm.de/user/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'OpenStreetMap',
+					'type'			=> 'social',
+					'description'	=> 'OpenStreetMap Account',
+					'logo'			=> 'openstreetmap-128.png',
+					'url_scheme'	=> 'https://www.openstreetmap.org/user/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Linkedin',
 					'type'			=> 'social',
 					'description'	=> 'Linkedin URL',
@@ -182,6 +203,13 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Soup',
+					'type'			=> 'social',
+					'description'	=> 'Soup Account',
+					'logo'			=> 'soup-128.png',
+					'url_scheme'	=> 'http://%account-placeholder%.soup.io'
+				),
+			array(
 			 		'title' 		=> 'Steam',
 			 		'type'			=> 'social',
 			 		'description'	=> 'Steam Account',
@@ -193,7 +221,7 @@ class Social extends \Podlove\Modules\Base {
 					'type'			=> 'social',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
-					'url_scheme'	=> 'https://%account-placeholder%.tumblr.com/'
+					'url_scheme'	=> 'http://%account-placeholder%.tumblr.com/'
 				),
 			array(
 					'title' 		=> 'Twitter',
@@ -287,7 +315,7 @@ class Social extends \Podlove\Modules\Base {
 			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%/wishlist'
 				),
 			array(
-					'title' 		=> 'Thomann Wishtlist',
+					'title' 		=> 'Thomann Wishlist',
 					'type'			=> 'donation',
 					'description'	=> 'Thomann Wishlist URL',
 					'logo'			=> 'thomann-128.png',
@@ -443,11 +471,8 @@ class Social extends \Podlove\Modules\Base {
 		if (!isset($_POST['podlove_contributor']) )
 			return;
 
-		$services_appearances = $_POST['podlove_contributor']['services'];
-		$donations_appearances = $_POST['podlove_contributor']['donations'];
-
-		if (isset($services_appearances) )
-			foreach ($services_appearances as $service_appearance) {
+		if (isset($_POST['podlove_contributor']['services']) )
+			foreach ($_POST['podlove_contributor']['services'] as $service_appearance) {
 				foreach ($service_appearance as $service_id => $service) {
 					$c = new \Podlove\Modules\Social\Model\ContributorService;
 					$c->position = $position;
@@ -462,8 +487,8 @@ class Social extends \Podlove\Modules\Base {
 
 		$position = 0;
 
-		if (isset($donations_appearances) )
-			foreach ($donations_appearances as $donation_appearances) {
+		if (isset($_POST['podlove_contributor']['donations']) )
+			foreach ($_POST['podlove_contributor']['donations'] as $donation_appearances) {
 				foreach ($donation_appearances as $donation_id => $donation) {
 					$c = new \Podlove\Modules\Social\Model\ContributorService;
 					$c->position = $position;
@@ -530,8 +555,7 @@ class Social extends \Podlove\Modules\Base {
 
 		    // insert contributors at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("social" => __('Social', 'podlove'),
-		           		 "flattr" => __('Flattr', 'podlove')) +
+		           array("social" => __('Social', 'podlove')) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
 		    return $columns;
@@ -544,7 +568,11 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->callback( 'services_form_table', array(
 			'callback' => function() {
 
-				$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'] );
+				if (isset($_GET['contributor'])) {
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'] );
+				} else {
+					$services = array();
+				}
 
 				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table($services);
@@ -560,7 +588,11 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->callback( 'services_form_table', array(
 			'callback' => function() {
 
-				$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'], 'donation' );
+				if (isset($_GET['contributor'])) {
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'], 'donation' );
+				} else {
+					$services = array();
+				}
 
 				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );
@@ -621,7 +653,7 @@ class Social extends \Podlove\Modules\Base {
 				<td class="podlove-service-column">
 					<select name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
-						<?php foreach ( \Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service ): ?>
+						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `type` = \'' . $type . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>

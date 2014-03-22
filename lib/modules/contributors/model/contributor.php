@@ -23,7 +23,11 @@ class Contributor extends Base
 			$wpdb->prepare($sql, $groupSlug)
 		);
 
-		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+		if (is_array($contributor_ids) && count($contributor_ids) > 0) {
+			return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+		} else {
+			return array();
+		}
 	}
 
 	public static function byRole($roleSlug) {
@@ -44,7 +48,11 @@ class Contributor extends Base
 			$wpdb->prepare($sql, $roleSlug)
 		);
 
-		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+		if (is_array($contributor_ids) && count($contributor_ids) > 0) {
+			return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+		} else {
+			return array();
+		}
 	}
 
 	public static function byGroupAndRole($groupSlug = null, $roleSlug = null) {
@@ -76,7 +84,11 @@ class Contributor extends Base
 			$wpdb->prepare($sql, $roleSlug, $groupSlug)
 		);
 
-		return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+		if (is_array($contributor_ids) && count($contributor_ids) > 0) {
+			return Contributor::all('WHERE id IN (' . implode(',', $contributor_ids) . ')');
+		} else {
+			return array();
+		}
 	}
 
 	public function getName() {

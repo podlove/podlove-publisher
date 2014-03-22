@@ -50,3 +50,17 @@
 .adn-dropdown {
 	width: 180px;
 }
+
+.row_podlove_module_app_dot_net_adn_patter_room, .row_podlove_module_app_dot_net_adn_broadcast_channel {
+	display: none;
+}
+
+.chzn-container {
+	width: 150px !important;
+}
+
+#podlove_module_app_dot_net_adn_post_delay_hours, 
+#podlove_module_app_dot_net_adn_post_delay_minutes {
+	width: 40px;
+	text-align: center;
+}
