@@ -210,6 +210,8 @@ function add_feed_discoverability() {
 }
 
 add_action( 'init', function () {
+        load_plugin_textdomain( 'podlove', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages/');
+
 	new Podcast_Post_Type();
 
 	// priority 2 so they are placed below the WordPress default discovery links
