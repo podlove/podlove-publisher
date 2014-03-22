@@ -702,6 +702,23 @@ function run_migrations_for_version( $version ) {
 			$podcast  = \Podlove\Model\Podcast::get_instance();
 			$episodes = \Podlove\Model\Episode::all();
 
+			// Migration for Podcast
+			if( $episodes->license_type  == 'cc' && $episode->license_cc_allow_commercial_use !== '' &&
+				$episode->license_cc_allow_modifications !== '' && $episode->license_cc_license_jurisdiction !== '' ) {
+					$license = array(
+							'version'		=>	'3.0',
+							'commercial_use'=>	$podcast->license_cc_allow_commercial_use,
+							'modification'	=>	$podcast->license_cc_allow_modifications,
+							'jurisdiction'	=>	$podcast->license_cc_license_jurisdiction
+									);
+
+					$podcast->license_url = \Podlove\Model\License::get_url_from_license( $license );
+					$podcast->license_name = \Podlove\Model\License::get_name_from_license( $license );
+
+					$podcast->save();
+			}
+
+			// Migration for Episodes
 			foreach ( $episodes as $episode ) {
 				if( $episodes->license_type  == 'other' || $episode->license_cc_allow_commercial_use == '' ||
 					$episode->license_cc_allow_modifications == '' || $episode->license_cc_license_jurisdiction == '' ) {
