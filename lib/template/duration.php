@@ -23,6 +23,30 @@ class Duration extends Wrapper {
 	// /////////
 
 	/**
+	 * @deprecated since 1.10.3
+	 */
+	public function __toString() {
+		return $this->hours()
+		     . ":" . self::lfill( $this->minutes(), 2, 0 )
+		     . ":" . self::lfill( $this->seconds(), 2, 0 );
+	}
+
+	/**
+	 * Append characters to the left of the given string until a length is reached.
+	 * 
+	 * @param  string $string  
+	 * @param  int    $length  
+	 * @param  string $fillchar
+	 * @return string
+	 */
+	private static function lfill( $string, $length, $fillchar = ' ' ) {
+		while ( strlen( $string ) < $length ) {
+			$string = $fillchar . $string;
+		}
+		return $string;
+	}
+
+	/**
 	 * Hours
 	 *
 	 * 0,1,2,…
