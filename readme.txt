@@ -107,6 +107,7 @@ __DEPRECATIONS/WARNINGS__
 * Enhancement: Use custom contributor social/donation titles as icon titles
 * Enhancement: Template form has a "Save Changes and Continue Editing" button now
 * Enhancement: feed validation is asynchronous now and has improved performance
+* Enhancement: Licenses have a new interface and are compatible with Auphonic now: they can be imported from a finished production and are included when creating a production.
 * Fix: all default contributors appear in new episodes again
 * Fix: change Tumblr URLs from https to http since Tumblr does not support them
 * Fix: `[podlove-podcast-contributor-list]` shows the correct contributors now
