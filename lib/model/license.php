@@ -11,90 +11,40 @@ class License {
 	public $type;
 	public $name;
 	public $url;
-	public $cc_allow_modifications;
-	public $cc_allow_commercial_use;
-	public $cc_license_jurisdiction;
+	public $modifcation;
+	public $commercial_use;
+	public $jurisdiction;
 
 	public function __construct($scope, $attributes) {
-		$this->scope                   = $scope;
-		$this->type                    = $attributes['type'];
-		$this->name                    = $attributes['license_name'];
-		$this->url                     = $attributes['license_url'];
-		$this->cc_allow_modifications  = $attributes['allow_modifications'];
-		$this->cc_allow_commercial_use = $attributes['allow_commercial_use'];
-		$this->cc_license_jurisdiction = $attributes['jurisdiction'];
-	}
 
-	public function getAttributes() {
-		return array(
-			'license_type'         => $this->type,
-			'license_name'         => $this->name,
-			'license_url'          => $this->url,
-			'allow_modifications'  => $this->cc_allow_modifications,
-			'allow_commercial_use' => $this->cc_allow_commercial_use,
-			'jurisdiction'         => $this->cc_license_jurisdiction
-		);
-	}
+		$license = self::get_license_from_url( $attributes['license_url'] );
 
-	public function getSelectOptions() {
-		return array(
-			'cc'    => 'Creative Commons',
-			'other' => __('Other', 'podlove')
-		);
+		$this->scope 			 = $scope;
+		$this->type  			 = self::getLicenseType( $attributes['license_url'], $attributes['license_name'] );
+		$this->name  			 = $attributes['license_name'];
+		$this->url  			 = $attributes['license_url'];
+		$this->modification  	 = $license['modification'] ;
+		$this->commercial_use  	 = $license['commercial_use'];
+		$this->jurisdiction   	 = $license['jurisdiction'];
+	}	
+
+	public function getLicenseType( $url, $name ) {
+
+		if( empty($url) || empty($name) )
+			return;
+
+		if( self::is_cc_license( $url, $name ) )
+			return 'cc';
+
+		return 'other';
 	}
 
 	public function getName() {
-		if ($this->type == 'cc') {
-			$locales  = \Podlove\License\locales_cc();
-			$versions = \Podlove\License\version_per_country_cc();
-
-			if($this->cc_license_jurisdiction == "international") {
-				$version = $versions["international"]["version"];
-				$name = $versions["international"]["name"];
-			} else {
-				$version = $versions[$this->cc_license_jurisdiction]["version"];
-				$name = $locales[$this->cc_license_jurisdiction];
-			}
-
-			return "Creative Commons Attribution " . $version . " " . $name . " License";
-		} else {
-			return $this->name;
-		}
+		return $this->name;
 	}
 
 	public function getUrl() {
-		if ($this->type == 'cc') {
-			$locales  = \Podlove\License\locales_cc();
-			$versions = \Podlove\License\version_per_country_cc();
-			$url_slugs = $this->getURLSlug( $this->cc_allow_modifications, $this->cc_allow_commercial_use );
-
-			if($this->cc_license_jurisdiction == "international") {
-				$locale = "";
-				$version = $versions["international"]["version"];
-			} else {
-				$locale = $this->cc_license_jurisdiction."/";
-				$version = $versions[$this->cc_license_jurisdiction]["version"];
-			}
-
-			return "http://creativecommons.org/licenses/by"
-			     . $url_slugs['allow_commercial_use']
-			     . $url_slugs['allow_modifications']
-			     . "/" . $version
-			     . "/" . $locale
-			     . "deed.en";
-		} else {
-			return $this->url;
-		}
-	}
-
-	public function hasCompleteCCData() {
-		return $this->cc_license_jurisdiction != ""
-		    && $this->cc_allow_modifications  != ""
-		    && $this->cc_allow_commercial_use != "";
-	}
-
-	public function hasCompleteOtherData() {
-		return $this->name != "" && $this->url != "";
+		return $this->url;
 	}
 
 	public function isCreativeCommons() {
@@ -102,8 +52,7 @@ class License {
 	}
 
 	public function getHtml() {
-
-		if ($this->type == 'cc' && $this->hasCompleteCCData()) {
+		if ($this->type == 'cc') {
 			return "
 			<div class=\"podlove_cc_license\">
 				<img src=\"" . $this->getPictureUrl() . "\" alt=\"License\" />
@@ -113,7 +62,7 @@ class License {
 			</div>";
 		}
 
-		if ($this->type == 'other' && $this->hasCompleteOtherData()) {
+		if ($this->type == 'other') {
 			return "
 			<div class=\"podlove_license\">
 				<p>
@@ -141,7 +90,7 @@ class License {
 	public function getPictureUrl() {
 
 		if ($this->type != 'cc')
-			throw new Exception("Only cc licenses have pictures");
+			throw new \Exception("Only cc licenses have pictures");
 
 		return \Podlove\PLUGIN_URL
 			. "/images/cc/"
@@ -149,6 +98,27 @@ class License {
 			. "_"
 			. $this->getAlloCommercialUseId() 
 			. ".png";		
+	}
+
+	private function getAllowModificationId() {
+		switch ($this->modification) {
+			case "yes" :
+				return 1;
+			break;
+			case "yesbutshare" :
+				return 10;
+			break;
+			case "no" :
+				return 0;
+			break;
+			default :
+				return 1;
+			break;
+		}
+	}
+
+	private function getAlloCommercialUseId() {
+		return $this->commercial_use == "no" ? "0" : "1";
 	}
 
 	private function getURLSlug( $allow_modifications, $allow_commercial_use ) {
@@ -177,26 +147,77 @@ class License {
 						);
 	}
 
-	private function getAllowModificationId() {
-		switch ($this->cc_allow_modifications) {
-			case "yes" :
-				return 1;
-			break;
-			case "yesbutshare" :
-				return 10;
-			break;
-			case "no" :
-				return 0;
-			break;
-			default :
-				return 1;
-			break;
-		}
+	public static function is_cc_license( $license_url, $license_name ) {
+		if( !is_string( $license_url ) )
+			return;
+
+		if ( strpos( $license_url, 'creativecommons.org' ) === FALSE || strpos( $license_name, 'Creative Commons' ) === FALSE  )
+			return FALSE;
+
+		return TRUE;
 	}
 
-	private function getAlloCommercialUseId() {
-		return $this->cc_allow_commercial_use == "no" ? "0" : "1";
+	public static function get_license_from_url( $url=NULL ) {
+		if( is_null($url) )
+			return;
+
+		$raw_extract = array_slice(
+										explode( '/', $url ),
+										4, // remove http://creativecommons.org/
+										3
+							  		 );
+
+		$license = array(
+							'version'			=>	$raw_extract[1],
+							'commercial_use'	=>	( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
+							'modification'		=>	self::get_modification_state( $raw_extract[0] ),
+							'jurisdiction'		=>	( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
+						);
+
+		return $license;
 	}
 
+	public static function get_name_from_license( $license ) {
+
+		$locales = \Podlove\License\locales_cc();
+
+		$license_attributions = '';
+
+		if( $license['commercial_use'] == 'no' )
+			$license_attributions .= '-NonCommercial';
+
+		if( $license['modification'] == 'no' )
+			$license_attributions .= '-NoDerivatives';
+
+		if( $license['modification'] == 'yesbutshare' )
+			$license_attributions .= '-ShareAlike';
+
+		return 'Creative Commons Attribution' . $license_attributions . ' ' . $license['version'] . ' ' .  ( $license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']] ) . ' License';
+	}
+
+	public static function get_url_from_license( $license ) {
+		if( !is_array($license) )
+			return;
+
+		$url = 'http://creativecommons.org/licenses/by'
+				. ( $license['commercial_use'] == 'no' ? '-nc' : '' )
+				. ( $license['modification'] == 'yes' ? '/' : ( $license['modification'] == 'no' ? '-nd/' : '-sa/' ) )
+				. $license['version']
+				. ( $license['jurisdiction'] == 'international' ? '/' : '/'.$license['jurisdiction'].'/' )
+				. 'deed.en';
+
+		return $url;
+	}
+
+	private static function get_modification_state( $parameter_string ) {
+		if ( strpos( $parameter_string, 'sa' ) )
+			return 'yesbutshare';
+
+		if ( strpos( $parameter_string, 'nd' ) )
+			return 'no';
+
+		return 'yes';
+	}
 
 }
+

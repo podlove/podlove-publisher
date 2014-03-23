@@ -49,7 +49,11 @@ class License extends Wrapper {
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->license->getPictureUrl();
+		if ($this->license->isCreativeCommons() == 'cc') {
+			return $this->license->getPictureUrl();
+		} else {
+			return "";
+		}
 	}
 
 	/**
@@ -67,8 +71,7 @@ class License extends Wrapper {
 	 * @accessor
 	 */
 	public function valid() {
-		return $this->creativeCommons() && $this->license->hasCompleteCCData()
-		    || !$this->creativeCommons() && $this->license->hasCompleteOtherData();
+		return $this->url() && $this->name();
 	}
 
 	/**

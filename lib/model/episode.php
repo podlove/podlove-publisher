@@ -239,12 +239,8 @@ class Episode extends Base implements Licensable {
 	public function get_license()
 	{
 		$license = new License('episode', array(
-			'type'                 => $this->license_type,
 			'license_name'         => $this->license_name,
-			'license_url'          => $this->license_url,
-			'allow_modifications'  => $this->license_cc_allow_modifications,
-			'allow_commercial_use' => $this->license_cc_allow_commercial_use,
-			'jurisdiction'         => $this->license_cc_license_jurisdiction
+			'license_url'          => $this->license_url
 		));
 
 		return $license;
@@ -270,9 +266,5 @@ Episode::property( 'cover_art', 'VARCHAR(255)' );
 Episode::property( 'chapters', 'TEXT' );
 Episode::property( 'recording_date', 'DATETIME' );
 Episode::property( 'explicit', 'TINYINT' );
-Episode::property( 'license_type', 'VARCHAR(255)' );
 Episode::property( 'license_name', 'TEXT' );
 Episode::property( 'license_url', 'TEXT' );
-Episode::property( 'license_cc_allow_modifications', 'TEXT' );
-Episode::property( 'license_cc_allow_commercial_use', 'TEXT' );
-Episode::property( 'license_cc_license_jurisdiction', 'TEXT' );

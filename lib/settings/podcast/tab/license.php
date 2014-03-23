@@ -14,12 +14,8 @@ class License extends Tab {
 			return;
 
 		$formKeys = array(
-			'license_type',
 			'license_name',
-			'license_url',
-			'license_cc_allow_modifications',
-			'license_cc_allow_commercial_use',
-			'license_cc_license_jurisdiction'
+			'license_url'
 		);
 
 		$settings = get_option('podlove_podcast');
@@ -39,16 +35,11 @@ class License extends Tab {
 		);
 
 		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
+
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
 			
 			$podcast = \Podlove\Model\Podcast::get_instance();
-
-			$wrapper->select( 'license_type', array(
-				'label'       => __( 'License', 'podlove' ),
-				'options' 	  => array('cc' => 'Creative Commons', 'other' => 'Other'),
-				'description' => __( "<p class=\"podlove_podcast_license_status\"></p>", 'podlove' )
-			) );
 
 			$wrapper->string( 'license_name', array(
 				'label'       => __( 'License Name', 'podlove' )
@@ -58,31 +49,60 @@ class License extends Tab {
 				'label'       => __( 'License URL', 'podlove' ),
 				'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
 			) );
-
-			$wrapper->select( 'license_cc_allow_modifications', array(
-				'label'       => __( 'Modification', 'podlove' ),
-				'description' => __( 'Allow modifications of your work?', 'podlove' ),
-				'options' => array('yes' => 'Yes', 'yesbutshare' => 'Yes, as long as others share alike', 'no' => 'No')
-			) );
-
-			$wrapper->select( 'license_cc_allow_commercial_use', array(
-				'label'       => __( 'Commercial Use', 'podlove' ),
-				'description' => __( 'Allow commercial uses of your work?', 'podlove' ),
-				'options' => array('yes' => 'Yes', 'no' => 'No')
-			) );
-
-			$wrapper->select( 'license_cc_license_jurisdiction', array(
-				'label'       => __( 'License Jurisdiction', 'podlove' ),
-				'options' => \Podlove\License\locales_cc()
-			) );
-
 			?>
+				
+				<tr class="row_podlove_cc_license_selector_toggle">
+					<th></th>
+					<td>
+						<span id="podlove_cc_license_selector_toggle">
+							<span class="_podlove_episode_list_triangle">&#9658;</span>
+							<span class="_podlove_episode_list_triangle_expanded">&#9660;</span>
+							License Selector
+						</span>
+					</td>
+				</tr>
+				<tr class="row_podlove_cc_license_selector">
+					<th></th>
+					<td>
+						<div>
+							<label for="license_cc_allow_modifications" class="podlove_cc_license_selector_label">Allow modifications of your work?</label>
+							<select id="license_cc_allow_modifications">
+								<option value="yes">Yes</option>
+								<option value="yesbutshare">Yes, as long as others share alike</option>
+								<option value="no">No</option>
+							</select>
+						</div>
+						<div>
+							<label for="license_cc_allow_commercial_use" class="podlove_cc_license_selector_label">Allow commercial uses of your work?</label>
+							<select id="license_cc_allow_commercial_use">
+								<option value="yes">Yes</option>
+								<option value="no">No</option>
+							</select>
+						</div>
+						<div>
+							<label for="license_cc_license_jurisdiction" class="podlove_cc_license_selector_label">License Jurisdiction</label>
+							<select id="license_cc_license_jurisdiction">
+								<?php
+									foreach ( \Podlove\License\locales_cc() as $locale_key => $locale_description) {
+										echo "<option value='" . $locale_key . "' " . ( $locale_key == 'international' ? "selected='selected'" : '' ) . ">" . $locale_description . "</option>\n";
+									}
+								?>			
+							</select>
+						</div>
+					</td>
+				</tr>
 				<tr class="row_podlove_podcast_license_preview">
 					<th scope="row" valign="top">
 							<label for="podlove_podcast_subtitle">License Preview</label>
 					</th>
 					<td>
 						<p class="podlove_podcast_license_image"></p>
+						<div class="podlove_license">
+							<p>
+								This work is licensed under the 
+								<a class="podlove-license-link" rel="license" href=""></a>.
+							</p>
+						</div>
 					</td>
 				</tr>
 			<?php
@@ -94,28 +114,12 @@ class License extends Tab {
 
 			locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
 			versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
+			license: JSON.parse('<?php echo json_encode(\Podlove\Model\License::get_license_from_url($podcast->license_url)); ?>'),
 
-			container: '.row_podlove_podcast_license_type',
-			type: '<?php echo $podcast->license_type; ?>',
-			status: '.podlove_podcast_license_status',
-			image: '.podlove_podcast_license_image',
-			image_row: 'tr.podlove_podcast_license_image',
-			form_row_cc_preview: 'tr.row_podlove_podcast_license_preview',
-
-			form_type: '#podlove_podcast_license_type',
-			form_other_name: '#podlove_podcast_license_name',
-			form_other_url: '#podlove_podcast_license_url',
-			form_cc_commercial_use: '#podlove_podcast_license_cc_allow_commercial_use',
-			form_cc_modification: '#podlove_podcast_license_cc_allow_modifications',
-			form_cc_jurisdiction: '#podlove_podcast_license_cc_license_jurisdiction',
-			form_cc_preview: '#podlove_podcast_license_preview',
-
-			form_row_other_name: 'tr.row_podlove_podcast_license_name',
-			form_row_other_url: 'tr.row_podlove_podcast_license_url',
-			form_row_cc_commercial_use: 'tr.row_podlove_podcast_license_cc_allow_commercial_use',
-			form_row_cc_modification: 'tr.row_podlove_podcast_license_cc_allow_modifications',
-			form_row_cc_jurisdiction: 'tr.row_podlove_podcast_license_cc_license_jurisdiction'
+			license_name_field_id: '#podlove_podcast_license_name',
+			license_url_field_id: '#podlove_podcast_license_url'
 		});
+
 		</script>
 		<?php
 	}

@@ -145,66 +145,61 @@ class Podcast_Post_Meta_Box {
 
 				if ( \Podlove\get_setting( 'metadata', 'enable_episode_license' ) ) {
 					$podcast = Model\Podcast::get_instance();
-					$license = $podcast->get_license();
-
-					$wrapper->select( 'license_type', array(
-						'label'       => __( 'License', 'podlove' ),
-						'options' 	  => $license->getSelectOptions(),
-						'html' => array( 'style' => 'width: 300px;'),
-						'please_choose' => false,
-						'default' => $license->type,
-						'description' => '<span id="podlove_podcast_license_status"><a href="javascript:podlove_toggle_license_form(\''.$license->type.'\')">Edit</a> the selected license for the current episode.</span>'
-						));
-
-					echo "<div id=\"podlove_episode_license_wrapper\">";
+					$license = $episode->get_license();
 
 					$wrapper->string( 'license_name', array(
-						'label'       => __( 'License Name', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' ),
-						'default' => $license->name
+						'label'       => __( 'License Name', 'podlove' )
 					) );
 
 					$wrapper->string( 'license_url', array(
 						'label'       => __( 'License URL', 'podlove' ),
-						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' ),
-						'default' => $license->url
+						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
 					) );
-
-					$wrapper->select( 'license_cc_allow_modifications', array(
-						'label'       => __( 'Modification', 'podlove' ),
-						'description' => __( 'Allow modifications of your work?', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' ),
-						'options' => array('yes' => 'Yes', 'yesbutshare' => 'Yes, as long as others share alike', 'no' => 'No'),
-						'default' => $license->cc_allow_modifications
-					) );
-
-					$wrapper->select( 'license_cc_allow_commercial_use', array(
-						'label'       => __( 'Commercial Use', 'podlove' ),
-						'description' => __( 'Allow commercial uses of your work?', 'podlove' ),
-						'html' => array( 'class' => 'regular-text' ),
-						'options' => array('yes' => 'Yes', 'no' => 'No'),
-						'default' => $license->cc_allow_commercial_use
-					) );
-
-					$wrapper->select( 'license_cc_license_jurisdiction', array(
-						'label'       => __( 'License Jurisdiction', 'podlove' ),
-						'options' => \Podlove\License\locales_cc(),
-						'default' => $license->cc_license_jurisdiction
-					) );
-
 					?>
-
-					</div>
-					<div class="row__podlove_podcast_license_preview">
-						<span>
-							<label>License Preview</label>
-						</span>
-						<div>
-							<p class="podlove_podcast_license_image"></p>
+						<div class="row_podlove_cc_license_selector_toggle">
+							<span id="podlove_cc_license_selector_toggle">
+								<span class="_podlove_episode_list_triangle">&#9658;</span>
+								<span class="_podlove_episode_list_triangle_expanded">&#9660;</span>
+								License Selector
+							</span>
 						</div>
-					</div>
-
+						<div class="row_podlove_cc_license_selector">
+							<div>
+								<label for="license_cc_allow_modifications" class="podlove_cc_license_selector_label">Allow modifications of your work?</label>
+								<select id="license_cc_allow_modifications">
+									<option value="yes">Yes</option>
+									<option value="yesbutshare">Yes, as long as others share alike</option>
+									<option value="no">No</option>
+								</select>
+							</div>
+							<div>
+								<label for="license_cc_allow_commercial_use" class="podlove_cc_license_selector_label">Allow commercial uses of your work?</label>
+								<select id="license_cc_allow_commercial_use">
+									<option value="yes">Yes</option>
+									<option value="no">No</option>
+								</select>
+							</div>
+							<div>
+								<label for="license_cc_license_jurisdiction" class="podlove_cc_license_selector_label">License Jurisdiction</label>
+								<select id="license_cc_license_jurisdiction">
+									<?php
+										foreach ( \Podlove\License\locales_cc() as $locale_key => $locale_description) {
+											echo "<option value='" . $locale_key . "' " . ( $locale_key == 'international' ? "selected='selected'" : '' ) . ">" . $locale_description . "</option>\n";
+										}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="row_podlove_podcast_license_preview">
+								<span><label for="podlove_podcast_subtitle">License Preview</label></span>
+								<p class="podlove_podcast_license_image"></p>
+								<div class="podlove_license">
+									<p>
+										This work is licensed under the 
+										<a class="podlove-license-link" rel="license" href=""></a>.
+									</p>
+								</div>
+						</div>
 					<?php
 				}
 
@@ -218,33 +213,16 @@ class Podcast_Post_Meta_Box {
 		if ( \Podlove\get_setting( 'metadata', 'enable_episode_license' ) ) :
 		?>
 		<script type="text/javascript">
-			PODLOVE.License({
-				plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
+		PODLOVE.License({
+			plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
 
-				locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
-				versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
+			locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
+			versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
+			license: JSON.parse('<?php echo json_encode(\Podlove\Model\License::get_license_from_url($episode->license_url)); ?>'),
 
-				container: ".row__podlove_meta_license_type",
-				type: '<?php echo $podcast->get_license()->type; ?>',
-				status: '#podlove_podcast_license_status',
-				image: '.podlove_podcast_license_image',
-				image_row: 'div.row__podlove_podcast_license_preview',
-				form_row_cc_preview: 'div.row__podlove_podcast_license_preview',
-
-				form_type: '#_podlove_meta_license_type',
-				form_other_name: '#_podlove_meta_license_name',
-				form_other_url: '#_podlove_meta_license_url',
-				form_cc_commercial_use: '#_podlove_meta_license_cc_allow_commercial_use',
-				form_cc_modification: '#_podlove_meta_license_cc_allow_modifications',
-				form_cc_jurisdiction: '#_podlove_meta_license_cc_license_jurisdiction',
-				form_cc_preview: '#podlove_podcast_license_preview',
-
-				form_row_other_name: 'div.row__podlove_meta_license_name',
-				form_row_other_url: 'div.row__podlove_meta_license_url',
-				form_row_cc_commercial_use: 'div.row__podlove_meta_license_cc_allow_commercial_use',
-				form_row_cc_modification: 'div.row__podlove_meta_license_cc_allow_modifications',
-				form_row_cc_jurisdiction: 'div.row__podlove_meta_license_cc_license_jurisdiction',
-			});
+			license_name_field_id: '#_podlove_meta_license_name',
+			license_url_field_id: '#_podlove_meta_license_url'
+		});
 		</script>
 		<?php endif; ?>
 

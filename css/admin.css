@@ -191,66 +191,47 @@ input.podlove-contributor-field {
 
 /* Podlove Podcast License */
 
-tr.row_podlove_podcast_license_url,
-tr.row_podlove_podcast_license_name,
-tr.row_podlove_podcast_license_cc_allow_modifications,
-tr.row_podlove_podcast_license_cc_allow_commercial_use,
-tr.row_podlove_podcast_license_cc_license_jurisdiction,
-tr.row_podlove_podcast_license_preview {
-	display: none;
+#podlove_podcast_license_name,
+#podlove_podcast_license_url {
+	width: 400px;
 }
 
-div.podlove_cc_license, div.podlove_license {
+div.podlove_cc_license, div.podlove_license, .podlove_podcast_license_image {
 	display: block;
 	width: 300px;
 	text-align: center;
-	padding: 10px;
 }
 
-div.row__podlove_meta_license_name,
-div.row__podlove_meta_license_url,
-div.row__podlove_meta_license_cc_allow_modifications,
-div.row__podlove_meta_license_cc_allow_commercial_use,
-div.row__podlove_meta_license_cc_license_jurisdiction,
-div.row__podlove_podcast_license_preview {
+._podlove_episode_list_triangle,
+._podlove_episode_list_triangle_expanded {
+	width: 20px;
+	font-size: 0.8em;
+}
+
+._podlove_episode_list_triangle_expanded {
 	display: none;
 }
 
-div.row__podlove_meta_license_name input,
-div.row__podlove_meta_license_url input,
-div.row__podlove_meta_license_cc_allow_modifications select,
-div.row__podlove_meta_license_cc_allow_commercial_use select,
-div.row__podlove_meta_license_cc_license_jurisdiction select {
+span#podlove_cc_license_selector_toggle {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.row_podlove_cc_license_selector {
+	display: none;
+}
+
+.row_podlove_cc_license_selector td div {
+	padding: 0px 5px 5px 30px;
+}
+
+.row_podlove_cc_license_selector td div select {
+	width: 190px;
+}
+
+label.podlove_cc_license_selector_label {
+	font-style: italic;
 	width: 240px;
-}
-
-div.row__podlove_meta_license_name div,
-div.row__podlove_meta_license_url div,
-div.row__podlove_meta_license_cc_allow_modifications div,
-div.row__podlove_meta_license_cc_allow_commercial_use div,
-div.row__podlove_meta_license_cc_license_jurisdiction div {
 	display: inline-block;
-	margin: 0px 0px 0.5em 0px;
-}
-
-div.row__podlove_meta_license_name label,
-div.row__podlove_meta_license_url label,
-div.row__podlove_meta_license_cc_allow_modifications label,
-div.row__podlove_meta_license_cc_allow_commercial_use label,
-div.row__podlove_meta_license_cc_license_jurisdiction label {
-	width: 130px;
-	display: inline-block;
-	margin-left: 1em;
-}
-
-div.row__podlove_meta_license_type {
-	margin: 0px 0px 1em 0px;
-}
-
-td.podlove-avatar-column, th.podlove-avatar-column {
-	width: 45px !important;
-}
-
-td.podlove-contributor-column {
-	white-space: nowrap;
+	clear: both;
 }

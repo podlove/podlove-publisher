@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 65 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 66 );
 
 add_action( 'init', function () {
 	
@@ -690,6 +690,52 @@ function run_migrations_for_version( $version ) {
 
 					$flattr_service->delete();
 				}
+			}
+		break;
+		case 66:
+			// Temporary add license_type and CC license fields to episode model
+			\Podlove\Model\Episode::property( 'license_type', 'VARCHAR(255)' );
+			\Podlove\Model\Episode::property( 'license_cc_allow_modifications', 'VARCHAR(255)' );
+			\Podlove\Model\Episode::property( 'license_cc_allow_commercial_use', 'VARCHAR(255)' );
+			\Podlove\Model\Episode::property( 'license_cc_license_jurisdiction', 'VARCHAR(255)' );
+
+			$podcast  = \Podlove\Model\Podcast::get_instance();
+			$episodes = \Podlove\Model\Episode::all();
+
+			// Migration for Podcast
+			if( $podcast->license_type  == 'cc' && $podcast->license_cc_allow_commercial_use !== '' &&
+				$podcast->license_cc_allow_modifications !== '' && $podcast->license_cc_license_jurisdiction !== '' ) {
+					$license = array(
+							'version'		=>	'3.0',
+							'commercial_use'=>	$podcast->license_cc_allow_commercial_use,
+							'modification'	=>	$podcast->license_cc_allow_modifications,
+							'jurisdiction'	=>	$podcast->license_cc_license_jurisdiction
+									);
+
+					$podcast->license_url = \Podlove\Model\License::get_url_from_license( $license );
+					$podcast->license_name = \Podlove\Model\License::get_name_from_license( $license );
+
+					$podcast->save();
+			}
+
+			// Migration for Episodes
+			foreach ( $episodes as $episode ) {
+				if( $episode->license_type  == 'other' || $episode->license_cc_allow_commercial_use == '' ||
+					$episode->license_cc_allow_modifications == '' || $episode->license_cc_license_jurisdiction == '' ) {
+					continue;
+				}
+
+				$license = array(
+					'version'        => '3.0',
+					'commercial_use' => $episode->license_cc_allow_commercial_use,
+					'modification'   => $episode->license_cc_allow_modifications,
+					'jurisdiction'   => $episode->license_cc_license_jurisdiction
+				);
+
+				$episode->license_url  = \Podlove\Model\License::get_url_from_license( $license );
+				$episode->license_name = \Podlove\Model\License::get_name_from_license( $license );
+
+				$episode->save();
 			}
 		break;
 	}
