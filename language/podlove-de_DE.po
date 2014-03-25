@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Podlove-Publisher 1.10\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-25 13:05+0100\n"
-"PO-Revision-Date: 2014-03-25 13:48+0100\n"
+"POT-Creation-Date: 2014-03-25 14:05+0100\n"
+"PO-Revision-Date: 2014-03-25 15:54+0100\n"
 "Last-Translator: Sven Anders <poedit2014@sven.anders.im>\n"
 "Language-Team: Deutsch <DE@li.org>\n"
 "Language: de_DE\n"
@@ -216,7 +216,7 @@ msgstr "Gruppenkürzel"
 #: lib/modules/contributors/settings/contributor_roles.php:49
 #, php-format
 msgid "You selected to delete the role \"%s\". Please confirm this action."
-msgstr ""
+msgstr "Wollen Sie wirklich die Rolle \"%s\" löschen?"
 
 #: lib/modules/contributors/settings/contributor_roles.php:53
 msgid "Delete role permanently"
@@ -275,7 +275,7 @@ msgstr "Rollen"
 #: lib/modules/contributors/settings/contributor_groups.php:49
 #, php-format
 msgid "You selected to delete the group \"%s\". Please confirm this action."
-msgstr ""
+msgstr "Sie haben die Gruppe \"%s\" zum Löschen ausgewählt. Bitte bestätigen Sie diese Aktion."
 
 #: lib/modules/contributors/settings/contributor_groups.php:53
 msgid "Delete group permanently"
@@ -300,7 +300,7 @@ msgstr "Gruppe bearbeiten: %s"
 msgid ""
 "This Flattr account will be associated with your Podcast. Flattr donations for e.g. new episodes\n"
 "\t\t\t\t\t\t\twill be linked with this account."
-msgstr ""
+msgstr "Ihr Flattr-Konto wird mit Ihrem Podcast verknüpft. Flattr spenden für z.B. neue Folgen werden bei diesem Konto eingehen."
 
 #: lib/modules/contributors/settings/podcast_flattr_settings_tab.php:48
 #: lib/modules/contributors/settings/contributors.php:298
@@ -310,12 +310,12 @@ msgstr "Flattr Account"
 #: lib/modules/contributors/settings/podcast_contributors_settings_tab.php:40
 #, php-format
 msgid "This is the current team of your podcast. Display this list using the shortcode %s"
-msgstr ""
+msgstr "Dies ist das aktuelle Team des Podcasts. Um es an zu zeigen nutze den Befehl %s"
 
 #: lib/modules/contributors/settings/contributors.php:84
 #, php-format
 msgid "You selected to delete the contributor \"%s\". Please confirm this action."
-msgstr ""
+msgstr "Soll der Mitwirkende \"%s\" wirklich gelöscht werden?"
 
 #: lib/modules/contributors/settings/contributors.php:88
 msgid "Delete contributor permanently"
@@ -435,9 +435,8 @@ msgstr "Sichtbarkeit"
 
 #: lib/modules/contributors/contributor_list_table.php:242
 #: lib/list_table.php:24
-#, fuzzy
 msgid "No items found."
-msgstr "Keine Elemente gefunden."
+msgstr "Keine Einträge gefunden."
 
 #: lib/modules/contributors/contributors.php:183
 msgid "Genders"
@@ -469,26 +468,27 @@ msgid "Dismiss this message"
 msgstr "Diese Nachricht verwerfen"
 
 #: lib/modules/migration/settings/wizard/step_welcome.php:26
-#: lib/modules/migration/settings/wizard/step_welcome.php:60
-msgid "Don't know how to do a backup? Try "
+#: lib/modules/migration/settings/wizard/step_welcome.php:61
+#, php-format
+msgid "Don't know how to do a backup? Try <a href=\"%s\" target=\"_blank\">%s</a>?"
 msgstr ""
 
-#: lib/modules/migration/settings/wizard/step_welcome.php:42
-#: lib/modules/migration/settings/wizard/step_welcome.php:64
+#: lib/modules/migration/settings/wizard/step_welcome.php:43
+#: lib/modules/migration/settings/wizard/step_welcome.php:65
 msgid "Let's do this!"
 msgstr "Ausführen!"
 
-#: lib/modules/migration/settings/wizard/step_welcome.php:49
+#: lib/modules/migration/settings/wizard/step_welcome.php:50
 msgid "Hi, Let's Migrate!"
 msgstr "Hallo, laß uns Migrieren!"
 
-#: lib/modules/migration/settings/wizard/step_welcome.php:52
+#: lib/modules/migration/settings/wizard/step_welcome.php:53
 msgid ""
 "My name is Miggy and I'm your Migration Assistant for today. Cool, huh?\n"
 "\t\t\t\tI'm able to help you if you're currently using PodPress, PowerPress or any other podcasting setup which manages episodes as posts with enclosures."
 msgstr ""
 
-#: lib/modules/migration/settings/wizard/step_welcome.php:56
+#: lib/modules/migration/settings/wizard/step_welcome.php:57
 msgid ""
 "Before we start, <strong><em>please backup your database!</em></strong>\n"
 "\t\t\t\tI won't edit or delete any of your existing data but, you know, nobody has ever lost any data by backing up. Play it safe."
@@ -522,9 +522,8 @@ msgstr "Mit der Migration fortzufahren."
 #: lib/settings/episode_asset.php:13
 #: lib/settings/episode_asset.php:14
 #: lib/settings/episode_asset.php:185
-#, fuzzy
 msgid "Episode Assets"
-msgstr "Ausprägungen einrichten"
+msgstr ""
 
 #: lib/modules/migration/settings/wizard/step_posts.php:141
 msgid "Use"
@@ -579,7 +578,7 @@ msgstr "Podcastzusammenfassung"
 
 #: lib/modules/migration/settings/wizard/step_basics.php:88
 msgid "A couple of sentences describing the podcast."
-msgstr ""
+msgstr "Ein paar Sätze die den Podcast beschreiben."
 
 #: lib/modules/migration/settings/wizard/step_basics.php:92
 #: lib/podcast_post_meta_box.php:346
@@ -600,7 +599,7 @@ msgstr "Migrations-Assistenten"
 
 #: lib/modules/migration/settings/assistant.php:136
 msgid "Deletes all episodes, assets, feeds and migration settings."
-msgstr ""
+msgstr "Löscht alle Folgen, Assets, Feeds und Migrationseinstellungen."
 
 #: lib/modules/migration/settings/assistant.php:138
 msgid "start from scratch"
@@ -657,7 +656,7 @@ msgstr "Autorisierung"
 #: lib/modules/auphonic/auphonic.php:44
 #, php-format
 msgid "You are logged in as %s. If you want to logout, click %shere%s."
-msgstr ""
+msgstr "Sie sind angemeldet als %s. Wenn Sie sich abmelden wollen %sklicken Sie hier%s"
 
 #: lib/modules/app_dot_net/app_dot_net.php:57
 #, php-format
@@ -718,7 +717,7 @@ msgstr "Ankündigungstext"
 
 #: lib/modules/app_dot_net/app_dot_net.php:135
 msgid "Check out the new {podcastTitle} episode: {linkedEpisodeTitle}"
-msgstr ""
+msgstr "Neue Folge von {podcastTitle}: {linkedEpisodeTitle}"
 
 #: lib/modules/app_dot_net/app_dot_net.php:140
 msgid "Announcement preview"
@@ -774,9 +773,8 @@ msgid "Open in Auphonic"
 msgstr "In Auphonic öffnen"
 
 #: lib/modules/auphonic/auphonic.php:316
-#, fuzzy
 msgid "Publish episode when done"
-msgstr "Geben Sie »exit« ein, wenn Sie fertig sind.\n"
+msgstr "Veröffentliche die Folge wenn fertig"
 
 #: lib/modules/auphonic_production_data/auphonic_production_data.php:29
 #: lib/settings/episode_asset.php:227
@@ -792,25 +790,22 @@ msgid "Asset: %s"
 msgstr ""
 
 #: lib/modules/auphonic_production_data/auphonic_production_data.php:39
-#, fuzzy
 msgid "Episode Metadata"
-msgstr "Metadaten &speichern"
+msgstr "Metadaten der Folge"
 
 #: lib/modules/feed_validation/feed_validation.php:30
 #: lib/modules/asset_validation/asset_validation.php:24
-#, fuzzy, php-format
+#, php-format
 msgid "Next scheduled validation: %s"
-msgstr "Unterzeichnet von (überprüft durch: %1)"
+msgstr "Nächste geplante Überprüfung: %s"
 
 #: lib/modules/feed_validation/feed_validation.php:42
-#, fuzzy
 msgid "Podcast feeds"
-msgstr "Geschwindigkeit der Feeds"
+msgstr "Podcast Feeds"
 
 #: lib/modules/feed_validation/feed_validation.php:70
-#, fuzzy
 msgid "Revalidate Feeds"
-msgstr "Geschwindigkeit der Feeds"
+msgstr "Feeds überprüfen"
 
 #: lib/modules/feed_validation/feed_validation.php:75
 #: lib/settings/file_type.php:150
@@ -819,12 +814,10 @@ msgid "Name"
 msgstr "Name"
 
 #: lib/modules/feed_validation/feed_validation.php:76
-#, fuzzy
 msgid "Slug/URL"
-msgstr "Server-Adresse"
+msgstr "Kürzel/URL"
 
 #: lib/modules/feed_validation/feed_validation.php:77
-#, fuzzy
 msgid "Last Modification"
 msgstr "Letzte Änderung"
 
@@ -837,12 +830,10 @@ msgid "Size"
 msgstr "Größe"
 
 #: lib/modules/feed_validation/feed_validation.php:79
-#, fuzzy
 msgid "Latest item"
-msgstr "Eintrag entfernen"
+msgstr "Letzter Eintrag "
 
 #: lib/modules/feed_validation/feed_validation.php:80
-#, fuzzy
 msgid "Validation"
 msgstr "Überprüfung"
 
@@ -851,25 +842,22 @@ msgid "Just now"
 msgstr "gerade jetzt"
 
 #: lib/modules/pubsubhubbub/pubsubhubbub.php:16
-#, fuzzy
 msgid "Hub URL"
-msgstr "Server-Adresse"
+msgstr "Hub URL"
 
 #: lib/modules/pubsubhubbub/pubsubhubbub.php:17
 msgid "Use hub URL for all feeds."
 msgstr ""
 
 #: lib/modules/logging/logging.php:38
-#, fuzzy
 msgid "Logging"
 msgstr "Protokollierung"
 
 #: lib/modules/social/social.php:541
 #: lib/modules/social/social.php:558
 #: lib/modules/social/social.php:566
-#, fuzzy
 msgid "Social"
-msgstr "Sozialwissenschaften"
+msgstr "Sozial"
 
 #: lib/modules/social/social.php:547
 #: lib/modules/social/social.php:586
@@ -881,9 +869,8 @@ msgid "No Services were added yet."
 msgstr "Es wurde noch kein Dienst hinzugefügt."
 
 #: lib/modules/social/social.php:655
-#, fuzzy
 msgid "Choose Service"
-msgstr "Diensttypen"
+msgstr "Wähle einen Dienst"
 
 #: lib/modules/social/settings/podcast_settings_social_tab.php:41
 #, php-format
@@ -900,14 +887,12 @@ msgid "Activate for all existing Episodes"
 msgstr ""
 
 #: lib/episode_asset_list_table.php:35
-#, fuzzy
 msgid "- title missing -"
-msgstr "Kein Name"
+msgstr "- Titel fehlt -"
 
 #: lib/episode_asset_list_table.php:58
-#, fuzzy
 msgid "Episode Asset"
-msgstr "Nummer der Folge"
+msgstr ""
 
 #: lib/episode_asset_list_table.php:59
 #: lib/file_type_list_table.php:61
@@ -916,14 +901,12 @@ msgstr "Dateityp"
 
 #: lib/episode_asset_list_table.php:60
 #: lib/settings/episode_asset.php:334
-#, fuzzy
 msgid "Downloadable"
-msgstr "Herunterladbare Treiber"
+msgstr "Herunterladbar"
 
 #: lib/settings/settings.php:25
-#, fuzzy
 msgid "Expert Settings"
-msgstr "Weitere Einstellungen"
+msgstr "Experten-Einstellungen"
 
 #: lib/settings/settings.php:26
 msgid "Website"
@@ -951,65 +934,56 @@ msgid "<strong>The asset has not been deleted. Are you aware that the asset is s
 msgstr ""
 
 #: lib/settings/episode_asset.php:155
-#, fuzzy, php-format
+#, php-format
 msgid "There are %s connected media files."
-msgstr "Es gibt keine Datei im Verzeichnis »%s«."
+msgstr "Es gibt %s zugehörige Mediendateien."
 
 #: lib/settings/episode_asset.php:160
 msgid "This asset is assigned to episode images or episode chapters."
 msgstr ""
 
 #: lib/settings/episode_asset.php:165
-#, fuzzy
 msgid "A feed uses this asset."
-msgstr "Die Datei verwendet erweiterte Zugriffsrechte."
+msgstr ""
 
 #: lib/settings/episode_asset.php:170
 msgid "The web player uses this asset."
 msgstr ""
 
 #: lib/settings/episode_asset.php:175
-#, fuzzy
 msgid "delete anyway"
-msgstr "&Trotzdem absenden"
+msgstr "trotzdem löschen"
 
 #: lib/settings/episode_asset.php:202
 #: lib/settings/episode_asset.php:204
-#, fuzzy
 msgid "Add New Episode Asset"
-msgstr "Als neuen Kalender hinzufügen"
+msgstr ""
 
 #: lib/settings/episode_asset.php:213
-#, fuzzy
 msgid "Assign Assets"
-msgstr "Ausprägungen einrichten"
+msgstr ""
 
 #: lib/settings/episode_asset.php:228
 #: lib/settings/episode_asset.php:245
-#, fuzzy
 msgid "Manual Entry"
-msgstr "Kein Handbucheintrag für %s vorhanden\n"
+msgstr "Manueller Eintrag"
 
 #: lib/settings/episode_asset.php:239
-#, fuzzy
 msgid "Episode Image"
-msgstr "Bilddateien"
+msgstr "Folgenbild"
 
 #: lib/settings/episode_asset.php:255
-#, fuzzy
 msgid "Episode Chapters"
-msgstr "Nummer der Folge"
+msgstr "Folgen Kapitel"
 
 #: lib/settings/episode_asset.php:307
-#, fuzzy
 msgid "Asset Type"
-msgstr "Composit-Typ:"
+msgstr ""
 
 #: lib/settings/episode_asset.php:311
 #: lib/form/input/builder.php:137
-#, fuzzy
 msgid "Please choose ..."
-msgstr "Bitte Datei auswählen"
+msgstr "Bitte wählen..."
 
 #: lib/settings/episode_asset.php:322
 msgid "File Format"
@@ -1021,14 +995,12 @@ msgstr ""
 
 #: lib/settings/episode_asset.php:341
 #: lib/podcast_post_meta_box.php:334
-#, fuzzy
 msgid "Asset File Name"
-msgstr "Dateinamen-Vorlage: "
+msgstr ""
 
 #: lib/settings/episode_asset.php:346
-#, fuzzy
 msgid "File Name Suffix"
-msgstr "Der Name sollte mit Suffix '{0}' enden."
+msgstr "Dateinamen Suffix"
 
 #: lib/settings/episode_asset.php:347
 msgid "Optional. Is appended to file name after episode slug."
@@ -1039,9 +1011,9 @@ msgid "URL Preview"
 msgstr "Vorschau-Adresse:"
 
 #: lib/settings/episode_asset.php:372
-#, fuzzy, php-format
+#, php-format
 msgid "Edit Episode Asset: %s"
-msgstr "Erstelle eine neue Episode"
+msgstr ""
 
 #: lib/settings/templates.php:13
 #: lib/settings/templates.php:14
@@ -1050,7 +1022,6 @@ msgid "Templates"
 msgstr "Vorlagen"
 
 #: lib/settings/templates.php:124
-#, fuzzy
 msgid "Are you sure you want do delete this template?"
 msgstr "Diese Vorlage wirklich entfernen?"
 
@@ -1072,9 +1043,8 @@ msgid "Insert templates to content automatically"
 msgstr ""
 
 #: lib/settings/templates.php:199
-#, fuzzy
 msgid "Don't insert automatically"
-msgstr "Schließende Tags automatisch einfügen"
+msgstr "Nicht automatisch einfügen"
 
 #: lib/settings/templates.php:205
 msgid "Insert at top"
@@ -1158,18 +1128,16 @@ msgid "Unused"
 msgstr "Unbenutzt"
 
 #: lib/settings/web_player.php:137
-#, fuzzy
 msgid "Insert player automatically"
-msgstr "Schließende Tags automatisch einfügen"
+msgstr "Player automatisch anzeigen"
 
 #: lib/settings/web_player.php:138
 msgid "Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-web-player]</code>."
 msgstr ""
 
 #: lib/settings/web_player.php:140
-#, fuzzy
 msgid "insert manually via shortcode"
-msgstr "crl_cache_insert über den DP fehlgeschlagen: %s\n"
+msgstr "füge manuell über Kürzbefehl ein"
 
 #: lib/settings/web_player.php:141
 msgid "insert at the beginning"
@@ -1180,17 +1148,16 @@ msgid "insert at the end"
 msgstr "am Ende einfügen"
 
 #: lib/settings/web_player.php:146
-#, fuzzy
 msgid "Chapters Visibility"
-msgstr "Einstellungen zur Sichtbarkeit"
+msgstr "Kapitel-Sichtbarkeit"
 
 #: lib/settings/web_player.php:148
 msgid "Visible when player loads"
-msgstr ""
+msgstr "Sichtbar wenn der Player lädt."
 
 #: lib/settings/web_player.php:149
 msgid "Hidden when player loads"
-msgstr ""
+msgstr "Versteckt wenn der Player lädt"
 
 #: lib/settings/web_player.php:157
 #: lib/settings/modules.php:68
@@ -1207,14 +1174,12 @@ msgid "About"
 msgstr "Über"
 
 #: lib/settings/dashboard.php:68
-#, fuzzy
 msgid "At a glance"
-msgstr " bei Zeichen %s"
+msgstr "Auf einem Blick"
 
 #: lib/settings/dashboard.php:72
-#, fuzzy
 msgid "Validate Podcast Files"
-msgstr "Konfigurationsbeschreibungsdateien"
+msgstr "Überprüfe Podcast Dateien"
 
 #: lib/settings/dashboard.php:78
 msgid "Podlove Dashboard"
@@ -1227,7 +1192,7 @@ msgstr "Dein Podacst benötigt einen Titel"
 
 #: lib/settings/dashboard.php:136
 msgid "Your podcast needs a base URL for file storage."
-msgstr ""
+msgstr "Ihr Podcast benötigt eine Basis-URL für die Dateien"
 
 #: lib/settings/dashboard.php:228
 msgid "Published"
@@ -1238,9 +1203,8 @@ msgid "Private"
 msgstr "Privat"
 
 #: lib/settings/dashboard.php:244
-#, fuzzy
 msgid "To be published"
-msgstr "Zu indexierendes Dokument"
+msgstr "Noch zu veröffentlichen"
 
 #: lib/settings/dashboard.php:252
 msgid "Drafts"
@@ -1255,9 +1219,8 @@ msgid "Statistics"
 msgstr "Statistiken"
 
 #: lib/settings/dashboard.php:273
-#, fuzzy
 msgid "is the average length of an episode"
-msgstr "substr: Länge %g ist nicht >= 0"
+msgstr "ist die durchschnittliche Länge einer Folge"
 
 #: lib/settings/dashboard.php:280
 #: lib/settings/dashboard.php:305
@@ -1269,26 +1232,24 @@ msgstr[1] "%s Tage"
 
 #: lib/settings/dashboard.php:284
 msgid "is the total playback time of all episodes"
-msgstr ""
+msgstr "ist die gesammte Abspieldauer aller Folgen"
 
 #: lib/settings/dashboard.php:292
-#, fuzzy
 msgid "is the average media file size"
-msgstr "Dies ist keine Mediendatei"
+msgstr "ist die durchschnittliche Meidendateigröße"
 
 #: lib/settings/dashboard.php:300
-#, fuzzy
 msgid "is the total media file size"
-msgstr "Dies ist keine Mediendatei"
+msgstr "ist die Gesamt-Mediendateigröße"
 
 #: lib/settings/dashboard.php:308
 msgid "is the average interval until a new episode is released"
 msgstr ""
 
 #: lib/settings/dashboard.php:315
-#, fuzzy, php-format
-msgid "You are using %s"
-msgstr "Sie benutzen den Zeichensatz `%s'\n"
+#, php-format
+msgid "You are using <strong>Podlove Publisher %s</strong>"
+msgstr ""
 
 #: lib/settings/dashboard.php:333
 #: lib/podcast_post_meta_box.php:336
@@ -1296,19 +1257,16 @@ msgid "Status"
 msgstr "Status"
 
 #: lib/settings/dashboard.php:342
-#, fuzzy
 msgid "Revalidate Assets"
-msgstr "Ausprägungen einrichten"
+msgstr ""
 
 #: lib/settings/expert/tab/metadata.php:12
-#, fuzzy
 msgid "Episode Metadata Settings"
-msgstr "Benutzereinstellungen anzeigen"
+msgstr "Folge Metadaten-Einstllungen"
 
 #: lib/settings/expert/tab/metadata.php:20
-#, fuzzy
 msgid "Enable recording date field."
-msgstr "Aufnahme für diese Spur aktivieren"
+msgstr "Aufnahmedatum-Feld freigeben."
 
 #: lib/settings/expert/tab/metadata.php:25
 #: lib/settings/expert/tab/metadata.php:44
@@ -1323,35 +1281,29 @@ msgid "disable"
 msgstr "Deaktivieren"
 
 #: lib/settings/expert/tab/metadata.php:40
-#, fuzzy
 msgid "Enable explicit content field."
-msgstr "nur %d Feld im Inhalt enthalten"
+msgstr "\"Anstößigen Inhalt\"-Feld freigeben"
 
 #: lib/settings/expert/tab/metadata.php:59
-#, fuzzy
 msgid "Enable license field."
-msgstr "Aktualisieren des Feldes gecos"
+msgstr "Lizenzfeld freigeben."
 
 #: lib/settings/expert/tab/redirects.php:19
-#, fuzzy
 msgid "Permanent URL Redirects"
-msgstr "Post-Fader Redirects"
+msgstr "Dauerhafte URL Weiterleitungen"
 
 #: lib/settings/expert/tab/redirects.php:31
-#, fuzzy
 msgid "From URL"
-msgstr "Kopiert von URL: %s\n"
+msgstr "von URL"
 
 #: lib/settings/expert/tab/redirects.php:32
-#, fuzzy
 msgid "To URL"
-msgstr "Adresse (URL), die geöffnet werden soll"
+msgstr "zu URL"
 
 #: lib/settings/expert/tab/redirects.php:33
 #: lib/settings/feed.php:274
-#, fuzzy
 msgid "Redirect Method"
-msgstr "Skalierungsmethode:"
+msgstr "Weiterleitungsart"
 
 #: lib/settings/expert/tab/redirects.php:53
 msgid "Temporary Redirect (HTTP Status 307)"
@@ -1363,7 +1315,6 @@ msgstr "Dauerhafte Weiterleitung (HTTP Status 301)"
 
 #: lib/settings/expert/tab/redirects.php:58
 #: lib/settings/expert/tab/redirects.php:95
-#, fuzzy
 msgid "delete"
 msgstr "löschen"
 
@@ -1376,9 +1327,8 @@ msgid "Create custom permanent redirects. URLs can be absolute like <code>http:/
 msgstr ""
 
 #: lib/settings/expert/tab/website.php:11
-#, fuzzy
 msgid "Website Settings"
-msgstr "Weitere Einstellungen"
+msgstr "Webseiten-Einstellungen"
 
 #: lib/settings/expert/tab/website.php:18
 msgid "Files & Downloads"
@@ -1393,14 +1343,12 @@ msgid "Hide default WordPress Feeds for blog and comments (no auto-discovery)."
 msgstr ""
 
 #: lib/settings/expert/tab/website.php:56
-#, fuzzy
 msgid "Permalink structure for episodes"
-msgstr "Editor für Funktionsstrukturdiagramme"
+msgstr "Permanentlink Struktur für Folgen"
 
 #: lib/settings/expert/tab/website.php:67
-#, fuzzy
 msgid "Use the same permalink structure as posts"
-msgstr "Editor für Funktionsstrukturdiagramme"
+msgstr "Benutze die selbe Permanentlink Struktur wie Beiträge"
 
 #: lib/settings/expert/tab/website.php:72
 msgid ""
@@ -1410,14 +1358,12 @@ msgid ""
 msgstr ""
 
 #: lib/settings/expert/tab/website.php:115
-#, fuzzy
 msgid "Episode archive"
-msgstr "Beschädigtes Archiv"
+msgstr "Archiv der Folgen"
 
 #: lib/settings/expert/tab/website.php:126
-#, fuzzy
 msgid "Enable episode archive"
-msgstr "Ungültige Archiv-Signatur"
+msgstr "Erlaube Folgenarchivierung"
 
 #: lib/settings/expert/tab/website.php:161
 msgid "Episode Asset URL Template."
@@ -1428,9 +1374,8 @@ msgid "Is used to generate URLs. You probably don't want to change this."
 msgstr ""
 
 #: lib/settings/expert/tab/website.php:181
-#, fuzzy
 msgid "Force browsers to download files"
-msgstr "Einige Dateien konnten nicht heruntergeladen werden."
+msgstr "Browsern auffordern Dateien herunterzuladen"
 
 #: lib/settings/expert/tab/website.php:186
 msgid "By default, browsers try to play files directly instead of downloading them. Check this to enforce a download. Warning: This creates extra traffic for your web server!"
@@ -1469,9 +1414,8 @@ msgid "Directory"
 msgstr "Verzeichnis"
 
 #: lib/settings/modules.php:106
-#, fuzzy
 msgid "Podlove Publisher Modules"
-msgstr "Einstellungen der Farbsättigungs-Module"
+msgstr "Podlove Publisher Module"
 
 #: lib/settings/feed.php:112
 #, php-format
@@ -1492,45 +1436,38 @@ msgstr "Podcast Feeds"
 
 #: lib/settings/feed.php:145
 #: lib/settings/feed.php:147
-#, fuzzy
 msgid "Add New Feed"
-msgstr "Neue Nachrichtenquelle erstellen"
+msgstr "Neuen Feed erstellen"
 
 #: lib/settings/feed.php:170
-#, fuzzy
 msgid "Feed Global Defaults"
-msgstr "Auf Voreinstellungen zurücksetzen"
+msgstr "Globale Feed Voreinstellungen"
 
 #: lib/settings/feed.php:173
 #: lib/settings/feed.php:299
-#, fuzzy
 msgid "No limit. Include all items."
-msgstr "Keine Aktion für alle Elemente"
+msgstr "Keine Begrenzung. Alle Folgen einfügen."
 
 #: lib/settings/feed.php:174
-#, fuzzy
 msgid "Use WordPress Default"
-msgstr "Standardschrift benutzen"
+msgstr "Benutze Wordpress Vorgabe"
 
 #: lib/settings/feed.php:181
 #: lib/settings/feed.php:307
-#, fuzzy
 msgid "Limit Items"
-msgstr "Elemente aufzählen"
+msgstr "Anzahl begrenzen"
 
 #: lib/settings/feed.php:182
 msgid "If you have a lot of episodes, you might want to restrict the feed size. Additional limits can be set for the feeds individually."
 msgstr ""
 
 #: lib/settings/feed.php:223
-#, fuzzy
 msgid "Basic Settings"
 msgstr "Grundeinstellungen"
 
 #: lib/settings/feed.php:226
-#, fuzzy
 msgid "Episode Media File"
-msgstr "Dateiformat der Mediendatei"
+msgstr "Folgen-Mediendatei"
 
 #: lib/settings/feed.php:232
 msgid "Feed Name"
@@ -1554,13 +1491,13 @@ msgid "Slug"
 msgstr "Kürzel"
 
 #: lib/settings/feed.php:245
-#, fuzzy, php-format
+#, php-format
 msgid "Feed identifier. URL Preview: %s"
-msgstr "Eine Nachrichtenquelle mit der angegebenen Adresse hinzufügen"
+msgstr "Feed Bezeichner: URL Vorschau: %s"
 
 #: lib/settings/feed.php:250
 msgid "Discoverable?"
-msgstr ""
+msgstr "Auffindbar?"
 
 #: lib/settings/feed.php:251
 msgid "Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed."
@@ -1571,9 +1508,8 @@ msgid "Directory Settings"
 msgstr "Verzeichniseinstellungen"
 
 #: lib/settings/feed.php:258
-#, fuzzy
 msgid "Allow Submission to Directories"
-msgstr "Den Zugriff auf %1 durch %2 erlauben."
+msgstr "Den Zugriff durch Verzeichnisse erlauben"
 
 #: lib/settings/feed.php:259
 msgid "Allow this feed to appear in podcast directories."
@@ -1588,9 +1524,8 @@ msgid "Is used to generate a link to the iTunes directory."
 msgstr ""
 
 #: lib/settings/feed.php:267
-#, fuzzy
 msgid "Open in iTunes directory"
-msgstr "Im Verzeichnis '{1}' wird nach '{0}' gesucht"
+msgstr "Im ITunes Verzeichnis öffnen"
 
 #: lib/settings/feed.php:271
 msgid "Advanced Settings"
@@ -1624,7 +1559,7 @@ msgstr "HTML Inhalt einfügen"
 
 #: lib/settings/feed.php:316
 msgid "Warning: Potentially creates huge feeds."
-msgstr ""
+msgstr "Warnung: Erzeugt wahrscheinlich große Feeds."
 
 #: lib/settings/feed.php:320
 msgid "Protection"
@@ -1636,7 +1571,7 @@ msgstr "Feed schützen"
 
 #: lib/settings/feed.php:324
 msgid "The feed will be protected by HTTP Basic Authentication."
-msgstr ""
+msgstr "Der Feed wird durch HTTP Basic Authentification geschützt."
 
 #: lib/settings/feed.php:329
 msgid "Method"
@@ -1657,7 +1592,7 @@ msgstr "Feed bearbeiten: %s"
 
 #: lib/settings/podcast/tab/license.php:50
 msgid "<p class=\"podlove_podcast_license_status\"></p>"
-msgstr ""
+msgstr "<p class=\"podlove_podcast_license_status\"></p>"
 
 #: lib/settings/podcast/tab/license.php:54
 #: lib/podcast_post_meta_box.php:162
@@ -1672,7 +1607,7 @@ msgstr "Lizenz URL"
 #: lib/settings/podcast/tab/license.php:59
 #: lib/podcast_post_meta_box.php:169
 msgid "Example: http://creativecommons.org/licenses/by/3.0/"
-msgstr ""
+msgstr "Beispiel: http://creativecommons.org/licenses/by/3.0/"
 
 #: lib/settings/podcast/tab/license.php:63
 #: lib/podcast_post_meta_box.php:175
@@ -1804,7 +1739,7 @@ msgstr "Upload Ort"
 
 #: lib/settings/podcast/tab/media.php:48
 msgid "Example: http://cdn.example.com/pod/"
-msgstr ""
+msgstr "Beispiel: http://cnd.example.com/pod/"
 
 #: lib/settings/podcast/tab/media.php:53
 msgid "Cover Art URL"
@@ -1813,7 +1748,7 @@ msgstr "Cover Bild URL"
 #: lib/settings/podcast/tab/media.php:54
 #: lib/podcast_post_meta_box.php:96
 msgid "JPEG or PNG. At least 1400 x 1400 pixels."
-msgstr ""
+msgstr "JPEG oder PNG. Mindestens 1400 x 1400 Pixel."
 
 #: lib/settings/file_type.php:112
 msgid "Add New File Type"
@@ -1873,7 +1808,7 @@ msgstr "Dauer"
 
 #: lib/podcast_post_meta_box.php:95
 msgid "Episode Cover Art URL"
-msgstr ""
+msgstr "Folgen Bilddatei URL"
 
 #: lib/podcast_post_meta_box.php:103
 msgid "Chapter Marks"
@@ -1942,15 +1877,15 @@ msgstr "Sonstiges"
 #: lib/model/license.php:121
 #, php-format
 msgid "This work is licensed under the %s license."
-msgstr ""
+msgstr "Dieses Werk steht unter der %s Lizenz."
 
 #: lib/model/license.php:136
 msgid "This work is (not yet) licensed, as no license was chosen."
-msgstr ""
+msgstr "Für dieses Werk wurde (noch) keine Lizenz gewählt."
 
 #: lib/model/episode_asset.php:56
 msgid "Notice: No file format defined."
-msgstr ""
+msgstr "Hinweis: Kein Dateiformat definiert."
 
 #: lib/model/feed.php:95
 #, php-format
@@ -1975,7 +1910,7 @@ msgstr "Begrenze Anzahl"
 
 #: lib/feed_list_table.php:79
 msgid "Discoverable"
-msgstr ""
+msgstr "Auffindbarkeit"
 
 #: lib/feed_list_table.php:80
 msgid "Protected"
@@ -1993,6 +1928,10 @@ msgstr ""
 #: plugin.php:341
 msgid "Critical Podlove Warnings"
 msgstr "Kritische Podlove Warnungen"
+
+#, fuzzy
+#~ msgid "You are using %s"
+#~ msgstr "Sie benutzen den Zeichensatz `%s'\n"
 
 #, fuzzy
 #~ msgid "1 minute ago, "
