@@ -540,6 +540,7 @@ class Contributors extends \Podlove\Modules\Base {
 			<tr class="media_file_row podlove-contributor-table" data-contributor-id="{{contributor-id}}">
 				<td class="podlove-avatar-column"></td>
 				<td class="podlove-contributor-column">
+					<div style="min-width: 205px">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
 						<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
@@ -547,6 +548,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<?php endforeach; ?>
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
+					</div>
 				</td>
 				<?php if( $has_groups ) : ?>
 				<td>
