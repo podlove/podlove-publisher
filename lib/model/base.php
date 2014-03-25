@@ -527,7 +527,7 @@ abstract class Base
 		     . self::table_name()
 		     . ' ('
 		     . implode( ',', $property_sql )
-		     . ' );'
+		     . ' ) CHARACTER SET utf8;'
 		;
 		
 		$wpdb->query( $sql );
