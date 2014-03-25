@@ -60,7 +60,7 @@ class Importer {
 				$new_episode->post_id = $new_post_id;
 				$new_episode->save();
 			} else {
-				// no matching post found
+				\Podlove\Log::get()->addWarning('Importer: no matching post for (old) post_id=' . $new_episode->post_id);
 			}
 		}
 	}
