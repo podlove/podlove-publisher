@@ -295,9 +295,9 @@ class Feed {
 				$limit_default = $podcast_settings['limit_items'];
 			}
 			$limit_options = array(
-				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove' ),
+				'-2' => sprintf(__( "Use Podlove default (%d)", 'podlove' ), $limit_default),
 				'-1' => __( "No limit. Include all items.", 'podlove' ),
-				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+				'0'  => sprintf(__( 'Use WordPress default (%d)', 'podlove' ) , get_option( 'posts_per_rss' ) ))'
 			);
 			for( $i = 1; $i*5 <= 100; $i++ ) {
 				$limit_options[ $i*5 ] = $i*5;
