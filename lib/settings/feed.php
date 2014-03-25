@@ -297,7 +297,7 @@ class Feed {
 			$limit_options = array(
 				'-2' => sprintf(__( "Use Podlove default (%d)", 'podlove' ), $limit_default),
 				'-1' => __( "No limit. Include all items.", 'podlove' ),
-				'0'  => sprintf(__( 'Use WordPress default (%d)', 'podlove' ) , get_option( 'posts_per_rss' ) ))'
+				'0'  => sprintf(__( 'Use WordPress default (%d)', 'podlove' ) , get_option( 'posts_per_rss' ) )
 			);
 			for( $i = 1; $i*5 <= 100; $i++ ) {
 				$limit_options[ $i*5 ] = $i*5;
@@ -353,7 +353,7 @@ class Feed {
 	
 	private function edit_template() {
 		$feed = \Podlove\Model\Feed::find_by_id( $_REQUEST['feed'] );
-		echo '<h3>' . sprintf( __( 'Edit Feed: %s', 'podlove' ), $feed->name ) . '</h3>';
+		echo '<h3>' . sprintf( __('Edit Feed: %s', 'podlove' ), $feed->name ) . '</h3>';
 		$this->form_template( $feed, 'save' );
 	}
 	
