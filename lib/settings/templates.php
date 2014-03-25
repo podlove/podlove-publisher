@@ -69,7 +69,11 @@ class Templates {
 		$template = new \Podlove\Model\Template;
 		$template->update_attributes( $_POST['podlove_template'] );
 
-		$this->redirect( 'index' );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $template->id );
+		} else {
+			$this->redirect( 'index' );
+		}
 	}
 	
 	/**
