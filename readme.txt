@@ -115,6 +115,7 @@ __DEPRECATIONS/WARNINGS__
 * Fix: internal template warning when accessing empty contributor roles or groups
 * Fix: episode rendering when no files are available
 * Fix: flattr script in rss feeds
+* Fix: importer issue where sometimes modules would not activate properly
 
 = 1.10.2 =
 

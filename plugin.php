@@ -304,7 +304,9 @@ add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val
 			do_action( 'podlove_module_was_deactivated', $deactivated_module );
 			do_action( 'podlove_module_was_deactivated_' . $deactivated_module );
 		}
-	} elseif ( $activated_modules ) {
+	} 
+
+	if ( $activated_modules ) {
 		foreach ($activated_modules as $activated_module) {
 			Log::get()->addInfo( 'Activate module "' . $activated_module . '"' );
 
