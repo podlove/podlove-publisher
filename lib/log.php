@@ -32,7 +32,7 @@ class Log {
 
 		$log = new Logger( 'Podlove' );
 
-		if ( defined('defined') && WP_DEBUG )
+		if ( defined('WP_DEBUG') && WP_DEBUG )
 			$log->pushHandler( new StreamHandler( 'php://stderr', $this->get_log_level() ) );
 
 		$this->log = $log;
