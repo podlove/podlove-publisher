@@ -5,6 +5,6 @@ Episode -> Folge
 
 Asset -> Ausprägung? Typ?
 
-Slug
+Slug -> Kürzel
 
 Feed -> Feed
