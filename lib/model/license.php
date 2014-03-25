@@ -157,22 +157,29 @@ class License {
 		return TRUE;
 	}
 
-	public static function get_license_from_url( $url=NULL ) {
-		if( is_null($url) )
-			return;
+	public static function get_license_from_url($url) {
+
+		// only parse cc licenses
+		if (stripos($url, 'creativecommons.org') === false)
+			return array(
+				'version'        => null,
+				'commercial_use' => null,
+				'modification'   => null,
+				'jurisdiction'   => null
+			);
 
 		$raw_extract = array_slice(
-										explode( '/', $url ),
-										4, // remove http://creativecommons.org/
-										3
-							  		 );
+			explode( '/', $url ),
+			4, // remove http://creativecommons.org/
+			3
+		);
 
 		$license = array(
-							'version'			=>	$raw_extract[1],
-							'commercial_use'	=>	( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
-							'modification'		=>	self::get_modification_state( $raw_extract[0] ),
-							'jurisdiction'		=>	( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
-						);
+			'version'        => $raw_extract[1],
+			'commercial_use' => ( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
+			'modification'   => self::get_modification_state( $raw_extract[0] ),
+			'jurisdiction'   => ( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
+		);
 
 		return $license;
 	}
