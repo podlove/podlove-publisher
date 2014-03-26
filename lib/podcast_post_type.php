@@ -152,6 +152,7 @@ class Podcast_Post_Type {
 				\Podlove\PLUGIN_URL . '/js/admin.js',
 				array(
 					'jquery',
+					'jquery-ui-datepicker',
 					'podlove_admin_episode',
 					'podlove_admin_dashboard_asset_validation',
 					'podlove_admin_dashboard_feed_validation',
@@ -169,6 +170,8 @@ class Podcast_Post_Type {
 			);
 
 			wp_enqueue_script( 'podlove_admin' );
+			wp_enqueue_style( 'jquery-ui-style', \Podlove\PLUGIN_URL . '/js/admin/jquery-ui/css/smoothness/jquery-ui.css' ); 
+
 		} else {
 			wp_register_script(
 				'podlove_frontend',
