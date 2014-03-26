@@ -13,6 +13,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     
     		$module_url = $this->get_module_url();
     		$user = null;
+
+    		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
     	
     		if ($this->get_module_option('adn_auth_key') !== "") {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
@@ -79,7 +81,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_patter_room', 'select', array(
-					'description' => 'From the list of subscribed <a href="http://patter-app.net/faq.html" target="_blank">Patter rooms</a>, choose the one related to your Podcast.',
+					'description' => '<span class="podlove_adn_patter_refresh" data-category="patter_room"><i class="podlove-icon-repeat"></i></span>From the list of subscribed <a href="http://patter-app.net/faq.html" target="_blank">Patter rooms</a>, choose the one related to your Podcast.',
 					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 					'options'	  => $this->get_patter_rooms()
 				) );
@@ -90,7 +92,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_broadcast_channel', 'select', array(
-					'description' => 'From the list of your Broadcast channels, choose the one related to your Podcast.',
+					'description' => '<span class="podlove_adn_broadcast_refresh" data-category="broadcast_channel"><i class="podlove-icon-repeat"></i></span> From the list of your Broadcast channels, choose the one related to your Podcast.',
 					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 					'options'	  => $this->get_broadcast_channels()
 				) );
@@ -194,6 +196,22 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				
 			}
     }
+
+    public function ajax_refresh_channel() {
+		$category = $_REQUEST['category'];
+		switch ( $category ) {
+			case 'broadcast_channel':
+				delete_transient('podlove_adn_broadcast_channels');
+				$result = $this->get_broadcast_channels();
+			break;
+			case 'patter_room':
+				delete_transient('podlove_adn_rooms');
+				$result = $this->get_patter_rooms();
+			break;
+		}
+		
+		return \Podlove\AJAX\AJAX::respond_with_json( $result );
+	}
 
     /**
      * Fetch name of logged in user via ADN API.

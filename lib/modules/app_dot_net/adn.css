@@ -64,3 +64,12 @@
 	width: 40px;
 	text-align: center;
 }
+
+.podlove_adn_patter_refresh,
+.podlove_adn_broadcast_refresh {
+	display: inline-block;
+	width: 20px;
+	text-align: center;
+	font-size: 1.1em;
+	cursor: pointer;
+}
