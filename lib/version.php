@@ -679,7 +679,7 @@ function run_migrations_for_version( $version ) {
 					foreach ( $contributor_flattr_donations_accounts as $contributor_flattr_donations_account ) {
 						$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $contributor_flattr_donations_account->contributor_id );
 						
-						if( is_null( $contributor->flattr ) ) {
+						if ( $contributor && is_null( $contributor->flattr ) ) {
 							$contributor->flattr = $contributor_flattr_donations_account->value;
 							$contributor->save();
 						}

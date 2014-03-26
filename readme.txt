@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.4 =
+
+* Hotfix: solve migration issue
+
 = 1.10.3 =
 
 **Changes to the Templating System**
