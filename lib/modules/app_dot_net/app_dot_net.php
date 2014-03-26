@@ -443,6 +443,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			$this->update_module_option('adn_auth_key', "");
 			delete_transient('podlove_adn_user');
 			delete_transient('podlove_adn_rooms');
+			delete_transient('podlove_adn_broadcast_channels');
 			header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');    
     	}
     }
