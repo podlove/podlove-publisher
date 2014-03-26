@@ -87,6 +87,8 @@ function auto_fill_form(id, title_id) {
 
 jQuery(function($) {
 
+	$( "#_podlove_meta_recording_date" ).datepicker({ dateFormat: 'yy-mm-dd'});
+
 	$("#dashboard_feed_info").each(function() {
 		PODLOVE.DashboardFeedValidation($(this));
 	});
