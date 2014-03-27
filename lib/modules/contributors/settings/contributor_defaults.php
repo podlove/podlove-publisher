@@ -28,7 +28,6 @@ class ContributorDefaults {
 
 	public function save_setting()
 	{
-
 		$contributor_appearances = $_REQUEST['podlove_contributor_defaults']['contributor'];
 
 		foreach (DefaultContribution::all() as $contribution) {
@@ -40,11 +39,11 @@ class ContributorDefaults {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
 				$c = new DefaultContribution;
 
-				if ($role = ContributorRole::find_one_by_slug( $contributor['role'] )) {
+				if (isset($contributor['role']) && ($role = ContributorRole::find_one_by_slug($contributor['role']))) {
 					$c->role_id = $role->id;
 				}
 
-				if ($group = ContributorGroup::find_one_by_slug( $contributor['group'] )) {
+				if (isset($contributor['group']) && ($group = ContributorGroup::find_one_by_slug($contributor['group']))) {
 					$c->group_id = $group->id;
 				}
 

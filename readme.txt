@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.5 =
 
 * Enhancement: Add refresh buttons for ADN patter and broadcast channel selectors
+* Fix: Avoid "Grey Goo" scenario of self-replicating contributors
 
 = 1.10.4 =
 
