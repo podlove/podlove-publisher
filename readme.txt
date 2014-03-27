@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.5 =
+
+* Enhancement: Add refresh buttons for ADN patter and broadcast channel selectors
+
 = 1.10.4 =
 
 * Hotfix: solve migration issue
