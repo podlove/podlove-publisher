@@ -63,7 +63,7 @@ class Description extends Tab {
 
 			$wrapper->select( 'language', array(
 				'label'       => __( 'Language', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'default'     => get_bloginfo( 'language' ),
 				'options'  => \Podlove\Locale\locales()
 			) );

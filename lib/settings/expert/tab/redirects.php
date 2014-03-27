@@ -7,7 +7,7 @@ class Redirects extends Tab {
 	public function init() {
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_redirects',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ '',	
 			/* $callback */ function () { echo '<h3>' . __( 'Redirects', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);

@@ -38,4 +38,4 @@ function get_plugin_header( $tag_name ) {
 
 define( __NAMESPACE__ . '\PLUGIN_NAME', get_plugin_header( 'Name' ) );
 define( __NAMESPACE__ . '\TEXTDOMAIN', strtolower( str_replace( ' ', '-', PLUGIN_NAME ) ) );
-load_plugin_textdomain( TEXTDOMAIN, FALSE, TEXTDOMAIN . '/languages' );
+

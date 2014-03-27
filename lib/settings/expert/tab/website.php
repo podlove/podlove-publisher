@@ -7,14 +7,14 @@ class Website extends Tab {
 	public function init() {
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_general',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ '', 	
 			/* $callback */ function () { echo '<h3>' . __( 'Website Settings', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_files',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ '',	
 			/* $callback */ function () { echo '<h3>' . __( 'Files & Downloads', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);

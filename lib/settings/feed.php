@@ -272,7 +272,7 @@ class Feed {
 
 			$wrapper->select( 'redirect_http_status', array(
 				'label'       => __( 'Redirect Method', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'options' => array(
 					'0'   => 'Don\'t redirect', 
 					'307' => 'Temporary Redirect (HTTP Status 307)',
@@ -295,9 +295,9 @@ class Feed {
 				$limit_default = $podcast_settings['limit_items'];
 			}
 			$limit_options = array(
-				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove' ),
+				'-2' => sprintf(__( "Use Podlove default (%d)", 'podlove' ), $limit_default),
 				'-1' => __( "No limit. Include all items.", 'podlove' ),
-				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+				'0'  => sprintf(__( 'Use WordPress default (%d)', 'podlove' ) , get_option( 'posts_per_rss' ) )
 			);
 			for( $i = 1; $i*5 <= 100; $i++ ) {
 				$limit_options[ $i*5 ] = $i*5;
@@ -327,7 +327,7 @@ class Feed {
 
 			$wrapper->select( 'protection_type', array(
 				'label'       => __( 'Method', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'description' => '',
 				'options' => array(
 					'0'   => 'Custom Login',
 					'1' => 'WordPress User database'
@@ -353,7 +353,7 @@ class Feed {
 	
 	private function edit_template() {
 		$feed = \Podlove\Model\Feed::find_by_id( $_REQUEST['feed'] );
-		echo '<h3>' . sprintf( __( 'Edit Feed: %s', 'podlove' ), $feed->name ) . '</h3>';
+		echo '<h3>' . sprintf( __('Edit Feed: %s', 'podlove' ), $feed->name ) . '</h3>';
 		$this->form_template( $feed, 'save' );
 	}
 	
