@@ -85,15 +85,12 @@ class Episode extends Wrapper {
 	 * Post publication date
 	 *
 	 * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
-	 * 
+	 *
+	 * @see  datetime
 	 * @accessor
 	 */
 	public function publicationDate($format = '') {
-
-		if ($format === '')
-			$format = get_option('date_format') . ' ' . get_option('time_format');
-
-		return mysql2date($format, $this->post->post_date);
+		return new \Podlove\Template\DateTime(strtotime($this->post->post_date), $format);
 	}
 
 	/**
@@ -101,14 +98,11 @@ class Episode extends Wrapper {
 	 *
 	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate('Y-m-d') }}`
 	 *
+	 * @see  datetime
 	 * @accessor
 	 */
 	public function recordingDate($format = '') {
-
-		if ($format === '')
-			$format = get_option('date_format') . ' ' . get_option('time_format');
-
-		return mysql2date($format, $this->episode->recording_date);
+		return new \Podlove\Template\DateTime(strtotime($this->episode->recording_date), $format);
 	}
 
 	/**

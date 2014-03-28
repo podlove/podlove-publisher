@@ -87,6 +87,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.5 =
 
+**Changes to the Templating System**
+
+`episode.recordingDate` and `episode.publicationDate` are DateTime objects now. Available accessors are: year, month, day, hours, minutes, seconds. For custom formatting, use `episode.recordingDate.format("Y-m-d H:i:s")` for example. Calling `episode.recordingDate` directly is still supported and defaults to the format configured in WordPress.
+
+**Other Changes**
+
 * Enhancement: Add refresh buttons for ADN patter and broadcast channel selectors
 * Fix: Avoid "Grey Goo" scenario of self-replicating contributors
 
