@@ -28,6 +28,7 @@ $classes = [
 	'\Podlove\Template\Duration',
 	'\Podlove\Template\Chapter',
 	'\Podlove\Template\License',
+	'\Podlove\Template\DateTime',
 	'\Podlove\Template\FileType',
 	'\Podlove\Modules\Contributors\Template\Contributor',
 	'\Podlove\Modules\Contributors\Template\ContributorGroup',

@@ -90,7 +90,7 @@ class DateTime extends Wrapper {
 	/**
 	 * Custom time format
 	 *
-	 * See PHP date documentation for available formats.
+	 * See [PHP date documentation](http://php.net/manual/en/function.date.php) for available formats
 	 * 
 	 * @accessor
 	 */
