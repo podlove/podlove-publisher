@@ -7,6 +7,7 @@
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-wp-i18n": "~0.4.3",
-    "grunt-po2mo": "~0.1.0"
+    "grunt-po2mo": "~0.1.0",
+    "grunt-shell": "~0.6.4"
   }
 }
