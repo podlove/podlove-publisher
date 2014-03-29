@@ -1,6 +1,21 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    makepot: {
+        target: {
+            options: {
+                domainPath: '/language',
+                potFilename: 'podlove.po',   // Name of the POT file.
+                type: 'wp-plugin'  // Type of project (wp-plugin or wp-theme).
+            }
+        }
+    },
+    po2mo: {
+        files: {
+            src: 'language/*.po',
+            expand: true,
+        },
+    },
     rsync: {
       dist: {
         src: "./",
@@ -33,8 +48,11 @@ module.exports = function(grunt) {
   // Load the plugin that provides the "uglify" task.
   // grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks("grunt-rsync");
+  grunt.loadNpmTasks('grunt-po2mo'); 
+  grunt.loadNpmTasks( 'grunt-wp-i18n' );
 
   // Default task(s).
-  grunt.registerTask('default', ['rsync']);
+  grunt.registerTask('default', ['makepot','po2mo','rsync']);
+
 
 };
