@@ -85,6 +85,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.6 =
+
+* Fix: contributor services will be saved correctly
+* Enhancement: add a donation column to contributor management table
+
 = 1.10.5 =
 
 **Changes to the Templating System**
