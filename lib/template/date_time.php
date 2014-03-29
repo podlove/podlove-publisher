@@ -25,11 +25,8 @@ class DateTime extends Wrapper {
 	/**
 	 * $format parameter is @deprecated, use DateTime.format instead
 	 */
-	public function __toString($format = '') {
-		
-		if (!$format)
-			$format = get_option('date_format') . ' ' . get_option('time_format');
-
+	public function __toString() {
+		$format = get_option('date_format') . ' ' . get_option('time_format');
 		return date($format, $this->timestamp);
 	}
 
