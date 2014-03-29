@@ -91,7 +91,15 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_social( $contributor ) {
-		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $contributor->id );
+		return $this->service_column_templates( $contributor );
+	}
+
+	public function column_donation( $contributor ) {
+		return $this->service_column_templates( $contributor, 'donation' );
+	}
+
+	private function service_column_templates( $contributor, $type='social' ) {
+		$contributor_services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $contributor->id, $type );
 		$source = '';
 
 		foreach ($contributor_services as $contributor_service) {

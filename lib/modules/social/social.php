@@ -555,7 +555,10 @@ class Social extends \Podlove\Modules\Base {
 
 		    // insert contributors at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("social" => __('Social', 'podlove')) +
+		           array(
+		           		"social" => __('Social', 'podlove'),
+		           		"donation" => __('Donation', 'podlove')
+		           	) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
 		    return $columns;
@@ -651,7 +654,7 @@ class Social extends \Podlove\Modules\Base {
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
 				
 				<td class="podlove-service-column">
-					<select name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
+					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `type` = \'' . $type . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
@@ -659,11 +662,11 @@ class Social extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
+					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
 					<i class="podlove-icon-share podlove-service-link"></i>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $type.'_'.$form_base_name ?>[{{id}}][{{service-id}}][title]" class="podlove-service-title" />
+					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][title]" class="podlove-service-title" />
 				</td>
 				<td>
 					<span class="service_remove">
