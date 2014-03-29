@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         target: {
             options: {
                 domainPath: '/language',
-                potFilename: 'podlove.po',   // Name of the POT file.
+                potFilename: 'podlove.pot',   // Name of the POT file.
                 type: 'wp-plugin'  // Type of project (wp-plugin or wp-theme).
             }
         }
