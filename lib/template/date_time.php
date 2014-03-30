@@ -27,7 +27,7 @@ class DateTime extends Wrapper {
 	 */
 	public function __toString() {
 		$format = get_option('date_format') . ' ' . get_option('time_format');
-		return date($format, $this->timestamp);
+		return date_i18n($format, $this->timestamp);
 	}
 
 	/**
@@ -92,6 +92,6 @@ class DateTime extends Wrapper {
 	 * @accessor
 	 */
 	public function format($format) {
-		return date($format, $this->timestamp);
+		return date_i18n($format, $this->timestamp);
 	}
 }
