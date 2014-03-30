@@ -111,3 +111,11 @@ legend {
 	background: white;
 	font-size: 14px;
 }
+
+.podlove_auphonic_production_refresh {
+	display: inline-block;
+	width: 20px;
+	text-align: center;
+	font-size: 1.1em;
+	cursor: pointer;
+}

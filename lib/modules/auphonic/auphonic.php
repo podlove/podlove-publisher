@@ -12,6 +12,7 @@ class Auphonic extends \Podlove\Modules\Base {
     public function load() {
 
 			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+			add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
     		
     		if($this->get_module_option('auphonic_api_key') == "") { } else {
     			add_action( 'podlove_episode_form_beginning', array( $this, 'auphonic_episodes' ), 10, 2 );
@@ -74,7 +75,7 @@ class Auphonic extends \Podlove\Modules\Base {
 					
 				$this->register_option( 'auphonic_production_preset', 'select', array(
 					'label'       => __( 'Auphonic production preset', 'podlove' ),
-					'description' => 'This preset will be used, if you create Auphonic production from an Episode.',
+					'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span>This preset will be used, if you create Auphonic production from an Episode.',
 					'html'        => array( 'class' => 'regular-text' ),
 					'options'	  => $preset_list
 				) );
@@ -83,6 +84,16 @@ class Auphonic extends \Podlove\Modules\Base {
 
     		add_action( 'save_post', array( $this, 'save_post' ) );
     }
+
+    /**
+     * Refresh the list of auphonic presets
+     */
+    public function ajax_refresh_presets() {
+		delete_transient('podlove_auphonic_presets');
+		$result = $this->fetch_presets();
+		
+		return \Podlove\AJAX\AJAX::respond_with_json( $result );
+	}
 
     /**
      * Fetch name of logged in user via Auphonic API.
@@ -171,7 +182,7 @@ class Auphonic extends \Podlove\Modules\Base {
     public function admin_print_styles() {
 
     	$screen = get_current_screen();
-    	if ( $screen->base != 'post' || $screen->post_type != 'podcast' )
+    	if ( $screen->base != 'post' && $screen->post_type != 'podcast' && $screen->base != 'podlove_page_podlove_settings_modules_handle' )
     		return;
 
     	wp_register_style(
