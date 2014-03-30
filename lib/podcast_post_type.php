@@ -7,7 +7,7 @@ use \Podlove\Model;
  */
 class Podcast_Post_Type {
 
-	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle'; 
+	const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
 
 	public function __construct() {
 
@@ -58,7 +58,7 @@ class Podcast_Post_Type {
 		add_filter( 'close_comments_for_post_types', array( $this, 'compatibility_with_auto_comment_closing' ) );
 
 		$version = \Podlove\get_plugin_header( 'Version' );
-		
+
 		if ( is_admin() ) {
 			add_action( 'podlove_list_shows', array( $this, 'list_shows' ) );
 			add_action( 'podlove_list_formats', array( $this, 'list_formats' ) );
@@ -170,7 +170,7 @@ class Podcast_Post_Type {
 			);
 
 			wp_enqueue_script( 'podlove_admin' );
-			wp_enqueue_style( 'jquery-ui-style', \Podlove\PLUGIN_URL . '/js/admin/jquery-ui/css/smoothness/jquery-ui.css' ); 
+			wp_enqueue_style( 'jquery-ui-style', \Podlove\PLUGIN_URL . '/js/admin/jquery-ui/css/smoothness/jquery-ui.css' );
 
 		} else {
 			wp_register_script(
@@ -191,8 +191,9 @@ class Podcast_Post_Type {
 	/**
 	 * Add .post CSS class to post-classes to work around themes using the
 	 * .post class to style articles.
-	 * 
+	 *
 	 * @param array $classes
+	 * @return array
 	 */
 	function add_post_class( $classes ) {
 
@@ -209,9 +210,9 @@ class Podcast_Post_Type {
 	 * WordPress has an option to automatically close commenting after some time.
 	 * By default, it only works for "post" post types. But there is a hook to
 	 * add post types.
-	 * 
+	 *
 	 * @param  array $post_types
-	 * @return array            
+	 * @return array
 	 */
 	public function compatibility_with_auto_comment_closing($post_types) {
 		$post_types[] = 'podcast';
@@ -262,7 +263,7 @@ class Podcast_Post_Type {
 		new \Podlove\Settings\WebPlayer( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Templates( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\FileType( self::SETTINGS_PAGE_HANDLE );
-		
+
 		do_action( 'podlove_register_settings_pages', self::SETTINGS_PAGE_HANDLE );
 	}
 
@@ -295,6 +296,6 @@ class Podcast_Post_Type {
 
 		$episode->delete();
 	}
- 
+
 }
 
