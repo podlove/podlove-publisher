@@ -32,7 +32,11 @@ class EpisodeAsset {
 		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 		
-		$this->redirect( 'index', $episode_asset->id );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $episode_asset->id );
+		} else {
+			$this->redirect( 'index', $episode_asset->id );
+		}
 	}
 	
 	/**
@@ -44,7 +48,11 @@ class EpisodeAsset {
 		$episode_asset = new \Podlove\Model\EpisodeAsset;
 		$episode_asset->update_attributes( $_POST['podlove_episode_asset'] );
 
-		$this->redirect( 'index' );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $episode_asset->id );
+		} else {
+			$this->redirect( 'index' );
+		}
 	}
 	
 	/**
@@ -291,7 +299,15 @@ class EpisodeAsset {
 			),
 			'attributes' => array(
 				'id' => 'podlove_episode_assets'
-			)
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
 		);
 
 		\Podlove\Form\build_for( $episode_asset, $form_args, function ( $form ) use ( $format_optionlist ) {

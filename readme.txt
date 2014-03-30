@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.7 =
+
+* Enhancement: Add "Save and Continue Editing" buttons to all table based management screens
+
 = 1.10.6 =
 
 * Fix: contributor services will be saved correctly

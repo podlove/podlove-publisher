@@ -84,7 +84,11 @@ class ContributorRoles {
 		$role = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $_REQUEST['role'] );
 		$role->update_attributes( $_POST['podlove_contributor_role'] );
 		
-		self::redirect( 'index', $role->id );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $role->id );
+		} else {
+			$this->redirect( 'index', $role->id );
+		}
 	}
 	
 	/**
@@ -96,7 +100,11 @@ class ContributorRoles {
 		$contributor = new \Podlove\Modules\Contributors\Model\ContributorRole;
 		$contributor->update_attributes( $_POST['podlove_contributor_role'] );
 
-		self::redirect( 'index' );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $contributor->id );
+		} else {
+			$this->redirect( 'index' );
+		}
 	}
 	
 	/**
@@ -157,7 +165,15 @@ class ContributorRoles {
 			'hidden'  => array(
 				'role' => $role->id,
 				'action' => $action
-			)
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
 		);
 
 		\Podlove\Form\build_for( $role, $form_args, function ( $form ) {

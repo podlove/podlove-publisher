@@ -85,7 +85,11 @@ class ContributorGroups {
 		$group = \Podlove\Modules\Contributors\Model\ContributorGroup::find_by_id( $_REQUEST['group'] );
 		$group->update_attributes( $_POST['podlove_contributor_group'] );
 		
-		self::redirect( 'index', $group->id );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $group->id );
+		} else {
+			$this->redirect( 'index', $group->id );
+		}
 	}
 	
 	/**
@@ -97,7 +101,11 @@ class ContributorGroups {
 		$contributor = new \Podlove\Modules\Contributors\Model\ContributorGroup;
 		$contributor->update_attributes( $_POST['podlove_contributor_group'] );
 
-		self::redirect( 'index' );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $contributor->id );
+		} else {
+			$this->redirect( 'index' );
+		}
 	}
 	
 	/**
@@ -162,7 +170,15 @@ class ContributorGroups {
 			'hidden'  => array(
 				'group' => $group->id,
 				'action' => $action
-			)
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
 		);
 
 		\Podlove\Form\build_for( $group, $form_args, function ( $form ) {

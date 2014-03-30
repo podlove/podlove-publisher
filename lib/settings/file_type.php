@@ -26,7 +26,12 @@ class FileType {
 		}
 			
 		$format->save();
-		$this->redirect( 'index', $format->id );
+
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $format->id );
+		} else {
+			$this->redirect( 'index', $format->id );
+		}
 	}
 	
 	/**
@@ -45,7 +50,11 @@ class FileType {
 		}
 		$format->save();
 
-		$this->redirect( 'index' );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $format->id );
+		} else {
+			$this->redirect( 'index' );
+		}
 	}
 	
 	/**
@@ -136,7 +145,16 @@ class FileType {
 				'file_type'   => $format->id,
 				'action'      => $action,
 				'podlove_tab' => $_REQUEST['podlove_tab']
-		));
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
+		);
 
 		\Podlove\Form\build_for( $format, $form_args, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );

@@ -42,7 +42,11 @@ class Feed {
 		$feed = \Podlove\Model\Feed::find_by_id( $_REQUEST['feed'] );
 		$feed->update_attributes( $_POST['podlove_feed'] );
 		
-		$this->redirect( 'index', $feed->id );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $feed->id );
+		} else {
+			$this->redirect( 'index', $feed->id );
+		}
 	}
 	
 	/**
@@ -54,7 +58,11 @@ class Feed {
 		$feed = new \Podlove\Model\Feed;
 		$feed->update_attributes( $_POST['podlove_feed'] );
 
-		$this->redirect( 'index' );
+		if (isset($_POST['submit_and_stay'])) {
+			$this->redirect( 'edit', $feed->id );
+		} else {
+			$this->redirect( 'index' );
+		}
 	}
 	
 	/**
@@ -204,7 +212,15 @@ class Feed {
 			'hidden'  => array(
 				'feed' => $feed->id,
 				'action' => $action
-			)
+			),
+			'submit_button' => false, // for custom control in form_end
+			'form_end' => function() {
+				echo "<p>";
+				submit_button( __('Save Changes'), 'primary', 'submit', false );
+				echo " ";
+				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				echo "</p>";
+			}
 		);
 
 		\Podlove\Form\build_for( $feed, $form_args, function ( $form ) {
