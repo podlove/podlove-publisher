@@ -93,6 +93,16 @@ class Contributors extends \Podlove\Modules\Base {
 			return (bool) $c->getContributor();
 		});
 
+		if (isset($args['id'])) {
+			foreach ($contributions as $contribution) {
+				if ($contribution->getContributor()->slug == $args['id']) {
+					return new Template\Contributor($contribution->getContributor(), $contribution);
+				}
+			}
+			// if an id is set but cannot be found, return null
+			return null;
+		}
+
 		// filter by role
 		if (isset($args['role']) && $args['role'] != 'all') {
 			$role = $args['role'];

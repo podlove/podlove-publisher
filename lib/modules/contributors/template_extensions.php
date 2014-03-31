@@ -34,10 +34,13 @@ class TemplateExtensions {
 	 * ```
 	 * 
 	 * Options:
-	 * 
-	 * - **group:**   (optional) group slug. If none is given, show all contributors.
-	 * - **role:**    (optional) role slug. If none is given, show all contributors.
-	 * - **groupby:** (optional) group or role slug. Group by "group" or "role".
+	 *
+	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters. 
+	 *                Returns null if the id belongs to an existing contributor which is not part of the episode. 
+	 *                Example: `episode.contributors({id: 'james'}).name`
+	 * - **group:**   group slug. If none is given, show all contributors.
+	 * - **role:**    role slug. If none is given, show all contributors.
+	 * - **groupby:** group or role slug. Group by "group" or "role".
 	 * 	         If used, the returned data is has another layer for the groups.
 	 * 	         See examples for more details.
 	 *
@@ -73,13 +76,15 @@ class TemplateExtensions {
 	 * ```
 	 * 
 	 * Options:
-	 * 
+	 *
+	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters.
+	 *                Example: `podcast.contributors({id: 'james'}).name`
 	 * - **scope:**   Either "global" or "podcast". "global" returns *all* contributors.
 	 * 	              "podcast" returns the contributors configured in podcast settings.
 	 * 	              Default: "global".
-	 * - **group:**   (optional) filter by group slug. Defaults to "all", which does not filter.
-	 * - **role:**    (optional) filter by role slug. Defaults to "all", which does not filter.
-	 * - **groupby:** (optional) group or role slug. Group by "group" or "role".
+	 * - **group:**   filter by group slug. Defaults to "all", which does not filter.
+	 * - **role:**    filter by role slug. Defaults to "all", which does not filter.
+	 * - **groupby:** group or role slug. Group by "group" or "role".
 	 * 	              If used, the returned data is has another layer for the groups.
 	 * 	              See examples for more details.
 	 *
@@ -87,6 +92,10 @@ class TemplateExtensions {
 	 * @dynamicAccessor podcast.contributors
 	 */
 	public function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
+		
+		if (isset($args['id']))
+			return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
+
 		$scope = isset($args['scope']) && in_array($args['scope'], array('global', 'podcast')) ? $args['scope'] : 'global';
 
 		if ($scope == 'global') {

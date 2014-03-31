@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * Feature: Direct episode access in templates via `{{ podcast.episodes({slug: 'pod001'}).title }}`
 * Feature: Episodes in templates can be filtered and ordered, for example `{{ podcast.episodes({orderby: 'title', 'order': 'ASC'}) }}`. For details, see [`podcast.episodes` documentation](http://docs.podlove.org/publisher/template-reference/#podcast)
+* Feature: Direct contributor access in templates via `{{ podcast.contributors({id: 'john'}).name }}`
 * Enhancement: Add "Save and Continue Editing" buttons to all table based management screens
 * Enhancement: Use translations for month and day names in formatted template dates (if a language other than english is used)
 
