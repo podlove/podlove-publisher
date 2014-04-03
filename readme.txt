@@ -92,6 +92,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Direct contributor access in templates via `{{ podcast.contributors({id: 'john'}).name }}`
 * Enhancement: Add "Save and Continue Editing" buttons to all table based management screens
 * Enhancement: Use translations for month and day names in formatted template dates (if a language other than english is used)
+* Fix: "Network Activate" works now
 
 = 1.10.6 =
 

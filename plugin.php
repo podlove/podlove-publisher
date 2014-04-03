@@ -87,17 +87,15 @@ function activate_for_current_blog() {
  * for in the scope of that blog.
  */
 function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-	global $wpdb;
-	
-	// something like 'podlove/podlove.php'
-	$plugin_file = basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ );
-    
+	switch_to_blog( $blog_id );
+
+	$plugin_file = "podlove/podlove.php";
+
 	if ( is_plugin_active_for_network( $plugin_file ) ) {
-		$current_blog = $wpdb->blogid;
-		switch_to_blog( $blog_id );
 		activate_for_current_blog();
-		switch_to_blog( $current_blog );
 	}
+
+	restore_current_blog();
 }
 
 /**
@@ -107,21 +105,18 @@ function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) 
  * However, in a multisite install, iterate over all blogs and call the activate
  * function for each of them.
  */
-function activate() {
+function activate($network_wide) {
 	global $wpdb;
 
-	if ( is_multisite() ) {
-		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
-			$current_blog = $wpdb->blogid;
-			$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
-			foreach ( $blogids as $blog_id ) {
-				switch_to_blog($blog_id);
-				activate_for_current_blog();
-			}
-			switch_to_blog($current_blog);
-		} else {
+	if ( $network_wide ) {
+		set_time_limit(0); // may take a while, depending on network size
+		$current_blog = $wpdb->blogid;
+		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
+		foreach ( $blogids as $blog_id ) {
+			switch_to_blog($blog_id);
 			activate_for_current_blog();
 		}
+		switch_to_blog($current_blog);
 	} else {
 		activate_for_current_blog();
 	}
