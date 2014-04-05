@@ -75,7 +75,7 @@ class Auphonic extends \Podlove\Modules\Base {
 					
 				$this->register_option( 'auphonic_production_preset', 'select', array(
 					'label'       => __( 'Auphonic production preset', 'podlove' ),
-					'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span>This preset will be used, if you create Auphonic production from an Episode.',
+					'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span> This preset will be used, if you create Auphonic production from an Episode.',
 					'html'        => array( 'class' => 'regular-text' ),
 					'options'	  => $preset_list
 				) );
