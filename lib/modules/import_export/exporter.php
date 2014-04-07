@@ -5,7 +5,7 @@ use Podlove\Model;
 
 class Exporter {
 
-	const XML_NAMESPACE = 'http://podlove.org/dtd/wordpress-publisher-export/1.0';
+	const XML_NAMESPACE = 'http://podlove.org/podlove-podcast-publisher/export';
 
 	public function __construct() {
 		add_action('podlove_xml_export', array($this, 'exportEpisodes'));
@@ -111,12 +111,26 @@ class Exporter {
 	}
 
 	public function getXml() {
-		$xml = new \SimpleXMLElement('<xml/>');
+		$xml = new \SimpleXMLElement('<wpe:export/>');
 		// Double xmlns looks strange but is intentionally/required.
 		// See http://stackoverflow.com/a/9391673/72448
 		$xml->addAttribute('xmlns:xmlns:wpe', self::XML_NAMESPACE);
+		$xml->addAttribute('version', '1.0');
+
+		// add comments
+		$comment = "\n\tPublisher Version: " . \Podlove\get_plugin_header( 'Version' );
+		$comment.= "\n\tExport Date: " . date('r');
+		$comment.= "\n\t";
+
+		$dom = dom_import_simplexml($xml);
+		$commentElement = $dom->ownerDocument->createComment($comment);
+		$dom->appendChild($commentElement);
 
 		do_action('podlove_xml_export', $xml);
-		return $xml->asXML();
+
+		// return formatted
+		$dom = dom_import_simplexml($xml)->ownerDocument;
+		$dom->formatOutput = true;
+		return $dom->saveXML();
 	}
 }
