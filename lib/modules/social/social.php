@@ -33,6 +33,9 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'wp_ajax_podlove-services-delete-contributor-services', array($this, 'delete_contributor_services') );
 		add_action( 'wp_ajax_podlove-services-delete-podcast-services', array($this, 'delete_podcast_services') );
 
+		add_action('podlove_xml_export', array($this, 'expandExportFile'));
+		add_action('podlove_xml_import', array($this, 'expandImport'));
+
 		\Podlove\Modules\Contributors\Template\Contributor::add_accessor(
 			'services', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorContributorServices'), 5
 		);
@@ -842,5 +845,17 @@ class Social extends \Podlove\Modules\Base {
 
 		if ($service = ShowService::find_by_id($object_id))
 			$service->delete();
+	}
+	
+	public function expandExportFile(\SimpleXMLElement $xml) {
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
+	}
+
+	public function expandImport($xml) {
+		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 }

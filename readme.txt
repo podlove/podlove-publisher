@@ -96,6 +96,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Pass more data to web player (as preparation for the next release)
 * Fix: "Network Activate" works now
 * Fix: group and role filters for `[podlove-podcast-contributor-list]` shortcode work as expected now
+* Fix: Add services and donations to export format
 
 = 1.10.6 =
 
