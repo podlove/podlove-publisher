@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 66 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 67 );
 
 add_action( 'init', function () {
 	
@@ -736,6 +736,15 @@ function run_migrations_for_version( $version ) {
 				$episode->license_name = \Podlove\Model\License::get_name_from_license( $license );
 
 				$episode->save();
+			}
+		break;
+		case 67:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$instagram_service = \Podlove\Modules\Social\Model\Service::find_one_by_where( "`title` = 'Instagram' AND `type` = 'social'" );
+				if ($instagram_service) {
+					$instagram_service->url_scheme = 'https://instagram.com/%account-placeholder%';
+					$instagram_service->save();
+				}
 			}
 		break;
 	}
