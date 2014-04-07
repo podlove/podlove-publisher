@@ -95,6 +95,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Add refresh buttons for Auphonic preset selector
 * Enhancement: Pass more data to web player (as preparation for the next release)
 * Fix: "Network Activate" works now
+* Fix: group and role filters for `[podlove-podcast-contributor-list]` shortcode work as expected now
 
 = 1.10.6 =
 
