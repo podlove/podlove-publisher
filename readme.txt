@@ -93,6 +93,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Add "Save and Continue Editing" buttons to all table based management screens
 * Enhancement: Use translations for month and day names in formatted template dates (if a language other than english is used)
 * Enhancement: Add refresh buttons for Auphonic preset selector
+* Enhancement: Pass more data to web player (as preparation for the next release)
 * Fix: "Network Activate" works now
 
 = 1.10.6 =
