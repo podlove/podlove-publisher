@@ -180,7 +180,8 @@ class Printer {
 				return array(
 					'assetTitle'   => $mf['assetTitle'],
 					'downloadUrl'  => $mf['publicUrl'],
-					'directAccess' => $mf['url']
+					'directAccess' => $mf['url'],
+					'url' => $mf['url'] /* player v.2.0.x compatibility */
 				);
 			}, array_values($sorted_files)),
 			'duration'            => $this->episode->get_duration(),
