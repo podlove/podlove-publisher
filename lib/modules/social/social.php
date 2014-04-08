@@ -50,6 +50,7 @@ class Social extends \Podlove\Modules\Base {
 		);
 
 		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
+		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
 	}
 
 	public function was_activated( $module_name ) {
@@ -871,5 +872,12 @@ class Social extends \Podlove\Modules\Base {
 	 */
 	public function podlove_podcast_social_media_list() {
 		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-social-media-list.twig');
+	}
+
+	/**
+	 * [podlove-podcast-social-media-list] shortcode
+	 */
+	public function podlove_podcast_donations_list() {
+		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-donations-list.twig');
 	}
 }
