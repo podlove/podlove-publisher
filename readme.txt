@@ -92,6 +92,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Direct contributor access in templates via `{{ podcast.contributors({id: 'john'}).name }}`
 * Feature: Add shortcode `[podlove-podcast-social-media-list]`, which lists all social media accounts for the podcast
 * Feature: Add shortcode `[podlove-podcast-donations-list]`, which lists all donation accounts for the podcast
+* Feature: Add tag support for Auphonic
 * Enhancement: Add "Save and Continue Editing" buttons to all table based management screens
 * Enhancement: Use translations for month and day names in formatted template dates (if a language other than english is used)
 * Enhancement: Add refresh buttons for Auphonic preset selector
