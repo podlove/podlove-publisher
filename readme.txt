@@ -101,6 +101,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: group and role filters for `[podlove-podcast-contributor-list]` shortcode work as expected now
 * Fix: Add services and donations to export format
 * Fix: `episode.player` in episode loops, outside the WordPress loop works now
+* Fix: Auphonic chapter integration issue
+* Fix: Instagram URL scheme
 
 = 1.10.6 =
 
