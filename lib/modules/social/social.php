@@ -36,6 +36,11 @@ class Social extends \Podlove\Modules\Base {
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 
+		add_filter('podlove_twig_file_loader', function($file_loader) {
+			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'templates')), 'social');
+			return $file_loader;
+		});
+
 		\Podlove\Modules\Contributors\Template\Contributor::add_accessor(
 			'services', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorContributorServices'), 5
 		);
@@ -43,6 +48,8 @@ class Social extends \Podlove\Modules\Base {
 		\Podlove\Template\Podcast::add_accessor(
 			'services', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorPodcastServices'), 4
 		);
+
+		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
 	}
 
 	public function was_activated( $module_name ) {
@@ -857,5 +864,12 @@ class Social extends \Podlove\Modules\Base {
 		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
 		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
 		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
+	}
+	
+	/**
+	 * [podlove-podcast-social-media-list] shortcode
+	 */
+	public function podlove_podcast_social_media_list() {
+		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-social-media-list.twig');
 	}
 }
