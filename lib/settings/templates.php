@@ -260,21 +260,8 @@ class Templates {
 
 			$f->text( 'content', array(
 				'label'       => __( 'HTML Template', 'podlove' ),
-				'description' => __( 'Have a look at the <a href="http://docs.podlove.org/publisher/shortcodes/" target="_blank">Shortcode documentation</a> for all available options.', 'podlove' ),
-				'html' => array( 'class' => 'large-text required', 'rows' => 20 ),
-				'default' => <<<EOT
-{# display the web player #}
-{{ episode.player }}
-
-{# display the download section #}
-[podlove-episode-downloads]
-
-{# display the duration of the episode #}
-<span class="podlove-duration">Duration: {{ episode.duration.hours }}:{{ episode.duration.minutes|padLeft("0",2) }}:{{ episode.duration.seconds|padLeft("0",2) }}</span>
-
-{# display the license #}
-{% include '@core/license.twig' %}
-EOT
+				'description' => __( 'Templates support HTML and Twig. Read the <a href="http://docs.podlove.org/guides/understanding-templates/">Template Guide</a> to get started and have a look at the <a href="http://docs.podlove.org/publisher/template-reference/" target="_blank">Template reference</a> for all available data accessors.', 'podlove' ),
+				'html' => array( 'class' => 'large-text required', 'rows' => 20 )
 			) );
 
 		} );

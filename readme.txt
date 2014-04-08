@@ -98,6 +98,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: Add refresh buttons for Auphonic preset selector
 * Enhancement: Pass more data to web player (as preparation for the next release)
 * Enhancement: Improved export format: It has its own namespace and a version now. Publisher version and export date are included as XML comments. XML elements are indented for better readability.
+* Remove default content for new templates
 * Fix: "Network Activate" works now
 * Fix: group and role filters for `[podlove-podcast-contributor-list]` shortcode work as expected now
 * Fix: Add services and donations to export format
