@@ -148,7 +148,7 @@ class Social extends \Podlove\Modules\Base {
 					'type'			=> 'social',
 					'description'	=> 'Instagram Account',
 					'logo'			=> 'instagram-128.png',
-					'url_scheme'	=> 'https://http://instagram.com/%account-placeholder%'
+					'url_scheme'	=> 'https://instagram.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Jabber',
