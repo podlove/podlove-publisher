@@ -100,6 +100,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: "Network Activate" works now
 * Fix: group and role filters for `[podlove-podcast-contributor-list]` shortcode work as expected now
 * Fix: Add services and donations to export format
+* Fix: `episode.player` in episode loops, outside the WordPress loop works now
 
 = 1.10.6 =
 

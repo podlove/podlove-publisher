@@ -32,6 +32,7 @@ class Printer {
 
 	public function __construct( Episode $episode ) {
 		$this->episode = $episode;
+		$this->post    = get_post($episode->post_id);
 		$this->player_format_assignments = $this->get_player_format_assignments();
 		$this->files = $this->get_files();
 	}
@@ -157,8 +158,8 @@ class Printer {
 			'sharewholeepisode'   => in_array( $this->get_webplayer_setting('buttons_sharemode'), $truthy, true ),
 			'loop'                => false,
 			'chapterlinks'        => 'all',
-			'permalink'           => get_permalink(),
-			'title'               => get_the_title(),
+			'permalink'           => get_permalink( $this->post->ID ),
+			'title'               => get_the_title( $this->post->ID ),
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
