@@ -294,7 +294,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$data['channel_id'] = $this->get_module_option('adn_patter_room');
 		$data['annotations'][] = $this->get_crosspost_annotation();
 		$data['annotations'][] = $this->get_invite_annotation();
-    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
 		$url = sprintf(
 			'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
@@ -313,7 +312,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
     	$data['annotations'][] = $this->get_broadcast_metadata( $_POST['post_title'] );
     	$data['annotations'][] = $this->get_read_more_link( get_permalink($_POST['post_ID']) );
-    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
     	$url = sprintf(
     		'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
@@ -365,14 +363,14 @@ class App_Dot_Net extends \Podlove\Modules\Base {
         if ($this->get_module_option('adn_language_annotation') !== "")
         	$data['annotations'][] = $this->get_language_annotation();
 
-    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
+    	$data['annotations'][] = $this->get_episode_cover( $post_id );
 
         $this->post_to_alpha($data);
         $this->post_to_patter($data);
 
         // Change Announcement text for broadcast
 
-        $data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
+        $data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
         $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
