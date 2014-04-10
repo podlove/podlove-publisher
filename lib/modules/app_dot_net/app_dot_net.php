@@ -273,8 +273,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     			'Content-Length' => \Podlove\strlen($data_string)
     		)
     	) );
-
-    	$curl->get_response();
+		
+		$curl->get_response();
     }
 
     private function post_to_alpha($data) {
@@ -369,8 +369,12 @@ class App_Dot_Net extends \Podlove\Modules\Base {
         $this->post_to_patter($data);
 
         // Change Announcement text for broadcast
+        if ( is_array( $_POST ) ) {
+        	$data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
+        } else {
+        	$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
+        }
 
-        $data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
         $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
@@ -482,7 +486,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
     	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
     
-    	if($this->get_module_option('adn_post_delay') !== "" AND $this->get_module_option('adn_post_delay') !== "00:00") {
+    	if($this->get_module_option('adn_post_delay_hours') !== "00" AND $this->get_module_option('adn_post_delay_minutes') !== "00") {
     		$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
     		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 			wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array($post_id, $post_title));
