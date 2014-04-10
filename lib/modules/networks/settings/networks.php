@@ -104,7 +104,7 @@ class Networks {
 	public static function get_action_link( $network, $title, $action = 'edit', $class = 'link' ) {
 		return sprintf(
 			'<a href="?page=%s&amp;action=%s&amp;network=%s" class="%s">' . $title . '</a>',
-			$_REQUEST['page'],
+			'podlove_settings_network_handle',
 			$action,
 			$network->id,
 			$class

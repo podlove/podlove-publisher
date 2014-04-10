@@ -56,11 +56,23 @@ class Network extends Base {
 	}
 
 	/**
+	 * Fetch all Blogs
+	 */
+	public static function all_blogs() {
+		global $wpdb;
+		return $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+	}
+
+
+	/**
 	 * Fetch all Podcasts
 	 */
 	public static function all_podcasts() {
-		global $wpdb;
-		return $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+		return array_filter( self::all_blogs(), function( $blog ) {
+			switch_to_blog( $blog );
+				if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) )
+					return $blog;
+		} );
 	}
 
 	/**
@@ -95,6 +107,7 @@ class Network extends Base {
 
 }
 
+Network::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 Network::property( 'title', 'VARCHAR(255)' );
 Network::property( 'subtitle', 'TEXT' );
 Network::property( 'description', 'TEXT' );

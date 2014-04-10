@@ -92,65 +92,13 @@ class Dashboard {
 		<?php
 	}
 
-	public function right_now() {
+	public static function right_now() {
 		
 	}
 
-	public function network_overview() {
-		
+	public static function network_overview() {
+		$table = new \Podlove\Modules\Networks\Network_List_Table();
+		$table->prepare_items();
+		$table->display();
 	}
-}
-
-class PodcastNetworkTable extends \WP_List_Table {
-
-	public function get_columns(){
-	  $columns = array(
-	  	'cover' => '',
-	    'title' => 'Title',
-	    'episodes'    => 'Episodes',
-	    'contributors' => 'Contributors',
-	    'domain'      => 'Domain'
-	  );
-	  return $columns;
-	}
-
-	public function prepare_items( $podcasts ) {
-	  $columns = $this->get_columns();
-	  $hidden = array();
-	  $sortable = $this->get_sortable_columns();
-	  $this->_column_headers = array($columns, $hidden, $sortable);
-	  $this->items = $podcasts;
-	}
-
-	public function get_sortable_columns() {
-		$sortable_columns = array(
-		    'title'  => array('title',false),
-		    'episodes' => array('episodes',false),
-		    'contributors'   => array('contributors',false)
-		  );
-		  return $sortable_columns;
-	}
-
-	public function column_default( $item, $column_name ) {
-	  switch( $column_name ) { 
-	  	case 'cover':
-	  		if( $item[ $column_name ] == "" ) {
-	  			return '';
-	  		} else {
-	  			return '<img src="'. $item[ $column_name ] .'" alt="' . $item[ 'title' ] . 'Cover" style="width: 50px;" />';
-	  		}
-	  	break;
-	    case 'title':
-	    	return "<a href='" . $item[ 'domain' ] . "'>" . $item[ $column_name ] . "</a>";
-	    break;
-	    case 'episodes':
-	    case 'contributors':
-		    return $item[ $column_name ];
-		break;
-	    case 'domain':
-	    	return "<a href='" . $item[ $column_name ] . "'>" . $item[ $column_name ] . "</a>";
-	    break;
-	  }
-	}
-
 }

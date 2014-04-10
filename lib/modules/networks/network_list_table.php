@@ -24,7 +24,7 @@ class Network_List_Table extends \Podlove\List_Table {
 		return sprintf( '%1$s %2$s',
 		    Settings\Networks::get_action_link( $network, $network->title ),
 		    $this->row_actions( $actions )
-		) . '<input type="hidden" class="network_id" value="' . $network->id . '">';;
+		) . '<input type="hidden" class="network_id" value="' . $network->id . '">';
 	}
 
 	public function column_logo( $network ) {
@@ -42,8 +42,10 @@ class Network_List_Table extends \Podlove\List_Table {
 	public function column_podcasts( $network ) {
 		$list = '';
 		foreach ( explode( ',', $network->podcasts ) as $podcast_id ) {
-			$podcast = Network::fetch_podcast_by_id( $podcast_id );
-			$list = $list . "<a href='" . site_url() . "'>" .  $podcast->title . "</a>, ";
+			if ( $podcast_id ) {
+				$podcast = Network::fetch_podcast_by_id( $podcast_id );
+				$list = $list . "<a href='" . site_url() . "'>" .  $podcast->title . "</a>, ";
+			}
 		}
 		return substr( $list, 0, -2 );
 	}
