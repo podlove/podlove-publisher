@@ -14,8 +14,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		$module_url = $this->get_module_url();
     		$user = null;
 
+    		add_action( 'podlove_module_was_activated_app_dot_net', array( $this, 'was_activated' ) );
+
     		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
-    	
+   	
     		if ($this->get_module_option('adn_auth_key') !== "") {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
 				add_action('delayed_adn_post', array( $this, 'post_to_adn_delayer' ), 10, 2);
@@ -195,6 +197,15 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 				
 			}
+    }
+
+    public function was_activated() {
+    	$episodes = Model\Episode::all();
+    	foreach ( $episodes as $episode ) {
+    		$post = get_post( $episode->post_id );
+    		if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
+    			update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+    	}
     }
 
     public function ajax_refresh_channel() {

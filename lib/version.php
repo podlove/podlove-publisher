@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 67 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 68 );
 
 add_action( 'init', function () {
 	
@@ -745,6 +745,14 @@ function run_migrations_for_version( $version ) {
 					$instagram_service->url_scheme = 'https://instagram.com/%account-placeholder%';
 					$instagram_service->save();
 				}
+			}
+		break;
+		case 68: // Do that ADN module fix again, as we forgot to mark all episodes as published if the ADN module is activated
+			$episodes = Model\Episode::all();
+			foreach ( $episodes as $episode ) {
+				$post = get_post( $episode->post_id );
+				if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
+						update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
 			}
 		break;
 	}
