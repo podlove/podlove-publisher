@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 68 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 69 );
 
 add_action( 'init', function () {
 	
@@ -753,6 +753,19 @@ function run_migrations_for_version( $version ) {
 				$post = get_post( $episode->post_id );
 				if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
 						update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+			}
+		break;
+		case 69:
+			// update for everyone, so even those with inactive service tables get updated
+			$wpdb->query( sprintf(
+				"ALTER TABLE `%s` ADD COLUMN `name` VARCHAR(255) AFTER `title`",
+				\Podlove\Modules\Social\Model\Service::table_name()
+			) );
+
+			$services = \Podlove\Modules\Social\Model\Service::all();
+			foreach ($services as $service) {
+				$service->name = strtolower($service->title);
+				$service->save();
 			}
 		break;
 	}

@@ -18,6 +18,7 @@ class Service extends Base
 Service::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 Service::property( 'type', 'VARCHAR(255)' );
 Service::property( 'title', 'VARCHAR(255)' );
+Service::property( 'name', 'VARCHAR(255)' );
 Service::property( 'description', 'TEXT' );
 Service::property( 'logo', 'TEXT' );
 Service::property( 'url_scheme', 'TEXT' );
