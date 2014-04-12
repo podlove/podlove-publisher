@@ -14,8 +14,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		$module_url = $this->get_module_url();
     		$user = null;
 
+    		add_action( 'podlove_module_was_activated_app_dot_net', array( $this, 'was_activated' ) );
+
     		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
-    	
+   	
     		if ($this->get_module_option('adn_auth_key') !== "") {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
 				add_action('delayed_adn_post', array( $this, 'post_to_adn_delayer' ), 10, 2);
@@ -197,6 +199,15 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			}
     }
 
+    public function was_activated() {
+    	$episodes = Model\Episode::all();
+    	foreach ( $episodes as $episode ) {
+    		$post = get_post( $episode->post_id );
+    		if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
+    			update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+    	}
+    }
+
     public function ajax_refresh_channel() {
 		$category = $_REQUEST['category'];
 		switch ( $category ) {
@@ -262,8 +273,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     			'Content-Length' => \Podlove\strlen($data_string)
     		)
     	) );
-
-    	$curl->get_response();
+		
+		$curl->get_response();
     }
 
     private function post_to_alpha($data) {
@@ -283,7 +294,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$data['channel_id'] = $this->get_module_option('adn_patter_room');
 		$data['annotations'][] = $this->get_crosspost_annotation();
 		$data['annotations'][] = $this->get_invite_annotation();
-    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
 		$url = sprintf(
 			'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
@@ -302,7 +312,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
     	$data['annotations'][] = $this->get_broadcast_metadata( $_POST['post_title'] );
     	$data['annotations'][] = $this->get_read_more_link( get_permalink($_POST['post_ID']) );
-    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
 
     	$url = sprintf(
     		'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
@@ -354,14 +363,18 @@ class App_Dot_Net extends \Podlove\Modules\Base {
         if ($this->get_module_option('adn_language_annotation') !== "")
         	$data['annotations'][] = $this->get_language_annotation();
 
-    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
+    	$data['annotations'][] = $this->get_episode_cover( $post_id );
 
         $this->post_to_alpha($data);
         $this->post_to_patter($data);
 
         // Change Announcement text for broadcast
+        if ( is_array( $_POST ) ) {
+        	$data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
+        } else {
+        	$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
+        }
 
-        $data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
         $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
@@ -473,7 +486,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
     	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
     
-    	if($this->get_module_option('adn_post_delay') !== "" AND $this->get_module_option('adn_post_delay') !== "00:00") {
+    	if($this->get_module_option('adn_post_delay_hours') !== "00" AND $this->get_module_option('adn_post_delay_minutes') !== "00") {
     		$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
     		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 			wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array($post_id, $post_title));
