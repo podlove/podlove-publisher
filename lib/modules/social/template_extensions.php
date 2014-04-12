@@ -12,6 +12,7 @@ class TemplateExtensions {
 	 * Parameters:
 	 *
 	 * - **type:** (optional) "social", "donation" or "all". Default: "all"
+	 * - **name:** (optional) Filter services by name. List of all service names: 500px, amazon wishlist, app.net, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, facebook, flattr, flattr, flickr, generic wishlist, github, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, paypal, pinboard, pinterest, playstation network, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitter, website, xbox live, xing, youtube
 	 *
 	 * Example:
 	 *
@@ -36,6 +37,12 @@ class TemplateExtensions {
 			$services = ContributorService::find_by_contributor_id_and_type($contributor->id, $type);
 		}
 
+		if (isset($args["name"]) && $args["name"]) {
+			$services = array_filter($services, function ($s) use ($args) {
+				return $s->get_service()->name == $args["name"];
+			});
+		}
+
 		usort($services, function($a, $b) {
 			if ($a == $b)
 				return 0;
@@ -54,6 +61,7 @@ class TemplateExtensions {
 	 * Parameters:
 	 * 
 	 * - **type:** (optional) "social", "donation" or "all". Default: "all"
+	 * - **name:** (optional) Filter services by name. List of all services: 500px, amazon wishlist, app.net, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, facebook, flattr, flattr, flickr, generic wishlist, github, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, paypal, pinboard, pinterest, playstation network, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitter, website, xbox live, xing, youtube
 	 *
 	 * Example:
 	 *
@@ -76,6 +84,12 @@ class TemplateExtensions {
 			$services = ShowService::all("ORDER BY position ASC");
 		} else {
 			$services = ShowService::find_by_type($type);
+		}
+
+		if (isset($args["name"]) && $args["name"]) {
+			$services = array_filter($services, function ($s) use ($args) {
+				return $s->get_service()->name == $args["name"];
+			});
 		}
 
 		return array_map(function($service) {
