@@ -85,6 +85,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.8 =
+
+* Fix: failing delayed ADN broadcast
+* Fix: stop sending ADN announcements for old episodes
+* Fix: refresh of Auphonic presets keeps current preset
+
 = 1.10.7 =
 
 * Feature: Direct episode access in templates via `{{ podcast.episodes({slug: 'pod001'}).title }}`
