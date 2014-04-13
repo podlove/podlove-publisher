@@ -134,7 +134,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
 					<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
 					<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
-					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';		
+					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>
+					<code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code>';
 
 				$this->register_option( 'adn_poster_announcement_text', 'text', array(
 					'label'       => __( 'Announcement text', 'podlove' ),
@@ -158,13 +159,15 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 							$example_data = array(
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
-								'subtitle'     => $episode->subtitle
+								'subtitle'     => $episode->subtitle,
+								'contributors' => $this->get_contributors( $episode->post_id )
 							);
 						} else {
 							$example_data = array(
 								'episode'      => 'My Example Episode',
 								'episode-link' => 'http://www.example.com/episode/001',
-								'subtitle'     => 'My Example Subtitle'
+								'subtitle'     => 'My Example Subtitle',
+								'contributors' => '@example @elpmaxe'
 							);
 						}
 						?>
@@ -172,7 +175,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								data-podcast="<?php echo $podcast->title ?>"
 								data-episode="<?php echo $example_data['episode'] ?>"
 								data-episode-link="<?php echo $example_data['episode-link'] ?>"
-								data-episode-subtitle="<?php echo $example_data['subtitle'] ?>">
+								data-episode-subtitle="<?php echo $example_data['subtitle'] ?>"
+								data-contributors="<?php echo $example_data['contributors'] ?>">
 							<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
 							<div class="adn content">
 								<div class="adn username"><?php echo $user->username ?></div>
@@ -417,6 +421,26 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
     }
 
+    private function get_contributors($post_id) {
+    	$contributor_adn_accounts = '';
+
+    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+    	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
+
+    	foreach ( $contributions as $contribution ) {
+    		$contributor_adn_accounts .= '';
+    		$adn_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'App.net' );
+    		$social_accounts = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $contribution->contributor_id );
+
+    		array_map( function( $account ) use ( $adn_service, &$contributor_adn_accounts ) {
+    			if ( $account->service_id == $adn_service->id )
+    				$contributor_adn_accounts .= "@" . $account->value . " ";
+    		} , $social_accounts );
+    	}
+
+    	return $contributor_adn_accounts;
+    }
+
     private function get_text_for_episode($episode, $post_id, $post_title) {
 
 		$podcast = Model\Podcast::get_instance();
@@ -426,6 +450,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$text = str_replace("{episodeTitle}", $post_title, $text);
 		$text = str_replace("{episodeLink}", get_permalink( $post_id ), $text);
 		$text = str_replace("{episodeSubtitle}", $episode->subtitle, $text);
+		$text = str_replace("{episodeContributors}", $this->get_contributors( $post_id ), $text);
 		
 		$posted_linked_title = array();
 		$start_position = 0;
