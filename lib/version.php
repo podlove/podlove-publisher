@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 68 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 69 );
 
 add_action( 'init', function () {
 	
@@ -753,6 +753,13 @@ function run_migrations_for_version( $version ) {
 				$post = get_post( $episode->post_id );
 				if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
 						update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+			}
+		break;
+		case 69:
+			if (\Podlove\Modules\Base::is_active('app_dot_net')) {
+				$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
+				if ( $adn->get_module_option( 'adn_auth_key' ) )
+					$adn->update_module_option( 'adn_automatic_announcement', 'on' );
 			}
 		break;
 	}
