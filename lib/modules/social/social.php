@@ -552,7 +552,7 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function save_service_setting($old, $new, $form_key='services', $type='social') {
-		foreach (\Podlove\Modules\Social\Model\ShowService::find_by_type( $type ) as $service) {
+		foreach (\Podlove\Modules\Social\Model\ShowService::find_by_category( $type ) as $service) {
 			$service->delete();
 		}
 
@@ -621,7 +621,7 @@ class Social extends \Podlove\Modules\Base {
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
-					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'] );
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category( $_GET['contributor'] );
 				} else {
 					$services = array();
 				}
@@ -641,7 +641,7 @@ class Social extends \Podlove\Modules\Base {
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
-					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'], 'donation' );
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category( $_GET['contributor'], 'donation' );
 				} else {
 					$services = array();
 				}

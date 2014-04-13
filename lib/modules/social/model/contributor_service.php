@@ -18,8 +18,8 @@ class ContributorService extends Base {
 		return str_replace( '%account-placeholder%', $this->value, $service->url_scheme);
 	}
 
-	public static function find_by_contributor_id_and_type( $contributor_id, $type='social' ) {
-		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `type` = '" . $type . "' ) AND `contributor_id` = " . $contributor_id );
+	public static function find_by_contributor_id_and_category( $contributor_id, $category = 'social' ) {
+		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `category` = '" . $category . "' ) AND `contributor_id` = " . $contributor_id );
 	}
 
 }

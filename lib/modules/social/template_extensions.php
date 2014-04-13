@@ -11,13 +11,13 @@ class TemplateExtensions {
 	 *
 	 * Parameters:
 	 *
-	 * - **type:** (optional) "social", "donation" or "all". Default: "all"
-	 * - **name:** (optional) Filter services by name. List of all service names: 500px, amazon wishlist, app.net, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, facebook, flattr, flattr, flickr, generic wishlist, github, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, paypal, pinboard, pinterest, playstation network, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitter, website, xbox live, xing, youtube
+	 * - **category:** (optional) "social", "donation" or "all". Default: "all"
+	 * - **type:**     (optional) Filter services by type. List of all service types: 500px, amazon wishlist, app.net, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, facebook, flattr, flattr, flickr, generic wishlist, github, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, paypal, pinboard, pinterest, playstation network, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitter, website, xbox live, xing, youtube
 	 *
 	 * Example:
 	 *
 	 * ```html
-	 * {% for service in contributor.services({type: "social"}) %}
+	 * {% for service in contributor.services({category: "social"}) %}
 	 *   <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
 	 *     <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
 	 *   </a>
@@ -29,17 +29,17 @@ class TemplateExtensions {
 	 */
 	public function accessorContributorServices($return, $method_name, $contributor, $contribution, $args = array()) {
 
-		$type = (isset($args['type']) && in_array($args['type'], array("social", "donation", "all"))) ? $args['type'] : "all";
+		$category = (isset($args['category']) && in_array($args['category'], array("social", "donation", "all"))) ? $args['category'] : "all";
 
-		if ($type == "all") {
+		if ($category == "all") {
 			$services = ContributorService::find_all_by_contributor_id($contributor->id);
 		} else {
-			$services = ContributorService::find_by_contributor_id_and_type($contributor->id, $type);
+			$services = ContributorService::find_by_contributor_id_and_category($contributor->id, $category);
 		}
 
-		if (isset($args["name"]) && $args["name"]) {
+		if (isset($args["type"]) && $args["type"]) {
 			$services = array_filter($services, function ($s) use ($args) {
-				return $s->get_service()->name == $args["name"];
+				return $s->get_service()->type == $args["type"];
 			});
 		}
 
@@ -60,13 +60,13 @@ class TemplateExtensions {
 	 * 
 	 * Parameters:
 	 * 
-	 * - **type:** (optional) "social", "donation" or "all". Default: "all"
-	 * - **name:** (optional) Filter services by name. List of all services: 500px, amazon wishlist, app.net, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, facebook, flattr, flattr, flickr, generic wishlist, github, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, paypal, pinboard, pinterest, playstation network, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitter, website, xbox live, xing, youtube
+	 * - **category:** (optional) "social", "donation" or "all". Default: "all"
+	 * - **type:**     (optional) Filter services by type. List of all service types: 500px, amazon wishlist, app.net, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, facebook, flattr, flattr, flickr, generic wishlist, github, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, paypal, pinboard, pinterest, playstation network, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitter, website, xbox live, xing, youtube
 	 *
 	 * Example:
 	 *
 	 * ```html
-	 * {% for service in podcast.services({type: "social"}) %}
+	 * {% for service in podcast.services({category: "social"}) %}
 	 *   <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
 	 *     <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
 	 *   </a>
@@ -78,17 +78,17 @@ class TemplateExtensions {
 	 */
 	public function accessorPodcastServices($return, $method_name, $podcast, $args = array()) {
 
-		$type = isset($args['type']) && in_array($args['type'], array("social", "donation", "all")) ? $args['type'] : "all";
+		$category = isset($args['category']) && in_array($args['category'], array("social", "donation", "all")) ? $args['category'] : "all";
 
-		if ($type == "all") {
+		if ($category == "all") {
 			$services = ShowService::all("ORDER BY position ASC");
 		} else {
-			$services = ShowService::find_by_type($type);
+			$services = ShowService::find_by_category($category);
 		}
 
-		if (isset($args["name"]) && $args["name"]) {
+		if (isset($args["type"]) && $args["type"]) {
 			$services = array_filter($services, function ($s) use ($args) {
-				return $s->get_service()->name == $args["name"];
+				return $s->get_service()->type == $args["type"];
 			});
 		}
 

@@ -758,13 +758,18 @@ function run_migrations_for_version( $version ) {
 		case 69:
 			// update for everyone, so even those with inactive service tables get updated
 			$wpdb->query( sprintf(
-				"ALTER TABLE `%s` ADD COLUMN `name` VARCHAR(255) AFTER `title`",
+				'ALTER TABLE `%s` CHANGE COLUMN `type` `category` VARCHAR(255)',
+				\Podlove\Modules\Social\Model\Service::table_name()
+			) );
+
+			$wpdb->query( sprintf(
+				"ALTER TABLE `%s` ADD COLUMN `type` VARCHAR(255) AFTER `category`",
 				\Podlove\Modules\Social\Model\Service::table_name()
 			) );
 
 			$services = \Podlove\Modules\Social\Model\Service::all();
 			foreach ($services as $service) {
-				$service->name = strtolower($service->title);
+				$service->type = strtolower($service->title);
 				$service->save();
 			}
 		break;
