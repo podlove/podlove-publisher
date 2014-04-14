@@ -84,3 +84,8 @@
 .adn-post-status-ok {
 	display: none;
 }
+
+tr.row_podlove_module_app_dot_net_contributor_filter span.description {
+	margin-top: -0.5em;
+	display: inline-block;
+}
