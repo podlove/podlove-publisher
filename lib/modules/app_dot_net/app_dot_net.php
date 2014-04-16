@@ -19,7 +19,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
     		add_action( 'wp_ajax_podlove-adn-post', array( $this, 'ajax_post_to_adn' ) );
    	
-    		if ($this->get_module_option('adn_auth_key') !== "" AND $this->get_module_option('adn_automatic_announcement') ) {
+    		if ($this->get_module_option('adn_auth_key') !== "" ) {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
 				add_action('delayed_adn_post', array( $this, 'post_to_adn_delayer' ), 10, 2);
 			}
@@ -605,7 +605,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     }
     
 	public function post_to_adn_handler($postid) {
-		if ( $this->is_already_published($post_id) )
+		if ( $this->is_already_published($post_id) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
 			return;
 
 	    $post_id = $_POST['post_ID'];
@@ -614,12 +614,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
     	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
     
-    	if($this->get_module_option('adn_post_delay_hours') !== "00" AND $this->get_module_option('adn_post_delay_minutes') !== "00") {
-    		$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
+    	if( $adn_post_delay_hours == "00" AND 
+    		$adn_post_delay_minutes == "00") {
+			$this->post_to_adn($post_id, $post_title);
+		} else {
+			$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
     		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 			wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array($post_id, $post_title));
-		} else {
-			$this->post_to_adn($post_id, $post_title);
 		}
 	}
 	
