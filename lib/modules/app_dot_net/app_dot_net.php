@@ -350,8 +350,11 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		)
     	) );
 		
-		print_r( $curl->get_response() );
-		exit();
+		$response = $curl->get_response();
+		$body = json_decode( $response['body'] );
+
+		if ( $body->meta->code !== 200 )
+			\Podlove\Log::get()->addWarning( sprintf( 'Error: App.net Module failed to Post: %s (Code %s)', str_replace( "'", "''", $body->meta->error_message ), $body->meta->code ) );
     }
 
     private function post_to_alpha($data) {
@@ -446,11 +449,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     	$data['annotations'][] = $this->get_episode_cover( $post_id );
 
-       // $this->post_to_alpha($data);
-       // $this->post_to_patter($data);
+    	$this->post_to_alpha($data);
+    	$this->post_to_patter($data);
 
-    	 print_r($data);
-
+    	// Unset Links for the Broadcast
     	unset($data['entities']['links']);
 
         // Change Announcement text for broadcast
