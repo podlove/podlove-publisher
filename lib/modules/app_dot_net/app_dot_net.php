@@ -201,6 +201,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								'episode-link' => get_permalink( $episode->post_id ),
 								'subtitle'     => $episode->subtitle
 							);
+							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id );
 						} else {
 							$example_data = array(
 								'episode'      => 'My Example Episode',
