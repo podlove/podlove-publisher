@@ -189,7 +189,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				
 				$this->register_option( 'adn_preview', 'callback', array(
 					'label' => __( 'Announcement preview', 'podlove' ),
-					'callback' => function() use ( $user, $module_url, $selected_role, $selected_group ) {
+					'callback' => function() use ( $user, $module_url ) {
 
 						if ( ! $user )
 							return;
