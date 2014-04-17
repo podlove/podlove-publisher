@@ -125,6 +125,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 				$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
 				$groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
+				$selected_role = $this->get_module_option('adn_contributor_filter_role');
+				$selected_group = $this->get_module_option('adn_contributor_filter_group');
 
 				if ( count($roles) > 0 || count($groups) > 0 ) { 
 					$this->register_option( 'contributor_filter', 'callback', array(
@@ -194,14 +196,18 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						if ( ! $user )
 							return;
 
+						$selected_role = $this->get_module_option('adn_contributor_filter_role');
+						$selected_group = $this->get_module_option('adn_contributor_filter_group');
+
 						$podcast = Model\Podcast::get_instance();
 						if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
 							$example_data = array(
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
-								'subtitle'     => $episode->subtitle
+								'subtitle'     => $episode->subtitle,
+								'contributors' => ''
 							);
-							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id );
+							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id, $selected_role, $selected_group );
 						} else {
 							$example_data = array(
 								'episode'      => 'My Example Episode',
@@ -459,14 +465,14 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     }
 
     public function replace_tags( $post_id ) {
+    	$selected_role = $this->get_module_option('adn_contributor_filter_role');
+    	$selected_group = $this->get_module_option('adn_contributor_filter_group');
+
     	$text = $this->get_module_option('adn_poster_announcement_text');
     	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
     	$podcast = Model\Podcast::get_instance();
     	$post = get_post( $post_id );
     	$post_title = $post->post_title;
-
-    	$selected_role = $this->get_module_option('adn_contributor_filter_role');
-    	$selected_group = $this->get_module_option('adn_contributor_filter_group');
     	
     	$text = str_replace("{podcastTitle}", $podcast->title, $text);
     	$text = str_replace("{episodeTitle}", $post_title, $text);
@@ -489,7 +495,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	}
     	
     	$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
-    	$text = apply_filters( 'podlove_adn_tags', $text, $post_id );
+    	$text = apply_filters( 'podlove_adn_tags', $text, $post_id, $selected_role, $selected_group );
 
     	return array(
     			'text' => $text,

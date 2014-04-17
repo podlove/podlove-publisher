@@ -37,8 +37,8 @@ class Social extends \Podlove\Modules\Base {
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 
 		add_filter( 'podlove_adn_tags_description_contributors', array($this, 'adn_tags_description') );
-		add_filter( 'podlove_adn_example_data_contributors', array($this, 'adn_example_data'), 10, 2);
-		add_filter( 'podlove_adn_tags_contributors_contributors', array($this, 'adn_tags'), 10, 2);
+		add_filter( 'podlove_adn_example_data_contributors', array($this, 'adn_example_data'), 10, 4);
+		add_filter( 'podlove_adn_tags_contributors_contributors', array($this, 'adn_tags'), 10, 4);
 
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'templates')), 'social');
@@ -889,15 +889,13 @@ class Social extends \Podlove\Modules\Base {
 		return '<code title="' . __( 'The Contributors of your Epsiode', 'podlove' ) . '">{episodeContributors}</code>';
 	}
 
-	public function adn_example_data( $data, $post_id ) {
-		$data['contributors'] = $this->adn_tags( '{episodeContributors}', $post_id );
+	public function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
+		$data['contributors'] = $this->adn_tags( '{episodeContributors}', $post_id, $selected_role, $selected_group );
 		return $data;
 	}
 
-	public function adn_tags( $text, $post_id ) {
+	public function adn_tags( $text, $post_id, $selected_role, $selected_group ) {
     	$contributor_adn_accounts = '';
-    	$selected_role = $this->get_module_option('adn_contributor_filter_role');
-		$selected_group = $this->get_module_option('adn_contributor_filter_group');
 
     	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
     	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
