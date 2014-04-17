@@ -342,6 +342,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$curl = new Http\Curl();
     	$curl->request( $url, array(
     		'method' => 'POST',
+    		'timeout' => '5000',
     		'body' => $data_string,
     		'headers' => array(
     			'Content-type'   => 'application/json',
