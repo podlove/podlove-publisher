@@ -492,7 +492,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	return $contributor_adn_accounts;
     }
 
-    public function replace_tags( $text, $post_id ) {
+    public function replace_tags( $text, $post_id, $episode ) {
     	$podcast = Model\Podcast::get_instance();
     	$post = get_post( $post_id );
     	$post_title = $post->post_title;
@@ -530,7 +530,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     private function get_text_for_episode($episode, $post_id) {
 		$text = $this->get_module_option('adn_poster_announcement_text');	
-		$post = $this->replace_tags( $text, $post_id );
+		$post = $this->replace_tags( $text, $post_id, $episode );
 
 		if ( \Podlove\strlen( $post['text'] ) > 256 )
 			$post['text'] = \Podlove\substr( $post['text'], 0, 255 ) . "…";
