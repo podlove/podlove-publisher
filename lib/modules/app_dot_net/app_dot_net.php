@@ -21,7 +21,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
    	
     		if ($this->get_module_option('adn_auth_key') !== "" ) {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
-				add_action('delayed_adn_post', array( $this, 'post_to_adn_delayer' ), 10, 2);
+				add_action('publish_future_podcast', array( $this, 'post_to_adn_handler' ));
+				add_action('delayed_adn_post', array( $this, 'post_to_adn' ), 10, 2);
 			}
 			
 			if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
@@ -420,10 +421,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	);
     }
 
-    public function post_to_adn($post_id, $post_title) {
+    public function post_to_adn($post_id) {
 
     	$episode = Model\Episode::find_one_by_post_id( $post_id );
-    	$episode_text = $this->get_text_for_episode( $episode, $post_id, $post_title );
+    	$episode_text = $this->get_text_for_episode( $episode, $post_id );
 
     	$text            = $episode_text['text'];
     	$link_annotation = $episode_text['link_annotation'];
@@ -449,11 +450,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	unset($data['entities']['links']);
 
         // Change Announcement text for broadcast
-        if ( is_array( $_POST ) AND isset( $_POST['post_ID'] ) AND isset( $_POST['post_title'] ) ) {
-        	$data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
-        } else {
-        	$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
-        }
+        $data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
 
         $this->broadcast( $data, $post_id );
 		
@@ -495,8 +492,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	return $contributor_adn_accounts;
     }
 
-    public function replace_tags( $text, $post_id, $post_title ) {
+    public function replace_tags( $text, $post_id ) {
     	$podcast = Model\Podcast::get_instance();
+    	$post = get_post( $post_id );
+    	$post_title = $post->post_title;
     	$selected_role = $this->get_module_option('adn_contributor_filter_role');
     	$selected_group = $this->get_module_option('adn_contributor_filter_group');
     	
@@ -529,9 +528,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		);
     }
 
-    private function get_text_for_episode($episode, $post_id, $post_title) {
+    private function get_text_for_episode($episode, $post_id) {
 		$text = $this->get_module_option('adn_poster_announcement_text');	
-		$post = $this->replace_tags( $text, $post_id, $post_title );
+		$post = $this->replace_tags( $text, $post_id );
 
 		if ( \Podlove\strlen( $post['text'] ) > 256 )
 			$post['text'] = \Podlove\substr( $post['text'], 0, 255 ) . "…";
@@ -572,11 +571,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     private function get_episode_cover( $post_id ) {
     	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
-    	if( !empty( $_POST['_podlove_meta']['cover_art'] ) ) {
-    		$cover = $_POST['_podlove_meta']['cover_art'];
-    	} else {
-    		$cover = $episode->get_cover_art_with_fallback();
-    	}
+    	$cover = $episode->get_cover_art_with_fallback();
 
     	if ( empty( $cover ) )
     		return;
@@ -612,32 +607,22 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	if( !$_REQUEST['post_id'] )
     		return;
 
-    	$post = get_post( $_REQUEST['post_id'] );
-    	$this->post_to_adn( $_REQUEST['post_id'], $post->post_title );
+    	$this->post_to_adn( $_REQUEST['post_id'] );
     }
     
-	public function post_to_adn_handler($postid) {
-		if ( $this->is_already_published($post_id) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
+	public function post_to_adn_handler( $postid ) {
+		if ( $this->is_already_published( $post_id ) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
 			return;
 
 	    $post_id = $_POST['post_ID'];
-    	$post_title = stripcslashes($_POST['post_title']);
 
     	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
     	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
     
-    	if( $adn_post_delay_hours == "00" AND 
-    		$adn_post_delay_minutes == "00") {
-			$this->post_to_adn($post_id, $post_title);
-		} else {
-			$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
-    		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
-			wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array($post_id, $post_title));
-		}
-	}
-	
-	public function post_to_adn_delayer($post_id, $post_title) {
-		$this->post_to_adn($post_id, $post_title);
+    	$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
+   		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
+
+		wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array( $post_id ) );
 	}
  
 	public function get_patter_rooms() {
