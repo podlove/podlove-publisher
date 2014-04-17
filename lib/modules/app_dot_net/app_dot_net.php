@@ -349,7 +349,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		)
     	) );
 		
-		$curl->get_response();
+		print_r( $curl->get_response() );
+		exit();
     }
 
     private function post_to_alpha($data) {
@@ -444,8 +445,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     	$data['annotations'][] = $this->get_episode_cover( $post_id );
 
-        $this->post_to_alpha($data);
-        $this->post_to_patter($data);
+       // $this->post_to_alpha($data);
+       // $this->post_to_patter($data);
 
         // Change Announcement text for broadcast
         if ( is_array( $_POST ) AND isset( $_POST['post_ID'] ) AND isset( $_POST['post_title'] ) ) {
@@ -485,7 +486,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
    						} else {
    		 					if ( $contribution->group_id == $selected_group && $contribution->role_id == $selected_role )
    								$contributor_adn_accounts .= "@" . $account->value . " ";
-    					}    					
+    					}
     				}
     			}
     		} , $social_accounts );
@@ -568,6 +569,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	} else {
     		$cover = $episode->get_cover_art_with_fallback();
     	}
+
+    	if ( empty( $cover ) )
+    		return;
     	
     	$cover_info = getimagesize( $cover );
 
