@@ -495,42 +495,50 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	return $contributor_adn_accounts;
     }
 
-    private function get_text_for_episode($episode, $post_id, $post_title) {
+    public function replace_tags( $text, $post_id, $post_title ) {
+    	$podcast = Model\Podcast::get_instance();
+    	$selected_role = $this->get_module_option('adn_contributor_filter_role');
+    	$selected_group = $this->get_module_option('adn_contributor_filter_group');
+    	
+    	$text = str_replace("{podcastTitle}", $podcast->title, $text);
+    	$text = str_replace("{episodeTitle}", $post_title, $text);
+    	$text = str_replace("{episodeLink}", get_permalink( $post_id ), $text);
+    	$text = str_replace("{episodeSubtitle}", $episode->subtitle, $text);
 
-		$podcast = Model\Podcast::get_instance();
-		$selected_role = $this->get_module_option('adn_contributor_filter_role');
-		$selected_group = $this->get_module_option('adn_contributor_filter_group');
-		$text = $this->get_module_option('adn_poster_announcement_text');
-		
-		$text = str_replace("{podcastTitle}", $podcast->title, $text);
-		$text = str_replace("{episodeTitle}", $post_title, $text);
-		$text = str_replace("{episodeLink}", get_permalink( $post_id ), $text);
-		$text = str_replace("{episodeSubtitle}", $episode->subtitle, $text);
-		$text = str_replace("{episodeContributors}", App_Dot_Net::get_contributors( $post_id, $selected_role, $selected_group ), $text);
-		
-		$posted_linked_title = array();
+     	$posted_linked_title = array();
 		$start_position = 0;
-		
-		while ( ($position = \Podlove\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
-			$length = \Podlove\strlen( $post_title, "UTF-8" );
-	    	$episode_entry = array(
-	    		"url"  => get_permalink( $post_id ), 
-	    		"text" => $post_title, 
-	    		"pos"  => $position, 
-	    		"len"  => ($position + $length <= 256) ? $length : 256 - $position
-	    	);
-	    	array_push( $posted_linked_title, $episode_entry );
-	    	$start_position = $position + 1;
-		}
-		
-		$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
 
-		if ( \Podlove\strlen( $text ) > 256 )
-			$text = \Podlove\substr( $text, 0, 255 ) . "…";
+    	while ( ($position = \Podlove\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+    		$length = \Podlove\strlen( $post_title, "UTF-8" );
+        	$episode_entry = array(
+        		"url"  => get_permalink( $post_id ), 
+        		"text" => $post_title, 
+        		"pos"  => $position, 
+        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
+        	);
+        	array_push( $posted_linked_title, $episode_entry );
+        	$start_position = $position + 1;
+    	}
+    	
+    	$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
+    	$text = apply_filters( 'podlove_adn_tags', $text, $post_id );
+
+    	return array(
+    			'text' => $text,
+    			'posted_linked_title' => $posted_linked_title
+    		);
+    }
+
+    private function get_text_for_episode($episode, $post_id, $post_title) {
+		$text = $this->get_module_option('adn_poster_announcement_text');	
+		$post = $this->replace_tags( $text, $post_id, $post_title );
+
+		if ( \Podlove\strlen( $post['text'] ) > 256 )
+			$post['text'] = \Podlove\substr( $post['text'], 0, 255 ) . "…";
 
 		return array(
-			'text' => $text,
-			'link_annotation' => $posted_linked_title
+			'text' => $post['text'],
+			'link_annotation' => $post['posted_linked_title']
 		);
     }
 
