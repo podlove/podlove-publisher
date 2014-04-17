@@ -449,14 +449,14 @@ class App_Dot_Net extends \Podlove\Modules\Base {
        // $this->post_to_alpha($data);
        // $this->post_to_patter($data);
 
+    	 print_r($data);
+
         // Change Announcement text for broadcast
         if ( is_array( $_POST ) AND isset( $_POST['post_ID'] ) AND isset( $_POST['post_title'] ) ) {
         	$data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
         } else {
         	$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
         }
-
-        print_r($data);
 
         $this->broadcast($data);
 		
