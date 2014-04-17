@@ -451,7 +451,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     	 print_r($data);
 
-    	unset($data['entities']['links'])
+    	unset($data['entities']['links']);
 
         // Change Announcement text for broadcast
         if ( is_array( $_POST ) AND isset( $_POST['post_ID'] ) AND isset( $_POST['post_title'] ) ) {
