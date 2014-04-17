@@ -384,20 +384,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$this->send_data_to_adn($url, $data);
     }
 
-    private function broadcast($data) {
-    	if ( is_array( $_POST ) AND isset( $_POST['post_ID'] ) AND isset( $_POST['post_title'] ) ) {
-    		$post_id = $_POST['post_ID'];
-    		$post_title = get_the_title( $_POST['post_title'] );
-    	} else {
-    		$post_id = $_REQUEST['post_id'];
-    		$post_title = get_the_title( $_REQUEST['post_id'] );
-    	}
+    private function broadcast($data, $post_id) {
 
     	if ( $this->get_module_option('adn_broadcast') !== "on" )
     		return;
 
     	$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
-    	$data['annotations'][] = $this->get_broadcast_metadata( $post_title );
+    	$data['annotations'][] = $this->get_broadcast_metadata( get_the_title( $post_id ) );
     	$data['annotations'][] = $this->get_read_more_link( get_permalink( $post_id ) );
 
     	$url = sprintf(
@@ -462,7 +455,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
         	$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
         }
 
-        $this->broadcast($data);
+        $this->broadcast( $data, $post_id );
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
     }
