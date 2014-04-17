@@ -451,6 +451,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     	 print_r($data);
 
+    	unset($data['entities']['links'])
+
         // Change Announcement text for broadcast
         if ( is_array( $_POST ) AND isset( $_POST['post_ID'] ) AND isset( $_POST['post_title'] ) ) {
         	$data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
