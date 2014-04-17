@@ -425,7 +425,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     public function post_to_adn($post_id) {
 
     	$episode = Model\Episode::find_one_by_post_id( $post_id );
-    	$episode_text = $this->get_text_for_episode( $episode, $post_id );
+    	$episode_text = $this->get_text_for_episode( $post_id );
 
     	$text            = $episode_text['text'];
     	$link_annotation = $episode_text['link_annotation'];
