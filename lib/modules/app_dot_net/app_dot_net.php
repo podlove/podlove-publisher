@@ -456,6 +456,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
         	$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
         }
 
+        print_r($data);
+
         $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
