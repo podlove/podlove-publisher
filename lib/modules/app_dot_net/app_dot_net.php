@@ -452,6 +452,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
         // Change Announcement text for broadcast
         $data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
 
+        print_r($episode);
         print_r($data);
 
         $this->broadcast( $data, $post_id );
