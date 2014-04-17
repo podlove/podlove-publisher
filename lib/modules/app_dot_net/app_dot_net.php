@@ -18,6 +18,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
     		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
     		add_action( 'wp_ajax_podlove-adn-post', array( $this, 'ajax_post_to_adn' ) );
+			add_action( 'wp_ajax_podlove-preview-adn-post', array( $this, 'ajax_preview_alpha_post' ) );
+    		
    	
     		if ($this->get_module_option('adn_auth_key') !== "" ) {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
@@ -121,8 +123,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					}
 				) );
 
-				$selected_role = $this->get_module_option('adn_contributor_filter_role');
-				$selected_group = $this->get_module_option('adn_contributor_filter_group');
 				$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
 				$groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
 
@@ -173,8 +173,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
 					<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
 					<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
-					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>
-					<code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code>';
+					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';
+
+				$description = $this->tags_description( $description );
 
 				$this->register_option( 'adn_poster_announcement_text', 'text', array(
 					'label'       => __( 'Announcement text', 'podlove' ),
@@ -198,8 +199,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 							$example_data = array(
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
-								'subtitle'     => $episode->subtitle,
-								'contributors' => App_Dot_Net::get_contributors( $episode->post_id, $selected_role, $selected_group )
+								'subtitle'     => $episode->subtitle
 							);
 						} else {
 							$example_data = array(
@@ -457,45 +457,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
     }
 
-    public static function get_contributors($post_id, $selected_role, $selected_group) {
-    	$contributor_adn_accounts = '';
-
+    public function replace_tags( $post_id ) {
+    	$text = $this->get_module_option('adn_poster_announcement_text');
     	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-    	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
-
-    	foreach ( $contributions as $contribution ) {
-    		$contributor_adn_accounts .= '';
-    		$adn_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'App.net' );
-    		$social_accounts = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $contribution->contributor_id );
-
-    		array_map( function( $account ) use ( $adn_service, &$contributor_adn_accounts, $contribution, $selected_role, $selected_group ) {
-    			if ( $account->service_id == $adn_service->id ) {
-    				if ( $selected_role == '' ) {
-    					if ( $selected_group == '' ) {
-    						$contributor_adn_accounts .= "@" . $account->value . " ";
-   						} else {
-   		 					if ( $contribution->group_id == $selected_group )
-   								$contributor_adn_accounts .= "@" . $account->value . " ";
-    					}
-    				} else {
-						if ( $selected_group == '' && $contribution->role_id == $selected_role ) {
-    						$contributor_adn_accounts .= "@" . $account->value . " ";
-   						} else {
-   		 					if ( $contribution->group_id == $selected_group && $contribution->role_id == $selected_role )
-   								$contributor_adn_accounts .= "@" . $account->value . " ";
-    					}
-    				}
-    			}
-    		} , $social_accounts );
-    	}
-
-    	return $contributor_adn_accounts;
-    }
-
-    public function replace_tags( $text, $post_id, $episode ) {
     	$podcast = Model\Podcast::get_instance();
     	$post = get_post( $post_id );
     	$post_title = $post->post_title;
+
     	$selected_role = $this->get_module_option('adn_contributor_filter_role');
     	$selected_group = $this->get_module_option('adn_contributor_filter_group');
     	
@@ -528,9 +496,17 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		);
     }
 
-    private function get_text_for_episode($episode, $post_id) {
-		$text = $this->get_module_option('adn_poster_announcement_text');	
-		$post = $this->replace_tags( $text, $post_id, $episode );
+    public function ajax_preview_alpha_post() {
+    	if( !$_REQUEST['post_id'] )
+    		return;
+
+    	$result = $this->replace_tags( $_REQUEST['post_id'] );
+
+    	return \Podlove\AJAX\AJAX::respond_with_json( array( 'preview' => $result['text'] ) );
+    }
+
+    private function get_text_for_episode($post_id) {
+		$post = $this->replace_tags( $post_id );
 
 		if ( \Podlove\strlen( $post['text'] ) > 256 )
 			$post['text'] = \Podlove\substr( $post['text'], 0, 255 ) . "…";
@@ -697,6 +673,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			set_transient( $cache_key, $broadcast_channels, 60*60*24*365 ); // 1 year, we devalidate manually
 			return $broadcast_channels;
 		}
+	}
+
+	private function tags_description( $description ) {
+		return apply_filters( 'podlove_adn_tags_description', $description );
 	}
 
 	private function channel_has_annotations($details) {

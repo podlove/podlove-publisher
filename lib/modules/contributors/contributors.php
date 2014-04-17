@@ -42,6 +42,9 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'wp_ajax_podlove-contributors-delete-default', array($this, 'delete_default_contributor') );
 		add_action( 'wp_ajax_podlove-contributors-delete-episode', array($this, 'delete_episode_contributor') );
 
+		add_filter( 'podlove_adn_tags_description', array($this, 'adn_tags_description') );
+		add_filter( 'podlove_adn_tags', array($this, 'adn_tags'), 10, 2 );
+
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates')), 'contributors');
 			return $file_loader;
@@ -837,5 +840,13 @@ class Contributors extends \Podlove\Modules\Base {
 
 		if ($service = EpisodeContribution::find_by_id($object_id))
 			$service->delete();
+	}
+
+	public function adn_tags_description( $description ) {
+		return apply_filters( 'podlove_adn_tags_description_contributors', $description );
+	}
+
+	public function adn_tags( $text, $post_id ) {
+		return apply_filters( 'podlove_adn_tags_contributors_contributors', $text, $post_id );
 	}
 }
