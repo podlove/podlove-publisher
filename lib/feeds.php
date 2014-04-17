@@ -120,7 +120,7 @@ add_action('pre_get_posts', function ( ) {
 				switch ($feed->protection_type) {
 					case '0' :
 						// A local User/PW combination is set
-						if( $_SERVER['PHP_AUTH_USER'] == $feed->protection_user && crypt($_SERVER['PHP_AUTH_PW'], SECURE_AUTH_SALT) == $feed->protection_password) {
+						if( $_SERVER['PHP_AUTH_USER'] == $feed->protection_user && $_SERVER['PHP_AUTH_PW'] == $feed->protection_password) {
 							// let the script continue
 							check_for_and_do_compression();
 						} else {
