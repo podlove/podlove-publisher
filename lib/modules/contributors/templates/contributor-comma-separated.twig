@@ -1,5 +1,5 @@
 <span class="podlove-contributors">
-	{% for contributor in episode.contributors %}
+	{% for contributor in episode.contributors({group: group, role: role}) %}
 		{% if contributor.visible %}
 			<span>
 				{% if avatars == "yes" %}
