@@ -434,7 +434,7 @@ abstract class Base
 			;
 			$success = $wpdb->query( $sql );
 			if ( $success ) {
-				$this->id = mysql_insert_id();
+				$this->id = $wpdb->insert_id;
 			}
 		} else {
 			$sql = 'UPDATE ' . self::table_name()
