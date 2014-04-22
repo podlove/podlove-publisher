@@ -37,7 +37,7 @@ class Dashboard {
 
 	public static function settings_page() {
 
-		add_meta_box( Dashboard::$pagehook . '_right_now', __( 'Right now', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::right_now', Dashboard::$pagehook, 'normal' );
+		add_meta_box( Dashboard::$pagehook . '_right_now', __( 'At a glance', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::right_now', Dashboard::$pagehook, 'normal' );
 		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
 		add_meta_box( Dashboard::$pagehook . '_network_overview', __( 'Podcasts', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::network_overview', Dashboard::$pagehook, 'normal' );
 
@@ -93,18 +93,157 @@ class Dashboard {
 	}
 
 	public static function right_now() {
-		$episodes_total = array(
+		$podcasts = Network::all_podcasts();
+		$number_of_podcasts = count( $podcasts );
+
+		$episodes_total = 0;
+		$episodes_total_per_status = array(
 				'publish' => 0,
 				'private' => 0,
 				'future' => 0,
 				'draft' => 0
 			);
 		$episodes_total_length = 0;
-		$episode_total_average_size = 0;
+		$episode_total_average_length = 0;
 		$media_file_total_average_size = 0;
 		$media_file_total_size = 0;
+		$days_between_episodes = 0;
 
-			
+		foreach ( $podcasts as $podcast ) {
+			switch_to_blog( $podcast );
+
+			$episodes_total += get_transient( 'podlove_dashboard_stats_episodes' );
+
+			array_walk( get_transient( 'podlove_dashboard_stats_episodesperstat' ), function( $posts, $type ) use ( &$episodes_total_per_status ) {
+				switch ( $type ) {
+					case 'publish':
+						$episodes_total_per_status['publish'] += $posts;
+					break;
+					case 'publish':
+						$episodes_total_per_status['private'] += $posts;
+					break;
+					case 'future':
+						$episodes_total_per_status['future'] += $posts;
+					break;
+					case 'draft':
+						$episodes_total_per_status['draft'] += $posts;
+					break;
+				}
+			});
+
+			$episodes_total_length += get_transient( 'podlove_dashboard_stats_episodestlength' );
+			$episode_total_average_length += get_transient( 'podlove_dashboard_stats_episodealength' );
+			$days_between_episodes += get_transient( 'podlove_dashboard_stats_daysbetreleases' );
+			$media_file_total_average_size += get_transient( 'podlove_dashboard_stats_fileasize' );
+			$media_file_total_size += get_transient( 'podlove_dashboard_stats_filetsize' );
+		}
+
+		// Devide stats by number of Podcasts
+		$episode_total_average_length /= $number_of_podcasts;
+		$days_between_episodes /= $number_of_podcasts;
+		$media_file_total_average_size /= $number_of_podcasts;
+
+
+
+		?>
+		<div class="podlove-dashboard-statistics-wrapper">
+			<h4>Episodes</h4>
+			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo $episodes_total_per_status['publish']; ?>
+					</td>
+					<td>
+						<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo $episodes_total_per_status['private']; ?>
+					</td>
+					<td>
+						<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo $episodes_total_per_status['future']; ?>
+					</td>
+					<td>
+						<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo $episodes_total_per_status['draft']; ?>
+					</td>
+					<td>
+						<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column podlove-dashboard-total-number">
+						<?php echo $episodes_total; ?>
+					</td>
+					<td class="podlove-dashboard-total-number">
+						<?php echo __( 'Total', 'podlove' ); ?>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="podlove-dashboard-statistics-wrapper">
+			<h4><?php echo __('Statistics', 'podlove') ?></h4>
+			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo gmdate("H:i:s", $episode_total_average_length ); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the average length of an episode', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php
+							$days = round($episodes_total_length / 3600 / 24, 1);
+							echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
+						?>
+					</td>
+					<td>
+						<?php echo __( 'is the total playback time of all episodes', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo \Podlove\format_bytes($media_file_total_average_size, 1); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the average media file size', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo \Podlove\format_bytes($media_file_total_size, 1); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the total media file size', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo sprintf(_n('%s day', '%s days', $days_between_episodes, 'podlove'), $days_between_episodes); ?>
+					</td>
+					<td>
+						<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
+					</td>
+				</tr>
+				<?php // do_action('podlove_dashboard_statistics'); ?>
+			</table>
+		</div>
+		<p>
+			<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
+		</p>
+		<?php
 	}
 
 	public static function network_overview() {

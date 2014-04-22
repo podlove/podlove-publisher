@@ -168,11 +168,16 @@ class Dashboard {
 			'draft' => 0,
 		);
 
-		if ( ( $episodes_total_length = get_transient( 'podlove_dashboard_statistics_episodes_total_length' ) ) !== FALSE && 
-			 ( $episodes_average_episode_length = get_transient( 'podlove_dashboard_statistics_average_episode_length' ) ) !== FALSE && 
-			 ( $average_days_between_releases = get_transient( 'podlove_dashboard_statistics_days_between_releases' ) ) !== FALSE  ) {
-			$mediafile_total_size = $mediafile_total_size_transient;
-			$mediafile_average_size = $mediafile_average_size_transient;
+		if ( ( $episodes_total_length_transient = get_transient( 'podlove_dashboard_stats_episodestlength' ) ) !== FALSE && 
+			 ( $episodes_average_episode_length_transient = get_transient( 'podlove_dashboard_stats_episodealength' ) ) !== FALSE && 
+			 ( $average_days_between_releases_transient = get_transient( 'podlove_dashboard_stats_daysbetreleases' ) ) !== FALSE &&
+			 ( $episodes_total_transient = get_transient( 'podlove_dashboard_stats_episodes' ) ) !== FALSE &&
+			 ( $episodes_total_per_status = get_transient( 'podlove_dashboard_stats_episodesperstat' ) ) !== FALSE ) {
+			$episodes_total_length = $episodes_total_length_transient;
+			$episodes_average_episode_length = $episodes_average_episode_length_transient;
+			$counted_episodes = $episodes_total_transient;
+			$episode_status_count = $episodes_total_per_status;
+			$average_days_between_releases = $average_days_between_releases_transient;
 		} else {
 			foreach ( $valid_episodes as $episode_key => $episode ) {
 				$post = get_post( $episode->post_id );
@@ -206,16 +211,18 @@ class Dashboard {
 			$average_days_between_releases   = count($time_stamp_differences) > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0;
 
 			// Set transients (for 1h)
-			set_transient( 'podlove_dashboard_statistics_episodes_total_length', $episodes_total_length, 3600 );
-			set_transient( 'podlove_dashboard_statistics_average_episode_length', $episodes_average_episode_length, 3600 );
-			set_transient( 'podlove_dashboard_statistics_days_between_releases', $average_days_between_releases, 3600 );
+			set_transient( 'podlove_dashboard_stats_episodestlength', $episodes_total_length, 3600 );
+			set_transient( 'podlove_dashboard_stats_episodealength', $episodes_average_episode_length, 3600 );
+			set_transient( 'podlove_dashboard_stats_daysbetreleases', $average_days_between_releases, 3600 );
+			set_transient( 'podlove_dashboard_stats_episodes', $counted_episodes, 3600 );
+			set_transient( 'podlove_dashboard_stats_episodesperstat', $episode_status_count, 3600 );
 		}
 
 		/**
 		 *	Media Files
 		 */
-		if ( ( $mediafile_total_size_transient = get_transient( 'podlove_dashboard_statistics_mediafile_total_size' ) ) !== FALSE && 
-			 ( $mediafile_average_size_transient = get_transient( 'podlove_dashboard_statistics_mediafile_average_size' ) ) !== FALSE ) {
+		if ( ( $mediafile_total_size_transient = get_transient( 'podlove_dashboard_stats_filetsize' ) ) !== FALSE && 
+			 ( $mediafile_average_size_transient = get_transient( 'podlove_dashboard_stats_fileasize' ) ) !== FALSE ) {
 			$mediafile_total_size = $mediafile_total_size_transient;
 			$mediafile_average_size = $mediafile_average_size_transient;
 		} else {
@@ -234,8 +241,8 @@ class Dashboard {
 			$mediafile_average_size = $mediafile_count > 0 ? $mediafile_total_size / $mediafile_count : 0;
 
 			// Set transients (for 1h)
-			set_transient( 'podlove_dashboard_statistics_mediafile_total_size', $mediafile_total_size, 3600 );
-			set_transient( 'podlove_dashboard_statistics_mediafile_average_size', $mediafile_average_size, 3600 );
+			set_transient( 'podlove_dashboard_stats_filetsize', $mediafile_total_size, 3600 );
+			set_transient( 'podlove_dashboard_stats_fileasize', $mediafile_average_size, 3600 );
 		}
 		?>
 		<div class="podlove-dashboard-statistics-wrapper">
