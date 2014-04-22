@@ -93,7 +93,18 @@ class Dashboard {
 	}
 
 	public static function right_now() {
-		
+		$episodes_total = array(
+				'publish' => 0,
+				'private' => 0,
+				'future' => 0,
+				'draft' => 0
+			);
+		$episodes_total_length = 0;
+		$episode_total_average_size = 0;
+		$media_file_total_average_size = 0;
+		$media_file_total_size = 0;
+
+			
 	}
 
 	public static function network_overview() {
