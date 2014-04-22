@@ -109,10 +109,13 @@ class Dashboard {
 		$media_file_total_size = 0;
 		$days_between_episodes = 0;
 
+		$relative_gender_numbers = array( 'male' => 0, 'female' => 0 );
+
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
 
 			$episodes_total += get_transient( 'podlove_dashboard_stats_episodes' );
+			$relative_gender_numbers = apply_filters( 'podlove_dashboard_statistics_contributor', $relative_gender_numbers );
 
 			array_walk( get_transient( 'podlove_dashboard_stats_episodesperstat' ), function( $posts, $type ) use ( &$episodes_total_per_status ) {
 				switch ( $type ) {
@@ -135,16 +138,13 @@ class Dashboard {
 			$episode_total_average_length += get_transient( 'podlove_dashboard_stats_episodealength' );
 			$days_between_episodes += get_transient( 'podlove_dashboard_stats_daysbetreleases' );
 			$media_file_total_average_size += get_transient( 'podlove_dashboard_stats_fileasize' );
-			$media_file_total_size += get_transient( 'podlove_dashboard_stats_filetsize' );
+			$media_file_total_size += get_transient( 'podlove_dashboard_stats_filetsize' );			
 		}
 
 		// Devide stats by number of Podcasts
 		$episode_total_average_length /= $number_of_podcasts;
 		$days_between_episodes /= $number_of_podcasts;
 		$media_file_total_average_size /= $number_of_podcasts;
-
-
-
 		?>
 		<div class="podlove-dashboard-statistics-wrapper">
 			<h4>Episodes</h4>
@@ -237,10 +237,21 @@ class Dashboard {
 						<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
 					</td>
 				</tr>
-				<?php // do_action('podlove_dashboard_statistics'); ?>
+				<tr>
+					<td class="podlove-dashboard-number-column">
+						<?php echo __('Genders', 'podlove') ?>
+					</td>
+					<td>
+						<?php
+						echo implode(', ', array_map(function($percent, $gender) use ( $number_of_podcasts ) {
+							return round($percent / $number_of_podcasts) . "% " . $gender;
+						}, $relative_gender_numbers, array_keys($relative_gender_numbers)));
+						?>
+					</td>
+				</tr>
 			</table>
 		</div>
-		<p>
+		<pst
 			<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
 		</p>
 		<?php

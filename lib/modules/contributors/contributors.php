@@ -33,6 +33,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
 
 		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
+		add_filter('podlove_dashboard_statistics_contributor', array($this, 'dashboard_network_statistics_row'));
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_action('podlove_xml_import', array($this, 'expandImport'));
@@ -172,21 +173,32 @@ class Contributors extends \Podlove\Modules\Base {
 		Modules\ImportExport\Importer::importTable($xml, 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
 	}
 
+	private function fetch_contributors_for_dashboard_statistics() {
+		if ( ( $contributor_genders = get_transient( 'podlove_dashboard_stats_contributors' ) ) !== FALSE ) {
+			return $contributor_genders;
+		} else {
+			$contributions = EpisodeContribution::all();
+			$contributions_count = count($contributions);
+
+			$absolute_gender_numbers = array(
+				'female' => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'female'); })),
+				'male'   => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'male'); }))
+			);
+
+			$relative_gender_numbers = array_map(function($abs) use ($contributions_count) {
+				return $contributions_count > 0 ? $abs / $contributions_count * 100 : 0;
+			}, $absolute_gender_numbers);
+
+			// sort by percentage (high to low)
+			arsort( $relative_gender_numbers );
+
+			set_transient( 'podlove_dashboard_stats_contributors', $relative_gender_numbers, 3600 );
+			return $relative_gender_numbers;
+		}
+	}
+
 	public function dashboard_statistics_row() {
-		$contributions = EpisodeContribution::all();
-		$contributions_count = count($contributions);
-
-		$absolute_gender_numbers = array(
-			'female' => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'female'); })),
-			'male'   => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'male'); }))
-		);
-
-		$relative_gender_numbers = array_map(function($abs) use ($contributions_count) {
-			return $contributions_count > 0 ? $abs / $contributions_count * 100 : 0;
-		}, $absolute_gender_numbers);
-
-		// sort by percentage (high to low)
-		arsort( $relative_gender_numbers );
+		$relative_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
 		?>
 		<tr>
 			<td class="podlove-dashboard-number-column">
@@ -201,6 +213,15 @@ class Contributors extends \Podlove\Modules\Base {
 			</td>
 		</tr>
 		<?php
+	}
+
+	public function dashboard_network_statistics_row( $genders ) {
+		$relative_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
+
+		$genders['male'] += $relative_gender_numbers['male'];
+		$genders['female'] += $relative_gender_numbers['female'];
+
+		return $genders;
 	}
 
 	function feed_head_contributors() {
