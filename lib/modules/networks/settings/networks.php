@@ -18,8 +18,6 @@ class Networks {
 		);
 
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
-
 	}
 
 	public function process_form() {
@@ -237,15 +235,4 @@ class Networks {
 		</div>	
 		<?php
 	}
-
-	public function scripts_and_styles() {
-		wp_register_style(
-		    		'podlove_network_admin_style',
-		    		\Podlove\PLUGIN_URL . '/lib/modules/networks/css/admin.css',
-		    		false,
-		    		\Podlove\get_plugin_header( 'Version' )
-		    	);
-		wp_enqueue_style('podlove_network_admin_style');
-	}
-
 }

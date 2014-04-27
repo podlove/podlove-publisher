@@ -124,6 +124,7 @@ class Podcast extends Wrapper {
 	 *   - 'recordingDate' - Order by recording date.
 	 *   - 'title' - Order by title.
 	 *   - 'slug' - Order by episode slug.
+	 *	 - 'limit' - Limit the number of returned episodes.
 	 *
 	 * **Examples**
 	 *
@@ -219,6 +220,12 @@ class Podcast extends Wrapper {
 			$order = 'DESC';
 		}
 
+		if (isset($args['limit'])) {
+			$limit = ' LIMIT ' . $args['limit'];
+		} else {
+			$limit = '';
+		}
+
 		$sql = '
 			SELECT
 				e.*
@@ -226,7 +233,8 @@ class Podcast extends Wrapper {
 				' . \Podlove\Model\Episode::table_name() . ' e
 				INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
 			WHERE ' . $where . '
-			ORDER BY ' . $orderby . ' ' . $order;
+			ORDER BY ' . $orderby . ' ' . $order . 
+			$limit;
 
 		$rows = $wpdb->get_results($sql);
 
