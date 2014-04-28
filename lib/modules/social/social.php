@@ -943,18 +943,6 @@ class Social extends \Podlove\Modules\Base {
 				'label' => __( 'Contributor Filter', 'podlove' ),
 				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
 				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
-					if ( count($roles) > 0 ) :
-					?>
-						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_role" name="podlove_module_app_dot_net[adn_contributor_filter_role]">
-							<option value="">&nbsp;</option>
-							<?php
-								foreach ( $roles as $role ) {
-									echo "<option value='" . $role->id . "' " . ( $selected_role == $role->id ? "selected" : "" ) . ">" . $role->title . "</option>";
-								}
-							?>
-						</select> Role
-					<?php 
-					endif;
 					if ( count($groups) > 0 ) :
 					?>
 						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_group" name="podlove_module_app_dot_net[adn_contributor_filter_group]">
@@ -966,6 +954,18 @@ class Social extends \Podlove\Modules\Base {
 							?>
 						</select> Group
 					<?php
+					endif;
+					if ( count($roles) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_role" name="podlove_module_app_dot_net[adn_contributor_filter_role]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $roles as $role ) {
+									echo "<option value='" . $role->id . "' " . ( $selected_role == $role->id ? "selected" : "" ) . ">" . $role->title . "</option>";
+								}
+							?>
+						</select> Role
+					<?php 
 					endif;
 				}
 			) );
