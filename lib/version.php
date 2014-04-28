@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 68 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 69 );
 
 add_action( 'init', function () {
 	
@@ -754,6 +754,10 @@ function run_migrations_for_version( $version ) {
 				if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
 						update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
 			}
+		break;
+		case 69:
+			\Podlove\Model\DownloadIntent::build();
+			\Podlove\Model\UserAgent::build();
 		break;
 	}
 

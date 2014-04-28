@@ -3,8 +3,38 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f62c85fba8db28959a5b3f33303cd894",
+    "hash": "473fbe337a2182a6da8e9cae0621fc16",
     "packages": [
+        {
+            "name": "leth/ip-address",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leth/PHP-IPAddress.git",
+                "reference": "c7cdef99d0eb3660b14a6cd505d218f2bc8569b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leth/PHP-IPAddress/zipball/c7cdef99d0eb3660b14a6cd505d218f2bc8569b9",
+                "reference": "c7cdef99d0eb3660b14a6cd505d218f2bc8569b9",
+                "shasum": ""
+            },
+            "require": {
+                "pear/math_biginteger": "dev-tags/RELEASE_1_0_2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Leth\\IPAddress": "classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "IPv4 and IPv6 address and subnet classes with awesome utility functions.",
+            "time": "2014-04-03 21:49:21"
+        },
         {
             "name": "monolog/monolog",
             "version": "1.5.0",
@@ -66,6 +96,51 @@
                 "psr-3"
             ],
             "time": "2013-04-23 10:09:48"
+        },
+        {
+            "name": "pear/math_biginteger",
+            "version": "dev-tags/RELEASE_1_0_2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pear/Math_BigInteger.git",
+                "reference": "98529194f2c2d0334fff105ec4eba4e9cbe6cd29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pear/Math_BigInteger/zipball/98529194f2c2d0334fff105ec4eba4e9cbe6cd29",
+                "reference": "98529194f2c2d0334fff105ec4eba4e9cbe6cd29",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=4.2.0"
+            },
+            "suggest": {
+                "ext-bcmath": "Allows using the BCMath extension internally for computation. Faster than native implementation.",
+                "ext-gmp": "Allows using the GNU Multiple Precision extension internally for computation. If you are doing a lot of computation this is the recommended extension."
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1+"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Pure-PHP arbitrary precission integer arithmetic library. If GMP or BCMath are available they are used.",
+            "homepage": "https://github.com/pear/Math_BigInteger",
+            "keywords": [
+                "arbitrary",
+                "bcmath",
+                "gmp",
+                "integer",
+                "precision"
+            ],
+            "time": "2014-02-12 03:11:21"
         },
         {
             "name": "podlove/normalplaytime",
@@ -195,16 +270,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig-extensions.git",
-                "reference": "0fdc8ca874d415b65c7a0d31376cac9c9ed775af"
+                "reference": "502303198afc1ec0bcc061c6f3a0926f7eb685e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig-extensions/zipball/0fdc8ca874d415b65c7a0d31376cac9c9ed775af",
-                "reference": "0fdc8ca874d415b65c7a0d31376cac9c9ed775af",
+                "url": "https://api.github.com/repos/fabpot/Twig-extensions/zipball/502303198afc1ec0bcc061c6f3a0926f7eb685e3",
+                "reference": "502303198afc1ec0bcc061c6f3a0926f7eb685e3",
                 "shasum": ""
             },
             "require": {
-                "twig/twig": "~1.0"
+                "twig/twig": "~1.12"
             },
             "type": "library",
             "extra": {
@@ -224,7 +299,9 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 }
             ],
             "description": "Common additional features for Twig that do not directly belong in core",
@@ -234,7 +311,7 @@
                 "i18n",
                 "text"
             ],
-            "time": "2013-11-27 18:19:39"
+            "time": "2014-03-01 02:53:07"
         },
         {
             "name": "twig/twig",
@@ -297,16 +374,16 @@
     "packages-dev": [
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.16",
+            "version": "1.2.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "69e55e68481cf708a6db43aff0b504e31402fe27"
+                "reference": "6ef2bf3a1c47eca07ea95f0d8a902a6340390b34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/69e55e68481cf708a6db43aff0b504e31402fe27",
-                "reference": "69e55e68481cf708a6db43aff0b504e31402fe27",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ef2bf3a1c47eca07ea95f0d8a902a6340390b34",
+                "reference": "6ef2bf3a1c47eca07ea95f0d8a902a6340390b34",
                 "shasum": ""
             },
             "require": {
@@ -354,7 +431,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-02-25 03:34:05"
+            "time": "2014-03-28 10:53:45"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -491,16 +568,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "5220af2a7929aa35cf663d97c89ad3d50cf5fa3e"
+                "reference": "ad4e1e23ae01b483c16f600ff1bebec184588e32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/5220af2a7929aa35cf663d97c89ad3d50cf5fa3e",
-                "reference": "5220af2a7929aa35cf663d97c89ad3d50cf5fa3e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/ad4e1e23ae01b483c16f600ff1bebec184588e32",
+                "reference": "ad4e1e23ae01b483c16f600ff1bebec184588e32",
                 "shasum": ""
             },
             "require": {
@@ -537,20 +614,20 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2013-09-13 04:58:23"
+            "time": "2014-03-03 05:10:30"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.32",
+            "version": "3.7.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2752cbb9ea5bd84c2811b34b6953f76965ec7a2f"
+                "reference": "83f9537e46346f75ed6925441ac259453213c7cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2752cbb9ea5bd84c2811b34b6953f76965ec7a2f",
-                "reference": "2752cbb9ea5bd84c2811b34b6953f76965ec7a2f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/83f9537e46346f75ed6925441ac259453213c7cc",
+                "reference": "83f9537e46346f75ed6925441ac259453213c7cc",
                 "shasum": ""
             },
             "require": {
@@ -559,11 +636,11 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": "~1.2.1",
-                "phpunit/php-file-iterator": ">=1.3.1",
-                "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.4",
-                "phpunit/phpunit-mock-objects": "~1.2.0",
+                "phpunit/php-code-coverage": "~1.2",
+                "phpunit/php-file-iterator": "~1.3",
+                "phpunit/php-text-template": "~1.1",
+                "phpunit/php-timer": "~1.0",
+                "phpunit/phpunit-mock-objects": "~1.2",
                 "symfony/yaml": "~2.0"
             },
             "require-dev": {
@@ -573,7 +650,7 @@
                 "ext-json": "*",
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
-                "phpunit/php-invoker": ">=1.1.0,<1.2.0"
+                "phpunit/php-invoker": "~1.1"
             },
             "bin": [
                 "composer/bin/phpunit"
@@ -611,7 +688,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-02-25 03:47:29"
+            "time": "2014-04-21 06:25:54"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -758,17 +835,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.2",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "bb6ddaf8956139d1b8c360b4b713ed0138e876b3"
+                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/bb6ddaf8956139d1b8c360b4b713ed0138e876b3",
-                "reference": "bb6ddaf8956139d1b8c360b4b713ed0138e876b3",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
+                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
                 "shasum": ""
             },
             "require": {
@@ -803,7 +880,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-07 13:28:54"
+            "time": "2014-04-18 20:37:09"
         }
     ],
     "aliases": [
@@ -813,6 +890,8 @@
     "stability-flags": {
         "monolog/monolog": 20,
         "twig/extensions": 20,
+        "pear/math_biginteger": 20,
+        "leth/ip-address": 20,
         "podlove/comment-introspection": 20
     },
     "platform": {

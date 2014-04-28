@@ -1,5 +1,6 @@
 <?php
 namespace Podlove;
+use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 
 register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
@@ -13,6 +14,8 @@ function activate_for_current_blog() {
 	Model\MediaFile::build();
 	Model\Episode::build();
 	Model\Template::build();
+	Model\DownloadIntent::build();
+	Model\UserAgent::build();
 
 	if ( ! Model\FileType::has_entries() ) {
 		$default_types = array(
@@ -175,6 +178,8 @@ function uninstall_for_current_blog() {
 	Model\MediaFile::destroy();
 	Model\Episode::destroy();
 	Model\Template::destroy();
+	Model\DownloadIntent::destroy();
+	Model\UserAgent::destroy();
 }
 
 /**
@@ -767,6 +772,97 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 
 	return $new;
 }, 10, 2);
+
+function handle_media_file_download() {
+	
+	if ( ! isset( $_GET['download_media_file'] ) )
+		return;
+
+	// tell WP Super Cache to not cache download links
+	if ( ! defined( 'DONOTCACHEPAGE' ) )
+		define( 'DONOTCACHEPAGE', true );
+
+	// FIXME: this is a hack for bitlove => so move it in this module AND make sure the location in valid
+	// if download_media_file is a URL, download directly
+	if ( filter_var( $_GET['download_media_file'], FILTER_VALIDATE_URL ) ) {
+		$parsed_url = parse_url($_GET['download_media_file']);
+		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
+		header( "Expires: 0" );
+		header( 'Cache-Control: must-revalidate' );
+	    header( 'Pragma: public' );
+		header( "Content-Type: application/x-bittorrent" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Disposition: attachment; filename=$file_name" );
+		header( "Content-Transfer-Encoding: binary" );
+		ob_clean();
+		flush();
+		while ( @ob_end_flush() ); // flush and end all output buffers
+		readfile( $_GET['download_media_file'] );
+		exit;
+	}
+
+	$media_file_id = (int) $_GET['download_media_file'];
+	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
+
+	if ( ! $media_file ) {
+		status_header( 404 );
+		exit;
+	}
+
+	$episode_asset = $media_file->episode_asset();
+
+	if ( ! $episode_asset || ! $episode_asset->downloadable ) {
+		status_header( 404 );
+		exit;
+	}
+
+	// tracking
+	// TODO: in case some client does not respect the permanent redirect,
+	// maybe ignore intents by the same IP, with the same client, on the same day
+	// — or leave that as an exercise for the analytics
+	$intent = new Model\DownloadIntent;
+	$intent->media_file_id = $media_file_id;
+	$intent->accessed_at = date('Y-m-d H:i:s');
+	
+	if (isset($_REQUEST['ptm_source'])) {
+		$intent->source = trim($_REQUEST['ptm_source']);
+	}
+
+	if (isset($_REQUEST['ptm_context'])) {
+		$intent->context = trim($_REQUEST['ptm_context']);
+	}
+
+	// respect do-not-track header
+	if (!(isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'])) {
+		// save ip address in ipv6 format
+		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+
+		if (method_exists($ip, 'as_IPv6_address')) {
+			$ip = $ip->as_IPv6_address();
+		}
+
+		$intent->ip = $ip->format(IP\Address::FORMAT_COMPACT);
+
+		// set user agent
+		$ua_string = $_SERVER['HTTP_USER_AGENT'];
+		if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
+			$agent = new Model\UserAgent;
+			$agent->user_agent = $ua_string;
+			$agent->save();
+		}
+		$intent->user_agent_id = $agent->id;
+	}
+
+	$intent->save();
+
+	// TODO: how does the web player deal with this? do browsers resolve 301s
+	// and it works perfectly out of the box? Should the player audio source tags
+	// contain the final/raw urls? If so, how do we track player engagement?
+	header("HTTP/1.1 301 Moved Permanently");
+	header("Location: " . $media_file->get_file_url());
+	exit;
+}
+add_action( 'init', '\Podlove\handle_media_file_download' );
 
 // register ajax actions
 new \Podlove\AJAX\Ajax;
