@@ -52,7 +52,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net authentication code' )
 				) );
 			} else {
-				
 				if ( $user = $this->fetch_authorized_user() ) { 
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
