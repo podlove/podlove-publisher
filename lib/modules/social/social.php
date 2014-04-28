@@ -39,6 +39,7 @@ class Social extends \Podlove\Modules\Base {
 		add_filter( 'podlove_adn_tags_description_contributors', array($this, 'adn_tags_description') );
 		add_filter( 'podlove_adn_example_data_contributors', array($this, 'adn_example_data'), 10, 4);
 		add_filter( 'podlove_adn_tags_contributors_contributors', array($this, 'adn_tags'), 10, 4);
+		add_action( 'init', array($this, 'adn_contributor_filter') );
 
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'templates')), 'social');
@@ -927,6 +928,48 @@ class Social extends \Podlove\Modules\Base {
     	}
 
     	return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+	}
+
+	public function adn_contributor_filter() {
+		$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
+
+		$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
+		$groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
+		$selected_role = $adn->get_module_option('adn_contributor_filter_role');
+		$selected_group = $adn->get_module_option('adn_contributor_filter_group');
+
+		if ( count($roles) > 0 || count($groups) > 0 ) { 
+			$adn->register_option( 'contributor_filter', 'callback', array(
+				'label' => __( 'Contributor Filter', 'podlove' ),
+				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
+				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
+					if ( count($roles) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_role" name="podlove_module_app_dot_net[adn_contributor_filter_role]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $roles as $role ) {
+									echo "<option value='" . $role->id . "' " . ( $selected_role == $role->id ? "selected" : "" ) . ">" . $role->title . "</option>";
+								}
+							?>
+						</select> Role
+					<?php 
+					endif;
+					if ( count($groups) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_group" name="podlove_module_app_dot_net[adn_contributor_filter_group]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $groups as $group ) {
+									echo "<option value='" . $group->id . "' " . ( $selected_group == $group->id ? "selected" : "" ) . ">" . $group->title . "</option>";
+								}
+							?>
+						</select> Group
+					<?php
+					endif;
+				}
+			) );
+		}
 	}
 
 }

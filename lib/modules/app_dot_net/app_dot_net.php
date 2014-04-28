@@ -14,12 +14,14 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     		$module_url = $this->get_module_url();
     		$user = null;
 
+    		$selected_role = $this->get_module_option('adn_contributor_filter_role');
+    		$selected_group = $this->get_module_option('adn_contributor_filter_group');
+
     		add_action( 'podlove_module_was_activated_app_dot_net', array( $this, 'was_activated' ) );
 
     		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
     		add_action( 'wp_ajax_podlove-adn-post', array( $this, 'ajax_post_to_adn' ) );
 			add_action( 'wp_ajax_podlove-preview-adn-post', array( $this, 'ajax_preview_alpha_post' ) );
-    		
    	
     		if ($this->get_module_option('adn_auth_key') !== "" ) {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
@@ -123,44 +125,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					}
 				) );
 
-				$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
-				$groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
-				$selected_role = $this->get_module_option('adn_contributor_filter_role');
-				$selected_group = $this->get_module_option('adn_contributor_filter_group');
-
-				if ( count($roles) > 0 || count($groups) > 0 ) { 
-					$this->register_option( 'contributor_filter', 'callback', array(
-						'label' => __( 'Contributor Filter', 'podlove' ),
-						'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
-						'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
-							if ( count($roles) > 0 ) :
-							?>
-								<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_role" name="podlove_module_app_dot_net[adn_contributor_filter_role]">
-									<option value="">&nbsp;</option>
-									<?php
-										foreach ( $roles as $role ) {
-											echo "<option value='" . $role->id . "' " . ( $selected_role == $role->id ? "selected" : "" ) . ">" . $role->title . "</option>";
-										}
-									?>
-								</select> Role
-							<?php 
-							endif;
-							if ( count($groups) > 0 ) :
-							?>
-								<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_group" name="podlove_module_app_dot_net[adn_contributor_filter_group]">
-									<option value="">&nbsp;</option>
-									<?php
-										foreach ( $groups as $group ) {
-											echo "<option value='" . $group->id . "' " . ( $selected_group == $group->id ? "selected" : "" ) . ">" . $group->title . "</option>";
-										}
-									?>
-								</select> Group
-							<?php
-							endif;
-						}
-					) );
-				}
-
 				$description = '';
 				if ( $this->get_module_option('adn_poster_announcement_text') == "" ) {			
 					$description = '<i class="podlove-icon-remove"></i>'
@@ -191,13 +155,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				
 				$this->register_option( 'adn_preview', 'callback', array(
 					'label' => __( 'Announcement preview', 'podlove' ),
-					'callback' => function() use ( $user, $module_url ) {
+					'callback' => function() use ( $selected_role, $selected_group, $user, $module_url ) {
 
 						if ( ! $user )
 							return;
-
-						$selected_role = $this->get_module_option('adn_contributor_filter_role');
-						$selected_group = $this->get_module_option('adn_contributor_filter_group');
 
 						$podcast = Model\Podcast::get_instance();
 						if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
