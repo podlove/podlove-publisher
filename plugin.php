@@ -833,7 +833,8 @@ function handle_media_file_download() {
 	}
 
 	// respect do-not-track header
-	if (!(isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'])) {
+	$dnt = isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'];
+	if (apply_filters('podlove_track_user_data_in_download_intents', !$dnt)) {
 		// save ip address in ipv6 format
 		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
 
