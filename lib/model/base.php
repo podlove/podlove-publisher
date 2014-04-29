@@ -55,16 +55,25 @@ abstract class Base
 	 * @param string $name Name of the property / column
 	 * @param string $type mySQL column type 
 	 */
-	public static function property( $name, $type ) {
+	public static function property( $name, $type, $args = array() ) {
 		$class = get_called_class();
 		
 		if ( ! isset( self::$properties[ $class ] ) ) {
 			self::$properties[ $class ] = array();
 		}
+
+		// "id" columns and those ending on "_id" get an index by default
+		$index = $name == 'id' || stripos( $name, '_id' );
+		// but if the argument is set, it overrides the default
+		if (isset($args['index'])) {
+			$index = $args['index'];
+		}
 		
 		self::$properties[ $class ][] = array(
-			'name' => $name,
-			'type' => $type
+			'name'  => $name,
+			'type'  => $type,
+			'index' => $index,
+			'index_length' => isset($args['index_length']) ? $args['index_length'] : null
 		);
 	}
 	
@@ -550,8 +559,9 @@ abstract class Base
 		$index_columns = array_map( function($index){ return $index->Column_name; }, $indices );
 
 		foreach ( self::properties() as $property ) {
-			if ( ($property['name'] == 'id' || stripos( $property['name'], '_id' )) && ! in_array( $property['name'], $index_columns ) ) {
-				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD INDEX `' . $property['name'] . '` (`' . $property['name'] . '`)';
+			if ( $property['index'] && ! in_array( $property['name'], $index_columns ) ) {
+				$length = isset($property['index_length']) ? '(' . (int) $property['index_length'] . ')' : '';
+				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
 				$wpdb->query( $sql );
 			}
 		}
