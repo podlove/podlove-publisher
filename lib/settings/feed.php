@@ -358,7 +358,7 @@ class Feed {
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
-			$wrapper->password( 'protection_password', array(
+			$wrapper->string( 'protection_password', array(
 				'label'       => __( 'Password', 'podlove' ),
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text required' )
