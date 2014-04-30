@@ -36,6 +36,11 @@ class Social extends \Podlove\Modules\Base {
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 
+		add_filter( 'podlove_adn_tags_description_contributors', array($this, 'adn_tags_description') );
+		add_filter( 'podlove_adn_example_data_contributors', array($this, 'adn_example_data'), 10, 4);
+		add_filter( 'podlove_adn_tags_contributors_contributors', array($this, 'adn_tags'), 10, 4);
+		add_action( 'init', array($this, 'adn_contributor_filter') );
+
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'templates')), 'social');
 			return $file_loader;
@@ -880,4 +885,91 @@ class Social extends \Podlove\Modules\Base {
 	public function podlove_podcast_donations_list() {
 		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-donations-list.twig');
 	}
+
+	public function adn_tags_description( $description ) {
+		return '<code title="' . __( 'The Contributors of your Epsiode', 'podlove' ) . '">{episodeContributors}</code>';
+	}
+
+	public function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
+		$data['contributors'] = $this->adn_tags( '{episodeContributors}', $post_id, $selected_role, $selected_group );
+		return $data;
+	}
+
+	public function adn_tags( $text, $post_id, $selected_role, $selected_group ) {
+    	$contributor_adn_accounts = '';
+
+    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+    	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
+
+    	foreach ( $contributions as $contribution ) {
+    		$contributor_adn_accounts .= '';
+    		$adn_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'App.net' );
+    		$social_accounts = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $contribution->contributor_id );
+
+    		array_map( function( $account ) use ( $adn_service, &$contributor_adn_accounts, $contribution, $selected_role, $selected_group ) {
+    			if ( $account->service_id == $adn_service->id ) {
+    				if ( $selected_role == '' ) {
+    					if ( $selected_group == '' ) {
+    						$contributor_adn_accounts .= "@" . $account->value . " ";
+   						} else {
+   		 					if ( $contribution->group_id == $selected_group )
+   								$contributor_adn_accounts .= "@" . $account->value . " ";
+    					}
+    				} else {
+						if ( $selected_group == '' && $contribution->role_id == $selected_role ) {
+    						$contributor_adn_accounts .= "@" . $account->value . " ";
+   						} else {
+   		 					if ( $contribution->group_id == $selected_group && $contribution->role_id == $selected_role )
+   								$contributor_adn_accounts .= "@" . $account->value . " ";
+    					}
+    				}
+    			}
+    		} , $social_accounts );
+    	}
+
+    	return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+	}
+
+	public function adn_contributor_filter() {
+		$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
+
+		$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
+		$groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
+		$selected_role = $adn->get_module_option('adn_contributor_filter_role');
+		$selected_group = $adn->get_module_option('adn_contributor_filter_group');
+
+		if ( count($roles) > 0 || count($groups) > 0 ) { 
+			$adn->register_option( 'contributor_filter', 'callback', array(
+				'label' => __( 'Contributor Filter', 'podlove' ),
+				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
+				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
+					if ( count($groups) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_group" name="podlove_module_app_dot_net[adn_contributor_filter_group]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $groups as $group ) {
+									echo "<option value='" . $group->id . "' " . ( $selected_group == $group->id ? "selected" : "" ) . ">" . $group->title . "</option>";
+								}
+							?>
+						</select> Group
+					<?php
+					endif;
+					if ( count($roles) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_role" name="podlove_module_app_dot_net[adn_contributor_filter_role]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $roles as $role ) {
+									echo "<option value='" . $role->id . "' " . ( $selected_role == $role->id ? "selected" : "" ) . ">" . $role->title . "</option>";
+								}
+							?>
+						</select> Role
+					<?php 
+					endif;
+				}
+			) );
+		}
+	}
+
 }

@@ -51,7 +51,9 @@
 	width: 180px;
 }
 
-.row_podlove_module_app_dot_net_adn_patter_room, .row_podlove_module_app_dot_net_adn_broadcast_channel {
+.row_podlove_module_app_dot_net_adn_patter_room, 
+.row_podlove_module_app_dot_net_adn_broadcast_channel,
+.row_podlove_module_app_dot_net_adn_post_delay {
 	display: none;
 }
 
@@ -72,4 +74,18 @@
 	text-align: center;
 	font-size: 1.1em;
 	cursor: pointer;
+}
+
+#adn_manual_post_episode_selector_chzn {
+	width: 300px !important;
+}
+
+.adn-post-status-pending,
+.adn-post-status-ok {
+	display: none;
+}
+
+tr.row_podlove_module_app_dot_net_contributor_filter span.description {
+	margin-top: -0.5em;
+	display: inline-block;
 }
