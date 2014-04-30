@@ -87,6 +87,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.8 =
 
+* Feature: Allow manual posting of ADN announcements
+* Feature: Add contributor support to ADN announcements
+* Enhancement: remove encryption for "protected feed" password
+* Fix: enable group and role selection in contributor shortcodes
 * Fix: failing delayed ADN broadcast
 * Fix: stop sending ADN announcements for old episodes
 * Fix: refresh of Auphonic presets keeps current preset
