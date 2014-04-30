@@ -60,7 +60,36 @@ class MediaFile extends Base {
 	}
 
 	/**
-	 * Dynamically return file url from release, format and show.
+	 * Return public file URL
+	 *
+	 * A source must be provided, an additional context is optional.
+	 * Example sources: webplayer, download, feed, other
+	 * Example contexts: home/episode/archive for player source, feed slug for feed source
+	 * 
+	 * @param  string $source  download source
+	 * @param  string $context optional download context
+	 * @return string
+	 */
+	public function get_public_file_url($source, $context = null) {
+
+		// trim source and context
+		$context = trim($context);
+		$source  = trim($source);
+
+		// build path
+		$path = '?download_media_file=' . $this->id;
+		$path.= '&ptm_source=' . $source;
+
+		if (is_string($context) && strlen($context) > 0)
+			$path .= '&ptm_context=' . $context;
+
+		return site_url($path);
+	}
+
+	/**
+	 * Return real file URL
+	 *
+	 * For public facing URLs, use ::get_public_file_url().
 	 *
 	 * @return string
 	 */
@@ -83,18 +112,6 @@ class MediaFile extends Base {
 		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
 		return $template;
-	}
-
-	/**
-	 * Dynamically return file path from release, format and show.
-	 *
-	 * @return string
-	 */
-	public function get_file_path() {
-		
-		$url_data  = parse_url( $this->get_file_url() );
-		
-		return trim( $url_data['path'], '/' );
 	}
 
 	public function episode() {

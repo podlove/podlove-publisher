@@ -72,4 +72,8 @@ class File extends Wrapper {
 		return $this->file->get_file_url();
 	}
 
+	public function publicUrl($source, $context = null) {
+		return $this->file->get_public_file_url($source, $context);
+	}
+
 }

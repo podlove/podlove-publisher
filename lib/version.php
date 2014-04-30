@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 69 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 70 );
 
 add_action( 'init', function () {
 	
@@ -761,6 +761,10 @@ function run_migrations_for_version( $version ) {
 				if ( $adn->get_module_option( 'adn_auth_key' ) )
 					$adn->update_module_option( 'adn_automatic_announcement', 'on' );
 			}
+		break;
+		case 70:
+			\Podlove\Model\DownloadIntent::build();
+			\Podlove\Model\UserAgent::build();
 		break;
 	}
 
