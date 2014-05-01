@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.8 =
 
+* Feature: Services in templates can be filtered by their type. That way, you can, for example, iterate over all Twitter accounts via `podcast.services({type: "twitter"})`. The previous "type" parameter (for choosing between "social", "donation" and "all") has been renamed to "category". All default templates have been adjusted accordingly _but if you were using this API in a custom template, you need to change it_.
 * Feature: Allow manual posting of ADN announcements
 * Feature: Add contributor support to ADN announcements
 * Enhancement: remove encryption for "protected feed" password
