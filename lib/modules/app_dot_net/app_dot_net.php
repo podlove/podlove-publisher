@@ -215,14 +215,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$this->register_option( 'adn_manual_post', 'callback', array(
 					'label' => __( 'Manual Announcement', 'podlove' ),
 					'callback' => function() {
-						$episodes = Model\Episode::all();
 						?>
 							<select id="adn_manual_post_episode_selector" class="chosen">
 								<?php
+								$episodes = array_filter(Model\Episode::all(), function($e) { return $e->is_valid(); });
 								foreach ( $episodes as $episode ) {
 									$post = get_post( $episode->post_id );
-									if ( $post->post_status == 'publish'  )
-										echo "<option value='" . $episode->post_id . "'>" . $post->post_title . "</option>";
+									echo "<option value='" . $episode->post_id . "'>" . $post->post_title . "</option>";
 								}
 								?>
 							</select>
