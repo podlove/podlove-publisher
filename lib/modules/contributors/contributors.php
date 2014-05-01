@@ -475,8 +475,11 @@ class Contributors extends \Podlove\Modules\Base {
 					}
 				}
 
+				if (isset($contributor['comment'])) {
+					$c->comment = $contributor['comment'];
+				}
+				
 				$c->contributor_id = $contributor_id;
-				$c->comment = $contributor['comment'];
 				$c->position = $position++;
 				$c->save();
 			}

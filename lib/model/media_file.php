@@ -101,7 +101,7 @@ class MediaFile extends Base {
 		$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
 		$file_type     = FileType::find_by_id( $episode_asset->file_type_id );
 
-		if ( ! $episode_asset || ! $file_type )
+		if ( ! $episode_asset || ! $file_type || ! $episode )
 			return '';
 
 		$template = $podcast->get_url_template();
