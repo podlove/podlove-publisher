@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Allow manual posting of ADN announcements
 * Feature: Add contributor support to ADN announcements
 * Enhancement: remove encryption for "protected feed" password
+* Enhancement: default WordPress search now covers episode subtitle, summary and chapters
 * Fix: enable group and role selection in contributor shortcodes
 * Fix: failing delayed ADN broadcast
 * Fix: stop sending ADN announcements for old episodes
