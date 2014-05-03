@@ -860,7 +860,7 @@ function handle_media_file_download() {
 	// and it works perfectly out of the box? Should the player audio source tags
 	// contain the final/raw urls? If so, how do we track player engagement?
 	header("HTTP/1.1 301 Moved Permanently");
-	header("Location: " . $media_file->get_file_url());
+	header("Location: " . $media_file->get_file_url($intent->source, $intent->context));
 	exit;
 }
 add_action( 'init', '\Podlove\handle_media_file_download' );

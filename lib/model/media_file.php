@@ -91,9 +91,11 @@ class MediaFile extends Base {
 	 *
 	 * For public facing URLs, use ::get_public_file_url().
 	 *
+	 * @param  string $source  optional download source
+	 * @param  string $context optional download context
 	 * @return string
 	 */
-	public function get_file_url() {
+	public function get_file_url($source = null, $context = null) {
 
 		$podcast  = Podcast::get_instance();
 
@@ -110,6 +112,16 @@ class MediaFile extends Base {
 		$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
 		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
 		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
+
+		if ($source) {
+			$connector = strpos($template, '?') === false ? '?' : '&';
+			$template .= $connector . "ptm_source=$source";
+		}
+
+		if ($context) {
+			$connector = strpos($template, '?') === false ? '?' : '&';
+			$template .= $connector . "ptm_source=$context";
+		}
 
 		return $template;
 	}
