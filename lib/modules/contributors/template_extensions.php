@@ -87,30 +87,69 @@ class TemplateExtensions {
 	 * - **groupby:** group or role slug. Group by "group" or "role".
 	 * 	              If used, the returned data is has another layer for the groups.
 	 * 	              See examples for more details.
+	 * - **order:**   Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+	 * - **orderby:** Sort contributors by parameter. Defaults to 'name'.
+	 *   - 'name' - Order by public name.
 	 *
 	 * @accessor
 	 * @dynamicAccessor podcast.contributors
 	 */
 	public function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
+
+		$args = shortcode_atts( array(
+			'id'      => null,
+			'scope'   => 'global',
+			'group'   => 'all',
+			'role'    => 'all',
+			'groupby' => null,
+			'order'   => 'ASC',
+			'orderby' => 'name',
+		), $args );
 		
-		if (isset($args['id']))
+		if ($args['id'])
 			return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
 
-		$scope = isset($args['scope']) && in_array($args['scope'], array('global', 'podcast')) ? $args['scope'] : 'global';
+		$scope = in_array($args['scope'], array('global', 'podcast')) ? $args['scope'] : 'global';
 
+		$contributors = array();
 		if ($scope == 'global') {
 			// fetch by group and/or role. defaults to *all* contributors
 			// if no role or group are given
-			$group = isset($args['group']) && $args['group'] !== 'all' ? $args['group'] : null;
-			$role  = isset($args['role'])  && $args['role']  !== 'all' ? $args['role']  : null;
+			$group = $args['group'] !== 'all' ? $args['group'] : null;
+			$role  = $args['role']  !== 'all' ? $args['role']  : null;
 			$contributors = Contributor::byGroupAndRole($group, $role);
 
-			return array_map(function($contributor) {
+			$contributors = array_map(function($contributor) {
 				return new Template\Contributor($contributor);
 			}, $contributors);
 		} else {
 			$contributions = ShowContribution::all();
-			return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
+			$contributors = \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
 		}
+
+		// sort
+		if ($args['groupby'] == 'group') {
+			foreach ($contributors as $group_id => $group) {
+				usort($contributors[$group_id]['contributors'], function($a, $b) {
+					return strcmp($a->name(), $b->name());
+				});
+
+				if (strtoupper($args['order']) == 'DESC') {
+					$contributors[$group_id]['contributors'] = array_reverse($contributors[$group_id]['contributors']);
+				}
+			}
+		} else {
+			usort($contributors, function($a, $b) {
+				return strcmp($a->name(), $b->name());
+			});
+
+			if (strtoupper($args['order']) == 'DESC') {
+				$contributors = array_reverse($contributors);
+			}
+		}
+
+		return $contributors;
 	}
 }
