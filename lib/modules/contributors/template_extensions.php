@@ -87,6 +87,8 @@ class TemplateExtensions {
 	 * - **groupby:** group or role slug. Group by "group" or "role".
 	 * 	              If used, the returned data is has another layer for the groups.
 	 * 	              See examples for more details.
+	 * - **active:**  Only include contributors with at least one published episode.
+	 *                Does have no effect in "podcast" scope. Defaults to 'true'.
 	 * - **order:**   Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
 	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
 	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
@@ -104,6 +106,7 @@ class TemplateExtensions {
 			'group'   => 'all',
 			'role'    => 'all',
 			'groupby' => null,
+			'active'  => true,
 			'order'   => 'ASC',
 			'orderby' => 'name',
 		), $args );
@@ -120,6 +123,12 @@ class TemplateExtensions {
 			$group = $args['group'] !== 'all' ? $args['group'] : null;
 			$role  = $args['role']  !== 'all' ? $args['role']  : null;
 			$contributors = Contributor::byGroupAndRole($group, $role);
+
+			if ($args['active']) {
+				$contributors = array_filter($contributors, function($contributor) {
+					return $contributor->getPublishedContributionCount() > 0;
+				});
+			}
 
 			$contributors = array_map(function($contributor) {
 				return new Template\Contributor($contributor);
