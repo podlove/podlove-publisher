@@ -24,6 +24,13 @@ $downloadsCommand->addOption('episode', array(
    'description' => 'episode id to generate data for'
 ));
 
+$downloadsCommand->addOption('post', array(
+   'short_name'  => '-p',
+   'long_name'   => '--post',
+   'action'      => 'StoreInt',
+   'description' => 'post id related to the episode id to generate data for. is ignored if the episode option is set'
+));
+
 $downloadsCommand->addOption('number', array(
 	'short_name'  => '-n',
 	'long_name'   => '--number',
@@ -84,12 +91,22 @@ function bellcurve() {
 
 function generate_downloads($command) {
 	$episode_id = $command->options['episode'];
+	$post_id    = $command->options['post'];
 	$number     = $command->options['number'];
 	$source     = $command->options['source'];
 	$context    = $command->options['context'];
 	$timespan   = $command->options['timespan'];
 
-	$episode = \Podlove\Model\Episode::find_one_by_id($episode_id);
+	if (!$episode_id) {
+
+		if (!$post_id)
+			die("either 'episode' or 'post' must be given");
+
+		$post = get_post($post_id);
+		$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id);
+	} else {
+		$episode = \Podlove\Model\Episode::find_one_by_id($episode_id);
+	}
 
 	if (!$episode)
 		die("no episode for id '$episode_id'");
@@ -97,7 +114,7 @@ function generate_downloads($command) {
 	$files = $episode->media_files();
 
 	if (!count($files))
-		die("no files for episode with id '$episode_id'");
+		die("no files for episode with episode_id '$episode_id' or post_id '$post_id'");
 
 	for ($i=0; $i < $number; $i++) { 
 		$file = $files[array_rand($files)];
