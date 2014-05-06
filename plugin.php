@@ -933,6 +933,32 @@ add_filter('posts_join', function($join, $query) {
 add_filter('manage_edit-podcast_columns', '\Podlove\podlove_episode_add_downloads_column' );
 add_action('manage_podcast_posts_custom_column', '\Podlove\podlove_episode_add_downloads_column_content' );
 
+/**
+ * This is probably how you add sortability.
+ * However, it requires a "downloads" meta entry.
+ * To make this work, a cron has to periodically (hourly?) update the downloads
+ * meta value.
+ * 
+ *	add_filter('manage_edit-podcast_sortable_columns', function($columns) {
+ *		$columns['downloads'] = 'downloads';
+ *		return $columns;
+ *	});
+ *
+ *	add_action('pre_get_posts', function ($query) {
+ *
+ *	    if (!is_admin())
+ *	        return;
+ *	 
+ *	    $orderby = $query->get('orderby');
+ *	 
+ *	    if ('downloads' == $orderby) {
+ *	        $query->set('meta_key', 'downloads');
+ *	        $query->set('orderby', 'meta_value_num');
+ *	    }
+ *	});
+ *	
+ */
+
 function podlove_episode_add_downloads_column($columns)
 {
 		$keys = array_keys($columns);
