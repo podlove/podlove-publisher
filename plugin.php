@@ -186,6 +186,7 @@ function uninstall_for_current_blog() {
  * Activate internal modules.
  */
 add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
+add_action( 'init', array( '\Podlove\Downloads', 'init' ) );
 
 /**
  * Adds feed discover links to WordPress head.
@@ -926,82 +927,6 @@ add_filter('posts_join', function($join, $query) {
 
 	return $join;
 }, 10, 2);
-
-/**
- * Add "Downloads" column to episodes table
- */
-add_filter('manage_edit-podcast_columns', '\Podlove\podlove_episode_add_downloads_column' );
-add_action('manage_podcast_posts_custom_column', '\Podlove\podlove_episode_add_downloads_column_content' );
-
-/**
- * This is probably how you add sortability.
- * However, it requires a "downloads" meta entry.
- * To make this work, a cron has to periodically (hourly?) update the downloads
- * meta value.
- * 
- *	add_filter('manage_edit-podcast_sortable_columns', function($columns) {
- *		$columns['downloads'] = 'downloads';
- *		return $columns;
- *	});
- *
- *	add_action('pre_get_posts', function ($query) {
- *
- *	    if (!is_admin())
- *	        return;
- *	 
- *	    $orderby = $query->get('orderby');
- *	 
- *	    if ('downloads' == $orderby) {
- *	        $query->set('meta_key', 'downloads');
- *	        $query->set('orderby', 'meta_value_num');
- *	    }
- *	});
- *	
- */
-
-function podlove_episode_add_downloads_column($columns)
-{
-		$keys = array_keys($columns);
-	    $insertIndex = array_search('author', $keys) + 1; // after author column
-
-	    // insert contributors at that index
-	    $columns = array_slice($columns, 0, $insertIndex, true) +
-	           array("downloads" => __('Downloads', 'podlove')) +
-		       array_slice($columns, $insertIndex, count($columns) - 1, true);
-
-	    return $columns;
-}
-
-function podlove_episode_add_downloads_column_content($column_name) {
-	global $wpdb;
-
-    switch ($column_name) {
-    	case 'downloads':
-    		$episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
-
-    		if (!$episode)
-    			return;
-
-        	$sql = "
-        		SELECT
-        			COUNT(*)
-        		FROM
-        			" . \Podlove\Model\DownloadIntent::table_name() . "
-        		WHERE
-        			media_file_id IN (
-        				SELECT id FROM " . \Podlove\Model\MediaFile::table_name() . " WHERE episode_id = %d
-        			)
-        	";
-
-        	$downloads = $wpdb->get_var(
-        		$wpdb->prepare($sql, $episode->id)
-        	);
-
-        	echo $downloads;
-
-    	break;
-    }
-}
 
 // register ajax actions
 new \Podlove\AJAX\Ajax;
