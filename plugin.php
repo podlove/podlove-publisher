@@ -927,6 +927,56 @@ add_filter('posts_join', function($join, $query) {
 	return $join;
 }, 10, 2);
 
+/**
+ * Add "Downloads" column to episodes table
+ */
+add_filter('manage_edit-podcast_columns', '\Podlove\podlove_episode_add_downloads_column' );
+add_action('manage_podcast_posts_custom_column', '\Podlove\podlove_episode_add_downloads_column_content' );
+
+function podlove_episode_add_downloads_column($columns)
+{
+		$keys = array_keys($columns);
+	    $insertIndex = array_search('author', $keys) + 1; // after author column
+
+	    // insert contributors at that index
+	    $columns = array_slice($columns, 0, $insertIndex, true) +
+	           array("downloads" => __('Downloads', 'podlove')) +
+		       array_slice($columns, $insertIndex, count($columns) - 1, true);
+
+	    return $columns;
+}
+
+function podlove_episode_add_downloads_column_content($column_name) {
+	global $wpdb;
+
+    switch ($column_name) {
+    	case 'downloads':
+    		$episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
+
+    		if (!$episode)
+    			return;
+
+        	$sql = "
+        		SELECT
+        			COUNT(*)
+        		FROM
+        			" . \Podlove\Model\DownloadIntent::table_name() . "
+        		WHERE
+        			media_file_id IN (
+        				SELECT id FROM " . \Podlove\Model\MediaFile::table_name() . " WHERE episode_id = %d
+        			)
+        	";
+
+        	$downloads = $wpdb->get_var(
+        		$wpdb->prepare($sql, $episode->id)
+        	);
+
+        	echo $downloads;
+
+    	break;
+    }
+}
+
 // register ajax actions
 new \Podlove\AJAX\Ajax;
 
