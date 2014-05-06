@@ -188,41 +188,7 @@ function uninstall_for_current_blog() {
 add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
 add_action( 'init', array( '\Podlove\Downloads', 'init' ) );
 add_action( 'init', array( '\Podlove\ExtendSearch', 'init' ) );
-
-/**
- * Adds feed discover links to WordPress head.
- *
- * @todo move into \Podlove\Feed_Discoverability and load like \Podlove\Custom_Guid
- */
-function add_feed_discoverability() {
-
-	if ( is_admin() )
-		return;
-
-	if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
-		require_once \PODLOVE\PLUGIN_DIR . 'lib/feeds/base.php';
-
-	$feeds = \Podlove\Model\Feed::all( 'ORDER BY position ASC' );
-
-	foreach ( $feeds as $feed ) {
-		if ( $feed->discoverable )
-			echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
-	}
-		
-}
-
-add_action( 'init', function () {
-	new Podcast_Post_Type();
-
-	// priority 2 so they are placed below the WordPress default discovery links
-	add_action( 'wp_head', '\Podlove\add_feed_discoverability', 2 );
-
-	// hide WordPress default link discovery
-	if ( \Podlove\get_setting( 'website', 'hide_wp_feed_discovery' ) === 'on' ) {
-		remove_action( 'wp_head', 'feed_links',       2 );
-		remove_action( 'wp_head', 'feed_links_extra', 3 );
-	}
-});
+add_action( 'init', array( '\Podlove\FeedDiscoverability', 'init' ) );
 
 add_action( 'init', function () {
 
