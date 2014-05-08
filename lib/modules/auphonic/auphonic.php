@@ -13,6 +13,8 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 			add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
+			add_action( 'wp_ajax_podlove-add-production-remote-publish', array( $this, 'ajax_add_episode_for_remote_publishing' ) );
+			add_action( 'wp', array( $this, 'auphonic_webhook' ) );
     		
     		if($this->get_module_option('auphonic_api_key') == "") { } else {
     			add_action( 'podlove_episode_form_beginning', array( $this, 'auphonic_episodes' ), 10, 2 );
@@ -86,6 +88,27 @@ class Auphonic extends \Podlove\Modules\Base {
     }
 
     /**
+     * Register Event for Auphonic Webhook
+     */
+    public function auphonic_webhook() {
+    	if ( !isset( $_REQUEST['podlove-auphonic-production'] ) || empty( $_REQUEST['podlove-auphonic-production'] ) || empty( $_POST ) )
+    		return;
+
+    	$episodes_to_be_remote_published = get_option( 'podlove_episodes_to_be_remote_published' );
+
+    	if ( !is_array( $episodes_to_be_remote_published ) )
+    		return;
+
+    	if ( !in_array( $_REQUEST['podlove-auphonic-production'] , $episodes_to_be_remote_published ) )
+    		return;
+
+    	if ( $_POST['status_string'] !== 'Done' )
+    		return;
+    	
+    	wp_publish_post( $_REQUEST['podlove-auphonic-production'] );
+    }
+
+    /**
      * Refresh the list of auphonic presets
      */
     public function ajax_refresh_presets() {
@@ -93,6 +116,28 @@ class Auphonic extends \Podlove\Modules\Base {
 		$result = $this->fetch_presets();
 		
 		return \Podlove\AJAX\AJAX::respond_with_json( $result );
+	}
+
+	/**
+	 * Register a new Episode that can be published via Auphonic
+	 */
+	public function ajax_add_episode_for_remote_publishing() {
+		$post_id = $_REQUEST['post_id'];
+
+		if ( !$post_id )
+			return;
+
+		$episodes_to_be_remote_published = get_option( 'podlove_episodes_to_be_remote_published' );
+
+		if ( !is_array( $episodes_to_be_remote_published ) )
+			$episodes_to_be_remote_published = array();
+		
+		if ( !in_array( $post_id , $episodes_to_be_remote_published ) ) {
+			$episodes_to_be_remote_published[] = $post_id;
+			update_option( 'podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published );
+		}
+
+		return \Podlove\AJAX\AJAX::respond_with_json( TRUE );
 	}
 
     /**
@@ -220,6 +265,7 @@ class Auphonic extends \Podlove\Modules\Base {
 			data-assignment-chapter="<?php echo $asset_assignments->chapters ?>"
 			data-assignment-image="<?php echo $asset_assignments->image ?>"
 			data-module-url="<?php echo $this->get_module_url() ?>"
+			data-site-url="<?php echo get_home_url(); ?>"
 			/>
 
 		<div id="auphonic-box">
