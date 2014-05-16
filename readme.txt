@@ -99,6 +99,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: failing delayed ADN broadcast
 * Fix: stop sending ADN announcements for old episodes
 * Fix: refresh of Auphonic presets keeps current preset
+* Fix: `contributor.episodes` does not return duplicate episodes any more
 
 = 1.10.7 =
 
