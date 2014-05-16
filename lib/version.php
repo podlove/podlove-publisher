@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 70 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 72 );
 
 add_action( 'init', function () {
 	
@@ -782,6 +782,31 @@ function run_migrations_for_version( $version ) {
 			foreach ($services as $service) {
 				$service->type = strtolower($service->title);
 				$service->save();
+			}
+		break;
+		case 72:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$services = array(
+					array(
+						'title'       => 'Vimeo',
+						'type'        => 'vimeo',
+						'category'    => 'social',
+						'description' => 'Vimeo Account',
+						'logo'        => 'vimeo-128.png',
+						'url_scheme'  => 'http://vimeo.com/%account-placeholder%'
+					)
+				);
+
+				foreach ($services as $service_key => $service) {
+					$c = new \Podlove\Modules\Social\Model\Service;
+					$c->title = $service['title'];
+					$c->type = $service['type'];
+					$c->category = $service['category'];
+					$c->description = $service['description'];
+					$c->logo = $service['logo'];
+					$c->url_scheme = $service['url_scheme'];
+					$c->save();
+				}
 			}
 		break;
 	}

@@ -273,6 +273,14 @@ class Social extends \Podlove\Modules\Base {
 					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Vimeo',
+					'name'	 		=> 'vimeo',
+					'category'		=> 'social',
+					'description'	=> 'Vimeo Account',
+					'logo'			=> 'vimeo-128.png',
+					'url_scheme'	=> 'http://vimeo.com/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Website',
 					'name'	 		=> 'website',
 					'type'			=> 'social',
