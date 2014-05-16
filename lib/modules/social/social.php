@@ -667,12 +667,12 @@ class Social extends \Podlove\Modules\Base {
 		) );
 	}
 
-	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $type = 'social') {
+	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $category = 'social') {
 		$cjson = array();
 		$converted_services = array();
-		$wrapper_id = "services-form-$type";
+		$wrapper_id = "services-form-$category";
 
-		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service) {
+		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'category', $category ) as $service) {
 			$cjson[$service->id] = array(
 				'id'   			=> $service->id,
 				'title'   		=> $service->title,
@@ -710,16 +710,16 @@ class Social extends \Podlove\Modules\Base {
 			</table>
 
 			<div id="add_new_contributor_wrapper">
-				<input class="button" id="add_new_service_button-<?php echo $type ?>" value="+" type="button" />
+				<input class="button" id="add_new_service_button-<?php echo $category ?>" value="+" type="button" />
 			</div>
 
-			<script type="text/template" id="service-row-template-<?php echo $type ?>">
+			<script type="text/template" id="service-row-template-<?php echo $category ?>">
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
 				
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
-						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `type` = \'' . $type . '\' ORDER BY `title`' ) as $service ): ?>
+						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `category` = \'' . $category . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -806,10 +806,10 @@ class Social extends \Podlove\Modules\Base {
 						var i = 0;
 
 						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
-							rowTemplate: "#service-row-template-<?php echo $type; ?>",
+							rowTemplate: "#service-row-template-<?php echo $category; ?>",
 							deleteHandle: ".service_remove",
 							sortableHandle: ".reorder-handle",
-							addRowHandle: "#add_new_service_button-<?php echo $type ?>",
+							addRowHandle: "#add_new_service_button-<?php echo $category ?>",
 							data: existing_services,
 							dataPresets: services,
 							onRowLoad: function(o) {
