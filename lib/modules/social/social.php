@@ -383,6 +383,22 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Thomann Wishlist URL',
 					'logo'			=> 'thomann-128.png',
 					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'about.me',
+					'name'	 		=> 'about.me',
+					'category'		=> 'social',
+					'description'	=> 'about.me Account',
+					'logo'			=> 'aboutme-128.png',
+					'url_scheme'	=> 'http://about.me/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Gittip',
+					'name'	 		=> 'gittip',
+					'category'		=> 'donation',
+					'description'	=> 'Gittip Account',
+					'logo'			=> 'gittip-128.png',
+					'url_scheme'	=> 'https://www.gittip.com/%account-placeholder%'
 				)
 		);
 

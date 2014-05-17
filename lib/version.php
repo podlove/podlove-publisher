@@ -794,6 +794,22 @@ function run_migrations_for_version( $version ) {
 						'description' => 'Vimeo Account',
 						'logo'        => 'vimeo-128.png',
 						'url_scheme'  => 'http://vimeo.com/%account-placeholder%'
+					),
+					array(
+						'title' 		=> 'about.me',
+						'type'	 		=> 'about.me',
+						'category'		=> 'social',
+						'description'	=> 'about.me Account',
+						'logo'			=> 'aboutme-128.png',
+						'url_scheme'	=> 'http://about.me/%account-placeholder%'
+					),
+					array(
+						'title' 		=> 'Gittip',
+						'type'	 		=> 'gittip',
+						'category'		=> 'donation',
+						'description'	=> 'Gittip Account',
+						'logo'			=> 'gittip-128.png',
+						'url_scheme'	=> 'https://www.gittip.com/%account-placeholder%'
 					)
 				);
 
