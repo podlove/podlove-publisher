@@ -93,7 +93,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feature: Allow manual posting of ADN announcements
 * Feature: Add contributor support to ADN announcements
 * Feature: We are beginning to implement download intent tracking and statistics. As a first step, we are now tracking download intents. A following release will contain an analytics section where you can examine the statistics.
-* Enhancement: remove encryption for "protected feed" password
+* Enhancement: remove encryption for "protected feed" password to prevent autofill browser features to destroy contents
 * Enhancement: default WordPress search now covers episode subtitle, summary and chapters
 * Enhancement: add Vimeo to services
 * Fix: enable group and role selection in contributor shortcodes
