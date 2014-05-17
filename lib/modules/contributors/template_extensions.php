@@ -79,16 +79,17 @@ class TemplateExtensions {
 	 *
 	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters.
 	 *                Example: `podcast.contributors({id: 'james'}).name`
-	 * - **scope:**   Either "global" or "podcast". "global" returns *all* contributors.
-	 * 	              "podcast" returns the contributors configured in podcast settings.
-	 * 	              Default: "global".
+	 * - **scope:**   Either "global", "global-active" or "podcast".
+	 *                - "global" returns all contributors.
+	 *                - "global-active" returns all contributors with 
+	 *                   at least one contribution in a published episode.
+	 * 	              - "podcast" returns the contributors configured in podcast settings.
+	 * 	              Default: "global-active".
 	 * - **group:**   filter by group slug. Defaults to "all", which does not filter.
 	 * - **role:**    filter by role slug. Defaults to "all", which does not filter.
 	 * - **groupby:** group or role slug. Group by "group" or "role".
 	 * 	              If used, the returned data is has another layer for the groups.
 	 * 	              See examples for more details.
-	 * - **active:**  Only include contributors with at least one published episode.
-	 *                Does have no effect in "podcast" scope. Defaults to 'true'.
 	 * - **order:**   Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
 	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
 	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
@@ -102,11 +103,10 @@ class TemplateExtensions {
 
 		$args = shortcode_atts( array(
 			'id'      => null,
-			'scope'   => 'global',
+			'scope'   => 'global-active',
 			'group'   => 'all',
 			'role'    => 'all',
 			'groupby' => null,
-			'active'  => true,
 			'order'   => 'ASC',
 			'orderby' => 'name',
 		), $args );
@@ -114,17 +114,17 @@ class TemplateExtensions {
 		if ($args['id'])
 			return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
 
-		$scope = in_array($args['scope'], array('global', 'podcast')) ? $args['scope'] : 'global';
+		$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
 
 		$contributors = array();
-		if ($scope == 'global') {
+		if (in_array($scope, array("global", "global-active"))) {
 			// fetch by group and/or role. defaults to *all* contributors
 			// if no role or group are given
 			$group = $args['group'] !== 'all' ? $args['group'] : null;
 			$role  = $args['role']  !== 'all' ? $args['role']  : null;
 			$contributors = Contributor::byGroupAndRole($group, $role);
 
-			if ($args['active']) {
+			if ($scope == 'global-active') {
 				$contributors = array_filter($contributors, function($contributor) {
 					return $contributor->getPublishedContributionCount() > 0;
 				});
