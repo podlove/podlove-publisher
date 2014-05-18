@@ -764,10 +764,10 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 70:
 			if (\Podlove\Modules\Base::is_active('social')) {
-				$instagram_service = \Podlove\Modules\Social\Model\Service::find_one_by_where( "`title` = 'Jabber' AND `type` = 'social'" );
-				if ($instagram_service) {
-					$instagram_service->url_scheme = 'jabber:%account-placeholder%';
-					$instagram_service->save();
+				$jabber_service = \Podlove\Modules\Social\Model\Service::find_one_by_where( "`title` = 'Jabber' AND `type` = 'social'" );
+				if ($jabber_service) {
+					$jabber_service->url_scheme = 'jabber:%account-placeholder%';
+					$jabber_service->save();
 				}
 			}
 		break;
