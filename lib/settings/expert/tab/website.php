@@ -23,7 +23,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_merge_episodes',
 			/* $title    */ sprintf(
 				'<label for="merge_episodes">%s</label>',
-				__( 'Display episodes on front page together with blog posts', 'podlove' )
+				__( 'Include episode posts on the front page and in the blog feed', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>

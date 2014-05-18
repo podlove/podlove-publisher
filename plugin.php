@@ -266,6 +266,31 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 	return $wp_query;
 } );
 
+/**
+ * Checking "merge_episodes" also includes episodes in main feed
+ */
+add_filter( 'request', function($query_var) {
+
+	if ( !isset( $query_var['feed'] ) ) 
+		return $query_var;
+	
+	if ( \Podlove\get_setting( 'website', 'merge_episodes' ) !== 'on' )
+		return $query_var;
+	
+	$extend = array(
+		'post' => 'post',
+		'podcast' => 'podcast'
+	);
+
+	if ( empty( $query_var['post_type'] ) || ! is_array( $query_var['post_type'] ) ) {
+		$query_var['post_type'] = $extend;
+	} else {
+		$query_var['post_type'] = array_merge( $query_var['post_type'], $extend );
+	}
+	
+	return $query_var;
+} );
+
 // init modules
 add_action( 'plugins_loaded', function () {
 	$modules = Modules\Base::get_active_module_names();
