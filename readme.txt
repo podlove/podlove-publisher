@@ -102,6 +102,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: stop sending ADN announcements for old episodes
 * Fix: refresh of Auphonic presets keeps current preset
 * Fix: `contributor.episodes` does not return duplicate episodes any more
+* Fix: Jabber URL scheme is now prefixed with `jabber:`
 
 = 1.10.7 =
 

@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 72 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 73 );
 
 add_action( 'init', function () {
 	
@@ -822,6 +822,15 @@ function run_migrations_for_version( $version ) {
 					$c->logo = $service['logo'];
 					$c->url_scheme = $service['url_scheme'];
 					$c->save();
+				}
+			}
+		break;
+		case 73:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$jabber_service = \Podlove\Modules\Social\Model\Service::find_one_by_where( "`type` = 'jabber' AND `category` = 'social'" );
+				if ($jabber_service) {
+					$jabber_service->url_scheme = 'jabber:%account-placeholder%';
+					$jabber_service->save();
 				}
 			}
 		break;

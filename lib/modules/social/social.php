@@ -174,7 +174,7 @@ class Social extends \Podlove\Modules\Base {
 					'category'		=> 'social',
 					'description'	=> 'Jabber ID',
 					'logo'			=> 'jabber-128.png',
-					'url_scheme'	=> '%account-placeholder%'
+					'url_scheme'	=> 'jabber:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Last.fm',
