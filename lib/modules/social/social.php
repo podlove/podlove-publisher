@@ -961,8 +961,12 @@ class Social extends \Podlove\Modules\Base {
 	public function adn_tags( $text, $post_id, $selected_role, $selected_group ) {
     	$contributor_adn_accounts = '';
 
-    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+    	$episode       = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
     	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
+    	$adn_service   = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'type', 'app.net' );
+
+    	if (!$adn_service)
+    		return;
 
     	foreach ( $contributions as $contribution ) {
     		$contributor_adn_accounts .= '';
