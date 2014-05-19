@@ -284,7 +284,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	    		return false;
 
 	    	$curl = new Http\Curl();
-	    	$curl->request( 'https://alpha-api.app.net/stream/0/token?access_token=' . $token);
+	    	$curl->request(
+	    		'https://alpha-api.app.net/stream/0/token?access_token=' . $token,
+	    		array( 'timeout' => 10 )
+	    	);
 	    	$response = $curl->get_response();
 
 	    	if ($curl->isSuccessful()) {
