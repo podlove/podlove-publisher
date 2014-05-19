@@ -970,7 +970,6 @@ class Social extends \Podlove\Modules\Base {
 
     	foreach ( $contributions as $contribution ) {
     		$contributor_adn_accounts .= '';
-    		$adn_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'App.net' );
     		$social_accounts = \Podlove\Modules\Social\Model\ContributorService::find_all_by_contributor_id( $contribution->contributor_id );
 
     		array_map( function( $account ) use ( $adn_service, &$contributor_adn_accounts, $contribution, $selected_role, $selected_group ) {
