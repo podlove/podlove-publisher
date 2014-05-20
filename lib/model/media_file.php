@@ -120,7 +120,7 @@ class MediaFile extends Base {
 
 		if ($context) {
 			$connector = strpos($template, '?') === false ? '?' : '&';
-			$template .= $connector . "ptm_source=$context";
+			$template .= $connector . "ptm_context=$context";
 		}
 
 		return $template;
