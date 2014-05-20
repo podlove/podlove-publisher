@@ -97,6 +97,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: default WordPress search now covers episode subtitle, summary and chapters
 * Enhancement: add Vimeo, Gittip and about.me to services
 * Enhancement: The expert setting "Display episodes on front page together with blog posts" changed to "Include episode posts on the front page and in the blog feed". So if you set it, episodes will additionally appear in `/feed`. However, only in the form of a post. You will not find enclosures, iTunes metadata etc. in `/feed` items.
+* Enhancement: sort chapters imported from Auphonic by time
 * Fix: enable group and role selection in contributor shortcodes
 * Fix: failing delayed ADN broadcast
 * Fix: stop sending ADN announcements for old episodes
