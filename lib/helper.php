@@ -67,6 +67,11 @@ function get_setting( $namespace, $name ) {
 		),
 		'redirects' => array(
 			'podlove_setting_redirect' => array(),
+		),
+		'tracking' => array(
+			'enable_ptm'  => 1,
+			'enable_ips'  => 0,
+			'respect_dnt' => 1
 		)
 	);
 

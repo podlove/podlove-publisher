@@ -72,12 +72,18 @@ class MediaFile extends Base {
 	 */
 	public function get_public_file_url($source, $context = null) {
 
+		$path = '?download_media_file=' . $this->id;
+
+		if (!\Podlove\get_setting( 'tracking', 'enable_ptm' ))
+			return site_url($path);
+
+		// if PTM is enabled, add ptm parameters
+
 		// trim source and context
 		$context = trim($context);
 		$source  = trim($source);
 
 		// build path
-		$path = '?download_media_file=' . $this->id;
 		$path.= '&ptm_source=' . $source;
 
 		if (is_string($context) && strlen($context) > 0)

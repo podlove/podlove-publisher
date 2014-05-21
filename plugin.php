@@ -858,16 +858,20 @@ function handle_media_file_download() {
 	}
 
 	// respect do-not-track header
-	$dnt = isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'];
-	if (apply_filters('podlove_track_user_data_in_download_intents', !$dnt)) {
+	$dnt         = isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'];
+	$respect_dnt = \Podlove\get_setting( 'tracking', 'respect_dnt' );
+	if (apply_filters('podlove_track_user_data_in_download_intents', !$dnt || !$respect_dnt)) {
+
 		// save ip address in ipv6 format
-		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+		if (\Podlove\get_setting( 'tracking', 'enable_ips' )) {
+			$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
 
-		if (method_exists($ip, 'as_IPv6_address')) {
-			$ip = $ip->as_IPv6_address();
+			if (method_exists($ip, 'as_IPv6_address')) {
+				$ip = $ip->as_IPv6_address();
+			}
+
+			$intent->ip = $ip->format(IP\Address::FORMAT_COMPACT);
 		}
-
-		$intent->ip = $ip->format(IP\Address::FORMAT_COMPACT);
 
 		// set user agent
 		$ua_string = $_SERVER['HTTP_USER_AGENT'];
