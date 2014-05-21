@@ -313,6 +313,8 @@ class Podcast extends Wrapper {
 	 *  	enable_ips
 	 *  	respect_dnt
 	 *  ```
+	 *
+	 * @accessor
 	 */
 	public function setting($namespace, $name) {
 		return \Podlove\get_setting($namespace, $name);
