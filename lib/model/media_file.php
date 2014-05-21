@@ -71,25 +71,33 @@ class MediaFile extends Base {
 	 * @return string
 	 */
 	public function get_public_file_url($source, $context = null) {
+		switch (\Podlove\get_setting( 'tracking', 'mode' )) {
+			case 'ptm':
+				// when PTM is active, add $source and $context but
+				// keep the original file URL
+				return $this->get_file_url($source, $context);
+				break;
+			case 'ptm_analytics':
+				// we track, so we need to generate a shadow URL
+				$path = '?download_media_file=' . $this->id;
 
-		$path = '?download_media_file=' . $this->id;
+				// trim source and context
+				$context = trim($context);
+				$source  = trim($source);
 
-		if (!\Podlove\get_setting( 'tracking', 'enable_ptm' ))
-			return site_url($path);
+				// build path
+				$path.= '&ptm_source=' . $source;
 
-		// if PTM is enabled, add ptm parameters
+				if (is_string($context) && strlen($context) > 0)
+					$path .= '&ptm_context=' . $context;
 
-		// trim source and context
-		$context = trim($context);
-		$source  = trim($source);
-
-		// build path
-		$path.= '&ptm_source=' . $source;
-
-		if (is_string($context) && strlen($context) > 0)
-			$path .= '&ptm_context=' . $context;
-
-		return site_url($path);
+				return site_url($path);
+				break;
+			default:
+				// tracking is off, return raw URL
+				return $this->get_file_url();
+				break;
+		}
 	}
 
 	/**

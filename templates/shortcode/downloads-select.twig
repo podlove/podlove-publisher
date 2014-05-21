@@ -1,7 +1,7 @@
 {% spaceless %}
 <form action="#">
  <div class="episode_downloads">
-    {% if podcast.setting("tracking", "enable_ptm") %}
+    {% if podcast.setting("tracking", "mode") in ["ptm", "ptm_analytics"] %}
         <input type="hidden" name="ptm_source" value="download" />
         <input type="hidden" name="ptm_context" value="select-button" />
     {% endif %}
