@@ -89,15 +89,16 @@ class Feed_List_Table extends \Podlove\List_Table {
 		return $columns;
 	}
 	
-	public function prepare_items() {
+	public function prepare_items()
+	{
 		// number of items per page
-		$per_page = 10;
-		
+		$per_page = get_user_meta( get_current_user_id(), 'podlove_feeds_per_page', true);
+		if ( empty($per_page) ) {
+			$per_page = 10;
+		}
+
 		// define column headers
-		$columns = $this->get_columns();
-		$hidden = array();
-		$sortable = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = $this->get_column_info();
 		
 		// retrieve data
 		$data = \Podlove\Model\Feed::all( 'ORDER BY position ASC' );
