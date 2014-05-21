@@ -57,7 +57,13 @@ class Feed_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_url( $feed ) {
-		return $feed->get_subscribe_link();
+		$link = $feed->get_subscribe_link();
+
+		if ($feed->redirect_http_status > 0 && strlen($feed->redirect_url)) {
+			$link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;<a href=\"{$feed->redirect_url}\">{$feed->redirect_url}</a>"; 
+		}
+
+		return $link;
 	}
 
 	public function column_media( $feed ) {
