@@ -310,8 +310,6 @@ class Podcast extends Wrapper {
 	 *  	podlove_setting_redirect
 	 *  tracking
 	 *  	mode
-	 *  	enable_ips
-	 *  	respect_dnt
 	 *  ```
 	 *
 	 * @accessor

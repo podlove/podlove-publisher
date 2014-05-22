@@ -18,28 +18,6 @@ class Tracking extends Tab {
 				.form-table .aligned-radio .row { display: table-row; }
 				.form-table .aligned-radio .row > div { display: table-cell; }
 				</style>
-
-				<script type="text/javascript">
-				jQuery(function($) {
-					function manage_tracking_setting_visibility() {
-						var input = $("input[name='podlove_tracking[mode]']:checked"),
-							value = input.val(),
-							toggleElements = $("#enable_ips, #respect_dnt").closest("tr");
-
-						if (value == "ptm_analytics") {
-							toggleElements.show();
-						} else {
-							toggleElements.hide();
-						}
-					}
-
-					$("input[name='podlove_tracking[mode]']").on("change", function(e) {
-						manage_tracking_setting_visibility();
-					});
-
-					manage_tracking_setting_visibility();
-				});
-				</script>
 				<?php
 			},
 			/* $page	 */ Settings::$pagehook	
@@ -101,55 +79,6 @@ class Tracking extends Tab {
 						</div>
 					</div>
 				</label>
-				<?php
-			},
-			/* $page     */ Settings::$pagehook,  
-			/* $section  */ 'podlove_settings_episode'
-		);
-
-		add_settings_field(
-			/* $id       */ 'podlove_setting_tracking_ips',
-			/* $title    */ sprintf(
-				'<label id="enable_ips">%s</label>',
-				__( 'Save IP addresses', 'podlove' )
-			),
-			/* $callback */ function () {
-				?>
-				<label>
-					<input name="podlove_tracking[enable_ips]" type="radio" value="1" <?php checked( \Podlove\get_setting( 'tracking', 'enable_ips' ), 1 ) ?> /> <?php echo __( 'Save IP addresses (allows geo tracking).', 'podlove' ) ?>
-				</label>
-				<br>
-				<label>
-					<input name="podlove_tracking[enable_ips]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'enable_ips' ), 0 ) ?> /> <?php echo __( 'Do not save IP addresses.', 'podlove' ) ?>
-				</label>
-				<?php
-			},
-			/* $page     */ Settings::$pagehook,  
-			/* $section  */ 'podlove_settings_episode'
-		);
-
-		add_settings_field(
-			/* $id       */ 'podlove_setting_tracking_dnt',
-			/* $title    */ sprintf(
-				'<label id="respect_dnt">%s</label>',
-				__( 'Respect DNT Header', 'podlove' )
-			),
-			/* $callback */ function () {
-				?>
-				<label>
-					<input name="podlove_tracking[respect_dnt]" type="radio" value="1" <?php checked( \Podlove\get_setting( 'tracking', 'respect_dnt' ), 1 ) ?> /> <?php echo __( 'Respect DNT.', 'podlove' ) ?>
-				</label>
-				<br>
-				<label>
-					<input name="podlove_tracking[respect_dnt]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'respect_dnt' ), 0 ) ?> /> <?php echo __( 'Ignore DNT.', 'podlove' ) ?>
-				</label>
-				<p>
-					<?php echo sprintf(
-						__('Respect the %sDO NOT TRACK-Header%s of clients. When it is set, neither IP nor user agent will be saved if the client sends a DNT header.', 'podlove'),
-						'<a href="http://en.wikipedia.org/wiki/Do_not_track" target="_blank">',
-						'</a>'
-					); ?>
-				</p>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
