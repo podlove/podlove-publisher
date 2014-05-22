@@ -11,13 +11,35 @@ class Tracking extends Tab {
 			/* $id 		 */ 'podlove_settings_episode',
 			/* $title 	 */ __( '', 'podlove' ),	
 			/* $callback */ function () {
-				echo '<h3>' . __( 'Episode Tracking Settings', 'podlove' ) . '</h3>';
+				echo '<h3>' . __( 'Download Tracking & Analytics Settings', 'podlove' ) . '</h3>';
 				?>
 				<style type="text/css">
 				.form-table .aligned-radio { display: table; margin-bottom: 10px; }
 				.form-table .aligned-radio .row { display: table-row; }
 				.form-table .aligned-radio .row > div { display: table-cell; }
 				</style>
+
+				<script type="text/javascript">
+				jQuery(function($) {
+					function manage_tracking_setting_visibility() {
+						var input = $("input[name='podlove_tracking[mode]']:checked"),
+							value = input.val(),
+							toggleElements = $("#enable_ips, #respect_dnt").closest("tr");
+
+						if (value == "ptm_analytics") {
+							toggleElements.show();
+						} else {
+							toggleElements.hide();
+						}
+					}
+
+					$("input[name='podlove_tracking[mode]']").on("change", function(e) {
+						manage_tracking_setting_visibility();
+					});
+
+					manage_tracking_setting_visibility();
+				});
+				</script>
 				<?php
 			},
 			/* $page	 */ Settings::$pagehook	
@@ -34,7 +56,7 @@ class Tracking extends Tab {
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" id="mode" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 0 ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 0 ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
@@ -49,7 +71,7 @@ class Tracking extends Tab {
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" id="mode" type="radio" value="ptm" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm' ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="ptm" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm' ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
@@ -66,7 +88,7 @@ class Tracking extends Tab {
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" id="mode" type="radio" value="ptm_analytics" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm_analytics' ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="ptm_analytics" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm_analytics' ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
@@ -88,17 +110,17 @@ class Tracking extends Tab {
 		add_settings_field(
 			/* $id       */ 'podlove_setting_tracking_ips',
 			/* $title    */ sprintf(
-				'<label for="enable_ips">%s</label>',
+				'<label id="enable_ips">%s</label>',
 				__( 'Save IP addresses', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<label>
-					<input name="podlove_tracking[enable_ips]" id="enable_ips" type="radio" value="1" <?php checked( \Podlove\get_setting( 'tracking', 'enable_ips' ), 1 ) ?> /> <?php echo __( 'Save IP addresses (allows geo tracking).', 'podlove' ) ?>
+					<input name="podlove_tracking[enable_ips]" type="radio" value="1" <?php checked( \Podlove\get_setting( 'tracking', 'enable_ips' ), 1 ) ?> /> <?php echo __( 'Save IP addresses (allows geo tracking).', 'podlove' ) ?>
 				</label>
 				<br>
 				<label>
-					<input name="podlove_tracking[enable_ips]" id="enable_ips" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'enable_ips' ), 0 ) ?> /> <?php echo __( 'Do not save IP addresses.', 'podlove' ) ?>
+					<input name="podlove_tracking[enable_ips]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'enable_ips' ), 0 ) ?> /> <?php echo __( 'Do not save IP addresses.', 'podlove' ) ?>
 				</label>
 				<?php
 			},
@@ -109,17 +131,17 @@ class Tracking extends Tab {
 		add_settings_field(
 			/* $id       */ 'podlove_setting_tracking_dnt',
 			/* $title    */ sprintf(
-				'<label for="respect_dnt">%s</label>',
+				'<label id="respect_dnt">%s</label>',
 				__( 'Respect DNT Header', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<label>
-					<input name="podlove_tracking[respect_dnt]" id="respect_dnt" type="radio" value="1" <?php checked( \Podlove\get_setting( 'tracking', 'respect_dnt' ), 1 ) ?> /> <?php echo __( 'Respect DNT.', 'podlove' ) ?>
+					<input name="podlove_tracking[respect_dnt]" type="radio" value="1" <?php checked( \Podlove\get_setting( 'tracking', 'respect_dnt' ), 1 ) ?> /> <?php echo __( 'Respect DNT.', 'podlove' ) ?>
 				</label>
 				<br>
 				<label>
-					<input name="podlove_tracking[respect_dnt]" id="respect_dnt" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'respect_dnt' ), 0 ) ?> /> <?php echo __( 'Ignore DNT.', 'podlove' ) ?>
+					<input name="podlove_tracking[respect_dnt]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'respect_dnt' ), 0 ) ?> /> <?php echo __( 'Ignore DNT.', 'podlove' ) ?>
 				</label>
 				<p>
 					<?php echo sprintf(
