@@ -12,3 +12,6 @@ DownloadIntent::property( 'request_id', 'VARCHAR(32)' );
 DownloadIntent::property( 'accessed_at', 'DATETIME' );
 DownloadIntent::property( 'source', 'VARCHAR(255)' );
 DownloadIntent::property( 'context', 'VARCHAR(255)' );
+DownloadIntent::property( 'geo_area_id', 'INT' );
+DownloadIntent::property( 'lat', 'FLOAT' );
+DownloadIntent::property( 'lng', 'FLOAT' );

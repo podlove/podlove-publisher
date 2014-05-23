@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 73 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 74 );
 
 add_action( 'init', function () {
 	
@@ -833,6 +833,10 @@ function run_migrations_for_version( $version ) {
 					$jabber_service->save();
 				}
 			}
+		break;
+		case 74:
+			Model\GeoArea::build();
+			Model\GeoAreaName::build();
 		break;
 	}
 
