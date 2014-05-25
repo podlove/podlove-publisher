@@ -42,7 +42,9 @@ use \Podlove\Model;
 
 define( __NAMESPACE__ . '\DATABASE_VERSION', 74 );
 
-add_action( 'init', function () {
+add_action( 'init', '\Podlove\run_database_migrations' );
+
+function run_database_migrations() {
 	
 	$database_version = get_option( 'podlove_database_version' );
 
@@ -57,7 +59,7 @@ add_action( 'init', function () {
 		}
 	}
 
-} );
+}
 
 /**
  * Find and run migration for given version number.

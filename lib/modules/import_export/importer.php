@@ -40,6 +40,8 @@ class Importer {
 
 		do_action('podlove_xml_import', $this->xml);
 
+		\Podlove\run_database_migrations();
+
 		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
 		exit;
 	}

@@ -58,7 +58,8 @@ class Exporter {
 			'podlove_template_assignment',
 			'podlove_webplayer_formats',
 			'podlove_webplayer_settings',
-			'podlove_contributors'
+			'podlove_contributors',
+			'podlove_database_version'
 		);
 
 		$xml_group = $xml->addChild('xmlns:wpe:options');
