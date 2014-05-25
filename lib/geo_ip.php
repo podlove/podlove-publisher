@@ -18,30 +18,34 @@ class Geo_Ip {
 	 */
 	public static function init()
 	{
-		/*
-		// self::update_database();
+		add_filter( 'cron_schedules', array(__CLASS__, 'cron_add_monthly') );
+		add_action( 'podlove_geoip_db_update', array(__CLASS__, 'update_database') );
 
-		$ip = IP\Address::factory('182.74.40.62');
-		if (method_exists($ip, 'as_IPv6_address')) {
-			$ip = $ip->as_IPv6_address();
+		register_deactivation_hook( \Podlove\PLUGIN_FILE, array(__CLASS__, 'stop_updater_cron') );
+		register_activation_hook( \Podlove\PLUGIN_FILE, array(__CLASS__, 'register_updater_cron') );
+	}
+
+	public static function register_updater_cron()
+	{
+		if (!wp_next_scheduled('podlove_geoip_db_update'))
+			wp_schedule_event(time(), 'monthly', 'podlove_geoip_db_update');
+	}
+
+	public static function stop_updater_cron()
+	{
+		wp_clear_scheduled_hook('podlove_geoip_db_update');
+	}
+
+	public static function cron_add_monthly($schedules)
+	{
+		if (!isset($schedules['monthly'])) {
+			$schedules['monthly'] = array(
+				'interval' => 2635200,
+				'display'  => __('Once a month', 'podlove')
+			);
 		}
-		$ipv6_string = $ip->format(IP\Address::FORMAT_COMPACT);
 
-		var_dump($ipv6_string);
-
-		echo "<pre>";
-		$reader = new Reader(self::get_upload_file_path());
-		$record = $reader->city($ipv6_string);
-		var_dump($record);
-		// var_dump($record->mostSpecificSubdivision);
-		// var_dump($record->city);
-		// var_dump($record->postal);
-		// var_dump($record->location);
-		echo "</pre>";
-		exit;
-
-		// file_put_contents('/tmp/php.log', print_r("\n" . "Starting GeoIP db update ...\n", true), FILE_APPEND | LOCK_EX);
-		*/
+		return $schedules;
 	}
 
 	public static function is_db_valid()

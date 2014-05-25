@@ -837,6 +837,7 @@ function run_migrations_for_version( $version ) {
 		case 74:
 			Model\GeoArea::build();
 			Model\GeoAreaName::build();
+			\Podlove\Geo_Ip::register_updater_cron();
 		break;
 	}
 

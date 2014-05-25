@@ -886,24 +886,12 @@ function handle_media_file_download() {
 	$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
 
 	try {
-		// $ip_string = '182.24.40.62'; // FOR DEBUGGING
 		// geo ip lookup
 		$reader = new \GeoIp2\Database\Reader(\Podlove\Geo_Ip::get_upload_file_path());
 		$record = $reader->city($ip_string);
 
 		$intent->lat = $record->location->latitude;
 		$intent->lng = $record->location->longitude;
-
-		// STEPS
-		// - find city
-		//  / yes         \ no
-		//  add DI entry   \
-		//                  - create city entry + translations
-		//                  - parent (subdivision) exists?
-		//                   / yes                \
-		//                  nothing to do!         \ no
-		//                                         - create area + translations
-		//                                         - rinse and repeat ...
 
 		/**
 		 * Get most specific area for given record, beginning at the given area-type.

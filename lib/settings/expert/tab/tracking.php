@@ -85,7 +85,66 @@ class Tracking extends Tab {
 			/* $section  */ 'podlove_settings_episode'
 		);
 
-		register_setting( Settings::$pagehook, 'podlove_tracking' );
+		add_settings_field(
+			/* $id       */ 'podlove_status_location_database',
+			/* $title    */ sprintf(
+				'<label for="mode">%s</label>',
+				__( 'Geolocation Lookup', 'podlove' )
+			),
+			/* $callback */ function () {
+				$file = \Podlove\Geo_Ip::get_upload_file_path();
+				\Podlove\Geo_Ip::register_updater_cron();
+				?>
+				<?php if ( file_exists($file) ): ?>
+					<p>
+						<?php echo __("Geolocation database", "podlove"); ?>:
+						<code><?php echo $file ?></code>
+					</p>
+					<p>
+						<?php echo __("Last modified", "podlove"); ?>: 
+						<?php echo date(get_option('date_format') . ' ' . get_option( 'time_format' ), filemtime($file)) ?>
+					</p>
+					<p>
+						<?php echo sprintf(
+							__("The database is updated automatically once a month. Next scheduled update: %s", "podlove"),
+							date(get_option('date_format') . ' ' . get_option( 'time_format' ), wp_next_scheduled('podlove_geoip_db_update'))
+						) ?>
+					</p>
+					<p>
+						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __("Update Now", "podlove") ?></button>
+					</p>
+				<?php else: ?>
+					<p>
+						<?php echo __("You need to download a geolocation-database for lookups to work.", "podlove") ?>
+					</p>
+					<p>
+						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __("Download Now", "podlove") ?></button>
+					</p>
+				<?php endif; ?>
+				<p>
+					<!-- This snippet must be included, as stated here: http://dev.maxmind.com/geoip/geoip2/geolite2/ -->
+					<em>
+						This product includes GeoLite2 data created by MaxMind, available from
+						<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+					</em>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);
+
+		register_setting(
+			Settings::$pagehook,
+			'podlove_tracking',
+			function($args)
+			{
+				if (isset($_REQUEST['update_geo_database']))
+					\Podlove\Geo_Ip::update_database();
+
+				return $args;
+			}
+		);
 	}
 
 }
