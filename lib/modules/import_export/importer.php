@@ -30,6 +30,15 @@ class Importer {
 		$this->xml = simplexml_load_file($this->file);
 		$this->xml->registerXPathNamespace('wpe', Exporter::XML_NAMESPACE);
 
+		$export = $this->xml->xpath('//wpe:export');
+		$export = $export[0];
+
+		if (isset($export["podlove-publisher-version"]) && (string) $export["podlove-publisher-version"] == \Podlove\get_plugin_header('Version')) {
+			$status = "success";
+		} else {
+			$status = "version-warning";
+		}
+
 		$this->importEpisodes();
 		$this->importOptions();
 		$this->importFileTypes();
@@ -42,7 +51,7 @@ class Importer {
 
 		\Podlove\run_database_migrations();
 
-		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
+		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=' . $status));
 		exit;
 	}
 

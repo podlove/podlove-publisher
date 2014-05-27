@@ -25,13 +25,22 @@ class Settings {
 			if ($_GET['page'] != 'podlove_imexport_migration_handle')
 				return false;
 
-			if (!isset($_GET['status']) || $_GET['status'] != 'success')
+			if (!isset($_GET['status']))
 				return false;
 
 			?>
 			<div class="updated">
 				<p>
-					<?php echo __('Import successful. Happy podcasting!') ?>
+					<?php
+					switch ($_GET['status']) {
+						case 'success':
+							echo __('Import successful. Happy podcasting!');
+							break;
+						case 'version-warning':
+							echo __('Heads up: Your export file was exported from a Publisher with a different version. If possible, both Publisher versions should be identical. However, that might not be a problem. Happy podcasting!');
+							break;
+					}
+					?>
 				</p>
 			</div>
 			<?php

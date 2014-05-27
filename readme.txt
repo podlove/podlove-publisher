@@ -99,6 +99,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Enhancement: The expert setting "Display episodes on front page together with blog posts" changed to "Include episode posts on the front page and in the blog feed". So if you set it, episodes will additionally appear in `/feed`. However, only in the form of a post. You will not find enclosures, iTunes metadata etc. in `/feed` items.
 * Enhancement: sort chapters imported from Auphonic by time
 * Enhancement: Changes to feed list: redirect URL is shown and added screen options to hide columns
+* Enhancement: Added Publisher version as an attribute to the export file. If a file is imported with a version different from the current Publisher, a warning is displayed.
 * Fix: enable group and role selection in contributor shortcodes
 * Fix: failing delayed ADN broadcast
 * Fix: stop sending ADN announcements for old episodes

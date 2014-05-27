@@ -117,9 +117,9 @@ class Exporter {
 		// See http://stackoverflow.com/a/9391673/72448
 		$xml->addAttribute('xmlns:xmlns:wpe', self::XML_NAMESPACE);
 		$xml->addAttribute('version', '1.0');
+		$xml->addAttribute('podlove-publisher-version', \Podlove\get_plugin_header( 'Version' ));
 
 		// add comments
-		$comment = "\n\tPublisher Version: " . \Podlove\get_plugin_header( 'Version' );
 		$comment.= "\n\tExport Date: " . date('r');
 		$comment.= "\n\t";
 
