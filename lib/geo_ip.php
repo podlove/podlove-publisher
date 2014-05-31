@@ -12,9 +12,6 @@ class Geo_Ip {
 
 	/**
 	 * Register hooks.
-	 *
-	 * @todo  initial database fetch
-	 * @todo  update-cron or regular notification for users (ideal: cron+conflict system to handle errors)
 	 */
 	public static function init()
 	{
