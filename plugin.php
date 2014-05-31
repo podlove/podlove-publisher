@@ -896,7 +896,6 @@ function handle_media_file_download() {
 		/**
 		 * Get most specific area for given record, beginning at the given area-type.
 		 *
-		 * 
 		 * Missing records will be created on the fly, based on data in $record.
 		 * 
 		 * @param object $record GeoIp object
