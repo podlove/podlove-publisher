@@ -73,7 +73,8 @@ abstract class Base
 			'name'  => $name,
 			'type'  => $type,
 			'index' => $index,
-			'index_length' => isset($args['index_length']) ? $args['index_length'] : null
+			'index_length' => isset($args['index_length']) ? $args['index_length'] : null,
+			'unique' => isset($args['unique']) ? $args['unique'] : null
 		);
 	}
 	
@@ -556,9 +557,11 @@ abstract class Base
 		$index_columns = array_map( function($index){ return $index->Column_name; }, $indices );
 
 		foreach ( self::properties() as $property ) {
+
 			if ( $property['index'] && ! in_array( $property['name'], $index_columns ) ) {
 				$length = isset($property['index_length']) ? '(' . (int) $property['index_length'] . ')' : '';
-				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
+				$unique = isset($property['unique']) && $property['unique'] ? 'UNIQUE' : '';
+				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD ' . $unique . ' INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
 				$wpdb->query( $sql );
 			}
 		}
