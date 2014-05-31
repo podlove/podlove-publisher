@@ -850,9 +850,6 @@ function handle_media_file_download() {
 	}
 
 	// tracking
-	// TODO: in case some client does not respect the permanent redirect,
-	// maybe ignore intents by the same IP, with the same client, on the same day
-	// — or leave that as an exercise for the analytics
 	$intent = new Model\DownloadIntent;
 	$intent->media_file_id = $media_file_id;
 	$intent->accessed_at = date('Y-m-d H:i:s');
