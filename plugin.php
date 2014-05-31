@@ -971,9 +971,6 @@ function handle_media_file_download() {
 
 	$intent->save();
 
-	// TODO: how does the web player deal with this? do browsers resolve 301s
-	// and it works perfectly out of the box? Should the player audio source tags
-	// contain the final/raw urls? If so, how do we track player engagement?
 	header("HTTP/1.1 301 Moved Permanently");
 	header("Location: " . $media_file->get_file_url($intent->source, $intent->context));
 	exit;
