@@ -13,7 +13,7 @@ class Auphonic extends \Podlove\Modules\Base {
 
 			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 			add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
-			add_action( 'wp_ajax_podlove-add-production-remote-publish', array( $this, 'ajax_add_episode_for_remote_publishing' ) );
+			add_action( 'wp_ajax_podlove-add-production-for-auphonic-webhook', array( $this, 'ajax_add_episode_for_auphonic_webhook' ) );
 			add_action( 'wp', array( $this, 'auphonic_webhook' ) );
     		
     		if($this->get_module_option('auphonic_api_key') == "") { } else {
@@ -91,6 +91,9 @@ class Auphonic extends \Podlove\Modules\Base {
      * Register Event for Auphonic Webhook
      */
     public function auphonic_webhook() {
+    	$auth_key = 0;
+    	$action = 'update';
+
     	if ( !isset( $_REQUEST['podlove-auphonic-production'] ) || empty( $_REQUEST['podlove-auphonic-production'] ) || empty( $_POST ) )
     		return;
 
@@ -99,13 +102,102 @@ class Auphonic extends \Podlove\Modules\Base {
     	if ( !is_array( $episodes_to_be_remote_published ) )
     		return;
 
-    	if ( !in_array( $_REQUEST['podlove-auphonic-production'] , $episodes_to_be_remote_published ) )
-    		return;
+    	foreach ( $episodes_to_be_remote_published as $episode ) {
+    		if ( $episode['post_id'] == $_REQUEST['podlove-auphonic-production'] ) {
+    			$auth_key = $episode['auth_key'];
+    			$action = $episode['action'];
+    		}
+    	}
 
     	if ( $_POST['status_string'] !== 'Done' )
     		return;
+
+    	if ( $_REQUEST['auth_key'] !== $auth_key )
+    		return;
     	
-    	wp_publish_post( $_REQUEST['podlove-auphonic-production'] );
+    	// Update episode with production results
+    	$this->update_production_data( $_REQUEST['podlove-auphonic-production'] );
+
+    	if ( $action == 'publish' )
+    		wp_publish_post( $_REQUEST['podlove-auphonic-production'] );
+    }
+
+    /** 
+     * Updates Episode production data after Auphonic production has finished.
+     * Basically, this is like pushing the "Get Production Results" button.
+     */
+    public function update_production_data( $post_id ) {
+    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+
+    	$metadata = array(
+    			'title' => get_the_title( $post_id ),
+    			'subtitle' => $episode->subtitle,
+    			'summary' => $episode->summary,
+    			'duration' => $episode->duration,
+    			'chapters' => $episode->chapters,
+    			'slug' => $episode->slug,
+    			'license' => $episode->license,
+    			'license_url' => $episode->license_url,
+    			'tags' => implode( ',', array_map( function( $tag ) {
+    				return $tag->name;
+    			}, wp_get_post_tags( $post_id ) ) )
+    		);
+
+    	$auphonic_metadata = array(
+    			'title' => $_POST['metadata']['title'],
+    			'subtitle' => $_POST['metadata']['subtitle'],
+    			'summary' => $_POST['metadata']['summary'],
+    			'duration' => $_POST['length_timestring'],
+    			'chapters' => $this->convert_chapters_to_string( 
+    				array( array( 'title' => 'start', 'start_output' => '00:00:00', 'url' => '' ), array( 'title' => 'asd', 'start_output' => '00:00:01', 'url' => 'asasddas' )  )
+    			 ), //$_POST['chapters']
+    			'slug' => $_POST['output_basename'],
+    			'license' => $_POST['metadata']['license'],
+    			'license_url' => $_POST['metadata']['license_url'],
+    			'tags' => implode( ',', $_POST['metadata']['tags'] )
+    		);
+
+    	// Merge both arrays
+    	foreach ( $metadata as $metadata_key => $metadata_entry ) {
+    		if ( is_null( $metadata_entry ) || empty( $metadata_entry ) )
+    			$metadata[$metadata_key] = $auphonic_metadata[$metadata_key];
+     	}
+
+     	$episode->subtitle = $metadata['subtitle'];
+     	$episode->summary = $metadata['summary'];
+     	$episode->duration = $metadata['duration'];
+     	$episode->chapters = $metadata['chapters'];
+     	$episode->slug = $metadata['slug'];
+     	$episode->license = $metadata['license'];
+     	$episode->license_url = $metadata['license_url'];
+     	$episode->save();
+
+     	wp_update_post( array( 
+     			'ID' => $post_id,
+     			'post_title' => $metadata['title']
+     		 ) );
+     	wp_set_post_tags( $post_id, $metadata['tags'] );
+
+    }
+
+    public function convert_chapters_to_string( $chapters ) {
+    	if ( !is_array( $chapters ) )
+    		return;
+
+    	$chapters_string = "";
+
+    	foreach ( $chapters as $chapter ) {
+
+    		$chapters_string .= $chapter['start_output'] . ' ';
+    		$chapters_string .= $chapter['title'];
+
+    		if ( !empty( $chapter['url'] ) )
+    			$chapters_string = $chapters_string . ' <' . $chapter['url'] . '>';
+
+    		$chapters_string .= "\n";
+    	}
+
+    	return $chapters_string;
     }
 
     /**
@@ -121,10 +213,12 @@ class Auphonic extends \Podlove\Modules\Base {
 	/**
 	 * Register a new Episode that can be published via Auphonic
 	 */
-	public function ajax_add_episode_for_remote_publishing() {
+	public function ajax_add_episode_for_auphonic_webhook() {
 		$post_id = $_REQUEST['post_id'];
+		$auth_key = $_REQUEST['authkey'];
+		$action = $_REQUEST['flag'];
 
-		if ( !$post_id )
+		if ( !$post_id || !$action || !$auth_key )
 			return;
 
 		$episodes_to_be_remote_published = get_option( 'podlove_episodes_to_be_remote_published' );
@@ -133,7 +227,11 @@ class Auphonic extends \Podlove\Modules\Base {
 			$episodes_to_be_remote_published = array();
 		
 		if ( !in_array( $post_id , $episodes_to_be_remote_published ) ) {
-			$episodes_to_be_remote_published[] = $post_id;
+			$episodes_to_be_remote_published[] = array(
+					'post_id' => $post_id,
+					'auth_key' => $auth_key,
+					'action' => $action
+				);
 			update_option( 'podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published );
 		}
 
@@ -371,6 +469,10 @@ class Auphonic extends \Podlove\Modules\Base {
 
 						<label>
 							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php echo __( 'Publish episode when done', 'podlove' ) ?>
+						</label>
+
+						<label>
+							<input type="checkbox" id="auphonic_complete_after_finishing"> <?php echo __( 'Complete episode metadata when done', 'podlove' ) ?>
 						</label>
 					</div>
 
