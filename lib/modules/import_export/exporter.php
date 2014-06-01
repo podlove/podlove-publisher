@@ -112,7 +112,7 @@ class Exporter {
 	}
 
 	public function getXml() {
-		$xml = new \SimpleXMLElement('<wpe:export/>');
+		$xml = new \SimpleXMLElement('<wpe:export/>', LIBXML_NOERROR | LIBXML_NOWARNING, false, 'wpe', true);
 		// Double xmlns looks strange but is intentionally/required.
 		// See http://stackoverflow.com/a/9391673/72448
 		$xml->addAttribute('xmlns:xmlns:wpe', self::XML_NAMESPACE);
@@ -120,7 +120,7 @@ class Exporter {
 		$xml->addAttribute('podlove-publisher-version', \Podlove\get_plugin_header( 'Version' ));
 
 		// add comments
-		$comment.= "\n\tExport Date: " . date('r');
+		$comment = "\n\tExport Date: " . date('r');
 		$comment.= "\n\t";
 
 		$dom = dom_import_simplexml($xml);
