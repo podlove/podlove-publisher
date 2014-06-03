@@ -312,7 +312,7 @@ class Dashboard {
 			</table>
 		</div>
 		<p>
-			<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
+			<?php echo sprintf( __('You are using <strong>Podlove Publisher %s</strong>'), \Podlove\get_plugin_header( 'Version' ) ); ?>.
 		</p>
 		<?php
 	}

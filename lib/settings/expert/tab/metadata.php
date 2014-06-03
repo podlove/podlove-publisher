@@ -8,7 +8,7 @@ class Metadata extends Tab {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_episode',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ '',	
 			/* $callback */ function () { echo '<h3>' . __( 'Episode Metadata Settings', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);

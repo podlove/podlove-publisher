@@ -118,7 +118,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		$columns = array(
-			'avatar'               => __( '', 'podlove' ),
+			'avatar'               => '',
 			'realname'             => __( 'Contributor', 'podlove' ),
 			'slug'                 => __( 'ID', 'podlove' ),
 			'gender'               => __( 'Gender', 'podlove' ),
