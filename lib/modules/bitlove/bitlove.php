@@ -5,7 +5,7 @@ use \Podlove\Model;
 class Bitlove extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Bitlove';
-	protected $module_description = 'Enable support for <a href="http://bitlove.org/" target="_blank">Bitlove</a>. Bitlove creates Torrents for all enclosures of an RSS/ATOM feed and seeds them.';
+	protected $module_description = 'Enable support for <a href="https://bitlove.org/" target="_blank">Bitlove</a>. Bitlove creates Torrents for all enclosures of an RSS/ATOM feed and seeds them.';
 	protected $module_group = 'external services';
 
 	public function load() {
@@ -49,7 +49,7 @@ class Bitlove extends \Podlove\Modules\Base {
 			return $bitlove_feed_url;
 		} else {
 			$subscribe_url = $feed->get_subscribe_url();
-			$url = 'http://api.bitlove.org/feed-lookup.json?url=' . $subscribe_url;
+			$url = 'https://api.bitlove.org/feed-lookup.json?url=' . $subscribe_url;
 
 			$curl = new \Podlove\Http\Curl();
 			$curl->request( $url, array(
@@ -110,7 +110,7 @@ class Bitlove extends \Podlove\Modules\Base {
 
 	public function inject_base() {
 		?>
-		<script src="http://bitlove.org/widget/base.js" type="text/javascript"></script>
+		<script src="https://bitlove.org/widget/base.js" type="text/javascript"></script>
 		<?php
 	}
 

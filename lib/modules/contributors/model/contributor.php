@@ -148,7 +148,7 @@ class Contributor extends Base
 
 		$email = $email ? $email : $this->publicemail;
 
-		$url = 'http://www.gravatar.com/avatar/';
+		$url = 'https://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;

@@ -50,14 +50,14 @@ class Dashboard {
 				        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
 				        s.type = 'text/javascript';
 				        s.async = true;
-				        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+				        s.src = 'https://api.flattr.com/js/0.6/load.js?mode=auto';
 				        t.parentNode.insertBefore(s, t);
 				    })();
 				/* ]]> */</script>
 				<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/"></a>
 				<a href="http://www.cornify.com" onclick="cornify_add();return false;" style="text-decoration: none; color: #A7A7A7; float: right; font-size: 20px; line-height: 20px;"><i class="podlove-icon-heart"></i></a>
 				<noscript><a href="http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress" target="_blank">
-				<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
+				<img src="https://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
 			</li>
 		</ul>
 		<?php
