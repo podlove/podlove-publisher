@@ -106,6 +106,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: refresh of Auphonic presets keeps current preset
 * Fix: `contributor.episodes` does not return duplicate episodes any more
 * Fix: Jabber URL scheme is now prefixed with `jabber:`
+* Fix: Display podcast subtitle in feed description (it was the blog description before)
 
 = 1.10.7 =
 

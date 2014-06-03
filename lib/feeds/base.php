@@ -29,6 +29,14 @@ function override_feed_title( $feed ) {
 	} );
 }
 
+function override_feed_description($feed) {
+	add_filter('podlove_rss_feed_description', function($description) use ($feed) {
+		$podcast = Model\Podcast::get_instance();
+		$desc = $podcast->subtitle ? $podcast->subtitle : $description;
+		return htmlspecialchars($desc);
+	});
+}
+
 function override_feed_language( $feed ) {
 	add_filter( 'pre_option_rss_language', function ( $language ) use ( $feed ) {
 		$podcast = Model\Podcast::get_instance();
