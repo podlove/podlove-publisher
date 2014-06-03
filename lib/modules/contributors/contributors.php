@@ -212,7 +212,7 @@ class Contributors extends \Podlove\Modules\Base {
 		foreach (\Podlove\Modules\Contributors\Model\ShowContribution::all() as $contribution) {
 			$contributor = $contribution->getContributor();
 
-			if( !is_object( $contributor ) )
+			if (!is_object($contributor) || !$contributor->guid)
 				return;
 
 			$contributor_xml .= $this->getContributorXML( $contributor );
@@ -225,7 +225,7 @@ class Contributors extends \Podlove\Modules\Base {
 		foreach (\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
 			$contributor = $contribution->getContributor();
 
-			if( !is_object( $contributor ) )
+			if (!is_object($contributor) || !$contributor->guid)
 				return;
 
 			$contributor_xml .= $this->getContributorXML( $contributor );

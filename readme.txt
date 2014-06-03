@@ -107,6 +107,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: `contributor.episodes` does not return duplicate episodes any more
 * Fix: Jabber URL scheme is now prefixed with `jabber:`
 * Fix: Display podcast subtitle in feed description (it was the blog description before)
+* Fix: Hide contributors missing a URI from feeds
 
 = 1.10.7 =
 
