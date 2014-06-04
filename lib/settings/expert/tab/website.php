@@ -169,7 +169,7 @@ class Website extends Tab {
 				$landing_page_options = array(
 					array( 'value' => 'homepage', 'text' => __('Front page', 'podlove') ),
 					array( 'value' => 'archive',  'text' => __('Episode pages', 'podlove') ),
-					// array( 'text' => '--- ' . __('A Page:', 'podlove') . ' ---', 'disabled' => true ),
+					array( 'text' => '––––––––––', 'disabled' => true ),
 				);
 
 				$pages_query = new \WP_Query( array(
