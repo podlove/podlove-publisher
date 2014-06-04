@@ -114,7 +114,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_episode_archive',
 			/* $title    */ sprintf(
 				'<label for="episode_archive">%s</label>',
-				__( 'Episode archive', 'podlove' )
+				__( 'Episode pages', 'podlove' )
 			),
 			/* $callback */ function () {
 
@@ -125,7 +125,7 @@ class Website extends Tab {
 					$episode_archive_slug = preg_replace( '|^/?blog|', '', $episode_archive_slug );
 				}
 				?>
-				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode archive', 'podlove' ); ?>
+				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode pages: a complete, paginated list of episodes, sorted by publishing date.', 'podlove' ); ?>
 				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
 					<code><?php echo get_option('home') . $blog_prefix; ?></code>
 					<input name="podlove_website[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
@@ -167,9 +167,9 @@ class Website extends Tab {
 				$landing_page = \Podlove\get_setting( 'website', 'landing_page' );
 
 				$landing_page_options = array(
-					array( 'value' => 'homepage', 'text' => __('Homepage', 'podlove') ),
-					array( 'value' => 'archive',  'text' => __('Episode Archive', 'podlove') ),
-					array( 'text' => '--- ' . __('A Page:', 'podlove') . ' ---', 'disabled' => true ),
+					array( 'value' => 'homepage', 'text' => __('Front page', 'podlove') ),
+					array( 'value' => 'archive',  'text' => __('Episode pages', 'podlove') ),
+					// array( 'text' => '--- ' . __('A Page:', 'podlove') . ' ---', 'disabled' => true ),
 				);
 
 				$pages_query = new \WP_Query( array(
