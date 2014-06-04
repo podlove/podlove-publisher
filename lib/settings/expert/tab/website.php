@@ -23,12 +23,13 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_merge_episodes',
 			/* $title    */ sprintf(
 				'<label for="merge_episodes">%s</label>',
-				__( 'Include episode posts on the front page and in the blog feed', 'podlove' )
+				__( 'Combine blog & podcast', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[merge_episodes]" id="merge_episodes" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'merge_episodes' ), 'on' ) ?>>
 				<?php
+				echo __( 'Include episode posts on the front page and in the blog feed', 'podlove' );
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -38,12 +39,13 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_hide_wp_feed_discovery',
 			/* $title    */ sprintf(
 				'<label for="hide_wp_feed_discovery">%s</label>',
-				__( 'Hide default WordPress Feeds for blog and comments (no auto-discovery).', 'podlove' )
+				__( 'Deactivate blog feeds.', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[hide_wp_feed_discovery]" id="hide_wp_feed_discovery" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'hide_wp_feed_discovery' ), 'on' ) ?>>
 				<?php
+				echo __( 'Hide default WordPress feeds for blog and comments (no auto-discovery).', 'podlove' );
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -158,7 +160,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_landing_page',
 			/* $title    */ sprintf(
 				'<label for="landing_page">%s</label>',
-				__( 'Episode landing page', 'podlove' )
+				__( 'Podcast landing page', 'podlove' )
 			),
 			/* $callback */ function () {
 
@@ -198,6 +200,36 @@ class Website extends Tab {
 						</option>
 					<?php endforeach; ?>
 				</select>
+
+				<script type="text/javascript">
+				jQuery(function($) {
+					$(document).ready(function() {
+						var maybe_toggle_episode_archive_option = function() {
+							var $archive = $("#episode_archive"),
+								$archive_option = $("#landing_page option:eq(1)"),
+								$home_option = $("#landing_page option:eq(0)");
+
+							if ($archive.is(':checked')) {
+								$archive_option.attr('disabled', false);
+							} else {
+								$archive_option.attr('disabled', 'disabled');
+								// if it was selected before, unselect it
+								if ($archive_option.attr('selected') == 'selected') {
+									$archive_option.attr('selected', false);
+									$home_option.attr('selected', 'selected');
+								}
+							}
+
+						};
+
+						$("#episode_archive").on("click", function(e) {
+							maybe_toggle_episode_archive_option();
+						});
+
+						maybe_toggle_episode_archive_option();
+					});
+				});
+				</script>
 				<?php echo __('This defines the landing page to your podcast. It is the site that the your podcast feeds link to.', 'podlove') ?>
 				<?php
 			},
