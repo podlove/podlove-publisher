@@ -153,6 +153,57 @@ class Website extends Tab {
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
 		);
+		
+		add_settings_field(
+			/* $id       */ 'podlove_setting_landing_page',
+			/* $title    */ sprintf(
+				'<label for="landing_page">%s</label>',
+				__( 'Episode landing page', 'podlove' )
+			),
+			/* $callback */ function () {
+
+				$landing_page = \Podlove\get_setting( 'website', 'landing_page' );
+
+				$landing_page_options = array(
+					array( 'value' => 'homepage', 'text' => __('Homepage', 'podlove') ),
+					array( 'value' => 'archive',  'text' => __('Episode Archive', 'podlove') ),
+					array( 'text' => '--- ' . __('A Page:', 'podlove') . ' ---', 'disabled' => true ),
+				);
+
+				$pages_query = new \WP_Query( array(
+					'post_type' => 'page',
+					'nopaging'  => true
+				) );
+
+				if ( $pages_query->have_posts() ) {
+					while ( $pages_query->have_posts() ) {
+						$pages_query->the_post();
+						$landing_page_options[] = array('value' => get_the_ID(), 'text' => get_the_title());
+					}
+				}
+
+				wp_reset_postdata();
+
+				?>
+				<select name="podlove_website[landing_page]" id="landing_page">
+					<?php foreach ( $landing_page_options as $option ): ?>
+						<option
+							<?php if ( isset($option['value']) ): ?>
+								value="<?php echo $option['value'] ?>"
+								<?php if ( $landing_page == $option['value'] ): ?> selected<?php endif; ?>
+							<?php endif; ?>
+							<?php if ( isset($option['disabled']) && $option['disabled'] ): ?> disabled<?php endif; ?>
+						>
+							<?php echo $option['text'] ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+				<?php echo __('This defines the landing page to your podcast. It is the site that the your podcast feeds link to.', 'podlove') ?>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
 
 		add_settings_field(
 			/* $id       */ 'podlove_setting_url_template',
