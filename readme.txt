@@ -109,6 +109,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Fix: Jabber URL scheme is now prefixed with `jabber:`
 * Fix: Display podcast subtitle in feed description (it was the blog description before)
 * Fix: Hide contributors missing a URI from feeds
+* Fix: Escaping issue when saving podcast description settings
 
 = 1.10.7 =
 
