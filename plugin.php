@@ -2,8 +2,6 @@
 namespace Podlove;
 
 use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
-use \Podlove\Model\GeoAreaName;
-use \Podlove\Model\GeoArea;
 
 register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
@@ -881,90 +879,7 @@ function handle_media_file_download() {
 	// Generate a hash from IP address and UserAgent so we can identify
 	// identical requests without storing an IP address.
 	$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
-
-	try {
-		// geo ip lookup
-		$reader = new \GeoIp2\Database\Reader(\Podlove\Geo_Ip::get_upload_file_path());
-		$record = $reader->city($ip_string);
-
-		$intent->lat = $record->location->latitude;
-		$intent->lng = $record->location->longitude;
-
-		/**
-		 * Get most specific area for given record, beginning at the given area-type.
-		 *
-		 * Missing records will be created on the fly, based on data in $record.
-		 * 
-		 * @param object $record GeoIp object
-		 * @param string $type Area identifier. One of: city, subdivision, country, continent.
-		 */
-		$get_area = function($record, $type) use (&$get_area) {
-
-			// get parent area for the given area-type
-			$get_parent_area = function($type) use ($get_area, $record) {
-
-				switch ($type) {
-					case 'city':
-						return $get_area($record, 'subdivision');
-						break;
-					case 'subdivision':
-						return $get_area($record, 'country');
-						break;
-					case 'country':
-						return $get_area($record, 'continent');
-						break;
-					case 'continent':
-						// has no parent
-						break;
-				}
-
-				return null;
-			};
-
-			$subRecord = $record->{$type == 'subdivision' ? 'mostSpecificSubdivision' : $type};
-
-			if (!$subRecord->geonameId)
-				return $get_parent_area($type);
-
-			if ($area = GeoArea::find_one_by_property('geoname_id', $subRecord->geonameId))
-				return $area;
-
-			$area = new GeoArea;
-			$area->geoname_id = $subRecord->geonameId;
-			$area->type = $type;
-
-			if (isset($subRecord->code)) {
-				$area->code = $subRecord->code;
-			} elseif (isset($subRecord->isoCode)) {
-				$area->code = $subRecord->isoCode;
-			}
-
-			if ($area->type != 'continent') {
-				$parent_area     = $get_parent_area($area->type);
-				$area->parent_id = $parent_area->id;
-			}
-
-			$area->save();
-
-			// save name and translations
-			foreach ($subRecord->names as $lang => $name) {
-				$n           = new GeoAreaName;
-				$n->area_id  = $area->id;
-				$n->language = $lang;
-				$n->name     = $name;
-				$n->save();
-			}
-
-			return $area;
-		};
-
-		$area = $get_area($record, 'city');
-
-		$intent->geo_area_id = $area->id;
-
-	} catch (\GeoIp2\Exception\AddressNotFoundException $e) {
-		// geo lookup might fail, but that's not grave		
-	}
+	$intent = $intent->add_geo_data($ip_string);
 
 	$intent->save();
 

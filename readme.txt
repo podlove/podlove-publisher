@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.9 =
+
+* Fix: When tracking was active but no geo-location database available, downloads would fail. This exception is handled correctly now. You can check the status of tracking and the geo-location database in `Expert Settings > Tracking`
+
 = 1.10.8 =
 
 * Feature: Services in templates can be filtered by their type. That way, you can, for example, iterate over all Twitter accounts via `podcast.services({type: "twitter"})`. The previous "type" parameter (for choosing between "social", "donation" and "all") has been renamed to "category". All default templates have been adjusted accordingly _but if you were using this API in a custom template, you need to change it_.
