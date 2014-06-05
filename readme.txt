@@ -85,6 +85,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.10 =
+
+We discovered incompatibilities between our tracking implementation and some clients. To avoid further trouble, we are *deactivating tracking* until we solve the issue. The option is still available, we just switch it off automatically with this release and it isn't on by default any more.
+
+If you're of the curious type, feel free to activate it and tell us any issues you run into. Thanks!
+
 = 1.10.9 =
 
 * Fix: When tracking was active but no geo-location database available, downloads would fail. This exception is handled correctly now. You can check the status of tracking and the geo-location database in `Expert Settings > Tracking`

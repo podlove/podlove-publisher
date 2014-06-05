@@ -70,7 +70,7 @@ function get_setting( $namespace, $name ) {
 			'podlove_setting_redirect' => array(),
 		),
 		'tracking' => array(
-			'mode' => 'ptm_analytics'
+			'mode' => 0
 		)
 	);
 

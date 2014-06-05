@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 74 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 75 );
 
 add_action( 'init', '\Podlove\run_database_migrations' );
 
@@ -840,6 +840,11 @@ function run_migrations_for_version( $version ) {
 			Model\GeoArea::build();
 			Model\GeoAreaName::build();
 			\Podlove\Geo_Ip::register_updater_cron();
+		break;
+		case 75:
+			$tracking = get_option('podlove_tracking');
+			$tracking['mode'] = 0;
+			update_option('podlove_tracking', $tracking);
 		break;
 	}
 
