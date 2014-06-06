@@ -4,51 +4,51 @@ use \Podlove\Model;
 
 class App_Dot_Net extends \Podlove\Modules\Base {
 
-    protected $module_name = 'App.net';
-    protected $module_description = 'Support for Announcements on App.net';
-    protected $module_group = 'external services';
+	protected $module_name = 'App.net';
+	protected $module_description = 'Support for Announcements on App.net';
+	protected $module_group = 'external services';
 	
 	/**
 	 * API to ADN Service
 	 * 
 	 * @var Podlove\Modules\AppDotNet\API
 	 */
-    private $api;
+	private $api;
 
-    public function load() {
+	public function load() {
 
-    		$this->api = new API($this);
-    
-    		$module_url = $this->get_module_url();
-    		$user = null;
+			$this->api = new API($this);
+	
+			$module_url = $this->get_module_url();
+			$user = null;
 
-    		$selected_role = $this->get_module_option('adn_contributor_filter_role');
-    		$selected_group = $this->get_module_option('adn_contributor_filter_group');
+			$selected_role = $this->get_module_option('adn_contributor_filter_role');
+			$selected_group = $this->get_module_option('adn_contributor_filter_group');
 
-    		add_action( 'podlove_module_was_activated_app_dot_net', array( $this, 'was_activated' ) );
+			add_action( 'podlove_module_was_activated_app_dot_net', array( $this, 'was_activated' ) );
 
-    		add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
-    		add_action( 'wp_ajax_podlove-adn-post', array( $this, 'ajax_post_to_adn' ) );
+			add_action( 'wp_ajax_podlove-refresh-channel', array( $this, 'ajax_refresh_channel' ) );
+			add_action( 'wp_ajax_podlove-adn-post', array( $this, 'ajax_post_to_adn' ) );
 			add_action( 'wp_ajax_podlove-preview-adn-post', array( $this, 'ajax_preview_alpha_post' ) );
-   	
-    		if ($this->get_module_option('adn_auth_key') !== "" ) {
+	
+			if ($this->get_module_option('adn_auth_key') !== "" ) {
 				add_action('publish_podcast', array( $this, 'post_to_adn_handler' ));
 				add_action('publish_future_podcast', array( $this, 'post_to_adn_handler' ));
 				add_action('delayed_adn_post', array( $this, 'post_to_adn' ), 10, 2);
 			}
 			
 			if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
-    			add_action('admin_bar_init', array( $this, 'reset_adn_auth'));
-    		}   
-        
-    		// Import all posts as already published
-    		add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
-    			$postmetas[] = array(
-    				'key' => '_podlove_episode_was_published',
-    				'value' => true
-    			);
-    			return $postmetas;
-    		}, 10, 3 );
+				add_action('admin_bar_init', array( $this, 'reset_adn_auth'));
+			}   
+	    
+			// Import all posts as already published
+			add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
+				$postmetas[] = array(
+					'key' => '_podlove_episode_was_published',
+					'value' => true
+				);
+				return $postmetas;
+			}, 10, 3 );
 
 			if ($this->get_module_option('adn_auth_key') == "") {
 				$description = '<i class="podlove-icon-remove"></i> '
@@ -247,18 +247,18 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 				
 			}
-    }
+	}
 
-    public function was_activated() {
-    	$episodes = Model\Episode::all();
-    	foreach ( $episodes as $episode ) {
-    		$post = get_post( $episode->post_id );
-    		if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
-    			update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
-    	}
-    }
+	public function was_activated() {
+		$episodes = Model\Episode::all();
+		foreach ( $episodes as $episode ) {
+			$post = get_post( $episode->post_id );
+			if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
+				update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
+		}
+	}
 
-    public function ajax_refresh_channel() {
+	public function ajax_refresh_channel() {
 		$category = $_REQUEST['category'];
 		switch ( $category ) {
 			case 'broadcast_channel':
@@ -274,23 +274,23 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		return \Podlove\AJAX\AJAX::respond_with_json( $result );
 	}
 
-    private function is_already_published($post_id) {
-    	return get_post_meta($post_id, '_podlove_episode_was_published', true);
-    }
+	private function is_already_published($post_id) {
+		return get_post_meta($post_id, '_podlove_episode_was_published', true);
+	}
 
-    private function post_to_alpha($data) {
+	private function post_to_alpha($data) {
 		$url = sprintf(
 			'https://alpha-api.app.net/stream/0/posts?access_token=%s',
 			$this->get_module_option('adn_auth_key')
 		);
 
 		$this->api->post($url, $data);
-    }
+	}
 
-    private function post_to_patter($data) {
+	private function post_to_patter($data) {
 
-    	if ( $this->get_module_option('adn_patter_room_announcement') !== "on" )
-    		return;
+		if ( $this->get_module_option('adn_patter_room_announcement') !== "on" )
+			return;
 
 		$data['channel_id'] = $this->get_module_option('adn_patter_room');
 		$data['annotations'][] = $this->get_crosspost_annotation();
@@ -303,129 +303,129 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		);
 
 		$this->api->post($url, $data);
-    }
+	}
 
-    private function broadcast($data, $post_id) {
+	private function broadcast($data, $post_id) {
 
-    	if ( $this->get_module_option('adn_broadcast') !== "on" )
-    		return;
+		if ( $this->get_module_option('adn_broadcast') !== "on" )
+			return;
 
-    	$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
-    	$data['annotations'][] = $this->get_broadcast_metadata( get_the_title( $post_id ) );
-    	$data['annotations'][] = $this->get_read_more_link( get_permalink( $post_id ) );
+		$data['channel_id'] = $this->get_module_option('adn_broadcast_channel');
+		$data['annotations'][] = $this->get_broadcast_metadata( get_the_title( $post_id ) );
+		$data['annotations'][] = $this->get_read_more_link( get_permalink( $post_id ) );
 
-    	$url = sprintf(
-    		'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
-    		$this->get_module_option('adn_broadcast_channel'),
-    		$this->get_module_option('adn_auth_key')
-    	);
+		$url = sprintf(
+			'https://alpha-api.app.net/stream/0/channels/%s/messages?access_token=%s',
+			$this->get_module_option('adn_broadcast_channel'),
+			$this->get_module_option('adn_auth_key')
+		);
 
-    	$this->api->post($url, $data);
-    }
+		$this->api->post($url, $data);
+	}
 
-    private function get_broadcast_metadata($subject) {
-    	return array(
-    		"type" => "net.app.core.broadcast.message.metadata",
-    		"value" => array(
-    			"subject" => $subject
-    		)
-    	);
-    }
+	private function get_broadcast_metadata($subject) {
+		return array(
+			"type" => "net.app.core.broadcast.message.metadata",
+			"value" => array(
+				"subject" => $subject
+			)
+		);
+	}
 
-    private function get_read_more_link($read_more_link) {
-    	return array(
-    		"type" => "net.app.core.crosspost",
-    		"value" => array(
-    			"canonical_url" => $read_more_link
-    		)
-    	);
-    }
+	private function get_read_more_link($read_more_link) {
+		return array(
+			"type" => "net.app.core.crosspost",
+			"value" => array(
+				"canonical_url" => $read_more_link
+			)
+		);
+	}
 
-    public function post_to_adn($post_id) {
+	public function post_to_adn($post_id) {
 
-    	$episode = Model\Episode::find_one_by_post_id( $post_id );
-    	$episode_text = $this->get_text_for_episode( $post_id );
+		$episode = Model\Episode::find_one_by_post_id( $post_id );
+		$episode_text = $this->get_text_for_episode( $post_id );
 
-    	$text            = $episode_text['text'];
-    	$link_annotation = $episode_text['link_annotation'];
-        
-        $data = array(
-        	"text" => $text,
-        	"entities" => array(
-        		"links" => $link_annotation,
-        		"parse_links" => true
-        	),
-        	"annotations" => array()
-        );
+		$text            = $episode_text['text'];
+		$link_annotation = $episode_text['link_annotation'];
+		
+		$data = array(
+			"text" => $text,
+			"entities" => array(
+				"links" => $link_annotation,
+				"parse_links" => true
+			),
+			"annotations" => array()
+		);
 
-        if ($this->get_module_option('adn_language_annotation') !== "")
-        	$data['annotations'][] = $this->get_language_annotation();
+		if ($this->get_module_option('adn_language_annotation') !== "")
+			$data['annotations'][] = $this->get_language_annotation();
 
-    	$data['annotations'][] = $this->get_episode_cover( $post_id );
+		$data['annotations'][] = $this->get_episode_cover( $post_id );
 
-    	$this->post_to_alpha($data);
-    	$this->post_to_patter($data);
+		$this->post_to_alpha($data);
+		$this->post_to_patter($data);
 
-    	// Unset Links for the Broadcast
-    	unset($data['entities']['links']);
+		// Unset Links for the Broadcast
+		unset($data['entities']['links']);
 
-        // Change Announcement text for broadcast
-        $data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
+		// Change Announcement text for broadcast
+		$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
 
-        $this->broadcast( $data, $post_id );
+		$this->broadcast( $data, $post_id );
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
-    }
+	}
 
-    public function replace_tags( $post_id ) {
-    	$selected_role = $this->get_module_option('adn_contributor_filter_role');
-    	$selected_group = $this->get_module_option('adn_contributor_filter_group');
+	public function replace_tags( $post_id ) {
+		$selected_role = $this->get_module_option('adn_contributor_filter_role');
+		$selected_group = $this->get_module_option('adn_contributor_filter_group');
 
-    	$text = $this->get_module_option('adn_poster_announcement_text');
-    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-    	$podcast = Model\Podcast::get_instance();
-    	$post = get_post( $post_id );
-    	$post_title = $post->post_title;
-    	
-    	$text = str_replace("{podcastTitle}", $podcast->title, $text);
-    	$text = str_replace("{episodeTitle}", $post_title, $text);
-    	$text = str_replace("{episodeLink}", get_permalink( $post_id ), $text);
-    	$text = str_replace("{episodeSubtitle}", $episode->subtitle, $text);
+		$text = $this->get_module_option('adn_poster_announcement_text');
+		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+		$podcast = Model\Podcast::get_instance();
+		$post = get_post( $post_id );
+		$post_title = $post->post_title;
+		
+		$text = str_replace("{podcastTitle}", $podcast->title, $text);
+		$text = str_replace("{episodeTitle}", $post_title, $text);
+		$text = str_replace("{episodeLink}", get_permalink( $post_id ), $text);
+		$text = str_replace("{episodeSubtitle}", $episode->subtitle, $text);
 
-     	$posted_linked_title = array();
+	 	$posted_linked_title = array();
 		$start_position = 0;
 
-    	while ( ($position = \Podlove\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
-    		$length = \Podlove\strlen( $post_title, "UTF-8" );
-        	$episode_entry = array(
-        		"url"  => get_permalink( $post_id ), 
-        		"text" => $post_title, 
-        		"pos"  => $position, 
-        		"len"  => ($position + $length <= 256) ? $length : 256 - $position
-        	);
-        	array_push( $posted_linked_title, $episode_entry );
-        	$start_position = $position + 1;
-    	}
-    	
-    	$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
-    	$text = apply_filters( 'podlove_adn_tags', $text, $post_id, $selected_role, $selected_group );
+		while ( ($position = \Podlove\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+			$length = \Podlove\strlen( $post_title, "UTF-8" );
+			$episode_entry = array(
+				"url"  => get_permalink( $post_id ), 
+				"text" => $post_title, 
+				"pos"  => $position, 
+				"len"  => ($position + $length <= 256) ? $length : 256 - $position
+			);
+			array_push( $posted_linked_title, $episode_entry );
+			$start_position = $position + 1;
+		}
+		
+		$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
+		$text = apply_filters( 'podlove_adn_tags', $text, $post_id, $selected_role, $selected_group );
 
-    	return array(
-    			'text' => $text,
-    			'posted_linked_title' => $posted_linked_title
-    		);
-    }
+		return array(
+				'text' => $text,
+				'posted_linked_title' => $posted_linked_title
+			);
+	}
 
-    public function ajax_preview_alpha_post() {
-    	if( !$_REQUEST['post_id'] )
-    		return;
+	public function ajax_preview_alpha_post() {
+		if( !$_REQUEST['post_id'] )
+			return;
 
-    	$result = $this->replace_tags( $_REQUEST['post_id'] );
+		$result = $this->replace_tags( $_REQUEST['post_id'] );
 
-    	return \Podlove\AJAX\AJAX::respond_with_json( array( 'preview' => $result['text'] ) );
-    }
+		return \Podlove\AJAX\AJAX::respond_with_json( array( 'preview' => $result['text'] ) );
+	}
 
-    private function get_text_for_episode($post_id) {
+	private function get_text_for_episode($post_id) {
 		$post = $this->replace_tags( $post_id );
 
 		if ( \Podlove\strlen( $post['text'] ) > 256 )
@@ -435,48 +435,48 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			'text' => $post['text'],
 			'link_annotation' => $post['posted_linked_title']
 		);
-    }
+	}
 
-    private function get_crosspost_annotation() {
-    	return array(
-    		"type" => "net.app.core.crosspost",
-    		"value" => array(
-    			"canonical_url" => "http://patter-app.net/room.html?channel=" . $this->get_module_option('adn_patter_room')
-    		)
-    	);
-    }
+	private function get_crosspost_annotation() {
+		return array(
+			"type" => "net.app.core.crosspost",
+			"value" => array(
+				"canonical_url" => "http://patter-app.net/room.html?channel=" . $this->get_module_option('adn_patter_room')
+			)
+		);
+	}
 
-    private function get_invite_annotation() {
-    	return array(
-    		"type" => "net.app.core.channel.invite",
-    		"value" => array(
-    			"channel_id" => $this->get_module_option('adn_patter_room')
-    		)
-    	);
-    }
+	private function get_invite_annotation() {
+		return array(
+			"type" => "net.app.core.channel.invite",
+			"value" => array(
+				"channel_id" => $this->get_module_option('adn_patter_room')
+			)
+		);
+	}
 
-    private function get_language_annotation() {
-    	return array(
-    		"type" => "net.app.core.language",
-    		"value" => array(
-    			"language" => $this->get_module_option('adn_language_annotation')
-    		)
-    	);
-    }
+	private function get_language_annotation() {
+		return array(
+			"type" => "net.app.core.language",
+			"value" => array(
+				"language" => $this->get_module_option('adn_language_annotation')
+			)
+		);
+	}
 
-    private function get_episode_cover( $post_id ) {
-    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+	private function get_episode_cover( $post_id ) {
+		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
-    	$cover = $episode->get_cover_art_with_fallback();
+		$cover = $episode->get_cover_art_with_fallback();
 
-    	if ( empty( $cover ) )
-    		return;
-    	
-    	$cover_info = getimagesize( $cover );
+		if ( empty( $cover ) )
+			return;
+		
+		$cover_info = getimagesize( $cover );
 
-    	return array(
-    		"type" => "net.app.core.oembed",
-    		"value" => array(
+		return array(
+			"type" => "net.app.core.oembed",
+			"value" => array(
 				"type" => "photo",
 				"version" => "1.0",
 				"width" => $cover_info[0],
@@ -485,38 +485,38 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				"thumbnail_width" => $cover_info[0],
 				"thumbnail_height" => $cover_info[1],
 				"thumbnail_url" => $cover
-    		)
-    	);
-    }
-    
-    public function reset_adn_auth() {
-    	if (isset( $_GET["reset_appnet_auth_code"] ) && $_GET["reset_appnet_auth_code"] == "1") {
+			)
+		);
+	}
+	
+	public function reset_adn_auth() {
+		if (isset( $_GET["reset_appnet_auth_code"] ) && $_GET["reset_appnet_auth_code"] == "1") {
 			$this->update_module_option('adn_auth_key', "");
 			delete_transient('podlove_adn_user');
 			delete_transient('podlove_adn_rooms');
 			delete_transient('podlove_adn_broadcast_channels');
 			header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');    
-    	}
-    }
+		}
+	}
 
-    public function ajax_post_to_adn() {
-    	if( !$_REQUEST['post_id'] )
-    		return;
+	public function ajax_post_to_adn() {
+		if( !$_REQUEST['post_id'] )
+			return;
 
-    	$this->post_to_adn( $_REQUEST['post_id'] );
-    }
-    
+		$this->post_to_adn( $_REQUEST['post_id'] );
+	}
+	
 	public function post_to_adn_handler( $postid ) {
 		if ( $this->is_already_published( $post_id ) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
 			return;
 
-	    $post_id = $_POST['post_ID'];
+		$post_id = $_POST['post_ID'];
 
-    	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
-    	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
-    
-    	$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
-   		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
+		$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
+		$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
+	
+		$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
+		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 
 		wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array( $post_id ) );
 	}
