@@ -6,90 +6,73 @@ use \Podlove\Http;
 class API {
 
 	private $module;
+	public static $auth_key;
 	
 	public function __construct(\Podlove\Modules\AppDotNet\App_Dot_Net $module)
 	{
 		$this->module = $module;
+		self::$auth_key = $this->module->get_module_option('adn_auth_key');
 	}
 
     public function fetch_authorized_user()
     {
-    	$cache_key = 'podlove_adn_user';
+    	return self::cache_for("podlove_adn_user", function() {
+			$curl = new Http\Curl();
+			$curl->request(
+				'https://alpha-api.app.net/stream/0/token?access_token=' . API::$auth_key,
+				array( 'timeout' => 10 )
+			);
+			$response = $curl->get_response();
 
-    	if ( ( $user = get_transient( $cache_key ) ) !== false ) {
-    		return $user;
-    	} else {
-	    	if ( ! ( $token = $this->module->get_module_option('adn_auth_key') ) )
-	    		return false;
-
-	    	$curl = new Http\Curl();
-	    	$curl->request(
-	    		'https://alpha-api.app.net/stream/0/token?access_token=' . $token,
-	    		array( 'timeout' => 10 )
-	    	);
-	    	$response = $curl->get_response();
-
-	    	if ($curl->isSuccessful()) {
-		    	$decoded_result = json_decode( $response['body'] );
-		    	$user = $decoded_result ? $decoded_result->data->user : false;
-		    	set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
-		    	return $user;
-	    	}
-    	}
-
-    	return false;
+			if ($curl->isSuccessful()) {
+				$decoded_result = json_decode( $response['body'] );
+				return $decoded_result ? $decoded_result->data->user : false;
+			} else {
+				return false;
+			}
+    	});
     }
 
     public function fetch_patter_rooms()
     {
-    	$cache_key = 'podlove_adn_rooms';
+    	return self::cache_for("podlove_adn_rooms", function() {
+			$curl = new Http\Curl();
+			$curl->request( 
+				'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . API::$auth_key,
+				array( 'headers' => array( 'Content-type'  => 'application/json' ) )
+			);
+			$response = $curl->get_response();
 
-    	if ( ( $patter_rooms = get_transient( $cache_key ) ) !== FALSE ) {
-    		return $patter_rooms;
-    	} else {
-    		$url = 'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . $this->module->get_module_option('adn_auth_key');
+			if (!$curl->isSuccessful())
+				return array();
 
-    		$curl = new Http\Curl();
-    		$curl->request( $url, array(
-    			'headers' => array( 'Content-type'  => 'application/json' )
-    		) );
-    		$response = $curl->get_response();
+			$patter_rooms = array();
 
-    		if (!$curl->isSuccessful())
-    			return array();
-    		
-    		$patter_rooms = array();
-    		
-    		foreach ( json_decode($response['body']) as $channel ) {
-    			foreach ( $channel as $channel_details ) {
-    				
-    				if ( ! $this->channel_has_annotations( $channel_details ) )
-    					continue;
+			foreach ( json_decode($response['body']) as $channel ) {
+				foreach ( $channel as $channel_details ) {
+					
+					if ( ! API::channel_has_annotations( $channel_details ) )
+						continue;
 
-    				foreach ( $channel_details->annotations as $annotation_id => $annotation_values ) {
-    					if ( $annotation_values->type == "net.patter-app.settings" )
-    						$patter_rooms[$channel_details->id] = $annotation_values->value->name;
-    				}
-    			}
-    		}
+					foreach ( $channel_details->annotations as $annotation_id => $annotation_values ) {
+						if ( $annotation_values->type == "net.patter-app.settings" )
+							$patter_rooms[$channel_details->id] = $annotation_values->value->name;
+					}
+				}
+			}
 
-    		set_transient( $cache_key, $patter_rooms, 60*60*24*365 ); // 1 year, we devalidate manually
-    		return $patter_rooms;
-    	}
+			return $patter_rooms;
+    	});
     }
 
-    public function fetch_broadcast_channels() {
-    	$cache_key = 'podlove_adn_broadcast_channels';
-
-    	if ( ( $broadcast_channels = get_transient( $cache_key ) ) !== FALSE ) {
-    		return $broadcast_channels;
-    	} else {
-    		$url = 'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . $this->module->get_module_option('adn_auth_key');
-
+    public function fetch_broadcast_channels()
+    {
+    	return self::cache_for("podlove_adn_broadcast_channels", function() {
     		$curl = new Http\Curl();
-    		$curl->request( $url, array(
-    			'headers' => array( 'Content-type'  => 'application/json' )
-    		) );
+    		$curl->request(
+    			'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . API::$auth_key,
+    			array( 'headers' => array( 'Content-type'  => 'application/json' ) )
+    		);
     		$response = $curl->get_response();
 
     		if (!$curl->isSuccessful())
@@ -110,9 +93,8 @@ class API {
     			}	
     		}
 
-    		set_transient( $cache_key, $broadcast_channels, 60*60*24*365 ); // 1 year, we devalidate manually
     		return $broadcast_channels;
-    	}
+    	});
     }
 
     /**
@@ -143,7 +125,21 @@ class API {
 			\Podlove\Log::get()->addWarning( sprintf( 'Error: App.net Module failed to Post: %s (Code %s)', str_replace( "'", "''", $body->meta->error_message ), $body->meta->code ) );
 	}
 
-	private function channel_has_annotations($details) {
+	public static function channel_has_annotations($details) {
 		return isset($details->annotations) && count($details->annotations) !== 0;
 	}
+
+    private static function cache_for($cache_key, $callback, $duration = 31536000 /* 1 year */)
+    {
+    	if (($value = get_transient($cache_key)) !== FALSE) {
+    		return $value;
+    	} else {
+    		$value = call_user_func($callback);
+    		
+    		if ($value !== FALSE)
+	    		set_transient($cache_key, $value, $duration);
+
+    		return $value;
+    	}
+    }
 }
