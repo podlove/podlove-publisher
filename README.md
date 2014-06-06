@@ -28,23 +28,3 @@ cd podlove-publisher
 curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
-
-## Running the test suite
-
-There is a test suite validating some Publisher functionality. It is based on Ruby/Mechanize. You need Ruby 2.0 or higher.
-
-You need a local WordPress instance for tests. **The tests will override the database! DO NOT use the same database as for development or production!**.
-
-*Preparations*
-
-```
-gem install mechanize
-gem install rspec
-cp test/config.example.yml test/config.yml 
-```
-
-*Run*
-
-```
-rspec test
-```
