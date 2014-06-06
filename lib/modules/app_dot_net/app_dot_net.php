@@ -459,6 +459,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
     	$text = apply_filters( 'podlove_adn_tags', $text, $post_id, $selected_role, $selected_group );
 
+    	if ( strlen( $text ) > 256 ) {
+    		$text = substr( $text, 0, strrchr( $text, " " ) );
+    	}
+
     	return array(
     			'text' => $text,
     			'posted_linked_title' => $posted_linked_title
@@ -556,10 +560,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     }
     
 	public function post_to_adn_handler( $postid ) {
-		if ( $this->is_already_published( $post_id ) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
-			return;
 
-	    $post_id = $_POST['post_ID'];
+		if ( $this->is_already_published( $postid ) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
+			return;
 
     	$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
     	$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
@@ -567,7 +570,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
     	$delayed_time = strtotime( $adn_post_delay_hours . $adn_post_delay_minutes );
    		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 
-		wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array( $post_id ) );
+		wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array( $postid ) );
 	}
  
 	public function get_patter_rooms() {

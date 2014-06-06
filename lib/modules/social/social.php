@@ -992,8 +992,12 @@ class Social extends \Podlove\Modules\Base {
     			}
     		} , $social_accounts );
     	}
+    	$total_text_length = strlen( $text ) + strlen( $contributor_adn_accounts );
 
-    	return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+    	if ( $total_text_length <= 256 )
+    		return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+
+    	return $text;
 	}
 
 	public function adn_contributor_filter() {
