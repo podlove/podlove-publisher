@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.11 =
+
+* Tracking: Add `&ptm_file=<episode-slug>.<file-extension>` parameter to the end of URLs, so tools like wget generate a filename with a correct extension by default.
+
 = 1.10.10 =
 
 We discovered incompatibilities between our tracking implementation and some clients. To avoid further trouble, we are *deactivating tracking* until we solve the issue. The option is still available, we just switch it off automatically with this release and it isn't on by default any more.
