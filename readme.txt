@@ -87,8 +87,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.11 =
 
-* Tracking: Add `&ptm_file=<episode-slug>.<file-extension>` parameter to the end of URLs, so tools like wget generate a filename with a correct extension by default.
+**Tracking**
+
+* Add `&ptm_file=<episode-slug>.<file-extension>` parameter to the end of URLs, so tools like wget generate a filename with a correct extension by default.
 * Feeds now support a `&tracking=no` parameter, which dynamically disables tracking parameters in feed enclosures.
+* Fix PHP glitch that caused tracking to go into "Tracking URL Parameters" mode even when it was disabled
 
 = 1.10.10 =
 
