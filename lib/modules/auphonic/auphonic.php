@@ -6,7 +6,7 @@ use \Podlove\Http;
 class Auphonic extends \Podlove\Modules\Base {
 
     protected $module_name = 'Auphonic';
-    protected $module_description = 'Import Episode data from an Auphonic production';
+    protected $module_description = 'Auphonic is an audio post production web service. This module adds an interface to episodes, so you can create and manage productions right from the publisher.';
     protected $module_group = 'external services';
 	
     public function load() {
