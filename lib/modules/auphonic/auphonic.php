@@ -8,8 +8,17 @@ class Auphonic extends \Podlove\Modules\Base {
     protected $module_name = 'Auphonic';
     protected $module_description = 'Auphonic is an audio post production web service. This module adds an interface to episodes, so you can create and manage productions right from the publisher.';
     protected $module_group = 'external services';
+
+    /**
+     * API to Auphonic Service
+     * 
+     * @var Podlove\Modules\Auphonic\API_Wrapper
+     */
+    private $api;
 	
     public function load() {
+
+    		$this->api = new API_Wrapper($this);
 
 			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 			add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
@@ -38,7 +47,7 @@ class Auphonic extends \Podlove\Modules\Base {
 					'html'        => array( 'class' => 'regular-text' )
 				) );	
     		} else {
-				$user = $this->fetch_authorized_user();
+				$user = $this->api->fetch_authorized_user();
     			if ( isset($user) && is_object($user) && is_object($user->data) ) {
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
@@ -63,7 +72,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				) );	
 				
 				// Fetch Auphonic presets
-				$presets = $this->fetch_presets();
+				$presets = $this->api->fetch_presets();
 				if ( $presets && is_array( $presets->data ) ) {
 					$preset_list = array();
 					foreach( $presets->data as $preset_id => $preset ) {
@@ -90,82 +99,10 @@ class Auphonic extends \Podlove\Modules\Base {
      */
     public function ajax_refresh_presets() {
 		delete_transient('podlove_auphonic_presets');
-		$result = $this->fetch_presets();
+		$result = $this->api->fetch_presets();
 		
 		return \Podlove\AJAX\AJAX::respond_with_json( $result );
 	}
-
-    /**
-     * Fetch name of logged in user via Auphonic API.
-     *
-     * Cached in transient "podlove_auphonic_user".
-     * 
-     * @return string
-     */
-    public function fetch_authorized_user() {
-    	$cache_key = 'podlove_auphonic_user';
-
-    	if ( ( $user = get_transient( $cache_key ) ) !== FALSE ) {
-    		return $user;
-    	} else {
-	    	if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
-	    		return "";
-
-	    	$curl = new Http\Curl();
-	    	$curl->request( 'https://auphonic.com/api/user.json', array(
-	    		'headers' => array(
-	    			'Content-type'  => 'application/json',
-	    			'Authorization' => 'Bearer ' . $this->get_module_option('auphonic_api_key')
-	    		)
-	    	) );
-	    	$response = $curl->get_response();
-
-    		if ($curl->isSuccessful()) {
-				$decoded_user = json_decode( $response['body'] );
-				$user = $decoded_user ? $decoded_user : FALSE;
-				set_transient( $cache_key, $user, 60*60*24*365 ); // 1 year, we devalidate manually
-    	    	return $user;
-    		} else {
-    			return false;
-    		}
-    	}
-    }
-
-    /**
-     * Fetch list of presets via Auphonic APU.
-     *
-     * Cached in transient "podlove_auphonic_presets".
-     * 
-     * @return string
-     */
-    public function fetch_presets() {
-    	$cache_key = 'podlove_auphonic_presets';
-
-    	if ( ( $presets = get_transient( $cache_key ) ) !== FALSE ) {
-    		return $presets;
-    	} else {
-	    	if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
-	    		return "";
-
-    		$curl = new Http\Curl();
-    		$curl->request( 'https://auphonic.com/api/presets.json', array(
-    			'headers' => array(
-    				'Content-type'  => 'application/json',
-    				'Authorization' => 'Bearer ' . $this->get_module_option('auphonic_api_key')
-    			)
-    		) );
-			$response = $curl->get_response();
-
-			if ($curl->isSuccessful()) {
-		    	$presets = json_decode( $response['body'] );
-		    	set_transient( $cache_key, $presets, 60*60*24*365 ); // 1 year, we devalidate manually
-		    	return $presets;
-			} else {
-				return array();
-			}
-
-    	}
-    }
 
     public function save_post( $post_id ) {
     	

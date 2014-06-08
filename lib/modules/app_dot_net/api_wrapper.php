@@ -19,7 +19,7 @@ class API_Wrapper {
 		return self::cache_for("podlove_adn_user", function() {
 			$curl = new Http\Curl();
 			$curl->request(
-				'https://alpha-api.app.net/stream/0/token?access_token=' . API::$auth_key,
+				'https://alpha-api.app.net/stream/0/token?access_token=' . API_Wrapper::$auth_key,
 				array( 'timeout' => 10 )
 			);
 			$response = $curl->get_response();
@@ -38,7 +38,7 @@ class API_Wrapper {
 		return self::cache_for("podlove_adn_rooms", function() {
 			$curl = new Http\Curl();
 			$curl->request( 
-				'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . API::$auth_key,
+				'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . API_Wrapper::$auth_key,
 				array( 'headers' => array( 'Content-type'  => 'application/json' ) )
 			);
 			$response = $curl->get_response();
@@ -51,7 +51,7 @@ class API_Wrapper {
 			foreach ( json_decode($response['body']) as $channel ) {
 				foreach ( $channel as $channel_details ) {
 					
-					if ( ! API::channel_has_annotations( $channel_details ) )
+					if ( ! API_Wrapper::channel_has_annotations( $channel_details ) )
 						continue;
 
 					foreach ( $channel_details->annotations as $annotation_id => $annotation_values ) {
@@ -70,7 +70,7 @@ class API_Wrapper {
 		return self::cache_for("podlove_adn_broadcast_channels", function() {
 			$curl = new Http\Curl();
 			$curl->request(
-				'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . API::$auth_key,
+				'https://alpha-api.app.net/stream/0/channels?include_annotations=1&access_token=' . API_Wrapper::$auth_key,
 				array( 'headers' => array( 'Content-type'  => 'application/json' ) )
 			);
 			$response = $curl->get_response();
