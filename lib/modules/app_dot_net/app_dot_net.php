@@ -11,7 +11,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	/**
 	 * API to ADN Service
 	 * 
-	 * @var Podlove\Modules\AppDotNet\API
+	 * @var Podlove\Modules\AppDotNet\API_Wrapper
 	 */
 	private $api;
 
