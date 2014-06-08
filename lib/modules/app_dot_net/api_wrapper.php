@@ -3,7 +3,7 @@ namespace Podlove\Modules\AppDotNet;
 
 use \Podlove\Http;
 
-class API {
+class API_Wrapper {
 
 	private $module;
 	public static $auth_key;

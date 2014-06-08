@@ -17,7 +17,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 	public function load() {
 
-			$this->api = new API($this);
+			$this->api = new API_Wrapper($this);
 	
 			$module_url = $this->get_module_url();
 			$user = null;
