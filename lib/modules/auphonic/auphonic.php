@@ -26,13 +26,9 @@ class Auphonic extends \Podlove\Modules\Base {
     		if($this->get_module_option('auphonic_api_key') == "") { } else {
     			add_action( 'podlove_episode_form_beginning', array( $this, 'auphonic_episodes' ), 10, 2 );
 				// add_action( 'podlove_episode_form_beginning', array( $this, 'create_auphonic_production' ), 10, 2 );    			
-    		}
-    		
-			if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
-    			add_action('admin_bar_init', array( $this, 'check_code'));
     		}    		
     		
-    		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
+    		if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
     			add_action('admin_bar_init', array( $this, 'check_code'));
     		}  
 
