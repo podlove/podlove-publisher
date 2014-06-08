@@ -39,7 +39,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				) );	
     		} else {
 				$user = $this->fetch_authorized_user();
-    			if( isset($user) AND $user !== "" ) {
+    			if ( isset($user) && is_object($user) && is_object($user->data) ) {
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
 									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
