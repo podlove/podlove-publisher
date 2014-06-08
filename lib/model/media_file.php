@@ -72,7 +72,7 @@ class MediaFile extends Base {
 	 */
 	public function get_public_file_url($source, $context = null)
 	{
-		switch (\Podlove\get_setting( 'tracking', 'mode' )) {
+		switch ((string) \Podlove\get_setting('tracking', 'mode')) {
 			case 'ptm':
 				// when PTM is active, add $source and $context but
 				// keep the original file URL
