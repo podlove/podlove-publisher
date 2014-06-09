@@ -410,6 +410,13 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
 		$text = apply_filters( 'podlove_adn_tags', $text, $post_id, $selected_role, $selected_group );
 
+		while ( strlen( $text ) > 256 ) {
+			$text = substr( $text, 0, strrchr( $text, " " ) );
+			
+			if ( strlen( $text ) < 256 )
+				$text .= '…';
+		}
+
 		return array(
 				'text' => $text,
 				'posted_linked_title' => $posted_linked_title
