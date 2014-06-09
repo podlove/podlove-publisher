@@ -506,11 +506,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$this->post_to_adn( $_REQUEST['post_id'] );
 	}
 	
-	public function post_to_adn_handler( $postid ) {
+	public function post_to_adn_handler( $post_id ) {
 		if ( $this->is_already_published( $post_id ) || $this->get_module_option('adn_automatic_announcement') !== 'on' )
 			return;
-
-		$post_id = $_POST['post_ID'];
 
 		$adn_post_delay_hours   = str_pad( $this->get_module_option('adn_post_delay_hours'), 2, 0, STR_PAD_LEFT );
 		$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
