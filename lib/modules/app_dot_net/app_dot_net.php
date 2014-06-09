@@ -148,16 +148,19 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
 					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';
 
-				$description = $this->tags_description( $description );
+				$preview_text = $this->get_module_option('adn_poster_announcement_text');
 
-				$this->register_option( 'adn_poster_announcement_text', 'text', array(
+				$this->register_option( 'adn_poster_announcement_text', 'callback', array(
 					'label'       => __( 'Announcement text', 'podlove' ),
-					'description' => $description,
-					'html'        => array(
-						'cols' => '50',
-						'rows' => '4',
-						'placeholder' => __( 'Check out the new {podcastTitle} episode: {linkedEpisodeTitle}', 'podlove' )
-					)
+					'callback'	  => function() use ( $description, $preview_text ) {
+						$description = apply_filters( 'podlove_adn_tags_description', $description );
+						?>
+							<div>		
+								<textarea name="podlove_module_app_dot_net[adn_poster_announcement_text]" id="podlove_module_app_dot_net_adn_poster_announcement_text" cols="50" rows="4" placeholder="Check out the new {podcastTitle} episode: {linkedEpisodeTitle}"><?php echo $preview_text; ?></textarea>
+							</div>
+							<span class="description"><?php echo $description; ?></span>
+						<?php
+					}
 				) );
 				
 				$this->register_option( 'adn_preview', 'callback', array(
@@ -411,10 +414,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$text = apply_filters( 'podlove_adn_tags', $text, $post_id, $selected_role, $selected_group );
 
 		while ( strlen( $text ) > 256 ) {
-			$text = substr( $text, 0, strrchr( $text, " " ) );
-			
+			$text = substr( $text, 0, strrpos( $text, " " ) );
+
 			if ( strlen( $text ) < 256 )
-				$text .= '…';
+				$text .= "…";
 		}
 
 		return array(
@@ -524,10 +527,6 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$delayed_time_in_seconds = date("H", $delayed_time) * 3600 + date("i", $delayed_time) * 60;
 
 		wp_schedule_single_event( time()+$delayed_time_in_seconds, "delayed_adn_post", array( $post_id ) );
-	}
-
-	private function tags_description( $description ) {
-		return apply_filters( 'podlove_adn_tags_description', $description );
 	}
 
 	private function get_languages() {
