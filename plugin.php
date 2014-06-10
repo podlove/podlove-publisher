@@ -1024,6 +1024,15 @@ add_filter( 'query_vars', function ( $query_vars ){
     return $query_vars;
 }, 10, 1 );
 
+// don't add trailing slash to file URLs
+add_filter('redirect_canonical', function($redirect_url, $requested_url) {
+	if ((int) get_query_var('download_media_file')) {
+		return false;
+	} else {
+		return $redirect_url;
+	}
+}, 10, 2);
+
 // register ajax actions
 new \Podlove\AJAX\Ajax;
 

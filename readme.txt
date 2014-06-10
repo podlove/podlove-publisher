@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.12 =
+
+* Never redirect media file URLs to trailing-slash-URLs (WordPress has a habit of adding a trailing slash to every URL via redirect. That is undesirable here, since it create two download intents).
+
 = 1.10.11 =
 
 **Tracking**
