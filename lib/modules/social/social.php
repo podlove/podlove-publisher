@@ -950,7 +950,7 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function adn_tags_description( $description ) {
-		return '<code title="' . __( 'The Contributors of your Epsiode', 'podlove' ) . '">{episodeContributors}</code>';
+		return $description . "\n<code title=\"" . __( 'The Contributors of your Epsiode', 'podlove' ) . "\">{episodeContributors}</code>";
 	}
 
 	public function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
@@ -993,7 +993,12 @@ class Social extends \Podlove\Modules\Base {
     		} , $social_accounts );
     	}
 
-    	return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+    	$total_text_length = strlen( $text ) + strlen( $contributor_adn_accounts );
+ 		
+ 		if ( $total_text_length <= 256 )
+     		return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+
+    	return str_replace( '{episodeContributors}' , '', $text) ;
 	}
 
 	public function adn_contributor_filter() {

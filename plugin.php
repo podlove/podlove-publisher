@@ -902,11 +902,17 @@ function handle_media_file_download() {
 			readfile( $media_file->get_file_url($intent->source, $intent->context) );
 		}
 	} else {
+		$location = $media_file->add_ptm_parameters(
+			$media_file->get_file_url(),
+			array(
+				'source'  => $intent->source,
+				'context' => $intent->context
+			)
+		);
+		
 		header("HTTP/1.1 301 Moved Permanently");
-		header("Location: " . $media_file->get_file_url($intent->source, $intent->context));
+		header("Location: " . $location);
 	}
-
-	exit;
 }
 add_action( 'init', '\Podlove\handle_media_file_download' );
 

@@ -25,7 +25,10 @@ class Episode extends Base implements Licensable {
 			foreach (self::property_names() as $property) {
 				$episode->$property = $row->$property;
 			}
-			$episodes[] = $episode;
+
+			if ($episode->is_valid()) {
+				$episodes[] = $episode;
+			}
 		}
 		
 		return $episodes;
