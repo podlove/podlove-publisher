@@ -93,6 +93,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Feeds now support a `&tracking=no` parameter, which dynamically disables tracking parameters in feed enclosures.
 * Fix PHP glitch that caused tracking to go into "Tracking URL Parameters" mode even when it was disabled
 
+**ADN Module**
+
+* Fix issue that could lead to repostings
+* Fix tags description
+* Messages longer than 256 characters will be shortened now and "…" will be appended
+
 = 1.10.10 =
 
 We discovered incompatibilities between our tracking implementation and some clients. To avoid further trouble, we are *deactivating tracking* until we solve the issue. The option is still available, we just switch it off automatically with this release and it isn't on by default any more.
