@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 75 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 76 );
 
 add_action( 'init', '\Podlove\run_database_migrations' );
 
@@ -845,6 +845,9 @@ function run_migrations_for_version( $version ) {
 			$tracking = get_option('podlove_tracking');
 			$tracking['mode'] = 0;
 			update_option('podlove_tracking', $tracking);
+		break;
+		case 76:
+			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 		break;
 	}
 

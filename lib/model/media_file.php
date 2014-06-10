@@ -89,8 +89,9 @@ class MediaFile extends Base {
 				break;
 			case 'ptm_analytics':
 				// we track, so we need to generate a shadow URL
-				$path = '?download_media_file=' . $this->id;
-				$path = $this->add_ptm_parameters($path, array(
+				// $path = '?download_media_file=' . $this->id;
+				$path = '/podlove/file/' . $this->id;
+				$path = $this->add_ptm_routing($path, array(
 					'source'  => $source,
 					'context' => $context
 				));
@@ -101,6 +102,21 @@ class MediaFile extends Base {
 				return $this->get_file_url();
 				break;
 		}
+	}
+
+	public function add_ptm_routing($path, $params)
+	{
+		if (isset($params['source'])) {
+			$path .= "/s/{$params['source']}";
+		}
+
+		if (isset($params['context'])) {
+			$path .= "/c/{$params['context']}";
+		}
+
+		$path .= "/" . $this->get_download_file_name();
+
+		return $path;
 	}
 
 	public function add_ptm_parameters($path, $params)
