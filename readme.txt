@@ -89,9 +89,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 **Tracking**
 
-* For increased compatibility, new file URLs without parameters are used when analytics are active.
+* For increased compatibility (we are looking at you, iTunes), new file URLs without parameters are used when analytics are active.
 * Add `&ptm_file=<episode-slug>.<file-extension>` parameter to the end of Parameter-URLs, so tools like wget generate a filename with a correct extension by default.
-* Feeds now support a `&tracking=no` parameter, which dynamically disables tracking parameters in feed enclosures.
+* Feed URLs now support a `&tracking=no` parameter, which dynamically disables tracking parameters in feed enclosures. This is introduced for debugging purposes and is only mentioned here for the sake of completeness.
 * Fix PHP glitch that caused tracking to go into "Tracking URL Parameters" mode even when it was disabled
 
 **ADN Module**
