@@ -1003,7 +1003,18 @@ add_action( 'init', function () {
     add_rewrite_rule(
         '^podlove/file/([0-9]+)/s/([^/]+)/c/([^/]+)/.+/?$',
         'index.php?download_media_file=$matches[1]&ptm_source=$matches[2]&ptm_context=$matches[3]',
-        'top' );
+        'top'
+    );
+    add_rewrite_rule(
+        '^podlove/file/([0-9]+)/s/([^/]+)/.+/?$',
+        'index.php?download_media_file=$matches[1]&ptm_source=$matches[2]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^podlove/file/([0-9]+)/.+/?$',
+        'index.php?download_media_file=$matches[1]',
+        'top'
+    );
 }, 10 );
 
 add_filter( 'query_vars', function ( $query_vars ){
