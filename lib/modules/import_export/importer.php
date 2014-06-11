@@ -66,6 +66,7 @@ class Importer {
 		$this->importAssets();
 		$this->importFeeds();
 		$this->importMediaFiles();
+		$this->importTracking();
 		$this->importTemplates();
 
 		do_action('podlove_xml_import', $this->xml);
@@ -120,6 +121,13 @@ class Importer {
 
 	private function importMediaFiles() {
 		self::importTable($this->xml, 'mediafile', '\Podlove\Model\MediaFile');
+	}
+
+	private function importTracking() {
+		self::importTable($this->xml, 'geoarea', '\Podlove\Model\GeoArea');
+		self::importTable($this->xml, 'geoareaname', '\Podlove\Model\GeoAreaName');
+		self::importTable($this->xml, 'useragent', '\Podlove\Model\UserAgent');
+		self::importTable($this->xml, 'downloadintent', '\Podlove\Model\DownloadIntent');
 	}
 
 	private function importTemplates() {
