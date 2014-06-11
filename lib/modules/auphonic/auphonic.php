@@ -148,9 +148,7 @@ class Auphonic extends \Podlove\Modules\Base {
     			'subtitle' => $_POST['metadata']['subtitle'],
     			'summary' => $_POST['metadata']['summary'],
     			'duration' => $_POST['length_timestring'],
-    			'chapters' => $this->convert_chapters_to_string( 
-    				array( array( 'title' => 'start', 'start_output' => '00:00:00', 'url' => '' ), array( 'title' => 'asd', 'start_output' => '00:00:01', 'url' => 'asasddas' )  )
-    			 ), //$_POST['chapters']
+    			'chapters' => $this->convert_chapters_to_string( $_POST['chapters'] ),
     			'slug' => $_POST['output_basename'],
     			'license' => $_POST['metadata']['license'],
     			'license_url' => $_POST['metadata']['license_url'],
