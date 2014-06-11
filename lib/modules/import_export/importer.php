@@ -27,7 +27,28 @@ class Importer {
 	 */
 	public function import() {
 
-		$this->xml = simplexml_load_file($this->file);
+		$gzfilesize = function($filename) {
+			$gzFilesize = FALSE;
+			if (($zp = fopen($filename, 'r'))!==FALSE) {
+				if (@fread($zp, 2) == "\x1F\x8B") { // this is a gzip'd file
+					fseek($zp, -4, SEEK_END);
+					if (strlen($datum = @fread($zp, 4))==4)
+					  extract(unpack('Vgzfs', $datum));
+				}
+				else // not a gzip'd file, revert to regular filesize function
+					$gzfs = filesize($filename);
+				fclose($zp);
+			}
+			return($gzfs);
+		};
+		
+		// It might not look like it, but it is actually compatible to 
+		// uncompressed files.
+		$gzFileHandler = gzopen($this->file, 'r');
+		$decompressed = gzread($gzFileHandler, $gzfilesize($this->file));
+
+		$this->xml = simplexml_load_string($decompressed);
+
 		$this->xml->registerXPathNamespace('wpe', Exporter::XML_NAMESPACE);
 
 		$export = $this->xml->xpath('//wpe:export');
