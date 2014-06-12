@@ -881,13 +881,15 @@ function handle_media_file_download() {
 		$intent->context = $ptm_context;
 
 	// set user agent
-	$ua_string = $_SERVER['HTTP_USER_AGENT'];
-	if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
-		$agent = new Model\UserAgent;
-		$agent->user_agent = $ua_string;
-		$agent->save();
+	$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
+	if (strlen($ua_string)) {
+		if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
+			$agent = new Model\UserAgent;
+			$agent->user_agent = $ua_string;
+			$agent->save();
+		}
+		$intent->user_agent_id = $agent->id;
 	}
-	$intent->user_agent_id = $agent->id;
 
 	// get ip, but don't store it
 	$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);

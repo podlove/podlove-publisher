@@ -87,7 +87,13 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.12 =
 
+**Tracking**
+
 * Never redirect media file URLs to trailing-slash-URLs (WordPress has a habit of adding a trailing slash to every URL via redirect. That is undesirable here, since it create two download intents).
+* Handle empty user agent strings
+
+**Other**
+
 * Compress export files via gzip.
 * Add tracking data to export files.
 
