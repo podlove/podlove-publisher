@@ -936,6 +936,7 @@ function handle_media_file_download() {
 		header("HTTP/1.1 301 Moved Permanently");
 		header("Location: " . $location);
 	}
+	exit;
 }
 add_action( 'wp', '\Podlove\handle_media_file_download' );
 
