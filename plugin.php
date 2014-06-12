@@ -813,13 +813,13 @@ function handle_media_file_download() {
 	}
 
 	if (isset($_REQUEST['ptm_source'])) {
-		$ptm_source = isset($_REQUEST['ptm_source']);
+		$ptm_source = $_REQUEST['ptm_source'];
 	} else {
 		$ptm_source = get_query_var("ptm_source");
 	}
 
 	if (isset($_REQUEST['ptm_context'])) {
-		$ptm_context = isset($_REQUEST['ptm_context']);
+		$ptm_context = $_REQUEST['ptm_context'];
 	} else {
 		$ptm_context = get_query_var("ptm_context");
 	}
@@ -869,41 +869,42 @@ function handle_media_file_download() {
 		exit;
 	}
 
-	// tracking
-	$intent = new Model\DownloadIntent;
-	$intent->media_file_id = $media_file_id;
-	$intent->accessed_at = date('Y-m-d H:i:s');
-	
-	if ($ptm_source)
-		$intent->source = $ptm_source;
+	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics") {
+		$intent = new Model\DownloadIntent;
+		$intent->media_file_id = $media_file_id;
+		$intent->accessed_at = date('Y-m-d H:i:s');
+		
+		if ($ptm_source)
+			$intent->source = $ptm_source;
 
-	if ($ptm_context)
-		$intent->context = $ptm_context;
+		if ($ptm_context)
+			$intent->context = $ptm_context;
 
-	// set user agent
-	$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
-	if (strlen($ua_string)) {
-		if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
-			$agent = new Model\UserAgent;
-			$agent->user_agent = $ua_string;
-			$agent->save();
+		// set user agent
+		$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
+		if (strlen($ua_string)) {
+			if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
+				$agent = new Model\UserAgent;
+				$agent->user_agent = $ua_string;
+				$agent->save();
+			}
+			$intent->user_agent_id = $agent->id;
 		}
-		$intent->user_agent_id = $agent->id;
+
+		// get ip, but don't store it
+		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+		if (method_exists($ip, 'as_IPv6_address')) {
+			$ip = $ip->as_IPv6_address();
+		}
+		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
+
+		// Generate a hash from IP address and UserAgent so we can identify
+		// identical requests without storing an IP address.
+		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
+		$intent = $intent->add_geo_data($ip_string);
+
+		$intent->save();
 	}
-
-	// get ip, but don't store it
-	$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
-	if (method_exists($ip, 'as_IPv6_address')) {
-		$ip = $ip->as_IPv6_address();
-	}
-	$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
-
-	// Generate a hash from IP address and UserAgent so we can identify
-	// identical requests without storing an IP address.
-	$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
-	$intent = $intent->add_geo_data($ip_string);
-
-	$intent->save();
 
 	if ( \Podlove\get_setting('website', 'force_download') == 'on' && in_array( strtolower( ini_get( 'allow_url_fopen' ) ), array( "1", "on", "true" ) ) ) {
 		header( "Expires: 0" );
