@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 76 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 77 );
 
 add_action( 'init', '\Podlove\run_database_migrations' );
 
@@ -848,6 +848,28 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 76:
 			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		break;
+		case 77:
+			// delete empty user agents
+			$userAgentTable      = Model\UserAgent::table_name();
+			$downloadIntentTable = Model\DownloadIntent::table_name();
+
+			$sql = "SELECT
+				di.id
+			FROM
+				$downloadIntentTable di
+				JOIN $userAgentTable ua ON ua.id = di.user_agent_id
+			WHERE
+				ua.user_agent IS NULL";
+			$ids = $wpdb->get_col($sql);
+
+			if (is_array($ids) && count($ids)) {
+				$sql = "UPDATE $downloadIntentTable SET user_agent_id = NULL WHERE id IN (" . implode(",", $ids) . ")";
+				$wpdb->query($sql);
+
+				$sql = "DELETE FROM $userAgentTable WHERE user_agent IS NULL";
+				$wpdb->query($sql);
+			}
 		break;
 	}
 
