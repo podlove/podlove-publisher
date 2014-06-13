@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.13 =
+
+* Trim whitespace around some URLs that appear in the podcast feed.
+
 = 1.10.12 =
 
 **Tracking**

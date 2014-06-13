@@ -164,7 +164,7 @@ class MediaFile extends Base {
 		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
 		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
-		return $template;
+		return trim($template);
 	}
 
 	public function episode() {

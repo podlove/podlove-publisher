@@ -151,7 +151,7 @@ class Episode extends Base implements Licensable {
 			return;
 		
 		if ( $asset_assignment->image == 'manual' )
-			return $this->cover_art;
+			return trim($this->cover_art);
 
 		$cover_art_file_id = $asset_assignment->image;
 		if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
