@@ -66,7 +66,7 @@ class Importer {
 		$this->importAssets();
 		$this->importFeeds();
 		$this->importMediaFiles();
-		$this->importTracking();
+		// $this->importTracking();
 		$this->importTemplates();
 
 		do_action('podlove_xml_import', $this->xml);
