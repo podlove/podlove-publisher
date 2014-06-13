@@ -34,7 +34,7 @@ class Import_Export extends \Podlove\Modules\Base {
 			return $postmetas;
 		}, 10, 3 );
 
-		add_action( 'admin_menu', array( $this, 'register_menu' ), 20 );
+		add_action( 'admin_menu', array( $this, 'register_menu' ), 250 );
 	}
 
 	public function register_menu() {
