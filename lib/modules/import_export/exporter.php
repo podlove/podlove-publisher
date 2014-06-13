@@ -75,18 +75,9 @@ class Exporter {
 
 	public function exportOptions(\SimpleXMLElement $xml)
 	{
-		$options = array(
-			'podlove',
-			'podlove_active_modules',
-			'podlove_asset_assignment',
-			'podlove_metadata',
-			'podlove_podcast',
-			'podlove_template_assignment',
-			'podlove_webplayer_formats',
-			'podlove_webplayer_settings',
-			'podlove_contributors',
-			'podlove_database_version'
-		);
+		global $wpdb;
+		$sql = 'SELECT option_name FROM wp_options WHERE option_name LIKE "%podlove%" AND option_name NOT LIKE "_transient%"';
+		$options = $wpdb->get_col($sql);
 
 		$xml_group = $xml->addChild('xmlns:wpe:options');
 		foreach ($options as $option_name) {
