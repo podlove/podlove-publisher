@@ -1037,6 +1037,17 @@ add_filter('redirect_canonical', function($redirect_url, $requested_url) {
 	}
 }, 10, 2);
 
+// Ensure WordPress importer keeps the mapping id for old<->new post id.
+// This is required for the Im/Export module. To avoid user errors, it is
+// better to keep this behaviour in core.
+add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
+	$postmetas[] = array(
+		'key' => 'import_id',
+		'value' => $post_id
+	);
+	return $postmetas;
+}, 10, 3 );
+
 // register ajax actions
 new \Podlove\AJAX\Ajax;
 

@@ -25,15 +25,6 @@ class Import_Export extends \Podlove\Modules\Base {
 
 		});
 
-		// ensure the importer keeps the mapping id for old<->new post id
-		add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
-			$postmetas[] = array(
-				'key' => 'import_id',
-				'value' => $post_id
-			);
-			return $postmetas;
-		}, 10, 3 );
-
 		add_action( 'admin_menu', array( $this, 'register_menu' ), 250 );
 	}
 
