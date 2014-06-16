@@ -84,6 +84,20 @@ function activate_for_current_blog() {
 		update_option( 'podlove', $settings );
 	}
 
+	// set default template
+	if (!$template = Model\Template::find_one_by_property('title', 'default')) {
+		$template = new Model\Template;
+		$template->title = 'default';
+		$template->content = <<<EOT
+{{ episode.player }}
+[podlove-episode-downloads]
+EOT;
+		$template->save();
+
+		$assignment = Model\TemplateAssignment::get_instance();
+		$assignment->top = $template->id;
+		$assignment->save();
+	}
 }
 
 /**

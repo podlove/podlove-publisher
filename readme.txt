@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.14 =
+
+* There is now a default template containing the player and download section
+
 = 1.10.13 =
 
 We decided to remove the "Force Download" feature. Its purpose was to guarantee that a click on a download button results in a download dialogue, rather than playing the media file in the browser. The way we implemented it worked, but came with many downsides. Just to name two of them:
