@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.13 =
 
 * Trim whitespace around some URLs that appear in the podcast feed.
+* Update certificate for auth.podlove.org
 
 = 1.10.12 =
 
