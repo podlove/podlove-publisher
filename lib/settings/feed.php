@@ -105,6 +105,8 @@ class Feed {
 		if ( ! isset( $_REQUEST['feed'] ) )
 			return;
 
+		do_action( 'podlove_feed_process', $_REQUEST['feed'], $_REQUEST['action'] );
+
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 
 		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
@@ -373,6 +375,8 @@ class Feed {
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
+
+			do_action( 'podlove_feed_contributor_settings', $wrapper );
 
 		} );
 	}

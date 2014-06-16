@@ -42,6 +42,9 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'wp_ajax_podlove-contributors-delete-default', array($this, 'delete_default_contributor') );
 		add_action( 'wp_ajax_podlove-contributors-delete-episode', array($this, 'delete_episode_contributor') );
 
+		add_action( 'podlove_feed_contributor_settings', array($this, 'feed_settings') );
+		add_action( 'podlove_feed_process', array($this, 'feed_process'), 10, 2 );
+
 		add_filter( 'podlove_adn_tags_description', array($this, 'adn_tags_description') );
 		add_filter( 'podlove_adn_example_data', array($this, 'adn_example_data'), 10, 4 );
 		add_filter( 'podlove_adn_tags', array($this, 'adn_tags'), 10, 4 );
@@ -208,12 +211,24 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	function feed_head_contributors() {
+		global $wp_query;
+
+		$feed = \Podlove\Model\Feed::find_one_by_slug( $wp_query->query_vars['feed'] );
+		$option_name = 'podlove_feed_' . $feed->id . '_contributor_filter';
+		$selected_filter = get_option( $option_name );
+
 		$contributor_xml = '';
 		foreach (\Podlove\Modules\Contributors\Model\ShowContribution::all() as $contribution) {
 			$contributor = $contribution->getContributor();
 
 			if (!is_object($contributor) || !$contributor->guid)
-				return;
+				continue;
+
+			if ( !empty( $selected_filter['group'] ) && $contribution->group_id !== $selected_filter['group'] )
+				continue;
+
+			if ( !empty( $selected_filter['role'] ) && $contribution->role_id !== $selected_filter['role'] )
+				continue;
 
 			$contributor_xml .= $this->getContributorXML( $contributor );
 		}	
@@ -226,7 +241,7 @@ class Contributors extends \Podlove\Modules\Base {
 			$contributor = $contribution->getContributor();
 
 			if (!is_object($contributor) || !$contributor->guid)
-				return;
+				continue;
 
 			$contributor_xml .= $this->getContributorXML( $contributor );
 		}
@@ -844,6 +859,62 @@ class Contributors extends \Podlove\Modules\Base {
 
 		if ($service = EpisodeContribution::find_by_id($object_id))
 			$service->delete();
+	}
+
+	public function feed_settings( $wrapper ) {
+		$contributors_roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
+		$contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
+		$option_name = 'podlove_feed_' . $_REQUEST['feed'] . '_contributor_filter';
+
+		$selected_filter = get_option( $option_name );
+
+		if ( !$selected_filter ) {
+			$selected_filter = array(
+					'group' => NULL,
+					'role' => NULL
+				);
+		}
+
+		$wrapper->subheader( __( 'Contributors', 'podlove' ) );
+		$wrapper->callback( 'services_form_table', array(
+			'label' => __( 'Contributor Filter', 'podlove' ),
+			'callback' => function() use ( $contributors_roles, $contributors_groups, $selected_filter ) {
+				?>
+					<select name="podlove_feed[contributor_filter][group]" id="">
+						<option value=""></option>
+						<?php
+							foreach ($contributors_groups as $group) {
+								echo "<option value='" . $group->id . "' " . ( $group->id == $selected_filter['group'] ? 'selected' : '' ) . ">" . $group->title . "</option>";
+							}
+						?>
+					</select>
+					Group
+
+					<select name="podlove_feed[contributor_filter][role]" id="">
+						<option value=""></option>
+						<?php
+							foreach ($contributors_roles as $role) {
+								echo "<option value='" . $role->id . "' " . ( $role->id == $selected_filter['role'] ? 'selected' : '' ) . ">" . $role->title . "</option>";
+							}
+						?>
+					</select>
+					Role
+				<?php
+			}		
+		) );
+
+		return $wrapper;
+	}
+
+	public function feed_process( $feed_id, $action ) {
+		if ( !$_POST )
+			return;
+
+		$group = $_POST['podlove_feed']['contributor_filter']['group'];
+		$role = $_POST['podlove_feed']['contributor_filter']['role'];
+		$option_name = 'podlove_feed_' . $feed_id . '_contributor_filter';
+
+		update_option( $option_name , array( 'group' => $group, 'role' => $role ) );
 	}
 
 	public function adn_tags_description( $description ) {
