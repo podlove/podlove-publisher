@@ -614,7 +614,7 @@ class Contributors extends \Podlove\Modules\Base {
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
 				var existing_contributions = <?php
-				echo json_encode(array_map(function($c){
+				echo json_encode(array_filter(array_map(function($c){
 					// Set default role
 					$role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $c->role_id );
 					if ( isset( $role_data ) ) {
@@ -644,7 +644,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 					return '';
 
-				}, $current_contributions)); ?>;
+				}, $current_contributions))); ?>;
 
 				PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
 				PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";

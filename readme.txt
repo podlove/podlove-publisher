@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * Trim whitespace around some URLs that appear in the podcast feed.
 * Update certificate for auth.podlove.org
+* Fix an issue with saving contributors in `Podlove > Podcast Settings > Contributors`
 
 = 1.10.12 =
 
