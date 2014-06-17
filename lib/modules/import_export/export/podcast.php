@@ -8,6 +8,20 @@ class Podcast {
 	const XML_NAMESPACE = 'http://podlove.org/podlove-podcast-publisher/export';
 	private $compression = false;
 
+	public static function init() {
+		add_action('init', function() {
+
+			if (!is_admin())
+				return;
+
+			if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
+				$exporter = new Export\Podcast;
+				$exporter->download();
+				exit;
+			}
+		});
+	}
+
 	public function __construct() {
 		add_action('podlove_xml_export', array($this, 'exportEpisodes'));
 		add_action('podlove_xml_export', array($this, 'exportAssets'));
