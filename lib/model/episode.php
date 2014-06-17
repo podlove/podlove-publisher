@@ -239,6 +239,14 @@ class Episode extends Base implements Licensable {
 		return true;
 	}
 
+	public function is_published() {
+		
+		if (!$post = get_post($this->post_id))
+			return false;
+
+		return in_array($post->post_status, array('private', 'publish'));
+	}
+
 	public function get_license()
 	{
 		$license = new License('episode', array(

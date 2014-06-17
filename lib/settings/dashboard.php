@@ -151,7 +151,7 @@ class Dashboard {
 
 	public static function statistics() {
 		$episodes = Model\Episode::allByTime();
-		$valid_episodes = array_filter($episodes, function($e) { return $e->is_valid(); });
+		$valid_episodes = array_filter($episodes, function($e) { return $e->is_valid() && $e->is_published(); });
 		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
 
 		/*
