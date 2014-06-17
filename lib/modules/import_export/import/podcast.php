@@ -1,10 +1,10 @@
 <?php
-namespace Podlove\Modules\ImportExport;
+namespace Podlove\Modules\ImportExport\Import;
 
 use Podlove\Model;
-use Podlove\Modules\ImportExport\Exporter;
+use Podlove\Modules\ImportExport\Export\Podcast as Exporter;
 
-class Importer {
+class Podcast {
 
 	// path to import file
 	private $file;

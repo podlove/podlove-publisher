@@ -1,7 +1,7 @@
 <?php
 namespace Podlove\Modules\ImportExport\Settings;
 
-use Podlove\Modules\ImportExport\Importer;
+use Podlove\Modules\ImportExport\Import\Podcast as Importer;
 
 class Settings {
 

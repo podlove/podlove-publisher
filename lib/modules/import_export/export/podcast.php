@@ -1,9 +1,9 @@
 <?php
-namespace Podlove\Modules\ImportExport;
+namespace Podlove\Modules\ImportExport\Export;
 
 use Podlove\Model;
 
-class Exporter {
+class Podcast {
 
 	const XML_NAMESPACE = 'http://podlove.org/podlove-podcast-publisher/export';
 	private $compression = false;

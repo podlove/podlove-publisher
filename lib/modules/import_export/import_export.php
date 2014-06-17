@@ -1,8 +1,6 @@
 <?php
 namespace Podlove\Modules\ImportExport;
 
-use Podlove\Modules\ImportExport\Exporter;
-
 class Import_Export extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Import &amp; Export';
@@ -21,7 +19,7 @@ class Import_Export extends \Podlove\Modules\Base {
 				return;
 
 			if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
-				$exporter = new Exporter;
+				$exporter = new Export\Podcast;
 				$exporter->download();
 				exit;
 			}

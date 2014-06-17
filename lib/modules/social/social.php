@@ -924,15 +924,15 @@ class Social extends \Podlove\Modules\Base {
 	}
 	
 	public function expandExportFile(\SimpleXMLElement $xml) {
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
+		\Podlove\Modules\ImportExport\Export\Podcast::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Export\Podcast::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Export\Podcast::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 
 	public function expandImport($xml) {
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
+		\Podlove\Modules\ImportExport\Import\Podcast::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Import\Podcast::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Import\Podcast::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 	
 	/**
