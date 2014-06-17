@@ -209,7 +209,7 @@ class Settings {
 					}
 				});
 
-				podlove_check_export_status();
+				window.setTimeout(podlove_check_export_status, 2000);
 			});
 
 			// start immediately, in case the user refreshes the page
