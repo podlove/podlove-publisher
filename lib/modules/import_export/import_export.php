@@ -63,19 +63,29 @@ class Import_Export extends \Podlove\Modules\Base {
 		update_option('podlove_tracking_export_progress', 0);
 
 		$rowsPerQuery = 1000;
+		$lastId = 0;
 		$page = 0;
 
 		$fp = gzopen(self::get_tracking_export_file_path(), 'w');
 
 		do {
-			$sql = "SELECT * FROM " . \Podlove\Model\DownloadIntent::table_name() . " di LIMIT " . ($page*$rowsPerQuery) . ", $rowsPerQuery";
+			// Keeping track of the $lastId is (roughly) a bajillion times faster than paging via LIMIT.
+			$sql = "
+				SELECT
+					*
+				FROM
+					" . \Podlove\Model\DownloadIntent::table_name() . "
+					WHERE id > " . (int) $lastId . "
+				LIMIT 0, $rowsPerQuery";
 			$rows = $wpdb->get_results($sql, ARRAY_A);
 			foreach ($rows as $row) {
 				gzwrite($fp, implode(",", $row) . "\n");
 			}
 
-			update_option('podlove_tracking_export_progress', $page*$rowsPerQuery);
+			$lastId = $row['id'];
 			$page++;
+
+			update_option('podlove_tracking_export_progress', $page*$rowsPerQuery);
 		} while (count($rows) > 0);
 
 		gzclose($fp);
