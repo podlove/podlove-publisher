@@ -29,7 +29,7 @@ class Podcast {
 		add_action('podlove_xml_export', array($this, 'exportFileType'));
 		add_action('podlove_xml_export', array($this, 'exportMediaFile'));
 		add_action('podlove_xml_export', array($this, 'exportTemplates'));
-		// add_action('podlove_xml_export', array($this, 'exportTracking'));
+		add_action('podlove_xml_export', array($this, 'exportTracking'));
 		add_action('podlove_xml_export', array($this, 'exportOptions'));
 
 		if (function_exists('gzencode') && extension_loaded('zlib'))
@@ -84,7 +84,6 @@ class Podcast {
 		self::exportTable($xml, 'geoareas', 'geoarea', '\Podlove\Model\GeoArea');
 		self::exportTable($xml, 'geoareanames', 'geoareaname', '\Podlove\Model\GeoAreaName');
 		self::exportTable($xml, 'useragents', 'useragent', '\Podlove\Model\UserAgent');
-		self::exportTable($xml, 'downloadintents', 'downloadintent', '\Podlove\Model\DownloadIntent');
 	}
 
 	public function exportOptions(\SimpleXMLElement $xml)
