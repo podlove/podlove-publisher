@@ -71,6 +71,7 @@ class Podcast {
 		// uncompressed files.
 		$gzFileHandler = gzopen($this->file, 'r');
 		$decompressed = gzread($gzFileHandler, $gzfilesize($this->file));
+		gzclose($gzFileHandler);
 
 		$this->xml = simplexml_load_string($decompressed);
 
