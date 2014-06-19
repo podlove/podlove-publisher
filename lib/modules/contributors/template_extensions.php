@@ -43,12 +43,19 @@ class TemplateExtensions {
 	 * - **groupby:** group or role slug. Group by "group" or "role".
 	 * 	         If used, the returned data is has another layer for the groups.
 	 * 	         See examples for more details.
+	 * - **order:**   Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+         *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+         *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+         * - **orderby:** Sort contributors by parameter. Defaults to 'name'.
+         *   - 'position' - Order by the contributors position in the episode.
+         *   - 'comment' - Order by the contributors comment in the episode.
 	 *
 	 * @accessor
 	 * @dynamicAccessor episode.contributors
 	 */
 	public function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = array()) {
 		$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+		$contributions = \Podlove\Modules\Contributors\Contributors::orderContributions($contributions, $args);
 		return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
 	}
 
