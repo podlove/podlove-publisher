@@ -3,7 +3,7 @@ namespace Podlove\Modules\ImportExport\Export;
 
 use Podlove\Model;
 
-class Tracking {
+class TrackingExporter {
 
 	public static function init() {
 		
@@ -23,7 +23,7 @@ class Tracking {
 				header( 'Cache-control: private' );
 				header( 'Expires: -1' );
 
-				readfile(\Podlove\Modules\ImportExport\Export\Tracking::get_tracking_export_file_path());
+				readfile(\Podlove\Modules\ImportExport\Export\TrackingExporter::get_tracking_export_file_path());
 				exit;
 			}
 

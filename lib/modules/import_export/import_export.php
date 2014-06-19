@@ -9,10 +9,10 @@ class Import_Export extends \Podlove\Modules\Base {
 
 	public function load() {
 		
-		Export\Podcast::init();
-		Import\Podcast::init();
-		Export\Tracking::init();
-		Import\Tracking::init();
+		Export\PodcastExporter::init();
+		Import\PodcastImporter::init();
+		Export\TrackingExporter::init();
+		Import\TrackingImporter::init();
 
 		add_action( 'admin_menu', array( $this, 'register_menu' ), 250 );
 	}

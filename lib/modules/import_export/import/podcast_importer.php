@@ -2,9 +2,9 @@
 namespace Podlove\Modules\ImportExport\Import;
 
 use Podlove\Model;
-use Podlove\Modules\ImportExport\Export\Podcast as Exporter;
+use Podlove\Modules\ImportExport\Export\PodcastExporter;
 
-class Podcast {
+class PodcastImporter {
 
 	// path to import file
 	private $file;
@@ -30,7 +30,7 @@ class Podcast {
 			if (!($file = get_option('podlove_import_file')))
 				return;
 
-			$importer = new \Podlove\Modules\ImportExport\Import\Podcast($file);
+			$importer = new \Podlove\Modules\ImportExport\Import\PodcastImporter($file);
 			$importer->import();
 		} else {
 			// file upload didn't work
@@ -75,7 +75,7 @@ class Podcast {
 
 		$this->xml = simplexml_load_string($decompressed);
 
-		$this->xml->registerXPathNamespace('wpe', Exporter::XML_NAMESPACE);
+		$this->xml->registerXPathNamespace('wpe', PodcastExporter::XML_NAMESPACE);
 
 		$export = $this->xml->xpath('//wpe:export');
 		$export = $export[0];

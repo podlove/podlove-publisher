@@ -3,7 +3,7 @@ namespace Podlove\Modules\ImportExport\Export;
 
 use Podlove\Model;
 
-class Podcast {
+class PodcastExporter {
 
 	const XML_NAMESPACE = 'http://podlove.org/podlove-podcast-publisher/export';
 	private $compression = false;
@@ -15,7 +15,7 @@ class Podcast {
 				return;
 
 			if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
-				$exporter = new \Podlove\Modules\ImportExport\Export\Podcast;
+				$exporter = new \Podlove\Modules\ImportExport\Export\PodcastExporter;
 				$exporter->download();
 				exit;
 			}

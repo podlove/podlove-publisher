@@ -3,7 +3,7 @@ namespace Podlove\Modules\ImportExport\Import;
 
 use Podlove\Model;
 
-class Tracking {
+class TrackingImporter {
 	
 	// path to import file
 	private $file;
@@ -26,7 +26,7 @@ class Tracking {
 			if (!($file = get_option('podlove_import_tracking_file')))
 				return;
 
-			$importer = new \Podlove\Modules\ImportExport\Import\Tracking($file);
+			$importer = new \Podlove\Modules\ImportExport\Import\TrackingImporter($file);
 			$importer->import();
 		} else {
 			// file upload didn't work
