@@ -15,7 +15,7 @@ class Podcast {
 				return;
 
 			if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
-				$exporter = new Export\Podcast;
+				$exporter = new \Podlove\Modules\ImportExport\Export\Podcast;
 				$exporter->download();
 				exit;
 			}

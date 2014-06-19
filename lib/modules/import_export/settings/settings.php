@@ -1,8 +1,6 @@
 <?php
 namespace Podlove\Modules\ImportExport\Settings;
 
-use Podlove\Modules\ImportExport\Import\Podcast as Importer;
-
 class Settings {
 
 	static $pagehook;
@@ -46,30 +44,6 @@ class Settings {
 			<?php
 		});
 
-		if (isset($_FILES['podlove_import'])) {
-
-			// allow xml uploads
-			add_filter('upload_mimes', function ($mimes) {
-			    return array_merge($mimes, array('xml' => 'application/xml'));
-			});
-			 
-			$file = wp_handle_upload($_FILES['podlove_import'], array('test_form' => false));
-			if ($file) {
-				update_option('podlove_import_file', $file['file']);
-				$this->import();
-			} else {
-				// file upload didn't work
-			}
-		}
-	}
-
-	public function import()
-	{
-		if (!($file = get_option('podlove_import_file')))
-			return;
-
-		$importer = new Importer($file);
-		$importer->import();
 	}
 
 	public function page() {
