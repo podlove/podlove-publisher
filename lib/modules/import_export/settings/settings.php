@@ -104,14 +104,23 @@ class Settings {
 			<hr>
 			<h2><?php echo __('Tracking Import &amp; Export', 'podlove') ?></h2>
 
+			<?php if ( defined('SAVEQUERIES') && SAVEQUERIES ): ?>
+				<div class="error">
+					<p>
+						<b><?php echo __('Heads up!', 'podlove') ?></b>
+						<?php echo __('The WordPress debug option <code>SAVEQUERIES</code> is active. This might lead to memory issues when exporting or importing tracking data. It is probably defined in <code>wp-config.php</code>.', 'podlove') ?>
+					</p>
+				</div>
+			<?php endif; ?>
+
 			<table class="form-table">
 				<tr>
-					<th scope="row" valign="top">
+					<th scope="row" valign="top" colspan="2">
 						<h3 style="margin-bottom: 0px"><?php echo __('Export', 'podlove') ?></h3>
 					</th>
 				</tr>
 				<tr>
-					<td>
+					<td colspan="2">
 						<p>
 							<?php echo __('Im- and export of tracking data is a separate task. After you have completed the steps above, you can ex- and import tracking data.', 'podlove'); ?>
 						</p>
@@ -121,6 +130,15 @@ class Settings {
 								<?php echo __('Export', 'podlove') ?>: <span id="podlove_tracking_export_status">starting ...</span>
 							</span>
 						</p>
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo __('Import File', 'podlove') ?></td>
+					<td>
+						<form method="POST" enctype="multipart/form-data">
+							<input type="file" name="podlove_import_tracking"/>
+							<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove') ?>" class="button-primary" />
+						</form>
 					</td>
 				</tr>
 			</table>
