@@ -46,6 +46,13 @@ class Settings {
 
 	}
 
+	public static function get_maximum_upload_size_text() {
+		// this is exactly the same way it is done in wp_import_upload_form()
+		$bytes = apply_filters( 'import_upload_size_limit', \wp_max_upload_size() );
+		$size = \size_format( $bytes );
+		return sprintf( __('Maximum size: %s' ), $size );
+	}
+
 	public function page() {
 		?>
 		<div class="wrap">
@@ -94,7 +101,8 @@ class Settings {
 					<td><?php echo __('Import File', 'podlove') ?></td>
 					<td>
 						<form method="POST" enctype="multipart/form-data">
-							<input type="file" name="podlove_import"/>
+							(<span><?php echo self::get_maximum_upload_size_text() ?></span>)
+							<input type="file" name="podlove_import"/> 
 							<input type="submit" value="<?php echo __('Import Podcast Data', 'podlove') ?>" class="button-primary" />
 						</form>
 					</td>
@@ -136,6 +144,7 @@ class Settings {
 					<td><?php echo __('Import File', 'podlove') ?></td>
 					<td>
 						<form method="POST" enctype="multipart/form-data">
+							(<span><?php echo self::get_maximum_upload_size_text() ?></span>)
 							<input type="file" name="podlove_import_tracking"/>
 							<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove') ?>" class="button-primary" />
 						</form>
