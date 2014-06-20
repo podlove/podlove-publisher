@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * There is now a default template containing the player and download section
 * Episode contributions can be sorted by comment and position, for example: `episode.contributors({orderby: "comment", order: "DESC"})` or episode.contributors({orderby: "position", order: "ASC"})
+* Iterate over the list of episode tags: `{% for tag in episode.tags({order: "DESC", orderby: "count"}) %} {{ tag.name }} {% endfor %}`
 
 = 1.10.13 =
 

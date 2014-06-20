@@ -196,6 +196,28 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Access a list of post tags.
+	 *
+	 * See http://codex.wordpress.org/Function_Reference/wp_get_object_terms#Argument_Options
+	 * for a list of available argument options.
+	 *
+	 * Example:
+	 *
+	 * ```html
+	 *   {% for tag in episode.tags({order: "ASC", orderby: "count"}) %}
+	 *     <a href="{{ tag.url }}">{{ tag.name }} ({{ tag.count }})</a>
+	 *   {% endfor %}
+	 * ```
+	 * 
+	 * @accessor
+	 */
+	public function tags($args = array()) {
+		return array_map(function($tag) {
+			return new Tag($tag);
+		}, wp_get_post_tags($this->post->ID, $args));
+	}
+
+	/**
 	 * List of episode files
 	 *
 	 * @see  file
