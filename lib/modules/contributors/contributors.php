@@ -78,29 +78,32 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	/**
-         * Orders episode contributors by their 'orderby' and 'order' attribute.
-         *
-         * @param  array $contributions List of contributions
-         * @param  array $args          List of arguments. Keys: order, orderby
-         * @return Ordered list of cobtributions.
-         */
-        public static function orderContributions($contributions, $args) {
-                // Order by via attribute comperator
-                switch (strtoupper($args['orderby'])) {
-                case 'COMMENT':
-                        usort($contributions, 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment');
-                        break;
-                case 'POSITION':
-                        usort($contributions, 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition');
-                        break;
-                }
+	 * Orders episode contributors by their 'orderby' and 'order' attribute.
+	 *
+	 * @param  array $contributions List of contributions
+	 * @param  array $args          List of arguments. Keys: order, orderby
+	 * @return Ordered list of cobtributions.
+	 */
+	public static function orderContributions($contributions, $args) {
+		// Order by via attribute comperator
+		if (isset($args['orderby'])) {
+			switch (strtoupper($args['orderby'])) {
+				case 'COMMENT':
+					usort($contributions, 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment');
+					break;
+				case 'POSITION':
+					usort($contributions, 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition');
+					break;
+			}
+		}
 
-                // ASC or DESC order
-                if (strtoupper($args['order']) == 'DESC') {
-                        $contributions = array_reverse($contributions);
-                }
-                return $contributions;
-        }
+		// ASC or DESC order
+		if (!isset($args['order']) || strtoupper($args['order']) == 'DESC') {
+			$contributions = array_reverse($contributions);
+		}
+
+		return $contributions;
+	}
 
 	/**
 	 * Filter contributions.

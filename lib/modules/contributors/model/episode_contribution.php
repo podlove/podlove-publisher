@@ -35,16 +35,14 @@ class EpisodeContribution extends Base {
 	}
 	
 	public static function sortByComment($a, $b) {
-                if ($a->comment == $b->comment)
-                        return 0;
-                return ($a->comment < $b->comment) ? -1 : 1;
-        }
+		return strcmp($a->comment, $b->comment);
+	}
 
-        public static function sortByPosition($a, $b) {
-                if ($a->position == $b->position)
-                        return 0;
-                return ($a->position < $b->position) ? -1 : 1;
-        }
+	public static function sortByPosition($a, $b) {
+		if ($a->position == $b->position)
+			return 0;
+		return ($a->position < $b->position) ? -1 : 1;
+	}
 }
 
 EpisodeContribution::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
