@@ -76,6 +76,26 @@ class Network extends Base {
 	}
 
 	/**
+	 * Fetch all Pocasts in the current network
+	 */
+	public function get_podcasts() {
+		$podcasts = json_decode( $this->podcasts );
+		$podcast_objects = array();
+		foreach ($podcasts as $podcast) {
+			switch ( $podcast->type ) {
+				default: case 'wpnetwork':
+					switch_to_blog( $podcast->podcast );
+					$podcast_intance = \Podlove\Model\Podcast::get_instance();
+					$podcast_intance->blog_id = $podcast->podcast;
+					$podcast_objects[] = $podcast_intance;
+				break;
+			}
+		}
+
+		return $podcast_objects;
+	}
+
+	/**
 	 * Fetch all Podcasts ordered
 	 */
 	public static function all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {

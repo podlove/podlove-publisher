@@ -10,8 +10,8 @@ class Networks {
 		
 		Networks::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Networks',
-			/* $menu_title */ 'Networks',
+			/* $page_title */ 'Lists',
+			/* $menu_title */ 'Lists',
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_settings_network_handle',
 			/* $function   */ array( $this, 'page' )
@@ -38,16 +38,6 @@ class Networks {
 		}
 	}
 
-	/**
-	 * Parse Multiselect arguments into string
-	 */
-	private function manage_multiselect() {
-		if( isset( $_POST['podlove_network']['podcasts'] ) && is_array( $_POST['podlove_network']['podcasts'] ) ) {
-			$_POST['podlove_network']['podcasts'] = implode( ',', array_keys( $_POST['podlove_network']['podcasts'] ) );
-		} else {
-			$_POST['podlove_network']['podcasts'] = '';
-		}		
-	}
 
 	/**
 	 * Process form: save/update a network
@@ -56,7 +46,13 @@ class Networks {
 		if ( ! isset( $_REQUEST['network'] ) )
 			return;
 
-		self::manage_multiselect();
+		$podcasts = array();
+		foreach ($_POST['podlove_network']['podcasts'] as $podcast) {
+			$podcasts[] = $podcast;
+		}
+
+		$_POST['podlove_network']['podcasts'] = json_encode( $podcasts );
+
 		$network = Network::find_by_id( $_REQUEST['network'] );
 		$network->update_attributes( $_POST['podlove_network'] );
 		
@@ -176,25 +172,142 @@ class Networks {
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
-			$podcasts = Network::all_podcasts_ordered();
-			$podcasts_options_array = array();
-			foreach ( $podcasts as $blog_id => $podcast ) {
-				$podcasts_options_array[ $blog_id ] = $podcast->title;
-			}
-
-			$podcasts_multi_values = array_filter( $podcasts_options_array, function () {
-				return 0;
-			});
-			
-			foreach ( explode( ',', $network->podcasts ) as $podcast_id ) {
-				$podcasts_multi_values[ $podcast_id ] = 1;
-			}
-
-			$wrapper->multiselect( 'podcasts', array(
+			$wrapper->callback( 'podcasts', array(
 				'label'       => __( 'Podcasts', 'podlove' ),
-				'options'     => $podcasts_options_array,
-				'multi_values'     => $podcasts_multi_values,
-				'default'	  => false
+				'callback'	  => function() use ( $network ) {
+					$form_base_name = "podlove_network";
+					?>
+					<div id="podcast_lists">
+						<table class="podlove_alternating" border="0" cellspacing="0">
+							<thead>
+								<tr>
+									<th>Podcast Source</th>
+									<th>Podcast/URL</th>
+									<th style="width: 60px">Remove</th>
+									<th style="width: 30px"></th>
+								</tr>
+							</thead>
+							<tbody class="podcasts_table_body" style="min-height: 50px;">
+								<tr class="podcasts_table_body_placeholder" style="display: none;">
+									<td><em><?php echo __('No Podcasts were added yet.', 'podlove') ?></em></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div id="add_new_podcasts_wrapper">
+							<input class="button" id="add_new_podcast" value="+" type="button" />
+						</div>
+
+						<script type="text/template" id="podcast-row-template">
+						<tr class="media_file_row podlove-podcast-table" data-id="{{id}}">
+							<td class="podlove-podcast-column">
+								<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
+									<option value=""><?php echo __('Select Source', 'podlove') ?></option>
+									<option value="wpnetwork"><?php echo __('WordPress Network', 'podlove') ?></option>
+								</select>
+							</td>
+							<td class="podlove-podcast-value"></td>
+							<td>
+								<span class="podcast_remove">
+									<i class="clickable podlove-icon-remove"></i>
+								</span>
+							</td>
+							<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
+						</tr>
+						</script>
+						<script type="text/template" id="podcast-select-type-wpnetwork">
+						<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
+							<?php
+								foreach ( Network::all_podcasts_ordered() as $blog_id => $podcast ) {
+									if ( $podcast->title )
+										printf( "<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_image ,$podcast->title );
+								}
+							?>
+						</select>
+						</script>
+					</div>
+
+					<script type="text/javascript">
+
+						var PODLOVE = PODLOVE || {};
+
+						(function($) {
+							var i = 0;
+							var existing_podcasts = <?php echo $network->podcasts; ?>;
+							var podcasts = [];
+
+							function update_chosen() {
+								$(".chosen").chosen();
+								$(".chosen-image").chosenImage();
+							}
+
+							function podcast_dropdown_handler() {
+								$('select.podlove-podcast-dropdown').change(function() {
+									row = $(this).closest("tr");
+									podcast_source = $(this).val();
+
+									// Check for empty podcast / for new field
+									if( podcast_source === '' ) {
+										row.find(".podlove-podcast-value").html(""); // Empty podcast column and hide edit button
+										row.find(".podlove-podcast-edit").hide();
+										return;
+									}
+
+									template_id = "#podcast-select-type-" + podcast_source;
+									template = $( template_id ).html();
+									template = template.replace(/\{\{id\}\}/g, row.data('id') );
+
+									row.find(".podlove-podcast-value").html( template );
+									update_chosen();
+
+									i++; // continue using "i" which was already used to add the existing contributions
+								});
+							}
+
+							$(document).ready(function() {
+								$("#podcast_lists table").podloveDataTable({
+									rowTemplate: "#podcast-row-template",
+									deleteHandle: ".podcast_remove",
+									sortableHandle: ".reorder-handle",
+									addRowHandle: "#add_new_podcast",
+									data: existing_podcasts,
+									dataPresets: podcasts,
+									onRowLoad: function(o) {
+										template_id = "#podcast-select-type-" + o.entry.type;
+										template = $( template_id ).html();
+										row_as_object = $(o.row)
+										
+										row_as_object.find(".podlove-podcast-value").html( template );
+										row_as_object.find('select.podlove-podcast-dropdown option[value="' + o.entry.type + '"]').attr('selected',true);
+
+										switch ( o.entry.type ) {
+											default: case 'wpnetwork':
+												row_as_object.find('select.podlove-podcast option[value="' + o.entry.podcast + '"]').attr('selected',true);
+											break;
+										}
+
+										o.row = row_as_object[0].outerHTML;
+										o.row = o.row.replace(/\{\{id\}\}/g, i);
+
+										i++;
+									},
+									onRowAdd: function(o) {
+										o.row = o.row.replace(/\{\{id\}\}/g, i);
+
+										podcast_dropdown_handler();
+										update_chosen();
+									},
+									onRowDelete: function(tr) {
+										
+									}
+								});
+							});
+
+						}(jQuery));
+
+					</script>
+					<?php	
+				}
 			) );
 
 		} );

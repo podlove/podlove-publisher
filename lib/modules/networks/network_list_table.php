@@ -40,14 +40,14 @@ class Network_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_podcasts( $network ) {
-		$list = '';
-		foreach ( explode( ',', $network->podcasts ) as $podcast_id ) {
-			if ( $podcast_id ) {
-				$podcast = Network::fetch_podcast_by_id( $podcast_id );
-				$list = $list . "<a href='" . site_url() . "'>" .  $podcast->title . "</a>, ";
-			}
+		$podcasts = $network->get_podcasts();
+		$podcasts_as_string = "";
+
+		foreach ($podcasts as $podcast_list_key => $podcast ) {
+			$podcasts_as_string .= '<a href="' . get_home_url( $podcast->blog_id ) .'">' . $podcast->title . '</a>' . ( $podcast_list_key == count( $podcasts ) - 1 ? "" : ", " );
 		}
-		return substr( $list, 0, -2 );
+
+		return $podcasts_as_string;
 	}
 
 	public function get_columns(){
