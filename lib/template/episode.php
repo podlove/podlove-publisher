@@ -89,7 +89,7 @@ class Episode extends Wrapper {
 	/**
 	 * Post publication date
 	 *
-	 * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate.format('Y-m-d') }}`
 	 *
 	 * @see  datetime
 	 * @accessor
@@ -101,7 +101,7 @@ class Episode extends Wrapper {
 	/**
 	 * Post recording date
 	 *
-	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate('Y-m-d') }}`
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate.format('Y-m-d') }}`
 	 *
 	 * @see  datetime
 	 * @accessor
