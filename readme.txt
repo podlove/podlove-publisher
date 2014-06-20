@@ -87,7 +87,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.14 =
 
+**Templates**
+
 * There is now a default template containing the player and download section
+* Episode contributions can be sorted by comment and position, for example: `episode.contributors({orderby: "comment", order: "DESC"})` or episode.contributors({orderby: "position", order: "ASC"})
 
 = 1.10.13 =
 
