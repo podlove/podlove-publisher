@@ -87,13 +87,20 @@ class Contributors extends \Podlove\Modules\Base {
 	public static function orderContributions($contributions, $args) {
 		// Order by via attribute comperator
 		if (isset($args['orderby'])) {
+			$comperareFunc = null;
 			switch (strtoupper($args['orderby'])) {
 				case 'COMMENT':
-					usort($contributions, 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment');
+					$comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment';
 					break;
 				case 'POSITION':
-					usort($contributions, 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition');
+					$comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition';
 					break;
+			}
+
+			$comperareFunc = apply_filters('podlove_order_contributions_compare_func', $comperareFunc, $args);
+
+			if ($comperareFunc && is_callable($comperareFunc)) {
+				usort($contributions, $comperareFunc);
 			}
 		}
 
