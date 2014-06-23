@@ -128,7 +128,7 @@ function slugify( $text ) {
 	$text = preg_replace( '~[^\\pL\d_\.\~]~u', '-', $text );
 
 	// transliterate
-	$text = iconv( 'utf-8', 'us-ascii//TRANSLIT', $text );
+	$text = urlencode( $text );
 
 	return empty( $text ) ? 'n-a' : $text;
 }
