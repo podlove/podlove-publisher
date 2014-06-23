@@ -96,6 +96,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 **Other**
 
 * Display available processing time in Auphonic production box
+* Episode slugs may contain a wider variety of characters now, such as umlauts.
 
 = 1.10.13 =
 
