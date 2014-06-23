@@ -93,6 +93,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Episode contributions can be sorted by comment and position, for example: `episode.contributors({orderby: "comment", order: "DESC"})` or episode.contributors({orderby: "position", order: "ASC"})
 * Iterate over the list of episode tags: `{% for tag in episode.tags({order: "DESC", orderby: "count"}) %} {{ tag.name }} {% endfor %}`
 
+**Other**
+
+* Display available processing time in Auphonic production box
+
 = 1.10.13 =
 
 We decided to remove the "Force Download" feature. Its purpose was to guarantee that a click on a download button results in a download dialogue, rather than playing the media file in the browser. The way we implemented it worked, but came with many downsides. Just to name two of them:
