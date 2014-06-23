@@ -150,19 +150,33 @@ function template_shortcode( $attributes ) {
 
 	// backward compatibility
 	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
+	$permalink   = get_permalink();
 
-	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
-		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
+	// Cache key must not be longer than 64 characters!
+	// Transients API prepends "_transient_", 11 characters
+	// 64 - 11 = 53 (minus one because you never know)
+	$cache_key   = sprintf("podlove_cache_%s", sha1($template_id . $permalink));
+	$cache_key   = substr($cache_key, 0, 52);
 
-	$html = apply_filters('podlove_template_raw', $template->title, $attributes);
+	if (($html = get_transient($cache_key)) !== FALSE) {
+		return $html;
+	} else {
+		if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
+			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-	// apply autop and shortcodes
-	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
-		$html = wpautop( $html );
+		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
-	$html = do_shortcode( $html );
+		// apply autop and shortcodes
+		if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
+			$html = wpautop( $html );
 
-	return $html;
+		$html = do_shortcode( $html );
+
+		if ($html !== FALSE)
+			set_transient($cache_key, $html);
+
+		return $html;
+	}
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 
