@@ -113,7 +113,7 @@ class Auphonic extends \Podlove\Modules\Base {
     	if ( $_POST['status_string'] !== 'Done' )
     		return;
 
-    	if ( $_REQUEST['auth_key'] !== $auth_key )
+    	if ( $_REQUEST['authkey'] !== $auth_key )
     		return;
     	
     	// Update episode with production results
