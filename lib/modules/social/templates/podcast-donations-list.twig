@@ -1,5 +1,5 @@
 <ul class="podcast_services">
-{% for service in podcast.services({type: "donation"}) %}
+{% for service in podcast.services({category: "donation"}) %}
 	<li>
     	<a href="{{ service.profileUrl }}" title="{{ service.description }}">
     		<img src="{{ service.logoUrl }}" width="16" height="16" /> {{ service.title }}

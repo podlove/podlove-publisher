@@ -30,6 +30,7 @@ class RSS {
 		}, 10, 4 );
 
 		override_feed_title( $feed );
+		override_feed_description( $feed );
 		override_feed_language( $feed );
 		override_feed_head( 'rss2_head', $podcast, $feed, $file_type );
 		override_feed_entry( 'rss2_item', $podcast, $feed, $file_type );

@@ -204,6 +204,10 @@ class Contributor extends Wrapper {
 			$wpdb->prepare($sql, $this->contributor->id)
 		);
 
+		// I'm not sure under which circumstances the query emits duplicate
+		// episode IDs — but it happens.
+		$episode_ids = array_unique($episode_ids);
+
 		$episodes = array();
 		foreach ($episode_ids as $episode_id) {
 			$episodes[$episode_id] = new Episode(\Podlove\Model\Episode::find_one_by_id($episode_id));

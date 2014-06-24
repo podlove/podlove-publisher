@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Contributors\Model;
 
 use \Podlove\Model\Base;
+use \Podlove\Model\Episode;
 
 class Contributor extends Base
 {	
@@ -123,6 +124,28 @@ class Contributor extends Base
 		return EpisodeContribution::find_all_by_contributor_id($this->id);
 	}
 
+	public function getPublishedContributionCount() {
+		global $wpdb;
+
+		$sql = "
+			SELECT
+				COUNT(*)
+			FROM
+				" . EpisodeContribution::table_name() . " ec
+				JOIN " . Episode::table_name() . " e ON ec.episode_id = e.id
+				JOIN " . $wpdb->posts .  " p ON e.post_id = p.ID
+			WHERE
+				ec.contributor_id = %d
+				AND p.post_status = 'publish'
+		";
+
+		$contributionCount = $wpdb->get_var(
+			$wpdb->prepare($sql, $this->id)
+		);
+
+		return $contributionCount;
+	}
+
 	public function getShowContributions() {
 		return ShowContribution::find_all_by_contributor_id($this->id);
 	}
@@ -148,7 +171,7 @@ class Contributor extends Base
 
 		$email = $email ? $email : $this->publicemail;
 
-		$url = 'http://www.gravatar.com/avatar/';
+		$url = 'https://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;

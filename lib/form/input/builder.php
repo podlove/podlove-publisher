@@ -250,7 +250,7 @@ class Builder {
 				if( $(field).val().indexOf("@") == -1 ) {
 					url = $(field).val();
 				} else {
-					url = 'http://www.gravatar.com/avatar/' + CryptoJS.MD5( $(field).val() ) + '&amp;s=50';
+					url = 'https://www.gravatar.com/avatar/' + CryptoJS.MD5( $(field).val() ) + '&amp;s=50';
 
 				}	
 				$(field).parent().find("img").attr("src", url);

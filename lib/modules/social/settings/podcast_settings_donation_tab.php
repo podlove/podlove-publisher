@@ -57,7 +57,7 @@ class PodcastSettingsDonationTab extends Tab {
 
 	public static function podcast_form_extension_form()
 	{
-		$services = \Podlove\Modules\Social\Model\ShowService::find_by_type( 'donation' );
+		$services = \Podlove\Modules\Social\Model\ShowService::find_by_category( 'donation' );
 		\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_podcast[donations]', 'donation');
 	}
 }

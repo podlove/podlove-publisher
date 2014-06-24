@@ -75,7 +75,7 @@ class Printer {
 				'file'       => $file,
 				'mime_type'  => $mime,
 				'url'        => $file->get_file_url(),
-				'publicUrl'  => home_url('?download_media_file=' . $file->id),
+				'publicUrl'  => $file->get_public_file_url("webplayer", $this->get_tracking_context()),
 				'assetTitle' => $asset->title()
 			);
 		}
@@ -102,7 +102,7 @@ class Printer {
 			$mime_type = $file['mime_type'];
 
 			$source = $xml->addChild('source');
-			$source->addAttribute( 'src', $file['url'] );
+			$source->addAttribute( 'src', $file['publicUrl'] );
 			$source->addAttribute( 'type', $mime_type );
 
 			if ( $mime_type == 'audio/mpeg' ) {
@@ -303,4 +303,13 @@ class Printer {
 		return trim( str_replace( '<?xml version="1.0"?>', '', $xml ) );
 	}
 
+	private function get_tracking_context() {
+		if (is_home())
+			return "home";
+
+		if (is_single())
+			return "episode";
+
+		return "website";
+	}
 }

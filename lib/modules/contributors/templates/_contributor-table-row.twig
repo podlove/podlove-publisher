@@ -21,17 +21,17 @@
 		{% endif %}
 	</td>
 	{% if groups == "yes" %}
-		<td>
+		<td class="group_cell">
 			{{ contributor.group }}
 		</td>
 	{% endif %}
 	{% if roles == "yes" %}
-		<td>
+		<td class="role_cell">
 			{{ contributor.role }}
 		</td>
 	{% endif %}
 	<td class="social_cell">
-		{% for service in contributor.services({type: "social"}) %}
+		{% for service in contributor.services({category: "social"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
 				<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
 			</a>
@@ -39,7 +39,7 @@
 	</td>
 	{% if donations == "yes" %}
 		<td class="donation_cell">
-		{% for service in contributor.services({type: "donation"}) %}
+		{% for service in contributor.services({category: "donation"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
 				<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
 			</a>

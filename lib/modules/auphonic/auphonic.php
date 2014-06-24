@@ -6,28 +6,31 @@ use \Podlove\Http;
 class Auphonic extends \Podlove\Modules\Base {
 
     protected $module_name = 'Auphonic';
-    protected $module_description = 'Import Episode data from an Auphonic production';
+    protected $module_description = 'Auphonic is an audio post production web service. This module adds an interface to episodes, so you can create and manage productions right from the publisher.';
     protected $module_group = 'external services';
+
+    /**
+     * API to Auphonic Service
+     * 
+     * @var Podlove\Modules\Auphonic\API_Wrapper
+     */
+    private $api;
 	
     public function load() {
 
+    		$this->api = new API_Wrapper($this);
+
+    		new EpisodeEnhancer($this);
+
 			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 			add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
+
 			add_action( 'wp_ajax_podlove-add-production-for-auphonic-webhook', array( $this, 'ajax_add_episode_for_auphonic_webhook' ) );
 			add_action( 'wp', array( $this, 'auphonic_webhook' ) );
-    		
-    		if($this->get_module_option('auphonic_api_key') == "") { } else {
-    			add_action( 'podlove_episode_form_beginning', array( $this, 'auphonic_episodes' ), 10, 2 );
-				// add_action( 'podlove_episode_form_beginning', array( $this, 'create_auphonic_production' ), 10, 2 );    			
-    		}
     		
 			if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
     			add_action('admin_bar_init', array( $this, 'check_code'));
     		}    		
-    		
-    		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
-    			add_action('admin_bar_init', array( $this, 'check_code'));
-    		}  
 
     		if ( $this->get_module_option('auphonic_api_key') == "" ) {
     			$auth_url = "https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
@@ -40,8 +43,8 @@ class Auphonic extends \Podlove\Modules\Base {
 					'html'        => array( 'class' => 'regular-text' )
 				) );	
     		} else {
-				$user = $this->fetch_authorized_user();
-    			if( isset($user) AND $user !== "" ) {
+				$user = $this->api->fetch_authorized_user();
+    			if ( isset($user) && is_object($user) && is_object($user->data) ) {
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
 									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
@@ -65,7 +68,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				) );	
 				
 				// Fetch Auphonic presets
-				$presets = $this->fetch_presets();
+				$presets = $this->api->fetch_presets();
 				if ( $presets && is_array( $presets->data ) ) {
 					$preset_list = array();
 					foreach( $presets->data as $preset_id => $preset ) {
@@ -83,8 +86,6 @@ class Auphonic extends \Podlove\Modules\Base {
 				) );
     		
     		}
-
-    		add_action( 'save_post', array( $this, 'save_post' ) );
     }
 
     /**
@@ -203,7 +204,7 @@ class Auphonic extends \Podlove\Modules\Base {
      */
     public function ajax_refresh_presets() {
 		delete_transient('podlove_auphonic_presets');
-		$result = $this->fetch_presets();
+		$result = $this->api->fetch_presets();
 		
 		return \Podlove\AJAX\AJAX::respond_with_json( $result );
 	}
@@ -217,7 +218,7 @@ class Auphonic extends \Podlove\Modules\Base {
 		$action = $_REQUEST['flag'];
 
 		if ( !$post_id || !$action || !$auth_key )
-			return;
+			return \Podlove\AJAX\AJAX::respond_with_json( false );
 
 		$episodes_to_be_remote_published = get_option( 'podlove_episodes_to_be_remote_published' );
 
@@ -233,7 +234,7 @@ class Auphonic extends \Podlove\Modules\Base {
 			update_option( 'podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published );
 		}
 
-		return \Podlove\AJAX\AJAX::respond_with_json( TRUE );
+		return \Podlove\AJAX\AJAX::respond_with_json( true );
 	}
 
     /**
@@ -341,164 +342,6 @@ class Auphonic extends \Podlove\Modules\Base {
     		\Podlove\get_plugin_header( 'Version' )
     	);
     	wp_enqueue_script('podlove_auphonic_admin_script');
-    }
-    
-    public function auphonic_episodes( $wrapper, $episode ) {
-    	$wrapper->callback( 'import_from_auphonic_form', array(
-			'label'    => __( 'Auphonic', 'podlove' ),
-			'callback' => array( $this, 'auphonic_episodes_form' )
-		) );			
-    }
-
-    public function auphonic_episodes_form() {
-		$asset_assignments = Model\AssetAssignment::get_instance();
-		?>
-
-		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta( get_the_ID(), '_auphonic_production', true ) ?>" />
-		<input type="hidden" id="auphonic" value="1"
-			data-api-key="<?php echo $this->get_module_option('auphonic_api_key') ?>"
-			data-presetuuid="<?php echo $this->get_module_option('auphonic_production_preset') ?>"
-			data-assignment-chapter="<?php echo $asset_assignments->chapters ?>"
-			data-assignment-image="<?php echo $asset_assignments->image ?>"
-			data-module-url="<?php echo $this->get_module_url() ?>"
-			data-site-url="<?php echo get_home_url(); ?>"
-			/>
-
-		<div id="auphonic-box">
-
-			<div id="auphonic-production-status" class="auphonic-status status-info"></div>
-
-			<fieldset>
-				<legend>Create Production</legend>
-				<div class="auphonic-segment">
-					<div class="auphonic_production_head">
-						<label for="auphonic_services">
-							Source
-						</label>
-					</div>
-					<select id="auphonic_services">
-						<option><?php echo __( 'Loading sources ...' ) ?></option>
-					</select>
-				</div>
-				
-				<div class="auphonic-segment">
-					<div class="auphonic_production_head">
-						<label for="auphonic_production_files">
-							Master Audio File
-						</label>
-						<span id="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>">
-							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
-							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-							<span class="state_success"><i class="podlove-icon-ok"></i></span>
-							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-						</span>
-					</div>
-					<select id="auphonic_production_files" name="input_file">
-						<option>-</option>
-					</select>
-					<input type="text" id="auphonic_http_upload_url" name="auphonic_http_upload_url" style="display:none" class="large-text" />
-					<input type="file" id="auphonic_local_upload_url" name="auphonic_local_upload_url" style="display:none" class="large-text" />
-				</div>
-
-				<div class="auphonic-row">
-
-					<button class="button button-primary" id="create_auphonic_production_button" title="<?php echo __( 'Create a production for the selected file.', 'podlove' ) ?>">
-						<span class="indicating_button_wrapper">
-							<span class="state_idle"><i class="podlove-icon-plus"></i></span>
-							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-							<span class="state_success"><i class="podlove-icon-ok"></i></span>
-							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-						</span>
-						Create Production
-					</button>
-
-					<label>
-						<input type="checkbox" id="auphonic_start_after_creation"> <?php echo __( 'Start after creation', 'podlove' ) ?>
-					</label>
-				</div>
-			</fieldset>
-
-			<fieldset>
-				<legend>Manage Production</legend>
-				<div class="auphonic-row">
-						<select name="import_from_auphonic" id="auphonic_productions">
-							<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
-						</select>
-						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->get_module_option('auphonic_api_key') ?>'>
-							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
-							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-							<span class="state_success"><i class="podlove-icon-ok"></i></span>
-							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-						</span>
-
-						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove') ?>">
-							<span class="indicating_button_wrapper">
-								<i class="podlove-icon-share"></i>
-							</span>
-							Open Production
-						</button>
-
-					<div style="clear: both"></div>
-
-				</div>
-
-				<div id="auphonic-selected-production">
-					<div class="auphonic-row">
-
-						<button class="button button-primary" id="start_auphonic_production_button" disabled>
-							<span class="indicating_button_wrapper">
-								<span class="state_idle"><i class="podlove-icon-cogs"></i></span>
-								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-								<span class="state_success"><i class="podlove-icon-ok"></i></span>
-								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-							</span>
-							Start Production
-						</button>
-
-						<button class="button" id="stop_auphonic_production_button" disabled>
-							<span class="indicating_button_wrapper">
-								<span class="state_idle"><i class="podlove-icon-ban-circle"></i></span>
-								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-								<span class="state_success"><i class="podlove-icon-ok"></i></span>
-								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-							</span>
-							Stop Production
-						</button>
-
-						<label>
-							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php echo __( 'Publish episode when done', 'podlove' ) ?>
-						</label>
-
-						<label>
-							<input type="checkbox" id="auphonic_complete_after_finishing"> <?php echo __( 'Complete episode metadata when done', 'podlove' ) ?>
-						</label>
-					</div>
-
-					<div class="auphonic-row">
-						<button id="fetch_production_results_button" class="button" disabled>
-							<span class="indicating_button_wrapper">
-								<span class="state_idle"><i class="podlove-icon-cloud-download"></i></span>
-								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-								<span class="state_success"><i class="podlove-icon-ok"></i></span>
-								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-							</span>
-							Get Production Results
-						</button>
-						<button id="fetch_production_data_button" class="button" disabled>
-							<span class="indicating_button_wrapper">
-								<span class="state_idle"><i class="podlove-icon-cloud-download"></i></span>
-								<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-								<span class="state_success"><i class="podlove-icon-ok"></i></span>
-								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-							</span>
-							Import Episode Metadata
-						</button>
-					</div>
-				</div>
-			</fieldset>
-
-		</div>
-		<?php
     }
     
     public function check_code() { 
