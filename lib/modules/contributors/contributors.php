@@ -42,7 +42,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'wp_ajax_podlove-contributors-delete-default', array($this, 'delete_default_contributor') );
 		add_action( 'wp_ajax_podlove-contributors-delete-episode', array($this, 'delete_episode_contributor') );
 
-		add_action( 'podlove_feed_contributor_settings', array($this, 'feed_settings') );
+		add_action( 'podlove_feed_settings_bottom', array($this, 'feed_settings') );
 		add_action( 'podlove_feed_process', array($this, 'feed_process'), 10, 2 );
 
 		add_filter( 'podlove_adn_tags_description', array($this, 'adn_tags_description') );

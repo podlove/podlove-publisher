@@ -376,7 +376,7 @@ class Feed {
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
-			do_action( 'podlove_feed_contributor_settings', $wrapper );
+			do_action( 'podlove_feed_settings_bottom', $wrapper );
 
 		} );
 	}
