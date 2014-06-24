@@ -270,12 +270,22 @@ class Contributors extends \Podlove\Modules\Base {
 		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );	
 	}
 
-	function feed_item_contributors($podcast, $episode, $feed, $format) {
+	function feed_item_contributors($podcast, $episode, $feed, $format)
+	{
+		$option_name = 'podlove_feed_' . $feed->id . '_contributor_filter';
+		$selected_filter = get_option( $option_name );
+
 		$contributor_xml = '';
 		foreach (\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
 			$contributor = $contribution->getContributor();
 
 			if (!is_object($contributor) || !$contributor->guid)
+				continue;
+
+			if ( !empty( $selected_filter['group'] ) && $contribution->group_id !== $selected_filter['group'] )
+				continue;
+
+			if ( !empty( $selected_filter['role'] ) && $contribution->role_id !== $selected_filter['role'] )
 				continue;
 
 			$contributor_xml .= $this->getContributorXML( $contributor );
