@@ -4,12 +4,9 @@ namespace Podlove\Modules\Networks\Model;
 use \Podlove\Model\Base;
 
 /**
- * Simplified Singleton model for network data.
- *
- * There is only one Network, that's why this is a singleton.
- * Data handling is still similar to the other models. Storage is different.
+ * Lists are a model that can be used to organize Podcasts (e.g. networks)
  */
-class Network extends Base {
+class PodcastList extends Base {
 
 	/**
 	 * Override Base::table_name() to get the right prefix
@@ -17,7 +14,7 @@ class Network extends Base {
 	public static function table_name() {
 		global $wpdb;
 		
-		// Switching to the first blog in network (contains network tables) (It is always 1!)
+		// Switching to the first blog in list (contains list tables) (It is always 1!)
 		switch_to_blog(1);
 		// get name of implementing class
 		$table_name = get_called_class();
@@ -32,15 +29,15 @@ class Network extends Base {
 	}
 
 	/** 
-	*  Fetch Podcasts by Network
+	*  Fetch Podcasts by List
 	*/
-	public static function fetch_podcasts_by_network( $network_id ) {
-		$network = self::find_by_id( $network_id );
-		if( !isset( $network ) ) 
+	public static function fetch_podcasts_by_list( $list_id ) {
+		$list = self::find_by_id( $list_id );
+		if( !isset( $list ) ) 
 			return;
 
 		$podcasts = array();
-		foreach ( explode( ',', $network->podcasts ) as $podcast ) {
+		foreach ( explode( ',', $list->podcasts ) as $podcast ) {
 			switch_to_blog( $podcast );
 			$podcasts[ $podcast ] = \Podlove\Model\Podcast::get_instance();
 		}
@@ -76,14 +73,14 @@ class Network extends Base {
 	}
 
 	/**
-	 * Fetch all Pocasts in the current network
+	 * Fetch all Pocasts in the current list
 	 */
 	public function get_podcasts() {
 		$podcasts = json_decode( $this->podcasts );
 		$podcast_objects = array();
 		foreach ($podcasts as $podcast) {
 			switch ( $podcast->type ) {
-				default: case 'wpnetwork':
+				default: case 'wplist':
 					switch_to_blog( $podcast->podcast );
 					$podcast_intance = \Podlove\Model\Podcast::get_instance();
 					$podcast_intance->blog_id = $podcast->podcast;
@@ -118,19 +115,18 @@ class Network extends Base {
 	}
 
 	/**
-	 * Fetch statistics for the network
+	 * Fetch statistics for the list
 	 */
 	public static function statistics() {
-		$networks = count( self::all() );
-		
+		$lists = count( self::all() );
 	}
 
 }
 
-Network::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-Network::property( 'title', 'VARCHAR(255)' );
-Network::property( 'subtitle', 'TEXT' );
-Network::property( 'description', 'TEXT' );
-Network::property( 'url', 'TEXT' );
-Network::property( 'logo', 'TEXT' );
-Network::property( 'podcasts', 'TEXT' );
+PodcastList::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
+PodcastList::property( 'title', 'VARCHAR(255)' );
+PodcastList::property( 'subtitle', 'TEXT' );
+PodcastList::property( 'description', 'TEXT' );
+PodcastList::property( 'url', 'TEXT' );
+PodcastList::property( 'logo', 'TEXT' );
+PodcastList::property( 'podcasts', 'TEXT' );

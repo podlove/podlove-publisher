@@ -3,7 +3,7 @@ namespace Podlove\Modules\Networks;
 
 use \Podlove\Model;
 use \Podlove\Modules\Networks\Model\Base;
-use \Podlove\Modules\Networks\Model\Network;
+use \Podlove\Modules\Networks\Model\PodcastList;
 
 class Networks extends \Podlove\Modules\Base {
 
@@ -19,10 +19,6 @@ class Networks extends \Podlove\Modules\Base {
 		add_action( 'network_admin_menu', array( $this, 'create_network_menu' ) );
 
 		add_action( 'admin_bar_menu', array( $this, 'create_network_toolbar' ), 999 );
-
-		// Adding Shortcodes
-		//add_shortcode( 'podlove-latest-network-episodes', array( $this, 'shortcode_latest_episodes' ) );
-		//add_shortcode( 'podlove-network-podcasts', array( $this, 'shortcode_list_podcasts' ) );
 
 		// Twig template filter
 		add_filter( 'podlove_templates_global_context', array( $this, 'twig_template_filter' ) );
@@ -41,7 +37,7 @@ class Networks extends \Podlove\Modules\Base {
 	 */ 
 
 	public function was_activated( $module_name ) {
-		Network::build();
+		PodcastList::build();
 	}
 
 	/*
@@ -50,7 +46,7 @@ class Networks extends \Podlove\Modules\Base {
 	public function create_network_toolbar( $wp_admin_bar ) {
 		$current_blog_id = get_current_blog_id();
 		$network_dashboard_url = network_site_url() . 'wp-admin/network/admin.php?page=podlove_network_settings_handle';
-		$podcasts = Network::all_podcasts();
+		$podcasts = PodcastList::all_podcasts();
 
 		// Podlove Toolbar Icon
 		$args = array(
@@ -165,7 +161,7 @@ class Networks extends \Podlove\Modules\Base {
 		);
 
 		new \Podlove\Modules\Networks\Settings\Dashboard( \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
-		new \Podlove\Modules\Networks\Settings\Networks( \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
+		new \Podlove\Modules\Networks\Settings\PodcastLists( \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
 		
 		do_action( 'podlove_register_settings_pages', \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
 	}
@@ -176,7 +172,7 @@ class Networks extends \Podlove\Modules\Base {
 
 	public function shortcode_latest_episodes() {
 
-		$latest_episodes = \Podlove\Modules\Networks\Model\Network::latest_episodes();
+		$latest_episodes = \Podlove\Modules\Networks\Model\PodcastList::latest_episodes();
 
 		$source = " <table>
 					<thead>
@@ -209,7 +205,7 @@ class Networks extends \Podlove\Modules\Base {
 
 	public function shortcode_list_podcasts( $attributes ) {
 
-		$podcasts = \Podlove\Modules\Networks\Model\Network::get_podcasts();
+		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::get_podcasts();
 
 		$source = "<ul class='podlove_network_podcast_list'>";
 

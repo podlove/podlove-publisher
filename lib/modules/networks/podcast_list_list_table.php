@@ -1,46 +1,46 @@
 <?php
 namespace Podlove\Modules\Networks;
-use \Podlove\Modules\Networks\Model\Network;
+use \Podlove\Modules\Networks\Model\PodcastList;
 
-class Network_List_Table extends \Podlove\List_Table {
+class PodcastList_List_Table extends \Podlove\List_Table {
 	
 	function __construct(){
 		global $status, $page;
 		        
 		// Set parent defaults
 		parent::__construct( array(
-		    'singular'  => 'network',   // singular name of the listed records
-		    'plural'    => 'networks',  // plural name of the listed records
+		    'singular'  => 'list',   // singular name of the listed records
+		    'plural'    => 'lists',  // plural name of the listed records
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
 	
-	public function column_title( $network ) {
+	public function column_title( $list ) {
 		$actions = array(
-			'edit'   => Settings\Networks::get_action_link( $network, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\Networks::get_action_link( $network, __( 'Delete', 'podlove' ), 'confirm_delete' )
+			'edit'   => Settings\PodcastLists::get_action_link( $list, __( 'Edit', 'podlove' ) ),
+			'delete' => Settings\PodcastLists::get_action_link( $list, __( 'Delete', 'podlove' ), 'confirm_delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
-		    Settings\Networks::get_action_link( $network, $network->title ),
+		    Settings\PodcastLists::get_action_link( $list, $list->title ),
 		    $this->row_actions( $actions )
-		) . '<input type="hidden" class="network_id" value="' . $network->id . '">';
+		) . '<input type="hidden" class="list_id" value="' . $list->id . '">';
 	}
 
-	public function column_logo( $network ) {
-		if( $network->logo == "" ) {
+	public function column_logo( $list ) {
+		if( $list->logo == "" ) {
 			return;
 		} else {
-			return "<img src='" . $network->logo . "' title='" . $network->title . "' alt='" . $network->title . "' />";
+			return "<img src='" . $list->logo . "' title='" . $list->title . "' alt='" . $list->title . "' />";
 		}
 	}	
 
-	public function column_url( $network ) {
-		return $network->url;
+	public function column_url( $list ) {
+		return $list->url;
 	}
 
-	public function column_podcasts( $network ) {
-		$podcasts = $network->get_podcasts();
+	public function column_podcasts( $list ) {
+		$podcasts = $list->get_podcasts();
 		$podcasts_as_string = "";
 
 		foreach ($podcasts as $podcast_list_key => $podcast ) {
@@ -89,7 +89,7 @@ class Network_List_Table extends \Podlove\List_Table {
 		$hidden = array();
 		$sortable = false;
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$items = \Podlove\Modules\Networks\Model\Network::all();
+		$items = \Podlove\Modules\Networks\Model\PodcastList::all();
 
 		uasort( $items, function ( $a, $b ) {
 			return strnatcmp( $a->title, $b->title );
