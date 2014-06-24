@@ -29,13 +29,17 @@ class Networks extends \Podlove\Modules\Base {
 	}
 
 	public function twig_template_filter( $context ) {
-		return array_merge($context, array('network' => new Network(\Podlove\Modules\Networks\Model\Network::get_instance())));
+		$lists = array();
+		foreach ( \Podlove\Modules\Networks\Model\PodcastList::all() as $list ) {
+			$lists[] = new \Podlove\Modules\Networks\Template\PodcastList( $list );
+		}
+
+		return array_merge($context, array('lists' => $lists ));
 	}
 
 	/*
 	 *	Was activated
-	 */ 
-
+	 */
 	public function was_activated( $module_name ) {
 		PodcastList::build();
 	}

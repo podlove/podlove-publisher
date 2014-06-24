@@ -58,7 +58,9 @@ class TwigFilter {
 
 		// add podcast to global context
 		$context = array_merge($context, array('podcast' => new Podcast(Model\Podcast::get_instance())));
-		$context = array_merge($context, array('network' => new Network(\Podlove\Modules\Networks\Model\Network::find_by_id(1))));
+
+		// Apply filters to twig templates
+		$context = apply_filters( 'podlove_templates_global_context', $context );
 
 		// add podcast to global context if we are in an episode
 		if ($episode = Model\Episode::find_one_by_property('post_id', get_the_ID())) {

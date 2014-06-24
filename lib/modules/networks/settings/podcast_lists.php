@@ -64,7 +64,6 @@ class PodcastLists {
 	private function create() {
 		global $wpdb;
 		
-		self::manage_multiselect();
 		$list = new PodcastList;
 		$list->update_attributes( $_POST['podlove_list'] );
 		$this->redirect( 'index' );
@@ -232,7 +231,7 @@ class PodcastLists {
 
 						(function($) {
 							var i = 0;
-							var existing_podcasts = <?php echo $list->podcasts; ?>;
+							var existing_podcasts = <?php echo ( empty( $list->podcasts ) ? "[]" : $list->podcasts ); ?>;
 							var podcasts = [];
 
 							function update_chosen() {
