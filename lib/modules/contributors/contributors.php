@@ -923,7 +923,7 @@ class Contributors extends \Podlove\Modules\Base {
 							}
 						?>
 					</select>
-					Group
+					<?php echo __('Group', 'podlove') ?>
 
 					<select name="podlove_feed[contributor_filter][role]" id="">
 						<option value=""></option>
@@ -933,7 +933,10 @@ class Contributors extends \Podlove\Modules\Base {
 							}
 						?>
 					</select>
-					Role
+					<?php echo __('Role', 'podlove') ?>
+					<p>
+						<span class="description"><?php echo __('Limit contributors to the given group and/or role.', 'podlove') ?></span>
+					</p>
 				<?php
 			}		
 		) );
