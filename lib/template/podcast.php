@@ -300,7 +300,6 @@ class Podcast extends Wrapper {
 	 *  	episode_archive
 	 *  	episode_archive_slug
 	 *  	url_template
-	 *  	force_download
 	 *  	ssl_verify_peer
 	 *  metadata
 	 *  	enable_episode_recording_date

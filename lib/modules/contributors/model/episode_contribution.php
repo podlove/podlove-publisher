@@ -33,6 +33,16 @@ class EpisodeContribution extends Base {
 		parent::delete();
 		$this->getContributor()->calcContributioncount();
 	}
+	
+	public static function sortByComment($a, $b) {
+		return strcmp($a->comment, $b->comment);
+	}
+
+	public static function sortByPosition($a, $b) {
+		if ($a->position == $b->position)
+			return 0;
+		return ($a->position < $b->position) ? -1 : 1;
+	}
 }
 
 EpisodeContribution::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

@@ -57,7 +57,6 @@ function get_setting( $namespace, $name ) {
 			'episode_archive' => 'on',
 			'episode_archive_slug' => '/podcast/',
 			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
-			'force_download' => 'on',
 			'ssl_verify_peer' => 'on',
 			'landing_page' => 'homepage'
 		),
@@ -129,7 +128,7 @@ function slugify( $text ) {
 	$text = preg_replace( '~[^\\pL\d_\.\~]~u', '-', $text );
 
 	// transliterate
-	$text = iconv( 'utf-8', 'us-ascii//TRANSLIT', $text );
+	$text = urlencode( $text );
 
 	return empty( $text ) ? 'n-a' : $text;
 }
@@ -748,7 +747,7 @@ function getFlattrScript() {
 		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
 		     s.type = 'text/javascript';
 		     s.async = true;
-		    s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+		    s.src = 'https://api.flattr.com/js/0.6/load.js?mode=auto';
 		    t.parentNode.insertBefore(s, t);
 			 })();
 		/* ]]> */</script>\n";

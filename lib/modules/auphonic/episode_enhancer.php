@@ -58,6 +58,8 @@ class EpisodeEnhancer {
 
 		<div id="auphonic-box">
 
+			<em id="auphonic-credits-status">Available processing time: <span id="auphonic-credits"></span></em>
+
 			<div id="auphonic-production-status" class="auphonic-status status-info"></div>
 
 			<fieldset>

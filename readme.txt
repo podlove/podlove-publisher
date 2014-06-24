@@ -85,6 +85,64 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.14 =
+
+**Templates**
+
+* There is now a default template containing the player and download section
+* Episode contributions can be sorted by comment and position, for example: `episode.contributors({orderby: "comment", order: "DESC"})` or episode.contributors({orderby: "position", order: "ASC"})
+* Iterate over the list of episode tags: `{% for tag in episode.tags({order: "DESC", orderby: "count"}) %} {{ tag.name }} {% endfor %}`
+
+**Other**
+
+* Display available processing time in Auphonic production box
+* Episode slugs may contain a wider variety of characters now, such as umlauts.
+
+= 1.10.13 =
+
+We decided to remove the "Force Download" feature. Its purpose was to guarantee that a click on a download button results in a download dialogue, rather than playing the media file in the browser. The way we implemented it worked, but came with many downsides. Just to name two of them:
+1) We doubled the traffic and significantly increased load since we had to pull all the bytes through the webserver in addition to the download server (even if both are the same).
+2) It was impossible to support HTTP range requests. That means no client was able to resume a broken or paused download. It also seemed to lead to strange behaviour in the web player.
+
+But there is another, superior way to force downloads: configure your download server. The important setting here is [Content-Disposition](http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.5.1).
+
+In *Apache*, you need the `headers` module (`a2enmod headers` on Debian-ish distributions). Then you can add this to your configuration:
+
+	<FilesMatch "\.(mp3|m4a|ogg|oga|ogv|opus|mpg|m4v|webm|flac|pdf|epub|zip)$">
+		Header set Content-Disposition attachment
+	</FilesMatch>
+
+*lighttpd*:
+
+	$HTTP["url"] =~ "\.(mp3|m4a|ogg|oga|ogv|opus|mpg|m4v|webm|flac|pdf|epub|zip)$" {
+		setenv.add-response-header = ("Content-Disposition" => "attachment")
+	}
+
+*Nginx*:
+
+	if ($request_filename ~ "\.(mp3|m4a|ogg|oga|ogv|opus|mpg|m4v|webm|flac|pdf|epub)$"){
+	    add_header Content-Disposition 'attachment';
+	}
+
+**Other Changes**
+
+* Trim whitespace around some URLs that appear in the podcast feed.
+* Update certificate for auth.podlove.org
+* Fix an issue with saving contributors in `Podlove > Podcast Settings > Contributors`
+
+= 1.10.12 =
+
+**Tracking**
+
+* Never redirect media file URLs to trailing-slash-URLs (WordPress has a habit of adding a trailing slash to every URL via redirect. That is undesirable here, since it create two download intents).
+* Handle empty user agent strings
+* Do not write anything to tracking-database unless tracking is in analytics mode.
+
+**Other**
+
+* Compress export files via gzip.
+* Add tracking data to export files.
+
 = 1.10.11 =
 
 **Tracking**

@@ -151,7 +151,7 @@ class Episode extends Base implements Licensable {
 			return;
 		
 		if ( $asset_assignment->image == 'manual' )
-			return $this->cover_art;
+			return trim($this->cover_art);
 
 		$cover_art_file_id = $asset_assignment->image;
 		if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
@@ -237,6 +237,14 @@ class Episode extends Base implements Licensable {
 			return false;
 
 		return true;
+	}
+
+	public function is_published() {
+		
+		if (!$post = get_post($this->post_id))
+			return false;
+
+		return in_array($post->post_status, array('private', 'publish'));
 	}
 
 	public function get_license()

@@ -258,22 +258,6 @@ class Website extends Tab {
 		);
 
 		add_settings_field(
-			/* $id       */ 'podlove_setting_download_header',
-			/* $title    */ sprintf(
-				'<label for="force_download">%s</label>',
-				__( 'Force browsers to download files', 'podlove' )
-			),
-			/* $callback */ function () {
-				?>
-				<input name="podlove_website[force_download]" id="force_download" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'force_download' ), 'on' ) ?>>
-				<?php echo __('By default, browsers try to play files directly instead of downloading them. Check this to enforce a download. Warning: This creates extra traffic for your web server!', 'podlove') ?>
-				<?php
-			},
-			/* $page     */ Settings::$pagehook,  
-			/* $section  */ 'podlove_settings_files'
-		);
-
-		add_settings_field(
 			/* $id       */ 'podlove_setting_ssl_verify_peer',
 			/* $title    */ sprintf(
 				'<label for="ssl_verify_peer">%s</label>',
@@ -298,7 +282,6 @@ class Website extends Tab {
 				'hide_wp_feed_discovery',
 				'use_post_permastruct',
 				'episode_archive',
-				'force_download',
 				'ssl_verify_peer'
 			);
 			foreach ( $checkboxes as $checkbox_key ) {

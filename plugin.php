@@ -65,7 +65,7 @@ function activate_for_current_blog() {
 	$podcast->save();
 
 	// set default modules
-	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation' );
+	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation', 'import_export' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
@@ -84,6 +84,20 @@ function activate_for_current_blog() {
 		update_option( 'podlove', $settings );
 	}
 
+	// set default template
+	if (!$template = Model\Template::find_one_by_property('title', 'default')) {
+		$template = new Model\Template;
+		$template->title = 'default';
+		$template->content = <<<EOT
+{{ episode.player }}
+[podlove-episode-downloads]
+EOT;
+		$template->save();
+
+		$assignment = Model\TemplateAssignment::get_instance();
+		$assignment->top = $template->id;
+		$assignment->save();
+	}
 }
 
 /**
@@ -813,13 +827,13 @@ function handle_media_file_download() {
 	}
 
 	if (isset($_REQUEST['ptm_source'])) {
-		$ptm_source = isset($_REQUEST['ptm_source']);
+		$ptm_source = $_REQUEST['ptm_source'];
 	} else {
 		$ptm_source = get_query_var("ptm_source");
 	}
 
 	if (isset($_REQUEST['ptm_context'])) {
-		$ptm_context = isset($_REQUEST['ptm_context']);
+		$ptm_context = $_REQUEST['ptm_context'];
 	} else {
 		$ptm_context = get_query_var("ptm_context");
 	}
@@ -869,70 +883,54 @@ function handle_media_file_download() {
 		exit;
 	}
 
-	// tracking
-	$intent = new Model\DownloadIntent;
-	$intent->media_file_id = $media_file_id;
-	$intent->accessed_at = date('Y-m-d H:i:s');
-	
-	if ($ptm_source)
-		$intent->source = $ptm_source;
-
-	if ($ptm_context)
-		$intent->context = $ptm_context;
-
-	// set user agent
-	$ua_string = $_SERVER['HTTP_USER_AGENT'];
-	if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
-		$agent = new Model\UserAgent;
-		$agent->user_agent = $ua_string;
-		$agent->save();
-	}
-	$intent->user_agent_id = $agent->id;
-
-	// get ip, but don't store it
-	$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
-	if (method_exists($ip, 'as_IPv6_address')) {
-		$ip = $ip->as_IPv6_address();
-	}
-	$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
-
-	// Generate a hash from IP address and UserAgent so we can identify
-	// identical requests without storing an IP address.
-	$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
-	$intent = $intent->add_geo_data($ip_string);
-
-	$intent->save();
-
-	if ( \Podlove\get_setting('website', 'force_download') == 'on' && in_array( strtolower( ini_get( 'allow_url_fopen' ) ), array( "1", "on", "true" ) ) ) {
-		header( "Expires: 0" );
-		header( 'Cache-Control: must-revalidate' );
-	    header( 'Pragma: public' );
-		header( "Content-Type: " . $episode_asset->file_type()->mime_type );
-		header( "Content-Description: File Transfer" );
-		header( "Content-Disposition: attachment; filename=" . $media_file->get_download_file_name() );
-		header( "Content-Transfer-Encoding: binary" );
-
-		if ( $media_file->size > 0 )
-			header( 'Content-Length: ' . $media_file->size );
+	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics") {
+		$intent = new Model\DownloadIntent;
+		$intent->media_file_id = $media_file_id;
+		$intent->accessed_at = date('Y-m-d H:i:s');
 		
-		if (strtoupper($_SERVER['REQUEST_METHOD']) !== "HEAD") {
-			ob_clean();
-			flush();
-			while ( @ob_end_flush() ); // flush and end all output buffers
-			readfile( $media_file->get_file_url($intent->source, $intent->context) );
-		}
-	} else {
-		$location = $media_file->add_ptm_parameters(
-			$media_file->get_file_url(),
-			array(
-				'source'  => $intent->source,
-				'context' => $intent->context
-			)
-		);
+		if ($ptm_source)
+			$intent->source = $ptm_source;
 
-		header("HTTP/1.1 301 Moved Permanently");
-		header("Location: " . $location);
+		if ($ptm_context)
+			$intent->context = $ptm_context;
+
+		// set user agent
+		$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
+		if (strlen($ua_string)) {
+			if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
+				$agent = new Model\UserAgent;
+				$agent->user_agent = $ua_string;
+				$agent->save();
+			}
+			$intent->user_agent_id = $agent->id;
+		}
+
+		// get ip, but don't store it
+		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+		if (method_exists($ip, 'as_IPv6_address')) {
+			$ip = $ip->as_IPv6_address();
+		}
+		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
+
+		// Generate a hash from IP address and UserAgent so we can identify
+		// identical requests without storing an IP address.
+		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
+		$intent = $intent->add_geo_data($ip_string);
+
+		$intent->save();
 	}
+
+	$location = $media_file->add_ptm_parameters(
+		$media_file->get_file_url(),
+		array(
+			'source'  => $intent->source,
+			'context' => $intent->context
+		)
+	);
+
+	header("HTTP/1.1 301 Moved Permanently");
+	header("Location: " . $location);
+	exit;
 }
 add_action( 'wp', '\Podlove\handle_media_file_download' );
 
@@ -1023,6 +1021,26 @@ add_filter( 'query_vars', function ( $query_vars ){
     $query_vars[] = 'ptm_context';
     return $query_vars;
 }, 10, 1 );
+
+// don't add trailing slash to file URLs
+add_filter('redirect_canonical', function($redirect_url, $requested_url) {
+	if ((int) get_query_var('download_media_file')) {
+		return false;
+	} else {
+		return $redirect_url;
+	}
+}, 10, 2);
+
+// Ensure WordPress importer keeps the mapping id for old<->new post id.
+// This is required for the Im/Export module. To avoid user errors, it is
+// better to keep this behaviour in core.
+add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
+	$postmetas[] = array(
+		'key' => 'import_id',
+		'value' => $post_id
+	);
+	return $postmetas;
+}, 10, 3 );
 
 // register ajax actions
 new \Podlove\AJAX\Ajax;

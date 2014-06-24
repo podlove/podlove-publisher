@@ -81,6 +81,41 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	/**
+	 * Orders episode contributors by their 'orderby' and 'order' attribute.
+	 *
+	 * @param  array $contributions List of contributions
+	 * @param  array $args          List of arguments. Keys: order, orderby
+	 * @return Ordered list of cobtributions.
+	 */
+	public static function orderContributions($contributions, $args) {
+		// Order by via attribute comperator
+		if (isset($args['orderby'])) {
+			$comperareFunc = null;
+			switch (strtoupper($args['orderby'])) {
+				case 'COMMENT':
+					$comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment';
+					break;
+				case 'POSITION':
+					$comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition';
+					break;
+			}
+
+			$comperareFunc = apply_filters('podlove_order_contributions_compare_func', $comperareFunc, $args);
+
+			if ($comperareFunc && is_callable($comperareFunc)) {
+				usort($contributions, $comperareFunc);
+			}
+		}
+
+		// ASC or DESC order
+		if (!isset($args['order']) || strtoupper($args['order']) == 'DESC') {
+			$contributions = array_reverse($contributions);
+		}
+
+		return $contributions;
+	}
+
+	/**
 	 * Filter contributions.
 	 *
 	 * @fixme {groupby: "role"} is missing
@@ -161,22 +196,22 @@ class Contributors extends \Podlove\Modules\Base {
 	 * Expands "Import/Export" module: export logic
 	 */
 	public function expandExportFile(\SimpleXMLElement $xml) {
-		Modules\ImportExport\Exporter::exportTable($xml, 'contributors', 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
-		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-groups', 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
-		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-roles', 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
-		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-episode-contributions', 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
-		Modules\ImportExport\Exporter::exportTable($xml, 'contributor-show-contributions', 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
+		Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributors', 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
+		Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributor-groups', 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
+		Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributor-roles', 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
+		Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributor-episode-contributions', 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
+		Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributor-show-contributions', 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
 	}
 
 	/**
 	 * Expands "Import/Export" module: import logic
 	 */
 	public function expandImport($xml) {
-		Modules\ImportExport\Importer::importTable($xml, 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
-		Modules\ImportExport\Importer::importTable($xml, 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
-		Modules\ImportExport\Importer::importTable($xml, 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
-		Modules\ImportExport\Importer::importTable($xml, 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
-		Modules\ImportExport\Importer::importTable($xml, 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
+		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
+		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
+		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
+		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
+		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
 	}
 
 	public function dashboard_statistics_row() {
@@ -629,7 +664,7 @@ class Contributors extends \Podlove\Modules\Base {
 				var PODLOVE = PODLOVE || {};
 				var i = 0;
 				var existing_contributions = <?php
-				echo json_encode(array_map(function($c){
+				echo json_encode(array_filter(array_map(function($c){
 					// Set default role
 					$role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id( $c->role_id );
 					if ( isset( $role_data ) ) {
@@ -659,7 +694,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 					return '';
 
-				}, $current_contributions)); ?>;
+				}, $current_contributions))); ?>;
 
 				PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
 				PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";
