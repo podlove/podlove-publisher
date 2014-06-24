@@ -97,6 +97,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * Display available processing time in Auphonic production box
 * Episode slugs may contain a wider variety of characters now, such as umlauts.
+* Feeds now only contain contributors with an URI. Also, output of contributors in feeds can be filtered by group and/or role.
 
 = 1.10.13 =
 
