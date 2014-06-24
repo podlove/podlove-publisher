@@ -78,6 +78,31 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorSettings($settings_parent);
 		});
+
+		// filter contributions in feeds
+		add_filter('podlove_feed_contributions', array($this, 'must_have_uri'), 10, 2);
+		add_filter('podlove_feed_contributions', array($this, 'must_match_feed_role_and_group'), 10, 2);
+	}
+
+	public function must_have_uri($contributions, $feed)
+	{
+		return array_filter($contributions, function($c) {
+			return is_object($c['contributor']) && strlen($c['contributor']->guid) > 0;
+		});
+	}
+
+	public function must_match_feed_role_and_group($contributions, $feed)
+	{
+		$option_name = 'podlove_feed_' . $feed->id . '_contributor_filter';
+		$filter = get_option( $option_name );
+
+		if (!$filter)
+			return $contributions;
+
+		return array_filter($contributions, function($c) use ($filter) {
+			return (empty($filter['group']) || $c['contribution']->group_id == $filter['group'])
+			    && (empty($filter['role'])  || $c['contribution']->role_id  == $filter['role']);
+		});
 	}
 
 	/**
@@ -245,51 +270,54 @@ class Contributors extends \Podlove\Modules\Base {
 		<?php
 	}
 
+	/**
+	 * Prepare contributions for output in feed.
+	 *
+	 *	- applies various filters
+	 *	- generates and returns feed-compatible xml
+	 * 
+	 * @param  array  $raw_contributions
+	 * @param  object $feed
+	 * @return string
+	 */
+	private function prepare_contributions_for_feed($raw_contributions, $feed)
+	{
+		$contributions = array();
+		foreach ($raw_contributions as $contribution) {
+			$contributions[] = array(
+				'contributor'  => $contribution->getContributor(),
+				'contribution' => $contribution
+			);
+		}
+
+		$contributions = apply_filters( 'podlove_feed_contributions', $contributions, $feed );
+
+		$contributor_xml = '';
+		foreach ($contributions as $contribution) {
+			$contributor_xml .= $this->getContributorXML( $contribution['contributor'] );
+		}
+
+		return $contributor_xml;
+	}
+
 	function feed_head_contributors() {
 		global $wp_query;
 
-		$feed = \Podlove\Model\Feed::find_one_by_slug( $wp_query->query_vars['feed'] );
-		$option_name = 'podlove_feed_' . $feed->id . '_contributor_filter';
-		$selected_filter = get_option( $option_name );
+		$contributor_xml = $this->prepare_contributions_for_feed(
+			\Podlove\Modules\Contributors\Model\ShowContribution::all(),
+			\Podlove\Model\Feed::find_one_by_slug( $wp_query->query_vars['feed'] )
+		);
 
-		$contributor_xml = '';
-		foreach (\Podlove\Modules\Contributors\Model\ShowContribution::all() as $contribution) {
-			$contributor = $contribution->getContributor();
-
-			if (!is_object($contributor) || !$contributor->guid)
-				continue;
-
-			if ( !empty( $selected_filter['group'] ) && $contribution->group_id !== $selected_filter['group'] )
-				continue;
-
-			if ( !empty( $selected_filter['role'] ) && $contribution->role_id !== $selected_filter['role'] )
-				continue;
-
-			$contributor_xml .= $this->getContributorXML( $contributor );
-		}	
-		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );	
+		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );
 	}
 
 	function feed_item_contributors($podcast, $episode, $feed, $format)
 	{
-		$option_name = 'podlove_feed_' . $feed->id . '_contributor_filter';
-		$selected_filter = get_option( $option_name );
+		$contributor_xml = $this->prepare_contributions_for_feed(
+			\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id),
+			$feed
+		);
 
-		$contributor_xml = '';
-		foreach (\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
-			$contributor = $contribution->getContributor();
-
-			if (!is_object($contributor) || !$contributor->guid)
-				continue;
-
-			if ( !empty( $selected_filter['group'] ) && $contribution->group_id !== $selected_filter['group'] )
-				continue;
-
-			if ( !empty( $selected_filter['role'] ) && $contribution->role_id !== $selected_filter['role'] )
-				continue;
-
-			$contributor_xml .= $this->getContributorXML( $contributor );
-		}
 		echo apply_filters( 'podlove_feed_contributors', $contributor_xml );
 	}
 
