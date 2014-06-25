@@ -2,8 +2,8 @@
 namespace Podlove\Modules\Networks;
 
 use \Podlove\Model;
-use \Podlove\Modules\Networks\Model\Base;
 use \Podlove\Modules\Networks\Model\PodcastList;
+use \Podlove\Modules\Networks\Model\Template;
 
 class Networks extends \Podlove\Modules\Base {
 
@@ -20,12 +20,21 @@ class Networks extends \Podlove\Modules\Base {
 
 		add_action( 'admin_bar_menu', array( $this, 'create_network_toolbar' ), 999 );
 
+		// Add Network templates to local template query
+		add_filter( 'podlove_template_query', array( $this, 'provide_network_template' ) );
+
 		// Twig template filter
 		add_filter( 'podlove_templates_global_context', array( $this, 'twig_template_filter' ) );
 
 		// Styles
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( 'wp_print_styles', array( $this, 'scripts_and_styles' ) );
+	}
+
+	public function provide_network_template( $template_id ) {
+		$template = \Podlove\Modules\Networks\Model\Template::find_one_by_title( $template_id );
+
+		return $template;
 	}
 
 	public function twig_template_filter( $context ) {
@@ -42,6 +51,7 @@ class Networks extends \Podlove\Modules\Base {
 	 */
 	public function was_activated( $module_name ) {
 		PodcastList::build();
+		Template::build();
 	}
 
 	/*
@@ -166,6 +176,7 @@ class Networks extends \Podlove\Modules\Base {
 
 		new \Podlove\Modules\Networks\Settings\Dashboard( \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
 		new \Podlove\Modules\Networks\Settings\PodcastLists( \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
+		new \Podlove\Modules\Networks\Settings\Templates( \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
 		
 		do_action( 'podlove_register_settings_pages', \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE );
 	}
