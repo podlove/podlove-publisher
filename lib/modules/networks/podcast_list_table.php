@@ -42,7 +42,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		$episodes = array_filter( \Podlove\Model\Episode::allByTime() , function($e) { return $e->is_valid(); });
 		$latest_episode = reset($episodes);
 		$latest_episode_blog_post = get_post( $latest_episode->post_id );
- 		return "<a title='Published on " . date('Y-m-d h:i:s', strtotime( $latest_episode_blog_post->post_date )) ."' href='" . admin_url() . "post.php?post=" . $latest_episode->post_id . "&action=edit'>" . $latest_episode->full_title() . "</a>"
+ 		return "<a title='Published on " . date('Y-m-d h:i:s', strtotime( $latest_episode_blog_post->post_date )) ."' href='" . admin_url() . "post.php?post=" . $latest_episode->post_id . "&action=edit'>" . $latest_episode_blog_post->post_title . "</a>"
  				. "<br />" . \Podlove\relative_time_steps( strtotime( $latest_episode_blog_post->post_date ) );
 	}
 

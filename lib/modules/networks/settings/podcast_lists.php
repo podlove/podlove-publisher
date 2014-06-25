@@ -63,6 +63,13 @@ class PodcastLists {
 	 */
 	private function create() {
 		global $wpdb;
+
+		$podcasts = array();
+		foreach ($_POST['podlove_list']['podcasts'] as $podcast) {
+			$podcasts[] = $podcast;
+		}
+
+		$_POST['podlove_list']['podcasts'] = json_encode( $podcasts );
 		
 		$list = new PodcastList;
 		$list->update_attributes( $_POST['podlove_list'] );
