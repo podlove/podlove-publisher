@@ -4,14 +4,16 @@ use \Podlove\Model;
 
 function handle_feed_proxy_redirects() {
 
+	if (!$feed_slug = get_query_var( 'feed' ))
+		return
+
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
 	$is_feedburner_bot = isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
 	$is_feed_page = $paged > 1;
-	$feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) );
 
-	if ( ! $feed )
+	if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
 		return;
 
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
