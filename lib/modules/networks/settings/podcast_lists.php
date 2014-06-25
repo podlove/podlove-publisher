@@ -231,7 +231,7 @@ class PodcastLists {
 
 						(function($) {
 							var i = 0;
-							var existing_podcasts = <?php echo ( empty( $list->podcasts ) ? "[]" : $list->podcasts ); ?>;
+							var existing_podcasts = <?php echo ( is_null( $list->podcasts ) ? "[]" : $list->podcasts ); ?>;
 							var podcasts = [];
 
 							function update_chosen() {

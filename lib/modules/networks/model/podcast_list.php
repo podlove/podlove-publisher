@@ -96,7 +96,7 @@ class PodcastList extends Base {
 	 * Fetch all Podcasts ordered
 	 */
 	public static function all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
-		$blog_ids = static::all_podcasts();
+		$blog_ids = self::all_podcasts();
 
 		foreach ($blog_ids as $blog_id) {
 			switch_to_blog( $blog_id );
