@@ -129,6 +129,7 @@ class Auphonic extends \Podlove\Modules\Base {
      */
     public function update_production_data( $post_id ) {
     	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+        $production = json_decode( $this->fetch_production( $_POST['uuid'] ) );
 
     	$metadata = array(
     			'title' => get_the_title( $post_id ),
@@ -145,15 +146,15 @@ class Auphonic extends \Podlove\Modules\Base {
     		);
 
     	$auphonic_metadata = array(
-    			'title' => $_POST['metadata']['title'],
-    			'subtitle' => $_POST['metadata']['subtitle'],
-    			'summary' => $_POST['metadata']['summary'],
-    			'duration' => $_POST['length_timestring'],
-    			'chapters' => $this->convert_chapters_to_string( $_POST['chapters'] ),
-    			'slug' => $_POST['output_basename'],
-    			'license' => $_POST['metadata']['license'],
-    			'license_url' => $_POST['metadata']['license_url'],
-    			'tags' => implode( ',', $_POST['metadata']['tags'] )
+    			'title' => $production['metadata']['title'],
+    			'subtitle' => $production['metadata']['subtitle'],
+    			'summary' => $production['metadata']['summary'],
+    			'duration' => $production['length_timestring'],
+    			'chapters' => $this->convert_chapters_to_string( $production['chapters'] ),
+    			'slug' => $production['output_basename'],
+    			'license' => $production['metadata']['license'],
+    			'license_url' => $production['metadata']['license_url'],
+    			'tags' => implode( ',', $production['metadata']['tags'] )
     		);
 
     	// Merge both arrays
@@ -274,6 +275,28 @@ class Auphonic extends \Podlove\Modules\Base {
     }
 
     /**
+     * Fetch production via Auphonic APU.
+     *
+     * 
+     * @return string
+     */
+    public function fetch_production( $uuid ) {
+        if ( ! ( $token = $this->get_module_option('auphonic_api_key') ) )
+            return "";
+
+        $curl = new Http\Curl();
+        $curl->request( 'https://auphonic.com/api/production/' . $uuid . '.json', array(
+            'headers' => array(
+            'Content-type'  => 'application/json',
+            'Authorization' => 'Bearer ' . $this->get_module_option('auphonic_api_key')
+            )
+        ) );
+        $response = $curl->get_response();
+
+        return $response['body'];
+    }
+
+    /**
      * Fetch list of presets via Auphonic APU.
      *
      * Cached in transient "podlove_auphonic_presets".
@@ -322,7 +345,6 @@ class Auphonic extends \Podlove\Modules\Base {
     }
 
     public function admin_print_styles() {
-
     	$screen = get_current_screen();
     	if ( $screen->base != 'post' && $screen->post_type != 'podcast' && $screen->base != 'podlove_page_podlove_settings_modules_handle' )
     		return;
