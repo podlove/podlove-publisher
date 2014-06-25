@@ -54,6 +54,8 @@ class Contributors extends \Podlove\Modules\Base {
 			return $file_loader;
 		});
 
+		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+
 		\Podlove\Template\Episode::add_accessor(
 			'contributors', array('\Podlove\Modules\Contributors\TemplateExtensions', 'accessorEpisodeContributors'), 5
 		);
@@ -103,6 +105,17 @@ class Contributors extends \Podlove\Modules\Base {
 			return (empty($filter['group']) || $c['contribution']->group_id == $filter['group'])
 			    && (empty($filter['role'])  || $c['contribution']->role_id  == $filter['role']);
 		});
+	}
+
+	public function cache_tainting_classes($classes) {
+		return array_merge($classes, array(
+			Contributor::name(),
+			ContributorRole::name(),
+			ContributorGroup::name(),
+			EpisodeContribution::name(),
+			ShowContribution::name(),
+			DefaultContribution::name()
+		));
 	}
 
 	/**
@@ -174,7 +187,7 @@ class Contributors extends \Podlove\Modules\Base {
 		if (isset($args['role']) && $args['role'] != 'all') {
 			$role = $args['role'];
 			$contributions = array_filter($contributions, function($c) use ($role) {
-				return strtolower($role) == $c->getRole()->slug;
+				return $c->hasRole() && strtolower($role) == $c->getRole()->slug;
 			});
 		}
 
@@ -182,7 +195,7 @@ class Contributors extends \Podlove\Modules\Base {
 		if (isset($args['group']) && $args['group'] != 'all') {
 			$group = $args['group'];
 			$contributions = array_filter($contributions, function($c) use ($group) {
-				return strtolower($group) == $c->getGroup()->slug;
+				return $c->hasGroup() && strtolower($group) == $c->getGroup()->slug;
 			});
 		}
 

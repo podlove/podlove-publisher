@@ -51,6 +51,10 @@ class TemplateAssignment {
 		}
 	}
 	
+	public static function name() {
+		return 'template_assignment';
+	}
+
 	private function set_property( $name, $value ) {
 		$this->data[ $name ] = $value;
 	}
@@ -121,6 +125,9 @@ class TemplateAssignment {
 	 */
 	public function save() {
 		update_option( 'podlove_template_assignment', $this->data );
+
+		do_action('podlove_model_save', $this);
+		do_action('podlove_model_change', $this);
 	}
 
 	/**

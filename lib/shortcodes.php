@@ -150,19 +150,22 @@ function template_shortcode( $attributes ) {
 
 	// backward compatibility
 	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
+	$permalink   = get_permalink();
 
-	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
-		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
+	$cache = \Podlove\Cache\TemplateCache::get_instance();
+	return $cache->cache_for($template_id . $permalink, function() use ($template_id, $attributes) {
 
-	$html = apply_filters('podlove_template_raw', $template->title, $attributes);
+		if (!$template = Model\Template::find_one_by_title($template_id))
+			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-	// apply autop and shortcodes
-	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
-		$html = wpautop( $html );
+		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
-	$html = do_shortcode( $html );
+		// apply autop and shortcodes
+		if ( in_array($attributes['autop'], array('yes', 1, 'true')))
+			$html = wpautop($html);
 
-	return $html;
+		return do_shortcode($html);
+	});
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 
