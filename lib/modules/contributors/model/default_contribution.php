@@ -18,6 +18,14 @@ class DefaultContribution extends Base {
 	public function getContributor() {
 		return Contributor::find_by_id($this->contributor_id);
 	}
+
+	public function hasRole() {
+		return ((int) $this->role_id) > 0;
+	}
+
+	public function hasGroup() {
+		return ((int) $this->group_id) > 0;
+	}
 }
 
 DefaultContribution::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

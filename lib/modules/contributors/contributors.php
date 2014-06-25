@@ -146,7 +146,7 @@ class Contributors extends \Podlove\Modules\Base {
 		if (isset($args['role']) && $args['role'] != 'all') {
 			$role = $args['role'];
 			$contributions = array_filter($contributions, function($c) use ($role) {
-				return strtolower($role) == $c->getRole()->slug;
+				return $c->hasRole() && strtolower($role) == $c->getRole()->slug;
 			});
 		}
 
@@ -154,7 +154,7 @@ class Contributors extends \Podlove\Modules\Base {
 		if (isset($args['group']) && $args['group'] != 'all') {
 			$group = $args['group'];
 			$contributions = array_filter($contributions, function($c) use ($group) {
-				return strtolower($group) == $c->getGroup()->slug;
+				return $c->hasGroup() && strtolower($group) == $c->getGroup()->slug;
 			});
 		}
 

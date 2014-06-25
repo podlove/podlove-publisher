@@ -20,6 +20,14 @@ class EpisodeContribution extends Base {
 		return Contributor::find_by_id($this->contributor_id);
 	}
 
+	public function hasRole() {
+		return ((int) $this->role_id) > 0;
+	}
+
+	public function hasGroup() {
+		return ((int) $this->group_id) > 0;
+	}
+
 	public function getEpisode() {
 		return \Podlove\Model\Episode::find_one_by_id($this->episode_id);
 	}
