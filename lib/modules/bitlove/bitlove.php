@@ -129,6 +129,7 @@ class Bitlove extends \Podlove\Modules\Base {
 			$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 			$media_files = $episode->media_files();
 			$downloads = array();
+			$content = '';
 
 			foreach ( $media_files as $media_file ) {
 
