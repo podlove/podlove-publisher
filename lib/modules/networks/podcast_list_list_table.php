@@ -36,7 +36,7 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 	}	
 
 	public function column_url( $list ) {
-		return $list->url;
+		return "<a href='" . $list->url . "'>" . $list->url . "</a>";
 	}
 
 	public function column_podcasts( $list ) {

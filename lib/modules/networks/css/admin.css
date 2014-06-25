@@ -1,4 +1,5 @@
-table.lists td.column-logo img {
+table.lists td.column-logo img,
+table.podcasts td.column-logo img {
 	width: 80px;
 }
 

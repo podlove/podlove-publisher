@@ -39,6 +39,7 @@ class Dashboard {
 
 		add_meta_box( Dashboard::$pagehook . '_right_now', __( 'At a glance', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::right_now', Dashboard::$pagehook, 'normal' );
 		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
+		add_meta_box( Dashboard::$pagehook . '_podcast_overview', __( 'Podcasts', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::podcast_overview', Dashboard::$pagehook, 'normal' );
 		add_meta_box( Dashboard::$pagehook . '_list_overview', __( 'Lists', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::list_overview', Dashboard::$pagehook, 'normal' );
 
 		do_action( 'podlove_network_dashboard_meta_boxes' );
@@ -241,6 +242,14 @@ class Dashboard {
 			<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
 		</p>
 		<?php
+	}
+
+	public static function podcast_overview() {
+		switch_to_blog( 1 );
+
+		$table = new \Podlove\Modules\Networks\Podcast_List_Table();
+		$table->prepare_items();
+		$table->display();
 	}
 
 	public static function list_overview() {
