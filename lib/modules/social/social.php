@@ -1012,6 +1012,10 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function adn_contributor_filter() {
+
+		if (!is_admin())
+			return;
+
 		$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
 
 		$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
