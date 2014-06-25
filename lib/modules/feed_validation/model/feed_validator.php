@@ -20,7 +20,7 @@ class FeedValidator extends \Podlove\Model\Base {
 		$feed_body = $source['body'];
 		$feed_items = $feed->post_ids();
 
-		$last_modification = \Podlove\Modules\FeedValidation\Feed_Validation::relative_time_steps(strtotime( isset($feed_header['last-modified']) ? $feed_header['last-modified'] : 0 ));
+		$last_modification = \Podlove\relative_time_steps(strtotime( isset($feed_header['last-modified']) ? $feed_header['last-modified'] : 0 ));
 		$size = \Podlove\format_bytes(strlen( $feed_body ));
 
 		if ( extension_loaded('zlib') ) {
