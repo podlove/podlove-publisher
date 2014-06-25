@@ -149,36 +149,33 @@ class Dashboard {
 		return \Podlove\NormalPlayTime\Parser::parse( $timestring, 's' );
 	}
 
-	public static function statistics() {
-		$episodes = Model\Episode::allByTime();
-		$valid_episodes = array_filter($episodes, function($e) { return $e->is_valid(); });
-		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
-
-		/*
-         *	Episode Statistics
-		 */
-		$prev_post = null;
-		$counted_episodes = 0;
-		$time_stamp_differences = array();
-		$episode_durations = array();
-		$episode_status_count = array(
-			'publish' => 0,
-			'private' => 0,
-			'future' => 0,
-			'draft' => 0,
-		);
-
-		if ( ( $episodes_total_length_transient = get_transient( 'podlove_dashboard_stats_episodestlength' ) ) !== FALSE && 
-			 ( $episodes_average_episode_length_transient = get_transient( 'podlove_dashboard_stats_episodealength' ) ) !== FALSE && 
-			 ( $average_days_between_releases_transient = get_transient( 'podlove_dashboard_stats_daysbetreleases' ) ) !== FALSE &&
-			 ( $episodes_total_transient = get_transient( 'podlove_dashboard_stats_episodes' ) ) !== FALSE &&
-			 ( $episodes_total_per_status = get_transient( 'podlove_dashboard_stats_episodesperstat' ) ) !== FALSE ) {
-			$episodes_total_length = $episodes_total_length_transient;
-			$episodes_average_episode_length = $episodes_average_episode_length_transient;
-			$counted_episodes = $episodes_total_transient;
-			$episode_status_count = $episodes_total_per_status;
-			$average_days_between_releases = $average_days_between_releases_transient;
+	public static function prepare_statistics() {
+		if ( ( $statistics = get_transient( 'podlove_dashboard_stats' ) ) !== FALSE ) {
+			return $statistics;
 		} else {
+			$episodes = Model\Episode::allByTime();
+			$valid_episodes = array_filter($episodes, function($e) { return $e->is_valid(); });
+
+			$prev_post = 0;
+			$counted_episodes = 0;
+			$time_stamp_differences = array();
+			$episode_durations = array();
+			$episode_status_count = array(
+				'publish' => 0,
+				'private' => 0,
+				'future' => 0,
+				'draft' => 0,
+			);
+
+			$statistics = array(
+					'episodes' => array(),
+					'total_episode_length' => 0,
+					'average_episode_length' => 0,
+					'days_between_releases' => 0,
+					'average_media_file_size' => 0,
+					'total_media_file_size' => 0
+				);
+
 			foreach ( $valid_episodes as $episode_key => $episode ) {
 				$post = get_post( $episode->post_id );
 				$counted_episodes++;
@@ -204,28 +201,18 @@ class Dashboard {
 				$prev_post = $post;
 			}
 
-			$episodes_total_length = array_sum($episode_durations);
+			// Episode Stati
+			$statistics['episodes'] = $episode_status_count;
+			// Number of Episodes
+			$statistics['total_number_of_episodes'] = count( $valid_episodes );
+			// Total Episode length
+			$statistics['total_episode_length'] = array_sum($episode_durations);
 			// Calculating average episode in seconds
-			$episodes_average_episode_length = count($episode_durations) > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0;
-			// Calculate average tim until next release in days
-			$average_days_between_releases   = count($time_stamp_differences) > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0;
+			$statistics['average_episode_length'] = count($episode_durations) > 0 ? round(array_sum($episode_durations) / count($episode_durations)) : 0;
+			// Calculate average time until next release in days
+			$statistics['days_between_releases']   = count($time_stamp_differences) > 0 ? round(array_sum($time_stamp_differences) / count($time_stamp_differences)) : 0;			
 
-			// Set transients (for 1h)
-			set_transient( 'podlove_dashboard_stats_episodestlength', $episodes_total_length, 3600 );
-			set_transient( 'podlove_dashboard_stats_episodealength', $episodes_average_episode_length, 3600 );
-			set_transient( 'podlove_dashboard_stats_daysbetreleases', $average_days_between_releases, 3600 );
-			set_transient( 'podlove_dashboard_stats_episodes', $counted_episodes, 3600 );
-			set_transient( 'podlove_dashboard_stats_episodesperstat', $episode_status_count, 3600 );
-		}
-
-		/**
-		 *	Media Files
-		 */
-		if ( ( $mediafile_total_size_transient = get_transient( 'podlove_dashboard_stats_filetsize' ) ) !== FALSE && 
-			 ( $mediafile_average_size_transient = get_transient( 'podlove_dashboard_stats_fileasize' ) ) !== FALSE ) {
-			$mediafile_total_size = $mediafile_total_size_transient;
-			$mediafile_average_size = $mediafile_average_size_transient;
-		} else {
+			// Media Files
 			$episodes_to_media_files = function ($media_files, $episode) {
 				return array_merge($media_files, $episode->media_files());
 			};
@@ -235,22 +222,26 @@ class Dashboard {
 			$sum_mediafile_sizes = function ($result, $media_file) {
 				return $result + $media_file->size;
 			};
-			$mediafile_total_size = array_reduce( $valid_media_files, $sum_mediafile_sizes, 0 );
+			$statistics['total_media_file_size'] = array_reduce( $valid_media_files, $sum_mediafile_sizes, 0 );
 			$mediafile_count      = count($valid_media_files);
 
-			$mediafile_average_size = $mediafile_count > 0 ? $mediafile_total_size / $mediafile_count : 0;
+			$statistics['average_media_file_size'] = $mediafile_count > 0 ? $statistics['total_media_file_size'] / $mediafile_count : 0;
 
-			// Set transients (for 1h)
-			set_transient( 'podlove_dashboard_stats_filetsize', $mediafile_total_size, 3600 );
-			set_transient( 'podlove_dashboard_stats_fileasize', $mediafile_average_size, 3600 );
+			set_transient( 'podlove_dashboard_stats', $statistics, 3600 );
+			return $statistics;
 		}
+	}
+
+	public static function statistics() {
+		$episode_edit_url = site_url() . '/wp-admin/edit.php?post_type=podcast';
+		$statistics = self::prepare_statistics();
 		?>
 		<div class="podlove-dashboard-statistics-wrapper">
 			<h4>Episodes</h4>
 			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $episode_status_count['publish']; ?></a>
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=publish"><?php echo $statistics['episodes']['publish']; ?></a>
 					</td>
 					<td>
 						<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
@@ -258,7 +249,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $episode_status_count['private']; ?></a>
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=private"><?php echo $statistics['episodes']['private']; ?></a>
 					</td>
 					<td>
 						<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
@@ -266,7 +257,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $episode_status_count['future']; ?></a>
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=future"><?php echo $statistics['episodes']['future']; ?></a>
 					</td>
 					<td>
 						<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
@@ -274,7 +265,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $episode_status_count['draft']; ?></a>
+						<a href="<?php echo $episode_edit_url; ?>&amp;post_status=draft"><?php echo $statistics['episodes']['draft']; ?></a>
 					</td>
 					<td>
 						<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
@@ -282,7 +273,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column podlove-dashboard-total-number">
-						<a href="<?php echo $episode_edit_url; ?>"><?php echo $counted_episodes; ?></a>
+						<a href="<?php echo $episode_edit_url; ?>"><?php echo $statistics['total_number_of_episodes']; ?></a>
 					</td>
 					<td class="podlove-dashboard-total-number">
 						<?php echo __( 'Total', 'podlove' ); ?>
@@ -295,7 +286,7 @@ class Dashboard {
 			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo gmdate("H:i:s", $episodes_average_episode_length ); ?>
+						<?php echo gmdate("H:i:s", $statistics['average_episode_length'] ); ?>
 					</td>
 					<td>
 						<?php echo __( 'is the average length of an episode', 'podlove' ); ?>.
@@ -304,7 +295,7 @@ class Dashboard {
 				<tr>
 					<td class="podlove-dashboard-number-column">
 						<?php
-							$days = round($episodes_total_length / 3600 / 24, 1);
+							$days = round($statistics['total_episode_length'] / 3600 / 24, 1);
 							echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
 						?>
 					</td>
@@ -314,7 +305,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo \Podlove\format_bytes($mediafile_average_size, 1); ?>
+						<?php echo \Podlove\format_bytes($statistics['average_media_file_size'], 1); ?>
 					</td>
 					<td>
 						<?php echo __( 'is the average media file size', 'podlove' ); ?>.
@@ -322,7 +313,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo \Podlove\format_bytes($mediafile_total_size, 1); ?>
+						<?php echo \Podlove\format_bytes($statistics['total_media_file_size'], 1); ?>
 					</td>
 					<td>
 						<?php echo __( 'is the total media file size', 'podlove' ); ?>.
@@ -330,7 +321,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo sprintf(_n('%s day', '%s days', $average_days_between_releases, 'podlove'), $average_days_between_releases); ?>
+						<?php echo sprintf(_n('%s day', '%s days', $statistics['days_between_releases'], 'podlove'), $statistics['days_between_releases']); ?>
 					</td>
 					<td>
 						<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.

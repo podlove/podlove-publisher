@@ -1,7 +1,7 @@
 <?php
 namespace Podlove\Modules\Networks\Settings;
 use \Podlove\Model;
-use \Podlove\Modules\Networks\Model\Network;
+use \Podlove\Modules\Networks\Model\PocastList;
 
 class Dashboard {
 
@@ -93,7 +93,7 @@ class Dashboard {
 	}
 
 	public static function right_now() {
-		$podcasts = Network::all_podcasts();
+		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::all_podcasts();
 		$number_of_podcasts = count( $podcasts );
 
 		$episodes_total = 0;
@@ -109,15 +109,13 @@ class Dashboard {
 		$media_file_total_size = 0;
 		$days_between_episodes = 0;
 
-		$relative_gender_numbers = array( 'male' => 0, 'female' => 0 );
-
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
+			$statistics = \Podlove\Settings\Dashboard::prepare_statistics();
 
-			$episodes_total += get_transient( 'podlove_dashboard_stats_episodes' );
-			$relative_gender_numbers = apply_filters( 'podlove_dashboard_statistics_contributor', $relative_gender_numbers );
+			$episodes_total += $statistics['total_number_of_episodes'];
 
-			array_walk( get_transient( 'podlove_dashboard_stats_episodesperstat' ), function( $posts, $type ) use ( &$episodes_total_per_status ) {
+			array_walk( $statistics['episodes'], function( $posts, $type ) use ( &$episodes_total_per_status ) {
 				switch ( $type ) {
 					case 'publish':
 						$episodes_total_per_status['publish'] += $posts;
@@ -134,11 +132,11 @@ class Dashboard {
 				}
 			});
 
-			$episodes_total_length += get_transient( 'podlove_dashboard_stats_episodestlength' );
-			$episode_total_average_length += get_transient( 'podlove_dashboard_stats_episodealength' );
-			$days_between_episodes += get_transient( 'podlove_dashboard_stats_daysbetreleases' );
-			$media_file_total_average_size += get_transient( 'podlove_dashboard_stats_fileasize' );
-			$media_file_total_size += get_transient( 'podlove_dashboard_stats_filetsize' );			
+			$episodes_total_length += $statistics['total_episode_length'];
+			$episode_total_average_length += $statistics['average_episode_length'];
+			$days_between_episodes += $statistics['days_between_releases'];
+			$media_file_total_average_size += $statistics['average_media_file_size'];
+			$media_file_total_size += $statistics['total_media_file_size'];			
 		}
 
 		// Devide stats by number of Podcasts
@@ -231,22 +229,10 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo sprintf(_n('%s day', '%s days', $days_between_episodes, 'podlove'), $days_between_episodes); ?>
+						<?php echo sprintf(_n('%s day', '%s days', round( $days_between_episodes ), 'podlove'), round( $days_between_episodes ) ); ?>
 					</td>
 					<td>
 						<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
-					</td>
-				</tr>
-				<tr>
-					<td class="podlove-dashboard-number-column">
-						<?php echo __('Genders', 'podlove') ?>
-					</td>
-					<td>
-						<?php
-						echo implode(', ', array_map(function($percent, $gender) use ( $number_of_podcasts ) {
-							return round($percent / $number_of_podcasts) . "% " . $gender;
-						}, $relative_gender_numbers, array_keys($relative_gender_numbers)));
-						?>
 					</td>
 				</tr>
 			</table>
