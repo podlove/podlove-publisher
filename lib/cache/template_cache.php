@@ -3,6 +3,29 @@ namespace Podlove\Cache;
 
 use \Podlove\Model;
 
+/**
+ * Template Caching
+ *
+ * API to cache rendered text strings.
+ * This cache does *not* expire by time. Instead, purging is also handled by
+ * this class. Whenever a view-relevant model changes, *all* caches are purged.
+ * To register a model class for purging, the 'podlove_cache_tainting_classes'
+ * filter has to be used. Look into the source below for usage. Alternatively,
+ * a purge can be started manually:
+ *
+ * 	\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+ *
+ * Usage example:
+ *
+ * 	$cache = \Podlove\Cache\TemplateCache::get_instance();
+ * 	$html = $cache->cache_for('unique_cache_key', function() {
+ * 		return "Hello World"; // or probably something more costly to generate
+ * 	});
+ *
+ * To globally deactivate caching, put this in the wp-config.php:
+ *
+ * 	define('PODLOVE_TEMPLATE_CACHE', false);
+ */
 class TemplateCache {
 
 	private static $instance = NULL;
