@@ -51,6 +51,8 @@ class Contributors extends \Podlove\Modules\Base {
 			return $file_loader;
 		});
 
+		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+
 		\Podlove\Template\Episode::add_accessor(
 			'contributors', array('\Podlove\Modules\Contributors\TemplateExtensions', 'accessorEpisodeContributors'), 5
 		);
@@ -75,6 +77,17 @@ class Contributors extends \Podlove\Modules\Base {
 			new Settings\Contributors($settings_parent);
 			new Settings\ContributorSettings($settings_parent);
 		});
+	}
+
+	public function cache_tainting_classes($classes) {
+		return array_merge($classes, array(
+			Contributor::name(),
+			ContributorRole::name(),
+			ContributorGroup::name(),
+			EpisodeContribution::name(),
+			ShowContribution::name(),
+			DefaultContribution::name()
+		));
 	}
 
 	/**

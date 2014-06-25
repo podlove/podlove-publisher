@@ -56,6 +56,16 @@ class Social extends \Podlove\Modules\Base {
 
 		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
 		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
+
+		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+	}
+
+	public function cache_tainting_classes($classes) {
+		return array_merge($classes, array(
+			Service::name(),
+			ShowService::name(),
+			ContributorService::name()
+		));
 	}
 
 	public function was_activated( $module_name ) {
