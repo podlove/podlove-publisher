@@ -73,26 +73,6 @@ class PodcastList extends Base {
 	}
 
 	/**
-	 * Fetch all Pocasts in the current list
-	 */
-	public function get_podcasts() {
-		$podcasts = json_decode( $this->podcasts );
-		$podcast_objects = array();
-		foreach ($podcasts as $podcast) {
-			switch ( $podcast->type ) {
-				default: case 'wplist':
-					switch_to_blog( $podcast->podcast );
-					$podcast_intance = \Podlove\Model\Podcast::get_instance();
-					$podcast_intance->blog_id = $podcast->podcast;
-					$podcast_objects[] = $podcast_intance;
-				break;
-			}
-		}
-
-		return $podcast_objects;
-	}
-
-	/**
 	 * Fetch all Podcasts ordered
 	 */
 	public static function all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
@@ -115,10 +95,70 @@ class PodcastList extends Base {
 	}
 
 	/**
-	 * Fetch statistics for the list
+	 * Fetch all Pocasts in the current list
 	 */
-	public static function statistics() {
-		$lists = count( self::all() );
+	public function get_podcasts() {
+		$podcasts = json_decode( $this->podcasts );
+
+		$podcast_objects = array();
+		foreach ($podcasts as $podcast) {
+			switch ( $podcast->type ) {
+				default: case 'wplist':
+					switch_to_blog( $podcast->podcast );
+					$podcast_intance = \Podlove\Model\Podcast::get_instance();
+					$podcast_intance->blog_id = $podcast->podcast;
+					$podcast_objects[] = $podcast_intance;
+				break;
+			}
+		}
+
+		return $podcast_objects;
+	}
+
+	/**
+	 * Fetch episodes for the list
+	 */
+	public function latest_episodes( $number_of_episodes = "10", $orderby = "date", $order = "desc" ) {
+ 		global $wpdb;
+ 		$current_blog_id = get_current_blog_id();
+
+ 		$podcasts = $this->podcasts;
+ 		$prefix = $wpdb->get_blog_prefix(0);
+ 		$prefix = str_replace( '1_', '' , $prefix );
+ 		$query = "";
+ 		$episodes = array();
+ 
+ 		// Generate mySQL Query
+ 		foreach ( $podcasts as $podcast_key => $podcast ) {
+ 			if( $podcast_key == 0 ) {
+ 			    $post_table = $prefix . "posts";
+ 			} else {
+ 			    $post_table = $prefix . $podcast->blog_id . "_posts";
+ 			}
+ 
+ 			$post_table = esc_sql( $post_table );
+ 	        $blog_table = esc_sql( $prefix . 'blogs' );
+ 
+ 	        $query .= "(SELECT $post_table.ID, $post_table.post_title, $post_table.post_date, $blog_table.blog_id FROM $post_table, $blog_table\n";
+ 	        $query .= "WHERE $post_table.post_type = 'podcast'";
+ 	        $query .= "AND $post_table.post_status = 'publish'";
+ 	        $query .= "AND $blog_table.blog_id = {$podcast->blog_id})";
+ 
+ 	        if( $podcast_key !== count( $podcasts ) - 1 ) 
+ 	           $query .= "UNION\n";
+ 	        else
+ 	           $query .= "ORDER BY post_date DESC LIMIT 0, $number_of_episodes";		
+ 		}
+ 
+       	$recent_posts = $wpdb->get_results( $query );
+ 
+       	foreach ( $recent_posts as $post ) {
+    			switch_to_blog( $post->blog_id );
+    			$episodes[] = \Podlove\Model\Episode::find_one_by_post_id( $post->ID );
+       	}
+ 
+ 		switch_to_blog( $current_blog_id );
+       	return $episodes;
 	}
 
 }

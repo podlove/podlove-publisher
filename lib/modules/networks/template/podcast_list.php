@@ -25,7 +25,10 @@ class PodcastList extends Wrapper {
 		$returned_podcasts = array();
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast->blog_id );
-			$returned_podcasts[] = new \Podlove\Template\Podcast(\Podlove\Model\Podcast::get_instance());
+			$podcast_instance = new \Podlove\Template\Podcast(\Podlove\Model\Podcast::get_instance());
+			$podcast_instance->blog_id = $podcast->blog_id;
+			
+			$returned_podcasts[] = $podcast_instance;
 		}
 
 		$this->list->podcasts = $returned_podcasts;
@@ -92,5 +95,14 @@ class PodcastList extends Wrapper {
 	 */
 	public function podcasts() {
 		return $this->list->podcasts;
+	}
+
+	/**
+	 * List latest episodes from network
+	 * 
+	 * @accessor
+	 */
+	public function episodes() {
+		return $this->list->latest_episodes();
 	}
 }
