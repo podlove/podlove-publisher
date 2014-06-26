@@ -32,6 +32,10 @@ class Dashboard {
 			);
 			wp_enqueue_script( 'cornify-js' );
 		} );
+
+		add_action( 'publish_podcast', function() {
+			delete_transient('podlove_dashboard_stats');
+		} );
 	}
 
 	public static function about_meta() {
