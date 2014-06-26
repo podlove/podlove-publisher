@@ -125,6 +125,7 @@ class PodcastList extends Base {
 
 PodcastList::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 PodcastList::property( 'title', 'VARCHAR(255)' );
+PodcastList::property( 'slug', 'VARCHAR(255)' );
 PodcastList::property( 'subtitle', 'TEXT' );
 PodcastList::property( 'description', 'TEXT' );
 PodcastList::property( 'url', 'TEXT' );

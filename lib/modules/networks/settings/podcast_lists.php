@@ -163,6 +163,11 @@ class PodcastLists {
 				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
 			) );
 
+			$wrapper->string( 'slug', array(
+				'label'       => __( 'Slug', 'podlove' ),
+				'html'        => array( 'class' => 'regular-text required' )
+			) );
+
 			$wrapper->image( 'logo', array(
 				'label'        => __( 'Logo', 'podlove' ),
 				'description'  => __( 'JPEG or PNG.', 'podlove' ),
