@@ -87,6 +87,17 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.14 =
 
+**Performance**
+
+A simple yet effective caching strategy has been implemented. This is used to cache rendered site segments. A complete cache invalidation happens when podcast related data changes. This should be a good start since such data rarely changes (mostly when a new episode is published). In a Multisite setup, each site handles its cache separately.
+
+This is implemented using the [Transients API](http://codex.wordpress.org/Transients_API). By default, WordPress uses the database as a caching backend. If you want to squeeze out even more speed, consider installing a [Persistent Cache Plugin](http://codex.wordpress.org/Class_Reference/WP_Object_Cache#Persistent_Cache_Plugins) which replaces the database with a more efficient caching backend, such as memcached or APC. That might require some fiddling around, though.
+
+* Cache Publisher templates
+* Cache feed discovery header
+* Cache Bitlove widget
+* Other minor performance improvements
+
 **Templates**
 
 * There is now a default template containing the player and download section
