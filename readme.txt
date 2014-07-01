@@ -93,6 +93,8 @@ A simple yet effective caching strategy has been implemented. This is used to ca
 
 This is implemented using the [Transients API](http://codex.wordpress.org/Transients_API). By default, WordPress uses the database as a caching backend. If you want to squeeze out even more speed, consider installing a [Persistent Cache Plugin](http://codex.wordpress.org/Class_Reference/WP_Object_Cache#Persistent_Cache_Plugins) which replaces the database with a more efficient caching backend, such as memcached or APC. That might require some fiddling around, though.
 
+Caching can be deactivated in the `wp-config.php` with the following line: `define('PODLOVE_TEMPLATE_CACHE', false);`
+
 * Cache Publisher templates
 * Cache feed discovery header
 * Cache Bitlove widget
