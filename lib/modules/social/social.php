@@ -399,6 +399,14 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Gittip Account',
 					'logo'			=> 'gittip-128.png',
 					'url_scheme'	=> 'https://www.gittip.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Auphonic Credits',
+					'name'	 		=> 'auphonic credits',
+					'category'		=> 'donation',
+					'description'	=> 'Auphonic Account',
+					'logo'			=> 'auphonic-128.png',
+					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
 				)
 		);
 
