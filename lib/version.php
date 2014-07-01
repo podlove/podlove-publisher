@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 77 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 78 );
 
 add_action( 'init', '\Podlove\run_database_migrations' );
 
@@ -869,6 +869,18 @@ function run_migrations_for_version( $version ) {
 
 				$sql = "DELETE FROM $userAgentTable WHERE user_agent IS NULL";
 				$wpdb->query($sql);
+			}
+		break;
+		case 78:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$c = new \Podlove\Modules\Social\Model\Service;
+				$c->title = 'Auphonic Credits';
+				$c->category = 'donation';
+				$c->type = 'auphonic credits';
+				$c->description = 'Auphonic Account';
+				$c->logo = 'auphonic-128.png';
+				$c->url_scheme = 'https://auphonic.com/donate_credits?user=%account-placeholder%';
+				$c->save();
 			}
 		break;
 	}
