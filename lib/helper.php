@@ -126,9 +126,7 @@ function slugify( $text ) {
 
 	// replace everything but unreserved characters (RFC 3986 section 2.3) by a hyphen
 	$text = preg_replace( '~[^\\pL\d_\.\~]~u', '-', $text );
-
-	// transliterate
-	$text = urlencode( $text );
+	$text = rawurlencode( $text );
 
 	return empty( $text ) ? 'n-a' : $text;
 }
