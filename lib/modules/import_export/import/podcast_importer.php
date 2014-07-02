@@ -99,7 +99,15 @@ class PodcastImporter {
 
 		\Podlove\run_database_migrations();
 
-		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=' . $status));
+		$redirect_url = 'admin.php?page=podlove_imexport_migration_handle';
+
+		if ($status)
+			$redirect_url .= '&status=' . $status;
+
+		if (isset($_REQUEST['podlove_tab']))
+			$redirect_url .= '&podlove_tab=' . $_REQUEST['podlove_tab'];
+
+		wp_redirect(admin_url($redirect_url));
 		exit;
 	}
 
