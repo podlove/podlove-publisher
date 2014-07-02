@@ -112,6 +112,7 @@ Caching can be deactivated in the `wp-config.php` with the following line: `defi
 * Episode slugs may contain a wider variety of characters now, such as umlauts.
 * Feeds now only contain contributors with an URI. Also, output of contributors in feeds can be filtered by group and/or role.
 * New donation option for Auphonic Credits
+* Remove scary debug output on failed media file validations. This can be found in the log now.
 
 = 1.10.13 =
 
