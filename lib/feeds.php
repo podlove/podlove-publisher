@@ -5,7 +5,7 @@ use \Podlove\Model;
 function handle_feed_proxy_redirects() {
 
 	if (!$feed_slug = get_query_var( 'feed' ))
-		return
+		return;
 
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
