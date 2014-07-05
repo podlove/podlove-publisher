@@ -8,16 +8,8 @@ class Export extends \Podlove\Settings\Expert\Tab {
 	}
 
 	public function page() {
+		do_action('podlove_imexport_settings_head');
 		?>
-
-		<?php if ( defined('SAVEQUERIES') && SAVEQUERIES ): ?>
-			<div class="error">
-				<p>
-					<b><?php echo __('Heads up!', 'podlove') ?></b>
-					<?php echo __('The WordPress debug option <code>SAVEQUERIES</code> is active. This might lead to memory issues when exporting or importing tracking data.<br>It is probably defined in <code>wp-config.php</code>. Please turn it off before using the export tool.', 'podlove') ?>
-				</p>
-			</div>
-		<?php endif; ?>
 
 		<h3><?php echo __('Podcast Export', 'podlove') ?></h3>
 

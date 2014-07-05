@@ -37,9 +37,11 @@ class Import extends \Podlove\Settings\Expert\Tab {
 	}
 
 	public function page() {
+		do_action('podlove_imexport_settings_head');
 		?>
+
 		<p>
-			<?php echo __('Heads up: Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove'); ?>
+			<?php echo __('Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove'); ?>
 		</p>
 
 		<h3><?php echo __('Podcast Import', 'podlove') ?></h3>
