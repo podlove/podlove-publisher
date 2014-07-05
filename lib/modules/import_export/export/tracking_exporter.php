@@ -55,7 +55,16 @@ class TrackingExporter {
 			// Keeping track of the $lastId is (roughly) a bajillion times faster than paging via LIMIT.
 			$sql = "
 				SELECT
-					*
+					id,
+					user_agent_id,
+					media_file_id,
+					request_id,
+					accessed_at,
+					source,
+					context,
+					geo_area_id,
+					lat,
+					lng
 				FROM
 					" . \Podlove\Model\DownloadIntent::table_name() . "
 					WHERE id > " . (int) $lastId . "
