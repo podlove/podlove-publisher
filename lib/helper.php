@@ -122,13 +122,13 @@ function get_webplayer_setting( $name ) {
 	return $settings[ $name ];
 }
 
-function slugify( $text ) {
-
+function slugify($slug) {
+	$slug = trim($slug);
 	// replace everything but unreserved characters (RFC 3986 section 2.3) by a hyphen
-	$text = preg_replace( '~[^\\pL\d_\.\~]~u', '-', $text );
-	$text = rawurlencode( $text );
+	$slug = preg_replace('~[^\\pL\d_\.\~]~u', '-', $slug);
+	$slug = rawurlencode($slug);
 
-	return empty( $text ) ? 'n-a' : $text;
+	return empty($slug) ? 'n-a' : $slug;
 }
 
 function require_code_mirror() {
