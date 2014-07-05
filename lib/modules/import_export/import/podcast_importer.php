@@ -14,6 +14,9 @@ class PodcastImporter {
 
 	public static function init()
 	{
+		if (!is_admin())
+			return;
+
 		if (!isset($_FILES['podlove_import']))
 			return;
 
