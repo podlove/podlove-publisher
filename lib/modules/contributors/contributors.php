@@ -339,13 +339,25 @@ class Contributors extends \Podlove\Modules\Base {
 		$contributor_xml = '';
 
 		if ($contributor->visibility == 1) {
-			$contributor_xml .= "<atom:contributor>\n";
-			$contributor_xml .= "	<atom:name>" . $contributor->getName() . "</atom:name>\n";
+
+			$dom = new \Podlove\DomDocumentFragment;
+
+			$xml = $dom->createElement('atom:contributor');
+			
+			// add the empty name tag
+			$name = $dom->createElement('atom:name');
+			$xml->appendChild($name);
+
+			// fill name tag with escaped content
+			$name_text = $dom->createTextNode($contributor->getName());
+			$name->appendChild($name_text);
 
 			if ($contributor->guid)
-				$contributor_xml .= "	<atom:uri>" . $contributor->guid . "</atom:uri>\n";
+				$xml->appendChild($dom->createElement('atom:uri', $contributor->guid));
 
-			$contributor_xml .= "</atom:contributor>\n";
+			$dom->appendChild($xml);
+
+			$contributor_xml .= (string) $dom;
 		}
 
 		return $contributor_xml;

@@ -114,6 +114,7 @@ Caching can be deactivated in the `wp-config.php` with the following line: `defi
 * New donation option for Auphonic Credits
 * Remove scary debug output on failed media file validations. This can be found in the log now.
 * Fix Auphonic authentication issue by providing the whole certificate chain
+* Fix contributor related feed rendering issue
 
 = 1.10.13 =
 
