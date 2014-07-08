@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.15 =
+
+* Supply web player API with more data: "publicationDate" contains an ISO-8601 date and "show.url" the URL to the show.
+
 = 1.10.14 =
 
 **Performance**

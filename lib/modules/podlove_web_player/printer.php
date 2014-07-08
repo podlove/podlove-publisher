@@ -162,6 +162,7 @@ class Printer {
 			'title'               => get_the_title( $this->post->ID ),
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
+			'publicationDate'     => mysql2date("c", $this->post->post_date),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
@@ -171,7 +172,8 @@ class Printer {
 				'title'    => $podcast->title,
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
-				'poster'   => $podcast->cover_image
+				'poster'   => $podcast->cover_image,
+				'url'      => \Podlove\get_landing_page_url()
 			),
 			'license' => array(
 				'name' => $license_name,
