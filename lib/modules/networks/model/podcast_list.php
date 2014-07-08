@@ -132,7 +132,7 @@ class PodcastList extends Base {
 	/**
 	 * Fetch episodes for the list
 	 */
-	public function latest_episodes( $number_of_episodes = "10", $orderby = "date", $order = "desc" ) {
+	public function latest_episodes( $number_of_episodes = "10", $orderby = "post_date", $order = "DESC" ) {
  		global $wpdb;
  		$current_blog_id = get_current_blog_id();
 
@@ -161,7 +161,7 @@ class PodcastList extends Base {
  	        if( $podcast_key !== count( $podcasts ) - 1 ) 
  	           $query .= "UNION\n";
  	        else
- 	           $query .= "ORDER BY post_date DESC LIMIT 0, $number_of_episodes";		
+ 	           $query .= "ORDER BY $orderby $order LIMIT 0, $number_of_episodes";		
  		}
  
        	$recent_posts = $wpdb->get_results( $query );
