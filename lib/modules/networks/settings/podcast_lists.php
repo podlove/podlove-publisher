@@ -304,6 +304,8 @@ class PodcastLists {
 									onRowAdd: function(o) {
 										o.row = o.row.replace(/\{\{id\}\}/g, i);
 
+										row = $(".podcasts_table_body tr:last .podlove-podcast-dropdown").focus();
+
 										podcast_dropdown_handler();
 										update_chosen();
 									},
