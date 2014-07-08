@@ -25,13 +25,17 @@ class PodcastList extends Base {
 		// all lowercase
 		$table_name = strtolower( $table_name );
 		// prefix with $wpdb prefix
-		return $wpdb->prefix . $table_name;
+		$prefix = $wpdb->prefix . $table_name;
+
+		restore_current_blog();
+		return $prefix;
 	}
 
 	/** 
 	*  Fetch Podcasts by List
 	*/
 	public static function fetch_podcasts_by_list( $list_id ) {
+		$current_blog_id = get_current_blog_id();
 		$list = self::find_by_id( $list_id );
 		if( !isset( $list ) ) 
 			return;
@@ -41,6 +45,7 @@ class PodcastList extends Base {
 			switch_to_blog( $podcast );
 			$podcasts[ $podcast ] = \Podlove\Model\Podcast::get_instance();
 		}
+		switch_to_blog( $current_blog_id );
 		return $podcasts;
 	}
 
@@ -49,7 +54,9 @@ class PodcastList extends Base {
 	*/
 	public static function fetch_podcast_by_id( $id ) {
 		switch_to_blog( $id );
-		return \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get_instance();
+		restore_current_blog();
+		return $podcast;
 	}
 
 	/**
@@ -65,17 +72,21 @@ class PodcastList extends Base {
 	 * Fetch all Podcasts
 	 */
 	public static function all_podcasts() {
-		return array_filter( self::all_blogs(), function( $blog ) {
+		$current_blog_id = get_current_blog_id();
+		$podcasts = array_filter( self::all_blogs(), function( $blog ) {
 			switch_to_blog( $blog );
 				if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) )
 					return $blog;
 		} );
+		switch_to_blog( $current_blog_id );
+		return $podcasts;
 	}
 
 	/**
 	 * Fetch all Podcasts ordered
 	 */
 	public static function all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
+		$current_blog_id = get_current_blog_id();
 		$blog_ids = self::all_podcasts();
 
 		foreach ($blog_ids as $blog_id) {
@@ -91,6 +102,7 @@ class PodcastList extends Base {
 			krsort( $podcasts );
 		}
 
+		switch_to_blog( $current_blog_id );
 		return $podcasts;	
 	}
 
@@ -98,6 +110,7 @@ class PodcastList extends Base {
 	 * Fetch all Pocasts in the current list
 	 */
 	public function get_podcasts() {
+		$current_blog_id = get_current_blog_id();
 		$podcasts = json_decode( $this->podcasts );
 
 		$podcast_objects = array();
@@ -112,6 +125,7 @@ class PodcastList extends Base {
 			}
 		}
 
+		switch_to_blog( $current_blog_id );
 		return $podcast_objects;
 	}
 
@@ -154,7 +168,8 @@ class PodcastList extends Base {
  
        	foreach ( $recent_posts as $post ) {
     			switch_to_blog( $post->blog_id );
-    			$episodes[] = \Podlove\Model\Episode::find_one_by_post_id( $post->ID );
+    			if ( $episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID ) )
+    				$episodes[] = new \Podlove\Template\Episode( $episode );
        	}
  
  		switch_to_blog( $current_blog_id );

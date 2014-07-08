@@ -22,6 +22,7 @@ class PodcastList extends Wrapper {
 		$this->list = $list;
 
 		$podcasts = $list->get_podcasts();
+
 		$returned_podcasts = array();
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast->blog_id );

@@ -16,7 +16,6 @@ class Template extends Base {
 				}
 			}
 		}
-		restore_current_blog();
 		return $template;
 	}
 
