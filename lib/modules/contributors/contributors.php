@@ -33,7 +33,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
 
 		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
-		add_filter('podlove_dashboard_statistics_contributor', array($this, 'dashboard_network_statistics_row'));
+		add_filter('podlove_dashboard_statistics_network', array($this, 'dashboard_network_statistics_row'));
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_action('podlove_xml_import', array($this, 'expandImport'));
@@ -216,12 +216,37 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function dashboard_network_statistics_row( $genders ) {
-		$relative_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
-
-		$genders['male'] += $relative_gender_numbers['male'];
-		$genders['female'] += $relative_gender_numbers['female'];
-
-		return $genders;
+		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::all_podcasts();
+		$podcasts_with_contributors_active = 0;
+		$relative_gender_numbers = array( 
+				'male' => 0,
+				'female' => 0
+			);
+		$current_blog = get_current_blog_id();
+		foreach ( $podcasts as $podcast ) {
+			switch_to_blog( $podcast );
+			if ( \Podlove\Modules\Base::is_active('contributors') ) {
+				foreach ( $this->fetch_contributors_for_dashboard_statistics() as $gender => $percentage ) {
+				 	$relative_gender_numbers[$gender] += $percentage;
+				 }
+				$podcasts_with_contributors_active++;
+			}
+		}
+		switch_to_blog( $current_blog );
+		?>
+		<tr>
+			<td class="podlove-dashboard-number-column">
+				<?php echo __('Genders', 'podlove') ?>
+			</td>
+			<td>
+				<?php
+				echo implode(', ', array_map(function($percent, $gender) use ( $podcasts_with_contributors_active ) {
+					return round($percent/$podcasts_with_contributors_active) . "% " . $gender;
+				}, $relative_gender_numbers, array_keys($relative_gender_numbers)));
+				?>
+			</td>
+		</tr>
+		<?php
 	}
 
 	function feed_head_contributors() {

@@ -244,6 +244,7 @@ class Dashboard {
 						<?php echo __( 'exist in your WordPress installation', 'podlove' ); ?>.
 					</td>
 				</tr>
+				<?php do_action('podlove_dashboard_statistics_network'); ?>
 			</table>
 		</div>
 		<p>
