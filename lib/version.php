@@ -42,23 +42,61 @@ use \Podlove\Model;
 
 define( __NAMESPACE__ . '\DATABASE_VERSION', 78 );
 
-add_action( 'init', '\Podlove\run_database_migrations' );
+add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
+add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
 
-function run_database_migrations() {
+function maybe_run_database_migrations() {
 	
-	$database_version = get_option( 'podlove_database_version' );
+	$database_version = get_option('podlove_database_version');
 
 	if ( $database_version === false ) {
 		// plugin has just been installed
 		update_option( 'podlove_database_version', DATABASE_VERSION );
 	} elseif ( $database_version < DATABASE_VERSION ) {
-		// run one or multiple migrations
-		for ( $i = $database_version+1; $i <= DATABASE_VERSION; $i++ ) { 
-			\Podlove\run_migrations_for_version( $i );
-			update_option( 'podlove_database_version', $i );
+		wp_redirect( admin_url( 'admin.php?page=podlove_upgrade&_wp_http_referer=' . urlencode( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
+		exit;
+	}
+}
+
+function run_database_migrations() {
+	global $wpdb;
+	
+	if (!isset($_REQUEST['page']) || $_REQUEST['page'] != 'podlove_upgrade')
+		return;
+
+	$database_version = get_option('podlove_database_version');
+
+	if ($database_version >= DATABASE_VERSION)
+		return;
+
+	if (is_multisite()) {
+		set_time_limit(0); // may take a while, depending on network size
+		$current_blog = $wpdb->blogid;
+		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
+		foreach ($blogids as $blog_id) {
+			switch_to_blog($blog_id);
+			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
+				migrate_for_current_blog();
+			}
 		}
+		switch_to_blog($current_blog);
+	} else {
+		migrate_for_current_blog();
 	}
 
+	if (isset($_REQUEST['_wp_http_referer']) && $_REQUEST['_wp_http_referer']) {
+		wp_redirect($_REQUEST['_wp_http_referer']);
+		exit;
+	}
+}
+
+function migrate_for_current_blog() {
+	$database_version = get_option('podlove_database_version');
+
+	for ($i = $database_version+1; $i <= DATABASE_VERSION; $i++) { 
+		\Podlove\run_migrations_for_version($i);
+		update_option('podlove_database_version', $i);
+	}
 }
 
 /**
