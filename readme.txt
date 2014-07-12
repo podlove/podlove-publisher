@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * Supply web player API with more data: "publicationDate" contains an ISO-8601 date and "show.url" the URL to the show.
 * Auphonic UI improvement: When selecting a production, the "Select existing production" option disappears.
+* Don't pass `redirect=no` parameter to feed URLs
 
 = 1.10.14 =
 

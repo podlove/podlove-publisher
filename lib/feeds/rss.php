@@ -56,11 +56,6 @@ class RSS {
 					$url .= '?paged=' . $page;
 				}
 
-				if (isset($_GET['redirect'])) {
-					$op = $page > 0 ? '&amp;' : '?';
-					$url .= $op . "redirect=" . $_GET['redirect'];
-				}		
-
 				return $url;		
 			};
 
