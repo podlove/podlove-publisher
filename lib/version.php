@@ -60,6 +60,10 @@ function run_database_migrations() {
 
 		// flush rewrite rules after migrations
 		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+
+		// purge cache after migrations
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+		$cache->setup_purge();
 	}
 
 }
