@@ -87,10 +87,13 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.15 =
 
+**Various Fixes and Enhancements**
+
 * Supply web player API with more data: "publicationDate" contains an ISO-8601 date and "show.url" the URL to the show.
 * Auphonic UI improvement: When selecting a production, the "Select existing production" option disappears.
 * Don't pass `redirect=no` parameter to feed URLs
 * Ensure web player IDs are unique to avoid rendering bugs
+* Fix caching bug that lead to disappearing web player and download buttons
 
 = 1.10.14 =
 
