@@ -94,6 +94,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Don't pass `redirect=no` parameter to feed URLs
 * Ensure web player IDs are unique to avoid rendering bugs
 * Fix caching bug that lead to disappearing web player and download buttons
+* Fix redirection UI bug
 * Flush rewrite rules after migrations to avoid broken links
 
 = 1.10.14 =
