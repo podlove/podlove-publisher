@@ -888,6 +888,8 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 79:
 			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+			$cache = \Podlove\Cache\TemplateCache::get_instance();
+			$cache->setup_purge();
 		break;
 	}
 
