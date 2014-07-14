@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 78 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 79 );
 
 add_action( 'init', '\Podlove\run_database_migrations' );
 
@@ -885,6 +885,9 @@ function run_migrations_for_version( $version ) {
 				$c->url_scheme = 'https://auphonic.com/donate_credits?user=%account-placeholder%';
 				$c->save();
 			}
+		break;
+		case 79:
+			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 		break;
 	}
 
