@@ -57,6 +57,9 @@ function run_database_migrations() {
 			\Podlove\run_migrations_for_version( $i );
 			update_option( 'podlove_database_version', $i );
 		}
+
+		// flush rewrite rules after migrations
+		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 	}
 
 }
