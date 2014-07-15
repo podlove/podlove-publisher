@@ -122,7 +122,10 @@ class SystemReport {
 				$error = __( 'You need to assign at least one asset to the web player.', 'podlove' );
 				$errors[] = $error;
 				return $error;
-			} )
+			} ),
+			'podlove_cache' => array( 'callback' => function() {
+				return \Podlove\Cache\TemplateCache::is_enabled() ? 'on' : 'off';
+			})
 		);
 
 		$this->run();
