@@ -24,6 +24,34 @@ class Support {
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Support', 'podlove' ); ?></h2>
 
+			<h3><?php echo __('Get in Touch', 'podlove') ?></h3>
+
+			<p>
+				<?php echo __('For quick remarks, feedback and questions, you can reach us here:', 'podlove') ?>
+				<ul class="ul-disc">
+					<li><strong>Twitter:</strong> <a target="_blank" href="https://twitter.com/podlove_org">@podlove_org</a></li>
+					<li><strong>ADN:</strong> <a target="_blank" href="https://alpha.app.net/podlove">@podlove</a></li>
+				</ul>
+			</p>
+
+			<h3><?php echo __('Bug Reports, Feature Requests & Help', 'podlove') ?></h3>
+
+			<p>
+				<?php
+				echo sprintf(
+					__('The best way to reach us is via %sGitHub Issues%s. Feel free to join in on discussions or create new topics.', 'podlove'),
+					'<a href="https://github.com/podlove/podlove-publisher/issues" target="_blank">',
+					'</a>'
+				);
+				?>
+			</p>
+
+			<p>
+				<a target="_blank" href="https://github.com/podlove/podlove-publisher/issues" class="button button-primary">
+					<?php echo __( 'Go to GitHub', 'podlove' ) ?>
+				</a>
+			</p>
+
 			<p>
 				<?php echo __( 'When reporting a bug, please append the following system report to help us trace the root cause:', 'podlove' ) ?>
 			</p>
@@ -34,17 +62,6 @@ class Support {
 				$report = $r->render();
 				?>
 				<textarea class="podlove_system_report" readonly cols="100" rows="<?php echo substr_count( $report, "\n" )+1; ?>"><?php echo $report ?></textarea>
-			</p>
-
-			<!--
-			- check for caching constants to determine popular caching plugins
-			- modules: mod_rewrite
-			-->
-
-			<p>
-				<a target="_blank" href="https://github.com/podlove/podlove-publisher/issues" class="button button-primary">
-					<?php echo __( 'Report a Bug on GitHub', 'podlove' ) ?>
-				</a>
 			</p>
 
 		</div>	
