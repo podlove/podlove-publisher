@@ -85,6 +85,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.16 =
+
+* Hotfix: remove wrong output in HTML sites
+* rework support page
+
 = 1.10.15 =
 
 **Various Fixes and Enhancements**
