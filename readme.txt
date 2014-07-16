@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.17 =
+
+* fix escaping in database logger
+
 = 1.10.16 =
 
 * Hotfix: remove wrong output in HTML sites
