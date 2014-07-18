@@ -12,9 +12,6 @@ use Podlove\Model\MediaFile;
  */
 class Printer {
 
-	// unique player index
-	private static $index = 0;
-
 	// unique player id
 	private $html_id;
 
@@ -228,8 +225,7 @@ class Printer {
 	private function get_html_id() {
 
 		if ( ! $this->html_id ) {
-			self::$index++;
-			$this->html_id = 'podlovewebplayer_' . self::$index;
+			$this->html_id = 'podlovewebplayer_' . sha1(microtime() . rand());
 		}
 
 		return $this->html_id;

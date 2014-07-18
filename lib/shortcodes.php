@@ -152,8 +152,17 @@ function template_shortcode( $attributes ) {
 	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
 	$permalink   = get_permalink();
 
+	/**
+	 * Cache key must be unique for *every permutation* of the content.
+	 * Meaning: If there are context based conditionals, the key must reflect them.
+	 * Right now, the only relevant context change is the `is_feed` state.
+	 * However, that might change. Once `is_page` etc. are available in templates, they must become part of the key!
+	 */
+	$cache_key = $template_id . $permalink . is_feed();
+	$cache_key = apply_filters( 'podlove_template_shortcode_cache_key', $cache_key, $template_id );
+
 	$cache = \Podlove\Cache\TemplateCache::get_instance();
-	return $cache->cache_for($template_id . $permalink, function() use ($template_id, $attributes) {
+	return $cache->cache_for($cache_key, function() use ($template_id, $attributes) {
 
 		if (!$template = Model\Template::find_one_by_title($template_id))
 			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );

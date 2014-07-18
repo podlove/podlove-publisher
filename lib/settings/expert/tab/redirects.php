@@ -21,8 +21,12 @@ class Redirects extends Tab {
 			/* $callback */ function () {
 				$redirect_settings = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
 
-				if ( ! is_array( $redirect_settings ) )
+				if ( ! is_array( $redirect_settings ) ) {
 					$redirect_settings = array();
+				} else {
+					// avoids array-index-based glitches
+					$redirect_settings = array_values($redirect_settings);
+				}
 
 				?>
 				<table class="wp-list-table widefat podlove_redirects">
