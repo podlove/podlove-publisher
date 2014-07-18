@@ -374,40 +374,6 @@ add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val
 	}
 }, 10, 2 );
 
-function show_critical_errors() {
-
-	$errors = get_option( 'podlove_global_messages', array() );
-
-	if ( ! isset( $errors['errors'] ) && ! isset( $errors['notices'] ) )
-		return;
-
-	if ( count( $errors['errors'] ) + count( $errors['notices'] ) === 0 )
-		return;
-
-	// if there are errors, always run the system report to see if they are gone
-	run_system_report();
-    ?>
-    <div class="error">
-        
-    	<?php if ( isset( $errors['errors'] ) ): ?>
-			<h3>
-				<?php echo __( 'Critical Podlove Warnings', 'podlove' ) ?>
-			</h3>
-    		<ul>
-    			<?php foreach ( $errors['errors'] as $error ): ?>
-    				<li><?php echo $error ?></li>
-    			<?php endforeach; ?>
-    			<?php foreach ( $errors['notices'] as $error ): ?>
-    				<li><?php echo $error ?></li>
-    			<?php endforeach; ?>
-    		</ul>
-    	<?php endif; ?>
-
-    </div>
-    <?php
-}
-add_action( 'admin_notices', '\Podlove\show_critical_errors' );
-
 /**
  * System Report needs to be run whenever a setting has changed that could effect something critical.
  */

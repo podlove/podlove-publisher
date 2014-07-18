@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix escaping in database logger
 * fix feed validator for sites not using "pretty permalinks"
 * fix dashboard box state saving
+* remove "Critical Podlove Warnings" — they are scary and don't help a lot
 
 = 1.10.16 =
 
