@@ -73,6 +73,13 @@ table.podlove-dashboard-statistics td {
 	padding: 3px;
 }
 
+/* Dashboard in Sidebar */
+
+.inner-sidebar div.podlove-dashboard-statistics-wrapper {
+	width: 100%;
+	display: block;
+}
+
 /* Settings: Assets */
 .episode_assets.wp-list-table .column-move {
 	width: 50px;
