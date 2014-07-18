@@ -90,6 +90,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * plugin-migrations are more robust now
 * fix escaping in database logger
 * fix feed validator for sites not using "pretty permalinks"
+* fix dashboard box state saving
 
 = 1.10.16 =
 
