@@ -34,6 +34,8 @@ class Support {
 				</ul>
 			</p>
 
+			<?php do_action('podlove_support_repair_html'); ?>
+
 			<h3><?php echo __('Bug Reports, Feature Requests & Help', 'podlove') ?></h3>
 
 			<p>
