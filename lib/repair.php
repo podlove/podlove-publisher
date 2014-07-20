@@ -48,12 +48,12 @@ class Repair {
 	private static function clear_podlove_cache() {
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
 		$cache->setup_purge();
-		self::add_to_repair_log('Podlove cache cleared');
+		self::add_to_repair_log(__('Podlove cache cleared', 'podlove'));
 	}
 
 	private static function flush_rewrite_rules() {
 		flush_rewrite_rules();
-		self::add_to_repair_log('Rewrite rules flushed');
+		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove'));
 	}
 
 	private static function fix_data_inconsistencies()
@@ -64,7 +64,7 @@ class Repair {
 		$services = self::find_duplicate_services();
 
 		if (!is_array($services) || empty($services)) {
-			self::add_to_repair_log('Services did not need repair');
+			self::add_to_repair_log(__('Services did not need repair', 'podlove'));
 			return;
 		}
 
@@ -86,7 +86,12 @@ class Repair {
 			$wpdb->query($sql);
 		}
 
-		self::add_to_repair_log('Consolidated duplicate services (' . implode(', ', array_map(function($s){ return $s['type']; }, $services)) . ')');
+		self::add_to_repair_log(
+			sprintf(
+				__('Consolidated duplicate services (%s)', 'podlove'),
+				implode(', ', array_map(function($s){ return $s['type']; }, $services))
+			)
+		);
 	}
 
 	private static function find_duplicate_services() {
