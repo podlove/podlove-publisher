@@ -40,13 +40,13 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 79 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 80 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
 
 function maybe_run_database_migrations() {
-	
+
 	$database_version = get_option('podlove_database_version');
 
 	if ( $database_version === false ) {
@@ -932,6 +932,13 @@ function run_migrations_for_version( $version ) {
 			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 			$cache = \Podlove\Cache\TemplateCache::get_instance();
 			$cache->setup_purge();
+		break;
+		case 80:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `httprange` VARCHAR(255)',
+				\Podlove\Model\DownloadIntent::table_name()
+			);
+			$wpdb->query( $sql );
 		break;
 	}
 

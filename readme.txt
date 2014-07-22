@@ -87,6 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.17 =
 
+* tracking now includes range headers
 * plugin-migrations are more robust now
 * add caching for OpenGraph module
 * fix escaping in database logger

@@ -881,6 +881,11 @@ function handle_media_file_download() {
 			$intent->user_agent_id = $agent->id;
 		}
 
+		// save HTTP range header
+		// @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35 for spec
+		if (isset($_SERVER['HTTP_RANGE']))
+			$intent->httprange = $_SERVER['HTTP_RANGE'];
+
 		// get ip, but don't store it
 		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
 		if (method_exists($ip, 'as_IPv6_address')) {
