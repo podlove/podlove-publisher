@@ -88,9 +88,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.17 =
 
 * plugin-migrations are more robust now
+* add caching for OpenGraph module
 * fix escaping in database logger
 * fix feed validator for sites not using "pretty permalinks"
 * fix dashboard box state saving
+* fix generation of faulty URLs when tracking was on but pretty permalinks off
 * remove "Critical Podlove Warnings" — they are scary and don't help a lot
 
 = 1.10.16 =
