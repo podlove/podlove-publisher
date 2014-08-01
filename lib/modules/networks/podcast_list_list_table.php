@@ -90,7 +90,7 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		$this->items = $items;
 	}
 
-	function no_items() {
+	public function no_items() {
 		?>
 		<div style="margin: 20px 10px 10px 5px">
 	 		<span class="add-new-h2" style="background: transparent">
