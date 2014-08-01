@@ -19,7 +19,7 @@ class Podlove extends Wrapper {
 		return array();
 	}
 
-	public function lists( $args ) {
+	public function lists( $args=array() ) {
 		if ( isset($args['slug']) ) {
 			$list_with_slug = \Podlove\Modules\Networks\Model\PodcastList::find_one_by_property( 'slug', $args['slug'] );		
 			if ( is_object( $list_with_slug ) )
