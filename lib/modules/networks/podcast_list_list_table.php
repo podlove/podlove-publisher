@@ -61,14 +61,6 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		return $columns;
 	}
 
-	public function search_form() {
-		?>
-		<form method="post">
-		  <?php $this->search_box('search', 'search_id'); ?>
-		</form>
-		<?php
-	}	
-
 	/**
 	 * @override
 	 */
@@ -97,4 +89,17 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 
 		$this->items = $items;
 	}
+
+	function no_items() {
+		?>
+		<div style="margin: 20px 10px 10px 5px">
+	 		<span class="add-new-h2" style="background: transparent">
+			<?php _e( 'No items found.' ); ?>
+			</span>
+			<a href="?page=podlove_settings_list_handle&action=new" class="add-new-h2">
+	 		<?php _e( 'Add New' ) ?>
+	 		</a>
+	 	</div>
+	 	<?php
+	 }
 }
