@@ -30,11 +30,7 @@ class Template extends Base {
 			return NULL;
 		}
 		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
+		return $row;
 	}
 
 }
