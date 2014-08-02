@@ -58,6 +58,7 @@ class Networks extends \Podlove\Modules\Base {
 		$current_blog_id = get_current_blog_id();
 		$network_dashboard_url = network_site_url() . 'wp-admin/network/admin.php?page=podlove_network_settings_handle';
 		$podcasts = PodcastList::all_podcasts();
+		$podcast_admin_url = get_admin_url();
 
 		// Podlove Toolbar Icon
 		$args = array(
@@ -73,7 +74,7 @@ class Networks extends \Podlove\Modules\Base {
 			'id'     => 'podlove_toolbar_dashboard',
 			'title'  => 'Dashboard',
 			'parent' => 'podlove_toolbar',
-			'href'   => $network_dashboard_url,
+			'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
 			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
 		);
 		$wp_admin_bar->add_node( $args );
@@ -83,7 +84,7 @@ class Networks extends \Podlove\Modules\Base {
 			'id'     => 'podlove_toolbar_episodes',
 			'title'  => 'Episodes',
 			'parent' => 'podlove_toolbar',
-			'href'   => $network_dashboard_url,
+			'href'   => $podcast_admin_url . 'edit.php?post_type=podcast',
 			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
 		);
 		$wp_admin_bar->add_node( $args );
@@ -93,7 +94,7 @@ class Networks extends \Podlove\Modules\Base {
 			'id'     => 'podlove_toolbar_contributors',
 			'title'  => 'Contributors',
 			'parent' => 'podlove_toolbar',
-			'href'   => $network_dashboard_url,
+			'href'   => $podcast_admin_url . 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle',
 			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
 		);
 		$wp_admin_bar->add_node( $args );
@@ -102,14 +103,14 @@ class Networks extends \Podlove\Modules\Base {
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
 			$podcast_data = \Podlove\Model\Podcast::get_instance();
-
 			$podcast_toolbar_id = 'podlove_toolbar_' . $podcast;
+			$podcast_admin_url = get_admin_url();
 
 			$args = array(
 				'id'     => $podcast_toolbar_id,
 				'title'  => get_bloginfo( 'name' ),
 				'parent' => 'podlove_toolbar',
-				'href'   => $network_dashboard_url,
+				'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
 				'meta'   => array( 
 						'class' => 'podlove-toolbar-podcast podlove-toolbar-podcast-' . $podcast,
 						'html'  => '<img class="podlove-toolbar-podcast-cover" src="' . $podcast_data->cover_image . '" alt="' . get_bloginfo( 'name' ) . '" />'
@@ -122,7 +123,7 @@ class Networks extends \Podlove\Modules\Base {
 				'id'     => $podcast_toolbar_id . '_dashboard',
 				'title'  => 'Dashboard',
 				'parent' => $podcast_toolbar_id,
-				'href'   => $network_dashboard_url,
+				'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
 				'meta'   => array( 
 						'class' => 'podlove-toolbar-without-icon'
 					)
@@ -132,7 +133,7 @@ class Networks extends \Podlove\Modules\Base {
 				'id'     => $podcast_toolbar_id . '_episodes',
 				'title'  => 'Episodes',
 				'parent' => $podcast_toolbar_id,
-				'href'   => $network_dashboard_url,
+				'href'   => $podcast_admin_url . 'edit.php?post_type=podcast',
 				'meta'   => array( 
 						'class' => 'podlove-toolbar-without-icon'
 					)
@@ -143,7 +144,7 @@ class Networks extends \Podlove\Modules\Base {
 				'id'     => $podcast_toolbar_id . '_contributors',
 				'title'  => 'Contributors',
 				'parent' => $podcast_toolbar_id,
-				'href'   => $network_dashboard_url,
+				'href'   => $podcast_admin_url . 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle',
 				'meta'   => array( 
 						'class' => 'podlove-toolbar-without-icon'
 					)
