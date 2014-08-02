@@ -17,8 +17,8 @@ class ShowService extends Base {
 		return str_replace( '%account-placeholder%', $this->value, $service->url_scheme);
 	}
 
-	public static function find_by_type( $type='social' ) {
-		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `type` = '" . $type . "' ) ORDER BY position ASC" );
+	public static function find_by_category( $category = 'social' ) {
+		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `category` = '" . $category . "' ) ORDER BY position ASC" );
 	}
 
 }

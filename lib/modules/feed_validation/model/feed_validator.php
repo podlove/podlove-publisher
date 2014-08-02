@@ -55,17 +55,25 @@ class FeedValidator extends \Podlove\Model\Base {
 					);
 	}
 
+	public static function getResolvedUrl($feedid, $redirected)
+	{
+		$feed = \Podlove\Model\Feed::find_by_id( $feedid );
+
+		if ($redirected === FALSE) {
+			$subscribe_url = $feed->get_subscribe_url();
+			return $subscribe_url . ((strpos($subscribe_url, '?') === FALSE) ? '?' : '&') . "redirect=no";
+		} else {
+			return $feed->redirect_url;	
+		}
+	}
+
 	/**
 	 * Fetch feed source
 	 */
-
-	public static function getSource( $feedid, $redirected=FALSE ) {
-		$feed = \Podlove\Model\Feed::find_by_id( $feedid );
-
-		$url = ( $redirected === FALSE ? $feed->get_subscribe_url() . "?redirect=no" : $feed->redirect_url );
-
+	public static function getSource( $feedid, $redirected=FALSE )
+	{
 		$curl = new \Podlove\Http\Curl();
-		$curl->request( $url, array(
+		$curl->request( self::getResolvedUrl($feedid, $redirected), array(
 			'headers' => array( 'Content-type'  => 'application/json' ),
 			'timeout' => 10,
 			'compress' => true,
@@ -85,15 +93,10 @@ class FeedValidator extends \Podlove\Model\Base {
 	/**
 	 * Feed Validation via w3c validator API (http://validator.w3.org/feed/)
 	 */
-
 	public static function getValidation( $feedid, $redirected=FALSE )
 	{
-		$feed = \Podlove\Model\Feed::find_by_id( $feedid );
-
-		$url = ( $redirected === FALSE ? $feed->get_subscribe_url() . "?redirect=no" : $feed->redirect_url );
-
 		$curl = new \Podlove\Http\Curl();
-		$curl->request( "http://validator.w3.org/feed/check.cgi?output=soap12&url=" . $url, array(
+		$curl->request( "http://validator.w3.org/feed/check.cgi?output=soap12&url=" . self::getResolvedUrl($feedid, $redirected), array(
 			'headers' => array( 'Content-type'  => 'application/soap+xml' ),
 			'timeout' => 20,
 			'compress' => true,

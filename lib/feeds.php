@@ -4,14 +4,16 @@ use \Podlove\Model;
 
 function handle_feed_proxy_redirects() {
 
+	if (!$feed_slug = get_query_var( 'feed' ))
+		return;
+
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
 	$is_feedburner_bot = isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
 	$is_feed_page = $paged > 1;
-	$feed = Model\Feed::find_one_by_slug( get_query_var( 'feed' ) );
 
-	if ( ! $feed )
+	if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
 		return;
 
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
@@ -109,48 +111,49 @@ function check_for_and_do_compression()
 
 add_action('pre_get_posts', function ( ) {
 	global $wp_query;	
-	if( is_feed() ) {
-		$feedname = get_query_var('feed');
-		$feed = \Podlove\Model\Feed::find_one_by_property('slug', $feedname);
-		
-		if( isset($feed) && $feed->protected == 1 ) {
-			if( !isset( $_SERVER['PHP_AUTH_USER'] ) || !isset( $_SERVER['PHP_AUTH_PW'] ) ) {
-				feed_authentication();
-			} else {
-				switch ($feed->protection_type) {
-					case '0' :
-						// A local User/PW combination is set
-						if( $_SERVER['PHP_AUTH_USER'] == $feed->protection_user && crypt($_SERVER['PHP_AUTH_PW'], SECURE_AUTH_SALT) == $feed->protection_password) {
+
+	if (!is_feed())
+		return;
+
+	$feedname = get_query_var('feed');
+	$feed = \Podlove\Model\Feed::find_one_by_property('slug', $feedname);
+	
+	if ( isset($feed) && $feed->protected == 1 ) {
+		if ( !isset( $_SERVER['PHP_AUTH_USER'] ) || !isset( $_SERVER['PHP_AUTH_PW'] ) ) {
+			feed_authentication();
+		} else {
+			switch ($feed->protection_type) {
+				case '0' :
+					// A local User/PW combination is set
+					if ( $_SERVER['PHP_AUTH_USER'] == $feed->protection_user && $_SERVER['PHP_AUTH_PW'] == $feed->protection_password) {
+						// let the script continue
+						check_for_and_do_compression();
+					} else {
+						feed_authentication();
+					}
+				break;
+				case '1' :
+					// The WordPress User db is used for authentification
+					if ( !username_exists($_SERVER['PHP_AUTH_USER'] ) ) {
+						feed_authentication();
+					} else {
+						$userinfo = get_user_by( 'login', $_SERVER['PHP_AUTH_USER'] );
+						if ( wp_check_password( $_SERVER['PHP_AUTH_PW'], $userinfo->data->user_pass, $userinfo->ID ) ) {
 							// let the script continue
 							check_for_and_do_compression();
 						} else {
 							feed_authentication();
 						}
-					break;
-					case '1' :
-						// The WordPress User db is used for authentification
-						if( !username_exists($_SERVER['PHP_AUTH_USER'] ) ) {
-							feed_authentication();
-						} else {
-							$userinfo = get_user_by( 'login', $_SERVER['PHP_AUTH_USER'] );
-							if( wp_check_password( $_SERVER['PHP_AUTH_PW'], $userinfo->data->user_pass, $userinfo->ID ) ) {
-								// let the script continue
-								check_for_and_do_compression();
-							} else {
-								feed_authentication();
-							}
-						}
-					break;
-					default :
-						exit; // If the feed is protected and no auth method is selected exit the script
-					break;
-					
-				}
+					}
+				break;
+				default :
+					exit; // If the feed is protected and no auth method is selected exit the script
+				break;
 			}
-		} else {
-			// compress unprotected feeds
-			check_for_and_do_compression();
 		}
+	} else {
+		// compress unprotected feeds
+		check_for_and_do_compression();
 	}
 });
 

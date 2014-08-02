@@ -12,9 +12,6 @@ use Podlove\Model\MediaFile;
  */
 class Printer {
 
-	// unique player index
-	private static $index = 0;
-
 	// unique player id
 	private $html_id;
 
@@ -75,7 +72,7 @@ class Printer {
 				'file'       => $file,
 				'mime_type'  => $mime,
 				'url'        => $file->get_file_url(),
-				'publicUrl'  => home_url('?download_media_file=' . $file->id),
+				'publicUrl'  => $file->get_public_file_url("webplayer", $this->get_tracking_context()),
 				'assetTitle' => $asset->title()
 			);
 		}
@@ -102,7 +99,7 @@ class Printer {
 			$mime_type = $file['mime_type'];
 
 			$source = $xml->addChild('source');
-			$source->addAttribute( 'src', $file['url'] );
+			$source->addAttribute( 'src', $file['publicUrl'] );
 			$source->addAttribute( 'type', $mime_type );
 
 			if ( $mime_type == 'audio/mpeg' ) {
@@ -162,6 +159,7 @@ class Printer {
 			'title'               => get_the_title( $this->post->ID ),
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
+			'publicationDate'     => mysql2date("c", $this->post->post_date),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
@@ -171,7 +169,8 @@ class Printer {
 				'title'    => $podcast->title,
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
-				'poster'   => $podcast->cover_image
+				'poster'   => $podcast->cover_image,
+				'url'      => \Podlove\get_landing_page_url()
 			),
 			'license' => array(
 				'name' => $license_name,
@@ -226,8 +225,7 @@ class Printer {
 	private function get_html_id() {
 
 		if ( ! $this->html_id ) {
-			self::$index++;
-			$this->html_id = 'podlovewebplayer_' . self::$index;
+			$this->html_id = 'podlovewebplayer_' . sha1(microtime() . rand());
 		}
 
 		return $this->html_id;
@@ -303,4 +301,13 @@ class Printer {
 		return trim( str_replace( '<?xml version="1.0"?>', '', $xml ) );
 	}
 
+	private function get_tracking_context() {
+		if (is_home())
+			return "home";
+
+		if (is_single())
+			return "episode";
+
+		return "website";
+	}
 }

@@ -123,34 +123,38 @@ class Bitlove extends \Podlove\Modules\Base {
 		if ( is_feed() )
 			return $content;
 
-		$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-		$media_files = $episode->media_files();
-		$downloads = array();
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+		$bitlove_html = $cache->cache_for('bitlove_' . get_permalink($post->ID), function() use ($post) {
 
-		foreach ( $media_files as $media_file ) {
+			$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
+			$media_files = $episode->media_files();
+			$downloads = array();
+			$content = '';
 
-			$episode_asset = $media_file->episode_asset();
+			foreach ( $media_files as $media_file ) {
 
-			if ( ! $episode_asset->downloadable )
-				continue;
+				$episode_asset = $media_file->episode_asset();
 
-			$file_type = $episode_asset->file_type();
-			
-			$download_link_url  = $media_file->get_file_url();
-			$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
+				if ( ! $episode_asset->downloadable )
+					continue;
 
-			$downloads[] = array(
-				'url'  => $download_link_url,
-				'name' => $download_link_name,
-				'size' => \Podlove\format_bytes( $media_file->size, 0 ),
-				'file' => $media_file
-			);
-		}
+				$file_type = $episode_asset->file_type();
+				
+				$download_link_url  = $media_file->get_file_url();
+				$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
 
-		$content .= '<script type="text/javascript">';
-		$content .= '    /* <!-- */';
-		foreach ( $downloads as $download ) {
-			$content .= <<<EOF
+				$downloads[] = array(
+					'url'  => $download_link_url,
+					'name' => $download_link_name,
+					'size' => \Podlove\format_bytes( $media_file->size, 0 ),
+					'file' => $media_file
+				);
+			}
+
+			$content .= '<script type="text/javascript">';
+			$content .= '    /* <!-- */';
+			foreach ( $downloads as $download ) {
+				$content .= <<<EOF
 jQuery(function($) {
 	torrentByEnclosure("${download['url']}", function(info) {
 	  if (info) {
@@ -164,11 +168,14 @@ jQuery(function($) {
 	});
 });
 EOF;
-		}
-		$content .= '    /* --> */';
-		$content .= '</script>';
+			}
+			$content .= '    /* --> */';
+			$content .= '</script>';
 
-		return $content;
+			return $content;
+		});
+
+		return $content . $bitlove_html;
 	}
 
 }

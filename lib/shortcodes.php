@@ -2,72 +2,6 @@
 namespace Podlove;
 use \Podlove\Model;
 
-function handle_direct_download() {
-	
-	if ( ! isset( $_GET['download_media_file'] ) )
-		return;
-
-	// tell WP Super Cache to not cache download links
-	if ( ! defined( 'DONOTCACHEPAGE' ) )
-		define( 'DONOTCACHEPAGE', true );
-
-	// if download_media_file is a URL, download directly
-	if ( filter_var( $_GET['download_media_file'], FILTER_VALIDATE_URL ) ) {
-		$parsed_url = parse_url($_GET['download_media_file']);
-		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
-		header( "Expires: 0" );
-		header( 'Cache-Control: must-revalidate' );
-	    header( 'Pragma: public' );
-		header( "Content-Type: application/x-bittorrent" );
-		header( "Content-Description: File Transfer" );
-		header( "Content-Disposition: attachment; filename=$file_name" );
-		header( "Content-Transfer-Encoding: binary" );
-		ob_clean();
-		flush();
-		while ( @ob_end_flush() ); // flush and end all output buffers
-		readfile( $_GET['download_media_file'] );
-		exit;
-	}
-
-	$media_file_id = (int) $_GET['download_media_file'];
-	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
-
-	if ( ! $media_file ) {
-		status_header( 404 );
-		exit;
-	}
-
-	$episode_asset = $media_file->episode_asset();
-
-	if ( ! $episode_asset || ! $episode_asset->downloadable ) {
-		status_header( 404 );
-		exit;
-	}
-
-	if ( \Podlove\get_setting('website', 'force_download') == 'on' && in_array( strtolower( ini_get( 'allow_url_fopen' ) ), array( "1", "on", "true" ) ) ) {
-		header( "Expires: 0" );
-		header( 'Cache-Control: must-revalidate' );
-	    header( 'Pragma: public' );
-		header( "Content-Type: " . $episode_asset->file_type()->mime_type );
-		header( "Content-Description: File Transfer" );
-		header( "Content-Disposition: attachment; filename=" . $media_file->get_download_file_name() );
-		header( "Content-Transfer-Encoding: binary" );
-
-		if ( $media_file->size > 0 )
-			header( 'Content-Length: ' . $media_file->size );
-		
-		ob_clean();
-		flush();
-		while ( @ob_end_flush() ); // flush and end all output buffers
-		readfile( $media_file->get_file_url() );
-		exit;
-	} else {
-		header( "Location: " . $media_file->get_file_url() );
-		exit;
-	}
-}
-add_action( 'init', '\Podlove\handle_direct_download' );
-
 /**
  * Provides a shortcode to display all available download links.
  *
@@ -216,19 +150,31 @@ function template_shortcode( $attributes ) {
 
 	// backward compatibility
 	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
+	$permalink   = get_permalink();
 
-	if ( ! $template = Model\Template::find_one_by_title( $template_id ) )
-		return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
+	/**
+	 * Cache key must be unique for *every permutation* of the content.
+	 * Meaning: If there are context based conditionals, the key must reflect them.
+	 * Right now, the only relevant context change is the `is_feed` state.
+	 * However, that might change. Once `is_page` etc. are available in templates, they must become part of the key!
+	 */
+	$cache_key = $template_id . $permalink . is_feed();
+	$cache_key = apply_filters( 'podlove_template_shortcode_cache_key', $cache_key, $template_id );
 
-	$html = apply_filters('podlove_template_raw', $template->title, $attributes);
+	$cache = \Podlove\Cache\TemplateCache::get_instance();
+	return $cache->cache_for($cache_key, function() use ($template_id, $attributes) {
 
-	// apply autop and shortcodes
-	if ( in_array( $attributes['autop'], array('yes', 1, 'true') ) )
-		$html = wpautop( $html );
+		if (!$template = Model\Template::find_one_by_title($template_id))
+			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-	$html = do_shortcode( $html );
+		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
-	return $html;
+		// apply autop and shortcodes
+		if ( in_array($attributes['autop'], array('yes', 1, 'true')))
+			$html = wpautop($html);
+
+		return do_shortcode($html);
+	});
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 

@@ -23,12 +23,13 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_merge_episodes',
 			/* $title    */ sprintf(
 				'<label for="merge_episodes">%s</label>',
-				__( 'Display episodes on front page together with blog posts', 'podlove' )
+				__( 'Combine blog & podcast', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[merge_episodes]" id="merge_episodes" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'merge_episodes' ), 'on' ) ?>>
 				<?php
+				echo __( 'Include episode posts on the front page and in the blog feed', 'podlove' );
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -38,12 +39,13 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_hide_wp_feed_discovery',
 			/* $title    */ sprintf(
 				'<label for="hide_wp_feed_discovery">%s</label>',
-				__( 'Hide default WordPress Feeds for blog and comments (no auto-discovery).', 'podlove' )
+				__( 'Deactivate blog feeds.', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[hide_wp_feed_discovery]" id="hide_wp_feed_discovery" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'hide_wp_feed_discovery' ), 'on' ) ?>>
 				<?php
+				echo __( 'Hide default WordPress feeds for blog and comments (no auto-discovery).', 'podlove' );
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -112,7 +114,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_episode_archive',
 			/* $title    */ sprintf(
 				'<label for="episode_archive">%s</label>',
-				__( 'Episode archive', 'podlove' )
+				__( 'Episode pages', 'podlove' )
 			),
 			/* $callback */ function () {
 
@@ -123,7 +125,7 @@ class Website extends Tab {
 					$episode_archive_slug = preg_replace( '|^/?blog|', '', $episode_archive_slug );
 				}
 				?>
-				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode archive', 'podlove' ); ?>
+				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode pages: a complete, paginated list of episodes, sorted by publishing date.', 'podlove' ); ?>
 				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
 					<code><?php echo get_option('home') . $blog_prefix; ?></code>
 					<input name="podlove_website[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
@@ -153,6 +155,87 @@ class Website extends Tab {
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
 		);
+		
+		add_settings_field(
+			/* $id       */ 'podlove_setting_landing_page',
+			/* $title    */ sprintf(
+				'<label for="landing_page">%s</label>',
+				__( 'Podcast landing page', 'podlove' )
+			),
+			/* $callback */ function () {
+
+				$landing_page = \Podlove\get_setting( 'website', 'landing_page' );
+
+				$landing_page_options = array(
+					array( 'value' => 'homepage', 'text' => __('Front page', 'podlove') ),
+					array( 'value' => 'archive',  'text' => __('Episode pages', 'podlove') ),
+					array( 'text' => '––––––––––', 'disabled' => true ),
+				);
+
+				$pages_query = new \WP_Query( array(
+					'post_type' => 'page',
+					'nopaging'  => true
+				) );
+
+				if ( $pages_query->have_posts() ) {
+					while ( $pages_query->have_posts() ) {
+						$pages_query->the_post();
+						$landing_page_options[] = array('value' => get_the_ID(), 'text' => get_the_title());
+					}
+				}
+
+				wp_reset_postdata();
+
+				?>
+				<select name="podlove_website[landing_page]" id="landing_page">
+					<?php foreach ( $landing_page_options as $option ): ?>
+						<option
+							<?php if ( isset($option['value']) ): ?>
+								value="<?php echo $option['value'] ?>"
+								<?php if ( $landing_page == $option['value'] ): ?> selected<?php endif; ?>
+							<?php endif; ?>
+							<?php if ( isset($option['disabled']) && $option['disabled'] ): ?> disabled<?php endif; ?>
+						>
+							<?php echo $option['text'] ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+
+				<script type="text/javascript">
+				jQuery(function($) {
+					$(document).ready(function() {
+						var maybe_toggle_episode_archive_option = function() {
+							var $archive = $("#episode_archive"),
+								$archive_option = $("#landing_page option:eq(1)"),
+								$home_option = $("#landing_page option:eq(0)");
+
+							if ($archive.is(':checked')) {
+								$archive_option.attr('disabled', false);
+							} else {
+								$archive_option.attr('disabled', 'disabled');
+								// if it was selected before, unselect it
+								if ($archive_option.attr('selected') == 'selected') {
+									$archive_option.attr('selected', false);
+									$home_option.attr('selected', 'selected');
+								}
+							}
+
+						};
+
+						$("#episode_archive").on("click", function(e) {
+							maybe_toggle_episode_archive_option();
+						});
+
+						maybe_toggle_episode_archive_option();
+					});
+				});
+				</script>
+				<?php echo __('This defines the landing page to your podcast. It is the site that the your podcast feeds link to.', 'podlove') ?>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
 
 		add_settings_field(
 			/* $id       */ 'podlove_setting_url_template',
@@ -168,22 +251,6 @@ class Website extends Tab {
 						<?php echo __( 'Is used to generate URLs. You probably don\'t want to change this.', 'podlove' ); ?>
 					</span>
 				</p>
-				<?php
-			},
-			/* $page     */ Settings::$pagehook,  
-			/* $section  */ 'podlove_settings_files'
-		);
-
-		add_settings_field(
-			/* $id       */ 'podlove_setting_download_header',
-			/* $title    */ sprintf(
-				'<label for="force_download">%s</label>',
-				__( 'Force browsers to download files', 'podlove' )
-			),
-			/* $callback */ function () {
-				?>
-				<input name="podlove_website[force_download]" id="force_download" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'force_download' ), 'on' ) ?>>
-				<?php echo __('By default, browsers try to play files directly instead of downloading them. Check this to enforce a download. Warning: This creates extra traffic for your web server!', 'podlove') ?>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
@@ -215,7 +282,6 @@ class Website extends Tab {
 				'hide_wp_feed_discovery',
 				'use_post_permastruct',
 				'episode_archive',
-				'force_download',
 				'ssl_verify_peer'
 			);
 			foreach ( $checkboxes as $checkbox_key ) {

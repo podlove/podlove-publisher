@@ -119,3 +119,10 @@ legend {
 	font-size: 1.1em;
 	cursor: pointer;
 }
+
+#auphonic-credits-status {
+	float: right;
+	bottom: 20px;
+	position: relative;
+	display: none;
+}

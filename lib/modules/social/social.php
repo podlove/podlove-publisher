@@ -36,6 +36,11 @@ class Social extends \Podlove\Modules\Base {
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_action('podlove_xml_import', array($this, 'expandImport'));
 
+		add_filter( 'podlove_adn_tags_description_contributors', array($this, 'adn_tags_description') );
+		add_filter( 'podlove_adn_example_data_contributors', array($this, 'adn_example_data'), 10, 4);
+		add_filter( 'podlove_adn_tags_contributors_contributors', array($this, 'adn_tags'), 10, 4);
+		add_action( 'init', array($this, 'adn_contributor_filter') );
+
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'templates')), 'social');
 			return $file_loader;
@@ -51,6 +56,16 @@ class Social extends \Podlove\Modules\Base {
 
 		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
 		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
+
+		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+	}
+
+	public function cache_tainting_classes($classes) {
+		return array_merge($classes, array(
+			Service::name(),
+			ShowService::name(),
+			ContributorService::name()
+		));
 	}
 
 	public function was_activated( $module_name ) {
@@ -61,285 +76,356 @@ class Social extends \Podlove\Modules\Base {
 		$services = array(
 			array(
 					'title' 		=> '500px',
-					'type'			=> 'social',
+					'name'	 		=> '500px',
+					'category'		=> 'social',
 					'description'	=> '500px Account',
 					'logo'			=> '500px-128.png',
 					'url_scheme'	=> 'https://500px.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'App.net',
-					'type'			=> 'social',
+					'name'	 		=> 'app.net',
+					'category'		=> 'social',
 					'description'	=> 'App.net Account',
 					'logo'			=> 'adn-128.png',
 					'url_scheme'	=> 'https://alpha.app.net/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bandcamp',
-					'type'			=> 'social',
+					'name'	 		=> 'bandcamp',
+					'category'		=> 'social',
 					'description'	=> 'Bandcamp URL',
 					'logo'			=> 'bandcamp-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bitbucket',
-					'type'			=> 'social',
+					'name'	 		=> 'bitbucket',
+					'category'		=> 'social',
 					'description'	=> 'Bitbucket Account',
 					'logo'			=> 'bitbucket-128.png',
 					'url_scheme'	=> 'https://bitbucket.org/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'DeviantART',
-					'type'			=> 'social',
+					'name'	 		=> 'deviantart',
+					'category'		=> 'social',
 					'description'	=> 'DeviantART Account',
 					'logo'			=> 'deviantart-128.png',
 					'url_scheme'	=> 'https://%account-placeholder%.deviantart.com/'
 				),
 			array(
 					'title' 		=> 'Diaspora',
-					'type'			=> 'social',
+					'name'	 		=> 'diaspora',
+					'category'		=> 'social',
 					'description'	=> 'Diaspora URL',
 					'logo'			=> 'diaspora-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Dribbble',
-					'type'			=> 'social',
+					'name'	 		=> 'dribbble',
+					'category'		=> 'social',
 					'description'	=> 'Dribbble Account',
 					'logo'			=> 'dribbble-128.png',
 					'url_scheme'	=> 'https://dribbble.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Facebook',
-					'type'			=> 'social',
+					'name'	 		=> 'facebook',
+					'category'		=> 'social',
 					'description'	=> 'Facebook Account',
 					'logo'			=> 'facebook-128.png',
 					'url_scheme'	=> 'https://facebook.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flattr',
-					'type'			=> 'social',
+					'name'	 		=> 'flattr',
+					'category'		=> 'social',
 					'description'	=> 'Flattr Account',
 					'logo'			=> 'flattr-128.png',
 					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flickr',
-					'type'			=> 'social',
+					'name'	 		=> 'flickr',
+					'category'		=> 'social',
 					'description'	=> 'Flickr Account',
 					'logo'			=> 'flickr-128.png',
 					'url_scheme'	=> 'https://secure.flickr.com/photos/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'GitHub',
-					'type'			=> 'social',
+					'name'	 		=> 'github',
+					'category'		=> 'social',
 					'description'	=> 'GitHub Account',
 					'logo'			=> 'github-128.png',
 					'url_scheme'	=> 'https://github.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Google+',
-					'type'			=> 'social',
+					'name'	 		=> 'google+',
+					'category'		=> 'social',
 					'description'	=> 'Google+ URL',
 					'logo'			=> 'googleplus-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Instagram',
-					'type'			=> 'social',
+					'name'	 		=> 'instagram',
+					'category'		=> 'social',
 					'description'	=> 'Instagram Account',
 					'logo'			=> 'instagram-128.png',
 					'url_scheme'	=> 'https://instagram.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Jabber',
-					'type'			=> 'social',
+					'name'	 		=> 'jabber',
+					'category'		=> 'social',
 					'description'	=> 'Jabber ID',
 					'logo'			=> 'jabber-128.png',
-					'url_scheme'	=> '%account-placeholder%'
+					'url_scheme'	=> 'jabber:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Last.fm',
-					'type'			=> 'social',
+					'name'	 		=> 'last.fm',
+					'category'		=> 'social',
 					'description'	=> 'Last.fm Account',
 					'logo'			=> 'lastfm-128.png',
 					'url_scheme'	=> 'https://www.lastfm.de/user/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'OpenStreetMap',
-					'type'			=> 'social',
+					'name'	 		=> 'openstreetmap',
+					'category'		=> 'social',
 					'description'	=> 'OpenStreetMap Account',
 					'logo'			=> 'openstreetmap-128.png',
 					'url_scheme'	=> 'https://www.openstreetmap.org/user/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Linkedin',
-					'type'			=> 'social',
+					'name'	 		=> 'linkedin',
+					'category'		=> 'social',
 					'description'	=> 'Linkedin URL',
 					'logo'			=> 'linkedin-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Pinboard',
-					'type'			=> 'social',
+					'name'	 		=> 'pinboard',
+					'category'		=> 'social',
 					'description'	=> 'Pinboard Account',
 					'logo'			=> 'pinboard-128.png',
 					'url_scheme'	=> 'https://pinboard.in/u:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Pinterest',
-					'type'			=> 'social',
+					'name'	 		=> 'pinterest',
+					'category'		=> 'social',
 					'description'	=> 'Pinterest Account',
 					'logo'			=> 'pinterest-128.png',
 					'url_scheme'	=> 'https://www.pinterest.com/%account-placeholder%'
 				),
 			array(
 			 		'title' 		=> 'Playstation Network',
-			 		'type'			=> 'social',
+			 		'name'	 		=> 'playstation network',
+			 		'category'		=> 'social',
 			 		'description'	=> 'Playstation Network Account',
 			 		'logo'			=> 'psn-128.png',
 			 		'url_scheme'	=> 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
 			 	),
 			 array(
 			 		'title' 		=> 'Skype',
-			 		'type'			=> 'social',
+			 		'name'	 		=> 'skype',
+			 		'category'		=> 'social',
 			 		'description'	=> 'Skype Account',
 			 		'logo'			=> 'skype-128.png',
 			 		'url_scheme'	=> 'skype:%account-placeholder%'
 			 	),
 			array(
 					'title' 		=> 'Soundcloud',
-					'type'			=> 'social',
+					'name'	 		=> 'soundcloud',
+					'category'		=> 'social',
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Soup',
-					'type'			=> 'social',
+					'name'	 		=> 'soup',
+					'category'		=> 'social',
 					'description'	=> 'Soup Account',
 					'logo'			=> 'soup-128.png',
 					'url_scheme'	=> 'http://%account-placeholder%.soup.io'
 				),
 			array(
 			 		'title' 		=> 'Steam',
-			 		'type'			=> 'social',
+			 		'name'	 		=> 'steam',
+			 		'category'		=> 'social',
 			 		'description'	=> 'Steam Account',
 			 		'logo'			=> 'steam-128.png',
 			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Tumblr',
-					'type'			=> 'social',
+					'name'	 		=> 'tumblr',
+					'category'		=> 'social',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
 					'url_scheme'	=> 'http://%account-placeholder%.tumblr.com/'
 				),
 			array(
 					'title' 		=> 'Twitter',
-					'type'			=> 'social',
+					'name'	 		=> 'twitter',
+					'category'		=> 'social',
 					'description'	=> 'Twitter Account',
 					'logo'			=> 'twitter-128.png',
 					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Vimeo',
+					'name'	 		=> 'vimeo',
+					'category'		=> 'social',
+					'description'	=> 'Vimeo Account',
+					'logo'			=> 'vimeo-128.png',
+					'url_scheme'	=> 'http://vimeo.com/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Website',
-					'type'			=> 'social',
+					'name'	 		=> 'website',
+					'category'		=> 'social',
 					'description'	=> 'Website URL',
 					'logo'			=> 'www-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 			 		'title' 		=> 'Xbox Live',
-			 		'type'			=> 'social',
+			 		'name'	 		=> 'xbox live',
+			 		'category'		=> 'social',
 					'description'	=> 'Xbox Live Account',
 					'logo'			=> 'xbox-128.png',
 					'url_scheme'	=> 'https://live.xbox.com/profile?gamertag=%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Xing',
-					'type'			=> 'social',
+					'name'	 		=> 'xing',
+					'category'		=> 'social',
 					'description'	=> 'Xing URL',
 					'logo'			=> 'xing-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'YouTube',
-					'type'			=> 'social',
+					'name'	 		=> 'youtube',
+					'category'		=> 'social',
 					'description'	=> 'YouTube Account',
 					'logo'			=> 'youtube-128.png',
 					'url_scheme'	=> 'https://www.youtube.com/user/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Amazon Wishlist',
-					'type'			=> 'donation',
+					'name'	 		=> 'amazon wishlist',
+					'category'		=> 'donation',
 					'description'	=> 'Amazon Wishlist URL',
 					'logo'			=> 'amazonwishlist-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Bitcoin',
-					'type'			=> 'donation',
+					'name'	 		=> 'bitcoin',
+					'category'		=> 'donation',
 					'description'	=> 'Bitcoin Wallet Address',
 					'logo'			=> 'bitcoin-128.png',
 					'url_scheme'	=> 'bitcoin:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Dogecoin',
-					'type'			=> 'donation',
+					'name'	 		=> 'dogecoin',
+					'category'		=> 'donation',
 					'description'	=> 'Dogecoin Wallet Address',
 					'logo'			=> 'dogecoin-128.png',
 					'url_scheme'	=> 'dogecoin:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Flattr',
-					'type'			=> 'donation',
+					'name'	 		=> 'flattr',
+					'category'		=> 'donation',
 					'description'	=> 'Flattr Account',
 					'logo'			=> 'flattr-128.png',
 					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Generic Wishlist',
-					'type'			=> 'donation',
+					'name'	 		=> 'generic wishlist',
+					'category'		=> 'donation',
 					'description'	=> 'Wishlist URL',
 					'logo'			=> 'genericwishlist-128.png',
 					'url_scheme'	=> '%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Litecoin',
-					'type'			=> 'donation',
+					'name'	 		=> 'litecoin',
+					'category'		=> 'donation',
 					'description'	=> 'Litecoin Wallet Address',
 					'logo'			=> 'litecoin-128.png',
 					'url_scheme'	=> 'litecoin:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Paypal',
-					'type'			=> 'donation',
+					'name'	 		=> 'paypal',
+					'category'		=> 'donation',
 					'description'	=> 'Paypal Button ID',
 					'logo'			=> 'paypal-128.png',
 					'url_scheme'	=> 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=%account-placeholder%'
 				),
 			array(
 			 		'title' 		=> 'Steam Wishlist',
-			 		'type'			=> 'donation',
+			 		'name'	 		=> 'steam wishlist',
+			 		'category'		=> 'donation',
 			 		'description'	=> 'Steam Account',
 			 		'logo'			=> 'steam-128.png',
 			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%/wishlist'
 				),
 			array(
 					'title' 		=> 'Thomann Wishlist',
-					'type'			=> 'donation',
+					'name'	 		=> 'thomann wishlist',
+					'category'		=> 'donation',
 					'description'	=> 'Thomann Wishlist URL',
 					'logo'			=> 'thomann-128.png',
 					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'about.me',
+					'name'	 		=> 'about.me',
+					'category'		=> 'social',
+					'description'	=> 'about.me Account',
+					'logo'			=> 'aboutme-128.png',
+					'url_scheme'	=> 'http://about.me/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Gittip',
+					'name'	 		=> 'gittip',
+					'category'		=> 'donation',
+					'description'	=> 'Gittip Account',
+					'logo'			=> 'gittip-128.png',
+					'url_scheme'	=> 'https://www.gittip.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Auphonic Credits',
+					'name'	 		=> 'auphonic credits',
+					'category'		=> 'donation',
+					'description'	=> 'Auphonic Account',
+					'logo'			=> 'auphonic-128.png',
+					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
 				)
 		);
-
 
 		if( count(Service::all()) == 0 ) {
 			foreach ($services as $service_key => $service) {
 				$c = new \Podlove\Modules\Social\Model\Service;
 				$c->title = $service['title'];
-				$c->type = $service['type'];
+				$c->category = $service['category'];
+				$c->type = $service['name'];
 				$c->description = $service['description'];
 				$c->logo = $service['logo'];
 				$c->url_scheme = $service['url_scheme'];
@@ -514,7 +600,7 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function save_service_setting($old, $new, $form_key='services', $type='social') {
-		foreach (\Podlove\Modules\Social\Model\ShowService::find_by_type( $type ) as $service) {
+		foreach (\Podlove\Modules\Social\Model\ShowService::find_by_category( $type ) as $service) {
 			$service->delete();
 		}
 
@@ -583,7 +669,7 @@ class Social extends \Podlove\Modules\Base {
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
-					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'] );
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category( $_GET['contributor'] );
 				} else {
 					$services = array();
 				}
@@ -603,7 +689,7 @@ class Social extends \Podlove\Modules\Base {
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
-					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_type( $_GET['contributor'], 'donation' );
+					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category( $_GET['contributor'], 'donation' );
 				} else {
 					$services = array();
 				}
@@ -615,12 +701,12 @@ class Social extends \Podlove\Modules\Base {
 		) );
 	}
 
-	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $type = 'social') {
+	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $category = 'social') {
 		$cjson = array();
 		$converted_services = array();
-		$wrapper_id = "services-form-$type";
+		$wrapper_id = "services-form-$category";
 
-		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service) {
+		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'category', $category ) as $service) {
 			$cjson[$service->id] = array(
 				'id'   			=> $service->id,
 				'title'   		=> $service->title,
@@ -658,16 +744,16 @@ class Social extends \Podlove\Modules\Base {
 			</table>
 
 			<div id="add_new_contributor_wrapper">
-				<input class="button" id="add_new_service_button-<?php echo $type ?>" value="+" type="button" />
+				<input class="button" id="add_new_service_button-<?php echo $category ?>" value="+" type="button" />
 			</div>
 
-			<script type="text/template" id="service-row-template-<?php echo $type ?>">
+			<script type="text/template" id="service-row-template-<?php echo $category ?>">
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
 				
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
-						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `type` = \'' . $type . '\' ORDER BY `title`' ) as $service ): ?>
+						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `category` = \'' . $category . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -754,10 +840,10 @@ class Social extends \Podlove\Modules\Base {
 						var i = 0;
 
 						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
-							rowTemplate: "#service-row-template-<?php echo $type; ?>",
+							rowTemplate: "#service-row-template-<?php echo $category; ?>",
 							deleteHandle: ".service_remove",
 							sortableHandle: ".reorder-handle",
-							addRowHandle: "#add_new_service_button-<?php echo $type ?>",
+							addRowHandle: "#add_new_service_button-<?php echo $category ?>",
 							data: existing_services,
 							dataPresets: services,
 							onRowLoad: function(o) {
@@ -856,15 +942,15 @@ class Social extends \Podlove\Modules\Base {
 	}
 	
 	public function expandExportFile(\SimpleXMLElement $xml) {
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 
 	public function expandImport($xml) {
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 	
 	/**
@@ -880,4 +966,103 @@ class Social extends \Podlove\Modules\Base {
 	public function podlove_podcast_donations_list() {
 		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-donations-list.twig');
 	}
+
+	public function adn_tags_description( $description ) {
+		return $description . "\n<code title=\"" . __( 'The Contributors of your Epsiode', 'podlove' ) . "\">{episodeContributors}</code>";
+	}
+
+	public function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
+		$data['contributors'] = $this->adn_tags( '{episodeContributors}', $post_id, $selected_role, $selected_group );
+		return $data;
+	}
+
+	public function adn_tags( $text, $post_id, $selected_role, $selected_group ) {
+    	$contributor_adn_accounts = '';
+
+    	$episode       = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+    	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
+    	$adn_service   = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'type', 'app.net' );
+
+    	if (!$adn_service)
+    		return;
+
+    	foreach ( $contributions as $contribution ) {
+    		$contributor_adn_accounts .= '';
+    		$social_accounts = \Podlove\Modules\Social\Model\ContributorService::find_all_by_contributor_id( $contribution->contributor_id );
+
+    		array_map( function( $account ) use ( $adn_service, &$contributor_adn_accounts, $contribution, $selected_role, $selected_group ) {
+    			if ( $account->service_id == $adn_service->id ) {
+    				if ( $selected_role == '' ) {
+    					if ( $selected_group == '' ) {
+    						$contributor_adn_accounts .= "@" . $account->value . " ";
+   						} else {
+   		 					if ( $contribution->group_id == $selected_group )
+   								$contributor_adn_accounts .= "@" . $account->value . " ";
+    					}
+    				} else {
+						if ( $selected_group == '' && $contribution->role_id == $selected_role ) {
+    						$contributor_adn_accounts .= "@" . $account->value . " ";
+   						} else {
+   		 					if ( $contribution->group_id == $selected_group && $contribution->role_id == $selected_role )
+   								$contributor_adn_accounts .= "@" . $account->value . " ";
+    					}
+    				}
+    			}
+    		} , $social_accounts );
+    	}
+
+    	$total_text_length = strlen( $text ) + strlen( $contributor_adn_accounts );
+ 		
+ 		if ( $total_text_length <= 256 )
+     		return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+
+    	return str_replace( '{episodeContributors}' , '', $text) ;
+	}
+
+	public function adn_contributor_filter() {
+
+		if (!is_admin())
+			return;
+
+		$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
+
+		$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
+		$groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
+		$selected_role = $adn->get_module_option('adn_contributor_filter_role');
+		$selected_group = $adn->get_module_option('adn_contributor_filter_group');
+
+		if ( count($roles) > 0 || count($groups) > 0 ) { 
+			$adn->register_option( 'contributor_filter', 'callback', array(
+				'label' => __( 'Contributor Filter', 'podlove' ),
+				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
+				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
+					if ( count($groups) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_group" name="podlove_module_app_dot_net[adn_contributor_filter_group]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $groups as $group ) {
+									echo "<option value='" . $group->id . "' " . ( $selected_group == $group->id ? "selected" : "" ) . ">" . $group->title . "</option>";
+								}
+							?>
+						</select> Group
+					<?php
+					endif;
+					if ( count($roles) > 0 ) :
+					?>
+						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_role" name="podlove_module_app_dot_net[adn_contributor_filter_role]">
+							<option value="">&nbsp;</option>
+							<?php
+								foreach ( $roles as $role ) {
+									echo "<option value='" . $role->id . "' " . ( $selected_role == $role->id ? "selected" : "" ) . ">" . $role->title . "</option>";
+								}
+							?>
+						</select> Role
+					<?php 
+					endif;
+				}
+			) );
+		}
+	}
+
 }

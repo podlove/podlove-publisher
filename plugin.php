@@ -1,6 +1,8 @@
 <?php
 namespace Podlove;
 
+use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
+
 register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 register_uninstall_hook(    PLUGIN_FILE, __NAMESPACE__ . '\uninstall' );
@@ -13,6 +15,10 @@ function activate_for_current_blog() {
 	Model\MediaFile::build();
 	Model\Episode::build();
 	Model\Template::build();
+	Model\DownloadIntent::build();
+	Model\UserAgent::build();
+	Model\GeoArea::build();
+	Model\GeoAreaName::build();
 
 	if ( ! Model\FileType::has_entries() ) {
 		$default_types = array(
@@ -59,7 +65,7 @@ function activate_for_current_blog() {
 	$podcast->save();
 
 	// set default modules
-	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation' );
+	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation', 'import_export' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
@@ -78,6 +84,20 @@ function activate_for_current_blog() {
 		update_option( 'podlove', $settings );
 	}
 
+	// set default template
+	if (!$template = Model\Template::find_one_by_property('title', 'default')) {
+		$template = new Model\Template;
+		$template->title = 'default';
+		$template->content = <<<EOT
+{{ episode.player }}
+[podlove-episode-downloads]
+EOT;
+		$template->save();
+
+		$assignment = Model\TemplateAssignment::get_instance();
+		$assignment->top = $template->id;
+		$assignment->save();
+	}
 }
 
 /**
@@ -175,12 +195,22 @@ function uninstall_for_current_blog() {
 	Model\MediaFile::destroy();
 	Model\Episode::destroy();
 	Model\Template::destroy();
+	Model\DownloadIntent::destroy();
+	Model\UserAgent::destroy();
+	Model\GeoArea::destroy();
+	Model\GeoAreaName::destroy();
 }
 
 /**
  * Activate internal modules.
  */
 add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
+add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
+
+add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
+
+// init cache (after plugins_loaded, so modules have a chance to hook)
+add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
 /**
  * Adds feed discover links to WordPress head.
@@ -195,13 +225,18 @@ function add_feed_discoverability() {
 	if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
 		require_once \PODLOVE\PLUGIN_DIR . 'lib/feeds/base.php';
 
-	$feeds = \Podlove\Model\Feed::all( 'ORDER BY position ASC' );
+	$cache = \Podlove\Cache\TemplateCache::get_instance();
+	echo $cache->cache_for('feed_discoverability', function() {
 
-	foreach ( $feeds as $feed ) {
-		if ( $feed->discoverable )
-			echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
-	}
-		
+		$feeds = \Podlove\Model\Feed::all( 'ORDER BY position ASC' );
+
+		$html = '';
+		foreach ( $feeds as $feed ) {
+			if ( $feed->discoverable )
+				$html .= '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
+		}
+		return $html;
+	});
 }
 
 add_action( 'init', function () {
@@ -261,6 +296,31 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 	return $wp_query;
 } );
 
+/**
+ * Checking "merge_episodes" also includes episodes in main feed
+ */
+add_filter( 'request', function($query_var) {
+
+	if ( !isset( $query_var['feed'] ) ) 
+		return $query_var;
+	
+	if ( \Podlove\get_setting( 'website', 'merge_episodes' ) !== 'on' )
+		return $query_var;
+	
+	$extend = array(
+		'post' => 'post',
+		'podcast' => 'podcast'
+	);
+
+	if ( empty( $query_var['post_type'] ) || ! is_array( $query_var['post_type'] ) ) {
+		$query_var['post_type'] = $extend;
+	} else {
+		$query_var['post_type'] = array_merge( $query_var['post_type'], $extend );
+	}
+	
+	return $query_var;
+} );
+
 // init modules
 add_action( 'plugins_loaded', function () {
 	$modules = Modules\Base::get_active_module_names();
@@ -315,40 +375,6 @@ add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val
 		}
 	}
 }, 10, 2 );
-
-function show_critical_errors() {
-
-	$errors = get_option( 'podlove_global_messages', array() );
-
-	if ( ! isset( $errors['errors'] ) && ! isset( $errors['notices'] ) )
-		return;
-
-	if ( count( $errors['errors'] ) + count( $errors['notices'] ) === 0 )
-		return;
-
-	// if there are errors, always run the system report to see if they are gone
-	run_system_report();
-    ?>
-    <div class="error">
-        
-    	<?php if ( isset( $errors['errors'] ) ): ?>
-			<h3>
-				<?php echo __( 'Critical Podlove Warnings', 'podlove' ) ?>
-			</h3>
-    		<ul>
-    			<?php foreach ( $errors['errors'] as $error ): ?>
-    				<li><?php echo $error ?></li>
-    			<?php endforeach; ?>
-    			<?php foreach ( $errors['notices'] as $error ): ?>
-    				<li><?php echo $error ?></li>
-    			<?php endforeach; ?>
-    		</ul>
-    	<?php endif; ?>
-
-    </div>
-    <?php
-}
-add_action( 'admin_notices', '\Podlove\show_critical_errors' );
 
 /**
  * System Report needs to be run whenever a setting has changed that could effect something critical.
@@ -471,16 +497,20 @@ function autoinsert_templates_into_content( $content ) {
 	$template_assignments = Model\TemplateAssignment::get_instance();
 
 	if ( $template_assignments->top ) {
-		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->top )->title . '"]';
-		if ( stripos( $content, $shortcode ) === false ) {
-			$content = $shortcode . $content;
+		if ($template = Model\Template::find_by_id( $template_assignments->top )) {
+			$shortcode = '[podlove-template id="' . $template->title . '"]';
+			if ( stripos( $content, $shortcode ) === false ) {
+				$content = $shortcode . $content;
+			}
 		}
 	}
 
 	if ( $template_assignments->bottom ) {
-		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->bottom )->title . '"]';
-		if ( stripos( $content, $shortcode ) === false ) {
-			$content = $content . $shortcode;
+		if ($template = Model\Template::find_by_id( $template_assignments->bottom )) {
+			$shortcode = '[podlove-template id="' . $template->title . '"]';
+			if ( stripos( $content, $shortcode ) === false ) {
+				$content = $content . $shortcode;
+			}
 		}
 	}
 
@@ -759,7 +789,7 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 
 	foreach ($episodes as $episode) {
 		if ($chapters = $episode->get_chapters('mp4chaps'))
-			$episode->update_attribute('chapters', mysql_real_escape_string($chapters));
+			$episode->update_attribute('chapters', esc_sql($chapters));
 	}
 
 	// delete chapters caches
@@ -767,6 +797,235 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 
 	return $new;
 }, 10, 2);
+
+function handle_media_file_download() {
+
+	if (isset($_GET['download_media_file'])) {
+		$download_media_file = $_GET['download_media_file'];
+	} else {
+		$download_media_file = get_query_var("download_media_file");
+	}
+
+	if (isset($_REQUEST['ptm_source'])) {
+		$ptm_source = $_REQUEST['ptm_source'];
+	} else {
+		$ptm_source = get_query_var("ptm_source");
+	}
+
+	if (isset($_REQUEST['ptm_context'])) {
+		$ptm_context = $_REQUEST['ptm_context'];
+	} else {
+		$ptm_context = get_query_var("ptm_context");
+	}
+
+	$download_media_file = (int) $download_media_file;
+	$ptm_source  = trim($ptm_source);
+	$ptm_context = trim($ptm_context);
+
+	if (!$download_media_file)
+		return;
+
+	// tell WP Super Cache to not cache download links
+	if ( ! defined( 'DONOTCACHEPAGE' ) )
+		define( 'DONOTCACHEPAGE', true );
+
+	// FIXME: this is a hack for bitlove => so move it in this module AND make sure the location in valid
+	// if download_media_file is a URL, download directly
+	if ( filter_var( $download_media_file, FILTER_VALIDATE_URL ) ) {
+		$parsed_url = parse_url($download_media_file);
+		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
+		header( "Expires: 0" );
+		header( 'Cache-Control: must-revalidate' );
+	    header( 'Pragma: public' );
+		header( "Content-Type: application/x-bittorrent" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Disposition: attachment; filename=$file_name" );
+		header( "Content-Transfer-Encoding: binary" );
+		ob_clean();
+		flush();
+		while ( @ob_end_flush() ); // flush and end all output buffers
+		readfile( $download_media_file );
+		exit;
+	}
+
+	$media_file_id = $download_media_file;
+	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
+
+	if ( ! $media_file ) {
+		status_header( 404 );
+		exit;
+	}
+
+	$episode_asset = $media_file->episode_asset();
+
+	if ( ! $episode_asset || ! $episode_asset->downloadable ) {
+		status_header( 404 );
+		exit;
+	}
+
+	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics") {
+		$intent = new Model\DownloadIntent;
+		$intent->media_file_id = $media_file_id;
+		$intent->accessed_at = date('Y-m-d H:i:s');
+		
+		if ($ptm_source)
+			$intent->source = $ptm_source;
+
+		if ($ptm_context)
+			$intent->context = $ptm_context;
+
+		// set user agent
+		$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
+		if (strlen($ua_string)) {
+			if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
+				$agent = new Model\UserAgent;
+				$agent->user_agent = $ua_string;
+				$agent->save();
+			}
+			$intent->user_agent_id = $agent->id;
+		}
+
+		// save HTTP range header
+		// @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35 for spec
+		if (isset($_SERVER['HTTP_RANGE']))
+			$intent->httprange = $_SERVER['HTTP_RANGE'];
+
+		// get ip, but don't store it
+		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+		if (method_exists($ip, 'as_IPv6_address')) {
+			$ip = $ip->as_IPv6_address();
+		}
+		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
+
+		// Generate a hash from IP address and UserAgent so we can identify
+		// identical requests without storing an IP address.
+		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
+		$intent = $intent->add_geo_data($ip_string);
+
+		$intent->save();
+	}
+
+	$location = $media_file->add_ptm_parameters(
+		$media_file->get_file_url(),
+		array(
+			'source'  => $intent->source,
+			'context' => $intent->context
+		)
+	);
+
+	header("HTTP/1.1 301 Moved Permanently");
+	header("Location: " . $location);
+	exit;
+}
+add_action( 'wp', '\Podlove\handle_media_file_download' );
+
+/**
+ * Extend/Replace WordPress core search logic to include episode fields.
+ *
+ * The way I do it here is not well-behaving. If other plugins modify the query
+ * before me, their changes will be overridden. However, there is no better
+ * place to hook into and I refuse to modify the filterable query string with
+ * regular expressions.
+ *
+ * If you found this piece of code and are now cursing at me, please get in
+ * touch. 
+ */
+add_filter('posts_search', function($search, $query) {
+	global $wpdb;
+
+	if (!isset($query->query_vars['search_terms']))
+		return $search;
+
+	$episodesTable = \Podlove\Model\Episode::table_name();
+
+	$search = '';
+	$searchand = '';
+	$n = !empty($query->query_vars['exact']) ? '' : '%';
+	foreach( (array) $query->query_vars['search_terms'] as $term ) {
+		$term = esc_sql( like_escape( $term ) );
+		$search .= "
+			{$searchand}
+			(
+				($wpdb->posts.post_title LIKE '{$n}{$term}{$n}')
+				OR
+				($wpdb->posts.post_content LIKE '{$n}{$term}{$n}')
+				OR
+				($episodesTable.subtitle LIKE '{$n}{$term}{$n}')
+				OR
+				($episodesTable.summary LIKE '{$n}{$term}{$n}')
+				OR
+				($episodesTable.chapters LIKE '{$n}{$term}{$n}')
+			)";
+		$searchand = ' AND ';
+	}
+
+	if ( !empty($search) ) {
+		$search = " AND ({$search}) ";
+		if ( !is_user_logged_in() )
+			$search .= " AND ($wpdb->posts.post_password = '') ";
+	}
+
+	return $search;
+}, 10, 2);
+
+// join into episode table in WordPress searches so we can access episode fields
+add_filter('posts_join', function($join, $query) {
+	global $wpdb;
+
+	if (!$query->is_search())
+		return $join;
+
+	$episodesTable = \Podlove\Model\Episode::table_name();
+	$join .= " LEFT JOIN $episodesTable ON $wpdb->posts.ID = $episodesTable.post_id ";
+
+	return $join;
+}, 10, 2);
+
+// add route for file downloads
+add_action( 'init', function () {
+    add_rewrite_rule(
+        '^podlove/file/([0-9]+)/s/([^/]+)/c/([^/]+)/.+/?$',
+        'index.php?download_media_file=$matches[1]&ptm_source=$matches[2]&ptm_context=$matches[3]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^podlove/file/([0-9]+)/s/([^/]+)/.+/?$',
+        'index.php?download_media_file=$matches[1]&ptm_source=$matches[2]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^podlove/file/([0-9]+)/.+/?$',
+        'index.php?download_media_file=$matches[1]',
+        'top'
+    );
+}, 10 );
+
+add_filter( 'query_vars', function ( $query_vars ){
+    $query_vars[] = 'download_media_file';
+    $query_vars[] = 'ptm_source';
+    $query_vars[] = 'ptm_context';
+    return $query_vars;
+}, 10, 1 );
+
+// don't add trailing slash to file URLs
+add_filter('redirect_canonical', function($redirect_url, $requested_url) {
+	if ((int) get_query_var('download_media_file')) {
+		return false;
+	} else {
+		return $redirect_url;
+	}
+}, 10, 2);
+
+// Ensure WordPress importer keeps the mapping id for old<->new post id.
+// This is required for the Im/Export module. To avoid user errors, it is
+// better to keep this behaviour in core.
+add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
+	$postmetas[] = array(
+		'key' => 'import_id',
+		'value' => $post_id
+	);
+	return $postmetas;
+}, 10, 3 );
 
 // register ajax actions
 new \Podlove\AJAX\Ajax;

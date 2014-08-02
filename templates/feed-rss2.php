@@ -16,7 +16,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 
 <channel>
 	<title><?php echo apply_filters( 'podlove_feed_title', '' ); ?></title>
-	<link><?php bloginfo_rss( 'url' ) ?></link>
+	<link><?php echo apply_filters( 'podlove_feed_link', \Podlove\get_landing_page_url() ) ?></link>
 	<description><?php echo apply_filters( 'podlove_rss_feed_description', get_bloginfo_rss( 'description' ) ) ?></description>
 	<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_lastpostmodified( 'GMT' ), false ); ?></lastBuildDate>
 	<?php do_action( 'rss2_head' ); ?>

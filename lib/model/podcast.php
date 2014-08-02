@@ -65,6 +65,10 @@ class Podcast implements Licensable {
 			$this->$name = $value;
 		}
 	}
+
+	public static function name() {
+		return 'podcast';
+	}
 	
 	private function set_property( $name, $value ) {
 		$this->data[ $name ] = $value;
@@ -137,6 +141,9 @@ class Podcast implements Licensable {
 	public function save() {
 		$this->set_property( 'media_file_base_uri', trailingslashit( $this->media_file_base_uri ) );
 		update_option( 'podlove_podcast', $this->data );
+
+		do_action('podlove_model_save', $this);
+		do_action('podlove_model_change', $this);
 	}
 
 	/**

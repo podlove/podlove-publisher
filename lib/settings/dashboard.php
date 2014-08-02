@@ -110,7 +110,7 @@ class Dashboard {
 				// close postboxes that should be closed
 				$( '.if-js-closed' ).removeClass( 'if-js-closed' ).addClass( 'closed' );
 				// postboxes setup
-				postboxes.add_postbox_toggles( '<?php echo \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE; ?>' );
+				postboxes.add_postbox_toggles( '<?php echo Dashboard::$pagehook; ?>' );
 			} );
 			</script>
 

@@ -117,11 +117,13 @@ class Ajax {
 			$info['php_safe_mode'] = ini_get( 'safe_mode' );
 			$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
 			$info['curl_exec'] = function_exists( 'curl_exec' );
-			$result['message'] = "--- # Can't reach {$file->get_file_url()}\n";
-			$result['message'].= "--- # Please include this output when you report a bug\n";
+			$errorLog = "--- # Can't reach {$file->get_file_url()}\n";
+			$errorLog.= "--- # Please include this output when you report a bug\n";
 			foreach ( $info as $key => $value ) {
-				$result['message'] .= "$key: $value\n";
+				$errorLog .= "$key: $value\n";
 			}
+
+			\Podlove\Log::get()->addError( $errorLog );
 		}
 
 		self::respond_with_json( $result );
