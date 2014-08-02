@@ -497,16 +497,20 @@ function autoinsert_templates_into_content( $content ) {
 	$template_assignments = Model\TemplateAssignment::get_instance();
 
 	if ( $template_assignments->top ) {
-		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->top )->title . '"]';
-		if ( stripos( $content, $shortcode ) === false ) {
-			$content = $shortcode . $content;
+		if ($template = Model\Template::find_by_id( $template_assignments->top )) {
+			$shortcode = '[podlove-template id="' . $template->title . '"]';
+			if ( stripos( $content, $shortcode ) === false ) {
+				$content = $shortcode . $content;
+			}
 		}
 	}
 
 	if ( $template_assignments->bottom ) {
-		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->bottom )->title . '"]';
-		if ( stripos( $content, $shortcode ) === false ) {
-			$content = $content . $shortcode;
+		if ($template = Model\Template::find_by_id( $template_assignments->bottom )) {
+			$shortcode = '[podlove-template id="' . $template->title . '"]';
+			if ( stripos( $content, $shortcode ) === false ) {
+				$content = $content . $shortcode;
+			}
 		}
 	}
 
