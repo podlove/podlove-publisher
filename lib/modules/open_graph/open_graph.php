@@ -29,7 +29,17 @@ class Open_Graph extends \Podlove\Modules\Base {
 				return $output . ' prefix="og: http://ogp.me/ns#"';
 			} );
 
-			add_action( 'wp_head', array( $this, 'insert_open_graph_metadata' ) );
+			add_action( 'wp_head', array( $this, 'the_open_graph_metadata' ) );
+		}
+
+		public function the_open_graph_metadata()
+		{
+			$cache_key = 'opg' . get_the_ID() . get_permalink();
+
+			$cache = \Podlove\Cache\TemplateCache::get_instance();
+			return $cache->cache_for($cache_key, function() {
+				return \Podlove\Modules\OpenGraph\Open_Graph::get_open_graph_metadata();
+			});
 		}
 
 		/**
@@ -39,7 +49,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 		 * @todo  let user choose what's in og:description: subtitle, excerpt, ...
 		 * @todo  handle multiple releases per episode
 		 */
-		public function insert_open_graph_metadata() {
+		public static function get_open_graph_metadata() {
 
 			$post_id = get_the_ID();
 			if ( ! $post_id )
@@ -122,6 +132,6 @@ class Open_Graph extends \Podlove\Modules\Base {
 				$dom->appendChild($element);
 			}
 
-			echo $dom;
+			return $dom;
 		}		
 }

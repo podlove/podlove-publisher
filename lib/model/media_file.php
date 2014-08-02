@@ -74,27 +74,29 @@ class MediaFile extends Base {
 	{
 		if (!$source && !$context)
 			return $this->get_file_url();
+
+		$params = array(
+			'source'  => $source,
+			'context' => $context
+		);
 		
 		switch ((string) \Podlove\get_setting('tracking', 'mode')) {
 			case 'ptm':
 				// when PTM is active, add $source and $context but
 				// keep the original file URL
 				return $this->add_ptm_parameters(
-					$this->get_file_url(),
-					array(
-						'source'  => $source,
-						'context' => $context
-					)
+					$this->get_file_url(), $params
 				);
 				break;
 			case 'ptm_analytics':
 				// we track, so we need to generate a shadow URL
-				// $path = '?download_media_file=' . $this->id;
-				$path = '/podlove/file/' . $this->id;
-				$path = $this->add_ptm_routing($path, array(
-					'source'  => $source,
-					'context' => $context
-				));
+				if (get_option('permalink_structure')) {
+					$path = '/podlove/file/' . $this->id;
+					$path = $this->add_ptm_routing($path, $params);
+				} else {
+					$path = '?download_media_file=' . $this->id;
+					$path = $this->add_ptm_parameters($path, $params);
+				}
 				return site_url($path);
 				break;
 			default:

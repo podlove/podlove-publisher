@@ -122,6 +122,23 @@ class SystemReport {
 				$error = __( 'You need to assign at least one asset to the web player.', 'podlove' );
 				$errors[] = $error;
 				return $error;
+			} ),
+			'podlove_cache' => array( 'callback' => function() {
+				return \Podlove\Cache\TemplateCache::is_enabled() ? 'on' : 'off';
+			}),
+			'assets' => array( 'callback' => function() {
+				$assets = array();
+				foreach (\Podlove\Model\EpisodeAsset::all() as $asset) {
+					$file_type = $asset->file_type();
+					$assets[] = array(
+						'extension' => $file_type->extension,
+						'mime_type' => $file_type->mime_type
+					);
+				}
+
+				return "\n\t" . implode("\n\t", array_map(function($asset) {
+					return str_pad($asset['extension'], 7) . $asset['mime_type'];
+				}, $assets));
 			} )
 		);
 

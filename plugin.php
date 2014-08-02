@@ -207,6 +207,8 @@ function uninstall_for_current_blog() {
 add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 
+add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
+
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
@@ -374,40 +376,6 @@ add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val
 	}
 }, 10, 2 );
 
-function show_critical_errors() {
-
-	$errors = get_option( 'podlove_global_messages', array() );
-
-	if ( ! isset( $errors['errors'] ) && ! isset( $errors['notices'] ) )
-		return;
-
-	if ( count( $errors['errors'] ) + count( $errors['notices'] ) === 0 )
-		return;
-
-	// if there are errors, always run the system report to see if they are gone
-	run_system_report();
-    ?>
-    <div class="error">
-        
-    	<?php if ( isset( $errors['errors'] ) ): ?>
-			<h3>
-				<?php echo __( 'Critical Podlove Warnings', 'podlove' ) ?>
-			</h3>
-    		<ul>
-    			<?php foreach ( $errors['errors'] as $error ): ?>
-    				<li><?php echo $error ?></li>
-    			<?php endforeach; ?>
-    			<?php foreach ( $errors['notices'] as $error ): ?>
-    				<li><?php echo $error ?></li>
-    			<?php endforeach; ?>
-    		</ul>
-    	<?php endif; ?>
-
-    </div>
-    <?php
-}
-add_action( 'admin_notices', '\Podlove\show_critical_errors' );
-
 /**
  * System Report needs to be run whenever a setting has changed that could effect something critical.
  */
@@ -529,16 +497,20 @@ function autoinsert_templates_into_content( $content ) {
 	$template_assignments = Model\TemplateAssignment::get_instance();
 
 	if ( $template_assignments->top ) {
-		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->top )->title . '"]';
-		if ( stripos( $content, $shortcode ) === false ) {
-			$content = $shortcode . $content;
+		if ($template = Model\Template::find_by_id( $template_assignments->top )) {
+			$shortcode = '[podlove-template id="' . $template->title . '"]';
+			if ( stripos( $content, $shortcode ) === false ) {
+				$content = $shortcode . $content;
+			}
 		}
 	}
 
 	if ( $template_assignments->bottom ) {
-		$shortcode = '[podlove-template id="' . Model\Template::find_by_id( $template_assignments->bottom )->title . '"]';
-		if ( stripos( $content, $shortcode ) === false ) {
-			$content = $content . $shortcode;
+		if ($template = Model\Template::find_by_id( $template_assignments->bottom )) {
+			$shortcode = '[podlove-template id="' . $template->title . '"]';
+			if ( stripos( $content, $shortcode ) === false ) {
+				$content = $content . $shortcode;
+			}
 		}
 	}
 
@@ -817,7 +789,7 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 
 	foreach ($episodes as $episode) {
 		if ($chapters = $episode->get_chapters('mp4chaps'))
-			$episode->update_attribute('chapters', mysql_real_escape_string($chapters));
+			$episode->update_attribute('chapters', esc_sql($chapters));
 	}
 
 	// delete chapters caches
@@ -912,6 +884,11 @@ function handle_media_file_download() {
 			}
 			$intent->user_agent_id = $agent->id;
 		}
+
+		// save HTTP range header
+		// @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35 for spec
+		if (isset($_SERVER['HTTP_RANGE']))
+			$intent->httprange = $_SERVER['HTTP_RANGE'];
 
 		// get ip, but don't store it
 		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);

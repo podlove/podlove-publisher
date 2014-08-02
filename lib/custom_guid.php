@@ -59,7 +59,7 @@ class Custom_Guid {
 										.append("<br><strong class=\"guid_warning\">GUID regenerated. You still need to save the post.<br>Only regenerate if you messed up and need all clients to redownload all files!</strong>");
 								}
 							} else {
-								alert("Sorry, couln't generate new GUID.");
+								alert("Sorry, couldn't generate new GUID.");
 							}
 						}
 					});
