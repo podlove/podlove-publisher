@@ -95,6 +95,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix dashboard box state saving
 * fix generation of faulty URLs when tracking was on but pretty permalinks off
 * fix auto-insertion of nonexisting templates
+* fix routing issues when `/%category%/%postname%` is used as permalink structure
 * remove "Critical Podlove Warnings" — they are scary and don't help a lot
 
 = 1.10.16 =
