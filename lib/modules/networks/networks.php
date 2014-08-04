@@ -20,21 +20,12 @@ class Networks extends \Podlove\Modules\Base {
 
 		add_action( 'admin_bar_menu', array( $this, 'create_network_toolbar' ), 999 );
 
-		// Add Network templates to local template query
-		add_filter( 'podlove_template_query', array( $this, 'provide_network_template' ) );
-
 		// Twig template filter
 		add_filter( 'podlove_templates_global_context', array( $this, 'twig_template_filter' ) );
 
 		// Styles
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( 'wp_print_styles', array( $this, 'scripts_and_styles' ) );
-	}
-
-	public function provide_network_template( $template_id ) {
-		$template = \Podlove\Modules\Networks\Model\Template::find_one_by_title( $template_id );
-
-		return $template;
 	}
 
 	public function twig_template_filter( $context ) {
