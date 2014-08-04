@@ -29,6 +29,8 @@ use \Podlove\Model;
 class TemplateCache {
 
 	private static $instance = NULL;
+	
+	const CACHE_NAMESPACE = "podlove_cachev2_";
 
 	/**
 	 * If the cache is tainted, it has to be purged.
@@ -117,7 +119,7 @@ class TemplateCache {
 		global $wpdb;
 
 		// quick, reliable purge (but only works with database as backend)
-		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_podlove_cache_%\"";
+		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_" . self::CACHE_NAMESPACE . "%\"";
 		$wpdb->query($sql);
 
 		// safe purge that works even if transients backend is not database
@@ -186,7 +188,7 @@ class TemplateCache {
 	 * @return string
 	 */
 	private function generate_cache_key($cache_key) {
-		$cache_key = sprintf("podlove_cache_%s", sha1($cache_key));
+		$cache_key = sprintf("%s%s", self::CACHE_NAMESPACE, sha1($cache_key));
 		return substr($cache_key, 0, 52);
 	}
 
