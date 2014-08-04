@@ -96,6 +96,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix generation of faulty URLs when tracking was on but pretty permalinks off
 * fix auto-insertion of nonexisting templates
 * fix routing issues when `/%category%/%postname%` is used as permalink structure
+* fix rare cache concurrency issues by introducing a 24h auto-expiry
 * remove "Critical Podlove Warnings" — they are scary and don't help a lot
 
 = 1.10.16 =

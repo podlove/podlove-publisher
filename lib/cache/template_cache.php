@@ -101,7 +101,26 @@ class TemplateCache {
 		wp_schedule_single_event( time(), 'podlove_purge_template_cache', array('time' => time()) );
 	}
 
+	/**
+	 * Purge all caches
+	 *
+	 * @todo The way cache keys are stored right now is *not cuncurrency safe*.
+	 * Deletion by SQL query guarantees to catch all cached values, but that does not work
+	 * when another storage engine like memcached is used.
+	 * My problem is that I would prefer either a `delete_all_transients()` or 
+	 * `delete_transient_matching(<string>)` method. However, WordPress only lets you
+	 * delete by exact key. That's why I need to store all generated keys. I am doing this,
+	 * but race conditions can screw that logic up. Worst case, this leads to caches that
+	 * are *never deleted*. Which is why the 24h auto-expiry is introduced.
+	 */
 	public function purge() {
+		global $wpdb;
+
+		// quick, reliable purge (but only works with database as backend)
+		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_podlove_cache_%\"";
+		$wpdb->query($sql);
+
+		// safe purge that works even if transients backend is not database
 		$cache_keys_string = get_option('podlove_tpl_cache_keys', '');
 		$keys = explode(",", $cache_keys_string);
 		foreach ($keys as $cache_key) {
@@ -117,7 +136,7 @@ class TemplateCache {
 	 * @param  function $callback  The function that generates the content in case of a cache miss.
 	 * @return string              Content for given cache key.
 	 */
-	public function cache_for($cache_key, $callback)
+	public function cache_for($cache_key, $callback, $expiration = DAY_IN_SECONDS)
 	{
 		if (!self::is_enabled())
 			return call_user_func($callback);
@@ -131,7 +150,7 @@ class TemplateCache {
 			$html = call_user_func($callback);
 
 			if ($html !== FALSE) {
-				set_transient($cache_key, $html);
+				set_transient($cache_key, $html, $expiration);
 				$this->memorize_cache_key($cache_key);
 			}
 				
