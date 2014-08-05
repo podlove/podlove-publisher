@@ -23,9 +23,44 @@ class Networks extends \Podlove\Modules\Base {
 		// Twig template filter
 		add_filter( 'podlove_templates_global_context', array( $this, 'twig_template_filter' ) );
 
+		add_filter( 'podlove_system_report_fields', array( $this, 'add_system_report_validations' ) );
+
 		// Styles
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( 'wp_print_styles', array( $this, 'scripts_and_styles' ) );
+	}
+
+	public function add_system_report_validations($fields)
+	{
+		$switch_to_main_blog = function() {
+			global $current_site;
+			switch_to_blog($current_site->blog_id);
+		};
+
+		$is_active_in_main_blog = function() use ($switch_to_main_blog) {
+			
+			$switch_to_main_blog();
+			$module_active = \Podlove\Modules\Base::is_active('networks');
+			$plugin_active = is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) );
+			restore_current_blog();
+
+			return $module_active && $plugin_active;
+		};
+
+		$fields['network module'] = array(
+			'callback' => function() use ($is_active_in_main_blog) {
+				if ($is_active_in_main_blog()) {
+					return "ok";
+				} else {
+					return array(
+						"message" => "Must be active in main blog!",
+						"error" => "You are using the network module. You have to activate it in your main WordPress blog to work properly"
+					);
+				}
+			}
+		);
+
+		return $fields;
 	}
 
 	public function twig_template_filter( $context ) {
