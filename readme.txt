@@ -85,6 +85,13 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.18 =
+
+**Improvements to media file slugs**
+
+* Slugs may contain slashes now. This allows storing asset files in subfolders and using the WordPress media uploader to manage files.
+* Media file validation is more consistent: when you get a green checkmark, the file is guaranteed to be valid and reachable.
+
 = 1.10.17 =
 
 * tracking now includes range headers

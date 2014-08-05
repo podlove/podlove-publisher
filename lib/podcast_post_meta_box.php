@@ -348,11 +348,10 @@ class Podcast_Post_Meta_Box {
 				
 				$attributes = array(
 					'data-template'  => \Podlove\Model\Podcast::get_instance()->get_url_template(),
-					'data-extension' => $format->extension,
 					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
-					'data-suffix' => $asset->suffix,
 					'data-episode-asset-id' => $asset->id,
-					'data-episode-id' => $episode->id
+					'data-episode-id' => $episode->id,
+					'data-file-url' => $file->get_file_url()
 				);
 
 				if ( $file )
