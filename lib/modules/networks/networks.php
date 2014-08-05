@@ -79,15 +79,7 @@ class Networks extends \Podlove\Modules\Base {
 		);
 		$wp_admin_bar->add_node( $args );
 
-		// Podlove Contributors
-		$args = array(
-			'id'     => 'podlove_toolbar_contributors',
-			'title'  => 'Contributors',
-			'parent' => 'podlove_toolbar',
-			'href'   => $podcast_admin_url . 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle',
-			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
-		);
-		$wp_admin_bar->add_node( $args );
+		do_action('podlove_network_admin_bar', $wp_admin_bar);
 
 		// Register Podcasts
 		foreach ( $podcasts as $podcast ) {
@@ -130,16 +122,8 @@ class Networks extends \Podlove\Modules\Base {
 				
 			);
 			$wp_admin_bar->add_node( $args );
-			$args = array(
-				'id'     => $podcast_toolbar_id . '_contributors',
-				'title'  => 'Contributors',
-				'parent' => $podcast_toolbar_id,
-				'href'   => $podcast_admin_url . 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle',
-				'meta'   => array( 
-						'class' => 'podlove-toolbar-without-icon'
-					)
-			);
-			$wp_admin_bar->add_node( $args );
+
+			do_action('podlove_network_admin_bar_podcast', $wp_admin_bar, $podcast);
 
 			restore_current_blog();
 		}
