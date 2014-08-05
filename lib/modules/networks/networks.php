@@ -46,7 +46,6 @@ class Networks extends \Podlove\Modules\Base {
 	 *  Register Network Toolbar Menu
 	 */
 	public function create_network_toolbar( $wp_admin_bar ) {
-		$current_blog_id = get_current_blog_id();
 		$network_dashboard_url = network_site_url() . 'wp-admin/network/admin.php?page=podlove_network_settings_handle';
 		$podcasts = PodcastList::all_podcasts();
 		$podcast_admin_url = get_admin_url();
@@ -141,9 +140,9 @@ class Networks extends \Podlove\Modules\Base {
 					)
 			);
 			$wp_admin_bar->add_node( $args );
-		}
 
-		switch_to_blog( $current_blog_id );
+			restore_current_blog();
+		}
 	}
 
 	/*

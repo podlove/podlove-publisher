@@ -64,21 +64,30 @@ class PodcastList extends Base {
 	 */
 	public static function all_blogs() {
 		global $wpdb;
-		return $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-	}
 
+		if ($wpdb->blogs) {
+			$blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+		} else {
+			$blogs = array();
+		}
+
+		return $blogs;
+	}
 
 	/**
 	 * Fetch all Podcasts
 	 */
 	public static function all_podcasts() {
-		$current_blog_id = get_current_blog_id();
 		$podcasts = array_filter( self::all_blogs(), function( $blog ) {
 			switch_to_blog( $blog );
-				if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) )
-					return $blog;
+			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
+				restore_current_blog();
+				return $blog;
+			} else {
+				restore_current_blog();
+				return false;
+			}
 		} );
-		switch_to_blog( $current_blog_id );
 		return $podcasts;
 	}
 
@@ -137,21 +146,19 @@ class PodcastList extends Base {
  		$current_blog_id = get_current_blog_id();
 
  		$podcasts = $this->podcasts;
- 		$prefix = $wpdb->get_blog_prefix(0);
- 		$prefix = str_replace( '1_', '' , $prefix );
  		$query = "";
  		$episodes = array();
  
  		// Generate mySQL Query
  		foreach ( $podcasts as $podcast_key => $podcast ) {
  			if( $podcast_key == 0 ) {
- 			    $post_table = $prefix . "posts";
+ 			    $post_table = $wpdb->base_prefix . "posts";
  			} else {
- 			    $post_table = $prefix . $podcast->blog_id . "_posts";
+ 			    $post_table = $wpdb->base_prefix . $podcast->blog_id . "_posts";
  			}
  
  			$post_table = esc_sql( $post_table );
- 	        $blog_table = esc_sql( $prefix . 'blogs' );
+ 	        $blog_table = esc_sql( $wpdb->base_prefix . 'blogs' );
  
  	        $query .= "(SELECT $post_table.ID, $post_table.post_title, $post_table.post_date, $blog_table.blog_id FROM $post_table, $blog_table\n";
  	        $query .= "WHERE $post_table.post_type = 'podcast'";
