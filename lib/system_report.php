@@ -160,6 +160,9 @@ class SystemReport {
 				if (isset($result['error'])) {
 					$this->errors[] = $result['error'];
 				}
+				if (isset($result['notice'])) {
+					$this->notices[] = $result['notice'];
+				}
 			} else {
 				$this->fields[ $field_key ]['value'] = $result;	
 			}
@@ -190,18 +193,20 @@ class SystemReport {
 		$out .= "\n";
 
 		if ( count( $this->errors ) ) {
-			$out .= count( $this->errors ) . " CRITICAL ERRORS: \n";
+			$out .= _n( '1 ERROR', '%s ERRORS', count( $this->errors ), 'podlove' );
+			$out .= ": \n";
 			foreach ( $this->errors as $error ) {
-				$out .= "$error\n";
+				$out .= "- $error\n";
 			}
 		} else {
 			$out .= "0 errors\n";
 		}
 
 		if ( count( $this->notices ) ) {
-			$out .= count( $this->notices ) . " notices (no dealbreaker, but should be fixed if possible): \n";
+			$out .= _n( '1 NOTICE', '%s NOTICES', count( $this->notices ), 'podlove' );
+			$out .= " (no dealbreaker, but should be fixed if possible): \n";
 			foreach ( $this->notices as $error ) {
-				$out .= "$error\n";
+				$out .= "- $error\n";
 			}
 		} else {
 			$out .= "0 notices\n";
