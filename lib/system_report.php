@@ -142,6 +142,8 @@ class SystemReport {
 			} )
 		);
 
+		$this->fields = apply_filters('podlove_system_report_fields', $this->fields);
+
 		$this->run();
 	}
 
@@ -151,7 +153,17 @@ class SystemReport {
 		$this->notices = array();
 
 		foreach ( $this->fields as $field_key => $field ) {
-			$this->fields[ $field_key ]['value'] = call_user_func( $field['callback'] );
+			$result = call_user_func( $field['callback'] );
+
+			if (is_array($result)) {
+				$this->fields[ $field_key ]['value'] = $result['message'];
+				if (isset($result['error'])) {
+					$this->errors[] = $result['error'];
+				}
+			} else {
+				$this->fields[ $field_key ]['value'] = $result;	
+			}
+			
 		}
 
 		update_option( 'podlove_global_messages', array( 'errors' => $this->errors, 'notices' => $this->notices ) );
