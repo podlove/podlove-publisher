@@ -94,7 +94,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 **Other**
 
-* rename a method to avoid a bug in early PHP5.3 versions
+* Once we release Publisher 2.0, we will increase the minimum PHP version to 5.4 and recommend 5.5. A notice is now displayed in the system report if you are running a version requiring an upgrade.
+* Rename a method to avoid a bug in early PHP 5.3 versions
 
 = 1.10.17 =
 
