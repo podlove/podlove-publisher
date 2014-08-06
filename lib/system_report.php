@@ -13,7 +13,23 @@ class SystemReport {
 		
 		$this->fields = array(
 			'site'        => array( 'title' => 'Website',           'callback' => function() { return get_site_url(); } ),
-			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() { return phpversion(); } ),
+			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() {
+
+				$version = phpversion();
+				$is_less_than_54 = version_compare(phpversion(),"5.4", "<=");
+				$is_less_than_55 = version_compare(phpversion(),"5.5", "<=");
+
+				$return = array();
+
+				if ($is_less_than_54) {
+					$return['message'] = "$version (upgrade to 5.4 or higher recommended)";
+					$return['notice'] = "Official support for PHP 5.3 ends 14 August 2014. We will require PHP 5.4 once we reach Publisher 2.0. Feel free to upgrade to a higher version like 5.5.";
+				} elseif ($is_less_than_55) {
+					$return['message'] = "$version (upgrade to 5.5 brings enhanced performance)";
+				}
+
+				return $return;
+			} ),
 			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
 			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
