@@ -92,6 +92,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Slugs may contain slashes now. This allows storing asset files in subfolders and using the WordPress media uploader to manage files.
 * Media file validation is more consistent: when you get a green checkmark, the file is guaranteed to be valid and reachable.
 
+**Other**
+
+* rename a method to avoid a bug in early PHP5.3 versions
+
 = 1.10.17 =
 
 * tracking now includes range headers

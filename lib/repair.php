@@ -20,10 +20,10 @@ class Repair {
 	public static function maybe_repair()
 	{
 		if (isset($_GET['repair']) && $_GET['repair'])
-			self::repair();
+			self::do_repair();
 	}
 
-	public static function repair()
+	public static function do_repair()
 	{
 		self::clear_repair_log();
 
