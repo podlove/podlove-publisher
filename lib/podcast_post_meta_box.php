@@ -351,7 +351,7 @@ class Podcast_Post_Meta_Box {
 					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
 					'data-episode-asset-id' => $asset->id,
 					'data-episode-id' => $episode->id,
-					'data-file-url' => $file->get_file_url()
+					'data-file-url' => ( is_object( $file ) ) ? $file->get_file_url() : ''
 				);
 
 				if ( $file )
