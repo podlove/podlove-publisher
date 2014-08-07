@@ -40,7 +40,7 @@ class Ajax {
 
 	private function simulate_temporary_episode_slug( $slug ) {
 		add_filter( 'podlove_file_url_template', function ( $template ) use ( $slug ) {
-			return str_replace( '%episode_slug%', $slug, $template );;
+			return str_replace( '%episode_slug%', \Podlove\slugify( $slug ), $template );;
 		} );
 	}
 
@@ -107,6 +107,7 @@ class Ajax {
 		$file->save();
 
 		$result = array();
+		$result['file_url']  = $file->get_file_url();
 		$result['file_id']   = $file_id;
 		$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 || $info['http_code'] == 304 );
 		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];

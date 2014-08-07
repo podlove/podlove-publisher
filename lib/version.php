@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 80 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 81 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -939,6 +939,10 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\DownloadIntent::table_name()
 			);
 			$wpdb->query( $sql );
+		break;
+		case 81:
+			// remove all caches with old namespace
+			$wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_podlove_cache%\"");
 		break;
 	}
 

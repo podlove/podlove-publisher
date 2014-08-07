@@ -549,14 +549,14 @@ function add_podcast_rewrite_rules() {
 	if ( "/%podcast%" == untrailingslashit( $permastruct ) ) {
 		// Generate custom rewrite rules
 		$wp_rewrite->matches = 'matches';
-		$wp_rewrite->extra_rules = array_merge( $wp_rewrite->extra_rules, $wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true ) );
+		$wp_rewrite->extra_rules = array_merge(
+			$wp_rewrite->extra_rules,
+			$wp_rewrite->generate_rewrite_rules( "%podcast%", EP_PERMALINK, true, true, false, true, true )
+		);
 		$wp_rewrite->matches = '';
 		
 		// Add for WP_Query
 		$wp_rewrite->use_verbose_page_rules = true;
-	// Use standard mode
-	} else {
-		$wp_rewrite->add_permastruct( "podcast", $permastruct, false, EP_PERMALINK );
 	}
 	
 	// Add archive pages
@@ -569,6 +569,38 @@ function add_podcast_rewrite_rules() {
 		$wp_rewrite->add_rule( "{$blog_prefix}{$archive_slug}/?$", "index.php?post_type=podcast", 'top' );
 		$wp_rewrite->add_rule( "{$blog_prefix}{$archive_slug}/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top' );
 	}
+}
+
+/**
+ * Add podcast episode rules to post rules
+ * 
+ * Add to post rewrite rules our rules for a podcast episode to respect correct
+ * rule order. Needed to not interfere with other rules (like feeds).
+ * 
+ * @since 1.10.17
+ * 
+ * @param array $post_rewrite The rewrite rules for posts.
+ * @return array An associate array of matches and queries.
+ */
+function add_podcast_episode_rules_to_post_rules( $post_rewrite ) {
+	global $wp_rewrite;
+
+	// Get permalink structure
+	$permastruct = \Podlove\get_setting( 'website', 'custom_episode_slug' );
+
+	// Use same permastruct as post_type 'post'
+	if ( podlove_and_wordpress_permastructs_are_equal() )
+		$permastruct = str_replace( '%postname%', '%podcast%', get_option( 'permalink_structure' ) );
+
+	// Don't add rules here, if use the other method
+	// @see \Podlove\add_podcast_rewrite_rules
+	if ( "/%podcast%" == untrailingslashit( $permastruct ) )
+		return $post_rewrite;
+	
+	// Generate rules for podcast episode and merge them with post rules
+	$post_rewrite = array_merge( $wp_rewrite->generate_rewrite_rules( $permastruct, EP_PERMALINK, true, true, false, true, true ), $post_rewrite );
+
+	return $post_rewrite;
 }
 
 /**
@@ -646,14 +678,14 @@ function no_verbose_page_rules() {
  * Replace placeholders in permalinks with the correct values
  */
 function generate_custom_post_link( $post_link, $id, $leavename = false, $sample = false ) {
-
 	// Get post
-	$post = get_post($id);
+	$post = get_post( $id );
 
-	// only change Podlove URLs
-	if ( $post->post_type != 'podcast' )
+	// Generate urls only for podcast episodes
+	if ( 'podcast' != $post->post_type )
 		return $post_link;
 
+	// Draft or pending?
 	$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 
 	// Sample
@@ -670,7 +702,12 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	if ( "/%podcast%" == untrailingslashit( $permastruct ) && ( !$draft_or_pending || $sample ) )
 		return home_url( user_trailingslashit( $post->post_name ) );
 	
-	//
+	// Generate post link
+	if ( !$draft_or_pending || $sample ) {
+		$post_link = home_url( user_trailingslashit( $permastruct ) );
+	}
+
+	// Replace simple placeholders
 	$unixtime = strtotime( $post->post_date );
 	$post_link = str_replace( '%year%', date( 'Y', $unixtime ), $post_link );
 	$post_link = str_replace( '%monthnum%', date( 'm', $unixtime ), $post_link );
@@ -682,19 +719,22 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 	$post_link = str_replace( '%podcast%', $post->post_name, $post_link );
 
 	// category and author replacement copied from WordPress core
-	if ( strpos($post_link, '%category%') !== false ) {
+	if ( false !== strpos( $permastruct, '%category%' ) ) {
+		$cats = get_the_category( $post->ID );
 
-	$cats = get_the_category($post->ID);
-	if ( $cats ) {
-		usort($cats, '_usort_terms_by_ID'); // order by ID
-		$category_object = apply_filters( 'post_link_category', $cats[0], $cats, $post );
-		$category_object = get_term( $category_object, 'category' );
-		$category = $category_object->slug;
-		if ( $parent = $category_object->parent )
-			$category = get_category_parents($parent, false, '/', true) . $category;
+		if ( $cats ) {
+			usort( $cats, '_usort_terms_by_ID' ); // order by ID
+			
+			$category_object = apply_filters( 'post_link_category', $cats[0], $cats, $post );
+			$category_object = get_term( $category_object, 'category' );
+			$category = $category_object->slug;
+			
+			if ( $parent = $category_object->parent ) {
+				$category = get_category_parents( $parent, false, '/', true ) . $category;
+			}
 		}
 
-		if ( empty($category) ) {
+		if ( empty( $category ) ) {
 			$default_category = get_category( get_option( 'default_category' ) );
 			$category = is_wp_error( $default_category ) ? '' : $default_category->slug;
 		}
@@ -702,7 +742,7 @@ function generate_custom_post_link( $post_link, $id, $leavename = false, $sample
 		$post_link = str_replace( '%category%', $category, $post_link );
 	}
 
-	if ( strpos($post_link, '%author%') !== false ) {
+	if ( false !== strpos( $permastruct, '%author%' ) ) {
 		$authordata = get_userdata($post->post_author);
 		$post_link = str_replace( '%author%', $authordata->user_nicename, $post_link );
 	}
@@ -715,6 +755,7 @@ if ( get_option( 'permalink_structure' ) != '' ) {
 	add_action( 'permalink_structure_changed', '\Podlove\add_podcast_rewrite_rules' );
 	add_action( 'wp', '\Podlove\no_verbose_page_rules' );		
 	add_filter( 'post_type_link', '\Podlove\generate_custom_post_link', 10, 4 );
+	add_filter( 'post_rewrite_rules', '\Podlove\add_podcast_episode_rules_to_post_rules' );
 
 	if ( podlove_and_wordpress_permastructs_are_equal() ) {
 		add_filter( 'request', '\Podlove\podcast_permalink_proxy' );

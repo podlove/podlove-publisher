@@ -5,7 +5,7 @@ use \Podlove\Model;
 class Bitlove extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Bitlove';
-	protected $module_description = 'Enable support for <a href="http://bitlove.org/" target="_blank">Bitlove</a>. Bitlove creates Torrents for all enclosures of an RSS/ATOM feed and seeds them.';
+	protected $module_description = 'Enable support for <a href="http://bitlove.org/" target="_blank">Bitlove</a>. Bitlove creates Torrents for all enclosures of an RSS/ATOM feed and seeds them. Unfortunately, there is only limited support if you use a feedproxy like Feedburner or feedpress.it.';
 	protected $module_group = 'external services';
 
 	public function load() {

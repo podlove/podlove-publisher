@@ -124,9 +124,10 @@ function get_webplayer_setting( $name ) {
 
 function slugify($slug) {
 	$slug = trim($slug);
-	// replace everything but unreserved characters (RFC 3986 section 2.3) by a hyphen
-	$slug = preg_replace('~[^\\pL\d_\.\~]~u', '-', $slug);
+	// replace everything but unreserved characters (RFC 3986 section 2.3) and slashes by a hyphen
+	$slug = preg_replace('~[^\\pL\d_\.\~/]~u', '-', $slug);
 	$slug = rawurlencode($slug);
+	$slug = str_replace("%2F", "/", $slug);
 
 	return empty($slug) ? 'n-a' : $slug;
 }

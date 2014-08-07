@@ -85,6 +85,22 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.19 =
+
+* fix caching issue (cache keys were too long in last update, resulting in no cache hits at all)
+
+= 1.10.18 =
+
+**Improvements to media file slugs**
+
+* Slugs may contain slashes now. This allows storing asset files in subfolders and using the WordPress media uploader to manage files.
+* Media file validation is more consistent: when you get a green checkmark, the file is guaranteed to be valid and reachable.
+
+**Other**
+
+* Once we release Publisher 2.0, we will increase the minimum PHP version to 5.4 and recommend 5.5. A notice is now displayed in the system report if you are running a version requiring an upgrade.
+* Rename a method to avoid a bug in early PHP 5.3 versions
+
 = 1.10.17 =
 
 * tracking now includes range headers
@@ -95,6 +111,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix dashboard box state saving
 * fix generation of faulty URLs when tracking was on but pretty permalinks off
 * fix auto-insertion of nonexisting templates
+* fix routing issues when `/%category%/%postname%` is used as permalink structure
+* fix rare cache concurrency issues by introducing a 24h auto-expiry
 * remove "Critical Podlove Warnings" — they are scary and don't help a lot
 
 = 1.10.16 =
