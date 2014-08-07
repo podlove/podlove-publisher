@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.19 =
+
+* fix caching issue (cache keys were too long in last update, resulting in no cache hits at all)
+
 = 1.10.18 =
 
 **Improvements to media file slugs**

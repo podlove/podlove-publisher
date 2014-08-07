@@ -182,14 +182,14 @@ class TemplateCache {
 	 *   would lead to cache collisions. sha1-ing avoids this.
 	 * - ensures key is not too long:
 	 * 	Cache key must not be longer than 64 characters!
-	 *  Transients API prepends "_transient_", 11 characters
-	 *  64 - 11 = 53 (minus one because you never know)
+	 *  Transients API prepends "_transient_timeout_", 19 characters
+	 *  64 - 19 = 45 (minus one because you never know)
 	 *
 	 * @return string
 	 */
 	private function generate_cache_key($cache_key) {
 		$cache_key = sprintf("%s%s", self::CACHE_NAMESPACE, sha1($cache_key));
-		return substr($cache_key, 0, 52);
+		return substr($cache_key, 0, 44);
 	}
 
 }
