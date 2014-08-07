@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.19 =
 
 * fix caching issue (cache keys were too long in last update, resulting in no cache hits at all)
+* fix error when creating a new episode
 
 = 1.10.18 =
 

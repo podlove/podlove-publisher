@@ -61,7 +61,8 @@ var PODLOVE = PODLOVE || {};
 	 			success: function(result) {
 	 				args.checkbox.data({
 	 					id: result.file_id,
-	 					size: result.file_size
+	 					size: result.file_size,
+	 					'file-url': result.file_url
 	 				});
 	 				o.update_preview_row(args.container_row);
 	 			}

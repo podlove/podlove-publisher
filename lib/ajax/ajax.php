@@ -145,7 +145,8 @@ class Ajax {
 
 		self::respond_with_json( array(
 			'file_id'   => $file->id,
-			'file_size' => $file->size
+			'file_size' => $file->size,
+			'file_url'  => $file->get_file_url()
 		) );
 	}
 
