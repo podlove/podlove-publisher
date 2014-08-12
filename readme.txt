@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.20 =
+
+* fix contribution counting in contributor table (you may have to hit the "repair" button in `Podlove > Support` if you still see wrong numbers)
+
 = 1.10.19 =
 
 * fix caching issue (cache keys were too long in last update, resulting in no cache hits at all)
