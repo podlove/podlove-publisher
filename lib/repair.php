@@ -29,8 +29,8 @@ class Repair {
 
 		self::clear_podlove_cache();
 		self::flush_rewrite_rules();
-		self::fix_duplicate_contributions();
 
+		// hook for modules to add their repair methods
 		do_action('podlove_repair_do_repair');
 
 		wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
@@ -56,60 +56,6 @@ class Repair {
 	private static function flush_rewrite_rules() {
 		flush_rewrite_rules();
 		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove'));
-	}
-
-	private static function fix_duplicate_contributions()
-	{
-		global $wpdb;
-
-		$contributions = self::find_duplicate_episode_contributions();
-
-		if (!is_array($contributions) || empty($contributions)) {
-			self::add_to_repair_log(__('Contributions did not need repair', 'podlove'));
-			return;
-		}
-
-		foreach ($contributions as $contribution) {
-			$sql = "
-				DELETE FROM
-					" . \Podlove\Modules\Contributors\Model\EpisodeContribution::table_name() . "
-				WHERE
-					id != " . $contribution['id'] . "
-					AND `contributor_id` = \"" . $contribution['contributor_id'] . "\"
-					AND `episode_id` = \"" . $contribution['episode_id'] . "\"
-					AND `role_id` = \"" . $contribution['role_id'] . "\"
-					AND `group_id` = \"" . $contribution['group_id'] . "\"
-				";
-			$wpdb->query($sql);
-
-			$ec = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_by_id($contribution['id']);
-			$ec->save(); // recalculates contribution count
-		}
-
-		self::add_to_repair_log(
-			sprintf(
-				_n( 'Deleted 1 duplicate contribution', 'Deleted %s duplicate contributions', count($contributions), 'podlove' ),
-				count($contributions)
-			)
-		);
-	}
-
-	private static function find_duplicate_episode_contributions() {
-		global $wpdb;
-
-		$sql = "
-			SELECT
-				id, contributor_id, episode_id, role_id, group_id, COUNT(*) cnt
-			FROM
-				" . \Podlove\Modules\Contributors\Model\EpisodeContribution::table_name() . "
-			GROUP BY
-				contributor_id, episode_id, role_id, group_id
-			HAVING
-				cnt > 1
-			ORDER BY
-				cnt DESC
-		";
-		return $wpdb->get_results($sql, ARRAY_A);
 	}
 
 	private static function print_and_clear_repair_log() {
@@ -154,6 +100,7 @@ class Repair {
 					<strong>flushes WordPress rewrite rules</strong>
 					If you have strange behaviour in some sites or pages are not found which should exist, this might solve it.
 				</li>
+				<?php // hook for modules to add their repair method descriptions ?>
 				<?php foreach ( apply_filters('podlove_repair_descriptions', array()) as $entry ): ?>
 					<li><?php echo $entry; ?></li>
 				<?php endforeach; ?>

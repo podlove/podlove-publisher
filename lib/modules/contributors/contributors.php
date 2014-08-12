@@ -84,6 +84,8 @@ class Contributors extends \Podlove\Modules\Base {
 		// filter contributions in feeds
 		add_filter('podlove_feed_contributions', array($this, 'must_have_uri'), 10, 2);
 		add_filter('podlove_feed_contributions', array($this, 'must_match_feed_role_and_group'), 10, 2);
+
+		ContributorRepair::init();
 	}
 
 	public function must_have_uri($contributions, $feed)
