@@ -29,7 +29,7 @@ class Repair {
 
 		self::clear_podlove_cache();
 		self::flush_rewrite_rules();
-		self::fix_data_inconsistencies();
+		self::fix_duplicate_services();
 		self::fix_duplicate_contributions();
 
 		wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
@@ -57,7 +57,7 @@ class Repair {
 		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove'));
 	}
 
-	private static function fix_data_inconsistencies()
+	private static function fix_duplicate_services()
 	{
 		global $wpdb;
 
