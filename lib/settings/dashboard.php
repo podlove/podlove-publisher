@@ -19,13 +19,19 @@ class Dashboard {
 			/* $function   */ array( $this, 'settings_page' )
 		);
 
-		add_action( Dashboard::$pagehook, function () {
+		add_action( 'load-' . Dashboard::$pagehook, function () {
+			// Adding the meta boxes here, so they can be filtered by the user settings.
+			add_action( 'add_meta_boxes_' . Dashboard::$pagehook, function () {
+				add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
+				add_meta_box( Dashboard::$pagehook . '_statistics', __( 'At a glance', 'podlove' ), '\Podlove\Settings\Dashboard::statistics', Dashboard::$pagehook, 'normal' );
+				
+				do_action( 'podlove_dashboard_meta_boxes' );
+
+				add_meta_box( Dashboard::$pagehook . '_validation', __( 'Validate Podcast Files', 'podlove' ), '\Podlove\Settings\Dashboard::validate_podcast_files', Dashboard::$pagehook, 'normal' );
+			} );
+			do_action( 'add_meta_boxes_' . Dashboard::$pagehook );
 
 			wp_enqueue_script( 'postbox' );
-			add_screen_option( 'layout_columns', array(
-				'max' => 2, 'default' => 2
-			) );
-
 			wp_register_script(
 				'cornify-js',
 				\Podlove\PLUGIN_URL . '/js/admin/cornify.js'
@@ -64,14 +70,6 @@ class Dashboard {
 	}
 
 	public static function settings_page() {
-		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
-		add_meta_box( Dashboard::$pagehook . '_statistics', __( 'At a glance', 'podlove' ), '\Podlove\Settings\Dashboard::statistics', Dashboard::$pagehook, 'normal' );
-		
-		do_action( 'podlove_dashboard_meta_boxes' );
-
-		add_meta_box( Dashboard::$pagehook . '_validation', __( 'Validate Podcast Files', 'podlove' ), '\Podlove\Settings\Dashboard::validate_podcast_files', Dashboard::$pagehook, 'normal' );
-
-
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
