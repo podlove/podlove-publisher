@@ -31,7 +31,8 @@ class EpisodeEnhancer {
 			'options' => array(
 				'label'    => __('Auphonic', 'podlove'),
 				'callback' => array($this, 'auphonic_episodes_form')
-			)
+			),
+			'position' => 500
 		);
 
 		return $form_data;

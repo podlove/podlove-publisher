@@ -69,7 +69,8 @@ class Custom_Guid {
 				});
 				</script>
 				<?php
-			} )
+			} ),
+			'position' => 100
 		);
 
 		return $form_data;

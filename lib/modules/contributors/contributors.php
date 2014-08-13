@@ -490,7 +490,8 @@ class Contributors extends \Podlove\Modules\Base {
 			'options' => array(
 				'label'    => __( 'Contributors', 'podlove' ),
 				'callback' => array($this, 'contributors_form_for_episode_callback')
-			)
+			),
+			'position' => 850
 		);
 
 		return $form_data;

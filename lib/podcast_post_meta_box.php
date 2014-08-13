@@ -70,7 +70,8 @@ class Podcast_Post_Meta_Box {
 							'class' => 'large-text autogrow',
 							'rows'  => 1
 						)
-					)
+					),
+					'position' => 1000
 				),
 				array(
 					'type' => 'text',
@@ -82,16 +83,8 @@ class Podcast_Post_Meta_Box {
 							'class' => 'large-text autogrow',
 							'rows'  => 3
 						)
-					)
-				),
-				array(
-					'type' => 'string',
-					'key'  => 'duration',
-					'options' => array(
-						'label'       => __( 'Duration', 'podlove' ),
-						'description' => '',
-						'html'        => array( 'class' => 'regular-text' )
-					)
+					),
+					'position' => 900
 				),
 				array(
 					'type' => 'string',
@@ -100,12 +93,24 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Episode Media File Slug', 'podlove' ),
 						'description' => '',
 						'html'        => array( 'class' => 'regular-text' )
-					)
+					),
+					'position' => 510
+				),
+				array(
+					'type' => 'string',
+					'key'  => 'duration',
+					'options' => array(
+						'label'       => __( 'Duration', 'podlove' ),
+						'description' => '',
+						'html'        => array( 'class' => 'regular-text' )
+					),
+					'position' => 400
 				),
 				array(
 					'type' => 'multiselect',
 					'key'  => 'episode_assets',
-					'options' => Podcast_Post_Meta_Box::episode_assets_form( $episode )
+					'options' => Podcast_Post_Meta_Box::episode_assets_form( $episode ),
+					'position' => 300
 				)
 			);
 
@@ -117,7 +122,8 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Episode Cover Art URL', 'podlove' ),
 						'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
 						'html'        => array( 'class' => 'regular-text' )
-					)
+					),
+					'position' => 790
 				);
 			}
 
@@ -133,7 +139,8 @@ class Podcast_Post_Meta_Box {
 							'placeholder' => '00:00:00.000 Intro',
 							'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
 						)
-					)
+					),
+					'position' => 800
 				);
 			}
 
@@ -145,7 +152,8 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Recording Date', 'podlove' ),
 						'description' => '',
 						'html'        => array( 'class' => 'regular-text' )
-					)
+					),
+					'position' => 750
 				);
 			}
 
@@ -159,7 +167,8 @@ class Podcast_Post_Meta_Box {
 						'html'        => array( 'style' => 'width: 200px;' ),
 						'default'	=> '-1',
 		                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
-					)
+					),
+					'position' => 770
 				);
 			}
 
@@ -172,7 +181,8 @@ class Podcast_Post_Meta_Box {
 					'key'  => 'license_name',
 					'options' => array(
 						'label' => __( 'License Name', 'podlove' )
-					)
+					),
+					'position' => 525
 				);
 
 				$form_data[] = array(
@@ -181,7 +191,8 @@ class Podcast_Post_Meta_Box {
 					'options' => array(
 						'label'       => __( 'License URL', 'podlove' ),
 						'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
-					)
+					),
+					'position' => 524
 				);
 
 				$form_data[] = array(
@@ -196,7 +207,8 @@ class Podcast_Post_Meta_Box {
 							</span>
 							',
 						'callback' => function() {}
-					)
+					),
+					'position' => 523
 				);
 
 				$form_data[] = array(
@@ -235,7 +247,8 @@ class Podcast_Post_Meta_Box {
 							</div>
 							<?php
 						}
-					)
+					),
+					'position' => 522
 				);
 
 				$form_data[] = array(
@@ -257,14 +270,27 @@ class Podcast_Post_Meta_Box {
 							</div>
 							<?php
 						}
-					)
+					),
+					'position' => 521
 				);
 			}
 
-			// TODO: filter
+			// allow modules to add / change the form
 			$form_data = apply_filters('podlove_episode_form_data', $form_data, $episode);
 
-			// TODO: sort by position
+			// sort entities by position
+			// TODO first sanitize position attribute, then I don't have to check on each comparison
+			usort($form_data, function ($a, $b) {
+
+				$pos_a = isset($a['position']) ? (int) $a['position'] : 0;
+				$pos_b = isset($b['position']) ? (int) $b['position'] : 0;
+
+				if ($a == $b || $pos_a == $pos_b) {
+					return 0;
+				}
+
+				return ($pos_a < $pos_b) ? 1 : -1;
+			});
 
 			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $podcast, $form_data ) {
 				$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
