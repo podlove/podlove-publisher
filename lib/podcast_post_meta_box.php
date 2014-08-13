@@ -61,6 +61,17 @@ class Podcast_Post_Meta_Box {
 
 			$form_data = array(
 				array(
+					'type' => 'string',
+					'key'  => 'title',
+					'options' => array(
+						'label'       => __( 'Title', 'podlove' ),
+						'description' => '',
+						'html'        => array(
+							'readonly' => 'readonly'
+						)
+					),
+					'position' => 1100
+				),array(
 					'type' => 'text',
 					'key'  => 'subtitle',
 					'options' => array(

@@ -206,6 +206,25 @@ var PODLOVE = PODLOVE || {};
 			o.slug_field.trigger('slugHasChanged');
 		});
 
+		var title_input = $("#titlewrap input");
+
+		title_input
+			.on('blur', function() {
+ 				title_input.trigger('titleHasChanged');
+ 			})
+			.on('keyup', function() {
+				typewatch(
+					function() {
+						title_input.trigger('titleHasChanged');
+					},
+					500
+				);
+ 			})
+ 			.on('titleHasChanged', function () {
+	 			var title = $(this).val();
+	 			$("#_podlove_meta_title").val(title);
+	 		}).trigger('titleHasChanged');
+
  		o.slug_field
  			.on('blur', function() {
  				o.slug_field.trigger('slugHasChanged');
