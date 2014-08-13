@@ -19,16 +19,22 @@ class EpisodeEnhancer {
 		add_action('save_post', array($this, 'save_post'));
 
 		if ($this->module->get_module_option('auphonic_api_key') != "") {
-			add_action('podlove_episode_form_beginning', array($this, 'auphonic_episodes'), 10, 2);
+			add_filter('podlove_episode_form_data', array($this, 'auphonic_episodes'), 10, 2);
 		}
 	}
 
-	public function auphonic_episodes($wrapper, $episode)
+	public function auphonic_episodes($form_data, $episode)
 	{
-		$wrapper->callback('import_from_auphonic_form', array(
-			'label'    => __('Auphonic', 'podlove'),
-			'callback' => array($this, 'auphonic_episodes_form')
-		));			
+		$form_data[] = array(
+			'type' => 'callback',
+			'key'  => 'import_from_auphonic_form',
+			'options' => array(
+				'label'    => __('Auphonic', 'podlove'),
+				'callback' => array($this, 'auphonic_episodes_form')
+			)
+		);
+
+		return $form_data;
 	}
 
 	public function save_post($post_id)

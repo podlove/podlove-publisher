@@ -261,21 +261,17 @@ class Podcast_Post_Meta_Box {
 			}
 
 			// TODO: filter
+			$form_data = apply_filters('podlove_episode_form_data', $form_data, $episode);
+
 			// TODO: sort by position
 
 			\Podlove\Form\build_for( $episode, $form_args, function ( $form ) use ( $podcast, $form_data ) {
 				$wrapper = new \Podlove\Form\Input\DivWrapper( $form );
 				$episode = $form->object;
 
-				// TO BE DEPRECATED
-				do_action( 'podlove_episode_form_beginning', $wrapper, $episode );
-
 				foreach ($form_data as $entry) {
 					$wrapper->{$entry['type']}($entry['key'], $entry['options']);
 				}
-
-				// TO BE DEPRECATED
-				do_action( 'podlove_episode_form', $wrapper, $episode );
 
 			} );
 			?>
