@@ -550,9 +550,7 @@ class Contributors extends \Podlove\Modules\Base {
 			}
 		}
 
-		echo '</table>';
 		\Podlove\Modules\Contributors\Contributors::contributors_form_table($map);
-		echo '<table class="form-table">';
 	}
 
 	/**

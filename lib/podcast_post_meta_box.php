@@ -55,7 +55,8 @@ class Podcast_Post_Meta_Box {
 			$form_args = array(
 				'context' => '_podlove_meta',
 				'submit_button' => false,
-				'form' => false
+				'form' => false,
+				'is_table' => false
 			);
 
 			$form_data = array(
