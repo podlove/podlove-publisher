@@ -406,6 +406,9 @@ function override404() {
 
 	foreach ( \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' ) as $redirect ) {
 
+		if ( ! isset( $redirect['active'] ) )
+			continue;
+
 		if ( ! strlen( trim( $redirect['from'] ) ) || ! strlen( trim( $redirect['to'] ) ) )
 			continue;
 

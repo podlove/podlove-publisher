@@ -90,6 +90,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Podlove Dashboard supports screen options
 * fix contribution counting in contributor table (you may have to hit the "repair" button in `Podlove > Support` if you still see wrong numbers)
 * reorder episode form and display episode title in episode meta box
+* improved redirects: added sortability and individual entries can be deactivated without being deleted
 
 = 1.10.19 =
 
