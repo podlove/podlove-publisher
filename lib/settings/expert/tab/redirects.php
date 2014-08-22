@@ -14,10 +14,7 @@ class Redirects extends Tab {
 
 		add_settings_field(
 			/* $id       */ 'podlove_setting_redirect',
-			/* $title    */ sprintf(
-				'<label for="podlove_setting_redirect">%s</label>',
-				__( 'Permanent URL Redirects', 'podlove' )
-			),
+			/* $title    */ '',
 			/* $callback */ function () {
 				$redirect_settings = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
 
@@ -148,6 +145,10 @@ class Redirects extends Tab {
 				}
 				.podlove_redirects td input {
 					width: 100%;
+				}
+
+				.form-table > tbody > tr > th {
+					display: none;
 				}
 				</style>
 				<?php
