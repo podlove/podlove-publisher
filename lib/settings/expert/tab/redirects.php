@@ -30,7 +30,7 @@ class Redirects extends Tab {
 				<table id="podlove-redirects" class="podlove_alternating" border="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th><?php echo __( 'Active', 'podlove' ) ?></th>
+							<th style="width: 55px"><?php echo __( 'Active', 'podlove' ) ?></th>
 							<th><?php echo __( 'From URL', 'podlove' ) ?></th>
 							<th><?php echo __( 'To URL', 'podlove' ) ?></th>
 							<th><?php echo __( 'Redirect Method', 'podlove' ) ?></th>
@@ -139,11 +139,15 @@ class Redirects extends Tab {
 				</p>
 
 				<style type="text/css">
-				.podlove_redirects th.delete, .podlove_redirects td.delete {
-					width: 60px;
+				#podlove-redirects th.delete,
+				#podlove-redirects td.delete,
+				#podlove-redirects th.move,
+				#podlove-redirects td.move {
+					width: 50px;
 					text-align: right;
 				}
-				.podlove_redirects td input {
+
+				#podlove-redirects td input[type="text"] {
 					width: 100%;
 				}
 
