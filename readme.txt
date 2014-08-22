@@ -99,6 +99,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix contribution counting in contributor table (you may have to hit the "repair" button in `Podlove > Support` if you still see wrong numbers)
 * fix tracking data export
 * improved redirects: added sortability and individual entries can be deactivated without being deleted
+* `contributor.id` is accessible via template API now
 
 As mentioned before, we will be phasing out PHP 5.3 soon. Please read the corresponding blog post for more details: http://podlove.org/2014/08/14/podlove-publisher-2-phasing-out-php-5-3/
 
