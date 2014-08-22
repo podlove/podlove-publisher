@@ -62,11 +62,30 @@ var PODLOVE = PODLOVE || {};
 	 				args.checkbox.data({
 	 					id: result.file_id,
 	 					size: result.file_size,
-	 					'file-url': result.file_url
+	 					'fileUrl': result.file_url
 	 				});
 	 				o.update_preview_row(args.container_row);
 	 			}
 	 		});
+	 	};
+
+	 	function maybe_update_episode_slug(title) {
+	 		if (o.slug_field.data("auto-update")) {
+	 			update_episode_slug(title);
+	 		}
+	 	};
+
+	 	function update_episode_slug(title) {
+	 		var slug = title;
+
+	 		slug = slug.trim();
+	 		slug = slug.replace(/[^-\w\.\~]+/g, '-');
+	 		slug = slug.replace(/^-+|-+$/g, ''); // remove leading and trailing dashes
+	 		slug = slug.toLowerCase();
+
+	 		o.slug_field
+	 			.val(slug)
+	 			.blur();
 	 	};
 
 	 	o.update_preview_row = function(container) {
@@ -86,7 +105,7 @@ var PODLOVE = PODLOVE || {};
 	 					container_row: container
 	 				});
 	 			} else {
-	 				var url                 = $checkbox.data('file-url');
+	 				var url                 = $checkbox.data('fileUrl');
 	 				var media_file_base_uri = PODLOVE.trailingslashit($container.find('input[name="show-media-file-base-uri"]').val());
 	 				var size                = $checkbox.data('size');
 
@@ -181,7 +200,7 @@ var PODLOVE = PODLOVE || {};
  				success: function(result) {
  					ajax_requests.pop();
  					container.find("input").data('size', result.file_size);
- 					container.find("input").data('file-url', result.file_url);
+ 					container.find("input").data('fileUrl', result.file_url);
  					o.update_preview_row(container);
  				}
  			});
@@ -190,9 +209,15 @@ var PODLOVE = PODLOVE || {};
  			return false;
  		});
 
-		o.slug_field.on('slugHasChanged', function() {
-			maybe_update_media_files();
-		});
+		o.slug_field
+			.on('slugHasChanged', function() {
+				maybe_update_media_files();
+			})
+			.data("auto-update", !Boolean(o.slug_field.val())) // only auto-update if it is empty
+			.on("keyup", function() {
+				o.slug_field.data("auto-update", false); // stop autoupdate on manual change
+			})
+		;
 
 		var typewatch = (function() {
 			var timer = 0;
@@ -222,7 +247,12 @@ var PODLOVE = PODLOVE || {};
  			})
  			.on('titleHasChanged', function () {
 	 			var title = $(this).val();
+
+	 			// update episode title
 	 			$("#_podlove_meta_title").val(title);
+
+	 			// maybe update episode slug
+	 			maybe_update_episode_slug(title);
 	 		}).trigger('titleHasChanged');
 
  		o.slug_field
