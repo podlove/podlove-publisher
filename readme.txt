@@ -98,6 +98,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * Podlove Dashboard supports screen options
 * fix contribution counting in contributor table (you may have to hit the "repair" button in `Podlove > Support` if you still see wrong numbers)
 * fix tracking data export
+* fix missing OpenGraph metadata
 * improved redirects: added sortability and individual entries can be deactivated without being deleted
 * `contributor.id` is accessible via template API now
 
