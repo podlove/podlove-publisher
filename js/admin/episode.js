@@ -61,11 +61,31 @@ var PODLOVE = PODLOVE || {};
 	 			success: function(result) {
 	 				args.checkbox.data({
 	 					id: result.file_id,
-	 					size: result.file_size
+	 					size: result.file_size,
+	 					'fileUrl': result.file_url
 	 				});
 	 				o.update_preview_row(args.container_row);
 	 			}
 	 		});
+	 	};
+
+	 	function maybe_update_episode_slug(title) {
+	 		if (o.slug_field.data("auto-update")) {
+	 			update_episode_slug(title);
+	 		}
+	 	};
+
+	 	function update_episode_slug(title) {
+	 		var slug = title;
+
+	 		slug = slug.trim();
+	 		slug = slug.replace(/[^-\w\.\~]+/g, '-');
+	 		slug = slug.replace(/^-+|-+$/g, ''); // remove leading and trailing dashes
+	 		slug = slug.toLowerCase();
+
+	 		o.slug_field
+	 			.val(slug)
+	 			.blur();
 	 	};
 
 	 	o.update_preview_row = function(container) {
@@ -85,17 +105,9 @@ var PODLOVE = PODLOVE || {};
 	 					container_row: container
 	 				});
 	 			} else {
-	 				var url                 = $checkbox.data('template');
+	 				var url                 = $checkbox.data('fileUrl');
 	 				var media_file_base_uri = PODLOVE.trailingslashit($container.find('input[name="show-media-file-base-uri"]').val());
-	 				var episode_slug        = $container.find('input[name*="slug"]').val();
-	 				var format_extension    = $checkbox.data('extension');
 	 				var size                = $checkbox.data('size');
-	 				var suffix              = $checkbox.data('suffix');
-
-	 				url = url.replace( '%media_file_base_url%', media_file_base_uri );
-	 				url = url.replace( '%episode_slug%', episode_slug );
-	 				url = url.replace( '%suffix%', suffix );
-	 				url = url.replace( '%format_extension%', format_extension );
 
 	 				var readable_size = human_readable_size( size );
 	 				var filename      = url.replace(media_file_base_uri, "");
@@ -188,16 +200,8 @@ var PODLOVE = PODLOVE || {};
  				success: function(result) {
  					ajax_requests.pop();
  					container.find("input").data('size', result.file_size);
+ 					container.find("input").data('fileUrl', result.file_url);
  					o.update_preview_row(container);
- 					if (result.message) {
- 						if ( !$("#debug_info").length ) {
- 							$("table.media_file_table").after("<div id='debug_info'></div>");
- 						}
- 						CodeMirror(
- 							document.getElementById("debug_info"),
- 							{ value: result.message, mode: "yaml" }
- 						);
- 					}
  				}
  			});
  			ajax_requests.push(request);
@@ -205,9 +209,15 @@ var PODLOVE = PODLOVE || {};
  			return false;
  		});
 
-		o.slug_field.on('slugHasChanged', function() {
-			maybe_update_media_files();
-		});
+		o.slug_field
+			.on('slugHasChanged', function() {
+				maybe_update_media_files();
+			})
+			.data("auto-update", !Boolean(o.slug_field.val())) // only auto-update if it is empty
+			.on("keyup", function() {
+				o.slug_field.data("auto-update", false); // stop autoupdate on manual change
+			})
+		;
 
 		var typewatch = (function() {
 			var timer = 0;
@@ -220,6 +230,30 @@ var PODLOVE = PODLOVE || {};
 		$.subscribe("/auphonic/production/status/results_imported", function(e, production) {
 			o.slug_field.trigger('slugHasChanged');
 		});
+
+		var title_input = $("#titlewrap input");
+
+		title_input
+			.on('blur', function() {
+ 				title_input.trigger('titleHasChanged');
+ 			})
+			.on('keyup', function() {
+				typewatch(
+					function() {
+						title_input.trigger('titleHasChanged');
+					},
+					500
+				);
+ 			})
+ 			.on('titleHasChanged', function () {
+	 			var title = $(this).val();
+
+	 			// update episode title
+	 			$("#_podlove_meta_title").val(title);
+
+	 			// maybe update episode slug
+	 			maybe_update_episode_slug(title);
+	 		}).trigger('titleHasChanged');
 
  		o.slug_field
  			.on('blur', function() {

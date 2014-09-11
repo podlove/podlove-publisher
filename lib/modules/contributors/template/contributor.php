@@ -72,6 +72,15 @@ class Contributor extends Wrapper {
 	}
 
 	/**
+	 * ID
+	 * 
+	 * @accessor
+	 */
+	public function id() {
+		return $this->contributor->guid;
+	}
+
+	/**
 	 * Public name
 	 *
 	 * You should use `contributor.name` as display name.
@@ -203,6 +212,10 @@ class Contributor extends Wrapper {
 		$episode_ids = $wpdb->get_col(
 			$wpdb->prepare($sql, $this->contributor->id)
 		);
+
+		// I'm not sure under which circumstances the query emits duplicate
+		// episode IDs — but it happens.
+		$episode_ids = array_unique($episode_ids);
 
 		$episodes = array();
 		foreach ($episode_ids as $episode_id) {

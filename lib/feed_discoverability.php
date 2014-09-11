@@ -7,8 +7,7 @@ namespace Podlove;
 class FeedDiscoverability {
 
 	public static function init() {
-		new Podcast_Post_Type();
-
+		
 		// priority 2 so they are placed below the WordPress default discovery links
 		add_action( 'wp_head', array(__CLASS__, 'add_feed_discoverability'), 2 );
 

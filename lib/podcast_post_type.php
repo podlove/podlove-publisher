@@ -51,7 +51,11 @@ class Podcast_Post_Type {
 		register_post_type( 'podcast', $args );
 
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
-		add_action( 'admin_menu', array( $this, 'create_support_menu_entry' ), 100 ); // make sure it's at the bottom
+		
+		add_action( 'admin_menu', array( $this, 'create_modules_menu_entry' ), 100 );
+		add_action( 'admin_menu', array( $this, 'create_expert_settings_menu_entry' ), 200 );
+		add_action( 'admin_menu', array( $this, 'create_support_menu_entry' ), 300 );
+
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
 		add_filter( 'pre_get_posts', array( $this, 'enable_tag_and_category_search' ) );
 		add_filter( 'post_class', array( $this, 'add_post_class' ) );
@@ -268,12 +272,15 @@ class Podcast_Post_Type {
 		do_action( 'podlove_register_settings_pages', self::SETTINGS_PAGE_HANDLE );
 	}
 
-	/**
-	 * Make sure those are at the bottom of the list.
-	 */
-	public function create_support_menu_entry() {
+	public function create_modules_menu_entry() {
 		new \Podlove\Settings\Modules( self::SETTINGS_PAGE_HANDLE );
+	}
+
+	public function create_expert_settings_menu_entry() {
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
+	}
+
+	public function create_support_menu_entry() {
 		new \Podlove\Settings\Support( self::SETTINGS_PAGE_HANDLE );
 	}
 

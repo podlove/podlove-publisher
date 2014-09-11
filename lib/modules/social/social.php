@@ -56,6 +56,18 @@ class Social extends \Podlove\Modules\Base {
 
 		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
 		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
+
+		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+
+		RepairSocial::init();
+	}
+
+	public function cache_tainting_classes($classes) {
+		return array_merge($classes, array(
+			Service::name(),
+			ShowService::name(),
+			ContributorService::name()
+		));
 	}
 
 	public function was_activated( $module_name ) {
@@ -67,7 +79,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> '500px',
 					'name'	 		=> '500px',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> '500px Account',
 					'logo'			=> '500px-128.png',
 					'url_scheme'	=> 'https://500px.com/%account-placeholder%'
@@ -75,7 +87,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'App.net',
 					'name'	 		=> 'app.net',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'App.net Account',
 					'logo'			=> 'adn-128.png',
 					'url_scheme'	=> 'https://alpha.app.net/%account-placeholder%'
@@ -83,7 +95,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Bandcamp',
 					'name'	 		=> 'bandcamp',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Bandcamp URL',
 					'logo'			=> 'bandcamp-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -91,7 +103,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Bitbucket',
 					'name'	 		=> 'bitbucket',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Bitbucket Account',
 					'logo'			=> 'bitbucket-128.png',
 					'url_scheme'	=> 'https://bitbucket.org/%account-placeholder%'
@@ -99,7 +111,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'DeviantART',
 					'name'	 		=> 'deviantart',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'DeviantART Account',
 					'logo'			=> 'deviantart-128.png',
 					'url_scheme'	=> 'https://%account-placeholder%.deviantart.com/'
@@ -107,7 +119,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Diaspora',
 					'name'	 		=> 'diaspora',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Diaspora URL',
 					'logo'			=> 'diaspora-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -115,7 +127,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Dribbble',
 					'name'	 		=> 'dribbble',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Dribbble Account',
 					'logo'			=> 'dribbble-128.png',
 					'url_scheme'	=> 'https://dribbble.com/%account-placeholder%'
@@ -123,7 +135,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Facebook',
 					'name'	 		=> 'facebook',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Facebook Account',
 					'logo'			=> 'facebook-128.png',
 					'url_scheme'	=> 'https://facebook.com/%account-placeholder%'
@@ -131,7 +143,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Flattr',
 					'name'	 		=> 'flattr',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Flattr Account',
 					'logo'			=> 'flattr-128.png',
 					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
@@ -139,7 +151,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Flickr',
 					'name'	 		=> 'flickr',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Flickr Account',
 					'logo'			=> 'flickr-128.png',
 					'url_scheme'	=> 'https://secure.flickr.com/photos/%account-placeholder%'
@@ -147,7 +159,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'GitHub',
 					'name'	 		=> 'github',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'GitHub Account',
 					'logo'			=> 'github-128.png',
 					'url_scheme'	=> 'https://github.com/%account-placeholder%'
@@ -155,7 +167,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Google+',
 					'name'	 		=> 'google+',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Google+ URL',
 					'logo'			=> 'googleplus-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -163,7 +175,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Instagram',
 					'name'	 		=> 'instagram',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Instagram Account',
 					'logo'			=> 'instagram-128.png',
 					'url_scheme'	=> 'https://instagram.com/%account-placeholder%'
@@ -171,15 +183,15 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Jabber',
 					'name'	 		=> 'jabber',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Jabber ID',
 					'logo'			=> 'jabber-128.png',
-					'url_scheme'	=> '%account-placeholder%'
+					'url_scheme'	=> 'jabber:%account-placeholder%'
 				),
 			array(
 					'title' 		=> 'Last.fm',
 					'name'	 		=> 'last.fm',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Last.fm Account',
 					'logo'			=> 'lastfm-128.png',
 					'url_scheme'	=> 'https://www.lastfm.de/user/%account-placeholder%'
@@ -187,7 +199,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'OpenStreetMap',
 					'name'	 		=> 'openstreetmap',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'OpenStreetMap Account',
 					'logo'			=> 'openstreetmap-128.png',
 					'url_scheme'	=> 'https://www.openstreetmap.org/user/%account-placeholder%'
@@ -195,7 +207,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Linkedin',
 					'name'	 		=> 'linkedin',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Linkedin URL',
 					'logo'			=> 'linkedin-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -203,7 +215,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Pinboard',
 					'name'	 		=> 'pinboard',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Pinboard Account',
 					'logo'			=> 'pinboard-128.png',
 					'url_scheme'	=> 'https://pinboard.in/u:%account-placeholder%'
@@ -211,7 +223,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Pinterest',
 					'name'	 		=> 'pinterest',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Pinterest Account',
 					'logo'			=> 'pinterest-128.png',
 					'url_scheme'	=> 'https://www.pinterest.com/%account-placeholder%'
@@ -219,7 +231,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 			 		'title' 		=> 'Playstation Network',
 			 		'name'	 		=> 'playstation network',
-			 		'type'			=> 'social',
+			 		'category'		=> 'social',
 			 		'description'	=> 'Playstation Network Account',
 			 		'logo'			=> 'psn-128.png',
 			 		'url_scheme'	=> 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
@@ -227,7 +239,7 @@ class Social extends \Podlove\Modules\Base {
 			 array(
 			 		'title' 		=> 'Skype',
 			 		'name'	 		=> 'skype',
-			 		'type'			=> 'social',
+			 		'category'		=> 'social',
 			 		'description'	=> 'Skype Account',
 			 		'logo'			=> 'skype-128.png',
 			 		'url_scheme'	=> 'skype:%account-placeholder%'
@@ -235,7 +247,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Soundcloud',
 					'name'	 		=> 'soundcloud',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Soundcloud Account',
 					'logo'			=> 'soundcloud-128.png',
 					'url_scheme'	=> 'https://soundcloud.com/%account-placeholder%'
@@ -243,7 +255,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Soup',
 					'name'	 		=> 'soup',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Soup Account',
 					'logo'			=> 'soup-128.png',
 					'url_scheme'	=> 'http://%account-placeholder%.soup.io'
@@ -251,7 +263,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 			 		'title' 		=> 'Steam',
 			 		'name'	 		=> 'steam',
-			 		'type'			=> 'social',
+			 		'category'		=> 'social',
 			 		'description'	=> 'Steam Account',
 			 		'logo'			=> 'steam-128.png',
 			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%'
@@ -259,7 +271,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Tumblr',
 					'name'	 		=> 'tumblr',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Tumblr Account',
 					'logo'			=> 'tumblr-128.png',
 					'url_scheme'	=> 'http://%account-placeholder%.tumblr.com/'
@@ -267,15 +279,23 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Twitter',
 					'name'	 		=> 'twitter',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Twitter Account',
 					'logo'			=> 'twitter-128.png',
 					'url_scheme'	=> 'https://twitter.com/%account-placeholder%'
 				),
 			array(
+					'title' 		=> 'Vimeo',
+					'name'	 		=> 'vimeo',
+					'category'		=> 'social',
+					'description'	=> 'Vimeo Account',
+					'logo'			=> 'vimeo-128.png',
+					'url_scheme'	=> 'http://vimeo.com/%account-placeholder%'
+				),
+			array(
 					'title' 		=> 'Website',
 					'name'	 		=> 'website',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Website URL',
 					'logo'			=> 'www-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -283,7 +303,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 			 		'title' 		=> 'Xbox Live',
 			 		'name'	 		=> 'xbox live',
-			 		'type'			=> 'social',
+			 		'category'		=> 'social',
 					'description'	=> 'Xbox Live Account',
 					'logo'			=> 'xbox-128.png',
 					'url_scheme'	=> 'https://live.xbox.com/profile?gamertag=%account-placeholder%'
@@ -291,7 +311,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Xing',
 					'name'	 		=> 'xing',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'Xing URL',
 					'logo'			=> 'xing-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -299,7 +319,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'YouTube',
 					'name'	 		=> 'youtube',
-					'type'			=> 'social',
+					'category'		=> 'social',
 					'description'	=> 'YouTube Account',
 					'logo'			=> 'youtube-128.png',
 					'url_scheme'	=> 'https://www.youtube.com/user/%account-placeholder%'
@@ -307,7 +327,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Amazon Wishlist',
 					'name'	 		=> 'amazon wishlist',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Amazon Wishlist URL',
 					'logo'			=> 'amazonwishlist-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -315,7 +335,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Bitcoin',
 					'name'	 		=> 'bitcoin',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Bitcoin Wallet Address',
 					'logo'			=> 'bitcoin-128.png',
 					'url_scheme'	=> 'bitcoin:%account-placeholder%'
@@ -323,7 +343,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Dogecoin',
 					'name'	 		=> 'dogecoin',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Dogecoin Wallet Address',
 					'logo'			=> 'dogecoin-128.png',
 					'url_scheme'	=> 'dogecoin:%account-placeholder%'
@@ -331,7 +351,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Flattr',
 					'name'	 		=> 'flattr',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Flattr Account',
 					'logo'			=> 'flattr-128.png',
 					'url_scheme'	=> 'https://flattr.com/profile/%account-placeholder%'
@@ -339,7 +359,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Generic Wishlist',
 					'name'	 		=> 'generic wishlist',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Wishlist URL',
 					'logo'			=> 'genericwishlist-128.png',
 					'url_scheme'	=> '%account-placeholder%'
@@ -347,7 +367,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Litecoin',
 					'name'	 		=> 'litecoin',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Litecoin Wallet Address',
 					'logo'			=> 'litecoin-128.png',
 					'url_scheme'	=> 'litecoin:%account-placeholder%'
@@ -355,7 +375,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Paypal',
 					'name'	 		=> 'paypal',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Paypal Button ID',
 					'logo'			=> 'paypal-128.png',
 					'url_scheme'	=> 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=%account-placeholder%'
@@ -363,7 +383,7 @@ class Social extends \Podlove\Modules\Base {
 			array(
 			 		'title' 		=> 'Steam Wishlist',
 			 		'name'	 		=> 'steam wishlist',
-			 		'type'			=> 'donation',
+			 		'category'		=> 'donation',
 			 		'description'	=> 'Steam Account',
 			 		'logo'			=> 'steam-128.png',
 			 		'url_scheme'	=> 'http://steamcommunity.com/id/%account-placeholder%/wishlist'
@@ -371,10 +391,34 @@ class Social extends \Podlove\Modules\Base {
 			array(
 					'title' 		=> 'Thomann Wishlist',
 					'name'	 		=> 'thomann wishlist',
-					'type'			=> 'donation',
+					'category'		=> 'donation',
 					'description'	=> 'Thomann Wishlist URL',
 					'logo'			=> 'thomann-128.png',
 					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'about.me',
+					'name'	 		=> 'about.me',
+					'category'		=> 'social',
+					'description'	=> 'about.me Account',
+					'logo'			=> 'aboutme-128.png',
+					'url_scheme'	=> 'http://about.me/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Gittip',
+					'name'	 		=> 'gittip',
+					'category'		=> 'donation',
+					'description'	=> 'Gittip Account',
+					'logo'			=> 'gittip-128.png',
+					'url_scheme'	=> 'https://www.gittip.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Auphonic Credits',
+					'name'	 		=> 'auphonic credits',
+					'category'		=> 'donation',
+					'description'	=> 'Auphonic Account',
+					'logo'			=> 'auphonic-128.png',
+					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
 				)
 		);
 
@@ -382,7 +426,8 @@ class Social extends \Podlove\Modules\Base {
 			foreach ($services as $service_key => $service) {
 				$c = new \Podlove\Modules\Social\Model\Service;
 				$c->title = $service['title'];
-				$c->type = $service['type'];
+				$c->category = $service['category'];
+				$c->type = $service['name'];
 				$c->description = $service['description'];
 				$c->logo = $service['logo'];
 				$c->url_scheme = $service['url_scheme'];
@@ -658,12 +703,12 @@ class Social extends \Podlove\Modules\Base {
 		) );
 	}
 
-	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $type = 'social') {
+	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $category = 'social') {
 		$cjson = array();
 		$converted_services = array();
-		$wrapper_id = "services-form-$type";
+		$wrapper_id = "services-form-$category";
 
-		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'type', $type ) as $service) {
+		foreach (\Podlove\Modules\Social\Model\Service::find_all_by_property( 'category', $category ) as $service) {
 			$cjson[$service->id] = array(
 				'id'   			=> $service->id,
 				'title'   		=> $service->title,
@@ -701,16 +746,16 @@ class Social extends \Podlove\Modules\Base {
 			</table>
 
 			<div id="add_new_contributor_wrapper">
-				<input class="button" id="add_new_service_button-<?php echo $type ?>" value="+" type="button" />
+				<input class="button" id="add_new_service_button-<?php echo $category ?>" value="+" type="button" />
 			</div>
 
-			<script type="text/template" id="service-row-template-<?php echo $type ?>">
+			<script type="text/template" id="service-row-template-<?php echo $category ?>">
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
 				
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
-						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `type` = \'' . $type . '\' ORDER BY `title`' ) as $service ): ?>
+						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `category` = \'' . $category . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -797,10 +842,10 @@ class Social extends \Podlove\Modules\Base {
 						var i = 0;
 
 						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
-							rowTemplate: "#service-row-template-<?php echo $type; ?>",
+							rowTemplate: "#service-row-template-<?php echo $category; ?>",
 							deleteHandle: ".service_remove",
 							sortableHandle: ".reorder-handle",
-							addRowHandle: "#add_new_service_button-<?php echo $type ?>",
+							addRowHandle: "#add_new_service_button-<?php echo $category ?>",
 							data: existing_services,
 							dataPresets: services,
 							onRowLoad: function(o) {
@@ -899,15 +944,15 @@ class Social extends \Podlove\Modules\Base {
 	}
 	
 	public function expandExportFile(\SimpleXMLElement $xml) {
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Exporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 
 	public function expandImport($xml) {
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Importer::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 	
 	/**
@@ -925,7 +970,7 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function adn_tags_description( $description ) {
-		return '<code title="' . __( 'The Contributors of your Epsiode', 'podlove' ) . '">{episodeContributors}</code>';
+		return $description . "\n<code title=\"" . __( 'The Contributors of your Epsiode', 'podlove' ) . "\">{episodeContributors}</code>";
 	}
 
 	public function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
@@ -936,12 +981,15 @@ class Social extends \Podlove\Modules\Base {
 	public function adn_tags( $text, $post_id, $selected_role, $selected_group ) {
     	$contributor_adn_accounts = '';
 
-    	$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
+    	$episode       = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
     	$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id( $episode->id );
+    	$adn_service   = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'type', 'app.net' );
+
+    	if (!$adn_service)
+    		return;
 
     	foreach ( $contributions as $contribution ) {
     		$contributor_adn_accounts .= '';
-    		$adn_service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', 'App.net' );
     		$social_accounts = \Podlove\Modules\Social\Model\ContributorService::find_all_by_contributor_id( $contribution->contributor_id );
 
     		array_map( function( $account ) use ( $adn_service, &$contributor_adn_accounts, $contribution, $selected_role, $selected_group ) {
@@ -965,10 +1013,19 @@ class Social extends \Podlove\Modules\Base {
     		} , $social_accounts );
     	}
 
-    	return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+    	$total_text_length = strlen( $text ) + strlen( $contributor_adn_accounts );
+ 		
+ 		if ( $total_text_length <= 256 )
+     		return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
+
+    	return str_replace( '{episodeContributors}' , '', $text) ;
 	}
 
 	public function adn_contributor_filter() {
+
+		if (!is_admin())
+			return;
+
 		$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
 
 		$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();

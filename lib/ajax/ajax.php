@@ -40,7 +40,7 @@ class Ajax {
 
 	private function simulate_temporary_episode_slug( $slug ) {
 		add_filter( 'podlove_file_url_template', function ( $template ) use ( $slug ) {
-			return str_replace( '%episode_slug%', $slug, $template );;
+			return str_replace( '%episode_slug%', \Podlove\slugify( $slug ), $template );;
 		} );
 	}
 
@@ -107,6 +107,7 @@ class Ajax {
 		$file->save();
 
 		$result = array();
+		$result['file_url']  = $file->get_file_url();
 		$result['file_id']   = $file_id;
 		$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 || $info['http_code'] == 304 );
 		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];
@@ -117,11 +118,13 @@ class Ajax {
 			$info['php_safe_mode'] = ini_get( 'safe_mode' );
 			$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
 			$info['curl_exec'] = function_exists( 'curl_exec' );
-			$result['message'] = "--- # Can't reach {$file->get_file_url()}\n";
-			$result['message'].= "--- # Please include this output when you report a bug\n";
+			$errorLog = "--- # Can't reach {$file->get_file_url()}\n";
+			$errorLog.= "--- # Please include this output when you report a bug\n";
 			foreach ( $info as $key => $value ) {
-				$result['message'] .= "$key: $value\n";
+				$errorLog .= "$key: $value\n";
 			}
+
+			\Podlove\Log::get()->addError( $errorLog );
 		}
 
 		self::respond_with_json( $result );
@@ -142,7 +145,8 @@ class Ajax {
 
 		self::respond_with_json( array(
 			'file_id'   => $file->id,
-			'file_size' => $file->size
+			'file_size' => $file->size,
+			'file_url'  => $file->get_file_url()
 		) );
 	}
 

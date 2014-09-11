@@ -286,4 +286,35 @@ class Podcast extends Wrapper {
 		);
 	}
 
+	/**
+	 * Get a podcast setting.
+	 *
+	 * Valid namespaces / names:
+	 *
+	 *  ```
+	 *  website
+	 *  	merge_episodes
+	 *  	hide_wp_feed_discovery
+	 *  	use_post_permastruct
+	 *  	custom_episode_slug
+	 *  	episode_archive
+	 *  	episode_archive_slug
+	 *  	url_template
+	 *  	ssl_verify_peer
+	 *  metadata
+	 *  	enable_episode_recording_date
+	 *  	enable_episode_explicit
+	 *  	enable_episode_license
+	 *  redirects
+	 *  	podlove_setting_redirect
+	 *  tracking
+	 *  	mode
+	 *  ```
+	 *
+	 * @accessor
+	 */
+	public function setting($namespace, $name) {
+		return \Podlove\get_setting($namespace, $name);
+	}
+
 }

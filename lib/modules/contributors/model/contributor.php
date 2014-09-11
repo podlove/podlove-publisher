@@ -154,8 +154,29 @@ class Contributor extends Base
 		return DefaultContribution::find_all_by_contributor_id($this->id);
 	}
 
+	/**
+	 * Calculates episode contributions and stores them in contributioncount attribute
+	 *
+	 * Note: Counts only one contribution per episode even if one contributor has
+	 * multiple contributions in an episode.
+	 */
 	public function calcContributioncount() {
-		$this->contributioncount = count($this->getContributions());
+		global $wpdb;
+
+		$sql = "
+			SELECT COUNT(*) FROM (
+				SELECT
+					contributor_id, episode_id
+				FROM
+					" . EpisodeContribution::table_name() . "
+				WHERE
+					contributor_id = %d
+				GROUP BY
+					episode_id
+			) x
+		";
+
+		$this->contributioncount = $wpdb->get_var($wpdb->prepare($sql, $this->id));
 		$this->save();
 	}
 
@@ -171,7 +192,7 @@ class Contributor extends Base
 
 		$email = $email ? $email : $this->publicemail;
 
-		$url = 'http://www.gravatar.com/avatar/';
+		$url = 'https://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;

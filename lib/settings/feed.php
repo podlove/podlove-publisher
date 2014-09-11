@@ -16,10 +16,21 @@ class Feed {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+		add_action( "load-" . self::$pagehook,  array( $this, 'add_screen_options' ) );
 		
 		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_feeds_settings_handle" && isset( $_GET["update_settings"] ) && $_GET["update_settings"] == "true") {
 		   	add_action('admin_bar_init', array( $this, 'save_global_feed_setting'));
 		}  
+	}
+
+	public function add_screen_options() {
+		add_screen_option( 'per_page', array(
+		   'label'   => 'Feeds',
+		   'default' => 10,
+		   'option'  => 'podlove_feeds_per_page'
+		) );
+
+		$this->table = new \Podlove\Feed_List_Table();
 	}
 
 	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {
@@ -94,6 +105,8 @@ class Feed {
 		if ( ! isset( $_REQUEST['feed'] ) )
 			return;
 
+		do_action( 'podlove_feed_process', $_REQUEST['feed'], $_REQUEST['action'] );
+
 		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
 
 		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
@@ -156,9 +169,8 @@ class Feed {
 	}
 	
 	private function view_template() {
-		$table = new \Podlove\Feed_List_Table();
-		$table->prepare_items();
-		$table->display();
+		$this->table->prepare_items();
+		$this->table->display();
 		?>
 		<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_settings=true">
 			<?php settings_fields( Podcast::$pagehook ); ?>
@@ -363,6 +375,8 @@ class Feed {
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
+
+			do_action( 'podlove_feed_settings_bottom', $wrapper );
 
 		} );
 	}

@@ -70,20 +70,75 @@ class MediaFile extends Base {
 	 * @param  string $context optional download context
 	 * @return string
 	 */
-	public function get_public_file_url($source, $context = null) {
+	public function get_public_file_url($source, $context = null)
+	{
+		if (!$source && !$context)
+			return $this->get_file_url();
 
-		// trim source and context
-		$context = trim($context);
-		$source  = trim($source);
+		$params = array(
+			'source'  => $source,
+			'context' => $context
+		);
+		
+		switch ((string) \Podlove\get_setting('tracking', 'mode')) {
+			case 'ptm':
+				// when PTM is active, add $source and $context but
+				// keep the original file URL
+				return $this->add_ptm_parameters(
+					$this->get_file_url(), $params
+				);
+				break;
+			case 'ptm_analytics':
+				// we track, so we need to generate a shadow URL
+				if (get_option('permalink_structure')) {
+					$path = '/podlove/file/' . $this->id;
+					$path = $this->add_ptm_routing($path, $params);
+				} else {
+					$path = '?download_media_file=' . $this->id;
+					$path = $this->add_ptm_parameters($path, $params);
+				}
+				return site_url($path);
+				break;
+			default:
+				// tracking is off, return raw URL
+				return $this->get_file_url();
+				break;
+		}
+	}
 
-		// build path
-		$path = '?download_media_file=' . $this->id;
-		$path.= '&ptm_source=' . $source;
+	public function add_ptm_routing($path, $params)
+	{
+		if (isset($params['source'])) {
+			$path .= "/s/{$params['source']}";
+		}
 
-		if (is_string($context) && strlen($context) > 0)
-			$path .= '&ptm_context=' . $context;
+		if (isset($params['context'])) {
+			$path .= "/c/{$params['context']}";
+		}
 
-		return site_url($path);
+		$path .= "/" . $this->get_download_file_name();
+
+		return $path;
+	}
+
+	public function add_ptm_parameters($path, $params)
+	{
+		// trim params
+		$params = array_map(function($p) { return trim($p); }, $params);
+
+		$connector = function($path) {
+			return strpos($path, '?') === false ? '?' : '&';
+		};
+
+		// add params to path
+		foreach ($params as $param_name => $value) {
+			$path .= $connector($path) . 'ptm_' . $param_name . '=' . $value;
+		}
+
+		// at last, add file param, so wget users get the right extension
+		$path .= $connector($path) . 'ptm_file=' . $this->get_download_file_name();
+
+		return $path;
 	}
 
 	/**
@@ -91,11 +146,9 @@ class MediaFile extends Base {
 	 *
 	 * For public facing URLs, use ::get_public_file_url().
 	 *
-	 * @param  string $source  optional download source
-	 * @param  string $context optional download context
 	 * @return string
 	 */
-	public function get_file_url($source = null, $context = null) {
+	public function get_file_url() {
 
 		$podcast  = Podcast::get_instance();
 
@@ -113,17 +166,7 @@ class MediaFile extends Base {
 		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
 		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
-		if ($source) {
-			$connector = strpos($template, '?') === false ? '?' : '&';
-			$template .= $connector . "ptm_source=$source";
-		}
-
-		if ($context) {
-			$connector = strpos($template, '?') === false ? '?' : '&';
-			$template .= $connector . "ptm_source=$context";
-		}
-
-		return $template;
+		return trim($template);
 	}
 
 	public function episode() {

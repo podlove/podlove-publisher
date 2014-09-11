@@ -74,7 +74,9 @@ class Analytics {
 		foreach ($top_episode_ids as $episode_id) {
 			$totals = Model\DownloadIntent::daily_episode_totals($episode_id, $start, $end);
 
-			$episode = Model\Episode::find_one_by_id($episode_id);
+			if (!$episode = Model\Episode::find_one_by_id($episode_id))
+				continue;
+
 			$post = get_post($episode->post_id);
 
 			$top_episode_data[] = array(

@@ -10,7 +10,7 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 
 	public function load() {
 		add_action( 'admin_print_styles', array( $this, 'add_jquery_auphonicdata' ) );
-		add_action( 'podlove_episode_form', array( $this, 'add_media_base_url' ), 1, 2 );
+		add_filter( 'podlove_episode_form_data', array( $this, 'add_media_base_url' ), 1, 2 );
 		add_action( 'wp_ajax_get_auphonic_data', array($this, 'get_auphonic_data_callback'));
 
 		// make asset assignment configurable
@@ -56,13 +56,15 @@ class Auphonic_Production_Data extends \Podlove\Modules\Base {
 
 	}
 
-	public function add_media_base_url ( $form_wrapper, $episode ) {
+	public function add_media_base_url ( $form_data, $episode ) {
 		$podcast = Model\Podcast::get_instance();	
 		?>
 		<script type="text/javascript">
 		var podlove_media_base_url = '<?php echo($podcast->media_file_base_uri); ?>';
 		</script>
 		<?php 
+
+		return $form_data;
 	}
 
 	function get_auphonic_data_callback() {

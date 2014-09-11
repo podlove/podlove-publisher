@@ -89,7 +89,7 @@ class Episode extends Wrapper {
 	/**
 	 * Post publication date
 	 *
-	 * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate('Y-m-d') }}`
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate.format('Y-m-d') }}`
 	 *
 	 * @see  datetime
 	 * @accessor
@@ -101,7 +101,7 @@ class Episode extends Wrapper {
 	/**
 	 * Post recording date
 	 *
-	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate('Y-m-d') }}`
+	 * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate.format('Y-m-d') }}`
 	 *
 	 * @see  datetime
 	 * @accessor
@@ -193,6 +193,28 @@ class Episode extends Wrapper {
 	 */
 	public function metas($meta_key) {
 		return get_post_meta($this->post->ID, $meta_key, false);
+	}
+
+	/**
+	 * Access a list of post tags.
+	 *
+	 * See http://codex.wordpress.org/Function_Reference/wp_get_object_terms#Argument_Options
+	 * for a list of available argument options.
+	 *
+	 * Example:
+	 *
+	 * ```html
+	 *   {% for tag in episode.tags({order: "ASC", orderby: "count"}) %}
+	 *     <a href="{{ tag.url }}">{{ tag.name }} ({{ tag.count }})</a>
+	 *   {% endfor %}
+	 * ```
+	 * 
+	 * @accessor
+	 */
+	public function tags($args = array()) {
+		return array_map(function($tag) {
+			return new Tag($tag);
+		}, wp_get_post_tags($this->post->ID, $args));
 	}
 
 	/**

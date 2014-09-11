@@ -1,8 +1,6 @@
 <?php
 namespace Podlove\Modules\ImportExport;
 
-use Podlove\Modules\ImportExport\Exporter;
-
 class Import_Export extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Import &amp; Export';
@@ -11,30 +9,14 @@ class Import_Export extends \Podlove\Modules\Base {
 
 	public function load() {
 		
-		// hook into export feature
-		add_action('init', function() {
-
-			if (!is_admin())
-				return;
-
-			if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
-				$exporter = new Exporter;
-				$exporter->download();
-				exit;
-			}
-
+		add_action('admin_init', function() {
+			Export\PodcastExporter::init();
+			Import\PodcastImporter::init();
+			Export\TrackingExporter::init();
+			Import\TrackingImporter::init();
 		});
 
-		// ensure the importer keeps the mapping id for old<->new post id
-		add_filter( 'wp_import_post_meta', function($postmetas, $post_id, $post) {
-			$postmetas[] = array(
-				'key' => 'import_id',
-				'value' => $post_id
-			);
-			return $postmetas;
-		}, 10, 3 );
-
-		add_action( 'admin_menu', array( $this, 'register_menu' ), 20 );
+		add_action( 'admin_menu', array( $this, 'register_menu' ), 250 );
 	}
 
 	public function register_menu() {

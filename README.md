@@ -10,14 +10,6 @@ This is the podcast publishing plugin for WordPress.
 
 [![Flattr This][2]][1]
 
-  [1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
-  [2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)
-  [3]: http://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
-  [4]: https://trello.com/b/zB4mKQlD/podlove-publisher
-  [5]: https://github.com/podlove/podlove-publisher/issues
-  [6]: http://docs.podlove.org/publisher/
-  [7]: http://podlove.org/
-
 ## Development
 
 Code dependencies are managed via [Composer](http://getcomposer.org/). So you need to clone the repository and then fetch the dependencies via Composer.
@@ -29,22 +21,21 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
 
-## Running the test suite
+## Release Checklist
 
-There is a test suite validating some Publisher functionality. It is based on Ruby/Mechanize. You need Ruby 2.0 or higher.
+- Ensure that the changelog in `readme.txt` has an entry for the current version.
+- Merge the release-branch into `master`.
+- Increase version number in `podlove.php`.
+- Run `ruby ./bin/wprelease.rb`, which deploys the plugin to the WordPress SVN repository. It also creates tags in both SVN and git for the current version.
+- Post changelog to [Github Releases][8].
+- Remove/cleanup published feature branches.
+- Create and publish a new release branch.
 
-You need a local WordPress instance for tests. **The tests will override the database! DO NOT use the same database as for development or production!**.
-
-*Preparations*
-
-```
-gem install mechanize
-gem install rspec
-cp test/config.example.yml test/config.yml 
-```
-
-*Run*
-
-```
-rspec test
-```
+[1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
+[2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)
+[3]: http://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
+[4]: https://trello.com/b/zB4mKQlD/podlove-publisher
+[5]: https://github.com/podlove/podlove-publisher/issues
+[6]: http://docs.podlove.org/publisher/
+[7]: http://podlove.org/
+[8]: https://github.com/podlove/podlove-publisher/releases

@@ -27,6 +27,7 @@ class Settings {
 		$tabs->addTab( new Tab\Metadata( __( 'Metadata', 'podlove' ) ) );
 		$tabs->addTab( new Tab\Redirects( __( 'Redirects', 'podlove' ) ) );
 		$tabs->addTab( new Tab\FileTypes( __( 'File Types', 'podlove' ) ) );
+		$tabs->addTab( new Tab\Tracking( __( 'Tracking', 'podlove' ) ) );
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 	}

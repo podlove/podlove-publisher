@@ -6,13 +6,15 @@
         "twig/twig": "1.*",
         "twig/extensions": "1.0.*@dev",
         "pear/math_biginteger": "dev-tags/RELEASE_1_0_2",
-        "leth/ip-address": "1.0.*@dev"
+        "leth/ip-address": "1.0.*@dev",
+        "geoip2/geoip2": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "phpunit/phpunit-selenium": "1.3.*",
         "podlove/comment-introspection": "dev-master",
         "pear/pear_exception": "1.0.*@dev",
-        "pear/console_commandline": "dev-trunk"
+        "pear/console_commandline": "dev-trunk",
+        "podlove/comment-introspection": "dev-master"
     }
 }

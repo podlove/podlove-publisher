@@ -73,7 +73,8 @@ abstract class Base
 			'name'  => $name,
 			'type'  => $type,
 			'index' => $index,
-			'index_length' => isset($args['index_length']) ? $args['index_length'] : null
+			'index_length' => isset($args['index_length']) ? $args['index_length'] : null,
+			'unique' => isset($args['unique']) ? $args['unique'] : null
 		);
 	}
 	
@@ -453,6 +454,9 @@ abstract class Base
 
 		$this->is_new = false;
 
+		do_action('podlove_model_save', $this);
+		do_action('podlove_model_change', $this);
+
 		return $success;
 	}
 
@@ -493,7 +497,12 @@ abstract class Base
 		     . self::table_name()
 		     . ' WHERE id = ' . $this->id;
 
-		return $wpdb->query( $sql );
+		$rows_affected = $wpdb->query( $sql );
+
+	    do_action('podlove_model_delete', $this);
+	    do_action('podlove_model_change', $this);
+
+		return $rows_affected !== false;
 	}
 
 	private function property_name_to_sql_update_statement( $p ) {
@@ -556,9 +565,11 @@ abstract class Base
 		$index_columns = array_map( function($index){ return $index->Column_name; }, $indices );
 
 		foreach ( self::properties() as $property ) {
+
 			if ( $property['index'] && ! in_array( $property['name'], $index_columns ) ) {
 				$length = isset($property['index_length']) ? '(' . (int) $property['index_length'] . ')' : '';
-				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
+				$unique = isset($property['unique']) && $property['unique'] ? 'UNIQUE' : '';
+				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD ' . $unique . ' INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
 				$wpdb->query( $sql );
 			}
 		}
@@ -576,6 +587,14 @@ abstract class Base
 	public static function table_name() {
 		global $wpdb;
 		
+		// prefix with $wpdb prefix
+		return $wpdb->prefix . self::name();
+	}
+
+	/**
+	 * Model identifier.
+	 */
+	public static function name() {
 		// get name of implementing class
 		$table_name = get_called_class();
 		// replace backslashes from namespace by underscores
@@ -584,8 +603,8 @@ abstract class Base
 		$table_name = str_replace( 'Model_', '', $table_name );
 		// all lowercase
 		$table_name = strtolower( $table_name );
-		// prefix with $wpdb prefix
-		return $wpdb->prefix . $table_name;
+
+		return $table_name;
 	}
 	
 	public static function destroy() {

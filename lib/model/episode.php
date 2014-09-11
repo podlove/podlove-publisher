@@ -25,7 +25,10 @@ class Episode extends Base implements Licensable {
 			foreach (self::property_names() as $property) {
 				$episode->$property = $row->$property;
 			}
-			$episodes[] = $episode;
+
+			if ($episode->is_valid()) {
+				$episodes[] = $episode;
+			}
 		}
 		
 		return $episodes;
@@ -126,9 +129,9 @@ class Episode extends Base implements Licensable {
 		return $episode;
 	}
 
-	public function enclosure_url( $episode_asset ) {
+	public function enclosure_url( $episode_asset, $source = "feed", $context = null ) {
 		$media_file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $episode_asset->id );
-		return $media_file->get_file_url();
+		return $media_file->get_public_file_url($source, $context);
 	}
 
 	public function get_cover_art_with_fallback() {
@@ -148,7 +151,7 @@ class Episode extends Base implements Licensable {
 			return;
 		
 		if ( $asset_assignment->image == 'manual' )
-			return $this->cover_art;
+			return trim($this->cover_art);
 
 		$cover_art_file_id = $asset_assignment->image;
 		if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
@@ -234,6 +237,14 @@ class Episode extends Base implements Licensable {
 			return false;
 
 		return true;
+	}
+
+	public function is_published() {
+		
+		if (!$post = get_post($this->post_id))
+			return false;
+
+		return in_array($post->post_status, array('private', 'publish'));
 	}
 
 	public function get_license()
