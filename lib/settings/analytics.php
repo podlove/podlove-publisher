@@ -29,8 +29,8 @@ class Analytics {
 		if ( $_REQUEST['page'] != 'podlove_analytics' )
 			return;
 
-		wp_register_script('podlove-highcharts-js', \Podlove\PLUGIN_URL . '/js/highcharts.js', array('jquery'));
-		wp_enqueue_script('podlove-highcharts-js');
+		// wp_register_script('podlove-highcharts-js', \Podlove\PLUGIN_URL . '/js/highcharts.js', array('jquery'));
+		// wp_enqueue_script('podlove-highcharts-js');
 	}
 
 	public function page() {
@@ -100,64 +100,6 @@ class Analytics {
 
 		<script type="text/javascript">
 		(function ($) {
-		
-			$('#total_chart').highcharts({
-			    chart: {
-			        type: "area"
-			    },
-			    title: {
-			        text: 'Downloads: 30 days'
-			    },
-			    subtitle: {
-			        text: 'Top 3 episodes compared to the rest'
-			    },
-			    xAxis: {
-			        type: 'datetime',
-			        //minRange: 14 * 24 * 3600000 // fourteen days
-			    },
-			    yAxis: {
-			        title: {
-			            text: 'Downloads'
-			        }
-			    },
-			    plotOptions: {
-			    	area: {
-			    		stacking: "normal"
-			    	}
-			    },
-			    legend: {
-			        enabled: true
-			    },
-			    series: [{
-			        name: "<?php echo addslashes($top_episode_data[0]['title']) ?>",
-			        pointInterval: 24 * 3600 * 1000,
-			        pointStart: Date.UTC(2014, 04, 07),
-			        data: [
-			            <?php echo implode(",", $top_episode_data[0]['days']) ?>
-			        ]
-			    },{
-			        name: "<?php echo addslashes($top_episode_data[1]['title']) ?>",
-			        pointInterval: 24 * 3600 * 1000,
-			        pointStart: Date.UTC(2014, 04, 07),
-			        data: [
-			            <?php echo implode(",", $top_episode_data[1]['days']) ?>
-			        ]
-			    },{
-			        name: "<?php echo addslashes($top_episode_data[2]['title']) ?>",
-			        pointInterval: 24 * 3600 * 1000,
-			        pointStart: Date.UTC(2014, 04, 07),
-			        data: [
-			            <?php echo implode(",", $top_episode_data[2]['days']) ?>
-			        ]
-			    },{
-			        name: "<?php echo addslashes($other_episode_data['title']) ?>",
-			        pointInterval: 24 * 3600 * 1000,
-			        pointStart: Date.UTC(2014, 04, 07),
-			        data: [
-			            <?php echo implode(",", $other_episode_data['days']) ?>
-			        ]
-			    }]
-			});
 
 		})(jQuery);
 		</script>
