@@ -59,14 +59,6 @@ class Analytics {
 		<?php
 	}
 
-	public function show_template() {
-		?>
-
-		<h2><?php echo __("Podcast Analytics", "podlove"); ?> | Episode FOO!!</h2>
-
-		<?php
-	}
-
 	public function view_template() {
 		?>
 
@@ -176,6 +168,93 @@ class Analytics {
 
 		})(jQuery);
 		</script>
+
+		<?php
+	}
+
+	public function show_template() {
+		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
+		$post    = get_post( $episode->post_id );
+
+		$topEpisodeIds = Model\DownloadIntent::top_episode_ids("1000 years ago", "now", 1);
+		$topEpisodeId  = $topEpisodeIds[0];
+		$topEpisode    = Model\Episode::find_one_by_id($topEpisodeId);
+		$topPost       = get_post( $topEpisode->post_id );
+
+		$releaseDate = new \DateTime($post->post_date);
+		$releaseDate->setTime(0, 0, 0);
+
+		$diff = $releaseDate->diff(new \DateTime());
+		$daysSinceRelease = $diff->days;
+
+		$downloads = array(
+			'total'     => Model\DownloadIntent::total_by_episode_id($episode->id, "1000 years ago", "now"),
+			'month'     => Model\DownloadIntent::total_by_episode_id($episode->id, "28 days ago", "yesterday"),
+			'week'      => Model\DownloadIntent::total_by_episode_id($episode->id, "7 days ago", "yesterday"),
+			'yesterday' => Model\DownloadIntent::total_by_episode_id($episode->id, "1 day ago"),
+			'today'     => Model\DownloadIntent::total_by_episode_id($episode->id, "now")
+		);
+
+		$peak = Model\DownloadIntent::peak_download_by_episode_id($episode->id);
+		?>
+
+		<h2>
+			<?php echo sprintf(
+				__("Analytics: %s", "podlove"),
+				$post->post_title
+			);
+			?>
+		</h2>
+
+		<table>
+			<tbody>
+				<tr>
+					<td>Total Downloads</td>
+					<td><?php echo number_format_i18n($downloads['total']) ?></td>
+				</tr>
+				<tr>
+					<td>28 Days*</td>
+					<td><?php echo number_format_i18n($downloads['month']) ?></td>
+				</tr>
+				<tr>
+					<td>7 Days*</td>
+					<td><?php echo number_format_i18n($downloads['week']) ?></td>
+				</tr>
+				<tr>
+					<td>Yesterday</td>
+					<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
+				</tr>
+				<tr>
+					<td>Today</td>
+					<td><?php echo number_format_i18n($downloads['today']) ?></td>
+				</tr>
+				<tr>
+					<td>Release Date</td>
+					<td><?php echo mysql2date(get_option('date_format'), $post->post_date) ?></td>
+				</tr>
+				<tr>
+					<td>Peak Downloads/Day</td>
+					<td><?php echo sprintf(
+						"%s (%s)",
+						number_format_i18n($peak['downloads']),
+						mysql2date(get_option('date_format'), $peak['theday'])
+					) ?></td>
+				</tr>
+				<tr>
+					<td>Average Downloads/Day</td>
+					<td><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></td>
+				</tr>
+				<tr>
+					<td>Days since Release</td>
+					<td><?php echo number_format_i18n($daysSinceRelease) ?></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<em>* excluding today</em>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<?php
 	}
