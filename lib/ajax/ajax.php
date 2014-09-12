@@ -33,6 +33,8 @@ class Ajax {
 
 	public function analytics_downloads_per_day() {
 
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
 		echo $cache->cache_for('podlove_analytics_downloads_per_day', function() {
 			global $wpdb;
