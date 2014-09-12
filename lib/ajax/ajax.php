@@ -23,11 +23,45 @@ class Ajax {
 			'hide-teaser',
 			'get-license-url',
 			'get-license-name',
-			'get-license-parameters-from-url'
+			'get-license-parameters-from-url',
+			'analytics-downloads-per-day'
 		);
 
 		foreach ( $actions as $action )
 			add_action( 'wp_ajax_podlove-' . $action, array( $this, str_replace( '-', '_', $action ) ) );
+	}
+
+	public function analytics_downloads_per_day() {
+
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+		echo $cache->cache_for('podlove_analytics_downloads_per_day', function() {
+			global $wpdb;
+
+			$sql = "SELECT COUNT(*) downloads, post_title, access_date, episode_id, post_id FROM 
+					  (
+					   SELECT
+						media_file_id, DATE(accessed_at) access_date
+					   FROM
+						wp_podlove_downloadintent di 
+					   GROUP BY media_file_id, request_id, access_date
+					  ) di
+					  JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
+					  JOIN wp_podlove_episode e ON mf.episode_id = e.id
+					  JOIN wp_posts p ON e.post_id = p.ID
+					GROUP BY access_date, episode_id";
+
+			$results = $wpdb->get_results($sql, ARRAY_N);
+
+			$csv = '"downloads","title","date","episode_id","post_id"' . "\n";
+			foreach ($results as $row) {
+				$row[1] = '"' . str_replace('"', '""', $row[1]) . '"'; // quote & escape title
+				$csv .= implode(",", $row) . "\n";
+			}
+
+			return $csv;
+		}, 3600);
+
+		exit;
 	}
 
 	public static function respond_with_json( $result ) {
