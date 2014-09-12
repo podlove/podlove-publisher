@@ -40,27 +40,48 @@ class Analytics {
 	}
 
 	public function page() {
+
+		?>
+		<div class="wrap">
+			<?php
+			$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
+			switch ( $action ) {
+				case 'show':
+					$this->show_template();
+					break;
+				case 'index':
+				default:
+					$this->view_template();
+					break;
+			}
+			?>
+		</div>	
+		<?php
+	}
+
+	public function show_template() {
 		?>
 
-		<div class="wrap">
-			<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
+		<h2><?php echo __("Podcast Analytics", "podlove"); ?> | Episode FOO!!</h2>
 
-			<div style="width: 100%; height: 260px">
-				<div id="total-chart"></div>
-				<div id="month-chart"></div>
-			</div>
-			<div style="width: 100%">
-				<div id="episode-downloads-table">
-<!-- 					<thead>
-						<tr>
-							<th>Episode</th>
-							<th>Downloads</th>
-						</tr>
-					</thead> -->
-				</div>
-			</div>
+		<?php
+	}
 
+	public function view_template() {
+		?>
+
+		<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
+
+		<div style="width: 100%; height: 260px">
+			<div id="total-chart"></div>
+			<div id="month-chart"></div>
 		</div>
+		
+		<?php 
+		$table = new \Podlove\Downloads_List_Table();
+		$table->prepare_items();
+		$table->display();
+		?>
 
 		<script type="text/javascript">
 		function print_filter(filter){
