@@ -35,28 +35,39 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
+		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
+
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
-		echo $cache->cache_for('podlove_analytics_downloads_per_day', function() {
+		echo $cache->cache_for('podlove_analytics_dpd_' . $episode_id, function() use ($episode_id) {
 			global $wpdb;
 
-			$sql = "SELECT COUNT(*) downloads, post_title, access_date, episode_id, post_id FROM 
-					  (
-					   SELECT
-						media_file_id, DATE(accessed_at) access_date
-					   FROM
-						wp_podlove_downloadintent di 
-					   GROUP BY media_file_id, request_id, access_date
-					  ) di
-					  JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
-					  JOIN wp_podlove_episode e ON mf.episode_id = e.id
-					  JOIN wp_posts p ON e.post_id = p.ID
+			$episode_cond = "";
+			if ($episode_id) {
+				$episode_cond = " AND episode_id = $episode_id";
+			}
+
+			$sql = "SELECT COUNT(*) downloads, post_title, access_date, episode_id, post_id
+					FROM (
+						SELECT
+							media_file_id, DATE(accessed_at) access_date, episode_id
+						FROM
+							wp_podlove_downloadintent di 
+							INNER JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
+						WHERE 1 = 1 $episode_cond
+						GROUP BY media_file_id, request_id, access_date
+					) di
+                    INNER JOIN wp_podlove_episode e ON episode_id = e.id
+					INNER JOIN wp_posts p ON e.post_id = p.ID
 					GROUP BY access_date, episode_id";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$csv = '"downloads","title","date","episode_id","post_id"' . "\n";
+			$release_date = min(array_column($results, 2));
+
+			$csv = '"downloads","title","date","episode_id","post_id","days"' . "\n";
 			foreach ($results as $row) {
 				$row[1] = '"' . str_replace('"', '""', $row[1]) . '"'; // quote & escape title
+				$row[] = date_diff(date_create($release_date), date_create($row[2]))->format('%a');
 				$csv .= implode(",", $row) . "\n";
 			}
 
