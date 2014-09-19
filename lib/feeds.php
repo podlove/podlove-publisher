@@ -103,6 +103,11 @@ function check_for_and_do_compression()
 	if (in_array('ob_gzhandler', ob_list_handlers()))
 		return false;
 
+       // don't try to use ob_gzhandler on hhvm, it's not supported
+       // (see https://github.com/facebook/hhvm/issues/1854)
+       if (defined('HHVM_VERSION'))
+               return false;
+
 	// ensure content type headers are set
 	header('Content-type: application/rss+xml');
 	// start gzipping
