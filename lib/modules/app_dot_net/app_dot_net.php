@@ -376,6 +376,28 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$data['text'] = ( !empty( $episode->subtitle ) ? $episode->subtitle . "\n\n" : '' ) . $episode->summary;
 
 		$this->broadcast( $data, $post_id );
+        
+        $data = array(
+        	"text" => $text,
+        	"entities" => array(
+        		"links" => $link_annotation,
+        		"parse_links" => true
+        	),
+        	"annotations" => array()
+        );
+
+        if ($this->get_module_option('adn_language_annotation') !== "")
+        	$data['annotations'][] = $this->get_language_annotation();
+
+    	$data['annotations'][] = $this->get_episode_cover( $_POST['post_ID'] );
+
+        $this->post_to_alpha($data);
+        $this->post_to_patter($data);
+
+        // Change Announcement text for broadcast
+
+        $data['text'] = ( !empty( $_POST['_podlove_meta']['subtitle'] ) ? $_POST['_podlove_meta']['subtitle'] . "\n\n" : '' ) . $_POST['_podlove_meta']['summary'];
+        $this->broadcast($data);
 		
 		update_post_meta( $post_id, '_podlove_episode_was_published', true );
 	}
@@ -408,6 +430,27 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			);
 			array_push( $posted_linked_title, $episode_entry );
 			$start_position = $position + 1;
+
+			$ch = curl_init('https://alpha-api.app.net/stream/0/channels/'.$this->get_module_option('adn_patter_room').'/messages?access_token='.$this->get_module_option('adn_auth_key'));                                                                      
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");       
+			curl_setopt($ch, CURLOPT_USERAGENT, 'Podlove Publisher (http://podlove.org/)');                                                              
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+				'Content-Type: application/json',                                                                                
+				'Content-Length: ' . $strlen_fun($data_string))                                                                       
+			);                                                                                                                  
+
+			if(!$is_already_published) {
+				$result = curl_exec($ch);
+				$parsed_result = json_decode($result);
+				if (isset($parsed_result->meta) && isset($parsed_result->meta->error_message) && $parsed_result->meta->error_message) {
+					\Podlove\Log::get()->addError( 'Failed to post to ADN Patter Room', array(
+						'episode_id' => $episode->id,
+						'error' => $parsed_result->meta->error_message
+					) );
+				}
+			}
 		}
 		
 		$text = str_replace("{linkedEpisodeTitle}", $post_title, $text);
