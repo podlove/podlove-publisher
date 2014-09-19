@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.21 =
 
 * improve HHVM compatibility
+* resolve bug concerning internal article linking
 
 = 1.10.20 =
 
