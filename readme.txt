@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * improve HHVM compatibility
 * resolve bug concerning internal article linking
+* use WordPress method to generate default episode slugs for better results (if you are using a plugin that changes permalink slug behavior, that affects episode slugs now, too)
 
 = 1.10.20 =
 

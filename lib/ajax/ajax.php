@@ -23,7 +23,8 @@ class Ajax {
 			'hide-teaser',
 			'get-license-url',
 			'get-license-name',
-			'get-license-parameters-from-url'
+			'get-license-parameters-from-url',
+			'episode-slug'
 		);
 
 		foreach ( $actions as $action )
@@ -196,5 +197,9 @@ class Ajax {
 	public function get_license_parameters_from_url() {
 		self::respond_with_json( \Podlove\Model\License::get_license_from_url( $_REQUEST['url'] ) );
 	}
-	
+
+	public function episode_slug() {
+		echo sanitize_title($_REQUEST['title']);
+		die();
+	}	
 }
