@@ -78,7 +78,7 @@ class Analytics {
 		<script type="text/javascript">
 		(function ($) {
 
-			var dateFormat = d3.time.format("%Y-%m-%d");
+			var dateFormat = d3.time.format("%Y-%m-%d %H");
 
 			d3.csv(ajaxurl + "?action=podlove-analytics-downloads-per-day", function(data) {
 				data.forEach(function(d) {
@@ -269,7 +269,23 @@ class Analytics {
 			?>
 		</h2>
 
-		<div id="episode-performance-chart" data-top-episode="<?php echo $topEpisode->id ?>" data-episode="<?php echo $episode->id ?>"></div>
+		<div id="chart-grouping-selection">
+			<a href="#">1h</a>
+			<a href="#">2h</a>
+			<a href="#">3h</a>
+			<a href="#">4h</a>
+			<a href="#">6h</a>
+			<a href="#">12h</a>
+			<a href="#">24h</a>
+		</div>
+
+		<div 
+			id="episode-performance-chart" 
+			data-top-episode="<?php echo $topEpisode->id ?>" 
+			data-top-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $topPost->post_date_gmt ) ?>"
+			data-episode="<?php echo $episode->id ?>"
+			data-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $post->post_date_gmt ); ?>"
+		></div>
 
 		<?php echo $this->render_episode_data_table(); ?>
 
@@ -284,94 +300,130 @@ class Analytics {
 
 		(function ($) {
 
-			var dateFormat = d3.time.format("%Y-%m-%d");
-			var episode_id     = $("#episode-performance-chart").data("episode");
-			var top_episode_id = $("#episode-performance-chart").data("top-episode");
+			function render_episode_performance_chart(options) {
+				var $chart = $("#episode-performance-chart");
 
-			$.when(
-				$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-day&episode=" + episode_id),
-				$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-day&episode=" + top_episode_id)
-			).done(function(csv1, csv2) {
+				var dateFormat     = d3.time.format("%Y-%m-%d %H");
+				var dateTimeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
 
-				var csvMapper = function(d) {
-					return {
-						date: d.date,
-						downloads: +d.downloads,
-						month: dateFormat.parse(d.date).getMonth()+1,
-						year: dateFormat.parse(d.date).getFullYear(),
-						days: +d.days
+				var episode_id           = $chart.data("episode");
+				var episode_release_date = dateTimeFormat.parse($chart.data("episode-release-date"));
+				var top_episode_id       = $chart.data("top-episode");
+				var top_episode_release_date = dateTimeFormat.parse($chart.data("top-episode-release-date"));
+
+				var hours_per_unit = options.hours_per_unit;
+
+				$.when(
+					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
+					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + top_episode_id)
+				).done(function(csv1, csv2) {
+
+					var csvMapper = function(d, reference_date) {
+						var parsed_date = dateFormat.parse(d.date);
+
+						// round reference_date to hours_per_unit
+						reference_date = reference_date - reference_date.getMinutes() * 1000 * 60 - reference_date.getSeconds() * 1000;
+
+						return {
+							date: parsed_date,
+							downloads: +d.downloads,
+							month: parsed_date.getMonth()+1,
+							year: parsed_date.getFullYear(),
+							days: +d.days,
+							hoursSinceRelease: Math.floor((parsed_date - reference_date) / 1000 / 3600)
+						};
 					};
-				};
 
-				data1 = d3.csv.parse(csv1[0], csvMapper);
-				data2 = d3.csv.parse(csv2[0], csvMapper);
-				
-				// chart 1: current episode
-				var ndx               = crossfilter(data1);
-				var curDateDim        = ndx.dimension(function(d){ return d.days; });
-				var curDownloadsTotal = curDateDim.group().reduceSum(dc.pluck("downloads"));
+					var csvMapper1 = function(d) {
+						return csvMapper(d, episode_release_date);
+					};
+					var csvMapper2 = function(d) {
+						return csvMapper(d, top_episode_release_date);
+					};
 
-				// filter after grouping
-				// @see http://stackoverflow.com/a/22018053/72448
-				var curFilteredDownloadsTotal = {
-				    all: function () {
-				        return curDownloadsTotal.all().filter(function(d) { return d.key < 14; });
-				    }
-				}
-				
-				// chart 2: top episode
-				var ndx            = crossfilter(data2);
-				var dateDim        = ndx.dimension(function(d){ return d.days; });
-				var downloadsTotal = dateDim.group().reduceSum(dc.pluck("downloads"));
+					data1 = d3.csv.parse(csv1[0], csvMapper1);
+					data2 = d3.csv.parse(csv2[0], csvMapper2);
+					
+					// chart 1: current episode
+					var ndx               = crossfilter(data1);
+					var curDateDim        = ndx.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
+					var curDownloadsTotal = curDateDim.group().reduceSum(dc.pluck("downloads"));
 
-				var filteredDownloadsTotal = {
-				    all: function () {
-				        return downloadsTotal.all().filter(function(d) { return d.key < 14; });
-				    }
-				};
+					// filter after grouping
+					// @see http://stackoverflow.com/a/22018053/72448
+					var curFilteredDownloadsTotal = {
+					    all: function () {
+					        return curDownloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
+					    }
+					}
+					
+					// chart 2: top episode
+					var ndx            = crossfilter(data2);
+					var dateDim        = ndx.dimension(function(d){ return d.hoursSinceRelease; });
+					var downloadsTotal = dateDim.group().reduceSum(dc.pluck("downloads"));
 
-				var compChart = dc.compositeChart("#episode-performance-chart")
-					.width(450).height(250)
-					.x(d3.scale.linear())
-					.legend(dc.legend().x(300).y(20).itemHeight(13).gap(5))
-					.elasticX(true)
-					.brushOn(false)
-					.yAxisLabel("Downloads per day")
-					.xAxisLabel("Days since release")
-					.compose([
-						dc.barChart(compChart)
-							.dimension(curDateDim)
-							.group(curFilteredDownloadsTotal, "Current Episode")
-							.centerBar(true)
-							.xAxisPadding(0.6)
-							.renderTitle(true)
-							.title(function(d) {
-								return [
-									"Current Episode",
-									"Downloads: " + d.value
-								].join("\n");
-							}),
-						dc.lineChart(compChart)
-							.dimension(dateDim)
-							.group(filteredDownloadsTotal, "Top Episode")
-							.renderTitle(true)
-							.colors('red')
-							.title(function(d) {
-								return [
-									"Top Episode",
-									"Downloads: " + d.value
-								].join("\n");
-							})
-					]);
+					var filteredDownloadsTotal = {
+					    all: function () {
+					        return downloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
+					    }
+					};
 
-				compChart.yAxis().tickFormat(function(v) {
-					if (v < 1000)
-						return v;
-					else
-						return (v/1000) + "k";
+					var compChart = dc.compositeChart("#episode-performance-chart")
+						.width(1050).height(250)
+						.x(d3.scale.linear())
+						.legend(dc.legend().x(900).y(20).itemHeight(13).gap(5))
+						.elasticX(true)
+						.brushOn(false)
+						.yAxisLabel("Downloads per day")
+						.xAxisLabel("Hours since release")
+						.title(function(d) {
+							// console.log(d);
+							return [
+								"Downloads: " + d.value
+							].join("\n");
+						})
+						.compose([
+							dc.barChart(compChart)
+								.dimension(curDateDim)
+								.group(curFilteredDownloadsTotal, "Current Episode")
+								.centerBar(true)
+								.xAxisPadding(0.6)
+								.renderTitle(true)
+								,
+							dc.lineChart(compChart)
+								.dimension(dateDim)
+								.group(filteredDownloadsTotal, "Top Episode")
+								.renderTitle(true)
+								.colors('red')
+						]);
+
+					compChart.yAxis().tickFormat(function(v) {
+						if (v < 1000)
+							return v;
+						else
+							return (v/1000) + "k";
+					});
+
+					compChart.xAxis().tickFormat(function(v) {
+						return v * hours_per_unit + "h";
+					});
+
+					compChart.render();
+				});
+			}
+
+			render_episode_performance_chart({
+				hours_per_unit: 4
+			});
+
+			$("#chart-grouping-selection").on("click", "a", function(e) {
+				var hours = parseInt($(this).html(), 10);
+
+				render_episode_performance_chart({
+					hours_per_unit: hours
 				});
 
-				compChart.render();
+				e.preventDefault();
 			});
 
 		})(jQuery);

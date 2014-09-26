@@ -24,7 +24,8 @@ class Ajax {
 			'get-license-url',
 			'get-license-name',
 			'get-license-parameters-from-url',
-			'analytics-downloads-per-day'
+			'analytics-downloads-per-day',
+			'analytics-downloads-per-hour'
 		);
 
 		foreach ( $actions as $action )
@@ -68,6 +69,53 @@ class Ajax {
 			foreach ($results as $row) {
 				$row[1] = '"' . str_replace('"', '""', $row[1]) . '"'; // quote & escape title
 				$row[] = date_diff(date_create($release_date), date_create($row[2]))->format('%a');
+				$csv .= implode(",", $row) . "\n";
+			}
+
+			return $csv;
+		}, 3600);
+
+		exit;
+	}
+
+	public function analytics_downloads_per_hour() {
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+
+		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
+
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+		echo $cache->cache_for('podlove_analytics_dphx_' . $episode_id, function() use ($episode_id) {
+			global $wpdb;
+
+			$episode_cond = "";
+			if ($episode_id) {
+				$episode_cond = " AND episode_id = $episode_id";
+			}
+
+			$sql = "SELECT COUNT(*) downloads, post_title, access_hour, episode_id, post_id
+					FROM (
+						SELECT
+							media_file_id, DATE_FORMAT(accessed_at, '%Y-%m-%d %H') access_hour, episode_id
+						FROM
+							wp_podlove_downloadintent di 
+							INNER JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
+						WHERE 1 = 1 $episode_cond
+						GROUP BY media_file_id, request_id, access_hour
+					) di
+                    INNER JOIN wp_podlove_episode e ON episode_id = e.id
+					INNER JOIN wp_posts p ON e.post_id = p.ID
+					GROUP BY access_hour, episode_id";
+
+			$results = $wpdb->get_results($sql, ARRAY_N);
+
+			$release_date = min(array_column($results, 2));
+			$release_date = reset(explode(" ", $release_date)); // chop off hour
+
+			$csv = '"downloads","title","date","episode_id","post_id","days"' . "\n";
+			foreach ($results as $row) {
+				$row[1] = '"' . str_replace('"', '""', $row[1]) . '"'; // quote & escape title
+				$row[] = date_diff(date_create($release_date), date_create(reset(explode(" ", $row[2]))))->format('%a');
 				$csv .= implode(",", $row) . "\n";
 			}
 
