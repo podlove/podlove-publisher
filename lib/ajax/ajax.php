@@ -83,9 +83,10 @@ class Ajax {
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
 		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
+		$cache_key = 'podlove_analytics_dphx_' . $episode_id;
 
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
-		echo $cache->cache_for('podlove_analytics_dphx_' . $episode_id, function() use ($episode_id) {
+		$content = $cache->cache_for($cache_key, function() use ($episode_id) {
 			global $wpdb;
 
 			$episode_cond = "";
@@ -121,6 +122,20 @@ class Ajax {
 
 			return $csv;
 		}, 3600);
+
+		$etag = md5($content);
+
+		header("Etag: $etag");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s", $cache->expiration_for($cache_key)) . " GMT");
+
+		$etagHeader = (isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false);
+
+		if ($etagHeader == $etag) {
+			header("HTTP/1.1 304 Not Modified");
+			exit;
+		}
+
+		echo $content;
 
 		exit;
 	}

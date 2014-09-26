@@ -160,6 +160,12 @@ class TemplateCache {
 		}
 	}
 
+	public function expiration_for($cache_key)
+	{
+		$cache_key = $this->generate_cache_key($cache_key);
+		return get_option('_transient_timeout_' . $cache_key);
+	}
+
 	private function memorize_cache_key($cache_key)
 	{
 		$cache_keys = get_option('podlove_tpl_cache_keys', '');
