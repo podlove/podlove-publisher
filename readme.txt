@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.22 =
+
+* fix bug in contribution counting
+
 = 1.10.21 =
 
 * improve HHVM compatibility
