@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.10.22 =
 
 * fix bug in contribution counting
+* simplify internal cache key handling to avoid technical issues
 
 = 1.10.21 =
 
