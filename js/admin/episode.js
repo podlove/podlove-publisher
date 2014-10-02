@@ -75,17 +75,27 @@ var PODLOVE = PODLOVE || {};
 	 		}
 	 	};
 
+	 	// current ajax object to ensure only the latest one is active
+	 	var update_episode_slug_xhr;
+
 	 	function update_episode_slug(title) {
-	 		var slug = title;
 
-	 		slug = slug.trim();
-	 		slug = slug.replace(/[^-\w\.\~]+/g, '-');
-	 		slug = slug.replace(/^-+|-+$/g, ''); // remove leading and trailing dashes
-	 		slug = slug.toLowerCase();
+	 		if (update_episode_slug_xhr)
+	 			update_episode_slug_xhr.abort();
 
-	 		o.slug_field
-	 			.val(slug)
-	 			.blur();
+	 		update_episode_slug_xhr = $.ajax({
+	 			url: ajaxurl,
+	 			data: {
+	 				action: 'podlove-episode-slug',
+	 				title: title,
+	 			},
+	 			context: o.slug_field
+	 		}).done(function(slug) {
+	 			console.log(slug);
+	 			$(this)
+	 				.val(slug)
+		 			.blur();
+	 		});
 	 	};
 
 	 	o.update_preview_row = function(container) {

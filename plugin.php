@@ -952,6 +952,9 @@ add_filter('posts_search', function($search, $query) {
 
 	if (!isset($query->query_vars['search_terms']))
 		return $search;
+		
+	if ( isset( $query->query_vars['suppress_filters'] ) && true == $query->query_vars['suppress_filters'] )
+		return $search;
 
 	$episodesTable = \Podlove\Model\Episode::table_name();
 
