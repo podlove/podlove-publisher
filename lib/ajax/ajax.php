@@ -1,5 +1,6 @@
 <?php
 namespace Podlove\AJAX;
+
 use \Podlove\Model;
 
 class Ajax {
@@ -26,11 +27,68 @@ class Ajax {
 			'get-license-parameters-from-url',
 			'analytics-downloads-per-day',
 			'analytics-downloads-per-hour',
+			'analytics-average-downloads-per-hour',
 			'episode-slug'
 		);
 
 		foreach ( $actions as $action )
 			add_action( 'wp_ajax_podlove-' . $action, array( $this, str_replace( '-', '_', $action ) ) );
+	}
+
+	public function analytics_average_downloads_per_hour()
+	{
+		global $wpdb;
+
+		$downloads = $wpdb->get_col("
+			SELECT
+				meta_value
+			FROM
+				$wpdb->postmeta pm
+				JOIN $wpdb->posts p ON pm.post_id = p.ID
+			WHERE
+				pm.meta_key = '_podlove_eda_downloads'
+				AND p.post_status IN ('publish', 'private')
+		");
+
+		$downloads = array_reduce($downloads, function($agg, $item) {
+
+			$row = explode(",", $item);
+
+			// skip episodes with missing data, for example if released before tracking was started
+			if (array_sum(array_slice($row, 0, 24)) < 10) {
+				return $agg;
+			}
+
+			// skip young episodes
+			if (count($row) < \Podlove\Analytics\EpisodeDownloadAverage::HOURS_TO_CALCULATE/2)
+				return $agg;
+
+			if (empty($agg)) {
+				$agg = $row;
+			} else {
+				for ($i=0; $i < \Podlove\Analytics\EpisodeDownloadAverage::HOURS_TO_CALCULATE; $i++) { 
+					if (isset($row[$i])) {
+						$agg['downloads'][$i] += $row[$i];
+					}
+				}
+				$agg['rows']++;
+			}
+
+			return $agg;
+		}, array('downloads' => array_fill(0, \Podlove\Analytics\EpisodeDownloadAverage::HOURS_TO_CALCULATE, 0), 'rows' => 0));
+
+		$downloads = array_map(function($item) use ($downloads) {
+			return round($item / $downloads['rows']);
+		}, $downloads['downloads']);
+
+		$csv = '"downloads","hoursSinceRelease"' . "\n";
+		foreach ($downloads as $key => $value) {
+			$csv .= "$value,$key\n";
+		}
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+		echo $csv;
+		exit;
 	}
 
 	public function analytics_downloads_per_day() {

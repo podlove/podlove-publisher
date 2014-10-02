@@ -315,8 +315,9 @@ class Analytics {
 
 				$.when(
 					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
-					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + top_episode_id)
-				).done(function(csv1, csv2) {
+					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + top_episode_id),
+					$.ajax(ajaxurl + "?action=podlove-analytics-average-downloads-per-hour")
+				).done(function(csvCurEpisode, csvTopEpisode, csvAvgEpisode) {
 
 					var csvMapper = function(d, reference_date) {
 						var parsed_date = dateFormat.parse(d.date);
@@ -341,8 +342,14 @@ class Analytics {
 						return csvMapper(d, top_episode_release_date);
 					};
 
-					data1 = d3.csv.parse(csv1[0], csvMapper1);
-					data2 = d3.csv.parse(csv2[0], csvMapper2);
+					data1 = d3.csv.parse(csvCurEpisode[0], csvMapper1);
+					data2 = d3.csv.parse(csvTopEpisode[0], csvMapper2);
+					data3 = d3.csv.parse(csvAvgEpisode[0], function(d) {
+						return {
+							hoursSinceRelease: +d.hoursSinceRelease,
+							downloads: +d.downloads
+						};
+					});
 					
 					// chart 1: current episode
 					var ndx               = crossfilter(data1);
@@ -365,6 +372,17 @@ class Analytics {
 					var filteredDownloadsTotal = {
 					    all: function () {
 					        return downloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
+					    }
+					};
+
+					// chart 3: average episode
+					var ndx            = crossfilter(data3);
+					var avgDateDim     = ndx.dimension(function(d){ return d.hoursSinceRelease; });
+					var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
+
+					var avgFilteredDownloadsTotal = {
+					    all: function () {
+					        return avgDownloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
 					    }
 					};
 
@@ -395,6 +413,12 @@ class Analytics {
 								.group(filteredDownloadsTotal, "Top Episode")
 								.renderTitle(true)
 								.colors('red')
+								,
+							dc.lineChart(compChart)
+								.dimension(avgDateDim)
+								.group(avgFilteredDownloadsTotal, "Average Episode")
+								.renderTitle(true)
+								.colors('black')
 						]);
 
 					compChart.yAxis().tickFormat(function(v) {

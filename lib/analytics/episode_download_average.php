@@ -66,8 +66,8 @@ class EpisodeDownloadAverage
 				SELECT
 					media_file_id, DATE_FORMAT(accessed_at, '%%Y-%%m-%%d %%H') access_hour
 				FROM
-					wp_podlove_downloadintent di 
-					INNER JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
+					" . \Podlove\Model\DownloadIntent::table_name() . " di 
+					INNER JOIN " . \Podlove\Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 					WHERE episode_id = %d
 				GROUP BY media_file_id, request_id, access_hour
 			) di
@@ -81,8 +81,18 @@ class EpisodeDownloadAverage
 			ARRAY_A
 		);
 
+		$release_date = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT post_date FROM $wpdb->posts p JOIN " . \Podlove\Model\Episode::table_name() . " e ON e.post_id = p.ID WHERE e.id = %d",
+				$episode_id
+			)
+		);
+
 		if ($data) {
-			return array_column(self::add_missing_hours($data), 'downloads');
+			$missing_hours = self::add_missing_hours($data, $release_date);
+			array_splice($missing_hours, self::HOURS_TO_CALCULATE);
+
+			return array_column($missing_hours, 'downloads');
 		} else {
 			return array();			
 		}
@@ -94,18 +104,37 @@ class EpisodeDownloadAverage
 	 *
 	 * @todo add entries *before* first item (actually ... for current use case not required)
 	 */
-	private static function add_missing_hours($data)
+	private static function add_missing_hours($data, $release_date)
 	{
 		$time_format = "Y-m-d H";
+		$release_date = \DateTime::createFromFormat("Y-m-d H:i:s", $release_date);
 
-		return array_reduce($data, function($agg, $item) use ($time_format) {
+		return array_reduce($data, function($agg, $item) use ($time_format, $release_date) {
+
+			$cur_time  = \DateTime::createFromFormat($time_format, $item['access_hour']);
 
 			if (empty($agg)) {
+				$date_diff = $release_date->diff($cur_time);
+
+				// only fill if release date is older than first item
+				if (!$date_diff->invert) {
+					$hour_diff = $date_diff->h + $date_diff->d * 24 + $date_diff->d * 30 * 24;
+					$hour_diff = min($hour_diff, EpisodeDownloadAverage::HOURS_TO_CALCULATE); // don't generate data that will be deleted later
+
+					// fill with 0 entries for every missing hour
+					for ($i=$hour_diff; $i > 1; $i--) { 
+						$release_date->add(\DateInterval::createFromDateString("1 hour"));
+						$agg[] = array(
+							'downloads' => 0,
+							'access_hour' => $release_date->format($time_format)
+						);
+					}
+				}
+
 				$agg[] = $item;
 			} else {
 				$last_item = end($agg);
 				$last_time = \DateTime::createFromFormat($time_format, $last_item['access_hour']);
-				$cur_time  = \DateTime::createFromFormat($time_format, $item['access_hour']);
 				$date_diff = $last_time->diff($cur_time);
 				$hour_diff = $date_diff->h + $date_diff->d * 24;
 
