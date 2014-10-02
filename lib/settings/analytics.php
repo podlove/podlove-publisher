@@ -374,7 +374,7 @@ class Analytics {
 						.legend(dc.legend().x(900).y(20).itemHeight(13).gap(5))
 						.elasticX(true)
 						.brushOn(false)
-						.yAxisLabel("Downloads per day")
+						.yAxisLabel("Downloads")
 						.xAxisLabel("Hours since release")
 						.title(function(d) {
 							// console.log(d);

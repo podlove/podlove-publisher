@@ -209,6 +209,7 @@ add_action( 'init', array( '\Podlove\Downloads', 'init' ) );
 add_action( 'init', array( '\Podlove\ExtendSearch', 'init' ) );
 add_action( 'init', array( '\Podlove\FeedDiscoverability', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
+add_action( 'init', array( '\Podlove\Analytics\EpisodeDownloadAverage', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
 
