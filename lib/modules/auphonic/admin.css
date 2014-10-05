@@ -126,3 +126,24 @@ legend {
 	position: relative;
 	display: none;
 }
+
+.podlove-auphonic-remove-track {
+	font-size: 1.6em;
+}
+
+#add_new_auphonic_track {
+	height: 25px;
+	font-size: 1.5em;
+}
+
+#add_new_track_wrapper {
+	margin-top: 5px;
+}
+
+.podlove-auphonic-track-identifier {
+	width: 140px;
+}
+
+.podlove-auphonic-sources {
+	width: 250px;
+}

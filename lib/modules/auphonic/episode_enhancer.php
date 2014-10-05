@@ -63,6 +63,35 @@ class EpisodeEnhancer {
 			data-module-url="<?php echo $this->module->get_module_url() ?>"
 			/>
 
+		<script type="text/template" id="podlove-auphonic-track-row">
+		<tr class="media_file_row">
+			<td class="podlove-auphonic-track-identifier">
+				<input type="text" class="regular-text" />
+			</td>
+			<td class="podlove-auphonic-sources">
+				<select id="auphonic_services_{{id}}" class="auphonic_services">
+					<option><?php echo __( 'Loading sources ...' ) ?></option>
+				</select>
+			</td>
+			<td>
+				<span id="fetch_auphonic_production_files_{{id}}" class="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>">
+					<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
+					<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
+					<span class="state_success"><i class="podlove-icon-ok"></i></span>
+					<span class="state_fail"><i class="podlove-icon-remove"></i></span>
+				</span>
+				<select id="auphonic_production_files_{{id}}" class="auphonic_production_files" name="input_file[{{id}}]">
+					<option>-</option>
+				</select>
+				<input type="text" id="auphonic_http_upload_url_{{id}}" name="auphonic_http_upload_url[{{id}}]" class="auphonic_http_upload_url" style="display:none" class="large-text" />
+				<input type="file" id="auphonic_local_upload_url_{{id}}" name="auphonic_local_upload_url[{{id}}]" class="auphonic_local_upload_url" style="display:none" class="large-text" />
+			</td>
+			<td>
+				<i class="podlove-auphonic-remove-track podlove-icon-remove"></i>
+			</td>
+		</tr>
+		</script>
+
 		<div id="auphonic-box">
 
 			<em id="auphonic-credits-status">Available processing time: <span id="auphonic-credits"></span></em>
@@ -71,34 +100,20 @@ class EpisodeEnhancer {
 
 			<fieldset>
 				<legend>Create Production</legend>
-				<div class="auphonic-segment">
-					<div class="auphonic_production_head">
-						<label for="auphonic_services">
-							Source
-						</label>
-					</div>
-					<select id="auphonic_services">
-						<option><?php echo __( 'Loading sources ...' ) ?></option>
-					</select>
-				</div>
 				
-				<div class="auphonic-segment">
-					<div class="auphonic_production_head">
-						<label for="auphonic_production_files">
-							Master Audio File
-						</label>
-						<span id="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>">
-							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
-							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
-							<span class="state_success"><i class="podlove-icon-ok"></i></span>
-							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
-						</span>
-					</div>
-					<select id="auphonic_production_files" name="input_file">
-						<option>-</option>
-					</select>
-					<input type="text" id="auphonic_http_upload_url" name="auphonic_http_upload_url" style="display:none" class="large-text" />
-					<input type="file" id="auphonic_local_upload_url" name="auphonic_local_upload_url" style="display:none" class="large-text" />
+				<table class="media_file_table" border="0" cellspacing="0">
+					<thead>
+						<tr>
+							<th>Track Identifier</th>
+							<th>Source</th>
+							<th>Audio File</th>
+							<th>Remove</th>
+						</tr>
+					</thead>
+					<tbody id="podlove-auphonic-tracks-table-body"></tbody>
+				</table>
+				<div id="add_new_track_wrapper">
+					<input class="button" id="add_new_auphonic_track" value="+" type="button" />
 				</div>
 
 				<div class="auphonic-row">
