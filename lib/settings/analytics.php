@@ -395,8 +395,8 @@ class Analytics {
 						.yAxisLabel("Downloads")
 						.xAxisLabel("Hours since release")
 						.title(function(d) {
-							// console.log(d);
 							return [
+								(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
 								"Downloads: " + d.value
 							].join("\n");
 						})
