@@ -407,12 +407,24 @@ class Analytics {
 								.centerBar(true)
 								.xAxisPadding(0.6)
 								.renderTitle(true)
+								.colors(
+									d3.scale.ordinal()
+										.domain(["even","odd"])
+										.range(["#69A4A2","#9478B4"])
+								)
+								.colorAccessor(function(d) { 
+									if (Math.floor(d.key * hours_per_unit / 24) % 2 === 0) {
+										return "even";
+									} else {
+										return "odd";
+									}
+								})
 								,
 							dc.lineChart(compChart)
 								.dimension(dateDim)
 								.group(filteredDownloadsTotal, "Top Episode")
 								.renderTitle(true)
-								.colors('red')
+								.colors('#7C7416')
 								,
 							dc.lineChart(compChart)
 								.dimension(avgDateDim)
