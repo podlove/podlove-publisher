@@ -360,29 +360,29 @@ class Analytics {
 					// @see http://stackoverflow.com/a/22018053/72448
 					var curFilteredDownloadsTotal = {
 					    all: function () {
-					        return curDownloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
+					        return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
 					    }
 					}
 					
 					// chart 2: top episode
 					var ndx            = crossfilter(data2);
-					var dateDim        = ndx.dimension(function(d){ return d.hoursSinceRelease; });
+					var dateDim        = ndx.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 					var downloadsTotal = dateDim.group().reduceSum(dc.pluck("downloads"));
 
 					var filteredDownloadsTotal = {
 					    all: function () {
-					        return downloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
+					        return downloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
 					    }
 					};
 
 					// chart 3: average episode
 					var ndx            = crossfilter(data3);
-					var avgDateDim     = ndx.dimension(function(d){ return d.hoursSinceRelease; });
+					var avgDateDim     = ndx.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 					var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
 
 					var avgFilteredDownloadsTotal = {
 					    all: function () {
-					        return avgDownloadsTotal.all().filter(function(d) { return d.key < 10 * 24 / hours_per_unit; });
+					        return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
 					    }
 					};
 

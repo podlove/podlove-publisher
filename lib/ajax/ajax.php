@@ -109,15 +109,16 @@ class Ajax {
 			$sql = "SELECT COUNT(*) downloads, post_title, access_date, episode_id, post_id
 					FROM (
 						SELECT
-							media_file_id, DATE(accessed_at) access_date, episode_id
+							media_file_id, accessed_at, DATE(accessed_at) access_date, episode_id
 						FROM
-							wp_podlove_downloadintent di 
-							INNER JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
+							" . Model\DownloadIntent::table_name() . " di 
+							INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						WHERE 1 = 1 $episode_cond
 						GROUP BY media_file_id, request_id, access_date
 					) di
-                    INNER JOIN wp_podlove_episode e ON episode_id = e.id
-					INNER JOIN wp_posts p ON e.post_id = p.ID
+                    INNER JOIN " . Model\Episode::table_name() . " e ON episode_id = e.id
+					INNER JOIN $wpdb->posts p ON e.post_id = p.ID
+					WHERE accessed_at > p.post_date_gmt
 					GROUP BY access_date, episode_id";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
@@ -156,15 +157,16 @@ class Ajax {
 			$sql = "SELECT COUNT(*) downloads, post_title, access_hour, episode_id, post_id
 					FROM (
 						SELECT
-							media_file_id, DATE_FORMAT(accessed_at, '%Y-%m-%d %H') access_hour, episode_id
+							media_file_id, accessed_at, DATE_FORMAT(accessed_at, '%Y-%m-%d %H') access_hour, episode_id
 						FROM
-							wp_podlove_downloadintent di 
-							INNER JOIN wp_podlove_mediafile mf ON mf.id = di.media_file_id
+							" . Model\DownloadIntent::table_name() . " di 
+							INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						WHERE 1 = 1 $episode_cond
 						GROUP BY media_file_id, request_id, access_hour
 					) di
-                    INNER JOIN wp_podlove_episode e ON episode_id = e.id
-					INNER JOIN wp_posts p ON e.post_id = p.ID
+                    INNER JOIN " . Model\Episode::table_name() . " e ON episode_id = e.id
+					INNER JOIN $wpdb->posts p ON e.post_id = p.ID
+					WHERE accessed_at > p.post_date_gmt
 					GROUP BY access_hour, episode_id";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
