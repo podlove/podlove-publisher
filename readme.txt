@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * fix bug in contribution counting
 * simplify internal cache key handling to avoid technical issues
+* tracking: don't count HEAD requests
 
 = 1.10.21 =
 
