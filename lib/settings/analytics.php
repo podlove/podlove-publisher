@@ -393,7 +393,7 @@ class Analytics {
 						.elasticX(true)
 						.brushOn(false)
 						.yAxisLabel("Downloads")
-						.xAxisLabel("Hours since release")
+						.xAxisLabel("Hours since release (" + d3.time.format("%Y-%m-%d")(episode_release_date) + ")")
 						.title(function(d) {
 							return [
 								(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
