@@ -270,13 +270,14 @@ class Analytics {
 		</h2>
 
 		<div id="chart-grouping-selection">
-			<a href="#">1h</a>
-			<a href="#">2h</a>
-			<a href="#">3h</a>
-			<a href="#">4h</a>
-			<a href="#">6h</a>
-			<a href="#">12h</a>
-			<a href="#">24h</a>
+			<span style="line-height: 26px">Zoom</span>
+			<a href="#" class="button button-secondary">1h</a>
+			<a href="#" class="button button-secondary">2h</a>
+			<a href="#" class="button button-secondary">3h</a>
+			<a href="#" class="button button-secondary">4h</a>
+			<a href="#" class="button button-secondary">6h</a>
+			<a href="#" class="button button-secondary">12h</a>
+			<a href="#" class="button button-secondary">24h</a>
 		</div>
 
 		<div 
@@ -448,12 +449,11 @@ class Analytics {
 				});
 			}
 
-			render_episode_performance_chart({
-				hours_per_unit: 4
-			});
-
 			$("#chart-grouping-selection").on("click", "a", function(e) {
 				var hours = parseInt($(this).html(), 10);
+
+				$(this).siblings().removeClass("active");
+				$(this).addClass("active");
 
 				render_episode_performance_chart({
 					hours_per_unit: hours
@@ -461,6 +461,8 @@ class Analytics {
 
 				e.preventDefault();
 			});
+
+			$("#chart-grouping-selection a:eq(3)").click();
 
 		})(jQuery);
 		</script>
