@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 82 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 83 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -951,6 +951,27 @@ function run_migrations_for_version( $version ) {
 				$redirect_settings[$index]['active'] = 'active';
 			}
 			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
+		break;
+		case 83:
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `bot` TINYINT',
+				'ALTER TABLE `%s` ADD COLUMN `client_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_type` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_brand` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_model` VARCHAR(255)',
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
+			}
+
+			foreach (Model\UserAgent::all() as $ua) {
+				$ua->parse();
+				$ua->save();
+			}
 		break;
 	}
 
