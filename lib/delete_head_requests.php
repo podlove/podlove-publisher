@@ -20,10 +20,14 @@ class DeleteHeadRequests {
 	public static function ajax_delete() {
 		global $wpdb;
 
-		$send_response = function ($todo) {
+		$send_response = function ($todo) use ($wpdb) {
 
-			if (!$todo)
+			if (!$todo) {
+				// free disk space
+				$wpdb->query('OPTIMIZE TABLE ' . \Podlove\Model\DownloadIntent::table_name());
+				// mark migration as done
 				delete_option('podlove_tracking_delete_head_requests');
+			}
 
 			\Podlove\AJAX\Ajax::respond_with_json(array('todo' => $todo));
 		};
