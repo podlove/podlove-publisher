@@ -208,6 +208,7 @@ add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
+add_action( 'admin_init', array( '\Podlove\DeleteHeadRequests', 'init' ) );
 
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
