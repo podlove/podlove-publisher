@@ -179,7 +179,7 @@ class Ajax {
 
 	private function parse_get_parameter_into_url_array() {
 		return array(
-						'version'		 => '3.0',
+						'version'		 => $_REQUEST['version'],
 						'modification'	 => $_REQUEST['modification'],
 						'commercial_use' => $_REQUEST['commercial_use'],
 						'jurisdiction'	 => $_REQUEST['jurisdiction']

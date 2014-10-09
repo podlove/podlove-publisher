@@ -231,6 +231,15 @@ class Podcast_Post_Meta_Box {
 							?>
 							<div class="row_podlove_cc_license_selector">
 								<div>
+									<label for="license_cc_version" class="podlove_cc_license_selector_label">Version</label>
+									<select id="license_cc_version">
+										<option value="cc0">Public Domain</option>
+										<option value="pdmark">Public Domain Mark</option>
+										<option value="cc3">Creative Commons 3.0 and earlier</option>
+										<option value="cc4">Creative Commons 4.0</option>
+									</select>
+								</div>
+								<div class="podlove-hide">
 									<label for="license_cc_allow_modifications" class="podlove_cc_license_selector_label">Allow modifications of your work?</label>
 									<select id="license_cc_allow_modifications">
 										<option value="yes">Yes</option>
@@ -238,14 +247,14 @@ class Podcast_Post_Meta_Box {
 										<option value="no">No</option>
 									</select>
 								</div>
-								<div>
+								<div class="podlove-hide">
 									<label for="license_cc_allow_commercial_use" class="podlove_cc_license_selector_label">Allow commercial uses of your work?</label>
 									<select id="license_cc_allow_commercial_use">
 										<option value="yes">Yes</option>
 										<option value="no">No</option>
 									</select>
 								</div>
-								<div>
+								<div class="podlove-hide">
 									<label for="license_cc_license_jurisdiction" class="podlove_cc_license_selector_label">License Jurisdiction</label>
 									<select id="license_cc_license_jurisdiction">
 										<?php

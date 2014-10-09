@@ -233,7 +233,7 @@ span#podlove_cc_license_selector_toggle {
 }
 
 .row_podlove_cc_license_selector td div select {
-	width: 190px;
+	width: 240px;
 }
 
 label.podlove_cc_license_selector_label {
@@ -241,4 +241,8 @@ label.podlove_cc_license_selector_label {
 	width: 240px;
 	display: inline-block;
 	clear: both;
+}
+
+.podlove-hide {
+	display: none;
 }
