@@ -214,10 +214,6 @@ class Analytics {
 						<td><?php echo number_format_i18n($downloads['today']) ?></td>
 					</tr>
 					<tr>
-						<td>Release Date</td>
-						<td><?php echo mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $post->post_date) ?></td>
-					</tr>
-					<tr>
 						<td>Peak Downloads/Day</td>
 						<td><?php echo sprintf(
 							"%s (%s)",
@@ -228,10 +224,6 @@ class Analytics {
 					<tr>
 						<td>Average Downloads/Day</td>
 						<td><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></td>
-					</tr>
-					<tr>
-						<td>Days since Release</td>
-						<td><?php echo number_format_i18n($daysSinceRelease) ?></td>
 					</tr>
 					<tr>
 						<td colspan="2">
@@ -254,15 +246,31 @@ class Analytics {
 	public function show_template() {
 		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
 		$post    = get_post( $episode->post_id );
+
+		$releaseDate = new \DateTime($post->post_date);
+		$releaseDate->setTime(0, 0, 0);
+
+		$diff = $releaseDate->diff(new \DateTime());
+		$daysSinceRelease = $diff->days;
+
 		?>
 
 		<h2>
-			<?php echo sprintf(
-				__("Analytics: %s", "podlove"),
-				$post->post_title
-			);
-			?>
+			<?php echo $post->post_title ?>
+			<br><small>
+				<?php echo sprintf(
+							"Released on %s (%d days ago)",
+							mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $post->post_date),
+							number_format_i18n($daysSinceRelease)
+						) ?>
+			</small>
 		</h2>
+
+		<style type="text/css">
+		h2 small {
+			color: #666;
+		}
+		</style>
 
 		<div id="chart-grouping-selection">
 			<span style="line-height: 26px">Zoom</span>
