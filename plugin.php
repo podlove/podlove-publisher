@@ -16,6 +16,7 @@ function activate_for_current_blog() {
 	Model\Episode::build();
 	Model\Template::build();
 	Model\DownloadIntent::build();
+	Model\DownloadIntentClean::build();
 	Model\UserAgent::build();
 	Model\GeoArea::build();
 	Model\GeoAreaName::build();
@@ -196,6 +197,7 @@ function uninstall_for_current_blog() {
 	Model\Episode::destroy();
 	Model\Template::destroy();
 	Model\DownloadIntent::destroy();
+	Model\DownloadIntentClean::destroy();
 	Model\UserAgent::destroy();
 	Model\GeoArea::destroy();
 	Model\GeoAreaName::destroy();
@@ -210,6 +212,7 @@ add_action( 'init', array( '\Podlove\ExtendSearch', 'init' ) );
 add_action( 'init', array( '\Podlove\FeedDiscoverability', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 add_action( 'init', array( '\Podlove\Analytics\EpisodeDownloadAverage', 'init' ) );
+add_action( 'init', array( '\Podlove\Analytics\DownloadIntentCleanup', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
 

@@ -953,6 +953,8 @@ function run_migrations_for_version( $version ) {
 			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
 		break;
 		case 83:
+			\Podlove\Model\DownloadIntentClean::build();
+			
 			$alterations = array(
 				'ALTER TABLE `%s` ADD COLUMN `bot` TINYINT',
 				'ALTER TABLE `%s` ADD COLUMN `client_name` VARCHAR(255)',

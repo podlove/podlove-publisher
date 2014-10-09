@@ -1,6 +1,13 @@
 <?php
 namespace Podlove\Model;
 
+/**
+ * Raw download intent data.
+ * 
+ * If you want to run analytics queries, you probably want to use
+ * the DownloadIntentClean table.
+ * 
+ */
 class DownloadIntent extends Base {
 
 	public static function top_episode_ids($start, $end = "now", $limit = 3) {
