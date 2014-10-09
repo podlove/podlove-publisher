@@ -149,35 +149,21 @@ class Ajax {
 		$content = $cache->cache_for($cache_key, function() use ($episode_id) {
 			global $wpdb;
 
-			$episode_cond = "";
-			if ($episode_id) {
-				$episode_cond = " AND episode_id = $episode_id";
-			}
-
-			$sql = "SELECT COUNT(*) downloads, post_title, access_hour, episode_id, post_id
-					FROM (
-						SELECT
-							media_file_id, accessed_at, DATE_FORMAT(accessed_at, '%Y-%m-%d %H') access_hour, episode_id
-						FROM
-							" . Model\DownloadIntent::table_name() . " di 
-							INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
-						WHERE 1 = 1 $episode_cond
-						GROUP BY media_file_id, request_id, access_hour
-					) di
-                    INNER JOIN " . Model\Episode::table_name() . " e ON episode_id = e.id
-					INNER JOIN $wpdb->posts p ON e.post_id = p.ID
-					WHERE accessed_at > p.post_date_gmt
-					GROUP BY access_hour, episode_id";
+			$sql = "SELECT COUNT(*) downloads, DATE_FORMAT(accessed_at, '%Y-%m-%d %H') AS access_hour
+					FROM
+						" . Model\DownloadIntentClean::table_name() . " di
+						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
+						WHERE episode_id = $episode_id
+						GROUP BY access_hour";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$release_date = min(array_column($results, 2));
+			$release_date = min(array_column($results, 1));
 			$release_date = reset(explode(" ", $release_date)); // chop off hour
 
-			$csv = '"downloads","title","date","episode_id","post_id","days"' . "\n";
+			$csv = '"downloads","date","days"' . "\n";
 			foreach ($results as $row) {
-				$row[1] = '"' . str_replace('"', '""', $row[1]) . '"'; // quote & escape title
-				$row[] = date_diff(date_create($release_date), date_create(reset(explode(" ", $row[2]))))->format('%a');
+				$row[] = date_diff(date_create($release_date), date_create(reset(explode(" ", $row[1]))))->format('%a');
 				$csv .= implode(",", $row) . "\n";
 			}
 
