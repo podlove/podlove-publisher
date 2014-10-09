@@ -39,13 +39,13 @@ class Analytics {
 		if ( $_REQUEST['page'] != 'podlove_analytics' )
 			return;
 
-		wp_register_script('podlove-d3-js',          \Podlove\PLUGIN_URL . '/node_modules/d3/d3.min.js');
-		wp_register_script('podlove-crossfilter-js', \Podlove\PLUGIN_URL . '/node_modules/crossfilter/crossfilter.min.js');
-		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/node_modules/dc/dc.min.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
+		wp_register_script('podlove-d3-js',          \Podlove\PLUGIN_URL . '/js/admin/d3.min.js');
+		wp_register_script('podlove-crossfilter-js', \Podlove\PLUGIN_URL . '/js/admin/crossfilter.min.js');
+		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/js/admin/dc.min.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
 	
 		wp_enqueue_script('podlove-dc-js');
 
-		wp_register_style( 'podlove-dc-css', \Podlove\PLUGIN_URL . '/node_modules/dc/dc.css', array(), \Podlove\get_plugin_header( 'Version' ) );
+		wp_register_style( 'podlove-dc-css', \Podlove\PLUGIN_URL . '/css/dc.css', array(), \Podlove\get_plugin_header( 'Version' ) );
 		wp_enqueue_style( 'podlove-dc-css' );
 	}
 
