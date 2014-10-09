@@ -20,6 +20,16 @@ class Analytics {
 
 		// add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );
+
+		add_action( 'load-' . self::$pagehook, function () {
+			add_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook, function () {
+				add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_release_downloads_chart', __( 'Downloads over Time', 'podlove' ), '\Podlove\Settings\Analytics::chart', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
+				add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_numbers', __( 'Download Numbers', 'podlove' ), '\Podlove\Settings\Analytics::numbers', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
+			} );
+			do_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook );
+
+			wp_enqueue_script( 'postbox' );
+		} );
 	}
 
 	public function scripts_and_styles() {
@@ -164,7 +174,7 @@ class Analytics {
 		<?php
 	}
 
-	private function render_episode_data_table() {
+	public static function numbers() {
 
 		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
 
@@ -191,47 +201,74 @@ class Analytics {
 
 			ob_start();
 			?>
-			<table>
-				<tbody>
-					<tr>
-						<td>Total Downloads</td>
-						<td><?php echo number_format_i18n($downloads['total']) ?></td>
-					</tr>
-					<tr>
-						<td>28 Days*</td>
-						<td><?php echo number_format_i18n($downloads['month']) ?></td>
-					</tr>
-					<tr>
-						<td>7 Days*</td>
-						<td><?php echo number_format_i18n($downloads['week']) ?></td>
-					</tr>
-					<tr>
-						<td>Yesterday</td>
-						<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
-					</tr>
-					<tr>
-						<td>Today</td>
-						<td><?php echo number_format_i18n($downloads['today']) ?></td>
-					</tr>
-					<tr>
-						<td>Peak Downloads/Day</td>
-						<td><?php echo sprintf(
-							"%s (%s)",
-							number_format_i18n($peak['downloads']),
-							mysql2date(get_option('date_format'), $peak['theday'])
-						) ?></td>
-					</tr>
-					<tr>
-						<td>Average Downloads/Day</td>
-						<td><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<em>* excluding today</em>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+
+			<div class="analytics-metric-box">
+				<span class="analytics-description">Average</span>
+				<span class="analytics-value"><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></span>
+				<span class="analytics-subtext">Downloads per Day</span>
+			</div>
+
+			<div class="analytics-metric-box">
+				<span class="analytics-description">Peak</span>
+				<span class="analytics-value"><?php echo number_format_i18n($peak['downloads']) ?></span>
+				<span class="analytics-subtext">Downloads<br>on <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
+			</div>
+
+			<div class="analytics-metric-box">
+				<span class="analytics-description">Total</span>
+				<span class="analytics-value"><?php echo number_format_i18n($downloads['total']) ?></span>
+				<span class="analytics-subtext">Downloads</span>
+			</div>
+
+			<div class="analytics-metric-box">
+				<table>
+					<tbody>
+						<tr>
+							<td>28 Days</td>
+							<td><?php echo number_format_i18n($downloads['month']) ?></td>
+						</tr>
+						<tr>
+							<td>7 Days</td>
+							<td><?php echo number_format_i18n($downloads['week']) ?></td>
+						</tr>
+						<tr>
+							<td>Yesterday</td>
+							<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
+						</tr>
+						<tr>
+							<td>Today</td>
+							<td><?php echo number_format_i18n($downloads['today']) ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<style type="text/css">
+			.analytics-metric-box {
+				text-align: center;
+				float: left;
+				margin: 20px 0 20px 20px;
+			}
+			.analytics-metric-box > span {
+				font-size: 23px;
+				line-height: 23px;
+				display: block;
+			}
+
+			.analytics-metric-box .analytics-value {
+				font-weight: bold;
+				line-height: 40px;
+			}
+
+			.analytics-metric-box .analytics-description,
+			.analytics-metric-box .analytics-subtext {
+				font-size: 14px;
+				line-height: 16px;
+				color: #666;
+			}
+			</style>
+
+			<div class="clear"></div>
 			<?php
 
 			$html = ob_get_contents();
@@ -239,7 +276,6 @@ class Analytics {
 			return $html;
 
 		}, 600); // 10 minutes
-
 
 	}
 
@@ -272,6 +308,44 @@ class Analytics {
 		}
 		</style>
 
+		<div id="poststuff" class="metabox-holder">
+
+			<!-- main -->
+			<div id="post-body">
+				<div id="post-body-content">
+					<?php do_meta_boxes( self::$pagehook, 'normal', NULL ); ?>					
+				</div>
+			</div>
+
+			<br class="clear"/>
+
+		</div>
+
+		<!-- Stuff for opening / closing metaboxes -->
+		<script type="text/javascript">
+		jQuery( document ).ready( function( $ ){
+			// close postboxes that should be closed
+			$( '.if-js-closed' ).removeClass( 'if-js-closed' ).addClass( 'closed' );
+			// postboxes setup
+			postboxes.add_postbox_toggles( '<?php echo self::$pagehook; ?>' );
+		} );
+		</script>
+
+		<form style='display: none' method='get' action=''>
+			<?php
+			wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+			wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+			?>
+		</form>
+
+		<?php
+	}
+
+	public static function chart() {
+		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
+		$post    = get_post( $episode->post_id );
+
+		?>
 		<div id="chart-grouping-selection">
 			<span style="line-height: 26px">Zoom</span>
 			<a href="#" class="button button-secondary">1h</a>
@@ -287,9 +361,8 @@ class Analytics {
 			id="episode-performance-chart" 
 			data-episode="<?php echo $episode->id ?>"
 			data-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $post->post_date_gmt ); ?>"
+			style="float: none"
 		></div>
-
-		<?php echo $this->render_episode_data_table(); ?>
 
 		<script type="text/javascript">
 		function print_filter(filter){
@@ -370,14 +443,17 @@ class Analytics {
 					    }
 					};
 
+					var chart_width = $("#episode-performance-chart").closest(".inside").width();
+
 					var compChart = dc.compositeChart("#episode-performance-chart")
-						.width(1050).height(250)
+						.width(chart_width)
+						.height(250)
 						.x(d3.scale.linear())
-						.legend(dc.legend().x(900).y(20).itemHeight(13).gap(5))
+						.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
 						.elasticX(true)
 						.brushOn(false)
 						.yAxisLabel("Downloads")
-						.xAxisLabel("Hours since release (" + d3.time.format("%Y-%m-%d")(episode_release_date) + ")")
+						.xAxisLabel("Hours since release")
 						.title(function(d) {
 							return [
 								(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
