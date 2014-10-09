@@ -215,6 +215,7 @@ add_action( 'init', array( '\Podlove\Analytics\EpisodeDownloadAverage', 'init' )
 add_action( 'init', array( '\Podlove\Analytics\DownloadIntentCleanup', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
+add_action( 'admin_init', array( '\Podlove\DeleteHeadRequests', 'init' ) );
 
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
@@ -820,6 +821,10 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 }, 10, 2);
 
 function handle_media_file_download() {
+	
+	// don't count HEAD requests
+	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'HEAD')
+		return;
 
 	if (isset($_GET['download_media_file'])) {
 		$download_media_file = $_GET['download_media_file'];
