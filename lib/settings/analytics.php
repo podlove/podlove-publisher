@@ -254,11 +254,6 @@ class Analytics {
 	public function show_template() {
 		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
 		$post    = get_post( $episode->post_id );
-
-		$topEpisodeIds = Model\DownloadIntentClean::top_episode_ids("1000 years ago", "now", 1);
-		$topEpisodeId  = $topEpisodeIds[0];
-		$topEpisode    = Model\Episode::find_one_by_id($topEpisodeId);
-		$topPost       = get_post( $topEpisode->post_id );
 		?>
 
 		<h2>
@@ -282,8 +277,6 @@ class Analytics {
 
 		<div 
 			id="episode-performance-chart" 
-			data-top-episode="<?php echo $topEpisode->id ?>" 
-			data-top-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $topPost->post_date_gmt ) ?>"
 			data-episode="<?php echo $episode->id ?>"
 			data-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $post->post_date_gmt ); ?>"
 		></div>
@@ -309,16 +302,13 @@ class Analytics {
 
 				var episode_id           = $chart.data("episode");
 				var episode_release_date = dateTimeFormat.parse($chart.data("episode-release-date"));
-				var top_episode_id       = $chart.data("top-episode");
-				var top_episode_release_date = dateTimeFormat.parse($chart.data("top-episode-release-date"));
 
 				var hours_per_unit = options.hours_per_unit;
 
 				$.when(
 					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
-					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + top_episode_id),
 					$.ajax(ajaxurl + "?action=podlove-analytics-average-downloads-per-hour")
-				).done(function(csvCurEpisode, csvTopEpisode, csvAvgEpisode) {
+				).done(function(csvCurEpisode, csvAvgEpisode) {
 
 					var csvMapper = function(d, reference_date) {
 						var parsed_date = dateFormat.parse(d.date);
@@ -339,12 +329,8 @@ class Analytics {
 					var csvMapper1 = function(d) {
 						return csvMapper(d, episode_release_date);
 					};
-					var csvMapper2 = function(d) {
-						return csvMapper(d, top_episode_release_date);
-					};
 
 					data1 = d3.csv.parse(csvCurEpisode[0], csvMapper1);
-					data2 = d3.csv.parse(csvTopEpisode[0], csvMapper2);
 					data3 = d3.csv.parse(csvAvgEpisode[0], function(d) {
 						return {
 							hoursSinceRelease: +d.hoursSinceRelease,
@@ -364,17 +350,6 @@ class Analytics {
 					        return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
 					    }
 					}
-					
-					// chart 2: top episode
-					var ndx            = crossfilter(data2);
-					var dateDim        = ndx.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
-					var downloadsTotal = dateDim.group().reduceSum(dc.pluck("downloads"));
-
-					var filteredDownloadsTotal = {
-					    all: function () {
-					        return downloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-					    }
-					};
 
 					// chart 3: average episode
 					var ndx            = crossfilter(data3);
@@ -420,12 +395,6 @@ class Analytics {
 										return "odd";
 									}
 								})
-								,
-							dc.lineChart(compChart)
-								.dimension(dateDim)
-								.group(filteredDownloadsTotal, "Top Episode")
-								.renderTitle(true)
-								.colors('#7C7416')
 								,
 							dc.lineChart(compChart)
 								.dimension(avgDateDim)
