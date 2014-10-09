@@ -58,7 +58,7 @@ class Downloads {
 		switch ($column_name) {
 			case 'downloads':
 				if ($episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID())) {
-					echo \Podlove\Model\DownloadIntent::total_by_episode_id($episode->id);
+					echo \Podlove\Model\DownloadIntentClean::total_by_episode_id($episode->id);
 				}
 			break;
 		}

@@ -102,16 +102,13 @@ class Downloads_List_Table extends \Podlove\List_Table {
 						COUNT(di2.id) downloads
 					FROM
 						" . Model\MediaFile::table_name() . " mf2
-						LEFT JOIN " . Model\DownloadIntent::table_name() . " di2 ON di2.media_file_id = mf2.id
+						LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di2 ON di2.media_file_id = mf2.id
 					WHERE
 						mf2.episode_id = e.id
 						$timerange
 				";
 			};
 
-			// TODO: find optimization options
-			// for example: how much faster is it if, instead of joining DownloadIntent,
-			// I join into a table with stuff already grouped by day?
 			$sql = "
 				SELECT
 					e.id,
@@ -126,7 +123,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 					" . Model\Episode::table_name() . " e
 					JOIN " . $wpdb->posts . " p ON e.post_id = p.ID
 					JOIN " . Model\MediaFile::table_name() . " mf ON e.id = mf.episode_id
-					LEFT JOIN " . Model\DownloadIntent::table_name() . " di ON di.media_file_id = mf.id
+					LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di ON di.media_file_id = mf.id
 				WHERE
 					p.post_status IN ('publish', 'private')
 				GROUP BY

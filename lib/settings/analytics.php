@@ -180,14 +180,14 @@ class Analytics {
 			$daysSinceRelease = $diff->days;
 
 			$downloads = array(
-				'total'     => Model\DownloadIntent::total_by_episode_id($episode->id, "1000 years ago", "now"),
-				'month'     => Model\DownloadIntent::total_by_episode_id($episode->id, "28 days ago", "yesterday"),
-				'week'      => Model\DownloadIntent::total_by_episode_id($episode->id, "7 days ago", "yesterday"),
-				'yesterday' => Model\DownloadIntent::total_by_episode_id($episode->id, "1 day ago"),
-				'today'     => Model\DownloadIntent::total_by_episode_id($episode->id, "now")
+				'total'     => Model\DownloadIntentClean::total_by_episode_id($episode->id, "1000 years ago", "now"),
+				'month'     => Model\DownloadIntentClean::total_by_episode_id($episode->id, "28 days ago", "yesterday"),
+				'week'      => Model\DownloadIntentClean::total_by_episode_id($episode->id, "7 days ago", "yesterday"),
+				'yesterday' => Model\DownloadIntentClean::total_by_episode_id($episode->id, "1 day ago"),
+				'today'     => Model\DownloadIntentClean::total_by_episode_id($episode->id, "now")
 			);
 
-			$peak = Model\DownloadIntent::peak_download_by_episode_id($episode->id);
+			$peak = Model\DownloadIntentClean::peak_download_by_episode_id($episode->id);
 
 			ob_start();
 			?>
@@ -255,7 +255,7 @@ class Analytics {
 		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
 		$post    = get_post( $episode->post_id );
 
-		$topEpisodeIds = Model\DownloadIntent::top_episode_ids("1000 years ago", "now", 1);
+		$topEpisodeIds = Model\DownloadIntentClean::top_episode_ids("1000 years ago", "now", 1);
 		$topEpisodeId  = $topEpisodeIds[0];
 		$topEpisode    = Model\Episode::find_one_by_id($topEpisodeId);
 		$topPost       = get_post( $topEpisode->post_id );
