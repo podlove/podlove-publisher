@@ -61,16 +61,11 @@ class EpisodeDownloadAverage
 
 		$sql = "
 			SELECT
-			  	COUNT(*) downloads, access_hour
-			FROM (
-				SELECT
-					media_file_id, DATE_FORMAT(accessed_at, '%%Y-%%m-%%d %%H') access_hour
-				FROM
-					" . \Podlove\Model\DownloadIntent::table_name() . " di 
-					INNER JOIN " . \Podlove\Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
+			  	COUNT(*) downloads, DATE_FORMAT(accessed_at, '%%Y-%%m-%%d %%H') AS access_hour
+			FROM		
+					`" . \Podlove\Model\DownloadIntentClean::table_name() . "` di 
+					INNER JOIN `" . \Podlove\Model\MediaFile::table_name() . "` mf ON mf.id = di.media_file_id
 					WHERE episode_id = %d
-				GROUP BY media_file_id, request_id, access_hour
-			) di
 			GROUP BY access_hour
 			ORDER BY access_hour
 			LIMIT %d
