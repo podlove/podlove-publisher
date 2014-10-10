@@ -187,8 +187,8 @@ class License {
 			$version = 'cc0';
 		} elseif (stripos($url, '/publicdomain/mark/')) {
 			$version = 'pdmark';
-		} elseif (stripos($url, 'by/4.0')) {
-			$version = 'cc4';		
+		} elseif (stripos($url, '/4.0')) {
+			$version = 'cc4';
 		} else {
 			$version = 'cc3';
 		}			
