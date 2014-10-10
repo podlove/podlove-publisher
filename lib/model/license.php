@@ -23,6 +23,7 @@ class License {
 		$this->type  			 = self::getLicenseType( $attributes['license_url'], $attributes['license_name'] );
 		$this->name  			 = $attributes['license_name'];
 		$this->url  			 = $attributes['license_url'];
+		$this->version  		 = $license['version'];
 		$this->modification  	 = $license['modification'] ;
 		$this->commercial_use  	 = $license['commercial_use'];
 		$this->jurisdiction   	 = $license['jurisdiction'];
@@ -92,11 +93,19 @@ class License {
 		if ($this->type != 'cc')
 			throw new \Exception("Only cc licenses have pictures");
 
+		if ($this->version == 'cc0')
+			return \Podlove\PLUGIN_URL
+			. "/images/cc/pd.png";
+
+		if ($this->version == 'pdmark')
+			return \Podlove\PLUGIN_URL
+			. "/images/cc/pdmark.png";
+
 		return \Podlove\PLUGIN_URL
 			. "/images/cc/"
 			. $this->getAllowModificationId() 
 			. "_"
-			. $this->getAlloCommercialUseId() 
+			. $this->getAllowCommercialUseId() 
 			. ".png";		
 	}
 
@@ -117,7 +126,7 @@ class License {
 		}
 	}
 
-	private function getAlloCommercialUseId() {
+	private function getAllowCommercialUseId() {
 		return $this->commercial_use == "no" ? "0" : "1";
 	}
 
@@ -151,7 +160,7 @@ class License {
 		if( !is_string( $license_url ) )
 			return;
 
-		if ( strpos( $license_url, 'creativecommons.org' ) === FALSE || strpos( $license_name, 'Creative Commons' ) === FALSE  )
+		if ( strpos( $license_url, 'creativecommons.org' ) === FALSE || strpos( $license_name, 'Creative Commons' ) === FALSE && strpos( $license_name, 'Public Domain' ) === FALSE )
 			return FALSE;
 
 		return TRUE;
@@ -174,8 +183,18 @@ class License {
 			3
 		);
 
+		if (stripos($url, '/publicdomain/zero/')) {
+			$version = 'cc0';
+		} elseif (stripos($url, '/publicdomain/mark/')) {
+			$version = 'pdmark';
+		} elseif (stripos($url, '/4.0')) {
+			$version = 'cc4';
+		} else {
+			$version = 'cc3';
+		}			
+
 		$license = array(
-			'version'        => $raw_extract[1],
+			'version'        => $version,
 			'commercial_use' => ( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
 			'modification'   => self::get_modification_state( $raw_extract[0] ),
 			'jurisdiction'   => ( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
@@ -187,8 +206,15 @@ class License {
 	public static function get_name_from_license( $license ) {
 
 		$locales = \Podlove\License\locales_cc();
+		$versions = \Podlove\License\version_per_country_cc();
 
 		$license_attributions = '';
+
+		if ( $license['version'] == 'pdmark' )
+			return 'Public Domain Mark License';
+
+		if ( $license['version'] == 'cc0' )
+			return 'Public Domain License';
 
 		if( $license['commercial_use'] == 'no' )
 			$license_attributions .= '-NonCommercial';
@@ -199,21 +225,36 @@ class License {
 		if( $license['modification'] == 'yesbutshare' )
 			$license_attributions .= '-ShareAlike';
 
-		return 'Creative Commons Attribution' . $license_attributions . ' ' . $license['version'] . ' ' .  ( $license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']] ) . ' License';
+		if ( $license['version'] == 'cc4' )
+			return 'Creative Commons Attribution' . $license_attributions . ' 4.0 International License';
+
+		return 'Creative Commons Attribution' . $license_attributions . ' ' . $versions[$license['jurisdiction']]['version'] . ' ' .  ( $license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']] ) . ' License';
 	}
 
 	public static function get_url_from_license( $license ) {
+		$versions = \Podlove\License\version_per_country_cc();
+
 		if( !is_array($license) )
 			return;
 
-		$url = 'http://creativecommons.org/licenses/by'
+		if ($license['version'] == "cc0")
+			return "http://creativecommons.org/publicdomain/zero/1.0/";
+
+		if ($license['version'] == "pdmark")
+			return "http://creativecommons.org/publicdomain/mark/1.0/";
+
+		if ($license['version'] == "cc4")
+			return 'http://creativecommons.org/licenses/by'
+					. ( $license['commercial_use'] == 'no' ? '-nc' : '' )
+					. ( $license['modification'] == 'yes' ? '/' : ( $license['modification'] == 'no' ? '-nd/' : '-sa/' ) )
+					. "4.0";
+
+		return 'http://creativecommons.org/licenses/by'
 				. ( $license['commercial_use'] == 'no' ? '-nc' : '' )
 				. ( $license['modification'] == 'yes' ? '/' : ( $license['modification'] == 'no' ? '-nd/' : '-sa/' ) )
-				. $license['version']
+				. $versions[$license['jurisdiction']]['version']
 				. ( $license['jurisdiction'] == 'international' ? '/' : '/'.$license['jurisdiction'].'/' )
 				. 'deed.en';
-
-		return $url;
 	}
 
 	private static function get_modification_state( $parameter_string ) {

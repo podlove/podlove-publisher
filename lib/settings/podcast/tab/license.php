@@ -47,7 +47,7 @@ class License extends Tab {
 
 			$wrapper->string( 'license_url', array(
 				'label'       => __( 'License URL', 'podlove' ),
-				'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
+				'description' => __( 'Example: http://creativecommons.org/licenses/by/4.0/', 'podlove' )
 			) );
 			?>
 				
@@ -65,6 +65,15 @@ class License extends Tab {
 					<th></th>
 					<td>
 						<div>
+							<label for="license_cc_version" class="podlove_cc_license_selector_label">Version</label>
+							<select id="license_cc_version">
+								<option value="cc0">Public Domain</option>
+								<option value="pdmark">Public Domain Mark</option>
+								<option value="cc3">Creative Commons 3.0 and earlier</option>
+								<option value="cc4">Creative Commons 4.0</option>
+							</select>
+						</div>
+						<div class="podlove-hide">
 							<label for="license_cc_allow_modifications" class="podlove_cc_license_selector_label">Allow modifications of your work?</label>
 							<select id="license_cc_allow_modifications">
 								<option value="yes">Yes</option>
@@ -72,14 +81,14 @@ class License extends Tab {
 								<option value="no">No</option>
 							</select>
 						</div>
-						<div>
+						<div class="podlove-hide">
 							<label for="license_cc_allow_commercial_use" class="podlove_cc_license_selector_label">Allow commercial uses of your work?</label>
 							<select id="license_cc_allow_commercial_use">
 								<option value="yes">Yes</option>
 								<option value="no">No</option>
 							</select>
 						</div>
-						<div>
+						<div class="podlove-hide">
 							<label for="license_cc_license_jurisdiction" class="podlove_cc_license_selector_label">License Jurisdiction</label>
 							<select id="license_cc_license_jurisdiction">
 								<?php
@@ -112,6 +121,7 @@ class License extends Tab {
 		PODLOVE.License({
 			plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
 
+			types: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
 			locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
 			versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
 			license: JSON.parse('<?php echo json_encode(\Podlove\Model\License::get_license_from_url($podcast->license_url)); ?>'),
