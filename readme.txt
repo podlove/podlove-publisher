@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * fix bug in contribution counting
 * simplify internal cache key handling to avoid technical issues
+* support more licenses (CC4.0, CC0, Public Domain)
 * tracking: don't count HEAD requests
 * tracking: add manual migration notice to delete accidentally recorded HEAD requests
 
