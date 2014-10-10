@@ -445,6 +445,32 @@ class Analytics {
 
 					var chart_width = $("#episode-performance-chart").closest(".inside").width();
 
+					var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
+						.dimension(curDateDim)
+						.group(curFilteredDownloadsTotal, "Current Episode")
+						.centerBar(true)
+						.xAxisPadding(0.6)
+						.renderTitle(true)
+						.colors(
+							d3.scale.ordinal()
+								.domain(["even","odd"])
+								.range(["#69A4A2","#9478B4"])
+						)
+						.colorAccessor(function(d) { 
+							if (Math.floor(d.key * hours_per_unit / 24) % 2 === 0) {
+								return "even";
+							} else {
+								return "odd";
+							}
+						});
+
+					var averageEpisodeChart = dc.lineChart(compChart)
+						.dimension(avgDateDim)
+						.group(avgFilteredDownloadsTotal, "Average Episode")
+						.renderTitle(true)
+						.colors('black')
+					;
+
 					var compChart = dc.compositeChart("#episode-performance-chart")
 						.width(chart_width)
 						.height(250)
@@ -460,32 +486,7 @@ class Analytics {
 								"Downloads: " + d.value
 							].join("\n");
 						})
-						.compose([
-							dc.barChart(compChart)
-								.dimension(curDateDim)
-								.group(curFilteredDownloadsTotal, "Current Episode")
-								.centerBar(true)
-								.xAxisPadding(0.6)
-								.renderTitle(true)
-								.colors(
-									d3.scale.ordinal()
-										.domain(["even","odd"])
-										.range(["#69A4A2","#9478B4"])
-								)
-								.colorAccessor(function(d) { 
-									if (Math.floor(d.key * hours_per_unit / 24) % 2 === 0) {
-										return "even";
-									} else {
-										return "odd";
-									}
-								})
-								,
-							dc.lineChart(compChart)
-								.dimension(avgDateDim)
-								.group(avgFilteredDownloadsTotal, "Average Episode")
-								.renderTitle(true)
-								.colors('black')
-						]);
+						.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart]);
 
 					compChart.yAxis().tickFormat(function(v) {
 						if (v < 1000)
