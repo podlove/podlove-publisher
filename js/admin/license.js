@@ -71,8 +71,6 @@ var PODLOVE = PODLOVE || {};
 				return '<img src="' + settings.plugin_url + '/images/cc/pd.png" alt="" />';
 			} else if (version_value == 'pdmark') {
 				return '<img src="' + settings.plugin_url + '/images/cc/pdmark.png" alt="" />';
-			} else if (version_value == 'cc4') {
-				return '<img src="' + settings.plugin_url + '/images/cc/1_1.png" alt="" />';
 			} else {
 				return '<img src="' + settings.plugin_url + '/images/cc/' + podlove_license_cc_get_image(modification_value, commercial_use_value) + '.png" alt="" />';
 			}
