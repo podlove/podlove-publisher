@@ -16,7 +16,7 @@
 	width: auto;
 }
 
-#fetch_auphonic_production_files, #reload_productions_button {
+.fetch_auphonic_production_files, #reload_productions_button {
 	width: 14px;
 	height: 12px;
 	padding: 0px 4px;
@@ -38,7 +38,7 @@
 	cursor: pointer;
 }
 
-#reload_productions_button, #fetch_auphonic_production_files {
+#reload_productions_button, .fetch_auphonic_production_files {
 	font-size: 14px;
 	cursor: pointer;
 }

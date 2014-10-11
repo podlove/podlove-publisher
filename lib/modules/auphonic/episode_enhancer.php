@@ -66,7 +66,7 @@ class EpisodeEnhancer {
 		<script type="text/template" id="podlove-auphonic-track-row">
 		<tr class="media_file_row">
 			<td class="podlove-auphonic-track-identifier">
-				<input type="text" class="regular-text" />
+				<input type="text" class="regular-text" id="auphonic_track_{{id}}" name="auphonic_track[{{id}}]" />
 			</td>
 			<td class="podlove-auphonic-sources">
 				<select id="auphonic_services_{{id}}" class="auphonic_services" data-trackid="{{id}}">
@@ -74,7 +74,7 @@ class EpisodeEnhancer {
 				</select>
 			</td>
 			<td>
-				<span id="fetch_auphonic_production_files_{{id}}" class="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>">
+				<span id="fetch_auphonic_production_files_{{id}}" class="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>" data-trackid="{{id}}">
 					<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 					<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 					<span class="state_success"><i class="podlove-icon-ok"></i></span>
