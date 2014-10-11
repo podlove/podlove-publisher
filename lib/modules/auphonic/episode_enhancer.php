@@ -69,7 +69,7 @@ class EpisodeEnhancer {
 				<input type="text" class="regular-text" />
 			</td>
 			<td class="podlove-auphonic-sources">
-				<select id="auphonic_services_{{id}}" class="auphonic_services">
+				<select id="auphonic_services_{{id}}" class="auphonic_services" data-trackid="{{id}}">
 					<option><?php echo __( 'Loading sources ...' ) ?></option>
 				</select>
 			</td>
