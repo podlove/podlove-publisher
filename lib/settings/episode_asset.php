@@ -343,7 +343,7 @@ class EpisodeAsset {
 			$f->string( 'title', array(
 				'label'       => __( 'Title', 'podlove' ),
 				'description' => __( 'Description to identify the media file type to the user in download buttons.', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required' )
+				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$f->checkbox( 'downloadable', array(
@@ -361,7 +361,7 @@ class EpisodeAsset {
 			$f->string( 'suffix', array(
 				'label'       => __( 'File Name Suffix', 'podlove' ),
 				'description' => __( 'Optional. Is appended to file name after episode slug.', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required' )
+				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 			?>
 			<tr class="row_podlove_asset_url_preview">

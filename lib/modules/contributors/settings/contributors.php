@@ -255,7 +255,7 @@ class Contributors {
 			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
 				'description' => 'Either a Gravatar email adress or a URL.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
 			) );
 
 			$wrapper->string( 'slug', array(
@@ -299,13 +299,13 @@ class Contributors {
 			$wrapper->string( 'privateemail', array(
 				'label'       => __( 'Contact email', 'podlove' ),
 				'description' => 'The provided email will be used for internal purposes only.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
 			) );
 			
 			$wrapper->string( 'publicemail', array(
 				'label'       => __( 'Public email', 'podlove' ),
 				'description' => 'This email will be displayed for public purposes.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
 			) );
 
 			$wrapper->subheader( __( 'Flattr', 'podlove' ) );

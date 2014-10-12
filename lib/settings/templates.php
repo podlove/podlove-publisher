@@ -255,7 +255,7 @@ class Templates {
 			$f->string( 'title', array(
 				'label'       => __( 'ID', 'podlove' ),
 				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required' )
+				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$f->text( 'content', array(

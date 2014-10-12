@@ -67,7 +67,7 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Title', 'podlove' ),
 						'description' => '',
 						'html'        => array(
-							'readonly' => 'readonly'
+							'readonly' => 'readonly podlove-check-input'
 						)
 					),
 					'position' => 1100
@@ -78,7 +78,7 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Subtitle', 'podlove' ),
 						'description' => '',
 						'html'        => array(
-							'class' => 'large-text autogrow',
+							'class' => 'large-text autogrow podlove-check-input',
 							'rows'  => 1
 						)
 					),
@@ -91,7 +91,7 @@ class Podcast_Post_Meta_Box {
 						'label'       => __( 'Summary', 'podlove' ),
 						'description' => '',
 						'html'        => array(
-							'class' => 'large-text autogrow',
+							'class' => 'large-text autogrow podlove-check-input',
 							'rows'  => 3
 						)
 					),
@@ -103,7 +103,7 @@ class Podcast_Post_Meta_Box {
 					'options' => array(
 						'label'       => __( 'Episode Media File Slug', 'podlove' ),
 						'description' => '',
-						'html'        => array( 'class' => 'regular-text' )
+						'html'        => array( 'class' => 'regular-text podlove-check-input' )
 					),
 					'position' => 510
 				),
@@ -113,7 +113,7 @@ class Podcast_Post_Meta_Box {
 					'options' => array(
 						'label'       => __( 'Duration', 'podlove' ),
 						'description' => '',
-						'html'        => array( 'class' => 'regular-text' )
+						'html'        => array( 'class' => 'regular-text podlove-check-input' )
 					),
 					'position' => 400
 				),
@@ -132,7 +132,7 @@ class Podcast_Post_Meta_Box {
 					'options' => array(
 						'label'       => __( 'Episode Cover Art URL', 'podlove' ),
 						'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
-						'html'        => array( 'class' => 'regular-text' )
+						'html'        => array( 'class' => 'regular-text podlove-check-input' )
 					),
 					'position' => 790
 				);
@@ -162,7 +162,7 @@ class Podcast_Post_Meta_Box {
 					'options' => array(
 						'label'       => __( 'Recording Date', 'podlove' ),
 						'description' => '',
-						'html'        => array( 'class' => 'regular-text' )
+						'html'        => array( 'class' => 'regular-text podlove-check-input' )
 					),
 					'position' => 750
 				);

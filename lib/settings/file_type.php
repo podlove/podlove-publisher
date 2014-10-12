@@ -166,6 +166,7 @@ class FileType {
 
 	 		$wrapper->string( 'name', array(
 	 			'label'       => __( 'Name', 'podlove' ),
+	 			'html' => array( 'class' => 'podlove-check-input' ),
 	 			'description' => '' ) );
 
 	 		$wrapper->select( 'type', array(
@@ -175,10 +176,12 @@ class FileType {
 
 	 		$wrapper->string( 'mime_type', array(
 	 			'label'       => __( 'Format Mime Type', 'podlove' ),
+	 			'html' => array( 'class' => 'podlove-check-input' ),
 	 			'description' => __( 'Example: audio/mp4', 'podlove' ) ) );
 
 	 		$wrapper->string( 'extension', array(
 	 			'label'       => __( 'Format Extension', 'podlove' ),
+	 			'html' => array( 'class' => 'podlove-check-input' ),
 	 			'description' => __( 'Example: m4a', 'podlove' ) ) );
 		} );
 	}

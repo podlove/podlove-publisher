@@ -51,10 +51,10 @@ class Redirects extends Tab {
 						<input type="checkbox" name="podlove_redirects[podlove_setting_redirect][{{index}}][active]" value="active">
 					</td>
 					<td>
-						<input type="text" name="podlove_redirects[podlove_setting_redirect][{{index}}][from]" value="{{redirect-from}}">
+						<input type="text" class="podlove-check-input" data-podlove-input-type="url" id="podlove_redirects_podlove_setting_redirect_{{index}}_from" name="podlove_redirects[podlove_setting_redirect][{{index}}][from]" value="{{redirect-from}}"><span class="podlove-input-status" data-podlove-input-status-for="podlove_redirects_podlove_setting_redirect_{{index}}_from"></span>
 					</td>
 					<td>
-						<input type="text" name="podlove_redirects[podlove_setting_redirect][{{index}}][to]" value="{{redirect-to}}">
+						<input type="text" class="podlove-check-input" data-podlove-input-type="url" id="podlove_redirects_podlove_setting_redirect_{{index}}_to" name="podlove_redirects[podlove_setting_redirect][{{index}}][to]" value="{{redirect-to}}"><span class="podlove-input-status" data-podlove-input-status-for="podlove_redirects_podlove_setting_redirect_{{index}}_to"></span>
 					</td>
 					<td>
 						<select name="podlove_redirects[podlove_setting_redirect][{{index}}][code]">
@@ -93,6 +93,7 @@ class Redirects extends Tab {
 						$("tbody", container_id).append($row);
 
 						$row.find("input[type=text]:first").focus();
+						clean_up_input();
 					}
 
 					$(document).ready(function() {

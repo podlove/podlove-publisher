@@ -761,7 +761,7 @@ class Social extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
+					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" id="podlove_contributor_services_{{id}}_{{service-id}}_value" class="podlove-service-value podlove-check-input" /><span class="podlove-input-status" data-podlove-input-status-for="podlove_contributor_services_{{id}}_{{service-id}}_value"></span>
 					<i class="podlove-icon-share podlove-service-link"></i>
 				</td>
 				<td>
@@ -820,6 +820,15 @@ class Social extends \Podlove\Modules\Base {
 							row.find(".podlove-service-value").attr("title", service.description);
 							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
 							row.find(".podlove-service-title").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
+
+							// If this is an Twitter or App.net account remove @
+							if ( service.title == 'Twitter' || service.title == 'App.net' )
+								row.find(".podlove-service-value").data("podlove-input-remove", "@");
+
+							// If this is an Website, check if the URL is valid
+							if ( service.title == 'Website' )
+								row.find(".podlove-service-value").data("podlove-input-type", "url");
+
 							i++; // continue using "i" which was already used to add the existing contributions
 						});
 					}
@@ -873,6 +882,7 @@ class Social extends \Podlove\Modules\Base {
 								
 								// Focus new service
 								$("#" + new_row_id + "_chzn").find("a").focus();
+								clean_up_input();
 							},
 							onRowDelete: function(tr) {
 								var object_id = tr.data("object-id"),

@@ -82,7 +82,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
+			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
 	}
@@ -100,7 +100,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<div>
-			<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html_attributes; ?>><?php echo $this->field_value; ?></textarea>
+			<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html_attributes; ?>><?php echo $this->field_value; ?></textarea><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
 	}
@@ -220,7 +220,7 @@ class Builder {
 
 		?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
+			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 			<br>
 			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes ?> />
 		</div>
@@ -240,7 +240,7 @@ class Builder {
 
 		?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
+			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 			<br>
 			<img src="<?php echo $this->field_value; ?>" class="podlove-avatar" />
 		</div>

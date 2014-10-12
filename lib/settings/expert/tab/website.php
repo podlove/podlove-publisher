@@ -128,7 +128,7 @@ class Website extends Tab {
 				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode pages: a complete, paginated list of episodes, sorted by publishing date.', 'podlove' ); ?>
 				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
 					<code><?php echo get_option('home') . $blog_prefix; ?></code>
-					<input name="podlove_website[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
+					<input class="podlove-check-input" name="podlove_website[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
 				</div>
 				
 				<script type="text/javascript">
@@ -245,7 +245,7 @@ class Website extends Tab {
 			),
 			/* $callback */ function () {
 				?>
-				<input name="podlove_website[url_template]" id="url_template" type="text" value="<?php echo \Podlove\get_setting( 'website', 'url_template' ) ?>" class="large-text">
+				<input name="podlove_website[url_template]" id="url_template" type="text" value="<?php echo \Podlove\get_setting( 'website', 'url_template' ) ?>" class="large-text podlove-check-input">
 				<p>
 					<span class="description">
 						<?php echo __( 'Is used to generate URLs. You probably don\'t want to change this.', 'podlove' ); ?>

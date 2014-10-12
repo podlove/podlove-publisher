@@ -46,19 +46,19 @@ class Description extends Tab {
 
 			$wrapper->string( 'title', array(
 				'label'       => __( 'Title', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text required' )
+				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$wrapper->string( 'subtitle', array(
 				'label'       => __( 'Subtitle', 'podlove' ),
 				'description' => __( 'Extension to the title. Clarify what the podcast is about.', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text' )
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->text( 'summary', array(
 				'label'       => __( 'Summary', 'podlove' ),
 				'description' => __( 'Elaborate description of the podcast\'s content.', 'podlove' ),
-				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
+				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
 			) );
 
 			$wrapper->select( 'language', array(

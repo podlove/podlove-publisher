@@ -57,7 +57,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$this->register_option( 'adn_auth_key', 'string', array(
 				'label'       => __( 'Authorization', 'podlove' ),
 				'description' => $description,
-				'html'        => array( 'class' => 'regular-text', 'placeholder' => 'App.net authentication code' )
+				'html'        => array( 'class' => 'regular-text podlove-check-input', 'placeholder' => 'App.net authentication code' )
 				) );
 			} else {
 				if ( $user = $this->api->fetch_authorized_user() ) { 
@@ -80,7 +80,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$this->register_option( 'adn_auth_key', 'hidden', array(
 				'label'       => __( 'Authorization', 'podlove' ),
 				'description' => $description,
-				'html'        => array( 'class' => 'regular-text' )
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				) );
 		
 				$this->register_option( 'adn_language_annotation', 'select', array(
@@ -124,9 +124,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 					'label' => __( 'Post delay', 'podlove' ),
 					'callback' => function() use ( $adn_post_delay_hours, $adn_post_delay_minutes ) {
 						?>
-							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_hours]" id="podlove_module_app_dot_net_adn_post_delay_hours" value="<?php echo( $adn_post_delay_hours ? $adn_post_delay_hours : '' ); ?>" class="regular-text" placeholder="00" >
+							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_hours]" id="podlove_module_app_dot_net_adn_post_delay_hours" value="<?php echo( $adn_post_delay_hours ? $adn_post_delay_hours : '' ); ?>" class="regular-text podlove-check-input" placeholder="00" >
 								<label for="podlove_module_app_dot_net_adn_post_delay_hours">Hours</label>
-							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_minutes]" id="podlove_module_app_dot_net_adn_post_delay_minutes" value="<?php echo( $adn_post_delay_minutes ? $adn_post_delay_minutes : '' ); ?>" class="regular-text" placeholder="00" >
+							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_minutes]" id="podlove_module_app_dot_net_adn_post_delay_minutes" value="<?php echo( $adn_post_delay_minutes ? $adn_post_delay_minutes : '' ); ?>" class="regular-text podlove-check-input" placeholder="00" >
 								<label for="podlove_module_app_dot_net_adn_post_delay_minutes">Minutes</label>
 						<?php
 					}
@@ -156,7 +156,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						$description = apply_filters( 'podlove_adn_tags_description', $description );
 						?>
 							<div>		
-								<textarea name="podlove_module_app_dot_net[adn_poster_announcement_text]" id="podlove_module_app_dot_net_adn_poster_announcement_text" cols="50" rows="4" placeholder="Check out the new {podcastTitle} episode: {linkedEpisodeTitle}"><?php echo $preview_text; ?></textarea>
+								<textarea name="podlove_module_app_dot_net[adn_poster_announcement_text]" class"podlove-check-input" id="podlove_module_app_dot_net_adn_poster_announcement_text" cols="50" rows="4" placeholder="Check out the new {podcastTitle} episode: {linkedEpisodeTitle}"><?php echo $preview_text; ?></textarea>
 							</div>
 							<span class="description"><?php echo $description; ?></span>
 						<?php

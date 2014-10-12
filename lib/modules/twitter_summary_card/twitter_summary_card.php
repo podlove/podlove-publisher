@@ -16,13 +16,13 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 			$this->register_option( 'site', 'string', array(
 				'label'       => __( 'Twitter Site', 'podlove' ),
 				'description' => __( '@username for the website used in the card footer', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text' )
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$this->register_option( 'creator', 'string', array(
 				'label'       => __( 'Twitter Creator', 'podlove' ),
 				'description' => __( '@username for the content creator / author', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text' )
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 		}
