@@ -419,6 +419,14 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Auphonic Account',
 					'logo'			=> 'auphonic-128.png',
 					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Foursquare',
+					'name'	 		=> 'foursquare',
+					'category'		=> 'social',
+					'description'	=> 'Foursquare Account',
+					'logo'			=> 'foursquare-128.png',
+					'url_scheme'	=> 'https://foursquare.com/%account-placeholder%'
 				)
 		);
 
