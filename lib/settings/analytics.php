@@ -41,7 +41,7 @@ class Analytics {
 
 		wp_register_script('podlove-d3-js',          \Podlove\PLUGIN_URL . '/js/admin/d3.min.js');
 		wp_register_script('podlove-crossfilter-js', \Podlove\PLUGIN_URL . '/js/admin/crossfilter.min.js');
-		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/js/admin/dc.min.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
+		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/js/admin/dc.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
 	
 		wp_enqueue_script('podlove-dc-js');
 
@@ -362,7 +362,10 @@ class Analytics {
 			data-episode="<?php echo $episode->id ?>"
 			data-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $post->post_date_gmt ); ?>"
 			style="float: none"
-		></div>
+			>
+		</div>
+
+		<div id="episode-range-chart" style="float: none"></div>
 
 		<script type="text/javascript">
 		function print_filter(filter){
@@ -373,10 +376,13 @@ class Analytics {
 			console.log(filter+"("+f.length+") = "+JSON.stringify(f).replace("[","[\n\t").replace(/}\,/g,"},\n\t").replace("]","\n]"));
 		} 
 
+		var rangeChart = dc.barChart("#episode-range-chart");
+		var compChart;
+		
 		(function ($) {
 
 			function render_episode_performance_chart(options) {
-				var $chart = $("#episode-performance-chart");
+				var $chart = jQuery("#episode-performance-chart");
 
 				var dateFormat     = d3.time.format("%Y-%m-%d %H");
 				var dateTimeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
@@ -385,6 +391,8 @@ class Analytics {
 				var episode_release_date = dateTimeFormat.parse($chart.data("episode-release-date"));
 
 				var hours_per_unit = options.hours_per_unit;
+
+				var chart_width = $("#episode-performance-chart").closest(".inside").width();
 
 				$.when(
 					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
@@ -400,6 +408,7 @@ class Analytics {
 						return {
 							date: parsed_date,
 							downloads: +d.downloads,
+							hour: d3.time.hour(parsed_date),
 							month: parsed_date.getMonth()+1,
 							year: parsed_date.getFullYear(),
 							days: +d.days,
@@ -418,11 +427,13 @@ class Analytics {
 							downloads: +d.downloads
 						};
 					});
-					
+
+					var ndx1              = crossfilter(data1);
+
+					var aggregatedDateDim = ndx1.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
+
 					// chart 1: current episode
-					var ndx               = crossfilter(data1);
-					var curDateDim        = ndx.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
-					var curDownloadsTotal = curDateDim.group().reduceSum(dc.pluck("downloads"));
+					var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
 
 					// filter after grouping
 					// @see http://stackoverflow.com/a/22018053/72448
@@ -433,8 +444,8 @@ class Analytics {
 					}
 
 					// chart 3: average episode
-					var ndx            = crossfilter(data3);
-					var avgDateDim     = ndx.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
+					var ndx3           = crossfilter(data3);
+					var avgDateDim     = ndx3.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 					var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
 
 					var avgFilteredDownloadsTotal = {
@@ -443,11 +454,9 @@ class Analytics {
 					    }
 					};
 
-					var chart_width = $("#episode-performance-chart").closest(".inside").width();
-
 					var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
-						.dimension(curDateDim)
-						.group(curFilteredDownloadsTotal, "Current Episode")
+						.dimension(aggregatedDateDim)
+						.group(curDownloadsTotal, "Current Episode")
 						.centerBar(true)
 						.xAxisPadding(0.6)
 						.renderTitle(true)
@@ -471,15 +480,17 @@ class Analytics {
 						.colors('black')
 					;
 
-					var compChart = dc.compositeChart("#episode-performance-chart")
+					compChart = dc.compositeChart("#episode-performance-chart")
 						.width(chart_width)
 						.height(250)
-						.x(d3.scale.linear())
+						.x(d3.scale.linear().domain([0,1000000]))
 						.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
 						.elasticX(true)
+						.elasticY(true)
 						.brushOn(false)
 						.yAxisLabel("Downloads")
 						.xAxisLabel("Hours since release")
+						.rangeChart(rangeChart)
 						.title(function(d) {
 							return [
 								(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
@@ -500,6 +511,37 @@ class Analytics {
 					});
 
 					compChart.render();
+
+					rangeChart
+						.width(chart_width)
+						.height(80)
+						.dimension(aggregatedDateDim)
+						.group(curDownloadsTotal)
+						.x(d3.scale.linear().domain([0,100000]))
+						.y(d3.scale.sqrt().domain([0,4000])) // FIXME 4000 must be filled i dynamically
+						.elasticX(true)
+						.centerBar(true)
+						.xAxisPadding(0.6)
+					;
+
+					rangeChart.yAxis().ticks([2]);
+					rangeChart.yAxis().tickFormat(function(v) {
+						if (v < 1000)
+							return v;
+						else
+							return (v/1000) + "k";
+					});
+
+					rangeChart.xAxis().tickFormat(function(v) {
+						return v * hours_per_unit + "h";
+					});
+
+					rangeChart.render();
+
+					rangeChart.brush()
+						.extent([0, 7*24/hours_per_unit])
+						.event(rangeChart.select('g.brush'));
+
 				});
 			}
 
