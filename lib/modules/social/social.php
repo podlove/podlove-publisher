@@ -419,6 +419,30 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Auphonic Account',
 					'logo'			=> 'auphonic-128.png',
 					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'ResearchGate',
+					'name'	 		=> 'researchgate',
+					'category'		=> 'social',
+					'description'	=> 'ResearchGate URL',
+					'logo'			=> 'researchgate-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'ORCiD',
+					'name'	 		=> 'orcid',
+					'category'		=> 'social',
+					'description'	=> 'ORCiD',
+					'logo'			=> 'orcid-128.png',
+					'url_scheme'	=> 'https://orcid.org/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Scopus',
+					'name'	 		=> 'scous',
+					'category'		=> 'social',
+					'description'	=> 'Scopus Author ID',
+					'logo'			=> 'scopus-128.png',
+					'url_scheme'	=> 'https://www.scopus.com/authid/detail.url?authorId=%account-placeholder%'
 				)
 		);
 
