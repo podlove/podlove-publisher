@@ -376,173 +376,180 @@ class Analytics {
 			console.log(filter+"("+f.length+") = "+JSON.stringify(f).replace("[","[\n\t").replace(/}\,/g,"},\n\t").replace("]","\n]"));
 		} 
 
-		var rangeChart = dc.barChart("#episode-range-chart");
-		var compChart;
-		
 		(function ($) {
+			var csvCurEpisodeRawData, csvAvgEpisodeRawData;
+
+			var $chart = jQuery("#episode-performance-chart");
+
+			var dateFormat     = d3.time.format("%Y-%m-%d %H");
+			var dateTimeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
+
+			var episode_id           = $chart.data("episode");
+			var episode_release_date = dateTimeFormat.parse($chart.data("episode-release-date"));
+
+			var chart_width = $("#episode-performance-chart").closest(".inside").width();
 
 			function render_episode_performance_chart(options) {
-				var $chart = jQuery("#episode-performance-chart");
-
-				var dateFormat     = d3.time.format("%Y-%m-%d %H");
-				var dateTimeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
-
-				var episode_id           = $chart.data("episode");
-				var episode_release_date = dateTimeFormat.parse($chart.data("episode-release-date"));
-
 				var hours_per_unit = options.hours_per_unit;
 
-				var chart_width = $("#episode-performance-chart").closest(".inside").width();
+				var ndx1 = crossfilter(csvCurEpisodeRawData);
 
-				$.when(
-					$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
-					$.ajax(ajaxurl + "?action=podlove-analytics-average-downloads-per-hour")
-				).done(function(csvCurEpisode, csvAvgEpisode) {
+				var aggregatedDateDim = ndx1.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 
-					var csvMapper = function(d, reference_date) {
-						var parsed_date = dateFormat.parse(d.date);
+				// chart 1: current episode
+				var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
 
-						// round reference_date to hours_per_unit
-						reference_date = reference_date - reference_date.getMinutes() * 1000 * 60 - reference_date.getSeconds() * 1000;
+				// filter after grouping
+				// @see http://stackoverflow.com/a/22018053/72448
+				var curFilteredDownloadsTotal = {
+				    all: function () {
+				        return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
+				    }
+				}
 
-						return {
-							date: parsed_date,
-							downloads: +d.downloads,
-							hour: d3.time.hour(parsed_date),
-							month: parsed_date.getMonth()+1,
-							year: parsed_date.getFullYear(),
-							days: +d.days,
-							hoursSinceRelease: Math.floor((parsed_date - reference_date) / 1000 / 3600)
-						};
-					};
+				// chart 3: average episode
+				var ndx3           = crossfilter(csvAvgEpisodeRawData);
+				var avgDateDim     = ndx3.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
+				var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
 
-					var csvMapper1 = function(d) {
-						return csvMapper(d, episode_release_date);
-					};
+				var avgFilteredDownloadsTotal = {
+				    all: function () {
+				        return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
+				    }
+				};
 
-					data1 = d3.csv.parse(csvCurEpisode[0], csvMapper1);
-					data3 = d3.csv.parse(csvAvgEpisode[0], function(d) {
-						return {
-							hoursSinceRelease: +d.hoursSinceRelease,
-							downloads: +d.downloads
-						};
+				var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
+					.dimension(aggregatedDateDim)
+					.group(curDownloadsTotal, "Current Episode")
+					.centerBar(true)
+					.xAxisPadding(0.6)
+					.renderTitle(true)
+					.colors(
+						d3.scale.ordinal()
+							.domain(["even","odd"])
+							.range(["#69A4A2","#9478B4"])
+					)
+					.colorAccessor(function(d) { 
+						if (Math.floor(d.key * hours_per_unit / 24) % 2 === 0) {
+							return "even";
+						} else {
+							return "odd";
+						}
 					});
 
-					var ndx1              = crossfilter(data1);
+				var averageEpisodeChart = dc.lineChart(compChart)
+					.dimension(avgDateDim)
+					.group(avgFilteredDownloadsTotal, "Average Episode")
+					.renderTitle(true)
+					.colors('black')
+				;
 
-					var aggregatedDateDim = ndx1.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
+				var rangeChart = dc.barChart("#episode-range-chart")
+					.width(chart_width)
+					.height(80)
+					.dimension(aggregatedDateDim)
+					.group(curDownloadsTotal)
+					.x(d3.scale.linear().domain([0,100000]))
+					.y(d3.scale.sqrt().domain([0,4000])) // FIXME 4000 must be filled i dynamically
+					.elasticX(true)
+					.centerBar(true)
+					.xAxisPadding(0.6)
+				;
 
-					// chart 1: current episode
-					var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
+				rangeChart.yAxis().ticks([2]);
+				rangeChart.yAxis().tickFormat(function(v) {
+					if (v < 1000)
+						return v;
+					else
+						return (v/1000) + "k";
+				});
 
-					// filter after grouping
-					// @see http://stackoverflow.com/a/22018053/72448
-					var curFilteredDownloadsTotal = {
-					    all: function () {
-					        return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-					    }
-					}
+				rangeChart.xAxis().tickFormat(function(v) {
+					return v * hours_per_unit + "h";
+				});
 
-					// chart 3: average episode
-					var ndx3           = crossfilter(data3);
-					var avgDateDim     = ndx3.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
-					var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
+				var compChart = dc.compositeChart("#episode-performance-chart")
+					.width(chart_width)
+					.height(250)
+					.x(d3.scale.linear().domain([0,1000000]))
+					.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
+					.elasticX(true)
+					.elasticY(true)
+					.brushOn(false)
+					.yAxisLabel("Downloads")
+					.xAxisLabel("Hours since release")
+					.rangeChart(rangeChart)
+					.title(function(d) {
+						return [
+							(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
+							"Downloads: " + d.value
+						].join("\n");
+					})
+					.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart]);
 
-					var avgFilteredDownloadsTotal = {
-					    all: function () {
-					        return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-					    }
-					};
+				compChart.yAxis().tickFormat(function(v) {
+					if (v < 1000)
+						return v;
+					else
+						return (v/1000) + "k";
+				});
 
-					var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
-						.dimension(aggregatedDateDim)
-						.group(curDownloadsTotal, "Current Episode")
-						.centerBar(true)
-						.xAxisPadding(0.6)
-						.renderTitle(true)
-						.colors(
-							d3.scale.ordinal()
-								.domain(["even","odd"])
-								.range(["#69A4A2","#9478B4"])
-						)
-						.colorAccessor(function(d) { 
-							if (Math.floor(d.key * hours_per_unit / 24) % 2 === 0) {
-								return "even";
-							} else {
-								return "odd";
-							}
+				compChart.xAxis().tickFormat(function(v) {
+					return v * hours_per_unit + "h";
+				});
+
+				compChart.render();
+				rangeChart.render();
+
+				rangeChart.brush()
+					.extent([0, 7*24/hours_per_unit])
+					.event(rangeChart.select('g.brush'));
+
+			}
+
+			function load_episode_performance_chart(options) {
+
+				if (csvCurEpisodeRawData) {
+					render_episode_performance_chart(options);
+				} else {
+					$.when(
+						$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
+						$.ajax(ajaxurl + "?action=podlove-analytics-average-downloads-per-hour")
+					).done(function(csvCurEpisode, csvAvgEpisode) {
+
+						var csvMapper = function(d, reference_date) {
+							var parsed_date = dateFormat.parse(d.date);
+
+							// round reference_date to hours_per_unit
+							reference_date = reference_date - reference_date.getMinutes() * 1000 * 60 - reference_date.getSeconds() * 1000;
+
+							return {
+								date: parsed_date,
+								downloads: +d.downloads,
+								hour: d3.time.hour(parsed_date),
+								month: parsed_date.getMonth()+1,
+								year: parsed_date.getFullYear(),
+								days: +d.days,
+								hoursSinceRelease: Math.floor((parsed_date - reference_date) / 1000 / 3600)
+							};
+						};
+
+						var csvMapper1 = function(d) {
+							return csvMapper(d, episode_release_date);
+						};
+
+						csvCurEpisodeRawData = d3.csv.parse(csvCurEpisode[0], csvMapper1);
+						csvAvgEpisodeRawData = d3.csv.parse(csvAvgEpisode[0], function(d) {
+							return {
+								hoursSinceRelease: +d.hoursSinceRelease,
+								downloads: +d.downloads
+							};
 						});
 
-					var averageEpisodeChart = dc.lineChart(compChart)
-						.dimension(avgDateDim)
-						.group(avgFilteredDownloadsTotal, "Average Episode")
-						.renderTitle(true)
-						.colors('black')
-					;
-
-					compChart = dc.compositeChart("#episode-performance-chart")
-						.width(chart_width)
-						.height(250)
-						.x(d3.scale.linear().domain([0,1000000]))
-						.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
-						.elasticX(true)
-						.elasticY(true)
-						.brushOn(false)
-						.yAxisLabel("Downloads")
-						.xAxisLabel("Hours since release")
-						.rangeChart(rangeChart)
-						.title(function(d) {
-							return [
-								(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
-								"Downloads: " + d.value
-							].join("\n");
-						})
-						.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart]);
-
-					compChart.yAxis().tickFormat(function(v) {
-						if (v < 1000)
-							return v;
-						else
-							return (v/1000) + "k";
+						render_episode_performance_chart(options);
 					});
+				}
 
-					compChart.xAxis().tickFormat(function(v) {
-						return v * hours_per_unit + "h";
-					});
-
-					compChart.render();
-
-					rangeChart
-						.width(chart_width)
-						.height(80)
-						.dimension(aggregatedDateDim)
-						.group(curDownloadsTotal)
-						.x(d3.scale.linear().domain([0,100000]))
-						.y(d3.scale.sqrt().domain([0,4000])) // FIXME 4000 must be filled i dynamically
-						.elasticX(true)
-						.centerBar(true)
-						.xAxisPadding(0.6)
-					;
-
-					rangeChart.yAxis().ticks([2]);
-					rangeChart.yAxis().tickFormat(function(v) {
-						if (v < 1000)
-							return v;
-						else
-							return (v/1000) + "k";
-					});
-
-					rangeChart.xAxis().tickFormat(function(v) {
-						return v * hours_per_unit + "h";
-					});
-
-					rangeChart.render();
-
-					rangeChart.brush()
-						.extent([0, 7*24/hours_per_unit])
-						.event(rangeChart.select('g.brush'));
-
-				});
 			}
 
 			$("#chart-grouping-selection").on("click", "a", function(e) {
@@ -551,7 +558,7 @@ class Analytics {
 				$(this).siblings().removeClass("active");
 				$(this).addClass("active");
 
-				render_episode_performance_chart({
+				load_episode_performance_chart({
 					hours_per_unit: hours
 				});
 
