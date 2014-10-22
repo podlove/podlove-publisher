@@ -117,14 +117,6 @@ class RSS {
 
 		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );
-
-		if ( ! have_posts() ) {
-			$wp_query->set_404();
-			status_header( 404 );
-			nocache_headers();
-			exit;
-		}
-
 	}
 
 	public static function render() {
