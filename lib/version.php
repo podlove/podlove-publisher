@@ -960,6 +960,16 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 86:
 			if (\Podlove\Modules\Base::is_active('social')) {
+				
+				$c = new \Podlove\Modules\Social\Model\Service;
+				$c->title = 'Foursquare';
+				$c->category = 'social';
+				$c->type = 'foursquare';
+				$c->description = 'Foursquare Account';
+				$c->logo = 'foursquare-128.png';
+				$c->url_scheme = 'https://foursquare.com/%account-placeholder%';
+				$c->save();
+ 
 				$services = array(
 					array(
 							'title' 		=> 'ResearchGate',
