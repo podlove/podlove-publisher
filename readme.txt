@@ -90,6 +90,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * add support for scientific networks: ResearchGate, ORCiD, Scopus
 * ADN module: add option to not fall back on episode cover when no episode image is present
 * add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+* fix social repair module
 
 = 1.10.22 =
 
