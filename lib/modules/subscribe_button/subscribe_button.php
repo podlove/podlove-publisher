@@ -22,13 +22,25 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 
 				switch ($file_type->name) {
 					case 'MPEG-4 AAC Audio':
-						$feeds['aac'] = $feed->get_subscribe_url();
+						$feeds[] = array(
+									'type' => $file_type->type,
+									'format' => 'aac',
+									'url' => $feed->get_subscribe_url()
+								);
 					break;
 					case 'Ogg Vorbis Audio':
-						$feeds['ogg'] = $feed->get_subscribe_url();
+						$feeds[] = array(
+									'type' => $file_type->type,
+									'format' => 'ogg',
+									'url' => $feed->get_subscribe_url()
+								);
 					break;
 					default:
-						$feeds[$file_type->extension] = $feed->get_subscribe_url();
+						$feeds[] = array(
+									'type' => $file_type->type,
+									'format' => $file_type->extension,
+									'url' => $feed->get_subscribe_url()
+								);
 					break;
 				}
 			}
