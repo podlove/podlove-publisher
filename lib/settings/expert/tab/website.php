@@ -39,7 +39,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_hide_wp_feed_discovery',
 			/* $title    */ sprintf(
 				'<label for="hide_wp_feed_discovery">%s</label>',
-				__( 'Deactivate blog feeds.', 'podlove' )
+				__( 'Hide blog feeds', 'podlove' )
 			),
 			/* $callback */ function () {
 				?>
