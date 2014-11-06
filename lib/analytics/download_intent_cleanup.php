@@ -45,6 +45,9 @@ class DownloadIntentCleanup {
 
 	public static function get_last_insert_id() {
 		global $wpdb;
-		return $wpdb->get_var("SELECT MAX(id) FROM " . Model\DownloadIntentClean::table_name());
+
+		$id = $wpdb->get_var("SELECT MAX(id) FROM " . Model\DownloadIntentClean::table_name());
+
+		return $id ? (int) $id : 0;
 	}
 }
