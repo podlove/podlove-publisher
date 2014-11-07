@@ -347,14 +347,14 @@ class Analytics {
 
 		?>
 		<div id="chart-grouping-selection">
-			<span style="line-height: 26px">Zoom</span>
+			<span style="line-height: 26px">Unit</span>
 			<a href="#" class="button button-secondary">1h</a>
 			<a href="#" class="button button-secondary">2h</a>
 			<a href="#" class="button button-secondary">3h</a>
 			<a href="#" class="button button-secondary">4h</a>
 			<a href="#" class="button button-secondary">6h</a>
 			<a href="#" class="button button-secondary">12h</a>
-			<a href="#" class="button button-secondary">24h</a>
+			<a href="#" class="button button-secondary">1d</a>
 		</div>
 
 		<div 
@@ -414,7 +414,24 @@ class Analytics {
 
 				var avgFilteredDownloadsTotal = {
 				    all: function () {
+				    	// console.log(avgDownloadsTotal.all());
 				        return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
+				    }
+				};
+
+		        var cumulativeDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads")).all()
+		                	.reduce(function (acc, cur) {
+		                		if (acc.length) {
+		        	        		cur.value += acc.slice(-1)[0].value;
+		                		}
+		                		acc.push(cur);
+		                		return acc;
+		                	}, [])
+		        ;
+
+				var filteredCumulativeDownloadsTotal = {
+				    all: function () {
+				        return cumulativeDownloadsTotal;
 				    }
 				};
 
@@ -442,6 +459,13 @@ class Analytics {
 					.group(avgFilteredDownloadsTotal, "Average Episode")
 					.renderTitle(true)
 					.colors('black')
+				;
+
+				var cumulativeEpisodeChart = dc.lineChart(compChart)
+					.dimension(avgDateDim)
+					.group(filteredCumulativeDownloadsTotal, "Cumulative")
+					.colors('red')
+					.useRightYAxis(true)
 				;
 
 				var rangeChart = dc.barChart("#episode-range-chart")
@@ -485,7 +509,9 @@ class Analytics {
 							"Downloads: " + d.value
 						].join("\n");
 					})
-					.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart]);
+					.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart, cumulativeEpisodeChart])
+					.rightYAxisLabel("Monthly Index Fnord")
+					;
 
 				compChart.yAxis().tickFormat(function(v) {
 					if (v < 1000)
@@ -496,6 +522,13 @@ class Analytics {
 
 				compChart.xAxis().tickFormat(function(v) {
 					return v * hours_per_unit + "h";
+				});
+
+				compChart.rightYAxis().tickFormat(function(v) {
+					if (v < 1000)
+						return v;
+					else
+						return (v/1000) + "k";
 				});
 
 				compChart.render();
