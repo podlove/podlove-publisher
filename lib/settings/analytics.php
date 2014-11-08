@@ -367,6 +367,8 @@ class Analytics {
 		</div>
 
 		<div id="episode-range-chart" style="float: none"></div>
+		
+		<div id="episode-weekday-chart" style="float: none"></div>
 
 		<script type="text/javascript">
 		function print_filter(filter){
@@ -580,8 +582,31 @@ class Analytics {
 						return (v/1000) + "k";
 				});
 
+				var dayOfWeek = ndx1.dimension(function (d) {
+			        var day = d.weekday;
+			        var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+			        return day+"."+name[day];
+			    });
+			    var dayOfWeekGroup = dayOfWeek.group().reduceSum(dc.pluck("downloads"));
+
+				var weekdayChart = dc.rowChart("#episode-weekday-chart")
+					.height(240)
+			        .margins({top: 20, left: 10, right: 10, bottom: 20})
+			        .group(dayOfWeekGroup)
+			        .dimension(dayOfWeek)
+			        .ordinalColors(["#16212B", "#163048","#234D76","#336799","#4985BE","#69A7E3", "#55A8F8"])
+			        .elasticX(true)
+			        .label(function (d) {
+	                    return d.key.split(".")[1];
+	                })
+	                .title(function (d) {
+                        return d.value;
+                    })
+				;
+
 				compChart.render();
 				rangeChart.render();
+				weekdayChart.render();
 
 				rangeChart.brush()
 					.extent([0, 7*24/hours_per_unit])
