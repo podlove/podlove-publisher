@@ -71,15 +71,14 @@ function run_database_migrations() {
 
 	if (is_multisite()) {
 		set_time_limit(0); // may take a while, depending on network size
-		$current_blog = $wpdb->blogid;
 		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
 		foreach ($blogids as $blog_id) {
 			switch_to_blog($blog_id);
 			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
 				migrate_for_current_blog();
 			}
+			restore_current_blog();
 		}
-		switch_to_blog($current_blog);
 	} else {
 		migrate_for_current_blog();
 	}

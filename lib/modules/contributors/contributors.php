@@ -334,7 +334,6 @@ class Contributors extends \Podlove\Modules\Base {
 				'male' => 0,
 				'female' => 0
 			);
-		$current_blog = get_current_blog_id();
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
 			if ( \Podlove\Modules\Base::is_active('contributors') ) {
@@ -343,8 +342,8 @@ class Contributors extends \Podlove\Modules\Base {
 				 }
 				$podcasts_with_contributors_active++;
 			}
+			restore_current_blog();
 		}
-		switch_to_blog( $current_blog );
 		?>
 		<tr>
 			<td class="podlove-dashboard-number-column">

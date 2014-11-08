@@ -18,7 +18,6 @@ class PodcastList extends Wrapper {
 	private $list;
 
 	public function __construct( $list ) {
-		$current_blog = get_current_blog_id();
 		$this->list = $list;
 
 		$podcasts = $list->get_podcasts();
@@ -30,10 +29,10 @@ class PodcastList extends Wrapper {
 			$podcast_instance->blog_id = $podcast->blog_id;
 			
 			$returned_podcasts[] = $podcast_instance;
+			restore_current_blog();
 		}
 
 		$this->list->podcasts = $returned_podcasts;
-		switch_to_blog( $current_blog );
 	}
 
 	protected function getExtraFilterArgs() {
@@ -107,7 +106,7 @@ class PodcastList extends Wrapper {
 		$number_of_episodes = ( isset( $args['limit'] ) && is_numeric( $args['limit'] ) ? $args['limit'] : 10 );
 		$orderby = ( isset( $args['orderby'] ) && $args['orderby'] ? $args['orderby'] : 'post_date' );
 		$order = ( isset( $args['order'] ) && $args['order'] ? $args['order'] : 'DESC' );
-		
+
 		return $this->list->latest_episodes( $number_of_episodes, $orderby, $order );
 	}
 }

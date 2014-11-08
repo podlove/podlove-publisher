@@ -167,9 +167,7 @@ function template_shortcode( $attributes ) {
 		if (!$template = Model\Template::find_one_by_title_with_fallback($template_id))
 			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
-		$current_blog_id = get_current_blog_id();
 		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
-		switch_to_blog($current_blog_id);
 
 		Model\Template::deactivate_network_scope();
 

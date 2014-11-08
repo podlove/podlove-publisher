@@ -12,7 +12,6 @@ class PodcastList extends Base {
 	*  Fetch Podcasts by List
 	*/
 	public static function fetch_podcasts_by_list( $list_id ) {
-		$current_blog_id = get_current_blog_id();
 		$list = self::find_by_id( $list_id );
 		if( !isset( $list ) ) 
 			return;
@@ -21,8 +20,8 @@ class PodcastList extends Base {
 		foreach ( explode( ',', $list->podcasts ) as $podcast ) {
 			switch_to_blog( $podcast );
 			$podcasts[ $podcast ] = \Podlove\Model\Podcast::get_instance();
+			restore_current_blog();
 		}
-		switch_to_blog( $current_blog_id );
 		return $podcasts;
 	}
 
@@ -72,12 +71,12 @@ class PodcastList extends Base {
 	 * Fetch all Podcasts ordered
 	 */
 	public static function all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
-		$current_blog_id = get_current_blog_id();
 		$blog_ids = self::all_podcasts();
 
 		foreach ($blog_ids as $blog_id) {
 			switch_to_blog( $blog_id );
 			$podcasts[ $blog_id ] = \Podlove\Model\Podcast::get_instance();
+			restore_current_blog();
 		}
 
 		uasort( $podcasts, function ( $a, $b ) use ( $sortby, $sort ) {
@@ -88,7 +87,6 @@ class PodcastList extends Base {
 			krsort( $podcasts );
 		}
 
-		switch_to_blog( $current_blog_id );
 		return $podcasts;	
 	}
 
@@ -96,7 +94,6 @@ class PodcastList extends Base {
 	 * Fetch all Pocasts in the current list
 	 */
 	public function get_podcasts() {
-		$current_blog_id = get_current_blog_id();
 		$podcasts = json_decode( $this->podcasts );
 
 		$podcast_objects = array();
@@ -107,11 +104,11 @@ class PodcastList extends Base {
 					$podcast_intance = \Podlove\Model\Podcast::get_instance();
 					$podcast_intance->blog_id = $podcast->podcast;
 					$podcast_objects[] = $podcast_intance;
+					restore_current_blog();
 				break;
 			}
 		}
 
-		switch_to_blog( $current_blog_id );
 		return $podcast_objects;
 	}
 
@@ -120,7 +117,6 @@ class PodcastList extends Base {
 	 */
 	public function latest_episodes( $number_of_episodes = "10", $orderby = "post_date", $order = "DESC" ) {
  		global $wpdb;
- 		$current_blog_id = get_current_blog_id();
 
  		$podcasts = $this->podcasts;
  		$query = "";
@@ -157,9 +153,9 @@ class PodcastList extends Base {
     				$episodes[] = new \Podlove\Template\Episode( $episode );
     			}
     			\Podlove\Model\Episode::activate_network_scope();
+    			restore_current_blog();
        	}
  
- 		switch_to_blog( $current_blog_id );
        	return $episodes;
 	}
 

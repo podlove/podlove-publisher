@@ -137,7 +137,8 @@ class Dashboard {
 			$episode_total_average_length += $statistics['average_episode_length'];
 			$days_between_episodes += $statistics['days_between_releases'];
 			$media_file_total_average_size += $statistics['average_media_file_size'];
-			$media_file_total_size += $statistics['total_media_file_size'];			
+			$media_file_total_size += $statistics['total_media_file_size'];
+			restore_current_blog();	
 		}
 
 		// Devide stats by number of Podcasts

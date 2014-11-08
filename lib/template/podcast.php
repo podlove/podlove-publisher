@@ -241,9 +241,11 @@ class Podcast extends Wrapper {
 
 		$rows = $wpdb->get_results($sql);
 
-		if (!$rows)
+		if (!$rows) {
+			restore_current_blog();
 			return array();
-		
+		}
+
 		$episodes = array();
 		foreach ($rows as $row) {
 			$episode = new \Podlove\Model\Episode();
