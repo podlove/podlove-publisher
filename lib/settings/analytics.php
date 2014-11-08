@@ -348,13 +348,15 @@ class Analytics {
 		?>
 		<div id="chart-grouping-selection">
 			<span style="line-height: 26px">Unit</span>
-			<a href="#" class="button button-secondary">1h</a>
-			<a href="#" class="button button-secondary">2h</a>
-			<a href="#" class="button button-secondary">3h</a>
-			<a href="#" class="button button-secondary">4h</a>
-			<a href="#" class="button button-secondary">6h</a>
-			<a href="#" class="button button-secondary">12h</a>
-			<a href="#" class="button button-secondary">1d</a>
+			<a href="#" data-hours="1" class="button button-secondary">1h</a>
+			<a href="#" data-hours="2" class="button button-secondary">2h</a>
+			<a href="#" data-hours="3" class="button button-secondary">3h</a>
+			<a href="#" data-hours="4" class="button button-secondary">4h</a>
+			<a href="#" data-hours="6" class="button button-secondary">6h</a>
+			<a href="#" data-hours="12" class="button button-secondary">12h</a>
+			<a href="#" data-hours="24" class="button button-secondary">1d</a>
+			<a href="#" data-hours="168" class="button button-secondary">7d</a>
+			<a href="#" data-hours="720" class="button button-secondary">30d</a>
 		</div>
 
 		<div 
@@ -586,7 +588,7 @@ class Analytics {
 			}
 
 			$("#chart-grouping-selection").on("click", "a", function(e) {
-				var hours = parseInt($(this).html(), 10);
+				var hours = parseInt($(this).data('hours'), 10);
 
 				$(this).siblings().removeClass("active");
 				$(this).addClass("active");
