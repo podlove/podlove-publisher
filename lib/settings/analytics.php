@@ -355,8 +355,8 @@ class Analytics {
 			<a href="#" data-hours="6" class="button button-secondary">6h</a>
 			<a href="#" data-hours="12" class="button button-secondary">12h</a>
 			<a href="#" data-hours="24" class="button button-secondary">1d</a>
-			<a href="#" data-hours="168" class="button button-secondary">7d</a>
-			<a href="#" data-hours="720" class="button button-secondary">30d</a>
+			<a href="#" data-hours="168" class="button button-secondary">1w</a>
+			<a href="#" data-hours="672" class="button button-secondary">4w</a>
 		</div>
 
 		<div 
