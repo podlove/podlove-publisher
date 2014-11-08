@@ -478,6 +478,13 @@ class Analytics {
 				    }
 				};
 
+				var dayOfWeek = ndx1.dimension(function (d) {
+			        var day = d.weekday;
+			        var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+			        return day+"."+name[day];
+			    });
+			    var dayOfWeekGroup = dayOfWeek.group().reduceSum(dc.pluck("downloads"));
+
 				var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
 					.dimension(aggregatedDateDim)
 					.group(curDownloadsTotal, "Current Episode")
@@ -582,13 +589,6 @@ class Analytics {
 						return (v/1000) + "k";
 				});
 
-				var dayOfWeek = ndx1.dimension(function (d) {
-			        var day = d.weekday;
-			        var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-			        return day+"."+name[day];
-			    });
-			    var dayOfWeekGroup = dayOfWeek.group().reduceSum(dc.pluck("downloads"));
-
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
 					.height(240)
 					.width(240)
@@ -604,6 +604,13 @@ class Analytics {
                         return d.value;
                     })
 				;
+
+				weekdayChart.xAxis().tickFormat(function(v) {
+					if (v < 1000)
+						return v;
+					else
+						return (v/1000) + "k";
+				});
 
 				compChart.render();
 				rangeChart.render();
