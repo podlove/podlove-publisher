@@ -8,29 +8,6 @@ use \Podlove\Model\Base;
  */
 class PodcastList extends Base {
 
-	/**
-	 * Override Base::table_name() to get the right prefix
-	 */
-	public static function table_name() {
-		global $wpdb;
-		
-		// Switching to the first blog in list (contains list tables) (It is always 1!)
-		switch_to_blog(1);
-		// get name of implementing class
-		$table_name = get_called_class();
-		// replace backslashes from namespace by underscores
-		$table_name = str_replace( '\\', '_', $table_name );
-		// remove Models subnamespace from name
-		$table_name = str_replace( 'Model_', '', $table_name );
-		// all lowercase
-		$table_name = strtolower( $table_name );
-		// prefix with $wpdb prefix
-		$prefix = $wpdb->prefix . $table_name;
-
-		restore_current_blog();
-		return $prefix;
-	}
-
 	/** 
 	*  Fetch Podcasts by List
 	*/
@@ -175,8 +152,11 @@ class PodcastList extends Base {
  
        	foreach ( $recent_posts as $post ) {
     			switch_to_blog( $post->blog_id );
-    			if ( $episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID ) )
+    			\Podlove\Model\Episode::deactivate_network_scope(); // Deactivate the network scope here, because we there are no global episodes ;-)
+    			if ( $episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID ) ) {
     				$episodes[] = new \Podlove\Template\Episode( $episode );
+    			}
+    			\Podlove\Model\Episode::activate_network_scope();
        	}
  
  		switch_to_blog( $current_blog_id );

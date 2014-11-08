@@ -1,6 +1,6 @@
 <?php 
 namespace Podlove\Modules\Networks\Settings;
-use \Podlove\Modules\Networks\Model\Template;
+use \Podlove\Model\Template;
 
 class Templates {
 
@@ -49,9 +49,11 @@ class Templates {
 	private function save() {
 		if ( ! isset( $_REQUEST['template'] ) )
 			return;
-			
-		$template = \Podlove\Modules\Networks\Model\Template::find_by_id( $_REQUEST['template'] );
+		
+		Template::activate_network_scope();
+		$template = Template::find_by_id( $_REQUEST['template'] );
 		$template->update_attributes( $_POST['podlove_template'] );
+		Template::deactivate_network_scope();
 
 		if (isset($_POST['submit_and_stay'])) {
 			$this->redirect( 'edit', $template->id );
@@ -66,8 +68,10 @@ class Templates {
 	private function create() {
 		global $wpdb;
 		
-		$template = new \Podlove\Modules\Networks\Model\Template;
+		Template::activate_network_scope();
+		$template = new Template;
 		$template->update_attributes( $_POST['podlove_template'] );
+		Template::deactivate_network_scope();
 
 		if (isset($_POST['submit_and_stay'])) {
 			$this->redirect( 'edit', $template->id );
@@ -83,7 +87,9 @@ class Templates {
 		if ( ! isset( $_REQUEST['template'] ) )
 			return;
 
-		\Podlove\Modules\Networks\Model\Template::find_by_id( $_REQUEST['template'] )->delete();
+		Template::activate_network_scope();
+		Template::find_by_id( $_REQUEST['template'] )->delete();
+		Template::deactivate_network_scope();
 		
 		$this->redirect( 'index' );
 	}
@@ -119,6 +125,7 @@ class Templates {
 	public function page() {
 
 		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
+		Template::activate_network_scope();
 
 		if ( $action == 'confirm_delete' && isset( $_REQUEST['template'] ) ) {
 			?>
@@ -132,7 +139,7 @@ class Templates {
 					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove' ) ?>
 				</p>
 				<p>
-					<?php echo self::get_action_link( \Podlove\Modules\Networks\Model\Template::find_by_id( (int) $_REQUEST['template'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( Template::find_by_id( (int) $_REQUEST['template'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
 				</p>
 			</div>
 			<?php
@@ -152,6 +159,7 @@ class Templates {
 			?>
 		</div>	
 		<?php
+		Template::deactivate_network_scope();
 	}
 
 	private function view_template() {
@@ -190,11 +198,13 @@ class Templates {
 	}
 
 	private function new_template() {
-		$template = new \Podlove\Modules\Networks\Model\Template;
+		Template::activate_network_scope();
+		$template = new Template;
 		?>
 		<h3><?php echo __( 'Add New Template', 'podlove' ); ?></h3>
 		<?php
 		$this->form_template( $template, 'create', __( 'Add New Template', 'podlove' ) );
+		Template::deactivate_network_scope();
 	}
 
 	private function form_template( $template, $action, $button_text = NULL ) {
@@ -269,9 +279,11 @@ class Templates {
 	}
 	
 	private function edit_template() {
-		$template = \Podlove\Modules\Networks\Model\Template::find_by_id( $_REQUEST['template'] );
+		Template::activate_network_scope();
+		$template = Template::find_by_id( $_REQUEST['template'] );
 		echo '<h3>' . sprintf( __( 'Edit Template: %s', 'podlove' ), $template->title ) . '</h3>';
 		$this->form_template( $template, 'save' );
+		Template::deactivate_network_scope();
 	}
 
 }

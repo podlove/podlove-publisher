@@ -3,7 +3,7 @@ namespace Podlove\Modules\Networks;
 
 use \Podlove\Model;
 use \Podlove\Modules\Networks\Model\PodcastList;
-use \Podlove\Modules\Networks\Model\Template;
+use \Podlove\Model\Template;
 
 class Networks extends \Podlove\Modules\Base {
 
@@ -65,7 +65,7 @@ class Networks extends \Podlove\Modules\Base {
 
 	public function twig_template_filter( $context ) {
 		$podlove = new \Podlove\Modules\Networks\Template\Podlove;
-
+		
 		return array_merge($context, array( 'podlove' => $podlove ));
 	}
 
@@ -73,8 +73,13 @@ class Networks extends \Podlove\Modules\Base {
 	 *	Was activated
 	 */
 	public function was_activated( $module_name ) {
+		PodcastList::activate_network_scope();
 		PodcastList::build();
+		PodcastList::deactivate_network_scope();
+		
+		Template::activate_network_scope();
 		Template::build();
+		Template::deactivate_network_scope();
 	}
 
 	/*
@@ -82,7 +87,9 @@ class Networks extends \Podlove\Modules\Base {
 	 */
 	public function create_network_toolbar( $wp_admin_bar ) {
 		$network_dashboard_url = network_site_url() . 'wp-admin/network/admin.php?page=podlove_network_settings_handle';
+		PodcastList::activate_network_scope();
 		$podcasts = PodcastList::all_podcasts();
+		PodcastList::deactivate_network_scope();
 		$podcast_admin_url = get_admin_url();
 
 		// Podlove Toolbar Icon
@@ -162,6 +169,8 @@ class Networks extends \Podlove\Modules\Base {
 
 			restore_current_blog();
 		}
+
+
 	}
 
 	/*

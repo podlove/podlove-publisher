@@ -1,36 +1,22 @@
 <?php
 namespace Podlove\Model;
 
+use \Podlove\Model\Template;
+
 /**
  * Episode Templates.
  */
 class Template extends Base {
 
-	public static function find_one_by_title( $title ) {
-		if ( ! $template = self::fetch_template_by_title( $title ) ) {
-			if ( \Podlove\Modules\Base::is_active('networks') ) {
-				switch_to_blog ( 1 );
-				if ( ! $template = \Podlove\Modules\Networks\Model\Template::fetch_template_by_title( $title ) ) {
-					restore_current_blog();
-					return NULL;
-				}
-			}
+	public static function find_one_by_title_with_fallback($template_id) {
+		if ( $template = self::find_one_by_title($template_id) ) {
+			return $template;
 		}
-		return $template;
-	}
+		
+		self::activate_network_scope();
+		$global_template = self::find_one_by_title($template_id);
 
-	public static function fetch_template_by_title( $title ) {
-		global $wpdb;
-		
-		$row = $wpdb->get_row(
-			'SELECT * FROM ' . self::table_name() . ' WHERE `title` = \'' . $title . '\' LIMIT 0,1'
-		);
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		return $row;
+		return $global_template;
 	}
 
 }

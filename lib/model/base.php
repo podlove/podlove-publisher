@@ -19,7 +19,7 @@ abstract class Base
 	/**
 	 * Enables or disables network scope
 	 */
-	private static $is_network = false;
+	public static $is_network = false;
 	
 	public function __set( $name, $value ) {
 		if ( self::has_property( $name ) ) {
@@ -593,7 +593,7 @@ abstract class Base
 		global $wpdb;
 		
 		if ( self::$is_network )
-			return $wpdb->base_prefix . self::name();
+			return $wpdb->base_prefix . 'global_' . self::name();
 
 		// prefix with $wpdb prefix
 		return $wpdb->prefix . self::name();

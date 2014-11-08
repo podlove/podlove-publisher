@@ -81,7 +81,9 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		$hidden = array();
 		$sortable = false;
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		PodcastList::activate_network_scope();
 		$items = \Podlove\Modules\Networks\Model\PodcastList::all();
+		PodcastList::deactivate_network_scope();
 
 		uasort( $items, function ( $a, $b ) {
 			return strnatcmp( $a->title, $b->title );

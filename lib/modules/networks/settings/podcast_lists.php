@@ -52,8 +52,10 @@ class PodcastLists {
 
 		$_POST['podlove_list']['podcasts'] = json_encode( $podcasts );
 
+		PodcastList::activate_network_scope();
 		$list = PodcastList::find_by_id( $_REQUEST['list'] );
 		$list->update_attributes( $_POST['podlove_list'] );
+		PodcastList::deactivate_network_scope();
 		
 		$this->redirect( 'index', $list->id );
 	}
@@ -71,8 +73,11 @@ class PodcastLists {
 
 		$_POST['podlove_list']['podcasts'] = json_encode( $podcasts );
 		
+		PodcastList::activate_network_scope();
 		$list = new PodcastList;
 		$list->update_attributes( $_POST['podlove_list'] );
+		PodcastList::deactivate_network_scope();
+
 		$this->redirect( 'index' );
 	}
 	
@@ -83,7 +88,9 @@ class PodcastLists {
 		if ( ! isset( $_REQUEST['list'] ) )
 			return;
 
+		PodcastList::activate_network_scope();
 		PodcastList::find_by_id( $_REQUEST['list'] )->delete();
+		PodcastList::deactivate_network_scope();
 		
 		$this->redirect( 'index' );
 	}
@@ -119,17 +126,21 @@ class PodcastLists {
 	}
 
 	private function new_template() {
+		PodcastList::activate_network_scope();
 		$list = new PodcastList;
 		?>
 		<h3><?php echo __( 'Add New list', 'podlove' ); ?></h3>
 		<?php
 		$this->form_template( $list, 'create', __( 'Add New list', 'podlove' ) );
+		PodcastList::deactivate_network_scope();
 	}
 	
 	private function edit_template() {
+		PodcastList::activate_network_scope();
 		$list = PodcastList::find_by_id( $_REQUEST['list'] );
 		echo '<h3>' . sprintf( __( 'Edit list: %s', 'podlove' ), $list->title ) . '</h3>';
 		$this->form_template( $list, 'save' );
+		PodcastList::deactivate_network_scope();
 	}
 
 	private function form_template( $list, $action, $button_text = NULL ) {
@@ -327,7 +338,9 @@ class PodcastLists {
 
 	function page() {
 		if ( isset($_GET["action"]) AND $_GET["action"] == 'confirm_delete' AND isset( $_REQUEST['list'] ) ) {
+			 PodcastList::activate_network_scope();
 			 $list = PodcastList::find_by_id( $_REQUEST['list'] );
+			 PodcastList::deactivate_network_scope();
 			?>
 			<div class="updated">
 				<p>

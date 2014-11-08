@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Modules\Networks;
 
+use \Podlove\Model\Template;
+
 class Template_List_Table extends \Podlove\List_Table {
 	
 	function __construct(){
@@ -54,7 +56,9 @@ class Template_List_Table extends \Podlove\List_Table {
 		
 		// retrieve data
 		// TODO select data for current page only
-		$data = \Podlove\Modules\Networks\Model\Template::all();
+		Template::activate_network_scope();
+		$data = Template::all();
+		Template::deactivate_network_scope();
 		
 		// get current page
 		$current_page = $this->get_pagenum();
