@@ -392,13 +392,20 @@ class Analytics {
 			var chart_width = $("#episode-performance-chart").closest(".inside").width();
 
 			function hour_format (hours) {
-				var days = 0;
-				var label = [];
+				var days = 0, weeks = 0, label = [];
 
 				if (hours > 48) {
 					days  = (hours - hours % 24) / 24;
 					hours = hours % 24;
 				}
+
+				if (days > 13) {
+					weeks = (days - days % 7) / 7;
+					days  = days % 7;
+				};
+
+				if (weeks)
+					label.push(weeks + "w");
 
 				if (days)
 					label.push(days + "d");
