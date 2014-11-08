@@ -368,7 +368,9 @@ class Analytics {
 
 		<div id="episode-range-chart" style="float: none"></div>
 		
-		<div id="episode-weekday-chart" style="float: none"></div>
+		<div id="episode-weekday-chart" style="float: left"></div>
+
+		<div id="episode-asset-chart" style="float: none"></div>
 
 		<script type="text/javascript">
 		function print_filter(filter){
@@ -378,6 +380,16 @@ class Analytics {
 			if (typeof(f.dimension) != "undefined") {f=f.dimension(function(d) { return "";}).top(Infinity);}else{}
 			console.log(filter+"("+f.length+") = "+JSON.stringify(f).replace("[","[\n\t").replace(/}\,/g,"},\n\t").replace("]","\n]"));
 		} 
+
+		var assetNames = <?php
+			$assets = Model\EpisodeAsset::all();
+			echo json_encode(
+				array_combine(
+					array_map(function($a) { return $a->id; }, $assets),
+					array_map(function($a) { return $a->title; }, $assets)
+				)
+			);
+		?>;
 
 		(function ($) {
 			var csvCurEpisodeRawData, csvAvgEpisodeRawData;
@@ -416,6 +428,29 @@ class Analytics {
 				return label.join(" ");
 			}
 
+			var reduceAddFun = function (p, v) {
+				
+				p.downloads += v.downloads;
+
+				p.weekday  = v.weekday;
+				p.asset_id = v.asset_id;
+				p.date     = v.date;
+
+				return p;
+			};
+			var reduceSubFun = function (p, v) { 
+				p.downloads -= v.downloads;
+				return p;
+			};
+			var reduceBaseFun = function () {
+				return {
+					downloads: 0,
+					weekday: 0,
+					asset_id: 0,
+					date: 0
+				};
+			};
+
 			function render_episode_performance_chart(options) {
 				var hours_per_unit = options.hours_per_unit;
 
@@ -425,22 +460,7 @@ class Analytics {
 
 				// chart 1: current episode
 				// var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
-				var curDownloadsTotal = aggregatedDateDim.group().reduce(
-					function (p, v) {
-						p.downloads += v.downloads;
-						p.weekday = v.weekday;
-						p.date = v.date;
-
-						return p;
-					},
-					function (p, v) { },
-					function () {
-						return {
-							downloads: 0,
-							weekday: 0
-						};
-					}
-				);
+				var curDownloadsTotal = aggregatedDateDim.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				// filter after grouping
 				// @see http://stackoverflow.com/a/22018053/72448
@@ -479,11 +499,12 @@ class Analytics {
 				};
 
 				var dayOfWeek = ndx1.dimension(function (d) {
-			        var day = d.weekday;
-			        var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-			        return day+"."+name[day];
+					return d.weekday;
+			        // var day = d.weekday;
+			        // var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+			        // return day+"."+name[day];
 			    });
-			    var dayOfWeekGroup = dayOfWeek.group().reduceSum(dc.pluck("downloads"));
+			    var dayOfWeekGroup = dayOfWeek.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
 					.dimension(aggregatedDateDim)
@@ -504,7 +525,11 @@ class Analytics {
 					// 	}
 					// })
 					.valueAccessor(function (v) {
-						return v.value.downloads;
+						if (v.value) {
+							return v.value.downloads;
+						} else {
+							return 0;
+						}
 					})
 				;
 
@@ -589,6 +614,7 @@ class Analytics {
 						return (v/1000) + "k";
 				});
 
+	        	var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
 					.height(240)
 					.width(240)
@@ -598,10 +624,17 @@ class Analytics {
 			        .ordinalColors(["#16212B", "#163048","#234D76","#336799","#4985BE","#69A7E3", "#55A8F8"])
 			        .elasticX(true)
 			        .label(function (d) {
-	                    return d.key.split(".")[1];
+			        	return weekdayNames[d.key];
 	                })
 	                .title(function (d) {
-                        return d.value;
+                        return d.value.downloads;
+                    })
+                    .valueAccessor(function (v) {
+                    	if (v.value) {
+                    		return v.value.downloads;
+                    	} else {
+                    		return 0;
+                    	}
                     })
 				;
 
@@ -612,9 +645,34 @@ class Analytics {
 						return (v/1000) + "k";
 				});
 
+				var assets = ndx1.dimension(function (d) {
+					return d.asset_id;
+			    });
+			    var assetsGroup = assets.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				var assetChart = dc.rowChart("#episode-asset-chart")
+					.width(240)
+					.height(240)
+					.margins({top: 20, left: 10, right: 10, bottom: 20})
+					.elasticX(true)
+					.dimension(assets) // set dimension
+					.group(assetsGroup) // set group
+					.valueAccessor(function (v) {
+						if (v.value) {
+							return v.value.downloads;
+						} else {
+							return 0;
+						}
+					})
+			        .label(function (d) {
+			        	return assetNames[d.key];
+	                })
+			   ;
+
 				compChart.render();
 				rangeChart.render();
 				weekdayChart.render();
+				assetChart.render();
 
 				rangeChart.brush()
 					.extent([0, 7*24/hours_per_unit])
@@ -643,7 +701,8 @@ class Analytics {
 								year: parsed_date.getFullYear(),
 								// days: +d.days,
 								weekday: parsed_date.getDay(),
-								hoursSinceRelease: +d.hours_since_release
+								hoursSinceRelease: +d.hours_since_release,
+								asset_id: +d.asset_id
 							};
 						};
 
