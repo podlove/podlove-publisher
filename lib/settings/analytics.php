@@ -424,15 +424,31 @@ class Analytics {
 				var aggregatedDateDim = ndx1.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 
 				// chart 1: current episode
-				var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
+				// var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
+				var curDownloadsTotal = aggregatedDateDim.group().reduce(
+					function (p, v) {
+						p.downloads += v.downloads;
+						p.weekday = v.weekday;
+						p.date = v.date;
+
+						return p;
+					},
+					function (p, v) { },
+					function () {
+						return {
+							downloads: 0,
+							weekday: 0
+						};
+					}
+				);
 
 				// filter after grouping
 				// @see http://stackoverflow.com/a/22018053/72448
-				var curFilteredDownloadsTotal = {
-				    all: function () {
-				        return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-				    }
-				}
+				// var curFilteredDownloadsTotal = {
+				//     all: function () {
+				//         return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
+				//     }
+				// }
 
 				// chart 3: average episode
 				var ndx3           = crossfilter(csvAvgEpisodeRawData);
@@ -479,7 +495,11 @@ class Analytics {
 						} else {
 							return "odd";
 						}
-					});
+					})
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
+				;
 
 				var averageEpisodeChart = dc.lineChart(compChart)
 					.dimension(avgDateDim)
@@ -532,8 +552,9 @@ class Analytics {
 					.rangeChart(rangeChart)
 					.title(function(d) {
 						return [
-							(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h",
-							"Downloads: " + d.value
+							d.value.date ? d3.time.format("%Y-%m-%d")(d.value.date) : "",
+							(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h after release",
+							"Downloads: " + d.value.downloads
 						].join("\n");
 					})
 					.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart, cumulativeEpisodeChart])
@@ -590,6 +611,7 @@ class Analytics {
 								month: parsed_date.getMonth()+1,
 								year: parsed_date.getFullYear(),
 								days: +d.days,
+								weekday: parsed_date.getDay(),
 								hoursSinceRelease: Math.floor((parsed_date - reference_date) / 1000 / 3600)
 							};
 						};
