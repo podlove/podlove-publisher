@@ -23,9 +23,10 @@ class DownloadIntentCleanup {
 	public static function cleanup_download_intents() {
 		global $wpdb;
 
-		$sql = "INSERT INTO `" . Model\DownloadIntentClean::table_name() . "` (`id`, `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`)
+		$sql = "INSERT INTO `" . Model\DownloadIntentClean::table_name() . "` (`id`, `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`, `hours_since_release`)
 		SELECT
-			di.id, `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`
+			di.id, `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`,
+			TIMESTAMPDIFF(HOUR, p.post_date_gmt, accessed_at)
 		FROM
 			`" . Model\DownloadIntent::table_name() . "` di
 			INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id -- filter dead intents

@@ -149,21 +149,17 @@ class Ajax {
 		$content = $cache->cache_for($cache_key, function() use ($episode_id) {
 			global $wpdb;
 
-			$sql = "SELECT COUNT(*) downloads, DATE_FORMAT(accessed_at, '%Y-%m-%d %H') AS access_hour
+			$sql = "SELECT COUNT(*) downloads, DATE_FORMAT(accessed_at, '%Y-%m-%d') AS access_date, hours_since_release
 					FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						WHERE episode_id = $episode_id
-						GROUP BY access_hour";
+						GROUP BY hours_since_release";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$release_date = min(array_column($results, 1));
-			$release_date = reset(explode(" ", $release_date)); // chop off hour
-
-			$csv = '"downloads","date","days"' . "\n";
+			$csv = '"downloads","date","hours_since_release"' . "\n";
 			foreach ($results as $row) {
-				$row[] = date_diff(date_create($release_date), date_create(reset(explode(" ", $row[1]))))->format('%a');
 				$csv .= implode(",", $row) . "\n";
 			}
 

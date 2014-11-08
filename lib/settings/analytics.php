@@ -362,7 +362,6 @@ class Analytics {
 		<div 
 			id="episode-performance-chart" 
 			data-episode="<?php echo $episode->id ?>"
-			data-episode-release-date="<?php echo mysql2date( 'Y-m-d H:i:s', $post->post_date_gmt ); ?>"
 			style="float: none"
 			>
 		</div>
@@ -383,11 +382,10 @@ class Analytics {
 
 			var $chart = jQuery("#episode-performance-chart");
 
-			var dateFormat     = d3.time.format("%Y-%m-%d %H");
+			var dateFormat     = d3.time.format("%Y-%m-%d");
 			var dateTimeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
 
 			var episode_id           = $chart.data("episode");
-			var episode_release_date = dateTimeFormat.parse($chart.data("episode-release-date"));
 
 			var chart_width = $("#episode-performance-chart").closest(".inside").width();
 
@@ -601,11 +599,8 @@ class Analytics {
 						$.ajax(ajaxurl + "?action=podlove-analytics-average-downloads-per-hour")
 					).done(function(csvCurEpisode, csvAvgEpisode) {
 
-						var csvMapper = function(d, reference_date) {
+						var csvMapper = function(d) {
 							var parsed_date = dateFormat.parse(d.date);
-
-							// round reference_date to hours_per_unit
-							reference_date = reference_date - reference_date.getMinutes() * 1000 * 60 - reference_date.getSeconds() * 1000;
 
 							return {
 								date: parsed_date,
@@ -613,14 +608,14 @@ class Analytics {
 								hour: d3.time.hour(parsed_date),
 								month: parsed_date.getMonth()+1,
 								year: parsed_date.getFullYear(),
-								days: +d.days,
+								// days: +d.days,
 								weekday: parsed_date.getDay(),
-								hoursSinceRelease: Math.floor((parsed_date - reference_date) / 1000 / 3600)
+								hoursSinceRelease: +d.hours_since_release
 							};
 						};
 
 						var csvMapper1 = function(d) {
-							return csvMapper(d, episode_release_date);
+							return csvMapper(d);
 						};
 
 						csvCurEpisodeRawData = d3.csv.parse(csvCurEpisode[0], csvMapper1);

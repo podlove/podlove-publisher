@@ -122,3 +122,4 @@ DownloadIntentClean::property( 'geo_area_id', 'INT' );
 DownloadIntentClean::property( 'lat', 'FLOAT' );
 DownloadIntentClean::property( 'lng', 'FLOAT' );
 DownloadIntentClean::property( 'httprange', 'VARCHAR(255)' );
+DownloadIntentClean::property( 'hours_since_release', 'INT' );
