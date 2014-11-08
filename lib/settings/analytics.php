@@ -391,6 +391,24 @@ class Analytics {
 
 			var chart_width = $("#episode-performance-chart").closest(".inside").width();
 
+			function hour_format (hours) {
+				var days = 0;
+				var label = [];
+
+				if (hours > 48) {
+					days  = (hours - hours % 24) / 24;
+					hours = hours % 24;
+				}
+
+				if (days)
+					label.push(days + "d");
+
+				if (hours)
+					label.push(hours + "h")
+
+				return label.join(" ");
+			}
+
 			function render_episode_performance_chart(options) {
 				var hours_per_unit = options.hours_per_unit;
 
@@ -491,7 +509,7 @@ class Analytics {
 				});
 
 				rangeChart.xAxis().tickFormat(function(v) {
-					return v * hours_per_unit + "h";
+					return hour_format(v * hours_per_unit);
 				});
 
 				var compChart = dc.compositeChart("#episode-performance-chart")
@@ -523,7 +541,7 @@ class Analytics {
 				});
 
 				compChart.xAxis().tickFormat(function(v) {
-					return v * hours_per_unit + "h";
+					return hour_format(v * hours_per_unit);
 				});
 
 				compChart.rightYAxis().tickFormat(function(v) {
