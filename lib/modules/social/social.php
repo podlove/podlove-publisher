@@ -58,6 +58,8 @@ class Social extends \Podlove\Modules\Base {
 		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
 
 		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+
+		RepairSocial::init();
 	}
 
 	public function cache_tainting_classes($classes) {

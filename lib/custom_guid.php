@@ -13,63 +13,67 @@ class Custom_Guid {
 	public static function init() {
 		add_action( 'wp_insert_post', array( __CLASS__, 'generate_guid_for_episodes' ), 10, 2 );
 		add_filter( 'get_the_guid', array( __CLASS__, 'override_wordpress_guid' ), 100 );
-		add_action( 'podlove_episode_form', array( __CLASS__, 'add_guid_form_element' ), 10, 2 );
+		add_filter( 'podlove_episode_form_data', array( __CLASS__, 'add_guid_form_element' ), 10, 2 );
 		add_action( 'podlove_save_episode', array( __CLASS__, 'save_form'), 10, 2 );
 	}
 
-	public static function add_guid_form_element( $form_wrapper, $episode ) {
+	public static function add_guid_form_element( $form_data, $episode )
+	{
+		$form_data[] = array(
+			'type' => 'callback',
+			'key'  => 'GUID',
+			'options' => array(
+				'label'    => 'GUID',
+				'callback' => function() use ( $episode ) {
+				?>
+				<div>
+					<span id="guid_preview"><?php echo get_the_guid() ?></span>
+					<a href="#" id="regenerate_guid"><?php echo __( 'regenerate', 'podlove' ) ?></a>
+				</div>
+				<span class="description">
+					<?php echo __( 'Identifier for this episode. Change it to force podcatchers to redownload media files for this episode.', 'podlove' ) ?>
+				</span>
 
-		$form_wrapper->callback( 'GUID', array(
-			'label'    => 'GUID',
-			'callback' => function() use ( $form_wrapper, $episode ) {
-			?>
-			<div>
-				<span id="guid_preview"><?php echo get_the_guid() ?></span>
-				<a href="#" id="regenerate_guid"><?php echo __( 'regenerate', 'podlove' ) ?></a>
-			</div>
-			<span class="description">
-				<?php echo __( 'Identifier for this episode. Change it to force podcatchers to redownload media files for this episode.', 'podlove' ) ?>
-			</span>
-			<?php
-			$form_wrapper->builder->hidden( 'guid', array(
-				'label'       => __( 'GUID', 'podlove' ),
-				'default'     => get_the_guid()
-			));
-			?>
-			<script type="text/javascript">
-			jQuery(function($){
-				$("#regenerate_guid").on('click', function(e) {
-					e.preventDefault();
+				<input type="hidden" name="_podlove_meta[guid]" id="_podlove_meta_guid" value="<?php echo get_the_guid() ?>">
 
-					var data = {
-						action: 'podlove-get-new-guid',
-						post_id: jQuery("#post_ID").val()
-					};
+				<script type="text/javascript">
+				jQuery(function($){
+					$("#regenerate_guid").on('click', function(e) {
+						e.preventDefault();
 
-					$.ajax({
-						url: ajaxurl,
-						data: data,
-						dataType: 'json',
-						success: function(result) {
-							if (result && result.guid) {
-								$("#_podlove_meta_guid").val(result.guid);
-								$("#guid_preview").html(result.guid);
-								if ( ! $(".guid_warning").length ) {
-									$(".row__podlove_meta_guid .description")
-										.append("<br><strong class=\"guid_warning\">GUID regenerated. You still need to save the post.<br>Only regenerate if you messed up and need all clients to redownload all files!</strong>");
+						var data = {
+							action: 'podlove-get-new-guid',
+							post_id: jQuery("#post_ID").val()
+						};
+
+						$.ajax({
+							url: ajaxurl,
+							data: data,
+							dataType: 'json',
+							success: function(result) {
+								if (result && result.guid) {
+									$("#_podlove_meta_guid").val(result.guid);
+									$("#guid_preview").html(result.guid);
+									if ( ! $(".guid_warning").length ) {
+										$(".row__podlove_meta_guid .description")
+											.append("<br><strong class=\"guid_warning\">GUID regenerated. You still need to save the post.<br>Only regenerate if you messed up and need all clients to redownload all files!</strong>");
+									}
+								} else {
+									alert("Sorry, couldn't generate new GUID.");
 								}
-							} else {
-								alert("Sorry, couldn't generate new GUID.");
 							}
-						}
-					});
+						});
 
-					return false;
+						return false;
+					});
 				});
-			});
-			</script>
-			<?php
-		} ) );
+				</script>
+				<?php
+			} ),
+			'position' => 100
+		);
+
+		return $form_data;
 	}
 
 	public static function save_form( $post_id, $form_data ) {

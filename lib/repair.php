@@ -29,7 +29,9 @@ class Repair {
 
 		self::clear_podlove_cache();
 		self::flush_rewrite_rules();
-		self::fix_data_inconsistencies();
+
+		// hook for modules to add their repair methods
+		do_action('podlove_repair_do_repair');
 
 		wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
 		exit;
@@ -39,7 +41,7 @@ class Repair {
 		update_option(self::REPAIR_LOG_KEY, array());
 	}
 
-	private static function add_to_repair_log($message) {
+	public static function add_to_repair_log($message) {
 		$log = get_option(self::REPAIR_LOG_KEY, array());
 		$log[] = $message;
 		update_option(self::REPAIR_LOG_KEY, $log);
@@ -54,51 +56,6 @@ class Repair {
 	private static function flush_rewrite_rules() {
 		flush_rewrite_rules();
 		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove'));
-	}
-
-	private static function fix_data_inconsistencies()
-	{
-		global $wpdb;
-
-		// @FIMXE: mhh, shouldn't this be hookable and dealt with in the module?
-		$services = self::find_duplicate_services();
-
-		if (!is_array($services) || empty($services)) {
-			self::add_to_repair_log(__('Services did not need repair', 'podlove'));
-			return;
-		}
-
-		foreach ($services as $service) {
-			# update contributor services
-			$sql = "UPDATE " . Social\Model\ContributorService::table_name() . " SET service_id = " . $service['id'] . " WHERE service_id IN (
-				SELECT id FROM " . Social\Model\Service::table_name() . " WHERE `type` = \"" . $service['type'] . "\"
-			)";
-			$wpdb->query($sql);
-
-			# update show services
-			$sql = "UPDATE " . Social\Model\ShowService::table_name() . " SET service_id = " . $service['id'] . " WHERE service_id IN (
-				SELECT id FROM " . Social\Model\Service::table_name() . " WHERE `type` = \"" . $service['type'] . "\"
-			)";
-			$wpdb->query($sql);
-
-			# delete obsolete services
-			$sql = "DELETE FROM " . Social\Model\Service::table_name() . " WHERE id != " . $service['id'] . " AND `type` = \"" . $service['type'] . "\"";
-			$wpdb->query($sql);
-		}
-
-		self::add_to_repair_log(
-			sprintf(
-				__('Consolidated duplicate services (%s)', 'podlove'),
-				implode(', ', array_map(function($s){ return $s['type']; }, $services))
-			)
-		);
-	}
-
-	private static function find_duplicate_services() {
-		global $wpdb;
-
-		$sql = "SELECT id, `type`, COUNT(*) cnt FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " GROUP BY `type` HAVING cnt > 1";
-		return $wpdb->get_results($sql, ARRAY_A);
 	}
 
 	private static function print_and_clear_repair_log() {
@@ -143,10 +100,10 @@ class Repair {
 					<strong>flushes WordPress rewrite rules</strong>
 					If you have strange behaviour in some sites or pages are not found which should exist, this might solve it.
 				</li>
-				<li>
-					<strong>fix data inconsistencies</strong>
-					If you have duplicate data (for example a service appearing twice), this might fix it.
-				</li>
+				<?php // hook for modules to add their repair method descriptions ?>
+				<?php foreach ( apply_filters('podlove_repair_descriptions', array()) as $entry ): ?>
+					<li><?php echo $entry; ?></li>
+				<?php endforeach; ?>
 			</ul>
 			<?php echo __('Feel free to press this button as often as you like. Worst case scenario: nothing happens.', 'podlove') ?>
 		</p>

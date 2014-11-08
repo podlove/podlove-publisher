@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 81 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 85 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -943,6 +943,20 @@ function run_migrations_for_version( $version ) {
 		case 81:
 			// remove all caches with old namespace
 			$wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_podlove_cache%\"");
+		break;
+		case 82:
+			// set all redirect entries to active
+			$redirect_settings = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
+			foreach ($redirect_settings as $index => $data) {
+				$redirect_settings[$index]['active'] = 'active';
+			}
+			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
+		break;
+		case 83:
+			delete_option('podlove_tpl_cache_keys');
+		break;
+		case 85:
+			add_option('podlove_tracking_delete_head_requests', 1);
 		break;
 	}
 

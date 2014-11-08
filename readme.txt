@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
-Tested up to: 3.8
+Tested up to: 4.0
 Stable tag: trunk
 License: MIT
 
@@ -85,9 +85,43 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.22 =
+
+* fix bug in contribution counting
+* simplify internal cache key handling to avoid technical issues
+* support more licenses (CC4.0, CC0, Public Domain)
+* tracking: don't count HEAD requests
+* tracking: add manual migration notice to delete accidentally recorded HEAD requests
+
+= 1.10.21 =
+
+* improve HHVM compatibility
+* resolve bug concerning internal article linking
+* use WordPress method to generate default episode slugs for better results (if you are using a plugin that changes permalink slug behavior, that affects episode slugs now, too)
+
+= 1.10.20 =
+
+**Episode Form Improvements**
+
+* Reorder components
+* Display episode title in episode meta box
+* Auto-generate media file slug based on the episode title. This is useful if your file slugs match the episode title. But don't worry, you can still change it to your liking if you prefer a different naming scheme.
+
+**Other**
+
+* Podlove Dashboard supports screen options
+* fix contribution counting in contributor table (you may have to hit the "repair" button in `Podlove > Support` if you still see wrong numbers)
+* fix tracking data export
+* fix missing OpenGraph metadata
+* improved redirects: added sortability and individual entries can be deactivated without being deleted
+* `contributor.id` is accessible via template API now
+
+As mentioned before, we will be phasing out PHP 5.3 soon. Please read the corresponding blog post for more details: http://podlove.org/2014/08/14/podlove-publisher-2-phasing-out-php-5-3/
+
 = 1.10.19 =
 
 * fix caching issue (cache keys were too long in last update, resulting in no cache hits at all)
+* fix error when creating a new episode
 
 = 1.10.18 =
 

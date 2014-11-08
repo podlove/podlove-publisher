@@ -11,7 +11,7 @@ class Feed extends Base {
 		global $wpdb;
 		
 		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
-		$this->slug = \Podlove\slugify( $this->slug );
+		$this->slug = sanitize_title( $this->slug );
 
 		if ( ! $this->position ) {
 			$pos = $wpdb->get_var( sprintf( 'SELECT MAX(position)+1 FROM %s', self::table_name() ) );
@@ -34,7 +34,7 @@ class Feed extends Base {
 			$url = sprintf(
 				'%s/feed/%s/',
 				get_bloginfo( 'url' ),
-				\Podlove\slugify( $this->slug )
+				sanitize_title( $this->slug )
 			);
 		} else {
 			$url = get_feed_link( $this->slug );

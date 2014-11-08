@@ -106,14 +106,15 @@ class TemplateCache {
 	/**
 	 * Purge all caches
 	 *
-	 * @todo The way cache keys are stored right now is *not cuncurrency safe*.
-	 * Deletion by SQL query guarantees to catch all cached values, but that does not work
-	 * when another storage engine like memcached is used.
-	 * My problem is that I would prefer either a `delete_all_transients()` or 
-	 * `delete_transient_matching(<string>)` method. However, WordPress only lets you
-	 * delete by exact key. That's why I need to store all generated keys. I am doing this,
-	 * but race conditions can screw that logic up. Worst case, this leads to caches that
-	 * are *never deleted*. Which is why the 24h auto-expiry is introduced.
+	 * @todo Purging cache by DELETE query works for DB-storage only.
+	 * In previous versions, I memorized all generated cache keys but that
+	 * lead to its own set of problems (race conditions, db locks because 
+	 * it's a huge value that is written to very often, ...).
+	 * I would prefer either a `delete_all_transients()` or `delete_transient_matching(<string>)` 
+	 * method. However, WordPress only lets you delete by exact key.
+	 *
+	 * That's why, at the moment, purging only works for DB storage (which is the default).
+	 * Other caches expire automatically after 24 hours.
 	 */
 	public function purge() {
 		global $wpdb;
@@ -121,14 +122,6 @@ class TemplateCache {
 		// quick, reliable purge (but only works with database as backend)
 		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_" . self::CACHE_NAMESPACE . "%\"";
 		$wpdb->query($sql);
-
-		// safe purge that works even if transients backend is not database
-		$cache_keys_string = get_option('podlove_tpl_cache_keys', '');
-		$keys = explode(",", $cache_keys_string);
-		foreach ($keys as $cache_key) {
-			delete_transient($cache_key);
-		}
-		update_option('podlove_tpl_cache_keys', '');
 	}
 
 	/**
@@ -153,23 +146,10 @@ class TemplateCache {
 
 			if ($html !== FALSE) {
 				set_transient($cache_key, $html, $expiration);
-				$this->memorize_cache_key($cache_key);
 			}
 				
 			return $html;
 		}
-	}
-
-	private function memorize_cache_key($cache_key)
-	{
-		$cache_keys = get_option('podlove_tpl_cache_keys', '');
-
-		if (strlen($cache_keys)) {
-			$cache_keys .= "," . $cache_key;
-		} else {
-			$cache_keys = $cache_key;
-		}
-		update_option('podlove_tpl_cache_keys', $cache_keys);
 	}
 
 	/**

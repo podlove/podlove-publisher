@@ -208,6 +208,7 @@ add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
+add_action( 'admin_init', array( '\Podlove\DeleteHeadRequests', 'init' ) );
 
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
@@ -223,7 +224,7 @@ function add_feed_discoverability() {
 		return;
 
 	if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
-		require_once \PODLOVE\PLUGIN_DIR . 'lib/feeds/base.php';
+		require_once \Podlove\PLUGIN_DIR . 'lib/feeds/base.php';
 
 	$cache = \Podlove\Cache\TemplateCache::get_instance();
 	echo $cache->cache_for('feed_discoverability', function() {
@@ -405,6 +406,9 @@ function override404() {
 		$parsed_request_url .= "?" . $parsed_request['query'];
 
 	foreach ( \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' ) as $redirect ) {
+
+		if ( ! isset( $redirect['active'] ) )
+			continue;
 
 		if ( ! strlen( trim( $redirect['from'] ) ) || ! strlen( trim( $redirect['to'] ) ) )
 			continue;
@@ -840,6 +844,10 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 }, 10, 2);
 
 function handle_media_file_download() {
+	
+	// don't count HEAD requests
+	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'HEAD')
+		return;
 
 	if (isset($_GET['download_media_file'])) {
 		$download_media_file = $_GET['download_media_file'];
@@ -975,6 +983,9 @@ add_filter('posts_search', function($search, $query) {
 	global $wpdb;
 
 	if (!isset($query->query_vars['search_terms']))
+		return $search;
+		
+	if ( isset( $query->query_vars['suppress_filters'] ) && true == $query->query_vars['suppress_filters'] )
 		return $search;
 
 	$episodesTable = \Podlove\Model\Episode::table_name();

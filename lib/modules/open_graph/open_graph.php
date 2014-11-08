@@ -34,11 +34,11 @@ class Open_Graph extends \Podlove\Modules\Base {
 
 		public function the_open_graph_metadata()
 		{
-			$cache_key = 'opg' . get_the_ID() . get_permalink();
+			$cache_key = 'opgv2' . get_the_ID() . get_permalink();
 
 			$cache = \Podlove\Cache\TemplateCache::get_instance();
-			return $cache->cache_for($cache_key, function() {
-				return \Podlove\Modules\OpenGraph\Open_Graph::get_open_graph_metadata();
+			echo $cache->cache_for($cache_key, function() {
+				return (string) \Podlove\Modules\OpenGraph\Open_Graph::get_open_graph_metadata();
 			});
 		}
 
