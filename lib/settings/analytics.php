@@ -484,18 +484,18 @@ class Analytics {
 					.centerBar(true)
 					.xAxisPadding(0.6)
 					.renderTitle(true)
-					.colors(
-						d3.scale.ordinal()
-							.domain(["even","odd"])
-							.range(["#69A4A2","#9478B4"])
-					)
-					.colorAccessor(function(d) { 
-						if (Math.floor(d.key * hours_per_unit / 24) % 2 === 0) {
-							return "even";
-						} else {
-							return "odd";
-						}
-					})
+					// .colors(
+					// 	d3.scale.ordinal()
+					// 		.domain(["1","2","3","4","5","6","0"]) // 0 = sun, 1 = mon, ...
+					// 		.range(["#16212B", "#163048","#234D76","#336799","#4985BE","#69A7E3", "#55A8F8"])
+					// )
+					// .colorAccessor(function(d) { 
+					// 	if (d.value) {
+					// 		return d.value.weekday;
+					// 	} else {
+					// 		return "0";
+					// 	}
+					// })
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
@@ -525,6 +525,9 @@ class Analytics {
 					.elasticX(true)
 					.centerBar(true)
 					.xAxisPadding(0.6)
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
 				;
 
 				rangeChart.yAxis().ticks([2]);
