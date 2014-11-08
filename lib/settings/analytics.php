@@ -455,12 +455,12 @@ class Analytics {
 				var avgDateDim     = ndx3.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 				var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
 
-				var avgFilteredDownloadsTotal = {
-				    all: function () {
-				    	// console.log(avgDownloadsTotal.all());
-				        return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-				    }
-				};
+				// var avgFilteredDownloadsTotal = {
+				//     all: function () {
+				//     	// console.log(avgDownloadsTotal.all());
+				//         return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
+				//     }
+				// };
 
 		        var cumulativeDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads")).all()
 		                	.reduce(function (acc, cur) {
@@ -503,7 +503,7 @@ class Analytics {
 
 				var averageEpisodeChart = dc.lineChart(compChart)
 					.dimension(avgDateDim)
-					.group(avgFilteredDownloadsTotal, "Average Episode")
+					.group(avgDownloadsTotal, "Average Episode")
 					.renderTitle(true)
 					.colors('black')
 				;
@@ -591,6 +591,7 @@ class Analytics {
 
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
 					.height(240)
+					.width(240)
 			        .margins({top: 20, left: 10, right: 10, bottom: 20})
 			        .group(dayOfWeekGroup)
 			        .dimension(dayOfWeek)
