@@ -532,7 +532,7 @@ class Analytics {
 						}
 					})
 
-					.colors('#6BD692')
+					.colors('#69B3FF')
 				;
 
 				var averageEpisodeChart = dc.lineChart(compChart)
@@ -562,7 +562,7 @@ class Analytics {
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
-					.colors('#6BD692')
+					.colors('#69B3FF')
 				;
 
 				rangeChart.yAxis().ticks([2]);
@@ -623,7 +623,7 @@ class Analytics {
                     		return 0;
                     	}
                     })
-                    .colors('#6BD692')
+                    .colors('#69B3FF')
 				;
 
 				weekdayChart.xAxis().tickFormat(formatThousands);
@@ -659,7 +659,7 @@ class Analytics {
 	                .title(function (d) {
 	                    return d.value.downloads;
 	                })
-	                .colors('#6BD692')
+	                .colors('#69B3FF')
 			   ;
 
 			   assetChart.xAxis().tickFormat(formatThousands);
@@ -688,7 +688,7 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
-					.colors('#6BD692')
+					.colors('#69B3FF')
 				;
 
 				clientChart.xAxis().tickFormat(formatThousands);
@@ -717,7 +717,7 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
-					.colors('#6BD692')
+					.colors('#69B3FF')
 				;
 
 				systemChart.xAxis().tickFormat(formatThousands);
