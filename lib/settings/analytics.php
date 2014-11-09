@@ -731,6 +731,12 @@ class Analytics {
 		})(jQuery);
 		</script>
 
+		<style type="text/css">
+		#episode-asset-chart g.row text {
+			fill: black;
+		}
+		</style>
+
 		<?php
 	}
 
