@@ -370,6 +370,8 @@ class Analytics {
 		
 		<div id="episode-weekday-chart" style="float: left"></div>
 
+		<div id="episode-client-chart" style="float: left"></div>
+
 		<div id="episode-asset-chart" style="float: none"></div>
 
 		<script type="text/javascript">
@@ -435,6 +437,7 @@ class Analytics {
 				p.weekday  = v.weekday;
 				p.asset_id = v.asset_id;
 				p.date     = v.date;
+				p.client   = v.client;
 
 				return p;
 			};
@@ -447,7 +450,8 @@ class Analytics {
 					downloads: 0,
 					weekday: 0,
 					asset_id: 0,
-					date: 0
+					date: 0,
+					client: ""
 				};
 			};
 
@@ -651,6 +655,9 @@ class Analytics {
 							return 0;
 						}
 					})
+					.ordering(function (v) {
+						return -v.value.downloads;
+					})
 			        .label(function (d) {
 			        	return assetNames[d.key];
 	                })
@@ -661,10 +668,39 @@ class Analytics {
 
 			   assetChart.xAxis().tickFormat(formatThousands);
 
+			   	var clients = ndx1.dimension(function (d) {
+			   		return d.client;
+			    });
+				var clientsGroup = clients.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
+					return v.downloads;
+				});
+
+			   var clientChart = dc.rowChart("#episode-client-chart")
+					.width(240)
+					.height(240)
+					.margins({top: 20, left: 10, right: 10, bottom: 20})
+					.elasticX(true)
+					.dimension(clients)
+					.group(clientsGroup)
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
+					.ordering(function (v) {
+						return -v.value.downloads;
+					})
+					.othersGrouper(function(data) {
+						return data; // no "others" group
+					})
+					.cap(10)
+				;
+
+				clientChart.xAxis().tickFormat(formatThousands);
+
 				compChart.render();
 				rangeChart.render();
 				weekdayChart.render();
 				assetChart.render();
+				clientChart.render();
 
 				rangeChart.brush()
 					.extent([0, 7*24/hours_per_unit])
@@ -694,7 +730,8 @@ class Analytics {
 								// days: +d.days,
 								weekday: parsed_date.getDay(),
 								hoursSinceRelease: +d.hours_since_release,
-								asset_id: +d.asset_id
+								asset_id: +d.asset_id,
+								client: d.client ? d.client : "Unknown"
 							};
 						};
 
@@ -735,6 +772,7 @@ class Analytics {
 		</script>
 
 		<style type="text/css">
+		#episode-client-chart g.row text,
 		#episode-asset-chart g.row text {
 			fill: black;
 		}
