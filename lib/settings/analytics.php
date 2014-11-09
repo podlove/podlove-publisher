@@ -369,10 +369,12 @@ class Analytics {
 		<div id="episode-range-chart" style="float: none"></div>
 		
 		<div id="episode-weekday-chart" style="float: left"></div>
-
+		<div id="episode-asset-chart" style="float: left"></div>
 		<div id="episode-client-chart" style="float: left"></div>
+		<div id="episode-system-chart" style="float: left"></div>
 
-		<div id="episode-asset-chart" style="float: none"></div>
+		<div style="clear: both"></div>
+
 
 		<script type="text/javascript">
 		function print_filter(filter){
@@ -438,6 +440,7 @@ class Analytics {
 				p.asset_id = v.asset_id;
 				p.date     = v.date;
 				p.client   = v.client;
+				p.system   = v.system;
 
 				return p;
 			};
@@ -451,7 +454,8 @@ class Analytics {
 					weekday: 0,
 					asset_id: 0,
 					date: 0,
-					client: ""
+					client: "",
+					system: ""
 				};
 			};
 
@@ -696,11 +700,40 @@ class Analytics {
 
 				clientChart.xAxis().tickFormat(formatThousands);
 
+			   	var systems = ndx1.dimension(function (d) {
+			   		return d.system;
+			    });
+				var systemsGroup = systems.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
+					return v.downloads;
+				});
+
+			   var systemChart = dc.rowChart("#episode-system-chart")
+					.width(240)
+					.height(240)
+					.margins({top: 20, left: 10, right: 10, bottom: 20})
+					.elasticX(true)
+					.dimension(systems)
+					.group(systemsGroup)
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
+					.ordering(function (v) {
+						return -v.value.downloads;
+					})
+					.othersGrouper(function(data) {
+						return data; // no "others" group
+					})
+					.cap(10)
+				;
+
+				systemChart.xAxis().tickFormat(formatThousands);
+
 				compChart.render();
 				rangeChart.render();
 				weekdayChart.render();
 				assetChart.render();
 				clientChart.render();
+				systemChart.render();
 
 				rangeChart.brush()
 					.extent([0, 7*24/hours_per_unit])
@@ -731,7 +764,8 @@ class Analytics {
 								weekday: parsed_date.getDay(),
 								hoursSinceRelease: +d.hours_since_release,
 								asset_id: +d.asset_id,
-								client: d.client ? d.client : "Unknown"
+								client: d.client ? d.client : "Unknown",
+								system: d.system ? d.system : "Unknown",
 							};
 						};
 
@@ -773,6 +807,7 @@ class Analytics {
 
 		<style type="text/css">
 		#episode-client-chart g.row text,
+		#episode-system-chart g.row text,
 		#episode-asset-chart g.row text {
 			fill: black;
 		}

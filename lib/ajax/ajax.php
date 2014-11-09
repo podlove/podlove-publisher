@@ -154,19 +154,21 @@ class Ajax {
 						DATE_FORMAT(accessed_at, '%Y-%m-%d') AS access_date,
 						hours_since_release,
 						mf.episode_asset_id asset_id,
-						client_name
+						client_name,
+						os_name AS system
 					FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						INNER JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
 						WHERE episode_id = $episode_id
-						GROUP BY hours_since_release, asset_id, client_name";
+						GROUP BY hours_since_release, asset_id, client_name, system";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$csv = '"downloads","date","hours_since_release","asset_id","client"' . "\n";
+			$csv = '"downloads","date","hours_since_release","asset_id","client","system"' . "\n";
 			foreach ($results as $row) {
 				$row[4] = '"' . $row[4] . '"';
+				$row[5] = '"' . $row[5] . '"';
 				$csv .= implode(",", $row) . "\n";
 			}
 
