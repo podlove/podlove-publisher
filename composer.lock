@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "00a520f3c51206a14820e15aa538333679c26b13"
+                "reference": "64f226209342c4a2f54b82ba3f0707db944f7d70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/00a520f3c51206a14820e15aa538333679c26b13",
-                "reference": "00a520f3c51206a14820e15aa538333679c26b13",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/64f226209342c4a2f54b82ba3f0707db944f7d70",
+                "reference": "64f226209342c4a2f54b82ba3f0707db944f7d70",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,6 @@
                 "php": ">=5.3.1"
             },
             "require-dev": {
-                "apigen/apigen": "2.8.2",
                 "phpunit/phpunit": "4.2.*",
                 "satooshi/php-coveralls": "dev-master"
             },
@@ -56,7 +55,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2014-09-29 20:16:23"
+            "time": "2014-10-29 17:11:44"
         },
         {
             "name": "guzzle/guzzle",
@@ -389,12 +388,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eteubert/device-detector.git",
-                "reference": "e96cdd9843175b8770ed94c090eece659ecffa9d"
+                "reference": "afbafac26c7eeb8f11e10e457fa4af600ccb87f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/e96cdd9843175b8770ed94c090eece659ecffa9d",
-                "reference": "e96cdd9843175b8770ed94c090eece659ecffa9d",
+                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/afbafac26c7eeb8f11e10e457fa4af600ccb87f4",
+                "reference": "afbafac26c7eeb8f11e10e457fa4af600ccb87f4",
                 "shasum": ""
             },
             "require": {
@@ -433,7 +432,7 @@
                 "wiki": "http://dev.piwik.org/",
                 "source": "https://github.com/piwik/piwik"
             },
-            "time": "2014-10-07 12:09:10"
+            "time": "2014-11-09 14:28:56"
         },
         {
             "name": "podlove/normalplaytime",
@@ -599,17 +598,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.5.5",
+            "version": "v2.5.6",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "f6281337bf5f985f585d1db6a83adb05ce531f46"
+                "reference": "804eb28dbbfba9ffdab21fe2066744906cea2212"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/f6281337bf5f985f585d1db6a83adb05ce531f46",
-                "reference": "f6281337bf5f985f585d1db6a83adb05ce531f46",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/804eb28dbbfba9ffdab21fe2066744906cea2212",
+                "reference": "804eb28dbbfba9ffdab21fe2066744906cea2212",
                 "shasum": ""
             },
             "require": {
@@ -652,7 +651,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-09-28 15:56:11"
+            "time": "2014-10-01 15:43:05"
         },
         {
             "name": "twig/extensions",
@@ -705,16 +704,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.16.0",
+            "version": "v1.16.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "8ce37115802e257a984a82d38254884085060024"
+                "reference": "42f758d9fe2146d1f0470604fc05ee43580873fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/8ce37115802e257a984a82d38254884085060024",
-                "reference": "8ce37115802e257a984a82d38254884085060024",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/42f758d9fe2146d1f0470604fc05ee43580873fc",
+                "reference": "42f758d9fe2146d1f0470604fc05ee43580873fc",
                 "shasum": ""
             },
             "require": {
@@ -758,7 +757,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-07-05 12:19:05"
+            "time": "2014-10-17 12:53:44"
         }
     ],
     "packages-dev": [
@@ -1116,16 +1115,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.37",
+            "version": "3.7.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ae6cefd7cc84586a5ef27e04bae11ee940ec63dc"
+                "reference": "38709dc22d519a3d1be46849868aa2ddf822bcf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ae6cefd7cc84586a5ef27e04bae11ee940ec63dc",
-                "reference": "ae6cefd7cc84586a5ef27e04bae11ee940ec63dc",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/38709dc22d519a3d1be46849868aa2ddf822bcf6",
+                "reference": "38709dc22d519a3d1be46849868aa2ddf822bcf6",
                 "shasum": ""
             },
             "require": {
@@ -1185,7 +1184,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-04-30 12:24:19"
+            "time": "2014-10-17 09:04:17"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1332,17 +1331,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.5.5",
+            "version": "v2.5.6",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "b1dbc53593b98c2d694ebf383660ac9134d30b96"
+                "reference": "2d9f527449cabfa8543dd7fa3a466d6ae83d6726"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b1dbc53593b98c2d694ebf383660ac9134d30b96",
-                "reference": "b1dbc53593b98c2d694ebf383660ac9134d30b96",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/2d9f527449cabfa8543dd7fa3a466d6ae83d6726",
+                "reference": "2d9f527449cabfa8543dd7fa3a466d6ae83d6726",
                 "shasum": ""
             },
             "require": {
@@ -1375,7 +1374,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-09-22 09:14:18"
+            "time": "2014-10-01 05:50:18"
         }
     ],
     "aliases": [],
