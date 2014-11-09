@@ -654,6 +654,9 @@ class Analytics {
 			        .label(function (d) {
 			        	return assetNames[d.key];
 	                })
+	                .title(function (d) {
+	                    return d.value.downloads;
+	                })
 			   ;
 
 			   assetChart.xAxis().tickFormat(formatThousands);
