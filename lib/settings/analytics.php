@@ -515,9 +515,6 @@ class Analytics {
 
 				var dayOfWeek = ndx1.dimension(function (d) {
 					return d.weekday;
-			        // var day = d.weekday;
-			        // var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-			        // return day+"."+name[day];
 			    });
 			    var dayOfWeekGroup = dayOfWeek.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
@@ -527,18 +524,6 @@ class Analytics {
 					.centerBar(true)
 					.xAxisPadding(0.6)
 					.renderTitle(true)
-					// .colors(
-					// 	d3.scale.ordinal()
-					// 		.domain(["1","2","3","4","5","6","0"]) // 0 = sun, 1 = mon, ...
-					// 		.range(["#16212B", "#163048","#234D76","#336799","#4985BE","#69A7E3", "#55A8F8"])
-					// )
-					// .colorAccessor(function(d) { 
-					// 	if (d.value) {
-					// 		return d.value.weekday;
-					// 	} else {
-					// 		return "0";
-					// 	}
-					// })
 					.valueAccessor(function (v) {
 						if (v.value) {
 							return v.value.downloads;
@@ -546,6 +531,8 @@ class Analytics {
 							return 0;
 						}
 					})
+
+					.colors('#6BD692')
 				;
 
 				var averageEpisodeChart = dc.lineChart(compChart)
@@ -575,6 +562,7 @@ class Analytics {
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
+					.colors('#6BD692')
 				;
 
 				rangeChart.yAxis().ticks([2]);
@@ -616,12 +604,11 @@ class Analytics {
 
 	        	var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
-					.height(240)
-					.width(240)
-			        .margins({top: 20, left: 10, right: 10, bottom: 20})
+					.height(285)
+					.width(285)
+			        .margins({top: 0, left: 10, right: 10, bottom: 20})
 			        .group(dayOfWeekGroup)
 			        .dimension(dayOfWeek)
-			        .ordinalColors(["#16212B", "#163048","#234D76","#336799","#4985BE","#69A7E3", "#55A8F8"])
 			        .elasticX(true)
 			        .label(function (d) {
 			        	return weekdayNames[d.key];
@@ -636,6 +623,7 @@ class Analytics {
                     		return 0;
                     	}
                     })
+                    .colors('#6BD692')
 				;
 
 				weekdayChart.xAxis().tickFormat(formatThousands);
@@ -646,9 +634,12 @@ class Analytics {
 			    var assetsGroup = assets.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var assetChart = dc.rowChart("#episode-asset-chart")
-					.width(240)
-					.height(240)
-					.margins({top: 20, left: 10, right: 10, bottom: 20})
+					.width(285)
+					.height(285)
+					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					// .labelOffsetX(0)
+					// .labelOffsetY(-2)
+					// .gap(20)
 					.elasticX(true)
 					.dimension(assets) // set dimension
 					.group(assetsGroup) // set group
@@ -668,6 +659,7 @@ class Analytics {
 	                .title(function (d) {
 	                    return d.value.downloads;
 	                })
+	                .colors('#6BD692')
 			   ;
 
 			   assetChart.xAxis().tickFormat(formatThousands);
@@ -680,9 +672,9 @@ class Analytics {
 				});
 
 			   var clientChart = dc.rowChart("#episode-client-chart")
-					.width(240)
-					.height(240)
-					.margins({top: 20, left: 10, right: 10, bottom: 20})
+					.width(285)
+					.height(285)
+					.margins({top: 0, left: 10, right: 10, bottom: 20})
 					.elasticX(true)
 					.dimension(clients)
 					.group(clientsGroup)
@@ -696,6 +688,7 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
+					.colors('#6BD692')
 				;
 
 				clientChart.xAxis().tickFormat(formatThousands);
@@ -708,9 +701,9 @@ class Analytics {
 				});
 
 			   var systemChart = dc.rowChart("#episode-system-chart")
-					.width(240)
-					.height(240)
-					.margins({top: 20, left: 10, right: 10, bottom: 20})
+					.width(285)
+					.height(285)
+					.margins({top: 0, left: 10, right: 10, bottom: 20})
 					.elasticX(true)
 					.dimension(systems)
 					.group(systemsGroup)
@@ -724,6 +717,7 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
+					.colors('#6BD692')
 				;
 
 				systemChart.xAxis().tickFormat(formatThousands);
@@ -806,6 +800,7 @@ class Analytics {
 		</script>
 
 		<style type="text/css">
+		#episode-weekday-chart g.row text,
 		#episode-client-chart g.row text,
 		#episode-system-chart g.row text,
 		#episode-asset-chart g.row text {
