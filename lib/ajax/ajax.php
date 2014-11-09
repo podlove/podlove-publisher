@@ -149,12 +149,12 @@ class Ajax {
 		$content = $cache->cache_for($cache_key, function() use ($episode_id) {
 			global $wpdb;
 
-			$sql = "SELECT COUNT(*) downloads, DATE_FORMAT(accessed_at, '%Y-%m-%d') AS access_date, hours_since_release, mf.episode_asset_id
+			$sql = "SELECT COUNT(*) downloads, DATE_FORMAT(accessed_at, '%Y-%m-%d') AS access_date, hours_since_release, mf.episode_asset_id asset_id
 					FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						WHERE episode_id = $episode_id
-						GROUP BY hours_since_release";
+						GROUP BY hours_since_release, asset_id";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 

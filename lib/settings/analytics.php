@@ -451,6 +451,13 @@ class Analytics {
 				};
 			};
 
+			var formatThousands = function(v) {
+				if (v < 1000)
+					return v;
+				else
+					return (v/1000) + "k";
+			};
+
 			function render_episode_performance_chart(options) {
 				var hours_per_unit = options.hours_per_unit;
 
@@ -563,12 +570,7 @@ class Analytics {
 				;
 
 				rangeChart.yAxis().ticks([2]);
-				rangeChart.yAxis().tickFormat(function(v) {
-					if (v < 1000)
-						return v;
-					else
-						return (v/1000) + "k";
-				});
+				rangeChart.yAxis().tickFormat(formatThousands);
 
 				rangeChart.xAxis().tickFormat(function(v) {
 					return hour_format(v * hours_per_unit);
@@ -596,23 +598,13 @@ class Analytics {
 					.rightYAxisLabel("Monthly Index Fnord")
 					;
 
-				compChart.yAxis().tickFormat(function(v) {
-					if (v < 1000)
-						return v;
-					else
-						return (v/1000) + "k";
-				});
+				compChart.yAxis().tickFormat(formatThousands);
 
 				compChart.xAxis().tickFormat(function(v) {
 					return hour_format(v * hours_per_unit);
 				});
 
-				compChart.rightYAxis().tickFormat(function(v) {
-					if (v < 1000)
-						return v;
-					else
-						return (v/1000) + "k";
-				});
+				compChart.rightYAxis().tickFormat(formatThousands);
 
 	        	var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
@@ -638,12 +630,7 @@ class Analytics {
                     })
 				;
 
-				weekdayChart.xAxis().tickFormat(function(v) {
-					if (v < 1000)
-						return v;
-					else
-						return (v/1000) + "k";
-				});
+				weekdayChart.xAxis().tickFormat(formatThousands);
 
 				var assets = ndx1.dimension(function (d) {
 					return d.asset_id;
@@ -668,6 +655,8 @@ class Analytics {
 			        	return assetNames[d.key];
 	                })
 			   ;
+
+			   assetChart.xAxis().tickFormat(formatThousands);
 
 				compChart.render();
 				rangeChart.render();
