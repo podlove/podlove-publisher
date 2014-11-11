@@ -91,6 +91,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * ADN module: add option to not fall back on episode cover when no episode image is present
 * add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
 * fix social repair module
+* adjust Bitlove script so it plays well with https sites
+* empty rss feeds now render properly
 
 = 1.10.22 =
 
