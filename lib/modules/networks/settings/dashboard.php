@@ -94,7 +94,7 @@ class Dashboard {
 	}
 
 	public static function right_now() {
-		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::all_podcasts();
+		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::get_all_podcast_ids();
 		$number_of_podcasts = count( $podcasts );
 
 		$episodes_total = 0;
@@ -256,17 +256,17 @@ class Dashboard {
 
 	public static function podcast_overview() {
 		switch_to_blog( 1 );
-
 		$table = new \Podlove\Modules\Networks\Podcast_List_Table();
 		$table->prepare_items();
 		$table->display();
+		restore_current_blog();
 	}
 
 	public static function list_overview() {
 		switch_to_blog( 1 );
-
 		$table = new \Podlove\Modules\Networks\PodcastList_List_Table();
 		$table->prepare_items();
 		$table->display();
+		restore_current_blog();
 	}
 }

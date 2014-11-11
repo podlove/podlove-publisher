@@ -53,8 +53,8 @@ class Networks extends \Podlove\Modules\Base {
 					return "ok";
 				} else {
 					return array(
-						"message" => "Must be active in main blog!",
-						"error" => "You are using the network module. You have to activate it in your main WordPress blog to work properly"
+						"message" => __( "Must be active in main blog!", 'podlove' ),
+						"error" => __( "You are using the network module. You have to activate it in your main WordPress blog to work properly", 'podlove' )
 					);
 				}
 			}
@@ -88,7 +88,7 @@ class Networks extends \Podlove\Modules\Base {
 	public function create_network_toolbar( $wp_admin_bar ) {
 		$network_dashboard_url = network_site_url() . 'wp-admin/network/admin.php?page=podlove_network_settings_handle';
 		PodcastList::activate_network_scope();
-		$podcasts = PodcastList::all_podcasts();
+		$podcasts = PodcastList::get_all_podcast_ids();
 		PodcastList::deactivate_network_scope();
 		$podcast_admin_url = get_admin_url();
 
@@ -104,7 +104,7 @@ class Networks extends \Podlove\Modules\Base {
 		// Podlove Dashboard
 		$args = array(
 			'id'     => 'podlove_toolbar_dashboard',
-			'title'  => 'Dashboard',
+			'title'  => __( 'Dashboard', 'podlove' ),
 			'parent' => 'podlove_toolbar',
 			'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
 			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
@@ -114,7 +114,7 @@ class Networks extends \Podlove\Modules\Base {
 		// Podlove Episodes
 		$args = array(
 			'id'     => 'podlove_toolbar_episodes',
-			'title'  => 'Episodes',
+			'title'  => __( 'Episodes', 'podlove' ),
 			'parent' => 'podlove_toolbar',
 			'href'   => $podcast_admin_url . 'edit.php?post_type=podcast',
 			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
@@ -145,7 +145,7 @@ class Networks extends \Podlove\Modules\Base {
 			// Register Dashboard, Episodes and Contributor per Podcast
 			$args = array(
 				'id'     => $podcast_toolbar_id . '_dashboard',
-				'title'  => 'Dashboard',
+				'title'  => __( 'Dashboard', 'podlove' ),
 				'parent' => $podcast_toolbar_id,
 				'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
 				'meta'   => array( 
@@ -155,7 +155,7 @@ class Networks extends \Podlove\Modules\Base {
 			$wp_admin_bar->add_node( $args );
 			$args = array(
 				'id'     => $podcast_toolbar_id . '_episodes',
-				'title'  => 'Episodes',
+				'title'  => __( 'Episodes', 'podlove' ),
 				'parent' => $podcast_toolbar_id,
 				'href'   => $podcast_admin_url . 'edit.php?post_type=podcast',
 				'meta'   => array( 

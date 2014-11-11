@@ -239,7 +239,7 @@ class PodcastLists {
 						<script type="text/template" id="podcast-select-type-wplist">
 						<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
 							<?php
-								foreach ( PodcastList::all_podcasts_ordered() as $blog_id => $podcast ) {
+								foreach ( PodcastList::get_all_podcast_ids_ordered() as $blog_id => $podcast ) {
 									if ( $podcast->title )
 										printf( "<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_image ,$podcast->title );
 								}

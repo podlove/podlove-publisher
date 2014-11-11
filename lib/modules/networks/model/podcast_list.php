@@ -38,7 +38,7 @@ class PodcastList extends Base {
 	/**
 	 * Fetch all Blogs
 	 */
-	public static function all_blogs() {
+	public static function get_all_blog_ids() {
 		global $wpdb;
 
 		if ($wpdb->blogs) {
@@ -53,8 +53,8 @@ class PodcastList extends Base {
 	/**
 	 * Fetch all Podcasts
 	 */
-	public static function all_podcasts() {
-		$podcasts = array_filter( self::all_blogs(), function( $blog ) {
+	public static function get_all_podcast_ids() {
+		$podcasts = array_filter( self::get_all_blog_ids(), function( $blog ) {
 			switch_to_blog( $blog );
 			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
 				restore_current_blog();
@@ -70,8 +70,8 @@ class PodcastList extends Base {
 	/**
 	 * Fetch all Podcasts ordered
 	 */
-	public static function all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
-		$blog_ids = self::all_podcasts();
+	public static function get_all_podcast_ids_ordered( $sortby = "title", $sort = 'ASC' ) {
+		$blog_ids = self::get_all_podcast_ids();
 
 		foreach ($blog_ids as $blog_id) {
 			switch_to_blog( $blog_id );

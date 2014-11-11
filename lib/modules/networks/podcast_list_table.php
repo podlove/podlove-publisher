@@ -85,7 +85,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		$hidden = array();
 		$sortable = false;
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$items = \Podlove\Modules\Networks\Model\PodcastList::all_podcasts_ordered();
+		$items = \Podlove\Modules\Networks\Model\PodcastList::get_all_podcast_ids_ordered();
 
 		uasort( $items, function ( $a, $b ) {
 			return strnatcmp( $a->title, $b->title );

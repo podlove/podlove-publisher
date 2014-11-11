@@ -109,7 +109,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		$args = array(
 			'id'     => $podcast_toolbar_id . '_contributors',
-			'title'  => 'Contributors',
+			'title'  => __( 'Contributors', 'podlove' ),
 			'parent' => $podcast_toolbar_id,
 			'href'   => get_admin_url(get_current_blog_id(), 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle'),
 			'meta'   => array( 
@@ -328,7 +328,7 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function dashboard_network_statistics_row( $genders ) {
-		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::all_podcasts();
+		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::get_all_podcast_ids();
 		$podcasts_with_contributors_active = 0;
 		$relative_gender_numbers = array( 
 				'male' => 0,

@@ -15,6 +15,7 @@ class Template extends Base {
 		
 		self::activate_network_scope();
 		$global_template = self::find_one_by_title($template_id);
+		self::deactivate_network_scope();
 
 		return $global_template;
 	}

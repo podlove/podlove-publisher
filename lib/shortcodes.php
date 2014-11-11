@@ -169,8 +169,6 @@ function template_shortcode( $attributes ) {
 
 		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
-		Model\Template::deactivate_network_scope();
-
 		// apply autop and shortcodes
 		if ( in_array($attributes['autop'], array('yes', 1, 'true')))
 			$html = wpautop($html);
