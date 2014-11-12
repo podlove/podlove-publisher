@@ -398,6 +398,7 @@ class Analytics {
 			var episode_id           = $chart.data("episode");
 
 			var chart_width = $("#episode-performance-chart").closest(".inside").width();
+			var brush = { min: null, max: null };
 
 			function hour_format (hours) {
 				var days = 0, weeks = 0, label = [];
@@ -721,10 +722,28 @@ class Analytics {
 				clientChart.render();
 				systemChart.render();
 
+				// set range from 0 to "one week" or "everything" if it is younger than a week
+
+				if (!brush.min && !brush.max) {
+					brush.min = 0;
+					brush.max = 7*24;
+				}
+
 				rangeChart.brush()
-					.extent([0, 7*24/hours_per_unit])
+					.extent([
+						brush.min / hours_per_unit,
+						Math.min(
+							rangeChart.xUnitCount(),
+							brush.max / hours_per_unit
+						)
+					])
 					.event(rangeChart.select('g.brush'));
 
+				rangeChart.brush().on('brushend', function(x,y,z) {
+					extent = rangeChart.brush().extent();
+					brush.min = extent[0] * hours_per_unit;
+					brush.max = extent[1] * hours_per_unit;
+				});
 			}
 
 			function load_episode_performance_chart(options) {
