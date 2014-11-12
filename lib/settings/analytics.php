@@ -475,37 +475,24 @@ class Analytics {
 				var aggregatedDateDim = ndx1.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
 
 				// chart 1: current episode
-				// var curDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads"));
 				var curDownloadsTotal = aggregatedDateDim.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
-
-				// filter after grouping
-				// @see http://stackoverflow.com/a/22018053/72448
-				// var curFilteredDownloadsTotal = {
-				//     all: function () {
-				//         return curDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-				//     }
-				// }
 
 				// chart 3: average episode
 				var ndx3           = crossfilter(csvAvgEpisodeRawData);
 				var avgDateDim     = ndx3.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
-				var avgDownloadsTotal = avgDateDim.group().reduceSum(dc.pluck("downloads"));
+				var avgDownloadsTotal = avgDateDim.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
-				// var avgFilteredDownloadsTotal = {
-				//     all: function () {
-				//     	// console.log(avgDownloadsTotal.all());
-				//         return avgDownloadsTotal.all().filter(function(d) { return d.key < 7 * 24 / hours_per_unit; });
-				//     }
-				// };
-
-		        var cumulativeDownloadsTotal = aggregatedDateDim.group().reduceSum(dc.pluck("downloads")).all()
-		                	.reduce(function (acc, cur) {
-		                		if (acc.length) {
-		        	        		cur.value += acc.slice(-1)[0].value;
-		                		}
-		                		acc.push(cur);
-		                		return acc;
-		                	}, [])
+		        var cumulativeDownloadsTotal = aggregatedDateDim.group()
+		        	// .reduceSum(dc.pluck("downloads"))
+		        	.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+		        	.all()
+					.reduce(function (acc, cur) {
+						if (acc.length) {
+							cur.value.downloads += acc.slice(-1)[0].value.downloads;
+						}
+						acc.push(cur);
+						return acc;
+					}, [])
 		        ;
 
 				var filteredCumulativeDownloadsTotal = {
@@ -526,13 +513,8 @@ class Analytics {
 					.xAxisPadding(0.6)
 					.renderTitle(true)
 					.valueAccessor(function (v) {
-						if (v.value) {
-							return v.value.downloads;
-						} else {
-							return 0;
-						}
+						return v.value.downloads;
 					})
-
 					.colors('#69B3FF')
 				;
 
@@ -541,6 +523,9 @@ class Analytics {
 					.group(avgDownloadsTotal, "Average Episode")
 					.renderTitle(true)
 					.colors('black')
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
 				;
 
 				var cumulativeEpisodeChart = dc.lineChart(compChart)
@@ -548,6 +533,9 @@ class Analytics {
 					.group(filteredCumulativeDownloadsTotal, "Cumulative")
 					.colors('red')
 					.useRightYAxis(true)
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
 				;
 
 				var rangeChart = dc.barChart("#episode-range-chart")
