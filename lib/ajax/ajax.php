@@ -151,7 +151,7 @@ class Ajax {
 
 			$sql = "SELECT
 						COUNT(*) downloads,
-						DATE_FORMAT(accessed_at, '%Y-%m-%d') AS access_date,
+						UNIX_TIMESTAMP(accessed_at) AS access_date,
 						hours_since_release,
 						mf.episode_asset_id asset_id,
 						client_name,

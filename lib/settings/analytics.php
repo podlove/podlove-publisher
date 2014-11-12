@@ -400,10 +400,9 @@ class Analytics {
 
 			var $chart = jQuery("#episode-performance-chart");
 
-			var dateFormat     = d3.time.format("%Y-%m-%d");
-			var dateTimeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
+			var titleDateFormat = d3.time.format("%Y-%m-%d %H:%M %Z");
 
-			var episode_id           = $chart.data("episode");
+			var episode_id = $chart.data("episode");
 
 			var chart_width = $("#episode-performance-chart").closest(".inside").width();
 			var brush = { min: null, max: null };
@@ -574,7 +573,7 @@ class Analytics {
 					.rangeChart(rangeChart)
 					.title(function(d) {
 						return [
-							d.value.date ? d3.time.format("%Y-%m-%d")(d.value.date) : "",
+							d.value.date ? titleDateFormat(d.value.date) : "",
 							(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h after release",
 							"Downloads: " + d.value.downloads
 						].join("\n");
@@ -804,7 +803,7 @@ class Analytics {
 					).done(function(csvCurEpisode, csvAvgEpisode) {
 
 						var csvMapper = function(d) {
-							var parsed_date = dateFormat.parse(d.date);
+							var parsed_date = new Date(+d.date * 1000);
 
 							return {
 								date: parsed_date,
