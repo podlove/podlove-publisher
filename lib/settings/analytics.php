@@ -739,7 +739,7 @@ class Analytics {
 					])
 					.event(rangeChart.select('g.brush'));
 
-				rangeChart.brush().on('brushend', function(x,y,z) {
+				rangeChart.brush().on('brushend', function() {
 					extent = rangeChart.brush().extent();
 					brush.min = extent[0] * hours_per_unit;
 					brush.max = extent[1] * hours_per_unit;
