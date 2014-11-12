@@ -346,11 +346,19 @@ class Analytics {
 		$post    = get_post( $episode->post_id );
 
 		?>
+		<div id="chart-zoom-selection" style="float: right">
+			<span style="line-height: 26px">Zoom</span>
+			<a href="#" data-hours="24" class="button button-secondary">1d</a>
+			<a href="#" data-hours="168" class="button button-secondary">1w</a>
+			<a href="#" data-hours="672" class="button button-secondary">4w</a>
+			<a href="#" data-hours="0" class="button button-secondary">all</a>
+		</div>
+
 		<div id="chart-grouping-selection">
 			<span style="line-height: 26px">Unit</span>
 			<a href="#" data-hours="1" class="button button-secondary">1h</a>
 			<a href="#" data-hours="2" class="button button-secondary">2h</a>
-			<a href="#" data-hours="3" class="button button-secondary">3h</a>
+			<!-- <a href="#" data-hours="3" class="button button-secondary">3h</a> -->
 			<a href="#" data-hours="4" class="button button-secondary">4h</a>
 			<a href="#" data-hours="6" class="button button-secondary">6h</a>
 			<a href="#" data-hours="12" class="button button-secondary">12h</a>
@@ -723,10 +731,10 @@ class Analytics {
 				systemChart.render();
 
 				// set range from 0 to "one week" or "everything" if it is younger than a week
-
 				if (!brush.min && !brush.max) {
 					brush.min = 0;
-					brush.max = 7*24;
+					brush.max = 7*24 - 1;
+					$("#chart-zoom-selection .button:eq(1)").addClass('active');
 				}
 
 				rangeChart.brush()
@@ -740,9 +748,60 @@ class Analytics {
 					.event(rangeChart.select('g.brush'));
 
 				rangeChart.brush().on('brushend', function() {
+					var validRanges = $("#chart-zoom-selection .button").map(function() { return $(this).data('hours'); });
+
 					extent = rangeChart.brush().extent();
 					brush.min = extent[0] * hours_per_unit;
 					brush.max = extent[1] * hours_per_unit;
+
+					// if startpoint is < 0, automatically shift brush to the right
+					if (brush.min < 0) {
+						brush.max -= brush.min;
+						brush.min = 0;
+
+						rangeChart.brush()
+							.extent([
+								brush.min / hours_per_unit,
+								Math.min(
+									rangeChart.xUnitCount(),
+									brush.max / hours_per_unit
+								)
+							])
+							.event(rangeChart.select('g.brush'));
+					}
+
+					// clear selection if the user modifies selection
+					if (-1 === $.inArray(Math.round(brush.max - brush.min + 1), validRanges)) {
+						$("#chart-zoom-selection .button.active").removeClass("active");
+					}
+				});
+
+				$("#chart-zoom-selection .button").on("click", function(e) {
+					var hours = parseInt($(this).data('hours'), 10);
+
+					$(this).siblings().removeClass("active");
+					$(this).addClass("active");
+
+					if (hours === 0) {
+						// set to full range
+						brush.min = 0;
+						brush.max = rangeChart.xUnitCount() * hours_per_unit;
+					} else {
+						// extend to set range
+						brush.max = brush.min + hours - 1;
+					}
+
+					rangeChart.brush()
+						.extent([
+							brush.min / hours_per_unit,
+							Math.min(
+								rangeChart.xUnitCount(),
+								brush.max / hours_per_unit
+							)
+						])
+						.event(rangeChart.select('g.brush'));
+
+					e.preventDefault();
 				});
 			}
 
