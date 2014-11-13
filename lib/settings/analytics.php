@@ -579,7 +579,7 @@ class Analytics {
 					.dimension(avgEpisodeHoursDimension)
 					.group(avgDownloadsGroup, "Average Episode")
 					.renderTitle(true)
-					.colors('black')
+					.colors('red')
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
@@ -589,12 +589,13 @@ class Analytics {
 				var cumulativeEpisodeChart = dc.lineChart(compChart)
 					.dimension(avgEpisodeHoursDimension)
 					.group(cumulativeDownloadsGroup, "Cumulative")
-					.colors('red')
+					.colors('#CCC')
 					.useRightYAxis(true)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
 					.renderDataPoints({})
+					.renderArea(true)
 				;
 
 				var rangeChart = dc.barChart("#episode-range-chart")
@@ -630,7 +631,7 @@ class Analytics {
 							"Downloads: " + d.value.downloads
 						].join("\n");
 					})
-					.compose([downloadsChart, avgEpisodeDownloadsChart, cumulativeEpisodeChart])
+					.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
 					.rightYAxisLabel("Monthly Index Fnord")
 				;
 
