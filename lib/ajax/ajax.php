@@ -155,7 +155,9 @@ class Ajax {
 						hours_since_release,
 						mf.episode_asset_id asset_id,
 						client_name,
-						os_name AS system
+						os_name AS system,
+						source,
+						context
 					FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
@@ -165,7 +167,7 @@ class Ajax {
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$csv = '"downloads","date","hours_since_release","asset_id","client","system"' . "\n";
+			$csv = '"downloads","date","hours_since_release","asset_id","client","system","source","context"' . "\n";
 			foreach ($results as $row) {
 				$row[4] = '"' . $row[4] . '"';
 				$row[5] = '"' . $row[5] . '"';

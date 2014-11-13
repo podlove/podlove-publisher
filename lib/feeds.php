@@ -81,6 +81,9 @@ function feed_authentication() {
 
 function check_for_and_do_compression($content_type = 'application/rss+xml')
 {
+	// ensure content type headers are set
+	header('Content-type: ' . $content_type);
+	
 	if (!apply_filters('podlove_enable_gzip_for_feeds', true))
 		return false;
 	
@@ -108,8 +111,6 @@ function check_for_and_do_compression($content_type = 'application/rss+xml')
 	if (defined('HHVM_VERSION'))
 		return false;
 
-	// ensure content type headers are set
-	header('Content-type: ' . $content_type);
 	// start gzipping
 	ob_start("ob_gzhandler");
 }

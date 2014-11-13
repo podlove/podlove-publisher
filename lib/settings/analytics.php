@@ -376,6 +376,8 @@ class Analytics {
 
 		<div id="episode-range-chart" style="float: none"></div>
 		
+		<div id="episode-source-chart" style="float: left"></div>
+		<div id="episode-context-chart" style="float: left"></div>
 		<div id="episode-weekday-chart" style="float: left"></div>
 		<div id="episode-asset-chart" style="float: left"></div>
 		<div id="episode-client-chart" style="float: left"></div>
@@ -457,6 +459,8 @@ class Analytics {
 				p.date     = v.date;
 				p.client   = v.client;
 				p.system   = v.system;
+				p.source   = v.source;
+				p.context  = v.context;
 
 				return p;
 			};
@@ -725,6 +729,48 @@ class Analytics {
 					.colors(chartColor)
 				;
 
+				// dimension: download source
+				var sourceDimension = xfilter.dimension(function (d) {
+					return d.source;
+				});
+
+				// group: downloads by source
+				var sourceGroup = sourceDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				var sourceChart = dc.rowChart("#episode-source-chart")
+					.width(285)
+					.height(285)
+					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.elasticX(true)
+					.dimension(sourceDimension)
+					.group(sourceGroup)
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
+					.colors(chartColor)
+				;
+
+				// dimension: download source
+				var contextDimension = xfilter.dimension(function (d) {
+					return d.context;
+				});
+				
+				// group: downloads by context
+				var contextGroup = contextDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				var contextChart = dc.rowChart("#episode-context-chart")
+					.width(285)
+					.height(285)
+					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.elasticX(true)
+					.dimension(contextDimension)
+					.group(contextGroup)
+					.valueAccessor(function (v) {
+						return v.value.downloads;
+					})
+					.colors(chartColor)
+				;
+
 				// set tickFormats for all charts
 				rangeChart.yAxis().ticks([2]);
 				rangeChart.xAxis().tickFormat(function(v) {
@@ -742,8 +788,10 @@ class Analytics {
 				assetChart.xAxis().tickFormat(formatThousands);
 				clientChart.xAxis().tickFormat(formatThousands);
 				systemChart.xAxis().tickFormat(formatThousands);
+				sourceChart.xAxis().tickFormat(formatThousands);
+				contextChart.xAxis().tickFormat(formatThousands);
 
-				[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart].forEach(function(chart) {
+				[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart, sourceChart, contextChart].forEach(function(chart) {
 					chart.render()
 				});
 
@@ -838,6 +886,8 @@ class Analytics {
 								asset_id: +d.asset_id,
 								client: d.client ? d.client : "Unknown",
 								system: d.system ? d.system : "Unknown",
+								source: d.source ? d.source : "Unknown",
+								context: d.context ? d.context : "Unknown"
 							};
 						};
 
@@ -878,6 +928,8 @@ class Analytics {
 		</script>
 
 		<style type="text/css">
+		#episode-source-chart g.row text,
+		#episode-context-chart g.row text,
 		#episode-weekday-chart g.row text,
 		#episode-client-chart g.row text,
 		#episode-system-chart g.row text,
