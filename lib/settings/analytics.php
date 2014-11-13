@@ -491,6 +491,17 @@ class Analytics {
 
 				var xfilter    = crossfilter(csvCurEpisodeRawData);
 				var xfilterAvg = crossfilter(csvAvgEpisodeRawData);
+				var all = xfilter.groupAll().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				var labelWithPercent = function (d, keyAccessor) {
+					var label = keyAccessor();
+
+					if (all.value()) {
+						label += " (" + Math.round(d.value.downloads / all.value().downloads * 100) + "%)";
+					}
+
+					return label;
+				};
 
 				/**
 				 * Dimensions & Groups
@@ -647,8 +658,10 @@ class Analytics {
 				    .group(dayOfWeekGroup)
 				    .dimension(dayOfWeekDimension)
 				    .elasticX(true)
-				    .label(function (d) {
-				    	return weekdayNames[d.key];
+				    .label(function(d) {
+				    	return labelWithPercent(d, function() {
+				    		return weekdayNames[d.key];
+				    	});
 				    })
 				    .title(function (d) {
 				        return d.value.downloads;
@@ -680,8 +693,10 @@ class Analytics {
 					.ordering(function (v) {
 						return -v.value.downloads;
 					})
-					.label(function (d) {
-						return assetNames[d.key];
+					.label(function(d) {
+						return labelWithPercent(d, function() {
+							return assetNames[d.key];
+						});
 					})
 					.title(function (d) {
 						return d.value.downloads;
@@ -706,6 +721,11 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
+					.label(function(d) {
+						return labelWithPercent(d, function() {
+							return d.key;
+						});
+					})
 					.colors(chartColor)
 				;
 
@@ -726,6 +746,11 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
+					.label(function(d) {
+						return labelWithPercent(d, function() {
+							return d.key;
+						});
+					})
 					.colors(chartColor)
 				;
 
@@ -747,6 +772,11 @@ class Analytics {
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
+					.label(function(d) {
+						return labelWithPercent(d, function() {
+							return d.key;
+						});
+					})
 					.colors(chartColor)
 				;
 
@@ -767,6 +797,11 @@ class Analytics {
 					.group(contextGroup)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
+					})
+					.label(function(d) {
+						return labelWithPercent(d, function() {
+							return d.key;
+						});
 					})
 					.colors(chartColor)
 				;
