@@ -64,7 +64,7 @@ class Feed_Validation extends \Podlove\Modules\Base {
 		wp_schedule_single_event( time(), 'renewFeedTransients' );
 	}
 
-	public function meta_box() {
+	public static function meta_box() {
 		$feeds = \Podlove\Model\Feed::all();
 		?>
 		<input id="revalidate_feeds" type="button" class="button button-primary" value="<?php _e( 'Revalidate Feeds', 'podlove' ); ?>">
