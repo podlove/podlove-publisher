@@ -469,22 +469,50 @@ class Analytics {
 			function render_episode_performance_chart(options) {
 				var hours_per_unit = options.hours_per_unit;
 
-				var ndx1 = crossfilter(csvCurEpisodeRawData);
+				var xfilter    = crossfilter(csvCurEpisodeRawData);
+				var xfilterAvg = crossfilter(csvAvgEpisodeRawData);
 
-				var aggregatedDateDim = ndx1.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
+				/**
+				 * Dimensions & Groups
+				 */
+				var dimRelativeHoursSinceRelease = function(d) {
+					return Math.floor(d.hoursSinceRelease / hours_per_unit);
+				};
 
-				// chart 1: current episode
-				var curDownloadsTotal = aggregatedDateDim.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+				// dimension: "hours since release"
+				var hoursDimension = xfilter.dimension(dimRelativeHoursSinceRelease);
 
-				// chart 3: average episode
-				var ndx3           = crossfilter(csvAvgEpisodeRawData);
-				var avgDateDim     = ndx3.dimension(function(d){ return Math.floor(d.hoursSinceRelease / hours_per_unit); });
-				var avgDownloadsTotal = avgDateDim.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+				// dimension: "hours since release"
+				var avgEpisodeHoursDimension = xfilterAvg.dimension(dimRelativeHoursSinceRelease);
 
-		        var cumulativeDownloadsTotal = aggregatedDateDim.group()
-		        	// .reduceSum(dc.pluck("downloads"))
-		        	.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
-		        	.all()
+				// dimension: day of week
+				var dayOfWeekDimension = xfilter.dimension(function (d) { return d.weekday; });
+
+				// dimension: asset id
+				var assetDimension = xfilter.dimension(function (d) {
+					return d.asset_id;
+				});
+
+				// dimension: client
+				var clientDimension = xfilter.dimension(function (d) {
+					return d.client;
+				});
+
+				// dimension: operating system
+				var systemDimension = xfilter.dimension(function (d) {
+					return d.system;
+				});
+
+				// group: downloads
+				var downloadsGroup = hoursDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				// group: downloads
+				var avgDownloadsGroup = avgEpisodeHoursDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				// group: cumulative downloads
+				var _cumulativeDownloadsGroup = hoursDimension.group()
+					.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+					.all()
 					.reduce(function (acc, cur) {
 						if (acc.length) {
 							cur.value.downloads += acc.slice(-1)[0].value.downloads;
@@ -492,34 +520,48 @@ class Analytics {
 						acc.push(cur);
 						return acc;
 					}, [])
-		        ;
+				;
 
-				var filteredCumulativeDownloadsTotal = {
-				    all: function () {
-				        return cumulativeDownloadsTotal;
-				    }
+				var cumulativeDownloadsGroup = {
+				    all: function () { return _cumulativeDownloadsGroup; }
 				};
 
-				var dayOfWeek = ndx1.dimension(function (d) {
-					return d.weekday;
-			    });
-			    var dayOfWeekGroup = dayOfWeek.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+				// group: downloads per weekday
+				var dayOfWeekGroup = dayOfWeekDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
-				var curEpisodeDownloadsPerDayChart = dc.barChart(compChart)
-					.dimension(aggregatedDateDim)
-					.group(curDownloadsTotal, "Current Episode")
+				// group: downloads per asset
+				var assetsGroup = assetDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+				// group: downloads per client
+				var clientsGroup = clientDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
+					return v.downloads;
+				});
+
+				// group: downloads per operating system
+				var systemsGroup = systemDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
+					return v.downloads;
+				});
+
+				/**
+				 * Charts
+				 */
+				var chartColor = '#69B3FF';
+
+				var downloadsChart = dc.barChart(compChart)
+					.dimension(hoursDimension)
+					.group(downloadsGroup, "Current Episode")
 					.centerBar(true)
 					.xAxisPadding(0.6)
 					.renderTitle(true)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
-					.colors('#69B3FF')
+					.colors(chartColor)
 				;
 
-				var averageEpisodeChart = dc.lineChart(compChart)
-					.dimension(avgDateDim)
-					.group(avgDownloadsTotal, "Average Episode")
+				var avgEpisodeDownloadsChart = dc.lineChart(compChart)
+					.dimension(avgEpisodeHoursDimension)
+					.group(avgDownloadsGroup, "Average Episode")
 					.renderTitle(true)
 					.colors('black')
 					.valueAccessor(function (v) {
@@ -528,8 +570,8 @@ class Analytics {
 				;
 
 				var cumulativeEpisodeChart = dc.lineChart(compChart)
-					.dimension(avgDateDim)
-					.group(filteredCumulativeDownloadsTotal, "Cumulative")
+					.dimension(avgEpisodeHoursDimension)
+					.group(cumulativeDownloadsGroup, "Cumulative")
 					.colors('red')
 					.useRightYAxis(true)
 					.valueAccessor(function (v) {
@@ -540,25 +582,17 @@ class Analytics {
 				var rangeChart = dc.barChart("#episode-range-chart")
 					.width(chart_width)
 					.height(80)
-					.dimension(aggregatedDateDim)
-					.group(curDownloadsTotal)
-					.x(d3.scale.linear().domain([0,100000]))
-					.y(d3.scale.sqrt().domain([0,4000])) // FIXME 4000 must be filled i dynamically
+					.dimension(hoursDimension)
+					.group(downloadsGroup)
+					.x(d3.scale.linear().domain([0,Infinity]))
 					.elasticX(true)
 					.centerBar(true)
 					.xAxisPadding(0.6)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
-					.colors('#69B3FF')
+					.colors(chartColor)
 				;
-
-				rangeChart.yAxis().ticks([2]);
-				rangeChart.yAxis().tickFormat(formatThousands);
-
-				rangeChart.xAxis().tickFormat(function(v) {
-					return hour_format(v * hours_per_unit);
-				});
 
 				var compChart = dc.compositeChart("#episode-performance-chart")
 					.width(chart_width)
@@ -578,58 +612,40 @@ class Analytics {
 							"Downloads: " + d.value.downloads
 						].join("\n");
 					})
-					.compose([curEpisodeDownloadsPerDayChart, averageEpisodeChart, cumulativeEpisodeChart])
+					.compose([downloadsChart, avgEpisodeDownloadsChart, cumulativeEpisodeChart])
 					.rightYAxisLabel("Monthly Index Fnord")
-					;
+				;
 
-				compChart.yAxis().tickFormat(formatThousands);
-
-				compChart.xAxis().tickFormat(function(v) {
-					return hour_format(v * hours_per_unit);
-				});
-
-				compChart.rightYAxis().tickFormat(formatThousands);
-
-	        	var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+				var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
 					.height(285)
 					.width(285)
-			        .margins({top: 0, left: 10, right: 10, bottom: 20})
-			        .group(dayOfWeekGroup)
-			        .dimension(dayOfWeek)
-			        .elasticX(true)
-			        .label(function (d) {
-			        	return weekdayNames[d.key];
-	                })
-	                .title(function (d) {
-                        return d.value.downloads;
-                    })
-                    .valueAccessor(function (v) {
-                    	if (v.value) {
-                    		return v.value.downloads;
-                    	} else {
-                    		return 0;
-                    	}
-                    })
-                    .colors('#69B3FF')
+				    .margins({top: 0, left: 10, right: 10, bottom: 20})
+				    .group(dayOfWeekGroup)
+				    .dimension(dayOfWeekDimension)
+				    .elasticX(true)
+				    .label(function (d) {
+				    	return weekdayNames[d.key];
+				    })
+				    .title(function (d) {
+				        return d.value.downloads;
+				    })
+				    .valueAccessor(function (v) {
+				    	if (v.value) {
+				    		return v.value.downloads;
+				    	} else {
+				    		return 0;
+				    	}
+				    })
+				    .colors(chartColor)
 				;
-
-				weekdayChart.xAxis().tickFormat(formatThousands);
-
-				var assets = ndx1.dimension(function (d) {
-					return d.asset_id;
-			    });
-			    var assetsGroup = assets.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var assetChart = dc.rowChart("#episode-asset-chart")
 					.width(285)
 					.height(285)
 					.margins({top: 0, left: 10, right: 10, bottom: 20})
-					// .labelOffsetX(0)
-					// .labelOffsetY(-2)
-					// .gap(20)
 					.elasticX(true)
-					.dimension(assets) // set dimension
+					.dimension(assetDimension) // set dimension
 					.group(assetsGroup) // set group
 					.valueAccessor(function (v) {
 						if (v.value) {
@@ -641,30 +657,21 @@ class Analytics {
 					.ordering(function (v) {
 						return -v.value.downloads;
 					})
-			        .label(function (d) {
-			        	return assetNames[d.key];
-	                })
-	                .title(function (d) {
-	                    return d.value.downloads;
-	                })
-	                .colors('#69B3FF')
-			   ;
+					.label(function (d) {
+						return assetNames[d.key];
+					})
+					.title(function (d) {
+						return d.value.downloads;
+					})
+					.colors(chartColor)
+				;
 
-			   assetChart.xAxis().tickFormat(formatThousands);
-
-			   	var clients = ndx1.dimension(function (d) {
-			   		return d.client;
-			    });
-				var clientsGroup = clients.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
-					return v.downloads;
-				});
-
-			   var clientChart = dc.rowChart("#episode-client-chart")
+				var clientChart = dc.rowChart("#episode-client-chart")
 					.width(285)
 					.height(285)
 					.margins({top: 0, left: 10, right: 10, bottom: 20})
 					.elasticX(true)
-					.dimension(clients)
+					.dimension(clientDimension)
 					.group(clientsGroup)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
@@ -676,24 +683,15 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
-					.colors('#69B3FF')
+					.colors(chartColor)
 				;
 
-				clientChart.xAxis().tickFormat(formatThousands);
-
-			   	var systems = ndx1.dimension(function (d) {
-			   		return d.system;
-			    });
-				var systemsGroup = systems.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
-					return v.downloads;
-				});
-
-			   var systemChart = dc.rowChart("#episode-system-chart")
+				var systemChart = dc.rowChart("#episode-system-chart")
 					.width(285)
 					.height(285)
 					.margins({top: 0, left: 10, right: 10, bottom: 20})
 					.elasticX(true)
-					.dimension(systems)
+					.dimension(systemDimension)
 					.group(systemsGroup)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
@@ -705,35 +703,55 @@ class Analytics {
 						return data; // no "others" group
 					})
 					.cap(10)
-					.colors('#69B3FF')
+					.colors(chartColor)
 				;
 
+				// set tickFormats for all charts
+				rangeChart.yAxis().ticks([2]);
+				rangeChart.xAxis().tickFormat(function(v) {
+					return hour_format(v * hours_per_unit);
+				});
+					
+				compChart.xAxis().tickFormat(function(v) {
+					return hour_format(v * hours_per_unit);
+				});
+
+				rangeChart.yAxis().tickFormat(formatThousands);
+				compChart.yAxis().tickFormat(formatThousands);
+				compChart.rightYAxis().tickFormat(formatThousands);
+				weekdayChart.xAxis().tickFormat(formatThousands);
+				assetChart.xAxis().tickFormat(formatThousands);
+				clientChart.xAxis().tickFormat(formatThousands);
 				systemChart.xAxis().tickFormat(formatThousands);
 
-				compChart.render();
-				rangeChart.render();
-				weekdayChart.render();
-				assetChart.render();
-				clientChart.render();
-				systemChart.render();
+				[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart].forEach(function(chart) {
+					chart.render()
+				});
 
-				// set range from 0 to "one week" or "everything" if it is younger than a week
+				var renderBrush = function(chart, brush) {
+					chart.brush()
+						// set new brush range
+						.extent([
+							brush.min / hours_per_unit,
+							Math.min(
+								chart.xUnitCount(),
+								brush.max / hours_per_unit
+							)
+						])
+						// send brush event to trigger redraw
+						.event(chart.select('g.brush'));
+				}
+				
+				// set range from 0 to "one week" or "everything" if the episode is younger than a week
 				if (!brush.min && !brush.max) {
 					brush.min = 0;
 					brush.max = 7*24 - 1;
 					$("#chart-zoom-selection .button:eq(1)").addClass('active');
 				}
 
-				rangeChart.brush()
-					.extent([
-						brush.min / hours_per_unit,
-						Math.min(
-							rangeChart.xUnitCount(),
-							brush.max / hours_per_unit
-						)
-					])
-					.event(rangeChart.select('g.brush'));
+				renderBrush(rangeChart, brush);
 
+				// handle the user changing the brush manually
 				rangeChart.brush().on('brushend', function() {
 					var validRanges = $("#chart-zoom-selection .button").map(function() { return $(this).data('hours'); });
 
@@ -746,15 +764,7 @@ class Analytics {
 						brush.max -= brush.min;
 						brush.min = 0;
 
-						rangeChart.brush()
-							.extent([
-								brush.min / hours_per_unit,
-								Math.min(
-									rangeChart.xUnitCount(),
-									brush.max / hours_per_unit
-								)
-							])
-							.event(rangeChart.select('g.brush'));
+						renderBrush(rangeChart, brush);
 					}
 
 					// clear selection if the user modifies selection
@@ -778,15 +788,7 @@ class Analytics {
 						brush.max = brush.min + hours - 1;
 					}
 
-					rangeChart.brush()
-						.extent([
-							brush.min / hours_per_unit,
-							Math.min(
-								rangeChart.xUnitCount(),
-								brush.max / hours_per_unit
-							)
-						])
-						.event(rangeChart.select('g.brush'));
+					renderBrush(rangeChart, brush);
 
 					e.preventDefault();
 				});
