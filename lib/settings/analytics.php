@@ -109,7 +109,6 @@ class Analytics {
 				var maxDate = dateDim.top(1)[0].dd;
 
 				var totalDownloadsChart = dc.barChart("#total-chart")
-					.width(800).height(250)
 					.dimension(dateDim)
 					.group(downloadsTotal)
 					.x(d3.time.scale().domain([minDate,maxDate]))
@@ -346,16 +345,16 @@ class Analytics {
 		$post    = get_post( $episode->post_id );
 
 		?>
-		<div id="chart-zoom-selection" style="float: right">
-			<span style="line-height: 26px">Zoom</span>
+		<div id="chart-zoom-selection" class="chart-menubar">
+			<span>Zoom</span>
 			<a href="#" data-hours="24" class="button button-secondary">1d</a>
 			<a href="#" data-hours="168" class="button button-secondary">1w</a>
 			<a href="#" data-hours="672" class="button button-secondary">4w</a>
 			<a href="#" data-hours="0" class="button button-secondary">all</a>
 		</div>
 
-		<div id="chart-grouping-selection">
-			<span style="line-height: 26px">Unit</span>
+		<div id="chart-grouping-selection" class="chart-menubar">
+			<span>Unit</span>
 			<a href="#" data-hours="1" class="button button-secondary">1h</a>
 			<a href="#" data-hours="2" class="button button-secondary">2h</a>
 			<!-- <a href="#" data-hours="3" class="button button-secondary">3h</a> -->
@@ -367,24 +366,74 @@ class Analytics {
 			<a href="#" data-hours="672" class="button button-secondary">4w</a>
 		</div>
 
-		<div 
-			id="episode-performance-chart" 
-			data-episode="<?php echo $episode->id ?>"
-			style="float: none"
-			>
+		<div id="episode-performance-chart" data-episode="<?php echo $episode->id ?>">
 		</div>
 
-		<div id="episode-range-chart" style="float: none"></div>
+		<div id="episode-range-chart"></div>
 		
-		<div id="episode-source-chart" style="float: left"></div>
-		<div id="episode-context-chart" style="float: left"></div>
-		<div id="episode-weekday-chart" style="float: left"></div>
-		<div id="episode-asset-chart" style="float: left"></div>
-		<div id="episode-client-chart" style="float: left"></div>
-		<div id="episode-system-chart" style="float: left"></div>
+		<section id="episode-source-chart-wrapper" class="chart-wrapper">
+			<h1>Download Source</h1>
+			<div id="episode-source-chart"></div>
+		</section>
+
+		<section id="episode-context-chart-wrapper" class="chart-wrapper">
+			<h1>Download Context</h1>
+			<div id="episode-context-chart"></div>
+		</section>
+
+		<section id="episode-weekday-chart-wrapper" class="chart-wrapper">
+			<h1>Day of Week</h1>
+			<div id="episode-weekday-chart"></div>
+		</section>
+
+		<section id="episode-asset-chart-wrapper" class="chart-wrapper">
+			<h1>Asset</h1>
+			<div id="episode-asset-chart"></div>
+		</section>
+
+		<section id="episode-client-chart-wrapper" class="chart-wrapper">
+			<h1>Podcast Client</h1>
+			<div id="episode-client-chart"></div>
+		</section>
+
+		<section id="episode-system-chart-wrapper" class="chart-wrapper">
+			<h1>Operating System</h1>
+			<div id="episode-system-chart"></div>
+		</section>
 
 		<div style="clear: both"></div>
 
+		<style type="text/css">
+		section.chart-wrapper {
+			float: left;
+		}
+
+		section.chart-wrapper h1 {
+			font-size: 14px;
+			margin-left: 10px;
+		}
+
+		section.chart-wrapper div {
+			width: 285px;
+			height: 285px;
+		}
+
+		.chart-menubar:first-child { float: right; }
+		.chart-menubar:last-child  { float: left; }
+
+		.chart-menubar span { line-height: 26px; }
+
+		#episode-performance-chart {
+			float: none;
+			height: 250px
+		}
+
+		#episode-range-chart {
+			float: none;
+			height: 80px;
+			margin-top: -15px;
+		}
+		</style>
 
 		<script type="text/javascript">
 		var assetNames = <?php
@@ -626,11 +675,11 @@ class Analytics {
 						return v.value.downloads;
 					})
 					.colors(chartColor)
+					.yAxisLabel(" ") // to align yaxis with main chart
 				;
 
 				var compChart = dc.compositeChart("#episode-performance-chart")
 					.width(chart_width)
-					.height(250)
 					.x(d3.scale.linear().domain([0,1000000]))
 					.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
 					.elasticX(true)
@@ -652,9 +701,7 @@ class Analytics {
 
 				var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
-					.height(285)
-					.width(285)
-				    .margins({top: 0, left: 10, right: 10, bottom: 20})
+				    .margins({top: 0, left: 10, right: 10, bottom: 25})
 				    .group(dayOfWeekGroup)
 				    .dimension(dayOfWeekDimension)
 				    .elasticX(true)
@@ -677,9 +724,7 @@ class Analytics {
 				;
 
 				var assetChart = dc.rowChart("#episode-asset-chart")
-					.width(285)
-					.height(285)
-					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.margins({top: 0, left: 10, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(assetDimension) // set dimension
 					.group(assetsGroup) // set group
@@ -705,9 +750,7 @@ class Analytics {
 				;
 
 				var clientChart = dc.rowChart("#episode-client-chart")
-					.width(285)
-					.height(285)
-					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.margins({top: 0, left: 10, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(clientDimension)
 					.group(clientsGroup)
@@ -730,9 +773,7 @@ class Analytics {
 				;
 
 				var systemChart = dc.rowChart("#episode-system-chart")
-					.width(285)
-					.height(285)
-					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.margins({top: 0, left: 10, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(systemDimension)
 					.group(systemsGroup)
@@ -763,9 +804,7 @@ class Analytics {
 				var sourceGroup = sourceDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var sourceChart = dc.rowChart("#episode-source-chart")
-					.width(285)
-					.height(285)
-					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.margins({top: 0, left: 10, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(sourceDimension)
 					.group(sourceGroup)
@@ -789,9 +828,7 @@ class Analytics {
 				var contextGroup = contextDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var contextChart = dc.rowChart("#episode-context-chart")
-					.width(285)
-					.height(285)
-					.margins({top: 0, left: 10, right: 10, bottom: 20})
+					.margins({top: 0, left: 10, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(contextDimension)
 					.group(contextGroup)
