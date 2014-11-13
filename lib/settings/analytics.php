@@ -407,7 +407,23 @@ class Analytics {
 			var chart_width = $("#episode-performance-chart").closest(".inside").width();
 			var brush = { min: null, max: null };
 
-			function hour_format (hours) {
+			/**
+			 * round to <digits> digits after comma.
+			 *
+			 * decimalRound(5.123,1) // => 5.1
+			 * decimalRound(5.678,2) // => 5.68
+			 */
+			function decimalRound(number, digits) {
+				var exp = Math.pow(10, digits);
+
+				number *= exp;
+				number = Math.round(number);
+				number /= exp;
+
+				return number;
+			}
+
+			function hourFormat(hours) {
 				var days = 0, weeks = 0, label = [];
 
 				if (hours > 48) {
@@ -421,13 +437,13 @@ class Analytics {
 				};
 
 				if (weeks)
-					label.push(weeks + "w");
+					label.push(decimalRound(weeks,1) + "w");
 
 				if (days)
-					label.push(days + "d");
+					label.push(decimalRound(days,1) + "d");
 
 				if (hours)
-					label.push(hours + "h")
+					label.push(decimalRound(hours,1) + "h")
 
 				return label.join(" ");
 			}
@@ -463,7 +479,7 @@ class Analytics {
 				if (v < 1000)
 					return v;
 				else
-					return (v/1000) + "k";
+					return decimalRound(v/1000, 1) + "k";
 			};
 
 			function render_episode_performance_chart(options) {
@@ -709,11 +725,11 @@ class Analytics {
 				// set tickFormats for all charts
 				rangeChart.yAxis().ticks([2]);
 				rangeChart.xAxis().tickFormat(function(v) {
-					return hour_format(v * hours_per_unit);
+					return hourFormat(v * hours_per_unit);
 				});
 					
 				compChart.xAxis().tickFormat(function(v) {
-					return hour_format(v * hours_per_unit);
+					return hourFormat(v * hours_per_unit);
 				});
 
 				rangeChart.yAxis().tickFormat(formatThousands);
