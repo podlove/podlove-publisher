@@ -583,6 +583,7 @@ class Analytics {
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
+					.renderDataPoints({})
 				;
 
 				var cumulativeEpisodeChart = dc.lineChart(compChart)
@@ -593,6 +594,7 @@ class Analytics {
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
+					.renderDataPoints({})
 				;
 
 				var rangeChart = dc.barChart("#episode-range-chart")
