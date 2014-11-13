@@ -632,7 +632,7 @@ class Analytics {
 						].join("\n");
 					})
 					.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
-					.rightYAxisLabel("Monthly Index Fnord")
+					.rightYAxisLabel("Cumulative Downloads")
 				;
 
 				var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
