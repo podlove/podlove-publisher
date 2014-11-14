@@ -542,15 +542,26 @@ class Analytics {
 				var xfilterAvg = crossfilter(csvAvgEpisodeRawData);
 				var all = xfilter.groupAll().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
-				var labelWithPercent = function (d, keyAccessor) {
-					var label = keyAccessor();
+				var addPercentageLabels = function(chart) {
+					var data = chart.data();
 
-					if (all.value()) {
-						label += " (" + Math.round(d.value.downloads / all.value().downloads * 100) + "%)";
-					}
+					data.forEach(function(d, index) {
+						var row = chart.selectAll("g.row._" + index);
+						var label = chart.selectAll("g.row._" + index + " text");
+						
+						if (!row.selectAll(".subLabel").size()) {
+							row.append("text")
+								.attr('class', 'subLabel')
+								.attr('text-anchor', 'end')
+								.attr('x', -10)
+								.attr('y', label.attr('y'))
+							;
+						}
 
-					return label;
-				};
+						row.selectAll(".subLabel")
+							.html(Math.round(d.value.downloads / all.value().downloads * 100) + "%");
+					});
+			    };
 
 				/**
 				 * Dimensions & Groups
@@ -701,14 +712,12 @@ class Analytics {
 
 				var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 				var weekdayChart = dc.rowChart("#episode-weekday-chart")
-				    .margins({top: 0, left: 10, right: 10, bottom: 25})
+				    .margins({top: 0, left: 40, right: 10, bottom: 25})
 				    .group(dayOfWeekGroup)
 				    .dimension(dayOfWeekDimension)
 				    .elasticX(true)
 				    .label(function(d) {
-				    	return labelWithPercent(d, function() {
-				    		return weekdayNames[d.key];
-				    	});
+				    	return weekdayNames[d.key];
 				    })
 				    .title(function (d) {
 				        return d.value.downloads;
@@ -721,10 +730,11 @@ class Analytics {
 				    	}
 				    })
 				    .colors(chartColor)
+				    .on('preRedraw', addPercentageLabels)
 				;
 
 				var assetChart = dc.rowChart("#episode-asset-chart")
-					.margins({top: 0, left: 10, right: 10, bottom: 25})
+					.margins({top: 0, left: 40, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(assetDimension) // set dimension
 					.group(assetsGroup) // set group
@@ -739,18 +749,17 @@ class Analytics {
 						return -v.value.downloads;
 					})
 					.label(function(d) {
-						return labelWithPercent(d, function() {
-							return assetNames[d.key];
-						});
+						return assetNames[d.key];
 					})
 					.title(function (d) {
 						return d.value.downloads;
 					})
 					.colors(chartColor)
+					.on('preRedraw', addPercentageLabels)
 				;
 
 				var clientChart = dc.rowChart("#episode-client-chart")
-					.margins({top: 0, left: 10, right: 10, bottom: 25})
+					.margins({top: 0, left: 40, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(clientDimension)
 					.group(clientsGroup)
@@ -765,15 +774,14 @@ class Analytics {
 					})
 					.cap(10)
 					.label(function(d) {
-						return labelWithPercent(d, function() {
-							return d.key;
-						});
+						return d.key;
 					})
 					.colors(chartColor)
+					.on('preRedraw', addPercentageLabels)
 				;
 
 				var systemChart = dc.rowChart("#episode-system-chart")
-					.margins({top: 0, left: 10, right: 10, bottom: 25})
+					.margins({top: 0, left: 40, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(systemDimension)
 					.group(systemsGroup)
@@ -788,11 +796,10 @@ class Analytics {
 					})
 					.cap(10)
 					.label(function(d) {
-						return labelWithPercent(d, function() {
-							return d.key;
-						});
+						return d.key;
 					})
 					.colors(chartColor)
+					.on('preRedraw', addPercentageLabels)
 				;
 
 				// dimension: download source
@@ -804,7 +811,7 @@ class Analytics {
 				var sourceGroup = sourceDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var sourceChart = dc.rowChart("#episode-source-chart")
-					.margins({top: 0, left: 10, right: 10, bottom: 25})
+					.margins({top: 0, left: 40, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(sourceDimension)
 					.group(sourceGroup)
@@ -812,11 +819,10 @@ class Analytics {
 						return v.value.downloads;
 					})
 					.label(function(d) {
-						return labelWithPercent(d, function() {
-							return d.key;
-						});
+						return d.key;
 					})
 					.colors(chartColor)
+					.on('preRedraw', addPercentageLabels)
 				;
 
 				// dimension: download source
@@ -828,7 +834,7 @@ class Analytics {
 				var contextGroup = contextDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var contextChart = dc.rowChart("#episode-context-chart")
-					.margins({top: 0, left: 10, right: 10, bottom: 25})
+					.margins({top: 0, left: 40, right: 10, bottom: 25})
 					.elasticX(true)
 					.dimension(contextDimension)
 					.group(contextGroup)
@@ -836,11 +842,10 @@ class Analytics {
 						return v.value.downloads;
 					})
 					.label(function(d) {
-						return labelWithPercent(d, function() {
-							return d.key;
-						});
+						return d.key;
 					})
 					.colors(chartColor)
+					.on('preRedraw', addPercentageLabels)
 				;
 
 				// set tickFormats for all charts
