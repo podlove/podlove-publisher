@@ -593,6 +593,16 @@ class Analytics {
 				var systemDimension = xfilter.dimension(function (d) {
 					return d.system;
 				});
+				
+				// dimension: download source
+				var sourceDimension = xfilter.dimension(function (d) {
+					return d.source;
+				});
+
+				// dimension: download context
+				var contextDimension = xfilter.dimension(function (d) {
+					return d.context;
+				});
 
 				// group: downloads
 				var downloadsGroup = hoursDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
@@ -624,14 +634,22 @@ class Analytics {
 				var assetsGroup = assetDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				// group: downloads per client
-				var clientsGroup = clientDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
-					return v.downloads;
-				});
+				var clientsGroup = clientDimension.group()
+					.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+					.order(function(v) { return v.downloads; })
+				;
 
 				// group: downloads per operating system
-				var systemsGroup = systemDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun).order(function(v) {
-					return v.downloads;
-				});
+				var systemsGroup = systemDimension.group()
+					.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+					.order(function(v) { return v.downloads; })
+				;
+
+				// group: downloads by source
+				var sourceGroup = sourceDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+				
+				// group: downloads by context
+				var contextGroup = contextDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				/**
 				 * Charts
@@ -729,6 +747,9 @@ class Analytics {
 				    		return 0;
 				    	}
 				    })
+					.ordering(function (v) {
+						return -v.value.downloads;
+					})
 				    .colors(chartColor)
 				    .on('preRedraw', addPercentageLabels)
 				;
@@ -802,14 +823,6 @@ class Analytics {
 					.on('preRedraw', addPercentageLabels)
 				;
 
-				// dimension: download source
-				var sourceDimension = xfilter.dimension(function (d) {
-					return d.source;
-				});
-
-				// group: downloads by source
-				var sourceGroup = sourceDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
-
 				var sourceChart = dc.rowChart("#episode-source-chart")
 					.margins({top: 0, left: 40, right: 10, bottom: 25})
 					.elasticX(true)
@@ -818,20 +831,15 @@ class Analytics {
 					.valueAccessor(function (v) {
 						return v.value.downloads;
 					})
+					.ordering(function (v) {
+						return -v.value.downloads;
+					})
 					.label(function(d) {
 						return d.key;
 					})
 					.colors(chartColor)
 					.on('preRedraw', addPercentageLabels)
 				;
-
-				// dimension: download source
-				var contextDimension = xfilter.dimension(function (d) {
-					return d.context;
-				});
-				
-				// group: downloads by context
-				var contextGroup = contextDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 				var contextChart = dc.rowChart("#episode-context-chart")
 					.margins({top: 0, left: 40, right: 10, bottom: 25})
@@ -840,6 +848,9 @@ class Analytics {
 					.group(contextGroup)
 					.valueAccessor(function (v) {
 						return v.value.downloads;
+					})
+					.ordering(function (v) {
+						return -v.value.downloads;
 					})
 					.label(function(d) {
 						return d.key;
