@@ -504,8 +504,8 @@ jQuery(document).ready(function($) {
 			render_episode_performance_chart(options);
 		} else {
 			$.when(
-				$.ajax(ajaxurl + "?action=podlove-analytics-downloads-per-hour&episode=" + episode_id),
-				$.ajax(ajaxurl + "?action=podlove-analytics-average-downloads-per-hour")
+				$.ajax(ajaxurl + "?action=podlove-analytics-episode-downloads-per-hour&episode=" + episode_id),
+				$.ajax(ajaxurl + "?action=podlove-analytics-episode-average-downloads-per-hour")
 			).done(function(csvCurEpisode, csvAvgEpisode) {
 
 				var csvMapper = function(d) {

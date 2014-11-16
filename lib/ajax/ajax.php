@@ -26,8 +26,8 @@ class Ajax {
 			'get-license-name',
 			'get-license-parameters-from-url',
 			'analytics-downloads-per-day',
-			'analytics-downloads-per-hour',
-			'analytics-average-downloads-per-hour',
+			'analytics-episode-downloads-per-hour',
+			'analytics-episode-average-downloads-per-hour',
 			'episode-slug'
 		);
 
@@ -35,7 +35,7 @@ class Ajax {
 			add_action( 'wp_ajax_podlove-' . $action, array( $this, str_replace( '-', '_', $action ) ) );
 	}
 
-	public function analytics_average_downloads_per_hour()
+	public function analytics_episode_average_downloads_per_hour()
 	{
 		global $wpdb;
 
@@ -138,7 +138,7 @@ class Ajax {
 		exit;
 	}
 
-	public function analytics_downloads_per_hour() {
+	public function analytics_episode_downloads_per_hour() {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
