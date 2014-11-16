@@ -1,12 +1,9 @@
 jQuery(document).ready(function($) {
 	var csvCurEpisodeRawData, csvAvgEpisodeRawData;
 
-	var $chart = jQuery("#episode-performance-chart");
-
 	var titleDateFormat = d3.time.format("%Y-%m-%d %H:%M %Z");
 
-	var episode_id = $chart.data("episode");
-
+	var episode_id = jQuery("#episode-performance-chart").data("episode");
 	var chart_width = $("#episode-performance-chart").closest(".inside").width();
 	var brush = { min: null, max: null };
 
