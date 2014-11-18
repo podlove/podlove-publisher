@@ -6,22 +6,6 @@ jQuery(document).ready(function($) {
 	var chart_width = $("#total-chart").closest(".wrap").width();
 	var brush = { min: null, max: null };
 
-	/**
-	 * round to <digits> digits after comma.
-	 *
-	 * decimalRound(5.123,1) // => 5.1
-	 * decimalRound(5.678,2) // => 5.68
-	 */
-	function decimalRound(number, digits) {
-		var exp = Math.pow(10, digits);
-
-		number *= exp;
-		number = Math.round(number);
-		number /= exp;
-
-		return number;
-	}
-
 	var reduceAddFun = function (p, v) {
 		
 		p.downloads += v.downloads;
@@ -49,13 +33,6 @@ jQuery(document).ready(function($) {
 			client: "",
 			system: ""
 		};
-	};
-
-	var formatThousands = function(v) {
-		if (v < 1000)
-			return v;
-		else
-			return decimalRound(v/1000, 1) + "k";
 	};
 
 	function render_episode_performance_chart() {
@@ -105,7 +82,7 @@ jQuery(document).ready(function($) {
 			.renderHorizontalGridLines(true)
 		;
 
-		downloadsChart.yAxis().tickFormat(formatThousands);
+		downloadsChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 
 		downloadsChart.render();
 	}
@@ -125,10 +102,6 @@ jQuery(document).ready(function($) {
 					return {
 						date: parsed_date,
 						downloads: +d.downloads,
-						hour: d3.time.hour(parsed_date),
-						month: parsed_date.getMonth()+1,
-						year: parsed_date.getFullYear(),
-						weekday: parsed_date.getDay(),
 						asset_id: +d.asset_id,
 						client: d.client ? d.client : "Unknown",
 						system: d.system ? d.system : "Unknown",

@@ -45,8 +45,9 @@ class Analytics {
 		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/js/admin/dc.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
 	
 		// application
-		wp_register_script('podlove-analytics-episode-js', \Podlove\PLUGIN_URL . '/js/analytics/episode.js', array('podlove-dc-js'));
-		wp_register_script('podlove-analytics-totals-js', \Podlove\PLUGIN_URL . '/js/analytics/totals.js', array('podlove-dc-js'));
+		wp_register_script('podlove-analytics-common-js', \Podlove\PLUGIN_URL . '/js/analytics/common.js');
+		wp_register_script('podlove-analytics-episode-js', \Podlove\PLUGIN_URL . '/js/analytics/episode.js', array('podlove-analytics-common-js', 'podlove-dc-js'));
+		wp_register_script('podlove-analytics-totals-js', \Podlove\PLUGIN_URL . '/js/analytics/totals.js', array('podlove-analytics-common-js', 'podlove-dc-js'));
 
 		if (isset($_GET['action']) && $_GET['action'] == 'show') {
 			wp_enqueue_script('podlove-analytics-episode-js');

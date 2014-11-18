@@ -7,47 +7,6 @@ jQuery(document).ready(function($) {
 	var chart_width = $("#episode-performance-chart").closest(".inside").width();
 	var brush = { min: null, max: null };
 
-	/**
-	 * round to <digits> digits after comma.
-	 *
-	 * decimalRound(5.123,1) // => 5.1
-	 * decimalRound(5.678,2) // => 5.68
-	 */
-	function decimalRound(number, digits) {
-		var exp = Math.pow(10, digits);
-
-		number *= exp;
-		number = Math.round(number);
-		number /= exp;
-
-		return number;
-	}
-
-	function hourFormat(hours) {
-		var days = 0, weeks = 0, label = [];
-
-		if (hours > 48) {
-			days  = (hours - hours % 24) / 24;
-			hours = hours % 24;
-		}
-
-		if (days > 13) {
-			weeks = (days - days % 7) / 7;
-			days  = days % 7;
-		};
-
-		if (weeks)
-			label.push(decimalRound(weeks,1) + "w");
-
-		if (days)
-			label.push(decimalRound(days,1) + "d");
-
-		if (hours)
-			label.push(decimalRound(hours,1) + "h")
-
-		return label.join(" ");
-	}
-
 	var reduceAddFun = function (p, v) {
 		
 		p.downloads += v.downloads;
@@ -75,13 +34,6 @@ jQuery(document).ready(function($) {
 			client: "",
 			system: ""
 		};
-	};
-
-	var formatThousands = function(v) {
-		if (v < 1000)
-			return v;
-		else
-			return decimalRound(v/1000, 1) + "k";
 	};
 
 	function render_episode_performance_chart(options) {
@@ -411,22 +363,22 @@ jQuery(document).ready(function($) {
 		// set tickFormats for all charts
 		rangeChart.yAxis().ticks([2]);
 		rangeChart.xAxis().tickFormat(function(v) {
-			return hourFormat(v * hours_per_unit);
+			return PODLOVE.Analytics.hourFormat(v * hours_per_unit);
 		});
 			
 		compChart.xAxis().tickFormat(function(v) {
-			return hourFormat(v * hours_per_unit);
+			return PODLOVE.Analytics.hourFormat(v * hours_per_unit);
 		});
 
-		rangeChart.yAxis().tickFormat(formatThousands);
-		compChart.yAxis().tickFormat(formatThousands);
-		compChart.rightYAxis().tickFormat(formatThousands);
-		weekdayChart.xAxis().tickFormat(formatThousands);
-		assetChart.xAxis().tickFormat(formatThousands);
-		clientChart.xAxis().tickFormat(formatThousands);
-		systemChart.xAxis().tickFormat(formatThousands);
-		sourceChart.xAxis().tickFormat(formatThousands);
-		contextChart.xAxis().tickFormat(formatThousands);
+		rangeChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		compChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		compChart.rightYAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		weekdayChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		assetChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		clientChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		systemChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		sourceChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		contextChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 
 		[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart, sourceChart, contextChart].forEach(function(chart) {
 			chart.render()
@@ -514,10 +466,6 @@ jQuery(document).ready(function($) {
 					return {
 						date: parsed_date,
 						downloads: +d.downloads,
-						hour: d3.time.hour(parsed_date),
-						month: parsed_date.getMonth()+1,
-						year: parsed_date.getFullYear(),
-						// days: +d.days,
 						weekday: parsed_date.getDay(),
 						hoursSinceRelease: +d.hours_since_release,
 						asset_id: +d.asset_id,
@@ -528,11 +476,7 @@ jQuery(document).ready(function($) {
 					};
 				};
 
-				var csvMapper1 = function(d) {
-					return csvMapper(d);
-				};
-
-				csvCurEpisodeRawData = d3.csv.parse(csvCurEpisode[0], csvMapper1);
+				csvCurEpisodeRawData = d3.csv.parse(csvCurEpisode[0], csvMapper);
 				csvAvgEpisodeRawData = d3.csv.parse(csvAvgEpisode[0], function(d) {
 					return {
 						hoursSinceRelease: +d.hoursSinceRelease,
