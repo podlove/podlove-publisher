@@ -21,15 +21,17 @@ class Analytics {
 		// add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );
 
-		add_action( 'load-' . self::$pagehook, function () {
-			add_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook, function () {
-				add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_release_downloads_chart', __( 'Downloads over Time', 'podlove' ), '\Podlove\Settings\Analytics::chart', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
-				add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_numbers', __( 'Download Numbers', 'podlove' ), '\Podlove\Settings\Analytics::numbers', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
-			} );
-			do_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook );
+		if (isset($_GET['action']) && $_GET['action'] == 'show') {
+			add_action( 'load-' . self::$pagehook, function () {
+				add_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook, function () {
+					add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_release_downloads_chart', __( 'Downloads over Time', 'podlove' ), '\Podlove\Settings\Analytics::chart', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
+					add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_numbers', __( 'Download Numbers', 'podlove' ), '\Podlove\Settings\Analytics::numbers', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
+				} );
+				do_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook );
 
-			wp_enqueue_script( 'postbox' );
-		} );
+				wp_enqueue_script( 'postbox' );
+			} );
+		}
 	}
 
 	public function scripts_and_styles() {
