@@ -46,8 +46,13 @@ class Analytics {
 	
 		// application
 		wp_register_script('podlove-analytics-episode-js', \Podlove\PLUGIN_URL . '/js/analytics/episode.js', array('podlove-dc-js'));
+		wp_register_script('podlove-analytics-totals-js', \Podlove\PLUGIN_URL . '/js/analytics/totals.js', array('podlove-dc-js'));
 
-		wp_enqueue_script('podlove-analytics-episode-js');
+		if (isset($_GET['action']) && $_GET['action'] == 'show') {
+			wp_enqueue_script('podlove-analytics-episode-js');
+		} else {
+			wp_enqueue_script('podlove-analytics-totals-js');
+		}
 
 		wp_register_style( 'podlove-dc-css', \Podlove\PLUGIN_URL . '/css/dc.css', array(), \Podlove\get_plugin_header( 'Version' ) );
 		wp_enqueue_style( 'podlove-dc-css' );
@@ -78,103 +83,14 @@ class Analytics {
 
 		<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
 
-		<div style="width: 100%; height: 260px">
-			<div id="total-chart"></div>
-			<div id="month-chart"></div>
+		<div style="width: 100%">
+			<div id="total-chart" style="height: 200px"></div>
 		</div>
 		
 		<?php 
 		$table = new \Podlove\Downloads_List_Table();
 		$table->prepare_items();
 		$table->display();
-		?>
-
-		<script type="text/javascript">
-		(function ($) {
-
-			var dateFormat = d3.time.format("%Y-%m-%d %H");
-
-			d3.csv(ajaxurl + "?action=podlove-analytics-downloads-per-day", function(data) {
-				data.forEach(function(d) {
-					d.dd = dateFormat.parse(d.date);
-					d.downloads = +d.downloads;
-					d.month = dateFormat.parse(d.date).getMonth()+1;
-					d.year = dateFormat.parse(d.date).getFullYear();
-				});
-				
-				var ndx = crossfilter(data);
-				var all = ndx.groupAll();
-
-				// var downloadsDim = ndx.dimension(function(d){ return d.downloads; });
-				var dateDim = ndx.dimension(function(d){ return d.dd; });
-				var downloadsTotal = dateDim.group().reduceSum(dc.pluck("downloads"));
-
-				var minDate = dateDim.bottom(1)[0].dd;
-				var maxDate = dateDim.top(1)[0].dd;
-
-				var totalDownloadsChart = dc.barChart("#total-chart")
-					.dimension(dateDim)
-					.group(downloadsTotal)
-					.x(d3.time.scale().domain([minDate,maxDate]))
-					.elasticX(true)
-					.centerBar(true)
-					.gap(1)
-					.brushOn(false)
-					.yAxisLabel("Total Downloads per day")
-				;
-
-				totalDownloadsChart.yAxis().tickFormat(function(v) {
-					if (v < 1000)
-						return v;
-					else
-						return (v/1000) + "k";
-				});
-
-				var monthDim  = ndx.dimension(function(d) {return +d.month;});
-				var monthTotal = monthDim.group().reduceSum(function(d) {return d.downloads;});
-
-				var monthRingChart = dc.pieChart("#month-chart")
-				    .width(150).height(150)
-				    .dimension(monthDim)
-				    .group(monthTotal)
-				    .innerRadius(30)
-				    .label(function(d) {
-				    	switch (d.key) {
-				    	  case 1:
-				    	    return "Jan"; break;
-				    	  case 2:
-				    	    return "Feb"; break;
-				    	  case 3:
-				    	    return "Mar"; break;
-				    	  case 4:
-				    	    return "Apr"; break;
-				    	  case 5:
-				    	    return "May"; break;
-				    	  case 6:
-				    	    return "Jun"; break;
-				    	  case 7:
-				    	    return "Jul"; break;
-				    	  case 8:
-				    	    return "Aug"; break;
-				    	  case 9:
-				    	    return "Sep"; break;
-				    	  case 10:
-				    	    return "Oct"; break;
-				    	  case 11:
-				    	    return "Nov"; break;
-				    	  case 12:
-				    	    return "Dec"; break;
-				    	}
-				    });
-
-				dc.renderAll();
-
-			});
-
-		})(jQuery);
-		</script>
-
-		<?php
 	}
 
 	public static function numbers() {

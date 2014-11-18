@@ -27,6 +27,7 @@ class Ajax {
 			'get-license-parameters-from-url',
 			'analytics-downloads-per-day',
 			'analytics-episode-downloads-per-hour',
+			'analytics-total-downloads-per-day',
 			'analytics-episode-average-downloads-per-hour',
 			'episode-slug'
 		);
@@ -163,11 +164,66 @@ class Ajax {
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						INNER JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
 						WHERE episode_id = $episode_id
-						GROUP BY hours_since_release, asset_id, client_name, system";
+						GROUP BY hours_since_release, asset_id, client_name, system, source, context";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
 			$csv = '"downloads","date","hours_since_release","asset_id","client","system","source","context"' . "\n";
+			foreach ($results as $row) {
+				$row[4] = '"' . $row[4] . '"';
+				$row[5] = '"' . $row[5] . '"';
+				$csv .= implode(",", $row) . "\n";
+			}
+
+			return $csv;
+		}, 3600);
+
+		$etag = md5($content);
+
+		header("Etag: $etag");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s", $cache->expiration_for($cache_key)) . " GMT");
+
+		$etagHeader = (isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false);
+
+		if ($etagHeader == $etag) {
+			header("HTTP/1.1 304 Not Modified");
+			exit;
+		}
+
+		echo $content;
+
+		exit;
+	}
+
+	public function analytics_total_downloads_per_day() {
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+
+		$cache_key = 'podlove_analytics_tdphx';
+
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+		$content = $cache->cache_for($cache_key, function() {
+			global $wpdb;
+
+			$sql = "SELECT
+						COUNT(*) downloads,
+						UNIX_TIMESTAMP(accessed_at) AS access_date,
+						DATE_FORMAT(accessed_at, '%Y-%m-%d') AS date_day,
+						mf.episode_asset_id asset_id,
+						client_name,
+						os_name AS system,
+						source,
+						context
+					FROM
+						" . Model\DownloadIntentClean::table_name() . " di
+						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
+						INNER JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
+					WHERE accessed_at >= STR_TO_DATE('" . date("Y-m-d", strtotime("-30 days")) . "','%Y-%m-%d')
+					GROUP BY date_day, asset_id, client_name, system, source, context";
+
+			$results = $wpdb->get_results($sql, ARRAY_N);
+
+			$csv = '"downloads","date","asset_id","client","system","source","context"' . "\n";
 			foreach ($results as $row) {
 				$row[4] = '"' . $row[4] . '"';
 				$row[5] = '"' . $row[5] . '"';
