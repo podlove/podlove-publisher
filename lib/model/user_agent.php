@@ -6,6 +6,15 @@ use DeviceDetector\DeviceDetector;
 class UserAgent extends Base {
 
 	/**
+	 * Fetch new data for all UAs
+	 */
+	public function reparse_all() {
+		foreach (UserAgent::all() as $ua) {
+			$ua->parse()->save();
+		}
+	}
+
+	/**
 	 * Parse UA string and fill in other attributes
 	 */
 	public function parse()
@@ -21,17 +30,29 @@ class UserAgent extends Base {
 			$this->bot = 1;
 		} else {
 			$client = $dd->getClient();
-			$this->client_name = $client['name'];
-			$this->client_version = $client['version'];
-			$this->client_type = $client['type'];
+
+			if (isset($client['name']))
+				$this->client_name = $client['name'];
+
+			if (isset($client['version']))
+				$this->client_version = $client['version'];
+
+			if (isset($client['type']))
+				$this->client_type = $client['type'];
 
 			$os = $dd->getOs();
-			$this->os_name = $os['name'];
-			$this->os_version = $os['version'];
+
+			if (isset($os['name']))
+				$this->os_name = $os['name'];
+
+			if (isset($os['version']))
+				$this->os_version = $os['version'];
 
 			$this->device_brand = $dd->getBrand();
 			$this->device_model = $dd->getModel();
 		}
+
+		return $this;
 	}
 
 }

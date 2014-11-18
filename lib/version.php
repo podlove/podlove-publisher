@@ -970,10 +970,7 @@ function run_migrations_for_version( $version ) {
 				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
 			}
 
-			foreach (Model\UserAgent::all() as $ua) {
-				$ua->parse();
-				$ua->save();
-			}
+			Model\UserAgent::reparse_all();
 		break;
 		case 84:
 			delete_option('podlove_tpl_cache_keys');

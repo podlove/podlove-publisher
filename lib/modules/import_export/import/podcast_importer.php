@@ -167,6 +167,7 @@ class PodcastImporter {
 		self::importTable($this->xml, 'geoarea', '\Podlove\Model\GeoArea');
 		self::importTable($this->xml, 'geoareaname', '\Podlove\Model\GeoAreaName');
 		self::importTable($this->xml, 'useragent', '\Podlove\Model\UserAgent');
+		Model\UserAgent::reparse_all();
 	}
 
 	private function importTemplates() {
