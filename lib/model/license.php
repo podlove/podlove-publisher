@@ -197,7 +197,7 @@ class License {
 			'version'        => $version,
 			'commercial_use' => ( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
 			'modification'   => self::get_modification_state( $raw_extract[0] ),
-			'jurisdiction'   => ( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
+			'jurisdiction'   => ( strpos($raw_extract[2], '.') || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
 		);
 
 		return $license;
