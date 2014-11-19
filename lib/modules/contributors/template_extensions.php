@@ -53,7 +53,7 @@ class TemplateExtensions {
 	 * @accessor
 	 * @dynamicAccessor episode.contributors
 	 */
-	public function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = array()) {
+	public static function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = array()) {
 
 		$defaults = array(
 			'order'   => 'ASC',
@@ -113,7 +113,7 @@ class TemplateExtensions {
 	 * @accessor
 	 * @dynamicAccessor podcast.contributors
 	 */
-	public function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
+	public static function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
 
 		$args = shortcode_atts( array(
 			'id'      => null,

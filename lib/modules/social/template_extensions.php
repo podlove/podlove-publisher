@@ -27,7 +27,7 @@ class TemplateExtensions {
 	 * @accessor
 	 * @dynamicAccessor contributor.services
 	 */
-	public function accessorContributorServices($return, $method_name, $contributor, $contribution, $args = array()) {
+	public static function accessorContributorServices($return, $method_name, $contributor, $contribution, $args = array()) {
 
 		$category = (isset($args['category']) && in_array($args['category'], array("social", "donation", "all"))) ? $args['category'] : "all";
 
@@ -76,7 +76,7 @@ class TemplateExtensions {
 	 * @accessor
 	 * @dynamicAccessor podcast.services
 	 */
-	public function accessorPodcastServices($return, $method_name, $podcast, $args = array()) {
+	public static function accessorPodcastServices($return, $method_name, $podcast, $args = array()) {
 
 		$category = isset($args['category']) && in_array($args['category'], array("social", "donation", "all")) ? $args['category'] : "all";
 
