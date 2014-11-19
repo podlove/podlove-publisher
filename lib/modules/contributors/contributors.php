@@ -468,6 +468,10 @@ class Contributors extends \Podlove\Modules\Base {
 
 		foreach ($_POST["episode_contributor"] as $contributor_appearance) {
 			foreach ($contributor_appearance as $contributor_id => $contributor) {
+
+				if (!$contributor_id)
+					continue;
+
 				$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
 				if( !empty( $contributor['role'] ) )
 					$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
