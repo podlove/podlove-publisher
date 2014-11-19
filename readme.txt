@@ -85,6 +85,23 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.23 =
+
+* add support for scientific networks: ResearchGate, ORCiD, Scopus
+* ADN module: add option to not fall back on episode cover when no episode image is present
+* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+* fix social repair module
+* adjust Bitlove script so it plays well with https sites
+* empty rss feeds now render properly
+
+= 1.10.22 =
+
+* fix bug in contribution counting
+* simplify internal cache key handling to avoid technical issues
+* support more licenses (CC4.0, CC0, Public Domain)
+* tracking: don't count HEAD requests
+* tracking: add manual migration notice to delete accidentally recorded HEAD requests
+
 = 1.10.21 =
 
 * improve HHVM compatibility

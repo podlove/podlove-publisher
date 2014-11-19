@@ -162,6 +162,11 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						<?php
 					}
 				) );
+
+				$this->register_option( 'adn_poster_image_fallback', 'checkbox', array(
+					'label'       => __( 'Announcement Image', 'podlove' ),
+					'description' => 'Use Podcast Cover as Fallback'
+				) );
 				
 				$this->register_option( 'adn_preview', 'callback', array(
 					'label' => __( 'Announcement preview', 'podlove' ),
@@ -176,6 +181,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
 								'subtitle'     => $episode->subtitle,
+								'episode-image'=> $episode->get_cover_art(),
+								'podcast-image'=> $podcast->cover_image,
 								'contributors' => ''
 							);
 							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id, $selected_role, $selected_group );
@@ -184,7 +191,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								'episode'      => 'My Example Episode',
 								'episode-link' => 'http://www.example.com/episode/001',
 								'subtitle'     => 'My Example Subtitle',
-								'contributors' => '@example @elpmaxe'
+								'contributors' => '@example @elpmaxe',
+								'podcast-image' => '',
+								'episode-image' => ''
 							);
 						}
 						?>
@@ -193,9 +202,12 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								data-episode="<?php echo $example_data['episode'] ?>"
 								data-episode-link="<?php echo $example_data['episode-link'] ?>"
 								data-episode-subtitle="<?php echo $example_data['subtitle'] ?>"
-								data-contributors="<?php echo $example_data['contributors'] ?>">
+								data-contributors="<?php echo $example_data['contributors'] ?>"
+								data-episode-image="<?php echo $example_data['episode-image'] ?>"
+								data-podcast-image="<?php echo $example_data['podcast-image'] ?>">
 							<div class="adn avatar" style="background-image:url(<?php echo $user->avatar_image->url ?>);"></div>
 							<div class="adn content">
+								<div class="adn image"><img src="" /></div>
 								<div class="adn username"><?php echo $user->username ?></div>
 								<div class="adn body">Lorem ipsum dolor ...</div>
 						
@@ -259,6 +271,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			if ( $post->post_status == 'publish' && !get_post_meta( $episode->post_id, '_podlove_episode_was_published', true ) )
 				update_post_meta( $episode->post_id, '_podlove_episode_was_published', true );
 		}
+
+		$this->update_module_option( 'adn_poster_image_fallback', 'on' );
 	}
 
 	public function ajax_refresh_channel() {
@@ -364,7 +378,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		if ($this->get_module_option('adn_language_annotation') !== "")
 			$data['annotations'][] = $this->get_language_annotation();
 
-		$data['annotations'][] = $this->get_episode_cover( $post_id );
+		if ($episode_cover = $this->get_episode_cover( $post_id ))
+			$data['annotations'][] = $episode_cover;
 
 		$this->post_to_alpha($data);
 		$this->post_to_patter($data);
@@ -477,7 +492,11 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	private function get_episode_cover( $post_id ) {
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
-		$cover = $episode->get_cover_art_with_fallback();
+		if ($this->get_module_option('adn_poster_image_fallback') == 'on' ) {
+			$cover = $episode->get_cover_art_with_fallback();
+		} else {
+			$cover = $episode->get_cover_art();
+		}
 
 		if ( empty( $cover ) )
 			return;

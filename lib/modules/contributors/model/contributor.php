@@ -166,13 +166,15 @@ class Contributor extends Base
 		$sql = "
 			SELECT COUNT(*) FROM (
 				SELECT
-					contributor_id, episode_id
+					ec.contributor_id, ec.episode_id
 				FROM
-					" . EpisodeContribution::table_name() . "
+					" . EpisodeContribution::table_name() . " ec
+					JOIN " . Episode::table_name() . " e ON e.id = ec.episode_id
+					JOIN " . $wpdb->posts . " p ON p.ID = e.post_id
 				WHERE
-					contributor_id = %d
+					ec.contributor_id = %d
 				GROUP BY
-					episode_id
+					ec.episode_id
 			) x
 		";
 

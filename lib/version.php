@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 82 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 87 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -951,6 +951,70 @@ function run_migrations_for_version( $version ) {
 				$redirect_settings[$index]['active'] = 'active';
 			}
 			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
+		break;
+		case 83:
+			delete_option('podlove_tpl_cache_keys');
+		break;
+		case 85:
+			add_option('podlove_tracking_delete_head_requests', 1);
+		break;
+		case 86:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				
+				$c = new \Podlove\Modules\Social\Model\Service;
+				$c->title = 'Foursquare';
+				$c->category = 'social';
+				$c->type = 'foursquare';
+				$c->description = 'Foursquare Account';
+				$c->logo = 'foursquare-128.png';
+				$c->url_scheme = 'https://foursquare.com/%account-placeholder%';
+				$c->save();
+ 
+				$services = array(
+					array(
+							'title' 		=> 'ResearchGate',
+							'name'	 		=> 'researchgate',
+							'category'		=> 'social',
+							'description'	=> 'ResearchGate URL',
+							'logo'			=> 'researchgate-128.png',
+							'url_scheme'	=> '%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'ORCiD',
+							'name'	 		=> 'orcid',
+							'category'		=> 'social',
+							'description'	=> 'ORCiD',
+							'logo'			=> 'orcid-128.png',
+							'url_scheme'	=> 'https://orcid.org/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'Scopus',
+							'name'	 		=> 'scous',
+							'category'		=> 'social',
+							'description'	=> 'Scopus Author ID',
+							'logo'			=> 'scopus-128.png',
+							'url_scheme'	=> 'https://www.scopus.com/authid/detail.url?authorId=%account-placeholder%'
+						)
+				);
+
+				foreach ($services as $service_key => $service) {
+					$c = new \Podlove\Modules\Social\Model\Service;
+					$c->title = $service['title'];
+					$c->category = $service['category'];
+					$c->type = $service['name'];
+					$c->description = $service['description'];
+					$c->logo = $service['logo'];
+					$c->url_scheme = $service['url_scheme'];
+					$c->save();
+				}
+			}
+		break;
+		case 87:
+		if (\Podlove\Modules\Base::is_active('app_dot_net')) {
+			$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
+			if ( $adn->get_module_option( 'adn_auth_key' ) )
+				$adn->update_module_option( 'adn_poster_image_fallback', 'on' );
+		}	
 		break;
 	}
 
