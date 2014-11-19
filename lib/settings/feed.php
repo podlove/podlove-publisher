@@ -259,7 +259,7 @@ class Feed {
 			$wrapper->string( 'name', array(
 				'label'       => __( 'Feed Name', 'podlove' ),
 				'description' => __( 'Some podcast clients may display this title to describe the feed content.', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required' )
+				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 			
 			$wrapper->checkbox( 'append_name_to_podcast_title', array(
@@ -271,7 +271,7 @@ class Feed {
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove' ),
 				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
-				'html'        => array( 'class' => 'regular-text required' )
+				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$wrapper->checkbox( 'discoverable', array(
@@ -293,7 +293,7 @@ class Feed {
 			$wrapper->string( 'itunes_feed_id', array(
 				'label'       => __( 'iTunes Feed ID', 'podlove' ),
 				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ) . (($feed->itunes_feed_id) ? ' <a href="http://itunes.apple.com/podcast/id' . $feed->itunes_feed_id . '" target="_blank">' . __( 'Open in iTunes directory') . '</a>' : ''),
-				'html'        => array( 'class' => 'regular-text' )
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->subheader( __( 'Advanced Settings', 'podlove' ) );
@@ -313,7 +313,7 @@ class Feed {
 			$wrapper->string( 'redirect_url', array(
 				'label'       => __( 'Redirect Url', 'podlove' ),
 				'description' => __( 'e.g. Feedburner URL', 'podlove' ),
-				'html' => array( 'class' => 'regular-text' )
+				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 
 			$podcast_settings = get_option('podlove_podcast');

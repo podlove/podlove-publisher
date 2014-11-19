@@ -46,7 +46,7 @@ class PodcastFlattrSettingsTab extends Tab {
 
 			$wrapper->string( 'flattr', array(
 				'label'       => __( 'Flattr Account', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text required' )
+				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 		});
 	}

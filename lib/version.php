@@ -40,25 +40,70 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 77 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 87 );
 
-add_action( 'init', '\Podlove\run_database_migrations' );
+add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
+add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
 
-function run_database_migrations() {
-	
-	$database_version = get_option( 'podlove_database_version' );
+function maybe_run_database_migrations() {
+
+	$database_version = get_option('podlove_database_version');
 
 	if ( $database_version === false ) {
 		// plugin has just been installed
 		update_option( 'podlove_database_version', DATABASE_VERSION );
 	} elseif ( $database_version < DATABASE_VERSION ) {
-		// run one or multiple migrations
-		for ( $i = $database_version+1; $i <= DATABASE_VERSION; $i++ ) { 
-			\Podlove\run_migrations_for_version( $i );
-			update_option( 'podlove_database_version', $i );
+		wp_redirect( admin_url( 'index.php?podlove_page=podlove_upgrade&_wp_http_referer=' . urlencode( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
+		exit;
+	}
+}
+
+function run_database_migrations() {
+	global $wpdb;
+	
+	if (!isset($_REQUEST['podlove_page']) || $_REQUEST['podlove_page'] != 'podlove_upgrade')
+		return;
+
+	$database_version = get_option('podlove_database_version');
+
+	if ($database_version >= DATABASE_VERSION)
+		return;
+
+	if (is_multisite()) {
+		set_time_limit(0); // may take a while, depending on network size
+		$current_blog = $wpdb->blogid;
+		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
+		foreach ($blogids as $blog_id) {
+			switch_to_blog($blog_id);
+			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
+				migrate_for_current_blog();
+			}
 		}
+		switch_to_blog($current_blog);
+	} else {
+		migrate_for_current_blog();
 	}
 
+	if (isset($_REQUEST['_wp_http_referer']) && $_REQUEST['_wp_http_referer']) {
+		wp_redirect($_REQUEST['_wp_http_referer']);
+		exit;
+	}
+}
+
+function migrate_for_current_blog() {
+	$database_version = get_option('podlove_database_version');
+
+	for ($i = $database_version+1; $i <= DATABASE_VERSION; $i++) { 
+		\Podlove\run_migrations_for_version($i);
+		update_option('podlove_database_version', $i);
+	}
+
+	// flush rewrite rules after migrations
+	set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+
+	// purge cache after migrations
+	$cache = \Podlove\Cache\TemplateCache::get_instance();
+	$cache->setup_purge();
 }
 
 /**
@@ -870,6 +915,106 @@ function run_migrations_for_version( $version ) {
 				$sql = "DELETE FROM $userAgentTable WHERE user_agent IS NULL";
 				$wpdb->query($sql);
 			}
+		break;
+		case 78:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$c = new \Podlove\Modules\Social\Model\Service;
+				$c->title = 'Auphonic Credits';
+				$c->category = 'donation';
+				$c->type = 'auphonic credits';
+				$c->description = 'Auphonic Account';
+				$c->logo = 'auphonic-128.png';
+				$c->url_scheme = 'https://auphonic.com/donate_credits?user=%account-placeholder%';
+				$c->save();
+			}
+		break;
+		case 79:
+			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+			$cache = \Podlove\Cache\TemplateCache::get_instance();
+			$cache->setup_purge();
+		break;
+		case 80:
+			$sql = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `httprange` VARCHAR(255)',
+				\Podlove\Model\DownloadIntent::table_name()
+			);
+			$wpdb->query( $sql );
+		break;
+		case 81:
+			// remove all caches with old namespace
+			$wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_podlove_cache%\"");
+		break;
+		case 82:
+			// set all redirect entries to active
+			$redirect_settings = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
+			foreach ($redirect_settings as $index => $data) {
+				$redirect_settings[$index]['active'] = 'active';
+			}
+			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
+		break;
+		case 83:
+			delete_option('podlove_tpl_cache_keys');
+		break;
+		case 85:
+			add_option('podlove_tracking_delete_head_requests', 1);
+		break;
+		case 86:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				
+				$c = new \Podlove\Modules\Social\Model\Service;
+				$c->title = 'Foursquare';
+				$c->category = 'social';
+				$c->type = 'foursquare';
+				$c->description = 'Foursquare Account';
+				$c->logo = 'foursquare-128.png';
+				$c->url_scheme = 'https://foursquare.com/%account-placeholder%';
+				$c->save();
+ 
+				$services = array(
+					array(
+							'title' 		=> 'ResearchGate',
+							'name'	 		=> 'researchgate',
+							'category'		=> 'social',
+							'description'	=> 'ResearchGate URL',
+							'logo'			=> 'researchgate-128.png',
+							'url_scheme'	=> '%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'ORCiD',
+							'name'	 		=> 'orcid',
+							'category'		=> 'social',
+							'description'	=> 'ORCiD',
+							'logo'			=> 'orcid-128.png',
+							'url_scheme'	=> 'https://orcid.org/%account-placeholder%'
+						),
+					array(
+							'title' 		=> 'Scopus',
+							'name'	 		=> 'scous',
+							'category'		=> 'social',
+							'description'	=> 'Scopus Author ID',
+							'logo'			=> 'scopus-128.png',
+							'url_scheme'	=> 'https://www.scopus.com/authid/detail.url?authorId=%account-placeholder%'
+						)
+				);
+
+				foreach ($services as $service_key => $service) {
+					$c = new \Podlove\Modules\Social\Model\Service;
+					$c->title = $service['title'];
+					$c->category = $service['category'];
+					$c->type = $service['name'];
+					$c->description = $service['description'];
+					$c->logo = $service['logo'];
+					$c->url_scheme = $service['url_scheme'];
+					$c->save();
+				}
+			}
+		break;
+		case 87:
+		if (\Podlove\Modules\Base::is_active('app_dot_net')) {
+			$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
+			if ( $adn->get_module_option( 'adn_auth_key' ) )
+				$adn->update_module_option( 'adn_poster_image_fallback', 'on' );
+		}	
 		break;
 	}
 

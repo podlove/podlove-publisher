@@ -10,12 +10,18 @@ class TrackingImporter {
 
 	public static function init()
 	{
+		if (!is_admin())
+			return;
+		
 		if (!isset($_FILES['podlove_import_tracking']))
 			return;
 
-		// allow xml uploads
+		// allow xml+gz uploads
 		add_filter('upload_mimes', function ($mimes) {
-		    return array_merge($mimes, array('xml' => 'application/xml'));
+		    return array_merge($mimes, array(
+		    	'xml' => 'application/xml',
+		    	'gz|gzip' => 'application/x-gzip'
+		    ));
 		});
 
 		require_once ABSPATH . '/wp-admin/includes/file.php';

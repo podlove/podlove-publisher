@@ -108,3 +108,4 @@ DownloadIntent::property( 'context', 'VARCHAR(255)' );
 DownloadIntent::property( 'geo_area_id', 'INT' );
 DownloadIntent::property( 'lat', 'FLOAT' );
 DownloadIntent::property( 'lng', 'FLOAT' );
+DownloadIntent::property( 'httprange', 'VARCHAR(255)' );

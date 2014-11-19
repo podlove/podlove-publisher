@@ -56,6 +56,18 @@ class Social extends \Podlove\Modules\Base {
 
 		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
 		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
+
+		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
+
+		RepairSocial::init();
+	}
+
+	public function cache_tainting_classes($classes) {
+		return array_merge($classes, array(
+			Service::name(),
+			ShowService::name(),
+			ContributorService::name()
+		));
 	}
 
 	public function was_activated( $module_name ) {
@@ -399,6 +411,46 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Gittip Account',
 					'logo'			=> 'gittip-128.png',
 					'url_scheme'	=> 'https://www.gittip.com/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Auphonic Credits',
+					'name'	 		=> 'auphonic credits',
+					'category'		=> 'donation',
+					'description'	=> 'Auphonic Account',
+					'logo'			=> 'auphonic-128.png',
+					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
+				),
+			array(
+				'title' 		=> 'Foursquare',
+				'name'	 		=> 'foursquare',
+				'category'		=> 'social',
+				'description'	=> 'Foursquare Account',
+				'logo'			=> 'foursquare-128.png',
+				'url_scheme'	=> 'https://foursquare.com/%account-placeholder%'
+			),
+			array(
+					'title' 		=> 'ResearchGate',
+					'name'	 		=> 'researchgate',
+					'category'		=> 'social',
+					'description'	=> 'ResearchGate URL',
+					'logo'			=> 'researchgate-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'ORCiD',
+					'name'	 		=> 'orcid',
+					'category'		=> 'social',
+					'description'	=> 'ORCiD',
+					'logo'			=> 'orcid-128.png',
+					'url_scheme'	=> 'https://orcid.org/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Scopus',
+					'name'	 		=> 'scous',
+					'category'		=> 'social',
+					'description'	=> 'Scopus Author ID',
+					'logo'			=> 'scopus-128.png',
+					'url_scheme'	=> 'https://www.scopus.com/authid/detail.url?authorId=%account-placeholder%'
 				)
 		);
 
@@ -741,7 +793,7 @@ class Social extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
+					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" id="podlove_contributor_services_{{id}}_{{service-id}}_value" class="podlove-service-value podlove-check-input" /><span class="podlove-input-status" data-podlove-input-status-for="podlove_contributor_services_{{id}}_{{service-id}}_value"></span>
 					<i class="podlove-icon-share podlove-service-link"></i>
 				</td>
 				<td>
@@ -800,6 +852,15 @@ class Social extends \Podlove\Modules\Base {
 							row.find(".podlove-service-value").attr("title", service.description);
 							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
 							row.find(".podlove-service-title").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
+
+							// If this is an Twitter or App.net account remove @
+							if ( service.title == 'Twitter' || service.title == 'App.net' )
+								row.find(".podlove-service-value").data("podlove-input-remove", "@");
+
+							// If this is an Website, check if the URL is valid
+							if ( service.title == 'Website' )
+								row.find(".podlove-service-value").data("podlove-input-type", "url");
+
 							i++; // continue using "i" which was already used to add the existing contributions
 						});
 					}
@@ -853,6 +914,7 @@ class Social extends \Podlove\Modules\Base {
 								
 								// Focus new service
 								$("#" + new_row_id + "_chzn").find("a").focus();
+								clean_up_input();
 							},
 							onRowDelete: function(tr) {
 								var object_id = tr.data("object-id"),
@@ -1002,6 +1064,10 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function adn_contributor_filter() {
+
+		if (!is_admin())
+			return;
+
 		$adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
 
 		$roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();

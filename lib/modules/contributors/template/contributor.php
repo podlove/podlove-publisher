@@ -72,6 +72,15 @@ class Contributor extends Wrapper {
 	}
 
 	/**
+	 * ID
+	 * 
+	 * @accessor
+	 */
+	public function id() {
+		return $this->contributor->guid;
+	}
+
+	/**
 	 * Public name
 	 *
 	 * You should use `contributor.name` as display name.

@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
-Tested up to: 3.8
+Tested up to: 4.0
 Stable tag: trunk
 License: MIT
 
@@ -85,7 +85,111 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.23 =
+
+* add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are verified against syntactically correctness.
+* add support for scientific networks: ResearchGate, ORCiD, Scopus
+* ADN module: add option to not fall back on episode cover when no episode image is present
+* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+* fix social repair module
+* adjust Bitlove script so it plays well with https sites
+* empty rss feeds now render properly
+
+= 1.10.22 =
+
+* fix bug in contribution counting
+* simplify internal cache key handling to avoid technical issues
+* support more licenses (CC4.0, CC0, Public Domain)
+* tracking: don't count HEAD requests
+* tracking: add manual migration notice to delete accidentally recorded HEAD requests
+
+= 1.10.21 =
+
+* improve HHVM compatibility
+* resolve bug concerning internal article linking
+* use WordPress method to generate default episode slugs for better results (if you are using a plugin that changes permalink slug behavior, that affects episode slugs now, too)
+
+= 1.10.20 =
+
+**Episode Form Improvements**
+
+* Reorder components
+* Display episode title in episode meta box
+* Auto-generate media file slug based on the episode title. This is useful if your file slugs match the episode title. But don't worry, you can still change it to your liking if you prefer a different naming scheme.
+
+**Other**
+
+* Podlove Dashboard supports screen options
+* fix contribution counting in contributor table (you may have to hit the "repair" button in `Podlove > Support` if you still see wrong numbers)
+* fix tracking data export
+* fix missing OpenGraph metadata
+* improved redirects: added sortability and individual entries can be deactivated without being deleted
+* `contributor.id` is accessible via template API now
+
+As mentioned before, we will be phasing out PHP 5.3 soon. Please read the corresponding blog post for more details: http://podlove.org/2014/08/14/podlove-publisher-2-phasing-out-php-5-3/
+
+= 1.10.19 =
+
+* fix caching issue (cache keys were too long in last update, resulting in no cache hits at all)
+* fix error when creating a new episode
+
+= 1.10.18 =
+
+**Improvements to media file slugs**
+
+* Slugs may contain slashes now. This allows storing asset files in subfolders and using the WordPress media uploader to manage files.
+* Media file validation is more consistent: when you get a green checkmark, the file is guaranteed to be valid and reachable.
+
+**Other**
+
+* Once we release Publisher 2.0, we will increase the minimum PHP version to 5.4 and recommend 5.5. A notice is now displayed in the system report if you are running a version requiring an upgrade.
+* Rename a method to avoid a bug in early PHP 5.3 versions
+
+= 1.10.17 =
+
+* tracking now includes range headers
+* plugin-migrations are more robust now
+* add caching for OpenGraph module
+* fix escaping in database logger
+* fix feed validator for sites not using "pretty permalinks"
+* fix dashboard box state saving
+* fix generation of faulty URLs when tracking was on but pretty permalinks off
+* fix auto-insertion of nonexisting templates
+* fix routing issues when `/%category%/%postname%` is used as permalink structure
+* fix rare cache concurrency issues by introducing a 24h auto-expiry
+* remove "Critical Podlove Warnings" — they are scary and don't help a lot
+
+= 1.10.16 =
+
+* Hotfix: remove wrong output in HTML sites
+* rework support page
+
+= 1.10.15 =
+
+**Various Fixes and Enhancements**
+
+* Supply web player API with more data: "publicationDate" contains an ISO-8601 date and "show.url" the URL to the show.
+* Auphonic UI improvement: When selecting a production, the "Select existing production" option disappears.
+* Don't pass `redirect=no` parameter to feed URLs
+* Ensure web player IDs are unique to avoid rendering bugs
+* Fix caching bug that lead to disappearing web player and download buttons
+* Fix redirection UI bug
+* Flush rewrite rules after migrations to avoid broken links
+
 = 1.10.14 =
+
+**Performance**
+
+A simple yet effective caching strategy has been implemented. This is used to cache rendered site segments. A complete cache invalidation happens when podcast related data changes. This should be a good start since such data rarely changes (mostly when a new episode is published). In a Multisite setup, each site handles its cache separately.
+
+This is implemented using the [Transients API](http://codex.wordpress.org/Transients_API). By default, WordPress uses the database as a caching backend. If you want to squeeze out even more speed, consider installing a [Persistent Cache Plugin](http://codex.wordpress.org/Class_Reference/WP_Object_Cache#Persistent_Cache_Plugins) which replaces the database with a more efficient caching backend, such as memcached or APC. That might require some fiddling around, though.
+
+Caching can be deactivated in the `wp-config.php` with the following line: `define('PODLOVE_TEMPLATE_CACHE', false);`
+
+* Cache Publisher templates
+* Cache feed discovery header
+* Cache Bitlove widget
+* Other minor performance improvements
 
 **Templates**
 
@@ -97,6 +201,11 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * Display available processing time in Auphonic production box
 * Episode slugs may contain a wider variety of characters now, such as umlauts.
+* Feeds now only contain contributors with an URI. Also, output of contributors in feeds can be filtered by group and/or role.
+* New donation option for Auphonic Credits
+* Remove scary debug output on failed media file validations. This can be found in the log now.
+* Fix Auphonic authentication issue by providing the whole certificate chain
+* Fix contributor related feed rendering issue
 
 = 1.10.13 =
 

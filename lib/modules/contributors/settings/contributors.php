@@ -234,17 +234,17 @@ class Contributors {
 			$wrapper->string( 'publicname', array(
 				'label'       => __( 'Public name', 'podlove' ),
 				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'realname', array(
 				'label'       => __( 'Real name', 'podlove' ),
-				'html'        => array( 'class' => 'required podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'nickname', array(
 				'label'       => __( 'Nickname', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );
 
 			$wrapper->select( 'gender', array(
@@ -255,19 +255,19 @@ class Contributors {
 			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
 				'description' => 'Either a Gravatar email adress or a URL.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
 			) );
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'ID', 'podlove' ),
 				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
-				'html'        => array( 'class' => 'required podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'guid', array(
 				'label'       => __( 'URI', 'podlove' ),
 				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove'),
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );		
 
 			$wrapper->radio( 'visibility', array(
@@ -281,17 +281,17 @@ class Contributors {
 			
 			$wrapper->string( 'organisation', array(
 				'label'       => __( 'Organisation', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );
 			
 			$wrapper->string( 'department', array(
 				'label'       => __( 'Department', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'jobtitle', array(
 				'label'       => __( 'Job Title', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );
 			
 			$wrapper->subheader( __( 'Contact', 'podlove' ) );
@@ -299,13 +299,13 @@ class Contributors {
 			$wrapper->string( 'privateemail', array(
 				'label'       => __( 'Contact email', 'podlove' ),
 				'description' => 'The provided email will be used for internal purposes only.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
 			) );
 			
 			$wrapper->string( 'publicemail', array(
 				'label'       => __( 'Public email', 'podlove' ),
 				'description' => 'This email will be displayed for public purposes.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
 			) );
 
 			$wrapper->subheader( __( 'Flattr', 'podlove' ) );
@@ -313,7 +313,7 @@ class Contributors {
 			$wrapper->string( 'flattr', array(
 				'label'       => __( 'Flattr Account', 'podlove' ),
 				'description' => 'The provided flattr account will be used to generate episode specific Flattr buttons.',
-				'html'        => array( 'class' => 'podlove-contributor-field' )
+				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 			) );
 
 			do_action( 'podlove_contributors_form_end', $wrapper );

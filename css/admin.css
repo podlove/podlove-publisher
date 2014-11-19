@@ -73,6 +73,13 @@ table.podlove-dashboard-statistics td {
 	padding: 3px;
 }
 
+/* Dashboard in Sidebar */
+
+.inner-sidebar div.podlove-dashboard-statistics-wrapper {
+	width: 100%;
+	display: block;
+}
+
 /* Settings: Assets */
 .episode_assets.wp-list-table .column-move {
 	width: 50px;
@@ -226,7 +233,7 @@ span#podlove_cc_license_selector_toggle {
 }
 
 .row_podlove_cc_license_selector td div select {
-	width: 190px;
+	width: 240px;
 }
 
 label.podlove_cc_license_selector_label {
@@ -234,4 +241,24 @@ label.podlove_cc_license_selector_label {
 	width: 240px;
 	display: inline-block;
 	clear: both;
+}
+
+/* Podlove input field validation */
+
+.podlove-invalid-input {
+	border: 2px solid #c72a00 !important;
+}
+
+.podlove-input-isinvalid {
+	display: inline-block;
+	background-color: #c72a00;
+	color: #FFF;
+	height: 29px;
+	line-height: 30px;
+	padding: 0 5px 0 5px;
+	margin-left: -1px;
+}
+
+.podlove-hide {
+	display: none;
 }

@@ -12,9 +12,6 @@ use Podlove\Model\MediaFile;
  */
 class Printer {
 
-	// unique player index
-	private static $index = 0;
-
 	// unique player id
 	private $html_id;
 
@@ -162,6 +159,7 @@ class Printer {
 			'title'               => get_the_title( $this->post->ID ),
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
+			'publicationDate'     => mysql2date("c", $this->post->post_date),
 			'poster'              => $this->episode->get_cover_art_with_fallback(),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
@@ -171,7 +169,8 @@ class Printer {
 				'title'    => $podcast->title,
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
-				'poster'   => $podcast->cover_image
+				'poster'   => $podcast->cover_image,
+				'url'      => \Podlove\get_landing_page_url()
 			),
 			'license' => array(
 				'name' => $license_name,
@@ -181,7 +180,6 @@ class Printer {
 				return array(
 					'assetTitle'   => $mf['assetTitle'],
 					'downloadUrl'  => $mf['publicUrl'],
-					'directAccess' => $mf['url'],
 					'url' => $mf['url'] /* player v.2.0.x compatibility */
 				);
 			}, array_values($sorted_files)),
@@ -226,8 +224,7 @@ class Printer {
 	private function get_html_id() {
 
 		if ( ! $this->html_id ) {
-			self::$index++;
-			$this->html_id = 'podlovewebplayer_' . self::$index;
+			$this->html_id = 'podlovewebplayer_' . sha1(microtime() . rand());
 		}
 
 		return $this->html_id;

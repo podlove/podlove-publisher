@@ -11,7 +11,7 @@ class Feed extends Base {
 		global $wpdb;
 		
 		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
-		$this->slug = \Podlove\slugify( $this->slug );
+		$this->slug = sanitize_title( $this->slug );
 
 		if ( ! $this->position ) {
 			$pos = $wpdb->get_var( sprintf( 'SELECT MAX(position)+1 FROM %s', self::table_name() ) );
@@ -34,7 +34,7 @@ class Feed extends Base {
 			$url = sprintf(
 				'%s/feed/%s/',
 				get_bloginfo( 'url' ),
-				\Podlove\slugify( $this->slug )
+				sanitize_title( $this->slug )
 			);
 		} else {
 			$url = get_feed_link( $this->slug );
@@ -196,11 +196,6 @@ class Feed extends Base {
 		$args = wp_parse_args( $args, $defaults );
 
 		$tag_name = $args['prefix'] ? $args['prefix'] . ':link' : 'link';
-
-		if (isset($_GET['redirect'])) {
-			$op = parse_url($args['href'], PHP_URL_QUERY) ? '&amp;' : '?';
-			$args['href'] .= $op . "redirect=" . $_GET['redirect'];
-		}
 
 		return sprintf(
 			'<%s%s%s%s href="%s" />',

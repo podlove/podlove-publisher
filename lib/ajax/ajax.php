@@ -23,7 +23,8 @@ class Ajax {
 			'hide-teaser',
 			'get-license-url',
 			'get-license-name',
-			'get-license-parameters-from-url'
+			'get-license-parameters-from-url',
+			'episode-slug'
 		);
 
 		foreach ( $actions as $action )
@@ -40,7 +41,7 @@ class Ajax {
 
 	private function simulate_temporary_episode_slug( $slug ) {
 		add_filter( 'podlove_file_url_template', function ( $template ) use ( $slug ) {
-			return str_replace( '%episode_slug%', $slug, $template );;
+			return str_replace( '%episode_slug%', \Podlove\slugify( $slug ), $template );;
 		} );
 	}
 
@@ -107,6 +108,7 @@ class Ajax {
 		$file->save();
 
 		$result = array();
+		$result['file_url']  = $file->get_file_url();
 		$result['file_id']   = $file_id;
 		$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 || $info['http_code'] == 304 );
 		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];
@@ -117,11 +119,13 @@ class Ajax {
 			$info['php_safe_mode'] = ini_get( 'safe_mode' );
 			$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
 			$info['curl_exec'] = function_exists( 'curl_exec' );
-			$result['message'] = "--- # Can't reach {$file->get_file_url()}\n";
-			$result['message'].= "--- # Please include this output when you report a bug\n";
+			$errorLog = "--- # Can't reach {$file->get_file_url()}\n";
+			$errorLog.= "--- # Please include this output when you report a bug\n";
 			foreach ( $info as $key => $value ) {
-				$result['message'] .= "$key: $value\n";
+				$errorLog .= "$key: $value\n";
 			}
+
+			\Podlove\Log::get()->addError( $errorLog );
 		}
 
 		self::respond_with_json( $result );
@@ -142,7 +146,8 @@ class Ajax {
 
 		self::respond_with_json( array(
 			'file_id'   => $file->id,
-			'file_size' => $file->size
+			'file_size' => $file->size,
+			'file_url'  => $file->get_file_url()
 		) );
 	}
 
@@ -174,7 +179,7 @@ class Ajax {
 
 	private function parse_get_parameter_into_url_array() {
 		return array(
-						'version'		 => '3.0',
+						'version'		 => $_REQUEST['version'],
 						'modification'	 => $_REQUEST['modification'],
 						'commercial_use' => $_REQUEST['commercial_use'],
 						'jurisdiction'	 => $_REQUEST['jurisdiction']
@@ -192,5 +197,9 @@ class Ajax {
 	public function get_license_parameters_from_url() {
 		self::respond_with_json( \Podlove\Model\License::get_license_from_url( $_REQUEST['url'] ) );
 	}
-	
+
+	public function episode_slug() {
+		echo sanitize_title($_REQUEST['title']);
+		die();
+	}	
 }

@@ -13,7 +13,23 @@ class SystemReport {
 		
 		$this->fields = array(
 			'site'        => array( 'title' => 'Website',           'callback' => function() { return get_site_url(); } ),
-			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() { return phpversion(); } ),
+			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() {
+
+				$version = phpversion();
+				$is_less_than_54 = version_compare(phpversion(),"5.4", "<=");
+				$is_less_than_55 = version_compare(phpversion(),"5.5", "<=");
+
+				$return = array();
+
+				if ($is_less_than_54) {
+					$return['message'] = "$version (upgrade to 5.4 or higher recommended)";
+					$return['notice'] = "Official support for PHP 5.3 ends 14 August 2014. We will require PHP 5.4 once we reach Publisher 2.0. Feel free to upgrade to a higher version like 5.5.";
+				} elseif ($is_less_than_55) {
+					$return['message'] = "$version (upgrade to 5.5 brings enhanced performance)";
+				}
+
+				return $return;
+			} ),
 			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
 			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
@@ -122,8 +138,27 @@ class SystemReport {
 				$error = __( 'You need to assign at least one asset to the web player.', 'podlove' );
 				$errors[] = $error;
 				return $error;
+			} ),
+			'podlove_cache' => array( 'callback' => function() {
+				return \Podlove\Cache\TemplateCache::is_enabled() ? 'on' : 'off';
+			}),
+			'assets' => array( 'callback' => function() {
+				$assets = array();
+				foreach (\Podlove\Model\EpisodeAsset::all() as $asset) {
+					$file_type = $asset->file_type();
+					$assets[] = array(
+						'extension' => $file_type->extension,
+						'mime_type' => $file_type->mime_type
+					);
+				}
+
+				return "\n\t" . implode("\n\t", array_map(function($asset) {
+					return str_pad($asset['extension'], 7) . $asset['mime_type'];
+				}, $assets));
 			} )
 		);
+
+		$this->fields = apply_filters('podlove_system_report_fields', $this->fields);
 
 		$this->run();
 	}
@@ -134,7 +169,20 @@ class SystemReport {
 		$this->notices = array();
 
 		foreach ( $this->fields as $field_key => $field ) {
-			$this->fields[ $field_key ]['value'] = call_user_func( $field['callback'] );
+			$result = call_user_func( $field['callback'] );
+
+			if (is_array($result)) {
+				$this->fields[ $field_key ]['value'] = $result['message'];
+				if (isset($result['error'])) {
+					$this->errors[] = $result['error'];
+				}
+				if (isset($result['notice'])) {
+					$this->notices[] = $result['notice'];
+				}
+			} else {
+				$this->fields[ $field_key ]['value'] = $result;	
+			}
+			
 		}
 
 		update_option( 'podlove_global_messages', array( 'errors' => $this->errors, 'notices' => $this->notices ) );
@@ -161,18 +209,20 @@ class SystemReport {
 		$out .= "\n";
 
 		if ( count( $this->errors ) ) {
-			$out .= count( $this->errors ) . " CRITICAL ERRORS: \n";
+			$out .= _n( '1 ERROR', '%s ERRORS', count( $this->errors ), 'podlove' );
+			$out .= ": \n";
 			foreach ( $this->errors as $error ) {
-				$out .= "$error\n";
+				$out .= "- $error\n";
 			}
 		} else {
 			$out .= "0 errors\n";
 		}
 
 		if ( count( $this->notices ) ) {
-			$out .= count( $this->notices ) . " notices (no dealbreaker, but should be fixed if possible): \n";
+			$out .= _n( '1 NOTICE', '%s NOTICES', count( $this->notices ), 'podlove' );
+			$out .= " (no dealbreaker, but should be fixed if possible): \n";
 			foreach ( $this->notices as $error ) {
-				$out .= "$error\n";
+				$out .= "- $error\n";
 			}
 		} else {
 			$out .= "0 notices\n";

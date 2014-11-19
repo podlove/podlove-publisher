@@ -80,8 +80,9 @@ var PODLOVE = PODLOVE || {};
 			}
 		}
 
-		function slugify( text ) {
+		function slugify(text) {
 
+			text = text.trim();
 			// replace non letter or digits by -
 			text = text.replace(/[^-\w\.\~]/g, '-');
 

@@ -6,6 +6,7 @@
 	color: #333;
 	font-size: 14px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	min-height: 125px;
 }
 
 .adn.avatar {
@@ -28,6 +29,26 @@
 	min-height: 39px;
 	line-height: 18px;
 	margin-bottom: 10px;
+}
+
+.adn.image {
+	float: right;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.05),0 2px 0 rgba(0,0,0,0.05);
+	width: 112px;
+	height: 112px;
+	margin-right: 45px;
+}
+
+.adn.image,
+.adn.image img {
+	border: 1px solid #ddd;
+}
+
+.adn.image img {
+	width: 100px;
+	height: 100px;
+	margin: 4px;
+	border-width: 2px;
 }
 
 .adn.footer {

@@ -14,12 +14,18 @@ class PodcastImporter {
 
 	public static function init()
 	{
+		if (!is_admin())
+			return;
+
 		if (!isset($_FILES['podlove_import']))
 			return;
 
-		// allow xml uploads
+		// allow xml+gz uploads
 		add_filter('upload_mimes', function ($mimes) {
-		    return array_merge($mimes, array('xml' => 'application/xml'));
+		    return array_merge($mimes, array(
+		    	'xml' => 'application/xml',
+		    	'gz|gzip' => 'application/x-gzip'
+		    ));
 		});
 
 		require_once ABSPATH . '/wp-admin/includes/file.php';
@@ -99,7 +105,15 @@ class PodcastImporter {
 
 		\Podlove\run_database_migrations();
 
-		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=' . $status));
+		$redirect_url = 'admin.php?page=podlove_imexport_migration_handle';
+
+		if ($status)
+			$redirect_url .= '&status=' . $status;
+
+		if (isset($_REQUEST['podlove_tab']))
+			$redirect_url .= '&podlove_tab=' . $_REQUEST['podlove_tab'];
+
+		wp_redirect(admin_url($redirect_url));
 		exit;
 	}
 

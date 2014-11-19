@@ -12,12 +12,7 @@ namespace Podlove;
  */
 
 define( __NAMESPACE__ . '\PLUGIN_FILE_NAME', strtolower( preg_replace( '/([a-z])([A-Z])/', '$1-$2', __NAMESPACE__ ) ) . '.php' );
-$dir = dirname( __FILE__ );
-if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-	define( __NAMESPACE__ . '\PLUGIN_DIR' , substr( $dir, 0, strrpos( $dir, '\\' ) + 1 ) );
-} else {
-	define( __NAMESPACE__ . '\PLUGIN_DIR' , substr( $dir, 0, strrpos( $dir, '/' ) + 1 ) );
-}
+define( __NAMESPACE__ . '\PLUGIN_DIR' , plugin_dir_path( dirname(__FILE__) ) );
 define( __NAMESPACE__ . '\PLUGIN_FILE', PLUGIN_DIR . PLUGIN_FILE_NAME );
 define( __NAMESPACE__ . '\PLUGIN_URL' , plugins_url( '', PLUGIN_FILE ) );
 

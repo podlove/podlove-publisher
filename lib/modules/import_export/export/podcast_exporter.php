@@ -9,17 +9,15 @@ class PodcastExporter {
 	private $compression = false;
 
 	public static function init() {
-		add_action('init', function() {
 
-			if (!is_admin())
-				return;
-
-			if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
-				$exporter = new \Podlove\Modules\ImportExport\Export\PodcastExporter;
-				$exporter->download();
-				exit;
-			}
-		});
+		if (!is_admin())
+			return;
+		
+		if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
+			$exporter = new \Podlove\Modules\ImportExport\Export\PodcastExporter;
+			$exporter->download();
+			exit;
+		}
 	}
 
 	public function __construct() {
@@ -89,7 +87,7 @@ class PodcastExporter {
 	public function exportOptions(\SimpleXMLElement $xml)
 	{
 		global $wpdb;
-		$sql = 'SELECT option_name FROM wp_options WHERE option_name LIKE "%podlove%" AND option_name NOT LIKE "_transient%"';
+		$sql = 'SELECT option_name FROM ' . $wpdb->options . ' WHERE option_name LIKE "%podlove%" AND option_name NOT LIKE "_transient%"';
 		$options = $wpdb->get_col($sql);
 
 		$xml_group = $xml->addChild('xmlns:wpe:options');

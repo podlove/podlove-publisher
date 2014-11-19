@@ -16,7 +16,8 @@ class Pubsubhubbub extends \Podlove\Modules\Base {
 				'label'       => __( 'Hub URL', 'podlove' ),
 				'description' => __( 'Use hub URL for all feeds.', 'podlove' ),
 				'html'        => array(
-					'class' => 'regular-text',
+					'class' => 'regular-text podlove-check-input',
+					'data-podlove-input-type' => 'url',
 					'placeholder' => 'http://<your-hub-name>.superfeedr.com/'
 				)
 			) );

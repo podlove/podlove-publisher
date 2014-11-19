@@ -84,7 +84,7 @@ function get_landing_page_url() {
 
 	switch ($landing_page) {
 		case 'homepage':
-			return bloginfo_rss('url');
+			return get_bloginfo_rss('url');
 			break;
 		case 'archive':
 			if ( 'on' == \Podlove\get_setting( 'website', 'episode_archive' ) ) {
@@ -106,7 +106,7 @@ function get_landing_page_url() {
 	}
 
 	// always default to home page
-	return bloginfo_rss('url');
+	return get_bloginfo_rss('url');
 }
 
 function get_webplayer_setting( $name ) {
@@ -122,15 +122,14 @@ function get_webplayer_setting( $name ) {
 	return $settings[ $name ];
 }
 
-function slugify( $text ) {
+function slugify($slug) {
+	$slug = trim($slug);
+	// replace everything but unreserved characters (RFC 3986 section 2.3) and slashes by a hyphen
+	$slug = preg_replace('~[^\\pL\d_\.\~/]~u', '-', $slug);
+	$slug = rawurlencode($slug);
+	$slug = str_replace("%2F", "/", $slug);
 
-	// replace everything but unreserved characters (RFC 3986 section 2.3) by a hyphen
-	$text = preg_replace( '~[^\\pL\d_\.\~]~u', '-', $text );
-
-	// transliterate
-	$text = urlencode( $text );
-
-	return empty( $text ) ? 'n-a' : $text;
+	return empty($slug) ? 'n-a' : $slug;
 }
 
 function require_code_mirror() {
