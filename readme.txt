@@ -95,6 +95,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * adjust Bitlove script so it plays well with https sites
 * empty rss feeds now render properly
 * fix issue of randomly breaking URLs
+* include date in tracking export filename
 
 = 1.10.22 =
 
