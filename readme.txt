@@ -107,6 +107,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * ADN module: add option to not fall back on episode cover when no episode image is present
 * adjust Bitlove script so it plays well with https sites
 * include date in tracking export filename
+* move web player settings to expert settings
 
 = 1.10.22 =
 
