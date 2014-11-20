@@ -243,6 +243,11 @@ label.podlove_cc_license_selector_label {
 	clear: both;
 }
 
+.row_podlove_contributor_services_form_table td,
+.row_podlove_contributor_services_form_table td {
+	padding: 0;
+}
+
 /* Podlove input field validation */
 
 .podlove-invalid-input {

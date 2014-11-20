@@ -700,6 +700,7 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->subheader( __( 'Social', 'podlove' ) );
 
 		$wrapper->callback( 'services_form_table', array(
+			'nolabel' => true,
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
@@ -708,9 +709,7 @@ class Social extends \Podlove\Modules\Base {
 					$services = array();
 				}
 
-				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table($services);
-				echo '<table class="form-table">';
 			}
 		) );
 	}
@@ -720,6 +719,7 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->subheader( __( 'Donations', 'podlove' ) );
 
 		$wrapper->callback( 'services_form_table', array(
+			'nolabel' => true,
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
@@ -728,9 +728,7 @@ class Social extends \Podlove\Modules\Base {
 					$services = array();
 				}
 
-				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );
-				echo '<table class="form-table">';
 			}
 		) );
 	}
