@@ -1,46 +1,40 @@
 <?php
-namespace Podlove\Settings;
+namespace Podlove\Settings\Expert\Tab;
+use \Podlove\Settings\Settings;
+use \Podlove\Settings\Expert\Tab;
 use \Podlove\Model;
 
-class WebPlayer {
+class WebPlayer extends Tab {
+	public function init() {
 
-	static $pagehook;
-	
-	public function __construct( $handle ) {
-		
-		WebPlayer::$pagehook = add_submenu_page(
-			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Web Player',
-			/* $menu_title */ 'Web Player',
-			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_webplayer_settings_handle',
-			/* $function   */ array( $this, 'page' )
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_episode',
+			/* $title 	 */ __( '', 'podlove' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'WebPlayer Settings', 'podlove' ) . '</h3>'; },
+			/* $page	 */ Settings::$pagehook	
 		);
 
-		register_setting( WebPlayer::$pagehook, 'podlove_webplayer_formats' );
-		register_setting( WebPlayer::$pagehook, 'podlove_webplayer_settings' );
+		register_setting( Settings::$pagehook, 'podlove_webplayer_formats' );
+		register_setting( Settings::$pagehook, 'podlove_webplayer_settings' );
 	}
 
 	public function page() {
 		?>
-		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Web Player', 'podlove' ); ?></h2>
+		<form method="post" action="options.php">
+			<?php if ( isset( $_REQUEST['podlove_tab'] ) ): ?>
+				<input type="hidden" name="podlove_tab" value="<?php echo $_REQUEST['podlove_tab'] ?>" />
+			<?php endif; ?>
+			<?php settings_fields( Settings::$pagehook ); ?>
+			<?php do_settings_sections( Settings::$pagehook ); ?>
 
 			<?php echo __( 'Webplayers are able to provide various media formats depending on context. Try to provide as many as possible to maximize compatibility with all browsers.', 'podlove' ); ?>
 
-
-			<form method="post" action="options.php">
-				<?php settings_fields( WebPlayer::$pagehook ); ?>
-
-				<table class="form-table">
-					<?php $this->form_fields(); ?>
-				</table>
-				
-				<?php submit_button( __( 'Save Changes' ), 'button-primary', 'submit', TRUE ); ?>
-			</form>
-
-		</div>	
+			<table class="form-table">
+				<?php $this->form_fields(); ?>
+			</table>
+			
+			<?php submit_button( __( 'Save Changes' ), 'button-primary', 'submit', TRUE ); ?>
+		</form>
 		<?php
 	}
 

@@ -243,6 +243,27 @@ label.podlove_cc_license_selector_label {
 	clear: both;
 }
 
+.row_podlove_contributor_services_form_table td,
+.row_podlove_contributor_services_form_table td {
+	padding: 0;
+}
+
+/* Podlove input field validation */
+
+.podlove-invalid-input {
+	border: 2px solid #c72a00 !important;
+}
+
+.podlove-input-isinvalid {
+	display: inline-block;
+	background-color: #c72a00;
+	color: #FFF;
+	height: 29px;
+	line-height: 30px;
+	padding: 0 5px 0 5px;
+	margin-left: -1px;
+}
+
 .podlove-hide {
 	display: none;
 }

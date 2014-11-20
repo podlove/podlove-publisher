@@ -27,19 +27,19 @@ class RepairSocial {
 
 		foreach ($services as $service) {
 			# update contributor services
-			$sql = "UPDATE " . Social\Model\ContributorService::table_name() . " SET service_id = " . $service['id'] . " WHERE service_id IN (
-				SELECT id FROM " . Social\Model\Service::table_name() . " WHERE `type` = \"" . $service['type'] . "\"
+			$sql = "UPDATE " . Model\ContributorService::table_name() . " SET service_id = " . $service['id'] . " WHERE service_id IN (
+				SELECT id FROM " . Model\Service::table_name() . " WHERE `type` = \"" . $service['type'] . "\"
 			)";
 			$wpdb->query($sql);
 
 			# update show services
-			$sql = "UPDATE " . Social\Model\ShowService::table_name() . " SET service_id = " . $service['id'] . " WHERE service_id IN (
-				SELECT id FROM " . Social\Model\Service::table_name() . " WHERE `type` = \"" . $service['type'] . "\"
+			$sql = "UPDATE " . Model\ShowService::table_name() . " SET service_id = " . $service['id'] . " WHERE service_id IN (
+				SELECT id FROM " . Model\Service::table_name() . " WHERE `type` = \"" . $service['type'] . "\"
 			)";
 			$wpdb->query($sql);
 
 			# delete obsolete services
-			$sql = "DELETE FROM " . Social\Model\Service::table_name() . " WHERE id != " . $service['id'] . " AND `type` = \"" . $service['type'] . "\"";
+			$sql = "DELETE FROM " . Model\Service::table_name() . " WHERE id != " . $service['id'] . " AND `type` = \"" . $service['type'] . "\"";
 			$wpdb->query($sql);
 		}
 
@@ -54,7 +54,7 @@ class RepairSocial {
 	private static function find_duplicate_services() {
 		global $wpdb;
 
-		$sql = "SELECT id, `type`, COUNT(*) cnt FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " GROUP BY `type` HAVING cnt > 1";
+		$sql = "SELECT id, `type`, COUNT(*) cnt FROM " . Model\Service::table_name() . " GROUP BY `type` HAVING cnt > 1";
 		return $wpdb->get_results($sql, ARRAY_A);
 	}
 

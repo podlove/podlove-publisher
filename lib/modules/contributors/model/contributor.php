@@ -224,21 +224,21 @@ Contributor::property( 'organisation', 'TEXT' );
 Contributor::property( 'department', 'TEXT' );
 Contributor::property( 'jobtitle', 'TEXT' );
 Contributor::property( 'avatar', 'TEXT' );
-Contributor::property( 'twitter', 'VARCHAR(255)' );
-Contributor::property( 'adn', 'VARCHAR(255)' );
-Contributor::property( 'googleplus', 'TEXT' );
-Contributor::property( 'facebook', 'VARCHAR(255)' );
-Contributor::property( 'flattr', 'VARCHAR(255)' );
-Contributor::property( 'paypal', 'VARCHAR(255)' );
-Contributor::property( 'bitcoin', 'VARCHAR(255)' );
-Contributor::property( 'litecoin', 'VARCHAR(255)' );
-Contributor::property( 'amazonwishlist', 'TEXT' );
-Contributor::property( 'publicemail', 'TEXT' );
+Contributor::property( 'twitter', 'VARCHAR(255)' );			// DEPRECATED since long ago
+Contributor::property( 'adn', 'VARCHAR(255)' );				// DEPRECATED since long ago
+Contributor::property( 'googleplus', 'TEXT' );				// DEPRECATED since long ago
+Contributor::property( 'facebook', 'VARCHAR(255)' );		// DEPRECATED since long ago
+Contributor::property( 'flattr', 'VARCHAR(255)' );			// DEPRECATED since long ago
+Contributor::property( 'paypal', 'VARCHAR(255)' );			// DEPRECATED since long ago
+Contributor::property( 'bitcoin', 'VARCHAR(255)' );			// DEPRECATED since long ago
+Contributor::property( 'litecoin', 'VARCHAR(255)' );		// DEPRECATED since long ago
+Contributor::property( 'amazonwishlist', 'TEXT' );			// DEPRECATED since long ago
+Contributor::property( 'publicemail', 'TEXT' );				// DEPRECATED since 1.10.23
 Contributor::property( 'privateemail', 'TEXT' );
 Contributor::property( 'realname', 'TEXT' );
 Contributor::property( 'nickname', 'TEXT' );
 Contributor::property( 'publicname', 'TEXT' );
 Contributor::property( 'visibility', 'TINYINT(1)' );
 Contributor::property( 'guid', 'TEXT' );
-Contributor::property( 'www', 'TEXT' );
+Contributor::property( 'www', 'TEXT' );						// DEPRECATED since long ago
 Contributor::property( 'contributioncount', 'INT' );

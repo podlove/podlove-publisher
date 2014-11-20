@@ -419,6 +419,46 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Auphonic Account',
 					'logo'			=> 'auphonic-128.png',
 					'url_scheme'	=> 'https://auphonic.com/donate_credits?user=%account-placeholder%'
+				),
+			array(
+				'title' 		=> 'Foursquare',
+				'name'	 		=> 'foursquare',
+				'category'		=> 'social',
+				'description'	=> 'Foursquare Account',
+				'logo'			=> 'foursquare-128.png',
+				'url_scheme'	=> 'https://foursquare.com/%account-placeholder%'
+			),
+			array(
+					'title' 		=> 'ResearchGate',
+					'name'	 		=> 'researchgate',
+					'category'		=> 'social',
+					'description'	=> 'ResearchGate URL',
+					'logo'			=> 'researchgate-128.png',
+					'url_scheme'	=> '%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'ORCiD',
+					'name'	 		=> 'orcid',
+					'category'		=> 'social',
+					'description'	=> 'ORCiD',
+					'logo'			=> 'orcid-128.png',
+					'url_scheme'	=> 'https://orcid.org/%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Scopus',
+					'name'	 		=> 'scous',
+					'category'		=> 'social',
+					'description'	=> 'Scopus Author ID',
+					'logo'			=> 'scopus-128.png',
+					'url_scheme'	=> 'https://www.scopus.com/authid/detail.url?authorId=%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Email',
+					'name'	 		=> 'email',
+					'category'		=> 'social',
+					'description'	=> 'Email',
+					'logo'			=> 'email-128.png',
+					'url_scheme'	=> 'mailto:%account-placeholder%'
 				)
 		);
 
@@ -668,6 +708,7 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->subheader( __( 'Social', 'podlove' ) );
 
 		$wrapper->callback( 'services_form_table', array(
+			'nolabel' => true,
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
@@ -676,9 +717,7 @@ class Social extends \Podlove\Modules\Base {
 					$services = array();
 				}
 
-				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table($services);
-				echo '<table class="form-table">';
 			}
 		) );
 	}
@@ -688,6 +727,7 @@ class Social extends \Podlove\Modules\Base {
 		$wrapper->subheader( __( 'Donations', 'podlove' ) );
 
 		$wrapper->callback( 'services_form_table', array(
+			'nolabel' => true,
 			'callback' => function() {
 
 				if (isset($_GET['contributor'])) {
@@ -696,9 +736,7 @@ class Social extends \Podlove\Modules\Base {
 					$services = array();
 				}
 
-				echo '</table>';
 				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );
-				echo '<table class="form-table">';
 			}
 		) );
 	}
@@ -761,7 +799,7 @@ class Social extends \Podlove\Modules\Base {
 					</select>
 				</td>
 				<td>
-					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" class="podlove-service-value" />
+					<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][value]" id="podlove_contributor_services_{{id}}_{{service-id}}_value" class="podlove-service-value podlove-check-input" /><span class="podlove-input-status" data-podlove-input-status-for="podlove_contributor_services_{{id}}_{{service-id}}_value"></span>
 					<i class="podlove-icon-share podlove-service-link"></i>
 				</td>
 				<td>
@@ -800,7 +838,7 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					function service_dropdown_handler() {
-						$('select.podlove-service-dropdown').change(function() {
+						$(document).on('change', 'select.podlove-service-dropdown', function() {
 							service = fetch_service(this.value);
 							row = $(this).closest("tr");
 
@@ -820,6 +858,15 @@ class Social extends \Podlove\Modules\Base {
 							row.find(".podlove-service-value").attr("title", service.description);
 							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
 							row.find(".podlove-service-title").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
+
+							// If this is an Twitter or App.net account remove @
+							if ( service.title == 'Twitter' || service.title == 'App.net' )
+								row.find(".podlove-service-value").data("podlove-input-remove", "@");
+
+							// If this is an Website, check if the URL is valid
+							if ( service.title == 'Website' )
+								row.find(".podlove-service-value").data("podlove-input-type", "url");
+
 							i++; // continue using "i" which was already used to add the existing contributions
 						});
 					}
@@ -840,6 +887,8 @@ class Social extends \Podlove\Modules\Base {
 
 					$(document).ready(function() {
 						var i = 0;
+
+						service_dropdown_handler();
 
 						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
 							rowTemplate: "#service-row-template-<?php echo $category; ?>",
@@ -869,10 +918,11 @@ class Social extends \Podlove\Modules\Base {
 								// Update Chosen before we focus on the new service
 								update_chosen();
 								var new_row_id = row.find('select.podlove-service-dropdown').last().attr('id');	
-								service_dropdown_handler();
+								$('select.podlove-service-dropdown').change();
 								
 								// Focus new service
 								$("#" + new_row_id + "_chzn").find("a").focus();
+								clean_up_input();
 							},
 							onRowDelete: function(tr) {
 								var object_id = tr.data("object-id"),

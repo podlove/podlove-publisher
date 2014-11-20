@@ -110,7 +110,7 @@ class Bitlove extends \Podlove\Modules\Base {
 
 	public function inject_base() {
 		?>
-		<script src="http://bitlove.org/widget/base.js" type="text/javascript"></script>
+		<script src="//bitlove.org/widget/base.js" type="text/javascript"></script>
 		<?php
 	}
 

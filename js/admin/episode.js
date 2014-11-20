@@ -186,6 +186,7 @@ var PODLOVE = PODLOVE || {};
  		};
 
  		$.subscribe("/auphonic/production/status/done", update_all_media_files);
+ 		$.subscribe("/auphonic/production/status/results_imported", update_all_media_files);
  		$(document).on("click", "#update_all_media_files", update_all_media_files);
 
  		$(document).on("click", ".update_media_file", function(e) {

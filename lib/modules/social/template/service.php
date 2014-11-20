@@ -68,6 +68,18 @@ class Service extends Wrapper {
 	}
 
 	/**
+	 * Service value
+	 *
+	 * Normally, you want to access the generates url via `profileUrl()`.
+	 * But in case you need the raw user value, use this method.
+	 * 
+	 * @accessor
+	 */
+	public function rawValue() {
+		return $this->contributor_service->value;
+	}
+
+	/**
 	 * Logo URL
 	 * 
 	 * @accessor

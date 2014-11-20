@@ -76,7 +76,7 @@ class EpisodeAsset extends Base {
 	 */
 	public function maybe_connect_to_web_player() {
 		$webplayer_formats = get_option( 'podlove_webplayer_formats', array() );
-		$allowed_formats = \Podlove\Settings\WebPlayer::formats();
+		$allowed_formats = \Podlove\Settings\Expert\Tab\WebPlayer::formats();
 		$asset_type = $this->file_type()->mime_type;
 		$type = substr( $asset_type, 0, stripos( $asset_type, '/' ) );
 

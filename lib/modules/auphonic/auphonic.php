@@ -37,7 +37,7 @@ class Auphonic extends \Podlove\Modules\Base {
 				$this->register_option( 'auphonic_api_key', 'hidden', array(
 					'label'       => __( 'Authorization', 'podlove' ),
 					'description' => $description,
-					'html'        => array( 'class' => 'regular-text' )
+					'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				) );	
     		} else {
 				$user = $this->api->fetch_authorized_user();

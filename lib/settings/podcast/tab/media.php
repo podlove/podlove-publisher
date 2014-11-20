@@ -46,13 +46,13 @@ class Media extends Tab {
 			$wrapper->string( 'media_file_base_uri', array(
 				'label'       => __( 'Upload Location', 'podlove' ),
 				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required' )
+				'html' => array( 'class' => 'regular-text required podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 
 			$wrapper->image( 'cover_image', array(
 				'label'        => __( 'Cover Art URL', 'podlove' ),
 				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
-				'html'         => array( 'class' => 'regular-text' ),
+				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
 				'image_width'  => 300,
 				'image_height' => 300
 			) );
