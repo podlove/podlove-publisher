@@ -33,8 +33,6 @@ class Settings {
 	}
 	
 	function page() {
-		// hack: always flush rewrite rules here for custom_episode_slug setting
-		flush_rewrite_rules();
 		?>
 		<div class="wrap">
 			<?php

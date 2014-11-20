@@ -150,12 +150,13 @@ function activate($network_wide) {
  *
  * flush_rewrite_rules() is expensive, so it should only be called once.
  * However, calling it on activaton doesn't work. So I add a temporary flag
- * and call it when the flag exists. Not pretty but it does the job.
+ * and call it when the flag exists. Transient is also used in other places
+ * where rules must be rewritten.
  */
 add_action( 'admin_init', function () {
 	if ( delete_transient( 'podlove_needs_to_flush_rewrite_rules' ) )
 		flush_rewrite_rules();
-} );
+}, 100 );
 
 function deactivate() {
 	flush_rewrite_rules();

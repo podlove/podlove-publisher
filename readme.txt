@@ -94,6 +94,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix social repair module
 * adjust Bitlove script so it plays well with https sites
 * empty rss feeds now render properly
+* fix issue of randomly breaking URLs
 
 = 1.10.22 =
 
