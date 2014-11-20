@@ -231,15 +231,15 @@ class Contributors {
 
 			$wrapper->subheader( __( 'General', 'podlove' ) );
 
+			$wrapper->string( 'realname', array(
+				'label'       => __( 'Real name', 'podlove' ),
+				'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
+			) );
+
 			$wrapper->string( 'publicname', array(
 				'label'       => __( 'Public name', 'podlove' ),
 				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".',
 				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'realname', array(
-				'label'       => __( 'Real name', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
 			) );
 
 			$wrapper->string( 'nickname', array(
