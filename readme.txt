@@ -87,16 +87,25 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.10.23 =
 
-* add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are verified against syntactically correctness.
-* add support for scientific networks: ResearchGate, ORCiD, Scopus
-* ADN module: add option to not fall back on episode cover when no episode image is present
-* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+**Bugfixes**
+
 * fix social repair module
-* adjust Bitlove script so it plays well with https sites
 * empty rss feeds now render properly
 * fix issue of randomly breaking URLs
-* include date in tracking export filename
 * fix missing files when using auto-publish feature by automatically validating files before publishing
+
+**New Features**
+
+* add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are verified against syntactically correctness.
+* add support for scientific networks: ResearchGate, ORCiD, Scopus
+* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+
+**Enhancements & Others**
+
+* contributors form: switch public and real name fields
+* ADN module: add option to not fall back on episode cover when no episode image is present
+* adjust Bitlove script so it plays well with https sites
+* include date in tracking export filename
 
 = 1.10.22 =
 
