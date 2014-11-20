@@ -103,7 +103,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 **Enhancements & Others**
 
-* contributors form: switch public and real name fields
+* contributors form:
+  * switch public name and real name fields
+  * remove public email field (see deprecations)
+  * move contact email fiel to general section
 * ADN module: add option to not fall back on episode cover when no episode image is present
 * adjust Bitlove script so it plays well with https sites
 * include date in tracking export filename

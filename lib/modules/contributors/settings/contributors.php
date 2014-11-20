@@ -252,6 +252,12 @@ class Contributors {
 				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
 			) );
 			
+			$wrapper->string( 'privateemail', array(
+				'label'       => __( 'Contact email', 'podlove' ),
+				'description' => 'The provided email will be used for internal purposes only.',
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
+			) );
+			
 			$wrapper->avatar( 'avatar', array(
 				'label'       => __( 'Avatar', 'podlove' ),
 				'description' => 'Either a Gravatar email adress or a URL.',
@@ -292,20 +298,6 @@ class Contributors {
 			$wrapper->string( 'jobtitle', array(
 				'label'       => __( 'Job Title', 'podlove' ),
 				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-			
-			$wrapper->subheader( __( 'Contact', 'podlove' ) );
-			
-			$wrapper->string( 'privateemail', array(
-				'label'       => __( 'Contact email', 'podlove' ),
-				'description' => 'The provided email will be used for internal purposes only.',
-				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
-			) );
-			
-			$wrapper->string( 'publicemail', array(
-				'label'       => __( 'Public email', 'podlove' ),
-				'description' => 'This email will be displayed for public purposes.',
-				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
 			) );
 
 			$wrapper->subheader( __( 'Flattr', 'podlove' ) );
