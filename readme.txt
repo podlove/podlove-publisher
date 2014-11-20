@@ -108,6 +108,15 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * adjust Bitlove script so it plays well with https sites
 * include date in tracking export filename
 * move web player settings to expert settings
+* public contributor emails are handled by the social module now, instead of being a contributor attribute
+
+**Deprecations & Migration**
+
+If you are using `{{ contributor.publicemail }}` in your templates, you should change it to something like the following:
+
+	{% for service in contributor.services({type: "email"}) %}
+		<a target="_blank" href="{{ service.profileUrl }}">{{ service.rawValue }}</a>
+	{% endfor %}
 
 = 1.10.22 =
 

@@ -9,6 +9,24 @@ use \Podlove\Modules\Social\Model\Service;
  */
 class ContributorService extends Base {
 
+	public function save() {
+		global $wpdb;
+
+		if (!$this->position) {
+			$pos = $wpdb->get_var(
+				sprintf(
+					'SELECT MAX(position)+1 FROM %s WHERE contributor_id = %d',
+					self::table_name(),
+					$this->contributor_id
+				)
+			);
+			
+			$this->position = $pos ? $pos : 1;
+		}
+
+		parent::save();
+	}
+
 	public function get_service() {
 		return \Podlove\Modules\Social\Model\Service::find_one_by_id($this->service_id);
 	}

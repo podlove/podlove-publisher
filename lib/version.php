@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 87 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 89 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1015,6 +1015,30 @@ function run_migrations_for_version( $version ) {
 			if ( $adn->get_module_option( 'adn_auth_key' ) )
 				$adn->update_module_option( 'adn_poster_image_fallback', 'on' );
 		}	
+		break;
+		case 88:
+			$service = new \Podlove\Modules\Social\Model\Service;
+			$service->title = 'Email';
+			$service->category = 'social';
+			$service->type = 'email';
+			$service->description = 'Email';
+			$service->logo = 'email-128.png';
+			$service->url_scheme = 'mailto:%account-placeholder%';
+			$service->save();
+		break;
+		case 89:
+			$email_service = \Podlove\Modules\Social\Model\Service::find_one_by_type('email');
+
+			foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
+				if (!$contributor->publicemail)
+					continue;
+
+				$contributor_service = new \Podlove\Modules\Social\Model\ContributorService;
+				$contributor_service->contributor_id = $contributor->id;
+				$contributor_service->service_id = $email_service->id;
+				$contributor_service->value = $contributor->publicemail;
+				$contributor_service->save();
+			}
 		break;
 	}
 

@@ -451,6 +451,14 @@ class Social extends \Podlove\Modules\Base {
 					'description'	=> 'Scopus Author ID',
 					'logo'			=> 'scopus-128.png',
 					'url_scheme'	=> 'https://www.scopus.com/authid/detail.url?authorId=%account-placeholder%'
+				),
+			array(
+					'title' 		=> 'Email',
+					'name'	 		=> 'email',
+					'category'		=> 'social',
+					'description'	=> 'Email',
+					'logo'			=> 'email-128.png',
+					'url_scheme'	=> 'mailto:%account-placeholder%'
 				)
 		);
 
