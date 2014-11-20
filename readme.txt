@@ -96,6 +96,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * empty rss feeds now render properly
 * fix issue of randomly breaking URLs
 * include date in tracking export filename
+* fix missing files when using auto-publish feature by automatically validating files before publishing
 
 = 1.10.22 =
 
