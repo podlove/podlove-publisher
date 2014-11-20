@@ -830,7 +830,7 @@ class Social extends \Podlove\Modules\Base {
 					}
 
 					function service_dropdown_handler() {
-						$('select.podlove-service-dropdown').change(function() {
+						$(document).on('change', 'select.podlove-service-dropdown', function() {
 							service = fetch_service(this.value);
 							row = $(this).closest("tr");
 
@@ -880,6 +880,8 @@ class Social extends \Podlove\Modules\Base {
 					$(document).ready(function() {
 						var i = 0;
 
+						service_dropdown_handler();
+
 						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
 							rowTemplate: "#service-row-template-<?php echo $category; ?>",
 							deleteHandle: ".service_remove",
@@ -908,7 +910,7 @@ class Social extends \Podlove\Modules\Base {
 								// Update Chosen before we focus on the new service
 								update_chosen();
 								var new_row_id = row.find('select.podlove-service-dropdown').last().attr('id');	
-								service_dropdown_handler();
+								$('select.podlove-service-dropdown').change();
 								
 								// Focus new service
 								$("#" + new_row_id + "_chzn").find("a").focus();

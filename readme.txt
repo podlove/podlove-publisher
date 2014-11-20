@@ -93,6 +93,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * empty rss feeds now render properly
 * fix issue of randomly breaking URLs
 * fix missing files when using auto-publish feature by automatically validating files before publishing
+* fix "open" link for last contributor donations item
 
 **New Features**
 
