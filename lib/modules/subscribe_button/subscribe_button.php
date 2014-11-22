@@ -54,10 +54,11 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 				);
 
 			return sprintf(
-					'<script>window.podcastData = %s;</script><script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s" data-json-data="podcastData"></script>',
+					'<script>window.podcastData = %s;</script><script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
 					json_encode($subscribe_button_info),
 					$podcast->language,
-					( isset($args['size']) && in_array($args['size'], array('small', 'medium', 'big', 'big-logo', 'big-title')) ? $args['size'] : 'medium' )
+					( isset($args['size']) && in_array($args['size'], array('small', 'medium', 'big', 'big-logo')) ? $args['size'] : 'medium' ),
+					( isset($args['width']) && $args['width'] == 'auto' ? ' auto' : '' )
 				);
 		} );
 	}
