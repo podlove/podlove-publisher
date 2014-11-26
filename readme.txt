@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.10.24 =
+
+* fix `contributor.episodes`: only show published episodes
+
 = 1.10.23 =
 
 **Bugfixes**
