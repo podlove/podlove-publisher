@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * fix `contributor.episodes`: only show published episodes
 * fix redirect form: remove url validation
+* redirects are counted and displayed in the redirect settings
 
 = 1.10.23 =
 

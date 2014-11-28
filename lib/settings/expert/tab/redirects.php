@@ -34,6 +34,9 @@ class Redirects extends Tab {
 							<th><?php echo __( 'From URL', 'podlove' ) ?></th>
 							<th><?php echo __( 'To URL', 'podlove' ) ?></th>
 							<th><?php echo __( 'Redirect Method', 'podlove' ) ?></th>
+							<th class="count">
+								<?php echo __( 'Redirects', 'podlove' ) ?>
+							</th>
 							<th class="delete"></th>
 							<th class="move"></th>
 						</tr>
@@ -62,6 +65,10 @@ class Redirects extends Tab {
 							<option value="301"><?php echo __('Permanent Redirect (HTTP Status 301)', 'podlove') ?></option>
 						</select>
 					</td>
+					<td class="count">
+						<span data-podlove-input-status-for="podlove_redirects_podlove_setting_redirect_{{index}}_count">{{count}}</span>
+						<input type="hidden" name="podlove_redirects[podlove_setting_redirect][{{index}}][count]" value="{{count}}">
+					</td>
 					<td class="delete">
 						<a href="#" class="button delete"><?php echo __( 'delete', 'podlove' ) ?></a>
 					</td>
@@ -82,6 +89,7 @@ class Redirects extends Tab {
 						row = row.replace(/\{\{index\}\}/g, index);
 						row = row.replace(/\{\{redirect-from\}\}/g, data.from ? data.from : "");
 						row = row.replace(/\{\{redirect-to\}\}/g, data.to ? data.to : "");
+						row = row.replace(/\{\{count\}\}/g, data.count ? data.count : "0");
 
 						$row = $(row);
 						$row.find("select option[value=\"" + data.code + "\"]").prop("selected", true);
@@ -140,6 +148,8 @@ class Redirects extends Tab {
 				</p>
 
 				<style type="text/css">
+				#podlove-redirects th.count,
+				#podlove-redirects td.count,
 				#podlove-redirects th.delete,
 				#podlove-redirects td.delete,
 				#podlove-redirects th.move,

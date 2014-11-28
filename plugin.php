@@ -407,7 +407,9 @@ function override404() {
 	if ( isset( $parsed_request['query'] ) )
 		$parsed_request_url .= "?" . $parsed_request['query'];
 
-	foreach ( \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' ) as $redirect ) {
+	$redirects = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
+
+	foreach ( $redirects as $index => $redirect ) {
 
 		if ( ! isset( $redirect['active'] ) )
 			continue;
@@ -434,6 +436,11 @@ function override404() {
 				$http_code = 302;
 			}
 
+			// increment redirection counter
+			$redirects[$index]['count'] += 1;
+			\Podlove\save_setting( 'redirects', 'podlove_setting_redirect', $redirects );
+
+			// redirect
 			status_header( $http_code );
 			$wp_query->is_404 = false;
 			\wp_redirect( $redirect['to'], $http_code );
