@@ -39,8 +39,6 @@ class Templates {
 
 		if ( $_REQUEST['page'] != 'podlove_templates_settings_handle' )
 			return;
-
-		\Podlove\require_code_mirror();
 	}
 
 	/**
@@ -167,22 +165,6 @@ class Templates {
 		$table->prepare_items();
 		$table->display();
 		?>
-		<script type="text/javascript">
-		jQuery(function($) {
-			var readonly_textareas = $(".highlight-readonly");
-			readonly_textareas.each(function() {
-				var podlove_code_highlight = CodeMirror.fromTextArea(this, {
-					mode: "application/x-twig",
-					lineNumbers: false,
-					theme: "default",
-					indentUnit: 4,
-					readOnly: "nocursor",
-					lineWrapping: true,
-				});
-				podlove_code_highlight.setSize(null, "150");
-			});
-		});
-		</script>
 		<style type="text/css">
 		.column-name { width: 33%; }
 		</style>
@@ -265,41 +247,6 @@ class Templates {
 			) );
 
 		} );
-		?>
-		<script type="text/javascript">
-		var podlove_template_content = document.getElementById("podlove_template_content");
-		var podlove_template_editor = CodeMirror.fromTextArea(podlove_template_content, {
-			mode: "application/x-twig",
-			lineNumbers: true,
-			theme: "default",
-			indentUnit: 4,
-			lineWrapping: true,
-			autoCloseTags: true,
-			onCursorActivity: function() {
-				podlove_template_editor.matchHighlight("CodeMirror-matchhighlight");
-			}
-		});		
-
-		podlove_template_editor.setSize(null, "350");
-
-		jQuery(function($){
-			$("#podlove_template_title").bind("keyup", function(e) {
-				$(".template_title_preview").html($(this).val());
-			});
-		});
-		</script>
-		<style type="text/css">
-		span.CodeMirror-matchhighlight {
-			background: #e9e9e9;
-		}
-		.CodeMirror-focused span.CodeMirror-matchhighlight {
-			background: #e7e4ff; !important
-		}
-		.CodeMirror-scroll {
-			border: 1px solid #CCC;
-		}
-		</style>
-		<?php
 	}
 	
 	private function edit_template() {

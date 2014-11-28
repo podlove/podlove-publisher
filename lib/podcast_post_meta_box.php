@@ -25,8 +25,6 @@ class Podcast_Post_Meta_Box {
 	 * Meta Box Template
 	 */
 	public static function post_type_meta_box_callback( $post ) {
-
-		\Podlove\require_code_mirror();
 		
 		$post_id = $post->ID;
 
