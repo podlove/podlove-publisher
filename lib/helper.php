@@ -554,6 +554,7 @@ function locales() {
 		'es-GT' => "Spanish - Guatemala",
 		'en-ZW' => "English - Zimbabwe",
 		'es-HN' => "Spanish - Honduras",
+		'eo' => "Esperanto",
 		'et' => "Estonian",
 		'es-MX' => "Spanish - Mexico",
 		'et-EE' => "Estonian - Estonia",
