@@ -566,6 +566,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			"nl" => "Dutch",
 			"en" => "English",
 			"en_GB" => "English, British",
+			"eo" => "Esperanto",
 			"et" => "Estonian",
 			"fi" => "Finnish",
 			"fr" => "French",
