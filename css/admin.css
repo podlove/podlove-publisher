@@ -267,3 +267,93 @@ label.podlove_cc_license_selector_label {
 .podlove-hide {
 	display: none;
 }
+
+
+
+#template-editor {
+	background: white;
+	border: 1px solid rgb(229, 229, 229);
+	margin-top: 15px;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#template-editor a {
+	text-decoration: none;
+}
+
+#template-editor a:focus, #template-editor a:active {
+	outline: 0;
+}
+
+#template-editor .navigation {
+	/*padding: 8px 10px;*/
+	background: #F9F9F9;
+	width: 20%;
+	float: left;
+	position: relative;
+	min-height: 445px;
+	box-sizing: border-box;
+}
+
+#template-editor .navigation .add {
+	position: absolute;
+	bottom: 8px;
+	left: 10px;
+}
+
+#template-editor .navigation ul {
+	margin: 0;
+}
+
+#template-editor .navigation ul li {
+	padding: 6px 10px;
+	margin: 0;
+}
+
+#template-editor .navigation ul a {
+	display: block;
+}
+
+#template-editor .navigation ul li.active {
+	background: #D7D7D7;
+}
+
+#template-editor .editor {
+	float: left;
+	width: 80%;
+	box-sizing: border-box;
+}
+
+#template-editor .toolbar {
+	border-bottom: 1px solid rgb(229, 229, 229);
+	padding: 8px 10px;
+	font-size: 14px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#template-editor .toolbar input[type=text] {
+	width: 100%;
+}
+
+#template-editor .toolbar .title {
+	float: left;
+	line-height: 26px;
+	width: 50%;
+}
+
+#template-editor .toolbar .actions {
+	float: right;
+}
+
+#template-editor .toolbar a.delete {
+	color: red;
+	line-height: 26px;
+	padding-right: 5px;
+}
+
+#template-editor .editor .main {
+	/*padding: 8px 10px;*/
+	height: 400px;
+}

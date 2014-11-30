@@ -39,6 +39,9 @@ class Templates {
 
 		if ( $_REQUEST['page'] != 'podlove_templates_settings_handle' )
 			return;
+
+		wp_register_script( 'podlove-ace-js', \Podlove\PLUGIN_URL . '/js/admin/ace/ace.js' );
+		wp_enqueue_script( 'podlove-ace-js' );
 	}
 
 	/**
@@ -161,9 +164,148 @@ class Templates {
 			)
 		;
 
+		?>
+		<div id="template-editor">
+			<div class="navigation">
+				<ul>
+					<?php foreach ( Model\Template::all() as $template ): ?>
+						<li>
+							<a href="#" data-id="<?php echo $template->id ?>">
+								<?php echo $template->title; ?>&nbsp;
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+				<div class="add">
+					<a href="#">+ add new template</a>
+				</div>
+			</div>
+			<div class="editor">
+				<div class="toolbar">
+					<div class="actions">
+						<a href="#" class="delete">delete</a>
+						<a href="#" class="save button button-primary">Save</a>
+					</div>
+					<div class="title">
+						<input type="text">
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="main" id="ace-editor"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+
+		<script type="text/javascript">
+		(function($) {
+
+			$(document).ready(function() {
+
+				var $editor     = $("#template-editor");
+				var $title      = $(".editor .title input", $editor);
+				var $toolbar    = $(".toolbar", $editor);
+				var $navigation = $(".navigation", $editor);
+
+				var editor = ace.edit("ace-editor");
+
+				editor.setTheme("ace/theme/github");
+				editor.getSession().setMode("ace/mode/twig");
+				editor.getSession().setUseWrapMode(true);
+
+				$navigation.on("click", "a", function(e) {
+					var $this = $(this);
+					var template_id = $this.data('id');
+
+					$this.closest("li")
+						.addClass("active")
+						.siblings().removeClass("active")
+					;
+
+					$.getJSON(ajaxurl, {
+						id: template_id,
+						action: 'podlove-template-get'
+					}, function(data) {
+						$title.val(data.title)
+						editor.getSession().setValue(data.content);
+					});
+
+					$this.blur(); // removes link outline
+					e.preventDefault();
+				});
+
+				$toolbar.on("click", "a.save", function(e) {
+					var template_id = $("li.active a", $navigation).data("id");
+					var template_title = $title.val();
+					var template_content = editor.getSession().getValue();
+
+					$.getJSON(ajaxurl, {
+						id: template_id,
+						title: template_title,
+						content: template_content,
+						action: 'podlove-template-update'
+					}, function(data) {
+						if (!data.success) {
+							console.log("Error: Could not save template.");
+						}
+					});
+
+					e.preventDefault();
+				});
+
+				$title.keyup(function(e) {
+					$("li.active a", $navigation).html($(this).val());
+				});
+
+				// select first template on page load
+				$("li:first a", $navigation).click();
+
+				$(".add a", $navigation).click(function(e) {
+
+					$.getJSON(ajaxurl, {
+						action: 'podlove-template-create'
+					}, function(data) {
+						$("ul", $navigation)
+							.append("<li><a href=\"#\" data-id=\"" + data.id + "\">new template</a></li>");
+						$("ul li:last a", $navigation).click();
+						$title.focus();
+					});
+
+					e.preventDefault();
+				});
+
+				$(".delete", $toolbar).click(function(e) {
+					var template_id = $("li.active a", $navigation).data('id');
+
+					if (window.confirm("Delete template?")) {
+						$.getJSON(ajaxurl, {
+							id: template_id,
+							action: 'podlove-template-delete'
+						}, function(data) {
+							if (data.success) {
+								$("li a[data-id=" + template_id + "]", $navigation)
+									.closest("li")
+									.remove();
+								$("li:first a", $navigation).click();
+							} else {
+								console.log("Error: Could not delete template.");
+							}
+						});
+					}
+
+					e.preventDefault();
+				});
+
+			});
+
+		}(jQuery));
+		</script>
+
+		<?php
+		/*
 		$table = new \Podlove\Template_List_Table();
 		$table->prepare_items();
 		$table->display();
+		*/
 		?>
 		<style type="text/css">
 		.column-name { width: 33%; }

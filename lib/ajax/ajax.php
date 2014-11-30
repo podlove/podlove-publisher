@@ -27,8 +27,12 @@ class Ajax {
 			'episode-slug'
 		);
 
+		// kickoff generic ajax methods
 		foreach ( $actions as $action )
 			add_action( 'wp_ajax_podlove-' . $action, array( $this, str_replace( '-', '_', $action ) ) );
+
+		// kickof specialized ajax controllers
+		TemplateController::init();
 	}
 
 	public static function respond_with_json( $result ) {
