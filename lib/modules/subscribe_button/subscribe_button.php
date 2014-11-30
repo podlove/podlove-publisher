@@ -23,43 +23,43 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 				switch ($file_type->name) {
 					case 'MPEG-4 AAC Audio':
 						$feeds[] = array(
-									'type' => $file_type->type,
-									'format' => 'aac',
-									'url' => $feed->get_subscribe_url()
-								);
+							'type'   => $file_type->type,
+							'format' => 'aac',
+							'url'    => $feed->get_subscribe_url()
+						);
 					break;
 					case 'Ogg Vorbis Audio':
 						$feeds[] = array(
-									'type' => $file_type->type,
-									'format' => 'ogg',
-									'url' => $feed->get_subscribe_url()
-								);
+							'type'   => $file_type->type,
+							'format' => 'ogg',
+							'url'    => $feed->get_subscribe_url()
+						);
 					break;
 					default:
 						$feeds[] = array(
-									'type' => $file_type->type,
-									'format' => $file_type->extension,
-									'url' => $feed->get_subscribe_url()
-								);
+							'type'   => $file_type->type,
+							'format' => $file_type->extension,
+							'url'    => $feed->get_subscribe_url()
+						);
 					break;
 				}
 			}
 
 			$subscribe_button_info = array(
-					'title' => $podcast->title,
-					'subtitle' => $podcast->subtitle,
-					'summary' => $podcast->summary,
-					'cover' => $podcast->cover_image,
-					'feeds' => $feeds
-				);
+				'title'    => $podcast->title,
+				'subtitle' => $podcast->subtitle,
+				'summary'  => $podcast->summary,
+				'cover'    => $podcast->cover_image,
+				'feeds'    => $feeds
+			);
 
 			return sprintf(
-					'<script>window.podcastData = %s;</script><script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
-					json_encode($subscribe_button_info),
-					$podcast->language,
-					( isset($args['size']) && in_array($args['size'], array('small', 'medium', 'big', 'big-logo')) ? $args['size'] : 'medium' ),
-					( isset($args['width']) && $args['width'] == 'auto' ? ' auto' : '' )
-				);
+				'<script>window.podcastData = %s;</script><script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
+				json_encode($subscribe_button_info),
+				$podcast->language,
+				( isset($args['size']) && in_array($args['size'], array('small', 'medium', 'big', 'big-logo')) ? $args['size'] : 'medium' ),
+				( isset($args['width']) && $args['width'] == 'auto' ? ' auto' : '' )
+			);
 		} );
 	}
 	
