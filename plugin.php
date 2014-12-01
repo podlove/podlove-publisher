@@ -65,7 +65,7 @@ function activate_for_current_blog() {
 	$podcast->save();
 
 	// set default modules
-	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation', 'import_export' );
+	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation', 'import_export', 'subscribe_button' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
@@ -407,7 +407,9 @@ function override404() {
 	if ( isset( $parsed_request['query'] ) )
 		$parsed_request_url .= "?" . $parsed_request['query'];
 
-	foreach ( \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' ) as $redirect ) {
+	$redirects = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
+
+	foreach ( $redirects as $index => $redirect ) {
 
 		if ( ! isset( $redirect['active'] ) )
 			continue;
@@ -434,6 +436,11 @@ function override404() {
 				$http_code = 302;
 			}
 
+			// increment redirection counter
+			$redirects[$index]['count'] += 1;
+			\Podlove\save_setting( 'redirects', 'podlove_setting_redirect', $redirects );
+
+			// redirect
 			status_header( $http_code );
 			$wp_query->is_404 = false;
 			\wp_redirect( $redirect['to'], $http_code );
@@ -846,10 +853,6 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 }, 10, 2);
 
 function handle_media_file_download() {
-	
-	// don't count HEAD requests
-	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'HEAD')
-		return;
 
 	if (isset($_GET['download_media_file'])) {
 		$download_media_file = $_GET['download_media_file'];
@@ -914,7 +917,7 @@ function handle_media_file_download() {
 		exit;
 	}
 
-	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics") {
+	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics" && strtoupper($_SERVER['REQUEST_METHOD']) !== 'HEAD') {
 		$intent = new Model\DownloadIntent;
 		$intent->media_file_id = $media_file_id;
 		$intent->accessed_at = date('Y-m-d H:i:s');

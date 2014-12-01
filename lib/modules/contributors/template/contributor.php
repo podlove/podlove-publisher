@@ -204,6 +204,7 @@ class Contributor extends Wrapper {
 				INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
 			WHERE
 				ec.contributor_id = %d
+				AND p.post_status = "publish"
 			GROUP BY
 				ec.episode_id
 			ORDER BY
