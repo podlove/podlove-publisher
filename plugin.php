@@ -853,10 +853,6 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 }, 10, 2);
 
 function handle_media_file_download() {
-	
-	// don't count HEAD requests
-	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'HEAD')
-		return;
 
 	if (isset($_GET['download_media_file'])) {
 		$download_media_file = $_GET['download_media_file'];
@@ -921,7 +917,7 @@ function handle_media_file_download() {
 		exit;
 	}
 
-	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics") {
+	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics" && strtoupper($_SERVER['REQUEST_METHOD']) !== 'HEAD') {
 		$intent = new Model\DownloadIntent;
 		$intent->media_file_id = $media_file_id;
 		$intent->accessed_at = date('Y-m-d H:i:s');
