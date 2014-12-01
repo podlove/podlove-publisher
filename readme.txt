@@ -92,7 +92,7 @@ Say hello to the **Podlove Subscribe button**, the *Universal button to subscrib
 More info on those sites:
 
 * Homepage: http://podlove.org/podlove-subscribe-button/
-* Help Translate: https://podlove.oneskyapp.com/collaboration/project?id=14564
+* Help Translate: http://translate.podlove.org
 * GitHub: https://github.com/podlove/podlove-subscribe-button
 
 **Other Changes**
