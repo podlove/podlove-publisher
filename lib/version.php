@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 89 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 90 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1039,6 +1039,9 @@ function run_migrations_for_version( $version ) {
 				$contributor_service->value = $contributor->publicemail;
 				$contributor_service->save();
 			}
+		break;
+		case 90:
+			\Podlove\Modules\Base::activate( 'subscribe_button' );
 		break;
 	}
 
