@@ -87,8 +87,19 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 1.11 =
 
+Say hello to the **Podlove Subscribe button**, the *Universal button to subscribe to buttons in the desired podcast client or player website*. It ships as a widget, so you can easily display it on your site. For more finegrained positioning, you can use the `[podlove-subscribe-button]` shortcode.
+
+More info on those sites:
+
+* Homepage: http://podlove.org/podlove-subscribe-button/
+* Help Translate: https://podlove.oneskyapp.com/collaboration/project?id=14564
+* GitHub: https://github.com/podlove/podlove-subscribe-button
+
+**Other Changes**
+
 * fix `contributor.episodes`: only show published episodes
 * fix redirect form: remove url validation
+* fix HEAD requests for download URLs
 * redirects are counted and displayed in the redirect settings
 
 = 1.10.23 =
