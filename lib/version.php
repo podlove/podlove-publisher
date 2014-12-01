@@ -1040,6 +1040,9 @@ function run_migrations_for_version( $version ) {
 				$contributor_service->save();
 			}
 		break;
+		case 90:
+			\Podlove\Modules\Base::activate( 'subscribe_button' );
+		break;
 	}
 
 }
