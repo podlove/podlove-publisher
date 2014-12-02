@@ -16,7 +16,7 @@ class Widget extends \WP_Widget {
 
 	public function widget( $args, $instance ) {
 		?>
-		<aside id="<?php echo $args['widget_id']; ?>">
+		<aside id="<?php echo $args['widget_id']; ?>" class="widget">
 			
 			<?php if ( strlen($instance['title']) ): ?>
 				<h3 class="widget-title"><?php echo $instance['title'] ?></h3>
