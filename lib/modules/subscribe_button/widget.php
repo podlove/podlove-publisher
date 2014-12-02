@@ -38,12 +38,35 @@ class Widget extends \WP_Widget {
 		$feeds = array();
 
 		foreach (Feed::all() as $feed) {
-			$feeds[] = array(
-				'type'    => 'audio',
-				'format'  => $feed->episode_asset()->file_type()->extension,
-				'url'     => $feed->get_subscribe_url(),
-				'variant' => 'high'
-			);
+			$file_type = $feed->episode_asset()->file_type();
+
+			switch ($file_type->name) {
+				case 'MPEG-4 AAC Audio':
+					$feeds[] = array(
+						'type'   => $file_type->type,
+						'format' => 'aac',
+						'url'    => $feed->get_subscribe_url(),
+						'variant' => 'high'
+
+					);
+				break;
+				case 'Ogg Vorbis Audio':
+					$feeds[] = array(
+						'type'   => $file_type->type,
+						'format' => 'ogg',
+						'url'    => $feed->get_subscribe_url(),
+						'variant' => 'high'
+					);
+				break;
+				default:
+					$feeds[] = array(
+						'type'   => $file_type->type,
+						'format' => $file_type->extension,
+						'url'    => $feed->get_subscribe_url(),
+						'variant' => 'high'
+					);
+				break;
+			}
 		}
 
 		$podcast_data = array(
