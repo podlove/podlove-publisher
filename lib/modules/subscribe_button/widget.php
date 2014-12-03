@@ -32,24 +32,11 @@ class Widget extends \WP_Widget {
 		<?php
 	}
 
-	public function button( $style = 'medium', $autowidth = false ) {
-		
-		$podcast = Podcast::get_instance();
-		$podlove_feeds = Feed::find_all_by_discoverable(1);
-		$feeds = Subscribe_Button::prepare_feeds($podlove_feeds);
-
-		if ( ! $podcast || ! $feeds )
-			return;
-
-		$podcast_data = Subscribe_Button::prepare_podcast($podcast, $feeds);
-
-		return"
-			<script>
-				podcastData =".json_encode($podcast_data)."
-			</script>
-			<script class=\"podlove-subscribe-button\" src=\"http://cdn.podlove.org/subscribe-button/javascripts/app.js\"
-			 data-language=\"".get_bloginfo('language')."\" data-size=\"" . $style . ( $autowidth === 'on' ? ' auto' : '' ) . "\" data-json-data=\"podcastData\"></script>
-		";
+	public function button( $style = 'big-logo', $autowidth = true ) {
+		return Subscribe_Button::render_button(array(
+			'size'  => $style,
+			'width' => ($autowidth === true ? 'auto' : '')
+		));
 	}
 
 	public function form( $instance ) {
