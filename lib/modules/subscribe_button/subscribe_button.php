@@ -32,21 +32,24 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 					$feeds[] = array(
 						'type'   => $file_type->type,
 						'format' => 'aac',
-						'url'    => $feed->get_subscribe_url()
+						'url'    => $feed->get_subscribe_url(),
+						'variant' => 'high'
 					);
 				break;
 				case 'Ogg Vorbis Audio':
 					$feeds[] = array(
 						'type'   => $file_type->type,
 						'format' => 'ogg',
-						'url'    => $feed->get_subscribe_url()
+						'url'    => $feed->get_subscribe_url(),
+						'variant' => 'high'
 					);
 				break;
 				default:
 					$feeds[] = array(
 						'type'   => $file_type->type,
 						'format' => $file_type->extension,
-						'url'    => $feed->get_subscribe_url()
+						'url'    => $feed->get_subscribe_url(),
+						'variant' => 'high'
 					);
 				break;
 			}
