@@ -17,8 +17,9 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	}
 
 	public function button($args) {
+		
 		$podcast = Model\Podcast::get_instance();
-		$existing_feeds = Model\Feed::all();
+		$existing_feeds = Model\Feed::find_all_by_discoverable(1);
 		$feeds = array();
 
 		if ( ! $podcast || ! $existing_feeds )

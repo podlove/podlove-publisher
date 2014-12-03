@@ -35,9 +35,13 @@ class Widget extends \WP_Widget {
 	public function button( $style = 'medium', $autowidth = false ) {
 		
 		$podcast = Podcast::get_instance();
+		$existing_feeds = Feed::find_all_by_discoverable(1);
 		$feeds = array();
 
-		foreach (Feed::all() as $feed) {
+		if ( ! $podcast || ! $existing_feeds )
+			return;
+
+		foreach ($existing_feeds as $feed) {
 			$file_type = $feed->episode_asset()->file_type();
 
 			switch ($file_type->name) {
@@ -74,7 +78,7 @@ class Widget extends \WP_Widget {
 			'subtitle'    => $podcast->subtitle,
 			'description' => $podcast->summary,
 			'cover'       => $podcast->cover_image,
-			'feeds' => $feeds
+			'feeds'       => $feeds
 		);
 
 		return"
