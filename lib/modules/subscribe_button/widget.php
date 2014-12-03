@@ -35,51 +35,13 @@ class Widget extends \WP_Widget {
 	public function button( $style = 'medium', $autowidth = false ) {
 		
 		$podcast = Podcast::get_instance();
-		$existing_feeds = Feed::find_all_by_discoverable(1);
-		$feeds = array();
+		$podlove_feeds = Feed::find_all_by_discoverable(1);
+		$feeds = Subscribe_Button::prepare_feeds($podlove_feeds);
 
-		if ( ! $podcast || ! $existing_feeds )
+		if ( ! $podcast || ! $feeds )
 			return;
 
-		foreach ($existing_feeds as $feed) {
-			$file_type = $feed->episode_asset()->file_type();
-
-			switch ($file_type->name) {
-				case 'MPEG-4 AAC Audio':
-					$feeds[] = array(
-						'type'   => $file_type->type,
-						'format' => 'aac',
-						'url'    => $feed->get_subscribe_url(),
-						'variant' => 'high'
-
-					);
-				break;
-				case 'Ogg Vorbis Audio':
-					$feeds[] = array(
-						'type'   => $file_type->type,
-						'format' => 'ogg',
-						'url'    => $feed->get_subscribe_url(),
-						'variant' => 'high'
-					);
-				break;
-				default:
-					$feeds[] = array(
-						'type'   => $file_type->type,
-						'format' => $file_type->extension,
-						'url'    => $feed->get_subscribe_url(),
-						'variant' => 'high'
-					);
-				break;
-			}
-		}
-
-		$podcast_data = array(
-			'title'       => $podcast->title,
-			'subtitle'    => $podcast->subtitle,
-			'description' => $podcast->summary,
-			'cover'       => $podcast->cover_image,
-			'feeds'       => $feeds
-		);
+		$podcast_data = Subscribe_Button::prepare_podcast($podcast, $feeds);
 
 		return"
 			<script>
