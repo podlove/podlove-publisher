@@ -555,6 +555,7 @@ function locales() {
 		'kok-IN' => "Konkani - India",
 		'ky' => "Kyrgyz",
 		'ky-KG' => "Kyrgyz - Kyrgyzstan",
+		'lb' => "Luxembourgish",
 		'lt' => "Lithuanian",
 		'lt-LT' => "Lithuanian - Lithuania",
 		'lv' => "Latvian",
