@@ -1,4 +1,13 @@
 <?php
+/**
+ * Extracts template reference and saves them to JSON files.
+ * 
+ * Complete workflow for generating reference markdown:
+ *
+ * 1. $> WPBASE=/path/to/wordpress php bin/documentation.php
+ * 2. $> ruby bin/template_ref.rb > /path/to/file.md
+ */
+
 require_once 'vendor/autoload.php';
 
 use Podlove\Comment\Comment;
@@ -11,7 +20,8 @@ require_once dirname(__FILE__) . '/../lib/helper.php';
 require_once getenv('WPBASE') . '/wp-load.php';
 require_once dirname(__FILE__) . '/../bootstrap/bootstrap.php';
 
-$output_dir = '/Users/ericteubert/code/podlove.github.com/sources/template';
+$output_dir = '/tmp/podlove/doc';
+@mkdir($output_dir, 0777, true);
 
 // classes containing dynamic accessors
 $dynamicAccessorClasses = [
