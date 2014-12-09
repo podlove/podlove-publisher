@@ -50,7 +50,7 @@ class Geo_Ip {
 		$original_md5 = wp_remote_fopen(self::SOURCE_MD5_URL);
 		$our_md5      = md5_file(self::get_upload_file_path());
 
-		return $original_md5 == $our_md5;
+		return $original_md5 === $our_md5;
 	}
 
 	public static function get_upload_file_path()
