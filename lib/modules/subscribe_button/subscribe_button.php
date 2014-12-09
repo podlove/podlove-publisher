@@ -16,57 +16,127 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 		});
 	}
 
-	public function button($args) {
-		$podcast = Model\Podcast::get_instance();
-		$existing_feeds = Model\Feed::all();
+	/**
+	 * Prepare Podlove feeds for Subscribe Button format.
+	 *
+	 * @todo $file_type->name could change! there must be another way
+	 * 
+	 * @param  array $podlove_feeds List of podlove feeds
+	 * @return array
+	 */
+	public static function prepare_feeds($podlove_feeds) {
+		
 		$feeds = array();
 
-		if ( ! $podcast || ! $existing_feeds )
-			return;
-
-		foreach ($existing_feeds as $feed) {
+		foreach ($podlove_feeds as $feed) {
 			$file_type = $feed->episode_asset()->file_type();
 
 			switch ($file_type->name) {
 				case 'MPEG-4 AAC Audio':
-					$feeds[] = array(
-						'type'   => $file_type->type,
-						'format' => 'aac',
-						'url'    => $feed->get_subscribe_url()
-					);
+					$format = 'aac';
 				break;
 				case 'Ogg Vorbis Audio':
-					$feeds[] = array(
-						'type'   => $file_type->type,
-						'format' => 'ogg',
-						'url'    => $feed->get_subscribe_url()
-					);
+					$format = 'ogg';
 				break;
 				default:
-					$feeds[] = array(
-						'type'   => $file_type->type,
-						'format' => $file_type->extension,
-						'url'    => $feed->get_subscribe_url()
-					);
+					$format = $file_type->extension;
 				break;
 			}
+
+			$feeds[] = array(
+				'type'    => $file_type->type,
+				'format'  => $format,
+				'url'     => $feed->get_subscribe_url(),
+				'variant' => 'high'
+			);
 		}
 
-		$subscribe_button_info = array(
+		return $feeds;
+	}
+
+	/**
+	 * Prepare podcast data for Subscribe Button format.
+	 * 
+	 * @param  \Podlove\Model\Podcast $podcast
+	 * @param  array $feeds
+	 * @return array
+	 */
+	public static function prepare_podcast($podcast, $feeds) {
+		return array(
 			'title'    => $podcast->title,
 			'subtitle' => $podcast->subtitle,
 			'summary'  => $podcast->summary,
 			'cover'    => $podcast->cover_image,
 			'feeds'    => $feeds
 		);
+	}
+
+	/**
+	 * Prepare Subscribe Button parameters
+	 *
+	 * - size:  one of 'small', 'medium', 'big', 'big-logo'
+	 * - width: 'auto' to enable auto-size, all other values deactivate it
+	 * 
+	 * @param  array $args [ 'size' => value, 'width' => value ]
+	 * @return array
+	 */
+	public static function prepare_button_params($args) {
+
+		// apply defaults
+		$defaults = array(
+			'size'  => 'big-logo',
+			'width' => 'auto'
+		);
+		$args = wp_parse_args($args, $defaults);
+
+		// whitelist size parameter
+		$valid_sizes = array('small', 'medium', 'big', 'big-logo');
+		if (!in_array($args['size'], $valid_sizes)) {
+			$args['size'] = $defaults['size'];
+		}
+
+		// only "auto" is allowed, otherwise empty param
+		if ($args['width'] == 'auto') {
+			$args['width'] = ' auto';
+		} else {
+			$args['width'] = '';
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Return Subscribe Button HTML
+	 *
+	 *	For $args doc, see `prepare_button_params`.
+	 * 
+	 * @param  array $args
+	 * @return string
+	 */
+	public static function render_button($args) {
+		$args = Subscribe_Button::prepare_button_params($args);
+
+		$podcast       = Model\Podcast::get_instance();
+		$podlove_feeds = Model\Feed::find_all_by_discoverable(1);
+		$feeds         = Subscribe_Button::prepare_feeds($podlove_feeds);
+
+		if (!$podcast || !$feeds)
+			return;
+
+		$podcast_data = Subscribe_Button::prepare_podcast($podcast, $feeds);
 
 		return sprintf(
-			'<script>window.podcastData = %s;</script><script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
-			json_encode($subscribe_button_info),
+			'<script>window.podcastData = %s;</script>
+			 <script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
+			json_encode($podcast_data),
 			$podcast->language,
-			( isset($args['size']) && in_array($args['size'], array('small', 'medium', 'big', 'big-logo')) ? $args['size'] : 'medium' ),
-			( isset($args['width']) && $args['width'] == 'auto' ? ' auto' : '' )
+			$args['size'],
+			$args['width']
 		);
 	}
-	
+
+	// shortcode function
+	public function button($args) {
+		return Subscribe_Button::render_button($args);
+	}
 }

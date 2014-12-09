@@ -16,7 +16,7 @@ class Widget extends \WP_Widget {
 
 	public function widget( $args, $instance ) {
 		?>
-		<aside id="<?php echo $args['widget_id']; ?>">
+		<aside id="<?php echo $args['widget_id']; ?>" class="widget">
 			
 			<?php if ( strlen($instance['title']) ): ?>
 				<h3 class="widget-title"><?php echo $instance['title'] ?></h3>
@@ -32,35 +32,11 @@ class Widget extends \WP_Widget {
 		<?php
 	}
 
-	public function button( $style = 'medium', $autowidth = false ) {
-		
-		$podcast = Podcast::get_instance();
-		$feeds = array();
-
-		foreach (Feed::all() as $feed) {
-			$feeds[] = array(
-				'type'    => 'audio',
-				'format'  => $feed->episode_asset()->file_type()->extension,
-				'url'     => $feed->get_subscribe_url(),
-				'variant' => 'high'
-			);
-		}
-
-		$podcast_data = array(
-			'title'       => $podcast->title,
-			'subtitle'    => $podcast->subtitle,
-			'description' => $podcast->summary,
-			'cover'       => $podcast->cover_image,
-			'feeds' => $feeds
-		);
-
-		return"
-			<script>
-				podcastData =".json_encode($podcast_data)."
-			</script>
-			<script class=\"podlove-subscribe-button\" src=\"http://cdn.podlove.org/subscribe-button/javascripts/app.js\"
-			 data-language=\"".get_bloginfo('language')."\" data-size=\"" . $style . ( $autowidth === 'on' ? ' auto' : '' ) . "\" data-json-data=\"podcastData\"></script>
-		";
+	public function button( $style = 'big-logo', $autowidth = true ) {
+		return Subscribe_Button::render_button(array(
+			'size'  => $style,
+			'width' => ($autowidth === 'on' ? 'auto' : '')
+		));
 	}
 
 	public function form( $instance ) {

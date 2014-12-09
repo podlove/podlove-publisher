@@ -586,6 +586,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			"kk" => "Kazakh",
 			"km" => "Khmer",
 			"ko" => "Korean",
+			"lb" => "Luxembourgish",
 			"lv" => "Latvian",
 			"lt" => "Lithuanian",
 			"mk" => "Macedonian",
