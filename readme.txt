@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.11.2 =
+
+- Cache feed items. This drastically reduces load when no feed proxy is used; especially in a "full feed" with many episodes.
+
 = 1.11.1 =
 
 Subscribe Button fixes & enhancements:
