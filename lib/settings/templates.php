@@ -158,7 +158,7 @@ class Templates {
 
 		echo sprintf(
 			__( 'Episode Templates are an easy way to keep the same structure in all your episodes. Create one and use the displayed %sShortcode%s as the episode content.', 'podlove' ),
-			'<a href="http://docs.podlove.org/publisher/shortcodes/" target="_blank">',
+			'<a href="http://docs.podlove.org/ref/shortcodes.html" target="_blank">',
 			'</a>'
 			)
 		;
@@ -260,7 +260,7 @@ class Templates {
 
 			$f->text( 'content', array(
 				'label'       => __( 'HTML Template', 'podlove' ),
-				'description' => __( 'Templates support HTML and Twig. Read the <a href="http://docs.podlove.org/guides/understanding-templates/">Template Guide</a> to get started and have a look at the <a href="http://docs.podlove.org/publisher/template-reference/" target="_blank">Template reference</a> for all available data accessors.', 'podlove' ),
+				'description' => __( 'Templates support HTML and Twig. Read the <a href="http://docs.podlove.org/tut/understanding-templates.html">Template Guide</a> to get started and have a look at the <a href="http://docs.podlove.org/ref/template-tags.html" target="_blank">Template reference</a> for all available data accessors.', 'podlove' ),
 				'html' => array( 'class' => 'large-text required', 'rows' => 20 )
 			) );
 

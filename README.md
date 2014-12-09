@@ -36,6 +36,6 @@ php composer.phar --dev install
 [3]: http://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
 [4]: https://trello.com/b/zB4mKQlD/podlove-publisher
 [5]: https://github.com/podlove/podlove-publisher/issues
-[6]: http://docs.podlove.org/publisher/
+[6]: http://docs.podlove.org/
 [7]: http://podlove.org/
 [8]: https://github.com/podlove/podlove-publisher/releases

@@ -141,7 +141,7 @@ class ContributorGroups {
 		<?php
 		echo sprintf(
 			__('Use groups to divide contributors by type of participation. Create a group for teams working together or for a supporting community. Team members can be displayed separately by using the %sappropriate option%s to select a group.', 'podlove'),
-			'<a href="http://docs.podlove.org/publisher/shortcodes/#contributors" target="_blank">',
+			'<a href="http://docs.podlove.org/ref/template-tags.html#contributors" target="_blank">',
 			'</a>'
 		);
 		$table = new \Podlove\Modules\Contributors\Contributor_Group_List_Table();
