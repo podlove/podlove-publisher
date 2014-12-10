@@ -89,6 +89,8 @@ class Templates {
 		<script type="text/javascript">
 		(function($) {
 
+			// unsaved changes: ●
+
 			$(document).ready(function() {
 
 				var $editor     = $("#template-editor");
@@ -173,10 +175,12 @@ class Templates {
 				editor.on("input", function () {
 					var $active_item = $("li.active a", $navigation);
 					var template_id  = $active_item.data("id");
-					var new_content = editor.getSession().getValue();
+					var new_content  = editor.getSession().getValue();
 
 					// update cache
-					templates[template_id].content = new_content;
+					if (templates[template_id]) {
+						templates[template_id].content = new_content;
+					}
 				});
 
 				// select first template on page load
