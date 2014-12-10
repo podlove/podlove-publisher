@@ -16,20 +16,9 @@ class Templates {
 			/* $menu_slug  */ 'podlove_templates_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
-		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 
 		register_setting( Templates::$pagehook, 'podlove_template_assignment' );
-	}
-
-	public static function get_action_link( $template, $title, $action = 'edit', $type = 'link' ) {
-		return sprintf(
-			'<a href="?page=%s&action=%s&template=%s"%s>' . $title . '</a>',
-			$_REQUEST['page'],
-			$action,
-			$template->id,
-			$type == 'button' ? ' class="button"' : ''
-		);
 	}
 
 	public function scripts_and_styles() {
@@ -44,112 +33,13 @@ class Templates {
 		wp_enqueue_script( 'podlove-ace-js' );
 	}
 
-	/**
-	 * Process form: save/update a format
-	 */
-	private function save() {
-		if ( ! isset( $_REQUEST['template'] ) )
-			return;
-			
-		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
-		$template->update_attributes( $_POST['podlove_template'] );
-
-		if (isset($_POST['submit_and_stay'])) {
-			$this->redirect( 'edit', $template->id );
-		} else {
-			$this->redirect( 'index', $template->id );
-		}
-	}
-	
-	/**
-	 * Process form: create a format
-	 */
-	private function create() {
-		global $wpdb;
-		
-		$template = new \Podlove\Model\Template;
-		$template->update_attributes( $_POST['podlove_template'] );
-
-		if (isset($_POST['submit_and_stay'])) {
-			$this->redirect( 'edit', $template->id );
-		} else {
-			$this->redirect( 'index' );
-		}
-	}
-	
-	/**
-	 * Process form: delete a format
-	 */
-	private function delete() {
-		if ( ! isset( $_REQUEST['template'] ) )
-			return;
-
-		\Podlove\Model\Template::find_by_id( $_REQUEST['template'] )->delete();
-		
-		$this->redirect( 'index' );
-	}
-	
-	/**
-	 * Helper method: redirect to a certain page.
-	 */
-	private function redirect( $action, $template_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
-		$show   = ( $template_id ) ? '&template=' . $template_id : '';
-		$action = '&action=' . $action;
-		
-		wp_redirect( admin_url( $page . $show . $action ) );
-		exit;
-	}
-
-	public function process_form() {
-
-		if ( ! isset( $_REQUEST['template'] ) )
-			return;
-
-		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
-
-		if ( $action === 'save' ) {
-			$this->save();
-		} elseif ( $action === 'create' ) {
-			$this->create();
-		} elseif ( $action === 'delete' ) {
-			$this->delete();
-		}
-	}
-
 	public function page() {
-
-		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
-
-		if ( $action == 'confirm_delete' && isset( $_REQUEST['template'] ) ) {
-			?>
-			<div class="updated">
-				<p>
-					<strong>
-						<?php echo __( 'Are you sure you want do delete this template?', 'podlove' ) ?>
-					</strong>
-				</p>
-				<p>
-					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove' ) ?>
-				</p>
-				<p>
-					<?php echo self::get_action_link( \Podlove\Model\Template::find_by_id( (int) $_REQUEST['template'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
-				</p>
-			</div>
-			<?php
-		}
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Templates', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Templates', 'podlove' ); ?></h2>
 			<?php
-			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
-			switch ( $action ) {
-				case 'new':   $this->new_template();  break;
-				case 'edit':  $this->edit_template(); break;
-				case 'index': $this->view_template(); break;
-				default:      $this->view_template(); break;
-			}
+			$this->view_template();
 			?>
 		</div>	
 		<?php
@@ -345,56 +235,6 @@ class Templates {
 		?>
 		</form>
 		<?php
-	}
-
-	private function new_template() {
-		$template = new \Podlove\Model\Template;
-		?>
-		<h3><?php echo __( 'Add New Template', 'podlove' ); ?></h3>
-		<?php
-		$this->form_template( $template, 'create', __( 'Add New Template', 'podlove' ) );
-	}
-
-	private function form_template( $template, $action, $button_text = NULL ) {
-
-		$form_args = array(
-			'context' => 'podlove_template',
-			'hidden'  => array(
-				'template' => $template->id,
-				'action' => $action
-			),
-			'submit_button' => false, // for custom control in form_end
-			'form_end' => function() {
-				echo "<p>";
-				submit_button( __('Save Changes'), 'primary', 'submit', false );
-				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
-				echo "</p>";
-			}
-		);
-
-		\Podlove\Form\build_for( $template, $form_args, function ( $form ) {
-			$f = new \Podlove\Form\Input\TableWrapper( $form );
-
-			$f->string( 'title', array(
-				'label'       => __( 'ID', 'podlove' ),
-				'description' => __( 'Description to identify the template in the shortcode: <code>[podlove-template id="<span class=\'template_title_preview\'>' . $form->object->title . '</span>"]</code>', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required podlove-check-input' )
-			) );
-
-			$f->text( 'content', array(
-				'label'       => __( 'HTML Template', 'podlove' ),
-				'description' => __( 'Templates support HTML and Twig. Read the <a href="http://docs.podlove.org/tut/understanding-templates.html">Template Guide</a> to get started and have a look at the <a href="http://docs.podlove.org/ref/template-tags.html" target="_blank">Template reference</a> for all available data accessors.', 'podlove' ),
-				'html' => array( 'class' => 'large-text required', 'rows' => 20 )
-			) );
-
-		} );
-	}
-	
-	private function edit_template() {
-		$template = \Podlove\Model\Template::find_by_id( $_REQUEST['template'] );
-		echo '<h3>' . sprintf( __( 'Edit Template: %s', 'podlove' ), $template->title ) . '</h3>';
-		$this->form_template( $template, 'save' );
 	}
 
 }
