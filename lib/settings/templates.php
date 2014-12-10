@@ -96,7 +96,15 @@ class Templates {
 				var $toolbar    = $(".toolbar", $editor);
 				var $navigation = $(".navigation", $editor);
 
+				// local cache
+				var templates   = [];
+
 				var editor = ace.edit("ace-editor");
+
+				var activateTemplate = function(title, content) {
+					$title.val(title);
+					editor.getSession().setValue(content);
+				};
 
 				editor.setTheme("ace/theme/github");
 				editor.getSession().setMode("ace/mode/twig");
@@ -111,13 +119,21 @@ class Templates {
 						.siblings().removeClass("active")
 					;
 
-					$.getJSON(ajaxurl, {
-						id: template_id,
-						action: 'podlove-template-get'
-					}, function(data) {
-						$title.val(data.title)
-						editor.getSession().setValue(data.content);
-					});
+					if (templates[template_id]) {
+						activateTemplate(templates[template_id].title, templates[template_id].content);
+					} else {
+						$.getJSON(ajaxurl, {
+							id: template_id,
+							action: 'podlove-template-get'
+						}, function(data) {
+							templates[template_id] = {
+								title: data.title,
+								content: data.content
+							};
+
+							activateTemplate(data.title, data.content);
+						});
+					}
 
 					$this.blur(); // removes link outline
 					e.preventDefault();
@@ -143,7 +159,24 @@ class Templates {
 				});
 
 				$title.keyup(function(e) {
-					$("li.active a", $navigation).html($(this).val());
+					var $active_item = $("li.active a", $navigation);
+					var template_id  = $active_item.data("id");
+					var new_title    = $(this).val();
+
+					// update cache
+					templates[template_id].title = new_title;
+
+					// update navigation element
+					$active_item.html(new_title);
+				});
+
+				editor.on("input", function () {
+					var $active_item = $("li.active a", $navigation);
+					var template_id  = $active_item.data("id");
+					var new_content = editor.getSession().getValue();
+
+					// update cache
+					templates[template_id].content = new_content;
 				});
 
 				// select first template on page load
