@@ -61,7 +61,7 @@ class Templates {
 					<?php foreach ( Model\Template::all() as $template ): ?>
 						<li>
 							<a href="#" data-id="<?php echo $template->id ?>">
-								<?php echo $template->title; ?>&nbsp;
+								<span class="filename"><?php echo $template->title; ?></span>&nbsp;
 							</a>
 						</li>
 					<?php endforeach; ?>
@@ -89,8 +89,6 @@ class Templates {
 		<script type="text/javascript">
 		(function($) {
 
-			// unsaved changes: ●
-
 			$(document).ready(function() {
 
 				var $editor     = $("#template-editor");
@@ -100,6 +98,34 @@ class Templates {
 
 				// local cache
 				var templates   = [];
+
+				var template = function (id, title, content) {
+					
+					var $navigationItem = $("li a[data-id=" + id + "]", $navigation);
+					var isMarked = false;
+
+					var markAsUnsaved = function () {
+						if (!isMarked) {
+							isMarked = true;
+							$navigationItem.html($navigationItem.html() + '<span class="unsaved" title="unsaved changes"> ●</span>');
+						}
+					};
+
+					var markAsSaved = function () {
+						if (isMarked) {
+							isMarked = false;
+							$navigationItem.find(".unsaved").remove();
+						}
+					};
+
+					return {
+						id: id,
+						title: title,
+						content: content,
+						markAsUnsaved: markAsUnsaved,
+						markAsSaved: markAsSaved
+					}
+				};
 
 				var editor = ace.edit("ace-editor");
 
@@ -128,10 +154,7 @@ class Templates {
 							id: template_id,
 							action: 'podlove-template-get'
 						}, function(data) {
-							templates[template_id] = {
-								title: data.title,
-								content: data.content
-							};
+							templates[template_id] = template(template_id, data.title, data.content);
 
 							activateTemplate(data.title, data.content);
 						});
@@ -154,6 +177,8 @@ class Templates {
 					}, function(data) {
 						if (!data.success) {
 							console.log("Error: Could not save template.");
+						} else {
+							templates[template_id].markAsSaved();
 						}
 					});
 
@@ -167,19 +192,25 @@ class Templates {
 
 					// update cache
 					templates[template_id].title = new_title;
+					templates[template_id].markAsUnsaved();
 
 					// update navigation element
-					$active_item.html(new_title);
+					$(".filename", $active_item).html(new_title);
 				});
 
-				editor.on("input", function () {
-					var $active_item = $("li.active a", $navigation);
-					var template_id  = $active_item.data("id");
-					var new_content  = editor.getSession().getValue();
+				editor.on("change", function () {
+					// only track user input, *not* programmatical change
+					// @see https://github.com/ajaxorg/ace/issues/503#issuecomment-44525640
+					if (editor.curOp && editor.curOp.command.name) { 
+						var $active_item = $("li.active a", $navigation);
+						var template_id  = $active_item.data("id");
+						var new_content  = editor.getSession().getValue();
 
-					// update cache
-					if (templates[template_id]) {
-						templates[template_id].content = new_content;
+						// update cache
+						if (templates[template_id]) {
+							templates[template_id].content = new_content;
+							templates[template_id].markAsUnsaved();
+						}
 					}
 				});
 
@@ -192,7 +223,7 @@ class Templates {
 						action: 'podlove-template-create'
 					}, function(data) {
 						$("ul", $navigation)
-							.append("<li><a href=\"#\" data-id=\"" + data.id + "\">new template</a></li>");
+							.append("<li><a href=\"#\" data-id=\"" + data.id + "\"><span class='filename'>new template</span>&nbsp;</a></li>");
 						$("ul li:last a", $navigation).click();
 						$title.focus();
 					});
