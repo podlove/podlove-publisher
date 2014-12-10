@@ -109,7 +109,7 @@ class Templates {
 					var markAsUnsaved = function () {
 						if (!isMarked) {
 							isMarked = true;
-							$navigationItem.html($navigationItem.html() + '<span class="unsaved" title="unsaved changes"> ●</span>');
+							$navigationItem.html($navigationItem.html() + '<span class="unsaved" title="unsaved changes"> ● </span>');
 						}
 					};
 
@@ -168,6 +168,9 @@ class Templates {
 					var template_id = $("li.active a", $navigation).data("id");
 					var template_title = $title.val();
 					var template_content = editor.getSession().getValue();
+					var saving_icon = '<i class="podlove-icon-spinner rotate"></i>';
+
+					$("li.active a", $navigation).append(saving_icon);
 
 					$.getJSON(ajaxurl, {
 						id: template_id,
@@ -175,6 +178,7 @@ class Templates {
 						content: template_content,
 						action: 'podlove-template-update'
 					}, function(data) {
+						$("li.active a i", $navigation).remove();
 						if (!data.success) {
 							console.log("Error: Could not save template.");
 						} else {
