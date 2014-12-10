@@ -81,10 +81,14 @@ class Templates {
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="main" id="ace-editor"></div>
+				<div class="editor-wrapper">
+					<div class="main" id="ace-editor"></div>
+					<div id="fullscreen" class="fullscreen-on fullscreen-button"></div>
+				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
+
 
 		<script type="text/javascript">
 		(function($) {
@@ -97,6 +101,14 @@ class Templates {
 				var $navigation = $(".navigation", $editor);
 
 				var editor = ace.edit("ace-editor");
+
+				$("#fullscreen").on( 'click', function () {
+					$(document.body).toggleClass("fullScreen");
+					$("#ace-editor").toggleClass("fullScreen-editor");
+					$(this).toggleClass("fullscreen-on").toggleClass("fullscreen-off");
+					editor.resize();
+					window.scroll(0,0); // reset window scrolling to avoid fullscreen-button positioning issues
+				} );
 
 				// local cache
 				var templates   = [];
