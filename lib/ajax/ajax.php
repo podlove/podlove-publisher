@@ -13,7 +13,6 @@ class Ajax {
 
 		$actions = array(
 			'get-new-guid',
-			'validate-file',
 			'validate-url',
 			'update-asset-position',
 			'update-feed-position',
@@ -59,20 +58,6 @@ class Ajax {
 		$guid = \Podlove\Custom_Guid::guid_for_post( $post );
 
 		self::respond_with_json( array( 'guid' => $guid ) );
-	}
-
-	public function validate_file() {
-		$file_id = $_REQUEST['file_id'];
-
-		$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
-		$info = $file->curl_get_header();
-		$reachable = $info['http_code'] >= 200 && $info['http_code'] < 300;
-
-		self::respond_with_json( array(
-			'file_url'	=> $file_url,
-			'reachable'	=> $reachable,
-			'file_size'	=> $info['download_content_length']
-		) );
 	}
 
 	public function validate_url() {
