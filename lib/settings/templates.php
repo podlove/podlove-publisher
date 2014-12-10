@@ -165,6 +165,7 @@ class Templates {
 				});
 
 				$toolbar.on("click", "a.save", function(e) {
+					var save_button = $(this);
 					var template_id = $("li.active a", $navigation).data("id");
 					var template_title = $title.val();
 					var template_content = editor.getSession().getValue();
@@ -178,6 +179,7 @@ class Templates {
 						content: template_content,
 						action: 'podlove-template-update'
 					}, function(data) {
+						save_button.blur();
 						$("li.active a i", $navigation).remove();
 						if (!data.success) {
 							console.log("Error: Could not save template.");
