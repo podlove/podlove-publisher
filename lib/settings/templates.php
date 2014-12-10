@@ -96,6 +96,8 @@ class Templates {
 				var $toolbar    = $(".toolbar", $editor);
 				var $navigation = $(".navigation", $editor);
 
+				var editor = ace.edit("ace-editor");
+
 				// local cache
 				var templates   = [];
 
@@ -118,20 +120,19 @@ class Templates {
 						}
 					};
 
+					var activate = function () {
+						$title.val(title);
+						editor.getSession().setValue(content);
+					};
+
 					return {
 						id: id,
 						title: title,
 						content: content,
 						markAsUnsaved: markAsUnsaved,
-						markAsSaved: markAsSaved
+						markAsSaved: markAsSaved,
+						activate: activate
 					}
-				};
-
-				var editor = ace.edit("ace-editor");
-
-				var activateTemplate = function(title, content) {
-					$title.val(title);
-					editor.getSession().setValue(content);
 				};
 
 				editor.setTheme("ace/theme/github");
@@ -148,15 +149,14 @@ class Templates {
 					;
 
 					if (templates[template_id]) {
-						activateTemplate(templates[template_id].title, templates[template_id].content);
+						templates[template_id].activate();
 					} else {
 						$.getJSON(ajaxurl, {
 							id: template_id,
 							action: 'podlove-template-get'
 						}, function(data) {
 							templates[template_id] = template(template_id, data.title, data.content);
-
-							activateTemplate(data.title, data.content);
+							templates[template_id].activate();
 						});
 					}
 
