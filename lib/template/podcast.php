@@ -113,6 +113,7 @@ class Podcast extends Wrapper {
 	 * 
 	 * - post_id: one episode matching the given post id
 	 * - post_ids: list of episodes matching the given list of post ids
+	 * - category: list of episodes matching the category slug
 	 * - slug: one episode matching the given slug
 	 * - slugs: list of episodes matching the given list of slugs
 	 * - post_status: Publication status of the post. Defaults to 'publish'
@@ -164,6 +165,7 @@ class Podcast extends Wrapper {
 
 		// build conditions
 		$where = "1 = 1";
+		$joins = "";
 		if (isset($args['post_ids'])) {
 			$ids = array_filter( // remove "0"-IDs
 				array_map( // convert elements to integers
@@ -192,6 +194,14 @@ class Podcast extends Wrapper {
 			$where .= " AND p.post_status = '" . $args['post_status'] . "'";
 		} else {
 			$where .= " AND p.post_status = 'publish'";
+		}
+
+		if (isset($args['category']) && strlen($args['category'])) {
+			$joins .= '
+				JOIN ' . $wpdb->term_relationships . ' tr ON p.ID = tr.object_id
+				JOIN ' . $wpdb->term_taxonomy . ' tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = "category"
+				JOIN ' . $wpdb->terms . ' t ON t.term_id = tt.term_id AND t.slug = ' . $wpdb->prepare('%s', $args['category']) . '
+			';
 		}
 
 		// order
@@ -225,6 +235,7 @@ class Podcast extends Wrapper {
 			FROM
 				' . \Podlove\Model\Episode::table_name() . ' e
 				INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
+				' . $joins . '
 			WHERE ' . $where . '
 			ORDER BY ' . $orderby . ' ' . $order;
 
