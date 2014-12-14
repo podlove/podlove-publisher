@@ -127,7 +127,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 
 		return sprintf(
 			'<script>window.podcastData = %s;</script>
-			 <script class="podlove-subscribe-button" src="http://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
+			 <script class="podlove-subscribe-button" src="https://cdn.podlove.org/subscribe-button/javascripts/app.js" data-language="%s" data-size="%s%s" data-json-data="podcastData"></script>',
 			json_encode($podcast_data),
 			$podcast->language,
 			$args['size'],
