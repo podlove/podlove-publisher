@@ -1,31 +1,22 @@
 <?php
 use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
+use \Podlove\Model;
 
 add_action( 'wp', 'podlove_handle_media_file_download' );
 
 function podlove_handle_media_file_download() {
 
-	if (isset($_GET['download_media_file'])) {
-		$download_media_file = $_GET['download_media_file'];
-	} else {
-		$download_media_file = get_query_var("download_media_file");
+	$get_query_var = function($var_name) {
+		if (isset($_GET[$var_name])) {
+			return $_GET[$var_name];
+		} else {
+			return; get_query_var($var_name);
+		}		
 	}
 
-	if (isset($_REQUEST['ptm_source'])) {
-		$ptm_source = $_REQUEST['ptm_source'];
-	} else {
-		$ptm_source = get_query_var("ptm_source");
-	}
-
-	if (isset($_REQUEST['ptm_context'])) {
-		$ptm_context = $_REQUEST['ptm_context'];
-	} else {
-		$ptm_context = get_query_var("ptm_context");
-	}
-
-	$download_media_file = (int) $download_media_file;
-	$ptm_source  = trim($ptm_source);
-	$ptm_context = trim($ptm_context);
+	$download_media_file = (int) $get_query_var('download_media_file');
+	$ptm_source          = trim($get_query_var('ptm_source'));
+	$ptm_context         = trim($get_query_var('ptm_context'));
 
 	if (!$download_media_file)
 		return;
