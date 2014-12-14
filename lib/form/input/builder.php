@@ -105,18 +105,6 @@ class Builder {
 		<?php
 	}
 
-	public function password( $object_key, $arguments ) {
-		$this->build_input_values( $object_key, $arguments );
-		$random = rand();
-		?>
-		<div>
-			<input type="password" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo $random; ?>" <?php echo $this->html_attributes; ?>>
-			<input type="hidden" name="<?php echo "field_filler_".$this->field_name; ?>" id="<?php echo "field_filler_".$this->field_name; ?>" value="<?php echo $random; ?>" <?php echo $this->html_attributes; ?>>
-			<input type="hidden" name="passwords[]" value="<?php echo esc_attr( $this->object_key ) ?>">
-		</div>
-		<?php
-	}
-
 	public function checkbox( $object_key, $arguments ) {
 		$this->build_input_values( $object_key, $arguments );
 		?>

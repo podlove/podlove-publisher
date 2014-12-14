@@ -345,14 +345,6 @@ abstract class Base
 			}
 		}
 
-		// @todo this is the wrong place to do this!
-		// The feed password is the only "passphrase" which is saved. It is not encrypted!
-		// However, we keep this function for later use
-		if ( isset( $_REQUEST['passwords'] ) && is_array( $_REQUEST['passwords'] ) ) {
-			foreach ( $_REQUEST['passwords'] as $password ) {
-				$this->$password = $attributes[ $password ];
-			}
-		}
 		return $this->save();
 	}
 
