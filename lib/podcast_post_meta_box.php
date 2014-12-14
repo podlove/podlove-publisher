@@ -538,7 +538,6 @@ class Podcast_Post_Meta_Box {
 		else 
 			$this->save_episode_assets( $episode, array() );
 
-		\Podlove\clear_all_caches(); // mainly for feeds
 		do_action( 'podlove_episode_content_has_changed', $episode->id );
 	}
 

@@ -1,0 +1,69 @@
+<?php
+/**
+ * Enable chapters pages
+ * 
+ * add ?chapters_format=psc|json|mp4chaps to any episode URL to get chapters
+ */
+add_action( 'wp', function() {
+
+	if ( ! is_single() )
+		return;
+
+	if ( ! isset( $_GET['chapters_format'] ) )
+		return;
+
+	if ( ! $episode = \Podlove\Model\Episode::find_or_create_by_post_id( get_the_ID() ) )
+		return;
+
+	if ( ! in_array( $_GET['chapters_format'], array( 'psc', 'json', 'mp4chaps' ) ) )
+		$_GET['chapters_format'] = 'psc';
+
+	switch ( $_GET['chapters_format'] ) {
+		case 'psc':
+			header( "Content-Type: application/xml" );
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+			break;
+		case 'mp4chaps':
+			header( "Content-Type: text/plain" );
+			break;
+		case 'json':
+			header( "Content-Type: application/json" );
+			break;
+	}	
+	
+	echo $episode->get_chapters( $_GET['chapters_format'] );
+	exit;
+} );
+
+/**
+ * When changing from an external chapter asset to 'manual', copy external 
+ * contents into local field.
+ */
+add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
+	global $wpdb;
+
+	if (!isset($old['chapters']) || !isset($new['chapters']))
+		return $new;
+
+	if ($new['chapters'] != 'manual')  // just changes to manual
+		return $new;
+
+	if (((int) $old['chapters']) <= 0) // just changes from an asset
+		return $new;
+
+	$episodes = \Podlove\Model\Episode::allByTime();
+
+	// 10 seconds per episode or 30 seconds since 1 request per asset 
+	// is required if it is not cached
+	set_time_limit(max(30, count($episodes) * 10));
+
+	foreach ($episodes as $episode) {
+		if ($chapters = $episode->get_chapters('mp4chaps'))
+			$episode->update_attribute('chapters', esc_sql($chapters));
+	}
+
+	// delete chapters caches
+	$wpdb->query('DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove_chapters_string_%"');
+
+	return $new;
+}, 10, 2);
