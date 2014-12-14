@@ -139,98 +139,22 @@ abstract class Base
 		);
 	}
 
-	private static function find_one_by_sql($sql) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row($sql);
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
-	}
-
 	public static function find_all_by_property( $property, $value ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$models = array();
-		
-		$rows = $wpdb->get_results(
+		return self::find_all_by_sql(
 			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\''
 		);
-		
-		if ( ! $rows ) {
-			return array();
-		}
-		
-		foreach ( $rows as $row ) {
-			$model = new $class();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$models[] = $model;
-		}
-		
-		return $models;
 	}
 
 	public static function find_one_by_property( $property, $value ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row(
+		return self::find_one_by_sql(
 			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\' LIMIT 0,1'
 		);
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
 	}
 
 	public static function find_all_by_where( $where ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$models = array();
-		
-		$rows = $wpdb->get_results(
+		return self::find_all_by_sql(
 			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where
 		);
-		
-		if ( ! $rows ) {
-			return array();
-		}
-		
-		foreach ( $rows as $row ) {
-			$model = new $class();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$models[] = $model;
-		}
-		
-		return $models;
 	}
 	
 	public static function find_one_by_where( $where ) {
@@ -290,22 +214,9 @@ abstract class Base
 	 * @return array list of model objects
 	 */
 	public static function all( $sql_suffix = '' ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$models = array();
-		
-		$rows = $wpdb->get_results( 'SELECT * FROM ' . self::table_name() . ' ' . $sql_suffix );
-		foreach ( $rows as $row ) {
-			$model = new $class();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$models[] = $model;
-		}
-		
-		return $models;
+		return self::find_all_by_sql(
+			'SELECT * FROM ' . self::table_name() . ' ' . $sql_suffix
+		);
 	}
 	
 	/**
@@ -572,5 +483,48 @@ abstract class Base
 
 	    if ($reset_autoincrement)
 	    	$wpdb->query( 'ALTER TABLE ' . self::table_name() . ' AUTO_INCREMENT = 1' );  
+	}
+
+	private static function find_one_by_sql($sql) {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$model = new $class();
+		$model->flag_as_not_new();
+		
+		$row = $wpdb->get_row($sql);
+		
+		if ( ! $row ) {
+			return NULL;
+		}
+		
+		foreach ( $row as $property => $value ) {
+			$model->$property = $value;
+		}
+		
+		return $model;
+	}
+
+	private function find_all_by_sql($sql) {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$models = array();
+		
+		$rows = $wpdb->get_results($sql);
+		
+		if ( ! $rows )
+			return array();
+		
+		foreach ( $rows as $row ) {
+			$model = new $class();
+			$model->flag_as_not_new();
+			foreach ( $row as $property => $value ) {
+				$model->$property = $value;
+			}
+			$models[] = $model;
+		}
+		
+		return $models;
 	}
 }
