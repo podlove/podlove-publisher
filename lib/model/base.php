@@ -134,13 +134,19 @@ abstract class Base
 	}
 
 	public static function find_by_id( $id ) {
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . self::table_name() . ' WHERE id = ' . (int) $id
+		);
+	}
+
+	private static function find_one_by_sql($sql) {
 		global $wpdb;
 		
 		$class = get_called_class();
 		$model = new $class();
 		$model->flag_as_not_new();
 		
-		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' WHERE id = ' . (int) $id );
+		$row = $wpdb->get_row($sql);
 		
 		if ( ! $row ) {
 			return NULL;
@@ -228,25 +234,9 @@ abstract class Base
 	}
 	
 	public static function find_one_by_where( $where ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row(
+		return self::find_one_by_sql(
 			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where . ' LIMIT 0,1'
 		);
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
 	}
 
 	// mimic ::find_one_by_<property>
@@ -282,43 +272,15 @@ abstract class Base
 	 * @return model object
 	 */
 	public static function first() {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' LIMIT 0,1' );
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-
-		return $model;
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . self::table_name() . ' LIMIT 0,1'
+		);
 	}
 	
 	public static function last() {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' ORDER BY id DESC LIMIT 0,1' );
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-
-		return $model;
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . self::table_name() . ' ORDER BY id DESC LIMIT 0,1'
+		);
 	}
 
 	/**
