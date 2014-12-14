@@ -636,7 +636,7 @@ function podcast_permalink_proxy($query_vars) {
 	}
 
 	// No post request
-	if ( isset( $query_vars["preview"] ) || false == ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
+	if ( isset( $query_vars["preview"] ) || false === ( isset( $query_vars["name"] ) || isset( $query_vars["p"] ) ) )
 		return $query_vars;
 	
 	if ( ! isset( $query_vars["post_type"] ) || $query_vars["post_type"] == "post" )
@@ -656,7 +656,7 @@ function remove_trash_posts_from_the_posts($posts, $wp_query) {
 		return $posts;
 
 	// No post request
-	if ( isset( $wp_query->query["preview"] ) || false == ( isset( $wp_query->query["name"] ) || isset( $wp_query->query["p"] ) ) )
+	if ( isset( $wp_query->query["preview"] ) || false === ( isset( $wp_query->query["name"] ) || isset( $wp_query->query["p"] ) ) )
 		return $posts;
 
 	// Only check if we found more than 2 posts
