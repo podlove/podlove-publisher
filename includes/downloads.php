@@ -12,7 +12,7 @@ function podlove_handle_media_file_download() {
 		} else {
 			return; get_query_var($var_name);
 		}		
-	}
+	};
 
 	$download_media_file = (int) $get_query_var('download_media_file');
 	$ptm_source          = trim($get_query_var('ptm_source'));
