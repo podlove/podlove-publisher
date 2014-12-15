@@ -106,35 +106,24 @@ class Social extends \Podlove\Modules\Base {
 		if (!isset($_POST['podlove_contributor']) )
 			return;
 
-		if (isset($_POST['podlove_contributor']['services']) )
-			foreach ($_POST['podlove_contributor']['services'] as $service_appearance) {
-				foreach ($service_appearance as $service_id => $service) {
-					$c = new \Podlove\Modules\Social\Model\ContributorService;
-					$c->position = $position;
-					$c->contributor_id = $contributor->id;
-					$c->service_id = $service_id;
-					$c->value = $service['value'];
-					$c->title = $service['title'];
-					$c->save();
-				}
-				$position++;
-			}
+		foreach (array('donations', 'services') as $type) {
+			$position = 0;
 
-		$position = 0;
-
-		if (isset($_POST['podlove_contributor']['donations']) )
-			foreach ($_POST['podlove_contributor']['donations'] as $donation_appearances) {
-				foreach ($donation_appearances as $donation_id => $donation) {
-					$c = new \Podlove\Modules\Social\Model\ContributorService;
-					$c->position = $position;
-					$c->contributor_id = $contributor->id;
-					$c->service_id = $donation_id;
-					$c->value = $donation['value'];
-					$c->title = $donation['title'];
-					$c->save();
+			if (isset($_POST['podlove_contributor'][$type]) ) {
+				foreach ($_POST['podlove_contributor'][$type] as $service_appearance) {
+					foreach ($service_appearance as $service_id => $service) {
+						$c = new \Podlove\Modules\Social\Model\ContributorService;
+						$c->position = $position;
+						$c->contributor_id = $contributor->id;
+						$c->service_id = $service_id;
+						$c->value = $service['value'];
+						$c->title = $service['title'];
+						$c->save();
+					}
+					$position++;
 				}
-				$position++;
 			}
+		}
 	}
 
 	public function save_service_setting($old, $new, $form_key='services', $type='social') {
