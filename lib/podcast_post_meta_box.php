@@ -76,11 +76,12 @@ class Podcast_Post_Meta_Box {
 					'label'       => __( 'Title', 'podlove' ),
 					'description' => '',
 					'html'        => array(
-						'readonly' => 'readonly podlove-check-input'
+						'readonly' => 'readonly',
+						'class'    => 'podlove-check-input'
 					)
 				),
 				'position' => 1100
-			),array(
+			), array(
 				'type' => 'text',
 				'key'  => 'subtitle',
 				'options' => array(
@@ -92,8 +93,7 @@ class Podcast_Post_Meta_Box {
 					)
 				),
 				'position' => 1000
-			),
-			array(
+			), array(
 				'type' => 'text',
 				'key'  => 'summary',
 				'options' => array(
@@ -105,8 +105,7 @@ class Podcast_Post_Meta_Box {
 					)
 				),
 				'position' => 900
-			),
-			array(
+			), array(
 				'type' => 'string',
 				'key'  => 'slug',
 				'options' => array(
@@ -115,8 +114,7 @@ class Podcast_Post_Meta_Box {
 					'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				),
 				'position' => 510
-			),
-			array(
+			), array(
 				'type' => 'string',
 				'key'  => 'duration',
 				'options' => array(
@@ -125,8 +123,7 @@ class Podcast_Post_Meta_Box {
 					'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				),
 				'position' => 400
-			),
-			array(
+			), array(
 				'type' => 'multiselect',
 				'key'  => 'episode_assets',
 				'options' => Podcast_Post_Meta_Box::episode_assets_form( $episode ),
@@ -134,82 +131,24 @@ class Podcast_Post_Meta_Box {
 			)
 		);
 
-		if ( Model\AssetAssignment::get_instance()->image === 'manual' ) {
-			$form_data[] = array(
-				'type' => 'string',
-				'key'  => 'cover_art',
-				'options' => array(
-					'label'       => __( 'Episode Cover Art URL', 'podlove' ),
-					'description' => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
-					'html'        => array( 'class' => 'regular-text podlove-check-input' )
-				),
-				'position' => 790
-			);
-		}
-
-		if ( Model\AssetAssignment::get_instance()->chapters === 'manual' ) {
-			$form_data[] = array(
-				'type' => 'text',
-				'key'  => 'chapters',
-				'options' => array(
-					'label'       => __( 'Chapter Marks', 'podlove' ),
-					'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
-					'html'        => array(
-						'class'       => 'large-text code autogrow',
-						'placeholder' => '00:00:00.000 Intro',
-						'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
-					)
-				),
-				'position' => 800
-			);
-		}
-
-		if ( \Podlove\get_setting( 'metadata', 'enable_episode_recording_date' ) ) {
-			$form_data[] = array(
-				'type' => 'string',
-				'key'  => 'recording_date',
-				'options' => array(
-					'label'       => __( 'Recording Date', 'podlove' ),
-					'description' => '',
-					'html'        => array( 'class' => 'regular-text podlove-check-input' )
-				),
-				'position' => 750
-			);
-		}
-
-		if ( \Podlove\get_setting( 'metadata', 'enable_episode_explicit' ) ) {
-			$form_data[] = array(
-				'type' => 'select',
-				'key'  => 'explicit',
-				'options' => array(
-					'label'       => __( 'Explicit Content?', 'podlove' ),
-					'type'    => 'checkbox',
-					'html'        => array( 'style' => 'width: 200px;' ),
-					'default'	=> '-1',
-	                'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
-				),
-				'position' => 770
-			);
-		}
-
 		// allow modules to add / change the form
 		$form_data = apply_filters('podlove_episode_form_data', $form_data, $episode);
 
 		// sort entities by position
 		// TODO first sanitize position attribute, then I don't have to check on each comparison
-		usort($form_data, function ($a, $b) {
-
-			$pos_a = isset($a['position']) ? (int) $a['position'] : 0;
-			$pos_b = isset($b['position']) ? (int) $b['position'] : 0;
-
-			if ($a == $b || $pos_a == $pos_b) {
-				return 0;
-			}
-
-			return ($pos_a < $pos_b) ? 1 : -1;
-		});
+		usort($form_data, array(__CLASS__, 'compare_by_position'));
 
 		return $form_data;
+	}
+
+	public static function compare_by_position($a, $b) {
+		$pos_a = isset($a['position']) ? (int) $a['position'] : 0;
+		$pos_b = isset($b['position']) ? (int) $b['position'] : 0;
+
+		if ($a == $b || $pos_a == $pos_b)
+			return 0;
+
+		return ($pos_a < $pos_b) ? 1 : -1;
 	}
 
 	/**
@@ -340,10 +279,7 @@ class Podcast_Post_Meta_Box {
 			return;
 		
 		// Check permissions
-		if ( 'podcast' == $_POST['post_type'] ) {
-		  if ( ! current_user_can( 'edit_post', $post_id ) )
-			return;
-		} else {
+		if ( 'podcast' !== $_POST['post_type'] || !current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 

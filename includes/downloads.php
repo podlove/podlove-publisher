@@ -1,6 +1,6 @@
 <?php
 use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
-use \Podlove\Model;
+use Podlove\Model;
 
 add_action( 'wp', 'podlove_handle_media_file_download' );
 
