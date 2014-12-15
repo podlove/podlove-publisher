@@ -51,13 +51,11 @@ class Social extends \Podlove\Modules\Base {
 			'services', array('\Podlove\Modules\Social\TemplateExtensions', 'accessorPodcastServices'), 4
 		);
 
-		add_shortcode( 'podlove-podcast-social-media-list', array( $this, 'podlove_podcast_social_media_list') );
-		add_shortcode( 'podlove-podcast-donations-list', array( $this, 'podlove_podcast_donations_list') );
-
 		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
 
 		RepairSocial::init();
 		AppDotNet::init();
+		Shortcodes::init();
 	}
 
 	public function cache_tainting_classes($classes) {
@@ -484,20 +482,6 @@ class Social extends \Podlove\Modules\Base {
 		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
 		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
 		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
-	}
-	
-	/**
-	 * [podlove-podcast-social-media-list] shortcode
-	 */
-	public function podlove_podcast_social_media_list() {
-		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-social-media-list.twig');
-	}
-
-	/**
-	 * [podlove-podcast-donations-list] shortcode
-	 */
-	public function podlove_podcast_donations_list() {
-		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-donations-list.twig');
 	}
 
 }
