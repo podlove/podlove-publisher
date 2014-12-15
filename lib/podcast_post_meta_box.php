@@ -36,20 +36,6 @@ class Podcast_Post_Meta_Box {
 		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
 		?>
 		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
-		<style type="text/css">
-		.podlove-div-wrapper-form > div > span > label {
-			display: inline-block;
-			padding: 15px 0 6px 0;
-			font-size: 1.2em;
-		}
-		.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input[type=text], .podlove-div-wrapper-form select {
-			margin: 0px;
-			width: 100%;
-		}
-		.podlove-div-wrapper-form .character_counter {
-			text-align: right;
-		}
-		</style>
 		<div class="podlove-div-wrapper-form">
 			<?php 
 			$form_args = array(
@@ -339,50 +325,7 @@ class Podcast_Post_Meta_Box {
 			license_url_field_id: '#_podlove_meta_license_url'
 		});
 		</script>
-		<?php endif; ?>
-
-		<style type="text/css">
-		.media_file_table {
-			width: 100%;
-			border-bottom: 1px solid #999;
-		}
-		.media_file_table th {
-			text-align: left;
-			border-bottom: 1px solid #999;
-		}
-		.media_file_table td {
-			padding: 5px;
-			height: 24px;
-		}
-		.media_file_table tr:nth-child(even) {
-			background: #EAEAEA;
-		}
-		#update_all_media_files {
-			display: inline-block;
-			vertical-align: middle;
-			padding: 15px 0 6px 0;
-		}
-		.base_url {
-			color: #777;
-			font-size: 0.9em;
-		}
-		.media_file_row .enable {
-			text-align: center;
-		}
-		.subtitle_warning {
-			float: left;
-			font-weight: bold;
-			padding-right: 10px;
-		}
-		.subtitle_warning .close {
-			cursor: pointer;
-		}
-
-		.media_file_row .enable { width: 45px; }
-		.media_file_row .size   { width: 130px; }
-		.media_file_row .update { width: 90px; }
-		</style>
-		<?php
+		<?php endif;
 	}
 
 	/**
