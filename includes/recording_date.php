@@ -1,6 +1,6 @@
 <?php
 
-add_filter('podlove_episode_form_data', function ($form_data, $episode) {
+add_filter('podlove_episode_form_data', function ($form_data) {
 	
 	if (!\Podlove\get_setting('metadata', 'enable_episode_recording_date'))
 		return $form_data;
