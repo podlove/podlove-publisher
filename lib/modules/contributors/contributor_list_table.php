@@ -211,7 +211,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 				`slug` LIKE \'%' . $search . '%\' OR
 				`department` LIKE \'%' . $search . '%\' OR
 				`jobtitle` LIKE \'%' . $search . '%\' OR
-				`publicemail` LIKE \'%' . $search . '%\' OR
 				`flattr` LIKE \'%' . $search . '%\' OR
 				`privateemail` LIKE \'%' . $search . '%\' OR
 				`realname` LIKE \'%' . $search . '%\' OR
