@@ -1,4 +1,6 @@
 <?php
+use Podlove\Model;
+
 // devalidate caches when media file has changed
 add_action( 'podlove_media_file_content_has_changed', function ( $media_file_id ) {
 	if ( $media_file = Model\MediaFile::find_by_id( $media_file_id ) )
