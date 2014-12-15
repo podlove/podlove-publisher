@@ -243,7 +243,7 @@ class Social extends \Podlove\Modules\Base {
 		}
 		
 		?>
-		<div id="<?php echo $wrapper_id ?>">
+		<div id="<?php echo $wrapper_id ?>" class="social_wrapper" data-category="<?php echo $category ?>">
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
@@ -296,145 +296,12 @@ class Social extends \Podlove\Modules\Base {
 			<script type="text/javascript">
 
 				var PODLOVE = PODLOVE || {};
-
-				(function($) {
-					var i = 0;
-					var existing_services = <?php echo json_encode($converted_services); ?>;
-					var services = <?php echo json_encode(array_values($cjson)); ?>;
-					var services_form_base_name = "<?php echo $form_base_name ?>";
-
-					function update_chosen() {
-						$(".chosen").chosen();
-						$(".chosen-image").chosenImage();
-					}
-
-					function fetch_service(service_id) {
-						service_id = parseInt(service_id, 10);
-
-						return $.grep(services, function(service, index) {
-							return parseInt(service.id, 10) === service_id;
-						})[0]; // Using [0] as the returned element has multiple indexes
-					}
-
-					function service_dropdown_handler() {
-						$(document).on('change', 'select.podlove-service-dropdown', function() {
-							service = fetch_service(this.value);
-							row = $(this).closest("tr");
-
-							// Check for empty contributors / for new field
-							if( typeof service === 'undefined' ) {
-								row.find(".podlove-logo-column").html(""); // Empty avatar column and hide edit button
-								row.find(".podlove-service-edit").hide();
-								return;
-							}
-
-							// Setting data attribute and avatar field
-							row.data("service-id", service.id);
-							// Renaming all corresponding elements after the contributor has changed 
-							row.find(".podlove-service-dropdown").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
-							row.find(".podlove-service-value").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
-							row.find(".podlove-service-value").attr("placeholder", service.description);
-							row.find(".podlove-service-value").attr("title", service.description);
-							row.find(".podlove-service-link").data("service-url-scheme", service.url_scheme);
-							row.find(".podlove-service-title").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[title]");
-
-							// If this is an Twitter or App.net account remove @
-							if ( service.title == 'Twitter' || service.title == 'App.net' )
-								row.find(".podlove-service-value").data("podlove-input-remove", "@");
-
-							// If this is an Website, check if the URL is valid
-							if ( service.title == 'Website' )
-								row.find(".podlove-service-value").data("podlove-input-type", "url");
-
-							i++; // continue using "i" which was already used to add the existing contributions
-						});
-					}
-
-					$(document).on('click', '.podlove-service-link',  function() {
-						if( $(this).parent().find(".podlove-service-value").val() !== '' )
-							window.open( $(this).data("service-url-scheme").replace( '%account-placeholder%', $(this).parent().find(".podlove-service-value").val() ) );
-					});	
-
-					$(document).on('keydown', '.podlove-service-value',  function() {
-						$(this).parent().find(".podlove-service-link").show();
-					});
-
-					$(document).on('focusout', '.podlove-service-value',  function() {
-						if( $(this).val() == '' )
-							$(this).parent().find(".podlove-service-link").hide();
-					});
-
-					$(document).ready(function() {
-						var i = 0;
-
-						service_dropdown_handler();
-
-						$("#<?php echo $wrapper_id ?> table").podloveDataTable({
-							rowTemplate: "#service-row-template-<?php echo $category; ?>",
-							deleteHandle: ".service_remove",
-							sortableHandle: ".reorder-handle",
-							addRowHandle: "#add_new_service_button-<?php echo $category ?>",
-							data: existing_services,
-							dataPresets: services,
-							onRowLoad: function(o) {
-								o.row = o.row.replace(/\{\{service-id\}\}/g, o.object.id);
-								o.row = o.row.replace(/\{\{id\}\}/g, i);
-								i++;
-							},
-							onRowAdd: function(o) {
-								var row = $("#<?php echo $wrapper_id ?> .services_table_body tr:last");
-
-								// select object in object-dropdown
-								row.find('select.podlove-service-dropdown option[value="' + o.object.id + '"]').attr('selected',true);
-								// set value
-								row.find('input.podlove-service-value').val(o.entry.value);
-								// set title
-								row.find('input.podlove-service-title').val(o.entry.title);
-								// Show account/URL if not empty
-								if( row.find('input.podlove-service-value').val() !== '' )
-									row.find('input.podlove-service-value').parent().find(".podlove-service-link").show();
-
-								// Update Chosen before we focus on the new service
-								update_chosen();
-								var new_row_id = row.find('select.podlove-service-dropdown').last().attr('id');	
-								$('select.podlove-service-dropdown').change();
-								
-								// Focus new service
-								$("#" + new_row_id + "_chzn").find("a").focus();
-								clean_up_input();
-							},
-							onRowDelete: function(tr) {
-								var object_id = tr.data("object-id"),
-								    ajax_action = "podlove-services-delete-";
-
-								switch(services_form_base_name) {
-									case "podlove_contributor[donations]": /* fall through */
-									case "podlove_contributor[services]":
-										ajax_action += "contributor-services";
-										break;
-									case "podlove_podcast[donations]": /* fall through */
-									case "podlove_podcast[services]":
-										ajax_action += "podcast-services";
-										break;
-									default:
-										console.log("Error when deleting social/donation entry: unknows form type");
-								}
-
-								var data = {
-									action: ajax_action,
-									object_id: object_id
-								};
-
-								$.ajax({
-									url: ajaxurl,
-									data: data,
-									dataType: 'json'
-								});
-							}
-						});
-
-					});
-				}(jQuery));
+				PODLOVE.Social = PODLOVE.Social || {};
+				PODLOVE.Social.<?php echo $category ?> = {
+					existing_services: <?php echo json_encode($converted_services); ?>,
+					services: <?php echo json_encode(array_values($cjson)); ?>,
+					form_base_name: "<?php echo $form_base_name ?>"
+				};
 
 			</script>
 		</div>
@@ -450,6 +317,14 @@ class Social extends \Podlove\Modules\Base {
 			\Podlove\get_plugin_header( 'Version' )
 		);
 		wp_enqueue_style('podlove_social_admin_style');
+
+		wp_register_script(
+			'podlove_social_admin_script',
+			$this->get_module_url() . '/js/admin.js',
+			array( 'jquery' ),
+			\Podlove\get_plugin_header( 'Version' )
+		);
+		wp_enqueue_script('podlove_social_admin_script');
 	}
 
 	public function delete_contributor_services() {
