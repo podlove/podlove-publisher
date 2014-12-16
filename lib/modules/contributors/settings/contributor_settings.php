@@ -11,7 +11,7 @@ class ContributorSettings {
 	
 	public function __construct( $handle ) {
 		
-		ContributorRoles::$pagehook = add_submenu_page(
+		ContributorSettings::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ 'Contributor Settings',
 			/* $menu_title */ 'Contributor Settings',
@@ -44,5 +44,4 @@ class ContributorSettings {
 		<?php
 	}
 	
-
 }
