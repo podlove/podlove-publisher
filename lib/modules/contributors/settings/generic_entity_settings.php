@@ -196,10 +196,7 @@ class GenericEntitySettings {
 
 		$form_args = array(
 			'context' => 'podlove_' . $this->get_entity_slug(),
-			'hidden'  => array(
-				'group' => $entity->id,
-				'action' => $action
-			),
+			'hidden'  => array( 'action' => $action ),
 			'submit_button' => false, // for custom control in form_end
 			'form_end' => function() {
 				echo "<p>";
@@ -209,6 +206,8 @@ class GenericEntitySettings {
 				echo "</p>";
 			}
 		);
+
+		$form_args['hidden'][$this->get_entity_slug()] = $entity->id;
 
 		$cb = $this->form_callback;
 		$cb($form_args, $entity, $action);

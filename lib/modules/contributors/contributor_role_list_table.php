@@ -17,12 +17,12 @@ class Contributor_Role_List_Table extends \Podlove\List_Table {
 
 	public function column_title( $role ) {
 		$actions = array(
-			'edit'   => Settings\ContributorRoles::get_action_link( $role, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\ContributorRoles::get_action_link( $role, __( 'Delete', 'podlove' ), 'confirm_delete' )
+			'edit'   => Settings\GenericEntitySettings::get_action_link( 'role', $role->id, __( 'Edit', 'podlove' ) ),
+			'delete' => Settings\GenericEntitySettings::get_action_link( 'role', $role->id, __( 'Delete', 'podlove' ), 'confirm_delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
-		    Settings\ContributorRoles::get_action_link( $role, $role->title ),
+		    Settings\GenericEntitySettings::get_action_link( 'role', $role->id, $role->title ),
 		    $this->row_actions( $actions )
 		) . '<input type="hidden" class="role_id" value="' . $role->id . '">';;
 	}
