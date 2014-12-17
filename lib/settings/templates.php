@@ -276,17 +276,6 @@ class Templates {
 		}(jQuery));
 		</script>
 
-		<?php
-		/*
-		$table = new \Podlove\Template_List_Table();
-		$table->prepare_items();
-		$table->display();
-		*/
-		?>
-		<style type="text/css">
-		.column-name { width: 33%; }
-		</style>
-
 		<h3><?php echo __( 'Insert templates to content automatically', 'podlove' ) ?></h3>
 		<form method="post" action="options.php">
 			<?php settings_fields( Templates::$pagehook );
