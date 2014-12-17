@@ -18,7 +18,7 @@ var PODLOVE = PODLOVE || {};
 
 				var $that = $(this);
 				var data = {
-					action: 'podlove-update-file',
+					action: 'podlove-file-update',
 					file_id: media_file_id
 				};
 

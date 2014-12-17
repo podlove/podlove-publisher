@@ -174,7 +174,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 		global $post;
 
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
-		echo $cache->cache_for('feed_item_' . $post->ID, function() use ( $podcast, $feed, $format, $post ) {
+		echo $cache->cache_for('feed_item_' . $feed->slug . '_' . $post->ID, function() use ( $podcast, $feed, $format, $post ) {
 
 			$xml = "";
 

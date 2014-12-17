@@ -48,7 +48,7 @@ var PODLOVE = PODLOVE || {};
 
 	 	function create_file(args) {
 	 		var data = {
-	 			action: 'podlove-create-file',
+	 			action: 'podlove-file-create',
 	 			episode_id: args.episode_id,
 	 			episode_asset_id: args.episode_asset_id,
 	 			slug: $("#_podlove_meta_slug").val()
@@ -196,7 +196,7 @@ var PODLOVE = PODLOVE || {};
  			var file = container.find("input").data();
 
  			var data = {
- 				action: 'podlove-update-file',
+ 				action: 'podlove-file-update',
  				file_id: file.id,
  				slug: $("#_podlove_meta_slug").val()
  			};
