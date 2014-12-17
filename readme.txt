@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 - enable episode filtering by category slug: `podcast.episodes({category: "kitten"})`
 - redesigned template editor interface
 - fix feed cache issue which lead to enclosure URL mixups
+- display PHP deprecation warning aggressively for everyone below 5.4
 
 = 1.11.2 =
 
