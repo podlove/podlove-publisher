@@ -9,9 +9,14 @@ class PhpDeprecationWarning {
 
 		$correct_php_version = version_compare( phpversion(), self::$target_version, ">=" );
 
-		if (!$correct_php_version) {
-			add_action( 'admin_notices', array(__CLASS__, 'show_warning') );
-		}
+		if ($correct_php_version)
+			return;
+
+		// don't show on non-podlove pages
+		if (!isset($_GET['page']) || false === stristr($_GET['page'], 'podlove'))
+			return;
+
+		add_action( 'admin_notices', array(__CLASS__, 'show_warning') );
 	}
 
 	public static function show_warning() {
