@@ -90,6 +90,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 - enable some WordPress template tags in Twig Templates: `is_archive()`, `is_post_type_archive()`, `is_attachment()`, `is_tax()`, `is_date()`, `is_day()`, `is_feed()`, `is_comment_feed()`, `is_front_page()`, `is_home()`, `is_month()`, `is_page()`, `is_paged()`, `is_preview()`, `is_search()`, `is_single()`, `is_singular()`, `is_time()`, `is_year()`, `is_404()`, `is_main_query()`
 - enable episode filtering by category slug: `podcast.episodes({category: "kitten"})`
 - redesigned template editor interface
+- fix feed cache issue which lead to enclosure URL mixups
 
 = 1.11.2 =
 
