@@ -956,11 +956,16 @@ function handle_media_file_download() {
 			$intent->httprange = $_SERVER['HTTP_RANGE'];
 
 		// get ip, but don't store it
-		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
-		if (method_exists($ip, 'as_IPv6_address')) {
-			$ip = $ip->as_IPv6_address();
+		$ip_string = $_SERVER['REMOTE_ADDR'];
+		try {
+			$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+			if (method_exists($ip, 'as_IPv6_address')) {
+				$ip = $ip->as_IPv6_address();
+			}
+			$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
+		} catch (\InvalidArgumentException $e) {
+			\Podlove\Log::get()->addWarning( 'Could not use IP "' . $_SERVER['REMOTE_ADDR'] . '"' . $e->getMessage() );
 		}
-		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
 
 		// Generate a hash from IP address and UserAgent so we can identify
 		// identical requests without storing an IP address.
