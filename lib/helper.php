@@ -136,6 +136,20 @@ function slugify($slug) {
 	return empty($slug) ? 'n-a' : $slug;
 }
 
+function cache_for($cache_key, $callback, $duration = 31536000 /* 1 year */)
+{
+	if (($value = get_transient($cache_key)) !== FALSE) {
+		return $value;
+	} else {
+		$value = call_user_func($callback);
+		
+		if ($value !== FALSE)
+			set_transient($cache_key, $value, $duration);
+
+		return $value;
+	}
+}
+
 namespace Podlove\Form;
 
 /**

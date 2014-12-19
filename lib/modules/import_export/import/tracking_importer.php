@@ -51,6 +51,7 @@ class TrackingImporter {
 		$gzFileHandler = gzopen($this->file, 'r');
 
 		Model\DownloadIntent::delete_all();
+		Model\DownloadIntentClean::delete_all();
 		
 		$batchSize = 1000;
 		$batch = array();
@@ -104,6 +105,9 @@ class TrackingImporter {
 		}
 
 		gzclose($gzFileHandler);
+
+		\Podlove\Analytics\DownloadIntentCleanup::cleanup_download_intents();
+		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 
 		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
 		exit;

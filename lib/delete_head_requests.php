@@ -25,6 +25,8 @@ class DeleteHeadRequests {
 			if (!$todo) {
 				// free disk space
 				$wpdb->query('OPTIMIZE TABLE ' . \Podlove\Model\DownloadIntent::table_name());
+				// clear caches
+				\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 				// mark migration as done
 				delete_option('podlove_tracking_delete_head_requests');
 			}
@@ -52,6 +54,14 @@ class DeleteHeadRequests {
 		$sql = "
 		DELETE
 			FROM " . \Podlove\Model\DownloadIntent::table_name() . "
+			WHERE user_agent_id IN (" . implode(",", $user_agent_ids) . ")
+			LIMIT 25000
+		";
+		$wpdb->query($sql);
+
+		$sql = "
+		DELETE
+			FROM " . \Podlove\Model\DownloadIntentClean::table_name() . "
 			WHERE user_agent_id IN (" . implode(",", $user_agent_ids) . ")
 			LIMIT 25000
 		";

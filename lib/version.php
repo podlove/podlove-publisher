@@ -953,6 +953,26 @@ function run_migrations_for_version( $version ) {
 			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
 		break;
 		case 83:
+			\Podlove\Model\DownloadIntentClean::build();
+			
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `bot` TINYINT',
+				'ALTER TABLE `%s` ADD COLUMN `client_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_type` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_brand` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_model` VARCHAR(255)',
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
+			}
+
+			Model\UserAgent::reparse_all();
+		break;
+		case 84:
 			delete_option('podlove_tpl_cache_keys');
 		break;
 		case 85:

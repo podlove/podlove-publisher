@@ -261,6 +261,7 @@ class Podcast_Post_Type {
 		);
 
 		new \Podlove\Settings\Dashboard( self::SETTINGS_PAGE_HANDLE );
+		new \Podlove\Settings\Analytics( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Podcast( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\EpisodeAsset( self::SETTINGS_PAGE_HANDLE );
 		new \Podlove\Settings\Feed( self::SETTINGS_PAGE_HANDLE );

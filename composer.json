@@ -1,4 +1,10 @@
 {
+    "repositories": [
+       {
+         "type": "vcs",
+         "url": "https://github.com/eteubert/device-detector"
+       }
+    ],
     "require": {
         "php": ">=5.3.0",
         "podlove/podlove-timeline": ">=1.1.0",
@@ -8,9 +14,13 @@
         "twig/extensions": "1.0.*@dev",
         "pear/math_biginteger": "dev-tags/RELEASE_1_0_2",
         "leth/ip-address": "1.0.*@dev",
-        "geoip2/geoip2": "dev-master"
+        "geoip2/geoip2": "dev-master",
+        "rhumsaa/array_column": "~1.1",
+        "piwik/device-detector": "dev-master"
     },
     "require-dev": {
+        "pear/pear_exception": "1.0.*@dev",
+        "pear/console_commandline": "dev-trunk",
         "podlove/comment-introspection": "dev-master"
     }
 }
