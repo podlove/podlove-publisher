@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
-Tested up to: 4.0.1
+Tested up to: 4.1
 Stable tag: trunk
 License: MIT
 
@@ -84,6 +84,21 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 1. Click Activate Plugin to activate it.
 
 == Changelog ==
+
+= 1.12.1 =
+
+* fix: catch failed IP categorizations
+* fix: solve PHP notice
+* add custom icon to close template fullscreen mode
+* add custom contributor css to look nicely in twentyfifteen theme
+
+= 1.12 =
+
+- enable some WordPress template tags in Twig Templates: `is_archive()`, `is_post_type_archive()`, `is_attachment()`, `is_tax()`, `is_date()`, `is_day()`, `is_feed()`, `is_comment_feed()`, `is_front_page()`, `is_home()`, `is_month()`, `is_page()`, `is_paged()`, `is_preview()`, `is_search()`, `is_single()`, `is_singular()`, `is_time()`, `is_year()`, `is_404()`, `is_main_query()`
+- enable episode filtering by category slug: `podcast.episodes({category: "kitten"})`
+- redesigned template editor interface
+- fix feed cache issue which lead to enclosure URL mixups
+- display PHP deprecation warning aggressively for everyone below 5.4
 
 = 1.11.2 =
 

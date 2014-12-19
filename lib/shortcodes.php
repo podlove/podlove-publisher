@@ -155,10 +155,12 @@ function template_shortcode( $attributes ) {
 	/**
 	 * Cache key must be unique for *every permutation* of the content.
 	 * Meaning: If there are context based conditionals, the key must reflect them.
-	 * Right now, the only relevant context change is the `is_feed` state.
-	 * However, that might change. Once `is_page` etc. are available in templates, they must become part of the key!
 	 */
-	$cache_key = $template_id . $permalink . is_feed();
+	$tag_permutation = implode('', array_map(function($tag) {
+		return $tag() ? "1" : "0";
+	}, \Podlove\Template\TwigFilter::$template_tags));
+
+	$cache_key = $template_id . $permalink . $tag_permutation;
 	$cache_key = apply_filters( 'podlove_template_shortcode_cache_key', $cache_key, $template_id );
 
 	$cache = \Podlove\Cache\TemplateCache::get_instance();

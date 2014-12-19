@@ -92,7 +92,7 @@ function check_for_and_do_compression()
 	// if zlib output compression is already active, don't gzip
 	// (both cannot be active at the same time)
 	$ob_status = ob_get_status();
-	if ($ob_status['name'] == 'zlib output compression') {
+	if (isset($ob_status['name']) && $ob_status['name'] == 'zlib output compression') {
 		return false;
 	}
 

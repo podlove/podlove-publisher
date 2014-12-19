@@ -13,10 +13,7 @@ class Ajax {
 
 		$actions = array(
 			'get-new-guid',
-			'validate-file',
 			'validate-url',
-			'update-file',
-			'create-file',
 			'update-asset-position',
 			'update-feed-position',
 			'podcast',
@@ -27,8 +24,13 @@ class Ajax {
 			'episode-slug'
 		);
 
+		// kickoff generic ajax methods
 		foreach ( $actions as $action )
 			add_action( 'wp_ajax_podlove-' . $action, array( $this, str_replace( '-', '_', $action ) ) );
+
+		// kickof specialized ajax controllers
+		TemplateController::init();
+		FileController::init();
 	}
 
 	public static function respond_with_json( $result ) {
@@ -37,12 +39,6 @@ class Ajax {
 		header( 'Content-type: application/json' );
 		echo json_encode( $result );
 		die();
-	}
-
-	private function simulate_temporary_episode_slug( $slug ) {
-		add_filter( 'podlove_file_url_template', function ( $template ) use ( $slug ) {
-			return str_replace( '%episode_slug%', \Podlove\slugify( $slug ), $template );;
-		} );
 	}
 
 	public function podcast() {
@@ -64,20 +60,6 @@ class Ajax {
 		self::respond_with_json( array( 'guid' => $guid ) );
 	}
 
-	public function validate_file() {
-		$file_id = $_REQUEST['file_id'];
-
-		$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
-		$info = $file->curl_get_header();
-		$reachable = $info['http_code'] >= 200 && $info['http_code'] < 300;
-
-		self::respond_with_json( array(
-			'file_url'	=> $file_url,
-			'reachable'	=> $reachable,
-			'file_size'	=> $info['download_content_length']
-		) );
-	}
-
 	public function validate_url() {
 		$file_url = $_REQUEST['file_url'];
 
@@ -93,61 +75,6 @@ class Ajax {
 			'file_url'	=> $file_url,
 			'reachable'	=> $reachable,
 			'file_size'	=> $header['download_content_length']
-		) );
-	}
-
-	public function update_file() {
-		$file_id = (int) $_REQUEST['file_id'];
-
-		$file = \Podlove\Model\MediaFile::find_by_id( $file_id );
-
-		if ( isset( $_REQUEST['slug'] ) )
-			$this->simulate_temporary_episode_slug( $_REQUEST['slug'] );
-
-		$info = $file->determine_file_size();
-		$file->save();
-
-		$result = array();
-		$result['file_url']  = $file->get_file_url();
-		$result['file_id']   = $file_id;
-		$result['reachable'] = ( $info['http_code'] >= 200 && $info['http_code'] < 300 || $info['http_code'] == 304 );
-		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];
-
-		if ( ! $result['reachable'] ) {
-			$info['certinfo'] = print_r($info['certinfo'], true);
-			$info['php_open_basedir'] = ini_get( 'open_basedir' );
-			$info['php_safe_mode'] = ini_get( 'safe_mode' );
-			$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
-			$info['curl_exec'] = function_exists( 'curl_exec' );
-			$errorLog = "--- # Can't reach {$file->get_file_url()}\n";
-			$errorLog.= "--- # Please include this output when you report a bug\n";
-			foreach ( $info as $key => $value ) {
-				$errorLog .= "$key: $value\n";
-			}
-
-			\Podlove\Log::get()->addError( $errorLog );
-		}
-
-		self::respond_with_json( $result );
-	}
-
-	public function create_file() {
-
-		$episode_id        = (int) $_REQUEST['episode_id'];
-		$episode_asset_id  = (int) $_REQUEST['episode_asset_id'];
-
-		if ( ! $episode_id || ! $episode_asset_id )
-			die();
-
-		if ( isset( $_REQUEST['slug'] ) )
-			$this->simulate_temporary_episode_slug( $_REQUEST['slug'] );
-
-		$file = Model\MediaFile::find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id );
-
-		self::respond_with_json( array(
-			'file_id'   => $file->id,
-			'file_size' => $file->size,
-			'file_url'  => $file->get_file_url()
 		) );
 	}
 

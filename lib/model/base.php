@@ -505,7 +505,7 @@ abstract class Base
 		return $model;
 	}
 
-	private function find_all_by_sql($sql) {
+	private static function find_all_by_sql($sql) {
 		global $wpdb;
 		
 		$class = get_called_class();
