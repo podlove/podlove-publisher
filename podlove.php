@@ -3,7 +3,7 @@
  * Plugin Name: Podlove Podcast Publisher
  * Plugin URI:  http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/
  * Description: The one and only next generation podcast feed generator. Seriously. It's magical and sparkles a lot.
- * Version:     1.12.1-alpha
+ * Version:     2.0
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT
@@ -11,10 +11,10 @@
  * Text Domain: podlove
  */
 
-$correct_php_version = version_compare( phpversion(), "5.3", ">=" );
+$correct_php_version = version_compare( phpversion(), "5.4", ">=" );
 
 if ( ! $correct_php_version ) {
-	echo "Podlove Podcasting Plugin requires <strong>PHP 5.3</strong> or higher.<br>";
+	echo "Podlove Podcasting Plugin requires <strong>PHP 5.4</strong> or higher.<br>";
 	echo "You are running PHP " . phpversion();
 	exit;
 }
