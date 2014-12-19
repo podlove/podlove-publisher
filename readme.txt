@@ -88,6 +88,9 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.12.1 =
 
 * fix: catch failed IP categorizations
+* fix: solve PHP notice
+* add custom icon to close template fullscreen mode
+* add custom contributor css to look nicely in twentyfifteen theme
 
 = 1.12 =
 
