@@ -3,20 +3,66 @@ use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 use Podlove\Model;
 
 add_action( 'wp', 'podlove_handle_media_file_download' );
+add_action( 'podlove_download_file', 'podlove_handle_media_file_tracking' );
+
+function podlove_get_query_var($var_name) {
+	if (isset($_GET[$var_name])) {
+		return $_GET[$var_name];
+	} else {
+		return get_query_var($var_name);
+	}	
+}
+
+function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file) {
+
+	if (\Podlove\get_setting('tracking', 'mode') !== "ptm_analytics")
+		return;
+
+	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'HEAD')
+		return;
+
+	$intent = new Model\DownloadIntent;
+	$intent->media_file_id = $media_file->id;
+	$intent->accessed_at = date('Y-m-d H:i:s');
+	
+	$ptm_source  = trim(podlove_get_query_var('ptm_source'));
+	$ptm_context = trim(podlove_get_query_var('ptm_context'));
+
+	if ($ptm_source)
+		$intent->source = $ptm_source;
+
+	if ($ptm_context)
+		$intent->context = $ptm_context;
+
+	// set user agent
+	$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
+	if ($agent = Model\UserAgent::find_or_create_by_uastring($ua_string)) {
+		$intent->user_agent_id = $agent->id;
+	}
+
+	// save HTTP range header
+	// @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35 for spec
+	if (isset($_SERVER['HTTP_RANGE']))
+		$intent->httprange = $_SERVER['HTTP_RANGE'];
+
+	// get ip, but don't store it
+	$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+	if (method_exists($ip, 'as_IPv6_address')) {
+		$ip = $ip->as_IPv6_address();
+	}
+	$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
+
+	// Generate a hash from IP address and UserAgent so we can identify
+	// identical requests without storing an IP address.
+	$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
+	$intent = $intent->add_geo_data($ip_string);
+
+	$intent->save();
+}
 
 function podlove_handle_media_file_download() {
 
-	$get_query_var = function($var_name) {
-		if (isset($_GET[$var_name])) {
-			return $_GET[$var_name];
-		} else {
-			return; get_query_var($var_name);
-		}		
-	};
-
-	$download_media_file = (int) $get_query_var('download_media_file');
-	$ptm_source          = trim($get_query_var('ptm_source'));
-	$ptm_context         = trim($get_query_var('ptm_context'));
+	$download_media_file = (int) podlove_get_query_var('download_media_file');
 
 	if (!$download_media_file)
 		return;
@@ -59,54 +105,15 @@ function podlove_handle_media_file_download() {
 		exit;
 	}
 
-	if (\Podlove\get_setting('tracking', 'mode') === "ptm_analytics" && strtoupper($_SERVER['REQUEST_METHOD']) !== 'HEAD') {
-		$intent = new Model\DownloadIntent;
-		$intent->media_file_id = $media_file_id;
-		$intent->accessed_at = date('Y-m-d H:i:s');
-		
-		if ($ptm_source)
-			$intent->source = $ptm_source;
+	do_action('podlove_download_file', $media_file);
 
-		if ($ptm_context)
-			$intent->context = $ptm_context;
-
-		// set user agent
-		$ua_string = trim($_SERVER['HTTP_USER_AGENT']);
-		if (strlen($ua_string)) {
-			if (!($agent = Model\UserAgent::find_one_by_user_agent($ua_string))) {
-				$agent = new Model\UserAgent;
-				$agent->user_agent = $ua_string;
-				$agent->save();
-			}
-			$intent->user_agent_id = $agent->id;
-		}
-
-		// save HTTP range header
-		// @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35 for spec
-		if (isset($_SERVER['HTTP_RANGE']))
-			$intent->httprange = $_SERVER['HTTP_RANGE'];
-
-		// get ip, but don't store it
-		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
-		if (method_exists($ip, 'as_IPv6_address')) {
-			$ip = $ip->as_IPv6_address();
-		}
-		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
-
-		// Generate a hash from IP address and UserAgent so we can identify
-		// identical requests without storing an IP address.
-		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
-		$intent = $intent->add_geo_data($ip_string);
-
-		$intent->save();
-	}
-
+	// build redirect url
 	$location = $media_file->add_ptm_parameters(
 		$media_file->get_file_url(),
-		array(
-			'source'  => $intent->source,
-			'context' => $intent->context
-		)
+		[
+			'source'  => trim(podlove_get_query_var('ptm_source')),
+			'context' => trim(podlove_get_query_var('ptm_context'))
+		]
 	);
 
 	header("HTTP/1.1 301 Moved Permanently");

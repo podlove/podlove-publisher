@@ -55,6 +55,24 @@ class UserAgent extends Base {
 		return $this;
 	}
 
+	public static function find_or_create_by_uastring($ua_string) {
+
+		$ua_string = trim($ua_string);
+
+		if (!strlen($ua_string))
+			return NULL;
+
+		$agent = self::find_one_by_user_agent($ua_string);
+
+		if (!$agent) {
+			$agent = new self;
+			$agent->user_agent = $ua_string;
+			$agent->parse()->save();
+		}
+		
+		return $agent;
+	}
+
 }
 
 UserAgent::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
