@@ -141,7 +141,7 @@ function activate($network_wide) {
 	}
 
 	set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
-	\Podlove\run_system_report();
+	podlove_run_system_report();
 }
 
 function deactivate() {
