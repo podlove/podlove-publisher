@@ -4,7 +4,7 @@
  * System Report needs to be run whenever a setting has changed that could effect something critical.
  */
 function podlove_run_system_report() {
-	$report = new SystemReport;
+	$report = new Podlove\SystemReport;
 	$report->run();
 }
 
