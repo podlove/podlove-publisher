@@ -8,6 +8,9 @@ class Analytics {
 	static $pagehook;
 	
 	public function __construct( $handle ) {
+
+		if (\Podlove\get_setting('tracking', 'mode') !== "ptm_analytics")
+			return;
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
