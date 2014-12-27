@@ -37,7 +37,7 @@ class DownloadIntentClean extends Base {
 	 * @param  int $episode_id
 	 * @return array with keys "downloads" and "theday"
 	 */
-	public function peak_download_by_episode_id($episode_id) {
+	public static function peak_download_by_episode_id($episode_id) {
 		global $wpdb;
 
 		$sql = "

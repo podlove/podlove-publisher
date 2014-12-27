@@ -8,7 +8,7 @@ class UserAgent extends Base {
 	/**
 	 * Fetch new data for all UAs
 	 */
-	public function reparse_all() {
+	public static function reparse_all() {
 		foreach (UserAgent::all() as $ua) {
 			$ua->parse()->save();
 		}
