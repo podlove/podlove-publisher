@@ -505,4 +505,37 @@ jQuery(document).ready(function($) {
 
 	$("#chart-grouping-selection a:eq(3)").click();
 
+	/**
+	 * Analytics Tiles can be hidden via Screen Options
+	 */
+	$("input[name='podlove_analytics_tiles']").each(function () {
+		var checked = $(this).attr("checked")
+		    tile_id = $(this).val()
+		    chart   = $(".chart-wrapper[data-tile-id='" + tile_id + "']")
+		;
+
+		if (!checked) {
+			chart.hide();
+		}
+	}).on("click", function (e) {
+		var checked = $(this).attr("checked")
+		    tile_id = $(this).val()
+		    chart   = $(".chart-wrapper[data-tile-id='" + tile_id + "']")
+		;
+
+		// save
+		$.ajax({ url: ajaxurl, data: {
+			action: 'podlove-analytics-settings-tiles-update',
+			tile_id: tile_id,
+			checked: checked
+		} });
+
+		// update UI
+		if (checked) {
+			chart.show();
+		} else {
+			chart.hide();
+		}
+	});
+
 });

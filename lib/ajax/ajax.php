@@ -26,6 +26,7 @@ class Ajax {
 			'analytics-episode-downloads-per-hour',
 			'analytics-total-downloads-per-day',
 			'analytics-episode-average-downloads-per-hour',
+			'analytics-settings-tiles-update',
 			'episode-slug'
 		);
 
@@ -250,6 +251,15 @@ class Ajax {
 		echo $content;
 
 		exit;
+	}
+
+	public static function analytics_settings_tiles_update() {
+		$tile_id = $_GET['tile_id'];
+		$checked = isset($_GET['checked']) && $_GET['checked'] === 'checked';
+
+		$option = get_option('podlove_analytics_tiles', array());
+		$option[$tile_id] = $checked;
+		update_option('podlove_analytics_tiles', $option);
 	}
 
 	public static function respond_with_json( $result ) {

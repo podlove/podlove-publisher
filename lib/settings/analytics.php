@@ -35,6 +35,43 @@ class Analytics {
 				wp_enqueue_script( 'postbox' );
 			} );
 		}
+
+		add_filter('screen_settings', [$this, 'screen_settings'], 10, 2 );
+	}
+
+	public function screen_settings($status, $args) {
+
+		if ($args->base !== 'podlove_page_podlove_analytics')
+			return $status;
+
+		if (!isset($_GET['action']) || $_GET['action'] !== 'show')
+			return $status;
+
+		$tiles = [
+			'download_source'  => __("Download Source", 'podlove'),
+			'download_context' => __("Download Context", 'podlove'),
+			'day_of_week'      => __("Day of Week", 'podlove'),
+			'asset'            => __("Asset", 'podlove'),
+			'podcast_client'   => __("Podcast Client", 'podlove'),
+			'operating_system' => __("Operating System", 'podlove')
+		];
+
+		$option = get_option('podlove_analytics_tiles', array());
+
+		$status .= "
+		<h5>Show Analytics Tiles</h5>
+		<div class='metabox-prefs'>";
+
+		foreach ($tiles as $id => $title) {
+			$status .= "<label for='$id'>
+				<input " . checked(!isset($option[$id]) || $option[$id], true, false) . " type='checkbox' value='$id' name='podlove_analytics_tiles' id='$id' /> 
+				$title
+			</label>";
+		}
+
+		$status .= "</div>";
+
+		return $status;
 	}
 
 	public function scripts_and_styles() {
@@ -311,33 +348,33 @@ class Analytics {
 		</div>
 
 		<div id="episode-range-chart"></div>
-		
-		<section id="episode-source-chart-wrapper" class="chart-wrapper">
+
+		<section id="episode-source-chart-wrapper" class="chart-wrapper" data-tile-id="download_source">
 			<h1>Download Source</h1>
 			<div id="episode-source-chart"></div>
 		</section>
 
-		<section id="episode-context-chart-wrapper" class="chart-wrapper">
+		<section id="episode-context-chart-wrapper" class="chart-wrapper" data-tile-id="download_context">
 			<h1>Download Context</h1>
 			<div id="episode-context-chart"></div>
 		</section>
 
-		<section id="episode-weekday-chart-wrapper" class="chart-wrapper">
+		<section id="episode-weekday-chart-wrapper" class="chart-wrapper" data-tile-id="day_of_week">
 			<h1>Day of Week</h1>
 			<div id="episode-weekday-chart"></div>
 		</section>
 
-		<section id="episode-asset-chart-wrapper" class="chart-wrapper">
+		<section id="episode-asset-chart-wrapper" class="chart-wrapper" data-tile-id="asset">
 			<h1>Asset</h1>
 			<div id="episode-asset-chart"></div>
 		</section>
 
-		<section id="episode-client-chart-wrapper" class="chart-wrapper">
+		<section id="episode-client-chart-wrapper" class="chart-wrapper" data-tile-id="podcast_client">
 			<h1>Podcast Client</h1>
 			<div id="episode-client-chart"></div>
 		</section>
 
-		<section id="episode-system-chart-wrapper" class="chart-wrapper">
+		<section id="episode-system-chart-wrapper" class="chart-wrapper" data-tile-id="operating_system">
 			<h1>Operating System</h1>
 			<div id="episode-system-chart"></div>
 		</section>
