@@ -89,6 +89,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 * add service: miiverse
 * fix: use `home_url()` instead of `site_url()` to generate tracking URLs
+* fix: tracking export does not get stuck forever when it fails once
 
 = 1.12.1 =
 
