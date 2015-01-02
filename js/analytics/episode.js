@@ -354,7 +354,7 @@ jQuery(document).ready(function($) {
 				return -v.value.downloads;
 			})
 			.label(function(d) {
-				return d.key;
+				return d.value.source + "/" + d.key;
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
