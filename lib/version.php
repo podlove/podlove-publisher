@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 90 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 91 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1062,6 +1062,16 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 90:
 			\Podlove\Modules\Base::activate( 'subscribe_button' );
+		break;
+		case 91:
+			$c = new \Podlove\Modules\Social\Model\Service;
+			$c->title = 'Miiverse';
+			$c->category = 'social';
+			$c->type = 'miiverse';
+			$c->description = 'Miiverse Account';
+			$c->logo = 'miiverse-128.png';
+			$c->url_scheme = 'https://miiverse.nintendo.net/users/%account-placeholder%';
+			$c->save();
 		break;
 	}
 

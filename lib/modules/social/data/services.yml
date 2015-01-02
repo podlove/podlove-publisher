@@ -118,6 +118,13 @@
   logo: 'linkedin-128.png'
   url_scheme: '%account-placeholder%'
 
+- title: 'Miiverse'
+  name: 'miiverse'
+  category: 'social'
+  description: 'Miiverse Account'
+  logo: 'miiverse-128.png'
+  url_scheme: 'https://miiverse.nintendo.net/users/%account-placeholder%'
+
 - title: 'Pinboard'
   name: 'pinboard'
   category: 'social'
