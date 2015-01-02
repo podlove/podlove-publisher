@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 2.0.0 =
+
+* add service: miiverse
+
 = 1.12.1 =
 
 * fix: catch failed IP categorizations
