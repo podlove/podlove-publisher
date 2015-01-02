@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 2.0.0 =
 
 * add service: miiverse
+* fix: use `home_url()` instead of `site_url()` to generate tracking URLs
 
 = 1.12.1 =
 

@@ -97,7 +97,7 @@ class MediaFile extends Base {
 					$path = '?download_media_file=' . $this->id;
 					$path = $this->add_ptm_parameters($path, $params);
 				}
-				return site_url($path);
+				return home_url($path);
 				break;
 			default:
 				// tracking is off, return raw URL
