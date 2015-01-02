@@ -118,5 +118,7 @@ jQuery(document).ready(function($) {
 
 	}
 
-	load_episode_performance_chart();
+	if ($("#total-chart").length) {
+		load_episode_performance_chart();
+	}
 });

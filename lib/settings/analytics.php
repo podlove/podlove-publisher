@@ -69,18 +69,33 @@ class Analytics {
 		?>
 		<div class="wrap">
 			<?php
-			$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
-			switch ( $action ) {
-				case 'show':
-					$this->show_template();
-					break;
-				case 'index':
-				default:
-					$this->view_template();
-					break;
+
+			if (Model\DownloadIntentClean::first() === NULL) {
+				$this->blank_template();
+			} else {
+				$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
+				switch ( $action ) {
+					case 'show':
+						$this->show_template();
+						break;
+					case 'index':
+					default:
+						$this->view_template();
+						break;
+				}
 			}
 			?>
 		</div>	
+		<?php
+	}
+
+	public function blank_template() {
+		?>
+
+		<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
+
+		<?php echo __('There is no tracking data yet. See you later!', 'podlove'); ?>
+
 		<?php
 	}
 
