@@ -85,6 +85,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 == Changelog ==
 
+= 1.12.2 =
+
+* fix: disappearing podcast description settings
+
 = 1.12.1 =
 
 * fix: catch failed IP categorizations
