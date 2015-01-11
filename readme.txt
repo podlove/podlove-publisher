@@ -88,6 +88,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 = 1.12.2 =
 
 * fix: disappearing podcast description settings
+* Bitlove: add `<bitlove:enclosure-guid>` to RSS feed and use this to identify files
 
 = 1.12.1 =
 
