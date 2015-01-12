@@ -2,6 +2,7 @@
 namespace Podlove\Settings\Expert\Tab;
 use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
+use \Podlove\Model;
 
 class Tracking extends Tab {
 
@@ -127,6 +128,70 @@ class Tracking extends Tab {
 						This product includes GeoLite2 data created by MaxMind, available from
 						<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 					</em>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_debug_tracking',
+			/* $title    */ sprintf(
+				'<label for="mode">%s</label>',
+				__( 'Debug Tracking', 'podlove' )
+			),
+			/* $callback */ function () {
+				$media_file = Model\MediaFile::find_one_by_where("size > 0 ORDER BY id DESC");
+				$episode    = $media_file->episode();
+
+				$public_url = $media_file->get_public_file_url("debug");
+				$actual_url = $media_file->get_file_url(); 
+
+				?>
+				<h4>Example Episode</h4>
+				<p>
+					<?php echo $episode->full_title() ?>
+				</p>
+				<h4>Media File</h4>
+				<p>
+					<h5>Actual Location</h5>
+					<code><?php echo $actual_url ?></code>
+				</p>
+				<p>
+					<h5>Public URL</h5>
+					<code><?php echo $public_url ?></code>
+				</p>
+				<p>
+					<h5>Validations</h5>
+					<ul>
+						<li>
+							<!-- check rewrite rules -->
+							<?php if ( \Podlove\Tracking\Debug::rewrites_exist() ): ?>
+								✔ Rewrite Rules Exist
+							<?php else: ?>
+								✘ <strong>Rewrite Rules Missing</strong>
+								<!-- todo: repair button -->
+							<?php endif; ?>
+						</li>
+						<li>
+							<?php if ( \Podlove\Tracking\Debug::url_resolves_correctly($public_url, $actual_url) ): ?>
+								✔ URL resolves correctly
+							<?php else: ?>
+								✘ <strong>URL does not resolve correctly</strong>
+							<?php endif; ?>
+						</li>
+						<li>
+							<!-- check http/https consistency -->
+							<?php if ( \Podlove\Tracking\Debug::is_consistent_https_chain($public_url, $actual_url) ): ?>
+								✔ Consistent protocol chain
+							<?php else: ?>
+								✘ <strong>Protocol chain is inconsistent</strong>: Your site uses SSL but the files are not served with SSL.
+								Many clients will not allow to download episodes. To fix this, serve files via SSL or deactivate tracking.
+							<?php endif; ?>
+						</li>
+					<!-- todo: check regularly and spit user in his face if it blows up -->
+					</ul>
 				</p>
 				<?php
 			},
