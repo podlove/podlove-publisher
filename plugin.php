@@ -978,8 +978,8 @@ function handle_media_file_download() {
 	$location = $media_file->add_ptm_parameters(
 		$media_file->get_file_url(),
 		array(
-			'source'  => $intent->source,
-			'context' => $intent->context
+			'source'  => $ptm_source,
+			'context' => $ptm_context
 		)
 	);
 
