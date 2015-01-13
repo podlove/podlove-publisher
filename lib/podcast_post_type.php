@@ -238,9 +238,14 @@ class Podcast_Post_Type {
 
 	public function default_excerpt_to_episode_summary( $excerpt ) {
 		global $post;
-
-		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
-		return $episode && strlen( $episode->summary ) > 0 ? $episode->summary : $excerpt;
+    
+		if ( get_post_type() == 'podcast' ) {
+  		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post->ID );
+      $excerpt = strlen( $episode->summary ) > 0 ? $episode->summary : $excerpt;
+      $filtered = apply_filters("wp_trim_excerpt", $excerpt);
+  		return $filtered;
+		}
+    else return $excerpt;
 	}
 
 	public function create_menu() {
