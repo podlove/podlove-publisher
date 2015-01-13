@@ -313,20 +313,7 @@ class MediaFile extends Base {
 			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
 		}
 
-		curl_setopt(
-			$curl,
-			CURLOPT_USERAGENT,
-			sprintf(
-				'PHP/%s (; ) cURL/%s(OpenSSL/%s; zlib/%s) Wordpress/%s (; ) %s/%s (; )',
-				phpversion(),
-				$curl_version['version'],
-				$curl_version['ssl_version'],
-				$curl_version['libz_version'],
-				get_bloginfo( 'version' ),
-				\Podlove\get_plugin_header( 'Name' ),
-				\Podlove\get_plugin_header( 'Version' )
-			)
-		);
+		curl_setopt( $curl, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
 		
 		$response        = curl_exec( $curl );
 		$response_header = curl_getinfo( $curl );

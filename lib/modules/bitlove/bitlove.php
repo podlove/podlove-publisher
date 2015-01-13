@@ -23,11 +23,13 @@ class Bitlove extends \Podlove\Modules\Base {
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
 		add_action( 'wp_ajax_podlove-fetch-bitlove-url', array( $this, 'fetch_bitlove_url' ) );
+
+		RssExtension::init();
 	}
 
 	public function fetch_bitlove_url() {
 		\Podlove\AJAX\Ajax::respond_with_json( array(
-			'bitlove_url'   => self::get_bitlove_feed_url( $_REQUEST['feed_id'] )
+			'bitlove_url' => self::get_bitlove_feed_url( $_REQUEST['feed_id'] )
 		) );
 	}
 
@@ -140,11 +142,10 @@ class Bitlove extends \Podlove\Modules\Base {
 
 				$file_type = $episode_asset->file_type();
 				
-				$download_link_url  = $media_file->get_file_url();
 				$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
 
 				$downloads[] = array(
-					'url'  => $download_link_url,
+					'enclosure_guid' => RssExtension::get_enclosure_guid($media_file),
 					'name' => $download_link_name,
 					'size' => \Podlove\format_bytes( $media_file->size, 0 ),
 					'file' => $media_file
@@ -156,7 +157,7 @@ class Bitlove extends \Podlove\Modules\Base {
 			foreach ( $downloads as $download ) {
 				$content .= <<<EOF
 jQuery(function($) {
-	torrentByEnclosure("${download['url']}", function(info) {
+	torrentByEnclosure("${download['enclosure_guid']}", function(info) {
 	  if (info) {
 	    var url   = info.sources[0].torrent,
 	        title = "Torrent:&nbsp;${download['name']}";

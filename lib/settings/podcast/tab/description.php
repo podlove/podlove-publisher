@@ -10,6 +10,10 @@ class Description extends Tab {
 	}
 
 	public function process_form() {
+
+		if (!isset($_GET['page']) || $_GET['page'] !== 'podlove_settings_podcast_handle')
+			return;
+
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
