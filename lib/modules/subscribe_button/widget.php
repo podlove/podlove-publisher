@@ -17,8 +17,7 @@ class Widget extends \WP_Widget {
 	public function widget( $args, $instance ) {
 		?>
 		<?php echo $args['before_widget']; ?>
-		<aside id="<?php echo $args['widget_id']; ?>" class="widget">
-			
+
 			<?php if ( strlen($instance['title']) ): ?>
 				<h3 class="widget-title"><?php echo $instance['title'] ?></h3>
 			<?php endif; ?>
@@ -29,7 +28,6 @@ class Widget extends \WP_Widget {
 				<p><?php echo $instance['infotext'] ?></p>
 			<?php endif; ?>
 
-		</aside>
 		<?php echo $args['after_widget']; ?>
 		<?php
 	}
