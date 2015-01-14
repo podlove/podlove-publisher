@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Settings;
 
+use Podlove\Model;
+
 class Feed {
 
 	static $pagehook;
@@ -16,7 +18,8 @@ class Feed {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( "load-" . self::$pagehook,  array( $this, 'add_screen_options' ) );
+		add_action( "load-" . self::$pagehook, array( $this, 'add_screen_options' ) );
+		add_action( "load-" . self::$pagehook, array( $this, 'add_help_tabs' ) );
 		
 		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_feeds_settings_handle" && isset( $_GET["update_settings"] ) && $_GET["update_settings"] == "true") {
 		   	add_action('admin_bar_init', array( $this, 'save_global_feed_setting'));
@@ -31,6 +34,43 @@ class Feed {
 		) );
 
 		$this->table = new \Podlove\Feed_List_Table();
+	}
+
+	private function get_help_tabs() {
+		return [
+			'podlove_help_feed_slug' => [
+				'title'   => __('Feed Slugs', 'podlove'),
+				'content' => 
+					'<p>'
+						. __('Every feed URL is unique. To make it unique, you must assign each feed a unique <em>slug</em>.
+							It\'s a good habit to use your asset:', 'podlove')
+						. '<ul>'
+							. '<li>' . __('"mp3" slug for your mp3 asset', 'podlove') . '</li>'
+							. '<li>' . __('"m4a" slug for your m4a asset', 'podlove') . '</li>'
+							. '<li>' . __('etc.', 'podlove') . '</li>'
+						. '</ul>'
+					. '</p>'
+			],
+			'podlove_help_feed_asset' => [
+				'title'   => __('Feed Assets', 'podlove'),
+				'content' =>
+					'<p>'
+						. __('Each feed contains exactly one asset. You should have one feed for each asset you want your users to be able to subscribe to.', 'podlove')
+					. '</p>'
+			]
+		];
+	}
+
+	public function add_help_tabs() {
+		foreach ($this->get_help_tabs() as $id => $tab) {
+			get_current_screen()->add_help_tab([
+				'id'       => $id,
+				'title'    => __( $tab['title'], 'some_textdomain' ),
+				'callback' => function ($screen, $tab) {
+					echo $this->get_help_tabs()[$tab['id']]['content'];
+				}
+			]);
+		}
 	}
 
 	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {
@@ -169,8 +209,72 @@ class Feed {
 	}
 	
 	private function view_template() {
+		$this->validate_feeds();
+
 		$this->table->prepare_items();
 		$this->table->display();
+
+		$this->global_feed_settings_form();
+	}
+
+	/**
+	 * Validate Feeds and show appropriate error messages.
+	 */
+	private function validate_feeds() {
+		$errors = [];
+
+		// check for missing mandatory fields
+		foreach (Model\Feed::all() as $feed) {
+			if (!strlen(trim($feed->slug))) {
+				$errors[] = sprintf(
+								__('The feed %s has no slug.', 'podlove'), 
+								'<strong>' . $feed->name . '</strong>'
+							)
+				          . \Podlove\get_help_link('podlove_help_feed_slug')
+				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove'));
+			}
+			if (!$feed->episode_asset_id) {
+				$errors[] = sprintf(
+								__('The feed %s has no assigned asset.', 'podlove'),
+								'<strong>' . $feed->name . '</strong>'
+							)
+				          . \Podlove\get_help_link('podlove_help_feed_asset')
+				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove'));
+			}
+		}
+
+		// check for duplicate slugs
+		foreach (Model\Feed::find_duplicate_slugs() as $duplicate) {
+			
+			$feeds = array_map(function($feed_id) {
+				return Model\Feed::find_by_id($feed_id);
+			}, $duplicate['feed_ids']);
+
+			$feed_links = array_map(function($feed) {
+				return self::get_action_link($feed, $feed->name);
+			}, $feeds);
+
+			$errors[] = sprintf(
+				__('Some feeds (%s) use identical slugs. Please assign unique slugs.'),
+				implode(', ', $feed_links)
+			) . \Podlove\get_help_link('podlove_help_feed_slug');
+		}
+
+		if (count($errors)) {
+			?>
+			<div class="error">
+				<p>
+					<strong><?php echo __('Please resolve these issues so your feeds can work.', 'podlove') ?></strong>
+				</p>
+				<p>
+					<?php echo implode("</p><p>", $errors); ?>
+				</p>
+			</div>
+			<?php
+		}
+	}
+
+	private function global_feed_settings_form() {
 		?>
 		<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_settings=true">
 			<?php settings_fields( Podcast::$pagehook ); ?>

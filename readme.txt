@@ -93,6 +93,12 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix: disappearing podcast description settings
 * Bitlove: add `<bitlove:enclosure-guid>` to RSS feed and use this to identify files
 
+* Improved feed settings
+  * check for missing and duplicate slugs
+  * check for missing asset assignment
+  * show prominent warning for detected problems
+  * provide contextual help to better understand what's required and why
+
 = 1.12.1 =
 
 * fix: catch failed IP categorizations

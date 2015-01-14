@@ -239,6 +239,26 @@ class Feed extends Base {
 		// default to no limit; however, this should never happen
 		return '';
 	}
+
+	public static function find_duplicate_slugs() {
+		global $wpdb;
+
+		$sql = "
+		SELECT slug, GROUP_CONCAT(`id`) ids, COUNT(*) cnt
+		FROM " . self::table_name() . "
+		GROUP BY slug
+		HAVING cnt > 1";
+
+		if (!$rows = $wpdb->get_results($sql, ARRAY_A))
+			return [];
+
+		return array_map(function ($row) {
+			return [
+				'slug'      => $row['slug'],
+				'feed_ids'  => explode(",", $row['ids'])
+			];
+		}, $rows);
+	}
 }
 
 Feed::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

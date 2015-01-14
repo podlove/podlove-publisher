@@ -46,6 +46,10 @@ function get_blog_prefix() {
 	return $blog_prefix;
 }
 
+function get_help_link($tab_id, $title = '<sup>?</sup>') {
+	return sprintf('<a href="#" data-podlove-help="%s">%s</a>', $tab_id, $title);
+}
+
 function get_setting( $namespace, $name ) {
 	
 	$defaults = array(

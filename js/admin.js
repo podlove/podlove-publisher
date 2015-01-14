@@ -169,6 +169,43 @@ function clean_up_input() {
 	}(jQuery));
 }
 
+/**
+ * Initialize contextual help links.
+ *
+ *	Use like this:
+ *
+ *  <a href="#" data-podlove-help="help-tab-id">?</a>
+ */
+function init_contextual_help_links() {
+	jQuery("a[data-podlove-help]").on("click", function (e) {
+		var help_id = jQuery(this).data('podlove-help');
+
+		e.preventDefault();
+
+		// Remove 'active' class from all link tabs
+		jQuery('li[id^="tab-link-"]').each(function(){
+		    jQuery(this).removeClass('active');
+		});
+
+		// Hide all panels
+		jQuery('div[id^="tab-panel-"]').each(function(){
+		    jQuery(this).css('display', 'none');
+		});
+
+		// Set our desired link/panel
+		jQuery('#tab-link-' + help_id).addClass('active');
+		jQuery('#tab-panel-' + help_id).css('display', 'block');
+
+		// Force click on the Help tab
+		if (jQuery('#contextual-help-link').attr('aria-expanded') === "false") {
+			jQuery('#contextual-help-link').click();
+		}
+
+		// Force scroll to top, so you can actually see the help
+		window.scroll(0, 0);
+	});
+}
+
 jQuery(function($) {
 
 	$( "#_podlove_meta_recording_date" ).datepicker({ dateFormat: 'yy-mm-dd'});
@@ -226,6 +263,7 @@ jQuery(function($) {
 	$(document).ready(function() {
 		auto_fill_form('contributor', 'realname');
 		clean_up_input();
+		init_contextual_help_links();
 	});
 	
 });
