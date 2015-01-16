@@ -194,7 +194,6 @@ function uninstall_for_current_blog() {
  */
 add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
 add_action( 'init', array( '\Podlove\Downloads', 'init' ) );
-add_action( 'init', array( '\Podlove\ExtendSearch', 'init' ) );
 add_action( 'init', array( '\Podlove\FeedDiscoverability', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 add_action( 'init', array( '\Podlove\DuplicatePost', 'init' ) );
