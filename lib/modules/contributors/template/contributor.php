@@ -142,16 +142,6 @@ class Contributor extends Wrapper {
 	}
 
 	/**
-	 * Email address for public use
-	 * 
-	 * @deprecated since 1.10.23, use social module instead
-	 * @accessor
-	 */
-	public function publicemail() {
-		return $this->contributor->publicemail;
-	}
-
-	/**
 	 * Email address for internal use
 	 * 
 	 * @accessor

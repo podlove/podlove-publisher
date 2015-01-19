@@ -57,71 +57,6 @@ function webplayer_shortcode( $options ) {
 add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
 
 /**
- * @deprecated since 1.2.18-alpha
- */
-$podlove_public_episode_attributes = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
-foreach ( $podlove_public_episode_attributes as $attr ) {
-	add_shortcode( 'podlove-episode-' . $attr, function() use ( $attr ) {
-		global $post;
-		return nl2br( Model\Episode::find_or_create_by_post_id( $post->ID )->$attr );
-	} );
-}
-
-/**
- * @deprecated since 1.10.0, use {{ episode.<attribute> }} instead
- */
-function episode_data_shortcode( $attributes ) {
-	global $post;
-
-	$defaults = array(
-		'field' => '',
-		'format' => 'HH:MM:SS',
-		'date_format' => get_option( 'date_format' ) . ' ' . get_option( 'time_format' )
-	);
-	$attributes = shortcode_atts( $defaults, $attributes );
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	if ( ! $episode )
-		return;
-
-	$allowed_fields = array( 'subtitle', 'summary', 'slug', 'chapters' );
-
-	if ( in_array( $attributes['field'], $allowed_fields ) ) {
-		return nl2br( $episode->$attributes['field'] );
-	} elseif ( $attributes['field'] == 'image' ) {
-		return $episode->get_cover_art();
-	} elseif ( $attributes['field'] == 'duration' ) {
-		return $episode->get_duration( $attributes['format'] );
-	} elseif ( $attributes['field'] == 'title' ) {
-		return get_the_title( $episode->post_id );
-	} elseif ( stristr( $attributes['field'], '_date' ) !== false ) {
-		return date( $attributes['date_format'], strtotime( $episode->$attributes['field'] ) );
-	} else {
-		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
-	}
-}
-add_shortcode( 'podlove-episode', '\Podlove\episode_data_shortcode' );
-
-/**
- * @deprecated since 1.10.0, use {{ podcast.<attribute> instead }}
- */
-function podcast_data_shortcode( $attributes ) {
-
-	$defaults = array( 'field' => '' );
-	$attributes = shortcode_atts( $defaults, $attributes );
-
-	$podcast = Model\Podcast::get_instance();
-
-	if ( $podcast->has_property( $attributes['field'] ) ) {
-		return $podcast->$attributes['field'];
-	} else {
-		return sprintf( __( 'Podlove Error: Unknown podcast field "%s"', 'podcast' ), $attributes['field'] );
-	}
-}
-add_shortcode( 'podlove-podcast', '\Podlove\podcast_data_shortcode' );
-add_shortcode( 'podlove-show', '\Podlove\podcast_data_shortcode' );
-
-/**
  * Provides shortcode to display episode template.
  *
  * Usage:
@@ -181,29 +116,6 @@ function template_shortcode( $attributes ) {
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 
 add_filter('podlove_template_raw', array('\Podlove\Template\TwigFilter', 'apply_to_html'), 10, 2);
-
-/**
- * @deprecated since 1.10.0, use {{ episode.license }} or {{ podcast.license }} instead
- */
-function podcast_license() {
-	$podcast = Model\Podcast::get_instance();
-		return $podcast->get_license_html();
-}
-add_shortcode( 'podlove-podcast-license', '\Podlove\podcast_license' );
-
-/**
- * @deprecated since 1.10.0, use {{ episode.license }} or {{ podcast.license }} instead
- */
-function episode_license() {
-	global $post;
-
-	if ( is_feed() )
-		return '';
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	return $episode->get_license_html();
-}
-add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
 
 function feed_list() {
 	return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/feed-list.twig');

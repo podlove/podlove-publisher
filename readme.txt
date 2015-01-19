@@ -104,6 +104,22 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 **Removed Functionality**
 
 * removed module "Auphonic Production Data"
+* removed the following shortcodes (use [Template Tags](http://docs.podlove.org/reference/template-tags/) instead)
+  * `[podlove-episode-subtitle]`
+  * `[podlove-episode-summary]`
+  * `[podlove-episode-slug]`
+  * `[podlove-episode-duration]`
+  * `[podlove-episode-chapters]`
+  * `[podlove-episode field="..."]`
+  * `[podlove-podcast field="..."]`
+  * `[podlove-show field="..."]`
+  * `[podlove-podcast-license]`
+  * `[podlove-episode-license]`
+  * `[podlove-contributors]` (use `[podlove-episode-contributor-list]` instead)
+  * `[podlove-contributor-list]` (use `[podlove-episode-contributor-list]` instead)
+* removed the following template tags
+  * `{{ contributor.publicemail }}` (use social module instead)
+  * `{{ license.html }}` (use `{% include '@core/license.twig' %}` instead)
 
 = 1.12.1 =
 
