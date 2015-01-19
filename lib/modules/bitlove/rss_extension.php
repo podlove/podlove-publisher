@@ -10,7 +10,7 @@ class RssExtension {
 	}
 
 	public static function add_rss_namespace() {
-		echo 'xmlns:bitlove="http://bitlove.org" ';
+		echo 'xmlns:bitlove="http://bitlove.org/extensions" ';
 	}
 
 	public static function add_rss_enclosure_guid($podcast, $episode, $feed, $format) {
