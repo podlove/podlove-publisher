@@ -18,7 +18,7 @@ add_action( 'wp', function() {
 	if ( ! $chapters_format )
 		return;
 
-	if ( ! $episode = Model\Episode::find_or_create_by_post_id( get_the_ID() ) )
+	if ( ! $episode = Model\Episode::find_one_by_post_id( get_the_ID() ) )
 		return;
 
 	switch ( $chapters_format ) {
