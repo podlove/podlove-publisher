@@ -383,6 +383,12 @@ class Feed {
 				'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' ),
 				'default'     => true
 			) );
+			
+			$wrapper->checkbox( 'embed_content_encoded', array(
+				'label'       => __( 'Include HTML Content', 'podlove' ),
+				'description' => __( 'Include episode show notes in the feed.', 'podlove' ),
+				'default'     => false
+			) );
 
 			$wrapper->subheader( __( 'Directory Settings', 'podlove' ) );
 			
@@ -441,12 +447,6 @@ class Feed {
 				'options' => $limit_options,
 				'please_choose' => false,
 				'default' => '-2'
-			) );
-			
-			$wrapper->checkbox( 'embed_content_encoded', array(
-				'label'       => __( 'Include HTML Content', 'podlove' ),
-				'description' => __( 'Warning: Potentially creates huge feeds.', 'podlove' ),
-				'default'     => false
 			) );
 
 			$wrapper->subheader( __( 'Protection', 'podlove' ) );
