@@ -1,3 +1,5 @@
+/* global PODLOVE, assetNames, d3, dc, jQuery, crossfilter, ajaxurl */
+
 jQuery(document).ready(function($) {
 	var csvCurEpisodeRawData, csvAvgEpisodeRawData;
 
@@ -381,7 +383,7 @@ jQuery(document).ready(function($) {
 		contextChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 
 		[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart, sourceChart, contextChart].forEach(function(chart) {
-			chart.render()
+			chart.render();
 		});
 
 		var renderBrush = function(chart, brush) {
@@ -396,7 +398,7 @@ jQuery(document).ready(function($) {
 				])
 				// send brush event to trigger redraw
 				.event(chart.select('g.brush'));
-		}
+		};
 		
 		// set range from 0 to "one week" or "everything" if the episode is younger than a week
 		if (!brush.min && !brush.max) {
@@ -411,7 +413,7 @@ jQuery(document).ready(function($) {
 		rangeChart.brush().on('brushend', function() {
 			var validRanges = $("#chart-zoom-selection .button").map(function() { return $(this).data('hours'); });
 
-			extent = rangeChart.brush().extent();
+			var extent = rangeChart.brush().extent();
 			brush.min = extent[0] * hours_per_unit;
 			brush.max = extent[1] * hours_per_unit;
 
@@ -509,17 +511,17 @@ jQuery(document).ready(function($) {
 	 * Analytics Tiles can be hidden via Screen Options
 	 */
 	$("input[name='podlove_analytics_tiles']").each(function () {
-		var checked = $(this).attr("checked")
-		    tile_id = $(this).val()
+		var checked = $(this).attr("checked"),
+		    tile_id = $(this).val(),
 		    chart   = $(".chart-wrapper[data-tile-id='" + tile_id + "']")
 		;
 
 		if (!checked) {
 			chart.hide();
 		}
-	}).on("click", function (e) {
-		var checked = $(this).attr("checked")
-		    tile_id = $(this).val()
+	}).on("click", function () {
+		var checked = $(this).attr("checked"),
+		    tile_id = $(this).val(),
 		    chart   = $(".chart-wrapper[data-tile-id='" + tile_id + "']")
 		;
 
