@@ -101,6 +101,10 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
   * show prominent warning for detected problems
   * provide contextual help to better understand what's required and why
 
+**Removed Functionality**
+
+* removed module "Auphonic Production Data"
+
 = 1.12.1 =
 
 * fix: catch failed IP categorizations
