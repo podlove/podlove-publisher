@@ -15,23 +15,17 @@ class Widget extends \WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		?>
-		<?php echo $args['before_widget']; ?>
-		<aside id="<?php echo $args['widget_id']; ?>" class="widget">
-			
-			<?php if ( strlen($instance['title']) ): ?>
-				<h3 class="widget-title"><?php echo $instance['title'] ?></h3>
-			<?php endif; ?>
-			
-			<?php echo $this->button($instance['style'], $instance['autowidth']); ?>
-			
-			<?php if ( strlen($instance['infotext']) ): ?>
-				<p><?php echo $instance['infotext'] ?></p>
-			<?php endif; ?>
+		echo $args['before_widget'];
 
-		</aside>
-		<?php echo $args['after_widget']; ?>
-		<?php
+		if (!empty($instance['title']))
+			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+
+		echo $this->button($instance['style'], $instance['autowidth']);
+
+		if (!empty($instance['infotext']))
+			echo $instance['infotext'];
+
+		echo $args['after_widget'];
 	}
 
 	public function button( $style = 'big-logo', $autowidth = true ) {
