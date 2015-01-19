@@ -11,16 +11,17 @@ add_action( 'wp', function() {
 	if ( ! is_single() )
 		return;
 
-	if ( ! isset( $_GET['chapters_format'] ) )
+	$chapters_format = filter_input(INPUT_GET, 'chapters_format', FILTER_VALIDATE_REGEXP, [
+		'options' => ['regexp' => "/^(psc|json|mp4chaps)$/"]
+	]);
+
+	if ( ! $chapters_format )
 		return;
 
 	if ( ! $episode = Model\Episode::find_or_create_by_post_id( get_the_ID() ) )
 		return;
 
-	if ( ! in_array( $_GET['chapters_format'], array( 'psc', 'json', 'mp4chaps' ) ) )
-		$_GET['chapters_format'] = 'psc';
-
-	switch ( $_GET['chapters_format'] ) {
+	switch ( $chapters_format ) {
 		case 'psc':
 			header( "Content-Type: application/xml" );
 			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
@@ -33,7 +34,7 @@ add_action( 'wp', function() {
 			break;
 	}	
 	
-	echo $episode->get_chapters( $_GET['chapters_format'] );
+	echo $episode->get_chapters( $chapters_format );
 	exit;
 } );
 
