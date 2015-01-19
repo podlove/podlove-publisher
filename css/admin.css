@@ -48,6 +48,8 @@ i.rotate {
 
 .podlove-contributor-edit { display: none; }
 
+a[data-podlove-help] { text-decoration: none; }
+
 /* Dashboard */
 
 div.podlove-dashboard-statistics-wrapper {
