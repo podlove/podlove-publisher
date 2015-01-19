@@ -97,6 +97,13 @@ class RSS {
 			'posts_per_page' => $posts_per_page
 		);
 
+		# The theme "getnoticed" globally overrides post_types in pre_get_posts.
+		# Fix: hook in after the theme and override it again.
+		# It's not bad practice because I *really* only want episodes in this feed.
+		add_action('pre_get_posts', function ($query) {
+		    $query->set('post_type', 'podcast');
+		}, 20);
+
 		/**
 		 * In feeds, WordPress ignores the 'posts_per_page' parameter 
 		 * and overrides it with the 'posts_per_rss' option. So we need to
