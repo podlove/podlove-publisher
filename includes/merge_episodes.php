@@ -6,10 +6,10 @@
 /**
  * Checking "merge_episodes" allows to see episodes on the front page.
  */
-add_filter( 'pre_get_posts', function ( $wp_query ) {
+add_action( 'pre_get_posts', function ( $wp_query ) {
 
 	if ( \Podlove\get_setting( 'website', 'merge_episodes' ) !== 'on' )
-		return $wp_query;
+		return;
 
 	if ( is_home() && $wp_query->is_main_query() && ! isset( $wp_query->query_vars["post_type"] ) ) {
 		$wp_query->set(
@@ -17,8 +17,6 @@ add_filter( 'pre_get_posts', function ( $wp_query ) {
 			array_merge( array( 'post', 'podcast' ), (array) $wp_query->get( 'post_type' ) )
 		);
 	}
-
-	return $wp_query;
 } );
 
 /**
