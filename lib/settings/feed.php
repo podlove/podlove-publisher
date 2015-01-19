@@ -355,7 +355,7 @@ class Feed {
 			$wrapper->subheader( __( 'Basic Settings', 'podlove' ) );
 
 			$wrapper->select( 'episode_asset_id', array(
-				'label'       => __( 'Episode Media File', 'podlove' ),
+				'label'       => __( 'Episode Media File', 'podlove' ) . \Podlove\get_help_link('podlove_help_feed_asset'),
 				'options'     => $assets,
 				'html'        => array( 'class' => 'required' )
 			) );
@@ -373,7 +373,7 @@ class Feed {
 			) );
 
 			$wrapper->string( 'slug', array(
-				'label'       => __( 'Slug', 'podlove' ),
+				'label'       => __( 'Slug', 'podlove' ) . \Podlove\get_help_link('podlove_help_feed_slug'),
 				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
