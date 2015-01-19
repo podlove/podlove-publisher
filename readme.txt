@@ -93,6 +93,8 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix: disappearing podcast description settings
 * Bitlove: add `<bitlove:enclosure-guid>` to RSS feed and use this to identify files
 
+* moved episode GUID regeneration into separate metabox because it's rarely required
+
 * Improved feed settings
   * check for missing and duplicate slugs
   * check for missing asset assignment
