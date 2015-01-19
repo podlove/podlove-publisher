@@ -91,7 +91,6 @@ var PODLOVE = PODLOVE || {};
 	 			},
 	 			context: o.slug_field
 	 		}).done(function(slug) {
-	 			console.log(slug);
 	 			$(this)
 	 				.val(slug)
 		 			.blur();
