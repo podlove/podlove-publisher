@@ -46,5 +46,8 @@ PODLOVE.Analytics.hourFormat = function(hours) {
 	if (hours)
 		label.push(PODLOVE.Analytics.decimalRound(hours,1) + "h")
 
+	if (label.length === 0)
+		label = ["0h"];
+
 	return label.join(" ");
 };
