@@ -174,8 +174,6 @@ jQuery(document).ready(function($) {
 		var downloadsChart = dc.barChart(compChart)
 			.dimension(hoursDimension)
 			.group(downloadsGroup, "Current Episode")
-			// .centerBar(false)
-			// .xAxisPadding(0.6)
 			.renderTitle(true)
 			.valueAccessor(function (v) {
 				return v.value.downloads;
@@ -183,15 +181,15 @@ jQuery(document).ready(function($) {
 			.colors(chartColor)
 		;
 
-		var avgEpisodeDownloadsChart = dc.lineChart(compChart)
+		var avgEpisodeDownloadsChart = dc.barChart(compChart)
 			.dimension(avgEpisodeHoursDimension)
 			.group(avgDownloadsGroup, "Average Episode")
 			.renderTitle(true)
-			.colors('red')
+			.colors('#224BA6')
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
-			.renderDataPoints({})
+			.barPadding(1)
 		;
 
 		var cumulativeEpisodeChart = dc.lineChart(compChart)
