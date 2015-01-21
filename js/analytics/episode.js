@@ -229,6 +229,7 @@ jQuery(document).ready(function($) {
 			.elasticX(true)
 			.elasticY(true)
 			.brushOn(false)
+			.transitionDuration(0) // turn off transitions
 			.yAxisLabel("Downloads")
 			.xAxisLabel("Hours since release")
 			.rangeChart(rangeChart)
