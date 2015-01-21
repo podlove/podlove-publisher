@@ -118,6 +118,8 @@ jQuery(document).ready(function($) {
 			.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
 			.all()
 			.reduce(function (acc, cur) {
+				cur.key += 1;   // shift all keys to make space for a zero-entry
+				cur.value.cum = true; // set flag to identify cumulative data set
 				if (acc.length) {
 					cur.value.downloads += acc.slice(-1)[0].value.downloads;
 				}
@@ -125,6 +127,16 @@ jQuery(document).ready(function($) {
 				return acc;
 			}, [])
 		;
+
+		// add zero-entry
+		_cumulativeDownloadsGroup.unshift({
+		    key: 0,
+		    value: {
+		        date: 0,
+		        downloads: 0,
+		        cum: true
+		    }
+		});
 
 		var cumulativeDownloadsGroup = {
 		    all: function () { return _cumulativeDownloadsGroup; }
@@ -162,8 +174,8 @@ jQuery(document).ready(function($) {
 		var downloadsChart = dc.barChart(compChart)
 			.dimension(hoursDimension)
 			.group(downloadsGroup, "Current Episode")
-			.centerBar(true)
-			.xAxisPadding(0.6)
+			// .centerBar(false)
+			// .xAxisPadding(0.6)
 			.renderTitle(true)
 			.valueAccessor(function (v) {
 				return v.value.downloads;
@@ -183,7 +195,7 @@ jQuery(document).ready(function($) {
 		;
 
 		var cumulativeEpisodeChart = dc.lineChart(compChart)
-			.dimension(avgEpisodeHoursDimension)
+			.dimension(hoursDimension)
 			.group(cumulativeDownloadsGroup, "Cumulative")
 			.colors('#CCC')
 			.useRightYAxis(true)
@@ -221,9 +233,20 @@ jQuery(document).ready(function($) {
 			.xAxisLabel("Hours since release")
 			.rangeChart(rangeChart)
 			.title(function(d) {
+				
+				var title = d.value.date ? titleDateFormat(d.value.date) : "Average Episode",
+					time  = ''
+				;
+
+				if (d.value.cum) {
+					time = (d.key * hours_per_unit) + "h after release";
+				} else {
+					time = (d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit) + "h after release";
+				}
+
 				return [
-					d.value.date ? titleDateFormat(d.value.date) : "",
-					(d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit - 1) + "h after release",
+					title,
+					time,
 					"Downloads: " + d.value.downloads
 				].join("\n");
 			})
