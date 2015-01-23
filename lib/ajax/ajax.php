@@ -165,7 +165,7 @@ class Ajax {
 					FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
-						INNER JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
+						LEFT JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
 						WHERE episode_id = $episode_id
 						GROUP BY hours_since_release, asset_id, client_name, system, source, context";
 
