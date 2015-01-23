@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Podlove\Modules\Social;
 
 use \Podlove\Modules\Social\Model\Service;
@@ -235,6 +235,14 @@ class Social extends \Podlove\Modules\Base {
 			 		'description'	=> 'Playstation Network Account',
 			 		'logo'			=> 'psn-128.png',
 			 		'url_scheme'	=> 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
+			 	),
+			array(
+			 		'title' 		=> 'Prezi',
+			 		'name'	 		=> 'prezi',
+			 		'category'		=> 'social',
+			 		'description'	=> 'Prezis',
+			 		'logo'			=> 'prezi-128.png',
+			 		'url_scheme'	=> 'http://prezi.com/user/%account-placeholder%'
 			 	),
 			 array(
 			 		'title' 		=> 'Skype',
@@ -495,7 +503,7 @@ class Social extends \Podlove\Modules\Base {
 				foreach ($contributors as $contributor) {
 
 					$position = 0;
-					
+
 					if( !is_null($contributor->www) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
 						$c->contributor_id = $contributor->id;
@@ -544,7 +552,7 @@ class Social extends \Podlove\Modules\Base {
 						$c->position = $position;
 						$c->save();
 						$position++;
-					}			
+					}
 
 					if( !is_null($contributor->flattr) ) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
@@ -751,8 +759,8 @@ class Social extends \Podlove\Modules\Base {
 				'id'   			=> $service->id,
 				'title'   		=> $service->title,
 				'description'   => $service->description,
-				'url_scheme'   	=> $service->url_scheme				
-			);			
+				'url_scheme'   	=> $service->url_scheme
+			);
 		}
 
 		foreach ($current_services as $current_service_key => $service) {
@@ -762,13 +770,13 @@ class Social extends \Podlove\Modules\Base {
 				'title'   		=> $service->title
 			);
 		}
-		
+
 		?>
 		<div id="<?php echo $wrapper_id ?>">
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
-						
+
 						<th>Service</th>
 						<th>Account/URL</th>
 						<th>Title</th>
@@ -789,7 +797,7 @@ class Social extends \Podlove\Modules\Base {
 
 			<script type="text/template" id="service-row-template-<?php echo $category ?>">
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
-				
+
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
@@ -851,7 +859,7 @@ class Social extends \Podlove\Modules\Base {
 
 							// Setting data attribute and avatar field
 							row.data("service-id", service.id);
-							// Renaming all corresponding elements after the contributor has changed 
+							// Renaming all corresponding elements after the contributor has changed
 							row.find(".podlove-service-dropdown").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[id]");
 							row.find(".podlove-service-value").attr("name", services_form_base_name + "[" + i + "]" + "[" + service.id + "]" + "[value]");
 							row.find(".podlove-service-value").attr("placeholder", service.description);
@@ -874,7 +882,7 @@ class Social extends \Podlove\Modules\Base {
 					$(document).on('click', '.podlove-service-link',  function() {
 						if( $(this).parent().find(".podlove-service-value").val() !== '' )
 							window.open( $(this).data("service-url-scheme").replace( '%account-placeholder%', $(this).parent().find(".podlove-service-value").val() ) );
-					});	
+					});
 
 					$(document).on('keydown', '.podlove-service-value',  function() {
 						$(this).parent().find(".podlove-service-link").show();
@@ -917,9 +925,9 @@ class Social extends \Podlove\Modules\Base {
 
 								// Update Chosen before we focus on the new service
 								update_chosen();
-								var new_row_id = row.find('select.podlove-service-dropdown').last().attr('id');	
+								var new_row_id = row.find('select.podlove-service-dropdown').last().attr('id');
 								$('select.podlove-service-dropdown').change();
-								
+
 								// Focus new service
 								$("#" + new_row_id + "_chzn").find("a").focus();
 								clean_up_input();
@@ -959,7 +967,7 @@ class Social extends \Podlove\Modules\Base {
 
 			</script>
 		</div>
-		<?php		
+		<?php
 	}
 
 	public function admin_print_styles() {
@@ -992,7 +1000,7 @@ class Social extends \Podlove\Modules\Base {
 		if ($service = ShowService::find_by_id($object_id))
 			$service->delete();
 	}
-	
+
 	public function expandExportFile(\SimpleXMLElement $xml) {
 		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'services', 'service', '\Podlove\Modules\Social\Model\Service');
 		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'contributorServices', 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
@@ -1004,7 +1012,7 @@ class Social extends \Podlove\Modules\Base {
 		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
 		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
-	
+
 	/**
 	 * [podlove-podcast-social-media-list] shortcode
 	 */
@@ -1064,7 +1072,7 @@ class Social extends \Podlove\Modules\Base {
     	}
 
     	$total_text_length = strlen( $text ) + strlen( $contributor_adn_accounts );
- 		
+
  		if ( $total_text_length <= 256 )
      		return str_replace( '{episodeContributors}' , $contributor_adn_accounts, $text) ;
 
@@ -1083,11 +1091,11 @@ class Social extends \Podlove\Modules\Base {
 		$selected_role = $adn->get_module_option('adn_contributor_filter_role');
 		$selected_group = $adn->get_module_option('adn_contributor_filter_group');
 
-		if ( count($roles) > 0 || count($groups) > 0 ) { 
+		if ( count($roles) > 0 || count($groups) > 0 ) {
 			$adn->register_option( 'contributor_filter', 'callback', array(
 				'label' => __( 'Contributor Filter', 'podlove' ),
 				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
-				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
+				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {
 					if ( count($groups) > 0 ) :
 					?>
 						<select class="chosen" id="podlove_module_app_dot_net_adn_contributor_filter_group" name="podlove_module_app_dot_net[adn_contributor_filter_group]">
@@ -1110,7 +1118,7 @@ class Social extends \Podlove\Modules\Base {
 								}
 							?>
 						</select> Role
-					<?php 
+					<?php
 					endif;
 				}
 			) );
