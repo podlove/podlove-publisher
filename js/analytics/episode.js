@@ -178,6 +178,7 @@ jQuery(document).ready(function($) {
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
+			.gap(1)
 			.colors(chartColor)
 		;
 
@@ -209,8 +210,7 @@ jQuery(document).ready(function($) {
 			.height(80)
 			.dimension(hoursDimension)
 			.group(downloadsGroup)
-			.x(d3.scale.linear().domain([0,Infinity]))
-			.elasticX(true)
+			.x(d3.scale.linear().domain([0, downloadsGroup.all().length]))
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
@@ -220,7 +220,7 @@ jQuery(document).ready(function($) {
 
 		var compChart = dc.compositeChart("#episode-performance-chart")
 			.width(chart_width)
-			.x(d3.scale.linear().domain([0,1000000]))
+			.x(d3.scale.linear().domain([0, Infinity]))
 			.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
 			.elasticX(true)
 			.elasticY(true)
@@ -463,7 +463,7 @@ jQuery(document).ready(function($) {
 				brush.max = rangeChart.xUnitCount() * hours_per_unit;
 			} else {
 				// extend to set range
-				brush.max = brush.min + hours - 1;
+				brush.max = brush.min + hours;
 			}
 
 			renderBrush(rangeChart, brush);
