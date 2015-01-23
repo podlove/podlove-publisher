@@ -211,8 +211,6 @@ jQuery(document).ready(function($) {
 			.group(downloadsGroup)
 			.x(d3.scale.linear().domain([0,Infinity]))
 			.elasticX(true)
-			.centerBar(true)
-			.xAxisPadding(0.6)
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
