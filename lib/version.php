@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 91 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 92 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1071,6 +1071,16 @@ function run_migrations_for_version( $version ) {
 			$c->description = 'Miiverse Account';
 			$c->logo = 'miiverse-128.png';
 			$c->url_scheme = 'https://miiverse.nintendo.net/users/%account-placeholder%';
+			$c->save();
+		break;
+		case 92:
+			$c = new \Podlove\Modules\Social\Model\Service;
+			$c->title = 'Prezi';
+			$c->category = 'social';
+			$c->type = 'prezi';
+			$c->description = 'Prezis';
+			$c->logo = 'prezi-128.png';
+			$c->url_scheme = 'http://prezi.com/user/%account-placeholder%';
 			$c->save();
 		break;
 	}
