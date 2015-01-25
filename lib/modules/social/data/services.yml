@@ -146,6 +146,13 @@
   logo: 'psn-128.png'
   url_scheme: 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
 
+- title: 'Prezi'
+  name: 'prezi'
+  category: 'social'
+  description: 'Prezis'
+  logo: 'prezi-128.png'
+  url_scheme: 'http://prezi.com/user/%account-placeholder%'
+
 - title: 'Skype'
   name: 'skype'
   category: 'social'
