@@ -87,7 +87,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 
 = 2.0.0 =
 
-* add service: miiverse
+* add services: miiverse, prezi
 * fix: use `home_url()` instead of `site_url()` to generate tracking URLs
 * fix: tracking export does not get stuck forever when it fails once
 * fix: disappearing podcast description settings
