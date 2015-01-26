@@ -11,14 +11,14 @@ class Shortcodes
 	/**
 	 * [podlove-podcast-social-media-list] shortcode
 	 */
-	public function social_media_list() {
+	public static function social_media_list() {
 		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-social-media-list.twig');
 	}
 
 	/**
 	 * [podlove-podcast-donations-list] shortcode
 	 */
-	public function podcast_donations_list() {
+	public static function podcast_donations_list() {
 		return \Podlove\Template\TwigFilter::apply_to_html('@social/podcast-donations-list.twig');
 	}
 }
