@@ -40,8 +40,8 @@
 			};
 
 			var activate = function () {
-				$title.val(title);
-				editor.getSession().setValue(content);
+				$title.val(this.title);
+				editor.getSession().setValue(this.content);
 			};
 
 			return {
