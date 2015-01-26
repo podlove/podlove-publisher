@@ -88,8 +88,15 @@ function activate_for_current_blog() {
 		$template = new Model\Template;
 		$template->title = 'default';
 		$template->content = <<<EOT
-{{ episode.player }}
-[podlove-episode-downloads]
+{% if not is_feed() %}
+
+	{# display web player for episode #}
+	{{ episode.player }}
+	
+	{# display download menu for episode #}
+	{% include '@core/shortcode/downloads-select.twig' %}
+
+{% endif %}
 EOT;
 		$template->save();
 
