@@ -91,6 +91,7 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 * fix: use `home_url()` instead of `site_url()` to generate tracking URLs
 * fix: tracking export does not get stuck forever when it fails once
 * fix: disappearing podcast description settings
+* fix: add function to repair button that removes duplicate episode entries
 * Bitlove: add `<bitlove:enclosure-guid>` to RSS feed and use this to identify files
 
 * moved episode GUID regeneration into separate metabox because it's rarely required
