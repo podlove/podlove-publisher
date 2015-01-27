@@ -49,10 +49,10 @@ jQuery(document).ready(function($) {
 			var data = chart.data();
 
 			data.forEach(function(d, index) {
-				var row = chart.selectAll("g.row._" + index);
-				var label = chart.selectAll("g.row._" + index + " text");
+				var row = chart.select("g.row._" + index);
+				var label = chart.select("g.row._" + index + " text");
 				
-				if (!row.selectAll(".subLabel").size()) {
+				if (!row.select(".subLabel").size()) {
 					row.append("text")
 						.attr('class', 'subLabel')
 						.attr('text-anchor', 'end')
@@ -61,8 +61,8 @@ jQuery(document).ready(function($) {
 					;
 				}
 
-				row.selectAll(".subLabel")
-					.html(Math.round(d.value.downloads / all.value().downloads * 100) + "%");
+				row.select(".subLabel")
+					.text(Math.round(d.value.downloads / all.value().downloads * 100) + "%");
 			});
 	    };
 
