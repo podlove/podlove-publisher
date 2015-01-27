@@ -79,6 +79,14 @@ class Episode extends Wrapper {
 	/**
 	 * Web Player for the current episode
 	 * 
+	 * The player should not appear in feeds, so embed it like this:
+	 * 
+	 * ```jinja
+	 * {% if not is_feed() %}
+	 *   {{ episode.player }}
+	 * {% endif %}
+	 * ```
+	 * 
 	 * @accessor
 	 */
 	public function player() {
