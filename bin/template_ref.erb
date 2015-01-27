@@ -17,18 +17,16 @@
                 <strong>
                     <%= method['title'] %>
                 </strong>
-
                 <%= renderDescription(method['description']) %>
-
                 <%
-                if seeTags = method['tags'].keep_if { |tag| tag['name'] == 'see' }
+                seeTags = method['tags'].keep_if { |tag| tag['name'] == 'see' }
+                if seeTags && seeTags.length > 0
                     %><p><% 
                     seeTags.each do |tag| %>
                         see <a href="#podlove-class-<%= tag['description'] %>"><%= renderDescription(tag['description']) %></a>
                     <% end
                     %></p><% 
                 end %>
-
             </td>
         </tr>
     <% end %>

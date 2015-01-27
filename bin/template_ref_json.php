@@ -4,8 +4,8 @@
  * 
  * Complete workflow for generating reference markdown:
  *
- * 1. $> WPBASE=/path/to/wordpress php bin/documentation.php
- * 2. $> ruby bin/template_ref.rb > /path/to/file.md
+ * 1. $> WPBASE=/path/to/wordpress php bin/template_ref_json.php
+ * 2. $> ruby bin/template_ref.rb > doc/tempate_ref.md
  */
 
 require_once 'vendor/autoload.php';
@@ -20,7 +20,8 @@ require_once dirname(__FILE__) . '/../lib/helper.php';
 require_once getenv('WPBASE') . '/wp-load.php';
 require_once dirname(__FILE__) . '/../bootstrap/bootstrap.php';
 
-$output_dir = '/tmp/podlove/doc';
+// $output_dir = '/tmp/podlove/doc';
+$output_dir = dirname(__FILE__) . '/../doc/data/template';
 @mkdir($output_dir, 0777, true);
 
 // classes containing dynamic accessors

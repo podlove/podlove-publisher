@@ -3,7 +3,7 @@ require "json"
 
 def templateRefClasses
 	classes = %w{podcast episode chapter feed asset file duration file_type contributor contributor_group service license datetime}
-	classes.map { |klass| JSON.parse(IO.read("/tmp/podlove/doc/#{klass}.json")) }
+	classes.map { |klass| JSON.parse(IO.read("doc/data/template/#{klass}.json")) }
 end
 
 def renderDescription(s)
