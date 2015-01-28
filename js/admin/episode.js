@@ -180,7 +180,9 @@ var PODLOVE = PODLOVE || {};
  		$(".row__podlove_meta_episode_assets > span > label").after(" <a href='#' id='update_all_media_files'>update all media files</a>")
 
  		var update_all_media_files = function(e) {
- 			e.preventDefault();
+ 			if (e) {
+	 			e.preventDefault();
+ 			}
  			$(".update_media_file").click();
  		};
 
@@ -241,6 +243,14 @@ var PODLOVE = PODLOVE || {};
 				o.slug_field.data("auto-update", false); // stop autoupdate on manual change
 			})
 		;
+
+ 		$(document).ready(function() {
+ 			// check all media files on page load
+ 			// wait a while because it shouldn't slow down loading the rest of the page
+ 			if (o.slug_field.val().length > 0) {
+	 			setTimeout(function() { update_all_media_files(); }, 2000);
+ 			}
+ 		});
 
 		var typewatch = (function() {
 			var timer = 0;

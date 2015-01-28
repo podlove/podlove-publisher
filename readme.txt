@@ -91,16 +91,17 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.0.0 =
 
-* add services: miiverse, prezi
 * fix: use `home_url()` instead of `site_url()` to generate tracking URLs
 * fix: tracking export does not get stuck forever when it fails once
 * fix: disappearing podcast description settings
 * fix: add function to repair button that removes duplicate episode entries
 * fix: template editor does not forget changes if you reselect a template after changing it
 * fix: improve uninstall routine
-* Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
 
+* add services: miiverse, prezi
+* Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
 * moved episode GUID regeneration into separate metabox because it's rarely required
+* always check media files when opening an episode edit page
 
 * Improved feed settings
   * check for missing and duplicate slugs
