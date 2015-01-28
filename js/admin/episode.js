@@ -208,9 +208,22 @@ var PODLOVE = PODLOVE || {};
  				data: data,
  				dataType: 'json',
  				success: function(result) {
+ 					var input = container.find("input");
+ 					if (result) {
+	 					input.data('size'   , result.file_size);
+	 					input.data('fileUrl', result.file_url);
+ 					} else {
+	 					input.data('size'   , -1);
+	 					input.data('fileUrl', "");
+ 					}
+ 				},
+ 				error: function(xhr, status, error) {
+ 					var input = container.find("input");
+ 					input.data('size'   , -1);
+ 					input.data('fileUrl', "");
+ 				},
+ 				complete: function(xhr, status) {
  					ajax_requests.pop();
- 					container.find("input").data('size', result.file_size);
- 					container.find("input").data('fileUrl', result.file_url);
  					o.update_preview_row(container);
  				}
  			});
