@@ -183,6 +183,8 @@ function uninstall() {
 }
 
 function uninstall_for_current_blog() {
+	global $wpdb;
+
 	Model\Feed::destroy();
 	Model\FileType::destroy();
 	Model\EpisodeAsset::destroy();
@@ -194,6 +196,21 @@ function uninstall_for_current_blog() {
 	Model\UserAgent::destroy();
 	Model\GeoArea::destroy();
 	Model\GeoAreaName::destroy();
+
+	// trash all episodes
+	$query = new WP_Query([ 'post_type' => 'podcast' ]);
+
+	if ($query->have_posts()) {
+		while ($query->have_posts()) {
+			$query->the_post();
+			wp_trash_post(get_the_ID());
+		}
+	}
+
+	wp_reset_postdata();
+
+	// delete everything from wp_options
+	$wpdb->query('DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove%"');
 }
 
 /**
