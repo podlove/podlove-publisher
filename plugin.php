@@ -196,6 +196,7 @@ function uninstall_for_current_blog() {
 	Model\UserAgent::destroy();
 	Model\GeoArea::destroy();
 	Model\GeoAreaName::destroy();
+	Modules\Logging\LogTable::destroy();
 
 	// trash all episodes
 	$query = new WP_Query([ 'post_type' => 'podcast' ]);
