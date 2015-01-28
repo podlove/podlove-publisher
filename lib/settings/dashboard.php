@@ -44,10 +44,19 @@ class Dashboard {
 		?>
 		<ul>
 			<li>
+				<a href="//podlove.org" target="_blank">podlove.org</a>
+			</li>
+			<li>
+				<a href="//docs.podlove.org" target="_blank">Documentation &amp; Guides</a>
+			</li>
+			<li>
 				<a href="<?php echo admin_url( 'admin.php?page=podlove_Support_settings_handle' ) ?>">Report Bugs</a>
 			</li>
 			<li>
-				<a target="_blank" href="https://trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">See what we're working on</a>
+				<a href="https://sendegate.de/" target="_blank">Join Sendegate</a>
+			</li>
+			<li>
+				<a href="http://podlove.org/donations/" target="_blank">Donate</a>
 			</li>
 			<li>
 				<script type="text/javascript">
