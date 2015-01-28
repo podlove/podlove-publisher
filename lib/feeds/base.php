@@ -208,7 +208,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			));
 			$xml .= apply_filters( 'podlove_deep_link', $deep_link, $feed );
 			
-			$xml .= apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
+			$xml .= apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type, $file );
 
 			$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $episode->get_duration( 'HH:MM:SS' ) );
 			$xml .= apply_filters( 'podlove_feed_itunes_duration', $duration );
