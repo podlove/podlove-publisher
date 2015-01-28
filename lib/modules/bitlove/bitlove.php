@@ -9,7 +9,6 @@ class Bitlove extends \Podlove\Modules\Base {
 	protected $module_group = 'external services';
 
 	public function load() {
-		add_action( 'wp_footer', array( $this, 'inject_base' ) );
 		add_filter( 'the_content', array( $this, 'inject_widget' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'require_jquery' ) );
 
@@ -21,6 +20,7 @@ class Bitlove extends \Podlove\Modules\Base {
 		add_action( 'admin_init', array( $this, 'add_feed_model_extension' ) );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_print_styles' ));
 
 		add_action( 'wp_ajax_podlove-fetch-bitlove-url', array( $this, 'fetch_bitlove_url' ) );
 
@@ -41,6 +41,16 @@ class Bitlove extends \Podlove\Modules\Base {
 			\Podlove\get_plugin_header( 'Version' )
 		);
 		wp_enqueue_script('podlove_bitlove_admin_script');
+	}
+
+	public function frontend_print_styles() {
+		wp_register_script(
+			'podlove_bitlove_widget_script',
+			$this->get_module_url() . '/js/widget.js',
+			array(),
+			\Podlove\get_plugin_header( 'Version' )
+		);
+		wp_enqueue_script('podlove_bitlove_widget_script');
 	}
 
 	public static function get_bitlove_feed_url( $feed_id ) {
@@ -108,12 +118,6 @@ class Bitlove extends \Podlove\Modules\Base {
 	public function require_jquery() {
 		if ( ! is_admin() )
 			wp_enqueue_script( 'jquery' );
-	}
-
-	public function inject_base() {
-		?>
-		<script src="//bitlove.org/widget/base.js" type="text/javascript"></script>
-		<?php
 	}
 
 	public function inject_widget( $content ) {

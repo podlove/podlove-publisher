@@ -97,7 +97,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: disappearing podcast description settings
 * fix: add function to repair button that removes duplicate episode entries
 * fix: template editor does not forget changes if you reselect a template after changing it
-* Bitlove: add `<bitlove:enclosure-guid>` to RSS feed and use this to identify files
+* Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
 
 * moved episode GUID regeneration into separate metabox because it's rarely required
 
