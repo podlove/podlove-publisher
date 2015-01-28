@@ -7,7 +7,7 @@ class FileType extends Base {
 		return $this->name . ' (' . $this->extension . ')';
 	}
 
-	public function get_types() {
+	public static function get_types() {
 		global $wpdb;
 		return $wpdb->get_col( "SELECT DISTINCT `type` FROM " . FileType::table_name() );
 	}
