@@ -75,6 +75,10 @@ If you haven't already, get the official Flattr plugin here:
 
 Find the setting Flattr > Advanced Settings > Flattrable content > Post Types and check "podcast". Save changes. There is no step 3 ;)
 
+---
+
+This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
+
 == Installation ==
 
 1. Download the Podlove Publisher Plugin to your desktop.
