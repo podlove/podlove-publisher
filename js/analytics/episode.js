@@ -1,12 +1,15 @@
 /* global PODLOVE, assetNames, d3, dc, jQuery, crossfilter, ajaxurl */
 
+'use strict';
+
 jQuery(document).ready(function($) {
+
 	var csvCurEpisodeRawData, csvAvgEpisodeRawData;
 
-	var titleDateFormat = d3.time.format("%Y-%m-%d %H:%M %Z");
+	var titleDateFormat = d3.time.format('%Y-%m-%d %H:%M %Z');
 
-	var episode_id = jQuery("#episode-performance-chart").data("episode");
-	var chart_width = $("#episode-performance-chart").closest(".inside").width();
+	var episode_id = jQuery('#episode-performance-chart').data('episode');
+	var chart_width = $('#episode-performance-chart').closest('.inside').width();
 	var brush = { min: null, max: null };
 
 	var reduceAddFun = function (p, v) {
@@ -33,8 +36,8 @@ jQuery(document).ready(function($) {
 			weekday: 0,
 			asset_id: 0,
 			date: 0,
-			client: "",
-			system: ""
+			client: '',
+			system: ''
 		};
 	};
 
@@ -49,11 +52,11 @@ jQuery(document).ready(function($) {
 			var data = chart.data();
 
 			data.forEach(function(d, index) {
-				var row = chart.select("g.row._" + index);
-				var label = chart.select("g.row._" + index + " text");
+				var row = chart.select('g.row._' + index);
+				var label = chart.select('g.row._' + index + ' text');
 				
-				if (!row.select(".subLabel").size()) {
-					row.append("text")
+				if (!row.select('.subLabel').size()) {
+					row.append('text')
 						.attr('class', 'subLabel')
 						.attr('text-anchor', 'end')
 						.attr('x', -10)
@@ -61,8 +64,8 @@ jQuery(document).ready(function($) {
 					;
 				}
 
-				row.select(".subLabel")
-					.text(Math.round(d.value.downloads / all.value().downloads * 100) + "%");
+				row.select('.subLabel')
+					.text(Math.round(d.value.downloads / all.value().downloads * 100) + '%');
 			});
 	    };
 
@@ -173,7 +176,7 @@ jQuery(document).ready(function($) {
 
 		var downloadsChart = dc.barChart(compChart)
 			.dimension(hoursDimension)
-			.group(downloadsGroup, "Current Episode")
+			.group(downloadsGroup, 'Current Episode')
 			.renderTitle(true)
 			.valueAccessor(function (v) {
 				return v.value.downloads;
@@ -184,7 +187,7 @@ jQuery(document).ready(function($) {
 
 		var avgEpisodeDownloadsChart = dc.barChart(compChart)
 			.dimension(avgEpisodeHoursDimension)
-			.group(avgDownloadsGroup, "Average Episode")
+			.group(avgDownloadsGroup, 'Average Episode')
 			.renderTitle(true)
 			.colors('#224BA6')
 			.valueAccessor(function (v) {
@@ -195,7 +198,7 @@ jQuery(document).ready(function($) {
 
 		var cumulativeEpisodeChart = dc.lineChart(compChart)
 			.dimension(hoursDimension)
-			.group(cumulativeDownloadsGroup, "Cumulative")
+			.group(cumulativeDownloadsGroup, 'Cumulative')
 			.colors('#CCC')
 			.useRightYAxis(true)
 			.valueAccessor(function (v) {
@@ -205,7 +208,7 @@ jQuery(document).ready(function($) {
 			.renderArea(true)
 		;
 
-		var rangeChart = dc.barChart("#episode-range-chart")
+		var rangeChart = dc.barChart('#episode-range-chart')
 			.width(chart_width)
 			.height(80)
 			.dimension(hoursDimension)
@@ -215,10 +218,10 @@ jQuery(document).ready(function($) {
 				return v.value.downloads;
 			})
 			.colors(chartColor)
-			.yAxisLabel(" ") // to align yaxis with main chart
+			.yAxisLabel(' ') // to align yaxis with main chart
 		;
 
-		var compChart = dc.compositeChart("#episode-performance-chart")
+		var compChart = dc.compositeChart('#episode-performance-chart')
 			.width(chart_width)
 			.x(d3.scale.linear().domain([0, Infinity]))
 			.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
@@ -226,33 +229,33 @@ jQuery(document).ready(function($) {
 			.elasticY(true)
 			.brushOn(false)
 			.transitionDuration(0) // turn off transitions
-			.yAxisLabel("Downloads")
-			.xAxisLabel("Hours since release")
+			.yAxisLabel('Downloads')
+			.xAxisLabel('Hours since release')
 			.rangeChart(rangeChart)
 			.title(function(d) {
 				
-				var title = d.value.date ? titleDateFormat(d.value.date) : "Average Episode",
+				var title = d.value.date ? titleDateFormat(d.value.date) : 'Average Episode',
 					time  = ''
 				;
 
 				if (d.value.cum) {
-					time = (d.key * hours_per_unit) + "h after release";
+					time = (d.key * hours_per_unit) + 'h after release';
 				} else {
-					time = (d.key * hours_per_unit) + "h – " + ((d.key + 1) * hours_per_unit) + "h after release";
+					time = (d.key * hours_per_unit) + 'h – ' + ((d.key + 1) * hours_per_unit) + 'h after release';
 				}
 
 				return [
 					title,
 					time,
-					"Downloads: " + d.value.downloads
-				].join("\n");
+					'Downloads: ' + d.value.downloads
+				].join('\n');
 			})
 			.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
-			.rightYAxisLabel("Cumulative Downloads")
+			.rightYAxisLabel('Cumulative Downloads')
 		;
 
-		var weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-		var weekdayChart = dc.rowChart("#episode-weekday-chart")
+		var weekdayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+		var weekdayChart = dc.rowChart('#episode-weekday-chart')
 		    .margins({top: 0, left: 40, right: 10, bottom: 25})
 		    .group(dayOfWeekGroup)
 		    .dimension(dayOfWeekDimension)
@@ -277,7 +280,7 @@ jQuery(document).ready(function($) {
 		    .on('preRedraw', addPercentageLabels)
 		;
 
-		var assetChart = dc.rowChart("#episode-asset-chart")
+		var assetChart = dc.rowChart('#episode-asset-chart')
 			.margins({top: 0, left: 40, right: 10, bottom: 25})
 			.elasticX(true)
 			.dimension(assetDimension) // set dimension
@@ -302,7 +305,7 @@ jQuery(document).ready(function($) {
 			.on('preRedraw', addPercentageLabels)
 		;
 
-		var clientChart = dc.rowChart("#episode-client-chart")
+		var clientChart = dc.rowChart('#episode-client-chart')
 			.margins({top: 0, left: 40, right: 10, bottom: 25})
 			.elasticX(true)
 			.dimension(clientDimension)
@@ -314,7 +317,7 @@ jQuery(document).ready(function($) {
 				return -v.value.downloads;
 			})
 			.othersGrouper(function(data) {
-				return data; // no "others" group
+				return data; // no 'others' group
 			})
 			.cap(10)
 			.label(function(d) {
@@ -324,7 +327,7 @@ jQuery(document).ready(function($) {
 			.on('preRedraw', addPercentageLabels)
 		;
 
-		var systemChart = dc.rowChart("#episode-system-chart")
+		var systemChart = dc.rowChart('#episode-system-chart')
 			.margins({top: 0, left: 40, right: 10, bottom: 25})
 			.elasticX(true)
 			.dimension(systemDimension)
@@ -336,7 +339,7 @@ jQuery(document).ready(function($) {
 				return -v.value.downloads;
 			})
 			.othersGrouper(function(data) {
-				return data; // no "others" group
+				return data; // no 'others' group
 			})
 			.cap(10)
 			.label(function(d) {
@@ -346,7 +349,7 @@ jQuery(document).ready(function($) {
 			.on('preRedraw', addPercentageLabels)
 		;
 
-		var sourceChart = dc.rowChart("#episode-source-chart")
+		var sourceChart = dc.rowChart('#episode-source-chart')
 			.margins({top: 0, left: 40, right: 10, bottom: 25})
 			.elasticX(true)
 			.dimension(sourceDimension)
@@ -364,7 +367,7 @@ jQuery(document).ready(function($) {
 			.on('preRedraw', addPercentageLabels)
 		;
 
-		var contextChart = dc.rowChart("#episode-context-chart")
+		var contextChart = dc.rowChart('#episode-context-chart')
 			.margins({top: 0, left: 40, right: 10, bottom: 25})
 			.elasticX(true)
 			.dimension(contextDimension)
@@ -376,7 +379,7 @@ jQuery(document).ready(function($) {
 				return -v.value.downloads;
 			})
 			.label(function(d) {
-				return d.value.source + "/" + d.key;
+				return d.value.source + '/' + d.key;
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
@@ -420,18 +423,18 @@ jQuery(document).ready(function($) {
 				.event(chart.select('g.brush'));
 		};
 		
-		// set range from 0 to "one week" or "everything" if the episode is younger than a week
+		// set range from 0 to 'one week' or 'everything' if the episode is younger than a week
 		if (!brush.min && !brush.max) {
 			brush.min = 0;
 			brush.max = 7*24 - 1;
-			$("#chart-zoom-selection .button:eq(1)").addClass('active');
+			$('#chart-zoom-selection .button:eq(1)').addClass('active');
 		}
 
 		renderBrush(rangeChart, brush);
 
 		// handle the user changing the brush manually
 		rangeChart.brush().on('brushend', function() {
-			var validRanges = $("#chart-zoom-selection .button").map(function() { return $(this).data('hours'); });
+			var validRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
 
 			var extent = rangeChart.brush().extent();
 			brush.min = extent[0] * hours_per_unit;
@@ -447,15 +450,15 @@ jQuery(document).ready(function($) {
 
 			// clear selection if the user modifies selection
 			if (-1 === $.inArray(Math.round(brush.max - brush.min + 1), validRanges)) {
-				$("#chart-zoom-selection .button.active").removeClass("active");
+				$('#chart-zoom-selection .button.active').removeClass('active');
 			}
 		});
 
-		$("#chart-zoom-selection .button").on("click", function(e) {
+		$('#chart-zoom-selection .button').on('click', function(e) {
 			var hours = parseInt($(this).data('hours'), 10);
 
-			$(this).siblings().removeClass("active");
-			$(this).addClass("active");
+			$(this).siblings().removeClass('active');
+			$(this).addClass('active');
 
 			if (hours === 0) {
 				// set to full range
@@ -478,8 +481,8 @@ jQuery(document).ready(function($) {
 			render_episode_performance_chart(options);
 		} else {
 			$.when(
-				$.ajax(ajaxurl + "?action=podlove-analytics-episode-downloads-per-hour&episode=" + episode_id),
-				$.ajax(ajaxurl + "?action=podlove-analytics-episode-average-downloads-per-hour")
+				$.ajax(ajaxurl + '?action=podlove-analytics-episode-downloads-per-hour&episode=' + episode_id),
+				$.ajax(ajaxurl + '?action=podlove-analytics-episode-average-downloads-per-hour')
 			).done(function(csvCurEpisode, csvAvgEpisode) {
 
 				var csvMapper = function(d) {
@@ -491,10 +494,10 @@ jQuery(document).ready(function($) {
 						weekday: parsed_date.getDay(),
 						hoursSinceRelease: +d.hours_since_release,
 						asset_id: +d.asset_id,
-						client: d.client ? d.client : "Unknown",
-						system: d.system ? d.system : "Unknown",
-						source: d.source ? d.source : "Unknown",
-						context: d.context ? d.context : "Unknown"
+						client: d.client ? d.client : 'Unknown',
+						system: d.system ? d.system : 'Unknown',
+						source: d.source ? d.source : 'Unknown',
+						context: d.context ? d.context : 'Unknown'
 					};
 				};
 
@@ -512,11 +515,11 @@ jQuery(document).ready(function($) {
 
 	}
 
-	$("#chart-grouping-selection").on("click", "a", function(e) {
+	$('#chart-grouping-selection').on('click', 'a', function(e) {
 		var hours = parseInt($(this).data('hours'), 10);
 
-		$(this).siblings().removeClass("active");
-		$(this).addClass("active");
+		$(this).siblings().removeClass('active');
+		$(this).addClass('active');
 
 		load_episode_performance_chart({
 			hours_per_unit: hours
@@ -525,24 +528,24 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 	});
 
-	$("#chart-grouping-selection a:eq(3)").click();
+	$('#chart-grouping-selection a:eq(3)').click();
 
 	/**
 	 * Analytics Tiles can be hidden via Screen Options
 	 */
-	$("input[name='podlove_analytics_tiles']").each(function () {
-		var checked = $(this).attr("checked"),
+	$('input[name=\'podlove_analytics_tiles\']').each(function () {
+		var checked = $(this).attr('checked'),
 		    tile_id = $(this).val(),
-		    chart   = $(".chart-wrapper[data-tile-id='" + tile_id + "']")
+		    chart   = $('.chart-wrapper[data-tile-id=\'' + tile_id + '\']')
 		;
 
 		if (!checked) {
 			chart.hide();
 		}
-	}).on("click", function () {
-		var checked = $(this).attr("checked"),
+	}).on('click', function () {
+		var checked = $(this).attr('checked'),
 		    tile_id = $(this).val(),
-		    chart   = $(".chart-wrapper[data-tile-id='" + tile_id + "']")
+		    chart   = $('.chart-wrapper[data-tile-id=\'' + tile_id + '\']')
 		;
 
 		// save
