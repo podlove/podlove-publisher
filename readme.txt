@@ -97,6 +97,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: add function to repair button that removes duplicate episode entries
 * fix: template editor does not forget changes if you reselect a template after changing it
 * fix: improve uninstall routine
+* fix: wrong month when choosing Auphonic productions
 
 * add services: miiverse, prezi
 * Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
