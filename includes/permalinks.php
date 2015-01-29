@@ -110,11 +110,7 @@ function podlove_podcast_permalink_proxy($query_vars) {
 	// I don't think this is 100% bulletproof but seems to work well enough.
 	if ( isset( $query_vars["preview"] ) && ! isset( $query_vars["post_type"] ) && isset( $query_vars["name"] ) ) {
 		$query_vars["post_type"] = $wpdb->get_var(
-			sprintf(
-				'SELECT post_type FROM %s WHERE post_name = "%s"',
-				$wpdb->posts,
-				$wpdb->escape( $query_vars['name'] )
-			)
+			$wpdb->prepare('SELECT post_type FROM ' . $wpdb->posts . ' WHERE post_name = %s', $query_vars['name'])
 		);
 	}
 
