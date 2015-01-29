@@ -94,7 +94,7 @@ function activate_for_current_blog() {
 	{{ episode.player }}
 	
 	{# display download menu for episode #}
-	{% include '@core/shortcode/downloads-select.twig' %}
+	{% include "@core/shortcode/downloads-select.twig" %}
 
 {% endif %}
 EOT;

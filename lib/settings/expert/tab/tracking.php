@@ -142,8 +142,14 @@ class Tracking extends Tab {
 				__( 'Debug Tracking', 'podlove' )
 			),
 			/* $callback */ function () {
+
 				$media_file = Model\MediaFile::find_one_by_where("size > 0 ORDER BY id DESC");
-				$episode    = $media_file->episode();
+				if (!$media_file)
+					return;
+
+				$episode = $media_file->episode();
+				if (!$episode)
+					return;
 
 				$public_url = $media_file->get_public_file_url("debug");
 				$actual_url = $media_file->get_file_url(); 

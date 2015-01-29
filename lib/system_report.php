@@ -171,7 +171,7 @@ class SystemReport {
 		foreach ( $this->fields as $field_key => $field ) {
 			$result = call_user_func( $field['callback'] );
 
-			if (is_array($result)) {
+			if (is_array($result) && isset($result['message'])) {
 				$this->fields[ $field_key ]['value'] = $result['message'];
 				if (isset($result['error'])) {
 					$this->errors[] = $result['error'];
