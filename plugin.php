@@ -236,6 +236,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/admin_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/chapters.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cover_art.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/downloads.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/explicit_content.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/extras.php';
