@@ -1,6 +1,6 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert, chemiker
-Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
+Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
 Tested up to: 4.1
@@ -30,6 +30,13 @@ Development of the plugin is an open process. The current version is available o
 https://github.com/podlove/podlove-publisher
 
 Feel free to contribute and to fix errors or send improvements via github.
+
+Requires PHP 5.4+
+
+* Podlove Project: http://podlove.org/
+* Documentation: http://docs.podlove.org/
+* Bug Tracker: https://github.com/podlove/podlove-publisher/issues
+* Donate: http://podlove.org/donations/
 
 == Frequently Asked Questions ==
 
