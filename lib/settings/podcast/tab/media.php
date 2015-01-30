@@ -13,7 +13,7 @@ class Media extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
-		$formKeys = array('media_file_base_uri', 'cover_image');
+		$formKeys = array('media_file_base_uri');
 
 		$settings = get_option('podlove_podcast');
 		foreach ($formKeys as $key) {
@@ -47,14 +47,6 @@ class Media extends Tab {
 				'label'       => __( 'Upload Location', 'podlove' ),
 				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
 				'html' => array( 'class' => 'regular-text required podlove-check-input', 'data-podlove-input-type' => 'url' )
-			) );
-
-			$wrapper->image( 'cover_image', array(
-				'label'        => __( 'Cover Art URL', 'podlove' ),
-				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
-				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
-				'image_width'  => 300,
-				'image_height' => 300
 			) );
 		});
 	}

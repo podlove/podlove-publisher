@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
 * moved episode GUID regeneration into separate metabox because it's rarely required
 * always check media files when opening an episode edit page
+* move podcast cover art from media tab to description tab
 
 * Improved feed settings
   * check for missing and duplicate slugs
