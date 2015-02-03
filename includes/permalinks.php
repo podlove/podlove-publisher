@@ -149,7 +149,7 @@ function podlove_generate_custom_post_link( $post_link, $id, $leavename = false,
 	$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 
 	// Sample
-	if ( $sample )
+	if ( $sample && true == $leavename )
 		$post->post_name = "%pagename%";
 	
 	// Get permastruct
