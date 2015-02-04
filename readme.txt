@@ -107,6 +107,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: wrong month when choosing Auphonic productions
 
 * add services: miiverse, prezi
+* add missing services via repair button
 * Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
 * moved episode GUID regeneration into separate metabox because it's rarely required
 * always check media files when opening an episode edit page

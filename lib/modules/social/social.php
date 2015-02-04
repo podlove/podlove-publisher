@@ -71,22 +71,32 @@ class Social extends \Podlove\Modules\Base {
 		ShowService::build();
 		ContributorService::build();
 
+		self::build_missing_services();
+	}
+
+	public static function build_missing_services() {
+
 		$file = implode(
 			DIRECTORY_SEPARATOR,
 			array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'data', 'services.yml')
 		);
 		$services = Yaml::parse(file_get_contents($file));
 
-		if (count(Service::all()) == 0) {
-			foreach ($services as $service_key => $service) {
-				$c = new \Podlove\Modules\Social\Model\Service;
-				$c->title = $service['title'];
-				$c->category = $service['category'];
-				$c->type = $service['name'];
-				$c->description = $service['description'];
-				$c->logo = $service['logo'];
-				$c->url_scheme = $service['url_scheme'];
-				$c->save();
+		foreach ($services as $service_key => $service) {
+
+			$service_exists = (bool) Service::find_one_by_where(
+				sprintf('`category` = "%s" AND `type` = "%s"', $service['category'], $service['name'])
+			);
+
+			if (!$service_exists) {
+				$s = new Service;
+				$s->title = $service['title'];
+				$s->category = $service['category'];
+				$s->type = $service['name'];
+				$s->description = $service['description'];
+				$s->logo = $service['logo'];
+				$s->url_scheme = $service['url_scheme'];
+				$s->save();
 			}
 		}
 	}
