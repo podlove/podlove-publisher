@@ -193,7 +193,7 @@ jQuery(document).ready(function($) {
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
-			.barPadding(1)
+			.barPadding(2)
 		;
 
 		var cumulativeEpisodeChart = dc.lineChart(compChart)
