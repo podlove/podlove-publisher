@@ -4,6 +4,8 @@ use \Podlove\Model;
 
 class Dashboard {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 
 	public function __construct() {
@@ -18,6 +20,8 @@ class Dashboard {
 			/* $menu_slug  */ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array( $this, 'settings_page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
 
 		add_action( 'load-' . Dashboard::$pagehook, function () {
 			// Adding the meta boxes here, so they can be filtered by the user settings.

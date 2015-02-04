@@ -8,6 +8,8 @@ use \Podlove\Settings\Expert\Tabs;
  */
 class Settings {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	private $tabs;
 	
@@ -21,6 +23,8 @@ class Settings {
 			/* $menu_slug  */ 'podlove_settings_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
 
 		$tabs = new Tabs( __( 'Expert Settings', 'podlove' ) );
 		$tabs->addTab( new Tab\Website( __( 'Website', 'podlove' ), true ) );

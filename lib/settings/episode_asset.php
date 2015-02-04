@@ -4,6 +4,8 @@ use \Podlove\Model;
 
 class EpisodeAsset {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -16,6 +18,9 @@ class EpisodeAsset {
 			/* $menu_slug  */ 'podlove_episode_assets_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
+		
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 
 		register_setting( EpisodeAsset::$pagehook, 'podlove_asset_assignment' );

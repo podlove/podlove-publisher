@@ -5,6 +5,8 @@ use Podlove\Model;
 
 class Feed {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -19,7 +21,8 @@ class Feed {
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( "load-" . self::$pagehook, array( $this, 'add_screen_options' ) );
-		add_action( "load-" . self::$pagehook, array( $this, 'add_help_tabs' ) );
+		
+		$this->init_page_documentation(self::$pagehook);
 		
 		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_feeds_settings_handle" && isset( $_GET["update_settings"] ) && $_GET["update_settings"] == "true") {
 		   	add_action('admin_bar_init', array( $this, 'save_global_feed_setting'));
@@ -34,43 +37,6 @@ class Feed {
 		) );
 
 		$this->table = new \Podlove\Feed_List_Table();
-	}
-
-	private function get_help_tabs() {
-		return [
-			'podlove_help_feed_slug' => [
-				'title'   => __('Feed Slugs', 'podlove'),
-				'content' => 
-					'<p>'
-						. __('Every feed URL is unique. To make it unique, you must assign each feed a unique <em>slug</em>.
-							It\'s a good habit to use your asset:', 'podlove')
-						. '<ul>'
-							. '<li>' . __('"mp3" slug for your mp3 asset', 'podlove') . '</li>'
-							. '<li>' . __('"m4a" slug for your m4a asset', 'podlove') . '</li>'
-							. '<li>' . __('etc.', 'podlove') . '</li>'
-						. '</ul>'
-					. '</p>'
-			],
-			'podlove_help_feed_asset' => [
-				'title'   => __('Feed Assets', 'podlove'),
-				'content' =>
-					'<p>'
-						. __('Each feed contains exactly one asset. You should have one feed for each asset you want your users to be able to subscribe to.', 'podlove')
-					. '</p>'
-			]
-		];
-	}
-
-	public function add_help_tabs() {
-		foreach ($this->get_help_tabs() as $id => $tab) {
-			get_current_screen()->add_help_tab([
-				'id'       => $id,
-				'title'    => __( $tab['title'], 'some_textdomain' ),
-				'callback' => function ($screen, $tab) {
-					echo $this->get_help_tabs()[$tab['id']]['content'];
-				}
-			]);
-		}
 	}
 
 	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {

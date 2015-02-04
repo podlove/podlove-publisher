@@ -4,6 +4,8 @@ use \Podlove\Model;
 
 class Modules {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -16,6 +18,8 @@ class Modules {
 			/* $menu_slug  */ 'podlove_settings_modules_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',

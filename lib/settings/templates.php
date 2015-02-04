@@ -4,6 +4,8 @@ use \Podlove\Model;
 
 class Templates {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -16,6 +18,9 @@ class Templates {
 			/* $menu_slug  */ 'podlove_templates_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
+		
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 
 		register_setting( Templates::$pagehook, 'podlove_template_assignment' );
