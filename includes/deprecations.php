@@ -19,39 +19,30 @@ function podlove_get_template_deprecations() {
 
 	$deprecations = [];
 
-	$shortcodes_data   = podlove_get_deprecated_shortcodes();
-	$shortcode_matcher = array_keys($shortcodes_data);
-
-	$tags_data         = podlove_get_deprecated_template_tags();
-	$tags_matcher      = array_keys($tags_data);
+	$deprecation_matcher = [
+		'shortcode' => [
+			'data'    => podlove_get_deprecated_shortcodes(),
+			'matcher' => array_keys(podlove_get_deprecated_shortcodes())
+		],
+		'template tag' => [
+			'data'    => podlove_get_deprecated_template_tags(),
+			'matcher' => array_keys(podlove_get_deprecated_template_tags())
+		]
+	];
 
 	foreach (\Podlove\Model\Template::all() as $template) {
-
-		$context = [ 'type' => 'template', 'id' => $template->id ];
-
-		foreach ($shortcode_matcher as $shortcode) {
-			if (preg_match("/" . $shortcode . "/", $template->content, $matches)) {
-				$deprecations[] = [
-					'context' => $context,
-					'deprecated' => [
-						'type'    => 'shortcode',
-						'content' => $matches[0]
-					],
-					'instead' => $shortcodes_data[$shortcode]
-				];
-			}
-		}
-
-		foreach ($tags_matcher as $tag) {
-			if (preg_match("/" . $tag . "/", $template->content, $matches)) {
-				$deprecations[] = [
-					'context' => $context,
-					'deprecated' => [
-						'type'    => 'template tag',
-						'content' => $matches[0]
-					],
-					'instead' => $tags_data[$tag]
-				];
+		foreach ($deprecation_matcher as $deprecated_type => $matcher) {
+			foreach ($matcher['matcher'] as $regex) {
+				if (preg_match("/" . $regex . "/", $template->content, $matches)) {
+					$deprecations[] = [
+						'context' => [ 'type' => 'template', 'id' => $template->id ],
+						'deprecated' => [
+							'type'    => $deprecated_type,
+							'content' => $matches[0]
+						],
+						'instead' => $matcher['data'][$regex]
+					];
+				}
 			}
 		}
 	}
