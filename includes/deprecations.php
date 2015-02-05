@@ -15,7 +15,7 @@ function podlove_init_deprecation_checker() {
 	podlove_render_deprecations($deprecations);
 }
 
-function podlove_get_deprecations() {
+function podlove_get_template_deprecations() {
 
 	$deprecations = [];
 
@@ -24,17 +24,15 @@ function podlove_get_deprecations() {
 
 	$tags_data         = podlove_get_deprecated_template_tags();
 	$tags_matcher      = array_keys($tags_data);
-	
-	// check templates
+
 	foreach (\Podlove\Model\Template::all() as $template) {
+
+		$context = [ 'type' => 'template', 'id' => $template->id ];
 
 		foreach ($shortcode_matcher as $shortcode) {
 			if (preg_match("/" . $shortcode . "/", $template->content, $matches)) {
 				$deprecations[] = [
-					'context' => [
-						'type' => 'template',
-						'id'   => $template->id
-					],
+					'context' => $context,
 					'deprecated' => [
 						'type'    => 'shortcode',
 						'content' => $matches[0]
@@ -47,10 +45,7 @@ function podlove_get_deprecations() {
 		foreach ($tags_matcher as $tag) {
 			if (preg_match("/" . $tag . "/", $template->content, $matches)) {
 				$deprecations[] = [
-					'context' => [
-						'type' => 'template',
-						'id'   => $template->id
-					],
+					'context' => $context,
 					'deprecated' => [
 						'type'    => 'template tag',
 						'content' => $matches[0]
@@ -61,7 +56,16 @@ function podlove_get_deprecations() {
 		}
 	}
 
-	// check episodes
+	return $deprecations;
+}
+
+function podlove_get_episodes_deprecations() {
+
+	$deprecations = [];
+
+	$shortcodes_data   = podlove_get_deprecated_shortcodes();
+	$shortcode_matcher = array_keys($shortcodes_data);
+
 	$query = new \WP_Query(['post_type' => 'podcast']);
 	while ($query->have_posts()) {
 		$post = $query->next_post();
@@ -86,6 +90,16 @@ function podlove_get_deprecations() {
 	}
 
 	return $deprecations;
+}
+
+function podlove_get_deprecations() {
+
+	$deprecations = array_merge(
+		podlove_get_template_deprecations(), 
+		podlove_get_episodes_deprecations()
+	);	
+
+	return apply_filters('podlove_deprecations', $deprecations);
 }
 
 function podlove_get_deprecation_context($context) {
