@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 92 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 93 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1082,6 +1082,9 @@ function run_migrations_for_version( $version ) {
 			$c->logo = 'prezi-128.png';
 			$c->url_scheme = 'http://prezi.com/user/%account-placeholder%';
 			$c->save();
+		break;
+		case 93:
+			podlove_init_user_agent_refresh();
 		break;
 	}
 

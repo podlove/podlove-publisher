@@ -253,6 +253,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/search.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/system_report.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/templates.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/trash.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/user_agent_refresh.php';
 
 // @todo: change to internal module
 new \Podlove\AJAX\Ajax(); 

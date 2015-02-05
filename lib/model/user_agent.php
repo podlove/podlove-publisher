@@ -7,11 +7,11 @@ class UserAgent extends Base {
 
 	/**
 	 * Fetch new data for all UAs
+	 * 
+	 * @deprecated use podlove_init_user_agent_refresh() instead
 	 */
 	public static function reparse_all() {
-		foreach (UserAgent::all() as $ua) {
-			$ua->parse()->save();
-		}
+		podlove_init_user_agent_refresh();
 	}
 
 	/**
