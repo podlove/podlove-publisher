@@ -72,7 +72,7 @@ class RepairSocial {
 	private static function find_duplicate_services() {
 		global $wpdb;
 
-		$sql = "SELECT id, `type`, COUNT(*) cnt FROM " . Service::table_name() . " GROUP BY `type` HAVING cnt > 1";
+		$sql = "SELECT id, `type`, COUNT(*) cnt FROM " . Service::table_name() . " GROUP BY `type`, `category` HAVING cnt > 1";
 		return $wpdb->get_results($sql, ARRAY_A);
 	}
 
