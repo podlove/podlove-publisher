@@ -389,12 +389,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eteubert/device-detector.git",
-                "reference": "4ddf35ac522aa94490bfa700b9969fe571331f6c"
+                "reference": "d348a62c5270e7cfb44ff320e9cd7bc849bb6edd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/4ddf35ac522aa94490bfa700b9969fe571331f6c",
-                "reference": "4ddf35ac522aa94490bfa700b9969fe571331f6c",
+                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/d348a62c5270e7cfb44ff320e9cd7bc849bb6edd",
+                "reference": "d348a62c5270e7cfb44ff320e9cd7bc849bb6edd",
                 "shasum": ""
             },
             "require": {
@@ -436,7 +436,7 @@
                 "wiki": "http://dev.piwik.org/",
                 "source": "https://github.com/piwik/piwik"
             },
-            "time": "2015-02-04 14:45:12"
+            "time": "2015-02-05 08:49:11"
         },
         {
             "name": "podlove/normalplaytime",
