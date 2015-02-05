@@ -4,7 +4,7 @@ add_action( 'admin_notices', 'podlove_init_deprecation_checker' );
 function podlove_init_deprecation_checker() {
 	
 	// dashboard only
-	if (!isset($_GET['page']) || $_GET['page'] !== 'podlove_settings_handle')
+	if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_handle')
 		return;
 
 	$cache = \Podlove\Cache\TemplateCache::get_instance();
