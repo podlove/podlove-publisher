@@ -105,6 +105,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: template editor does not forget changes if you reselect a template after changing it
 * fix: improve uninstall routine
 * fix: wrong month when choosing Auphonic productions
+* fix: deacitvate Jetpack's OpenGraph when the Publisher OpenGraph module is active
 
 * add services: miiverse, prezi
 * add missing services via repair button

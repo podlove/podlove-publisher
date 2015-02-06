@@ -29,6 +29,11 @@ class Open_Graph extends \Podlove\Modules\Base {
 				return $output . ' prefix="og: http://ogp.me/ns#"';
 			} );
 
+			// as recommended in http://jetpack.me/2013/05/03/remove-open-graph-meta-tags/
+			// @fixme Generate conflicts for known conflicting plugins.
+			//        Get inspired by Jetpack's list class.jetpack.php "open_graph_conflicting_plugins"
+			add_filter( 'jetpack_enable_open_graph', '__return_false' );
+
 			add_action( 'wp_head', array( $this, 'the_open_graph_metadata' ) );
 		}
 
