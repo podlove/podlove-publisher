@@ -51,13 +51,13 @@ class Dashboard {
 				<a href="//podlove.org" target="_blank">podlove.org</a>
 			</li>
 			<li>
+				<a href="https://community.podlove.org/" target="_blank">Podlove Community</a>
+			</li>
+			<li>
 				<a href="//docs.podlove.org" target="_blank">Documentation &amp; Guides</a>
 			</li>
 			<li>
 				<a href="<?php echo admin_url( 'admin.php?page=podlove_Support_settings_handle' ) ?>">Report Bugs</a>
-			</li>
-			<li>
-				<a href="https://sendegate.de/" target="_blank">Join Sendegate</a>
 			</li>
 			<li>
 				<a href="http://podlove.org/donations/" target="_blank">Donate</a>
