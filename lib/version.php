@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 93 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 94 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1084,6 +1084,28 @@ function run_migrations_for_version( $version ) {
 			$c->save();
 		break;
 		case 93:
+			// podlove_init_user_agent_refresh();
+			// do nothing instead, because see 94 below
+		break;
+		case 94:
+			// this is a duplicate of migration 83 but it looks like that didn't work.
+			Model\DownloadIntentClean::build();
+			
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `bot` TINYINT',
+				'ALTER TABLE `%s` ADD COLUMN `client_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_type` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_brand` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_model` VARCHAR(255)',
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
+			}
+
 			podlove_init_user_agent_refresh();
 		break;
 	}
