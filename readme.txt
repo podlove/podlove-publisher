@@ -34,6 +34,7 @@ Feel free to contribute and to fix errors or send improvements via github.
 Requires PHP 5.4+
 
 * Podlove Project: http://podlove.org/
+* Podlove Community: https://community.podlove.org/
 * Documentation: http://docs.podlove.org/
 * Bug Tracker: https://github.com/podlove/podlove-publisher/issues
 * Donate: http://podlove.org/donations/
