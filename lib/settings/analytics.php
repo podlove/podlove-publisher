@@ -135,7 +135,40 @@ class Analytics {
 
 		<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
 
-		<?php echo __('There is no tracking data yet. See you later!', 'podlove'); ?>
+		<div id="welcome-panel" class="welcome-panel">
+		    <div class="welcome-panel-content">
+		        <h3><?php echo __('Welcome to Podlove Publisher Analytics!', 'podlove') ?></h3>
+		        <p class="about-description">
+		        	<?php if (Model\DownloadIntent::count() < 50): ?>
+		        		<?php echo __('There is not enough tracking data yet. Publish an episode, then come back after a while.', 'podlove'); ?>
+		        	<?php else: ?>
+		        		<?php echo __('Still crunching the numbers. The first time it may take up to an hour until you see analytics.'); ?>
+		        	<?php endif ?>
+		        </p>
+		        <div class="welcome-panel-column-container">
+		            <div class="welcome-panel-column">
+		                <h4><?php echo __('While you wait ...', 'podlove') ?></h4>
+		                <ul>
+		                	<li>
+		                		<a target="_blank" href="http://docs.podlove.org/guides/download-analytics/" class="welcome-icon welcome-learn-more">
+		                			<?php echo __('Learn more about how tracking works', 'podlove') ?>
+		                		</a>
+		                	</li>
+		                    <li>
+		                        <a href="<?php echo admin_url( 'post-new.php?post_type=podcast' ) ?>" class="welcome-icon welcome-write-blog">
+		                        	<?php echo __('Add a new episode', 'podlove') ?>
+		                        </a>
+		                    </li>
+		                    <li>
+		                        <a href="<?php echo home_url() ?>" class="welcome-icon welcome-view-site">
+		                        	<?php echo __('View your site', 'podlove') ?>
+		                        </a>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 
 		<?php
 	}
