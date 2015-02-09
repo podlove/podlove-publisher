@@ -45,10 +45,9 @@ class DownloadIntentClean extends Base {
 				COUNT(*) downloads, DATE(accessed_at) theday
 			FROM
 				" . self::table_name() . " di
+				INNER JOIN " . MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 			WHERE
-				media_file_id IN (
-					SELECT id FROM " . MediaFile::table_name() . " WHERE episode_id = %d
-				)
+				episode_id = %d
 			GROUP BY theday
 			ORDER BY downloads DESC
 			LIMIT 0,1
@@ -68,10 +67,9 @@ class DownloadIntentClean extends Base {
 				COUNT(*)
 			FROM
 				" . self::table_name() . " di
+				INNER JOIN " . MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 			WHERE
-				media_file_id IN (
-					SELECT id FROM " . MediaFile::table_name() . " WHERE episode_id = %d
-				)
+				episode_id = %d
 				AND " . self::sql_condition_from_time_strings($start, $end) . "
 		";
 
