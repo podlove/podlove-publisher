@@ -396,13 +396,8 @@ class Analytics {
 			<div id="episode-context-chart"></div>
 		</section>
 
-		<section id="episode-weekday-chart-wrapper" class="chart-wrapper" data-tile-id="day_of_week">
-			<h1>Day of Week</h1>
-			<div id="episode-weekday-chart"></div>
-		</section>
-
 		<section id="episode-asset-chart-wrapper" class="chart-wrapper" data-tile-id="asset">
-			<h1>Asset</h1>
+			<h1>Episode Asset</h1>
 			<div id="episode-asset-chart"></div>
 		</section>
 
@@ -414,6 +409,11 @@ class Analytics {
 		<section id="episode-system-chart-wrapper" class="chart-wrapper" data-tile-id="operating_system">
 			<h1>Operating System</h1>
 			<div id="episode-system-chart"></div>
+		</section>
+
+		<section id="episode-weekday-chart-wrapper" class="chart-wrapper" data-tile-id="day_of_week">
+			<h1>Day of Week</h1>
+			<div id="episode-weekday-chart"></div>
 		</section>
 
 		<div style="clear: both"></div>
