@@ -449,13 +449,19 @@ jQuery(document).ready(function($) {
 			}
 
 			// clear selection if the user modifies selection
-			if (-1 === $.inArray(Math.round(brush.max - brush.min + 1), validRanges)) {
+			if (-1 === $.inArray(Math.round(brush.max - brush.min), validRanges)) {
 				$('#chart-zoom-selection .button.active').removeClass('active');
 			}
 		});
 
 		$('#chart-zoom-selection .button').on('click', function(e) {
 			var hours = parseInt($(this).data('hours'), 10);
+
+			e.preventDefault();
+
+			if ($(this).hasClass("disabled")) {
+				return;
+			}
 
 			$(this).siblings().removeClass('active');
 			$(this).addClass('active');
@@ -470,9 +476,11 @@ jQuery(document).ready(function($) {
 			}
 
 			renderBrush(rangeChart, brush);
-
-			e.preventDefault();
 		});
+
+		if (options.rendered && options.rendered instanceof Function) {
+			options.rendered();
+		}
 	}
 
 	function load_episode_performance_chart(options) {
@@ -512,17 +520,37 @@ jQuery(document).ready(function($) {
 				render_episode_performance_chart(options);
 			});
 		}
-
 	}
 
 	$('#chart-grouping-selection').on('click', 'a', function(e) {
-		var hours = parseInt($(this).data('hours'), 10);
+		var unit_hours = parseInt($(this).data('hours'), 10),
+		    zoom_hours = parseInt($('#chart-zoom-selection .button.active').data("hours"), 10);
 
 		$(this).siblings().removeClass('active');
 		$(this).addClass('active');
 
+		// deactivate all zoom buttons smaller than unit selection
+		$("#chart-zoom-selection a.button").each(function() {
+			var h = parseInt($(this).data('hours'), 10);
+
+			if (h !== 0 && h < unit_hours) {
+				$(this).addClass("disabled");
+			} else {
+				$(this).removeClass("disabled");
+			}
+		});
+
 		load_episode_performance_chart({
-			hours_per_unit: hours
+			hours_per_unit: unit_hours,
+			rendered: function() {
+				// check if zoom setting makes sense
+				if (!zoom_hours || zoom_hours < unit_hours) {
+					var fitting_zoom = $("#chart-zoom-selection a.button").filter(function() {
+						var h = parseInt($(this).data('hours'), 10);
+						return h === 0 || h >= unit_hours;
+					}).first().click();
+				};
+			}
 		});
 
 		e.preventDefault();
