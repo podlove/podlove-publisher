@@ -1107,6 +1107,12 @@ function run_migrations_for_version( $version ) {
 			}
 
 			podlove_init_user_agent_refresh();
+
+			// manually trigger intent cron after user agents are parsed
+			// parameter to make sure WP does not skip it due to 10 minute rule
+			wp_schedule_single_event(time() + 120 , 'podlove_cleanup_download_intents', ['really' => true]);
+			// manually trigger average cron after intents are calculated
+			wp_schedule_single_event(time() + 240, 'recalculate_episode_download_average', ['really' => true]);
 		break;
 	}
 
