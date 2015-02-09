@@ -50,6 +50,7 @@ jQuery(document).ready(function($) {
 
 		var addPercentageLabels = function(chart) {
 			var data = chart.data();
+			var filters = chart.filters();
 
 			data.forEach(function(d, index) {
 				var row = chart.select('g.row._' + index);
@@ -63,6 +64,13 @@ jQuery(document).ready(function($) {
 						.attr('y', label.attr('y'))
 					;
 				}
+
+				// when a filter is set, only show active rows
+				if (filters.length > 0 && $.inArray(d.key, filters) === -1) {
+					row.select('.subLabel').style({'display': 'none'});
+				} else {
+					row.select('.subLabel').style({'display': 'inherit'});
+				};
 
 				row.select('.subLabel')
 					.text(Math.round(d.value.downloads / all.value().downloads * 100) + '%');
