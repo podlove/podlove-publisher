@@ -374,7 +374,7 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "%s = '%s'", $p, $this->$p );
+			return sprintf( "%s = '%s'", $p, esc_sql($this->$p) );
 		} else {
 			return "$p = NULL";
 		}
