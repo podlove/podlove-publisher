@@ -560,7 +560,7 @@ jQuery(document).ready(function($) {
 			hours_per_unit: unit_hours,
 			rendered: function() {
 				// check if zoom setting makes sense
-				if (!zoom_hours || zoom_hours < unit_hours) {
+				if (zoom_hours !== 0 && (NaN === zoom_hours || zoom_hours < unit_hours)) {
 					var fitting_zoom = $("#chart-zoom-selection a.button").filter(function() {
 						var h = parseInt($(this).data('hours'), 10);
 						return h === 0 || h >= unit_hours;
