@@ -442,7 +442,7 @@ jQuery(document).ready(function($) {
 
 		// handle the user changing the brush manually
 		rangeChart.brush().on('brushend', function() {
-			var validRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
+			var presetRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
 
 			var extent = rangeChart.brush().extent();
 			brush.min = extent[0] * hours_per_unit;
@@ -456,8 +456,16 @@ jQuery(document).ready(function($) {
 				renderBrush(rangeChart, brush);
 			}
 
+			var brushMatchesPresetRange = function() {
+				return -1 === $.inArray(Math.round(brush.max - brush.min), presetRanges);
+			};
+
+			var everythingIsSelected = function() {
+				return brush.min === 0 && brush.max === rangeChart.xUnitCount() * hours_per_unit;
+			};
+
 			// clear selection if the user modifies selection
-			if (-1 === $.inArray(Math.round(brush.max - brush.min), validRanges)) {
+			if (brushMatchesPresetRange() && !everythingIsSelected()) {
 				$('#chart-zoom-selection .button.active').removeClass('active');
 			}
 		});
