@@ -77,6 +77,14 @@ jQuery(document).ready(function($) {
 			});
 	    };
 
+	    var addResetFilter = function(chart, filter) {
+			chart.select(".reset").on("click", function(data, index) {
+				d3.event.preventDefault();
+				chart.filterAll();
+				dc.redrawAll();
+			});
+		};
+
 		/**
 		 * Dimensions & Groups
 		 */
@@ -286,6 +294,7 @@ jQuery(document).ready(function($) {
 			})
 		    .colors(chartColor)
 		    .on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
 		;
 
 		var assetChart = dc.rowChart('#episode-asset-chart')
@@ -311,6 +320,7 @@ jQuery(document).ready(function($) {
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
 		;
 
 		var clientChart = dc.rowChart('#episode-client-chart')
@@ -333,6 +343,7 @@ jQuery(document).ready(function($) {
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
 		;
 
 		var systemChart = dc.rowChart('#episode-system-chart')
@@ -355,6 +366,7 @@ jQuery(document).ready(function($) {
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
 		;
 
 		var sourceChart = dc.rowChart('#episode-source-chart')
@@ -373,6 +385,7 @@ jQuery(document).ready(function($) {
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
 		;
 
 		var contextChart = dc.rowChart('#episode-context-chart')
@@ -391,6 +404,7 @@ jQuery(document).ready(function($) {
 			})
 			.colors(chartColor)
 			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
 		;
 
 		// set tickFormats for all charts

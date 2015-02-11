@@ -387,33 +387,39 @@ class Analytics {
 		<div id="episode-range-chart"></div>
 
 		<section id="episode-source-chart-wrapper" class="chart-wrapper" data-tile-id="download_source">
-			<h1>Download Source</h1>
-			<div id="episode-source-chart"></div>
+			<div id="episode-source-chart">
+				<h1>Download Source <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+			</div>
 		</section>
 
 		<section id="episode-context-chart-wrapper" class="chart-wrapper" data-tile-id="download_context">
-			<h1>Download Context</h1>
-			<div id="episode-context-chart"></div>
+			<div id="episode-context-chart">
+				<h1>Download Context <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+			</div>
 		</section>
 
 		<section id="episode-asset-chart-wrapper" class="chart-wrapper" data-tile-id="asset">
-			<h1>Episode Asset</h1>
-			<div id="episode-asset-chart"></div>
+			<div id="episode-asset-chart">
+				<h1>Episode Asset <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+			</div>
 		</section>
 
 		<section id="episode-client-chart-wrapper" class="chart-wrapper" data-tile-id="podcast_client">
-			<h1>Podcast Client</h1>
-			<div id="episode-client-chart"></div>
+			<div id="episode-client-chart">
+				<h1>Podcast Client <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+			</div>
 		</section>
 
 		<section id="episode-system-chart-wrapper" class="chart-wrapper" data-tile-id="operating_system">
-			<h1>Operating System</h1>
-			<div id="episode-system-chart"></div>
+			<div id="episode-system-chart">
+				<h1>Operating System <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+			</div>
 		</section>
 
 		<section id="episode-weekday-chart-wrapper" class="chart-wrapper" data-tile-id="day_of_week">
-			<h1>Day of Week</h1>
-			<div id="episode-weekday-chart"></div>
+			<div id="episode-weekday-chart">
+				<h1>Day of Week <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+			</div>
 		</section>
 
 		<div style="clear: both"></div>
@@ -433,6 +439,7 @@ class Analytics {
 		<style type="text/css">
 		section.chart-wrapper {
 			float: left;
+			height: 320px;
 		}
 
 		section.chart-wrapper h1 {
@@ -443,6 +450,16 @@ class Analytics {
 		section.chart-wrapper div {
 			width: 285px;
 			height: 285px;
+		}
+
+		.chart-wrapper h1, 
+		.chart-wrapper h1 small {
+			line-height: 19px;
+			height: 19px;
+		}
+
+		.chart-wrapper h1 a {
+			text-decoration: none;
 		}
 
 		.chart-menubar:first-child { float: right; }
