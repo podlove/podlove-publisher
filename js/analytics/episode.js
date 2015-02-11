@@ -18,7 +18,7 @@ jQuery(document).ready(function($) {
 
 		p.weekday  = v.weekday;
 		p.asset_id = v.asset_id;
-		p.date     = v.date;
+		p.date     = p.date && p.date < v.date ? p.date : v.date; // take first date in reduced set
 		p.client   = v.client;
 		p.system   = v.system;
 		p.source   = v.source;
