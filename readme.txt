@@ -97,7 +97,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Screenshots ==
 1. Custom episode post type separates media from your blog content.
-2. Download analytics provide your with all the data you ever wanted.
+2. Download analytics provide you with all the data you ever wanted.
 3. The Publisher automatically checks the health of your media files.
 4. The mighty template engine gives you full control over the episode presentation.
 5. Includes the Podlove Subscribe Button, the easiest way for listeners to subscribe to your podcast.
