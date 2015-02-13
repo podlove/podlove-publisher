@@ -67,7 +67,7 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 
 function podlove_handle_media_file_download() {
 
-	$download_media_file = (int) podlove_get_query_var('download_media_file');
+	$download_media_file = podlove_get_query_var('download_media_file');
 
 	if (!$download_media_file)
 		return;
@@ -95,7 +95,7 @@ function podlove_handle_media_file_download() {
 		exit;
 	}
 
-	$media_file_id = $download_media_file;
+	$media_file_id = (int) $download_media_file;
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 
 	if ( ! $media_file ) {
