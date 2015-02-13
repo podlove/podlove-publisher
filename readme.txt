@@ -105,7 +105,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2.0 =
+= 2.0.0 =
 
 **Download Analytics**
 
@@ -1167,7 +1167,7 @@ A similar concept might return once we tackle stuff like seasons.
 
 == Upgrade Notice ==
 
-= 2.0 =
+= 2.0.0 =
 
 Upgrade only if you are on PHP 5.4 or higher.
 
