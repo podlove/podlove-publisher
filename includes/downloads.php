@@ -76,24 +76,9 @@ function podlove_handle_media_file_download() {
 	if ( ! defined( 'DONOTCACHEPAGE' ) )
 		define( 'DONOTCACHEPAGE', true );
 
-	// FIXME: this is a hack for bitlove => so move it in this module AND make sure the location in valid
-	// if download_media_file is a URL, download directly
-	if ( filter_var( $download_media_file, FILTER_VALIDATE_URL ) ) {
-		$parsed_url = parse_url($download_media_file);
-		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
-		header( "Expires: 0" );
-		header( 'Cache-Control: must-revalidate' );
-	    header( 'Pragma: public' );
-		header( "Content-Type: application/x-bittorrent" );
-		header( "Content-Description: File Transfer" );
-		header( "Content-Disposition: attachment; filename=$file_name" );
-		header( "Content-Transfer-Encoding: binary" );
-		ob_clean();
-		flush();
-		while ( @ob_end_flush() ); // flush and end all output buffers
-		readfile( $download_media_file );
+	// use this hook to short-circuit the download logic
+	if (apply_filters('podlove_pre_media_file_download', false, $download_media_file))
 		exit;
-	}
 
 	$media_file_id = (int) $download_media_file;
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );

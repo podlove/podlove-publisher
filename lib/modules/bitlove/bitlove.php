@@ -24,6 +24,8 @@ class Bitlove extends \Podlove\Modules\Base {
 
 		add_action( 'wp_ajax_podlove-fetch-bitlove-url', array( $this, 'fetch_bitlove_url' ) );
 
+		add_filter( 'podlove_pre_media_file_download', array( $this, 'intercept_downloads' ), 10, 2 );
+
 		RssExtension::init();
 	}
 
@@ -181,6 +183,32 @@ EOF;
 		});
 
 		return $content . $bitlove_html;
+	}
+
+	function intercept_downloads($_, $download_media_file) {
+
+		if (filter_var($download_media_file, FILTER_VALIDATE_URL) === FALSE)
+			return false;
+
+		$parsed_url = parse_url($download_media_file);
+		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
+		header( "Expires: 0" );
+		header( 'Cache-Control: must-revalidate' );
+	    header( 'Pragma: public' );
+		header( "Content-Type: application/x-bittorrent" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Disposition: attachment; filename=$file_name" );
+		header( "Content-Transfer-Encoding: binary" );
+		ob_clean();
+		flush();
+		while ( @ob_end_flush() ); // flush and end all output buffers
+
+		$curl = new \Podlove\Http\Curl;
+		$curl->request($download_media_file, ['filename' => $file_name]);
+		$response = $curl->get_response();
+		echo $response['body'];
+
+		return true; // stops rest of download logic
 	}
 
 }
