@@ -105,7 +105,21 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2.0.0 =
+= 2.0 =
+
+**Download Analytics**
+
+You want to know more about who listens to your podcast? We got you covered.
+
+We spent months of research and prototyping to find a reliable way of tracking. We are confident that our approach works and produces trustworthy data. If you have not done so yet, you have to activate tracking in _Expert Settings -> Tracking_.
+
+If you are interested in all the technical details, head over to http://docs.podlove.org/guides/download-analytics/.
+
+But what you are seeing now is just the beginning. We have a plethora of ideas on how to give you even more insight into the data available. Stay tuned!
+
+We are curious what you think about the current analytics interface? What do you love? What do you hate? What do you miss? Head over to our new community site and share your thoughts: https://community.podlove.org/
+
+**Bugfixes**
 
 * fix: use `home_url()` instead of `site_url()` to generate tracking URLs
 * fix: tracking export does not get stuck forever when it fails once
@@ -115,6 +129,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: improve uninstall routine
 * fix: wrong month when choosing Auphonic productions
 * fix: deactivate Jetpack's OpenGraph when the Publisher OpenGraph module is active
+
+**Other Changes**
 
 * add services: miiverse, prezi
 * add missing services via repair button
@@ -1150,6 +1166,10 @@ A similar concept might return once we tackle stuff like seasons.
 * Enhancement: Remove pagination from formats settings page
 
 == Upgrade Notice ==
+
+= 2.0 =
+
+Upgrade only if you are on PHP 5.4 or higher.
 
 = 1.2.0-alpha =
 Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change!
