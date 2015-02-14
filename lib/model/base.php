@@ -141,13 +141,13 @@ abstract class Base
 
 	public static function find_all_by_property( $property, $value ) {
 		return self::find_all_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\''
+			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\''
 		);
 	}
 
 	public static function find_one_by_property( $property, $value ) {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\' LIMIT 0,1'
+			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\' LIMIT 0,1'
 		);
 	}
 
