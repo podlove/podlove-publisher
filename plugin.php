@@ -199,7 +199,7 @@ function uninstall_for_current_blog() {
 	Modules\Logging\LogTable::destroy();
 
 	// trash all episodes
-	$query = new WP_Query([ 'post_type' => 'podcast' ]);
+	$query = new \WP_Query([ 'post_type' => 'podcast' ]);
 
 	if ($query->have_posts()) {
 		while ($query->have_posts()) {
