@@ -19,13 +19,17 @@ class TemplateController {
 
 		$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-		$template = Template::find_by_id($id);
+		if ($template = Template::find_by_id($id)) {
+			$response = [
+				'id'      => $template->id,
+				'title'   => $template->title,
+				'content' => $template->content,
+			];
+		} else {
+			$response = [];
+		}
 
-		Ajax::respond_with_json(array(
-			'id'      => $template->id,
-			'title'   => $template->title,
-			'content' => $template->content,
-		));
+		Ajax::respond_with_json($response);
 	}
 
 	public static function update() {
