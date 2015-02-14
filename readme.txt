@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.0.2 =
+
+* fix: include missing YAML library
+
 = 2.0.1 =
 
 **Bugfixes**
