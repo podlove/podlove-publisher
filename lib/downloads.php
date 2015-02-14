@@ -44,7 +44,7 @@ class Downloads {
 			$keys = array_keys($columns);
 		    $insertIndex = array_search('date', $keys) + 1; // after date column
 
-		    // insert contributors at that index
+		    // insert downloads at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
 		           array("downloads" => __('Downloads', 'podlove')) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
@@ -58,7 +58,7 @@ class Downloads {
 		switch ($column_name) {
 			case 'downloads':
 				if ($episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID())) {
-					echo \Podlove\Model\DownloadIntentClean::total_by_episode_id($episode->id);
+					echo number_format_i18n(\Podlove\Model\DownloadIntentClean::total_by_episode_id($episode->id));
 				}
 			break;
 		}
