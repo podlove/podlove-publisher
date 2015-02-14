@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.0.1 =
+
+* fix: properly sanitize episode form data (fixes "A wild Backslash appears")
+
 = 2.0.0 =
 
 **Download Analytics**

@@ -286,16 +286,33 @@ class Podcast_Post_Meta_Box {
 
 		do_action( 'podlove_save_episode', $post_id, $_POST['_podlove_meta'] );
 
+		// sanitize data
+		$episode_data = filter_input_array(INPUT_POST, [
+			'_podlove_meta' => [ 'flags' => FILTER_REQUIRE_ARRAY ]
+		]);
+		$episode_data = $episode_data['_podlove_meta'];
+
+		$episode_data = filter_var_array($episode_data, [
+			'title'          => FILTER_SANITIZE_STRING,
+			'subtitle'       => FILTER_SANITIZE_STRING,
+			'summary'        => FILTER_SANITIZE_STRING,
+			'chapters'       => FILTER_SANITIZE_STRING,
+			'slug'           => FILTER_SANITIZE_STRING,
+			'duration'       => FILTER_SANITIZE_STRING,
+			'episode_assets' => [ 'flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING ],
+			'guid'           => FILTER_SANITIZE_STRING,
+		]);
+
 		// save changes
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-		$episode_slug_has_changed = isset( $_POST['_podlove_meta']['slug'] ) && $_POST['_podlove_meta']['slug'] != $episode->slug;
-		$episode->update_attributes( $_POST['_podlove_meta'] );
+		$episode_slug_has_changed = isset( $episode_data['slug'] ) && $episode_data['slug'] != $episode->slug;
+		$episode->update_attributes( $episode_data );
 
 		if ( $episode_slug_has_changed )
 			$episode->refetch_files();
 
-		if ( isset( $_REQUEST['_podlove_meta']['episode_assets'] ) )
-			$this->save_episode_assets( $episode, $_REQUEST['_podlove_meta']['episode_assets'] );
+		if ( isset( $episode_data['episode_assets'] ) )
+			$this->save_episode_assets( $episode, $episode_data['episode_assets'] );
 		else 
 			$this->save_episode_assets( $episode, array() );
 
