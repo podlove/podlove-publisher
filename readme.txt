@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Enhancements**
 
 * format download numbers in episode list
+* remove check for PHP setting `allow_url_fopen` because we don't rely on it any more
 
 = 2.0.0 =
 

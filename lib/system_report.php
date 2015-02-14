@@ -60,13 +60,6 @@ class SystemReport {
 
 				return $iconv_available ? "available" : "MISSING";
 			} ),
-			'allow_url_fopen' => array( 'callback' => function() use ( &$errors ) {
-
-				if ( ! $allow_url_fopen = ini_get( 'allow_url_fopen' ) )
-					$errors[] = 'allow_url_fopen must be activated in your php.ini';
-
-				return $allow_url_fopen;
-			} ),
 			'simplexml' => array( 'callback' => function() use ( &$errors ) {
 				
 				if ( ! $simplexml = in_array('SimpleXML', get_loaded_extensions()) )
