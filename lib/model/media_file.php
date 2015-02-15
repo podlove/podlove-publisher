@@ -27,6 +27,28 @@ class MediaFile extends Base {
 		return EpisodeAsset::find_by_id( $this->episode_asset_id );
 	}
 
+	/**
+	 * Find one downloadable example file.
+	 * 
+	 * - JOIN episode to avoid dead media files
+	 * - ORDER BY e.id DESC, mf.id ASC: get a recent episode and the first asset, which is probably an audio file
+	 */
+	public static function find_example() {
+		return self::find_one_by_sql("
+			SELECT
+				mf.*
+			FROM
+				" . MediaFile::table_name() . " mf
+				JOIN " . EpisodeAsset::table_name() . " a ON a.id = mf.`episode_asset_id`
+				JOIN " . Episode::table_name() . " e ON e.id = mf.`episode_id`
+			WHERE
+				a.`downloadable` 
+				AND mf.size > 0
+			ORDER BY e.id DESC, mf.id ASC
+			LIMIT 0,1
+		");
+	}
+
 	public static function find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
 		
 		if ( ! $file = self::find_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) ) {

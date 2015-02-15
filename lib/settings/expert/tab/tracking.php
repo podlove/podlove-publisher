@@ -143,7 +143,7 @@ class Tracking extends Tab {
 			),
 			/* $callback */ function () {
 
-				$media_file = Model\MediaFile::find_one_by_where("size > 0 ORDER BY id DESC");
+				$media_file = Model\MediaFile::find_example();
 				if (!$media_file)
 					return;
 
