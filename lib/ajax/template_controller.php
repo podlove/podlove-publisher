@@ -34,9 +34,9 @@ class TemplateController {
 
 	public static function update() {
 
-		$id      = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-		$title   = filter_input(INPUT_GET, 'title');
-		$content = filter_input(INPUT_GET, 'content');
+		$id      = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+		$title   = filter_input(INPUT_POST, 'title');
+		$content = filter_input(INPUT_POST, 'content');
 
 		if (!$id || !$title)
 			Ajax::respond_with_json(array("success" => false));
@@ -60,7 +60,7 @@ class TemplateController {
 
 	public static function delete() {
 		
-		$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+		$id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 		$template = Template::find_by_id($id);
 
 		if (!$id || !$template) {
