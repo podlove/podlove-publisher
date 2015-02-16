@@ -107,6 +107,22 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.0.3 =
 
+*Allow Non-Admins to access Analytics*
+
+Analytics have a new capability called "podlove_read_analytics".
+You can provide access to, for example, editors, using the following code snippet:
+
+    function podsnip_add_capability() {
+        // default roles: editor, author, contributor, subscriber
+        $role = get_role('editor');
+        $role->add_cap('podlove_read_analytics');
+    }
+    add_action( 'admin_init', 'podsnip_add_capability');
+
+You can add snippets using the "Code Snippets" plugin.
+
+*Bugfixes*
+
 * fix: use proper HTTP method to create/update/delete templates
 * fix: don't remove URLs from chapter marks when saving
 * fix: optional episode form elements can be saved

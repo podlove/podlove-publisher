@@ -18,10 +18,14 @@ class Analytics {
 			/* $parent_slug*/ $handle,
 			/* $page_title */ __( 'Analytics', 'podlove' ),
 			/* $menu_title */ __( 'Analytics', 'podlove' ),
-			/* $capability */ 'administrator',
+			/* $capability */ 'podlove_read_analytics',
 			/* $menu_slug  */ 'podlove_analytics',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		// todo: this is persistent, so it should only be called on migration/plugin activation
+	    $role = get_role('administrator');
+	    $role->add_cap('podlove_read_analytics');
 
 		$this->init_page_documentation(self::$pagehook);
 
