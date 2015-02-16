@@ -65,6 +65,8 @@ class File extends Wrapper {
 
 	/**
 	 * URL
+	 * 
+	 * The real file URL. For public facing URLs, use `.publicUrl`.
 	 *
 	 * @accessor
 	 */
@@ -72,6 +74,14 @@ class File extends Wrapper {
 		return $this->file->get_file_url();
 	}
 
+	/**
+	 * Public URL
+	 * 
+	 * If tracking is active, this generates the tracking URL.
+	 * Otherwise, it's identical to `.url`.
+	 * 
+	 * @accessor
+	 */
 	public function publicUrl($source, $context = null) {
 		return $this->file->get_public_file_url($source, $context);
 	}
