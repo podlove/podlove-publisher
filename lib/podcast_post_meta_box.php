@@ -292,16 +292,18 @@ class Podcast_Post_Meta_Box {
 		]);
 		$episode_data = $episode_data['_podlove_meta'];
 
-		$episode_data = filter_var_array($episode_data, [
+		$episode_data_filter = [
 			'title'          => FILTER_SANITIZE_STRING,
 			'subtitle'       => FILTER_SANITIZE_STRING,
 			'summary'        => FILTER_SANITIZE_STRING,
-			'chapters'       => FILTER_SANITIZE_STRING,
 			'slug'           => FILTER_SANITIZE_STRING,
 			'duration'       => FILTER_SANITIZE_STRING,
 			'episode_assets' => [ 'flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING ],
 			'guid'           => FILTER_SANITIZE_STRING,
-		]);
+		];
+		$episode_data_filter = apply_filters('podlove_episode_data_filter', $episode_data_filter);
+
+		$episode_data = filter_var_array($episode_data, $episode_data_filter);
 
 		// save changes
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );

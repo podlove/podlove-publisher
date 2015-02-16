@@ -108,6 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.0.3 =
 
 * fix: use proper HTTP method to create/update/delete templates
+* fix: don't remove URLs from chapter marks when saving
+* fix: optional episode form elements can be saved
 
 = 2.0.2 =
 

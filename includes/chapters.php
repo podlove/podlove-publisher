@@ -94,3 +94,9 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 
 	return $form_data;
 }, 10, 2);
+
+add_filter('podlove_episode_data_filter', function ($filter) {
+	return array_merge($filter, [
+		'chapters'  => FILTER_UNSAFE_RAW
+	]);
+});

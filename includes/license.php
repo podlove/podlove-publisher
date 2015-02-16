@@ -25,8 +25,6 @@ function podlove_episode_license_add_js() {
 	<?php
 }
 
-
-
 function podlove_episode_license_extend_form ($form_data, $episode) {
 
 	$podcast = Model\Podcast::get_instance();
@@ -141,3 +139,10 @@ function podlove_episode_license_extend_form ($form_data, $episode) {
 
 	return $form_data;
 }
+
+add_filter('podlove_episode_data_filter', function ($filter) {
+	return array_merge($filter, [
+		'license_name' => FILTER_SANITIZE_STRING,
+		'license_url'  => FILTER_SANITIZE_URL
+	]);
+});
