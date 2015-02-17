@@ -82,6 +82,12 @@ class ChaptersManager {
 	private function get_chapters_object() {
 
 		if ( ! $this->chapters_raw )
+			$this->chapters_raw = apply_filters( 'podlove_episode_chapters', $this->episode->post_id );
+
+		if ( ! empty($this->chapters_raw) )
+			return Parser\Mp4chaps::parse( $this->chapters_raw ); // Return if apply_filter returned a non-empty string 
+
+		if ( ! $this->chapters_raw )
 			$this->chapters_raw = $this->get_raw_chapters_string();
 
 		if ( ! $this->chapters_raw )
@@ -89,7 +95,7 @@ class ChaptersManager {
 
 		$asset_assignment = Model\AssetAssignment::get_instance();
 
-		if ( $asset_assignment->chapters == 'manual' )
+		if ( $this->chapters_raw )
 			return Parser\Mp4chaps::parse( $this->chapters_raw );
 
 		if ( ! $chapters_asset = Model\EpisodeAsset::find_one_by_id( $asset_assignment->chapters ) )
