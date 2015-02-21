@@ -224,6 +224,7 @@ Contributor::property( 'organisation', 'TEXT' );
 Contributor::property( 'department', 'TEXT' );
 Contributor::property( 'jobtitle', 'TEXT' );
 Contributor::property( 'avatar', 'TEXT' );
+Contributor::property( 'flattr', 'VARCHAR(255)' );
 Contributor::property( 'publicemail', 'TEXT' );				// DEPRECATED since 1.10.23
 Contributor::property( 'privateemail', 'TEXT' );
 Contributor::property( 'realname', 'TEXT' );

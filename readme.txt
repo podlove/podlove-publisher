@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.0.4 =
+
+* fix: missing flattr attribute for contributors
+
 = 2.0.3 =
 
 *Allow Non-Admins to access Analytics*
