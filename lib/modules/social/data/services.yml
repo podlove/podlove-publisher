@@ -181,6 +181,13 @@
   logo: 'steam-128.png'
   url_scheme: 'http://steamcommunity.com/id/%account-placeholder%'
 
+- title: 'Trakt'
+  name: 'trakt'
+  category: 'social'
+  description: 'Trakt account'
+  logo: 'trakt-128.png'
+  url_scheme: 'http://trakt.tv/users/%account-placeholder%'
+
 - title: 'Tumblr'
   name: 'tumblr'
   category: 'social'
