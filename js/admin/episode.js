@@ -211,7 +211,7 @@ var PODLOVE = PODLOVE || {};
  				dataType: 'json',
  				success: function(result) {
  					var input = container.find("input");
- 					if (result) {
+ 					if (result && result.file_size > 0 && result.reachable) {
 	 					input.data('size'   , result.file_size);
 	 					input.data('fileUrl', result.file_url);
  					} else {
