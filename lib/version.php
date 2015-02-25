@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 94 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 95 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1113,6 +1113,13 @@ function run_migrations_for_version( $version ) {
 			wp_schedule_single_event(time() + 120 , 'podlove_cleanup_download_intents', ['really' => true]);
 			// manually trigger average cron after intents are calculated
 			wp_schedule_single_event(time() + 240, 'recalculate_episode_download_average', ['really' => true]);
+		break;
+		case 95:
+			// add missing flattr column
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `flattr` VARCHAR(255) AFTER `avatar`',
+				\Podlove\Modules\Contributors\Model\Contributor::table_name()
+			) );
 		break;
 	}
 
