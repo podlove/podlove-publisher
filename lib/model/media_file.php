@@ -221,11 +221,11 @@ class MediaFile extends Base {
 		// do not change the filesize if http_code = 0
 		// aka "an error occured I don't know how to deal with" (probably timeout)
 		// => change to proper handling once "Conflicts" are introduced
-		if ( $http_code && $http_code !== 304 )
+		if ( podlove_is_resolved_and_reachable_http_status($http_code) && $http_code !== 304 )
 			$this->size = $header['download_content_length'];
 
 		if ( $this->size <= 0 )
-			$this->etag = '';
+			$this->etag = NULL;
 
 		return $header;
 	}
@@ -262,18 +262,16 @@ class MediaFile extends Base {
 			);
 		}
 
-		// look for ETag and safe for later
-		if ( preg_match( '/ETag:\s*"([^"]+)"/i', $response['response'], $matches ) ) {
-			$this->etag = $matches[1];
-		}
-
 		// skip validation if ETag did not change
 		if ( (int) $header["http_code"] === 304 ) {
-			// Log::get()->addInfo(
-			// 	'Validating media file: File Not Modified.',
-			// 	array( 'media_file_id' => $this->id )
-			// );
 			return;
+		}
+
+		// look for ETag and safe for later
+		if (podlove_is_resolved_and_reachable_http_status($header["http_code"]) && preg_match( '/ETag:\s*"([^"]+)"/i', $response['response'], $matches )) {
+			$this->etag = $matches[1];
+		} else {
+			$this->etag = NULL;
 		}
 
 		do_action( 'podlove_media_file_content_has_changed', $this->id );
