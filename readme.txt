@@ -108,6 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.0.4 =
 
 * fix: missing flattr attribute for contributors
+* fix: subscribe button description is properly wrapped in p-tags
 * add trakt.tv to the services list
 
 = 2.0.3 =

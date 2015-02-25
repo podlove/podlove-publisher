@@ -23,7 +23,7 @@ class Widget extends \WP_Widget {
 		echo $this->button($instance['style'], $instance['autowidth']);
 
 		if (!empty($instance['infotext']))
-			echo $instance['infotext'];
+			echo wpautop($instance['infotext']);
 
 		echo $args['after_widget'];
 	}
