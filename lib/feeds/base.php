@@ -91,6 +91,36 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo $feed->get_alternate_links();
 	}, 9 );
  	
+ 	// add rss image
+	add_action( $hook, function() use ( $podcast ) {
+
+		$image = [
+			'url'   => $podcast->cover_image,
+			'title' => $podcast->title,
+			'link'  => apply_filters( 'podlove_feed_link', \Podlove\get_landing_page_url() )
+		];
+		$image = apply_filters('podlove_feed_image', $image);
+
+		if (!$image['url'])
+			return;
+
+		$dom = new \Podlove\DomDocumentFragment;
+		$image_tag = $dom->createElement('image');
+		
+		foreach ($image as $tag_name => $tag_text) {
+			if ($tag_text) {
+				$tag = $dom->createElement($tag_name);
+				$tag_text = $dom->createTextNode($tag_text);
+				$tag->appendChild($tag_text);
+				$image_tag->appendChild($tag);
+			}
+		}
+
+		$dom->appendChild($image_tag);
+
+		echo (string) $dom;
+	} );
+
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		echo PHP_EOL;
 
