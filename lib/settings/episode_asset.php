@@ -248,6 +248,11 @@ class EpisodeAsset {
 					}
 				}
 
+				$wrapper->select( 'image', array(
+					'label'   => __( 'Episode Image', 'podlove' ),
+					'options' => $artwork_options
+				) );
+
 				$chapter_file_options = array(
 					'0'      => __( 'None', 'podlove' ),
 					'manual' => __( 'Manual Entry', 'podlove' )
@@ -259,15 +264,6 @@ class EpisodeAsset {
 						$chapter_file_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
 					}
 				}
-
-				// Offer a filter to provide optional assets to the publisher
-				$artwork_options = apply_filters( 'podlove_artwork_assets', $artwork_options );
-				$chapter_file_options = apply_filters( 'podlove_chapter_assets', $chapter_file_options );
-
-				$wrapper->select( 'image', array(
-					'label'   => __( 'Episode Image', 'podlove' ),
-					'options' => $artwork_options
-				) );
 				$wrapper->select( 'chapters', array(
 					'label'   => __( 'Episode Chapters', 'podlove' ),
 					'options' => $chapter_file_options
