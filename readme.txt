@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: subscribe button description is properly wrapped in p-tags
 * fix: faulty valid file if check returns "unreachable" but includes a Content-Length header
 * fix: more thoughtful handling of ETags when validating files prevents failing updates
+* fix: off-by-one display in analytics
 * add trakt.tv to the services list
 * add support for RSS channel image tag
 

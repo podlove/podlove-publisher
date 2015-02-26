@@ -456,7 +456,7 @@ jQuery(document).ready(function($) {
 		// set range from 0 to 'one week' or 'everything' if the episode is younger than a week
 		if (!brush.min && !brush.max) {
 			brush.min = 0;
-			brush.max = 7*24 - 1;
+			brush.max = 7*24;
 			$('#chart-zoom-selection .button:eq(1)').addClass('active');
 		}
 
