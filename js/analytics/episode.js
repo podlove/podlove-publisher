@@ -55,6 +55,7 @@ jQuery(document).ready(function($) {
 			data.forEach(function(d, index) {
 				var row = chart.select('g.row._' + index);
 				var label = chart.select('g.row._' + index + ' text');
+				var text = '';
 				
 				if (!row.select('.subLabel').size()) {
 					row.append('text')
@@ -72,8 +73,11 @@ jQuery(document).ready(function($) {
 					row.select('.subLabel').style({'display': 'inherit'});
 				};
 
-				row.select('.subLabel')
-					.text(Math.round(d.value.downloads / all.value().downloads * 100) + '%');
+				if (all.value().downloads > 0) {
+					text = Math.round(d.value.downloads / all.value().downloads * 100) + '%';
+				}
+
+				row.select('.subLabel').text(text);
 			});
 	    };
 
