@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
 Requires at least: 3.0
-Tested up to: 4.1
+Tested up to: 4.1.1
 Stable tag: trunk
 License: MIT
 
