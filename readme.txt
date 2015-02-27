@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: more thoughtful handling of ETags when validating files prevents failing updates
 * fix: "NaN" analytics should display properly now
 * fix: off-by-one display in analytics
+* fix: don't HTML-encode quotes in episode title/subtitle/summary since it leads to invalid feeds
 * add trakt.tv to the services list
 * add support for RSS channel image tag
 

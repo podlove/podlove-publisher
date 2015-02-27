@@ -293,9 +293,9 @@ class Podcast_Post_Meta_Box {
 		$episode_data = $episode_data['_podlove_meta'];
 
 		$episode_data_filter = [
-			'title'          => FILTER_SANITIZE_STRING,
-			'subtitle'       => FILTER_SANITIZE_STRING,
-			'summary'        => FILTER_SANITIZE_STRING,
+			'title'          => [ 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING ],
+			'subtitle'       => [ 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING ],
+			'summary'        => [ 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING ],
 			'slug'           => FILTER_SANITIZE_STRING,
 			'duration'       => FILTER_SANITIZE_STRING,
 			'episode_assets' => [ 'flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING ],
