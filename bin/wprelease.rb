@@ -92,7 +92,7 @@ class Wprelease
 
 		if system("svn commit -m 'release'")
 			puts "create svn tag ..."
-			system "svn copy -m \"#{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
+			system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
 		else
 			puts "abort"
 		end
