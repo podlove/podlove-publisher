@@ -369,7 +369,7 @@
                 {
                     "name": "Jim Wigginton",
                     "email": "terrafrost@php.net",
-                    "role": "Developer"
+                    "role": "Lead Developer"
                 }
             ],
             "description": "Pure-PHP arbitrary precission integer arithmetic library. If GMP or BCMath are available they are used.",
@@ -923,12 +923,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/PEAR_Exception.git",
-                "reference": "d5a3e9597040dcc56a4a2053a605e07214951202"
+                "reference": "8c18719fdae000b690e3912be401c76e406dd13b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/d5a3e9597040dcc56a4a2053a605e07214951202",
-                "reference": "d5a3e9597040dcc56a4a2053a605e07214951202",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/8c18719fdae000b690e3912be401c76e406dd13b",
+                "reference": "8c18719fdae000b690e3912be401c76e406dd13b",
                 "shasum": ""
             },
             "require": {
@@ -958,13 +958,11 @@
             "authors": [
                 {
                     "name": "Helgi Thormar",
-                    "email": "dufuz@php.net",
-                    "role": "Lead"
+                    "email": "dufuz@php.net"
                 },
                 {
                     "name": "Greg Beaver",
-                    "email": "cellog@php.net",
-                    "role": "Helper"
+                    "email": "cellog@php.net"
                 }
             ],
             "description": "The PEAR Exception base class.",
@@ -972,7 +970,7 @@
             "keywords": [
                 "exception"
             ],
-            "time": "2014-02-21 17:39:41"
+            "time": "2015-02-10 20:07:52"
         },
         {
             "name": "podlove/comment-introspection",
@@ -1031,6 +1029,7 @@
         "jdorn/sql-formatter": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.0"
     },
