@@ -195,6 +195,13 @@
   logo: 'tumblr-128.png'
   url_scheme: 'http://%account-placeholder%.tumblr.com/'
 
+- title: 'Twitch'
+  name: 'twitch'
+  category: 'social'
+  description: 'Twitch Account'
+  logo: 'twitch-128.png'
+  url_scheme: 'http://www.twitch.tv/%account-placeholder%'
+
 - title: 'Twitter'
   name: 'twitter'
   category: 'social'
