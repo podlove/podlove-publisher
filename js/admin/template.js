@@ -54,7 +54,7 @@
 			}
 		};
 
-		editor.setTheme("ace/theme/github");
+		editor.setTheme("ace/theme/chrome");
 		editor.getSession().setMode("ace/mode/twig");
 		editor.getSession().setUseWrapMode(true);
 
