@@ -108,6 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.0.5 =
 
 * fix: template editor cursor position in Safari (by changing to a different theme that doesn't use bold styles)
+* fix: double escaped feed enclosure URLs when using non-pretty-permalinks
 
 = 2.0.4 =
 
