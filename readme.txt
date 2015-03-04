@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.0.5 =
+
+* fix: template editor cursor position in Safari (by changing to a different theme that doesn't use bold styles)
+
 = 2.0.4 =
 
 * fix: missing flattr attribute for contributors
