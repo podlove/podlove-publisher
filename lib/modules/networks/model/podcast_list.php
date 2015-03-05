@@ -115,16 +115,23 @@ class PodcastList extends Base {
 	/**
 	 * Fetch episodes for the list
 	 */
-	public function latest_episodes( $number_of_episodes = "10", $orderby = "post_date", $order = "DESC" ) {
+	public function latest_episodes( $number_of_episodes = 10, $orderby = "post_date", $order = "DESC" ) {
  		global $wpdb;
 
  		$podcasts = $this->podcasts;
  		$query = "";
  		$episodes = array();
+
+ 		// sanitize order
+ 		$order = $order == 'DESC' ? 'DESC' : 'ASC';
+
+ 		// sanitize orderby
+ 		$valid_orderby = [ 'post_date', 'post_title', 'ID', 'comment_count'	];
+ 		$orderby = in_array($orderby, $valid_orderby) ? $orderby : 'post_date';
  
  		// Generate mySQL Query
  		foreach ( $podcasts as $podcast_key => $podcast ) {
- 			if( $podcast_key == 0 ) {
+ 			if ( $podcast_key == 0 ) {
  			    $post_table = $wpdb->base_prefix . "posts";
  			} else {
  			    $post_table = $wpdb->base_prefix . $podcast->blog_id . "_posts";
@@ -138,10 +145,10 @@ class PodcastList extends Base {
  	        $query .= "AND $post_table.post_status = 'publish'";
  	        $query .= "AND $blog_table.blog_id = {$podcast->blog_id})";
  
- 	        if( $podcast_key !== count( $podcasts ) - 1 ) 
+ 	        if ( $podcast_key !== count( $podcasts ) - 1 ) 
  	           $query .= "UNION\n";
  	        else
- 	           $query .= "ORDER BY $orderby $order LIMIT 0, $number_of_episodes";		
+ 	           $query .= "ORDER BY $orderby $order LIMIT 0, " . (int) $number_of_episodes;
  		}
  
        	$recent_posts = $wpdb->get_results( $query );
