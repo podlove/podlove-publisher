@@ -252,10 +252,11 @@ class Podcast extends Wrapper {
 
 		$rows = $wpdb->get_results($sql);
 
-		if (!$rows) {
+		if ($blog_id)
 			restore_current_blog();
+
+		if (!$rows)
 			return array();
-		}
 
 		$episodes = array();
 		foreach ($rows as $row) {
@@ -273,9 +274,6 @@ class Podcast extends Wrapper {
 		$episodes = array_filter($episodes, function($e) {
 			return $e->is_valid();
 		});
-
-		if ( $blog_id )
-			restore_current_blog();
 
 		return array_map(function ($episode) {
 			return new Episode($episode);
