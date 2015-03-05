@@ -69,9 +69,10 @@ class Networks extends \Podlove\Modules\Base {
 	}
 
 	public function twig_template_filter( $context ) {
-		$podlove = new \Podlove\Modules\Networks\Template\Podlove;
-		
-		return array_merge($context, array( 'podlove' => $podlove ));
+		return array_merge(
+			$context, 
+			[ 'network' => new \Podlove\Modules\Networks\Template\Network ]
+		);
 	}
 
 	/*
