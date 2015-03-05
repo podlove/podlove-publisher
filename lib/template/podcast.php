@@ -125,6 +125,7 @@ class Podcast extends Wrapper {
 	 *   - 'recordingDate' - Order by recording date.
 	 *   - 'title' - Order by title.
 	 *   - 'slug' - Order by episode slug.
+	 *	 - 'limit' - Limit the number of returned episodes.
 	 *
 	 * **Examples**
 	 *
@@ -155,6 +156,9 @@ class Podcast extends Wrapper {
 	 */
 	public function episodes($args = array()) {
 		global $wpdb;
+
+		if ( $blog_id = $this->podcast->blog_id )
+			switch_to_blog( $blog_id );
 
 		// fetch single episodes
 		if (isset($args['post_id']))
@@ -229,6 +233,12 @@ class Podcast extends Wrapper {
 			$order = 'DESC';
 		}
 
+		if (isset($args['limit'])) {
+			$limit = ' LIMIT ' . $args['limit'];
+		} else {
+			$limit = '';
+		}
+
 		$sql = '
 			SELECT
 				e.*
@@ -237,13 +247,16 @@ class Podcast extends Wrapper {
 				INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
 				' . $joins . '
 			WHERE ' . $where . '
-			ORDER BY ' . $orderby . ' ' . $order;
+			ORDER BY ' . $orderby . ' ' . $order . 
+			$limit;
 
 		$rows = $wpdb->get_results($sql);
 
-		if (!$rows)
+		if (!$rows) {
+			restore_current_blog();
 			return array();
-		
+		}
+
 		$episodes = array();
 		foreach ($rows as $row) {
 			$episode = new \Podlove\Model\Episode();
@@ -251,6 +264,8 @@ class Podcast extends Wrapper {
 			foreach ( $row as $property => $value ) {
 				$episode->$property = $value;
 			}
+			if ( $blog_id )
+				$episode->blog_id = $blog_id;
 			$episodes[] = $episode;
 		}
 
@@ -258,6 +273,9 @@ class Podcast extends Wrapper {
 		$episodes = array_filter($episodes, function($e) {
 			return $e->is_valid();
 		});
+
+		if ( $blog_id )
+			restore_current_blog();
 
 		return array_map(function ($episode) {
 			return new Episode($episode);

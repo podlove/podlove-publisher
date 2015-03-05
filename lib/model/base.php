@@ -15,6 +15,11 @@ abstract class Base
 	 * Contains property values
 	 */
 	private $data = array();
+
+	/**
+	 * Enables or disables network scope
+	 */
+	public static $is_network = false;
 	
 	public function __set( $name, $value ) {
 		if ( self::has_property( $name ) ) {
@@ -452,6 +457,9 @@ abstract class Base
 	public static function table_name() {
 		global $wpdb;
 		
+		if ( self::$is_network )
+			return $wpdb->base_prefix . 'global_' . self::name();
+
 		// prefix with $wpdb prefix
 		return $wpdb->prefix . self::name();
 	}
@@ -526,5 +534,17 @@ abstract class Base
 		}
 		
 		return $models;
+	}
+
+	/**
+	 * Network scope.
+	 * @todo  move into a trait
+	 */	
+	public static function activate_network_scope() {
+		self::$is_network = true;
+	}
+
+	public static function deactivate_network_scope() {
+		self::$is_network = false;
 	}
 }

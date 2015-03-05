@@ -13,7 +13,7 @@ class TwigLoaderPodloveDatabase implements \Twig_LoaderInterface {
 	 * @return string The template source code
 	 */
 	function getSource($name) {
-		if ($template = Template::find_one_by_title($name)) {
+		if ($template = Template::find_one_by_title_with_fallback($name)) {
 			return $template->content;
 		} else {
 			return false;
