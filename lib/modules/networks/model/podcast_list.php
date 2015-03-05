@@ -12,16 +12,17 @@ class PodcastList extends Base {
 	*  Fetch Podcasts by List
 	*/
 	public static function fetch_podcasts_by_list( $list_id ) {
-		$list = self::find_by_id( $list_id );
-		if( !isset( $list ) ) 
+		
+		if (!$list = self::find_by_id($list_id)) 
 			return;
 
-		$podcasts = array();
-		foreach ( explode( ',', $list->podcasts ) as $podcast ) {
-			switch_to_blog( $podcast );
-			$podcasts[ $podcast ] = \Podlove\Model\Podcast::get_instance();
+		$podcasts = [];
+		foreach ( explode(',', $list->podcasts) as $podcast ) {
+			switch_to_blog($podcast);
+			$podcasts[$podcast] = \Podlove\Model\Podcast::get_instance();
 			restore_current_blog();
 		}
+
 		return $podcasts;
 	}
 
@@ -36,7 +37,7 @@ class PodcastList extends Base {
 	}
 
 	/**
-	 * Fetch all Blogs
+	 * Fetch all blog IDs
 	 */
 	public static function get_all_blog_ids() {
 		global $wpdb;
@@ -44,17 +45,17 @@ class PodcastList extends Base {
 		if ($wpdb->blogs) {
 			$blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
 		} else {
-			$blogs = array();
+			$blogs = [];
 		}
 
 		return $blogs;
 	}
 
 	/**
-	 * Fetch all Podcasts
+	 * Fetch all blog IDs for Publisher blogs 
 	 */
 	public static function get_all_podcast_ids() {
-		$podcasts = array_filter( self::get_all_blog_ids(), function( $blog ) {
+		return array_filter( self::get_all_blog_ids(), function( $blog ) {
 			switch_to_blog( $blog );
 			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
 				restore_current_blog();
@@ -64,11 +65,10 @@ class PodcastList extends Base {
 				return false;
 			}
 		} );
-		return $podcasts;
 	}
 
 	/**
-	 * Fetch all Podcasts ordered
+	 * Fetch all blog IDs for Publisher blogs, ordered
 	 */
 	public static function get_all_podcast_ids_ordered( $sortby = "title", $sort = 'ASC' ) {
 		$blog_ids = self::get_all_podcast_ids();
@@ -83,9 +83,8 @@ class PodcastList extends Base {
 			return strnatcmp( $a->$sortby, $b->$sortby );
 		});
 
-		if( $sort == 'DESC' ) {
+		if ( $sort == 'DESC' )
 			krsort( $podcasts );
-		}
 
 		return $podcasts;	
 	}
