@@ -30,6 +30,31 @@ class Podlove extends Wrapper {
 			}
 
 			return;
+	/**
+	 * Network Lists
+	 * 
+	 * List all lists.
+	 * Use the `slug` parameter to access a specific list.
+	 * 
+	 * **Examples**
+	 * 
+	 * Iterate over all lists.
+	 * 
+	 * ```jinja
+	 * {% for list in podlove.lists %}
+	 *     {{ list.title }}
+	 * {% endfor %}
+	 * ```
+	 * 
+	 * Access a specific list by slug.
+	 * 
+	 * ```jinja
+	 * {{ podlove.lists({slug: "example"}).title }}
+	 * ```
+	 * 
+	 * @see list
+	 * @accessor
+	 */
 		}
 		
 		$lists = array();
