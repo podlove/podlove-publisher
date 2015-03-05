@@ -103,9 +103,9 @@ class PodcastList extends Wrapper {
 	 * @accessor
 	 */
 	public function episodes( $args = array() ) {
-		$number_of_episodes = ( isset( $args['limit'] ) && is_numeric( $args['limit'] ) ? $args['limit'] : 10 );
-		$orderby = ( isset( $args['orderby'] ) && $args['orderby'] ? $args['orderby'] : 'post_date' );
-		$order = ( isset( $args['order'] ) && $args['order'] ? $args['order'] : 'DESC' );
+		$number_of_episodes = isset( $args['limit'] ) && is_numeric( $args['limit'] ) ? $args['limit'] : 10;
+		$orderby = isset( $args['orderby'] ) && $args['orderby'] ? $args['orderby'] : 'post_date';
+		$order   = isset( $args['order'] )   && $args['order']   ? $args['order']   : 'DESC';
 
 		return $this->list->latest_episodes( $number_of_episodes, $orderby, $order );
 	}

@@ -20,10 +20,13 @@ class Episode extends Wrapper {
 
 	public function __construct(\Podlove\Model\Episode $episode) {
 		$this->episode = $episode;
-		if( $blog_id = $episode->blog_id )
+		
+		if ( $blog_id = $episode->blog_id )
 			switch_to_blog( $blog_id );
+		
 		$this->post = get_post($episode->post_id);
-		if( $blog_id )
+		
+		if ( $blog_id )
 			restore_current_blog();
 	}
 
