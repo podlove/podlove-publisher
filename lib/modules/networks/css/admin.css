@@ -42,3 +42,31 @@ img.podlove-toolbar-podcast-cover {
 	width: 16px !important;
 	height: 16px !important;
 }
+
+#toplevel_page_podlove_network_settings_handle_podcast_overview .inside {
+	padding: 0;
+	margin-top: 0px;
+}
+
+#toplevel_page_podlove_network_settings_handle_podcast_overview .tablenav,
+#toplevel_page_podlove_network_settings_handle_podcast_overview .wp-list-table tfoot {
+	display: none;
+}
+
+#toplevel_page_podlove_network_settings_handle_podcast_overview .wp-list-table {
+	border-width: 0px;
+}
+
+#toplevel_page_podlove_network_settings_handle_list_overview .inside {
+	padding: 0;
+	margin-top: 0px;
+}
+
+#toplevel_page_podlove_network_settings_handle_list_overview .tablenav,
+#toplevel_page_podlove_network_settings_handle_list_overview .wp-list-table tfoot {
+	display: none;
+}
+
+#toplevel_page_podlove_network_settings_handle_list_overview .wp-list-table {
+	border-width: 0px;
+}
