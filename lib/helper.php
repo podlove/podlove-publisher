@@ -158,16 +158,18 @@ function relative_time_steps($time) {
 	$time_diff = time() - $time;
 	$formated_time_string = date('Y-m-d h:i:s', $time);
 
-	if($time_diff == 0) {
-		return 'Now';
-	} else {   
-		if($time_diff < 60)		return "<span title='" . $formated_time_string . "'>" . __( 'Just now', 'podlove' ) . "</span>";
-		if($time_diff < 120)	return "<span title='" . $formated_time_string . "'>" . __( '1 minute ago', 'podlove' ) . "</span>";
-		if($time_diff < 3600)	return "<span title='" . $formated_time_string . "'>" . floor($time_diff / 60) . __( ' minutes ago', 'podlove' ) . "</span>";
-		if($time_diff < 7200)	return "<span title='" . $formated_time_string . "'>" . __( '1 hour ago', 'podlove' ) . "</span>";
- 		if($time_diff < 86400)	return "<span title='" . $formated_time_string . "'>" . floor($time_diff / 3600) . __( ' hours ago', 'podlove' ) . "</span>";
+	if ($time_diff == 0) {
+		return __('Now', 'podlove');
+	} else {
+		$time_text = $formated_time_string;
 
-		return $formated_time_string;      
+		if     ($time_diff < 60)	$time_text = __( 'Just now', 'podlove' );
+		elseif ($time_diff < 120)	$time_text = __( '1 minute ago', 'podlove' );
+		elseif ($time_diff < 3600)	$time_text = floor($time_diff / 60) . __( ' minutes ago', 'podlove' );
+		elseif ($time_diff < 7200)	$time_text = __( '1 hour ago', 'podlove' );
+ 		elseif ($time_diff < 86400)	$time_text = floor($time_diff / 3600) . __( ' hours ago', 'podlove' );
+
+		return sprintf('<span title="%s">%s</span>', $formated_time_string, $time_text);
 	}
 }
 
