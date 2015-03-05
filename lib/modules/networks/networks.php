@@ -12,6 +12,11 @@ class Networks extends \Podlove\Modules\Base {
 	protected $module_group = 'system';
 
 	public function load() {
+
+		// skip module outsite multisite environments
+		if (!is_multisite())
+			return;
+
 		// Actions after activation
 		add_action( 'podlove_module_was_activated_networks', array( $this, 'was_activated' ) );
 
