@@ -2,57 +2,34 @@
 namespace Podlove\Model;
 
 /**
- * Simplified Singleton model for podcast data.
- *
- * There is only one podcast, that's why this is a singleton.
- * Data handling is still similar to the other models. Storage is different.
+ * Simplified model for podcast data.
  */
 class Podcast implements Licensable {
-
-	/**
-	 * Singleton instance container.
-	 * @var \Podlove\Model\Podcast|NULL
-	 */
-	private static $instance = NULL;
 
 	/**
 	 * Contains property values.
 	 * @var  array
 	 */
-	private $data = array();
+	private $data = [];
 
 	/**
 	 * Contains property names.
 	 * @var array
 	 */
-	protected $properties = array();
+	protected static $properties = [];
 
 	private $blog_id = NULL;
 
-	/**
-	 * Singleton.
-	 * 
-	 * @return \Podlove\Model\Podcast
-	 */
-	static public function get_instance() {
+	public static function get($blog_id = NULL) {
 
-		// whenever the blog is switched, we need to reload all podcast data
-		if ( ! isset( self::$instance ) || self::$instance->blog_id != get_current_blog_id() ) {
+		if (!$blog_id)
+			$blog_id = get_current_blog_id();
 
-			$properties = isset( self::$instance ) ? self::$instance->properties : false;
-			self::$instance = new self;
-			self::$instance->blog_id = get_current_blog_id();
-
-			// only take properties from preexisting instances
-			if ( $properties )
-				self::$instance->properties = $properties;
-		}
-
-		return self::$instance;
+		return new self($blog_id);
 	}
 
-	protected function __construct() {
-		$this->data = array();
+	protected function __construct($blog_id) {
+		$this->blog_id = $blog_id;
 		$this->fetch();
 	}
 
@@ -97,10 +74,10 @@ class Podcast implements Licensable {
 	 */
 	private function properties() {
 		
-		if ( ! isset( $this->properties ) )
-			$this->properties = array();
+		if ( ! isset( self::$properties ) )
+			self::$properties = [];
 		
-		return $this->properties;
+		return self::$properties;
 	}
 	
 	/**
@@ -119,7 +96,7 @@ class Podcast implements Licensable {
 	 * @return array property names
 	 */
 	public function property_names() {
-		return array_map( function ( $p ) { return $p['name']; } , $this->properties );
+		return array_map( function ( $p ) { return $p['name']; } , self::$properties );
 	}
 
 	/**
@@ -127,12 +104,12 @@ class Podcast implements Licensable {
 	 * 
 	 * @param string $name Name of the property / column
 	 */
-	public function property( $name ) {
+	public static function property( $name ) {
 
-		if ( ! isset( $this->properties ) )
-			$this->properties = array();
+		if ( ! isset( self::$properties ) )
+			self::$properties = [];
 
-		array_push( $this->properties, array( 'name' => $name ) );
+		array_push( self::$properties, ['name' => $name] );
 	}
 
 	/**
@@ -140,17 +117,47 @@ class Podcast implements Licensable {
 	 */
 	public function save() {
 		$this->set_property( 'media_file_base_uri', trailingslashit( $this->media_file_base_uri ) );
-		update_option( 'podlove_podcast', $this->data );
 
-		do_action('podlove_model_save', $this);
-		do_action('podlove_model_change', $this);
+		self::with_blog_scope($this->blog_id, function() {
+
+			update_option( 'podlove_podcast', $this->data );
+
+			do_action('podlove_model_save', $this);
+			do_action('podlove_model_change', $this);
+		});
 	}
 
 	/**
 	 * Load podcast data.
 	 */
 	private function fetch() {
-		$this->data = get_option( 'podlove_podcast', array() );
+		$this->data = self::with_blog_scope($this->blog_id, function() {
+			return get_option('podlove_podcast', []);
+		});
+	}
+
+	/**
+	 * Execute block with proper blog scope.
+	 * 
+	 * If the given blog id is different from the current one, the scope is
+	 * switches. Otherwise, the callback is just executed.
+	 * 
+	 * @param  int      $blog_id
+	 * @param  callable $callback
+	 * @return mixed
+	 */
+	private static function with_blog_scope($blog_id, $callback) {
+		$result = NULL;
+
+		if ($blog_id != get_current_blog_id()) {
+			switch_to_blog($blog_id);
+			$result = $callback();
+			restore_current_blog();
+		} else {
+			$result = $callback();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -163,7 +170,7 @@ class Podcast implements Licensable {
 	public function full_title() {
 		$t = $this->title;
 		
-		if ( $this->subtitle )
+		if ($this->subtitle)
 			$t = $t . ' - ' . $this->subtitle;
 		
 		return $t;
@@ -171,10 +178,10 @@ class Podcast implements Licensable {
 
 	public function get_license()
 	{
-		$license = new License('podcast', array(
-			'license_name'         => $this->license_name,
-			'license_url'          => $this->license_url
-		));
+		$license = new License('podcast', [
+			'license_name' => $this->license_name,
+			'license_url'  => $this->license_url
+		]);
 		
 		return $license;
 	}
@@ -188,36 +195,37 @@ class Podcast implements Licensable {
 	}
 
 	public function get_url_template() {
-		return \Podlove\get_setting( 'website', 'url_template' );
+		return self::with_blog_scope($this->blog_id, function() {
+			return \Podlove\get_setting( 'website', 'url_template' );
+		});
 	}
 }
 
-$podcast = Podcast::get_instance();
-$podcast->property( 'title' );
-$podcast->property( 'subtitle' );
-$podcast->property( 'cover_image' );
-$podcast->property( 'summary' );
-$podcast->property( 'author_name' );
-$podcast->property( 'owner_name' );
-$podcast->property( 'owner_email' );
-$podcast->property( 'publisher_name' );
-$podcast->property( 'publisher_url' );
-$podcast->property( 'license_type' );
-$podcast->property( 'license_name' );
-$podcast->property( 'license_url' );
-$podcast->property( 'license_cc_allow_modifications' );
-$podcast->property( 'license_cc_allow_commercial_use' );
-$podcast->property( 'license_cc_license_jurisdiction' );
-$podcast->property( 'keywords' );
-$podcast->property( 'category_1' );
-$podcast->property( 'category_2' );
-$podcast->property( 'category_3' );
-$podcast->property( 'explicit' );
-$podcast->property( 'label' );
-$podcast->property( 'episode_prefix' );
-$podcast->property( 'media_file_base_uri' );
-$podcast->property( 'uri_delimiter' );
-$podcast->property( 'limit_items' );
-$podcast->property( 'language' );
-$podcast->property( 'complete' );
-$podcast->property( 'flattr' );
+Podcast::property( 'title' );
+Podcast::property( 'subtitle' );
+Podcast::property( 'cover_image' );
+Podcast::property( 'summary' );
+Podcast::property( 'author_name' );
+Podcast::property( 'owner_name' );
+Podcast::property( 'owner_email' );
+Podcast::property( 'publisher_name' );
+Podcast::property( 'publisher_url' );
+Podcast::property( 'license_type' );
+Podcast::property( 'license_name' );
+Podcast::property( 'license_url' );
+Podcast::property( 'license_cc_allow_modifications' );
+Podcast::property( 'license_cc_allow_commercial_use' );
+Podcast::property( 'license_cc_license_jurisdiction' );
+Podcast::property( 'keywords' );
+Podcast::property( 'category_1' );
+Podcast::property( 'category_2' );
+Podcast::property( 'category_3' );
+Podcast::property( 'explicit' );
+Podcast::property( 'label' );
+Podcast::property( 'episode_prefix' );
+Podcast::property( 'media_file_base_uri' );
+Podcast::property( 'uri_delimiter' );
+Podcast::property( 'limit_items' );
+Podcast::property( 'language' );
+Podcast::property( 'complete' );
+Podcast::property( 'flattr' );

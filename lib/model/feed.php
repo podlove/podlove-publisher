@@ -28,7 +28,7 @@ class Feed extends Base {
 	 */
 	public function get_subscribe_url() {
 
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 
 		if ( '' != get_option( 'permalink_structure' ) ) {
 			$url = sprintf(
@@ -60,7 +60,7 @@ class Feed extends Base {
 	 */
 	public function get_title() {
 
-		$podcast = Podcast::get_instance();
+		$podcast = Podcast::get();
 
 		if( $this->append_name_to_podcast_title )
 			return $podcast->title . ' (' . $this->name . ')';
@@ -82,7 +82,7 @@ class Feed extends Base {
 	 */
 	public function title_for_discovery() {
 
-		$podcast = Podcast::get_instance();
+		$podcast = Podcast::get();
 
 		if ( ! $episode_asset = $this->episode_asset() )
 			return $this->name;
@@ -230,7 +230,7 @@ class Feed extends Base {
 			return '';
 
 		if ($posts_per_page === self::ITEMS_GLOBAL_LIMIT) {
-			$podcast = Podcast::get_instance();
+			$podcast = Podcast::get();
 			if ((int) $podcast->limit_items !== self::ITEMS_GLOBAL_LIMIT) {
 				return $this->get_post_limit_sql($podcast->limit_items);
 			}

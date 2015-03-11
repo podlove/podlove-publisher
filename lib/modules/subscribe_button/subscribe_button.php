@@ -116,7 +116,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	public static function render_button($args) {
 		$args = Subscribe_Button::prepare_button_params($args);
 
-		$podcast       = Model\Podcast::get_instance();
+		$podcast       = Model\Podcast::get();
 		$podlove_feeds = Model\Feed::find_all_by_discoverable(1);
 		$feeds         = Subscribe_Button::prepare_feeds($podlove_feeds);
 

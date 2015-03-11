@@ -137,14 +137,14 @@ class Episode extends Base implements Licensable {
 	public function get_cover_art_with_fallback() {
 
 		if ( ! $image = $this->get_cover_art() )
-			$image = Podcast::get_instance()->cover_image;
+			$image = Podcast::get()->cover_image;
 
 		return $image;
 	}
 
 	public function get_cover_art() {
 		
-		$podcast = Podcast::get_instance();
+		$podcast = Podcast::get();
 		$asset_assignment = AssetAssignment::get_instance();
 
 		if ( ! $asset_assignment->image )

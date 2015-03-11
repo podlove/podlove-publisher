@@ -43,7 +43,7 @@ class AdminBarMenu {
 				'href'   => get_admin_url($podcast_id, 'admin.php?page=podlove_settings_handle'),
 				'meta'   => [
 					'class' => 'podlove-toolbar-podcast podlove-toolbar-podcast-' . $podcast_id,
-					'html'  => '<img class="podlove-toolbar-podcast-cover" src="' . Podcast::get_instance()->cover_image . '" alt="' . get_bloginfo( 'name' ) . '" />'
+					'html'  => '<img class="podlove-toolbar-podcast-cover" src="' . Podcast::get()->cover_image . '" alt="' . get_bloginfo( 'name' ) . '" />'
 				]
 			]);
 

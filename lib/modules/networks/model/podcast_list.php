@@ -19,7 +19,7 @@ class PodcastList extends Base {
 		$podcasts = [];
 		foreach ( explode(',', $list->podcasts) as $podcast ) {
 			switch_to_blog($podcast);
-			$podcasts[$podcast] = \Podlove\Model\Podcast::get_instance();
+			$podcasts[$podcast] = \Podlove\Model\Podcast::get();
 			restore_current_blog();
 		}
 
@@ -31,7 +31,7 @@ class PodcastList extends Base {
 	*/
 	public static function fetch_podcast_by_id( $id ) {
 		switch_to_blog( $id );
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 		restore_current_blog();
 		return $podcast;
 	}
@@ -75,7 +75,7 @@ class PodcastList extends Base {
 
 		foreach ($blog_ids as $blog_id) {
 			switch_to_blog( $blog_id );
-			$podcasts[ $blog_id ] = \Podlove\Model\Podcast::get_instance();
+			$podcasts[ $blog_id ] = \Podlove\Model\Podcast::get();
 			restore_current_blog();
 		}
 
@@ -100,7 +100,7 @@ class PodcastList extends Base {
 			switch ( $podcast->type ) {
 				default: case 'wplist':
 					switch_to_blog( $podcast->podcast );
-					$podcast_intance = \Podlove\Model\Podcast::get_instance();
+					$podcast_intance = \Podlove\Model\Podcast::get();
 					$podcast_intance->blog_id = $podcast->podcast;
 					$podcast_objects[] = $podcast_intance;
 					restore_current_blog();

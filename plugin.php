@@ -57,7 +57,7 @@ function activate_for_current_blog() {
 		}
 	}
 
-	$podcast = Model\Podcast::get_instance();
+	$podcast = Model\Podcast::get();
 	if (!$podcast->limit_items) {
 		$podcast->limit_items = Model\Feed::ITEMS_NO_LIMIT;
 	}

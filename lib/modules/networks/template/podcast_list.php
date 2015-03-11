@@ -25,7 +25,7 @@ class PodcastList extends Wrapper {
 		$returned_podcasts = array();
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast->blog_id );
-			$podcast_instance = new \Podlove\Template\Podcast(\Podlove\Model\Podcast::get_instance());
+			$podcast_instance = new \Podlove\Template\Podcast(\Podlove\Model\Podcast::get());
 			$podcast_instance->blog_id = $podcast->blog_id;
 			
 			$returned_podcasts[] = $podcast_instance;

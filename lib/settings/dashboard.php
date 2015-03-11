@@ -144,7 +144,7 @@ class Dashboard {
 	public static function get_podcast_setting_warnings() {
 		
 		$warnings = array();
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 
 		$required_attributes = array(
 			'title'               => __( 'Your podcast needs a title.', 'podlove' ),
@@ -353,7 +353,7 @@ class Dashboard {
 
 	public static function validate_podcast_files() {
 		
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		?>
 		<div id="asset_validation">
 			<?php

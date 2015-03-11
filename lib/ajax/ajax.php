@@ -277,7 +277,7 @@ class Ajax {
 	}
 
 	public function podcast() {
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$podcast_data = array();
 		foreach ( $podcast->property_names() as $property ) {
 			$podcast_data[ $property ] = $podcast->$property;

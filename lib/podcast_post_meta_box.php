@@ -28,7 +28,7 @@ class Podcast_Post_Meta_Box {
 		
 		$post_id = $post->ID;
 
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$episode = Model\Episode::find_or_create_by_post_id( $post_id );
 			
 		wp_nonce_field( \Podlove\PLUGIN_FILE, 'podlove_noncename' );
@@ -200,7 +200,7 @@ class Podcast_Post_Meta_Box {
 				</table>
 				<p>
 					<span class="description">
-						<?php echo __( 'Media File Base URL', 'podlove' ) . ': ' . \Podlove\Model\Podcast::get_instance()->media_file_base_uri; ?>
+						<?php echo __( 'Media File Base URL', 'podlove' ) . ': ' . \Podlove\Model\Podcast::get()->media_file_base_uri; ?>
 					</span>
 				</p>
 				<?php
@@ -226,7 +226,7 @@ class Podcast_Post_Meta_Box {
 				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
 				
 				$attributes = array(
-					'data-template'  => \Podlove\Model\Podcast::get_instance()->get_url_template(),
+					'data-template'  => \Podlove\Model\Podcast::get()->get_url_template(),
 					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
 					'data-episode-asset-id' => $asset->id,
 					'data-episode-id' => $episode->id,

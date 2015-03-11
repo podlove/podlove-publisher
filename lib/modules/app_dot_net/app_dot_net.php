@@ -175,7 +175,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						if ( ! $user )
 							return;
 
-						$podcast = Model\Podcast::get_instance();
+						$podcast = Model\Podcast::get();
 						if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
 							$example_data = array(
 								'episode'      => get_the_title( $episode->post_id ),
@@ -401,7 +401,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 		$text = $this->get_module_option('adn_poster_announcement_text');
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$post = get_post( $post_id );
 		$post_title = $post->post_title;
 		

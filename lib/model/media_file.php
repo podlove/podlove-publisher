@@ -172,7 +172,7 @@ class MediaFile extends Base {
 	 */
 	public function get_file_url() {
 
-		$podcast  = Podcast::get_instance();
+		$podcast  = Podcast::get();
 
 		$episode       = $this->episode();
 		$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );

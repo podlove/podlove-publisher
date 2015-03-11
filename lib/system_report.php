@@ -88,7 +88,7 @@ class SystemReport {
 			'podcast_settings' => array( 'callback' => function() use ( &$errors ) {
 
 				$out = '';
-				$podcast = Model\Podcast::get_instance();
+				$podcast = Model\Podcast::get();
 
 				if ( ! $podcast->title ) {
 					$error = __( 'Your podcast needs a title.', 'podlove' );
