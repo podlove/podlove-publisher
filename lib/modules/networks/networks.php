@@ -23,8 +23,6 @@ class Networks extends \Podlove\Modules\Base {
 		// Adding Network Admin Menu
 		add_action( 'network_admin_menu', array( $this, 'create_network_menu' ) );
 
-		add_action( 'admin_bar_menu', array( $this, 'create_network_toolbar' ), 999 );
-
 		// Twig template filter
 		add_filter( 'podlove_templates_global_context', array( $this, 'twig_template_filter' ) );
 
@@ -33,6 +31,8 @@ class Networks extends \Podlove\Modules\Base {
 		// Styles
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
 		add_action( 'wp_print_styles', array( $this, 'scripts_and_styles' ) );
+
+		AdminBarMenu::init();
 	}
 
 	public function add_system_report_validations($fields)
@@ -86,97 +86,6 @@ class Networks extends \Podlove\Modules\Base {
 		Template::activate_network_scope();
 		Template::build();
 		Template::deactivate_network_scope();
-	}
-
-	/*
-	 *  Register Network Toolbar Menu
-	 */
-	public function create_network_toolbar( $wp_admin_bar ) {
-		$network_dashboard_url = network_site_url() . 'wp-admin/network/admin.php?page=podlove_network_settings_handle';
-		PodcastList::activate_network_scope();
-		$podcasts = PodcastList::get_all_podcast_ids();
-		PodcastList::deactivate_network_scope();
-		$podcast_admin_url = get_admin_url();
-
-		// Podlove Toolbar Icon
-		$args = array(
-			'id'     => 'podlove_toolbar',
-			'title'  => 'Podlove',
-			'href'   => $network_dashboard_url,
-			'meta'   => array( 'class' => 'podlove-toolbar-opener' )
-		);
-		$wp_admin_bar->add_node( $args );
-
-		// Podlove Dashboard
-		$args = array(
-			'id'     => 'podlove_toolbar_dashboard',
-			'title'  => __( 'Dashboard', 'podlove' ),
-			'parent' => 'podlove_toolbar',
-			'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
-			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
-		);
-		$wp_admin_bar->add_node( $args );
-
-		// Podlove Episodes
-		$args = array(
-			'id'     => 'podlove_toolbar_episodes',
-			'title'  => __( 'Episodes', 'podlove' ),
-			'parent' => 'podlove_toolbar',
-			'href'   => $podcast_admin_url . 'edit.php?post_type=podcast',
-			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
-		);
-		$wp_admin_bar->add_node( $args );
-
-		do_action('podlove_network_admin_bar', $wp_admin_bar);
-
-		// Register Podcasts
-		foreach ( $podcasts as $podcast ) {
-			switch_to_blog( $podcast );
-			$podcast_data = \Podlove\Model\Podcast::get_instance();
-			$podcast_toolbar_id = 'podlove_toolbar_' . $podcast;
-			$podcast_admin_url = get_admin_url();
-
-			$args = array(
-				'id'     => $podcast_toolbar_id,
-				'title'  => get_bloginfo( 'name' ),
-				'parent' => 'podlove_toolbar',
-				'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
-				'meta'   => array( 
-						'class' => 'podlove-toolbar-podcast podlove-toolbar-podcast-' . $podcast,
-						'html'  => '<img class="podlove-toolbar-podcast-cover" src="' . $podcast_data->cover_image . '" alt="' . get_bloginfo( 'name' ) . '" />'
-					)
-			);
-			$wp_admin_bar->add_node( $args );
-
-			// Register Dashboard, Episodes and Contributor per Podcast
-			$args = array(
-				'id'     => $podcast_toolbar_id . '_dashboard',
-				'title'  => __( 'Dashboard', 'podlove' ),
-				'parent' => $podcast_toolbar_id,
-				'href'   => $podcast_admin_url . 'admin.php?page=podlove_settings_handle',
-				'meta'   => array( 
-						'class' => 'podlove-toolbar-without-icon'
-					)
-			);
-			$wp_admin_bar->add_node( $args );
-			$args = array(
-				'id'     => $podcast_toolbar_id . '_episodes',
-				'title'  => __( 'Episodes', 'podlove' ),
-				'parent' => $podcast_toolbar_id,
-				'href'   => $podcast_admin_url . 'edit.php?post_type=podcast',
-				'meta'   => array( 
-						'class' => 'podlove-toolbar-without-icon'
-					)
-				
-			);
-			$wp_admin_bar->add_node( $args );
-
-			do_action('podlove_network_admin_bar_podcast', $wp_admin_bar, $podcast);
-
-			restore_current_blog();
-		}
-
-
 	}
 
 	/*
