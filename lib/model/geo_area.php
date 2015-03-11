@@ -3,6 +3,8 @@ namespace Podlove\Model;
 
 class GeoArea extends Base {
 
+	use NetworkTrait;
+	
 }
 
 GeoArea::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

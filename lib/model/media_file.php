@@ -4,6 +4,8 @@ use Podlove\Log;
 
 class MediaFile extends Base {
 
+	use NetworkTrait;
+	
 	/**
 	 * Fetches file size if necessary.
 	 *

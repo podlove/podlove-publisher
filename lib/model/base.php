@@ -15,11 +15,6 @@ abstract class Base
 	 * Contains property values
 	 */
 	private $data = array();
-
-	/**
-	 * Enables or disables network scope
-	 */
-	public static $is_network = false;
 	
 	public function __set( $name, $value ) {
 		if ( self::has_property( $name ) ) {
@@ -152,7 +147,7 @@ abstract class Base
 
 	public static function find_one_by_property( $property, $value ) {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\' LIMIT 0,1'
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\' LIMIT 0,1'
 		);
 	}
 
@@ -450,17 +445,11 @@ abstract class Base
 	 * 
 	 * The name is derived from the namespace an class name. Additionally, it
 	 * is prefixed with the global WordPress database table prefix.
-	 * @todo cache
 	 * 
 	 * @return string database table name
 	 */
 	public static function table_name() {
 		global $wpdb;
-		
-		if ( self::$is_network )
-			return $wpdb->base_prefix . 'global_' . self::name();
-
-		// prefix with $wpdb prefix
 		return $wpdb->prefix . self::name();
 	}
 
@@ -534,45 +523,5 @@ abstract class Base
 		}
 		
 		return $models;
-	}
-
-	/**
-	 * Activate network scope.
-	 * 
-	 * @todo  move into a trait
-	 */	
-	public static function activate_network_scope() {
-		self::$is_network = true;
-	}
-
-	/**
-	 * Deactivate network scope.
-	 */
-	public static function deactivate_network_scope() {
-		self::$is_network = false;
-	}
-
-	/**
-	 * Execute a callback within network scope.
-	 * 
-	 * Example:
-	 * 
-	 * 		$templates = Template::with_network_scope(function(){
-	 *			return Template::all();
-	 *		});
-	 * 
-	 * @param  callable $callback
-	 * @return mixed    Returns result of evaluated callback.
-	 */
-	public static function with_network_scope($callback) {
-
-		if (!is_callable($callback))
-			throw new \InvalidArgumentException('expected argument 1 of ::with_network_scope to be callable');
-
-		self::activate_network_scope();
-		$result = $callback();
-		self::deactivate_network_scope();
-
-		return $result;
 	}
 }

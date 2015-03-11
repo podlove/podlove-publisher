@@ -8,6 +8,8 @@ use \Podlove\Model\Template;
  */
 class Template extends Base {
 
+	use NetworkTrait;
+	
 	public static function find_one_by_title_with_fallback($template_id) {
 		if ( $template = self::find_one_by_title($template_id) ) {
 			return $template;

@@ -154,11 +154,14 @@ class Podcast extends Wrapper {
 	 * @see episode
 	 * @accessor
 	 */
-	public function episodes($args = array()) {
-		global $wpdb;
+	public function episodes($args = []) {
+		return \Podlove\Model\Podcast::with_blog_scope($this->podcast->get_blog_id(), function() use ($args) {
+			return $this->fetch_episodes($args);
+		});	
+	}
 
-		if ( $blog_id = $this->podcast->blog_id )
-			switch_to_blog( $blog_id );
+	private function fetch_episodes($args) {
+		global $wpdb;
 
 		// fetch single episodes
 		if (isset($args['post_id']))
@@ -252,9 +255,6 @@ class Podcast extends Wrapper {
 
 		$rows = $wpdb->get_results($sql);
 
-		if ($blog_id)
-			restore_current_blog();
-
 		if (!$rows)
 			return array();
 
@@ -265,8 +265,6 @@ class Podcast extends Wrapper {
 			foreach ( $row as $property => $value ) {
 				$episode->$property = $value;
 			}
-			if ( $blog_id )
-				$episode->blog_id = $blog_id;
 			$episodes[] = $episode;
 		}
 
@@ -277,7 +275,7 @@ class Podcast extends Wrapper {
 
 		return array_map(function ($episode) {
 			return new Episode($episode);
-		}, $episodes);		
+		}, $episodes);	
 	}
 
 	/**

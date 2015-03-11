@@ -8,6 +8,8 @@ use Podlove\ChaptersManager;
  */
 class Episode extends Base implements Licensable {
 
+	use NetworkTrait;
+
 	public static function allByTime() {
 		global $wpdb;
 

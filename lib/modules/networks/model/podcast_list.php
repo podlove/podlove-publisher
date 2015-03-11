@@ -8,6 +8,8 @@ use \Podlove\Model\Base;
  */
 class PodcastList extends Base {
 
+	use \Podlove\Model\NetworkTrait;
+
 	/** 
 	*  Fetch Podcasts by List
 	*/
@@ -99,11 +101,7 @@ class PodcastList extends Base {
 		foreach ($podcasts as $podcast) {
 			switch ( $podcast->type ) {
 				default: case 'wplist':
-					switch_to_blog( $podcast->podcast );
-					$podcast_intance = \Podlove\Model\Podcast::get();
-					$podcast_intance->blog_id = $podcast->podcast;
-					$podcast_objects[] = $podcast_intance;
-					restore_current_blog();
+					$podcast_objects[] = \Podlove\Model\Podcast::get($podcast->podcast);
 				break;
 			}
 		}
@@ -154,11 +152,9 @@ class PodcastList extends Base {
  
        	foreach ( $recent_posts as $post ) {
     			switch_to_blog( $post->blog_id );
-    			\Podlove\Model\Episode::deactivate_network_scope(); // Deactivate the network scope here, because we there are no global episodes ;-)
     			if ( $episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID ) ) {
     				$episodes[] = new \Podlove\Template\Episode( $episode );
     			}
-    			\Podlove\Model\Episode::activate_network_scope();
     			restore_current_blog();
        	}
  

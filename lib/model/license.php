@@ -5,6 +5,8 @@ use \Podlove\Model\Podcast;
 
 class License {
 
+	use NetworkTrait;
+	
 	// "podcast" or "episode"
 	public $scope;
 

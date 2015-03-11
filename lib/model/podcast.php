@@ -43,6 +43,10 @@ class Podcast implements Licensable {
 		}
 	}
 
+	public function get_blog_id() {
+		return $this->blog_id;
+	}
+
 	public static function name() {
 		return 'podcast';
 	}
@@ -146,7 +150,7 @@ class Podcast implements Licensable {
 	 * @param  callable $callback
 	 * @return mixed
 	 */
-	private static function with_blog_scope($blog_id, $callback) {
+	public static function with_blog_scope($blog_id, $callback) {
 		$result = NULL;
 
 		if ($blog_id != get_current_blog_id()) {
