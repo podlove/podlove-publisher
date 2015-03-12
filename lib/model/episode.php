@@ -105,17 +105,6 @@ class Episode extends Base implements Licensable {
 		return $media_files;
 	}
 
-	/**
-	 * Get episode related to the current global post object.
-	 */
-	public static function get_current() {
-		if (is_single()) {
-			return self::find_one_by_post_id(get_the_ID());
-		} else {
-			return null;
-		}
-	}
-
 	public static function find_or_create_by_post_id( $post_id ) {
 		$episode = Episode::find_one_by_property( 'post_id', $post_id );
 
