@@ -115,7 +115,7 @@ class Podcast implements Licensable {
 	public function save() {
 		$this->set_property( 'media_file_base_uri', trailingslashit( $this->media_file_base_uri ) );
 
-		self::with_static_blog_scope($this->blog_id, function() {
+		$this->with_blog_scope(function() {
 
 			update_option( 'podlove_podcast', $this->data );
 
@@ -128,33 +128,9 @@ class Podcast implements Licensable {
 	 * Load podcast data.
 	 */
 	private function fetch() {
-		$this->data = self::with_static_blog_scope($this->blog_id, function() {
+		$this->data = $this->with_blog_scope(function() {
 			return get_option('podlove_podcast', []);
 		});
-	}
-
-	/**
-	 * Execute block with proper blog scope.
-	 * 
-	 * If the given blog id is different from the current one, the scope is
-	 * switched. Otherwise, the callback is just executed.
-	 * 
-	 * @param  int      $blog_id
-	 * @param  callable $callback
-	 * @return mixed
-	 */
-	public static function with_static_blog_scope($blog_id, $callback) {
-		$result = NULL;
-
-		if ($blog_id != get_current_blog_id()) {
-			switch_to_blog($blog_id);
-			$result = $callback();
-			restore_current_blog();
-		} else {
-			$result = $callback();
-		}
-
-		return $result;
 	}
 
 	/**
@@ -192,7 +168,7 @@ class Podcast implements Licensable {
 	}
 
 	public function get_url_template() {
-		return self::with_static_blog_scope($this->blog_id, function() {
+		return $this->with_blog_scope(function() {
 			return \Podlove\get_setting( 'website', 'url_template' );
 		});
 	}
