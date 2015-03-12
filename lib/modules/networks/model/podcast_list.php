@@ -71,14 +71,14 @@ class PodcastList extends Base {
 
 	/**
 	 * Fetch all blog IDs for Publisher blogs, ordered
+	 * 
+	 * @fixme it doesn't return IDs, but podcasts. rename or change implementation
 	 */
 	public static function get_all_podcast_ids_ordered( $sortby = "title", $sort = 'ASC' ) {
 		$blog_ids = self::get_all_podcast_ids();
 
 		foreach ($blog_ids as $blog_id) {
-			switch_to_blog( $blog_id );
-			$podcasts[ $blog_id ] = \Podlove\Model\Podcast::get();
-			restore_current_blog();
+			$podcasts[$blog_id] = \Podlove\Model\Podcast::get($blog_id);
 		}
 
 		uasort( $podcasts, function ( $a, $b ) use ( $sortby, $sort ) {

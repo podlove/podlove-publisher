@@ -169,7 +169,6 @@ class Dashboard {
 			return $statistics;
 		} else {
 			$episodes = Model\Episode::allByTime();
-			$valid_episodes = array_filter($episodes, function($e) { return $e->is_valid(); });
 
 			$prev_post = 0;
 			$counted_episodes = 0;
@@ -191,7 +190,7 @@ class Dashboard {
 					'total_media_file_size' => 0
 				);
 
-			foreach ( $valid_episodes as $episode_key => $episode ) {
+			foreach ( $episodes as $episode_key => $episode ) {
 				$post = get_post( $episode->post_id );
 				$counted_episodes++;
 
@@ -219,7 +218,7 @@ class Dashboard {
 			// Episode Stati
 			$statistics['episodes'] = $episode_status_count;
 			// Number of Episodes
-			$statistics['total_number_of_episodes'] = count( $valid_episodes );
+			$statistics['total_number_of_episodes'] = count($episodes);
 			// Total Episode length
 			$statistics['total_episode_length'] = array_sum($episode_durations);
 			// Calculating average episode in seconds
@@ -231,7 +230,7 @@ class Dashboard {
 			$episodes_to_media_files = function ($media_files, $episode) {
 				return array_merge($media_files, $episode->media_files());
 			};
-			$media_files       = array_reduce($valid_episodes, $episodes_to_media_files, array());
+			$media_files       = array_reduce($episodes, $episodes_to_media_files, array());
 			$valid_media_files = array_filter($media_files, function($m) { return $m->size > 0; });
 
 			$sum_mediafile_sizes = function ($result, $media_file) {

@@ -30,14 +30,12 @@ class Podcast_List_Table extends \Podlove\List_Table {
 	}	
 
 	public function column_episodes( $podcast ) {
-		switch_to_blog( $podcast->blog_id );
-
-		$episodes = array_filter( \Podlove\Model\Episode::allByTime() , function($e) { return $e->is_valid(); });
-		return count( $episodes );
+		switch_to_blog( $podcast->get_blog_id() );
+		return count(\Podlove\Model\Episode::allByTime());
 	}
 
 	public function column_latest_episode( $podcast ) {
-		switch_to_blog( $podcast->blog_id );
+		switch_to_blog( $podcast->get_blog_id() );
 
 		$episodes = array_filter( \Podlove\Model\Episode::allByTime() , function($e) { return $e->is_valid(); });
 		$latest_episode = reset($episodes);

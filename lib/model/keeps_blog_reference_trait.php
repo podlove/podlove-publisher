@@ -24,4 +24,18 @@ trait KeepsBlogReferenceTrait {
 		return $this->blog_id;
 	}
 
+	public function with_blog_scope($callback) {
+		$result = NULL;
+
+		if ($this->blog_id != get_current_blog_id()) {
+			switch_to_blog($this->blog_id);
+			$result = $callback();
+			restore_current_blog();
+		} else {
+			$result = $callback();
+		}
+
+		return $result;
+	}
+
 }
