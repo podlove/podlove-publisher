@@ -172,7 +172,28 @@ class Podcast implements Licensable {
 			return \Podlove\get_setting( 'website', 'url_template' );
 		});
 	}
-
+	
+	/**
+	 * Episodes
+	 *
+	 * Filter and order episodes with parameters:
+	 * 
+	 * - post_id: one episode matching the given post id
+	 * - post_ids: list of episodes matching the given list of post ids
+	 * - category: list of episodes matching the category slug
+	 * - slug: one episode matching the given slug
+	 * - slugs: list of episodes matching the given list of slugs
+	 * - post_status: Publication status of the post. Defaults to 'publish'
+	 * - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+	 * - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+	 *   - 'publicationDate' - Order by publication date.
+	 *   - 'recordingDate' - Order by recording date.
+	 *   - 'title' - Order by title.
+	 *   - 'slug' - Order by episode slug.
+	 *	 - 'limit' - Limit the number of returned episodes.
+	 */
 	public function episodes($args) {
 		return $this->with_blog_scope(function() use ($args) {
 			global $wpdb;
