@@ -168,7 +168,7 @@ class Dashboard {
 		if ( ( $statistics = get_transient( 'podlove_dashboard_stats' ) ) !== FALSE ) {
 			return $statistics;
 		} else {
-			$episodes = Model\Episode::allByTime();
+			$episodes = Model\Episode::find_all_by_time();
 
 			$prev_post = 0;
 			$counted_episodes = 0;

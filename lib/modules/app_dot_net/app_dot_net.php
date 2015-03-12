@@ -241,7 +241,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						?>
 							<select id="adn_manual_post_episode_selector" class="chosen">
 								<?php
-								$episodes = Model\Episode::allByTime();
+								$episodes = Model\Episode::find_all_by_time();
 								foreach ( $episodes as $episode ) {
 									$post = get_post( $episode->post_id );
 									echo "<option value='" . $episode->post_id . "'>" . $post->post_title . "</option>";

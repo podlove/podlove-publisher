@@ -14,7 +14,7 @@ class Episode extends Base implements Licensable {
 		$this->set_blog_id();
 	}
 
-	public static function allByTime() {
+	public static function find_all_by_time() {
 		global $wpdb;
 
 		$sql = '

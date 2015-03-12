@@ -31,13 +31,13 @@ class Podcast_List_Table extends \Podlove\List_Table {
 
 	public function column_episodes( $podcast ) {
 		switch_to_blog( $podcast->get_blog_id() );
-		return count(\Podlove\Model\Episode::allByTime());
+		return count(\Podlove\Model\Episode::find_all_by_time());
 	}
 
 	public function column_latest_episode( $podcast ) {
 		switch_to_blog( $podcast->get_blog_id() );
 
-		$episodes = array_filter( \Podlove\Model\Episode::allByTime() , function($e) { return $e->is_valid(); });
+		$episodes = array_filter( \Podlove\Model\Episode::find_all_by_time() , function($e) { return $e->is_valid(); });
 		$latest_episode = reset($episodes);
 		$latest_episode_blog_post = get_post( $latest_episode->post_id );
  		return "<a title='Published on " . date('Y-m-d h:i:s', strtotime( $latest_episode_blog_post->post_date )) ."' href='" . admin_url() . "post.php?post=" . $latest_episode->post_id . "&action=edit'>" . $latest_episode_blog_post->post_title . "</a>"
