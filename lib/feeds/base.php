@@ -255,7 +255,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$xml .= apply_filters( 'podlove_feed_itunes_summary', $summary );
 
 			if (\Podlove\get_setting('metadata', 'enable_episode_explicit')) {
-				$itunes_explicit = apply_filters( 'podlove_feed_content', $episode->explicitText() );
+				$itunes_explicit = apply_filters( 'podlove_feed_content', $episode->explicit_text() );
 				$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', $itunes_explicit );
 				$xml .= apply_filters( 'podlove_feed_itunes_explicit', $itunes_explicit );
 			}

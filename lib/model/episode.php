@@ -60,7 +60,7 @@ class Episode extends Base implements Licensable {
 		return htmlspecialchars(trim($description));
 	}
 
-	public function explicitText() {
+	public function explicit_text() {
 
 		if ($this->explicit == 2)
 			return 'clean';

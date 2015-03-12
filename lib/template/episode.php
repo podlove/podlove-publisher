@@ -127,7 +127,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function explicit() {
-		return $this->episode->explicitText();
+		return $this->episode->explicit_text();
 	}
 
 	/**
