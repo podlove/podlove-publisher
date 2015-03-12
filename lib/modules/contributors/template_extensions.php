@@ -50,20 +50,23 @@ class TemplateExtensions {
 	 *   - 'position' - Order by the contributors position in the episode.
 	 *   - 'comment' - Order by the contributors comment in the episode.
 	 *
+	 * @todo  blog scoping should only happen in models
+	 * 
 	 * @accessor
 	 * @dynamicAccessor episode.contributors
 	 */
 	public static function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = array()) {
+		return $episode->with_blog_scope(function() use ($return, $method_name, $episode, $post, $args) {
+			$defaults = array(
+				'order'   => 'ASC',
+				'orderby' => 'position'
+			);
+			$args = wp_parse_args($args, $defaults);
 
-		$defaults = array(
-			'order'   => 'ASC',
-			'orderby' => 'position'
-		);
-		$args = wp_parse_args($args, $defaults);
-
-		$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
-		$contributions = \Podlove\Modules\Contributors\Contributors::orderContributions($contributions, $args);
-		return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
+			$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+			$contributions = \Podlove\Modules\Contributors\Contributors::orderContributions($contributions, $args);
+			return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
+		});
 	}
 
 	/**
