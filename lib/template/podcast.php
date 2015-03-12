@@ -155,127 +155,15 @@ class Podcast extends Wrapper {
 	 * @accessor
 	 */
 	public function episodes($args = []) {
-		return \Podlove\Model\Podcast::with_blog_scope($this->podcast->get_blog_id(), function() use ($args) {
-			return $this->fetch_episodes($args);
-		});	
-	}
+		$episodes = $this->podcast->episodes($args);
 
-	private function fetch_episodes($args) {
-		global $wpdb;
-
-		// fetch single episodes
-		if (isset($args['post_id']))
-			return new Episode(\Podlove\Model\Episode::find_one_by_post_id($args['post_id']));
-
-		if (isset($args['slug']))
-			return new Episode(\Podlove\Model\Episode::find_one_by_slug($args['slug']));
-
-		// build conditions
-		$where = "1 = 1";
-		$joins = "";
-		if (isset($args['post_ids'])) {
-			$ids = array_filter( // remove "0"-IDs
-				array_map( // convert elements to integers
-					function($n) { return (int) trim($n); },
-					$args['post_ids']
-				)
-			);
-
-			if (count($ids))
-				$where .= " AND p.ID IN (" . implode(",", $ids) . ")";
-		}
-
-		if (isset($args['slugs'])) {
-			$slugs = array_filter( // remove empty slugs
-				array_map( // trim
-					function($n) { return "'" . trim($n) . "'"; },
-					$args['slugs']
-				)
-			);
-
-			if (count($slugs))
-				$where .= " AND e.slug IN (" . implode(",", $slugs) . ")";
-		}
-
-		if (isset($args['post_status']) && in_array($args['post_status'], get_post_stati())) {
-			$where .= " AND p.post_status = '" . $args['post_status'] . "'";
+		if (is_array($episodes)) {
+			return array_map(function ($episode) {
+				return new Episode($episode);
+			}, $episodes);
 		} else {
-			$where .= " AND p.post_status = 'publish'";
+			return new Episode($episodes);
 		}
-
-		if (isset($args['category']) && strlen($args['category'])) {
-			$joins .= '
-				JOIN ' . $wpdb->term_relationships . ' tr ON p.ID = tr.object_id
-				JOIN ' . $wpdb->term_taxonomy . ' tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = "category"
-				JOIN ' . $wpdb->terms . ' t ON t.term_id = tt.term_id AND t.slug = ' . $wpdb->prepare('%s', $args['category']) . '
-			';
-		}
-
-		// order
-		$order_map = array(
-			'publicationDate' => 'p.post_date',
-			'recordingDate'   => 'e.recordingDate',
-			'slug'            => 'e.slug',
-			'title'           => 'p.post_title'
-		);
-
-		if (isset($args['orderby']) && isset($order_map[$args['orderby']])) {
-			$orderby = $order_map[$args['orderby']];
-		} else {
-			$orderby = $order_map['publicationDate'];
-		}
-
-		if (isset($args['order'])) {
-			$args['order'] = strtoupper($args['order']);
-			if (in_array($args['order'], array('ASC', 'DESC'))) {
-				$order = $args['order'];
-			} else {
-				$order = 'DESC';
-			}
-		} else {
-			$order = 'DESC';
-		}
-
-		if (isset($args['limit'])) {
-			$limit = ' LIMIT ' . $args['limit'];
-		} else {
-			$limit = '';
-		}
-
-		$sql = '
-			SELECT
-				e.*
-			FROM
-				' . \Podlove\Model\Episode::table_name() . ' e
-				INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
-				' . $joins . '
-			WHERE ' . $where . '
-			ORDER BY ' . $orderby . ' ' . $order . 
-			$limit;
-
-		$rows = $wpdb->get_results($sql);
-
-		if (!$rows)
-			return array();
-
-		$episodes = array();
-		foreach ($rows as $row) {
-			$episode = new \Podlove\Model\Episode();
-			$episode->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$episode->$property = $value;
-			}
-			$episodes[] = $episode;
-		}
-
-		// filter out invalid episodes
-		$episodes = array_filter($episodes, function($e) {
-			return $e->is_valid();
-		});
-
-		return array_map(function ($episode) {
-			return new Episode($episode);
-		}, $episodes);	
 	}
 
 	/**
