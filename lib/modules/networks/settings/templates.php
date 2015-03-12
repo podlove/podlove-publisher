@@ -48,9 +48,13 @@ class Templates {
 	public function page() {
 
 		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
-		Template::activate_network_scope();
 
 		if ( $action == 'confirm_delete' && isset( $_REQUEST['template'] ) ) {
+
+			$template = Template::with_network_scope(function() {
+				return Template::find_by_id( (int) $_REQUEST['template'] );
+			});
+
 			?>
 			<div class="updated">
 				<p>
@@ -62,7 +66,7 @@ class Templates {
 					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove' ) ?>
 				</p>
 				<p>
-					<?php echo self::get_action_link( Template::find_by_id( (int) $_REQUEST['template'] ), __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( $template, __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
 				</p>
 			</div>
 			<?php
@@ -82,7 +86,6 @@ class Templates {
 			?>
 		</div>	
 		<?php
-		Template::deactivate_network_scope();
 	}
 
 	private function view_template() {
