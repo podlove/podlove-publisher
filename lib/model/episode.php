@@ -60,6 +60,12 @@ class Episode extends Base implements Licensable {
 		return htmlspecialchars(trim($description));
 	}
 
+	public function post() {
+		return $this->with_blog_scope(function() {
+			return get_post($this->post_id);
+		});
+	}
+
 	public function permalink() {
 		return $this->with_blog_scope(function() {
 			return get_permalink($this->post_id);

@@ -20,7 +20,7 @@ class Episode extends Wrapper {
 
 	public function __construct(\Podlove\Model\Episode $episode) {
 		$this->episode = $episode;
-		$this->post = get_post($episode->post_id);
+		$this->post    = $episode->post();
 	}
 
 	protected function getExtraFilterArgs() {
