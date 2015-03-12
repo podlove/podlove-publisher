@@ -52,18 +52,18 @@ class Networks extends \Podlove\Modules\Base {
 			return $module_active && $plugin_active;
 		};
 
-		$fields['network module'] = array(
+		$fields['network module'] = [
 			'callback' => function() use ($is_active_in_main_blog) {
 				if ($is_active_in_main_blog()) {
 					return "ok";
 				} else {
-					return array(
+					return [
 						"message" => __( "Must be active in main blog!", 'podlove' ),
 						"error" => __( "You are using the network module. You have to activate it in your main WordPress blog to work properly", 'podlove' )
-					);
+					];
 				}
 			}
-		);
+		];
 
 		return $fields;
 	}
@@ -113,11 +113,11 @@ class Networks extends \Podlove\Modules\Base {
 
 	public function scripts_and_styles() {
 		wp_register_style(
-		    		'podlove_network_admin_style',
-		    		\Podlove\PLUGIN_URL . '/lib/modules/networks/css/admin.css',
-		    		false,
-		    		\Podlove\get_plugin_header( 'Version' )
-		    	);
+			'podlove_network_admin_style',
+			\Podlove\PLUGIN_URL . '/lib/modules/networks/css/admin.css',
+			false,
+			\Podlove\get_plugin_header( 'Version' )
+		);
 		wp_enqueue_style('podlove_network_admin_style');
 	}
 
