@@ -60,6 +60,30 @@ class Episode extends Base implements Licensable {
 		return htmlspecialchars(trim($description));
 	}
 
+	public function permalink() {
+		return $this->with_blog_scope(function() {
+			return get_permalink($this->post_id);
+		});
+	}
+
+	public function meta($meta_key, $single = true) {
+		return $this->with_blog_scope(function() use($meta_key, $single) {
+			return get_post_meta($this->post_id, $meta_key, $single);
+		});
+	}
+
+	public function tags($args = []) {
+		return $this->with_blog_scope(function() use ($args) {
+			return wp_get_post_tags($this->post_id, $args);
+		});
+	}
+
+	public function player() {
+		return $this->with_blog_scope(function() {
+			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render();
+		});
+	}
+
 	public function explicit_text() {
 
 		if ($this->explicit == 2)

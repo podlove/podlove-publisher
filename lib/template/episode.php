@@ -90,9 +90,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function player() {
-		return $this->episode->with_blog_scope(function() {
-			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this->episode))->render();
-		});
+		return $this->episode->player();
 	}
 
 	/**
@@ -136,9 +134,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function url() {
-		return $this->episode->with_blog_scope(function() {
-			return get_permalink($this->post->ID);
-		});
+		return $this->episode->permalink();
 	}
 
 	/**
@@ -180,9 +176,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function meta($meta_key) {
-		return $this->episode->with_blog_scope(function() use($meta_key) {
-			return get_post_meta($this->post->ID, $meta_key, true);
-		});
+		return $this->episode->meta($meta_key, true);
 	}
 
 	/**
@@ -205,9 +199,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function metas($meta_key) {
-		return $this->episode->with_blog_scope(function() use($meta_key) {
-			return get_post_meta($this->post->ID, $meta_key, false);
-		});
+		return $this->episode->meta($meta_key, false);
 	}
 
 	/**
@@ -227,11 +219,9 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function tags($args = []) {
-		return $this->episode->with_blog_scope(function() use ($args) {
-			return array_map(function($tag) {
-				return new Tag($tag);
-			}, wp_get_post_tags($this->post->ID, $args));
-		});
+		return array_map(function($tag) {
+			return new Tag($tag);
+		}, $this->episode->tags($args));
 	}
 
 	/**
