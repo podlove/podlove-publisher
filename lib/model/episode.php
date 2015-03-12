@@ -8,6 +8,12 @@ use Podlove\ChaptersManager;
  */
 class Episode extends Base implements Licensable {
 
+	use KeepsBlogReferenceTrait;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
+
 	public static function allByTime() {
 		global $wpdb;
 
