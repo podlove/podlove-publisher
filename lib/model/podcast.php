@@ -144,7 +144,7 @@ class Podcast implements Licensable {
 	 * Execute block with proper blog scope.
 	 * 
 	 * If the given blog id is different from the current one, the scope is
-	 * switches. Otherwise, the callback is just executed.
+	 * switched. Otherwise, the callback is just executed.
 	 * 
 	 * @param  int      $blog_id
 	 * @param  callable $callback
