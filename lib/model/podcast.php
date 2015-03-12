@@ -6,6 +6,8 @@ namespace Podlove\Model;
  */
 class Podcast implements Licensable {
 
+	use KeepsBlogReferenceTrait;
+
 	/**
 	 * Contains property values.
 	 * @var  array
@@ -18,17 +20,12 @@ class Podcast implements Licensable {
 	 */
 	protected static $properties = [];
 
-	private $blog_id = NULL;
-
 	public static function get($blog_id = NULL) {
-
-		if (!$blog_id)
-			$blog_id = get_current_blog_id();
-
 		return new self($blog_id);
 	}
 
 	protected function __construct($blog_id) {
+		$this->set_blog_id($blog_id);
 		$this->blog_id = $blog_id;
 		$this->fetch();
 	}
@@ -41,10 +38,6 @@ class Podcast implements Licensable {
 		} else {
 			$this->$name = $value;
 		}
-	}
-
-	public function get_blog_id() {
-		return $this->blog_id;
 	}
 
 	public static function name() {
