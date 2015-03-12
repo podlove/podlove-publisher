@@ -6,8 +6,6 @@ namespace Podlove\Model;
  */
 class DownloadIntentClean extends Base {
 
-	use NetworkTrait;
-	
 	public static function top_episode_ids($start, $end = "now", $limit = 3) {
 		global $wpdb;
 

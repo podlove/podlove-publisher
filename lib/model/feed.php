@@ -3,8 +3,6 @@ namespace Podlove\Model;
 
 class Feed extends Base {
 
-	use NetworkTrait;
-	
 	const ITEMS_WP_LIMIT = 0;
 	const ITEMS_NO_LIMIT = -1;
 	const ITEMS_GLOBAL_LIMIT = -2;

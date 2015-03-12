@@ -3,8 +3,6 @@ namespace Podlove\Model;
 
 class EpisodeAsset extends Base {
 
-	use NetworkTrait;
-	
 	public function save() {
 		global $wpdb;
 

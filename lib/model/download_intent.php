@@ -10,8 +10,6 @@ namespace Podlove\Model;
  */
 class DownloadIntent extends Base {
 
-	use NetworkTrait;
-	
 	public function add_geo_data($ip_string) {
 
 		try {

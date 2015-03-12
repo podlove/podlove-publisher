@@ -3,8 +3,6 @@ namespace Podlove\Model;
 
 class FileType extends Base {
 	
-	use NetworkTrait;
-	
 	public function title() {
 		return $this->name . ' (' . $this->extension . ')';
 	}
