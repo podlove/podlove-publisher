@@ -6,6 +6,10 @@ use \Podlove\Model\Episode;
 
 class Contributor extends Base
 {	
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+
 	public static function byGroup($groupSlug) {
 		global $wpdb;
 
