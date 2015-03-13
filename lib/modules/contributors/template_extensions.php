@@ -117,65 +117,66 @@ class TemplateExtensions {
 	 * @dynamicAccessor podcast.contributors
 	 */
 	public static function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
+		return $podcast->with_blog_scope(function() use ($podcast, $args) {
+			$args = shortcode_atts( array(
+				'id'      => null,
+				'scope'   => 'global-active',
+				'group'   => 'all',
+				'role'    => 'all',
+				'groupby' => null,
+				'order'   => 'ASC',
+				'orderby' => 'name',
+			), $args );
+			
+			if ($args['id'])
+				return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
 
-		$args = shortcode_atts( array(
-			'id'      => null,
-			'scope'   => 'global-active',
-			'group'   => 'all',
-			'role'    => 'all',
-			'groupby' => null,
-			'order'   => 'ASC',
-			'orderby' => 'name',
-		), $args );
-		
-		if ($args['id'])
-			return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
+			$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
 
-		$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
+			$contributors = array();
+			if (in_array($scope, array("global", "global-active"))) {
+				// fetch by group and/or role. defaults to *all* contributors
+				// if no role or group are given
+				$group = $args['group'] !== 'all' ? $args['group'] : null;
+				$role  = $args['role']  !== 'all' ? $args['role']  : null;
+				$contributors = Contributor::byGroupAndRole($group, $role);
 
-		$contributors = array();
-		if (in_array($scope, array("global", "global-active"))) {
-			// fetch by group and/or role. defaults to *all* contributors
-			// if no role or group are given
-			$group = $args['group'] !== 'all' ? $args['group'] : null;
-			$role  = $args['role']  !== 'all' ? $args['role']  : null;
-			$contributors = Contributor::byGroupAndRole($group, $role);
+				if ($scope == 'global-active') {
+					$contributors = array_filter($contributors, function($contributor) {
+						return $contributor->getPublishedContributionCount() > 0;
+					});
+				}
 
-			if ($scope == 'global-active') {
-				$contributors = array_filter($contributors, function($contributor) {
-					return $contributor->getPublishedContributionCount() > 0;
-				});
+				$contributors = array_map(function($contributor) {
+					return new Template\Contributor($contributor);
+				}, $contributors);
+			} else {
+				$contributions = ShowContribution::all();
+				$contributors = \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
 			}
 
-			$contributors = array_map(function($contributor) {
-				return new Template\Contributor($contributor);
-			}, $contributors);
-		} else {
-			$contributions = ShowContribution::all();
-			$contributors = \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
-		}
+			// sort
+			if ($args['groupby'] == 'group') {
+				foreach ($contributors as $group_id => $group) {
+					usort($contributors[$group_id]['contributors'], function($a, $b) {
+						return strcmp($a->name(), $b->name());
+					});
 
-		// sort
-		if ($args['groupby'] == 'group') {
-			foreach ($contributors as $group_id => $group) {
-				usort($contributors[$group_id]['contributors'], function($a, $b) {
+					if (strtoupper($args['order']) == 'DESC') {
+						$contributors[$group_id]['contributors'] = array_reverse($contributors[$group_id]['contributors']);
+					}
+				}
+			} else {
+				usort($contributors, function($a, $b) {
 					return strcmp($a->name(), $b->name());
 				});
 
 				if (strtoupper($args['order']) == 'DESC') {
-					$contributors[$group_id]['contributors'] = array_reverse($contributors[$group_id]['contributors']);
+					$contributors = array_reverse($contributors);
 				}
 			}
-		} else {
-			usort($contributors, function($a, $b) {
-				return strcmp($a->name(), $b->name());
-			});
 
-			if (strtoupper($args['order']) == 'DESC') {
-				$contributors = array_reverse($contributors);
-			}
-		}
-
-		return $contributors;
+			return $contributors;
+		});
 	}
 }
