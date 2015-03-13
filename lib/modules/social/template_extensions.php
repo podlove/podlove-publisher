@@ -77,24 +77,26 @@ class TemplateExtensions {
 	 * @dynamicAccessor podcast.services
 	 */
 	public static function accessorPodcastServices($return, $method_name, $podcast, $args = array()) {
+		return $podcast->with_blog_scope(function() use ($args) {
+			
+			$category = isset($args['category']) && in_array($args['category'], array("social", "donation", "all")) ? $args['category'] : "all";
 
-		$category = isset($args['category']) && in_array($args['category'], array("social", "donation", "all")) ? $args['category'] : "all";
+			if ($category == "all") {
+				$services = ShowService::all("ORDER BY position ASC");
+			} else {
+				$services = ShowService::find_by_category($category);
+			}
 
-		if ($category == "all") {
-			$services = ShowService::all("ORDER BY position ASC");
-		} else {
-			$services = ShowService::find_by_category($category);
-		}
+			if (isset($args["type"]) && $args["type"]) {
+				$services = array_filter($services, function ($s) use ($args) {
+					return $s->get_service()->type == $args["type"];
+				});
+			}
 
-		if (isset($args["type"]) && $args["type"]) {
-			$services = array_filter($services, function ($s) use ($args) {
-				return $s->get_service()->type == $args["type"];
-			});
-		}
-
-		return array_map(function($service) {
-			return new Template\Service($service, $service->get_service());
-		}, $services);
+			return array_map(function($service) {
+				return new Template\Service($service, $service->get_service());
+			}, $services);
+		});
 	}
 
 }
