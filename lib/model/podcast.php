@@ -26,7 +26,6 @@ class Podcast implements Licensable {
 
 	protected function __construct($blog_id) {
 		$this->set_blog_id($blog_id);
-		$this->blog_id = $blog_id;
 		$this->fetch();
 	}
 
