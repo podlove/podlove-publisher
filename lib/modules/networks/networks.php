@@ -1,3 +1,4 @@
+
 <?php 
 namespace Podlove\Modules\Networks;
 
@@ -84,7 +85,7 @@ class Networks extends \Podlove\Modules\Base {
 		});
 		
 		Template::with_network_scope(function() {
-			Template::deactivate_network_scope();
+			Template::build();
 		});
 	}
 
