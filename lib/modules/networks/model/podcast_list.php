@@ -20,22 +20,10 @@ class PodcastList extends Base {
 
 		$podcasts = [];
 		foreach ( explode(',', $list->podcasts) as $podcast ) {
-			switch_to_blog($podcast);
-			$podcasts[$podcast] = \Podlove\Model\Podcast::get();
-			restore_current_blog();
+			$podcasts[$podcast] = \Podlove\Model\Podcast::get($podcast->get_blog_id());
 		}
 
 		return $podcasts;
-	}
-
-	/** 
-	*  Fetch Podcast by ID
-	*/
-	public static function fetch_podcast_by_id( $id ) {
-		switch_to_blog( $id );
-		$podcast = \Podlove\Model\Podcast::get();
-		restore_current_blog();
-		return $podcast;
 	}
 
 	/**
@@ -61,7 +49,7 @@ class PodcastList extends Base {
 			switch_to_blog( $blog );
 			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
 				restore_current_blog();
-				return $blog;
+				return true;
 			} else {
 				restore_current_blog();
 				return false;
