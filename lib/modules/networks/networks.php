@@ -1,4 +1,3 @@
-
 <?php 
 namespace Podlove\Modules\Networks;
 
