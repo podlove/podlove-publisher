@@ -172,6 +172,12 @@ class Podcast implements Licensable {
 		});
 	}
 	
+	public function feeds() {
+		return $this->with_blog_scope(function() {
+			return \Podlove\Model\Feed::all('ORDER BY position ASC');
+		});
+	}
+
 	/**
 	 * Episodes
 	 *

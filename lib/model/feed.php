@@ -3,9 +3,15 @@ namespace Podlove\Model;
 
 class Feed extends Base {
 
+	use KeepsBlogReferenceTrait;
+
 	const ITEMS_WP_LIMIT = 0;
 	const ITEMS_NO_LIMIT = -1;
 	const ITEMS_GLOBAL_LIMIT = -2;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
 
 	public function save() {
 		global $wpdb;
@@ -27,21 +33,22 @@ class Feed extends Base {
 	 * @return string
 	 */
 	public function get_subscribe_url() {
+		return $this->with_blog_scope(function() {
+			$podcast = \Podlove\Model\Podcast::get();
 
-		$podcast = \Podlove\Model\Podcast::get();
-
-		if ( '' != get_option( 'permalink_structure' ) ) {
-			$url = sprintf(
-				'%s/feed/%s/',
-				get_bloginfo( 'url' ),
-				sanitize_title( $this->slug )
-			);
-		} else {
-			$url = get_feed_link( $this->slug );
-		}
+			if ( '' != get_option( 'permalink_structure' ) ) {
+				$url = sprintf(
+					'%s/feed/%s/',
+					get_bloginfo( 'url' ),
+					sanitize_title( $this->slug )
+				);
+			} else {
+				$url = get_feed_link( $this->slug );
+			}
 
 
-		return apply_filters( 'podlove_subscribe_url', $url );
+			return apply_filters( 'podlove_subscribe_url', $url );
+		});
 	}
 
 	/**
@@ -81,23 +88,24 @@ class Feed extends Base {
 	 * @return string
 	 */
 	public function title_for_discovery() {
+		return $this->with_blog_scope(function() {
+			$podcast = Podcast::get();
 
-		$podcast = Podcast::get();
+			if ( ! $episode_asset = $this->episode_asset() )
+				return $this->name;
 
-		if ( ! $episode_asset = $this->episode_asset() )
-			return $this->name;
+			if ( ! $file_type = $episode_asset->file_type() )
+				return $this->name;
 
-		if ( ! $file_type = $episode_asset->file_type() )
-			return $this->name;
+			$file_extension = $file_type->extension;
 
-		$file_extension = $file_type->extension;
+			$title_template = is_feed() ? '%s (%s)' : __( 'Podcast Feed: %s (%s)', 'podcast' );
 
-		$title_template = is_feed() ? '%s (%s)' : __( 'Podcast Feed: %s (%s)', 'podcast' );
+			$title = sprintf( $title_template, $podcast->title, $this->name );
+			$title = apply_filters( 'podlove_feed_title_for_discovery', $title, $this->title, $file_extension, $this->id );
 
-		$title = sprintf( $title_template, $podcast->title, $this->name );
-		$title = apply_filters( 'podlove_feed_title_for_discovery', $title, $this->title, $file_extension, $this->id );
-
-		return $title;
+			return $title;
+		});
 	}
 
 	/**
@@ -106,7 +114,9 @@ class Feed extends Base {
 	 * @return \Podlove\Model\EpisodeAsset|NULL
 	 */
 	public function episode_asset() {
-		return ( $this->episode_asset_id ) ? EpisodeAsset::find_by_id( $this->episode_asset_id ) : NULL;
+		return $this->with_blog_scope(function() {
+			return $this->episode_asset_id ? EpisodeAsset::find_by_id($this->episode_asset_id) : NULL;
+		});
 	}
 
 	/**

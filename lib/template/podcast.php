@@ -175,7 +175,7 @@ class Podcast extends Wrapper {
 	public function feeds() {
 		return array_map(function ($feed) {
 			return new Feed($feed);
-		}, \Podlove\Model\Feed::all('ORDER BY position ASC'));
+		}, $this->podcast->feeds());
 	}
 
 	/**
