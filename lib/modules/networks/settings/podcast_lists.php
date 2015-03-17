@@ -202,9 +202,9 @@ class PodcastLists {
 						<table class="podlove_alternating" border="0" cellspacing="0">
 							<thead>
 								<tr>
-									<th>Podcast Source</th>
-									<th>Podcast/URL</th>
-									<th style="width: 60px">Remove</th>
+									<th><?php echo __('Source', 'podlove') ?></th>
+									<th><?php echo __('Podcast/URL', 'podlove') ?></th>
+									<th style="width: 60px"><?php echo __('Remove', 'podlove') ?></th>
 									<th style="width: 30px"></th>
 								</tr>
 							</thead>
@@ -224,7 +224,7 @@ class PodcastLists {
 							<td class="podlove-podcast-column">
 								<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
 									<option value=""><?php echo __('Select Source', 'podlove') ?></option>
-									<option value="wplist"><?php echo __('WordPress list', 'podlove') ?></option>
+									<option value="wplist"><?php echo __('WordPress Network', 'podlove') ?></option>
 								</select>
 							</td>
 							<td class="podlove-podcast-value"></td>
