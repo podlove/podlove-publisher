@@ -52,14 +52,12 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 	}
 
 	public function get_columns(){
-		$columns = array(
-			'logo'             => __( 'Logo', 'podlove' ),
-			'title'           => __( 'Title', 'podlove' ),
-			'url'                 => __( 'URL', 'podlove' ),
-			'podcasts'                 => __( 'Podcasts', 'podlove' )
-		);
-
-		return $columns;
+		return [
+			'logo'     => __('Logo'    , 'podlove'),
+			'title'    => __('Title'   , 'podlove'),
+			'url'      => __('URL'     , 'podlove'),
+			'podcasts' => __('Podcasts', 'podlove')
+		];
 	}
 
 	/**
