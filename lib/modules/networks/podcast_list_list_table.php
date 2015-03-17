@@ -39,15 +39,16 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		return "<a href='" . $list->url . "'>" . $list->url . "</a>";
 	}
 
-	public function column_podcasts( $list ) {
-		$podcasts = $list->get_podcasts();
-		$podcasts_as_string = "";
+	public function column_podcasts($list) {
+		return implode(', ', array_map(function($podcast) {
+			return $this->podcast_admin_link($podcast);
+		}, $list->get_podcasts()));
+	}
 
-		foreach ($podcasts as $podcast_list_key => $podcast ) {
-			$podcasts_as_string .= '<a href="' . get_admin_url( $podcast->blog_id ) .'">' . $podcast->title . '</a>' . ( $podcast_list_key == count( $podcasts ) - 1 ? "" : ", " );
-		}
-
-		return $podcasts_as_string;
+	public function podcast_admin_link($podcast) {
+		return sprintf(
+			'<a href="%s">%s</a>', get_admin_url($podcast->blog_id), $podcast->title
+		);
 	}
 
 	public function get_columns(){
