@@ -178,6 +178,12 @@ class Podcast implements Licensable {
 		});
 	}
 
+	public function landing_page_url() {
+		return $this->with_blog_scope(function() {
+			return \Podlove\get_landing_page_url();
+		});
+	}
+
 	/**
 	 * Episodes
 	 *

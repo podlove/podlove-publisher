@@ -87,6 +87,13 @@ function save_setting( $namespace, $name, $values ) {
 	update_option( 'podlove_' . $namespace, array( $name => $values ) );
 }
 
+/**
+ * Podcast Landing Page URL
+ * 
+ * @todo  move to Model\Podcast->get_landing_page_url()
+ * 
+ * @return string
+ */
 function get_landing_page_url() {
 	$landing_page = \Podlove\get_setting('website', 'landing_page');
 

@@ -107,6 +107,15 @@ class Podcast extends Wrapper {
 	}
 
 	/**
+	 * Podcast Home URL
+	 * 
+	 * @accessor
+	 */
+	public function landingPageUrl() {
+		return $this->podcast->landing_page_url();
+	}
+
+	/**
 	 * Episodes
 	 *
 	 * Filter and order episodes with parameters:
