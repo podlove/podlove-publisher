@@ -4,18 +4,18 @@ use \Podlove\Modules\Networks\Model\PodcastList;
 
 class PodcastList_List_Table extends \Podlove\List_Table {
 	
-	function __construct(){
+	function __construct() {
 		global $status, $page;
 		        
 		// Set parent defaults
-		parent::__construct( array(
+		parent::__construct(array(
 		    'singular'  => 'list',   // singular name of the listed records
 		    'plural'    => 'lists',  // plural name of the listed records
 		    'ajax'      => false       // does this table support ajax?
-		) );
+		));
 	}
 	
-	public function column_title( $list ) {
+	public function column_title($list) {
 		$actions = array(
 			'edit'   => Settings\PodcastLists::get_action_link( $list, __( 'Edit', 'podlove' ) ),
 			'delete' => Settings\PodcastLists::get_action_link( $list, __( 'Delete', 'podlove' ), 'confirm_delete' )
@@ -27,15 +27,15 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		) . '<input type="hidden" class="list_id" value="' . $list->id . '">';
 	}
 
-	public function column_logo( $list ) {
-		if( $list->logo == "" ) {
+	public function column_logo($list) {
+		if ($list->logo == "") {
 			return;
 		} else {
 			return "<img src='" . $list->logo . "' title='" . $list->title . "' alt='" . $list->title . "' />";
 		}
 	}	
 
-	public function column_url( $list ) {
+	public function column_url($list) {
 		return "<a href='" . $list->url . "'>" . $list->url . "</a>";
 	}
 
@@ -51,7 +51,7 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		);
 	}
 
-	public function get_columns(){
+	public function get_columns() {
 		return [
 			'logo'     => __('Logo'    , 'podlove'),
 			'title'    => __('Title'   , 'podlove'),
