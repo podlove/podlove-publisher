@@ -44,7 +44,7 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 		$podcasts_as_string = "";
 
 		foreach ($podcasts as $podcast_list_key => $podcast ) {
-			$podcasts_as_string .= '<a href="' . get_home_url( $podcast->blog_id ) .'">' . $podcast->title . '</a>' . ( $podcast_list_key == count( $podcasts ) - 1 ? "" : ", " );
+			$podcasts_as_string .= '<a href="' . get_admin_url( $podcast->blog_id ) .'">' . $podcast->title . '</a>' . ( $podcast_list_key == count( $podcasts ) - 1 ? "" : ", " );
 		}
 
 		return $podcasts_as_string;
