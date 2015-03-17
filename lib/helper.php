@@ -92,7 +92,7 @@ function get_landing_page_url() {
 
 	switch ($landing_page) {
 		case 'homepage':
-			return get_bloginfo_rss('url');
+			return home_url();
 			break;
 		case 'archive':
 			if ( 'on' == \Podlove\get_setting( 'website', 'episode_archive' ) ) {
@@ -114,7 +114,7 @@ function get_landing_page_url() {
 	}
 
 	// always default to home page
-	return get_bloginfo_rss('url');
+	return home_url();
 }
 
 function get_webplayer_setting( $name ) {
