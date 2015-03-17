@@ -223,8 +223,10 @@ class PodcastLists {
 						<tr class="media_file_row podlove-podcast-table" data-id="{{id}}">
 							<td class="podlove-podcast-column">
 								<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
+									<!--
 									<option value=""><?php echo __('Select Source', 'podlove') ?></option>
-									<option value="wplist"><?php echo __('WordPress Network', 'podlove') ?></option>
+									-->
+									<option value="wplist" selected><?php echo __('WordPress Network', 'podlove') ?></option>
 								</select>
 							</td>
 							<td class="podlove-podcast-value"></td>
