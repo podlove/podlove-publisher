@@ -39,7 +39,7 @@ class Flattr extends Wrapper {
 	 * Large button
 	 * 
 	 * ```jinja
-	 * {{ flattr.button({ button: 'large' }) }}
+	 * {{ flattr.button({ style: 'large' }) }}
 	 * ```
 	 * 
 	 * Button for the Podlove Publisher plugin
