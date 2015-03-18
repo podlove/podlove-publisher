@@ -22,6 +22,6 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 
 	// shortcode function
 	public static function button($args) {
-		return (new Button($podcast))->render($args);
+		return (new Button(Model\Podcast::get()))->render($args);
 	}
 }
