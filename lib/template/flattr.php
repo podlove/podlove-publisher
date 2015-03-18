@@ -25,8 +25,8 @@ class Flattr extends Wrapper {
 	 * **Parameters**
 	 * 
 	 * - **url:** URL of thing to flattr. Defaults to WordPress permalink.
-	 * - **button:** Button style."large", "compact" or "static". Default: "compact".
-	 * - **uid:** Flattr user id. Defaults to Flattr account in podcast settings.
+	 * - **style:** Button style."large", "compact" or "static". Default: "compact".
+	 * - **user:** Flattr user id. Defaults to Flattr account in podcast settings.
 	 * 
 	 * **Examples**
 	 * 
@@ -45,7 +45,7 @@ class Flattr extends Wrapper {
 	 * Button for the Podlove Publisher plugin
 	 * 
 	 * ```jinja
-	 * {{ flattr.button({ uid: 'ericteubert', url: 'http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/' }) }}
+	 * {{ flattr.button({ user: 'ericteubert', url: 'http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/' }) }}
 	 * ```
 	 * 
 	 * @accessor
@@ -54,13 +54,13 @@ class Flattr extends Wrapper {
 		
 		$defaults = [
 			'url'   => get_permalink(),
-			'button' => 'compact',
-			'uid'   => \Podlove\Model\Podcast::get()->flattr
+			'style' => 'compact',
+			'user'  => \Podlove\Model\Podcast::get()->flattr
 		];
 		$args = wp_parse_args($args, $defaults);
 
-		if ($args['button'] == 'static') {
-			return self::static_button($args['url'], $args['uid']);
+		if ($args['style'] == 'static') {
+			return self::static_button($args['url'], $args['user']);
 		} else {
 			return self::dynamic_button($args);
 		}
@@ -76,7 +76,7 @@ class Flattr extends Wrapper {
 			$args['url'], 
 			$description, 
 			$args['uid'], 
-			$args['button'] == 'compact' ? 'data-flattr-button="compact"' : '',
+			$args['style'] == 'compact' ? 'data-flattr-button="compact"' : '',
 			$description
 		);
 	}
