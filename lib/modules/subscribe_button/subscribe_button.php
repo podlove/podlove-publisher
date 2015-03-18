@@ -9,7 +9,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	protected $module_group = 'web publishing';
 
 	public function load() {
-		add_shortcode('podlove-subscribe-button', [$this, 'button']);
+		add_shortcode('podlove-subscribe-button', [__CLASS__, 'button']);
 
 		add_action( 'widgets_init', function(){
 		     register_widget('\Podlove\Modules\SubscribeButton\Widget');
@@ -21,7 +21,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	}
 
 	// shortcode function
-	public function button($args) {
+	public static function button($args) {
 		return (new Button($podcast))->render($args);
 	}
 }

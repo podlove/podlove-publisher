@@ -29,7 +29,7 @@ class Widget extends \WP_Widget {
 	}
 
 	public function button( $style = 'big-logo', $autowidth = true ) {
-		return Subscribe_Button::render_button(array(
+		return Subscribe_Button::button(array(
 			'size'  => $style,
 			'width' => ($autowidth === 'on' ? 'auto' : '')
 		));
