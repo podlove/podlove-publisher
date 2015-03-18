@@ -24,27 +24,27 @@ class Flattr extends Wrapper {
 	 * 
 	 * **Parameters**
 	 * 
-	 * - url: URL of thing to flattr. Defaults to WordPress permalink.
-	 * - button: Button style."large", "compact" or "static". Default: "compact".
-	 * - uid: Flattr user id. Defaults to Flattr account in podcast settings.
+	 * - **url:** URL of thing to flattr. Defaults to WordPress permalink.
+	 * - **button:** Button style."large", "compact" or "static". Default: "compact".
+	 * - **uid:** Flattr user id. Defaults to Flattr account in podcast settings.
 	 * 
 	 * **Examples**
 	 * 
 	 * Simple button with defaults
 	 * 
-	 * ```
+	 * ```jinja
 	 * {{ flattr.button }}
 	 * ```
 	 * 
 	 * Large button
 	 * 
-	 * ```
+	 * ```jinja
 	 * {{ flattr.button({ button: 'large' }) }}
 	 * ```
 	 * 
 	 * Button for the Podlove Publisher plugin
 	 * 
-	 * ```
+	 * ```jinja
 	 * {{ flattr.button({ uid: 'ericteubert', url: 'http://wordpress.org/extend/plugins/podlove-podcasting-plugin-for-wordpress/' }) }}
 	 * ```
 	 * 

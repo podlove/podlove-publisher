@@ -13,17 +13,20 @@ class TemplateExtensions {
 	/**
 	 * List of episode contributors
 	 *
-	 * Examples:
+	 * **Examples**
 	 *
-	 * ```
-	 * {# iterating over a list of contributors #}
+	 * Iterating over a list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributor in episode.contributors %}
 	 * 	{{ contributor.name }}
 	 * 	{% if not loop.last %}, {% endif %}
 	 * {% endfor %}
 	 * ```
-	 * ```
-	 * {# iterating over a grouped list of contributors #}
+	 * 
+	 * Iterating over a grouped list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributorGroup in episode.contributors({groupby: "group"}) %}
 	 * 	<strong>{{ contributorGroup.group.title }}:</strong> 
 	 * 	{% for contributor in contributorGroup.contributors %}
@@ -33,7 +36,7 @@ class TemplateExtensions {
 	 * {% endfor %}
 	 * ```
 	 * 
-	 * Options:
+	 * **Parameters**
 	 *
 	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters. 
 	 *                Returns null if the id belongs to an existing contributor which is not part of the episode. 
@@ -50,8 +53,6 @@ class TemplateExtensions {
 	 *   - 'position' - Order by the contributors position in the episode.
 	 *   - 'comment' - Order by the contributors comment in the episode.
 	 *
-	 * @todo  blog scoping should only happen in models
-	 * 
 	 * @accessor
 	 * @dynamicAccessor episode.contributors
 	 */
@@ -72,17 +73,20 @@ class TemplateExtensions {
 	/**
 	 * List of podcast contributors.
 	 *
-	 * Examples:
+	 * **Examples**
 	 *
-	 * ```
-	 * {# iterating over a list of contributors #}
+	 * Iterating over a list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributor in podcast.contributors({scope: "podcast"}) %}
 	 * 	{{ contributor.name }}
 	 * 	{% if not loop.last %}, {% endif %}
 	 * {% endfor %}
 	 * ```
-	 * ```
-	 * {# iterating over a grouped list of contributors #}
+	 * 
+	 * Iterating over a grouped list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributorGroup in podcast.contributors({scope: "podcast", groupby: "group"}) %}
 	 * 	<strong>{{ contributorGroup.group.title }}:</strong> 
 	 * 	{% for contributor in contributorGroup.contributors %}
@@ -92,7 +96,7 @@ class TemplateExtensions {
 	 * {% endfor %}
 	 * ```
 	 * 
-	 * Options:
+	 * **Parameters**
 	 *
 	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters.
 	 *                Example: `podcast.contributors({id: 'james'}).name`
