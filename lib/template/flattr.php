@@ -75,7 +75,7 @@ class Flattr extends Wrapper {
 				data-flattr-uid="%s" %s>%s</a>',
 			$args['url'], 
 			$description, 
-			$args['uid'], 
+			$args['user'], 
 			$args['style'] == 'compact' ? 'data-flattr-button="compact"' : '',
 			$description
 		);
