@@ -321,7 +321,7 @@ class PodcastLists {
 
 										podcast_dropdown_handler();
 										update_chosen();
-										$('select.podlove-podcast-dropdown').change();
+										row.change();
 									},
 									onRowDelete: function(tr) {
 										
