@@ -86,8 +86,13 @@ class TwigFilter {
 
 		$context = $vars;
 
-		// add podcast to global context
-		$context = array_merge($context, array('podcast' => new Podcast(Model\Podcast::get())));
+		// add podcast, flattr to global context
+		$context = array_merge(
+			$context, [
+				'podcast' => new Podcast(Model\Podcast::get()),
+				'flattr'  => new Flattr
+			]
+		);
 
 		// Apply filters to twig templates
 		$context = apply_filters( 'podlove_templates_global_context', $context );
