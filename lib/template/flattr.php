@@ -88,8 +88,4 @@ class Flattr extends Wrapper {
 			$uid
 		);
 	}
-
-	private static function flattr_uuid() {
-		return 'fb' . bin2hex(openssl_random_pseudo_bytes(5));
-	}
 }
