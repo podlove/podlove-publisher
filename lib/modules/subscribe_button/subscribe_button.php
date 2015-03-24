@@ -11,9 +11,13 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	public function load() {
 		add_shortcode( 'podlove-subscribe-button', array( $this, 'button' ) );
 
-		add_action( 'widgets_init', function(){
-		     register_widget( '\Podlove\Modules\SubscribeButton\Widget' );
-		});
+		add_filter(
+			'podlove_widgets',
+			function ($widgets) {
+				$widgets[] = '\Podlove\Modules\SubscribeButton\Widget';
+				return $widgets;
+			}
+		);
 	}
 
 	/**
