@@ -11,14 +11,14 @@ class Duration {
 	 * Raw user input
 	 * @var string
 	 */
-	private $duration;
+	public $duration;
 
-	private /* int */ $hours;
-	private /* int */ $minutes;
-	private /* int */ $seconds;
-	private /* int */ $milliseconds;
+	public /* int */ $hours;
+	public /* int */ $minutes;
+	public /* int */ $seconds;
+	public /* int */ $milliseconds;
 
-	private /* bool */ $valid = true;
+	public /* bool */ $valid = true;
 
 	public function __construct( $duration ) {
 		$this->duration = trim( $duration );

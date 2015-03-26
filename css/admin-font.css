@@ -28,7 +28,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="podlove-icon-"] {
 */
-.podlove-icon-reorder, .podlove-icon-ok, .podlove-icon-remove, .podlove-icon-minus, .podlove-icon-spinner, .podlove-icon-reply, .podlove-icon-share, .podlove-icon-time, .podlove-icon-repeat, .podlove-icon-plus, .podlove-icon-cloud-download, .podlove-icon-external-link, .podlove-icon-circle, .podlove-icon-cogs, .podlove-icon-ban-circle, .podlove-icon-heart, .podlove-icon-appdotnet, .podlove-icon-github, .podlove-icon-twitter, .podlove-icon-facebook, .podlove-icon-googleplus, .podlove-icon-pinterest, .podlove-icon-flattr, .podlove-icon-paypal, .podlove-icon-house, .podlove-icon-mail, .podlove-icon-cart, .podlove-icon-edit {
+.podlove-icon-reorder, .podlove-icon-ok, .podlove-icon-remove, .podlove-icon-minus, .podlove-icon-spinner, .podlove-icon-reply, .podlove-icon-share, .podlove-icon-time, .podlove-icon-repeat, .podlove-icon-plus, .podlove-icon-cloud-download, .podlove-icon-external-link, .podlove-icon-circle, .podlove-icon-cogs, .podlove-icon-ban-circle, .podlove-icon-heart, .podlove-icon-appdotnet, .podlove-icon-github, .podlove-icon-twitter, .podlove-icon-facebook, .podlove-icon-googleplus, .podlove-icon-pinterest, .podlove-icon-flattr, .podlove-icon-paypal, .podlove-icon-house, .podlove-icon-mail, .podlove-icon-cart, .podlove-icon-edit, .podlove-icon-calendar {
 	font-family: 'Podlove';
 	speak: none;
 	font-style: normal;
@@ -121,4 +121,7 @@ you can use the generic selector below, but it's slower:
 }
 .podlove-icon-edit:before {
 	content: "e";
+}
+.podlove-icon-calendar:before {
+	content: "\e953";
 }
