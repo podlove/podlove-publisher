@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Social\Model;
 
 use \Podlove\Model\Base;
+use \Podlove\Modules\Social\Model\Service;
 
 /**
  * A contributor contributes to a podcast/show.
@@ -15,7 +16,9 @@ class ShowService extends Base {
 	}
 
 	public function get_service() {
-		return \Podlove\Modules\Social\Model\Service::find_one_by_id($this->service_id);
+		return $this->with_blog_scope(function() {
+			return Service::find_one_by_id($this->service_id);
+		});
 	}
 
 	public function get_service_url() {
@@ -24,7 +27,7 @@ class ShowService extends Base {
 	}
 
 	public static function find_by_category( $category = 'social' ) {
-		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `category` = '" . $category . "' ) ORDER BY position ASC" );
+		return self::all( "WHERE service_id IN (SELECT id FROM " . Service::table_name() . " WHERE `category` = '" . $category . "' ) ORDER BY position ASC" );
 	}
 
 }
