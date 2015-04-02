@@ -223,9 +223,6 @@ class PodcastLists {
 						<tr class="media_file_row podlove-podcast-table" data-id="{{id}}">
 							<td class="podlove-podcast-column">
 								<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
-									<!--
-									<option value=""><?php echo __('Select Source', 'podlove') ?></option>
-									-->
 									<option value="wplist" selected><?php echo __('WordPress Network', 'podlove') ?></option>
 								</select>
 							</td>
@@ -264,29 +261,6 @@ class PodcastLists {
 								$(".chosen-image").chosenImage();
 							}
 
-							function podcast_dropdown_handler() {
-								$('select.podlove-podcast-dropdown').change(function() {
-									row = $(this).closest("tr");
-									podcast_source = $(this).val();
-
-									// Check for empty podcast / for new field
-									if( podcast_source === '' ) {
-										row.find(".podlove-podcast-value").html(""); // Empty podcast column and hide edit button
-										row.find(".podlove-podcast-edit").hide();
-										return;
-									}
-
-									template_id = "#podcast-select-type-" + podcast_source;
-									template = $( template_id ).html();
-									template = template.replace(/\{\{id\}\}/g, row.data('id') );
-
-									row.find(".podlove-podcast-value").html( template );
-									update_chosen();
-
-									i++; // continue using "i" which was already used to add the existing contributions
-								});
-							}
-
 							$(document).ready(function() {
 								$("#podcast_lists table").podloveDataTable({
 									rowTemplate: "#podcast-row-template",
@@ -301,16 +275,15 @@ class PodcastLists {
 										row_as_object = $(o.row)
 										
 										row_as_object.find(".podlove-podcast-value").html( template );
-										row_as_object.find('select.podlove-podcast-dropdown option[value="' + o.entry.type + '"]').attr('selected',true);
+										row_as_object.find('select.podlove-podcast-dropdown option[value="' + o.entry.type + '"]').attr('selected', 'selected');
 
 										switch ( o.entry.type ) {
 											default: case 'wplist':
-												row_as_object.find('select.podlove-podcast option[value="' + o.entry.podcast + '"]').attr('selected',true);
+												row_as_object.find('select.podlove-podcast option[value="' + o.entry.podcast + '"]').attr('selected', true);
 											break;
 										}
 
-										o.row = row_as_object[0].outerHTML;
-										o.row = o.row.replace(/\{\{id\}\}/g, i);
+										o.row = row_as_object[0].outerHTML.replace(/\{\{id\}\}/g, i);
 
 										i++;
 									},
@@ -319,7 +292,6 @@ class PodcastLists {
 
 										row = $(".podcasts_table_body tr:last .podlove-podcast-dropdown").focus();
 
-										podcast_dropdown_handler();
 										update_chosen();
 										row.change();
 									},
