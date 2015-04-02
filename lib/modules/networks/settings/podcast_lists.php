@@ -237,6 +237,7 @@ class PodcastLists {
 						</script>
 						<script type="text/template" id="podcast-select-type-wplist">
 						<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
+							<option>— <?php echo __('Select Podcast', 'podlove') ?> —</option>
 							<?php
 								foreach ( PodcastList::get_all_podcast_ids_ordered() as $blog_id => $podcast ) {
 									if ( $podcast->title )
@@ -259,6 +260,32 @@ class PodcastLists {
 							function update_chosen() {
 								$(".chosen").chosen();
 								$(".chosen-image").chosenImage();
+							}
+
+							function podcast_dropdown_handler() {
+								$('select.podlove-podcast-dropdown').change(function() {
+									row = $(this).closest("tr");
+									podcast_source = $(this).val();
+
+									// Check for empty podcast / for new field
+									if (podcast_source === '') {
+										row.find(".podlove-podcast-value").html(""); // Empty podcast column and hide edit button
+										row.find(".podlove-podcast-edit").hide();
+										return;
+									}
+
+									if (!row.find(".podlove-podcast").length) {
+										template_id = "#podcast-select-type-" + podcast_source;
+										template = $( template_id ).html();
+										template = template.replace(/\{\{id\}\}/g, row.data('id') );
+
+										row.find(".podlove-podcast-value").html( template );
+										update_chosen();
+
+										i++; // continue using "i" which was already used to add the existing contributions
+									}
+
+								});
 							}
 
 							$(document).ready(function() {
@@ -290,8 +317,10 @@ class PodcastLists {
 									onRowAdd: function(o) {
 										o.row = o.row.replace(/\{\{id\}\}/g, i);
 
+										
 										row = $(".podcasts_table_body tr:last .podlove-podcast-dropdown").focus();
 
+										podcast_dropdown_handler();
 										update_chosen();
 										row.change();
 									},
