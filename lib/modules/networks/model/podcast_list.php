@@ -33,7 +33,7 @@ class PodcastList extends Base {
 		global $wpdb;
 
 		if ($wpdb->blogs) {
-			$blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+			$blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs WHERE NOT archived");
 		} else {
 			$blogs = [];
 		}
