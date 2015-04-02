@@ -8,6 +8,12 @@ use \Podlove\Model\Base;
  */
 class ShowService extends Base {
 
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
+
 	public function get_service() {
 		return \Podlove\Modules\Social\Model\Service::find_one_by_id($this->service_id);
 	}

@@ -9,6 +9,12 @@ use \Podlove\Modules\Social\Model\Service;
  */
 class ContributorService extends Base {
 
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
+
 	public function save() {
 		global $wpdb;
 
