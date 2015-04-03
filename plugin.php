@@ -57,7 +57,7 @@ function activate_for_current_blog() {
 		}
 	}
 
-	$podcast = Model\Podcast::get_instance();
+	$podcast = Model\Podcast::get();
 	if (!$podcast->limit_items) {
 		$podcast->limit_items = Model\Feed::ITEMS_NO_LIMIT;
 	}
@@ -136,13 +136,12 @@ function activate($network_wide) {
 
 	if ( $network_wide ) {
 		set_time_limit(0); // may take a while, depending on network size
-		$current_blog = $wpdb->blogid;
 		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
 		foreach ( $blogids as $blog_id ) {
-			switch_to_blog($blog_id);
-			activate_for_current_blog();
+			\Podlove\with_blog_scope($blog_id, function() {
+				activate_for_current_blog();
+			});
 		}
-		switch_to_blog($current_blog);
 	} else {
 		activate_for_current_blog();
 	}
@@ -232,6 +231,7 @@ add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
+require_once \Podlove\PLUGIN_DIR . 'includes/admin_bar.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/admin_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/chapters.php';
@@ -241,9 +241,11 @@ require_once \Podlove\PLUGIN_DIR . 'includes/downloads.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/explicit_content.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/extras.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/flattr.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/frontend_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/http.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/import.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/jetpack.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/license.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/merge_episodes.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/modules.php';

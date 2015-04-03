@@ -175,7 +175,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						if ( ! $user )
 							return;
 
-						$podcast = Model\Podcast::get_instance();
+						$podcast = Model\Podcast::get();
 						if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
 							$example_data = array(
 								'episode'      => get_the_title( $episode->post_id ),
@@ -241,7 +241,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						?>
 							<select id="adn_manual_post_episode_selector" class="chosen">
 								<?php
-								$episodes = Model\Episode::allByTime();
+								$episodes = Model\Episode::find_all_by_time();
 								foreach ( $episodes as $episode ) {
 									$post = get_post( $episode->post_id );
 									echo "<option value='" . $episode->post_id . "'>" . $post->post_title . "</option>";
@@ -401,7 +401,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 		$text = $this->get_module_option('adn_poster_announcement_text');
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$post = get_post( $post_id );
 		$post_title = $post->post_title;
 		

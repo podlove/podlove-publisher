@@ -4,7 +4,7 @@ namespace Podlove\Model;
 use DeviceDetector\DeviceDetector;
 
 class UserAgent extends Base {
-
+	
 	/**
 	 * Fetch new data for all UAs
 	 * 

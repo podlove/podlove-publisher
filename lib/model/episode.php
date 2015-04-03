@@ -8,30 +8,46 @@ use Podlove\ChaptersManager;
  */
 class Episode extends Base implements Licensable {
 
-	public static function allByTime() {
+	use KeepsBlogReferenceTrait;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
+
+	public static function find_all_by_time() {
 		global $wpdb;
 
-		$sql = 'SELECT * FROM `' . self::table_name() . '` e JOIN `' . $wpdb->prefix . 'posts` p ON e.post_id = p.ID ORDER BY p.post_date DESC';
-		$rows = $wpdb->get_results($sql);
+		$sql = '
+			SELECT
+				*
+			FROM
+				`' . Episode::table_name() . '` e 
+				JOIN `' . $wpdb->posts . '` p ON e.post_id = p.ID
+			ORDER BY
+				p.post_date DESC';
 
-		if ( ! $rows ) {
-			return array();
-		}
+		return array_filter(Episode::find_all_by_sql($sql), function($e) { return $e->is_valid(); });
+	}
 
-		$episodes = array();
-		foreach ( $rows as $row ) {
-			$episode = new self();
-			$episode->flag_as_not_new();
-			foreach (self::property_names() as $property) {
-				$episode->$property = $row->$property;
-			}
+	public static function latest() {
+		global $wpdb;
 
-			if ($episode->is_valid()) {
-				$episodes[] = $episode;
-			}
-		}
-		
-		return $episodes;
+		// Why do we fetch 10 instead of just 1?
+		// Because some of the newest ones might be drafts or otherwise invalid.
+		// So we grab a bunch, filter by validity and then return the first one.
+		$sql = '
+			SELECT
+				*
+			FROM
+				`' . Episode::table_name() . '` e 
+				JOIN `' . $wpdb->posts . '` p ON e.post_id = p.ID
+			ORDER BY
+				p.post_date DESC
+			LIMIT 0, 10';
+
+		$episodes = array_filter(Episode::find_all_by_sql($sql), function($e) { return $e->is_valid(); });
+
+		return reset($episodes);
 	}
 
 	/**
@@ -43,30 +59,59 @@ class Episode extends Base implements Licensable {
 	 */
 	public function full_title() {
 		
-		$post_id = $this->post_id;
-		$post    = get_post( $post_id );
-		$title   = $post->post_title;
+		$post  = $this->with_blog_scope(function() { return get_post($this->post_id); });
+		$title = $post->post_title;
 		
-		if ( $this->subtitle )
+		if ($this->subtitle)
 			$title = $title . ' - ' . $this->subtitle;
 		
 		return $title;
 	}
 
 	public function description() {
-	
-	  if ( $this->summary ) {
-	    $description = $this->summary;
-	  } elseif ( $this->subtitle ) {
-	    $description = $this->subtitle;
-	  } else {
-	    $description = get_the_title();
-	  }
-	
-	  return htmlspecialchars( trim( $description ) );
+		
+		if ($this->summary) {
+			$description = $this->summary;
+		} elseif ($this->subtitle) {
+			$description = $this->subtitle;
+		} else {
+			$description = $this->with_blog_scope(function() { return get_the_title(); });
+		}
+		
+		return htmlspecialchars(trim($description));
 	}
 
-	public function explicitText() {
+	public function post() {
+		return $this->with_blog_scope(function() {
+			return get_post($this->post_id);
+		});
+	}
+
+	public function permalink() {
+		return $this->with_blog_scope(function() {
+			return get_permalink($this->post_id);
+		});
+	}
+
+	public function meta($meta_key, $single = true) {
+		return $this->with_blog_scope(function() use($meta_key, $single) {
+			return get_post_meta($this->post_id, $meta_key, $single);
+		});
+	}
+
+	public function tags($args = []) {
+		return $this->with_blog_scope(function() use ($args) {
+			return wp_get_post_tags($this->post_id, $args);
+		});
+	}
+
+	public function player() {
+		return $this->with_blog_scope(function() {
+			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render();
+		});
+	}
+
+	public function explicit_text() {
 
 		if ($this->explicit == 2)
 			return 'clean';
@@ -75,48 +120,20 @@ class Episode extends Base implements Licensable {
 	}
 
 	public function media_files() {
-		global $wpdb;
-		
-		$media_files = array();
-		
-		$sql = '
-			SELECT M.*
-			FROM ' . MediaFile::table_name() . ' M
-				JOIN ' . EpisodeAsset::table_name() . ' A ON A.id = M.episode_asset_id
-			WHERE M.episode_id = \'' . $this->id . '\'
-			ORDER BY A.position ASC
-		';
+		return $this->with_blog_scope(function() {
+			$sql = '
+				SELECT M.*
+				FROM ' . MediaFile::table_name() . ' M
+					JOIN ' . EpisodeAsset::table_name() . ' A ON A.id = M.episode_asset_id
+				WHERE M.episode_id = \'' . $this->id . '\'
+				ORDER BY A.position ASC
+			';
 
-		$rows = $wpdb->get_results( $sql );
-		
-		if ( ! $rows ) {
-			return array();
-		}
-		
-		foreach ( $rows as $row ) {
-			$model = new MediaFile();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$media_files[] = $model;
-		}
-		
-		return $media_files;
+			return MediaFile::find_all_by_sql($sql);
+		});
 	}
 
-	/**
-	 * Get episode related to the current global post object.
-	 */
-	public static function get_current() {
-		if (is_single()) {
-			return self::find_one_by_post_id(get_the_ID());
-		} else {
-			return null;
-		}
-	}
-
-	public static function find_or_create_by_post_id( $post_id ) {
+	public static function find_or_create_by_post_id($post_id) {
 		$episode = Episode::find_one_by_property( 'post_id', $post_id );
 
 		if ( $episode )
@@ -129,38 +146,40 @@ class Episode extends Base implements Licensable {
 		return $episode;
 	}
 
-	public function enclosure_url( $episode_asset, $source = "feed", $context = null ) {
-		$media_file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $episode_asset->id );
-		return $media_file->get_public_file_url($source, $context);
+	public function enclosure_url($episode_asset, $source = "feed", $context = null) {
+		return MediaFile::find_by_episode_id_and_episode_asset_id($this->id, $episode_asset->id)->get_public_file_url($source, $context);
 	}
 
 	public function get_cover_art_with_fallback() {
+		return $this->with_blog_scope(function() {
 
-		if ( ! $image = $this->get_cover_art() )
-			$image = Podcast::get_instance()->cover_image;
+			if ( ! $image = $this->get_cover_art() )
+				$image = Podcast::get()->cover_image;
 
-		return $image;
+			return $image;
+		});
 	}
 
 	public function get_cover_art() {
-		
-		$podcast = Podcast::get_instance();
-		$asset_assignment = AssetAssignment::get_instance();
+		return $this->with_blog_scope(function() {
+			$podcast = Podcast::get();
+			$asset_assignment = AssetAssignment::get_instance();
 
-		if ( ! $asset_assignment->image )
-			return;
-		
-		if ( $asset_assignment->image == 'manual' )
-			return trim($this->cover_art);
+			if ( ! $asset_assignment->image )
+				return;
+			
+			if ( $asset_assignment->image == 'manual' )
+				return trim($this->cover_art);
 
-		$cover_art_file_id = $asset_assignment->image;
-		if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
-			return false;
+			$cover_art_file_id = $asset_assignment->image;
+			if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
+				return false;
 
-		if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
-			return false;
+			if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
+				return false;
 
-		return ( $file->size > 0 ) ? $file->get_file_url() : false;
+			return ( $file->size > 0 ) ? $file->get_file_url() : false;
+		});
 	}
 
 	/**
@@ -169,9 +188,10 @@ class Episode extends Base implements Licensable {
 	 * @param  string $format object, psc, mp4chaps, json. Default: object
 	 * @return mixed
 	 */
-	public function get_chapters( $format = 'object' ) {
-		$chapters_manager = new ChaptersManager( $this );
-		return $chapters_manager->get( $format );
+	public function get_chapters($format = 'object') {
+		return $this->with_blog_scope(function() use ($format) {
+			return (new ChaptersManager($this))->get($format);
+		});
 	}
 
 	public function refetch_files() {
@@ -191,9 +211,8 @@ class Episode extends Base implements Licensable {
 			Log::get()->addAlert( 'All assets for this episode are invalid!', array( 'episode_id' => $this->id ) );
 	}
 
-	public function get_duration( $format = 'HH:MM:SS' ) {
-		$duration = new \Podlove\Duration( $this->duration );
-		return $duration->get( $format );
+	public function get_duration($format = 'HH:MM:SS') {
+		return (new \Podlove\Duration($this->duration))->get($format);
 	}
 
 	/**
@@ -253,8 +272,8 @@ class Episode extends Base implements Licensable {
 	public function get_license()
 	{
 		$license = new License('episode', array(
-			'license_name'         => $this->license_name,
-			'license_url'          => $this->license_url
+			'license_name' => $this->license_name,
+			'license_url'  => $this->license_url
 		));
 
 		return $license;

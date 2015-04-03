@@ -129,37 +129,37 @@ abstract class Base
 	public static function count() {
 		global $wpdb;
 		
-		$sql = 'SELECT COUNT(*) FROM ' . self::table_name();
+		$sql = 'SELECT COUNT(*) FROM ' . static::table_name();
 		return (int) $wpdb->get_var( $sql );
 	}
 
 	public static function find_by_id( $id ) {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE id = ' . (int) $id
+			'SELECT * FROM ' . static::table_name() . ' WHERE id = ' . (int) $id
 		);
 	}
 
 	public static function find_all_by_property( $property, $value ) {
 		return self::find_all_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\''
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\''
 		);
 	}
 
 	public static function find_one_by_property( $property, $value ) {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\' LIMIT 0,1'
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\' LIMIT 0,1'
 		);
 	}
 
 	public static function find_all_by_where( $where ) {
 		return self::find_all_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $where
 		);
 	}
 	
 	public static function find_one_by_where( $where ) {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where . ' LIMIT 0,1'
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $where . ' LIMIT 0,1'
 		);
 	}
 
@@ -197,13 +197,13 @@ abstract class Base
 	 */
 	public static function first() {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' LIMIT 0,1'
+			'SELECT * FROM ' . static::table_name() . ' LIMIT 0,1'
 		);
 	}
 	
 	public static function last() {
 		return self::find_one_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' ORDER BY id DESC LIMIT 0,1'
+			'SELECT * FROM ' . static::table_name() . ' ORDER BY id DESC LIMIT 0,1'
 		);
 	}
 
@@ -215,7 +215,7 @@ abstract class Base
 	 */
 	public static function all( $sql_suffix = '' ) {
 		return self::find_all_by_sql(
-			'SELECT * FROM ' . self::table_name() . ' ' . $sql_suffix
+			'SELECT * FROM ' . static::table_name() . ' ' . $sql_suffix
 		);
 	}
 	
@@ -273,7 +273,7 @@ abstract class Base
 
 		$sql = sprintf(
 			"UPDATE %s SET %s = '%s' WHERE id = %s",
-			self::table_name(),
+			static::table_name(),
 			$attribute,
 			$value,
 			$this->id
@@ -295,7 +295,7 @@ abstract class Base
 			$this->set_defaults();
 
 			$sql = 'INSERT INTO '
-			     . self::table_name()
+			     . static::table_name()
 			     . ' ( '
 			     . implode( ',', self::property_names() )
 			     . ' ) '
@@ -309,7 +309,7 @@ abstract class Base
 				$this->id = $wpdb->insert_id;
 			}
 		} else {
-			$sql = 'UPDATE ' . self::table_name()
+			$sql = 'UPDATE ' . static::table_name()
 			     . ' SET '
 			     . implode( ',', array_map( array( $this, 'property_name_to_sql_update_statement' ), self::property_names() ) )
 			     . ' WHERE id = ' . $this->id
@@ -359,7 +359,7 @@ abstract class Base
 		global $wpdb;
 		
 		$sql = 'DELETE FROM '
-		     . self::table_name()
+		     . static::table_name()
 		     . ' WHERE id = ' . $this->id;
 
 		$rows_affected = $wpdb->query( $sql );
@@ -404,7 +404,7 @@ abstract class Base
 			$property_sql[] = "`{$property['name']}` {$property['type']}";
 		
 		$sql = 'CREATE TABLE IF NOT EXISTS '
-		     . self::table_name()
+		     . static::table_name()
 		     . ' ('
 		     . implode( ',', $property_sql )
 		     . ' ) CHARACTER SET utf8;'
@@ -425,7 +425,7 @@ abstract class Base
 	public static function build_indices() {
 		global $wpdb;
 
-		$indices_sql = 'SHOW INDEX FROM `' . self::table_name() . '`';
+		$indices_sql = 'SHOW INDEX FROM `' . static::table_name() . '`';
 		$indices = $wpdb->get_results( $indices_sql );
 		$index_columns = array_map( function($index){ return $index->Column_name; }, $indices );
 
@@ -434,7 +434,7 @@ abstract class Base
 			if ( $property['index'] && ! in_array( $property['name'], $index_columns ) ) {
 				$length = isset($property['index_length']) ? '(' . (int) $property['index_length'] . ')' : '';
 				$unique = isset($property['unique']) && $property['unique'] ? 'UNIQUE' : '';
-				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD ' . $unique . ' INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
+				$sql = 'ALTER TABLE `' . static::table_name() . '` ADD ' . $unique . ' INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
 				$wpdb->query( $sql );
 			}
 		}
@@ -445,14 +445,11 @@ abstract class Base
 	 * 
 	 * The name is derived from the namespace an class name. Additionally, it
 	 * is prefixed with the global WordPress database table prefix.
-	 * @todo cache
 	 * 
 	 * @return string database table name
 	 */
 	public static function table_name() {
 		global $wpdb;
-		
-		// prefix with $wpdb prefix
 		return $wpdb->prefix . self::name();
 	}
 
@@ -474,15 +471,15 @@ abstract class Base
 	
 	public static function destroy() {
 		global $wpdb;
-		$wpdb->query( 'DROP TABLE ' . self::table_name() );
+		$wpdb->query( 'DROP TABLE ' . static::table_name() );
 	}
 
 	public static function delete_all($reset_autoincrement = true) {
 	    global $wpdb;
-	    $wpdb->query( 'TRUNCATE ' . self::table_name() );  
+	    $wpdb->query( 'TRUNCATE ' . static::table_name() );  
 
 	    if ($reset_autoincrement)
-	    	$wpdb->query( 'ALTER TABLE ' . self::table_name() . ' AUTO_INCREMENT = 1' );  
+	    	$wpdb->query( 'ALTER TABLE ' . static::table_name() . ' AUTO_INCREMENT = 1' );  
 	}
 
 	protected static function find_one_by_sql($sql) {

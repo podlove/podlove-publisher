@@ -29,7 +29,7 @@ class Widget extends \WP_Widget {
 	}
 
 	public function button( $style = 'big-logo', $autowidth = true ) {
-		return Subscribe_Button::render_button(array(
+		return Subscribe_Button::button(array(
 			'size'  => $style,
 			'width' => ($autowidth === 'on' ? 'auto' : '')
 		));
@@ -42,7 +42,7 @@ class Widget extends \WP_Widget {
 		$autowidth = isset( $instance[ 'autowidth' ] ) ? $instance[ 'autowidth' ]  : 0;
 		$infotext  = isset( $instance[ 'infotext' ] )  ? $instance[ 'infotext' ]   : '';
 
-		$subscribebutton = Podcast::get_instance();
+		$subscribebutton = Podcast::get();
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
