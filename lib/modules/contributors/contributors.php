@@ -393,9 +393,14 @@ class Contributors extends \Podlove\Modules\Base {
 	function feed_head_contributors() {
 		global $wp_query;
 
+		$feed = \Podlove\Model\Feed::find_one_by_slug( $wp_query->query_vars['feed'] );
+
+		if (!$feed)
+			return;
+
 		$contributor_xml = $this->prepare_contributions_for_feed(
 			\Podlove\Modules\Contributors\Model\ShowContribution::all(),
-			\Podlove\Model\Feed::find_one_by_slug( $wp_query->query_vars['feed'] )
+			$feed
 		);
 
 		echo apply_filters( 'podlove_feed_head_contributors', $contributor_xml );
