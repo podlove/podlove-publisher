@@ -43,15 +43,16 @@ class PodcastInformation extends \WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" placeholder="<?php echo $podcast->title; ?>" />
-
+		</p>
+		<p>
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>" <?php echo ( $show_image ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display image?', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display image', 'podlove' ); ?></label><br />
 
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_subtitle' ); ?>" name="<?php echo $this->get_field_name( 'show_subtitle' ); ?>" <?php echo ( $show_subtitle ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_subtitle' ); ?>"><?php _e( 'Display subtitle?', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_subtitle' ); ?>"><?php _e( 'Display subtitle', 'podlove' ); ?></label><br />
 
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_summary' ); ?>" name="<?php echo $this->get_field_name( 'show_summary' ); ?>" <?php echo ( $show_summary ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_summary' ); ?>"><?php _e( 'Display summary?', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_summary' ); ?>"><?php _e( 'Display summary', 'podlove' ); ?></label><br />
 		</p>
 		<?php 
 	}

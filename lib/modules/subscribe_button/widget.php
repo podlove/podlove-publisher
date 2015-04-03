@@ -47,7 +47,8 @@ class Widget extends \WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" />
-
+		</p>
+		<p>
 			<label for="<?php echo $this->get_field_id( 'style' ); ?>"><?php _e( 'Style', 'podlove' ); ?></label> 
 			<select class="widefat" id="<?php echo $this->get_field_id( 'style' ); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>">
 				<option value="small"    <?php echo ( $style == 'small'    ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'Small', 'podlove' ) ?></option>
@@ -55,10 +56,12 @@ class Widget extends \WP_Widget {
 				<option value="big"      <?php echo ( $style == 'big'      ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'Big', 'podlove' ) ?></option>
 				<option value="big-logo" <?php echo ( $style == 'big-logo' ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'Big with logo', 'podlove' ) ?></option>
 			</select>
-
+		</p>
+		<p>
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'autowidth' ); ?>" name="<?php echo $this->get_field_name( 'autowidth' ); ?>" <?php echo ( $autowidth ? 'checked="checked"' : '' ); ?>/>
-			<label for="<?php echo $this->get_field_id( 'autowidth' ); ?>"><?php _e( 'Auto-adjust width?', 'podlove' ); ?></label><br />
-			
+			<label for="<?php echo $this->get_field_id( 'autowidth' ); ?>"><?php _e( 'Auto-adjust width', 'podlove' ); ?></label><br />
+		</p>
+		<p>
 			<label for="<?php echo $this->get_field_id( 'infotext' ); ?>"><?php _e( 'Description', 'podlove' ); ?></label> 
 			<textarea class="widefat" rows="10" id="<?php echo $this->get_field_id( 'infotext' ); ?>" name="<?php echo $this->get_field_name( 'infotext' ); ?>"><?php echo $infotext; ?></textarea>
 		</p>

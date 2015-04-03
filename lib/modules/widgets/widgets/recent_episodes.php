@@ -63,16 +63,17 @@ class RecentEpisodes extends \WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" />
-
+		</p>
+		<p>
 			<label for="<?php echo $this->get_field_id( 'number_of_episodes' ); ?>"><?php _e( 'Number of Episodes', 'podlove' ); ?></label> 
 			<input class="widefat" type="number" id="<?php echo $this->get_field_id( 'number_of_episodes' ); ?>" name="<?php echo $this->get_field_name( 'number_of_episodes' ); ?>" value="<?php echo $number_of_episodes; ?>" />
-		
+		</p>
+		<p>		
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>" <?php echo ( $show_image ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display episode image?', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display episode image', 'podlove' ); ?></label><br />
 
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_duration' ); ?>" name="<?php echo $this->get_field_name( 'show_duration' ); ?>" <?php echo ( $show_duration ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_duration' ); ?>"><?php _e( 'Show duration?', 'podlove' ); ?></label><br />
-
+			<label for="<?php echo $this->get_field_id( 'show_duration' ); ?>"><?php _e( 'Show duration', 'podlove' ); ?></label><br />
 		</p>
 		<?php 
 	}
