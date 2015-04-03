@@ -59,13 +59,10 @@ class PodcastList extends Base {
 
 	/**
 	 * Fetch all blog IDs for Publisher blogs, ordered
-	 * 
-	 * @fixme it doesn't return IDs, but podcasts. rename or change implementation
 	 */
-	public static function get_all_podcast_ids_ordered( $sortby = "title", $sort = 'ASC' ) {
-		$blog_ids = self::get_all_podcast_ids();
+	public static function get_all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
 
-		foreach ($blog_ids as $blog_id) {
+		foreach (self::get_all_podcast_ids() as $blog_id) {
 			$podcasts[$blog_id] = \Podlove\Model\Podcast::get($blog_id);
 		}
 
