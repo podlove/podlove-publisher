@@ -11,14 +11,14 @@ class Duration {
 	 * Raw user input
 	 * @var string
 	 */
-	public $duration;
+	private $duration;
 
-	public /* int */ $hours;
-	public /* int */ $minutes;
-	public /* int */ $seconds;
-	public /* int */ $milliseconds;
+	private /* int */ $hours;
+	private /* int */ $minutes;
+	private /* int */ $seconds;
+	private /* int */ $milliseconds;
 
-	public /* bool */ $valid = true;
+	private /* bool */ $valid = true;
 
 	public function __construct( $duration ) {
 		$this->duration = trim( $duration );
@@ -80,6 +80,23 @@ class Duration {
 			case 'HH:MM:SS':
 				return $this->format( true, true, true, false );
 				break;
+			case 'human-readable':
+				$duration_string = '';
+
+				if ( $duration->hours > 1 ) {
+					$duration_string .= $this->hours . __(' hours ', 'podlove');
+				} elseif ( $this->hours == 1 ) {
+					$duration_string .= $this->hours . __(' hour ', 'podlove');
+				}
+
+				if ( $this->minutes >= 1 )
+					$duration_string .= $this->minutes . __(' minutes ', 'podlove');
+
+				if ( $this->hours == 0 && $this->minutes == 0 )
+					$duration_string .= $this->seconds . __(' seconds', 'podlove');
+
+				return $duration_string;
+			break;
 			case 'full': /* full is default */
 			default:
 				return $this->format();

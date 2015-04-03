@@ -9,7 +9,7 @@ class PodcastInformation extends \WP_Widget {
 		parent::__construct(
 			'podlove_podcast_widget',
 			'Podlove Podcast Information',
-			array( 'description' => __( 'Displays basic informations about your Podcast.', 'podlove' ) )
+			array( 'description' => __( 'Displays basic information about your Podcast.', 'podlove' ) )
 		);
 	}
 
@@ -27,7 +27,7 @@ class PodcastInformation extends \WP_Widget {
 			echo '<p><strong>' . $podcast->subtitle . '</strong></p>';
 
 		if ( $instance['show_summary'] )
-			echo '<p>' . $podcast->summary . '</p>';
+			echo wpautop($podcast->summary);
 
 		echo $args['after_widget'];
 	}

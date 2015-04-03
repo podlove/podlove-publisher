@@ -13,28 +13,12 @@ class RecentEpisodes extends \WP_Widget {
 		);
 	}
 
-	private static function get_duration_text_string($episode) {
-		$duration = new \Podlove\Duration( $episode->duration );
-		$duration_string = '';
-
-		if ( $duration->hours > 1 ) {
-			$duration_string .= $duration->hours . __(' hours ', 'podlove');
-		} elseif ( $duration->hours = 1 ) {
-			$duration_string .= $duration->hours . __(' hour ', 'podlove');
-		}
-
-		if ( $duration->minutes >= 1 )
-			$duration_string .= $duration->minutes . __(' minutes ', 'podlove');
-
-		if ( $duration->hours == 0 && $duration->minutes == 0 )
-			$duration_string .= $duration->seconds . __(' seconds', 'podlove');
-
-		return $duration_string;
-	}
-
 	public function widget( $args, $instance ) {
 		$number_of_episodes = ( is_numeric($instance['number_of_episodes']) ? $instance['number_of_episodes'] : 10 ); // Fallback for old browsers that allow a non-numeric string to be entered in the "number_of_episodes" field
-		$episodes = \Podlove\Model\Episode::all( "LIMIT " . $number_of_episodes );
+		$episodes = array_splice(
+		  \Podlove\Model\Episode::allByTime(),
+		  0, $number_of_episodes
+		);
 
 		echo $args['before_widget'];
 
@@ -44,8 +28,7 @@ class RecentEpisodes extends \WP_Widget {
 		echo "<ul style='list-style-type: none;'>";
 		foreach ($episodes as $episode) {
 			$post = get_post($episode->post_id);
-			// Adjust 
-			
+			$episode_duration = new \Podlove\Duration( $episode->duration );
 			?>
 				<li>
 					<?php if ($instance[ 'show_image' ]) : ?>
@@ -57,7 +40,7 @@ class RecentEpisodes extends \WP_Widget {
 						<i class="podlove-icon-calendar"></i> <?php echo get_the_date( get_option('date_format'), $episode->post_id ); ?>
 						<?php 
 						if ($instance[ 'show_duration' ])
-							echo "<br /><i class='podlove-icon-time'></i> " . self::get_duration_text_string($episode);
+							echo "<br /><i class='podlove-icon-time'></i> " . ($episode_duration->get('human-readable'));
 						?>
 					</p>
 					<?php if ($instance[ 'show_image' ]) : ?>

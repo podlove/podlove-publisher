@@ -10,11 +10,11 @@ class Widgets extends \Podlove\Modules\Base {
 
 	public function load() {
 		$widgets = array(
-					'\Podlove\Modules\Widgets\Widgets\PodcastLicense',
-					'\Podlove\Modules\Widgets\Widgets\RecentEpisodes',
-					'\Podlove\Modules\Widgets\Widgets\PodcastInformation',
-					'\Podlove\Modules\Widgets\Widgets\RenderTemplate'
-				);
+				'\Podlove\Modules\Widgets\Widgets\PodcastLicense',
+				'\Podlove\Modules\Widgets\Widgets\RecentEpisodes',
+				'\Podlove\Modules\Widgets\Widgets\PodcastInformation',
+				'\Podlove\Modules\Widgets\Widgets\RenderTemplate'
+			);
 		$widgets = apply_filters( 'podlove_widgets', $widgets );
 
 		foreach ($widgets as $widget_class ) {
