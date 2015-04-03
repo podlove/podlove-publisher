@@ -11,6 +11,10 @@ class Networks extends \Podlove\Modules\Base {
 	protected $module_description = 'Support for Podcast Networks using <a href="http://codex.wordpress.org/Create_A_Network">WordPress Multisite</a> environments.';
 	protected $module_group = 'system';
 
+	public static function is_core() {
+		return true;
+	}
+
 	public function load() {
 
 		// skip module outsite multisite environments
