@@ -15,14 +15,14 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		) );
 	}
 	
-	public function column_title( $podcast ) {
-		switch_to_blog( $podcast->blog_id );
-		
-		if ($podcast->title) {
-			return "<a href='" . admin_url() . "admin.php?page=podlove_settings_handle'>" . $podcast->title . "</a> <br />" . $podcast->subtitle;
-		} else {
-			return sprintf(__("No podcast title in blog %s.", 'podlove'), '<a href="' . admin_url() . '">' . get_bloginfo("name") . '</a>');
-		}
+	public function column_title($podcast) {
+		return $podcast->with_blog_scope(function() use ($podcast) {
+			if ($podcast->title) {
+				return "<a href='" . admin_url() . "admin.php?page=podlove_settings_handle'>" . $podcast->title . "</a> <br />" . $podcast->subtitle;
+			} else {
+				return sprintf(__("No podcast title in blog %s.", 'podlove'), '<a href="' . admin_url() . '">' . get_bloginfo("name") . '</a>');
+			}
+		});
 	}
 
 	public function column_logo( $podcast ) {

@@ -161,6 +161,20 @@ function cache_for($cache_key, $callback, $duration = 31536000 /* 1 year */)
 	}
 }
 
+function with_blog_scope($blog_id, $callback) {
+	$result = NULL;
+
+	if ($blog_id != get_current_blog_id()) {
+		switch_to_blog($blog_id);
+		$result = $callback();
+		restore_current_blog();
+	} else {
+		$result = $callback();
+	}
+
+	return $result;
+}
+
 function relative_time_steps($time) {
 	$time_diff = time() - $time;
 	$formated_time_string = date('Y-m-d h:i:s', $time);

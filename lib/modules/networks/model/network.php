@@ -21,15 +21,10 @@ class Network {
 	 * Fetch all blog IDs for Publisher blogs 
 	 */
 	public static function podcast_blog_ids() {
-		return array_filter( Network::blog_ids(), function( $blog ) {
-			switch_to_blog( $blog );
-			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
-				restore_current_blog();
-				return true;
-			} else {
-				restore_current_blog();
-				return false;
-			}
+		return array_filter( Network::blog_ids(), function($blog_id) {
+			return \Podlove\with_blog_scope($blog_id, function() {
+				return is_plugin_active(plugin_basename(\Podlove\PLUGIN_FILE));
+			});
 		} );
 	}
 
@@ -38,7 +33,12 @@ class Network {
 	 */
 	public static function podcasts( $sortby = "title", $sort = 'ASC' ) {
 
-		foreach (Network::podcast_blog_ids() as $blog_id) {
+		$podcast_blog_ids = Network::podcast_blog_ids();
+
+		if (empty($podcast_blog_ids))
+			return [];
+
+		foreach ($podcast_blog_ids as $blog_id) {
 			$podcasts[$blog_id] = Podcast::get($blog_id);
 		}
 
