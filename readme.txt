@@ -111,6 +111,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 lorem ...
 
+**Widgets**
+
+We added a happy bunch of widgets to make your life easy. 
+
+* Podcast Information: Display cover, subtitle and summary of your podcast
+* Recent Episodes: Display a list of recent episodes, with cover art and duration if you like
+* Template: Display any Publisher template in a widget area
+* Podcast License
+
 **Templates**
 
 * add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)
