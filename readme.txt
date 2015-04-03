@@ -118,6 +118,7 @@ lorem ...
 
 **Other**
 
+* add support for Auphonic cover art
 * add support for Jetpack "Publicize" module to podcast post type
 * fix: remove Jetpack "Site Icon" from podcast feeds
 
