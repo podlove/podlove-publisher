@@ -20,7 +20,7 @@ class PodcastList extends Wrapper {
 	public function __construct( $list ) {
 		$this->list = $list;
 
-		$podcasts = $list->get_podcasts();
+		$podcasts = $list->podcasts();
 
 		$returned_podcasts = array();
 		foreach ( $podcasts as $podcast ) {

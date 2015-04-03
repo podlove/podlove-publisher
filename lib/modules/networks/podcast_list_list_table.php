@@ -42,7 +42,7 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 	public function column_podcasts($list) {
 		return implode(', ', array_map(function($podcast) {
 			return $this->podcast_admin_link($podcast);
-		}, $list->get_podcasts()));
+		}, $list->podcasts()));
 	}
 
 	public function podcast_admin_link($podcast) {

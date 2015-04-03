@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Networks\Model;
 
 use \Podlove\Model\Base;
+use \Podlove\Model\Podcast;
 
 /**
  * Lists are a model that can be used to organize Podcasts (e.g. networks)
@@ -10,83 +11,17 @@ class PodcastList extends Base {
 
 	use \Podlove\Model\NetworkTrait;
 
-	/** 
-	*  Fetch Podcasts by List
-	*/
-	public static function fetch_podcasts_by_list( $list_id ) {
-		
-		if (!$list = self::find_by_id($list_id)) 
-			return;
-
-		$podcasts = [];
-		foreach ( explode(',', $list->podcasts) as $podcast ) {
-			$podcasts[$podcast] = \Podlove\Model\Podcast::get($podcast->get_blog_id());
-		}
-
-		return $podcasts;
-	}
-
-	/**
-	 * Fetch all blog IDs
-	 */
-	public static function get_all_blog_ids() {
-		global $wpdb;
-
-		if ($wpdb->blogs) {
-			$blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs WHERE NOT archived");
-		} else {
-			$blogs = [];
-		}
-
-		return $blogs;
-	}
-
-	/**
-	 * Fetch all blog IDs for Publisher blogs 
-	 */
-	public static function get_all_podcast_blog_ids() {
-		return array_filter( self::get_all_blog_ids(), function( $blog ) {
-			switch_to_blog( $blog );
-			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
-				restore_current_blog();
-				return true;
-			} else {
-				restore_current_blog();
-				return false;
-			}
-		} );
-	}
-
-	/**
-	 * Fetch all blog IDs for Publisher blogs, ordered
-	 */
-	public static function get_all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
-
-		foreach (self::get_all_podcast_blog_ids() as $blog_id) {
-			$podcasts[$blog_id] = \Podlove\Model\Podcast::get($blog_id);
-		}
-
-		uasort( $podcasts, function ( $a, $b ) use ( $sortby, $sort ) {
-			return strnatcmp( $a->$sortby, $b->$sortby );
-		});
-
-		if ( $sort == 'DESC' )
-			krsort( $podcasts );
-
-		return $podcasts;	
-	}
-
 	/**
 	 * Fetch all Pocasts in the current list
 	 */
-	public function get_podcasts() {
+	public function podcasts() {
 		$podcasts = json_decode( $this->podcasts );
 
 		$podcast_objects = array();
 		foreach ($podcasts as $podcast) {
 			switch ( $podcast->type ) {
 				default: case 'wplist':
-					$podcast_objects[] = \Podlove\Model\Podcast::get($podcast->podcast);
+					$podcast_objects[] = Podcast::get($podcast->podcast);
 				break;
 			}
 		}

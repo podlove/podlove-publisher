@@ -94,7 +94,7 @@ class Dashboard {
 	}
 
 	public static function right_now() {
-		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::get_all_podcast_blog_ids();
+		$podcasts = \Podlove\Modules\Networks\Model\Network::podcast_blog_ids();
 		$number_of_podcasts = count( $podcasts );
 
 		$episodes_total = 0;

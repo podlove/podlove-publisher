@@ -1,5 +1,7 @@
 <?php
 namespace Podlove\Modules\Networks\Settings;
+
+use \Podlove\Modules\Networks\Model\Network;
 use \Podlove\Modules\Networks\Model\PodcastList;
 
 class PodcastLists {
@@ -239,7 +241,7 @@ class PodcastLists {
 						<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
 							<option>— <?php echo __('Select Podcast', 'podlove') ?> —</option>
 							<?php
-								foreach ( PodcastList::get_all_podcasts_ordered() as $blog_id => $podcast ) {
+								foreach ( Network::podcasts() as $blog_id => $podcast ) {
 									if ( $podcast->title )
 										printf( "<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_image ,$podcast->title );
 								}
