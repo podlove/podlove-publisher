@@ -131,7 +131,7 @@ class Printer {
 		$xml_string = $this->remove_xml_header( $xml_string );
 
 		// get podcast object
-		$podcast = Podcast::get_instance();
+		$podcast = Podcast::get();
 
 		if ($this->episode->license_name && $this->episode->license_url) {
 			$license_name = $this->episode->license_name;

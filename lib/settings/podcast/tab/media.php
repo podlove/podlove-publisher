@@ -24,7 +24,7 @@ class Media extends Tab {
 	}
 
 	public function register_page() {
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 		
 		$form_attributes = array(
 			'context' => 'podlove_podcast',

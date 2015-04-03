@@ -105,6 +105,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.1.0 =
+
+**Networks: WordPress Multisite Support is Here**
+
+lorem ...
+
+**Templates**
+
+* add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)
+* add accessor `{{ flattr.button }}` (see http://docs.podlove.org/reference/template-tags/#flattr)
+
+**Other**
+
+* add support for Auphonic cover art
+* add support for Jetpack "Publicize" module to podcast post type
+* fix: remove Jetpack "Site Icon" from podcast feeds
+
 = 2.0.5 =
 
 * fix: template editor cursor position in Safari (by changing to a different theme that doesn't use bold styles)

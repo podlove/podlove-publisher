@@ -8,12 +8,20 @@ use \Podlove\Model\Base;
  */
 class EpisodeContribution extends Base {
 	
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+	
 	public function getRole() {
-		return ContributorRole::find_by_id($this->role_id);
+		return $this->with_blog_scope(function() {
+			return ContributorRole::find_by_id($this->role_id);
+		});
 	}
 
 	public function getGroup() {
-		return ContributorGroup::find_by_id($this->group_id);
+		return $this->with_blog_scope(function() {
+			return ContributorGroup::find_by_id($this->group_id);
+		});
 	}
 
 	public function getContributor() {

@@ -15,8 +15,8 @@ class RecentEpisodes extends \WP_Widget {
 
 	public function widget( $args, $instance ) {
 		$number_of_episodes = ( is_numeric($instance['number_of_episodes']) ? $instance['number_of_episodes'] : 10 ); // Fallback for old browsers that allow a non-numeric string to be entered in the "number_of_episodes" field
-		$episodes = array_splice(
-		  \Podlove\Model\Episode::allByTime(),
+		$episodes = array_slice(
+		  array_filter(\Podlove\Model\Episode::find_all_by_time(), function($e) { return $e->is_published(); }),
 		  0, $number_of_episodes
 		);
 

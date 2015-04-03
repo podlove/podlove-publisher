@@ -8,6 +8,11 @@ use Podlove\DomDocumentFragment;
 
 class Service extends Base
 {
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
 
 	public function get_logo() {
 		return \Podlove\PLUGIN_URL . '/lib/modules/social/images/icons/' . $this->logo;

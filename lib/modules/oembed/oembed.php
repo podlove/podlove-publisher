@@ -52,7 +52,7 @@ class oembed extends \Podlove\Modules\Base {
 		}
 
 		$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 		$permalink = get_permalink( $post_id );
 
 		$player_width = "560px";

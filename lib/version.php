@@ -71,15 +71,14 @@ function run_database_migrations() {
 
 	if (is_multisite()) {
 		set_time_limit(0); // may take a while, depending on network size
-		$current_blog = $wpdb->blogid;
 		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
 		foreach ($blogids as $blog_id) {
 			switch_to_blog($blog_id);
 			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
 				migrate_for_current_blog();
 			}
+			restore_current_blog();
 		}
-		switch_to_blog($current_blog);
 	} else {
 		migrate_for_current_blog();
 	}
@@ -199,7 +198,7 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( $sql );
 		break;
 		case 21:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			$podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
 			$podcast->save();
 		break;
@@ -218,7 +217,7 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( $sql );
 		break;
 		case 24:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			update_option( 'podlove_asset_assignment', array(
 				'image'    => $podcast->supports_cover_art,
 				'chapters' => $podcast->chapter_file
@@ -483,7 +482,7 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 48:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			$podcast->limit_items = '-1';
 			$podcast->save();
 		break;
@@ -494,7 +493,7 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 50:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			$podcast->license_type = 'other';
 			$podcast->save();
 
@@ -746,7 +745,7 @@ function run_migrations_for_version( $version ) {
 			\Podlove\Model\Episode::property( 'license_cc_allow_commercial_use', 'VARCHAR(255)' );
 			\Podlove\Model\Episode::property( 'license_cc_license_jurisdiction', 'VARCHAR(255)' );
 
-			$podcast  = \Podlove\Model\Podcast::get_instance();
+			$podcast  = \Podlove\Model\Podcast::get();
 			$episodes = \Podlove\Model\Episode::all();
 
 			// Migration for Podcast

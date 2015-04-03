@@ -83,7 +83,7 @@ class Duration {
 			case 'human-readable':
 				$duration_string = '';
 
-				if ( $duration->hours > 1 ) {
+				if ( $this->hours > 1 ) {
 					$duration_string .= $this->hours . __(' hours ', 'podlove');
 				} elseif ( $this->hours == 1 ) {
 					$duration_string .= $this->hours . __(' hour ', 'podlove');

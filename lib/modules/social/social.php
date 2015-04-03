@@ -253,7 +253,7 @@ class Social extends \Podlove\Modules\Base {
 		}
 		
 		?>
-		<div id="<?php echo $wrapper_id ?>" class="social_wrapper" data-category="<?php echo $category ?>">
+		<div id="<?php echo $wrapper_id ?>" class="podlove_social_wrapper" data-category="<?php echo $category ?>">
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>

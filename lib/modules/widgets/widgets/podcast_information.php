@@ -14,14 +14,14 @@ class PodcastInformation extends \WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 
 		echo $args['before_widget'];
 
 		echo $args['before_title'] . apply_filters( 'widget_title', ( empty($instance['title']) ) ? $podcast->title : $instance['title'] ) . $args['after_title'];
 
 		if ( $instance['show_image'] )
-			echo '<img src="' . $podcast->cover_image . '" alt="' . $podcast->full_title . '" />';
+			echo '<img src="' . $podcast->cover_image . '" alt="' . $podcast->full_title() . '" />';
 
 		if ( $instance['show_subtitle'] )
 			echo '<p><strong>' . $podcast->subtitle . '</strong></p>';
@@ -33,7 +33,7 @@ class PodcastInformation extends \WP_Widget {
 	}
 
 	public function form( $instance ) {
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 
 		$title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : '';
 		$show_image = isset( $instance[ 'show_image' ] ) ? $instance[ 'show_image' ] : '';

@@ -36,6 +36,9 @@ class Modules {
 			if ( ! class_exists( $class ) )
 				continue;
 
+			if ( $class::is_core() )
+				continue;
+
 			$module = $class::instance();
 			$module_options = $module->get_registered_options();
 

@@ -14,7 +14,7 @@ class PodcastLicense extends \WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 
 		echo $args['before_widget'];
 
