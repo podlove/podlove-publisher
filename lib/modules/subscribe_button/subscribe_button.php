@@ -19,10 +19,6 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 			}
 		);
 
-		add_action( 'widgets_init', function(){
-		     register_widget('\Podlove\Modules\SubscribeButton\Widget');
-		});
-
 		\Podlove\Template\Podcast::add_accessor(
 			'subscribe_button', ['\Podlove\Modules\SubscribeButton\TemplateExtensions', 'accessorPodcastSubscribeButton'], 4
 		);
