@@ -136,13 +136,12 @@ function activate($network_wide) {
 
 	if ( $network_wide ) {
 		set_time_limit(0); // may take a while, depending on network size
-		$current_blog = $wpdb->blogid;
 		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
 		foreach ( $blogids as $blog_id ) {
-			switch_to_blog($blog_id);
-			activate_for_current_blog();
+			\Podlove\with_blog_scope($blog_id, function() {
+				activate_for_current_blog();
+			});
 		}
-		switch_to_blog($current_blog);
 	} else {
 		activate_for_current_blog();
 	}
