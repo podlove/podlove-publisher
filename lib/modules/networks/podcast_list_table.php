@@ -1,6 +1,9 @@
 <?php
 namespace Podlove\Modules\Networks;
+
 use \Podlove\Modules\Networks\Model\PodcastList;
+use \Podlove\Modules\Networks\Model\Network;
+use \Podlove\Model\Episode;
 
 class Podcast_List_Table extends \Podlove\List_Table {
 	
@@ -43,14 +46,13 @@ class Podcast_List_Table extends \Podlove\List_Table {
 
 	public function column_episodes( $podcast ) {
 		return $podcast->with_blog_scope(function() {
-			return count(\Podlove\Model\Episode::find_all_by_time());
+			return count(Episode::find_all_by_time());
 		});
 	}
 
 	public function column_latest_episode( $podcast ) {
 		return $podcast->with_blog_scope(function() {
-			$episodes = \Podlove\Model\Episode::find_all_by_time();
-			if ($latest_episode = reset($episodes)) {
+			if ($latest_episode = Episode::latest()) {
 				$latest_episode_blog_post = get_post( $latest_episode->post_id );
 		 		return "<a title='Published on " . date('Y-m-d h:i:s', strtotime( $latest_episode_blog_post->post_date )) ."' href='" . admin_url() . "post.php?post=" . $latest_episode->post_id . "&action=edit'>" . $latest_episode_blog_post->post_title . "</a>"
 	 			     . "<br />" . \Podlove\relative_time_steps( strtotime( $latest_episode_blog_post->post_date ) );
@@ -97,7 +99,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		$hidden = array();
 		$sortable = false;
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$items = \Podlove\Modules\Networks\Model\Network::podcasts();
+		$items = Network::podcasts();
 
 		uasort( $items, function ( $a, $b ) {
 			return strnatcmp( $a->title, $b->title );
