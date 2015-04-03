@@ -14,6 +14,14 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		    'ajax'      => false       // does this table support ajax?
 		) );
 	}
+
+	public function no_items_content() {
+		?>
+		<span class="add-new-h2" style="background: transparent">
+			<?php _e( 'No podcasts exist yet.', 'podlove' ); ?>
+		</span>
+		<?php
+	}
 	
 	public function column_title($podcast) {
 		return $podcast->with_blog_scope(function() use ($podcast) {
@@ -26,7 +34,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_logo( $podcast ) {
-		if( $podcast->cover_image == "" ) {
+		if (!trim($podcast->cover_image)) {
 			return;
 		} else {
 			return "<img src='" . $podcast->cover_image . "' title='" . $podcast->title . "' alt='" . $podcast->title . "' />";
@@ -34,32 +42,31 @@ class Podcast_List_Table extends \Podlove\List_Table {
 	}	
 
 	public function column_episodes( $podcast ) {
-		switch_to_blog( $podcast->get_blog_id() );
-		return count(\Podlove\Model\Episode::find_all_by_time());
+		return $podcast->with_blog_scope(function() {
+			return count(\Podlove\Model\Episode::find_all_by_time());
+		});
 	}
 
 	public function column_latest_episode( $podcast ) {
-		switch_to_blog( $podcast->get_blog_id() );
-
-		$episodes = array_filter( \Podlove\Model\Episode::find_all_by_time() , function($e) { return $e->is_valid(); });
-		if ($latest_episode = reset($episodes)) {
-			$latest_episode_blog_post = get_post( $latest_episode->post_id );
-	 		return "<a title='Published on " . date('Y-m-d h:i:s', strtotime( $latest_episode_blog_post->post_date )) ."' href='" . admin_url() . "post.php?post=" . $latest_episode->post_id . "&action=edit'>" . $latest_episode_blog_post->post_title . "</a>"
- 			     . "<br />" . \Podlove\relative_time_steps( strtotime( $latest_episode_blog_post->post_date ) );
-		} else {
-			return "—";
-		}
+		return $podcast->with_blog_scope(function() {
+			$episodes = \Podlove\Model\Episode::find_all_by_time();
+			if ($latest_episode = reset($episodes)) {
+				$latest_episode_blog_post = get_post( $latest_episode->post_id );
+		 		return "<a title='Published on " . date('Y-m-d h:i:s', strtotime( $latest_episode_blog_post->post_date )) ."' href='" . admin_url() . "post.php?post=" . $latest_episode->post_id . "&action=edit'>" . $latest_episode_blog_post->post_title . "</a>"
+	 			     . "<br />" . \Podlove\relative_time_steps( strtotime( $latest_episode_blog_post->post_date ) );
+			} else {
+				return "—";
+			}
+		});
 	}
 
 	public function get_columns(){
-		$columns = array(
-			'logo'             => __( 'Logo', 'podlove' ),
-			'title'           => __( 'Title', 'podlove' ),
-			'episodes'                 => __( 'Episodes', 'podlove' ),
-			'latest_episode'                 => __( 'Latest Episode', 'podlove' )
-		);
-
-		return $columns;
+		return [
+			'logo'           => __( 'Logo', 'podlove' ),
+			'title'          => __( 'Title', 'podlove' ),
+			'episodes'       => __( 'Episodes', 'podlove' ),
+			'latest_episode' => __( 'Latest Episode', 'podlove' )
+		];
 	}
 
 	public function search_form() {

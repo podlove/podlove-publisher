@@ -97,6 +97,11 @@ class Dashboard {
 		$podcasts = \Podlove\Modules\Networks\Model\Network::podcast_blog_ids();
 		$number_of_podcasts = count( $podcasts );
 
+		if (!$number_of_podcasts) {
+			echo __('No podcasts exist yet.', 'podlove');
+			return;
+		}
+
 		$episodes_total = 0;
 		$episodes_total_per_status = array(
 				'publish' => 0,
