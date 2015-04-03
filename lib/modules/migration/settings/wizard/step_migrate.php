@@ -19,7 +19,7 @@ class StepMigrate extends Step {
 		$migration_settings = get_option( 'podlove_migration', array() );
 
 		// Basic Podcast Settings
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$podcast->title                = $migration_settings['podcast']['title'];
 		$podcast->subtitle             = $migration_settings['podcast']['subtitle'];
 		$podcast->summary              = $migration_settings['podcast']['summary'];

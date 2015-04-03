@@ -100,7 +100,10 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function role() {
-		return ($this->contribution) ? $this->contribution->getRole()->title : '';
+		if ($role = $this->contribution->getRole())
+			return $role->title;
+		else
+			return '';
 	}
 
 	/**
@@ -112,7 +115,10 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function group() {
-		return ($this->contribution) ? $this->contribution->getGroup()->title : '';
+		if ($group = $this->contribution->getGroup())
+			return $group->title;
+		else
+			return '';
 	}
 
 	/**
@@ -168,12 +174,13 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function flattr_url() {
-
-		if (is_page()) {
-			return "https://flattr.com/profile/" . $this->flattr();
-		} else {
-			return get_permalink( get_the_ID() ) . "#" . md5( $this->contributor->id . '-' . $this->flattr() );
-		}
+		return $this->contributor->with_blog_scope(function() {
+			if (is_page()) {
+				return "https://flattr.com/profile/" . $this->flattr();
+			} else {
+				return get_permalink( get_the_ID() ) . "#" . md5( $this->contributor->id . '-' . $this->flattr() );
+			}
+		});
 	}
 
 	/**
@@ -183,38 +190,9 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function episodes() {
-		global $wpdb;
-
-		$sql = '
-			SELECT
-				ec.episode_id
-			FROM
-				' . EpisodeContribution::table_name() . ' ec
-				INNER JOIN ' . \Podlove\Model\Episode::table_name() . ' e ON e.id = ec.episode_id
-				INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
-			WHERE
-				ec.contributor_id = %d
-				AND p.post_status = "publish"
-			GROUP BY
-				ec.episode_id
-			ORDER BY
-				p.post_date DESC
-		';
-
-		$episode_ids = $wpdb->get_col(
-			$wpdb->prepare($sql, $this->contributor->id)
-		);
-
-		// I'm not sure under which circumstances the query emits duplicate
-		// episode IDs — but it happens.
-		$episode_ids = array_unique($episode_ids);
-
-		$episodes = array();
-		foreach ($episode_ids as $episode_id) {
-			$episodes[$episode_id] = new Episode(\Podlove\Model\Episode::find_one_by_id($episode_id));
-		}
-
-		return array_values($episodes);
+		return array_map(function($e) {
+			return new Episode($e);
+		}, $this->contributor->episodes());
 	}
 
 }

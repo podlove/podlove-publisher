@@ -36,7 +36,7 @@ abstract class Base {
 	abstract function load();
 
 	/**
-	 * Fetch internal module names by iterating over module directories.
+	 * Fetch module names by iterating over module directories.
 	 * 
 	 * @return array
 	 */
@@ -57,16 +57,31 @@ abstract class Base {
 	}
 
 	/**
-	 * Fetch internal module names for active modules only.
+	 * Fetch module names for active modules only.
 	 * 
 	 * @return array
 	 */
 	public static function get_active_module_names() {
 		$modules = self::get_all_module_names();
 
-		return array_filter( $modules, function ( $module ) {
-			return Base::is_active( $module );
-		} );
+		return array_merge(
+			array_filter($modules, function ($module) {
+				return Base::is_active($module);
+			}),
+			self::get_core_module_names()
+		);
+	}
+
+	/**
+	 * Fetch module names for core modules only.
+	 * 
+	 * @return array
+	 */
+	public static function get_core_module_names() {
+		return array_filter(self::get_all_module_names(), function($module) {
+			$class = self::get_class_by_module_name($module);
+			return $class::is_core();
+		});
 	}
 
 	/**
@@ -93,6 +108,17 @@ abstract class Base {
 			$options[ $module_name ] = 'on';
 			update_option( 'podlove_active_modules', $options );
 		}
+	}
+
+	/**
+	 * Is this module core functionality?
+	 * 
+	 * Core modules are always-on and don't appear in modules list.
+	 * 
+	 * @return boolean
+	 */
+	public static function is_core() {
+		return false;
 	}
 
 	public function get_module_url() {

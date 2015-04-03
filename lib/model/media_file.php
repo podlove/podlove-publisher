@@ -4,6 +4,10 @@ use Podlove\Log;
 
 class MediaFile extends Base {
 
+	use KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+
 	/**
 	 * Fetches file size if necessary.
 	 *
@@ -24,7 +28,9 @@ class MediaFile extends Base {
 	 * @return \Podlove\Model\EpisodeAsset|NULL
 	 */
 	public function episode_asset() {
-		return EpisodeAsset::find_by_id( $this->episode_asset_id );
+		return $this->with_blog_scope(function() {
+			return EpisodeAsset::find_by_id($this->episode_asset_id);
+		});
 	}
 
 	/**
@@ -94,38 +100,40 @@ class MediaFile extends Base {
 	 */
 	public function get_public_file_url($source, $context = null)
 	{
-		if (!$source && !$context)
-			return $this->get_file_url();
-
-		$params = array(
-			'source'  => $source,
-			'context' => $context
-		);
-		
-		switch ((string) \Podlove\get_setting('tracking', 'mode')) {
-			case 'ptm':
-				// when PTM is active, add $source and $context but
-				// keep the original file URL
-				return $this->add_ptm_parameters(
-					$this->get_file_url(), $params
-				);
-				break;
-			case 'ptm_analytics':
-				// we track, so we need to generate a shadow URL
-				if (get_option('permalink_structure')) {
-					$path = '/podlove/file/' . $this->id;
-					$path = $this->add_ptm_routing($path, $params);
-				} else {
-					$path = '?download_media_file=' . $this->id;
-					$path = $this->add_ptm_parameters($path, $params);
-				}
-				return home_url($path);
-				break;
-			default:
-				// tracking is off, return raw URL
+		return $this->with_blog_scope(function() use ($source, $context) {
+			if (!$source && !$context)
 				return $this->get_file_url();
-				break;
-		}
+
+			$params = array(
+				'source'  => $source,
+				'context' => $context
+			);
+
+			switch ((string) \Podlove\get_setting('tracking', 'mode')) {
+				case 'ptm':
+					// when PTM is active, add $source and $context but
+					// keep the original file URL
+					return $this->add_ptm_parameters(
+						$this->get_file_url(), $params
+					);
+					break;
+				case 'ptm_analytics':
+					// we track, so we need to generate a shadow URL
+					if (get_option('permalink_structure')) {
+						$path = '/podlove/file/' . $this->id;
+						$path = $this->add_ptm_routing($path, $params);
+					} else {
+						$path = '?download_media_file=' . $this->id;
+						$path = $this->add_ptm_parameters($path, $params);
+					}
+					return home_url($path);
+					break;
+				default:
+					// tracking is off, return raw URL
+					return $this->get_file_url();
+					break;
+			}
+		});
 	}
 
 	public function add_ptm_routing($path, $params)
@@ -171,28 +179,31 @@ class MediaFile extends Base {
 	 * @return string
 	 */
 	public function get_file_url() {
+		return $this->with_blog_scope(function() {
+			$podcast  = Podcast::get();
 
-		$podcast  = Podcast::get_instance();
+			$episode       = $this->episode();
+			$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
+			$file_type     = FileType::find_by_id( $episode_asset->file_type_id );
 
-		$episode       = $this->episode();
-		$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
-		$file_type     = FileType::find_by_id( $episode_asset->file_type_id );
+			if ( ! $episode_asset || ! $file_type || ! $episode )
+				return '';
 
-		if ( ! $episode_asset || ! $file_type || ! $episode )
-			return '';
+			$template = $podcast->get_url_template();
+			$template = apply_filters( 'podlove_file_url_template', $template );
+			$template = str_replace( '%media_file_base_url%', trailingslashit( $podcast->media_file_base_uri ), $template );
+			$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
+			$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
+			$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
-		$template = $podcast->get_url_template();
-		$template = apply_filters( 'podlove_file_url_template', $template );
-		$template = str_replace( '%media_file_base_url%', trailingslashit( $podcast->media_file_base_uri ), $template );
-		$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
-		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
-		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
-
-		return trim($template);
+			return trim($template);
+		});
 	}
 
 	public function episode() {
-		return Episode::find_by_id( $this->episode_id );
+		return $this->with_blog_scope(function() {
+			return Episode::find_by_id( $this->episode_id );
+		});
 	}
 
 	/**

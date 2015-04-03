@@ -54,7 +54,7 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 			if ( ! $episode )
 				return;
 
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 
 			// determine image
 			$cover_art_url = $episode->get_cover_art();

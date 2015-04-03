@@ -27,7 +27,7 @@ function podlove_episode_license_add_js() {
 
 function podlove_episode_license_extend_form ($form_data, $episode) {
 
-	$podcast = Model\Podcast::get_instance();
+	$podcast = Model\Podcast::get();
 	$license = $episode->get_license();
 
 	$form_data[] = array(

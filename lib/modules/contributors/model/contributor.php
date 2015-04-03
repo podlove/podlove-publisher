@@ -6,6 +6,10 @@ use \Podlove\Model\Episode;
 
 class Contributor extends Base
 {	
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+
 	public static function byGroup($groupSlug) {
 		global $wpdb;
 
@@ -122,6 +126,36 @@ class Contributor extends Base
 
 	public function getContributions() {
 		return EpisodeContribution::find_all_by_contributor_id($this->id);
+	}
+
+	public function episodes() {
+		return $this->with_blog_scope(function() {
+			global $wpdb;
+
+			$sql = '
+				SELECT
+					ec.episode_id
+				FROM
+					' . EpisodeContribution::table_name() . ' ec
+					INNER JOIN ' . \Podlove\Model\Episode::table_name() . ' e ON e.id = ec.episode_id
+					INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
+				WHERE
+					ec.contributor_id = %d
+					AND p.post_status = "publish"
+				GROUP BY
+					ec.episode_id
+				ORDER BY
+					p.post_date DESC
+			';
+
+			$episode_ids = $wpdb->get_col(
+				$wpdb->prepare($sql, $this->id)
+			);
+
+			return array_map(function($episode_id) {
+				return \Podlove\Model\Episode::find_one_by_id($episode_id);
+			}, array_unique($episode_ids));
+		});
 	}
 
 	public function getPublishedContributionCount() {
