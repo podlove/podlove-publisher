@@ -328,7 +328,7 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function dashboard_network_statistics_row( $genders ) {
-		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::get_all_podcast_ids();
+		$podcasts = \Podlove\Modules\Networks\Model\PodcastList::get_all_podcast_blog_ids();
 		$podcasts_with_contributors_active = 0;
 		$relative_gender_numbers = array( 
 				'male' => 0,

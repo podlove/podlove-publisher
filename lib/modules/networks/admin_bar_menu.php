@@ -71,7 +71,7 @@ class AdminBarMenu {
 
 	private static function podcast_ids() {
 		return Model\PodcastList::with_network_scope(function() {
-			return Model\PodcastList::get_all_podcast_ids();
+			return Model\PodcastList::get_all_podcast_blog_ids();
 		});
 	}
 

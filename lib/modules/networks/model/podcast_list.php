@@ -44,7 +44,7 @@ class PodcastList extends Base {
 	/**
 	 * Fetch all blog IDs for Publisher blogs 
 	 */
-	public static function get_all_podcast_ids() {
+	public static function get_all_podcast_blog_ids() {
 		return array_filter( self::get_all_blog_ids(), function( $blog ) {
 			switch_to_blog( $blog );
 			if ( is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) ) ) {
@@ -62,7 +62,7 @@ class PodcastList extends Base {
 	 */
 	public static function get_all_podcasts_ordered( $sortby = "title", $sort = 'ASC' ) {
 
-		foreach (self::get_all_podcast_ids() as $blog_id) {
+		foreach (self::get_all_podcast_blog_ids() as $blog_id) {
 			$podcasts[$blog_id] = \Podlove\Model\Podcast::get($blog_id);
 		}
 
