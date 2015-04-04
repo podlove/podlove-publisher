@@ -7,6 +7,9 @@ use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Contributors\Contributor_List_Table;
 
+use \Podlove\Settings\Expert\Tabs;
+use \Podlove\Modules\Contributors\Settings\Tab;
+
 class Contributors {
 
 	static $pagehook;
@@ -57,7 +60,6 @@ class Contributors {
 	}
 	
 	public function process_form() {
-
 		if ( ! isset( $_REQUEST['contributor'] ) )
 			return;
 
@@ -96,7 +98,6 @@ class Contributors {
 
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Contributors', 'podlove' ); ?> <a href="?post_type=podcast&amp;page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {
@@ -120,6 +121,12 @@ class Contributors {
 			return;
 			
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
+
+		foreach ($_POST['podlove_contributor'] as $contributor_attribute => $contributor_value) {
+			if ( isset($contributor->$contributor_attribute) )
+				$contributor->$contributor_attribute = $contributor_value;
+		}
+
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
 
 		do_action( 'update_podlove_contributor', $contributor );
@@ -179,138 +186,40 @@ class Contributors {
 		$page   = 'edit.php?post_type=podcast&page=' . $_REQUEST['page'];
 		$show   = ( $contributor_id ) ? '&contributor=' . $contributor_id : '';
 		$action = '&action=' . $action;
+		$tab 	= '&podlove_tab=' . $_REQUEST['podlove_tab'];
 		
-		wp_redirect( admin_url( $page . $show . $action ) );
+		wp_redirect( admin_url( $page . $show . $action . $tab ) );
 		exit;
 	}
 	
 	private function view_template() {
+		?><h2><?php echo __( 'Contributors', 'podlove' ); ?> <a href="?post_type=podcast&amp;page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2><?php
 		$this->table->prepare_items();
 		echo \Podlove\Flattr\getFlattrScript();
 		$this->table->display();
 	}
+
+	private function tab_interface($heading) {
+		$tabs = new Tabs($heading);
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors\General( __( 'General', 'podlove' ), true ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors\Affiliation( __( 'Affiliation', 'podlove' ) ) );
+		$this->tabs = apply_filters( 'podlove_contributor_settings_tabs', $tabs );
+		$this->tabs->initCurrentTab();
+
+		echo $this->tabs->getTabsHTML();
+		echo $this->tabs->getCurrentTabPage();
+	}
 	
 	private function new_template() {
 		$contributor = new Contributor;
-		?>
-		<h3><?php echo __( 'Add New Contributor', 'podlove' ); ?></h3>
-		<?php
-		$this->form_template( $contributor, 'create', __( 'Add New Contributor', 'podlove' ) );
+
+		$this->tab_interface(__('New Contributor', 'podlove'));
 	}
 	
 	private function edit_template() {
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
-		echo '<h3>' . sprintf( __( 'Edit Contributor: %s', 'podlove' ), $contributor->getName() ) . '</h3>';
-		$this->form_template( $contributor, 'save' );
-	}
-	
-	private function form_template( $contributor, $action, $button_text = NULL ) {
 
-		$form_args = array(
-			'context' => 'podlove_contributor',
-			'hidden'  => array(
-				'contributor' => $contributor->id,
-				'action' => $action
-			),
-			'submit_button' => false, // for custom control in form_end
-			'form_end' => function() {
-				echo "<p>";
-				submit_button( __('Save Changes'), 'primary', 'submit', false );
-				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
-				echo "</p>";
-			}
-		);
-
-		\Podlove\Form\build_for( $contributor, $form_args, function ( $form ) {
-			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
-
-			$contributor = $form->object;
-
-			do_action( 'podlove_contributors_form_beginning', $wrapper );
-
-			$wrapper->subheader( __( 'General', 'podlove' ) );
-
-			$wrapper->string( 'realname', array(
-				'label'       => __( 'Real name', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'publicname', array(
-				'label'       => __( 'Public name', 'podlove' ),
-				'description' => 'The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".',
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'nickname', array(
-				'label'       => __( 'Nickname', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-
-			$wrapper->select( 'gender', array(
-				'label'       => __( 'Gender', 'podlove' ),
-				'options'     => array( 'female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed')
-			) );
-			
-			$wrapper->string( 'privateemail', array(
-				'label'       => __( 'Contact email', 'podlove' ),
-				'description' => 'The provided email will be used for internal purposes only.',
-				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
-			) );
-			
-			$wrapper->avatar( 'avatar', array(
-				'label'       => __( 'Avatar', 'podlove' ),
-				'description' => 'Either a Gravatar email adress or a URL.',
-				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
-			) );
-
-			$wrapper->string( 'slug', array(
-				'label'       => __( 'ID', 'podlove' ),
-				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
-				'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'guid', array(
-				'label'       => __( 'URI', 'podlove' ),
-				'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove'),
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );		
-
-			$wrapper->radio( 'visibility', array(
-				'label'       => __( 'Visibility', 'podlove' ),
-				'options'	  => array( '1' => 'Yes, the contributor’s information will be visible for the public (e.g. displayed in the Contributor Table).<br />', 
-					                    '0' => 'No, the contributor’s information will be private and not visible for anybody.' ),
-				'default'	  => '1'
-			) );
-
-			$wrapper->subheader( __( 'Affiliation', 'podlove' ) );
-			
-			$wrapper->string( 'organisation', array(
-				'label'       => __( 'Organisation', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-			
-			$wrapper->string( 'department', array(
-				'label'       => __( 'Department', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-
-			$wrapper->string( 'jobtitle', array(
-				'label'       => __( 'Job Title', 'podlove' ),
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-
-			$wrapper->subheader( __( 'Flattr', 'podlove' ) );
-			
-			$wrapper->string( 'flattr', array(
-				'label'       => __( 'Flattr Account', 'podlove' ),
-				'description' => 'The provided flattr account will be used to generate episode specific Flattr buttons.',
-				'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
-			) );
-
-			do_action( 'podlove_contributors_form_end', $wrapper );
-
-		} );
+		$this->tab_interface(sprintf( __( 'Contributor: %s', 'podlove' ), $contributor->getName()));
 	}
 
 	public function scripts_and_styles() {

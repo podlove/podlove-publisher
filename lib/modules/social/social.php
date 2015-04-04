@@ -25,8 +25,7 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_donation_setting' ), 10, 2 );
 		add_action( 'update_podlove_contributor', array( $this, 'save_contributor' ), 10, 2 );
 
-		add_action( 'podlove_contributors_form_end', array( $this, 'services_form_for_contributors' ), 10, 2 );
-		add_action( 'podlove_contributors_form_end', array( $this, 'donations_form_for_contributors' ), 10, 2 );
+		add_filter( 'podlove_contributor_settings_tabs', array( $this, 'register_contributor_tabs' ), 10, 2 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
@@ -102,18 +101,25 @@ class Social extends \Podlove\Modules\Base {
 	}
 
 	public function save_contributor( $contributor ) {
-
-		foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $contributor->id) as $service) {
-			$service->delete();
-		}
-
 		if (!isset($_POST['podlove_contributor']) )
 			return;
+
+		if (!isset($_POST['podlove_contributor']['services']) && !isset($_POST['podlove_contributor']['donations']))
+			return;
+
+		$delete_service = function ($type) use ($contributor) {
+			foreach (\Podlove\Modules\Social\Model\ContributorService::all("WHERE `contributor_id` = " . $contributor->id) as $ContributorService) {
+				$service = \Podlove\Modules\Social\Model\Service::find_by_id($ContributorService->service_id);
+				if ( $service->category == $type )
+					$ContributorService->delete();
+			}
+		};
 
 		foreach (array('donations', 'services') as $type) {
 			$position = 0;
 
 			if (isset($_POST['podlove_contributor'][$type]) ) {
+				$delete_service( ( $type == 'donations' ? 'donation' : 'social' ) );
 				foreach ($_POST['podlove_contributor'][$type] as $service_appearance) {
 					foreach ($service_appearance as $service_id => $service) {
 						$c = new \Podlove\Modules\Social\Model\ContributorService;
@@ -127,6 +133,7 @@ class Social extends \Podlove\Modules\Base {
 					$position++;
 				}
 			}
+			
 		}
 	}
 
@@ -192,42 +199,10 @@ class Social extends \Podlove\Modules\Base {
 		    return $columns;
 	}
 
-	public function services_form_for_contributors($wrapper) {
-
-		$wrapper->subheader( __( 'Social', 'podlove' ) );
-
-		$wrapper->callback( 'services_form_table', array(
-			'nolabel' => true,
-			'callback' => function() {
-
-				if (isset($_GET['contributor'])) {
-					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category( $_GET['contributor'] );
-				} else {
-					$services = array();
-				}
-
-				\Podlove\Modules\Social\Social::services_form_table($services);
-			}
-		) );
-	}
-
-	public function donations_form_for_contributors($wrapper) {
-
-		$wrapper->subheader( __( 'Donations', 'podlove' ) );
-
-		$wrapper->callback( 'services_form_table', array(
-			'nolabel' => true,
-			'callback' => function() {
-
-				if (isset($_GET['contributor'])) {
-					$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category( $_GET['contributor'], 'donation' );
-				} else {
-					$services = array();
-				}
-
-				\Podlove\Modules\Social\Social::services_form_table( $services, 'podlove_contributor[donations]', 'donation' );
-			}
-		) );
+	public function register_contributor_tabs($tabs) {
+		$tabs->addTab( new \Podlove\Modules\Social\Settings\Tab\Social( __( 'Social', 'podlove' ) ) );
+		$tabs->addTab( new \Podlove\Modules\Social\Settings\Tab\Donation( __( 'Donation', 'podlove' ) ) );
+		return $tabs;
 	}
 
 	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $category = 'social') {
