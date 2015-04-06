@@ -283,7 +283,7 @@ class Podcast implements Licensable {
 			}
 
 			if (isset($args['limit'])) {
-				$limit = ' LIMIT ' . $args['limit'];
+				$limit = ' LIMIT ' . (int) $args['limit'];
 			} else {
 				$limit = '';
 			}

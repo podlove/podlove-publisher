@@ -124,6 +124,20 @@ We added a happy bunch of widgets to make your life easy.
 
 * add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)
 * add accessor `{{ flattr.button }}` (see http://docs.podlove.org/reference/template-tags/#flattr)
+* add query parameters to ``{{ contributor.episodes }}`:
+
+    - group: Filter by contribution group. Default: ''.
+    - role: Filter by contribution role. Default: ''.
+    - post_status: Publication status of the post. Defaults to 'publish'
+    - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+      - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+      - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+    - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+      - 'publicationDate' - Order by publication date.
+      - 'recordingDate' - Order by recording date.
+      - 'title' - Order by title.
+      - 'slug' - Order by episode slug.
+      - 'limit' - Limit the number of returned episodes.
 
 **Other**
 
