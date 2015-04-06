@@ -30,6 +30,8 @@ class Tab extends \Podlove\Settings\Podcast\Tab {
 			case 'edit':  $action = 'save'; break;
 			default:      $action = 'delete'; break;
 		}
+
+		$tab = isset($_GET['podlove_tab']) ? $_GET['podlove_tab'] : 'general';
 		
 		$form_attributes = array(
 			'context' => 'podlove_contributor',
@@ -37,7 +39,7 @@ class Tab extends \Podlove\Settings\Podcast\Tab {
 			'hidden'  => array(
 				'contributor' => $contributor->id,
 				'action' => $action,
-				'podlove_tab' => $_GET['podlove_tab']
+				'podlove_tab' => $tab
 			),
 			'submit_button' => false, // for custom control in form_end
 			'form_end' => function() {
