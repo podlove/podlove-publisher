@@ -9,7 +9,7 @@
 {% endmacro %}
 
 <tr>
-	{% if avatars == "yes" %}
+	{% if option.avatars == "yes" %}
 		<td class="avatar_cell">
 			{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}
 		</td>
@@ -20,12 +20,12 @@
 			<br><em>{{ contributor.comment }}</em>
 		{% endif %}
 	</td>
-	{% if groups == "yes" %}
+	{% if option.groups == "yes" %}
 		<td class="group_cell">
 			{{ contributor.group }}
 		</td>
 	{% endif %}
-	{% if roles == "yes" %}
+	{% if option.roles == "yes" %}
 		<td class="role_cell">
 			{{ contributor.role }}
 		</td>
@@ -37,7 +37,7 @@
 			</a>
 		{% endfor %}
 	</td>
-	{% if donations == "yes" %}
+	{% if option.donations == "yes" %}
 		<td class="donation_cell">
 		{% for service in contributor.services({category: "donation"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
@@ -46,7 +46,7 @@
 		{% endfor %}
 		</td>
 	{% endif %}
-	{% if flattr == "yes" %}
+	{% if option.flattr == "yes" %}
 		<td class="flattr_cell">
 			{% if contributor.flattr %}
 				{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}

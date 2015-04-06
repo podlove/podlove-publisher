@@ -6,7 +6,7 @@
 {% if flattr == "yes"    %}{% set colspan = colspan + 1 %}{% endif %}
 
 <table class="podlove-contributors-table">
-	{% if title %}
+	{% if option.title %}
 		<thead>
 			<tr>
 				<th colspan="{{ colspan }}">{{ title }}</th>
@@ -14,8 +14,8 @@
 		</thead>
 	{% endif %}
 	<tbody>
-		{% if groupby == "group" %}
-			{% for contributorGroup in episode.contributors({groupby: 'group', group: group, role: role}) %}
+		{% if option.groupby == "group" %}
+			{% for contributorGroup in episode.contributors({groupby: 'group', group: option.group, role: option.role}) %}
 				<tr>
 					<th colspan="{{ colspan }}" class="contributor-group">
 						{% if contributorGroup.group %}
@@ -32,7 +32,7 @@
 				{% endfor %}
 			{% endfor %}
 		{% else %}
-		    {% for contributor in episode.contributors({group: group, role: role}) %}
+		    {% for contributor in episode.contributors({group: option.group, role: option.role}) %}
 		    	{% if contributor.visible %}
 		    		{% include '@contributors/_contributor-table-row.twig' %}
 		    	{% endif %}
@@ -41,7 +41,7 @@
 	</tbody>
 </table>
 
-{% if flattr == "yes" %}
+{% if option.flattr == "yes" %}
 	{% include '@contributors/_contributor-table-flattr.twig' %}
 {% endif %}
 

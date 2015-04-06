@@ -84,7 +84,7 @@ class TwigFilter {
 			$twig->addFunction($func);
 		}
 
-		$context = $vars;
+		$context = ['option' => $vars];
 
 		// add podcast, flattr to global context
 		$context = array_merge(
