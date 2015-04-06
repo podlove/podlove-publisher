@@ -52,7 +52,7 @@ class EpisodeEnhancer {
 
 	public function auphonic_episodes_form() {
 		$asset_assignments = Model\AssetAssignment::get_instance();
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		?>
 
 		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta( get_the_ID(), '_auphonic_production', true ) ?>" />
