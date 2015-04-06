@@ -41,24 +41,9 @@ class Networks extends \Podlove\Modules\Base {
 
 	public function add_system_report_validations($fields)
 	{
-		$switch_to_main_blog = function() {
-			global $current_site;
-			switch_to_blog($current_site->blog_id);
-		};
-
-		$is_active_in_main_blog = function() use ($switch_to_main_blog) {
-			
-			$switch_to_main_blog();
-			$module_active = \Podlove\Modules\Base::is_active('networks');
-			$plugin_active = is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) );
-			restore_current_blog();
-
-			return $module_active && $plugin_active;
-		};
-
 		$fields['network module'] = [
-			'callback' => function() use ($is_active_in_main_blog) {
-				if ($is_active_in_main_blog()) {
+			'callback' => function() {
+				if (self::is_active_in_main_blog()) {
 					return "ok";
 				} else {
 					return [
@@ -70,6 +55,17 @@ class Networks extends \Podlove\Modules\Base {
 		];
 
 		return $fields;
+	}
+
+	private static function is_active_in_main_blog() {
+		global $current_site;
+
+		return \Podlove\with_blog_scope($current_site->blog_id, function() {
+			$module_active = \Podlove\Modules\Base::is_active('networks');
+			$plugin_active = is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) );
+			
+			return $module_active && $plugin_active;
+		});
 	}
 
 	public function twig_template_filter( $context ) {
