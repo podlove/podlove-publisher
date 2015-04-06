@@ -144,6 +144,7 @@ We added a happy bunch of widgets to make your life easy.
 * add warning in tracking settings when default permalink structure is used
 * add support for Auphonic cover art
 * add support for Jetpack "Publicize" module to podcast post type
+* contributor editing has a tabbed interface
 * fix: remove Jetpack "Site Icon" from podcast feeds
 
 = 2.0.5 =
