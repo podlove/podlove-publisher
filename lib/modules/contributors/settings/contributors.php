@@ -213,7 +213,11 @@ class Contributors {
 	private function edit_template() {
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
 
-		$this->tab_interface(sprintf( __( 'Contributor: %s', 'podlove' ), $contributor->getName()));
+		$this->tab_interface(sprintf(
+			'%s &#x00BB; %s', 
+			'<a href="?post_type=podcast&amp;page=podlove_contributors_settings_handle" style="text-decoration: none">' . __('Contributors', 'podlove') . '</a>',
+			$contributor->getName()
+		));
 	}
 
 	public function scripts_and_styles() {
