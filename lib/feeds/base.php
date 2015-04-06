@@ -31,7 +31,7 @@ function override_feed_title( $feed ) {
 
 function override_feed_description($feed) {
 	add_filter('podlove_rss_feed_description', function($description) use ($feed) {
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$desc = $podcast->subtitle ? $podcast->subtitle : $description;
 		return htmlspecialchars($desc);
 	});
@@ -39,7 +39,7 @@ function override_feed_description($feed) {
 
 function override_feed_language( $feed ) {
 	add_filter( 'pre_option_rss_language', function ( $language ) use ( $feed ) {
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		return apply_filters( 'podlove_feed_language', ( $podcast->language ) ? $podcast->language : $language );
 	} );
 }
@@ -255,7 +255,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$xml .= apply_filters( 'podlove_feed_itunes_summary', $summary );
 
 			if (\Podlove\get_setting('metadata', 'enable_episode_explicit')) {
-				$itunes_explicit = apply_filters( 'podlove_feed_content', $episode->explicitText() );
+				$itunes_explicit = apply_filters( 'podlove_feed_content', $episode->explicit_text() );
 				$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', $itunes_explicit );
 				$xml .= apply_filters( 'podlove_feed_itunes_explicit', $itunes_explicit );
 			}

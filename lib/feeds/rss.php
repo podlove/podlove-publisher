@@ -16,7 +16,7 @@ class RSS {
 			echo 'xmlns:fh="http://purl.org/syndication/history/1.0" ';
 		} );
 
-		$podcast        = Model\Podcast::get_instance();
+		$podcast        = Model\Podcast::get();
 		$feed           = Model\Feed::find_one_by_slug( $feed_slug );
 		$episode_asset  = $feed->episode_asset();
 		$file_type      = $episode_asset->file_type();

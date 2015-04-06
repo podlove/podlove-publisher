@@ -33,6 +33,20 @@ add_action( 'plugins_loaded', function () {
 	}
 } );
 
+// Add core modules to "activated modules" to ensure:
+// 1. they are active
+// 2. activation hook gets fired
+add_filter('pre_update_option_podlove_active_modules', function($new_val, $old_val) {
+
+	// bring in form
+	$core_modules = [];
+	foreach (Modules\Base::get_core_module_names() as $module) {
+		$core_modules[$module] = "on";
+	}
+
+	return array_merge($new_val, $core_modules);
+}, 10, 2);
+
 // fire activation and deactivation hooks for modules
 add_action( 'update_option_podlove_active_modules', function( $old_val, $new_val ) {
 	$deactivated_modules = array_keys( array_diff_assoc( $old_val, $new_val ) );

@@ -11,8 +11,20 @@ class TemplateController {
 			'get', 'update', 'create', 'delete'
 		);
 
-		foreach ( $actions as $action )
+		foreach ( $actions as $action ) {
+			
+			if (is_network_admin()) {
+				// No need to deactivate the scope because the script dies
+				// after the main action anyway.
+				add_action( 'wp_ajax_podlove-template-' . $action, [ __CLASS__, 'activate_network_scope'], 9 );
+			}
+
 			add_action( 'wp_ajax_podlove-template-' . $action, array( __CLASS__, str_replace( '-', '_', $action ) ) );
+		}
+	}
+
+	public static function activate_network_scope() {
+		Template::activate_network_scope();
 	}
 
 	public static function get() {

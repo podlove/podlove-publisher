@@ -77,7 +77,7 @@ class License {
 
 		// episodes fall back to podcast licenses
 		if ($this->scope == 'episode')
-			return Podcast::get_instance()->get_license_html();
+			return Podcast::get()->get_license_html();
 
 		// ... otherwise, a license is missing
 		return "

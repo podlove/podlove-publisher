@@ -6,6 +6,10 @@ use \Podlove\Model\Episode;
 
 class Contributor extends Base
 {	
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+
 	public static function byGroup($groupSlug) {
 		global $wpdb;
 
@@ -122,6 +126,99 @@ class Contributor extends Base
 
 	public function getContributions() {
 		return EpisodeContribution::find_all_by_contributor_id($this->id);
+	}
+
+	/**
+	 * Episodes
+	 *
+	 * Filter and order episodes with parameters:
+	 * 
+	 * - group: Filter by contribution group. Default: ''.
+	 * - role: Filter by contribution role. Default: ''.
+	 * - post_status: Publication status of the post. Defaults to 'publish'
+	 * - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+	 * - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+	 *   - 'publicationDate' - Order by publication date.
+	 *   - 'recordingDate' - Order by recording date.
+	 *   - 'title' - Order by title.
+	 *   - 'slug' - Order by episode slug.
+	 *	 - 'limit' - Limit the number of returned episodes.
+	 */	
+	public function episodes($args = []) {
+		return $this->with_blog_scope(function() use ($args) {
+			global $wpdb;
+
+			$joins = "";
+
+			if (isset($args['group']) && $args['group']) {
+				$joins .= "INNER JOIN " . ContributorGroup::table_name() . " g ON g.id = ec.group_id AND g.slug = '" . esc_sql($args['group']) . "'";
+			}
+
+			if (isset($args['role']) && $args['role']) {
+				$joins .= "INNER JOIN " . ContributorRole::table_name() . " r ON r.id = ec.role_id AND r.slug = '" . esc_sql($args['role']) . "'";
+			}
+
+			$where = "ec.contributor_id = " . (int) $this->id;
+
+			if (isset($args['post_status']) && in_array($args['post_status'], get_post_stati())) {
+				$where .= " AND p.post_status = '" . $args['post_status'] . "'";
+			} else {
+				$where .= " AND p.post_status = 'publish'";
+			}
+
+			// order
+			$order_map = array(
+				'publicationDate' => 'p.post_date',
+				'recordingDate'   => 'e.recordingDate',
+				'slug'            => 'e.slug',
+				'title'           => 'p.post_title'
+			);
+
+			if (isset($args['orderby']) && isset($order_map[$args['orderby']])) {
+				$orderby = $order_map[$args['orderby']];
+			} else {
+				$orderby = $order_map['publicationDate'];
+			}
+
+			if (isset($args['order'])) {
+				$args['order'] = strtoupper($args['order']);
+				if (in_array($args['order'], array('ASC', 'DESC'))) {
+					$order = $args['order'];
+				} else {
+					$order = 'DESC';
+				}
+			} else {
+				$order = 'DESC';
+			}
+
+			if (isset($args['limit'])) {
+				$limit = ' LIMIT ' . (int) $args['limit'];
+			} else {
+				$limit = '';
+			}
+
+			$sql = '
+				SELECT
+					ec.episode_id
+				FROM
+					' . EpisodeContribution::table_name() . ' ec
+					INNER JOIN ' . \Podlove\Model\Episode::table_name() . ' e ON e.id = ec.episode_id
+					INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
+					' . $joins . '
+				WHERE ' . $where . '
+				GROUP BY ec.episode_id
+				ORDER BY ' . $orderby . ' ' . $order . 
+				$limit
+			;
+
+			$episode_ids = $wpdb->get_col($sql);
+
+			return array_map(function($episode_id) {
+				return \Podlove\Model\Episode::find_one_by_id($episode_id);
+			}, array_unique($episode_ids));
+		});
 	}
 
 	public function getPublishedContributionCount() {

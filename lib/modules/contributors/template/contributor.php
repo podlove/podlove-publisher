@@ -100,7 +100,10 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function role() {
-		return ($this->contribution) ? $this->contribution->getRole()->title : '';
+		if ($role = $this->contribution->getRole())
+			return $role->title;
+		else
+			return '';
 	}
 
 	/**
@@ -112,7 +115,10 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function group() {
-		return ($this->contribution) ? $this->contribution->getGroup()->title : '';
+		if ($group = $this->contribution->getGroup())
+			return $group->title;
+		else
+			return '';
 	}
 
 	/**
@@ -168,53 +174,40 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function flattr_url() {
-
-		if (is_page()) {
-			return "https://flattr.com/profile/" . $this->flattr();
-		} else {
-			return get_permalink( get_the_ID() ) . "#" . md5( $this->contributor->id . '-' . $this->flattr() );
-		}
+		return $this->contributor->with_blog_scope(function() {
+			if (is_page()) {
+				return "https://flattr.com/profile/" . $this->flattr();
+			} else {
+				return get_permalink( get_the_ID() ) . "#" . md5( $this->contributor->id . '-' . $this->flattr() );
+			}
+		});
 	}
 
 	/**
 	 * Episodes with this contributor
+	 * 
+	 * Filter and order episodes with parameters:
+	 * 
+	 * - group: Filter by contribution group. Default: ''.
+	 * - role: Filter by contribution role. Default: ''.
+	 * - post_status: Publication status of the post. Defaults to 'publish'
+	 * - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+	 * - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+	 *   - 'publicationDate' - Order by publication date.
+	 *   - 'recordingDate' - Order by recording date.
+	 *   - 'title' - Order by title.
+	 *   - 'slug' - Order by episode slug.
+	 *	 - 'limit' - Limit the number of returned episodes.
 	 *
 	 * @see  episode
 	 * @accessor
 	 */
-	public function episodes() {
-		global $wpdb;
-
-		$sql = '
-			SELECT
-				ec.episode_id
-			FROM
-				' . EpisodeContribution::table_name() . ' ec
-				INNER JOIN ' . \Podlove\Model\Episode::table_name() . ' e ON e.id = ec.episode_id
-				INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
-			WHERE
-				ec.contributor_id = %d
-				AND p.post_status = "publish"
-			GROUP BY
-				ec.episode_id
-			ORDER BY
-				p.post_date DESC
-		';
-
-		$episode_ids = $wpdb->get_col(
-			$wpdb->prepare($sql, $this->contributor->id)
-		);
-
-		// I'm not sure under which circumstances the query emits duplicate
-		// episode IDs — but it happens.
-		$episode_ids = array_unique($episode_ids);
-
-		$episodes = array();
-		foreach ($episode_ids as $episode_id) {
-			$episodes[$episode_id] = new Episode(\Podlove\Model\Episode::find_one_by_id($episode_id));
-		}
-
-		return array_values($episodes);
+	public function episodes($args = []) {
+		return array_map(function($e) {
+			return new Episode($e);
+		}, $this->contributor->episodes($args));
 	}
 
 }

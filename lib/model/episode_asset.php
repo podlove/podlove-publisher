@@ -3,6 +3,10 @@ namespace Podlove\Model;
 
 class EpisodeAsset extends Base {
 
+	use KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+
 	public function save() {
 		global $wpdb;
 
@@ -22,7 +26,9 @@ class EpisodeAsset extends Base {
 	 * @return \Podlove\Model\FileType|NULL
 	 */
 	public function file_type() {
-		return FileType::find_by_id( $this->file_type_id );
+		return $this->with_blog_scope(function() {
+			return FileType::find_by_id( $this->file_type_id );
+		});
 	}
 
 	/**
@@ -31,7 +37,9 @@ class EpisodeAsset extends Base {
 	 * @return array|NULL
 	 */
 	function media_files() {
-		return MediaFile::find_all_by_episode_asset_id( $this->id );
+		return $this->with_blog_scope(function() {
+			return MediaFile::find_all_by_episode_asset_id( $this->id );
+		});
 	}
 
 	/**

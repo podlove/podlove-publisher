@@ -2,7 +2,7 @@
 {% for contributor in episode.contributors({group: group, role: role}) %}
 	{% if contributor.visible %}
 		<li>
-			{% if avatars == "yes" %}
+			{% if option.avatars == "yes" %}
 				<span class="avatar">{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 18} only %}</span>
 			{% endif %}
 			<span class="name">{{ contributor.name }}</span>

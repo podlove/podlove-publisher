@@ -54,7 +54,7 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 	if (((int) $old['chapters']) <= 0) // just changes from an asset
 		return $new;
 
-	$episodes = \Podlove\Model\Episode::allByTime();
+	$episodes = \Podlove\Model\Episode::find_all_by_time();
 
 	// 10 seconds per episode or 30 seconds since 1 request per asset 
 	// is required if it is not cached

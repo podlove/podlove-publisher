@@ -143,6 +143,24 @@ class Tracking extends Tab {
 			),
 			/* $callback */ function () {
 
+				if (!\get_option('permalink_structure')) {
+					?>
+					<div class="error">
+						<p>
+							<b><?php echo __('Please Change Permalink Structure', 'podlove') ?></b>
+							<?php
+							echo sprintf(
+								__('You are using the default WordPress permalink structure. 
+								This may cause problems with some podcast clients when you activate tracking.
+								Go to %s and set it to anything but default (for example "Post name") before activating Tracking.', 'podlove'),
+								'<a href="' . admin_url('options-permalink.php') . '">' . __('Permalink Settings') . '</a>'
+							);
+							?>
+						</p>
+					</div>
+					<?php
+				}
+
 				$media_file = Model\MediaFile::find_example();
 				if (!$media_file)
 					return;

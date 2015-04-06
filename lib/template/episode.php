@@ -20,7 +20,7 @@ class Episode extends Wrapper {
 
 	public function __construct(\Podlove\Model\Episode $episode) {
 		$this->episode = $episode;
-		$this->post = get_post($episode->post_id);
+		$this->post    = $episode->post();
 	}
 
 	protected function getExtraFilterArgs() {
@@ -90,8 +90,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function player() {
-		$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $this->episode );
-		return $printer->render();
+		return $this->episode->player();
 	}
 
 	/**
@@ -126,7 +125,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function explicit() {
-		return $this->episode->explicitText();
+		return $this->episode->explicit_text();
 	}
 
 	/**
@@ -135,7 +134,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function url() {
-		return get_permalink($this->post->ID);
+		return $this->episode->permalink();
 	}
 
 	/**
@@ -177,7 +176,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function meta($meta_key) {
-		return get_post_meta($this->post->ID, $meta_key, true);
+		return $this->episode->meta($meta_key, true);
 	}
 
 	/**
@@ -200,7 +199,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function metas($meta_key) {
-		return get_post_meta($this->post->ID, $meta_key, false);
+		return $this->episode->meta($meta_key, false);
 	}
 
 	/**
@@ -219,10 +218,10 @@ class Episode extends Wrapper {
 	 * 
 	 * @accessor
 	 */
-	public function tags($args = array()) {
+	public function tags($args = []) {
 		return array_map(function($tag) {
-			return new Tag($tag);
-		}, wp_get_post_tags($this->post->ID, $args));
+			return new Tag($tag, $this->episode->get_blog_id());
+		}, $this->episode->tags($args));
 	}
 
 	/**

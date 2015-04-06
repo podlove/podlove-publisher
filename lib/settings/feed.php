@@ -246,7 +246,7 @@ class Feed {
 			<?php settings_fields( Podcast::$pagehook ); ?>
 
 			<?php
-			$podcast = \Podlove\Model\Podcast::get_instance();
+			$podcast = \Podlove\Model\Podcast::get();
 
 			$form_attributes = array(
 				'context'    => 'podlove_podcast',
@@ -310,7 +310,7 @@ class Feed {
 
 			$feed = $form->object;
 
-			$podcast = \Podlove\Model\Podcast::get_instance();
+			$podcast = \Podlove\Model\Podcast::get();
 
 			$episode_assets = \Podlove\Model\EpisodeAsset::all();
 			$assets = array();

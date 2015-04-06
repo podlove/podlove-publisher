@@ -105,6 +105,47 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.1.0 =
+
+**Networks: WordPress Multisite Support is Here**
+
+lorem ...
+
+**Widgets**
+
+We added a happy bunch of widgets to make your life easy. 
+
+* Podcast Information: Display cover, subtitle and summary of your podcast
+* Recent Episodes: Display a list of recent episodes, with cover art and duration if you like
+* Template: Display any Publisher template in a widget area
+* Podcast License
+
+**Templates**
+
+* add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)
+* add accessor `{{ flattr.button }}` (see http://docs.podlove.org/reference/template-tags/#flattr)
+* add query parameters to ``{{ contributor.episodes }}`:
+
+    - group: Filter by contribution group. Default: ''.
+    - role: Filter by contribution role. Default: ''.
+    - post_status: Publication status of the post. Defaults to 'publish'
+    - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+      - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+      - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+    - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+      - 'publicationDate' - Order by publication date.
+      - 'recordingDate' - Order by recording date.
+      - 'title' - Order by title.
+      - 'slug' - Order by episode slug.
+      - 'limit' - Limit the number of returned episodes.
+
+**Other**
+
+* add warning in tracking settings when default permalink structure is used
+* add support for Auphonic cover art
+* add support for Jetpack "Publicize" module to podcast post type
+* fix: remove Jetpack "Site Icon" from podcast feeds
+
 = 2.0.5 =
 
 * fix: template editor cursor position in Safari (by changing to a different theme that doesn't use bold styles)
