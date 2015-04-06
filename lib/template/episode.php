@@ -220,7 +220,7 @@ class Episode extends Wrapper {
 	 */
 	public function tags($args = []) {
 		return array_map(function($tag) {
-			return new Tag($tag);
+			return new Tag($tag, $this->episode->get_blog_id());
 		}, $this->episode->tags($args));
 	}
 
