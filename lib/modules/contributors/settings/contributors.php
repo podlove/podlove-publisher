@@ -121,12 +121,6 @@ class Contributors {
 			return;
 			
 		$contributor = Contributor::find_by_id( $_REQUEST['contributor'] );
-
-		foreach ($_POST['podlove_contributor'] as $contributor_attribute => $contributor_value) {
-			if ( isset($contributor->$contributor_attribute) )
-				$contributor->$contributor_attribute = $contributor_value;
-		}
-
 		$contributor->update_attributes( $_POST['podlove_contributor'] );
 
 		do_action( 'update_podlove_contributor', $contributor );
