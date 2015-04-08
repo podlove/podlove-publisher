@@ -180,9 +180,16 @@
 					},
 					success: function(data, status, xhr) {
 						if (data.success) {
+							// delete navigation entry
 							$("li a[data-id=" + template_id + "]", $navigation)
 								.closest("li")
 								.remove();
+
+							// clear out editor
+							$title.val("");
+							editor.getSession().setValue("");
+
+							// select other template, if available
 							$("li:first a", $navigation).click();
 						} else {
 							console.log("Error: Could not delete template.");

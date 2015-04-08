@@ -146,6 +146,7 @@ We added a happy bunch of widgets to make your life easy.
 * add support for Jetpack "Publicize" module to podcast post type
 * contributor editing has a tabbed interface
 * fix: remove Jetpack "Site Icon" from podcast feeds
+* fix: empty template editor when last template is deleted
 
 = 2.0.5 =
 
