@@ -77,6 +77,17 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Podcast
+	 * 
+	 * @accessor
+	 */
+	public function podcast() {
+		return new \Podlove\Template\Podcast(
+			\Podlove\Model\Podcast::get($this->episode->get_blog_id())
+		);
+	}
+
+	/**
 	 * Web Player for the current episode
 	 * 
 	 * The player should not appear in feeds, so embed it like this:

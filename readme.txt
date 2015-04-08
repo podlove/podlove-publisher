@@ -124,6 +124,7 @@ We added a happy bunch of widgets to make your life easy.
 
 * add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)
 * add accessor `{{ flattr.button }}` (see http://docs.podlove.org/reference/template-tags/#flattr)
+* add accessor `{{ episode.podcast }}`
 * add query parameters to ``{{ contributor.episodes }}`:
 
     - group: Filter by contribution group. Default: ''.
