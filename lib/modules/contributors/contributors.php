@@ -918,7 +918,7 @@ class Contributors extends \Podlove\Modules\Base {
 								o.row = o.row.replace(/\{\{id\}\}/g, i);
 								i++;
 							},
-							onRowAdd: function(o) {
+							onRowAdd: function(o, init) {
 								var row = $("#contributors_table_body tr:last");
 
 								row.find('td.podlove-avatar-column').html(o.object.avatar);
@@ -936,7 +936,9 @@ class Contributors extends \Podlove\Modules\Base {
 								var new_row_id = row.find('select.podlove-contributor-dropdown').last().attr('id');	
 								
 								// Focus new contributor
-								$("#" + new_row_id + "_chzn").find("a").focus();
+								if (!init) {
+									$("#" + new_row_id + "_chzn").find("a").focus();
+								}
 							},
 							onRowDelete: function(tr) {
 								var object_id = tr.data("object-id"),

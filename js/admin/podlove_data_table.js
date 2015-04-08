@@ -35,18 +35,18 @@
 			})[0]; // Using [0] as the returned element has multiple indexes
 		}
 
-		function add_object_row(object_index, object, entry) {
+		function add_object_row(object_index, object, entry, initializing) {
 			var row = $(settings.rowTemplate).html();
 			var obj = {row: row, object: object, entry: entry};
 
-			settings.onRowLoad.call(this, obj);
+			settings.onRowLoad.call(this, obj, initializing);
 			$("tbody", $this).append($(obj.row).data('object-id', object_index));
-			settings.onRowAdd.call(this, obj);
+			settings.onRowAdd.call(this, obj, initializing);
 		}
 
 		// add existing data
 		$.each(settings.data, function(index, entry) {
-			add_object_row(index, fetch_object(entry.id), entry);
+			add_object_row(index, fetch_object(entry.id), entry, true);
 		});
 
 		// fix td width
