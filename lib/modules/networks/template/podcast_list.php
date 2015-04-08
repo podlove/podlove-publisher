@@ -19,17 +19,6 @@ class PodcastList extends Wrapper {
 
 	public function __construct( $list ) {
 		$this->list = $list;
-
-		$podcasts = $list->podcasts();
-
-		$returned_podcasts = array();
-		foreach ( $podcasts as $podcast ) {
-			$returned_podcasts[] = new \Podlove\Template\Podcast(
-				\Podlove\Model\Podcast::get($podcast->blog_id)
-			);
-		}
-
-		$this->list->podcasts = $returned_podcasts;
 	}
 
 	protected function getExtraFilterArgs() {

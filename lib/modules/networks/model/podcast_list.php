@@ -35,9 +35,7 @@ class PodcastList extends Base {
 	public function latest_episodes( $number_of_episodes = 10, $orderby = "post_date", $order = "DESC" ) {
  		global $wpdb;
 
- 		$podcasts = $this->podcasts;
- 		$query = "";
- 		$episodes = array();
+ 		$podcasts = $this->podcasts();
 
  		// sanitize order
  		$order = $order == 'DESC' ? 'DESC' : 'ASC';
@@ -47,29 +45,27 @@ class PodcastList extends Base {
  		$orderby = in_array($orderby, $valid_orderby) ? $orderby : 'post_date';
  
  		// Generate mySQL Query
+ 		$subqueries = [];
  		foreach ( $podcasts as $podcast_key => $podcast ) {
- 			if ( $podcast_key == 0 ) {
- 			    $post_table = $wpdb->base_prefix . "posts";
- 			} else {
- 			    $post_table = $wpdb->base_prefix . $podcast->blog_id . "_posts";
- 			}
- 
- 			$post_table = esc_sql( $post_table );
- 	        $blog_table = esc_sql( $wpdb->base_prefix . 'blogs' );
- 
- 	        $query .= "(SELECT $post_table.ID, $post_table.post_title, $post_table.post_date, $blog_table.blog_id FROM $post_table, $blog_table\n";
- 	        $query .= "WHERE $post_table.post_type = 'podcast'";
- 	        $query .= "AND $post_table.post_status = 'publish'";
- 	        $query .= "AND $blog_table.blog_id = {$podcast->blog_id})";
- 
- 	        if ( $podcast_key !== count( $podcasts ) - 1 ) 
- 	           $query .= "UNION\n";
- 	        else
- 	           $query .= "ORDER BY $orderby $order LIMIT 0, " . (int) $number_of_episodes;
+
+ 			$subqueries[] = $podcast->with_blog_scope(function() use ($podcast) {
+ 				global $wpdb;
+	 
+	 	        $query = "(SELECT p.ID, p.post_title, p.post_date, b.blog_id FROM " . $wpdb->posts . " p, " . $wpdb->blogs . " b\n";
+	 	        $query .= "WHERE p.post_type = 'podcast'";
+	 	        $query .= "AND p.post_status = 'publish'";
+	 	        $query .= "AND b.blog_id = " . $podcast->get_blog_id() . ")";
+
+	 	       return $query;
+ 			});
+
  		}
  
+ 		$query = implode("UNION\n", $subqueries) . " ORDER BY $orderby $order LIMIT 0, " . (int) $number_of_episodes;
+
        	$recent_posts = $wpdb->get_results( $query );
  
+ 		$episodes = [];
        	foreach ( $recent_posts as $post ) {
     			switch_to_blog( $post->blog_id );
     			if ( $episode = \Podlove\Model\Episode::find_one_by_post_id( $post->ID ) ) {
