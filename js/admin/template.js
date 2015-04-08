@@ -58,7 +58,7 @@
 		editor.getSession().setMode("ace/mode/twig");
 		editor.getSession().setUseWrapMode(true);
 
-		$navigation.on("click", "a", function(e) {
+		var activate_template = function(e) {
 			var $this = $(this);
 			var template_id = $this.data('id');
 
@@ -80,10 +80,13 @@
 			}
 
 			$this.blur(); // removes link outline
-			e.preventDefault();
-		});
 
-		$toolbar.on("click", "a.save", function(e) {
+			if (e) {
+				e.preventDefault();
+			}
+		};
+
+		var save_template = function(e) {
 			var save_button = $(this);
 			var template_id = $("li.active a", $navigation).data("id");
 			var template_title = $title.val();
@@ -113,9 +116,9 @@
 			});
 
 			e.preventDefault();
-		});
+		};
 
-		$title.keyup(function(e) {
+		var update_title = function(e) {
 			var $active_item = $("li.active a", $navigation);
 			var template_id  = $active_item.data("id");
 			var new_title    = $(this).val();
@@ -126,9 +129,9 @@
 
 			// update navigation element
 			$(".filename", $active_item).html(new_title);
-		});
+		};
 
-		editor.on("change", function () {
+		var update_editor_cache = function () {
 			// only track user input, *not* programmatical change
 			// @see https://github.com/ajaxorg/ace/issues/503#issuecomment-44525640
 			if (editor.curOp && editor.curOp.command.name) { 
@@ -142,12 +145,9 @@
 					templates[template_id].markAsUnsaved();
 				}
 			}
-		});
+		};
 
-		// select first template on page load
-		$("li:first a", $navigation).click();
-
-		$(".add a", $navigation).click(function(e) {
+		var add_template = function(e) {
 
 			$.ajax(ajaxurl, {
 				dataType: 'json',
@@ -156,15 +156,17 @@
 				success: function(data, status, xhr) {
 					$("ul", $navigation)
 						.append("<li><a href=\"#\" data-id=\"" + data.id + "\"><span class='filename'>new template</span>&nbsp;</a></li>");
-					$("ul li:last a", $navigation).click();
+
+					$.proxy(activate_template, $("ul li:last a", $navigation))();
+
 					$title.focus();
 				}
 			});
 
 			e.preventDefault();
-		});
+		};
 
-		$(".delete", $toolbar).click(function(e) {
+		var delete_template = function(e) {
 			var template_id = $("li.active a", $navigation).data('id');
 
 			if (window.confirm("Delete template?")) {
@@ -190,7 +192,18 @@
 			}
 
 			e.preventDefault();
-		});
+		};
+
+		$title.keyup(update_title);
+		editor.on("change", update_editor_cache);
+
+		$navigation.on("click", "a[data-id]", activate_template);
+		$navigation.on("click", ".add a", add_template);
+		$toolbar.on("click", "a.save", save_template);
+		$toolbar.on("click", ".delete", delete_template);
+
+		// select first template on page load
+		$("li:first a", $navigation).click();
 
 	});
 
