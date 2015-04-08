@@ -136,30 +136,6 @@ class Dashboard {
 		<?php
 	}
 
-	/**
-	 * Look for errors in podcast settings.
-	 * 
-	 * @return array list of error messages
-	 */
-	public static function get_podcast_setting_warnings() {
-		
-		$warnings = array();
-		$podcast = Model\Podcast::get();
-
-		$required_attributes = array(
-			'title'               => __( 'Your podcast needs a title.', 'podlove' ),
-			'media_file_base_uri' => __( 'Your podcast needs a base URL for file storage.', 'podlove' ),
-		);
-		$required_attributes = apply_filters( 'podlove_podcast_required_attributes', $required_attributes );
-
-		foreach ( $required_attributes as $attribute => $error_text ) {
-			if ( ! $podcast->$attribute )
-				$warnings[] = $error_text;
-		}
-
-		return $warnings;
-	}
-
 	public static function duration_to_seconds( $timestring ) {
 		return \Podlove\NormalPlayTime\Parser::parse( $timestring, 's' );
 	}
