@@ -57,7 +57,6 @@ class Contributors extends \Podlove\Modules\Base {
 
 		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
 
-		add_action('podlove_network_admin_bar', array($this, 'add_to_admin_bar'));
 		add_action('podlove_network_admin_bar_podcast', array($this, 'add_to_admin_bar_podcast'), 10, 2);
 
 		\Podlove\Template\Episode::add_accessor(
@@ -92,29 +91,15 @@ class Contributors extends \Podlove\Modules\Base {
 		ContributorRepair::init();
 	}
 
-	public function add_to_admin_bar($wp_admin_bar) {
-		$args = array(
-			'id'     => 'podlove_toolbar_contributors',
-			'title'  => 'Contributors',
-			'parent' => 'podlove_toolbar',
-			'href'   => get_admin_url(get_current_blog_id(), 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle'),
-			'meta'   => array( 'class' => 'podlove-toolbar-without-icon' )
-		);
-		$wp_admin_bar->add_node( $args );
-	}
-
 	public function add_to_admin_bar_podcast($wp_admin_bar, $podcast)
 	{
 		$podcast_toolbar_id = 'podlove_toolbar_' . $podcast;
 
 		$args = array(
 			'id'     => $podcast_toolbar_id . '_contributors',
-			'title'  => __( 'Contributors', 'podlove' ),
-			'parent' => $podcast_toolbar_id,
-			'href'   => get_admin_url(get_current_blog_id(), 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle'),
-			'meta'   => array( 
-				'class' => 'podlove-toolbar-without-icon'
-			)
+			'title'  => __( 'Podcast Contributors', 'podlove' ),
+			'parent' => "blog-" . $podcast,
+			'href'   => get_admin_url(get_current_blog_id(), 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle')
 		);
 		$wp_admin_bar->add_node( $args );
 	}
