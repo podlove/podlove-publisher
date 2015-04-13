@@ -26,6 +26,9 @@ class Settings {
 
 		$this->init_page_documentation(self::$pagehook);
 
+		if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_settings_handle')
+			return;
+
 		$tabs = new Tabs( __( 'Expert Settings', 'podlove' ) );
 		$tabs->addTab( new Tab\Website( __( 'Website', 'podlove' ), true ) );
 		$tabs->addTab( new Tab\Metadata( __( 'Metadata', 'podlove' ) ) );

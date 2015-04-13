@@ -5,8 +5,11 @@ use \Podlove\Settings\Expert\Tab;
 
 class Website extends Tab {
 	public function init() {
+		
 		// always flush rewrite rules here for custom_episode_slug setting
-		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		if ($this->is_active()) {
+			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		}
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_general',
