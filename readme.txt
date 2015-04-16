@@ -109,8 +109,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Networks: WordPress Multisite Support is Here**
 
-- WordPress Multisite
-- Dedicated Admin Menu with all Podcasts, for quick access
+- dedicated WordPress Multisite support
+- "My Sites" menu features podcast covers and menus include often used pages like "Podlove Dashboard" and episodes
 - Network Dashboard provides a birds-eye view over your podcast empire
 - Network-Templates that are accessible in every podcast
 - Podcast lists: give templates access to multiple podcasts at once, allowing you to automatically list all podcasts in your network, the 10 last episode releases in your network and much more
