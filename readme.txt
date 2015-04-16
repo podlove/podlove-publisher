@@ -152,6 +152,7 @@ We added a happy bunch of widgets to make your life easy.
 * contributor editing has a tabbed interface
 * fix: remove Jetpack "Site Icon" from podcast feeds
 * fix: empty template editor when last template is deleted
+* improved Podlove Dashboard performance
 
 = 2.0.5 =
 
