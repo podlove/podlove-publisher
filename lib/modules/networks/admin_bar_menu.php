@@ -61,14 +61,14 @@ class AdminBarMenu {
 			// Register Dashboard & Episodes per Podcast
 			$wp_admin_bar->add_node([
 				'id'     => self::podcast_toolbar_id($podcast_id, 'dashboard'),
-				'title'  => __( 'Podcast Dashboard', 'podlove' ),
+				'title'  => __( 'Podlove Dashboard', 'podlove' ),
 				'parent' => 'blog-' . $podcast_id,
 				'href'   => get_admin_url($podcast_id, 'admin.php?page=podlove_settings_handle')
 			]);
 
 			$wp_admin_bar->add_node([
 				'id'     => self::podcast_toolbar_id($podcast_id, 'episodes'),
-				'title'  => __( 'Podcast Episodes', 'podlove' ),
+				'title'  => __( 'Podlove Episodes', 'podlove' ),
 				'parent' => 'blog-' . $podcast_id,
 				'href'   => get_admin_url($podcast_id, 'edit.php?post_type=podcast')
 			]);

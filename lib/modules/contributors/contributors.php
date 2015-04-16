@@ -97,7 +97,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		$args = array(
 			'id'     => $podcast_toolbar_id . '_contributors',
-			'title'  => __( 'Podcast Contributors', 'podlove' ),
+			'title'  => __( 'Podlove Contributors', 'podlove' ),
 			'parent' => "blog-" . $podcast,
 			'href'   => get_admin_url(get_current_blog_id(), 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle')
 		);
