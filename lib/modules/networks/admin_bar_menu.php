@@ -7,13 +7,23 @@ class AdminBarMenu {
 
 	public static function init() {
 		add_action( 'admin_bar_menu', [__CLASS__, 'enhance_admin_bar'], 120 );
-		add_action( 'admin_head', [__CLASS__, 'print_styles'] );
+
+		add_action('admin_print_styles', function() {
+			wp_enqueue_style(
+				'podlove-network-cover-style',
+				admin_url('admin-ajax.php').'?action=podlove-network-cover-style',
+				[], \Podlove\get_plugin_header('Version')
+			);
+		});
+		add_action('wp_ajax_podlove-network-cover-style', [__CLASS__, 'print_styles']);
 	}
 
 	public static function print_styles() {
+		header('Content-type: text/css');
 		echo \Podlove\cache_for("podlove_admin_menu_style_covers", function() {
 			return self::get_styles();
 		}, HOUR_IN_SECONDS);
+		exit;
 	}
 
 	private static function get_styles() {
@@ -33,7 +43,6 @@ class AdminBarMenu {
 			return "#wp-admin-bar-blog-$id .blavatar { background-image: url(" . Podcast::get($id)->cover_image . "); }";
 		}, $podcast_ids));
 		?>
-<style type="text/css">
 <?php echo $cover_styles; ?>
 <?php echo $blavatar_classes ?> {
 	background-size: 100% 100%;
@@ -48,7 +57,6 @@ class AdminBarMenu {
 <?php echo $blavatar_before_classes; ?> {
 	content: none;
 }
-</style>
 		<?php
 
 		$html = ob_get_contents();
