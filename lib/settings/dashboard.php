@@ -327,6 +327,38 @@ class Dashboard {
 	}
 
 	public static function validate_podcast_files() {
+		global $wpdb;
+
+		$sql = "
+		SELECT
+			p.post_status,
+			mf.episode_id,
+			mf.episode_asset_id,
+			mf.size,
+			mf.id media_file_id
+		FROM
+			`" . Model\MediaFile::table_name() . "` mf
+			JOIN `" . Model\Episode::table_name() . "` e ON e.id = mf.`episode_id`
+			JOIN `" . $wpdb->posts . "` p ON e.`post_id` = p.`ID`
+		WHERE
+			p.`post_type` = 'podcast'
+			AND p.post_status in ('private', 'draft', 'publish', 'pending', 'future')
+		";
+
+		$rows = $wpdb->get_results($sql, ARRAY_A);
+
+		$media_files = [];
+		foreach ($rows as $row) {
+			
+			if (!isset($media_files[$row['episode_id']])) {
+				$media_files[$row['episode_id']] = [ 'post_status' => $row["post_status"] ];
+			}
+
+			$media_files[$row['episode_id']][$row['episode_asset_id']] = [
+				'size'          => $row['size'],
+				'media_file_id' => $row['media_file_id']
+			];
+		}
 		
 		$podcast = Model\Podcast::get();
 		?>
@@ -361,29 +393,27 @@ class Dashboard {
 				<tbody>
 					<?php foreach ( $episodes as $episode ): ?>
 						<?php 
-						$post_id = $episode->post_id;
-						$post = get_post( $post_id );
-
-						if ( ! $episode || ! $episode->is_valid() )
+						// skip invalid episodes
+						if (!isset($media_files[$episode->id]))
 							continue;
 						?>
 						<tr>
 							<td>
-								<a href="<?php echo get_edit_post_link( $episode->post_id ) ?>"><?php echo $episode->slug ?></a>
+								<a href="<?php echo admin_url('?post.php&amp;post=' . $episode->post_id . '&amp;action=edit') ?>"><?php echo $episode->slug ?></a>
 							</td>
-							<?php $media_files = $episode->media_files(); ?>
 							<?php foreach ( $assets as $asset ): ?>
 								<?php 
-								$files = array_filter( $media_files, function ( $file ) use ( $asset ) {
-									return $file->episode_asset_id == $asset->id;
-								} );
-								$file = array_pop( $files );
+								if (isset($media_files[$episode->id][$asset->id])) {
+									$file = $media_files[$episode->id][$asset->id];
+								} else {
+									$file = false;
+								}
 								?>
-								<td style="text-align: center; font-weight: bold; font-size: 20px" data-media-file-id="<?php echo $file ? $file->id : '' ?>">
+								<td style="text-align: center; font-weight: bold; font-size: 20px" data-media-file-id="<?php echo $file ? $file['media_file_id'] : '' ?>">
 									<?php
 									if ( ! $file ) {
 										echo ASSET_STATUS_INACTIVE;
-									} elseif ( $file->size > 0 ) {
+									} elseif ( $file['size'] > 0 ) {
 										echo ASSET_STATUS_OK;
 									} else {
 										echo ASSET_STATUS_ERROR;
@@ -392,9 +422,8 @@ class Dashboard {
 								</td>
 							<?php endforeach; ?>
 							<td>
-								<?php echo $post->post_status ?>
+								<?php echo $media_files[$episode->id]['post_status'] ?>
 							</td>
-							<!-- <td>buttons</td> -->
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
