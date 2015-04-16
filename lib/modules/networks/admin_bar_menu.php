@@ -11,6 +11,14 @@ class AdminBarMenu {
 	}
 
 	public static function print_styles() {
+		echo \Podlove\cache_for("podlove_admin_menu_style_covers", function() {
+			return self::get_styles();
+		}, HOUR_IN_SECONDS);
+	}
+
+	private static function get_styles() {
+		ob_start();
+
 		$podcast_ids = self::podcast_ids();
 
 		$blavatar_classes = implode(", ", array_map(function($id) {
@@ -42,12 +50,19 @@ class AdminBarMenu {
 }
 </style>
 		<?php
+
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $html;
 	}
 
 	public static function enhance_admin_bar($wp_admin_bar) {
-		do_action('podlove_network_admin_bar', $wp_admin_bar);
 		self::add_podcast_list($wp_admin_bar);
+		self::add_network_entries($wp_admin_bar);
+	}
 
+	private static function add_network_entries($wp_admin_bar) {
 		// add network dashboard
 		$wp_admin_bar->add_node([
 			'id'     => self::podcast_toolbar_id('network', 'dashboard'),
@@ -63,7 +78,6 @@ class AdminBarMenu {
 			'parent' => 'network-admin',
 			'href'   => network_admin_url('admin.php?page=podlove_templates_settings_handle')
 		]);
-
 	}
 
 	private static function add_podcast_list($wp_admin_bar) {
