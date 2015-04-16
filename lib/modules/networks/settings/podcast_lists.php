@@ -160,6 +160,12 @@ class PodcastLists {
 
 			$list = $form->object;
 
+			$wrapper->string( 'slug', array(
+				'label'       => __( 'ID', 'podlove' ),
+				'html'        => array( 'class' => 'regular-text required' ),
+				'description' => sprintf(__('For referencing in templates: %s', 'podlove'), '<code>{{ network.lists({id: "example"}).title }}</code>')
+			) );
+
 			$wrapper->string( 'title', array(
 				'label'       => __( 'Title', 'podlove' ),
 				'html'        => array( 'class' => 'regular-text required' )
@@ -176,11 +182,6 @@ class PodcastLists {
 				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
 			) );
 
-			$wrapper->string( 'slug', array(
-				'label'       => __( 'Slug', 'podlove' ),
-				'html'        => array( 'class' => 'regular-text required' )
-			) );
-
 			$wrapper->image( 'logo', array(
 				'label'        => __( 'Logo', 'podlove' ),
 				'description'  => __( 'JPEG or PNG.', 'podlove' ),
@@ -190,7 +191,7 @@ class PodcastLists {
 			) );
 
 			$wrapper->string( 'url', array(
-				'label'       => __( 'list URL', 'podlove' ),
+				'label'       => __( 'List URL', 'podlove' ),
 				'description' => __( '', 'podlove' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );

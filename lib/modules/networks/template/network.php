@@ -38,10 +38,10 @@ class Network extends Wrapper {
 	 * {% endfor %}
 	 * ```
 	 * 
-	 * Access a specific list by slug.
+	 * Access a specific list by id.
 	 * 
 	 * ```jinja
-	 * {{ network.lists({slug: "example"}).title }}
+	 * {{ network.lists({id: "example"}).title }}
 	 * ```
 	 * 
 	 * @see list
@@ -51,8 +51,8 @@ class Network extends Wrapper {
 
 		NetworksModel\PodcastList::activate_network_scope();
 
-		if (isset($args['slug'])) {
-			if ($list = NetworksModel\PodcastList::find_one_by_slug($args['slug']))
+		if (isset($args['id'])) {
+			if ($list = NetworksModel\PodcastList::find_one_by_slug($args['id']))
 				return new NetworksTemplate\PodcastList($list);
 		}
 		
