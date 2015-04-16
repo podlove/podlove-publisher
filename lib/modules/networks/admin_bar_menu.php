@@ -47,6 +47,23 @@ class AdminBarMenu {
 	public static function enhance_admin_bar($wp_admin_bar) {
 		do_action('podlove_network_admin_bar', $wp_admin_bar);
 		self::add_podcast_list($wp_admin_bar);
+
+		// add network dashboard
+		$wp_admin_bar->add_node([
+			'id'     => self::podcast_toolbar_id('network', 'dashboard'),
+			'title'  => __( 'Podlove Dashboard', 'podlove' ),
+			'parent' => 'network-admin',
+			'href'   => network_admin_url('admin.php?page=podlove_network_settings_handle')
+		]);
+
+		// add network templates
+		$wp_admin_bar->add_node([
+			'id'     => self::podcast_toolbar_id('network', 'templates'),
+			'title'  => __( 'Podlove Templates', 'podlove' ),
+			'parent' => 'network-admin',
+			'href'   => network_admin_url('admin.php?page=podlove_templates_settings_handle')
+		]);
+
 	}
 
 	private static function add_podcast_list($wp_admin_bar) {
