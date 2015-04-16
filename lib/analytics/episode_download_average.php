@@ -113,7 +113,7 @@ class EpisodeDownloadAverage
 
 				// only fill if release date is older than first item
 				if (!$date_diff->invert) {
-					$hour_diff = $date_diff->h + $date_diff->d * 24 + $date_diff->d * 30 * 24;
+					$hour_diff = $date_diff->h + $date_diff->d * 24 + $date_diff->m * 30 * 24 + $date_diff->y * 365 * 24;
 					$hour_diff = min($hour_diff, EpisodeDownloadAverage::HOURS_TO_CALCULATE); // don't generate data that will be deleted later
 
 					// fill with 0 entries for every missing hour

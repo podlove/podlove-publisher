@@ -58,6 +58,8 @@ class Ajax {
 			WHERE
 				pm.meta_key = '_podlove_eda_downloads'
 				AND p.post_status IN ('publish', 'private')
+			GROUP BY
+				pm.post_id
 		");
 
 		$downloads = array_reduce($downloads, function($agg, $item) {
