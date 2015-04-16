@@ -98,6 +98,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 		echo $csv;
+		ob_end_flush();
 		exit;
 	}
 
@@ -150,8 +151,6 @@ class Ajax {
 
 	public function analytics_episode_downloads_per_hour() {
 
-		\Podlove\Feeds\check_for_and_do_compression('text/plain');
-
 		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
 		$cache_key = 'podlove_analytics_dphx_' . $episode_id;
 
@@ -199,14 +198,13 @@ class Ajax {
 			exit;
 		}
 
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 		echo $content;
-
+		ob_end_flush();
 		exit;
 	}
 
 	public function analytics_total_downloads_per_day() {
-
-		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
 		$cache_key = 'podlove_analytics_tdphx';
 
@@ -254,8 +252,9 @@ class Ajax {
 			exit;
 		}
 
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 		echo $content;
-
+		ob_end_flush();
 		exit;
 	}
 
