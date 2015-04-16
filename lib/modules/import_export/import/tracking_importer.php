@@ -27,7 +27,7 @@ class TrackingImporter {
 		require_once ABSPATH . '/wp-admin/includes/file.php';
 		 
 		$file = wp_handle_upload($_FILES['podlove_import_tracking'], array('test_form' => false));
-		if ($file) {
+		if ($file && (!isset($file['error']) || !$file['error'])) {
 			update_option('podlove_import_tracking_file', $file['file']);
 			if (!($file = get_option('podlove_import_tracking_file')))
 				return;
@@ -35,7 +35,7 @@ class TrackingImporter {
 			$importer = new \Podlove\Modules\ImportExport\Import\TrackingImporter($file);
 			$importer->import();
 		} else {
-			// file upload didn't work
+			echo '<div class="error"><p>' . $file['error'] . '</p></div>';
 		}
 	}
 
