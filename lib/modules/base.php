@@ -226,4 +226,16 @@ abstract class Base {
 		return $this->options;
 	}
 
+	public static function is_module_settings_page() {
+		// If I'm on the module page ...
+		if (filter_input(INPUT_GET, 'page') == 'podlove_settings_modules_handle')
+			return true;
+
+		// ... or saving on the module page
+		if (stripos(filter_input(INPUT_SERVER, 'REQUEST_URI'), 'options.php') !== FALSE)
+			return true;
+
+		return false;
+	}
+
 }

@@ -70,6 +70,9 @@ class AppDotNet {
 		if (!is_admin())
 			return;
 
+		if (!\Podlove\Modules\Base::is_module_settings_page())
+			return;
+
 		if (!\Podlove\Modules\Base::is_active('app_dot_net'))
 			return;
 
