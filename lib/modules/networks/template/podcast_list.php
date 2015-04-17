@@ -80,7 +80,9 @@ class PodcastList extends Wrapper {
 	 * @accessor
 	 */
 	public function podcasts() {
-		return $this->list->podcasts;
+		return array_map(function($podcast) {
+			return new \Podlove\Template\Podcast($podcast);
+		}, $this->list->podcasts());
 	}
 
 	/**
