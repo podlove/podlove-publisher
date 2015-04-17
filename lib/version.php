@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 96 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 97 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1122,6 +1122,13 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 96:
 			\Podlove\DeleteHeadRequests::init();
+		break;
+		case 97:
+			// recalculate all downloads average data
+			$wpdb->query(sprintf(
+				'DELETE FROM `%s` WHERE `meta_key` LIKE "_podlove_eda%%"',
+				$wpdb->postmeta
+			));
 		break;
 	}
 

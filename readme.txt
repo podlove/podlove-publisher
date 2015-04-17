@@ -153,6 +153,7 @@ We added a happy bunch of widgets to make your life easy.
 * fix: remove Jetpack "Site Icon" from podcast feeds
 * fix: empty template editor when last template is deleted
 * improved Podlove Dashboard performance
+* fix analytics episode average calculation for ancient episodes
 
 **API changes**
 
