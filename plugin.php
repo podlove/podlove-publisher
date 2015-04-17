@@ -225,7 +225,6 @@ add_action( 'init', array( '\Podlove\Analytics\EpisodeDownloadAverage', 'init' )
 add_action( 'init', array( '\Podlove\Analytics\DownloadIntentCleanup', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
-add_action( 'admin_init', array( '\Podlove\DeleteHeadRequests', 'init' ) );
 add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );
 
 // init cache (after plugins_loaded, so modules have a chance to hook)

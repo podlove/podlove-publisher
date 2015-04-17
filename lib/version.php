@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 95 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 96 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1119,6 +1119,9 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` ADD COLUMN `flattr` VARCHAR(255) AFTER `avatar`',
 				\Podlove\Modules\Contributors\Model\Contributor::table_name()
 			) );
+		break;
+		case 96:
+			\Podlove\DeleteHeadRequests::init();
 		break;
 	}
 
