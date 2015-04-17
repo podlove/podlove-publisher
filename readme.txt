@@ -146,6 +146,7 @@ We added a happy bunch of widgets to make your life easy.
 
 **Other**
 
+* Flattr parameter in `[podlove-episode-contributor-list]` now defaults to "no". If you need to reactivate it, use `[podlove-episode-contributor-list flattr="yes"]`
 * add warning in tracking settings when default permalink structure is used
 * add support for Auphonic cover art
 * add support for Jetpack "Publicize" module to podcast post type
