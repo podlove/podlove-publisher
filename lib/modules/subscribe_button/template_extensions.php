@@ -9,11 +9,11 @@ class TemplateExtensions {
 	 * **Examples**
 	 * 
 	 * ```jinja
-	 * {{ podcast.subscribe_button }}
+	 * {{ podcast.subscribeButton }}
 	 * ```
 	 * 
 	 * ```jinja
-	 * {{ podcast.subscribe_button({size: 'small', width: '', colors: 'black;;;#ffffff'}) }}
+	 * {{ podcast.subscribeButton({size: 'small', width: '', colors: 'black;;;#ffffff'}) }}
 	 * ```
 	 * 
 	 * **Parameters**

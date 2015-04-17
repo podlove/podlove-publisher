@@ -146,7 +146,6 @@ We added a happy bunch of widgets to make your life easy.
 
 **Other**
 
-* Flattr parameter in `[podlove-episode-contributor-list]` now defaults to "no". If you need to reactivate it, use `[podlove-episode-contributor-list flattr="yes"]`
 * add warning in tracking settings when default permalink structure is used
 * add support for Auphonic cover art
 * add support for Jetpack "Publicize" module to podcast post type
@@ -154,6 +153,12 @@ We added a happy bunch of widgets to make your life easy.
 * fix: remove Jetpack "Site Icon" from podcast feeds
 * fix: empty template editor when last template is deleted
 * improved Podlove Dashboard performance
+
+**API changes**
+
+* Flattr parameter in `[podlove-episode-contributor-list]` now defaults to "no". If you need to reactivate it, use `[podlove-episode-contributor-list flattr="yes"]`
+* `[podlove-web-player]` was renamed to `[podlove-episode-web-player]` to avoid clashes with the standalone web player plugin. For now, the old shortcode still works.
+* `[podlove-subscribe-button]` was renamed to `[podlove-podcast-subscribe-button]` to avoid clashes with the standalone web player plugin. For now, the old shortcode still works.
 
 = 2.0.5 =
 

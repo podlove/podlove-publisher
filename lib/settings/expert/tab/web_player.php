@@ -129,7 +129,7 @@ class WebPlayer extends Tab {
 		$settings = array(
 			'inject' => array(
 				'label'       => __( 'Insert player automatically', 'podlove' ),
-				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-web-player]</code>.', 'podlove' ),
+				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-episode-web-player]</code>.', 'podlove' ),
 				'options'     => array(
 					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
 					'beginning' => __( 'insert at the beginning', 'podlove' ),

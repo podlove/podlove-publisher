@@ -66,9 +66,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 		$inject = \Podlove\get_webplayer_setting( 'inject' );
 
 		if ( $inject == 'beginning' ) {
-			$content = '[podlove-web-player]' . $content;
+			$content = '[podlove-episode-web-player]' . $content;
 		} elseif ( $inject == 'end' ) {
-			$content = $content . '[podlove-web-player]';
+			$content = $content . '[podlove-episode-web-player]';
 		}
 
 		return $content;
@@ -98,6 +98,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 			stripos( $content, '[audio' ) !== false OR 
 			stripos( $content, '[video' ) !== false OR
 			stripos( $content, '[podlove-web-player' ) !== false OR
+			stripos( $content, '[podlove-episode-web-player' ) !== false OR
 			stripos( $content, '[podlove-template' ) !== false
 		);
 	}

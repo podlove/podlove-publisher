@@ -156,7 +156,9 @@ function podlove_get_deprecated_shortcodes() {
 		'\[podlove-podcast-license[^\]]*]'  => '<code>{% include \'@core/license.twig\' with {\'license\': podcast.license} %}</code>',
 		'\[podlove-episode-license[^\]]*]'  => '<code>{% include \'@core/license.twig\' with {\'license\': episode.license} %}</code>',
 		'\[podlove-contributors[^\]]*]'     => '<code>[podlove-episode-contributor-list]</code>',
-		'\[podlove-contributor-list[^\]]*]' => '<code>[podlove-episode-contributor-list]</code>'
+		'\[podlove-contributor-list[^\]]*]' => '<code>[podlove-episode-contributor-list]</code>',
+		'\[podlove-web-player[^\]]*]'       => '<code>[podlove-episode-web-player]</code> (or <code>{{ episode.player }}</code> in templates)',
+		'\[podlove-subscribe-button[^\]]*]' => '<code>[podlove-podcast-subscribe-button]</code> (or <code>{{ podcast.subscribeButton }}</code> in templates)'
 	];
 }
 

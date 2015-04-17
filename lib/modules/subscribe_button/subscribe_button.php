@@ -9,7 +9,8 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	protected $module_group = 'web publishing';
 
 	public function load() {
-		add_shortcode('podlove-subscribe-button', [__CLASS__, 'button']);
+		
+		self::register_shortcode();
 
 		add_filter(
 			'podlove_widgets',
@@ -20,7 +21,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 		);
 
 		\Podlove\Template\Podcast::add_accessor(
-			'subscribe_button', ['\Podlove\Modules\SubscribeButton\TemplateExtensions', 'accessorPodcastSubscribeButton'], 4
+			'subscribeButton', ['\Podlove\Modules\SubscribeButton\TemplateExtensions', 'accessorPodcastSubscribeButton'], 4
 		);
 	}
 
@@ -28,4 +29,13 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	public static function button($args) {
 		return (new Button(Model\Podcast::get()))->render($args);
 	}
+
+	public static function register_shortcode() {
+		// backward compatible, but only load if no other plugin has registered this shortcode
+		if (!shortcode_exists('podlove-subscribe-button'))
+			add_shortcode('podlove-subscribe-button', [__CLASS__, 'button']);
+
+		add_shortcode('podlove-podcast-subscribe-button', [__CLASS__, 'button']);
+	}
+
 }

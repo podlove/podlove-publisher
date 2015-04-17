@@ -38,11 +38,8 @@ add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcod
  * Right now there is only audio support.
  *
  * Usage:
- * 	[podlove-web-player]
- *
- * @deprecated since 1.10.0 use {{ episode.player }} instead
- * @param  array $options
- * @return string
+ * 	[podlove-episode-web-player]
+ * 
  */
 function webplayer_shortcode( $options ) {
 	global $post;
@@ -54,7 +51,14 @@ function webplayer_shortcode( $options ) {
 	$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $episode );
 	return $printer->render();
 }
-add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
+add_action('plugins_loaded', function() {
+
+	// backward compatible, but only load if no other plugin has registered this shortcode
+	if (!shortcode_exists('podlove-web-player'))
+		add_shortcode('podlove-web-player', '\Podlove\webplayer_shortcode');
+
+	add_shortcode('podlove-episode-web-player', '\Podlove\webplayer_shortcode');
+});
 
 /**
  * Provides shortcode to display episode template.
