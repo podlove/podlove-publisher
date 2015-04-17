@@ -8,14 +8,15 @@ class AdminBarMenu {
 	public static function init() {
 		add_action( 'admin_bar_menu', [__CLASS__, 'enhance_admin_bar'], 120 );
 
-		add_action('admin_print_styles', function() {
-			wp_enqueue_style(
-				'podlove-network-cover-style',
-				admin_url('admin-ajax.php').'?action=podlove-network-cover-style',
-				[], \Podlove\get_plugin_header('Version')
-			);
-		});
-		add_action('wp_ajax_podlove-network-cover-style', [__CLASS__, 'print_styles']);
+		// DEACTIVATED until image caching/resizing is implemented
+		// add_action('admin_print_styles', function() {
+		// 	wp_enqueue_style(
+		// 		'podlove-network-cover-style',
+		// 		admin_url('admin-ajax.php').'?action=podlove-network-cover-style',
+		// 		[], \Podlove\get_plugin_header('Version')
+		// 	);
+		// });
+		// add_action('wp_ajax_podlove-network-cover-style', [__CLASS__, 'print_styles']);
 	}
 
 	public static function print_styles() {
