@@ -159,7 +159,7 @@ We added a happy bunch of widgets to make your life easy.
 
 * Flattr parameter in `[podlove-episode-contributor-list]` now defaults to "no". If you need to reactivate it, use `[podlove-episode-contributor-list flattr="yes"]`
 * `[podlove-web-player]` was renamed to `[podlove-episode-web-player]` to avoid clashes with the standalone web player plugin. For now, the old shortcode still works.
-* `[podlove-subscribe-button]` was renamed to `[podlove-podcast-subscribe-button]` to avoid clashes with the standalone web player plugin. For now, the old shortcode still works.
+* `[podlove-subscribe-button]` was renamed to `[podlove-podcast-subscribe-button]` to avoid clashes with the standalone button plugin. For now, the old shortcode still works.
 
 = 2.0.5 =
 
