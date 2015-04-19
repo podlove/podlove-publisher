@@ -8,6 +8,10 @@ class Widgets extends \Podlove\Modules\Base {
 	protected $module_description = 'Brings a bunch of useful Podlove Publisher widgets to WordPress.';
 	protected $module_group = 'web publishing';
 
+	public static function is_core() {
+		return true;
+	}
+
 	public function load() {
 		$widgets = array(
 				'\Podlove\Modules\Widgets\Widgets\PodcastLicense',
