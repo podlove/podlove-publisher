@@ -9,7 +9,7 @@ function handle_feed_proxy_redirects() {
 
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
-	$is_feedburner_bot = isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
+	$should_deliver_original_feed = isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( "/feedburner|feedsqueezer|feedvalidator|feedpress/i", $_SERVER['HTTP_USER_AGENT'] );
 	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
 	$is_feed_page = $paged > 1;
 
@@ -19,7 +19,7 @@ function handle_feed_proxy_redirects() {
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
 	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;
 
-	if ( ! $is_feed_page && strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $http_status_code > 0 ) {
+	if ( ! $is_feed_page && strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $should_deliver_original_feed && $http_status_code > 0 ) {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $http_status_code );
 		exit;
 	} else { // don't redirect; prepare feed
