@@ -63,9 +63,36 @@ class Wprelease
 		system "git push --tags"
 
 		puts "rsync files ..."
-		# system "rsync --recursive --quiet --delete --exclude=wprelease.yml --exclude=.git --exclude=.wordpress_release --exclude=.gitmodules --exclude=.tags --exclude=.tags_sorted_by_file --exclude=podlove.sublime-workspace --exclude=podlove.sublime-project . #{@svn_dir}/trunk"
-		# system "grunt"
-		system "rsync ./ #{@svn_dir}/trunk --recursive --delete --delete-excluded --exclude=.git --exclude=#{@svn_dir} --exclude=.gitmodules --exclude=.tags --exclude=tags --exclude=.ctags --exclude=.tags_sorted_by_file --exclude=wprelease.yml --exclude=podlove.sublime-workspace --exclude=podlove.sublime-project --exclude=lib/modules/podlove_web_player/player/podlove-web-player/libs --exclude=vendor/bin --exclude=vendor/phpunit --exclude=node_modules --exclude=Gruntfile.js --exclude=phpunit.xml --exclude=test --exclude=Rakefile"
+		
+		excludes = [
+			'.git',
+			 @svn_dir,
+			 '.gitmodules',
+			 '.gitignore',
+			 '.tags',
+			 'tags',
+			 '.ctags',
+			 '.tags_sorted_by_file',
+			 'wprelease.yml',
+			 'podlove.sublime-workspace',
+			 'podlove.sublime-project',
+			 'lib/modules/podlove_web_player/player/podlove-web-player/libs',
+			 'vendor/bin',
+			 'vendor/phpunit',
+			 'node_modules',
+			 'Gruntfile.js',
+			 'phpunit.xml',
+			 'test',
+			 'Rakefile',
+			 'bower_components',
+			 'bin',
+			 'README.md',
+			 'CONTRIBUTING.md',
+			 'composer.lock',
+			 'composer.json'
+		]
+
+		system "rsync ./ #{@svn_dir}/trunk --recursive " + excludes.map{|p| "--exclude=" + p}.join(" ") + " --delete --delete-excluded"
 
 		puts "committing changes to svn ..."
 
