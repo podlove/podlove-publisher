@@ -232,6 +232,7 @@ class Episode extends Base implements Licensable {
 			}
 		}
 
+		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 	}
 
 	/**

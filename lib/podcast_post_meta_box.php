@@ -8,6 +8,10 @@ class Podcast_Post_Meta_Box {
 
 	public function __construct() {
 		add_action( 'save_post', array( $this, 'save_postdata' ) );
+		add_action( 'save_post_podcast', function($post_id, $post, $_) {
+			if ($episode = Model\Episode::find_one_by_where('post_id = ' . intval($post_id)))
+				do_action( 'podlove_episode_content_has_changed', $episode->id );
+		}, 10, 3);
 	}
 
 	public static function add_meta_box() {
@@ -317,8 +321,6 @@ class Podcast_Post_Meta_Box {
 			$this->save_episode_assets( $episode, $episode_data['episode_assets'] );
 		else 
 			$this->save_episode_assets( $episode, array() );
-
-		do_action( 'podlove_episode_content_has_changed', $episode->id );
 	}
 
 	/**
