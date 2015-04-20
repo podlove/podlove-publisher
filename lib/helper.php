@@ -62,7 +62,8 @@ function get_setting( $namespace, $name ) {
 			'episode_archive_slug' => '/podcast/',
 			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
 			'ssl_verify_peer' => 'on',
-			'landing_page' => 'homepage'
+			'landing_page' => 'homepage',
+			'feeds_skip_redirect' => 'off'
 		),
 		'metadata' => array(
 			'enable_episode_recording_date' => 0,
