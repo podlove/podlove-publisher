@@ -124,6 +124,8 @@ We added a happy bunch of widgets to make your life easy.
 * Template: Display any Publisher template in a widget area
 * Podcast License
 
+The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It has also been renamed to "Podlove Publisher Subscribe Button" to be distinguishable from the new standalone plugin.
+
 **Templates**
 
 * add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)

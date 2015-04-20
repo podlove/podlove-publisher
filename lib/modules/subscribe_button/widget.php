@@ -9,7 +9,7 @@ class Widget extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_subscribe_button_widget',
-			'Podlove Subscribe Button',
+			'Podlove Publisher Subscribe Button',
 			array( 'description' => __( 'Adds a Podlove Subscribe Button to your Sidebar', 'podlove' ), )
 		);
 	}
@@ -39,7 +39,7 @@ class Widget extends \WP_Widget {
 		$title     = isset( $instance[ 'title' ] )     ? $instance[ 'title' ]      : '';
 		$button    = isset( $instance[ 'button' ] )    ? $instance[ 'button' ]     : '';
 		$style     = isset( $instance[ 'style' ] )     ? $instance[ 'style' ]      : '';
-		$autowidth = isset( $instance[ 'autowidth' ] ) ? $instance[ 'autowidth' ]  : 0;
+		$autowidth = isset( $instance[ 'autowidth' ] ) ? $instance[ 'autowidth' ]  : true;
 		$infotext  = isset( $instance[ 'infotext' ] )  ? $instance[ 'infotext' ]   : '';
 
 		$subscribebutton = Podcast::get();
@@ -51,10 +51,10 @@ class Widget extends \WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'style' ); ?>"><?php _e( 'Style', 'podlove' ); ?></label> 
 			<select class="widefat" id="<?php echo $this->get_field_id( 'style' ); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>">
-				<option value="small"    <?php echo ( $style == 'small'    ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'Small', 'podlove' ) ?></option>
-				<option value="medium"   <?php echo ( $style == 'medium'   ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'medium', 'podlove' ) ?></option>
-				<option value="big"      <?php echo ( $style == 'big'      ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'Big', 'podlove' ) ?></option>
-				<option value="big-logo" <?php echo ( $style == 'big-logo' ? 'selected=\"selected\"' : '' ); ?>><?php _e( 'Big with logo', 'podlove' ) ?></option>
+				<option value="big-logo" <?php selected($style, 'big-logo') ?>><?php _e( 'Big with logo', 'podlove' ) ?></option>
+				<option value="big"      <?php selected($style, 'big')      ?>><?php _e( 'Big', 'podlove' ) ?></option>
+				<option value="medium"   <?php selected($style, 'medium')   ?>><?php _e( 'Medium', 'podlove' ) ?></option>
+				<option value="small"    <?php selected($style, 'small')    ?>><?php _e( 'Small', 'podlove' ) ?></option>
 			</select>
 		</p>
 		<p>
