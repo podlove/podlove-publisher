@@ -152,10 +152,10 @@ The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It h
 * add support for Auphonic cover art
 * add support for Jetpack "Publicize" module to podcast post type
 * contributor editing has a tabbed interface
+* improved Podlove Dashboard performance
 * fix: remove Jetpack "Site Icon" from podcast feeds
 * fix: empty template editor when last template is deleted
 * fix: empty caches when a scheduled episode gets published
-* improved Podlove Dashboard performance
 * fix analytics episode average calculation for ancient episodes
 
 **API changes**
