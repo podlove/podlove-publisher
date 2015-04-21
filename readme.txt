@@ -152,6 +152,7 @@ The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It h
 * add warning in tracking settings when default permalink structure is used
 * add support for Auphonic cover art
 * add support for Jetpack "Publicize" module to podcast post type
+* add warning when open_basedir is set to system report
 * contributor editing has a tabbed interface
 * improved Podlove Dashboard performance
 * fix: remove Jetpack "Site Icon" from podcast feeds

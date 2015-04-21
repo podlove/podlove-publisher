@@ -31,7 +31,19 @@ class SystemReport {
 
 				return $plugin_data['Version'];
 			} ),
-			'curl'        => array( 'title' => 'curl Version',      'callback' => function() use ( &$errors ) {
+			'open_basedir' => array('callback' => function() use (&$errors) {
+				$open_basedir = trim(ini_get('open_basedir'));
+
+				if ($open_basedir != '')
+					$errors[] = 'The PHP setting "open_basedir" is not empty. This is incompatible with curl, a library required by Podlove Publisher. Please ask your hoster to unset "open_basedir".';
+
+				if ($open_basedir) {
+					return $open_basedir;
+				} else {
+					return 'ok';
+				}
+			}),
+			'curl'         => array( 'title' => 'curl Version',      'callback' => function() use ( &$errors ) {
 				$module_loaded = in_array( 'curl', get_loaded_extensions() );
 				$function_disabled = stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false;
 				$out = '';
