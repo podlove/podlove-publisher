@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 97 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 98 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1129,6 +1129,9 @@ function run_migrations_for_version( $version ) {
 				'DELETE FROM `%s` WHERE `meta_key` LIKE "_podlove_eda%%"',
 				$wpdb->postmeta
 			));
+		break;
+		case 98:
+			delete_transient('podlove_dashboard_stats_contributors');
 		break;
 	}
 
