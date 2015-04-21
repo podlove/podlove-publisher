@@ -471,3 +471,22 @@ label.podlove_cc_license_selector_label {
 .fullScreen .editor-wrapper {
 	position: static;
 }
+
+.podlove_gender_widget_column {
+	min-width: 300px;
+	display: inline-block;
+}
+
+.podlove_gender_widget_column table {
+	width: 95%;
+}
+
+.podlove_gender_widget_column thead th {
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.podlove_gender_widget_column td,
+.podlove_gender_widget_column th {
+	text-align: right;
+	padding-right: 2%;
+}

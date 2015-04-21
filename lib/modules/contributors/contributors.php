@@ -32,7 +32,7 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('rss2_head', array($this, 'feed_head_contributors'));
 		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
 
-		add_action('podlove_dashboard_statistics', array($this, 'dashboard_statistics_row'));
+		add_action('podlove_dashboard_meta_boxes', array($this, 'dashboard_gender_statistics'));
 		add_filter('podlove_dashboard_statistics_network', array($this, 'dashboard_network_statistics_row'));
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
@@ -276,39 +276,144 @@ class Contributors extends \Podlove\Modules\Base {
 		} else {
 			$contributions = EpisodeContribution::all();
 			$contributions_count = count($contributions);
+			
+			$empty_default_array = array(
+					'by_gender' => array(
+						'male' => 0,
+						'female' => 0,
+						'none' => 0
+					),
+					'total' => 0
+				);
 
-			$absolute_gender_numbers = array(
-				'female' => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'female'); })),
-				'male'   => count(array_filter($contributions, function($c) { return (is_object($c->getContributor()) && $c->getContributor()->gender == 'male'); }))
-			);
+			$global_gender_distribution = $empty_default_array;
+			$gender_distribution_by_role = array();
+			$gender_distribution_by_group = array();
 
-			$relative_gender_numbers = array_map(function($abs) use ($contributions_count) {
-				return $contributions_count > 0 ? $abs / $contributions_count * 100 : 0;
-			}, $absolute_gender_numbers);
+			$get_contributor_gender_by_contribution = function ($contribution) {
+				$contributor = $contribution->getContributor();
 
-			// sort by percentage (high to low)
-			arsort( $relative_gender_numbers );
+				return $contributor->gender;
+			};
 
-			set_transient( 'podlove_dashboard_stats_contributors', $relative_gender_numbers, 3600 );
-			return $relative_gender_numbers;
+			$set_counter_by_group = function ($group_id, $gender) use ($empty_default_array, &$gender_distribution_by_group) {
+				if ( ! isset($gender_distribution_by_group[$group_id]) )
+					$gender_distribution_by_group[$group_id] = $empty_default_array;
+
+				$gender_distribution_by_group[$group_id]['by_gender'][$gender]++;
+				$gender_distribution_by_group[$group_id]['total']++;
+			};
+
+			$set_counter_by_role = function ($role_id, $gender) use ($empty_default_array, &$gender_distribution_by_role) {
+				if ( ! isset($gender_distribution_by_role[$role_id]) )
+					$gender_distribution_by_role[$role_id] = $empty_default_array;
+
+				$gender_distribution_by_role[$role_id]['by_gender'][$gender]++;
+				$gender_distribution_by_role[$role_id]['total']++;
+			};
+
+			foreach ($contributions as $contribution) {
+				$contributor_gender = $get_contributor_gender_by_contribution($contribution);
+
+				// Gender distribution by Group
+				$set_counter_by_group($contribution->group_id, $contributor_gender);
+				// Gender distribution by Role
+				$set_counter_by_role($contribution->role_id, $contributor_gender);
+				// Global Gender distribution
+				$global_gender_distribution['by_gender'][$contributor_gender]++;
+				$global_gender_distribution['total']++;
+			}
+
+			$gender_numbers = array(
+					'global' => $global_gender_distribution,
+					'by_role' => $gender_distribution_by_role,
+					'by_group' => $gender_distribution_by_group
+				);
+
+			set_transient( 'podlove_dashboard_stats_contributors', $gender_numbers, 3600 );
+			return $gender_numbers;
 		}
 	}
 
-	public function dashboard_statistics_row() {
-		$relative_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
-		?>
-		<tr>
-			<td class="podlove-dashboard-number-column">
-				<?php echo __('Genders', 'podlove') ?>
-			</td>
-			<td>
-				<?php
-				echo implode(', ', array_map(function($percent, $gender) {
-					return round($percent) . "% " . $gender;
-				}, $relative_gender_numbers, array_keys($relative_gender_numbers)));
+	public function dashboard_gender_statistics() {
+		add_meta_box(
+			\Podlove\Settings\Dashboard::$pagehook . '_gender',
+			__( 'Gender Statistics', 'podlove' ),
+			'Podlove\Modules\Contributors\Contributors::dashboard_gender_statistics_widget',
+			\Podlove\Settings\Dashboard::$pagehook,
+			'normal', 
+			'default',
+			array( 'numbers' => $this->fetch_contributors_for_dashboard_statistics() )
+		);
+	}
+
+	public static function dashboard_gender_statistics_widget($post, $arguments) {
+		$gender_distribution = $arguments['args']['numbers'];
+		$get_in_relative_percent = function ($value, $relative_to) {
+			return round($value / $relative_to * 100);
+		};
+
+		$group_or_role_staticts_table = function ( $context='group', $numbers ) use ( $get_in_relative_percent ) {
+			?>
+			<table cellspacing="0" cellspadding="0">
+				<thead>
+					<tr>
+						<th><?php echo ( $context == 'group' ? __('Group', 'podlove') : __('Role', 'podlove') ); ?></th>
+						<th><?php _e('Female', 'podlove'); ?></th>
+						<th><?php _e('Male', 'podlove'); ?></th>
+						<th><?php _e('Not Attributed', 'podlove'); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+			<?php
+			foreach ($numbers as $group_or_role_id => $group_or_role_numbers) {
+				$group_or_role = ( $context == 'group' ? ContributorGroup::find_one_by_id($group_or_role_id) : ContributorRole::find_one_by_id($group_or_role_id) ); // This return either a group or a role object	
+
+				if( ! $group_or_role )
+					continue;
 				?>
-			</td>
-		</tr>
+					<tr>
+						<td><?php echo $group_or_role->title; ?></td>
+						<td><?php echo $get_in_relative_percent($group_or_role_numbers['by_gender']['female'], $group_or_role_numbers['total']); ?>%</td>
+						<td><?php echo $get_in_relative_percent($group_or_role_numbers['by_gender']['male'], $group_or_role_numbers['total']); ?>%</td>
+						<td><?php echo $get_in_relative_percent($group_or_role_numbers['by_gender']['none'], $group_or_role_numbers['total']); ?>%</td>
+					</tr>
+				<?php
+			}
+			?>
+				</tbody>
+			</table>
+			<?php
+		};
+
+		?>
+			<div class="podlove_gender_widget_column">
+				<h4><?php _e('Total', 'podlove'); ?></h4>
+				<table cellspacing="0" cellspadding="0">
+					<thead>
+						<tr>
+							<th><?php _e('Female', 'podlove'); ?></th>
+							<th><?php _e('Male', 'podlove'); ?></th>
+							<th><?php _e('Not Attributed', 'podlove'); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><?php echo $get_in_relative_percent($gender_distribution['global']['by_gender']['female'], $gender_distribution['global']['total']) ?>%</td>
+							<td><?php echo $get_in_relative_percent($gender_distribution['global']['by_gender']['male'], $gender_distribution['global']['total']) ?>%</td>
+							<td><?php echo $get_in_relative_percent($gender_distribution['global']['by_gender']['none'], $gender_distribution['global']['total']) ?>%</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="podlove_gender_widget_column">
+				<h4><?php _e('By Group', 'podlove'); ?></h4>
+				<?php $group_or_role_staticts_table('group', $gender_distribution['by_group']); ?>
+			</div>
+			<div class="podlove_gender_widget_column">
+				<h4><?php _e('By Role', 'podlove'); ?></h4>
+				<?php $group_or_role_staticts_table('role', $gender_distribution['by_role']); ?>
+			</div>
 		<?php
 	}
 
@@ -317,13 +422,16 @@ class Contributors extends \Podlove\Modules\Base {
 		$podcasts_with_contributors_active = 0;
 		$relative_gender_numbers = array( 
 				'male' => 0,
-				'female' => 0
+				'female' => 0,
+				'none' => 0
 			);
+
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
 			if ( \Podlove\Modules\Base::is_active('contributors') ) {
-				foreach ( $this->fetch_contributors_for_dashboard_statistics() as $gender => $percentage ) {
-				 	$relative_gender_numbers[$gender] += $percentage;
+				$global_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
+				foreach ( $global_gender_numbers['global']['by_gender'] as $gender => $number_of_contributions ) {
+				 	$relative_gender_numbers[$gender] += $number_of_contributions / $global_gender_numbers['global']['total'] * 100;
 				 }
 				$podcasts_with_contributors_active++;
 			}
@@ -337,7 +445,7 @@ class Contributors extends \Podlove\Modules\Base {
 			<td>
 				<?php
 				echo implode(', ', array_map(function($percent, $gender) use ( $podcasts_with_contributors_active ) {
-					return round($percent/$podcasts_with_contributors_active) . "% " . $gender;
+					return round($percent/$podcasts_with_contributors_active) . "% " . ( $gender == 'none' ? 'not attributed' : $gender );
 				}, $relative_gender_numbers, array_keys($relative_gender_numbers)));
 				?>
 			</td>
