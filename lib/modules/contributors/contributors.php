@@ -271,68 +271,9 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	private function fetch_contributors_for_dashboard_statistics() {
-		if ( ( $contributor_genders = get_transient( 'podlove_dashboard_stats_contributors' ) ) !== FALSE ) {
-			return $contributor_genders;
-		} else {
-			$contributions = EpisodeContribution::all();
-			$contributions_count = count($contributions);
-			
-			$empty_default_array = array(
-				'by_gender' => array(
-					'male' => 0,
-					'female' => 0,
-					'none' => 0
-				),
-				'total' => 0
-			);
-
-			$global_gender_distribution   = $empty_default_array;
-			$gender_distribution_by_role  = array();
-			$gender_distribution_by_group = array();
-
-			$get_contributor_gender_by_contribution = function ($contribution) {
-				$contributor = $contribution->getContributor();
-
-				return $contributor->gender;
-			};
-
-			$set_counter_by_group = function ($group_id, $gender) use ($empty_default_array, &$gender_distribution_by_group) {
-				if ( ! isset($gender_distribution_by_group[$group_id]) )
-					$gender_distribution_by_group[$group_id] = $empty_default_array;
-
-				$gender_distribution_by_group[$group_id]['by_gender'][$gender]++;
-				$gender_distribution_by_group[$group_id]['total']++;
-			};
-
-			$set_counter_by_role = function ($role_id, $gender) use ($empty_default_array, &$gender_distribution_by_role) {
-				if ( ! isset($gender_distribution_by_role[$role_id]) )
-					$gender_distribution_by_role[$role_id] = $empty_default_array;
-
-				$gender_distribution_by_role[$role_id]['by_gender'][$gender]++;
-				$gender_distribution_by_role[$role_id]['total']++;
-			};
-
-			foreach ($contributions as $contribution) {
-				$contributor_gender = $get_contributor_gender_by_contribution($contribution);
-
-				// Gender distribution by Group
-				$set_counter_by_group($contribution->group_id, $contributor_gender);
-				// Gender distribution by Role
-				$set_counter_by_role($contribution->role_id, $contributor_gender);
-				// Global Gender distribution
-				$global_gender_distribution['by_gender'][$contributor_gender]++;
-				$global_gender_distribution['total']++;
-			}
-
-			$gender_numbers = array(
-				'global'   => $global_gender_distribution,
-				'by_role'  => $gender_distribution_by_role,
-				'by_group' => $gender_distribution_by_group
-			);
-
-			set_transient( 'podlove_dashboard_stats_contributors', $gender_numbers, 3600 );
-			return $gender_numbers;
-		}
+		return \Podlove\cache_for('podlove_dashboard_stats_contributors', function() {
+			return (new Model\ContributionGenderStatistics)->get();
+		}, 3600);
 	}
 
 	public function dashboard_gender_statistics() {
