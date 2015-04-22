@@ -1,6 +1,9 @@
 <?php
 namespace Podlove;
 
+use \Podlove\Model\Feed;
+use \Podlove\Cache\TemplateCache;
+
 /**
  * Adds feed discover links to WordPress head.
  */
@@ -27,12 +30,14 @@ class FeedDiscoverability {
 		if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
 			require_once \PODLOVE\PLUGIN_DIR . 'lib/feeds/base.php';
 
-		$feeds = \Podlove\Model\Feed::all( 'ORDER BY position ASC' );
-
-		foreach ( $feeds as $feed ) {
-			if ( $feed->discoverable )
-				echo '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
-		}
+		echo TemplateCache::get_instance()->cache_for('', function() {
+			$html = '';
+			foreach (Feed::all('ORDER BY position ASC') as $feed) {
+				if ($feed->discoverable)
+					$html .= '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed($feed->title_for_discovery()) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
+			}
+			return $html;
+		});
 	}
 
 }
