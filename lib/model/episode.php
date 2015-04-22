@@ -14,19 +14,31 @@ class Episode extends Base implements Licensable {
 		$this->set_blog_id();
 	}
 
-	public static function find_all_by_time() {
+	public static function find_all_by_time($args = []) {
 		global $wpdb;
+
+		$defaults = [
+			'post_status' => ['private', 'draft', 'publish', 'pending', 'future']
+		];
+		$args = wp_parse_args($args, $defaults);
+
+		if (!is_array($args['post_status']))
+			$args['post_status'] = [$args['post_status']];
 
 		$sql = '
 			SELECT
-				*
+				e.*
 			FROM
 				`' . Episode::table_name() . '` e 
 				JOIN `' . $wpdb->posts . '` p ON e.post_id = p.ID
+			WHERE
+				p.post_status IN (' . implode(", ", array_map(function($s) { return '"' . $s . '"'; }, $args['post_status'])) . ')
+				AND
+				p.post_type = "podcast"
 			ORDER BY
 				p.post_date DESC';
 
-		return array_filter(Episode::find_all_by_sql($sql), function($e) { return $e->is_valid(); });
+		return Episode::find_all_by_sql($sql);
 	}
 
 	public static function latest() {
