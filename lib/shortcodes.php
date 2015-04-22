@@ -99,7 +99,12 @@ function template_shortcode( $attributes ) {
 		return $tag() ? "1" : "0";
 	}, \Podlove\Template\TwigFilter::$template_tags));
 
-	$cache_key = $template_id . $permalink . $tag_permutation;
+	/**
+	 * Cache key must change for any custom parameters.
+	 */
+	$attr_permutation = implode('', array_map(function($a) { return (string) $a; }, array_values($attributes)));
+
+	$cache_key = $template_id . $permalink . $tag_permutation . $attr_permutation;
 	$cache_key = apply_filters( 'podlove_template_shortcode_cache_key', $cache_key, $template_id );
 
 	$cache = \Podlove\Cache\TemplateCache::get_instance();
