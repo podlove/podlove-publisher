@@ -2,6 +2,7 @@
 namespace Podlove\Modules\SubscribeButton;
 
 use \Podlove\Model\Podcast;
+use \Podlove\Cache\TemplateCache;
 
 /**
  * Podlove Subscribe Button
@@ -98,17 +99,19 @@ class Button {
 	 * @return array list of prepared feed data-objects
 	 */
 	private function feeds() {
-		return array_map(function($feed) {
+		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() {
+			return array_map(function($feed) {
 
-			$file_type = $feed->episode_asset()->file_type();
+				$file_type = $feed->episode_asset()->file_type();
 
-			return [
-				'type'    => $file_type->type,
-				'format'  => self::feed_format($file_type->extension),
-				'url'     => $feed->get_subscribe_url(),
-				'variant' => 'high'
-			];
-		}, $this->discoverable_feeds());
+				return [
+					'type'    => $file_type->type,
+					'format'  => self::feed_format($file_type->extension),
+					'url'     => $feed->get_subscribe_url(),
+					'variant' => 'high'
+				];
+			}, $this->discoverable_feeds());
+		});
 	}
 
 	/**
