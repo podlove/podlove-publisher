@@ -1,6 +1,39 @@
 <?php
 
-add_action('init', 'podlove_about_page_init');
+add_action('admin_init', 'podlove_about_page_init');
+add_action('admin_init', 'podlove_maybe_redirect_to_about_page', 20); // run after migrations
+
+/**
+ * Redirects to about page once.
+ * 
+ * To reset before a major/minor release, 
+ * add `delete_site_option("podlove_seen_about")` as a migration.
+ */
+function podlove_maybe_redirect_to_about_page() {
+	
+	if (!podlove_should_see_about_page())
+		return;
+
+	// show only once per upgrade and network
+	update_site_option('podlove_seen_about', true);
+
+	wp_safe_redirect( admin_url( 'admin.php?page=podlove_settings_handle&about' ) );
+}
+
+function podlove_should_see_about_page() {
+	global $pagenow;
+
+	if (!current_user_can('manage_options'))
+		return false;
+
+	if (in_array($pagenow, ['update.php', 'update-core.php', 'plugins.php', 'plugin-install.php']))
+		return false;
+
+	if (get_site_option('podlove_seen_about'))
+		return false;
+
+	return true;
+}
 
 function podlove_about_page_init() {
 
