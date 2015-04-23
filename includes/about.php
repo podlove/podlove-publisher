@@ -147,7 +147,7 @@ function podlove_about_page($_) {
 				This section is relevant if you are using templates with custom variables passed in shortcodes, like this: 
 			</p>
 			<p>
-				<code>[podlove-template id="example" param="foo" dog="wow"]</code>
+				<code>[podlove-template template="example" param="foo" dog="wow"]</code>
 			</p>
 			<p>
 				Before 2.1 you have accessed those variables simply by calling <code>param</code> and <code>dog</code>.
