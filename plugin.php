@@ -230,6 +230,7 @@ add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
+require_once \Podlove\PLUGIN_DIR . 'includes/about.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/admin_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/chapters.php';
