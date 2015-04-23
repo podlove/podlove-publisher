@@ -87,6 +87,10 @@ class Dashboard {
 	}
 
 	public static function settings_page() {
+
+		if (apply_filters('podlove_dashboard_page', false) !== false)
+			return;
+
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
