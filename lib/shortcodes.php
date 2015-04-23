@@ -65,11 +65,11 @@ add_action('plugins_loaded', function() {
  *
  * Usage:
  * 	
- * 	[podlove-template id="Template Title"]
+ * 	[podlove-template template="Template Title"]
  *
  * 	Parameters:
- * 		title: (required) Title of template to render.
- * 		autop: (optional) Wraps blocks of text in p tags. 'yes' or 'no'. Default: 'yes'
+ * 		template: (required) Title of template to render.
+ * 		autop:    (optional) Wraps blocks of text in p tags. 'yes' or 'no'. Default: 'yes'
  * 	
  * @param  array $attributes
  * @return string
@@ -77,9 +77,10 @@ add_action('plugins_loaded', function() {
 function template_shortcode( $attributes ) {
 
 	$defaults = array(
-		'title' => '',
-		'id' => '',
-		'autop' => false
+		'title'    => '', // deprecated
+		'id'       => '', // deprecated
+		'template' => '',
+		'autop'    => false
 	);
 
 	$attributes = array_merge( $defaults, $attributes );
@@ -87,9 +88,19 @@ function template_shortcode( $attributes ) {
 	if ( $attributes['title'] !== '' )
 		_deprecated_argument( __FUNCTION__, '1.3.14-alpha', 'The "title" attribute for [podlove-template] shortcode is deprecated. Use "id" instead.' );
 
+	if ( $attributes['id'] !== '' )
+		_deprecated_argument( __FUNCTION__, '2.1.0', 'The "id" attribute for [podlove-template] shortcode is deprecated. Use "template" instead.' );
+
 	// backward compatibility
-	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
-	$permalink   = get_permalink();
+	if ($attributes['template']) {
+		$template_id = $attributes['template'];
+	} elseif ($attributes['id']) {
+		$template_id = $attributes['id'];
+	} else {
+		$template_id = $attributes['title'];
+	}
+	
+	$permalink = get_permalink();
 
 	/**
 	 * Cache key must be unique for *every permutation* of the content.
