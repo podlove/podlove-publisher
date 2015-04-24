@@ -8,7 +8,7 @@ class PodcastInformation extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_podcast_widget',
-			'Podlove Podcast Information',
+			__('Podcast Information', 'podlove'),
 			array( 'description' => __( 'Displays basic information about your Podcast.', 'podlove' ) )
 		);
 	}

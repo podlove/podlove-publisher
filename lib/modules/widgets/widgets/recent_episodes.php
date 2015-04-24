@@ -9,7 +9,7 @@ class RecentEpisodes extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_recent_episodes_widget',
-			'Podlove Recent Episodes',
+			__('Recent Episodes', 'podlove'),
 			array( 'description' => __( 'Shows the recent episodes of your podcast.', 'podlove' ) )
 		);
 	}

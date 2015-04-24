@@ -8,7 +8,7 @@ class PodcastLicense extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_podcast_license_widget',
-			'Podlove Podcast License',
+			__('Podcast License', 'podlove'),
 			array( 'description' => __( 'Displays the license of your podcast.', 'podlove' ) )
 		);
 	}

@@ -9,7 +9,7 @@ class RenderTemplate extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_render_template_widget',
-			'Podlove Template',
+			__('Podlove Template', 'podlove'),
 			array( 'description' => __( 'Renders a Podlove template.', 'podlove' ) )
 		);
 	}
