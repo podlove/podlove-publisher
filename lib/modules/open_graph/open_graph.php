@@ -92,7 +92,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 				),
 				array(
 					'property' => 'og:title',
-					'content'  => $episode->full_title()
+					'content'  => get_the_title()
 				),
 				array(
 					'property' => 'og:url',

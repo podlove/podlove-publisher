@@ -157,6 +157,7 @@ The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It h
 * add daily cleanup of logging table (only keep entries of previous 4 weeks)
 * contributor editing has a tabbed interface
 * improved Podlove Dashboard performance
+* Open Graph title does not include episode subtitle any more
 * fix: remove Jetpack "Site Icon" from podcast feeds
 * fix: empty template editor when last template is deleted
 * fix: empty caches when a scheduled episode gets published
