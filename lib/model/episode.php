@@ -62,6 +62,10 @@ class Episode extends Base implements Licensable {
 		return reset($episodes);
 	}
 
+	public function title() {
+		return $this->with_blog_scope(function() { return get_the_title(); });
+	}
+
 	/**
 	 * Generate a human readable title.
 	 * 
@@ -71,8 +75,7 @@ class Episode extends Base implements Licensable {
 	 */
 	public function full_title() {
 		
-		$post  = $this->with_blog_scope(function() { return get_post($this->post_id); });
-		$title = $post->post_title;
+		$title = $this->title();
 		
 		if ($this->subtitle)
 			$title = $title . ' - ' . $this->subtitle;
@@ -87,7 +90,7 @@ class Episode extends Base implements Licensable {
 		} elseif ($this->subtitle) {
 			$description = $this->subtitle;
 		} else {
-			$description = $this->with_blog_scope(function() { return get_the_title(); });
+			$description = $this->title();
 		}
 		
 		return htmlspecialchars(trim($description));
