@@ -55,6 +55,9 @@ add_filter('posts_search', function($search, $query) {
 add_filter('posts_join', function($join, $query) {
 	global $wpdb;
 
+	if ($query->is_feed())
+		return $join;
+
 	if (!$query->is_search())
 		return $join;
 

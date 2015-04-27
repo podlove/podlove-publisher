@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.1.1 =
+
+* fix: duplicate episodes in feeds
+
 = 2.1.0 =
 
 **Networks: WordPress Multisite Support is Here**
