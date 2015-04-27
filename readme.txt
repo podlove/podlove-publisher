@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.1.1 =
 
+* fix: template autoinsert does not use deprecated "id" parameter
 * fix: duplicate episodes in feeds
 * fix: some server configurations (especially on shared webhosting) break cURLs ability to follow HTTP redirects. We now check for that configuration and, if necessary, resolve the URL manually before continuing normally.
 * add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
