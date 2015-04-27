@@ -323,7 +323,13 @@ class MediaFile extends Base {
 			return false;
 
 		$curl = curl_init();
-		$curl_version = curl_version();
+
+		if ( \Podlove\Http\Curl::curl_can_follow_redirects() ) {
+			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
+			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
+		} else {
+			$url = \Podlove\Http\Curl::resolve_redirects($url, 5);
+		}
 
 		curl_setopt( $curl, CURLOPT_URL, $url );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); // make curl_exec() return the result
@@ -337,11 +343,6 @@ class MediaFile extends Base {
 			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
 				'If-None-Match: "' . $etag . '"'
 			) );
-		}
-
-		if ( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
-			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
-			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
 		}
 
 		curl_setopt( $curl, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
