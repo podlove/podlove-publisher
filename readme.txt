@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.1.1 =
 
 * fix: duplicate episodes in feeds
+* add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
 
 = 2.1.0 =
 

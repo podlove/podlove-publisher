@@ -44,7 +44,8 @@ i.rotate {
 .podlove-icon-ok     { color: green; }
 .podlove-icon-remove { color: red; }
 .podlove-icon-minus  { color: #999; }
-.podlove-icon-edit   { text-decoration: none; margin-left: 6px; }
+.podlove-contributor-edit, 
+.podlove-contributor-create { text-decoration: none; margin-left: 6px; vertical-align: middle; }
 
 .podlove-contributor-edit { display: none; }
 
