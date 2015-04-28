@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.1.1 =
 
+* fix: remove obsolete "Add New" template button from network templates screen
 * fix: template autoinsert does not use deprecated "id" parameter
 * fix: duplicate episodes in feeds
 * fix: some server configurations (especially on shared webhosting) break cURLs ability to follow HTTP redirects. We now check for that configuration and, if necessary, resolve the URL manually before continuing normally.
