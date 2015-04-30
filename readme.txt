@@ -116,6 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: some server configurations (especially on shared webhosting) break cURLs ability to follow HTTP redirects. We now check for that configuration and, if necessary, resolve the URL manually before continuing normally.
 * fix: XSS vulnerabilities in contributors search
 * fix: Template accessor `contributor.id` now correctly returns the id, not the uri. `contributor.uri` is the new accessor to get the uri.
+* fix: Filtering contributions by id is now correctly affected by other filters, like group and role. Until now, `podcast.contributors({id: 'james', role: 'on-air'})` always returned James, no matter if he had the given role or not. 
 * add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
 
 = 2.1.0 =

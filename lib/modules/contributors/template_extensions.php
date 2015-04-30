@@ -38,8 +38,7 @@ class TemplateExtensions {
 	 * 
 	 * **Parameters**
 	 *
-	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters. 
-	 *                Returns null if the id belongs to an existing contributor which is not part of the episode. 
+	 * - **id:**      Fetch one contributor by its id.
 	 *                Example: `episode.contributors({id: 'james'}).name`
 	 * - **group:**   group slug. If none is given, show all contributors.
 	 * - **role:**    role slug. If none is given, show all contributors.
@@ -98,7 +97,7 @@ class TemplateExtensions {
 	 * 
 	 * **Parameters**
 	 *
-	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters.
+	 * - **id:**      Fetch one contributor by its id.
 	 *                Example: `podcast.contributors({id: 'james'}).name`
 	 * - **scope:**   Either "global", "global-active" or "podcast".
 	 *                - "global" returns all contributors.

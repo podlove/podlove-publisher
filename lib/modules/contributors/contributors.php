@@ -192,13 +192,9 @@ class Contributors extends \Podlove\Modules\Base {
 		});
 
 		if (isset($args['id'])) {
-			foreach ($contributions as $contribution) {
-				if ($contribution->getContributor()->slug == $args['id']) {
-					return new Template\Contributor($contribution->getContributor(), $contribution);
-				}
-			}
-			// if an id is set but cannot be found, return null
-			return null;
+			$contributions = array_filter($contributions, function($c) use ($args) {
+				return $c->getContributor()->slug == $args['id'];
+			});
 		}
 
 		// filter by role
@@ -216,6 +212,9 @@ class Contributors extends \Podlove\Modules\Base {
 				return $c->hasGroup() && strtolower($group) == $c->getGroup()->slug;
 			});
 		}
+
+		// reset keys
+		$contributions = array_values($contributions);
 
 		if (isset($args['groupby']) && $args['groupby'] == 'group') {
 			$groups = array();
@@ -242,9 +241,16 @@ class Contributors extends \Podlove\Modules\Base {
 			}
 			return $groups;
 		} else {
-			return array_map(function($contribution) {
+			$contributors = array_map(function($contribution) {
 				return new Template\Contributor($contribution->getContributor(), $contribution);
 			}, $contributions);
+
+			// for convenience, return only one contributor if id parameter is used
+			if (isset($args['id']) && count($contributors)) {
+				return $contributors[0];
+			} else {
+				return $contributors;
+			}
 		}
 	}
 
