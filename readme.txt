@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: Template accessor `contributor.id` now correctly returns the id, not the uri. `contributor.uri` is the new accessor to get the uri.
 * fix: Filtering contributions by id is now correctly affected by other filters, like group and role. Until now, `podcast.contributors({id: 'james', role: 'on-air'})` always returned James, no matter if he had the given role or not. 
 * add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
+* add Twig version to system report
 
 = 2.1.0 =
 
