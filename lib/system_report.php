@@ -31,6 +31,9 @@ class SystemReport {
 
 				return $plugin_data['Version'];
 			} ),
+			'twig_version' => array( 'title' => 'Twig Version', 'callback' => function() {
+				return \Twig_Environment::VERSION;
+			} ),
 			'open_basedir' => array('callback' => function() use (&$errors) {
 				$open_basedir = trim(ini_get('open_basedir'));
 

@@ -88,6 +88,12 @@ class PodcastList extends Wrapper {
 	/**
 	 * List latest episodes from network
 	 * 
+	 * - limit:   Maximum number of episodes. Default: 10.
+	 * - orderby: Order episodes by 'post_date', 'post_title', 'ID' or 'comment_count'. Default: 'post_date'.
+	 * - order: Designates the ascending or descending order of the 'orderby' parameter. Default: 'DESC'.
+	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+	 * 
 	 * @accessor
 	 */
 	public function episodes( $args = array() ) {

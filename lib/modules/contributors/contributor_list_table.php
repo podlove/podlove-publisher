@@ -172,6 +172,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 
 	public function prepare_items() {
+		global $wpdb;
 
 		// number of items per page
 		$per_page = get_user_meta( get_current_user_id(), 'podlove_contributors_per_page', true);
@@ -184,39 +185,39 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 		// look for order options
 		if( isset($_GET['orderby'])  ) {
-			$orderby = 'ORDER BY ' . $_GET['orderby'];
+			$orderby = 'ORDER BY ' . esc_sql($_GET['orderby']);
 		} else{
 			$orderby = 'ORDER BY contributioncount';
 		}
 
 		// look how to sort
-		if( isset($_GET['order'])  ) {
-			$order = $_GET['order'];
+		if ( filter_input(INPUT_GET, 'order') === 'ASC' ) {
+			$order = 'ASC';
 		} else{
 			$order = 'DESC';
 		}
 		
 		// retrieve data
-		if( !isset($_POST['s']) ) {
-			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
-		} else if ( empty($_POST['s']) ) {
+		if( !isset($_POST['s']) || empty($_POST['s']) ) {
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else {
-	 	 	$search   = $_POST['s'];
+
+	 	 	$search = $wpdb->esc_like($_POST['s']);
+	 	 	$search = '%' . $search . '%';
+
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all(
 				'WHERE 
-				`slug` LIKE \'%' . $search . '%\' OR
-				`gender` LIKE \'%' . $search . '%\' OR
-				`organisation` LIKE \'%' . $search . '%\' OR
-				`slug` LIKE \'%' . $search . '%\' OR
-				`department` LIKE \'%' . $search . '%\' OR
-				`jobtitle` LIKE \'%' . $search . '%\' OR
-				`flattr` LIKE \'%' . $search . '%\' OR
-				`privateemail` LIKE \'%' . $search . '%\' OR
-				`realname` LIKE \'%' . $search . '%\' OR
-				`publicname` LIKE \'%' . $search . '%\' OR
-				`guid` LIKE \'%' . $search . '%\' OR
-				`www` LIKE \'%' . $search . '%\'
+				`slug`         LIKE \'' . $search . '\' OR
+				`gender`       LIKE \'' . $search . '\' OR
+				`organisation` LIKE \'' . $search . '\' OR
+				`slug`         LIKE \'' . $search . '\' OR
+				`department`   LIKE \'' . $search . '\' OR
+				`jobtitle`     LIKE \'' . $search . '\' OR
+				`flattr`       LIKE \'' . $search . '\' OR
+				`privateemail` LIKE \'' . $search . '\' OR
+				`realname`     LIKE \'' . $search . '\' OR
+				`publicname`   LIKE \'' . $search . '\' OR
+				`guid`         LIKE \'' . $search . '\' 
 				' . $orderby . ' ' . $order
 			);
 		}

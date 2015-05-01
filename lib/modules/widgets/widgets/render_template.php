@@ -22,7 +22,7 @@ class RenderTemplate extends \WP_Widget {
 		if ( ! empty($instance['title']) )
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 
-		echo do_shortcode( '[podlove-template id="' . $instance[ 'template' ] . '" autop="' . ( $instance[ 'autop' ] ? 'yes' : 'no' ) . '"]' );
+		echo do_shortcode( '[podlove-template template="' . $instance[ 'template' ] . '" autop="' . ( $instance[ 'autop' ] ? 'yes' : 'no' ) . '"]' );
 
 		echo $args['after_widget'];
 	}

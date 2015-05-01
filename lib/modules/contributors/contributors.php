@@ -192,13 +192,9 @@ class Contributors extends \Podlove\Modules\Base {
 		});
 
 		if (isset($args['id'])) {
-			foreach ($contributions as $contribution) {
-				if ($contribution->getContributor()->slug == $args['id']) {
-					return new Template\Contributor($contribution->getContributor(), $contribution);
-				}
-			}
-			// if an id is set but cannot be found, return null
-			return null;
+			$contributions = array_filter($contributions, function($c) use ($args) {
+				return $c->getContributor()->slug == $args['id'];
+			});
 		}
 
 		// filter by role
@@ -216,6 +212,9 @@ class Contributors extends \Podlove\Modules\Base {
 				return $c->hasGroup() && strtolower($group) == $c->getGroup()->slug;
 			});
 		}
+
+		// reset keys
+		$contributions = array_values($contributions);
 
 		if (isset($args['groupby']) && $args['groupby'] == 'group') {
 			$groups = array();
@@ -242,9 +241,16 @@ class Contributors extends \Podlove\Modules\Base {
 			}
 			return $groups;
 		} else {
-			return array_map(function($contribution) {
+			$contributors = array_map(function($contribution) {
 				return new Template\Contributor($contribution->getContributor(), $contribution);
 			}, $contributions);
+
+			// for convenience, return only one contributor if id parameter is used
+			if (isset($args['id']) && count($contributors)) {
+				return $contributors[0];
+			} else {
+				return $contributors;
+			}
 		}
 	}
 
@@ -809,11 +815,13 @@ class Contributors extends \Podlove\Modules\Base {
 					<div style="min-width: 205px">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
 						<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
+						<option value="create"><?php echo __('Add New Contributor', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
 							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->getAvatarUrl("10px") ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
 						<?php endforeach; ?>
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>
+					<a class="clickable podlove-icon-plus podlove-contributor-create" href="<?php echo admin_url('edit.php?post_type=podcast&page=podlove_contributors_settings_handle&action=new') ?>"></a>
 					</div>
 				</td>
 				<?php if( $has_groups ) : ?>
@@ -889,7 +897,6 @@ class Contributors extends \Podlove\Modules\Base {
 				PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
 				PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";
 
-
 				(function($) {
 					var form_base_name = "<?php echo $form_base_name ?>";
 
@@ -911,6 +918,20 @@ class Contributors extends \Podlove\Modules\Base {
 							var i;
 							var contributor = fetch_contributor(this.value);
 							var row = $(this).closest("tr");
+							var edit_button   = row.find(".podlove-contributor-edit");
+							var create_button = row.find(".podlove-contributor-create");
+
+							if (this.value == "create") {
+								var create_url = $(this).parent().find(".podlove-contributor-create").attr("href");
+								// show create button, just in case redirect does not work
+								create_button.show();
+								edit_button.hide();
+								// redirect
+								window.location = create_url;
+								return;
+							} else {
+								create_button.hide();
+							}
 
 							// Check for empty contributors / for new field
 							if( typeof contributor === 'undefined' ) {
@@ -929,8 +950,8 @@ class Contributors extends \Podlove\Modules\Base {
 							row.find(".podlove-group").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[group]");
 							row.find(".podlove-role").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[role]");
 							row.find(".podlove-comment").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[comment]");
-							row.find(".podlove-contributor-edit").attr("href", "<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&page=podlove_contributors_settings_handle&action=edit&contributor=" + contributor.id);
-							row.find(".podlove-contributor-edit").show(); // Show Edit Button
+							edit_button.attr("href", "<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&page=podlove_contributors_settings_handle&action=edit&contributor=" + contributor.id);
+							edit_button.show(); // Show Edit Button
 						});
 					}
 

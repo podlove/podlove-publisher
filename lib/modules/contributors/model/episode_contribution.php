@@ -42,12 +42,14 @@ class EpisodeContribution extends Base {
 
 	public function save() {
 		parent::save();
-		$this->getContributor()->calcContributioncount();
+		if ($contributor = $this->getContributor())
+			$contributor->calcContributioncount();
 	}
 
 	public function delete() {
 		parent::delete();
-		$this->getContributor()->calcContributioncount();
+		if ($contributor = $this->getContributor())
+			$contributor->calcContributioncount();
 	}
 	
 	public static function sortByComment($a, $b) {
