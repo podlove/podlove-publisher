@@ -11,20 +11,17 @@ class EpisodeRelation extends Base {
 		if ( ! $episode_id )
 			return array();
 
-		$sql = sprintf( '( 
-				SELECT ep.* 
-				FROM '.self::table_name().' rel 
-				INNER JOIN '.Episode::table_name().' ep 
-				ON rel.right_episode_id = ep.id 
-				WHERE left_episode_id=%1$d
-			) UNION (
-				SELECT ep.* from '.self::table_name().' rel
-				INNER JOIN '.Episode::table_name().' ep 
-				ON rel.left_episode_id = ep.id 
-				WHERE right_episode_id=%1$d
-			);', $episode_id );
+		$sql = sprintf( 'SELECT
+			*
+			FROM
+			'.Episode::table_name().' e
+			WHERE id IN (
+				SELECT right_episode_id FROM '.self::table_name().' WHERE left_episode_id = %1$d
+				UNION
+				SELECT left_episode_id FROM '.self::table_name().' WHERE right_episode_id = %1$d
+			)', $episode_id );
 
-		return $wpdb->get_results($sql);
+		return Episode::find_all_by_sql($sql);
 	}
 
 }
