@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.1.3 =
+
+* add warning in system report for users with default permalink settings (which is problematic for some podcast clients)
+
 = 2.1.2 =
 
 * fix issue with users that have open_basedir set, which lead to all assets being invalid

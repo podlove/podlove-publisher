@@ -87,7 +87,22 @@ class SystemReport {
 			'memory_limit'        => array( 'callback' => function() { return ini_get( 'memory_limit' ); } ),
 			'disable_classes'     => array( 'callback' => function() { return ini_get( 'disable_classes' ); } ),
 			'disable_functions'   => array( 'callback' => function() { return ini_get( 'disable_functions' ); } ),
-			'permalinks' => array( 'callback' => function() use ( &$errors ) {
+			'permalinks'          => array( 'callback' => function() use ( &$errors ) {
+
+				$permalinks = \get_option('permalink_structure');
+
+				if (!$permalinks) {
+					$errors[] = sprintf(
+						__('You are using the default WordPress permalink structure. This may cause problems with some podcast clients. Go to %s and set it to anything but default (for example "Post name").', 'podlove'),
+						admin_url('options-permalink.php')
+					);
+
+					return __("\"non-pretty\" Permalinks: Please change permalink structure", 'podlove');
+				}
+
+				return "ok ($permalinks)";
+			} ),
+			'podlove_permalinks'  => array( 'callback' => function() use ( &$errors ) {
 
 				if ( \Podlove\get_setting( 'website', 'use_post_permastruct' ) == 'on' )
 					return 'ok';
@@ -116,6 +131,9 @@ class SystemReport {
 					$errors[] = $error;
 					$out .= $error;
 				}
+
+				if (!$out)
+					$out = "ok";
 
 				return $out;
 			} ),
