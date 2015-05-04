@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.1.3 =
 
 * add warning in system report for users with default permalink settings (which is problematic for some podcast clients)
+* fix: duplicate episodes when using `podlove.episodes` template accessor
 
 = 2.1.2 =
 
