@@ -43,6 +43,12 @@ class General extends Tab {
 				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
 			) );
 
+			$wrapper->string( 'flattr', array(
+				'label'       => __( 'Flattr', 'podlove' ),
+				'description' => 'Flattr username',
+				'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input' )
+			) );
+
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'ID', 'podlove' ),
 				'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
