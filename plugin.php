@@ -115,9 +115,9 @@ EOT;
 function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 	switch_to_blog( $blog_id );
 
-	$plugin_file = "podlove/podlove.php";
+	$plugin_base_path = implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, PLUGIN_FILE), -2));
 
-	if ( is_plugin_active_for_network( $plugin_file ) ) {
+	if ( is_plugin_active_for_network( $plugin_base_path ) ) {
 		activate_for_current_blog();
 	}
 
