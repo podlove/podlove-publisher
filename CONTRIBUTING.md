@@ -45,6 +45,10 @@ Thank you!
 <a name=“request-support”></a>
 # Ask for Support
 
+If you are looking for professional support, head over to publisher.podlove.org/support/.
+
+We have a community forum for questions, answers and feature discussions at https://community.podlove.org.
+
 Please check if your questions are answered in our growing documentation site http://docs.podlove.org. If you still have open questions, feel free to open a support issue.
 
 <a name=“donate”></a>
