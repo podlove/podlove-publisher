@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: add flattr setting to contributors general tab
 * fix: duplicate episodes when using `podlove.episodes` template accessor
 * fix: correctly fire plugin activation hooks in network mode
+* fix: "Add New" link in empty list tables
 
 = 2.1.2 =
 
