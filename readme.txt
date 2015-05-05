@@ -111,6 +111,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.1.3 =
 
 * add warning in system report for users with default permalink settings (which is problematic for some podcast clients)
+* enhancement: delete caches in all blogs when changing a network template
+* enhancement: delete caches when changing the template default assignment
 * fix: add flattr setting to contributors general tab
 * fix: duplicate episodes when using `podlove.episodes` template accessor
 * fix: correctly fire plugin activation hooks in network mode

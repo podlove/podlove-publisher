@@ -124,6 +124,19 @@ class TemplateCache {
 		$wpdb->query($sql);
 	}
 
+	public function setup_purge_in_all_blogs() {
+		global $wpdb;
+
+		$blog_ids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+		if (is_array($blog_ids)) {
+			foreach ($blog_ids as $blog_id) {
+				\Podlove\with_blog_scope($blog_id, function() use ($blog_id) {
+					TemplateCache::get_instance()->setup_purge();
+				});
+			}
+		}
+	}
+
 	/**
 	 * Fetch and/or fill cache for given key.
 	 * 
