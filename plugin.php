@@ -243,6 +243,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/flattr.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/frontend_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/http.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/images.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/import.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/jetpack.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/license.php';

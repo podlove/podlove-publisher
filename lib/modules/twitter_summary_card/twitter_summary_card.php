@@ -57,8 +57,12 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 			$podcast = Model\Podcast::get();
 
 			// determine image
-			$cover_art_url = $episode->get_cover_art();
-			if ( ! $cover_art_url )
+			$cover_art_url = NULL;
+
+			if ($episode->get_cover_art())
+				$cover_art_url = $episode->get_cover_art()->url();
+
+			if (!$cover_art_url)
 				$cover_art_url = $podcast->cover_image;
 
 			// define meta tags

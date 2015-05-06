@@ -17,12 +17,18 @@ class Image {
 		$this->upload_baseurl = implode('/', [$upload['baseurl'], 'podlove', $this->id]);
 	}
 
+	public function schedule_download_source() {
+		if (!wp_next_scheduled('podlove_download_image_source', [$this->source_url]))
+			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url]);
+	}
+
 	public function url($width = NULL, $height = NULL) {
 
-		// fetch original if we don't have it
-		// @TODO: I guess resizing on the fly is ok, but the http request should be async, and until we have it, return the source url
-		if (!$this->source_exists())
-			$this->download_source();
+		// fetch original if we don't have it — until then, return the original URL
+		if (!$this->source_exists()) {
+			$this->schedule_download_source();
+			return $this->source_url;
+		}
 
 		// resize if we don't have that size yet
 		if (!file_exists($this->resized_file($width, $height)))
@@ -74,7 +80,7 @@ class Image {
 		return $size;
 	}
 
-	private function download_source() {
+	public function download_source() {
 
   		// for download_url()
    		require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -88,7 +94,6 @@ class Image {
 
 		// If error storing temporarily, return the error.
 		if ( is_wp_error( $file_array['tmp_name'] ) ) {
-			error_log(print_r("upload error", true));
 			return $file_array['tmp_name']; // fixme log error
 		}
 
