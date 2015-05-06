@@ -32,8 +32,10 @@ class Curl {
 
 		$params = wp_parse_args( $params, $defaults );
 
-		if ( !self::curl_can_follow_redirects() )
-			$url = self::resolve_redirects($url, 5);
+		if (!isset($params['_redirection']) || $params['_redirection']) {
+			if ( !self::curl_can_follow_redirects() )
+				$url = self::resolve_redirects($url, 5);
+		}
 
 		$this->response = $this->curl->request( $url, $params );
 

@@ -79,7 +79,7 @@ class Networks extends \Podlove\Modules\Base {
 	/*
 	 *	Was activated
 	 */
-	public function was_activated( $module_name ) {
+	public function was_activated( $module_name = 'networks' ) {
 		PodcastList::with_network_scope(function() {
 			PodcastList::build();
 		});

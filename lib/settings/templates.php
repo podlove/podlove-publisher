@@ -23,7 +23,13 @@ class Templates {
 		
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 
-		register_setting( Templates::$pagehook, 'podlove_template_assignment' );
+		register_setting( Templates::$pagehook, 'podlove_template_assignment', function($args) {
+
+			// when changing the assignment, clear caches
+			\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+
+			return $args;
+		} );
 	}
 
 	public function scripts_and_styles() {

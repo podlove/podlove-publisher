@@ -52,12 +52,20 @@ class Button {
 		return $this->html();
 	}
 
+	public static function get_random_string() {
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			return bin2hex(openssl_random_pseudo_bytes(7));
+		} else {
+			return dechex(mt_rand());
+		}
+	}
+
 	private function html() {
 
 		if (!count($this->args['data']['feeds']))
 			return '';
 
-		$dataAccessor = 'podcastData' . bin2hex(openssl_random_pseudo_bytes(7));
+		$dataAccessor = 'podcastData' . self::get_random_string();
 
 		$dom = new \Podlove\DomDocumentFragment;
 		

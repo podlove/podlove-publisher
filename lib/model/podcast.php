@@ -299,7 +299,9 @@ class Podcast implements Licensable {
 					' . Episode::table_name() . ' e
 					INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
 					' . $joins . '
-				WHERE ' . $where . '
+				WHERE
+					' . $where . '
+					AND p.post_type = "podcast"
 				ORDER BY ' . $orderby . ' ' . $order . 
 				$limit;
 

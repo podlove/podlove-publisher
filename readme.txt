@@ -108,6 +108,22 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.1.3 =
+
+* add warning in system report for users with default permalink settings (which is problematic for some podcast clients)
+* enhancement: delete caches in all blogs when changing a network template
+* enhancement: delete caches when changing the template default assignment
+* enhancement: do not rely on openssl module
+* fix: add flattr setting to contributors general tab
+* fix: duplicate episodes when using `podlove.episodes` template accessor
+* fix: correctly fire plugin activation hooks in network mode
+* fix: ensure network module is activated correctly
+* fix: "Add New" link in empty list tables
+
+= 2.1.2 =
+
+* fix issue with users that have open_basedir set, which lead to all assets being invalid
+
 = 2.1.1 =
 
 * fix: remove obsolete "Add New" template button from network templates screen
