@@ -5,12 +5,23 @@ class Image {
 
 	private $id;
 	private $source_url;
+	private $file_name;
 	private $upload_basedir;
 	private $upload_baseurl;
 
-	public function __construct($url) {
+	/**
+	 * Create image object
+	 * 
+	 * Manage remote image objects. Cache locally so we can resize and serve 
+	 * optimized image dimensions.
+	 * 
+	 * @param string $url  Remote image URL
+	 * @param string $name (optional) image file name prefix
+	 */
+	public function __construct($url, $file_name = '') {
 		$this->source_url = trim($url);
-		$this->id = md5($url);
+		$this->file_name = sanitize_title($file_name);
+		$this->id = md5($url . $this->file_name);
 
 		$upload = wp_upload_dir();
 		$this->upload_basedir = implode(DIRECTORY_SEPARATOR, [$upload['basedir'], 'podlove', $this->id]);
@@ -18,8 +29,8 @@ class Image {
 	}
 
 	public function schedule_download_source() {
-		if (!wp_next_scheduled('podlove_download_image_source', [$this->source_url]))
-			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url]);
+		if (!wp_next_scheduled('podlove_download_image_source', [$this->source_url, $this->file_name]))
+			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url, $this->file_name]);
 	}
 
 	public function url($width = NULL, $height = NULL) {
@@ -37,24 +48,32 @@ class Image {
 		return $this->resized_url($width, $height);
 	}
 
+	public function file_name($size_slug) {
+		if ($this->file_name) {
+			return $this->file_name . '_' . $size_slug;
+		} else {
+			return $size_slug;
+		}
+	}
+
 	private function source_exists() {
 		return is_file($this->original_file());
 	}
 
 	private function original_file() {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, 'original']) . '.jpg';
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]) . '.jpg';
 	}
 
 	private function resized_file($width, $height) {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, self::size_slug($width, $height)]) . '.jpg';
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name(self::size_slug($width, $height))]) . '.jpg';
 	}
 
 	private function original_url() {
-		return implode('/', [$this->upload_baseurl, 'original']) . '.jpg';
+		return implode('/', [$this->upload_baseurl, $this->file_name('original')]) . '.jpg';
 	}
 
 	private function resized_url($width, $height) {
-		return implode('/', [$this->upload_baseurl, self::size_slug($width, $height)]) . '.jpg';
+		return implode('/', [$this->upload_baseurl, $this->file_name(self::size_slug($width, $height))]) . '.jpg';
 	}
 
 	private function generate_resized_copy($width, $height) {

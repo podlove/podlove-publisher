@@ -186,7 +186,7 @@ class Episode extends Base implements Licensable {
 				return;
 			
 			if ( $asset_assignment->image == 'manual' )
-				return new Image($this->cover_art);
+				return new Image($this->cover_art, $this->title());
 
 			$cover_art_file_id = $asset_assignment->image;
 			if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
@@ -195,7 +195,7 @@ class Episode extends Base implements Licensable {
 			if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
 				return false;
 
-			return ( $file->size > 0 ) ? new Image($file->get_file_url()) : false;
+			return ( $file->size > 0 ) ? new Image($file->get_file_url(), $this->title()) : false;
 		});
 	}
 
