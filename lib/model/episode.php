@@ -1,7 +1,9 @@
 <?php
 namespace Podlove\Model;
+
 use Podlove\Log;
 use Podlove\ChaptersManager;
+use Podlove\Model\Image;
 
 /**
  * We could use simple post_meta instead of a table here
@@ -169,7 +171,7 @@ class Episode extends Base implements Licensable {
 		return $this->with_blog_scope(function() {
 
 			if ( ! $image = $this->get_cover_art() )
-				$image = Podcast::get()->cover_image;
+				$image = Podcast::get()->cover_image();
 
 			return $image;
 		});
@@ -184,7 +186,7 @@ class Episode extends Base implements Licensable {
 				return;
 			
 			if ( $asset_assignment->image == 'manual' )
-				return trim($this->cover_art);
+				return new Image($this->cover_art);
 
 			$cover_art_file_id = $asset_assignment->image;
 			if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
@@ -193,7 +195,7 @@ class Episode extends Base implements Licensable {
 			if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
 				return false;
 
-			return ( $file->size > 0 ) ? $file->get_file_url() : false;
+			return ( $file->size > 0 ) ? new Image($file->get_file_url()) : false;
 		});
 	}
 

@@ -160,7 +160,7 @@ class Printer {
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'publicationDate'     => mysql2date("c", $this->post->post_date),
-			'poster'              => $this->episode->get_cover_art_with_fallback(),
+			'poster'              => $this->episode->get_cover_art_with_fallback()->url(100),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
 			'showSummary'         => $podcast->summary,     /* deprecated */

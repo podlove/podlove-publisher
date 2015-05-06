@@ -15,36 +15,97 @@ class Image {
 		$upload = wp_upload_dir();
 		$this->upload_basedir = implode(DIRECTORY_SEPARATOR, [$upload['basedir'], 'podlove', $this->id]);
 		$this->upload_baseurl = implode('/', [$upload['baseurl'], 'podlove', $this->id]);
-
-		error_log(print_r([
-			'basedir' => $this->upload_basedir,
-			'baseurl' => $this->upload_baseurl,
-		], true));
-
-		// todo only do this before saving files
-		if (!wp_mkdir_p($this->upload_basedir)) {
-			$message = sprintf( __( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir );
-			\Podlove\Log::get()->addWarning( 'This is a warning.' );
-		}
 	}
 
 	public function url($width = NULL, $height = NULL) {
 
+		// fetch original if we don't have it
+		// @TODO: I guess resizing on the fly is ok, but the http request should be async, and until we have it, return the source url
+		if (!$this->source_exists())
+			$this->download_source();
+
+		// resize if we don't have that size yet
+		if (!file_exists($this->resized_file($width, $height)))
+			$this->generate_resized_copy($width, $height);
+
+		return $this->resized_url($width, $height);
+	}
+
+	private function source_exists() {
+		return is_file($this->original_file());
+	}
+
+	private function original_file() {
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, 'original']) . '.jpg';
+	}
+
+	private function resized_file($width, $height) {
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, self::size_slug($width, $height)]) . '.jpg';
+	}
+
+	private function original_url() {
+		return implode('/', [$this->upload_baseurl, 'original']) . '.jpg';
+	}
+
+	private function resized_url($width, $height) {
+		return implode('/', [$this->upload_baseurl, self::size_slug($width, $height)]) . '.jpg';
+	}
+
+	private function generate_resized_copy($width, $height) {
+		$image = wp_get_image_editor($this->original_file());
+
+		if (is_wp_error($image))
+			return;
+
+		$image->resize($width, $height);
+		$image->save($this->resized_file($width, $height));
+	}
+
+	private static function size_slug($width, $height) {
 		$size = '';
 		if ($width && $height) {
 			$size = $width . 'x' . $height;
 		} elseif ($width) {
 			$size = $width . 'x' . $width;
-		}
-
-		$file = implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $size]) '.jpg';
-		if (file_exists($file)) {
-			return implode('.', [$this->upload_baseurl, $size]) '.jpg';;
-		} elseif (/* try to resize original if it exists */) {
-
 		} else {
-			// fetch original via http, then resize, then return
+			$size = 'original';
 		}
+
+		return $size;
 	}
+
+	private function download_source() {
+
+  		// for download_url()
+   		require_once(ABSPATH . 'wp-admin/includes/file.php');
+
+		preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $this->source_url, $matches );
+		$file_array = array();
+		$file_array['name'] = basename( $matches[0] );
+
+		// Download$this->source_url to temp location.
+		$file_array['tmp_name'] = download_url( $this->source_url );
+
+		// If error storing temporarily, return the error.
+		if ( is_wp_error( $file_array['tmp_name'] ) ) {
+			error_log(print_r("upload error", true));
+			return $file_array['tmp_name']; // fixme log error
+		}
+
+		if (!wp_mkdir_p($this->upload_basedir)) {
+			\Podlove\Log::get()->addWarning(
+				sprintf( __( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir )
+			);
+		}
+
+		$move_new_file = @ rename( $file_array['tmp_name'], $this->original_file() );
+
+		if ( false === $move_new_file ) {
+			error_log(print_r(sprintf( __('The uploaded file could not be moved to %s.' ), $this->original_file() ), true));
+		}
+
+		@ unlink($file_array['tmp_name']);
+	}
+
 
 }
