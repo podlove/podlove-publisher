@@ -376,9 +376,11 @@ class Contributors extends \Podlove\Modules\Base {
 			switch_to_blog( $podcast );
 			if ( \Podlove\Modules\Base::is_active('contributors') ) {
 				$global_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
-				foreach ( $global_gender_numbers['global']['by_gender'] as $gender => $number_of_contributions ) {
-				 	$relative_gender_numbers[$gender] += $number_of_contributions / $global_gender_numbers['global']['total'] * 100;
-				 }
+				if ($global_gender_numbers['global']['total'] > 0) {
+					foreach ( $global_gender_numbers['global']['by_gender'] as $gender => $number_of_contributions ) {
+						 $relative_gender_numbers[$gender] += $number_of_contributions / $global_gender_numbers['global']['total'] * 100;
+					}
+				}
 				$podcasts_with_contributors_active++;
 			}
 			restore_current_blog();
