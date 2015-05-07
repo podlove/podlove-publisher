@@ -36,6 +36,7 @@ class Image extends Wrapper {
 	 * 
 	 * - width: Image width. Set width and leave height blank to keep the orinal aspect ratio.
 	 * - height: Image height. Set height and leave width blank to keep the orinal aspect ratio.
+	 * - crop: true or false. Crop image if given dimensions deviate from original aspect ratio. Default: false.
 	 * 
 	 * **Examples**
 	 * 
@@ -53,9 +54,13 @@ class Image extends Wrapper {
 
 		$defaults = [
 			'width'  => NULL,
-			'height' => NULL
+			'height' => NULL,
+			'crop'   => false
 		];
 		$args = wp_parse_args($args, $defaults);
+
+		if ($args['crop'])
+			$this->image->setCrop(true);
 
 		return $this->image->url($args['width'], $args['height']);
 	}
@@ -67,6 +72,7 @@ class Image extends Wrapper {
 	 * 
 	 * - width: Image width. Set width and leave height blank to keep the orinal aspect ratio.
 	 * - height: Image height. Set height and leave width blank to keep the orinal aspect ratio.
+	 * - crop: true or false. Crop image if given dimensions deviate from original aspect ratio. Default: false.
 	 * - alt: Set image tag "alt" attribute.
 	 * - title: Set image tag "title" attribute.
 	 * 
@@ -88,10 +94,14 @@ class Image extends Wrapper {
 		$defaults = [
 			'width'  => NULL,
 			'height' => NULL,
+			'crop'   => false,
 			'alt'    => NULL,
 			'title'  => NULL
 		];
 		$args = wp_parse_args($args, $defaults);
+
+		if ($args['crop'])
+			$this->image->setCrop(true);
 
 		return $this->image->image($args['width'], $args['height'], $args['alt'], $args['title']);
 	}

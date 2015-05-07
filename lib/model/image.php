@@ -9,6 +9,8 @@ class Image {
 	private $file_extension;
 	private $upload_basedir;
 	private $upload_baseurl;
+	
+	private $crop = false;
 
 	/**
 	 * Create image object
@@ -28,6 +30,18 @@ class Image {
 		$upload = wp_upload_dir();
 		$this->upload_basedir = implode(DIRECTORY_SEPARATOR, [$upload['basedir'], 'podlove', $this->id]);
 		$this->upload_baseurl = implode('/', [$upload['baseurl'], 'podlove', $this->id]);
+	}
+
+	/**
+	 * Set to true if resizing should crop when necessary.
+	 * 
+	 * @param  bool $crop Crop image if given dimensions deviate from original aspect ratio.
+	 * @return $this for chaining
+	 */
+	public function setCrop($crop) {
+		$this->crop = (bool) $crop;
+
+		return $this;
 	}
 
 	/**
@@ -124,7 +138,7 @@ class Image {
 	}
 
 	private function resized_file($width, $height) {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name(self::size_slug($width, $height))]) . '.' . $this->file_extension;
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name($this->size_slug($width, $height))]) . '.' . $this->file_extension;
 	}
 
 	private function original_url() {
@@ -132,7 +146,7 @@ class Image {
 	}
 
 	private function resized_url($width, $height) {
-		return implode('/', [$this->upload_baseurl, $this->file_name(self::size_slug($width, $height))]) . '.' . $this->file_extension;
+		return implode('/', [$this->upload_baseurl, $this->file_name($this->size_slug($width, $height))]) . '.' . $this->file_extension;
 	}
 
 	private function generate_resized_copy($width, $height) {
@@ -141,13 +155,16 @@ class Image {
 		if (is_wp_error($image))
 			return;
 
-		$image->resize($width, $height);
+		$image->resize($width, $height, $this->crop);
 		$image->save($this->resized_file($width, $height));
 	}
 
-	private static function size_slug($width, $height) {
+	private function size_slug($width, $height) {
+
+		$crop = $this->crop ? 'c' : '';
+
 		if ($width || $height)
-			return $width . 'x' . $height;
+			return $width . 'x' . $height . $crop;
 		else
 			return 'original';
 	}
