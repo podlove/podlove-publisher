@@ -188,6 +188,10 @@ class Podcast implements Licensable {
 		return new Image($this->cover_image, $this->title);
 	}
 
+	public function has_cover_art() {
+		return strlen(trim($this->cover_image)) > 0;
+	}
+
 	/**
 	 * Episodes
 	 *
