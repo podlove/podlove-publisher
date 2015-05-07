@@ -167,7 +167,11 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->episode->cover_art()->url();
+
+		if ($cover_art = $this->episode->cover_art())
+			return $cover_art->url();
+
+		return '';
 	}
 
 	/**
