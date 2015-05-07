@@ -34,14 +34,14 @@ class Image extends Wrapper {
 	 * 
 	 * **Parameters**
 	 * 
-	 * - size: Image dimensions. Either in the form of "10x20" or just "35" for square dimensions.
+	 * - width: Image width. Set width and leave height blank to keep the orinal aspect ratio.
+	 * - height: Image height. Set height and leave width blank to keep the orinal aspect ratio.
 	 * 
 	 * **Examples**
 	 * 
 	 * ```jinja
-	 * {{ image.url }}                  {# returns the unresized image URL #}
-	 * {{ image.url({size: "10x20"}) }} {# returns resized / cropped image URL #}
-	 * {{ image.url({size: 10}) }}      {# returns image URL resized to 10x10 #}
+	 * {{ image.url }}               {# returns the unresized image URL #}
+	 * {{ image.url({width: 100}) }} {# returns resized image URL #}
 	 * ```
 	 * 
 	 * Note: It is not _guaranteed_ to get back the resized image. If it is 
@@ -50,12 +50,14 @@ class Image extends Wrapper {
 	 * @accessor
 	 */
 	public function url($args = []) {
-		$defaults = ['size' => NULL];
+
+		$defaults = [
+			'width'  => NULL,
+			'height' => NULL
+		];
 		$args = wp_parse_args($args, $defaults);
 
-		$size = self::parse_size($args['size']);
-
-		return $this->image->url($size['width'], $size['height']);
+		return $this->image->url($args['width'], $args['height']);
 	}
 
 	/**
@@ -63,7 +65,8 @@ class Image extends Wrapper {
 	 * 
 	 * **Parameters**
 	 * 
-	 * - size: Image dimensions. Either in the form of "10x20" or just "35" for square dimensions.
+	 * - width: Image width. Set width and leave height blank to keep the orinal aspect ratio.
+	 * - height: Image height. Set height and leave width blank to keep the orinal aspect ratio.
 	 * - alt: Set image tag "alt" attribute.
 	 * - title: Set image tag "title" attribute.
 	 * 
@@ -71,8 +74,7 @@ class Image extends Wrapper {
 	 * 
 	 * ```jinja
 	 * {{ image.image }}                       {# returns the unresized image tag #}
-	 * {{ image.image({size: "10x20"}) }}      {# returns resized / cropped image tag #}
-	 * {{ image.image({size: 10}) }}           {# returns image tag resized to 10x10 #}
+	 * {{ image.image({width: 100}) }}         {# returns resized image tag #}
 	 * {{ image.image({title: "The Spark"}) }} {# returns image tag with custom title #}
 	 * ```
 	 * 
@@ -84,55 +86,13 @@ class Image extends Wrapper {
 	public function image($args = []) {
 		
 		$defaults = [
-			'size'  => NULL,
-			'alt'   => NULL,
-			'title' => NULL
+			'width'  => NULL,
+			'height' => NULL,
+			'alt'    => NULL,
+			'title'  => NULL
 		];
-
 		$args = wp_parse_args($args, $defaults);
 
-		$size = self::parse_size($args['size']);
-
-		return $this->image->image($size['width'], $size['height'], $args['alt'], $args['title']);
-	}
-
-	/**
-	 * Parse size string.
-	 * 
-	 * Allowed size formats:
-	 * 
-	 * - "<width>x<height>", for example "30x50"
-	 * - single integer, for example "10" is equivalent to "10x10"
-	 * - NULL, which means no resizing
-	 * 
-	 * @param  mixed $size
-	 * @return array ['width' => $width, 'height' => $height]
-	 */
-	private static function parse_size($size) {
-		
-		$null = ['width' => NULL, 'height' => NULL];
-
-		if (is_null($size))
-			return $null;
-
-		// parse format "<width>x<height>", for example "30x50"
-		if (preg_match('/^(\d+)x(\d+)$/', $size, $matches) === 1) {
-			return [
-				'width'  => (int) $matches[1], 
-				'height' => (int) $matches[2]
-			];
-		}
-
-		// parse singe value "<size>", interpret as square
-		$size = (int) $size;
-
-		if ($size > 0) {
-			return [
-				'width'  => $size, 
-				'height' => $size
-			];
-		}
-
-		return $null;
+		return $this->image->image($args['width'], $args['height'], $args['alt'], $args['title']);
 	}
 }

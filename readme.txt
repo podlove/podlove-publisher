@@ -116,7 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - deprecated `episode.imageUrlWithFallback`, use `episode.imageWithFallback` instead
 - deprecated `podcast.imageUrl`, use `podcast.image` instead
 
-While you are changing these, consider scaling them down appropriately. Your images are probably huge but in many cases you don't need the full size. So instead of `episode.image` or `episode.image.url`, specify a size, like this `episode.image.url({size: 200})` or like this `episode.image.url({size: "200x200"})`.
+While you are changing these, consider scaling them down appropriately. Your images are probably huge but in many cases you don't need the full size. So instead of `episode.image` or `episode.image.url`, specify a size, like this `episode.image.url({width: 200})`.
 
 = 2.1.3 =
 

@@ -146,16 +146,10 @@ class Image {
 	}
 
 	private static function size_slug($width, $height) {
-		$size = '';
-		if ($width && $height) {
-			$size = $width . 'x' . $height;
-		} elseif ($width) {
-			$size = $width . 'x' . $width;
-		} else {
-			$size = 'original';
-		}
-
-		return $size;
+		if ($width || $height)
+			return $width . 'x' . $height;
+		else
+			return 'original';
 	}
 
 	public function download_source() {
