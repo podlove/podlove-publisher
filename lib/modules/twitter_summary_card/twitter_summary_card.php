@@ -55,7 +55,7 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 				return;
 
 			$podcast = Model\Podcast::get();
-			$cover_art_url = $episode->get_cover_art_with_fallback()->url();
+			$cover_art_url = $episode->cover_art_with_fallback()->url();
 
 			// define meta tags
 			$data = array(

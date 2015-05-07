@@ -217,7 +217,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 				return;
 
 			$enclosure_file_size = $file->size;
-			$cover_art_url       = $episode->get_cover_art();
+			$cover_art_url       = $episode->cover_art();
 
 			if (isset($_REQUEST['tracking']) && $_REQUEST['tracking'] == 'no') {
 				$enclosure_url = $episode->enclosure_url( $feed->episode_asset(), null, null );

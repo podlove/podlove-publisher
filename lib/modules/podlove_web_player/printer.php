@@ -49,7 +49,7 @@ class Printer {
 		$height = strtolower( trim( $this->get_webplayer_setting( $this->get_media_tag(), 'height' ) ) );
 
 		if ( $this->is_video ) {
-			$xml->addAttribute( 'poster', $this->episode->get_cover_art_with_fallback() );
+			$xml->addAttribute( 'poster', $this->episode->cover_art_with_fallback() );
 			$xml->addAttribute( 'width', $width );
 			$xml->addAttribute( 'height', $height );
 		} else {
@@ -160,7 +160,7 @@ class Printer {
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'publicationDate'     => mysql2date("c", $this->post->post_date),
-			'poster'              => $this->episode->get_cover_art_with_fallback()->url(200),
+			'poster'              => $this->episode->cover_art_with_fallback()->url(200),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
 			'showSummary'         => $podcast->summary,     /* deprecated */

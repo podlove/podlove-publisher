@@ -167,17 +167,17 @@ class Episode extends Base implements Licensable {
 		return MediaFile::find_by_episode_id_and_episode_asset_id($this->id, $episode_asset->id)->get_public_file_url($source, $context);
 	}
 
-	public function get_cover_art_with_fallback() {
+	public function cover_art_with_fallback() {
 		return $this->with_blog_scope(function() {
 
-			if ( ! $image = $this->get_cover_art() )
+			if ( ! $image = $this->cover_art() )
 				$image = Podcast::get()->cover_art();
 
 			return $image;
 		});
 	}
 
-	public function get_cover_art() {
+	public function cover_art() {
 		return $this->with_blog_scope(function() {
 			$podcast = Podcast::get();
 			$asset_assignment = AssetAssignment::get_instance();

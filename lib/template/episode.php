@@ -167,7 +167,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->episode->get_cover_art();
+		return $this->episode->cover_art();
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function imageUrlWithFallback() {
-		return $this->episode->get_cover_art_with_fallback();
+		return $this->episode->cover_art_with_fallback();
 	}
 
 	/**
