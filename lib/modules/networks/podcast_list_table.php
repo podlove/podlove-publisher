@@ -37,10 +37,10 @@ class Podcast_List_Table extends \Podlove\List_Table {
 	}
 
 	public function column_logo( $podcast ) {
-		if (!trim($podcast->cover_image)) {
+		if (!trim($podcast->cover_art()->url())) {
 			return;
 		} else {
-			return "<img src='" . $podcast->cover_image . "' title='" . $podcast->title . "' alt='" . $podcast->title . "' />";
+			return $podcast->cover_art()->image(70, 70, $podcast->title, $podcast->title);
 		}
 	}	
 

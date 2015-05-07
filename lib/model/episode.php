@@ -171,7 +171,7 @@ class Episode extends Base implements Licensable {
 		return $this->with_blog_scope(function() {
 
 			if ( ! $image = $this->get_cover_art() )
-				$image = Podcast::get()->cover_image();
+				$image = Podcast::get()->cover_art();
 
 			return $image;
 		});

@@ -28,11 +28,22 @@ class Image {
 		$this->upload_baseurl = implode('/', [$upload['baseurl'], 'podlove', $this->id]);
 	}
 
-	public function schedule_download_source() {
-		if (!wp_next_scheduled('podlove_download_image_source', [$this->source_url, $this->file_name]))
-			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url, $this->file_name]);
-	}
-
+	/**
+	 * Get URL for resized image.
+	 * 
+	 * Examples
+	 * 
+	 * 	$image->url();       // returns the unresized image URL
+	 *  $image->url(10, 20); // returns resized / cropped image URL
+	 *  $image->url(10);     // returns image URL resized to 10x10
+	 * 
+	 * Note: It is not _guaranteed_ to get back the resized image. If it is 
+	 * not ready yet, the source URL will be returned.
+	 * 
+	 * @param  int|NULL $width  Image width. If NULL, the image is not resized. Default: NULL.
+	 * @param  int|NULL $height Image height. If NULL, it takes the value of $width. Default: NULL.
+	 * @return string image URL
+	 */
 	public function url($width = NULL, $height = NULL) {
 
 		// fetch original if we don't have it — until then, return the original URL
@@ -46,6 +57,47 @@ class Image {
 			$this->generate_resized_copy($width, $height);
 
 		return $this->resized_url($width, $height);
+	}
+
+	/**
+	 * Get HTML image tag for resized image.
+	 * 
+	 * Examples
+	 * 
+	 * 	$image->image();       // returns the unresized image tag
+	 *  $image->image(10, 20); // returns resized / cropped image tag
+	 *  $image->image(10);     // returns image tag resized to 10x10
+	 * 
+	 * Note: It is not _guaranteed_ to get back the resized image. If it is 
+	 * not ready yet, the source URL will be returned.
+	 * 
+	 * @param  int|NULL $width    Image width. If NULL, the image is not resized. Default: NULL.
+	 * @param  int|NULL $height   Image height. If NULL, it takes the value of $width. Default: NULL.
+	 * @param  string|NULL $alt   Image alt-text. If NULL, it defaults to $file_name. Default: NULL.
+	 * @param  string|NULL $title Image title-text. If NULL, it defaults to $file_name. Default: NULL.
+	 * @return string HTML image tag
+	 */
+	public function image($width = NULL, $height = NULL, $alt = NULL, $title = NULL) {
+
+		if (is_null($alt))
+			$alt = $this->file_name;
+
+		if (is_null($title))
+			$title = $this->file_name;
+
+		$dom = new \Podlove\DomDocumentFragment;
+		$img = $dom->createElement('img');
+		$img->setAttribute('src', $this->url($width, $height));
+		$img->setAttribute('alt', $alt);
+		$img->setAttribute('title', $title);
+		$dom->appendChild($img);
+		
+		return (string) $dom;
+	}
+
+	public function schedule_download_source() {
+		if (!wp_next_scheduled('podlove_download_image_source', [$this->source_url, $this->file_name]))
+			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url, $this->file_name]);
 	}
 
 	public function file_name($size_slug) {

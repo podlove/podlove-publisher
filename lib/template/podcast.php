@@ -58,7 +58,7 @@ class Podcast extends Wrapper {
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->podcast->cover_image;
+		return $this->podcast->cover_art()->url();
 	}
 
 	/**

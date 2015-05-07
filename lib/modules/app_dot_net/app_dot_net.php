@@ -182,7 +182,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								'episode-link' => get_permalink( $episode->post_id ),
 								'subtitle'     => $episode->subtitle,
 								'episode-image'=> $episode->get_cover_art()->url(),
-								'podcast-image'=> $podcast->cover_image,
+								'podcast-image'=> $podcast->cover_art()->url(),
 								'contributors' => ''
 							);
 							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id, $selected_role, $selected_group );

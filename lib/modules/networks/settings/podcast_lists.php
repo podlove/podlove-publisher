@@ -244,7 +244,7 @@ class PodcastLists {
 							<?php
 								foreach ( Network::podcasts() as $blog_id => $podcast ) {
 									if ( $podcast->title )
-										printf( "<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_image ,$podcast->title );
+										printf( "<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_art()->url(20) ,$podcast->title );
 								}
 							?>
 						</select>
