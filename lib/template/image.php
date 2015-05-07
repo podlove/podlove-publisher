@@ -59,10 +59,11 @@ class Image extends Wrapper {
 		];
 		$args = wp_parse_args($args, $defaults);
 
-		if ($args['crop'])
-			$this->image->setCrop(true);
-
-		return $this->image->url($args['width'], $args['height']);
+		return $this->image
+			->setCrop((bool) $args['crop'])
+			->setWidth((int) $args['width'])
+			->setHeight((int) $args['height'])
+			->url();
 	}
 
 	/**
@@ -100,9 +101,10 @@ class Image extends Wrapper {
 		];
 		$args = wp_parse_args($args, $defaults);
 
-		if ($args['crop'])
-			$this->image->setCrop(true);
-
-		return $this->image->image($args['width'], $args['height'], $args['alt'], $args['title']);
+		return $this->image
+			->setCrop((bool) $args['crop'])
+			->setWidth((int) $args['width'])
+			->setHeight((int) $args['height'])
+			->image($args['alt'], $args['title']);
 	}
 }

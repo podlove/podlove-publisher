@@ -1,8 +1,27 @@
 <?php
 namespace Podlove\Model;
 
+/**
+ * Image Object
+ * 
+ * Usage
+ * 
+ * 	// get url, resized to 100px width, keep aspect ratio
+ * 	$image = (new Image($url))->setWidth(100)->url();
+ * 
+ * 	// get url, resized to 100px width and 50px height, cropped
+ * 	$image = (new Image($url))
+ *  	->setWidth(100)
+ *   	->setHeight(50)
+ * 	  	->setCrop(true)
+ * 		->url();
+ * 
+ *   // get image tag with custom alt text and title
+ *   $image = (new Image($url))->image("custom alt", "custom title");
+ */
 class Image {
 
+	// URL/file properties
 	private $id;
 	private $source_url;
 	private $file_name;
@@ -10,7 +29,10 @@ class Image {
 	private $upload_basedir;
 	private $upload_baseurl;
 	
-	private $crop = false;
+	// image properties
+	private $crop   = false;
+	private $width  = NULL;
+	private $height = NULL;
 
 	/**
 	 * Create image object
@@ -40,7 +62,16 @@ class Image {
 	 */
 	public function setCrop($crop) {
 		$this->crop = (bool) $crop;
+		return $this;
+	}
 
+	public function setWidth($width) {
+		$this->width = (int) $width;
+		return $this;
+	}
+
+	public function setHeight($height) {
+		$this->height = (int) $height;
 		return $this;
 	}
 
@@ -49,18 +80,11 @@ class Image {
 	 * 
 	 * Examples
 	 * 
-	 * 	$image->url();       // returns the unresized image URL
-	 *  $image->url(10, 20); // returns resized / cropped image URL
-	 *  $image->url(10);     // returns image URL resized to 10x10
+	 * 	$image->url(); // returns image URL
 	 * 
-	 * Note: It is not _guaranteed_ to get back the resized image. If it is 
-	 * not ready yet, the source URL will be returned.
-	 * 
-	 * @param  int|NULL $width  Image width. If NULL, the image is not resized. Default: NULL.
-	 * @param  int|NULL $height Image height. If NULL, it takes the value of $width. Default: NULL.
 	 * @return string image URL
 	 */
-	public function url($width = NULL, $height = NULL) {
+	public function url() {
 
 		if (!$this->file_extension) {
 			\Podlove\Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
@@ -74,10 +98,10 @@ class Image {
 		}
 
 		// resize if we don't have that size yet
-		if (!file_exists($this->resized_file($width, $height)))
-			$this->generate_resized_copy($width, $height);
+		if (!file_exists($this->resized_file()))
+			$this->generate_resized_copy();
 
-		return $this->resized_url($width, $height);
+		return $this->resized_url();
 	}
 
 	/**
@@ -85,20 +109,13 @@ class Image {
 	 * 
 	 * Examples
 	 * 
-	 * 	$image->image();       // returns the unresized image tag
-	 *  $image->image(10, 20); // returns resized / cropped image tag
-	 *  $image->image(10);     // returns image tag resized to 10x10
+	 * 	$image->image(); // returns image tag
 	 * 
-	 * Note: It is not _guaranteed_ to get back the resized image. If it is 
-	 * not ready yet, the source URL will be returned.
-	 * 
-	 * @param  int|NULL $width    Image width. If NULL, the image is not resized. Default: NULL.
-	 * @param  int|NULL $height   Image height. If NULL, it takes the value of $width. Default: NULL.
 	 * @param  string|NULL $alt   Image alt-text. If NULL, it defaults to $file_name. Default: NULL.
 	 * @param  string|NULL $title Image title-text. If NULL, it defaults to $file_name. Default: NULL.
 	 * @return string HTML image tag
 	 */
-	public function image($width = NULL, $height = NULL, $alt = NULL, $title = NULL) {
+	public function image($alt = NULL, $title = NULL) {
 
 		if (is_null($alt))
 			$alt = $this->file_name;
@@ -108,7 +125,7 @@ class Image {
 
 		$dom = new \Podlove\DomDocumentFragment;
 		$img = $dom->createElement('img');
-		$img->setAttribute('src', $this->url($width, $height));
+		$img->setAttribute('src', $this->url());
 		$img->setAttribute('alt', $alt);
 		$img->setAttribute('title', $title);
 		$dom->appendChild($img);
@@ -123,9 +140,9 @@ class Image {
 
 	public function file_name($size_slug) {
 		if ($this->file_name) {
-			return $this->file_name . '_' . $size_slug;
+			return $this->file_name . '_' . $size_slug . '.' . $this->file_extension;
 		} else {
-			return $size_slug;
+			return $size_slug . '.' . $this->file_extension;
 		}
 	}
 
@@ -134,37 +151,37 @@ class Image {
 	}
 
 	private function original_file() {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]) . '.' . $this->file_extension;
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]);
 	}
 
-	private function resized_file($width, $height) {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name($this->size_slug($width, $height))]) . '.' . $this->file_extension;
+	private function resized_file() {
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name($this->size_slug())]);
 	}
 
 	private function original_url() {
-		return implode('/', [$this->upload_baseurl, $this->file_name('original')]) . '.' . $this->file_extension;
+		return implode('/', [$this->upload_baseurl, $this->file_name('original')]);
 	}
 
-	private function resized_url($width, $height) {
-		return implode('/', [$this->upload_baseurl, $this->file_name($this->size_slug($width, $height))]) . '.' . $this->file_extension;
+	private function resized_url() {
+		return implode('/', [$this->upload_baseurl, $this->file_name($this->size_slug())]);
 	}
 
-	private function generate_resized_copy($width, $height) {
+	private function generate_resized_copy() {
 		$image = wp_get_image_editor($this->original_file());
 
 		if (is_wp_error($image))
 			return;
 
-		$image->resize($width, $height, $this->crop);
-		$image->save($this->resized_file($width, $height));
+		$image->resize($this->width, $this->height, $this->crop);
+		$image->save($this->resized_file());
 	}
 
-	private function size_slug($width, $height) {
+	private function size_slug() {
 
 		$crop = $this->crop ? 'c' : '';
 
-		if ($width || $height)
-			return $width . 'x' . $height . $crop;
+		if ($this->width || $this->height)
+			return $this->width . 'x' . $this->height . $crop;
 		else
 			return 'original';
 	}

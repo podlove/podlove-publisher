@@ -160,16 +160,16 @@ class Printer {
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'publicationDate'     => mysql2date("c", $this->post->post_date),
-			'poster'              => $this->episode->cover_art_with_fallback()->url(200),
+			'poster'              => $this->episode->cover_art_with_fallback()->setWidth(200)->url(),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
 			'showSummary'         => $podcast->summary,     /* deprecated */
-			'showPoster'          => $podcast->cover_art()->url(200), /* deprecated */
+			'showPoster'          => $podcast->cover_art()->setWidth(200)->url(), /* deprecated */
 			'show' => array(
 				'title'    => $podcast->title,
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
-				'poster'   => $podcast->cover_art()->url(200),
+				'poster'   => $podcast->cover_art()->setWidth(200)->url(),
 				'url'      => \Podlove\get_landing_page_url()
 			),
 			'license' => array(

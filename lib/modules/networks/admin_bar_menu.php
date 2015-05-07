@@ -43,7 +43,7 @@ class AdminBarMenu {
 		}, $podcast_ids));
 
 		$cover_styles = implode("\n", array_map(function($id) {
-			return "#wp-admin-bar-blog-$id .blavatar { background-image: url(" . Podcast::get($id)->cover_art()->url(40) . "); }";
+			return "#wp-admin-bar-blog-$id .blavatar { background-image: url(" . Podcast::get($id)->cover_art()->setWidth(40)->url() . "); }";
 		}, $podcast_ids));
 		?>
 <?php echo $cover_styles; ?>

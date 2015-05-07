@@ -32,7 +32,7 @@ class RecentEpisodes extends \WP_Widget {
 			?>
 				<li>
 					<?php if ($instance[ 'show_image' ]) : ?>
-					<img src="<?php echo $episode->cover_art_with_fallback()->url(400); ?>" alt="<?php echo $post->post_title; ?>" style="width: 20%; vertical-align: top; margin-right: 2%;"/>
+					<img src="<?php echo $episode->cover_art_with_fallback()->setWidth(400)->url(); ?>" alt="<?php echo $post->post_title; ?>" style="width: 20%; vertical-align: top; margin-right: 2%;"/>
 					<div style="display: inline-block; width: 75%;">
 					<?php endif; ?>
 					<p>

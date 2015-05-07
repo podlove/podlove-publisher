@@ -45,7 +45,7 @@ class Button {
 			'title'    => $this->podcast->title,
 			'subtitle' => $this->podcast->subtitle,
 			'summary'  => $this->podcast->summary,
-			'cover'    => $this->podcast->cover_art()->url(400),
+			'cover'    => $this->podcast->cover_art()->setWidth(400)->url(),
 			'feeds'    => $this->feeds()
 		];
 
