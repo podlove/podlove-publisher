@@ -66,7 +66,7 @@ class oembed extends \Podlove\Modules\Base {
 							'url'			=> get_permalink( $post_id ),
 							'author_name'	=> $podcast->full_title(),
 							'author_url'	=> site_url(),
-							'thumbnail_url'	=> $episode->cover_art_with_fallback(),
+							'thumbnail_url'	=> $episode->cover_art_with_fallback()->url(),
 							'html'			=> '<iframe width="' . $player_width .'" height="' . $player_height . '" src="' . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
 	}
 

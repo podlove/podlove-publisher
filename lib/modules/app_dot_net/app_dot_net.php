@@ -493,9 +493,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
 		if ($this->get_module_option('adn_poster_image_fallback') == 'on' ) {
-			$cover = $episode->cover_art_with_fallback();
+			$cover = $episode->cover_art_with_fallback()->url();
 		} else {
-			$cover = $episode->cover_art();
+			$cover = $episode->cover_art()->url();
 		}
 
 		if ( empty( $cover ) )

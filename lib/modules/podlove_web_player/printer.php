@@ -49,7 +49,7 @@ class Printer {
 		$height = strtolower( trim( $this->get_webplayer_setting( $this->get_media_tag(), 'height' ) ) );
 
 		if ( $this->is_video ) {
-			$xml->addAttribute( 'poster', $this->episode->cover_art_with_fallback() );
+			$xml->addAttribute( 'poster', $this->episode->cover_art_with_fallback()->url() );
 			$xml->addAttribute( 'width', $width );
 			$xml->addAttribute( 'height', $height );
 		} else {
