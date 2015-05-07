@@ -164,12 +164,27 @@ class Episode extends Wrapper {
 	/**
 	 * Image URL
 	 * 
+	 * @deprecated since 2.2.0, use `image` instead
 	 * @accessor
 	 */
 	public function imageUrl() {
 
 		if ($cover_art = $this->episode->cover_art())
-			return $cover_art->url();
+			return new Image($cover_art);
+
+		return '';
+	}
+
+	/**
+	 * Image
+	 * 
+	 * @see  image
+	 * @accessor
+	 */
+	public function image() {
+
+		if ($cover_art = $this->episode->cover_art())
+			return new Image($cover_art);
 
 		return '';
 	}
@@ -177,12 +192,23 @@ class Episode extends Wrapper {
 	/**
 	 * Image URL with fallback
 	 *
-	 * Returns podcast image if no episode image is available.
-	 * 
+	 * @deprecated since 2.2.0, use `imageWithFallback` instead
 	 * @accessor
 	 */
 	public function imageUrlWithFallback() {
-		return $this->episode->cover_art_with_fallback()->url();
+		return new Image($this->episode->cover_art_with_fallback());
+	}
+
+	/**
+	 * Image with fallback
+	 *
+	 * Returns podcast image if no episode image is available.
+	 * 
+	 * @see  image
+	 * @accessor
+	 */
+	public function imageWithFallback() {
+		return new Image($this->episode->cover_art_with_fallback());
 	}
 
 	/**
