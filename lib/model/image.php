@@ -6,6 +6,7 @@ class Image {
 	private $id;
 	private $source_url;
 	private $file_name;
+	private $file_extension;
 	private $upload_basedir;
 	private $upload_baseurl;
 
@@ -21,6 +22,7 @@ class Image {
 	public function __construct($url, $file_name = '') {
 		$this->source_url = trim($url);
 		$this->file_name = sanitize_title($file_name);
+		$this->file_extension = $this->extract_file_extension();
 		$this->id = md5($url . $this->file_name);
 
 		$upload = wp_upload_dir();
@@ -45,6 +47,11 @@ class Image {
 	 * @return string image URL
 	 */
 	public function url($width = NULL, $height = NULL) {
+
+		if (!$this->file_extension) {
+			\Podlove\Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
+			return $this->source_url;
+		}
 
 		// fetch original if we don't have it — until then, return the original URL
 		if (!$this->source_exists()) {
@@ -113,19 +120,19 @@ class Image {
 	}
 
 	private function original_file() {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]) . '.jpg';
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]) . '.' . $this->file_extension;
 	}
 
 	private function resized_file($width, $height) {
-		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name(self::size_slug($width, $height))]) . '.jpg';
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name(self::size_slug($width, $height))]) . '.' . $this->file_extension;
 	}
 
 	private function original_url() {
-		return implode('/', [$this->upload_baseurl, $this->file_name('original')]) . '.jpg';
+		return implode('/', [$this->upload_baseurl, $this->file_name('original')]) . '.' . $this->file_extension;
 	}
 
 	private function resized_url($width, $height) {
-		return implode('/', [$this->upload_baseurl, $this->file_name(self::size_slug($width, $height))]) . '.jpg';
+		return implode('/', [$this->upload_baseurl, $this->file_name(self::size_slug($width, $height))]) . '.' . $this->file_extension;
 	}
 
 	private function generate_resized_copy($width, $height) {
@@ -160,7 +167,7 @@ class Image {
 		$file_array = array();
 		$file_array['name'] = basename( $matches[0] );
 
-		// Download$this->source_url to temp location.
+		// Download $this->source_url to temp location.
 		$file_array['tmp_name'] = download_url( $this->source_url );
 
 		// If error storing temporarily, return the error.
@@ -183,5 +190,8 @@ class Image {
 		@ unlink($file_array['tmp_name']);
 	}
 
-
+	private function extract_file_extension() {
+		$url = parse_url($this->source_url);
+		return pathinfo($url['path'], PATHINFO_EXTENSION);
+	}
 }
