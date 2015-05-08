@@ -3,6 +3,7 @@ namespace Podlove\Modules\Contributors\Model;
 
 use \Podlove\Model\Base;
 use \Podlove\Model\Episode;
+use \Podlove\Model\Image;
 
 class Contributor extends Base
 {	
@@ -116,7 +117,7 @@ class Contributor extends Base
 
 		if ($this->avatar)
 			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
-				return $this->avatar;
+				return (new Image($this->avatar))->setWidth((int) $size)->url();
 			} else {
 				return $this->getGravatarUrl($size, $this->avatar);
 			}
