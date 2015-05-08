@@ -28,7 +28,7 @@ class FeedDiscoverability {
 			return;
 
 		if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
-			require_once \PODLOVE\PLUGIN_DIR . 'lib/feeds/base.php';
+			require_once \Podlove\PLUGIN_DIR . 'lib/feeds/base.php';
 
 		echo TemplateCache::get_instance()->cache_for('', function() {
 			$html = '';
