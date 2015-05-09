@@ -80,9 +80,9 @@ class Image extends Wrapper {
 	 * **Examples**
 	 * 
 	 * ```jinja
-	 * {{ image.image }}                       {# returns the unresized image tag #}
-	 * {{ image.image({width: 100}) }}         {# returns resized image tag #}
-	 * {{ image.image({title: "The Spark"}) }} {# returns image tag with custom title #}
+	 * {{ image.html }}                       {# returns the unresized image tag #}
+	 * {{ image.html({width: 100}) }}         {# returns resized image tag #}
+	 * {{ image.html({title: "The Spark"}) }} {# returns image tag with custom title #}
 	 * ```
 	 * 
 	 * Note: It is not _guaranteed_ to get back the resized image. If it is 
@@ -90,7 +90,7 @@ class Image extends Wrapper {
 	 * 
 	 * @accessor
 	 */
-	public function image($args = []) {
+	public function html($args = []) {
 		
 		$defaults = [
 			'width'  => NULL,
