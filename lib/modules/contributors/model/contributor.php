@@ -117,7 +117,7 @@ class Contributor extends Base
 
 		if ($this->avatar)
 			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
-				return (new Image($this->avatar))->setWidth((int) $size)->url();
+				return (new Image($this->avatar, $this->getName()))->setWidth((int) $size)->url();
 			} else {
 				return $this->getGravatarUrl($size, $this->avatar);
 			}
