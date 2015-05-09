@@ -755,7 +755,7 @@ class Contributors extends \Podlove\Modules\Base {
 					'role' => '',
 					'group' => '',
 					'realname' => $contributor->realname,
-					'avatar' => $contributor->getAvatar("35px")
+					'avatar' => $contributor->avatar()->setWidth(45)->setRetina(true)->image()
 				);
 			} else {
 				foreach($show_contributions as $show_contribution) {
@@ -769,7 +769,7 @@ class Contributors extends \Podlove\Modules\Base {
 						'role' => $role,
 						'group' => $group,
 						'realname' => $contributor->realname,
-						'avatar' => $contributor->getAvatar("35px")
+						'avatar' => $contributor->avatar()->setWidth(45)->setRetina(true)->image()
 					);
 				}
 			} 
@@ -819,7 +819,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
 						<option value="create"><?php echo __('Add New Contributor', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
-							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->getAvatarUrl("10px") ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
+							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url() ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
 						<?php endforeach; ?>
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>

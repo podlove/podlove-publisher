@@ -109,27 +109,6 @@ class Contributor extends Base
 		}
 	}
 
-	/**
-	 * @deprecated since 2.2.0
-	 */
-	public function getAvatar($size) {
-		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
-	}
-
-	/**
-	 * @deprecated since 2.2.0
-	 */
-	public function getAvatarUrl($size) {
-		if ($this->avatar)
-			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
-				return (new Image($this->avatar, $this->getName()))->setWidth((int) $size)->url();
-			} else {
-				return $this->getGravatarUrl($size, $this->avatar);
-			}
-		else
-			return $this->getGravatarUrl($size);
-	}
-
 	public function avatar() {
 		
 		if ($this->avatar) {

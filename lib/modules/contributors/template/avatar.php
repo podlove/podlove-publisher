@@ -36,7 +36,7 @@ class Avatar extends Wrapper {
 	 * @accessor
 	 */
 	public function url($size = 50) {
-		return $this->contributor->getAvatarUrl($size);
+		return $this->contributor->avatar()->setWidth($size)->url();
 	}
 
 }

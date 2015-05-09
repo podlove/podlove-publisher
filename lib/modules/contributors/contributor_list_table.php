@@ -15,8 +15,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 	
 	public function column_avatar( $contributor ) {
-		
-		return $contributor->getAvatar("45px");
+		return $contributor
+			->avatar()
+			->setWidth(45)
+			->setRetina(true)
+			->image();
 	}
 	
 	public function column_realname( $contributor ) {
