@@ -162,9 +162,31 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Image
+	 * 
+	 * @see  image
+	 * @accessor
+	 */
+	public function image($args = []) {
+
+		$defaults = ['fallback' => false];
+		$args = wp_parse_args($args, $defaults);
+
+		if ($args['fallback']) {
+			return new Image($this->episode->cover_art_with_fallback());
+		} else {
+			if ($cover_art = $this->episode->cover_art())
+				return new Image($cover_art);
+			else
+				return '';
+			
+		}
+	}
+
+	/**
 	 * Image URL
 	 * 
-	 * @deprecated since 2.2.0, use `image` instead
+	 * @deprecated since 2.2.0, use `episode.image.url` instead
 	 * @accessor
 	 */
 	public function imageUrl() {
@@ -176,38 +198,12 @@ class Episode extends Wrapper {
 	}
 
 	/**
-	 * Image
-	 * 
-	 * @see  image
-	 * @accessor
-	 */
-	public function image() {
-
-		if ($cover_art = $this->episode->cover_art())
-			return new Image($cover_art);
-
-		return '';
-	}
-
-	/**
 	 * Image URL with fallback
 	 *
-	 * @deprecated since 2.2.0, use `imageWithFallback` instead
+	 * @deprecated since 2.2.0, use `episode.image({fallback: true}).url` instead
 	 * @accessor
 	 */
 	public function imageUrlWithFallback() {
-		return new Image($this->episode->cover_art_with_fallback());
-	}
-
-	/**
-	 * Image with fallback
-	 *
-	 * Returns podcast image if no episode image is available.
-	 * 
-	 * @see  image
-	 * @accessor
-	 */
-	public function imageWithFallback() {
 		return new Image($this->episode->cover_art_with_fallback());
 	}
 
