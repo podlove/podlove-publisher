@@ -109,12 +109,17 @@ class Contributor extends Base
 		}
 	}
 
+	/**
+	 * @deprecated since 2.2.0
+	 */
 	public function getAvatar($size) {
 		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
 	}
 
+	/**
+	 * @deprecated since 2.2.0
+	 */
 	public function getAvatarUrl($size) {
-
 		if ($this->avatar)
 			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
 				return (new Image($this->avatar, $this->getName()))->setWidth((int) $size)->url();
@@ -123,6 +128,21 @@ class Contributor extends Base
 			}
 		else
 			return $this->getGravatarUrl($size);
+	}
+
+	public function avatar() {
+		
+		if ($this->avatar) {
+			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
+				$url = $this->avatar;
+			} else {
+				$url = $this->getGravatarUrl(512, $this->avatar);
+			}
+		} else {
+			$url = $this->getGravatarUrl(512);
+		}
+
+		return new Image($url, $this->getName());
 	}
 
 	public function getContributions() {
@@ -294,6 +314,7 @@ class Contributor extends Base
 
 		$url = 'https://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
+		$url .= ".jpg";
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;
 	}	
