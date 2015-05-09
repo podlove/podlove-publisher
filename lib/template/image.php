@@ -61,8 +61,8 @@ class Image extends Wrapper {
 
 		return $this->image
 			->setCrop((bool) $args['crop'])
-			->setWidth((int) $args['width'])
-			->setHeight((int) $args['height'])
+			->setWidth($args['width'])
+			->setHeight($args['height'])
 			->url();
 	}
 
@@ -97,14 +97,16 @@ class Image extends Wrapper {
 			'height' => NULL,
 			'crop'   => false,
 			'alt'    => NULL,
-			'title'  => NULL
+			'title'  => NULL,
+			'retina' => false
 		];
 		$args = wp_parse_args($args, $defaults);
 
 		return $this->image
 			->setCrop((bool) $args['crop'])
-			->setWidth((int) $args['width'])
-			->setHeight((int) $args['height'])
+			->setRetina((bool) $args['retina'])
+			->setWidth($args['width'])
+			->setHeight($args['height'])
 			->image($args['alt'], $args['title']);
 	}
 }

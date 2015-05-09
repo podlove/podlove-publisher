@@ -34,6 +34,9 @@ class Image {
 	private $width  = NULL;
 	private $height = NULL;
 
+	// html rendering properties
+	private $retina = false;
+
 	/**
 	 * Create image object
 	 * 
@@ -66,12 +69,46 @@ class Image {
 	}
 
 	public function setWidth($width) {
+
+		if (!$width)
+			return $this;
+
 		$this->width = (int) $width;
+		$this->height = 0;
+		$this->determineMissingDimension();
+
 		return $this;
 	}
 
 	public function setHeight($height) {
+
+		if (!$height)
+			return $this;
+
 		$this->height = (int) $height;
+		$this->width = 0;
+		$this->determineMissingDimension();
+
+		return $this;
+	}
+
+	private function determineMissingDimension() {
+
+		if (!$this->height) {
+			$known_dimension   = 'width';
+			$missing_dimension = 'height';
+		} elseif (!$this->width) {
+			$known_dimension   = 'height';
+			$missing_dimension = 'width';
+		}
+
+		@list($width, $height) = getimagesize($this->original_file());
+		if ($width && $height)
+			$this->$missing_dimension = round($this->$known_dimension / ${$known_dimension} * ${$missing_dimension});
+	}
+
+	public function setRetina($retina) {
+		$this->retina = (bool) $retina;
 		return $this;
 	}
 
@@ -126,11 +163,52 @@ class Image {
 		$dom = new \Podlove\DomDocumentFragment;
 		$img = $dom->createElement('img');
 		$img->setAttribute('src', $this->url());
+
+		if ($this->retina && $srcset = $this->srcset())
+			$img->setAttribute('srcset', $srcset);			
+
+		if ($this->width)
+			$img->setAttribute('width', $this->width);
+
+		if ($this->height)
+			$img->setAttribute('height', $this->height);
+
 		$img->setAttribute('alt', $alt);
 		$img->setAttribute('title', $title);
 		$dom->appendChild($img);
 		
 		return (string) $dom;
+	}
+
+	/**
+	 * Generate srcset attribute for img tag
+	 * 
+	 * @return string|NULL
+	 */
+	private function srcset() {
+		@list($max_width, $max_height) = getimagesize($this->original_file());
+
+		if ($this->width * 2 > $max_width)
+			return NULL;
+
+		$sizes = ['1x' => $this->url()];
+
+		$img2x = clone $this;
+		$img2x = $img2x->setWidth($this->width * 2)->url();
+		$sizes['2x'] = $img2x;
+
+		if ($this->width * 3 <= $max_width) {
+			$img3x = clone $this;
+			$img3x = $img3x->setWidth($this->width * 3)->url();
+			$sizes['3x'] = $img3x;
+		}
+
+		$sources = [];
+		foreach ($sizes as $factor => $url) {
+			$sources[] = $url . ' ' . $factor;
+		}
+
+		return implode(", ", $sources);
 	}
 
 	public function schedule_download_source() {
