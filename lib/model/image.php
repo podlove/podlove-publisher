@@ -269,31 +269,20 @@ class Image {
   		// for download_url()
    		require_once(ABSPATH . 'wp-admin/includes/file.php');
 
-		preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $this->source_url, $matches );
-		$file_array = array();
-		$file_array['name'] = basename( $matches[0] );
+		$temp_file = download_url($this->source_url);
 
-		// Download $this->source_url to temp location.
-		$file_array['tmp_name'] = download_url( $this->source_url );
+		if (is_wp_error($temp_file))
+			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to download image. %s.' ), $temp_file->get_error_message()));
 
-		// If error storing temporarily, return the error.
-		if ( is_wp_error( $file_array['tmp_name'] ) ) {
-			return $file_array['tmp_name']; // fixme log error
-		}
+		if (!wp_mkdir_p($this->upload_basedir))
+			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
 
-		if (!wp_mkdir_p($this->upload_basedir)) {
-			\Podlove\Log::get()->addWarning(
-				sprintf( __( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir )
-			);
-		}
+		$move_new_file = @rename($temp_file, $this->original_file());
 
-		$move_new_file = @ rename( $file_array['tmp_name'], $this->original_file() );
+		if ( false === $move_new_file )
+			\Podlove\Log::get()->addWarning(sprintf(__('The downloaded image could not be moved to %s.' ), $this->original_file()));
 
-		if ( false === $move_new_file ) {
-			error_log(print_r(sprintf( __('The uploaded file could not be moved to %s.' ), $this->original_file() ), true));
-		}
-
-		@ unlink($file_array['tmp_name']);
+		@unlink($temp_file);
 	}
 
 	private function extract_file_extension() {
