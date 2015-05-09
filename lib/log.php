@@ -2,7 +2,7 @@
 namespace Podlove;
 
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\ErrorLogHandler;
 
 /**
  * Podlove Logger class.
@@ -31,9 +31,8 @@ class Log {
 	private function __construct() {
 
 		$log = new Logger( 'Podlove' );
-
 		if ( defined('WP_DEBUG') && WP_DEBUG )
-			$log->pushHandler( new StreamHandler( 'php://stderr', $this->get_log_level() ) );
+			$log->pushHandler( new ErrorLogHandler( ErrorLogHandler::OPERATING_SYSTEM, $this->get_log_level() ) );
 
 		$this->log = $log;
 	}
@@ -47,7 +46,7 @@ class Log {
 	}
 
 	public function get_log_level() {
-		return defined('defined') && WP_DEBUG ? Logger::DEBUG : Logger::INFO;
+		return defined('WP_DEBUG') && WP_DEBUG ? Logger::DEBUG : Logger::INFO;
 	}
 
 	/**
