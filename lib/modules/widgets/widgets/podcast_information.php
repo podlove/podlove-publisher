@@ -21,7 +21,7 @@ class PodcastInformation extends \WP_Widget {
 		echo $args['before_title'] . apply_filters( 'widget_title', ( empty($instance['title']) ) ? $podcast->title : $instance['title'] ) . $args['after_title'];
 
 		if ( $instance['show_image'] )
-			echo $podcast->cover_art()->image(400, 400, $podcast->title, $podcast->title);
+			echo $podcast->cover_art()->setWidth(400)->image(["alt" => $podcast->title]);
 
 		if ( $instance['show_subtitle'] )
 			echo '<p><strong>' . $podcast->subtitle . '</strong></p>';

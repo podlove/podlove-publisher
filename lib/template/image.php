@@ -107,6 +107,9 @@ class Image extends Wrapper {
 			->setRetina((bool) $args['retina'])
 			->setWidth($args['width'])
 			->setHeight($args['height'])
-			->image($args['alt'], $args['title']);
+			->image([
+				'alt'   => $args['alt'], 
+				'title' => $args['title']
+			]);
 	}
 }

@@ -40,7 +40,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		if (!trim($podcast->cover_art()->url())) {
 			return;
 		} else {
-			return $podcast->cover_art()->image(70, 70, $podcast->title, $podcast->title);
+			return $podcast->cover_art()->setWidth(70)->image(["alt" => $podcast->title]);
 		}
 	}	
 

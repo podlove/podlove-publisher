@@ -17,7 +17,7 @@ namespace Podlove\Model;
  * 		->url();
  * 
  *   // get image tag with custom alt text and title
- *   $image = (new Image($url))->image("custom alt", "custom title");
+ *   $image = (new Image($url))->image(["alt" => "custom alt", "title" => "custom title"]);
  */
 class Image {
 
@@ -148,17 +148,18 @@ class Image {
 	 * 
 	 * 	$image->image(); // returns image tag
 	 * 
-	 * @param  string|NULL $alt   Image alt-text. If NULL, it defaults to $file_name. Default: NULL.
-	 * @param  string|NULL $title Image title-text. If NULL, it defaults to $file_name. Default: NULL.
+	 * @param  array $args List of optional arguments
+	 * 	                   - string|NULL alt   Image alt-text. If NULL, it defaults to $file_name. Default: ''.
+	 * 	                   - string|NULL title Image title-text. If NULL, it defaults to $file_name. Default: ''.
 	 * @return string HTML image tag
 	 */
-	public function image($alt = NULL, $title = NULL) {
+	public function image($args = []) {
 
-		if (is_null($alt))
-			$alt = $this->file_name;
-
-		if (is_null($title))
-			$title = $this->file_name;
+		$defaults = [
+			'alt'   => '',
+			'title' => ''
+		];
+		$args = wp_parse_args($args, $defaults);
 
 		$dom = new \Podlove\DomDocumentFragment;
 		$img = $dom->createElement('img');
