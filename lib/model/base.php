@@ -482,7 +482,7 @@ abstract class Base
 	    	$wpdb->query( 'ALTER TABLE ' . static::table_name() . ' AUTO_INCREMENT = 1' );  
 	}
 
-	protected static function find_one_by_sql($sql) {
+	public static function find_one_by_sql($sql) {
 		global $wpdb;
 		
 		$class = get_called_class();
@@ -502,7 +502,7 @@ abstract class Base
 		return $model;
 	}
 
-	protected static function find_all_by_sql($sql) {
+	public static function find_all_by_sql($sql) {
 		global $wpdb;
 		
 		$class = get_called_class();

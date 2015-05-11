@@ -110,6 +110,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.2.0 =
 
+* fix: duplicate feed discovery
+* fix: ignore incomplete feed configurations
+
 **Deprecations**
 
 - deprecated `episode.imageUrl`, use `episode.image` instead

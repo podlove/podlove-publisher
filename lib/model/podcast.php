@@ -172,9 +172,33 @@ class Podcast implements Licensable {
 		});
 	}
 	
+
+	/**
+	 * Fetch all valid feeds.
+	 * 
+	 * A feed is valid if...
+	 * 
+	 * - it has an asset assigned (and the asset has a filetype assigned)
+	 * - the slug in not empty
+	 * 
+	 * @return array list of feeds
+	 */
 	public function feeds() {
 		return $this->with_blog_scope(function() {
-			return \Podlove\Model\Feed::all('ORDER BY position ASC');
+
+			$sql = "
+				SELECT
+					f.*
+				FROM
+					" . Feed::table_name() . " f
+					JOIN " . EpisodeAsset::table_name() . " a ON a.id = f.episode_asset_id
+					JOIN " . FileType::table_name() . " ft ON ft.id = a.file_type_id
+				WHERE
+					f.slug IS NOT NULL
+				ORDER BY 
+					position ASC
+			";
+			return Feed::find_all_by_sql($sql);
 		});
 	}
 

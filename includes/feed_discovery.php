@@ -13,7 +13,7 @@ function podlove_add_feed_discoverability() {
 	$cache = \Podlove\Cache\TemplateCache::get_instance();
 	echo $cache->cache_for('feed_discoverability', function() {
 
-		$feeds = \Podlove\Model\Feed::all( 'ORDER BY position ASC' );
+		$feeds = \Podlove\Model\Podcast::get()->feeds();
 
 		$html = '';
 		foreach ( $feeds as $feed ) {
