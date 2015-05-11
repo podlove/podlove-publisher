@@ -16,10 +16,15 @@ class RSS {
 			echo 'xmlns:fh="http://purl.org/syndication/history/1.0" ';
 		} );
 
-		$podcast        = Model\Podcast::get();
-		$feed           = Model\Feed::find_one_by_slug( $feed_slug );
-		$episode_asset  = $feed->episode_asset();
-		$file_type      = $episode_asset->file_type();
+		$podcast = Model\Podcast::get();
+
+		if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
+			self::wp_404();
+
+		if (!$episode_asset = $feed->episode_asset())
+			self::wp_404();
+
+		$file_type = $episode_asset->file_type();
 
 		add_filter( 'podlove_feed_enclosure', function ( $enclosure, $enclosure_url, $enclosure_file_size, $mime_type, $media_file ) {
 
@@ -141,6 +146,14 @@ class RSS {
 
 		$args = array_merge( $wp_query->query_vars, $args );
 		query_posts( $args );
+	}
+
+	public static function wp_404() {
+		status_header(404);
+		header("Content-Type: text/html");
+		if ($template = get_404_template())
+			include $template;
+		exit;
 	}
 
 	public static function render() {
