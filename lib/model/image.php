@@ -35,7 +35,7 @@ class Image {
 	private $height = NULL;
 
 	// html rendering properties
-	private $retina = false;
+	private $retina = true;
 
 	/**
 	 * Create image object

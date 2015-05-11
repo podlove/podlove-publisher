@@ -755,7 +755,7 @@ class Contributors extends \Podlove\Modules\Base {
 					'role' => '',
 					'group' => '',
 					'realname' => $contributor->realname,
-					'avatar' => $contributor->avatar()->setWidth(45)->setRetina(true)->image()
+					'avatar' => $contributor->avatar()->setWidth(45)->image()
 				);
 			} else {
 				foreach($show_contributions as $show_contribution) {
@@ -769,7 +769,7 @@ class Contributors extends \Podlove\Modules\Base {
 						'role' => $role,
 						'group' => $group,
 						'realname' => $contributor->realname,
-						'avatar' => $contributor->avatar()->setWidth(45)->setRetina(true)->image()
+						'avatar' => $contributor->avatar()->setWidth(45)->image()
 					);
 				}
 			} 

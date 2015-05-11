@@ -18,7 +18,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		return $contributor
 			->avatar()
 			->setWidth(45)
-			->setRetina(true)
 			->image();
 	}
 	

@@ -102,7 +102,7 @@ class Image extends Wrapper {
 			'class'  => NULL,
 			'alt'    => NULL,
 			'title'  => NULL,
-			'retina' => false
+			'retina' => true
 		];
 		$args = wp_parse_args($args, $defaults);
 
