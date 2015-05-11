@@ -156,26 +156,34 @@ class Image {
 	public function image($args = []) {
 
 		$defaults = [
-			'alt'   => '',
-			'title' => ''
+			'id'         => '',
+			'class'      => '',
+			'alt'        => '',
+			'title'      => '',
+			'width'      => $this->width,
+			'height'     => $this->height,
+			'attributes' => []
 		];
 		$args = wp_parse_args($args, $defaults);
 
+		// put everything in 'attributes' for easy iteration
+		foreach (['id', 'class', 'alt', 'title', 'width', 'height'] as $attr) {
+			if ($args[$attr])
+				$args['attributes'][$attr] = $args[$attr];
+		}
+
 		$dom = new \Podlove\DomDocumentFragment;
 		$img = $dom->createElement('img');
+		
+		foreach ($args['attributes'] as $key => $value) {
+			$img->setAttribute($key, $value);
+		}
+
 		$img->setAttribute('src', $this->url());
 
 		if ($this->retina && $srcset = $this->srcset())
 			$img->setAttribute('srcset', $srcset);			
 
-		if ($this->width)
-			$img->setAttribute('width', $this->width);
-
-		if ($this->height)
-			$img->setAttribute('height', $this->height);
-
-		$img->setAttribute('alt', $alt);
-		$img->setAttribute('title', $title);
 		$dom->appendChild($img);
 		
 		return (string) $dom;
