@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Model;
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
  * Image Object
  * 
@@ -237,6 +239,10 @@ class Image {
 		return is_file($this->original_file());
 	}
 
+	private function cache_file() {
+		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, 'cache.yml']);
+	}
+
 	private function original_file() {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]);
 	}
@@ -273,12 +279,22 @@ class Image {
 			return 'original';
 	}
 
+	public function redownload_source() {
+		$this->download_source();
+		$this->delete_resized_versions();
+	}
+
+	private function delete_resized_versions() {
+		$resized_versions = implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, "*x*.*"]);
+		array_map('unlink', glob($resized_versions));
+	}
+
 	public function download_source() {
 
   		// for download_url()
    		require_once(ABSPATH . 'wp-admin/includes/file.php');
 
-		$temp_file = download_url($this->source_url);
+		list($temp_file, $response) = $this->download_url($this->source_url);
 
 		if (is_wp_error($temp_file))
 			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to download image. %s.' ), $temp_file->get_error_message()));
@@ -286,12 +302,68 @@ class Image {
 		if (!wp_mkdir_p($this->upload_basedir))
 			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
 
+		$this->save_cache_data($response);
+
 		$move_new_file = @rename($temp_file, $this->original_file());
 
 		if ( false === $move_new_file )
 			\Podlove\Log::get()->addWarning(sprintf(__('The downloaded image could not be moved to %s.' ), $this->original_file()));
 
 		@unlink($temp_file);
+	}
+
+	/**
+	 * Save data relevant for cache invalidation to file.
+	 * 
+	 * @param  array $response
+	 */
+	private function save_cache_data($response) {
+
+		$cache_info = [
+			'source'        => $this->source_url,
+			'filename'      => $this->file_name,
+			'etag'          => wp_remote_retrieve_header($response, 'etag'),
+			'last-modified' => wp_remote_retrieve_header($response, 'last-modified'),
+			'expires'       => wp_remote_retrieve_header($response, 'expires'),
+		];
+
+		file_put_contents($this->cache_file(), Yaml::dump($cache_info));
+	}
+
+	/**
+	 * Downloads a url to a local temporary file using the WordPress HTTP Class.
+	 * Please note, That the calling function must unlink() the file.
+	 * 
+	 * This is a modified copy of WP Core download_url().
+	 * I copied it because I need to look into the header of the response but
+	 * unfortunately the original implementation does not expose it.
+	 *
+	 * @param string $url the URL of the file to download
+	 * @param int $timeout The timeout for the request to download the file default 300 seconds
+	 * @return mixed WP_Error on failure, array with Filename & http response on success.
+	 */
+	private function download_url( $url, $timeout = 300 ) {
+		//WARNING: The file is not automatically deleted, The script must unlink() the file.
+		if ( ! $url )
+			return new WP_Error('http_no_url', __('Invalid URL Provided.'));
+
+		$tmpfname = wp_tempnam($url);
+		if ( ! $tmpfname )
+			return new WP_Error('http_no_file', __('Could not create Temporary file.'));
+
+		$response = wp_safe_remote_get( $url, array( 'timeout' => $timeout, 'stream' => true, 'filename' => $tmpfname ) );
+
+		if ( is_wp_error( $response ) ) {
+			unlink( $tmpfname );
+			return $response;
+		}
+
+		if ( 200 != wp_remote_retrieve_response_code( $response ) ){
+			unlink( $tmpfname );
+			return new WP_Error( 'http_404', trim( wp_remote_retrieve_response_message( $response ) ) );
+		}
+
+		return [$tmpfname, $response];
 	}
 
 	private function extract_file_extension() {
