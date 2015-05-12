@@ -3,7 +3,9 @@
 	{% if contributor.visible %}
 		<li>
 			{% if option.avatars == "yes" %}
-				<span class="avatar">{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 18} only %}</span>
+				<span class="avatar">
+					{{ contributor.image.html({width: size, height: size, class: "avatar avatar-" ~ size ~  " photo" alt="avatar" }) }}
+				</span>
 			{% endif %}
 			<span class="name">{{ contributor.name }}</span>
 		</li>
