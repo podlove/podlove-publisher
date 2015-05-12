@@ -16,7 +16,8 @@
         "leth/ip-address": "1.0.*@dev",
         "geoip2/geoip2": "dev-master",
         "ramsey/array_column": "~1.1",
-        "piwik/device-detector": "dev-master"
+        "piwik/device-detector": "dev-master",
+        "phpunit/php-timer": "~1.0"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
