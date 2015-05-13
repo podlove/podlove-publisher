@@ -95,13 +95,13 @@ class MediaFile extends Base {
 	 * Example contexts: home/episode/archive for player source, feed slug for feed source
 	 * 
 	 * @param  string $source  download source
-	 * @param  string $context optional download context
+	 * @param  string|null $context optional download context
 	 * @return string
 	 */
 	public function get_public_file_url($source, $context = null)
 	{
 		return $this->with_blog_scope(function() use ($source, $context) {
-			if (!$source && !$context)
+			if (empty($source) && empty($context))
 				return $this->get_file_url();
 
 			$params = array(
