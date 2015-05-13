@@ -315,12 +315,14 @@ class MediaFile extends Base {
 	}
 
 	/**
-	 * @todo  use \Podlove\Http\Curl	
+	 * @todo  use \Podlove\Http\Curl
+	 * 
+	 * @return array	
 	 */
 	public static function curl_get_header_for_url( $url, $etag = NULL ) {
 		
 		if ( ! function_exists( 'curl_exec' ) )
-			return false;
+			return [];
 
 		$curl = curl_init();
 
