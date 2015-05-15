@@ -65,7 +65,7 @@ class Episode extends Base implements Licensable {
 	}
 
 	public function title() {
-		return $this->with_blog_scope(function() { return get_the_title(); });
+		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
 	}
 
 	/**
