@@ -54,8 +54,29 @@ class Image {
 		$this->file_extension = $this->extract_file_extension();
 		$this->id = md5($url . $this->file_name);
 
-		$this->upload_basedir = trailingslashit(WP_CONTENT_DIR) . 'cache/podlove/' . $this->id;
+		$this->upload_basedir = self::cache_dir() . $this->id;
 		$this->upload_baseurl = content_url('cache/podlove/') . $this->id;
+	}
+
+	public static function cache_dir() {
+		return trailingslashit(WP_CONTENT_DIR) . 'cache/podlove/';
+	}
+
+	/**
+	 * Delete all image caches.
+	 */
+	public static function flush_cache() {
+		$dir   = self::cache_dir();
+		$it    = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+		$files = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
+		foreach ($files as $file) {
+			if ($file->isDir()){
+				rmdir($file->getRealPath());
+			} else {
+				unlink($file->getRealPath());
+			}
+		}
+		rmdir($dir);
 	}
 
 	/**
