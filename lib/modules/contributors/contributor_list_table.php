@@ -108,10 +108,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			$service = $contributor_service->get_service();
 
 			$source .= "<li>" 
-			        . $service->image()->image([
-			        	'width' => 16,
-			        	'class' => 'podlove-contributor-list-social-logo'
-			        ]) 
+			        . $service->image()->setWidth(16)->image(['class' => 'podlove-contributor-list-social-logo']) 
 			        . "<a href='" . $contributor_service->get_service_url() . "'>"
 					. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) 
 					. "</a>"
