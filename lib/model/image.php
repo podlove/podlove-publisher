@@ -2,6 +2,7 @@
 namespace Podlove\Model;
 
 use Symfony\Component\Yaml\Yaml;
+use \Podlove\Cache\TemplateCache;
 
 /**
  * Image Object
@@ -294,6 +295,9 @@ class Image {
 
 		$image->resize($this->width, $this->height, $this->crop);
 		$image->save($this->resized_file());
+
+		// when a new image size is created, Templace Cache must be cleared
+		TemplateCache::get_instance()->setup_global_purge();
 	}
 
 	private function size_slug() {

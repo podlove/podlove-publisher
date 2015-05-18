@@ -100,7 +100,38 @@ class TemplateCache {
 	 * WordPress will only execute one purge every 10 minutes.
 	 */
 	public function setup_purge() {
-		wp_schedule_single_event( time(), 'podlove_purge_template_cache', array('time' => time()) );
+		if (!wp_next_scheduled('podlove_purge_template_cache'))
+			wp_schedule_single_event( time(), 'podlove_purge_template_cache', array('time' => time()) );
+	}
+
+	/**
+	 * Setup cache purge in all blogs.
+	 */
+	public function setup_purge_in_all_blogs() {
+		global $wpdb;
+
+		if (wp_next_scheduled('podlove_purge_template_cache'))
+			return;
+
+		$blog_ids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+		if (is_array($blog_ids)) {
+			foreach ($blog_ids as $blog_id) {
+				\Podlove\with_blog_scope($blog_id, function() use ($blog_id) {
+					TemplateCache::get_instance()->setup_purge();
+				});
+			}
+		}
+	}
+
+	/**
+	 * Setup complete purge, depending on if we are a Multisite
+	 */
+	public function setup_global_purge() {
+		if (is_multisite()) {
+			TemplateCache::get_instance()->setup_purge_in_all_blogs();
+		} else {
+			TemplateCache::get_instance()->setup_purge();
+		}
 	}
 
 	/**
@@ -122,19 +153,6 @@ class TemplateCache {
 		// quick, reliable purge (but only works with database as backend)
 		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_" . self::CACHE_NAMESPACE . "%\"";
 		$wpdb->query($sql);
-	}
-
-	public function setup_purge_in_all_blogs() {
-		global $wpdb;
-
-		$blog_ids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-		if (is_array($blog_ids)) {
-			foreach ($blog_ids as $blog_id) {
-				\Podlove\with_blog_scope($blog_id, function() use ($blog_id) {
-					TemplateCache::get_instance()->setup_purge();
-				});
-			}
-		}
 	}
 
 	/**
