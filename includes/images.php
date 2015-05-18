@@ -34,8 +34,6 @@ function podlove_validate_image_cache() {
 		$validator = new HttpHeaderValidator($cache['source'], $cache['etag'], $cache['last-modified']);
 		$validator->validate();
 		if ($validator->hasChanged()) {
-			error_log(print_r("need to refetch: " . $cache['source'], true));
-			error_log(print_r([$cache['source'], $cache['etag'], $cache['last-modified']], true));
 			wp_schedule_single_event(time(), 'podlove_refetch_cached_image', [$cache['source'], $cache['filename']]);
 		}
 	}
