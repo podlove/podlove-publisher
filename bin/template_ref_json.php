@@ -45,7 +45,9 @@ $classes = [
 	'\Podlove\Template\FileType',
 	'\Podlove\Modules\Contributors\Template\Contributor',
 	'\Podlove\Modules\Contributors\Template\ContributorGroup',
-	'\Podlove\Modules\Social\Template\Service'
+	'\Podlove\Modules\Social\Template\Service',
+	'\Podlove\Modules\Networks\Template\Network',
+	'\Podlove\Modules\Networks\Template\PodcastList'
 ];
 
 // first, parse dynamic accessors
