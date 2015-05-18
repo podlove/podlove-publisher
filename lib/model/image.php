@@ -54,9 +54,8 @@ class Image {
 		$this->file_extension = $this->extract_file_extension();
 		$this->id = md5($url . $this->file_name);
 
-		$upload = wp_upload_dir();
-		$this->upload_basedir = implode(DIRECTORY_SEPARATOR, [$upload['basedir'], 'podlove', $this->id]);
-		$this->upload_baseurl = implode('/', [$upload['baseurl'], 'podlove', $this->id]);
+		$this->upload_basedir = trailingslashit(WP_CONTENT_DIR) . 'cache/podlove/' . $this->id;
+		$this->upload_baseurl = content_url('cache/podlove/') . $this->id;
 	}
 
 	/**
