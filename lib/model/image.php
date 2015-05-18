@@ -55,8 +55,11 @@ class Image {
 		$this->file_extension = $this->extract_file_extension();
 		$this->id = md5($url . $this->file_name);
 
-		$this->upload_basedir = self::cache_dir() . $this->id;
-		$this->upload_baseurl = content_url('cache/podlove/') . $this->id;
+		// create subdirectories to avoid too many directories in the root directory
+		$id_directory = substr($this->id, 0, 2) . '/' . substr($this->id, 2);
+
+		$this->upload_basedir = self::cache_dir() . $id_directory;
+		$this->upload_baseurl = content_url('cache/podlove/') . $id_directory;
 	}
 
 	public static function cache_dir() {
