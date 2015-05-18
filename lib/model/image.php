@@ -344,6 +344,15 @@ class Image {
 			\Podlove\Log::get()->addWarning(sprintf(__('The downloaded image could not be moved to %s.' ), $this->original_file()));
 
 		@unlink($temp_file);
+
+		$this->add_donotbackup_dotfile();
+	}
+
+	private function add_donotbackup_dotfile() {
+		file_put_contents(
+			trailingslashit(self::cache_dir()) . '.donotbackup', 
+			"Backup plugins are encouraged to not backup folders and subfolders when this file is inside.\n"
+		);
 	}
 
 	/**
