@@ -1,7 +1,7 @@
 <tr>
 	{% if option.avatars == "yes" %}
 		<td class="avatar_cell">
-			{{ contributor.image.html({width: size, height: size, class: "avatar avatar-" ~ size ~  " photo", alt: "avatar" }) }}
+			{{ contributor.image.html({width: size|default(50), height: size|default(50), class: "avatar avatar-" ~ size|default(50) ~  " photo", alt: "avatar" }) }}
 		</td>
 	{% endif %}
 	<td class="title_cell">
