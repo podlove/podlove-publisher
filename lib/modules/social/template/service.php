@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Social\Template;
 
 use Podlove\Template\Wrapper;
+use Podlove\Template\Image;
 
 /**
  * Service Template Wrapper
@@ -82,9 +83,19 @@ class Service extends Wrapper {
 	/**
 	 * Logo URL
 	 * 
-	 * @accessor
+	 * @deprecated since 2.2.0, use ::image instead
 	 */
 	public function logoUrl() {
 		return $this->service->get_logo();
+	}
+
+	/**
+	 * Image
+	 *
+	 * @see  image
+	 * @accessor
+	 */
+	public function image() {
+		return new Image($this->service->image());
 	}
 }

@@ -258,7 +258,7 @@ class Social extends \Podlove\Modules\Base {
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `category` = \'' . $category . '\' ORDER BY `title`' ) as $service ): ?>
-							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
+							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->image()->setWidth(16)->url() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>
 				</td>

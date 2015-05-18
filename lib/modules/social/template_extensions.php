@@ -19,7 +19,7 @@ class TemplateExtensions {
 	 * ```html
 	 * {% for service in contributor.services({category: "social"}) %}
 	 *   <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-	 *     <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+	 *		{{ service.image.html({width: 20}) }}
 	 *   </a>
 	 * {% endfor %}
 	 * ```
@@ -69,7 +69,7 @@ class TemplateExtensions {
 	 * ```html
 	 * {% for service in podcast.services({category: "social"}) %}
 	 *   <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-	 *     <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+	 *		{{ service.image.html({width: 20}) }}
 	 *   </a>
 	 * {% endfor %}
 	 * ```

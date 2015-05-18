@@ -18,7 +18,13 @@
 						<div class="social-icons">
 							{% for service in contributor.socialServices %}
 								<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-									<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+									{{
+										service.image.html({
+											width: 32, 
+											class: "podlove-contributor-button",
+											alt: service.title ~ " Icon"
+										}) 
+									}}
 								</a>
 							{% endfor %}
 						</div>

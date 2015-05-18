@@ -107,12 +107,15 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		foreach ($contributor_services as $contributor_service) {
 			$service = $contributor_service->get_service();
 
-			$source .= "<li>
-						<img class='podlove-contributor-list-social-logo' src='"
-						. $service->get_logo() . "' /> <a href='"
-						. $contributor_service->get_service_url() . "'>"
-						. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) . "</a>
-						</li>\n";
+			$source .= "<li>" 
+			        . $service->image()->image([
+			        	'width' => 16,
+			        	'class' => 'podlove-contributor-list-social-logo'
+			        ]) 
+			        . "<a href='" . $contributor_service->get_service_url() . "'>"
+					. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) 
+					. "</a>"
+			        . "</li>\n";
 		}
 
 		return '<ul class="podlove-contributor-social-list">' . $source . '</ul>';
