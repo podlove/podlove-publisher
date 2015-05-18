@@ -20,7 +20,7 @@ class AdminBarMenu {
 
 	public static function print_styles() {
 		header('Content-type: text/css');
-		echo \Podlove\cache_for("podlove_admin_menu_style_covers", function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for("podlove_admin_menu_style_covers", function() {
 			return self::get_styles();
 		}, HOUR_IN_SECONDS);
 		exit;
