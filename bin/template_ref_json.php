@@ -43,6 +43,8 @@ $classes = [
 	'\Podlove\Template\License',
 	'\Podlove\Template\DateTime',
 	'\Podlove\Template\FileType',
+	'\Podlove\Template\Tag',
+	'\Podlove\Template\Category',
 	'\Podlove\Modules\Contributors\Template\Contributor',
 	'\Podlove\Modules\Contributors\Template\ContributorGroup',
 	'\Podlove\Modules\Social\Template\Service',

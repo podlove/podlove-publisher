@@ -2,23 +2,23 @@
 namespace Podlove\Template;
 
 /**
- * Tag Template Wrapper
+ * Category Template Wrapper
  *
- * @templatetag tag
+ * @templatetag category
  */
-class Tag extends Wrapper {
+class Category extends Wrapper {
 
 	use \Podlove\Model\KeepsBlogReferenceTrait;
 
-	private $tag;
+	private $category;
 
-	public function __construct($tag, $blog_id = null) {
-		$this->tag = $tag;
+	public function __construct($category, $blog_id = null) {
+		$this->category = $category;
 		$this->set_blog_id($blog_id);
 	}
 
 	protected function getExtraFilterArgs() {
-		return array($this->tag);
+		return array($this->category);
 	}
 
 	// /////////
@@ -31,7 +31,7 @@ class Tag extends Wrapper {
 	 * @accessor
 	 */
 	public function id() {
-		return $this->tag->term_id;
+		return $this->category->term_id;
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Tag extends Wrapper {
 	 * @accessor
 	 */
 	public function name() {
-		return $this->tag->name;
+		return $this->category->name;
 	}
 
 	/**
@@ -49,7 +49,7 @@ class Tag extends Wrapper {
 	 * @accessor
 	 */
 	public function slug() {
-		return $this->tag->slug;
+		return $this->category->slug;
 	}
 
 	/**
@@ -58,7 +58,7 @@ class Tag extends Wrapper {
 	 * @accessor
 	 */
 	public function description() {
-		return $this->tag->description;
+		return $this->category->description;
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Tag extends Wrapper {
 	 * @accessor
 	 */
 	public function count() {
-		return $this->tag->count;
+		return $this->category->count;
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Tag extends Wrapper {
 	 */
 	public function url() {
 		return $this->with_blog_scope(function() {
-			return get_tag_link($this->tag->term_id);
+			return get_category_link($this->category->term_id);
 		});
 	}
 

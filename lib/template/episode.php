@@ -263,12 +263,38 @@ class Episode extends Wrapper {
 	 *   {% endfor %}
 	 * ```
 	 * 
+	 * @see  tag
 	 * @accessor
 	 */
 	public function tags($args = []) {
 		return array_map(function($tag) {
 			return new Tag($tag, $this->episode->get_blog_id());
 		}, $this->episode->tags($args));
+	}
+
+	/**
+	 * Access a list of episode categories.
+	 *
+	 * See http://codex.wordpress.org/Function_Reference/wp_get_object_terms#Argument_Options
+	 * for a list of available argument options.
+	 *
+	 * Requires the "Categories" module.
+	 * 
+	 * Example:
+	 *
+	 * ```html
+	 *   {% for category in episode.categories({order: "ASC", orderby: "count"}) %}
+	 *     <a href="{{ category.url }}">{{ category.name }} ({{ category.count }})</a>
+	 *   {% endfor %}
+	 * ```
+	 * 
+	 * @see  category
+	 * @accessor
+	 */
+	public function categories($args = []) {
+		return array_map(function($category) {
+			return new Category($category, $this->episode->get_blog_id());
+		}, $this->episode->categories($args));
 	}
 
 	/**

@@ -112,7 +112,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * fix: duplicate feed discovery
 * fix: ignore incomplete feed configurations
-* web player template tag can set tracking context: `{{ episode.player({context: 'landing-page'}) }}`
+* web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
+* add `episode.categories` template tag
 
 **Deprecations**
 

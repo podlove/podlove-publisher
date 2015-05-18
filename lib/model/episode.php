@@ -122,6 +122,16 @@ class Episode extends Base implements Licensable {
 		});
 	}
 
+	public function categories($args = []) {
+
+		// "wp_get_post_categories" defaults to "fields => ids" so we need to set it manually
+		$args['fields'] = 'all';
+
+		return $this->with_blog_scope(function() use ($args) {
+			return wp_get_post_categories($this->post_id, $args);
+		});
+	}
+
 	public function player($context = NULL) {
 		return $this->with_blog_scope(function() use ($context) {
 			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render($context);
