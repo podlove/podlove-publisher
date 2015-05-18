@@ -122,9 +122,9 @@ class Episode extends Base implements Licensable {
 		});
 	}
 
-	public function player() {
-		return $this->with_blog_scope(function() {
-			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render();
+	public function player($context = NULL) {
+		return $this->with_blog_scope(function() use ($context) {
+			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render($context);
 		});
 	}
 

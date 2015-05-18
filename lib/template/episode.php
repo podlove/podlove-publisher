@@ -98,10 +98,20 @@ class Episode extends Wrapper {
 	 * {% endif %}
 	 * ```
 	 * 
+	 * You can set a custom context for tracking:
+	 * 
+	 * ```jinja
+	 * {{ episode.player({context: 'landing-page'}) }}
+	 * ```
+	 * 
 	 * @accessor
 	 */
-	public function player() {
-		return $this->episode->player();
+	public function player($args = []) {
+
+		$defaults = ['context' => NULL];
+		$args = wp_parse_args($args, $defaults);
+
+		return $this->episode->player($args['context']);
 	}
 
 	/**

@@ -34,7 +34,13 @@ class Printer {
 		$this->files = $this->get_files();
 	}
 
-	public function render() {
+	/**
+	 * Render player
+	 * 
+	 * @param  string $context (optional) player context for tracking. Set to NULL for auto-detection. Default: NULL
+	 * @return string
+	 */
+	public function render($context = NULL) {
 
 		if ( count( $this->player_format_assignments ) == 0 )
 			return '';
@@ -72,7 +78,7 @@ class Printer {
 				'file'       => $file,
 				'mime_type'  => $mime,
 				'url'        => $file->get_file_url(),
-				'publicUrl'  => $file->get_public_file_url("webplayer", $this->get_tracking_context()),
+				'publicUrl'  => $file->get_public_file_url("webplayer", is_null($context) ? $this->get_tracking_context() : $context),
 				'assetTitle' => $asset->title()
 			);
 		}
