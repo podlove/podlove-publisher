@@ -76,6 +76,7 @@ class Image extends Wrapper {
 	 * - crop: true or false. Crop image if given dimensions deviate from original aspect ratio. Default: false.
 	 * - id: Set image tag "id" attribute.
 	 * - class: Set image tag "class" attribute.
+	 * - style: Set image tag "style" attribute.
 	 * - alt: Set image tag "alt" attribute.
 	 * - title: Set image tag "title" attribute.
 	 * 
@@ -100,6 +101,7 @@ class Image extends Wrapper {
 			'crop'   => false,
 			'id'     => NULL,
 			'class'  => NULL,
+			'style'  => NULL,
 			'alt'    => NULL,
 			'title'  => NULL,
 			'attributes' => [],
@@ -115,6 +117,7 @@ class Image extends Wrapper {
 			->image([
 				'id' => $args['id'],
 				'class' => $args['class'],
+				'style' => $args['style'],
 				'alt'   => $args['alt'], 
 				'title' => $args['title'],
 				'attributes' => $args['attributes']

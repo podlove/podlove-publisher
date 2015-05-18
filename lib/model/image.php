@@ -150,9 +150,15 @@ class Image {
 	 * 
 	 * 	$image->image(); // returns image tag
 	 * 
-	 * @param  array $args List of optional arguments
-	 * 	                   - string|NULL alt   Image alt-text. If NULL, it defaults to $file_name. Default: ''.
-	 * 	                   - string|NULL title Image title-text. If NULL, it defaults to $file_name. Default: ''.
+	 * @param  array $args List of arguments
+	 * 		- id: Set image tag "id" attribute.
+	 * 		- class: Set image tag "class" attribute.
+	 * 		- style: Set image tag "style" attribute.
+	 * 		- alt: Set image tag "alt" attribute.
+	 * 		- title: Set image tag "title" attribute.
+	 *      - width: Image width. Set width and leave height blank to keep the orinal aspect ratio.
+	 * 		- height: Image height. Set height and leave width blank to keep the orinal aspect ratio.
+	 *   	- attributes: List of other HTML attributes, for example: ['data-foo' => 'bar']
 	 * @return string HTML image tag
 	 */
 	public function image($args = []) {
@@ -160,6 +166,7 @@ class Image {
 		$defaults = [
 			'id'         => '',
 			'class'      => '',
+			'style'      => '',
 			'alt'        => '',
 			'title'      => '',
 			'width'      => $this->width,
@@ -169,7 +176,7 @@ class Image {
 		$args = wp_parse_args($args, $defaults);
 
 		// put everything in 'attributes' for easy iteration
-		foreach (['id', 'class', 'alt', 'title', 'width', 'height'] as $attr) {
+		foreach (['id', 'class', 'style', 'alt', 'title', 'width', 'height'] as $attr) {
 			if ($args[$attr])
 				$args['attributes'][$attr] = $args[$attr];
 		}
