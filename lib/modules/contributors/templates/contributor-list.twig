@@ -4,7 +4,7 @@
 		<li>
 			{% if option.avatars == "yes" %}
 				<span class="avatar">
-					{{ contributor.image.html({width: size, height: size, class: "avatar avatar-" ~ size ~  " photo" alt="avatar" }) }}
+					{{ contributor.image.html({width: size, height: size, class: "avatar avatar-" ~ size ~  " photo", alt: "avatar" }) }}
 				</span>
 			{% endif %}
 			<span class="name">{{ contributor.name }}</span>

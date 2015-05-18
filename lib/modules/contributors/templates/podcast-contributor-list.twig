@@ -11,7 +11,7 @@
 			{% if contributor.visible %}
 				<tr>
 					<td rowspan="2" class="avatar-cell" width="60">
-						{{ contributor.image.html({width: 60, height: 60, class: "avatar avatar-" ~ size ~  " photo" alt="avatar" }) }}
+						{{ contributor.image.html({width: 60, height: 60, class: "avatar avatar-" ~ size ~  " photo", alt: "avatar" }) }}
 					</td>
 					<td class="social-cell">
 						<strong class="contributor-name">{{ contributor.name }}</strong>
