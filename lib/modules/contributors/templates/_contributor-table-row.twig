@@ -51,14 +51,14 @@
 	{% if option.flattr == "yes" %}
 		<td class="flattr_cell">
 			{% if contributor.flattr %}
-				{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}
+				{% set cTitle = contributor.name ~ (episode ? " @ " ~ episode.title : "" ) %}
 				<a target="_blank"
 					class="FlattrButton"
 					style="display:none;"
 					title="Flattr {{ cTitle }}"
 					rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
 					href="{{ contributor.flattr_url }}">
-						Flattr {{ cTitle }}
+						{{ cTitle }}
 				</a>
 			{% endif %}
 		</td>
