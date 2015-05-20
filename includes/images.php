@@ -26,8 +26,7 @@ function podlove_validate_image_cache() {
 	set_time_limit(5 * MINUTE_IN_SECONDS);
 
 	PHP_Timer::start();
-
-	$cache_files = glob(trailingslashit(Image::cache_dir()) . "*" . DIRECTORY_SEPARATOR . "cache.yml");
+	$cache_files = glob(trailingslashit(Image::cache_dir()) . "*" . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "cache.yml");
 	foreach ($cache_files as $cache_file) {
 		$cache = Yaml::parse(file_get_contents($cache_file));
 
