@@ -116,6 +116,9 @@ class Logging extends \Podlove\Modules\Base {
 					if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
 						echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
 					}
+					if (isset($data->type) && $data->type == 'twig') {
+						echo sprintf('in template "%s" line %d', $data->template, $data->line);
+					}
 					?>
 				</span>
 			</div>
