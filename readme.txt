@@ -2,7 +2,7 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
-Requires at least: 3.0
+Requires at least: 3.5
 Tested up to: 4.2.1
 Stable tag: trunk
 License: MIT
@@ -118,6 +118,8 @@ images* for higher-resolution displays are also supported. We do this automatica
 is click update, lean back and enjoy.
 
 Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2-say-hello-to-image-caching/);
+
+This update increases the WordPress requirement from 3.0 to 3.5 (due to the required image editing functionality).
 
 **Other**
 
