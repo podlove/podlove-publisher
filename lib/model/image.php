@@ -329,7 +329,14 @@ class Image {
   		// for download_url()
    		require_once(ABSPATH . 'wp-admin/includes/file.php');
 
-		list($temp_file, $response) = $this->download_url($this->source_url);
+		$result = $this->download_url($this->source_url);
+
+		if (is_wp_error($result)) {
+			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to download image. %s.' ), $result->get_error_message()));
+			return;
+		}
+
+		list($temp_file, $response) = $result;
 
 		if (is_wp_error($temp_file))
 			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to download image. %s.' ), $temp_file->get_error_message()));
