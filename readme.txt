@@ -1,7 +1,7 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
-Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
+Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
 Requires at least: 3.5
 Tested up to: 4.2.1
 Stable tag: trunk
