@@ -110,6 +110,17 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.2.0 =
 
+**Image Caching, Resizing & Retina Support**
+
+We now take better control of podcast images, episode images, contributor avatars and our own social icons. 
+We are able to *resize* them to ideal sizes, which results in *faster page load times* for your users. *Retina 
+images* for higher-resolution displays are also supported. We do this automatically, so all you need to do 
+is click update, lean back and enjoy.
+
+Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2-say-hello-to-image-caching/);
+
+**Other**
+
 * fix: duplicate feed discovery
 * fix: ignore incomplete feed configurations
 * web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
