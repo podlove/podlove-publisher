@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 101 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 102 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1144,6 +1144,10 @@ function run_migrations_for_version( $version ) {
 			// add patreon
 			if (\Podlove\Modules\Base::is_active('social'))
 				\Podlove\Modules\Social\RepairSocial::fix_missing_services();
+		break;
+		case 102:
+			// update logos
+			\Podlove\Modules\Social\Social::update_existing_services();
 		break;
 	}
 
