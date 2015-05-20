@@ -1142,12 +1142,13 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 101:
 			// add patreon
-			if (\Podlove\Modules\Base::is_active('social'))
+			if (\Podlove\Modules\Social\Model\Service::table_exists())
 				\Podlove\Modules\Social\RepairSocial::fix_missing_services();
 		break;
 		case 102:
 			// update logos
-			\Podlove\Modules\Social\Social::update_existing_services();
+			if (\Podlove\Modules\Social\Model\Service::table_exists())
+				\Podlove\Modules\Social\Social::update_existing_services();
 		break;
 	}
 

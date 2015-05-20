@@ -453,6 +453,12 @@ abstract class Base
 		return $wpdb->prefix . self::name();
 	}
 
+	public static function table_exists() {
+		global $wpdb;
+		$sql = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->esc_like(self::table_name()));
+		return $wpdb->get_var($sql) !== null;
+	}
+
 	/**
 	 * Model identifier.
 	 */
