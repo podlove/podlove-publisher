@@ -350,11 +350,11 @@
   url_scheme: 'https://orcid.org/%account-placeholder%'
 
 - title: 'Patreon'
-	  name: 'patreon'
-	  category: 'social'
-	  description: 'Patreon'
-	  logo: 'patreon-128.png'
-	  url_scheme: 'https://www.patreon.com/%account-placeholder%'
+  name: 'patreon'
+  category: 'social'
+  description: 'Patreon'
+  logo: 'patreon-128.png'
+  url_scheme: 'https://www.patreon.com/%account-placeholder%'
 
 - title: 'Scopus'
   name: 'scous'
