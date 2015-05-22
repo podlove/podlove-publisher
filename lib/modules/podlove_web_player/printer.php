@@ -112,10 +112,10 @@ class Printer {
 				$flash_fallback_func = function( &$xml ) use ( $file ) {
 					$flash_fallback = $xml->addChild('object');
 					$flash_fallback->addAttribute( 'type', 'application/x-shockwave-flash' );
-					$flash_fallback->addAttribute( 'data', 'flashmediaelement.swf' );
+					$flash_fallback->addAttribute( 'data', plugins_url( 'player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf' );
 
 					$params = array(
-						array( 'name' => 'movie', 'value' => 'flashmediaelement.swf' ),
+						array( 'name' => 'movie', 'value' => plugins_url( 'player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf' ),
 						array( 'name' => 'flashvars', 'value' => 'controls=true&file=' . $file['url'] )
 					);
 
