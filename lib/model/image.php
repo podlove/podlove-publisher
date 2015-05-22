@@ -161,8 +161,14 @@ class Image {
 		}
 
 		// resize if we don't have that size yet
-		if (!file_exists($this->resized_file()))
+		if (!file_exists($this->resized_file())) {
 			$this->generate_resized_copy();
+
+			// if we couldn't resize, bail out
+			if (!file_exists($this->resized_file()))
+				return $this->source_url;
+		}
+
 
 		return $this->resized_url();
 	}
