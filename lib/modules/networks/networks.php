@@ -34,7 +34,6 @@ class Networks extends \Podlove\Modules\Base {
 
 		// Styles
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
-		add_action( 'wp_print_styles', array( $this, 'scripts_and_styles' ) );
 
 		if (is_admin())
 			AdminBarMenu::init();
