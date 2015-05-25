@@ -127,6 +127,7 @@ This update increases the WordPress requirement from 3.0 to 3.5 (due to the requ
 * fix: ignore incomplete feed configurations
 * fix: don't include network admin module css in frontend
 * fix: dashboard episode edit links
+* fix: when deleting WordPress Network sites, trigger plugin uninstall to remove database tables
 * show Twig template errors in dashboard log
 * web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
 * add `episode.categories` template tag

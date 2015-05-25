@@ -5,6 +5,7 @@ register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 register_uninstall_hook(    PLUGIN_FILE, __NAMESPACE__ . '\uninstall' );
 add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
+add_action( 'delete_blog', '\Podlove\delete_blog', 10, 2 );
 
 function activate_for_current_blog() {
 	Model\Feed::build();
@@ -122,6 +123,18 @@ function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) 
 	}
 
 	restore_current_blog();
+}
+
+/**
+ * Fires before a blog is deleted.
+ *
+ * @param int  $blog_id The blog ID.
+ * @param bool $drop    True if blog's table should be dropped.
+ */
+function delete_blog($blog_id, $drop) {
+	if ($drop) {
+		uninstall_for_current_blog();
+	}
 }
 
 /**
