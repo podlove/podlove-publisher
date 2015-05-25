@@ -337,14 +337,21 @@ class Image {
 		$result = $this->download_url($this->source_url);
 
 		if (is_wp_error($result)) {
-			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to download image. %s.' ), $result->get_error_message()));
+			\Podlove\Log::get()->addWarning(
+				sprintf(__( 'Unable to download image. %s.' ), $result->get_error_message()),
+				['url' => $this->source_url]
+			);
 			return;
 		}
 
 		list($temp_file, $response) = $result;
 
-		if (is_wp_error($temp_file))
-			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to download image. %s.' ), $temp_file->get_error_message()));
+		if (is_wp_error($temp_file)) {
+			\Podlove\Log::get()->addWarning(
+				sprintf(__( 'Unable to download image. %s.' ), $temp_file->get_error_message()),
+				['url' => $this->source_url]
+			);
+		}
 
 		if (!wp_mkdir_p($this->upload_basedir))
 			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
