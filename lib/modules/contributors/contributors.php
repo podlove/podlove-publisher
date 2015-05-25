@@ -19,6 +19,7 @@ class Contributors extends \Podlove\Modules\Base {
 	protected $module_group = 'metadata';
 
 	public function load() {
+		add_action( 'podlove_uninstall_plugin', [$this, 'uninstall'] );
 		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
 		add_filter( 'podlove_episode_form_data', array( $this, 'contributors_form_for_episode' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
@@ -89,6 +90,15 @@ class Contributors extends \Podlove\Modules\Base {
 		add_filter('podlove_feed_contributions', array($this, 'must_match_feed_role_and_group'), 10, 2);
 
 		ContributorRepair::init();
+	}
+
+	public function uninstall() {
+		Contributor::destroy();
+		ContributorRole::destroy();
+		ContributorGroup::destroy();
+		EpisodeContribution::destroy();
+		ShowContribution::destroy();
+		DefaultContribution::destroy();
 	}
 
 	public function add_to_admin_bar_podcast($wp_admin_bar, $podcast)
