@@ -298,7 +298,6 @@ class Image {
 
 	private function generate_resized_copy() {
 		$image = wp_get_image_editor($this->original_file());
-		$image->set_quality(100); // turn quality up to 11 ... erh, or 100.
 
 		if (is_wp_error($image))
 			return;
