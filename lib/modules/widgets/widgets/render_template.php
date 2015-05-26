@@ -28,7 +28,7 @@ class RenderTemplate extends \WP_Widget {
 	}
 
 	public function form( $instance ) {
-		$templates = \Podlove\Model\Template::all();
+		$templates = \Podlove\Model\Template::all_globally();
 		$title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : '';
 		$selected_template = isset( $instance[ 'template' ] ) ? $instance[ 'template' ] : '';
 		$autop = isset( $instance[ 'autop' ] ) ? $instance[ 'autop' ] : '';
