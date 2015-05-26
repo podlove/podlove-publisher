@@ -64,6 +64,8 @@ function activate_for_current_blog() {
 	}
 	$podcast->save();
 
+	// required for all module hooks to fire correctly
+	add_option('podlove_active_modules', []);
 	// set default modules
 	$default_modules = array( 'logging', 'podlove_web_player', 'open_graph', 'asset_validation', 'oembed', 'feed_validation', 'import_export', 'subscribe_button' );
 	foreach ( $default_modules as $module ) {
