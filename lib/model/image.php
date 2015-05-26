@@ -160,15 +160,10 @@ class Image {
 			return $this->source_url;
 		}
 
-		// resize if we don't have that size yet
 		if (!file_exists($this->resized_file())) {
-			$this->generate_resized_copy();
-
-			// if we couldn't resize, bail out
-			if (!file_exists($this->resized_file()))
-				return $this->source_url;
+			$this->schedule_image_resize();
+			return $this->source_url;
 		}
-
 
 		return $this->resized_url();
 	}
@@ -264,6 +259,12 @@ class Image {
 			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url, $this->file_name]);
 	}
 
+	public function schedule_image_resize() {
+		$args = [$this->source_url, $this->file_name, $this->width, $this->height, $this->crop];
+		if (!wp_next_scheduled('podlove_download_image_resize', $args))
+			wp_schedule_single_event(time(), 'podlove_download_image_resize', $args);
+	}
+
 	public function file_name($size_slug) {
 		if ($this->file_name) {
 			return $this->file_name . '_' . $size_slug . '.' . $this->file_extension;
@@ -296,7 +297,7 @@ class Image {
 		return implode('/', [$this->upload_baseurl, $this->file_name($this->size_slug())]);
 	}
 
-	private function generate_resized_copy() {
+	public function generate_resized_copy() {
 		$image = wp_get_image_editor($this->original_file());
 
 		if (is_wp_error($image))

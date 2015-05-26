@@ -4,12 +4,23 @@ use Symfony\Component\Yaml\Yaml;
 use Podlove\Cache\HttpHeaderValidator;
 
 /**
- * WP Cron: Download image url
+ * WP Cron: Download Image URL
  */
 add_action('podlove_download_image_source', function($source_url, $file_name) {
 	$image = new Image($source_url, $file_name);
 	$image->download_source();
 }, 10, 2);
+
+/**
+ * WP Cron: Resize Image
+ */
+add_action('podlove_download_image_resize', function($source_url, $file_name, $width, $height, $crop) {
+	(new Image($source_url, $file_name))
+		->setWidth($width)
+		->setHeight($height)
+		->setCrop($crop)
+		->generate_resized_copy();
+}, 10, 5);
 
 /**
  * WP Cron: Image cache validation
