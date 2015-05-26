@@ -304,6 +304,16 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function dashboard_gender_statistics_widget($post) {
+
+		if (EpisodeContribution::count() === 0) {
+			?>
+			<p>
+				<?php echo __('Gender statistics will be available once you start assigning contributors to episodes.', 'podlove') ?>
+			</p>
+			<?php
+			return;
+		}
+
 		$gender_distribution = $this->fetch_contributors_for_dashboard_statistics();
 		?>
 		<div class="podlove_gender_widget_column">
@@ -337,6 +347,10 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	private static function get_percentage($value, $relative_to) {
+
+		if ($relative_to === 0)
+			return "—";
+
 		return round($value / $relative_to * 100);
 	}
 
