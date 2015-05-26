@@ -129,7 +129,7 @@ This update increases the WordPress requirement from 3.0 to 3.5 (due to the requ
 * fix: dashboard episode edit links
 * fix: when deleting WordPress Network sites, trigger plugin uninstall to remove database tables
 * fix: web player flash fallback
-* fix: template widget now also shows network templates
+* fix: network templates now also appear in the template widget and template auto-insert setting
 * show Twig template errors in dashboard log
 * web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
 * add `episode.categories` template tag
