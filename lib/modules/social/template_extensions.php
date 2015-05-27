@@ -12,14 +12,14 @@ class TemplateExtensions {
 	 * Parameters:
 	 *
 	 * - **category:** (optional) "social", "donation" or "all". Default: "all"
-	 * - **type:**     (optional) Filter services by type. List of all service types: 500px, about.me, amazon wishlist, app.net, auphonic credits, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, email, facebook, flattr, flickr, foursquare, generic wishlist, github, gittip, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, orcid, paypal, miiverse, pinboard, pinterest, playstation network, researchgate, scous, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitch, twitter, vimeo, website, xbox live, xing, youtube
+	 * - **type:**     (optional) Filter services by type. List of all service types: 500px, about.me, amazon wishlist, app.net, auphonic credits, bandcamp, bitbucket, bitcoin, deviantart, diaspora, dogecoin, dribbble, email, facebook, flattr, flickr, foursquare, generic wishlist, github, gittip, google+, instagram, jabber, last.fm, linkedin, litecoin, openstreetmap, orcid, patreon, paypal, miiverse, pinboard, pinterest, playstation network, researchgate, scous, skype, soundcloud, soup, steam, steam wishlist, thomann wishlist, tumblr, twitch, twitter, vimeo, website, xbox live, xing, youtube
 	 *
 	 * Example:
 	 *
 	 * ```html
 	 * {% for service in contributor.services({category: "social"}) %}
 	 *   <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-	 *     <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+	 *		{{ service.image.html({width: 20}) }}
 	 *   </a>
 	 * {% endfor %}
 	 * ```
@@ -69,7 +69,7 @@ class TemplateExtensions {
 	 * ```html
 	 * {% for service in podcast.services({category: "social"}) %}
 	 *   <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-	 *     <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+	 *		{{ service.image.html({width: 20}) }}
 	 *   </a>
 	 * {% endfor %}
 	 * ```

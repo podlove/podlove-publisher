@@ -80,6 +80,9 @@ class File extends Wrapper {
 	 * If tracking is active, this generates the tracking URL.
 	 * Otherwise, it's identical to `.url`.
 	 * 
+	 * - source: download source for tracking, for example "webplayer", "download" or "feed"
+	 * - context: (optional) download context for tracking, for example "home"/"episode"/"archive" for player source or feed slug for feed source
+	 * 
 	 * @accessor
 	 */
 	public function publicUrl($source, $context = null) {

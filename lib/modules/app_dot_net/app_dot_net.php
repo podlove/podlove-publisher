@@ -181,8 +181,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
 								'subtitle'     => $episode->subtitle,
-								'episode-image'=> $episode->get_cover_art(),
-								'podcast-image'=> $podcast->cover_image,
+								'episode-image'=> $episode->cover_art()->url(),
+								'podcast-image'=> $podcast->cover_art()->url(),
 								'contributors' => ''
 							);
 							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id, $selected_role, $selected_group );
@@ -493,9 +493,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
 		if ($this->get_module_option('adn_poster_image_fallback') == 'on' ) {
-			$cover = $episode->get_cover_art_with_fallback();
+			$cover = $episode->cover_art_with_fallback()->url();
 		} else {
-			$cover = $episode->get_cover_art();
+			$cover = $episode->cover_art()->url();
 		}
 
 		if ( empty( $cover ) )

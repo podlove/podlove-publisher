@@ -119,8 +119,8 @@ class Templates {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				
 				$templates = array( 0 => __( 'Don\'t insert automatically', 'podlove' ) );
-				foreach ( Model\Template::all() as $template ) {
-					$templates[ $template->id ] = $template->title;
+				foreach ( Model\Template::all_globally() as $template ) {
+					$templates[ $template->title ] = $template->title;
 				}
 
 				$wrapper->select( 'top', array(

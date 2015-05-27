@@ -62,7 +62,7 @@ class EpisodeEnhancer {
 			data-assignment-chapter="<?php echo $asset_assignments->chapters ?>"
 			data-assignment-image="<?php echo $asset_assignments->image ?>"
 			data-module-url="<?php echo $this->module->get_module_url() ?>"
-			data-podcast-image="<?php echo $podcast->cover_image ?>"
+			data-podcast-image="<?php echo $podcast->cover_art()->url() ?>"
 			/>
 
 		<div id="auphonic-box">

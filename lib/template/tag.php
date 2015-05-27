@@ -2,7 +2,7 @@
 namespace Podlove\Template;
 
 /**
- * File Template Wrapper
+ * Tag Template Wrapper
  *
  * @templatetag tag
  */

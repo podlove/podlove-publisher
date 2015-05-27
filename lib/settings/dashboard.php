@@ -406,7 +406,7 @@ class Dashboard {
 						?>
 						<tr>
 							<td>
-								<a href="<?php echo admin_url('?post.php&amp;post=' . $episode->post_id . '&amp;action=edit') ?>"><?php echo $episode->slug ?></a>
+								<a href="<?php echo admin_url('post.php?post=' . $episode->post_id . '&amp;action=edit') ?>"><?php echo $episode->slug ?></a>
 							</td>
 							<?php foreach ( $assets as $asset ): ?>
 								<?php 

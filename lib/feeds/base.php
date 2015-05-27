@@ -95,7 +95,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function() use ( $podcast ) {
 
 		$image = [
-			'url'   => $podcast->cover_image,
+			'url'   => $podcast->cover_art()->url(),
 			'title' => $podcast->title,
 			'link'  => apply_filters( 'podlove_feed_link', \Podlove\get_landing_page_url() )
 		];
@@ -169,8 +169,8 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo "\t" . apply_filters( 'podlove_feed_itunes_owner', $owner );
 		echo PHP_EOL;
 		
-		if ( $podcast->cover_image ) {
-			$coverimage = sprintf( '<itunes:image href="%s" />', $podcast->cover_image );
+		if ( $podcast->cover_art()->url() ) {
+			$coverimage = sprintf( '<itunes:image href="%s" />', $podcast->cover_art()->url() );
 		} else {
 			$coverimage = '';
 		}
@@ -217,7 +217,10 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 				return;
 
 			$enclosure_file_size = $file->size;
-			$cover_art_url       = $episode->get_cover_art();
+
+			$cover_art_url = "";
+			if ($cover_art = $episode->cover_art())
+				$cover_art_url = $cover_art->url();
 
 			if (isset($_REQUEST['tracking']) && $_REQUEST['tracking'] == 'no') {
 				$enclosure_url = $episode->enclosure_url( $feed->episode_asset(), null, null );

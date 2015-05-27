@@ -98,10 +98,20 @@ class Episode extends Wrapper {
 	 * {% endif %}
 	 * ```
 	 * 
+	 * You can set a custom context for tracking:
+	 * 
+	 * ```jinja
+	 * {{ episode.player({context: 'landing-page'}) }}
+	 * ```
+	 * 
 	 * @accessor
 	 */
-	public function player() {
-		return $this->episode->player();
+	public function player($args = []) {
+
+		$defaults = ['context' => NULL];
+		$args = wp_parse_args($args, $defaults);
+
+		return $this->episode->player($args['context']);
 	}
 
 	/**
@@ -162,23 +172,49 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Image
+	 * 
+	 * @see  image
+	 * @accessor
+	 */
+	public function image($args = []) {
+
+		$defaults = ['fallback' => false];
+		$args = wp_parse_args($args, $defaults);
+
+		if ($args['fallback']) {
+			return new Image($this->episode->cover_art_with_fallback());
+		} else {
+			if ($cover_art = $this->episode->cover_art())
+				return new Image($cover_art);
+			else
+				return '';
+			
+		}
+	}
+
+	/**
 	 * Image URL
 	 * 
+	 * @deprecated since 2.2.0, use `episode.image.url` instead
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->episode->get_cover_art();
+
+		if ($cover_art = $this->episode->cover_art())
+			return new Image($cover_art);
+
+		return '';
 	}
 
 	/**
 	 * Image URL with fallback
 	 *
-	 * Returns podcast image if no episode image is available.
-	 * 
+	 * @deprecated since 2.2.0, use `episode.image({fallback: true}).url` instead
 	 * @accessor
 	 */
 	public function imageUrlWithFallback() {
-		return $this->episode->get_cover_art_with_fallback();
+		return new Image($this->episode->cover_art_with_fallback());
 	}
 
 	/**
@@ -227,12 +263,38 @@ class Episode extends Wrapper {
 	 *   {% endfor %}
 	 * ```
 	 * 
+	 * @see  tag
 	 * @accessor
 	 */
 	public function tags($args = []) {
 		return array_map(function($tag) {
 			return new Tag($tag, $this->episode->get_blog_id());
 		}, $this->episode->tags($args));
+	}
+
+	/**
+	 * Access a list of episode categories.
+	 *
+	 * See http://codex.wordpress.org/Function_Reference/wp_get_object_terms#Argument_Options
+	 * for a list of available argument options.
+	 *
+	 * Requires the "Categories" module.
+	 * 
+	 * Example:
+	 *
+	 * ```html
+	 *   {% for category in episode.categories({order: "ASC", orderby: "count"}) %}
+	 *     <a href="{{ category.url }}">{{ category.name }} ({{ category.count }})</a>
+	 *   {% endfor %}
+	 * ```
+	 * 
+	 * @see  category
+	 * @accessor
+	 */
+	public function categories($args = []) {
+		return array_map(function($category) {
+			return new Category($category, $this->episode->get_blog_id());
+		}, $this->episode->categories($args));
 	}
 
 	/**

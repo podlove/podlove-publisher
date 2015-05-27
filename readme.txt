@@ -1,9 +1,9 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
-Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
-Requires at least: 3.0
-Tested up to: 4.2.1
+Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
+Requires at least: 3.5
+Tested up to: 4.2.2
 Stable tag: trunk
 License: MIT
 
@@ -107,6 +107,44 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2.2.0 =
+
+**Image Caching, Resizing & Retina Support**
+
+We now take better control of podcast images, episode images, contributor avatars and our own social icons. 
+We are able to *resize* them to ideal sizes, which results in *faster page load times* for your users. *Retina 
+images* for higher-resolution displays are also supported. We do this automatically, so all you need to do 
+is click update, lean back and enjoy.
+
+Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2/);
+
+This update increases the WordPress requirement from 3.0 to 3.5 (due to the required image editing functionality).
+
+**Other**
+
+* fix: duplicate feed discovery
+* fix: ignore incomplete feed configurations
+* fix: don't include network admin module css in frontend
+* fix: dashboard episode edit links
+* fix: when deleting WordPress Network sites, trigger plugin uninstall to remove database tables
+* fix: web player flash fallback
+* fix: network templates now also appear in the template widget and template auto-insert setting
+* fix: issue where some database tables were not created
+* fix: podcast covers are displayed in frontend admin menu bar
+* show Twig template errors in dashboard log
+* web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
+* add `episode.categories` template tag
+
+**Deprecations**
+
+- deprecated `episode.imageUrl`, use `episode.image` instead
+- deprecated `episode.imageUrlWithFallback`, use `episode.image({fallback: true})` instead
+- deprecated `podcast.imageUrl`, use `podcast.image` instead
+- deprecated `service.logoUrl`, use `service.image` instead
+- deprecated `contributor.avatar`, use `contributor.image` instead
+
+While you are changing these, consider scaling them down appropriately. Your images are probably huge but in many cases you don't need the full size. So instead of `episode.image` or `episode.image.url`, specify a size, like this `episode.image.url({width: 200})`.
 
 = 2.1.3 =
 

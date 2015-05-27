@@ -8,20 +8,21 @@ class AdminBarMenu {
 	public static function init() {
 		add_action( 'admin_bar_menu', [__CLASS__, 'enhance_admin_bar'], 120 );
 
-		// DEACTIVATED until image caching/resizing is implemented
-		// add_action('admin_print_styles', function() {
-		// 	wp_enqueue_style(
-		// 		'podlove-network-cover-style',
-		// 		admin_url('admin-ajax.php').'?action=podlove-network-cover-style',
-		// 		[], \Podlove\get_plugin_header('Version')
-		// 	);
-		// });
-		// add_action('wp_ajax_podlove-network-cover-style', [__CLASS__, 'print_styles']);
+		add_action('wp_enqueue_scripts', function() {
+			if (is_admin_bar_showing()) {
+				wp_enqueue_style(
+					'podlove-network-cover-style',
+					admin_url('admin-ajax.php').'?action=podlove-network-cover-style',
+					[], \Podlove\get_plugin_header('Version')
+				);
+			}
+		});
+		add_action('wp_ajax_podlove-network-cover-style', [__CLASS__, 'print_styles']);
 	}
 
 	public static function print_styles() {
 		header('Content-type: text/css');
-		echo \Podlove\cache_for("podlove_admin_menu_style_covers", function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for("podlove_admin_menu_style_covers", function() {
 			return self::get_styles();
 		}, HOUR_IN_SECONDS);
 		exit;
@@ -31,6 +32,9 @@ class AdminBarMenu {
 		ob_start();
 
 		$podcast_ids = self::podcast_ids();
+		$podcast_ids = array_filter($podcast_ids, function($id) {
+			return Podcast::get($id)->has_cover_art();
+		});
 
 		$blavatar_classes = implode(", ", array_map(function($id) {
 			return "#wp-admin-bar-blog-$id .blavatar";
@@ -41,18 +45,18 @@ class AdminBarMenu {
 		}, $podcast_ids));
 
 		$cover_styles = implode("\n", array_map(function($id) {
-			return "#wp-admin-bar-blog-$id .blavatar { background-image: url(" . Podcast::get($id)->cover_image . "); }";
+			return "#wp-admin-bar-blog-$id .blavatar { background-image: url(" . Podcast::get($id)->cover_art()->setWidth(40)->url() . "); }";
 		}, $podcast_ids));
 		?>
 <?php echo $cover_styles; ?>
 <?php echo $blavatar_classes ?> {
 	background-size: 100% 100%;
 	margin-right: 5px;
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 	position: relative;
 	top: 4px;
-	left: -2px;
+	left: -3px;
 }
 
 <?php echo $blavatar_before_classes; ?> {

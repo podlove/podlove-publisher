@@ -55,10 +55,21 @@ class Podcast extends Wrapper {
 	/**
 	 * Image URL
 	 *
+	 * @deprecated since 2.2.0, use `image` instead
 	 * @accessor
 	 */
 	public function imageUrl() {
-		return $this->podcast->cover_image;
+		return new Image($this->podcast->cover_art());
+	}
+
+	/**
+	 * Image
+	 *
+	 * @see  image
+	 * @accessor
+	 */
+	public function image() {
+		return new Image($this->podcast->cover_art());
 	}
 
 	/**

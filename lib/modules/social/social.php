@@ -73,15 +73,33 @@ class Social extends \Podlove\Modules\Base {
 		self::build_missing_services();
 	}
 
-	public static function build_missing_services() {
-
+	private static function services_config() {
 		$file = implode(
 			DIRECTORY_SEPARATOR,
 			array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'data', 'services.yml')
 		);
-		$services = Yaml::parse(file_get_contents($file));
+		return Yaml::parse(file_get_contents($file));
+	}
 
-		foreach ($services as $service_key => $service) {
+	public static function update_existing_services() {
+		foreach (self::services_config() as $service_key => $service) {
+
+			$s = Service::find_one_by_where(
+				sprintf('`category` = "%s" AND `type` = "%s"', esc_sql($service['category']), esc_sql($service['name']))
+			);
+
+			if ($s) {
+				$s->title       = $service['title'];
+				$s->description = $service['description'];
+				$s->logo        = $service['logo'];
+				$s->url_scheme  = $service['url_scheme'];
+				$s->save();
+			}
+		}
+	}
+
+	public static function build_missing_services() {
+		foreach (self::services_config() as $service_key => $service) {
 
 			$service_exists = (bool) Service::find_one_by_where(
 				sprintf('`category` = "%s" AND `type` = "%s"', $service['category'], $service['name'])
@@ -258,7 +276,7 @@ class Social extends \Podlove\Modules\Base {
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `category` = \'' . $category . '\' ORDER BY `title`' ) as $service ): ?>
-							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->get_logo() ?>"><?php echo $service->title; ?></option>
+							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->image()->setWidth(16)->url() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>
 					</select>
 				</td>
