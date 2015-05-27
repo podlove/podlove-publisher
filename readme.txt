@@ -131,6 +131,7 @@ This update increases the WordPress requirement from 3.0 to 3.5 (due to the requ
 * fix: web player flash fallback
 * fix: network templates now also appear in the template widget and template auto-insert setting
 * fix: issue where some database tables were not created
+* fix: podcast covers are displayed in frontend admin menu bar
 * show Twig template errors in dashboard log
 * web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
 * add `episode.categories` template tag
