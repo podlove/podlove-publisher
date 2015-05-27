@@ -117,7 +117,7 @@ We are able to *resize* them to ideal sizes, which results in *faster page load 
 images* for higher-resolution displays are also supported. We do this automatically, so all you need to do 
 is click update, lean back and enjoy.
 
-Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2/);
+Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2/)
 
 This update increases the WordPress requirement from 3.0 to 3.5 (due to the required image editing functionality).
 
