@@ -89,6 +89,18 @@ function save_setting( $namespace, $name, $values ) {
 }
 
 /**
+ * Are we on the WordPress Settings API save page?
+ * 
+ * @return boolean
+ */
+function is_options_save_page() {
+	$self    = filter_input(INPUT_SERVER, 'PHP_SELF');
+	$request = filter_input(INPUT_SERVER, 'REQUEST_URI');
+
+	return stripos($self, 'options.php') !== FALSE || stripos($request, 'options.php') !== FALSE;
+}
+
+/**
  * Podcast Landing Page URL
  * 
  * @todo  move to Model\Podcast->get_landing_page_url()

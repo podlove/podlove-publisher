@@ -23,7 +23,13 @@ class Templates {
 		
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 
-		register_setting( Templates::$pagehook, 'podlove_template_assignment' );
+		register_setting( Templates::$pagehook, 'podlove_template_assignment', function($args) {
+
+			// when changing the assignment, clear caches
+			\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+
+			return $args;
+		} );
 	}
 
 	public function scripts_and_styles() {
@@ -113,8 +119,8 @@ class Templates {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				
 				$templates = array( 0 => __( 'Don\'t insert automatically', 'podlove' ) );
-				foreach ( Model\Template::all() as $template ) {
-					$templates[ $template->id ] = $template->title;
+				foreach ( Model\Template::all_globally() as $template ) {
+					$templates[ $template->title ] = $template->title;
 				}
 
 				$wrapper->select( 'top', array(

@@ -65,11 +65,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 				return;
 
 			$podcast = Model\Podcast::get();
-
-			// determine image
-			$cover_art_url = $episode->get_cover_art();
-			if ( ! $cover_art_url )
-				$cover_art_url = $podcast->cover_image;
+			$cover_art_url = $episode->cover_art_with_fallback()->url();
 
 			// determine featured image (thumbnail)
 			$thumbnail = NULL;
@@ -78,6 +74,15 @@ class Open_Graph extends \Podlove\Modules\Base {
 				$thumbnailInfo = wp_get_attachment_image_src( $post_thumbnail_id );
 				if ( is_array( $thumbnailInfo ) )
 					list( $thumbnail, $width, $height ) = $thumbnailInfo;
+			}
+
+			$description = NULL;
+			if ($episode->summary && $episode->subtitle) {
+				$description = $episode->subtitle . "\n" . $episode->summary;
+			} elseif ($episode->summary) {
+				$description = $episode->summary;
+			} elseif ($episode->subtitle) {
+				$description = $episode->subtitle;
 			}
 
 			// define meta tags
@@ -92,17 +97,20 @@ class Open_Graph extends \Podlove\Modules\Base {
 				),
 				array(
 					'property' => 'og:title',
-					'content'  => $episode->full_title()
+					'content'  => get_the_title()
 				),
 				array(
 					'property' => 'og:url',
 					'content'  => get_permalink()
-				),
-				array(
-					'property' => 'og:description',
-					'content'  => $episode->description()
 				)
 			);
+
+			if ($description) {
+				$data[] = array(
+					'property' => 'og:description',
+					'content'  => $description
+				);
+			}
 			
 			if ($cover_art_url) {
 				$data[] = array(

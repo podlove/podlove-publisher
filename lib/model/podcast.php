@@ -172,9 +172,33 @@ class Podcast implements Licensable {
 		});
 	}
 	
+
+	/**
+	 * Fetch all valid feeds.
+	 * 
+	 * A feed is valid if...
+	 * 
+	 * - it has an asset assigned (and the asset has a filetype assigned)
+	 * - the slug in not empty
+	 * 
+	 * @return array list of feeds
+	 */
 	public function feeds() {
 		return $this->with_blog_scope(function() {
-			return \Podlove\Model\Feed::all('ORDER BY position ASC');
+
+			$sql = "
+				SELECT
+					f.*
+				FROM
+					" . Feed::table_name() . " f
+					JOIN " . EpisodeAsset::table_name() . " a ON a.id = f.episode_asset_id
+					JOIN " . FileType::table_name() . " ft ON ft.id = a.file_type_id
+				WHERE
+					f.slug IS NOT NULL
+				ORDER BY 
+					position ASC
+			";
+			return Feed::find_all_by_sql($sql);
 		});
 	}
 
@@ -182,6 +206,14 @@ class Podcast implements Licensable {
 		return $this->with_blog_scope(function() {
 			return \Podlove\get_landing_page_url();
 		});
+	}
+
+	public function cover_art() {
+		return new Image($this->cover_image, $this->title);
+	}
+
+	public function has_cover_art() {
+		return strlen(trim($this->cover_image)) > 0;
 	}
 
 	/**
@@ -295,7 +327,9 @@ class Podcast implements Licensable {
 					' . Episode::table_name() . ' e
 					INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
 					' . $joins . '
-				WHERE ' . $where . '
+				WHERE
+					' . $where . '
+					AND p.post_type = "podcast"
 				ORDER BY ' . $orderby . ' ' . $order . 
 				$limit;
 

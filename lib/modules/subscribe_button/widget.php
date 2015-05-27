@@ -9,7 +9,7 @@ class Widget extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_subscribe_button_widget',
-			'Podlove Publisher Subscribe Button',
+			__('Podcast Subscribe Button', 'podlove'),
 			array( 'description' => __( 'Adds a Podlove Subscribe Button to your Sidebar', 'podlove' ), )
 		);
 	}

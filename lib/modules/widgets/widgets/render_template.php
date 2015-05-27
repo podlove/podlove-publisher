@@ -9,7 +9,7 @@ class RenderTemplate extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_render_template_widget',
-			'Podlove Template',
+			__('Podlove Template', 'podlove'),
 			array( 'description' => __( 'Renders a Podlove template.', 'podlove' ) )
 		);
 	}
@@ -22,13 +22,13 @@ class RenderTemplate extends \WP_Widget {
 		if ( ! empty($instance['title']) )
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 
-		echo do_shortcode( '[podlove-template id="' . $instance[ 'template' ] . '" autop="' . ( $instance[ 'autop' ] ? 'yes' : 'no' ) . '"]' );
+		echo do_shortcode( '[podlove-template template="' . $instance[ 'template' ] . '" autop="' . ( $instance[ 'autop' ] ? 'yes' : 'no' ) . '"]' );
 
 		echo $args['after_widget'];
 	}
 
 	public function form( $instance ) {
-		$templates = \Podlove\Model\Template::all();
+		$templates = \Podlove\Model\Template::all_globally();
 		$title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : '';
 		$selected_template = isset( $instance[ 'template' ] ) ? $instance[ 'template' ] : '';
 		$autop = isset( $instance[ 'autop' ] ) ? $instance[ 'autop' ] : '';

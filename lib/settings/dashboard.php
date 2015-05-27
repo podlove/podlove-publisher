@@ -52,10 +52,13 @@ class Dashboard {
 		?>
 		<ul>
 			<li>
-				<a href="//podlove.org" target="_blank">podlove.org</a>
+				<a href="//publisher.podlove.org">Podlove Publisher</a>
 			</li>
 			<li>
-				<a href="https://community.podlove.org/" target="_blank">Podlove Community</a>
+				<a href="//podlove.org" target="_blank">Podlove Initiative</a>
+			</li>
+			<li>
+				<a href="//community.podlove.org/" target="_blank">Podlove Community</a>
 			</li>
 			<li>
 				<a href="//docs.podlove.org" target="_blank">Documentation &amp; Guides</a>
@@ -64,7 +67,7 @@ class Dashboard {
 				<a href="<?php echo admin_url( 'admin.php?page=podlove_Support_settings_handle' ) ?>">Report Bugs</a>
 			</li>
 			<li>
-				<a href="http://podlove.org/donations/" target="_blank">Donate</a>
+				<a href="//podlove.org/donations/" target="_blank">Donate</a>
 			</li>
 			<li>
 				<script type="text/javascript">
@@ -87,6 +90,10 @@ class Dashboard {
 	}
 
 	public static function settings_page() {
+
+		if (apply_filters('podlove_dashboard_page', false) !== false)
+			return;
+
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
@@ -399,7 +406,7 @@ class Dashboard {
 						?>
 						<tr>
 							<td>
-								<a href="<?php echo admin_url('?post.php&amp;post=' . $episode->post_id . '&amp;action=edit') ?>"><?php echo $episode->slug ?></a>
+								<a href="<?php echo admin_url('post.php?post=' . $episode->post_id . '&amp;action=edit') ?>"><?php echo $episode->slug ?></a>
 							</td>
 							<?php foreach ( $assets as $asset ): ?>
 								<?php 

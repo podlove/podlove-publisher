@@ -8,7 +8,7 @@ class PodcastInformation extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_podcast_widget',
-			'Podlove Podcast Information',
+			__('Podcast Information', 'podlove'),
 			array( 'description' => __( 'Displays basic information about your Podcast.', 'podlove' ) )
 		);
 	}
@@ -21,7 +21,7 @@ class PodcastInformation extends \WP_Widget {
 		echo $args['before_title'] . apply_filters( 'widget_title', ( empty($instance['title']) ) ? $podcast->title : $instance['title'] ) . $args['after_title'];
 
 		if ( $instance['show_image'] )
-			echo '<img src="' . $podcast->cover_image . '" alt="' . $podcast->full_title() . '" />';
+			echo $podcast->cover_art()->setWidth(400)->image(["alt" => $podcast->title]);
 
 		if ( $instance['show_subtitle'] )
 			echo '<p><strong>' . $podcast->subtitle . '</strong></p>';

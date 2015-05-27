@@ -9,7 +9,7 @@ class RecentEpisodes extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_recent_episodes_widget',
-			'Podlove Recent Episodes',
+			__('Recent Episodes', 'podlove'),
 			array( 'description' => __( 'Shows the recent episodes of your podcast.', 'podlove' ) )
 		);
 	}
@@ -32,7 +32,7 @@ class RecentEpisodes extends \WP_Widget {
 			?>
 				<li>
 					<?php if ($instance[ 'show_image' ]) : ?>
-					<img src="<?php echo $episode->get_cover_art_with_fallback(); ?>" alt="<?php echo $post->post_title; ?>" style="width: 20%; vertical-align: top; margin-right: 2%;"/>
+					<img src="<?php echo $episode->cover_art_with_fallback()->setWidth(400)->url(); ?>" alt="<?php echo $post->post_title; ?>" style="width: 20%; vertical-align: top; margin-right: 2%;"/>
 					<div style="display: inline-block; width: 75%;">
 					<?php endif; ?>
 					<p>

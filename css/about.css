@@ -1,0 +1,343 @@
+/*------------------------------------------------------------------------------
+  22.0 - About Pages
+
+   1.0 Global: About, Credits, Freedoms
+    1.1 Typography
+    1.2 Structure
+    1.3 Point Releases
+   2.0 About Page
+    2.1 Typography
+    2.2 Structure
+------------------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------------------
+  1.0 - Global: About, Credits, Freedoms
+------------------------------------------------------------------------------*/
+
+.podlove-about-wrap {
+	position: relative;
+	margin: 25px 40px 0 20px;
+	max-width: 1050px; /* readability */
+	font-size: 15px;
+}
+
+.podlove-about-wrap div.updated,
+.podlove-about-wrap div.error {
+	display: none !important;
+}
+
+.podlove-about-wrap hr {
+	border: 0;
+	height: 0;
+	margin: 0;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.podlove-about-wrap img {
+	margin: 0;
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+}
+
+/* WordPress Version Badge */
+
+
+
+.podlove-badge {
+	background: #777 url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjQsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCIgWw0KCTwhRU5USVRZIG5zX2V4dGVuZCAiaHR0cDovL25zLmFkb2JlLmNvbS9FeHRlbnNpYmlsaXR5LzEuMC8iPg0KCTwhRU5USVRZIG5zX2FpICJodHRwOi8vbnMuYWRvYmUuY29tL0Fkb2JlSWxsdXN0cmF0b3IvMTAuMC8iPg0KCTwhRU5USVRZIG5zX2dyYXBocyAiaHR0cDovL25zLmFkb2JlLmNvbS9HcmFwaHMvMS4wLyI+DQoJPCFFTlRJVFkgbnNfdmFycyAiaHR0cDovL25zLmFkb2JlLmNvbS9WYXJpYWJsZXMvMS4wLyI+DQoJPCFFTlRJVFkgbnNfaW1yZXAgImh0dHA6Ly9ucy5hZG9iZS5jb20vSW1hZ2VSZXBsYWNlbWVudC8xLjAvIj4NCgk8IUVOVElUWSBuc19zZncgImh0dHA6Ly9ucy5hZG9iZS5jb20vU2F2ZUZvcldlYi8xLjAvIj4NCgk8IUVOVElUWSBuc19jdXN0b20gImh0dHA6Ly9ucy5hZG9iZS5jb20vR2VuZXJpY0N1c3RvbU5hbWVzcGFjZS8xLjAvIj4NCgk8IUVOVElUWSBuc19hZG9iZV94cGF0aCAiaHR0cDovL25zLmFkb2JlLmNvbS9YUGF0aC8xLjAvIj4NCl0+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkViZW5lXzEiIHhtbG5zOng9IiZuc19leHRlbmQ7IiB4bWxuczppPSImbnNfYWk7IiB4bWxuczpncmFwaD0iJm5zX2dyYXBoczsiDQoJIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMTI4cHgiIGhlaWdodD0iMTI4cHgiDQoJIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjggMTI4IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxtZXRhZGF0YT4NCgk8c2Z3ICB4bWxucz0iJm5zX3NmdzsiPg0KCQk8c2xpY2VzPjwvc2xpY2VzPg0KCQk8c2xpY2VTb3VyY2VCb3VuZHMgIGhlaWdodD0iMTI3Ljk4MyIgd2lkdGg9IjcyLjQyNCIgYm90dG9tTGVmdE9yaWdpbj0idHJ1ZSIgeD0iMjcuMzk2IiB5PSIwLjUwNSI+PC9zbGljZVNvdXJjZUJvdW5kcz4NCgk8L3Nmdz4NCjwvbWV0YWRhdGE+DQo8cGF0aCBmaWxsPSIjZmZmIiBkPSJNOTIuMjczLDEyNy45OTVIMzUuOTQzYy00LjQ0NCwwLTguMDQ3LTMuNTgxLTguMDQ3LTcuOTk5VjguMDExYzAtNC40MTcsMy42MDMtNy45OTksOC4wNDctNy45OTloNTYuMzMxDQoJYzQuNDQzLDAsOC4wNDcsMy41ODIsOC4wNDcsNy45OTl2MTExLjk4NUMxMDAuMzIsMTI0LjQxNCw5Ni43MTgsMTI3Ljk5NSw5Mi4yNzMsMTI3Ljk5NXogTTYzLjYwNSwxMTEuOTk2DQoJYzEzLjMzMywwLDI0LjE0MS0xMC43NDMsMjQuMTQxLTIzLjk5N2MwLTEzLjI1MS0xMC44MDktMjMuOTk1LTI0LjE0MS0yMy45OTVjLTEzLjMzMywwLTI0LjE0MSwxMC43NDQtMjQuMTQxLDIzLjk5NQ0KCUMzOS40NjQsMTAxLjI1Myw1MC4yNzMsMTExLjk5Niw2My42MDUsMTExLjk5NnogTTkyLjI3Myw4LjAxMUgzNS45NDN2NDcuOTkzaDU2LjMzMVY4LjAxMUw5Mi4yNzMsOC4wMTF6IE02My42MDUsNzkuMjQ2DQoJYzQuODY0LDAsOC44MDYsMy45Miw4LjgwNiw4Ljc1M2MwLDQuODM2LTMuOTQsOC43NTUtOC44MDYsOC43NTVjLTQuODY0LDAtOC44MDctMy45MTktOC44MDctOC43NTUNCglDNTQuNzk5LDgzLjE2Niw1OC43NDIsNzkuMjQ2LDYzLjYwNSw3OS4yNDZ6Ii8+DQo8cGF0aCBmaWxsPSIjZmZmIiBkPSJNNjMuOTkyLDIyLjk3MmM1LjAzMy0xMS4yNSwyMC4yOTktOS4wOTgsMjAuMzk4LDQuNTM0YzAuMDU3LDcuODA5LTIwLjM2OSwyMS44NzEtMjAuMzY5LDIxLjg3MQ0KCXMtMjAuNDctMTMuOTI5LTIwLjQxMy0yMS43ODlDNDMuNzA4LDEzLjk4OCw1OC43MTIsMTEuMjUzLDYzLjk5MiwyMi45NzJ6Ii8+DQo8L3N2Zz4NCg==");
+	background-position: center 24px;
+	background-repeat: no-repeat;
+	-webkit-background-size: 85px 85px;
+	background-size: 85px 85px;
+	font-size: 14px;
+	text-align: center;
+	font-weight: 600;
+	margin: 5px 0 0;
+	padding-top: 110px;
+	height: 30px;
+	display: inline-block;
+	width: 140px;
+}
+
+.podlove-about-wrap .podlove-badge {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+/* Tabs */
+
+.podlove-about-wrap h2.nav-tab-wrapper {
+	padding-left: 6px;
+}
+
+.podlove-about-wrap h2 .nav-tab {
+	padding: 4px 15px 6px;
+	margin: 0 3px -1px 0;
+	font-size: 18px;
+	vertical-align: top;
+	border-width: 1px;
+	white-space: nowrap;
+}
+
+/* 1.1 - Typography */
+
+.podlove-about-wrap p {
+	line-height: 1.6em;
+	font-size: 14px;
+}
+
+.podlove-about-wrap h1 {
+	margin: 0.2em 200px 0 0;
+	color: #333;
+	line-height: 1.2em;
+	font-size: 2.8em;
+	font-weight: 400;
+}
+
+.podlove-about-wrap h3 {
+	margin: 2em 0 .6em;
+	font-size: 1.25em;
+	line-height: 1.5em;
+}
+
+.podlove-about-wrap h4 {
+	color: #222;
+}
+
+.podlove-about-wrap code,
+.podlove-about-wrap ol li p {
+	font-size: 14px;
+}
+
+.podlove-about-wrap .about-description,
+.podlove-about-wrap .about-text {
+	margin-top: 1.4em;
+	font-weight: normal;
+	line-height: 1.6em;
+	font-size: 19px;
+}
+
+.podlove-about-wrap .about-text {
+	margin: 1em 200px 1em 0;
+	min-height: 60px;
+	color: #777;
+}
+
+/* 1.2 - Structure */
+
+.podlove-about-wrap .two-col > div {
+	position: relative;
+	width: 47.6%;
+	margin-right: 4.799999999%;
+	float: left;
+}
+
+.podlove-about-wrap .three-col > div {
+	position: relative;
+	width: 29.95%;
+	margin-right: 4.999999999%;
+	float: left;
+}
+
+.podlove-about-wrap .col .last-feature {
+	margin-right: 0;
+}
+
+/* 1.3 - Point Releases */
+
+.podlove-about-wrap .point-releases {
+	margin-top: 5px;
+	border-bottom: 1px solid #dfdfdf;
+}
+
+.podlove-about-wrap .changelog.point-releases h3 {
+	padding-top: 35px;
+}
+
+.podlove-about-wrap .changelog.point-releases h3:first-child {
+	padding-top: 7px;
+}
+
+/*------------------------------------------------------------------------------
+  2.0 - About Page
+------------------------------------------------------------------------------*/
+
+/* 2.1 - Typography */
+
+.podlove-about-wrap .headline-feature h2 {
+	margin: 1.1em 0 0.2em;
+	font-size: 2.4em;
+	font-weight: 300;
+	line-height: 1.3;
+	text-align: center;
+}
+
+.podlove-about-wrap .feature-list h2 {
+	margin: 30px 0 15px;
+	text-align: center;
+}
+
+.podlove-about-wrap .feature-section h4 {
+	margin: 1.4em 0 0.6em 0;
+	font-size: 1.2em;
+}
+
+.podlove-about-wrap .feature-section p {
+	margin-top: 0.6em;
+}
+
+/* 2.2 - Structure */
+
+.podlove-about-wrap .featured-image {
+	text-align: center;
+}
+
+.podlove-about-wrap .feature-section {
+	overflow: hidden;
+	padding-bottom: 20px;
+}
+
+.podlove-about-wrap .headline-feature .feature-section {
+	margin: 0 auto;
+	max-width: 82%;
+}
+
+.podlove-about-wrap .headline-feature .feature-section .col:first-child {
+	float: left;
+	margin: 15px 5% 0 0;
+	width: 55%;
+}
+
+.podlove-about-wrap .headline-feature .feature-section .col:last-child {
+	float: right;
+	margin: 15px 0 40px;
+	width: 40%;
+}
+
+.podlove-about-wrap .feature-list .feature-section {
+	margin-top: 0;
+}
+
+.top-feature h3 {
+	text-align: center;
+}
+
+.top-feature p, .top-feature ul {
+	max-width: 68%;
+	margin: 0 auto 20px;
+}
+
+/* Return to Dashboard Home link */
+
+.podlove-about-wrap .return-to-dashboard {
+	margin: 30px 0 0 -5px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.podlove-about-wrap .return-to-dashboard a {
+	text-decoration: none;
+	padding: 0 5px;
+}
+
+/* SVGs */
+.podlove-about-wrap .feature-list svg {
+	float: left;
+	clear: left;
+	margin: 15px 15px 0 0 ;
+	height: 90px;
+	width: 90px;
+	background-color: #cccccc;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	fill: #999;
+	border: 1px solid #c1c1c1;
+}
+
+.podlove-about-wrap .feature-list.finer-points h4,
+.podlove-about-wrap .feature-list.finer-points p {
+	margin-left: 115px;
+}
+
+/*------------------------------------------------------------------------------
+  4.0 - Media Queries
+------------------------------------------------------------------------------*/
+
+@media screen and ( max-width: 782px ) {
+	.podlove-about-wrap .one-col > div,
+	.podlove-about-wrap .two-col > div,
+	.podlove-about-wrap .three-col > div {
+		width: 100%;
+		margin: 0 0 40px;
+		padding: 0 0 40px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	}
+
+	.podlove-about-wrap .feature-list div,
+	.podlove-about-wrap .col > div.last-feature {
+		margin: 0;
+		padding: 0;
+		border-bottom: none;
+	}
+
+	.podlove-about-wrap .headline-feature .feature-section {
+		max-width: 100%;
+	}
+
+	.podlove-about-wrap .feature-list .feature-section {
+		padding: 0 0 40px;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.podlove-about-wrap {
+		margin-right: 20px;
+		margin-left: 10px;
+	}
+
+	.podlove-about-wrap h1,
+	.podlove-about-wrap .about-text {
+		margin-right: 0;
+	}
+
+	.podlove-about-wrap .about-text {
+		margin-bottom: 0.25em;
+	}
+
+	.podlove-about-wrap .podlove-badge {
+		position: relative;
+		margin-bottom: 1.5em;
+		width: 100%;
+	}
+
+	.podlove-about-wrap h2.nav-tab-wrapper {
+		padding-left: 0;
+		border-bottom: 0;
+	}
+
+	.podlove-about-wrap h2 .nav-tab {
+		margin-top: 10px;
+		margin-right: 10px;
+		border-bottom: 1px solid #ccc;
+	}
+
+	.podlove-about-wrap .three-col div,
+	.podlove-about-wrap .headline-feature .feature-section div {
+		width: 100% !important;
+		float: none !important;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.podlove-about-wrap .feature-list svg {
+		margin-top: 15px;
+		height: 65px;
+		width: 65px;
+	}
+	.podlove-about-wrap .feature-list.finer-points h4,
+	.podlove-about-wrap .feature-list.finer-points p {
+		margin-left: 80px;
+	}
+}

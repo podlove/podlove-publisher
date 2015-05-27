@@ -232,7 +232,7 @@ abstract class Base {
 			return true;
 
 		// ... or saving on the module page
-		if (stripos(filter_input(INPUT_SERVER, 'REQUEST_URI'), 'options.php') !== FALSE)
+		if (\Podlove\is_options_save_page())
 			return true;
 
 		return false;

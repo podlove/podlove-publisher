@@ -102,6 +102,20 @@ class TwigFilter {
 			$context = array_merge($context, array('episode' => new Episode($episode)));
 		}
 
-		return $twig->render($html, $context);
+		try {
+			return $twig->render($html, $context);
+		} catch (\Twig_Error $e) {
+			$message  = $e->getRawMessage();
+			$line     = $e->getTemplateLine();
+			$template = $e->getTemplateFile();
+
+			\Podlove\Log::get()->addError($message, [
+				'type'     => 'twig',
+				'line'     => $line,
+				'template' => $template
+			]);
+		}
+
+		return "";
 	}
 }

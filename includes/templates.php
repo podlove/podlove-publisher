@@ -13,8 +13,8 @@ function podlove_autoinsert_templates_into_content( $content ) {
 	$template_assignments = TemplateAssignment::get_instance();
 
 	if ( $template_assignments->top ) {
-		if ($template = Template::find_by_id( $template_assignments->top )) {
-			$shortcode = '[podlove-template id="' . $template->title . '"]';
+		if ($template = Template::find_one_by_title_with_fallback( $template_assignments->top )) {
+			$shortcode = '[podlove-template template="' . $template->title . '"]';
 			if ( stripos( $content, $shortcode ) === false ) {
 				$content = $shortcode . $content;
 			}
@@ -22,8 +22,8 @@ function podlove_autoinsert_templates_into_content( $content ) {
 	}
 
 	if ( $template_assignments->bottom ) {
-		if ($template = Template::find_by_id( $template_assignments->bottom )) {
-			$shortcode = '[podlove-template id="' . $template->title . '"]';
+		if ($template = Template::find_one_by_title_with_fallback( $template_assignments->bottom )) {
+			$shortcode = '[podlove-template template="' . $template->title . '"]';
 			if ( stripos( $content, $shortcode ) === false ) {
 				$content = $content . $shortcode;
 			}

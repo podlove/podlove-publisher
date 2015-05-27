@@ -8,15 +8,16 @@
     "require": {
         "php": ">=5.3.0",
         "podlove/podlove-timeline": ">=1.1.0",
-        "monolog/monolog": "1.5.*@dev",
+        "monolog/monolog": "1.13.*@dev",
         "symfony/yaml": "2.7.*@dev",
         "twig/twig": "1.*",
         "twig/extensions": "1.0.*@dev",
         "pear/math_biginteger": "dev-tags/RELEASE_1_0_2",
         "leth/ip-address": "1.0.*@dev",
         "geoip2/geoip2": "dev-master",
-        "rhumsaa/array_column": "~1.1",
-        "piwik/device-detector": "dev-master"
+        "ramsey/array_column": "~1.1",
+        "piwik/device-detector": "dev-master",
+        "phpunit/php-timer": "~1.0"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",

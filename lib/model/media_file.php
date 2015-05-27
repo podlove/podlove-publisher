@@ -95,13 +95,13 @@ class MediaFile extends Base {
 	 * Example contexts: home/episode/archive for player source, feed slug for feed source
 	 * 
 	 * @param  string $source  download source
-	 * @param  string $context optional download context
+	 * @param  string|null $context optional download context
 	 * @return string
 	 */
 	public function get_public_file_url($source, $context = null)
 	{
 		return $this->with_blog_scope(function() use ($source, $context) {
-			if (!$source && !$context)
+			if (empty($source) && empty($context))
 				return $this->get_file_url();
 
 			$params = array(
@@ -315,15 +315,23 @@ class MediaFile extends Base {
 	}
 
 	/**
-	 * @todo  use \Podlove\Http\Curl	
+	 * @todo  use \Podlove\Http\Curl
+	 * 
+	 * @return array	
 	 */
 	public static function curl_get_header_for_url( $url, $etag = NULL ) {
 		
 		if ( ! function_exists( 'curl_exec' ) )
-			return false;
+			return [];
 
 		$curl = curl_init();
-		$curl_version = curl_version();
+
+		if ( \Podlove\Http\Curl::curl_can_follow_redirects() ) {
+			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
+			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
+		} else {
+			$url = \Podlove\Http\Curl::resolve_redirects($url, 5);
+		}
 
 		curl_setopt( $curl, CURLOPT_URL, $url );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); // make curl_exec() return the result
@@ -337,11 +345,6 @@ class MediaFile extends Base {
 			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
 				'If-None-Match: "' . $etag . '"'
 			) );
-		}
-
-		if ( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
-			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
-			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
 		}
 
 		curl_setopt( $curl, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );

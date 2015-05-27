@@ -49,7 +49,8 @@ function generate_podcast_feed() {
 add_action( 'init', function() {
 
 	foreach ( Model\Feed::all() as $feed ) {
-		add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
+		if ($feed->slug)
+			add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
 	}
 
 	// changing feed settings may affect permalinks, so we need to flush

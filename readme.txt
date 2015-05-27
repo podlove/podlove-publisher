@@ -1,9 +1,9 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
-Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
-Requires at least: 3.0
-Tested up to: 4.2
+Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
+Requires at least: 3.5
+Tested up to: 4.2.2
 Stable tag: trunk
 License: MIT
 
@@ -11,41 +11,52 @@ The one and only next generation podcast publishing system. Seriously. It's magi
 
 == Description ==
 
-The Podlove Podcast Publisher is a workflow-oriented solution for serious podcasters that want to save time and get full control over their Podcast publishing process, their feeds and the integrity of their publication.
+We built the Podlove Podcast Publisher because existing solutions are stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
+
+Official Site: [publisher.podlove.org](http://publisher.podlove.org/)
+
+= Compatible Feeds =
 
 The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behavior (e.g. GUID control to replace faulty episodes and for clients to reload) supporting all important meta data.
 
+= Multi-Format Publishing =
+
 The Publisher also makes multi-format publishing - embracing all modern and legacy audio and video codecs - a snap. By adopting simple file name conventions, the plugin allows the podcaster to provide individual feeds for certain use cases or audiences without adding work for the podcaster during the publishing process.
 
-The Publisher also comes with integrated with the Podlove  Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+= Optimized Web Player =
+
+The Publisher also comes with integrated with the Podlove Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+
+= Chapter Support =
 
 The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+
+= Flexible Templates =
 
 To round it all up, a flexible template system enables you to published Podcasts in a defined fashion and change the style at any time without having to touch your individual postings later on.
 
 And this is just the beginning. We have a rich roadmap that will bring even more interesting features: integration with helpful services, much improved timeline metadata support (show notes) and much more.
 
-Development of the plugin is an open process. The current version is available on github:
+= Further Reading =
 
-https://github.com/podlove/podlove-publisher
+* [Podlove Publisher](http://publisher.podlove.org/)
+* [Podlove Project](http://podlove.org/)
+* [Podlove Community](https://community.podlove.org/)
+* [Documentation](http://docs.podlove.org/)
+* [Bug Tracker](https://github.com/podlove/podlove-publisher/issues)
+* [Donate](http://podlove.org/donations/)
 
-Feel free to contribute and to fix errors or send improvements via github.
+Development of the plugin is an open process. The current version is available [on GitHub](https://github.com/podlove/podlove-publisher) Feel free to contribute and to fix errors or send improvements via GitHub.
 
 Requires PHP 5.4+
-
-* Podlove Project: http://podlove.org/
-* Podlove Community: https://community.podlove.org/
-* Documentation: http://docs.podlove.org/
-* Bug Tracker: https://github.com/podlove/podlove-publisher/issues
-* Donate: http://podlove.org/donations/
 
 == Frequently Asked Questions ==
 
 ### Why do my episodes look the same as my normal posts/missing some information?
 
-The Podlove Podcast Publisher (PPP) uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
+The Podlove Podcast Publisher uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
 
-Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. PPP does work together will all templates that come with WordPress.
+Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. The Publisher does work together will all templates that come with WordPress.
 
 ### My episodes do not show up on the home page. What's wrong?
 
@@ -63,17 +74,9 @@ The exact media file name is made up of a) the Episode Media File Flug you set i
 
 ### Where is the Web Player / Download list?
 
-Right now, these have to be inserted manually via so called shortcodes. They are [podlove-web-player] and [podlove-episode-downloads].
-
-There are compatibility issues with the "Jetpack" plugin. If you use it, you might need to turn it off.
+Right now, these have to be inserted manually via shortcodes. They are [podlove-episode-web-player] and [podlove-episode-downloads].
 
 You can use the plugin's templates to make sure you have the proper shortcodes in every episode.
-
-### A feed link directs me to a blog page. What's wrong?
-
-This is an issue that sometimes arises out of the weirdness that is WordPress. Your settings might be totally okay but there  is some kind of amnesia going on in the WordPress core.
-
-In order to free WordPress from its amnesia go to Settings > Permalinks, hit Save and try again.
 
 ### How do I add Flattr integration to my episodes?
 
@@ -105,6 +108,73 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.2.0 =
+
+**Image Caching, Resizing & Retina Support**
+
+We now take better control of podcast images, episode images, contributor avatars and our own social icons. 
+We are able to *resize* them to ideal sizes, which results in *faster page load times* for your users. *Retina 
+images* for higher-resolution displays are also supported. We do this automatically, so all you need to do 
+is click update, lean back and enjoy.
+
+Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2/)
+
+This update increases the WordPress requirement from 3.0 to 3.5 (due to the required image editing functionality).
+
+**Other**
+
+* fix: duplicate feed discovery
+* fix: ignore incomplete feed configurations
+* fix: don't include network admin module css in frontend
+* fix: dashboard episode edit links
+* fix: when deleting WordPress Network sites, trigger plugin uninstall to remove database tables
+* fix: web player flash fallback
+* fix: network templates now also appear in the template widget and template auto-insert setting
+* fix: issue where some database tables were not created
+* fix: podcast covers are displayed in frontend admin menu bar
+* show Twig template errors in dashboard log
+* web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
+* add `episode.categories` template tag
+
+**Deprecations**
+
+- deprecated `episode.imageUrl`, use `episode.image` instead
+- deprecated `episode.imageUrlWithFallback`, use `episode.image({fallback: true})` instead
+- deprecated `podcast.imageUrl`, use `podcast.image` instead
+- deprecated `service.logoUrl`, use `service.image` instead
+- deprecated `contributor.avatar`, use `contributor.image` instead
+
+While you are changing these, consider scaling them down appropriately. Your images are probably huge but in many cases you don't need the full size. So instead of `episode.image` or `episode.image.url`, specify a size, like this `episode.image.url({width: 200})`.
+
+= 2.1.3 =
+
+* add warning in system report for users with default permalink settings (which is problematic for some podcast clients)
+* enhancement: delete caches in all blogs when changing a network template
+* enhancement: delete caches when changing the template default assignment
+* enhancement: do not rely on openssl module
+* fix: add flattr setting to contributors general tab
+* fix: duplicate episodes when using `podlove.episodes` template accessor
+* fix: correctly fire plugin activation hooks in network mode
+* fix: ensure network module is activated correctly
+* fix: "Add New" link in empty list tables
+
+= 2.1.2 =
+
+* fix issue with users that have open_basedir set, which lead to all assets being invalid
+
+= 2.1.1 =
+
+* fix: remove obsolete "Add New" template button from network templates screen
+* fix: template autoinsert does not use deprecated "id" parameter
+* fix: template widget does not use deprecated "id" parameter
+* fix: duplicate episodes in feeds
+* fix: some server configurations (especially on shared webhosting) break cURLs ability to follow HTTP redirects. We now check for that configuration and, if necessary, resolve the URL manually before continuing normally.
+* fix: XSS vulnerabilities in contributors search
+* fix: Template accessor `contributor.id` now correctly returns the id, not the uri. `contributor.uri` is the new accessor to get the uri.
+* fix: Filtering contributions by id is now correctly affected by other filters, like group and role. Until now, `podcast.contributors({id: 'james', role: 'on-air'})` always returned James, no matter if he had the given role or not. 
+* add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
+* add Twig version to system report
+
 = 2.1.0 =
 
 **Networks: WordPress Multisite Support is Here**
@@ -124,7 +194,7 @@ We added a happy bunch of widgets to make your life easy.
 * Template: Display any Publisher template in a widget area
 * Podcast License
 
-The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It has also been renamed to "Podlove Publisher Subscribe Button" to be distinguishable from the new standalone plugin.
+The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It has also been renamed to "Podcast Subscribe Button" to be distinguishable from the new standalone plugin.
 
 **Templates**
 
@@ -157,6 +227,7 @@ The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It h
 * add daily cleanup of logging table (only keep entries of previous 4 weeks)
 * contributor editing has a tabbed interface
 * improved Podlove Dashboard performance
+* Open Graph title does not include episode subtitle any more. If a subtitle is available, it is put in front of the summary in the description tag.
 * fix: remove Jetpack "Site Icon" from podcast feeds
 * fix: empty template editor when last template is deleted
 * fix: empty caches when a scheduled episode gets published

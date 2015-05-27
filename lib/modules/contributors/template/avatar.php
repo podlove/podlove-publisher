@@ -8,6 +8,7 @@ use Podlove\Template\Wrapper;
  *
  * Requires the "Contributor" module.
  *
+ * @deprecated since 2.2.0
  * @templatetag avatar
  */
 class Avatar extends Wrapper {
@@ -35,7 +36,7 @@ class Avatar extends Wrapper {
 	 * @accessor
 	 */
 	public function url($size = 50) {
-		return $this->contributor->getAvatarUrl($size);
+		return $this->contributor->avatar()->setWidth($size)->url();
 	}
 
 }

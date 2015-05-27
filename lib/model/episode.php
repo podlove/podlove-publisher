@@ -1,7 +1,9 @@
 <?php
 namespace Podlove\Model;
+
 use Podlove\Log;
 use Podlove\ChaptersManager;
+use Podlove\Model\Image;
 
 /**
  * We could use simple post_meta instead of a table here
@@ -62,6 +64,10 @@ class Episode extends Base implements Licensable {
 		return reset($episodes);
 	}
 
+	public function title() {
+		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
+	}
+
 	/**
 	 * Generate a human readable title.
 	 * 
@@ -71,8 +77,7 @@ class Episode extends Base implements Licensable {
 	 */
 	public function full_title() {
 		
-		$post  = $this->with_blog_scope(function() { return get_post($this->post_id); });
-		$title = $post->post_title;
+		$title = $this->title();
 		
 		if ($this->subtitle)
 			$title = $title . ' - ' . $this->subtitle;
@@ -87,7 +92,7 @@ class Episode extends Base implements Licensable {
 		} elseif ($this->subtitle) {
 			$description = $this->subtitle;
 		} else {
-			$description = $this->with_blog_scope(function() { return get_the_title(); });
+			$description = $this->title();
 		}
 		
 		return htmlspecialchars(trim($description));
@@ -117,9 +122,19 @@ class Episode extends Base implements Licensable {
 		});
 	}
 
-	public function player() {
-		return $this->with_blog_scope(function() {
-			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render();
+	public function categories($args = []) {
+
+		// "wp_get_post_categories" defaults to "fields => ids" so we need to set it manually
+		$args['fields'] = 'all';
+
+		return $this->with_blog_scope(function() use ($args) {
+			return wp_get_post_categories($this->post_id, $args);
+		});
+	}
+
+	public function player($context = NULL) {
+		return $this->with_blog_scope(function() use ($context) {
+			return (new \Podlove\Modules\PodloveWebPlayer\Printer($this))->render($context);
 		});
 	}
 
@@ -162,17 +177,17 @@ class Episode extends Base implements Licensable {
 		return MediaFile::find_by_episode_id_and_episode_asset_id($this->id, $episode_asset->id)->get_public_file_url($source, $context);
 	}
 
-	public function get_cover_art_with_fallback() {
+	public function cover_art_with_fallback() {
 		return $this->with_blog_scope(function() {
 
-			if ( ! $image = $this->get_cover_art() )
-				$image = Podcast::get()->cover_image;
+			if ( ! $image = $this->cover_art() )
+				$image = Podcast::get()->cover_art();
 
 			return $image;
 		});
 	}
 
-	public function get_cover_art() {
+	public function cover_art() {
 		return $this->with_blog_scope(function() {
 			$podcast = Podcast::get();
 			$asset_assignment = AssetAssignment::get_instance();
@@ -181,7 +196,7 @@ class Episode extends Base implements Licensable {
 				return;
 			
 			if ( $asset_assignment->image == 'manual' )
-				return trim($this->cover_art);
+				return new Image($this->cover_art, $this->title());
 
 			$cover_art_file_id = $asset_assignment->image;
 			if ( ! $asset = EpisodeAsset::find_one_by_id( $cover_art_file_id ) )
@@ -190,7 +205,7 @@ class Episode extends Base implements Licensable {
 			if ( ! $file = MediaFile::find_by_episode_id_and_episode_asset_id( $this->id, $asset->id ) )
 				return false;
 
-			return ( $file->size > 0 ) ? $file->get_file_url() : false;
+			return ( $file->size > 0 ) ? new Image($file->get_file_url(), $this->title()) : false;
 		});
 	}
 

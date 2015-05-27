@@ -59,7 +59,12 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 
 	// Generate a hash from IP address and UserAgent so we can identify
 	// identical requests without storing an IP address.
-	$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
+	if (function_exists('openssl_digest')) {
+		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
+	} else {
+		$intent->request_id = sha1($ip_string . $ua_string);
+	}
+	
 	$intent = $intent->add_geo_data($ip_string);
 
 	$intent->save();
