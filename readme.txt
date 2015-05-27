@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.2.1 =
+
+* fix: App.net announcement preview in modules
+
 = 2.2.0 =
 
 **Image Caching, Resizing & Retina Support**
