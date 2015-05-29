@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * fix: App.net announcement preview in modules
 * fix: asset validations are always scheduled properly
+* fix: Remove method calls that require WordPress 4.0+ (wpdb::esc_like)
 
 = 2.2.0 =
 

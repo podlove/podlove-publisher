@@ -31,6 +31,15 @@ function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
     return substr($str, $start, $length);
 }
 
+/**
+ * Duplicate of $wpdb::esc_like
+ * 
+ * Can be replaced once we bump WordPress version dependency to 4.0+
+ */
+function esc_like( $text ) {
+	return addcslashes( $text, '_%\\' );
+}
+
 function format_bytes( $size, $decimals = 2 ) {
     $units = array( ' B', ' KB', ' MB', ' GB', ' TB' );
     for ( $i = 0; $size >= 1024 && $i < 4; $i++ ) $size /= 1024;
