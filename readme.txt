@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.2.2 =
+
+* fix: template cache issue where duplicate purge cronjobs could flood the cron system
+
 = 2.2.1 =
 
 * fix: App.net announcement preview in modules

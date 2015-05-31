@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 103 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 104 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1160,6 +1160,9 @@ function run_migrations_for_version( $version ) {
 				$assignment['bottom'] = Model\Template::find_by_id($assignment['bottom'])->title;
 
 			update_option('podlove_template_assignment', $assignment);
+		break;
+		case 104:
+			\Podlove\unschedule_events(\Podlove\Cache\TemplateCache::CRON_PURGE_HOOK);
 		break;
 	}
 
