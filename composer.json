@@ -21,7 +21,6 @@
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
-        "pear/console_commandline": "dev-trunk",
         "podlove/comment-introspection": "dev-master"
     }
 }
