@@ -174,6 +174,14 @@ class Episode extends Wrapper {
 	/**
 	 * Image
 	 * 
+	 * - fallback: `true` or `false`. Should the podcast image be used if no episode image is available? Default: `false`
+	 * 
+	 * Example:
+	 * 
+	 * ```jinja
+	 * {{ episode.image({fallback: true}).url }}
+	 * ```
+	 * 
 	 * @see  image
 	 * @accessor
 	 */

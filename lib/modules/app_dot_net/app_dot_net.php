@@ -181,7 +181,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
 								'subtitle'     => $episode->subtitle,
-								'episode-image'=> $episode->cover_art()->url(),
+								'episode-image'=> $episode->cover_art() ? $episode->cover_art()->url() : '',
 								'podcast-image'=> $podcast->cover_art()->url(),
 								'contributors' => ''
 							);

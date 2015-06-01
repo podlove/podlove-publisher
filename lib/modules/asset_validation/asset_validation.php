@@ -14,6 +14,8 @@ class Asset_Validation extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_deactivated_asset_validation', array( $this, 'was_deactivated' ) );
 		add_action( 'podlove_asset_validation', array( $this, 'do_valiations' ) );
 		add_action( 'podlove_module_before_settings_asset_validation', function () {
+			$this->schedule_crons();
+			
 			if ( $timezone = get_option( 'timezone_string' ) )
 				date_default_timezone_set( $timezone );
 			?>
@@ -31,9 +33,13 @@ class Asset_Validation extends \Podlove\Modules\Base {
 		} );
 	}
 
-	public function was_activated( $module_name ) {
+	public function schedule_crons() {
 		if ( ! wp_next_scheduled( 'podlove_asset_validation' ) )
 			wp_schedule_event( time(), 'hourly', 'podlove_asset_validation' );
+	}
+
+	public function was_activated( $module_name ) {
+		$this->schedule_crons();
 	}
 
 	public function was_deactivated( $module_name ) {

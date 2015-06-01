@@ -108,6 +108,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.2.3 =
+
+* fix: web player image fallback to podcast image when an episode image asset is defined but unused
+* fix: gzip compression: only set content type if headers have not been sent
+* fix: in networks, don't schedule template cleanups for blogs without an active Publisher
+
+= 2.2.2 =
+
+* fix: template cache issue where duplicate purge cronjobs could flood the cron system
+* fix: image cache validation (didn't work due to missing library)
+
+= 2.2.1 =
+
+* fix: App.net announcement preview in modules
+* fix: asset validations are always scheduled properly
+* fix: Remove method calls that require WordPress 4.0+ (wpdb::esc_like)
+
 = 2.2.0 =
 
 **Image Caching, Resizing & Retina Support**

@@ -181,7 +181,7 @@ function uninstall() {
 	
 	if ( is_multisite() ) {
 		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
-            		$current_blog = $wpdb->blogid;
+			$current_blog = $wpdb->blogid;
 			$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
 			foreach ( $blogids as $blog_id ) {
 				switch_to_blog($blog_id);
