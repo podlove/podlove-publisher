@@ -108,17 +108,9 @@ class TemplateCache {
 	public function setup_purge_in_all_blogs() {
 		global $wpdb;
 
-		if (wp_next_scheduled(self::CRON_PURGE_HOOK))
-			return;
-
-		$blog_ids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-		if (is_array($blog_ids)) {
-			foreach ($blog_ids as $blog_id) {
-				\Podlove\with_blog_scope($blog_id, function() use ($blog_id) {
-					TemplateCache::get_instance()->setup_purge();
-				});
-			}
-		}
+		\Podlove\for_every_podcast_blog(function() {
+			TemplateCache::get_instance()->setup_purge();
+		});
 	}
 
 	/**

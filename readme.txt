@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * fix: web player image fallback to podcast image when an episode image asset is defined but unused
 * fix: gzip compression: only set content type if headers have not been sent
+* fix: in networks, don't schedule template cleanups for blogs without an active Publisher
 
 = 2.2.2 =
 

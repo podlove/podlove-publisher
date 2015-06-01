@@ -59,26 +59,16 @@ function maybe_run_database_migrations() {
 }
 
 function run_database_migrations() {
-	global $wpdb;
 	
 	if (!isset($_REQUEST['podlove_page']) || $_REQUEST['podlove_page'] != 'podlove_upgrade')
 		return;
 
-	$database_version = get_option('podlove_database_version');
-
-	if ($database_version >= DATABASE_VERSION)
+	if (get_option('podlove_database_version') >= DATABASE_VERSION)
 		return;
 
 	if (is_multisite()) {
 		set_time_limit(0); // may take a while, depending on network size
-		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
-		foreach ($blogids as $blog_id) {
-			switch_to_blog($blog_id);
-			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
-				migrate_for_current_blog();
-			}
-			restore_current_blog();
-		}
+		\Podlove\for_every_podcast_blog(function() { migrate_for_current_blog(); });
 	} else {
 		migrate_for_current_blog();
 	}
