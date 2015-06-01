@@ -111,6 +111,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.2.3 =
 
 * fix: web player image fallback to podcast image when an episode image asset is defined but unused
+* fix: gzip compression: only set content type if headers have not been sent
+
 = 2.2.2 =
 
 * fix: template cache issue where duplicate purge cronjobs could flood the cron system
