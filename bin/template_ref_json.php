@@ -45,6 +45,7 @@ $classes = [
 	'\Podlove\Template\FileType',
 	'\Podlove\Template\Tag',
 	'\Podlove\Template\Category',
+	'\Podlove\Template\Image',
 	'\Podlove\Modules\Contributors\Template\Contributor',
 	'\Podlove\Modules\Contributors\Template\ContributorGroup',
 	'\Podlove\Modules\Social\Template\Service',

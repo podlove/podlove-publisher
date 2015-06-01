@@ -204,7 +204,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else {
 
-	 	 	$search = $wpdb->esc_like($_POST['s']);
+	 	 	$search = \Podlove\esc_like($_POST['s']);
 	 	 	$search = '%' . $search . '%';
 
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all(

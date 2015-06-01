@@ -31,6 +31,7 @@ class TemplateCache {
 	private static $instance = NULL;
 	
 	const CACHE_NAMESPACE = "podlove_cachev2_";
+	const CRON_PURGE_HOOK = 'podlove_purge_template_cache';
 
 	/**
 	 * If the cache is tainted, it has to be purged.
@@ -54,7 +55,7 @@ class TemplateCache {
 	protected function __construct()
 	{
 		register_shutdown_function( array( $this, 'maybe_purge' ) );
-		add_action('podlove_purge_template_cache', array($this, 'purge'));
+		add_action(self::CRON_PURGE_HOOK, array($this, 'purge'));
 		add_action('podlove_model_change', array($this, 'handle_model_change'));
 	}
 
@@ -95,13 +96,10 @@ class TemplateCache {
 
 	/**
 	 * Schedule async cache purge *now*
-	 *
-	 * Note: time parameter must be set to make the event unique. Otherwise 
-	 * WordPress will only execute one purge every 10 minutes.
 	 */
 	public function setup_purge() {
-		if (!wp_next_scheduled('podlove_purge_template_cache'))
-			wp_schedule_single_event( time(), 'podlove_purge_template_cache', array('time' => time()) );
+		if (!wp_next_scheduled(self::CRON_PURGE_HOOK))
+			wp_schedule_single_event(time(), self::CRON_PURGE_HOOK);
 	}
 
 	/**
@@ -110,17 +108,9 @@ class TemplateCache {
 	public function setup_purge_in_all_blogs() {
 		global $wpdb;
 
-		if (wp_next_scheduled('podlove_purge_template_cache'))
-			return;
-
-		$blog_ids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-		if (is_array($blog_ids)) {
-			foreach ($blog_ids as $blog_id) {
-				\Podlove\with_blog_scope($blog_id, function() use ($blog_id) {
-					TemplateCache::get_instance()->setup_purge();
-				});
-			}
-		}
+		\Podlove\for_every_podcast_blog(function() {
+			TemplateCache::get_instance()->setup_purge();
+		});
 	}
 
 	/**
