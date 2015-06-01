@@ -108,6 +108,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.0 =
+
+Use WordPress Object Cache API to cache model objects. 
+See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
+
 = 2.2.3 =
 
 * fix: web player image fallback to podcast image when an episode image asset is defined but unused
