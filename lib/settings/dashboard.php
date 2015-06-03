@@ -28,6 +28,7 @@ class Dashboard {
 			add_action( 'add_meta_boxes_' . Dashboard::$pagehook, function () {
 				add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
 				add_meta_box( Dashboard::$pagehook . '_statistics', __( 'At a glance', 'podlove' ), '\Podlove\Settings\Dashboard::statistics', Dashboard::$pagehook, 'normal' );
+				add_meta_box( Dashboard::$pagehook . '_news', __( 'Podlove News', 'podlove' ), '\Podlove\Settings\Dashboard::news', Dashboard::$pagehook, 'normal' );
 				
 				do_action( 'podlove_dashboard_meta_boxes' );
 
@@ -87,6 +88,37 @@ class Dashboard {
 			</li>
 		</ul>
 		<?php
+	}
+
+	public static function news() {
+		$feeds = [
+			'podlove' => [
+				'link'         => 'http://podlove.org/',
+				'url'          => 'http://podlove.org/feed/',
+				'title'        => 'Podlove News',
+				'items'        => 5,
+				'show_summary' => 1,
+				'show_author'  => 0,
+				'show_date'    => 1,
+			]
+		];
+		require_once(ABSPATH . 'wp-admin/includes/dashboard.php');
+		$success = \wp_dashboard_cached_rss_widget( 'podlove_dashboard_news', 'wp_dashboard_primary_output', $feeds );
+
+		if (!$success) {
+			?>
+<script type="text/javascript">
+jQuery.ajax(ajaxurl, {
+	dataType: 'html',
+	type: 'GET',
+	data: { action: 'podlove-admin-news' },
+	success: function(response, status, xhr) {
+		jQuery("#toplevel_page_podlove_settings_handle_news .inside").html(response);
+	}
+});
+</script>
+			<?php
+		}
 	}
 
 	public static function settings_page() {
