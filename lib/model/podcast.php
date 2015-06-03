@@ -237,7 +237,7 @@ class Podcast implements Licensable {
 	 *   - 'slug' - Order by episode slug.
 	 *	 - 'limit' - Limit the number of returned episodes.
 	 */
-	public function episodes($args) {
+	public function episodes($args = []) {
 		return $this->with_blog_scope(function() use ($args) {
 			global $wpdb;
 

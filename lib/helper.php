@@ -42,6 +42,25 @@ function ends_with($haystack, $needle) {
 	return $needle === substr($haystack, -strlen($needle));
 }
 
+function load_template($path, $vars = []) {
+	$template = null;
+
+	$paths = [
+		\Podlove\PLUGIN_DIR . 'views/' . $path . '.php',
+		\Podlove\PLUGIN_DIR . $path . '.php'
+	];
+
+	foreach ($paths as $path) {
+		if (file_exists($path)) {
+			$template = $path;
+			break;
+		}
+	}
+
+	extract($vars);
+	require $template;
+}
+
 /**
  * Duplicate of $wpdb::esc_like
  * 
