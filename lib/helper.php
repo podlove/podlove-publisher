@@ -32,6 +32,17 @@ function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
 }
 
 /**
+ * Check string ends with a certain character or substring.
+ * 	
+ * @param  string $haystack String to search
+ * @param  string $needle   Substring or character
+ * @return bool
+ */
+function ends_with($haystack, $needle) {
+	return $needle === substr($haystack, -strlen($needle));
+}
+
+/**
  * Duplicate of $wpdb::esc_like
  * 
  * Can be replaced once we bump WordPress version dependency to 4.0+

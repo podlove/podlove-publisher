@@ -34,20 +34,7 @@ class Feed extends Base {
 	 */
 	public function get_subscribe_url() {
 		return $this->with_blog_scope(function() {
-			$podcast = \Podlove\Model\Podcast::get();
-
-			if ( '' != get_option( 'permalink_structure' ) ) {
-				$url = sprintf(
-					'%s/feed/%s/',
-					get_bloginfo( 'url' ),
-					sanitize_title( $this->slug )
-				);
-			} else {
-				$url = get_feed_link( $this->slug );
-			}
-
-
-			return apply_filters( 'podlove_subscribe_url', $url );
+			return apply_filters('podlove_subscribe_url', get_feed_link($this->slug));
 		});
 	}
 

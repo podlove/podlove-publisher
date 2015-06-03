@@ -22,6 +22,22 @@ function handle_feed_proxy_redirects() {
 	if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
 		return;
 
+	/**
+	 * Before we redirect to a proxy or deliver the feed, ensure that the canonical
+	 * feed URL was accessed.
+	 */
+	if (get_option('permalink_structure') != '') {
+		$feed_url = $feed->get_subscribe_url();
+		if (
+			!\Podlove\ends_with($_SERVER['REQUEST_URI'], '/') && \Podlove\ends_with($feed_url, '/')
+			||
+			\Podlove\ends_with($_SERVER['REQUEST_URI'], '/') && !\Podlove\ends_with($feed_url, '/')
+		) {
+			wp_redirect($feed_url, 301);
+			exit;
+		}
+	}
+
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
 	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;
 
