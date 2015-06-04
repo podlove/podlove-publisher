@@ -7,7 +7,7 @@
 		<!-- sidebar -->
 		<div id="side-info-column" class="inner-sidebar">
 			<?php do_action( 'podlove_settings_before_sidebar_boxes' ); ?>
-			<?php do_meta_boxes( Dashboard::$pagehook, 'side', NULL ); ?>
+			<?php do_meta_boxes( \Podlove\Settings\Dashboard::$pagehook, 'side', NULL ); ?>
 			<?php do_action( 'podlove_settings_after_sidebar_boxes' ); ?>
 		</div>
 
@@ -15,8 +15,8 @@
 		<div id="post-body" class="has-sidebar">
 			<div id="post-body-content" class="has-sidebar-content">
 				<?php do_action( 'podlove_settings_before_main_boxes' ); ?>
-				<?php do_meta_boxes( Dashboard::$pagehook, 'normal', NULL ); ?>
-				<?php do_meta_boxes( Dashboard::$pagehook, 'additional', NULL ); ?>
+				<?php do_meta_boxes( \Podlove\Settings\Dashboard::$pagehook, 'normal', NULL ); ?>
+				<?php do_meta_boxes( \Podlove\Settings\Dashboard::$pagehook, 'additional', NULL ); ?>
 				<?php do_action( 'podlove_settings_after_main_boxes' ); ?>						
 			</div>
 		</div>
@@ -31,7 +31,7 @@
 		// close postboxes that should be closed
 		$( '.if-js-closed' ).removeClass( 'if-js-closed' ).addClass( 'closed' );
 		// postboxes setup
-		postboxes.add_postbox_toggles( '<?php echo Dashboard::$pagehook; ?>' );
+		postboxes.add_postbox_toggles( '<?php echo \Podlove\Settings\Dashboard::$pagehook; ?>' );
 	} );
 	</script>
 

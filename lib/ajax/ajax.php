@@ -49,7 +49,7 @@ class Ajax {
 
 	public function admin_news() {
 		require_once ABSPATH . 'wp-admin/includes/dashboard.php';
-		\Podlove\Settings\Dashboard::news();
+		\Podlove\Settings\Dashboard\News::content();
 		wp_die();
 	}
 

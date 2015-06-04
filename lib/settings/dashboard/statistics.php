@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Settings\Dashboard;
 
+use Podlove\Model;
+
 class Statistics {
 
 	public static function content() {
