@@ -24,6 +24,7 @@ require_once 'bootstrap/bootstrap.php';
 require_once 'lib/helper.php';
 require_once 'lib/cron.php';
 require_once 'lib/network.php';
+require_once 'lib/php/array.php';
 require_once 'lib/version.php';
 require_once 'lib/feeds.php';
 require_once 'lib/shortcodes.php';

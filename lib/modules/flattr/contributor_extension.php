@@ -11,6 +11,7 @@ class ContributorExtension {
 		add_filter('podlove_contributor_list_table_columns', [__CLASS__, 'contributor_list_table_columns']);
 		add_filter('podlove_contributor_list_table_search_db_columns', [__CLASS__, 'contributor_list_table_search_db_columns']);
 		add_action('admin_head-podcast_page_podlove_contributors_settings_handle', ['\Podlove\Modules\Flattr\Flattr', 'insert_script']);
+		add_filter('podlove_contributors_general_fields', [__CLASS__, 'add_flattr_field_to_contributor_settings']);
 	}
 
 	/**
@@ -49,14 +50,7 @@ class ContributorExtension {
 	 * @return array          
 	 */
 	public static function contributor_list_table_columns($columns) {
-		
-		$insert_position = 4;
-
-		$columns = array_slice($columns, 0, $insert_position, true) 
-		         + ['flattr' => __('Flattr', 'podlove')]
-		         + array_slice($columns, $insert_position, count($columns)-$insert_position, true);
-
-		return $columns;
+		return \Podlove\PHP\array_insert($columns, 'episodes', ['flattr' => __('Flattr', 'podlove')]);
 	}
 
 	/**
@@ -68,5 +62,21 @@ class ContributorExtension {
 	public static function contributor_list_table_search_db_columns($columns) {
 		$columns[] = 'flattr';
 		return $columns;
+	}
+
+	public static function add_flattr_field_to_contributor_settings($fields) {
+		
+		$field = [
+			'flattr' => [
+				'field_type' => 'string',
+				'field_options' => [
+					'label'       => 'Flattr',
+					'description' => __('Flattr username', 'podlove'),
+					'html'        => ['class' => 'podlove-contributor-field podlove-check-input']
+				]
+			]
+		];
+
+		return \Podlove\PHP\array_insert($fields, 'slug', $field);
 	}
 }
