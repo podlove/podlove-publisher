@@ -255,7 +255,6 @@ require_once \Podlove\PLUGIN_DIR . 'includes/downloads.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/explicit_content.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/extras.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';
-require_once \Podlove\PLUGIN_DIR . 'includes/flattr.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/frontend_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/http.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/images.php';
