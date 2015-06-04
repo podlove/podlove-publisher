@@ -1,12 +1,14 @@
 <?php
-namespace Podlove\Template;
+namespace Podlove\Modules\Flattr\Template;
 
 /**
  * Flattr Template Wrapper
+ * 
+ * Requires "Flattr" module.
  *
  * @templatetag flattr
  */
-class Flattr extends Wrapper {
+class Flattr extends \Podlove\Template\Wrapper {
 
 	public function __construct() {
 	}

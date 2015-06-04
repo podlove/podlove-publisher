@@ -37,7 +37,6 @@ $classes = [
 	'\Podlove\Template\Episode',
 	'\Podlove\Template\Asset',
 	'\Podlove\Template\File',
-	'\Podlove\Template\Flattr',
 	'\Podlove\Template\Duration',
 	'\Podlove\Template\Chapter',
 	'\Podlove\Template\License',
@@ -48,6 +47,7 @@ $classes = [
 	'\Podlove\Template\Image',
 	'\Podlove\Modules\Contributors\Template\Contributor',
 	'\Podlove\Modules\Contributors\Template\ContributorGroup',
+	'\Podlove\Modules\Flattr\Template\Flattr',
 	'\Podlove\Modules\Social\Template\Service',
 	'\Podlove\Modules\Networks\Template\Network',
 	'\Podlove\Modules\Networks\Template\PodcastList'
