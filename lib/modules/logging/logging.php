@@ -18,7 +18,9 @@ class Logging extends \Podlove\Modules\Base {
 		add_action( 'podlove_module_was_activated_logging', array( $this, 'was_activated' ) );
 		add_action( 'init', array( $this, 'register_database_logger' ));
 
-		add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_box' ) );
+		if (current_user_can('administrator')) {
+			add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_box' ) );
+		}
 
 		self::schedule_crons();
 		add_action('podlove_cleanup_logging_table', array(__CLASS__, 'cleanup_logging_table'));

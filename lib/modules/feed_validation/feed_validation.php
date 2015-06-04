@@ -36,15 +36,17 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			<?php
 		} );
 
-		add_action('podlove_dashboard_meta_boxes', function() {
-			add_meta_box(
-				\Podlove\Settings\Dashboard::$pagehook . '_feeds',
-				__( 'Podcast feeds', 'podlove' ),
-				'Podlove\Modules\FeedValidation\Feed_Validation::meta_box',
-				\Podlove\Settings\Dashboard::$pagehook,
-				'normal'
-			);
-		});
+		if (current_user_can('administrator')) {
+			add_action('podlove_dashboard_meta_boxes', function() {
+				add_meta_box(
+					\Podlove\Settings\Dashboard::$pagehook . '_feeds',
+					__( 'Podcast feeds', 'podlove' ),
+					'Podlove\Modules\FeedValidation\Feed_Validation::meta_box',
+					\Podlove\Settings\Dashboard::$pagehook,
+					'normal'
+				);
+			});
+		}
 	}
 
 	public function was_activated( $module_name ) {

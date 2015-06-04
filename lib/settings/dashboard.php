@@ -15,7 +15,7 @@ class Dashboard {
 			/* $parent_slug*/ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			/* $page_title */ __('Dashboard', 'podlove'),
 			/* $menu_title */ __('Dashboard', 'podlove'),
-			/* $capability */ 'administrator',
+			/* $capability */ 'author',
 			/* $menu_slug  */ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array(__CLASS__, 'page')
 		);
@@ -31,7 +31,9 @@ class Dashboard {
 				
 				do_action('podlove_dashboard_meta_boxes');
 
-				add_meta_box(Dashboard::$pagehook . '_validation', __('Validate Podcast Files', 'podlove'), '\Podlove\Settings\Dashboard\FileValidation::content', Dashboard::$pagehook, 'normal');
+				if (current_user_can('administrator')) {
+					add_meta_box(Dashboard::$pagehook . '_validation', __('Validate Podcast Files', 'podlove'), '\Podlove\Settings\Dashboard\FileValidation::content', Dashboard::$pagehook, 'normal');
+				}
 			});
 			do_action('add_meta_boxes_' . Dashboard::$pagehook);
 
