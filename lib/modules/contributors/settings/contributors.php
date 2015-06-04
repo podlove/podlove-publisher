@@ -189,7 +189,6 @@ class Contributors {
 	private function view_template() {
 		?><h2><?php echo __( 'Contributors', 'podlove' ); ?> <a href="?post_type=podcast&amp;page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2><?php
 		$this->table->prepare_items();
-		\Podlove\load_template('lib/modules/flattr/views/flattr_script');
 		$this->table->display();
 	}
 
