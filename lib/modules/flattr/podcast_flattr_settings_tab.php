@@ -1,8 +1,7 @@
 <?php 
-namespace Podlove\Modules\Contributors\Settings;
+namespace Podlove\Modules\Flattr;
 
 use \Podlove\Settings\Podcast\Tab;
-use \Podlove\Modules\Contributors\Model\ShowContribution;
 
 class PodcastFlattrSettingsTab extends Tab {
 

@@ -712,7 +712,6 @@ class Contributors extends \Podlove\Modules\Base {
 	public function podcast_settings_tab($tabs)
 	{
 		$tabs->addTab( new Settings\PodcastContributorsSettingsTab( __( 'Contributors', 'podlove' ) ) );
-		$tabs->addTab( new Settings\PodcastFlattrSettingsTab( __( 'Flattr', 'podlove' ) ) );
 		return $tabs;
 	}
 
