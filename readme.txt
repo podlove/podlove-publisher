@@ -113,6 +113,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 Use WordPress Object Cache API to cache model objects. 
 See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
 
+**Flattr**
+
+* Everything Flattr related was moved into its own module. If you don't use Flattr, you can turn it off and it gets out of your way.
+* If you are using the Flattr module, we write Flattr payment information into podcast feeds. This way you don't need to rely on the official Flattr plugin to do this. You can probably deactivate it if you were using it since we provide the main functionality within the Publisher now.
+* We recently changed the default `flattr` parameter in shortcodes. Now there's a setting in Flattr Podcast Settings where you can define the default parameter for contributor shortcodes.
+
 **Other**
 
 * Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.

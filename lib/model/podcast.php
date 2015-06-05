@@ -383,4 +383,4 @@ Podcast::property( 'uri_delimiter' );
 Podcast::property( 'limit_items' );
 Podcast::property( 'language' );
 Podcast::property( 'complete' );
-Podcast::property( 'flattr' );
+Podcast::property( 'flattr' ); // @deprecated since 2.3.0 (now: wp_option "podlove_flattr")

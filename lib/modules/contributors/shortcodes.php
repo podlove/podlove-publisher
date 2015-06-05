@@ -15,19 +15,6 @@ class Shortcodes {
 	 */
 	private $contributions = array();
 
-	private static $shortcode_defaults = array(
-		'preset'    => 'table',
-		'avatars'   => 'yes',
-		'role'      => 'all',
-		'roles'		=> 'no',
-		'group'		=> 'all',
-		'groups'	=> 'no',
-		'donations' => 'yes',
-		'flattr'    => 'no',
-		'title'     => '',
-		'groupby'   => 'none'
-	);
-
 	/**
 	 * Shortcode settings.
 	 */
@@ -40,6 +27,24 @@ class Shortcodes {
 		add_shortcode( 'podlove-podcast-contributor-list', array( $this, 'podlove_podcast_contributor_list') );
 		// display a table/list of all contributors
 		add_shortcode( 'podlove-global-contributor-list', array( $this, 'global_contributor_list') );
+	}
+
+	public static function shortcode_defaults()
+	{
+		$defaults = array(
+			'preset'    => 'table',
+			'avatars'   => 'yes',
+			'role'      => 'all',
+			'roles'		=> 'no',
+			'group'		=> 'all',
+			'groups'	=> 'no',
+			'donations' => 'yes',
+			'flattr'    => 'no',
+			'title'     => '',
+			'groupby'   => 'none'
+		);
+
+		return apply_filters('podlove_contributors_shortcode_defaults', $defaults);
 	}
 
 	public function global_contributor_list($attributes)
@@ -89,7 +94,7 @@ class Shortcodes {
 		if (!is_array($attributes))
 			$attributes = array();
 
-		$this->settings = array_merge(self::$shortcode_defaults, $attributes);
+		$this->settings = array_merge(self::shortcode_defaults(), $attributes);
 
 		switch ($this->settings['preset']) {
 			case 'comma separated':
@@ -114,7 +119,7 @@ class Shortcodes {
 		if (!is_array($attributes))
 			$attributes = array();
 
-		$this->settings = array_merge(self::$shortcode_defaults, $attributes);
+		$this->settings = array_merge(self::shortcode_defaults(), $attributes);
 
 		return \Podlove\Template\TwigFilter::apply_to_html('@contributors/podcast-contributor-table.twig', $this->settings);
 	}
