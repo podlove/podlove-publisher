@@ -25,7 +25,7 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_donation_setting' ), 10, 2 );
 		add_action( 'update_podlove_contributor', array( $this, 'save_contributor' ), 10, 2 );
 
-		add_filter( 'podlove_contributor_settings_tabs', array( $this, 'register_contributor_tabs' ), 10, 2 );
+		add_filter( 'podlove_contributor_settings_sections', array( $this, 'register_contributor_sections' ), 10, 2 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
@@ -217,10 +217,51 @@ class Social extends \Podlove\Modules\Base {
 		    return $columns;
 	}
 
-	public function register_contributor_tabs($tabs) {
-		$tabs->addTab( new \Podlove\Modules\Social\Settings\Tab\Social( __( 'Social', 'podlove' ) ) );
-		$tabs->addTab( new \Podlove\Modules\Social\Settings\Tab\Donation( __( 'Donation', 'podlove' ) ) );
-		return $tabs;
+	public function register_contributor_sections($sections) {
+
+		$sections['social'] = [
+			'title'  => __('Social', 'podlove'),
+			'fields' => [
+				'services_form_table' => [
+					'field_type'    => 'callback',
+					'field_options' => [
+						'nolabel' => true,
+						'callback' => function() {
+							if (isset($_GET['contributor'])) {
+								$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category($_GET['contributor'], 'social');
+							} else {
+								$services = [];
+							}
+
+							\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_contributor[services]', 'social');
+						}
+					]
+				]
+			]
+		];
+
+		$sections['donation'] = [
+			'title'  => __('Donation', 'podlove'),
+			'fields' => [
+				'services_form_table' => [
+					'field_type'    => 'callback',
+					'field_options' => [
+						'nolabel' => true,
+						'callback' => function() {
+							if (isset($_GET['contributor'])) {
+								$services = \Podlove\Modules\Social\Model\ContributorService::find_by_contributor_id_and_category($_GET['contributor'], 'donation');
+							} else {
+								$services = [];
+							}
+
+							\Podlove\Modules\Social\Social::services_form_table($services, 'podlove_contributor[donations]', 'donation');
+						}
+					]
+				]
+			]
+		];
+
+		return $sections;
 	}
 
 	public static function services_form_table($current_services = array(), $form_base_name = 'podlove_contributor[services]', $category = 'social') {
