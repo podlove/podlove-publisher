@@ -23,13 +23,13 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	
 	public function column_realname( $contributor ) {
 		$actions = array(
-			'edit'   => Settings\Contributors::get_action_link( $contributor, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\Contributors::get_action_link( $contributor, __( 'Delete', 'podlove' ), 'confirm_delete' ),
+			'edit'   => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Edit', 'podlove' ) ),
+			'delete' => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Delete', 'podlove' ), 'confirm_delete' ),
 			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove'))
 		);
 	
 		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
-		    Settings\Contributors::get_action_link( $contributor, $contributor->getName() ),
+		    Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, $contributor->getName() ),
 		    $contributor->realname,
 		    ( $contributor->nickname == "" ? "" : " (" . $contributor->nickname . ")"  ),
 		    $this->row_actions( $actions )
@@ -154,6 +154,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		td.column-visibility, th.column-visibility { width: 7% !important; }
 		td.column-gender, th.column-gender { width: 7% !important; }
 		td.column-episodes, th.column-episodes { width: 8% !important; }
+		.add-new-h2 { float: left; }
 		</style>
 		<?php
 	}
@@ -203,7 +204,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 				'WHERE ' . $like_searches . ' ' . $orderby . ' ' . $order
 			);
 		}
-		
+
 		// get current page
 		$current_page = $this->get_pagenum();
 		// get total items

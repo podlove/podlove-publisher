@@ -21,9 +21,10 @@ class ContributorSettings {
 		);
 
 		$tabs = new Tabs( __( 'Contributor Settings', 'podlove' ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove' ), true ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors( __( 'Contributors', 'podlove' ) ) );
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove' ) ) );
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove' ) ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove' ), true ) );
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 
