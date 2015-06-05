@@ -14,10 +14,14 @@ class PodcastFlattrSettingsTab extends Tab {
 		if (!isset($_POST['podlove_flattr']) || !$this->is_active())
 			return;
 
-		update_option('podlove_flattr', [
-			'account'                       => $_POST['podlove_flattr']['account'],
-			'contributor_shortcode_default' => $_POST['podlove_flattr']['contributor_shortcode_default']
-		]);
+		$settings = Flattr::get_setting();
+		$settings['account'] = $_POST['podlove_flattr']['account'];
+
+		if (isset($_POST['podlove_flattr']['contributor_shortcode_default'])) {
+			$settings['contributor_shortcode_default'] = $_POST['podlove_flattr']['contributor_shortcode_default'];
+		}
+
+		update_option('podlove_flattr', $settings);
 
 		header('Location: ' . $this->get_url());
 	}
@@ -53,15 +57,17 @@ class PodcastFlattrSettingsTab extends Tab {
 				'html'  => ['class' => 'regular-text required podlove-check-input']
 			]);
 
-			$wrapper->radio('contributor_shortcode_default', [
-				'label'       => __('Default Parameter in Contributors Shortcodes', 'podlove'),
-				'description' => '<br>' . __('You can override this setting individually by passing along the <code>flattr="yes"</code> or <code>flattr="no"</code> parameter to the shortcodes.', 'podlove'),
-				'options'     => [
-					'yes' => 'yes, show Flattr buttons by default', 
-					'no'  => 'no, do not show Flattr buttons by default'
-				],
-				'default'     => 'no'
-			]);
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$wrapper->radio('contributor_shortcode_default', [
+					'label'       => __('Default Parameter in Contributors Shortcodes', 'podlove'),
+					'description' => '<br>' . __('You can override this setting individually by passing along the <code>flattr="yes"</code> or <code>flattr="no"</code> parameter to the shortcodes.', 'podlove'),
+					'options'     => [
+						'yes' => 'yes, show Flattr buttons by default', 
+						'no'  => 'no, do not show Flattr buttons by default'
+					],
+					'default'     => 'no'
+				]);
+			}
 		});
 	}
 }
