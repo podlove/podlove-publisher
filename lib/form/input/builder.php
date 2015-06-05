@@ -229,7 +229,6 @@ class Builder {
 		?>
 		<div>
 			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
-			<br>
 			<img src="<?php echo $this->field_value; ?>" class="podlove-avatar" />
 		</div>
 		<script type="text/javascript">

@@ -193,6 +193,8 @@ tr.row_podlove_feed_protection_type {
 
 img.podlove-avatar {
 	width: 50px;
+	vertical-align: bottom;
+	margin: 2px;
 }
 
 input.podlove-contributor-field {
