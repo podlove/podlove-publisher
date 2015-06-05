@@ -413,8 +413,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	 	$posted_linked_title = array();
 		$start_position = 0;
 
-		while ( ($position = \Podlove\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
-			$length = \Podlove\strlen( $post_title, "UTF-8" );
+		while ( ($position = \Podlove\PHP\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+			$length = \Podlove\PHP\strlen( $post_title, "UTF-8" );
 			$episode_entry = array(
 				"url"  => get_permalink( $post_id ), 
 				"text" => $post_title, 
@@ -453,8 +453,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	private function get_text_for_episode($post_id) {
 		$post = $this->replace_tags( $post_id );
 
-		if ( \Podlove\strlen( $post['text'] ) > 256 )
-			$post['text'] = \Podlove\substr( $post['text'], 0, 255 ) . "…";
+		if ( \Podlove\PHP\strlen( $post['text'] ) > 256 )
+			$post['text'] = \Podlove\PHP\substr( $post['text'], 0, 255 ) . "…";
 
 		return array(
 			'text' => $post['text'],

@@ -29,9 +29,9 @@ function handle_feed_proxy_redirects() {
 	if (get_option('permalink_structure') != '') {
 		$feed_url = $feed->get_subscribe_url();
 		if (
-			!\Podlove\ends_with($_SERVER['REQUEST_URI'], '/') && \Podlove\ends_with($feed_url, '/')
+			!\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
 			||
-			\Podlove\ends_with($_SERVER['REQUEST_URI'], '/') && !\Podlove\ends_with($feed_url, '/')
+			\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
 		) {
 			wp_redirect($feed_url, 301);
 			exit;

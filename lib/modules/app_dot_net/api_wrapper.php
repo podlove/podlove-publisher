@@ -114,7 +114,7 @@ class API_Wrapper {
 			'body' => $data_string,
 			'headers' => array(
 				'Content-type'   => 'application/json',
-				'Content-Length' => \Podlove\strlen($data_string)
+				'Content-Length' => \Podlove\PHP\strlen($data_string)
 			)
 		) );
 		
