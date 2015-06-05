@@ -1159,6 +1159,7 @@ function run_migrations_for_version( $version ) {
 			if ($podcast->flattr) {
 				$settings = get_option('podlove_flattr', []);
 				$settings['account'] = $podcast->flattr;
+				$settings['contributor_shortcode_default'] = 'yes';
 				update_option('podlove_flattr', $settings);
 			}
 		break;
