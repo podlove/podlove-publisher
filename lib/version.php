@@ -1155,13 +1155,15 @@ function run_migrations_for_version( $version ) {
 			\Podlove\unschedule_events(\Podlove\Cache\TemplateCache::CRON_PURGE_HOOK);
 		break;
 		case 105:
+			// activate flattr plugin
+			\Podlove\Modules\Base::activate('flattr');
+
+			// migrate flattr data
 			$podcast = Model\Podcast::get();			
-			if ($podcast->flattr) {
-				$settings = get_option('podlove_flattr', []);
-				$settings['account'] = $podcast->flattr;
-				$settings['contributor_shortcode_default'] = 'yes';
-				update_option('podlove_flattr', $settings);
-			}
+			$settings = get_option('podlove_flattr', []);
+			$settings['account'] = $podcast->flattr;
+			$settings['contributor_shortcode_default'] = 'yes';
+			update_option('podlove_flattr', $settings);
 		break;
 	}
 
