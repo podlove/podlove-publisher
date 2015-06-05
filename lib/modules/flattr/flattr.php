@@ -15,8 +15,8 @@ class Flattr extends \Podlove\Modules\Base {
 
 		FeedExtension::init();
 		ContributorExtension::init();
+		Shortcodes::init();
 	}
-
 
 	/**
 	 * Get Flattr setting by name.

@@ -57,7 +57,7 @@ class Flattr extends \Podlove\Template\Wrapper {
 		$defaults = [
 			'url'   => get_permalink(),
 			'style' => 'compact',
-			'user'  => \Podlove\Model\Podcast::get()->flattr
+			'user'  => \Podlove\Modules\Flattr\Flattr::get_setting('account')
 		];
 		$args = wp_parse_args($args, $defaults);
 
