@@ -16,7 +16,7 @@ class PodcastFlattrSettingsTab extends Tab {
 
 		update_option('podlove_flattr', [
 			'account'                       => $_POST['podlove_flattr']['account'],
-			'contributor_shortcode_default' => (bool) $_POST['podlove_flattr']['contributor_shortcode_default']
+			'contributor_shortcode_default' => $_POST['podlove_flattr']['contributor_shortcode_default']
 		]);
 
 		header('Location: ' . $this->get_url());
@@ -44,7 +44,7 @@ class PodcastFlattrSettingsTab extends Tab {
 		</style>
 		<?php
 
-		\Podlove\Form\build_for( (object) get_option('podlove_flattr', []), $form_attributes, function ( $form ) {
+		\Podlove\Form\build_for( (object) Flattr::get_setting(), $form_attributes, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
 

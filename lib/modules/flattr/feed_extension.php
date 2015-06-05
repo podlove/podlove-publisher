@@ -15,7 +15,7 @@ class FeedExtension {
 
 		$url = sprintf(
 			'https://flattr.com/submit/auto?user_id=%s&amp;language=%s&amp;url=%s&amp;title=%s&amp;description=%s',
-			urlencode($podcast->flattr),
+			urlencode(Flattr::get_setting("account")),
 			urlencode(str_replace("-", "_", $podcast->language)),
 			urlencode($podcast->landing_page_url()),
 			urlencode($podcast->title),
@@ -29,7 +29,7 @@ class FeedExtension {
 		
 		$url = sprintf(
 			'https://flattr.com/submit/auto?user_id=%s&amp;language=%s&amp;url=%s&amp;title=%s&amp;description=%s',
-			urlencode($podcast->flattr),
+			urlencode(Flattr::get_setting("account")),
 			urlencode(str_replace("-", "_", $podcast->language)),
 			urlencode($episode->permalink()),
 			urlencode($episode->title()),

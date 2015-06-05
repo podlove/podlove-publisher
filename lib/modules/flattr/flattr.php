@@ -17,6 +17,29 @@ class Flattr extends \Podlove\Modules\Base {
 		ContributorExtension::init();
 	}
 
+
+	/**
+	 * Get Flattr setting by name.
+	 * 
+	 * If no name is given, return all settings.
+	 * 
+	 * Settings: account, contributor_shortcode_default
+	 * 
+	 * @param  string|null $name setting name
+	 * @return mixed             setting value
+	 */
+	public static function get_setting($name = null) {
+		$defaults = [
+			'account'                       => '',
+			'contributor_shortcode_default' => 'yes'
+		];
+
+		$options = get_option('podlove_flattr', []);
+		$options = wp_parse_args($options, $defaults);
+
+		return is_null($name) ? $options : $options[$name];
+	}
+
 	public static function insert_script() {
 		\Podlove\load_template('lib/modules/flattr/views/flattr_script');
 	}
