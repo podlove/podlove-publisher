@@ -98,6 +98,18 @@ class Contributors extends \Podlove\Modules\Base {
 		DefaultContribution::destroy();
 	}
 
+	public static function get_index_contributors_url() {
+		return get_admin_url(get_current_blog_id(), 'admin.php?page=podlove_contributor_settings&podlove_tab=contributors');
+	}
+
+	public static function get_create_contributor_url() {
+		return get_admin_url(get_current_blog_id(), 'admin.php?page=podlove_contributor_settings&podlove_tab=contributors&action=new');
+	}
+
+	public static function get_edit_contributor_url($contributor_id) {
+		return get_admin_url(get_current_blog_id(), 'admin.php?page=podlove_contributor_settings&podlove_tab=contributors&action=edit&contributor=' . $contributor_id);
+	}
+
 	public function add_to_admin_bar_podcast($wp_admin_bar, $podcast)
 	{
 		$podcast_toolbar_id = 'podlove_toolbar_' . $podcast;
@@ -106,7 +118,7 @@ class Contributors extends \Podlove\Modules\Base {
 			'id'     => $podcast_toolbar_id . '_contributors',
 			'title'  => __( 'Podlove Contributors', 'podlove' ),
 			'parent' => "blog-" . $podcast,
-			'href'   => get_admin_url(get_current_blog_id(), 'edit.php?post_type=podcast&page=podlove_contributors_settings_handle')
+			'href'   => self::get_index_contributors_url()
 		);
 		$wp_admin_bar->add_node( $args );
 	}

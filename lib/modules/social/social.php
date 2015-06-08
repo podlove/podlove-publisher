@@ -29,7 +29,7 @@ class Social extends \Podlove\Modules\Base {
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
-		add_filter( "manage_podcast_page_podlove_contributors_settings_handle_columns", array( $this, 'add_new_contributor_column' ) );
+		add_filter( "podlove_contributor_list_table_columns", array( $this, 'add_new_contributor_column' ) );
 
 		add_action( 'wp_ajax_podlove-services-delete-contributor-services', array($this, 'delete_contributor_services') );
 		add_action( 'wp_ajax_podlove-services-delete-podcast-services', array($this, 'delete_podcast_services') );

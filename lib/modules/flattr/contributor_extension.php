@@ -10,7 +10,7 @@ class ContributorExtension {
 		add_filter('podlove_contributor_list_table_column_default', [__CLASS__, 'contributor_list_table_column'], 10, 3);
 		add_filter('podlove_contributor_list_table_columns', [__CLASS__, 'contributor_list_table_columns']);
 		add_filter('podlove_contributor_list_table_search_db_columns', [__CLASS__, 'contributor_list_table_search_db_columns']);
-		add_action('admin_head-podcast_page_podlove_contributors_settings_handle', ['\Podlove\Modules\Flattr\Flattr', 'insert_script']);
+		add_action('admin_head-podlove_page_podlove_contributor_settings', ['\Podlove\Modules\Flattr\Flattr', 'insert_script']);
 		add_filter('podlove_contributors_general_fields', [__CLASS__, 'add_flattr_field_to_contributor_settings']);
 		add_filter('podlove_contributors_shortcode_defaults', [__CLASS__, 'adjust_contributors_shortcode_defaults']);
 	}

@@ -1,3 +1,6 @@
+<?php
+use \Podlove\Modules\Contributors\Contributors;
+?>
 <div id="contributors-form">
 	<table class="podlove_alternating" border="0" cellspacing="0">
 		<thead>
@@ -34,8 +37,8 @@
 					<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url() ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
 				<?php endforeach; ?>
 			</select>
-			<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&amp;contributor={{contributor-id}}"></a>
-			<a class="clickable podlove-icon-plus podlove-contributor-create" href="<?php echo admin_url('edit.php?post_type=podcast&page=podlove_contributors_settings_handle&action=new') ?>"></a>
+			<a class="clickable podlove-icon-edit podlove-contributor-edit"   href="<?php echo Contributors::get_edit_contributor_url("{{contributor-id}}"); ?>"></a>
+			<a class="clickable podlove-icon-plus podlove-contributor-create" href="<?php echo Contributors::get_create_contributor_url() ?>"></a>
 			</div>
 		</td>
 		<?php if ($has_groups) : ?>
@@ -133,7 +136,7 @@
 					row.find(".podlove-group").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[group]");
 					row.find(".podlove-role").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[role]");
 					row.find(".podlove-comment").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[comment]");
-					edit_button.attr("href", "<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&page=podlove_contributors_settings_handle&action=edit&contributor=" + contributor.id);
+					edit_button.attr("href", "<?php echo site_url(); ?>/wp-admin/admin.php?page=podlove_contributor_settings&action=edit&contributor=" + contributor.id);
 					edit_button.show(); // Show Edit Button
 				});
 			}
