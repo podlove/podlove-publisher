@@ -3,6 +3,7 @@ namespace Podlove\Modules\Contributors\Template;
 
 use Podlove\Template\Wrapper;
 use Podlove\Template\Episode;
+use Podlove\Template\Image;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 
 /**
@@ -150,10 +151,15 @@ class Contributor extends Wrapper {
 	 * or
 	 * `{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 150} only %}`
 	 * 
+	 * @deprecated use contributor.image instead
 	 * @accessor
 	 */
 	public function avatar($size = 50) {
 		return new Avatar($this->contributor, $size);
+	}
+
+	public function image() {
+		return new Image($this->contributor->avatar());
 	}
 
 	/**

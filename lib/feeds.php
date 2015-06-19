@@ -49,7 +49,8 @@ function generate_podcast_feed() {
 add_action( 'init', function() {
 
 	foreach ( Model\Feed::all() as $feed ) {
-		add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
+		if ($feed->slug)
+			add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
 	}
 
 	// changing feed settings may affect permalinks, so we need to flush
@@ -89,7 +90,8 @@ function feed_authentication() {
 function check_for_and_do_compression($content_type = 'application/rss+xml')
 {
 	// ensure content type headers are set
-	header('Content-type: ' . $content_type);
+	if (!headers_sent())
+		header('Content-type: ' . $content_type);
 	
 	if (!apply_filters('podlove_enable_gzip_for_feeds', true))
 		return false;

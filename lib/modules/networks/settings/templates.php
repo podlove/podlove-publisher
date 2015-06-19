@@ -17,8 +17,6 @@ class Templates {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
-
-		register_setting( Templates::$pagehook, 'podlove_template_assignment' );
 	}
 
 	public static function get_action_link( $template, $title, $action = 'edit', $type = 'link' ) {

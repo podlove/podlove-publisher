@@ -15,8 +15,10 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 	
 	public function column_avatar( $contributor ) {
-		
-		return $contributor->getAvatar("45px");
+		return $contributor
+			->avatar()
+			->setWidth(45)
+			->image();
 	}
 	
 	public function column_realname( $contributor ) {
@@ -105,12 +107,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		foreach ($contributor_services as $contributor_service) {
 			$service = $contributor_service->get_service();
 
-			$source .= "<li>
-						<img class='podlove-contributor-list-social-logo' src='"
-						. $service->get_logo() . "' /> <a href='"
-						. $contributor_service->get_service_url() . "'>"
-						. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) . "</a>
-						</li>\n";
+			$source .= "<li>" 
+			        . $service->image()->setWidth(16)->image(['class' => 'podlove-contributor-list-social-logo']) 
+			        . "<a href='" . $contributor_service->get_service_url() . "'>"
+					. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) 
+					. "</a>"
+			        . "</li>\n";
 		}
 
 		return '<ul class="podlove-contributor-social-list">' . $source . '</ul>';
@@ -202,7 +204,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else {
 
-	 	 	$search = $wpdb->esc_like($_POST['s']);
+	 	 	$search = \Podlove\esc_like($_POST['s']);
 	 	 	$search = '%' . $search . '%';
 
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all(

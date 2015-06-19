@@ -34,10 +34,8 @@ class Networks extends \Podlove\Modules\Base {
 
 		// Styles
 		add_action( 'admin_print_styles', array( $this, 'scripts_and_styles' ) );
-		add_action( 'wp_print_styles', array( $this, 'scripts_and_styles' ) );
 
-		if (is_admin())
-			AdminBarMenu::init();
+		AdminBarMenu::init();
 	}
 
 	public function add_system_report_validations($fields)
@@ -79,7 +77,7 @@ class Networks extends \Podlove\Modules\Base {
 	/*
 	 *	Was activated
 	 */
-	public function was_activated( $module_name ) {
+	public function was_activated( $module_name = 'networks' ) {
 		PodcastList::with_network_scope(function() {
 			PodcastList::build();
 		});

@@ -14,6 +14,7 @@ class Logging extends \Podlove\Modules\Base {
 	protected $module_group = 'system';
 
 	public function load() {
+		add_action( 'podlove_uninstall_plugin', [$this, 'uninstall'] );
 		add_action( 'podlove_module_was_activated_logging', array( $this, 'was_activated' ) );
 		add_action( 'init', array( $this, 'register_database_logger' ));
 
@@ -21,6 +22,10 @@ class Logging extends \Podlove\Modules\Base {
 
 		self::schedule_crons();
 		add_action('podlove_cleanup_logging_table', array(__CLASS__, 'cleanup_logging_table'));
+	}
+
+	public function uninstall() {
+		LogTable::destroy();
 	}
 
 	public static function schedule_crons() {
@@ -115,6 +120,9 @@ class Logging extends \Podlove\Modules\Base {
 					}
 					if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
 						echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+					}
+					if (isset($data->type) && $data->type == 'twig') {
+						echo sprintf('in template "%s" line %d', $data->template, $data->line);
 					}
 					?>
 				</span>

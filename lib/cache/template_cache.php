@@ -31,6 +31,7 @@ class TemplateCache {
 	private static $instance = NULL;
 	
 	const CACHE_NAMESPACE = "podlove_cachev2_";
+	const CRON_PURGE_HOOK = 'podlove_purge_template_cache';
 
 	/**
 	 * If the cache is tainted, it has to be purged.
@@ -54,7 +55,7 @@ class TemplateCache {
 	protected function __construct()
 	{
 		register_shutdown_function( array( $this, 'maybe_purge' ) );
-		add_action('podlove_purge_template_cache', array($this, 'purge'));
+		add_action(self::CRON_PURGE_HOOK, array($this, 'purge'));
 		add_action('podlove_model_change', array($this, 'handle_model_change'));
 	}
 
@@ -95,12 +96,32 @@ class TemplateCache {
 
 	/**
 	 * Schedule async cache purge *now*
-	 *
-	 * Note: time parameter must be set to make the event unique. Otherwise 
-	 * WordPress will only execute one purge every 10 minutes.
 	 */
 	public function setup_purge() {
-		wp_schedule_single_event( time(), 'podlove_purge_template_cache', array('time' => time()) );
+		if (!wp_next_scheduled(self::CRON_PURGE_HOOK))
+			wp_schedule_single_event(time(), self::CRON_PURGE_HOOK);
+	}
+
+	/**
+	 * Setup cache purge in all blogs.
+	 */
+	public function setup_purge_in_all_blogs() {
+		global $wpdb;
+
+		\Podlove\for_every_podcast_blog(function() {
+			TemplateCache::get_instance()->setup_purge();
+		});
+	}
+
+	/**
+	 * Setup complete purge, depending on if we are a Multisite
+	 */
+	public function setup_global_purge() {
+		if (is_multisite()) {
+			TemplateCache::get_instance()->setup_purge_in_all_blogs();
+		} else {
+			TemplateCache::get_instance()->setup_purge();
+		}
 	}
 
 	/**

@@ -3,6 +3,7 @@ namespace Podlove\Modules\Contributors\Model;
 
 use \Podlove\Model\Base;
 use \Podlove\Model\Episode;
+use \Podlove\Model\Image;
 
 class Contributor extends Base
 {	
@@ -108,20 +109,19 @@ class Contributor extends Base
 		}
 	}
 
-	public function getAvatar($size) {
-		return '<img alt="avatar" src="' . $this->getAvatarUrl($size) . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '">';
-	}
-
-	public function getAvatarUrl($size) {
-
-		if ($this->avatar)
+	public function avatar() {
+		
+		if ($this->avatar) {
 			if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === FALSE) {
-				return $this->avatar;
+				$url = $this->avatar;
 			} else {
-				return $this->getGravatarUrl($size, $this->avatar);
+				$url = $this->getGravatarUrl(512, $this->avatar);
 			}
-		else
-			return $this->getGravatarUrl($size);
+		} else {
+			$url = $this->getGravatarUrl(512);
+		}
+
+		return new Image($url, $this->getName());
 	}
 
 	public function getContributions() {
@@ -293,6 +293,7 @@ class Contributor extends Base
 
 		$url = 'https://www.gravatar.com/avatar/';
 		$url .= md5( strtolower( trim( $email ) ) );
+		$url .= ".jpg";
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;
 	}	

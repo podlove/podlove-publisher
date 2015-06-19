@@ -45,11 +45,19 @@ class Button {
 			'title'    => $this->podcast->title,
 			'subtitle' => $this->podcast->subtitle,
 			'summary'  => $this->podcast->summary,
-			'cover'    => $this->podcast->cover_image,
+			'cover'    => $this->podcast->cover_art()->setWidth(400)->url(),
 			'feeds'    => $this->feeds()
 		];
 
 		return $this->html();
+	}
+
+	public static function get_random_string() {
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			return bin2hex(openssl_random_pseudo_bytes(7));
+		} else {
+			return dechex(mt_rand());
+		}
 	}
 
 	private function html() {
@@ -57,7 +65,7 @@ class Button {
 		if (!count($this->args['data']['feeds']))
 			return '';
 
-		$dataAccessor = 'podcastData' . bin2hex(openssl_random_pseudo_bytes(7));
+		$dataAccessor = 'podcastData' . self::get_random_string();
 
 		$dom = new \Podlove\DomDocumentFragment;
 		

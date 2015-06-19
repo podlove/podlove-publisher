@@ -26,7 +26,7 @@ class Settings {
 
 		$this->init_page_documentation(self::$pagehook);
 
-		if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_settings_handle' && stripos(filter_input(INPUT_SERVER, 'REQUEST_URI'), 'options.php') === FALSE)
+		if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_settings_handle' && !\Podlove\is_options_save_page())
 			return;
 
 		$tabs = new Tabs( __( 'Expert Settings', 'podlove' ) );

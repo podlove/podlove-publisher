@@ -25,7 +25,7 @@ add_filter('posts_search', function($search, $query) {
 	$searchand = '';
 	$n = !empty($query->query_vars['exact']) ? '' : '%';
 	foreach( (array) $query->query_vars['search_terms'] as $term ) {
-		$term = esc_sql( $wpdb->esc_like( $term ) );
+		$term = esc_sql( \Podlove\esc_like( $term ) );
 		$search .= "
 			{$searchand}
 			(

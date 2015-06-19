@@ -29,6 +29,7 @@ class Repair {
 		self::clear_repair_log();
 
 		self::clear_podlove_cache();
+		self::clear_podlove_image_cache();
 		self::flush_rewrite_rules();
 		self::remove_duplicate_episodes();
 
@@ -53,6 +54,11 @@ class Repair {
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
 		$cache->setup_purge();
 		self::add_to_repair_log(__('Podlove cache cleared', 'podlove'));
+	}
+
+	private static function clear_podlove_image_cache() {
+		\Podlove\Model\Image::flush_cache();
+		self::add_to_repair_log(__('Podlove image cache cleared', 'podlove'));
 	}
 
 	private static function flush_rewrite_rules() {
@@ -139,6 +145,10 @@ class Repair {
 					Sometimes an issue is already fixed but you still see the faulty output.
 					Clearing the cache avoids this.
 					However, if you use a third party caching plugin, you should clear that cache, too.
+				</li>
+				<li>
+					<strong>clears Podlove image cache</strong>
+					Podlove should notice automatically when an image changes and replace it after a while. If you want to enforce the refresh, this will do it.
 				</li>
 				<li>
 					<strong>flushes WordPress rewrite rules</strong>

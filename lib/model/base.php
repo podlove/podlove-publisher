@@ -453,6 +453,12 @@ abstract class Base
 		return $wpdb->prefix . self::name();
 	}
 
+	public static function table_exists() {
+		global $wpdb;
+		$sql = $wpdb->prepare("SHOW TABLES LIKE %s", \Podlove\esc_like(self::table_name()));
+		return $wpdb->get_var($sql) !== null;
+	}
+
 	/**
 	 * Model identifier.
 	 */
@@ -482,7 +488,7 @@ abstract class Base
 	    	$wpdb->query( 'ALTER TABLE ' . static::table_name() . ' AUTO_INCREMENT = 1' );  
 	}
 
-	protected static function find_one_by_sql($sql) {
+	public static function find_one_by_sql($sql) {
 		global $wpdb;
 		
 		$class = get_called_class();
@@ -502,7 +508,7 @@ abstract class Base
 		return $model;
 	}
 
-	protected static function find_all_by_sql($sql) {
+	public static function find_all_by_sql($sql) {
 		global $wpdb;
 		
 		$class = get_called_class();

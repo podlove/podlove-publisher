@@ -5,6 +5,7 @@ register_activation_hook(   PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 register_deactivation_hook( PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 register_uninstall_hook(    PLUGIN_FILE, __NAMESPACE__ . '\uninstall' );
 add_action( 'wpmu_new_blog', '\Podlove\create_new_blog', 10, 6 );
+add_action( 'delete_blog', '\Podlove\delete_blog', 10, 2 );
 
 function activate_for_current_blog() {
 	Model\Feed::build();
@@ -63,8 +64,10 @@ function activate_for_current_blog() {
 	}
 	$podcast->save();
 
+	// required for all module hooks to fire correctly
+	add_option('podlove_active_modules', []);
 	// set default modules
-	$default_modules = array( 'podlove_web_player', 'open_graph', 'asset_validation', 'logging', 'oembed', 'feed_validation', 'import_export', 'subscribe_button' );
+	$default_modules = array( 'logging', 'podlove_web_player', 'open_graph', 'asset_validation', 'oembed', 'feed_validation', 'import_export', 'subscribe_button' );
 	foreach ( $default_modules as $module ) {
 		\Podlove\Modules\Base::activate( $module );
 	}
@@ -115,13 +118,25 @@ EOT;
 function create_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 	switch_to_blog( $blog_id );
 
-	$plugin_file = "podlove/podlove.php";
+	$plugin_base_path = implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, PLUGIN_FILE), -2));
 
-	if ( is_plugin_active_for_network( $plugin_file ) ) {
+	if ( is_plugin_active_for_network( $plugin_base_path ) ) {
 		activate_for_current_blog();
 	}
 
 	restore_current_blog();
+}
+
+/**
+ * Fires before a blog is deleted.
+ *
+ * @param int  $blog_id The blog ID.
+ * @param bool $drop    True if blog's table should be dropped.
+ */
+function delete_blog($blog_id, $drop) {
+	if ($drop) {
+		uninstall_for_current_blog();
+	}
 }
 
 /**
@@ -166,7 +181,7 @@ function uninstall() {
 	
 	if ( is_multisite() ) {
 		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
-            		$current_blog = $wpdb->blogid;
+			$current_blog = $wpdb->blogid;
 			$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
 			foreach ( $blogids as $blog_id ) {
 				switch_to_blog($blog_id);
@@ -195,7 +210,8 @@ function uninstall_for_current_blog() {
 	Model\UserAgent::destroy();
 	Model\GeoArea::destroy();
 	Model\GeoAreaName::destroy();
-	Modules\Logging\LogTable::destroy();
+
+	do_action('podlove_uninstall_plugin');
 
 	// trash all episodes
 	$query = new \WP_Query([ 'post_type' => 'podcast' ]);
@@ -218,7 +234,6 @@ function uninstall_for_current_blog() {
  */
 add_action( 'init', array( '\Podlove\Custom_Guid', 'init' ) );
 add_action( 'init', array( '\Podlove\Downloads', 'init' ) );
-add_action( 'init', array( '\Podlove\FeedDiscoverability', 'init' ) );
 add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 add_action( 'init', array( '\Podlove\DuplicatePost', 'init' ) );
 add_action( 'init', array( '\Podlove\Analytics\EpisodeDownloadAverage', 'init' ) );
@@ -243,6 +258,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/flattr.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/frontend_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/http.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/images.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/import.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/jetpack.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/license.php';

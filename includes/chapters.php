@@ -100,3 +100,9 @@ add_filter('podlove_episode_data_filter', function ($filter) {
 		'chapters'  => FILTER_UNSAFE_RAW
 	]);
 });
+
+// add PSC to rss feed
+add_action('podlove_append_to_feed_entry', function($podcast, $episode, $feed, $format) {
+	$chapters = new \Podlove\Feeds\Chapters($episode);
+	$chapters->render('inline');
+}, 10, 4);

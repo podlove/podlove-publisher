@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 98 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 104 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -59,26 +59,16 @@ function maybe_run_database_migrations() {
 }
 
 function run_database_migrations() {
-	global $wpdb;
 	
 	if (!isset($_REQUEST['podlove_page']) || $_REQUEST['podlove_page'] != 'podlove_upgrade')
 		return;
 
-	$database_version = get_option('podlove_database_version');
-
-	if ($database_version >= DATABASE_VERSION)
+	if (get_option('podlove_database_version') >= DATABASE_VERSION)
 		return;
 
 	if (is_multisite()) {
 		set_time_limit(0); // may take a while, depending on network size
-		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
-		foreach ($blogids as $blog_id) {
-			switch_to_blog($blog_id);
-			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
-				migrate_for_current_blog();
-			}
-			restore_current_blog();
-		}
+		\Podlove\for_every_podcast_blog(function() { migrate_for_current_blog(); });
 	} else {
 		migrate_for_current_blog();
 	}
@@ -1132,6 +1122,37 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 98:
 			delete_transient('podlove_dashboard_stats_contributors');
+		break;
+		case 99:
+			// Activate network module for migrating users.
+			// Core modules are automatically activated for _new_ setups and
+			// whenever modules change. Since this can't be guaranteed for
+			// existing setups, it must be triggered manually.
+			\Podlove\Modules\Networks\Networks::instance()->was_activated();
+		break;
+		case 101:
+			// add patreon
+			if (\Podlove\Modules\Social\Model\Service::table_exists())
+				\Podlove\Modules\Social\RepairSocial::fix_missing_services();
+		break;
+		case 102:
+			// update logos
+			if (\Podlove\Modules\Social\Model\Service::table_exists())
+				\Podlove\Modules\Social\Social::update_existing_services();
+		break;
+		case 103:
+			$assignment = get_option('podlove_template_assignment', []);
+
+			if ($assignment['top'] && is_numeric($assignment['top']))
+				$assignment['top'] = Model\Template::find_by_id($assignment['top'])->title;
+
+			if ($assignment['bottom'] && is_numeric($assignment['bottom']))
+				$assignment['bottom'] = Model\Template::find_by_id($assignment['bottom'])->title;
+
+			update_option('podlove_template_assignment', $assignment);
+		break;
+		case 104:
+			\Podlove\unschedule_events(\Podlove\Cache\TemplateCache::CRON_PURGE_HOOK);
 		break;
 	}
 

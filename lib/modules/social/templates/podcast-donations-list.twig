@@ -2,7 +2,12 @@
 {% for service in podcast.services({category: "donation"}) %}
 	<li>
     	<a href="{{ service.profileUrl }}" title="{{ service.description }}">
-    		<img src="{{ service.logoUrl }}" width="16" height="16" /> {{ service.title }}
+			{{
+				service.image.html({
+					width: 16,
+					alt: service.title ~ " Icon"
+				}) 
+			}} {{ service.title }}
         </a>
     </li>
 {% endfor %}

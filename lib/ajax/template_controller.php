@@ -58,6 +58,9 @@ class TemplateController {
 		$template->content = $content;
 		$template->save();
 
+		if (is_network_admin())
+			\Podlove\Cache\TemplateCache::get_instance()->setup_purge_in_all_blogs();
+
 		Ajax::respond_with_json(array("success" => true));
 	}
 

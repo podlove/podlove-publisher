@@ -34,7 +34,13 @@ class Printer {
 		$this->files = $this->get_files();
 	}
 
-	public function render() {
+	/**
+	 * Render player
+	 * 
+	 * @param  string $context (optional) player context for tracking. Set to NULL for auto-detection. Default: NULL
+	 * @return string
+	 */
+	public function render($context = NULL) {
 
 		if ( count( $this->player_format_assignments ) == 0 )
 			return '';
@@ -49,7 +55,7 @@ class Printer {
 		$height = strtolower( trim( $this->get_webplayer_setting( $this->get_media_tag(), 'height' ) ) );
 
 		if ( $this->is_video ) {
-			$xml->addAttribute( 'poster', $this->episode->get_cover_art_with_fallback() );
+			$xml->addAttribute( 'poster', $this->episode->cover_art_with_fallback()->url() );
 			$xml->addAttribute( 'width', $width );
 			$xml->addAttribute( 'height', $height );
 		} else {
@@ -72,7 +78,7 @@ class Printer {
 				'file'       => $file,
 				'mime_type'  => $mime,
 				'url'        => $file->get_file_url(),
-				'publicUrl'  => $file->get_public_file_url("webplayer", $this->get_tracking_context()),
+				'publicUrl'  => $file->get_public_file_url("webplayer", is_null($context) ? $this->get_tracking_context() : $context),
 				'assetTitle' => $asset->title()
 			);
 		}
@@ -106,10 +112,10 @@ class Printer {
 				$flash_fallback_func = function( &$xml ) use ( $file ) {
 					$flash_fallback = $xml->addChild('object');
 					$flash_fallback->addAttribute( 'type', 'application/x-shockwave-flash' );
-					$flash_fallback->addAttribute( 'data', 'flashmediaelement.swf' );
+					$flash_fallback->addAttribute( 'data', plugins_url( 'player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf' );
 
 					$params = array(
-						array( 'name' => 'movie', 'value' => 'flashmediaelement.swf' ),
+						array( 'name' => 'movie', 'value' => plugins_url( 'player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf' ),
 						array( 'name' => 'flashvars', 'value' => 'controls=true&file=' . $file['url'] )
 					);
 
@@ -160,16 +166,16 @@ class Printer {
 			'subtitle'            => wptexturize( convert_chars( trim( $this->episode->subtitle ) ) ),
 			'summary'             => nl2br( wptexturize( convert_chars( trim( $this->episode->summary ) ) ) ),
 			'publicationDate'     => mysql2date("c", $this->post->post_date),
-			'poster'              => $this->episode->get_cover_art_with_fallback(),
+			'poster'              => $this->episode->cover_art_with_fallback()->setWidth(200)->url(),
 			'showTitle'           => $podcast->title,       /* deprecated */
 			'showSubtitle'        => $podcast->subtitle,    /* deprecated */
 			'showSummary'         => $podcast->summary,     /* deprecated */
-			'showPoster'          => $podcast->cover_image, /* deprecated */
+			'showPoster'          => $podcast->cover_art()->setWidth(200)->url(), /* deprecated */
 			'show' => array(
 				'title'    => $podcast->title,
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
-				'poster'   => $podcast->cover_image,
+				'poster'   => $podcast->cover_art()->setWidth(200)->url(),
 				'url'      => \Podlove\get_landing_page_url()
 			),
 			'license' => array(

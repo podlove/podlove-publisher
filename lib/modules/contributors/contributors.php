@@ -19,6 +19,7 @@ class Contributors extends \Podlove\Modules\Base {
 	protected $module_group = 'metadata';
 
 	public function load() {
+		add_action( 'podlove_uninstall_plugin', [$this, 'uninstall'] );
 		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
 		add_filter( 'podlove_episode_form_data', array( $this, 'contributors_form_for_episode' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
@@ -89,6 +90,15 @@ class Contributors extends \Podlove\Modules\Base {
 		add_filter('podlove_feed_contributions', array($this, 'must_match_feed_role_and_group'), 10, 2);
 
 		ContributorRepair::init();
+	}
+
+	public function uninstall() {
+		Contributor::destroy();
+		ContributorRole::destroy();
+		ContributorGroup::destroy();
+		EpisodeContribution::destroy();
+		ShowContribution::destroy();
+		DefaultContribution::destroy();
 	}
 
 	public function add_to_admin_bar_podcast($wp_admin_bar, $podcast)
@@ -294,6 +304,16 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	public function dashboard_gender_statistics_widget($post) {
+
+		if (EpisodeContribution::count() === 0) {
+			?>
+			<p>
+				<?php echo __('Gender statistics will be available once you start assigning contributors to episodes.', 'podlove') ?>
+			</p>
+			<?php
+			return;
+		}
+
 		$gender_distribution = $this->fetch_contributors_for_dashboard_statistics();
 		?>
 		<div class="podlove_gender_widget_column">
@@ -327,6 +347,10 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	private static function get_percentage($value, $relative_to) {
+
+		if ($relative_to === 0)
+			return "—";
+
 		return round($value / $relative_to * 100);
 	}
 
@@ -376,9 +400,11 @@ class Contributors extends \Podlove\Modules\Base {
 			switch_to_blog( $podcast );
 			if ( \Podlove\Modules\Base::is_active('contributors') ) {
 				$global_gender_numbers = $this->fetch_contributors_for_dashboard_statistics();
-				foreach ( $global_gender_numbers['global']['by_gender'] as $gender => $number_of_contributions ) {
-				 	$relative_gender_numbers[$gender] += $number_of_contributions / $global_gender_numbers['global']['total'] * 100;
-				 }
+				if ($global_gender_numbers['global']['total'] > 0) {
+					foreach ( $global_gender_numbers['global']['by_gender'] as $gender => $number_of_contributions ) {
+						 $relative_gender_numbers[$gender] += $number_of_contributions / $global_gender_numbers['global']['total'] * 100;
+					}
+				}
 				$podcasts_with_contributors_active++;
 			}
 			restore_current_blog();
@@ -753,7 +779,7 @@ class Contributors extends \Podlove\Modules\Base {
 					'role' => '',
 					'group' => '',
 					'realname' => $contributor->realname,
-					'avatar' => $contributor->getAvatar("35px")
+					'avatar' => $contributor->avatar()->setWidth(45)->image()
 				);
 			} else {
 				foreach($show_contributions as $show_contribution) {
@@ -767,7 +793,7 @@ class Contributors extends \Podlove\Modules\Base {
 						'role' => $role,
 						'group' => $group,
 						'realname' => $contributor->realname,
-						'avatar' => $contributor->getAvatar("35px")
+						'avatar' => $contributor->avatar()->setWidth(45)->image()
 					);
 				}
 			} 
@@ -817,7 +843,7 @@ class Contributors extends \Podlove\Modules\Base {
 						<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
 						<option value="create"><?php echo __('Add New Contributor', 'podlove') ?></option>
 						<?php foreach ( \Podlove\Modules\Contributors\Model\Contributor::all() as $contributor ): ?>
-							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->getAvatarUrl("10px") ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
+							<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url() ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
 						<?php endforeach; ?>
 					</select>
 					<a class="clickable podlove-icon-edit podlove-contributor-edit" href="<?php echo site_url(); ?>/wp-admin/edit.php?post_type=podcast&amp;page=podlove_contributors_settings_handle&amp;action=edit&contributor={{contributor-id}}"></a>

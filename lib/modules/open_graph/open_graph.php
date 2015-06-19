@@ -65,11 +65,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 				return;
 
 			$podcast = Model\Podcast::get();
-
-			// determine image
-			$cover_art_url = $episode->get_cover_art();
-			if ( ! $cover_art_url )
-				$cover_art_url = $podcast->cover_image;
+			$cover_art_url = $episode->cover_art_with_fallback()->url();
 
 			// determine featured image (thumbnail)
 			$thumbnail = NULL;

@@ -31,6 +31,15 @@ function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
     return substr($str, $start, $length);
 }
 
+/**
+ * Duplicate of $wpdb::esc_like
+ * 
+ * Can be replaced once we bump WordPress version dependency to 4.0+
+ */
+function esc_like( $text ) {
+	return addcslashes( $text, '_%\\' );
+}
+
 function format_bytes( $size, $decimals = 2 ) {
     $units = array( ' B', ' KB', ' MB', ' GB', ' TB' );
     for ( $i = 0; $size >= 1024 && $i < 4; $i++ ) $size /= 1024;
@@ -86,6 +95,18 @@ function get_setting( $namespace, $name ) {
 
 function save_setting( $namespace, $name, $values ) {
 	update_option( 'podlove_' . $namespace, array( $name => $values ) );
+}
+
+/**
+ * Are we on the WordPress Settings API save page?
+ * 
+ * @return boolean
+ */
+function is_options_save_page() {
+	$self    = filter_input(INPUT_SERVER, 'PHP_SELF');
+	$request = filter_input(INPUT_SERVER, 'REQUEST_URI');
+
+	return stripos($self, 'options.php') !== FALSE || stripos($request, 'options.php') !== FALSE;
 }
 
 /**
