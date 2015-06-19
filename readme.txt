@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.2.4 =
+
+* fix: erratically missing chapter information in RSS feeds
+
 = 2.2.3 =
 
 * fix: web player image fallback to podcast image when an episode image asset is defined but unused
