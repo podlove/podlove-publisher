@@ -30,6 +30,25 @@ PODLOVE.trailingslashit = function (url) {
 	return PODLOVE.untrailingslashit(url) + '/';
 }
 
+PODLOVE.toDurationFormat = function (float_seconds) {
+	var sec_num = parseInt(float_seconds, 10);
+	var hours   = Math.floor(sec_num / 3600);
+	var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+	var seconds = sec_num - (hours * 3600) - (minutes * 60);
+	var milliseconds = Math.round((float_seconds % 1) * 1000);
+
+	if (hours   < 10) {hours   = "0"+hours;}
+	if (minutes < 10) {minutes = "0"+minutes;}
+	if (seconds < 10) {seconds = "0"+seconds;}
+	var time = hours+':'+minutes+':'+seconds;
+
+	if (milliseconds) {
+		time += '.' + milliseconds;
+	};
+
+	return time;
+}
+
 function human_readable_size(size) {
 	if (!size || size < 1) {
 		return "???";

@@ -133,10 +133,12 @@ table.podlove_alternating td {
 table.podlove_alternating tr:nth-child(even) {
 	background: #EAEAEA;
 }
-#update_all_media_files {
+#update_all_media_files,
+#podlove_detect_duration,
+#podlove_detect_duration_status {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 15px 0 6px 0;
+	margin: 15px 0 6px 0;
 }
 .base_url {
 	color: #777;
