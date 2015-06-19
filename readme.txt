@@ -126,6 +126,8 @@ See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
 * Users with role "author" and higher now have access to the Podlove Dashboard and Analytics. They only have access to dashboard sections that make sense for authors, so they won't see logging, feed or asset validation.
 * Contributors can now be edited in _Contributor Settings_ (instead of _Episodes > Contributors_)
 
+* fix: "Allow to skip feed redirects" setting was sometimes ignored
+
 = 2.2.3 =
 
 * fix: web player image fallback to podcast image when an episode image asset is defined but unused

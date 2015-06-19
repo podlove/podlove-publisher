@@ -8,9 +8,11 @@ function handle_feed_proxy_redirects() {
 		return;
 
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$is_debug_view = false;
 
 	if (\Podlove\get_setting('website', 'feeds_skip_redirect') == 'on' && filter_input(INPUT_GET, 'redirect') == 'no') {
 		$should_redirect = false;
+		$is_debug_view = true;
 	} elseif (preg_match("/feedburner|feedsqueezer|feedvalidator|feedpress/i", filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'))) {
 		$should_redirect = false;
 	} else {
@@ -26,7 +28,7 @@ function handle_feed_proxy_redirects() {
 	 * Before we redirect to a proxy or deliver the feed, ensure that the canonical
 	 * feed URL was accessed.
 	 */
-	if (get_option('permalink_structure') != '') {
+	if (!$is_debug_view && get_option('permalink_structure') != '') {
 		$feed_url = $feed->get_subscribe_url();
 		if (
 			!\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
