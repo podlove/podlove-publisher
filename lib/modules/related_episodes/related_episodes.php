@@ -51,10 +51,10 @@ class Related_Episodes extends \Podlove\Modules\Base {
 				'type' => 'callback',
 				'key'  => 'episode_relation_form_table',
 				'options' => array(
-					'label'    => __( 'Episode Relations', 'podlove' ),
+					'label'    => __( 'Related Episodes', 'podlove' ),
 					'callback' => array($this, 'episode_relation_form_callback')
 				),
-				'position' => 900
+				'position' => 870
 			);
 
 			return $form_data;
@@ -77,7 +77,7 @@ class Related_Episodes extends \Podlove\Modules\Base {
 				<table class="podlove_alternating" border="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th><?php _e('Related Episode', 'podlove'); ?></th>
+							<th><?php _e('Episode', 'podlove'); ?></th>
 							<th><?php _e('Remove', 'podlove'); ?></th>
 						</tr>
 					</thead>
@@ -94,7 +94,7 @@ class Related_Episodes extends \Podlove\Modules\Base {
 			</div>
 
 			<script type="text/template" id="episode-relation-row-template">
-			<tr class="media_file_row podlove-episode-relation-table">
+			<tr class="podlove-episode-relation-table">
 				<td>
 					<select name="<?php echo $form_base_name ?>[related_episodes][{{id}}]" id="<?php echo $form_base_name ?>_related_episodes_{{id}}"  class="chosen-related-episodes podlove_episode_relation_episodes_dropdown">
 					<?php foreach ($existing_episodes as $episode_id => $episode_title) : ?>

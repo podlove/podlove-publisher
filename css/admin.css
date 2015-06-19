@@ -181,7 +181,8 @@ table.podlove_alternating tr:nth-child(even) {
 	height: 40px !important;
 }
 
-span.contributor_remove {
+span.contributor_remove,
+span.episode_relation_remove {
 	font-size: 1.6em;
 }	
 
