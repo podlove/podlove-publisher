@@ -1,0 +1,7 @@
+<ul>
+{% for related_episode in episode.relatedEpisodes %}
+	<li>
+		<a href="{{ related_episode.url }}">{{ related_episode.title }}</a>
+	</li>
+{% endfor %}
+</ul>

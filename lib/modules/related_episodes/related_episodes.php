@@ -8,7 +8,7 @@ use Podlove\Modules\RelatedEpisodes\TemplateExtensions;
 class Related_Episodes extends \Podlove\Modules\Base {
 
 		protected $module_name = 'Related Episodes';
-		protected $module_description = 'Create related pairs of episodes.';
+		protected $module_description = 'Create related pairs of episodes. Display with shortcode <code>[podlove-related-episodes]</code>';
 		protected $module_group = 'metadata';
 
 		public function load() {
@@ -21,6 +21,13 @@ class Related_Episodes extends \Podlove\Modules\Base {
 			\Podlove\Template\Episode::add_accessor(
 				'relatedEpisodes', array('\Podlove\Modules\RelatedEpisodes\TemplateExtensions', 'accessorRelatedEpisodes'), 5
 			);
+
+			add_filter('podlove_twig_file_loader', function($file_loader) {
+				$file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'related_episodes', 'templates']), 'related-episodes');
+				return $file_loader;
+			});
+
+			Shortcodes::init();
 		}
 
 		public function was_activated( $module_name ) {
