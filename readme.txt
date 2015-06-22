@@ -128,6 +128,11 @@ See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
 
 * fix: "Allow to skip feed redirects" setting was sometimes ignored
 
+
+= 2.2.4 =
+
+* fix: erratically missing chapter information in RSS feeds
+
 = 2.2.3 =
 
 * fix: web player image fallback to podcast image when an episode image asset is defined but unused

@@ -554,4 +554,14 @@ abstract class Base
 		
 		return $models;
 	}
+
+	public function to_array() {
+		return array_combine(
+			static::property_names(),
+			array_map( function($property) {
+				return $this->$property;
+			}, static::property_names()
+			)
+		);
+	}
 }
