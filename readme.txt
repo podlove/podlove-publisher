@@ -119,19 +119,22 @@ See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
 * If you are using the Flattr module, we write Flattr payment information into podcast feeds. This way you don't need to rely on the official Flattr plugin to do this. You can probably deactivate it if you were using it since we provide the main functionality within the Publisher now.
 * We recently changed the default `flattr` parameter in shortcodes. Now there's a setting in Flattr Podcast Settings where you can define the default parameter for contributor shortcodes.
 
+**New Module: Related Episodes**
+
+You can now express that episodes are related to each other. You can list all related episodes using the new shortcode `[podlove-related-episodes]` or using the template accessor `episode.relatedEpisodes`.
+
 **Other**
 
 * Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.
 * News from podlove.org are displayed in the Podlove Dashboard
 * Users with role "author" and higher now have access to the Podlove Dashboard and Analytics. They only have access to dashboard sections that make sense for authors, so they won't see logging, feed or asset validation.
 * Contributors can now be edited in _Contributor Settings_ (instead of _Episodes > Contributors_)
-
-* fix: "Allow to skip feed redirects" setting was sometimes ignored
-
+* Add functionality to automatically determine the duration for episodes. This is especially useful for people who don't use Auphonic, which already determines the duration automatically.
 
 = 2.2.4 =
 
 * fix: erratically missing chapter information in RSS feeds
+* fix: "Allow to skip feed redirects" setting was sometimes ignored
 
 = 2.2.3 =
 
