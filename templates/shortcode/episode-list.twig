@@ -9,7 +9,7 @@
     {% for episode in podcast.episodes %}
         <tr class="podcast_archive_element">
             <td class="thumbnail">
-                <img src="{{ episode.imageUrlWithFallback }}" width="64" height="64">
+                {{ episode.image({fallback: true}).html({width: 64, height: 64}) }}
             </td>
             <td class="date">
                 <span class="release_date">
