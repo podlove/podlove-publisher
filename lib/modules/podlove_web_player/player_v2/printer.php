@@ -1,5 +1,5 @@
 <?php 
-namespace Podlove\Modules\PodloveWebPlayer;
+namespace Podlove\Modules\PodloveWebPlayer\PlayerV2;
 
 use Podlove\Model;
 use Podlove\Model\Episode;
@@ -10,7 +10,7 @@ use Podlove\Model\MediaFile;
 /**
  * Print HTML & stuff required for Podlove Web Player
  */
-class Printer {
+class Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
 	// unique player id
 	private $html_id;

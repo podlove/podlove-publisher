@@ -54,6 +54,8 @@ function podlove_autoloader( $class_name ) {
 			return true;
 		}
 	}
+
+	error_log(print_r($possibilities, true));
 	
 	return false;
 }

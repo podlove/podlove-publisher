@@ -1,5 +1,5 @@
 <?php 
-namespace Podlove\Modules\PodloveWebPlayer\Playerv3;
+namespace Podlove\Modules\PodloveWebPlayer\PlayerV3;
 
 use Podlove\Model\Episode;
 use Podlove\Model\Podcast;

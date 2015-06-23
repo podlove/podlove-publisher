@@ -10,7 +10,7 @@
     <link href="<?php echo $css_path ?>/vendor/progress-polyfill.css" rel="stylesheet" media="screen" type="text/css" />
 </head>
 <body>
-    <?php echo (new \Podlove\Modules\PodloveWebPlayer\Playerv3\HTML5Printer($episode))->render(); ?>
+    <?php echo (new \Podlove\Modules\PodloveWebPlayer\PlayerV3\Html5Printer($episode))->render(); ?>
     <script src="<?php echo $js_path ?>/vendor/html5shiv.min.js"></script>
     <script src="<?php echo $js_path ?>/vendor/jquery.min.js"></script>
     <script src="<?php echo $js_path ?>/vendor/progress-polyfill.min.js"></script>

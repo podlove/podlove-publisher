@@ -1,21 +1,24 @@
 <?php 
-namespace Podlove\Modules\PodloveWebPlayer\Playerv3;
+namespace Podlove\Modules\PodloveWebPlayer\PlayerV3;
 
 use Podlove\Model\Episode;
 
-class HTML5Printer {
+class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
 	// Model\Episode
 	private $episode;
 
-	// determined player type, based on $files
-	private $is_video = true;
+	private $attributes = [];
 
 	public function __construct(Episode $episode) {
 		$this->episode = $episode;
 	}
 
-	public function render($context = NULL, $attributes = []) {
+	public function setAttributes($attributes) {
+		$this->attributes = $attributes;
+	}
+
+	public function render($context = NULL) {
 
 		$player_media_files = new PlayerMediaFiles($this->episode);
 		$media_files = $player_media_files->get($context);
@@ -25,8 +28,8 @@ class HTML5Printer {
 		$xml->addAttribute('controls', 'controls');
 		$xml->addAttribute('preload', 'none');
 
-		if (count($attributes) > 0) {
-			foreach ($attributes as $key => $value) {
+		if (count($this->attributes) > 0) {
+			foreach ($this->attributes as $key => $value) {
 				$xml->addAttribute($key, $value);
 			}
 		}
