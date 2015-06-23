@@ -10,10 +10,42 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	protected $module_group = 'web publishing';
 
 	public function load() {
+		if (defined('PODLOVE_USE_PLAYER3_BETA') && PODLOVE_USE_PLAYER3_BETA) {
+			$this->load_beta();
+		} else {
+			$this->load_legacy();
+		}
+	}
 
+	public function load_beta() {
+		// backward compatible, but only load if no other plugin has registered this shortcode
+		if (!shortcode_exists('podlove-web-player'))
+			add_shortcode('podlove-web-player', [__CLASS__, 'webplayer_shortcode_beta']);
+
+		add_shortcode('podlove-episode-web-player', [__CLASS__, 'webplayer_shortcode_beta']);
+	}
+
+	public static function webplayer_shortcode_beta() {
+		global $post;
+
+		if ( is_feed() )
+			return '';
+
+		$episode = Episode::find_or_create_by_post_id( $post->ID );
+		$printer = new Playerv3\HTML5Printer($episode);
+		return $printer->render();
+	}
+
+	public function load_legacy() {
 		add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_boxes' ) );
 		add_filter( 'the_content', array( $this, 'autoinsert_into_content' ) );
 		add_action('wp', array( $this, 'standalone_player_page' ) );
+
+		// backward compatible, but only load if no other plugin has registered this shortcode
+		if (!shortcode_exists('podlove-web-player'))
+			add_shortcode('podlove-web-player', [__CLASS__, 'webplayer_shortcode']);
+
+		add_shortcode('podlove-episode-web-player', [__CLASS__, 'webplayer_shortcode']);
 
 		if ( defined( 'PODLOVEWEBPLAYER_DIR' ) ) {
 			define( 'PODLOVE_MEDIA_PLAYER', 'external' );
@@ -23,6 +55,26 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 		}
 
 		include_once 'player/podlove-web-player/podlove-web-player.php';
+	}
+
+	/**
+	 * Provides shortcode to display web player.
+	 *
+	 * Right now there is only audio support.
+	 *
+	 * Usage:
+	 * 	[podlove-episode-web-player]
+	 * 
+	 */
+	public static function webplayer_shortcode( $options ) {
+		global $post;
+
+		if ( is_feed() )
+			return '';
+
+		$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
+		$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $episode );
+		return $printer->render();
 	}
 
 	public function standalone_player_page() {
