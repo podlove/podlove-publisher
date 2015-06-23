@@ -6,5 +6,5 @@ player:
 	mkdir -p $(player_dst)/css
 	mkdir -p $(player_dst)/js
 	cp $(player_src)/bin/flashmediaelement.swf $(player_dst)/bin
-	cp $(player_src)/css/* $(player_dst)/css
-	cp $(player_src)/js/*.min.js $(player_dst)/js
+	cp -r $(player_src)/css/* $(player_dst)/css
+	cp -r $(player_src)/js/* $(player_dst)/js

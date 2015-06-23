@@ -18,6 +18,17 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	}
 
 	public function load_beta() {
+
+		add_action('wp', [$this, 'embed_player']);
+
+		add_action('wp_enqueue_scripts', function() {
+			wp_enqueue_script(
+				'podlove-player-moderator-script',
+				plugins_url('playerv3/js/podlove-web-moderator.min.js', __FILE__),
+				[], \Podlove\get_plugin_header('Version')
+			);
+		});
+
 		// backward compatible, but only load if no other plugin has registered this shortcode
 		if (!shortcode_exists('podlove-web-player'))
 			add_shortcode('podlove-web-player', [__CLASS__, 'webplayer_shortcode_beta']);
@@ -25,15 +36,39 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'webplayer_shortcode_beta']);
 	}
 
-	public static function webplayer_shortcode_beta() {
-		global $post;
+	public function embed_player() {
+		
+		if (!filter_input(INPUT_GET, 'podloveEmbed'))
+			return;
 
-		if ( is_feed() )
+		if (!is_single())
+			return;
+
+		if (!$episode = Episode::find_or_create_by_post_id(get_the_ID()))
+			return;
+
+		$css_path = plugins_url('playerv3/css', __FILE__);
+		$js_path  = plugins_url('playerv3/js', __FILE__);
+
+		$player_config = (new Playerv3\PlayerConfig($episode))->get();
+
+		\Podlove\load_template(
+			'lib/modules/podlove_web_player/playerv3/views/embed_player', 
+			compact('episode', 'css_path', 'js_path', 'player_config')
+		);
+
+		exit;
+	}
+
+	public static function webplayer_shortcode_beta() {
+
+		if (is_feed())
 			return '';
 
-		$episode = Episode::find_or_create_by_post_id( $post->ID );
-		$printer = new Playerv3\HTML5Printer($episode);
-		return $printer->render();
+		$episode = Episode::find_or_create_by_post_id(get_the_ID());
+		return (new Playerv3\HTML5Printer($episode))->render(null, [
+			'data-podlove-web-player-source' => add_query_arg(['podloveEmbed' => true], get_permalink())
+		]) . '<script>jQuery("audio").podlovewebplayer();</script>';
 	}
 
 	public function load_legacy() {
