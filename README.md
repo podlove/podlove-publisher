@@ -21,21 +21,14 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
 
-## Release Checklist
+#### Web Player
 
-- Ensure changelog in `readme.txt` has an entry for that version
-- Update "tested with WordPress version" in `readme.txt`
-- Merge release-branch into master
-- Increase version number in `podlove.php`
-- `git add -A . && git commit -m ":shipit: release <version>"`
-- git push
-- Deploy to WordPress plugin repository
-- Post changelog to [Github Releases][8]
-- Rerun `bin/template_ref_json.php` and `bin/template_ref.rb`
-- Rebuild & Redeploy docs.podlove.org
-- Remove/cleanup published feature branches
-- Create new release branch
+To get and update the web player v3+, use bower and make:
 
+```
+bower update
+make player
+```
 
 [1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 [2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)
