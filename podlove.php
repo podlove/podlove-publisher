@@ -4,7 +4,6 @@
  * Plugin URI:  http://publisher.podlove.org
  * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
  * Version:     2.3.0
- * Version:     2.2.4
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT
