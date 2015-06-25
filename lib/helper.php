@@ -139,7 +139,8 @@ function get_webplayer_setting( $name ) {
 
 	$defaults = array(
 		'chaptersVisible' => 'false',
-		'inject'          => 'manually'
+		'inject'          => 'manually',
+		'version'         => 'player_v2'
 	);
 	
 	$settings = get_option( 'podlove_webplayer_settings', array() );

@@ -10,7 +10,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	protected $module_group = 'web publishing';
 
 	public function load() {
-		if (defined('PODLOVE_USE_PLAYER3_BETA') && PODLOVE_USE_PLAYER3_BETA) {
+		if (\Podlove\get_webplayer_setting('version') === 'player_v3') {
 			(new PlayerV3\Module)->load();
 		} else {
 			(new PlayerV2\Module)->load();
@@ -18,7 +18,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	}
 
 	public static function get_player_printer(Episode $episode) {
-		if (defined('PODLOVE_USE_PLAYER3_BETA') && PODLOVE_USE_PLAYER3_BETA) {
+		if (\Podlove\get_webplayer_setting('version') === 'player_v3') {
 			$printer = new PlayerV3\Html5Printer($episode);
 			$printer->setAttributes(['data-podlove-web-player-source' => add_query_arg(['podloveEmbed' => true], get_permalink())]);
 			return $printer;
