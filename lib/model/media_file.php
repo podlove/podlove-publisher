@@ -232,8 +232,15 @@ class MediaFile extends Base {
 		// do not change the filesize if http_code = 0
 		// aka "an error occured I don't know how to deal with" (probably timeout)
 		// => change to proper handling once "Conflicts" are introduced
-		if ( podlove_is_resolved_and_reachable_http_status($http_code) && $http_code !== 304 )
-			$this->size = $header['download_content_length'];
+		if ( podlove_is_resolved_and_reachable_http_status($http_code) && $http_code !== 304 ) {
+			if (isset($header['download_content_length']) && $header['download_content_length'] > 0) {
+				$this->size = $header['download_content_length'];
+			} else {
+				// We know that the file exists but have no way of determining its size.
+				// Having a proper state would be nice, but this "size = 1 byte" hack works for now.
+				$this->size = 1;
+			}
+		}
 
 		if ( $this->size <= 0 )
 			$this->etag = NULL;
@@ -296,8 +303,13 @@ class MediaFile extends Base {
 			return;
 		}
 
-		// check if content length has changed
-		if ( $header['download_content_length'] != $this->size ) {
+		// check that content length exists and hasn't changed
+		if ( !isset($header['download_content_length']) || $header['download_content_length'] <= 0) {
+			Log::get()->addWarning(
+				'Unable to read "Content-Length" header. Impossible to determine file size.',
+				array( 'media_file_id' => $this->id, 'mime_type' => $header['content_type'], 'expected_mime_type' => $mime_type )
+			);
+		} elseif ( $header['download_content_length'] != $this->size ) {
 			Log::get()->addInfo(
 				'Change of media file content length detected.',
 				array( 'media_file_id' => $this->id, 'old_size' => $this->size, 'new_size' => $header['download_content_length'] )

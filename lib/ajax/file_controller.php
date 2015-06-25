@@ -31,7 +31,7 @@ class FileController {
 		$result['file_url']  = $file->get_file_url();
 		$result['file_id']   = $file_id;
 		$result['reachable'] = podlove_is_resolved_and_reachable_http_status( $info['http_code'] );
-		$result['file_size'] = ( $info['http_code'] == 304 ) ? $file->size : $info['download_content_length'];
+		$result['file_size'] = $file->size;
 
 		if ( ! $result['reachable'] ) {
 			$info['certinfo'] = print_r($info['certinfo'], true);
