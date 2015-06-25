@@ -263,6 +263,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/jetpack.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/license.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/merge_episodes.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/modules.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/no_enclosure_autodiscovery.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/permalinks.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/recording_date.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/redirects.php';
