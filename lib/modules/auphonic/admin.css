@@ -120,6 +120,10 @@ legend {
 	cursor: pointer;
 }
 
+#auphonic_complete_after_finishing {
+	margin-left: 5px;
+}
+
 #auphonic-credits-status {
 	float: right;
 	bottom: 20px;
