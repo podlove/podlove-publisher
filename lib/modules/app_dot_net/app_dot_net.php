@@ -175,14 +175,14 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						if ( ! $user )
 							return;
 
-						$podcast = Model\Podcast::get_instance();
+						$podcast = Model\Podcast::get();
 						if ( $episode = Model\Episode::find_one_by_where('slug IS NOT NULL') ) {
 							$example_data = array(
 								'episode'      => get_the_title( $episode->post_id ),
 								'episode-link' => get_permalink( $episode->post_id ),
 								'subtitle'     => $episode->subtitle,
-								'episode-image'=> $episode->get_cover_art(),
-								'podcast-image'=> $podcast->cover_image,
+								'episode-image'=> $episode->cover_art() ? $episode->cover_art()->url() : '',
+								'podcast-image'=> $podcast->cover_art()->url(),
 								'contributors' => ''
 							);
 							$example_data = apply_filters( 'podlove_adn_example_data', $example_data, $episode->post_id, $selected_role, $selected_group );
@@ -241,7 +241,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 						?>
 							<select id="adn_manual_post_episode_selector" class="chosen">
 								<?php
-								$episodes = Model\Episode::allByTime();
+								$episodes = Model\Episode::find_all_by_time();
 								foreach ( $episodes as $episode ) {
 									$post = get_post( $episode->post_id );
 									echo "<option value='" . $episode->post_id . "'>" . $post->post_title . "</option>";
@@ -401,7 +401,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 		$text = $this->get_module_option('adn_poster_announcement_text');
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$post = get_post( $post_id );
 		$post_title = $post->post_title;
 		
@@ -413,8 +413,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	 	$posted_linked_title = array();
 		$start_position = 0;
 
-		while ( ($position = \Podlove\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
-			$length = \Podlove\strlen( $post_title, "UTF-8" );
+		while ( ($position = \Podlove\PHP\strpos( $text, "{linkedEpisodeTitle}", $start_position, "UTF-8" )) !== FALSE ) {
+			$length = \Podlove\PHP\strlen( $post_title, "UTF-8" );
 			$episode_entry = array(
 				"url"  => get_permalink( $post_id ), 
 				"text" => $post_title, 
@@ -453,8 +453,8 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 	private function get_text_for_episode($post_id) {
 		$post = $this->replace_tags( $post_id );
 
-		if ( \Podlove\strlen( $post['text'] ) > 256 )
-			$post['text'] = \Podlove\substr( $post['text'], 0, 255 ) . "…";
+		if ( \Podlove\PHP\strlen( $post['text'] ) > 256 )
+			$post['text'] = \Podlove\PHP\substr( $post['text'], 0, 255 ) . "…";
 
 		return array(
 			'text' => $post['text'],
@@ -493,9 +493,9 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 
 		if ($this->get_module_option('adn_poster_image_fallback') == 'on' ) {
-			$cover = $episode->get_cover_art_with_fallback();
+			$cover = $episode->cover_art_with_fallback()->url();
 		} else {
-			$cover = $episode->get_cover_art();
+			$cover = $episode->cover_art()->url();
 		}
 
 		if ( empty( $cover ) )
@@ -566,6 +566,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			"nl" => "Dutch",
 			"en" => "English",
 			"en_GB" => "English, British",
+			"eo" => "Esperanto",
 			"et" => "Estonian",
 			"fi" => "Finnish",
 			"fr" => "French",
@@ -585,6 +586,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 			"kk" => "Kazakh",
 			"km" => "Khmer",
 			"ko" => "Korean",
+			"lb" => "Luxembourgish",
 			"lv" => "Latvian",
 			"lt" => "Lithuanian",
 			"mk" => "Macedonian",

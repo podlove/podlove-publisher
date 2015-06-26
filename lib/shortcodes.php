@@ -33,104 +33,15 @@ function episode_downloads_shortcode( $options ) {
 add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcode' );
 
 /**
- * Provides shortcode to display web player.
- *
- * Right now there is only audio support.
- *
- * Usage:
- * 	[podlove-web-player]
- *
- * @deprecated since 1.10.0 use {{ episode.player }} instead
- * @param  array $options
- * @return string
- */
-function webplayer_shortcode( $options ) {
-	global $post;
-
-	if ( is_feed() )
-		return '';
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $episode );
-	return $printer->render();
-}
-add_shortcode( 'podlove-web-player', '\Podlove\webplayer_shortcode' );
-
-/**
- * @deprecated since 1.2.18-alpha
- */
-$podlove_public_episode_attributes = array( 'subtitle', 'summary', 'slug', 'duration', 'chapters' );
-foreach ( $podlove_public_episode_attributes as $attr ) {
-	add_shortcode( 'podlove-episode-' . $attr, function() use ( $attr ) {
-		global $post;
-		return nl2br( Model\Episode::find_or_create_by_post_id( $post->ID )->$attr );
-	} );
-}
-
-/**
- * @deprecated since 1.10.0, use {{ episode.<attribute> }} instead
- */
-function episode_data_shortcode( $attributes ) {
-	global $post;
-
-	$defaults = array(
-		'field' => '',
-		'format' => 'HH:MM:SS',
-		'date_format' => get_option( 'date_format' ) . ' ' . get_option( 'time_format' )
-	);
-	$attributes = shortcode_atts( $defaults, $attributes );
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	if ( ! $episode )
-		return;
-
-	$allowed_fields = array( 'subtitle', 'summary', 'slug', 'chapters' );
-
-	if ( in_array( $attributes['field'], $allowed_fields ) ) {
-		return nl2br( $episode->$attributes['field'] );
-	} elseif ( $attributes['field'] == 'image' ) {
-		return $episode->get_cover_art();
-	} elseif ( $attributes['field'] == 'duration' ) {
-		return $episode->get_duration( $attributes['format'] );
-	} elseif ( $attributes['field'] == 'title' ) {
-		return get_the_title( $episode->post_id );
-	} elseif ( stristr( $attributes['field'], '_date' ) !== false ) {
-		return date( $attributes['date_format'], strtotime( $episode->$attributes['field'] ) );
-	} else {
-		return sprintf( __( 'Podlove Error: Unknown episode field "%s"', 'podcast' ), $attributes['field'] );
-	}
-}
-add_shortcode( 'podlove-episode', '\Podlove\episode_data_shortcode' );
-
-/**
- * @deprecated since 1.10.0, use {{ podcast.<attribute> instead }}
- */
-function podcast_data_shortcode( $attributes ) {
-
-	$defaults = array( 'field' => '' );
-	$attributes = shortcode_atts( $defaults, $attributes );
-
-	$podcast = Model\Podcast::get_instance();
-
-	if ( $podcast->has_property( $attributes['field'] ) ) {
-		return $podcast->$attributes['field'];
-	} else {
-		return sprintf( __( 'Podlove Error: Unknown podcast field "%s"', 'podcast' ), $attributes['field'] );
-	}
-}
-add_shortcode( 'podlove-podcast', '\Podlove\podcast_data_shortcode' );
-add_shortcode( 'podlove-show', '\Podlove\podcast_data_shortcode' );
-
-/**
  * Provides shortcode to display episode template.
  *
  * Usage:
  * 	
- * 	[podlove-template id="Template Title"]
+ * 	[podlove-template template="Template Title"]
  *
  * 	Parameters:
- * 		title: (required) Title of template to render.
- * 		autop: (optional) Wraps blocks of text in p tags. 'yes' or 'no'. Default: 'yes'
+ * 		template: (required) Title of template to render.
+ * 		autop:    (optional) Wraps blocks of text in p tags. 'yes' or 'no'. Default: 'yes'
  * 	
  * @param  array $attributes
  * @return string
@@ -138,9 +49,10 @@ add_shortcode( 'podlove-show', '\Podlove\podcast_data_shortcode' );
 function template_shortcode( $attributes ) {
 
 	$defaults = array(
-		'title' => '',
-		'id' => '',
-		'autop' => false
+		'title'    => '', // deprecated
+		'id'       => '', // deprecated
+		'template' => '',
+		'autop'    => false
 	);
 
 	$attributes = array_merge( $defaults, $attributes );
@@ -148,23 +60,40 @@ function template_shortcode( $attributes ) {
 	if ( $attributes['title'] !== '' )
 		_deprecated_argument( __FUNCTION__, '1.3.14-alpha', 'The "title" attribute for [podlove-template] shortcode is deprecated. Use "id" instead.' );
 
+	if ( $attributes['id'] !== '' )
+		_deprecated_argument( __FUNCTION__, '2.1.0', 'The "id" attribute for [podlove-template] shortcode is deprecated. Use "template" instead.' );
+
 	// backward compatibility
-	$template_id = $attributes['id'] ? $attributes['id'] : $attributes['title'];
-	$permalink   = get_permalink();
+	if ($attributes['template']) {
+		$template_id = $attributes['template'];
+	} elseif ($attributes['id']) {
+		$template_id = $attributes['id'];
+	} else {
+		$template_id = $attributes['title'];
+	}
+	
+	$permalink = get_permalink();
 
 	/**
 	 * Cache key must be unique for *every permutation* of the content.
 	 * Meaning: If there are context based conditionals, the key must reflect them.
-	 * Right now, the only relevant context change is the `is_feed` state.
-	 * However, that might change. Once `is_page` etc. are available in templates, they must become part of the key!
 	 */
-	$cache_key = $template_id . $permalink . is_feed();
+	$tag_permutation = implode('', array_map(function($tag) {
+		return $tag() ? "1" : "0";
+	}, \Podlove\Template\TwigFilter::$template_tags));
+
+	/**
+	 * Cache key must change for any custom parameters.
+	 */
+	$attr_permutation = implode('', array_map(function($a) { return (string) $a; }, array_values($attributes)));
+
+	$cache_key = $template_id . $permalink . $tag_permutation . $attr_permutation;
 	$cache_key = apply_filters( 'podlove_template_shortcode_cache_key', $cache_key, $template_id );
 
 	$cache = \Podlove\Cache\TemplateCache::get_instance();
 	return $cache->cache_for($cache_key, function() use ($template_id, $attributes) {
 
-		if (!$template = Model\Template::find_one_by_title($template_id))
+		if (!$template = Model\Template::find_one_by_title_with_fallback($template_id))
 			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
 
 		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
@@ -179,29 +108,6 @@ function template_shortcode( $attributes ) {
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 
 add_filter('podlove_template_raw', array('\Podlove\Template\TwigFilter', 'apply_to_html'), 10, 2);
-
-/**
- * @deprecated since 1.10.0, use {{ episode.license }} or {{ podcast.license }} instead
- */
-function podcast_license() {
-	$podcast = Model\Podcast::get_instance();
-		return $podcast->get_license_html();
-}
-add_shortcode( 'podlove-podcast-license', '\Podlove\podcast_license' );
-
-/**
- * @deprecated since 1.10.0, use {{ episode.license }} or {{ podcast.license }} instead
- */
-function episode_license() {
-	global $post;
-
-	if ( is_feed() )
-		return '';
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	return $episode->get_license_html();
-}
-add_shortcode( 'podlove-episode-license', '\Podlove\episode_license' );
 
 function feed_list() {
 	return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/feed-list.twig');

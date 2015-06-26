@@ -7,7 +7,7 @@ use Podlove\DomDocumentFragment;
 class Twitter_Summary_Card extends \Podlove\Modules\Base {
 
 		protected $module_name = 'Twitter Card Integration';
-		protected $module_description = 'Adds Twitter summary card metadata to episodes. <a href="https://dev.twitter.com/form/participate-twitter-cards" target="_blank">Right now, you need to apply here to make it work.</a>';
+		protected $module_description = 'Adds Twitter summary card metadata to episodes. <a href="https://cards-dev.twitter.com/validator" target="_blank">Right now, you need to validate and whitelist your site to make it work.</a>';
 		protected $module_group = 'web publishing';
 
 		public function load() {
@@ -54,12 +54,8 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 			if ( ! $episode )
 				return;
 
-			$podcast = Model\Podcast::get_instance();
-
-			// determine image
-			$cover_art_url = $episode->get_cover_art();
-			if ( ! $cover_art_url )
-				$cover_art_url = $podcast->cover_image;
+			$podcast = Model\Podcast::get();
+			$cover_art_url = $episode->cover_art_with_fallback()->url();
 
 			// define meta tags
 			$data = array(

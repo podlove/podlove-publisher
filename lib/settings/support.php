@@ -4,6 +4,8 @@ use \Podlove\Model;
 
 class Support {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -16,6 +18,8 @@ class Support {
 			/* $menu_slug  */ 'podlove_Support_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
 	}
 
 	public function page() {
@@ -24,35 +28,55 @@ class Support {
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Support', 'podlove' ); ?></h2>
 
-			<h3><?php echo __('Get in Touch', 'podlove') ?></h3>
-
-			<p>
-				<?php echo __('For quick remarks, feedback and questions, you can reach us here:', 'podlove') ?>
-				<ul class="ul-disc">
-					<li><strong>Twitter:</strong> <a target="_blank" href="https://twitter.com/podlove_org">@podlove_org</a></li>
-					<li><strong>ADN:</strong> <a target="_blank" href="https://alpha.app.net/podlove">@podlove</a></li>
-				</ul>
-			</p>
-
-			<?php do_action('podlove_support_repair_html'); ?>
+			<div class="notice" style="margin: 3%">
+				<p style="float: right">
+					<a href="//publisher.podlove.org/support/" target="_blank" class="button button-primary"><?php echo __('Get Support', 'podlove') ?></a>
+				</p>
+				<h2><?php echo __('Get Professional Support', 'podlove') ?></h2>
+				<p>
+					<?php echo sprintf(
+						__('If you need quick, private and competent support, get it at %spublisher.podlove.org/support%s.', 'podlove'),
+						'<a href="//publisher.podlove.org/support/" target="_blank">', '</a>'
+					); ?>
+				</p>
+				<p>
+					<?php echo __('We are happy to help getting you up and running during setup or answering questions that come up once in a while.', 'podlove') ?>
+				</p>
+			</div>
 
 			<h3><?php echo __('Bug Reports, Feature Requests & Help', 'podlove') ?></h3>
 
 			<p>
-				<?php
-				echo sprintf(
-					__('The best way to reach us is via %sGitHub Issues%s. Feel free to join in on discussions or create new topics.', 'podlove'),
-					'<a href="https://github.com/podlove/podlove-publisher/issues" target="_blank">',
-					'</a>'
-				);
-				?>
+				<ul>
+					<li>
+						<?php echo sprintf(
+							__('Please report bugs at %sGitHub Issues%s.', 'podlove'),
+							'<a href="https://github.com/podlove/podlove-publisher/issues" target="_blank">', '</a>'
+						); ?>
+					</li>
+					<li>
+						<?php echo sprintf(
+							__('%sPodlove Community%s is the best place to find answers, ask the community for help and discuss features.', 'podlove'),
+							'<a target="_blank" href="//community.podlove.org">', '</a>'
+						); ?>
+					</li>
+					<li>
+						<?php echo sprintf(
+							__('%sTrello%s shows our roadmap.', 'podlove'),
+							'<a target="_blank" href="//trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">', '</a>'
+						); ?>
+					</li>
+					<li>
+						<?php echo sprintf(
+							__('For quick remarks and feedback, you can reach us at %sTwitter (@podlove_org)%s and %sADN (@podlove)%s', 'podlove'),
+							'<a target="_blank" href="//twitter.com/podlove_org">', '</a>',
+							'<a target="_blank" href="https://alpha.app.net/podlove">', '</a>'
+						); ?>
+					</li>
+				</ul>
 			</p>
 
-			<p>
-				<a target="_blank" href="https://github.com/podlove/podlove-publisher/issues" class="button button-primary">
-					<?php echo __( 'Go to GitHub', 'podlove' ) ?>
-				</a>
-			</p>
+			<?php do_action('podlove_support_repair_html'); ?>
 
 			<p>
 				<?php echo __( 'When reporting a bug, please append the following system report to help us trace the root cause:', 'podlove' ) ?>

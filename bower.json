@@ -1,0 +1,16 @@
+{
+  "name": "podlove-publisher",
+  "version": "2.0.4",
+  "homepage": "https://github.com/podlove/podlove-publisher",
+  "authors": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "podlove-web-player": "~v3.0.0"
+  }
+}

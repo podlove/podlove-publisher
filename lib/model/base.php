@@ -129,124 +129,56 @@ abstract class Base
 	public static function count() {
 		global $wpdb;
 		
-		$sql = 'SELECT COUNT(*) FROM ' . self::table_name();
+		$sql = 'SELECT COUNT(*) FROM ' . static::table_name();
 		return (int) $wpdb->get_var( $sql );
 	}
 
-	public static function find_by_id( $id ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' WHERE id = ' . (int) $id );
-		
-		if ( ! $row ) {
-			return NULL;
+	public static function find_by_id($id) {
+
+		$value = wp_cache_get(static::cache_key($id), 'podlove-model');
+
+		if ($value === false) {
+			$value = self::find_one_by_sql(
+				'SELECT * FROM ' . static::table_name() . ' WHERE id = ' . (int) $id
+			);
+			wp_cache_set(static::cache_key($id), $value, 'podlove-model');
 		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
+
+		return $value;
+	}
+
+	/**
+	 * Get unique cache key for data row.
+	 * 
+	 * @param  int $id object id
+	 * @return string  cache key
+	 */
+	public static function cache_key($id) {
+		return 'podlove_' . static::table_name() . '_id' . $id;
 	}
 
 	public static function find_all_by_property( $property, $value ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$models = array();
-		
-		$rows = $wpdb->get_results(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\''
+		return self::find_all_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\''
 		);
-		
-		if ( ! $rows ) {
-			return array();
-		}
-		
-		foreach ( $rows as $row ) {
-			$model = new $class();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$models[] = $model;
-		}
-		
-		return $models;
 	}
 
 	public static function find_one_by_property( $property, $value ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $property .  ' = \'' . $value . '\' LIMIT 0,1'
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $property .  ' = \'' . esc_sql($value) . '\' LIMIT 0,1'
 		);
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
 	}
 
 	public static function find_all_by_where( $where ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$models = array();
-		
-		$rows = $wpdb->get_results(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where
+		return self::find_all_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $where
 		);
-		
-		if ( ! $rows ) {
-			return array();
-		}
-		
-		foreach ( $rows as $row ) {
-			$model = new $class();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$models[] = $model;
-		}
-		
-		return $models;
 	}
 	
 	public static function find_one_by_where( $where ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row(
-			'SELECT * FROM ' . self::table_name() . ' WHERE ' . $where . ' LIMIT 0,1'
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' WHERE ' . $where . ' LIMIT 0,1'
 		);
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-		
-		return $model;
 	}
 
 	// mimic ::find_one_by_<property>
@@ -282,43 +214,15 @@ abstract class Base
 	 * @return model object
 	 */
 	public static function first() {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' LIMIT 0,1' );
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-
-		return $model;
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' LIMIT 0,1'
+		);
 	}
 	
 	public static function last() {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$model = new $class();
-		$model->flag_as_not_new();
-		
-		$row = $wpdb->get_row( 'SELECT * FROM ' . self::table_name() . ' ORDER BY id DESC LIMIT 0,1' );
-		
-		if ( ! $row ) {
-			return NULL;
-		}
-		
-		foreach ( $row as $property => $value ) {
-			$model->$property = $value;
-		}
-
-		return $model;
+		return self::find_one_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' ORDER BY id DESC LIMIT 0,1'
+		);
 	}
 
 	/**
@@ -328,22 +232,9 @@ abstract class Base
 	 * @return array list of model objects
 	 */
 	public static function all( $sql_suffix = '' ) {
-		global $wpdb;
-		
-		$class = get_called_class();
-		$models = array();
-		
-		$rows = $wpdb->get_results( 'SELECT * FROM ' . self::table_name() . ' ' . $sql_suffix );
-		foreach ( $rows as $row ) {
-			$model = new $class();
-			$model->flag_as_not_new();
-			foreach ( $row as $property => $value ) {
-				$model->$property = $value;
-			}
-			$models[] = $model;
-		}
-		
-		return $models;
+		return self::find_all_by_sql(
+			'SELECT * FROM ' . static::table_name() . ' ' . $sql_suffix
+		);
 	}
 	
 	/**
@@ -383,14 +274,6 @@ abstract class Base
 			}
 		}
 
-		// @todo this is the wrong place to do this!
-		// The feed password is the only "passphrase" which is saved. It is not encrypted!
-		// However, we keep this function for later use
-		if ( isset( $_REQUEST['passwords'] ) && is_array( $_REQUEST['passwords'] ) ) {
-			foreach ( $_REQUEST['passwords'] as $password ) {
-				$this->$password = $attributes[ $password ];
-			}
-		}
 		return $this->save();
 	}
 
@@ -408,11 +291,13 @@ abstract class Base
 
 		$sql = sprintf(
 			"UPDATE %s SET %s = '%s' WHERE id = %s",
-			self::table_name(),
+			static::table_name(),
 			$attribute,
 			$value,
 			$this->id
 		);
+
+		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
 
 		return $wpdb->query( $sql );
 	}
@@ -430,7 +315,7 @@ abstract class Base
 			$this->set_defaults();
 
 			$sql = 'INSERT INTO '
-			     . self::table_name()
+			     . static::table_name()
 			     . ' ( '
 			     . implode( ',', self::property_names() )
 			     . ' ) '
@@ -444,13 +329,15 @@ abstract class Base
 				$this->id = $wpdb->insert_id;
 			}
 		} else {
-			$sql = 'UPDATE ' . self::table_name()
+			$sql = 'UPDATE ' . static::table_name()
 			     . ' SET '
 			     . implode( ',', array_map( array( $this, 'property_name_to_sql_update_statement' ), self::property_names() ) )
 			     . ' WHERE id = ' . $this->id
 			;
 			$success = $wpdb->query( $sql );
 		}
+
+		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
 
 		$this->is_new = false;
 
@@ -493,8 +380,10 @@ abstract class Base
 	public function delete() {
 		global $wpdb;
 		
+	    wp_cache_delete(static::cache_key($this->id), 'podlove-model');
+
 		$sql = 'DELETE FROM '
-		     . self::table_name()
+		     . static::table_name()
 		     . ' WHERE id = ' . $this->id;
 
 		$rows_affected = $wpdb->query( $sql );
@@ -509,7 +398,7 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "%s = '%s'", $p, $this->$p );
+			return sprintf( "%s = '%s'", $p, esc_sql($this->$p) );
 		} else {
 			return "$p = NULL";
 		}
@@ -539,7 +428,7 @@ abstract class Base
 			$property_sql[] = "`{$property['name']}` {$property['type']}";
 		
 		$sql = 'CREATE TABLE IF NOT EXISTS '
-		     . self::table_name()
+		     . static::table_name()
 		     . ' ('
 		     . implode( ',', $property_sql )
 		     . ' ) CHARACTER SET utf8;'
@@ -560,7 +449,7 @@ abstract class Base
 	public static function build_indices() {
 		global $wpdb;
 
-		$indices_sql = 'SHOW INDEX FROM `' . self::table_name() . '`';
+		$indices_sql = 'SHOW INDEX FROM `' . static::table_name() . '`';
 		$indices = $wpdb->get_results( $indices_sql );
 		$index_columns = array_map( function($index){ return $index->Column_name; }, $indices );
 
@@ -569,7 +458,7 @@ abstract class Base
 			if ( $property['index'] && ! in_array( $property['name'], $index_columns ) ) {
 				$length = isset($property['index_length']) ? '(' . (int) $property['index_length'] . ')' : '';
 				$unique = isset($property['unique']) && $property['unique'] ? 'UNIQUE' : '';
-				$sql = 'ALTER TABLE `' . self::table_name() . '` ADD ' . $unique . ' INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
+				$sql = 'ALTER TABLE `' . static::table_name() . '` ADD ' . $unique . ' INDEX `' . $property['name'] . '` (' . $property['name'] . $length . ')';
 				$wpdb->query( $sql );
 			}
 		}
@@ -580,15 +469,18 @@ abstract class Base
 	 * 
 	 * The name is derived from the namespace an class name. Additionally, it
 	 * is prefixed with the global WordPress database table prefix.
-	 * @todo cache
 	 * 
 	 * @return string database table name
 	 */
 	public static function table_name() {
 		global $wpdb;
-		
-		// prefix with $wpdb prefix
 		return $wpdb->prefix . self::name();
+	}
+
+	public static function table_exists() {
+		global $wpdb;
+		$sql = $wpdb->prepare("SHOW TABLES LIKE %s", \Podlove\esc_like(self::table_name()));
+		return $wpdb->get_var($sql) !== null;
 	}
 
 	/**
@@ -609,14 +501,67 @@ abstract class Base
 	
 	public static function destroy() {
 		global $wpdb;
-		$wpdb->query( 'DROP TABLE ' . self::table_name() );
+		$wpdb->query( 'DROP TABLE ' . static::table_name() );
 	}
 
 	public static function delete_all($reset_autoincrement = true) {
 	    global $wpdb;
-	    $wpdb->query( 'TRUNCATE ' . self::table_name() );  
+	    $wpdb->query( 'TRUNCATE ' . static::table_name() );  
 
 	    if ($reset_autoincrement)
-	    	$wpdb->query( 'ALTER TABLE ' . self::table_name() . ' AUTO_INCREMENT = 1' );  
+	    	$wpdb->query( 'ALTER TABLE ' . static::table_name() . ' AUTO_INCREMENT = 1' );  
+	}
+
+	public static function find_one_by_sql($sql) {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$model = new $class();
+		$model->flag_as_not_new();
+		
+		$row = $wpdb->get_row($sql);
+		
+		if ( ! $row ) {
+			return NULL;
+		}
+		
+		foreach ( $row as $property => $value ) {
+			$model->$property = $value;
+		}
+		
+		return $model;
+	}
+
+	public static function find_all_by_sql($sql) {
+		global $wpdb;
+		
+		$class = get_called_class();
+		$models = array();
+		
+		$rows = $wpdb->get_results($sql);
+		
+		if ( ! $rows )
+			return array();
+		
+		foreach ( $rows as $row ) {
+			$model = new $class();
+			$model->flag_as_not_new();
+			foreach ( $row as $property => $value ) {
+				$model->$property = $value;
+			}
+			$models[] = $model;
+		}
+		
+		return $models;
+	}
+
+	public function to_array() {
+		return array_combine(
+			static::property_names(),
+			array_map( function($property) {
+				return $this->$property;
+			}, static::property_names()
+			)
+		);
 	}
 }

@@ -4,6 +4,10 @@ use Podlove\Log;
 
 class MediaFile extends Base {
 
+	use KeepsBlogReferenceTrait;
+
+	public function __construct() { $this->set_blog_id(); }
+
 	/**
 	 * Fetches file size if necessary.
 	 *
@@ -24,7 +28,31 @@ class MediaFile extends Base {
 	 * @return \Podlove\Model\EpisodeAsset|NULL
 	 */
 	public function episode_asset() {
-		return EpisodeAsset::find_by_id( $this->episode_asset_id );
+		return $this->with_blog_scope(function() {
+			return EpisodeAsset::find_by_id($this->episode_asset_id);
+		});
+	}
+
+	/**
+	 * Find one downloadable example file.
+	 * 
+	 * - JOIN episode to avoid dead media files
+	 * - ORDER BY e.id DESC, mf.id ASC: get a recent episode and the first asset, which is probably an audio file
+	 */
+	public static function find_example() {
+		return self::find_one_by_sql("
+			SELECT
+				mf.*
+			FROM
+				" . MediaFile::table_name() . " mf
+				JOIN " . EpisodeAsset::table_name() . " a ON a.id = mf.`episode_asset_id`
+				JOIN " . Episode::table_name() . " e ON e.id = mf.`episode_id`
+			WHERE
+				a.`downloadable` 
+				AND mf.size > 0
+			ORDER BY e.id DESC, mf.id ASC
+			LIMIT 0,1
+		");
 	}
 
 	public static function find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
@@ -67,43 +95,45 @@ class MediaFile extends Base {
 	 * Example contexts: home/episode/archive for player source, feed slug for feed source
 	 * 
 	 * @param  string $source  download source
-	 * @param  string $context optional download context
+	 * @param  string|null $context optional download context
 	 * @return string
 	 */
 	public function get_public_file_url($source, $context = null)
 	{
-		if (!$source && !$context)
-			return $this->get_file_url();
-
-		$params = array(
-			'source'  => $source,
-			'context' => $context
-		);
-		
-		switch ((string) \Podlove\get_setting('tracking', 'mode')) {
-			case 'ptm':
-				// when PTM is active, add $source and $context but
-				// keep the original file URL
-				return $this->add_ptm_parameters(
-					$this->get_file_url(), $params
-				);
-				break;
-			case 'ptm_analytics':
-				// we track, so we need to generate a shadow URL
-				if (get_option('permalink_structure')) {
-					$path = '/podlove/file/' . $this->id;
-					$path = $this->add_ptm_routing($path, $params);
-				} else {
-					$path = '?download_media_file=' . $this->id;
-					$path = $this->add_ptm_parameters($path, $params);
-				}
-				return site_url($path);
-				break;
-			default:
-				// tracking is off, return raw URL
+		return $this->with_blog_scope(function() use ($source, $context) {
+			if (empty($source) && empty($context))
 				return $this->get_file_url();
-				break;
-		}
+
+			$params = array(
+				'source'  => $source,
+				'context' => $context
+			);
+
+			switch ((string) \Podlove\get_setting('tracking', 'mode')) {
+				case 'ptm':
+					// when PTM is active, add $source and $context but
+					// keep the original file URL
+					return $this->add_ptm_parameters(
+						$this->get_file_url(), $params
+					);
+					break;
+				case 'ptm_analytics':
+					// we track, so we need to generate a shadow URL
+					if (get_option('permalink_structure')) {
+						$path = '/podlove/file/' . $this->id;
+						$path = $this->add_ptm_routing($path, $params);
+					} else {
+						$path = '?download_media_file=' . $this->id;
+						$path = $this->add_ptm_parameters($path, $params);
+					}
+					return home_url($path);
+					break;
+				default:
+					// tracking is off, return raw URL
+					return $this->get_file_url();
+					break;
+			}
+		});
 	}
 
 	public function add_ptm_routing($path, $params)
@@ -149,28 +179,31 @@ class MediaFile extends Base {
 	 * @return string
 	 */
 	public function get_file_url() {
+		return $this->with_blog_scope(function() {
+			$podcast  = Podcast::get();
 
-		$podcast  = Podcast::get_instance();
+			$episode       = $this->episode();
+			$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
+			$file_type     = FileType::find_by_id( $episode_asset->file_type_id );
 
-		$episode       = $this->episode();
-		$episode_asset = EpisodeAsset::find_by_id( $this->episode_asset_id );
-		$file_type     = FileType::find_by_id( $episode_asset->file_type_id );
+			if ( ! $episode_asset || ! $file_type || ! $episode )
+				return '';
 
-		if ( ! $episode_asset || ! $file_type || ! $episode )
-			return '';
+			$template = $podcast->get_url_template();
+			$template = apply_filters( 'podlove_file_url_template', $template );
+			$template = str_replace( '%media_file_base_url%', trailingslashit( $podcast->media_file_base_uri ), $template );
+			$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
+			$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
+			$template = str_replace( '%format_extension%',    $file_type->extension, $template );
 
-		$template = $podcast->get_url_template();
-		$template = apply_filters( 'podlove_file_url_template', $template );
-		$template = str_replace( '%media_file_base_url%', trailingslashit( $podcast->media_file_base_uri ), $template );
-		$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
-		$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
-		$template = str_replace( '%format_extension%',    $file_type->extension, $template );
-
-		return trim($template);
+			return trim($template);
+		});
 	}
 
 	public function episode() {
-		return Episode::find_by_id( $this->episode_id );
+		return $this->with_blog_scope(function() {
+			return Episode::find_by_id( $this->episode_id );
+		});
 	}
 
 	/**
@@ -199,11 +232,18 @@ class MediaFile extends Base {
 		// do not change the filesize if http_code = 0
 		// aka "an error occured I don't know how to deal with" (probably timeout)
 		// => change to proper handling once "Conflicts" are introduced
-		if ( $http_code && $http_code !== 304 )
-			$this->size = $header['download_content_length'];
+		if ( podlove_is_resolved_and_reachable_http_status($http_code) && $http_code !== 304 ) {
+			if (isset($header['download_content_length']) && $header['download_content_length'] > 0) {
+				$this->size = $header['download_content_length'];
+			} else {
+				// We know that the file exists but have no way of determining its size.
+				// Having a proper state would be nice, but this "size = 1 byte" hack works for now.
+				$this->size = 1;
+			}
+		}
 
 		if ( $this->size <= 0 )
-			$this->etag = '';
+			$this->etag = NULL;
 
 		return $header;
 	}
@@ -240,18 +280,16 @@ class MediaFile extends Base {
 			);
 		}
 
-		// look for ETag and safe for later
-		if ( preg_match( '/ETag:\s*"([^"]+)"/i', $response['response'], $matches ) ) {
-			$this->etag = $matches[1];
-		}
-
 		// skip validation if ETag did not change
 		if ( (int) $header["http_code"] === 304 ) {
-			// Log::get()->addInfo(
-			// 	'Validating media file: File Not Modified.',
-			// 	array( 'media_file_id' => $this->id )
-			// );
 			return;
+		}
+
+		// look for ETag and safe for later
+		if (podlove_is_resolved_and_reachable_http_status($header["http_code"]) && preg_match( '/ETag:\s*"([^"]+)"/i', $response['response'], $matches )) {
+			$this->etag = $matches[1];
+		} else {
+			$this->etag = NULL;
 		}
 
 		do_action( 'podlove_media_file_content_has_changed', $this->id );
@@ -265,8 +303,13 @@ class MediaFile extends Base {
 			return;
 		}
 
-		// check if content length has changed
-		if ( $header['download_content_length'] != $this->size ) {
+		// check that content length exists and hasn't changed
+		if ( !isset($header['download_content_length']) || $header['download_content_length'] <= 0) {
+			Log::get()->addWarning(
+				'Unable to read "Content-Length" header. Impossible to determine file size.',
+				array( 'media_file_id' => $this->id, 'mime_type' => $header['content_type'], 'expected_mime_type' => $mime_type )
+			);
+		} elseif ( $header['download_content_length'] != $this->size ) {
 			Log::get()->addInfo(
 				'Change of media file content length detected.',
 				array( 'media_file_id' => $this->id, 'old_size' => $this->size, 'new_size' => $header['download_content_length'] )
@@ -284,15 +327,23 @@ class MediaFile extends Base {
 	}
 
 	/**
-	 * @todo  use \Podlove\Http\Curl	
+	 * @todo  use \Podlove\Http\Curl
+	 * 
+	 * @return array	
 	 */
 	public static function curl_get_header_for_url( $url, $etag = NULL ) {
 		
 		if ( ! function_exists( 'curl_exec' ) )
-			return false;
+			return [];
 
 		$curl = curl_init();
-		$curl_version = curl_version();
+
+		if ( \Podlove\Http\Curl::curl_can_follow_redirects() ) {
+			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
+			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
+		} else {
+			$url = \Podlove\Http\Curl::resolve_redirects($url, 5);
+		}
 
 		curl_setopt( $curl, CURLOPT_URL, $url );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); // make curl_exec() return the result
@@ -308,25 +359,7 @@ class MediaFile extends Base {
 			) );
 		}
 
-		if ( ini_get( 'open_basedir' ) == '' && ini_get( 'safe_mode' ) != '1' ) {
-			curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); // follow redirects
-			curl_setopt( $curl, CURLOPT_MAXREDIRS, 5 );         // maximum number of redirects
-		}
-
-		curl_setopt(
-			$curl,
-			CURLOPT_USERAGENT,
-			sprintf(
-				'PHP/%s (; ) cURL/%s(OpenSSL/%s; zlib/%s) Wordpress/%s (; ) %s/%s (; )',
-				phpversion(),
-				$curl_version['version'],
-				$curl_version['ssl_version'],
-				$curl_version['libz_version'],
-				get_bloginfo( 'version' ),
-				\Podlove\get_plugin_header( 'Name' ),
-				\Podlove\get_plugin_header( 'Version' )
-			)
-		);
+		curl_setopt( $curl, CURLOPT_USERAGENT, \Podlove\Http\Curl::user_agent() );
 		
 		$response        = curl_exec( $curl );
 		$response_header = curl_getinfo( $curl );

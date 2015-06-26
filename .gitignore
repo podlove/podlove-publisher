@@ -1,3 +1,4 @@
+.DS_Store
 .tags*
 .wordpress_release
 podlove.sublime-*
@@ -6,3 +7,6 @@ composer.phar
 node_modules/*
 vendor/*
 test/config.yml
+bower_components
+doc
+.htaccess

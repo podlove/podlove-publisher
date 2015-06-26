@@ -1,9 +1,9 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert, chemiker
-Donate link: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
-Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player
-Requires at least: 3.0
-Tested up to: 4.0
+Donate link: http://podlove.org/donations/
+Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
+Requires at least: 3.5
+Tested up to: 4.2.2
 Stable tag: trunk
 License: MIT
 
@@ -11,33 +11,52 @@ The one and only next generation podcast publishing system. Seriously. It's magi
 
 == Description ==
 
-The Podlove Podcast Publisher is a workflow-oriented solution for serious podcasters that want to save time and get full control over their Podcast publishing process, their feeds and the integrity of their publication.
+We built the Podlove Podcast Publisher because existing solutions are stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
 
-The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behaviour (e.g. GUID control to replace faulty episodes and fore clients to reload) supporting all important meta data.
+Official Site: [publisher.podlove.org](http://publisher.podlove.org/)
+
+= Compatible Feeds =
+
+The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behavior (e.g. GUID control to replace faulty episodes and for clients to reload) supporting all important meta data.
+
+= Multi-Format Publishing =
 
 The Publisher also makes multi-format publishing - embracing all modern and legacy audio and video codecs - a snap. By adopting simple file name conventions, the plugin allows the podcaster to provide individual feeds for certain use cases or audiences without adding work for the podcaster during the publishing process.
 
-The Publisher also comes with integrated with the Podlove  Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+= Optimized Web Player =
+
+The Publisher also comes with integrated with the Podlove Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+
+= Chapter Support =
 
 The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+
+= Flexible Templates =
 
 To round it all up, a flexible template system enables you to published Podcasts in a defined fashion and change the style at any time without having to touch your individual postings later on.
 
 And this is just the beginning. We have a rich roadmap that will bring even more interesting features: integration with helpful services, much improved timeline metadata support (show notes) and much more.
 
-Development of the plugin is an open process. The current version is available on github:
+= Further Reading =
 
-https://github.com/podlove/podlove-publisher
+* [Podlove Publisher](http://publisher.podlove.org/)
+* [Podlove Project](http://podlove.org/)
+* [Podlove Community](https://community.podlove.org/)
+* [Documentation](http://docs.podlove.org/)
+* [Bug Tracker](https://github.com/podlove/podlove-publisher/issues)
+* [Donate](http://podlove.org/donations/)
 
-Feel free to contribute and to fix errors or send improvements via github.
+Development of the plugin is an open process. The current version is available [on GitHub](https://github.com/podlove/podlove-publisher) Feel free to contribute and to fix errors or send improvements via GitHub.
+
+Requires PHP 5.4+
 
 == Frequently Asked Questions ==
 
 ### Why do my episodes look the same as my normal posts/missing some information?
 
-The Podlove Podcast Publisher (PPP) uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
+The Podlove Podcast Publisher uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
 
-Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. PPP does work together will all templates that come with WordPress.
+Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. The Publisher does work together will all templates that come with WordPress.
 
 ### My episodes do not show up on the home page. What's wrong?
 
@@ -55,17 +74,9 @@ The exact media file name is made up of a) the Episode Media File Flug you set i
 
 ### Where is the Web Player / Download list?
 
-Right now, these have to be inserted manually via so called shortcodes. They are [podlove-web-player] and [podlove-episode-downloads].
-
-There are compatibility issues with the "Jetpack" plugin. If you use it, you might need to turn it off.
+Right now, these have to be inserted manually via shortcodes. They are [podlove-episode-web-player] and [podlove-episode-downloads].
 
 You can use the plugin's templates to make sure you have the proper shortcodes in every episode.
-
-### A feed link directs me to a blog page. What's wrong?
-
-This is an issue that sometimes arises out of the weirdness that is WordPress. Your settings might be totally okay but there  is some kind of amnesia going on in the WordPress core.
-
-In order to free WordPress from its amnesia go to Settings > Permalinks, hit Save and try again.
 
 ### How do I add Flattr integration to my episodes?
 
@@ -75,6 +86,10 @@ If you haven't already, get the official Flattr plugin here:
 
 Find the setting Flattr > Advanced Settings > Flattrable content > Post Types and check "podcast". Save changes. There is no step 3 ;)
 
+---
+
+This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
+
 == Installation ==
 
 1. Download the Podlove Publisher Plugin to your desktop.
@@ -83,17 +98,391 @@ Find the setting Flattr > Advanced Settings > Flattrable content > Post Types an
 1. Go to Plugins screen and find the newly uploaded Plugin in the list.
 1. Click Activate Plugin to activate it.
 
+== Screenshots ==
+1. Custom episode post type separates media from your blog content.
+2. Download analytics provide you with all the data you ever wanted.
+3. The Publisher automatically checks the health of your media files.
+4. The mighty template engine gives you full control over the episode presentation.
+5. Includes the Podlove Subscribe Button, the easiest way for listeners to subscribe to your podcast.
+6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
+
 == Changelog ==
+
+= 2.3.0 =
+
+Use WordPress Object Cache API to cache model objects. 
+See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
+
+**Flattr**
+
+* Everything Flattr related was moved into its own module. If you don't use Flattr, you can turn it off and it gets out of your way.
+* If you are using the Flattr module, we write Flattr payment information into podcast feeds. This way you don't need to rely on the official Flattr plugin to do this. You can probably deactivate it if you were using it since we provide the main functionality within the Publisher now.
+* We recently changed the default `flattr` parameter in shortcodes. Now there's a setting in Flattr Podcast Settings where you can define the default parameter for contributor shortcodes.
+
+**New Module: Related Episodes**
+
+You can now express that episodes are related to each other. You can list all related episodes using the new shortcode `[podlove-related-episodes]` or using the template accessor `episode.relatedEpisodes`.
+
+**Other**
+
+* Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.
+* News from podlove.org are displayed in the Podlove Dashboard
+* Users with role "author" and higher now have access to the Podlove Dashboard and Analytics. They only have access to dashboard sections that make sense for authors, so they won't see logging, feed or asset validation.
+* Contributors can now be edited in _Contributor Settings_ (instead of _Episodes > Contributors_)
+* Add functionality to automatically determine the duration for episodes. This is especially useful for people who don't use Auphonic, which already determines the duration automatically.
+* We are now able to handle media files that are served without a "Content-Length" header. A specific warning is generated and the size is displayed as "unknown", but the files are treated as valid so they can be played.
+
+= 2.2.4 =
+
+* fix: erratically missing chapter information in RSS feeds
+* fix: "Allow to skip feed redirects" setting was sometimes ignored
+
+= 2.2.3 =
+
+* fix: web player image fallback to podcast image when an episode image asset is defined but unused
+* fix: gzip compression: only set content type if headers have not been sent
+* fix: in networks, don't schedule template cleanups for blogs without an active Publisher
+
+= 2.2.2 =
+
+* fix: template cache issue where duplicate purge cronjobs could flood the cron system
+* fix: image cache validation (didn't work due to missing library)
+
+= 2.2.1 =
+
+* fix: App.net announcement preview in modules
+* fix: asset validations are always scheduled properly
+* fix: Remove method calls that require WordPress 4.0+ (wpdb::esc_like)
+
+= 2.2.0 =
+
+**Image Caching, Resizing & Retina Support**
+
+We now take better control of podcast images, episode images, contributor avatars and our own social icons. 
+We are able to *resize* them to ideal sizes, which results in *faster page load times* for your users. *Retina 
+images* for higher-resolution displays are also supported. We do this automatically, so all you need to do 
+is click update, lean back and enjoy.
+
+Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2/)
+
+This update increases the WordPress requirement from 3.0 to 3.5 (due to the required image editing functionality).
+
+**Other**
+
+* fix: duplicate feed discovery
+* fix: ignore incomplete feed configurations
+* fix: don't include network admin module css in frontend
+* fix: dashboard episode edit links
+* fix: when deleting WordPress Network sites, trigger plugin uninstall to remove database tables
+* fix: web player flash fallback
+* fix: network templates now also appear in the template widget and template auto-insert setting
+* fix: issue where some database tables were not created
+* fix: podcast covers are displayed in frontend admin menu bar
+* show Twig template errors in dashboard log
+* web player template tag can set tracking context: `episode.player({context: 'landing-page'})`
+* add `episode.categories` template tag
+
+**Deprecations**
+
+- deprecated `episode.imageUrl`, use `episode.image` instead
+- deprecated `episode.imageUrlWithFallback`, use `episode.image({fallback: true})` instead
+- deprecated `podcast.imageUrl`, use `podcast.image` instead
+- deprecated `service.logoUrl`, use `service.image` instead
+- deprecated `contributor.avatar`, use `contributor.image` instead
+
+While you are changing these, consider scaling them down appropriately. Your images are probably huge but in many cases you don't need the full size. So instead of `episode.image` or `episode.image.url`, specify a size, like this `episode.image.url({width: 200})`.
+
+= 2.1.3 =
+
+* add warning in system report for users with default permalink settings (which is problematic for some podcast clients)
+* enhancement: delete caches in all blogs when changing a network template
+* enhancement: delete caches when changing the template default assignment
+* enhancement: do not rely on openssl module
+* fix: add flattr setting to contributors general tab
+* fix: duplicate episodes when using `podlove.episodes` template accessor
+* fix: correctly fire plugin activation hooks in network mode
+* fix: ensure network module is activated correctly
+* fix: "Add New" link in empty list tables
+
+= 2.1.2 =
+
+* fix issue with users that have open_basedir set, which lead to all assets being invalid
+
+= 2.1.1 =
+
+* fix: remove obsolete "Add New" template button from network templates screen
+* fix: template autoinsert does not use deprecated "id" parameter
+* fix: template widget does not use deprecated "id" parameter
+* fix: duplicate episodes in feeds
+* fix: some server configurations (especially on shared webhosting) break cURLs ability to follow HTTP redirects. We now check for that configuration and, if necessary, resolve the URL manually before continuing normally.
+* fix: XSS vulnerabilities in contributors search
+* fix: Template accessor `contributor.id` now correctly returns the id, not the uri. `contributor.uri` is the new accessor to get the uri.
+* fix: Filtering contributions by id is now correctly affected by other filters, like group and role. Until now, `podcast.contributors({id: 'james', role: 'on-air'})` always returned James, no matter if he had the given role or not. 
+* add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
+* add Twig version to system report
+
+= 2.1.0 =
+
+**Networks: WordPress Multisite Support is Here**
+
+- dedicated WordPress Multisite support
+- "My Sites" menu features podcast covers and menus include often used pages like "Podlove Dashboard" and episodes
+- Network Dashboard provides a birds-eye view over your podcast empire
+- Network-Templates that are accessible in every podcast
+- Podcast lists: give templates access to multiple podcasts at once, allowing you to automatically list all podcasts in your network, the 10 last episode releases in your network and much more
+
+**Widgets**
+
+We added a happy bunch of widgets to make your life easy. 
+
+* Podcast Information: Display cover, subtitle and summary of your podcast
+* Recent Episodes: Display a list of recent episodes, with cover art and duration if you like
+* Template: Display any Publisher template in a widget area
+* Podcast License
+
+The Subscribe Button Widget now defaults to "Big with Logo" and auto-width. It has also been renamed to "Podcast Subscribe Button" to be distinguishable from the new standalone plugin.
+
+**Templates**
+
+* add accessors `{{ podcast.landingPageUrl }}`, `{{ podcast.subscribe_button }}` (see http://docs.podlove.org/reference/template-tags/#podcast)
+* add accessor `{{ flattr.button }}` (see http://docs.podlove.org/reference/template-tags/#flattr)
+* add accessor `{{ episode.podcast }}`
+* add query parameters to ``{{ contributor.episodes }}`:
+
+    - group: Filter by contribution group. Default: ''.
+    - role: Filter by contribution role. Default: ''.
+    - post_status: Publication status of the post. Defaults to 'publish'
+    - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+      - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+      - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+    - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+      - 'publicationDate' - Order by publication date.
+      - 'recordingDate' - Order by recording date.
+      - 'title' - Order by title.
+      - 'slug' - Order by episode slug.
+      - 'limit' - Limit the number of returned episodes.
+
+**Other**
+
+* add gender contribution statistics to dashboard
+* add expert setting "Allow to skip feed redirects"
+* add warning in tracking settings when default permalink structure is used
+* add support for Auphonic cover art
+* add support for Jetpack "Publicize" module to podcast post type
+* add warning when open_basedir is set to system report
+* add daily cleanup of logging table (only keep entries of previous 4 weeks)
+* contributor editing has a tabbed interface
+* improved Podlove Dashboard performance
+* Open Graph title does not include episode subtitle any more. If a subtitle is available, it is put in front of the summary in the description tag.
+* fix: remove Jetpack "Site Icon" from podcast feeds
+* fix: empty template editor when last template is deleted
+* fix: empty caches when a scheduled episode gets published
+* fix analytics episode average calculation for ancient episodes
+
+**API changes**
+
+* Flattr parameter in `[podlove-episode-contributor-list]` now defaults to "no". If you need to reactivate it, use `[podlove-episode-contributor-list flattr="yes"]`
+* `[podlove-web-player]` was renamed to `[podlove-episode-web-player]` to avoid clashes with the standalone web player plugin. For now, the old shortcode still works.
+* `[podlove-subscribe-button]` was renamed to `[podlove-podcast-subscribe-button]` to avoid clashes with the standalone button plugin. For now, the old shortcode still works.
+
+= 2.0.5 =
+
+* fix: template editor cursor position in Safari (by changing to a different theme that doesn't use bold styles)
+* fix: double escaped feed enclosure URLs when using non-pretty-permalinks
+
+= 2.0.4 =
+
+* fix: missing flattr attribute for contributors
+* fix: subscribe button description is properly wrapped in p-tags
+* fix: faulty valid file if check returns "unreachable" but includes a Content-Length header
+* fix: more thoughtful handling of ETags when validating files prevents failing updates
+* fix: "NaN" analytics should display properly now
+* fix: off-by-one display in analytics
+* fix: don't HTML-encode quotes in episode title/subtitle/summary since it leads to invalid feeds
+* add trakt.tv to the services list
+* add support for RSS channel image tag
+
+= 2.0.3 =
+
+*Allow Non-Admins to access Analytics*
+
+Analytics have a new capability called "podlove_read_analytics".
+You can provide access to, for example, editors, using the following code snippet:
+
+    function podsnip_add_capability() {
+        // default roles: editor, author, contributor, subscriber
+        $role = get_role('editor');
+        $role->add_cap('podlove_read_analytics');
+    }
+    add_action( 'admin_init', 'podsnip_add_capability');
+
+You can add snippets using the "Code Snippets" plugin.
+
+*Bugfixes*
+
+* fix: use proper HTTP method to create/update/delete templates
+* fix: don't remove URLs from chapter marks when saving
+* fix: optional episode form elements can be saved
+
+= 2.0.2 =
+
+* fix: include missing YAML library
+* fix: namespacing issue in uninstall procedure
+* fix: debug tracking example file must be downloadable
+
+= 2.0.1 =
+
+**Bugfixes**
+
+* fix: properly sanitize episode form data (fixes "A wild Backslash appears")
+
+**Enhancements**
+
+* format download numbers in episode list
+* remove check for PHP setting `allow_url_fopen` because we don't rely on it any more
+
+= 2.0.0 =
+
+**Download Analytics**
+
+You want to know more about who listens to your podcast? We got you covered.
+
+We spent months of research and prototyping to find a reliable way of tracking. We are confident that our approach works and produces trustworthy data. If you have not done so yet, you have to activate tracking in _Expert Settings -> Tracking_.
+
+If you are interested in all the technical details, head over to http://docs.podlove.org/guides/download-analytics/.
+
+But what you are seeing now is just the beginning. We have a plethora of ideas on how to give you even more insight into the data available. Stay tuned!
+
+We are curious what you think about the current analytics interface? What do you love? What do you hate? What do you miss? Head over to our new community site and share your thoughts: https://community.podlove.org/
+
+**Bugfixes**
+
+* fix: use `home_url()` instead of `site_url()` to generate tracking URLs
+* fix: tracking export does not get stuck forever when it fails once
+* fix: disappearing podcast description settings
+* fix: add function to repair button that removes duplicate episode entries
+* fix: template editor does not forget changes if you reselect a template after changing it
+* fix: improve uninstall routine
+* fix: wrong month when choosing Auphonic productions
+* fix: deactivate Jetpack's OpenGraph when the Publisher OpenGraph module is active
+
+**Other Changes**
+
+* add services: miiverse, prezi
+* add missing services via repair button
+* Bitlove: add `<bitlove:guid>` to RSS feed and use this to identify files
+* moved episode GUID regeneration into separate metabox because it's rarely required
+* always check media files when opening an episode edit page
+* move podcast cover art from media tab to description tab
+
+* Improved feed settings
+  * check for missing and duplicate slugs
+  * check for missing asset assignment
+  * show prominent warning for detected problems
+  * provide contextual help to better understand what's required and why
+
+**Removed Functionality**
+
+* removed module "Auphonic Production Data"
+* removed the following shortcodes (use [Template Tags](http://docs.podlove.org/reference/template-tags/) instead)
+  * `[podlove-episode-subtitle]`
+  * `[podlove-episode-summary]`
+  * `[podlove-episode-slug]`
+  * `[podlove-episode-duration]`
+  * `[podlove-episode-chapters]`
+  * `[podlove-episode field="..."]`
+  * `[podlove-podcast field="..."]`
+  * `[podlove-show field="..."]`
+  * `[podlove-podcast-license]`
+  * `[podlove-episode-license]`
+  * `[podlove-contributors]` (use `[podlove-episode-contributor-list]` instead)
+  * `[podlove-contributor-list]` (use `[podlove-episode-contributor-list]` instead)
+* removed the following template tags
+  * `{{ contributor.publicemail }}` (use social module instead)
+  * `{{ license.html }}` (use `{% include '@core/license.twig' %}` instead)
+
+= 1.12.1 =
+
+* fix: catch failed IP categorizations
+* fix: solve PHP notice
+* add custom icon to close template fullscreen mode
+* add custom contributor css to look nicely in twentyfifteen theme
+
+= 1.12 =
+
+- enable some WordPress template tags in Twig Templates: `is_archive()`, `is_post_type_archive()`, `is_attachment()`, `is_tax()`, `is_date()`, `is_day()`, `is_feed()`, `is_comment_feed()`, `is_front_page()`, `is_home()`, `is_month()`, `is_page()`, `is_paged()`, `is_preview()`, `is_search()`, `is_single()`, `is_singular()`, `is_time()`, `is_year()`, `is_404()`, `is_main_query()`
+- enable episode filtering by category slug: `podcast.episodes({category: "kitten"})`
+- redesigned template editor interface
+- fix feed cache issue which lead to enclosure URL mixups
+- display PHP deprecation warning aggressively for everyone below 5.4
+
+= 1.11.2 =
+
+- Cache feed items. This drastically reduces load when no feed proxy is used; especially in a "full feed" with many episodes.
+- Add Luxembourgish to languages
+
+= 1.11.1 =
+
+Subscribe Button fixes & enhancements:
+
+- don't pass undiscoverable feeds to the button
+- don't show a button if no feed is available
+- change defaults to "big-logo" and "autowidth"
+- fix issue with internal format
+
+= 1.11 =
+
+Say hello to the **Podlove Subscribe button**, the *Universal button to subscribe to buttons in the desired podcast client or player website*. It ships as a widget, so you can easily display it on your site. For more finegrained positioning, you can use the `[podlove-subscribe-button]` shortcode.
+
+More info on those sites:
+
+* Homepage: http://podlove.org/podlove-subscribe-button/
+* Help Translate: http://translate.podlove.org
+* GitHub: https://github.com/podlove/podlove-subscribe-button
+
+**Other Changes**
+
+* fix `contributor.episodes`: only show published episodes
+* fix redirect form: remove url validation
+* fix HEAD requests for download URLs
+* redirects are counted and displayed in the redirect settings
 
 = 1.10.23 =
 
-* add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are verified against syntactically correctness.
-* add support for scientific networks: ResearchGate, ORCiD, Scopus
-* ADN module: add option to not fall back on episode cover when no episode image is present
-* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+**Bugfixes**
+
 * fix social repair module
-* adjust Bitlove script so it plays well with https sites
 * empty rss feeds now render properly
+* fix issue of randomly breaking URLs
+* fix missing files when using auto-publish feature by automatically validating files before publishing
+* fix "open" link for last contributor donations item
+* fix javascript error in license ui
+
+**New Features**
+
+* add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are automatically syntax checked.
+* add support for scientific networks: ResearchGate, ORCiD, Scopus
+* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+
+**Enhancements & Others**
+
+* contributors form:
+  * switch public name and real name fields
+  * remove public email field (see deprecations)
+  * move contact email field to general section
+* ADN module: add option to not fall back on episode cover when no episode image is present
+* adjust Bitlove script so it plays well with https sites
+* include date in tracking export filename
+* move web player settings to expert settings
+* public contributor emails are handled by the social module now, instead of being a contributor attribute
+
+**Deprecations & Migration**
+
+If you are using `{{ contributor.publicemail }}` in your templates, you should change it to something like the following:
+
+	{% for service in contributor.services({type: "email"}) %}
+		<a target="_blank" href="{{ service.profileUrl }}">{{ service.rawValue }}</a>
+	{% endfor %}
 
 = 1.10.22 =
 
@@ -310,7 +699,7 @@ If you're of the curious type, feel free to activate it and tell us any issues y
 = 1.10.7 =
 
 * Feature: Direct episode access in templates via `{{ podcast.episodes({slug: 'pod001'}).title }}`
-* Feature: Episodes in templates can be filtered and ordered, for example `{{ podcast.episodes({orderby: 'title', 'order': 'ASC'}) }}`. For details, see [`podcast.episodes` documentation](http://docs.podlove.org/publisher/template-reference/#podcast)
+* Feature: Episodes in templates can be filtered and ordered, for example `{{ podcast.episodes({orderby: 'title', 'order': 'ASC'}) }}`. For details, see [`podcast.episodes` documentation](http://docs.podlove.org/ref/template-tags.html#podcast)
 * Feature: Direct contributor access in templates via `{{ podcast.contributors({id: 'john'}).name }}`
 * Feature: Add shortcode `[podlove-podcast-social-media-list]`, which lists all social media accounts for the podcast
 * Feature: Add shortcode `[podlove-podcast-donations-list]`, which lists all donation accounts for the podcast
@@ -402,7 +791,7 @@ __DEPRECATIONS/WARNINGS__
 
 **All-new, mighty Templating system**
 
-You can now use the [Twig Template Syntax](http://twig.sensiolabs.org/documentation) in all templates. Access all podcast/episode data via the new template API. Please read the [Template Guide](http://docs.podlove.org/guides/understanding-templates/) to get started.
+You can now use the [Twig Template Syntax](http://twig.sensiolabs.org/documentation) in all templates. Access all podcast/episode data via the new template API. Please read the [Template Guide](http://docs.podlove.org/tut/understanding-templates.html) to get started.
 
 If you have used templates before, please note that some shortcodes are now _DEPRECATED_. That means they still work but will be removed at some point. Following is a list of affected shortcodes and their replacements:
 
@@ -412,9 +801,9 @@ Instead of `[podlove-podcast-license]`, write `{{ podcast.license.html }}`.
 
 Instead of `[podlove-episode-license]`, write `{{ episode.license.html }}`.
 
-Instead of `[podlove-episode field="subtitle"]`, write `{{ episode.subtitle }}`. Instead of `[podlove-episode field="summary"]`, write `{{ episode.summary }}` etc. When in doubt, look at the [Episode Template Reference](http://docs.podlove.org/publisher/template-reference/#episode).
+Instead of `[podlove-episode field="subtitle"]`, write `{{ episode.subtitle }}`. Instead of `[podlove-episode field="summary"]`, write `{{ episode.summary }}` etc. When in doubt, look at the [Episode Template Reference](http://docs.podlove.org/ref/template-tags.html#episode).
 
-Changing the podcast data shortcodes works exactly the same: Instead of `[podlove-podcast field="title"]`, write `{{ podcast.title }}` etc. When in doubt, look at the [Podcast Template Reference](http://docs.podlove.org/publisher/template-reference/#podcast).
+Changing the podcast data shortcodes works exactly the same: Instead of `[podlove-podcast field="title"]`, write `{{ podcast.title }}` etc. When in doubt, look at the [Podcast Template Reference](http://docs.podlove.org/ref/template-tags.html#podcast).
 
 **Other Changes**
 
@@ -517,7 +906,7 @@ Changing the podcast data shortcodes works exactly the same: Instead of `[podlov
 
 **New Module: Contributors**
 
-Podcasts are not possible without their active communities. Huge contributions are being made behind the scenes and nobody notices except the podcaster. The contributors module shines light on all those diligent people. It's now easy to manage contributors of an episode and list them on the blog. The list contains references to their social profiles and the donation service Flattr. Shortcode to display them in an episode post: [`[podlove-contributor-list]`](http://docs.podlove.org/publisher/shortcodes/#contributors).
+Podcasts are not possible without their active communities. Huge contributions are being made behind the scenes and nobody notices except the podcaster. The contributors module shines light on all those diligent people. It's now easy to manage contributors of an episode and list them on the blog. The list contains references to their social profiles and the donation service Flattr. Shortcode to display them in an episode post: [`[podlove-contributor-list]`](http://docs.podlove.org/ref/template-tags.html#contributors).
 
 **Simple Protected Feeds**
 
@@ -1013,6 +1402,10 @@ A similar concept might return once we tackle stuff like seasons.
 * Enhancement: Remove pagination from formats settings page
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+
+Upgrade only if you are on PHP 5.4 or higher.
 
 = 1.2.0-alpha =
 Before you update, delete all shows but one to ensure your important data stays. Watch out: Your feed URLs will change!

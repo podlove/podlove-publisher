@@ -1,17 +1,7 @@
-{% macro iconSrc(icon) %}
-	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
-{% endmacro %}
-
-{% macro iconLink(title, icon, href) %}
-	<a target="_blank" title="{{ title }}" href="{{ href }}">
-		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
-	</a>
-{% endmacro %}
-
 <tr>
-	{% if avatars == "yes" %}
+	{% if option.avatars == "yes" %}
 		<td class="avatar_cell">
-			{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar} only %}
+			{{ contributor.image.html({width: size|default(50), height: size|default(50), class: "avatar avatar-" ~ size|default(50) ~  " photo", alt: "avatar" }) }}
 		</td>
 	{% endif %}
 	<td class="title_cell">
@@ -20,12 +10,12 @@
 			<br><em>{{ contributor.comment }}</em>
 		{% endif %}
 	</td>
-	{% if groups == "yes" %}
+	{% if option.groups == "yes" %}
 		<td class="group_cell">
 			{{ contributor.group }}
 		</td>
 	{% endif %}
-	{% if roles == "yes" %}
+	{% if option.roles == "yes" %}
 		<td class="role_cell">
 			{{ contributor.role }}
 		</td>
@@ -33,30 +23,42 @@
 	<td class="social_cell">
 		{% for service in contributor.services({category: "social"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-				<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+				{{
+					service.image.html({
+						width: 20, 
+						class: "podlove-contributor-button",
+						alt: service.title ~ " Icon"
+					}) 
+				}}
 			</a>
 		{% endfor %}
 	</td>
-	{% if donations == "yes" %}
+	{% if option.donations == "yes" %}
 		<td class="donation_cell">
 		{% for service in contributor.services({category: "donation"}) %}
 			<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-				<img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
+				{{
+					service.image.html({
+						width: 20, 
+						class: "podlove-contributor-button",
+						alt: service.title ~ " Icon"
+					}) 
+				}}
 			</a>
 		{% endfor %}
 		</td>
 	{% endif %}
-	{% if flattr == "yes" %}
+	{% if option.flattr == "yes" %}
 		<td class="flattr_cell">
 			{% if contributor.flattr %}
-				{% set cTitle = contributor.name ~ (episode ? "@" ~ episode.title : "" ) %}
+				{% set cTitle = contributor.name ~ (episode ? " @ " ~ episode.title : "" ) %}
 				<a target="_blank"
 					class="FlattrButton"
 					style="display:none;"
 					title="Flattr {{ cTitle }}"
 					rel="flattr;uid:{{ contributor.flattr }};button:compact;popout:0"
 					href="{{ contributor.flattr_url }}">
-						Flattr {{ cTitle }}
+						{{ cTitle }}
 				</a>
 			{% endif %}
 		</td>

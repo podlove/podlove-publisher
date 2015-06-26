@@ -2,6 +2,7 @@
 namespace Podlove\Settings\Expert\Tab;
 use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
+use \Podlove\Model;
 
 class Tracking extends Tab {
 
@@ -127,6 +128,94 @@ class Tracking extends Tab {
 						This product includes GeoLite2 data created by MaxMind, available from
 						<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 					</em>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_debug_tracking',
+			/* $title    */ sprintf(
+				'<label for="mode">%s</label>',
+				__( 'Debug Tracking', 'podlove' )
+			),
+			/* $callback */ function () {
+
+				if (!\get_option('permalink_structure')) {
+					?>
+					<div class="error">
+						<p>
+							<b><?php echo __('Please Change Permalink Structure', 'podlove') ?></b>
+							<?php
+							echo sprintf(
+								__('You are using the default WordPress permalink structure. 
+								This may cause problems with some podcast clients when you activate tracking.
+								Go to %s and set it to anything but default (for example "Post name") before activating Tracking.', 'podlove'),
+								'<a href="' . admin_url('options-permalink.php') . '">' . __('Permalink Settings') . '</a>'
+							);
+							?>
+						</p>
+					</div>
+					<?php
+				}
+
+				$media_file = Model\MediaFile::find_example();
+				if (!$media_file)
+					return;
+
+				$episode = $media_file->episode();
+				if (!$episode)
+					return;
+
+				$public_url = $media_file->get_public_file_url("debug");
+				$actual_url = $media_file->get_file_url(); 
+
+				?>
+				<h4>Example Episode</h4>
+				<p>
+					<?php echo $episode->full_title() ?>
+				</p>
+				<h4>Media File</h4>
+				<p>
+					<h5>Actual Location</h5>
+					<code><?php echo $actual_url ?></code>
+				</p>
+				<p>
+					<h5>Public URL</h5>
+					<code><?php echo $public_url ?></code>
+				</p>
+				<p>
+					<h5>Validations</h5>
+					<ul>
+						<li>
+							<!-- check rewrite rules -->
+							<?php if ( \Podlove\Tracking\Debug::rewrites_exist() ): ?>
+								✔ Rewrite Rules Exist
+							<?php else: ?>
+								✘ <strong>Rewrite Rules Missing</strong>
+								<!-- todo: repair button -->
+							<?php endif; ?>
+						</li>
+						<li>
+							<?php if ( \Podlove\Tracking\Debug::url_resolves_correctly($public_url, $actual_url) ): ?>
+								✔ URL resolves correctly
+							<?php else: ?>
+								✘ <strong>URL does not resolve correctly</strong>
+							<?php endif; ?>
+						</li>
+						<li>
+							<!-- check http/https consistency -->
+							<?php if ( \Podlove\Tracking\Debug::is_consistent_https_chain($public_url, $actual_url) ): ?>
+								✔ Consistent protocol chain
+							<?php else: ?>
+								✘ <strong>Protocol chain is inconsistent</strong>: Your site uses SSL but the files are not served with SSL.
+								Many clients will not allow to download episodes. To fix this, serve files via SSL or deactivate tracking.
+							<?php endif; ?>
+						</li>
+					<!-- todo: check regularly and spit user in his face if it blows up -->
+					</ul>
 				</p>
 				<?php
 			},

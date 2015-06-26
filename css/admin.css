@@ -44,9 +44,12 @@ i.rotate {
 .podlove-icon-ok     { color: green; }
 .podlove-icon-remove { color: red; }
 .podlove-icon-minus  { color: #999; }
-.podlove-icon-edit   { text-decoration: none; margin-left: 6px; }
+.podlove-contributor-edit, 
+.podlove-contributor-create { text-decoration: none; margin-left: 6px; vertical-align: middle; }
 
 .podlove-contributor-edit { display: none; }
+
+a[data-podlove-help] { text-decoration: none; }
 
 /* Dashboard */
 
@@ -130,10 +133,12 @@ table.podlove_alternating td {
 table.podlove_alternating tr:nth-child(even) {
 	background: #EAEAEA;
 }
-#update_all_media_files {
+#update_all_media_files,
+#podlove_detect_duration,
+#podlove_detect_duration_status {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 15px 0 6px 0;
+	margin: 15px 0 6px 0;
 }
 .base_url {
 	color: #777;
@@ -178,7 +183,8 @@ table.podlove_alternating tr:nth-child(even) {
 	height: 40px !important;
 }
 
-span.contributor_remove {
+span.contributor_remove,
+span.episode_relation_remove {
 	font-size: 1.6em;
 }	
 
@@ -190,6 +196,8 @@ tr.row_podlove_feed_protection_type {
 
 img.podlove-avatar {
 	width: 50px;
+	vertical-align: bottom;
+	margin: 2px;
 }
 
 input.podlove-contributor-field {
@@ -243,6 +251,11 @@ label.podlove_cc_license_selector_label {
 	clear: both;
 }
 
+.row_podlove_contributor_services_form_table td,
+.row_podlove_contributor_services_form_table td {
+	padding: 0;
+}
+
 /* Podlove input field validation */
 
 .podlove-invalid-input {
@@ -261,4 +274,201 @@ label.podlove_cc_license_selector_label {
 
 .podlove-hide {
 	display: none;
+}
+
+/* podcast post meta box */
+
+.media_file_table {
+	width: 100%;
+	border-bottom: 1px solid #999;
+}
+.media_file_table th {
+	text-align: left;
+	border-bottom: 1px solid #999;
+}
+.media_file_table td {
+	padding: 5px;
+	height: 24px;
+}
+.media_file_table tr:nth-child(even) {
+	background: #EAEAEA;
+}
+
+.podlove-div-wrapper-form > div > span > label {
+	display: inline-block;
+	padding: 15px 0 6px 0;
+	font-size: 1.2em;
+}
+.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input[type=text], .podlove-div-wrapper-form select {
+	margin: 0px;
+	width: 100%;
+}
+.podlove-div-wrapper-form .character_counter {
+	text-align: right;
+}
+
+#template-editor {
+	background: white;
+	border: 1px solid rgb(229, 229, 229);
+	margin-top: 15px;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#template-editor a {
+	text-decoration: none;
+}
+
+#template-editor a:focus, #template-editor a:active {
+	outline: 0;
+}
+
+#template-editor .navigation {
+	background: #F9F9F9;
+	width: 20%;
+	float: left;
+	position: relative;
+	min-height: 445px;
+	box-sizing: border-box;
+	font-weight: bold;
+}
+
+#template-editor .navigation span {
+	vertical-align: middle;
+}
+
+#template-editor .navigation .unsaved {
+	font-size: 150%;
+}
+
+#template-editor .navigation .add {
+	position: absolute;
+	bottom: 8px;
+	left: 10px;
+}
+
+#template-editor .navigation ul {
+	margin: 0;
+}
+
+#template-editor .navigation ul li {
+	padding: 6px 10px;
+	margin: 0;
+}
+
+#template-editor .navigation ul a {
+	display: block;
+}
+
+#template-editor .navigation ul li.active {
+	background: #D7D7D7;
+}
+
+#template-editor .editor {
+	float: left;
+	width: 80%;
+	box-sizing: border-box;
+}
+
+#template-editor .toolbar {
+	border-bottom: 1px solid rgb(229, 229, 229);
+	padding: 8px 10px;
+	font-size: 14px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#template-editor .toolbar input[type=text] {
+	width: 100%;
+}
+
+#template-editor .toolbar .title {
+	float: left;
+	line-height: 26px;
+	width: 50%;
+}
+
+#template-editor .toolbar .actions {
+	float: right;
+}
+
+#template-editor .toolbar a.delete {
+	color: red;
+	line-height: 26px;
+	padding-right: 5px;
+}
+
+#template-editor .editor .main {
+	/*padding: 8px 10px;*/
+	height: 400px;
+}
+
+.fullscreen-button.fullscreen-off {
+	background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iMzJweCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzIgMzI7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJMYXllcl8xIi8+PGcgaWQ9ImZ1bGxzY3JlZW5feDVGX2V4aXQiPjxnPjxwb2x5Z29uIHBvaW50cz0iMjQuNTg2LDI3LjQxNCAyOS4xNzIsMzIgMzIsMjkuMTcyIDI3LjQxNCwyNC41ODYgMzIsMjAgMjAsMjAgMjAsMzIgICAiIHN0eWxlPSJmaWxsOiM0RTRFNTA7Ii8+PHBvbHlnb24gcG9pbnRzPSIwLDEyIDEyLDEyIDEyLDAgNy40MTQsNC41ODYgMi44NzUsMC4wNDMgMC4wNDcsMi44NzEgNC41ODYsNy40MTQgICAiIHN0eWxlPSJmaWxsOiM0RTRFNTA7Ii8+PHBvbHlnb24gcG9pbnRzPSIwLDI5LjE3MiAyLjgyOCwzMiA3LjQxNCwyNy40MTQgMTIsMzIgMTIsMjAgMCwyMCA0LjU4NiwyNC41ODYgICAiIHN0eWxlPSJmaWxsOiM0RTRFNTA7Ii8+PHBvbHlnb24gcG9pbnRzPSIyMCwxMiAzMiwxMiAyNy40MTQsNy40MTQgMzEuOTYxLDIuODcxIDI5LjEzMywwLjA0MyAyNC41ODYsNC41ODYgMjAsMCAgICIgc3R5bGU9ImZpbGw6IzRFNEU1MDsiLz48L2c+PC9nPjwvc3ZnPg==');
+}
+
+.fullscreen-button:hover {
+	opacity: 1;
+}
+
+.fullscreen-button {
+	display: block;
+	position: absolute;
+	z-index: 100001;
+	padding: 0;
+	margin: 0;
+	height: 32px;
+	width: 32px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iMzJweCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzIgMzI7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGlkPSJMYXllcl8xIi8+PGcgaWQ9ImZ1bGxzY3JlZW4iPjxnPjxwb2x5Z29uIHBvaW50cz0iMjcuNDE0LDI0LjU4NiAyMi44MjgsMjAgMjAsMjIuODI4IDI0LjU4NiwyNy40MTQgMjAsMzIgMzIsMzIgMzIsMjAgICAiIHN0eWxlPSJmaWxsOiM0RTRFNTA7Ii8+PHBvbHlnb24gcG9pbnRzPSIxMiwwIDAsMCAwLDEyIDQuNTg2LDcuNDE0IDkuMTI5LDExLjk1MyAxMS45NTcsOS4xMjUgNy40MTQsNC41ODYgICAiIHN0eWxlPSJmaWxsOiM0RTRFNTA7Ii8+PHBvbHlnb24gcG9pbnRzPSIxMiwyMi44MjggOS4xNzIsMjAgNC41ODYsMjQuNTg2IDAsMjAgMCwzMiAxMiwzMiA3LjQxNCwyNy40MTQgICAiIHN0eWxlPSJmaWxsOiM0RTRFNTA7Ii8+PHBvbHlnb24gcG9pbnRzPSIzMiwwIDIwLDAgMjQuNTg2LDQuNTg2IDIwLjA0Myw5LjEyNSAyMi44NzEsMTEuOTUzIDI3LjQxNCw3LjQxNCAzMiwxMiAgICIgc3R5bGU9ImZpbGw6IzRFNEU1MDsiLz48L2c+PC9nPjwvc3ZnPg==');
+	opacity: 0.3;
+	top: 5px;
+	right: 5px;
+}
+
+.fullScreen .fullScreen-editor {
+	height: auto !important;
+	width: auto !important;
+	border: 0;
+	margin: 0;
+	position: fixed !important;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100000;
+}
+
+.fullScreen {
+	overflow: hidden
+}
+
+.editor-wrapper {
+	position: relative;
+}
+
+.fullScreen #wpwrap,
+.fullScreen #wpbody,
+.fullScreen .editor-wrapper {
+	position: static;
+}
+
+.podlove_gender_widget_column {
+	min-width: 300px;
+	display: inline-block;
+}
+
+.podlove_gender_widget_column table {
+	width: 95%;
+}
+
+.podlove_gender_widget_column thead th {
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.podlove_gender_widget_column td,
+.podlove_gender_widget_column th {
+	text-align: right;
+	padding-right: 2%;
 }

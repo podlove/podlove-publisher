@@ -73,15 +73,4 @@ class License extends Wrapper {
 	public function valid() {
 		return $this->url() && $this->name();
 	}
-
-	/**
-	 * HTML
-	 *
-	 * @deprecated use `{% include '@core/license.twig' %}` instead
-	 * @accessor
-	 */
-	public function html() {
-		return $this->license->getHtml();
-	}
-
 }

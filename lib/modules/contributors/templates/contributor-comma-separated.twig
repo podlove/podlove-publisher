@@ -2,8 +2,8 @@
 	{% for contributor in episode.contributors({group: group, role: role}) %}
 		{% if contributor.visible %}
 			<span>
-				{% if avatars == "yes" %}
-					{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 18} only %}
+				{% if option.avatars == "yes" %}
+					{{ contributor.image.html({width: 18, height: 18, class: "avatar avatar-" ~ size ~  " photo", alt: "avatar" }) }}
 				{% endif %}
 				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% endif %}
 		{% endif %}

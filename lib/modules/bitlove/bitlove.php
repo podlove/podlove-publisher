@@ -9,7 +9,6 @@ class Bitlove extends \Podlove\Modules\Base {
 	protected $module_group = 'external services';
 
 	public function load() {
-		add_action( 'wp_footer', array( $this, 'inject_base' ) );
 		add_filter( 'the_content', array( $this, 'inject_widget' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'require_jquery' ) );
 
@@ -21,13 +20,18 @@ class Bitlove extends \Podlove\Modules\Base {
 		add_action( 'admin_init', array( $this, 'add_feed_model_extension' ) );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_print_styles' ));
 
 		add_action( 'wp_ajax_podlove-fetch-bitlove-url', array( $this, 'fetch_bitlove_url' ) );
+
+		add_filter( 'podlove_pre_media_file_download', array( $this, 'intercept_downloads' ), 10, 2 );
+
+		RssExtension::init();
 	}
 
 	public function fetch_bitlove_url() {
 		\Podlove\AJAX\Ajax::respond_with_json( array(
-			'bitlove_url'   => self::get_bitlove_feed_url( $_REQUEST['feed_id'] )
+			'bitlove_url' => self::get_bitlove_feed_url( $_REQUEST['feed_id'] )
 		) );
 	}
 
@@ -39,6 +43,16 @@ class Bitlove extends \Podlove\Modules\Base {
 			\Podlove\get_plugin_header( 'Version' )
 		);
 		wp_enqueue_script('podlove_bitlove_admin_script');
+	}
+
+	public function frontend_print_styles() {
+		wp_register_script(
+			'podlove_bitlove_widget_script',
+			$this->get_module_url() . '/js/widget.js',
+			array(),
+			\Podlove\get_plugin_header( 'Version' )
+		);
+		wp_enqueue_script('podlove_bitlove_widget_script');
 	}
 
 	public static function get_bitlove_feed_url( $feed_id ) {
@@ -108,12 +122,6 @@ class Bitlove extends \Podlove\Modules\Base {
 			wp_enqueue_script( 'jquery' );
 	}
 
-	public function inject_base() {
-		?>
-		<script src="//bitlove.org/widget/base.js" type="text/javascript"></script>
-		<?php
-	}
-
 	public function inject_widget( $content ) {
 		global $post;
 
@@ -140,11 +148,10 @@ class Bitlove extends \Podlove\Modules\Base {
 
 				$file_type = $episode_asset->file_type();
 				
-				$download_link_url  = $media_file->get_file_url();
 				$download_link_name = str_replace( " ", "&nbsp;", $episode_asset->title );
 
 				$downloads[] = array(
-					'url'  => $download_link_url,
+					'enclosure_guid' => RssExtension::get_enclosure_guid($media_file),
 					'name' => $download_link_name,
 					'size' => \Podlove\format_bytes( $media_file->size, 0 ),
 					'file' => $media_file
@@ -156,7 +163,7 @@ class Bitlove extends \Podlove\Modules\Base {
 			foreach ( $downloads as $download ) {
 				$content .= <<<EOF
 jQuery(function($) {
-	torrentByEnclosure("${download['url']}", function(info) {
+	torrentByEnclosure("${download['enclosure_guid']}", function(info) {
 	  if (info) {
 	    var url   = info.sources[0].torrent,
 	        title = "Torrent:&nbsp;${download['name']}";
@@ -176,6 +183,32 @@ EOF;
 		});
 
 		return $content . $bitlove_html;
+	}
+
+	function intercept_downloads($_, $download_media_file) {
+
+		if (filter_var($download_media_file, FILTER_VALIDATE_URL) === FALSE)
+			return false;
+
+		$parsed_url = parse_url($download_media_file);
+		$file_name = substr( $parsed_url['path'], strrpos( $parsed_url['path'], "/" ) + 1 );
+		header( "Expires: 0" );
+		header( 'Cache-Control: must-revalidate' );
+	    header( 'Pragma: public' );
+		header( "Content-Type: application/x-bittorrent" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Disposition: attachment; filename=$file_name" );
+		header( "Content-Transfer-Encoding: binary" );
+		ob_clean();
+		flush();
+		while ( @ob_end_flush() ); // flush and end all output buffers
+
+		$curl = new \Podlove\Http\Curl;
+		$curl->request($download_media_file, ['filename' => $file_name]);
+		$response = $curl->get_response();
+		echo $response['body'];
+
+		return true; // stops rest of download logic
 	}
 
 }

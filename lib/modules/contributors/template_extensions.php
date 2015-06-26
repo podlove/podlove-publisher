@@ -13,17 +13,20 @@ class TemplateExtensions {
 	/**
 	 * List of episode contributors
 	 *
-	 * Examples:
+	 * **Examples**
 	 *
-	 * ```
-	 * {# iterating over a list of contributors #}
+	 * Iterating over a list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributor in episode.contributors %}
 	 * 	{{ contributor.name }}
 	 * 	{% if not loop.last %}, {% endif %}
 	 * {% endfor %}
 	 * ```
-	 * ```
-	 * {# iterating over a grouped list of contributors #}
+	 * 
+	 * Iterating over a grouped list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributorGroup in episode.contributors({groupby: "group"}) %}
 	 * 	<strong>{{ contributorGroup.group.title }}:</strong> 
 	 * 	{% for contributor in contributorGroup.contributors %}
@@ -33,10 +36,9 @@ class TemplateExtensions {
 	 * {% endfor %}
 	 * ```
 	 * 
-	 * Options:
+	 * **Parameters**
 	 *
-	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters. 
-	 *                Returns null if the id belongs to an existing contributor which is not part of the episode. 
+	 * - **id:**      Fetch one contributor by its id.
 	 *                Example: `episode.contributors({id: 'james'}).name`
 	 * - **group:**   group slug. If none is given, show all contributors.
 	 * - **role:**    role slug. If none is given, show all contributors.
@@ -53,33 +55,37 @@ class TemplateExtensions {
 	 * @accessor
 	 * @dynamicAccessor episode.contributors
 	 */
-	public function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = array()) {
+	public static function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = array()) {
+		return $episode->with_blog_scope(function() use ($return, $method_name, $episode, $post, $args) {
+			$defaults = array(
+				'order'   => 'ASC',
+				'orderby' => 'position'
+			);
+			$args = wp_parse_args($args, $defaults);
 
-		$defaults = array(
-			'order'   => 'ASC',
-			'orderby' => 'position'
-		);
-		$args = wp_parse_args($args, $defaults);
-
-		$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
-		$contributions = \Podlove\Modules\Contributors\Contributors::orderContributions($contributions, $args);
-		return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
+			$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+			$contributions = \Podlove\Modules\Contributors\Contributors::orderContributions($contributions, $args);
+			return \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
+		});
 	}
 
 	/**
 	 * List of podcast contributors.
 	 *
-	 * Examples:
+	 * **Examples**
 	 *
-	 * ```
-	 * {# iterating over a list of contributors #}
+	 * Iterating over a list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributor in podcast.contributors({scope: "podcast"}) %}
 	 * 	{{ contributor.name }}
 	 * 	{% if not loop.last %}, {% endif %}
 	 * {% endfor %}
 	 * ```
-	 * ```
-	 * {# iterating over a grouped list of contributors #}
+	 * 
+	 * Iterating over a grouped list of contributors
+	 * 
+	 * ```jinja
 	 * {% for contributorGroup in podcast.contributors({scope: "podcast", groupby: "group"}) %}
 	 * 	<strong>{{ contributorGroup.group.title }}:</strong> 
 	 * 	{% for contributor in contributorGroup.contributors %}
@@ -89,9 +95,9 @@ class TemplateExtensions {
 	 * {% endfor %}
 	 * ```
 	 * 
-	 * Options:
+	 * **Parameters**
 	 *
-	 * - **id:**      Fetch one contributor by its id. Ignores all other parameters.
+	 * - **id:**      Fetch one contributor by its id.
 	 *                Example: `podcast.contributors({id: 'james'}).name`
 	 * - **scope:**   Either "global", "global-active" or "podcast".
 	 *                - "global" returns all contributors.
@@ -113,66 +119,67 @@ class TemplateExtensions {
 	 * @accessor
 	 * @dynamicAccessor podcast.contributors
 	 */
-	public function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
+	public static function accessorPodcastContributors($return, $method_name, $podcast, $args = array()) {
+		return $podcast->with_blog_scope(function() use ($podcast, $args) {
+			$args = shortcode_atts( array(
+				'id'      => null,
+				'scope'   => 'global-active',
+				'group'   => 'all',
+				'role'    => 'all',
+				'groupby' => null,
+				'order'   => 'ASC',
+				'orderby' => 'name',
+			), $args );
+			
+			if ($args['id'])
+				return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
 
-		$args = shortcode_atts( array(
-			'id'      => null,
-			'scope'   => 'global-active',
-			'group'   => 'all',
-			'role'    => 'all',
-			'groupby' => null,
-			'order'   => 'ASC',
-			'orderby' => 'name',
-		), $args );
-		
-		if ($args['id'])
-			return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
+			$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
 
-		$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
+			$contributors = array();
+			if (in_array($scope, array("global", "global-active"))) {
+				// fetch by group and/or role. defaults to *all* contributors
+				// if no role or group are given
+				$group = $args['group'] !== 'all' ? $args['group'] : null;
+				$role  = $args['role']  !== 'all' ? $args['role']  : null;
+				$contributors = Contributor::byGroupAndRole($group, $role);
 
-		$contributors = array();
-		if (in_array($scope, array("global", "global-active"))) {
-			// fetch by group and/or role. defaults to *all* contributors
-			// if no role or group are given
-			$group = $args['group'] !== 'all' ? $args['group'] : null;
-			$role  = $args['role']  !== 'all' ? $args['role']  : null;
-			$contributors = Contributor::byGroupAndRole($group, $role);
+				if ($scope == 'global-active') {
+					$contributors = array_filter($contributors, function($contributor) {
+						return $contributor->getPublishedContributionCount() > 0;
+					});
+				}
 
-			if ($scope == 'global-active') {
-				$contributors = array_filter($contributors, function($contributor) {
-					return $contributor->getPublishedContributionCount() > 0;
-				});
+				$contributors = array_map(function($contributor) {
+					return new Template\Contributor($contributor);
+				}, $contributors);
+			} else {
+				$contributions = ShowContribution::all();
+				$contributors = \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
 			}
 
-			$contributors = array_map(function($contributor) {
-				return new Template\Contributor($contributor);
-			}, $contributors);
-		} else {
-			$contributions = ShowContribution::all();
-			$contributors = \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
-		}
+			// sort
+			if ($args['groupby'] == 'group') {
+				foreach ($contributors as $group_id => $group) {
+					usort($contributors[$group_id]['contributors'], function($a, $b) {
+						return strcmp($a->name(), $b->name());
+					});
 
-		// sort
-		if ($args['groupby'] == 'group') {
-			foreach ($contributors as $group_id => $group) {
-				usort($contributors[$group_id]['contributors'], function($a, $b) {
+					if (strtoupper($args['order']) == 'DESC') {
+						$contributors[$group_id]['contributors'] = array_reverse($contributors[$group_id]['contributors']);
+					}
+				}
+			} else {
+				usort($contributors, function($a, $b) {
 					return strcmp($a->name(), $b->name());
 				});
 
 				if (strtoupper($args['order']) == 'DESC') {
-					$contributors[$group_id]['contributors'] = array_reverse($contributors[$group_id]['contributors']);
+					$contributors = array_reverse($contributors);
 				}
 			}
-		} else {
-			usort($contributors, function($a, $b) {
-				return strcmp($a->name(), $b->name());
-			});
 
-			if (strtoupper($args['order']) == 'DESC') {
-				$contributors = array_reverse($contributors);
-			}
-		}
-
-		return $contributors;
+			return $contributors;
+		});
 	}
 }

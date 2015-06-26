@@ -8,6 +8,8 @@ use \Podlove\Settings\Expert\Tabs;
  */
 class Settings {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	private $tabs;
 	
@@ -22,10 +24,16 @@ class Settings {
 			/* $function   */ array( $this, 'page' )
 		);
 
+		$this->init_page_documentation(self::$pagehook);
+
+		if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_settings_handle' && !\Podlove\is_options_save_page())
+			return;
+
 		$tabs = new Tabs( __( 'Expert Settings', 'podlove' ) );
 		$tabs->addTab( new Tab\Website( __( 'Website', 'podlove' ), true ) );
 		$tabs->addTab( new Tab\Metadata( __( 'Metadata', 'podlove' ) ) );
 		$tabs->addTab( new Tab\Redirects( __( 'Redirects', 'podlove' ) ) );
+		$tabs->addTab( new Tab\WebPlayer( __( 'Web Player', 'podlove' ) ) );
 		$tabs->addTab( new Tab\FileTypes( __( 'File Types', 'podlove' ) ) );
 		$tabs->addTab( new Tab\Tracking( __( 'Tracking', 'podlove' ) ) );
 		$this->tabs = $tabs;
@@ -33,8 +41,6 @@ class Settings {
 	}
 	
 	function page() {
-		// hack: always flush rewrite rules here for custom_episode_slug setting
-		flush_rewrite_rules();
 		?>
 		<div class="wrap">
 			<?php

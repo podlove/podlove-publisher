@@ -48,7 +48,7 @@ var PODLOVE = PODLOVE || {};
 
 	 	function create_file(args) {
 	 		var data = {
-	 			action: 'podlove-create-file',
+	 			action: 'podlove-file-create',
 	 			episode_id: args.episode_id,
 	 			episode_asset_id: args.episode_asset_id,
 	 			slug: $("#_podlove_meta_slug").val()
@@ -91,7 +91,6 @@ var PODLOVE = PODLOVE || {};
 	 			},
 	 			context: o.slug_field
 	 		}).done(function(slug) {
-	 			console.log(slug);
 	 			$(this)
 	 				.val(slug)
 		 			.blur();
@@ -123,13 +122,20 @@ var PODLOVE = PODLOVE || {};
 	 				var filename      = url.replace(media_file_base_uri, "");
 	 				var $row          = $checkbox.closest(".media_file_row");
 
+	 				var isNumber = function (obj) { return !isNaN(parseFloat(obj)) };
+
 	 				if (readable_size === "???") {
 	 					size_html = '<span style="color:red">File not found!</span>';
 	 					$row.find(".status").html('<i class="podlove-icon-remove"></i>');
 	 				} else {
-	 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
+	 					if (isNumber(size)) {
+		 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
+	 					} else {
+	 						size_html = '<span>' + size + '</span>';	
+	 					}
 	 					$row.find(".status").html('<i class="podlove-icon-ok"></i>');
 	 				}
+
 	 				$row.find(".size").html(size_html);
 	 				$row.find(".url").html('<a href="' + url + '" target="_blank">' + filename + '</a>');
 	 				$row.find(".update").html('<a href="#" class="button update_media_file">update</a>');
@@ -181,11 +187,14 @@ var PODLOVE = PODLOVE || {};
  		$(".row__podlove_meta_episode_assets > span > label").after(" <a href='#' id='update_all_media_files'>update all media files</a>")
 
  		var update_all_media_files = function(e) {
- 			e.preventDefault();
+ 			if (e) {
+	 			e.preventDefault();
+ 			}
  			$(".update_media_file").click();
  		};
 
  		$.subscribe("/auphonic/production/status/done", update_all_media_files);
+ 		$.subscribe("/auphonic/production/status/results_imported", update_all_media_files);
  		$(document).on("click", "#update_all_media_files", update_all_media_files);
 
  		$(document).on("click", ".update_media_file", function(e) {
@@ -195,7 +204,7 @@ var PODLOVE = PODLOVE || {};
  			var file = container.find("input").data();
 
  			var data = {
- 				action: 'podlove-update-file',
+ 				action: 'podlove-file-update',
  				file_id: file.id,
  				slug: $("#_podlove_meta_slug").val()
  			};
@@ -208,9 +217,26 @@ var PODLOVE = PODLOVE || {};
  				data: data,
  				dataType: 'json',
  				success: function(result) {
+ 					var input = container.find("input");
+ 					if (result && result.file_size > 0 && result.reachable) {
+ 						if (result.file_size === 1) {
+ 							input.data('size' , 'unknown');
+ 						} else {
+		 					input.data('size' , result.file_size);
+ 						}
+	 					input.data('fileUrl', result.file_url);
+ 					} else {
+	 					input.data('size'   , -1);
+	 					input.data('fileUrl', "");
+ 					}
+ 				},
+ 				error: function(xhr, status, error) {
+ 					var input = container.find("input");
+ 					input.data('size'   , -1);
+ 					input.data('fileUrl', "");
+ 				},
+ 				complete: function(xhr, status) {
  					ajax_requests.pop();
- 					container.find("input").data('size', result.file_size);
- 					container.find("input").data('fileUrl', result.file_url);
  					o.update_preview_row(container);
  				}
  			});
@@ -228,6 +254,14 @@ var PODLOVE = PODLOVE || {};
 				o.slug_field.data("auto-update", false); // stop autoupdate on manual change
 			})
 		;
+
+ 		$(document).ready(function() {
+ 			// check all media files on page load
+ 			// wait a while because it shouldn't slow down loading the rest of the page
+ 			if (o.slug_field.val().length > 0) {
+	 			setTimeout(function() { update_all_media_files(); }, 2000);
+ 			}
+ 		});
 
 		var typewatch = (function() {
 			var timer = 0;

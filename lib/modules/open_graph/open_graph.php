@@ -29,6 +29,11 @@ class Open_Graph extends \Podlove\Modules\Base {
 				return $output . ' prefix="og: http://ogp.me/ns#"';
 			} );
 
+			// as recommended in http://jetpack.me/2013/05/03/remove-open-graph-meta-tags/
+			// @fixme Generate conflicts for known conflicting plugins.
+			//        Get inspired by Jetpack's list class.jetpack.php "open_graph_conflicting_plugins"
+			add_filter( 'jetpack_enable_open_graph', '__return_false' );
+
 			add_action( 'wp_head', array( $this, 'the_open_graph_metadata' ) );
 		}
 
@@ -59,12 +64,8 @@ class Open_Graph extends \Podlove\Modules\Base {
 			if ( ! $episode )
 				return;
 
-			$podcast = Model\Podcast::get_instance();
-
-			// determine image
-			$cover_art_url = $episode->get_cover_art();
-			if ( ! $cover_art_url )
-				$cover_art_url = $podcast->cover_image;
+			$podcast = Model\Podcast::get();
+			$cover_art_url = $episode->cover_art_with_fallback()->url();
 
 			// determine featured image (thumbnail)
 			$thumbnail = NULL;
@@ -73,6 +74,15 @@ class Open_Graph extends \Podlove\Modules\Base {
 				$thumbnailInfo = wp_get_attachment_image_src( $post_thumbnail_id );
 				if ( is_array( $thumbnailInfo ) )
 					list( $thumbnail, $width, $height ) = $thumbnailInfo;
+			}
+
+			$description = NULL;
+			if ($episode->summary && $episode->subtitle) {
+				$description = $episode->subtitle . "\n" . $episode->summary;
+			} elseif ($episode->summary) {
+				$description = $episode->summary;
+			} elseif ($episode->subtitle) {
+				$description = $episode->subtitle;
 			}
 
 			// define meta tags
@@ -87,17 +97,20 @@ class Open_Graph extends \Podlove\Modules\Base {
 				),
 				array(
 					'property' => 'og:title',
-					'content'  => $episode->full_title()
+					'content'  => get_the_title()
 				),
 				array(
 					'property' => 'og:url',
 					'content'  => get_permalink()
-				),
-				array(
-					'property' => 'og:description',
-					'content'  => $episode->description()
 				)
 			);
+
+			if ($description) {
+				$data[] = array(
+					'property' => 'og:description',
+					'content'  => $description
+				);
+			}
 			
 			if ($cover_art_url) {
 				$data[] = array(

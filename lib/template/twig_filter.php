@@ -13,6 +13,30 @@ use \Podlove\Model;
  */
 class TwigFilter {
 
+	public static $template_tags = array(
+		'is_archive',
+		'is_post_type_archive',
+		'is_attachment',
+		'is_tax',
+		'is_date',
+		'is_day',
+		'is_feed',
+		'is_comment_feed',
+		'is_front_page',
+		'is_home',
+		'is_month',
+		'is_page',
+		'is_paged',
+		'is_preview',
+		'is_search',
+		'is_single',
+		'is_singular',
+		'is_time',
+		'is_year',
+		'is_404',
+		'is_main_query',
+	);
+
 	/**
 	 * Apply Twig to given template
 	 * 
@@ -54,16 +78,41 @@ class TwigFilter {
 		$twig->addFilter($formatBytesFilter);
 		$twig->addFilter($padLeftFilter);
 
-		$context = $vars;
+		// add functions
+		foreach (self::$template_tags as $tag) {
+			$func = new \Twig_SimpleFunction($tag, function() use ($tag) { return $tag(); });
+			$twig->addFunction($func);
+		}
+
+		$context = ['option' => $vars];
 
 		// add podcast to global context
-		$context = array_merge($context, array('podcast' => new Podcast(Model\Podcast::get_instance())));
+		$context = array_merge(
+			$context, ['podcast' => new Podcast(Model\Podcast::get())]
+		);
+
+		// Apply filters to twig templates
+		$context = apply_filters( 'podlove_templates_global_context', $context );
 
 		// add podcast to global context if we are in an episode
 		if ($episode = Model\Episode::find_one_by_property('post_id', get_the_ID())) {
 			$context = array_merge($context, array('episode' => new Episode($episode)));
 		}
 
-		return $twig->render($html, $context);
+		try {
+			return $twig->render($html, $context);
+		} catch (\Twig_Error $e) {
+			$message  = $e->getRawMessage();
+			$line     = $e->getTemplateLine();
+			$template = $e->getTemplateFile();
+
+			\Podlove\Log::get()->addError($message, [
+				'type'     => 'twig',
+				'line'     => $line,
+				'template' => $template
+			]);
+		}
+
+		return "";
 	}
 }

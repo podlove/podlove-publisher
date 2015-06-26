@@ -31,7 +31,7 @@ function override_feed_title( $feed ) {
 
 function override_feed_description($feed) {
 	add_filter('podlove_rss_feed_description', function($description) use ($feed) {
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$desc = $podcast->subtitle ? $podcast->subtitle : $description;
 		return htmlspecialchars($desc);
 	});
@@ -39,7 +39,7 @@ function override_feed_description($feed) {
 
 function override_feed_language( $feed ) {
 	add_filter( 'pre_option_rss_language', function ( $language ) use ( $feed ) {
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		return apply_filters( 'podlove_feed_language', ( $podcast->language ) ? $podcast->language : $language );
 	} );
 }
@@ -91,6 +91,36 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo $feed->get_alternate_links();
 	}, 9 );
  	
+ 	// add rss image
+	add_action( $hook, function() use ( $podcast ) {
+
+		$image = [
+			'url'   => $podcast->cover_art()->url(),
+			'title' => $podcast->title,
+			'link'  => apply_filters( 'podlove_feed_link', \Podlove\get_landing_page_url() )
+		];
+		$image = apply_filters('podlove_feed_image', $image);
+
+		if (!$image['url'])
+			return;
+
+		$dom = new \Podlove\DomDocumentFragment;
+		$image_tag = $dom->createElement('image');
+		
+		foreach ($image as $tag_name => $tag_text) {
+			if ($tag_text) {
+				$tag = $dom->createElement($tag_name);
+				$tag_text = $dom->createTextNode($tag_text);
+				$tag->appendChild($tag_text);
+				$image_tag->appendChild($tag);
+			}
+		}
+
+		$dom->appendChild($image_tag);
+
+		echo (string) $dom;
+	} );
+
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		echo PHP_EOL;
 
@@ -139,8 +169,8 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo "\t" . apply_filters( 'podlove_feed_itunes_owner', $owner );
 		echo PHP_EOL;
 		
-		if ( $podcast->cover_image ) {
-			$coverimage = sprintf( '<itunes:image href="%s" />', $podcast->cover_image );
+		if ( $podcast->cover_art()->url() ) {
+			$coverimage = sprintf( '<itunes:image href="%s" />', $podcast->cover_art()->url() );
 		} else {
 			$coverimage = '';
 		}
@@ -166,6 +196,8 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		$complete = sprintf( '<itunes:complete>%s</itunes:complete>', ( $podcast->complete ) ? 'yes' : 'no' );
 		echo apply_filters( 'podlove_feed_itunes_complete', ( $podcast->complete ? "\t$complete"  : '' ) );
 		echo PHP_EOL;
+
+		do_action('podlove_append_to_feed_head', $podcast, $feed, $format);
 	} );
 }
 
@@ -173,75 +205,85 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		global $post;
 
-		$episode = Model\Episode::find_one_by_post_id( $post->ID );
-		$asset   = $feed->episode_asset();
-		$file    = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
-		$asset_assignment = Model\AssetAssignment::get_instance();
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+		echo $cache->cache_for('feed_item_' . $feed->slug . '_' . $post->ID, function() use ( $podcast, $feed, $format, $post ) {
 
-		if ( ! $file )
-			return;
+			$xml = "";
 
-		$enclosure_file_size = $file->size;
-		$cover_art_url       = $episode->get_cover_art();
+			$episode = Model\Episode::find_one_by_post_id( $post->ID );
+			$asset   = $feed->episode_asset();
+			$file    = Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
+			$asset_assignment = Model\AssetAssignment::get_instance();
 
-		if (isset($_REQUEST['tracking']) && $_REQUEST['tracking'] == 'no') {
-			$enclosure_url = $episode->enclosure_url( $feed->episode_asset(), null, null );
-		} else {
-			$enclosure_url = $episode->enclosure_url( $feed->episode_asset(), "feed", $feed->slug );
-		}
-		$enclosure_url = htmlentities($enclosure_url);
+			if ( ! $file )
+				return;
 
-		$chapters = new \Podlove\Feeds\Chapters( $episode );
-		$chapters->render( 'inline' );
+			$enclosure_file_size = $file->size;
 
-		$deep_link = Model\Feed::get_link_tag(array(
-			'prefix' => 'atom',
-			'rel'    => 'http://podlove.org/deep-link',
-			'type'   => '',
-			'title'  => '',
-			'href'   => get_permalink() . "#"
-		));
-		echo apply_filters( 'podlove_deep_link', $deep_link, $feed );
-		
-		echo apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type );
+			$cover_art_url = "";
+			if ($cover_art = $episode->cover_art())
+				$cover_art_url = $cover_art->url();
 
-		$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $episode->get_duration( 'HH:MM:SS' ) );
-		echo apply_filters( 'podlove_feed_itunes_duration', $duration );
+			if (isset($_REQUEST['tracking']) && $_REQUEST['tracking'] == 'no') {
+				$enclosure_url = $episode->enclosure_url( $feed->episode_asset(), null, null );
+			} else {
+				$enclosure_url = $episode->enclosure_url( $feed->episode_asset(), "feed", $feed->slug );
+			}
 
-		$author = apply_filters( 'podlove_feed_content', $podcast->author_name );
-		$author = sprintf( '<itunes:author>%s</itunes:author>', $author );
-		echo apply_filters( 'podlove_feed_itunes_author', $author );
+			$deep_link = Model\Feed::get_link_tag(array(
+				'prefix' => 'atom',
+				'rel'    => 'http://podlove.org/deep-link',
+				'type'   => '',
+				'title'  => '',
+				'href'   => get_permalink() . "#"
+			));
+			$xml .= apply_filters( 'podlove_deep_link', $deep_link, $feed );
+			
+			$xml .= apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type, $file );
 
-		$subtitle = apply_filters( 'podlove_feed_content', $episode->subtitle );
-		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $subtitle )  ;
-		echo apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
+			$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $episode->get_duration( 'HH:MM:SS' ) );
+			$xml .= apply_filters( 'podlove_feed_itunes_duration', $duration );
 
-		$summary = apply_filters( 'podlove_feed_content', strip_tags( $episode->summary ) );
-		$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
-		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
+			$author = apply_filters( 'podlove_feed_content', $podcast->author_name );
+			$author = sprintf( '<itunes:author>%s</itunes:author>', $author );
+			$xml .= apply_filters( 'podlove_feed_itunes_author', $author );
 
-		if (\Podlove\get_setting('metadata', 'enable_episode_explicit')) {
-			$itunes_explicit = apply_filters( 'podlove_feed_content', $episode->explicitText() );
-			$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', $itunes_explicit );
-			echo apply_filters( 'podlove_feed_itunes_explicit', $itunes_explicit );
-		}
+			$subtitle = apply_filters( 'podlove_feed_content', $episode->subtitle );
+			$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $subtitle )  ;
+			$xml .= apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
 
-		if ( $cover_art_url ) {
-			$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
-		} else {
-			$cover_art = '';
-		}
-		echo apply_filters( 'podlove_feed_itunes_image', $cover_art );
+			$summary = apply_filters( 'podlove_feed_content', strip_tags( $episode->summary ) );
+			$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
+			$xml .= apply_filters( 'podlove_feed_itunes_summary', $summary );
 
-		if ( $feed->embed_content_encoded ) {
-			add_filter( 'the_content_feed', function( $content, $feed_type ) {
-				return preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content );
-			}, 10, 2 );
-			$content_encoded = '<content:encoded><![CDATA[' . get_the_content_feed( 'rss2' ) . ']]></content:encoded>';
-			echo apply_filters( 'podlove_feed_content_encoded', $content_encoded );
-		}
+			if (\Podlove\get_setting('metadata', 'enable_episode_explicit')) {
+				$itunes_explicit = apply_filters( 'podlove_feed_content', $episode->explicit_text() );
+				$itunes_explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', $itunes_explicit );
+				$xml .= apply_filters( 'podlove_feed_itunes_explicit', $itunes_explicit );
+			}
 
-		do_action('podlove_append_to_feed_entry', $podcast, $episode, $feed, $format);
+			if ( $cover_art_url ) {
+				$cover_art = sprintf( '<itunes:image href="%s" />', $cover_art_url );
+			} else {
+				$cover_art = '';
+			}
+			$xml .= apply_filters( 'podlove_feed_itunes_image', $cover_art );
+
+			if ( $feed->embed_content_encoded ) {
+				add_filter( 'the_content_feed', function( $content, $feed_type ) {
+					return preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content );
+				}, 10, 2 );
+				$content_encoded = '<content:encoded><![CDATA[' . get_the_content_feed( 'rss2' ) . ']]></content:encoded>';
+				$xml .= apply_filters( 'podlove_feed_content_encoded', $content_encoded );
+			}
+
+			ob_start();
+			do_action('podlove_append_to_feed_entry', $podcast, $episode, $feed, $format);
+			$xml .= ob_get_contents();
+			ob_end_clean();
+
+			return $xml;
+		}, 15 * MINUTE_IN_SECONDS);
 
 	}, 11 );
 }

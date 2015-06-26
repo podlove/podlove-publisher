@@ -8,6 +8,11 @@ class Export extends \Podlove\Settings\Expert\Tab {
 	}
 
 	public function page() {
+
+		// whenever the page is loaded, reset tracking export progress
+		delete_option('podlove_tracking_export_all');
+		delete_option('podlove_tracking_export_progress');
+
 		do_action('podlove_imexport_settings_head');
 		?>
 

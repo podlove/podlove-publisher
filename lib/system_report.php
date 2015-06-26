@@ -14,21 +14,7 @@ class SystemReport {
 		$this->fields = array(
 			'site'        => array( 'title' => 'Website',           'callback' => function() { return get_site_url(); } ),
 			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() {
-
-				$version = phpversion();
-				$is_less_than_54 = version_compare(phpversion(),"5.4", "<=");
-				$is_less_than_55 = version_compare(phpversion(),"5.5", "<=");
-
-				$return = array();
-
-				if ($is_less_than_54) {
-					$return['message'] = "$version (upgrade to 5.4 or higher recommended)";
-					$return['notice'] = "Official support for PHP 5.3 ends 14 August 2014. We will require PHP 5.4 once we reach Publisher 2.0. Feel free to upgrade to a higher version like 5.5.";
-				} elseif ($is_less_than_55) {
-					$return['message'] = "$version (upgrade to 5.5 brings enhanced performance)";
-				}
-
-				return $return;
+				return phpversion();
 			} ),
 			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
@@ -45,7 +31,22 @@ class SystemReport {
 
 				return $plugin_data['Version'];
 			} ),
-			'curl'        => array( 'title' => 'curl Version',      'callback' => function() use ( &$errors ) {
+			'twig_version' => array( 'title' => 'Twig Version', 'callback' => function() {
+				return \Twig_Environment::VERSION;
+			} ),
+			'open_basedir' => array('callback' => function() use (&$errors) {
+				$open_basedir = trim(ini_get('open_basedir'));
+
+				if ($open_basedir != '')
+					$errors[] = 'The PHP setting "open_basedir" is not empty. This is incompatible with curl, a library required by Podlove Publisher. Please ask your hoster to unset "open_basedir".';
+
+				if ($open_basedir) {
+					return $open_basedir;
+				} else {
+					return 'ok';
+				}
+			}),
+			'curl'         => array( 'title' => 'curl Version',      'callback' => function() use ( &$errors ) {
 				$module_loaded = in_array( 'curl', get_loaded_extensions() );
 				$function_disabled = stripos( ini_get( 'disable_functions' ), 'curl_exec' ) !== false;
 				$out = '';
@@ -74,13 +75,6 @@ class SystemReport {
 
 				return $iconv_available ? "available" : "MISSING";
 			} ),
-			'allow_url_fopen' => array( 'callback' => function() use ( &$errors ) {
-
-				if ( ! $allow_url_fopen = ini_get( 'allow_url_fopen' ) )
-					$errors[] = 'allow_url_fopen must be activated in your php.ini';
-
-				return $allow_url_fopen;
-			} ),
 			'simplexml' => array( 'callback' => function() use ( &$errors ) {
 				
 				if ( ! $simplexml = in_array('SimpleXML', get_loaded_extensions()) )
@@ -93,7 +87,22 @@ class SystemReport {
 			'memory_limit'        => array( 'callback' => function() { return ini_get( 'memory_limit' ); } ),
 			'disable_classes'     => array( 'callback' => function() { return ini_get( 'disable_classes' ); } ),
 			'disable_functions'   => array( 'callback' => function() { return ini_get( 'disable_functions' ); } ),
-			'permalinks' => array( 'callback' => function() use ( &$errors ) {
+			'permalinks'          => array( 'callback' => function() use ( &$errors ) {
+
+				$permalinks = \get_option('permalink_structure');
+
+				if (!$permalinks) {
+					$errors[] = sprintf(
+						__('You are using the default WordPress permalink structure. This may cause problems with some podcast clients. Go to %s and set it to anything but default (for example "Post name").', 'podlove'),
+						admin_url('options-permalink.php')
+					);
+
+					return __("\"non-pretty\" Permalinks: Please change permalink structure", 'podlove');
+				}
+
+				return "ok ($permalinks)";
+			} ),
+			'podlove_permalinks'  => array( 'callback' => function() use ( &$errors ) {
 
 				if ( \Podlove\get_setting( 'website', 'use_post_permastruct' ) == 'on' )
 					return 'ok';
@@ -109,7 +118,7 @@ class SystemReport {
 			'podcast_settings' => array( 'callback' => function() use ( &$errors ) {
 
 				$out = '';
-				$podcast = Model\Podcast::get_instance();
+				$podcast = Model\Podcast::get();
 
 				if ( ! $podcast->title ) {
 					$error = __( 'Your podcast needs a title.', 'podlove' );
@@ -122,6 +131,9 @@ class SystemReport {
 					$errors[] = $error;
 					$out .= $error;
 				}
+
+				if (!$out)
+					$out = "ok";
 
 				return $out;
 			} ),
@@ -171,7 +183,7 @@ class SystemReport {
 		foreach ( $this->fields as $field_key => $field ) {
 			$result = call_user_func( $field['callback'] );
 
-			if (is_array($result)) {
+			if (is_array($result) && isset($result['message'])) {
 				$this->fields[ $field_key ]['value'] = $result['message'];
 				if (isset($result['error'])) {
 					$this->errors[] = $result['error'];

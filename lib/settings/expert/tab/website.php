@@ -5,6 +5,12 @@ use \Podlove\Settings\Expert\Tab;
 
 class Website extends Tab {
 	public function init() {
+		
+		// always flush rewrite rules here for custom_episode_slug setting
+		if ($this->is_active()) {
+			set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
+		}
+
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_general',
 			/* $title 	 */ __( '', 'podlove' ),	
@@ -16,6 +22,13 @@ class Website extends Tab {
 			/* $id 		 */ 'podlove_settings_files',
 			/* $title 	 */ __( '', 'podlove' ),	
 			/* $callback */ function () { echo '<h3>' . __( 'Files & Downloads', 'podlove' ) . '</h3>'; },
+			/* $page	 */ Settings::$pagehook	
+		);
+
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_feeds',
+			/* $title 	 */ __( '', 'podlove' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Feeds', 'podlove' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 		
@@ -273,6 +286,22 @@ class Website extends Tab {
 			/* $section  */ 'podlove_settings_files'
 		);
 
+		add_settings_field(
+			/* $id       */ 'podlove_setting_feeds_skip_redirect',
+			/* $title    */ sprintf(
+				'<label for="feeds_skip_redirect">%s</label>',
+				__( 'Allow to skip feed redirects', 'podlove' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove_website[feeds_skip_redirect]" id="feeds_skip_redirect" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'feeds_skip_redirect' ), 'on' ) ?>>
+				<?php echo __('If you need to debug you feeds while using a feed proxy, add <code>?redirect=no</code> to the feed URL to skip the redirect.', 'podlove') ?>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_feeds'
+		);
+
 		register_setting( Settings::$pagehook, 'podlove_website', function($options) {
 			/**
 			 * handle checkboxes
@@ -282,7 +311,8 @@ class Website extends Tab {
 				'hide_wp_feed_discovery',
 				'use_post_permastruct',
 				'episode_archive',
-				'ssl_verify_peer'
+				'ssl_verify_peer',
+				'feeds_skip_redirect'
 			);
 			foreach ( $checkboxes as $checkbox_key ) {
 				if ( ! isset( $options[ $checkbox_key ] ) )

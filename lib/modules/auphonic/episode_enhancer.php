@@ -52,6 +52,7 @@ class EpisodeEnhancer {
 
 	public function auphonic_episodes_form() {
 		$asset_assignments = Model\AssetAssignment::get_instance();
+		$podcast = Model\Podcast::get();
 		?>
 
 		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta( get_the_ID(), '_auphonic_production', true ) ?>" />
@@ -62,6 +63,7 @@ class EpisodeEnhancer {
 			data-assignment-image="<?php echo $asset_assignments->image ?>"
 			data-module-url="<?php echo $this->module->get_module_url() ?>"
 			data-site-url="<?php echo get_home_url(); ?>"
+			data-podcast-image="<?php echo $podcast->cover_art()->url() ?>"
 			/>
 
 		<div id="auphonic-box">
@@ -169,10 +171,6 @@ class EpisodeEnhancer {
 
 						<label>
 							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php echo __( 'Publish episode when done', 'podlove' ) ?>
-						</label>
-						
-						<label>
-							<input type="checkbox" id="auphonic_complete_after_finishing"> <?php echo __( 'Complete episode metadata when done', 'podlove' ) ?>
 						</label>
 					</div>
 

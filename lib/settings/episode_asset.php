@@ -4,6 +4,8 @@ use \Podlove\Model;
 
 class EpisodeAsset {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -16,6 +18,9 @@ class EpisodeAsset {
 			/* $menu_slug  */ 'podlove_episode_assets_settings_handle',
 			/* $function   */ array( $this, 'page' )
 		);
+
+		$this->init_page_documentation(self::$pagehook);
+		
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 
 		register_setting( EpisodeAsset::$pagehook, 'podlove_asset_assignment' );
@@ -63,7 +68,7 @@ class EpisodeAsset {
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
 
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 
 		if ( isset( $_REQUEST['force'] ) && $_REQUEST['force'] || $asset->is_deletable() ) {
@@ -80,7 +85,7 @@ class EpisodeAsset {
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
 
-		$podcast = Model\Podcast::get_instance();
+		$podcast = Model\Podcast::get();
 		$asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
 
 		$episodes = Model\Episode::all();
@@ -370,7 +375,7 @@ class EpisodeAsset {
 				</th>
 				<td>
 					<div id="url_preview" style="font-size: 1.5em"></div>
-					<div id="url_template" style="display: none;"><?php echo Model\Podcast::get_instance()->get_url_template() ?></div>
+					<div id="url_template" style="display: none;"><?php echo Model\Podcast::get()->get_url_template() ?></div>
 				</td>
 			</tr>
 			<?php
@@ -379,7 +384,7 @@ class EpisodeAsset {
 
 		// hidden fields for JavaScript
 		?>
-		<input type="hidden" id="podlove_show_media_file_base_uri" value="<?php echo Model\Podcast::get_instance()->media_file_base_uri; ?>">
+		<input type="hidden" id="podlove_show_media_file_base_uri" value="<?php echo Model\Podcast::get()->media_file_base_uri; ?>">
 		<?php
 	}
 	

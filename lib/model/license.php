@@ -77,7 +77,7 @@ class License {
 
 		// episodes fall back to podcast licenses
 		if ($this->scope == 'episode')
-			return Podcast::get_instance()->get_license_html();
+			return Podcast::get()->get_license_html();
 
 		// ... otherwise, a license is missing
 		return "
@@ -195,9 +195,9 @@ class License {
 
 		$license = array(
 			'version'        => $version,
-			'commercial_use' => ( strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes' ),
+			'commercial_use' => strpos( $raw_extract[0], 'nc' ) ? 'no' : 'yes',
 			'modification'   => self::get_modification_state( $raw_extract[0] ),
-			'jurisdiction'   => ( $raw_extract[2] == 'deed.en' || $raw_extract[2] == '' ? 'international' : $raw_extract[2] )
+			'jurisdiction'   => !isset($raw_extract[2]) || strpos($raw_extract[2], '.') || $raw_extract[2] == '' ? 'international' : $raw_extract[2]
 		);
 
 		return $license;

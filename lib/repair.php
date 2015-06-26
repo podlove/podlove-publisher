@@ -2,6 +2,7 @@
 namespace Podlove;
 
 use \Podlove\Modules\Social;
+use \Podlove\Model;
 
 class Repair {
 
@@ -28,7 +29,9 @@ class Repair {
 		self::clear_repair_log();
 
 		self::clear_podlove_cache();
+		self::clear_podlove_image_cache();
 		self::flush_rewrite_rules();
+		self::remove_duplicate_episodes();
 
 		// hook for modules to add their repair methods
 		do_action('podlove_repair_do_repair');
@@ -53,9 +56,56 @@ class Repair {
 		self::add_to_repair_log(__('Podlove cache cleared', 'podlove'));
 	}
 
+	private static function clear_podlove_image_cache() {
+		\Podlove\Model\Image::flush_cache();
+		self::add_to_repair_log(__('Podlove image cache cleared', 'podlove'));
+	}
+
 	private static function flush_rewrite_rules() {
 		flush_rewrite_rules();
 		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove'));
+	}
+
+	// this should create a conflict with user aided resolution
+	public static function remove_duplicate_episodes() {
+		global $wpdb;
+
+		// find duplicate episodes
+		$sql = "SELECT post_id, COUNT(*) cnt FROM " . Model\Episode::table_name() . " GROUP BY post_id HAVING cnt > 1";
+		$duplicate_post_ids = $wpdb->get_col($sql, 0);
+
+		if ($duplicate_post_ids && count($duplicate_post_ids)) {
+			foreach ($duplicate_post_ids as $post_id) {
+				// only keep first created episode entry
+				$sql = $wpdb->prepare(
+					"DELETE FROM
+						" . Model\Episode::table_name() . "
+					WHERE post_id = %d AND id != (SELECT id FROM (
+						SELECT
+							id
+						FROM
+							" . Model\Episode::table_name() . "
+						WHERE
+							post_id = %d
+						ORDER BY
+							id ASC
+						LIMIT 1
+					) x)",
+					$post_id, $post_id
+				);
+				$wpdb->query($sql);
+			}
+			self::add_to_repair_log(
+				sprintf(
+					__('Removed duplicate episode datasets (%s) You should verify that they are correct.', 'podlove'),
+					implode(', ', array_map(function($post_id) {
+						$link  = \get_edit_post_link($post_id);
+						$title = \get_the_title($post_id);
+						return sprintf('<a href="%s" target="_blank">%s</a>', $link, $title);
+					}, $duplicate_post_ids))
+				)
+			);
+		}
 	}
 
 	private static function print_and_clear_repair_log() {
@@ -95,6 +145,10 @@ class Repair {
 					Sometimes an issue is already fixed but you still see the faulty output.
 					Clearing the cache avoids this.
 					However, if you use a third party caching plugin, you should clear that cache, too.
+				</li>
+				<li>
+					<strong>clears Podlove image cache</strong>
+					Podlove should notice automatically when an image changes and replace it after a while. If you want to enforce the refresh, this will do it.
 				</li>
 				<li>
 					<strong>flushes WordPress rewrite rules</strong>

@@ -2,7 +2,6 @@
 namespace Podlove\Model;
 
 class GeoArea extends Base {
-
 }
 
 GeoArea::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );

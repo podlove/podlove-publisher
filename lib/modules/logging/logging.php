@@ -10,14 +10,33 @@ use Podlove\Settings\Dashboard;
 class Logging extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Logging';
-	protected $module_description = 'Get an email when all episode assets are unavailable. View podlove related logs in dashboard. (writes logs to database)';
+	protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
 	protected $module_group = 'system';
 
 	public function load() {
+		add_action( 'podlove_uninstall_plugin', [$this, 'uninstall'] );
 		add_action( 'podlove_module_was_activated_logging', array( $this, 'was_activated' ) );
 		add_action( 'init', array( $this, 'register_database_logger' ));
 
-		add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_box' ) );
+		if (current_user_can('administrator')) {
+			add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_box' ) );
+		}
+
+		self::schedule_crons();
+		add_action('podlove_cleanup_logging_table', array(__CLASS__, 'cleanup_logging_table'));
+	}
+
+	public function uninstall() {
+		LogTable::destroy();
+	}
+
+	public static function schedule_crons() {
+		if (!wp_next_scheduled('podlove_cleanup_logging_table'))
+			wp_schedule_event(time(), 'daily', 'podlove_cleanup_logging_table');
+	}
+
+	public static function cleanup_logging_table() {
+		LogTable::cleanup();
 	}
 
 	public function was_activated( $module_name ) {
@@ -103,6 +122,9 @@ class Logging extends \Podlove\Modules\Base {
 					}
 					if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
 						echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+					}
+					if (isset($data->type) && $data->type == 'twig') {
+						echo sprintf('in template "%s" line %d', $data->template, $data->line);
 					}
 					?>
 				</span>

@@ -30,6 +30,25 @@ PODLOVE.trailingslashit = function (url) {
 	return PODLOVE.untrailingslashit(url) + '/';
 }
 
+PODLOVE.toDurationFormat = function (float_seconds) {
+	var sec_num = parseInt(float_seconds, 10);
+	var hours   = Math.floor(sec_num / 3600);
+	var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+	var seconds = sec_num - (hours * 3600) - (minutes * 60);
+	var milliseconds = Math.round((float_seconds % 1) * 1000);
+
+	if (hours   < 10) {hours   = "0"+hours;}
+	if (minutes < 10) {minutes = "0"+minutes;}
+	if (seconds < 10) {seconds = "0"+seconds;}
+	var time = hours+':'+minutes+':'+seconds;
+
+	if (milliseconds) {
+		time += '.' + milliseconds;
+	};
+
+	return time;
+}
+
 function human_readable_size(size) {
 	if (!size || size < 1) {
 		return "???";
@@ -169,6 +188,43 @@ function clean_up_input() {
 	}(jQuery));
 }
 
+/**
+ * Initialize contextual help links.
+ *
+ *	Use like this:
+ *
+ *  <a href="#" data-podlove-help="help-tab-id">?</a>
+ */
+function init_contextual_help_links() {
+	jQuery("a[data-podlove-help]").on("click", function (e) {
+		var help_id = jQuery(this).data('podlove-help');
+
+		e.preventDefault();
+
+		// Remove 'active' class from all link tabs
+		jQuery('li[id^="tab-link-"]').each(function(){
+		    jQuery(this).removeClass('active');
+		});
+
+		// Hide all panels
+		jQuery('div[id^="tab-panel-"]').each(function(){
+		    jQuery(this).css('display', 'none');
+		});
+
+		// Set our desired link/panel
+		jQuery('#tab-link-' + help_id).addClass('active');
+		jQuery('#tab-panel-' + help_id).css('display', 'block');
+
+		// Force click on the Help tab
+		if (jQuery('#contextual-help-link').attr('aria-expanded') === "false") {
+			jQuery('#contextual-help-link').click();
+		}
+
+		// Force scroll to top, so you can actually see the help
+		window.scroll(0, 0);
+	});
+}
+
 jQuery(function($) {
 
 	$( "#_podlove_meta_recording_date" ).datepicker({ dateFormat: 'yy-mm-dd'});
@@ -226,6 +282,7 @@ jQuery(function($) {
 	$(document).ready(function() {
 		auto_fill_form('contributor', 'realname');
 		clean_up_input();
+		init_contextual_help_links();
 	});
 	
 });

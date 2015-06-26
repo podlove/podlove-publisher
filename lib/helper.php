@@ -1,34 +1,32 @@
 <?php
 namespace Podlove;
 
-/**
- * strpos wrapper that prefers mb_strpos but falls back to strpos.
- */
-function strpos($haystack, $needle, $offset = 0, $encoding = 'UTF-8') {
-  if (function_exists('mb_strpos'))
-    return mb_strpos($haystack, $needle, $offset, $encoding);
-  else
-    return strpos($haystack, $needle, $offset);
+function load_template($path, $vars = []) {
+	$template = null;
+
+	$paths = [
+		\Podlove\PLUGIN_DIR . 'views/' . $path . '.php',
+		\Podlove\PLUGIN_DIR . $path . '.php'
+	];
+
+	foreach ($paths as $path) {
+		if (file_exists($path)) {
+			$template = $path;
+			break;
+		}
+	}
+
+	extract($vars);
+	require $template;
 }
 
 /**
- * strlen wrapper that prefers mb_strlen but falls back to strlen.
+ * Duplicate of $wpdb::esc_like
+ * 
+ * Can be replaced once we bump WordPress version dependency to 4.0+
  */
-function strlen($str, $encoding = 'UTF-8') {
-  if (function_exists('mb_strlen'))
-    return mb_strlen($str, $encoding);
-  else
-    return strlen($str);
-}
-
-/**
- * substr wrapper that prefers mb_substr but falls back to substr.
- */
-function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
-  if (function_exists('mb_substr'))
-    return mb_substr($str, $start, $length, $encoding);
-  else
-    return substr($str, $start, $length);
+function esc_like( $text ) {
+	return addcslashes( $text, '_%\\' );
 }
 
 function format_bytes( $size, $decimals = 2 ) {
@@ -46,6 +44,10 @@ function get_blog_prefix() {
 	return $blog_prefix;
 }
 
+function get_help_link($tab_id, $title = '<sup>?</sup>') {
+	return sprintf('<a href="#" data-podlove-help="%s">%s</a>', $tab_id, $title);
+}
+
 function get_setting( $namespace, $name ) {
 	
 	$defaults = array(
@@ -58,7 +60,8 @@ function get_setting( $namespace, $name ) {
 			'episode_archive_slug' => '/podcast/',
 			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
 			'ssl_verify_peer' => 'on',
-			'landing_page' => 'homepage'
+			'landing_page' => 'homepage',
+			'feeds_skip_redirect' => 'off'
 		),
 		'metadata' => array(
 			'enable_episode_recording_date' => 0,
@@ -79,12 +82,35 @@ function get_setting( $namespace, $name ) {
 	return $options[ $name ];
 }
 
+function save_setting( $namespace, $name, $values ) {
+	update_option( 'podlove_' . $namespace, array( $name => $values ) );
+}
+
+/**
+ * Are we on the WordPress Settings API save page?
+ * 
+ * @return boolean
+ */
+function is_options_save_page() {
+	$self    = filter_input(INPUT_SERVER, 'PHP_SELF');
+	$request = filter_input(INPUT_SERVER, 'REQUEST_URI');
+
+	return stripos($self, 'options.php') !== FALSE || stripos($request, 'options.php') !== FALSE;
+}
+
+/**
+ * Podcast Landing Page URL
+ * 
+ * @todo  move to Model\Podcast->get_landing_page_url()
+ * 
+ * @return string
+ */
 function get_landing_page_url() {
 	$landing_page = \Podlove\get_setting('website', 'landing_page');
 
 	switch ($landing_page) {
 		case 'homepage':
-			return get_bloginfo_rss('url');
+			return home_url();
 			break;
 		case 'archive':
 			if ( 'on' == \Podlove\get_setting( 'website', 'episode_archive' ) ) {
@@ -106,14 +132,15 @@ function get_landing_page_url() {
 	}
 
 	// always default to home page
-	return get_bloginfo_rss('url');
+	return home_url();
 }
 
 function get_webplayer_setting( $name ) {
 
 	$defaults = array(
 		'chaptersVisible' => 'false',
-		'inject'          => 'manually'
+		'inject'          => 'manually',
+		'version'         => 'player_v2'
 	);
 	
 	$settings = get_option( 'podlove_webplayer_settings', array() );
@@ -132,70 +159,51 @@ function slugify($slug) {
 	return empty($slug) ? 'n-a' : $slug;
 }
 
-function require_code_mirror() {
-	$codemirror_path = \Podlove\PLUGIN_URL . '/js/admin/codemirror/';
+function cache_for($cache_key, $callback, $duration = 31536000 /* 1 year */)
+{
+	if (($value = get_transient($cache_key)) !== FALSE) {
+		return $value;
+	} else {
+		$value = call_user_func($callback);
+		
+		if ($value !== FALSE)
+			set_transient($cache_key, $value, $duration);
 
-	wp_register_script( 'podlove-codemirror-mode-css-js', $codemirror_path . 'modes/css/css.js', array( 'podlove-codemirror-js' ) );
-	wp_register_script( 'podlove-codemirror-mode-javascript-js', $codemirror_path . 'modes/javascript/javascript.js', array( 'podlove-codemirror-js' ) );
-	wp_register_script( 'podlove-codemirror-mode-xml-js', $codemirror_path . 'modes/xml/xml.js', array( 'podlove-codemirror-js' ) );
-	wp_register_script( 'podlove-codemirror-mode-yaml-js', $codemirror_path . 'modes/yaml/yaml.js', array( 'podlove-codemirror-js' ) );
-	wp_register_script( 'podlove-codemirror-mode-twig-js', $codemirror_path . 'modes/twig/twig.js', array( 'podlove-codemirror-js' ) );
-	wp_register_script( 'podlove-codemirror-mode-htmlmixed-js', $codemirror_path . 'modes/htmlmixed/htmlmixed.js', array(
-		'podlove-codemirror-mode-css-js',
-		'podlove-codemirror-mode-javascript-js',
-		'podlove-codemirror-mode-yaml-js',
-		'podlove-codemirror-mode-xml-js'
-	) );
-	wp_register_script( 'podlove-codemirror-mode-twigmixed-js', $codemirror_path . 'modes/twigmixed/twigmixed.js', array(
-		'podlove-codemirror-mode-htmlmixed-js',
-		'podlove-codemirror-mode-twig-js'
-	) );
+		return $value;
+	}
+}
 
-	wp_register_script(
-		'podlove-codemirror-util-hint-js',
-		$codemirror_path . 'util/simple-hint.js'
-	);
+function with_blog_scope($blog_id, $callback) {
+	$result = NULL;
 
-	wp_register_script(
-		'podlove-codemirror-util-cursor-js',
-		$codemirror_path . 'util/searchcursor.js'
-	);
+	if ($blog_id != get_current_blog_id()) {
+		switch_to_blog($blog_id);
+		$result = $callback();
+		restore_current_blog();
+	} else {
+		$result = $callback();
+	}
 
-	wp_register_script(
-		'podlove-codemirror-util-match-js',
-		$codemirror_path . 'util/match-highlighter.js',
-		array( 'podlove-codemirror-util-cursor-js' )
-	);
+	return $result;
+}
 
-	wp_register_script(
-		'podlove-codemirror-util-close-js',
-		$codemirror_path . 'util/closetag.js'
-	);
+function relative_time_steps($time) {
+	$time_diff = time() - $time;
+	$formated_time_string = date('Y-m-d h:i:s', $time);
 
-	wp_register_script(
-		'podlove-codemirror-js',
-		$codemirror_path . 'codemirror.js'
-	);
+	if ($time_diff == 0) {
+		return __('Now', 'podlove');
+	} else {
+		$time_text = $formated_time_string;
 
-	wp_enqueue_script( 'podlove-codemirror-js' );
-	wp_enqueue_script( 'podlove-codemirror-mode-htmlmixed-js' );
-	wp_enqueue_script( 'podlove-codemirror-mode-twigmixed-js' );
-	wp_enqueue_script( 'podlove-codemirror-util-close-js' );
-	wp_enqueue_script( 'podlove-codemirror-util-match-js' );
-	wp_enqueue_script( 'podlove-codemirror-util-hint-js' );
+		if     ($time_diff < 60)	$time_text = __( 'Just now', 'podlove' );
+		elseif ($time_diff < 120)	$time_text = __( '1 minute ago', 'podlove' );
+		elseif ($time_diff < 3600)	$time_text = floor($time_diff / 60) . __( ' minutes ago', 'podlove' );
+		elseif ($time_diff < 7200)	$time_text = __( '1 hour ago', 'podlove' );
+ 		elseif ($time_diff < 86400)	$time_text = floor($time_diff / 3600) . __( ' hours ago', 'podlove' );
 
-    wp_register_style(
-    	'podlove-codemirror-css',
-		\Podlove\PLUGIN_URL . '/css/codemirror.css'
-    );
-
-    wp_register_style(
-    	'podlove-codemirror-hint-css',
-		$codemirror_path . 'util/simple-hint.css'
-    );
-
-    wp_enqueue_style( 'podlove-codemirror-css' );
-    wp_enqueue_style( 'podlove-codemirror-hint-css' );
+		return sprintf('<span title="%s">%s</span>', $formated_time_string, $time_text);
+	}
 }
 
 namespace Podlove\Form;
@@ -423,205 +431,207 @@ namespace Podlove\Locale;
 function locales() {
 	$locales = array(
 		'af' => "Afrikaans",
-		'hu-HU' => "Hungarian - Hungary",
 		'af-ZA' => "Afrikaans - South Africa",
-		'is' => "Icelandic",
-		'sq' => "Albanian",
-		'is-IS' => "Icelandic - Iceland",
-		'sq-AL' => "Albanian - Albania",
-		'id' => "Indonesian",
 		'ar' => "Arabic",
-		'id-ID' => "Indonesian - Indonesia",
-		'ar-DZ' => "Arabic - Algeria",
-		'it' => "Italian",
-		'ar-BH' => "Arabic - Bahrain",
-		'it-IT' => "Italian - Italy",
-		'ar-EG' => "Arabic - Egypt",
-		'it-CH' => "Italian - Switzerland",
-		'ar-IQ' => "Arabic - Iraq",
-		'ja' => "Japanese",
-		'ar-JO' => "Arabic - Jordan",
-		'ja-JP' => "Japanese - Japan",
-		'ar-KW' => "Arabic - Kuwait",
-		'kn' => "Kannada",
-		'ar-LB' => "Arabic - Lebanon",
-		'kn-IN' => "Kannada - India",
-		'ar-LY' => "Arabic - Libya",
-		'kk' => "Kazakh",
-		'ar-MA' => "Arabic - Morocco",
-		'kk-KZ' => "Kazakh - Kazakhstan",
-		'ar-OM' => "Arabic - Oman",
-		'kok' => "Konkani",
-		'ar-QA' => "Arabic - Qatar",
-		'kok-IN' => "Konkani - India",
-		'ar-SA' => "Arabic - Saudi Arabia",
-		'ko' => "Korean",
-		'ar-SY' => "Arabic - Syria",
-		'ko-KR' => "Korean - Korea",
-		'ar-TN' => "Arabic - Tunisia",
-		'ky' => "Kyrgyz",
 		'ar-AE' => "Arabic - United Arab Emirates",
-		'ky-KG' => "Kyrgyz - Kyrgyzstan",
+		'ar-BH' => "Arabic - Bahrain",
+		'ar-DZ' => "Arabic - Algeria",
+		'ar-EG' => "Arabic - Egypt",
+		'ar-IQ' => "Arabic - Iraq",
+		'ar-JO' => "Arabic - Jordan",
+		'ar-KW' => "Arabic - Kuwait",
+		'ar-LB' => "Arabic - Lebanon",
+		'ar-LY' => "Arabic - Libya",
+		'ar-MA' => "Arabic - Morocco",
+		'ar-OM' => "Arabic - Oman",
+		'ar-QA' => "Arabic - Qatar",
+		'ar-SA' => "Arabic - Saudi Arabia",
+		'ar-SY' => "Arabic - Syria",
+		'ar-TN' => "Arabic - Tunisia",
 		'ar-YE' => "Arabic - Yemen",
-		'lv' => "Latvian",
-		'hy' => "Armenian",
-		'lv-LV' => "Latvian - Latvia",
-		'hy-AM' => "Armenian - Armenia",
-		'lt' => "Lithuanian",
 		'az' => "Azeri",
-		'lt-LT' => "Lithuanian - Lithuania",
 		'az-AZ-Cyrl' => "Azeri (Cyrillic) - Azerbaijan",
-		'mk' => "Macedonian",
 		'az-AZ-Latn' => "Azeri (Latin) - Azerbaijan",
-		'mk-MK' => "Macedonian - Former Yugoslav Republic of Macedonia",
-		'eu' => "Basque",
-		'ms' => "Malay",
-		'eu-ES' => "Basque - Basque",
-		'ms-BN' => "Malay - Brunei",
 		'be' => "Belarusian",
-		'ms-MY' => "Malay - Malaysia",
 		'be-BY' => "Belarusian - Belarus",
-		'mr' => "Marathi",
 		'bg' => "Bulgarian",
-		'mr-IN' => "Marathi - India",
 		'bg-BG' => "Bulgarian - Bulgaria",
-		'mn' => "Mongolian",
 		'ca' => "Catalan",
-		'mn-MN' => "Mongolian - Mongolia",
 		'ca-ES' => "Catalan - Catalan",
-		'no' => "Norwegian",
-		'zh-HK' => "Chinese - Hong Kong SAR",
-		'nb-NO' => "Norwegian (Bokm�l) - Norway",
-		'zh-MO' => "Chinese - Macao SAR",
-		'nn-NO' => "Norwegian (Nynorsk) - Norway",
-		'zh-CN' => "Chinese - China",
-		'pl' => "Polish",
-		'zh-CHS' => "Chinese (Simplified)",
-		'pl-PL' => "Polish - Poland",
-		'zh-SG' => "Chinese - Singapore",
-		'pt' => "Portuguese",
-		'zh-TW' => "Chinese - Taiwan",
-		'pt-BR' => "Portuguese - Brazil",
-		'zh-CHT' => "Chinese (Traditional)",
-		'pt-PT' => "Portuguese - Portugal",
-		'hr' => "Croatian",
-		'pa' => "Punjabi",
-		'hr-HR' => "Croatian - Croatia",
-		'pa-IN' => "Punjabi - India",
 		'cs' => "Czech",
-		'ro' => "Romanian",
 		'cs-CZ' => "Czech - Czech Republic",
-		'ro-RO' => "Romanian - Romania",
 		'da' => "Danish",
-		'ru' => "Russian",
 		'da-DK' => "Danish - Denmark",
-		'ru-RU' => "Russian - Russia",
-		'div' => "Dhivehi",
-		'sa' => "Sanskrit",
-		'div-MV' => "Dhivehi - Maldives",
-		'sa-IN' => "Sanskrit - India",
-		'nl' => "Dutch",
-		'sr-SP-Cyrl' => "Serbian (Cyrillic) - Serbia",
-		'nl-BE' => "Dutch - Belgium",
-		'sr-SP-Latn' => "Serbian (Latin) - Serbia",
-		'nl-NL' => "Dutch - The Netherlands",
-		'sk' => "Slovak",
-		'en' => "English",
-		'sk-SK' => "Slovak - Slovakia",
-		'en-AU' => "English - Australia",
-		'sl' => "Slovenian",
-		'en-BZ' => "English - Belize",
-		'sl-SI' => "Slovenian - Slovenia",
-		'en-CA' => "English - Canada",
-		'es' => "Spanish",
-		'en-CB' => "English - Caribbean",
-		'es-AR' => "Spanish - Argentina",
-		'en-IE' => "English - Ireland",
-		'es-BO' => "Spanish - Bolivia",
-		'en-JM' => "English - Jamaica",
-		'es-CL' => "Spanish - Chile",
-		'en-NZ' => "English - New Zealand",
-		'es-CO' => "Spanish - Colombia",
-		'en-PH' => "English - Philippines",
-		'es-CR' => "Spanish - Costa Rica",
-		'en-ZA' => "English - South Africa",
-		'es-DO' => "Spanish - Dominican Republic",
-		'en-TT' => "English - Trinidad and Tobago",
-		'es-EC' => "Spanish - Ecuador",
-		'en-GB' => "English - United Kingdom",
-		'es-SV' => "Spanish - El Salvador",
-		'en-US' => "English - United States",
-		'es-GT' => "Spanish - Guatemala",
-		'en-ZW' => "English - Zimbabwe",
-		'es-HN' => "Spanish - Honduras",
-		'et' => "Estonian",
-		'es-MX' => "Spanish - Mexico",
-		'et-EE' => "Estonian - Estonia",
-		'es-NI' => "Spanish - Nicaragua",
-		'fo' => "Faroese",
-		'es-PA' => "Spanish - Panama",
-		'fo-FO' => "Faroese - Faroe Islands",
-		'es-PY' => "Spanish - Paraguay",
-		'fa' => "Farsi",
-		'es-PE' => "Spanish - Peru",
-		'fa-IR' => "Farsi - Iran",
-		'es-PR' => "Spanish - Puerto Rico",
-		'fi' => "Finnish",
-		'es-ES' => "Spanish - Spain",
-		'fi-FI' => "Finnish - Finland",
-		'es-UY' => "Spanish - Uruguay",
-		'fr' => "French",
-		'es-VE' => "Spanish - Venezuela",
-		'fr-BE' => "French - Belgium",
-		'sw' => "Swahili",
-		'fr-CA' => "French - Canada",
-		'sw-KE' => "Swahili - Kenya",
-		'fr-FR' => "French - France",
-		'sv' => "Swedish",
-		'fr-LU' => "French - Luxembourg",
-		'sv-FI' => "Swedish - Finland",
-		'fr-MC' => "French - Monaco",
-		'sv-SE' => "Swedish - Sweden",
-		'fr-CH' => "French - Switzerland",
-		'syr' => "Syriac",
-		'gl' => "Galician",
-		'syr-SY' => "Syriac - Syria",
-		'gl-ES' => "Galician - Galician",
-		'ta' => "Tamil",
-		'ka' => "Georgian",
-		'ta-IN' => "Tamil - India",
-		'ka-GE' => "Georgian - Georgia",
-		'tt' => "Tatar",
 		'de' => "German",
-		'tt-RU' => "Tatar - Russia",
 		'de-AT' => "German - Austria",
-		'te' => "Telugu",
-		'de-DE' => "German - Germany",
-		'te-IN' => "Telugu - India",
-		'de-LI' => "German - Liechtenstein",
-		'th' => "Thai",
-		'de-LU' => "German - Luxembourg",
-		'th-TH' => "Thai - Thailand",
 		'de-CH' => "German - Switzerland",
-		'tr' => "Turkish",
+		'de-DE' => "German - Germany",
+		'de-LI' => "German - Liechtenstein",
+		'de-LU' => "German - Luxembourg",
+		'div' => "Dhivehi",
+		'div-MV' => "Dhivehi - Maldives",
 		'el' => "Greek",
-		'tr-TR' => "Turkish - Turkey",
 		'el-GR' => "Greek - Greece",
-		'uk' => "Ukrainian",
+		'en' => "English",
+		'en-AU' => "English - Australia",
+		'en-BZ' => "English - Belize",
+		'en-CA' => "English - Canada",
+		'en-CB' => "English - Caribbean",
+		'en-GB' => "English - United Kingdom",
+		'en-IE' => "English - Ireland",
+		'en-JM' => "English - Jamaica",
+		'en-NZ' => "English - New Zealand",
+		'en-PH' => "English - Philippines",
+		'en-TT' => "English - Trinidad and Tobago",
+		'en-US' => "English - United States",
+		'en-ZA' => "English - South Africa",
+		'en-ZW' => "English - Zimbabwe",
+		'eo' => "Esperanto",
+		'es' => "Spanish",
+		'es-AR' => "Spanish - Argentina",
+		'es-BO' => "Spanish - Bolivia",
+		'es-CL' => "Spanish - Chile",
+		'es-CO' => "Spanish - Colombia",
+		'es-CR' => "Spanish - Costa Rica",
+		'es-DO' => "Spanish - Dominican Republic",
+		'es-EC' => "Spanish - Ecuador",
+		'es-ES' => "Spanish - Spain",
+		'es-GT' => "Spanish - Guatemala",
+		'es-HN' => "Spanish - Honduras",
+		'es-MX' => "Spanish - Mexico",
+		'es-NI' => "Spanish - Nicaragua",
+		'es-PA' => "Spanish - Panama",
+		'es-PE' => "Spanish - Peru",
+		'es-PR' => "Spanish - Puerto Rico",
+		'es-PY' => "Spanish - Paraguay",
+		'es-SV' => "Spanish - El Salvador",
+		'es-UY' => "Spanish - Uruguay",
+		'es-VE' => "Spanish - Venezuela",
+		'et' => "Estonian",
+		'et-EE' => "Estonian - Estonia",
+		'eu' => "Basque",
+		'eu-ES' => "Basque - Basque",
+		'fa' => "Farsi",
+		'fa-IR' => "Farsi - Iran",
+		'fi' => "Finnish",
+		'fi-FI' => "Finnish - Finland",
+		'fo' => "Faroese",
+		'fo-FO' => "Faroese - Faroe Islands",
+		'fr' => "French",
+		'fr-BE' => "French - Belgium",
+		'fr-CA' => "French - Canada",
+		'fr-CH' => "French - Switzerland",
+		'fr-FR' => "French - France",
+		'fr-LU' => "French - Luxembourg",
+		'fr-MC' => "French - Monaco",
+		'gl' => "Galician",
+		'gl-ES' => "Galician - Galician",
 		'gu' => "Gujarati",
-		'uk-UA' => "Ukrainian - Ukraine",
 		'gu-IN' => "Gujarati - India",
-		'ur' => "Urdu",
 		'he' => "Hebrew",
-		'ur-PK' => "Urdu - Pakistan",
 		'he-IL' => "Hebrew - Israel",
-		'uz' => "Uzbek",
 		'hi' => "Hindi",
-		'uz-UZ-Cyrl' => "Uzbek (Cyrillic) - Uzbekistan",
 		'hi-IN' => "Hindi - India",
-		'uz-UZ-Latn' => "Uzbek (Latin) - Uzbekistan",
+		'hr' => "Croatian",
+		'hr-HR' => "Croatian - Croatia",
 		'hu' => "Hungarian",
-		'vi' => "Vietnamese"
+		'hu-HU' => "Hungarian - Hungary",
+		'hy' => "Armenian",
+		'hy-AM' => "Armenian - Armenia",
+		'id' => "Indonesian",
+		'id-ID' => "Indonesian - Indonesia",
+		'is' => "Icelandic",
+		'is-IS' => "Icelandic - Iceland",
+		'it' => "Italian",
+		'it-CH' => "Italian - Switzerland",
+		'it-IT' => "Italian - Italy",
+		'ja' => "Japanese",
+		'ja-JP' => "Japanese - Japan",
+		'ka' => "Georgian",
+		'ka-GE' => "Georgian - Georgia",
+		'kk' => "Kazakh",
+		'kk-KZ' => "Kazakh - Kazakhstan",
+		'kn' => "Kannada",
+		'kn-IN' => "Kannada - India",
+		'ko' => "Korean",
+		'ko-KR' => "Korean - Korea",
+		'kok' => "Konkani",
+		'kok-IN' => "Konkani - India",
+		'ky' => "Kyrgyz",
+		'ky-KG' => "Kyrgyz - Kyrgyzstan",
+		'lb' => "Luxembourgish",
+		'lt' => "Lithuanian",
+		'lt-LT' => "Lithuanian - Lithuania",
+		'lv' => "Latvian",
+		'lv-LV' => "Latvian - Latvia",
+		'mk' => "Macedonian",
+		'mk-MK' => "Macedonian - Former Yugoslav Republic of Macedonia",
+		'mn' => "Mongolian",
+		'mn-MN' => "Mongolian - Mongolia",
+		'mr' => "Marathi",
+		'mr-IN' => "Marathi - India",
+		'ms' => "Malay",
+		'ms-BN' => "Malay - Brunei",
+		'ms-MY' => "Malay - Malaysia",
+		'nb-NO' => "Norwegian (Bokm�l) - Norway",
+		'nl' => "Dutch",
+		'nl-BE' => "Dutch - Belgium",
+		'nl-NL' => "Dutch - The Netherlands",
+		'nn-NO' => "Norwegian (Nynorsk) - Norway",
+		'no' => "Norwegian",
+		'pa' => "Punjabi",
+		'pa-IN' => "Punjabi - India",
+		'pl' => "Polish",
+		'pl-PL' => "Polish - Poland",
+		'pt' => "Portuguese",
+		'pt-BR' => "Portuguese - Brazil",
+		'pt-PT' => "Portuguese - Portugal",
+		'ro' => "Romanian",
+		'ro-RO' => "Romanian - Romania",
+		'ru' => "Russian",
+		'ru-RU' => "Russian - Russia",
+		'sa' => "Sanskrit",
+		'sa-IN' => "Sanskrit - India",
+		'sk' => "Slovak",
+		'sk-SK' => "Slovak - Slovakia",
+		'sl' => "Slovenian",
+		'sl-SI' => "Slovenian - Slovenia",
+		'sq' => "Albanian",
+		'sq-AL' => "Albanian - Albania",
+		'sr-SP-Cyrl' => "Serbian (Cyrillic) - Serbia",
+		'sr-SP-Latn' => "Serbian (Latin) - Serbia",
+		'sv' => "Swedish",
+		'sv-FI' => "Swedish - Finland",
+		'sv-SE' => "Swedish - Sweden",
+		'sw' => "Swahili",
+		'sw-KE' => "Swahili - Kenya",
+		'syr' => "Syriac",
+		'syr-SY' => "Syriac - Syria",
+		'ta' => "Tamil",
+		'ta-IN' => "Tamil - India",
+		'te' => "Telugu",
+		'te-IN' => "Telugu - India",
+		'th' => "Thai",
+		'th-TH' => "Thai - Thailand",
+		'tr' => "Turkish",
+		'tr-TR' => "Turkish - Turkey",
+		'tt' => "Tatar",
+		'tt-RU' => "Tatar - Russia",
+		'uk' => "Ukrainian",
+		'uk-UA' => "Ukrainian - Ukraine",
+		'ur' => "Urdu",
+		'ur-PK' => "Urdu - Pakistan",
+		'uz' => "Uzbek",
+		'uz-UZ-Cyrl' => "Uzbek (Cyrillic) - Uzbekistan",
+		'uz-UZ-Latn' => "Uzbek (Latin) - Uzbekistan",
+		'vi' => "Vietnamese",
+		'zh-CHS' => "Chinese (Simplified)",
+		'zh-CHT' => "Chinese (Traditional)",
+		'zh-CN' => "Chinese - China",
+		'zh-HK' => "Chinese - Hong Kong SAR",
+		'zh-MO' => "Chinese - Macao SAR",
+		'zh-SG' => "Chinese - Singapore",
+		'zh-TW' => "Chinese - Taiwan"
 	);
 	asort( $locales );
 	return $locales;
@@ -735,19 +745,4 @@ function categories( $prefix_subcategories = true ) {
 	}
  
 	return $temp;
-}
-
-namespace Podlove\Flattr;
-
-function getFlattrScript() {
-	return "<script type=\"text/javascript\">\n
-		/* <![CDATA[ */
-	    (function() {
-		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-		     s.type = 'text/javascript';
-		     s.async = true;
-		    s.src = 'https://api.flattr.com/js/0.6/load.js?mode=auto';
-		    t.parentNode.insertBefore(s, t);
-			 })();
-		/* ]]> */</script>\n";
 }

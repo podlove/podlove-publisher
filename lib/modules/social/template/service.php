@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Social\Template;
 
 use Podlove\Template\Wrapper;
+use Podlove\Template\Image;
 
 /**
  * Service Template Wrapper
@@ -68,11 +69,33 @@ class Service extends Wrapper {
 	}
 
 	/**
-	 * Logo URL
+	 * Service value
+	 *
+	 * Normally, you want to access the generates url via `profileUrl()`.
+	 * But in case you need the raw user value, use this method.
 	 * 
 	 * @accessor
 	 */
+	public function rawValue() {
+		return $this->contributor_service->value;
+	}
+
+	/**
+	 * Logo URL
+	 * 
+	 * @deprecated since 2.2.0, use ::image instead
+	 */
 	public function logoUrl() {
 		return $this->service->get_logo();
+	}
+
+	/**
+	 * Image
+	 *
+	 * @see  image
+	 * @accessor
+	 */
+	public function image() {
+		return new Image($this->service->image());
 	}
 }

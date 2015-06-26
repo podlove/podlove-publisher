@@ -8,18 +8,42 @@ function handle_feed_proxy_redirects() {
 		return;
 
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$is_debug_view = false;
 
-	$is_feedburner_bot = isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( "/feedburner|feedsqueezer/i", $_SERVER['HTTP_USER_AGENT'] );
-	$is_manual_redirect = ! isset( $_REQUEST['redirect'] ) || $_REQUEST['redirect'] != "no";
+	if (\Podlove\get_setting('website', 'feeds_skip_redirect') == 'on' && filter_input(INPUT_GET, 'redirect') == 'no') {
+		$should_redirect = false;
+		$is_debug_view = true;
+	} elseif (preg_match("/feedburner|feedsqueezer|feedvalidator|feedpress/i", filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'))) {
+		$should_redirect = false;
+	} else {
+		$should_redirect = true;
+	}
+
 	$is_feed_page = $paged > 1;
 
 	if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
 		return;
 
+	/**
+	 * Before we redirect to a proxy or deliver the feed, ensure that the canonical
+	 * feed URL was accessed.
+	 */
+	if (!$is_debug_view && get_option('permalink_structure') != '') {
+		$feed_url = $feed->get_subscribe_url();
+		if (
+			!\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
+			||
+			\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
+		) {
+			wp_redirect($feed_url, 301);
+			exit;
+		}
+	}
+
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
 	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;
 
-	if ( ! $is_feed_page && strlen( $feed->redirect_url ) > 0 && $is_manual_redirect && ! $is_feedburner_bot && $http_status_code > 0 ) {
+	if ( ! $is_feed_page && strlen( $feed->redirect_url ) > 0 && $should_redirect && $http_status_code > 0 ) {
 		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $http_status_code );
 		exit;
 	} else { // don't redirect; prepare feed
@@ -43,11 +67,13 @@ function generate_podcast_feed() {
 add_action( 'init', function() {
 
 	foreach ( Model\Feed::all() as $feed ) {
-		add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
+		if ($feed->slug)
+			add_feed( $feed->slug,  "\Podlove\Feeds\generate_podcast_feed" );
 	}
 
+	// changing feed settings may affect permalinks, so we need to flush
 	if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'podlove_feeds_settings_handle' ) {
-		flush_rewrite_rules();
+		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
 	}
 
 } );
@@ -79,8 +105,12 @@ function feed_authentication() {
 	exit;
 }
 
-function check_for_and_do_compression()
+function check_for_and_do_compression($content_type = 'application/rss+xml')
 {
+	// ensure content type headers are set
+	if (!headers_sent())
+		header('Content-type: ' . $content_type);
+	
 	if (!apply_filters('podlove_enable_gzip_for_feeds', true))
 		return false;
 	
@@ -91,7 +121,7 @@ function check_for_and_do_compression()
 	// if zlib output compression is already active, don't gzip
 	// (both cannot be active at the same time)
 	$ob_status = ob_get_status();
-	if ($ob_status['name'] == 'zlib output compression') {
+	if (isset($ob_status['name']) && $ob_status['name'] == 'zlib output compression') {
 		return false;
 	}
 
@@ -108,8 +138,6 @@ function check_for_and_do_compression()
 	if (defined('HHVM_VERSION'))
 		return false;
 
-	// ensure content type headers are set
-	header('Content-type: application/rss+xml');
 	// start gzipping
 	ob_start("ob_gzhandler");
 }

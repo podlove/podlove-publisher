@@ -11,19 +11,20 @@ class ContributorSettings {
 	
 	public function __construct( $handle ) {
 		
-		ContributorRoles::$pagehook = add_submenu_page(
+		ContributorSettings::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Contributor Settings',
-			/* $menu_title */ 'Contributor Settings',
+			/* $page_title */ 'Contributors',
+			/* $menu_title */ 'Contributors',
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_contributor_settings',
 			/* $function   */ array( $this, 'page' )
 		);
 
-		$tabs = new Tabs( __( 'Contributor Settings', 'podlove' ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove' ), true ) );
+		$tabs = new Tabs( __( 'Contributors', 'podlove' ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors( __( 'Contributors', 'podlove' ), true ) );
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove' ) ) );
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove' ) ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove' ) ) );
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 
@@ -44,5 +45,4 @@ class ContributorSettings {
 		<?php
 	}
 	
-
 }

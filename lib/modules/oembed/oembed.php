@@ -52,7 +52,7 @@ class oembed extends \Podlove\Modules\Base {
 		}
 
 		$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
-		$podcast = \Podlove\Model\Podcast::get_instance();
+		$podcast = \Podlove\Model\Podcast::get();
 		$permalink = get_permalink( $post_id );
 
 		$player_width = "560px";
@@ -66,7 +66,7 @@ class oembed extends \Podlove\Modules\Base {
 							'url'			=> get_permalink( $post_id ),
 							'author_name'	=> $podcast->full_title(),
 							'author_url'	=> site_url(),
-							'thumbnail_url'	=> $episode->get_cover_art_with_fallback(),
+							'thumbnail_url'	=> $episode->cover_art_with_fallback()->url(),
 							'html'			=> '<iframe width="' . $player_width .'" height="' . $player_height . '" src="' . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
 	}
 

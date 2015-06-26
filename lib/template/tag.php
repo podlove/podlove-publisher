@@ -2,16 +2,19 @@
 namespace Podlove\Template;
 
 /**
- * File Template Wrapper
+ * Tag Template Wrapper
  *
  * @templatetag tag
  */
 class Tag extends Wrapper {
 
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
 	private $tag;
 
-	public function __construct($tag) {
+	public function __construct($tag, $blog_id = null) {
 		$this->tag = $tag;
+		$this->set_blog_id($blog_id);
 	}
 
 	protected function getExtraFilterArgs() {
@@ -73,7 +76,9 @@ class Tag extends Wrapper {
 	 * @accessor
 	 */
 	public function url() {
-		return get_tag_link($this->tag->term_id);
+		return $this->with_blog_scope(function() {
+			return get_tag_link($this->tag->term_id);
+		});
 	}
 
 }

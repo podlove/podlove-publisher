@@ -18,109 +18,122 @@ class Auphonic extends \Podlove\Modules\Base {
 	
     public function load() {
 
-    		$this->api = new API_Wrapper($this);
+		$this->api = new API_Wrapper($this);
 
-    		new EpisodeEnhancer($this);
+		new EpisodeEnhancer($this);
 
-			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
-			add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
+        add_action( 'wp_ajax_podlove-add-production-for-auphonic-webhook', array( $this, 'ajax_add_episode_for_auphonic_webhook' ) );
+        add_action( 'wp', array( $this, 'auphonic_webhook' ) );
 
-			add_action( 'wp_ajax_podlove-add-production-for-auphonic-webhook', array( $this, 'ajax_add_episode_for_auphonic_webhook' ) );
-			add_action( 'wp', array( $this, 'auphonic_webhook' ) );
-    		
-			if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
-    			add_action('admin_bar_init', array( $this, 'check_code'));
-    		}    		
+		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+		add_action( 'wp_ajax_podlove-refresh-auphonic-presets', array( $this, 'ajax_refresh_presets' ) );
+		    		
+		if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
+			add_action('admin_bar_init', array( $this, 'check_code'));
+		}  
 
-    		if ( $this->get_module_option('auphonic_api_key') == "" ) {
-    			$auth_url = "https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
-	    		$description = '<i class="podlove-icon-remove"></i> '
-	    		             . __( 'You need to allow Podlove Publisher to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
-	    		             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove' ) . '</a>';
-				$this->register_option( 'auphonic_api_key', 'hidden', array(
-					'label'       => __( 'Authorization', 'podlove' ),
-					'description' => $description,
-					'html'        => array( 'class' => 'regular-text podlove-check-input' )
-				) );	
-    		} else {
-				$user = $this->api->fetch_authorized_user();
-    			if ( isset($user) && is_object($user) && is_object($user->data) ) {
-					$description = '<i class="podlove-icon-ok"></i> '
-								 . sprintf(
-									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
-									'<strong>' . $user->data->username . '</strong>',
-									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
-									'</a>'
-								);
-				} else {
-					$description = '<i class="podlove-icon-remove"></i> '
-								 . sprintf(
-									__( 'Something went wrong with the Auphonic connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove' ),
-									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
-									'</a>'
-								);
+		$this->register_settings();
+    }
+
+    public function register_settings() {
+
+		if (!self::is_module_settings_page())
+			return;
+
+		if ( $this->get_module_option('auphonic_api_key') == "" ) {
+			$auth_url = "https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
+			$description = '<i class="podlove-icon-remove"></i> '
+			             . __( 'You need to allow Podlove Publisher to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
+			             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove' ) . '</a>';
+			$this->register_option( 'auphonic_api_key', 'hidden', array(
+				'label'       => __( 'Authorization', 'podlove' ),
+				'description' => $description,
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
+			) );	
+		} else {
+			$user = $this->api->fetch_authorized_user();
+			if ( isset($user) && is_object($user) && is_object($user->data) ) {
+				$description = '<i class="podlove-icon-ok"></i> '
+							 . sprintf(
+								__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
+								'<strong>' . $user->data->username . '</strong>',
+								'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
+								'</a>'
+							);
+			} else {
+				$description = '<i class="podlove-icon-remove"></i> '
+							 . sprintf(
+								__( 'Something went wrong with the Auphonic connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove' ),
+								'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
+								'</a>'
+							);
+			}
+
+			$this->register_option( 'auphonic_api_key', 'hidden', array(
+				'label'       => __( 'Authorization', 'podlove' ),
+				'description' => $description,
+				'html'        => array( 'class' => 'regular-text' )
+			) );	
+			
+			// Fetch Auphonic presets
+			$presets = $this->api->fetch_presets();
+			if ( $presets && is_array( $presets->data ) ) {
+				$preset_list = array();
+				foreach( $presets->data as $preset_id => $preset ) {
+					$preset_list[ $preset->uuid ] = $preset->preset_name;
 				}
-
-				$this->register_option( 'auphonic_api_key', 'hidden', array(
-					'label'       => __( 'Authorization', 'podlove' ),
-					'description' => $description,
-					'html'        => array( 'class' => 'regular-text' )
-				) );	
+			} else {
+				$preset_list[] = __( 'Presets could not be loaded', 'podlove' );
+			}
 				
-				// Fetch Auphonic presets
-				$presets = $this->api->fetch_presets();
-				if ( $presets && is_array( $presets->data ) ) {
-					$preset_list = array();
-					foreach( $presets->data as $preset_id => $preset ) {
-						$preset_list[ $preset->uuid ] = $preset->preset_name;
-					}
-				} else {
-					$preset_list[] = __( 'Presets could not be loaded', 'podlove' );
-				}
-					
-				$this->register_option( 'auphonic_production_preset', 'select', array(
-					'label'       => __( 'Auphonic production preset', 'podlove' ),
-					'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span> This preset will be used, if you create Auphonic production from an Episode.',
-					'html'        => array( 'class' => 'regular-text' ),
-					'options'	  => $preset_list
-				) );
-    		
-    		}
+			$this->register_option( 'auphonic_production_preset', 'select', array(
+				'label'       => __( 'Auphonic production preset', 'podlove' ),
+				'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span> This preset will be used, if you create Auphonic production from an Episode.',
+				'html'        => array( 'class' => 'regular-text' ),
+				'options'	  => $preset_list
+			) );
+
+		}
     }
 
     /**
      * Register Event for Auphonic Webhook
      */
     public function auphonic_webhook() {
-    	$auth_key = 0;
-    	$action = 'update';
 
-    	if ( !isset( $_REQUEST['podlove-auphonic-production'] ) || empty( $_REQUEST['podlove-auphonic-production'] ) || empty( $_POST ) )
-    		return;
-
-    	$episodes_to_be_remote_published = get_option( 'podlove_episodes_to_be_remote_published' );
-
-    	if ( !is_array( $episodes_to_be_remote_published ) )
-    		return;
-
-    	foreach ( $episodes_to_be_remote_published as $episode ) {
-    		if ( $episode['post_id'] == $_REQUEST['podlove-auphonic-production'] ) {
-    			$auth_key = $episode['auth_key'];
-    			$action = $episode['action'];
-    		}
-    	}
+        if ( !isset( $_REQUEST['podlove-auphonic-production'] ) || empty( $_REQUEST['podlove-auphonic-production'] ) || empty( $_POST ) )
+            return;
 
     	if ( $_POST['status_string'] !== 'Done' )
     		return;
 
-    	if ( $_REQUEST['authkey'] !== $auth_key )
+        $post_id = (int) $_REQUEST['podlove-auphonic-production'];
+
+        $episodes_to_be_remote_published = get_option('podlove_episodes_to_be_remote_published');
+
+        if (!is_array($episodes_to_be_remote_published) || !isset($episodes_to_be_remote_published[$post_id]))
+            return;
+
+        $episode  = $episodes_to_be_remote_published[$post_id];
+        $auth_key = $episode['auth_key'];
+        $action   = $episode['action'];
+
+    	if ($_REQUEST['authkey'] !== $auth_key) {
+            \Podlove\Log::get()->addWarning(
+                'Auphonic webhook failed. AuthKey mismatch.',
+                ['post_id' => $post_id]
+            );
     		return;
+        }
     	
     	// Update episode with production results
-    	$this->update_production_data( $_REQUEST['podlove-auphonic-production'] );
+    	$this->update_production_data($post_id);
 
-    	if ( $action == 'publish' )
-    		wp_publish_post( $_REQUEST['podlove-auphonic-production'] );
+    	if ($action == 'publish')
+    		wp_publish_post($post_id);
+
+        unset($episodes_to_be_remote_published[$post_id]);
+        update_option('podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published);
     }
 
     /** 
@@ -214,28 +227,27 @@ class Auphonic extends \Podlove\Modules\Base {
 	 * Register a new Episode that can be published via Auphonic
 	 */
 	public function ajax_add_episode_for_auphonic_webhook() {
-		$post_id = $_REQUEST['post_id'];
+
+		$post_id  = $_REQUEST['post_id'];
 		$auth_key = $_REQUEST['authkey'];
-		$action = $_REQUEST['flag'];
+		$action   = $_REQUEST['flag'];
 
-		if ( !$post_id || !$action || !$auth_key )
-			return \Podlove\AJAX\AJAX::respond_with_json( false );
+		if (!$post_id || !$action || !$auth_key)
+			return \Podlove\AJAX\AJAX::respond_with_json(false);
 
-		$episodes_to_be_remote_published = get_option( 'podlove_episodes_to_be_remote_published' );
+		$episodes_to_be_remote_published = get_option('podlove_episodes_to_be_remote_published');
 
-		if ( !is_array( $episodes_to_be_remote_published ) )
-			$episodes_to_be_remote_published = array();
+		if (!is_array($episodes_to_be_remote_published))
+			$episodes_to_be_remote_published = [];
 		
-		if ( !in_array( $post_id , $episodes_to_be_remote_published ) ) {
-			$episodes_to_be_remote_published[] = array(
-					'post_id' => $post_id,
-					'auth_key' => $auth_key,
-					'action' => $action
-				);
-			update_option( 'podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published );
-		}
+		$episodes_to_be_remote_published[$post_id] = [
+			'post_id'  => $post_id,
+			'auth_key' => $auth_key,
+			'action'   => $action
+		];
+		update_option('podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published);
 
-		return \Podlove\AJAX\AJAX::respond_with_json( true );
+		return \Podlove\AJAX\AJAX::respond_with_json(true);
 	}
 
     /**
@@ -332,19 +344,8 @@ class Auphonic extends \Podlove\Modules\Base {
     	}
     }
 
-    public function save_post( $post_id ) {
-    	
-    	if ( get_post_type( $post_id ) !== 'podcast' )
-    		return;
-
-    	if ( ! current_user_can( 'edit_post', $post_id ) )
-	        return;
-
-	    if ( isset( $_REQUEST['_auphonic_production'] ) )
-	    	update_post_meta( $post_id, '_auphonic_production', $_REQUEST['_auphonic_production'] );
-    }
-
     public function admin_print_styles() {
+        
     	$screen = get_current_screen();
     	if ( $screen->base != 'post' && $screen->post_type != 'podcast' && $screen->base != 'podlove_page_podlove_settings_modules_handle' )
     		return;

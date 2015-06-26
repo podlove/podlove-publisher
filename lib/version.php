@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 87 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 105 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -59,27 +59,16 @@ function maybe_run_database_migrations() {
 }
 
 function run_database_migrations() {
-	global $wpdb;
 	
 	if (!isset($_REQUEST['podlove_page']) || $_REQUEST['podlove_page'] != 'podlove_upgrade')
 		return;
 
-	$database_version = get_option('podlove_database_version');
-
-	if ($database_version >= DATABASE_VERSION)
+	if (get_option('podlove_database_version') >= DATABASE_VERSION)
 		return;
 
 	if (is_multisite()) {
 		set_time_limit(0); // may take a while, depending on network size
-		$current_blog = $wpdb->blogid;
-		$blogids = $wpdb->get_col( "SELECT blog_id FROM " . $wpdb->blogs );
-		foreach ($blogids as $blog_id) {
-			switch_to_blog($blog_id);
-			if (is_plugin_active(basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME)) {
-				migrate_for_current_blog();
-			}
-		}
-		switch_to_blog($current_blog);
+		\Podlove\for_every_podcast_blog(function() { migrate_for_current_blog(); });
 	} else {
 		migrate_for_current_blog();
 	}
@@ -199,7 +188,7 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( $sql );
 		break;
 		case 21:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			$podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
 			$podcast->save();
 		break;
@@ -218,7 +207,7 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query( $sql );
 		break;
 		case 24:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			update_option( 'podlove_asset_assignment', array(
 				'image'    => $podcast->supports_cover_art,
 				'chapters' => $podcast->chapter_file
@@ -483,7 +472,7 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 48:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			$podcast->limit_items = '-1';
 			$podcast->save();
 		break;
@@ -494,7 +483,7 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 50:
-			$podcast = Model\Podcast::get_instance();
+			$podcast = Model\Podcast::get();
 			$podcast->license_type = 'other';
 			$podcast->save();
 
@@ -746,7 +735,7 @@ function run_migrations_for_version( $version ) {
 			\Podlove\Model\Episode::property( 'license_cc_allow_commercial_use', 'VARCHAR(255)' );
 			\Podlove\Model\Episode::property( 'license_cc_license_jurisdiction', 'VARCHAR(255)' );
 
-			$podcast  = \Podlove\Model\Podcast::get_instance();
+			$podcast  = \Podlove\Model\Podcast::get();
 			$episodes = \Podlove\Model\Episode::all();
 
 			// Migration for Podcast
@@ -953,6 +942,26 @@ function run_migrations_for_version( $version ) {
 			update_option('podlove_redirects', array( 'podlove_setting_redirect' => $redirect_settings ));
 		break;
 		case 83:
+			\Podlove\Model\DownloadIntentClean::build();
+			
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `bot` TINYINT',
+				'ALTER TABLE `%s` ADD COLUMN `client_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_type` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_brand` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_model` VARCHAR(255)',
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
+			}
+
+			Model\UserAgent::reparse_all();
+		break;
+		case 84:
 			delete_option('podlove_tpl_cache_keys');
 		break;
 		case 85:
@@ -1015,6 +1024,146 @@ function run_migrations_for_version( $version ) {
 			if ( $adn->get_module_option( 'adn_auth_key' ) )
 				$adn->update_module_option( 'adn_poster_image_fallback', 'on' );
 		}	
+		break;
+		case 88:
+			$service = new \Podlove\Modules\Social\Model\Service;
+			$service->title = 'Email';
+			$service->category = 'social';
+			$service->type = 'email';
+			$service->description = 'Email';
+			$service->logo = 'email-128.png';
+			$service->url_scheme = 'mailto:%account-placeholder%';
+			$service->save();
+		break;
+		case 89:
+			$email_service = \Podlove\Modules\Social\Model\Service::find_one_by_type('email');
+
+			foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
+				if (!$contributor->publicemail)
+					continue;
+
+				$contributor_service = new \Podlove\Modules\Social\Model\ContributorService;
+				$contributor_service->contributor_id = $contributor->id;
+				$contributor_service->service_id = $email_service->id;
+				$contributor_service->value = $contributor->publicemail;
+				$contributor_service->save();
+			}
+		break;
+		case 90:
+			\Podlove\Modules\Base::activate( 'subscribe_button' );
+		break;
+		case 91:
+			$c = new \Podlove\Modules\Social\Model\Service;
+			$c->title = 'Miiverse';
+			$c->category = 'social';
+			$c->type = 'miiverse';
+			$c->description = 'Miiverse Account';
+			$c->logo = 'miiverse-128.png';
+			$c->url_scheme = 'https://miiverse.nintendo.net/users/%account-placeholder%';
+			$c->save();
+		break;
+		case 92:
+			$c = new \Podlove\Modules\Social\Model\Service;
+			$c->title = 'Prezi';
+			$c->category = 'social';
+			$c->type = 'prezi';
+			$c->description = 'Prezis';
+			$c->logo = 'prezi-128.png';
+			$c->url_scheme = 'http://prezi.com/user/%account-placeholder%';
+			$c->save();
+		break;
+		case 93:
+			// podlove_init_user_agent_refresh();
+			// do nothing instead, because see 94 below
+		break;
+		case 94:
+			// this is a duplicate of migration 83 but it looks like that didn't work.
+			Model\DownloadIntentClean::build();
+			
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `bot` TINYINT',
+				'ALTER TABLE `%s` ADD COLUMN `client_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `client_type` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_name` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `os_version` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_brand` VARCHAR(255)',
+				'ALTER TABLE `%s` ADD COLUMN `device_model` VARCHAR(255)',
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
+			}
+
+			podlove_init_user_agent_refresh();
+
+			// manually trigger intent cron after user agents are parsed
+			// parameter to make sure WP does not skip it due to 10 minute rule
+			wp_schedule_single_event(time() + 120 , 'podlove_cleanup_download_intents', ['really' => true]);
+			// manually trigger average cron after intents are calculated
+			wp_schedule_single_event(time() + 240, 'recalculate_episode_download_average', ['really' => true]);
+		break;
+		case 95:
+			// add missing flattr column
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `flattr` VARCHAR(255) AFTER `avatar`',
+				\Podlove\Modules\Contributors\Model\Contributor::table_name()
+			) );
+		break;
+		case 96:
+			\Podlove\DeleteHeadRequests::init();
+		break;
+		case 97:
+			// recalculate all downloads average data
+			$wpdb->query(sprintf(
+				'DELETE FROM `%s` WHERE `meta_key` LIKE "_podlove_eda%%"',
+				$wpdb->postmeta
+			));
+		break;
+		case 98:
+			delete_transient('podlove_dashboard_stats_contributors');
+		break;
+		case 99:
+			// Activate network module for migrating users.
+			// Core modules are automatically activated for _new_ setups and
+			// whenever modules change. Since this can't be guaranteed for
+			// existing setups, it must be triggered manually.
+			\Podlove\Modules\Networks\Networks::instance()->was_activated();
+		break;
+		case 101:
+			// add patreon
+			if (\Podlove\Modules\Social\Model\Service::table_exists())
+				\Podlove\Modules\Social\RepairSocial::fix_missing_services();
+		break;
+		case 102:
+			// update logos
+			if (\Podlove\Modules\Social\Model\Service::table_exists())
+				\Podlove\Modules\Social\Social::update_existing_services();
+		break;
+		case 103:
+			$assignment = get_option('podlove_template_assignment', []);
+
+			if ($assignment['top'] && is_numeric($assignment['top']))
+				$assignment['top'] = Model\Template::find_by_id($assignment['top'])->title;
+
+			if ($assignment['bottom'] && is_numeric($assignment['bottom']))
+				$assignment['bottom'] = Model\Template::find_by_id($assignment['bottom'])->title;
+
+			update_option('podlove_template_assignment', $assignment);
+		break;
+		case 104:
+			\Podlove\unschedule_events(\Podlove\Cache\TemplateCache::CRON_PURGE_HOOK);
+		break;
+		case 105:
+			// activate flattr plugin
+			\Podlove\Modules\Base::activate('flattr');
+
+			// migrate flattr data
+			$podcast = Model\Podcast::get();			
+			$settings = get_option('podlove_flattr', []);
+			$settings['account'] = $podcast->flattr;
+			$settings['contributor_shortcode_default'] = 'yes';
+			update_option('podlove_flattr', $settings);
 		break;
 	}
 

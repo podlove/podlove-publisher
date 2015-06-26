@@ -7,12 +7,6 @@ namespace Podlove\Model;
 class AssetAssignment {
 
 	/**
-	 * Singleton instance container.
-	 * @var \Podlove\Model\AssetAssignment|NULL
-	 */
-	private static $instance = NULL;
-
-	/**
 	 * Contains property values.
 	 * @var  array
 	 */
@@ -22,19 +16,13 @@ class AssetAssignment {
 	 * Contains property names.
 	 * @var array
 	 */
-	private $properties;
+	protected static $properties = [];
 
 	/**
-	 * Singleton.
-	 * 
 	 * @return \Podlove\Model\AssetAssignment
 	 */
 	static public function get_instance() {
-
-		 if ( ! isset( self::$instance ) )
-		     self::$instance = new self;
-
-		 return self::$instance;
+		 return new self;
 	}
 
 	protected function __construct() {
@@ -78,10 +66,10 @@ class AssetAssignment {
 	 */
 	private function properties() {
 		
-		if ( ! isset( $this->properties ) )
-			$this->properties = array();
+		if ( ! isset( self::$properties ) )
+			self::$properties = [];
 		
-		return $this->properties;
+		return self::$properties;
 	}
 	
 	/**
@@ -100,7 +88,7 @@ class AssetAssignment {
 	 * @return array property names
 	 */
 	public function property_names() {
-		return array_map( function ( $p ) { return $p['name']; } , $this->properties );
+		return array_map( function ( $p ) { return $p['name']; } , self::$properties );
 	}
 
 	/**
@@ -108,12 +96,12 @@ class AssetAssignment {
 	 * 
 	 * @param string $name Name of the property / column
 	 */
-	public function property( $name ) {
+	public static function property( $name ) {
 
-		if ( ! isset( $this->properties ) )
-			$this->properties = array();
+		if ( ! isset( self::$properties ) )
+			self::$properties = [];
 
-		array_push( $this->properties, array( 'name' => $name ) );
+		array_push( self::$properties, ['name' => $name] );
 	}
 
 	/**
@@ -147,8 +135,5 @@ class AssetAssignment {
 	}
 }
 
-$asset_assignment = AssetAssignment::get_instance();
-$asset_assignment->property( 'image' );
-$asset_assignment->property( 'chapters' );
-
-$asset_assignment = apply_filters( 'podlove_model_asset_assignment_schema', $asset_assignment );
+AssetAssignment::property( 'image' );
+AssetAssignment::property( 'chapters' );

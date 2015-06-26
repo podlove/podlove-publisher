@@ -32,6 +32,11 @@ class Curl {
 
 		$params = wp_parse_args( $params, $defaults );
 
+		if (!isset($params['_redirection']) || $params['_redirection']) {
+			if ( !self::curl_can_follow_redirects() )
+				$url = self::resolve_redirects($url, 5);
+		}
+
 		$this->response = $this->curl->request( $url, $params );
 
 		if ( is_wp_error($this->response) ) {
@@ -81,4 +86,42 @@ class Curl {
 		);
 	}
 
+	/**
+	 * Manually resolve redirects.
+	 * 
+	 * Some server configurations can't deal with cURL CURLOPT_FOLLOWLOCATION
+	 * setting. This method resolves a URL without using that setting.
+	 * 
+	 * @param  string  $url               URL to resolve
+	 * @param  integer $maximum_redirects Maximum redirects. Default: 5.
+	 * @return string                     Final URL
+	 */
+	public static function resolve_redirects($url, $maximum_redirects = 5) {
+		$curl = new Curl;
+		$curl->request($url, ['method' => 'HEAD', '_redirection' => 0]);
+		$response = $curl->get_response();
+
+		$http_code = $response['response']['code'];
+		$location  = isset($response['headers']['location']) ? $response['headers']['location'] : NULL;
+
+		if ($http_code >= 300 && $http_code <= 400 && $location && $maximum_redirects > 0)
+			return self::resolve_redirects($location, $maximum_redirects - 1);
+
+		return $url;
+	}
+
+	/**
+	 * Check for CURLOPT_FOLLOWLOCATION bug.
+	 * 
+	 * If either safe_mode is on or an open_basedir path is set, 
+	 * CURLOPT_FOLLOWLOCATION does not work.
+	 * 
+	 * @see  https://stackoverflow.com/questions/2511410/curl-follow-location-error
+	 * @see  https://stackoverflow.com/questions/19539922/php-can-curlopt-followlocation-and-open-basedir-be-used-together
+	 * 
+	 * @return bool
+	 */
+	public static function curl_can_follow_redirects() {
+		return !(ini_get('open_basedir') || ini_get('safe_mode'));
+	}
 }

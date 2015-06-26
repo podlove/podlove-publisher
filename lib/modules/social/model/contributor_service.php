@@ -9,8 +9,34 @@ use \Podlove\Modules\Social\Model\Service;
  */
 class ContributorService extends Base {
 
+	use \Podlove\Model\KeepsBlogReferenceTrait;
+
+	public function __construct() {
+		$this->set_blog_id();
+	}
+
+	public function save() {
+		global $wpdb;
+
+		if (!$this->position) {
+			$pos = $wpdb->get_var(
+				sprintf(
+					'SELECT MAX(position)+1 FROM %s WHERE contributor_id = %d',
+					self::table_name(),
+					$this->contributor_id
+				)
+			);
+			
+			$this->position = $pos ? $pos : 1;
+		}
+
+		parent::save();
+	}
+
 	public function get_service() {
-		return \Podlove\Modules\Social\Model\Service::find_one_by_id($this->service_id);
+		return $this->with_blog_scope(function() {
+			return Service::find_one_by_id($this->service_id);
+		});
 	}
 
 	public function get_service_url() {
@@ -19,7 +45,7 @@ class ContributorService extends Base {
 	}
 
 	public static function find_by_contributor_id_and_category( $contributor_id, $category = 'social' ) {
-		return self::all( "WHERE service_id IN (SELECT id FROM " . \Podlove\Modules\Social\Model\Service::table_name() . " WHERE `category` = '" . $category . "' ) AND `contributor_id` = " . $contributor_id );
+		return self::all( "WHERE service_id IN (SELECT id FROM " . Service::table_name() . " WHERE `category` = '" . $category . "' ) AND `contributor_id` = " . $contributor_id );
 	}
 
 }

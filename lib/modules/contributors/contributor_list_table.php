@@ -15,19 +15,21 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	}
 	
 	public function column_avatar( $contributor ) {
-		
-		return $contributor->getAvatar("45px");
+		return $contributor
+			->avatar()
+			->setWidth(45)
+			->image();
 	}
 	
 	public function column_realname( $contributor ) {
 		$actions = array(
-			'edit'   => Settings\Contributors::get_action_link( $contributor, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\Contributors::get_action_link( $contributor, __( 'Delete', 'podlove' ), 'confirm_delete' ),
+			'edit'   => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Edit', 'podlove' ) ),
+			'delete' => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Delete', 'podlove' ), 'confirm_delete' ),
 			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove'))
 		);
 	
 		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
-		    Settings\Contributors::get_action_link( $contributor, $contributor->getName() ),
+		    Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, $contributor->getName() ),
 		    $contributor->realname,
 		    ( $contributor->nickname == "" ? "" : " (" . $contributor->nickname . ")"  ),
 		    $this->row_actions( $actions )
@@ -65,21 +67,8 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		return "<a href='mailto:".$contributor->privateemail."'>".$contributor->privateemail."</a>";
 	}
 
-	public function column_flattr( $contributor ) {
-		if ( !is_object($contributor) || $contributor->flattr == "" ) 
-			return;
-
-		return "<a 
-				    target=\"_blank\"
-					class=\"FlattrButton\"
-					style=\"display:none;\"
-		    		title=\"Flattr {$contributor->publicname}\"
-		    		rel=\"flattr;uid:{$contributor->flattr};button:compact;popout:0\"
-		    		href=\"https://flattr.com/profile/{$contributor->flattr}\">
-				    	Flattr {$contributor->publicname}
-				</a>
-				<br />
-				<a href='http://flattr.com/profile/".$contributor->flattr."'>".$contributor->flattr."</a>";
+	public function column_default($contributor, $column_name) {
+		return apply_filters('podlove_contributor_list_table_column_default', null, $contributor, $column_name);
 	}
 	
 	public function column_visibility( $contributor ) {
@@ -105,12 +94,12 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		foreach ($contributor_services as $contributor_service) {
 			$service = $contributor_service->get_service();
 
-			$source .= "<li>
-						<img class='podlove-contributor-list-social-logo' src='"
-						. $service->get_logo() . "' /> <a href='"
-						. $contributor_service->get_service_url() . "'>"
-						. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) . "</a>
-						</li>\n";
+			$source .= "<li>" 
+			        . $service->image()->setWidth(16)->image(['class' => 'podlove-contributor-list-social-logo']) 
+			        . "<a href='" . $contributor_service->get_service_url() . "'>"
+					. ( $service->url_scheme == '%account-placeholder%' ? 'link' : $contributor_service->value ) 
+					. "</a>"
+			        . "</li>\n";
 		}
 
 		return '<ul class="podlove-contributor-social-list">' . $source . '</ul>';
@@ -123,12 +112,11 @@ class Contributor_List_Table extends \Podlove\List_Table {
 			'slug'                 => __( 'ID', 'podlove' ),
 			'gender'               => __( 'Gender', 'podlove' ),
 			'affiliation'          => __( 'Affiliation', 'podlove' ),
-			'flattr'          	   => __( 'Flattr', 'podlove' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove' ),
 			'episodes'             => __( 'Episodes', 'podlove' ),
 			'visibility'           => __( 'Visiblity', 'podlove' )
 		);
-		return $columns;
+		return apply_filters('podlove_contributor_list_table_columns', $columns);
 	}
 
 	public function search_form() {
@@ -145,7 +133,6 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	    'slug'                 => array('slug',false),
 	    'gender'               => array('gender',false),
 	    'affiliation'          => array('organisation',false),
-	    'flattr'        	   => array('flattr',false),
 	    'privateemail'         => array('privateemail',false),
 	    'episodes'             => array('contributioncount',true),
 	    'visibility'           => array('visibility',false)
@@ -167,11 +154,13 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		td.column-visibility, th.column-visibility { width: 7% !important; }
 		td.column-gender, th.column-gender { width: 7% !important; }
 		td.column-episodes, th.column-episodes { width: 8% !important; }
+		.add-new-h2 { float: left; }
 		</style>
 		<?php
 	}
 
 	public function prepare_items() {
+		global $wpdb;
 
 		// number of items per page
 		$per_page = get_user_meta( get_current_user_id(), 'podlove_contributors_per_page', true);
@@ -184,44 +173,38 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 		// look for order options
 		if( isset($_GET['orderby'])  ) {
-			$orderby = 'ORDER BY ' . $_GET['orderby'];
+			$orderby = 'ORDER BY ' . esc_sql($_GET['orderby']);
 		} else{
 			$orderby = 'ORDER BY contributioncount';
 		}
 
 		// look how to sort
-		if( isset($_GET['order'])  ) {
-			$order = $_GET['order'];
+		if ( filter_input(INPUT_GET, 'order') === 'ASC' ) {
+			$order = 'ASC';
 		} else{
 			$order = 'DESC';
 		}
 		
 		// retrieve data
-		if( !isset($_POST['s']) ) {
-			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
-		} else if ( empty($_POST['s']) ) {
+		if( !isset($_POST['s']) || empty($_POST['s']) ) {
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all( $orderby . ' ' . $order );
 		} else {
-	 	 	$search   = $_POST['s'];
+
+	 	 	$search = \Podlove\esc_like($_POST['s']);
+	 	 	$search = '%' . $search . '%';
+
+	 	 	$search_columns = ['slug','gender','organisation','slug','department','jobtitle','privateemail','realname','publicname','guid'];
+	 	 	$search_columns = apply_filters('podlove_contributor_list_table_search_db_columns', $search_columns);
+
+	 	 	$like_searches = implode(' OR ', array_map(function($column) use ($search) {
+	 	 		return '`' . $column . '` LIKE \'' . $search . '\'';
+	 	 	}, $search_columns));
+
 			$data = \Podlove\Modules\Contributors\Model\Contributor::all(
-				'WHERE 
-				`slug` LIKE \'%' . $search . '%\' OR
-				`gender` LIKE \'%' . $search . '%\' OR
-				`organisation` LIKE \'%' . $search . '%\' OR
-				`slug` LIKE \'%' . $search . '%\' OR
-				`department` LIKE \'%' . $search . '%\' OR
-				`jobtitle` LIKE \'%' . $search . '%\' OR
-				`publicemail` LIKE \'%' . $search . '%\' OR
-				`flattr` LIKE \'%' . $search . '%\' OR
-				`privateemail` LIKE \'%' . $search . '%\' OR
-				`realname` LIKE \'%' . $search . '%\' OR
-				`publicname` LIKE \'%' . $search . '%\' OR
-				`guid` LIKE \'%' . $search . '%\' OR
-				`www` LIKE \'%' . $search . '%\'
-				' . $orderby . ' ' . $order
+				'WHERE ' . $like_searches . ' ' . $orderby . ' ' . $order
 			);
 		}
-		
+
 		// get current page
 		$current_page = $this->get_pagenum();
 		// get total items

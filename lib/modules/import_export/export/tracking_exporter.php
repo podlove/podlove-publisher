@@ -22,13 +22,25 @@ class TrackingExporter {
 			
 			header( 'Content-Type: application/octet-stream' );
 			header( 'Content-Description: File Transfer' );
-			header( 'Content-Disposition: attachment; filename=tracking.csv.gz' );
+			header( 'Content-Disposition: attachment; filename=' . TrackingExporter::getDownloadFileName() );
 			header( 'Cache-control: private' );
 			header( 'Expires: -1' );
 
-			readfile(\Podlove\Modules\ImportExport\Export\TrackingExporter::get_tracking_export_file_path());
+			readfile(TrackingExporter::get_tracking_export_file_path());
 			exit;
 		}
+	}
+
+	private static function getDownloadFileName()
+	{
+		$sitename = sanitize_key(get_bloginfo('name'));
+		
+		if (!empty($sitename))
+			$sitename .= '.';
+
+		$filename = $sitename . 'tracking.' . date( 'Y-m-d' ) . '.csv.gz';
+
+		return $filename;
 	}
 
 	public static function get_tracking_export_file_path() {

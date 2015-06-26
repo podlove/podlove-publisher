@@ -1,7 +1,11 @@
 <?php
 namespace Podlove\Settings;
 
+use Podlove\Model;
+
 class Feed {
+
+	use \Podlove\HasPageDocumentationTrait;
 
 	static $pagehook;
 	
@@ -16,7 +20,9 @@ class Feed {
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
-		add_action( "load-" . self::$pagehook,  array( $this, 'add_screen_options' ) );
+		add_action( "load-" . self::$pagehook, array( $this, 'add_screen_options' ) );
+		
+		$this->init_page_documentation(self::$pagehook);
 		
 		if( isset( $_GET["page"] ) && $_GET["page"] == "podlove_feeds_settings_handle" && isset( $_GET["update_settings"] ) && $_GET["update_settings"] == "true") {
 		   	add_action('admin_bar_init', array( $this, 'save_global_feed_setting'));
@@ -169,14 +175,78 @@ class Feed {
 	}
 	
 	private function view_template() {
+		$this->validate_feeds();
+
 		$this->table->prepare_items();
 		$this->table->display();
+
+		$this->global_feed_settings_form();
+	}
+
+	/**
+	 * Validate Feeds and show appropriate error messages.
+	 */
+	private function validate_feeds() {
+		$errors = [];
+
+		// check for missing mandatory fields
+		foreach (Model\Feed::all() as $feed) {
+			if (!strlen(trim($feed->slug))) {
+				$errors[] = sprintf(
+								__('The feed %s has no slug.', 'podlove'), 
+								'<strong>' . $feed->name . '</strong>'
+							)
+				          . \Podlove\get_help_link('podlove_help_feed_slug')
+				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove'));
+			}
+			if (!$feed->episode_asset_id) {
+				$errors[] = sprintf(
+								__('The feed %s has no assigned asset.', 'podlove'),
+								'<strong>' . $feed->name . '</strong>'
+							)
+				          . \Podlove\get_help_link('podlove_help_feed_asset')
+				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove'));
+			}
+		}
+
+		// check for duplicate slugs
+		foreach (Model\Feed::find_duplicate_slugs() as $duplicate) {
+			
+			$feeds = array_map(function($feed_id) {
+				return Model\Feed::find_by_id($feed_id);
+			}, $duplicate['feed_ids']);
+
+			$feed_links = array_map(function($feed) {
+				return self::get_action_link($feed, $feed->name);
+			}, $feeds);
+
+			$errors[] = sprintf(
+				__('Some feeds (%s) use identical slugs. Please assign unique slugs.'),
+				implode(', ', $feed_links)
+			) . \Podlove\get_help_link('podlove_help_feed_slug');
+		}
+
+		if (count($errors)) {
+			?>
+			<div class="error">
+				<p>
+					<strong><?php echo __('Please resolve these issues so your feeds can work.', 'podlove') ?></strong>
+				</p>
+				<p>
+					<?php echo implode("</p><p>", $errors); ?>
+				</p>
+			</div>
+			<?php
+		}
+	}
+
+	private function global_feed_settings_form() {
 		?>
 		<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_settings=true">
 			<?php settings_fields( Podcast::$pagehook ); ?>
 
 			<?php
-			$podcast = \Podlove\Model\Podcast::get_instance();
+			$podcast = \Podlove\Model\Podcast::get();
 
 			$form_attributes = array(
 				'context'    => 'podlove_podcast',
@@ -240,7 +310,7 @@ class Feed {
 
 			$feed = $form->object;
 
-			$podcast = \Podlove\Model\Podcast::get_instance();
+			$podcast = \Podlove\Model\Podcast::get();
 
 			$episode_assets = \Podlove\Model\EpisodeAsset::all();
 			$assets = array();
@@ -251,7 +321,7 @@ class Feed {
 			$wrapper->subheader( __( 'Basic Settings', 'podlove' ) );
 
 			$wrapper->select( 'episode_asset_id', array(
-				'label'       => __( 'Episode Media File', 'podlove' ),
+				'label'       => __( 'Episode Media File', 'podlove' ) . \Podlove\get_help_link('podlove_help_feed_asset'),
 				'options'     => $assets,
 				'html'        => array( 'class' => 'required' )
 			) );
@@ -269,7 +339,7 @@ class Feed {
 			) );
 
 			$wrapper->string( 'slug', array(
-				'label'       => __( 'Slug', 'podlove' ),
+				'label'       => __( 'Slug', 'podlove' ) . \Podlove\get_help_link('podlove_help_feed_slug'),
 				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
@@ -278,6 +348,12 @@ class Feed {
 				'label'       => __( 'Discoverable?', 'podlove' ),
 				'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' ),
 				'default'     => true
+			) );
+			
+			$wrapper->checkbox( 'embed_content_encoded', array(
+				'label'       => __( 'Include HTML Content', 'podlove' ),
+				'description' => __( 'Include episode show notes in the feed.', 'podlove' ),
+				'default'     => false
 			) );
 
 			$wrapper->subheader( __( 'Directory Settings', 'podlove' ) );
@@ -337,12 +413,6 @@ class Feed {
 				'options' => $limit_options,
 				'please_choose' => false,
 				'default' => '-2'
-			) );
-			
-			$wrapper->checkbox( 'embed_content_encoded', array(
-				'label'       => __( 'Include HTML Content', 'podlove' ),
-				'description' => __( 'Warning: Potentially creates huge feeds.', 'podlove' ),
-				'default'     => false
 			) );
 
 			$wrapper->subheader( __( 'Protection', 'podlove' ) );
