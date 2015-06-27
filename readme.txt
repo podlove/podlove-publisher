@@ -60,7 +60,7 @@ Get in contact with the theme developer and ask if it is ready for custom posts.
 
 ### My episodes do not show up on the home page. What's wrong?
 
-Episodes are kep separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
+Episodes are kept separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
 
 ### Episodes do not show up with the configured permalink URL. What's wrong?
 
@@ -70,7 +70,7 @@ Episodes are custom posts and are dealt with differently by WordPress. They show
 
 You don't. The plugin assembles the media file URL by combining various components that you have configured in the Podlove settings. All media files have to reside under a base URL that you specify in the "Podcast Settings" pane. This basically defines which directory all files have to be uploaded to.
 
-The exact media file name is made up of a) the Episode Media File Flug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
+The exact media file name is made up of a) the Episode Media File Slug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
 
 ### Where is the Web Player / Download list?
 
@@ -131,7 +131,7 @@ You can now express that episodes are related to each other. You can list all re
 * Contributors can now be edited in _Contributor Settings_ (instead of _Episodes > Contributors_)
 * Add functionality to automatically determine the duration for episodes. This is especially useful for people who don't use Auphonic, which already determines the duration automatically.
 * We are now able to handle media files that are served without a "Content-Length" header. A specific warning is generated and the size is displayed as "unknown", but the files are treated as valid so they can be played.
-* Add support for Auphonic webhooks. This allows us to episode your episode metadata once an Auphonic production is finished — even if you navigated away from the episode page.
+* Add support for Auphonic webhooks. This allows us to import your episode metadata once an Auphonic production is finished — even if you navigated away from the episode page.
 
 = 2.2.4 =
 
@@ -463,7 +463,7 @@ More info on those sites:
 
 * add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are automatically syntax checked.
 * add support for scientific networks: ResearchGate, ORCiD, Scopus
-* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+* add explicit support for "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
 
 **Enhancements & Others**
 
@@ -993,7 +993,7 @@ Auphonic integration Enhancements
 * Enhancement: Show expected and actual mime type in log when an error occurs
 * Bugfix: Fix Bitlove integration
 * Bugfix: Correctly hide content in password protected posts
-* Bugfix: ADN Plugin annonced new episode every time the episode got saved
+* Bugfix: ADN Plugin announced new episode every time the episode got saved
 * Fix some PHP 5.4 Strict warnings
 
 = 1.7.2 (2013-07-11) =
@@ -1143,7 +1143,7 @@ Minor fixes and improvements:
 * Bugfix: fix feed setting "No limit. Include all items."
 
 = 1.4.2-alpha =
-* Bugfix: add auphonic metadata file type
+* Bugfix: add Auphonic metadata file type
 * Bugfix: fix bug regarding limiting feed items
 
 = 1.4.1-alpha =
@@ -1189,7 +1189,7 @@ A similar concept might return once we tackle stuff like seasons.
 = 1.3.27-alpha =
 * Enhancement: enforce trailing slash at the end media file base url
 * Enhancement: fix huge download-select-font
-* Enhancement: doublecheck curl availablity
+* Enhancement: doublecheck curl availability
 * Bugfix: double quote escaping for Web Player title, subtitle and summary
 
 = 1.3.26-alpha =
