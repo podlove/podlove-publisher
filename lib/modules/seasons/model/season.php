@@ -74,6 +74,8 @@ class Season extends Base
 	 * Last day of the season.
 	 * 
 	 * The current season has no end_date.
+	 * Otherwise the end date equals the publication date of the last episode
+	 * in that season.
 	 * 
 	 * @param  string $format date format, defaults to WordPress setting
 	 * @return string|null
@@ -104,6 +106,9 @@ class Season extends Base
 			LIMIT 0,1
 		";
 		$episode = Episode::find_one_by_sql($sql);
+
+		if (is_null($episode))
+			return null;
 
 		return get_the_date($format, $episode->post_id);
 	}

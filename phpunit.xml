@@ -13,4 +13,18 @@
   <php>
     <const name="WP_RUN_CORE_TESTS" value="0"/>
   </php>
+  <!-- 
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">lib/modules/seasons/model</directory>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="coverage-html" target="/srv/log/coverage/report" lowUpperBound="35"
+         highLowerBound="70"/>
+    <log type="coverage-clover" target="/srv/log/coverage/coverage.xml"/>
+    <log type="coverage-php" target="/srv/log/coverage/coverage.serialized"/>
+    <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+  </logging>
+   -->
 </phpunit>
