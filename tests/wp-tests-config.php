@@ -39,3 +39,5 @@ define( 'WP_TESTS_TITLE', 'Test Blog' );
 define( 'WP_PHP_BINARY', 'php' );
 
 define( 'WPLANG', '' );
+
+define( 'PODLOVE_LOG_LEVEL', 250 ); // 250 = NOTICE
