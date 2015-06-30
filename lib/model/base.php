@@ -301,6 +301,19 @@ abstract class Base
 
 		return $wpdb->query( $sql );
 	}
+
+	public static function create($attributes = []) {
+		$class = get_called_class();
+		$instance = new $class;
+
+		foreach ($attributes as $key => $value) {
+			$instance->$key = $value;
+		}
+
+		$instance->save();
+
+		return $instance;
+	}
 	
 	/**
 	 * Saves changes to database.

@@ -1,7 +1,7 @@
 <?php 
 namespace Podlove\Modules\Seasons;
 
-use Model\Season;
+use \Podlove\Modules\Seasons\Model\Season;
 
 class Seasons extends \Podlove\Modules\Base {
 

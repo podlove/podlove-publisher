@@ -1,0 +1,16 @@
+<phpunit 
+	bootstrap="tests/includes/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true">
+  <testsuites>
+    <testsuite name="test">
+      <directory suffix="_test.php">tests/phpunit</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <const name="WP_RUN_CORE_TESTS" value="0"/>
+  </php>
+</phpunit>
