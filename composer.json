@@ -22,6 +22,6 @@
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
-        "phpunit/phpunit": "4.6.*"
+        "phpunit/phpunit": "4.7.*"
     }
 }
