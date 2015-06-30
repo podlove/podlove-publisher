@@ -20,11 +20,13 @@ class Module {
 
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
 
-		if ( defined( 'PODLOVEWEBPLAYER_DIR' ) ) {
-			define( 'PODLOVE_MEDIA_PLAYER', 'external' );
-			return;
-		} else {
-			define( 'PODLOVE_MEDIA_PLAYER', 'internal' );
+		if (!defined('PODLOVE_MEDIA_PLAYER')) {
+			if ( defined('PODLOVEWEBPLAYER_DIR')) {
+				define('PODLOVE_MEDIA_PLAYER', 'external');
+				return;
+			} else {
+				define('PODLOVE_MEDIA_PLAYER', 'internal');
+			}
 		}
 
 		include_once 'player/podlove-web-player/podlove-web-player.php';
