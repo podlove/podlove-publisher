@@ -49,6 +49,7 @@ class WP_UnitTest_Factory {
 
 	function __construct() {
 		$this->post = new WP_UnitTest_Factory_For_Post( $this );
+		$this->episode = new WP_UnitTest_Factory_For_Episode( $this );
 		$this->attachment = new WP_UnitTest_Factory_For_Attachment( $this );
 		$this->comment = new WP_UnitTest_Factory_For_Comment( $this );
 		$this->user = new WP_UnitTest_Factory_For_User( $this );
@@ -59,6 +60,43 @@ class WP_UnitTest_Factory {
 			$this->blog = new WP_UnitTest_Factory_For_Blog( $this );
 			$this->network = new WP_UnitTest_Factory_For_Network( $this );
 		}
+	}
+}
+
+class WP_UnitTest_Factory_For_Episode extends WP_UnitTest_Factory_For_Thing {
+
+	function __construct( $factory = null ) {
+		parent::__construct( $factory );
+		$this->default_generation_definitions = array(
+			'enable'  => 1,
+			'slug'    => new WP_UnitTest_Generator_Sequence( 'episode%s' )
+		);
+	}
+
+	function create_object( $args ) {
+
+		if (!isset($args['post_id']) || !$args['post_id']) {
+			$post_factory = new WP_UnitTest_Factory_For_Post($this->factory);
+			$args['post_id'] = $post_factory->create(['post_type' => 'podcast']);
+		}
+
+		$episode = \Podlove\Model\Episode::create($args);
+
+		return $episode->id;
+	}
+
+	function update_object( $episode_id, $fields ) {
+
+		$episode = \Podlove\Model\Episode::find_by_id($episode_id);
+		foreach ($fields as $key => $value) {
+			$episode->$key = $value;
+		}
+
+		return $episode->save();
+	}
+
+	function get_object_by_id($episode_id) {
+		return \Podlove\Model\Episode::find_by_id($episode_id);
 	}
 }
 
