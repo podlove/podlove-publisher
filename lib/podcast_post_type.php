@@ -153,6 +153,13 @@ class Podcast_Post_Type {
 			);
 
 			wp_register_script(
+				'podlove_admin_media',
+				\Podlove\PLUGIN_URL . '/js/admin/media.js',
+				array( 'jquery', 'thickbox', 'media-upload', 'jquery-ui-sortable' ),
+				$version
+			);
+
+			wp_register_script(
 				'podlove_admin_protected_feed',
 				\Podlove\PLUGIN_URL . '/js/admin/protected_feed.js',
 				array( 'jquery' ),
@@ -183,6 +190,7 @@ class Podcast_Post_Type {
 					'podlove_admin_chosen',
 					'podlove_admin_chosen_image',
 					'podlove_admin_license',
+					'podlove_admin_media',
 					'podlove_admin_protected_feed',
 					'podlove_admin_data_table'
 				),
