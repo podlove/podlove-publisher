@@ -139,7 +139,6 @@ class Settings {
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('jquery-ui-core');
 		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_media();
 
 		$form_args = array(
 			'context' => 'podlove_season',
@@ -181,29 +180,10 @@ class Settings {
 	 			'html'        => ['class' => 'regular-text podlove-check-input', 'readonly' => 'readonly']
 	 		]);
 
-	 		$wrapper->callback('image', [
-	 			'label'       => __('Image', 'podlove'),
-	 			'callback'    => function() use ($season) {
-	 				?>
-					<div class="podlove-media-upload-wrap">
-						<span>
-							<input type="text" class="regular-text" value="<?php echo $season->image ?>" name="podlove_season[image]" id="podlove_season_image"> 
-							<a href="#" class="podlove-media-upload button" title="Season Image" 
-								data-target="podlove_season_image" 
-								data-title="Logo" 
-								data-type="image" 
-								data-button="Use Image for Season" 
-								data-class="media-frame" 
-								data-frame="select" 
-								data-size="full" 
-								data-state="podlove_select_single_image" 
-								data-preview=".podlove_preview_pic"
-								data-fetch="url">Upload</a>
-						</span>
-						<div class="podlove_preview_pic"></div>
-					</div>
-	 				<?php
-	 			}
+	 		$wrapper->upload('image', [
+	 			'label' => __('Image', 'podlove'),
+	 			'html'  => ['class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'],
+ 				'media_button_text' => __("Use Image for Season", 'podlove')
 	 		]);
 		} );
 

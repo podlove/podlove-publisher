@@ -223,6 +223,38 @@ class Builder {
 		<?php
 	}
 
+	public function upload( $object_key, $arguments ) {
+		$this->build_input_values( $object_key, $arguments );
+		wp_enqueue_media();
+
+		$defaults = [
+			'form_button_text'  => __('Upload', 'podlove'),
+			'media_button_text' => __('Use Image', 'podlove'),
+			'media_title' => __('Image', 'podlove')
+		];
+		$arguments = wp_parse_args($arguments, $defaults);
+
+		?>
+		<div class="podlove-media-upload-wrap">
+			<span>
+				<input type="text" <?php echo $this->html_attributes; ?> value="<?php echo esc_attr( $this->field_value ); ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"> 
+				<a href="#" class="podlove-media-upload button" title="<?php echo $arguments['media_title'] ?>" 
+					data-target="<?php echo $this->field_id; ?>" 
+					data-title="<?php echo $arguments['media_title'] ?>" 
+					data-type="image" 
+					data-button="<?php echo $arguments['media_button_text'] ?>" 
+					data-class="media-frame" 
+					data-frame="select" 
+					data-size="full" 
+					data-state="podlove_select_single_image" 
+					data-preview=".podlove_preview_pic"
+					data-fetch="url"><?php echo $arguments['form_button_text'] ?></a>
+			</span>
+			<div class="podlove_preview_pic"></div>
+		</div>
+		<?php
+	}
+
 	public function avatar( $object_key, $arguments ) {
 		$this->build_input_values( $object_key, $arguments );
 
