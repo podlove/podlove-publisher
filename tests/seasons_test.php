@@ -10,6 +10,7 @@ class SeasonsTest extends WP_UnitTestCase {
 	 */
 	function activateSeasonsModule() {
 		\Podlove\Modules\Base::activate('seasons');
+		$this->episode_factory = new EpisodeFactory($this->factory);
 	}
 
 	public function testSeasonsAreNumberedCorrectly() {
@@ -49,8 +50,8 @@ class SeasonsTest extends WP_UnitTestCase {
 	public function testEpisodesForSingleSeason() {
 		$season = Season::create();
 
-		$episode1 = $this->factory->episode->create_and_get();
-		$episode2 = $this->factory->episode->create_and_get();
+		$episode1 = $this->episode_factory->create();
+		$episode2 = $this->episode_factory->create();
 
 		$this->assertEquals(2, count($season->episodes()));
 	}
@@ -98,7 +99,7 @@ class SeasonsTest extends WP_UnitTestCase {
 
 	public function testCurrentSeasonHasNoEndDate() {
 		$season = Season::create();
-		$episode = $this->factory->episode->create_and_get();
+		$episode = $this->episode_factory->create();
 
 		$this->assertTrue($season->is_running());
 		$this->assertNull($season->end_date());
@@ -115,7 +116,7 @@ class SeasonsTest extends WP_UnitTestCase {
 
 	private function _generate_episodes_for_dates(array $dates) {
 		foreach ($dates as $date) {
-			$this->factory->episode->create_and_get([
+			$this->episode_factory->create([
 				'post_id' => $this->factory->post->create(['post_date' => strftime("%Y-%m-%d %H:%M:%S", strtotime($date))])
 			]);
 		}
