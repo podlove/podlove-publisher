@@ -32,3 +32,6 @@ before_script:
 
 script:
 - phpunit
+
+notifications:
+  slack: $SLACK_TOKEN
