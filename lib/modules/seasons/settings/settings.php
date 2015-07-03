@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Seasons\Settings;
 
 use \Podlove\Modules\Seasons\Model\Season;
+use \Podlove\Modules\Seasons\Model\SeasonsValidator;
 
 class Settings {
 
@@ -140,6 +141,21 @@ class Settings {
 	}
 	
 	private function view_template() {
+
+		$validator = new SeasonsValidator;
+		$validator->validate();
+		$issues = $validator->issues();
+		foreach ($validator->issues() as $issue) {
+			?>
+			<div class="error">
+				<p>
+					<strong><?php echo __('Warning', 'podlove') . ': ' ?></strong>
+					<?php echo $issue->message(); ?>
+				</p>
+			</div>
+			<?php
+		}
+
 		$this->table->prepare_items();
 		$this->table->display();
 		?>
