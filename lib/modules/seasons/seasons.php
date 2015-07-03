@@ -19,6 +19,8 @@ class Seasons extends \Podlove\Modules\Base {
 			new \Podlove\Modules\Seasons\Settings\Settings($handle);
 		});
 
+		add_action('admin_print_styles', [$this, 'scripts_and_styles']);
+
 		add_filter( "set-screen-option", function($status, $option, $value) {
 			if ($option == 'podlove_seasons_per_page')
 				return $value;
@@ -30,5 +32,15 @@ class Seasons extends \Podlove\Modules\Base {
 
 	public function was_activated( $module_name ) {
 		Season::build();
+	}
+
+	public function scripts_and_styles() {
+		wp_register_style(
+			'podlove_seasons_admin_style',
+			\Podlove\PLUGIN_URL . '/lib/modules/seasons/css/admin.css',
+			false,
+			\Podlove\get_plugin_header('Version')
+		);
+		wp_enqueue_style('podlove_seasons_admin_style');
 	}
 }

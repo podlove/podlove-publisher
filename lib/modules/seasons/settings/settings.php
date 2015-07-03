@@ -158,17 +158,6 @@ class Settings {
 
 		$this->table->prepare_items();
 		$this->table->display();
-		?>
-<style type="text/css">
-.seasons .column-number { width: 15px; }
-.seasons .column-image  { width: 75px; }
-.seasons .column-start  { width: 150px; }
-
-@media all and (max-width: 782px) {
-	.column-start { display: none; }
-}
-</style>
-		<?php
 	}
 	
 	private function form_template( $season, $action, $button_text = NULL ) {
@@ -225,17 +214,6 @@ class Settings {
 		} );
 
 		?>
-<style type="text/css">
-.row_podlove_season_start_date td > div:before {
-	font: 400 20px/1 dashicons;
-	content: '\f145';
-	top: 4px;
-	position: relative;
-	color: #82878c;
-	cursor: pointer;
-}
-</style>
-
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     $("#podlove_season_start_date").datepicker({
