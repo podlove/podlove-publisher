@@ -36,16 +36,6 @@ class SeasonListTable extends \Podlove\List_Table {
 		);
 	}
 
-	public function column_time($season) {
-		$start = $season->start_date();
-		$end   = $season->end_date();
-
-		if (!$end)
-			return sprintf(__('since %s (currently running)', 'podlove'), $start);
-
-		return $start . ' ' . __('until', 'podlove') . ' ' . $end;
-	}
-
 	public function column_episodes($season) {
 		$episodes = $season->episodes();
 
@@ -67,7 +57,6 @@ class SeasonListTable extends \Podlove\List_Table {
 	public function get_columns(){
 		return array(
 			'title' => __( 'Season', 'podlove' ),
-			'time' => __( 'Time', 'podlove' ),
 			'episodes' => __( 'Episodes', 'podlove' )
 		);
 	}
