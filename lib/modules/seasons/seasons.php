@@ -19,6 +19,13 @@ class Seasons extends \Podlove\Modules\Base {
 			new \Podlove\Modules\Seasons\Settings\Settings($handle);
 		});
 
+		add_filter( "set-screen-option", function($status, $option, $value) {
+			if ($option == 'podlove_seasons_per_page')
+				return $value;
+			
+			return $status;
+		}, 10, 3 );
+
 	}
 
 	public function was_activated( $module_name ) {

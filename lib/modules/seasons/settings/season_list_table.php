@@ -77,8 +77,11 @@ class SeasonListTable extends \Podlove\List_Table {
 
 	public function prepare_items() {
 		// number of items per page
-		$per_page = 50;
-		
+		$per_page = get_user_meta( get_current_user_id(), 'podlove_seasons_per_page', true);
+		if (empty($per_page)) {
+			$per_page = 10;
+		}
+
 		// define column headers
 		$columns = $this->get_columns();
 		$hidden = array();

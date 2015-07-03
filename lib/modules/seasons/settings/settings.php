@@ -6,7 +6,7 @@ use \Podlove\Modules\Seasons\Model\Season;
 class Settings {
 
 	public function __construct($handle) {
-		add_submenu_page(
+		$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ __('Seasons', 'podlove'),
 			/* $menu_title */ __('Seasons', 'podlove'),
@@ -16,6 +16,17 @@ class Settings {
 		);
 
 		add_action( 'admin_init', array( $this, 'process_form' ) );
+		add_action( "load-" . $pagehook, [$this, 'add_screen_options'] );
+	}
+
+	public function add_screen_options() {
+		add_screen_option( 'per_page', array(
+		   'label'   => 'Seasons',
+		   'default' => 10,
+		   'option'  => 'podlove_seasons_per_page'
+		) );
+
+		$this->table = new SeasonListTable;
 	}
 
 	/**
@@ -129,9 +140,8 @@ class Settings {
 	}
 	
 	private function view_template() {
-		$table = new SeasonListTable();
-		$table->prepare_items();
-		$table->display();
+		$this->table->prepare_items();
+		$this->table->display();
 		?>
 <style type="text/css">
 .seasons .column-number { width: 15px; }
