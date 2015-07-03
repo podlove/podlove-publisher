@@ -46,7 +46,7 @@ class SeasonListTable extends \Podlove\List_Table {
 
 	public function column_image($season) {
 		if ($season->image) {
-			return $season->image()->setWidth(50)->setHeight(50)->image();
+			return $season->image()->setWidth(64)->setHeight(64)->image();
 		} else {
 			return '';			
 		}
