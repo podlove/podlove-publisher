@@ -40,6 +40,10 @@ class SeasonListTable extends \Podlove\List_Table {
 		return $season->number();
 	}
 
+	public function column_start($season) {
+		return $season->start_date();
+	}
+
 	public function column_image($season) {
 		if ($season->image) {
 			return $season->image()->setWidth(50)->setHeight(50)->image();
@@ -72,6 +76,7 @@ class SeasonListTable extends \Podlove\List_Table {
 			'image' => __( 'Image', 'podlove' ),
 			'title' => __( 'Season', 'podlove' ),
 			'episodes' => __( 'Episodes', 'podlove' )
+			'start' => __( 'Start', 'podlove' )
 		);
 	}
 
