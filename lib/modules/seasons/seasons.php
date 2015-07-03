@@ -35,12 +35,23 @@ class Seasons extends \Podlove\Modules\Base {
 	}
 
 	public function scripts_and_styles() {
-		wp_register_style(
+
+		// only on seasons settings pages
+		if (filter_input(INPUT_GET, 'page') !== 'podlove_seasons_settings')
+			return;
+
+		wp_enqueue_style(
 			'podlove_seasons_admin_style',
 			\Podlove\PLUGIN_URL . '/lib/modules/seasons/css/admin.css',
 			false,
 			\Podlove\get_plugin_header('Version')
 		);
-		wp_enqueue_style('podlove_seasons_admin_style');
+
+		wp_enqueue_script(
+			'podlove_seasons_admin_script',
+			$this->get_module_url() . '/js/admin.js',
+			['jquery'],
+			\Podlove\get_plugin_header('Version')
+		);
 	}
 }

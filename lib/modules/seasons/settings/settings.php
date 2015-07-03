@@ -213,22 +213,6 @@ class Settings {
 	 		]);
 		} );
 
-		?>
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-    $("#podlove_season_start_date").datepicker({
-    	dateFormat: $.datepicker.ISO_8601,
-		changeMonth: true,
-		changeYear: true
-    });
-
-    $("#podlove_season_start_date").closest("div").on("click", function() {
-    	$("#podlove_season_start_date").datepicker("show");
-    });
-});
-</script>
-		<?php
-
 	}
 	
 	private function edit_template() {
