@@ -69,25 +69,19 @@ class Settings {
 	 */
 	private function delete() {
 
-		if ( ! isset( $_REQUEST['season'] ) )
+		if (!isset($_REQUEST['season']))
 			return;
 
-		// $podcast = Model\Podcast::get();
-		// $asset   = Model\EpisodeAsset::find_by_id( $_REQUEST['season'] );
+		if ($season = Season::find_by_id($_REQUEST['season']))
+			$season->delete();
 
-		// if ( isset( $_REQUEST['force'] ) && $_REQUEST['force'] || $asset->is_deletable() ) {
-		// 	$asset->delete();
-		// 	$this->redirect( 'index' );
-		// } else {
-		// 	$this->redirect( 'index', NULL, array( 'message' => 'media_file_relation_warning', 'deleted_id' => $asset->id ) );
-		// }
-		
+		$this->redirect('index');
 	}
 
 	/**
 	 * Helper method: redirect to a certain page.
 	 */
-	private function redirect( $action, $episode_asset_id = NULL, $params = array() ) {
+	private function redirect( $action, $episode_asset_id = NULL, $params = [] ) {
 		$page    = 'admin.php?page=' . $_REQUEST['page'];
 		$show    = ( $episode_asset_id ) ? '&season=' . $episode_asset_id : '';
 		$action  = '&action=' . $action;
