@@ -146,6 +146,11 @@ class Settings {
 <style type="text/css">
 .seasons .column-number { width: 15px; }
 .seasons .column-image  { width: 75px; }
+.seasons .column-start  { width: 150px; }
+
+@media all and (max-width: 782px) {
+	.column-start { display: none; }
+}
 </style>
 		<?php
 	}

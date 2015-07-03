@@ -13,7 +13,7 @@ class SeasonListTable extends \Podlove\List_Table {
 		) );
 	}
 
-	public function column_title($season) {
+	public function column_season_title($season) {
 
 		$link = function ( $title, $action = 'edit' ) use ( $season ) {
 			return sprintf(
@@ -74,8 +74,8 @@ class SeasonListTable extends \Podlove\List_Table {
 		return array(
 			'number' => __( '#', 'podlove' ),
 			'image' => __( 'Image', 'podlove' ),
-			'title' => __( 'Season', 'podlove' ),
-			'episodes' => __( 'Episodes', 'podlove' )
+			'season_title' => __( 'Season', 'podlove' ),
+			'episodes' => __( 'Episodes', 'podlove' ),
 			'start' => __( 'Start', 'podlove' )
 		);
 	}
