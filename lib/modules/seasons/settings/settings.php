@@ -132,6 +132,12 @@ class Settings {
 		$table = new SeasonListTable();
 		$table->prepare_items();
 		$table->display();
+		?>
+<style type="text/css">
+.seasons .column-number { width: 15px; }
+.seasons .column-image  { width: 75px; }
+</style>
+		<?php
 	}
 	
 	private function form_template( $season, $action, $button_text = NULL ) {

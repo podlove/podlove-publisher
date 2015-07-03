@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Seasons\Model;
 
 use \Podlove\Model\Base;
+use \Podlove\Model\Image;
 use \Podlove\Model\Episode;
 
 class Season extends Base
@@ -18,6 +19,10 @@ class Season extends Base
 		} else {
 			return __('Season', 'podlove') . ' ' . $this->number();
 		}
+	}
+
+	public function image() {
+		return new Image($this->image, $this->title);
 	}
 
 	/**

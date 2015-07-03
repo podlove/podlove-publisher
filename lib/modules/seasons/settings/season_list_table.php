@@ -5,7 +5,7 @@ use \Podlove\Modules\Seasons\Model\Season;
 
 class SeasonListTable extends \Podlove\List_Table {
 
-	function __construct(){
+	function __construct() {
 		parent::__construct( array(
 		    'singular'  => 'season',   // singular name of the listed records
 		    'plural'    => 'seasons',  // plural name of the listed records
@@ -31,9 +31,21 @@ class SeasonListTable extends \Podlove\List_Table {
 	
 		return sprintf(
 			'%1$s %2$s',
-		    $link($season->title()),
-		    $this->row_actions($actions)
+			$link($season->title()),
+			$this->row_actions($actions)
 		);
+	}
+
+	public function column_number($season) {
+		return $season->number();
+	}
+
+	public function column_image($season) {
+		if ($season->image) {
+			return $season->image()->setWidth(50)->setHeight(50)->image();
+		} else {
+			return '';			
+		}
 	}
 
 	public function column_episodes($season) {
@@ -48,7 +60,7 @@ class SeasonListTable extends \Podlove\List_Table {
 		};
 
 		$link = function($episode) {
-			return '<a href="' . get_edit_post_link($episode->post_id) . '">' . $episode->title() . '</a>';
+			return '<a href="' . get_edit_post_link($episode->post_id) . '">' . $episode->title() . '</a> <small>' . get_the_date('', $episode->post_id) . '</small>';
 		};
 
 		return $link($first) . $totals($count) . $link($last);
@@ -56,6 +68,8 @@ class SeasonListTable extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
+			'number' => __( '#', 'podlove' ),
+			'image' => __( 'Image', 'podlove' ),
 			'title' => __( 'Season', 'podlove' ),
 			'episodes' => __( 'Episodes', 'podlove' )
 		);
