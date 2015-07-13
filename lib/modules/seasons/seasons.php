@@ -32,6 +32,10 @@ class Seasons extends \Podlove\Modules\Base {
 			'seasons', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'], 3
 		);
 
+		\Podlove\Template\Episode::add_accessor(
+			'season', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorEpisodeSeason'], 4
+		);
+
 	}
 
 	public function was_activated( $module_name ) {

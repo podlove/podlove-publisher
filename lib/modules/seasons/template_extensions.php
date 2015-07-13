@@ -19,4 +19,14 @@ class TemplateExtensions {
 		});
 	}
 
+	/**
+	 * Get season for an episode
+	 * 
+	 * @accessor
+	 * @dynamicAccessor episode.season
+	 */
+	public static function accessorEpisodeSeason($return, $method_name, $episode, $post, $args = []) {
+		return new Template\Season(Model\Season::for_episode($episode));
+	}
+
 }

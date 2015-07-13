@@ -13,6 +13,29 @@ class Season extends Base
 		$this->set_blog_id();
 	}
 
+	public static function for_episode(Episode $episode) {
+		return self::by_date(strtotime(get_post($episode->post_id)->post_date));
+	}
+
+	public static function by_date($timestamp) {
+		
+		if (!is_numeric($timestamp))
+			throw new InvalidArgumentException("Season::by_date expects a timestamp as parameter");
+
+		$seasons = Season::all();
+		$seasons = array_filter($seasons, function($season) use ($timestamp) {
+			$start = strtotime(get_post($season->first_episode()->post_id)->post_date);
+			$end   = strtotime(get_post($season->last_episode()->post_id)->post_date);
+			return $start <= $timestamp && ($end >= $timestamp || $season->is_running());
+		});
+
+		if (count($seasons) > 0) {
+			return reset($seasons);
+		} else {
+			return null;
+		}
+	}
+
 	public function title() {
 		if ($this->title) {
 			return $this->title;

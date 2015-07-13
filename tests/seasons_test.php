@@ -138,6 +138,21 @@ class SeasonsTest extends WP_UnitTestCase {
 		$this->assertEquals($episodes[2]->id, $season1->first_episode()->id);
 	}
 
+	public function testGetByDate() {
+		$season0 = Season::create();
+		$season1 = Season::create(['start_date' => '2011-01-01']);
+
+		$episodes = $this->_generate_episodes_for_dates([
+			'2010-10-10',
+			'2010-10-11',
+			'2013-01-01',
+		]);
+
+		$this->assertNull(Season::by_date(strtotime('2005-10-10')));
+		$this->assertEquals($season0->id, Season::by_date(strtotime('2010-10-10'))->id);
+		$this->assertEquals($season1->id, Season::by_date(strtotime('2013-01-02'))->id);
+	}
+
 	private function _generate_episodes_for_dates(array $dates) {
 		$episodes = [];
 
