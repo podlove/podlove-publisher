@@ -114,11 +114,39 @@ class SeasonsTest extends WP_UnitTestCase {
 		$this->assertEquals('2010-10-10', $season0->end_date('Y-m-d'));
 	}
 
+	public function testLastEpisode() {
+		$season0 = Season::create();
+		$season1 = Season::create(['start_date' => '2011-01-01']);
+
+		$episodes = $this->_generate_episodes_for_dates(['2010-10-10', '2010-10-11', '2013-01-01']);
+
+		$this->assertEquals($episodes[1]->id, $season0->last_episode()->id);
+		$this->assertEquals($episodes[2]->id, $season1->last_episode()->id);
+	}
+
+	public function testFirstEpisode() {
+		$season0 = Season::create();
+		$season1 = Season::create(['start_date' => '2011-01-01']);
+
+		$episodes = $this->_generate_episodes_for_dates([
+			'2010-10-10',
+			'2010-10-11 10:00',
+			'2013-01-01',
+		]);
+
+		$this->assertEquals($episodes[0]->id, $season0->first_episode()->id);
+		$this->assertEquals($episodes[2]->id, $season1->first_episode()->id);
+	}
+
 	private function _generate_episodes_for_dates(array $dates) {
+		$episodes = [];
+
 		foreach ($dates as $date) {
-			$this->episode_factory->create([
+			$episodes[] = $this->episode_factory->create([
 				'post_id' => $this->factory->post->create(['post_date' => strftime("%Y-%m-%d %H:%M:%S", strtotime($date))])
 			]);
 		}
+
+		return $episodes;
 	}
 }

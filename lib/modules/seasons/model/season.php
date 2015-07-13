@@ -75,6 +75,62 @@ class Season extends Base
 		return is_null($this->next_season());
 	}
 
+	public function first_episode() {
+		global $wpdb;
+
+		$previous_season = $this->previous_season();
+
+		if ($previous_season) {
+			$date_condition = "AND DATE(p.post_date) > '" . $previous_season->end_date('Y-m-d') . "'";
+		} else {
+			$date_condition = "";
+		}
+
+		$sql = "SELECT
+				e.*
+			FROM
+				`" . Episode::table_name() . "` e
+				JOIN `" . $wpdb->posts . "` p ON e.post_id = p.ID
+			WHERE
+				p.post_type = 'podcast' AND
+				p.post_status = 'publish' 
+				$date_condition
+			ORDER BY
+				p.post_date ASC
+			LIMIT 0,1
+		";
+
+		return Episode::find_one_by_sql($sql);
+	}
+
+	public function last_episode() {
+		global $wpdb;
+
+		$next_season = $this->next_season();
+
+		if ($next_season) {
+			$date_condition = "AND DATE(p.post_date) < '" . $next_season->start_date('Y-m-d') . "'";
+		} else {
+			$date_condition = "";
+		}
+
+		$sql = "SELECT
+				e.*
+			FROM
+				`" . Episode::table_name() . "` e
+				JOIN `" . $wpdb->posts . "` p ON e.post_id = p.ID
+			WHERE
+				p.post_type = 'podcast' AND
+				p.post_status = 'publish' 
+				$date_condition
+			ORDER BY
+				p.post_date DESC
+			LIMIT 0,1
+		";
+
+		return Episode::find_one_by_sql($sql);
+	}
+
 	/**
 	 * Last day of the season.
 	 * 
@@ -94,23 +150,7 @@ class Season extends Base
 		if (is_null($format))
 			$format = get_option('date_format');
 
-		// end date is publication date of last episode in this season
-		$next_season = $this->next_season();
-
-		$sql = "SELECT
-				e.*
-			FROM
-				`" . Episode::table_name() . "` e
-				JOIN `" . $wpdb->posts . "` p ON e.post_id = p.ID
-			WHERE
-				p.post_type = 'podcast' AND
-				p.post_status = 'publish' AND
-				p.post_date < '" . $this->next_season()->start_date('Y-m-d') . "'
-			ORDER BY
-				p.post_date DESC
-			LIMIT 0,1
-		";
-		$episode = Episode::find_one_by_sql($sql);
+		$episode = $this->last_episode();
 
 		if (is_null($episode))
 			return null;
