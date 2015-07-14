@@ -46,7 +46,8 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function subtitle() {
-		return $this->episode->subtitle;
+		// @todo generate warning if a shortcode is used in subtitles
+		return \Podlove\PHP\escape_shortcodes($this->episode->subtitle);
 	}
 
 	/**
@@ -55,7 +56,8 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function summary() {
-		return $this->episode->summary;
+		// @todo generate warning if a shortcode is used in summaries
+		return \Podlove\PHP\escape_shortcodes($this->episode->summary);
 	}
 
 	/**

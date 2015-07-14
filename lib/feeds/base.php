@@ -248,11 +248,11 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$author = sprintf( '<itunes:author>%s</itunes:author>', $author );
 			$xml .= apply_filters( 'podlove_feed_itunes_author', $author );
 
-			$subtitle = apply_filters( 'podlove_feed_content', $episode->subtitle );
+			$subtitle = apply_filters( 'podlove_feed_content', \Podlove\PHP\escape_shortcodes(strip_tags($episode->subtitle)) );
 			$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $subtitle )  ;
 			$xml .= apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
 
-			$summary = apply_filters( 'podlove_feed_content', strip_tags( $episode->summary ) );
+			$summary = apply_filters( 'podlove_feed_content', \Podlove\PHP\escape_shortcodes(strip_tags($episode->summary)) );
 			$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
 			$xml .= apply_filters( 'podlove_feed_itunes_summary', $summary );
 

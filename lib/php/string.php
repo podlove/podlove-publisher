@@ -41,3 +41,18 @@ function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
 function ends_with($haystack, $needle) {
 	return $needle === substr($haystack, -strlen($needle));
 }
+
+/**
+ * Escape WordPress Shortcodes
+ * 
+ * Replaces the opening square bracket by its HTML code, which is
+ * ignored by WordPress.
+ * 
+ * @param  string $text
+ * @return string
+ */
+function escape_shortcodes($text) {
+    return preg_replace_callback('/' . get_shortcode_regex() . '/', function($matches) {
+      return str_replace('[', '&#x005B;', $matches[0]);
+    }, $text);
+}
