@@ -34,7 +34,7 @@ script:
 
 after_success:
 - if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
-  ]]; bash bin/travis-deploy.sh; fi
+  ]]; then bash bin/travis-deploy.sh; fi
 
 notifications:
   slack:
