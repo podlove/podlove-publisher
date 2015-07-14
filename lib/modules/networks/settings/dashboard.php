@@ -117,7 +117,7 @@ class Dashboard {
 
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
-			$statistics = \Podlove\Settings\Dashboard::prepare_statistics();
+			$statistics = \Podlove\Settings\Dashboard\Statistics::prepare_statistics();
 
 			$episodes_total += $statistics['total_number_of_episodes'];
 
