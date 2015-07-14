@@ -28,6 +28,7 @@ build:
 	rm -rf dist/vendor/twig/twig/test
 	rm -rf dist/vendor/guzzle/guzzle/tests
 	rm -f dist/.travis.yml
+	rm -f dist/bower.json
 	rm -rf dist/bin
 	rm -f dist/wprelease.yml
 	rm -f dist/CONTRIBUTING.md
@@ -36,3 +37,5 @@ build:
 	rm -f dist/README.md
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
+	find dist/vendor -type d -iname "test" | xargs rm -rf
+	find dist/vendor -type d -iname "tests" | xargs rm -rf
