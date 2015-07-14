@@ -18,9 +18,10 @@ build:
 	rsync -r --exclude=.git --exclude=dist . dist
 	# cleanup
 	find dist -name "*.git*" | xargs rm -rf
-	rm -rf dist/lib/modules/podlove_web_player/player/podlove-web-player/libs
-	rm -rf dist/lib/modules/podlove_web_player/player/podlove-web-player/img/banner-772x250.png
-	rm -rf dist/lib/modules/podlove_web_player/player/podlove-web-player/img/banner-1544x500.png
+	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs
+	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-772x250.png
+	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-1544x500.png
+	rm -rf dist/tests
 	rm -rf dist/vendor/bin
 	rm -rf dist/vendor/phpunit/php-code-coverage
 	rm -rf dist/vendor/phpunit/phpunit
@@ -33,6 +34,7 @@ build:
 	rm -f dist/wprelease.yml
 	rm -f dist/CONTRIBUTING.md
 	rm -f dist/Makefile
+	rm -f dist/phpunit.xml
 	rm -f dist/Rakefile
 	rm -f dist/README.md
 	find dist -name "*composer.json" | xargs rm -rf
