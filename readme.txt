@@ -113,9 +113,21 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 Use WordPress Object Cache API to cache model objects. 
 See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
 
-**Flattr**
+**New Module: Seasons**
 
-* Everything Flattr related was moved into its own module. If you don't use Flattr, you can turn it off and it gets out of your way.
+Do you have seasonal content? We got you covered. The new "Seasons" module allows you to group episodes into seasons. Each season has a title and other optional metadata, like a custom image. You can access all this data using the template system.
+
+New Template accessors:
+
+- `episode.season` returns the season for the episode
+- `podcast.seasons` returns a list of all seasons
+- `season.episodes` returns a list of all episodes in a season
+
+**New Module: Flattr**
+
+Everything Flattr related was moved into its own module.
+If you don't use Flattr, you can turn it off and it gets out of your way.
+
 * If you are using the Flattr module, we write Flattr payment information into podcast feeds. This way you don't need to rely on the official Flattr plugin to do this. You can probably deactivate it if you were using it since we provide the main functionality within the Publisher now.
 * We recently changed the default `flattr` parameter in shortcodes. Now there's a setting in Flattr Podcast Settings where you can define the default parameter for contributor shortcodes.
 
