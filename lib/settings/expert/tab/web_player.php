@@ -15,7 +15,12 @@ class WebPlayer extends Tab {
 		);
 
 		register_setting( Settings::$pagehook, 'podlove_webplayer_formats' );
-		register_setting( Settings::$pagehook, 'podlove_webplayer_settings' );
+		register_setting( Settings::$pagehook, 'podlove_webplayer_settings', function($setting) {
+
+			\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+
+			return $setting;
+		} );
 	}
 
 	public function page() {
