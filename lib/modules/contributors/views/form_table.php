@@ -9,8 +9,8 @@ use \Podlove\Modules\Contributors\Contributors;
 				<th></th>
 				<?php echo $has_groups       ? '<th>' . __('Group', 'podlove') . '</th>'           : ''; ?>
 				<?php echo $has_roles        ? '<th>' . __('Role', 'podlove') . '</th>'            : ''; ?>
-				<?php echo $can_be_commented ? '<th>' . __('Public Comment', 'podlove') . '</th>'  : ''; ?>
-				<th style="width: 60px"><?php echo __('Remove', 'podlove') ?></th>
+				<?php echo $can_be_commented ? '<th>' . __('Pub&shy;lic Com&shy;ment', 'podlove') . '</th>'  : ''; ?>
+				<th style="width: 60px"><?php echo __('Re&shy;move', 'podlove') ?></th>
 				<th style="width: 30px"></th>
 			</tr>
 		</thead>
@@ -42,7 +42,7 @@ use \Podlove\Modules\Contributors\Contributors;
 			</div>
 		</td>
 		<?php if ($has_groups) : ?>
-		<td>
+		<td style="min-width: 90px">
 			<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
 				<option value="">&nbsp;</option>
 				<?php foreach ( $contributors_groups as $group_slug => $group_title ): ?>
@@ -52,7 +52,7 @@ use \Podlove\Modules\Contributors\Contributors;
 		</td>
 		<?php endif; ?>
 		<?php if ($has_roles) : ?>
-		<td>
+		<td style="min-width: 90px">
 			<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 				<option value="">&nbsp;</option>
 				<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
@@ -87,7 +87,7 @@ use \Podlove\Modules\Contributors\Contributors;
 			var form_base_name = "<?php echo $form_base_name ?>";
 
 			function update_chosen() {
-				$(".chosen").chosen();
+				$(".chosen").chosen({ width: '100%' });
 				$(".chosen-image").chosenImage();
 			}
 
