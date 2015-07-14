@@ -21,6 +21,23 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
 
+## Testing
+
+You need a dedicated database for testing because _running tests wipes all data_. To setup tests, run this once:
+
+```
+# bash bin/install-wp-tests.sh <database> <user> <password> <host> <wordpress-version>
+bash bin/install-wp-tests.sh wordpress_test root root localhost latest
+```
+
+This will download the latest WordPress core and files required for testing into `/tmp`.
+
+Then run `phpunit` to run the tests.
+
+```
+./vendor/bin/phpunit
+```
+
 #### Web Player
 
 To get and update the web player v3+, use bower and make:

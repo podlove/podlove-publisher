@@ -65,12 +65,11 @@ class Description extends Tab {
 				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
 			) );
 
-			$wrapper->image( 'cover_image', array(
+			$wrapper->upload( 'cover_image', array(
 				'label'        => __( 'Cover Art URL', 'podlove' ),
 				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
 				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
-				'image_width'  => 300,
-				'image_height' => 300
+				'media_button_text' => __("Use for Podcast Cover Art", 'podlove')
 			) );
 
 			$wrapper->select( 'language', array(

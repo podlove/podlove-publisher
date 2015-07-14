@@ -46,6 +46,10 @@ class Log {
 	}
 
 	public function get_log_level() {
+
+		if (defined('PODLOVE_LOG_LEVEL'))
+			return PODLOVE_LOG_LEVEL;
+
 		return defined('WP_DEBUG') && WP_DEBUG ? Logger::DEBUG : Logger::INFO;
 	}
 

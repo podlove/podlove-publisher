@@ -1,0 +1,20 @@
+/* seasons table */
+
+.seasons .column-number { width: 15px; }
+.seasons .column-image  { width: 75px; }
+.seasons .column-start  { width: 150px; }
+
+@media all and (max-width: 782px) {
+	.seasons .column-start { display: none; }
+}
+
+/* seasons form */
+
+.row_podlove_season_start_date td > div:before {
+	font: 400 20px/1 dashicons;
+	content: '\f145';
+	top: 4px;
+	position: relative;
+	color: #82878c;
+	cursor: pointer;
+}
