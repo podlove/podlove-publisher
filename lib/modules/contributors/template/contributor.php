@@ -102,6 +102,17 @@ class Contributor extends Wrapper {
 	}
 
 	/**
+	 * Gender
+	 * 
+	 * Either 'female', 'male', 'none' or null (not configured).
+	 * 
+	 * @accessor
+	 */
+	public function gender() {
+		return $this->contributor->gender;
+	}
+
+	/**
 	 * Contribution role
 	 *
 	 * A role is only available for `episode.contributors` and `podcast.contributors`,
