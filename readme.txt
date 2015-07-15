@@ -135,6 +135,17 @@ If you don't use Flattr, you can turn it off and it gets out of your way.
 
 You can now express that episodes are related to each other. You can list all related episodes using the new shortcode `[podlove-related-episodes]` or using the template accessor `episode.relatedEpisodes`.
 
+**Templates & Themes**
+
+If you are developing themes, you now have full access to the Publisher Template system. The API is exactly the same as in Twig, just the syntax is different. At the moment, there are 4 entry points:
+
+- `\Podlove\get_episode()`
+- `\Podlove\get_podcast()`
+- `\Podlove\get_flattr()`
+- `\Podlove\get_network()`
+
+Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/understanding-templates/) for more details.
+
 **Other**
 
 * Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.
