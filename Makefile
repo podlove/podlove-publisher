@@ -39,8 +39,8 @@ build:
 	rm -f dist/README.md
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
-	find dist/vendor -type d -iname "test" | xargs rm -rf
-	find dist/vendor -type d -iname "tests" | xargs rm -rf
+	# find dist/vendor -type d -iname "test" | xargs rm -rf
+	# find dist/vendor -type d -iname "tests" | xargs rm -rf
 	# player v2 / mediaelement
 	find dist -iname "echo-hereweare.*" | xargs rm -rf
 	find dist -iname "*.jar" | xargs rm -rf
