@@ -29,12 +29,21 @@ function handle_feed_proxy_redirects() {
 	 * feed URL was accessed.
 	 */
 	if (!$is_debug_view && get_option('permalink_structure') != '') {
+
 		$feed_url = $feed->get_subscribe_url();
+		$request_url = "http" . (isset($_SERVER['HTTPS']) ? 's' : '') . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$url = parse_url($request_url);
+
 		if (
-			!\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
+			!\Podlove\PHP\ends_with($url['path'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
 			||
-			\Podlove\PHP\ends_with($_SERVER['REQUEST_URI'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
+			\Podlove\PHP\ends_with($url['path'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
 		) {
+
+			if ($is_feed_page) {
+				$feed_url = add_query_arg(['paged' => $paged], $feed_url);
+			}
+
 			wp_redirect($feed_url, 301);
 			exit;
 		}
