@@ -155,6 +155,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * Add functionality to automatically determine the duration for episodes. This is especially useful for people who don't use Auphonic, which already determines the duration automatically.
 * We are now able to handle media files that are served without a "Content-Length" header. A specific warning is generated and the size is displayed as "unknown", but the files are treated as valid so they can be played.
 * Add support for Auphonic webhooks. This allows us to import your episode metadata once an Auphonic production is finished — even if you navigated away from the episode page.
+* Podcast cover image can now be uploaded using the WordPress media uploader.
 * add `contributor.gender` template accessor
 * fix: Shortcodes in episode subtitle and summary are not interpreted any more. Both fields were always considered plain text and having shortcodes leads to various issues, especially in feeds.
 
