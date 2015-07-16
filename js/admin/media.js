@@ -68,7 +68,7 @@ PODLOVE.media = PODLOVE.media || {};
 	PODLOVE.media.reset = function(e) {
 		var options = e.data.options;
 
-		options.container.find(".podlove_preview_pic").empty();
+		options.container.find(".podlove_preview_pic").empty().hide();
 		options.input_target.val("");
 	};
 
@@ -81,7 +81,7 @@ PODLOVE.media = PODLOVE.media || {};
 			return;
 		}
 
-		$(".podlove_preview_pic", wrapper).empty();
+		$(".podlove_preview_pic", wrapper).empty().hide();
 
 		var image = document.createElement('img');
 		image.width = 300;
@@ -93,6 +93,7 @@ PODLOVE.media = PODLOVE.media || {};
 
 		preview.appendChild(image);
 		preview.appendChild(remove);
+		preview.style.display = "block";
 	};
 	
 	PODLOVE.media.insert = function(file_frame , options) {

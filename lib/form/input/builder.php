@@ -228,7 +228,7 @@ class Builder {
 		wp_enqueue_media();
 
 		$defaults = [
-			'form_button_text'  => __('Upload', 'podlove'),
+			'form_button_text'  => __('Select', 'podlove'),
 			'media_button_text' => __('Use Image', 'podlove'),
 			'media_title' => __('Image', 'podlove')
 		];
@@ -238,7 +238,7 @@ class Builder {
 		<div class="podlove-media-upload-wrap">
 			<span>
 				<input type="text" <?php echo $this->html_attributes; ?> value="<?php echo esc_attr( $this->field_value ); ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"> 
-				<a href="#" class="podlove-media-upload button" title="<?php echo $arguments['media_title'] ?>" 
+				<a href="#" class="podlove-media-upload button" 
 					data-target="<?php echo $this->field_id; ?>" 
 					data-title="<?php echo $arguments['media_title'] ?>" 
 					data-type="image" 
@@ -250,6 +250,10 @@ class Builder {
 					data-preview=".podlove_preview_pic"
 					data-fetch="url"><?php echo $arguments['form_button_text'] ?></a>
 			</span>
+			<p>
+			<span class="description"><?php echo __('Enter URL or select image from media library.', 'podlove') ?></span>
+				
+			</p>
 			<div class="podlove_preview_pic"></div>
 		</div>
 		<?php
