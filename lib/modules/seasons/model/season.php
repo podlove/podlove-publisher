@@ -190,11 +190,11 @@ class Season extends Base
 		if (is_null($prev) && is_null($next)) { // first and only season
 			$date_range = '1 = 1';
 		} elseif (is_null($prev)) { // first, completed season
-			$date_range = "p.post_date < '" . $next->start_date('Y-m-d') . "'";
+			$date_range = "DATE(p.post_date) < '" . $next->start_date('Y-m-d') . "'";
 		} elseif (is_null($next)) { // current running season
-			$date_range = "p.post_date > '" . $prev->end_date('Y-m-d') . "'";
+			$date_range = "DATE(p.post_date) > '" . $prev->end_date('Y-m-d') . "'";
 		} else { // anything inbetween
-			$date_range = "p.post_date >= '" . $this->start_date('Y-m-d') . "' AND p.post_date <= '" . $this->end_date('Y-m-d') . "'";
+			$date_range = "DATE(p.post_date) >= '" . $this->start_date('Y-m-d') . "' AND DATE(p.post_date) <= '" . $this->end_date('Y-m-d') . "'";
 		}
 
 		$sql = "SELECT

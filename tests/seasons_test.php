@@ -97,6 +97,20 @@ class SeasonsTest extends WP_UnitTestCase {
 		$this->assertEquals(2, count($season1->episodes()));
 	}
 
+	public function testEpisodesFreakShow() {
+		$season1 = Season::create(['start_date' => '2008-04-01']);
+		$season2 = Season::create(['start_date' => '2014-08-08']);
+
+		$this->_generate_episodes_for_dates([
+			'2008-04-01 19:33',
+			'2013-07-11 01:29',
+			'2015-07-16 02:13',
+		]);
+		
+		$this->assertEquals(2, count($season1->episodes()), "mobileMacs");
+		$this->assertEquals(1, count($season2->episodes()), "Freak Show");
+	}
+
 	public function testCurrentSeasonHasNoEndDate() {
 		$season = Season::create();
 		$episode = $this->episode_factory->create();
