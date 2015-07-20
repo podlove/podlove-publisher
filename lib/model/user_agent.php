@@ -31,6 +31,9 @@ class UserAgent extends Base {
 		} else {
 			$client = $dd->getClient();
 
+			if ($this->counts_as_bot($client))
+				return $this;
+
 			if (isset($client['name']))
 				$this->client_name = $client['name'];
 
@@ -53,6 +56,22 @@ class UserAgent extends Base {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Classify some clients as bots.
+	 * 
+	 * @return bool
+	 */
+	private function counts_as_bot($client) {
+
+		$type = isset($client['type']) ? $client['type'] : '';
+		$name = isset($client['name']) ? $client['name'] : '';
+		
+		if ($type == 'library' && $name == 'WWW::Mechanize')
+			return true;
+
+		return false;
 	}
 
 	public static function find_or_create_by_uastring($ua_string) {
