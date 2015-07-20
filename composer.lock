@@ -12,17 +12,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "4f47978e867cc123dfd5b779fb5c87c97c600989"
+                "reference": "2609a973e943650411e5a33004096457b67d34db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/4f47978e867cc123dfd5b779fb5c87c97c600989",
-                "reference": "4f47978e867cc123dfd5b779fb5c87c97c600989",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/2609a973e943650411e5a33004096457b67d34db",
+                "reference": "2609a973e943650411e5a33004096457b67d34db",
                 "shasum": ""
             },
             "require": {
                 "maxmind-db/reader": "~1.0",
-                "maxmind/web-service-common": "~0.0.2",
+                "maxmind/web-service-common": "~0.0.3",
                 "php": ">=5.3.1"
             },
             "require-dev": {
@@ -55,7 +55,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2015-06-29 19:42:45"
+            "time": "2015-07-16 20:24:08"
         },
         {
             "name": "leth/ip-address",
@@ -138,16 +138,16 @@
         },
         {
             "name": "maxmind/web-service-common",
-            "version": "v0.0.2",
+            "version": "v0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/web-service-common-php.git",
-                "reference": "9d16d149135cec7b8a8004a8ca78fffc883f4ba6"
+                "reference": "cc395e9ecd585b3a3b6197cec219f432da21f1c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/9d16d149135cec7b8a8004a8ca78fffc883f4ba6",
-                "reference": "9d16d149135cec7b8a8004a8ca78fffc883f4ba6",
+                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/cc395e9ecd585b3a3b6197cec219f432da21f1c6",
+                "reference": "cc395e9ecd585b3a3b6197cec219f432da21f1c6",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +176,7 @@
             ],
             "description": "Internal MaxMind Web Service API",
             "homepage": "https://github.com/maxmind/mm-web-service-api-php",
-            "time": "2015-06-09 19:11:34"
+            "time": "2015-06-30 18:56:25"
         },
         {
             "name": "monolog/monolog",
@@ -392,12 +392,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eteubert/device-detector.git",
-                "reference": "d348a62c5270e7cfb44ff320e9cd7bc849bb6edd"
+                "reference": "56a6e4ff461c5b2c56518b1b43494d67aa6a5348"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/d348a62c5270e7cfb44ff320e9cd7bc849bb6edd",
-                "reference": "d348a62c5270e7cfb44ff320e9cd7bc849bb6edd",
+                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/56a6e4ff461c5b2c56518b1b43494d67aa6a5348",
+                "reference": "56a6e4ff461c5b2c56518b1b43494d67aa6a5348",
                 "shasum": ""
             },
             "require": {
@@ -405,6 +405,7 @@
                 "php": ">=5.3.2"
             },
             "require-dev": {
+                "fabpot/php-cs-fixer": "~1.7",
                 "phpunit/phpunit": "4.1.*"
             },
             "suggest": {
@@ -439,7 +440,7 @@
                 "wiki": "http://dev.piwik.org/",
                 "source": "https://github.com/piwik/piwik"
             },
-            "time": "2015-02-05 08:49:11"
+            "time": "2015-07-20 09:04:50"
         },
         {
             "name": "podlove/normalplaytime",
@@ -614,12 +615,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "917af7bb1286fd5d0bc06049089721ad0cdad145"
+                "reference": "4bfbe0ed3909bfddd75b70c094391ec1f142f860"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/917af7bb1286fd5d0bc06049089721ad0cdad145",
-                "reference": "917af7bb1286fd5d0bc06049089721ad0cdad145",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4bfbe0ed3909bfddd75b70c094391ec1f142f860",
+                "reference": "4bfbe0ed3909bfddd75b70c094391ec1f142f860",
                 "shasum": ""
             },
             "require": {
@@ -655,7 +656,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-06-18 19:21:56"
+            "time": "2015-07-01 11:25:50"
         },
         {
             "name": "twig/extensions",
@@ -985,16 +986,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.1.7",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "07e27765596d72c378a6103e80da5d84e802f1e4"
+                "reference": "6044546998c7627ab997501a3d0db972b3db9790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/07e27765596d72c378a6103e80da5d84e802f1e4",
-                "reference": "07e27765596d72c378a6103e80da5d84e802f1e4",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6044546998c7627ab997501a3d0db972b3db9790",
+                "reference": "6044546998c7627ab997501a3d0db972b3db9790",
                 "shasum": ""
             },
             "require": {
@@ -1043,7 +1044,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-30 06:52:35"
+            "time": "2015-07-13 11:25:58"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1184,16 +1185,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.7.6",
+            "version": "4.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b"
+                "reference": "9b97f9d807b862c2de2a36e86690000801c85724"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b",
-                "reference": "0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9b97f9d807b862c2de2a36e86690000801c85724",
+                "reference": "9b97f9d807b862c2de2a36e86690000801c85724",
                 "shasum": ""
             },
             "require": {
@@ -1252,20 +1253,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-30 06:53:57"
+            "time": "2015-07-13 11:28:34"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.4",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "92408bb1968a81b3217a6fdf6c1a198da83caa35"
+                "reference": "1c330b1b6e1ea8fd15f2fbea46770576e366855c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/92408bb1968a81b3217a6fdf6c1a198da83caa35",
-                "reference": "92408bb1968a81b3217a6fdf6c1a198da83caa35",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/1c330b1b6e1ea8fd15f2fbea46770576e366855c",
+                "reference": "1c330b1b6e1ea8fd15f2fbea46770576e366855c",
                 "shasum": ""
             },
             "require": {
@@ -1307,7 +1308,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-06-11 15:55:48"
+            "time": "2015-07-04 05:41:32"
         },
         {
             "name": "podlove/comment-introspection",
