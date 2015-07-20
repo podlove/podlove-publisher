@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 105 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 106 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1164,6 +1164,9 @@ function run_migrations_for_version( $version ) {
 			$settings['account'] = $podcast->flattr;
 			$settings['contributor_shortcode_default'] = 'yes';
 			update_option('podlove_flattr', $settings);
+		break;
+		case 106:
+			podlove_init_user_agent_refresh();
 		break;
 	}
 

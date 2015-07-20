@@ -148,6 +148,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 
 **Other**
 
+* Analytics: Update & improve user agent detection library so you can have more accurate analytics.
 * Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.
 * News from podlove.org are displayed in the Podlove Dashboard
 * Users with role "author" and higher now have access to the Podlove Dashboard and Analytics. They only have access to dashboard sections that make sense for authors, so they won't see logging, feed or asset validation.

@@ -30,3 +30,7 @@ function podlove_refresh_user_agents($start_id) {
     }
 }
 
+// add_action('init', function() {
+// 	error_log(print_r("start refreshing user agents", true));
+// 	podlove_init_user_agent_refresh();
+// });
