@@ -16,6 +16,8 @@ class TrackingImporter {
 		if (!isset($_FILES['podlove_import_tracking']))
 			return;
 
+		set_time_limit(10 * MINUTE_IN_SECONDS);
+
 		// allow xml+gz uploads
 		add_filter('upload_mimes', function ($mimes) {
 		    return array_merge($mimes, array(
