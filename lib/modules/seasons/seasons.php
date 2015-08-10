@@ -21,6 +21,9 @@ class Seasons extends \Podlove\Modules\Base {
 
 		add_action('admin_print_styles', [$this, 'scripts_and_styles']);
 
+		add_action('podlove_xml_export', array($this, 'expandExportFile'));
+		add_action('podlove_xml_import', array($this, 'expandImport'));
+
 		add_filter( "set-screen-option", function($status, $option, $value) {
 			if ($option == 'podlove_seasons_per_page')
 				return $value;
@@ -61,5 +64,19 @@ class Seasons extends \Podlove\Modules\Base {
 			['jquery'],
 			\Podlove\get_plugin_header('Version')
 		);
+	}
+
+	/**
+	 * Expands "Import/Export" module: export logic
+	 */
+	public function expandExportFile(\SimpleXMLElement $xml) {
+		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'seasons', 'season', '\Podlove\Modules\Seasons\Model\Season');
+	}
+
+	/**
+	 * Expands "Import/Export" module: import logic
+	 */
+	public function expandImport($xml) {
+		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'season', '\Podlove\Modules\Seasons\Model\Season');
 	}
 }
