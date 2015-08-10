@@ -159,6 +159,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * Podcast cover image can now be uploaded using the WordPress media uploader.
 * add `contributor.gender` template accessor
 * fix: Shortcodes in episode subtitle and summary are not interpreted any more. Both fields were always considered plain text and having shortcodes leads to various issues, especially in feeds.
+* export files are now gzipped if possible
 
 = 2.2.4 =
 
