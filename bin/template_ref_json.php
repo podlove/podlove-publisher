@@ -28,6 +28,7 @@ $output_dir = dirname(__FILE__) . '/../doc/data/template';
 $dynamicAccessorClasses = [
 	'\Podlove\Modules\Contributors\TemplateExtensions',
 	'\Podlove\Modules\Seasons\TemplateExtensions',
+	'\Podlove\Modules\RelatedEpisodes\TemplateExtensions',
 	'\Podlove\Modules\Social\TemplateExtensions',
 	'\Podlove\Modules\SubscribeButton\TemplateExtensions',
 ];

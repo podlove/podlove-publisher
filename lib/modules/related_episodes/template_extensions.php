@@ -5,6 +5,12 @@ use \Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation;
 
 class TemplateExtensions {
 
+	/**
+	 * List of Related Episodes
+	 * 
+	 * @accessor
+	 * @dynamicAccessor episode.relatedEpisodes
+	 */
 	public static function accessorRelatedEpisodes($return, $method_name, $episode, $post, $args = array()) {
 		$episodes = array();
 
