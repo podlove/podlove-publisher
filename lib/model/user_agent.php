@@ -31,8 +31,10 @@ class UserAgent extends Base {
 		} else {
 			$client = $dd->getClient();
 
-			if ($this->counts_as_bot($client))
+			if ($this->counts_as_bot($client)) {
+				$this->bot = 1;
 				return $this;
+			}
 
 			if (isset($client['name']))
 				$this->client_name = $client['name'];
