@@ -59,8 +59,7 @@ class PlayerConfig {
 		$config = [
             "alwaysShowHours" => true,
             "alwaysShowControls" => true,
-            "summaryVisible" => true,
-            "sharebuttonsVisible" => true,
+            "chaptersVisible" => true,
             "permalink" => get_permalink($this->post->ID),
             "publicationDate" => mysql2date("c", $this->post->post_date),
             "title" => get_the_title($this->post->ID),
