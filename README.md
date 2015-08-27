@@ -21,6 +21,22 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
 
+
+### Vagrant virtual machine
+
+For easy setup of a virtual machine for development including the latest WordPress release, Apache 2.4, PHP 5.6 and MySQL 5.6, a configuration file for
+Vagrant is included.
+
+Just run the following command in the root directory of your checkout:
+
+```
+vagrant up
+```
+
+The provisioning script will take care of all the initial installation stuff. Then point your browser to `http://localhost:8080` for HTTP or
+`https://localhost:8443` for HTTPS. Database username and password is `root`. A database called `wordpress` is already created.
+
+
 ## Release Checklist
 
 - Ensure changelog in `readme.txt` has an entry for that version
