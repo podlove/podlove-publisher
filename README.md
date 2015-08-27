@@ -24,7 +24,7 @@ php composer.phar --dev install
 
 ### Vagrant virtual machine
 
-For easy setup of a virtual machine for development including the latest WordPress release, Apache 2.4, PHP 5.6 and MySQL 5.6, a configuration file for
+For easy setup of a virtual machine for development including the latest WordPress release, Apache 2.4, PHP 5.5 and MySQL 5.6, a configuration file for
 Vagrant is included.
 
 Just run the following command in the root directory of your checkout:
