@@ -19,9 +19,10 @@
             var $chosen = $select.next('.chosen-container').addClass('chosenImage-container');
 
             // 3. Style lis with image sources.
-            $chosen.mousedown(function(event) {
-                $chosen.find('.chosen-results li').each(function(i) {
-                    $(this).css(cssObj(imgMap[i]));
+            $chosen.on('mousedown.chosen, keyup.chosen', function(event){
+                $chosen.find('.chosen-results li').each(function() {
+                    var imgIndex = $(this).attr('data-option-array-index');
+                    $(this).css(cssObj(imgMap[imgIndex]));
                 });
             });
 
