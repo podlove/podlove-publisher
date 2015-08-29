@@ -13,3 +13,8 @@
 .chosenImage-container .chosen-single span {
   background-position: left 2px;
 }
+
+/* Let the "No results match" text fill the whole width. */
+.chosenImage-container .chosen-results .no-results {
+  padding-left: inherit;
+}
