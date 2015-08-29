@@ -1,17 +1,20 @@
-/* DG - 29/11/12 - Align single item with results. General UI Imrpovement */
-.chzn-container-single .chzn-single {
-  padding: 0 0 0 10px;
+/* Give the image 3px of space to breathe. */
+.chosenImage-container .chosen-results li,
+.chosenImage-container .chosen-single span {
+  background: none 3px center / 19px 19px no-repeat;
+  padding-left: 28px;
 }
 
-/* DG - 03/12/12 -chosenImage - position, size and indent text */
-.chznImage-container .chzn-results li,
-.chznImage-container .chzn-single span {
-  background-position: 6px 45%;
-  background-size: auto 12px;
-  padding-left: 23px;
+/* Make the image fit nicely to the left of the dropdown. */
+.chosenImage-container .chosen-single {
+  padding-left: 2px;
 }
 
-.chznImage-container .chzn-single span {
-  background-position: 0px 45%;
-  padding-left: 17px;
+.chosenImage-container .chosen-single span {
+  background-position: left 2px;
+}
+
+/* Let the "No results match" text fill the whole width. */
+.chosenImage-container .chosen-results .no-results {
+  padding-left: inherit;
 }
