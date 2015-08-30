@@ -246,7 +246,6 @@ add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
 require_once \Podlove\PLUGIN_DIR . 'includes/about.php';
-require_once \Podlove\PLUGIN_DIR . 'includes/admin_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/chapters.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cover_art.php';
@@ -267,6 +266,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/no_enclosure_autodiscovery.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/permalinks.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/recording_date.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/redirects.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/scripts_and_styles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/search.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/system_report.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/templates.php';
