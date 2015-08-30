@@ -161,6 +161,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * add `contributor.gender` template accessor
 * fix: Shortcodes in episode subtitle and summary are not interpreted any more. Both fields were always considered plain text and having shortcodes leads to various issues, especially in feeds.
 * export files are now gzipped if possible
+* fix JavaScript incompatibility related to Diaspora plugin ([#771](https://github.com/podlove/podlove-publisher/pull/771), [#770](https://github.com/podlove/podlove-publisher/pull/770), [#425](https://github.com/podlove/podlove-publisher/issues/425), thanks [@noplanman](https://github.com/noplanman)!)
 
 = 2.2.4 =
 
