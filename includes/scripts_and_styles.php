@@ -6,7 +6,7 @@ add_action( 'admin_print_styles', function () {
 	$screen = get_current_screen();
 
 	$is_podlove_settings_screen = stripos($screen->id, 'podlove') !== false;
-	$is_episode_edit_screen = $screen->base == 'post' && $screen->post_type == 'podcast';
+	$is_episode_edit_screen = in_array($screen->base, ['edit', 'post']) && $screen->post_type == 'podcast';
 
 	if ($is_podlove_settings_screen || $is_episode_edit_screen) {
 
