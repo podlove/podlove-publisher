@@ -1,3 +1,4 @@
-[submodule "lib/modules/podlove_web_player/player"]
-	path = lib/modules/podlove_web_player/player
+[submodule "lib/modules/podlove_web_player/player_v2/player"]
+	path = lib/modules/podlove_web_player/player_v2/player
 	url = git://github.com/podlove/podlove-web-player.git
+	branch = 2.0.x

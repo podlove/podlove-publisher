@@ -15,7 +15,12 @@ class WebPlayer extends Tab {
 		);
 
 		register_setting( Settings::$pagehook, 'podlove_webplayer_formats' );
-		register_setting( Settings::$pagehook, 'podlove_webplayer_settings' );
+		register_setting( Settings::$pagehook, 'podlove_webplayer_settings', function($setting) {
+
+			\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+
+			return $setting;
+		} );
 	}
 
 	public function page() {
@@ -141,6 +146,13 @@ class WebPlayer extends Tab {
 				'options' => array(
 					'true' => __( 'Visible when player loads', 'podlove' ),
 					'false' => __( 'Hidden when player loads', 'podlove' )
+				)
+			),
+			'version'     => array(
+				'label'   => __( 'Player Version', 'podlove' ),
+				'options' => array(
+					'player_v2' => __( 'Podlove Web Player 2', 'podlove' ),
+					'player_v3' => __( 'Podlove Web Player 3 (unstable beta, don\'t use in production)', 'podlove' )
 				)
 			)
 		);

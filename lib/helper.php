@@ -1,34 +1,23 @@
 <?php
 namespace Podlove;
 
-/**
- * strpos wrapper that prefers mb_strpos but falls back to strpos.
- */
-function strpos($haystack, $needle, $offset = 0, $encoding = 'UTF-8') {
-  if (function_exists('mb_strpos'))
-    return mb_strpos($haystack, $needle, $offset, $encoding);
-  else
-    return strpos($haystack, $needle, $offset);
-}
+function load_template($path, $vars = []) {
+	$template = null;
 
-/**
- * strlen wrapper that prefers mb_strlen but falls back to strlen.
- */
-function strlen($str, $encoding = 'UTF-8') {
-  if (function_exists('mb_strlen'))
-    return mb_strlen($str, $encoding);
-  else
-    return strlen($str);
-}
+	$paths = [
+		\Podlove\PLUGIN_DIR . 'views/' . $path . '.php',
+		\Podlove\PLUGIN_DIR . $path . '.php'
+	];
 
-/**
- * substr wrapper that prefers mb_substr but falls back to substr.
- */
-function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
-  if (function_exists('mb_substr'))
-    return mb_substr($str, $start, $length, $encoding);
-  else
-    return substr($str, $start, $length);
+	foreach ($paths as $path) {
+		if (file_exists($path)) {
+			$template = $path;
+			break;
+		}
+	}
+
+	extract($vars);
+	require $template;
 }
 
 /**
@@ -150,7 +139,8 @@ function get_webplayer_setting( $name ) {
 
 	$defaults = array(
 		'chaptersVisible' => 'false',
-		'inject'          => 'manually'
+		'inject'          => 'manually',
+		'version'         => 'player_v2'
 	);
 	
 	$settings = get_option( 'podlove_webplayer_settings', array() );
@@ -755,19 +745,4 @@ function categories( $prefix_subcategories = true ) {
 	}
  
 	return $temp;
-}
-
-namespace Podlove\Flattr;
-
-function getFlattrScript() {
-	return "<script type=\"text/javascript\">\n
-		/* <![CDATA[ */
-	    (function() {
-		     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-		     s.type = 'text/javascript';
-		     s.async = true;
-		    s.src = 'https://api.flattr.com/js/0.6/load.js?mode=auto';
-		    t.parentNode.insertBefore(s, t);
-			 })();
-		/* ]]> */</script>\n";
 }

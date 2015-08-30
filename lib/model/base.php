@@ -133,10 +133,28 @@ abstract class Base
 		return (int) $wpdb->get_var( $sql );
 	}
 
-	public static function find_by_id( $id ) {
-		return self::find_one_by_sql(
-			'SELECT * FROM ' . static::table_name() . ' WHERE id = ' . (int) $id
-		);
+	public static function find_by_id($id) {
+
+		$value = wp_cache_get(static::cache_key($id), 'podlove-model');
+
+		if ($value === false) {
+			$value = self::find_one_by_sql(
+				'SELECT * FROM ' . static::table_name() . ' WHERE id = ' . (int) $id
+			);
+			wp_cache_set(static::cache_key($id), $value, 'podlove-model');
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get unique cache key for data row.
+	 * 
+	 * @param  int $id object id
+	 * @return string  cache key
+	 */
+	public static function cache_key($id) {
+		return 'podlove_' . static::table_name() . '_id' . $id;
 	}
 
 	public static function find_all_by_property( $property, $value ) {
@@ -279,7 +297,22 @@ abstract class Base
 			$this->id
 		);
 
+		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
+
 		return $wpdb->query( $sql );
+	}
+
+	public static function create($attributes = []) {
+		$class = get_called_class();
+		$instance = new $class;
+
+		foreach ($attributes as $key => $value) {
+			$instance->$key = $value;
+		}
+
+		$instance->save();
+
+		return $instance;
 	}
 	
 	/**
@@ -316,6 +349,8 @@ abstract class Base
 			;
 			$success = $wpdb->query( $sql );
 		}
+
+		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
 
 		$this->is_new = false;
 
@@ -358,6 +393,8 @@ abstract class Base
 	public function delete() {
 		global $wpdb;
 		
+	    wp_cache_delete(static::cache_key($this->id), 'podlove-model');
+
 		$sql = 'DELETE FROM '
 		     . static::table_name()
 		     . ' WHERE id = ' . $this->id;
@@ -529,5 +566,15 @@ abstract class Base
 		}
 		
 		return $models;
+	}
+
+	public function to_array() {
+		return array_combine(
+			static::property_names(),
+			array_map( function($property) {
+				return $this->$property;
+			}, static::property_names()
+			)
+		);
 	}
 }

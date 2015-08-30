@@ -33,7 +33,8 @@ class Ajax {
 			'analytics-total-downloads-per-day',
 			'analytics-episode-average-downloads-per-hour',
 			'analytics-settings-tiles-update',
-			'episode-slug'
+			'episode-slug',
+			'admin-news'
 		);
 
 		// kickoff generic ajax methods
@@ -43,6 +44,13 @@ class Ajax {
 		// kickof specialized ajax controllers
 		TemplateController::init();
 		FileController::init();
+
+	}
+
+	public function admin_news() {
+		require_once ABSPATH . 'wp-admin/includes/dashboard.php';
+		\Podlove\Settings\Dashboard\News::content();
+		wp_die();
 	}
 
 	public function analytics_episode_average_downloads_per_hour()

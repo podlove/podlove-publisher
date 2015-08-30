@@ -38,7 +38,7 @@ class Dashboard {
 	public static function settings_page() {
 
 		add_meta_box( Dashboard::$pagehook . '_right_now', __( 'At a glance', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::right_now', Dashboard::$pagehook, 'normal' );
-		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard::about_meta', Dashboard::$pagehook, 'side' );		
+		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard\About::content', Dashboard::$pagehook, 'side' );		
 		add_meta_box( Dashboard::$pagehook . '_podcast_overview', __( 'Podcasts', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::podcast_overview', Dashboard::$pagehook, 'normal' );
 		add_meta_box( Dashboard::$pagehook . '_list_overview', __( 'Lists', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::list_overview', Dashboard::$pagehook, 'normal' );
 
@@ -117,7 +117,7 @@ class Dashboard {
 
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
-			$statistics = \Podlove\Settings\Dashboard::prepare_statistics();
+			$statistics = \Podlove\Settings\Dashboard\Statistics::prepare_statistics();
 
 			$episodes_total += $statistics['total_number_of_episodes'];
 

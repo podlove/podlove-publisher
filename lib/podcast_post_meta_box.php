@@ -226,12 +226,16 @@ class Podcast_Post_Meta_Box {
 			},
 			'multiselect_callback' => function ( $asset_id ) use ( $episode ) {
 				$asset = \Podlove\Model\EpisodeAsset::find_by_id( $asset_id );
-				$format   = $asset->file_type();
-				$file     = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
-				
+				$format = $asset->file_type();
+				$file = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id( $episode->id, $asset->id );
+				$size = is_object($file) ? (int) $file->size : 0;
+				if ($size === 1) {
+					$size = "unknown";
+				}
+
 				$attributes = array(
 					'data-template'  => \Podlove\Model\Podcast::get()->get_url_template(),
-					'data-size' => ( is_object( $file ) ) ? $file->size : 0,
+					'data-size' => $size,
 					'data-episode-asset-id' => $asset->id,
 					'data-episode-id' => $episode->id,
 					'data-file-url' => ( is_object( $file ) ) ? $file->get_file_url() : ''

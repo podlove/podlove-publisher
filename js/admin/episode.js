@@ -122,13 +122,20 @@ var PODLOVE = PODLOVE || {};
 	 				var filename      = url.replace(media_file_base_uri, "");
 	 				var $row          = $checkbox.closest(".media_file_row");
 
+	 				var isNumber = function (obj) { return !isNaN(parseFloat(obj)) };
+
 	 				if (readable_size === "???") {
 	 					size_html = '<span style="color:red">File not found!</span>';
 	 					$row.find(".status").html('<i class="podlove-icon-remove"></i>');
 	 				} else {
-	 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
+	 					if (isNumber(size)) {
+		 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
+	 					} else {
+	 						size_html = '<span>' + size + '</span>';	
+	 					}
 	 					$row.find(".status").html('<i class="podlove-icon-ok"></i>');
 	 				}
+
 	 				$row.find(".size").html(size_html);
 	 				$row.find(".url").html('<a href="' + url + '" target="_blank">' + filename + '</a>');
 	 				$row.find(".update").html('<a href="#" class="button update_media_file">update</a>');
@@ -212,7 +219,11 @@ var PODLOVE = PODLOVE || {};
  				success: function(result) {
  					var input = container.find("input");
  					if (result && result.file_size > 0 && result.reachable) {
-	 					input.data('size'   , result.file_size);
+ 						if (result.file_size === 1) {
+ 							input.data('size' , 'unknown');
+ 						} else {
+		 					input.data('size' , result.file_size);
+ 						}
 	 					input.data('fileUrl', result.file_url);
  					} else {
 	 					input.data('size'   , -1);

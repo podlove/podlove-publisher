@@ -27,6 +27,8 @@ $output_dir = dirname(__FILE__) . '/../doc/data/template';
 // classes containing dynamic accessors
 $dynamicAccessorClasses = [
 	'\Podlove\Modules\Contributors\TemplateExtensions',
+	'\Podlove\Modules\Seasons\TemplateExtensions',
+	'\Podlove\Modules\RelatedEpisodes\TemplateExtensions',
 	'\Podlove\Modules\Social\TemplateExtensions',
 	'\Podlove\Modules\SubscribeButton\TemplateExtensions',
 ];
@@ -37,7 +39,6 @@ $classes = [
 	'\Podlove\Template\Episode',
 	'\Podlove\Template\Asset',
 	'\Podlove\Template\File',
-	'\Podlove\Template\Flattr',
 	'\Podlove\Template\Duration',
 	'\Podlove\Template\Chapter',
 	'\Podlove\Template\License',
@@ -48,6 +49,8 @@ $classes = [
 	'\Podlove\Template\Image',
 	'\Podlove\Modules\Contributors\Template\Contributor',
 	'\Podlove\Modules\Contributors\Template\ContributorGroup',
+	'\Podlove\Modules\Flattr\Template\Flattr',
+	'\Podlove\Modules\Seasons\Template\Season',
 	'\Podlove\Modules\Social\Template\Service',
 	'\Podlove\Modules\Networks\Template\Network',
 	'\Podlove\Modules\Networks\Template\PodcastList'

@@ -231,6 +231,8 @@ class Tracking extends Tab {
 				if (isset($_REQUEST['update_geo_database']))
 					\Podlove\Geo_Ip::update_database();
 
+				\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+
 				return $args;
 			}
 		);

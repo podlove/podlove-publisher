@@ -237,7 +237,7 @@ class Podcast implements Licensable {
 	 *   - 'slug' - Order by episode slug.
 	 *	 - 'limit' - Limit the number of returned episodes.
 	 */
-	public function episodes($args) {
+	public function episodes($args = []) {
 		return $this->with_blog_scope(function() use ($args) {
 			global $wpdb;
 
@@ -383,4 +383,4 @@ Podcast::property( 'uri_delimiter' );
 Podcast::property( 'limit_items' );
 Podcast::property( 'language' );
 Podcast::property( 'complete' );
-Podcast::property( 'flattr' );
+Podcast::property( 'flattr' ); // @deprecated since 2.3.0 (now: wp_option "podlove_flattr")

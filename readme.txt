@@ -60,7 +60,7 @@ Get in contact with the theme developer and ask if it is ready for custom posts.
 
 ### My episodes do not show up on the home page. What's wrong?
 
-Episodes are kep separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
+Episodes are kept separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
 
 ### Episodes do not show up with the configured permalink URL. What's wrong?
 
@@ -70,7 +70,7 @@ Episodes are custom posts and are dealt with differently by WordPress. They show
 
 You don't. The plugin assembles the media file URL by combining various components that you have configured in the Podlove settings. All media files have to reside under a base URL that you specify in the "Podcast Settings" pane. This basically defines which directory all files have to be uploaded to.
 
-The exact media file name is made up of a) the Episode Media File Flug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
+The exact media file name is made up of a) the Episode Media File Slug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
 
 ### Where is the Web Player / Download list?
 
@@ -108,9 +108,64 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.0 =
+
+Use WordPress Object Cache API to cache model objects. 
+See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
+
+**New Module: Seasons**
+
+Do you have seasonal content? We got you covered. The new "Seasons" module allows you to group episodes into seasons. Each season has a title and other optional metadata, like a custom image. You can access all this data using the template system.
+
+New Template accessors:
+
+- `episode.season` returns the season for the episode
+- `podcast.seasons` returns a list of all seasons
+- `season.episodes` returns a list of all episodes in a season
+
+**New Module: Flattr**
+
+Everything Flattr related was moved into its own module.
+If you don't use Flattr, you can turn it off and it gets out of your way.
+
+* If you are using the Flattr module, we write Flattr payment information into podcast feeds. This way you don't need to rely on the official Flattr plugin to do this. You can probably deactivate it if you were using it since we provide the main functionality within the Publisher now.
+* We recently changed the default `flattr` parameter in shortcodes. Now there's a setting in Flattr Podcast Settings where you can define the default parameter for contributor shortcodes.
+
+**New Module: Related Episodes**
+
+You can now express that episodes are related to each other. You can list all related episodes using the new shortcode `[podlove-related-episodes]` or using the template accessor `episode.relatedEpisodes`.
+
+**Templates & Themes**
+
+If you are developing themes, you now have full access to the Publisher Template system. The API is exactly the same as in Twig, just the syntax is different. At the moment, there are 4 entry points:
+
+- `\Podlove\get_episode()`
+- `\Podlove\get_podcast()`
+- `\Podlove\get_flattr()`
+- `\Podlove\get_network()`
+
+Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/understanding-templates/) for more details.
+
+**Other**
+
+* Analytics: Update & improve user agent detection library so you can have more accurate analytics.
+* Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.
+* News from podlove.org are displayed in the Podlove Dashboard
+* Users with role "author" and higher now have access to the Podlove Dashboard and Analytics. They only have access to dashboard sections that make sense for authors, so they won't see logging, feed or asset validation.
+* Contributors can now be edited in _Contributor Settings_ (instead of _Episodes > Contributors_)
+* Contributors Social Services: It is now possible to add a YouTube "Channel", not just user profiles
+* Add functionality to automatically determine the duration for episodes. This is especially useful for people who don't use Auphonic, which already determines the duration automatically.
+* We are now able to handle media files that are served without a "Content-Length" header. A specific warning is generated and the size is displayed as "unknown", but the files are treated as valid so they can be played.
+* Add support for Auphonic webhooks. This allows us to import your episode metadata once an Auphonic production is finished — even if you navigated away from the episode page.
+* Podcast cover image can now be uploaded using the WordPress media uploader.
+* add `contributor.gender` template accessor
+* fix: Shortcodes in episode subtitle and summary are not interpreted any more. Both fields were always considered plain text and having shortcodes leads to various issues, especially in feeds.
+* export files are now gzipped if possible
+
 = 2.2.4 =
 
 * fix: erratically missing chapter information in RSS feeds
+* fix: "Allow to skip feed redirects" setting was sometimes ignored
 
 = 2.2.3 =
 
@@ -437,7 +492,7 @@ More info on those sites:
 
 * add basic client-side input validation to avoid typing errors: Leading and trailing whitespace will be removed automatically. URL and email fields are automatically syntax checked.
 * add support for scientific networks: ResearchGate, ORCiD, Scopus
-* add explicit support dor "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
+* add explicit support for "Duplicate Post" plugin: duplicated episodes now regenerate GUIDs and contributions are copied, too
 
 **Enhancements & Others**
 
@@ -967,7 +1022,7 @@ Auphonic integration Enhancements
 * Enhancement: Show expected and actual mime type in log when an error occurs
 * Bugfix: Fix Bitlove integration
 * Bugfix: Correctly hide content in password protected posts
-* Bugfix: ADN Plugin annonced new episode every time the episode got saved
+* Bugfix: ADN Plugin announced new episode every time the episode got saved
 * Fix some PHP 5.4 Strict warnings
 
 = 1.7.2 (2013-07-11) =
@@ -1117,7 +1172,7 @@ Minor fixes and improvements:
 * Bugfix: fix feed setting "No limit. Include all items."
 
 = 1.4.2-alpha =
-* Bugfix: add auphonic metadata file type
+* Bugfix: add Auphonic metadata file type
 * Bugfix: fix bug regarding limiting feed items
 
 = 1.4.1-alpha =
@@ -1163,7 +1218,7 @@ A similar concept might return once we tackle stuff like seasons.
 = 1.3.27-alpha =
 * Enhancement: enforce trailing slash at the end media file base url
 * Enhancement: fix huge download-select-font
-* Enhancement: doublecheck curl availablity
+* Enhancement: doublecheck curl availability
 * Bugfix: double quote escaping for Web Player title, subtitle and summary
 
 = 1.3.26-alpha =

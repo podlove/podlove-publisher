@@ -8,9 +8,11 @@ function handle_feed_proxy_redirects() {
 		return;
 
 	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$is_debug_view = false;
 
 	if (\Podlove\get_setting('website', 'feeds_skip_redirect') == 'on' && filter_input(INPUT_GET, 'redirect') == 'no') {
 		$should_redirect = false;
+		$is_debug_view = true;
 	} elseif (preg_match("/feedburner|feedsqueezer|feedvalidator|feedpress/i", filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'))) {
 		$should_redirect = false;
 	} else {
@@ -21,6 +23,31 @@ function handle_feed_proxy_redirects() {
 
 	if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
 		return;
+
+	/**
+	 * Before we redirect to a proxy or deliver the feed, ensure that the canonical
+	 * feed URL was accessed.
+	 */
+	if (!$is_debug_view && get_option('permalink_structure') != '') {
+
+		$feed_url = $feed->get_subscribe_url();
+		$request_url = "http" . (isset($_SERVER['HTTPS']) ? 's' : '') . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$url = parse_url($request_url);
+
+		if (
+			!\Podlove\PHP\ends_with($url['path'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
+			||
+			\Podlove\PHP\ends_with($url['path'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
+		) {
+
+			if ($is_feed_page) {
+				$feed_url = add_query_arg(['paged' => $paged], $feed_url);
+			}
+
+			wp_redirect($feed_url, 301);
+			exit;
+		}
+	}
 
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
 	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;

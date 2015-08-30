@@ -237,12 +237,19 @@
   logo: 'xing.png'
   url_scheme: '%account-placeholder%'
 
-- title: 'YouTube'
+- title: 'YouTube (User)'
   name: 'youtube'
   category: 'social'
-  description: 'YouTube Account'
+  description: 'YouTube User'
   logo: 'youtube.png'
   url_scheme: 'https://www.youtube.com/user/%account-placeholder%'
+
+- title: 'YouTube (Channel)'
+  name: 'youtube-channel'
+  category: 'social'
+  description: 'YouTube Channel'
+  logo: 'youtube.png'
+  url_scheme: 'https://www.youtube.com/c/%account-placeholder%'
 
 - title: 'Amazon Wishlist'
   name: 'amazon wishlist'

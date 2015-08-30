@@ -21,21 +21,31 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
 ```
 
-## Release Checklist
+## Testing
 
-- Ensure changelog in `readme.txt` has an entry for that version
-- Update "tested with WordPress version" in `readme.txt`
-- Merge release-branch into master
-- Increase version number in `podlove.php`
-- `git add -A . && git commit -m ":shipit: release <version>"`
-- git push
-- Deploy to WordPress plugin repository
-- Post changelog to [Github Releases][8]
-- Rerun `bin/template_ref_json.php` and `bin/template_ref.rb`
-- Rebuild & Redeploy docs.podlove.org
-- Remove/cleanup published feature branches
-- Create new release branch
+You need a dedicated database for testing because _running tests wipes all data_. To setup tests, run this once:
 
+```
+# bash bin/install-wp-tests.sh <database> <user> <password> <host> <wordpress-version>
+bash bin/install-wp-tests.sh wordpress_test root root localhost latest
+```
+
+This will download the latest WordPress core and files required for testing into `/tmp`.
+
+Then run `phpunit` to run the tests.
+
+```
+./vendor/bin/phpunit
+```
+
+#### Web Player
+
+To get and update the web player v3+, use bower and make:
+
+```
+bower update
+make player
+```
 
 [1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 [2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)

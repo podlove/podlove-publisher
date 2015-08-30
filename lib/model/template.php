@@ -45,11 +45,13 @@ class Template extends Base {
 			return $template;
 		}
 		
-		self::activate_network_scope();
-		$global_template = self::find_one_by_title($template_id);
-		self::deactivate_network_scope();
+		if (is_multisite()) {
+			return self::with_network_scope(function() use ($template_id) {
+				return self::find_one_by_title($template_id);
+			});
+		}
 
-		return $global_template;
+		return null;
 	}
 
 }

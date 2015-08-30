@@ -47,7 +47,7 @@ class PodcastExporter {
 		$xml = $this->getXml();
 
 		if ($this->isCompressionEnabled()) {
-			echo gzencode($xml, 9);
+			echo gzencode($xml);
 		} else {
 			echo $xml;
 		}
@@ -144,8 +144,12 @@ class PodcastExporter {
 		header( 'Expires: -1' );
 
 		if ($this->isCompressionEnabled()) {
-			header( 'Content-Encoding: gzip' );
-			header( 'Content-Type: application/x-gzip; charset=' . get_option( 'blog_charset' ), true );
+			// Do *not* send gzip headers. Why? If you set gzip headers, the data is 
+			// transferred compressed but unzipped before it's saved to disk. But we
+			// want it to be compressed as a file, not just for transfer.
+			
+			// header( 'Content-Encoding: gzip' );
+			// header( 'Content-Type: application/x-gzip; charset=' . get_option( 'blog_charset' ), true );
 		} else {
 			header( 'Content-Type: text/xml; charset=' . get_option( 'blog_charset' ), true );
 		}

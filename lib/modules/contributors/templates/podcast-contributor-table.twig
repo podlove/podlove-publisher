@@ -1,13 +1,3 @@
-{% macro iconSrc(icon) %}
-	{{ constant("\\Podlove\\PLUGIN_URL") }}/lib/modules/contributors/images/icons/{{ icon }}-128.png
-{% endmacro %}
-
-{% macro iconLink(title, icon, href) %}
-	<a target="_blank" title="{{ title }}" href="{{ href }}">
-		<img width="32" height="32" src="{{ _self.iconSrc(icon) }}" class="podlove-contributor-button" alt="{{ title }}" />
-	</a>
-{% endmacro %}
-
 <table class="podlove-contributors-table">
 	<tbody>
 		{% for contributor in podcast.contributors({group: option.group, role: option.role, scope: 'podcast'}) %}

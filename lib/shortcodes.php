@@ -33,34 +33,6 @@ function episode_downloads_shortcode( $options ) {
 add_shortcode( 'podlove-episode-downloads', '\Podlove\episode_downloads_shortcode' );
 
 /**
- * Provides shortcode to display web player.
- *
- * Right now there is only audio support.
- *
- * Usage:
- * 	[podlove-episode-web-player]
- * 
- */
-function webplayer_shortcode( $options ) {
-	global $post;
-
-	if ( is_feed() )
-		return '';
-
-	$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
-	$printer = new \Podlove\Modules\PodloveWebPlayer\Printer( $episode );
-	return $printer->render();
-}
-add_action('plugins_loaded', function() {
-
-	// backward compatible, but only load if no other plugin has registered this shortcode
-	if (!shortcode_exists('podlove-web-player'))
-		add_shortcode('podlove-web-player', '\Podlove\webplayer_shortcode');
-
-	add_shortcode('podlove-episode-web-player', '\Podlove\webplayer_shortcode');
-});
-
-/**
  * Provides shortcode to display episode template.
  *
  * Usage:

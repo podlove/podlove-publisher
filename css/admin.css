@@ -133,10 +133,12 @@ table.podlove_alternating td {
 table.podlove_alternating tr:nth-child(even) {
 	background: #EAEAEA;
 }
-#update_all_media_files {
+#update_all_media_files,
+#podlove_detect_duration,
+#podlove_detect_duration_status {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 15px 0 6px 0;
+	margin: 15px 0 6px 0;
 }
 .base_url {
 	color: #777;
@@ -181,7 +183,8 @@ table.podlove_alternating tr:nth-child(even) {
 	height: 40px !important;
 }
 
-span.contributor_remove {
+span.contributor_remove,
+span.episode_relation_remove {
 	font-size: 1.6em;
 }	
 
@@ -193,6 +196,8 @@ tr.row_podlove_feed_protection_type {
 
 img.podlove-avatar {
 	width: 50px;
+	vertical-align: bottom;
+	margin: 2px;
 }
 
 input.podlove-contributor-field {
@@ -288,30 +293,6 @@ label.podlove_cc_license_selector_label {
 .media_file_table tr:nth-child(even) {
 	background: #EAEAEA;
 }
-#update_all_media_files {
-	display: inline-block;
-	vertical-align: middle;
-	padding: 15px 0 6px 0;
-}
-.base_url {
-	color: #777;
-	font-size: 0.9em;
-}
-.media_file_row .enable {
-	text-align: center;
-}
-.subtitle_warning {
-	float: left;
-	font-weight: bold;
-	padding-right: 10px;
-}
-.subtitle_warning .close {
-	cursor: pointer;
-}
-
-.media_file_row .enable { width: 45px; }
-.media_file_row .size   { width: 130px; }
-.media_file_row .update { width: 90px; }
 
 .podlove-div-wrapper-form > div > span > label {
 	display: inline-block;
@@ -490,4 +471,18 @@ label.podlove_cc_license_selector_label {
 .podlove_gender_widget_column th {
 	text-align: right;
 	padding-right: 2%;
+}
+
+/* podlove media upload */
+
+.podlove_preview_pic { 
+	margin: 1px;
+	position: relative;
+	min-height: 40px;
+}
+.podlove_preview_pic img { border: 1px solid #ddd; }
+.podlove_preview_pic .podlove_reset_image {
+	position: absolute;
+	bottom: 5px;
+	color: #a00;
 }

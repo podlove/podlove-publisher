@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 104 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 108 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1153,6 +1153,29 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 104:
 			\Podlove\unschedule_events(\Podlove\Cache\TemplateCache::CRON_PURGE_HOOK);
+		break;
+		case 105:
+			// activate flattr plugin
+			\Podlove\Modules\Base::activate('flattr');
+
+			// migrate flattr data
+			$podcast = Model\Podcast::get();			
+			$settings = get_option('podlove_flattr', []);
+			$settings['account'] = $podcast->flattr;
+			$settings['contributor_shortcode_default'] = 'yes';
+			update_option('podlove_flattr', $settings);
+		break;
+		case 106:
+			podlove_init_user_agent_refresh();
+		break;
+		case 107:
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::update_existing_services();
+				\Podlove\Modules\Social\Social::build_missing_services();
+			}
+		break;
+		case 108:
+			podlove_init_user_agent_refresh();
 		break;
 	}
 
