@@ -14,7 +14,7 @@ class DownloadIntent extends Base {
 
 		try {
 			$reader = new \GeoIp2\Database\Reader(\Podlove\Geo_Ip::get_upload_file_path());
-		} catch (\InvalidArgumentException $e) {
+		} catch (\Exception $e) {
 			return $this;
 		}
 		
@@ -96,7 +96,7 @@ class DownloadIntent extends Base {
 			$area = $get_area($record, 'city');
 
 			$this->geo_area_id = $area->id;
-		} catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+		} catch (\Exception $e) {
 			// geo lookup might fail, but that's not grave		
 		}
 
