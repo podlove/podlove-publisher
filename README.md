@@ -10,6 +10,10 @@ This is the podcast publishing plugin for WordPress.
 
 [![Flattr This][2]][1]
 
+## Development Environment
+
+Any WordPress development environment with a PHP version of at least 5.4 will do. A Vagrant Virtual Machine using the [Varying-Vagrant-Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) configuration is recommended.
+
 ## Development
 
 Code dependencies are managed via [Composer](http://getcomposer.org/). So you need to clone the repository and then fetch the dependencies via Composer.
