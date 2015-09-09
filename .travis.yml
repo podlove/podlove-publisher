@@ -32,13 +32,9 @@ before_script:
 script:
 - phpunit
 
-deploy:
-  provider: script
-  script: bin/travis-deploy.sh
-  skip_cleanup: true
-  on:
-    all_branches: true
-    condition: $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
+after_success:
+- if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
+  ]]; then bash bin/travis-deploy.sh; fi
 
 notifications:
   slack:
