@@ -6,6 +6,8 @@ use \Podlove\Modules\Seasons\Model\SeasonsValidator;
 
 class Settings {
 
+	use \Podlove\HasPageDocumentationTrait;
+
 	public function __construct($handle) {
 		$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
@@ -15,6 +17,8 @@ class Settings {
 			/* $menu_slug  */ 'podlove_seasons_settings',
 			/* $function   */ [$this, 'page']
 		);
+
+		$this->init_page_documentation($pagehook);
 
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( "load-" . $pagehook, [$this, 'add_screen_options'] );
@@ -181,7 +185,7 @@ class Settings {
 			$season  = $form->object;
 
 	 		$wrapper->string('title', [
-	 			'label'       => __('Title', 'podlove'),
+	 			'label'       => __('Title', 'podlove') . \Podlove\get_help_link('podlove_help_seasons_title'),
 	 			'html'        => ['class' => 'regular-text podlove-check-input']
 	 		]);
 
@@ -196,7 +200,7 @@ class Settings {
 	 		]);
 
 	 		$wrapper->string('start_date', [
-	 			'label'       => __('Start Date', 'podlove'),
+	 			'label'       => __('Start Date', 'podlove') . \Podlove\get_help_link('podlove_help_seasons_date'),
 	 			'html'        => ['class' => 'regular-text podlove-check-input', 'readonly' => 'readonly']
 	 		]);
 
