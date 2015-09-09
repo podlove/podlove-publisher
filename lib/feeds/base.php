@@ -92,7 +92,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	}, 9 );
  	
  	// add rss image
-	add_action( $hook, function() use ( $podcast ) {
+	add_action( $hook, function() use ( $podcast, $hook ) {
 
 		$image = [
 			'url'   => $podcast->cover_art()->url(),
@@ -104,6 +104,10 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		if (!$image['url'])
 			return;
 
+		// remove WordPress provided favicon
+		remove_action($hook, 'rss2_site_icon');
+
+		// generate our own image tag
 		$dom = new \Podlove\DomDocumentFragment;
 		$image_tag = $dom->createElement('image');
 		
@@ -119,7 +123,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		$dom->appendChild($image_tag);
 
 		echo (string) $dom;
-	} );
+	}, 5 ); // let it run early so we can stop the `rss2_site_icon` call
 
 	add_action( $hook, function () use ( $podcast, $feed, $format ) {
 		echo PHP_EOL;

@@ -163,6 +163,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * export files are now gzipped if possible
 * fix JavaScript incompatibility related to Diaspora plugin ([#771](https://github.com/podlove/podlove-publisher/pull/771), [#770](https://github.com/podlove/podlove-publisher/pull/770), [#425](https://github.com/podlove/podlove-publisher/issues/425), thanks [@noplanman](https://github.com/noplanman)!)
 * fix: failing geo-lookup does not break tracking links
+* fix: Remove WordPress favicon (since WP 4.3) from podcast feeds if a podcast image is set
 
 = 2.2.4 =
 
