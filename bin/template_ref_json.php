@@ -3,8 +3,11 @@
  * Extracts template reference and saves them to JSON files.
  * 
  * Complete workflow for generating reference markdown:
+ * 
+ * - Warning: Does NOT work on multisite installs! Set `define('MULTISITE', false);`!
+ * - use `php -d "opcache.enable=off"` to avoid opcache removing comments
  *
- * 1. $> WPBASE=/path/to/wordpress php bin/template_ref_json.php
+ * 1. $> WPBASE=/path/to/wordpress php -d "opcache.enable=off" bin/template_ref_json.php
  * 2. $> ruby bin/template_ref.rb > doc/tempate_ref.md
  */
 
@@ -68,6 +71,11 @@ foreach ($dynamicAccessorClasses as $class) {
 	});
 
 	$parsedMethods = array_map(function($method) {
+
+		assert_options(ASSERT_CALLBACK, function() use ($method) {
+			print_r("!!! Assertion failed in {$method->class}::{$method->name}\n");
+		});
+
 		$c = new Comment($method->getDocComment());
 		$c->parse();
 
