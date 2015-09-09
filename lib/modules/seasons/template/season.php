@@ -3,6 +3,11 @@ namespace Podlove\Modules\Seasons\Template;
 
 use Podlove\Template\Wrapper;
 
+/**
+ * Season Template Wrapper
+ *
+ * @templatetag season
+ */
 class Season extends Wrapper {
 
 	private $season;
