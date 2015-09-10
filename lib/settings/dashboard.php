@@ -15,10 +15,18 @@ class Dashboard {
 			/* $parent_slug*/ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			/* $page_title */ __('Dashboard', 'podlove'),
 			/* $menu_title */ __('Dashboard', 'podlove'),
-			/* $capability */ 'author',
+			/* $capability */ 'podlove_read_dashboard',
 			/* $menu_slug  */ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array(__CLASS__, 'page')
 		);
+
+		$roles = ['administrator', 'editor', 'author'];
+		foreach ($roles as $role_name) {
+			$role = get_role($role_name);
+			if (!$role->has_cap('podlove_read_dashboard')) {
+				$role->add_cap('podlove_read_dashboard');
+			}
+		}
 
 		$this->init_page_documentation(self::$pagehook);
 

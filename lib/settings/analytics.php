@@ -24,8 +24,13 @@ class Analytics {
 		);
 
 		// todo: this is persistent, so it should only be called on migration/plugin activation
-	    $role = get_role('author');
-	    $role->add_cap('podlove_read_analytics');
+		$roles = ['administrator', 'editor', 'author'];
+		foreach ($roles as $role_name) {
+			$role = get_role($role_name);
+			if (!$role->has_cap('podlove_read_analytics')) {
+				$role->add_cap('podlove_read_analytics');
+			}
+		}
 
 		$this->init_page_documentation(self::$pagehook);
 
