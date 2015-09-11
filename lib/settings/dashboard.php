@@ -20,14 +20,6 @@ class Dashboard {
 			/* $function   */ array(__CLASS__, 'page')
 		);
 
-		$roles = ['administrator', 'editor', 'author'];
-		foreach ($roles as $role_name) {
-			$role = get_role($role_name);
-			if (!$role->has_cap('podlove_read_dashboard')) {
-				$role->add_cap('podlove_read_dashboard');
-			}
-		}
-
 		$this->init_page_documentation(self::$pagehook);
 
 		add_action('load-' . Dashboard::$pagehook, function () {

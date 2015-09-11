@@ -20,6 +20,8 @@ function activate_for_current_blog() {
 	Model\GeoArea::build();
 	Model\GeoAreaName::build();
 
+	\podlove_init_capabilities();
+
 	if ( ! Model\FileType::has_entries() ) {
 		$default_types = array(
 			array( 'name' => 'MP3 Audio',              'type' => 'audio',    'mime_type' => 'audio/mpeg',  'extension' => 'mp3' ),
@@ -247,6 +249,7 @@ add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
 require_once \Podlove\PLUGIN_DIR . 'includes/about.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/capabilities.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/chapters.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cover_art.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/deprecations.php';

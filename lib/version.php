@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 108 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 109 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1176,6 +1176,9 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 108:
 			podlove_init_user_agent_refresh();
+		break;
+		case 109:
+			\podlove_init_capabilities();
 		break;
 	}
 

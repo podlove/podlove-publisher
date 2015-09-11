@@ -23,15 +23,6 @@ class Analytics {
 			/* $function   */ array( $this, 'page' )
 		);
 
-		// todo: this is persistent, so it should only be called on migration/plugin activation
-		$roles = ['administrator', 'editor', 'author'];
-		foreach ($roles as $role_name) {
-			$role = get_role($role_name);
-			if (!$role->has_cap('podlove_read_analytics')) {
-				$role->add_cap('podlove_read_analytics');
-			}
-		}
-
 		$this->init_page_documentation(self::$pagehook);
 
 		// add_action( 'admin_init', array( $this, 'process_form' ) );
