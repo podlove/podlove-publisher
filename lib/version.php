@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 109 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 110 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1169,16 +1169,19 @@ function run_migrations_for_version( $version ) {
 			podlove_init_user_agent_refresh();
 		break;
 		case 107:
-			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
-				\Podlove\Modules\Social\Social::update_existing_services();
-				\Podlove\Modules\Social\Social::build_missing_services();
-			}
+			// skipped
 		break;
 		case 108:
 			podlove_init_user_agent_refresh();
 		break;
 		case 109:
 			\podlove_init_capabilities();
+		break;
+		case 110:
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::update_existing_services();
+				\Podlove\Modules\Social\Social::build_missing_services();
+			}
 		break;
 	}
 

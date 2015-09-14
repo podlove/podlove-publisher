@@ -300,6 +300,13 @@
   logo: 'paypal.png'
   url_scheme: 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=%account-placeholder%'
 
+- title: 'Paypal.me'
+  name: 'paypalme'
+  category: 'donation'
+  description: 'Paypal.me Account'
+  logo: 'paypal.png'
+  url_scheme: 'https://paypal.me/%account-placeholder%'
+
 - title: 'Steam Wishlist'
   name: 'steam wishlist'
   category: 'donation'

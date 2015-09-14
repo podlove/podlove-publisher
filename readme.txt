@@ -154,6 +154,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * Users with role "author" and higher now have access to the Podlove Dashboard and Analytics. They only have access to dashboard sections that make sense for authors, so they won't see logging, feed or asset validation.
 * Contributors can now be edited in _Contributor Settings_ (instead of _Episodes > Contributors_)
 * Contributors Social Services: It is now possible to add a YouTube "Channel", not just user profiles
+* Contributors Social Donations: Add "paypal.me" option
 * Add functionality to automatically determine the duration for episodes. This is especially useful for people who don't use Auphonic, which already determines the duration automatically.
 * We are now able to handle media files that are served without a "Content-Length" header. A specific warning is generated and the size is displayed as "unknown", but the files are treated as valid so they can be played.
 * Add support for Auphonic webhooks. This allows us to import your episode metadata once an Auphonic production is finished — even if you navigated away from the episode page.
