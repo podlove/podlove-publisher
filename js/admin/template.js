@@ -132,18 +132,22 @@
 		};
 
 		var update_editor_cache = function () {
+			var $active_item = $("li.active a", $navigation);
+			var template_id  = $active_item.data("id");
+			var new_content  = editor.getSession().getValue();
+
+			// update cache
+			if (templates[template_id]) {
+				templates[template_id].content = new_content;
+				templates[template_id].markAsUnsaved();
+			}
+		};
+
+		var handle_editor_change = function () {
 			// only track user input, *not* programmatical change
 			// @see https://github.com/ajaxorg/ace/issues/503#issuecomment-44525640
 			if (editor.curOp && editor.curOp.command.name) { 
-				var $active_item = $("li.active a", $navigation);
-				var template_id  = $active_item.data("id");
-				var new_content  = editor.getSession().getValue();
-
-				// update cache
-				if (templates[template_id]) {
-					templates[template_id].content = new_content;
-					templates[template_id].markAsUnsaved();
-				}
+				update_editor_cache();
 			}
 		};
 
@@ -202,7 +206,8 @@
 		};
 
 		$title.keyup(update_title);
-		editor.on("change", update_editor_cache);
+		editor.on("change", handle_editor_change);
+		editor.on("paste", update_editor_cache);
 
 		$navigation.on("click", "a[data-id]", activate_template);
 		$navigation.on("click", ".add a", add_template);

@@ -165,6 +165,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * fix JavaScript incompatibility related to Diaspora plugin ([#771](https://github.com/podlove/podlove-publisher/pull/771), [#770](https://github.com/podlove/podlove-publisher/pull/770), [#425](https://github.com/podlove/podlove-publisher/issues/425), thanks [@noplanman](https://github.com/noplanman)!)
 * fix: failing geo-lookup does not break tracking links
 * fix: Remove WordPress favicon (since WP 4.3) from podcast feeds if a podcast image is set
+* fix: pasting into a template creates change-marker
 
 = 2.2.4 =
 
