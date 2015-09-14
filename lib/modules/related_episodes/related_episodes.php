@@ -128,7 +128,7 @@ class Related_Episodes extends \Podlove\Modules\Base {
 			wp_register_script(
 				'podlove_related_episodes',
 				$this->get_module_url() . '/js/admin.js',
-				array( 'jquery' ),
+				array( 'jquery', 'podlove_admin_data_table' ),
 				\Podlove\get_plugin_header( 'Version' )
 			);
 			wp_enqueue_script('podlove_related_episodes');

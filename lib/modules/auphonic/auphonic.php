@@ -361,7 +361,7 @@ class Auphonic extends \Podlove\Modules\Base {
     	wp_register_script(
     		'podlove_auphonic_admin_script',
     		$this->get_module_url() . '/admin.js',
-    		array( 'jquery', 'jquery-ui-tabs' ),
+    		array( 'jquery', 'jquery-ui-tabs', 'podlove_admin' ),
     		\Podlove\get_plugin_header( 'Version' )
     	);
     	wp_enqueue_script('podlove_auphonic_admin_script');
