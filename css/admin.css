@@ -160,6 +160,26 @@ table.podlove_alternating tr:nth-child(even) {
 .media_file_row .size   { width: 130px; }
 .media_file_row .update { width: 90px; }
 
+/* Episode */
+
+.row__podlove_meta_cover_art .podlove-media-upload-wrap > span {
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+.row__podlove_meta_cover_art .podlove-media-upload-wrap > span input {
+	-webkit-flex: initial;
+	    -ms-flex: initial;
+	        flex: initial;
+	width: 100%;
+	min-width: 100px;
+}
+
+.row__podlove_meta_cover_art .podlove-media-upload-wrap > span a {
+	margin-left: 10px;
+}
+
 /* Contributors */
 #add_new_contributor_selector {
 	width: 250px;
@@ -479,6 +499,7 @@ label.podlove_cc_license_selector_label {
 	margin: 1px;
 	position: relative;
 	min-height: 40px;
+	display: none;
 }
 .podlove_preview_pic img { border: 1px solid #ddd; }
 .podlove_preview_pic .podlove_reset_image {

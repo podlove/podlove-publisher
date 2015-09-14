@@ -33,6 +33,7 @@ add_action( 'admin_print_styles', function () {
 		wp_enqueue_script('podlove_admin_license',                    \Podlove\PLUGIN_URL . '/js/admin/license.js', ['jquery'], $version);
 		wp_enqueue_script('podlove_admin_protected_feed',             \Podlove\PLUGIN_URL . '/js/admin/protected_feed.js', ['jquery'], $version);
 		wp_enqueue_script('podlove_admin_data_table',                 \Podlove\PLUGIN_URL . '/js/admin/podlove_data_table.js', ['jquery'], $version);
+		wp_enqueue_script('podlove_admin_media',                      \Podlove\PLUGIN_URL . '/js/admin/media.js', ['jquery'], $version);
 		wp_enqueue_script('podlove_admin',                            \Podlove\PLUGIN_URL . '/js/admin.js', ['jquery', 'jquery-ui-datepicker'], $version);
 
 		wp_enqueue_style('jquery-ui-style', \Podlove\PLUGIN_URL . '/js/admin/jquery-ui/css/smoothness/jquery-ui.css');

@@ -250,10 +250,11 @@ class Builder {
 					data-preview=".podlove_preview_pic"
 					data-fetch="url"><?php echo $arguments['form_button_text'] ?></a>
 			</span>
-			<p>
-			<span class="description"><?php echo __('Enter URL or select image from media library.', 'podlove') ?></span>
-				
-			</p>
+			<?php if (!isset($arguments['description']) || !$arguments['description']): ?>
+				<p>
+					<span class="description"><?php echo __('Enter URL or select image from media library.', 'podlove') ?></span>
+				</p>
+			<?php endif ?>
 			<div class="podlove_preview_pic"></div>
 		</div>
 		<?php
