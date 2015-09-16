@@ -46,8 +46,6 @@ class TrackingImporter {
 	}
 
 	public function import() {
-		global $wpdb;
-
 		// It might not look like it, but it is actually compatible to 
 		// uncompressed files.
 		$gzFileHandler = gzopen($this->file, 'r');
@@ -57,12 +55,6 @@ class TrackingImporter {
 		
 		$batchSize = 1000;
 		$batch = array();
-
-		$sqlTemplate = "
-			INSERT INTO
-				" . Model\DownloadIntent::table_name() . " 
-			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`) 
-			VALUES %s";
 
 		while (!gzeof($gzFileHandler)) {
 			$line = gzgets($gzFileHandler);
@@ -93,25 +85,40 @@ class TrackingImporter {
 			);
 
 			if (count($batch) >= $batchSize) {
-
-				$inserts = implode(",", array_map(function($row) {
-					return "(" . implode(",", array_map(function($x){
-						return '"' . $x . '"';
-					}, $row)) . ")";
-				}, $batch));
-				$sql = sprintf($sqlTemplate, $inserts);
-				$wpdb->query($sql);
-				
-				$batch = array();
+				self::save_batch_to_db($batch);
+				$batch = [];
 			}
 		}
 
 		gzclose($gzFileHandler);
+
+		// save last batch to db
+		self::save_batch_to_db($batch);
 
 		\Podlove\Analytics\DownloadIntentCleanup::cleanup_download_intents();
 		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 
 		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
 		exit;
+	}
+
+	private static function save_batch_to_db($batch) {
+		global $wpdb;
+
+		$sqlTemplate = "
+			INSERT INTO
+				" . Model\DownloadIntent::table_name() . " 
+			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`) 
+			VALUES %s";
+
+		if (count($batch)) {
+			$inserts = implode(",", array_map(function($row) {
+				return "(" . implode(",", array_map(function($x){
+					return '"' . $x . '"';
+				}, $row)) . ")";
+			}, $batch));
+			$sql = sprintf($sqlTemplate, $inserts);
+			$wpdb->query($sql);
+		}		
 	}
 }

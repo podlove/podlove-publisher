@@ -166,6 +166,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * fix: failing geo-lookup does not break tracking links
 * fix: Remove WordPress favicon (since WP 4.3) from podcast feeds if a podcast image is set
 * fix: pasting into a template creates change-marker
+* fix: tracking import does not skip the last few entries
 
 = 2.2.4 =
 
