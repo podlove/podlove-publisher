@@ -110,9 +110,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.0 =
 
-Use WordPress Object Cache API to cache model objects. 
-See also: https://github.com/podlove/podlove-publisher/commit/a2488a3
-
 **New Module: Seasons**
 
 Do you have seasonal content? We got you covered. The new "Seasons" module allows you to group episodes into seasons. Each season has a title and other optional metadata, like a custom image. You can access all this data using the template system.
@@ -148,6 +145,7 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 
 **Other**
 
+* Use WordPress Object Cache API to cache model objects. All entities fetched by id are cached and reused within the same page call. Performance gains are most notably in complex templates, which often access the same data repeatedly.
 * Analytics: Update & improve user agent detection library so you can have more accurate analytics.
 * Canonical feed URLs. WordPress respects if you want your URLs to end with a slash or not (you do that by adding or removing the trailing slash from your WordPress permalink settings custom structure). Our feed URLs now respect this choice, too. Furthermore, we permanently redirect to the canonical URL if another one was accessed to ensure all clients access _exactly_ the same feed URL.
 * News from podlove.org are displayed in the Podlove Dashboard
