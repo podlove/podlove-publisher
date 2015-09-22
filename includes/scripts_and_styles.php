@@ -29,6 +29,10 @@ add_action( 'admin_print_styles', function () {
 		// other scripts
 		wp_enqueue_script('podlove-cryptojs',                         \Podlove\PLUGIN_URL . '/js/admin/cryptojs/md5.js');
 		wp_enqueue_script('podlove_admin_episode',                    \Podlove\PLUGIN_URL . '/js/admin/episode.js', ['jquery', 'podlove_admin'], $version);
+		
+		wp_enqueue_script('podlove_admin_audio_duration_loader',      \Podlove\PLUGIN_URL . '/js/admin/audio_duration_loader.js', ['jquery'], $version);
+		wp_enqueue_script('podlove_admin_episode_duration',           \Podlove\PLUGIN_URL . '/js/admin/episode_duration.js', ['jquery'], $version);
+
 		wp_enqueue_script('podlove_admin_dashboard_asset_validation', \Podlove\PLUGIN_URL . '/js/admin/dashboard_asset_validation.js', ['jquery'], $version);
 		wp_enqueue_script('podlove_admin_dashboard_feed_validation',  \Podlove\PLUGIN_URL . '/js/admin/dashboard_feed_validation.js', 	['jquery'], $version);
 		wp_enqueue_script('podlove_admin_episode_asset_settings',     \Podlove\PLUGIN_URL . '/js/admin/episode_asset_settings.js', ['jquery', 'jquery-ui-sortable'], $version);
