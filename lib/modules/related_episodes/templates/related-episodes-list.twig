@@ -1,7 +1,17 @@
-<ul>
-{% for related_episode in episode.relatedEpisodes %}
-	<li>
-		<a href="{{ related_episode.url }}">{{ related_episode.title }}</a>
-	</li>
-{% endfor %}
-</ul>
+{% set related_episodes = episode.relatedEpisodes %}
+
+{% if related_episodes %}
+
+	{% if option.before %}
+		{{ option.before }}
+	{% endif %}	
+
+	<ul>
+	{% for related_episode in related_episodes %}
+		<li>
+			<a href="{{ related_episode.url }}">{{ related_episode.title }}</a>
+		</li>
+	{% endfor %}
+	</ul>
+
+{% endif %}
