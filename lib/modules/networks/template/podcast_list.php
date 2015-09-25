@@ -48,9 +48,18 @@ class PodcastList extends Wrapper {
 	}
 
 	/**
-	 * List description
+	 * List summary
 	 * 
 	 * @accessor
+	 */
+	public function summary() {
+		return $this->list->description;
+	}
+
+	/**
+	 * List description
+	 * 
+	 * @deprecated since 2.3, use summary instead
 	 */
 	public function description() {
 		return $this->list->description;

@@ -177,7 +177,7 @@ class PodcastLists {
 			) );
 
 			$wrapper->text( 'description', array(
-				'label'       => __( 'Description', 'podlove' ),
+				'label'       => __( 'Summary', 'podlove' ),
 				'description' => __( '', 'podlove' ),
 				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
 			) );

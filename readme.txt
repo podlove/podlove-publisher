@@ -157,7 +157,8 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 * We are now able to handle media files that are served without a "Content-Length" header. A specific warning is generated and the size is displayed as "unknown", but the files are treated as valid so they can be played.
 * Add support for Auphonic webhooks. This allows us to import your episode metadata once an Auphonic production is finished — even if you navigated away from the episode page.
 * Podcast cover image can now be uploaded using the WordPress media uploader.
-* add `contributor.gender` template accessor
+* Add `contributor.gender` template accessor
+* Rename network list "description" to "summary" for consistency. In templates `list.description` is now deprecated. Please use `list.summary` instead.
 * fix: Shortcodes in episode subtitle and summary are not interpreted any more. Both fields were always considered plain text and having shortcodes leads to various issues, especially in feeds.
 * export files are now gzipped if possible
 * fix JavaScript incompatibility related to Diaspora plugin ([#771](https://github.com/podlove/podlove-publisher/pull/771), [#770](https://github.com/podlove/podlove-publisher/pull/770), [#425](https://github.com/podlove/podlove-publisher/issues/425), thanks [@noplanman](https://github.com/noplanman)!)
