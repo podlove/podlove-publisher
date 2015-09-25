@@ -15,6 +15,8 @@ require_once 'vendor/autoload.php';
 
 use Podlove\Comment\Comment;
 
+define('MULTISITE', false);
+
 if (!getenv('WPBASE')) {
 	die("You need to set the environment variable WPBASE to your WordPress root\n");
 }
