@@ -249,7 +249,7 @@
   category: 'social'
   description: 'YouTube Channel'
   logo: 'youtube.png'
-  url_scheme: 'https://www.youtube.com/c/%account-placeholder%'
+  url_scheme: 'https://www.youtube.com/channel/%account-placeholder%'
 
 - title: 'Amazon Wishlist'
   name: 'amazon wishlist'
