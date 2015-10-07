@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.1 =
+
+* enhance system report: change wording for `open_basedir` issue to clarify that it _should_ be fixed but a workaround exists
+
 = 2.3.0 =
 
 **New Module: Seasons**
