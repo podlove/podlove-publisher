@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.3.1 =
 
 * simplify download buttons (`[podlove-episode-downloads style="buttons"]`) style to better adapt to themes
+* fix: missing "Show URL" button in twentyfifteen theme
 * fix: URL structure for YouTube channels
 * fix: player visibility when JavaScript is disabled
 * fix: stop loading nonexisting player assets in WordPress admin area
