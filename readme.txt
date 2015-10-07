@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.1 =
 
+* fix: player visibility when JavaScript is disabled
 * fix: stop loading nonexisting player assets in WordPress admin area
 * enhance system report: change wording for `open_basedir` issue to clarify that it _should_ be fixed but a workaround exists
 
