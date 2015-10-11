@@ -111,11 +111,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.3.1 =
 
 * simplify download buttons (`[podlove-episode-downloads style="buttons"]`) style to better adapt to themes
-* fix: missing "Show URL" button in twentyfifteen theme
+* fix: missing "Show URL" download button in twentyfifteen theme
 * fix: URL structure for YouTube channels
 * fix: player visibility when JavaScript is disabled
 * fix: stop loading nonexisting player assets in WordPress admin area
-* enhance system report: change wording for `open_basedir` issue to clarify that it _should_ be fixed but a workaround exists
+* enhanced system report: change wording for `open_basedir` issue to clarify that it _should_ be fixed but a workaround exists
+* enhanced plugin loading
+  * When upgrading from version 1.x to 2.x using PHP 5.3, the upgrade lead to the "White Screen of Death" because 2.x requires PHP 5.4. This case is now handled and the Publisher deactivates itself.
+  * Some shared hosters seem to have problems with the plugin update process, which leads to the Publisher missing files and breaking the site. This is now also detected and a notice appears, asking the user to manually redownload the plugin.
 
 = 2.3.0 =
 
