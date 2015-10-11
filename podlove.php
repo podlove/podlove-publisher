@@ -25,10 +25,6 @@ function load_podlove_podcast_publisher() {
 	require_once 'plugin.php';
 }
 
-function deactivate_podlove_podcast_publisher() {
-	deactivate_plugins( plugin_basename( __FILE__ ) );
-}
-
 function podlove_admin_error_no_autoload() {
 	?>
 	<div id="message" class="error">
@@ -40,21 +36,34 @@ function podlove_admin_error_no_autoload() {
 		</p>
 	</div>
 	<?php
-	deactivate_podlove_podcast_publisher();
 }
 
-$correct_php_version = version_compare( phpversion(), "5.4", ">=" );
+function podlove_admin_error_ancient_php() {
+	?>
+	<div id="message" class="error">
+		<p>
+			<strong>Podlove Podcast Publisher could not be activated</strong>
+		</p>
+		<p>
+			Podlove Podcasting Plugin requires <code>PHP 5.4</code> or higher.<br>
+			You are running <code>PHP <?php echo phpversion(); ?></code>.<br>
+			Please ask you hoster how to upgrade to an up-to-date PHP version.
+		</p>
+		<p>
+			If you need to go back to an older Publisher version,
+			you can find a list of all available downloads at 
+			<a href="https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/developers/">wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/developers/</a>.
+		</p>
+	</div>
+	<?php
+}
 
-if ( ! $correct_php_version ) {
-	echo "Podlove Podcasting Plugin requires <strong>PHP 5.4</strong> or higher.<br>";
-	echo "You are running PHP " . phpversion();
-	deactivate_podlove_podcast_publisher();
-	// It's important to _exit_ here instead of showing an error message for
-	// installation workflow. When the PHP version is too low, WordPress 
-	// automatically disables the plugin and displays the message.
-	// For _upgrading_ users there is the "white screen of death", but only
-	// once, because we also make sure to deactivate the plugin if this occurs.
-	exit;
+$correct_php_version = version_compare(phpversion(), "5.4", ">=");
+
+if (!$correct_php_version) {
+	// Let the plugin update/setup succeed and constantly show the error
+	// message until resolved.
+	add_action('admin_notices', 'podlove_admin_error_ancient_php');
 } else if (!file_exists(trailingslashit(dirname(__FILE__)) . 'vendor/autoload.php')) {
 	// Looks like this can happen on cheap shared hosting. Update fails and leaves
 	// the Publisher in an unusable state. From experience it's always at least
