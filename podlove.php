@@ -47,7 +47,7 @@ function podlove_admin_error_ancient_php() {
 		<p>
 			Podlove Podcasting Plugin requires <code>PHP 5.4</code> or higher.<br>
 			You are running <code>PHP <?php echo phpversion(); ?></code>.<br>
-			Please ask you hoster how to upgrade to an up-to-date PHP version.
+			Please ask your hoster how to upgrade to an up-to-date PHP version.
 		</p>
 		<p>
 			If you need to go back to an older Publisher version,
