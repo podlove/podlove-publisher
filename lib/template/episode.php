@@ -326,9 +326,14 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function chapters() {
+		$chapters = $this->episode->get_chapters();
+
+		if (!$chapters)
+			return [];
+
 		return array_map(function($chapter) {
 			return new Chapter($chapter);
-		}, $this->episode->get_chapters()->toArray());
+		}, $chapters->toArray());
 	}
 
 	/**

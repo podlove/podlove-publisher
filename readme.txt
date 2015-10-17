@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.2 =
+
+* fix: template call `episode.chapters` returns an empty list when there are no chapters
+
 = 2.3.1 =
 
 * simplify download buttons (`[podlove-episode-downloads style="buttons"]`) style to better adapt to themes
