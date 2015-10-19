@@ -143,6 +143,8 @@ class TemplateCache {
 		// quick, reliable purge (but only works with database as backend)
 		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_" . self::CACHE_NAMESPACE . "%\"";
 		$wpdb->query($sql);
+		$sql = "DELETE FROM $wpdb->options WHERE option_name LIKE \"_transient_timeout_" . self::CACHE_NAMESPACE . "%\"";
+		$wpdb->query($sql);
 	}
 
 	/**
