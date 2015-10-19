@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.3.2 =
 
 * fix: template call `episode.chapters` returns an empty list when there are no chapters
+* fix: deleting image cache when no image cache directory exists
 
 = 2.3.1 =
 
