@@ -81,7 +81,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$data = \Podlove\cache_for('podlove_analytics_downloads_table', function() {
+		$data = \Podlove\Cache\TemplateCache::get_instance()->cache_for('podlove_analytics_downloads_table', function() {
 			global $wpdb;
 
 			// retrieve data

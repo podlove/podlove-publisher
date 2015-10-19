@@ -108,7 +108,7 @@ class GenderStats {
 	}
 
 	private static function fetch_contributors_for_dashboard_statistics() {
-		return \Podlove\cache_for('podlove_dashboard_stats_contributors', function() {
+		return \Podlove\Cache\TemplateCache::get_instance()->cache_for('podlove_dashboard_stats_contributors', function() {
 			return (new Model\ContributionGenderStatistics)->get();
 		}, 3600);
 	}
