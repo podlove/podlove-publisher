@@ -116,6 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: cache purge also deletes timeout entries
 * fix: cache purge affects downloads table
 * fix: JavaScript event for secondary download button
+* fix: default template assignment on plugin activation
 
 = 2.3.1 =
 
