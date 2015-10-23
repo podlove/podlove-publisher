@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.0 =
+
+* when activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup
+
 = 2.3.8 =
 
 * fix '&' issue in some fields when exporting/importing

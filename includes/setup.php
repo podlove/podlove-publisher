@@ -133,3 +133,26 @@ EOT;
 	$assignment->top = $template->id;
 	$assignment->save();
 }
+
+function podlove_setup_default_media() {
+
+	if (Model\EpisodeAsset::has_entries())
+		return;
+
+	$asset = new Model\EpisodeAsset;
+	$asset->file_type_id = Model\FileType::find_one_by_property('extension', 'mp3')->id;
+	$asset->title = "mp3";
+	$asset->downloadable = 1;
+	$asset->save();
+
+	$feed = new Model\Feed;
+	$feed->episode_asset_id = $asset->id;
+	$feed->name = "mp3 feed";
+	$feed->title = "MP3 Feed";
+	$feed->slug = "mp3";
+	$feed->enable = 1;
+	$feed->discoverable = 1;
+	$feed->limit_items = Model\Feed::ITEMS_WP_LIMIT;
+	$feed->embed_content_encoded = 1;
+	$feed->save();
+}
