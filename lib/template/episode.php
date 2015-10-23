@@ -174,6 +174,15 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * WordPress WP_Post object
+	 * 
+	 * @accessor
+	 */
+	public function post() {
+		return $this->post;
+	}
+
+	/**
 	 * Image
 	 * 
 	 * - fallback: `true` or `false`. Should the podcast image be used if no episode image is available? Default: `false`
@@ -326,9 +335,14 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function chapters() {
+		$chapters = $this->episode->get_chapters();
+
+		if (!$chapters)
+			return [];
+
 		return array_map(function($chapter) {
 			return new Chapter($chapter);
-		}, $this->episode->get_chapters()->toArray());
+		}, $chapters->toArray());
 	}
 
 	/**

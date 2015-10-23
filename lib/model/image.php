@@ -70,7 +70,12 @@ class Image {
 	 * Delete all image caches.
 	 */
 	public static function flush_cache() {
-		$dir   = self::cache_dir();
+
+		$dir = self::cache_dir();
+
+		if (!file_exists($dir))
+			return;
+
 		$it    = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
 		$files = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
 		foreach ($files as $file) {

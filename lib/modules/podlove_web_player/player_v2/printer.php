@@ -63,7 +63,7 @@ class Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterfac
 				'style',
 				sprintf(
 					'width: %s; height: %s',
-					empty( $width ) ||  $width == 'auto' ? 'auto' : $width . 'px',
+					empty( $width ) ||  $width == 'auto' ? '100%' : $width . 'px',
 					empty( $height ) ? '30px' : $height
 				)
 			);

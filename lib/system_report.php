@@ -10,6 +10,7 @@ class SystemReport {
 	public function __construct() {
 
 		$errors =& $this->errors;
+		$notices =& $this->notices;
 		
 		$this->fields = array(
 			'site'        => array( 'title' => 'Website',           'callback' => function() { return get_site_url(); } ),
@@ -34,11 +35,11 @@ class SystemReport {
 			'twig_version' => array( 'title' => 'Twig Version', 'callback' => function() {
 				return \Twig_Environment::VERSION;
 			} ),
-			'open_basedir' => array('callback' => function() use (&$errors) {
+			'open_basedir' => array('callback' => function() use (&$notices) {
 				$open_basedir = trim(ini_get('open_basedir'));
 
-				if ($open_basedir != '')
-					$errors[] = 'The PHP setting "open_basedir" is not empty. This is incompatible with curl, a library required by Podlove Publisher. Please ask your hoster to unset "open_basedir".';
+				if ($open_basedir != '.')
+					$notices[] = 'The PHP setting "open_basedir" is not empty. This is incompatible with curl, a library required by Podlove Publisher. We have a workaround in place but it is preferred to fix the issue. Please ask your hoster to unset "open_basedir".';
 
 				if ($open_basedir) {
 					return $open_basedir;
