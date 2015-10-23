@@ -169,6 +169,11 @@ class Contributor extends Wrapper {
 		return new Avatar($this->contributor, $size);
 	}
 
+	/**
+	 * Avatar Image
+	 * 
+	 * @see image
+	 */
 	public function image() {
 		return new Image($this->contributor->avatar());
 	}
