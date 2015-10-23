@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.2 =
 
+* add template accessor `episode.post` to get WordPress post object
 * fix: template call `episode.chapters` returns an empty list when there are no chapters
 * fix: deleting image cache when no image cache directory exists
 * fix: cache purge also deletes timeout entries

@@ -174,6 +174,15 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * WordPress WP_Post object
+	 * 
+	 * @accessor
+	 */
+	public function post() {
+		return $this->post;
+	}
+
+	/**
 	 * Image
 	 * 
 	 * - fallback: `true` or `false`. Should the podcast image be used if no episode image is available? Default: `false`
