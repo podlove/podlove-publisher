@@ -15,6 +15,7 @@ function activate_for_current_blog() {
 	\podlove_setup_modules();
 	\podlove_setup_expert_settings();
 	\podlove_setup_default_template();
+	\podlove_setup_default_media();
 }
 
 /**
