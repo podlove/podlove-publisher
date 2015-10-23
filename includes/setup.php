@@ -130,7 +130,7 @@ EOT;
 	$template->save();
 
 	$assignment = Model\TemplateAssignment::get_instance();
-	$assignment->top = $template->id;
+	$assignment->top = $template->title;
 	$assignment->save();
 }
 
