@@ -16,7 +16,7 @@ class EpisodeAsset extends Base {
 		}
 
 		parent::save();
-		
+
 		$this->maybe_connect_to_web_player();
 	}
 
@@ -33,7 +33,7 @@ class EpisodeAsset extends Base {
 
 	/**
 	 * Find all media file models in this location.
-	 * 
+	 *
 	 * @return array|NULL
 	 */
 	function media_files() {
@@ -66,7 +66,7 @@ class EpisodeAsset extends Base {
 
 	/**
 	 * Checks if asset is used by web player.
-	 * 
+	 *
 	 * @return boolean true if connected to any web player asset, otherwise false.
 	 */
 	public function is_connected_to_web_player() {
@@ -91,7 +91,7 @@ class EpisodeAsset extends Base {
 		if ( isset( $allowed_formats[ $type ] ) ) {
 			foreach ( $allowed_formats[ $type ] as $extension => $format_data ) {
 				if ( in_array($asset_type, $format_data['mime_types']) ) {
-					
+
 					if ( ! isset( $webplayer_formats[ $type ] ) )
 						$webplayer_formats[ $type ] = array();
 
@@ -108,7 +108,7 @@ class EpisodeAsset extends Base {
 
 	/**
 	 * Checks if asset is connected to any feed.
-	 * 
+	 *
 	 * @return boolean true if connected to any feed, otherwise false.
 	 */
 	public function is_connected_to_feed() {
@@ -119,7 +119,7 @@ class EpisodeAsset extends Base {
 	 * Checks if asset has an active media file.
 	 *
 	 * A media file is active if its file size is > 0.
-	 * 
+	 *
 	 * @return boolean true if any media file has a size > 0, otherwise false.
 	 */
 	public function has_active_media_files() {
@@ -128,12 +128,12 @@ class EpisodeAsset extends Base {
 
 	/**
 	 * Checks if asset is assigned as image or chapter asset.
-	 * 
+	 *
 	 * @return boolean true if assigned, otherwise false.
 	 */
 	public function has_asset_assignments() {
 		$assignment = AssetAssignment::get_instance();
-		return in_array( $this->id, array( $assignment->image, $assignment->chapters ) );
+		return in_array( $this->id, array( $assignment->image ) );
 	}
 
 	/**
@@ -144,7 +144,7 @@ class EpisodeAsset extends Base {
 	 * - has no asset assignment
 	 * - is not connected to any feed
 	 * - is not connected to web player
-	 * 
+	 *
 	 * @return boolean true if it should be deleted, otherwise false.
 	 */
 	public function is_deletable() {
