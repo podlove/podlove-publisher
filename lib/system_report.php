@@ -38,7 +38,7 @@ class SystemReport {
 			'open_basedir' => array('callback' => function() use (&$notices) {
 				$open_basedir = trim(ini_get('open_basedir'));
 
-				if ($open_basedir != '.')
+				if ($open_basedir != '')
 					$notices[] = 'The PHP setting "open_basedir" is not empty. This is incompatible with curl, a library required by Podlove Publisher. We have a workaround in place but it is preferred to fix the issue. Please ask your hoster to unset "open_basedir".';
 
 				if ($open_basedir) {
