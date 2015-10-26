@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: cache purge affects downloads table
 * fix: JavaScript event for secondary download button
 * fix: default template assignment on plugin activation
+* fix: unpublished relates episodes do not appear when using the shortcode or template accessor
 
 = 2.3.1 =
 
