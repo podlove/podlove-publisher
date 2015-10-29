@@ -223,6 +223,13 @@
   logo: 'www.png'
   url_scheme: '%account-placeholder%'
 
+- title: 'Wikipedia'
+  name: 'wikipedia'
+  category: 'social'
+  description: 'Wikipedia-Artikel'
+  logo: 'wikipedia.png'
+  url_scheme: '%account-placeholder%'
+
 - title: 'Xbox Live'
   name: 'xbox live'
   category: 'social'
