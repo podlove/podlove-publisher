@@ -378,6 +378,7 @@ Podcast::property( 'category_3' );
 Podcast::property( 'explicit' );
 Podcast::property( 'label' );
 Podcast::property( 'episode_prefix' );
+Podcast::property( 'media_storage' );
 Podcast::property( 'media_file_base_uri' );
 Podcast::property( 'uri_delimiter' );
 Podcast::property( 'limit_items' );

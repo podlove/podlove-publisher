@@ -13,11 +13,13 @@ class Media extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
-		$formKeys = array('media_file_base_uri');
+		$formKeys = array('media_file_base_uri', 'media_storage');
 
 		$settings = get_option('podlove_podcast');
 		foreach ($formKeys as $key) {
-			$settings[$key] = $_POST['podlove_podcast'][$key];
+			if (isset($_POST['podlove_podcast'][$key])) {
+				$settings[$key] = $_POST['podlove_podcast'][$key];
+			}
 		}
 		update_option('podlove_podcast', $settings);
 		header('Location: ' . $this->get_url());
@@ -39,15 +41,21 @@ class Media extends Tab {
 		</p>
 		<?php
 
-		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
-			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+		\Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
+			$wrapper = new \Podlove\Form\Input\TableWrapper($form);
 			$podcast = $form->object;
 
-			$wrapper->string( 'media_file_base_uri', array(
-				'label'       => __( 'Upload Location', 'podlove' ),
-				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
-				'html' => array( 'class' => 'regular-text required podlove-check-input', 'data-podlove-input-type' => 'url' )
-			) );
+			$media_storage_options = apply_filters('podlove_media_storage_options', []);
+
+			$wrapper->select('media_storage', [
+				'label'   => __('Media Storage', 'podlove'),
+				'default' => \Podlove\Storage\WordpressStorage::key(),
+				'options' => $media_storage_options
+			]);
+
+			do_action('podlove_media_storage_form', $wrapper);
 		});
+
+		do_action('podlove_media_storage_form_end');
 	}
 }
