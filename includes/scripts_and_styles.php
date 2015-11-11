@@ -13,7 +13,8 @@ add_action( 'admin_print_styles', function () {
 	wp_register_script('podlove_admin_data_table', \Podlove\PLUGIN_URL . '/js/admin/podlove_data_table.js', ['jquery'], $version);
 	wp_register_script('podlove_admin_episode_feed_settings', \Podlove\PLUGIN_URL . '/js/admin/feed_settings.js', ['jquery'], $version);
 	wp_register_script('podlove_admin_autogrow', \Podlove\PLUGIN_URL . '/js/admin/jquery.autogrow.js', ['jquery'], $version);
-	wp_register_script('podlove_admin', \Podlove\PLUGIN_URL . '/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'podlove_admin_episode_feed_settings', 'podlove_admin_autogrow'], $version);
+	wp_register_script('podlove_admin_autogrow_input', \Podlove\PLUGIN_URL . '/js/admin/jquery.autogrow_input.js', ['jquery'], $version);
+	wp_register_script('podlove_admin', \Podlove\PLUGIN_URL . '/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'podlove_admin_episode_feed_settings', 'podlove_admin_autogrow', 'podlove_admin_autogrow_input'], $version);
 
 	if ($is_podlove_settings_screen || $is_episode_edit_screen) {
 

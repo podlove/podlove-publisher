@@ -237,7 +237,7 @@ jQuery(function($) {
 		PODLOVE.DashboardAssetValidation($(this));
 	});
 
-	$("#podlove_podcast").each(function() {
+	$("#podlove_podcast_media_files").each(function() {
 		PODLOVE.Episode($(this));
 	});
 

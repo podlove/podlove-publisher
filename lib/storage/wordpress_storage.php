@@ -11,8 +11,12 @@ class WordpressStorage implements StorageInterface {
 		return __('WordPress Upload', 'podlove');
 	}
 
-	function __construct() {
+	public function register() {
 		add_filter('podlove_media_storage_options', [$this, 'add_storage_option']);
+	}
+
+	public function init() {
+		new WordpressStorage\MediaMetaBox;
 	}
 
 	public function add_storage_option($options) {

@@ -230,25 +230,30 @@ class Builder {
 		$defaults = [
 			'form_button_text'  => __('Select', 'podlove'),
 			'media_button_text' => __('Use Image', 'podlove'),
-			'media_title' => __('Image', 'podlove')
+			'media_title' => __('Image', 'podlove'),
+			'media_type' => 'image',
+			'result_fetch' => 'url',
+			'input_type' => 'text'
 		];
 		$arguments = wp_parse_args($arguments, $defaults);
 
 		?>
 		<div class="podlove-media-upload-wrap">
 			<span>
-				<input type="text" <?php echo $this->html_attributes; ?> value="<?php echo esc_attr( $this->field_value ); ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"> 
+				<input type="<?php echo $arguments['input_type'] ?>" <?php echo $this->html_attributes; ?> value="<?php echo esc_attr( $this->field_value ); ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"> 
 				<a href="#" class="podlove-media-upload button" 
 					data-target="<?php echo $this->field_id; ?>" 
 					data-title="<?php echo $arguments['media_title'] ?>" 
-					data-type="image" 
+					data-type="<?php echo $arguments['media_type'] ?>" 
 					data-button="<?php echo $arguments['media_button_text'] ?>" 
 					data-class="media-frame" 
 					data-frame="select" 
 					data-size="full" 
-					data-state="podlove_select_single_image" 
-					data-preview=".podlove_preview_pic"
-					data-fetch="url"><?php echo $arguments['form_button_text'] ?></a>
+					data-state="<?php echo $this->field_id; ?>" 
+					<?php if ($arguments['media_type'] == 'image'): ?>
+						data-preview=".podlove_preview_pic"
+					<?php endif ?>
+					data-fetch="<?php echo $arguments['result_fetch'] ?>"><?php echo $arguments['form_button_text'] ?></a>
 			</span>
 			<?php if (!isset($arguments['description']) || !$arguments['description']): ?>
 				<p>

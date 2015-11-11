@@ -23,7 +23,8 @@ class Custom_Guid {
 			/* $id       */ 'podlove_podcast_guid',
 			/* $title    */ __( 'Podcast Episode GUID', 'podlove' ),
 			/* $callback */ '\Podlove\Custom_Guid::meta_box_callback',
-			/* $page     */ 'podcast'
+			/* $page     */ 'podcast',
+			'normal'
 		);
 	}
 

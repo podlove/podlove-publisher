@@ -15,7 +15,7 @@ var PODLOVE = PODLOVE || {};
 	 			o.slug_field.on('slugHasChanged', function() {
 	 				if (o.slug_field.val().length > 0) {
 	 					// by default, tick all
-	 					$container.find('input[type="checkbox"][name*="episode_assets"]')
+	 					container.find('input[type="checkbox"][name*="episode_assets"]')
 	 						.attr("checked", true)
 	 						.change();
 	 				}

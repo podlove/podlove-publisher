@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Model;
 
+use \Podlove\Storage\StorageController;
+
 /**
  * Simplified model for podcast data.
  */
@@ -15,6 +17,13 @@ class Podcast implements Licensable {
 	private $data = [];
 
 	/**
+	 * Media Storage Controller
+	 * 
+	 * @var \Podlove\Storage\StorageController
+	 */
+	public $storage_controller;
+
+	/**
 	 * Contains property names.
 	 * @var array
 	 */
@@ -27,6 +36,9 @@ class Podcast implements Licensable {
 	protected function __construct($blog_id) {
 		$this->set_blog_id($blog_id);
 		$this->fetch();
+		$this->storage_controller = new StorageController;
+		$this->storage_controller->setCurrent($this->media_storage);
+		$this->storage_controller->getCurrent()->init();
 	}
 
 	final private function __clone() { }

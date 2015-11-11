@@ -21,7 +21,7 @@ PODLOVE.media = PODLOVE.media || {};
 				title: options.title
 			}
 		;
-		
+
 		if (typeof options.state != "undefined" ) params.state = options.state;
 		
 		options.input_target = $('#'+options.target);
@@ -38,11 +38,25 @@ PODLOVE.media = PODLOVE.media || {};
 			wp.media.view.settings.defaultProps.size = options.size;
 		}
 
-		var file_frame = wp.media(params);
+		var file_frame = wp.media(params),
+			library;
 		
-		file_frame.states.add([
-			new wp.media.controller.Library({
-				id:         'podlove_select_single_image',
+		if (options['type'] == 'audio') {
+			library = new wp.media.controller.Library({
+				id:         options['state'],
+				priority:   20,
+				filterable: false,
+				searchable: true,
+				content: 'upload',
+				library:    wp.media.query( file_frame.options.library ),
+				multiple:   false,
+				editable:   false,
+				displaySettings: false,
+				allowLocalEdits: false
+			});
+		} else {
+			library = new wp.media.controller.Library({
+				id:         options['state'],
 				priority:   20,
 				toolbar:    'select',
 				filterable: 'uploaded',
@@ -51,8 +65,10 @@ PODLOVE.media = PODLOVE.media || {};
 				editable:   true,
 				displaySettings: true,
 				allowLocalEdits: true
-			}),
-		]);
+			});
+		}
+
+		file_frame.states.add([library]);
 		
 		file_frame.on('select update insert', function() { PODLOVE.media.insert(file_frame, options); });
 
@@ -102,6 +118,7 @@ PODLOVE.media = PODLOVE.media || {};
 			value		= selection.id,
 			fetch_val   = typeof options.fetch != 'undefined' ? fetch_val = options.fetch : false
 		
+		console.log(fetch_val);
 		/*fetch custom val like url*/
 		if (fetch_val) {
 			value = state.get('selection').map( function( attachment ) {
@@ -115,7 +132,10 @@ PODLOVE.media = PODLOVE.media || {};
 					} else if (element.url) {
 						return element.url;
 					}
+				} else if (fetch_val == 'attachment_id') {
+					return element.id;
 				}
+				
 			});
 		}	
 		

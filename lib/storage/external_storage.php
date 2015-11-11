@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Storage;
 
+use \Podlove\Model;
+
 class ExternalStorage implements StorageInterface {
 	
 	public static function key() {
@@ -11,10 +13,14 @@ class ExternalStorage implements StorageInterface {
 		return __('External Hosting (sFTP, S3, libsyn, podseed, ...)', 'podlove');
 	}
 
-	function __construct() {
+	public function register() {
 		add_filter('podlove_media_storage_options', [$this, 'add_storage_option']);
 		add_action('podlove_media_storage_form', [$this, 'add_storage_form_element']);
 		add_action('podlove_media_storage_form_end', [$this, 'add_storage_form_scripts']);
+	}
+
+	public function init() {
+		new ExternalStorage\ExternalMediaMetaBox;
 	}
 
 	public function add_storage_option($options) {
