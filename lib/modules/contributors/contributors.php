@@ -21,8 +21,7 @@ class Contributors extends \Podlove\Modules\Base {
 	public function load() {
 		add_action( 'podlove_uninstall_plugin', [$this, 'uninstall'] );
 		add_action( 'podlove_module_was_activated_contributors', array( $this, 'was_activated' ) );
-		add_filter( 'podlove_episode_form_data', array( $this, 'contributors_form_for_episode' ), 10, 2 );
-		add_action( 'save_post', array( $this, 'update_contributors' ), 10, 2 );
+
 		add_action( 'podlove_podcast_settings_tabs', array( $this, 'podcast_settings_tab' ) );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_setting' ), 10, 2 );
 		add_filter( 'parse_query', array($this, 'filter_by_contributor') );
@@ -87,6 +86,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		ContributorRepair::init();
 		GenderStats::init();
+		new MetaBox();
 	}
 
 	public function uninstall() {
@@ -463,114 +463,6 @@ class Contributors extends \Podlove\Modules\Base {
 		if ( ! isset( $all_contributor_settings[ $term_id ] ) )
 			$all_contributor_settings[ $term_id ] = array();
 		return $all_contributor_settings[ $term_id ];
-	}
-
-	public function update_contributors($post_id)
-	{
-		if (!$post_id || !isset($_POST["episode_contributor"]))
-			return;
-		
-		$episode = Episode::find_one_by_post_id($post_id);
-
-		if (!$episode)
-			return;
-
-		foreach (\Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id) as $contribution) {
-			$contribution->delete();
-		}
-
-		$position = 0;
-
-		foreach ($_POST["episode_contributor"] as $contributor_appearance) {
-			foreach ($contributor_appearance as $contributor_id => $contributor) {
-
-				if (!$contributor_id)
-					continue;
-
-				$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-				if( !empty( $contributor['role'] ) )
-					$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
-				if( !empty( $contributor['group'] ) )
-					$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
-				$c->episode_id = $episode->id;
-				$c->contributor_id = $contributor_id;
-				$c->comment = $contributor['comment'];
-				$c->position = $position++;
-				$c->save();		
-			}
-		}
-	}
-
-	public function contributors_form_for_episode( $form_data )
-	{
-		$form_data[] = array(
-			'type' => 'callback',
-			'key'  => 'contributors_form_table',
-			'options' => array(
-				'label'    => __( 'Contributors', 'podlove' ),
-				'callback' => array($this, 'contributors_form_for_episode_callback')
-			),
-			'position' => 850
-		);
-
-		return $form_data;
-	}
-
-	public function contributors_form_for_episode_callback() {
-
-		$current_page = get_current_screen();
-		$episode = Episode::find_one_by_post_id(get_the_ID());
-		
-		// determine existing contributions
-		$contributions = array();
-		if ($current_page->action == "add") {
-			$i = 0;
-			$permanent_contributors = array();
-			foreach ( DefaultContribution::all() as $contribution_key => $contribution ) {
-				$permanent_contributors[$contribution_key]['contributor'] = $contribution->getContributor();
-				$permanent_contributors[$contribution_key]['role'] = $contribution->getRole();
-				$permanent_contributors[$contribution_key]['group'] = $contribution->getGroup();
-				$permanent_contributors[$contribution_key]['comment'] = $contribution->comment;
-			}
-
-			foreach ($permanent_contributors as $permanent_contributor) {
-					$contrib = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-					$contrib->contributor_id = $permanent_contributor['contributor']->id;
-
-					if (isset($permanent_contributor['role'])) {
-						$contrib->role = ContributorRole::find_by_id( $permanent_contributor['role']->id );
-					}
-					
-					if (isset($permanent_contributor['group'])) {
-						$contrib->group = ContributorGroup::find_by_id( $permanent_contributor['group']->id );
-					}
-
-					if (isset($permanent_contributor['comment'])) {
-						$contrib->comment = $permanent_contributor['comment'];
-					}
-
-					$contributions[] = $contrib;						
-			}
-
-			// map indices to IDs
-			$map = array();
-			$i = 0;
-			foreach ($contributions as $c) {
-				$map["default" . $c->contributor_id . "_" . $i] = $c;
-				$i++;
-			}
-
-		} else {
-			$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all("WHERE `episode_id` = " . $episode->id . " ORDER BY `position` ASC");
-
-			// map indices to IDs
-			$map = array();
-			foreach ($contributions as $c) {
-				$map[$c->id] = $c;
-			}
-		}
-
-		\Podlove\Modules\Contributors\Contributors::contributors_form_table($map);
 	}
 
 	/**
