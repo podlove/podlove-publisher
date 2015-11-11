@@ -306,7 +306,7 @@ class Social extends \Podlove\Modules\Base {
 				</tbody>
 			</table>
 
-			<div id="add_new_contributor_wrapper">
+			<div id="add_new_contributor_wrapper" class="podlove_add_list_item_wrapper">
 				<input class="button" id="add_new_service_button-<?php echo $category ?>" value="+" type="button" />
 			</div>
 

@@ -14,11 +14,12 @@ class MetaBox {
 
 	public function add_meta_box() {
 		add_meta_box(
-			/* $id       */ 'podlove_podcast_related_episodes',
-			/* $title    */ __('Related Episodes', 'podlove'),
-			/* $callback */ [$this, 'meta_box_callback'],
-			/* $page     */ 'podcast',
-			/* $context  */ 'normal'
+			/* id       */ 'podlove_podcast_related_episodes',
+			/* title    */ __('Related Episodes', 'podlove'),
+			/* callback */ [$this, 'meta_box_callback'],
+			/* page     */ 'podcast',
+			/* context  */ 'normal',
+			/* priority */ 'high'
 		);
 	}
 
@@ -65,7 +66,7 @@ class MetaBox {
 				<thead>
 					<tr>
 						<th><?php _e('Episode', 'podlove'); ?></th>
-						<th><?php _e('Remove', 'podlove'); ?></th>
+						<th class="col-remove"><?php _e('Remove', 'podlove'); ?></th>
 					</tr>
 				</thead>
 				<tbody id="episode_relation_table_body" style="min-height: 50px;">
@@ -75,7 +76,7 @@ class MetaBox {
 				</tbody>
 			</table>
 
-			<div id="add_new_episode_relation_wrapper">
+			<div id="add_new_episode_relation_wrapper" class="podlove_add_list_item_wrapper">
 				<input class="button" id="add_new_episode_relation_button" value="+" type="button" />
 			</div>
 		</div>
@@ -89,7 +90,7 @@ class MetaBox {
 				<?php endforeach; ?>
 				</select>
 			</td>
-			<td>
+			<td class="col-remove">
 				<span class="episode_relation_remove">
 					<i class="clickable podlove-icon-remove"></i>
 				</span>

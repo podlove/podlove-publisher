@@ -185,14 +185,14 @@ table.podlove_alternating tr:nth-child(even) {
 	width: 250px;
 }
 
-#add_new_contributor_button {
-	height: 25px;
-	font-size: 1.5em;
-}
-
-#add_new_contributor_wrapper {
+.podlove_add_list_item_wrapper {
 	width: 285px;
 	margin: 5px 0px 0px 0px;
+}
+
+.podlove_add_list_item_wrapper input[type="button"] {
+	height: 25px;
+	font-size: 1.5em;
 }
 
 #contributors_table_body select {
@@ -527,4 +527,11 @@ label.podlove_cc_license_selector_label {
   border-left-width: 0;
   border-radius: 0 3px 3px 0;
   padding: 4px 7px 3px 5px;
+}
+
+/* related episodes */
+
+#episode-relation-form .col-remove {
+	width: 60px;
+	text-align: center;
 }
