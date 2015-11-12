@@ -21,7 +21,7 @@ class ExternalStorage implements StorageInterface {
 
 	public function init() {
 		new ExternalStorage\ExternalMediaMetaBox;
-		add_filter('podlove_file_url', [$this, 'podlove_file_url'], 10, 4);
+		add_filter('podlove_file_url', [$this, 'podlove_file_url'], 10, 5);
 	}
 
 	public function add_storage_option($options) {
@@ -29,7 +29,7 @@ class ExternalStorage implements StorageInterface {
 		return $options;
 	}
 
-	public function podlove_file_url($podcast, $episode, $episode_asset, $file_type) {
+	public function podlove_file_url($url, $podcast, $episode, $episode_asset, $file_type) {
 		$template = $podcast->get_url_template();
 		$template = apply_filters('podlove_file_url_template', $template);
 		$template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);

@@ -189,7 +189,7 @@ class MediaFile extends Base {
 			if ( ! $episode_asset || ! $file_type || ! $episode )
 				return '';
 
-			$url = apply_filters('podlove_file_url', $podcast, $episode, $episode_asset, $file_type);
+			$url = apply_filters('podlove_file_url', '', $podcast, $episode, $episode_asset, $file_type);
 
 			return trim($url);
 		});
