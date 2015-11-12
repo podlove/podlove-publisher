@@ -189,14 +189,9 @@ class MediaFile extends Base {
 			if ( ! $episode_asset || ! $file_type || ! $episode )
 				return '';
 
-			$template = $podcast->get_url_template();
-			$template = apply_filters( 'podlove_file_url_template', $template );
-			$template = str_replace( '%media_file_base_url%', trailingslashit( $podcast->media_file_base_uri ), $template );
-			$template = str_replace( '%episode_slug%',        \Podlove\slugify( $episode->slug ), $template );
-			$template = str_replace( '%suffix%',              $episode_asset->suffix, $template );
-			$template = str_replace( '%format_extension%',    $file_type->extension, $template );
+			$url = apply_filters('podlove_file_url', $podcast, $episode, $episode_asset, $file_type);
 
-			return trim($template);
+			return trim($url);
 		});
 	}
 

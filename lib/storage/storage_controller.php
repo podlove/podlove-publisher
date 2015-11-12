@@ -4,6 +4,7 @@ namespace Podlove\Storage;
 class StorageController {
 
 	private $storages = [];
+	const DEFAULT_STORAGE = 'wordpress';
 
 	/**
 	 * Current Storage Engine
@@ -31,6 +32,11 @@ class StorageController {
 	}
 
 	public function setCurrent($storage_key) {
+		
+		if (empty($storage_key)) {
+			$storage_key = self::DEFAULT_STORAGE;
+		}
+
 		foreach ($this->storages as $storage) {
 			if ($storage::key() == $storage_key) {
 				$this->current = $storage;

@@ -49,15 +49,21 @@
 	};
 
 	var choose_asset_for_detection = function() {
-		var urls = $(".media_file_row .url a")
-			.map(function() {
-				return $(this).attr("href");
-			})
-			.filter(function() {
-				return this.match(/\.(mp3|m4a|ogg|oga|opus)$/);
-			});
+		var url;
 
-		return urls[0];
+		if ($(".media_file_row").length) {
+			url = $(".media_file_row .url a")
+				.map(function() {
+					return $(this).attr("href");
+				})
+				.filter(function() {
+					return this.match(/\.(mp3|m4a|ogg|oga|opus)$/);
+				})[0];
+		} else {
+			url = $(".podlove-permalink a").first().attr("href");
+		}
+
+		return url;
 	};
 
 	$(document).ready(function() {

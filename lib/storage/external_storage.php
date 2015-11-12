@@ -21,11 +21,22 @@ class ExternalStorage implements StorageInterface {
 
 	public function init() {
 		new ExternalStorage\ExternalMediaMetaBox;
+		add_filter('podlove_file_url', [$this, 'podlove_file_url'], 10, 4);
 	}
 
 	public function add_storage_option($options) {
 		$options[self::key()] = self::description();
 		return $options;
+	}
+
+	public function podlove_file_url($podcast, $episode, $episode_asset, $file_type) {
+		$template = $podcast->get_url_template();
+		$template = apply_filters('podlove_file_url_template', $template);
+		$template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
+		$template = str_replace('%episode_slug%',        \Podlove\slugify($episode->slug), $template);
+		$template = str_replace('%suffix%',              $episode_asset->suffix, $template);
+		$template = str_replace('%format_extension%',    $file_type->extension, $template);
+		return $template;
 	}
 
 	public function add_storage_form_element($wrapper) {

@@ -2,6 +2,9 @@
 namespace Podlove\Storage\WordpressStorage;
 
 use \Podlove\Model;
+use \Podlove\Model\Episode;
+use \Podlove\Model\EpisodeAsset;
+use \Podlove\Model\MediaFile;
 
 class MediaMetaBox {
 
@@ -38,7 +41,22 @@ class MediaMetaBox {
 		if (!isset($_POST['_podlove_media']))
 			return;
 
-		update_post_meta($post_id, 'podlove_media_attachment_id', (int) $_POST['_podlove_media']);
+		$attachment_id = (int) $_POST['_podlove_media'];
+		$attachment_meta = wp_get_attachment_metadata($attachment_id);
+
+		update_post_meta($post_id, 'podlove_media_attachment_id', $attachment_id);
+		$episode = Episode::find_or_create_by_post_id($post_id);
+
+		// @fixme: ensure it's the correct asset, not just any
+		$asset = EpisodeAsset::first();
+		if (!$file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id)) {
+			$file = new MediaFile;
+			$file->episode_id = $episode->id;
+			$file->episode_asset_id = $asset->id;
+		}
+		
+		$file->size = $attachment_meta['filesize'];
+		$file->save();
 	}
 
 	public function meta_box_callback($post) {
