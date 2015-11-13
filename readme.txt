@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.3 =
+
+Updating all the things for your pleasure.
+
 = 2.3.2 =
 
 * add template accessor `episode.post` to get WordPress post object
