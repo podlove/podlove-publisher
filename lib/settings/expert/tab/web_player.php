@@ -9,9 +9,9 @@ class WebPlayer extends Tab {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_episode',
-			/* $title 	 */ __( '', 'podlove' ),	
-			/* $callback */ function () { echo '<h3>' . __( 'WebPlayer Settings', 'podlove' ) . '</h3>'; },
-			/* $page	 */ Settings::$pagehook	
+			/* $title 	 */ __( '', 'podlove' ),
+			/* $callback */ function () { echo '<h3>' . __( 'Web Player Settings', 'podlove' ) . '</h3>'; },
+			/* $page	 */ Settings::$pagehook
 		);
 
 		register_setting( Settings::$pagehook, 'podlove_webplayer_formats' );
@@ -134,7 +134,7 @@ class WebPlayer extends Tab {
 		$settings = array(
 			'inject' => array(
 				'label'       => __( 'Insert player automatically', 'podlove' ),
-				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-episode-web-player]</code>.', 'podlove' ),
+				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatively, use the shortcode <code>[podlove-episode-web-player]</code>.', 'podlove' ),
 				'options'     => array(
 					'manually'  => __( 'insert manually via shortcode', 'podlove' ),
 					'beginning' => __( 'insert at the beginning', 'podlove' ),

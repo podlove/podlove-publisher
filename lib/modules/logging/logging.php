@@ -10,7 +10,7 @@ use Podlove\Settings\Dashboard;
 class Logging extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Logging';
-	protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
+	protected $module_description = 'View Podlove related logs in dashboard (writes logs to database).';
 	protected $module_group = 'system';
 
 	public function load() {

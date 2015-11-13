@@ -279,7 +279,7 @@ class Website extends Tab {
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[ssl_verify_peer]" id="ssl_verify_peer" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'ssl_verify_peer' ), 'on' ) ?>>
-				<?php echo __('If you provide your assets via https with a self-signed or not verifiable SSL-certificate, podlove should display your assets as non exiting. You might solve this by deactivating the ssl peer verification for asset checking. (Detailed: This sets "CURLOPT_SSL_VERIFYPEER" to FALSE.)', 'podlove') ?>
+				<?php echo __('If you provide your assets via https with a self-signed or not verifiable SSL-certificate, Podlove should display your assets as non exiting. You might solve this by deactivating the ssl peer verification for asset checking. (Detailed: This sets "CURLOPT_SSL_VERIFYPEER" to FALSE.)', 'podlove') ?>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  

@@ -4,7 +4,7 @@ namespace Podlove\Modules\ImportExport;
 class Import_Export extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Import &amp; Export';
-	protected $module_description = 'Import &amp; export podlove data for backup or migration to another WordPress instance.';
+	protected $module_description = 'Import &amp; export Podlove data for backup or migration to another WordPress instance.';
 	protected $module_group = 'system';
 
 	public function load() {
