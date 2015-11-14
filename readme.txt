@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.3.4 =
 
 * fix web player (v3 beta) permalink parameter
+* fix web player (v3 beta) width on Mobile Safari
 
 = 2.3.3 =
 

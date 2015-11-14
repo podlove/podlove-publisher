@@ -43,7 +43,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		$xml_string = $this->format_xml($xml_string);
 		$xml_string = $this->remove_xml_header($xml_string);
 
-		return $xml_string;
+		return '<div class="podlove-player-wrapper">' . $xml_string . '</div>';
 	}
 
 	public function add_sources($xml, $files) {

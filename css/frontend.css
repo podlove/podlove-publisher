@@ -45,3 +45,15 @@ ul.podlove-donations-list li, ul.podlove-social-list li {
   list-style-type: none;
   margin-right: 5px;
 }
+
+/* player */
+
+.podlove-player-wrapper {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.podlove-player-wrapper iframe {
+  width: 1px;
+  min-width: 100%;
+}
