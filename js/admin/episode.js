@@ -28,12 +28,8 @@ var PODLOVE = PODLOVE || {};
 	 		    prev_slug = o.slug_field.data('prev-slug');
 
 	 		if (current_slug !== prev_slug) {
-	 			// abort all current requests if any are running
-	 			$.each(
-	 				ajax_requests,
-	 				function(index, request){ request.abort(); });
 	 			// then trigger new requests
-	 			$(".update_media_file").click();
+	 			update_all_media_files();
 	 		}
 
 	 		o.slug_field.data('prev-slug', current_slug);
@@ -190,6 +186,17 @@ var PODLOVE = PODLOVE || {};
  			if (e) {
 	 			e.preventDefault();
  			}
+
+ 			// abort all current requests if any are running
+ 			$.each(
+ 				ajax_requests,
+ 				function(index, request) {
+ 					if (request) {
+	 					request.abort();
+ 					}
+ 				}
+ 			);
+
  			$(".update_media_file").click();
  		};
 
