@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title><?php the_title() ?></title>
     <meta name='robots' content='noindex,follow' />
-    <link href="<?php echo $css_path ?>/pwp-dark-green.min.css" rel="stylesheet" media="screen" type="text/css" />
+    <link href="<?php echo $css_path ?>/<?php echo \Podlove\get_webplayer_setting("playerv3theme"); ?>" rel="stylesheet" media="screen" type="text/css" />
     <link href="<?php echo $css_path ?>/vendor/progress-polyfill.css" rel="stylesheet" media="screen" type="text/css" />
 </head>
 <body>

@@ -140,7 +140,8 @@ function get_webplayer_setting( $name ) {
 	$defaults = array(
 		'chaptersVisible' => 'false',
 		'inject'          => 'manually',
-		'version'         => 'player_v2'
+		'version'         => 'player_v2',
+		'playerv3theme'   => 'pwp-dark-green.min.css'
 	);
 	
 	$settings = get_option( 'podlove_webplayer_settings', array() );

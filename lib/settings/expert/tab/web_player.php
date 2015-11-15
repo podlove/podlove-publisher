@@ -131,6 +131,20 @@ class WebPlayer extends Tab {
 
 		// advanced settings
 
+		$theme_options = [];
+		$player_css_dir = \Podlove\PLUGIN_DIR . 'lib/modules/podlove_web_player/player_v3/css/';
+		$dir = new \DirectoryIterator($player_css_dir);
+		foreach ($dir as $fileinfo) {
+			if ($fileinfo->getExtension() == 'css') {
+				$filename = $fileinfo->getFilename();
+				$filetitle = str_replace(".css", "", $filename);
+				$filetitle = str_replace(".min", "", $filetitle);
+				$filetitle = str_replace("-", " ", $filetitle);
+				$filetitle = str_replace("pwp", "PWP", $filetitle);
+				$theme_options[$filename] = $filetitle;
+			}
+		}
+
 		$settings = array(
 			'inject' => array(
 				'label'       => __( 'Insert player automatically', 'podlove' ),
@@ -154,7 +168,12 @@ class WebPlayer extends Tab {
 					'player_v2' => __( 'Podlove Web Player 2', 'podlove' ),
 					'player_v3' => __( 'Podlove Web Player 3 (unstable beta, don\'t use in production)', 'podlove' )
 				)
-			)
+			),
+			'playerv3theme' => [
+				'label' => 'Web Player Theme',
+				'description' => 'For Web Player V3 only.',
+				'options' => $theme_options
+			]
 		);
 
 		?>

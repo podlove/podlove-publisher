@@ -110,9 +110,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.4 =
 
-* update web player (v3 beta)
-* fix web player (v3 beta) permalink parameter
-* fix web player (v3 beta) width on Mobile Safari
+**Web Player (v3 Beta)**
+
+* update player
+* add theme player options
+* fix player permalink parameter
+* fix player width on Mobile Safari
+
+**Other**
+
 * fix Auphonic workflow bug: when finishing a production, media files would sometimes erroneously be detected as not existing
 
 = 2.3.3 =
