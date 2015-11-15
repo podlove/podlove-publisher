@@ -63,6 +63,7 @@ class TwigFilter {
 
 		$twig = new \Twig_Environment($loader, array('autoescape' => false));
 		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
+		$twig->addExtension(new \Twig_Extensions_Extension_Date());
 
 		$formatBytesFilter = new \Twig_SimpleFilter('formatBytes', function ($string) {
 		    return \Podlove\format_bytes($string, 0);

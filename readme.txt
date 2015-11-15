@@ -123,6 +123,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * detect when the configured Auphonic Preset does not exist
 * fix focus when adding new related episode rows
 * chosen search fields allow partial searches
+* enable Twig date extension to allow `time_diff` filter; see [Date Extension Documentation](http://twig.sensiolabs.org/doc/extensions/date.html)
 
 = 2.3.3 =
 
