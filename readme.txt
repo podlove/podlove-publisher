@@ -112,6 +112,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Web Player (v3 Beta)**
 
+The new web player can be selected in `Expert Settings > Web Player`. Please try it out and send us your feedback. Thanks!
+
 * update player
 * add theme player options
 * fix player permalink parameter
