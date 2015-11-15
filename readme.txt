@@ -120,6 +120,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Other**
 
 * fix Auphonic workflow bug: when finishing a production, media files would sometimes erroneously be detected as not existing
+* detect when the configured Auphonic Preset does not exist
 * fix focus when adding new related episode rows
 * chosen search fields allow partial searches
 

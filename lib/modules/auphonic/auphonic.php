@@ -93,6 +93,22 @@ class Auphonic extends \Podlove\Modules\Base {
 				'options'	  => $preset_list
 			) );
 
+            // detect invalid preset
+            $preset = $this->get_module_option('auphonic_production_preset');
+            if ($preset && !in_array($preset, array_keys($preset_list))) {
+                add_action('admin_notices', function() use ($preset) {
+                    ?>
+                    <div id="message" class="error">
+                        <p>
+                            <strong>Auphonic Preset "<?php echo $preset ?>" does not exist.</strong>
+                        </p>
+                        <p>
+                            The Auphonic preset does not exist any more. Please choose a valid one. <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle') ?>">Go to module settings.</a>
+                        </p>
+                    </div>
+                    <?php
+                });
+            }
 		}
     }
 

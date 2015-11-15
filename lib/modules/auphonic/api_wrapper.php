@@ -51,7 +51,7 @@ class API_Wrapper {
 			} else {
 				return array();
 			}
-    	});
+    	}, DAY_IN_SECONDS);
     }
 
 	private static function cache_for($cache_key, $callback, $duration = 31536000 /* 1 year */)
