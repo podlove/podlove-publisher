@@ -66,7 +66,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 					$params = [
 						[
 							'name' => 'movie',
-							'value' => plugins_url('player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf'
+							'value' => plugins_url('bin/', __FILE__) . 'flashmediaelement.swf'
 						],
 						[
 							'name' => 'flashvars',
