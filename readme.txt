@@ -115,6 +115,7 @@ Update Web Player v3
 * beta.6 https://github.com/podlove/podlove-web-player/releases/tag/v3.0.0-beta.6
 * rc.1 https://github.com/podlove/podlove-web-player/releases/tag/v3.0.0-rc.1
 * rc.2 https://github.com/podlove/podlove-web-player/releases/tag/v3.0.0-rc2
+* rc.3 https://github.com/podlove/podlove-web-player/releases/tag/v3.0.0-rc3
 
 = 2.3.4 =
 
