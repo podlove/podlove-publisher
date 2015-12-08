@@ -2,6 +2,7 @@
 namespace Podlove\Modules\SubscribeButton;
 
 use \Podlove\Model\Podcast;
+use \Podlove\Model\Feed;
 use \Podlove\Cache\TemplateCache;
 
 /**
@@ -108,8 +109,8 @@ class Button {
 	 */
 	private function feeds() {
 		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() {
-			return array_map(function($feed) {
 
+			$feeds = array_map(function($feed) {
 				$file_type = $feed->episode_asset()->file_type();
 
 				return [
@@ -119,6 +120,17 @@ class Button {
 					'variant' => 'high'
 				];
 			}, $this->discoverable_feeds());
+
+			$itunes_feed = Feed::find_one_by_where('itunes_feed_id > 0');
+			if ($itunes_feed) {
+				// @todo verify the url is valid
+				$feeds[] = [
+					'type' => 'itunes-url',
+					'url'  => 'https://itunes.apple.com/podcast/id' . $itunes_feed->itunes_feed_id
+				];
+			}
+
+			return $feeds;
 		});
 	}
 

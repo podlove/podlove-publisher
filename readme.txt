@@ -108,6 +108,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.6 =
+
+**Enhancements**
+
+* Podlove Subscribe Button: When an iTunes id is known for a feed, the button does not just pass the feed URL to the client when iTunes or Podcasts App are chosen. It redirects the user to the iTunes directory first. Because if you don't do this, "[it] does not increase your visibility on the iTunes Store or allow you to earn commission as part of the Affiliate Program." (http://www.apple.com/itunes/podcasts/specs.html)
+
 = 2.3.5 =
 
 Update Web Player v3
