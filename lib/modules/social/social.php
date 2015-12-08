@@ -24,6 +24,7 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_social_setting' ), 10, 2 );
 		add_action( 'update_option_podlove_podcast', array( $this, 'save_donation_setting' ), 10, 2 );
 		add_action( 'podlove_update_entity_contributor', array( $this, 'save_contributor' ), 10, 2 );
+		add_action( 'podlove_create_entity_contributor', array( $this, 'save_contributor' ), 10, 2 );
 
 		add_filter( 'podlove_contributor_settings_sections', array( $this, 'register_contributor_sections' ), 10, 2 );
 

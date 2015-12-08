@@ -104,6 +104,8 @@ class GenericEntitySettings {
 		$entity = new $class;
 		$entity->update_attributes( $_POST['podlove_' . $this->get_entity_slug()] );
 
+		do_action('podlove_create_entity_' . $this->get_entity_slug(), $entity);
+
 		if (isset($_POST['submit_and_stay'])) {
 			$this->redirect( 'edit', $entity->id );
 		} else {
