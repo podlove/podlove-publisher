@@ -29,7 +29,7 @@ class Tabs {
 	public function getTabsHTML() {
 
 		$html  = '<h2 class="nav-tab-wrapper">';
-		$html .= $this->title . "\n";
+		$html .= '<span class="nav-tab-title">' . $this->title . "</span>\n";
 		foreach ( $this->tabs as $tab ) {
 			$html .= sprintf(
 				'<a href="%s" class="nav-tab%s">%s</a>',

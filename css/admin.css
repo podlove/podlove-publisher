@@ -76,6 +76,13 @@ table.podlove-dashboard-statistics td {
 	padding: 3px;
 }
 
+.nav-tab-wrapper .nav-tab-title {
+	float: left;
+	line-height: 24px;
+	font-size: 14px;
+	padding: 5px 10px;
+}
+
 /* Dashboard in Sidebar */
 
 .inner-sidebar div.podlove-dashboard-statistics-wrapper {
