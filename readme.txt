@@ -108,6 +108,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.7 = 
+
+**Bugfixes**
+
+* fix "add new" contributor button
+
 = 2.3.6 =
 
 **Bugfixes**
