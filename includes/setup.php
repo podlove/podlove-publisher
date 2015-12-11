@@ -141,13 +141,13 @@ function podlove_setup_default_media() {
 
 	$asset = new Model\EpisodeAsset;
 	$asset->file_type_id = Model\FileType::find_one_by_property('extension', 'mp3')->id;
-	$asset->title = "mp3";
+	$asset->title = "MP3 Audio";
 	$asset->downloadable = 1;
 	$asset->save();
 
 	$feed = new Model\Feed;
 	$feed->episode_asset_id = $asset->id;
-	$feed->name = "mp3 feed";
+	$feed->name = "MP3 Feed";
 	$feed->title = "MP3 Feed";
 	$feed->slug = "mp3";
 	$feed->enable = 1;
