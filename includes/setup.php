@@ -79,9 +79,9 @@ function podlove_setup_modules() {
 		'logging',
 		'podlove_web_player',
 		'open_graph',
-		'asset_validation',
+		// 'asset_validation',
 		'oembed',
-		'feed_validation',
+		// 'feed_validation',
 		'import_export',
 		'subscribe_button'
 	];
