@@ -31,8 +31,9 @@ class StepWelcome extends Step {
 				<p>
 					<?php 
 					$r = new \Podlove\SystemReport;
-					echo $r->render();
+					$report = $r->render();
 					?>
+					<textarea style="width: 100%" readonly cols="100" rows="<?php echo substr_count( $report, "\n" )+1; ?>"><?php echo $report ?></textarea>
 				</p>
 			</div>
 		</div>

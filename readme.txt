@@ -113,6 +113,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Bugfixes**
 
 * fix "add new" contributor button
+* fix migration class error
+* fix migration system report display
+* use default WordPress background color in migration wizard
 
 = 2.3.6 =
 

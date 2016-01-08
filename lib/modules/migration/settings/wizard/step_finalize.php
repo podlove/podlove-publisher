@@ -1,6 +1,6 @@
 <?php
 namespace Podlove\Modules\Migration\Settings\Wizard;
-use Podlove\Modules\Migration;
+use Podlove\Modules\Migration\Migration;
 
 class StepFinalize extends Step {
 
@@ -68,7 +68,7 @@ class StepFinalize extends Step {
 				</p>
 			</div>
 		<?php else: ?>
-			<img src="<?php echo \Podlove\Modules\Migration\Migration::instance()->get_module_url() ?>/success.jpg" class="img-polaroid">
+			<img src="<?php echo Migration::instance()->get_module_url() ?>/success.jpg" class="img-polaroid">
 		<?php endif; ?>
 		<?php
 	}

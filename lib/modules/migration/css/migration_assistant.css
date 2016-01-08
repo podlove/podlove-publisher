@@ -54,6 +54,7 @@
 
 .bootstrap.wrap {
 	margin-right: 15px;
+	background: transparent;
 }
 
 .bootstrap.wrap h2 .tooltip {
