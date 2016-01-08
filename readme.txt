@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.8 =
 
+* fix '&' issue in some fields when exporting/importing
 * pass podcast language code to web player v3
 
 = 2.3.7 = 
