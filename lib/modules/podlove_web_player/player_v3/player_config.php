@@ -80,7 +80,8 @@ class PlayerConfig {
             "downloads" => $downloads,
             "duration" => $this->episode->get_duration(),
             "features" => ["current", "progress", "duration", "tracks", "fullscreen", "volume"],
-            "chapters" => json_decode($this->episode->get_chapters('json'))
+            "chapters" => json_decode($this->episode->get_chapters('json')),
+            "languageCode" => $this->podcast->language
          ];
 
          return $config;
