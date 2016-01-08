@@ -108,9 +108,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2.3.7 = 
+= 2.3.8 =
 
-**Bugfixes**
+* pass podcast language code to web player v3
+
+= 2.3.7 = 
 
 * fix "add new" contributor button
 * fix migration class error
