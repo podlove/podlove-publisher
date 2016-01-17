@@ -85,7 +85,7 @@ class DeleteHeadRequests {
 		?>
 		<div class="update-nag">
 			<?php
-			echo __('To prepare for the Podlove Analytics release, your tracking database needs an update.', 'podlove');
+			echo __('To prepare for the Podlove Analytics release, your tracking database needs an update.', 'podlove-podcasting-plugin-for-wordpress');
 			?>
 			<a id="podlove-start-tracking-migration" href="#"><?php echo __('Please update now') ?></a>.
 			<span id="podlove-migration-status"></span>

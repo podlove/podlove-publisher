@@ -37,7 +37,7 @@ class PodcastContributorsSettingsTab extends Tab {
 		?>
 		<p>
 			<?php echo sprintf(
-				__( 'This is the current team of your podcast. Display this list using the shortcode %s', 'podlove' ),
+				__( 'This is the current team of your podcast. Display this list using the shortcode %s', 'podlove-podcasting-plugin-for-wordpress' ),
 				'<code>[podlove-podcast-contributor-list]</code>'
 			); ?>
 		</p>
@@ -48,7 +48,7 @@ class PodcastContributorsSettingsTab extends Tab {
 			$podcast = $form->object;
 
 	    	$wrapper->callback( 'contributors', array(
-				// 'label'    => __( 'Contributors', 'podlove' ),
+				// 'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
 				'callback' => array( __CLASS__, 'podcast_form_extension_form' )
 			) );
 		});

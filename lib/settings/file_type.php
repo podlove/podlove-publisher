@@ -120,18 +120,18 @@ class FileType {
 	private function new_template() {
 		$format = new \Podlove\Model\FileType;
 		?>
-		<h3><?php echo __( 'Add New File Type', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New File Type', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 		<?php
-		$this->form_template( $format, 'create', __( 'Add New Format', 'podlove' ) );
+		$this->form_template( $format, 'create', __( 'Add New Format', 'podlove-podcasting-plugin-for-wordpress' ) );
 	}
 	
 	private function view_template() {
 		?>
 		<h2>
-			<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;podlove_tab=<?php echo $_REQUEST['podlove_tab'] ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a>
+			<a href="?page=<?php echo $_REQUEST['page']; ?>&amp;podlove_tab=<?php echo $_REQUEST['podlove_tab'] ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a>
 		</h2>
 		<p>
-			<?php echo __( 'This is a list of all file types the publisher knows about. If you would like to serve assets of an unknown file type, you must add it here before you can create the asset.', 'podlove' ); ?>
+			<?php echo __( 'This is a list of all file types the publisher knows about. If you would like to serve assets of an unknown file type, you must add it here before you can create the asset.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 		$table = new \Podlove\File_Type_List_Table();
@@ -153,7 +153,7 @@ class FileType {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );
 				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				submit_button( __('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false );
 				echo "</p>";
 			}
 		);
@@ -167,31 +167,31 @@ class FileType {
 			}
 
 	 		$wrapper->string( 'name', array(
-	 			'label'       => __( 'Name', 'podlove' ),
+	 			'label'       => __( 'Name', 'podlove-podcasting-plugin-for-wordpress' ),
 	 			'html' => array( 'class' => 'podlove-check-input' ),
 	 			'description' => '' ) );
 
 	 		$wrapper->select( 'type', array(
-	 			'label'       => __( 'Document Type', 'podlove' ),
+	 			'label'       => __( 'Document Type', 'podlove-podcasting-plugin-for-wordpress' ),
 		 		'options'     => $types
 	 		) );
 
 	 		$wrapper->string( 'mime_type', array(
-	 			'label'       => __( 'Format Mime Type', 'podlove' ),
+	 			'label'       => __( 'Format Mime Type', 'podlove-podcasting-plugin-for-wordpress' ),
 	 			'html' => array( 'class' => 'podlove-check-input' ),
-	 			'description' => __( 'Example: audio/mp4', 'podlove' ) ) );
+	 			'description' => __( 'Example: audio/mp4', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 
 	 		$wrapper->string( 'extension', array(
-	 			'label'       => __( 'Format Extension', 'podlove' ),
+	 			'label'       => __( 'Format Extension', 'podlove-podcasting-plugin-for-wordpress' ),
 	 			'html' => array( 'class' => 'podlove-check-input' ),
-	 			'description' => __( 'Example: m4a', 'podlove' ) ) );
+	 			'description' => __( 'Example: m4a', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		} );
 	}
 	
 	private function edit_template() {
 		$format = \Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] );
 		?>
-		<h3><?php echo __( 'Edit File Type', 'podlove' ) ?>: <?php echo $format->name ?></h3>
+		<h3><?php echo __( 'Edit File Type', 'podlove-podcasting-plugin-for-wordpress' ) ?>: <?php echo $format->name ?></h3>
 		
 		<?php $this->form_template( $format, 'save' ); ?>
 		<?php

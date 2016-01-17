@@ -23,11 +23,11 @@ class PhpDeprecationWarning {
 		?>
 		<div id="message" class="error">
 			<p>
-				<strong><?php echo __( 'Please upgrade your PHP as soon as possible.', 'podlove' ) ?></strong>
+				<strong><?php echo __( 'Please upgrade your PHP as soon as possible.', 'podlove-podcasting-plugin-for-wordpress' ) ?></strong>
 			</p>
 			<p>
 				<?php echo sprintf(
-					__( 'You are running PHP %s, which is deprecated.', 'podlove' ),
+					__( 'You are running PHP %s, which is deprecated.', 'podlove-podcasting-plugin-for-wordpress' ),
 					phpversion()
 				); ?>
 				<?php echo sprintf(
@@ -37,7 +37,7 @@ class PhpDeprecationWarning {
 				); ?>
 			</p>
 			<p>
-				<?php echo __('As long as you opt to not upgrade, do not attempt to update to Podlove Publisher 2.0 and above.', 'podlove') ?>
+				<?php echo __('As long as you opt to not upgrade, do not attempt to update to Podlove Publisher 2.0 and above.', 'podlove-podcasting-plugin-for-wordpress') ?>
 			</p>
 		</div>
 		<?php

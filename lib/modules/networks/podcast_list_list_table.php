@@ -17,8 +17,8 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 	
 	public function column_title($list) {
 		$actions = array(
-			'edit'   => Settings\PodcastLists::get_action_link( $list, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\PodcastLists::get_action_link( $list, __( 'Delete', 'podlove' ), 'confirm_delete' )
+			'edit'   => Settings\PodcastLists::get_action_link( $list, __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) ),
+			'delete' => Settings\PodcastLists::get_action_link( $list, __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ), 'confirm_delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
@@ -53,10 +53,10 @@ class PodcastList_List_Table extends \Podlove\List_Table {
 
 	public function get_columns() {
 		return [
-			'logo'     => __('Logo'    , 'podlove'),
-			'title'    => __('Title'   , 'podlove'),
-			'url'      => __('URL'     , 'podlove'),
-			'podcasts' => __('Podcasts', 'podlove')
+			'logo'     => __('Logo'    , 'podlove-podcasting-plugin-for-wordpress'),
+			'title'    => __('Title'   , 'podlove-podcasting-plugin-for-wordpress'),
+			'url'      => __('URL'     , 'podlove-podcasting-plugin-for-wordpress'),
+			'podcasts' => __('Podcasts', 'podlove-podcasting-plugin-for-wordpress')
 		];
 	}
 

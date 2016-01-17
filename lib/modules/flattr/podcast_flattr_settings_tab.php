@@ -53,14 +53,14 @@ class PodcastFlattrSettingsTab extends Tab {
 			$podcast = $form->object;
 
 			$wrapper->string('account', [
-				'label' => __('Flattr Account', 'podlove'),
+				'label' => __('Flattr Account', 'podlove-podcasting-plugin-for-wordpress'),
 				'html'  => ['class' => 'regular-text required podlove-check-input']
 			]);
 
 			if (\Podlove\Modules\Base::is_active('contributors')) {
 				$wrapper->radio('contributor_shortcode_default', [
-					'label'       => __('Default Parameter in Contributors Shortcodes', 'podlove'),
-					'description' => '<br>' . __('You can override this setting individually by passing along the <code>flattr="yes"</code> or <code>flattr="no"</code> parameter to the shortcodes.', 'podlove'),
+					'label'       => __('Default Parameter in Contributors Shortcodes', 'podlove-podcasting-plugin-for-wordpress'),
+					'description' => '<br>' . __('You can override this setting individually by passing along the <code>flattr="yes"</code> or <code>flattr="no"</code> parameter to the shortcodes.', 'podlove-podcasting-plugin-for-wordpress'),
 					'options'     => [
 						'yes' => 'yes, show Flattr buttons by default', 
 						'no'  => 'no, do not show Flattr buttons by default'

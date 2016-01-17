@@ -15,7 +15,7 @@ class GenderStats {
 	public static function dashboard_gender_statistics() {
 		add_meta_box(
 			\Podlove\Settings\Dashboard::$pagehook . '_gender',
-			__( 'Gender Statistics', 'podlove' ),
+			__( 'Gender Statistics', 'podlove-podcasting-plugin-for-wordpress' ),
 			[__CLASS__, 'dashboard_gender_statistics_widget'],
 			\Podlove\Settings\Dashboard::$pagehook,
 			'normal', 
@@ -28,7 +28,7 @@ class GenderStats {
 		if (EpisodeContribution::count() === 0) {
 			?>
 			<p>
-				<?php echo __('Gender statistics will be available once you start assigning contributors to episodes.', 'podlove') ?>
+				<?php echo __('Gender statistics will be available once you start assigning contributors to episodes.', 'podlove-podcasting-plugin-for-wordpress') ?>
 			</p>
 			<?php
 			return;
@@ -37,13 +37,13 @@ class GenderStats {
 		$gender_distribution = self::fetch_contributors_for_dashboard_statistics();
 		?>
 		<div class="podlove_gender_widget_column">
-			<h4><?php _e('Total', 'podlove'); ?></h4>
+			<h4><?php _e('Total', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 			<table cellspacing="0" cellspadding="0">
 				<thead>
 					<tr>
-						<th><?php _e('Female', 'podlove'); ?></th>
-						<th><?php _e('Male', 'podlove'); ?></th>
-						<th><?php _e('Not Attributed', 'podlove'); ?></th>
+						<th><?php _e('Female', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+						<th><?php _e('Male', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+						<th><?php _e('Not Attributed', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,11 +56,11 @@ class GenderStats {
 			</table>
 		</div>
 		<div class="podlove_gender_widget_column">
-			<h4><?php _e('By Group', 'podlove'); ?></h4>
+			<h4><?php _e('By Group', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 			<?php self::group_or_role_stats_table('group', $gender_distribution['by_group']); ?>
 		</div>
 		<div class="podlove_gender_widget_column">
-			<h4><?php _e('By Role', 'podlove'); ?></h4>
+			<h4><?php _e('By Role', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 			<?php self::group_or_role_stats_table('role', $gender_distribution['by_role']); ?>
 		</div>
 		<?php
@@ -79,10 +79,10 @@ class GenderStats {
 		<table cellspacing="0" cellspadding="0">
 			<thead>
 				<tr>
-					<th><?php echo ( $context == 'group' ? __('Group', 'podlove') : __('Role', 'podlove') ); ?></th>
-					<th><?php _e('Female', 'podlove'); ?></th>
-					<th><?php _e('Male', 'podlove'); ?></th>
-					<th><?php _e('Not Attributed', 'podlove'); ?></th>
+					<th><?php echo ( $context == 'group' ? __('Group', 'podlove') : __('Role', 'podlove-podcasting-plugin-for-wordpress') ); ?></th>
+					<th><?php _e('Female', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th><?php _e('Male', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th><?php _e('Not Attributed', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -138,7 +138,7 @@ class GenderStats {
 		?>
 		<tr>
 			<td class="podlove-dashboard-number-column">
-				<?php echo __('Genders', 'podlove') ?>
+				<?php echo __('Genders', 'podlove-podcasting-plugin-for-wordpress') ?>
 			</td>
 			<td>
 				<?php

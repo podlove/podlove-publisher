@@ -46,8 +46,8 @@ class Networks extends \Podlove\Modules\Base {
 					return "ok";
 				} else {
 					return [
-						"message" => __( "Must be active in main blog!", 'podlove' ),
-						"error" => __( "You are using the network module. You have to activate it in your main WordPress blog to work properly", 'podlove' )
+						"message" => __( "Must be active in main blog!", 'podlove-podcasting-plugin-for-wordpress' ),
+						"error" => __( "You are using the network module. You have to activate it in your main WordPress blog to work properly", 'podlove-podcasting-plugin-for-wordpress' )
 					];
 				}
 			}

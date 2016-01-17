@@ -13,8 +13,8 @@ class Dashboard {
 		// default first item name
 		Dashboard::$pagehook = add_submenu_page(
 			/* $parent_slug*/ \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE,
-			/* $page_title */ __( 'Dashboard', 'podlove' ),
-			/* $menu_title */ __( 'Dashboard', 'podlove' ),
+			/* $page_title */ __( 'Dashboard', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Dashboard', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ \Podlove\Podcast_Post_Type::NETWORK_SETTINGS_PAGE_HANDLE,
 			/* $function   */ array( $this, 'settings_page' )
@@ -37,17 +37,17 @@ class Dashboard {
 
 	public static function settings_page() {
 
-		add_meta_box( Dashboard::$pagehook . '_right_now', __( 'At a glance', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::right_now', Dashboard::$pagehook, 'normal' );
-		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove' ), '\Podlove\Settings\Dashboard\About::content', Dashboard::$pagehook, 'side' );		
-		add_meta_box( Dashboard::$pagehook . '_podcast_overview', __( 'Podcasts', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::podcast_overview', Dashboard::$pagehook, 'normal' );
-		add_meta_box( Dashboard::$pagehook . '_list_overview', __( 'Lists', 'podlove' ), '\Podlove\Modules\Networks\Settings\Dashboard::list_overview', Dashboard::$pagehook, 'normal' );
+		add_meta_box( Dashboard::$pagehook . '_right_now', __( 'At a glance', 'podlove-podcasting-plugin-for-wordpress' ), '\Podlove\Modules\Networks\Settings\Dashboard::right_now', Dashboard::$pagehook, 'normal' );
+		add_meta_box( Dashboard::$pagehook . '_about', __( 'About', 'podlove-podcasting-plugin-for-wordpress' ), '\Podlove\Settings\Dashboard\About::content', Dashboard::$pagehook, 'side' );		
+		add_meta_box( Dashboard::$pagehook . '_podcast_overview', __( 'Podcasts', 'podlove-podcasting-plugin-for-wordpress' ), '\Podlove\Modules\Networks\Settings\Dashboard::podcast_overview', Dashboard::$pagehook, 'normal' );
+		add_meta_box( Dashboard::$pagehook . '_list_overview', __( 'Lists', 'podlove-podcasting-plugin-for-wordpress' ), '\Podlove\Modules\Networks\Settings\Dashboard::list_overview', Dashboard::$pagehook, 'normal' );
 
 		do_action( 'podlove_network_dashboard_meta_boxes' );
 
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Podlove Network Dashboard', 'podlove' ); ?></h2>
+			<h2><?php echo __( 'Podlove Network Dashboard', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
 			<div id="poststuff" class="metabox-holder has-right-sidebar">
 				
@@ -98,7 +98,7 @@ class Dashboard {
 		$number_of_podcasts = count( $podcasts );
 
 		if (!$number_of_podcasts) {
-			echo __('No podcasts exist yet.', 'podlove');
+			echo __('No podcasts exist yet.', 'podlove-podcasting-plugin-for-wordpress');
 			return;
 		}
 
@@ -159,7 +159,7 @@ class Dashboard {
 						<?php echo $episodes_total_per_status['publish']; ?>
 					</td>
 					<td>
-						<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove' ); ?></span>
+						<span style="color: #2c6e36;"><?php echo __( 'Published', 'podlove-podcasting-plugin-for-wordpress' ); ?></span>
 					</td>
 				</tr>
 				<tr>
@@ -167,7 +167,7 @@ class Dashboard {
 						<?php echo $episodes_total_per_status['private']; ?>
 					</td>
 					<td>
-						<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove' ); ?></span>
+						<span style="color: #b43f56;"><?php echo __( 'Private', 'podlove-podcasting-plugin-for-wordpress' ); ?></span>
 					</td>
 				</tr>
 				<tr>
@@ -175,7 +175,7 @@ class Dashboard {
 						<?php echo $episodes_total_per_status['future']; ?>
 					</td>
 					<td>
-						<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove' ); ?></span>
+						<span style="color: #a8a8a8;"><?php echo __( 'To be published', 'podlove-podcasting-plugin-for-wordpress' ); ?></span>
 					</td>
 				</tr>
 				<tr>
@@ -183,7 +183,7 @@ class Dashboard {
 						<?php echo $episodes_total_per_status['draft']; ?>
 					</td>
 					<td>
-						<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove' ); ?></span>
+						<span style="color: #c0844c;"><?php echo __( 'Drafts', 'podlove-podcasting-plugin-for-wordpress' ); ?></span>
 					</td>
 				</tr>
 				<tr>
@@ -191,20 +191,20 @@ class Dashboard {
 						<?php echo $episodes_total; ?>
 					</td>
 					<td class="podlove-dashboard-total-number">
-						<?php echo __( 'Total', 'podlove' ); ?>
+						<?php echo __( 'Total', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 					</td>
 				</tr>
 			</table>
 		</div>
 		<div class="podlove-dashboard-statistics-wrapper">
-			<h4><?php echo __('Statistics', 'podlove') ?></h4>
+			<h4><?php echo __('Statistics', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
 			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 				<tr>
 					<td class="podlove-dashboard-number-column">
 						<?php echo gmdate("H:i:s", $episode_total_average_length ); ?>
 					</td>
 					<td>
-						<?php echo __( 'is the average length of an episode', 'podlove' ); ?>.
+						<?php echo __( 'is the average length of an episode', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<tr>
@@ -215,7 +215,7 @@ class Dashboard {
 						?>
 					</td>
 					<td>
-						<?php echo __( 'is the total playback time of all episodes', 'podlove' ); ?>.
+						<?php echo __( 'is the total playback time of all episodes', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<tr>
@@ -223,7 +223,7 @@ class Dashboard {
 						<?php echo \Podlove\format_bytes($media_file_total_average_size, 1); ?>
 					</td>
 					<td>
-						<?php echo __( 'is the average media file size', 'podlove' ); ?>.
+						<?php echo __( 'is the average media file size', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<tr>
@@ -231,15 +231,15 @@ class Dashboard {
 						<?php echo \Podlove\format_bytes($media_file_total_size, 1); ?>
 					</td>
 					<td>
-						<?php echo __( 'is the total media file size', 'podlove' ); ?>.
+						<?php echo __( 'is the total media file size', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo sprintf(_n('%s day', '%s days', round( $days_between_episodes ), 'podlove'), round( $days_between_episodes ) ); ?>
+						<?php echo sprintf(_n('%s day', '%s days', round( $days_between_episodes ), 'podlove-podcasting-plugin-for-wordpress'), round( $days_between_episodes ) ); ?>
 					</td>
 					<td>
-						<?php echo __( 'is the average interval until a new episode is released', 'podlove' ); ?>.
+						<?php echo __( 'is the average interval until a new episode is released', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<tr>
@@ -247,14 +247,14 @@ class Dashboard {
 						<?php echo sprintf(_n('%s podcast', '%s podcasts', $number_of_podcasts, 'podlove'), $number_of_podcasts ); ?>
 					</td>
 					<td>
-						<?php echo __( 'exist in your WordPress installation', 'podlove' ); ?>.
+						<?php echo __( 'exist in your WordPress installation', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<?php do_action('podlove_dashboard_statistics_network'); ?>
 			</table>
 		</div>
 		<p>
-			<?php echo sprintf( __('You are using %s', 'podlove'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
+			<?php echo sprintf( __('You are using %s', 'podlove-podcasting-plugin-for-wordpress'), '<strong>Podlove Publisher ' . \Podlove\get_plugin_header( 'Version' ) . '</strong>'); ?>.
 		</p>
 		<?php
 	}

@@ -27,12 +27,12 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 		};
 
 		$actions = array(
-			'edit'         => $link( __( 'Edit', 'podlove' ) ),
-			'batch_enable' => $link( __( 'Activate for all existing Episodes', 'podlove' ), 'batch_enable' ),
-			'delete'       => $link( __( 'Delete', 'podlove' ), 'delete' )
+			'edit'         => $link( __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) ),
+			'batch_enable' => $link( __( 'Activate for all existing Episodes', 'podlove-podcasting-plugin-for-wordpress' ), 'batch_enable' ),
+			'delete'       => $link( __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ), 'delete' )
 		);
 	
-		$title = ( $episode_asset->title ) ? $episode_asset->title : __( '- title missing -', 'podlove' );
+		$title = ( $episode_asset->title ) ? $episode_asset->title : __( '- title missing -', 'podlove-podcasting-plugin-for-wordpress' );
 
 		return sprintf( '%1$s %2$s',
 		    $link( $title ),
@@ -55,9 +55,9 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'title'     => __( 'Episode Asset', 'podlove' ),
-			'file_type' => __( 'File Type', 'podlove' ),
-			'downloadable' => __( 'Downloadable', 'podlove' ),
+			'title'     => __( 'Episode Asset', 'podlove-podcasting-plugin-for-wordpress' ),
+			'file_type' => __( 'File Type', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloadable' => __( 'Downloadable', 'podlove-podcasting-plugin-for-wordpress' ),
 			'move' => '',
 		);
 	}

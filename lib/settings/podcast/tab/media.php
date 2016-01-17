@@ -44,8 +44,8 @@ class Media extends Tab {
 			$podcast = $form->object;
 
 			$wrapper->string( 'media_file_base_uri', array(
-				'label'       => __( 'Upload Location', 'podlove' ),
-				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove' ),
+				'label'       => __( 'Upload Location', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Example: http://cdn.example.com/pod/', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text required podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 		});

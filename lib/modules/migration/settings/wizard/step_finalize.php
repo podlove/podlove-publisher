@@ -47,7 +47,7 @@ class StepFinalize extends Step {
 		<?php if ( $unpublished_episodes > 0 ): ?>
 			<div class="hero-unit">
 				<h1>
-					<?php echo __( 'Nearly done!', 'podlove' ); ?>
+					<?php echo __( 'Nearly done!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</h1>
 				<p>
 					All your episodes are migrated and marked as <em>pending</em>. Your original posts are still <em>published</em>.

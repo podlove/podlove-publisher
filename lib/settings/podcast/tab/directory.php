@@ -45,7 +45,7 @@ class Directory extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove' ); ?>
+			<?php echo __( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 
@@ -54,43 +54,43 @@ class Directory extends Tab {
 			$podcast = $form->object;
 
 			$wrapper->string( 'author_name', array(
-				'label'       => __( 'Author Name', 'podlove' ),
-				'description' => __( 'Publicly displayed in Podcast directories.', 'podlove' ),
+				'label'       => __( 'Author Name', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Publicly displayed in Podcast directories.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->string( 'publisher_name', array(
-				'label'       => __( 'Publisher Name', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Publisher Name', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->string( 'publisher_url', array(
-				'label'       => __( 'Publisher URL', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Publisher URL', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 	
 			$wrapper->string( 'owner_name', array(
-				'label'       => __( 'Owner Name', 'podlove' ),
-				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove' ),
+				'label'       => __( 'Owner Name', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 	
 			$wrapper->string( 'owner_email', array(
-				'label'       => __( 'Owner Email', 'podlove' ),
-				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove' ),
+				'label'       => __( 'Owner Email', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'email' )
 			) );
 	
 			$wrapper->string( 'keywords', array(
-				'label'       => __( 'Keywords', 'podlove' ),
-				'description' => __( 'List of keywords. Separate with commas.', 'podlove' ),
+				'label'       => __( 'Keywords', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'List of keywords. Separate with commas.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->select( 'category_1', array(
-				'label'       => __( 'iTunes Categories', 'podlove' ),
+				'label'       => __( 'iTunes Categories', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => '',
 				'type'     => 'select',
 				'options'  => \Podlove\Itunes\categories()
@@ -112,15 +112,15 @@ class Directory extends Tab {
 			) );
 
 			$wrapper->select( 'explicit', array(
-				'label'       => __( 'Explicit Content?', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Explicit Content?', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'type'    => 'checkbox',
                 'options'  => array(0 => 'no', 1 => 'yes', 2 => 'clean')
 			) );
 
 			$wrapper->checkbox( 'complete', array(
-				'label'       => __( 'Podcast complete?', 'podlove' ),
-				'description' => __( 'Shows that this Podcast is finished and no further episodes will be added.', 'podlove' ),
+				'label'       => __( 'Podcast complete?', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Shows that this Podcast is finished and no further episodes will be added.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => false
 			) );
 		});

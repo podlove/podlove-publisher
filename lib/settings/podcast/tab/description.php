@@ -49,32 +49,32 @@ class Description extends Tab {
 			$podcast = $form->object;
 
 			$wrapper->string( 'title', array(
-				'label'       => __( 'Title', 'podlove' ),
+				'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$wrapper->string( 'subtitle', array(
-				'label'       => __( 'Subtitle', 'podlove' ),
-				'description' => __( 'Extension to the title. Clarify what the podcast is about.', 'podlove' ),
+				'label'       => __( 'Subtitle', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Extension to the title. Clarify what the podcast is about.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->text( 'summary', array(
-				'label'       => __( 'Summary', 'podlove' ),
-				'description' => __( 'Elaborate description of the podcast\'s content.', 'podlove' ),
+				'label'       => __( 'Summary', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Elaborate description of the podcast\'s content.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
 			) );
 
 			$wrapper->upload( 'cover_image', array(
-				'label'        => __( 'Cover Art URL', 'podlove' ),
-				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
+				'label'        => __( 'Cover Art URL', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
-				'media_button_text' => __("Use for Podcast Cover Art", 'podlove')
+				'media_button_text' => __("Use for Podcast Cover Art", 'podlove-podcasting-plugin-for-wordpress')
 			) );
 
 			$wrapper->select( 'language', array(
-				'label'       => __( 'Language', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Language', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => get_bloginfo( 'language' ),
 				'options'  => \Podlove\Locale\locales()
 			) );

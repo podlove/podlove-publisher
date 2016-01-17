@@ -131,16 +131,16 @@ class PodcastLists {
 		PodcastList::activate_network_scope();
 		$list = new PodcastList;
 		?>
-		<h3><?php echo __( 'Add New list', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New list', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 		<?php
-		$this->form_template( $list, 'create', __( 'Add New list', 'podlove' ) );
+		$this->form_template( $list, 'create', __( 'Add New list', 'podlove-podcasting-plugin-for-wordpress' ) );
 		PodcastList::deactivate_network_scope();
 	}
 	
 	private function edit_template() {
 		PodcastList::activate_network_scope();
 		$list = PodcastList::find_by_id( $_REQUEST['list'] );
-		echo '<h3>' . sprintf( __( 'Edit list: %s', 'podlove' ), $list->title ) . '</h3>';
+		echo '<h3>' . sprintf( __( 'Edit list: %s', 'podlove-podcasting-plugin-for-wordpress' ), $list->title ) . '</h3>';
 		$this->form_template( $list, 'save' );
 		PodcastList::deactivate_network_scope();
 	}
@@ -161,43 +161,43 @@ class PodcastLists {
 			$list = $form->object;
 
 			$wrapper->string( 'slug', array(
-				'label'       => __( 'ID', 'podlove' ),
+				'label'       => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'class' => 'regular-text required' ),
-				'description' => sprintf(__('For referencing in templates: %s', 'podlove'), '<code>{{ network.lists({id: "example"}).title }}</code>')
+				'description' => sprintf(__('For referencing in templates: %s', 'podlove-podcasting-plugin-for-wordpress'), '<code>{{ network.lists({id: "example"}).title }}</code>')
 			) );
 
 			$wrapper->string( 'title', array(
-				'label'       => __( 'Title', 'podlove' ),
+				'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
 			$wrapper->string( 'subtitle', array(
-				'label'       => __( 'Subtitle', 'podlove' ),
+				'label'       => __( 'Subtitle', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->text( 'description', array(
-				'label'       => __( 'Summary', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Summary', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
 			) );
 
 			$wrapper->image( 'logo', array(
-				'label'        => __( 'Logo', 'podlove' ),
-				'description'  => __( 'JPEG or PNG.', 'podlove' ),
+				'label'        => __( 'Logo', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description'  => __( 'JPEG or PNG.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'         => array( 'class' => 'regular-text' ),
 				'image_width'  => 300,
 				'image_height' => 300
 			) );
 
 			$wrapper->string( 'url', array(
-				'label'       => __( 'List URL', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'List URL', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text' )
 			) );
 
 			$wrapper->callback( 'podcasts', array(
-				'label'       => __( 'Podcasts', 'podlove' ),
+				'label'       => __( 'Podcasts', 'podlove-podcasting-plugin-for-wordpress' ),
 				'callback'	  => function() use ( $list ) {
 					$form_base_name = "podlove_list";
 					?>
@@ -205,15 +205,15 @@ class PodcastLists {
 						<table class="podlove_alternating" border="0" cellspacing="0">
 							<thead>
 								<tr>
-									<th><?php echo __('Source', 'podlove') ?></th>
-									<th><?php echo __('Podcast/URL', 'podlove') ?></th>
-									<th style="width: 60px"><?php echo __('Remove', 'podlove') ?></th>
+									<th><?php echo __('Source', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+									<th><?php echo __('Podcast/URL', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+									<th style="width: 60px"><?php echo __('Remove', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 									<th style="width: 30px"></th>
 								</tr>
 							</thead>
 							<tbody class="podcasts_table_body" style="min-height: 50px;">
 								<tr class="podcasts_table_body_placeholder" style="display: none;">
-									<td><em><?php echo __('No Podcasts were added yet.', 'podlove') ?></em></td>
+									<td><em><?php echo __('No Podcasts were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
 								</tr>
 							</tbody>
 						</table>
@@ -226,7 +226,7 @@ class PodcastLists {
 						<tr class="media_file_row podlove-podcast-table" data-id="{{id}}">
 							<td class="podlove-podcast-column">
 								<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
-									<option value="wplist" selected><?php echo __('WordPress Network', 'podlove') ?></option>
+									<option value="wplist" selected><?php echo __('WordPress Network', 'podlove-podcasting-plugin-for-wordpress') ?></option>
 								</select>
 							</td>
 							<td class="podlove-podcast-value"></td>
@@ -240,7 +240,7 @@ class PodcastLists {
 						</script>
 						<script type="text/template" id="podcast-select-type-wplist">
 						<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
-							<option>— <?php echo __('Select Podcast', 'podlove') ?> —</option>
+							<option>— <?php echo __('Select Podcast', 'podlove-podcasting-plugin-for-wordpress') ?> —</option>
 							<?php
 								foreach ( Network::podcasts() as $blog_id => $podcast ) {
 									if ( $podcast->title )
@@ -352,12 +352,12 @@ class PodcastLists {
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo sprintf( __( 'You selected to delete the list "%s". Please confirm this action.', 'podlove' ), $list->title ) ?>
+						<?php echo sprintf( __( 'You selected to delete the list "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress' ), $list->title ) ?>
 					</strong>
 				</p>
 				<p>
-					<?php echo self::get_action_link( $list, __( 'Delete list permanently', 'podlove' ), 'delete', 'button' ) ?>
-					<?php echo self::get_action_link( $list, __( 'Don\'t change anything', 'podlove' ), 'keep', 'button-primary' ) ?>
+					<?php echo self::get_action_link( $list, __( 'Delete list permanently', 'podlove-podcasting-plugin-for-wordpress' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( $list, __( 'Don\'t change anything', 'podlove-podcasting-plugin-for-wordpress' ), 'keep', 'button-primary' ) ?>
 				</p>
 			</div>
 			<?php
@@ -365,7 +365,7 @@ class PodcastLists {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Lists', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Lists', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {

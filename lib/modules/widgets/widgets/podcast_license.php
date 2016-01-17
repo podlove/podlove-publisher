@@ -8,8 +8,8 @@ class PodcastLicense extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_podcast_license_widget',
-			__('Podcast License', 'podlove'),
-			array( 'description' => __( 'Displays the license of your podcast.', 'podlove' ) )
+			__('Podcast License', 'podlove-podcasting-plugin-for-wordpress'),
+			array( 'description' => __( 'Displays the license of your podcast.', 'podlove-podcasting-plugin-for-wordpress' ) )
 		);
 	}
 
@@ -30,7 +30,7 @@ class PodcastLicense extends \WP_Widget {
 		$title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : '';
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" />
 		</p>
 		<?php 

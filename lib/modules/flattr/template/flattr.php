@@ -70,7 +70,7 @@ class Flattr extends \Podlove\Template\Wrapper {
 
 	private static function dynamic_button($args) {
 		
-		$description = __('Flattr this', 'podlove');
+		$description = __('Flattr this', 'podlove-podcasting-plugin-for-wordpress');
 
 		return sprintf(
 			'<a class="FlattrButton" style="display:none;" href="%s" title="%s" 

@@ -68,7 +68,7 @@ class License {
 			<div class=\"podlove_license\">
 				<p>
 					" . sprintf(
-						__('This work is licensed under the %s license.', 'podlove'),
+						__('This work is licensed under the %s license.', 'podlove-podcasting-plugin-for-wordpress'),
 						'<a rel="license" href="' . $this->url . '">' . $this->name . '</a>'
 					) . "
 				</p>
@@ -83,7 +83,7 @@ class License {
 		return "
 		<div class=\"podlove_license\">
 				<p style='color: red;'>
-					" . __('This work is (not yet) licensed, as no license was chosen.', 'podlove') . "
+					" . __('This work is (not yet) licensed, as no license was chosen.', 'podlove-podcasting-plugin-for-wordpress') . "
 				</p>
 		</div>";
 	}

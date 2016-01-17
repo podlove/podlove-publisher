@@ -54,7 +54,7 @@ class Logging extends \Podlove\Modules\Base {
 	}
 
 	public function register_meta_box() {
-		add_meta_box( Dashboard::$pagehook . '_logging', __( 'Logging', 'podlove' ), array( $this, 'dashoard_template' ), Dashboard::$pagehook, 'normal' );
+		add_meta_box( Dashboard::$pagehook . '_logging', __( 'Logging', 'podlove-podcasting-plugin-for-wordpress' ), array( $this, 'dashoard_template' ), Dashboard::$pagehook, 'normal' );
 	}
 
 	public function dashoard_template() {

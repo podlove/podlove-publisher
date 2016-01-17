@@ -79,7 +79,7 @@ class AdminBarMenu {
 		// add network dashboard
 		$wp_admin_bar->add_node([
 			'id'     => self::podcast_toolbar_id('network', 'dashboard'),
-			'title'  => __( 'Podlove Dashboard', 'podlove' ),
+			'title'  => __( 'Podlove Dashboard', 'podlove-podcasting-plugin-for-wordpress' ),
 			'parent' => 'network-admin',
 			'href'   => network_admin_url('admin.php?page=podlove_network_settings_handle')
 		]);
@@ -87,7 +87,7 @@ class AdminBarMenu {
 		// add network templates
 		$wp_admin_bar->add_node([
 			'id'     => self::podcast_toolbar_id('network', 'templates'),
-			'title'  => __( 'Podlove Templates', 'podlove' ),
+			'title'  => __( 'Podlove Templates', 'podlove-podcasting-plugin-for-wordpress' ),
 			'parent' => 'network-admin',
 			'href'   => network_admin_url('admin.php?page=podlove_templates_settings_handle')
 		]);
@@ -105,14 +105,14 @@ class AdminBarMenu {
 			// Register Dashboard & Episodes per Podcast
 			$wp_admin_bar->add_node([
 				'id'     => self::podcast_toolbar_id($podcast_id, 'dashboard'),
-				'title'  => __( 'Podlove Dashboard', 'podlove' ),
+				'title'  => __( 'Podlove Dashboard', 'podlove-podcasting-plugin-for-wordpress' ),
 				'parent' => 'blog-' . $podcast_id,
 				'href'   => get_admin_url($podcast_id, 'admin.php?page=podlove_settings_handle')
 			]);
 
 			$wp_admin_bar->add_node([
 				'id'     => self::podcast_toolbar_id($podcast_id, 'episodes'),
-				'title'  => __( 'Podlove Episodes', 'podlove' ),
+				'title'  => __( 'Podlove Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
 				'parent' => 'blog-' . $podcast_id,
 				'href'   => get_admin_url($podcast_id, 'edit.php?post_type=podcast')
 			]);

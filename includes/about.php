@@ -60,23 +60,23 @@ function podlove_about_page($_) {
 <div class="wrap podlove-about-wrap">
 	
 	<h1>
-		<?php printf(__('Welcome to Podlove Publisher&nbsp;%s', 'podlove'), \Podlove\get_plugin_header('Version')); ?>
+		<?php printf(__('Welcome to Podlove Publisher&nbsp;%s', 'podlove-podcasting-plugin-for-wordpress'), \Podlove\get_plugin_header('Version')); ?>
 	</h1>
 
 	<div class="about-text">
-		<?php printf( __( 'Thank you for updating! This version focuses on podcasting in WordPress Multisite environments.', 'podlove' ) ); ?>
+		<?php printf( __( 'Thank you for updating! This version focuses on podcasting in WordPress Multisite environments.', 'podlove-podcasting-plugin-for-wordpress' ) ); ?>
 	</div>
 
 	<div class="podlove-badge"></div>
 
 	<h2 class="nav-tab-wrapper">
 		<a href="#" class="nav-tab nav-tab-active">
-			<?php _e( 'What&#8217;s New', 'podlove' ); ?>
+			<?php _e( 'What&#8217;s New', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</a>
 	</h2>
 
 	<div class="changelog headline-feature">
-		<h2><?php _e( 'Networks: WordPress Multisite Support is Here', 'podlove' ); ?></h2>
+		<h2><?php _e( 'Networks: WordPress Multisite Support is Here', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 		
 		<!-- <div class="featured-image">
 			<img src="//s.w.org/images/core/4.1/theme.png?0" />

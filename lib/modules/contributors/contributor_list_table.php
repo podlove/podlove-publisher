@@ -23,9 +23,9 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	
 	public function column_realname( $contributor ) {
 		$actions = array(
-			'edit'   => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Delete', 'podlove' ), 'confirm_delete' ),
-			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove'))
+			'edit'   => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) ),
+			'delete' => Settings\GenericEntitySettings::get_action_link( 'contributor', $contributor->id, __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ), 'confirm_delete' ),
+			'list'   => $this->get_episodes_link($contributor, __('Show Episodes', 'podlove-podcasting-plugin-for-wordpress'))
 		);
 	
 		return sprintf( '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
@@ -107,14 +107,14 @@ class Contributor_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		$columns = array(
-			'avatar'               => __( '', 'podlove' ),
-			'realname'             => __( 'Contributor', 'podlove' ),
-			'slug'                 => __( 'ID', 'podlove' ),
-			'gender'               => __( 'Gender', 'podlove' ),
-			'affiliation'          => __( 'Affiliation', 'podlove' ),
-			'privateemail'         => __( 'Private E-mail', 'podlove' ),
-			'episodes'             => __( 'Episodes', 'podlove' ),
-			'visibility'           => __( 'Visiblity', 'podlove' )
+			'avatar'               => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+			'realname'             => __( 'Contributor', 'podlove-podcasting-plugin-for-wordpress' ),
+			'slug'                 => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
+			'gender'               => __( 'Gender', 'podlove-podcasting-plugin-for-wordpress' ),
+			'affiliation'          => __( 'Affiliation', 'podlove-podcasting-plugin-for-wordpress' ),
+			'privateemail'         => __( 'Private E-mail', 'podlove-podcasting-plugin-for-wordpress' ),
+			'episodes'             => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'visibility'           => __( 'Visiblity', 'podlove-podcasting-plugin-for-wordpress' )
 		);
 		return apply_filters('podlove_contributor_list_table_columns', $columns);
 	}

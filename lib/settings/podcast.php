@@ -27,7 +27,7 @@ class Podcast {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_podcast_general',
-			/* $title 	 */ __( 'Podcast Settings', 'podlove' ),	
+			/* $title 	 */ __( 'Podcast Settings', 'podlove-podcasting-plugin-for-wordpress' ),	
 			/* $callback */ function () { /* section head html */ }, 		
 			/* $page	 */ Podcast::$pagehook	
 		);
@@ -40,11 +40,11 @@ class Podcast {
 			return $podcast;
 		} );
 
-		$tabs = new Tabs( __( 'Podcast Settings', 'podlove' ) );
-		$tabs->addTab( new Tab\Description( __( 'Description', 'podlove' ), true ) );
-		$tabs->addTab( new Tab\Media( __( 'Media', 'podlove' ) ) );
-		$tabs->addTab( new Tab\License( __( 'License', 'podlove' ) ) );
-		$tabs->addTab( new Tab\Directory( __( 'Directory', 'podlove' ) ) );
+		$tabs = new Tabs( __( 'Podcast Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
+		$tabs->addTab( new Tab\Description( __( 'Description', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
+		$tabs->addTab( new Tab\Media( __( 'Media', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\License( __( 'License', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\Directory( __( 'Directory', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$this->tabs = apply_filters( 'podlove_podcast_settings_tabs', $tabs );
 		$this->tabs->initCurrentTab();
 	}

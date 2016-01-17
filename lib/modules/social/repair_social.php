@@ -25,7 +25,7 @@ class RepairSocial {
 		if ($count_before < $count_after) {
 			Repair::add_to_repair_log(
 				sprintf(
-					__('Added %d missing social services', 'podlove'),
+					__('Added %d missing social services', 'podlove-podcasting-plugin-for-wordpress'),
 					$count_after - $count_before
 				)
 			);
@@ -39,7 +39,7 @@ class RepairSocial {
 		$services = self::find_duplicate_services();
 
 		if (!is_array($services) || empty($services)) {
-			Repair::add_to_repair_log(__('Services did not need repair', 'podlove'));
+			Repair::add_to_repair_log(__('Services did not need repair', 'podlove-podcasting-plugin-for-wordpress'));
 			return;
 		}
 
@@ -63,7 +63,7 @@ class RepairSocial {
 
 		Repair::add_to_repair_log(
 			sprintf(
-				__('Consolidated duplicate services (%s)', 'podlove'),
+				__('Consolidated duplicate services (%s)', 'podlove-podcasting-plugin-for-wordpress'),
 				implode(', ', array_map(function($s){ return $s['type']; }, $services))
 			)
 		);

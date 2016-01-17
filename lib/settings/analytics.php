@@ -16,8 +16,8 @@ class Analytics {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ __( 'Analytics', 'podlove' ),
-			/* $menu_title */ __( 'Analytics', 'podlove' ),
+			/* $page_title */ __( 'Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'podlove_read_analytics',
 			/* $menu_slug  */ 'podlove_analytics',
 			/* $function   */ array( $this, 'page' )
@@ -31,8 +31,8 @@ class Analytics {
 		if (isset($_GET['action']) && $_GET['action'] == 'show') {
 			add_action( 'load-' . self::$pagehook, function () {
 				add_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook, function () {
-					add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_release_downloads_chart', __( 'Downloads over Time', 'podlove' ), '\Podlove\Settings\Analytics::chart', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
-					add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_numbers', __( 'Download Numbers', 'podlove' ), '\Podlove\Settings\Analytics::numbers', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
+					add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_release_downloads_chart', __( 'Downloads over Time', 'podlove-podcasting-plugin-for-wordpress' ), '\Podlove\Settings\Analytics::chart', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
+					add_meta_box( \Podlove\Settings\Analytics::$pagehook . '_numbers', __( 'Download Numbers', 'podlove-podcasting-plugin-for-wordpress' ), '\Podlove\Settings\Analytics::numbers', \Podlove\Settings\Analytics::$pagehook, 'normal' );		
 				} );
 				do_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook );
 
@@ -52,12 +52,12 @@ class Analytics {
 			return $status;
 
 		$tiles = [
-			'download_source'  => __("Download Source", 'podlove'),
-			'download_context' => __("Download Context", 'podlove'),
-			'day_of_week'      => __("Day of Week", 'podlove'),
-			'asset'            => __("Asset", 'podlove'),
-			'podcast_client'   => __("Podcast Client", 'podlove'),
-			'operating_system' => __("Operating System", 'podlove')
+			'download_source'  => __("Download Source", 'podlove-podcasting-plugin-for-wordpress'),
+			'download_context' => __("Download Context", 'podlove-podcasting-plugin-for-wordpress'),
+			'day_of_week'      => __("Day of Week", 'podlove-podcasting-plugin-for-wordpress'),
+			'asset'            => __("Asset", 'podlove-podcasting-plugin-for-wordpress'),
+			'podcast_client'   => __("Podcast Client", 'podlove-podcasting-plugin-for-wordpress'),
+			'operating_system' => __("Operating System", 'podlove-podcasting-plugin-for-wordpress')
 		];
 
 		$option = get_option('podlove_analytics_tiles', array());
@@ -133,35 +133,35 @@ class Analytics {
 	public function blank_template() {
 		?>
 
-		<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
+		<h2><?php echo __("Podcast Analytics", 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
 		<div id="welcome-panel" class="welcome-panel">
 		    <div class="welcome-panel-content">
-		        <h3><?php echo __('Welcome to Podlove Publisher Analytics!', 'podlove') ?></h3>
+		        <h3><?php echo __('Welcome to Podlove Publisher Analytics!', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 		        <p class="about-description">
 		        	<?php if (Model\DownloadIntent::count() < 50): ?>
-		        		<?php echo __('There is not enough tracking data yet. Publish an episode, then come back after a while.', 'podlove'); ?>
+		        		<?php echo __('There is not enough tracking data yet. Publish an episode, then come back after a while.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		        	<?php else: ?>
 		        		<?php echo __('Still crunching the numbers. The first time it may take up to an hour until you see analytics.'); ?>
 		        	<?php endif ?>
 		        </p>
 		        <div class="welcome-panel-column-container">
 		            <div class="welcome-panel-column">
-		                <h4><?php echo __('While you wait ...', 'podlove') ?></h4>
+		                <h4><?php echo __('While you wait ...', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
 		                <ul>
 		                	<li>
 		                		<a target="_blank" href="http://docs.podlove.org/guides/download-analytics/" class="welcome-icon welcome-learn-more">
-		                			<?php echo __('Learn more about how tracking works', 'podlove') ?>
+		                			<?php echo __('Learn more about how tracking works', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                		</a>
 		                	</li>
 		                    <li>
 		                        <a href="<?php echo admin_url( 'post-new.php?post_type=podcast' ) ?>" class="welcome-icon welcome-write-blog">
-		                        	<?php echo __('Add a new episode', 'podlove') ?>
+		                        	<?php echo __('Add a new episode', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                        </a>
 		                    </li>
 		                    <li>
 		                        <a href="<?php echo home_url() ?>" class="welcome-icon welcome-view-site">
-		                        	<?php echo __('View your site', 'podlove') ?>
+		                        	<?php echo __('View your site', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                        </a>
 		                    </li>
 		                </ul>
@@ -176,7 +176,7 @@ class Analytics {
 	public function view_template() {
 		?>
 
-		<h2><?php echo __("Podcast Analytics", "podlove"); ?></h2>
+		<h2><?php echo __("Podcast Analytics", 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
 		<div style="width: 100%">
 			<div id="total-chart" style="height: 200px"></div>

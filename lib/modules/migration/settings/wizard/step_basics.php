@@ -71,25 +71,25 @@ class StepBasics extends Step {
 				<h3>Basic Settings</h3>
 				<form action="" class="form-horizontal">
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Podcast Title', 'podlove' ); ?></label>
+						<label for="" class="control-label"><?php echo __( 'Podcast Title', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
 						<div class="controls">
 							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][title]" value="<?php echo $podcast['title'] ?>">
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Podcast Subtitle', 'podlove' ); ?></label>
+						<label for="" class="control-label"><?php echo __( 'Podcast Subtitle', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
 						<div class="controls">
 							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][subtitle]" value="<?php echo $podcast['subtitle'] ?>">
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Podcast Summary', 'podlove' ); ?></label>
+						<label for="" class="control-label"><?php echo __( 'Podcast Summary', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
 						<div class="controls">
-							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xxlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove' ); ?>"><?php echo $podcast['summary'] ?></textarea>
+							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xxlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove-podcasting-plugin-for-wordpress' ); ?>"><?php echo $podcast['summary'] ?></textarea>
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Media File Base URL', 'podlove' ); ?></label>
+						<label for="" class="control-label"><?php echo __( 'Media File Base URL', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
 						<div class="controls">
 							<div class="radio">
 								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="preset" <?php checked( $podcast['media_file_base_url_option'], 'preset' ) ?>> 
@@ -110,8 +110,8 @@ class StepBasics extends Step {
 					</div>
 					<div class="control-group">
 						<div class="controls">
-							<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
-							<input type="submit" class="btn btn-primary" value="<?php echo __( 'Continue', 'podlove' ) ?>">
+							<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
+							<input type="submit" class="btn btn-primary" value="<?php echo __( 'Continue', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
 						</div>
 					</div>
 

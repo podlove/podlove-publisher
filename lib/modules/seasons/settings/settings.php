@@ -11,8 +11,8 @@ class Settings {
 	public function __construct($handle) {
 		$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ __('Seasons', 'podlove'),
-			/* $menu_title */ __('Seasons', 'podlove'),
+			/* $page_title */ __('Seasons', 'podlove-podcasting-plugin-for-wordpress'),
+			/* $menu_title */ __('Seasons', 'podlove-podcasting-plugin-for-wordpress'),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_seasons_settings',
 			/* $function   */ [$this, 'page']
@@ -116,7 +116,7 @@ class Settings {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Seasons', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Seasons', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
@@ -133,9 +133,9 @@ class Settings {
 	private function new_template() {
 		$season = new Season;
 		?>
-		<h3><?php echo __( 'Add New Season', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New Season', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 		<?php
-		$this->form_template( $season, 'create', __( 'Add New Season', 'podlove' ) );
+		$this->form_template( $season, 'create', __( 'Add New Season', 'podlove-podcasting-plugin-for-wordpress' ) );
 	}
 	
 	private function view_template() {
@@ -147,7 +147,7 @@ class Settings {
 			?>
 			<div class="error">
 				<p>
-					<strong><?php echo __('Warning', 'podlove') . ': ' ?></strong>
+					<strong><?php echo __('Warning', 'podlove-podcasting-plugin-for-wordpress') . ': ' ?></strong>
 					<?php echo $issue->message(); ?>
 				</p>
 			</div>
@@ -175,7 +175,7 @@ class Settings {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );
 				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				submit_button( __('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false );
 				echo "</p>";
 			}
 		);
@@ -185,29 +185,29 @@ class Settings {
 			$season  = $form->object;
 
 	 		$wrapper->string('title', [
-	 			'label'       => __('Title', 'podlove') . \Podlove\get_help_link('podlove_help_seasons_title'),
+	 			'label'       => __('Title', 'podlove-podcasting-plugin-for-wordpress') . \Podlove\get_help_link('podlove_help_seasons_title'),
 	 			'html'        => ['class' => 'regular-text podlove-check-input']
 	 		]);
 
 	 		$wrapper->string('subtitle', [
-	 			'label'       => __('Subtitle', 'podlove'),
+	 			'label'       => __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'),
 	 			'html'        => ['class' => 'regular-text podlove-check-input']
 	 		]);
 
 	 		$wrapper->text('summary', [
-	 			'label'       => __('Summary', 'podlove'),
+	 			'label'       => __('Summary', 'podlove-podcasting-plugin-for-wordpress'),
 	 			'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
 	 		]);
 
 	 		$wrapper->string('start_date', [
-	 			'label'       => __('Start Date', 'podlove') . \Podlove\get_help_link('podlove_help_seasons_date'),
+	 			'label'       => __('Start Date', 'podlove-podcasting-plugin-for-wordpress') . \Podlove\get_help_link('podlove_help_seasons_date'),
 	 			'html'        => ['class' => 'regular-text podlove-check-input', 'readonly' => 'readonly']
 	 		]);
 
 	 		$wrapper->upload('image', [
-	 			'label' => __('Image', 'podlove'),
+	 			'label' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
 	 			'html'  => ['class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'],
- 				'media_button_text' => __("Use Image for Season", 'podlove')
+ 				'media_button_text' => __("Use Image for Season", 'podlove-podcasting-plugin-for-wordpress')
 	 		]);
 		} );
 
@@ -215,7 +215,7 @@ class Settings {
 	
 	private function edit_template() {
 		$season = Season::find_by_id( $_REQUEST['season'] );
-		echo '<h3>' . sprintf( __( 'Edit Season: %s', 'podlove' ), $season->title ) . '</h3>';
+		echo '<h3>' . sprintf( __( 'Edit Season: %s', 'podlove-podcasting-plugin-for-wordpress' ), $season->title ) . '</h3>';
 		$this->form_template( $season, 'save' );
 	}
 

@@ -40,7 +40,7 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			add_action('podlove_dashboard_meta_boxes', function() {
 				add_meta_box(
 					\Podlove\Settings\Dashboard::$pagehook . '_feeds',
-					__( 'Podcast feeds', 'podlove' ),
+					__( 'Podcast feeds', 'podlove-podcasting-plugin-for-wordpress' ),
 					'Podlove\Modules\FeedValidation\Feed_Validation::meta_box',
 					\Podlove\Settings\Dashboard::$pagehook,
 					'normal'
@@ -69,17 +69,17 @@ class Feed_Validation extends \Podlove\Modules\Base {
 	public static function meta_box() {
 		$feeds = \Podlove\Model\Feed::all();
 		?>
-		<input id="revalidate_feeds" type="button" class="button button-primary" value="<?php _e( 'Revalidate Feeds', 'podlove' ); ?>">
+		<input id="revalidate_feeds" type="button" class="button button-primary" value="<?php _e( 'Revalidate Feeds', 'podlove-podcasting-plugin-for-wordpress' ); ?>">
 
 		<table id="dashboard_feed_info">
 			<thead>
 				<tr>
-					<th><?php _e( 'Name', 'podlove' ); ?></th>
-					<th><?php _e( 'Slug/URL', 'podlove' ); ?></th>
-					<th><?php _e( 'Last Modification', 'podlove' ); ?></th>
-					<th><?php echo extension_loaded('zlib') ? __( 'Size (compressed)', 'podlove') : __( 'Size', 'podlove'); ?></th>
-					<th><?php _e( 'Latest item', 'podlove'); ?></th>
-					<th><?php _e( 'Validation', 'podlove' ); ?></th>
+					<th><?php _e( 'Name', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
+					<th><?php _e( 'Slug/URL', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
+					<th><?php _e( 'Last Modification', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
+					<th><?php echo extension_loaded('zlib') ? __( 'Size (compressed)', 'podlove') : __( 'Size', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th><?php _e( 'Latest item', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th><?php _e( 'Validation', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>

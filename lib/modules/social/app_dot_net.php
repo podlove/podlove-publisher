@@ -14,7 +14,7 @@ class AppDotNet {
 	}
 
 	public static function adn_tags_description( $description ) {
-		return $description . "\n<code title=\"" . __( 'The Contributors of your Epsiode', 'podlove' ) . "\">{episodeContributors}</code>";
+		return $description . "\n<code title=\"" . __( 'The Contributors of your Epsiode', 'podlove-podcasting-plugin-for-wordpress' ) . "\">{episodeContributors}</code>";
 	}
 
 	public static function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
@@ -85,8 +85,8 @@ class AppDotNet {
 
 		if ( count($roles) > 0 || count($groups) > 0 ) { 
 			$adn->register_option( 'contributor_filter', 'callback', array(
-				'label' => __( 'Contributor Filter', 'podlove' ),
-				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove' ),
+				'label' => __( 'Contributor Filter', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '<br />Filter <code title="' . __( 'The contributors of the episode', 'podlove' ) . '">{episodeContributors}</code> by Group and/or role', 'podlove-podcasting-plugin-for-wordpress' ),
 				'callback' => function() use ( $selected_role, $selected_group, $roles, $groups ) {													
 					if ( count($groups) > 0 ) :
 					?>

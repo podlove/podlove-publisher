@@ -21,7 +21,7 @@ class Custom_Guid {
 	public static function meta_box() {
 		add_meta_box(
 			/* $id       */ 'podlove_podcast_guid',
-			/* $title    */ __( 'Podcast Episode GUID', 'podlove' ),
+			/* $title    */ __( 'Podcast Episode GUID', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $callback */ '\Podlove\Custom_Guid::meta_box_callback',
 			/* $page     */ 'podcast'
 		);
@@ -31,10 +31,10 @@ class Custom_Guid {
 		?>
 		<div>
 			<span id="guid_preview"><?php echo get_the_guid() ?></span>
-			<a href="#" id="regenerate_guid"><?php echo __( 'regenerate', 'podlove' ) ?></a>
+			<a href="#" id="regenerate_guid"><?php echo __( 'regenerate', 'podlove-podcasting-plugin-for-wordpress' ) ?></a>
 		</div>
 		<span class="description">
-			<?php echo __( 'Identifier for this episode. Change it to force podcatchers to redownload media files for this episode.', 'podlove' ) ?>
+			<?php echo __( 'Identifier for this episode. Change it to force podcatchers to redownload media files for this episode.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 		</span>
 
 		<input type="hidden" name="_podlove_meta[guid]" id="_podlove_meta_guid" value="<?php echo get_the_guid() ?>">

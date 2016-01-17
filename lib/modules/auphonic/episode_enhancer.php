@@ -29,7 +29,7 @@ class EpisodeEnhancer {
 			'type' => 'callback',
 			'key'  => 'import_from_auphonic_form',
 			'options' => array(
-				'label'    => __('Auphonic', 'podlove'),
+				'label'    => __('Auphonic', 'podlove-podcasting-plugin-for-wordpress'),
 				'callback' => array($this, 'auphonic_episodes_form')
 			),
 			'position' => 500
@@ -90,7 +90,7 @@ class EpisodeEnhancer {
 						<label for="auphonic_production_files">
 							Master Audio File
 						</label>
-						<span id="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove' ) ?>">
+						<span id="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
@@ -106,7 +106,7 @@ class EpisodeEnhancer {
 
 				<div class="auphonic-row">
 
-					<button class="button button-primary" id="create_auphonic_production_button" title="<?php echo __( 'Create a production for the selected file.', 'podlove' ) ?>">
+					<button class="button button-primary" id="create_auphonic_production_button" title="<?php echo __( 'Create a production for the selected file.', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
 						<span class="indicating_button_wrapper">
 							<span class="state_idle"><i class="podlove-icon-plus"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
@@ -117,7 +117,7 @@ class EpisodeEnhancer {
 					</button>
 
 					<label>
-						<input type="checkbox" id="auphonic_start_after_creation"> <?php echo __( 'Start after creation', 'podlove' ) ?>
+						<input type="checkbox" id="auphonic_start_after_creation"> <?php echo __( 'Start after creation', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 					</label>
 				</div>
 			</fieldset>
@@ -126,7 +126,7 @@ class EpisodeEnhancer {
 				<legend>Manage Production</legend>
 				<div class="auphonic-row">
 						<select name="import_from_auphonic" id="auphonic_productions">
-							<option><?php echo __( 'Loading productions ...', 'podlove' ) ?></option>
+							<option><?php echo __( 'Loading productions ...', 'podlove-podcasting-plugin-for-wordpress' ) ?></option>
 						</select>
 						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->module->get_module_option('auphonic_api_key') ?>'>
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
@@ -135,7 +135,7 @@ class EpisodeEnhancer {
 							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 						</span>
 
-						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove') ?>">
+						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove-podcasting-plugin-for-wordpress') ?>">
 							<span class="indicating_button_wrapper">
 								<i class="podlove-icon-share"></i>
 							</span>
@@ -170,7 +170,7 @@ class EpisodeEnhancer {
 						</button>
 
 						<label>
-							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php echo __( 'Publish episode when done', 'podlove' ) ?>
+							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php echo __( 'Publish episode when done', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						</label>
 					</div>
 

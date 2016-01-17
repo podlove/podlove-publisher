@@ -21,7 +21,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 	public function no_items_content() {
 		?>
 		<span class="add-new-h2" style="background: transparent">
-			<?php _e( 'No podcasts exist yet.', 'podlove' ); ?>
+			<?php _e( 'No podcasts exist yet.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</span>
 		<?php
 	}
@@ -31,7 +31,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 			if ($podcast->title) {
 				return "<a href='" . admin_url() . "admin.php?page=podlove_settings_handle'>" . $podcast->title . "</a> <br />" . $podcast->subtitle;
 			} else {
-				return sprintf(__("No podcast title in blog %s.", 'podlove'), '<a href="' . admin_url() . '">' . get_bloginfo("name") . '</a>');
+				return sprintf(__("No podcast title in blog %s.", 'podlove-podcasting-plugin-for-wordpress'), '<a href="' . admin_url() . '">' . get_bloginfo("name") . '</a>');
 			}
 		});
 	}
@@ -64,10 +64,10 @@ class Podcast_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return [
-			'logo'           => __( 'Logo', 'podlove' ),
-			'title'          => __( 'Title', 'podlove' ),
-			'episodes'       => __( 'Episodes', 'podlove' ),
-			'latest_episode' => __( 'Latest Episode', 'podlove' )
+			'logo'           => __( 'Logo', 'podlove-podcasting-plugin-for-wordpress' ),
+			'title'          => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
+			'episodes'       => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'latest_episode' => __( 'Latest Episode', 'podlove-podcasting-plugin-for-wordpress' )
 		];
 	}
 

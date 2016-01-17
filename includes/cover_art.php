@@ -11,8 +11,8 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 		'type' => 'upload',
 		'key'  => 'cover_art',
 		'options' => array(
-			'label'       => __( 'Episode Cover Art URL', 'podlove' ),
-			'description' => __( 'Enter URL or select image from media library. JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove' ),
+			'label'       => __( 'Episode Cover Art URL', 'podlove-podcasting-plugin-for-wordpress' ),
+			'description' => __( 'Enter URL or select image from media library. JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove-podcasting-plugin-for-wordpress' ),
 			'html'        => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 		),
 		'position' => 790

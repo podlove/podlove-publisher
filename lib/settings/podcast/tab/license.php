@@ -42,14 +42,14 @@ class License extends Tab {
 			$podcast = \Podlove\Model\Podcast::get();
 
 			$wrapper->string( 'license_name', array(
-				'label'       => __( 'License Name', 'podlove' ),
+				'label'       => __( 'License Name', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->string( 'license_url', array(
-				'label'       => __( 'License URL', 'podlove' ),
+				'label'       => __( 'License URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' ),
-				'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove' )
+				'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove-podcasting-plugin-for-wordpress' )
 			) );
 			?>
 				

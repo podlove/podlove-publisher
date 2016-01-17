@@ -17,8 +17,8 @@ class Feed_List_Table extends \Podlove\List_Table {
 	public function column_name( $feed ) {
 
 		$actions = array(
-			'edit'   => Settings\Feed::get_action_link( $feed, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\Feed::get_action_link( $feed, __( 'Delete', 'podlove' ), 'confirm_delete' )
+			'edit'   => Settings\Feed::get_action_link( $feed, __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) ),
+			'delete' => Settings\Feed::get_action_link( $feed, __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ), 'confirm_delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
@@ -69,7 +69,7 @@ class Feed_List_Table extends \Podlove\List_Table {
 	public function column_media( $feed ) {
 		$episode_asset = $feed->episode_asset();
 
-		return ( $episode_asset ) ? $episode_asset->title() : __( 'not set', 'podlove' );
+		return ( $episode_asset ) ? $episode_asset->title() : __( 'not set', 'podlove-podcasting-plugin-for-wordpress' );
 	}
 
 	public function column_move( $feed ) {
@@ -78,12 +78,12 @@ class Feed_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		$columns = array(
-			'name'         => __( 'Feed', 'podlove' ),
-			'url'          => __( 'Subscribe URL', 'podlove' ),
-			'media'        => __( 'Media', 'podlove' ),
-			'limit'        => __( 'Item Limit', 'podlove' ),
-			'discoverable' => __( 'Discoverable', 'podlove' ),
-			'protected' => __( 'Protected', 'podlove' ),
+			'name'         => __( 'Feed', 'podlove-podcasting-plugin-for-wordpress' ),
+			'url'          => __( 'Subscribe URL', 'podlove-podcasting-plugin-for-wordpress' ),
+			'media'        => __( 'Media', 'podlove-podcasting-plugin-for-wordpress' ),
+			'limit'        => __( 'Item Limit', 'podlove-podcasting-plugin-for-wordpress' ),
+			'discoverable' => __( 'Discoverable', 'podlove-podcasting-plugin-for-wordpress' ),
+			'protected' => __( 'Protected', 'podlove-podcasting-plugin-for-wordpress' ),
 			'move'         => ''
 		);
 		return $columns;

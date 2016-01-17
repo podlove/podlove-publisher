@@ -45,7 +45,7 @@ function podlove_duplicate_episode_slug_notice(Episode $episode, $duplicate_id) 
 			<p>
 				<?php
 				echo sprintf(
-					__('Watch out, an episode with the slug "%s" already exists! %s', 'podlove'),
+					__('Watch out, an episode with the slug "%s" already exists! %s', 'podlove-podcasting-plugin-for-wordpress'),
 					$episode->slug,
 					sprintf('<a href="%s">%s</a>', get_edit_post_link($duplicate_id), get_the_title($duplicate_id))
 				)

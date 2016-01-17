@@ -41,23 +41,23 @@ class Import extends \Podlove\Settings\Expert\Tab {
 		?>
 
 		<p>
-			<?php echo __('Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove'); ?>
+			<?php echo __('Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		</p>
 
-		<h3><?php echo __('Podcast Import', 'podlove') ?></h3>
+		<h3><?php echo __('Podcast Import', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 
 		<form method="POST" enctype="multipart/form-data">
 			(<span><?php echo self::get_maximum_upload_size_text() ?></span>)
 			<input type="file" name="podlove_import"/> 
-			<input type="submit" value="<?php echo __('Import Podcast Data', 'podlove') ?>" class="button-primary" />
+			<input type="submit" value="<?php echo __('Import Podcast Data', 'podlove-podcasting-plugin-for-wordpress') ?>" class="button-primary" />
 		</form>
 
-		<h3><?php echo __('Tracking Import', 'podlove') ?></h3>
+		<h3><?php echo __('Tracking Import', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 
 		<form method="POST" enctype="multipart/form-data">
 			(<span><?php echo self::get_maximum_upload_size_text() ?></span>)
 			<input type="file" name="podlove_import_tracking"/>
-			<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove') ?>" class="button-primary" />
+			<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove-podcasting-plugin-for-wordpress') ?>" class="button-primary" />
 		</form>
 
 		<?php

@@ -104,7 +104,7 @@ class Module {
 	public function register_meta_boxes() {
 		add_meta_box(
 			\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE . '_player',
-			__( 'Webplayer', 'podlove' ),
+			__( 'Webplayer', 'podlove-podcasting-plugin-for-wordpress' ),
 			array( $this, 'about_player_meta_box' ),
 			\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			'side'
@@ -113,9 +113,9 @@ class Module {
 
 	public function about_player_meta_box() {
 		if ( PODLOVE_MEDIA_PLAYER === 'external' )
-			echo __( 'It looks like you have installed an <strong>external plugin</strong> using mediaelement.js.<br>That\'s what\'s used.', 'podlove' );
+			echo __( 'It looks like you have installed an <strong>external plugin</strong> using mediaelement.js.<br>That\'s what\'s used.', 'podlove-podcasting-plugin-for-wordpress' );
 		else
-			echo __( 'Podlove ships with its <strong>own webplayer</strong>.<br>That\'s what\'s used.', 'podlove' );
+			echo __( 'Podlove ships with its <strong>own webplayer</strong>.<br>That\'s what\'s used.', 'podlove-podcasting-plugin-for-wordpress' );
 	}
 
 	public static function there_is_a_player_in_the_content( $content ) {

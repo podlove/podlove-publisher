@@ -116,7 +116,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		$args = array(
 			'id'     => $podcast_toolbar_id . '_contributors',
-			'title'  => __( 'Podlove Contributors', 'podlove' ),
+			'title'  => __( 'Podlove Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
 			'parent' => "blog-" . $podcast,
 			'href'   => self::get_index_contributors_url()
 		);
@@ -507,7 +507,7 @@ class Contributors extends \Podlove\Modules\Base {
 			'type' => 'callback',
 			'key'  => 'contributors_form_table',
 			'options' => array(
-				'label'    => __( 'Contributors', 'podlove' ),
+				'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
 				'callback' => array($this, 'contributors_form_for_episode_callback')
 			),
 			'position' => 850
@@ -581,7 +581,7 @@ class Contributors extends \Podlove\Modules\Base {
 	 */
 	public function podcast_settings_tab($tabs)
 	{
-		$tabs->addTab( new Settings\PodcastContributorsSettingsTab( __( 'Contributors', 'podlove' ) ) );
+		$tabs->addTab( new Settings\PodcastContributorsSettingsTab( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		return $tabs;
 	}
 
@@ -730,7 +730,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		    // insert contributors at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("contributors" => __('Contributors', 'podlove')) +
+		           array("contributors" => __('Contributors', 'podlove-podcasting-plugin-for-wordpress')) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
 		    return $columns;
@@ -814,9 +814,9 @@ class Contributors extends \Podlove\Modules\Base {
 				);
 		}
 
-		$wrapper->subheader( __( 'Contributors', 'podlove' ) );
+		$wrapper->subheader( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) );
 		$wrapper->callback( 'services_form_table', array(
-			'label' => __( 'Contributor Filter', 'podlove' ),
+			'label' => __( 'Contributor Filter', 'podlove-podcasting-plugin-for-wordpress' ),
 			'callback' => function() use ( $contributors_roles, $contributors_groups, $selected_filter ) {
 				?>
 					<select name="podlove_feed[contributor_filter][group]" id="">
@@ -827,7 +827,7 @@ class Contributors extends \Podlove\Modules\Base {
 							}
 						?>
 					</select>
-					<?php echo __('Group', 'podlove') ?>
+					<?php echo __('Group', 'podlove-podcasting-plugin-for-wordpress') ?>
 
 					<select name="podlove_feed[contributor_filter][role]" id="">
 						<option value=""></option>
@@ -837,9 +837,9 @@ class Contributors extends \Podlove\Modules\Base {
 							}
 						?>
 					</select>
-					<?php echo __('Role', 'podlove') ?>
+					<?php echo __('Role', 'podlove-podcasting-plugin-for-wordpress') ?>
 					<p>
-						<span class="description"><?php echo __('Limit contributors to the given group and/or role.', 'podlove') ?></span>
+						<span class="description"><?php echo __('Limit contributors to the given group and/or role.', 'podlove-podcasting-plugin-for-wordpress') ?></span>
 					</p>
 				<?php
 			}		

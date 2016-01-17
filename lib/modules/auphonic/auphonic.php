@@ -43,10 +43,10 @@ class Auphonic extends \Podlove\Modules\Base {
 		if ( $this->get_module_option('auphonic_api_key') == "" ) {
 			$auth_url = "https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
 			$description = '<i class="podlove-icon-remove"></i> '
-			             . __( 'You need to allow Podlove Publisher to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove' )
-			             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove' ) . '</a>';
+			             . __( 'You need to allow Podlove Publisher to access your Auphonic account. You will be redirected to this page once the auth process completed.', 'podlove-podcasting-plugin-for-wordpress' )
+			             . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>';
 			$this->register_option( 'auphonic_api_key', 'hidden', array(
-				'label'       => __( 'Authorization', 'podlove' ),
+				'label'       => __( 'Authorization', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => $description,
 				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );	
@@ -55,7 +55,7 @@ class Auphonic extends \Podlove\Modules\Base {
 			if ( isset($user) && is_object($user) && is_object($user->data) ) {
 				$description = '<i class="podlove-icon-ok"></i> '
 							 . sprintf(
-								__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
+								__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove-podcasting-plugin-for-wordpress' ),
 								'<strong>' . $user->data->username . '</strong>',
 								'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
 								'</a>'
@@ -63,14 +63,14 @@ class Auphonic extends \Podlove\Modules\Base {
 			} else {
 				$description = '<i class="podlove-icon-remove"></i> '
 							 . sprintf(
-								__( 'Something went wrong with the Auphonic connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove' ),
+								__( 'Something went wrong with the Auphonic connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove-podcasting-plugin-for-wordpress' ),
 								'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1' ) . '">',
 								'</a>'
 							);
 			}
 
 			$this->register_option( 'auphonic_api_key', 'hidden', array(
-				'label'       => __( 'Authorization', 'podlove' ),
+				'label'       => __( 'Authorization', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => $description,
 				'html'        => array( 'class' => 'regular-text' )
 			) );	
@@ -83,11 +83,11 @@ class Auphonic extends \Podlove\Modules\Base {
 					$preset_list[ $preset->uuid ] = $preset->preset_name;
 				}
 			} else {
-				$preset_list[] = __( 'Presets could not be loaded', 'podlove' );
+				$preset_list[] = __( 'Presets could not be loaded', 'podlove-podcasting-plugin-for-wordpress' );
 			}
 				
 			$this->register_option( 'auphonic_production_preset', 'select', array(
-				'label'       => __( 'Auphonic production preset', 'podlove' ),
+				'label'       => __( 'Auphonic production preset', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span> This preset will be used, if you create Auphonic production from an Episode.',
 				'html'        => array( 'class' => 'regular-text' ),
 				'options'	  => $preset_list

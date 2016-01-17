@@ -13,19 +13,19 @@ class Podcast_Post_Type {
 	public function __construct() {
 
 		$labels = array(
-			'name'               => __( 'Episodes', 'podlove' ),
-			'singular_name'      => __( 'Episode', 'podlove' ),
-			'add_new'            => __( 'Add New', 'podlove' ),
-			'add_new_item'       => __( 'Add New Episode', 'podlove' ),
-			'edit_item'          => __( 'Edit Episode', 'podlove' ),
-			'new_item'           => __( 'New Episode', 'podlove' ),
-			'all_items'          => __( 'All Episodes', 'podlove' ),
-			'view_item'          => __( 'View Episode', 'podlove' ),
-			'search_items'       => __( 'Search Episodes', 'podlove' ),
-			'not_found'          => __( 'No episodes found', 'podlove' ),
-			'not_found_in_trash' => __( 'No episodes found in Trash', 'podlove' ),
+			'name'               => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'singular_name'      => __( 'Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'add_new'            => __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ),
+			'add_new_item'       => __( 'Add New Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'edit_item'          => __( 'Edit Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'new_item'           => __( 'New Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'all_items'          => __( 'All Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'view_item'          => __( 'View Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'search_items'       => __( 'Search Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'not_found'          => __( 'No episodes found', 'podlove-podcasting-plugin-for-wordpress' ),
+			'not_found_in_trash' => __( 'No episodes found in Trash', 'podlove-podcasting-plugin-for-wordpress' ),
 			'parent_item_colon'  => '',
-			'menu_name'          => __( 'Episodes', 'podlove' ),
+			'menu_name'          => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
 		);
 
 		$args = array(

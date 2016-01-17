@@ -179,15 +179,15 @@ function relative_time_steps($time) {
 	$formated_time_string = date('Y-m-d h:i:s', $time);
 
 	if ($time_diff == 0) {
-		return __('Now', 'podlove');
+		return __('Now', 'podlove-podcasting-plugin-for-wordpress');
 	} else {
 		$time_text = $formated_time_string;
 
-		if     ($time_diff < 60)	$time_text = __( 'Just now', 'podlove' );
-		elseif ($time_diff < 120)	$time_text = __( '1 minute ago', 'podlove' );
-		elseif ($time_diff < 3600)	$time_text = floor($time_diff / 60) . __( ' minutes ago', 'podlove' );
-		elseif ($time_diff < 7200)	$time_text = __( '1 hour ago', 'podlove' );
- 		elseif ($time_diff < 86400)	$time_text = floor($time_diff / 3600) . __( ' hours ago', 'podlove' );
+		if     ($time_diff < 60)	$time_text = __( 'Just now', 'podlove-podcasting-plugin-for-wordpress' );
+		elseif ($time_diff < 120)	$time_text = __( '1 minute ago', 'podlove-podcasting-plugin-for-wordpress' );
+		elseif ($time_diff < 3600)	$time_text = floor($time_diff / 60) . __( ' minutes ago', 'podlove-podcasting-plugin-for-wordpress' );
+		elseif ($time_diff < 7200)	$time_text = __( '1 hour ago', 'podlove-podcasting-plugin-for-wordpress' );
+ 		elseif ($time_diff < 86400)	$time_text = floor($time_diff / 3600) . __( ' hours ago', 'podlove-podcasting-plugin-for-wordpress' );
 
 		return sprintf('<span title="%s">%s</span>', $formated_time_string, $time_text);
 	}

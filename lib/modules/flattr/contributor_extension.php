@@ -51,7 +51,7 @@ class ContributorExtension {
 	 * @return array          
 	 */
 	public static function contributor_list_table_columns($columns) {
-		return \Podlove\PHP\array_insert($columns, 'episodes', ['flattr' => __('Flattr', 'podlove')]);
+		return \Podlove\PHP\array_insert($columns, 'episodes', ['flattr' => __('Flattr', 'podlove-podcasting-plugin-for-wordpress')]);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class ContributorExtension {
 				'field_type' => 'string',
 				'field_options' => [
 					'label'       => 'Flattr',
-					'description' => __('Flattr username', 'podlove'),
+					'description' => __('Flattr username', 'podlove-podcasting-plugin-for-wordpress'),
 					'html'        => ['class' => 'podlove-contributor-field podlove-check-input']
 				]
 			]

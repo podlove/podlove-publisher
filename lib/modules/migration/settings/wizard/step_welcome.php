@@ -40,14 +40,14 @@ class StepWelcome extends Step {
 		<div class="row-fluid">
 			<div class="span12">
 				<a href="<?php echo self::get_page_link( 2 ) ?>" class="btn btn-primary btn-large btn-block">
-					<?php echo __( 'Let\'s do this!', 'podlove' ); ?>
+					<?php echo __( 'Let\'s do this!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</a>
 			</div>
 		</div>
 		<!-- 
 		<div class="hero-unit">
 			<h1>
-				<?php echo __( 'Hi, Let\'s Migrate!', 'podlove' ); ?>
+				<?php echo __( 'Hi, Let\'s Migrate!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 			</h1>
 			<p>
 				<?php echo __( 'My name is Miggy and I\'m your Migration Assistant for today. Cool, huh?
@@ -62,7 +62,7 @@ class StepWelcome extends Step {
 			</p>
 			<p>
 				<a href="<?php echo self::get_page_link( 2 ) ?>" class="btn btn-primary btn-large">
-					<?php echo __( 'Let\'s do this!', 'podlove' ); ?>
+					<?php echo __( 'Let\'s do this!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</a>
 			</p>
 		</div>

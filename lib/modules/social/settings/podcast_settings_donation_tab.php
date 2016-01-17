@@ -38,7 +38,7 @@ class PodcastSettingsDonationTab extends Tab {
 		?>
 		<p>
 			<?php echo sprintf(
-				__( 'These are the possibilities to donate for your Podcast. Display this list using the shortcode %s', 'podlove' ),
+				__( 'These are the possibilities to donate for your Podcast. Display this list using the shortcode %s', 'podlove-podcasting-plugin-for-wordpress' ),
 				'<code>[podlove-podcast-donations-list]</code>'
 			); ?>
 		</p>
@@ -49,7 +49,7 @@ class PodcastSettingsDonationTab extends Tab {
 			$podcast = $form->object;
 
 	    	$wrapper->callback( 'services', array(
-				// 'label'    => __( 'Contributors', 'podlove' ),
+				// 'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
 				'callback' => array( __CLASS__, 'podcast_form_extension_form' )
 			) );
 		});

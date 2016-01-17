@@ -9,7 +9,7 @@ add_filter('podlove_episode_form_data', function ($form_data) {
 		'type' => 'string',
 		'key'  => 'recording_date',
 		'options' => array(
-			'label'       => __( 'Recording Date', 'podlove' ),
+			'label'       => __( 'Recording Date', 'podlove-podcasting-plugin-for-wordpress' ),
 			'description' => '',
 			'html'        => array( 'class' => 'regular-text podlove-check-input' )
 		),

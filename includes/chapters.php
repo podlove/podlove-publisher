@@ -81,8 +81,8 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 		'type' => 'text',
 		'key'  => 'chapters',
 		'options' => array(
-			'label'       => __( 'Chapter Marks', 'podlove' ),
-			'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove' ),
+			'label'       => __( 'Chapter Marks', 'podlove-podcasting-plugin-for-wordpress' ),
+			'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove-podcasting-plugin-for-wordpress' ),
 			'html'        => array(
 				'class'       => 'large-text code autogrow',
 				'placeholder' => '00:00:00.000 Intro',

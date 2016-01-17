@@ -136,15 +136,15 @@ class Feed {
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo sprintf( __( 'You selected to delete the feed "%s". Please confirm this action.', 'podlove' ), $feed->name ) ?>
+						<?php echo sprintf( __( 'You selected to delete the feed "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress' ), $feed->name ) ?>
 					</strong>
 				</p>
 				<p>
-					<?php echo __( 'Clients subscribing to this feed will no longer receive updates. If you are moving your feed, you must inform your subscribers.', 'podlove' ) ?>
+					<?php echo __( 'Clients subscribing to this feed will no longer receive updates. If you are moving your feed, you must inform your subscribers.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 				</p>
 				<p>
-					<?php echo self::get_action_link( $feed, __( 'Delete feed permanently', 'podlove' ), 'delete', 'button' ) ?>
-					<?php echo self::get_action_link( $feed, __( 'Don\'t change anything', 'podlove' ), 'keep', 'button-primary' ) ?>
+					<?php echo self::get_action_link( $feed, __( 'Delete feed permanently', 'podlove-podcasting-plugin-for-wordpress' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( $feed, __( 'Don\'t change anything', 'podlove-podcasting-plugin-for-wordpress' ), 'keep', 'button-primary' ) ?>
 				</p>
 			</div>
 			<?php
@@ -152,7 +152,7 @@ class Feed {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Podcast Feeds', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Podcast Feeds', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			
 			switch ( $action ) {
@@ -169,9 +169,9 @@ class Feed {
 	private function new_template() {
 		$feed = new \Podlove\Model\Feed;
 		?>
-		<h3><?php echo __( 'Add New Feed', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New Feed', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 		<?php
-		$this->form_template( $feed, 'create', __( 'Add New Feed', 'podlove' ) );
+		$this->form_template( $feed, 'create', __( 'Add New Feed', 'podlove-podcasting-plugin-for-wordpress' ) );
 	}
 	
 	private function view_template() {
@@ -193,19 +193,19 @@ class Feed {
 		foreach (Model\Feed::all() as $feed) {
 			if (!strlen(trim($feed->slug))) {
 				$errors[] = sprintf(
-								__('The feed %s has no slug.', 'podlove'), 
+								__('The feed %s has no slug.', 'podlove-podcasting-plugin-for-wordpress'), 
 								'<strong>' . $feed->name . '</strong>'
 							)
 				          . \Podlove\get_help_link('podlove_help_feed_slug')
-				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove'));
+				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove-podcasting-plugin-for-wordpress'));
 			}
 			if (!$feed->episode_asset_id) {
 				$errors[] = sprintf(
-								__('The feed %s has no assigned asset.', 'podlove'),
+								__('The feed %s has no assigned asset.', 'podlove-podcasting-plugin-for-wordpress'),
 								'<strong>' . $feed->name . '</strong>'
 							)
 				          . \Podlove\get_help_link('podlove_help_feed_asset')
-				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove'));
+				          . ' ' . self::get_action_link($feed, __('Go fix it', 'podlove-podcasting-plugin-for-wordpress'));
 			}
 		}
 
@@ -230,7 +230,7 @@ class Feed {
 			?>
 			<div class="error">
 				<p>
-					<strong><?php echo __('Please resolve these issues so your feeds can work.', 'podlove') ?></strong>
+					<strong><?php echo __('Please resolve these issues so your feeds can work.', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
 				</p>
 				<p>
 					<?php echo implode("</p><p>", $errors); ?>
@@ -257,19 +257,19 @@ class Feed {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				$podcast = $form->object;
 
-				$wrapper->subheader( __( 'Feed Global Defaults', 'podlove' ) );
+				$wrapper->subheader( __( 'Feed Global Defaults', 'podlove-podcasting-plugin-for-wordpress' ) );
 
 				$limit_options = array(
-					'-1' => __( "No limit. Include all items.", 'podlove' ),
-					'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+					'-1' => __( "No limit. Include all items.", 'podlove-podcasting-plugin-for-wordpress' ),
+					'0'  => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
 				);
 				for( $i = 1; $i*5 <= 100; $i++ ) {
 					$limit_options[ $i*5 ] = $i*5;
 				}
 
 				$wrapper->select( 'limit_items', array(
-					'label'       => __( 'Limit Items', 'podlove' ),
-					'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size. Additional limits can be set for the feeds individually.', 'podlove' ),
+					'label'       => __( 'Limit Items', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size. Additional limits can be set for the feeds individually.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options' => $limit_options,
 					'please_choose' => false,
 					'default' => '-1'
@@ -300,7 +300,7 @@ class Feed {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );
 				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				submit_button( __('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false );
 				echo "</p>";
 			}
 		);
@@ -318,65 +318,65 @@ class Feed {
 				$assets[ $asset->id ] = $asset->title;
 			}
 
-			$wrapper->subheader( __( 'Basic Settings', 'podlove' ) );
+			$wrapper->subheader( __( 'Basic Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
 
 			$wrapper->select( 'episode_asset_id', array(
-				'label'       => __( 'Episode Media File', 'podlove' ) . \Podlove\get_help_link('podlove_help_feed_asset'),
+				'label'       => __( 'Episode Media File', 'podlove-podcasting-plugin-for-wordpress' ) . \Podlove\get_help_link('podlove_help_feed_asset'),
 				'options'     => $assets,
 				'html'        => array( 'class' => 'required' )
 			) );
 
 			$wrapper->string( 'name', array(
-				'label'       => __( 'Feed Name', 'podlove' ),
-				'description' => __( 'Some podcast clients may display this title to describe the feed content.', 'podlove' ),
+				'label'       => __( 'Feed Name', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Some podcast clients may display this title to describe the feed content.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 			
 			$wrapper->checkbox( 'append_name_to_podcast_title', array(
-				'label'       => __( 'Append Feed Name to Podcast title', 'podlove' ),
-				'description' => sprintf( __( 'Structure of the feed title. Preview: %s', 'podlove' ), $podcast->title . '<span id="feed_title_preview_append"></span>' ),
+				'label'       => __( 'Append Feed Name to Podcast title', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => sprintf( __( 'Structure of the feed title. Preview: %s', 'podlove-podcasting-plugin-for-wordpress' ), $podcast->title . '<span id="feed_title_preview_append"></span>' ),
 				'default'     => false
 			) );
 
 			$wrapper->string( 'slug', array(
-				'label'       => __( 'Slug', 'podlove' ) . \Podlove\get_help_link('podlove_help_feed_slug'),
-				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
+				'label'       => __( 'Slug', 'podlove-podcasting-plugin-for-wordpress' ) . \Podlove\get_help_link('podlove_help_feed_slug'),
+				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove-podcasting-plugin-for-wordpress' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$wrapper->checkbox( 'discoverable', array(
-				'label'       => __( 'Discoverable?', 'podlove' ),
-				'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove' ),
+				'label'       => __( 'Discoverable?', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Embed a meta tag into the head of your site so browsers and feed readers will find the link to the feed.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => true
 			) );
 			
 			$wrapper->checkbox( 'embed_content_encoded', array(
-				'label'       => __( 'Include HTML Content', 'podlove' ),
-				'description' => __( 'Include episode show notes in the feed.', 'podlove' ),
+				'label'       => __( 'Include HTML Content', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Include episode show notes in the feed.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => false
 			) );
 
-			$wrapper->subheader( __( 'Directory Settings', 'podlove' ) );
+			$wrapper->subheader( __( 'Directory Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
 			
 			$wrapper->checkbox( 'enable', array(
-				'label'       => __( 'Allow Submission to Directories', 'podlove' ),
-				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove' ),
+				'label'       => __( 'Allow Submission to Directories', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => true
 			) );
 
 			do_action( 'podlove_feeds_directories', $wrapper );
 			
 			$wrapper->string( 'itunes_feed_id', array(
-				'label'       => __( 'iTunes Feed ID', 'podlove' ),
-				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove' ) . (($feed->itunes_feed_id) ? ' <a href="http://itunes.apple.com/podcast/id' . $feed->itunes_feed_id . '" target="_blank">' . __( 'Open in iTunes directory') . '</a>' : ''),
+				'label'       => __( 'iTunes Feed ID', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove-podcasting-plugin-for-wordpress' ) . (($feed->itunes_feed_id) ? ' <a href="http://itunes.apple.com/podcast/id' . $feed->itunes_feed_id . '" target="_blank">' . __( 'Open in iTunes directory') . '</a>' : ''),
 				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
-			$wrapper->subheader( __( 'Advanced Settings', 'podlove' ) );
+			$wrapper->subheader( __( 'Advanced Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
 
 			$wrapper->select( 'redirect_http_status', array(
-				'label'       => __( 'Redirect Method', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => array(
 					'0'   => 'Don\'t redirect', 
 					'307' => 'Temporary Redirect (HTTP Status 307)',
@@ -387,8 +387,8 @@ class Feed {
 			) );
 			
 			$wrapper->string( 'redirect_url', array(
-				'label'       => __( 'Redirect Url', 'podlove' ),
-				'description' => __( 'e.g. Feedburner URL', 'podlove' ),
+				'label'       => __( 'Redirect Url', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'e.g. Feedburner URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 
@@ -399,33 +399,33 @@ class Feed {
 				$limit_default = $podcast_settings['limit_items'];
 			}
 			$limit_options = array(
-				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove' ),
-				'-1' => __( "No limit. Include all items.", 'podlove' ),
-				'0'  => __( 'Use WordPress Default', 'podlove' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove-podcasting-plugin-for-wordpress' ),
+				'-1' => __( "No limit. Include all items.", 'podlove-podcasting-plugin-for-wordpress' ),
+				'0'  => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
 			);
 			for( $i = 1; $i*5 <= 100; $i++ ) {
 				$limit_options[ $i*5 ] = $i*5;
 			}
 
 			$wrapper->select( 'limit_items', array(
-				'label'       => __( 'Limit Items', 'podlove' ),
-				'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size.', 'podlove' ),
+				'label'       => __( 'Limit Items', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'If you have a lot of episodes, you might want to restrict the feed size.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => $limit_options,
 				'please_choose' => false,
 				'default' => '-2'
 			) );
 
-			$wrapper->subheader( __( 'Protection', 'podlove' ) );
+			$wrapper->subheader( __( 'Protection', 'podlove-podcasting-plugin-for-wordpress' ) );
 
 			$wrapper->checkbox( 'protected', array(
-				'label'       => __( 'Protect feed ', 'podlove' ),
-				'description' => __( 'The feed will be protected by HTTP Basic Authentication.', 'podlove' ),
+				'label'       => __( 'Protect feed ', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'The feed will be protected by HTTP Basic Authentication.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => false
 			) );
 
 			$wrapper->select( 'protection_type', array(
-				'label'       => __( 'Method', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'Method', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => array(
 					'0'   => 'Custom Login',
 					'1' => 'WordPress User database'
@@ -435,13 +435,13 @@ class Feed {
 			) );
 
 			$wrapper->string( 'protection_user', array(
-				'label'       => __( 'Username', 'podlove' ),
+				'label'       => __( 'Username', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
 
 			$wrapper->string( 'protection_password', array(
-				'label'       => __( 'Password', 'podlove' ),
+				'label'       => __( 'Password', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => '',
 				'html'        => array( 'class' => 'regular-text required' )
 			) );
@@ -453,7 +453,7 @@ class Feed {
 	
 	private function edit_template() {
 		$feed = \Podlove\Model\Feed::find_by_id( $_REQUEST['feed'] );
-		echo '<h3>' . sprintf( __( 'Edit Feed: %s', 'podlove' ), $feed->name ) . '</h3>';
+		echo '<h3>' . sprintf( __( 'Edit Feed: %s', 'podlove-podcasting-plugin-for-wordpress' ), $feed->name ) . '</h3>';
 		$this->form_template( $feed, 'save' );
 	}
 	

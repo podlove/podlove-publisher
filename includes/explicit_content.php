@@ -9,7 +9,7 @@ add_filter('podlove_episode_form_data', function ($form_data) {
 		'type' => 'select',
 		'key'  => 'explicit',
 		'options' => array(
-			'label'   => __( 'Explicit Content?', 'podlove' ),
+			'label'   => __( 'Explicit Content?', 'podlove-podcasting-plugin-for-wordpress' ),
 			'type'    => 'checkbox',
 			'html'    => array( 'style' => 'width: 200px;' ),
 			'default' => '-1',

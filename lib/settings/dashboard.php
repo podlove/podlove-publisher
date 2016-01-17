@@ -13,8 +13,8 @@ class Dashboard {
 		// default first item name
 		Dashboard::$pagehook = add_submenu_page(
 			/* $parent_slug*/ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
-			/* $page_title */ __('Dashboard', 'podlove'),
-			/* $menu_title */ __('Dashboard', 'podlove'),
+			/* $page_title */ __('Dashboard', 'podlove-podcasting-plugin-for-wordpress'),
+			/* $menu_title */ __('Dashboard', 'podlove-podcasting-plugin-for-wordpress'),
 			/* $capability */ 'podlove_read_dashboard',
 			/* $menu_slug  */ \Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE,
 			/* $function   */ array(__CLASS__, 'page')
@@ -25,14 +25,14 @@ class Dashboard {
 		add_action('load-' . Dashboard::$pagehook, function () {
 			// Adding the meta boxes here, so they can be filtered by the user settings.
 			add_action('add_meta_boxes_' . Dashboard::$pagehook, function () {
-				add_meta_box(Dashboard::$pagehook . '_about',      __('About', 'podlove'),        '\Podlove\Settings\Dashboard\About::content', Dashboard::$pagehook, 'side');		
-				add_meta_box(Dashboard::$pagehook . '_statistics', __('At a glance', 'podlove'),  '\Podlove\Settings\Dashboard\Statistics::content', Dashboard::$pagehook, 'normal');
-				add_meta_box(Dashboard::$pagehook . '_news',       __('Podlove News', 'podlove'), '\Podlove\Settings\Dashboard\News::content', Dashboard::$pagehook, 'normal');
+				add_meta_box(Dashboard::$pagehook . '_about',      __('About', 'podlove-podcasting-plugin-for-wordpress'),        '\Podlove\Settings\Dashboard\About::content', Dashboard::$pagehook, 'side');		
+				add_meta_box(Dashboard::$pagehook . '_statistics', __('At a glance', 'podlove-podcasting-plugin-for-wordpress'),  '\Podlove\Settings\Dashboard\Statistics::content', Dashboard::$pagehook, 'normal');
+				add_meta_box(Dashboard::$pagehook . '_news',       __('Podlove News', 'podlove-podcasting-plugin-for-wordpress'), '\Podlove\Settings\Dashboard\News::content', Dashboard::$pagehook, 'normal');
 				
 				do_action('podlove_dashboard_meta_boxes');
 
 				if (current_user_can('administrator')) {
-					add_meta_box(Dashboard::$pagehook . '_validation', __('Validate Podcast Files', 'podlove'), '\Podlove\Settings\Dashboard\FileValidation::content', Dashboard::$pagehook, 'normal');
+					add_meta_box(Dashboard::$pagehook . '_validation', __('Validate Podcast Files', 'podlove-podcasting-plugin-for-wordpress'), '\Podlove\Settings\Dashboard\FileValidation::content', Dashboard::$pagehook, 'normal');
 				}
 			});
 			do_action('add_meta_boxes_' . Dashboard::$pagehook);

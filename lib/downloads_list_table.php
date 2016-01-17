@@ -49,12 +49,12 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'episode'            => __( 'Episode', 'podlove' ),
-			'downloads'          => __( 'Total Downloads', 'podlove' ),
-			'downloadsMonth'     => __( '28 Days', 'podlove' ),
-			'downloadsWeek'      => __( '7 Days', 'podlove' ),
-			'downloadsYesterday' => __( 'Yesterday', 'podlove' ),
-			'downloadsToday'     => __( 'Today', 'podlove' ),
+			'episode'            => __( 'Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloads'          => __( 'Total Downloads', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloadsMonth'     => __( '28 Days', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloadsWeek'      => __( '7 Days', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloadsYesterday' => __( 'Yesterday', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloadsToday'     => __( 'Today', 'podlove-podcasting-plugin-for-wordpress' ),
 		);
 	}
 

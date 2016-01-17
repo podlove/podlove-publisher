@@ -21,7 +21,7 @@ class ContributorRepair {
 		$contributions = self::find_duplicate_episode_contributions();
 
 		if (!is_array($contributions) || empty($contributions)) {
-			Repair::add_to_repair_log(__('Contributions did not need repair', 'podlove'));
+			Repair::add_to_repair_log(__('Contributions did not need repair', 'podlove-podcasting-plugin-for-wordpress'));
 			return;
 		}
 

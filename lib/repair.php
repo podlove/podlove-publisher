@@ -53,17 +53,17 @@ class Repair {
 	private static function clear_podlove_cache() {
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
 		$cache->setup_purge();
-		self::add_to_repair_log(__('Podlove cache cleared', 'podlove'));
+		self::add_to_repair_log(__('Podlove cache cleared', 'podlove-podcasting-plugin-for-wordpress'));
 	}
 
 	private static function clear_podlove_image_cache() {
 		\Podlove\Model\Image::flush_cache();
-		self::add_to_repair_log(__('Podlove image cache cleared', 'podlove'));
+		self::add_to_repair_log(__('Podlove image cache cleared', 'podlove-podcasting-plugin-for-wordpress'));
 	}
 
 	private static function flush_rewrite_rules() {
 		flush_rewrite_rules();
-		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove'));
+		self::add_to_repair_log(__('Rewrite rules flushed', 'podlove-podcasting-plugin-for-wordpress'));
 	}
 
 	// this should create a conflict with user aided resolution
@@ -97,7 +97,7 @@ class Repair {
 			}
 			self::add_to_repair_log(
 				sprintf(
-					__('Removed duplicate episode datasets (%s) You should verify that they are correct.', 'podlove'),
+					__('Removed duplicate episode datasets (%s) You should verify that they are correct.', 'podlove-podcasting-plugin-for-wordpress'),
 					implode(', ', array_map(function($post_id) {
 						$link  = \get_edit_post_link($post_id);
 						$title = \get_the_title($post_id);
@@ -132,7 +132,7 @@ class Repair {
 	public static function page() {
 		self::print_and_clear_repair_log();
 		?>
-		<h3><?php echo __('Repair', 'podlove') ?></h3>
+		<h3><?php echo __('Repair', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 
 		<p>
 			<?php echo __('There are a few occasional issues that are hard to avoid but easy to fix.
@@ -159,12 +159,12 @@ class Repair {
 					<li><?php echo $entry; ?></li>
 				<?php endforeach; ?>
 			</ul>
-			<?php echo __('Feel free to press this button as often as you like. Worst case scenario: nothing happens.', 'podlove') ?>
+			<?php echo __('Feel free to press this button as often as you like. Worst case scenario: nothing happens.', 'podlove-podcasting-plugin-for-wordpress') ?>
 		</p>
 
 		<p>
 			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&repair=1') ?>" class="button button-primary">
-				<?php echo __( 'Attempt Repair', 'podlove' ) ?>
+				<?php echo __( 'Attempt Repair', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 			</a>
 		</p>
 		<?php
