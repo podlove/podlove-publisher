@@ -239,7 +239,7 @@ else
 
 function plugin_textdomain() {
 	// only use language packs, see http://ottopress.com/2013/language-packs-101-prepwork/
-	load_plugin_textdomain('podlove');
+	load_plugin_textdomain('podlove-podcasting-plugin-for-wordpress');
 }
 
 /**
