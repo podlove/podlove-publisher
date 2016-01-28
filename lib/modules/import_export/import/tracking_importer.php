@@ -69,7 +69,8 @@ class TrackingImporter {
 				$context,
 				$geo_area_id,
 				$lat,
-				$lng
+				$lng,
+				$httprange
 			) = explode(",", $line);
 
 			$batch[] = array(
@@ -81,7 +82,8 @@ class TrackingImporter {
 				$context,
 				$geo_area_id,
 				$lat,
-				$lng
+				$lng,
+				$httprange
 			);
 
 			if (count($batch) >= $batchSize) {
@@ -108,7 +110,7 @@ class TrackingImporter {
 		$sqlTemplate = "
 			INSERT INTO
 				" . Model\DownloadIntent::table_name() . " 
-			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`) 
+			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`) 
 			VALUES %s";
 
 		if (count($batch)) {

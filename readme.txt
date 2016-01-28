@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.4.0 =
 
 * when activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup
+* fix tracking export: keep httprange
 
 = 2.3.8 =
 

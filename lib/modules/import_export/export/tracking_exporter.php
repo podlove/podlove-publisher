@@ -77,7 +77,8 @@ class TrackingExporter {
 					context,
 					geo_area_id,
 					lat,
-					lng
+					lng,
+					httprange
 				FROM
 					" . \Podlove\Model\DownloadIntent::table_name() . "
 					WHERE id > " . (int) $lastId . "
