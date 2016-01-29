@@ -371,7 +371,6 @@ Podcast::property( 'license_url' );
 Podcast::property( 'license_cc_allow_modifications' );
 Podcast::property( 'license_cc_allow_commercial_use' );
 Podcast::property( 'license_cc_license_jurisdiction' );
-Podcast::property( 'keywords' );
 Podcast::property( 'category_1' );
 Podcast::property( 'category_2' );
 Podcast::property( 'category_3' );

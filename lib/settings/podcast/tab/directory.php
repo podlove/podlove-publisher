@@ -19,7 +19,6 @@ class Directory extends Tab {
 			'publisher_url',
 			'owner_name',
 			'owner_email',
-			'keywords',
 			'category_1',
 			'category_2',
 			'category_3',
@@ -81,12 +80,6 @@ class Directory extends Tab {
 				'label'       => __( 'Owner Email', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( 'Used by iTunes and other Podcast directories to contact you.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'email' )
-			) );
-	
-			$wrapper->string( 'keywords', array(
-				'label'       => __( 'Keywords', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'List of keywords. Separate with commas.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$wrapper->select( 'category_1', array(

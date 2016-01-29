@@ -63,7 +63,6 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		'podlove_feed_itunes_author'  ,
 		'podlove_feed_itunes_owner'   ,
 		'podlove_feed_itunes_subtitle',
-		'podlove_feed_itunes_keywords',
 		'podlove_feed_itunes_summary' ,
 		'podlove_feed_itunes_complete',
 		'podlove_feed_itunes_explicit'
@@ -183,10 +182,6 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 
 		$subtitle = sprintf( '<itunes:subtitle>%s</itunes:subtitle>', $podcast->subtitle );
 		echo "\t" . apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
-		echo PHP_EOL;
-
-		$keywords = sprintf( '<itunes:keywords>%s</itunes:keywords>', $podcast->keywords );
-		echo "\t" . apply_filters( 'podlove_feed_itunes_keywords', $keywords );
 		echo PHP_EOL;
 
 		$block = sprintf( '<itunes:block>%s</itunes:block>', ( $feed->enable ) ? 'no' : 'yes' );
