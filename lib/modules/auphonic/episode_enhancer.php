@@ -135,7 +135,7 @@ class EpisodeEnhancer {
 							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 						</span>
 
-						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove-podcasting-plugin-for-wordpress') ?>">
+						<button class="button" id="open_production_button" title="<?php echo __('Open in Auphonic', 'podlove-podcasting-plugin-for-wordpress') ?>" disabled>
 							<span class="indicating_button_wrapper">
 								<i class="podlove-icon-share"></i>
 							</span>
