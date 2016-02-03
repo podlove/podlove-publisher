@@ -68,16 +68,16 @@ class EpisodeEnhancer {
 
 		<div id="auphonic-box">
 
-			<em id="auphonic-credits-status">Available processing time: <span id="auphonic-credits"></span></em>
+			<em id="auphonic-credits-status"><?php echo __('Available processing time: <span id="auphonic-credits"></span></em>', 'podlove-podcasting-plugin-for-wordpress'); ?>
 
 			<div id="auphonic-production-status" class="auphonic-status status-info"></div>
 
 			<fieldset>
-				<legend>Create Production</legend>
+				<legend><?php echo __('Create Production</legend>', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_services">
-							Source
+							<?php echo __('Source', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</label>
 					</div>
 					<select id="auphonic_services">
@@ -88,7 +88,7 @@ class EpisodeEnhancer {
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_production_files">
-							Master Audio File
+							<?php echo __('Master Audio File', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</label>
 						<span id="fetch_auphonic_production_files" title="<?php echo __( 'Fetch available audio files.', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
@@ -113,7 +113,7 @@ class EpisodeEnhancer {
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
 							<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 						</span>
-						Create Production
+						<?php echo __('Create Production', 'podlove-podcasting-plugin-for-wordpress'); ?>
 					</button>
 
 					<label>
@@ -123,7 +123,7 @@ class EpisodeEnhancer {
 			</fieldset>
 
 			<fieldset>
-				<legend>Manage Production</legend>
+				<legend><?php echo __('Manage Production', 'podlove-podcasting-plugin-for-wordpress') ?></legend>
 				<div class="auphonic-row">
 						<select name="import_from_auphonic" id="auphonic_productions">
 							<option><?php echo __( 'Loading productions ...', 'podlove-podcasting-plugin-for-wordpress' ) ?></option>
@@ -139,7 +139,7 @@ class EpisodeEnhancer {
 							<span class="indicating_button_wrapper">
 								<i class="podlove-icon-share"></i>
 							</span>
-							Open Production
+							<?php echo __('Open Production', 'podlove-podcasting-plugin-for-wordpress') ?>
 						</button>
 
 					<div style="clear: both"></div>
@@ -156,7 +156,7 @@ class EpisodeEnhancer {
 								<span class="state_success"><i class="podlove-icon-ok"></i></span>
 								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 							</span>
-							Start Production
+							<?php echo __('Start Production', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</button>
 
 						<button class="button" id="stop_auphonic_production_button" disabled>
@@ -166,7 +166,7 @@ class EpisodeEnhancer {
 								<span class="state_success"><i class="podlove-icon-ok"></i></span>
 								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 							</span>
-							Stop Production
+							<?php echo __('Stop Production', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</button>
 
 						<label>
@@ -182,7 +182,7 @@ class EpisodeEnhancer {
 								<span class="state_success"><i class="podlove-icon-ok"></i></span>
 								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 							</span>
-							Get Production Results
+							<?php echo __('Get Production Results', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</button>
 						<button id="fetch_production_data_button" class="button" disabled>
 							<span class="indicating_button_wrapper">
@@ -191,7 +191,7 @@ class EpisodeEnhancer {
 								<span class="state_success"><i class="podlove-icon-ok"></i></span>
 								<span class="state_fail"><i class="podlove-icon-remove"></i></span>
 							</span>
-							Import Episode Metadata
+							<?php echo __('Import Episode Metadata', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</button>
 					</div>
 				</div>
