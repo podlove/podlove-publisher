@@ -16,31 +16,30 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function column_episode( $episode ) {
 		return sprintf(
-			"<a href=\"?page=%s&action=show&episode=%d\">%s</a>",
+			"<a href=\"?page=%s&action=show&episode=%d\">%s</a><br>%s",
 			$_REQUEST['page'],
 			$episode['id'],
-			$episode['title']
+			$episode['title'],
+			date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($episode['post_date']))
 		);
 	}
 
 	public function column_downloads( $episode ) {
 		return self::get_number_or_dash($episode['downloads']);
 	}
+	public function column_downloads_peak( $episode ) {
+		$downloads = self::get_number_or_dash($episode['downloads_peak']['downloads']);
+		$date = $episode['downloads_peak']['theday'];
 
-	public function column_downloadsMonth( $episode ) {
-		return self::get_number_or_dash($episode['downloadsMonth']);
+		if (!$episode['downloads_peak']['downloads']) {
+			return $downloads;
+		} else {
+			return sprintf("%s %son %s%s", $downloads, '<span style="color: #999">', date(get_option('date_format'), strtotime($date)), '</span>');
+		}
 	}
 
-	public function column_downloadsWeek( $episode ) {
-		return self::get_number_or_dash($episode['downloadsWeek']);
-	}
-
-	public function column_downloadsYesterday( $episode ) {
-		return self::get_number_or_dash($episode['downloadsYesterday']);
-	}
-
-	public function column_downloadsToday( $episode ) {
-		return self::get_number_or_dash($episode['downloadsToday']);
+	public function column_downloads_avg( $episode ) {
+		return self::get_number_or_dash($episode['downloads_avg']);
 	}
 
 	public static function get_number_or_dash($value) {
@@ -49,23 +48,19 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'episode'            => __( 'Episode', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloads'          => __( 'Total Downloads', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsMonth'     => __( '28 Days', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsWeek'      => __( '7 Days', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsYesterday' => __( 'Yesterday', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsToday'     => __( 'Today', 'podlove-podcasting-plugin-for-wordpress' ),
+			'episode'        => __( 'Episode', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloads'      => __( 'Total Downloads', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloads_peak' => __( 'Downloads on Peak Day', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloads_avg'  => __( 'Average per Day', 'podlove-podcasting-plugin-for-wordpress' ),
 		);
 	}
 
 	public function get_sortable_columns() {
 		return array(
-			'episode'            => array('episode', true),
-			'downloads'          => array('downloads', true),
-			'downloadsMonth'     => array('downloadsMonth', true),
-			'downloadsWeek'      => array('downloadsWeek', true),
-			'downloadsYesterday' => array('downloadsYesterday', true),
-			'downloadsToday'     => array('downloadsToday', true),
+			'episode'        => array('episode', true),
+			'downloads'      => array('downloads', true),
+			'downloads_peak' => array('downloads_peak', true),
+			'downloads_avg'  => array('downloads_avg', true)
 		);
 	}	
 
@@ -81,65 +76,47 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$data = \Podlove\Cache\TemplateCache::get_instance()->cache_for('podlove_analytics_downloads_table', function() {
-			global $wpdb;
+		// $data = \Podlove\Cache\TemplateCache::get_instance()->cache_for('podlove_analytics_downloads_table', function() {
+		global $wpdb;
 
-			// retrieve data
-			$subSQL = function($start = null, $end = null) {
+		$sql = "
+			SELECT
+				e.id,
+				p.post_title title,
+				p.post_date post_date,
+				COUNT(di.id) downloads
+			FROM
+				" . Model\Episode::table_name() . " e
+				JOIN " . $wpdb->posts . " p ON e.post_id = p.ID
+				JOIN " . Model\MediaFile::table_name() . " mf ON e.id = mf.episode_id
+				LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di ON di.media_file_id = mf.id
+			WHERE
+				p.post_status IN ('publish', 'private')
+			GROUP BY
+				e.id
+		";
 
-				$strToMysqlDate = function($s) { return date('Y-m-d', strtotime($s)); };
+		$data = $wpdb->get_results($sql, ARRAY_A);
+		// }, HOUR_IN_SECONDS);
 
-				if ($start && $end) {
-					$timerange = " AND di2.accessed_at BETWEEN '{$strToMysqlDate($start)}' AND '{$strToMysqlDate($end)}'";
-				} elseif ($start) {
-					$timerange = " AND DATE(di2.accessed_at) = '{$strToMysqlDate($start)}'";
-				} else {
-					$timerange = "";
-				}
+		foreach ($data as $row_id => $row) {
+			
+			$days_since_release = (new \DateTime())->diff(new \DateTime($row['post_date']))->days;
+			if ($days_since_release) {
+				$data[$row_id]['downloads_avg'] = round($row['downloads'] / $days_since_release);
+			} else {
+				$data[$row_id]['downloads_avg'] = 0;
+			}
 
-				return "
-					SELECT
-						COUNT(di2.id) downloads
-					FROM
-						" . Model\MediaFile::table_name() . " mf2
-						LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di2 ON di2.media_file_id = mf2.id
-					WHERE
-						mf2.episode_id = e.id
-						$timerange
-				";
-			};
-
-			$sql = "
-				SELECT
-					e.id,
-					p.post_title title,
-					p.post_date post_date,
-					COUNT(di.id) downloads,
-					(" . $subSQL('28 days ago', 'now') . ") downloadsMonth,
-					(" . $subSQL('7 days ago', 'now') . ") downloadsWeek,
-					(" . $subSQL('1 day ago') . ") downloadsYesterday,
-					(" . $subSQL('now') . ") downloadsToday
-				FROM
-					" . Model\Episode::table_name() . " e
-					JOIN " . $wpdb->posts . " p ON e.post_id = p.ID
-					JOIN " . Model\MediaFile::table_name() . " mf ON e.id = mf.episode_id
-					LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di ON di.media_file_id = mf.id
-				WHERE
-					p.post_status IN ('publish', 'private')
-				GROUP BY
-					e.id
-			";
-
-			return $wpdb->get_results($sql, ARRAY_A);
-		}, HOUR_IN_SECONDS);
+			$peak = Model\DownloadIntentClean::peak_download_by_episode_id($row['id']);
+			$data[$row_id]['downloads_peak'] = $peak;
+		}
 
 		$valid_order_keys = array(
 			'post_date',
 			'downloads',
-			'downloadsMonth',
-			'downloadsWeek',
-			'downloadsYesterday',
-			'downloadsToday'
+			'downloads_peak',
+			'downloads_avg'
 		);
 
 		// look for order options
