@@ -110,13 +110,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.8 =
 
+**Bugfixes**
+
 * fix '&' issue in some fields when exporting/importing
-* pass podcast language code to web player v3
+* player: pass podcast language code to web player v3
 * open graph: do not include non-downloadable assets
 * open graph: use tracking URLs if available
-* enhance error message when resolving URL fails
 * template editor: add scrolling when having many templates in the list
 * auphonic: disable "Open Production" button when no production is selected
+* player: chapters visibility setting now applies to v3 beta player
+
+**Enhancements**
+
+* enhance error message when resolving URL fails
+
 
 = 2.3.7 = 
 

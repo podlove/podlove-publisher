@@ -166,7 +166,7 @@ class WebPlayer extends Tab {
 				'label'   => __( 'Player Version', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => array(
 					'player_v2' => __( 'Podlove Web Player 2', 'podlove-podcasting-plugin-for-wordpress' ),
-					'player_v3' => __( 'Podlove Web Player 3 (unstable beta, don\'t use in production)', 'podlove-podcasting-plugin-for-wordpress' )
+					'player_v3' => __( 'Podlove Web Player 3 (beta)', 'podlove-podcasting-plugin-for-wordpress' )
 				)
 			),
 			'playerv3theme' => [
