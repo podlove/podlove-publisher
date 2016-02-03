@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix '&' issue in some fields when exporting/importing
 * pass podcast language code to web player v3
 * open graph: do not include non-downloadable assets
+* open graph: use tracking URLs if available
 
 = 2.3.7 = 
 
