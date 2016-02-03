@@ -115,6 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * open graph: do not include non-downloadable assets
 * open graph: use tracking URLs if available
 * enhance error message when resolving URL fails
+* template editor: add scrolling when having many templates in the list
 
 = 2.3.7 = 
 
