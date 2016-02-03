@@ -185,9 +185,9 @@ function relative_time_steps($time) {
 
 		if     ($time_diff < 60)	$time_text = __( 'Just now', 'podlove-podcasting-plugin-for-wordpress' );
 		elseif ($time_diff < 120)	$time_text = __( '1 minute ago', 'podlove-podcasting-plugin-for-wordpress' );
-		elseif ($time_diff < 3600)	$time_text = floor($time_diff / 60) . __( ' minutes ago', 'podlove-podcasting-plugin-for-wordpress' );
+		elseif ($time_diff < 3600)	$time_text = sprintf(__( '%s minutes ago', 'podlove-podcasting-plugin-for-wordpress' ), floor($time_diff / 60));
 		elseif ($time_diff < 7200)	$time_text = __( '1 hour ago', 'podlove-podcasting-plugin-for-wordpress' );
- 		elseif ($time_diff < 86400)	$time_text = floor($time_diff / 3600) . __( ' hours ago', 'podlove-podcasting-plugin-for-wordpress' );
+ 		elseif ($time_diff < 86400)	$time_text = sprintf(__( '%s hours ago', 'podlove-podcasting-plugin-for-wordpress' ), floor($time_diff / 3600));
 
 		return sprintf('<span title="%s">%s</span>', $formated_time_string, $time_text);
 	}
