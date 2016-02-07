@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * template editor: add scrolling when having many templates in the list
 * auphonic: disable "Open Production" button when no production is selected
 * player: chapters visibility setting now applies to v3 beta player
+* more defensive feed gzipping for compatibility with various caching plugins
 
 **Enhancements**
 
