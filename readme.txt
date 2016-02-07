@@ -120,6 +120,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * auphonic: disable "Open Production" button when no production is selected
 * player: chapters visibility setting now applies to v3 beta player
 * more defensive feed gzipping for compatibility with various caching plugins
+* fix feed discovery cache (can now handle both http and https at the same time)
 
 **Enhancements**
 
