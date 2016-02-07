@@ -21,12 +21,14 @@ function podlove_add_feed_discoverability() {
 
 		$feeds = Model\Podcast::get()->feeds();
 
-		$html = '';
-		foreach ( $feeds as $feed ) {
-			if ( $feed->discoverable )
-				$html .= '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
-		}
-		return $html;
+		// only discoverable feeds
+		$feeds = array_filter($feeds, function($feed) { return $feed->discoverable; });
+
+		$links = array_map(function($feed) {
+			return '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";
+		}, $feeds);
+
+		return "\n" . implode("", $links);
 	});
 }
 
