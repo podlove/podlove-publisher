@@ -108,7 +108,31 @@ class Tools {
 	}
 
 	public function page() {
+
+		wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL . '/js/admin/tools/useragent.js', ['jquery'], \Podlove\get_plugin_header('Version'));
+		wp_enqueue_script('jquery-ui-progressbar');
+
 		?>
+
+  <style>
+  .ui-progressbar {
+    position: relative;
+    margin-left: 225px;
+  }
+  .progress-label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+
+  #recalculate_useragents {
+  	float: left;
+  }
+
+  </style>
+
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
@@ -116,10 +140,14 @@ class Tools {
 			<h3>Tracking &amp; Analytics</h3>
 
 			<p>
-				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_useragents') ?>" class="button button-primary">
+				<a id="recalculate_useragents" href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_useragents') ?>" class="button button-primary">
 					<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 				</a>
+
+				<div id="progressbar"><div class="progress-label"></div></div>
 			</p>
+
+			<div class="clear"></div>
 
 			<p>
 				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_analytics') ?>" class="button button-primary">
@@ -127,11 +155,15 @@ class Tools {
 				</a>
 			</p>
 
+			<div class="clear"></div>
+
 			<p>
 				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button button-primary">
 					<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 				</a>
 			</p>
+
+			<div class="clear"></div>
 
 		</div>	
 		<?php
