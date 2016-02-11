@@ -35,7 +35,9 @@ class Tools {
 			case 'recalculate_analytics':
 				self::recalculate_analytics();
 				break;
-			
+			case 'recalculate_useragents':
+				self::recalculate_useragents();
+				break;
 			default:
 				# code...
 				break;
@@ -49,11 +51,24 @@ class Tools {
 		TemplateCache::get_instance()->setup_purge();
 	}
 
+	public static function recalculate_useragents() {
+		error_log(print_r("recalc user agents", true));
+		podlove_init_user_agent_refresh();
+	}
+
 	public function page() {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
+
+			<h3>Tracking &amp; Analytics</h3>
+
+			<p>
+				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_useragents') ?>" class="button button-primary">
+					<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+				</a>
+			</p>
 
 			<p>
 				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_analytics') ?>" class="button button-primary">
