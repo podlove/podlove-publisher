@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "hash": "92f6fedb5d2a1e68029ab1fbd7d67d2a",
+    "content-hash": "7fddde2711f9b18ad176bc9f85dfe6a5",
     "packages": [
         {
             "name": "geoip2/geoip2",
@@ -16,7 +17,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/ee15b2e466dd09fd2246cf64efa1aa9eca988b86",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/a93764bddfb8a2e5738affbb9f9d69327df28342",
                 "reference": "ee15b2e466dd09fd2246cf64efa1aa9eca988b86",
                 "shasum": ""
             },
@@ -391,12 +392,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eteubert/device-detector.git",
-                "reference": "56a6e4ff461c5b2c56518b1b43494d67aa6a5348"
+                "reference": "e2ebea639dab2c3b233a66b18500d03e5654c956"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/56a6e4ff461c5b2c56518b1b43494d67aa6a5348",
-                "reference": "56a6e4ff461c5b2c56518b1b43494d67aa6a5348",
+                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/e2ebea639dab2c3b233a66b18500d03e5654c956",
+                "reference": "e2ebea639dab2c3b233a66b18500d03e5654c956",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +440,7 @@
                 "wiki": "http://dev.piwik.org/",
                 "source": "https://github.com/piwik/piwik"
             },
-            "time": "2015-07-20 09:04:50"
+            "time": "2016-02-11 04:36:25"
         },
         {
             "name": "podlove/normalplaytime",
@@ -618,7 +619,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/8c4ca8fcc7a7aa0637b5153871d7bffbcdd88df8",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/5552043bc00c536a9e48191de70ac3b5b79d6a2e",
                 "reference": "8c4ca8fcc7a7aa0637b5153871d7bffbcdd88df8",
                 "shasum": ""
             },
