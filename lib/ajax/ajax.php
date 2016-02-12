@@ -57,6 +57,10 @@ class Ajax {
 	{
 		global $wpdb;
 
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
 		$downloads = $wpdb->get_col("
 			SELECT
 				meta_value
@@ -114,6 +118,10 @@ class Ajax {
 
 	public function analytics_downloads_per_day() {
 
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
 		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
@@ -160,6 +168,10 @@ class Ajax {
 	}
 
 	public function analytics_episode_downloads_per_hour() {
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
 
 		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
 		$cache_key = 'podlove_analytics_dphx_' . $episode_id;
@@ -216,6 +228,10 @@ class Ajax {
 
 	public function analytics_total_downloads_per_day() {
 
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
 		$cache_key = 'podlove_analytics_tdphx';
 
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
@@ -269,6 +285,11 @@ class Ajax {
 	}
 
 	public static function analytics_settings_tiles_update() {
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
 		$tile_id = $_GET['tile_id'];
 		$checked = isset($_GET['checked']) && $_GET['checked'] === 'checked';
 
@@ -305,6 +326,12 @@ class Ajax {
 	}
 
 	public function validate_url() {
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			echo 'No permission';
+			exit;
+		}
+
 		$file_url = $_REQUEST['file_url'];
 
 		$info = \Podlove\Model\MediaFile::curl_get_header_for_url( $file_url );
@@ -324,6 +351,11 @@ class Ajax {
 
 	public function update_asset_position() {
 
+		if ( ! current_user_can( 'administrator' ) ) {
+			echo 'No permission';
+			exit;
+		}
+
 		$asset_id = (int)   $_REQUEST['asset_id'];
 		$position = (float) $_REQUEST['position'];
 
@@ -334,6 +366,11 @@ class Ajax {
 	}
 
 	public function update_feed_position() {
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			echo 'No permission';
+			exit;
+		}
 
 		$feed_id = (int)   $_REQUEST['feed_id'];
 		$position = (float) $_REQUEST['position'];
