@@ -29,6 +29,10 @@ class TemplateController {
 
 	public static function get() {
 
+		if ( ! current_user_can( 'administrator' ) ) {
+			Ajax::respond_with_json(array("success" => false));
+		}
+
 		$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 		if ($template = Template::find_by_id($id)) {
@@ -45,6 +49,10 @@ class TemplateController {
 	}
 
 	public static function update() {
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			Ajax::respond_with_json(array("success" => false));
+		}
 
 		$id      = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 		$title   = filter_input(INPUT_POST, 'title');
@@ -66,6 +74,10 @@ class TemplateController {
 
 	public static function create() {
 		
+		if ( ! current_user_can( 'administrator' ) ) {
+			Ajax::respond_with_json(array("success" => false));
+		}
+
 		$template = new Template;
 		$template->title = "new template";
 		$template->save();
@@ -75,6 +87,10 @@ class TemplateController {
 
 	public static function delete() {
 		
+		if ( ! current_user_can( 'administrator' ) ) {
+			Ajax::respond_with_json(array("success" => false));
+		}
+
 		$id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 		$template = Template::find_by_id($id);
 
