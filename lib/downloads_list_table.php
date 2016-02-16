@@ -20,7 +20,11 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			$_REQUEST['page'],
 			$episode['id'],
 			$episode['title'],
-			date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($episode['post_date']))
+			'<span style="color:#999; font-size: smaller">'.
+			sprintf(
+				__("%s days ago", "podlove-podcasting-plugin-for-wordpress"), 
+				Model\Episode::find_by_id($episode['id'])->days_since_release()
+			) . '</span>'
 		);
 	}
 
@@ -32,36 +36,8 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	{
 		$aggregation_columns = self::aggregation_columns();
 
-		$get_prev_column_index = function($col) {
-			$aggregation_columns = self::aggregation_columns();
-			$column_index = array_search($col, $aggregation_columns);
-
-			if ($column_index < 9) {
-				return $aggregation_columns[$column_index + 1];
-			}
-
-			return null;
-		};
-
 		if (in_array($column_name, $aggregation_columns)) {
-
-			$prev_column_index = $get_prev_column_index($column_name);
-
-			$factor = 0;
-			if ($prev_column_index) {
-				$prev = $item[$prev_column_index];
-				if ($prev > 0) {
-					$factor = round($item[$column_name] / $prev * 100 - 100);
-				}
-			}
-
-			$out = self::get_number_or_dash($item[$column_name]);
-
-			if ($factor) {
-				$out .= " <em style=\"color: #999\">+$factor%</em>";
-			}
-
-			return $out;
+			return self::get_number_or_dash($item[$column_name]);
 		}
 	}
 
@@ -109,8 +85,6 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	}
 
 	public function prepare_items() {
-		global $wpdb;
-
 		// number of items per page
 		$per_page = 20;
 		
@@ -120,41 +94,28 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		global $wpdb;
+		$data = [];
+		foreach (Model\Podcast::get()->episodes() as $episode) {
+			$post = $episode->post();
 
-		$aggregation_columns = self::aggregation_columns();
-
-		$select = array_map(function ($column) {
-			return sprintf('pm_%1$s.meta_value %1$s', $column);
-		}, $aggregation_columns);
-		$select = implode(",\n\t", $select);
-
-		$join = array_map(function ($column) {
-			global $wpdb;
-			return sprintf('LEFT JOIN ' . $wpdb->postmeta . ' pm_%1$s ON pm_%1$s.post_id = p.ID AND pm_%1$s.meta_key = \'_podlove_downloads_%1$s\'', $column);
-		}, $aggregation_columns);
-		$join = implode("\n\t", $join);
-
-		$sql = "
-SELECT
-	e.id,
-	p.post_title title,
-	p.post_date post_date,
-	COUNT(di.id) downloads,
-	$select
-FROM
-	" . Model\Episode::table_name() . " e
-	JOIN " . $wpdb->posts . " p ON e.post_id = p.ID
-	JOIN " . Model\MediaFile::table_name() . " mf ON e.id = mf.episode_id
-	LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di ON di.media_file_id = mf.id
-	$join
-WHERE
-	p.post_status IN ('publish', 'private')
-GROUP BY
-	e.id
-		";
-
-		$data = $wpdb->get_results($sql, ARRAY_A);
+			$data[] = [
+				'id' => $episode->id,
+				'title' => $post->post_title,
+				'post_date' => $post->post_date,
+				// @todo: cache me
+				'downloads' => Model\DownloadIntentClean::total_by_episode_id($episode->id, "1000 years ago", "now"),
+				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true) ,
+				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true) ,
+				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true) ,
+				'1w' => get_post_meta($post->ID, '_podlove_downloads_1w', true) ,
+				'6d' => get_post_meta($post->ID, '_podlove_downloads_6d', true) ,
+				'5d' => get_post_meta($post->ID, '_podlove_downloads_5d', true) ,
+				'4d' => get_post_meta($post->ID, '_podlove_downloads_4d', true) ,
+				'3d' => get_post_meta($post->ID, '_podlove_downloads_3d', true) ,
+				'2d' => get_post_meta($post->ID, '_podlove_downloads_2d', true) ,
+				'1d' => get_post_meta($post->ID, '_podlove_downloads_1d', true) 
+			];
+		}
 
 		$valid_order_keys = array(
 			'post_date',

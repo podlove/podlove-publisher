@@ -64,6 +64,14 @@ class Episode extends Base implements Licensable {
 		return reset($episodes);
 	}
 
+	public function days_since_release() {
+		$releaseDate = new \DateTime($this->post()->post_date);
+		$releaseDate->setTime(0, 0, 0);
+
+		$diff = $releaseDate->diff(new \DateTime());
+		return $diff->days;
+	}
+
 	public function title() {
 		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
 	}

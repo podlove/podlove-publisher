@@ -296,13 +296,6 @@ class Analytics {
 	public function show_template() {
 		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
 		$post    = get_post( $episode->post_id );
-
-		$releaseDate = new \DateTime($post->post_date);
-		$releaseDate->setTime(0, 0, 0);
-
-		$diff = $releaseDate->diff(new \DateTime());
-		$daysSinceRelease = $diff->days;
-
 		?>
 
 		<h2>
@@ -311,7 +304,7 @@ class Analytics {
 				<?php echo sprintf(
 							"Released on %s (%d days ago)",
 							mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $post->post_date),
-							number_format_i18n($daysSinceRelease)
+							number_format_i18n($episode->days_since_release())
 						) ?>
 			</small>
 		</h2>
