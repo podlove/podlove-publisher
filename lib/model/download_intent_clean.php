@@ -6,6 +6,20 @@ namespace Podlove\Model;
  */
 class DownloadIntentClean extends Base {
 
+	public static function episode_age_in_hours($episode_id) {
+		global $wpdb;
+
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT MAX(hours_since_release)
+				FROM ' . self::table_name() . ' di
+				JOIN ' . MediaFile::table_name() . ' mf ON mf.id = di.media_file_id
+				WHERE mf.episode_id = %d',
+				$episode_id
+			)
+		);
+	}
+
 	public static function top_episode_ids($start, $end = "now", $limit = 3) {
 		global $wpdb;
 

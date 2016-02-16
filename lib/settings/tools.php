@@ -59,50 +59,7 @@ class Tools {
 	}
 
 	public static function recalculate_downloads_table() {
-		global $wpdb;
-
-		$groupings = [
-			'4w' => 24 * 7 * 4,
-			'3w' => 24 * 7 * 3,
-			'2w' => 24 * 7 * 2,
-			'1w' => 24 * 7,
-			'6d' => 24 * 6,
-			'5d' => 24 * 5,
-			'4d' => 24 * 4,
-			'3d' => 24 * 3,
-			'2d' => 24 * 2,
-			'1d' => 24
-		];
-
-		foreach (Model\Podcast::get()->episodes() as $episode) {
-			
-			$max_hsr = $wpdb->get_var(
-				$wpdb->prepare(
-					'SELECT
-					  MAX(hours_since_release)
-					FROM ' . Model\DownloadIntentClean::table_name() . ' di
-					JOIN ' . Model\MediaFile::table_name() . ' mf ON mf.id = di.media_file_id
-					WHERE mf.episode_id = %d',
-					$episode->id
-				)
-			);
-
-			foreach ($groupings as $key => $hours) {
-				if ($max_hsr > $hours) {
-					$sql = $wpdb->prepare(
-						'SELECT
-						  COUNT(*)
-						FROM ' . Model\DownloadIntentClean::table_name() . ' di
-						INNER JOIN ' . Model\MediaFile::table_name() . ' mf ON mf.id = di.media_file_id
-						INNER JOIN ' . Model\Episode::table_name() . ' e ON mf.episode_id = e.id
-						WHERE e.id = %d AND hours_since_release <= %d',
-						$episode->id, $hours
-					);
-					$downloads = $wpdb->get_var($sql);
-					update_post_meta($episode->post_id, '_podlove_downloads_' . $key, $downloads);
-				}
-			}
-		}
+		\Podlove\Analytics\DownloadSumsCalculator::calc_download_sums(true);
 	}
 
 	public function page() {
