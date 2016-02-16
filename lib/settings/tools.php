@@ -98,10 +98,8 @@ class Tools {
 						WHERE e.id = %d AND hours_since_release <= %d',
 						$episode->id, $hours
 					);
-					error_log(print_r($sql, true));
 					$downloads = $wpdb->get_var($sql);
 					update_post_meta($episode->post_id, '_podlove_downloads_' . $key, $downloads);
-					error_log(print_r("update_post_meta($episode->post_id, '_podlove_downloads_' . $key, $downloads);", true));
 				}
 			}
 		}
