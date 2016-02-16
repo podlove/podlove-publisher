@@ -158,6 +158,7 @@ add_action( 'init', array( '\Podlove\Geo_Ip', 'init' ) );
 add_action( 'init', array( '\Podlove\DuplicatePost', 'init' ) );
 add_action( 'init', array( '\Podlove\Analytics\EpisodeDownloadAverage', 'init' ) );
 add_action( 'init', array( '\Podlove\Analytics\DownloadIntentCleanup', 'init' ) );
+add_action( 'init', array( '\Podlove\Analytics\DownloadTotalsCalculator', 'init' ) );
 
 add_action( 'admin_init', array( '\Podlove\Repair', 'init' ) );
 add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );

@@ -57,8 +57,9 @@ class Downloads {
 
 		switch ($column_name) {
 			case 'downloads':
-				if ($episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID())) {
-					echo number_format_i18n(\Podlove\Model\DownloadIntentClean::total_by_episode_id($episode->id));
+				$total = get_post_meta(get_the_ID(), '_podlove_downloads_total', true);
+				if ($total && is_numeric($total)) {
+					echo number_format_i18n($total);
 				}
 			break;
 		}

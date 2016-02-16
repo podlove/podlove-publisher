@@ -62,7 +62,6 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		);
 	}
 
-
 	public function get_sortable_columns() {
 		return [
 			'episode'   => ['episode', true],
@@ -102,17 +101,16 @@ class Downloads_List_Table extends \Podlove\List_Table {
 				'id' => $episode->id,
 				'title' => $post->post_title,
 				'post_date' => $post->post_date,
-				// @todo: cache me
-				'downloads' => Model\DownloadIntentClean::total_by_episode_id($episode->id, "1000 years ago", "now"),
-				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true) ,
-				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true) ,
-				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true) ,
-				'1w' => get_post_meta($post->ID, '_podlove_downloads_1w', true) ,
-				'6d' => get_post_meta($post->ID, '_podlove_downloads_6d', true) ,
-				'5d' => get_post_meta($post->ID, '_podlove_downloads_5d', true) ,
-				'4d' => get_post_meta($post->ID, '_podlove_downloads_4d', true) ,
-				'3d' => get_post_meta($post->ID, '_podlove_downloads_3d', true) ,
-				'2d' => get_post_meta($post->ID, '_podlove_downloads_2d', true) ,
+				'downloads' => get_post_meta($post->ID, '_podlove_downloads_total', true),
+				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true),
+				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true),
+				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true),
+				'1w' => get_post_meta($post->ID, '_podlove_downloads_1w', true),
+				'6d' => get_post_meta($post->ID, '_podlove_downloads_6d', true),
+				'5d' => get_post_meta($post->ID, '_podlove_downloads_5d', true),
+				'4d' => get_post_meta($post->ID, '_podlove_downloads_4d', true),
+				'3d' => get_post_meta($post->ID, '_podlove_downloads_3d', true),
+				'2d' => get_post_meta($post->ID, '_podlove_downloads_2d', true),
 				'1d' => get_post_meta($post->ID, '_podlove_downloads_1d', true) 
 			];
 		}
