@@ -23,5 +23,9 @@
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
         "phpunit/phpunit": "4.7.*"
+    },
+    "scripts": {
+        "post-update-cmd": [ "php bin/fix_spyc_loading.php" ],
+        "post-install-cmd": [ "php bin/fix_spyc_loading.php" ]
     }
 }
