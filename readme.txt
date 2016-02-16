@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * when activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup
 * fix tracking export: keep httprange
+* fix compatibility with other plugins relying on Spyc library
 * improve tracking: ignore 1-byte requests
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
