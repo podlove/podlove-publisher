@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "92f6fedb5d2a1e68029ab1fbd7d67d2a",
+    "hash": "438d0232b2c109dbf863ae1efa862090",
     "content-hash": "7fddde2711f9b18ad176bc9f85dfe6a5",
     "packages": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "ee15b2e466dd09fd2246cf64efa1aa9eca988b86"
+                "reference": "8c7cd846c82ad3fdfc1a0498afa366228e8f4340"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/a93764bddfb8a2e5738affbb9f9d69327df28342",
-                "reference": "ee15b2e466dd09fd2246cf64efa1aa9eca988b86",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/8c7cd846c82ad3fdfc1a0498afa366228e8f4340",
+                "reference": "8c7cd846c82ad3fdfc1a0498afa366228e8f4340",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +27,8 @@
                 "php": ">=5.3.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.2.*"
+                "phpunit/phpunit": "4.2.*",
+                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -55,7 +56,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2015-09-24 17:29:28"
+            "time": "2016-02-15 22:46:19"
         },
         {
             "name": "leth/ip-address",
@@ -89,16 +90,16 @@
         },
         {
             "name": "maxmind-db/reader",
-            "version": "v1.0.3",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/MaxMind-DB-Reader-php.git",
-                "reference": "07f211ab596ba60f9663d9984b888f76ee1beac9"
+                "reference": "1383655533aa2f13a990b27b075fdde8b7bdd5ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/07f211ab596ba60f9663d9984b888f76ee1beac9",
-                "reference": "07f211ab596ba60f9663d9984b888f76ee1beac9",
+                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/1383655533aa2f13a990b27b075fdde8b7bdd5ff",
+                "reference": "1383655533aa2f13a990b27b075fdde8b7bdd5ff",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +107,8 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "4.2.*",
-                "satooshi/php-coveralls": "dev-master"
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -134,7 +136,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2015-03-13 22:35:13"
+            "time": "2016-01-04 15:38:11"
         },
         {
             "name": "maxmind/web-service-common",
@@ -193,8 +195,8 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
+                "php": "^7.0",
+                "psr/log": "^1.0"
             },
             "provide": {
                 "psr/log-implementation": "1.0.0"
@@ -615,12 +617,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "8c4ca8fcc7a7aa0637b5153871d7bffbcdd88df8"
+                "reference": "5552043bc00c536a9e48191de70ac3b5b79d6a2e"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/yaml/zipball/5552043bc00c536a9e48191de70ac3b5b79d6a2e",
-                "reference": "8c4ca8fcc7a7aa0637b5153871d7bffbcdd88df8",
+                "reference": "5552043bc00c536a9e48191de70ac3b5b79d6a2e",
                 "shasum": ""
             },
             "require": {
@@ -656,7 +658,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-02 20:25:31"
+            "time": "2016-01-31 07:56:20"
         },
         {
             "name": "twig/extensions",
@@ -712,16 +714,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.23.1",
+            "version": "v1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6"
+                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
-                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
                 "shasum": ""
             },
             "require": {
@@ -734,7 +736,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.23-dev"
+                    "dev-master": "1.24-dev"
                 }
             },
             "autoload": {
@@ -769,7 +771,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-11-05 12:49:06"
+            "time": "2016-01-25 21:22:18"
         }
     ],
     "packages-dev": [
@@ -933,22 +935,24 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.5.0",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "4745ded9307786b730d7a60df5cb5a6c43cf95f7"
+                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4745ded9307786b730d7a60df5cb5a6c43cf95f7",
-                "reference": "4745ded9307786b730d7a60df5cb5a6c43cf95f7",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/3c91bdf81797d725b14cb62906f9a4ce44235972",
+                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
+                "php": "^5.3|^7.0",
                 "phpdocumentor/reflection-docblock": "~2.0",
-                "sebastian/comparator": "~1.1"
+                "sebastian/comparator": "~1.1",
+                "sebastian/recursion-context": "~1.0"
             },
             "require-dev": {
                 "phpspec/phpspec": "~2.0"
@@ -956,7 +960,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "1.5.x-dev"
                 }
             },
             "autoload": {
@@ -989,7 +993,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-08-13 10:07:40"
+            "time": "2016-02-15 07:46:21"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1424,28 +1428,28 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "1.3.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "863df9687835c62aa423a22412d26fa2ebde3fd3"
+                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/863df9687835c62aa423a22412d26fa2ebde3fd3",
-                "reference": "863df9687835c62aa423a22412d26fa2ebde3fd3",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.2"
+                "phpunit/phpunit": "~4.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -1468,24 +1472,24 @@
                 }
             ],
             "description": "Diff implementation",
-            "homepage": "http://www.github.com/sebastianbergmann/diff",
+            "homepage": "https://github.com/sebastianbergmann/diff",
             "keywords": [
                 "diff"
             ],
-            "time": "2015-02-22 15:13:53"
+            "time": "2015-12-08 07:14:41"
         },
         {
             "name": "sebastian/environment",
-            "version": "1.3.2",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "6324c907ce7a52478eeeaede764f48733ef5ae44"
+                "reference": "6e7133793a8e5a5714a551a8324337374be209df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6324c907ce7a52478eeeaede764f48733ef5ae44",
-                "reference": "6324c907ce7a52478eeeaede764f48733ef5ae44",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6e7133793a8e5a5714a551a8324337374be209df",
+                "reference": "6e7133793a8e5a5714a551a8324337374be209df",
                 "shasum": ""
             },
             "require": {
@@ -1522,7 +1526,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2015-08-03 06:14:51"
+            "time": "2015-12-02 08:37:27"
         },
         {
             "name": "sebastian/exporter",
@@ -1643,16 +1647,16 @@
         },
         {
             "name": "sebastian/recursion-context",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "994d4a811bafe801fb06dccbee797863ba2792ba"
+                "reference": "913401df809e99e4f47b27cdd781f4a258d58791"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/994d4a811bafe801fb06dccbee797863ba2792ba",
-                "reference": "994d4a811bafe801fb06dccbee797863ba2792ba",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/913401df809e99e4f47b27cdd781f4a258d58791",
+                "reference": "913401df809e99e4f47b27cdd781f4a258d58791",
                 "shasum": ""
             },
             "require": {
@@ -1692,7 +1696,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-06-21 08:04:50"
+            "time": "2015-11-11 19:50:13"
         },
         {
             "name": "sebastian/version",
