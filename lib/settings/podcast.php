@@ -43,6 +43,7 @@ class Podcast {
 		$tabs = new Tabs( __( 'Podcast Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
 		$tabs->addTab( new Tab\Description( __( 'Description', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
 		$tabs->addTab( new Tab\Media( __( 'Media', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\Player( __( 'Player', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
 		$tabs->addTab( new Tab\License( __( 'License', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$tabs->addTab( new Tab\Directory( __( 'Directory', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$this->tabs = apply_filters( 'podlove_podcast_settings_tabs', $tabs );

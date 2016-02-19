@@ -135,19 +135,24 @@ function get_landing_page_url() {
 	return home_url();
 }
 
-function get_webplayer_setting( $name ) {
-
-	$defaults = array(
+function get_webplayer_defaults() {
+	return [
 		'chaptersVisible' => 'false',
 		'inject'          => 'manually',
 		'version'         => 'player_v2',
 		'playerv3theme'   => 'pwp-dark-green.min.css'
-	);
-	
-	$settings = get_option( 'podlove_webplayer_settings', array() );
-	$settings = wp_parse_args( $settings, $defaults );
+	];
+}
 
-	return $settings[ $name ];
+function get_webplayer_settings() {
+	$settings = get_option('podlove_webplayer_settings', []);
+	$settings = array_filter($settings);
+	$settings = wp_parse_args($settings, get_webplayer_defaults());
+	return $settings;
+}
+
+function get_webplayer_setting($name) {
+	return get_webplayer_settings()[$name];
 }
 
 function slugify($slug) {
