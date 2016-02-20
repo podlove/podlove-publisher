@@ -51,7 +51,8 @@ class Player extends Tab {
 					'description' => '',
 					'options' => [
 						'player_v2' => __( 'Podlove Web Player 2', 'podlove-podcasting-plugin-for-wordpress' ),
-						'player_v3' => __( 'Podlove Web Player 3 (unstable beta, don\'t use in production)', 'podlove-podcasting-plugin-for-wordpress' )
+						'player_v3' => __( 'Podlove Web Player 3 (beta)', 'podlove-podcasting-plugin-for-wordpress' ),
+						'podigee'   => __( 'Podigee Podcast Player', 'podlove-podcasting-plugin-for-wordpress' )
 					]
 				],
 				'position' => 1000
@@ -124,7 +125,7 @@ class Player extends Tab {
 
 		\Podlove\Form\build_for( (object) \Podlove\get_webplayer_settings(), $form_attributes, function ( $form ) use ($form_data) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper($form);
-			
+
 			foreach ($form_data as $entry) {
 				$wrapper->{$entry['type']}($entry['key'], $entry['options']);
 			}

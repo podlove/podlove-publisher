@@ -10,21 +10,38 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	protected $module_group = 'web publishing';
 
 	public function load() {
-		if (\Podlove\get_webplayer_setting('version') === 'player_v3') {
-			(new PlayerV3\Module)->load();
-		} else {
-			(new PlayerV2\Module)->load();
+
+		switch (\Podlove\get_webplayer_setting('version')) {
+			case 'player_v3':
+				(new PlayerV3\Module)->load();
+				break;
+			case 'player_v2':
+				(new PlayerV2\Module)->load();
+				break;
+			case 'podigee':
+				(new Podigee\Module)->load();
+				break;
 		}
 	}
 
 	public static function get_player_printer(Episode $episode) {
-		if (\Podlove\get_webplayer_setting('version') === 'player_v3') {
-			$printer = new PlayerV3\Html5Printer($episode);
-			$printer->setAttributes(['data-podlove-web-player-source' => add_query_arg(['podloveEmbed' => true], get_permalink($episode->post_id))]);
-			return $printer;
-		} else {
-			return new PlayerV2\Printer($episode);
+
+		switch (\Podlove\get_webplayer_setting('version')) {
+			case 'player_v3':
+				$printer = new PlayerV3\Html5Printer($episode);
+				$printer->setAttributes([
+					'data-podlove-web-player-source' => add_query_arg(['podloveEmbed' => true], get_permalink($episode->post_id))
+				]);
+				return $printer;
+				break;
+			case 'player_v2':
+				return new PlayerV2\Printer($episode);
+				break;
+			case 'podigee':
+				return new Podigee\Html5Printer($episode);
+				break;
 		}
+
 	}
 }
 
