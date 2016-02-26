@@ -76,7 +76,7 @@ class Wprelease
 			 'wprelease.yml',
 			 'podlove.sublime-workspace',
 			 'podlove.sublime-project',
-			 'lib/modules/podlove_web_player/player/podlove-web-player/libs',
+			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs',
 			 'vendor/bin',
 			 'vendor/vendor/guzzle/guzzle/tests',
 			 'vendor/phpunit/php-code-coverage',
@@ -87,16 +87,20 @@ class Wprelease
 			 'vendor/phpunit/phpunit/phpunit',
 			 'vendor/twig/twig/test',
 			 'node_modules',
+			 'doc',
 			 'Gruntfile.js',
 			 'phpunit.xml',
 			 'test',
+			 'tests',
 			 'Rakefile',
+			 'Makefile',
 			 'bower_components',
 			 'bin',
 			 'README.md',
 			 'CONTRIBUTING.md',
 			 'composer.lock',
-			 'composer.json'
+			 'composer.json',
+			 'bower.json'
 		]
 
 		system "rsync ./ #{@svn_dir}/trunk --recursive " + excludes.map{|p| "--exclude=" + p}.join(" ") + " --delete --delete-excluded"
