@@ -13,8 +13,6 @@ class Repair {
 	 */
 	public static function init()
 	{
-		add_action('podlove_support_repair_html', array(__CLASS__, 'page'));
-		
 		self::maybe_repair();
 	}
 
@@ -50,13 +48,13 @@ class Repair {
 		update_option(self::REPAIR_LOG_KEY, $log);
 	}
 
-	private static function clear_podlove_cache() {
+	public static function clear_podlove_cache() {
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
 		$cache->setup_purge();
 		self::add_to_repair_log(__('Podlove cache cleared', 'podlove-podcasting-plugin-for-wordpress'));
 	}
 
-	private static function clear_podlove_image_cache() {
+	public static function clear_podlove_image_cache() {
 		\Podlove\Model\Image::flush_cache();
 		self::add_to_repair_log(__('Podlove image cache cleared', 'podlove-podcasting-plugin-for-wordpress'));
 	}
@@ -116,7 +114,6 @@ class Repair {
 
 		?>
 		<div class="updated">
-			<h3>Repair Done</h3>
 			<ul class="ul-disc">
 				<?php foreach ( $log as $entry ): ?>
 					<li>
@@ -132,27 +129,28 @@ class Repair {
 	public static function page() {
 		self::print_and_clear_repair_log();
 		?>
-		<h3><?php echo __('Repair', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
-
+		<p>
+			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&repair=1') ?>" class="button">
+				<?php echo __( 'Attempt Repair', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+			</a>
+		</p>
 		<p>
 			<?php echo __('There are a few occasional issues that are hard to avoid but easy to fix.
 			To make resolving those issues easier, instead of giving you an instruction on what to do,
 			pressing this button will attempt to fix it for you.
-			This is what happens:', 'podlove'); ?>
+			This is what happens:', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			<ul class="ul-disc">
 				<li>
-					<strong>clears Podlove cache</strong>
-					Sometimes an issue is already fixed but you still see the faulty output.
-					Clearing the cache avoids this.
-					However, if you use a third party caching plugin, you should clear that cache, too.
+					<strong><?php echo __('clears Podlove cache', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
+					<?php echo __('Sometimes an issue is already fixed but you still see the faulty output. Clearing the cache avoids this. However, if you use a third party caching plugin, you should clear that cache, too.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</li>
 				<li>
-					<strong>clears Podlove image cache</strong>
-					Podlove should notice automatically when an image changes and replace it after a while. If you want to enforce the refresh, this will do it.
+					<strong><?php echo __('clears Podlove image cache', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
+					<?php echo __('Podlove should notice automatically when an image changes and replace it after a while. If you want to enforce the refresh, this will do it.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</li>
 				<li>
-					<strong>flushes WordPress rewrite rules</strong>
-					If you have strange behaviour in some sites or pages are not found which should exist, this might solve it.
+					<strong><?php echo __('flushes WordPress rewrite rules', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
+					<?php echo __('If you have strange behaviour in some sites or pages are not found which should exist, this might solve it.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</li>
 				<?php // hook for modules to add their repair method descriptions ?>
 				<?php foreach ( apply_filters('podlove_repair_descriptions', array()) as $entry ): ?>
@@ -160,12 +158,6 @@ class Repair {
 				<?php endforeach; ?>
 			</ul>
 			<?php echo __('Feel free to press this button as often as you like. Worst case scenario: nothing happens.', 'podlove-podcasting-plugin-for-wordpress') ?>
-		</p>
-
-		<p>
-			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&repair=1') ?>" class="button button-primary">
-				<?php echo __( 'Attempt Repair', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</a>
 		</p>
 		<?php
 	}

@@ -76,8 +76,6 @@ class Support {
 				</ul>
 			</p>
 
-			<?php do_action('podlove_support_repair_html'); ?>
-
 			<p>
 				<?php echo __( 'When reporting a bug, please append the following system report to help us trace the root cause:', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 			</p>

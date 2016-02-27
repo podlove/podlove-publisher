@@ -41,6 +41,11 @@ class Tools {
 			case 'recalculate_downloads_table':
 				self::recalculate_downloads_table();
 				break;
+			case 'clear_caches':
+				\Podlove\Repair::clear_podlove_cache();
+				\Podlove\Repair::clear_podlove_image_cache();
+				wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
+				break;
 			default:
 				# code...
 				break;
@@ -93,8 +98,40 @@ class Tools {
 			<h2><?php echo __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
 			<div class="card" style="max-width: 100%">
+
+				<h3><?php echo __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
+
+				<table class="form-table">
+					<tbody>
+						<tr>
+							<th>
+								<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress') ?>
+							</th>
+							<td>
+								<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=clear_caches') ?>" class="button">
+									<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress') ?>
+								</a>
+								<p class="description">
+									<?php echo __('Sometimes an issue is already fixed but you still see the faulty output. Clearing the cache avoids this. However, if you use a third party caching plugin, you should clear that cache, too.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<?php echo __('Repair', 'podlove-podcasting-plugin-for-wordpress') ?>
+							</th>
+							<td>
+								<?php \Podlove\Repair::page() ?>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+			<div class="card" style="max-width: 100%">
 				
-				<h3>Tracking &amp; Analytics</h3>
+				<h3><?php echo __('Tracking &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
 
 				<table class="form-table">
 					<tbody>
