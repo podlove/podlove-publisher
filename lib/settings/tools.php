@@ -92,33 +92,64 @@ class Tools {
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
-			<h3>Tracking &amp; Analytics</h3>
+			<div class="card" style="max-width: 100%">
+				
+				<h3>Tracking &amp; Analytics</h3>
 
-			<p>
-				<a id="recalculate_useragents" href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_useragents') ?>" class="button button-primary">
-					<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-				</a>
+				<table class="form-table">
+					<tbody>
+						<tr>
+							<th>
+								<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+							</th>
+							<td>
+								<a id="recalculate_useragents" href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_useragents') ?>" class="button">
+									<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+								</a>
 
-				<div id="progressbar"><div class="progress-label"></div></div>
-			</p>
+								<div id="progressbar"><div class="progress-label"></div></div>
 
-			<div class="clear"></div>
+								<div class="clear"></div>
 
-			<p>
-				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_analytics') ?>" class="button button-primary">
-					<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-				</a>
-			</p>
+								<p class="description">
+									<?php echo __('Update user agent metadata based on <code>device-detector</code> library.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</p>
 
-			<div class="clear"></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+							</th>
+							<td>
+								<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_analytics') ?>" class="button">
+									<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+								</a>
 
-			<p>
-				<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button button-primary">
-					<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-				</a>
-			</p>
+								<p class="description">
+									<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+							</th>
+							<td>
+								<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button">
+									<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+								</a>
 
-			<div class="clear"></div>
+								<p class="description">
+									<?php echo __('Recalculates sums for episode downloads in Analytics overview page.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
 
 		</div>	
 		<?php
