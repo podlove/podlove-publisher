@@ -108,6 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.9 =
+
 = 2.3.8 =
 
 **Bugfixes**
