@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
 Requires at least: 3.5
-Tested up to: 4.4.1
+Tested up to: 4.4.2
 Stable tag: trunk
 License: MIT
 
@@ -119,8 +119,22 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.8 =
 
+**Bugfixes**
+
 * fix '&' issue in some fields when exporting/importing
-* pass podcast language code to web player v3
+* player: pass podcast language code to web player v3
+* open graph: do not include non-downloadable assets
+* open graph: use tracking URLs if available
+* template editor: add scrolling when having many templates in the list
+* auphonic: disable "Open Production" button when no production is selected
+* player: chapters visibility setting now applies to v3 beta player
+* more defensive feed gzipping for compatibility with various caching plugins
+* fix feed discovery cache (can now handle both http and https at the same time)
+
+**Enhancements**
+
+* enhance error message when resolving URL fails
+
 
 = 2.3.7 = 
 

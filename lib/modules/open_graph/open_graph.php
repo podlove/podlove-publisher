@@ -127,10 +127,13 @@ class Open_Graph extends \Podlove\Modules\Base {
 			}
 
 			foreach ($episode->media_files() as $media_file) {
-				$mime_type = $media_file->episode_asset()->file_type()->mime_type;
-				if (stripos($mime_type, 'audio') !== false) {
-					$data[] = array( 'property' => 'og:audio', 'content' => $media_file->get_file_url() );
-					$data[] = array( 'property' => 'og:audio:type', 'content' => $mime_type );
+				$asset = $media_file->episode_asset();
+				if ($asset->downloadable) {
+					$mime_type = $asset->file_type()->mime_type;
+					if (stripos($mime_type, 'audio') !== false) {
+						$data[] = array( 'property' => 'og:audio', 'content' => $media_file->get_public_file_url('opengraph', 'episode') );
+						$data[] = array( 'property' => 'og:audio:type', 'content' => $mime_type );
+					}
 				}
 			}
 
