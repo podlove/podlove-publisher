@@ -88,7 +88,7 @@ class Enclosure {
 
 		if ( ! $enclosure->file_type ) {
 			$enclosure->errors[] = sprintf(
-				__( '<strong>Unknown mime type "%s"</strong> in post %s If you want to migrate files with this mime type, you need to create your own %sfile type%s', 'podlove' ),
+				__( '<strong>Unknown mime type "%s"</strong> in post %s If you want to migrate files with this mime type, you need to create your own %sfile type%s', 'podlove-podcasting-plugin-for-wordpress' ),
 				$enclosure->mime_type,
 				sprintf( '<a href="%s" target="_blank">%s</a>', get_edit_post_link( $enclosure->post_id ), get_the_title( $enclosure->post_id ) ),
 				'<a href="?page=podlove_settings_settings_handle&podlove_tab=file-types" target="_blank">',
@@ -124,7 +124,7 @@ class Enclosure {
 
 		if ( ! $enclosure->file_type ) {
 			$enclosure->errors[] = sprintf(
-				__( '<strong>Unknown mime type "%s"</strong> in post %s If you want to migrate files with this mime type, you need to create your own %sfile type%s', 'podlove' ),
+				__( '<strong>Unknown mime type "%s"</strong> in post %s If you want to migrate files with this mime type, you need to create your own %sfile type%s', 'podlove-podcasting-plugin-for-wordpress' ),
 				$enclosure->mime_type,
 				sprintf( '<a href="%s" target="_blank">%s</a>', get_edit_post_link( $enclosure->post_id ), get_the_title( $enclosure->post_id ) ),
 				'<a href="?page=podlove_settings_settings_handle&podlove_tab=file-types" target="_blank">',
@@ -165,7 +165,7 @@ class Enclosure {
 
 		if ( ! $enclosure->file_type ) {
 			$errors[] = sprintf(
-				__( '<strong>Unknown extension "%s"</strong> in post %s If you want to migrate files with this extension, you need to create your own %sfile type%s', 'podlove' ),
+				__( '<strong>Unknown extension "%s"</strong> in post %s If you want to migrate files with this extension, you need to create your own %sfile type%s', 'podlove-podcasting-plugin-for-wordpress' ),
 				$enclosure->extension,
 				sprintf( '<a href="%s" target="_blank">%s</a>', get_edit_post_link( $enclosure->post_id ), get_the_title( $enclosure->post_id ) ),
 				'<a href="?page=podlove_settings_settings_handle&podlove_tab=file-types" target="_blank">',

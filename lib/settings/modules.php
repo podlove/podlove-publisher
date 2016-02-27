@@ -23,7 +23,7 @@ class Modules {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
 			/* $callback */ function () { /* section head html */ }, 		
 			/* $page	 */ Modules::$pagehook	
 		);

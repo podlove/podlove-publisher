@@ -46,7 +46,7 @@ class Downloads {
 
 		    // insert downloads at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
-		           array("downloads" => __('Downloads', 'podlove')) +
+		           array("downloads" => __('Downloads', 'podlove-podcasting-plugin-for-wordpress')) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
 		    return $columns;

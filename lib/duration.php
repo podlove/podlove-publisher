@@ -84,16 +84,16 @@ class Duration {
 				$duration_string = '';
 
 				if ( $this->hours > 1 ) {
-					$duration_string .= $this->hours . __(' hours ', 'podlove');
+					$duration_string .= $this->hours . __(' hours ', 'podlove-podcasting-plugin-for-wordpress');
 				} elseif ( $this->hours == 1 ) {
-					$duration_string .= $this->hours . __(' hour ', 'podlove');
+					$duration_string .= $this->hours . __(' hour ', 'podlove-podcasting-plugin-for-wordpress');
 				}
 
 				if ( $this->minutes >= 1 )
-					$duration_string .= $this->minutes . __(' minutes ', 'podlove');
+					$duration_string .= $this->minutes . __(' minutes ', 'podlove-podcasting-plugin-for-wordpress');
 
 				if ( $this->hours == 0 && $this->minutes == 0 )
-					$duration_string .= $this->seconds . __(' seconds', 'podlove');
+					$duration_string .= $this->seconds . __(' seconds', 'podlove-podcasting-plugin-for-wordpress');
 
 				return $duration_string;
 			break;

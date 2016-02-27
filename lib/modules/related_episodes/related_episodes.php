@@ -58,7 +58,7 @@ class Related_Episodes extends \Podlove\Modules\Base {
 				'type' => 'callback',
 				'key'  => 'episode_relation_form_table',
 				'options' => array(
-					'label'    => __( 'Related Episodes', 'podlove' ),
+					'label'    => __( 'Related Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
 					'callback' => array($this, 'episode_relation_form_callback')
 				),
 				'position' => 870
@@ -84,13 +84,13 @@ class Related_Episodes extends \Podlove\Modules\Base {
 				<table class="podlove_alternating" border="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th><?php _e('Episode', 'podlove'); ?></th>
-							<th><?php _e('Remove', 'podlove'); ?></th>
+							<th><?php _e('Episode', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+							<th><?php _e('Remove', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 						</tr>
 					</thead>
 					<tbody id="episode_relation_table_body" style="min-height: 50px;">
 						<tr class="episode_relation_table_body_placeholder" style="display: none;">
-							<td><em><?php echo __('No episode relations were added yet.', 'podlove') ?></em></td>
+							<td><em><?php echo __('No episode relations were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
 						</tr>
 					</tbody>
 				</table>

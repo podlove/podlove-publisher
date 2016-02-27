@@ -25,8 +25,8 @@ class SeasonListTable extends \Podlove\List_Table {
 		};
 
 		$actions = [
-			'edit'   => $link( __( 'Edit', 'podlove' ) ),
-			'delete' => $link( __( 'Delete', 'podlove' ), 'delete' )
+			'edit'   => $link( __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) ),
+			'delete' => $link( __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ), 'delete' )
 		];
 	
 		return sprintf(
@@ -72,11 +72,11 @@ class SeasonListTable extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'number' => __( '#', 'podlove' ),
-			'image' => __( 'Image', 'podlove' ),
-			'season_title' => __( 'Season', 'podlove' ),
-			'episodes' => __( 'Episodes', 'podlove' ),
-			'start' => __( 'Start', 'podlove' )
+			'number' => __( '#', 'podlove-podcasting-plugin-for-wordpress' ),
+			'image' => __( 'Image', 'podlove-podcasting-plugin-for-wordpress' ),
+			'season_title' => __( 'Season', 'podlove-podcasting-plugin-for-wordpress' ),
+			'episodes' => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'start' => __( 'Start', 'podlove-podcasting-plugin-for-wordpress' )
 		);
 	}
 

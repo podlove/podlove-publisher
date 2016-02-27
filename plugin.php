@@ -231,6 +231,17 @@ function uninstall_for_current_blog() {
 	$wpdb->query('DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove%"');
 }
 
+// prepare for translation
+if ( did_action( 'plugins_loaded' ) )
+	\Podlove\plugin_textdomain();
+else
+	add_action( 'plugins_loaded', '\Podlove\plugin_textdomain', 99 );
+
+function plugin_textdomain() {
+	// only use language packs, see http://ottopress.com/2013/language-packs-101-prepwork/
+	load_plugin_textdomain('podlove-podcasting-plugin-for-wordpress');
+}
+
 /**
  * Activate internal modules.
  */

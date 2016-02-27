@@ -29,13 +29,13 @@ class Settings {
 		if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_settings_handle' && !\Podlove\is_options_save_page())
 			return;
 
-		$tabs = new Tabs( __( 'Expert Settings', 'podlove' ) );
-		$tabs->addTab( new Tab\Website( __( 'Website', 'podlove' ), true ) );
-		$tabs->addTab( new Tab\Metadata( __( 'Metadata', 'podlove' ) ) );
-		$tabs->addTab( new Tab\Redirects( __( 'Redirects', 'podlove' ) ) );
-		$tabs->addTab( new Tab\WebPlayer( __( 'Web Player', 'podlove' ) ) );
-		$tabs->addTab( new Tab\FileTypes( __( 'File Types', 'podlove' ) ) );
-		$tabs->addTab( new Tab\Tracking( __( 'Tracking', 'podlove' ) ) );
+		$tabs = new Tabs( __( 'Expert Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
+		$tabs->addTab( new Tab\Website( __( 'Website', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
+		$tabs->addTab( new Tab\Metadata( __( 'Metadata', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\Redirects( __( 'Redirects', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\WebPlayer( __( 'Web Player', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\FileTypes( __( 'File Types', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Tab\Tracking( __( 'Tracking', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 	}

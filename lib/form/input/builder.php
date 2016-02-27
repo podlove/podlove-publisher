@@ -122,7 +122,7 @@ class Builder {
 					if (isset($this->arguments['please_choose_text'])) {
 						echo $this->arguments['please_choose_text'];
 					} else {
-						echo __( 'Please choose ...', 'podlove' );
+						echo __( 'Please choose ...', 'podlove-podcasting-plugin-for-wordpress' );
 					}
 				?></option>
 			<?php endif; ?>
@@ -228,9 +228,9 @@ class Builder {
 		wp_enqueue_media();
 
 		$defaults = [
-			'form_button_text'  => __('Select', 'podlove'),
-			'media_button_text' => __('Use Image', 'podlove'),
-			'media_title' => __('Image', 'podlove')
+			'form_button_text'  => __('Select', 'podlove-podcasting-plugin-for-wordpress'),
+			'media_button_text' => __('Use Image', 'podlove-podcasting-plugin-for-wordpress'),
+			'media_title' => __('Image', 'podlove-podcasting-plugin-for-wordpress')
 		];
 		$arguments = wp_parse_args($arguments, $defaults);
 
@@ -252,7 +252,7 @@ class Builder {
 			</span>
 			<?php if (!isset($arguments['description']) || !$arguments['description']): ?>
 				<p>
-					<span class="description"><?php echo __('Enter URL or select image from media library.', 'podlove') ?></span>
+					<span class="description"><?php echo __('Enter URL or select image from media library.', 'podlove-podcasting-plugin-for-wordpress') ?></span>
 				</p>
 			<?php endif ?>
 			<div class="podlove_preview_pic"></div>

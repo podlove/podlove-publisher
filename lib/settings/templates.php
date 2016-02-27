@@ -12,8 +12,8 @@ class Templates {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ __( 'Templates', 'podlove' ),
-			/* $menu_title */ __( 'Templates', 'podlove' ),
+			/* $page_title */ __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_templates_settings_handle',
 			/* $function   */ array( $this, 'page' )
@@ -50,7 +50,7 @@ class Templates {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Templates', 'podlove' ); ?></h2>
+			<h2><?php echo __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 			<?php
 			$this->view_template();
 			?>
@@ -105,7 +105,7 @@ class Templates {
 			<div class="clear"></div>
 		</div>
 
-		<h3><?php echo __( 'Insert templates to content automatically', 'podlove' ) ?></h3>
+		<h3><?php echo __( 'Insert templates to content automatically', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
 		<form method="post" action="options.php">
 			<?php settings_fields( Templates::$pagehook );
 			$template_assignment = Model\TemplateAssignment::get_instance();
@@ -118,19 +118,19 @@ class Templates {
 			\Podlove\Form\build_for( $template_assignment, $form_attributes, function ( $form ) {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				
-				$templates = array( 0 => __( 'Don\'t insert automatically', 'podlove' ) );
+				$templates = array( 0 => __( 'Don\'t insert automatically', 'podlove-podcasting-plugin-for-wordpress' ) );
 				foreach ( Model\Template::all_globally() as $template ) {
 					$templates[ $template->title ] = $template->title;
 				}
 
 				$wrapper->select( 'top', array(
-					'label'   => __( 'Insert at top', 'podlove' ),
+					'label'   => __( 'Insert at top', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options' => $templates,
 					'please_choose' => false
 				) );
 
 				$wrapper->select( 'bottom', array(
-					'label'   => __( 'Insert at bottom', 'podlove' ),
+					'label'   => __( 'Insert at bottom', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options' => $templates,
 					'please_choose' => false
 				) );

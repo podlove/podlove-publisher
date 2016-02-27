@@ -14,14 +14,14 @@ class Twitter_Summary_Card extends \Podlove\Modules\Base {
 			add_action( 'wp', array( $this, 'register_hooks' ) );
 
 			$this->register_option( 'site', 'string', array(
-				'label'       => __( 'Twitter Site', 'podlove' ),
-				'description' => __( '@username for the website used in the card footer', 'podlove' ),
+				'label'       => __( 'Twitter Site', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '@username for the website used in the card footer', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 
 			$this->register_option( 'creator', 'string', array(
-				'label'       => __( 'Twitter Creator', 'podlove' ),
-				'description' => __( '@username for the content creator / author', 'podlove' ),
+				'label'       => __( 'Twitter Creator', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '@username for the content creator / author', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 

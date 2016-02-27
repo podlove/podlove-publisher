@@ -20,6 +20,9 @@ function podlove_handle_user_redirects() {
 
 	$redirects = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
 
+	if (!is_array($redirects))
+		return;
+
 	foreach ( $redirects as $index => $redirect ) {
 
 		if ( ! isset( $redirect['active'] ) )

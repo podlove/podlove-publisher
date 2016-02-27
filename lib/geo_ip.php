@@ -38,7 +38,7 @@ class Geo_Ip {
 		if (!isset($schedules['monthly'])) {
 			$schedules['monthly'] = array(
 				'interval' => 2635200,
-				'display'  => __('Once a month', 'podlove')
+				'display'  => __('Once a month', 'podlove-podcasting-plugin-for-wordpress')
 			);
 		}
 

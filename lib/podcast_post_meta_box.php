@@ -17,7 +17,7 @@ class Podcast_Post_Meta_Box {
 	public static function add_meta_box() {
 		add_meta_box(
 			/* $id       */ 'podlove_podcast',
-			/* $title    */ __( 'Podcast Episode', 'podlove' ),
+			/* $title    */ __( 'Podcast Episode', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $callback */ '\Podlove\Podcast_Post_Meta_Box::post_type_meta_box_callback',
 			/* $page     */ 'podcast',
 			/* $context  */ 'normal',
@@ -75,7 +75,7 @@ class Podcast_Post_Meta_Box {
 				'type' => 'string',
 				'key'  => 'title',
 				'options' => array(
-					'label'       => __( 'Title', 'podlove' ),
+					'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => '',
 					'html'        => array(
 						'readonly' => 'readonly',
@@ -87,7 +87,7 @@ class Podcast_Post_Meta_Box {
 				'type' => 'text',
 				'key'  => 'subtitle',
 				'options' => array(
-					'label'       => __( 'Subtitle', 'podlove' ),
+					'label'       => __( 'Subtitle', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => '',
 					'html'        => array(
 						'class' => 'large-text autogrow podlove-check-input',
@@ -99,7 +99,7 @@ class Podcast_Post_Meta_Box {
 				'type' => 'text',
 				'key'  => 'summary',
 				'options' => array(
-					'label'       => __( 'Summary', 'podlove' ),
+					'label'       => __( 'Summary', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => '',
 					'html'        => array(
 						'class' => 'large-text autogrow podlove-check-input',
@@ -111,7 +111,7 @@ class Podcast_Post_Meta_Box {
 				'type' => 'string',
 				'key'  => 'slug',
 				'options' => array(
-					'label'       => __( 'Episode Media File Slug', 'podlove' ),
+					'label'       => __( 'Episode Media File Slug', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => '',
 					'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				),
@@ -120,7 +120,7 @@ class Podcast_Post_Meta_Box {
 				'type' => 'string',
 				'key'  => 'duration',
 				'options' => array(
-					'label'       => __( 'Duration', 'podlove' ),
+					'label'       => __( 'Duration', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => '',
 					'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				),
@@ -181,7 +181,7 @@ class Podcast_Post_Meta_Box {
 		// FIXME: empty checkbox -> no file id
 		// solution: when one checks the box, an AJAX request has to create and validate the file
 		$episode_assets_form = array(
-			'label'       => __( 'Media Files', 'podlove' ),
+			'label'       => __( 'Media Files', 'podlove-podcasting-plugin-for-wordpress' ),
 			'description' => '',
 			'options'     => $asset_options,
 			'default'      => true,
@@ -190,11 +190,11 @@ class Podcast_Post_Meta_Box {
 				?>
 				<table class='media_file_table' border="0" cellspacing="0">
 					<tr>
-						<th><?php echo __( 'Enable', 'podlove' ) ?></th>
-						<th><?php echo __( 'Asset', 'podlove' ) ?></th>
-						<th><?php echo __( 'Asset File Name', 'podlove' ) ?></th>
-						<th><?php echo __( 'Filesize', 'podlove' ) ?></th>
-						<th><?php echo __( 'Status', 'podlove' ) ?></th>
+						<th><?php echo __( 'Enable', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+						<th><?php echo __( 'Asset', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+						<th><?php echo __( 'Asset File Name', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+						<th><?php echo __( 'Filesize', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+						<th><?php echo __( 'Status', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
 						<th></th>
 					</tr>
 				<?php
@@ -204,7 +204,7 @@ class Podcast_Post_Meta_Box {
 				</table>
 				<p>
 					<span class="description">
-						<?php echo __( 'Media File Base URL', 'podlove' ) . ': ' . \Podlove\Model\Podcast::get()->media_file_base_uri; ?>
+						<?php echo __( 'Media File Base URL', 'podlove-podcasting-plugin-for-wordpress' ) . ': ' . \Podlove\Model\Podcast::get()->media_file_base_uri; ?>
 					</span>
 				</p>
 				<?php
@@ -257,13 +257,13 @@ class Podcast_Post_Meta_Box {
 			$episode_assets_form['description'] =
 				sprintf(
 					'<span style="color: red">%s</span>',
-					__( 'You need to configure assets for this show. No assets, no fun.', 'podlove' )
+					__( 'You need to configure assets for this show. No assets, no fun.', 'podlove-podcasting-plugin-for-wordpress' )
 				)
 				. ' '
 			    . sprintf(
 			    	'<a href="%s">%s</a>',
 			    	admin_url( 'admin.php?page=podlove_episode_assets_settings_handle' ),
-			    	__( 'Configure Assets', 'podlove' )
+			    	__( 'Configure Assets', 'podlove-podcasting-plugin-for-wordpress' )
 			    );
 		}
 

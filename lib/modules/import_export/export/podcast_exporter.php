@@ -95,8 +95,15 @@ class PodcastExporter {
 			$value = get_option($option_name);
 			if ($value !== false) {
 				if (is_array($value)) {
+					foreach ($value as $k => $v) {
+						// `addChild` does not escape '&', so we need to escape
+						// it *before* serializing, otherwise deserialization will
+						// break due to string length mismatch.
+						$value[$k] = htmlspecialchars($v);
+					}
 					$xml_group->addChild("xmlns:wpe:$option_name", serialize($value));
 				} else {
+					$value = htmlspecialchars($value);
 					$xml_group->addChild("xmlns:wpe:$option_name", $value);
 				}
 			}

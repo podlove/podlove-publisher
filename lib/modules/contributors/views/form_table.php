@@ -5,18 +5,18 @@ use \Podlove\Modules\Contributors\Contributors;
 	<table class="podlove_alternating" border="0" cellspacing="0">
 		<thead>
 			<tr>
-				<th class="podlove-avatar-column" colspand="2"><?php echo __('Contributor', 'podlove') ?></th>
+				<th class="podlove-avatar-column" colspand="2"><?php echo __('Contributor', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 				<th></th>
-				<?php echo $has_groups       ? '<th>' . __('Group', 'podlove') . '</th>'           : ''; ?>
-				<?php echo $has_roles        ? '<th>' . __('Role', 'podlove') . '</th>'            : ''; ?>
-				<?php echo $can_be_commented ? '<th>' . __('Pub&shy;lic Com&shy;ment', 'podlove') . '</th>'  : ''; ?>
-				<th style="width: 60px"><?php echo __('Re&shy;move', 'podlove') ?></th>
+				<?php echo $has_groups       ? '<th>' . __('Group', 'podlove-podcasting-plugin-for-wordpress') . '</th>'           : ''; ?>
+				<?php echo $has_roles        ? '<th>' . __('Role', 'podlove-podcasting-plugin-for-wordpress') . '</th>'            : ''; ?>
+				<?php echo $can_be_commented ? '<th>' . __('Pub&shy;lic Com&shy;ment', 'podlove-podcasting-plugin-for-wordpress') . '</th>'  : ''; ?>
+				<th style="width: 60px"><?php echo __('Re&shy;move', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 				<th style="width: 30px"></th>
 			</tr>
 		</thead>
 		<tbody id="contributors_table_body" style="min-height: 50px;">
 			<tr class="contributors_table_body_placeholder" style="display: none;">
-				<td><em><?php echo __('No contributors were added yet.', 'podlove') ?></em></td>
+				<td><em><?php echo __('No contributors were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
 			</tr>
 		</tbody>
 	</table>
@@ -31,8 +31,8 @@ use \Podlove\Modules\Contributors\Contributors;
 		<td class="podlove-contributor-column">
 			<div style="min-width: 205px">
 			<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
-				<option value=""><?php echo __('Choose Contributor', 'podlove') ?></option>
-				<option value="create"><?php echo __('Add New Contributor', 'podlove') ?></option>
+				<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress') ?></option>
+				<option value="create"><?php echo __('Add New Contributor', 'podlove-podcasting-plugin-for-wordpress') ?></option>
 				<?php foreach ( $contributors as $contributor ): ?>
 					<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url() ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
 				<?php endforeach; ?>

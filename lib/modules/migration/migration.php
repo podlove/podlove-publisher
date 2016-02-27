@@ -26,12 +26,12 @@ class Migration extends \Podlove\Modules\Base {
 			?>
 			<div id="podlove_welcome">
 				<h3>
-					<?php echo __( 'This is the Podlove Publisher. Welcome!', 'podlove' ); ?>
+					<?php echo __( 'This is the Podlove Publisher. Welcome!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</h3>
 				<p>
 					<?php
 					echo sprintf(
-						__( 'Do you have an existing podcast here which you\'d like to convert to the Publisher?%sPlease use the %sMigration Assistant%s.', 'podlove' ),
+						__( 'Do you have an existing podcast here which you\'d like to convert to the Publisher?%sPlease use the %sMigration Assistant%s.', 'podlove-podcasting-plugin-for-wordpress' ),
 						'<br>',
 						'<a href="' . admin_url( 'admin.php' . \Podlove\Modules\Migration\Settings\Assistant::get_page_link() ) . '">',
 						'</a>'
@@ -39,11 +39,11 @@ class Migration extends \Podlove\Modules\Base {
 					?>
 				</p>
 				<p>
-					<?php echo __( 'Have fun!', 'podlove' ); ?>
+					<?php echo __( 'Have fun!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</p>
 				<div class="dismiss">
 					<a href="#">
-						<?php echo __( 'Dismiss this message', 'podlove' ); ?>
+						<?php echo __( 'Dismiss this message', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 					</a>
 				</div>
 			</div>

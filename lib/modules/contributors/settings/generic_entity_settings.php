@@ -23,11 +23,11 @@ class GenericEntitySettings {
 		$this->entity_class = $entity_class;
 
 		$default_labels = array(
-			'delete_confirm' => __( 'You selected to delete the entity "%s". Please confirm this action.', 'podlove' ),
-			'delete_button_delete' => __( 'Delete permanently', 'podlove' ),
-			'delete_button_keep'   => __( 'Don\'t change anything', 'podlove' ),
-			'add_new' => __( 'Add New', 'podlove' ),
-			'edit'    => __( 'Edit', 'podlove' )
+			'delete_confirm' => __( 'You selected to delete the entity "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress' ),
+			'delete_button_delete' => __( 'Delete permanently', 'podlove-podcasting-plugin-for-wordpress' ),
+			'delete_button_keep'   => __( 'Don\'t change anything', 'podlove-podcasting-plugin-for-wordpress' ),
+			'add_new' => __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ),
+			'edit'    => __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' )
 		);
 
 		$this->labels = $default_labels;
@@ -209,9 +209,9 @@ class GenericEntitySettings {
 			'submit_button' => false, // for custom control in form_end
 			'form_end' => function() {
 				echo "<p>";
-				submit_button( __('Save Changes', 'podlove'), 'primary', 'submit', false );
+				submit_button( __('Save Changes', 'podlove-podcasting-plugin-for-wordpress'), 'primary', 'submit', false );
 				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				submit_button( __('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false );
 				echo "</p>";
 			}
 		);

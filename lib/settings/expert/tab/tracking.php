@@ -10,9 +10,9 @@ class Tracking extends Tab {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_episode',
-			/* $title 	 */ __( '', 'podlove' ),	
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
 			/* $callback */ function () {
-				echo '<h3>' . __( 'Download Tracking & Analytics Settings', 'podlove' ) . '</h3>';
+				echo '<h3>' . __( 'Download Tracking & Analytics Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>';
 				?>
 				<style type="text/css">
 				.form-table .aligned-radio { display: table; margin-bottom: 10px; }
@@ -28,7 +28,7 @@ class Tracking extends Tab {
 			/* $id       */ 'podlove_setting_tracking',
 			/* $title    */ sprintf(
 				'<label for="mode">%s</label>',
-				__( 'Tracking Mode', 'podlove' )
+				__( 'Tracking Mode', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				?>
@@ -40,8 +40,8 @@ class Tracking extends Tab {
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'No Tracking', 'podlove' ),
-								__( 'Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove' )
+								__( 'No Tracking', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>
@@ -55,7 +55,7 @@ class Tracking extends Tab {
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'Tracking URL Parameters', 'podlove' ),
+								__( 'Tracking URL Parameters', 'podlove-podcasting-plugin-for-wordpress' ),
 								__( 'Original file URLs are extended by tracking parameters before presenting them to users and clients. 
 									This is useful if you are using your server log files for download analytics. 
 									No download-data is tracked.', 'podlove' )
@@ -72,7 +72,7 @@ class Tracking extends Tab {
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'Tracking URL Parameters &amp; Analytics', 'podlove' ),
+								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
 								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
 									The Publisher logs the download intent and redirects the user to the original file. 
 									That way the Publisher is able to generate download statistics. ', 'podlove' )
@@ -90,7 +90,7 @@ class Tracking extends Tab {
 			/* $id       */ 'podlove_status_location_database',
 			/* $title    */ sprintf(
 				'<label for="mode">%s</label>',
-				__( 'Geolocation Lookup', 'podlove' )
+				__( 'Geolocation Lookup', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				$file = \Podlove\Geo_Ip::get_upload_file_path();
@@ -98,28 +98,28 @@ class Tracking extends Tab {
 				?>
 				<?php if ( file_exists($file) ): ?>
 					<p>
-						<?php echo __("Geolocation database", "podlove"); ?>:
+						<?php echo __("Geolocation database", 'podlove-podcasting-plugin-for-wordpress'); ?>:
 						<code><?php echo $file ?></code>
 					</p>
 					<p>
-						<?php echo __("Last modified", "podlove"); ?>: 
+						<?php echo __("Last modified", 'podlove-podcasting-plugin-for-wordpress'); ?>: 
 						<?php echo date(get_option('date_format') . ' ' . get_option( 'time_format' ), filemtime($file)) ?>
 					</p>
 					<p>
 						<?php echo sprintf(
-							__("The database is updated automatically once a month. Next scheduled update: %s", "podlove"),
+							__("The database is updated automatically once a month. Next scheduled update: %s", 'podlove-podcasting-plugin-for-wordpress'),
 							date(get_option('date_format') . ' ' . get_option( 'time_format' ), wp_next_scheduled('podlove_geoip_db_update'))
 						) ?>
 					</p>
 					<p>
-						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __("Update Now", "podlove") ?></button>
+						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __("Update Now", 'podlove-podcasting-plugin-for-wordpress') ?></button>
 					</p>
 				<?php else: ?>
 					<p>
-						<?php echo __("You need to download a geolocation-database for lookups to work.", "podlove") ?>
+						<?php echo __("You need to download a geolocation-database for lookups to work.", 'podlove-podcasting-plugin-for-wordpress') ?>
 					</p>
 					<p>
-						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __("Download Now", "podlove") ?></button>
+						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __("Download Now", 'podlove-podcasting-plugin-for-wordpress') ?></button>
 					</p>
 				<?php endif; ?>
 				<p>
@@ -139,7 +139,7 @@ class Tracking extends Tab {
 			/* $id       */ 'podlove_debug_tracking',
 			/* $title    */ sprintf(
 				'<label for="mode">%s</label>',
-				__( 'Debug Tracking', 'podlove' )
+				__( 'Debug Tracking', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 
@@ -147,7 +147,7 @@ class Tracking extends Tab {
 					?>
 					<div class="error">
 						<p>
-							<b><?php echo __('Please Change Permalink Structure', 'podlove') ?></b>
+							<b><?php echo __('Please Change Permalink Structure', 'podlove-podcasting-plugin-for-wordpress') ?></b>
 							<?php
 							echo sprintf(
 								__('You are using the default WordPress permalink structure. 

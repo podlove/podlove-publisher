@@ -5,7 +5,7 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
 ?>
 
 <div id="asset_validation">
-	<input id="revalidate_assets" type="button" class="button button-primary" value="<?php echo __( 'Revalidate Assets', 'podlove' ); ?>">
+	<input id="revalidate_assets" type="button" class="button button-primary" value="<?php echo __( 'Revalidate Assets', 'podlove-podcasting-plugin-for-wordpress' ); ?>">
 
 	<table id="asset_status_dashboard">
 		<thead>

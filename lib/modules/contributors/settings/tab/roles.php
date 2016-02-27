@@ -37,12 +37,12 @@ class Roles extends Tab {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 
 				$wrapper->string( 'title', array(
-					'label' => __( 'Role Title', 'podlove' ),
+					'label' => __( 'Role Title', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'  => array( 'class' => 'required' )
 				) );
 
 				$wrapper->string( 'slug', array(
-					'label' => __( 'Role Slug', 'podlove' ),
+					'label' => __( 'Role Slug', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'  => array( 'class' => 'required' )
 				) );
 
@@ -52,13 +52,13 @@ class Roles extends Tab {
 
 		$this->page->enable_tabs('roles');
 		$this->page->set_labels(array(
-			'delete_confirm' => __( 'You selected to delete the role "%s". Please confirm this action.', 'podlove' ),
-			'add_new' => __( 'Add new role', 'podlove' ),
-			'edit' => __( 'Edit role', 'podlove' )
+			'delete_confirm' => __( 'You selected to delete the role "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress' ),
+			'add_new' => __( 'Add new role', 'podlove-podcasting-plugin-for-wordpress' ),
+			'edit' => __( 'Edit role', 'podlove-podcasting-plugin-for-wordpress' )
 		));
 
 		add_action('podlove_settings_role_view', function() {
-			echo __('Use roles to assign a certain type of activity to a single contributor independent of any assigned group. A role might be helpful to mark somebody as being the main presenter of a show or a guest. Use roles sparingly as most of the times, groups might the more valuable way to structure contributors.', 'podlove');
+			echo __('Use roles to assign a certain type of activity to a single contributor independent of any assigned group. A role might be helpful to mark somebody as being the main presenter of a show or a guest. Use roles sparingly as most of the times, groups might the more valuable way to structure contributors.', 'podlove-podcasting-plugin-for-wordpress');
 			$table = new \Podlove\Modules\Contributors\Contributor_Role_List_Table();
 			$table->prepare_items();
 			$table->display();

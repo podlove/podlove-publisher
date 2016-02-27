@@ -59,7 +59,6 @@ class PlayerConfig {
 		$config = [
             "alwaysShowHours" => true,
             "alwaysShowControls" => true,
-            "chaptersVisible" => true,
             "permalink" => get_permalink($this->post->ID),
             "publicationDate" => mysql2date("c", $this->post->post_date),
             "title" => get_the_title($this->post->ID),
@@ -83,6 +82,10 @@ class PlayerConfig {
             "chapters" => json_decode($this->episode->get_chapters('json')),
             "languageCode" => $this->podcast->language
          ];
+
+         if (in_array(\Podlove\get_webplayer_setting("chaptersVisible"), [true, 'true', 'on', 1, "1"], true)) {
+         	$config["activeTab"] = "chapters";
+         }
 
          return $config;
 	}

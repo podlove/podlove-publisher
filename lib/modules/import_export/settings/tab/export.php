@@ -16,45 +16,45 @@ class Export extends \Podlove\Settings\Expert\Tab {
 		do_action('podlove_imexport_settings_head');
 		?>
 
-		<h3><?php echo __('Podcast Export', 'podlove') ?></h3>
+		<h3><?php echo __('Podcast Export', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 
 		<table class="form-table">
 			<tr>
 				<td colspan="2">
 					<?php echo sprintf(
-						__('This export complements the existing %sWordPress export tool%s. It contains all relevant podcast data to enable you to move from this WordPress instance to another. Step by step:', 'podlove'),
+						__('This export complements the existing %sWordPress export tool%s. It contains all relevant podcast data to enable you to move from this WordPress instance to another. Step by step:', 'podlove-podcasting-plugin-for-wordpress'),
 						'<a href="' . admin_url('export.php') . '">', '</a>'
 					);
 					?>
 					<ol>
 						<li>
 							<?php echo sprintf(
-								__('Go to the %sWordPress export tool%s and export all data.', 'podlove'),
+								__('Go to the %sWordPress export tool%s and export all data.', 'podlove-podcasting-plugin-for-wordpress'),
 								'<a href="' . admin_url('export.php') . '">', '</a>' 
 							); ?>
 						</li>
-						<li><?php echo __('Import this file to your new WordPress instance.', 'podlove') ?></li>
-						<li><?php echo __('Use the button below to export the podcast data file.', 'podlove') ?></li>
-						<li><?php echo __('In your new WordPress instance, import that file.', 'podlove') ?></li>
+						<li><?php echo __('Import this file to your new WordPress instance.', 'podlove-podcasting-plugin-for-wordpress') ?></li>
+						<li><?php echo __('Use the button below to export the podcast data file.', 'podlove-podcasting-plugin-for-wordpress') ?></li>
+						<li><?php echo __('In your new WordPress instance, import that file.', 'podlove-podcasting-plugin-for-wordpress') ?></li>
 					</ol>
 
-					<a href="?podlove_export=1" class="button-primary"><?php echo __('Export Podcast Data', 'podlove') ?></a>
+					<a href="?podlove_export=1" class="button-primary"><?php echo __('Export Podcast Data', 'podlove-podcasting-plugin-for-wordpress') ?></a>
 				</td>
 			</tr>
 		</table>
 
-		<h3><?php echo __('Tracking Export', 'podlove') ?></h3>
+		<h3><?php echo __('Tracking Export', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 
 		<table class="form-table">
 			<tr>
 				<td colspan="2">
 					<p>
-						<?php echo __('Im- and export of tracking data is a separate task. After you have completed the steps above, you can ex- and import tracking data.', 'podlove'); ?>
+						<?php echo __('Im- and export of tracking data is a separate task. After you have completed the steps above, you can ex- and import tracking data.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 					</p>
 					<p>
-						<button id="podlove_tracking_export" class="button-primary"><?php echo __('Export Tracking Data', 'podlove') ?></button>
+						<button id="podlove_tracking_export" class="button-primary"><?php echo __('Export Tracking Data', 'podlove-podcasting-plugin-for-wordpress') ?></button>
 						<span id="podlove_tracking_export_status_wrapper">
-							<?php echo __('Export', 'podlove') ?>: <span id="podlove_tracking_export_status">starting ...</span>
+							<?php echo __('Export', 'podlove-podcasting-plugin-for-wordpress') ?>: <span id="podlove_tracking_export_status">starting ...</span>
 						</span>
 					</p>
 				</td>

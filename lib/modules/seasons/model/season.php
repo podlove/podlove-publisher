@@ -40,7 +40,7 @@ class Season extends Base
 		if ($this->title) {
 			return $this->title;
 		} else {
-			return __('Season', 'podlove') . ' ' . $this->number();
+			return __('Season', 'podlove-podcasting-plugin-for-wordpress') . ' ' . $this->number();
 		}
 	}
 

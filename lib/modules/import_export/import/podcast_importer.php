@@ -143,7 +143,18 @@ class PodcastImporter {
 		$wpe_options = $this->xml->xpath('//wpe:options');
 		$options = $wpe_options[0]->children('wpe', true);
 		foreach ($options as $option) {
-			update_option($option->getName(), maybe_unserialize((string) $option));
+			$option_string = (string) $option;
+
+			// Replace lone '&' characters with '&amp;'.
+			// Why? When exporting, the same conversion needs to be done to
+			// make strings XML compatible. When importing, it is automatically
+			// converted back to '&' which breaks `maybe_unserialize` (because
+			// it changes the length of the content). So we need to convert it back.
+			if (strpos($option_string, '&') !== false) {
+				$option_string = preg_replace('/&([^#])(?![a-z1-4]{1,8};)/i', '&amp;$1', $option_string);
+			}
+
+			update_option($option->getName(), maybe_unserialize($option_string));
 		}
 	}
 

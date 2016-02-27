@@ -24,7 +24,7 @@ add_action( 'plugins_loaded', function () {
 				<div id="message" class="error">
 					<p>
 						<strong><?php echo __( 'Warning' ) ?></strong>
-						<?php echo sprintf( __( 'Podlove Module "%s" could not be found and has been deactivated.', 'podlove' ), $module_name ); ?>
+						<?php echo sprintf( __( 'Podlove Module "%s" could not be found and has been deactivated.', 'podlove-podcasting-plugin-for-wordpress' ), $module_name ); ?>
 					</p>
 				</div>
 				<?php

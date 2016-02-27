@@ -17,14 +17,14 @@ class File_Type_List_Table extends \Podlove\List_Table {
 	function column_name( $file_type ) {
 		$actions = array(
 			'edit' => sprintf(
-				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Edit', 'podlove' ) . '</a>',
+				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>',
 				$_REQUEST['page'],
 				$_REQUEST['podlove_tab'],
 				'edit',
 				$file_type->id
 			),
 			'delete' => sprintf(
-				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Delete', 'podlove' ) . '</a>',
+				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>',
 				$_REQUEST['page'],
 				$_REQUEST['podlove_tab'],
 				'delete',
@@ -56,11 +56,11 @@ class File_Type_List_Table extends \Podlove\List_Table {
 
 	function get_columns(){
 		return array(
-			'id'        => __( 'ID', 'podlove' ),
-			'name'      => __( 'Name', 'podlove' ),
-			'file_type' => __( 'File Type', 'podlove' ),
-			'mime'      => __( 'MIME Type', 'podlove' ),
-			'extension' => __( 'Extension', 'podlove' )
+			'id'        => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
+			'name'      => __( 'Name', 'podlove-podcasting-plugin-for-wordpress' ),
+			'file_type' => __( 'File Type', 'podlove-podcasting-plugin-for-wordpress' ),
+			'mime'      => __( 'MIME Type', 'podlove-podcasting-plugin-for-wordpress' ),
+			'extension' => __( 'Extension', 'podlove-podcasting-plugin-for-wordpress' )
 		);
 	}
 	

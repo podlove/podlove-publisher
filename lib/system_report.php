@@ -94,11 +94,11 @@ class SystemReport {
 
 				if (!$permalinks) {
 					$errors[] = sprintf(
-						__('You are using the default WordPress permalink structure. This may cause problems with some podcast clients. Go to %s and set it to anything but default (for example "Post name").', 'podlove'),
+						__('You are using the default WordPress permalink structure. This may cause problems with some podcast clients. Go to %s and set it to anything but default (for example "Post name").', 'podlove-podcasting-plugin-for-wordpress'),
 						admin_url('options-permalink.php')
 					);
 
-					return __("\"non-pretty\" Permalinks: Please change permalink structure", 'podlove');
+					return __("\"non-pretty\" Permalinks: Please change permalink structure", 'podlove-podcasting-plugin-for-wordpress');
 				}
 
 				return "ok ($permalinks)";
@@ -122,13 +122,13 @@ class SystemReport {
 				$podcast = Model\Podcast::get();
 
 				if ( ! $podcast->title ) {
-					$error = __( 'Your podcast needs a title.', 'podlove' );
+					$error = __( 'Your podcast needs a title.', 'podlove-podcasting-plugin-for-wordpress' );
 					$errors[] = $error;
 					$out .= $error;
 				}
 
 				if ( ! $podcast->media_file_base_uri ) {
-					$error = __( 'Your podcast needs an upload location for file storage.', 'podlove' );
+					$error = __( 'Your podcast needs an upload location for file storage.', 'podlove-podcasting-plugin-for-wordpress' );
 					$errors[] = $error;
 					$out .= $error;
 				}
@@ -148,7 +148,7 @@ class SystemReport {
 					}
 				}
 
-				$error = __( 'You need to assign at least one asset to the web player.', 'podlove' );
+				$error = __( 'You need to assign at least one asset to the web player.', 'podlove-podcasting-plugin-for-wordpress' );
 				$errors[] = $error;
 				return $error;
 			} ),

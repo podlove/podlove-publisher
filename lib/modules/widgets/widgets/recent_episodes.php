@@ -9,8 +9,8 @@ class RecentEpisodes extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_recent_episodes_widget',
-			__('Recent Episodes', 'podlove'),
-			array( 'description' => __( 'Shows the recent episodes of your podcast.', 'podlove' ) )
+			__('Recent Episodes', 'podlove-podcasting-plugin-for-wordpress'),
+			array( 'description' => __( 'Shows the recent episodes of your podcast.', 'podlove-podcasting-plugin-for-wordpress' ) )
 		);
 	}
 
@@ -61,19 +61,19 @@ class RecentEpisodes extends \WP_Widget {
 		$show_duration = isset( $instance[ 'show_duration' ] ) ? $instance[ 'show_duration' ] : '';
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number_of_episodes' ); ?>"><?php _e( 'Number of Episodes', 'podlove' ); ?></label> 
+			<label for="<?php echo $this->get_field_id( 'number_of_episodes' ); ?>"><?php _e( 'Number of Episodes', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
 			<input class="widefat" type="number" id="<?php echo $this->get_field_id( 'number_of_episodes' ); ?>" name="<?php echo $this->get_field_name( 'number_of_episodes' ); ?>" value="<?php echo $number_of_episodes; ?>" />
 		</p>
 		<p>		
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>" <?php echo ( $show_image ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display episode image', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display episode image', 'podlove-podcasting-plugin-for-wordpress' ); ?></label><br />
 
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'show_duration' ); ?>" name="<?php echo $this->get_field_name( 'show_duration' ); ?>" <?php echo ( $show_duration ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'show_duration' ); ?>"><?php _e( 'Show duration', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'show_duration' ); ?>"><?php _e( 'Show duration', 'podlove-podcasting-plugin-for-wordpress' ); ?></label><br />
 		</p>
 		<?php 
 	}

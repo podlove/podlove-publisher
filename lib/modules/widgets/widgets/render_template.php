@@ -9,8 +9,8 @@ class RenderTemplate extends \WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'podlove_render_template_widget',
-			__('Podlove Template', 'podlove'),
-			array( 'description' => __( 'Renders a Podlove template.', 'podlove' ) )
+			__('Podlove Template', 'podlove-podcasting-plugin-for-wordpress'),
+			array( 'description' => __( 'Renders a Podlove template.', 'podlove-podcasting-plugin-for-wordpress' ) )
 		);
 	}
 
@@ -34,10 +34,10 @@ class RenderTemplate extends \WP_Widget {
 		$autop = isset( $instance[ 'autop' ] ) ? $instance[ 'autop' ] : '';
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove' ); ?></label> 
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" />
 
-			<label for="<?php echo $this->get_field_id( 'template' ); ?>"><?php _e( 'Template', 'podlove' ); ?></label> 
+			<label for="<?php echo $this->get_field_id( 'template' ); ?>"><?php _e( 'Template', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
 			<select class="widefat" id="<?php echo $this->get_field_id( 'template' ); ?>" name="<?php echo $this->get_field_name( 'template' ); ?>">
 				<?php
 					foreach ($templates as $template) {
@@ -49,7 +49,7 @@ class RenderTemplate extends \WP_Widget {
 			</select>
 
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'autop' ); ?>" name="<?php echo $this->get_field_name( 'autop' ); ?>" <?php echo ( $autop ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'autop' ); ?>"><?php _e( 'Autowrap blocks of text?', 'podlove' ); ?></label><br />
+			<label for="<?php echo $this->get_field_id( 'autop' ); ?>"><?php _e( 'Autowrap blocks of text?', 'podlove-podcasting-plugin-for-wordpress' ); ?></label><br />
 		</p>
 		<?php
 	}

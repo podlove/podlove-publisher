@@ -43,11 +43,11 @@ class FileValidation {
 		$episodes = $podcast->episodes();
 		$assets   = Model\EpisodeAsset::all();
 
-		$header = [__('Episode', 'podlove')];
+		$header = [__('Episode', 'podlove-podcasting-plugin-for-wordpress')];
 		foreach ( $assets as $asset ) {
 			$header[] = $asset->title;
 		}
-		$header[] = __('Status', 'podlove');
+		$header[] = __('Status', 'podlove-podcasting-plugin-for-wordpress');
 
 		\Podlove\load_template('settings/dashboard/file_validation', [
 			'episodes'    => $episodes,

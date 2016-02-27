@@ -101,6 +101,15 @@ class Curl {
 		$curl->request($url, ['method' => 'HEAD', '_redirection' => 0]);
 		$response = $curl->get_response();
 
+		if (is_wp_error($this->response)) {
+			$message = sprintf('Unable to resolve URL. Might be related to PHP setting open_basedir, which should be empty, but is: "%s"', ini_get('open_basedir'));
+			Log::get()->addError($message, array(
+				'url' => $url,
+				'error' => $this->response->get_error_message()
+			) );
+			return $url;
+		}
+
 		$http_code = $response['response']['code'];
 		$location  = isset($response['headers']['location']) ? $response['headers']['location'] : NULL;
 

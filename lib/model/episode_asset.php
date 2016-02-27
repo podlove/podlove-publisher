@@ -61,7 +61,7 @@ class EpisodeAsset extends Base {
 		if ( $this->file_type_id )
 			return $this->file_type()->title();
 		else
-			return __( 'Notice: No file format defined.', 'podlove' );
+			return __( 'Notice: No file format defined.', 'podlove-podcasting-plugin-for-wordpress' );
 	}
 
 	/**

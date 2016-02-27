@@ -94,7 +94,7 @@ function template_shortcode( $attributes ) {
 	return $cache->cache_for($cache_key, function() use ($template_id, $attributes) {
 
 		if (!$template = Model\Template::find_one_by_title_with_fallback($template_id))
-			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove' ), $template_id );
+			return sprintf( __( 'Podlove Error: Whoops, there is no template with id "%s"', 'podlove-podcasting-plugin-for-wordpress' ), $template_id );
 
 		$html = apply_filters('podlove_template_raw', $template->title, $attributes);
 

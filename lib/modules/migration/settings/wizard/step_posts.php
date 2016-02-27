@@ -65,7 +65,7 @@ class StepPosts extends Step {
 		}
 
 		if ( ! count( $episodes ) )
-			$errors[] = __( '<strong>No Episodes Found!</strong> You can only migrate posts with enclosures. However, there don\'t seem to be any. Sorry!' , 'podlove' );
+			$errors[] = __( '<strong>No Episodes Found!</strong> You can only migrate posts with enclosures. However, there don\'t seem to be any. Sorry!' , 'podlove-podcasting-plugin-for-wordpress' );
 
 		$migration_settings = get_option( 'podlove_migration', array() );
 
@@ -100,8 +100,8 @@ class StepPosts extends Step {
 			<div class="span12">
 				<form action="" method="POST" class="pull-left" style="margin-right: 15px">
 					<input type="hidden" name="page" value="podlove_settings_migration_handle">
-					<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
-					<input type="submit" name="next" class="btn btn-primary pull-right" value="<?php echo __( 'Continue to Migration', 'podlove' ) ?>">
+					<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
+					<input type="submit" name="next" class="btn btn-primary pull-right" value="<?php echo __( 'Continue to Migration', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
 
 					<div class="clearfix"></div>
 
@@ -129,7 +129,7 @@ class StepPosts extends Step {
 						<?php endforeach; ?>
 					<?php endif; ?>
 
-					<h3><?php echo __( 'Episode Assets', 'podlove' ) ?> <small>choose assets to use in your podcast</small></h3>
+					<h3><?php echo __( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ) ?> <small>choose assets to use in your podcast</small></h3>
 					<p>
 						These are all detected assets. Please choose those that you want to use in your podcast.
 						For each asset, a feed will be created and users will be able to download those files (you can change this after the migration).
@@ -138,19 +138,19 @@ class StepPosts extends Step {
 						<thead>
 							<tr>
 						 		<th>
-						 			<?php echo __( 'Use', 'podlove' ) ?>
+						 			<?php echo __( 'Use', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						 		</th>
 						 		<th>
-						 			<?php echo __( 'Title', 'podlove' ) ?>
+						 			<?php echo __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						 		</th>
 						 		<th>
-						 			<?php echo __( 'Mime Type', 'podlove' ) ?>
+						 			<?php echo __( 'Mime Type', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						 		</th>
 						 		<th>
-						 			<?php echo __( 'Extension', 'podlove' ) ?>
+						 			<?php echo __( 'Extension', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						 		</th>
 						 		<th>
-						 			<?php echo __( 'Matching Episodes', 'podlove' ) ?>
+						 			<?php echo __( 'Matching Episodes', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						 		</th>
 							</tr>
 						</thead>
@@ -187,7 +187,7 @@ class StepPosts extends Step {
 					<div class="row-fluid">
 
 						<div class="span6" id="post_slug_select">
-							<h3><?php echo __( 'WordPress Post Slug', 'podlove' ); ?> <small>Url slug for the WordPress page</small></h3>
+							<h3><?php echo __( 'WordPress Post Slug', 'podlove-podcasting-plugin-for-wordpress' ); ?> <small>Url slug for the WordPress page</small></h3>
 							<label class="radio">
 								<input type="radio" name="podlove_migration[post_slug]" value="wordpress" <?php checked( $post_slug_type == 'wordpress' ) ?>>
 								Reuse previous WordPress post slug.
@@ -203,7 +203,7 @@ class StepPosts extends Step {
 						</div>
 
 						<div class="span6">
-							<h3><?php echo __( 'Clean up migrated Episodes', 'podlove' ); ?></h3>
+							<h3><?php echo __( 'Clean up migrated Episodes', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 
 							<div class="form-horizontal" id="cleanup_settings">
 
@@ -262,7 +262,7 @@ class StepPosts extends Step {
 						
 					</div>
 
-					<h3><?php echo __( 'Episode Verification Status', 'podlove' ); ?></h3>
+					<h3><?php echo __( 'Episode Verification Status', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 					<div class="progress progress-striped" id="verification-status">
 					  <div class="bar bar-success" style="width:0%;display:none" data-toggle="tooltip" title="All media files for these episodes are valid."></div>
 					  <div class="bar bar-warning" style="width:0%;display:none" data-toggle="tooltip" title="Some, but not all media files for these episodes are missing. You can add them later, so not necessarily a dealbreaker."></div>
@@ -281,7 +281,7 @@ class StepPosts extends Step {
 						</li>
 					</ul>
 
-					<h3><?php echo __( 'Episodes', 'podlove' ); ?></h3>
+					<h3><?php echo __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 					<p>
 						Select the episodes to migrate. Use the rest of the displayed data to verify the extracted data.
 					</p>
@@ -293,7 +293,7 @@ class StepPosts extends Step {
 								</th>
 								<th>#</th>
 								<th>
-									<?php echo __( 'Detected Episode', 'podlove' ) ?>
+									<?php echo __( 'Detected Episode', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</th>
 							</tr>
 						</thead>
@@ -624,8 +624,8 @@ class StepPosts extends Step {
 					});
 					</script>
 
-					<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove' ) ?>">
-					<input type="submit" name="next" class="btn btn-primary pull-right" value="<?php echo __( 'Continue to Migration', 'podlove' ) ?>">
+					<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
+					<input type="submit" name="next" class="btn btn-primary pull-right" value="<?php echo __( 'Continue to Migration', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
 					
 				</form>
 			</div>

@@ -17,8 +17,8 @@ class Contributor_Group_List_Table extends \Podlove\List_Table {
 
 	public function column_title( $group ) {
 		$actions = array(
-			'edit'   => Settings\GenericEntitySettings::get_action_link( 'group', $group->id, __( 'Edit', 'podlove' ) ),
-			'delete' => Settings\GenericEntitySettings::get_action_link( 'group', $group->id, __( 'Delete', 'podlove' ), 'confirm_delete' )
+			'edit'   => Settings\GenericEntitySettings::get_action_link( 'group', $group->id, __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) ),
+			'delete' => Settings\GenericEntitySettings::get_action_link( 'group', $group->id, __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ), 'confirm_delete' )
 		);
 	
 		return sprintf( '%1$s %2$s',
@@ -33,8 +33,8 @@ class Contributor_Group_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		$columns = array(
-			'title' => __( 'Group Title', 'podlove' ),
-			'slug'  => __( 'Group Slug', 'podlove' ),
+			'title' => __( 'Group Title', 'podlove-podcasting-plugin-for-wordpress' ),
+			'slug'  => __( 'Group Slug', 'podlove-podcasting-plugin-for-wordpress' ),
 		);
 		return $columns;
 	}

@@ -45,7 +45,7 @@ class Flattr extends \Podlove\Modules\Base {
 	}
 
 	public static function podcast_settings_tabs($tabs) {
-		$tabs->addTab(new PodcastFlattrSettingsTab(__('Flattr', 'podlove')));
+		$tabs->addTab(new PodcastFlattrSettingsTab(__('Flattr', 'podlove-podcasting-plugin-for-wordpress')));
 		return $tabs;
 	}
 

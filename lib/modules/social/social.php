@@ -192,13 +192,13 @@ class Social extends \Podlove\Modules\Base {
 
 	public function podcast_settings_social_tab($tabs)
 	{
-		$tabs->addTab( new Settings\PodcastSettingsSocialTab( __( 'Social', 'podlove' ) ) );
+		$tabs->addTab( new Settings\PodcastSettingsSocialTab( __( 'Social', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		return $tabs;
 	}
 
 	public function podcast_settings_donation_tab($tabs)
 	{
-		$tabs->addTab( new Settings\PodcastSettingsDonationTab( __( 'Donations', 'podlove' ) ) );
+		$tabs->addTab( new Settings\PodcastSettingsDonationTab( __( 'Donations', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		return $tabs;
 	}
 
@@ -210,8 +210,8 @@ class Social extends \Podlove\Modules\Base {
 		    // insert contributors at that index
 		    $columns = array_slice($columns, 0, $insertIndex, true) +
 		           array(
-		           		"social" => __('Social', 'podlove'),
-		           		"donation" => __('Donation', 'podlove')
+		           		"social" => __('Social', 'podlove-podcasting-plugin-for-wordpress'),
+		           		"donation" => __('Donation', 'podlove-podcasting-plugin-for-wordpress')
 		           	) +
 			       array_slice($columns, $insertIndex, count($columns) - 1, true);
 
@@ -221,7 +221,7 @@ class Social extends \Podlove\Modules\Base {
 	public function register_contributor_sections($sections) {
 
 		$sections['social'] = [
-			'title'  => __('Social', 'podlove'),
+			'title'  => __('Social', 'podlove-podcasting-plugin-for-wordpress'),
 			'fields' => [
 				'services_form_table' => [
 					'field_type'    => 'callback',
@@ -242,7 +242,7 @@ class Social extends \Podlove\Modules\Base {
 		];
 
 		$sections['donation'] = [
-			'title'  => __('Donation', 'podlove'),
+			'title'  => __('Donation', 'podlove-podcasting-plugin-for-wordpress'),
 			'fields' => [
 				'services_form_table' => [
 					'field_type'    => 'callback',
@@ -302,7 +302,7 @@ class Social extends \Podlove\Modules\Base {
 				</thead>
 				<tbody class="services_table_body" style="min-height: 50px;">
 					<tr class="services_table_body_placeholder" style="display: none;">
-						<td><em><?php echo __('No Services were added yet.', 'podlove') ?></em></td>
+						<td><em><?php echo __('No Services were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
 					</tr>
 				</tbody>
 			</table>
@@ -316,7 +316,7 @@ class Social extends \Podlove\Modules\Base {
 				
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
-						<option value=""><?php echo __('Choose Service', 'podlove') ?></option>
+						<option value=""><?php echo __('Choose Service', 'podlove-podcasting-plugin-for-wordpress') ?></option>
 						<?php foreach ( \Podlove\Modules\Social\Model\Service::all( 'WHERE `category` = \'' . $category . '\' ORDER BY `title`' ) as $service ): ?>
 							<option value="<?php echo $service->id ?>" data-img-src="<?php echo $service->image()->setWidth(45)->url() ?>"><?php echo $service->title; ?></option>
 						<?php endforeach; ?>

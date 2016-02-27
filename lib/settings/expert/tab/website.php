@@ -13,22 +13,22 @@ class Website extends Tab {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_general',
-			/* $title 	 */ __( '', 'podlove' ),	
-			/* $callback */ function () { echo '<h3>' . __( 'Website Settings', 'podlove' ) . '</h3>'; },
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Website Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_files',
-			/* $title 	 */ __( '', 'podlove' ),	
-			/* $callback */ function () { echo '<h3>' . __( 'Files & Downloads', 'podlove' ) . '</h3>'; },
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Files & Downloads', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_feeds',
-			/* $title 	 */ __( '', 'podlove' ),	
-			/* $callback */ function () { echo '<h3>' . __( 'Feeds', 'podlove' ) . '</h3>'; },
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Feeds', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 		
@@ -36,13 +36,13 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_merge_episodes',
 			/* $title    */ sprintf(
 				'<label for="merge_episodes">%s</label>',
-				__( 'Combine blog & podcast', 'podlove' )
+				__( 'Combine blog & podcast', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[merge_episodes]" id="merge_episodes" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'merge_episodes' ), 'on' ) ?>>
 				<?php
-				echo __( 'Include episode posts on the front page and in the blog feed', 'podlove' );
+				echo __( 'Include episode posts on the front page and in the blog feed', 'podlove-podcasting-plugin-for-wordpress' );
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -52,13 +52,13 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_hide_wp_feed_discovery',
 			/* $title    */ sprintf(
 				'<label for="hide_wp_feed_discovery">%s</label>',
-				__( 'Hide blog feeds', 'podlove' )
+				__( 'Hide blog feeds', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[hide_wp_feed_discovery]" id="hide_wp_feed_discovery" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'hide_wp_feed_discovery' ), 'on' ) ?>>
 				<?php
-				echo __( 'Hide default WordPress feeds for blog and comments (no auto-discovery).', 'podlove' );
+				echo __( 'Hide default WordPress feeds for blog and comments (no auto-discovery).', 'podlove-podcasting-plugin-for-wordpress' );
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -68,7 +68,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_custom_episode_slug',
 			/* $title    */ sprintf(
 				'<label for="custom_episode_slug">%s</label>',
-				__( 'Permalink structure for episodes', 'podlove' )
+				__( 'Permalink structure for episodes', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 
@@ -79,7 +79,7 @@ class Website extends Tab {
 					$custom_episode_slug = preg_replace( '|^/?blog|', '', $custom_episode_slug );
 				}
 				?>
-				<input name="podlove_website[use_post_permastruct]" id="use_post_permastruct" type="checkbox" <?php checked( $use_post_permastruct, 'on' ) ?>> <?php _e( 'Use the same permalink structure as posts', 'podlove' ); ?>
+				<input name="podlove_website[use_post_permastruct]" id="use_post_permastruct" type="checkbox" <?php checked( $use_post_permastruct, 'on' ) ?>> <?php _e( 'Use the same permalink structure as posts', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				<div id="custom_podcast_permastruct"<?php if ( $use_post_permastruct ) echo ' style="display:none;"' ?>>
 					<code><?php echo get_option('home'); ?></code>
 					<input name="podlove_website[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo $custom_episode_slug ?>">
@@ -127,7 +127,7 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_episode_archive',
 			/* $title    */ sprintf(
 				'<label for="episode_archive">%s</label>',
-				__( 'Episode pages', 'podlove' )
+				__( 'Episode pages', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 
@@ -138,7 +138,7 @@ class Website extends Tab {
 					$episode_archive_slug = preg_replace( '|^/?blog|', '', $episode_archive_slug );
 				}
 				?>
-				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode pages: a complete, paginated list of episodes, sorted by publishing date.', 'podlove' ); ?>
+				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode pages: a complete, paginated list of episodes, sorted by publishing date.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
 					<code><?php echo get_option('home') . $blog_prefix; ?></code>
 					<input class="podlove-check-input" name="podlove_website[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
@@ -173,15 +173,15 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_landing_page',
 			/* $title    */ sprintf(
 				'<label for="landing_page">%s</label>',
-				__( 'Podcast landing page', 'podlove' )
+				__( 'Podcast landing page', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 
 				$landing_page = \Podlove\get_setting( 'website', 'landing_page' );
 
 				$landing_page_options = array(
-					array( 'value' => 'homepage', 'text' => __('Front page', 'podlove') ),
-					array( 'value' => 'archive',  'text' => __('Episode pages', 'podlove') ),
+					array( 'value' => 'homepage', 'text' => __('Front page', 'podlove-podcasting-plugin-for-wordpress') ),
+					array( 'value' => 'archive',  'text' => __('Episode pages', 'podlove-podcasting-plugin-for-wordpress') ),
 					array( 'text' => '––––––––––', 'disabled' => true ),
 				);
 
@@ -243,7 +243,7 @@ class Website extends Tab {
 					});
 				});
 				</script>
-				<?php echo __('This defines the landing page to your podcast. It is the site that the your podcast feeds link to.', 'podlove') ?>
+				<?php echo __('This defines the landing page to your podcast. It is the site that the your podcast feeds link to.', 'podlove-podcasting-plugin-for-wordpress') ?>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
@@ -254,14 +254,14 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_url_template',
 			/* $title    */ sprintf(
 				'<label for="url_template">%s</label>',
-				__( 'Episode Asset URL Template.', 'podlove' )
+				__( 'Episode Asset URL Template.', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[url_template]" id="url_template" type="text" value="<?php echo \Podlove\get_setting( 'website', 'url_template' ) ?>" class="large-text podlove-check-input">
 				<p>
 					<span class="description">
-						<?php echo __( 'Is used to generate URLs. You probably don\'t want to change this.', 'podlove' ); ?>
+						<?php echo __( 'Is used to generate URLs. You probably don\'t want to change this.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 					</span>
 				</p>
 				<?php
@@ -274,12 +274,12 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_ssl_verify_peer',
 			/* $title    */ sprintf(
 				'<label for="ssl_verify_peer">%s</label>',
-				__( 'Check for Assets with SSL-peer-verification.', 'podlove' )
+				__( 'Check for Assets with SSL-peer-verification.', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[ssl_verify_peer]" id="ssl_verify_peer" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'ssl_verify_peer' ), 'on' ) ?>>
-				<?php echo __('If you provide your assets via https with a self-signed or not verifiable SSL-certificate, podlove should display your assets as non exiting. You might solve this by deactivating the ssl peer verification for asset checking. (Detailed: This sets "CURLOPT_SSL_VERIFYPEER" to FALSE.)', 'podlove') ?>
+				<?php echo __('If you provide your assets via https with a self-signed or not verifiable SSL-certificate, podlove should display your assets as non exiting. You might solve this by deactivating the ssl peer verification for asset checking. (Detailed: This sets "CURLOPT_SSL_VERIFYPEER" to FALSE.)', 'podlove-podcasting-plugin-for-wordpress') ?>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
@@ -290,12 +290,12 @@ class Website extends Tab {
 			/* $id       */ 'podlove_setting_feeds_skip_redirect',
 			/* $title    */ sprintf(
 				'<label for="feeds_skip_redirect">%s</label>',
-				__( 'Allow to skip feed redirects', 'podlove' )
+				__( 'Allow to skip feed redirects', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
 				?>
 				<input name="podlove_website[feeds_skip_redirect]" id="feeds_skip_redirect" type="checkbox" <?php checked( \Podlove\get_setting( 'website', 'feeds_skip_redirect' ), 'on' ) ?>>
-				<?php echo __('If you need to debug you feeds while using a feed proxy, add <code>?redirect=no</code> to the feed URL to skip the redirect.', 'podlove') ?>
+				<?php echo __('If you need to debug you feeds while using a feed proxy, add <code>?redirect=no</code> to the feed URL to skip the redirect.', 'podlove-podcasting-plugin-for-wordpress') ?>
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  

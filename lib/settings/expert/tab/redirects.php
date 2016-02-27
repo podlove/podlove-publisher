@@ -7,8 +7,8 @@ class Redirects extends Tab {
 	public function init() {
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_redirects',
-			/* $title 	 */ __( '', 'podlove' ),	
-			/* $callback */ function () { echo '<h3>' . __( 'Redirects', 'podlove' ) . '</h3>'; },
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $callback */ function () { echo '<h3>' . __( 'Redirects', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 
@@ -30,12 +30,12 @@ class Redirects extends Tab {
 				<table id="podlove-redirects" class="podlove_alternating" border="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th style="width: 55px"><?php echo __( 'Active', 'podlove' ) ?></th>
-							<th><?php echo __( 'From URL', 'podlove' ) ?></th>
-							<th><?php echo __( 'To URL', 'podlove' ) ?></th>
-							<th><?php echo __( 'Redirect Method', 'podlove' ) ?></th>
+							<th style="width: 55px"><?php echo __( 'Active', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+							<th><?php echo __( 'From URL', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+							<th><?php echo __( 'To URL', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+							<th><?php echo __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
 							<th class="count">
-								<?php echo __( 'Redirects', 'podlove' ) ?>
+								<?php echo __( 'Redirects', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 							</th>
 							<th class="delete"></th>
 							<th class="move"></th>
@@ -43,7 +43,7 @@ class Redirects extends Tab {
 					</thead>
 					<tbody id="podlove-redirects-table-body" style="min-height: 50px;">
 						<tr style="display: none;">
-							<td><em><?php echo __('No redirects were added yet.', 'podlove') ?></em></td>
+							<td><em><?php echo __('No redirects were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
 						</tr>
 					</tbody>
 				</table>
@@ -61,8 +61,8 @@ class Redirects extends Tab {
 					</td>
 					<td>
 						<select name="podlove_redirects[podlove_setting_redirect][{{index}}][code]">
-							<option value="307"><?php echo __('Temporary Redirect (HTTP Status 307)', 'podlove') ?></option>
-							<option value="301"><?php echo __('Permanent Redirect (HTTP Status 301)', 'podlove') ?></option>
+							<option value="307"><?php echo __('Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress') ?></option>
+							<option value="301"><?php echo __('Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress') ?></option>
 						</select>
 					</td>
 					<td class="count">
@@ -70,7 +70,7 @@ class Redirects extends Tab {
 						<input type="hidden" name="podlove_redirects[podlove_setting_redirect][{{index}}][count]" value="{{count}}">
 					</td>
 					<td class="delete">
-						<a href="#" class="button delete"><?php echo __( 'delete', 'podlove' ) ?></a>
+						<a href="#" class="button delete"><?php echo __( 'delete', 'podlove-podcasting-plugin-for-wordpress' ) ?></a>
 					</td>
 					<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
 				</tr>
@@ -144,7 +144,7 @@ class Redirects extends Tab {
 					<a href="#" id="podlove_add_new_rule" class="button"><?php echo __( 'Add new rule' ); ?></a>
 				</p>
 				<p class="description">
-					<?php echo __( 'Create custom permanent redirects. URLs can be absolute like <code>http://example.com/feed</code> or relative to the website like <code>/feed</code>.', 'podlove' ) ?>
+					<?php echo __( 'Create custom permanent redirects. URLs can be absolute like <code>http://example.com/feed</code> or relative to the website like <code>/feed</code>.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 				</p>
 
 				<style type="text/css">

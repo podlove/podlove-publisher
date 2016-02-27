@@ -1,4 +1,9 @@
 <?php
+
+use \Podlove\Cache\TemplateCache;
+use \Podlove\Model;
+use \Podlove\Feeds;
+
 /**
  * Adds feed discover links to WordPress head.
  */
@@ -10,17 +15,20 @@ function podlove_add_feed_discoverability() {
 	if ( ! function_exists( '\Podlove\Feeds\prepare_for_feed' ) )
 		require_once \Podlove\PLUGIN_DIR . 'lib/feeds/base.php';
 
-	$cache = \Podlove\Cache\TemplateCache::get_instance();
-	echo $cache->cache_for('feed_discoverability', function() {
+	// we need separate caches for http and https
+	$cache_key = 'feed_discoverability_' . (int) is_ssl();
+	echo TemplateCache::get_instance()->cache_for($cache_key, function() {
 
-		$feeds = \Podlove\Model\Podcast::get()->feeds();
+		$feeds = Model\Podcast::get()->feeds();
 
-		$html = '';
-		foreach ( $feeds as $feed ) {
-			if ( $feed->discoverable )
-				$html .= '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";			
-		}
-		return $html;
+		// only discoverable feeds
+		$feeds = array_filter($feeds, function($feed) { return $feed->discoverable; });
+
+		$links = array_map(function($feed) {
+			return '<link rel="alternate" type="' . $feed->get_content_type() . '" title="' . Feeds\prepare_for_feed( $feed->title_for_discovery() ) . '" href="' . $feed->get_subscribe_url() . "\" />\n";
+		}, $feeds);
+
+		return "\n" . implode("", $links);
 	});
 }
 

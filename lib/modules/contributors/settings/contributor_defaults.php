@@ -65,7 +65,7 @@ class ContributorDefaults {
 			<p>
 				Default Contributors will be automatically added to the list of contributors for new episodes.
 			</p>
-			<form method="post" action="admin.php?page=podlove_contributor_settings&action=save" id="contributor_default_form">
+			<form method="post" action="admin.php?page=podlove_contributor_settings&amp;action=save" id="contributor_default_form">
 			<?php
 				$this->default_contrib_form();
 			?>

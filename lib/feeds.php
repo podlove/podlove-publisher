@@ -138,6 +138,17 @@ function check_for_and_do_compression($content_type = 'application/rss+xml')
 	if ( isset($_SERVER['HTTP_ACCEPT_ENCODING']) && stripos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) === FALSE)
 		return false;
 
+	// don't gzip if _any_ output buffering is active
+	// this can be 1 if "output_buffering" is not set to off / 0
+	// but better safe than sorry (otherwise there's trouble with caching plugins)
+	if (ob_get_level() > 0) {
+		return false;
+	}
+
+	// don't gzip if wprocket is active
+	if (in_array('do_rocket_callback', ob_list_handlers()))
+		return false;
+
 	// don't gzip if gzipping is already active
 	if (in_array('ob_gzhandler', ob_list_handlers()))
 		return false;

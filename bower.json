@@ -11,6 +11,6 @@
     "bower_components"
   ],
   "dependencies": {
-    "podlove-web-player": "~v3.0.0"
+    "podlove-web-player": "~v3.0.0-rc.5"
   }
 }

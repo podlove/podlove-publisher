@@ -13,8 +13,8 @@ class Pubsubhubbub extends \Podlove\Modules\Base {
 			add_action( 'init', array( $this, 'register_hooks' ) );
 
 			$this->register_option( 'hub_url', 'string', array(
-				'label'       => __( 'Hub URL', 'podlove' ),
-				'description' => __( 'Use hub URL for all feeds.', 'podlove' ),
+				'label'       => __( 'Hub URL', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Use hub URL for all feeds.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'        => array(
 					'class' => 'regular-text podlove-check-input',
 					'data-podlove-input-type' => 'url',

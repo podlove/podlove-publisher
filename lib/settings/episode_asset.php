@@ -12,8 +12,8 @@ class EpisodeAsset {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ __( 'Episode Assets', 'podlove' ),
-			/* $menu_title */ __( 'Episode Assets', 'podlove' ),
+			/* $page_title */ __( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_episode_assets_settings_handle',
 			/* $function   */ array( $this, 'page' )
@@ -161,31 +161,31 @@ class EpisodeAsset {
 				?>
 				<div class="error">
 					<p>
-						<?php echo __( '<strong>The asset has not been deleted. Are you aware that the asset is still in use?</strong>', 'podlove' ) ?>
+						<?php echo __( '<strong>The asset has not been deleted. Are you aware that the asset is still in use?</strong>', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						<ul class="ul-disc">
 							<?php if ( $asset->has_active_media_files() ): ?>
 								<li>
-									<?php echo sprintf( __( 'There are %s connected media files.', 'podlove' ), count( $asset->active_media_files() ) ) ?>
+									<?php echo sprintf( __( 'There are %s connected media files.', 'podlove-podcasting-plugin-for-wordpress' ), count( $asset->active_media_files() ) ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->has_asset_assignments() ): ?>
 								<li>
-									<?php echo __( 'This asset is assigned to episode images or episode chapters.', 'podlove' ) ?>
+									<?php echo __( 'This asset is assigned to episode images or episode chapters.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->is_connected_to_feed() ): ?>
 								<li>
-									<?php echo __( 'A feed uses this asset.', 'podlove' ) ?>
+									<?php echo __( 'A feed uses this asset.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->is_connected_to_web_player() ): ?>
 								<li>
-									<?php echo __( 'The web player uses this asset.', 'podlove' ) ?>
+									<?php echo __( 'The web player uses this asset.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</li>
 							<?php endif; ?>
 						</ul>
 						<a href="?page=<?php echo $_REQUEST['page'] ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id ?>&amp;force=1">
-							<?php echo __( 'delete anyway', 'podlove' ) ?>
+							<?php echo __( 'delete anyway', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						</a>
 					</p>
 				</div>
@@ -195,7 +195,7 @@ class EpisodeAsset {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove' ); ?></a></h2>
+			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
@@ -212,9 +212,9 @@ class EpisodeAsset {
 	private function new_template() {
 		$episode_asset = new \Podlove\Model\EpisodeAsset;
 		?>
-		<h3><?php echo __( 'Add New Episode Asset', 'podlove' ); ?></h3>
+		<h3><?php echo __( 'Add New Episode Asset', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 		<?php
-		$this->form_template( $episode_asset, 'create', __( 'Add New Episode Asset', 'podlove' ) );
+		$this->form_template( $episode_asset, 'create', __( 'Add New Episode Asset', 'podlove-podcasting-plugin-for-wordpress' ) );
 	}
 	
 	private function view_template() {
@@ -223,7 +223,7 @@ class EpisodeAsset {
 		$table->display();
 
 		?>
-		<h3><?php echo __( 'Assign Assets', 'podlove' ) ?></h3>
+		<h3><?php echo __( 'Assign Assets', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
 		<form method="post" action="options.php">
 			<?php settings_fields( EpisodeAsset::$pagehook );
 			$asset_assignment = Model\AssetAssignment::get_instance();
@@ -237,35 +237,35 @@ class EpisodeAsset {
 				$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 				$asset_assignment = $form->object;
 				$artwork_options = array(
-					'0'      => __( 'None', 'podlove' ),
-					'manual' => __( 'Manual Entry', 'podlove' ),
+					'0'      => __( 'None', 'podlove-podcasting-plugin-for-wordpress' ),
+					'manual' => __( 'Manual Entry', 'podlove-podcasting-plugin-for-wordpress' ),
 				);
 				$episode_assets = Model\EpisodeAsset::all();
 				foreach ( $episode_assets as $episode_asset ) {
 					$file_type = $episode_asset->file_type();
 					if ( $file_type && $file_type->type === 'image' ) {
-						$artwork_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
+						$artwork_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove-podcasting-plugin-for-wordpress' ), $episode_asset->title );
 					}
 				}
 
 				$wrapper->select( 'image', array(
-					'label'   => __( 'Episode Image', 'podlove' ),
+					'label'   => __( 'Episode Image', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options' => $artwork_options
 				) );
 
 				$chapter_file_options = array(
-					'0'      => __( 'None', 'podlove' ),
-					'manual' => __( 'Manual Entry', 'podlove' )
+					'0'      => __( 'None', 'podlove-podcasting-plugin-for-wordpress' ),
+					'manual' => __( 'Manual Entry', 'podlove-podcasting-plugin-for-wordpress' )
 				);
 				$episode_assets = Model\EpisodeAsset::all();
 				foreach ( $episode_assets as $episode_asset ) {
 					$file_type = $episode_asset->file_type();
 					if ( $file_type && $file_type->type === 'chapters' ) {
-						$chapter_file_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove' ), $episode_asset->title );
+						$chapter_file_options[ $episode_asset->id ] = sprintf( __( 'Asset: %s', 'podlove-podcasting-plugin-for-wordpress' ), $episode_asset->title );
 					}
 				}
 				$wrapper->select( 'chapters', array(
-					'label'   => __( 'Episode Chapters', 'podlove' ),
+					'label'   => __( 'Episode Chapters', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options' => $chapter_file_options
 				) );
 
@@ -310,7 +310,7 @@ class EpisodeAsset {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );
 				echo " ";
-				submit_button( __('Save Changes and Continue Editing', 'podlove'), 'secondary', 'submit_and_stay', false );
+				submit_button( __('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false );
 				echo "</p>";
 			}
 		);
@@ -325,11 +325,11 @@ class EpisodeAsset {
 			?>
 			<tr class="row_podlove_episode_asset_type">
 				<th scope="row" valign="top">
-					<label for="podlove_episode_asset_type"><?php echo __( 'Asset Type', 'podlove' ); ?></label>
+					<label for="podlove_episode_asset_type"><?php echo __( 'Asset Type', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
 				</th>
 				<td>
 					<select name="podlove_episode_asset_type" id="podlove_episode_asset_type">
-						<option><?php echo __( 'Please choose ...', 'podlove' ); ?></option>
+						<option><?php echo __( 'Please choose ...', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
 						<?php foreach ( Model\FileType::get_types() as $type ): ?>
 							<option value="<?php echo $type ?>" <?php selected( $type, $current_file_type ) ?>><?php echo $type ?></option>	
 						<?php endforeach; ?>
@@ -340,38 +340,38 @@ class EpisodeAsset {
 			<?php
 
 			$f->select( 'file_type_id', array(
-				'label'       => __( 'File Format', 'podlove' ),
-				'description' => __( '', 'podlove' ),
+				'label'       => __( 'File Format', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options'     => $format_optionlist
 			) );
 
 			$f->string( 'title', array(
-				'label'       => __( 'Title', 'podlove' ),
-				'description' => __( 'Description to identify the media file type to the user in download buttons.', 'podlove' ),
+				'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Description to identify the media file type to the user in download buttons.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$f->checkbox( 'downloadable', array(
-				'label'       => __( 'Downloadable', 'podlove' ),
+				'label'       => __( 'Downloadable', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => sprintf( 'Allow downloads for users.', 'podlove' ),
 				'default' => true
 			) );
 			?>
 			<tr>
 				<th colspan="2">
-					<h3><?php echo __( 'Asset File Name', 'podlove' ); ?></h3>
+					<h3><?php echo __( 'Asset File Name', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 				</th>
 			</tr>
 			<?php 
 			$f->string( 'suffix', array(
-				'label'       => __( 'File Name Suffix', 'podlove' ),
-				'description' => __( 'Optional. Is appended to file name after episode slug.', 'podlove' ),
+				'label'       => __( 'File Name Suffix', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Optional. Is appended to file name after episode slug.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 			?>
 			<tr class="row_podlove_asset_url_preview">
 				<th>
-					<?php echo __( 'URL Preview', 'podlove' ); ?>
+					<?php echo __( 'URL Preview', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</th>
 				<td>
 					<div id="url_preview" style="font-size: 1.5em"></div>
@@ -390,7 +390,7 @@ class EpisodeAsset {
 	
 	private function edit_template() {
 		$episode_asset = \Podlove\Model\EpisodeAsset::find_by_id( $_REQUEST['episode_asset'] );
-		echo '<h3>' . sprintf( __( 'Edit Episode Asset: %s', 'podlove' ), $episode_asset->title ) . '</h3>';
+		echo '<h3>' . sprintf( __( 'Edit Episode Asset: %s', 'podlove-podcasting-plugin-for-wordpress' ), $episode_asset->title ) . '</h3>';
 		$this->form_template( $episode_asset, 'save' );
 	}
 

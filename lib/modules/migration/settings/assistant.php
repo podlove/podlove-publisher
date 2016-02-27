@@ -133,9 +133,9 @@ class Assistant {
 						   class="btn btn-small"
 						   data-placement="bottom"
 						   data-toggle="tooltip"
-						   title="<?php echo __( "Deletes all episodes, assets, feeds and migration settings.", 'podlove' ) ?>"
+						   title="<?php echo __( "Deletes all episodes, assets, feeds and migration settings.", 'podlove-podcasting-plugin-for-wordpress' ) ?>"
 						   >
-							<?php echo __( 'start from scratch', 'podlove' ) ?>
+							<?php echo __( 'start from scratch', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						</a>
 					</span>.
 					<br>
@@ -150,7 +150,7 @@ class Assistant {
 					<?php
 					$class = $index === $current_step ? 'active' : ( $current_step < $index ? 'disabled' : '' );
 					if ( $index > 1 ) {
-						$title = sprintf( __( 'Step %s:', 'podlove' ), $index - 1 ) . ' ' . $title;
+						$title = sprintf( __( 'Step %s:', 'podlove-podcasting-plugin-for-wordpress' ), $index - 1 ) . ' ' . $title;
 					}
 					$link  = ( $class == 'disabled' ) ? "#" : self::get_page_link( $index );
 					?>

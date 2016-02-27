@@ -20,11 +20,11 @@ class ContributorSettings {
 			/* $function   */ array( $this, 'page' )
 		);
 
-		$tabs = new Tabs( __( 'Contributors', 'podlove' ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors( __( 'Contributors', 'podlove' ), true ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove' ) ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove' ) ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove' ) ) );
+		$tabs = new Tabs( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 

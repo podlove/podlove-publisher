@@ -52,10 +52,10 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 
 			if ($this->get_module_option('adn_auth_key') == "") {
 				$description = '<i class="podlove-icon-remove"></i> '
-	    		             . __( 'You need to allow Podlove Publisher to access your App.net account. To do so please start the authorization process, follow the instructions and paste the obtained code in the field above.', 'podlove' )
-	    		             . '<br><a href="https://auth.podlove.org/adn.php?step=1" class="button button-primary" target="_blank">' . __( 'Start authorization process now', 'podlove' ) . '</a>';
+	    		             . __( 'You need to allow Podlove Publisher to access your App.net account. To do so please start the authorization process, follow the instructions and paste the obtained code in the field above.', 'podlove-podcasting-plugin-for-wordpress' )
+	    		             . '<br><a href="https://auth.podlove.org/adn.php?step=1" class="button button-primary" target="_blank">' . __( 'Start authorization process now', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>';
 				$this->register_option( 'adn_auth_key', 'string', array(
-				'label'       => __( 'Authorization', 'podlove' ),
+				'label'       => __( 'Authorization', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => $description,
 				'html'        => array( 'class' => 'regular-text podlove-check-input', 'placeholder' => 'App.net authentication code' )
 				) );
@@ -63,7 +63,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				if ( $user = $this->api->fetch_authorized_user() ) { 
 					$description = '<i class="podlove-icon-ok"></i> '
 								 . sprintf(
-									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove' ),
+									__( 'You are logged in as %s. If you want to logout, click %shere%s.', 'podlove-podcasting-plugin-for-wordpress' ),
 									'<strong>' . $user->username . '</strong>',
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_appnet_auth_code=1' ) . '">',
 									'</a>'
@@ -71,27 +71,27 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				} else {
 					$description = '<i class="podlove-icon-remove"></i> '
 								 . sprintf(
-									__( 'Something went wrong with the App.net connection. Please start the authorization process again. To do so click %shere%s', 'podlove' ),
+									__( 'Something went wrong with the App.net connection. Please start the authorization process again. To do so click %shere%s', 'podlove-podcasting-plugin-for-wordpress' ),
 									'<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_appnet_auth_code=1' ) . '">',
 									'</a>'
 								);
 		
 				}
 				$this->register_option( 'adn_auth_key', 'hidden', array(
-				'label'       => __( 'Authorization', 'podlove' ),
+				'label'       => __( 'Authorization', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => $description,
 				'html'        => array( 'class' => 'regular-text podlove-check-input' )
 				) );
 		
 				$this->register_option( 'adn_language_annotation', 'select', array(
-					'label'       => __( 'Language of Announcement', 'podlove' ),
+					'label'       => __( 'Language of Announcement', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => 'Selecting the language of the Announcement, will include an <a href="http://developers.app.net/docs/meta/annotations/" target="_blank">App.net language annotation</a>.',
 					'html'        => array( 'class' => 'regular-text adn-dropdown' ),
 					'options'	  => $this->get_languages()
 				) );
 			
 				$this->register_option( 'adn_patter_room_announcement', 'checkbox', array(
-					'label'       => __( 'Patter', 'podlove' ),
+					'label'       => __( 'Patter', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => 'Post announcement to Patter room, too.'
 				) );
 
@@ -102,7 +102,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_broadcast', 'checkbox', array(
-					'label'       => __( 'Broadcast', 'podlove' ),
+					'label'       => __( 'Broadcast', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => 'Send announcement via App.net Broadcast Channel.'
 				) );
 
@@ -113,7 +113,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_automatic_announcement', 'checkbox', array(
-					'label'       => __( 'Automatic Announcement', 'podlove' ),
+					'label'       => __( 'Automatic Announcement', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => 'Announces new podcast episodes on App.net'
 				) );
 
@@ -121,7 +121,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$adn_post_delay_minutes = str_pad( $this->get_module_option('adn_post_delay_minutes'), 2, 0, STR_PAD_LEFT );
 
 				$this->register_option( 'adn_post_delay', 'callback', array(
-					'label' => __( 'Post delay', 'podlove' ),
+					'label' => __( 'Post delay', 'podlove-podcasting-plugin-for-wordpress' ),
 					'callback' => function() use ( $adn_post_delay_hours, $adn_post_delay_minutes ) {
 						?>
 							<input type="text" name="podlove_module_app_dot_net[adn_post_delay_hours]" id="podlove_module_app_dot_net_adn_post_delay_hours" value="<?php echo( $adn_post_delay_hours ? $adn_post_delay_hours : '' ); ?>" class="regular-text podlove-check-input" placeholder="00" >
@@ -135,23 +135,23 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				$description = '';
 				if ( $this->get_module_option('adn_poster_announcement_text') == "" ) {			
 					$description = '<i class="podlove-icon-remove"></i>'
-					             . __( 'You need to set a text to announce new episodes.', 'podlove' );
+					             . __( 'You need to set a text to announce new episodes.', 'podlove-podcasting-plugin-for-wordpress' );
 				}
 
-				$description .= __( 'App.net allows 256 characters per post. Try to keep the announcement text short. Your episode titles will need more space than the placeholders.', 'podlove' );
+				$description .= __( 'App.net allows 256 characters per post. Try to keep the announcement text short. Your episode titles will need more space than the placeholders.', 'podlove-podcasting-plugin-for-wordpress' );
 
 				$description .= '
-					' . __( 'Use these placeholders to customize your announcement', 'podlove' ) . ':
-					<code title="' . __( 'The title of your podcast', 'podlove' ) . '">{podcastTitle}</code>
-					<code title="' . __( 'The title of your episode, linking to it', 'podlove' ) . '">{linkedEpisodeTitle}</code>
-					<code title="' . __( 'The title of the episode', 'podlove' ) . '">{episodeTitle}</code>
-					<code title="' . __( 'The permalink of the current episode', 'podlove' ) . '">{episodeLink}</code>
-					<code title="' . __( 'The subtitle of the episode', 'podlove' ) . '">{episodeSubtitle}</code>';
+					' . __( 'Use these placeholders to customize your announcement', 'podlove-podcasting-plugin-for-wordpress' ) . ':
+					<code title="' . __( 'The title of your podcast', 'podlove-podcasting-plugin-for-wordpress' ) . '">{podcastTitle}</code>
+					<code title="' . __( 'The title of your episode, linking to it', 'podlove-podcasting-plugin-for-wordpress' ) . '">{linkedEpisodeTitle}</code>
+					<code title="' . __( 'The title of the episode', 'podlove-podcasting-plugin-for-wordpress' ) . '">{episodeTitle}</code>
+					<code title="' . __( 'The permalink of the current episode', 'podlove-podcasting-plugin-for-wordpress' ) . '">{episodeLink}</code>
+					<code title="' . __( 'The subtitle of the episode', 'podlove-podcasting-plugin-for-wordpress' ) . '">{episodeSubtitle}</code>';
 
 				$preview_text = $this->get_module_option('adn_poster_announcement_text');
 
 				$this->register_option( 'adn_poster_announcement_text', 'callback', array(
-					'label'       => __( 'Announcement text', 'podlove' ),
+					'label'       => __( 'Announcement text', 'podlove-podcasting-plugin-for-wordpress' ),
 					'callback'	  => function() use ( $description, $preview_text ) {
 						$description = apply_filters( 'podlove_adn_tags_description', $description );
 						?>
@@ -164,12 +164,12 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_poster_image_fallback', 'checkbox', array(
-					'label'       => __( 'Announcement Image', 'podlove' ),
+					'label'       => __( 'Announcement Image', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => 'Use Podcast Cover as Fallback'
 				) );
 				
 				$this->register_option( 'adn_preview', 'callback', array(
-					'label' => __( 'Announcement preview', 'podlove' ),
+					'label' => __( 'Announcement preview', 'podlove-podcasting-plugin-for-wordpress' ),
 					'callback' => function() use ( $selected_role, $selected_group, $user, $module_url ) {
 
 						if ( ! $user )
@@ -236,7 +236,7 @@ class App_Dot_Net extends \Podlove\Modules\Base {
 				) );
 
 				$this->register_option( 'adn_manual_post', 'callback', array(
-					'label' => __( 'Manual Announcement', 'podlove' ),
+					'label' => __( 'Manual Announcement', 'podlove-podcasting-plugin-for-wordpress' ),
 					'callback' => function() {
 						?>
 							<select id="adn_manual_post_episode_selector" class="chosen">

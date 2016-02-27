@@ -10,8 +10,8 @@ class Templates {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ __( 'Templates', 'podlove' ),
-			/* $menu_title */ __( 'Templates', 'podlove' ),
+			/* $page_title */ __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_templates_settings_handle',
 			/* $function   */ array( $this, 'page' )
@@ -57,14 +57,14 @@ class Templates {
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo __( 'Are you sure you want do delete this template?', 'podlove' ) ?>
+						<?php echo __( 'Are you sure you want do delete this template?', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 					</strong>
 				</p>
 				<p>
-					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove' ) ?>
+					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 				</p>
 				<p>
-					<?php echo self::get_action_link( $template, __( 'Delete permanently', 'podlove' ), 'delete', 'button' ) ?>
+					<?php echo self::get_action_link( $template, __( 'Delete permanently', 'podlove-podcasting-plugin-for-wordpress' ), 'delete', 'button' ) ?>
 				</p>
 			</div>
 			<?php
@@ -72,7 +72,7 @@ class Templates {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Templates', 'podlove' ); ?></h2>
+			<h2><?php echo __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 			<?php $this->view_template(); ?>
 		</div>	
 		<?php
