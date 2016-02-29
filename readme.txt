@@ -117,6 +117,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
 
+= 2.3.9 =
+
+* fix `open_basedir` related issues
+
 = 2.3.8 =
 
 **Bugfixes**
