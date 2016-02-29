@@ -60,18 +60,37 @@ class Logging extends \Podlove\Modules\Base {
 	public function dashoard_template() {
 		?>
 <style type="text/css">
+
+#podlove-log-wrapper {
+	max-height: 500px;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: inherit;
+}
+
 #podlove-log {
-	height: 500px;
-	overflow: auto;
 	font-family: monospace;
 	font-size: 14px;
 	line-height: 18px;
-	padding: 5px;
+	margin-top: 5px;
+}
+
+#podlove-log td {
+	vertical-align: top;
+}
+
+.log-date {
+	width: 175px;
+	padding: 0px 4px;
 }
 
 #podlove-log-filter {
 	text-align: right;
 	width: 100%;
+}
+
+#podlove-log-filter .log-level {
+	padding: 0px 4px 2px 4px;
 }
 
 .log-level {
@@ -80,19 +99,23 @@ class Logging extends \Podlove\Modules\Base {
 }
 
 .log-level-200 {  } /* info */
-.log-level-300 { color: #f2875c; } /* warning */
-.log-level-400 { color: #95002B; } /* error */
+.log-level-300,
+.log-level-300 td:first-child { border-left: 2px solid #ffb900; background: #fff8e5; } /* warning */
+.log-level-400,
+.log-level-400 td:first-child { border-left: 2px solid #dc3232; background: #fbeaea; } /* error */
 .log-level-550 { background: #95002B; color: #FAD4AF; }
 .log-level-550 a { color: #F4E6AD; }
 
-pre.details {
-	display: none;
+code.details {
+	display: inline-block;
 	margin: 0;
 	padding: 5px 15px;
 	font-size: smaller;
 	line-height: 115%;
 	color: #666;
 	background: #F9F9F9;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 </style>
 
@@ -151,59 +174,67 @@ $(document).ready(function() {
 				</label>
 			</div>
 		</div>
-		<div id="podlove-log">
-		<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-1 week") ) as $log_entry ): ?>
-			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
-				<span class="log-date">
-					[<?php echo date( 'Y-m-d H:i:s', $log_entry->time ) ?>]
-				</span>
-				<span class="log-message">
-					<?php echo $log_entry->message; ?>
-				</span>
-				<span class="log-extra">
-					<?php
-					$data = json_decode( $log_entry->context );
-					if ( isset( $data->media_file_id ) ) {
-						if ( $media_file = Model\MediaFile::find_by_id( $data->media_file_id ) ) {
-							if ( $episode = $media_file->episode() ) {
-								if ( $asset = $media_file->episode_asset() ) {
-									echo sprintf( '<a href="%s">%s/%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
+
+
+		<div id="podlove-log-wrapper">
+		<table id="podlove-log" cellspacing="0" border="0">
+			<tbody>
+			<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-2 weeks") ) as $log_entry ): ?>
+				<tr class="log-entry log-level-<?php echo $log_entry->level ?>">
+					<td class="log-date">
+						<?php echo date('Y-m-d H:i:s', $log_entry->time) ?>
+					</td>
+					<td class="log-content">
+						<span class="log-message">
+							<?php echo $log_entry->message; ?>
+						</span>
+						<span class="log-extra">
+							<?php
+							$data = json_decode( $log_entry->context );
+							if ( isset( $data->media_file_id ) ) {
+								if ( $media_file = Model\MediaFile::find_by_id( $data->media_file_id ) ) {
+									if ( $episode = $media_file->episode() ) {
+										if ( $asset = $media_file->episode_asset() ) {
+											echo sprintf( '<a href="%s">%s/%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
+										}
+									}
 								}
 							}
-						}
-					}
-					if ( isset( $data->error ) ) {
-						echo sprintf(' "%s"', $data->error);
-					}
-					if ( isset( $data->episode_id ) ) {
-						if ( $episode = Model\Episode::find_by_id( $data->episode_id ) )
-							echo sprintf( ' <a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
-					}
-					if ( isset( $data->http_code ) ) {
-						echo " HTTP Status: " . $data->http_code;
-					}
-					if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
-						echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
-					}
-					if (isset($data->type) && $data->type == 'twig') {
-						echo sprintf('in template "%s" line %d', $data->template, $data->line);
-					}
+							if ( isset( $data->error ) ) {
+								echo sprintf(' "%s"', $data->error);
+							}
+							if ( isset( $data->episode_id ) ) {
+								if ( $episode = Model\Episode::find_by_id( $data->episode_id ) )
+									echo sprintf( ' <a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
+							}
+							if ( isset( $data->http_code ) ) {
+								echo " HTTP Status: " . $data->http_code;
+							}
+							if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
+								echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+							}
+							if (isset($data->type) && $data->type == 'twig') {
+								echo sprintf('in template "%s" line %d', $data->template, $data->line);
+							}
 
-					$extra = array_diff((array) $data, ['type', 'mime_type', 'expected_mime_type', 'error']);
-					if (count($extra) > 0) {
-						?>
-						<span class="log-details">
-							<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
-							<pre class="details"><?php
-							print_r((new \Spyc)->dump($extra, true));
-							?></pre>
+							$extra = array_diff((array) $data, ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id']);
+							if (count($extra) > 0) {
+								?>
+								<span class="log-details">
+									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
+									<code class="details" style="display: none"><?php
+									print_r(nl2br((new \Spyc)->dump($extra, true)));
+									?></code>
+								</span>
+								<?php
+							}
+							?>
 						</span>
-						<?php
-					}
-					?>
-				</span>
-			</div>
-		<?php endforeach; ?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 		</div>
 		<?php
 	}

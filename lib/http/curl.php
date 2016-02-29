@@ -47,9 +47,9 @@ class Curl {
 		} elseif (substr($this->response['response']['code'], 0, 1) >= 4) {
 			Log::get()->addError( 'Curl error', array(
 				'url' => $url,
-				'response code' => $this->response['response']['code']
+				'response code' => $this->response['response']['code'],
+				'debug' => $this->response
 			) );
-			Log::get()->addDebug(print_r($this->response, true));
 		}
 	}
 
