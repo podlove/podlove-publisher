@@ -116,6 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * improve tracking: ignore 1-byte requests
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
+* update recommended image size to 3000x3000 pixel
 
 = 2.3.9 =
 
