@@ -59,40 +59,98 @@ class Logging extends \Podlove\Modules\Base {
 
 	public function dashoard_template() {
 		?>
-		<style type="text/css">
-		#podlove-log {
-			height: 500px;
-			overflow: auto;
-			font-family: monospace;
-			font-size: 14px;
-			line-height: 18px;
-			padding: 5px;
-		}
+<style type="text/css">
+#podlove-log {
+	height: 500px;
+	overflow: auto;
+	font-family: monospace;
+	font-size: 14px;
+	line-height: 18px;
+	padding: 5px;
+}
 
-		.log-level-200 {  }
-		.log-level-400 { color: #95002B; }
-		.log-level-550 { background: #95002B; color: #FAD4AF; }
-		.log-level-550 a { color: #F4E6AD; }
-		</style>
+#podlove-log-filter {
+	text-align: right;
+	width: 100%;
+}
 
-		<script type="text/javascript">
-		jQuery(function($) {
-			$(document).ready(function() {
-				// scroll down
-				$("#podlove-log").scrollTop($("#podlove-log")[0].scrollHeight);
-				$("#podlove-log").on('click', '.log-details .toggle a', function(e) {
-					e.preventDefault();
-					$(this).closest('.log-details').find('.details').toggle();
-				});
-			});
-		});
-		</script>
+.log-level {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.log-level-200 {  } /* info */
+.log-level-300 { color: #f2875c; } /* warning */
+.log-level-400 { color: #95002B; } /* error */
+.log-level-550 { background: #95002B; color: #FAD4AF; }
+.log-level-550 a { color: #F4E6AD; }
+
+pre.details {
+	display: none;
+	margin: 0;
+	padding: 5px 15px;
+	font-size: smaller;
+	line-height: 115%;
+	color: #666;
+	background: #F9F9F9;
+}
+</style>
+
+<script type="text/javascript">
+(function ($) {
+
+function filter_log() {
+	var filterWrapper = $("#podlove-log-filter"),
+		info    = filterWrapper.find(".log-level.log-level-200 input[type=checkbox]:checked").length,
+		warning = filterWrapper.find(".log-level.log-level-300 input[type=checkbox]:checked").length,
+		error   = filterWrapper.find(".log-level.log-level-400 input[type=checkbox]:checked").length,
+		log = $("#podlove-log")
+	;
+	
+	log.find(".log-entry.log-level-200").toggle(!!info);
+	log.find(".log-entry.log-level-300").toggle(!!warning);
+	log.find(".log-entry.log-level-400").toggle(!!error);
+}
+
+$(document).ready(function() {
+	// scroll down
+	$("#podlove-log").scrollTop($("#podlove-log")[0].scrollHeight);
+	$("#podlove-log").on('click', '.log-details .toggle a', function(e) {
+		e.preventDefault();
+		$(this).closest('.log-details').find('.details').toggle();
+	});
+	$("#podlove-log-filter input").change(filter_log);
+	filter_log();
+});
+
+})(jQuery);
+</script>
 
 		<?php
 		if ( $timezone = get_option( 'timezone_string' ) )
 			date_default_timezone_set( $timezone );
 		?>
 
+		<div id="podlove-log-filter">
+			<div class="log-level log-level-200">
+				<label>
+					<input type="checkbox">
+					info
+				</label>
+			</div>
+			<div class="log-level log-level-300">
+				<label>
+					<input type="checkbox" checked>
+					warning
+				</label>
+			</div>
+			<div class="log-level log-level-400">
+				<label>
+					<input type="checkbox" checked>
+					error
+				</label>
+			</div>
+		</div>
 		<div id="podlove-log">
 		<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-1 week") ) as $log_entry ): ?>
 			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
@@ -136,7 +194,7 @@ class Logging extends \Podlove\Modules\Base {
 						?>
 						<span class="log-details">
 							<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
-							<pre class="details" style="display: none"><?php
+							<pre class="details"><?php
 							print_r((new \Spyc)->dump($extra, true));
 							?></pre>
 						</span>

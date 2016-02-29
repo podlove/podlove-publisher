@@ -118,6 +118,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
 * update recommended image size to 3000x3000 pixel
 
+* improve logging display
+  * add filtering for different severities
+  * hide "info" entries by default
+  * improve readability of data sections
+
 = 2.3.9 =
 
 * fix `open_basedir` related issues
