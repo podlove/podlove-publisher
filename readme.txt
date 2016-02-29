@@ -110,6 +110,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.9 =
 
+* fix `open_basedir` related issues
+
 = 2.3.8 =
 
 **Bugfixes**
