@@ -80,6 +80,10 @@ class Logging extends \Podlove\Modules\Base {
 			$(document).ready(function() {
 				// scroll down
 				$("#podlove-log").scrollTop($("#podlove-log")[0].scrollHeight);
+				$("#podlove-log").on('click', '.log-details .toggle a', function(e) {
+					e.preventDefault();
+					$(this).closest('.log-details').find('.details').toggle();
+				});
 			});
 		});
 		</script>
@@ -125,6 +129,18 @@ class Logging extends \Podlove\Modules\Base {
 					}
 					if (isset($data->type) && $data->type == 'twig') {
 						echo sprintf('in template "%s" line %d', $data->template, $data->line);
+					}
+
+					$extra = array_diff((array) $data, ['type', 'mime_type', 'expected_mime_type', 'error']);
+					if (count($extra) > 0) {
+						?>
+						<span class="log-details">
+							<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
+							<pre class="details" style="display: none"><?php
+							print_r((new \Spyc)->dump($extra, true));
+							?></pre>
+						</span>
+						<?php
 					}
 					?>
 				</span>
