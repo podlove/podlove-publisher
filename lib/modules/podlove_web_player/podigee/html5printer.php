@@ -50,7 +50,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'title' => get_the_title($this->post->ID),
 				'subtitle' => wptexturize(convert_chars(trim($this->episode->subtitle))),
 				'description' => nl2br(wptexturize(convert_chars(trim($this->episode->summary)))),
-				'cover_url' => $this->episode->cover_art_with_fallback()->setWidth(500)->url(),
+				'coverUrl' => $this->episode->cover_art_with_fallback()->setWidth(500)->url(),
 				'chaptermarks' => json_decode($this->episode->get_chapters('json'))
 			]
 		];
