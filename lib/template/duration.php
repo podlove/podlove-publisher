@@ -95,7 +95,7 @@ class Duration extends Wrapper {
 	 * @accessor
 	 */
 	public function totalMilliseconds() {
-		return \Podlove\NormalPlayTime\Parser::parse( $this->duration, 'ms' );
+		return \Podlove\NormalPlayTime\Parser::parse( $this->episode->duration, 'ms' );
 	}
 
 }
