@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: when exporting a podcast, don't call `htmlspecialchars` on arrays because it breaks things
 * fix: image caching issue (invisible characters)
 * fix: broken geolocation database does not prevent playing episodes
+* fix `{{ episode.duration.totalMilliseconds }}`
 * enhancement: check for geolocation database validity in tracking debug section
 * Podlove Subscribe Buttons: parameters in templates and shortcodes can override Publisher provided fields: 'title', 'subtitle', 'description', 'cover'
 
@@ -135,6 +136,13 @@ Design Update for Podlove Subscribe Button
 * fix feed issue that appeared with WordPress 4.5 (wrong content type)
 
 = 2.3.10 =
+* when activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup
+* fix tracking export: keep httprange
+* fix compatibility with other plugins relying on Spyc library
+* improve tracking: ignore 1-byte requests
+* update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
+* remove `<itunes:keywords>` from feed (it disappeared from the specification)
+* update recommended image size to 3000x3000 pixel
 
 * fix Podlove Subscribe Button iTunes link
 * add new "getting started" video to readme
