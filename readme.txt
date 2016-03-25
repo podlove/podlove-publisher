@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
 * update recommended image size to 3000x3000 pixel
+* add heartbeat to keep note of when tracking is active
 
 * improve logging display
   * add filtering for different severities
