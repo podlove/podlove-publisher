@@ -120,6 +120,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * update recommended image size to 3000x3000 pixel
 * add heartbeat to keep note of when tracking is active
 * `shortcode_exists($shortcode_name)` is now available in Twig templates
+* add contributors shortcode to default template (Many people activated contributors and then wondered why they were not displayed in the episode. Now the shortcode is part of the default template, but only if the contributors module is active.)
 
 * improve logging display
   * add filtering for different severities
