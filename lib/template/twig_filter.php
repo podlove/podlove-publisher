@@ -34,7 +34,7 @@ class TwigFilter {
 		'is_time',
 		'is_year',
 		'is_404',
-		'is_main_query',
+		'is_main_query'
 	);
 
 	/**
@@ -84,6 +84,10 @@ class TwigFilter {
 			$func = new \Twig_SimpleFunction($tag, function() use ($tag) { return $tag(); });
 			$twig->addFunction($func);
 		}
+
+		// shortcode_exists
+		$func = new \Twig_SimpleFunction('shortcode_exists', function($shortcode) { return \shortcode_exists($shortcode); });
+		$twig->addFunction($func);
 
 		$context = ['option' => $vars];
 

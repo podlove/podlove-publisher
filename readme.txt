@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
 * update recommended image size to 3000x3000 pixel
 * add heartbeat to keep note of when tracking is active
+* `shortcode_exists($shortcode_name)` is now available in Twig templates
 
 * improve logging display
   * add filtering for different severities
