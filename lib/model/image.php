@@ -52,6 +52,12 @@ class Image {
 	public function __construct($url, $file_name = '') {
 		$this->source_url = trim($url);
 		$this->file_name = sanitize_title($file_name);
+		
+		// manually remove troublemaking invisible character
+		// @see https://community.podlove.org/t/solved-kind-of-cover-art-disappears-caching-issue/478/
+		// @see https://sendegate.de/t/problem-mit-caching-von-grafiken/2947
+		$this->file_name = str_replace("%c2%ad", "", $this->file_name);
+		
 		$this->file_extension = $this->extract_file_extension();
 		$this->id = md5($url . $this->file_name);
 

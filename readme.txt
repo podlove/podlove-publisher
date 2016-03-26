@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix tracking export: keep httprange
 * fix compatibility with other plugins relying on Spyc library
 * fix `{{ episode.duration.totalMilliseconds }}`
+* fix image caching issue (invisible characters)
 * improve tracking: ignore 1-byte requests
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
