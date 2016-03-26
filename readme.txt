@@ -116,6 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * fix: sort contributor names while ignoring uppercase/lowercase
 * fix: when exporting a podcast, don't call `htmlspecialchars` on arrays because it breaks things
+* fix: image caching issue (invisible characters)
 * Podlove Subscribe Buttons: parameters in templates and shortcodes can override Publisher provided fields: 'title', 'subtitle', 'description', 'cover'
 
 = 2.3.12 =
