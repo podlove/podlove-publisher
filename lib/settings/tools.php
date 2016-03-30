@@ -164,7 +164,7 @@ class Tools {
 								</a>
 
 								<p class="description">
-									<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+									<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is only useful if you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</p>
 							</td>
 						</tr>
@@ -178,7 +178,7 @@ class Tools {
 								</a>
 
 								<p class="description">
-									<?php echo __('Recalculates sums for episode downloads in Analytics overview page.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+									<?php echo __('Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</p>
 							</td>
 						</tr>
