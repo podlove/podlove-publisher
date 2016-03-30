@@ -18,6 +18,10 @@
 
     UserAgentRecalculator.prototype.start = function() {
 
+        $(window).bind('beforeunload', function(){
+            return "If you leave, \"User Agent Refresh\" will abort.";
+        });
+
         var label = $("#progressbar .progress-label");
         progressbar = $("#progressbar");
 
@@ -48,13 +52,13 @@
             },
             dataType: 'json',
             success: function(result) {
-                console.log("refresh", result);
                 if (result.offset && result.offset < result.total) {
                     var percent = result.offset / result.total * 100;
                     that.setStatus(Math.round(percent));
                     that.refresh_some(result.offset);
                 } else {
                     that.setStatus(100);
+                    $(window).unbind("beforeunload");
                 }
             }
         });
