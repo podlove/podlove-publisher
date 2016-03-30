@@ -35,9 +35,6 @@ class Tools {
 			case 'recalculate_analytics':
 				self::recalculate_analytics();
 				break;
-			case 'recalculate_useragents':
-				self::recalculate_useragents();
-				break;
 			case 'recalculate_downloads_table':
 				self::recalculate_downloads_table();
 				break;
@@ -57,10 +54,6 @@ class Tools {
 		Model\DownloadIntentClean::delete_all();
 		DownloadIntentCleanup::cleanup_download_intents();
 		TemplateCache::get_instance()->setup_purge();
-	}
-
-	public static function recalculate_useragents() {
-		podlove_init_user_agent_refresh();
 	}
 
 	public static function recalculate_downloads_table() {
@@ -140,9 +133,9 @@ class Tools {
 								<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 							</th>
 							<td>
-								<a id="recalculate_useragents" href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_useragents') ?>" class="button">
+								<button id="recalculate_useragents" class="button">
 									<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-								</a>
+								</button>
 
 								<div id="progressbar"><div class="progress-label"></div></div>
 
