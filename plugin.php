@@ -202,3 +202,4 @@ require_once \Podlove\PLUGIN_DIR . 'includes/user_agent_refresh.php';
 // @todo: change to internal module
 new \Podlove\AJAX\Ajax(); 
 new \Podlove\Settings\Tools\UserAgentRefresh;
+new \Podlove\Settings\Tools\DownloadIntentCleaner;
