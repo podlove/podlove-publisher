@@ -199,6 +199,8 @@ require_once \Podlove\PLUGIN_DIR . 'includes/theme_helper.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/trash.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/user_agent_refresh.php';
 
+require_once \Podlove\PLUGIN_DIR . 'lib/tools.php';
+
 // @todo: change to internal module
 new \Podlove\AJAX\Ajax(); 
 new \Podlove\Settings\Tools\UserAgentRefresh;

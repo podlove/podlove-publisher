@@ -21,6 +21,75 @@ class Tools {
 		$this->init_page_documentation(self::$pagehook);
 
 		add_action( 'admin_init', array( $this, 'process_actions' ) );
+
+		\Podlove\add_tools_section('general-maintenance', __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'));
+		\Podlove\add_tools_section('tracking-analytics', __('Tracking & Analytics', 'podlove-podcasting-plugin-for-wordpress'));
+	
+		/**
+		 * Fields for section "General Maintenance"
+		 */
+		\Podlove\add_tools_field('gm-clear-caches', __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'), function() {
+			?>
+			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=clear_caches') ?>" class="button">
+				<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress') ?>
+			</a>
+			<p class="description">
+				<?php echo __('Sometimes an issue is already fixed but you still see the faulty output. Clearing the cache avoids this. However, if you use a third party caching plugin, you should clear that cache, too.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			</p>
+			<?php
+		}, 'general-maintenance');
+
+		\Podlove\add_tools_field('gm-repair', __('Repair', 'podlove-podcasting-plugin-for-wordpress'), function() {
+			\Podlove\Repair::page();
+		}, 'general-maintenance');
+
+
+		/**
+		 * Fields for section "Tracking & Analytics"
+		 */
+		\Podlove\add_tools_field('ta-recals-agents', __('Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress'), function() {
+			?>
+			<button id="recalculate_useragents" class="button progressbar-button">
+				<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+			</button>
+
+			<div id="progressbar"><div class="progress-label"></div></div>
+
+			<div class="clear"></div>
+
+			<p class="description">
+				<?php echo __('Update user agent metadata based on <code>device-detector</code> library.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			</p>
+			<?php
+		}, 'tracking-analytics');
+
+		\Podlove\add_tools_field('ta-recalc-analytics', __('Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress'), function() {
+			?>
+			<button id="cleanup_download_intents" class="button progressbar-button">
+				<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+			</button>
+
+			<div id="progressbar-cleanup"><div class="progress-label"></div></div>
+
+			<div class="clear"></div>
+
+			<p class="description">
+				<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is only useful if you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			</p>
+			<?php
+		}, 'tracking-analytics');
+
+		\Podlove\add_tools_field('ta-recalc-downloads-table', __('Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress'), function() {
+			?>
+			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button">
+				<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+			</a>
+
+			<p class="description">
+				<?php echo __('Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			</p>
+			<?php
+		}, 'tracking-analytics');
 	}
 
 	function process_actions() {
@@ -100,100 +169,42 @@ class Tools {
 			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
-			<div class="card" style="max-width: 100%">
+			<?php 
+			$sections = \Podlove\get_tools_sections();
+			$fields   = \Podlove\get_tools_fields();
+			?>
 
-				<h3><?php echo __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
+			<?php foreach ($sections as $section_id => $section): ?>
+				<div class="card" style="max-width: 100%">
 
-				<table class="form-table">
-					<tbody>
-						<tr>
-							<th>
-								<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress') ?>
-							</th>
-							<td>
-								<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=clear_caches') ?>" class="button">
-									<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress') ?>
-								</a>
-								<p class="description">
-									<?php echo __('Sometimes an issue is already fixed but you still see the faulty output. Clearing the cache avoids this. However, if you use a third party caching plugin, you should clear that cache, too.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<th>
-								<?php echo __('Repair', 'podlove-podcasting-plugin-for-wordpress') ?>
-							</th>
-							<td>
-								<?php \Podlove\Repair::page() ?>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+					<h3><?php echo $section['title'] ?></h3>
 
-			</div>
+					<?php
+					if (is_callable($section['callback'])) {
+						call_user_func($section['callback']);
+					}
+					?>
 
-			<div class="card" style="max-width: 100%">
-				
-				<h3><?php echo __('Tracking &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
-
-				<table class="form-table">
-					<tbody>
-						<tr>
-							<th>
-								<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-							</th>
-							<td>
-								<button id="recalculate_useragents" class="button progressbar-button">
-									<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-								</button>
-
-								<div id="progressbar"><div class="progress-label"></div></div>
-
-								<div class="clear"></div>
-
-								<p class="description">
-									<?php echo __('Update user agent metadata based on <code>device-detector</code> library.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-								</p>
-
-							</td>
-						</tr>
-						<tr>
-							<th>
-								<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-							</th>
-							<td>
-								<button id="cleanup_download_intents" class="button progressbar-button">
-									<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-								</button>
-
-								<div id="progressbar-cleanup"><div class="progress-label"></div></div>
-
-								<div class="clear"></div>
-
-								<p class="description">
-									<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is only useful if you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-								</p>
-							</td>
-						</tr>
-						<tr>
-							<th>
-								<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-							</th>
-							<td>
-								<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button">
-									<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-								</a>
-
-								<p class="description">
-									<?php echo __('Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-								</p>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-
-			</div>
-
+					<table class="form-table">
+						<tbody>
+						<?php foreach ($fields[$section_id] as $field_id => $field): ?>
+							<tr>
+								<th>
+									<?php echo $field['title'] ?>
+								</th>
+								<td>
+									<?php
+									if (is_callable($field['callback'])) {
+										call_user_func($field['callback']);
+									}
+									?>
+								</td>
+							</tr>
+						<?php endforeach ?>
+						</tbody>
+					</table>
+				</div>
+			<?php endforeach ?>
 
 		</div>	
 		<?php
