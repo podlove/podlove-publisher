@@ -113,22 +113,20 @@ class Button {
 			$feeds = array_map(function($feed) {
 				$file_type = $feed->episode_asset()->file_type();
 
-				return [
+				$feed_data = [
 					'type'    => $file_type->type,
 					'format'  => self::feed_format($file_type->extension),
 					'url'     => $feed->get_subscribe_url(),
 					'variant' => 'high'
 				];
-			}, $this->discoverable_feeds());
 
-			$itunes_feed = Feed::find_one_by_where('itunes_feed_id > 0');
-			if ($itunes_feed) {
-				// @todo verify the url is valid
-				$feeds[] = [
-					'type' => 'itunes-url',
-					'url'  => 'https://itunes.apple.com/podcast/id' . $itunes_feed->itunes_feed_id
-				];
-			}
+				$itunes_feed_id = (int) $feed->itunes_feed_id;
+				if ($itunes_feed_id > 0) {
+					$feed_data['directory-url-itunes'] = 'https://itunes.apple.com/podcast/id' . $itunes_feed_id;
+				}
+
+				return $feed_data;
+			}, $this->discoverable_feeds());
 
 			return $feeds;
 		});

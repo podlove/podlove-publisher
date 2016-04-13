@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.10 =
+
+* fix Podlove Subscribe Button iTunes link
+
 = 2.3.9 =
 
 * fix `open_basedir` related issues
