@@ -128,6 +128,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * add contributors shortcode to default template (Many people activated contributors and then wondered why they were not displayed in the episode. Now the shortcode is part of the default template, but only if the contributors module is active.)
 * add unmistakable warning if curl is not available and provide actionable steps for a solution
 
+* new "Tools" menu
+    * A new maintenance section gathers tools like the "Repair" button in one place
+    * There is a new section for tracking related maintenance
+    * Import & Export is now in the "Tools" menu
+
 * improve logging display
   * add filtering for different severities
   * hide "info" entries by default
