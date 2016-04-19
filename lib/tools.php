@@ -17,7 +17,7 @@ function get_tools_fields() {
 	return $podlove_tools_fields;
 }
 
-function add_tools_section($id, $title, $callback) {
+function add_tools_section($id, $title, $callback = null) {
 	global $podlove_tools_sections;
 
 	$podlove_tools_sections[$id] = ['id' => $id, 'title' => $title, 'callback' => $callback];
