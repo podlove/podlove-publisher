@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
 Requires at least: 3.5
-Tested up to: 4.4.2
+Tested up to: 4.5
 Stable tag: trunk
 License: MIT
 
@@ -14,6 +14,10 @@ The one and only next generation podcast publishing system. Seriously. It's magi
 We built the Podlove Podcast Publisher because existing solutions are stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
 
 Official Site: [publisher.podlove.org](http://publisher.podlove.org/)
+
+= Video Tutorial: Getting started with Podlove Publisher =
+
+[youtube http://www.youtube.com/watch?v=Hmrm-jUe6u4]
 
 = Compatible Feeds =
 
@@ -128,6 +132,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * add filtering for different severities
   * hide "info" entries by default
   * improve readability of data sections
+
+= 2.3.10 =
+
+* fix Podlove Subscribe Button iTunes link
+* add new "getting started" video to readme
 
 = 2.3.9 =
 
