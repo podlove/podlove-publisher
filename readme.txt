@@ -15,6 +15,10 @@ We built the Podlove Podcast Publisher because existing solutions are stuck in t
 
 Official Site: [publisher.podlove.org](http://publisher.podlove.org/)
 
+= Video Tutorial: Getting started with Podlove Publisher =
+
+[youtube http://www.youtube.com/watch?v=Hmrm-jUe6u4]
+
 = Compatible Feeds =
 
 The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behavior (e.g. GUID control to replace faulty episodes and for clients to reload) supporting all important meta data.
@@ -111,6 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.3.10 =
 
 * fix Podlove Subscribe Button iTunes link
+* add new "getting started" video to readme
 
 = 2.3.9 =
 
