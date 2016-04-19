@@ -100,7 +100,7 @@ class TrackingImporter {
 		\Podlove\Analytics\DownloadIntentCleanup::cleanup_download_intents();
 		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 
-		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
+		wp_redirect(admin_url('admin.php?page=podlove_tools_settings_handle&status=success'));
 		exit;
 	}
 

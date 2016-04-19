@@ -105,7 +105,7 @@ class PodcastImporter {
 
 		\Podlove\run_database_migrations();
 
-		$redirect_url = 'admin.php?page=podlove_imexport_migration_handle';
+		$redirect_url = 'admin.php?page=podlove_tools_settings_handle';
 
 		if ($status)
 			$redirect_url .= '&status=' . $status;
