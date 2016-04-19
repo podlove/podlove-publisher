@@ -112,6 +112,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.11 =
+
+* fix feed issue that appeared with WordPress 4.5 (wrong content type)
+
 = 2.3.10 =
 
 * fix Podlove Subscribe Button iTunes link
