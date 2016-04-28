@@ -16,10 +16,12 @@ use \Podlove\Cache\TemplateCache;
 class Button {
 
 	private $defaults = [
-		'size'     => 'big-logo',
+		'size'     => 'big',
+		'format'   => 'rectangle',
 		'width'    => 'auto',
+		'style'    => 'filled',
 		'language' => 'en',
-		'colors'   => NULL,
+		'color'    => '#75ad91',
 		'buttonid' => NULL,
 		'hide'     => false
 	];
@@ -39,13 +41,21 @@ class Button {
 		$this->args = wp_parse_args($args, $this->defaults);
 
 		// whitelist size parameter
-		if (!in_array($this->args['size'], self::valid_button_sizes()))
-			$this->args['size'] = $defaults['size'];
+		if (!in_array($this->args['size'], array_keys(Subscribe_Button::sizes())))
+			$this->args['size'] = $this->defaults['size'];
+
+		// whitelist style parameter
+		if (!in_array($this->args['style'], array_keys(Subscribe_Button::styles())))
+			$this->args['style'] = $this->defaults['style'];
+
+		// whitelist format parameter
+		if (!in_array($this->args['format'], array_keys(Subscribe_Button::formats())))
+			$this->args['format'] = $this->defaults['format'];
 
 		$this->args['data'] = [
 			'title'    => $this->podcast->title,
 			'subtitle' => $this->podcast->subtitle,
-			'summary'  => $this->podcast->summary,
+			'description'  => $this->podcast->summary,
 			'cover'    => $this->podcast->cover_art()->setWidth(400)->url(),
 			'feeds'    => $this->feeds()
 		];
@@ -76,17 +86,17 @@ class Button {
 				sprintf("window.$dataAccessor = %s;", json_encode($this->args['data']))
 			)
 		);
-		
+
 		$script_button_tag = $dom->createElement('script');
 		$script_button_tag->setAttribute('class', 'podlove-subscribe-button');
 		$script_button_tag->setAttribute('src'  , 'https://cdn.podlove.org/subscribe-button/javascripts/app.js');
 		$script_button_tag->setAttribute('data-json-data', $dataAccessor);
 		$script_button_tag->setAttribute('data-language' , self::language($this->args['language']));
 		$script_button_tag->setAttribute('data-size'     , self::size($this->args['size'], $this->args['width']));
+		$script_button_tag->setAttribute('data-format'   , $this->args['format']);
+		$script_button_tag->setAttribute('data-style'   , $this->args['style']);
+		$script_button_tag->setAttribute('data-color'   , $this->args['color']);
 
-		if ($this->args['colors'])
-			$script_button_tag->setAttribute('data-colors', $this->args['colors']);
-		
 		if ($this->args['buttonid'])
 			$script_button_tag->setAttribute('data-buttonid', $this->args['buttonid']);
 
@@ -173,15 +183,6 @@ class Button {
 	 */
 	private static function language($language) {
 		return strtolower(explode('-', $language)[0]);
-	}
-
-	/**
-	 * List of valid button sizes.
-	 * 
-	 * @return array
-	 */
-	private static function valid_button_sizes() {
-		return ['small', 'medium', 'big', 'big-logo'];
 	}
 
 	/**

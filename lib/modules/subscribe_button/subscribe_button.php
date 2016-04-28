@@ -8,6 +8,34 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	protected $module_description = 'Use <code title="Shortcode for the Subscribe Button">[podlove-subscribe-button]</code> to display a button which allows users to easily subscribe to your podcast.';
 	protected $module_group = 'web publishing';
 
+	public static function styles() {
+		return [
+			'filled'    => __('Filled', 'podlove-podcasting-plugin-for-wordpress'),
+			'outline'   => __('Outline', 'podlove-podcasting-plugin-for-wordpress'),
+			'frameless' => __('Frameless', 'podlove-podcasting-plugin-for-wordpress')
+		];
+	}
+
+	public static function formats() {
+		return [
+			'rectangle' => __('Rectangle', 'podlove-podcasting-plugin-for-wordpress'),
+			'square'    => __('Square', 'podlove-podcasting-plugin-for-wordpress'),
+			'cover'     => __('Cover', 'podlove-podcasting-plugin-for-wordpress')
+		];
+	}
+
+	public static function sizes() {
+		return [
+			'small'  => __('Small', 'podlove-podcasting-plugin-for-wordpress'),
+			'medium' => __('Medium', 'podlove-podcasting-plugin-for-wordpress'),
+			'big'    => __('Big', 'podlove-podcasting-plugin-for-wordpress')
+		];
+	}
+
+	public static function languages() {
+		return ['de', 'en', 'eo', 'fi', 'fr', 'nl', 'zh', 'ja'];
+	}
+
 	public function load() {
 		
 		self::register_shortcode();
