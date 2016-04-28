@@ -100,8 +100,9 @@ class Widget extends \WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'autowidth' ); ?>"><?php _e( 'Auto-adjust width', 'podlove-podcasting-plugin-for-wordpress' ); ?></label><br />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'infotext' ); ?>"><?php _e( 'Description', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
+			<label for="<?php echo $this->get_field_id( 'infotext' ); ?>"><?php _e( 'Content', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
 			<textarea class="widefat" rows="10" id="<?php echo $this->get_field_id( 'infotext' ); ?>" name="<?php echo $this->get_field_name( 'infotext' ); ?>"><?php echo $infotext; ?></textarea>
+			<em>This text will be shown below the subscribe button.</em>
 		</p>
 		<?php 
 	}
