@@ -14,7 +14,7 @@ class Widget extends \WP_Widget {
 		);
 
 		add_action( 'admin_enqueue_scripts', function() {
-			if (\get_current_screen()->base !== 'widgets')
+			if (!in_array(get_current_screen()->base, ['widgets', 'customize']))
 				return;
 	
 			wp_enqueue_style('podlove-spectrum', \Podlove\PLUGIN_URL . '/js/admin/spectrum/spectrum.css');
