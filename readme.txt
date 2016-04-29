@@ -120,6 +120,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix `{{ episode.duration.totalMilliseconds }}`
 * fix image caching issue (invisible characters)
 * fix: When plugin requirements are not met, admin notices are now still shown once but the plugin is automatically deactivated after that. This avoids faulty setups.
+* fix: show podcast covers in network site switcher
 * improve tracking: ignore 1-byte requests
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
