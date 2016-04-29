@@ -17,7 +17,7 @@ class Button {
 
 	private $defaults = [
 		'size'     => 'big',
-		'format'   => 'rectangle',
+		'format'   => 'cover',
 		'width'    => 'auto',
 		'style'    => 'filled',
 		'language' => 'en',

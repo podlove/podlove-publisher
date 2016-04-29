@@ -46,7 +46,7 @@ class Widget extends \WP_Widget {
 		$button    = isset( $instance[ 'button' ] )    ? $instance[ 'button' ]    : '';
 		$size      = isset( $instance[ 'size' ] )      ? $instance[ 'size' ]      : 'big';
 		$style     = isset( $instance[ 'style' ] )     ? $instance[ 'style' ]     : 'filled';
-		$format    = isset( $instance[ 'format' ] )    ? $instance[ 'format' ]    : 'rectangle';
+		$format    = isset( $instance[ 'format' ] )    ? $instance[ 'format' ]    : 'cover';
 		$autowidth = isset( $instance[ 'autowidth' ] ) ? $instance[ 'autowidth' ] : true;
 		$infotext  = isset( $instance[ 'infotext' ] )  ? $instance[ 'infotext' ]  : '';
 		$color     = isset( $instance[ 'color' ] )     ? $instance[ 'color' ]     : '#75ad91';
