@@ -11,7 +11,7 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 		'type' => 'upload',
 		'key'  => 'cover_art',
 		'options' => array(
-			'label'       => __( 'Episode Cover Art URL', 'podlove-podcasting-plugin-for-wordpress' ),
+			'label'       => __( 'Episode Image', 'podlove-podcasting-plugin-for-wordpress' ),
 			'description' => 
 				  __('Enter URL or select image from media library.', 'podlove-podcasting-plugin-for-wordpress')
 				. ' '

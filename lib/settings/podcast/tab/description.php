@@ -66,10 +66,10 @@ class Description extends Tab {
 			) );
 
 			$wrapper->upload( 'cover_image', array(
-				'label'        => __( 'Cover Art URL', 'podlove-podcasting-plugin-for-wordpress' ),
+				'label'        => __( 'Image URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description'  => __( 'Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
-				'media_button_text' => __("Use for Podcast Cover Art", 'podlove-podcasting-plugin-for-wordpress')
+				'media_button_text' => __("Use for Podcast Image", 'podlove-podcasting-plugin-for-wordpress')
 			) );
 
 			$wrapper->select( 'language', array(
