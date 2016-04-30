@@ -129,6 +129,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * `shortcode_exists($shortcode_name)` is now available in Twig templates
 * add contributors shortcode to default template (Many people activated contributors and then wondered why they were not displayed in the episode. Now the shortcode is part of the default template, but only if the contributors module is active.)
 * add unmistakable warning if curl is not available and provide actionable steps for a solution
+* change feed setting "Include HTML Content" default to "on"
 
 * new "Tools" menu
     * A new maintenance section gathers tools like the "Repair" button in one place

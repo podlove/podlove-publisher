@@ -353,7 +353,7 @@ class Feed {
 			$wrapper->checkbox( 'embed_content_encoded', array(
 				'label'       => __( 'Include HTML Content', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( 'Include episode show notes in the feed.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'default'     => false
+				'default'     => true
 			) );
 
 			$wrapper->subheader( __( 'Directory Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
