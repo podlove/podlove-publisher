@@ -53,8 +53,6 @@ class Asset_Validation extends \Podlove\Modules\Base {
 
 		set_time_limit( 1800 ); // set max_execution_time to half an hour
 
-		Log::get()->addInfo( 'Begin scheduled asset validation.' );
-
 		$new_posts_query = $this->get_new_posts_needing_validation();
 		while ( $new_posts_query->have_posts() ) {
 			$this->validate_post( $new_posts_query->next_post() );
@@ -70,7 +68,6 @@ class Asset_Validation extends \Podlove\Modules\Base {
 			$this->validate_post( $aged_posts_query->next_post() );
 		}
 
-		Log::get()->addInfo( 'End scheduled asset validation.' );
 	}
 
 	private function validate_post( \WP_Post $post ) {
