@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 111 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 112 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1187,6 +1187,18 @@ function run_migrations_for_version( $version ) {
 			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
 				\Podlove\Modules\Social\Social::update_existing_services();
 				\Podlove\Modules\Social\Social::build_missing_services();
+			}
+		case 112:
+			// if any feed is protected, activate protection module
+			$should_activate_protection_module = false;
+			foreach (Model\Feed::all() as $feed) {
+				if ($feed->protected) {
+					$should_activate_protection_module = treu;
+				}
+			}
+
+			if ($should_activate_protection_module) {
+				\Podlove\Modules\Base::activate('protected_feed');
 			}
 		break;
 	}
