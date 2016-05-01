@@ -415,37 +415,6 @@ class Feed {
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 
-			$wrapper->subheader( __( 'Protection', 'podlove-podcasting-plugin-for-wordpress' ) );
-
-			$wrapper->checkbox( 'protected', array(
-				'label'       => __( 'Protect feed ', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'The feed will be protected by HTTP Basic Authentication.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'default'     => false
-			) );
-
-			$wrapper->select( 'protection_type', array(
-				'label'       => __( 'Method', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
-				'options' => array(
-					'0'   => 'Custom Login',
-					'1' => 'WordPress User database'
-				),
-				'default' => -1,
-				'please_choose' => true
-			) );
-
-			$wrapper->string( 'protection_user', array(
-				'label'       => __( 'Username', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => '',
-				'html'        => array( 'class' => 'regular-text required' )
-			) );
-
-			$wrapper->string( 'protection_password', array(
-				'label'       => __( 'Password', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => '',
-				'html'        => array( 'class' => 'regular-text required' )
-			) );
-
 			do_action( 'podlove_feed_settings_bottom', $wrapper );
 
 		} );

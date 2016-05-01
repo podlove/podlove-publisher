@@ -131,6 +131,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * add unmistakable warning if curl is not available and provide actionable steps for a solution
 * change feed setting "Include HTML Content" default to "on"
 * remove log entries for beginning and ending asset validations
+* move feed protection into separate module
 
 * new "Tools" menu
     * A new maintenance section gathers tools like the "Repair" button in one place
