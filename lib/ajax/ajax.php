@@ -239,27 +239,21 @@ class Ajax {
 			global $wpdb;
 
 			$sql = "SELECT
-						COUNT(*) downloads,
-						UNIX_TIMESTAMP(accessed_at) AS access_date,
-						DATE_FORMAT(accessed_at, '%Y-%m-%d') AS date_day,
-						mf.episode_asset_id asset_id,
-						client_name,
-						os_name AS system,
-						source,
-						context
-					FROM
-						" . Model\DownloadIntentClean::table_name() . " di
-						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
-						INNER JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
-					WHERE accessed_at >= STR_TO_DATE('" . date("Y-m-d", strtotime("-30 days")) . "','%Y-%m-%d')
-					GROUP BY date_day, asset_id, client_name, system, source, context";
+			    COUNT(*) downloads,
+			    UNIX_TIMESTAMP(accessed_at) AS access_date,
+			    DATE_FORMAT(accessed_at, '%Y-%m-%d') AS date_day,
+			    mf.episode_id
+			FROM
+			    " . Model\DownloadIntentClean::table_name() . "  di
+			    INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
+			WHERE accessed_at >= STR_TO_DATE('" . date("Y-m-d", strtotime("-28 days")) . "','%Y-%m-%d')
+			GROUP BY date_day, episode_id
+			";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$csv = '"downloads","date","asset_id","client","system","source","context"' . "\n";
+			$csv = '"downloads","date","day","episode_id"' . "\n";
 			foreach ($results as $row) {
-				$row[4] = '"' . $row[4] . '"';
-				$row[5] = '"' . $row[5] . '"';
 				$csv .= implode(",", $row) . "\n";
 			}
 
