@@ -140,8 +140,8 @@ jQuery(document).ready(function($) {
 		;
 
 		// responsive legend position
-		if (chart_width > 500) {
-			var legendWidth = 250;
+		var legendWidth = 300;
+		if (chart_width > 650) {
 			var legendX = chart_width - legendWidth;
 
 			jQuery("#total-chart").height("200px")
@@ -150,7 +150,6 @@ jQuery(document).ready(function($) {
 			downloadsChart.margins().bottom = 30;
 			downloadsChart.margins().right = legendWidth + 5;
 		} else {
-			var legendWidth = 250;
 			var legendX = chart_width - legendWidth;
 
 			jQuery("#total-chart").height("370px")
