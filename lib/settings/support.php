@@ -90,6 +90,8 @@ class Support {
 
 		</div>	
 		<?php
+
+		do_action('podlove_support_page_footer');
 	}
 
 }

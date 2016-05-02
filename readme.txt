@@ -132,6 +132,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * change feed setting "Include HTML Content" default to "on"
 * remove log entries for beginning and ending asset validations
 * move feed protection into separate module
+* move debug log from Dashboard to Support page
 
 * new "Tools" menu
     * A new maintenance section gathers tools like the "Repair" button in one place

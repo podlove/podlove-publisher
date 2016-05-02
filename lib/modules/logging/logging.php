@@ -19,7 +19,7 @@ class Logging extends \Podlove\Modules\Base {
 		add_action( 'init', array( $this, 'register_database_logger' ));
 
 		if (current_user_can('administrator')) {
-			add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_box' ) );
+			add_action('podlove_support_page_footer', [$this, 'dashoard_template']);
 		}
 
 		self::schedule_crons();
@@ -51,10 +51,6 @@ class Logging extends \Podlove\Modules\Base {
 		$log->pushHandler( new WPDBHandler( $wpdb, $log->get_log_level() ) );
 		// send critical logs via email
 		// $log->pushHandler( new WPMailHandler( get_option( 'admin_email' ), "Podlove | Critical notice for " . get_option( 'blogname' ), Logger::CRITICAL ) );
-	}
-
-	public function register_meta_box() {
-		add_meta_box( Dashboard::$pagehook . '_logging', __( 'Logging', 'podlove-podcasting-plugin-for-wordpress' ), array( $this, 'dashoard_template' ), Dashboard::$pagehook, 'normal' );
 	}
 
 	public function dashoard_template() {
@@ -117,6 +113,11 @@ code.details {
 	word-break: break-all;
 	word-wrap: break-word;
 }
+
+#podlove-debug-log {
+	width: 80%;
+	max-width: 80%;
+}
 </style>
 
 <script type="text/javascript">
@@ -153,6 +154,10 @@ $(document).ready(function() {
 		if ( $timezone = get_option( 'timezone_string' ) )
 			date_default_timezone_set( $timezone );
 		?>
+
+		<h3><?php echo __('Debug Logging', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+
+		<div id="podlove-debug-log" class="card">
 
 		<div id="podlove-log-filter">
 			<div class="log-level log-level-200">
@@ -235,6 +240,7 @@ $(document).ready(function() {
 			<?php endforeach; ?>
 			</tbody>
 		</table>
+		</div>
 		</div>
 		<?php
 	}
