@@ -192,7 +192,7 @@ class Analytics {
 			<div id="total-chart" style="height: 200px"></div>
 		</div>
 		
-		<?php 
+		<?php 		
 		$table = new \Podlove\Downloads_List_Table();
 		$table->prepare_items();
 		$table->display();

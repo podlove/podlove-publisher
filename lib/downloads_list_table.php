@@ -156,4 +156,46 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		) );
 	}
 
+	protected function extra_tablenav( $which ) {
+
+		if ($which !== 'bottom')
+			return;
+
+		$get_cron_info = function($cron_name) {
+			$next_cron = wp_next_scheduled($cron_name);
+			$interval  = wp_get_schedules()[wp_get_schedule($cron_name)]['interval'];
+			$prev_cron = $next_cron - $interval;
+
+			return [
+				'interval' => $interval,
+				'next' => $next_cron,
+				'prev' => $prev_cron
+			];
+		};
+
+		$sums_cron   = $get_cron_info("podlove_calc_download_sums");
+		$totals_cron = $get_cron_info("podlove_calc_download_totals");
+
+		?>
+		<div class="alignleft actions">	
+			<em>
+				<?php
+				echo sprintf(
+					__('Sums data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
+					human_time_diff($sums_cron['prev'], time()),
+					human_time_diff(time(), $sums_cron['next'])
+				); ?>
+			</em><br>
+			<em>
+				<?php
+				echo sprintf(
+					__('Totals data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
+					human_time_diff($totals_cron['prev'], time()),
+					human_time_diff(time(), $totals_cron['next'])
+				); ?>
+			</em>	
+		</div>
+		<?php
+	}
+
 }
