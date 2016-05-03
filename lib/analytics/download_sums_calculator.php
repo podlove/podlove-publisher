@@ -29,7 +29,7 @@ class DownloadSumsCalculator {
 			foreach ($groupings as $key => $hours) {
 
 				// skip already calculated fields IF override is not forced
-				if ($force || get_post_meta($episode->post_id, '_podlove_downloads_' . $key, true) != '')
+				if (!$force && get_post_meta($episode->post_id, '_podlove_downloads_' . $key, true) != '')
 					continue;
 
 				// skip fields that cannot be calculated yet
