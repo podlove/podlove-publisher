@@ -9,12 +9,30 @@ class DownloadIntentClean extends Base {
 	public static function episode_age_in_hours($episode_id) {
 		global $wpdb;
 
+		// This query is a bit slow, ~50ms on 2MM intents table.
+		// It might be acceptable if not used in a loop.
+		// If the actual episode age is acceptable (rather than age in intents),
+		// use the quicker alternative: `actual_episode_age_in_hours`
 		return $wpdb->get_var(
 			$wpdb->prepare(
 				'SELECT MAX(hours_since_release)
 				FROM ' . self::table_name() . ' di
 				JOIN ' . MediaFile::table_name() . ' mf ON mf.id = di.media_file_id
 				WHERE mf.episode_id = %d',
+				$episode_id
+			)
+		);
+	}
+
+	public static function actual_episode_age_in_hours($episode_id) {
+		global $wpdb;
+
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT TIMESTAMPDIFF(HOUR, p.post_date, NOW())
+				FROM `' . Episode::table_name() . '` e
+				JOIN `' . $wpdb->posts . '` p ON p.ID = e.`post_id`
+				WHERE e.id = %d',
 				$episode_id
 			)
 		);

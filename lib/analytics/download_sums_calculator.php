@@ -24,7 +24,7 @@ class DownloadSumsCalculator {
 
 		foreach (Model\Podcast::get()->episodes() as $episode) {
 			
-			$max_hsr = Model\DownloadIntentClean::episode_age_in_hours($episode->id);
+			$max_hsr = Model\DownloadIntentClean::actual_episode_age_in_hours($episode->id);
 
 			foreach ($groupings as $key => $hours) {
 
