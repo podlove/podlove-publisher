@@ -18,7 +18,7 @@ class Button {
 	private $defaults = [
 		'size'     => 'big',
 		'format'   => 'cover',
-		'width'    => 'auto',
+		'width'    => '',
 		'style'    => 'filled',
 		'language' => 'en',
 		'color'    => '#75ad91',
