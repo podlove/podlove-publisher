@@ -112,6 +112,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.12 =
+
+Design Update for Podlove Subscribe Button
+
+* The button now follows a flat design and has more options for customizability.
+* See [docs.podlove.org/podlove-subscribe-button](http://docs.podlove.org/podlove-subscribe-button/) for a range of possible display variants.
+* Widget module has been updates to support a color picker and settings for size, format and style. When using the "WordPress Customizer" you get a live preview of the button.
+* If you are using the Template API, have a look at the updated [`podcast.subscribeButton` parameters](http://docs.podlove.org/podlove-publisher/reference/template-tags.html#podcast).
+
 = 2.3.11 =
 
 * fix feed issue that appeared with WordPress 4.5 (wrong content type)
