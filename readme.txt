@@ -112,6 +112,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.13 =
+
+* Podlove Subscribe Buttons: parameters in templates and shortcodes can override Publisher provided fields: 'title', 'subtitle', 'description', 'cover'
+
 = 2.3.12 =
 
 Design Update for Podlove Subscribe Button

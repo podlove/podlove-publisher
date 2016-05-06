@@ -60,6 +60,16 @@ class Button {
 			'feeds'    => $this->feeds()
 		];
 
+		// allow args to override data
+		$fields = ['title', 'subtitle', 'description', 'cover'];
+		foreach ($fields as $field) {
+			if (isset($this->args[$field]) && $this->args[$field]) {
+				$this->args['data'][$field] = $this->args[$field];
+			}
+		}
+
+		// @todo: special treatment for feeds
+
 		return $this->html();
 	}
 
