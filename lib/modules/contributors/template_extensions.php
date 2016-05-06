@@ -158,21 +158,21 @@ class TemplateExtensions {
 				$contributors = \Podlove\Modules\Contributors\Contributors::filterContributions($contributions, $args);
 			}
 
+			$sort_by_name = function($a, $b) {
+				return strcmp(strtolower($a->name()), strtolower($b->name()));
+			};
+
 			// sort
 			if ($args['groupby'] == 'group') {
 				foreach ($contributors as $group_id => $group) {
-					usort($contributors[$group_id]['contributors'], function($a, $b) {
-						return strcmp($a->name(), $b->name());
-					});
+					usort($contributors[$group_id]['contributors'], $sort_by_name);
 
 					if (strtoupper($args['order']) == 'DESC') {
 						$contributors[$group_id]['contributors'] = array_reverse($contributors[$group_id]['contributors']);
 					}
 				}
 			} else {
-				usort($contributors, function($a, $b) {
-					return strcmp($a->name(), $b->name());
-				});
+				usort($contributors, $sort_by_name);
 
 				if (strtoupper($args['order']) == 'DESC') {
 					$contributors = array_reverse($contributors);

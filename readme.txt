@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.13 =
 
+* fix: sort contributor names while ignoring uppercase/lowercase
 * Podlove Subscribe Buttons: parameters in templates and shortcodes can override Publisher provided fields: 'title', 'subtitle', 'description', 'cover'
 
 = 2.3.12 =
