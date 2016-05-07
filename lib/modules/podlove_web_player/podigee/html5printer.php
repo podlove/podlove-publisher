@@ -24,6 +24,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		return '
 		<script>window.' . $this->config_var_name() . ' = ' . json_encode($this->config($context)) . '</script>
 		<script class="podigee-podcast-player" src="' . $src . '" data-configuration="' . $this->config_var_name() . '"></script>';
+		// data-configuration should contain json URL
+		// CORS header setzen bei Request auf JSON file
 	}
 
 	public function config($context) {
@@ -51,7 +53,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'subtitle' => wptexturize(convert_chars(trim($this->episode->subtitle))),
 				'description' => nl2br(wptexturize(convert_chars(trim($this->episode->summary)))),
 				'coverUrl' => $this->episode->cover_art_with_fallback()->setWidth(500)->url(),
-				'chaptermarks' => json_decode($this->episode->get_chapters('json'))
+				'chaptermarks' => json_decode($this->episode->get_chapters('json')),
+				'url' => get_permalink($this->post->ID)
 			]
 		];
 
