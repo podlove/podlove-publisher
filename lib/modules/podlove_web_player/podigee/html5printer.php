@@ -8,29 +8,35 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	// Model\Episode
 	private $episode;
-	private $post;
 
 	private $config_var_name = null;
 
 	public function __construct(Episode $episode) {
 		$this->episode = $episode;
-		$this->post    = get_post($episode->post_id);
 	}
 
-	public function render($context = NULL) {
+	public function render($context = NULL, $style = 'configfile') {
 
 		$src = 'http://cdn.podigee.com/podcast-player/javascripts/podigee-podcast-player.js';
 
-		return '
-		<script>window.' . $this->config_var_name() . ' = ' . json_encode($this->config($context)) . '</script>
-		<script class="podigee-podcast-player" src="' . $src . '" data-configuration="' . $this->config_var_name() . '"></script>';
-		// data-configuration should contain json URL
-		// CORS header setzen bei Request auf JSON file
+		if ($style == 'inline') { // inline players are not embeddable
+			return '
+			<script>window.' . $this->config_var_name() . ' = ' . json_encode(self::config($this->episode, $context)) . '</script>
+			<script class="podigee-podcast-player" src="' . $src . '" data-configuration="' . $this->config_var_name() . '"></script>';
+		} else {
+			return '<script class="podigee-podcast-player" src="' . $src . '" data-configuration="' . $this->config_url() . '"></script>';
+		}
+
 	}
 
-	public function config($context) {
-		$player_media_files = new \Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles($this->episode);
-		$media_files = $player_media_files->get($context);
+	public function config_url() {
+		return esc_url( add_query_arg('podigee_player', $this->episode->id, get_option('siteurl')) );
+	}
+
+	public static function config($episode, $context) {
+		$post               = get_post($episode->post_id);
+		$player_media_files = new \Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles($episode);
+		$media_files        = $player_media_files->get($context);
 
 		$config = [
 			'options' => [
@@ -49,12 +55,12 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			],
 			'episode' => [
 				'media' => [],
-				'title' => get_the_title($this->post->ID),
-				'subtitle' => wptexturize(convert_chars(trim($this->episode->subtitle))),
-				'description' => nl2br(wptexturize(convert_chars(trim($this->episode->summary)))),
-				'coverUrl' => $this->episode->cover_art_with_fallback()->setWidth(500)->url(),
-				'chaptermarks' => json_decode($this->episode->get_chapters('json')),
-				'url' => get_permalink($this->post->ID)
+				'title' => get_the_title($post->ID),
+				'subtitle' => wptexturize(convert_chars(trim($episode->subtitle))),
+				'description' => nl2br(wptexturize(convert_chars(trim($episode->summary)))),
+				'coverUrl' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+				'chaptermarks' => json_decode($episode->get_chapters('json')),
+				'url' => get_permalink($post->ID)
 			]
 		];
 

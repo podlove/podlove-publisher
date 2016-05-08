@@ -22,6 +22,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 				(new Podigee\Module)->load();
 				break;
 		}
+
+		// this must _always_ be on, otherwise embedded players on other sites will stop working
+		Podigee\Module::register_config_url_route();
 	}
 
 	public static function get_player_printer(Episode $episode) {
