@@ -187,6 +187,7 @@ class Tools {
 
 					<table class="form-table">
 						<tbody>
+						<?php if (isset($fields[$section_id]) && is_array($fields[$section_id])): ?>
 						<?php foreach ($fields[$section_id] as $field_id => $field): ?>
 							<tr>
 								<th>
@@ -201,6 +202,7 @@ class Tools {
 								</td>
 							</tr>
 						<?php endforeach ?>
+						<?php endif ?>
 						</tbody>
 					</table>
 				</div>

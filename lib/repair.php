@@ -34,6 +34,9 @@ class Repair {
 		// hook for modules to add their repair methods
 		do_action('podlove_repair_do_repair');
 
+		// $runner = (new \Podlove\Jobs\CronJobRunner())->create_job('\Podlove\Jobs\CountingJob', ['from' => 0, 'to' => '42']);
+		// $runner->run();
+
 		wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
 		exit;
 	}

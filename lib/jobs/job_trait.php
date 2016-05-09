@@ -7,6 +7,9 @@ trait JobTrait {
 	private $status;
 	private $id;
 
+	public $created_at;
+	public $updated_at;
+
 	/**
 	 * If there is any state that has to be persisted between steps, 
 	 * it can be stored here.
@@ -126,7 +129,7 @@ trait JobTrait {
 	/**
 	 * Implement one step of the job
 	 */
-	abstract public function do_step();
+	abstract protected function do_step();
 
 	/**
 	 * Do one step, and record the progress.
