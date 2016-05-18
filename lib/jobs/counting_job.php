@@ -23,5 +23,9 @@ class CountingJob {
 
 	protected function do_step() {
 		$this->state += $this->args['stepsize'];
+		// generate CPU intensive task
+		// for ($i=0; $i < 7000000; $i++) { 
+		// 	pow($i, 42);
+		// }
 	}
 }
