@@ -28,7 +28,8 @@ trait JobTrait {
 	public function init() {
 		$this->status = [
 			'total' => $this->get_total_steps(),
-			'progress' => 0
+			'progress' => 0,
+			'active_run_time' => 0.0
 		];
 
 		$this->generate_job_id();
@@ -89,12 +90,17 @@ trait JobTrait {
 		Jobs::save($this->id, $job);
 	}
 
+	private function log_active_run_time($time_ms) {
+		$this->status['active_run_time'] += $time_ms;
+	}
+
 	public function get_status() {
 		return [
 			'total' => $this->status['total'],
 			'progress' => $this->status['progress'],
 			'percent' => $this->get_status_percent(),
 			'text' => $this->get_status_text(),
+			'time' => $this->status['active_run_time']
 		];
 	}
 
@@ -136,7 +142,11 @@ trait JobTrait {
 	 */
 	public function step()
 	{
+		$start = microtime(true);
 		$this->do_step();
+		$end = microtime(true);
+		$this->log_active_run_time($end - $start);
+
 		$this->status['progress']++;
 		$this->save_status();
 	}

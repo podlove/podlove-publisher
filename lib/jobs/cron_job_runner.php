@@ -15,7 +15,6 @@ use \Podlove\Log;
  * 
  * TODO
  * - when a job is done and it produced artefacts (like a file after an export), how do I get it?
- * - log how much time each step required
  * - try to spawn a new cron immediately after the current one is done
  * - for tools page, job-related tools should:
  *   - inform that user may navigate away
@@ -145,6 +144,8 @@ class CronJobRunner {
 
 		if (!$job->is_finished()) {
 			wp_schedule_single_event(time() - 1, 'cron_job_runner', [$job_id, $call_count+1]);
+		} else {
+			\Podlove\Log::get()->addDebug('[job] done ' . $job_id, $job->get_status());
 		}
 	}
 
