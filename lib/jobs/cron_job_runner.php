@@ -61,6 +61,10 @@ class CronJobRunner {
 		return $jobs;
 	}
 
+	// @todo: running jobs are _not_ returned by _get_cron_array
+	// => loop like self::get_recently_finished_jobs() instead and only match
+	//    to cron array inside loop for time (it's not in the cron array? then the
+	//    job is running right now!)
 	private static function get_running_jobs() {
 
 		$jobs = [];
