@@ -134,6 +134,8 @@ trait JobTrait {
 	
 	/**
 	 * Implement one step of the job
+	 * 
+	 * @return  int How much progress did the step make?
 	 */
 	abstract protected function do_step();
 
@@ -143,11 +145,11 @@ trait JobTrait {
 	public function step()
 	{
 		$start = microtime(true);
-		$this->do_step();
+		$progress = $this->do_step();
 		$end = microtime(true);
 		$this->log_active_run_time($end - $start);
 
-		$this->status['progress']++;
+		$this->status['progress'] += ($progress > 0) ? $progress : 1;
 		$this->save_status();
 	}
 
