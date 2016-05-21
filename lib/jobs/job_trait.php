@@ -7,6 +7,8 @@ trait JobTrait {
 	private $status;
 	private $id;
 
+	protected $hooks = [];
+
 	public $created_at;
 	public $updated_at;
 
@@ -151,6 +153,10 @@ trait JobTrait {
 
 		$this->status['progress'] += ($progress > 0) ? $progress : 1;
 		$this->save_status();
+
+		if ($this->is_finished() && isset($this->hooks['finished'])) {
+			call_user_func($this->hooks['finished']);
+		}
 	}
 
 	/**
