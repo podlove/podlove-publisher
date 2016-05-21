@@ -21,6 +21,7 @@ use \Podlove\Log;
  *   - restore/show progress when user opens tools page if it's running
  *   - show when the job was last run (nevermind if by user or programmatically—is the initiator an information worth saving?)
  * - JS toolkit for starting jobs, fetching their state
+ * - clean up podlove_jobs
  */
 class CronJobRunner {
 
@@ -35,6 +36,30 @@ class CronJobRunner {
 		add_action('cron_job_runner', [__CLASS__, 'run_job'], 10, 2);
 
 		\Podlove\add_tools_section('jobs', __('Background Jobs', 'podlove-podcasting-plugin-for-wordpress'), [__CLASS__, 'render_jobs_overview']);
+	}
+
+	private static function get_recently_finished_jobs() {
+
+		$jobs = [];
+
+		foreach (Jobs::all() as $job_id => $job_raw) {
+
+			$job = Jobs::load($job_id);
+
+			if (!$job->is_finished())
+				continue;
+
+			if (time() - $job->updated_at > DAY_IN_SECONDS)
+				continue;
+
+			$jobs[$job_id] = [
+				'time' => $time,
+				'job_raw' => $job_raw,
+				'job' => $job,
+			];
+		}
+
+		return $jobs;
 	}
 
 	private static function get_running_jobs() {
@@ -72,9 +97,11 @@ class CronJobRunner {
 
 	public static function render_jobs_overview() {
 		$jobs = self::get_running_jobs();
+		$finished_jobs = self::get_recently_finished_jobs();
 		?>
 
 		<?php if (count($jobs)): ?>
+		<h4><?php echo__('Running', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 		<table class="widefat striped">
 			<thead>
 				<tr>
@@ -110,6 +137,39 @@ class CronJobRunner {
 		</table>		
 		<?php else: ?>
 			<?php echo __('No jobs are running.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+		<?php endif; ?>
+
+		<?php if (count($finished_jobs)): ?>
+		<h4><?php echo__('Recently Finished', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
+		<table class="widefat striped">
+			<thead>
+				<tr>
+					<th><?php echo __('Job Name', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th><?php echo __('Finished', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th>
+						<?php echo __('Duration', 'podlove-podcasting-plugin-for-wordpress') ?>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($finished_jobs as $job_id => $job): ?>
+					<?php $status = $job['job']->get_status(); ?>
+					<tr>
+						<td>
+							<?php echo $job['job_raw']['class']; ?>
+						</td>
+						<td>
+							<?php echo sprintf(__('%s ago'), human_time_diff($job['job']->updated_at)); ?>
+						</td>
+						<td>
+							<?php echo sprintf(__('%s seconds', 'podlove-podcasting-plugin-for-wordpress'), round($job['job']->get_status()['time'], 2)); ?>
+						</td>
+					</tr>
+				<?php endforeach ?>
+			</tbody>
+		</table>		
+		<?php else: ?>
+			<?php echo __('No jobs were run recently.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		<?php endif; ?>
 		<?php
 	}
