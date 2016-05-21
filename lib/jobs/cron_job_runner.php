@@ -53,7 +53,6 @@ class CronJobRunner {
 				continue;
 
 			$jobs[$job_id] = [
-				'time' => $time,
 				'job_raw' => $job_raw,
 				'job' => $job,
 			];
@@ -101,7 +100,7 @@ class CronJobRunner {
 		?>
 
 		<?php if (count($jobs)): ?>
-		<h4><?php echo__('Running', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
+		<h4><?php echo __('Running', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 		<table class="widefat striped">
 			<thead>
 				<tr>
@@ -140,7 +139,7 @@ class CronJobRunner {
 		<?php endif; ?>
 
 		<?php if (count($finished_jobs)): ?>
-		<h4><?php echo__('Recently Finished', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
+		<h4><?php echo __('Recently Finished', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 		<table class="widefat striped">
 			<thead>
 				<tr>
