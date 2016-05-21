@@ -2,6 +2,7 @@
 namespace Podlove\Jobs;
 
 use \Podlove\Model\UserAgent;
+use \Podlove\Model\DownloadIntentClean;
 
 class UserAgentRefreshJob {
 	use JobTrait;
@@ -14,6 +15,7 @@ class UserAgentRefreshJob {
 		];
 
 		$this->args = wp_parse_args($args, $defaults);
+		$this->hooks['finished'] = [__CLASS__, 'delete_bots_from_clean_downloadintents'];
 
 		$this->state = ['previous_id' => 0];
 	}
@@ -38,5 +40,15 @@ class UserAgentRefreshJob {
 		$this->state['previous_id'] = $ua->id;
 
 		return $progress;
+	}
+
+	public static function delete_bots_from_clean_downloadintents() {
+		global $wpdb;
+
+		$sql = "DELETE FROM `" . DownloadIntentClean::table_name() . "` WHERE `user_agent_id` IN (
+			SELECT id FROM `" . UserAgent::table_name() . "` ua WHERE ua.bot
+		)";
+
+		$wpdb->query($sql);
 	}
 }
