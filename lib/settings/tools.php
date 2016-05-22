@@ -22,6 +22,10 @@ class Tools {
 
 		add_action( 'admin_init', array( $this, 'process_actions' ) );
 
+		add_action('admin_print_styles', function() {
+			wp_enqueue_script('podlove_admin_jobs');
+		}, 20);
+
 		\Podlove\add_tools_section('general-maintenance', __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'));
 		\Podlove\add_tools_section('tracking-analytics', __('Tracking & Analytics', 'podlove-podcasting-plugin-for-wordpress'));
 	
