@@ -80,7 +80,7 @@ class Tools {
 			<div class="clear"></div>
 
 			<p class="description">
-				<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is only useful if you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is useful if you don\'t get updated analytics or you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
