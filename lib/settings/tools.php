@@ -53,11 +53,13 @@ class Tools {
 		 */
 		\Podlove\add_tools_field('ta-recals-agents', __('Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress'), function() {
 			?>
-			<button id="recalculate_useragents" class="button progressbar-button">
-				<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</button>
 
-			<div id="progressbar"><div class="progress-label"></div></div>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-UserAgentRefreshJob" 
+				data-button-text="<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
+				
+			</div>
 
 			<div class="clear"></div>
 
