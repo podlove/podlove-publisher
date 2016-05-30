@@ -73,11 +73,15 @@ class Tools {
 
 		\Podlove\add_tools_field('ta-recalc-analytics', __('Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress'), function() {
 			?>
-			<button id="cleanup_download_intents" class="button progressbar-button">
-				<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</button>
 
-			<div id="progressbar-cleanup"><div class="progress-label"></div></div>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-DownloadIntentCleanupJob" 
+				data-button-text="<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\DownloadIntentCleanupJob') ?>"
+				>
+				
+			</div>
 
 			<div class="clear"></div>
 

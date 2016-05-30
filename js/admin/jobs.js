@@ -50,7 +50,6 @@ var PODLOVE = PODLOVE || {};
         var button = $("<button>")
             .addClass('button')
             .html(button_text)
-            .appendTo(wrapper)
         
         var renderStatus = function(status) {
             // console.log("status", status);
@@ -65,16 +64,20 @@ var PODLOVE = PODLOVE || {};
                     .html(" " + status.percent + "%")
                     .prepend(spinner.clone());
             } else {
-                var button_clone = button.clone();
                 wrapper
                     .empty()
-                    .append(button_clone)
                     .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.time) + " seconds <time class=\"timeago\" datetime=\"" + (new Date(status.updated_at * 1000)).toISOString() + "\"></time></small>.")
 
                 $("time.timeago").timeago();
-                button_clone.on('click', btnClickHandler);
+                renderButton();
             }
         };
+
+        var renderButton = function () {
+            var button_clone = button.clone();
+            wrapper.prepend(button_clone);
+            button_clone.on('click', btnClickHandler);
+        }
 
         var update = function() {
             PODLOVE.Jobs.getStatus(job_id, function(status) {
@@ -108,6 +111,8 @@ var PODLOVE = PODLOVE || {};
         if (recent_job_id) {
             job_id = recent_job_id;
             update();
+        } else {
+            renderButton();
         }
     }
 
