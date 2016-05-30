@@ -29,11 +29,11 @@ trait JobTrait {
 	 */
 	public function init() {
 		
-		$this->status = [
+		$this->status = array_merge([
 			'total' => $this->get_total_steps(),
 			'progress' => 0,
 			'active_run_time' => 0.0
-		];
+		], $this->status);
 
 		$this->generate_job_id();
 
@@ -50,7 +50,7 @@ trait JobTrait {
 	public static function load($args) {
 		$classname = get_called_class();
 
-		$class = new $classname();
+		$class = new $classname($args['args']);
 		$class->id = $args['id'];
 		$class->status = $args['status'];
 		$class->args = $args['args'];

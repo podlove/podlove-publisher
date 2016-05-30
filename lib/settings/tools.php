@@ -132,10 +132,8 @@ class Tools {
 	public function page() {
 
 		wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL . '/js/admin/tools/useragent.js', ['jquery'], \Podlove\get_plugin_header('Version'));
-		wp_enqueue_script('podlove-tools-download_intent_recalculator', \Podlove\PLUGIN_URL . '/js/admin/tools/download_intent_recalculator.js', ['jquery'], \Podlove\get_plugin_header('Version'));
 
 		wp_enqueue_script('jquery-ui-progressbar');
-		wp_enqueue_script('podlove-tools-download_intent_recalculator');
 
 		?>
 

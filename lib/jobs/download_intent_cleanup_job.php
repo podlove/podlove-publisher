@@ -10,20 +10,37 @@ class DownloadIntentCleanupJob {
 
 		$defaults = [
 			'intents_total' => self::get_max_intent_id(),
-			'intents_per_step' => 100000
+			'intents_per_step' => 100000,
+			'delete_all' => true // delete all clean intents before starting
 		];
 
 		$this->args = wp_parse_args($args, $defaults);
 		$this->hooks['finished'] = [__CLASS__, 'purge_cache'];
-		$this->hooks['init'] = [__CLASS__, 'delete_clean_intents'];
 
-		$this->state = ['previous_id' => 0];
+		if ($this->args['delete_all']) {
+			$this->hooks['init'] = [__CLASS__, 'delete_clean_intents'];
+			$this->state = ['previous_id' => 0];
+		} else {
+			$this->state = ['previous_id' => self::get_max_clean_intent_id()];
+		}
+
+		$this->status['progress'] = $this->state['previous_id'];
 	}
 
-	public static function get_max_intent_id()
-	{
+	public static function get_max_intent_id() {
 		global $wpdb;
-		return $wpdb->get_var('SELECT MAX(id) FROM `' . Model\DownloadIntent::table_name() . '`');
+		
+		$id = $wpdb->get_var('SELECT MAX(id) FROM `' . Model\DownloadIntent::table_name() . '`');
+
+		return $id ? (int) $id : 0;
+	}
+
+	public static function get_max_clean_intent_id() {
+		global $wpdb;
+		
+		$id = $wpdb->get_var('SELECT MAX(id) FROM `' . Model\DownloadIntentClean::table_name() . '`');
+
+		return $id ? (int) $id : 0;
 	}
 
 	public function get_total_steps() {
