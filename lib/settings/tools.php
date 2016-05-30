@@ -57,7 +57,9 @@ class Tools {
 			<div 
 				class="podlove-job" 
 				data-job="Podlove-Jobs-UserAgentRefreshJob" 
-				data-button-text="<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
+				data-button-text="<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\UserAgentRefreshJob') ?>"
+				>
 				
 			</div>
 
@@ -167,6 +169,13 @@ class Tools {
 }
 .ui-progressbar-indeterminate .ui-progressbar-value {
 	background-image: none;
+}
+
+.podlove-recent-job-info {
+    display: inline-block;
+    line-height: 28px;
+    padding-left: 8px;
+    color: #666;
 }
 
   </style>

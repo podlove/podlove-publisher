@@ -14,6 +14,7 @@ add_action( 'admin_print_styles', function () {
 	wp_register_script('podlove_admin_episode_feed_settings', \Podlove\PLUGIN_URL . '/js/admin/feed_settings.js', ['jquery'], $version);
 	wp_register_script('podlove_admin_autogrow', \Podlove\PLUGIN_URL . '/js/admin/jquery.autogrow.js', ['jquery'], $version);
 	wp_register_script('podlove_admin', \Podlove\PLUGIN_URL . '/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'podlove_admin_episode_feed_settings', 'podlove_admin_autogrow'], $version);
+	wp_register_script('podlove-timeago', \Podlove\PLUGIN_URL . '/js/admin/timeago.jquery.js', ['jquery']);
 
 	if ($is_podlove_settings_screen || $is_episode_edit_screen) {
 
@@ -29,7 +30,7 @@ add_action( 'admin_print_styles', function () {
 		// other scripts
 		wp_enqueue_script('podlove-cryptojs',                         \Podlove\PLUGIN_URL . '/js/admin/cryptojs/md5.js');
 		wp_enqueue_script('podlove_admin_episode',                    \Podlove\PLUGIN_URL . '/js/admin/episode.js', ['jquery', 'podlove_admin'], $version);
-		wp_register_script('podlove_admin_jobs', \Podlove\PLUGIN_URL . '/js/admin/jobs.js', ['jquery'], $version);
+		wp_register_script('podlove_admin_jobs', \Podlove\PLUGIN_URL . '/js/admin/jobs.js', ['jquery', 'podlove-timeago'], $version);
 		
 		wp_enqueue_script('podlove_admin_audio_duration_loader',      \Podlove\PLUGIN_URL . '/js/admin/audio_duration_loader.js', ['jquery'], $version);
 		wp_enqueue_script('podlove_admin_episode_duration',           \Podlove\PLUGIN_URL . '/js/admin/episode_duration.js', ['jquery'], $version);

@@ -43,6 +43,7 @@ var PODLOVE = PODLOVE || {};
         var job_name = wrapper.data('job')
         var button_text = wrapper.data('button-text')
         var job_id = null;
+        var recent_job_id = wrapper.data('recent-job-id')
         var timer = null;
 
         var spinner = $("<i class=\"podlove-icon-spinner rotate\"></i>");
@@ -64,7 +65,14 @@ var PODLOVE = PODLOVE || {};
                     .html(" " + status.percent + "%")
                     .prepend(spinner.clone());
             } else {
-                wrapper.html("done")
+                var button_clone = button.clone();
+                wrapper
+                    .empty()
+                    .append(button_clone)
+                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.time) + " seconds <time class=\"timeago\" datetime=\"" + (new Date(status.updated_at * 1000)).toISOString() + "\"></time></small>.")
+
+                $("time.timeago").timeago();
+                button_clone.on('click', btnClickHandler);
             }
         };
 
@@ -91,11 +99,16 @@ var PODLOVE = PODLOVE || {};
                 job_id = job.job_id;
                 update();
             });
-            button.remove();
-            job_spinner.appendTo(wrapper);
+
+            wrapper
+                .empty()
+                .append(spinner.clone());
         };
 
-        button.on('click', btnClickHandler);
+        if (recent_job_id) {
+            job_id = recent_job_id;
+            update();
+        }
     }
 
     $(document).ready(function() {

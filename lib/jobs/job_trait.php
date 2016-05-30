@@ -102,7 +102,9 @@ trait JobTrait {
 			'progress' => $this->status['progress'],
 			'percent' => $this->get_status_percent(),
 			'text' => $this->get_status_text(),
-			'time' => $this->status['active_run_time']
+			'time' => $this->status['active_run_time'],
+			'updated_at' => $this->updated_at,
+			'created_at' => $this->created_at
 		];
 	}
 
