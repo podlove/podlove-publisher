@@ -28,6 +28,7 @@ trait JobTrait {
 	 * @trait
 	 */
 	public function init() {
+		
 		$this->status = [
 			'total' => $this->get_total_steps(),
 			'progress' => 0,
@@ -35,6 +36,12 @@ trait JobTrait {
 		];
 
 		$this->generate_job_id();
+
+
+		if (isset($this->hooks['init'])) {
+			call_user_func($this->hooks['init']);
+		}
+
 		$this->save_status();
 
 		return $this;
