@@ -28,6 +28,9 @@ trait JobTrait {
 	 * @trait
 	 */
 	public function init() {
+
+		if (!is_array($this->status))
+			$this->status = [];
 		
 		$this->status = array_merge([
 			'total' => $this->get_total_steps(),

@@ -44,6 +44,7 @@ var PODLOVE = PODLOVE || {};
         var button_text = wrapper.data('button-text')
         var job_id = null;
         var recent_job_id = wrapper.data('recent-job-id')
+        var job_args = wrapper.data('args') || {}
         var timer = null;
 
         var spinner = $("<i class=\"podlove-icon-spinner rotate\"></i>");
@@ -52,7 +53,6 @@ var PODLOVE = PODLOVE || {};
             .html(button_text)
         
         var renderStatus = function(status) {
-            // console.log("status", status);
 
             if (status.error) {
                 wrapper.html(status.error);
@@ -98,7 +98,8 @@ var PODLOVE = PODLOVE || {};
 
         var btnClickHandler = function(e) {
             var job_spinner = spinner.clone();
-            PODLOVE.Jobs.create(job_name.split("-").join("\\"), [], function(job) {
+
+            PODLOVE.Jobs.create(job_name.split("-").join("\\"), job_args, function(job) {
                 job_id = job.job_id;
                 update();
             });

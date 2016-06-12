@@ -93,9 +93,15 @@ class Tools {
 
 		\Podlove\add_tools_field('ta-recalc-downloads-table', __('Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress'), function() {
 			?>
-			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button">
-				<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</a>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
+				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
+				data-button-text="<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\DownloadTimedAggregatorJob') ?>"
+				>
+				
+			</div>
 
 			<p class="description">
 				<?php echo __('Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
@@ -110,9 +116,6 @@ class Tools {
 			return;
 
 		switch (filter_input(INPUT_GET, 'action')) {
-			case 'recalculate_downloads_table':
-				self::recalculate_downloads_table();
-				break;
 			case 'clear_caches':
 				\Podlove\Repair::clear_podlove_cache();
 				\Podlove\Repair::clear_podlove_image_cache();
@@ -123,10 +126,6 @@ class Tools {
 				break;
 		}
 
-	}
-
-	public static function recalculate_downloads_table() {
-		\Podlove\Analytics\DownloadSumsCalculator::calc_download_sums(true);
 	}
 
 	public function page() {
