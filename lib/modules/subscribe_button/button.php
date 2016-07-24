@@ -100,7 +100,7 @@ class Button {
 		if ($this->args['buttonid'])
 			$script_button_tag->setAttribute('data-buttonid', $this->args['buttonid']);
 
-		if ($this->args['hide'] && in_array($args['hide'], [1, '1', true, 'true', 'on']))
+		if ($this->args['hide'] && in_array($this->args['hide'], [1, '1', true, 'true', 'on']))
 			$script_button_tag->setAttribute('data-hide', true);
 
 		// ensure there is a closing script tag
