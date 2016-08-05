@@ -20,6 +20,26 @@ trait JobTrait {
 	 */
 	protected $state;
 
+	public function __construct($args = [])
+	{
+		$this->args = wp_parse_args($args, self::defaults());
+		$this->setup();
+	}
+
+	/**
+	 * Called once on class construction.
+	 * 
+	 * Does nothing by default. Override for custom setup behaviour.
+	 */
+	public function setup() {}
+
+	/**
+	 * Return default job arguments
+	 * 
+	 * @return array
+	 */
+	public static function defaults() { return []; }
+
 	/**
 	 * Initialize job
 	 * 
@@ -39,7 +59,6 @@ trait JobTrait {
 		], $this->status);
 
 		$this->generate_job_id();
-
 
 		if (isset($this->hooks['init'])) {
 			call_user_func($this->hooks['init']);

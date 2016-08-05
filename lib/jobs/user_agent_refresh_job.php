@@ -7,17 +7,17 @@ use \Podlove\Model\DownloadIntentClean;
 class UserAgentRefreshJob {
 	use JobTrait;
 
-	public function __construct($args = []) {
-		// maybe separate func so that argument parsing can be done in trait?
-		$defaults = [
-			'agents_total' => UserAgent::count(),
-			'agents_per_step' => 500
-		];
-
-		$this->args = wp_parse_args($args, $defaults);
+	public function setup() {
 		$this->hooks['finished'] = [__CLASS__, 'delete_bots_from_clean_downloadintents'];
 
 		$this->state = ['previous_id' => 0];
+	}
+
+	public static function defaults() {
+		return [
+			'agents_total' => UserAgent::count(),
+			'agents_per_step' => 500
+		];
 	}
 
 	public function get_total_steps() {

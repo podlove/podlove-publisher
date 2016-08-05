@@ -9,14 +9,17 @@ use Podlove\Model;
 class DownloadTimedAggregatorJob {
 	use JobTrait;
 
-	public function __construct($args = []) {
-		
-		$defaults = [
+	public function setup() {
+		$this->hooks['init'] = [$this, 'setup_state'];
+	}
+
+	public static function defaults() {
+		return [
 			'force' => false
 		];
+	}
 
-		$this->args = wp_parse_args($args, $defaults);
-
+	public function setup_state() {
 		$episodes = Model\Podcast::get()->episodes();
 		$episode_ids = array_map(function($e) { return $e->id; }, $episodes);
 

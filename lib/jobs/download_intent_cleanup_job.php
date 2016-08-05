@@ -6,15 +6,8 @@ use Podlove\Model;
 class DownloadIntentCleanupJob {
 	use JobTrait;
 
-	public function __construct($args = []) {
-
-		$defaults = [
-			'intents_total' => self::get_max_intent_id(),
-			'intents_per_step' => 100000,
-			'delete_all' => true // delete all clean intents before starting
-		];
-
-		$this->args = wp_parse_args($args, $defaults);
+	public function setup() {
+		
 		$this->hooks['finished'] = [__CLASS__, 'purge_cache'];
 
 		if ($this->args['delete_all']) {
@@ -25,6 +18,14 @@ class DownloadIntentCleanupJob {
 		}
 
 		$this->status['progress'] = $this->state['previous_id'];
+	}
+
+	public static function defaults() {
+		return [
+			'intents_total' => self::get_max_intent_id(),
+			'intents_per_step' => 100000,
+			'delete_all' => true // delete all clean intents before starting
+		];
 	}
 
 	public static function get_max_intent_id() {

@@ -207,3 +207,4 @@ new \Podlove\Settings\Tools\UserAgentRefresh;
 new \Podlove\Settings\Tools\DownloadIntentCleaner;
 
 \Podlove\Jobs\CronJobRunner::init();
+\Podlove\Jobs\JobCleaner::init();

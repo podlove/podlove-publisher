@@ -4,17 +4,16 @@ namespace Podlove\Jobs;
 class CountingJob {
 	use JobTrait;
 
-	public function __construct($args = []) {
-		// maybe separate func so that argument parsing can be done in trait?
-		$defaults = [
+	public function setup() {
+		$this->state = $this->args['from'];
+	}
+
+	public static function defaults() {
+		return [
 			'from'     => 0,
 			'to'       => 100,
 			'stepsize' => 1
 		];
-
-		$this->args = wp_parse_args($args, $defaults);
-
-		$this->state = $this->args['from'];
 	}
 
 	public function get_total_steps() {
