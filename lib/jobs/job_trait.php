@@ -52,17 +52,17 @@ trait JobTrait {
 		if (!is_array($this->status))
 			$this->status = [];
 		
-		$this->status = array_merge([
-			'total' => $this->get_total_steps(),
-			'progress' => 0,
-			'active_run_time' => 0.0
-		], $this->status);
-
 		$this->generate_job_id();
 
 		if (isset($this->hooks['init'])) {
 			call_user_func($this->hooks['init']);
 		}
+		
+		$this->status = array_merge([
+			'total' => $this->get_total_steps(),
+			'progress' => 0,
+			'active_run_time' => 0.0
+		], $this->status);
 
 		$this->save_status();
 

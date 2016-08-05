@@ -2,6 +2,7 @@
 namespace Podlove\Analytics;
 
 use \Podlove\Model;
+use \Podlove\Jobs\CronJobRunner;
 
 class DownloadTotalsCalculator {
 
@@ -17,11 +18,7 @@ class DownloadTotalsCalculator {
 	}
 
 	public static function calc_download_totals() {
-		foreach (Model\Podcast::get()->episodes() as $episode) {
-			$total = Model\DownloadIntentClean::total_by_episode_id($episode->id);
-			if ($total) {
-				update_post_meta($episode->post_id, '_podlove_downloads_total', $total);
-			}
-		}
+		$job = CronJobRunner::create_job('\Podlove\Jobs\DownloadTotalsAggregatorJob');
+		CronJobRunner::run($job);
 	}
 }
