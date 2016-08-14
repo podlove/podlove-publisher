@@ -139,7 +139,7 @@ class Assistant {
 						</a>
 					</span>.
 					<br>
-					There's also <a href="http://podlove.github.com/publisher/migration/" target="_blank">documentation</a> if you'd like to get into details.
+					There's also <a href="http://docs.podlove.org/podlove-publisher/guides/podcast-migration.html" target="_blank">documentation</a> if you'd like to get into details.
 				</p>
 			</h2>
 

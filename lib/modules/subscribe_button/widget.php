@@ -29,6 +29,10 @@ class Widget extends \WP_Widget {
 		if (!empty($instance['title']))
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 
+		if ($instance['autowidth']) {
+			$instance['width'] = 'auto';
+		}
+
 		echo $this->button($instance);
 
 		if (!empty($instance['infotext']))
@@ -46,7 +50,7 @@ class Widget extends \WP_Widget {
 		$button    = isset( $instance[ 'button' ] )    ? $instance[ 'button' ]    : '';
 		$size      = isset( $instance[ 'size' ] )      ? $instance[ 'size' ]      : 'big';
 		$style     = isset( $instance[ 'style' ] )     ? $instance[ 'style' ]     : 'filled';
-		$format    = isset( $instance[ 'format' ] )    ? $instance[ 'format' ]    : 'rectangle';
+		$format    = isset( $instance[ 'format' ] )    ? $instance[ 'format' ]    : 'cover';
 		$autowidth = isset( $instance[ 'autowidth' ] ) ? $instance[ 'autowidth' ] : true;
 		$infotext  = isset( $instance[ 'infotext' ] )  ? $instance[ 'infotext' ]  : '';
 		$color     = isset( $instance[ 'color' ] )     ? $instance[ 'color' ]     : '#75ad91';

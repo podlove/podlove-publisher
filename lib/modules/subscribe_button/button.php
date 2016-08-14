@@ -17,8 +17,8 @@ class Button {
 
 	private $defaults = [
 		'size'     => 'big',
-		'format'   => 'rectangle',
-		'width'    => 'auto',
+		'format'   => 'cover',
+		'width'    => '',
 		'style'    => 'filled',
 		'language' => 'en',
 		'color'    => '#75ad91',
@@ -60,6 +60,16 @@ class Button {
 			'feeds'    => $this->feeds()
 		];
 
+		// allow args to override data
+		$fields = ['title', 'subtitle', 'description', 'cover'];
+		foreach ($fields as $field) {
+			if (isset($this->args[$field]) && $this->args[$field]) {
+				$this->args['data'][$field] = $this->args[$field];
+			}
+		}
+
+		// @todo: special treatment for feeds
+
 		return $this->html();
 	}
 
@@ -100,7 +110,7 @@ class Button {
 		if ($this->args['buttonid'])
 			$script_button_tag->setAttribute('data-buttonid', $this->args['buttonid']);
 
-		if ($this->args['hide'] && in_array($args['hide'], [1, '1', true, 'true', 'on']))
+		if ($this->args['hide'] && in_array($this->args['hide'], [1, '1', true, 'true', 'on']))
 			$script_button_tag->setAttribute('data-hide', true);
 
 		// ensure there is a closing script tag

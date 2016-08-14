@@ -89,8 +89,10 @@ class Geo_Ip {
 
 		unlink($tmpFile);
 
-		if (!self::is_db_valid())
+		if (!self::is_db_valid()) {
+			wp_delete_file($outFile);
 			die(sprintf('Checksum does not match (%s).', $outFile));
+		}
 	}
 
 }

@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
 Requires at least: 3.5
-Tested up to: 4.5
+Tested up to: 4.5.3
 Stable tag: trunk
 License: MIT
 
@@ -144,11 +144,40 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * hide "info" entries by default
   * improve readability of data sections
 
+= 2.3.13 =
+
+* fix: sort contributor names while ignoring uppercase/lowercase
+* fix: when exporting a podcast, don't call `htmlspecialchars` on arrays because it breaks things
+* fix: image caching issue (invisible characters)
+* fix: broken geolocation database does not prevent playing episodes
+* fix `{{ episode.duration.totalMilliseconds }}`
+* fix: `{{ episode.duration }}` returns "00:00" if no duration is set
+* fix: contributor avatar URLs with umlauts
+* enhancement: check for geolocation database validity in tracking debug section
+* enhancement: add current theme and feed URLs to system report
+* Podlove Subscribe Buttons: parameters in templates and shortcodes can override Publisher provided fields: 'title', 'subtitle', 'description', 'cover'
+
+= 2.3.12 =
+
+Design Update for Podlove Subscribe Button
+
+* The button now follows a flat design and has more options for customizability.
+* See [docs.podlove.org/podlove-subscribe-button](http://docs.podlove.org/podlove-subscribe-button/) for a range of possible display variants.
+* Widget module has been updates to support a color picker and settings for size, format and style. When using the "WordPress Customizer" you get a live preview of the button.
+* If you are using the Template API, have a look at the updated [`podcast.subscribeButton` parameters](http://docs.podlove.org/podlove-publisher/reference/template-tags.html#podcast).
+
 = 2.3.11 =
 
 * fix feed issue that appeared with WordPress 4.5 (wrong content type)
 
 = 2.3.10 =
+* when activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup
+* fix tracking export: keep httprange
+* fix compatibility with other plugins relying on Spyc library
+* improve tracking: ignore 1-byte requests
+* update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
+* remove `<itunes:keywords>` from feed (it disappeared from the specification)
+* update recommended image size to 3000x3000 pixel
 
 * fix Podlove Subscribe Button iTunes link
 * add new "getting started" video to readme
