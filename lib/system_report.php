@@ -165,12 +165,13 @@ class SystemReport {
 					$file_type = $asset->file_type();
 					$assets[] = array(
 						'extension' => $file_type->extension,
-						'mime_type' => $file_type->mime_type
+						'mime_type' => $file_type->mime_type,
+						'feed' => Model\Feed::find_one_by_episode_asset_id($asset->id)
 					);
 				}
 
-				return "\n\t" . implode("\n\t", array_map(function($asset) {
-					return str_pad($asset['extension'], 7) . $asset['mime_type'];
+				return "\n&nbsp; - " . implode("\n&nbsp; - ", array_map(function($asset) {
+					return str_pad($asset['extension'], 7) . str_pad($asset['mime_type'], 11) . ($asset['feed'] ? $asset['feed']->get_subscribe_url() : 'no feed');
 				}, $assets));
 			} )
 		);
