@@ -17,7 +17,11 @@ class SystemReport {
 			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() {
 				return phpversion();
 			} ),
-			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
+			'wp_version' => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
+			'theme'      => array( 'title' => 'WordPress Theme',   'callback' => function() {
+				$theme = wp_get_theme();
+				return $theme->get('Name') . ' v' . $theme->get('Version'); }
+			),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
 			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
 

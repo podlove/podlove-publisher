@@ -120,6 +120,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: broken geolocation database does not prevent playing episodes
 * fix `{{ episode.duration.totalMilliseconds }}`
 * enhancement: check for geolocation database validity in tracking debug section
+* enhancement: add current theme to system report
 * Podlove Subscribe Buttons: parameters in templates and shortcodes can override Publisher provided fields: 'title', 'subtitle', 'description', 'cover'
 
 = 2.3.12 =
