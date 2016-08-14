@@ -110,6 +110,8 @@ trait JobTrait {
 				'class'      => get_called_class(),
 				'created_at' => time(),
 			];
+			
+			$this->created_at = $job['created_at'];
 		}
 
 		$job = array_merge($job, [
@@ -117,6 +119,8 @@ trait JobTrait {
 			'state'      => $this->state,
 			'updated_at' => time()
 		]);
+
+		$this->updated_at = $job['updated_at'];
 
 		Jobs::save($this->id, $job);
 	}
