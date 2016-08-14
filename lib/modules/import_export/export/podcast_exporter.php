@@ -99,7 +99,9 @@ class PodcastExporter {
 						// `addChild` does not escape '&', so we need to escape
 						// it *before* serializing, otherwise deserialization will
 						// break due to string length mismatch.
-						$value[$k] = htmlspecialchars($v);
+						if (is_string($v)) {
+							$value[$k] = htmlspecialchars($v);
+						}
 					}
 					$xml_group->addChild("xmlns:wpe:$option_name", serialize($value));
 				} else {

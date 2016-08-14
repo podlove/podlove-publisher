@@ -17,7 +17,11 @@ class SystemReport {
 			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() {
 				return phpversion();
 			} ),
-			'wp_version'  => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
+			'wp_version' => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
+			'theme'      => array( 'title' => 'WordPress Theme',   'callback' => function() {
+				$theme = wp_get_theme();
+				return $theme->get('Name') . ' v' . $theme->get('Version'); }
+			),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
 			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
 
@@ -161,12 +165,13 @@ class SystemReport {
 					$file_type = $asset->file_type();
 					$assets[] = array(
 						'extension' => $file_type->extension,
-						'mime_type' => $file_type->mime_type
+						'mime_type' => $file_type->mime_type,
+						'feed' => Model\Feed::find_one_by_episode_asset_id($asset->id)
 					);
 				}
 
-				return "\n\t" . implode("\n\t", array_map(function($asset) {
-					return str_pad($asset['extension'], 7) . $asset['mime_type'];
+				return "\n&nbsp; - " . implode("\n&nbsp; - ", array_map(function($asset) {
+					return str_pad($asset['extension'], 7) . str_pad($asset['mime_type'], 11) . ($asset['feed'] ? $asset['feed']->get_subscribe_url() : 'no feed');
 				}, $assets));
 			} )
 		);

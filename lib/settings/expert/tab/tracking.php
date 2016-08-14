@@ -3,6 +3,7 @@ namespace Podlove\Settings\Expert\Tab;
 use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
 use \Podlove\Model;
+use \Podlove\Geo_Ip;
 
 class Tracking extends Tab {
 
@@ -213,6 +214,13 @@ class Tracking extends Tab {
 								✘ <strong>Protocol chain is inconsistent</strong>: Your site uses SSL but the files are not served with SSL.
 								Many clients will not allow to download episodes. To fix this, serve files via SSL or deactivate tracking.
 							<?php endif; ?>
+						</li>
+						<li>
+							<?php if (Geo_Ip::is_db_valid()): ?>
+								✔ Geolocation database valid
+							<?php else: ?>
+								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo \Podlove\Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above.
+							<?php endif ?>
 						</li>
 					<!-- todo: check regularly and spit user in his face if it blows up -->
 					</ul>

@@ -23,6 +23,11 @@ class Duration extends Wrapper {
 	// /////////
 
 	public function __toString() {
+
+		if (!$this->totalMilliseconds()) {
+			return '00:00';
+		}
+
 		return $this->hours()
 		     . ":" . self::lfill( $this->minutes(), 2, 0 )
 		     . ":" . self::lfill( $this->seconds(), 2, 0 );
@@ -95,7 +100,7 @@ class Duration extends Wrapper {
 	 * @accessor
 	 */
 	public function totalMilliseconds() {
-		return \Podlove\NormalPlayTime\Parser::parse( $this->duration, 'ms' );
+		return \Podlove\NormalPlayTime\Parser::parse( $this->episode->duration, 'ms' );
 	}
 
 }
