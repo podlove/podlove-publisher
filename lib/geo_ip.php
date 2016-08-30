@@ -45,6 +45,30 @@ class Geo_Ip {
 		return $schedules;
 	}
 
+	/**
+	 * Is tracking enabled?
+	 * 
+	 * @hook podlove_geo_tracking_is_enabled 
+	 * 
+	 * @return boolean
+	 */
+	public static function is_enabled()
+	{
+		$enabled = get_option('podlove_geo_tracking', 'on') === 'on';
+
+		return apply_filters('podlove_geo_tracking_is_enabled', $enabled);
+	}
+
+	public static function disable_tracking()
+	{
+		update_option('podlove_geo_tracking', 'off');
+	}
+
+	public static function enable_tracking()
+	{
+		update_option('podlove_geo_tracking', 'on');
+	}
+
 	public static function is_db_valid($file_to_verify = null)
 	{
 		if ($file_to_verify === null) {
@@ -84,11 +108,15 @@ class Geo_Ip {
 		$zh = gzopen($tmpFile, 'rb');
 		$h  = fopen($tmpFilePath, 'wb');
 
-		if (!$zh)
-			die('Downloaded file could not be opened for reading.');
+		if (!$zh) {
+			error_log(print_r('Downloaded file could not be opened for reading.', true));
+			exit;
+		}
 
-		if (!$h)
-			die(sprintf('Database could not be written (%s).', $tmpFilePath));
+		if (!$h) {
+			error_log(print_r(sprintf('Database could not be written (%s).', $tmpFilePath), true));
+			exit;
+		}
 
 		while(!gzeof($zh))
 		    fwrite($h, gzread($zh, 4096));
@@ -100,9 +128,13 @@ class Geo_Ip {
 
 		if (self::is_db_valid($tmpFilePath)) {
 			@rename($tmpFilePath, self::get_upload_file_path());
+			self::enable_tracking();
 		} else {
+			if (!self::is_db_valid()) {
+				self::disable_tracking();
+			}
 			wp_delete_file($tmpFilePath);
-			die(sprintf('Checksum does not match (%s).', $tmpFilePath));
+			error_log(print_r(sprintf('Checksum does not match (%s).', $tmpFilePath), true));
 		}
 	}
 

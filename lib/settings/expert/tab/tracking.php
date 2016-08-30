@@ -124,6 +124,9 @@ class Tracking extends Tab {
 					</p>
 				<?php endif; ?>
 				<p>
+					<?php echo sprintf(__('Geo-Tracking is <em>%s</em>.', 'podlove-podcasting-plugin-for-wordpress'), Geo_ip::is_enabled() ? __('active', 'podlove-podcasting-plugin-for-wordpress') : __('inactive', 'podlove-podcasting-plugin-for-wordpress')); ?>
+				</p>
+				<p>
 					<!-- This snippet must be included, as stated here: http://dev.maxmind.com/geoip/geoip2/geolite2/ -->
 					<em>
 						This product includes GeoLite2 data created by MaxMind, available from
@@ -218,11 +221,12 @@ class Tracking extends Tab {
 						<li>
 							<?php if (Geo_Ip::is_db_valid()): ?>
 								✔ Geolocation database valid
+								<?php Geo_Ip::enable_tracking(); ?>
 							<?php else: ?>
-								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo \Podlove\Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: <a href="<?php echo esc_url(\Podlove\Geo_Ip::SOURCE_URL); ?>" download><?php echo \Podlove\Geo_Ip::SOURCE_URL; ?></a>
+								<?php Geo_Ip::disable_tracking(); ?>
+								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: <a href="<?php echo esc_url(Geo_Ip::SOURCE_URL); ?>" download><?php echo Geo_Ip::SOURCE_URL; ?></a>
 							<?php endif ?>
 						</li>
-					<!-- todo: check regularly and spit user in his face if it blows up -->
 					</ul>
 				</p>
 				<?php
