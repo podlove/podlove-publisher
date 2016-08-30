@@ -112,6 +112,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.14 =
+
+* fix: improved download logic for `geoip.mmdb` should prevent faulty downloads
+* enhancement: error message for faulty `geoip.mmdb` includes instructions on how to manually fix the file
+
 = 2.3.13 =
 
 * fix: sort contributor names while ignoring uppercase/lowercase

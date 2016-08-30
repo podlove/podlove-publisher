@@ -45,10 +45,14 @@ class Geo_Ip {
 		return $schedules;
 	}
 
-	public static function is_db_valid()
+	public static function is_db_valid($file_to_verify = null)
 	{
+		if ($file_to_verify === null) {
+			$file_to_verify = self::get_upload_file_path();
+		}
+
 		$original_md5 = wp_remote_fopen(self::SOURCE_MD5_URL);
-		$our_md5      = md5_file(self::get_upload_file_path());
+		$our_md5      = md5_file($file_to_verify);
 
 		return $original_md5 === $our_md5;
 	}
@@ -59,10 +63,15 @@ class Geo_Ip {
 		return $upload_dir['basedir'] . DIRECTORY_SEPARATOR . self::GEO_FILENAME;
 	}
 
+	public static function get_tmp_file_path()
+	{
+		return self::get_upload_file_path() . '.tmp';
+	}
+
 	public static function update_database()
 	{
 		set_time_limit(0);
-		$outFile = self::get_upload_file_path();
+		$tmpFilePath = self::get_tmp_file_path();
 
 		// for download_url()
 		require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -73,13 +82,13 @@ class Geo_Ip {
 			die($tmpFile->get_error_message());
 
 		$zh = gzopen($tmpFile, 'rb');
-		$h  = fopen($outFile, 'wb');
+		$h  = fopen($tmpFilePath, 'wb');
 
 		if (!$zh)
 			die('Downloaded file could not be opened for reading.');
 
 		if (!$h)
-			die(sprintf('Database could not be written (%s).', $outFile));
+			die(sprintf('Database could not be written (%s).', $tmpFilePath));
 
 		while(!gzeof($zh))
 		    fwrite($h, gzread($zh, 4096));
@@ -89,9 +98,11 @@ class Geo_Ip {
 
 		unlink($tmpFile);
 
-		if (!self::is_db_valid()) {
-			wp_delete_file($outFile);
-			die(sprintf('Checksum does not match (%s).', $outFile));
+		if (self::is_db_valid($tmpFilePath)) {
+			@rename($tmpFilePath, self::get_upload_file_path());
+		} else {
+			wp_delete_file($tmpFilePath);
+			die(sprintf('Checksum does not match (%s).', $tmpFilePath));
 		}
 	}
 

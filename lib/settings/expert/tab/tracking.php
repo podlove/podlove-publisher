@@ -219,7 +219,7 @@ class Tracking extends Tab {
 							<?php if (Geo_Ip::is_db_valid()): ?>
 								✔ Geolocation database valid
 							<?php else: ?>
-								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo \Podlove\Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above.
+								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo \Podlove\Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: <a href="<?php echo esc_url(\Podlove\Geo_Ip::SOURCE_URL); ?>" download><?php echo \Podlove\Geo_Ip::SOURCE_URL; ?></a>
 							<?php endif ?>
 						</li>
 					<!-- todo: check regularly and spit user in his face if it blows up -->
