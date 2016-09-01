@@ -114,7 +114,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.4.0 =
 
-* when activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup
+* When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
+* Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
 * fix tracking export: keep httprange
 * fix compatibility with other plugins relying on Spyc library
 * fix `{{ episode.duration.totalMilliseconds }}`

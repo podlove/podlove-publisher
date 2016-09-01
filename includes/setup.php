@@ -4,6 +4,7 @@
  */
 
 use Podlove\Model;
+use Podlove\Model\AssetAssignment;
 
 function podlove_setup_database_tables() {
 	Model\Feed::build();
@@ -161,4 +162,14 @@ function podlove_setup_default_media() {
 	$feed->limit_items = Model\Feed::ITEMS_WP_LIMIT;
 	$feed->embed_content_encoded = 1;
 	$feed->save();
+}
+
+function podlove_setup_default_asset_assignments() {
+	$assignment = AssetAssignment::get_instance();
+
+	if (!$assignment->image) {
+		$assignment->image = 'post-thumbnail';
+		$assignment->save();
+	}
+
 }
