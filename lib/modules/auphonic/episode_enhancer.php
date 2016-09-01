@@ -53,6 +53,7 @@ class EpisodeEnhancer {
 	public function auphonic_episodes_form() {
 		$asset_assignments = Model\AssetAssignment::get_instance();
 		$podcast = Model\Podcast::get();
+		$episode = Model\Episode::find_one_by_property('post_id', get_the_ID());
 		?>
 
 		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta( get_the_ID(), '_auphonic_production', true ) ?>" />
@@ -64,6 +65,7 @@ class EpisodeEnhancer {
 			data-module-url="<?php echo $this->module->get_module_url() ?>"
 			data-site-url="<?php echo get_home_url(); ?>"
 			data-podcast-image="<?php echo $podcast->cover_art()->url() ?>"
+			data-episode-image="<?php echo $episode->cover_art() ? $episode->cover_art()->url() : '' ?>"
 			/>
 
 		<div id="auphonic-box">

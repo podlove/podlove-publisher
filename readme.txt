@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.3.14 =
 
+* fix: send episode cover to Auphonic if available
 * fix: improved download logic for `geoip.mmdb` should prevent faulty downloads
 * enhancement: error message for faulty `geoip.mmdb` includes instructions on how to manually fix the file
 * enhancement: automatically switch off geo tracking when no valid geo database is available
