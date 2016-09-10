@@ -116,6 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
 * Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
+* add fyyd.de module
 * fix tracking export: keep httprange
 * fix compatibility with other plugins relying on Spyc library
 * fix `{{ episode.duration.totalMilliseconds }}`
