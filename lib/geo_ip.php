@@ -69,6 +69,9 @@ class Geo_Ip {
 		update_option('podlove_geo_tracking', 'on');
 	}
 
+	// @todo it technically verifies that the files is valid AND up-to-date,
+	// which may result in false-negatives. But that is fine with me, better 
+	// than false positives.
 	public static function is_db_valid($file_to_verify = null)
 	{
 		if ($file_to_verify === null) {
@@ -95,6 +98,12 @@ class Geo_Ip {
 	public static function update_database()
 	{
 		set_time_limit(0);
+
+		// skip if database has not changed
+		if (self::is_db_valid()) {
+			return;
+		}
+
 		$tmpFilePath = self::get_tmp_file_path();
 
 		// for download_url()
