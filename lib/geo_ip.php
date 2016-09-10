@@ -45,10 +45,41 @@ class Geo_Ip {
 		return $schedules;
 	}
 
-	public static function is_db_valid()
+	/**
+	 * Is tracking enabled?
+	 * 
+	 * @hook podlove_geo_tracking_is_enabled 
+	 * 
+	 * @return boolean
+	 */
+	public static function is_enabled()
 	{
+		$enabled = get_option('podlove_geo_tracking', 'on') === 'on';
+
+		return apply_filters('podlove_geo_tracking_is_enabled', $enabled);
+	}
+
+	public static function disable_tracking()
+	{
+		update_option('podlove_geo_tracking', 'off');
+	}
+
+	public static function enable_tracking()
+	{
+		update_option('podlove_geo_tracking', 'on');
+	}
+
+	// @todo it technically verifies that the files is valid AND up-to-date,
+	// which may result in false-negatives. But that is fine with me, better 
+	// than false positives.
+	public static function is_db_valid($file_to_verify = null)
+	{
+		if ($file_to_verify === null) {
+			$file_to_verify = self::get_upload_file_path();
+		}
+
 		$original_md5 = wp_remote_fopen(self::SOURCE_MD5_URL);
-		$our_md5      = md5_file(self::get_upload_file_path());
+		$our_md5      = md5_file($file_to_verify);
 
 		return $original_md5 === $our_md5;
 	}
@@ -59,10 +90,21 @@ class Geo_Ip {
 		return $upload_dir['basedir'] . DIRECTORY_SEPARATOR . self::GEO_FILENAME;
 	}
 
+	public static function get_tmp_file_path()
+	{
+		return self::get_upload_file_path() . '.tmp';
+	}
+
 	public static function update_database()
 	{
 		set_time_limit(0);
-		$outFile = self::get_upload_file_path();
+
+		// skip if database has not changed
+		if (self::is_db_valid()) {
+			return;
+		}
+
+		$tmpFilePath = self::get_tmp_file_path();
 
 		// for download_url()
 		require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -73,13 +115,17 @@ class Geo_Ip {
 			die($tmpFile->get_error_message());
 
 		$zh = gzopen($tmpFile, 'rb');
-		$h  = fopen($outFile, 'wb');
+		$h  = fopen($tmpFilePath, 'wb');
 
-		if (!$zh)
-			die('Downloaded file could not be opened for reading.');
+		if (!$zh) {
+			error_log(print_r('Downloaded file could not be opened for reading.', true));
+			exit;
+		}
 
-		if (!$h)
-			die(sprintf('Database could not be written (%s).', $outFile));
+		if (!$h) {
+			error_log(print_r(sprintf('Database could not be written (%s).', $tmpFilePath), true));
+			exit;
+		}
 
 		while(!gzeof($zh))
 		    fwrite($h, gzread($zh, 4096));
@@ -89,9 +135,15 @@ class Geo_Ip {
 
 		unlink($tmpFile);
 
-		if (!self::is_db_valid()) {
-			wp_delete_file($outFile);
-			die(sprintf('Checksum does not match (%s).', $outFile));
+		if (self::is_db_valid($tmpFilePath)) {
+			@rename($tmpFilePath, self::get_upload_file_path());
+			self::enable_tracking();
+		} else {
+			if (!self::is_db_valid()) {
+				self::disable_tracking();
+			}
+			wp_delete_file($tmpFilePath);
+			error_log(print_r(sprintf('Checksum does not match (%s).', $tmpFilePath), true));
 		}
 	}
 

@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, blubrry, podpress, powerpress, feed, audio, video, player, mp3, m4a, ogg, opus, player, webplayer, mediaplayer, subscribe, iTunes, media, radio, rss, show
 Requires at least: 3.5
-Tested up to: 4.5.3
+Tested up to: 4.6.1
 Stable tag: trunk
 License: MIT
 
@@ -144,6 +144,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * add filtering for different severities
   * hide "info" entries by default
   * improve readability of data sections
+
+= 2.3.14 =
+
+* fix: send episode cover to Auphonic if available
+* fix: improved download logic for `geoip.mmdb` should prevent faulty downloads
+* enhancement: error message for faulty `geoip.mmdb` includes instructions on how to manually fix the file
+* enhancement: automatically switch off geo tracking when no valid geo database is available
+* enhancement: clarify episode image asset options
 
 = 2.3.13 =
 

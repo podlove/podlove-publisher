@@ -1,6 +1,7 @@
 <?php
 use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 use Podlove\Model;
+use Podlove\Geo_Ip;
 
 add_action( 'wp', 'podlove_handle_media_file_download' );
 add_action( 'podlove_download_file', 'podlove_handle_media_file_tracking' );
@@ -65,7 +66,9 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 		$intent->request_id = sha1($ip_string . $ua_string);
 	}
 	
-	$intent = $intent->add_geo_data($ip_string);
+	if (Geo_Ip::is_enabled()) {
+		$intent = $intent->add_geo_data($ip_string);
+	}
 
 	$intent->save();
 }
