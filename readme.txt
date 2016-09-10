@@ -146,6 +146,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * hide "info" entries by default
   * improve readability of data sections
 
+= 2.3.15 =
+
+* ensure 3rd party PHP dependencies do not require PHP 5.5 or greater
+
 = 2.3.14 =
 
 * fix: send episode cover to Auphonic if available
