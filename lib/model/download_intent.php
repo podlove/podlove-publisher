@@ -13,15 +13,6 @@ class DownloadIntent extends Base {
 	public function add_geo_data($ip_string) {
 
 		$geoip_file = \Podlove\Geo_Ip::get_upload_file_path();
-		$size = @filesize($geoip_file);
-
-		// Extremely naive way to check for incomplete file (should be 76M).
-		// Why is this necessary? 
-		// Because the GeoIp2\Database\Reader runs forever if it cannot find the meta information in the file.
-		// @see https://github.com/maxmind/MaxMind-DB-Reader-php/issues/42
-		if ($size < 65000000) {
-			return $this;
-		}
 
 		try {
 			$reader = new \GeoIp2\Database\Reader($geoip_file);
