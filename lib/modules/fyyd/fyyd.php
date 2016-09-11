@@ -32,6 +32,3 @@ class fyyd extends \Podlove\Modules\Base {
 	}
 
 }
-
-?>
-
