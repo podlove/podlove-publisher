@@ -30,7 +30,7 @@ class AssetAssignment {
 	}
 
 	final private function __clone() { }
-	
+
 	public function __set( $name, $value ) {
 		if ( $this->has_property( $name ) ) {
 			$this->set_property( $name, $value );
@@ -38,11 +38,11 @@ class AssetAssignment {
 			$this->$name = $value;
 		}
 	}
-	
+
 	private function set_property( $name, $value ) {
 		$this->data[ $name ] = $value;
 	}
-	
+
 	public function __get( $name ) {
 		if ( $this->has_property( $name ) ) {
 			return $this->get_property( $name );
@@ -50,7 +50,7 @@ class AssetAssignment {
 			return $this->$name;
 		}
 	}
-	
+
 	private function get_property( $name ) {
 		if ( isset( $this->data[ $name ] ) ) {
 			return $this->data[ $name ];
@@ -61,30 +61,30 @@ class AssetAssignment {
 
 	/**
 	 * Return a list of property dictionaries.
-	 * 
+	 *
 	 * @return array property list
 	 */
 	private function properties() {
-		
+
 		if ( ! isset( self::$properties ) )
 			self::$properties = [];
-		
+
 		return self::$properties;
 	}
-	
+
 	/**
 	 * Does the given property exist?
-	 * 
+	 *
 	 * @param string $name name of the property to test
 	 * @return bool True if the property exists, else false.
 	 */
 	public function has_property( $name ) {
 		return in_array( $name, $this->property_names() );
 	}
-	
+
 	/**
 	 * Return a list of property names.
-	 * 
+	 *
 	 * @return array property names
 	 */
 	public function property_names() {
@@ -93,7 +93,7 @@ class AssetAssignment {
 
 	/**
 	 * Define a property with by name.
-	 * 
+	 *
 	 * @param string $name Name of the property / column
 	 */
 	public static function property( $name ) {
@@ -120,20 +120,19 @@ class AssetAssignment {
 
 	/**
 	 * Generate a human readable title.
-	 * 
+	 *
 	 * Return name and, if available, the subtitle. Separated by a dash.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function full_title() {
 		$t = $this->title;
-		
+
 		if ( $this->subtitle )
 			$t = $t . ' - ' . $this->subtitle;
-		
+
 		return $t;
 	}
 }
 
 AssetAssignment::property( 'image' );
-AssetAssignment::property( 'chapters' );
