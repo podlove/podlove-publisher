@@ -114,6 +114,24 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.4.0 =
 
+**Background Jobs System**
+
+* _needs description_
+
+**New "Tools" Menu**
+
+* A new maintenance section gathers tools like the "Repair" button in one place
+* There is a new section for tracking related maintenance
+* Import & Export is now in the "Tools" menu
+
+**Improved Logging Display**
+
+* add filtering for different severities
+* hide "info" entries by default
+* improve readability of data sections
+
+**Other**
+
 * When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
 * Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
 * add fyyd.de module
@@ -135,16 +153,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * remove log entries for beginning and ending asset validations
 * move feed protection into separate module
 * move debug log from Dashboard to Support page
-
-* new "Tools" menu
-    * A new maintenance section gathers tools like the "Repair" button in one place
-    * There is a new section for tracking related maintenance
-    * Import & Export is now in the "Tools" menu
-
-* improve logging display
-  * add filtering for different severities
-  * hide "info" entries by default
-  * improve readability of data sections
 
 = 2.3.15 =
 
