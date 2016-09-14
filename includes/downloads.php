@@ -92,14 +92,14 @@ function podlove_handle_media_file_download() {
 	$media_file    = Model\MediaFile::find_by_id( $media_file_id );
 
 	if ( ! $media_file ) {
-		status_header( 404 );
+		status_header( 404, 'Media File not found' );
 		exit;
 	}
 
 	$episode_asset = $media_file->episode_asset();
 
 	if ( ! $episode_asset || ! $episode_asset->downloadable ) {
-		status_header( 404 );
+		status_header( 404, 'Asset not found' );
 		exit;
 	}
 
