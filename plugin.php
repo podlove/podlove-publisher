@@ -199,7 +199,6 @@ require_once \Podlove\PLUGIN_DIR . 'includes/system_report.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/templates.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/theme_helper.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/trash.php';
-require_once \Podlove\PLUGIN_DIR . 'includes/user_agent_refresh.php';
 
 require_once \Podlove\PLUGIN_DIR . 'lib/tools.php';
 
@@ -207,3 +206,6 @@ require_once \Podlove\PLUGIN_DIR . 'lib/tools.php';
 new \Podlove\AJAX\Ajax(); 
 new \Podlove\Settings\Tools\UserAgentRefresh;
 new \Podlove\Settings\Tools\DownloadIntentCleaner;
+
+\Podlove\Jobs\CronJobRunner::init();
+\Podlove\Jobs\JobCleaner::init();

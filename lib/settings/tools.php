@@ -22,6 +22,10 @@ class Tools {
 
 		add_action( 'admin_init', array( $this, 'process_actions' ) );
 
+		add_action('admin_print_styles', function() {
+			wp_enqueue_script('podlove_admin_jobs');
+		}, 20);
+
 		\Podlove\add_tools_section('general-maintenance', __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'));
 		\Podlove\add_tools_section('tracking-analytics', __('Tracking & Analytics', 'podlove-podcasting-plugin-for-wordpress'));
 	
@@ -49,11 +53,15 @@ class Tools {
 		 */
 		\Podlove\add_tools_field('ta-recals-agents', __('Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress'), function() {
 			?>
-			<button id="recalculate_useragents" class="button progressbar-button">
-				<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</button>
 
-			<div id="progressbar"><div class="progress-label"></div></div>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-UserAgentRefreshJob" 
+				data-button-text="<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\UserAgentRefreshJob') ?>"
+				>
+				
+			</div>
 
 			<div class="clear"></div>
 
@@ -65,25 +73,35 @@ class Tools {
 
 		\Podlove\add_tools_field('ta-recalc-analytics', __('Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress'), function() {
 			?>
-			<button id="cleanup_download_intents" class="button progressbar-button">
-				<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</button>
 
-			<div id="progressbar-cleanup"><div class="progress-label"></div></div>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-DownloadIntentCleanupJob" 
+				data-button-text="<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\DownloadIntentCleanupJob') ?>"
+				>
+				
+			</div>
 
 			<div class="clear"></div>
 
 			<p class="description">
-				<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is only useful if you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is useful if you don\'t get updated analytics or you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
 
 		\Podlove\add_tools_field('ta-recalc-downloads-table', __('Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress'), function() {
 			?>
-			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=recalculate_downloads_table') ?>" class="button">
-				<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-			</a>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
+				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
+				data-button-text="<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\DownloadTimedAggregatorJob') ?>"
+				>
+				
+			</div>
 
 			<p class="description">
 				<?php echo __('Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
@@ -98,9 +116,6 @@ class Tools {
 			return;
 
 		switch (filter_input(INPUT_GET, 'action')) {
-			case 'recalculate_downloads_table':
-				self::recalculate_downloads_table();
-				break;
 			case 'clear_caches':
 				\Podlove\Repair::clear_podlove_cache();
 				\Podlove\Repair::clear_podlove_image_cache();
@@ -113,17 +128,11 @@ class Tools {
 
 	}
 
-	public static function recalculate_downloads_table() {
-		\Podlove\Analytics\DownloadSumsCalculator::calc_download_sums(true);
-	}
-
 	public function page() {
 
 		wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL . '/js/admin/tools/useragent.js', ['jquery'], \Podlove\get_plugin_header('Version'));
-		wp_enqueue_script('podlove-tools-download_intent_recalculator', \Podlove\PLUGIN_URL . '/js/admin/tools/download_intent_recalculator.js', ['jquery'], \Podlove\get_plugin_header('Version'));
 
 		wp_enqueue_script('jquery-ui-progressbar');
-		wp_enqueue_script('podlove-tools-download_intent_recalculator');
 
 		?>
 
@@ -163,6 +172,13 @@ class Tools {
 	background-image: none;
 }
 
+.podlove-recent-job-info {
+    display: inline-block;
+    line-height: 28px;
+    padding-left: 8px;
+    color: #666;
+}
+
   </style>
 
 		<div class="wrap">
@@ -187,6 +203,7 @@ class Tools {
 
 					<table class="form-table">
 						<tbody>
+						<?php if (isset($fields[$section_id]) && is_array($fields[$section_id])): ?>
 						<?php foreach ($fields[$section_id] as $field_id => $field): ?>
 							<tr>
 								<th>
@@ -201,6 +218,7 @@ class Tools {
 								</td>
 							</tr>
 						<?php endforeach ?>
+						<?php endif ?>
 						</tbody>
 					</table>
 				</div>

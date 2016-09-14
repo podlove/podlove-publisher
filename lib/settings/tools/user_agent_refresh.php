@@ -3,6 +3,7 @@ namespace Podlove\Settings\Tools;
 
 use \Podlove\Model\UserAgent;
 
+// TODO: replace with job system
 class UserAgentRefresh {
 
 	public function __construct() {
@@ -16,7 +17,7 @@ class UserAgentRefresh {
 		if (!$offset)
 			$offset = 0;
 
-		podlove_refresh_user_agents($offset);
+		// podlove_refresh_user_agents($offset);
 
 		echo json_encode([
 			'offset' => $offset + 500,

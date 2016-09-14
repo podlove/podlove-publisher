@@ -2,16 +2,17 @@
 namespace Podlove\Model;
 
 use DeviceDetector\DeviceDetector;
+use \Podlove\Jobs\CronJobRunner;
 
 class UserAgent extends Base {
 	
 	/**
 	 * Fetch new data for all UAs
-	 * 
-	 * @deprecated use podlove_init_user_agent_refresh() instead
 	 */
 	public static function reparse_all() {
-		podlove_init_user_agent_refresh();
+		CronJobRunner::run(
+			CronJobRunner::create_job('\Podlove\Jobs\UserAgentRefreshJob')
+		);
 	}
 
 	/**

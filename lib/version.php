@@ -1095,7 +1095,7 @@ function run_migrations_for_version( $version ) {
 				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
 			}
 
-			podlove_init_user_agent_refresh();
+			// podlove_init_user_agent_refresh();
 
 			// manually trigger intent cron after user agents are parsed
 			// parameter to make sure WP does not skip it due to 10 minute rule
@@ -1166,13 +1166,13 @@ function run_migrations_for_version( $version ) {
 			update_option('podlove_flattr', $settings);
 		break;
 		case 106:
-			podlove_init_user_agent_refresh();
+			// podlove_init_user_agent_refresh();
 		break;
 		case 107:
 			// skipped
 		break;
 		case 108:
-			podlove_init_user_agent_refresh();
+			// podlove_init_user_agent_refresh();
 		break;
 		case 109:
 			\podlove_init_capabilities();

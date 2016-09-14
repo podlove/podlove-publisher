@@ -34,7 +34,9 @@ class Ajax {
 			'analytics-episode-average-downloads-per-hour',
 			'analytics-settings-tiles-update',
 			'episode-slug',
-			'admin-news'
+			'admin-news',
+			'job-create',
+			'job-get'
 		);
 
 		// kickoff generic ajax methods
@@ -45,6 +47,38 @@ class Ajax {
 		TemplateController::init();
 		FileController::init();
 
+	}
+
+	public function job_create() {
+		$job_name = filter_input(INPUT_POST, 'name');
+		$job_args = isset($_REQUEST['args']) && is_array($_REQUEST['args']) ? $_REQUEST['args'] : [];
+
+		// check class exists
+		if (!class_exists($job_name))
+			self::respond_with_json(['error' => 'job "' . $job_name . '" does not exist']);
+
+		// check that class is a job
+		if (!isset(class_uses($job_name)['Podlove\Jobs\JobTrait'])) {
+			self::respond_with_json(['error' => '"' . $job_name . '" is not a job']);
+		}
+
+		$job = \Podlove\Jobs\CronJobRunner::create_job($job_name, $job_args);
+		\Podlove\Jobs\CronJobRunner::run($job);
+
+		self::respond_with_json([
+			'job_id' => $job->get_job_id()
+		]);
+	}
+
+	public function job_get() {
+		$job_id = filter_input(INPUT_GET, 'job_id');
+
+		$job = \Podlove\Jobs\Jobs::load($job_id);
+
+		if (!$job)
+			self::respond_with_json(['error' => 'no job with id "' . $job_id . '"']);
+
+		self::respond_with_json($job->get_status());
 	}
 
 	public function admin_news() {
