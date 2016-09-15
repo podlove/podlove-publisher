@@ -292,9 +292,9 @@ abstract class Base
 		$sql = sprintf(
 			"UPDATE %s SET %s = '%s' WHERE id = %s",
 			static::table_name(),
-			$attribute,
-			$value,
-			$this->id
+			esc_sql($attribute),
+			esc_sql($value),
+			(int) $this->id
 		);
 
 		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
@@ -345,7 +345,7 @@ abstract class Base
 			$sql = 'UPDATE ' . static::table_name()
 			     . ' SET '
 			     . implode( ',', array_map( array( $this, 'property_name_to_sql_update_statement' ), self::property_names() ) )
-			     . ' WHERE id = ' . $this->id
+			     . ' WHERE id = ' . (int) $this->id
 			;
 			$success = $wpdb->query( $sql );
 		}
@@ -397,7 +397,7 @@ abstract class Base
 
 		$sql = 'DELETE FROM '
 		     . static::table_name()
-		     . ' WHERE id = ' . $this->id;
+		     . ' WHERE id = ' . (int) $this->id;
 
 		$rows_affected = $wpdb->query( $sql );
 

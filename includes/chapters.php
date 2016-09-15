@@ -62,7 +62,7 @@ add_filter('pre_update_option_podlove_asset_assignment', function($new, $old) {
 
 	foreach ($episodes as $episode) {
 		if ($chapters = $episode->get_chapters('mp4chaps'))
-			$episode->update_attribute('chapters', esc_sql($chapters));
+			$episode->update_attribute('chapters', $chapters);
 	}
 
 	// delete chapters caches
