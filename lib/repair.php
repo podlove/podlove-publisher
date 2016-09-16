@@ -36,7 +36,7 @@ class Repair {
 		// hook for modules to add their repair methods
 		do_action('podlove_repair_do_repair');
 
-		wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
+		wp_redirect(admin_url('admin.php?page=' . filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING)));
 		exit;
 	}
 
@@ -163,7 +163,7 @@ class Repair {
 		</p>
 
 		<p>
-			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&repair=1') ?>" class="button button-primary">
+			<a href="<?php echo admin_url('admin.php?page=' . filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING) . '&repair=1') ?>" class="button button-primary">
 				<?php echo __( 'Attempt Repair', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 			</a>
 		</p>

@@ -8,13 +8,15 @@ class Settings {
 
 	use \Podlove\HasPageDocumentationTrait;
 
+	const MENU_SLUG = 'podlove_seasons_settings';
+
 	public function __construct($handle) {
 		$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
 			/* $page_title */ __('Seasons', 'podlove-podcasting-plugin-for-wordpress'),
 			/* $menu_title */ __('Seasons', 'podlove-podcasting-plugin-for-wordpress'),
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_seasons_settings',
+			/* $menu_slug  */ self::MENU_SLUG,
 			/* $function   */ [$this, 'page']
 		);
 
@@ -86,7 +88,7 @@ class Settings {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $episode_asset_id = NULL, $params = [] ) {
-		$page    = 'admin.php?page=' . $_REQUEST['page'];
+		$page    = 'admin.php?page=' . self::MENU_SLUG;
 		$show    = ( $episode_asset_id ) ? '&season=' . $episode_asset_id : '';
 		$action  = '&action=' . $action;
 
@@ -116,7 +118,7 @@ class Settings {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Seasons', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php echo __( 'Seasons', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {

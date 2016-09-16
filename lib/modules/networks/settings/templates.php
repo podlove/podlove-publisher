@@ -19,16 +19,6 @@ class Templates {
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );	
 	}
 
-	public static function get_action_link( $template, $title, $action = 'edit', $type = 'link' ) {
-		return sprintf(
-			'<a href="?page=%s&action=%s&template=%s"%s>' . $title . '</a>',
-			$_REQUEST['page'],
-			$action,
-			$template->id,
-			$type == 'button' ? ' class="button"' : ''
-		);
-	}
-
 	public function scripts_and_styles() {
 
 		if ( ! isset( $_REQUEST['page'] ) )
@@ -47,28 +37,6 @@ class Templates {
 
 		$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 
-		if ( $action == 'confirm_delete' && isset( $_REQUEST['template'] ) ) {
-
-			$template = Template::with_network_scope(function() {
-				return Template::find_by_id( (int) $_REQUEST['template'] );
-			});
-
-			?>
-			<div class="updated">
-				<p>
-					<strong>
-						<?php echo __( 'Are you sure you want do delete this template?', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-					</strong>
-				</p>
-				<p>
-					<?php echo __( 'If you have inserted this templated manually into your posts, it might be a better idea to just empty the template.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-				</p>
-				<p>
-					<?php echo self::get_action_link( $template, __( 'Delete permanently', 'podlove-podcasting-plugin-for-wordpress' ), 'delete', 'button' ) ?>
-				</p>
-			</div>
-			<?php
-		}
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>

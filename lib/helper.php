@@ -219,8 +219,9 @@ function build_for( $object, $args, $callback ) {
 		$url = $args['action'];
 	} else {
 		$url = is_admin() ? 'admin.php' : '';
-		if ( isset( $_REQUEST['page'] ) ) {
-			$url .= '?page=' . $_REQUEST['page'];
+		$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+		if ($page) {
+			$url .= add_query_arg('page', $page, $url);
 		}
 	}
 
@@ -229,7 +230,7 @@ function build_for( $object, $args, $callback ) {
 	if ( isset( $args['attributes'] ) ) {
 		$attributes = array();
 		foreach ( $args['attributes'] as $attr_key => $attr_value ) {
-			$attributes[] = sprintf( '%s = "%s"', $attr_key, $attr_value );
+			$attributes[] = sprintf( '%s = "%s"', $attr_key, esc_attr($attr_value) );
 		}
 		$attributes_html = implode( ' ', $attributes );
 	}
@@ -245,12 +246,12 @@ function build_for( $object, $args, $callback ) {
 
 	?>
 	<?php if ( $print_form ): ?>
-		<form action="<?php echo $url; ?>" method="<?php echo $method; ?>" <?php echo $attributes_html ?>>
+		<form action="<?php echo esc_url($url); ?>" method="<?php echo esc_attr($method); ?>" <?php echo $attributes_html ?>>
 	<?php endif ?>
 
 	<?php if ( isset( $args['hidden'] ) && $args['hidden'] ): ?>
 		<?php foreach ( $args['hidden'] as $name => $value ): ?>
-			<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />		
+			<input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" />		
 		<?php endforeach ?>
 	<?php endif ?>
 

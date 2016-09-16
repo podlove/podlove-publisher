@@ -22,7 +22,7 @@ class Assistant {
 
 		if ( isset( $_REQUEST['reset_migration'] ) && $_REQUEST['reset_migration'] ) {
 			$this->reset_migration();
-			wp_redirect( admin_url( 'admin.php?page=' . $_REQUEST['page'] ) );
+			wp_redirect( admin_url( 'admin.php?page=podlove_settings_migration_handle' ) );
 		}
 
 	}
@@ -129,7 +129,7 @@ class Assistant {
 					<br>
 					If you get stuck, feel free to reset the migration and
 					<span class="btn-group">
-						<a href="<?php echo admin_url( 'admin.php?page=' . $_REQUEST['page'] . '&step=1&reset_migration=1' ) ?>"
+						<a href="<?php echo admin_url( 'admin.php?page=podlove_settings_migration_handle&step=1&reset_migration=1' ) ?>"
 						   class="btn btn-small"
 						   data-placement="bottom"
 						   data-toggle="tooltip"

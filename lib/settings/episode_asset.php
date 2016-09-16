@@ -7,6 +7,7 @@ class EpisodeAsset {
 	use \Podlove\HasPageDocumentationTrait;
 
 	static $pagehook;
+	const MENU_SLUG = 'podlove_episode_assets_settings_handle';
 	
 	public function __construct( $handle ) {
 		
@@ -15,7 +16,7 @@ class EpisodeAsset {
 			/* $page_title */ __( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $menu_title */ __( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_episode_assets_settings_handle',
+			/* $menu_slug  */ self::MENU_SLUG,
 			/* $function   */ array( $this, 'page' )
 		);
 
@@ -119,7 +120,7 @@ class EpisodeAsset {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $episode_asset_id = NULL, $params = array() ) {
-		$page    = 'admin.php?page=' . $_REQUEST['page'];
+		$page    = 'admin.php?page=' . self::MENU_SLUG;
 		$show    = ( $episode_asset_id ) ? '&episode_asset=' . $episode_asset_id : '';
 		$action  = '&action=' . $action;
 
@@ -184,7 +185,7 @@ class EpisodeAsset {
 								</li>
 							<?php endif; ?>
 						</ul>
-						<a href="?page=<?php echo $_REQUEST['page'] ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id ?>&amp;force=1">
+						<a href="?page=<?php echo self::MENU_SLUG ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id ?>&amp;force=1">
 							<?php echo __( 'delete anyway', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						</a>
 					</p>
@@ -195,7 +196,7 @@ class EpisodeAsset {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {

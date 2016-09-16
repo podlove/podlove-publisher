@@ -19,7 +19,7 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 		$link = function ( $title, $action = 'edit' ) use ( $episode_asset ) {
 			return sprintf(
 				'<a href="?page=%s&action=%s&episode_asset=%s">' . $title . '</a>',
-				$_REQUEST['page'],
+				Settings\EpisodeAsset::MENU_SLUG,
 				$action,
 				$episode_asset->id
 			) . '<input type="hidden" class="position" value="' . $episode_asset->position . '">'

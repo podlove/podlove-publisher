@@ -17,7 +17,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	public function column_episode( $episode ) {
 		return sprintf(
 			"<a href=\"?page=%s&action=show&episode=%d\">%s</a>",
-			$_REQUEST['page'],
+			'podlove_analytics',
 			$episode['id'],
 			$episode['title']
 		);

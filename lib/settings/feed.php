@@ -7,6 +7,8 @@ class Feed {
 
 	use \Podlove\HasPageDocumentationTrait;
 
+	const MENU_SLUG = 'podlove_feeds_settings_handle';
+
 	static $pagehook;
 	
 	public function __construct( $handle ) {
@@ -16,7 +18,7 @@ class Feed {
 			/* $page_title */ 'Podcast Feeds',
 			/* $menu_title */ 'Podcast Feeds',
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_feeds_settings_handle',
+			/* $menu_slug  */ self::MENU_SLUG,
 			/* $function   */ array( $this, 'page' )
 		);
 		add_action( 'admin_init', array( $this, 'process_form' ) );
@@ -42,7 +44,7 @@ class Feed {
 	public static function get_action_link( $feed, $title, $action = 'edit', $class = 'link' ) {
 		return sprintf(
 			'<a href="?page=%s&action=%s&feed=%s" class="%s">' . $title . '</a>',
-			$_REQUEST['page'],
+			self::MENU_SLUG,
 			$action,
 			$feed->id,
 			$class
@@ -98,7 +100,7 @@ class Feed {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $feed_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
+		$page   = 'admin.php?page=' . self::MENU_SLUG;
 		$show   = ( $feed_id ) ? '&feed=' . $feed_id : '';
 		$action = '&action=' . $action;
 		
@@ -152,7 +154,7 @@ class Feed {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Podcast Feeds', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php echo __( 'Podcast Feeds', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			
 			switch ( $action ) {

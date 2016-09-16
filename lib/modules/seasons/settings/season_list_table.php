@@ -18,7 +18,7 @@ class SeasonListTable extends \Podlove\List_Table {
 		$link = function ( $title, $action = 'edit' ) use ( $season ) {
 			return sprintf(
 				'<a href="?page=%s&action=%s&season=%s">' . $title . '</a>',
-				$_REQUEST['page'],
+				Settings::MENU_SLUG,
 				$action,
 				$season->id
 			);
