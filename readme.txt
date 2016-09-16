@@ -154,6 +154,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * move feed protection into separate module
 * move debug log from Dashboard to Support page
 
+= 2.3.16 =
+
+* security: fix SQL injection
+* security: remove several Cross-Site Scripting vulnerabilities
+
+All vulnerabilities require admin capabilities. That means they cannot be exploitet easily, but could be using Cross-site request forgery (CSRF).
+
+Thanks to [RIPS Technologies](https://www.ripstech.com/) for reporting these issues. The issues were found using their Static Source-Code Analyzer RIPS.
+
 = 2.3.15 =
 
 * ensure 3rd party PHP dependencies do not require PHP 5.5 or greater

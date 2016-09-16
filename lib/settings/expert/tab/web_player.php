@@ -21,7 +21,7 @@ class WebPlayer extends Tab {
 		?>
 		<form method="post" action="options.php">
 			<?php if ( isset( $_REQUEST['podlove_tab'] ) ): ?>
-				<input type="hidden" name="podlove_tab" value="<?php echo $_REQUEST['podlove_tab'] ?>" />
+				<input type="hidden" name="podlove_tab" value="<?php echo esc_attr($_REQUEST['podlove_tab']) ?>" />
 			<?php endif; ?>
 			<?php settings_fields( Settings::$pagehook ); ?>
 			<?php do_settings_sections( Settings::$pagehook ); ?>

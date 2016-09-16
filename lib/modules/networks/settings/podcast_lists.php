@@ -7,6 +7,8 @@ use \Podlove\Modules\Networks\Model\PodcastList;
 class PodcastLists {
 
 	static $pagehook;
+
+	const MENU_SLUG = 'podlove_settings_list_handle';
 	
 	public function __construct( $handle ) {
 		
@@ -15,7 +17,7 @@ class PodcastLists {
 			/* $page_title */ 'Lists',
 			/* $menu_title */ 'Lists',
 			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_settings_list_handle',
+			/* $menu_slug  */ self::MENU_SLUG,
 			/* $function   */ array( $this, 'page' )
 		);
 
@@ -101,7 +103,7 @@ class PodcastLists {
 	 * Helper method: redirect to a certain page.
 	 */
 	private function redirect( $action, $list_id = NULL ) {
-		$page   = 'network/admin.php?page=' . $_REQUEST['page'];
+		$page   = 'network/admin.php?page=' . self::MENU_SLUG;
 		$show   = ( $list_id ) ? '&list=' . $list_id : '';
 		$action = '&action=' . $action;
 		
@@ -112,7 +114,7 @@ class PodcastLists {
 	public static function get_action_link( $list, $title, $action = 'edit', $class = 'link' ) {
 		return sprintf(
 			'<a href="?page=%s&amp;action=%s&amp;list=%s" class="%s">' . $title . '</a>',
-			'podlove_settings_list_handle',
+			self::MENU_SLUG,
 			$action,
 			$list->id,
 			$class
@@ -365,7 +367,7 @@ class PodcastLists {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Lists', 'podlove' ); ?> <a href="?page=<?php echo $_REQUEST['page']; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php echo __( 'Lists', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {

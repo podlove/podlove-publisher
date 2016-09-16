@@ -34,7 +34,7 @@ class Repair {
 		// hook for modules to add their repair methods
 		do_action('podlove_repair_do_repair');
 
-		wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
+		wp_redirect(admin_url('admin.php?page=' . filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING)));
 		exit;
 	}
 

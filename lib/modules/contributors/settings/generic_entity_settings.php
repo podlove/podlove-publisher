@@ -193,9 +193,10 @@ class GenericEntitySettings {
 
 	protected function view_template() {
 		$tab = $this->is_tab ? '&amp;podlove_tab=' . $this->tab_slug : '';
+		$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
 		?>
 		<h2>
-			<a href="?page=<?php echo $_REQUEST['page'] . $tab; ?>&amp;action=new" class="add-new-h2"><?php echo $this->labels['add_new']; ?></a>
+			<a href="?page=<?php echo $page . $tab; ?>&amp;action=new" class="add-new-h2"><?php echo $this->labels['add_new']; ?></a>
 		</h2>
 		<?php
 		do_action('podlove_settings_' . $this->entity_slug . '_view');
@@ -223,10 +224,13 @@ class GenericEntitySettings {
 	}
 
 	public static function get_action_link( $entity_slug, $id, $title, $action = 'edit', $class = 'link' ) {
-		$request = ( isset( $_REQUEST['podlove_tab'] ) ? "&amp;podlove_tab=".$_REQUEST['podlove_tab'] : '' );
+		$podlove_tab = filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING);
+		$request = $podlove_tab ? "&amp;podlove_tab=" . $podlove_tab : '';
+		$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+
 		return sprintf(
 			'<a href="?page=%s%s&amp;action=%s&amp;%s=%s" class="%s">' . $title . '</a>',
-			$_REQUEST['page'],
+			$page,
 			$request,
 			$action,
 			$entity_slug,
@@ -239,7 +243,7 @@ class GenericEntitySettings {
 	 * Helper method: redirect to a certain page.
 	 */
 	protected function redirect( $action, $entity_id = NULL ) {
-		$page   = 'admin.php?page=' . $_REQUEST['page'];
+		$page   = 'admin.php?page=' . filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
 		$show   = $entity_id ? '&' . $this->get_entity_slug() . '=' . $entity_id : '';
 		$action = '&action=' . $action;
 		$tab    = $this->is_tab ? '&podlove_tab=' . $this->tab_slug : '';

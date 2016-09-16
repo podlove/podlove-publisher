@@ -18,15 +18,15 @@ class File_Type_List_Table extends \Podlove\List_Table {
 		$actions = array(
 			'edit' => sprintf(
 				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Edit', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>',
-				$_REQUEST['page'],
-				$_REQUEST['podlove_tab'],
+				filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING),
+				filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING),
 				'edit',
 				$file_type->id
 			),
 			'delete' => sprintf(
 				'<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">' . __( 'Delete', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>',
-				$_REQUEST['page'],
-				$_REQUEST['podlove_tab'],
+				filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING),
+				filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING),
 				'delete',
 				$file_type->id
 			)

@@ -51,7 +51,7 @@ class Tab {
 	}
 
 	public function get_url() {
-		return sprintf( "?page=%s&podlove_tab=%s", $_REQUEST['page'], $this->get_slug() );
+		return sprintf( "?page=%s&podlove_tab=%s", filter_var($_REQUEST['page'], FILTER_SANITIZE_STRING), $this->get_slug() );
 	}
 
 	public function page() {
