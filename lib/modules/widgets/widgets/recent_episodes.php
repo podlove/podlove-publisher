@@ -36,7 +36,7 @@ class RecentEpisodes extends \WP_Widget {
 					<div style="display: inline-block; width: 75%;">
 					<?php endif; ?>
 					<p>
-						<a href="<?php echo post_permalink($episode->post_id); ?>"><?php echo $post->post_title; ?></a><br />
+						<a href="<?php echo get_permalink($episode->post_id); ?>"><?php echo $post->post_title; ?></a><br />
 						<i class="podlove-icon-calendar"></i> <?php echo get_the_date( get_option('date_format'), $episode->post_id ); ?>
 						<?php 
 						if ($instance[ 'show_duration' ])
