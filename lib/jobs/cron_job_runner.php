@@ -205,19 +205,19 @@ class CronJobRunner {
 		$job = Jobs::load($job_id);
 
 		if (!$job) {
-			\Podlove\Log::get()->addDebug('[job] runner tried to run job ' . $job_id . ' but it does not exist', $job->get_status());
+			\Podlove\Log::get()->addDebug('[job] runner tried to run job ' . $job_id . ' but it does not exist');
 			return;
 		}
 
 		while (!$job->is_finished() && self::should_run_another_job()) {
 			$job->step();
-			\Podlove\Log::get()->addDebug('[job] step ' . $job_id, $job->get_status());
+			\Podlove\Log::get()->addDebug('[job] step ' . $job_id);
 		}
 
 		if (!$job->is_finished()) {
 			wp_schedule_single_event(time() - 1, 'cron_job_runner', [$job_id, $call_count+1]);
 		} else {
-			\Podlove\Log::get()->addDebug('[job] done ' . $job_id, $job->get_status());
+			\Podlove\Log::get()->addDebug('[job] done ' . $job_id);
 		}
 	}
 
