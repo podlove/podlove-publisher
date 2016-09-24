@@ -46,6 +46,10 @@ class CronJobRunner {
 
 			$job = Jobs::load($job_id);
 
+			if (!$job) {
+				continue;
+			}
+
 			if (!$job->is_finished())
 				continue;
 
@@ -199,6 +203,11 @@ class CronJobRunner {
 	public static function run_job($job_id, $call_count) {
 
 		$job = Jobs::load($job_id);
+
+		if (!$job) {
+			\Podlove\Log::get()->addDebug('[job] runner tried to run job ' . $job_id . ' but it does not exist', $job->get_status());
+			return;
+		}
 
 		while (!$job->is_finished() && self::should_run_another_job()) {
 			$job->step();
