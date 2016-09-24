@@ -19,6 +19,11 @@ class Jobs {
 
 	public static function load($id) {
 		$job = Jobs::get($id);
+
+		if (!$job) {
+			return NULL;
+		}
+
 		$job['id'] = $id;
 
 		return call_user_func_array([$job['class'], 'load'], [$job]);
