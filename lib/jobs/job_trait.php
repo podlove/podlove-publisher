@@ -41,6 +41,16 @@ trait JobTrait {
 	public static function defaults() { return []; }
 
 	/**
+	 * If a job is unique, only one can be active at any point in time.
+	 * 
+	 * @todo  needs to be checked by job runner
+	 * @return boolean
+	 */
+	public static function is_unique() {
+		return true;
+	}
+
+	/**
 	 * Initialize job
 	 * 
 	 * - find out and persist how many steps there are
