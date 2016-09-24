@@ -31,7 +31,7 @@ class Log {
 	private function __construct() {
 
 		$log = new Logger( 'Podlove' );
-		if ( defined('WP_DEBUG') && WP_DEBUG )
+		if ( $this->is_debug_enabled() )
 			$log->pushHandler( new ErrorLogHandler( ErrorLogHandler::OPERATING_SYSTEM, $this->get_log_level() ) );
 
 		$this->log = $log;
@@ -50,7 +50,11 @@ class Log {
 		if (defined('PODLOVE_LOG_LEVEL'))
 			return PODLOVE_LOG_LEVEL;
 
-		return defined('WP_DEBUG') && WP_DEBUG ? Logger::DEBUG : Logger::INFO;
+		return $this->is_debug_enabled() ? Logger::DEBUG : Logger::INFO;
+	}
+
+	public function is_debug_enabled() {
+		return defined('WP_DEBUG') && WP_DEBUG || defined('PODLOVE_LOGGER_DEBUG') && PODLOVE_LOGGER_DEBUG;
 	}
 
 	/**
