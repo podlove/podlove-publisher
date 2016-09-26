@@ -395,11 +395,6 @@ class Auphonic extends \Podlove\Modules\Base {
 			
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
 
-				// verify against startssl crt
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-				curl_setopt($ch, CURLOPT_CAINFO, \Podlove\PLUGIN_DIR . '/cert/podlove.crt');
-
 				$result = curl_exec($ch);
 						
 				$this->update_module_option('auphonic_api_key', $result);

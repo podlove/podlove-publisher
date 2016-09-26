@@ -112,6 +112,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.3.18 =
+
+* fix Auphonic authentication (https certificate issue)
+
 = 2.3.17 =
 
 * fixes a bug that broke some settings pages
