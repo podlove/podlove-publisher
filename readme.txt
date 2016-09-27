@@ -154,6 +154,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * move feed protection into separate module
 * move debug log from Dashboard to Support page
 
+= 2.3.18 =
+
+* fix Auphonic authentication (https certificate issue)
+
+= 2.3.17 =
+
+* fixes a bug that broke some settings pages
+
 = 2.3.16 =
 
 * security: fix SQL injection
