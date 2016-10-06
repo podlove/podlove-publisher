@@ -9,6 +9,14 @@ use Podlove\Model;
 class DownloadTimedAggregatorJob {
 	use JobTrait;
 
+	public static function title() {
+		return __('Download Aggregation', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
+	public static function description() {
+		return __('Recalculates sums for episode downloads in Analytics overview page.', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
 	public function setup() {
 		$this->hooks['init'] = [$this, 'setup_state'];
 	}

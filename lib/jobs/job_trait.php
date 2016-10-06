@@ -20,6 +20,18 @@ trait JobTrait {
 	}
 
 	/**
+	 * Human readable title
+	 * @return string
+	 */
+	abstract public static function title();
+
+	/**
+	 * Human readable description of what the job does
+	 * @return string
+	 */
+	abstract public static function description();
+
+	/**
 	 * Called once on class construction.
 	 * 
 	 * Does nothing by default. Override for custom setup behaviour.

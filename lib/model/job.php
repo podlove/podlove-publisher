@@ -29,7 +29,7 @@ class Job extends Base {
 		return self::find_one_by_sql($sql);
 	}
 
-	private static function find_recently_finished_jobs($limit = 10) {
+	public static function find_recently_finished_jobs($limit = 10) {
 		$sql = '
 			SELECT
 				*
@@ -44,7 +44,7 @@ class Job extends Base {
 		return Job::find_all_by_sql($sql);
 	}
 
-	private static function find_running_jobs() {
+	public static function find_running_jobs() {
 		$sql = '
 			SELECT
 				*

@@ -7,6 +7,14 @@ use \Podlove\Model\DownloadIntentClean;
 class UserAgentRefreshJob {
 	use JobTrait;
 
+	public static function title() {
+		return __('User Agent Refresh', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
+	public static function description() {
+		return __('Updates user agent metadata based on device-detector library.', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
 	public function setup() {
 		$this->hooks['finished'] = [__CLASS__, 'delete_bots_from_clean_downloadintents'];
 

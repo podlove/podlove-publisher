@@ -30,7 +30,7 @@ class ToolsSection {
 				<?php foreach ($jobs as $job): ?>
 					<tr>
 						<td>
-							<?php echo $job->class; ?>
+							<?php echo $job->title(); ?>
 						</td>
 						<td>
 							<?php 
@@ -71,7 +71,8 @@ class ToolsSection {
 				<?php foreach ($finished_jobs as $job_id => $job): ?>
 					<tr>
 						<td>
-							<?php echo $job->class; ?>
+							<?php $class = $job->class; ?>
+							<?php echo $class::title(); ?>
 						</td>
 						<td>
 							<?php echo sprintf(__('%s ago'), human_time_diff(strtotime($job->updated_at))); ?>

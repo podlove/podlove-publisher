@@ -10,6 +10,14 @@ namespace Podlove\Jobs;
 class CountingJob {
 	use JobTrait;
 
+	public static function title() {
+		return __('Counter', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
+	public static function description() {
+		return __('Can increment numbers like a boss.', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
 	public function setup() {
 		$this->state = $this->args['from'];
 	}

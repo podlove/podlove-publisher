@@ -6,6 +6,14 @@ use Podlove\Model;
 class DownloadIntentCleanupJob {
 	use JobTrait;
 
+	public static function title() {
+		return __('Download Intent Cleanup', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
+	public static function description() {
+		return __('Only cleaned download intents are available for analytics reports. Cleaning involves deduplication and removal of requests made by bots.', 'podlove-podcasting-plugin-for-wordpress');
+	}
+
 	public function setup() {
 		
 		$this->hooks['finished'] = [__CLASS__, 'purge_cache'];
