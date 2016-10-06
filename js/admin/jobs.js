@@ -59,9 +59,13 @@ var PODLOVE = PODLOVE || {};
                 return;
             }
 
-            if (status.percent < 100) {
+            var percent = 100 * (status.steps_progress / status.steps_total);
+
+            percent = Math.round(percent * 10) / 10;
+
+            if (percent < 100) {
                 wrapper
-                    .html(" " + status.percent + "%")
+                    .html(" " + percent + "%")
                     .prepend(spinner.clone());
             } else {
                 wrapper
@@ -89,7 +93,7 @@ var PODLOVE = PODLOVE || {};
                 }
 
                 // stop when done
-                if (status.percent >= 100)
+                if (parseInt(status.steps_progress, 10) >= parseInt(status.steps_total, 10))
                     return;
 
                 timer = window.setTimeout(update, 2500);

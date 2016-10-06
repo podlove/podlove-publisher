@@ -23,19 +23,22 @@ class DownloadTimedAggregatorJob {
 		$episodes = Model\Podcast::get()->episodes();
 		$episode_ids = array_map(function($e) { return $e->id; }, $episodes);
 
-		$this->state = [
+		$this->job->state = [
 			'episode_ids'    => $episode_ids, // reduced to empty array during job
 			'total_episodes' => count($episode_ids) // immutable
 		];
 	}
 
 	public function get_total_steps() {
-		return $this->state['total_episodes'];
+		return $this->job->state['total_episodes'];
 	}
 
 	protected function do_step() {
 		
-		$episode_id = array_pop($this->state['episode_ids']);
+		$state = $this->job->state;
+		$episode_id = array_pop($state['episode_ids']);
+		$this->job->state = $state;
+		
 		$episode = Model\Episode::find_by_id($episode_id);
 
 		if (!$episode)
@@ -46,7 +49,7 @@ class DownloadTimedAggregatorJob {
 
 		foreach ($groupings as $key => $hours) {
 			// skip already calculated fields IF override is not forced
-			if (!$this->args['force'] && get_post_meta($episode->post_id, '_podlove_downloads_' . $key, true) != '')
+			if (!$this->job->args['force'] && get_post_meta($episode->post_id, '_podlove_downloads_' . $key, true) != '')
 				continue;
 
 			// skip fields that cannot be calculated yet

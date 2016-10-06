@@ -13,6 +13,22 @@ class Job extends Base {
 		return $this->steps_progress >= $this->steps_total;
 	}
 
+	public static function find_next_in_queue()
+	{
+		$sql = '
+		SELECT
+			*
+		FROM
+			' . self::table_name() .  '
+		WHERE
+			steps_total > steps_progress
+		ORDER BY created_at ASC
+		LIMIT 0,1
+		';
+
+		return self::find_one_by_sql($sql);
+	}
+
 	public static function load($id)
 	{
 		$job = self::find_by_id($id);

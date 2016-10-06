@@ -21,7 +21,6 @@ class DownloadSumsCalculator {
 		$job = CronJobRunner::create_job('\Podlove\Jobs\DownloadTimedAggregatorJob', [
 			'force' => false
 		]);
-		CronJobRunner::run($job);
 	}
 
 }

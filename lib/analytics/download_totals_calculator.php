@@ -18,7 +18,6 @@ class DownloadTotalsCalculator {
 	}
 
 	public static function calc_download_totals() {
-		$job = CronJobRunner::create_job('\Podlove\Jobs\DownloadTotalsAggregatorJob');
-		CronJobRunner::run($job);
+		CronJobRunner::create_job('\Podlove\Jobs\DownloadTotalsAggregatorJob');
 	}
 }

@@ -63,7 +63,6 @@ class Ajax {
 		}
 
 		$job = \Podlove\Jobs\CronJobRunner::create_job($job_name, $job_args);
-		\Podlove\Jobs\CronJobRunner::run($job);
 
 		self::respond_with_json([
 			'job_id' => $job->get_job_id()

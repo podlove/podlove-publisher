@@ -10,9 +10,7 @@ class UserAgent extends Base {
 	 * Fetch new data for all UAs
 	 */
 	public static function reparse_all() {
-		CronJobRunner::run(
-			CronJobRunner::create_job('\Podlove\Jobs\UserAgentRefreshJob')
-		);
+		CronJobRunner::create_job('\Podlove\Jobs\UserAgentRefreshJob');
 	}
 
 	/**

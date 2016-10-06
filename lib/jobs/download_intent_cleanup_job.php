@@ -77,7 +77,7 @@ class DownloadIntentCleanupJob {
 
 		$this->job->update_state('previous_id', $to);
 
-		return $this->args['intents_per_step'];
+		return $this->job->args['intents_per_step'];
 	}
 
 	public static function purge_cache() {
