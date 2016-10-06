@@ -110,6 +110,24 @@ class Tools {
 			</p>
 			<?php
 		}, 'tracking-analytics');
+
+		\Podlove\add_tools_field('ta-recalc-downloads-totals', __('Recalculate Downloads Totals', 'podlove-podcasting-plugin-for-wordpress'), function() {
+			?>
+			<div 
+				class="podlove-job" 
+				data-job="Podlove-Jobs-DownloadTotalsAggregatorJob"
+				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
+				data-button-text="<?php echo __( 'Recalculate Downloads Totals', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
+				data-recent-job-id="<?php echo Job::find_one_recent_job('\Podlove\Jobs\DownloadTotalsAggregatorJob')->id ?>"
+				>
+				
+			</div>
+
+			<p class="description">
+				<?php echo __('Recalculates totals for episode downloads.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			</p>
+			<?php
+		}, 'tracking-analytics');
 	}
 
 	function process_actions() {

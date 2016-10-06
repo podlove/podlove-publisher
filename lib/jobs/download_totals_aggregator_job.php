@@ -40,8 +40,11 @@ class DownloadTotalsAggregatorJob {
 	}
 
 	protected function do_step() {
+
+		$state = $this->job->state;
+		$episode_id = array_pop($state['episode_ids']);
+		$this->job->state = $state;
 		
-		$episode_id = array_pop($this->job->state['episode_ids']);
 		$episode = Model\Episode::find_by_id($episode_id);
 
 		if (!$episode)
