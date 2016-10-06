@@ -16,17 +16,46 @@ class Job extends Base {
 	public static function find_next_in_queue()
 	{
 		$sql = '
-		SELECT
-			*
-		FROM
-			' . self::table_name() .  '
-		WHERE
-			steps_total > steps_progress
-		ORDER BY created_at ASC
-		LIMIT 0,1
+			SELECT
+				*
+			FROM
+				' . self::table_name() .  '
+			WHERE
+				steps_total > steps_progress
+			ORDER BY created_at ASC
+			LIMIT 0, 1
 		';
 
 		return self::find_one_by_sql($sql);
+	}
+
+	private static function find_recently_finished_jobs($limit = 10) {
+		$sql = '
+			SELECT
+				*
+			FROM
+				' . Job::table_name() .  '
+			WHERE
+				steps_total <= steps_progress
+			ORDER BY created_at DESC
+			LIMIT 0, ' . (int) $limit . '
+		';
+
+		return Job::find_all_by_sql($sql);
+	}
+
+	private static function find_running_jobs() {
+		$sql = '
+			SELECT
+				*
+			FROM
+				' . Job::table_name() .  '
+			WHERE
+				steps_total > steps_progress
+			ORDER BY created_at DESC
+		';
+
+		return Job::find_all_by_sql($sql);
 	}
 
 	public static function load($id)
