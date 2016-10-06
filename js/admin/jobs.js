@@ -66,7 +66,7 @@ var PODLOVE = PODLOVE || {};
             } else {
                 wrapper
                     .empty()
-                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.time) + " seconds <time class=\"timeago\" datetime=\"" + (new Date(status.updated_at * 1000)).toISOString() + "\"></time></small>.")
+                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.active_run_time) + " seconds <time class=\"timeago\" datetime=\"" + (new Date(status.updated_at + " UTC")).toISOString() + "\"></time></small>.")
 
                 $("time.timeago").timeago();
                 renderButton();

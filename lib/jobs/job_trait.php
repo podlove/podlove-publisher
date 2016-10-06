@@ -1,28 +1,21 @@
 <?php 
 namespace Podlove\Jobs;
 
-trait JobTrait {
+use Podlove\Model\Job;
 
-	private $args;
-	private $status;
-	private $id;
+trait JobTrait {
 
 	protected $hooks = [];
 
-	public $created_at;
-	public $updated_at;
-
 	/**
-	 * If there is any state that has to be persisted between steps, 
-	 * it can be stored here.
-	 * 
-	 * @var mixed
+	 * @var Podlove\Model\Job
 	 */
-	protected $state;
+	protected $job;
 
-	public function __construct($args = [])
+	public function __construct($args = [], $job = NULL)
 	{
-		$this->args = wp_parse_args($args, self::defaults());
+		$this->job = is_null($job) ? new Job : $job;
+		$this->job->args = wp_parse_args($args, self::defaults());
 		$this->setup();
 	}
 
@@ -59,100 +52,47 @@ trait JobTrait {
 	 */
 	public function init() {
 
-		if (!is_array($this->status))
-			$this->status = [];
-		
-		$this->generate_job_id();
-
 		if (isset($this->hooks['init'])) {
 			call_user_func($this->hooks['init']);
 		}
 		
-		$this->status = array_merge([
-			'total' => $this->get_total_steps(),
-			'progress' => 0,
-			'active_run_time' => 0.0
-		], $this->status);
+		$this->job->steps_total = $this->get_total_steps();
+		$this->job->steps_progress = 0;
+		$this->job->active_run_time = 0;
 
-		$this->save_status();
+		$this->save_job();
 
 		return $this;
 	}
 
-	public static function load($args) {
-		$classname = get_called_class();
-
-		$class = new $classname($args['args']);
-		$class->id = $args['id'];
-		$class->status = $args['status'];
-		$class->args = $args['args'];
-		$class->state = $args['state'];
-		$class->created_at = $args['created_at'];
-		$class->updated_at = $args['updated_at'];
-		$class->class = $args['class'];
-
-		return $class;
-	}
-
-	private function generate_job_id() {
-		if (function_exists('openssl_random_pseudo_bytes')) {
-			$this->id = bin2hex(openssl_random_pseudo_bytes(7));
-		} else {
-			$this->id = dechex(mt_rand());
-		}
-	}
-
 	public function get_job_id() {
-		return $this->id;
+		return $this->job->id;
 	}
 
 	public function is_finished() {
-		return $this->status['progress'] >= $this->status['total'];
+		return $this->job->is_finished();
 	}
 
-	public function save_status() {
+	public function save_job() {
 
-		$job = Jobs::get($this->id);
+		$current_time = current_time('mysql');
 
-		if (!isset($job)) {
-			$job = [
-				'args'       => $this->args,
-				'class'      => get_called_class(),
-				'created_at' => time(),
-			];
-			
-			$this->created_at = $job['created_at'];
+		if ($this->job->is_new()) {
+			$this->job->class = str_replace('\\', '\\\\', get_called_class());
+			$this->job->created_at = $current_time;
 		}
 
-		$job = array_merge($job, [
-			'status'     => $this->status,
-			'state'      => $this->state,
-			'updated_at' => time()
-		]);
+		$this->job->updated_at = $current_time;
 
-		$this->updated_at = $job['updated_at'];
-
-		Jobs::save($this->id, $job);
+		$this->job->save();
 	}
 
 	private function log_active_run_time($time_ms) {
-		$this->status['active_run_time'] += $time_ms;
+		$this->job->active_run_time += $time_ms;
 	}
 
-	public function get_status() {
-		return [
-			'total' => $this->status['total'],
-			'progress' => $this->status['progress'],
-			'percent' => $this->get_status_percent(),
-			'text' => $this->get_status_text(),
-			'time' => $this->status['active_run_time'],
-			'updated_at' => $this->updated_at,
-			'created_at' => $this->created_at
-		];
-	}
-
-	public function get_state() {
-		return $this->state;
+	public function get_job() {
+		return $this->job;
 	}
 
 	protected function get_status_percent() {
@@ -196,8 +136,8 @@ trait JobTrait {
 		$end = microtime(true);
 		$this->log_active_run_time($end - $start);
 
-		$this->status['progress'] += ($progress > 0) ? $progress : 1;
-		$this->save_status();
+		$this->job->steps_progress += ($progress > 0) ? $progress : 1;
+		$this->save_job();
 
 		if ($this->is_finished() && isset($this->hooks['finished'])) {
 			call_user_func($this->hooks['finished']);

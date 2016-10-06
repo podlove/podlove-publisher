@@ -2,7 +2,9 @@
 
 use \Podlove\Jobs\Jobs;
 use \Podlove\Jobs\CountingJob;
+use Podlove\Jobs\Jobs;
 // use \Podlove\Modules\Seasons\Model\Season;
+
 
 class JobsTest extends WP_UnitTestCase {
 
@@ -51,9 +53,9 @@ class JobsTest extends WP_UnitTestCase {
 	}
 
 	public function testInitializedJobIsSaved() {
-		$this->assertEquals(0, Jobs::count());
+		$this->assertEquals(0, Job::count());
 		$job = (new CountingJob(['from' => 1, 'to' => 5]))->init();
-		$this->assertEquals(1, Jobs::count());
+		$this->assertEquals(1, Job::count());
 		$this->assertNotNull(Jobs::get($job->get_job_id()));
 	}
 

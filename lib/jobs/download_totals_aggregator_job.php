@@ -21,19 +21,19 @@ class DownloadTotalsAggregatorJob {
 		$episodes = Model\Podcast::get()->episodes();
 		$episode_ids = array_map(function($e) { return $e->id; }, $episodes);
 
-		$this->state = [
+		$this->job->state = [
 			'episode_ids'    => $episode_ids, // reduced to empty array during job
 			'total_episodes' => count($episode_ids) // immutable
 		];
 	}
 
 	public function get_total_steps() {
-		return $this->state['total_episodes'];
+		return $this->job->state['total_episodes'];
 	}
 
 	protected function do_step() {
 		
-		$episode_id = array_pop($this->state['episode_ids']);
+		$episode_id = array_pop($this->job->state['episode_ids']);
 		$episode = Model\Episode::find_by_id($episode_id);
 
 		if (!$episode)

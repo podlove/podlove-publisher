@@ -73,12 +73,12 @@ class Ajax {
 	public function job_get() {
 		$job_id = filter_input(INPUT_GET, 'job_id');
 
-		$job = \Podlove\Jobs\Jobs::load($job_id);
+		$job = \Podlove\Model\Job::find_by_id($job_id);
 
 		if (!$job)
 			self::respond_with_json(['error' => 'no job with id "' . $job_id . '"']);
 
-		self::respond_with_json($job->get_status());
+		self::respond_with_json($job->to_array());
 	}
 
 	public function admin_news() {

@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 112 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 113 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1200,6 +1200,10 @@ function run_migrations_for_version( $version ) {
 			if ($should_activate_protection_module) {
 				\Podlove\Modules\Base::activate('protected_feed');
 			}
+		break;
+		case 113:
+			delete_option('podlove_jobs');
+			Model\Job::build();
 		break;
 	}
 

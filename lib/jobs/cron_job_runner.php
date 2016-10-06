@@ -2,6 +2,8 @@
 namespace Podlove\Jobs;
 
 use \Podlove\Log;
+use Podlove\Jobs\Jobs;
+use Podlove\Model\Job;
 
 /**
  * WP Cron based job runner
@@ -40,29 +42,9 @@ class CronJobRunner {
 
 	private static function get_recently_finished_jobs() {
 
-		$jobs = [];
+		// todo: filter by time & finished
+		return Job::all();
 
-		foreach (Jobs::all() as $job_id => $job_raw) {
-
-			$job = Jobs::load($job_id);
-
-			if (!$job) {
-				continue;
-			}
-
-			if (!$job->is_finished())
-				continue;
-
-			if (time() - $job->updated_at > DAY_IN_SECONDS)
-				continue;
-
-			$jobs[$job_id] = [
-				'job_raw' => $job_raw,
-				'job' => $job,
-			];
-		}
-
-		return $jobs;
 	}
 
 	// @todo: running jobs are _not_ returned by _get_cron_array
@@ -83,17 +65,15 @@ class CronJobRunner {
 					foreach ($cron as $cron_id => $cron_data) {
 						
 						$job_id  = $cron_data['args'][0];
-						$job_raw = Jobs::get($job_id);
-						$job     = Jobs::load($job_id);
-
-						if ($job && $job_raw) {
+						$job = Job::find_by_id($job_id);
+						if ($job) {
 							$jobs[$job_id] = [
 								'call_count' => $cron_data['args'][1],
-								'time' => $time,
-								'job_raw' => $job_raw,
-								'job' => $job,
+								'time'       => $time,
+								'job'        => $job
 							];
 						}
+
 					}
 				}
 			}
@@ -121,16 +101,21 @@ class CronJobRunner {
 			</thead>
 			<tbody>
 				<?php foreach ($jobs as $job_id => $job): ?>
-					<?php $status = $job['job']->get_status(); ?>
 					<tr>
 						<td>
-							<?php echo $job['job_raw']['class']; ?>
+							<?php echo $job['job']->class; ?>
 						</td>
 						<td>
-							<?php echo $status['text'] ?>
+							??? <?php // echo $status['text'] ?>
 						</td>
 						<td>
-							<?php echo sprintf("%d/%d (%d%%)", $status['progress'], $status['total'], $status['percent']) ?>
+							<?php 
+							echo sprintf(
+								"%d/%d (%d%%)", 
+								$job['job']->steps_progress, 
+								$job['job']->steps_total, 
+								$job['job']->steps_progress / $job['job']->steps_total)
+							?>
 						</td>
 						<td>
 							<?php echo sprintf(__('%s ago'), human_time_diff($job['job']->created_at)); ?>
@@ -160,16 +145,15 @@ class CronJobRunner {
 			</thead>
 			<tbody>
 				<?php foreach ($finished_jobs as $job_id => $job): ?>
-					<?php $status = $job['job']->get_status(); ?>
 					<tr>
 						<td>
-							<?php echo $job['job_raw']['class']; ?>
+							<?php echo $job->class; ?>
 						</td>
 						<td>
-							<?php echo sprintf(__('%s ago'), human_time_diff($job['job']->updated_at)); ?>
+							<?php echo sprintf(__('%s ago'), human_time_diff($job->updated_at)); ?>
 						</td>
 						<td>
-							<?php echo sprintf(__('%s seconds', 'podlove-podcasting-plugin-for-wordpress'), round($job['job']->get_status()['time'], 2)); ?>
+							<?php echo sprintf(__('%s seconds', 'podlove-podcasting-plugin-for-wordpress'), round($job->active_run_time, 2)); ?>
 						</td>
 					</tr>
 				<?php endforeach ?>
@@ -202,7 +186,7 @@ class CronJobRunner {
 
 	public static function run_job($job_id, $call_count) {
 
-		$job = Jobs::load($job_id);
+		$job = Job::load($job_id);
 
 		if (!$job) {
 			\Podlove\Log::get()->addDebug('[job] runner tried to run job ' . $job_id . ' but it does not exist');

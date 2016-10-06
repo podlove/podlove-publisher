@@ -58,7 +58,7 @@ class Tools {
 				class="podlove-job" 
 				data-job="Podlove-Jobs-UserAgentRefreshJob" 
 				data-button-text="<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
-				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\UserAgentRefreshJob') ?>"
+				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass(\Podlove\Jobs\UserAgentRefreshJob::class) ?>"
 				>
 				
 			</div>

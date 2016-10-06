@@ -10,14 +10,14 @@ class DownloadIntentCleanupJob {
 		
 		$this->hooks['finished'] = [__CLASS__, 'purge_cache'];
 
-		if ($this->args['delete_all']) {
+		if ($this->job->args['delete_all']) {
 			$this->hooks['init'] = [__CLASS__, 'delete_clean_intents'];
-			$this->state = ['previous_id' => 0];
+			$this->job->state = ['previous_id' => 0];
 		} else {
-			$this->state = ['previous_id' => self::get_max_clean_intent_id()];
+			$this->job->state = ['previous_id' => self::get_max_clean_intent_id()];
 		}
 
-		$this->status['progress'] = $this->state['previous_id'];
+		$this->job->steps_progress = $this->job->state['previous_id'];
 	}
 
 	public static function defaults() {
@@ -45,7 +45,7 @@ class DownloadIntentCleanupJob {
 	}
 
 	public function get_total_steps() {
-		return $this->args['intents_total'];
+		return $this->job->args['intents_total'];
 	}
 
 	protected function do_step() {
@@ -68,14 +68,14 @@ class DownloadIntentCleanupJob {
 		GROUP BY media_file_id, request_id, DATE_FORMAT(accessed_at, '%%Y-%%m-%%d %%H') -- deduplication
 		";
 
-		$from = $this->state['previous_id'];
-		$to   = $this->state['previous_id'] + $this->args['intents_per_step'];
+		$from = $this->job->state['previous_id'];
+		$to   = $this->job->state['previous_id'] + $this->job->args['intents_per_step'];
 
 		$wpdb->query(
 			$wpdb->prepare($sql, $from, $to)
 		);
 
-		$this->state['previous_id'] = $to;
+		$this->job->update_state('previous_id', $to);
 
 		return $this->args['intents_per_step'];
 	}

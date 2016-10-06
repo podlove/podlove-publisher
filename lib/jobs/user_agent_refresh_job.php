@@ -10,7 +10,7 @@ class UserAgentRefreshJob {
 	public function setup() {
 		$this->hooks['finished'] = [__CLASS__, 'delete_bots_from_clean_downloadintents'];
 
-		$this->state = ['previous_id' => 0];
+		$this->job->state = ['previous_id' => 0];
 	}
 
 	public static function defaults() {
@@ -21,13 +21,13 @@ class UserAgentRefreshJob {
 	}
 
 	public function get_total_steps() {
-		return $this->args['agents_total'];
+		return $this->job->args['agents_total'];
 	}
 
 	protected function do_step() {
 
-		$previous_id     = (int) $this->state['previous_id'];
-		$agents_per_step = (int) $this->args['agents_per_step'];
+		$previous_id     = (int) $this->job->state['previous_id'];
+		$agents_per_step = (int) $this->job->args['agents_per_step'];
 
 		$agents = UserAgent::find_all_by_where(sprintf("id > %d ORDER BY id ASC LIMIT %d", $previous_id, $agents_per_step));
 
@@ -37,7 +37,7 @@ class UserAgentRefreshJob {
 	        $progress++;
 	    }
 
-		$this->state['previous_id'] = $ua->id;
+	    $this->job->update_state('previous_id', $ua->id);
 
 		return $progress;
 	}

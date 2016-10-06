@@ -411,7 +411,7 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "%s = '%s'", $p, esc_sql($this->$p) );
+			return sprintf( "%s = '%s'", $p, esc_sql(maybe_serialize($this->$p)) );
 		} else {
 			return "$p = NULL";
 		}
@@ -421,7 +421,7 @@ abstract class Base
 		global $wpdb;
 
 		if ( $this->$p !== NULL && $this->$p !== '' ) {
-			return sprintf( "'%s'", $this->$p );
+			return sprintf( "'%s'", maybe_serialize($this->$p) );
 		} else {
 			return 'NULL';
 		}

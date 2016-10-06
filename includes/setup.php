@@ -18,6 +18,7 @@ function podlove_setup_database_tables() {
 	Model\UserAgent::build();
 	Model\GeoArea::build();
 	Model\GeoAreaName::build();
+	Model\Job::build();
 }
 
 function podlove_setup_file_types() {
