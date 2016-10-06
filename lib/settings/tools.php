@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Settings;
 
+use Podlove\Model\Job;
+
 class Tools {
 
 	use \Podlove\HasPageDocumentationTrait;
@@ -58,7 +60,7 @@ class Tools {
 				class="podlove-job" 
 				data-job="Podlove-Jobs-UserAgentRefreshJob" 
 				data-button-text="<?php echo __( 'Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
-				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass(\Podlove\Jobs\UserAgentRefreshJob::class) ?>"
+				data-recent-job-id="<?php echo Job::find_one_recent_job(\Podlove\Jobs\UserAgentRefreshJob::class)->id ?>"
 				>
 				
 			</div>
@@ -78,7 +80,7 @@ class Tools {
 				class="podlove-job" 
 				data-job="Podlove-Jobs-DownloadIntentCleanupJob" 
 				data-button-text="<?php echo __( 'Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
-				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\DownloadIntentCleanupJob') ?>"
+				data-recent-job-id="<?php echo Job::find_one_recent_job('\Podlove\Jobs\DownloadIntentCleanupJob')->id ?>"
 				>
 				
 			</div>
@@ -98,7 +100,7 @@ class Tools {
 				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
 				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
 				data-button-text="<?php echo __( 'Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress' ) ?>"
-				data-recent-job-id="<?php echo \Podlove\Jobs\Jobs::getMostRecentIdForJobClass('\Podlove\Jobs\DownloadTimedAggregatorJob') ?>"
+				data-recent-job-id="<?php echo Job::find_one_recent_job('\Podlove\Jobs\DownloadTimedAggregatorJob')->id ?>"
 				>
 				
 			</div>

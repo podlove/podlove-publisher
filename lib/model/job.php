@@ -13,6 +13,25 @@ class Job extends Base {
 		return $this->steps_progress >= $this->steps_total;
 	}
 
+	public static function find_one_recent_job($job_class) {
+
+		// get class name without namespace
+		$job_class_name = explode('\\', $job_class);
+		$job_class_name = end($job_class_name);
+
+		$sql = '
+			SELECT 
+				*
+			FROM
+				' . Job::table_name() . ' j
+			WHERE `class` LIKE "%' . $job_class_name . '"
+			ORDER BY `updated_at` DESC
+			LIMIT 0,1
+		';
+
+		return Job::find_one_by_sql($sql);
+	}
+
 	public static function find_next_in_queue()
 	{
 		$sql = '
