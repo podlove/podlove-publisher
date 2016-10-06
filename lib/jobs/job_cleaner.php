@@ -1,6 +1,8 @@
 <?php 
 namespace Podlove\Jobs;
 
+use Podlove\Model\Job;
+
 class JobCleaner {
 	
 	public static function init() {
@@ -12,7 +14,7 @@ class JobCleaner {
 	}
 
 	public static function podlove_jobs_clean() {
-		Jobs::clean();
+		Job::clean();
 	}
 
 }

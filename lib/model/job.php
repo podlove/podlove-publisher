@@ -75,6 +75,19 @@ class Job extends Base {
 		return $class;
 	}
 
+	public static function clean() {
+	    global $wpdb;
+
+	    $sql = '
+			DELETE FROM
+				' . self::table_name() . '
+			WHERE
+				created_at < "' . date('Y-m-d H:i:s', strtotime('-2 weeks')) . '"
+	    ';
+
+	    $wpdb->query($sql);  
+	}
+
 	/**
 	 * Dedicated method to update state object.
 	 * 

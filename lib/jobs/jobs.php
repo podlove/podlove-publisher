@@ -8,27 +8,6 @@ use Podlove\Model\Job;
  */
 class Jobs {
 
-	public static function clean() {
-		$jobs = get_option('podlove_jobs', []);
-
-		$clean_jobs = array_reduce(array_keys($jobs), function($agg, $job_id) use ($jobs) {
-
-			// remove jobs with faulty total calculation
-			if (!$jobs[$job_id]['status']['total'])
-				return $agg;
-
-			// remove old jobs
-			if (time() - $jobs[$job_id]['updated_at'] > DAY_IN_SECONDS * 14)
-				return $agg;
-
-			$agg[$job_id]  = $jobs[$job_id];
-
-			return $agg;
-		}, []);
-
-		update_option('podlove_jobs', $clean_jobs);
-	}
-
 	public static function getMostRecentIdForJobClass($job_class) {
 
 		$job_class_name = explode('\\', $job_class);
