@@ -63,7 +63,11 @@ var PODLOVE = PODLOVE || {};
 
             percent = Math.round(percent * 10) / 10;
 
-            if (percent < 100) {
+            if (!percent) {
+                wrapper
+                    .html(" starting…")
+                    .prepend(spinner.clone());
+            } else if (percent < 100) {
                 wrapper
                     .html(" " + percent + "%")
                     .prepend(spinner.clone());
