@@ -73,7 +73,7 @@ class Asset_Validation extends \Podlove\Modules\Base {
 	private function validate_post( \WP_Post $post ) {
 		$episode = Model\Episode::find_or_create_by_post_id( $post->ID );
 		if ( $episode && $episode->is_valid() ) {
-			Log::get()->addInfo( 'Validate episode', array( 'episode_id' => $episode->id ) );
+			// Log::get()->addInfo( 'Validate episode', array( 'episode_id' => $episode->id ) );
 			$episode->refetch_files();
 			update_post_meta( $post->ID, '_podlove_last_validated_at', time() );
 		}
