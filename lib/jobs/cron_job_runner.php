@@ -114,18 +114,18 @@ class CronJobRunner {
 		$job = Job::load($job_id);
 
 		if (!$job) {
-			\Podlove\Log::get()->addDebug('[job] runner tried to run job ' . $job_id . ' but it does not exist');
+			\Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] runner tried to run job but it does not exist');
 			self::unlock_process();
 			return;
 		}
 
 		while (!$job->is_finished() && self::should_run_another_job()) {
 			$job->step();
-			\Podlove\Log::get()->addDebug('[job] step ' . $job_id);
+			// \Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] step');
 		}
 
 		if ($job->is_finished()) {
-			\Podlove\Log::get()->addDebug('[job] done ' . $job_id);
+			\Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] done');
 		}
 
 		self::unlock_process();
