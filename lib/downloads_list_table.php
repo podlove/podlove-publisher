@@ -49,6 +49,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		return array(
 			'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
 			'downloads' => __('Total', 'podlove-podcasting-plugin-for-wordpress'),
+			'1y' => __('1y', 'podlove-podcasting-plugin-for-wordpress'),
 			'4w' => __('4w', 'podlove-podcasting-plugin-for-wordpress'),
 			'3w' => __('3w', 'podlove-podcasting-plugin-for-wordpress'),
 			'2w' => __('2w', 'podlove-podcasting-plugin-for-wordpress'),
@@ -66,6 +67,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		return [
 			'episode'   => ['episode', true],
 			'downloads' => ['downloads', true],
+			'1y'        => ['1y', true],
 			'4w'        => ['4w', true],
 			'3w'        => ['3w', true],
 			'2w'        => ['2w', true],
@@ -80,7 +82,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	}
 
 	public static function aggregation_columns() {
-		return ['4w','3w','2w','1w','6d','5d','4d','3d','2d','1d'];
+		return ['1y', '4w','3w','2w','1w','6d','5d','4d','3d','2d','1d'];
 	}
 
 	public function prepare_items() {
@@ -102,6 +104,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 				'title' => $post->post_title,
 				'post_date' => $post->post_date,
 				'downloads' => get_post_meta($post->ID, '_podlove_downloads_total', true),
+				'1y' => get_post_meta($post->ID, '_podlove_downloads_1y', true),
 				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true),
 				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true),
 				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true),

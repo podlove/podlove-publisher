@@ -93,6 +93,7 @@ class DownloadTimedAggregatorJob {
 	public static function groupings()
 	{
 		return  [
+			'1y' => 24 * 7 * 52,
 			'4w' => 24 * 7 * 4,
 			'3w' => 24 * 7 * 3,
 			'2w' => 24 * 7 * 2,
