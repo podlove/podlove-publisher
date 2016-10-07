@@ -83,6 +83,7 @@ function migrate_for_current_blog() {
 	$database_version = get_option('podlove_database_version');
 
 	for ($i = $database_version+1; $i <= DATABASE_VERSION; $i++) { 
+		\Podlove\Log::get()->addInfo(sprintf('Migrate blog %d to version %d', get_current_blog_id(), $i));
 		\Podlove\run_migrations_for_version($i);
 		update_option('podlove_database_version', $i);
 	}
