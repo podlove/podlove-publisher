@@ -125,20 +125,24 @@ code.details {
 
 function filter_log() {
 	var filterWrapper = $("#podlove-log-filter"),
+		debug    = filterWrapper.find(".log-level.log-level-100 input[type=checkbox]:checked").length,
 		info    = filterWrapper.find(".log-level.log-level-200 input[type=checkbox]:checked").length,
 		warning = filterWrapper.find(".log-level.log-level-300 input[type=checkbox]:checked").length,
 		error   = filterWrapper.find(".log-level.log-level-400 input[type=checkbox]:checked").length,
 		log = $("#podlove-log")
 	;
 	
+	log.find(".log-entry.log-level-100").toggle(!!debug);
 	log.find(".log-entry.log-level-200").toggle(!!info);
 	log.find(".log-entry.log-level-300").toggle(!!warning);
 	log.find(".log-entry.log-level-400").toggle(!!error);
+
+	// always scroll to newest when filtering
+	$("#podlove-log-wrapper").scrollTop($("#podlove-log-wrapper")[0].scrollHeight);
 }
 
 $(document).ready(function() {
 	// scroll down
-	$("#podlove-log").scrollTop($("#podlove-log")[0].scrollHeight);
 	$("#podlove-log").on('click', '.log-details .toggle a', function(e) {
 		e.preventDefault();
 		$(this).closest('.log-details').find('.details').toggle();
@@ -160,6 +164,12 @@ $(document).ready(function() {
 		<div id="podlove-debug-log" class="card">
 
 		<div id="podlove-log-filter">
+			<div class="log-level log-level-100">
+				<label>
+					<input type="checkbox">
+					debug
+				</label>
+			</div>
 			<div class="log-level log-level-200">
 				<label>
 					<input type="checkbox">
