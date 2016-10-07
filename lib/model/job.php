@@ -71,7 +71,7 @@ class Job extends Base {
 				' . Job::table_name() .  '
 			WHERE
 				steps_total > steps_progress
-			ORDER BY created_at DESC
+			ORDER BY created_at ASC
 		';
 
 		return Job::find_all_by_sql($sql);
