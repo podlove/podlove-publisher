@@ -30,7 +30,8 @@ class ToolsSection {
 				<?php foreach ($jobs as $job): ?>
 					<tr>
 						<td>
-							<?php echo $job->title(); ?>
+							<?php $class = $job->class; ?>
+							<?php echo $class::title(); ?>
 						</td>
 						<td>
 							<?php 
