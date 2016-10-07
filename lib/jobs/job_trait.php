@@ -69,8 +69,14 @@ trait JobTrait {
 		}
 		
 		$this->job->steps_total = $this->get_total_steps();
-		$this->job->steps_progress = 0;
-		$this->job->active_run_time = 0;
+
+		if (!$this->job->steps_progress) {
+			$this->job->steps_progress = 0;
+		}
+
+		if (!$this->job->active_run_time) {
+			$this->job->active_run_time = 0;
+		}
 
 		$this->save_job();
 
