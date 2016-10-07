@@ -93,7 +93,7 @@ trait JobTrait {
 
 	public function save_job() {
 
-		$current_time = current_time('mysql');
+		$current_time = current_time('mysql', true);
 
 		if ($this->job->is_new()) {
 			$this->job->class = str_replace('\\', '\\\\', get_called_class());
