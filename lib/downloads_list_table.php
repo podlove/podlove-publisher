@@ -1,6 +1,10 @@
 <?php
 namespace Podlove;
 
+use Podlove\Jobs\DownloadTimedAggregatorJob;
+use Podlove\Jobs\DownloadTotalsAggregatorJob;
+use Podlove\Model\Job;
+
 class Downloads_List_Table extends \Podlove\List_Table {
 
 	function __construct(){
@@ -160,6 +164,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	}
 
 	protected function extra_tablenav( $which ) {
+		global $wpdb;
 
 		if ($which !== 'bottom')
 			return;
@@ -179,11 +184,13 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$sums_cron   = $get_cron_info("podlove_calc_download_sums");
 		$totals_cron = $get_cron_info("podlove_calc_download_totals");
 
+		$prev_sums_job   = Job::find_one_recent_finished_job(DownloadTimedAggregatorJob::class);
+		$prev_totals_job = Job::find_one_recent_finished_job(DownloadTotalsAggregatorJob::class);
+
 		?>
 		<div class="alignleft actions">	
 			<em>
 				<?php 
-				global $wpdb;
 				$sql = 'SELECT SUM(meta_value) total FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_podlove_downloads_total"';
 				$total = $wpdb->get_var($sql);
 				echo sprintf("Your episodes have been downloaded a total of %s times.", number_format_i18n($total));
@@ -193,7 +200,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 				<?php
 				echo sprintf(
 					__('Sums data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
-					human_time_diff($sums_cron['prev'], time()),
+					human_time_diff(max($sums_cron['prev'], strtotime($prev_sums_job->updated_at)), time()),
 					human_time_diff(time(), $sums_cron['next'])
 				); ?>
 			</em><br>
@@ -201,7 +208,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 				<?php
 				echo sprintf(
 					__('Totals data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
-					human_time_diff($totals_cron['prev'], time()),
+					human_time_diff(max($totals_cron['prev'], strtotime($prev_totals_job->updated_at)), time()),
 					human_time_diff(time(), $totals_cron['next'])
 				); ?>
 			</em>
