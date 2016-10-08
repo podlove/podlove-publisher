@@ -23,13 +23,13 @@ trait JobTrait {
 	 * Human readable title
 	 * @return string
 	 */
-	abstract public static function title();
+	public static function title() { return ''; }
 
 	/**
 	 * Human readable description of what the job does
 	 * @return string
 	 */
-	abstract public static function description();
+	public static function description() { return ''; }
 
 	/**
 	 * Called once on class construction.
@@ -77,6 +77,9 @@ trait JobTrait {
 		if (!$this->job->active_run_time) {
 			$this->job->active_run_time = 0;
 		}
+
+		$this->job->wakeups = $this->job->wakeups ? $this->job->wakeups : 0;
+		$this->job->sleeps  = $this->job->sleeps ? $this->job->sleeps   : 0;
 
 		$this->save_job();
 

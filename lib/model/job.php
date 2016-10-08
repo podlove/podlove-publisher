@@ -143,6 +143,26 @@ class Job extends Base {
 		$state[$attribute] = $value;
 		$this->state = $state;
 	}
+
+	/**
+	 * Triggered when a job runner wakes a job.
+	 */
+	public function increase_wakeup_count()
+	{
+		global $wpdb;
+		$this->wakeups++;
+		$wpdb->query('UPDATE ' . self::table_name() . ' SET wakeups = wakeups + 1 WHERE id = ' . (int) $this->id);
+	}
+
+	/**
+	 * Triggered when job runner stops/finishes a job.
+	 */
+	public function increase_sleep_count()
+	{
+		global $wpdb;
+		$this->sleeps++;
+		$wpdb->query('UPDATE ' . self::table_name() . ' SET sleeps = sleeps + 1 WHERE id = ' . (int) $this->id);
+	}
 }
 
 Job::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
@@ -152,5 +172,7 @@ Job::property('steps_total', 'INT');
 Job::property('steps_progress', 'INT');
 Job::property('active_run_time', 'FLOAT');
 Job::property('state', 'LONGTEXT');
+Job::property('wakeups', 'INT'); // how often did the job get woken up by runner
+Job::property('sleeps', 'INT');  // how often did the job run complete successfully
 Job::property('created_at', 'DATETIME');
 Job::property('updated_at', 'DATETIME');

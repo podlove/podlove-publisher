@@ -53,7 +53,7 @@ class CronJobRunner {
 	}
 
 	public static function spawn($job) {
-		wp_schedule_single_event(time() - 1, 'cron_job_runner', [$job->id, 0]);
+		wp_schedule_single_event(time() - 1, 'cron_job_runner', [$job->id, time()]);
 	}
 
 	public static function work_jobs() {
@@ -109,7 +109,7 @@ class CronJobRunner {
 		delete_site_transient( 'podlove_process_lock' );
 	}
 
-	public static function run_job($job_id, $call_count) {
+	public static function run_job($job_id, $spawn_time) {
 
 		$job = Job::load($job_id);
 
@@ -118,6 +118,8 @@ class CronJobRunner {
 			self::unlock_process();
 			return;
 		}
+
+		$job->get_job()->increase_wakeup_count();
 
 		while (!$job->is_finished() && self::should_run_another_job()) {
 			$job->step();
@@ -128,6 +130,7 @@ class CronJobRunner {
 			\Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] done');
 		}
 
+		$job->get_job()->increase_sleep_count();
 		self::unlock_process();
 	}
 

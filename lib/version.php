@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 113 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 114 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1205,6 +1205,16 @@ function run_migrations_for_version( $version ) {
 		case 113:
 			delete_option('podlove_jobs');
 			Model\Job::build();
+		break;
+		case 114:
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `wakeups` INT',
+				'ALTER TABLE `%s` ADD COLUMN `sleeps` INT'
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\Job::table_name()) );
+			}
 		break;
 	}
 
