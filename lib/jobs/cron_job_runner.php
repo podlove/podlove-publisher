@@ -90,7 +90,7 @@ class CronJobRunner {
 	 * in a background process.
 	 */
 	protected static function is_process_running() {
-		if ( get_site_transient( 'podlove_process_lock' ) ) {
+		if ( get_transient( 'podlove_process_lock' ) ) {
 			// Process already running.
 			return true;
 		}
@@ -105,7 +105,7 @@ class CronJobRunner {
 	protected static function lock_process() {
 		$lock_duration = self::MAX_SECONDS_PER_REQUEST + 10;
 		$lock_duration = apply_filters( 'podlove_queue_lock_time', $lock_duration );
-		set_site_transient( 'podlove_process_lock', microtime(), $lock_duration );
+		set_transient( 'podlove_process_lock', microtime(), $lock_duration );
 	}
 	/**
 	 * Unlock process
@@ -115,7 +115,7 @@ class CronJobRunner {
 	 * @return $this
 	 */
 	protected static function unlock_process() {
-		delete_site_transient( 'podlove_process_lock' );
+		delete_transient( 'podlove_process_lock' );
 	}
 
 	public static function run_job($job_id, $spawn_time) {
