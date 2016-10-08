@@ -40,7 +40,7 @@
 namespace Podlove;
 use \Podlove\Model;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 114 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 115 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1215,6 +1215,9 @@ function run_migrations_for_version( $version ) {
 			foreach ($alterations as $sql) {
 				$wpdb->query( sprintf($sql, Model\Job::table_name()) );
 			}
+		break;
+		case 115:
+			Model\Job::delete_all();
 		break;
 	}
 
