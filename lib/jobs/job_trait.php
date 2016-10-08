@@ -164,13 +164,4 @@ trait JobTrait {
 			call_user_func($this->hooks['finished']);
 		}
 	}
-
-	/**
-	 * Finish the job
-	 */
-	public function run() {
-		while (!$this->is_finished()) {
-			$this->step();
-		}
-	}
 }
