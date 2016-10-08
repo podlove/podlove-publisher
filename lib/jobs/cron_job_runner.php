@@ -47,7 +47,7 @@ class CronJobRunner {
 
 		$unfinished = Job::find_one_recent_unfinished_job($job_class);
 		if ($unfinished) {
-			\Podlove\Log::get()->addDebug('[job] did not start ' . $job_class . ' because a job of this type is already running (id ' . $unfinished->id . ')');
+			\Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] did not start ' . $job_class . ' because a job of this type is already running (id ' . $unfinished->id . ')');
 			return NULL;
 		}
 
@@ -56,7 +56,7 @@ class CronJobRunner {
 		// immediately wake up worker for less waiting time
 		wp_schedule_single_event(time(), 'cron_job_worker');
 		
-		\Podlove\Log::get()->addDebug('[job] start ' . $job_class);
+		\Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] start ' . $job_class);
 
 		return $job;
 	}
