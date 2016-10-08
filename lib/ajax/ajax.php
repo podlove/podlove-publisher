@@ -64,9 +64,13 @@ class Ajax {
 
 		$job = \Podlove\Jobs\CronJobRunner::create_job($job_name, $job_args);
 
-		self::respond_with_json([
-			'job_id' => $job->get_job_id()
-		]);
+		if ($job) {
+			self::respond_with_json([
+				'job_id' => $job->get_job_id()
+			]);
+		} else {
+			self::respond_with_json(['error' => 'A job "' . $job_name . '" is already running']);
+		}
 	}
 
 	public function job_get() {

@@ -42,6 +42,15 @@ class CronJobRunner {
 	 */
 	public static function create_job($job_class, $args = []) {
 
+		// for now, only accept one unfinished instance per job
+		// maybe make this behaviour configurable per job
+
+		$unfinished = Job::find_one_recent_unfinished_job($job_class);
+		if ($unfinished) {
+			\Podlove\Log::get()->addDebug('[job] did not start ' . $job_class . ' because a job of this type is already running (id ' . $unfinished->id . ')');
+			return NULL;
+		}
+
 		$job = (new $job_class($args))->init();
 
 		// immediately wake up worker for less waiting time
