@@ -22,11 +22,6 @@ class DownloadIntentCleanup {
 	}
 
 	public static function cleanup_download_intents() {
-
-		// DEBUG / FIXME temporary fix for metaebene beta
-		// Prevents podlove_jobs option to grow too huge
-		delete_option('podlove_jobs');
-
 		CronJobRunner::create_job('\Podlove\Jobs\DownloadIntentCleanupJob', ['delete_all' => false]);
 	}
 
