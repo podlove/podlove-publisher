@@ -94,7 +94,7 @@ class CronJobRunner {
 	 * The duration should be greater than that defined in self::MAX_SECONDS_PER_REQUEST.
 	 */
 	protected static function lock_process() {
-		$lock_duration = 60; // 1 minute
+		$lock_duration = self::MAX_SECONDS_PER_REQUEST + 10;
 		$lock_duration = apply_filters( 'podlove_queue_lock_time', $lock_duration );
 		set_site_transient( 'podlove_process_lock', microtime(), $lock_duration );
 	}
