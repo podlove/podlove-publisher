@@ -14,6 +14,10 @@ class JobsTest extends WP_UnitTestCase {
 		// $this->episode_factory = new EpisodeFactory($this->factory);
 	}
 
+	public function testTruth() {
+		$this->assertEquals(true, true);
+	}
+
 	// public function testNewJobIsNotStarted() {
 	// 	$job = (new CountingJob(['from' => 1, 'to' => 5]))->init();
 	// 	$this->assertEquals($job->get_status()['text'], 'not_started');
