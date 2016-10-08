@@ -205,7 +205,6 @@ require_once \Podlove\PLUGIN_DIR . 'lib/tools.php';
 // @todo: change to internal module
 new \Podlove\AJAX\Ajax(); 
 new \Podlove\Settings\Tools\UserAgentRefresh;
-new \Podlove\Settings\Tools\DownloadIntentCleaner;
 
 \Podlove\Jobs\CronJobRunner::init();
 \Podlove\Jobs\ToolsSection::init();
