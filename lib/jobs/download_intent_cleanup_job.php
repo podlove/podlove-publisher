@@ -15,17 +15,18 @@ class DownloadIntentCleanupJob {
 	}
 
 	public function setup() {
-		
 		$this->hooks['finished'] = [__CLASS__, 'purge_cache'];
+		$this->hooks['init'] = [$this, 'init_job'];
+	}
 
+	public function init_job()
+	{
 		if ($this->job->args['delete_all']) {
-			$this->hooks['init'] = [__CLASS__, 'delete_clean_intents'];
+			Model\DownloadIntentClean::delete_all();
 			$this->job->state = ['previous_id' => 0];
 		} else {
 			$this->job->state = ['previous_id' => self::get_max_clean_intent_id()];
 		}
-
-		$this->job->steps_progress = $this->job->state['previous_id'];
 	}
 
 	public static function defaults() {
@@ -90,9 +91,5 @@ class DownloadIntentCleanupJob {
 
 	public static function purge_cache() {
 		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
-	}
-
-	public static function delete_clean_intents() {
-		Model\DownloadIntentClean::delete_all();
 	}
 }
