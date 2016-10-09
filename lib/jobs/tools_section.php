@@ -43,7 +43,7 @@ class ToolsSection {
 							?>
 						</td>
 						<td>
-							<?php echo sprintf(__('%s ago'), human_time_diff(strtotime($job->updated_at))); ?>
+							<?php echo sprintf(__('%s ago'), human_time_diff(strtotime($job->created_at))); ?>
 						</td>
 						<td>
 							<?php echo sprintf(__('%s sec ago'), (time() - strtotime($job->updated_at))); ?>
