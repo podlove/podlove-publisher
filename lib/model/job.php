@@ -94,7 +94,7 @@ class Job extends Base {
 				' . Job::table_name() .  '
 			WHERE
 				steps_total <= steps_progress
-			ORDER BY created_at ASC
+			ORDER BY created_at DESC
 			LIMIT 0, ' . (int) $limit . '
 		';
 
