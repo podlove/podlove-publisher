@@ -84,9 +84,7 @@ class ToolsSection {
 					</tr>
 				<?php endforeach ?>
 			</tbody>
-		</table>		
-		<?php else: ?>
-			<?php echo __('No jobs were run recently.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+		</table>
 		<?php endif; ?>
 		<?php
 	}
