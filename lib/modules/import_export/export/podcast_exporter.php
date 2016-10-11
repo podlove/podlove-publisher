@@ -105,6 +105,11 @@ class PodcastExporter {
 					}
 					$xml_group->addChild("xmlns:wpe:$option_name", serialize($value));
 				} else {
+
+					if (is_object($value)) {
+						$value = maybe_serialize($value);
+					}
+
 					$value = htmlspecialchars($value);
 					$xml_group->addChild("xmlns:wpe:$option_name", $value);
 				}
