@@ -58,6 +58,8 @@ class PodcastImporter {
 	 */
 	public function import() {
 
+		@set_time_limit(0);
+
 		$gzfilesize = function($filename) {
 			$gzFilesize = FALSE;
 			if (($zp = fopen($filename, 'r'))!==FALSE) {
