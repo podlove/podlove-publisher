@@ -116,16 +116,18 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Background Jobs System**
 
-* _needs description_
+Crunching numbers for Analytics takes time, especially for popular podcasts with many downloads. The old system was written optimistically and "let's-hope-we-finish-before-we-run-out-of-time"-ish. That was certainly good enough for podcasts with a few hundred downloads per episode, but more likely a gamble for popular shows.
+To solve this issue in a scaleable way, we built what is known as "background processing" or "queues". That way we can break big tasks into small chunks and process them step by step. You don't really need to know about this, since the main effect is that calculating analytics should be a smoother experience (if you have ever had troubles in that regard) but if you are curious, have a look at the new "Tools" section, which lists running and recently finished jobs.
 
 **New "Tools" Menu**
 
 * A new maintenance section gathers tools like the "Repair" button in one place
-* There is a new section for tracking related maintenance
+* There is a new section for analytics related maintenance
 * Import & Export is now in the "Tools" menu
 
 **Improved Logging Display**
 
+* Logging is now in the "Support" menu
 * add filtering for different severities
 * hide "info" entries by default
 * improve readability of data sections
