@@ -71,7 +71,9 @@ class TrackingImporter {
 				$lat,
 				$lng,
 				$httprange
-			) = explode(",", $line);
+			) = array_map(function ($value) {
+				return trim($value);
+			}, explode(",", $line));
 
 			$batch[] = array(
 				$user_agent_id,
