@@ -55,6 +55,8 @@ class PodcastImporter {
 	 * we do not need special handling since module activation and deactivation is hooked
 	 * to the "update_option_podlove_active_modules" filter. We only need to make sure
 	 * options/modules are imported early enough.
+	 * 
+	 * @todo  this should probably be a job, each import section its own step
 	 */
 	public function import() {
 
