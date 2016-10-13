@@ -155,6 +155,7 @@ To solve this issue in a scaleable way, we built what is known as "background pr
 * remove log entries for beginning and ending asset validations
 * move feed protection into separate module
 * move debug log from Dashboard to Support page
+* add ptm_request parameter to redirected tracking URLs which contains a uuid
 
 = 2.3.18 =
 
