@@ -119,6 +119,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 Crunching numbers for Analytics takes time, especially for popular podcasts with many downloads. The old system was written optimistically and "let's-hope-we-finish-before-we-run-out-of-time"-ish. That was certainly good enough for podcasts with a few hundred downloads per episode, but more likely a gamble for popular shows.
 To solve this issue in a scaleable way, we built what is known as "background processing" or "queues". That way we can break big tasks into small chunks and process them step by step. You don't really need to know about this, since the main effect is that calculating analytics should be a smoother experience (if you have ever had troubles in that regard) but if you are curious, have a look at the new "Tools" section, which lists running and recently finished jobs.
 
+**New Analytics Dashboard**
+
+* "Downloads per Day" is a stacked bar chart now so you can see which episode is responsible for peaks
+* Downloads table now shows downloads in time segments starting from the moment of episode release for better comparability
+* New information under downloads table:
+  * sum of all downloads over all episodes ever, because we know you like big numbers
+  * age of the data and when the next refresh is due
+
 **New "Tools" Menu**
 
 * A new maintenance section gathers tools like the "Repair" button in one place
