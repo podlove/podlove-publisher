@@ -147,6 +147,7 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 
 **Other**
 
+* Web Player setttings moved from Expert Settings to Podcast Settings
 * When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
 * Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
 * add contributors shortcode to default template (Many people activated contributors and then wondered why they were not displayed in the episode. Now the shortcode is part of the default template, but only if the contributors module is active.)
