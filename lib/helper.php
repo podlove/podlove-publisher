@@ -89,11 +89,15 @@ function save_setting( $namespace, $name, $values ) {
 /**
  * Are we on the WordPress Settings API save page?
  * 
+ * DO NOT USE filter_input here. There seems to be a PHP bug that on some
+ * systems prevents filter_input to work for INPUT_SERVER and INPUT_ENV.
+ * @see  http://stackoverflow.com/questions/25232975/php-filter-inputinput-server-request-method-returns-null
+ * 
  * @return boolean
  */
 function is_options_save_page() {
-	$self    = filter_input(INPUT_SERVER, 'PHP_SELF');
-	$request = filter_input(INPUT_SERVER, 'REQUEST_URI');
+    $self    = $_SERVER['PHP_SELF'];
+    $request = $_SERVER['REQUEST_URI'];
 
 	return stripos($self, 'options.php') !== FALSE || stripos($request, 'options.php') !== FALSE;
 }

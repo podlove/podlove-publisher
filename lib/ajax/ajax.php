@@ -14,7 +14,7 @@ class Ajax {
 
 		// workaround to make is_network_admin() work in ajax requests
 		// @see https://core.trac.wordpress.org/ticket/22589
-		if (!defined('WP_NETWORK_ADMIN') && defined('DOING_AJAX') && DOING_AJAX && is_multisite() && preg_match('#^' . network_admin_url() . '#i', filter_input(INPUT_SERVER, 'HTTP_REFERER'))) {
+		if (!defined('WP_NETWORK_ADMIN') && defined('DOING_AJAX') && DOING_AJAX && is_multisite() && preg_match('#^' . network_admin_url() . '#i', $_SERVER['HTTP_REFERER'])) {
 			define('WP_NETWORK_ADMIN',true);
 		}
 

@@ -13,7 +13,7 @@ function handle_feed_proxy_redirects() {
 	if (\Podlove\get_setting('website', 'feeds_skip_redirect') == 'on' && filter_input(INPUT_GET, 'redirect') == 'no') {
 		$should_redirect = false;
 		$is_debug_view = true;
-	} elseif (preg_match("/feedburner|feedsqueezer|feedvalidator|feedpress/i", filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'))) {
+	} elseif (preg_match("/feedburner|feedsqueezer|feedvalidator|feedpress/i", $_SERVER['HTTP_USER_AGENT'])) {
 		$should_redirect = false;
 	} else {
 		$should_redirect = true;
