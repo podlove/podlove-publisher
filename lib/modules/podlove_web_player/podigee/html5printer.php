@@ -37,6 +37,18 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		$post               = get_post($episode->post_id);
 		$player_media_files = new \Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles($episode);
 		$media_files        = $player_media_files->get($context);
+		$media_files_conf   = array_reduce($media_files, function($agg, $item) {
+
+			$extension = $item['extension'];
+
+			if ($extension == 'oga') {
+				$extension = 'ogg';
+			}
+
+			$agg[$extension] = $item['url'];
+
+			return $agg;
+		}, []);
 
 		$config = [
 			'options' => [
@@ -48,13 +60,15 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				],
 				'ChapterMarks' => [
 					'showOnStart' => false
-				]
+				],
+				'Share' => []
 			],
 			'podcast' => [
-				'feed' => Feed::first()->get_subscribe_url()
+				// don't provide the feed unless we have a CORS solution
+				// 'feed' => Feed::first()->get_subscribe_url()
 			],
 			'episode' => [
-				'media' => [],
+				'media' => $media_files_conf,
 				'title' => get_the_title($post->ID),
 				'subtitle' => wptexturize(convert_chars(trim($episode->subtitle))),
 				'description' => nl2br(wptexturize(convert_chars(trim($episode->summary)))),

@@ -127,6 +127,10 @@ To solve this issue in a scaleable way, we built what is known as "background pr
   * sum of all downloads over all episodes ever, because we know you like big numbers
   * age of the data and when the next refresh is due
 
+**Podigee Podcast Player**
+
+The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is available as an alternative to the Podlove Web Players. It supports everything you can expect from a modern web player like chaptermarks. It is also embeddable.
+
 **New "Tools" Menu**
 
 * A new maintenance section gathers tools like the "Repair" button in one place
