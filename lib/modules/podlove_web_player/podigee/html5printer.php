@@ -52,7 +52,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 		$config = [
 			'options' => [
-				'theme' => 'default'
+				'theme' => \Podlove\get_webplayer_setting('podigeetheme')
 			],
 			'extensions' => [
 				'EpisodeInfo' => [

@@ -7,6 +7,28 @@ class Module {
 	
 	public function load() {
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
+		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
+	}
+
+	public function add_player_settings($form_data) {
+
+		$theme_options = [
+			'default'      => 'Default',
+			'default-dark' => 'Default (dark)',
+			'minimal'      => 'Minimal'
+		];
+		
+		$form_data[] = [
+			'type' => 'select',
+			'key' => 'podigeetheme',
+			'options' => [
+				'label' => 'Web Player Theme',
+				'options' => $theme_options
+			],
+			'position' => 500
+		];
+
+		return $form_data;
 	}
 
 	public static function shortcode() {

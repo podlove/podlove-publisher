@@ -12,6 +12,8 @@ class Module {
 	public function load() {
 		add_action('wp', [$this, 'embed_player']);
 
+		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
+
 		add_action('wp_enqueue_scripts', function() {
 			wp_enqueue_script(
 				'podlove-player-moderator-script',
@@ -29,6 +31,35 @@ class Module {
 			add_shortcode('podlove-web-player', [__CLASS__, 'shortcode']);
 
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
+	}
+
+	public function add_player_settings($form_data) {
+
+		$theme_options = [];
+		$player_css_dir = \Podlove\PLUGIN_DIR . 'lib/modules/podlove_web_player/player_v3/css/';
+		$dir = new \DirectoryIterator($player_css_dir);
+		foreach ($dir as $fileinfo) {
+			if ($fileinfo->getExtension() == 'css') {
+				$filename = $fileinfo->getFilename();
+				$filetitle = str_replace(".css", "", $filename);
+				$filetitle = str_replace(".min", "", $filetitle);
+				$filetitle = str_replace("-", " ", $filetitle);
+				$filetitle = str_replace("pwp", "PWP", $filetitle);
+				$theme_options[$filename] = $filetitle;
+			}
+		}
+		
+		$form_data[] = [
+			'type' => 'select',
+			'key' => 'playerv3theme',
+			'options' => [
+				'label' => 'Web Player Theme',
+				'options' => $theme_options
+			],
+			'position' => 500
+		];
+
+		return $form_data;
 	}
 
 	public function embed_player() {

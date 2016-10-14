@@ -144,7 +144,8 @@ function get_webplayer_defaults() {
 		'chaptersVisible' => 'false',
 		'inject'          => 'manually',
 		'version'         => 'player_v2',
-		'playerv3theme'   => 'pwp-dark-green.min.css'
+		'playerv3theme'   => 'pwp-dark-green.min.css',
+		'podigeetheme'    => 'default'
 	];
 }
 
