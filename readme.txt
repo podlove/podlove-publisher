@@ -126,6 +126,7 @@ To solve this issue in a scaleable way, we built what is known as "background pr
 * New information under downloads table:
   * sum of all downloads over all episodes ever, because we know you like big numbers
   * age of the data and when the next refresh is due
+* _MUCH_ better performance / page load times
 
 **Podigee Podcast Player**
 
