@@ -149,20 +149,6 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 
 * When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
 * Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
-* add fyyd.de module
-* fix tracking export: keep httprange
-* fix compatibility with other plugins relying on Spyc library
-* fix `{{ episode.duration.totalMilliseconds }}`
-* fix image caching issue (invisible characters)
-* fix: When plugin requirements are not met, admin notices are now still shown once but the plugin is automatically deactivated after that. This avoids faulty setups.
-* fix: show podcast covers in network site switcher
-* fix: expert settings not saving on some systems
-* improve tracking: ignore 1-byte requests
-* update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
-* remove `<itunes:keywords>` from feed (it disappeared from the specification)
-* update recommended image size to 3000x3000 pixel
-* add heartbeat to keep note of when tracking is active
-* `shortcode_exists($shortcode_name)` is now available in Twig templates
 * add contributors shortcode to default template (Many people activated contributors and then wondered why they were not displayed in the episode. Now the shortcode is part of the default template, but only if the contributors module is active.)
 * add unmistakable warning if curl is not available and provide actionable steps for a solution
 * change feed setting "Include HTML Content" default to "on"
@@ -170,6 +156,20 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 * move feed protection into separate module
 * move debug log from Dashboard to Support page
 * add ptm_request parameter to redirected tracking URLs which contains a uuid
+* add fyyd.de module
+* improve tracking: ignore 1-byte requests
+* update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
+* remove `<itunes:keywords>` from feed (it disappeared from the specification)
+* update recommended image size to 3000x3000 pixel
+* add heartbeat to keep note of when tracking is active
+* `shortcode_exists($shortcode_name)` is now available in Twig templates
+* fix tracking export: keep httprange
+* fix compatibility with other plugins relying on Spyc library
+* fix `{{ episode.duration.totalMilliseconds }}`
+* fix image caching issue (invisible characters)
+* fix: When plugin requirements are not met, admin notices are now still shown once but the plugin is automatically deactivated after that. This avoids faulty setups.
+* fix: show podcast covers in network site switcher
+* fix: expert settings not saving on some systems
 
 = 2.3.18 =
 
