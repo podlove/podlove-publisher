@@ -164,6 +164,7 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 * update recommended image size to 3000x3000 pixel
 * add heartbeat to keep note of when tracking is active
 * `shortcode_exists($shortcode_name)` is now available in Twig templates
+* system report: add notice if ALTERNATE_WP_CRON is active
 * fix tracking export: keep httprange
 * fix compatibility with other plugins relying on Spyc library
 * fix `{{ episode.duration.totalMilliseconds }}`
