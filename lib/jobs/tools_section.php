@@ -112,8 +112,10 @@ class ToolsSection {
 				$seconds = time() - $activity['activity'];
 				if ($seconds === 0) {
 					echo __("now");
+				} elseif ($seconds < 120) {
+					echo sprintf(_n('%s second ago', '%s seconds ago', $seconds), $seconds);
 				} else {
-					echo sprintf(__('%s seconds ago'), $seconds);
+					echo sprintf(__('%s ago'), human_time_diff($activity['activity'], time()));
 				}
 			}
 
