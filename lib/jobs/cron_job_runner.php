@@ -26,12 +26,33 @@ class CronJobRunner {
 
 	public static function init() {
 		add_action('cron_job_runner', [__CLASS__, 'run_job'], 10, 2);
-		add_action('cron_job_worker', [__CLASS__, 'work_jobs']);
+
+		// Maybe spawning worker jobs every 5 seconds is more work than simply running
+		// the worker on every request. Takes load off the WP Cron system and might 
+		// help increase all-in-all stability. Let's give it a try.
+
+		if (!defined('DOING_AJAX') && !defined('DOING_CRON') && empty($_POST)) {
+			// \PHP_Timer::start();
+
+			self::work_jobs();
+
+			// $time = \PHP_Timer::stop();
+			// \Podlove\Log::get()->addInfo(sprintf('Working jobs took: %s', \PHP_Timer::secondsToTimeString($time)));
+		} else {
+			// only if jobs were not started anyway, see if a cron wants to start it
+			add_action('cron_job_worker', [__CLASS__, 'work_jobs']);
+		}
+
+		// ---------- START block: old system that runs worker via cron every 5 seconds
+		// 
+		// add_action('cron_job_worker', [__CLASS__, 'work_jobs']);
 
 		// worker checks every few seconds if there are jobs to handle
-		if (!wp_next_scheduled('cron_job_worker')) {
-			wp_schedule_single_event(time() + 5, 'cron_job_worker');
-		}
+		// if (!wp_next_scheduled('cron_job_worker')) {
+		// 	wp_schedule_single_event(time() + 5, 'cron_job_worker');
+		// }
+		// 
+		// ---------- END block
 	}
 
 	/**
@@ -145,6 +166,9 @@ class CronJobRunner {
 
 		$job->get_job()->increase_sleep_count();
 		self::unlock_process();
+
+		// after finishing, spawn a new worker process
+		wp_schedule_single_event(time(), 'cron_job_worker');
 	}
 
 	/**
