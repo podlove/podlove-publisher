@@ -67,6 +67,8 @@ class CronJobRunner {
 
 	public static function work_jobs() {
 
+		set_transient('podlove_jobs_last_spawn_worker', time(), DAY_IN_SECONDS);
+
 		if (self::is_process_running()) {
 			return;
 		}
@@ -119,6 +121,8 @@ class CronJobRunner {
 	}
 
 	public static function run_job($job_id, $spawn_time) {
+
+		set_transient('podlove_jobs_last_spawn_runner', time(), DAY_IN_SECONDS);
 
 		$job = Job::load($job_id);
 

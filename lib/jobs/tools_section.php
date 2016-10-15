@@ -86,6 +86,44 @@ class ToolsSection {
 			</tbody>
 		</table>
 		<?php endif; ?>
-		<?php
+
+		<?php 
+
+		$activities = [
+			'worker' => [
+				'title' => 'Worker Activity',
+				'activity' => get_transient('podlove_jobs_last_spawn_worker'),
+				'description' => 'Should not be more than few seconds unless you have a custom WP Cron system setup.'
+			],
+			'runner' => [
+				'title' => 'Runner Activity',
+				'activity' => get_transient('podlove_jobs_last_spawn_runner'),
+				'description' => 'May be inactive if no jobs are running. If at least one job is running, should be less than a minute or two unless you have a custom WP Cron system setup.'
+			]
+		];
+
+		echo '<p>';
+		foreach ($activities as $activity) {
+			echo $activity['title'] . ': ';
+
+			if (!$activity['activity']) {
+				echo "Not in the last hour.";
+			} else {
+				$seconds = time() - $activity['activity'];
+				if ($seconds === 0) {
+					echo __("now");
+				} else {
+					echo sprintf(__('%s seconds ago'), $seconds);
+				}
+			}
+
+			if ($activity['description']) {
+				echo " <small><em>({$activity['description']})</em></small>";
+			}
+
+			echo '<br>';
+		}
+		echo '</p>';
+
 	}
 }
