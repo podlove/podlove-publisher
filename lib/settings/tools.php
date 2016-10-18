@@ -54,7 +54,7 @@ class Tools {
 		 * Fields for section "Tracking & Analytics"
 		 */
 		\Podlove\add_tools_field('ta-recals-agents', __('Recalculate User Agents', 'podlove-podcasting-plugin-for-wordpress'), function() {
-				$job_class = \Podlove\Jobs\UserAgentRefreshJob::class;
+				$job_class = 'Podlove\Jobs\UserAgentRefreshJob';
 				$recent_job = Job::find_one_recent_job($job_class);
 				$recent_job_id = $recent_job ? $recent_job->id : '';
 			?>
@@ -77,7 +77,7 @@ class Tools {
 		}, 'tracking-analytics');
 
 		\Podlove\add_tools_field('ta-recalc-analytics', __('Recalculate Analytics', 'podlove-podcasting-plugin-for-wordpress'), function() {
-				$job_class = \Podlove\Jobs\DownloadIntentCleanupJob::class;
+				$job_class = 'Podlove\Jobs\DownloadIntentCleanupJob';
 				$recent_job = Job::find_one_recent_job($job_class);
 				$recent_job_id = $recent_job ? $recent_job->id : '';
 			?>
@@ -100,7 +100,7 @@ class Tools {
 		}, 'tracking-analytics');
 
 		\Podlove\add_tools_field('ta-recalc-downloads-table', __('Recalculate Downloads Table', 'podlove-podcasting-plugin-for-wordpress'), function() {
-				$job_class = \Podlove\Jobs\DownloadTimedAggregatorJob::class;
+				$job_class = 'Podlove\Jobs\DownloadTimedAggregatorJob';
 				$recent_job = Job::find_one_recent_job($job_class);
 				$recent_job_id = $recent_job ? $recent_job->id : '';
 			?>
@@ -121,7 +121,7 @@ class Tools {
 		}, 'tracking-analytics');
 
 		\Podlove\add_tools_field('ta-recalc-downloads-totals', __('Recalculate Downloads Totals', 'podlove-podcasting-plugin-for-wordpress'), function() {
-				$job_class = \Podlove\Jobs\DownloadTotalsAggregatorJob::class;
+				$job_class = 'Podlove\Jobs\DownloadTotalsAggregatorJob';
 				$recent_job = Job::find_one_recent_job($job_class);
 				$recent_job_id = $recent_job ? $recent_job->id : '';
 			?>

@@ -184,8 +184,8 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$sums_cron   = $get_cron_info("podlove_calc_download_sums");
 		$totals_cron = $get_cron_info("podlove_calc_download_totals");
 
-		$prev_sums_job   = Job::find_one_recent_finished_job(DownloadTimedAggregatorJob::class);
-		$prev_totals_job = Job::find_one_recent_finished_job(DownloadTotalsAggregatorJob::class);
+		$prev_sums_job   = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTimedAggregatorJob');
+		$prev_totals_job = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTotalsAggregatorJob');
 
 		?>
 		<div class="alignleft actions">	
