@@ -93,12 +93,12 @@ class ToolsSection {
 			'worker' => [
 				'title' => 'Worker Activity',
 				'activity' => get_transient('podlove_jobs_last_spawn_worker'),
-				'description' => 'Should not be more than few seconds unless you have a custom WP Cron system setup.'
+				'description' => 'Should not be more than two or three minutes.'
 			],
 			'runner' => [
 				'title' => 'Runner Activity',
 				'activity' => get_transient('podlove_jobs_last_spawn_runner'),
-				'description' => 'May be inactive if no jobs are running. If at least one job is running, should be less than a minute or two unless you have a custom WP Cron system setup.'
+				'description' => 'May be inactive if no jobs are running. If at least one job is running, should not be more than two or three minutes.'
 			]
 		];
 
