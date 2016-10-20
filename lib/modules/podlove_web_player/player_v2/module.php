@@ -68,8 +68,8 @@ class Module {
     <head>
         <script type="text/javascript" src="<?php echo plugins_url('/js/html5shiv.js', __FILE__) ?>"></script>
         <script type="text/javascript" src="<?php echo plugins_url('/js/jquery-1.9.1.min.js', __FILE__) ?>"></script>
-        <script type="text/javascript" src="<?php echo plugins_url('/player/podlove-web-player/static/podlove-web-player.js', __FILE__) ?>"></script>
-        <link rel="stylesheet" href="<?php echo plugins_url('/player/podlove-web-player/static/podlove-web-player.css', __FILE__) ?>" />
+        <script type="text/javascript" src="<?php echo plugins_url('/player/podlove-web-player/static/podlove-web-player.min.js', __FILE__) ?>"></script>
+        <link rel="stylesheet" href="<?php echo plugins_url('/player/podlove-web-player/static/podlove-web-player.min.css', __FILE__) ?>" />
     </head>
     <body>
 	    <?php

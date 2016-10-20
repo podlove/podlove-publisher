@@ -128,6 +128,12 @@ To solve this issue in a scaleable way, we built what is known as "background pr
   * age of the data and when the next refresh is due
 * _MUCH_ better performance / page load times
 
+**Podlove Web Player 2 Facelift**
+
+* simplified, modernised look
+* responsive layout for mobile devices
+* fix: updated mediaelement library to fix volume bar display bug
+
 **Podigee Podcast Player**
 
 The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is available as an alternative to the Podlove Web Players. It supports everything you can expect from a modern web player like chaptermarks. It is also embeddable.
