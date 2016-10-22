@@ -8,6 +8,7 @@ class ToolsSection {
 	public static function init()
 	{
 		\Podlove\add_tools_section('jobs', __('Background Jobs', 'podlove-podcasting-plugin-for-wordpress'), [__CLASS__, 'render_jobs_overview']);
+		ToolsSectionCronDiagnostics::init();
 	}
 	
 	public static function render_jobs_overview() {
@@ -127,5 +128,6 @@ class ToolsSection {
 		}
 		echo '</p>';
 
+		do_action('podlove_jobs_tools_end');
 	}
 }
