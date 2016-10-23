@@ -162,21 +162,21 @@ class Image {
 
 		if (!$this->file_extension) {
 			\Podlove\Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
-			return $this->source_url;
+			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
 		// fetch original if we don't have it — until then, return the original URL
 		if (!$this->source_exists()) {
 			$this->schedule_download_source();
-			return $this->source_url;
+			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
 		if (!file_exists($this->resized_file())) {
 			$this->schedule_image_resize();
-			return $this->source_url;
+			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
-		return $this->resized_url();
+		return apply_filters('podlove_image_url', $this->resized_url());
 	}
 
 	/**

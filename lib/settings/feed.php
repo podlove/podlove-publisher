@@ -276,6 +276,19 @@ class Feed {
 					'please_choose' => false,
 					'default' => '-1'
 				) );
+
+				$wrapper->select('feed_force_protocol', [
+					'label'       => __( 'Force Protocol', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'You may need to force your feed URL and all URLs inside the feed (like enclosures and images) to be either http or https, independent from what protocol your website uses.', 'podlove-podcasting-plugin-for-wordpress' ),
+					'options' => [
+						'default' => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ),
+						'http'    => __( 'Force HTTP', 'podlove-podcasting-plugin-for-wordpress' ),
+						'https'   => __( 'Force HTTPS', 'podlove-podcasting-plugin-for-wordpress' )
+					],
+					'please_choose' => false,
+					'default' => 'default'
+
+				]);
 			});
 			?>
 		</form>
@@ -285,6 +298,7 @@ class Feed {
 	public function save_global_feed_setting() {
   		$podcast_settings = get_option('podlove_podcast');
   		$podcast_settings['limit_items'] = (int) $_REQUEST['podlove_podcast']['limit_items'];
+  		$podcast_settings['feed_force_protocol'] = filter_var($_REQUEST['podlove_podcast']['feed_force_protocol'], FILTER_SANITIZE_STRING);
   		update_option('podlove_podcast', $podcast_settings);
 		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
 	}

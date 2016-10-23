@@ -164,6 +164,7 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 * move debug log from Dashboard to Support page
 * add ptm_request parameter to redirected tracking URLs which contains a uuid
 * add fyyd.de module
+* add option to force http or https in URLs inside feeds (enclosures, images)
 * improve tracking: ignore 1-byte requests
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
