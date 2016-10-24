@@ -300,6 +300,7 @@ class Feed {
   		$podcast_settings['limit_items'] = (int) $_REQUEST['podlove_podcast']['limit_items'];
   		$podcast_settings['feed_force_protocol'] = filter_var($_REQUEST['podlove_podcast']['feed_force_protocol'], FILTER_SANITIZE_STRING);
   		update_option('podlove_podcast', $podcast_settings);
+  		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
 	}
 	
