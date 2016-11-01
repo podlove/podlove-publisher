@@ -24,6 +24,20 @@ function handle_feed_proxy_redirects() {
 	if (!$feed = Model\Feed::find_one_by_slug($feed_slug))
 		return;
 
+	// construct canonical feed URL
+	$canonical_feed_url = $feed->get_subscribe_url();
+	if ($is_feed_page) {
+		$canonical_feed_url = add_query_arg(['paged' => $paged], $canonical_feed_url);
+	}
+
+	// maybe enforce protocol
+	$force_protocol = \Podlove\get_setting('website', 'feeds_force_protocol');
+
+	if ($force_protocol == 'https' && !is_ssl() || $force_protocol == 'http' && is_ssl()) {
+		wp_redirect($canonical_feed_url, 301);
+		exit;	
+	}
+
 	/**
 	 * Before we redirect to a proxy or deliver the feed, ensure that the canonical
 	 * feed URL was accessed.
@@ -31,7 +45,7 @@ function handle_feed_proxy_redirects() {
 	if (!$is_debug_view && get_option('permalink_structure') != '') {
 
 		$feed_url = $feed->get_subscribe_url();
-		$request_url = "http" . (isset($_SERVER['HTTPS']) ? 's' : '') . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$request_url = "http" . (is_ssl() ? 's' : '') . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		$url = parse_url($request_url);
 
 		if (
@@ -39,12 +53,7 @@ function handle_feed_proxy_redirects() {
 			||
 			\Podlove\PHP\ends_with($url['path'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
 		) {
-
-			if ($is_feed_page) {
-				$feed_url = add_query_arg(['paged' => $paged], $feed_url);
-			}
-
-			wp_redirect($feed_url, 301);
+			wp_redirect($canonical_feed_url, 301);
 			exit;
 		}
 	}
