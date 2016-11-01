@@ -380,7 +380,6 @@ Podcast::property( 'episode_prefix' );
 Podcast::property( 'media_file_base_uri' );
 Podcast::property( 'uri_delimiter' );
 Podcast::property( 'limit_items' );
-Podcast::property( 'feed_force_protocol' );
 Podcast::property( 'language' );
 Podcast::property( 'complete' );
 Podcast::property( 'flattr' ); // @deprecated since 2.3.0 (now: wp_option "podlove_flattr")

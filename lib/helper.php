@@ -61,7 +61,8 @@ function get_setting( $namespace, $name ) {
 			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
 			'ssl_verify_peer' => 'on',
 			'landing_page' => 'homepage',
-			'feeds_skip_redirect' => 'off'
+			'feeds_skip_redirect' => 'off',
+			'feeds_force_protocol' => 'default'
 		),
 		'metadata' => array(
 			'enable_episode_recording_date' => 0,

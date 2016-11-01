@@ -10,7 +10,7 @@ add_filter('feed_link', 'podlove_maybe_force_feed_url_protocol', 10, 2);
 
 function podlove_force_feed_url_protocol($url)
 {
-	$scheme = \Podlove\Model\Podcast::get()->feed_force_protocol;
+	$scheme = \Podlove\get_setting('website', 'feeds_force_protocol');
 
 	// stop if default setting is used
 	if (!in_array($scheme, ['http', 'https'])) {

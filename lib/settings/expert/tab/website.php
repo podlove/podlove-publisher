@@ -302,6 +302,35 @@ class Website extends Tab {
 			/* $section  */ 'podlove_settings_feeds'
 		);
 
+		add_settings_field(
+			/* $id       */ 'podlove_setting_feeds_force_protocol',
+			/* $title    */ sprintf(
+				'<label for="feeds_force_protocol">%s</label>',
+				__( 'Force Protocol', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+
+				$force_protocol_options = [
+					'default' => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ),
+					'http'    => __( 'Enforce HTTP', 'podlove-podcasting-plugin-for-wordpress' ),
+					'https'   => __( 'Enforce HTTPS', 'podlove-podcasting-plugin-for-wordpress' )
+				];
+
+				?>
+				<select name="podlove_website[feeds_force_protocol]" id="feeds_force_protocol">
+					<?php foreach ($force_protocol_options as $key => $text): ?>
+						<option value="<?php echo esc_attr($key) ?>" <?php selected(\Podlove\get_setting('website', 'feeds_force_protocol'), $key) ?>><?php echo esc_html($text); ?></option>
+					<?php endforeach ?>
+				</select>
+				<p>
+				<?php echo __( 'You may need to force your feed URL and all URLs inside the feed (like enclosures and images) to be either http or https, independent from what protocol your website uses. "Use WordPress Default" does not change the protcols. If you choose either "http" or "https", feed URLs are presented in the selected protocol. A permanent redirect will be performed when the enforced protocol is not accessed.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_feeds'
+		);
+
 		register_setting( Settings::$pagehook, 'podlove_website', function($options) {
 			/**
 			 * handle checkboxes
