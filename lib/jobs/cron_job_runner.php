@@ -33,32 +33,6 @@ class CronJobRunner {
 			wp_schedule_event(time(), '1min', 'cron_job_worker');
 		}
 		add_action('cron_job_worker', [__CLASS__, 'work_jobs']);
-
-		// ---------- START block: second system system that runs worker all the time
-
-		// Maybe spawning worker jobs every 5 seconds is more work than simply running
-		// the worker on every request. Takes load off the WP Cron system and might 
-		// help increase all-in-all stability. Let's give it a try.
-
-		// if (!defined('DOING_AJAX') && !defined('DOING_CRON') && empty($_POST)) {
-		// 	self::work_jobs();
-		// } else {
-		// 	// only if jobs were not started anyway, see if a cron wants to start it
-		// 	add_action('cron_job_worker', [__CLASS__, 'work_jobs']);
-		// }
-		// 
-		// ---------- END block
-
-		// ---------- START block: old system that runs worker via cron every 5 seconds
-		// 
-		// add_action('cron_job_worker', [__CLASS__, 'work_jobs']);
-
-		// worker checks every few seconds if there are jobs to handle
-		// if (!wp_next_scheduled('cron_job_worker')) {
-		// 	wp_schedule_single_event(time() + 5, 'cron_job_worker');
-		// }
-		// 
-		// ---------- END block
 	}
 
 	public static function add_cron_schedules($schedules) {
