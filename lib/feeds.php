@@ -34,11 +34,11 @@ function register_podcast_feeds()
  */
 function handle_feed_proxy_redirects() {
 
-	maybe_redirect_to_forced_protocol();
-	maybe_redirect_to_canonical_url();
-
 	if (!$feed = get_feed())
 		return;
+
+	maybe_redirect_to_forced_protocol();
+	maybe_redirect_to_canonical_url();
 
 	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
 	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : $feed->redirect_http_status;
@@ -90,7 +90,11 @@ function is_page_in_feed() {
  * @return string
  */
 function get_canonical_feed_url() {
-	$url = get_feed()->get_subscribe_url();
+	
+	if (!$feed = get_feed())
+		return NULL;
+
+	$url = $feed->get_subscribe_url();
 	
 	if (is_page_in_feed()) {
 		$url = add_query_arg(['paged' => get_query_var('paged', 1)], $url);
@@ -135,6 +139,9 @@ function should_redirect_to_proxy()
  */
 function get_feed()
 {
+	if (!is_feed())
+		return NULL;
+
 	if (!$feed_slug = get_query_var('feed'))
 		return NULL;
 
@@ -148,6 +155,9 @@ function get_feed()
  */
 function maybe_redirect_to_forced_protocol()
 {
+	if (!$feed = get_feed())
+		return;
+
 	$force_protocol = \Podlove\get_setting('website', 'feeds_force_protocol');
 
 	if ($force_protocol == 'https' && !is_ssl() || $force_protocol == 'http' && is_ssl()) {
