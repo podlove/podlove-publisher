@@ -3,7 +3,7 @@ namespace Podlove\Model;
 
 use Symfony\Component\Yaml\Yaml;
 use \Podlove\Cache\TemplateCache;
-use Log;
+use \Podlove\Log;
 
 /**
  * Image Object
