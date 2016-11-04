@@ -9,8 +9,6 @@ add_action('template_redirect', '\Podlove\Feeds\handle_feed_proxy_redirects', 11
 
 add_action('init', '\Podlove\Feeds\register_podcast_feeds');
 
-add_filter('post_limits', '\Podlove\Feeds\override_feed_item_limit', 20, 1);
-
 function register_podcast_feeds()
 {
 	foreach (Model\Feed::all() as $feed) {
@@ -51,26 +49,6 @@ function handle_feed_proxy_redirects() {
 		RSS::prepare_feed( $feed->slug );
 	}
 
-}
-
-function override_feed_item_limit($limits) {
-	global $wp_query;
-
-	if (!is_feed())
-		return $limits;
-
-	if (!$feed = get_feed())
-		return $limits;
-
-	$custom_limit = (int) $feed->limit_items;
-
-	if ($custom_limit > 0) {
-		return "LIMIT $custom_limit";	
-	} elseif ($custom_limit == 0) {
-		return $limits; // WordPress default
-	} else {
-		return ''; // no limit
-	}
 }
 
 /**
