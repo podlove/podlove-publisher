@@ -10,14 +10,13 @@ add_filter('feed_link', 'podlove_maybe_force_feed_url_protocol', 10, 2);
 
 function podlove_force_feed_url_protocol($url)
 {
-	$scheme = \Podlove\get_setting('website', 'feeds_force_protocol');
+	$force_setting = \Podlove\get_setting('website', 'feeds_force_protocol');
 
-	// stop if default setting is used
-	if (!in_array($scheme, ['http', 'https'])) {
+	if ($force_setting == 'http_feeds') {
+		return set_url_scheme($url, 'http');
+	} else {
 		return $url;
 	}
-
-	return set_url_scheme($url, $scheme);
 }
 
 function podlove_maybe_force_feed_url_protocol($url, $feed) 
