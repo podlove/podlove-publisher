@@ -20,6 +20,14 @@ function load_template($path, $vars = []) {
 	require $template;
 }
 
+function maybe_encode_emoji($string)
+{
+	if (function_exists('wp_encode_emoji'))
+		return \wp_encode_emoji($string);
+
+	return $string;
+}
+
 /**
  * Duplicate of $wpdb::esc_like
  * 

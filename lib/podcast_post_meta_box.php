@@ -313,6 +313,11 @@ class Podcast_Post_Meta_Box {
 
 		$episode_data = filter_var_array($episode_data, $episode_data_filter);
 
+		$episode_data = apply_filters('podlove_episode_data_before_save', $episode_data);
+
+		$episode_data['subtitle'] = \Podlove\maybe_encode_emoji($episode_data['subtitle']);
+		$episode_data['summary']  = \Podlove\maybe_encode_emoji($episode_data['summary']);
+
 		// save changes
 		$episode = \Podlove\Model\Episode::find_or_create_by_post_id( $post_id );
 		$episode_slug_has_changed = isset( $episode_data['slug'] ) && $episode_data['slug'] != $episode->slug;

@@ -153,6 +153,7 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 
 **Other**
 
+* add Emoji support for episode subtitle, summary and chapter marks (requires WordPress 4.2 or newer)
 * Web Player setttings moved from Expert Settings to Podcast Settings
 * When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
 * Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
