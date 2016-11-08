@@ -72,9 +72,19 @@ var PODLOVE = PODLOVE || {};
                     .html(" " + percent + "%")
                     .prepend(spinner.clone());
             } else {
+                var t, datetime;
+
+                try {
+                    // try our best to parse the time but don't sweat if it fails
+                    t = status.updated_at.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
+                    datetime = (new Date(Date.UTC(t[1], t[2], t[3], t[4], t[5], t[6]))).toISOString();
+                } catch (e) {
+                   datetime = "";
+                }
+
                 wrapper
                     .empty()
-                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.active_run_time) + " seconds <time class=\"timeago\" datetime=\"" + (new Date(status.updated_at + " UTC")).toISOString() + "\"></time></small>.")
+                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.active_run_time) + " seconds <time class=\"timeago\" datetime=\"" + datetime + "\"></time></small>.")
 
                 $("time.timeago").timeago();
                 renderButton();
