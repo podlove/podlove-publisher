@@ -1,9 +1,10 @@
 <?php if (count($issues)): ?>
+<div class="force-issues">
 	<h4>
 		<?php echo __('Possible Issues', 'podlove-podcasting-plugin-for-wordpress'); ?>
 	</h4>
 	<p>
-		<ul>
+		<ul class="podlove-disc-list">
 			<?php foreach ($issues as $issue): ?>
 				<li><?php echo $issue; ?></li>
 			<?php endforeach ?>
@@ -18,4 +19,5 @@
 			) 
 		?></em>
 	</p>
+</div>
 <?php endif ?>

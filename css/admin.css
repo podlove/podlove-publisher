@@ -39,6 +39,16 @@ i.rotate {
   to { transform:rotate(360deg);}
 }
 
+ul.podlove-disc-list {
+	list-style-type: disc;
+	margin-left: 40px;
+}
+
+.force-issues {
+	border-left: 4px solid #CCC;
+	padding-left: 15px;
+}
+
 .clickable { cursor: pointer; }
 
 .podlove-icon-ok     { color: green; }
