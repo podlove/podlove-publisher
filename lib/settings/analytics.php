@@ -191,6 +191,40 @@ class Analytics {
 		<div style="width: 100%">
 			<div id="total-chart" style="height: 200px"></div>
 		</div>
+
+		<div class="clear"></div>
+
+		<?php
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+
+		$total      = $cache->cache_for('podlove_downloads_total', '\Podlove\Model\DownloadIntentClean::total_downloads', 5 * MINUTE_IN_SECONDS);
+		$last_month = $cache->cache_for('podlove_downloads_last_month', '\Podlove\Model\DownloadIntentClean::prev_month_downloads', DAY_IN_SECONDS);
+		?>
+
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle" style="cursor: inherit;">Downloads</h2>
+				<div class="inside">
+
+					<div class="analytics-metric-container">
+						<div class="analytics-metric-box">
+							<span class="analytics-description">All Time</span>
+							<span class="analytics-value"><?php echo number_format_i18n($total); ?></span>
+							<span class="analytics-subtext">Downloads of all Episodes</span>
+						</div>
+
+						<div class="analytics-metric-box">
+							<span class="analytics-description">Last Month</span>
+							<span class="analytics-value"><?php echo number_format_i18n($last_month['downloads']); ?></span>
+							<span class="analytics-subtext">Downloads in <?php echo $last_month['homan_readable_month'] ?></span>
+						</div>
+
+						<div class="clear"></div>
+
+					</div>
+				</div>
+			</div>
+		</div>
 		
 		<?php 		
 		$table = new \Podlove\Downloads_List_Table();
@@ -226,71 +260,48 @@ class Analytics {
 			ob_start();
 			?>
 
-			<div class="analytics-metric-box">
-				<span class="analytics-description">Average</span>
-				<span class="analytics-value"><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></span>
-				<span class="analytics-subtext">Downloads per Day</span>
+			<div class="analytics-metric-container">
+				<div class="analytics-metric-box">
+					<span class="analytics-description">Average</span>
+					<span class="analytics-value"><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></span>
+					<span class="analytics-subtext">Downloads per Day</span>
+				</div>
+
+				<div class="analytics-metric-box">
+					<span class="analytics-description">Peak</span>
+					<span class="analytics-value"><?php echo number_format_i18n($peak['downloads']) ?></span>
+					<span class="analytics-subtext">Downloads<br>on <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
+				</div>
+
+				<div class="analytics-metric-box">
+					<span class="analytics-description">Total</span>
+					<span class="analytics-value"><?php echo number_format_i18n($downloads['total']) ?></span>
+					<span class="analytics-subtext">Downloads</span>
+				</div>
+
+				<div class="analytics-metric-box">
+					<table>
+						<tbody>
+							<tr>
+								<td>28 Days</td>
+								<td><?php echo number_format_i18n($downloads['month']) ?></td>
+							</tr>
+							<tr>
+								<td>7 Days</td>
+								<td><?php echo number_format_i18n($downloads['week']) ?></td>
+							</tr>
+							<tr>
+								<td>Yesterday</td>
+								<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
+							</tr>
+							<tr>
+								<td>Today</td>
+								<td><?php echo number_format_i18n($downloads['today']) ?></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
-
-			<div class="analytics-metric-box">
-				<span class="analytics-description">Peak</span>
-				<span class="analytics-value"><?php echo number_format_i18n($peak['downloads']) ?></span>
-				<span class="analytics-subtext">Downloads<br>on <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
-			</div>
-
-			<div class="analytics-metric-box">
-				<span class="analytics-description">Total</span>
-				<span class="analytics-value"><?php echo number_format_i18n($downloads['total']) ?></span>
-				<span class="analytics-subtext">Downloads</span>
-			</div>
-
-			<div class="analytics-metric-box">
-				<table>
-					<tbody>
-						<tr>
-							<td>28 Days</td>
-							<td><?php echo number_format_i18n($downloads['month']) ?></td>
-						</tr>
-						<tr>
-							<td>7 Days</td>
-							<td><?php echo number_format_i18n($downloads['week']) ?></td>
-						</tr>
-						<tr>
-							<td>Yesterday</td>
-							<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
-						</tr>
-						<tr>
-							<td>Today</td>
-							<td><?php echo number_format_i18n($downloads['today']) ?></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<style type="text/css">
-			.analytics-metric-box {
-				text-align: center;
-				float: left;
-				margin: 20px 0 20px 20px;
-			}
-			.analytics-metric-box > span {
-				font-size: 23px;
-				line-height: 23px;
-				display: block;
-			}
-
-			.analytics-metric-box .analytics-value {
-				font-weight: bold;
-				line-height: 40px;
-			}
-
-			.analytics-metric-box .analytics-description,
-			.analytics-metric-box .analytics-subtext {
-				font-size: 14px;
-				line-height: 16px;
-				color: #666;
-			}
-			</style>
 
 			<div class="clear"></div>
 			<?php

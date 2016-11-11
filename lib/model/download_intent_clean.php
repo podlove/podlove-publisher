@@ -110,6 +110,39 @@ class DownloadIntentClean extends Base {
 		);
 	}
 
+	public static function prev_month_downloads()
+	{
+		global $wpdb;
+
+		$cur_month = date('m');
+		$last_month = $cur_month - 1;
+		$year = date('Y');
+
+		if ($last_month < 1) {
+			$last_month = 12;
+			$year--;
+		}
+
+		$last_month_time = strtotime("$year-$last_month");
+		$last_month_name = date('F Y', $last_month_time);
+
+		$sql = 'SELECT COUNT(*) FROM ' . self::table_name() . ' d WHERE accessed_at LIKE "' . (int) $year . '-' . (int) $last_month . '%"';
+
+		return [
+			'downloads'            => $wpdb->get_var($sql),
+			'time'                 => $last_month_time,
+			'homan_readable_month' => $last_month_name
+		];
+	}
+
+	public static function total_downloads()
+	{
+		global $wpdb;
+
+		$sql = 'SELECT SUM(meta_value) total FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_podlove_downloads_total"';
+		return $wpdb->get_var($sql);
+	}
+
 	/**
 	 * Generate WHERE clause to a certain time range or day.
 	 *

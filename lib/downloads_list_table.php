@@ -190,13 +190,6 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		?>
 		<div class="alignleft actions">	
 			<em>
-				<?php 
-				$sql = 'SELECT SUM(meta_value) total FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_podlove_downloads_total"';
-				$total = $wpdb->get_var($sql);
-				echo sprintf("Your episodes have been downloaded a total of %s times.", number_format_i18n($total));
-				?>
-			</em><br>
-			<em>
 				<?php
 				echo sprintf(
 					__('Sums data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
