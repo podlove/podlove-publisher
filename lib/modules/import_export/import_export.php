@@ -156,7 +156,6 @@ class Import_Export extends \Podlove\Modules\Base {
 							$("#podlove_tracking_export_status").html((Math.round(1000.0 * (result.progress / result.all))/10.0) + "%");
 							$("#podlove_tracking_export_status_wrapper").show();
 
-							isExporting = true;
 							timeoutID = window.setTimeout(podlove_check_export_status, 1000);
 						} else {
 							$("#podlove_tracking_export").attr('disabled', false);
@@ -183,6 +182,8 @@ class Import_Export extends \Podlove\Modules\Base {
 						console.log("tracking export finished");
 					}
 				});
+
+				isExporting = true;
 
 				window.setTimeout(podlove_check_export_status, 2000);
 			});
