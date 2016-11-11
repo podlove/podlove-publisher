@@ -71,7 +71,7 @@ class Tools {
 			<div class="clear"></div>
 
 			<p class="description">
-				<?php echo __('Update user agent metadata based on <code>device-detector</code> library.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically on plugin updates. Update user agent metadata based on <code>device-detector</code> library.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
@@ -94,7 +94,7 @@ class Tools {
 			<div class="clear"></div>
 
 			<p class="description">
-				<?php echo __('Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is useful if you don\'t get updated analytics or you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically once per hour. Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is useful if you don\'t get updated analytics or you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
@@ -115,7 +115,7 @@ class Tools {
 			</div>
 
 			<p class="description">
-				<?php echo __('Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically twice per day. Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
@@ -136,7 +136,7 @@ class Tools {
 			</div>
 
 			<p class="description">
-				<?php echo __('Recalculates totals for episode downloads.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically once per hour. Recalculates totals for episode downloads.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
