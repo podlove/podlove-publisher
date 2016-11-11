@@ -136,12 +136,15 @@ function maybe_redirect_to_forced_protocol()
 	if (!$feed = get_feed())
 		return;
 
-	$force_protocol = \Podlove\get_setting('website', 'feeds_force_protocol');
-
-	if ($force_protocol == 'https' && !is_ssl() || $force_protocol == 'http' && is_ssl()) {
+	if (feed_should_be_http() && is_ssl()) {
 		wp_redirect(get_canonical_feed_url(), 301);
 		exit;	
 	}
+}
+
+function feed_should_be_http() {
+	$force_protocol = \Podlove\get_setting('website', 'feeds_force_protocol');
+	return in_array($force_protocol, ['http_feeds', 'http']);
 }
 
 /**

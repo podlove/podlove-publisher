@@ -10,9 +10,7 @@ add_filter('feed_link', 'podlove_maybe_force_feed_url_protocol', 10, 2);
 
 function podlove_force_feed_url_protocol($url)
 {
-	$force_setting = \Podlove\get_setting('website', 'feeds_force_protocol');
-
-	if ($force_setting == 'http_feeds') {
+	if (\Podlove\Feeds\feed_should_be_http()) {
 		return set_url_scheme($url, 'http');
 	} else {
 		return $url;

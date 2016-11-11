@@ -2,9 +2,6 @@
 	<?php echo __('How is your website configured and how do you want your feeds to behave?', 'podlove-podcasting-plugin-for-wordpress'); ?>
 </h4>
 <p>
-<?php echo __( 'If you choose either option 1 or 2 the Publisher will not change any behavior but will do sanity checks that ensure everything works as expected. Delivering everything via https is recommended.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
-</p>
-<p>
 <?php echo __( 'If you are using a certificate provider not supported by iTunes (like Let\'s Encrypt), you need to select option 3. The Publisher will then force feed URLs as well as enclosure and image URLs within the feed to be http only.', 'podlove-podcasting-plugin-for-wordpress' ) ?></p>
 <h4>
 	<?php echo __('Useful Resources', 'podlove-podcasting-plugin-for-wordpress'); ?>
