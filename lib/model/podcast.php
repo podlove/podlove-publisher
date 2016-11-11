@@ -248,6 +248,12 @@ class Podcast implements Licensable {
 			if (isset($args['slug']))
 				return Episode::find_one_by_slug($args['slug']);
 
+			// eager load posts, which fills WP object cache, avoiding n+1 performance issues
+			$posts = get_posts([
+				'post_type' => 'podcast',
+				'posts_per_page' => '-1'
+			]);
+
 			// build conditions
 			$where = "1 = 1";
 			$joins = "";

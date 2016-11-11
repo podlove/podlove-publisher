@@ -108,10 +108,22 @@ class Analytics {
 	}
 
 	public static function episode_ids_to_names_map() {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+			  e.id, p.post_title
+			FROM
+			  ' . $wpdb->posts . ' p
+			  INNER JOIN `' . Model\Episode::table_name() . '` e ON p.ID = e.`post_id`
+		';
+		$rows = $wpdb->get_results($sql);
+
 		$map = [];
-		foreach (Model\Episode::all() as $episode) {
-			$map[$episode->id] = $episode->title();
+		foreach ($rows as $row) {
+			$map[$row->id] = $row->post_title;
 		}
+
 		return $map;
 	}
 
