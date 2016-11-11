@@ -27,7 +27,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			'<span style="color:#999; font-size: smaller">'.
 			sprintf(
 				__("%s days ago", "podlove-podcasting-plugin-for-wordpress"), 
-				Model\Episode::find_by_id($episode['id'])->days_since_release()
+				$episode['days_since_release']
 			) . '</span>'
 		);
 	}
@@ -107,6 +107,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			$post = $episode->post();
 
 			$data[] = [
+				'days_since_release' => $episode->days_since_release(),
 				'id' => $episode->id,
 				'title' => $post->post_title,
 				'post_date' => $post->post_date,
