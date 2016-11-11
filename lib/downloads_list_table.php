@@ -91,7 +91,10 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function prepare_items() {
 		// number of items per page
-		$per_page = 20;
+		$per_page = get_user_meta( get_current_user_id(), 'podlove_episodes_per_page', true);
+		if (!$per_page) {
+			$per_page = 20;
+		}
 		
 		// define column headers
 		$columns = $this->get_columns();

@@ -123,10 +123,10 @@ To solve this issue in a scaleable way, we built what is known as "background pr
 
 * "Downloads per Day" is a stacked bar chart now so you can see which episode is responsible for peaks
 * Downloads table now shows downloads in time segments starting from the moment of episode release for better comparability
-* New information under downloads table:
-  * sum of all downloads over all episodes ever, because we know you like big numbers
-  * age of the data and when the next refresh is due
+* Show total number of all downloads in Analytics Dashboard
+* New information under downloads table: age of the data and when the next refresh is due
 * _MUCH_ better performance / page load times
+* New option to configure how many episodes per page should be shown
 
 **Podlove Web Player 2 Facelift**
 
