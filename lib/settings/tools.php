@@ -115,7 +115,7 @@ class Tools {
 			</div>
 
 			<p class="description">
-				<?php echo __('Runs automatically twice per day. Recalculates sums for episode downloads in Analytics overview page. This should happen automatically. Pressing this button forces the refresh.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically twice per day. Calculates downloads per episode in time segments (first day, first two days, ... first year) for the Analytics Dashboard.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
@@ -136,7 +136,7 @@ class Tools {
 			</div>
 
 			<p class="description">
-				<?php echo __('Runs automatically once per hour. Recalculates totals for episode downloads.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically once per hour. Calculates total downloads per episode.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');
