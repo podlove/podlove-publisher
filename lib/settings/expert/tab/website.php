@@ -268,6 +268,7 @@ class Website extends Tab {
 	private function feeds_force_protocol_setting()
 	{
 		$options = [
+			'default'    => __('Hands Off (leave everything as configured by WordPress)', 'podlove-podcasting-plugin-for-wordpress'),
 			'http'       => __('1 - Website is delivered via http (including podcast feeds)', 'podlove-podcasting-plugin-for-wordpress'),
 			'https'      => __('2 - Website is delivered via https (including podcast feeds)', 'podlove-podcasting-plugin-for-wordpress'),
 			'http_feeds' => __('3 - Website is delivered via https (excluding podcast feeds which will be delivered via http)', 'podlove-podcasting-plugin-for-wordpress')
