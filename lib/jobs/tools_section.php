@@ -47,7 +47,11 @@ class ToolsSection {
 							<?php echo sprintf(__('%s ago'), human_time_diff(strtotime($job->created_at))); ?>
 						</td>
 						<td>
-							<?php echo sprintf(__('%s sec ago'), (time() - strtotime($job->updated_at))); ?>
+							<?php if (!$job->wakeups || $job->created_at == $job->updated_at): ?>
+								<?php echo __('Never'); ?>
+							<?php else: ?>
+								<?php echo sprintf(__('%s sec ago'), (time() - strtotime($job->updated_at))); ?>
+							<?php endif ?>
 						</td>
 					</tr>
 				<?php endforeach ?>
