@@ -39,8 +39,9 @@
 
 namespace Podlove;
 use \Podlove\Model;
+use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 115 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 116 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1218,6 +1219,25 @@ function run_migrations_for_version( $version ) {
 		break;
 		case 115:
 			Model\Job::delete_all();
+		break;
+		case 116:
+
+			// "clean slate" analytics calculation
+
+			// first, ensure no jobs with wrong parameters are already setup
+			Model\Job::delete_all();
+
+			// then queue all analytics jobs
+			$jobs = [
+				'\Podlove\Jobs\UserAgentRefreshJob'         => [],
+				'\Podlove\Jobs\DownloadIntentCleanupJob'    => ['delete_all' => true],
+				'\Podlove\Jobs\DownloadTotalsAggregatorJob' => [],
+				'\Podlove\Jobs\DownloadTimedAggregatorJob'  => ['force' => true]
+			];
+
+			foreach ($jobs as $job => $args) {
+				CronJobRunner::create_job($job, $args);
+			}
 		break;
 	}
 
