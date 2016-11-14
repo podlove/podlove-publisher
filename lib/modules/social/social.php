@@ -293,16 +293,16 @@ class Social extends \Podlove\Modules\Base {
 				<thead>
 					<tr>
 						
-						<th>Service</th>
-						<th>Account/URL</th>
-						<th>Title</th>
-						<th style="width: 60px">Remove</th>
+						<th><?php _e('Service', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+						<th><?php _e('Account/URL', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+						<th><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+						<th style="width: 60px"><?php _e('Remove', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 						<th style="width: 30px"></th>
 					</tr>
 				</thead>
 				<tbody class="services_table_body" style="min-height: 50px;">
 					<tr class="services_table_body_placeholder" style="display: none;">
-						<td><em><?php echo __('No Services were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
+						<td><em><?php _e('No Services were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
 					</tr>
 				</tbody>
 			</table>
