@@ -70,12 +70,12 @@ class EpisodeEnhancer {
 
 		<div id="auphonic-box">
 
-			<em id="auphonic-credits-status"><?php echo __('Available processing time: <span id="auphonic-credits"></span></em>', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			<em id="auphonic-credits-status"><?php _e('Available processing time:', 'podlove-podcasting-plugin-for-wordpress'); ?>  <span id="auphonic-credits"></span></em>
 
 			<div id="auphonic-production-status" class="auphonic-status status-info"></div>
 
 			<fieldset>
-				<legend><?php echo __('Create Production</legend>', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<legend><?php _e('Create Production', 'podlove-podcasting-plugin-for-wordpress'); ?></legend>
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_services">
