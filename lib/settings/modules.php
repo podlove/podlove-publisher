@@ -12,8 +12,8 @@ class Modules {
 		
 		Modules::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Modules',
-			/* $menu_title */ 'Modules',
+			/* $page_title */ __( 'Modules', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Modules', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_settings_modules_handle',
 			/* $function   */ array( $this, 'page' )

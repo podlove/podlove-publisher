@@ -40,7 +40,7 @@ class Feed_Validation extends \Podlove\Modules\Base {
 			add_action('podlove_dashboard_meta_boxes', function() {
 				add_meta_box(
 					\Podlove\Settings\Dashboard::$pagehook . '_feeds',
-					__( 'Podcast feeds', 'podlove-podcasting-plugin-for-wordpress' ),
+					__( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
 					'Podlove\Modules\FeedValidation\Feed_Validation::meta_box',
 					\Podlove\Settings\Dashboard::$pagehook,
 					'normal'

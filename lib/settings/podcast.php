@@ -16,8 +16,8 @@ class Podcast {
 		
 		Podcast::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Podcast Settings',
-			/* $menu_title */ 'Podcast Settings',
+			/* $page_title */ __( 'Podcast Settings', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Podcast Settings', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_settings_podcast_handle',
 			/* $function   */ array( $this, 'page' )

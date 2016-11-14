@@ -69,12 +69,12 @@ class Description extends Tab {
 				'label'        => __( 'Cover Art URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description'  => __( 'JPEG or PNG. At least 1400 x 1400 pixels.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
-				'media_button_text' => __("Use for Podcast Cover Art", 'podlove-podcasting-plugin-for-wordpress')
+				'media_button_text' => __('Use for Podcast Cover Art', 'podlove-podcasting-plugin-for-wordpress')
 			) );
 
 			$wrapper->select( 'language', array(
 				'label'       => __( 'Language', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => '',
 				'default'     => get_bloginfo( 'language' ),
 				'options'  => \Podlove\Locale\locales()
 			) );

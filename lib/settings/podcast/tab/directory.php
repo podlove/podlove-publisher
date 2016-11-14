@@ -45,7 +45,7 @@ class Directory extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+			<?php _e( 'You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 

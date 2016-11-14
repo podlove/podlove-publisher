@@ -153,7 +153,7 @@ class EpisodeAsset {
 			if ( $_REQUEST['message'] == 'media_file_batch_enabled_notice' ) {
 				?>
 				<div class="updated">
-					<p><?php echo __( '<strong>Media Files enabled.</strong> These Media Files have been enabled for all existing episodes.' ) ?></p>
+					<p><?php _e( '<strong>Media Files enabled.</strong> These Media Files have been enabled for all existing episodes.', 'podlove-podcasting-plugin-for-wordpress'); ?></p>
 				</div>
 				<?php
 			}
@@ -162,7 +162,7 @@ class EpisodeAsset {
 				?>
 				<div class="error">
 					<p>
-						<?php echo __( '<strong>The asset has not been deleted. Are you aware that the asset is still in use?</strong>', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+						<strong><?php _e( 'The asset has not been deleted. Are you aware that the asset is still in use?', 'podlove-podcasting-plugin-for-wordpress' ) ?></strong>
 						<ul class="ul-disc">
 							<?php if ( $asset->has_active_media_files() ): ?>
 								<li>
@@ -171,22 +171,22 @@ class EpisodeAsset {
 							<?php endif; ?>
 							<?php if ( $asset->has_asset_assignments() ): ?>
 								<li>
-									<?php echo __( 'This asset is assigned to episode images or episode chapters.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+									<?php _e( 'This asset is assigned to episode images or episode chapters.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->is_connected_to_feed() ): ?>
 								<li>
-									<?php echo __( 'A feed uses this asset.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+									<?php _e( 'A feed uses this asset.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( $asset->is_connected_to_web_player() ): ?>
 								<li>
-									<?php echo __( 'The web player uses this asset.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+									<?php _e( 'The web player uses this asset.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 								</li>
 							<?php endif; ?>
 						</ul>
 						<a href="?page=<?php echo self::MENU_SLUG ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id ?>&amp;force=1">
-							<?php echo __( 'delete anyway', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+							<?php _e( 'delete anyway', 'podlove-podcasting-plugin-for-wordpress' ) ?>
 						</a>
 					</p>
 				</div>
@@ -196,7 +196,7 @@ class EpisodeAsset {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Episode Assets', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php _e( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php _e( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
 			switch ( $action ) {
@@ -213,7 +213,7 @@ class EpisodeAsset {
 	private function new_template() {
 		$episode_asset = new \Podlove\Model\EpisodeAsset;
 		?>
-		<h3><?php echo __( 'Add New Episode Asset', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
+		<h3><?php _e( 'Add New Episode Asset', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 		<?php
 		$this->form_template( $episode_asset, 'create', __( 'Add New Episode Asset', 'podlove-podcasting-plugin-for-wordpress' ) );
 	}
@@ -224,7 +224,7 @@ class EpisodeAsset {
 		$table->display();
 
 		?>
-		<h3><?php echo __( 'Assign Assets', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
+		<h3><?php _e( 'Assign Assets', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
 		<form method="post" action="options.php">
 			<?php settings_fields( EpisodeAsset::$pagehook );
 			$asset_assignment = Model\AssetAssignment::get_instance();
@@ -326,11 +326,11 @@ class EpisodeAsset {
 			?>
 			<tr class="row_podlove_episode_asset_type">
 				<th scope="row" valign="top">
-					<label for="podlove_episode_asset_type"><?php echo __( 'Asset Type', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
+					<label for="podlove_episode_asset_type"><?php _e( 'Asset Type', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
 				</th>
 				<td>
 					<select name="podlove_episode_asset_type" id="podlove_episode_asset_type">
-						<option><?php echo __( 'Please choose ...', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
+						<option><?php _e( 'Please choose ...', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
 						<?php foreach ( Model\FileType::get_types() as $type ): ?>
 							<option value="<?php echo $type ?>" <?php selected( $type, $current_file_type ) ?>><?php echo $type ?></option>	
 						<?php endforeach; ?>
@@ -342,7 +342,7 @@ class EpisodeAsset {
 
 			$f->select( 'file_type_id', array(
 				'label'       => __( 'File Format', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => '',
 				'options'     => $format_optionlist
 			) );
 
@@ -354,13 +354,13 @@ class EpisodeAsset {
 
 			$f->checkbox( 'downloadable', array(
 				'label'       => __( 'Downloadable', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => sprintf( 'Allow downloads for users.', 'podlove' ),
+				'description' => sprintf( 'Allow downloads for users.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default' => true
 			) );
 			?>
 			<tr>
 				<th colspan="2">
-					<h3><?php echo __( 'Asset File Name', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
+					<h3><?php _e( 'Asset File Name', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
 				</th>
 			</tr>
 			<?php 
@@ -372,7 +372,7 @@ class EpisodeAsset {
 			?>
 			<tr class="row_podlove_asset_url_preview">
 				<th>
-					<?php echo __( 'URL Preview', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+					<?php _e( 'URL Preview', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 				</th>
 				<td>
 					<div id="url_preview" style="font-size: 1.5em"></div>

@@ -15,8 +15,8 @@ class Feed {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Podcast Feeds',
-			/* $menu_title */ 'Podcast Feeds',
+			/* $page_title */ __( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ self::MENU_SLUG,
 			/* $function   */ array( $this, 'page' )
@@ -33,7 +33,7 @@ class Feed {
 
 	public function add_screen_options() {
 		add_screen_option( 'per_page', array(
-		   'label'   => 'Feeds',
+		   'label'   => __( 'Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
 		   'default' => 10,
 		   'option'  => 'podlove_feeds_per_page'
 		) );
