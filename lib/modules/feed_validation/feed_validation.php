@@ -77,7 +77,7 @@ class Feed_Validation extends \Podlove\Modules\Base {
 					<th><?php _e( 'Name', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
 					<th><?php _e( 'Slug/URL', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
 					<th><?php _e( 'Last Modification', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
-					<th><?php echo extension_loaded('zlib') ? __( 'Size (compressed)', 'podlove') : __( 'Size', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+					<th><?php echo extension_loaded('zlib') ? __( 'Size (compressed)', 'podlove-podcasting-plugin-for-wordpress') : __( 'Size', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 					<th><?php _e( 'Latest item', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 					<th><?php _e( 'Validation', 'podlove-podcasting-plugin-for-wordpress' ); ?></th>
 				</tr>

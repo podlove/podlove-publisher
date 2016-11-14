@@ -37,10 +37,10 @@ class Description extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'These are the three most important fields describing your podcast.
+			<?php _e( 'These are the three most important fields describing your podcast.
 					<strong>Title</strong> is the title of the podcast that is the primary field to be used to represent the podcast in directories, lists and other uses.
 					The <strong>subtitle</strong> is an extension to the title. The subtitle is meant to clarify what the podcast is about. While a title can be anything, a subtitle should be more descriptive in what the content actually wants to convey and what the most important information is, you want everybody want to know about the offering.
-					A <strong>summary</strong> is a much more precise and elaborate description of the podcast\'s content. While title and subtitle are rather concise, a summary is meant to consist of one or more sentences that form a paragraph or more.', 'podlove' ) ?>
+					A <strong>summary</strong> is a much more precise and elaborate description of the podcast\'s content. While title and subtitle are rather concise, a summary is meant to consist of one or more sentences that form a paragraph or more.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 

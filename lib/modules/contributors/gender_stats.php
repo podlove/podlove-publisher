@@ -79,7 +79,7 @@ class GenderStats {
 		<table cellspacing="0" cellspadding="0">
 			<thead>
 				<tr>
-					<th><?php echo ( $context == 'group' ? __('Group', 'podlove') : __('Role', 'podlove-podcasting-plugin-for-wordpress') ); ?></th>
+					<th><?php echo ( $context == 'group' ? __('Group', 'podlove-podcasting-plugin-for-wordpress') : __('Role', 'podlove-podcasting-plugin-for-wordpress') ); ?></th>
 					<th><?php _e('Female', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 					<th><?php _e('Male', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 					<th><?php _e('Not Attributed', 'podlove-podcasting-plugin-for-wordpress'); ?></th>

@@ -59,7 +59,7 @@
 			<td class="podlove-dashboard-number-column">
 				<?php
 				$days = round($statistics['total_episode_length'] / 3600 / 24, 1);
-				echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
+				echo sprintf(_n('%s day', '%s days', $days, 'podlove-podcasting-plugin-for-wordpress' ), $days);
 				?>
 			</td>
 			<td>
@@ -84,7 +84,7 @@
 		</tr>
 		<tr>
 			<td class="podlove-dashboard-number-column">
-				<?php echo sprintf(_n('%s day', '%s days', $statistics['days_between_releases'], 'podlove'), $statistics['days_between_releases']); ?>
+				<?php echo sprintf(_n('%s day', '%s days', $statistics['days_between_releases'], 'podlove-podcasting-plugin-for-wordpress' ), $statistics['days_between_releases']); ?>
 			</td>
 			<td>
 				<?php echo __( 'is the average interval until a new episode is released', 'podlove-podcasting-plugin-for-wordpress' ); ?>.

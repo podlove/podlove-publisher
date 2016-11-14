@@ -72,7 +72,7 @@ class Modules {
 
 					if ( $module_options ) {
 
-						?><h4><?php echo __( 'Settings' ) ?></h4><?php
+						?><h4><?php _e( 'Settings', 'podlove-podcasting-plugin-for-wordpress' ); ?></h4><?php
 
 						// prepare settings object because form framework expects an object
 						$settings_object = new \stdClass();
@@ -110,7 +110,7 @@ class Modules {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Podlove Publisher Modules' ) ?></h2>
+			<h2><?php _e( 'Podlove Publisher Modules', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
 			<form method="post" action="options.php">
 				<?php settings_fields( Modules::$pagehook ); ?>

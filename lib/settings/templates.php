@@ -64,7 +64,7 @@ class Templates {
 			__( 'Episode Templates are an easy way to keep the same structure in all your episodes.
 				You can use %sShortcodes%s as well as %sPublisher Template Tags%s to customize your episodes.<br>
 				Please read the %sTemplating Guide%s to get started.
-				', 'podlove' ),
+				', 'podlove-podcasting-plugin-for-wordpress' ),
 			'<a href="http://docs.podlove.org/ref/shortcodes.html" target="_blank">', '</a>',
 			'<a href="http://docs.podlove.org/reference/template-tags/" target="_blank">', '</a>',
 			'<a href="http://docs.podlove.org/guides/understanding-templates/" target="_blank">', '</a>'
