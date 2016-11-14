@@ -18,7 +18,9 @@ class UserAgentRefreshJob {
 	public function setup() {
 		$this->hooks['finished'] = [__CLASS__, 'delete_bots_from_clean_downloadintents'];
 
-		$this->job->state = ['previous_id' => 0];
+		if (!$this->job->state) {
+			$this->job->state = ['previous_id' => 0];
+		}
 	}
 
 	public static function defaults() {
