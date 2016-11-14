@@ -100,7 +100,7 @@ class ToolsSectionCronDiagnostics {
 		var taskWrapper = $("#diagnosis-item-check-cron-exec");
 		var result = taskWrapper.find(".result");
 		var helpHtml = 'There are many reasons why WP Cron may not work. <a href="https://encrypted.google.com/search?hl=en&q=wordpress%20cron%20not%20working" target="_blank">Try this Google search to find out why.</a>';
-		var maxAttempts = 20;
+		var maxAttempts = 30;
 		var spinner = taskWrapper.find('i.podlove-icon-spinner');
 
 		$.ajax({
@@ -118,9 +118,9 @@ class ToolsSectionCronDiagnostics {
 					spinner.hide();
 				} else if (data && data.tries > 4) {
 					result.html("Hmm, this is taking longer than expected. " + data.tries + "/" + maxAttempts + " failed attempts so far.");
-					window.setTimeout(initLookForCronSuccess, 1500);
+					window.setTimeout(initLookForCronSuccess, 2500);
 				} else if (data && data.tries) {
-					window.setTimeout(initLookForCronSuccess, 1500);
+					window.setTimeout(initLookForCronSuccess, 2500);
 				} else {
 					result.html("Something unexpected went wrong. " + helpHtml + " <i class=\"podlove-icon-remove\"></i>");
 					spinner.hide();
