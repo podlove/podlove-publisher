@@ -1,21 +1,21 @@
 <ul>
 	<li>
-		<a href="//publisher.podlove.org">Podlove Publisher</a>
+		<a href="//publisher.podlove.org"><?php _e('Podlove Publisher', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
-		<a href="//podlove.org" target="_blank">Podlove Initiative</a>
+		<a href="//podlove.org" target="_blank"><?php _e('Podlove Initiative', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
-		<a href="//community.podlove.org/" target="_blank">Podlove Community</a>
+		<a href="//community.podlove.org/" target="_blank"><?php _e('Podlove Community', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
-		<a href="//docs.podlove.org" target="_blank">Documentation &amp; Guides</a>
+		<a href="//docs.podlove.org" target="_blank"><?php _e('Documentation &amp; Guides', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
-		<a href="<?php echo admin_url( 'admin.php?page=podlove_Support_settings_handle' ) ?>">Report Bugs</a>
+		<a href="<?php echo admin_url( 'admin.php?page=podlove_Support_settings_handle' ) ?>"><?php _e('Report Bugs', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
-		<a href="//podlove.org/donations/" target="_blank">Donate</a>
+		<a href="//podlove.org/donations/" target="_blank"><?php _e('Donate', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
 		<script type="text/javascript">
