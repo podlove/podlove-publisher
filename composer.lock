@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "69cc41d6e37818ad2efe9434af934ccc",
-    "content-hash": "5393a288a11eee247771035f7364dac3",
+    "hash": "3df3ab35d616ff5b1d71185b8a56a747",
+    "content-hash": "f0e6c04493fb3dfa7ccc0fe995056c59",
     "packages": [
         {
             "name": "composer/ca-bundle",
-            "version": "1.0.4",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "ec21a59414b99501e723b63fd664aa8ead9c5680"
+                "reference": "a795611394b3c05164fd0eb291b492b39339cba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/ec21a59414b99501e723b63fd664aa8ead9c5680",
-                "reference": "ec21a59414b99501e723b63fd664aa8ead9c5680",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/a795611394b3c05164fd0eb291b492b39339cba4",
+                "reference": "a795611394b3c05164fd0eb291b492b39339cba4",
                 "shasum": ""
             },
             "require": {
@@ -63,7 +63,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2016-09-04 19:00:06"
+            "time": "2016-11-02 18:11:27"
         },
         {
             "name": "geoip2/geoip2",
@@ -118,20 +118,20 @@
         },
         {
             "name": "leth/ip-address",
-            "version": "1.0.1",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leth/PHP-IPAddress.git",
-                "reference": "c7cdef99d0eb3660b14a6cd505d218f2bc8569b9"
+                "reference": "00d9feb30d73e78fbae522ba21139ab6ea9db09b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leth/PHP-IPAddress/zipball/c7cdef99d0eb3660b14a6cd505d218f2bc8569b9",
-                "reference": "c7cdef99d0eb3660b14a6cd505d218f2bc8569b9",
+                "url": "https://api.github.com/repos/leth/PHP-IPAddress/zipball/00d9feb30d73e78fbae522ba21139ab6ea9db09b",
+                "reference": "00d9feb30d73e78fbae522ba21139ab6ea9db09b",
                 "shasum": ""
             },
             "require": {
-                "pear/math_biginteger": "dev-tags/RELEASE_1_0_2"
+                "pear/math_biginteger": "1.0.3"
             },
             "type": "library",
             "autoload": {
@@ -144,7 +144,7 @@
                 "LGPL-3.0"
             ],
             "description": "IPv4 and IPv6 address and subnet classes with awesome utility functions.",
-            "time": "2014-04-03 21:49:21"
+            "time": "2016-04-12 19:59:07"
         },
         {
             "name": "maxmind-db/reader",
@@ -320,16 +320,16 @@
         },
         {
             "name": "mustangostang/spyc",
-            "version": "0.6.0",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mustangostang/spyc.git",
-                "reference": "dfd9aadc1f5224065d55b42b712c7e99a50a3f4d"
+                "reference": "022532641d61d383fd3ae666982bd46e61e5915e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/dfd9aadc1f5224065d55b42b712c7e99a50a3f4d",
-                "reference": "dfd9aadc1f5224065d55b42b712c7e99a50a3f4d",
+                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/022532641d61d383fd3ae666982bd46e61e5915e",
+                "reference": "022532641d61d383fd3ae666982bd46e61e5915e",
                 "shasum": ""
             },
             "require": {
@@ -366,20 +366,20 @@
                 "yaml",
                 "yml"
             ],
-            "time": "2016-05-14 08:33:02"
+            "time": "2016-10-21 00:03:34"
         },
         {
             "name": "pear/math_biginteger",
-            "version": "dev-tags/RELEASE_1_0_2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Math_BigInteger.git",
-                "reference": "98529194f2c2d0334fff105ec4eba4e9cbe6cd29"
+                "reference": "33d4357543037a458fad3e8c837a01b93104e592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Math_BigInteger/zipball/98529194f2c2d0334fff105ec4eba4e9cbe6cd29",
-                "reference": "98529194f2c2d0334fff105ec4eba4e9cbe6cd29",
+                "url": "https://api.github.com/repos/pear/Math_BigInteger/zipball/33d4357543037a458fad3e8c837a01b93104e592",
+                "reference": "33d4357543037a458fad3e8c837a01b93104e592",
                 "shasum": ""
             },
             "require": {
@@ -391,15 +391,19 @@
                 "ext-gmp": "Allows using the GNU Multiple Precision extension internally for computation. If you are doing a lot of computation this is the recommended extension."
             },
             "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Math_": "./"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1+"
+                "MIT"
             ],
             "authors": [
                 {
                     "name": "Jim Wigginton",
-                    "email": "terrafrost@php.net",
-                    "role": "Developer"
+                    "email": "terrafrost@php.net"
                 }
             ],
             "description": "Pure-PHP arbitrary precission integer arithmetic library. If GMP or BCMath are available they are used.",
@@ -411,7 +415,7 @@
                 "integer",
                 "precision"
             ],
-            "time": "2014-02-12 03:11:21"
+            "time": "2016-04-12 05:46:52"
         },
         {
             "name": "phpunit/php-timer",
@@ -462,14 +466,8 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eteubert/device-detector.git",
-                "reference": "67df898ca313a86891643fdd20bfbf3f4cafc989"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eteubert/device-detector/zipball/67df898ca313a86891643fdd20bfbf3f4cafc989",
-                "reference": "67df898ca313a86891643fdd20bfbf3f4cafc989",
-                "shasum": ""
+                "url": "/Users/ericteubert/code/device-detector",
+                "reference": "e9e6b0aff96f068c46a034ce1cbe43673039cb16"
             },
             "require": {
                 "mustangostang/spyc": "*",
@@ -511,7 +509,7 @@
                 "wiki": "http://dev.piwik.org/",
                 "source": "https://github.com/piwik/piwik"
             },
-            "time": "2016-02-11 10:34:55"
+            "time": "2016-11-14 05:49:52"
         },
         {
             "name": "podlove/normalplaytime",
@@ -691,16 +689,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "2.7.x-dev",
+            "version": "2.8.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "1a9d264853100c597649f0218bb3c08c7bb3cbe8"
+                "reference": "58666e4ac3a2d378798f020308b35a75ffbeaafb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/1a9d264853100c597649f0218bb3c08c7bb3cbe8",
-                "reference": "1a9d264853100c597649f0218bb3c08c7bb3cbe8",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/58666e4ac3a2d378798f020308b35a75ffbeaafb",
+                "reference": "58666e4ac3a2d378798f020308b35a75ffbeaafb",
                 "shasum": ""
             },
             "require": {
@@ -709,7 +707,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -736,20 +734,20 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-08-31 13:10:08"
+            "time": "2016-11-03 07:52:58"
         },
         {
             "name": "twig/extensions",
-            "version": "v1.3.0",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig-extensions.git",
-                "reference": "449e3c8a9ffad7c2479c7864557275a32b037499"
+                "reference": "f0bb8431c8691f5a39f1017d9a5967a082bf01ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/449e3c8a9ffad7c2479c7864557275a32b037499",
-                "reference": "449e3c8a9ffad7c2479c7864557275a32b037499",
+                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/f0bb8431c8691f5a39f1017d9a5967a082bf01ff",
+                "reference": "f0bb8431c8691f5a39f1017d9a5967a082bf01ff",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +762,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -788,20 +786,20 @@
                 "i18n",
                 "text"
             ],
-            "time": "2015-08-22 16:38:35"
+            "time": "2016-10-25 17:34:14"
         },
         {
             "name": "twig/twig",
-            "version": "v1.26.1",
+            "version": "v1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d"
+                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
-                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
+                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +812,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.26-dev"
+                    "dev-master": "1.27-dev"
                 }
             },
             "autoload": {
@@ -849,7 +847,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-05 18:57:41"
+            "time": "2016-10-25 19:17:17"
         }
     ],
     "packages-dev": [
@@ -1817,8 +1815,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony/yaml": 20,
-        "pear/math_biginteger": 20,
-        "leth/ip-address": 20,
         "piwik/device-detector": 20,
         "pear/pear_exception": 20,
         "podlove/comment-introspection": 20
