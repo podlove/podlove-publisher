@@ -20,15 +20,13 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function column_episode( $episode ) {
 		return sprintf(
-			"<a href=\"?page=%s&action=show&episode=%d\">%s</a><br>%s",
+			"<a href=\"?page=%s&action=show&episode=%d\">%s</a> %s",
 			'podlove_analytics',
 			$episode['id'],
 			$episode['title'],
-			'<span style="color:#999; font-size: smaller">'.
-			sprintf(
-				__("%s days ago", "podlove-podcasting-plugin-for-wordpress"), 
-				$episode['days_since_release']
-			) . '</span>'
+			'<span style="color:#999; font-size: smaller" title="' . esc_attr(mysql2date(get_option('date_format'), $episode['post_date'])) . '">'
+			. sprintf(__('%s ago'), human_time_diff(strtotime($episode['post_date']))) 
+			. '</span>'
 		);
 	}
 
@@ -51,7 +49,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
+			// 'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
 			'downloads' => __('Total', 'podlove-podcasting-plugin-for-wordpress'),
 			'1y' => __('1y', 'podlove-podcasting-plugin-for-wordpress'),
 			'4w' => __('4w', 'podlove-podcasting-plugin-for-wordpress'),
@@ -87,6 +85,17 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public static function aggregation_columns() {
 		return ['1y', '4w','3w','2w','1w','6d','5d','4d','3d','2d','1d'];
+	}
+
+	public function single_row( $item ) {
+		echo '<tr>';
+		echo "<td colspan=\"12\">";
+		echo $this->column_episode($item);
+		echo "</td>";
+		echo '</tr>';
+		echo '<tr>';
+		$this->single_row_columns( $item );
+		echo '</tr>';
 	}
 
 	public function prepare_items() {
