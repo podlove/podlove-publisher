@@ -430,7 +430,8 @@ class Feed {
 				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => array(
 					'0'   => 'Custom Login',
-					'1' => 'WordPress User database'
+					'1' => 'WordPress User database',
+					'2' => 'Custom Authentication provided by additional plugin'
 				),
 				'default' => -1,
 				'please_choose' => true
