@@ -102,8 +102,16 @@ class Contributors extends Tab {
 					'description' => 'Either a Gravatar email adress or a URL.',
 					'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
 				)
-			], 
-			'slug' => [
+			],
+            'description' => [
+                'field_type' => 'string',
+                'field_options' => array(
+                    'label'       => __( 'Description', 'podlove-podcasting-plugin-for-wordpress' ),
+                    'description' => 'The description can be used for storing a default description of the contributor.',
+                    'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field', 'data-podlove-input-type' => 'description' )
+                )
+            ],
+            'slug' => [
 				'field_type' => 'string',
 				'field_options' => array(
 					'label'       => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),

@@ -331,3 +331,4 @@ Contributor::property( 'publicname', 'TEXT' );
 Contributor::property( 'visibility', 'TINYINT(1)' );
 Contributor::property( 'guid', 'TEXT' );
 Contributor::property( 'contributioncount', 'INT' );
+Contributor::property( 'description', 'TEXT' );
