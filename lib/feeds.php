@@ -199,6 +199,20 @@ add_action('pre_get_posts', function ( ) {
 						}
 					}
 				break;
+				case '2':
+					// A custom method is used for authentication
+					if ( !isset($_SERVER['PHP_AUTH_USER'] ) ) {
+						feed_authentication();
+					} else {
+						// Call custom login filters (most likely provided by other plugins)
+						if ( apply_filters('podlove_feed_authenticate', true, $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) ) {
+							// let the script continue
+							check_for_and_do_compression();
+						} else {
+							feed_authentication();
+						}
+					}
+				break;
 				default :
 					exit; // If the feed is protected and no auth method is selected exit the script
 				break;
