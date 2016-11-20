@@ -37,7 +37,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	public function column_default($item, $column_name)
 	{
 		$aggregation_columns = self::aggregation_columns();
-		$group = DownloadTimedAggregatorJob::current_time_group($item['days_since_release']);
+		$group = DownloadTimedAggregatorJob::current_time_group($item['hours_since_release']);
 
 		if (in_array($column_name, $aggregation_columns)) {
 
@@ -134,6 +134,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 			$data[] = [
 				'days_since_release' => $episode->days_since_release(),
+				'hours_since_release' => $episode->hours_since_release(),
 				'id' => $episode->id,
 				'title' => $post->post_title,
 				'post_date' => $post->post_date,

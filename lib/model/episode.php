@@ -72,6 +72,14 @@ class Episode extends Base implements Licensable {
 		return $diff->days;
 	}
 
+	public function hours_since_release()
+	{
+		$release = strtotime($this->post()->post_date_gmt);
+		$now = time();
+
+		return floor(($now - $release) / 3600);
+	}
+
 	public function title() {
 		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
 	}

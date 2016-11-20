@@ -90,7 +90,7 @@ class DownloadTimedAggregatorJob {
 		}
 	}
 
-	public static function current_time_group($days_since_release)
+	public static function current_time_group($hours_since_release)
 	{
 		$groupings = self::groupings();
 		$group_keys = array_reverse(array_keys($groupings));
@@ -98,10 +98,10 @@ class DownloadTimedAggregatorJob {
 		for ($i = 0; $i < count($group_keys); $i++) {
 			
 			$current_key = $group_keys[$i];
-			$next_key    = isset($group_keys[$i + 1]) ? $group_keys[$i + 1] : NULL;
-			$prev_key    = isset($group_keys[$i - 1]) ? $group_keys[$i - 1] : NULL;
+			// $next_key    = isset($group_keys[$i + 1]) ? $group_keys[$i + 1] : NULL;
+			// $prev_key    = isset($group_keys[$i - 1]) ? $group_keys[$i - 1] : NULL;
 
-			if ($days_since_release <= $groupings[$current_key] / 24) {
+			if ($hours_since_release <= $groupings[$current_key]) {
 				return $current_key;
 			}
 		}
