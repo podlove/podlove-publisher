@@ -37,14 +37,31 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	public function column_default($item, $column_name)
 	{
 		$aggregation_columns = self::aggregation_columns();
+		$group = DownloadTimedAggregatorJob::current_time_group($item['days_since_release']);
 
 		if (in_array($column_name, $aggregation_columns)) {
-			return self::get_number_or_dash($item[$column_name]);
+
+			// completed aggregate number
+			if (is_numeric($item[$column_name]) && $item[$column_name]) {
+				return number_format_i18n($item[$column_name]);	
+			}
+
+			// show grayed out total as temporary number
+			if ($column_name == $group) {
+				return '<span style="color:#999;">(' . self::get_number_or_dash($item['downloads']) . ')</span>';
+			}
+
+			// otherwise a dash -
+			return "–";
 		}
 	}
 
 	public static function get_number_or_dash($value) {
-		return is_numeric($value) && $value ? number_format_i18n($value) : "–";
+
+		if (is_numeric($value) && $value)
+			return number_format_i18n($value);	
+
+		return "–";
 	}
 
 	public function get_columns(){
