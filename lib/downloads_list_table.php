@@ -200,6 +200,16 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		if ($which !== 'bottom')
 			return;
 
+		?>
+		<div class="alignleft actions">
+			<em><?php echo $this->data_age() ?></em>
+		</div>		
+		<?php
+	}
+
+	private function data_age() {
+		global $wpdb;
+
 		$get_cron_info = function($cron_name) {
 			$next_cron = wp_next_scheduled($cron_name);
 			$interval  = wp_get_schedules()[wp_get_schedule($cron_name)]['interval'];
@@ -212,32 +222,17 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			];
 		};
 
-		$sums_cron   = $get_cron_info("podlove_calc_download_sums");
 		$totals_cron = $get_cron_info("podlove_calc_download_totals");
-
-		$prev_sums_job   = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTimedAggregatorJob');
 		$prev_totals_job = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTotalsAggregatorJob');
 
-		?>
-		<div class="alignleft actions">	
-			<em>
-				<?php
-				echo sprintf(
-					__('Sums data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
-					human_time_diff(max($sums_cron['prev'], strtotime($prev_sums_job->updated_at)), time()),
-					human_time_diff(time(), $sums_cron['next'])
-				); ?>
-			</em><br>
-			<em>
-				<?php
-				echo sprintf(
-					__('Totals data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
-					human_time_diff(max($totals_cron['prev'], strtotime($prev_totals_job->updated_at)), time()),
-					human_time_diff(time(), $totals_cron['next'])
-				); ?>
-			</em>
-		</div>
-		<?php
+		echo sprintf(
+			__('Analytics data is %s old.', 'podlove-podcasting-plugin-for-wordpress'), 
+			human_time_diff(max($totals_cron['prev'], strtotime($prev_totals_job->updated_at)), time())
+		);
+		echo ' ';
+		echo sprintf(
+			__('Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
+			human_time_diff(time(), $totals_cron['next'])
+		);
 	}
-
 }
