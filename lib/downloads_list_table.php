@@ -36,7 +36,6 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	public function column_default($item, $column_name)
 	{
 		$aggregation_columns = self::aggregation_columns();
-		$group = DownloadTimedAggregatorJob::current_time_group($item['hours_since_release']);
 
 		if (in_array($column_name, $aggregation_columns)) {
 
@@ -46,6 +45,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			}
 
 			// show grayed out total as temporary number
+			$group = DownloadTimedAggregatorJob::current_time_group($item);
 			if ($column_name == $group) {
 				return '<span style="color:#999;">(' . self::get_number_or_dash($item['downloads']) . ')</span>';
 			}

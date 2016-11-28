@@ -106,20 +106,40 @@ class DownloadTimedAggregatorJob {
 		}
 	}
 
-	public static function current_time_group($hours_since_release)
+	/**
+	 * Get "in progress" time group.
+	 * 
+	 * For the first 24h after a release "1d" is returned, followed by "2d" etc.
+	 * The next segment is only returned once the sum for the current segment
+	 * has been calculated.
+	 * 
+	 * @param  array $item
+	 * @return NULL|string
+	 */
+	public static function current_time_group($item)
 	{
-		$groupings = self::groupings();
+		$groupings  = self::groupings();
 		$group_keys = array_reverse(array_keys($groupings));
 
-		for ($i = 0; $i < count($group_keys); $i++) {
-			
-			$current_key = $group_keys[$i];
-			// $next_key    = isset($group_keys[$i + 1]) ? $group_keys[$i + 1] : NULL;
-			// $prev_key    = isset($group_keys[$i - 1]) ? $group_keys[$i - 1] : NULL;
+		// return first column without downloads
+		foreach ($group_keys as $key) {
 
-			if ($hours_since_release <= $groupings[$current_key]) {
-				return $current_key;
-			}
+			// ignore 'total' column
+			if ($key == 'total')
+				continue;
+
+			// ignore columns with calculated values
+			if (isset($item[$key]) && $item[$key] > 0)
+				continue;
+
+			// ignore old segments without tracking
+			$two_days_ago     = time() - DAY_IN_SECONDS * 2;
+			$segment_end_time = strtotime($item['post_date']) + $groupings[$key] * HOUR_IN_SECONDS;
+
+			if ($segment_end_time < $two_days_ago)
+				continue;
+
+			return $key;
 		}
 
 		return NULL;
