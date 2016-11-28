@@ -13,8 +13,8 @@ class ContributorSettings {
 		
 		ContributorSettings::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Contributors',
-			/* $menu_title */ 'Contributors',
+			/* $page_title */ __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_contributor_settings',
 			/* $function   */ array( $this, 'page' )

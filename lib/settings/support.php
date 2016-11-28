@@ -12,8 +12,8 @@ class Support {
 		
 		Support::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Support',
-			/* $menu_title */ 'Support',
+			/* $page_title */ __( 'Support', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Support', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_Support_settings_handle',
 			/* $function   */ array( $this, 'page' )

@@ -16,7 +16,7 @@ class Contributors extends Tab {
 
 	public function add_contributors_screen_options() {
 		add_screen_option( 'per_page', array(
-	       'label'   => 'Contributors',
+	       'label'   => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
 	       'default' => 10,
 	       'option'  => 'podlove_contributors_per_page'
 		) );
@@ -69,7 +69,7 @@ class Contributors extends Tab {
 				'field_type' => 'string',
 				'field_options' => array(
 					'label'       => __( 'Public name', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => 'The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".',
+					'description' => __('The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 				)
 			], 
@@ -91,7 +91,7 @@ class Contributors extends Tab {
 				'field_type' => 'string',
 				'field_options' => array(
 					'label'       => __( 'Contact email', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => 'The provided email will be used for internal purposes only.',
+					'description' => __('The provided email will be used for internal purposes only.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email' )
 				)
 			],
@@ -99,7 +99,7 @@ class Contributors extends Tab {
 				'field_type' => 'avatar',
 				'field_options' => array(
 					'label'       => __( 'Avatar', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => 'Either a Gravatar email adress or a URL.',
+					'description' => __('Either a Gravatar email adress or a URL.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
 				)
 			], 
@@ -107,7 +107,7 @@ class Contributors extends Tab {
 				'field_type' => 'string',
 				'field_options' => array(
 					'label'       => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => 'The ID will be used as in internal identifier for e.g. shortcodes.',
+					'description' => __('The ID will be used as in internal identifier for e.g. shortcodes.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array( 'class' => 'podlove-check-input required podlove-contributor-field' )
 				)
 			], 
@@ -123,8 +123,8 @@ class Contributors extends Tab {
 				'field_type' => 'radio',
 				'field_options' => array(
 					'label'       => __( 'Visibility', 'podlove-podcasting-plugin-for-wordpress' ),
-					'options'	  => array( '1' => 'Yes, the contributor’s information will be visible for the public (e.g. displayed in the Contributor Table).<br />', 
-						                    '0' => 'No, the contributor’s information will be private and not visible for anybody.' ),
+					'options'	  => array( '1' => __('Yes, the contributor’s information will be visible for the public (e.g. displayed in the Contributor Table).<br />', 'podlove-podcasting-plugin-for-wordpress' ), 
+						                    '0' => __('No, the contributor’s information will be private and not visible for anybody.', 'podlove-podcasting-plugin-for-wordpress' ) ),
 					'default'	  => '1'
 				)
 			]

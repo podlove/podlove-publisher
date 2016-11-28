@@ -17,8 +17,8 @@ class Settings {
 		
 		Settings::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Expert Settings',
-			/* $menu_title */ 'Expert Settings',
+			/* $page_title */ __( 'Expert Settings', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Expert Settings', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_settings_settings_handle',
 			/* $function   */ array( $this, 'page' )

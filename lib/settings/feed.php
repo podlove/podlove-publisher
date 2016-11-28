@@ -15,8 +15,8 @@ class Feed {
 		
 		self::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Podcast Feeds',
-			/* $menu_title */ 'Podcast Feeds',
+			/* $page_title */ __( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ self::MENU_SLUG,
 			/* $function   */ array( $this, 'page' )
@@ -33,7 +33,7 @@ class Feed {
 
 	public function add_screen_options() {
 		add_screen_option( 'per_page', array(
-		   'label'   => 'Feeds',
+		   'label'   => __( 'Feeds', 'podlove-podcasting-plugin-for-wordpress' ),
 		   'default' => 10,
 		   'option'  => 'podlove_feeds_per_page'
 		) );
@@ -405,9 +405,9 @@ class Feed {
 				'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( '"Temporary Redirect" is recommended.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => array(
-					'0'   => 'Don\'t redirect', 
-					'307' => 'Temporary Redirect (HTTP Status 307)',
-					'301' => 'Permanent Redirect (HTTP Status 301)'
+					'0'   => __('Don\'t redirect', 'podlove-podcasting-plugin-for-wordpress'),
+					'307' => __('Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress'),
+					'301' => __('Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress')
 				),
 				'default' => 0,
 				'please_choose' => false

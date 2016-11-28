@@ -63,14 +63,14 @@ class ContributorDefaults {
 		?>
 		<div class="wrap">
 			<p>
-				Default Contributors will be automatically added to the list of contributors for new episodes.
+				<?php _e( 'Default Contributors will be automatically added to the list of contributors for new episodes.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 			</p>
 			<form method="post" action="admin.php?page=podlove_contributor_settings&amp;action=save" id="contributor_default_form">
 			<?php
 				$this->default_contrib_form();
 			?>
 			<p>
-				<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"  />
+				<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Changes', 'podlove-podcasting-plugin-for-wordpress') ?>"  />
 			</p>
 			</form>
 		</div>	

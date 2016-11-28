@@ -9,8 +9,8 @@ class WebPlayer extends Tab {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_episode',
-			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
-			/* $callback */ function () { echo '<h3>' . __( 'WebPlayer Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
+			/* $title 	 */ '',	
+			/* $callback */ function () { echo '<h3>' . __( 'Web Player Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
 			/* $page	 */ Settings::$pagehook	
 		);
 
@@ -26,7 +26,7 @@ class WebPlayer extends Tab {
 			<?php settings_fields( Settings::$pagehook ); ?>
 			<?php do_settings_sections( Settings::$pagehook ); ?>
 
-			<?php echo __( 'Webplayers are able to provide various media formats depending on context. Try to provide as many as possible to maximize compatibility with all browsers.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+			<?php _e( 'Web players are able to provide various media formats depending on context. Try to provide as many as possible to maximize compatibility with all browsers.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 
 			<table class="form-table">
 				<?php $this->form_fields(); ?>
@@ -73,7 +73,7 @@ class WebPlayer extends Tab {
 					'mime_types' => array('video/ogg')
 				),
 				'webm' => array(
-					'title'     => __( 'Webm Video', 'podlove-podcasting-plugin-for-wordpress' ),
+					'title'     => __( 'WebM Video', 'podlove-podcasting-plugin-for-wordpress' ),
 					'mime_types' => array('video/webm')
 				),
 			)
@@ -108,7 +108,7 @@ class WebPlayer extends Tab {
 					<td>
 						<div>
 							<select name="<?php echo $name; ?>" id="<?php echo $id; ?>">
-								<option value="0" <?php selected( 0, $value ); ?> ><?php echo __( 'Unused', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
+								<option value="0" <?php selected( 0, $value ); ?> ><?php _e( 'Unused', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
 								<?php foreach ( $episode_assets as $episode_asset ): ?>
 									<?php $file_type = $episode_asset->file_type(); ?>
 									<?php if ( $file_type && in_array($file_type->mime_type, $mime_types) ): ?>

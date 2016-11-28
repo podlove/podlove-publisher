@@ -64,7 +64,7 @@ class Templates {
 			__( 'Episode Templates are an easy way to keep the same structure in all your episodes.
 				You can use %sShortcodes%s as well as %sPublisher Template Tags%s to customize your episodes.<br>
 				Please read the %sTemplating Guide%s to get started.
-				', 'podlove' ),
+				', 'podlove-podcasting-plugin-for-wordpress' ),
 			'<a href="http://docs.podlove.org/ref/shortcodes.html" target="_blank">', '</a>',
 			'<a href="http://docs.podlove.org/reference/template-tags/" target="_blank">', '</a>',
 			'<a href="http://docs.podlove.org/guides/understanding-templates/" target="_blank">', '</a>'
@@ -83,14 +83,14 @@ class Templates {
 					<?php endforeach; ?>
 				</ul>
 				<div class="add">
-					<a href="#">+ add new template</a>
+					<a href="#">+ <?php _e('add new template', 'podlove-podcasting-plugin-for-wordpress') ?></a>
 				</div>
 			</div>
 			<div class="editor">
 				<div class="toolbar">
 					<div class="actions">
-						<a href="#" class="delete">delete</a>
-						<a href="#" class="save button button-primary">Save</a>
+						<a href="#" class="delete"><?php _e('delete', 'podlove-podcasting-plugin-for-wordpress') ?></a>
+						<a href="#" class="save button button-primary"><?php _e('Save', 'podlove-podcasting-plugin-for-wordpress') ?></a>
 					</div>
 					<div class="title">
 						<input type="text">
@@ -105,7 +105,7 @@ class Templates {
 			<div class="clear"></div>
 		</div>
 
-		<h3><?php echo __( 'Insert templates to content automatically', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
+		<h3><?php _e( 'Insert templates to content automatically', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
 		<form method="post" action="options.php">
 			<?php settings_fields( Templates::$pagehook );
 			$template_assignment = Model\TemplateAssignment::get_instance();

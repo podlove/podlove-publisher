@@ -33,9 +33,9 @@ class Media extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'The Podlove Publisher expects all your media files to be in the same <strong>Upload Location</strong>.
+			<?php _e( 'The Podlove Publisher expects all your media files to be in the same <strong>Upload Location</strong>.
 					It should be a publicly readable directory containing all media files.
-					You should not create a separate directory for each episode.', 'podlove' ); ?>
+					You should not create a separate directory for each episode.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 

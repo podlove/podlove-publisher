@@ -63,7 +63,7 @@ class Analytics {
 		$option = get_option('podlove_analytics_tiles', array());
 
 		$status .= "
-		<h5>Show Analytics Tiles</h5>
+		<h5>" . __('Show Analytics Tiles', 'podlove-podcasting-plugin-for-wordpress') . "</h5>
 		<div class='metabox-prefs'>";
 
 		foreach ($tiles as $id => $title) {
@@ -155,35 +155,35 @@ class Analytics {
 	public function blank_template() {
 		?>
 
-		<h2><?php echo __("Podcast Analytics", 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
+		<h2><?php _e("Podcast Analytics", 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
 		<div id="welcome-panel" class="welcome-panel">
 		    <div class="welcome-panel-content">
-		        <h3><?php echo __('Welcome to Podlove Publisher Analytics!', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+		        <h3><?php _e('Welcome to Podlove Publisher Analytics!', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 		        <p class="about-description">
 		        	<?php if (Model\DownloadIntent::count() < 50): ?>
-		        		<?php echo __('There is not enough tracking data yet. Publish an episode, then come back after a while.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+		        		<?php _e('There is not enough tracking data yet. Publish an episode, then come back after a while.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		        	<?php else: ?>
-		        		<?php echo __('Still crunching the numbers. The first time it may take up to an hour until you see analytics.'); ?>
+		        		<?php _e('Still crunching the numbers. The first time it may take up to an hour until you see analytics.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		        	<?php endif ?>
 		        </p>
 		        <div class="welcome-panel-column-container">
 		            <div class="welcome-panel-column">
-		                <h4><?php echo __('While you wait ...', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
+		                <h4><?php _e('While you wait ...', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
 		                <ul>
 		                	<li>
 		                		<a target="_blank" href="http://docs.podlove.org/guides/download-analytics/" class="welcome-icon welcome-learn-more">
-		                			<?php echo __('Learn more about how tracking works', 'podlove-podcasting-plugin-for-wordpress') ?>
+		                			<?php _e('Learn more about how tracking works', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                		</a>
 		                	</li>
 		                    <li>
 		                        <a href="<?php echo admin_url( 'post-new.php?post_type=podcast' ) ?>" class="welcome-icon welcome-write-blog">
-		                        	<?php echo __('Add a new episode', 'podlove-podcasting-plugin-for-wordpress') ?>
+		                        	<?php _e('Add a new episode', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                        </a>
 		                    </li>
 		                    <li>
 		                        <a href="<?php echo home_url() ?>" class="welcome-icon welcome-view-site">
-		                        	<?php echo __('View your site', 'podlove-podcasting-plugin-for-wordpress') ?>
+		                        	<?php _e('View your site', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                        </a>
 		                    </li>
 		                </ul>
@@ -198,7 +198,7 @@ class Analytics {
 	public function view_template() {
 		?>
 
-		<h2><?php echo __("Podcast Analytics", 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
+		<h2><?php _e("Podcast Analytics", 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
 		<div style="width: 100%">
 			<div id="total-chart" style="height: 200px"></div>
@@ -215,20 +215,20 @@ class Analytics {
 
 		<div class="metabox-holder">
 			<div class="postbox">
-				<h2 class="hndle" style="cursor: inherit;">Downloads</h2>
+				<h2 class="hndle" style="cursor: inherit;"><?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 				<div class="inside">
 
 					<div class="analytics-metric-container">
 						<div class="analytics-metric-box">
-							<span class="analytics-description">All Time</span>
+							<span class="analytics-description"><?php _e('All Time', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 							<span class="analytics-value"><?php echo is_numeric($total) ? number_format_i18n($total) : '(' . __('crunching numbers...', 'podlove-podcasting-plugin-for-wordpress') . ')'; ?></span>
-							<span class="analytics-subtext">Downloads of all Episodes</span>
+							<span class="analytics-subtext"><?php _e('Downloads of all Episodes', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 						</div>
 
 						<div class="analytics-metric-box">
-							<span class="analytics-description">Last Month</span>
+							<span class="analytics-description"><?php _e('Last Month', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 							<span class="analytics-value"><?php echo is_numeric($last_month['downloads']) ? number_format_i18n($last_month['downloads']) : '(' . __('crunching numbers...', 'podlove-podcasting-plugin-for-wordpress') . ')'; ?></span>
-							<span class="analytics-subtext">Downloads in <?php echo $last_month['homan_readable_month'] ?></span>
+							<span class="analytics-subtext"><?php echo sprintf(__('Downloads in %s', 'podlove-podcasting-plugin-for-wordpress'), $last_month['homan_readable_month']); ?></span>
 						</div>
 
 						<div class="clear"></div>
@@ -274,40 +274,40 @@ class Analytics {
 
 			<div class="analytics-metric-container">
 				<div class="analytics-metric-box">
-					<span class="analytics-description">Average</span>
+					<span class="analytics-description"><?php _e('Average', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 					<span class="analytics-value"><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></span>
-					<span class="analytics-subtext">Downloads per Day</span>
+					<span class="analytics-subtext"><?php _e('Downloads per Day', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 				</div>
 
 				<div class="analytics-metric-box">
-					<span class="analytics-description">Peak</span>
+					<span class="analytics-description"><?php _e('Peak', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 					<span class="analytics-value"><?php echo number_format_i18n($peak['downloads']) ?></span>
-					<span class="analytics-subtext">Downloads<br>on <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
+					<span class="analytics-subtext"><?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?><br><?php _e('on', 'podlove-podcasting-plugin-for-wordpress'); ?> <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
 				</div>
 
 				<div class="analytics-metric-box">
-					<span class="analytics-description">Total</span>
+					<span class="analytics-description"><?php _e('Total', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 					<span class="analytics-value"><?php echo number_format_i18n($downloads['total']) ?></span>
-					<span class="analytics-subtext">Downloads</span>
+					<span class="analytics-subtext"><?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 				</div>
 
 				<div class="analytics-metric-box">
 					<table>
 						<tbody>
 							<tr>
-								<td>28 Days</td>
+								<td><?php _e('28 Days', 'podlove-podcasting-plugin-for-wordpress'); ?></td>
 								<td><?php echo number_format_i18n($downloads['month']) ?></td>
 							</tr>
 							<tr>
-								<td>7 Days</td>
+								<td><?php _e('7 Days', 'podlove-podcasting-plugin-for-wordpress'); ?></td>
 								<td><?php echo number_format_i18n($downloads['week']) ?></td>
 							</tr>
 							<tr>
-								<td>Yesterday</td>
+								<td><?php _e('Yesterday', 'podlove-podcasting-plugin-for-wordpress'); ?></td>
 								<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
 							</tr>
 							<tr>
-								<td>Today</td>
+								<td><?php _e('Today', 'podlove-podcasting-plugin-for-wordpress'); ?></td>
 								<td><?php echo number_format_i18n($downloads['today']) ?></td>
 							</tr>
 						</tbody>
@@ -335,7 +335,7 @@ class Analytics {
 			<?php echo $post->post_title ?>
 			<br><small>
 				<?php echo sprintf(
-							"Released on %s (%d days ago)",
+							__('Released on %s (%d days ago)', 'podlove-podcasting-plugin-for-wordpress'),
 							mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $post->post_date),
 							number_format_i18n($episode->days_since_release())
 						) ?>
@@ -387,24 +387,24 @@ class Analytics {
 
 		?>
 		<div id="chart-zoom-selection" class="chart-menubar">
-			<span>Zoom</span>
-			<a href="#" data-hours="24" class="button button-secondary">1d</a>
-			<a href="#" data-hours="168" class="button button-secondary">1w</a>
-			<a href="#" data-hours="672" class="button button-secondary">4w</a>
-			<a href="#" data-hours="0" class="button button-secondary">all</a>
+			<span><?php _e('Zoom', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
+			<a href="#" data-hours="24" class="button button-secondary"><?php _e('1d', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="168" class="button button-secondary"><?php _e('1w', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="672" class="button button-secondary"><?php _e('4w', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="0" class="button button-secondary"><?php _e('all', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 		</div>
 
 		<div id="chart-grouping-selection" class="chart-menubar">
-			<span>Unit</span>
-			<a href="#" data-hours="1" class="button button-secondary">1h</a>
-			<a href="#" data-hours="2" class="button button-secondary">2h</a>
+			<span><?php _e('Unit', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
+			<a href="#" data-hours="1" class="button button-secondary"><?php _e('1h', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="2" class="button button-secondary"><?php _e('2h', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 			<!-- <a href="#" data-hours="3" class="button button-secondary">3h</a> -->
-			<a href="#" data-hours="4" class="button button-secondary">4h</a>
-			<a href="#" data-hours="6" class="button button-secondary">6h</a>
-			<a href="#" data-hours="12" class="button button-secondary">12h</a>
-			<a href="#" data-hours="24" class="button button-secondary">1d</a>
-			<a href="#" data-hours="168" class="button button-secondary">1w</a>
-			<a href="#" data-hours="672" class="button button-secondary">4w</a>
+			<a href="#" data-hours="4" class="button button-secondary"><?php _e('4h', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="6" class="button button-secondary"><?php _e('6h', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="12" class="button button-secondary"><?php _e('12h', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="24" class="button button-secondary"><?php _e('1d', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="168" class="button button-secondary"><?php _e('1w', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="#" data-hours="672" class="button button-secondary"><?php _e('4w', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 		</div>
 
 		<div id="episode-performance-chart" data-episode="<?php echo $episode->id ?>">
@@ -414,37 +414,37 @@ class Analytics {
 
 		<section id="episode-source-chart-wrapper" class="chart-wrapper" data-tile-id="download_source">
 			<div id="episode-source-chart">
-				<h1>Download Source <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+				<h1><?php _e('Download Source', 'podlove-podcasting-plugin-for-wordpress'); ?><a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 
 		<section id="episode-context-chart-wrapper" class="chart-wrapper" data-tile-id="download_context">
 			<div id="episode-context-chart">
-				<h1>Download Context <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+				<h1><?php _e('Download Context', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 
 		<section id="episode-asset-chart-wrapper" class="chart-wrapper" data-tile-id="asset">
 			<div id="episode-asset-chart">
-				<h1>Episode Asset <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+				<h1><?php _e('Episode Asset', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 
 		<section id="episode-client-chart-wrapper" class="chart-wrapper" data-tile-id="podcast_client">
 			<div id="episode-client-chart">
-				<h1>Podcast Client <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+				<h1><?php _e('Podcast Client', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 
 		<section id="episode-system-chart-wrapper" class="chart-wrapper" data-tile-id="operating_system">
 			<div id="episode-system-chart">
-				<h1>Operating System <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+				<h1><?php _e('Operating System', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 
 		<section id="episode-weekday-chart-wrapper" class="chart-wrapper" data-tile-id="day_of_week">
 			<div id="episode-weekday-chart">
-				<h1>Day of Week <a href="#" class="reset" style="display: none"><small>reset</small></a></h1>
+				<h1><?php _e('Day of Week', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 

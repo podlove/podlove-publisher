@@ -37,10 +37,10 @@ class Description extends Tab {
 
 		?>
 		<p>
-			<?php echo __( 'These are the three most important fields describing your podcast.
+			<?php _e( 'These are the three most important fields describing your podcast.
 					<strong>Title</strong> is the title of the podcast that is the primary field to be used to represent the podcast in directories, lists and other uses.
 					The <strong>subtitle</strong> is an extension to the title. The subtitle is meant to clarify what the podcast is about. While a title can be anything, a subtitle should be more descriptive in what the content actually wants to convey and what the most important information is, you want everybody want to know about the offering.
-					A <strong>summary</strong> is a much more precise and elaborate description of the podcast\'s content. While title and subtitle are rather concise, a summary is meant to consist of one or more sentences that form a paragraph or more.', 'podlove' ) ?>
+					A <strong>summary</strong> is a much more precise and elaborate description of the podcast\'s content. While title and subtitle are rather concise, a summary is meant to consist of one or more sentences that form a paragraph or more.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 
@@ -69,12 +69,12 @@ class Description extends Tab {
 				'label'        => __( 'Image URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description'  => __( 'Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
-				'media_button_text' => __("Use for Podcast Image", 'podlove-podcasting-plugin-for-wordpress')
+				'media_button_text' => __('Use for Podcast Cover Art', 'podlove-podcasting-plugin-for-wordpress')
 			) );
 
 			$wrapper->select( 'language', array(
 				'label'       => __( 'Language', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => '',
 				'default'     => get_bloginfo( 'language' ),
 				'options'  => \Podlove\Locale\locales()
 			) );
