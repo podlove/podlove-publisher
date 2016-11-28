@@ -65,11 +65,8 @@ class Pubsubhubbub extends \Podlove\Modules\Base {
 
 			$curl = new \Podlove\Http\Curl();
 			$curl->request( $hub_url, array(
-				'method' => 'POST',
-				'body'   => array(
-					'hub.mode' => 'publish',
-					'hub.url'  => $ping_url
-				),
+				'method'  => 'POST',
+				'body'    => 'hub.mode=publish&hub.url=' . urlencode($ping_url),
 				'headers' => array(
 					'Content-Type' => 'application/x-www-form-urlencoded; charset=' . get_option('blog_charset')
 				)
