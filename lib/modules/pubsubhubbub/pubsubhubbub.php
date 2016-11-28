@@ -70,6 +70,9 @@ class Pubsubhubbub extends \Podlove\Modules\Base {
 					'hub.mode' => 'publish',
 					'hub.url'  => $ping_url
 				),
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded; charset=' . get_option('blog_charset')
+				)
 			) );
 		}
 }
