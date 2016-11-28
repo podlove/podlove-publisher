@@ -378,18 +378,18 @@ class Feed {
 
 			$wrapper->select( 'redirect_http_status', array(
 				'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => '',
 				'options' => array(
-					'0'   => 'Don\'t redirect', 
-					'307' => 'Temporary Redirect (HTTP Status 307)',
-					'301' => 'Permanent Redirect (HTTP Status 301)'
+					'0'   => __( 'Don\'t redirect', 'podlove-podcasting-plugin-for-wordpress' ),
+					'307' => __( 'Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress' ),
+					'301' => __( 'Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress' )
 				),
 				'default' => 0,
 				'please_choose' => false
 			) );
 			
 			$wrapper->string( 'redirect_url', array(
-				'label'       => __( 'Redirect Url', 'podlove-podcasting-plugin-for-wordpress' ),
+				'label'       => __( 'Redirect URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( 'e.g. Feedburner URL', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
@@ -427,10 +427,10 @@ class Feed {
 
 			$wrapper->select( 'protection_type', array(
 				'label'       => __( 'Method', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => '',
 				'options' => array(
-					'0'   => 'Custom Login',
-					'1' => 'WordPress User database'
+					'0'   => __( 'Custom Login', 'podlove-podcasting-plugin-for-wordpress' ),
+					'1' => __( 'WordPress User database', 'podlove-podcasting-plugin-for-wordpress' )
 				),
 				'default' => -1,
 				'please_choose' => true
