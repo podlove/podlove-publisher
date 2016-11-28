@@ -115,28 +115,7 @@ class Tools {
 			</div>
 
 			<p class="description">
-				<?php echo __('Runs automatically twice per day. Calculates downloads per episode in time segments (first day, first two days, ... first year) for the Analytics Dashboard.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-			</p>
-			<?php
-		}, 'tracking-analytics');
-
-		$job_class = 'Podlove\Jobs\DownloadTotalsAggregatorJob';
-		\Podlove\add_tools_field('ta-recalc-downloads-totals', $job_class::title(), function() use ($job_class) {
-				$recent_job = Job::find_one_recent_job($job_class);
-				$recent_job_id = $recent_job ? $recent_job->id : '';
-			?>
-			<div 
-				class="podlove-job" 
-				data-job="Podlove-Jobs-DownloadTotalsAggregatorJob"
-				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
-				data-button-text="<?php echo $job_class::title() ?>"
-				data-recent-job-id="<?php echo $recent_job_id ?>"
-				>
-				
-			</div>
-
-			<p class="description">
-				<?php echo __('Runs automatically once per hour. Calculates total downloads per episode.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				<?php echo __('Runs automatically once per hour. Calculates total downloads per episode and downloads per episode in time segments (first day, first two days, ... first year) for the Analytics Dashboard.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
 		}, 'tracking-analytics');

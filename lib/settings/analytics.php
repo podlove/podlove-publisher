@@ -221,13 +221,13 @@ class Analytics {
 					<div class="analytics-metric-container">
 						<div class="analytics-metric-box">
 							<span class="analytics-description">All Time</span>
-							<span class="analytics-value"><?php echo number_format_i18n($total); ?></span>
+							<span class="analytics-value"><?php echo is_numeric($total) ? number_format_i18n($total) : '(' . __('crunching numbers...', 'podlove-podcasting-plugin-for-wordpress') . ')'; ?></span>
 							<span class="analytics-subtext">Downloads of all Episodes</span>
 						</div>
 
 						<div class="analytics-metric-box">
 							<span class="analytics-description">Last Month</span>
-							<span class="analytics-value"><?php echo number_format_i18n($last_month['downloads']); ?></span>
+							<span class="analytics-value"><?php echo is_numeric($last_month['downloads']) ? number_format_i18n($last_month['downloads']) : '(' . __('crunching numbers...', 'podlove-podcasting-plugin-for-wordpress') . ')'; ?></span>
 							<span class="analytics-subtext">Downloads in <?php echo $last_month['homan_readable_month'] ?></span>
 						</div>
 

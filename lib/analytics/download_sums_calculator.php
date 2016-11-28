@@ -14,7 +14,7 @@ class DownloadSumsCalculator {
 
 	public static function schedule_crons() {
 		if (!wp_next_scheduled('podlove_calc_download_sums'))
-			wp_schedule_event(time(), 'twicedaily', 'podlove_calc_download_sums');
+			wp_schedule_event(time(), 'hourly', 'podlove_calc_download_sums');
 	}
 
 	public static function calc_download_sums() {

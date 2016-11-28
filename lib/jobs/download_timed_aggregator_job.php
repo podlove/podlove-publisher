@@ -14,7 +14,7 @@ class DownloadTimedAggregatorJob {
 	}
 
 	public static function description() {
-		return __('Recalculates sums for episode downloads in Analytics overview page.', 'podlove-podcasting-plugin-for-wordpress');
+		return __('Recalculates sums and totals for episode downloads.', 'podlove-podcasting-plugin-for-wordpress');
 	}
 
 	public function setup() {
@@ -52,38 +52,54 @@ class DownloadTimedAggregatorJob {
 		if (!$episode)
 			return 1;
 
-		$max_hsr = Model\DownloadIntentClean::actual_episode_age_in_hours($episode->id);
+		$max_hsr = Model\DownloadIntentClean::actual_episode_age_in_hours($episode_id);
 		$groupings = self::groupings();
 
 		foreach ($groupings as $key => $hours) {
-			// skip already calculated fields IF override is not forced
-			if (!$this->job->args['force'] && get_post_meta($episode->post_id, '_podlove_downloads_' . $key, true) != '')
-				continue;
-
-			// skip fields that cannot be calculated yet
-			if ($max_hsr <= $hours)
-				continue;
-
-			self::calculate_single_aggregation($episode, $key, $hours);
+			if ($this->should_calculate_grouping($episode_id, $key, $hours, $max_hsr)) {
+				self::calculate_single_aggregation($episode, $key, $hours);
+			}
 		}
 
 		return 1;
+	}
+
+	private function should_calculate_grouping($episode_id, $group_key, $group_hours, $max_hsr)
+	{
+		// skip fields that cannot be calculated yet
+		if ($max_hsr <= $group_hours)
+			return false;
+		
+		// always calculate if enforced
+		if ($this->job->args['force'])
+			return true;
+
+		// always calculate totals
+		if ($group_key === 'total')
+			return true;
+
+		// skip if field is already calculated
+		return !((bool) get_post_meta($episode_id, '_podlove_downloads_' . $group_key, true));		
 	}
 
 	private function calculate_single_aggregation($episode, $grouping_key, $grouping_hours)
 	{
 		global $wpdb;
 
-		$sql = $wpdb->prepare(
-			'SELECT
+		$sql = 'SELECT
 			  COUNT(*)
 			FROM ' . Model\DownloadIntentClean::table_name() . ' di
 			INNER JOIN ' . Model\MediaFile::table_name() . ' mf ON mf.id = di.media_file_id
 			INNER JOIN ' . Model\Episode::table_name() . ' e ON mf.episode_id = e.id
-			WHERE e.id = %d AND hours_since_release <= %d',
-			$episode->id, $grouping_hours
-		);
-		$downloads = $wpdb->get_var($sql);
+			WHERE e.id = %d';
+		$sql_params = [$episode->id];
+
+		if ($grouping_hours && $grouping_hours > 0) {
+			$sql .= ' AND hours_since_release <= %d';
+			$sql_params[] = $grouping_hours;
+		}
+
+		$downloads = $wpdb->get_var($wpdb->prepare($sql, $sql_params));
 
 		if ($downloads && is_numeric($downloads)) {
 			update_post_meta($episode->post_id, '_podlove_downloads_' . $grouping_key, $downloads);
@@ -112,6 +128,7 @@ class DownloadTimedAggregatorJob {
 	public static function groupings()
 	{
 		return  [
+			'total' => null,
 			'1y' => 24 * 7 * 52,
 			'4w' => 24 * 7 * 4,
 			'3w' => 24 * 7 * 3,
