@@ -1,7 +1,7 @@
 <?php 
 
 function podlove_episodes_per_page_option_name() {
-	return 'podlove_episodes_' . get_current_blog_id() . '_per_page';
+	return 'podlove_episodes_per_page';
 }
 
 add_filter("set-screen-option", function($status, $option, $value) {
