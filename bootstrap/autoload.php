@@ -55,7 +55,20 @@ function podlove_autoloader( $class_name ) {
 		}
 	}
 
-	error_log(print_r($possibilities, true));
+	if (defined('WP_DEBUG') && WP_DEBUG) {
+		$trace     = debug_backtrace();
+		$functions = array_map(function($t) { return $t['function']; }, $trace);
+
+		if (in_array('class_exists', $functions)) {
+			// don't log anything, we were just checking if that class exists
+		} else {
+			error_log(print_r([
+				'message'  => 'Class Autoload failed for "' . $class_name . '"', 
+				'attempts' => $possibilities,
+				'trace'    => $functions
+			], true));
+		}
+	}
 	
 	return false;
 }
