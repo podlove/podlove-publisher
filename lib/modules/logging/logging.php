@@ -232,14 +232,32 @@ $(document).ready(function() {
 								echo sprintf('in template "%s" line %d', $data->template, $data->line);
 							}
 
-							$extra = array_diff((array) $data, ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id']);
+							$data = (array) $data;
+							$remove_keys = ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id'];
+							$extra = $data;
+
+							foreach ($remove_keys as $key) {
+								if (isset($extra[$key])) {
+									unset($extra[$key]);
+								}
+							}
+
 							if (count($extra) > 0) {
 								?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
-									<code class="details" style="display: none"><?php
-									print_r(nl2br((new \Spyc)->dump($extra, true)));
-									?></code>
+									<code class="details" style="display: none"><pre><?php
+									print_r((new \Spyc)->dump($extra, true));
+									?></pre></code>
+								</span>
+								<?php
+							} elseif (!$data) {
+								?>
+								<span class="log-details">
+									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
+									<code class="details" style="display: none"><pre><?php
+									echo str_replace(',"', ',' . "\n" . '"', $log_entry->context);
+									?></pre></code>
 								</span>
 								<?php
 							}
