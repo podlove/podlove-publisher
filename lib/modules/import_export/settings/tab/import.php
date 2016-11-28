@@ -23,10 +23,10 @@ class Import extends \Podlove\Settings\Expert\Tab {
 					<?php
 					switch ($_GET['status']) {
 						case 'success':
-							echo __('Import successful. Happy podcasting!');
+							_e('Import successful. Happy podcasting!', 'podlove-podcasting-plugin-for-wordpress');
 							break;
 						case 'version-warning':
-							echo __('Heads up: Your export file was exported from a Publisher with a different version. If possible, both Publisher versions should be identical. However, that might not be a problem. Happy podcasting!');
+							_e('Heads up: Your export file was exported from a Publisher with a different version. If possible, both Publisher versions should be identical. However, that might not be a problem. Happy podcasting!', 'podlove-podcasting-plugin-for-wordpress');
 							break;
 					}
 					?>
@@ -41,23 +41,23 @@ class Import extends \Podlove\Settings\Expert\Tab {
 		?>
 
 		<p>
-			<?php echo __('Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			<?php _e('Use this import on <strong>fresh installs only</strong>! Otherwise you may lose data. In any case, you should have backups.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		</p>
 
-		<h3><?php echo __('Podcast Import', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+		<h3><?php _e('Podcast Import', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
 
 		<form method="POST" enctype="multipart/form-data">
 			(<span><?php echo self::get_maximum_upload_size_text() ?></span>)
 			<input type="file" name="podlove_import"/> 
-			<input type="submit" value="<?php echo __('Import Podcast Data', 'podlove-podcasting-plugin-for-wordpress') ?>" class="button-primary" />
+			<input type="submit" value="<?php _e('Import Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?>" class="button-primary" />
 		</form>
 
-		<h3><?php echo __('Tracking Import', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+		<h3><?php _e('Tracking Import', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
 
 		<form method="POST" enctype="multipart/form-data">
 			(<span><?php echo self::get_maximum_upload_size_text() ?></span>)
 			<input type="file" name="podlove_import_tracking"/>
-			<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove-podcasting-plugin-for-wordpress') ?>" class="button-primary" />
+			<input type="submit" value="<?php _e('Import Tracking Data', 'podlove-podcasting-plugin-for-wordpress'); ?>" class="button-primary" />
 		</form>
 
 		<?php
@@ -67,7 +67,7 @@ class Import extends \Podlove\Settings\Expert\Tab {
 		// this is exactly the same way it is done in wp_import_upload_form()
 		$bytes = apply_filters( 'import_upload_size_limit', \wp_max_upload_size() );
 		$size = \size_format( $bytes );
-		return sprintf( __('Maximum size: %s' ), $size );
+		return sprintf( __('Maximum size: %s', 'podlove-podcasting-plugin-for-wordpress'), $size );
 	}
 
 }
