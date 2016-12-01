@@ -28,6 +28,8 @@ class Analytics {
 		// add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( 'admin_init', array( $this, 'scripts_and_styles' ) );
 
+		add_action( "load-" . self::$pagehook,  array( $this, 'init_list_table' ) );
+
 		if (isset($_GET['action']) && $_GET['action'] == 'show') {
 			add_action( 'load-' . self::$pagehook, function () {
 				add_action( 'add_meta_boxes_' . \Podlove\Settings\Analytics::$pagehook, function () {
@@ -41,6 +43,12 @@ class Analytics {
 		}
 
 		add_filter('screen_settings', [$this, 'screen_settings'], 10, 2 );
+	}
+
+	// needs to be initialized here so columns become configurable
+	public function init_list_table()
+	{
+		$this->table = new \Podlove\Downloads_List_Table();
 	}
 
 	public function screen_settings($status, $args) {
@@ -239,10 +247,9 @@ class Analytics {
 			</div>
 		</div>
 		
-		<?php 		
-		$table = new \Podlove\Downloads_List_Table();
-		$table->prepare_items();
-		$table->display();
+		<?php
+		$this->table->prepare_items();
+		$this->table->display();
 	}
 
 	public static function numbers() {
