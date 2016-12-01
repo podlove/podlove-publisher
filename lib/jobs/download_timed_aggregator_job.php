@@ -118,7 +118,9 @@ class DownloadTimedAggregatorJob {
 	 */
 	public static function current_time_group($item)
 	{
-		$groupings  = self::groupings();
+		$groupings = self::groupings();
+		$hidden_groups = self::get_hidden_groups();
+
 		$group_keys = array_reverse(array_keys($groupings));
 
 		// return first column without downloads
@@ -126,6 +128,9 @@ class DownloadTimedAggregatorJob {
 
 			// ignore 'total' column
 			if ($key == 'total')
+				continue;
+
+			if (in_array($key, $hidden_groups))
 				continue;
 
 			// ignore columns with calculated values
@@ -143,6 +148,16 @@ class DownloadTimedAggregatorJob {
 		}
 
 		return NULL;
+	}
+
+	public static function get_hidden_groups_key()
+	{
+		return 'managepodlove_page_podlove_analyticscolumnshidden';
+	}
+
+	public static function get_hidden_groups()
+	{
+		return get_user_meta(get_current_user_id(), self::get_hidden_groups_key(), true);
 	}
 
 	public static function groupings()

@@ -2,6 +2,7 @@
 namespace Podlove\Settings;
 
 use \Podlove\Model;
+use Podlove\Jobs\DownloadTimedAggregatorJob;
 
 class Analytics {
 
@@ -48,14 +49,15 @@ class Analytics {
 	// needs to be initialized here so columns become configurable
 	public function init_list_table()
 	{
-		$hidden_cols_meta = 'managepodlove_page_podlove_analyticscolumnshidden';
-		$hidden_cols = get_user_meta(get_current_user_id(), $hidden_cols_meta, true);
+		$hidden_cols = DownloadTimedAggregatorJob::get_hidden_groups();
 
 		// set default hidden cols
 		if (!is_array($hidden_cols)) {
-			update_user_meta(get_current_user_id(), $hidden_cols_meta, [
-				'3y', '2y', '3q', '2q', '3w', '2w'
-			]);
+			update_user_meta(
+				get_current_user_id(), 
+				DownloadTimedAggregatorJob::get_hidden_groups_key(), 
+				[ '3y', '2y', '3q', '2q', '3w', '2w' ]
+			);
 		}
 
 		$this->table = new \Podlove\Downloads_List_Table();
