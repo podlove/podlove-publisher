@@ -132,7 +132,6 @@ class Analytics {
 		?>
 		<div class="wrap">
 			<?php
-
 			if (Model\DownloadIntentClean::first() === NULL) {
 				$this->blank_template();
 			} else {
@@ -159,12 +158,12 @@ class Analytics {
 
 		<div id="welcome-panel" class="welcome-panel">
 		    <div class="welcome-panel-content">
-		        <h3><?php _e('Welcome to Podlove Publisher Analytics!', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+		        <h3 style="margin-top: 0px"><?php _e('Welcome to Podlove Publisher Analytics!', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 		        <p class="about-description">
 		        	<?php if (Model\DownloadIntent::count() < 50): ?>
 		        		<?php _e('There is not enough tracking data yet. Publish an episode, then come back after a while.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		        	<?php else: ?>
-		        		<?php _e('Still crunching the numbers. The first time it may take up to an hour until you see analytics.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+		        		<span class="dashicons dashicons-hammer"></span> <?php _e('Busy crunching numbers. One plus one is&#8230; can you come back in a few minutes?', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		        	<?php endif ?>
 		        </p>
 		        <div class="welcome-panel-column-container">
@@ -172,7 +171,7 @@ class Analytics {
 		                <h4><?php _e('While you wait ...', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
 		                <ul>
 		                	<li>
-		                		<a target="_blank" href="http://docs.podlove.org/guides/download-analytics/" class="welcome-icon welcome-learn-more">
+		                		<a target="_blank" href="http://docs.podlove.org/podlove-publisher/guides/download-analytics" class="welcome-icon welcome-learn-more">
 		                			<?php _e('Learn more about how tracking works', 'podlove-podcasting-plugin-for-wordpress') ?>
 		                		</a>
 		                	</li>
