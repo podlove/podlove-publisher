@@ -22,7 +22,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			"<a href=\"?page=%s&action=show&episode=%d\">%s</a> %s",
 			'podlove_analytics',
 			$episode['id'],
-			$episode['title'],
+			'<span class="dashicons dashicons-chart-bar"></span> ' . $episode['title'],
 			'<span style="color:#999; font-size: smaller" title="' . esc_attr(mysql2date(get_option('date_format'), $episode['post_date'])) . '">'
 			. sprintf(__('%s ago'), human_time_diff(strtotime($episode['post_date']))) 
 			. '</span>'
