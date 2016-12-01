@@ -42,6 +42,11 @@ class Network {
 			$podcasts[$blog_id] = Podcast::get($blog_id);
 		}
 
+		// if it doesn't have a title, it's not a podcast
+		$podcasts = array_filter($podcasts, function ($podcast) {
+			return strlen(trim($podcast->title)) > 0;
+		});
+
 		uasort( $podcasts, function ( $a, $b ) use ( $sortby, $sort ) {
 			return strnatcmp( $a->$sortby, $b->$sortby );
 		});
