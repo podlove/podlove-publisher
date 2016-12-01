@@ -17,7 +17,9 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	public function render($context = NULL, $style = 'configfile') {
 
-		$src = 'https://cdn.podigee.com/podcast-player/javascripts/podigee-podcast-player.js';
+		// needs to be relative URL since it needs to request the config.json via XHR, 
+		// which will be blocked if the protocol does not match the iframe protocol
+		$src = '//cdn.podigee.com/podcast-player/javascripts/podigee-podcast-player.js';
 
 		if ($style == 'inline') { // inline players are not embeddable
 			return '
