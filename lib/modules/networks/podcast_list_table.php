@@ -4,6 +4,7 @@ namespace Podlove\Modules\Networks;
 use \Podlove\Modules\Networks\Model\PodcastList;
 use \Podlove\Modules\Networks\Model\Network;
 use \Podlove\Model\Episode;
+use \Podlove\Cache\TemplateCache;
 
 class Podcast_List_Table extends \Podlove\List_Table {
 	
@@ -50,6 +51,16 @@ class Podcast_List_Table extends \Podlove\List_Table {
 		});
 	}
 
+	public function column_downloads( $podcast ) {
+		return $podcast->with_blog_scope(function() {
+
+			$total = TemplateCache::get_instance()
+				->cache_for('podlove_downloads_total', '\Podlove\Model\DownloadIntentClean::total_downloads', 5 * MINUTE_IN_SECONDS);
+
+			return is_numeric($total) ? number_format_i18n($total) : '(' . __('crunching numbers&#8230;', 'podlove-podcasting-plugin-for-wordpress') . ')';
+		});
+	}
+
 	public function column_latest_episode( $podcast ) {
 		return $podcast->with_blog_scope(function() {
 			if ($latest_episode = Episode::latest()) {
@@ -67,6 +78,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 			'logo'           => __( 'Logo', 'podlove-podcasting-plugin-for-wordpress' ),
 			'title'          => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
 			'episodes'       => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
+			'downloads'      => __( 'Downloads', 'podlove-podcasting-plugin-for-wordpress' ),
 			'latest_episode' => __( 'Latest Episode', 'podlove-podcasting-plugin-for-wordpress' )
 		];
 	}

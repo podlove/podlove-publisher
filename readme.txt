@@ -168,6 +168,7 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 * add option to enforce http or https in URLs inside feeds (enclosures, images) and the actual feed URLs; see `Expert Settings > Website`
 * improve tracking: ignore 1-byte requests
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
+* show total downloads per site in network dashboard
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
 * update recommended image size to 3000x3000 pixel
 * add heartbeat to keep note of when tracking is active

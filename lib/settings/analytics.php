@@ -210,6 +210,8 @@ class Analytics {
 
 		$total      = $cache->cache_for('podlove_downloads_total', '\Podlove\Model\DownloadIntentClean::total_downloads', 5 * MINUTE_IN_SECONDS);
 		$last_month = $cache->cache_for('podlove_downloads_last_month', '\Podlove\Model\DownloadIntentClean::prev_month_downloads', DAY_IN_SECONDS);
+
+		$crunching_numbers_text = '(' . __('crunching numbers&#8230;', 'podlove-podcasting-plugin-for-wordpress') . ')';
 		?>
 
 		<div class="metabox-holder">
@@ -220,13 +222,13 @@ class Analytics {
 					<div class="analytics-metric-container">
 						<div class="analytics-metric-box">
 							<span class="analytics-description"><?php _e('All Time', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
-							<span class="analytics-value"><?php echo is_numeric($total) ? number_format_i18n($total) : '(' . __('crunching numbers...', 'podlove-podcasting-plugin-for-wordpress') . ')'; ?></span>
+							<span class="analytics-value"><?php echo is_numeric($total) ? number_format_i18n($total) : $crunching_numbers_text; ?></span>
 							<span class="analytics-subtext"><?php _e('Downloads of all Episodes', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 						</div>
 
 						<div class="analytics-metric-box">
 							<span class="analytics-description"><?php _e('Last Month', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
-							<span class="analytics-value"><?php echo is_numeric($last_month['downloads']) ? number_format_i18n($last_month['downloads']) : '(' . __('crunching numbers...', 'podlove-podcasting-plugin-for-wordpress') . ')'; ?></span>
+							<span class="analytics-value"><?php echo is_numeric($last_month['downloads']) ? number_format_i18n($last_month['downloads']) : $crunching_numbers_text; ?></span>
 							<span class="analytics-subtext"><?php echo sprintf(__('Downloads in %s', 'podlove-podcasting-plugin-for-wordpress'), $last_month['homan_readable_month']); ?></span>
 						</div>
 
