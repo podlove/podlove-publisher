@@ -67,7 +67,12 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		return array(
 			// 'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
 			'downloads' => __('Total', 'podlove-podcasting-plugin-for-wordpress'),
+			'3y' => __('3y', 'podlove-podcasting-plugin-for-wordpress'),
+			'2y' => __('2y', 'podlove-podcasting-plugin-for-wordpress'),
 			'1y' => __('1y', 'podlove-podcasting-plugin-for-wordpress'),
+			'3q' => __('3q', 'podlove-podcasting-plugin-for-wordpress'),
+			'2q' => __('2q', 'podlove-podcasting-plugin-for-wordpress'),
+			'1q' => __('1q', 'podlove-podcasting-plugin-for-wordpress'),
 			'4w' => __('4w', 'podlove-podcasting-plugin-for-wordpress'),
 			'3w' => __('3w', 'podlove-podcasting-plugin-for-wordpress'),
 			'2w' => __('2w', 'podlove-podcasting-plugin-for-wordpress'),
@@ -85,7 +90,12 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		return [
 			'episode'   => ['episode', true],
 			'downloads' => ['downloads', true],
+			'3y'        => ['3y', true],
+			'2y'        => ['2y', true],
 			'1y'        => ['1y', true],
+			'3q'        => ['3q', true],
+			'2q'        => ['2q', true],
+			'1q'        => ['1q', true],
 			'4w'        => ['4w', true],
 			'3w'        => ['3w', true],
 			'2w'        => ['2w', true],
@@ -100,7 +110,10 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	}
 
 	public static function aggregation_columns() {
-		return ['1y', '4w','3w','2w','1w','6d','5d','4d','3d','2d','1d'];
+		$columns = array_keys(DownloadTimedAggregatorJob::groupings());
+		array_shift($columns); // remove 'total' column
+
+		return $columns;
 	}
 
 	public function single_row( $item ) {
@@ -123,7 +136,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		if (!$per_page) {
 			$per_page = 20;
 		}
-		
+	
 		// define column headers
 		$this->_column_headers = $this->get_column_info();
 
@@ -138,7 +151,12 @@ class Downloads_List_Table extends \Podlove\List_Table {
 				'title' => $post->post_title,
 				'post_date' => $post->post_date,
 				'downloads' => get_post_meta($post->ID, '_podlove_downloads_total', true),
+				'3y' => get_post_meta($post->ID, '_podlove_downloads_3y', true),
+				'2y' => get_post_meta($post->ID, '_podlove_downloads_2y', true),
 				'1y' => get_post_meta($post->ID, '_podlove_downloads_1y', true),
+				'3q' => get_post_meta($post->ID, '_podlove_downloads_3q', true),
+				'2q' => get_post_meta($post->ID, '_podlove_downloads_2q', true),
+				'1q' => get_post_meta($post->ID, '_podlove_downloads_1q', true),
 				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true),
 				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true),
 				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true),
