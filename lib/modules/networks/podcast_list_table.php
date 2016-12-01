@@ -57,7 +57,7 @@ class Podcast_List_Table extends \Podlove\List_Table {
 			$total = TemplateCache::get_instance()
 				->cache_for('podlove_downloads_total', '\Podlove\Model\DownloadIntentClean::total_downloads', 5 * MINUTE_IN_SECONDS);
 
-			return is_numeric($total) ? number_format_i18n($total) : '(' . __('crunching numbers&#8230;', 'podlove-podcasting-plugin-for-wordpress') . ')';
+			return is_numeric($total) ? number_format_i18n($total) : __('no data', 'podlove-podcasting-plugin-for-wordpress');
 		});
 	}
 
