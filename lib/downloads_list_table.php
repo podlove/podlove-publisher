@@ -63,7 +63,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		return "–";
 	}
 
-	public function get_columns(){
+	public function get_columns() {
 		return array(
 			// 'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
 			'downloads' => __('Total', 'podlove-podcasting-plugin-for-wordpress'),
@@ -104,8 +104,11 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	}
 
 	public function single_row( $item ) {
+		$hidden_columns = count(get_hidden_columns(get_current_screen()));
+		$columns = count($this->get_columns()) - $hidden_columns;
+
 		echo '<tr>';
-		echo "<td colspan=\"12\">";
+		echo "<td colspan=\"{$columns}\">";
 		echo $this->column_episode($item);
 		echo "</td>";
 		echo '</tr>';
@@ -122,10 +125,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		}
 		
 		// define column headers
-		$columns = $this->get_columns();
-		$hidden = array();
-		$sortable = $this->get_sortable_columns();
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$this->_column_headers = $this->get_column_info();
 
 		$data = [];
 		foreach (Model\Podcast::get()->episodes() as $episode) {
@@ -202,7 +202,14 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		?>
 		<div class="alignleft actions">
 			<em><?php echo $this->data_age() ?></em>
-		</div>		
+		</div>
+
+<script type="text/javascript">
+jQuery("#adv-settings input[type=checkbox]").on('change', function() {
+	var visibleCols = jQuery("#adv-settings input[type=checkbox]:checked").length;
+	jQuery("table.downloads td[colspan]").attr('colspan', visibleCols);
+});
+</script>
 		<?php
 	}
 
