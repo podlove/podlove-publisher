@@ -170,6 +170,7 @@ The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is avail
 * update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
 * show total downloads per site in network dashboard
 * remove `<itunes:keywords>` from feed (it disappeared from the specification)
+* remove module: "Feed Validator"
 * update recommended image size to 3000x3000 pixel
 * add heartbeat to keep note of when tracking is active
 * `shortcode_exists($shortcode_name)` is now available in Twig templates
