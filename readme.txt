@@ -56,39 +56,29 @@ Requires PHP 5.4+
 
 == Frequently Asked Questions ==
 
-### Why do my episodes look the same as my normal posts/missing some information?
+### Is Podlove Podcast Publisher free?
 
-The Podlove Podcast Publisher uses "custom posts" for its episodes. Some themes treat normal posts and custom posts differently or just forgot to take into account that custom posts show up slightly different in the HTML.
+Yes! The core features of Podlove Podcast Publisher are and always will be free. [Paid Professional Support](https://publisher.podlove.org/support/) is available but not necessary to run the plugin.
 
-Get in contact with the theme developer and ask if it is ready for custom posts. It is usually not very complicated to make a theme work with custom posts out of the box. The Publisher does work together will all templates that come with WordPress.
+### Are there Download Statistics?
 
-### My episodes do not show up on the home page. What's wrong?
+Yes! Podcast Downloads can be tracked and analyzed. You can easily see how many people downloaded you podcast episodes, which clients they used, if they prefer to subscribe to the feed or listen on your website using the web player—and much more.
 
-Episodes are kept separate from blog posts but you can choose if you want episodes to be mixed with blog posts on the home page. To do this, check the "Display episodes on front page together with blog posts" setting in the Expert Settings panel.
+### Where can I host my podcast files?
 
-### Episodes do not show up with the configured permalink URL. What's wrong?
+Any storage where you have control over the file naming is compatible with Podlove Podcast Publisher. You can manage files using a simple FTP/sFTP or use services like Amazon S3.
 
-Episodes are custom posts and are dealt with differently by WordPress. They show up under a common URL prefix. You can define the result URL with the "URL segment prefix for podcast episode posts" setting in the Expert Settings panel. This is set to "episode" by default resulting in an episode to show up under "/episode/<episode-slug>".
+### Where can I ask questions and get support?
 
-### Where do I put the URL of my media files?
+Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/). [Professional Support](http://publisher.podlove.org/support) by the plugin developer is also available.
 
-You don't. The plugin assembles the media file URL by combining various components that you have configured in the Podlove settings. All media files have to reside under a base URL that you specify in the "Podcast Settings" pane. This basically defines which directory all files have to be uploaded to.
+### How can I help to project?
 
-The exact media file name is made up of a) the Episode Media File Slug you set in the episode's meta data b) the suffix of the episode asset (as configured in the "Episode Asset" settings page) and c) the extension of the file type of the Episode Asset (as configured in the "File Types" settings page).
+The continued success of Open Source project relies on the community. There are many ways you can help:
 
-### Where is the Web Player / Download list?
-
-Right now, these have to be inserted manually via shortcodes. They are [podlove-episode-web-player] and [podlove-episode-downloads].
-
-You can use the plugin's templates to make sure you have the proper shortcodes in every episode.
-
-### How do I add Flattr integration to my episodes?
-
-If you haven't already, get the official Flattr plugin here:
-
-   http://wordpress.org/extend/plugins/flattr/
-
-Find the setting Flattr > Advanced Settings > Flattrable content > Post Types and check "podcast". Save changes. There is no step 3 ;)
+- If you enjoy the plugin, please [leave a review](https://wordpress.org/support/plugin/podlove-podcasting-plugin-for-wordpress/reviews/#new-post).
+- You can answer questions of other fellow podcasters in the [Podlove Community](https://community.podlove.org/).
+- You can buy [Support](https://publisher.podlove.org/support/) to financially support the project.
 
 ---
 
