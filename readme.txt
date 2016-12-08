@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.1 =
+
+* services Playstation Network Account now links to `http://psnprofiles.com`
+
 = 2.4.0 =
 
 **Background Jobs System**
