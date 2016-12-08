@@ -105,6 +105,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.4.1 =
 
 * services Playstation Network Account now links to `http://psnprofiles.com`
+* allow spaces in episode slugs
 
 = 2.4.0 =
 

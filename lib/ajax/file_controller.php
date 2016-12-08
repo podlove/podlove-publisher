@@ -68,7 +68,7 @@ class FileController {
 
 	private static function simulate_temporary_episode_slug( $slug ) {
 		add_filter( 'podlove_file_url_template', function ( $template ) use ( $slug ) {
-			return str_replace( '%episode_slug%', \Podlove\slugify( $slug ), $template );;
+			return str_replace( '%episode_slug%', \Podlove\prepare_episode_slug_for_url( $slug ), $template );;
 		} );
 	}
 }
