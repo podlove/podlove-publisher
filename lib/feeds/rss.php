@@ -102,11 +102,9 @@ class RSS {
 
 		}, 9 );
 
-		$posts_per_page = $feed->limit_items == 0 ? get_option( 'posts_per_rss' ) : $feed->limit_items;
-
-		if ($posts_per_page == Model\Feed::ITEMS_GLOBAL_LIMIT) {
-			$posts_per_page = $podcast->limit_items;
-		}
+		// hint: don't move this line inside the pre_option_posts_per_rss 
+		// callback because it may access the option posts_per_rss, causing an endless loop 
+		$posts_per_page = $feed->get_post_limit_sql();
 
 		// now override the option so WP core functions accessing the option get the "correct" value
 		add_filter('pre_option_posts_per_rss', function($_) use ($posts_per_page) {

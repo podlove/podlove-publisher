@@ -12,8 +12,8 @@ class Modules {
 		
 		Modules::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Modules',
-			/* $menu_title */ 'Modules',
+			/* $page_title */ __('Modules', 'podlove-podcasting-plugin-for-wordpress'),
+			/* $menu_title */ __('Modules', 'podlove-podcasting-plugin-for-wordpress'),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_settings_modules_handle',
 			/* $function   */ array( $this, 'page' )
@@ -23,7 +23,7 @@ class Modules {
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_modules',
-			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $title 	 */ '',	
 			/* $callback */ function () { /* section head html */ }, 		
 			/* $page	 */ Modules::$pagehook	
 		);
@@ -72,7 +72,7 @@ class Modules {
 
 					if ( $module_options ) {
 
-						?><h4><?php echo __( 'Settings' ) ?></h4><?php
+						?><h4><?php echo __( 'Settings', 'podlove-podcasting-plugin-for-wordpress' ) ?></h4><?php
 
 						// prepare settings object because form framework expects an object
 						$settings_object = new \stdClass();
@@ -110,13 +110,13 @@ class Modules {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Podlove Publisher Modules' ) ?></h2>
+			<h2><?php echo __( 'Podlove Publisher Modules', 'podlove-podcasting-plugin-for-wordpress' ) ?></h2>
 
 			<form method="post" action="options.php">
 				<?php settings_fields( Modules::$pagehook ); ?>
 				<?php do_settings_sections( Modules::$pagehook ); ?>
 				
-				<?php submit_button( __( 'Save Changes' ), 'button-primary', 'submit', TRUE ); ?>
+				<?php submit_button( __( 'Save Changes', 'podlove-podcasting-plugin-for-wordpress' ), 'button-primary', 'submit', TRUE ); ?>
 			</form>
 		</div>	
 		<?php

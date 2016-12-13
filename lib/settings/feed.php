@@ -276,6 +276,7 @@ class Feed {
 					'please_choose' => false,
 					'default' => '-1'
 				) );
+
 			});
 			?>
 		</form>
@@ -286,6 +287,7 @@ class Feed {
   		$podcast_settings = get_option('podlove_podcast');
   		$podcast_settings['limit_items'] = (int) $_REQUEST['podlove_podcast']['limit_items'];
   		update_option('podlove_podcast', $podcast_settings);
+  		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
 	}
 	
@@ -355,43 +357,7 @@ class Feed {
 			$wrapper->checkbox( 'embed_content_encoded', array(
 				'label'       => __( 'Include HTML Content', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( 'Include episode show notes in the feed.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'default'     => false
-			) );
-
-			$wrapper->subheader( __( 'Directory Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
-			
-			$wrapper->checkbox( 'enable', array(
-				'label'       => __( 'Allow Submission to Directories', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default'     => true
-			) );
-
-			do_action( 'podlove_feeds_directories', $wrapper );
-			
-			$wrapper->string( 'itunes_feed_id', array(
-				'label'       => __( 'iTunes Feed ID', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove-podcasting-plugin-for-wordpress' ) . (($feed->itunes_feed_id) ? ' <a href="http://itunes.apple.com/podcast/id' . $feed->itunes_feed_id . '" target="_blank">' . __( 'Open in iTunes directory') . '</a>' : ''),
-				'html'        => array( 'class' => 'regular-text podlove-check-input' )
-			) );
-
-			$wrapper->subheader( __( 'Advanced Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
-
-			$wrapper->select( 'redirect_http_status', array(
-				'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
-				'options' => array(
-					'0'   => 'Don\'t redirect', 
-					'307' => 'Temporary Redirect (HTTP Status 307)',
-					'301' => 'Permanent Redirect (HTTP Status 301)'
-				),
-				'default' => 0,
-				'please_choose' => false
-			) );
-			
-			$wrapper->string( 'redirect_url', array(
-				'label'       => __( 'Redirect Url', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'e.g. Feedburner URL', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 
 			$podcast_settings = get_option('podlove_podcast');
@@ -417,36 +383,40 @@ class Feed {
 				'default' => '-2'
 			) );
 
-			$wrapper->subheader( __( 'Protection', 'podlove-podcasting-plugin-for-wordpress' ) );
-
-			$wrapper->checkbox( 'protected', array(
-				'label'       => __( 'Protect feed ', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'The feed will be protected by HTTP Basic Authentication.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'default'     => false
+			$wrapper->subheader( __( 'Directory Settings', 'podlove-podcasting-plugin-for-wordpress' ) );
+			
+			$wrapper->checkbox( 'enable', array(
+				'label'       => __( 'Allow Submission to Directories', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Allow this feed to appear in podcast directories.', 'podlove-podcasting-plugin-for-wordpress' ),
+				'default'     => true
 			) );
 
-			$wrapper->select( 'protection_type', array(
-				'label'       => __( 'Method', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
+			do_action( 'podlove_feeds_directories', $wrapper );
+			
+			$wrapper->string( 'itunes_feed_id', array(
+				'label'       => __( 'iTunes Feed ID', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Is used to generate a link to the iTunes directory.', 'podlove-podcasting-plugin-for-wordpress' ) . (($feed->itunes_feed_id) ? ' <a href="http://itunes.apple.com/podcast/id' . $feed->itunes_feed_id . '" target="_blank">' . __( 'Open in iTunes directory') . '</a>' : ''),
+				'html'        => array( 'class' => 'regular-text podlove-check-input' )
+			) );
+
+			$wrapper->subheader( __( 'Feed Proxy', 'podlove-podcasting-plugin-for-wordpress' ) );
+
+			$wrapper->select( 'redirect_http_status', array(
+				'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( '"Temporary Redirect" is recommended.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'options' => array(
-					'0'   => 'Custom Login',
-					'1' => 'WordPress User database',
-					'2' => 'Custom Authentication provided by additional plugin'
+					'0'   => 'Don\'t redirect', 
+					'307' => 'Temporary Redirect (HTTP Status 307)',
+					'301' => 'Permanent Redirect (HTTP Status 301)'
 				),
-				'default' => -1,
-				'please_choose' => true
+				'default' => 0,
+				'please_choose' => false
 			) );
-
-			$wrapper->string( 'protection_user', array(
-				'label'       => __( 'Username', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => '',
-				'html'        => array( 'class' => 'regular-text required' )
-			) );
-
-			$wrapper->string( 'protection_password', array(
-				'label'       => __( 'Password', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => '',
-				'html'        => array( 'class' => 'regular-text required' )
+			
+			$wrapper->string( 'redirect_url', array(
+				'label'       => __( 'Redirect Url', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'e.g. Feedburner URL', 'podlove-podcasting-plugin-for-wordpress' ),
+				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' )
 			) );
 
 			do_action( 'podlove_feed_settings_bottom', $wrapper );

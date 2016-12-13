@@ -39,6 +39,16 @@ i.rotate {
   to { transform:rotate(360deg);}
 }
 
+ul.podlove-disc-list {
+	list-style-type: disc;
+	margin-left: 40px;
+}
+
+.force-issues {
+	border-left: 4px solid #CCC;
+	padding-left: 15px;
+}
+
 .clickable { cursor: pointer; }
 
 .podlove-icon-ok     { color: green; }
@@ -515,4 +525,42 @@ label.podlove_cc_license_selector_label {
 	position: absolute;
 	bottom: 5px;
 	color: #a00;
+}
+
+.analytics-metric-container {
+	display: flex;
+    justify-content: center;
+	flex-wrap: wrap;
+}
+
+.analytics-metric-box {
+	text-align: center;
+	margin: 10px 20px;
+	min-width: 120px;
+}
+.analytics-metric-box > span {
+	font-size: 23px;
+	line-height: 23px;
+	display: block;
+}
+
+.analytics-metric-box .analytics-value {
+	font-weight: bold;
+	line-height: 40px;
+}
+
+.analytics-metric-box .analytics-description,
+.analytics-metric-box .analytics-subtext {
+	font-size: 14px;
+	line-height: 16px;
+	color: #666;
+}
+
+.downloads.striped>tbody>:nth-child(odd) {
+	background: inherit;
+}
+
+.downloads.striped>tbody>:nth-child(4n+1),
+.downloads.striped>tbody>:nth-child(4n+2) {
+	background: #f9f9f9;
 }

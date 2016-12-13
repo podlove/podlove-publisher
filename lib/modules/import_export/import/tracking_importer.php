@@ -69,8 +69,11 @@ class TrackingImporter {
 				$context,
 				$geo_area_id,
 				$lat,
-				$lng
-			) = explode(",", $line);
+				$lng,
+				$httprange
+			) = array_map(function ($value) {
+				return trim($value);
+			}, explode(",", $line));
 
 			$batch[] = array(
 				$user_agent_id,
@@ -81,7 +84,8 @@ class TrackingImporter {
 				$context,
 				$geo_area_id,
 				$lat,
-				$lng
+				$lng,
+				$httprange
 			);
 
 			if (count($batch) >= $batchSize) {
@@ -98,7 +102,7 @@ class TrackingImporter {
 		\Podlove\Analytics\DownloadIntentCleanup::cleanup_download_intents();
 		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 
-		wp_redirect(admin_url('admin.php?page=podlove_imexport_migration_handle&status=success'));
+		wp_redirect(admin_url('admin.php?page=podlove_tools_settings_handle&status=success'));
 		exit;
 	}
 
@@ -108,7 +112,7 @@ class TrackingImporter {
 		$sqlTemplate = "
 			INSERT INTO
 				" . Model\DownloadIntent::table_name() . " 
-			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`) 
+			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`) 
 			VALUES %s";
 
 		if (count($batch)) {

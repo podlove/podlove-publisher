@@ -239,6 +239,7 @@ class EpisodeAsset {
 				$asset_assignment = $form->object;
 				$artwork_options = array(
 					'0'      => __( 'Use Podcast Cover', 'podlove-podcasting-plugin-for-wordpress' ),
+					'post-thumbnail' => __( 'Post Thumbnail', 'podlove-podcasting-plugin-for-wordpress' ),
 					'manual' => __( 'Manual URL Entry per Episode', 'podlove-podcasting-plugin-for-wordpress' ),
 				);
 				$episode_assets = Model\EpisodeAsset::all();

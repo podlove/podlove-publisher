@@ -173,7 +173,17 @@ class SystemReport {
 				return "\n&nbsp; - " . implode("\n&nbsp; - ", array_map(function($asset) {
 					return str_pad($asset['extension'], 7) . str_pad($asset['mime_type'], 11) . ($asset['feed'] ? $asset['feed']->get_subscribe_url() : 'no feed');
 				}, $assets));
-			} )
+			} ),
+			'cron' => [
+				'callback' => function() use (&$notices) {
+					if (defined('ALTERNATE_WP_CRON') && ALTERNATE_WP_CRON) {
+						$notices[] = 'ALTERNATE_WP_CRON is active. This may sometimes cause failing downloads.';
+						return 'ALTERNATE_WP_CRON active';
+					}
+
+					return 'ok';
+				}
+			]
 		);
 
 		$this->fields = apply_filters('podlove_system_report_fields', $this->fields);

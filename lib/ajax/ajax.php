@@ -14,7 +14,7 @@ class Ajax {
 
 		// workaround to make is_network_admin() work in ajax requests
 		// @see https://core.trac.wordpress.org/ticket/22589
-		if (!defined('WP_NETWORK_ADMIN') && defined('DOING_AJAX') && DOING_AJAX && is_multisite() && preg_match('#^' . network_admin_url() . '#i', filter_input(INPUT_SERVER, 'HTTP_REFERER'))) {
+		if (!defined('WP_NETWORK_ADMIN') && defined('DOING_AJAX') && DOING_AJAX && is_multisite() && preg_match('#^' . network_admin_url() . '#i', $_SERVER['HTTP_REFERER'])) {
 			define('WP_NETWORK_ADMIN',true);
 		}
 
@@ -34,7 +34,9 @@ class Ajax {
 			'analytics-episode-average-downloads-per-hour',
 			'analytics-settings-tiles-update',
 			'episode-slug',
-			'admin-news'
+			'admin-news',
+			'job-create',
+			'job-get'
 		);
 
 		// kickoff generic ajax methods
@@ -45,6 +47,41 @@ class Ajax {
 		TemplateController::init();
 		FileController::init();
 
+	}
+
+	public function job_create() {
+		$job_name = filter_input(INPUT_POST, 'name');
+		$job_args = isset($_REQUEST['args']) && is_array($_REQUEST['args']) ? $_REQUEST['args'] : [];
+
+		// check class exists
+		if (!class_exists($job_name))
+			self::respond_with_json(['error' => 'job "' . $job_name . '" does not exist']);
+
+		// check that class is a job
+		if (!isset(class_uses($job_name)['Podlove\Jobs\JobTrait'])) {
+			self::respond_with_json(['error' => '"' . $job_name . '" is not a job']);
+		}
+
+		$job = \Podlove\Jobs\CronJobRunner::create_job($job_name, $job_args);
+
+		if ($job) {
+			self::respond_with_json([
+				'job_id' => $job->get_job_id()
+			]);
+		} else {
+			self::respond_with_json(['error' => 'A job "' . $job_name . '" is already running']);
+		}
+	}
+
+	public function job_get() {
+		$job_id = filter_input(INPUT_GET, 'job_id');
+
+		$job = \Podlove\Model\Job::find_by_id($job_id);
+
+		if (!$job)
+			self::respond_with_json(['error' => 'no job with id "' . $job_id . '"']);
+
+		self::respond_with_json($job->to_array());
 	}
 
 	public function admin_news() {
@@ -239,27 +276,21 @@ class Ajax {
 			global $wpdb;
 
 			$sql = "SELECT
-						COUNT(*) downloads,
-						UNIX_TIMESTAMP(accessed_at) AS access_date,
-						DATE_FORMAT(accessed_at, '%Y-%m-%d') AS date_day,
-						mf.episode_asset_id asset_id,
-						client_name,
-						os_name AS system,
-						source,
-						context
-					FROM
-						" . Model\DownloadIntentClean::table_name() . " di
-						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
-						INNER JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
-					WHERE accessed_at >= STR_TO_DATE('" . date("Y-m-d", strtotime("-30 days")) . "','%Y-%m-%d')
-					GROUP BY date_day, asset_id, client_name, system, source, context";
+			    COUNT(*) downloads,
+			    UNIX_TIMESTAMP(accessed_at) AS access_date,
+			    DATE_FORMAT(accessed_at, '%Y-%m-%d') AS date_day,
+			    mf.episode_id
+			FROM
+			    " . Model\DownloadIntentClean::table_name() . "  di
+			    INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
+			WHERE accessed_at >= STR_TO_DATE('" . date("Y-m-d", strtotime("-28 days")) . "','%Y-%m-%d')
+			GROUP BY date_day, episode_id
+			";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$csv = '"downloads","date","asset_id","client","system","source","context"' . "\n";
+			$csv = '"downloads","date","day","episode_id"' . "\n";
 			foreach ($results as $row) {
-				$row[4] = '"' . $row[4] . '"';
-				$row[5] = '"' . $row[5] . '"';
 				$csv .= implode(",", $row) . "\n";
 			}
 

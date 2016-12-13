@@ -55,8 +55,12 @@ class PodcastImporter {
 	 * we do not need special handling since module activation and deactivation is hooked
 	 * to the "update_option_podlove_active_modules" filter. We only need to make sure
 	 * options/modules are imported early enough.
+	 * 
+	 * @todo  this should probably be a job, each import section its own step
 	 */
 	public function import() {
+
+		@set_time_limit(0);
 
 		$gzfilesize = function($filename) {
 			$gzFilesize = FALSE;
@@ -105,7 +109,7 @@ class PodcastImporter {
 
 		\Podlove\run_database_migrations();
 
-		$redirect_url = 'admin.php?page=podlove_imexport_migration_handle';
+		$redirect_url = 'admin.php?page=podlove_tools_settings_handle';
 
 		if ($status)
 			$redirect_url .= '&status=' . $status;

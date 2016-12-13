@@ -3,7 +3,7 @@
  * Plugin Name: Podlove Podcast Publisher
  * Plugin URI:  http://publisher.podlove.org
  * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
- * Version:     2.3.18
+ * Version:     2.4.0
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT
@@ -58,18 +58,26 @@ function podlove_admin_error_ancient_php() {
 	<?php
 }
 
+function podlove_deactivate_plugin() {
+	add_action('admin_init', function() {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+	});
+}
+
 $correct_php_version = version_compare(phpversion(), "5.4", ">=");
 
 if (!$correct_php_version) {
 	// Let the plugin update/setup succeed and constantly show the error
 	// message until resolved.
 	add_action('admin_notices', 'podlove_admin_error_ancient_php');
+	podlove_deactivate_plugin();
 } else if (!file_exists(trailingslashit(dirname(__FILE__)) . 'vendor/autoload.php')) {
 	// Looks like this can happen on cheap shared hosting. Update fails and leaves
 	// the Publisher in an unusable state. From experience it's always at least
 	// 'vendor/autoload.php' that is missing. This also catches users that accidentally
 	// download the development version from GitHub.
 	add_action('admin_notices', 'podlove_admin_error_no_autoload');
+	podlove_deactivate_plugin();
 } else {
 	load_podlove_podcast_publisher();
 }

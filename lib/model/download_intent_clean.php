@@ -6,6 +6,38 @@ namespace Podlove\Model;
  */
 class DownloadIntentClean extends Base {
 
+	public static function episode_age_in_hours($episode_id) {
+		global $wpdb;
+
+		// This query is a bit slow, ~50ms on 2MM intents table.
+		// It might be acceptable if not used in a loop.
+		// If the actual episode age is acceptable (rather than age in intents),
+		// use the quicker alternative: `actual_episode_age_in_hours`
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT MAX(hours_since_release)
+				FROM ' . self::table_name() . ' di
+				JOIN ' . MediaFile::table_name() . ' mf ON mf.id = di.media_file_id
+				WHERE mf.episode_id = %d',
+				$episode_id
+			)
+		);
+	}
+
+	public static function actual_episode_age_in_hours($episode_id) {
+		global $wpdb;
+
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT TIMESTAMPDIFF(HOUR, p.post_date, NOW())
+				FROM `' . Episode::table_name() . '` e
+				JOIN `' . $wpdb->posts . '` p ON p.ID = e.`post_id`
+				WHERE e.id = %d',
+				$episode_id
+			)
+		);
+	}
+
 	public static function top_episode_ids($start, $end = "now", $limit = 3) {
 		global $wpdb;
 
@@ -76,6 +108,39 @@ class DownloadIntentClean extends Base {
 		return $wpdb->get_var(
 			$wpdb->prepare($sql, $episode_id)
 		);
+	}
+
+	public static function prev_month_downloads()
+	{
+		global $wpdb;
+
+		$cur_month = date('m');
+		$last_month = $cur_month - 1;
+		$year = date('Y');
+
+		if ($last_month < 1) {
+			$last_month = 12;
+			$year--;
+		}
+
+		$last_month_time = strtotime("$year-$last_month");
+		$last_month_name = date('F Y', $last_month_time);
+
+		$sql = 'SELECT COUNT(*) FROM ' . self::table_name() . ' d WHERE accessed_at LIKE "' . (int) $year . '-' . (int) $last_month . '%"';
+
+		return [
+			'downloads'            => $wpdb->get_var($sql),
+			'time'                 => $last_month_time,
+			'homan_readable_month' => $last_month_name
+		];
+	}
+
+	public static function total_downloads()
+	{
+		global $wpdb;
+
+		$sql = 'SELECT SUM(meta_value) total FROM `' . $wpdb->postmeta . '` WHERE `meta_key` = "_podlove_downloads_total"';
+		return $wpdb->get_var($sql);
 	}
 
 	/**

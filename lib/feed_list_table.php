@@ -29,7 +29,6 @@ class Feed_List_Table extends \Podlove\List_Table {
 	}
 	
 	public function column_limit( $feed ) {
-		// FIXME: Feeds verschwinden beim Speichern!!!
 		$podlove_feed_limit = \Podlove\Model\Podcast::get()->limit_items;
 		switch ($feed->limit_items) {
 			case '0':
@@ -83,9 +82,11 @@ class Feed_List_Table extends \Podlove\List_Table {
 			'media'        => __( 'Media', 'podlove-podcasting-plugin-for-wordpress' ),
 			'limit'        => __( 'Item Limit', 'podlove-podcasting-plugin-for-wordpress' ),
 			'discoverable' => __( 'Discoverable', 'podlove-podcasting-plugin-for-wordpress' ),
-			'protected' => __( 'Protected', 'podlove-podcasting-plugin-for-wordpress' ),
 			'move'         => ''
 		);
+
+		$columns = apply_filters('podlove_feed_list_table_columns', $columns);
+
 		return $columns;
 	}
 	

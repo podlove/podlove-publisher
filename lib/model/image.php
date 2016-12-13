@@ -3,6 +3,7 @@ namespace Podlove\Model;
 
 use Symfony\Component\Yaml\Yaml;
 use \Podlove\Cache\TemplateCache;
+use \Podlove\Log;
 
 /**
  * Image Object
@@ -161,22 +162,22 @@ class Image {
 	public function url() {
 
 		if (!$this->file_extension) {
-			\Podlove\Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
-			return $this->source_url;
+			Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
+			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
 		// fetch original if we don't have it — until then, return the original URL
 		if (!$this->source_exists()) {
 			$this->schedule_download_source();
-			return $this->source_url;
+			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
 		if (!file_exists($this->resized_file())) {
 			$this->schedule_image_resize();
-			return $this->source_url;
+			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
-		return $this->resized_url();
+		return apply_filters('podlove_image_url', $this->resized_url());
 	}
 
 	/**
@@ -311,11 +312,24 @@ class Image {
 	public function generate_resized_copy() {
 		$image = wp_get_image_editor($this->original_file());
 
-		if (is_wp_error($image))
+		if (is_wp_error($image)) {
+			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $image->get_error_message());
 			return;
+		}
 
-		$image->resize($this->width, $this->height, $this->crop);
-		$image->save($this->resized_file());
+		$result = $image->resize($this->width, $this->height, $this->crop);
+
+		if (is_wp_error($result)) {
+			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $result->get_error_message());
+			return;
+		}
+
+		$result = $image->save($this->resized_file());
+
+		if (is_wp_error($result)) {
+			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $result->get_error_message());
+			return;
+		}
 
 		// when a new image size is created, Templace Cache must be cleared
 		TemplateCache::get_instance()->setup_global_purge();
@@ -349,8 +363,8 @@ class Image {
 		$result = $this->download_url($this->source_url);
 
 		if (is_wp_error($result)) {
-			\Podlove\Log::get()->addWarning(
-				sprintf(__( 'Unable to download image. %s.' ), $result->get_error_message()),
+			Log::get()->addWarning(
+				sprintf(__( 'Podlove Image: Unable to download image. %s.' ), $result->get_error_message()),
 				['url' => $this->source_url]
 			);
 			return;
@@ -359,21 +373,21 @@ class Image {
 		list($temp_file, $response) = $result;
 
 		if (is_wp_error($temp_file)) {
-			\Podlove\Log::get()->addWarning(
-				sprintf(__( 'Unable to download image. %s.' ), $temp_file->get_error_message()),
+			Log::get()->addWarning(
+				sprintf(__( 'Podlove Image: Unable to download image. %s.' ), $temp_file->get_error_message()),
 				['url' => $this->source_url]
 			);
 		}
 
 		if (!wp_mkdir_p($this->upload_basedir))
-			\Podlove\Log::get()->addWarning(sprintf(__( 'Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
+			Log::get()->addWarning(sprintf(__( 'Podlove Image: Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
 
 		$this->save_cache_data($response);
 
 		$move_new_file = @rename($temp_file, $this->original_file());
 
 		if ( false === $move_new_file )
-			\Podlove\Log::get()->addWarning(sprintf(__('The downloaded image could not be moved to %s.' ), $this->original_file()));
+			Log::get()->addWarning(sprintf(__('Podlove Image: The downloaded image could not be moved to %s.' ), $this->original_file()));
 
 		@unlink($temp_file);
 

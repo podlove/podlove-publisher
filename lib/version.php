@@ -39,8 +39,9 @@
 
 namespace Podlove;
 use \Podlove\Model;
+use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 111 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 116 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -83,6 +84,7 @@ function migrate_for_current_blog() {
 	$database_version = get_option('podlove_database_version');
 
 	for ($i = $database_version+1; $i <= DATABASE_VERSION; $i++) { 
+		\Podlove\Log::get()->addInfo(sprintf('Migrate blog %d to version %d', get_current_blog_id(), $i));
 		\Podlove\run_migrations_for_version($i);
 		update_option('podlove_database_version', $i);
 	}
@@ -1095,7 +1097,7 @@ function run_migrations_for_version( $version ) {
 				$wpdb->query( sprintf($sql, Model\UserAgent::table_name()) );
 			}
 
-			podlove_init_user_agent_refresh();
+			// podlove_init_user_agent_refresh();
 
 			// manually trigger intent cron after user agents are parsed
 			// parameter to make sure WP does not skip it due to 10 minute rule
@@ -1166,13 +1168,13 @@ function run_migrations_for_version( $version ) {
 			update_option('podlove_flattr', $settings);
 		break;
 		case 106:
-			podlove_init_user_agent_refresh();
+			// podlove_init_user_agent_refresh();
 		break;
 		case 107:
 			// skipped
 		break;
 		case 108:
-			podlove_init_user_agent_refresh();
+			// podlove_init_user_agent_refresh();
 		break;
 		case 109:
 			\podlove_init_capabilities();
@@ -1187,6 +1189,54 @@ function run_migrations_for_version( $version ) {
 			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
 				\Podlove\Modules\Social\Social::update_existing_services();
 				\Podlove\Modules\Social\Social::build_missing_services();
+			}
+		case 112:
+			// if any feed is protected, activate protection module
+			$should_activate_protection_module = false;
+			foreach (Model\Feed::all() as $feed) {
+				if ($feed->protected) {
+					$should_activate_protection_module = treu;
+				}
+			}
+
+			if ($should_activate_protection_module) {
+				\Podlove\Modules\Base::activate('protected_feed');
+			}
+		break;
+		case 113:
+			delete_option('podlove_jobs');
+			Model\Job::build();
+		break;
+		case 114:
+			$alterations = array(
+				'ALTER TABLE `%s` ADD COLUMN `wakeups` INT',
+				'ALTER TABLE `%s` ADD COLUMN `sleeps` INT'
+			);
+
+			foreach ($alterations as $sql) {
+				$wpdb->query( sprintf($sql, Model\Job::table_name()) );
+			}
+		break;
+		case 115:
+			Model\Job::delete_all();
+		break;
+		case 116:
+
+			// "clean slate" analytics calculation
+
+			// first, ensure no jobs with wrong parameters are already setup
+			Model\Job::delete_all();
+
+			// then queue all analytics jobs
+			$jobs = [
+				'\Podlove\Jobs\UserAgentRefreshJob'         => [],
+				'\Podlove\Jobs\DownloadIntentCleanupJob'    => ['delete_all' => true],
+				'\Podlove\Jobs\DownloadTotalsAggregatorJob' => [],
+				'\Podlove\Jobs\DownloadTimedAggregatorJob'  => ['force' => true]
+			];
+
+			foreach ($jobs as $job => $args) {
+				CronJobRunner::create_job($job, $args);
 			}
 		break;
 	}

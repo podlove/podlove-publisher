@@ -93,7 +93,9 @@ class Analytics {
 		// application
 		wp_register_script('podlove-analytics-common-js', \Podlove\PLUGIN_URL . '/js/analytics/common.js');
 		wp_register_script('podlove-analytics-episode-js', \Podlove\PLUGIN_URL . '/js/analytics/episode.js', array('podlove-analytics-common-js', 'podlove-dc-js'));
-		wp_register_script('podlove-analytics-totals-js', \Podlove\PLUGIN_URL . '/js/analytics/totals.js', array('podlove-analytics-common-js', 'podlove-dc-js'));
+		wp_register_script('podlove-analytics-totals-js', \Podlove\PLUGIN_URL . '/js/analytics/totals.js', array('podlove-analytics-common-js', 'podlove-dc-js', 'underscore'));
+
+		wp_localize_script('podlove-analytics-totals-js', 'podlove_episode_names', self::episode_ids_to_names_map());
 
 		if (isset($_GET['action']) && $_GET['action'] == 'show') {
 			wp_enqueue_script('podlove-analytics-episode-js');
@@ -103,6 +105,26 @@ class Analytics {
 
 		wp_register_style( 'podlove-dc-css', \Podlove\PLUGIN_URL . '/css/dc.css', array(), \Podlove\get_plugin_header( 'Version' ) );
 		wp_enqueue_style( 'podlove-dc-css' );
+	}
+
+	public static function episode_ids_to_names_map() {
+		global $wpdb;
+
+		$sql = '
+			SELECT
+			  e.id, p.post_title
+			FROM
+			  ' . $wpdb->posts . ' p
+			  INNER JOIN `' . Model\Episode::table_name() . '` e ON p.ID = e.`post_id`
+		';
+		$rows = $wpdb->get_results($sql);
+
+		$map = [];
+		foreach ($rows as $row) {
+			$map[$row->id] = $row->post_title;
+		}
+
+		return $map;
 	}
 
 	public function page() {
@@ -181,8 +203,42 @@ class Analytics {
 		<div style="width: 100%">
 			<div id="total-chart" style="height: 200px"></div>
 		</div>
+
+		<div class="clear"></div>
+
+		<?php
+		$cache = \Podlove\Cache\TemplateCache::get_instance();
+
+		$total      = $cache->cache_for('podlove_downloads_total', '\Podlove\Model\DownloadIntentClean::total_downloads', 5 * MINUTE_IN_SECONDS);
+		$last_month = $cache->cache_for('podlove_downloads_last_month', '\Podlove\Model\DownloadIntentClean::prev_month_downloads', DAY_IN_SECONDS);
+		?>
+
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle" style="cursor: inherit;">Downloads</h2>
+				<div class="inside">
+
+					<div class="analytics-metric-container">
+						<div class="analytics-metric-box">
+							<span class="analytics-description">All Time</span>
+							<span class="analytics-value"><?php echo number_format_i18n($total); ?></span>
+							<span class="analytics-subtext">Downloads of all Episodes</span>
+						</div>
+
+						<div class="analytics-metric-box">
+							<span class="analytics-description">Last Month</span>
+							<span class="analytics-value"><?php echo number_format_i18n($last_month['downloads']); ?></span>
+							<span class="analytics-subtext">Downloads in <?php echo $last_month['homan_readable_month'] ?></span>
+						</div>
+
+						<div class="clear"></div>
+
+					</div>
+				</div>
+			</div>
+		</div>
 		
-		<?php 
+		<?php 		
 		$table = new \Podlove\Downloads_List_Table();
 		$table->prepare_items();
 		$table->display();
@@ -216,71 +272,48 @@ class Analytics {
 			ob_start();
 			?>
 
-			<div class="analytics-metric-box">
-				<span class="analytics-description">Average</span>
-				<span class="analytics-value"><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></span>
-				<span class="analytics-subtext">Downloads per Day</span>
+			<div class="analytics-metric-container">
+				<div class="analytics-metric-box">
+					<span class="analytics-description">Average</span>
+					<span class="analytics-value"><?php echo number_format_i18n($downloads['total'] / ($daysSinceRelease+1), 1) ?></span>
+					<span class="analytics-subtext">Downloads per Day</span>
+				</div>
+
+				<div class="analytics-metric-box">
+					<span class="analytics-description">Peak</span>
+					<span class="analytics-value"><?php echo number_format_i18n($peak['downloads']) ?></span>
+					<span class="analytics-subtext">Downloads<br>on <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
+				</div>
+
+				<div class="analytics-metric-box">
+					<span class="analytics-description">Total</span>
+					<span class="analytics-value"><?php echo number_format_i18n($downloads['total']) ?></span>
+					<span class="analytics-subtext">Downloads</span>
+				</div>
+
+				<div class="analytics-metric-box">
+					<table>
+						<tbody>
+							<tr>
+								<td>28 Days</td>
+								<td><?php echo number_format_i18n($downloads['month']) ?></td>
+							</tr>
+							<tr>
+								<td>7 Days</td>
+								<td><?php echo number_format_i18n($downloads['week']) ?></td>
+							</tr>
+							<tr>
+								<td>Yesterday</td>
+								<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
+							</tr>
+							<tr>
+								<td>Today</td>
+								<td><?php echo number_format_i18n($downloads['today']) ?></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
-
-			<div class="analytics-metric-box">
-				<span class="analytics-description">Peak</span>
-				<span class="analytics-value"><?php echo number_format_i18n($peak['downloads']) ?></span>
-				<span class="analytics-subtext">Downloads<br>on <?php echo mysql2date(get_option('date_format'), $peak['theday']) ?></span>
-			</div>
-
-			<div class="analytics-metric-box">
-				<span class="analytics-description">Total</span>
-				<span class="analytics-value"><?php echo number_format_i18n($downloads['total']) ?></span>
-				<span class="analytics-subtext">Downloads</span>
-			</div>
-
-			<div class="analytics-metric-box">
-				<table>
-					<tbody>
-						<tr>
-							<td>28 Days</td>
-							<td><?php echo number_format_i18n($downloads['month']) ?></td>
-						</tr>
-						<tr>
-							<td>7 Days</td>
-							<td><?php echo number_format_i18n($downloads['week']) ?></td>
-						</tr>
-						<tr>
-							<td>Yesterday</td>
-							<td><?php echo number_format_i18n($downloads['yesterday']) ?></td>
-						</tr>
-						<tr>
-							<td>Today</td>
-							<td><?php echo number_format_i18n($downloads['today']) ?></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<style type="text/css">
-			.analytics-metric-box {
-				text-align: center;
-				float: left;
-				margin: 20px 0 20px 20px;
-			}
-			.analytics-metric-box > span {
-				font-size: 23px;
-				line-height: 23px;
-				display: block;
-			}
-
-			.analytics-metric-box .analytics-value {
-				font-weight: bold;
-				line-height: 40px;
-			}
-
-			.analytics-metric-box .analytics-description,
-			.analytics-metric-box .analytics-subtext {
-				font-size: 14px;
-				line-height: 16px;
-				color: #666;
-			}
-			</style>
 
 			<div class="clear"></div>
 			<?php
@@ -296,13 +329,6 @@ class Analytics {
 	public function show_template() {
 		$episode = Model\Episode::find_one_by_id((int) $_REQUEST['episode']);
 		$post    = get_post( $episode->post_id );
-
-		$releaseDate = new \DateTime($post->post_date);
-		$releaseDate->setTime(0, 0, 0);
-
-		$diff = $releaseDate->diff(new \DateTime());
-		$daysSinceRelease = $diff->days;
-
 		?>
 
 		<h2>
@@ -311,7 +337,7 @@ class Analytics {
 				<?php echo sprintf(
 							"Released on %s (%d days ago)",
 							mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $post->post_date),
-							number_format_i18n($daysSinceRelease)
+							number_format_i18n($episode->days_since_release())
 						) ?>
 			</small>
 		</h2>

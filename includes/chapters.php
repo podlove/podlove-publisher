@@ -101,6 +101,11 @@ add_filter('podlove_episode_data_filter', function ($filter) {
 	]);
 });
 
+add_filter('podlove_episode_data_before_save', function ($data) {
+	$data['chapters'] = \Podlove\maybe_encode_emoji($data['chapters']);
+	return $data;
+});
+
 // add PSC to rss feed
 add_action('podlove_append_to_feed_entry', function($podcast, $episode, $feed, $format) {
 	$chapters = new \Podlove\Feeds\Chapters($episode);

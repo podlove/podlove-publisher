@@ -112,6 +112,75 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.0 =
+
+**Background Jobs System**
+
+Crunching numbers for Analytics takes time, especially for popular podcasts with many downloads. The old system was written optimistically and "let's-hope-we-finish-before-we-run-out-of-time"-ish. That was certainly good enough for podcasts with a few hundred downloads per episode, but more likely a gamble for popular shows.
+To solve this issue in a scaleable way, we built what is known as "background processing" or "queues". That way we can break big tasks into small chunks and process them step by step. You don't really need to know about this, since the main effect is that calculating analytics should be a smoother experience (if you have ever had troubles in that regard) but if you are curious, have a look at the new "Tools" section, which lists running and recently finished jobs.
+
+**New Analytics Dashboard**
+
+* "Downloads per Day" is a stacked bar chart now so you can see which episode is responsible for peaks
+* Downloads table now shows downloads in time segments starting from the moment of episode release for better comparability
+* Show total number of all downloads in Analytics Dashboard
+* New information under downloads table: age of the data and when the next refresh is due
+* _MUCH_ better performance / page load times
+* New option to configure how many episodes per page should be shown
+
+**Podlove Web Player 2 Facelift**
+
+* simplified, modernised look
+* responsive layout for mobile devices
+* fix: updated mediaelement library to fix volume bar display bug
+
+**Podigee Podcast Player**
+
+The [Podigee Podcast Player](https://www.podigee.com/en/podcast-player) is available as an alternative to the Podlove Web Players. It supports everything you can expect from a modern web player like chaptermarks. It is also embeddable.
+
+**New "Tools" Menu**
+
+* A new maintenance section gathers tools like the "Repair" button in one place
+* There is a new section for analytics related maintenance
+* Import & Export is now in the "Tools" menu
+
+**Improved Logging Display**
+
+* Logging is now in the "Support" menu
+* add filtering for different severities
+* hide "info" entries by default
+* improve readability of data sections
+
+**Other**
+
+* add Emoji support for episode subtitle, summary and chapter marks (requires WordPress 4.2 or newer)
+* Web Player setttings moved from Expert Settings to Podcast Settings
+* When activating the plugin, add mp3 asset and feed to help users get over the most confusing part of the setup.
+* Post thumbnails can be used as episode covers (see settings in "Episode Assets"). This is the new default.
+* add contributors shortcode to default template (Many people activated contributors and then wondered why they were not displayed in the episode. Now the shortcode is part of the default template, but only if the contributors module is active.)
+* add unmistakable warning if curl is not available and provide actionable steps for a solution
+* change feed setting "Include HTML Content" default to "on"
+* remove log entries for beginning and ending asset validations
+* move feed protection into separate module
+* move debug log from Dashboard to Support page
+* add ptm_request parameter to redirected tracking URLs which contains a uuid
+* add fyyd.de module
+* add option to enforce http or https in URLs inside feeds (enclosures, images) and the actual feed URLs; see `Expert Settings > Website`
+* improve tracking: ignore 1-byte requests
+* update user agent library (new/updated clients: Podcat, Downcast, iCatcher, BashPodder)
+* remove `<itunes:keywords>` from feed (it disappeared from the specification)
+* update recommended image size to 3000x3000 pixel
+* add heartbeat to keep note of when tracking is active
+* `shortcode_exists($shortcode_name)` is now available in Twig templates
+* system report: add notice if ALTERNATE_WP_CRON is active
+* fix tracking export: keep httprange
+* fix compatibility with other plugins relying on Spyc library
+* fix `{{ episode.duration.totalMilliseconds }}`
+* fix image caching issue (invisible characters)
+* fix: When plugin requirements are not met, admin notices are now still shown once but the plugin is automatically deactivated after that. This avoids faulty setups.
+* fix: show podcast covers in network site switcher
+* fix: expert settings not saving on some systems
+
 = 2.3.18 =
 
 * fix Auphonic authentication (https certificate issue)

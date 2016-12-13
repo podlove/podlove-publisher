@@ -64,6 +64,14 @@ class Episode extends Base implements Licensable {
 		return reset($episodes);
 	}
 
+	public function days_since_release() {
+		$releaseDate = new \DateTime($this->post()->post_date);
+		$releaseDate->setTime(0, 0, 0);
+
+		$diff = $releaseDate->diff(new \DateTime());
+		return $diff->days;
+	}
+
 	public function title() {
 		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
 	}
@@ -195,6 +203,15 @@ class Episode extends Base implements Licensable {
 			if ( ! $asset_assignment->image )
 				return false;
 			
+			if ($asset_assignment->image == 'post-thumbnail') {
+				if (has_post_thumbnail($this->post_id)) {
+					$size = apply_filters('podlove-post-thumbnail-cover-size', [3000, 3000]);
+					return new Image(get_the_post_thumbnail_url($this->post_id, $size), $this->title());
+				} else {
+					return false;
+				}
+			}
+
 			if ($asset_assignment->image == 'manual') {
 				$cover_art = trim($this->cover_art);
 				if (empty($cover_art)) {

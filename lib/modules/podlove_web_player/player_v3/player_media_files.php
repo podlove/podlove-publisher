@@ -46,7 +46,8 @@ class PlayerMediaFiles {
 				'url'        => $file->get_file_url(),
 				'publicUrl'  => $file->get_public_file_url("webplayer", $context),
 				'assetTitle' => $asset->title(),
-				'size' => $file->size
+				'size' => $file->size,
+				'extension' => $asset->file_type()->extension
 			];
 		}
 

@@ -110,7 +110,8 @@ function podlove_handle_media_file_download() {
 		$media_file->get_file_url(),
 		[
 			'source'  => trim(podlove_get_query_var('ptm_source')),
-			'context' => trim(podlove_get_query_var('ptm_context'))
+			'context' => trim(podlove_get_query_var('ptm_context')),
+			'request' => substr(md5(uniqid(microtime() . mt_rand(), true)), 0, 12)
 		]
 	);
 

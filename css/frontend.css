@@ -57,3 +57,7 @@ ul.podlove-donations-list li, ul.podlove-social-list li {
   width: 1px;
   min-width: 100%;
 }
+
+.podlovewebplayer_wrapper {
+  margin-bottom: 10px;
+}

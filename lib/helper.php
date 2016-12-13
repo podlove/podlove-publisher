@@ -20,6 +20,14 @@ function load_template($path, $vars = []) {
 	require $template;
 }
 
+function maybe_encode_emoji($string)
+{
+	if (function_exists('wp_encode_emoji'))
+		return \wp_encode_emoji($string);
+
+	return $string;
+}
+
 /**
  * Duplicate of $wpdb::esc_like
  * 
@@ -61,7 +69,8 @@ function get_setting( $namespace, $name ) {
 			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
 			'ssl_verify_peer' => 'on',
 			'landing_page' => 'homepage',
-			'feeds_skip_redirect' => 'off'
+			'feeds_skip_redirect' => 'off',
+			'feeds_force_protocol' => 'default'
 		),
 		'metadata' => array(
 			'enable_episode_recording_date' => 0,
@@ -89,11 +98,15 @@ function save_setting( $namespace, $name, $values ) {
 /**
  * Are we on the WordPress Settings API save page?
  * 
+ * DO NOT USE filter_input here. There seems to be a PHP bug that on some
+ * systems prevents filter_input to work for INPUT_SERVER and INPUT_ENV.
+ * @see  http://stackoverflow.com/questions/25232975/php-filter-inputinput-server-request-method-returns-null
+ * 
  * @return boolean
  */
 function is_options_save_page() {
-	$self    = filter_input(INPUT_SERVER, 'PHP_SELF');
-	$request = filter_input(INPUT_SERVER, 'REQUEST_URI');
+    $self    = $_SERVER['PHP_SELF'];
+    $request = $_SERVER['REQUEST_URI'];
 
 	return stripos($self, 'options.php') !== FALSE || stripos($request, 'options.php') !== FALSE;
 }
@@ -135,19 +148,25 @@ function get_landing_page_url() {
 	return home_url();
 }
 
-function get_webplayer_setting( $name ) {
-
-	$defaults = array(
+function get_webplayer_defaults() {
+	return [
 		'chaptersVisible' => 'false',
 		'inject'          => 'manually',
 		'version'         => 'player_v2',
-		'playerv3theme'   => 'pwp-dark-green.min.css'
-	);
-	
-	$settings = get_option( 'podlove_webplayer_settings', array() );
-	$settings = wp_parse_args( $settings, $defaults );
+		'playerv3theme'   => 'pwp-dark-green.min.css',
+		'podigeetheme'    => 'default'
+	];
+}
 
-	return $settings[ $name ];
+function get_webplayer_settings() {
+	$settings = get_option('podlove_webplayer_settings', []);
+	$settings = array_filter($settings);
+	$settings = wp_parse_args($settings, get_webplayer_defaults());
+	return $settings;
+}
+
+function get_webplayer_setting($name) {
+	return get_webplayer_settings()[$name];
 }
 
 function slugify($slug) {

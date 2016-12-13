@@ -19,7 +19,7 @@ class Logging extends \Podlove\Modules\Base {
 		add_action( 'init', array( $this, 'register_database_logger' ));
 
 		if (current_user_can('administrator')) {
-			add_action( 'podlove_dashboard_meta_boxes', array( $this, 'register_meta_box' ) );
+			add_action('podlove_support_page_footer', [$this, 'dashoard_template']);
 		}
 
 		self::schedule_crons();
@@ -53,83 +53,204 @@ class Logging extends \Podlove\Modules\Base {
 		// $log->pushHandler( new WPMailHandler( get_option( 'admin_email' ), "Podlove | Critical notice for " . get_option( 'blogname' ), Logger::CRITICAL ) );
 	}
 
-	public function register_meta_box() {
-		add_meta_box( Dashboard::$pagehook . '_logging', __( 'Logging', 'podlove-podcasting-plugin-for-wordpress' ), array( $this, 'dashoard_template' ), Dashboard::$pagehook, 'normal' );
-	}
-
 	public function dashoard_template() {
 		?>
-		<style type="text/css">
-		#podlove-log {
-			height: 500px;
-			overflow: auto;
-			font-family: monospace;
-			font-size: 14px;
-			line-height: 18px;
-			padding: 5px;
-		}
+<style type="text/css">
 
-		.log-level-200 {  }
-		.log-level-400 { color: #95002B; }
-		.log-level-550 { background: #95002B; color: #FAD4AF; }
-		.log-level-550 a { color: #F4E6AD; }
-		</style>
+#podlove-log-wrapper {
+	max-height: 500px;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: inherit;
+}
 
-		<script type="text/javascript">
-		jQuery(function($) {
-			$(document).ready(function() {
-				// scroll down
-				$("#podlove-log").scrollTop($("#podlove-log")[0].scrollHeight);
-			});
-		});
-		</script>
+#podlove-log {
+	font-family: monospace;
+	font-size: 14px;
+	line-height: 18px;
+	margin-top: 5px;
+}
+
+#podlove-log td {
+	vertical-align: top;
+}
+
+.log-date {
+	width: 175px;
+	padding: 0px 4px;
+}
+
+#podlove-log-filter {
+	text-align: right;
+	width: 100%;
+}
+
+#podlove-log-filter .log-level {
+	padding: 0px 4px 2px 4px;
+}
+
+.log-level {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.log-level-200 {  } /* info */
+.log-level-300,
+.log-level-300 td:first-child { border-left: 2px solid #ffb900; background: #fff8e5; } /* warning */
+.log-level-400,
+.log-level-400 td:first-child { border-left: 2px solid #dc3232; background: #fbeaea; } /* error */
+.log-level-550 { background: #95002B; color: #FAD4AF; }
+.log-level-550 a { color: #F4E6AD; }
+
+code.details {
+	display: inline-block;
+	margin: 0;
+	padding: 5px 15px;
+	font-size: smaller;
+	line-height: 115%;
+	color: #666;
+	background: #F9F9F9;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+#podlove-debug-log {
+	width: 80%;
+	max-width: 80%;
+}
+</style>
+
+<script type="text/javascript">
+(function ($) {
+
+function filter_log() {
+	var filterWrapper = $("#podlove-log-filter"),
+		debug    = filterWrapper.find(".log-level.log-level-100 input[type=checkbox]:checked").length,
+		info    = filterWrapper.find(".log-level.log-level-200 input[type=checkbox]:checked").length,
+		warning = filterWrapper.find(".log-level.log-level-300 input[type=checkbox]:checked").length,
+		error   = filterWrapper.find(".log-level.log-level-400 input[type=checkbox]:checked").length,
+		log = $("#podlove-log")
+	;
+	
+	log.find(".log-entry.log-level-100").toggle(!!debug);
+	log.find(".log-entry.log-level-200").toggle(!!info);
+	log.find(".log-entry.log-level-300").toggle(!!warning);
+	log.find(".log-entry.log-level-400").toggle(!!error);
+
+	// always scroll to newest when filtering
+	$("#podlove-log-wrapper").scrollTop($("#podlove-log-wrapper")[0].scrollHeight);
+}
+
+$(document).ready(function() {
+	// scroll down
+	$("#podlove-log").on('click', '.log-details .toggle a', function(e) {
+		e.preventDefault();
+		$(this).closest('.log-details').find('.details').toggle();
+	});
+	$("#podlove-log-filter input").change(filter_log);
+	filter_log();
+});
+
+})(jQuery);
+</script>
 
 		<?php
 		if ( $timezone = get_option( 'timezone_string' ) )
 			date_default_timezone_set( $timezone );
 		?>
 
-		<div id="podlove-log">
-		<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-1 week") ) as $log_entry ): ?>
-			<div class="log-entry log-level-<?php echo $log_entry->level ?>">
-				<span class="log-date">
-					[<?php echo date( 'Y-m-d H:i:s', $log_entry->time ) ?>]
-				</span>
-				<span class="log-message">
-					<?php echo $log_entry->message; ?>
-				</span>
-				<span class="log-extra">
-					<?php
-					$data = json_decode( $log_entry->context );
-					if ( isset( $data->media_file_id ) ) {
-						if ( $media_file = Model\MediaFile::find_by_id( $data->media_file_id ) ) {
-							if ( $episode = $media_file->episode() ) {
-								if ( $asset = $media_file->episode_asset() ) {
-									echo sprintf( '<a href="%s">%s/%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
+		<h3><?php echo __('Debug Logging', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+
+		<div id="podlove-debug-log" class="card">
+
+		<div id="podlove-log-filter">
+			<div class="log-level log-level-100">
+				<label>
+					<input type="checkbox">
+					debug
+				</label>
+			</div>
+			<div class="log-level log-level-200">
+				<label>
+					<input type="checkbox">
+					info
+				</label>
+			</div>
+			<div class="log-level log-level-300">
+				<label>
+					<input type="checkbox" checked>
+					warning
+				</label>
+			</div>
+			<div class="log-level log-level-400">
+				<label>
+					<input type="checkbox" checked>
+					error
+				</label>
+			</div>
+		</div>
+
+
+		<div id="podlove-log-wrapper">
+		<table id="podlove-log" cellspacing="0" border="0">
+			<tbody>
+			<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-2 weeks") ) as $log_entry ): ?>
+				<tr class="log-entry log-level-<?php echo $log_entry->level ?>">
+					<td class="log-date">
+						<?php echo date('Y-m-d H:i:s', $log_entry->time) ?>
+					</td>
+					<td class="log-content">
+						<span class="log-message">
+							<?php echo $log_entry->message; ?>
+						</span>
+						<span class="log-extra">
+							<?php
+							$data = json_decode( $log_entry->context );
+							if ( isset( $data->media_file_id ) ) {
+								if ( $media_file = Model\MediaFile::find_by_id( $data->media_file_id ) ) {
+									if ( $episode = $media_file->episode() ) {
+										if ( $asset = $media_file->episode_asset() ) {
+											echo sprintf( '<a href="%s">%s/%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
+										}
+									}
 								}
 							}
-						}
-					}
-					if ( isset( $data->error ) ) {
-						echo sprintf(' "%s"', $data->error);
-					}
-					if ( isset( $data->episode_id ) ) {
-						if ( $episode = Model\Episode::find_by_id( $data->episode_id ) )
-							echo sprintf( ' <a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
-					}
-					if ( isset( $data->http_code ) ) {
-						echo " HTTP Status: " . $data->http_code;
-					}
-					if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
-						echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
-					}
-					if (isset($data->type) && $data->type == 'twig') {
-						echo sprintf('in template "%s" line %d', $data->template, $data->line);
-					}
-					?>
-				</span>
-			</div>
-		<?php endforeach; ?>
+							if ( isset( $data->error ) ) {
+								echo sprintf(' "%s"', $data->error);
+							}
+							if ( isset( $data->episode_id ) ) {
+								if ( $episode = Model\Episode::find_by_id( $data->episode_id ) )
+									echo sprintf( ' <a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
+							}
+							if ( isset( $data->http_code ) ) {
+								echo " HTTP Status: " . $data->http_code;
+							}
+							if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
+								echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+							}
+							if (isset($data->type) && $data->type == 'twig') {
+								echo sprintf('in template "%s" line %d', $data->template, $data->line);
+							}
+
+							$extra = array_diff((array) $data, ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id']);
+							if (count($extra) > 0) {
+								?>
+								<span class="log-details">
+									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
+									<code class="details" style="display: none"><?php
+									print_r(nl2br((new \Spyc)->dump($extra, true)));
+									?></code>
+								</span>
+								<?php
+							}
+							?>
+						</span>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+		</div>
 		</div>
 		<?php
 	}

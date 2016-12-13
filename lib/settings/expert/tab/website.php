@@ -78,46 +78,8 @@ class Website extends Tab {
 				if ( $blog_prefix = \Podlove\get_blog_prefix() ) {
 					$custom_episode_slug = preg_replace( '|^/?blog|', '', $custom_episode_slug );
 				}
-				?>
-				<input name="podlove_website[use_post_permastruct]" id="use_post_permastruct" type="checkbox" <?php checked( $use_post_permastruct, 'on' ) ?>> <?php _e( 'Use the same permalink structure as posts', 'podlove-podcasting-plugin-for-wordpress' ); ?>
-				<div id="custom_podcast_permastruct"<?php if ( $use_post_permastruct ) echo ' style="display:none;"' ?>>
-					<code><?php echo get_option('home'); ?></code>
-					<input name="podlove_website[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo $custom_episode_slug ?>">
-					<p><span class="description">
-						<?php echo __( '
-							Placeholders: %podcast% (post name slug), %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%<br>
-							Example schemes: <code>/%podcast%</code>, <code>/episode/%podcast%</code>, <code>/%year%/%monthnum%/%podcast%</code>', 'podlove' );
-						?>
-					</span></p>
-				</div>
 				
-				<script type="text/javascript">
-				jQuery(function($) {
-					$(document).ready(function() {
-
-						function handle_permastruct_settings() {
-							if ( $("#use_post_permastruct").is( ':checked' ) ) {
-								$("#custom_podcast_permastruct").slideUp();
-							} else {
-								$("#custom_podcast_permastruct").slideDown();
-							}
-						}
-
-						$("#use_post_permastruct").on("click", function(e) {
-							handle_permastruct_settings();
-						});
-
-						handle_permastruct_settings();
-					});
-				});
-				</script>
-
-				<style type="text/css">
-				#custom_podcast_permastruct {
-					margin-top: 10px;
-				}
-				</style>
-				<?php
+				\Podlove\load_template('expert_settings/website/custom_episode_slug', compact('use_post_permastruct', 'custom_episode_slug'));
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -137,33 +99,8 @@ class Website extends Tab {
 				if ( $blog_prefix = \Podlove\get_blog_prefix() ) {
 					$episode_archive_slug = preg_replace( '|^/?blog|', '', $episode_archive_slug );
 				}
-				?>
-				<input name="podlove_website[episode_archive]" id="episode_archive" type="checkbox" <?php checked( $enable_episode_archive, 'on' ) ?>> <?php _e( 'Enable episode pages: a complete, paginated list of episodes, sorted by publishing date.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
-				<div id="episode_archive_slug_edit"<?php if ( !$enable_episode_archive ) echo ' style="display:none;"' ?>>
-					<code><?php echo get_option('home') . $blog_prefix; ?></code>
-					<input class="podlove-check-input" name="podlove_website[episode_archive_slug]" id="episode_archive_slug" type="text" value="<?php echo $episode_archive_slug ?>">
-				</div>
-				
-				<script type="text/javascript">
-				jQuery(function($) {
-					$(document).ready(function() {
-						$("#episode_archive").on("click", function(e) {
-							if ( $(this).is( ':checked' ) ) {
-								$("#episode_archive_slug_edit").slideDown();
-							} else {
-								$("#episode_archive_slug_edit").slideUp();
-							}
-						});
-					});
-				});
-				</script>
 
-				<style type="text/css">
-				#episode_archive_slug_edit {
-					margin-top: 10px;
-				}
-				</style>
-				<?php
+				\Podlove\load_template('expert_settings/website/episode_archive', compact('enable_episode_archive', 'episode_archive_slug', 'blog_prefix'));
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -199,52 +136,7 @@ class Website extends Tab {
 
 				wp_reset_postdata();
 
-				?>
-				<select name="podlove_website[landing_page]" id="landing_page">
-					<?php foreach ( $landing_page_options as $option ): ?>
-						<option
-							<?php if ( isset($option['value']) ): ?>
-								value="<?php echo $option['value'] ?>"
-								<?php if ( $landing_page == $option['value'] ): ?> selected<?php endif; ?>
-							<?php endif; ?>
-							<?php if ( isset($option['disabled']) && $option['disabled'] ): ?> disabled<?php endif; ?>
-						>
-							<?php echo $option['text'] ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-
-				<script type="text/javascript">
-				jQuery(function($) {
-					$(document).ready(function() {
-						var maybe_toggle_episode_archive_option = function() {
-							var $archive = $("#episode_archive"),
-								$archive_option = $("#landing_page option:eq(1)"),
-								$home_option = $("#landing_page option:eq(0)");
-
-							if ($archive.is(':checked')) {
-								$archive_option.attr('disabled', false);
-							} else {
-								$archive_option.attr('disabled', 'disabled');
-								// if it was selected before, unselect it
-								if ($archive_option.attr('selected') == 'selected') {
-									$archive_option.attr('selected', false);
-									$home_option.attr('selected', 'selected');
-								}
-							}
-
-						};
-
-						$("#episode_archive").on("click", function(e) {
-							maybe_toggle_episode_archive_option();
-						});
-
-						maybe_toggle_episode_archive_option();
-					});
-				});
-				</script>
-				<?php echo __('This defines the landing page to your podcast. It is the site that the your podcast feeds link to.', 'podlove-podcasting-plugin-for-wordpress') ?>
-				<?php
+				\Podlove\load_template('expert_settings/website/landing_page', compact('landing_page', 'landing_page_options'));
 			},
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_general'
@@ -298,6 +190,17 @@ class Website extends Tab {
 				<?php echo __('If you need to debug you feeds while using a feed proxy, add <code>?redirect=no</code> to the feed URL to skip the redirect.', 'podlove-podcasting-plugin-for-wordpress') ?>
 				<?php
 			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_feeds'
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_feeds_force_protocol',
+			/* $title    */ sprintf(
+				'<label for="feeds_force_protocol">%s</label>',
+				__( 'Website Protocol', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ [$this, 'feeds_force_protocol'],
 			/* $page     */ Settings::$pagehook,  
 			/* $section  */ 'podlove_settings_feeds'
 		);
@@ -356,4 +259,52 @@ class Website extends Tab {
 			return $options;
 		} );
 	}
+
+	public function feeds_force_protocol() {
+		$this->feeds_force_protocol_setting();
+		$this->feeds_force_protocol_issues();
+	}
+
+	private function feeds_force_protocol_setting()
+	{
+		$options = [
+			'default'    => __('Hands Off (leave everything as configured by WordPress)', 'podlove-podcasting-plugin-for-wordpress'),
+			'http'       => __('1 - Website is delivered via http (including podcast feeds)', 'podlove-podcasting-plugin-for-wordpress'),
+			'https'      => __('2 - Website is delivered via https (including podcast feeds)', 'podlove-podcasting-plugin-for-wordpress'),
+			'http_feeds' => __('3 - Website is delivered via https (excluding podcast feeds which will be delivered via http)', 'podlove-podcasting-plugin-for-wordpress')
+		];
+
+		\Podlove\load_template('expert_settings/website/feeds_force_protocol', compact('options'));		
+	}
+
+	private function feeds_force_protocol_issues()
+	{
+		$force = \Podlove\get_setting('website', 'feeds_force_protocol');
+
+		$home_url = parse_url(\get_option('home'));
+		$site_url = parse_url(\get_option('siteurl'));
+
+		$issues = [];
+
+		if ($force == 'http') {
+			// todo: explain where home/site url are set
+			if ($home_url['scheme'] !== 'http') {
+				$issues[] = sprintf(__('You claim your website is all http but your WordPress Address (home url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
+			}
+			if ($site_url['scheme'] !== 'http') {
+				$issues[] = sprintf(__('You claim your website is all http but your Site Address (site url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
+			}
+		} elseif ($force == 'https' || $force == 'http_feeds') {
+			// todo: explain where home/site url are set
+			if ($home_url['scheme'] !== 'https') {
+				$issues[] = sprintf(__('You claim your website is all https but your WordPress Address (home url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
+			}
+			if ($site_url['scheme'] !== 'https') {
+				$issues[] = sprintf(__('You claim your website is all https but your Site Address (site url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
+			}					
+		}
+
+		\Podlove\load_template('expert_settings/website/feeds_force_protocol_issues', compact('issues'));
+	}
+
 }

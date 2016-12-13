@@ -55,6 +55,7 @@ class Podcast_Post_Type {
 		
 		add_action( 'admin_menu', array( $this, 'create_modules_menu_entry' ), 100 );
 		add_action( 'admin_menu', array( $this, 'create_expert_settings_menu_entry' ), 200 );
+		add_action( 'admin_menu', array( $this, 'create_tools_menu_entry' ), 250 );
 		add_action( 'admin_menu', array( $this, 'create_support_menu_entry' ), 300 );
 
 		add_action( 'after_delete_post', array( $this, 'delete_trashed_episodes' ) );
@@ -154,6 +155,10 @@ class Podcast_Post_Type {
 
 	public function create_expert_settings_menu_entry() {
 		new \Podlove\Settings\Settings( self::SETTINGS_PAGE_HANDLE );
+	}
+
+	public function create_tools_menu_entry() {
+		new \Podlove\Settings\Tools( self::SETTINGS_PAGE_HANDLE );
 	}
 
 	public function create_support_menu_entry() {

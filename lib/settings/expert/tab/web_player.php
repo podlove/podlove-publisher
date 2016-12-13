@@ -15,12 +15,6 @@ class WebPlayer extends Tab {
 		);
 
 		register_setting( Settings::$pagehook, 'podlove_webplayer_formats' );
-		register_setting( Settings::$pagehook, 'podlove_webplayer_settings', function($setting) {
-
-			\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
-
-			return $setting;
-		} );
 	}
 
 	public function page() {
@@ -128,80 +122,5 @@ class WebPlayer extends Tab {
 				<?php 
 			}
 		}
-
-		// advanced settings
-
-		$theme_options = [];
-		$player_css_dir = \Podlove\PLUGIN_DIR . 'lib/modules/podlove_web_player/player_v3/css/';
-		$dir = new \DirectoryIterator($player_css_dir);
-		foreach ($dir as $fileinfo) {
-			if ($fileinfo->getExtension() == 'css') {
-				$filename = $fileinfo->getFilename();
-				$filetitle = str_replace(".css", "", $filename);
-				$filetitle = str_replace(".min", "", $filetitle);
-				$filetitle = str_replace("-", " ", $filetitle);
-				$filetitle = str_replace("pwp", "PWP", $filetitle);
-				$theme_options[$filename] = $filetitle;
-			}
-		}
-
-		$settings = array(
-			'inject' => array(
-				'label'       => __( 'Insert player automatically', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-episode-web-player]</code>.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'options'     => array(
-					'manually'  => __( 'insert manually via shortcode', 'podlove-podcasting-plugin-for-wordpress' ),
-					'beginning' => __( 'insert at the beginning', 'podlove-podcasting-plugin-for-wordpress' ),
-					'end'       => __( 'insert at the end', 'podlove-podcasting-plugin-for-wordpress' )
-				)
-			),
-			'chaptersVisible'     => array(
-				'label'   => __( 'Chapters Visibility', 'podlove-podcasting-plugin-for-wordpress' ),
-				'options' => array(
-					'true' => __( 'Visible when player loads', 'podlove-podcasting-plugin-for-wordpress' ),
-					'false' => __( 'Hidden when player loads', 'podlove-podcasting-plugin-for-wordpress' )
-				)
-			),
-			'version'     => array(
-				'label'   => __( 'Player Version', 'podlove-podcasting-plugin-for-wordpress' ),
-				'options' => array(
-					'player_v2' => __( 'Podlove Web Player 2', 'podlove-podcasting-plugin-for-wordpress' ),
-					'player_v3' => __( 'Podlove Web Player 3 (beta)', 'podlove-podcasting-plugin-for-wordpress' )
-				)
-			),
-			'playerv3theme' => [
-				'label' => 'Web Player Theme',
-				'description' => 'For Web Player V3 only.',
-				'options' => $theme_options
-			]
-		);
-
-		?>
-		<tr valign="top">
-			<th scope="row" valign="top" colspan="2">
-				<h3><?php echo __( 'Settings', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
-			</th>
-		</tr>
-		<?php foreach ( $settings as $setting_key => $field_values ): ?>
-			<tr class="row_<?php echo $setting_key; ?>">
-				<th scope="row" valign="top">
-					<?php if ( isset( $field_values['label'] ) && $field_values['label'] ): ?>
-						<label for="<?php echo $setting_key; ?>"><?php echo $field_values['label']; ?></label>
-					<?php endif ?>
-				</th>
-				<td>
-					<select name="podlove_webplayer_settings[<?php echo $setting_key; ?>]" id="<?php echo $setting_key; ?>">
-						<?php foreach ( $field_values['options'] as $key => $value ): ?>
-							<option value="<?php echo esc_attr( $key ); ?>" <?php if ( $key == \Podlove\get_webplayer_setting( $setting_key ) ): ?> selected="selected"<?php endif; ?>><?php echo $value; ?></option>
-						<?php endforeach; ?>
-					</select>
-					<?php if ( isset( $field_values['description'] ) &&  $field_values['description'] ): ?>
-						<div class="description"><?php echo $field_values['description']; ?></div>
-					<?php endif; ?>
-				</td>
-			</tr>
-		<?php endforeach; ?>
-		<?php
 	}
-
 }

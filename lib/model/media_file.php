@@ -109,11 +109,13 @@ class MediaFile extends Base {
 				'context' => $context
 			);
 
+			$url = '';
+
 			switch ((string) \Podlove\get_setting('tracking', 'mode')) {
 				case 'ptm':
 					// when PTM is active, add $source and $context but
 					// keep the original file URL
-					return $this->add_ptm_parameters(
+					$url = $this->add_ptm_parameters(
 						$this->get_file_url(), $params
 					);
 					break;
@@ -126,13 +128,15 @@ class MediaFile extends Base {
 						$path = '?download_media_file=' . $this->id;
 						$path = $this->add_ptm_parameters($path, $params);
 					}
-					return home_url($path);
+					$url = home_url($path);
 					break;
 				default:
 					// tracking is off, return raw URL
-					return $this->get_file_url();
+					$url = $this->get_file_url();
 					break;
 			}
+
+			return apply_filters('podlove_enclosure_url', $url);
 		});
 	}
 

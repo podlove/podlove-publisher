@@ -1,6 +1,10 @@
 <?php
 namespace Podlove;
 
+use Podlove\Jobs\DownloadTimedAggregatorJob;
+use Podlove\Jobs\DownloadTotalsAggregatorJob;
+use Podlove\Model\Job;
+
 class Downloads_List_Table extends \Podlove\List_Table {
 
 	function __construct(){
@@ -16,10 +20,13 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function column_episode( $episode ) {
 		return sprintf(
-			"<a href=\"?page=%s&action=show&episode=%d\">%s</a>",
+			"<a href=\"?page=%s&action=show&episode=%d\">%s</a> %s",
 			'podlove_analytics',
 			$episode['id'],
-			$episode['title']
+			$episode['title'],
+			'<span style="color:#999; font-size: smaller" title="' . esc_attr(mysql2date(get_option('date_format'), $episode['post_date'])) . '">'
+			. sprintf(__('%s ago'), human_time_diff(strtotime($episode['post_date']))) 
+			. '</span>'
 		);
 	}
 
@@ -27,20 +34,13 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		return self::get_number_or_dash($episode['downloads']);
 	}
 
-	public function column_downloadsMonth( $episode ) {
-		return self::get_number_or_dash($episode['downloadsMonth']);
-	}
+	public function column_default($item, $column_name)
+	{
+		$aggregation_columns = self::aggregation_columns();
 
-	public function column_downloadsWeek( $episode ) {
-		return self::get_number_or_dash($episode['downloadsWeek']);
-	}
-
-	public function column_downloadsYesterday( $episode ) {
-		return self::get_number_or_dash($episode['downloadsYesterday']);
-	}
-
-	public function column_downloadsToday( $episode ) {
-		return self::get_number_or_dash($episode['downloadsToday']);
+		if (in_array($column_name, $aggregation_columns)) {
+			return self::get_number_or_dash($item[$column_name]);
+		}
 	}
 
 	public static function get_number_or_dash($value) {
@@ -49,31 +49,61 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'episode'            => __( 'Episode', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloads'          => __( 'Total Downloads', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsMonth'     => __( '28 Days', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsWeek'      => __( '7 Days', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsYesterday' => __( 'Yesterday', 'podlove-podcasting-plugin-for-wordpress' ),
-			'downloadsToday'     => __( 'Today', 'podlove-podcasting-plugin-for-wordpress' ),
+			// 'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
+			'downloads' => __('Total', 'podlove-podcasting-plugin-for-wordpress'),
+			'1y' => __('1y', 'podlove-podcasting-plugin-for-wordpress'),
+			'4w' => __('4w', 'podlove-podcasting-plugin-for-wordpress'),
+			'3w' => __('3w', 'podlove-podcasting-plugin-for-wordpress'),
+			'2w' => __('2w', 'podlove-podcasting-plugin-for-wordpress'),
+			'1w' => __('1w', 'podlove-podcasting-plugin-for-wordpress'),
+			'6d' => __('6d', 'podlove-podcasting-plugin-for-wordpress'),
+			'5d' => __('5d', 'podlove-podcasting-plugin-for-wordpress'),
+			'4d' => __('4d', 'podlove-podcasting-plugin-for-wordpress'),
+			'3d' => __('3d', 'podlove-podcasting-plugin-for-wordpress'),
+			'2d' => __('2d', 'podlove-podcasting-plugin-for-wordpress'),
+			'1d' => __('1d', 'podlove-podcasting-plugin-for-wordpress')
 		);
 	}
 
 	public function get_sortable_columns() {
-		return array(
-			'episode'            => array('episode', true),
-			'downloads'          => array('downloads', true),
-			'downloadsMonth'     => array('downloadsMonth', true),
-			'downloadsWeek'      => array('downloadsWeek', true),
-			'downloadsYesterday' => array('downloadsYesterday', true),
-			'downloadsToday'     => array('downloadsToday', true),
-		);
-	}	
+		return [
+			'episode'   => ['episode', true],
+			'downloads' => ['downloads', true],
+			'1y'        => ['1y', true],
+			'4w'        => ['4w', true],
+			'3w'        => ['3w', true],
+			'2w'        => ['2w', true],
+			'1w'        => ['1w', true],
+			'6d'        => ['6d', true],
+			'5d'        => ['5d', true],
+			'4d'        => ['4d', true],
+			'3d'        => ['3d', true],
+			'2d'        => ['2d', true],
+			'1d'        => ['1d', true]
+		];
+	}
+
+	public static function aggregation_columns() {
+		return ['1y', '4w','3w','2w','1w','6d','5d','4d','3d','2d','1d'];
+	}
+
+	public function single_row( $item ) {
+		echo '<tr>';
+		echo "<td colspan=\"12\">";
+		echo $this->column_episode($item);
+		echo "</td>";
+		echo '</tr>';
+		echo '<tr>';
+		$this->single_row_columns( $item );
+		echo '</tr>';
+	}
 
 	public function prepare_items() {
-		global $wpdb;
-
 		// number of items per page
-		$per_page = 20;
+		$per_page = get_user_meta( get_current_user_id(), 'podlove_episodes_per_page', true);
+		if (!$per_page) {
+			$per_page = 20;
+		}
 		
 		// define column headers
 		$columns = $this->get_columns();
@@ -81,65 +111,33 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$data = \Podlove\Cache\TemplateCache::get_instance()->cache_for('podlove_analytics_downloads_table', function() {
-			global $wpdb;
+		$data = [];
+		foreach (Model\Podcast::get()->episodes() as $episode) {
+			$post = $episode->post();
 
-			// retrieve data
-			$subSQL = function($start = null, $end = null) {
-
-				$strToMysqlDate = function($s) { return date('Y-m-d', strtotime($s)); };
-
-				if ($start && $end) {
-					$timerange = " AND di2.accessed_at BETWEEN '{$strToMysqlDate($start)}' AND '{$strToMysqlDate($end)}'";
-				} elseif ($start) {
-					$timerange = " AND DATE(di2.accessed_at) = '{$strToMysqlDate($start)}'";
-				} else {
-					$timerange = "";
-				}
-
-				return "
-					SELECT
-						COUNT(di2.id) downloads
-					FROM
-						" . Model\MediaFile::table_name() . " mf2
-						LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di2 ON di2.media_file_id = mf2.id
-					WHERE
-						mf2.episode_id = e.id
-						$timerange
-				";
-			};
-
-			$sql = "
-				SELECT
-					e.id,
-					p.post_title title,
-					p.post_date post_date,
-					COUNT(di.id) downloads,
-					(" . $subSQL('28 days ago', 'now') . ") downloadsMonth,
-					(" . $subSQL('7 days ago', 'now') . ") downloadsWeek,
-					(" . $subSQL('1 day ago') . ") downloadsYesterday,
-					(" . $subSQL('now') . ") downloadsToday
-				FROM
-					" . Model\Episode::table_name() . " e
-					JOIN " . $wpdb->posts . " p ON e.post_id = p.ID
-					JOIN " . Model\MediaFile::table_name() . " mf ON e.id = mf.episode_id
-					LEFT JOIN " . Model\DownloadIntentClean::table_name() . " di ON di.media_file_id = mf.id
-				WHERE
-					p.post_status IN ('publish', 'private')
-				GROUP BY
-					e.id
-			";
-
-			return $wpdb->get_results($sql, ARRAY_A);
-		}, HOUR_IN_SECONDS);
+			$data[] = [
+				'days_since_release' => $episode->days_since_release(),
+				'id' => $episode->id,
+				'title' => $post->post_title,
+				'post_date' => $post->post_date,
+				'downloads' => get_post_meta($post->ID, '_podlove_downloads_total', true),
+				'1y' => get_post_meta($post->ID, '_podlove_downloads_1y', true),
+				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true),
+				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true),
+				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true),
+				'1w' => get_post_meta($post->ID, '_podlove_downloads_1w', true),
+				'6d' => get_post_meta($post->ID, '_podlove_downloads_6d', true),
+				'5d' => get_post_meta($post->ID, '_podlove_downloads_5d', true),
+				'4d' => get_post_meta($post->ID, '_podlove_downloads_4d', true),
+				'3d' => get_post_meta($post->ID, '_podlove_downloads_3d', true),
+				'2d' => get_post_meta($post->ID, '_podlove_downloads_2d', true),
+				'1d' => get_post_meta($post->ID, '_podlove_downloads_1d', true) 
+			];
+		}
 
 		$valid_order_keys = array(
 			'post_date',
-			'downloads',
-			'downloadsMonth',
-			'downloadsWeek',
-			'downloadsYesterday',
-			'downloadsToday'
+			'downloads'
 		);
 
 		// look for order options
@@ -176,6 +174,52 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		    'per_page'    => $per_page,
 		    'total_pages' => ceil( $total_items / $per_page )
 		) );
+	}
+
+	protected function extra_tablenav( $which ) {
+		global $wpdb;
+
+		if ($which !== 'bottom')
+			return;
+
+		$get_cron_info = function($cron_name) {
+			$next_cron = wp_next_scheduled($cron_name);
+			$interval  = wp_get_schedules()[wp_get_schedule($cron_name)]['interval'];
+			$prev_cron = $next_cron - $interval;
+
+			return [
+				'interval' => $interval,
+				'next' => $next_cron,
+				'prev' => $prev_cron
+			];
+		};
+
+		$sums_cron   = $get_cron_info("podlove_calc_download_sums");
+		$totals_cron = $get_cron_info("podlove_calc_download_totals");
+
+		$prev_sums_job   = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTimedAggregatorJob');
+		$prev_totals_job = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTotalsAggregatorJob');
+
+		?>
+		<div class="alignleft actions">	
+			<em>
+				<?php
+				echo sprintf(
+					__('Sums data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
+					human_time_diff(max($sums_cron['prev'], strtotime($prev_sums_job->updated_at)), time()),
+					human_time_diff(time(), $sums_cron['next'])
+				); ?>
+			</em><br>
+			<em>
+				<?php
+				echo sprintf(
+					__('Totals data is %s old. Next update will be in %s.', 'podlove-podcasting-plugin-for-wordpress'), 
+					human_time_diff(max($totals_cron['prev'], strtotime($prev_totals_job->updated_at)), time()),
+					human_time_diff(time(), $totals_cron['next'])
+				); ?>
+			</em>
+		</div>
+		<?php
 	}
 
 }
