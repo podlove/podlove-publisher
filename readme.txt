@@ -72,7 +72,7 @@ Any storage where you have control over the file naming is compatible with Podlo
 
 Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/). [Professional Support](http://publisher.podlove.org/support) by the plugin developer is also available.
 
-### How can I help to project?
+### How can I help the project?
 
 The continued success of Open Source project relies on the community. There are many ways you can help:
 
