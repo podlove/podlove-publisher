@@ -106,6 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * services Playstation Network Account now links to `http://psnprofiles.com`
 * allow spaces in episode slugs
+* fix Podlove Web Player 2 timecode share link
 
 = 2.4.0 =
 
