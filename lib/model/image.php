@@ -7,19 +7,19 @@ use \Podlove\Log;
 
 /**
  * Image Object
- * 
+ *
  * Usage
- * 
+ *
  * 	// get url, resized to 100px width, keep aspect ratio
  * 	$image = (new Image($url))->setWidth(100)->url();
- * 
+ *
  * 	// get url, resized to 100px width and 50px height, cropped
  * 	$image = (new Image($url))
  *  	->setWidth(100)
  *   	->setHeight(50)
  * 	  	->setCrop(true)
  * 		->url();
- * 
+ *
  *   // get image tag with custom alt text and title
  *   $image = (new Image($url))->image(["alt" => "custom alt", "title" => "custom title"]);
  */
@@ -32,7 +32,7 @@ class Image {
 	private $file_extension;
 	private $upload_basedir;
 	private $upload_baseurl;
-	
+
 	// image properties
 	private $crop   = false;
 	private $width  = NULL;
@@ -43,22 +43,23 @@ class Image {
 
 	/**
 	 * Create image object
-	 * 
-	 * Manage remote image objects. Cache locally so we can resize and serve 
+	 *
+	 * Manage remote image objects. Cache locally so we can resize and serve
 	 * optimized image dimensions.
-	 * 
+	 *
 	 * @param string $url  Remote image URL
 	 * @param string $name (optional) image file name prefix
 	 */
 	public function __construct($url, $file_name = '') {
 		$this->source_url = trim($url);
 		$this->file_name = sanitize_title($file_name);
-		
-		// manually remove troublemaking invisible character
+
+		// manually remove troublemaking characters
 		// @see https://community.podlove.org/t/solved-kind-of-cover-art-disappears-caching-issue/478/
 		// @see https://sendegate.de/t/problem-mit-caching-von-grafiken/2947
-		$this->file_name = str_ireplace("%c2%ad", "", $this->file_name);
-		
+		$this->file_name = iconv('UTF-8', 'ASCII//TRANSLIT', $this->file_name);
+		$this->file_name = preg_replace('~[^-a-z0-9_]+~', '', $this->file_name);
+
 		$this->file_extension = $this->extract_file_extension();
 		$this->id = md5($url . $this->file_name);
 
@@ -97,7 +98,7 @@ class Image {
 
 	/**
 	 * Set to true if resizing should crop when necessary.
-	 * 
+	 *
 	 * @param  bool $crop Crop image if given dimensions deviate from original aspect ratio.
 	 * @return $this for chaining
 	 */
@@ -152,11 +153,11 @@ class Image {
 
 	/**
 	 * Get URL for resized image.
-	 * 
+	 *
 	 * Examples
-	 * 
+	 *
 	 * 	$image->url(); // returns image URL
-	 * 
+	 *
 	 * @return string image URL
 	 */
 	public function url() {
@@ -182,11 +183,11 @@ class Image {
 
 	/**
 	 * Get HTML image tag for resized image.
-	 * 
+	 *
 	 * Examples
-	 * 
+	 *
 	 * 	$image->image(); // returns image tag
-	 * 
+	 *
 	 * @param  array $args List of arguments
 	 * 		- id: Set image tag "id" attribute.
 	 * 		- class: Set image tag "class" attribute.
@@ -220,7 +221,7 @@ class Image {
 
 		$dom = new \Podlove\DomDocumentFragment;
 		$img = $dom->createElement('img');
-		
+
 		foreach ($args['attributes'] as $key => $value) {
 			$img->setAttribute($key, $value);
 		}
@@ -228,16 +229,16 @@ class Image {
 		$img->setAttribute('src', $this->url());
 
 		if ($this->retina && $srcset = $this->srcset())
-			$img->setAttribute('srcset', $srcset);			
+			$img->setAttribute('srcset', $srcset);
 
 		$dom->appendChild($img);
-		
+
 		return (string) $dom;
 	}
 
 	/**
 	 * Generate srcset attribute for img tag
-	 * 
+	 *
 	 * @return string|NULL
 	 */
 	private function srcset() {
@@ -396,14 +397,14 @@ class Image {
 
 	private function add_donotbackup_dotfile() {
 		file_put_contents(
-			trailingslashit(self::cache_dir()) . '.donotbackup', 
+			trailingslashit(self::cache_dir()) . '.donotbackup',
 			"Backup plugins are encouraged to not backup folders and subfolders when this file is inside.\n"
 		);
 	}
 
 	/**
 	 * Save data relevant for cache invalidation to file.
-	 * 
+	 *
 	 * @param  array $response
 	 */
 	private function save_cache_data($response) {
@@ -422,7 +423,7 @@ class Image {
 	/**
 	 * Downloads a url to a local temporary file using the WordPress HTTP Class.
 	 * Please note, That the calling function must unlink() the file.
-	 * 
+	 *
 	 * This is a modified copy of WP Core download_url().
 	 * I copied it because I need to look into the header of the response but
 	 * unfortunately the original implementation does not expose it.
