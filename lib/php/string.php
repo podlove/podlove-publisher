@@ -33,7 +33,7 @@ function substr($str, $start, $length = NULL, $encoding = 'UTF-8') {
 
 /**
  * Check string ends with a certain character or substring.
- * 	
+ *
  * @param  string $haystack String to search
  * @param  string $needle   Substring or character
  * @return bool
@@ -44,10 +44,10 @@ function ends_with($haystack, $needle) {
 
 /**
  * Escape WordPress Shortcodes
- * 
+ *
  * Replaces the opening square bracket by its HTML code, which is
  * ignored by WordPress.
- * 
+ *
  * @param  string $text
  * @return string
  */
@@ -55,4 +55,16 @@ function escape_shortcodes($text) {
     return preg_replace_callback('/' . get_shortcode_regex() . '/', function($matches) {
       return str_replace('[', '&#x005B;', $matches[0]);
     }, $text);
+}
+
+/**
+ * Cleanup UTF8 control characters.
+ *
+ * - Remove UTF8 control characters
+ *
+ * @param  string $content
+ * @return string
+ */
+function cleanup_utf8_ctrl( $content ) {
+	return trim( preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $content) );
 }
