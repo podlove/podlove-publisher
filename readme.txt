@@ -108,6 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * allow spaces in episode slugs
 * fix Podlove Web Player 2 timecode share link
 * fix issue with image cache filenames ([PR 895](https://github.com/podlove/podlove-publisher/pull/895))
+* fix WP-Rocket incompatibility with Podigee Player
 
 = 2.4.0 =
 
