@@ -104,8 +104,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.4.1 =
 
-* services Playstation Network Account now links to `http://psnprofiles.com`
+* services: Playstation Network Account now links to `http://psnprofiles.com`
 * allow spaces in episode slugs
+* add help tab to analytics pages
 * fix Podlove Web Player 2 timecode share link
 * fix issue with image cache filenames ([PR 895](https://github.com/podlove/podlove-publisher/pull/895))
 * fix WP-Rocket incompatibility with Podigee Player
