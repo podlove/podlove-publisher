@@ -7,10 +7,9 @@
 //   - http://docs.wp-rocket.me/article/39-excluding-external-js-from-minification
 function podlove_fix_wprocket_excluded_external_js( $external_js ) {
 
-	/**
-	 * Replace with your external script URL part.
-	 */
+	// exclude our externals since it creates issues if they are mashed together
 	$external_js[] = 'cdn.podigee.com';
+	$external_js[] = 'cdn.podlove.org';
 
 	return $external_js;
 }
