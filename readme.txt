@@ -111,7 +111,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix issue with image cache filenames ([PR 895](https://github.com/podlove/podlove-publisher/pull/895))
 * fix WP-Rocket incompatibility with Podigee Player
 * fix Auphonic: when neither episode image nor post thumbnail are present, fallback to podcast cover art
-
+* fix PHP warnings in oembed module
+ 
 = 2.4.0 =
 
 **Background Jobs System**

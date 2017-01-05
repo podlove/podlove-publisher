@@ -25,8 +25,9 @@ class oembed extends \Podlove\Modules\Base {
 
 		switch ( strtoupper( $_GET['format'] ) ) {
 			case 'JSON' :
-				header('Content-type: application/json; charset=utf-8');
+				header('Content-Type: application/json; charset=utf-8');
 				print_r( json_encode( $this->get_current_episode( get_the_ID() ) ) );
+				exit;
 			break;
 			case 'XML' :
 				header('Content-Type: application/xml; charset=utf-8');
@@ -36,19 +37,20 @@ class oembed extends \Podlove\Modules\Base {
 								$episode,
 								array( $xml_source, 'addChild' ) );
 				print $xml_source->asXML();
+				exit;
 			break;
 			default :
 				status_header( 404 );
 			break;
 		}
 		
-		exit();
+		exit;
 	}
 
 	public function get_current_episode( $post_id ) {
-		if( get_post_status( $post_id ) !== 'publish' || get_post_type( $post_id ) !== 'podcast' ) { // If post is not public, 404 will be replied
+		if ( get_post_status( $post_id ) !== 'publish' || get_post_type( $post_id ) !== 'podcast' ) {
 			status_header( 404 );
-			return;
+			exit;
 		}
 
 		$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
@@ -58,16 +60,21 @@ class oembed extends \Podlove\Modules\Base {
 		$player_width = "560px";
 		$player_height =  "140px";
 
-		return array(		'version'		=> '1.0',
-							'type'			=> 'rich',
-							'width'			=> $player_width,
-							'height'		=> $player_height,
-							'title'			=> $episode->full_title(),
-							'url'			=> get_permalink( $post_id ),
-							'author_name'	=> $podcast->full_title(),
-							'author_url'	=> site_url(),
-							'thumbnail_url'	=> $episode->cover_art_with_fallback()->url(),
-							'html'			=> '<iframe width="' . $player_width .'" height="' . $player_height . '" src="' . $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" ) .'standalonePlayer"></iframe>');
+		$src = $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" );
+
+		// fixme: the iframe implementation with "standalonePlayer" parameter only works for PWP2
+		return [		
+			'version'		=> '1.0',
+			'type'			=> 'rich',
+			'width'			=> $player_width,
+			'height'		=> $player_height,
+			'title'			=> $episode->full_title(),
+			'url'			=> get_permalink( $post_id ),
+			'author_name'	=> $podcast->full_title(),
+			'author_url'	=> site_url(),
+			'thumbnail_url'	=> $episode->cover_art_with_fallback()->url(),
+			'html'			=> '<iframe width="' . $player_width .'" height="' . $player_height . '" src="' . $src .'standalonePlayer"></iframe>'
+		];
 	}
 
 	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
