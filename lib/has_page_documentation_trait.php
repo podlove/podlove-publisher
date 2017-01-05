@@ -37,6 +37,13 @@ trait HasPageDocumentationTrait {
 	}
 
 	public function add_help_tabs() {
+
+		get_current_screen()->set_help_sidebar(
+			'<p><strong>' . __( 'For more information:' ) . '</strong></p>' .
+			'<p><a href="http://docs.podlove.org/podlove-publisher/" target="_blank">' . __('Podlove Publisher Documentation', 'podlove-podcasting-plugin-for-wordpress') . '</a></p>' .
+			'<p><a href="https://community.podlove.org/" target="_blank">' . __('Podlove Community', 'podlove-podcasting-plugin-for-wordpress') . '</a></p>'
+		);
+
 		foreach ($this->get_help_tabs() as $id => $tab) {
 			get_current_screen()->add_help_tab([
 				'id'       => $id,
