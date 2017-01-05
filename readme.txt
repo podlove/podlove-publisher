@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.6.1
+Tested up to: 4.7
 Stable tag: trunk
 License: MIT
 
@@ -72,7 +72,7 @@ Any storage where you have control over the file naming is compatible with Podlo
 
 Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/). [Professional Support](http://publisher.podlove.org/support) by the plugin developer is also available.
 
-### How can I help to project?
+### How can I help the project?
 
 The continued success of Open Source project relies on the community. There are many ways you can help:
 
@@ -102,6 +102,17 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.1 =
+
+* services: Playstation Network Account now links to `http://psnprofiles.com`
+* allow spaces in episode slugs
+* add help tab to analytics pages
+* fix Podlove Web Player 2 timecode share link
+* fix issue with image cache filenames ([PR 895](https://github.com/podlove/podlove-publisher/pull/895))
+* fix WP-Rocket incompatibility with Podigee Player
+* fix Auphonic: when neither episode image nor post thumbnail are present, fallback to podcast cover art
+* fix PHP warnings in oembed module
+ 
 = 2.4.0 =
 
 **Background Jobs System**

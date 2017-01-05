@@ -144,7 +144,7 @@
   category: 'social'
   description: 'Playstation Network Account'
   logo: 'psn.png'
-  url_scheme: 'https://secure.us.playstation.com/logged-in/trophies/public-trophies/?onlinename=%account-placeholder%'
+  url_scheme: 'http://psnprofiles.com/%account-placeholder%'
 
 - title: 'Prezi'
   name: 'prezi'

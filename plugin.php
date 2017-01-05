@@ -200,6 +200,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/system_report.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/templates.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/theme_helper.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/trash.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/wp_rocket.php';
 
 require_once \Podlove\PLUGIN_DIR . 'lib/tools.php';
 

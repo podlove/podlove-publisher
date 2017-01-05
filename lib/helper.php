@@ -169,6 +169,7 @@ function get_webplayer_setting($name) {
 	return get_webplayer_settings()[$name];
 }
 
+// create slugs for text/titles
 function slugify($slug) {
 	$slug = trim($slug);
 	// replace everything but unreserved characters (RFC 3986 section 2.3) and slashes by a hyphen
@@ -177,6 +178,18 @@ function slugify($slug) {
 	$slug = str_replace("%2F", "/", $slug);
 
 	return empty($slug) ? 'n-a' : $slug;
+}
+
+// prepare an existing episode slug for use in URL
+function prepare_episode_slug_for_url($slug)
+{
+	$slug = trim($slug);
+	$slug = rawurlencode($slug);
+	
+	// allow directories in slug
+	$slug = str_replace("%2F", "/", $slug);
+
+	return $slug;
 }
 
 function with_blog_scope($blog_id, $callback) {
