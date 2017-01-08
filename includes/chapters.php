@@ -78,16 +78,22 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 		return $form_data;
 
 	$form_data[] = array(
-		'type' => 'text',
+		'type' => 'callback',
 		'key'  => 'chapters',
 		'options' => array(
+			'callback' => function () use ($episode) {
+?>
+<div id="podlove-chapters-app-data" style="display: none"><?php echo $episode->get_chapters('json'); ?></div>
+<div id="podlove-chapters-app"><chapters></chapters></div>
+
+<script src="<?php echo \Podlove\PLUGIN_URL ?>/js/dist/app.js"></script>
+<noscript>
+	<textarea name="_podlove_meta[chapters]"><?php echo $episode->chapters; ?></textarea>
+</noscript>
+<?php
+			},
 			'label'       => __( 'Chapter Marks', 'podlove-podcasting-plugin-for-wordpress' ),
-			'description' => __( 'One timepoint (hh:mm:ss[.mmm]) and the chapter title per line.', 'podlove-podcasting-plugin-for-wordpress' ),
-			'html'        => array(
-				'class'       => 'large-text code autogrow',
-				'placeholder' => '00:00:00.000 Intro',
-				'rows'        => max( 2, count( explode( "\n", $episode->chapters ) ) )
-			)
+			// 'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' )
 		),
 		'position' => 800
 	);
