@@ -82,11 +82,11 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 		'key'  => 'chapters',
 		'options' => array(
 			'callback' => function () use ($episode) {
+			wp_enqueue_script('podlove-episode-chapters', \Podlove\PLUGIN_URL . '/js/dist/app.js', false, \Podlove\get_plugin_header('Version') );
 ?>
 <div id="podlove-chapters-app-data" style="display: none"><?php echo $episode->get_chapters('json'); ?></div>
 <div id="podlove-chapters-app"><chapters></chapters></div>
 
-<script src="<?php echo \Podlove\PLUGIN_URL ?>/js/dist/app.js"></script>
 <noscript>
 	<textarea name="_podlove_meta[chapters]"><?php echo $episode->chapters; ?></textarea>
 </noscript>

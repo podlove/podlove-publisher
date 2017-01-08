@@ -34,6 +34,14 @@ export default class Timestamp {
     get pretty() {
       return this.pad(this.totalHours) + ":" + this.pad(this.minutes) + ":" + this.pad(this.seconds) + "." + this.pad(this.milliseconds, "000");
     }
+
+    get prettyShort() {
+        if (this.totalHours) {
+            return this.pad(this.totalHours) + ":" + this.pad(this.minutes) + ":" + this.pad(this.seconds);
+        } else {
+            return this.pad(this.minutes) + ":" + this.pad(this.seconds);            
+        }
+    }
     
     pad(num, pad = "00") {
         let str = "" + num;

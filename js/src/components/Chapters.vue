@@ -8,7 +8,9 @@
                     @activate="activateChapter(chapter)" 
                     :active="isActive(chapter)"
                     :start="chapter.start" 
-                    :title="chapter.title">
+                    :title="chapter.title"
+                    :duration="durationForChapter(chapter)"
+                    >
                 </chapter>
             </div>
 
@@ -152,6 +154,30 @@ export default {
                 this.activateChapter(null);
             }
             
+        },
+        durationForChapter(chapter) {
+            const curIndex = this.chapters.indexOf(chapter);
+            // const prevIndex = curIndex - 1;
+            const nextIndex = curIndex + 1;
+            const nextChapter = this.chapters[nextIndex];
+
+            if (!nextChapter) {
+
+                // check if total duration is known
+                const totalDurationEl = document.getElementById('_podlove_meta_duration');
+                if (totalDurationEl && totalDurationEl.value) {
+                    const totalDuration = npt.parse(totalDurationEl.value);
+                    if (totalDuration) {
+                        return totalDuration - chapter.start.totalMs;
+                    }
+                }
+
+                return -1;
+
+            } else {
+                return nextChapter.start.totalMs - chapter.start.totalMs;
+            }
+
         },
         importChapters() {
             const fileInput = document.getElementById("chapterimport");

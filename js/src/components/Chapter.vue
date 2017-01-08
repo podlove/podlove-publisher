@@ -7,18 +7,30 @@
         {{ title }}
     </div>
     <div class="duration">
-        ???
+        {{ prettyDuration }}
     </div>
 </div>
 </template>
 
 <script type="text/javascript">
+import Timestamp from "../timestamp"
+
 export default {
-    props: ['start', 'title', 'active'],
+    props: ['start', 'title', 'active', 'duration'],
 
     data() {
         return {
 
+        }
+    },
+
+    computed: {
+        prettyDuration: function() {
+            if (this.duration >= 0) {
+                return (new Timestamp(this.duration)).prettyShort;
+            } else {
+                return "unknown";
+            }
         }
     }
 }
