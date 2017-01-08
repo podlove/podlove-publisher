@@ -143,8 +143,11 @@ export default {
 
             this.chapters.splice(index, 1);
 
-            if (this.chapters.length > 0) {
-                this.activateChapter(this.chapters[0]);
+            // activate the nearest item (next, or previous if there is no next)
+            if (this.chapters[index]) {
+                this.activateChapter(this.chapters[index]);
+            } else if (this.chapters[index - 1]) {
+                this.activateChapter(this.chapters[index - 1]);
             } else {
                 this.activateChapter(null);
             }
