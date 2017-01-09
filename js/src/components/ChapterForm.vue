@@ -2,7 +2,15 @@
     <div class="col-md-4 chapter-edit" v-if="chapter">
         <div class="form-group">
             <label for="chapter_title">Title</label>
-            <input type="text" v-model="chapter.title" class="form-control" id="chapter_title">
+            <input 
+                type="text" 
+                class="form-control" 
+                id="chapter_title" 
+                v-model="chapter.title" 
+                @keyup.esc="unselectChapter"
+                @keyup.up="selectPrevChapter"
+                @keyup.down="selectNextChapter"
+                >
         </div>
         <div class="form-group">
             <label for="chapter_start">Start Time</label>
@@ -14,7 +22,16 @@
                     <input class="form-check-input" type="radio" name="timeformat" value="hr" autocomplete="off" v-model="timeformat"> human readable
                 </label>
 
-            <input type="text" :value="formatTime(chapter.start.totalMs)" v-on:input="chapter.start.totalMs = unformatTime($event.target.value)" class="form-control" id="chapter_start">
+            <input 
+                type="text" 
+                class="form-control" 
+                id="chapter_start" 
+                :value="formatTime(chapter.start.totalMs)" 
+                v-on:input="chapter.start.totalMs = unformatTime($event.target.value)" 
+                @keyup.esc="unselectChapter"
+                @keyup.up="selectPrevChapter"
+                @keyup.down="selectNextChapter"
+                >
         </div>
 
         <div class="form-group">
@@ -53,6 +70,15 @@ export default {
         },
         unformatTime(t) {
             return Timestamp.fromString(t).totalMs;
+        },
+        unselectChapter() {
+            this.$emit('unselectChapter');
+        },
+        selectPrevChapter() {
+            this.$emit('selectPrevChapter');
+        },
+        selectNextChapter() {
+            this.$emit('selectNextChapter');
         }
     }
 }

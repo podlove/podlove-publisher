@@ -14,7 +14,13 @@
                 </chapter>
             </div>
 
-            <chapter-form :chapter="activeChapter" @deleteChapter="onDeleteChapter"></chapter-form>
+            <chapter-form 
+                :chapter="activeChapter" 
+                @deleteChapter="onDeleteChapter"
+                @unselectChapter="activeChapter = null"
+                @selectPrevChapter="onSelectPrevChapter"
+                @selectNextChapter="onSelectNextChapter"
+                ></chapter-form>
 
         </div>
 
@@ -109,6 +115,21 @@ export default {
                 this.activateChapter(this.chapters[index - 1]);
             } else {
                 this.activateChapter(null);
+            }
+        },
+        onSelectPrevChapter() {
+            let index = this.chapters.indexOf(this.activeChapter) - 1;
+
+            if (this.chapters[index]) {
+                this.activateChapter(this.chapters[index]);
+            }
+
+        },
+        onSelectNextChapter() {
+            let index = this.chapters.indexOf(this.activeChapter) + 1;
+
+            if (this.chapters[index]) {
+                this.activateChapter(this.chapters[index]);
             }
         },
         durationForChapter(chapter) {
