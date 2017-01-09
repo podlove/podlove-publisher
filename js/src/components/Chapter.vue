@@ -35,3 +35,36 @@ export default {
     }
 }
 </script>
+
+<style type="text/css">
+.chapter {
+    padding: 2px;
+    display: flex;
+    cursor: pointer;
+}
+
+.chapter:hover,
+.chapter.active {
+    background: #EEE;
+}
+
+.title {
+    flex-grow: 4;
+    text-align: left;
+}
+
+.duration {
+    flex-grow: 1;
+    text-align: right;
+    cursor: text;
+    font-family: monospace;
+}
+
+.time {
+    /*flex-grow: 2;*/
+    width: 105px;
+    text-align: left;
+    cursor: text;
+    font-family: monospace;
+}
+</style>

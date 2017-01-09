@@ -1,3 +1,5 @@
+const npt = require('normalplaytime');
+
 export default class Timestamp {
     constructor(totalMs) {
         this.totalMs = totalMs;
@@ -51,5 +53,17 @@ export default class Timestamp {
         } else {
             return num;
         }
+    }
+
+    static fromString(t) {
+        let ms = 0;
+
+        if (t == parseInt(t, 10)) {
+            ms = parseInt(t, 10);
+        } else {
+            ms = npt.parse(t);
+        }
+
+        return new Timestamp(ms);            
     }
 }
