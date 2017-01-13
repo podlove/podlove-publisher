@@ -1,6 +1,35 @@
 <template>
     <div class="container">
-        <div class="row">
+
+        <div class="row import" v-show="mode == 'import'">
+
+            <button class="exit" @click.prevent="mode = 'chapters'">✕ Close</button>
+
+            <p>
+                <strong>Import</strong>
+            </p>
+
+            <p>
+                <input type="file" name="chapterimport" id="chapterimport"> 
+
+                <button class="button button-primary" @click.prevent="importChapters">Import Chapters</button>
+            </p>
+        </div>    
+        
+        <div class="row export" v-show="mode == 'export'">
+
+            <button class="exit" @click.prevent="mode = 'chapters'">✕ Close</button>
+
+            <p>
+                <strong>Export</strong>
+            </p>
+            <p>
+                <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">mp4chaps</a> 
+                <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">psc</a>
+            </p>
+        </div>
+
+        <div class="row chapters" v-show="mode == 'chapters'">
 
             <div :class="{'col-md-8': activeChapter, 'col-md-12': !activeChapter}">
                 <chapter 
@@ -13,6 +42,8 @@
                     >
                 </chapter>
             </div>
+
+            <div style="height: 1px; width: 20px;"></div>
 
             <chapter-form 
                 :chapter="activeChapter" 
@@ -27,22 +58,22 @@
         <hr>
 
         <div class="row">
+
+            <div style="float: left">
+
                 <button class="button button-secondary" @click.prevent="addChapter">Add Chapter</button>
+                
+            </div>
 
-                &nbsp;
+            <div style="float: right">
+                
+                <button class="button button-secondary" @click.prevent="mode = 'import'">Import</button>
+                <button class="button button-secondary" @click.prevent="mode = 'export'">Export</button>
 
-                <button class="button button-secondary" @click.prevent="importChapters">Import Chapter File</button>
+            </div>
 
-                &nbsp;
+            <div style="clear: both"></div>
 
-                <input type="file" name="chapterimport" id="chapterimport"> 
-
-                <div style="float: right">
-                    <small>
-                        Export: <a :href="mp4chapsDownloadHref" download="chapters.txt">mp4chaps</a> 
-                        <a :href="pscDownloadHref" download="chapters.psc">psc</a>
-                    </small>
-                </div>
         </div>
 
         <!-- invisible textarea used for persisting -->
@@ -73,7 +104,8 @@ export default {
         return {
             chapters: [],
             activeChapter: null,
-            timeformat: 'hr'
+            timeformat: 'hr',
+            mode: 'chapters'
         }
     },
 
@@ -145,7 +177,13 @@ export default {
                 if (totalDurationEl && totalDurationEl.value) {
                     const totalDuration = npt.parse(totalDurationEl.value);
                     if (totalDuration) {
-                        return totalDuration - chapter.start.totalMs;
+                        const duration = totalDuration - chapter.start.totalMs;
+
+                        if (duration < 0) {
+                            console.warn("Podlove Chapter Marks: Last chapter starts after total episode duration.")
+                        }
+
+                        return duration;
                     }
                 }
 
@@ -165,6 +203,7 @@ export default {
                 this.doImportChapters(e.target.result);
             };
             reader.readAsText(file);
+            this.mode = 'chapters';
         },
         doImportChapters(text) {
             var chapters = MP4Chaps.parse(text);
@@ -240,7 +279,6 @@ export default {
 
     mounted() {
         let chapters = JSON.parse(document.getElementById('podlove-chapters-app-data').innerHTML);
-        console.log("inital chapters", chapters);
         this.chapters = chapters.map((c) => {
             return new Chapter(c.title, Timestamp.fromString(c.start));
         });
@@ -249,16 +287,34 @@ export default {
 </script>
 
 <style type="text/css">
-.row { display: flex; }
-.col-md-12 { width: 100% }
+.row {
+    position: relative;
+}
+.exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border-width: 0;
+    font-weight: bold;
+    cursor: pointer;
+}
+.row.chapters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.col-md-12 {
+    width: 100%;
+}
 .col-md-8 {
-    width: 66%;
+    flex-grow: 3;
 }
 .col-md-4 {
-    width: 33%;
+    flex-grow: 1;
 }
 .chapter-edit {
-    padding-left: 20px
+    /*padding-left: 20px*/
 }
 .chapter-edit input[type=text] {
     width: 100%;

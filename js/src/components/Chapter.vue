@@ -43,9 +43,13 @@ export default {
     cursor: pointer;
 }
 
+.chapter:nth-child(odd) {
+    background: #F6F6F6;
+}
+
 .chapter:hover,
 .chapter.active {
-    background: #EEE;
+    background: #DDD;
 }
 
 .title {
@@ -56,15 +60,12 @@ export default {
 .duration {
     flex-grow: 1;
     text-align: right;
-    cursor: text;
     font-family: monospace;
 }
 
 .time {
-    /*flex-grow: 2;*/
     width: 105px;
     text-align: left;
-    cursor: text;
     font-family: monospace;
 }
 </style>
