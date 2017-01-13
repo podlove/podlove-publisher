@@ -102,6 +102,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.2 =
+
+**Improve Image Caches**
+
+Images relevant to the Podlove Publisher are downloaded so they can be resized to desired dimensions. This makes it possible to deliver retina-images and improves the website performance because only the appropriate image size delivered.
+
+This requires files to be downloaded. Until now, this happened in the background to avoid slow web page load times when the image is fetched. Until the cache existed, the original file URL to the unresized file was used. This worked alright, unless you were using a page cache plugin. The original file URL would be used much longer than necessary, causing big file downloads.
+
+Now a different approach is used. Instead of the original file URL, a dynamic link is generated, looking like this one: `https://example.com/podlove/image/http%3A%2F%2Fexample.com%2Fmedia%2Fmypodcast%2Fmy-podcast-logo-1500x1500.jpg/300/300/0/my-podcast`. When this link is requested, the cached and resized image is either delivered or, if it doesn't exist, generated on-the-fly. Once the cached file exists, the direct link to the cached file is delivered, just like before. The major improvement is that even if the initial URL is stuck in your page cache, the Publisher is now able to deliver a properly resized image anyway.
+
 = 2.4.1 =
 
 * services: Playstation Network Account now links to `http://psnprofiles.com`

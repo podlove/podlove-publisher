@@ -167,18 +167,20 @@ class Image {
 			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
-		// fetch original if we don't have it — until then, return the original URL
-		if (!$this->source_exists()) {
-			$this->schedule_download_source();
-			return apply_filters('podlove_image_url', $this->source_url);
+		if (file_exists($this->resized_file())) {
+			$url = $this->resized_url();
+		} else {
+			$url = home_url(
+				'/podlove/image/' 
+				. urlencode($this->source_url) 
+				. '/' . (int) $this->width 
+				. '/' . (int) $this->height 
+				. '/' . (int) $this->crop 
+				. '/' . urlencode($this->file_name)
+			);
 		}
 
-		if (!file_exists($this->resized_file())) {
-			$this->schedule_image_resize();
-			return apply_filters('podlove_image_url', $this->source_url);
-		}
-
-		return apply_filters('podlove_image_url', $this->resized_url());
+		return apply_filters('podlove_image_url', $url);
 	}
 
 	/**
@@ -267,17 +269,6 @@ class Image {
 		return implode(", ", $sources);
 	}
 
-	public function schedule_download_source() {
-		if (!wp_next_scheduled('podlove_download_image_source', [$this->source_url, $this->file_name]))
-			wp_schedule_single_event(time(), 'podlove_download_image_source', [$this->source_url, $this->file_name]);
-	}
-
-	public function schedule_image_resize() {
-		$args = [$this->source_url, $this->file_name, $this->width, $this->height, $this->crop];
-		if (!wp_next_scheduled('podlove_download_image_resize', $args))
-			wp_schedule_single_event(time(), 'podlove_download_image_resize', $args);
-	}
-
 	public function file_name($size_slug) {
 		if ($this->file_name) {
 			return $this->file_name . '_' . $size_slug . '.' . $this->file_extension;
@@ -286,7 +277,7 @@ class Image {
 		}
 	}
 
-	private function source_exists() {
+	public function source_exists() {
 		return is_file($this->original_file());
 	}
 
@@ -298,7 +289,7 @@ class Image {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]);
 	}
 
-	private function resized_file() {
+	public function resized_file() {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name($this->size_slug())]);
 	}
 
