@@ -35,6 +35,8 @@ function handle_feed_proxy_redirects() {
 	if (!$feed = get_feed())
 		return;
 
+	header( 'Content-Type: application/rss+xml; charset=' . get_option( 'blog_charset' ), true );
+
 	maybe_redirect_to_forced_protocol();
 	maybe_redirect_to_canonical_url();
 

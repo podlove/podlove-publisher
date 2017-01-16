@@ -112,6 +112,10 @@ This requires files to be downloaded. Until now, this happened in the background
 
 Now a different approach is used. Instead of the original file URL, a dynamic link is generated, looking like this one: `https://example.com/podlove/image/http%3A%2F%2Fexample.com%2Fmedia%2Fmypodcast%2Fmy-podcast-logo-1500x1500.jpg/300/300/0/my-podcast`. When this link is requested, the cached and resized image is either delivered or, if it doesn't exist, generated on-the-fly. Once the cached file exists, the direct link to the cached file is delivered, just like before. The major improvement is that even if the initial URL is stuck in your page cache, the Publisher is now able to deliver a properly resized image anyway.
 
+**Other**
+
+* set correct feed Content-Type in HEAD requests and redirects
+
 = 2.4.1 =
 
 * services: Playstation Network Account now links to `http://psnprofiles.com`
