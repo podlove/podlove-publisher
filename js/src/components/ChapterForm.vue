@@ -60,12 +60,16 @@ export default {
             this.$emit('deleteChapter', this.chapter);
         },
         formatTime(t) {
-            const timestamp = Timestamp.fromString(t);
+            try {
+                const timestamp = Timestamp.fromString(t);
 
-            if (this.timeformat == 'hr') {
-                return timestamp.pretty;
-            } else {
-                return timestamp.totalMs;
+                if (this.timeformat == 'hr') {
+                    return timestamp.pretty;
+                } else {
+                    return timestamp.totalMs;
+                }
+            } catch (e) {
+                return t;
             }
         },
         unformatTime(t) {

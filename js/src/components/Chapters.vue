@@ -210,10 +210,22 @@ export default {
             this.activeChapter = null;
         },
         doImportChapters(text) {
-            var chapters = MP4Chaps.parse(text);
+            let chapters;
+
+            try {
+                chapters = MP4Chaps.parse(text);
+            } catch (e) {
+                chapters = null;
+            }
             
             if (!chapters || !chapters.length) {
-                chapters = psc.parse(text);
+
+                try {
+                    chapters = psc.parse(text);
+                } catch (e) {
+                    chapters = null;
+                }
+                
             }
 
             if (!chapters || !chapters.length) {
