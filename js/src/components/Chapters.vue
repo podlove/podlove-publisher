@@ -59,7 +59,7 @@
 
         <div class="row">
 
-            <div style="float: left">
+            <div style="float: left" v-show="mode == 'chapters'">
 
                 <button class="button button-secondary" @click.prevent="addChapter">Add Chapter</button>
                 
