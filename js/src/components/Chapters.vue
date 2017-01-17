@@ -199,6 +199,7 @@ export default {
             };
             reader.readAsText(file);
             this.mode = 'chapters';
+            this.activeChapter = null;
         },
         doImportChapters(text) {
             var chapters = MP4Chaps.parse(text);
