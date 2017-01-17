@@ -13,7 +13,8 @@
 </template>
 
 <script type="text/javascript">
-import Timestamp from "../timestamp"
+import Timestamp from '../timestamp'
+import DurationErrors from '../duration_errors'
 
 export default {
     props: ['start', 'title', 'active', 'duration'],
@@ -29,7 +30,18 @@ export default {
             if (this.duration >= 0) {
                 return (new Timestamp(this.duration)).prettyShort;
             } else {
-                return "unknown";
+                switch (this.duration) {
+                    case DurationErrors.LONGER_THAN_TOTAL:
+                        return 'Exceeds episode length';
+                    break;
+                    case DurationErrors.TOTAL_UNKNOWN:
+                        return 'Unknown episode length';
+                    break;
+                    case DurationErrors.TOTAL_INVALID:
+                        return 'Invalid episode length';
+                    break;
+                }
+                return 'unknown';
             }
         }
     }

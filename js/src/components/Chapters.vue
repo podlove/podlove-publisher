@@ -87,8 +87,9 @@
 const MP4Chaps = require('podcast-chapter-parser-mp4chaps');
 const psc = require('podcast-chapter-parser-psc').parser(window.DOMParser);
 const npt = require('normalplaytime');
-import Timestamp from "../timestamp"
-import guid from "../guid"
+import Timestamp from '../timestamp'
+import guid from '../guid'
+import DurationErrors from '../duration_errors'
 
 class Chapter {
   constructor(title, start) {
@@ -174,20 +175,21 @@ export default {
 
                 // check if total duration is known
                 const totalDurationEl = document.getElementById('_podlove_meta_duration');
-                if (totalDurationEl && totalDurationEl.value) {
-                    const totalDuration = npt.parse(totalDurationEl.value);
-                    if (totalDuration) {
-                        const duration = totalDuration - chapter.start.totalMs;
+                
+                if (!totalDurationEl || !totalDurationEl.value)
+                    return DurationErrors.TOTAL_UNKNOWN;
 
-                        if (duration < 0) {
-                            console.warn("Podlove Chapter Marks: Last chapter starts after total episode duration.")
-                        }
+                const totalDuration = npt.parse(totalDurationEl.value);
 
-                        return duration;
-                    }
-                }
+                if (!totalDuration)
+                    return DurationErrors.TOTAL_INVALID;
 
-                return -1;
+                const duration = totalDuration - chapter.start.totalMs;
+
+                if (duration < 0)
+                    return DurationErrors.LONGER_THAN_TOTAL;                            
+
+                return duration;
 
             } else {
                 return nextChapter.start.totalMs - chapter.start.totalMs;
