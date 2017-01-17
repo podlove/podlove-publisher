@@ -77,7 +77,7 @@
         </div>
 
         <!-- invisible textarea used for persisting -->
-        <textarea name="_podlove_meta[chapters]" v-model="chaptersAsMp4chaps" style="display: none"></textarea>
+        <textarea name="_podlove_meta[chapters]" id="_podlove_meta_chapters" v-model="chaptersAsMp4chaps" style="display: none"></textarea>
 
     </div>
 </template>
