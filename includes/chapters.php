@@ -95,7 +95,7 @@ add_filter('podlove_episode_form_data', function($form_data, $episode) {
 			'label'       => __( 'Chapter Marks', 'podlove-podcasting-plugin-for-wordpress' ),
 			// 'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' )
 		),
-		'position' => 800
+		'position' => 450
 	);
 
 	return $form_data;
