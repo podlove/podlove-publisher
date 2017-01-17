@@ -14,20 +14,13 @@
         </div>
         <div class="form-group">
             <label for="chapter_start">Start Time</label>
-            
-                <label class="form-check-inline">
-                    <input class="form-check-input" type="radio" name="timeformat" value="ms" autocomplete="off" v-model="timeformat"> milliseconds
-                </label>
-                <label class="form-check-inline">
-                    <input class="form-check-input" type="radio" name="timeformat" value="hr" autocomplete="off" v-model="timeformat"> human readable
-                </label>
 
             <input 
                 type="text" 
                 class="form-control" 
                 id="chapter_start" 
                 :value="formatTime(chapter.start.totalMs)" 
-                v-on:input="chapter.start.totalMs = unformatTime($event.target.value)" 
+                v-on:input="handleTimeInput" 
                 @keyup.esc="unselectChapter"
                 @keyup.up="selectPrevChapter"
                 @keyup.down="selectNextChapter"
@@ -47,7 +40,6 @@ export default {
 
     data () {
         return {
-            timeformat: 'ms'
         }
     },
 
@@ -61,13 +53,7 @@ export default {
         },
         formatTime(t) {
             try {
-                const timestamp = Timestamp.fromString(t);
-
-                if (this.timeformat == 'hr') {
-                    return timestamp.pretty;
-                } else {
-                    return timestamp.totalMs;
-                }
+                return Timestamp.fromString(t).pretty;
             } catch (e) {
                 return t;
             }
@@ -83,7 +69,10 @@ export default {
         },
         selectNextChapter() {
             this.$emit('selectNextChapter');
-        }
+        },
+        handleTimeInput: _.debounce(function (e) {
+            this.chapter.start.totalMs = this.unformatTime(e.target.value);
+        }, 1500)
     }
 }
 </script>
