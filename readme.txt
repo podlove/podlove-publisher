@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.5.0 =
+
+* remove module: App.net
+
 = 2.4.2 =
 
 **Improve Image Caches**
