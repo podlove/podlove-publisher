@@ -84,7 +84,8 @@ class Wprelease
 			 'vendor/phpunit/php-token-stream',
 			 'vendor/phpunit/phpunit-mock-objects',
 			 'vendor/phpunit/php-file-iterator',
-			 'vendor/phpunit/phpunit/phpunit',
+			 'vendor/phpunit/phpunit',
+			 'vendor/piwik/device-detector/Tests'
 			 'vendor/twig/twig/test',
 			 'node_modules',
 			 'doc',
