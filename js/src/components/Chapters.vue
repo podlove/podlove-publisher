@@ -280,10 +280,14 @@ export default {
     },
 
     mounted() {
-        let chapters = JSON.parse(document.getElementById('podlove-chapters-app-data').innerHTML);
-        this.chapters = chapters.map((c) => {
-            return new Chapter(c.title, Timestamp.fromString(c.start));
-        });
+        try {
+            let chapters = JSON.parse(document.getElementById('podlove-chapters-app-data').innerHTML);
+            this.chapters = chapters.map((c) => {
+                return new Chapter(c.title, Timestamp.fromString(c.start));
+            });
+        } catch (e) {
+
+        }
     }
 }
 </script>
