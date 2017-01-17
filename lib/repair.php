@@ -14,6 +14,10 @@ class Repair {
 	public static function init()
 	{
 		self::maybe_repair();
+
+		add_action('admin_notices', function () {
+			self::print_and_clear_repair_log();
+		});
 	}
 
 	public static function maybe_repair()
@@ -42,16 +46,22 @@ class Repair {
 		update_option(self::REPAIR_LOG_KEY, array());
 	}
 
-	public static function add_to_repair_log($message) {
+	public static function add_to_repair_log($message, $status = 'updated') {
 		$log = get_option(self::REPAIR_LOG_KEY, array());
-		$log[] = $message;
+
+		if (!isset($log[$status])) {
+			$log[$status] = [];
+		}
+
+		$log[$status][] = $message;
 		update_option(self::REPAIR_LOG_KEY, $log);
 	}
 
 	public static function clear_podlove_cache() {
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
-		$cache->setup_purge();
+		$cache->purge();
 		self::add_to_repair_log(__('Podlove cache cleared', 'podlove-podcasting-plugin-for-wordpress'));
+		self::add_to_repair_log('<strong>' . __('If you are using a caching plugin like "WP Super Cache", "W3 Total Cache" or "Comet Cache", you need to wipe their caches.', 'podlove-podcasting-plugin-for-wordpress') . '</strong>', 'notice');
 	}
 
 	public static function clear_podlove_image_cache() {
@@ -113,21 +123,29 @@ class Repair {
 			return;
 
 		?>
-		<div class="updated">
-			<ul class="ul-disc">
-				<?php foreach ( $log as $entry ): ?>
-					<li>
-						<?php echo $entry ?>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-		</div>
+		<?php foreach ($log as $status => $messages): ?>
+			<div class="<?php echo $status ?>" <?php echo ($status == 'notice') ? 'style="border-left: 4px solid #ffba00;"' : '' ?>>
+				<?php if (count($messages) > 1): ?>
+					<ul class="ul-disc">
+						<?php foreach ( $messages as $entry ): ?>
+							<li>
+								<?php echo $entry ?>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php else: ?>
+					<?php foreach ( $messages as $entry ): ?>
+						<p><?php echo $entry ?></p>
+					<?php endforeach; ?>
+				<?php endif ?>
+			</div>
+		<?php endforeach ?>
+
 		<?php
 		self::clear_repair_log();
 	}
 
 	public static function page() {
-		self::print_and_clear_repair_log();
 		?>
 		<p>
 			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&repair=1') ?>" class="button">

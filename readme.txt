@@ -115,6 +115,7 @@ Now a different approach is used. Instead of the original file URL, a dynamic li
 **Other**
 
 * set correct feed Content-Type in HEAD requests and redirects
+* enhancement: repair & clear cache tools print a notice about other cache plugins
 
 = 2.4.1 =
 
