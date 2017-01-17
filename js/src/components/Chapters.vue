@@ -1,9 +1,36 @@
 <template>
     <div class="container">
 
-        <div class="row import" v-show="mode == 'import'">
+        <div class="row">
 
-            <button class="exit" @click.prevent="mode = 'chapters'">✕ Close</button>
+            <div class="chapters-tab-wrapper">
+                
+                <a href="#" 
+                   class="chapters-tab" 
+                   :class="{'chapters-tab-active': mode === 'chapters'}" 
+                   @click.prevent="mode = 'chapters'">
+                   Chapters
+                </a>
+
+                <a href="#" 
+                   class="chapters-tab" 
+                   :class="{'chapters-tab-active': mode === 'import'}" 
+                   @click.prevent="mode = 'import'">
+                   Import
+                </a>
+
+                <a href="#" 
+                   class="chapters-tab" 
+                   :class="{'chapters-tab-active': mode === 'export'}" 
+                   @click.prevent="mode = 'export'">
+                   Export
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="row import" v-show="mode == 'import'">
 
             <p>
                 <strong>Import</strong>
@@ -17,8 +44,6 @@
         </div>    
         
         <div class="row export" v-show="mode == 'export'">
-
-            <button class="exit" @click.prevent="mode = 'chapters'">✕ Close</button>
 
             <p>
                 <strong>Export</strong>
@@ -41,6 +66,10 @@
                     :duration="durationForChapter(chapter)"
                     >
                 </chapter>
+
+                <div class="chapter" style="background: white">
+                    <button class="button button-secondary" @click.prevent="addChapter">+ Add Chapter</button>
+                </div>
             </div>
 
             <div style="height: 1px; width: 20px;"></div>
@@ -52,27 +81,6 @@
                 @selectPrevChapter="onSelectPrevChapter"
                 @selectNextChapter="onSelectNextChapter"
                 ></chapter-form>
-
-        </div>
-
-        <hr>
-
-        <div class="row">
-
-            <div style="float: left" v-show="mode == 'chapters'">
-
-                <button class="button button-secondary" @click.prevent="addChapter">Add Chapter</button>
-                
-            </div>
-
-            <div style="float: right">
-                
-                <button class="button button-secondary" @click.prevent="mode = 'import'">Import</button>
-                <button class="button button-secondary" @click.prevent="mode = 'export'">Export</button>
-
-            </div>
-
-            <div style="clear: both"></div>
 
         </div>
 
@@ -306,15 +314,6 @@ export default {
 .row {
     position: relative;
 }
-.exit {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: none;
-    border-width: 0;
-    font-weight: bold;
-    cursor: pointer;
-}
 .row.chapters {
     display: flex;
     flex-wrap: wrap;
@@ -343,5 +342,32 @@ label[for=chapter_start] {
 label[for=chapter_start],
 button.button.delete-chapter {
     margin-top: 10px;
+}
+
+.chapters-tab-wrapper {
+    width: 100%;
+    height:28px;
+    display: block;
+}
+.chapters-tab-wrapper::after {
+    clear: both;
+}
+.chapters-tab {
+    float: left;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-right: 0.5em;
+    padding: 1px 10px;
+    font-size: 1em;
+    line-height: 24px;
+    background: #f6f6f6;
+}
+a.chapters-tab {
+    text-decoration: none;
+    color: #555;
+}
+.chapters-tab-active,
+.chapters-tab:hover{
+    background: white;
 }
 </style>
