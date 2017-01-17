@@ -106,7 +106,8 @@ export default {
             chapters: [],
             activeChapter: null,
             timeformat: 'hr',
-            mode: 'chapters'
+            mode: 'chapters',
+            episodeDuration: 0
         }
     },
 
@@ -173,18 +174,10 @@ export default {
 
             if (!nextChapter) {
 
-                // check if total duration is known
-                const totalDurationEl = document.getElementById('_podlove_meta_duration');
-                
-                if (!totalDurationEl || !totalDurationEl.value)
-                    return DurationErrors.TOTAL_UNKNOWN;
-
-                const totalDuration = npt.parse(totalDurationEl.value);
-
-                if (!totalDuration)
+                if (!this.episodeDuration)
                     return DurationErrors.TOTAL_INVALID;
 
-                const duration = totalDuration - chapter.start.totalMs;
+                const duration = this.episodeDuration - chapter.start.totalMs;
 
                 if (duration < 0)
                     return DurationErrors.LONGER_THAN_TOTAL;                            
@@ -224,6 +217,12 @@ export default {
 
                 return agg;
             }, []);
+        },
+        readEpisodeDuration() {
+            const duration = document.getElementById('_podlove_meta_duration');
+            if (duration && duration.value) {
+                this.episodeDuration = npt.parse(duration.value);
+            }
         }
     },
 
@@ -288,8 +287,18 @@ export default {
         } catch (e) {
 
         }
+
+        // monitor changes of episode duration
+        this.readEpisodeDuration();
+        
+        const episodeDuration = document.getElementById('_podlove_meta_duration');
+        const refresh = (e) => { this.readEpisodeDuration(); };
+
+        episodeDuration.addEventListener('change', refresh);
+        episodeDuration.addEventListener('keyup', refresh);
     }
 }
+
 </script>
 
 <style type="text/css">
