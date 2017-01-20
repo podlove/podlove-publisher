@@ -31,11 +31,6 @@
         </div>
 
         <div class="row import" v-show="mode == 'import'">
-
-            <p>
-                <strong>Import</strong>
-            </p>
-
             <p>
                 <form>
                     <input type="file" name="chapterimport" id="chapterimport"> 
@@ -46,10 +41,6 @@
         </div>    
         
         <div class="row export" v-show="mode == 'export'">
-
-            <p>
-                <strong>Export</strong>
-            </p>
             <p>
                 <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">mp4chaps</a> 
                 <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">psc</a>
