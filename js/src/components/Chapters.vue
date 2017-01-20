@@ -37,7 +37,9 @@
             </p>
 
             <p>
-                <input type="file" name="chapterimport" id="chapterimport"> 
+                <form>
+                    <input type="file" name="chapterimport" id="chapterimport"> 
+                </form>
 
                 <button class="button button-primary" @click.prevent="importChapters">Import Chapters</button>
             </p>
@@ -208,6 +210,9 @@ export default {
             reader.readAsText(file);
             this.mode = 'chapters';
             this.activeChapter = null;
+
+            // reset import element
+            fileInput.parentElement.reset();
         },
         doImportChapters(text) {
             let chapters;
