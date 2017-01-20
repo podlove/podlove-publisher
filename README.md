@@ -23,6 +23,7 @@ git clone --recursive https://github.com/podlove/podlove-publisher.git
 cd podlove-publisher
 curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
+npm run submodules-init
 ```
 
 ## Testing
