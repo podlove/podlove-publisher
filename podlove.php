@@ -12,17 +12,17 @@
  */
 
 function load_podlove_podcast_publisher() {
-	require_once 'vendor/autoload.php'; # composer autoloader
-	require_once 'bootstrap/bootstrap.php';
-	require_once 'lib/helper.php';
-	require_once 'lib/cron.php';
-	require_once 'lib/network.php';
-	require_once 'lib/php/array.php';
-	require_once 'lib/php/string.php';
-	require_once 'lib/version.php';
-	require_once 'lib/feeds.php';
-	require_once 'lib/shortcodes.php';
-	require_once 'plugin.php';
+	require_once __DIR__ . '/vendor/autoload.php'; # composer autoloader
+	require_once __DIR__ . '/bootstrap/bootstrap.php';
+	require_once __DIR__ . '/lib/helper.php';
+	require_once __DIR__ . '/lib/cron.php';
+	require_once __DIR__ . '/lib/network.php';
+	require_once __DIR__ . '/lib/php/array.php';
+	require_once __DIR__ . '/lib/php/string.php';
+	require_once __DIR__ . '/lib/version.php';
+	require_once __DIR__ . '/lib/feeds.php';
+	require_once __DIR__ . '/lib/shortcodes.php';
+	require_once __DIR__ . '/plugin.php';
 }
 
 function podlove_admin_error_no_autoload() {
