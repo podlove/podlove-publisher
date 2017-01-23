@@ -105,6 +105,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.5.0 =
 
 * remove module: App.net
+* enhancement: podcast import uses background processing, allowing more stable imports, especially for big export files
 
 = 2.4.2 =
 

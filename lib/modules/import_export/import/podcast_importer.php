@@ -3,6 +3,8 @@ namespace Podlove\Modules\ImportExport\Import;
 
 use Podlove\Model;
 use Podlove\Modules\ImportExport\Export\PodcastExporter;
+use \Podlove\Jobs\CronJobRunner;
+use Podlove\Model\Job;
 
 class PodcastImporter {
 
@@ -16,6 +18,10 @@ class PodcastImporter {
 	{
 		if (!is_admin())
 			return;
+
+		if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_tools_settings_handle') {
+			add_action('admin_notices', [__CLASS__, 'render_import_progress']);
+		}
 
 		if (!isset($_FILES['podlove_import']))
 			return;
@@ -31,97 +37,108 @@ class PodcastImporter {
 		require_once ABSPATH . '/wp-admin/includes/file.php';
 		 
 		$file = wp_handle_upload($_FILES['podlove_import'], array('test_form' => false));
-		if ($file) {
-			update_option('podlove_import_file', $file['file']);
-			if (!($file = get_option('podlove_import_file')))
-				return;
+		
+		update_option('podlove_import_file', $file['file']);
+		if (!($file = get_option('podlove_import_file')))
+			return;
 
-			$importer = new \Podlove\Modules\ImportExport\Import\PodcastImporter($file);
-			$importer->import();
-		} else {
-			// file upload didn't work
-		}
+		CronJobRunner::create_job('\Podlove\Modules\ImportExport\Import\PodcastImporterJob');
+
+		$redirect_url = 'admin.php?page=podlove_tools_settings_handle';
+		wp_redirect(admin_url($redirect_url));
+		exit;
+
+	}
+
+	public static function render_import_progress()
+	{
+		$job = Job::find_one_recent_unfinished_job('Podlove\Modules\ImportExport\Import\PodcastImporterJob');
+
+		if (!$job)
+			return;
+
+		?>
+		<div class="updated">
+			<p>
+				<strong>Import is running, please wait.</strong>
+			</p>
+			<p>
+				Progress: <span id="import-progress-notice" data-job-id="<?php echo $job->id; ?>"></span> <i class="podlove-icon-spinner rotate"></i>
+			</p>
+		</div>
+
+<script type="text/javascript">
+var updateImportProgressTimer;
+var updateImportProgress = function() {
+
+	var job_element = document.getElementById('import-progress-notice');
+	var job_id = job_element.getAttribute('data-job-id');
+
+    PODLOVE.Jobs.getStatus(job_id, function(status) {
+        if (status.error) {
+            job_element.innerHTML = status.error;
+            return;
+        }
+
+        var percent = 100 * (status.steps_progress / status.steps_total);
+
+        percent = Math.round(percent * 10) / 10;
+
+        if (!percent && status.steps_total > 0) {
+        	job_element.innerHTML = " starting…";
+        } else if (percent < 100 && status.steps_total > 0) {
+        	job_element.innerHTML = " " + percent + "%";
+        } else {
+            job_element.parentElement.parentElement.remove();
+            return;
+        }
+
+        if (status.error) {
+            console.error("job error", job_id, status.error);
+            return;
+        }
+
+        // stop when done
+        if (parseInt(status.steps_progress, 10) >= parseInt(status.steps_total, 10))
+            return;
+
+        updateImportProgressTimer = window.setTimeout(updateImportProgress, 2500);
+    });
+};
+updateImportProgress();
+</script>
+		<?php
 	}
 
 	public function __construct($file) {
 		$this->file = $file;
-	}
 
-	/**
-	 * Import podcast metadata.
-	 *
-	 * A note on modules:
-	 * Active modules are stored in wp_options "podlove_active_modules". When importing,
-	 * we do not need special handling since module activation and deactivation is hooked
-	 * to the "update_option_podlove_active_modules" filter. We only need to make sure
-	 * options/modules are imported early enough.
-	 * 
-	 * @todo  this should probably be a job, each import section its own step
-	 */
-	public function import() {
-
-		@set_time_limit(0);
-
-		$gzfilesize = function($filename) {
-			$gzFilesize = FALSE;
-			if (($zp = fopen($filename, 'r'))!==FALSE) {
-				if (@fread($zp, 2) == "\x1F\x8B") { // this is a gzip'd file
-					fseek($zp, -4, SEEK_END);
-					if (strlen($datum = @fread($zp, 4))==4)
-					  extract(unpack('Vgzfs', $datum));
-				}
-				else // not a gzip'd file, revert to regular filesize function
-					$gzfs = filesize($filename);
-				fclose($zp);
-			}
-			return($gzfs);
-		};
-		
 		// It might not look like it, but it is actually compatible to 
 		// uncompressed files.
 		$gzFileHandler = gzopen($this->file, 'r');
-		$decompressed = gzread($gzFileHandler, $gzfilesize($this->file));
+		$decompressed = gzread($gzFileHandler, self::gzfilesize($this->file));
 		gzclose($gzFileHandler);
 
 		$this->xml = simplexml_load_string($decompressed);
 
 		$this->xml->registerXPathNamespace('wpe', PodcastExporter::XML_NAMESPACE);
-
-		$export = $this->xml->xpath('//wpe:export');
-		$export = $export[0];
-
-		if (isset($export["podlove-publisher-version"]) && (string) $export["podlove-publisher-version"] == \Podlove\get_plugin_header('Version')) {
-			$status = "success";
-		} else {
-			$status = "version-warning";
+	}
+	
+	private static function gzfilesize($filename) {
+		if (($zp = fopen($filename, 'r'))!==FALSE) {
+			if (@fread($zp, 2) == "\x1F\x8B") { // this is a gzip'd file
+				fseek($zp, -4, SEEK_END);
+				if (strlen($datum = @fread($zp, 4))==4)
+				  extract(unpack('Vgzfs', $datum));
+			}
+			else // not a gzip'd file, revert to regular filesize function
+				$gzfs = filesize($filename);
+			fclose($zp);
 		}
-
-		$this->importEpisodes();
-		$this->importOptions();
-		$this->importFileTypes();
-		$this->importAssets();
-		$this->importFeeds();
-		$this->importMediaFiles();
-		$this->importTracking();
-		$this->importTemplates();
-
-		do_action('podlove_xml_import', $this->xml);
-
-		\Podlove\run_database_migrations();
-
-		$redirect_url = 'admin.php?page=podlove_tools_settings_handle';
-
-		if ($status)
-			$redirect_url .= '&status=' . $status;
-
-		if (isset($_REQUEST['podlove_tab']))
-			$redirect_url .= '&podlove_tab=' . $_REQUEST['podlove_tab'];
-
-		wp_redirect(admin_url($redirect_url));
-		exit;
+		return($gzfs);
 	}
 
-	private function importEpisodes()
+	public function importEpisodes()
 	{
 		Model\Episode::delete_all();
 
@@ -142,7 +159,7 @@ class PodcastImporter {
 		}
 	}
 
-	private function importOptions()
+	public function importOptions()
 	{
 		$wpe_options = $this->xml->xpath('//wpe:options');
 		$options = $wpe_options[0]->children('wpe', true);
@@ -162,31 +179,43 @@ class PodcastImporter {
 		}
 	}
 
-	private function importAssets() {
+	public function importAssets() {
 		self::importTable($this->xml, 'asset', '\Podlove\Model\EpisodeAsset');
 	}
 
-	private function importFeeds() {
+	public function importFeeds() {
 		self::importTable($this->xml, 'feed', '\Podlove\Model\Feed');
 	}
 
-	private function importFileTypes() {
+	public function importFileTypes() {
 		self::importTable($this->xml, 'filetype', '\Podlove\Model\FileType');	
 	}
 
-	private function importMediaFiles() {
+	public function importMediaFiles() {
 		self::importTable($this->xml, 'mediafile', '\Podlove\Model\MediaFile');
 	}
 
-	private function importTracking() {
+	public function importTrackingArea() {
 		self::importTable($this->xml, 'geoarea', '\Podlove\Model\GeoArea');
+		Model\UserAgent::reparse_all();
+	}
+
+	public function importTrackingAreaName() {
 		self::importTable($this->xml, 'geoareaname', '\Podlove\Model\GeoAreaName');
+		Model\UserAgent::reparse_all();
+	}
+
+	public function importTrackingUserAgent() {
 		self::importTable($this->xml, 'useragent', '\Podlove\Model\UserAgent');
 		Model\UserAgent::reparse_all();
 	}
 
-	private function importTemplates() {
+	public function importTemplates() {
 		self::importTable($this->xml, 'template', '\Podlove\Model\Template');
+	}
+
+	public function importOther() {
+		do_action('podlove_xml_import', $this->xml);
 	}
 
 	public static function importTable($xml, $item_name, $table_class) {
