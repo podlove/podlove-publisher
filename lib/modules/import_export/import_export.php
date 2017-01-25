@@ -137,8 +137,7 @@ class Import_Export extends \Podlove\Modules\Base {
 		<script type="text/javascript">
 		(function($) {
 
-			var timeoutID = null,
-				isExporting = false;
+			var timeoutID = null;
 
 			var podlove_check_export_status = function() {
 
@@ -157,12 +156,12 @@ class Import_Export extends \Podlove\Modules\Base {
 							$("#podlove_tracking_export_status_wrapper").show();
 
 							timeoutID = window.setTimeout(podlove_check_export_status, 1000);
-						} else {
+						} 
+
+						if (result.finished) {
 							$("#podlove_tracking_export").attr('disabled', false);
-							if (isExporting) {
-								$("#podlove_tracking_export_status_wrapper").hide();
-								window.location = window.location + "&podlove_export_tracking=1";
-							}
+							$("#podlove_tracking_export_status_wrapper").hide();
+							window.location = window.location + "&podlove_export_tracking=1";
 						}
 					}
 				});
@@ -182,8 +181,6 @@ class Import_Export extends \Podlove\Modules\Base {
 						console.log("tracking export finished");
 					}
 				});
-
-				isExporting = true;
 
 				window.setTimeout(podlove_check_export_status, 2000);
 			});

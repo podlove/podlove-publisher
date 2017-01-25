@@ -19,6 +19,8 @@ class TrackingExporter {
 			return;
 
 		if (isset($_GET['podlove_export_tracking']) && $_GET['podlove_export_tracking']) {
+
+			delete_transient('podlove_tracking_export_finished');
 			
 			header( 'Content-Type: application/octet-stream' );
 			header( 'Content-Description: File Transfer' );
@@ -96,6 +98,7 @@ class TrackingExporter {
 
 		gzclose($fp);
 
+		set_transient('podlove_tracking_export_finished', true, MINUTE_IN_SECONDS * 3);
 		delete_option('podlove_tracking_export_all');
 		delete_option('podlove_tracking_export_progress');
 		exit;
@@ -104,7 +107,8 @@ class TrackingExporter {
 	public static function export_tracking_status() {
 		echo json_encode(array(
 			'all'      => get_option('podlove_tracking_export_all'),
-			'progress' => get_option('podlove_tracking_export_progress')
+			'progress' => get_option('podlove_tracking_export_progress'),
+			'finished' => (bool) get_transient('podlove_tracking_export_finished')
 		));
 		exit;
 	}
