@@ -2,6 +2,7 @@
 namespace Podlove\Modules\ImportExport\Import;
 
 use Podlove\Model;
+use Podlove\Jobs\CronJobRunner;
 
 class TrackingImporter {
 	
@@ -34,8 +35,7 @@ class TrackingImporter {
 			if (!($file = get_option('podlove_import_tracking_file')))
 				return;
 
-			$importer = new \Podlove\Modules\ImportExport\Import\TrackingImporter($file);
-			$importer->import();
+			CronJobRunner::create_job('\Podlove\Modules\ImportExport\Import\TrackingImporterJob');
 		} else {
 			echo '<div class="error"><p>' . $file['error'] . '</p></div>';
 		}
@@ -45,84 +45,4 @@ class TrackingImporter {
 		$this->file = $file;
 	}
 
-	public function import() {
-		// It might not look like it, but it is actually compatible to 
-		// uncompressed files.
-		$gzFileHandler = gzopen($this->file, 'r');
-
-		Model\DownloadIntent::delete_all();
-		Model\DownloadIntentClean::delete_all();
-		
-		$batchSize = 1000;
-		$batch = array();
-
-		while (!gzeof($gzFileHandler)) {
-			$line = gzgets($gzFileHandler);
-
-			list(
-				$id,
-				$user_agent_id,
-				$media_file_id,
-				$request_id,
-				$accessed_at,
-				$source,
-				$context,
-				$geo_area_id,
-				$lat,
-				$lng,
-				$httprange
-			) = array_map(function ($value) {
-				return trim($value);
-			}, explode(",", $line));
-
-			$batch[] = array(
-				$user_agent_id,
-				$media_file_id,
-				$request_id,
-				$accessed_at,
-				$source,
-				$context,
-				$geo_area_id,
-				$lat,
-				$lng,
-				$httprange
-			);
-
-			if (count($batch) >= $batchSize) {
-				self::save_batch_to_db($batch);
-				$batch = [];
-			}
-		}
-
-		gzclose($gzFileHandler);
-
-		// save last batch to db
-		self::save_batch_to_db($batch);
-
-		\Podlove\Analytics\DownloadIntentCleanup::cleanup_download_intents();
-		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
-
-		wp_redirect(admin_url('admin.php?page=podlove_tools_settings_handle&status=success'));
-		exit;
-	}
-
-	private static function save_batch_to_db($batch) {
-		global $wpdb;
-
-		$sqlTemplate = "
-			INSERT INTO
-				" . Model\DownloadIntent::table_name() . " 
-			( `user_agent_id`, `media_file_id`, `request_id`, `accessed_at`, `source`, `context`, `geo_area_id`, `lat`, `lng`, `httprange`) 
-			VALUES %s";
-
-		if (count($batch)) {
-			$inserts = implode(",", array_map(function($row) {
-				return "(" . implode(",", array_map(function($x){
-					return '"' . $x . '"';
-				}, $row)) . ")";
-			}, $batch));
-			$sql = sprintf($sqlTemplate, $inserts);
-			$wpdb->query($sql);
-		}		
-	}
 }
