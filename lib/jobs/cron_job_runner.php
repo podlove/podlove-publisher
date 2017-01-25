@@ -17,8 +17,6 @@ use Podlove\Model\Job;
  */
 class CronJobRunner {
 
-	const MAX_SECONDS_PER_REQUEST = 10;
-
     /**
      * @var float
      */
@@ -109,17 +107,59 @@ class CronJobRunner {
 		}
 		return false;
 	}
+
+	/**
+	 * Maximum Seconds per Request
+	 * 
+	 * Duration after which no further job steps are started. The sum of 
+	 * max_seconds_per_request and lock_duration_buffer should not exceed
+	 * PHP ini value `max_execution_time` which defaults to 30 on most systems.
+	 * 
+	 * When running via the command line (or system cron), `max_execution_time`
+	 * is often much higher or deactivated. In these cases, much higher execution
+	 * times can be set for speedy results.
+	 * 
+	 * Example cron call while overriding time limit:
+	 * 
+	 *   sudo PODLOVE_JOB_MAX_SECONDS_PER_REQUEST=40 -u www-data php /var/www/html/wp/wp-cron.php >>/var/log/cron.log 2>&1
+	 * 
+	 * @return int
+	 */
+    public static function max_seconds_per_request()
+    {
+    	$default = isset($_SERVER['PODLOVE_JOB_MAX_SECONDS_PER_REQUEST']) ? $_SERVER['PODLOVE_JOB_MAX_SECONDS_PER_REQUEST'] : 20;
+    	return apply_filters('podlove_job_max_seconds_per_request', $default);
+    }
+
+    /**
+     * Lock Duration Buffer
+     * 
+     * A new job step is only started when the elapsed time is below 
+     * max_seconds_per_request. However, a step might take a while to complete
+     * and exceed max_seconds_per_request. The buffer should be at least as big
+     * as the longest expected time for one step of any job to avoid two
+     * job processes running at the same time.
+     * 
+     * @return int
+     */
+    public static function lock_duration_buffer()
+    {
+    	$default = isset($_SERVER['PODLOVE_JOB_LOCK_DURATION_BUFFER']) ? $_SERVER['PODLOVE_JOB_LOCK_DURATION_BUFFER'] : 5;
+    	return apply_filters('podlove_job_lock_duration_buffer', $default);
+    }
+
 	/**
 	 * Lock process
 	 *
 	 * Lock the process so that multiple instances can't run simultaneously.
-	 * The duration should be greater than that defined in self::MAX_SECONDS_PER_REQUEST.
+	 * The duration should be greater than that defined in self::max_seconds_per_request().
 	 */
 	protected static function lock_process() {
-		$lock_duration = self::MAX_SECONDS_PER_REQUEST + 10;
+		$lock_duration = self::max_seconds_per_request() + self::lock_duration_buffer();
 		$lock_duration = apply_filters( 'podlove_queue_lock_time', $lock_duration );
 		set_transient( 'podlove_process_lock', microtime(), $lock_duration );
 	}
+
 	/**
 	 * Unlock process
 	 *
@@ -176,7 +216,7 @@ class CronJobRunner {
 
 		$elapsed = microtime(true) - self::$requestTime;
 
-		return $elapsed < self::MAX_SECONDS_PER_REQUEST;
+		return $elapsed < self::max_seconds_per_request();
 	}
 
 }
