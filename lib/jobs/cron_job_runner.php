@@ -23,8 +23,6 @@ class CronJobRunner {
     public static $requestTime;
 
 	public static function init() {
-		add_action('cron_job_runner', [__CLASS__, 'run_job'], 10, 2);
-
 		add_filter('cron_schedules', [__CLASS__, 'add_cron_schedules']);
 
 		if (!wp_next_scheduled('cron_job_worker')) {
@@ -70,15 +68,11 @@ class CronJobRunner {
 		return $job;
 	}
 
-	public static function spawn($job) {
-		wp_schedule_single_event(time() - 1, 'cron_job_runner', [$job->id, time()]);
-	}
-
-	public static function work_jobs() {
+	public static function work_jobs($ignore_lock = false) {
 
 		set_transient('podlove_jobs_last_spawn_worker', time(), DAY_IN_SECONDS);
 
-		if (self::is_process_running()) {
+		if (!$ignore_lock && self::is_process_running()) {
 			return;
 		}
 
@@ -88,7 +82,7 @@ class CronJobRunner {
 		$job = Job::find_next_in_queue();
 
 		if ($job) {
-			self::spawn($job);
+			self::run_job($job->id, time());
 		} else {
 			self::unlock_process();
 		}
@@ -197,8 +191,12 @@ class CronJobRunner {
 		$job->get_job()->increase_sleep_count();
 		self::unlock_process();
 
-		// after finishing, spawn a new worker process
-		wp_schedule_single_event(time(), 'cron_job_worker');
+		if (self::should_run_another_job()) {
+			self::work_jobs();
+		} else {
+			// after finishing, spawn a new worker process
+			wp_schedule_single_event(time(), 'cron_job_worker');
+		}
 	}
 
 	/**

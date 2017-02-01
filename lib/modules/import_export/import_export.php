@@ -17,6 +17,10 @@ class Import_Export extends \Podlove\Modules\Base {
 			$this->register_tools();
 		});
 
+		if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_tools_settings_handle') {
+			wp_enqueue_script('podlove_admin_import_script', $this->get_module_url() . '/js/import.js', ['jquery'], \Podlove\get_plugin_header('Version'));
+		}
+
 		add_action('admin_notices', function() {
 
 			if (!isset($_GET['page']))

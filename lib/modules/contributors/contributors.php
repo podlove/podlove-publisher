@@ -34,7 +34,8 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_append_to_feed_entry', array($this, 'feed_item_contributors'), 10, 4);
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
-		add_action('podlove_xml_import', array($this, 'expandImport'));
+		add_filter('podlove_import_jobs', array($this, 'expandImport'));
+
 		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
 
 		add_action( 'wp_ajax_podlove-contributors-delete-podcast', array($this, 'delete_podcast_contributor') );
@@ -287,12 +288,15 @@ class Contributors extends \Podlove\Modules\Base {
 	/**
 	 * Expands "Import/Export" module: import logic
 	 */
-	public function expandImport($xml) {
-		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor', '\Podlove\Modules\Contributors\Model\Contributor');
-		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-group', '\Podlove\Modules\Contributors\Model\ContributorGroup');
-		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-role', '\Podlove\Modules\Contributors\Model\ContributorRole');
-		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-episode-contribution', '\Podlove\Modules\Contributors\Model\EpisodeContribution');
-		Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributor-show-contribution', '\Podlove\Modules\Contributors\Model\ShowContribution');
+	public function expandImport($jobs)
+	{
+		$jobs[] = '\Podlove\Modules\Contributors\Jobs\PodcastImportContributorsJob';
+		$jobs[] = '\Podlove\Modules\Contributors\Jobs\PodcastImportContributorGroupsJob';
+		$jobs[] = '\Podlove\Modules\Contributors\Jobs\PodcastImportContributorRolesJob';
+		$jobs[] = '\Podlove\Modules\Contributors\Jobs\PodcastImportContributorEpisodeContributionsJob';
+		$jobs[] = '\Podlove\Modules\Contributors\Jobs\PodcastImportContributorShowContributionsJob';
+		
+		return $jobs;
 	}
 
 	/**

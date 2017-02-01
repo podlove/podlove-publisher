@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * enhancement: podcast import uses background processing, allowing more stable imports, especially for big export files
 * fix tracking export
 
+**Module: Import/Export**
+
+Podcast import has been rewritten to make full use of Background Jobs. That way podcasts of any size can be imported without running into system resource restrictions for large podcasts.
+
 **Background Jobs**
 
 Adjusted background job duration parameters and made them configurable. The change of defaults aims to make better use of available cron time (normally 30 seconds per request), which can speed up long running background jobs dramatically.

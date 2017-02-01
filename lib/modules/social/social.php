@@ -36,7 +36,7 @@ class Social extends \Podlove\Modules\Base {
 		add_action( 'wp_ajax_podlove-services-delete-podcast-services', array($this, 'delete_podcast_services') );
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
-		add_action('podlove_xml_import', array($this, 'expandImport'));
+		add_action('podlove_import_jobs', array($this, 'expandImport'));
 
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'templates')), 'social');
@@ -398,10 +398,11 @@ class Social extends \Podlove\Modules\Base {
 		\Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'showServices', 'showService', '\Podlove\Modules\Social\Model\ShowService');
 	}
 
-	public function expandImport($xml) {
-		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'service', '\Podlove\Modules\Social\Model\Service');
-		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'contributorService', '\Podlove\Modules\Social\Model\ContributorService');
-		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'showService', '\Podlove\Modules\Social\Model\ShowService');
+	public function expandImport($jobs) {
+		$jobs[] = '\Podlove\Modules\Social\Jobs\PodcastImportServicesJob';
+		$jobs[] = '\Podlove\Modules\Social\Jobs\PodcastImportContributorServicesJob';
+		$jobs[] = '\Podlove\Modules\Social\Jobs\PodcastImportShowServicesJob';
+		return $jobs;
 	}
 
 }

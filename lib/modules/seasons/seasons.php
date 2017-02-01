@@ -22,7 +22,7 @@ class Seasons extends \Podlove\Modules\Base {
 		add_action('admin_print_styles', [$this, 'scripts_and_styles']);
 
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
-		add_action('podlove_xml_import', array($this, 'expandImport'));
+		add_filter('podlove_import_jobs', array($this, 'expandImport'));
 
 		add_filter( "set-screen-option", function($status, $option, $value) {
 			if ($option == 'podlove_seasons_per_page')
@@ -76,7 +76,9 @@ class Seasons extends \Podlove\Modules\Base {
 	/**
 	 * Expands "Import/Export" module: import logic
 	 */
-	public function expandImport($xml) {
-		\Podlove\Modules\ImportExport\Import\PodcastImporter::importTable($xml, 'season', '\Podlove\Modules\Seasons\Model\Season');
+	public function expandImport($xml)
+	{
+		$jobs[] = '\Podlove\Modules\Seasons\PodcastImportSeasonsJob';
+		return $jobs;
 	}
 }
