@@ -84,23 +84,23 @@ class PodcastImporter {
 		$jobs = self::get_import_job_classes();
 		$jobs = apply_filters('podlove_import_jobs', $jobs);
 
-		$any_unfinished = array_reduce($jobs, function($any, $job) {
+		$unfinished = array_reduce($jobs, function($jobs, $job) {
 
-			if ($any) {
-				return $any;
-			} else {
-				return !!Job::find_one_recent_unfinished_job($job);
+			if (Job::find_one_recent_unfinished_job($job)) {
+				$jobs[] = $job;
 			}
 
-		}, false);
+			return $jobs;
 
-		if (!$any_unfinished)
+		}, []);
+
+		if (count($unfinished) < 1)
 			return;
 
 		?>
 		<div class="updated" id="podlove-import-status">
 			<p>
-				<strong>Import is running, please wait.</strong>
+				<strong><?php echo __('Podcast Import', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
 			</p>
 			<?php self::render_import_progress_jobs(); ?>
 		</div>
@@ -111,29 +111,49 @@ class PodcastImporter {
 	{
 		$jobs = self::get_import_job_classes();
 		$jobs = apply_filters('podlove_import_jobs', $jobs);
+
+		$finished = array_reduce($jobs, function($jobs, $job) {
+
+			if (Job::find_one_recent_finished_job($job)) {
+				$jobs[] = $job;
+			}
+
+			return $jobs;
+
+		}, []);
+
+		$all_count = count($jobs);
+		$finished_count = count($finished);	
 		?>
-		<ul>
+		<div class="podlove-import-status-progress">
+		<?php if ($all_count == $finished_count): ?>
+			<p>
+				<em><?php echo __('Import finished!', 'podlove-podcasting-plugin-for-wordpress') ?></em>
+			</p>
+		<?php else: ?>
+			<p>
+				<?php echo sprintf(
+					__("Total import progress: %d/%d", 'podlove-podcasting-plugin-for-wordpress'),
+					$finished_count,
+					$all_count
+				); ?>
+			</p>
 			<?php foreach ($jobs as $jobClass): ?>
 				<?php $job = Job::find_one_recent_unfinished_job($jobClass) ?>
-				<li>
-					<?php echo $jobClass::title() ?>
-					<?php if ($job): ?>
-						<em>
-							<?php 
-							echo sprintf(
-								"%d%%", 
-								100 * ($job->steps_progress / $job->steps_total))
-							?>
-						</em>
+					<?php if ($job && $job->steps_progress > 0): ?>
+						<p>
+						<?php echo sprintf(
+							__("Currently working on: %s", 'podlove-podcasting-plugin-for-wordpress'),
+							 $jobClass::title()
+						); ?>
 						<?php if ($job->steps_progress > 0): ?>
 							<i class="clickable podlove-icon-spinner rotate"></i>
 						<?php endif ?>
-					<?php else: ?>
-						<i class="clickable podlove-icon-ok"></i>
+						</p>
 					<?php endif ?>
-				</li>
 			<?php endforeach ?>
-		</ul>		
+		<?php endif ?>
+		</div>
 		<?php
 	}
 }

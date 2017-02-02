@@ -110,7 +110,7 @@ var PODLOVE = PODLOVE || {};
                 if (parseInt(status.steps_progress, 10) >= parseInt(status.steps_total, 10))
                     return;
 
-                timer = window.setTimeout(update, 2500);
+                timer = window.setTimeout(update, 3500);
             });
         };
 

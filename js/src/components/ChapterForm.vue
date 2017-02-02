@@ -34,7 +34,7 @@
 </template>
 
 <script type="text/javascript">
-import Timestamp from "../timestamp"
+import Timestamp from "../lib/timestamp"
 
 export default {
 

@@ -13,8 +13,8 @@
 </template>
 
 <script type="text/javascript">
-import Timestamp from '../timestamp'
-import DurationErrors from '../duration_errors'
+import Timestamp from '../lib/timestamp'
+import DurationErrors from '../lib/duration_errors'
 
 export default {
     props: ['start', 'title', 'active', 'duration'],

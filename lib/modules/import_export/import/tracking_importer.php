@@ -39,10 +39,27 @@ class TrackingImporter {
 		} else {
 			echo '<div class="error"><p>' . $file['error'] . '</p></div>';
 		}
+
+		add_action('admin_notices', [__CLASS__, 'print_notice']);
 	}
 
 	public function __construct($file) {
 		$this->file = $file;
 	}
 
+	public static function print_notice()
+	{
+		?>
+		<div class="updated">
+			<p>
+				<strong>
+					<?php echo __('Tracking Import Started', 'podlove-podcasting-plugin-for-wordpress') ?>
+				</strong>
+			</p>
+			<p>
+				<?php echo __('See "Background Jobs" section below for progress.', 'podlove-podcasting-plugin-for-wordpress') ?>
+			</p>
+		</div>
+		<?php
+	}
 }

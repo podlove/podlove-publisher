@@ -88,9 +88,9 @@
 const MP4Chaps = require('podcast-chapter-parser-mp4chaps');
 const psc = require('podcast-chapter-parser-psc').parser(window.DOMParser);
 const npt = require('normalplaytime');
-import Timestamp from '../timestamp'
-import guid from '../guid'
-import DurationErrors from '../duration_errors'
+import Timestamp from '../lib/timestamp'
+import guid from '../lib/guid'
+import DurationErrors from '../lib/duration_errors'
 
 class Chapter {
   constructor(title, start) {

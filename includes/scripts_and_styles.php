@@ -16,6 +16,10 @@ add_action( 'admin_print_styles', function () {
 	wp_register_script('podlove_admin', \Podlove\PLUGIN_URL . '/js/admin.js', ['jquery', 'jquery-ui-datepicker', 'podlove_admin_episode_feed_settings', 'podlove_admin_autogrow'], $version);
 	wp_register_script('podlove-timeago', \Podlove\PLUGIN_URL . '/js/admin/timeago.jquery.js', ['jquery']);
 
+	if ($is_episode_edit_screen || $screen->base === 'podlove_page_podlove_tools_settings_handle') {
+		wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL . '/js/dist/app.js', ['underscore', 'jquery'], \Podlove\get_plugin_header('Version'), true );
+	}
+
 	if ($is_podlove_settings_screen || $is_episode_edit_screen) {
 
 		wp_enqueue_style('podlove-admin',      \Podlove\PLUGIN_URL . '/css/admin.css', [], $version);

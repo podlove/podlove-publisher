@@ -36,7 +36,8 @@ class Ajax {
 			'episode-slug',
 			'admin-news',
 			'job-create',
-			'job-get'
+			'job-get',
+			'jobs-get'
 		);
 
 		// kickoff generic ajax methods
@@ -82,6 +83,43 @@ class Ajax {
 			self::respond_with_json(['error' => 'no job with id "' . $job_id . '"']);
 
 		self::respond_with_json($job->to_array());
+	}
+
+	public function jobs_get() {
+		$jobs = \Podlove\Model\Job::all();
+		$jobs = array_map(function($j) {
+			$job = $j->to_array();
+			$job['title'] = ($job['class'])::title();
+
+			if ($job['steps_total'] > 0) {
+				$steps_percent = floor(100 * ($job['steps_progress'] / $job['steps_total']));
+				$job['steps_percent'] = $steps_percent < 100 ? $steps_percent : 100;
+			} else {
+				$job['steps_percent'] = 0;
+			}
+
+			$job['active_run_time'] = round($job['active_run_time'], 2);
+
+			$job['created_relative'] = sprintf(__('%s ago'), human_time_diff(strtotime($job['created_at'])));
+			$job['created_at_timestamp'] = strtotime($job['created_at']);
+			
+			if (!$job['wakeups'] || $job['created_at'] == $job['updated_at']) {
+				$job['last_progress'] = __('Never');
+			} else {
+				$seconds = time() - strtotime($job['updated_at']);
+				if ($seconds < 5) {
+					$job['last_progress'] = __('just now');
+				} elseif ($seconds < 60) {
+					$job['last_progress'] = sprintf(__('%s sec ago'), $seconds);
+				} else {
+					$job['last_progress'] = sprintf(__('%s ago'), human_time_diff(strtotime($job['updated_at'])));
+				}
+			}
+
+			return $job;
+		}, $jobs);
+
+		self::respond_with_json($jobs);
 	}
 
 	public function admin_news() {
