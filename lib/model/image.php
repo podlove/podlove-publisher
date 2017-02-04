@@ -172,7 +172,7 @@ class Image {
 		} else {
 			$url = home_url(
 				'/podlove/image/' 
-				. urlencode($this->source_url) 
+				. urlencode(base64_encode($this->source_url))
 				. '/' . (int) $this->width 
 				. '/' . (int) $this->height 
 				. '/' . (int) $this->crop 
@@ -285,7 +285,7 @@ class Image {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, 'cache.yml']);
 	}
 
-	private function original_file() {
+	public function original_file() {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]);
 	}
 

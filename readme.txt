@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.3 =
+
+Fix issue with broken images introduced in 2.4.2.
+
 = 2.4.2 =
 
 **Improve Image Caches**
