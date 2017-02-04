@@ -10,3 +10,4 @@ test/config.yml
 bower_components
 doc
 .htaccess
+.remote-sync.json

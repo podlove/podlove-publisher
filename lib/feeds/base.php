@@ -20,6 +20,7 @@ function the_description() {
 	else
 		$description = $title;
 
+	$description = \Podlove\PHP\cleanup_utf8_ctrl($description);
 	echo apply_filters( 'podlove_feed_item_description', $description );
 }
 
@@ -49,7 +50,7 @@ function override_feed_language( $feed ) {
  *
  * - Trim whitespace
  * - Convert special characters to HTML entities
- * 
+ *
  * @param  string $content
  * @return string
  */
@@ -89,7 +90,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo $feed->get_self_link();
 		echo $feed->get_alternate_links();
 	}, 9 );
- 	
+
  	// add rss image
 	add_action( $hook, function() use ( $podcast, $hook ) {
 
@@ -109,7 +110,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		// generate our own image tag
 		$dom = new \Podlove\DomDocumentFragment;
 		$image_tag = $dom->createElement('image');
-		
+
 		foreach ($image as $tag_name => $tag_text) {
 			if ($tag_text) {
 				$tag = $dom->createElement($tag_name);
@@ -135,9 +136,9 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
 		echo PHP_EOL;
 
-		$categories = \Podlove\Itunes\categories( false );	
+		$categories = \Podlove\Itunes\categories( false );
 		$category_html = '';
-		for ( $i = 1; $i <= 3; $i++ ) { 
+		for ( $i = 1; $i <= 3; $i++ ) {
 			$category_id = $podcast->{'category_' . $i};
 
 			if ( ! $category_id )
@@ -171,7 +172,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		);
 		echo "\t" . apply_filters( 'podlove_feed_itunes_owner', $owner );
 		echo PHP_EOL;
-		
+
 		if ( $podcast->cover_art()->url() ) {
 			$coverimage = sprintf( '<itunes:image href="%s" />', $podcast->cover_art()->url() );
 		} else {
@@ -237,7 +238,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 				'href'   => get_permalink() . "#"
 			));
 			$xml .= apply_filters( 'podlove_deep_link', $deep_link, $feed );
-			
+
 			$xml .= apply_filters( 'podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type, $file );
 
 			$duration = sprintf( '<itunes:duration>%s</itunes:duration>', $episode->get_duration( 'HH:MM:SS' ) );
@@ -252,7 +253,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$xml .= apply_filters( 'podlove_feed_itunes_subtitle', $subtitle );
 
 			$summary = apply_filters( 'podlove_feed_content', \Podlove\PHP\escape_shortcodes(strip_tags($episode->summary)) );
-			$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
+			$summary = sprintf( '<itunes:summary>%s</itunes:summary>', \Podlove\PHP\cleanup_utf8_ctrl($summary) );
 			$xml .= apply_filters( 'podlove_feed_itunes_summary', $summary );
 
 			if (\Podlove\get_setting('metadata', 'enable_episode_explicit')) {
@@ -272,7 +273,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 				add_filter( 'the_content_feed', function( $content, $feed_type ) {
 					return preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content );
 				}, 10, 2 );
-				$content_encoded = '<content:encoded><![CDATA[' . get_the_content_feed( 'rss2' ) . ']]></content:encoded>';
+				$content_encoded = '<content:encoded><![CDATA[' . \Podlove\PHP\cleanup_utf8_ctrl(get_the_content_feed( 'rss2' )) . ']]></content:encoded>';
 				$xml .= apply_filters( 'podlove_feed_content_encoded', $content_encoded );
 			}
 
