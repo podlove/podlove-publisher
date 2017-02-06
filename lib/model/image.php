@@ -301,8 +301,31 @@ class Image {
 		return implode('/', [$this->upload_baseurl, $this->file_name($this->size_slug())]);
 	}
 
+	private function get_image_type() {
+		if (function_exists('exif_imagetype')) {
+			return exif_imagetype($this->original_file());
+		} else {
+			$image = getimagesize($this->original_file());
+			return $image[2];
+		}
+	}
+
+	private function get_image_mime_type() {
+		return image_type_to_mime_type($this->get_image_type());
+	}
+
 	public function generate_resized_copy() {
-		$image = wp_get_image_editor($this->original_file());
+		
+		if ($this->get_image_type() === false) {
+			Log::get()->addWarning('Podlove Image: Not an image (' . $this->original_file() . ')');
+			return;
+		}
+
+		$editor_args = [
+			'mime_type' => $this->get_image_mime_type()
+		];
+
+		$image = wp_get_image_editor($this->original_file(), $editor_args);
 
 		if (is_wp_error($image)) {
 			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $image->get_error_message());
