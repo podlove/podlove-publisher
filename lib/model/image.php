@@ -113,7 +113,6 @@ class Image {
 			return $this;
 
 		$this->width = (int) $width;
-		$this->height = 0;
 		$this->determineMissingDimension();
 
 		return $this;
@@ -125,25 +124,45 @@ class Image {
 			return $this;
 
 		$this->height = (int) $height;
-		$this->width = 0;
 		$this->determineMissingDimension();
 
 		return $this;
 	}
 
 	private function determineMissingDimension() {
+		@list($width, $height) = getimagesize($this->original_file());
 
-		if (!$this->height) {
-			$known_dimension   = 'width';
-			$missing_dimension = 'height';
-		} elseif (!$this->width) {
-			$known_dimension   = 'height';
-			$missing_dimension = 'width';
+		if ($width * $height == 0) {
+			return;
 		}
 
+		if (!$this->height) {
+			$this->height = $this->determineHeightFromWidth($this->width);
+		} else {
+			$this->width  = $this->determineWidthFromHeight($this->height);
+		}
+	}
+
+	private function determineWidthFromHeight($givenHeight)
+	{
 		@list($width, $height) = getimagesize($this->original_file());
-		if ($width && $height)
-			$this->$missing_dimension = round($this->$known_dimension / ${$known_dimension} * ${$missing_dimension});
+
+		if ($width * $height > 0) {
+			return round($givenHeight * $width / $height);
+		} else {
+			return 0;			
+		}
+	}
+
+	private function determineHeightFromWidth($givenWidth)
+	{
+		@list($width, $height) = getimagesize($this->original_file());
+
+		if ($width * $height > 0) {
+			return round($givenWidth / $width * $height);
+		} else {
+			return 0;			
+		}
 	}
 
 	public function setRetina($retina) {
