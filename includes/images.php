@@ -41,17 +41,17 @@ function podlove_refetch_cached_image($url, $filename) {
 add_action( 'init', function () {
     add_rewrite_rule(
         '^podlove/image/([^/]+)/([0-9]+)/([0-9]+)/([0-9])/([^/]+)/?$',
-        'index.php?image_cache_url=$matches[1]&width=$matches[2]&height=$matches[3]&crop=$matches[4]&file_name=$matches[5]',
+        'index.php?podlove_image_cache_url=$matches[1]&podlove_width=$matches[2]&podlove_height=$matches[3]&podlove_crop=$matches[4]&podlove_file_name=$matches[5]',
         'top'
     );
 }, 10 );
 
 add_filter( 'query_vars', function ( $query_vars ){
-    $query_vars[] = 'image_cache_url';
-    $query_vars[] = 'width';
-    $query_vars[] = 'height';
-    $query_vars[] = 'crop';
-    $query_vars[] = 'file_name';
+    $query_vars[] = 'podlove_image_cache_url';
+    $query_vars[] = 'podlove_width';
+    $query_vars[] = 'podlove_height';
+    $query_vars[] = 'podlove_crop';
+    $query_vars[] = 'podlove_file_name';
     return $query_vars;
 }, 10, 1 );
 
@@ -59,11 +59,11 @@ add_action('wp', 'podlove_handle_cache_files');
 
 function podlove_handle_cache_files() {
 
-	$source_url = base64_decode(urldecode(podlove_get_query_var('image_cache_url')));
-	$file_name  = urldecode(podlove_get_query_var('file_name'));
-	$width  = (int) podlove_get_query_var('width');
-	$height = (int) podlove_get_query_var('height');
-	$crop   = (bool) podlove_get_query_var('crop');
+	$source_url = base64_decode(urldecode(podlove_get_query_var('podlove_image_cache_url')));
+	$file_name  = urldecode(podlove_get_query_var('podlove_file_name'));
+	$width  = (int) podlove_get_query_var('podlove_width');
+	$height = (int) podlove_get_query_var('podlove_height');
+	$crop   = (bool) podlove_get_query_var('podlove_crop');
 
 	if (!$source_url)
 		return;
