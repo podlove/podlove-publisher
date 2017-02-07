@@ -270,14 +270,22 @@ class Image {
 
 		$sizes = ['1x' => $this->url()];
 
-		$img2x = clone $this;
-		$img2x = $img2x->setWidth($this->width * 2)->url();
-		$sizes['2x'] = $img2x;
+		if ($this->width * 2 <= $max_width) {
+			$img2x = (new Image($this->source_url, $this->file_name))
+				->setCrop($this->crop)
+				->setRetina($this->retina)
+				->setWidth($this->width * 2);
+
+			$sizes['2x'] = $img2x->url();
+		}
 
 		if ($this->width * 3 <= $max_width) {
-			$img3x = clone $this;
-			$img3x = $img3x->setWidth($this->width * 3)->url();
-			$sizes['3x'] = $img3x;
+			$img3x = (new Image($this->source_url, $this->file_name))
+				->setCrop($this->crop)
+				->setRetina($this->retina)
+				->setWidth($this->width * 3);
+				
+			$sizes['3x'] = $img3x->url();
 		}
 
 		$sources = [];
