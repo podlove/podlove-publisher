@@ -56,6 +56,32 @@ function get_help_link($tab_id, $title = '<sup>?</sup>') {
 	return sprintf('<a href="#" data-podlove-help="%s">%s</a>', $tab_id, $title);
 }
 
+/**
+ * Checks if given file is an image based on mime type
+ * 
+ * @param  string  $file
+ * @return boolean
+ */
+function is_image($file) {
+	$type = get_image_type($file);
+	$mime = get_image_mime_type($type);
+
+	return substr($mime, 0, 5) == 'image';
+}
+
+function get_image_type($file) {
+	if (function_exists('exif_imagetype')) {
+		return exif_imagetype($file);
+	} else {
+		$image = getimagesize($file);
+		return $image[2];
+	}
+}
+
+function get_image_mime_type($image_type) {
+	return image_type_to_mime_type($image_type);
+}
+
 function get_setting( $namespace, $name ) {
 	
 	$defaults = array(

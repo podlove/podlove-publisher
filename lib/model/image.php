@@ -320,28 +320,15 @@ class Image {
 		return implode('/', [$this->upload_baseurl, $this->file_name($this->size_slug())]);
 	}
 
-	private function get_image_type() {
-		if (function_exists('exif_imagetype')) {
-			return exif_imagetype($this->original_file());
-		} else {
-			$image = getimagesize($this->original_file());
-			return $image[2];
-		}
-	}
-
-	private function get_image_mime_type() {
-		return image_type_to_mime_type($this->get_image_type());
-	}
-
 	public function generate_resized_copy() {
 		
-		if ($this->get_image_type() === false) {
+		if (!\Podlove\is_image($this->original_file())) {
 			Log::get()->addWarning('Podlove Image: Not an image (' . $this->original_file() . ')');
 			return;
 		}
 
 		$editor_args = [
-			'mime_type' => $this->get_image_mime_type()
+			'mime_type' => \Podlove\get_image_mime_type(\Podlove\get_image_type($this->original_file()))
 		];
 
 		$image = wp_get_image_editor($this->original_file(), $editor_args);
@@ -391,6 +378,35 @@ class Image {
 
 	public function download_source() {
 
+   		$source_url  = $this->source_url;
+   		$current_url = $this->source_url;
+
+   		$source_domain  = parse_url($source_url, PHP_URL_HOST);
+   		$current_domain = explode(":", $_SERVER["HTTP_HOST"])[0];
+
+   		// if domains match, see if the image is part of the Publisher 
+   		// and can be copied on the filesystem, skipping http
+   		if ($current_domain == $source_domain) {
+   			
+   			$plugin_dirname = basename(\Podlove\PLUGIN_DIR, true);
+
+   			if (stristr($source_url, $plugin_dirname)) {
+	   			$path = explode($plugin_dirname, $source_url)[1];
+	   			$file = untrailingslashit(\Podlove\PLUGIN_DIR) . $path;
+
+	   			if (file_exists($file) && \Podlove\is_image($file)) {
+	   				$this->create_basedir();
+	   				$this->save_cache_data();
+	   				$this->copy_as_original_file($file);
+	   				return;
+	   			}
+   			}
+   		}
+
+   		/**
+   		 * The following section is only reached if the downloaded image is not part of the Publisher.
+   		 */
+
   		// for download_url()
    		require_once(ABSPATH . 'wp-admin/includes/file.php');
 
@@ -413,19 +429,48 @@ class Image {
 			);
 		}
 
-		if (!wp_mkdir_p($this->upload_basedir))
-			Log::get()->addWarning(sprintf(__( 'Podlove Image: Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
-
+		$this->create_basedir();
 		$this->save_cache_data($response);
-
-		$move_new_file = @rename($temp_file, $this->original_file());
-
-		if ( false === $move_new_file )
-			Log::get()->addWarning(sprintf(__('Podlove Image: The downloaded image could not be moved to %s.' ), $this->original_file()));
-
+		$this->move_as_original_file($temp_file);
 		@unlink($temp_file);
-
 		$this->add_donotbackup_dotfile();
+	}
+
+	public function create_basedir() {
+		if (!wp_mkdir_p($this->upload_basedir)) {
+			Log::get()->addWarning(
+				sprintf(
+					__( 'Podlove Image: Unable to create directory %s. Is its parent directory writable by the server?' ),
+					$this->upload_basedir
+				)
+			);
+		}
+	}
+
+	public function move_as_original_file($file) {
+		$move_new_file = @rename($file, $this->original_file());
+
+		if ( false === $move_new_file ) {
+			Log::get()->addWarning(
+				sprintf(
+					__('Podlove Image: The downloaded image could not be moved to %s.' ),
+					$this->original_file()
+				)
+			);
+		}
+	}
+
+	public function copy_as_original_file($file) {
+		$move_new_file = @copy($file, $this->original_file());
+
+		if ( false === $move_new_file ) {
+			Log::get()->addWarning(
+				sprintf(
+					__('Podlove Image: The downloaded image could not be moved to %s.' ),
+					$this->original_file()
+				)
+			);
+		}
 	}
 
 	private function add_donotbackup_dotfile() {
@@ -440,15 +485,18 @@ class Image {
 	 *
 	 * @param  array $response
 	 */
-	private function save_cache_data($response) {
+	private function save_cache_data($response = []) {
 
 		$cache_info = [
 			'source'        => $this->source_url,
-			'filename'      => $this->file_name,
-			'etag'          => wp_remote_retrieve_header($response, 'etag'),
-			'last-modified' => wp_remote_retrieve_header($response, 'last-modified'),
-			'expires'       => wp_remote_retrieve_header($response, 'expires'),
+			'filename'      => $this->file_name
 		];
+
+		if (!empty($response)) {
+			$cache_info['etag']          = wp_remote_retrieve_header($response, 'etag');
+			$cache_info['last-modified'] = wp_remote_retrieve_header($response, 'last-modified');
+			$cache_info['expires']       = wp_remote_retrieve_header($response, 'expires');
+		}
 
 		file_put_contents($this->cache_file(), Yaml::dump($cache_info));
 	}
