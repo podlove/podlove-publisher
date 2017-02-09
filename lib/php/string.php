@@ -56,3 +56,12 @@ function escape_shortcodes($text) {
       return str_replace('[', '&#x005B;', $matches[0]);
     }, $text);
 }
+
+function hex2str($hex) {
+  return pack('H*', $hex);
+}
+
+function str2hex($str) {
+  $tmp = unpack('H*', $str);
+  return array_shift($tmp);
+}

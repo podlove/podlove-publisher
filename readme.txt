@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.5 =
+
+Image cache: change URL encoding method to fix Gravatar issues.
+
 = 2.4.4 =
 
 Further image cache improvements:
