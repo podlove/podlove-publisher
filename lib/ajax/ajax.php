@@ -89,7 +89,9 @@ class Ajax {
 		$jobs = \Podlove\Model\Job::all();
 		$jobs = array_map(function($j) {
 			$job = $j->to_array();
-			$job['title'] = ($job['class'])::title();
+
+			$job_class = $job['class'];
+			$job['title'] = $job_class::title();
 
 			if ($job['steps_total'] > 0) {
 				$steps_percent = floor(100 * ($job['steps_progress'] / $job['steps_total']));
