@@ -13,6 +13,19 @@
                 >
         </div>
         <div class="form-group">
+            <label for="chapter_url">URL <small>(optional)</small></label>
+
+            <input 
+                type="text" 
+                class="form-control" 
+                id="chapter_url" 
+                v-model="chapter.url" 
+                @keyup.esc="unselectChapter"
+                @keyup.up="selectPrevChapter"
+                @keyup.down="selectNextChapter"
+                >
+        </div>
+        <div class="form-group">
             <label for="chapter_start">Start Time</label>
 
             <input 

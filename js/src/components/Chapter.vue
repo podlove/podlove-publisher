@@ -4,7 +4,12 @@
         {{ start.pretty }}
     </div>
     <div class="title">
-        {{ title }}
+        <span v-if="url">
+            <a href="url" :title="url">{{ title }}</a>
+        </span>
+        <span v-else>
+            {{ title }}
+        </span>
     </div>
     <div class="duration">
         {{ prettyDuration }}
@@ -17,7 +22,7 @@ import Timestamp from '../lib/timestamp'
 import DurationErrors from '../lib/duration_errors'
 
 export default {
-    props: ['start', 'title', 'active', 'duration'],
+    props: ['start', 'title', 'active', 'duration', 'url'],
 
     data() {
         return {

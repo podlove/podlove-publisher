@@ -56,6 +56,7 @@
                     :active="isActive(chapter)"
                     :start="chapter.start" 
                     :title="chapter.title"
+                    :url="chapter.url"
                     :duration="durationForChapter(chapter)"
                     >
                 </chapter>
@@ -93,10 +94,11 @@ import guid from '../lib/guid'
 import DurationErrors from '../lib/duration_errors'
 
 class Chapter {
-  constructor(title, start) {
+  constructor(title, start, url) {
     this.id = guid();
     this.title = title;
     this.start = start;
+    this.url = url;
   }
 }
 
@@ -249,8 +251,13 @@ export default {
         },
         chaptersAsMp4chaps () {
             return this.sortedChapters.reduce((agg, chapter) => {
+                var line = chapter.start.pretty + " " + chapter.title;
 
-                agg.push(chapter.start.pretty + " " + chapter.title);
+                if (chapter.url) {
+                    line = line + " <" + chapter.url + ">";
+                }
+
+                agg.push(line);
 
                 return agg;
             }, []).join("\n") + "\n";
@@ -273,6 +280,11 @@ export default {
                 let node = xmlDoc.createElement("psc:chapter");
                 node.setAttribute("title", chapter.title);
                 node.setAttribute("start", chapter.start.pretty);
+
+                if (chapter.url) {
+                    node.setAttribute("href", chapter.url);
+                }
+
                 pscDoc.appendChild(node);
             });
 
@@ -299,7 +311,7 @@ export default {
         try {
             let chapters = JSON.parse(document.getElementById('podlove-chapters-app-data').innerHTML);
             this.chapters = chapters.map((c) => {
-                return new Chapter(c.title, Timestamp.fromString(c.start));
+                return new Chapter(c.title, Timestamp.fromString(c.start), c.href);
             });
         } catch (e) {
 
@@ -343,13 +355,19 @@ export default {
     width: 100%;
 }
 label[for=chapter_title],
+label[for=chapter_url],
 label[for=chapter_start] {
     display: block;
     font-weight: bold;
 }
 label[for=chapter_start],
+label[for=chapter_url],
 button.button.delete-chapter {
     margin-top: 10px;
+}
+
+label[for=chapter_url] small {
+    font-weight: normal;
 }
 
 .chapters-tab-wrapper {
