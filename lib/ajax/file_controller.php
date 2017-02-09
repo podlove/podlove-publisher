@@ -36,7 +36,6 @@ class FileController {
 		if ( ! $result['reachable'] ) {
 			$info['certinfo'] = print_r($info['certinfo'], true);
 			$info['php_open_basedir'] = ini_get( 'open_basedir' );
-			$info['php_safe_mode'] = ini_get( 'safe_mode' );
 			$info['php_curl'] = in_array( 'curl', get_loaded_extensions() );
 			$info['curl_exec'] = function_exists( 'curl_exec' );
 

@@ -122,8 +122,10 @@ class Curl {
 	/**
 	 * Check for CURLOPT_FOLLOWLOCATION bug.
 	 * 
-	 * If either safe_mode is on or an open_basedir path is set, 
+	 * If open_basedir path is set, 
 	 * CURLOPT_FOLLOWLOCATION does not work.
+	 * 
+	 * safe_mode is not checked because it was removed in PHP 5.4 and we require at least 5.4
 	 * 
 	 * @see  https://stackoverflow.com/questions/2511410/curl-follow-location-error
 	 * @see  https://stackoverflow.com/questions/19539922/php-can-curlopt-followlocation-and-open-basedir-be-used-together
@@ -131,6 +133,6 @@ class Curl {
 	 * @return bool
 	 */
 	public static function curl_can_follow_redirects() {
-		return !(ini_get('open_basedir') || ini_get('safe_mode'));
+		return !ini_get('open_basedir');
 	}
 }
