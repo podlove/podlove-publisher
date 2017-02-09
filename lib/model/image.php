@@ -437,6 +437,15 @@ class Image {
 			);
 		}
 
+		if (!\Podlove\is_image($temp_file)) {
+			Log::get()->addWarning(
+				sprintf(__( 'Podlove Image: Downloaded file is not an image.' )),
+				['url' => $this->source_url]
+			);
+			@unlink($temp_file);
+			return;
+		}
+
 		$this->create_basedir();
 		$this->save_cache_data($response);
 		$this->move_as_original_file($temp_file);
