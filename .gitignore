@@ -11,4 +11,5 @@ bower_components
 doc
 .htaccess
 Mix.json
+mix-manifest.json
 *.log

@@ -1,7 +1,7 @@
-var path = require('path');
-var webpack = require('webpack');
-var Mix = require('laravel-mix').config;
-var plugins = require('laravel-mix').plugins;
+let path = require('path');
+let webpack = require('webpack');
+let Mix = require('laravel-mix').config;
+let plugins = require('laravel-mix').plugins;
 
 
 /*
@@ -29,7 +29,7 @@ Mix.initialize();
  |
  */
 
-module.exports.context = Mix.paths.root();
+module.exports.context = Mix.Paths.root();
 
 
 /*
@@ -45,11 +45,6 @@ module.exports.context = Mix.paths.root();
 
 module.exports.entry = Mix.entry();
 
-if (Mix.js.vendor) {
-    module.exports.entry.vendor = Mix.js.vendor;
-}
-
-
 
 /*
  |--------------------------------------------------------------------------
@@ -63,7 +58,6 @@ if (Mix.js.vendor) {
  */
 
 module.exports.output = Mix.output();
-
 
 
 /*
@@ -96,51 +90,73 @@ module.exports.module = {
         },
 
         {
-            test: /\.js$/,
+            test: /\.jsx?$/,
             exclude: /(node_modules|bower_components)/,
             loader: 'babel-loader' + Mix.babelConfig()
+        },
+
+        {
+            test: /\.css$/,
+            loaders: ['style-loader', 'css-loader']
         },
 
         {
             test: /\.(png|jpg|gif)$/,
             loader: 'file-loader',
             options: {
-                name: '[name].[ext]?[hash]'
+                name: 'images/[name].[ext]?[hash]',
+                publicPath: '/'
             }
         },
 
         {
-            test: /\.(woff2?|ttf|eot|svg)$/,
+            test: /\.(woff2?|ttf|eot|svg|otf)$/,
             loader: 'file-loader',
             options: {
-                name: '/fonts/[name].[ext]?[hash]'
+                name: 'fonts/[name].[ext]?[hash]',
+                publicPath: '/'
             }
         }
     ]
 };
 
 
-if (Mix.sass) {
-    module.exports.module.rules.push({
-        test: /\.s[ac]ss$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: [
-                'css-loader', 'postcss-loader',
-                'resolve-url-loader', 'sass-loader?sourceMap'
-            ]
-        })
-    });
-}
+if (Mix.preprocessors) {
+    Mix.preprocessors.forEach(toCompile => {
+        let extractPlugin = new plugins.ExtractTextPlugin(
+            Mix.cssOutput(toCompile)
+        );
 
+        let sourceMap = Mix.sourcemaps ? '?sourceMap' : '';
 
-if (Mix.less) {
-    module.exports.module.rules.push({
-        test: /\.less$/,
-        loader: plugins.ExtractTextPlugin.extract({
-            fallbackLoader: 'style-loader',
-            loader: ['css-loader', 'postcss-loader', 'less-loader']
-        })
+        module.exports.module.rules.push({
+            test: new RegExp(toCompile.src.path.replace(/\\/g, '\\\\') + '$'),
+            use: extractPlugin.extract({
+                fallback: 'style-loader',
+                use: [
+                    { loader: 'css-loader' + sourceMap },
+                    { loader: 'postcss-loader' + sourceMap }
+                ].concat(
+                    toCompile.type == 'sass' ? [
+                        { loader: 'resolve-url-loader' + sourceMap },
+                        {
+                            loader: 'sass-loader',
+                            options: Object.assign({
+                                precision: 8,
+                                outputStyle: 'expanded'
+                            }, toCompile.pluginOptions, { sourceMap: true })
+                        }
+                    ] : [
+                        {
+                            loader: 'less-loader' + sourceMap,
+                            options: toCompile.pluginOptions
+                        }
+                    ]
+                )
+            })
+        });
+
+        module.exports.plugins = (module.exports.plugins || []).concat(extractPlugin);
     });
 }
 
@@ -182,7 +198,8 @@ module.exports.stats = {
     hash: false,
     version: false,
     timings: false,
-    children: false
+    children: false,
+    errors: false
 };
 
 module.exports.performance = { hints: false };
@@ -216,7 +233,9 @@ module.exports.devtool = Mix.sourcemaps;
  */
 module.exports.devServer = {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: true,
+    compress: true,
+    quiet: true
 };
 
 
@@ -232,17 +251,23 @@ module.exports.devServer = {
  |
  */
 
-module.exports.plugins = [];
+module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.ProvidePlugin(Mix.autoload || {
+        // jQuery: 'jquery',
+        // $: 'jquery',
+        // jquery: 'jquery',
+        // 'window.jQuery': 'jquery'
+    }),
 
+    new plugins.FriendlyErrorsWebpackPlugin(),
 
-module.exports.plugins.push(
-    function() {
-        this.plugin('done', stats => Mix.manifest.write(stats));
-    }
-);
+    new plugins.StatsWriterPlugin({
+        filename: 'mix-manifest.json',
+        transform: Mix.manifest.transform.bind(Mix.manifest),
+    }),
 
+    new plugins.WebpackMd5HashPlugin(),
 
-module.exports.plugins.push(
     new webpack.LoaderOptionsPlugin({
         minimize: Mix.inProduction,
         options: {
@@ -253,7 +278,7 @@ module.exports.plugins.push(
             output: { path: './' }
         }
     })
-);
+]);
 
 
 if (Mix.notifications) {
@@ -261,30 +286,17 @@ if (Mix.notifications) {
         new plugins.WebpackNotifierPlugin({
             title: 'Laravel Mix',
             alwaysNotify: true,
-            contentImage: 'node_modules/laravel-mix/icons/laravel.png'
+            contentImage: Mix.Paths.root('node_modules/laravel-mix/icons/laravel.png')
         })
     );
 }
 
 
-if (Mix.versioning.enabled) {
-    Mix.versioning.record();
-
-    module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(() => {
-            Mix.versioning.prune(Mix.publicPath);
-        })
-    );
-}
-
-
-if (Mix.combine || Mix.minify) {
-    module.exports.plugins.push(
-        new plugins.WebpackOnBuildPlugin(() => {
-            Mix.concatenateAll().minifyAll();
-        })
-    );
-}
+module.exports.plugins.push(
+    new plugins.WebpackOnBuildPlugin(
+        stats => Mix.events.fire('build', stats)
+    )
+);
 
 
 if (Mix.copy) {
@@ -296,19 +308,13 @@ if (Mix.copy) {
 }
 
 
-if (Mix.js.vendor) {
+if (Mix.extract) {
     module.exports.plugins.push(
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['vendor', 'manifest']
-        })
-    );
-}
-
-
-if (Mix.cssPreprocessor) {
-    module.exports.plugins.push(
-        new plugins.ExtractTextPlugin({
-            filename: Mix.cssOutput()
+            names: Mix.entryBuilder.extractions.concat([
+                path.join(Mix.js.base, 'manifest').replace(/\\/g, '/')
+            ]),
+            minChunks: Infinity
         })
     );
 }
@@ -325,7 +331,8 @@ if (Mix.inProduction) {
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
             compress: {
-                warnings: false
+                warnings: false,
+                drop_console: true
             }
         })
     ]);

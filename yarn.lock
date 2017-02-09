@@ -816,7 +816,11 @@ chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chokidar@^1.4.3, chokidar@^1.6.0:
+charenc@~0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
+
+chokidar@^1.4.3, chokidar@^1.6.0, chokidar@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.6.1.tgz#2f4447ab5e96e50fb3d789fd90d4c72e0e4c70c2"
   dependencies:
@@ -980,11 +984,11 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
 
-concatenate@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/concatenate/-/concatenate-0.0.1.tgz#706b433a276d10ad9d7a3f90e33cb1988e042c75"
+concatenate@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/concatenate/-/concatenate-0.0.2.tgz#0b49d6e8c41047d7728cdc8d62a086623397b49f"
   dependencies:
-    globs "git://github.com/stephenmathieson/node-globs.git#master"
+    globs "^0.1.2"
 
 config-chain@~1.1.5:
   version "1.1.11"
@@ -1108,6 +1112,10 @@ cross-spawn@^3.0.0, cross-spawn@^3.0.1:
   dependencies:
     lru-cache "^4.0.1"
     which "^1.2.9"
+
+crypt@~0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
 
 cryptiles@2.x.x:
   version "2.0.5"
@@ -1370,6 +1378,12 @@ error-ex@^1.2.0:
   dependencies:
     is-arrayish "^0.2.1"
 
+error-stack-parser@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/error-stack-parser/-/error-stack-parser-1.3.6.tgz#e0e73b93e417138d1cd7c0b746b1a4a14854c292"
+  dependencies:
+    stackframe "^0.3.1"
+
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
@@ -1471,7 +1485,7 @@ extglob@^0.3.1:
   dependencies:
     is-extglob "^1.0.0"
 
-extract-text-webpack-plugin@^2.0.0-beta.4:
+extract-text-webpack-plugin@^2.0.0-rc.3:
   version "2.0.0-rc.3"
   resolved "https://registry.yarnpkg.com/extract-text-webpack-plugin/-/extract-text-webpack-plugin-2.0.0-rc.3.tgz#7381aa7869ce26d4b39a7bab71cf09e5a38432b2"
   dependencies:
@@ -1578,6 +1592,13 @@ forwarded@~0.1.0:
 fresh@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.3.0.tgz#651f838e22424e7566de161d8358caa199f83d4f"
+
+friendly-errors-webpack-plugin@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-1.1.3.tgz#402ac39b40d5d6b1b922c6636a68857b9c5c6fb7"
+  dependencies:
+    chalk "^1.1.3"
+    error-stack-parser "^1.3.6"
 
 fs-extra@^0.26.4:
   version "0.26.7"
@@ -1706,9 +1727,9 @@ globals@^9.0.0:
   version "9.14.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.14.0.tgz#8859936af0038741263053b39d0e76ca241e4034"
 
-"globs@git://github.com/stephenmathieson/node-globs.git#master":
+globs@^0.1.2:
   version "0.1.3"
-  resolved "git://github.com/stephenmathieson/node-globs.git#c3cc46168a8849f20e10be67cc9f1c0562867b7b"
+  resolved "https://registry.yarnpkg.com/globs/-/globs-0.1.3.tgz#670037125287cb6549aad96a44cfa684fd7c5502"
   dependencies:
     glob "^7.1.1"
 
@@ -1897,13 +1918,13 @@ inflight@^1.0.4:
     once "^1.3.0"
     wrappy "1"
 
-inherits@2, inherits@2.0.1, inherits@^2.0.1, inherits@~2.0.0, inherits@~2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
-
-inherits@2.0.3:
+inherits@2, inherits@2.0.3, inherits@^2.0.1, inherits@~2.0.0, inherits@~2.0.1:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
+
+inherits@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
 
 ini@^1.3.4, ini@~1.3.0:
   version "1.3.4"
@@ -1941,7 +1962,7 @@ is-binary-path@^1.0.0:
   dependencies:
     binary-extensions "^1.0.0"
 
-is-buffer@^1.0.2:
+is-buffer@^1.0.2, is-buffer@~1.1.1:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.4.tgz#cfc86ccd5dc5a52fa80489111c6920c457e2d98b"
 
@@ -2169,38 +2190,43 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-laravel-mix@^0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-0.2.10.tgz#2df6197e41dfc4f798c6217b17f8497be5479408"
+laravel-mix@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-0.7.2.tgz#2eea50d83a91add446aa051d51ada3c42c4695dc"
   dependencies:
     babel-core "^6.20.0"
     babel-loader "^6.2.9"
     babel-preset-es2015 "^6.18.0"
+    chokidar "^1.6.1"
     clean-css "^3.4.22"
-    concatenate "0.0.1"
+    concatenate "0.0.2"
     copy-webpack-plugin "^4.0.1"
     cross-env "^3.1.3"
     css-loader "^0.26.1"
-    extract-text-webpack-plugin "^2.0.0-beta.4"
+    extract-text-webpack-plugin "^2.0.0-rc.3"
     file-loader "^0.9.0"
+    friendly-errors-webpack-plugin "^1.1.3"
     fs "0.0.1-security"
     less "^2.7.1"
     less-loader "^2.2.3"
     lodash "^4.17.4"
+    mkdirp "^0.5.1"
     node-sass "^4.0.0"
     on-build-webpack "^0.1.0"
     path "^0.12.7"
     postcss-load-config "^1.0.0"
     postcss-loader "^1.2.1"
     resolve-url-loader "^1.6.1"
-    sass-loader "^4.0.2"
+    sass-loader "^4.1.1"
     style-loader "^0.13.1"
     uglify-js "^2.7.5"
     vue-loader "^10.0.2"
-    vue-template-compiler "^2.1.4"
-    webpack "^2.2.0-rc.3"
-    webpack-dev-server "^2.1.0-beta.12"
+    vue-template-compiler "^2.1.9"
+    webpack "^2.2.0"
+    webpack-dev-server "^2.2.0"
+    webpack-md5-hash "0.0.5"
     webpack-notifier "^1.4.1"
+    webpack-stats-plugin "^0.1.4"
 
 lazy-cache@^1.0.3:
   version "1.0.4"
@@ -2437,6 +2463,14 @@ marked@^0.3.6:
 math-expression-evaluator@^1.2.14:
   version "1.2.16"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.16.tgz#b357fa1ca9faefb8e48d10c14ef2bcb2d9f0a7c9"
+
+md5@^2.0.0:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/md5/-/md5-2.2.1.tgz#53ab38d5fe3c8891ba465329ea23fac0540126f9"
+  dependencies:
+    charenc "~0.0.1"
+    crypt "~0.0.1"
+    is-buffer "~1.1.1"
 
 media-typer@0.3.0:
   version "0.3.0"
@@ -3525,7 +3559,7 @@ sass-graph@^2.1.1:
     lodash "^4.0.0"
     yargs "^4.7.1"
 
-sass-loader@^4.0.2:
+sass-loader@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-4.1.1.tgz#79ef9468cf0bf646c29529e1f2cba6bd6e51c7bc"
   dependencies:
@@ -3743,6 +3777,10 @@ sshpk@^1.7.0:
     jodid25519 "^1.0.0"
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
+
+stackframe@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-0.3.1.tgz#33aa84f1177a5548c8935533cbfeb3420975f5a4"
 
 "statuses@>= 1.3.1 < 2", statuses@~1.3.1:
   version "1.3.1"
@@ -4049,7 +4087,7 @@ vue-style-loader@^2.0.0:
     hash-sum "^1.0.2"
     loader-utils "^0.2.7"
 
-vue-template-compiler@^2.1.4:
+vue-template-compiler@^2.1.9:
   version "2.1.10"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.1.10.tgz#cb89643adc395e97435585522e43d0a9b1913257"
   dependencies:
@@ -4087,7 +4125,7 @@ webpack-dev-middleware@^1.9.0:
     path-is-absolute "^1.0.0"
     range-parser "^1.0.3"
 
-webpack-dev-server@^2.1.0-beta.12:
+webpack-dev-server@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.3.0.tgz#0437704bbd4d941a6e4c061eb3cc232ed7d06101"
   dependencies:
@@ -4109,6 +4147,12 @@ webpack-dev-server@^2.1.0-beta.12:
     webpack-dev-middleware "^1.9.0"
     yargs "^6.0.0"
 
+webpack-md5-hash@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/webpack-md5-hash/-/webpack-md5-hash-0.0.5.tgz#d9f1899ead664459dd8b6b0c926ac71cfbd7bc7a"
+  dependencies:
+    md5 "^2.0.0"
+
 webpack-notifier@^1.4.1:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/webpack-notifier/-/webpack-notifier-1.5.0.tgz#c010007d448cebc34defc99ecf288fa5e8c6baf6"
@@ -4124,7 +4168,11 @@ webpack-sources@^0.1.0, webpack-sources@^0.1.4:
     source-list-map "~0.1.7"
     source-map "~0.5.3"
 
-webpack@^2.2.0-rc.3:
+webpack-stats-plugin@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/webpack-stats-plugin/-/webpack-stats-plugin-0.1.4.tgz#400dd3967e12e54a54eb968ba368c0d7af334eb2"
+
+webpack@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-2.2.1.tgz#7bb1d72ae2087dd1a4af526afec15eed17dda475"
   dependencies:
