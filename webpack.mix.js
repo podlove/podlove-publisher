@@ -14,6 +14,7 @@ let mix = require('laravel-mix');
 mix.js('js/src/app.js', 'js/dist/');
 mix.combine(
     [
+        'js/admin/dc.js',
         'js/src/analytics/common.js',
         'js/src/analytics/episode.js',
         'js/src/analytics/totals.js',

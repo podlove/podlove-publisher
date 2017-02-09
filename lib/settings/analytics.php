@@ -108,11 +108,10 @@ class Analytics {
 		// libraries
 		wp_register_script('podlove-d3-js',          \Podlove\PLUGIN_URL . '/js/admin/d3.min.js');
 		wp_register_script('podlove-crossfilter-js', \Podlove\PLUGIN_URL . '/js/admin/crossfilter.min.js');
-		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/js/admin/dc.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
 	
 		// application
 
-		wp_register_script('podlove-analytics-js', \Podlove\PLUGIN_URL . '/js/dist/analytics.js', ['podlove-dc-js', 'underscore']);
+		wp_register_script('podlove-analytics-js', \Podlove\PLUGIN_URL . '/js/dist/analytics.js', ['podlove-d3-js', 'podlove-crossfilter-js', 'underscore']);
 		
 		wp_localize_script('podlove-analytics-js', 'podlove_episode_names', self::episode_ids_to_names_map());
 
