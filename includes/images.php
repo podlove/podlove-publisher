@@ -59,7 +59,7 @@ add_action('wp', 'podlove_handle_cache_files');
 
 function podlove_handle_cache_files() {
 
-	$source_url = base64_decode(urldecode(podlove_get_query_var('podlove_image_cache_url')));
+	$source_url = \Podlove\PHP\hex2str(podlove_get_query_var('podlove_image_cache_url'));
 	$file_name  = urldecode(podlove_get_query_var('podlove_file_name'));
 	$width  = (int) podlove_get_query_var('podlove_width');
 	$height = (int) podlove_get_query_var('podlove_height');

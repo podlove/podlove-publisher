@@ -128,6 +128,11 @@ The sum of `max_seconds_per_request` and `lock_duration_buffer` should not excee
 - `lock_duration_buffer` decreased from 10 to 5
 - both can be changed with filters (`podlove_job_max_seconds_per_request` and `podlove_job_max_seconds_per_request`) and shell environment variables (`PODLOVE_JOB_MAX_SECONDS_PER_REQUEST` and `PODLOVE_JOB_LOCK_DURATION_BUFFER`)
 
+= 2.4.5 =
+
+Image cache: change URL encoding method to fix Gravatar issues.
+>>>>>>> master
+
 = 2.4.4 =
 
 Further image cache improvements:

@@ -191,7 +191,7 @@ class Image {
 		} else {
 			$url = home_url(
 				'/podlove/image/' 
-				. urlencode(base64_encode($this->source_url))
+				. \Podlove\PHP\str2hex($this->source_url)
 				. '/' . (int) $this->width 
 				. '/' . (int) $this->height 
 				. '/' . (int) $this->crop 
