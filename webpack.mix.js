@@ -12,6 +12,14 @@ let mix = require('laravel-mix');
  */
 
 mix.js('js/src/app.js', 'js/dist/');
+mix.combine(
+    [
+        'js/src/analytics/common.js',
+        'js/src/analytics/episode.js',
+        'js/src/analytics/totals.js',
+    ], 
+    'js/dist/analytics.js'
+);
 
 // mix.js('src/app.js', 'dist/')
    // .sass('src/app.scss', 'dist/');

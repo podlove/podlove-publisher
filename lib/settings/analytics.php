@@ -111,17 +111,12 @@ class Analytics {
 		wp_register_script('podlove-dc-js',          \Podlove\PLUGIN_URL . '/js/admin/dc.js', array('podlove-d3-js', 'podlove-crossfilter-js'));
 	
 		// application
-		wp_register_script('podlove-analytics-common-js', \Podlove\PLUGIN_URL . '/js/analytics/common.js');
-		wp_register_script('podlove-analytics-episode-js', \Podlove\PLUGIN_URL . '/js/analytics/episode.js', array('podlove-analytics-common-js', 'podlove-dc-js'));
-		wp_register_script('podlove-analytics-totals-js', \Podlove\PLUGIN_URL . '/js/analytics/totals.js', array('podlove-analytics-common-js', 'podlove-dc-js', 'underscore'));
 
-		wp_localize_script('podlove-analytics-totals-js', 'podlove_episode_names', self::episode_ids_to_names_map());
+		wp_register_script('podlove-analytics-js', \Podlove\PLUGIN_URL . '/js/dist/analytics.js', ['podlove-dc-js', 'underscore']);
+		
+		wp_localize_script('podlove-analytics-js', 'podlove_episode_names', self::episode_ids_to_names_map());
 
-		if (isset($_GET['action']) && $_GET['action'] == 'show') {
-			wp_enqueue_script('podlove-analytics-episode-js');
-		} else {
-			wp_enqueue_script('podlove-analytics-totals-js');
-		}
+		wp_enqueue_script('podlove-analytics-js');
 
 		wp_register_style( 'podlove-dc-css', \Podlove\PLUGIN_URL . '/css/dc.css', array(), \Podlove\get_plugin_header( 'Version' ) );
 		wp_enqueue_style( 'podlove-dc-css' );
