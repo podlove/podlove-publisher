@@ -102,6 +102,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.4.4 =
+
+Further image cache improvements:
+
+- reject URLs that are not images
+- prefix query vars to avoid naming conflicts with other plugins
+- fix resizing sometimes not calculating the correct dimensions
+- enhancement: skip http when using images shipped with the Publisher; copy images from Publisher to cache directory on filesystem instead
+
 = 2.4.3 =
 
 Fix issue with broken images introduced in 2.4.2.
