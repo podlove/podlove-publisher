@@ -57,7 +57,7 @@
                     :active="isActive(chapter)"
                     :start="chapter.start" 
                     :title="chapter.title"
-                    :url="chapter.url"
+                    :href="chapter.href"
                     :duration="durationForChapter(chapter)"
                     >
                 </chapter>
@@ -95,11 +95,11 @@ import guid from '../lib/guid'
 import DurationErrors from '../lib/duration_errors'
 
 class Chapter {
-  constructor(title, start, url) {
+  constructor(title, start, href) {
     this.id = guid();
     this.title = title;
     this.start = start;
-    this.url = url;
+    this.href = href;
   }
 }
 
@@ -222,6 +222,7 @@ export default {
                 try {
                     chapters = psc.parse(text);
                 } catch (e) {
+                    console.log("Unable to parse PSC chapters.", e);
                     chapters = null;
                 }
                 
@@ -233,7 +234,7 @@ export default {
 
             this.chapters = chapters.reduce(function(agg, chapter) {
 
-                agg.push(new Chapter(chapter.title, new Timestamp(chapter.start)));
+                agg.push(new Chapter(chapter.title, new Timestamp(chapter.start), chapter.href));
 
                 return agg;
             }, []);
@@ -254,8 +255,8 @@ export default {
             return this.sortedChapters.reduce((agg, chapter) => {
                 var line = chapter.start.pretty + " " + chapter.title;
 
-                if (chapter.url) {
-                    line = line + " <" + chapter.url + ">";
+                if (chapter.href) {
+                    line = line + " <" + chapter.href + ">";
                 }
 
                 agg.push(line);
@@ -282,8 +283,8 @@ export default {
                 node.setAttribute("title", chapter.title);
                 node.setAttribute("start", chapter.start.pretty);
 
-                if (chapter.url) {
-                    node.setAttribute("href", chapter.url);
+                if (chapter.href) {
+                    node.setAttribute("href", chapter.href);
                 }
 
                 pscDoc.appendChild(node);

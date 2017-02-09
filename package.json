@@ -4,7 +4,6 @@
     "dev": "NODE_ENV=development webpack --watch --progress --hide-modules",
     "hmr": "NODE_ENV=development webpack-dev-server --inline --hot",
     "production": "NODE_ENV=production webpack --progress --hide-modules",
-
     "submodules-init": "git submodule update --init --recursive",
     "cloc": "cloc --by-file-by-lang --exclude-dir=node_modules,vendor,player_v2,.git,jquery-ui --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" *"
   },

@@ -2887,14 +2887,14 @@ pkg-dir@^1.0.0:
     find-up "^1.0.0"
 
 podcast-chapter-parser-mp4chaps@^1.0.2:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-mp4chaps/-/podcast-chapter-parser-mp4chaps-1.1.0.tgz#393fd3f1baed8b3d0959b4b0e7fffdb8d87ca28f"
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-mp4chaps/-/podcast-chapter-parser-mp4chaps-1.1.1.tgz#a81f6164ec84f0b797c7bdcba87ca5d1d5508e6f"
   dependencies:
     normalplaytime "^1.0.4"
 
 podcast-chapter-parser-psc@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-psc/-/podcast-chapter-parser-psc-1.1.2.tgz#aaceda4359d9ea4dfa7f2703c3bd21510a827813"
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-psc/-/podcast-chapter-parser-psc-1.2.1.tgz#cb56f5a208c7e4e2c8e2bc67ce9f432d9a5c4664"
   dependencies:
     normalplaytime "^1.0.3"
 

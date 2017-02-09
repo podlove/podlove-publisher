@@ -19,7 +19,7 @@
                 type="text" 
                 class="form-control" 
                 id="chapter_url" 
-                v-model="chapter.url" 
+                v-model="chapter.href" 
                 @keyup.esc="unselectChapter"
                 @keyup.up="selectPrevChapter"
                 @keyup.down="selectNextChapter"
