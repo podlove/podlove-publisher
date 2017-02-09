@@ -12,6 +12,23 @@ let mix = require('laravel-mix');
  */
 
 mix.js('js/src/app.js', 'js/dist/');
+
+mix.combine(
+    [   
+        'js/src/admin/episode.js',
+        'js/src/admin/audio_duration_loader.js',
+        'js/src/admin/dashboard_asset_validation.js',
+        'js/src/admin/dashboard_feed_validation.js',
+        'js/src/admin/episode_asset_settings.js',
+        'js/src/admin/episode_duration.js',
+        'js/src/admin/jquery.count_characters.js',
+        'js/src/admin/license.js',
+        'js/src/admin/media.js',
+        'js/src/admin/protected_feed.js'
+    ], 
+    'js/dist/podlove-admin.js'
+);
+
 mix.combine(
     [
         'js/admin/dc.js',
