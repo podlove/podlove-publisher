@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.7
+Tested up to: 4.7.2
 Stable tag: trunk
 License: MIT
 
@@ -128,6 +128,19 @@ The sum of `max_seconds_per_request` and `lock_duration_buffer` should not excee
 - `lock_duration_buffer` decreased from 10 to 5
 - both can be changed with filters (`podlove_job_max_seconds_per_request` and `podlove_job_max_seconds_per_request`) and shell environment variables (`PODLOVE_JOB_MAX_SECONDS_PER_REQUEST` and `PODLOVE_JOB_LOCK_DURATION_BUFFER`)
 
+= 2.4.4 =
+
+Further image cache improvements:
+
+- reject URLs that are not images
+- prefix query vars to avoid naming conflicts with other plugins
+- fix resizing sometimes not calculating the correct dimensions
+- enhancement: skip http when using images shipped with the Publisher; copy images from Publisher to cache directory on filesystem instead
+
+= 2.4.3 =
+
+Fix issue with broken images introduced in 2.4.2.
+
 = 2.4.2 =
 
 **Improve Image Caches**
@@ -141,7 +154,11 @@ Now a different approach is used. Instead of the original file URL, a dynamic li
 **Other**
 
 * set correct feed Content-Type in HEAD requests and redirects
+<<<<<<< HEAD
 * enhancement: repair & clear cache tools print a notice about other cache plugins
+=======
+* fix "Last Month" download widget in analytics
+>>>>>>> master
 
 = 2.4.1 =
 

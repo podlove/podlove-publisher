@@ -123,10 +123,14 @@ class DownloadIntentClean extends Base {
 			$year--;
 		}
 
+		if ($last_month < 10) {
+			$last_month = "0$last_month";
+		}
+
 		$last_month_time = strtotime("$year-$last_month");
 		$last_month_name = date('F Y', $last_month_time);
 
-		$sql = 'SELECT COUNT(*) FROM ' . self::table_name() . ' d WHERE accessed_at LIKE "' . (int) $year . '-' . (int) $last_month . '%"';
+		$sql = 'SELECT COUNT(*) FROM ' . self::table_name() . ' d WHERE accessed_at LIKE "' . (int) $year . '-' . $last_month . '%"';
 
 		return [
 			'downloads'            => $wpdb->get_var($sql),

@@ -113,7 +113,6 @@ class Image {
 			return $this;
 
 		$this->width = (int) $width;
-		$this->height = 0;
 		$this->determineMissingDimension();
 
 		return $this;
@@ -125,25 +124,45 @@ class Image {
 			return $this;
 
 		$this->height = (int) $height;
-		$this->width = 0;
 		$this->determineMissingDimension();
 
 		return $this;
 	}
 
 	private function determineMissingDimension() {
+		@list($width, $height) = getimagesize($this->original_file());
 
-		if (!$this->height) {
-			$known_dimension   = 'width';
-			$missing_dimension = 'height';
-		} elseif (!$this->width) {
-			$known_dimension   = 'height';
-			$missing_dimension = 'width';
+		if ($width * $height == 0) {
+			return;
 		}
 
+		if (!$this->height) {
+			$this->height = $this->determineHeightFromWidth($this->width);
+		} else {
+			$this->width  = $this->determineWidthFromHeight($this->height);
+		}
+	}
+
+	private function determineWidthFromHeight($givenHeight)
+	{
 		@list($width, $height) = getimagesize($this->original_file());
-		if ($width && $height)
-			$this->$missing_dimension = round($this->$known_dimension / ${$known_dimension} * ${$missing_dimension});
+
+		if ($width * $height > 0) {
+			return round($givenHeight * $width / $height);
+		} else {
+			return 0;			
+		}
+	}
+
+	private function determineHeightFromWidth($givenWidth)
+	{
+		@list($width, $height) = getimagesize($this->original_file());
+
+		if ($width * $height > 0) {
+			return round($givenWidth / $width * $height);
+		} else {
+			return 0;			
+		}
 	}
 
 	public function setRetina($retina) {
@@ -172,7 +191,7 @@ class Image {
 		} else {
 			$url = home_url(
 				'/podlove/image/' 
-				. urlencode($this->source_url) 
+				. urlencode(base64_encode($this->source_url))
 				. '/' . (int) $this->width 
 				. '/' . (int) $this->height 
 				. '/' . (int) $this->crop 
@@ -251,14 +270,22 @@ class Image {
 
 		$sizes = ['1x' => $this->url()];
 
-		$img2x = clone $this;
-		$img2x = $img2x->setWidth($this->width * 2)->url();
-		$sizes['2x'] = $img2x;
+		if ($this->width * 2 <= $max_width) {
+			$img2x = (new Image($this->source_url, $this->file_name))
+				->setCrop($this->crop)
+				->setRetina($this->retina)
+				->setWidth($this->width * 2);
+
+			$sizes['2x'] = $img2x->url();
+		}
 
 		if ($this->width * 3 <= $max_width) {
-			$img3x = clone $this;
-			$img3x = $img3x->setWidth($this->width * 3)->url();
-			$sizes['3x'] = $img3x;
+			$img3x = (new Image($this->source_url, $this->file_name))
+				->setCrop($this->crop)
+				->setRetina($this->retina)
+				->setWidth($this->width * 3);
+				
+			$sizes['3x'] = $img3x->url();
 		}
 
 		$sources = [];
@@ -285,7 +312,7 @@ class Image {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, 'cache.yml']);
 	}
 
-	private function original_file() {
+	public function original_file() {
 		return implode(DIRECTORY_SEPARATOR, [$this->upload_basedir, $this->file_name('original')]);
 	}
 
@@ -302,7 +329,17 @@ class Image {
 	}
 
 	public function generate_resized_copy() {
-		$image = wp_get_image_editor($this->original_file());
+		
+		if (!\Podlove\is_image($this->original_file())) {
+			Log::get()->addWarning('Podlove Image: Not an image (' . $this->original_file() . ')');
+			return;
+		}
+
+		$editor_args = [
+			'mime_type' => \Podlove\get_image_mime_type(\Podlove\get_image_type($this->original_file()))
+		];
+
+		$image = wp_get_image_editor($this->original_file(), $editor_args);
 
 		if (is_wp_error($image)) {
 			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $image->get_error_message());
@@ -349,6 +386,35 @@ class Image {
 
 	public function download_source() {
 
+   		$source_url  = $this->source_url;
+   		$current_url = $this->source_url;
+
+   		$source_domain  = parse_url($source_url, PHP_URL_HOST);
+   		$current_domain = explode(":", $_SERVER["HTTP_HOST"])[0];
+
+   		// if domains match, see if the image is part of the Publisher 
+   		// and can be copied on the filesystem, skipping http
+   		if ($current_domain == $source_domain) {
+   			
+   			$plugin_dirname = basename(\Podlove\PLUGIN_DIR, true);
+
+   			if (stristr($source_url, $plugin_dirname)) {
+	   			$path = explode($plugin_dirname, $source_url)[1];
+	   			$file = untrailingslashit(\Podlove\PLUGIN_DIR) . $path;
+
+	   			if (file_exists($file) && \Podlove\is_image($file)) {
+	   				$this->create_basedir();
+	   				$this->save_cache_data();
+	   				$this->copy_as_original_file($file);
+	   				return;
+	   			}
+   			}
+   		}
+
+   		/**
+   		 * The following section is only reached if the downloaded image is not part of the Publisher.
+   		 */
+
   		// for download_url()
    		require_once(ABSPATH . 'wp-admin/includes/file.php');
 
@@ -371,19 +437,57 @@ class Image {
 			);
 		}
 
-		if (!wp_mkdir_p($this->upload_basedir))
-			Log::get()->addWarning(sprintf(__( 'Podlove Image: Unable to create directory %s. Is its parent directory writable by the server?' ), $this->upload_basedir));
+		if (!\Podlove\is_image($temp_file)) {
+			Log::get()->addWarning(
+				sprintf(__( 'Podlove Image: Downloaded file is not an image.' )),
+				['url' => $this->source_url]
+			);
+			@unlink($temp_file);
+			return;
+		}
 
+		$this->create_basedir();
 		$this->save_cache_data($response);
-
-		$move_new_file = @rename($temp_file, $this->original_file());
-
-		if ( false === $move_new_file )
-			Log::get()->addWarning(sprintf(__('Podlove Image: The downloaded image could not be moved to %s.' ), $this->original_file()));
-
+		$this->move_as_original_file($temp_file);
 		@unlink($temp_file);
-
 		$this->add_donotbackup_dotfile();
+	}
+
+	public function create_basedir() {
+		if (!wp_mkdir_p($this->upload_basedir)) {
+			Log::get()->addWarning(
+				sprintf(
+					__( 'Podlove Image: Unable to create directory %s. Is its parent directory writable by the server?' ),
+					$this->upload_basedir
+				)
+			);
+		}
+	}
+
+	public function move_as_original_file($file) {
+		$move_new_file = @rename($file, $this->original_file());
+
+		if ( false === $move_new_file ) {
+			Log::get()->addWarning(
+				sprintf(
+					__('Podlove Image: The downloaded image could not be moved to %s.' ),
+					$this->original_file()
+				)
+			);
+		}
+	}
+
+	public function copy_as_original_file($file) {
+		$move_new_file = @copy($file, $this->original_file());
+
+		if ( false === $move_new_file ) {
+			Log::get()->addWarning(
+				sprintf(
+					__('Podlove Image: The downloaded image could not be moved to %s.' ),
+					$this->original_file()
+				)
+			);
+		}
 	}
 
 	private function add_donotbackup_dotfile() {
@@ -398,15 +502,18 @@ class Image {
 	 *
 	 * @param  array $response
 	 */
-	private function save_cache_data($response) {
+	private function save_cache_data($response = []) {
 
 		$cache_info = [
 			'source'        => $this->source_url,
-			'filename'      => $this->file_name,
-			'etag'          => wp_remote_retrieve_header($response, 'etag'),
-			'last-modified' => wp_remote_retrieve_header($response, 'last-modified'),
-			'expires'       => wp_remote_retrieve_header($response, 'expires'),
+			'filename'      => $this->file_name
 		];
+
+		if (!empty($response)) {
+			$cache_info['etag']          = wp_remote_retrieve_header($response, 'etag');
+			$cache_info['last-modified'] = wp_remote_retrieve_header($response, 'last-modified');
+			$cache_info['expires']       = wp_remote_retrieve_header($response, 'expires');
+		}
 
 		file_put_contents($this->cache_file(), Yaml::dump($cache_info));
 	}

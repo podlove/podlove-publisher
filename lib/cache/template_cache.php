@@ -175,6 +175,12 @@ class TemplateCache {
 		}
 	}
 
+	public function delete_cache_for($cache_key)
+	{
+		$cache_key = $this->generate_cache_key($cache_key);
+		return delete_transient($cache_key);
+	}
+
 	public function expiration_for($cache_key)
 	{
 		$cache_key = $this->generate_cache_key($cache_key);
