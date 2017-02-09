@@ -34,6 +34,7 @@
             <p>
                 <form>
                     <input type="file" name="chapterimport" id="chapterimport"> 
+                    <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>) and MP4Chaps (<code>.txt</code>)</div>
                 </form>
 
                 <button class="button button-primary" @click.prevent="importChapters">Import Chapters</button>
@@ -395,5 +396,17 @@ a.chapters-tab {
 .chapters-tab-active,
 .chapters-tab:hover{
     background: white;
+}
+
+.import form {
+    border: 2px dashed #999;
+    padding: 20px 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.import .description {
+    margin-top: 10px;
+    color: #666;
 }
 </style>
