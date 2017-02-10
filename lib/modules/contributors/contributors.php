@@ -43,10 +43,6 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action( 'podlove_feed_settings_bottom', array($this, 'feed_settings') );
 		add_action( 'podlove_feed_process', array($this, 'feed_process'), 10, 2 );
 
-		add_filter( 'podlove_adn_tags_description', array($this, 'adn_tags_description') );
-		add_filter( 'podlove_adn_example_data', array($this, 'adn_example_data'), 10, 4 );
-		add_filter( 'podlove_adn_tags', array($this, 'adn_tags'), 10, 4 );
-
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates')), 'contributors');
 			return $file_loader;
@@ -851,15 +847,4 @@ class Contributors extends \Podlove\Modules\Base {
 		update_option( $option_name , array( 'group' => $group, 'role' => $role ) );
 	}
 
-	public function adn_tags_description( $description ) {
-		return apply_filters( 'podlove_adn_tags_description_contributors', $description );
-	}
-
-	public function adn_example_data( $data, $post_id, $selected_role, $selected_group ) {
-		return apply_filters( 'podlove_adn_example_data_contributors', $data, $post_id, $selected_role, $selected_group );
-	}
-
-	public function adn_tags( $text, $post_id, $selected_role, $selected_group ) {
-		return apply_filters( 'podlove_adn_tags_contributors_contributors', $text, $post_id, $selected_role, $selected_group );
-	}
 }
