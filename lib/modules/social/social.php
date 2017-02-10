@@ -355,6 +355,12 @@ class Social extends \Podlove\Modules\Base {
 
 	public function admin_print_styles() {
 
+		if (!isset($_REQUEST['page']))
+			return;
+
+		if (!in_array($_REQUEST['page'], ['podlove_contributor_settings', 'podlove_settings_podcast_handle']))
+			return;
+
 		wp_register_style(
 			'podlove_social_admin_style',
 			$this->get_module_url() . '/admin.css',
