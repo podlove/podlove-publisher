@@ -36,8 +36,6 @@ class Contributors extends \Podlove\Modules\Base {
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_filter('podlove_import_jobs', array($this, 'expandImport'));
 
-		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
-
 		add_action( 'wp_ajax_podlove-contributors-delete-podcast', array($this, 'delete_podcast_contributor') );
 		add_action( 'wp_ajax_podlove-contributors-delete-default', array($this, 'delete_default_contributor') );
 		add_action( 'wp_ajax_podlove-contributors-delete-episode', array($this, 'delete_episode_contributor') );
@@ -762,16 +760,6 @@ class Contributors extends \Podlove\Modules\Base {
 
 	    	break;
 	    }
-	}
-
-	public function admin_print_styles() {
-		wp_register_script(
-			'podlove_contributor_jquery_visible',
-			$this->get_module_url() . '/js/jquery.visible.min.js',
-			array( 'jquery', 'jquery-ui-tabs' ),
-			\Podlove\get_plugin_header( 'Version' )
-		);
-		wp_enqueue_script('podlove_contributor_jquery_visible');
 	}
 
 	public function delete_podcast_contributor() {
