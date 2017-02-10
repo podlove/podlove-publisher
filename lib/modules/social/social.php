@@ -54,7 +54,6 @@ class Social extends \Podlove\Modules\Base {
 		add_filter('podlove_cache_tainting_classes', array($this, 'cache_tainting_classes'));
 
 		RepairSocial::init();
-		AppDotNet::init();
 		Shortcodes::init();
 	}
 
