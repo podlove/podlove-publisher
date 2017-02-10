@@ -253,10 +253,6 @@ jQuery(function($) {
 		PODLOVE.ProtectFeed();
 	});
 
-	$("#podlove_feed_bitlove").each(function() {
-		PODLOVE.Bitlove();
-	});
-
 	$(".autogrow").autogrow();
 
 	$("#podlove_contributor_publicname").change(function() {

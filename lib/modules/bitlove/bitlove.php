@@ -36,6 +36,10 @@ class Bitlove extends \Podlove\Modules\Base {
 	}
 
 	public function admin_print_styles() {
+
+		if (!isset($_REQUEST['page']) || $_REQUEST['page'] !== 'podlove_feeds_settings_handle')
+			return;
+
 		wp_register_script(
 			'podlove_bitlove_admin_script',
 			$this->get_module_url() . '/js/admin.js',
