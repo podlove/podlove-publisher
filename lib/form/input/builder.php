@@ -230,7 +230,8 @@ class Builder {
 		$defaults = [
 			'form_button_text'  => __('Select', 'podlove-podcasting-plugin-for-wordpress'),
 			'media_button_text' => __('Use Image', 'podlove-podcasting-plugin-for-wordpress'),
-			'media_title' => __('Image', 'podlove-podcasting-plugin-for-wordpress')
+			'media_title' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
+			'allow_gravatar' => false
 		];
 		$arguments = wp_parse_args($arguments, $defaults);
 
@@ -248,6 +249,7 @@ class Builder {
 					data-size="full" 
 					data-state="podlove_select_single_image" 
 					data-preview=".podlove_preview_pic"
+					data-allow-gravatar="<?php echo $arguments['allow_gravatar'] ?>"
 					data-fetch="url"><?php echo $arguments['form_button_text'] ?></a>
 			</span>
 			<?php if (!isset($arguments['description']) || !$arguments['description']): ?>
@@ -259,39 +261,6 @@ class Builder {
 		</div>
 		<?php
 	}
-
-	public function avatar( $object_key, $arguments ) {
-		$this->build_input_values( $object_key, $arguments );
-
-		?>
-		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
-			<img src="<?php echo $this->field_value; ?>" class="podlove-avatar" />
-		</div>
-		<script type="text/javascript">
-		(function($) {
-			function get_gravatar(field) {
-				if( $(field).val().indexOf("@") == -1 ) {
-					url = $(field).val();
-				} else {
-					url = 'https://www.gravatar.com/avatar/' + CryptoJS.MD5( $(field).val() ) + '&amp;s=50';
-
-				}	
-				$(field).parent().find("img").attr("src", url);
-			}
-
-			$("#<?php echo $this->field_id ?>").on( 'change', function() {
-				get_gravatar(this);
-			} );
-
-			$( document ).ready(function() {
-				get_gravatar( $("#<?php echo $this->field_id ?>") );
-			});
-		})(jQuery);
-		</script>
-		<?php
-	}	
-
 
 	public function callback( $object_key, $arguments ) {
 		call_user_func( $arguments['callback'] );

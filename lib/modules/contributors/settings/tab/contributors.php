@@ -96,11 +96,15 @@ class Contributors extends Tab {
 				)
 			],
 			'avatar' => [
-				'field_type' => 'avatar',
+				'field_type' => 'upload',
 				'field_options' => array(
 					'label'       => __( 'Avatar', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => __('Either a Gravatar email adress or a URL.', 'podlove-podcasting-plugin-for-wordpress' ),
-					'html'        => array( 'class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'avatar' )
+					'html'        => array( 
+						'class' => 'podlove-contributor-field podlove-check-input', 
+						'data-podlove-input-type' => 'avatar' 
+					),
+					'allow_gravatar' => true
 				)
 			], 
 			'slug' => [

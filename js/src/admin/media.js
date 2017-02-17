@@ -3,6 +3,8 @@ PODLOVE.media = PODLOVE.media || {};
 
 (function($) {
 	"use strict";
+
+	var args;
 	
 	PODLOVE.media.init =  function() {
 		$(".podlove-media-upload-wrap").each(function() {
@@ -38,6 +40,8 @@ PODLOVE.media = PODLOVE.media || {};
 			wp.media.view.settings.defaultProps.size = options.size;
 		}
 
+		args = options;
+
 		var file_frame = wp.media(params);
 		
 		file_frame.states.add([
@@ -72,10 +76,23 @@ PODLOVE.media = PODLOVE.media || {};
 		options.input_target.val("");
 	};
 
+	function get_gravatar(email) {
+		if ( email.indexOf("@") == -1 ) {
+			return email;
+		} else {
+			return 'https://www.gravatar.com/avatar/' + CryptoJS.MD5( email ) + '&s=400';
+
+		}	
+	}
+
 	PODLOVE.media.render_preview = function(wrapper) {
 		var preview  = $(".podlove_preview_pic", wrapper)[0],
 		    $input   = $("input", wrapper).first(),
 		    url      = $input.val();
+
+	    if (args.allowGravatar) {
+	    	url = get_gravatar(url);
+	    }
 
 		if (!url) {
 			return;

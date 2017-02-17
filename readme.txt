@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * background job dashboard shows realtime status (refreshes automatically)
 * fix tracking export
 * redirects (expert settings): redirect counter can be reset
+* contributor avatars use WordPress media picker
 * optimize use of JavaScript:
     - only load scripts on pages that require them
     - concatenate and minify some scripts
