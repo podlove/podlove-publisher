@@ -34,7 +34,7 @@
             <p>
                 <form>
                     <input type="file" name="chapterimport" id="chapterimport"> 
-                    <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>) and MP4Chaps (<code>.txt</code>)</div>
+                    <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), Audacity Track Labels and MP4Chaps (<code>.txt</code>)</div>
                 </form>
 
                 <button class="button button-primary" @click.prevent="importChapters">Import Chapters</button>
@@ -86,8 +86,8 @@
 </template>
 
 <script>
-// import MP4Chaps from 'podcast-chapter-parser-mp4chaps';
 const MP4Chaps = require('podcast-chapter-parser-mp4chaps');
+const Audacity = require('podcast-chapter-parser-audacity');
 const psc = require('podcast-chapter-parser-psc').parser(window.DOMParser);
 const npt = require('normalplaytime');
 import Timestamp from '../lib/timestamp'
@@ -179,7 +179,7 @@ export default {
             if (!nextChapter) {
 
                 if (!this.episodeDuration)
-                    return DurationErrors.TOTAL_INVALID;
+                    return DurationErrors.TOTAL_UNKNOWN;
 
                 const duration = this.episodeDuration - chapter.start.totalMs;
 
@@ -211,21 +211,30 @@ export default {
         doImportChapters(text) {
             let chapters;
 
+            // try Audacity
             try {
-                chapters = MP4Chaps.parse(text);
+                chapters = Audacity.parse(text)
             } catch (e) {
                 chapters = null;
             }
-            
-            if (!chapters || !chapters.length) {
 
+            // try MP4Chaps
+            if (!chapters || !chapters.length) {
+                try {
+                    chapters = MP4Chaps.parse(text);
+                } catch (e) {
+                    chapters = null;
+                }
+            }
+            
+            // try PSC
+            if (!chapters || !chapters.length) {
                 try {
                     chapters = psc.parse(text);
                 } catch (e) {
                     console.log("Unable to parse PSC chapters.", e);
                     chapters = null;
                 }
-                
             }
 
             if (!chapters || !chapters.length) {
