@@ -70,7 +70,8 @@ class Redirects extends Tab {
 						<input type="hidden" name="podlove_redirects[podlove_setting_redirect][{{index}}][count]" value="{{count}}">
 					</td>
 					<td class="delete">
-						<a href="#" class="button delete"><?php _e( 'delete', 'podlove-podcasting-plugin-for-wordpress' ) ?></a>
+						<button class="button delete"><?php _e( 'delete', 'podlove-podcasting-plugin-for-wordpress' ) ?></button>
+						<button class="button reset"><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress') ?></button>
 					</td>
 					<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
 				</tr>
@@ -114,9 +115,17 @@ class Redirects extends Tab {
 							add_row($("tbody tr", container_id).length, {active: "active"});
 						});
 
-						$(container_id).on("click", "td.delete a", function(e) {
+						$(container_id).on("click", "td.delete button.delete", function(e) {
 							e.preventDefault();
 							$(this).closest("tr").remove();
+							return false;
+						});
+
+						$(container_id).on("click", "td.delete button.reset", function(e) {
+							e.preventDefault();
+							var tr = $(this).closest("tr");
+							tr.find('.count input[type=hidden]:first').val(0);
+							tr.find('.count span:first').html("0");
 							return false;
 						});
 
@@ -156,6 +165,11 @@ class Redirects extends Tab {
 				#podlove-redirects td.move {
 					width: 50px;
 					text-align: right;
+				}
+
+				#podlove-redirects th.delete,
+				#podlove-redirects td.delete {
+					width: 120px;
 				}
 
 				#podlove-redirects td input[type="text"] {

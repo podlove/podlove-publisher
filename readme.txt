@@ -108,6 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * enhancement: podcast import uses background processing, allowing more stable imports, especially for big export files
 * background job dashboard shows realtime status (refreshes automatically)
 * fix tracking export
+* redirects (expert settings): redirect counter can be reset
 * optimize use of JavaScript:
     - only load scripts on pages that require them
     - concatenate and minify some scripts
