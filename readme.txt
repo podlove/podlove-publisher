@@ -104,9 +104,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.5.0 =
 
-* remove module: App.net
-* enhancement: podcast import uses background processing, allowing more stable imports, especially for big export files
-* background job dashboard shows realtime status (refreshes automatically)
+**New Chapter Management UI**
+
+Until now if you wanted to add chapters to your podcast, you had to write the mp4chaps format by hand into a textfield. The Publisher now finally provides an easy-to-use interface to manage chapters that doesn't require any knowledge about the underlying formats.
+
+The new inferace makes it simple to import chapters from files. We currently support [PSC (Podlove Simple Chapters)](https://podlove.org/simple-chapters/), mp4chaps and Audacity Track Labels. [Let us know](https://community.podlove.org/) if we don't support your favorite program's export format.
+
+**Bits & Pieces**
+
+* remove module: App.net (because they [are shutting down](http://blog.app.net/2017/01/12/app-net-is-shutting-down/))
 * fix tracking export
 * redirects (expert settings): redirect counter can be reset
 * contributor avatars use WordPress media picker
@@ -119,6 +125,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 Podcast import has been rewritten to make full use of Background Jobs. That way podcasts of any size can be imported without running into system resource restrictions for large podcasts.
 
 **Background Jobs**
+
+The jobs dashboard on the tools page now shows job statuses in realtime (refreshes automatically).
 
 Adjusted background job duration parameters and made them configurable. The change of defaults aims to make better use of available cron time (normally 30 seconds per request), which can speed up long running background jobs dramatically.
 
