@@ -108,7 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Until now if you wanted to add chapters to your podcast, you had to write the mp4chaps format by hand into a textfield. The Publisher now finally provides an easy-to-use interface to manage chapters that doesn't require any knowledge about the underlying formats.
 
-The new inferace makes it simple to import chapters from files. We currently support [PSC (Podlove Simple Chapters)](https://podlove.org/simple-chapters/), mp4chaps and Audacity Track Labels. [Let us know](https://community.podlove.org/) if we don't support your favorite program's export format.
+The new inferace makes it simple to import chapters from files. We currently support [PSC (Podlove Simple Chapters)](https://podlove.org/simple-chapters/), mp4chaps and Audacity Track Labels. [Let us know](https://community.podlove.org/c/podlove-publisher) if we don't support your favorite program's export format.
 
 **Bits & Pieces**
 
