@@ -102,7 +102,7 @@
   category: 'social'
   description: 'Last.fm Account'
   logo: 'lastfm.png'
-  url_scheme: 'https://www.lastfm.de/user/%account-placeholder%'
+  url_scheme: 'https://www.last.fm/user/%account-placeholder%'
 
 - title: 'OpenStreetMap'
   name: 'openstreetmap'
