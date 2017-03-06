@@ -63,16 +63,36 @@ class Notifications extends \Podlove\Modules\Base {
 
 			// todo: subject should be user configurable template with placeholders
 			$subject = "Episode Published: " . get_the_title($post);
-			$headers = ['Content-Type: text/html; charset=UTF-8'];
+			$headers = [
+				'Content-Type: text/html; charset=UTF-8',
+				'From: ' . self::getSenderAddress()
+			];
 			$message = "Hello " . $contributor->getName() . ",<p>Geht voll ab!</p><p>Greetings, Dein Internet</p>";
 
 			// todo: send using background jobs
-			$success = wp_mail( $contributor->privateemail, $subject, $message, $headers );
+			$success = wp_mail( $contributor->getMailAddress(), $subject, $message, $headers );
 
 			// todo: log is not successful
 
 			error_log(print_r("wp_mail: $success", true));
 		}
+	}
+
+	public static function getSenderAddress()
+	{
+		$default   = get_option('admin_email');
+		$sender_id = \Podlove\get_setting('notifications', 'send_as');
+		$sender    = Contributor::find_by_id($sender_id);
+
+		if (!$sender)
+			return $default;
+
+		$address = $sender->getMailAddress();
+
+		if (!$address)
+			return $default;
+
+		return $address;
 	}
 
 	/**

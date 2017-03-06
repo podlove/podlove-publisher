@@ -296,7 +296,30 @@ class Contributor extends Base
 		$url .= ".jpg";
 		$url .= "?s=$s&d=mm&r=g";
 		return $url;
-	}	
+	}
+
+	/**
+	 * Return private mail address in RFC2822 format
+	 * 
+	 * Something like:
+	 * 
+	 *   John Doe <hello@doe.com>
+	 * 
+	 * @return string
+	 */
+	public function getMailAddress()
+	{
+		$name  = $this->getName();
+		$email = $this->privateemail;
+
+		if (empty($email))
+			return "";
+
+		if (empty($name))
+			return $email;
+
+		return sprintf("%s <%s>", trim($name), trim($email));
+	}
 
 	/**
 	 * @override \Podlove\Model\Base::delete();
