@@ -11,8 +11,14 @@ class Notifications extends \Podlove\Modules\Base {
 	protected $module_description = 'Notify contributors via E-Mail when episodes get published.';
 	protected $module_group = 'system';
 
-	public function load() {
+	public function load()
+	{
 		add_action('publish_podcast', [$this, 'maybe_send_notifications'], 10, 2);
+
+		add_filter('podlove_contributor_settings_tabs', function ($tabs) {
+			$tabs->addTab( new \Podlove\Modules\Notifications\SettingsTab( __( 'Notifications', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+			return $tabs;
+		});
 
 		if (isset($_REQUEST['debug_notification']) && $_REQUEST['debug_notification']) {
 			$this->maybe_send_notifications(4116, get_post(4116));
