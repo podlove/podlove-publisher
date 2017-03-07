@@ -20,7 +20,7 @@ class SettingsTab extends Tab {
 			/* $id 		 */ 'podlove_settings_notifications_delay',
 			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
 			/* $callback */ function () {
-				echo '<h3>' . __( 'Notification Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>';
+				echo '<h3>' . __( 'E-Mail Notification Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>';
 				?>
 				<p>
 					<span class="description">
@@ -45,6 +45,42 @@ class SettingsTab extends Tab {
 			},
 			/* $page     */ $hook,  
 			/* $section  */ 'podlove_settings_notifications_delay'
+		);
+
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_notifications_content',
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $callback */ function () {
+				echo '<h3>' . __( 'Content', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>';
+				?>
+				<p>
+					<span class="description">
+						<?php echo sprintf(
+							__( 'You can use %sepisode template tags%s in notification content.', 'podlove-podcasting-plugin-for-wordpress' ),
+							'<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#episode" target="_blank">',
+							'</a>'
+						); ?>
+					</span>
+						
+				</p>
+				<?php
+			},
+			/* $page	 */ $hook
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_settings_notifications_subject',
+			/* $title    */ sprintf(
+				'<label for="podlove_delay">%s</label>',
+				__( 'Subject', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				?>
+				<input type="text" name="podlove_notifications[subject]" value="<?php echo \Podlove\get_setting('notifications', 'subject') ?>" class="regular-text">
+				<?php
+			},
+			/* $page     */ $hook,  
+			/* $section  */ 'podlove_settings_notifications_content'
 		);
 
 		add_settings_section(

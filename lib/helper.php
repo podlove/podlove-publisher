@@ -111,6 +111,7 @@ function get_setting( $namespace, $name ) {
 		],
 		'notifications' => [
 			'delay' => 1,
+			'subject' => "Episode Published: {{ episode.title }}",
 			'send_as' => null,
 			'group' => null,
 			'role'  => null

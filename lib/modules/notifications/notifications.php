@@ -7,7 +7,7 @@ use Podlove\Modules\Contributors\Model\Contributor;
 
 class Notifications extends \Podlove\Modules\Base {
 	
-	protected $module_name = 'Notifications';
+	protected $module_name = 'E-Mail Notifications';
 	protected $module_description = 'Notify contributors via E-Mail when episodes get published.';
 	protected $module_group = 'system';
 
@@ -16,7 +16,7 @@ class Notifications extends \Podlove\Modules\Base {
 		add_action('publish_podcast', [$this, 'maybe_send_notifications'], 10, 2);
 
 		add_filter('podlove_contributor_settings_tabs', function ($tabs) {
-			$tabs->addTab( new \Podlove\Modules\Notifications\SettingsTab( __( 'Notifications', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+			$tabs->addTab( new \Podlove\Modules\Notifications\SettingsTab( __( 'E-Mail Notifications', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 			return $tabs;
 		});
 
