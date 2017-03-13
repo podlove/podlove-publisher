@@ -104,7 +104,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.4.6 =
 
-Image cache: support non-pretty permalinks.
+- Image cache: support non-pretty permalinks.
+- fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
 
 = 2.4.5 =
 
