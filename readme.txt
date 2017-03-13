@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 Stable tag: trunk
 License: MIT
 
@@ -141,6 +141,13 @@ The sum of `max_seconds_per_request` and `lock_duration_buffer` should not excee
 - `max_seconds_per_request` increased from 10 to 20
 - `lock_duration_buffer` decreased from 10 to 5
 - both can be changed with filters (`podlove_job_max_seconds_per_request` and `podlove_job_max_seconds_per_request`) and shell environment variables (`PODLOVE_JOB_MAX_SECONDS_PER_REQUEST` and `PODLOVE_JOB_LOCK_DURATION_BUFFER`)
+
+= 2.4.6 / 2.4.7 =
+
+- Image cache: support non-pretty permalinks.
+- fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
+- services: fix lastfm url scheme (thanks [jazzcrack](https://github.com/jazzcrack))
+>>>>>>> master
 
 = 2.4.5 =
 

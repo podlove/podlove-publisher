@@ -143,6 +143,13 @@ class RSS {
 		} );
 
 		$args = array_merge( $wp_query->query_vars, $args );
+		
+		// unset search parameter if it is empty
+		// fixes is_search() and issue with Relevanssi plugin
+		if (isset($args['s']) && empty($args['s'])) {
+			unset($args['s']);
+		}
+
 		query_posts( $args );
 	}
 
