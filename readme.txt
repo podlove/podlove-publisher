@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 Stable tag: trunk
 License: MIT
 
