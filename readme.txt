@@ -106,6 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - Image cache: support non-pretty permalinks.
 - fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
+- services: fix lastfm url scheme (thanks [jazzcrack](https://github.com/jazzcrack))
 
 = 2.4.5 =
 
