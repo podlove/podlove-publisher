@@ -102,7 +102,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2.4.6 =
+= 2.4.6 / 2.4.7 =
 
 - Image cache: support non-pretty permalinks.
 - fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
