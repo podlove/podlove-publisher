@@ -189,14 +189,32 @@ class Image {
 		if (file_exists($this->resized_file())) {
 			$url = $this->resized_url();
 		} else {
-			$url = home_url(
-				'/podlove/image/' 
-				. \Podlove\PHP\str2hex($this->source_url)
-				. '/' . (int) $this->width 
-				. '/' . (int) $this->height 
-				. '/' . (int) $this->crop 
-				. '/' . urlencode($this->file_name)
-			);
+
+			$source_url = \Podlove\PHP\str2hex($this->source_url);
+			$width      = (int) $this->width;
+			$height     = (int) $this->height;
+			$crop       = (int) $this->crop;
+			$file_name  = urlencode($this->file_name);
+
+			if (get_option('permalink_structure')) {
+				$path = '/podlove/image/' 
+					. $source_url
+					. '/' . $width 
+					. '/' . $height 
+					. '/' . $crop 
+					. '/' . $file_name;
+			} else {
+				$path = add_query_arg([
+					'podlove_image_cache_url' => $source_url,
+					'podlove_width'           => $width,
+					'podlove_height'          => $height,
+					'podlove_crop'            => $crop,
+					'podlove_file_name'       => $file_name,
+				], 'index.php');
+			}
+			
+			$url = home_url($path);
+
 		}
 
 		return apply_filters('podlove_image_url', $url);

@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 Stable tag: trunk
 License: MIT
 
@@ -101,6 +101,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2.4.6 =
+
+- Image cache: support non-pretty permalinks.
+- fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
 
 = 2.4.5 =
 
