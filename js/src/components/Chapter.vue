@@ -1,11 +1,11 @@
 <template>
-<div class="chapter" :class="{'active': active}" @click.prevent="$emit('activate')">
+<div class="chapter" :class="{'active': active}" @click="$emit('activate')">
     <div class="time">
         {{ start.pretty }}
     </div>
     <div class="title">
         <span v-if="href">
-            <a href="href" :title="href">{{ title }}</a>
+            <a :href="href" :title="href" target="_blank">{{ title }}</a>
         </span>
         <span v-else>
             {{ title }}
