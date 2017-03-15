@@ -120,8 +120,13 @@ class Auphonic extends \Podlove\Modules\Base {
         if ( !isset( $_REQUEST['podlove-auphonic-production'] ) || empty( $_REQUEST['podlove-auphonic-production'] ) || empty( $_POST ) )
             return;
 
-    	if ( $_POST['status_string'] !== 'Done' )
+    	if ( $_POST['status_string'] !== 'Done' ) {
+            \Podlove\Log::get()->addError(
+                'Auphonic webhook failed.',
+                ['data' => $_POST]
+            );
     		return;
+        }
 
         $post_id = (int) $_REQUEST['podlove-auphonic-production'];
 
@@ -262,6 +267,11 @@ class Auphonic extends \Podlove\Modules\Base {
 			'action'   => $action
 		];
 		update_option('podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published);
+
+        \Podlove\Log::get()->addDebug(
+            'Auphonic webhooks changed.',
+            ['data' => $episodes_to_be_remote_published]
+        );
 
 		return \Podlove\AJAX\AJAX::respond_with_json(true);
 	}
