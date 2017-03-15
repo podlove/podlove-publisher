@@ -33,11 +33,10 @@
         <div class="row import" v-show="mode == 'import'">
             <p>
                 <form>
-                    <input type="file" name="chapterimport" id="chapterimport"> 
+                    <button class="button button-primary" @click.prevent="initImportChapters">Import Chapters</button>
+                    <input type="file" name="chapterimport" id="chapterimport" @change="importChapters" style="display: none"> 
                     <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), Audacity Track Labels and MP4Chaps (<code>.txt</code>)</div>
                 </form>
-
-                <button class="button button-primary" @click.prevent="importChapters">Import Chapters</button>
             </p>
         </div>    
         
@@ -192,6 +191,10 @@ export default {
                 return nextChapter.start.totalMs - chapter.start.totalMs;
             }
 
+        },
+        initImportChapters () {
+            const fileInput = document.getElementById("chapterimport");
+            fileInput.click();
         },
         importChapters() {
             const fileInput = document.getElementById("chapterimport");
