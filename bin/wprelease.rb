@@ -62,6 +62,9 @@ class Wprelease
 		system "git tag -a #{@version} -m 'version #{@version}'"
 		system "git push --tags"
 
+		# make sure assets are compiled for production
+		system "npm run production"
+
 		puts "rsync files ..."
 		
 		excludes = [
