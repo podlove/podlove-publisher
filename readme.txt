@@ -110,16 +110,6 @@ Until now if you wanted to add chapters to your podcast, you had to write the mp
 
 The new inferace makes it simple to import chapters from files. We currently support [PSC (Podlove Simple Chapters)](https://podlove.org/simple-chapters/), mp4chaps and Audacity Track Labels. [Let us know](https://community.podlove.org/c/podlove-publisher) if we don't support your favorite program's export format.
 
-**Bits & Pieces**
-
-* remove module: App.net (because they [are shutting down](http://blog.app.net/2017/01/12/app-net-is-shutting-down/))
-* fix tracking export
-* redirects (expert settings): redirect counter can be reset
-* contributor avatars use WordPress media picker
-* optimize use of JavaScript:
-    - only load scripts on pages that require them
-    - concatenate and minify some scripts
-
 **Module: Import/Export**
 
 Podcast import has been rewritten to make full use of Background Jobs. That way podcasts of any size can be imported without running into system resource restrictions for large podcasts.
@@ -130,17 +120,17 @@ The jobs dashboard on the tools page now shows job statuses in realtime (refresh
 
 Adjusted background job duration parameters and made them configurable. The change of defaults aims to make better use of available cron time (normally 30 seconds per request), which can speed up long running background jobs dramatically.
 
-If you know your system does not have the 30 seconds restriction or you are running WP Cron via system crons, you can increase the run time even further. A crontab entry might look like this:
+Please refer to the new [Background Jobs page in the documentation](http://docs.podlove.org/podlove-publisher/developer/background-jobs.html) for more details.
 
-```
-* * * * *   sudo PODLOVE_JOB_MAX_SECONDS_PER_REQUEST=45 -u www-data php /var/www/html/wp/wp-cron.php >>/var/log/cron.log 2>&1
-```
+**Bits & Pieces**
 
-The sum of `max_seconds_per_request` and `lock_duration_buffer` should not exceed PHP ini value `max_execution_time` which defaults to 30 on most systems. If you are running a cron every minute, the sum should be smaller than 60 seconds.
-
-- `max_seconds_per_request` increased from 10 to 20
-- `lock_duration_buffer` decreased from 10 to 5
-- both can be changed with filters (`podlove_job_max_seconds_per_request` and `podlove_job_max_seconds_per_request`) and shell environment variables (`PODLOVE_JOB_MAX_SECONDS_PER_REQUEST` and `PODLOVE_JOB_LOCK_DURATION_BUFFER`)
+* remove module: App.net (because they [are shutting down](http://blog.app.net/2017/01/12/app-net-is-shutting-down/))
+* fix tracking export
+* redirects (expert settings): redirect counter can be reset
+* contributor avatars use WordPress media picker
+* optimize use of JavaScript:
+    - only load scripts on pages that require them
+    - concatenate and minify some scripts
 
 = 2.4.6 / 2.4.7 =
 
