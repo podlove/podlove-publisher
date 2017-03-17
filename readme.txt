@@ -137,12 +137,10 @@ Please refer to the new [Background Jobs page in the documentation](http://docs.
 - Image cache: support non-pretty permalinks.
 - fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
 - services: fix lastfm url scheme (thanks [jazzcrack](https://github.com/jazzcrack))
->>>>>>> master
 
 = 2.4.5 =
 
 Image cache: change URL encoding method to fix Gravatar issues.
->>>>>>> master
 
 = 2.4.4 =
 
@@ -170,11 +168,8 @@ Now a different approach is used. Instead of the original file URL, a dynamic li
 **Other**
 
 * set correct feed Content-Type in HEAD requests and redirects
-<<<<<<< HEAD
 * enhancement: repair & clear cache tools print a notice about other cache plugins
-=======
 * fix "Last Month" download widget in analytics
->>>>>>> master
 
 = 2.4.1 =
 
