@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.5.1 =
+
+* fix "&" encoding in chapters
+
 = 2.5.0 =
 
 **New Chapter Management UI**

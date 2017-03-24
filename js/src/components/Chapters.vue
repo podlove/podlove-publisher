@@ -322,8 +322,20 @@ export default {
     },
 
     mounted() {
+        
+        function htmlDecode(input) {
+            if (window.DOMParser) {
+                var doc = new DOMParser().parseFromString(input, "text/html");
+                return doc.documentElement.textContent;
+            } else {
+                return input;
+            }
+        }
+
         try {
-            let chapters = JSON.parse(document.getElementById('podlove-chapters-app-data').innerHTML);
+            const rawChaptersData = document.getElementById('podlove-chapters-app-data').innerHTML;
+            const decodedChaptersData = htmlDecode(rawChaptersData);
+            const chapters = JSON.parse(decodedChaptersData);
             this.chapters = chapters.map((c) => {
                 return new Chapter(c.title, Timestamp.fromString(c.start), c.href);
             });
