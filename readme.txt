@@ -104,7 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.5.1 =
 
-* fix "&" encoding in chapters
+**Enhance Chapter UI**
+
+* fix encoding of "&" character
+* add support for Hindenburg project files
 
 = 2.5.0 =
 
