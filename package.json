@@ -14,7 +14,9 @@
     "podcast-chapter-parser-hindenburg": "^1.0.0",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
-    "vue": "^2.2.*"
+    "vue": "^2.2.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "vue-template-compiler": "^2.2.6"
+  }
 }
