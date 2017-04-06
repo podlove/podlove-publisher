@@ -112,6 +112,14 @@ function get_setting( $namespace, $name ) {
 		'notifications' => [
 			'delay' => 1,
 			'subject' => "Episode Published: {{ episode.title }}",
+			'body' => 'Hi {{ contributor.name }},
+
+Episode "{{ episode.title }}" was just released. Yay!
+
+URL: {{ episode.url }}
+
+Regards,
+You Favourite Podcaster',
 			'send_as' => null,
 			'group' => null,
 			'role'  => null

@@ -56,8 +56,10 @@ class SettingsTab extends Tab {
 				<p>
 					<span class="description">
 						<?php echo sprintf(
-							__( 'You can use %sepisode template tags%s in notification content.', 'podlove-podcasting-plugin-for-wordpress' ),
+							__( 'You can use %sepisode%s and %scontributor%s template tags in notification content.', 'podlove-podcasting-plugin-for-wordpress' ),
 							'<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#episode" target="_blank">',
+							'</a>',
+							'<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#contributor" target="_blank">',
 							'</a>'
 						); ?>
 					</span>
@@ -77,6 +79,21 @@ class SettingsTab extends Tab {
 			/* $callback */ function () {
 				?>
 				<input type="text" name="podlove_notifications[subject]" value="<?php echo \Podlove\get_setting('notifications', 'subject') ?>" class="regular-text">
+				<?php
+			},
+			/* $page     */ $hook,  
+			/* $section  */ 'podlove_settings_notifications_content'
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_settings_notifications_body',
+			/* $title    */ sprintf(
+				'<label for="podlove_delay">%s</label>',
+				__( 'Message', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				?>
+				<textarea name="podlove_notifications[body]" class="large-text autogrow"><?php echo \Podlove\get_setting('notifications', 'body') ?></textarea>
 				<?php
 			},
 			/* $page     */ $hook,  

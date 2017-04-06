@@ -21,12 +21,16 @@ class Notifications extends \Podlove\Modules\Base {
 		});
 
 		if (isset($_REQUEST['debug_notification']) && $_REQUEST['debug_notification']) {
-			$this->maybe_send_notifications(4116, get_post(4116));
+			add_action('init', function () {
+				$this->maybe_send_notifications(4116, get_post(4116));
+			} );
 		}
 	}
 
 	public function maybe_send_notifications($post_id, $post)
 	{
+		global $post;
+
 		error_log(print_r('maybe_send_notifications', true));
 
 		// if ($this->notifications_sent($post_id))
@@ -53,7 +57,19 @@ class Notifications extends \Podlove\Modules\Base {
 		if (!count($contributors))
 			return;
 
+		// setup post data for Twig context
+		$post = get_post($post_id);
+		setup_postdata($post);
+
 		foreach ($contributors as $contributor) {
+
+			// add contributor to message context
+			$add_contribtutor_to_context = function ($context) use ($contributor) {
+				$context['contributor'] = new \Podlove\Modules\Contributors\Template\Contributor($contributor);
+				return $context;
+			};
+
+			add_filter('podlove_templates_global_context', $add_contribtutor_to_context);
 			
 			if (!$contributor->privateemail) {
 				// todo: log that no email is set
@@ -61,21 +77,28 @@ class Notifications extends \Podlove\Modules\Base {
 				continue;
 			}
 
-			// todo: subject should be user configurable template with placeholders
-			$subject = "Episode Published: " . get_the_title($post);
+			$subject = \Podlove\get_setting('notifications', 'subject');
+			$subject = \Podlove\Template\TwigFilter::apply_to_html($subject);
+
 			$headers = [
-				'Content-Type: text/html; charset=UTF-8',
+				'Content-Type: text/plain; charset=UTF-8',
 				'From: ' . self::getSenderAddress()
 			];
-			$message = "Hello " . $contributor->getName() . ",<p>Geht voll ab!</p><p>Greetings, Dein Internet</p>";
+
+			// $message = "Hello " . $contributor->getName() . ",<p>Geht voll ab!</p><p>Greetings, Dein Internet</p>";
+			$message = \Podlove\get_setting('notifications', 'body');
+			$message = \Podlove\Template\TwigFilter::apply_to_html($message);
 
 			// todo: send using background jobs
 			$success = wp_mail( $contributor->getMailAddress(), $subject, $message, $headers );
 
-			// todo: log is not successful
+			remove_filter('podlove_templates_global_context', $add_contribtutor_to_context);
 
+			// todo: log is not successful
 			error_log(print_r("wp_mail: $success", true));
 		}
+
+		wp_reset_postdata();
 	}
 
 	public static function getSenderAddress()
