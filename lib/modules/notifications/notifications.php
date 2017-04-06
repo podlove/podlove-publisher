@@ -4,6 +4,7 @@ namespace Podlove\Modules\Notifications;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use Podlove\Model\Episode;
 use Podlove\Modules\Contributors\Model\Contributor;
+use Podlove\Log;
 
 class Notifications extends \Podlove\Modules\Base {
 	
@@ -31,19 +32,10 @@ class Notifications extends \Podlove\Modules\Base {
 	{
 		global $post;
 
-		error_log(print_r('maybe_send_notifications', true));
-
 		// if ($this->notifications_sent($post_id))
 		// 	return;
 
 		$this->mark_notifications_sent($post_id);
-
-		error_log(print_r('marker is set, now we send', true));
-		
-		// who? until there is UI, all contributors
-
-		// THOUGHT: maybe ... this should only be a hook that expects emails, names 
-		// or something, so it doesn't directly depend on the contributor module.
 
 		$episode = Episode::find_one_by_property('post_id', (int) $post_id);
 		$contributions = EpisodeContribution::find_all_by_property('episode_id', $episode->id);
@@ -72,8 +64,11 @@ class Notifications extends \Podlove\Modules\Base {
 			add_filter('podlove_templates_global_context', $add_contribtutor_to_context);
 			
 			if (!$contributor->privateemail) {
-				// todo: log that no email is set
-				error_log(print_r("no email for " . $contributor->getName() . " (id " . $contributor->id . ")", true));
+				Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". Unsuccessful due to missing contact email.", [
+					'module' => $this->get_module_name(),
+					'contributor_id'   => $contributor->id,
+					'contributor_name' => $contributor->getName()
+				]);
 				continue;
 			}
 
@@ -85,7 +80,6 @@ class Notifications extends \Podlove\Modules\Base {
 				'From: ' . self::getSenderAddress()
 			];
 
-			// $message = "Hello " . $contributor->getName() . ",<p>Geht voll ab!</p><p>Greetings, Dein Internet</p>";
 			$message = \Podlove\get_setting('notifications', 'body');
 			$message = \Podlove\Template\TwigFilter::apply_to_html($message);
 
@@ -94,8 +88,13 @@ class Notifications extends \Podlove\Modules\Base {
 
 			remove_filter('podlove_templates_global_context', $add_contribtutor_to_context);
 
-			// todo: log is not successful
-			error_log(print_r("wp_mail: $success", true));
+			if (!$success) {
+				Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". wp_mail was unable to send.", [
+					'module' => $this->get_module_name(),
+					'contributor_id'   => $contributor->id,
+					'contributor_name' => $contributor->getName()
+				]);
+			}
 		}
 
 		wp_reset_postdata();
