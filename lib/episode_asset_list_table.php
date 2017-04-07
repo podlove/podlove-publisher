@@ -64,7 +64,7 @@ class Episode_Asset_List_Table extends \Podlove\List_Table {
 	
 	public function prepare_items() {
 		// number of items per page
-		$per_page = 10;
+		$per_page = 100;
 		
 		// define column headers
 		$columns = $this->get_columns();

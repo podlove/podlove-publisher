@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.6.0 =
+
+* asset settings: increase assets per page from 10 to 100
+
 = 2.5.0 =
 
 **New Chapter Management UI**
