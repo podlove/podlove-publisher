@@ -331,7 +331,7 @@ class Image {
 	public function generate_resized_copy() {
 		
 		if (!\Podlove\is_image($this->original_file())) {
-			Log::get()->addWarning('Podlove Image: Not an image (' . $this->original_file() . ')');
+			Log::get()->addWarning('Podlove Image Cache: Not an image (' . $this->original_file() . ')');
 			return;
 		}
 
@@ -342,21 +342,21 @@ class Image {
 		$image = wp_get_image_editor($this->original_file(), $editor_args);
 
 		if (is_wp_error($image)) {
-			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $image->get_error_message());
+			Log::get()->addWarning('Podlove Image Cache: Unable to resize. ' . $image->get_error_message());
 			return;
 		}
 
 		$result = $image->resize($this->width, $this->height, $this->crop);
 
 		if (is_wp_error($result)) {
-			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $result->get_error_message());
+			Log::get()->addWarning('Podlove Image Cache: Unable to resize. ' . $result->get_error_message());
 			return;
 		}
 
 		$result = $image->save($this->resized_file());
 
 		if (is_wp_error($result)) {
-			Log::get()->addWarning('Podlove Image: Unable to resize. ' . $result->get_error_message());
+			Log::get()->addWarning('Podlove Image Cache: Unable to resize. ' . $result->get_error_message());
 			return;
 		}
 
@@ -422,7 +422,7 @@ class Image {
 
 		if (is_wp_error($result)) {
 			Log::get()->addWarning(
-				sprintf(__( 'Podlove Image: Unable to download image. %s.' ), $result->get_error_message()),
+				sprintf(__( 'Podlove Image Cache: Unable to download image. %s.' ), $result->get_error_message()),
 				['url' => $this->source_url]
 			);
 			return;
@@ -432,14 +432,14 @@ class Image {
 
 		if (is_wp_error($temp_file)) {
 			Log::get()->addWarning(
-				sprintf(__( 'Podlove Image: Unable to download image. %s.' ), $temp_file->get_error_message()),
+				sprintf(__( 'Podlove Image Cache: Unable to download image. %s.' ), $temp_file->get_error_message()),
 				['url' => $this->source_url]
 			);
 		}
 
 		if (!\Podlove\is_image($temp_file)) {
 			Log::get()->addWarning(
-				sprintf(__( 'Podlove Image: Downloaded file is not an image.' )),
+				sprintf(__( 'Podlove Image Cache: Downloaded file is not an image.' )),
 				['url' => $this->source_url]
 			);
 			@unlink($temp_file);
@@ -457,7 +457,7 @@ class Image {
 		if (!wp_mkdir_p($this->upload_basedir)) {
 			Log::get()->addWarning(
 				sprintf(
-					__( 'Podlove Image: Unable to create directory %s. Is its parent directory writable by the server?' ),
+					__( 'Podlove Image Cache: Unable to create directory %s. Is its parent directory writable by the server?' ),
 					$this->upload_basedir
 				)
 			);
@@ -470,7 +470,7 @@ class Image {
 		if ( false === $move_new_file ) {
 			Log::get()->addWarning(
 				sprintf(
-					__('Podlove Image: The downloaded image could not be moved to %s.' ),
+					__('Podlove Image Cache: The downloaded image could not be moved to %s.' ),
 					$this->original_file()
 				)
 			);
@@ -483,7 +483,7 @@ class Image {
 		if ( false === $move_new_file ) {
 			Log::get()->addWarning(
 				sprintf(
-					__('Podlove Image: The downloaded image could not be moved to %s.' ),
+					__('Podlove Image Cache: The downloaded image could not be moved to %s.' ),
 					$this->original_file()
 				)
 			);
