@@ -113,6 +113,7 @@ var PODLOVE = PODLOVE || {};
 	 				var url                 = $checkbox.data('fileUrl');
 	 				var media_file_base_uri = PODLOVE.trailingslashit($container.find('input[name="show-media-file-base-uri"]').val());
 	 				var size                = $checkbox.data('size');
+	 				var size_bytes_human    = $checkbox.data('size-bytes-human');
 
 	 				var readable_size = human_readable_size( size );
 	 				var filename      = url.replace(media_file_base_uri, "");
@@ -125,7 +126,7 @@ var PODLOVE = PODLOVE || {};
 	 					$row.find(".status").html('<i class="podlove-icon-remove"></i>');
 	 				} else {
 	 					if (isNumber(size)) {
-		 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + size + ' Bytes</span>';	
+		 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + (size_bytes_human ? size_bytes_human : size) + ' Bytes</span>';	
 	 					} else {
 	 						size_html = '<span>' + size + '</span>';	
 	 					}
@@ -134,7 +135,7 @@ var PODLOVE = PODLOVE || {};
 
 	 				$row.find(".size").html(size_html);
 	 				$row.find(".url").html('<a href="' + url + '" target="_blank">' + filename + '</a>');
-	 				$row.find(".update").html('<a href="#" class="button update_media_file">update</a>');
+	 				$row.find(".update").html('<a href="#" class="button update_media_file">verify</a>');
 
 	 				o.slug_field.trigger('mediaFileHasUpdated', [url]);
 	 			}
@@ -179,8 +180,6 @@ var PODLOVE = PODLOVE || {};
  		$(".media_file_row").each(function() {
  			$(".enable", this).html($(".asset input", this));
  		});
-
- 		$(".row__podlove_meta_episode_assets > span > label").after(" <a href='#' id='update_all_media_files'>update all media files</a>")
 
  		var update_all_media_files = function(e) {
  			if (e) {
@@ -230,12 +229,12 @@ var PODLOVE = PODLOVE || {};
  							input.data('size' , 'unknown');
  						} else {
 		 					input.data('size' , result.file_size);
+		 					input.data('size-bytes-human' , result.file_size_human);
  						}
-	 					input.data('fileUrl', result.file_url);
  					} else {
-	 					input.data('size'   , -1);
-	 					input.data('fileUrl', "");
+	 					input.data('size', -1);
  					}
+ 					input.data('fileUrl', result.file_url);
  				},
  				error: function(xhr, status, error) {
  					var input = container.find("input");

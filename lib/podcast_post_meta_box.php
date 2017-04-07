@@ -188,25 +188,22 @@ class Podcast_Post_Meta_Box {
 			'multi_values' => $asset_values,
 			'before' => function() {
 				?>
-				<table class='media_file_table' border="0" cellspacing="0">
+				<table class="media_file_table" border="0" cellspacing="0">
 					<tr>
 						<th><?php echo __( 'Enable', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
 						<th><?php echo __( 'Asset', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
-						<th><?php echo __( 'Asset File Name', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+						<th><?php echo __( 'File URL', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
 						<th><?php echo __( 'Filesize', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
 						<th><?php echo __( 'Status', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
-						<th></th>
+						<th class="verify_all">
+							<a href="#" id="update_all_media_files" class="button">verify all</a>
+						</th>
 					</tr>
 				<?php
 			},
 			'after' => function() {
 				?>
 				</table>
-				<p>
-					<span class="description">
-						<?php echo __( 'Media File Base URL', 'podlove-podcasting-plugin-for-wordpress' ) . ': ' . \Podlove\Model\Podcast::get()->media_file_base_uri; ?>
-					</span>
-				</p>
 				<?php
 			},
 			'around_each' => function ( $callback ) {
@@ -235,7 +232,7 @@ class Podcast_Post_Meta_Box {
 
 				$attributes = array(
 					'data-template'  => \Podlove\Model\Podcast::get()->get_url_template(),
-					'data-size' => $size,
+					'data-size' => number_format_i18n($size),
 					'data-episode-asset-id' => $asset->id,
 					'data-episode-id' => $episode->id,
 					'data-file-url' => ( is_object( $file ) ) ? $file->get_file_url() : ''
