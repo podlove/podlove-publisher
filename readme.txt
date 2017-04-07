@@ -106,6 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * asset settings: increase assets per page from 10 to 100
 * network dashboard statistics: fix average length and file size; remove "days between episodes"
+* prettify "detect episode duration" UI
 
 = 2.5.0 =
 

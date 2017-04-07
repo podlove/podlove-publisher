@@ -150,9 +150,7 @@ table.podlove_alternating td {
 table.podlove_alternating tr:nth-child(even) {
 	background: #EAEAEA;
 }
-#update_all_media_files,
-#podlove_detect_duration,
-#podlove_detect_duration_status {
+#update_all_media_files {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 15px 0 6px 0;
@@ -194,6 +192,29 @@ table.podlove_alternating tr:nth-child(even) {
 }
 
 .row__podlove_meta_cover_art .podlove-media-upload-wrap > span a {
+	margin-left: 10px;
+}
+
+.row__podlove_meta_duration > div > div {
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+.row__podlove_meta_duration > div > div input {
+	-webkit-flex: initial;
+	    -ms-flex: initial;
+	        flex: initial;
+	width: 100%;
+	min-width: 100px;
+}
+
+.row__podlove_meta_duration > div > div a.button {
+	margin-left: 10px;
+}
+
+.row__podlove_meta_duration div i {
+	line-height: 26px;
 	margin-left: 10px;
 }
 

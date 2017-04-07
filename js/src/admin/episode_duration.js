@@ -63,8 +63,8 @@
 	$(document).ready(function() {
 
 		// inject detect-duration-button
-		$(".row__podlove_meta_duration > span > label")
-			.after(" <a href=\"#\" id=\"podlove_detect_duration\">detect duration</a> <span id=\"podlove_detect_duration_status\"></span>");
+		$(".row__podlove_meta_duration div input")
+			.after(" <a href=\"#\" id=\"podlove_detect_duration\" class=\"button\">detect duration</a> <span id=\"podlove_detect_duration_status\"></span>");
 
 		$("#podlove_podcast").on('click', '#podlove_detect_duration', detect_duration);
 	});
