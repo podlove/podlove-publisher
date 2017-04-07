@@ -113,7 +113,6 @@ class Dashboard {
 		$episode_total_average_length = 0;
 		$media_file_total_average_size = 0;
 		$media_file_total_size = 0;
-		$days_between_episodes = 0;
 
 		foreach ( $podcasts as $podcast ) {
 			switch_to_blog( $podcast );
@@ -139,17 +138,13 @@ class Dashboard {
 			});
 
 			$episodes_total_length += $statistics['total_episode_length'];
-			$episode_total_average_length += $statistics['average_episode_length'];
-			$days_between_episodes += $statistics['days_between_releases'];
-			$media_file_total_average_size += $statistics['average_media_file_size'];
 			$media_file_total_size += $statistics['total_media_file_size'];
 			restore_current_blog();	
 		}
 
 		// Devide stats by number of Podcasts
-		$episode_total_average_length /= $number_of_podcasts;
-		$days_between_episodes /= $number_of_podcasts;
-		$media_file_total_average_size /= $number_of_podcasts;
+		$episode_total_average_length  = $episodes_total_length / $episodes_total;
+		$media_file_total_average_size = $media_file_total_size / $episodes_total;
 		?>
 		<div class="podlove-dashboard-statistics-wrapper">
 			<h4>Episodes</h4>
@@ -232,14 +227,6 @@ class Dashboard {
 					</td>
 					<td>
 						<?php echo __( 'is the total media file size', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
-					</td>
-				</tr>
-				<tr>
-					<td class="podlove-dashboard-number-column">
-						<?php echo sprintf(_n('%s day', '%s days', round( $days_between_episodes ), 'podlove-podcasting-plugin-for-wordpress'), round( $days_between_episodes ) ); ?>
-					</td>
-					<td>
-						<?php echo __( 'is the average interval until a new episode is released', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
 					</td>
 				</tr>
 				<tr>
