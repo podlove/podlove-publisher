@@ -251,7 +251,7 @@ $(document).ready(function() {
 									?></pre></code>
 								</span>
 								<?php
-							} elseif (!$data) {
+							} elseif (!$data && !empty($log_entry->context)) {
 								?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
