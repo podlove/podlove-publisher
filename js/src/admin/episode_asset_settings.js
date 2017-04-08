@@ -63,14 +63,29 @@ var PODLOVE = PODLOVE || {};
 			}).change();
 		}
 
+		function slugify(text) {
+
+			text = text.trim();
+			// replace non letter or digits by -
+			text = text.replace(/[^-\w\.\~]/g, '-');
+			text = text.toLowerCase();
+
+			return text ? text : 'n-a';
+		}
+
 		// set default asset title
 		function generate_default_episode_asset_title() {
 			$('select[name*=file_type_id]', container).on('change', function() {
 				var $container = $(this).closest('table');
 				var $title = $container.find('[name*="title"]');
-				// if ($title.val().length === 0) {
-					$title.val($("option:selected", this).data('name'));
-				// }
+				var $name = $container.find('[name*="name"]');
+				var fileFormatTitle = $("option:selected", this).data('name');
+
+				if (!fileFormatTitle)
+					return;
+
+				$title.val($("option:selected", this).data('name'));
+				$name.val(slugify($("option:selected", this).data('name')));
 			});
 		}
 

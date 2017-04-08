@@ -353,6 +353,12 @@ class EpisodeAsset {
 				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
+			$f->string( 'name', array(
+				'label'       => __( 'Name', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Internal identifier for use in templates.', 'podlove-podcasting-plugin-for-wordpress' ),
+				'html' => array( 'class' => 'regular-text podlove-check-input' )
+			) );
+
 			$f->checkbox( 'downloadable', array(
 				'label'       => __( 'Downloadable', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => sprintf( 'Allow downloads for users.', 'podlove-podcasting-plugin-for-wordpress' ),
