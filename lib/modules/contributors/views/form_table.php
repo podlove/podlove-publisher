@@ -173,12 +173,12 @@ use \Podlove\Modules\Contributors\Contributors;
 
 						// Update Chosen before we focus on the new contributor
 						update_chosen();
-						var new_row_id = row.find('select.podlove-contributor-dropdown').last().attr('id');	
 						
 						// Focus new contributor
 						if (!init) {
-							$("#" + new_row_id + "_chzn").find("a").focus();
+							$(".podlove-contributor-column").last().find(".chosen-container a").focus();
 						}
+
 					},
 					onRowDelete: function(tr) {
 						var object_id = tr.data("object-id"),

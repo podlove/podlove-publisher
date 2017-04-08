@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * move "update all media files" button above "verify" buttons and rename it to "verify all"
   * show file URL even if url cannot be reached
   * show Bytes in human readable format
+* fix focus when adding contributors to episodes
 
 = 2.5.0 =
 
