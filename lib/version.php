@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 123 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 124 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1281,6 +1281,28 @@ function run_migrations_for_version( $version ) {
 		case 123:
 			\Podlove\Cache\TemplateCache::get_instance()->purge();
 			\Podlove\Model\Image::flush_cache();
+		break;
+		case 124:
+			if (\Podlove\Modules\Base::is_active('social')) {
+				$services_to_be_migrated = array(
+						// Scheme: "title" -> "url_scheme"
+						"Playstation Network" => "https://psnprofiles.com/%account-placeholder%",
+						"Prezi" => "http://prezi.com/user/%account-placeholder%",
+						"Steam" => "https://steamcommunity.com/id/%account-placeholder%",
+						"Trakt" => "https://trakt.tv/users/%account-placeholder%",
+						"Tumblr" => "https://%account-placeholder%.tumblr.com/",
+						"Twitch" => "https://www.twitch.tv/%account-placeholder%",
+						"Vimeo" => "https://vimeo.com/%account-placeholder%",
+						"Steam Wishlist" => "https://steamcommunity.com/id/%account-placeholder%/wishlist",
+						"about.me" => "http://about.me/%account-placeholder%"
+					); 
+
+				foreach ($services_to_be_migrated as $title => $url_scheme) {
+					$service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', $title );
+					$service->url_scheme = $url_scheme;
+					$service->save();
+				}
+			}
 		break;
 	}
 
