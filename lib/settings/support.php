@@ -29,8 +29,11 @@ class Support {
 			<h2><?php echo __( 'Support', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
 			<div class="notice" style="margin: 3%">
+				<a href="https://publisher.podlove.org/support/" target="_blank">
+					<img src="<?php echo \Podlove\PLUGIN_URL ?>/images/logo/podlove-publisher-icon-500.png" style="float: left; margin: 12px 12px 12px 0" width="100" height="100" />
+				</a>
 				<p style="float: right">
-					<a href="//publisher.podlove.org/support/" target="_blank" class="button button-primary"><?php echo __('Get Support', 'podlove-podcasting-plugin-for-wordpress') ?></a>
+					<a href="https://publisher.podlove.org/support/" target="_blank" class="button button-primary"><?php echo __('Get Support', 'podlove-podcasting-plugin-for-wordpress') ?></a>
 				</p>
 				<h2><?php echo __('Get Professional Support', 'podlove-podcasting-plugin-for-wordpress') ?></h2>
 				<p>
@@ -42,6 +45,7 @@ class Support {
 				<p>
 					<?php echo __('We are happy to help getting you up and running during setup or answering questions that come up once in a while.', 'podlove-podcasting-plugin-for-wordpress') ?>
 				</p>
+				<div style="clear: both"></div>
 			</div>
 
 			<h3><?php echo __('Bug Reports, Feature Requests & Help', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
