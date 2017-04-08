@@ -222,12 +222,8 @@ table.podlove_alternating tr:nth-child(even) {
 	width: 250px;
 }
 
-#add_new_contributor_button {
-	height: 25px;
-	font-size: 1.5em;
-}
-
-#add_new_contributor_wrapper {
+#add_new_contributor_wrapper,
+#add_new_episode_relation_wrapper {
 	width: 285px;
 	margin: 5px 0px 0px 0px;
 }
