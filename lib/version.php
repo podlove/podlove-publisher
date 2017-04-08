@@ -1283,25 +1283,8 @@ function run_migrations_for_version( $version ) {
 			\Podlove\Model\Image::flush_cache();
 		break;
 		case 124:
-			if (\Podlove\Modules\Base::is_active('social')) {
-				$services_to_be_migrated = array(
-						// Scheme: "title" -> "url_scheme"
-						"Playstation Network" => "https://psnprofiles.com/%account-placeholder%",
-						"Prezi" => "http://prezi.com/user/%account-placeholder%",
-						"Steam" => "https://steamcommunity.com/id/%account-placeholder%",
-						"Trakt" => "https://trakt.tv/users/%account-placeholder%",
-						"Tumblr" => "https://%account-placeholder%.tumblr.com/",
-						"Twitch" => "https://www.twitch.tv/%account-placeholder%",
-						"Vimeo" => "https://vimeo.com/%account-placeholder%",
-						"Steam Wishlist" => "https://steamcommunity.com/id/%account-placeholder%/wishlist",
-						"about.me" => "http://about.me/%account-placeholder%"
-					); 
-
-				foreach ($services_to_be_migrated as $title => $url_scheme) {
-					$service = \Podlove\Modules\Social\Model\Service::find_one_by_property( 'title', $title );
-					$service->url_scheme = $url_scheme;
-					$service->save();
-				}
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::update_existing_services();
 			}
 		break;
 	}
