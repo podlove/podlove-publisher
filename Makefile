@@ -1,6 +1,12 @@
 player_src = bower_components/podlove-web-player/dist
 player_dst = lib/modules/podlove_web_player/player_v3
 
+update_subscribe_button:
+	rm -rf .tmppsb
+	git clone https://github.com/podlove/podlove-subscribe-button.git .tmppsb
+	mv .tmppsb/dist lib/modules/subscribe_button/
+	rm -rf .tmppsb
+
 player:
 	mkdir -p $(player_dst)/bin
 	mkdir -p $(player_dst)/css

@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * support page: add Publisher icon to "Get Professional Support" callout
 * contributors: services only get deleted on "Save Changes", not immediately
 * templates: immediately purge cache on updating any template
+* Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
 
 = 2.5.0 =
 

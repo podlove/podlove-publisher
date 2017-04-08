@@ -81,6 +81,10 @@ class Button {
 		}
 	}
 
+	private function module() {
+		return Subscribe_Button::instance();
+	}
+
 	private function html() {
 
 		if (!count($this->args['data']['feeds']))
@@ -97,9 +101,17 @@ class Button {
 			)
 		);
 
+		$use_cdn = $this->module()->get_module_option('use_cdn', true);
+
+		if ($use_cdn) {
+			$src = 'https://cdn.podlove.org/subscribe-button/javascripts/app.js';
+		} else {
+			$src = $this->module()->get_module_url() . '/dist/javascripts/app.js';
+		}
+
 		$script_button_tag = $dom->createElement('script');
 		$script_button_tag->setAttribute('class', 'podlove-subscribe-button');
-		$script_button_tag->setAttribute('src'  , 'https://cdn.podlove.org/subscribe-button/javascripts/app.js');
+		$script_button_tag->setAttribute('src', $src);
 		$script_button_tag->setAttribute('data-json-data', $dataAccessor);
 		$script_button_tag->setAttribute('data-language' , self::language($this->args['language']));
 		$script_button_tag->setAttribute('data-size'     , self::size($this->args['size'], $this->args['width']));
