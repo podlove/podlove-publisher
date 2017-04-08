@@ -80,8 +80,13 @@ var PODLOVE = PODLOVE || {};
 				var $title = $container.find('[name*="title"]');
 				var $name = $container.find('[name*="name"]');
 				var fileFormatTitle = $("option:selected", this).data('name');
+				var isCreateAction = ($container.closest("form").find("input[name='action']").val() === 'create');
 
 				if (!fileFormatTitle)
+					return;
+
+				// only prefill on unsaved assets
+				if (!isCreateAction)
 					return;
 
 				$title.val($("option:selected", this).data('name'));
