@@ -1283,15 +1283,8 @@ function run_migrations_for_version( $version ) {
 			\Podlove\Model\Image::flush_cache();
 		break;
 		case 124:
-			if (\Podlove\Modules\Base::is_active('social')) {
-				$c = new \Podlove\Modules\Social\Model\Service;
-				$c->title = 'Spreaker';
-				$c->category = 'social';
-				$c->type = 'spreaker';
-				$c->description = 'Spreaker Account';
-				$c->logo = 'spreaker.png';
-				$c->url_scheme = 'https://www.spreaker.com/user/%account-placeholder%';
-				$c->save();
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::build_missing_services();
 			}
 		break;
 	}
