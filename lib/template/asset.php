@@ -35,6 +35,15 @@ class Asset extends Wrapper {
 	}
 
 	/**
+	 * Name
+	 * 
+	 * @accessor
+	 */
+	public function name() {
+		return $this->asset->name;
+	}
+
+	/**
 	 * Is the asset downloadable?
 	 * 
 	 * @accessor
