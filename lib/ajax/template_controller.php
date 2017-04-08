@@ -1,7 +1,8 @@
 <?php
 namespace Podlove\AJAX;
 
-use \Podlove\Model\Template;
+use Podlove\Model\Template;
+use Podlove\Cache\TemplateCache;
 
 class TemplateController {
 
@@ -67,7 +68,9 @@ class TemplateController {
 		$template->save();
 
 		if (is_network_admin())
-			\Podlove\Cache\TemplateCache::get_instance()->setup_purge_in_all_blogs();
+			TemplateCache::get_instance()->setup_purge_in_all_blogs();
+		else
+			TemplateCache::get_instance()->purge();
 
 		Ajax::respond_with_json(array("success" => true));
 	}

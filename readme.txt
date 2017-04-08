@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * episode assets: new "name" attribute for reference in templates, for example `episode.file('cover').url` where "cover" is the asset name
 * support page: add Publisher icon to "Get Professional Support" callout
 * contributors: services only get deleted on "Save Changes", not immediately
+* templates: immediately purge cache on updating any template
 
 = 2.5.0 =
 
