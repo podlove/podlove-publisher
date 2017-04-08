@@ -329,6 +329,24 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * One episode file by asset name.
+	 * 
+	 * @see  file
+	 * @accessor
+	 */
+	public function file($asset_name) {
+		$files = array_map(function($file) {
+			return new File($file);
+		}, $this->episode->media_files(['asset_name' => $asset_name]));
+
+		if ($files) {
+			return reset($files);			
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * List of episode chapters
 	 *
 	 * @see  chapter

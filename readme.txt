@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * episodes: fix focus when adding contributors to episodes
 * episode asset settings: increase assets per page from 10 to 100
 * episode asset settings: fix format filtering by type
+* episode assets: new "name" attribute for reference in templates, for example `episode.file('cover').url` where "cover" is the asset name
 * support page: add Publisher icon to "Get Professional Support" callout
 * contributors: services only get deleted on "Save Changes", not immediately
 

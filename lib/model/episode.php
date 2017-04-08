@@ -162,13 +162,19 @@ class Episode extends Base implements Licensable {
 		return $this->explicit ? 'yes' : 'no';
 	}
 
-	public function media_files() {
-		return $this->with_blog_scope(function() {
+	public function media_files($args = []) {
+		return $this->with_blog_scope(function() use ($args) {
+
+			$assetNameWhere = '';
+			if (isset($args['asset_name'])) {
+				$assetNameWhere = 'AND A.name = "' . esc_sql($args['asset_name']) . '"';
+			}
+
 			$sql = '
 				SELECT M.*
 				FROM ' . MediaFile::table_name() . ' M
 					JOIN ' . EpisodeAsset::table_name() . ' A ON A.id = M.episode_asset_id
-				WHERE M.episode_id = \'' . $this->id . '\'
+				WHERE M.episode_id = \'' . $this->id . '\' ' . $assetNameWhere . '
 				ORDER BY A.position ASC
 			';
 
