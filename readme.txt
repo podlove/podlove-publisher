@@ -115,6 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * episode asset settings: increase assets per page from 10 to 100
 * episode asset settings: fix format filtering by type
 * support page: add Publisher icon to "Get Professional Support" callout
+* contributors: services only get deleted on "Save Changes", not immediately
 
 = 2.5.0 =
 

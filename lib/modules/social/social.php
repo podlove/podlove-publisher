@@ -32,9 +32,6 @@ class Social extends \Podlove\Modules\Base {
 
 		add_filter( "podlove_contributor_list_table_columns", array( $this, 'add_new_contributor_column' ) );
 
-		add_action( 'wp_ajax_podlove-services-delete-contributor-services', array($this, 'delete_contributor_services') );
-		add_action( 'wp_ajax_podlove-services-delete-podcast-services', array($this, 'delete_podcast_services') );
-
 		add_action('podlove_xml_export', array($this, 'expandExportFile'));
 		add_action('podlove_import_jobs', array($this, 'expandImport'));
 
@@ -375,26 +372,6 @@ class Social extends \Podlove\Modules\Base {
 			\Podlove\get_plugin_header( 'Version' )
 		);
 		wp_enqueue_script('podlove_social_admin_script');
-	}
-
-	public function delete_contributor_services() {
-		$object_id = (int) $_REQUEST['object_id'];
-
-		if (!$object_id)
-			return;
-
-		if ($service = ContributorService::find_by_id($object_id))
-			$service->delete();
-	}
-
-	public function delete_podcast_services() {
-		$object_id = (int) $_REQUEST['object_id'];
-
-		if (!$object_id)
-			return;
-
-		if ($service = ShowService::find_by_id($object_id))
-			$service->delete();
 	}
 	
 	public function expandExportFile(\SimpleXMLElement $xml) {
