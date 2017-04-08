@@ -60,7 +60,7 @@ var PODLOVE = PODLOVE || {};
 				$("#option_storage option").remove().appendTo($("#podlove_episode_asset_file_type_id"));
 				$("#podlove_episode_asset_file_type_id option[data-type!='" + $(this).val() + "']").remove().appendTo($("#option_storage"));
 				$('select[name*=file_type_id]').change();
-			});
+			}).change();
 		}
 
 		// set default asset title

@@ -104,15 +104,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.0 =
 
-* asset settings: increase assets per page from 10 to 100
 * network dashboard statistics: fix average length and file size; remove "days between episodes"
-* prettify "detect episode duration" UI
-* enhance media file UI:
+* episodes: prettify "detect episode duration" UI
+* episodes: enhance media file UI:
   * rename "update" button to "verify"
   * move "update all media files" button above "verify" buttons and rename it to "verify all"
   * show file URL even if url cannot be reached
   * show Bytes in human readable format
-* fix focus when adding contributors to episodes
+* episodes: fix focus when adding contributors to episodes
+* episode asset settings: increase assets per page from 10 to 100
+* episode asset settings: fix format filtering by type
 
 = 2.5.0 =
 
