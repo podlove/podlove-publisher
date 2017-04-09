@@ -69,7 +69,7 @@ class Contributors extends Tab {
 				'field_type' => 'string',
 				'field_options' => array(
 					'label'       => __( 'Public name', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => __('The Public Name will be used for public mentions. E.g. the Web Player. If left blank, it defaults to the "real name".', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __('The Public Name will be used for public mentions.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array( 'class' => 'podlove-check-input podlove-contributor-field' )
 				)
 			], 
