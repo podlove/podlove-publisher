@@ -40,14 +40,14 @@ class Networks extends \Podlove\Modules\Base {
 
 	public function add_system_report_validations($fields)
 	{
-		$fields['network module'] = [
+		$fields['multisite'] = [
 			'callback' => function() {
 				if (self::is_active_in_main_blog()) {
 					return "ok";
 				} else {
 					return [
-						"message" => __( "Must be active in main blog!", 'podlove-podcasting-plugin-for-wordpress' ),
-						"error" => __( "You are using the network module. You have to activate it in your main WordPress blog to work properly", 'podlove-podcasting-plugin-for-wordpress' )
+						"message" => __( "Podlove Publisher is not activated in main blog!", 'podlove-podcasting-plugin-for-wordpress' ),
+						"notice" => __( "If you want to use Podcast network functionality you have to activate the Podlove Plugin in your main WordPress blog to work properly" , 'podlove-podcasting-plugin-for-wordpress' )
 					];
 				}
 			}
@@ -60,10 +60,9 @@ class Networks extends \Podlove\Modules\Base {
 		global $current_site;
 
 		return \Podlove\with_blog_scope($current_site->blog_id, function() {
-			$module_active = \Podlove\Modules\Base::is_active('networks');
 			$plugin_active = is_plugin_active( plugin_basename( \Podlove\PLUGIN_FILE ) );
 			
-			return $module_active && $plugin_active;
+			return $plugin_active;
 		});
 	}
 
