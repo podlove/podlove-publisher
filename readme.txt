@@ -120,6 +120,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * templates: immediately purge cache on updating any template
 * Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
 
+= 2.5.2 =
+
+* fix episode sorting by recording date (`podcast.episodes({orderby: 'recordingDate'})`)
+* services: use https URLs where available ([#911](https://github.com/podlove/podlove-publisher/pull/911))
+* services: add Spreaker ([#912](https://github.com/podlove/podlove-publisher/pull/912))
+* contributors: adjust description of "Public Name" because it was misleading ([#914](https://github.com/podlove/podlove-publisher/pull/914))
+* services: fix URL encoding issue ([#915](https://github.com/podlove/podlove-publisher/pull/915))
+* network: fix system report notice that ensures module is setup correctly ([#916](https://github.com/podlove/podlove-publisher/pull/916))
+* remove ADN link from support page
+
+= 2.5.1 =
+
+**Enhance Chapter UI**
+
+* fix encoding of "&" character
+* add support for Hindenburg project files
+
 = 2.5.0 =
 
 **New Chapter Management UI**
@@ -155,12 +172,10 @@ Please refer to the new [Background Jobs page in the documentation](http://docs.
 - Image cache: support non-pretty permalinks.
 - fix feed compatibility issue with [Relevanssi plugin](https://wordpress.org/plugins/relevanssi/)
 - services: fix lastfm url scheme (thanks [jazzcrack](https://github.com/jazzcrack))
->>>>>>> master
 
 = 2.4.5 =
 
 Image cache: change URL encoding method to fix Gravatar issues.
->>>>>>> master
 
 = 2.4.4 =
 
@@ -188,11 +203,8 @@ Now a different approach is used. Instead of the original file URL, a dynamic li
 **Other**
 
 * set correct feed Content-Type in HEAD requests and redirects
-<<<<<<< HEAD
 * enhancement: repair & clear cache tools print a notice about other cache plugins
-=======
 * fix "Last Month" download widget in analytics
->>>>>>> master
 
 = 2.4.1 =
 

@@ -72,9 +72,8 @@ class Support {
 					</li>
 					<li>
 						<?php echo sprintf(
-							__('For quick remarks and feedback, you can reach us at %sTwitter (@podlove_org)%s and %sADN (@podlove)%s', 'podlove-podcasting-plugin-for-wordpress'),
-							'<a target="_blank" href="//twitter.com/podlove_org">', '</a>',
-							'<a target="_blank" href="https://alpha.app.net/podlove">', '</a>'
+							__('For quick remarks and feedback, you can reach us at %sTwitter (@podlove_org)%s', 'podlove-podcasting-plugin-for-wordpress'),
+							'<a target="_blank" href="//twitter.com/podlove_org">', '</a>'
 						); ?>
 					</li>
 				</ul>

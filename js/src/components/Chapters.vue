@@ -35,15 +35,15 @@
                 <form>
                     <button class="button button-primary" @click.prevent="initImportChapters">Import Chapters</button>
                     <input type="file" name="chapterimport" id="chapterimport" @change="importChapters" style="display: none"> 
-                    <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), Audacity Track Labels and MP4Chaps (<code>.txt</code>)</div>
+                    <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), <a href="http://www.audacityteam.org" target="_blank">Audacity</a> Track Labels, <a href="https://hindenburg.com" target="_blank">Hindenburg</a> project files and MP4Chaps (<code>.txt</code>)</div>
                 </form>
             </p>
         </div>    
         
         <div class="row export" v-show="mode == 'export'">
             <p>
-                <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">mp4chaps</a> 
-                <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">psc</a>
+                <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">Podlove Simple Chapters (psc)</a>
+                <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">MP4Chaps (txt)</a> 
             </p>
         </div>
 
@@ -87,6 +87,7 @@
 <script>
 const MP4Chaps = require('podcast-chapter-parser-mp4chaps');
 const Audacity = require('podcast-chapter-parser-audacity');
+const Hindenburg = require('podcast-chapter-parser-hindenburg').parser(window.DOMParser);
 const psc = require('podcast-chapter-parser-psc').parser(window.DOMParser);
 const npt = require('normalplaytime');
 import Timestamp from '../lib/timestamp'
@@ -229,6 +230,15 @@ export default {
                     chapters = null;
                 }
             }
+
+            // try Hindenburg
+            if (!chapters || !chapters.length) {
+                try {
+                    chapters = Hindenburg.parse(text);
+                } catch (e) {
+                    chapters = null;
+                }
+            }            
             
             // try PSC
             if (!chapters || !chapters.length) {
@@ -322,8 +332,20 @@ export default {
     },
 
     mounted() {
+        
+        function htmlDecode(input) {
+            if (window.DOMParser) {
+                var doc = new DOMParser().parseFromString(input, "text/html");
+                return doc.documentElement.textContent;
+            } else {
+                return input;
+            }
+        }
+
         try {
-            let chapters = JSON.parse(document.getElementById('podlove-chapters-app-data').innerHTML);
+            const rawChaptersData = document.getElementById('podlove-chapters-app-data').innerHTML;
+            const decodedChaptersData = htmlDecode(rawChaptersData);
+            const chapters = JSON.parse(decodedChaptersData);
             this.chapters = chapters.map((c) => {
                 return new Chapter(c.title, Timestamp.fromString(c.start), c.href);
             });

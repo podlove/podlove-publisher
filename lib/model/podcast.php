@@ -298,7 +298,7 @@ class Podcast implements Licensable {
 			// order
 			$order_map = array(
 				'publicationDate' => 'p.post_date',
-				'recordingDate'   => 'e.recordingDate',
+				'recordingDate'   => 'e.recording_date',
 				'slug'            => 'e.slug',
 				'title'           => 'p.post_title'
 			);
