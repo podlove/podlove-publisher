@@ -35,12 +35,12 @@ class Asset extends Wrapper {
 	}
 
 	/**
-	 * Name
+	 * ID
 	 * 
 	 * @accessor
 	 */
-	public function name() {
-		return $this->asset->name;
+	public function identifier() {
+		return $this->asset->identifier;
 	}
 
 	/**

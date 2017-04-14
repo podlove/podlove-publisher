@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 125 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 126 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1294,6 +1294,12 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Model\EpisodeAsset::table_name()
 			);
 			$wpdb->query($sql);
+		break;
+		case 126:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` CHANGE COLUMN `name` `identifier` VARCHAR(255)',
+				Model\EpisodeAsset::table_name()
+			) );
 		break;
 	}
 

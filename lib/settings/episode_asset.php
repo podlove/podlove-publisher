@@ -353,9 +353,13 @@ class EpisodeAsset {
 				'html' => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
-			$f->string( 'name', array(
-				'label'       => __( 'Name', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'Internal identifier for use in templates.', 'podlove-podcasting-plugin-for-wordpress' ),
+			$f->string( 'identifier', array(
+				'label'       => __( 'Template Identifier', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => sprintf(
+					__( 'Used in templates to access the file for this asset from an episode: %s', 'podlove-podcasting-plugin-for-wordpress' ),
+					'<code>episode.file("template-identifier")</code>'
+				)
+				,
 				'html' => array( 'class' => 'regular-text podlove-check-input' )
 			) );
 

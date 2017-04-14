@@ -168,7 +168,7 @@ class EpisodeAsset extends Base {
 
 EpisodeAsset::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 EpisodeAsset::property( 'title', 'VARCHAR(255)' );
-EpisodeAsset::property( 'name', 'VARCHAR(255)' );
+EpisodeAsset::property( 'identifier', 'VARCHAR(255)' );
 EpisodeAsset::property( 'file_type_id', 'INT' );
 EpisodeAsset::property( 'suffix', 'VARCHAR(255)' );
 EpisodeAsset::property( 'downloadable', 'INT' );
