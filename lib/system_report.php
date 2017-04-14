@@ -236,8 +236,8 @@ class SystemReport {
 
 		$out .= "\n";
 
-		if ( count( $this->errors ) ) {
-			$out .= _n( '1 ERROR', '%s ERRORS', count( $this->errors ), 'podlove' );
+		if ( $number_of_errors = count( $this->errors ) ) {
+			$out .= sprintf( _n( '%s ERROR', '%s ERRORS', $number_of_errors, 'podlove' ), $number_of_errors );
 			$out .= ": \n";
 			foreach ( $this->errors as $error ) {
 				$out .= "- $error\n";
@@ -246,8 +246,8 @@ class SystemReport {
 			$out .= "0 errors\n";
 		}
 
-		if ( count( $this->notices ) ) {
-			$out .= _n( '1 NOTICE', '%s NOTICES', count( $this->notices ), 'podlove' );
+		if ( $number_of_notices = count( $this->notices ) ) {
+			$out .= sprintf( _n( '%s NOTICE', '%s NOTICES', $number_of_notices, 'podlove' ), $number_of_notices );
 			$out .= " (no dealbreaker, but should be fixed if possible): \n";
 			foreach ( $this->notices as $error ) {
 				$out .= "- $error\n";
