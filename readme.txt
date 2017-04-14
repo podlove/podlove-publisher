@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix episode sorting by recording date (`podcast.episodes({orderby: 'recordingDate'})`)
 * services: use https URLs where available ([#911](https://github.com/podlove/podlove-publisher/pull/911))
 * services: add Spreaker ([#912](https://github.com/podlove/podlove-publisher/pull/912))
+* contributors: adjust description of "Public Name" because it was misleading ([#914](https://github.com/podlove/podlove-publisher/pull/914))
+* services: fix URL encoding issue ([#915](https://github.com/podlove/podlove-publisher/pull/915))
+* network: fix system report notice that ensures module is setup correctly ([#916](https://github.com/podlove/podlove-publisher/pull/916))
+* remove ADN link from support page
 
 = 2.5.1 =
 
