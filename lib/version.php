@@ -1285,6 +1285,7 @@ function run_migrations_for_version( $version ) {
 		case 124:
 			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
 				\Podlove\Modules\Social\Social::update_existing_services();
+				\Podlove\Modules\Social\Social::build_missing_services();
 			}
 		break;
 	}
