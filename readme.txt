@@ -105,6 +105,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.5.2 =
 
 * fix episode sorting by recording date (`podcast.episodes({orderby: 'recordingDate'})`)
+* services: use https URLs where available ([#911](https://github.com/podlove/podlove-publisher/pull/911))
+* services: add Spreaker ([#912](https://github.com/podlove/podlove-publisher/pull/912))
 
 = 2.5.1 =
 
