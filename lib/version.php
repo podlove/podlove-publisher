@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 123 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 124 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1281,6 +1281,11 @@ function run_migrations_for_version( $version ) {
 		case 123:
 			\Podlove\Cache\TemplateCache::get_instance()->purge();
 			\Podlove\Model\Image::flush_cache();
+		break;
+		case 124:
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::build_missing_services();
+			}
 		break;
 	}
 
