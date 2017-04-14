@@ -60,6 +60,10 @@ class Contributors extends \Podlove\Modules\Base {
 			'contributors',	array('\Podlove\Modules\Contributors\TemplateExtensions', 'accessorPodcastContributors'), 4
 		);
 
+		\Podlove\Template\Podcast::add_accessor(
+			'contributor',	array('\Podlove\Modules\Contributors\TemplateExtensions', 'accessorPodcastContributor'), 4
+		);
+
 		// register shortcodes
 		new Shortcodes;	
 
@@ -207,7 +211,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 		if (isset($args['id'])) {
 			$contributions = array_filter($contributions, function($c) use ($args) {
-				return $c->getContributor()->slug == $args['id'];
+				return $c->getContributor()->identifier == $args['id'];
 			});
 		}
 
@@ -379,7 +383,7 @@ class Contributors extends \Podlove\Modules\Base {
 	}
 
 	/**
-	 * Allow to filter post list by contributor slug.
+	 * Allow to filter post list by contributor identifier.
 	 */
 	function filter_by_contributor( $query )
 	{
@@ -434,7 +438,7 @@ class Contributors extends \Podlove\Modules\Base {
 
 			$contributor_infos = array( "realname" => $contributor->name,
 										"publicname" => $contributor->name,
-										"slug" => $contributor->slug,
+										"identifier" => $contributor->identifier,
 										"id" => $contributor->term_id,
 										"visibility" => 1,
 										"privateemail" => $privateemail);
@@ -642,7 +646,7 @@ class Contributors extends \Podlove\Modules\Base {
 			if( empty( $show_contributions ) ) { 
 				$cjson[$contributor->id] = array(
 					'id'   => $contributor->id,
-					'slug' => $contributor->slug,
+					'slug' => $contributor->identifier,
 					'role' => '',
 					'group' => '',
 					'realname' => $contributor->realname,
@@ -656,7 +660,7 @@ class Contributors extends \Podlove\Modules\Base {
 						($group_data == "" ? $group = '' : $group = $group_data->id );
 					$cjson[$contributor->id] = array(
 						'id'   => $contributor->id,
-						'slug' => $contributor->slug,
+						'slug' => $contributor->identifier,
 						'role' => $role,
 						'group' => $group,
 						'realname' => $contributor->realname,

@@ -104,6 +104,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.0 =
 
+**Templates**
+
+* Assets now have an identifier `asset.id` to quickly access a file for an asset within an episode, for example: `episode.file("mp3")`
+* Contributors already had such an id, but now there is a new accessor to get a single contributor by id, for example: `podcast.contributor("jerry")`
+* DEPRECATED: id parameter in `podcast.contributors` to access a single contributor: `podcast.contributors({id: "jerry"})`.
+* Feeds can now be accessed the same way by their slug: `podcast.feed("mp3")`
+
+**Bits & Pieces**
+
 * network dashboard statistics: fix average length and file size; remove "days between episodes"
 * episodes: prettify "detect episode duration" UI
 * episodes: enhance media file UI:

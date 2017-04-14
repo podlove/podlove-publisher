@@ -43,8 +43,8 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		);
 	}
 
-	public function column_slug( $contributor ) {
-		return $contributor->slug;
+	public function column_identifier( $contributor ) {
+		return $contributor->identifier;
 	}
 
 	public function column_gender( $contributor ) {
@@ -109,7 +109,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$columns = array(
 			'avatar'               => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
 			'realname'             => __( 'Contributor', 'podlove-podcasting-plugin-for-wordpress' ),
-			'slug'                 => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
+			'identifier'           => __( 'Template ID', 'podlove-podcasting-plugin-for-wordpress' ),
 			'gender'               => __( 'Gender', 'podlove-podcasting-plugin-for-wordpress' ),
 			'affiliation'          => __( 'Affiliation', 'podlove-podcasting-plugin-for-wordpress' ),
 			'privateemail'         => __( 'Private E-mail', 'podlove-podcasting-plugin-for-wordpress' ),
@@ -130,7 +130,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	public function get_sortable_columns() {
 	  $sortable_columns = array(
 	    'realname'             => array('realname',false),
-	    'slug'                 => array('slug',false),
+	    'identifier'           => array('identifier',false),
 	    'gender'               => array('gender',false),
 	    'affiliation'          => array('organisation',false),
 	    'privateemail'         => array('privateemail',false),
@@ -150,7 +150,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		/* avoid mouseover jumping */
 		#permanentcontributor { width: 160px; }
 		td.column-avatar, th.column-avatar { width: 50px; }
-		td.column-slug, th.column-slug { width: 12% !important; }
+		td.column-identifier, th.column-identifier { width: 12% !important; }
 		td.column-visibility, th.column-visibility { width: 7% !important; }
 		td.column-gender, th.column-gender { width: 7% !important; }
 		td.column-episodes, th.column-episodes { width: 8% !important; }
@@ -193,7 +193,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 	 	 	$search = \Podlove\esc_like($_POST['s']);
 	 	 	$search = '%' . $search . '%';
 
-	 	 	$search_columns = ['slug','gender','organisation','slug','department','jobtitle','privateemail','realname','publicname','guid'];
+	 	 	$search_columns = ['gender','organisation','identifier','department','jobtitle','privateemail','realname','publicname','guid'];
 	 	 	$search_columns = apply_filters('podlove_contributor_list_table_search_db_columns', $search_columns);
 
 	 	 	$like_searches = implode(' OR ', array_map(function($column) use ($search) {

@@ -97,8 +97,7 @@ class TemplateExtensions {
 	 * 
 	 * **Parameters**
 	 *
-	 * - **id:**      Fetch one contributor by its id.
-	 *                Example: `podcast.contributors({id: 'james'}).name`
+	 * - **id:**      Fetch one contributor by its id. DEPRECATED: Use `podcast.contributor(id)` instead.
 	 * - **scope:**   Either "global", "global-active" or "podcast".
 	 *                - "global" returns all contributors.
 	 *                - "global-active" returns all contributors with 
@@ -132,7 +131,7 @@ class TemplateExtensions {
 			), $args );
 			
 			if ($args['id'])
-				return new Template\Contributor(Contributor::find_one_by_slug($args['id']));
+				return new Template\Contributor(Contributor::find_one_by_identifier($args['id']));
 
 			$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
 
@@ -181,5 +180,23 @@ class TemplateExtensions {
 
 			return $contributors;
 		});
+	}
+
+	/**
+	 * Get one contributor by id.
+	 *
+	 * **Examples**
+	 *
+	 * Iterating over a list of contributors
+	 * 
+	 * ```jinja
+	 * {{ podcast.contributor('james').name }}
+	 * ```
+	 * 
+	 * @accessor
+	 * @dynamicAccessor podcast.contributor
+	 */
+	public static function accessorPodcastContributor($return, $method_name, $podcast, $id) {
+		return new Template\Contributor(Contributor::find_one_by_identifier($id));
 	}
 }

@@ -316,7 +316,7 @@ class Contributor extends Base
 }
 
 Contributor::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
-Contributor::property( 'slug', 'VARCHAR(255)' );
+Contributor::property( 'identifier', 'VARCHAR(255)' );
 Contributor::property( 'gender', 'VARCHAR(255)' );
 Contributor::property( 'organisation', 'TEXT' );
 Contributor::property( 'department', 'TEXT' );

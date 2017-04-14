@@ -78,7 +78,7 @@ class Contributor extends Wrapper {
 	 * @accessor
 	 */
 	public function id() {
-		return $this->contributor->slug;
+		return $this->contributor->identifier;
 	}
 
 	/**

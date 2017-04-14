@@ -199,6 +199,23 @@ class Podcast extends Wrapper {
 	}
 
 	/**
+	 * Single Feed by Slug/ID
+	 * 
+	 * **Example**
+	 * 
+	 * ```
+	 * {% set feed = podcast.feed("mp3") %}
+	 * The Feed: <a href="{{ feed.url }}">{{ feed.title }}</a>
+	 * ```
+	 *
+	 * @see  feed
+	 * @accessor
+	 */
+	public function feed($id) {
+		return new Feed(\Podlove\Model\Feed::find_one_by_slug($id));
+	}
+
+	/**
 	 * License
 	 *
 	 * To render an HTML license, use 
