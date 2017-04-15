@@ -12,6 +12,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	public function load() {
 
 		switch (\Podlove\get_webplayer_setting('version')) {
+			case 'player_v4':
+				(new PlayerV4\Module)->load();
+				break;
 			case 'player_v3':
 				(new PlayerV3\Module)->load();
 				break;
@@ -25,11 +28,16 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 
 		// this must _always_ be on, otherwise embedded players on other sites will stop working
 		Podigee\Module::register_config_url_route();
+		PlayerV4\Module::register_config_url_route();
 	}
 
 	public static function get_player_printer(Episode $episode) {
 
 		switch (\Podlove\get_webplayer_setting('version')) {
+			case 'player_v4':
+				$printer = new PlayerV4\Html5Printer($episode);
+				return $printer;
+				break;
 			case 'player_v3':
 				$printer = new PlayerV3\Html5Printer($episode);
 				$printer->setAttributes([
