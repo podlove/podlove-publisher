@@ -337,7 +337,7 @@ class Episode extends Wrapper {
 	public function file($asset_name) {
 		$files = array_map(function($file) {
 			return new File($file);
-		}, $this->episode->media_files(['asset_name' => $asset_name]));
+		}, $this->episode->media_files(['identifier' => $asset_name]));
 
 		if ($files) {
 			return reset($files);			

@@ -166,8 +166,8 @@ class Episode extends Base implements Licensable {
 		return $this->with_blog_scope(function() use ($args) {
 
 			$assetNameWhere = '';
-			if (isset($args['asset_name'])) {
-				$assetNameWhere = 'AND A.name = "' . esc_sql($args['asset_name']) . '"';
+			if (isset($args['identifier'])) {
+				$assetNameWhere = 'AND A.identifier = "' . esc_sql($args['identifier']) . '"';
 			}
 
 			$sql = '
