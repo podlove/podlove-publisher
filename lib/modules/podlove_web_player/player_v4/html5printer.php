@@ -44,7 +44,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'summary'  => $podcast->summary,
 				'poster'   => $podcast->cover_art()->setWidth(500)->url(),
 			],
-			'title'           => get_the_title($post->ID),
+			'title'           => $post->post_title,
 			'subtitle'        => wptexturize(convert_chars(trim($episode->subtitle))),
 			'summary'         => nl2br(wptexturize(convert_chars(trim($episode->summary)))),
 			'publicationDate' => mysql2date("c", $post->post_date),
