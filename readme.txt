@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.0 =
 
+**Podlove Web Player 4**
+
+I can haz \o/
+
 **Templates**
 
 * Assets now have an identifier `asset.id` to quickly access a file for an asset within an episode, for example: `episode.file("mp3")`
