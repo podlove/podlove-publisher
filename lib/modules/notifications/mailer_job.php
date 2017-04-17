@@ -54,6 +54,15 @@ class MailerJob {
 		$episode = Episode::find_by_id($this->job->args['episode']);
 		$post    = get_post($episode->post_id);
 
+		if (!$contributor->privateemail) {
+			Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". Unsuccessful due to missing contact email.", [
+				'module' => 'E-Mail Notifications',
+				'contributor_id'   => $contributor->id,
+				'contributor_name' => $contributor->getName()
+			]);
+			return;
+		}
+		
 		setup_postdata($post);
 
 		// add contributor to message context
@@ -63,35 +72,13 @@ class MailerJob {
 		};
 
 		add_filter('podlove_templates_global_context', $add_contribtutor_to_context);
-		
-		if (!$contributor->privateemail) {
-			Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". Unsuccessful due to missing contact email.", [
-				'module' => 'E-Mail Notifications',
-				'contributor_id'   => $contributor->id,
-				'contributor_name' => $contributor->getName()
-			]);
-			return 1;
-		}
 
-		$subject = \Podlove\get_setting('notifications', 'subject');
-		$subject = \Podlove\Template\TwigFilter::apply_to_html($subject);
-
-		$headers = [
-			'Content-Type: text/plain; charset=UTF-8',
-			'From: ' . self::getSenderAddress()
-		];
-
-		$message = \Podlove\get_setting('notifications', 'body');
-		$message = \Podlove\Template\TwigFilter::apply_to_html($message);
-
-		$to = $contributor->getMailAddress();
-
-		if ($this->job->args['debug'] && $this->job->args['debug_receiver']) {
-			$to = $this->job->args['debug_receiver'];
-			$subject = '[TEST] ' . $subject;
-		}
-
-		$success = wp_mail($to, $subject, $message, $headers);
+		$success = wp_mail(
+			$this->getReceiver($contributor),
+			$this->getSubject(),
+			$this->getMessage(),
+			$this->getHeaders()			
+		);
 
 		remove_filter('podlove_templates_global_context', $add_contribtutor_to_context);
 
@@ -104,6 +91,48 @@ class MailerJob {
 		}
 
 		wp_reset_postdata();
+	}
+
+	public function getReceiver(Contributor $contributor)
+	{
+		if (!$this->isDebug()) {
+			return $contributor->getMailAddress();
+		} else {
+			return $this->job->args['debug_receiver'];
+		}
+	}
+
+	public function isDebug()
+	{
+		return $this->job->args['debug'] && $this->job->args['debug_receiver'];
+	}
+
+	public function getSubject()
+	{
+		$subject = \Podlove\get_setting('notifications', 'subject');
+		$subject = \Podlove\Template\TwigFilter::apply_to_html($subject);
+
+		if ($this->isDebug()) {
+			$subject = '[TEST] ' . $subject;
+		}
+
+		return $subject;
+	}
+
+	public function getHeaders()
+	{
+		return [
+			'Content-Type: text/plain; charset=UTF-8',
+			'From: ' . self::getSenderAddress()
+		];		
+	}
+
+	public function getMessage()
+	{
+		$message = \Podlove\get_setting('notifications', 'body');
+		$message = \Podlove\Template\TwigFilter::apply_to_html($message);
+
+		return $message;
 	}
 
 	public static function getSenderAddress()
