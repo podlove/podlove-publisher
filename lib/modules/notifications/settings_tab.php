@@ -56,8 +56,8 @@ class SettingsTab extends Tab {
 				<p>
 					<span class="description">
 						<?php echo sprintf(
-							__( 'You can use %sepisode%s and %scontributor%s template tags in notification content.', 'podlove-podcasting-plugin-for-wordpress' ),
-							'<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#episode" target="_blank">',
+							__( 'Additionally to %sall standard template tags%s you have access to the receiving %scontributor%s in notification content.', 'podlove-podcasting-plugin-for-wordpress' ),
+							'<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html" target="_blank">',
 							'</a>',
 							'<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#contributor" target="_blank">',
 							'</a>'

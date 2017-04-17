@@ -5,6 +5,7 @@ use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use Podlove\Model\Episode;
 use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Log;
+use Podlove\Jobs\CronJobRunner;
 
 class Notifications extends \Podlove\Modules\Base {
 	
@@ -30,8 +31,6 @@ class Notifications extends \Podlove\Modules\Base {
 
 	public function maybe_send_notifications($post_id, $post)
 	{
-		global $post;
-
 		// if ($this->notifications_sent($post_id))
 		// 	return;
 
@@ -49,72 +48,12 @@ class Notifications extends \Podlove\Modules\Base {
 		if (!count($contributors))
 			return;
 
-		// setup post data for Twig context
-		$post = get_post($post_id);
-		setup_postdata($post);
+		$contributor_ids = array_map(function($c) { return $c->id; }, $contributors);
 
-		foreach ($contributors as $contributor) {
-
-			// add contributor to message context
-			$add_contribtutor_to_context = function ($context) use ($contributor) {
-				$context['contributor'] = new \Podlove\Modules\Contributors\Template\Contributor($contributor);
-				return $context;
-			};
-
-			add_filter('podlove_templates_global_context', $add_contribtutor_to_context);
-			
-			if (!$contributor->privateemail) {
-				Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". Unsuccessful due to missing contact email.", [
-					'module' => $this->get_module_name(),
-					'contributor_id'   => $contributor->id,
-					'contributor_name' => $contributor->getName()
-				]);
-				continue;
-			}
-
-			$subject = \Podlove\get_setting('notifications', 'subject');
-			$subject = \Podlove\Template\TwigFilter::apply_to_html($subject);
-
-			$headers = [
-				'Content-Type: text/plain; charset=UTF-8',
-				'From: ' . self::getSenderAddress()
-			];
-
-			$message = \Podlove\get_setting('notifications', 'body');
-			$message = \Podlove\Template\TwigFilter::apply_to_html($message);
-
-			// todo: send using background jobs
-			$success = wp_mail( $contributor->getMailAddress(), $subject, $message, $headers );
-
-			remove_filter('podlove_templates_global_context', $add_contribtutor_to_context);
-
-			if (!$success) {
-				Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". wp_mail was unable to send.", [
-					'module' => $this->get_module_name(),
-					'contributor_id'   => $contributor->id,
-					'contributor_name' => $contributor->getName()
-				]);
-			}
-		}
-
-		wp_reset_postdata();
-	}
-
-	public static function getSenderAddress()
-	{
-		$default   = get_option('admin_email');
-		$sender_id = \Podlove\get_setting('notifications', 'send_as');
-		$sender    = Contributor::find_by_id($sender_id);
-
-		if (!$sender)
-			return $default;
-
-		$address = $sender->getMailAddress();
-
-		if (!$address)
-			return $default;
-
-		return $address;
+		CronJobRunner::create_job('\Podlove\Modules\Notifications\MailerJob', [
+			'contributors' => $contributor_ids,
+			'episode' => $episode->id
+		]);
 	}
 
 	/**
