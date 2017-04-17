@@ -24,15 +24,15 @@ class Notifications extends \Podlove\Modules\Base {
 
 		add_action('podlove_notifications_start_mailer', [$this, 'start_mailer']);
 
-		if (isset($_REQUEST['podlove_notifications']) && isset($_REQUEST['podlove_notifications']['test_episode'])) {
+		if (isset($_REQUEST['podlove_notifications_test']) && isset($_REQUEST['podlove_notifications_test']['episode'])) {
 			$this->send_test_notifications();
 		}
 	}
 
 	public function send_test_notifications()
 	{
-		$episode_id = (int) $_REQUEST['podlove_notifications']['test_episode'];
-		$receiver = trim($_REQUEST['podlove_notifications']['test_receiver']);
+		$episode_id = (int) $_REQUEST['podlove_notifications_test']['episode'];
+		$receiver = trim($_REQUEST['podlove_notifications_test']['receiver']);
 
 		if (!$episode_id || !$receiver)
 			return;

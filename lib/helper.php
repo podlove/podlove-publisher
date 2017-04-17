@@ -126,6 +126,10 @@ Regards,
 			'send_as' => null,
 			'group' => null,
 			'role'  => null
+		],
+		'notifications_test' => [
+			'receiver' => '',
+			'episode' => 0
 		]
 	];
 

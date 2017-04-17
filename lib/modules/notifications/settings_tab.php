@@ -13,9 +13,40 @@ class SettingsTab extends Tab {
 
 	private $page = NULL;
 
+	public function page()
+	{
+		parent::page();
+
+		$debug_hook = self::debug_hook();
+
+		?>
+		<form method="post" action="options.php">
+			<?php if ( isset( $_REQUEST['podlove_tab'] ) ): ?>
+				<input type="hidden" name="podlove_tab" value="<?php echo esc_attr($_REQUEST['podlove_tab']) ?>" />
+			<?php endif; ?>
+
+			<?php settings_fields( $debug_hook ); ?>
+			<?php do_settings_sections( $debug_hook ); ?>
+			
+			<?php submit_button( __( 'Send Test Emails', 'podlove-podcasting-plugin-for-wordpress' ), 'button', 'submit', TRUE ); ?>
+		</form>		
+		<?php
+	}
+
+	public static function settings_hook()
+	{
+		return ContributorSettings::$pagehook;
+	}
+
+	public static function debug_hook()
+	{
+		return ContributorSettings::$pagehook . '_debug';
+	}
+
 	public function init() {
 
-		$hook = ContributorSettings::$pagehook;
+		$hook = self::settings_hook();
+		$debug_hook = self::debug_hook();
 
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_notifications_delay',
@@ -216,7 +247,7 @@ class SettingsTab extends Tab {
 				</p>
 				<?php
 			},
-			/* $page	 */ $hook
+			/* $page	 */ $debug_hook
 		);
 
 		add_settings_field(
@@ -228,15 +259,15 @@ class SettingsTab extends Tab {
 			/* $callback */ function () {
 				$episodes = Episode::find_all_by_time();
 				?>
-				<select name="podlove_notifications[test_episode]">
+				<select name="podlove_notifications_test[episode]">
 					<option value="0"><?php _e('Select Episode', 'podlove-podcasting-plugin-for-wordpress') ?></option>
 					<?php foreach ($episodes as $episode): ?>
-						<option value="<?php echo esc_attr($episode->id); ?>"><?php echo esc_html($episode->title()); ?></option>
+						<option value="<?php echo esc_attr($episode->id); ?>" <?php selected(\Podlove\get_setting('notifications_test', 'episode'), $episode->id) ?>><?php echo esc_html($episode->title()); ?></option>
 					<?php endforeach ?>
 				</select>
 				<?php
 			},
-			/* $page     */ $hook,  
+			/* $page     */ $debug_hook,  
 			/* $section  */ 'podlove_settings_notifications_test'
 		);
 
@@ -249,14 +280,15 @@ class SettingsTab extends Tab {
 			),
 			/* $callback */ function () {
 				?>
-				<input name="podlove_notifications[test_receiver]" type="email" value="" class="text">
+				<input name="podlove_notifications_test[receiver]" type="email" value="<?php echo esc_attr(\Podlove\get_setting('notifications_test', 'receiver')) ?>" class="text">
 				<?php
 			},
-			/* $page     */ $hook,  
+			/* $page     */ $debug_hook,  
 			/* $section  */ 'podlove_settings_notifications_test'
 		);
 
 		register_setting( $hook, 'podlove_notifications' );
+		register_setting( $debug_hook, 'podlove_notifications_test' );
 	}
 
 	/*
