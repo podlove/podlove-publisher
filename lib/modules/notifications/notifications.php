@@ -22,6 +22,8 @@ class Notifications extends \Podlove\Modules\Base {
 			return $tabs;
 		});
 
+		add_action('podlove_notifications_start_mailer', [$this, 'start_mailer']);
+
 		if (isset($_REQUEST['debug_notification']) && $_REQUEST['debug_notification']) {
 			add_action('init', function () {
 				$this->maybe_send_notifications(4116, get_post(4116));
@@ -50,10 +52,20 @@ class Notifications extends \Podlove\Modules\Base {
 
 		$contributor_ids = array_map(function($c) { return $c->id; }, $contributors);
 
-		CronJobRunner::create_job('\Podlove\Modules\Notifications\MailerJob', [
+		$delay = (int) \Podlove\get_setting('notifications', 'delay');
+		$delay = $delay * MINUTE_IN_SECONDS;
+
+		$job_args = [
 			'contributors' => $contributor_ids,
 			'episode' => $episode->id
-		]);
+		];
+
+		wp_schedule_single_event(time() + $delay, 'podlove_notifications_start_mailer', [$job_args]);
+	}
+
+	public function start_mailer($args)
+	{
+		CronJobRunner::create_job('\Podlove\Modules\Notifications\MailerJob', $args);
 	}
 
 	/**
