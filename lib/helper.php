@@ -114,12 +114,15 @@ function get_setting( $namespace, $name ) {
 			'subject' => "Episode Published: {{ episode.title }}",
 			'body' => 'Hi {{ contributor.name }},
 
-Episode "{{ episode.title }}" was just released. Yay!
+You get this email because you were part of "{{ podcast.title }}".
+Episode "{{ episode.title }}" was just released.
 
 URL: {{ episode.url }}
 
+{% if podcast.ownerName %}
 Regards,
-You Favourite Podcaster',
+{{ podcast.ownerName }}
+{% endif %}',
 			'send_as' => null,
 			'group' => null,
 			'role'  => null
