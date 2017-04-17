@@ -84,7 +84,14 @@ class MailerJob {
 		$message = \Podlove\get_setting('notifications', 'body');
 		$message = \Podlove\Template\TwigFilter::apply_to_html($message);
 
-		$success = wp_mail($contributor->getMailAddress(), $subject, $message, $headers);
+		$to = $contributor->getMailAddress();
+
+		if ($this->job->args['debug'] && $this->job->args['debug_receiver']) {
+			$to = $this->job->args['debug_receiver'];
+			$subject = '[TEST] ' . $subject;
+		}
+
+		$success = wp_mail($to, $subject, $message, $headers);
 
 		remove_filter('podlove_templates_global_context', $add_contribtutor_to_context);
 

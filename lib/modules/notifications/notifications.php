@@ -24,27 +24,52 @@ class Notifications extends \Podlove\Modules\Base {
 
 		add_action('podlove_notifications_start_mailer', [$this, 'start_mailer']);
 
-		if (isset($_REQUEST['debug_notification']) && $_REQUEST['debug_notification']) {
-			add_action('init', function () {
-				$this->maybe_send_notifications(4116, get_post(4116));
-			} );
+		if (isset($_REQUEST['podlove_notifications']) && isset($_REQUEST['podlove_notifications']['test_episode'])) {
+			$this->send_test_notifications();
 		}
+	}
+
+	public function send_test_notifications()
+	{
+		$episode_id = (int) $_REQUEST['podlove_notifications']['test_episode'];
+		$receiver = trim($_REQUEST['podlove_notifications']['test_receiver']);
+
+		if (!$episode_id || !$receiver)
+			return;
+
+		$episode = Episode::find_by_id($episode_id);
+
+		if (!$episode)
+			return;
+
+		$contributors = $this->get_contributors_to_be_notified($episode);
+
+		// stop if there is no one to be notified
+		if (!count($contributors))
+			return;
+
+		$contributor_ids = array_map(function($c) { return $c->id; }, $contributors);
+
+		$args = [
+			'contributors'   => $contributor_ids,
+			'episode'        => $episode->id,
+			'debug'          => true,
+			'debug_receiver' => $receiver
+		];
+
+		CronJobRunner::create_job('\Podlove\Modules\Notifications\MailerJob', $args);
 	}
 
 	public function maybe_send_notifications($post_id, $post)
 	{
-		// if ($this->notifications_sent($post_id))
-		// 	return;
+		if ($this->notifications_sent($post_id))
+			return;
 
 		$this->mark_notifications_sent($post_id);
 
 		$episode = Episode::find_one_by_property('post_id', (int) $post_id);
-		$contributions = EpisodeContribution::find_all_by_property('episode_id', $episode->id);
 
-		// map contributions to contributors
-		$contributors = array_map(function($c) {
-			return Contributor::find_by_id($c->contributor_id);
-		}, $contributions);
+		$contributors = $this->get_contributors_to_be_notified($episode);
 
 		// stop if there is no one to be notified
 		if (!count($contributors))
@@ -66,6 +91,18 @@ class Notifications extends \Podlove\Modules\Base {
 	public function start_mailer($args)
 	{
 		CronJobRunner::create_job('\Podlove\Modules\Notifications\MailerJob', $args);
+	}
+
+	private function get_contributors_to_be_notified(Episode $episode)
+	{
+		$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+
+		// map contributions to contributors
+		$contributors = array_map(function($c) {
+			return Contributor::find_by_id($c->contributor_id);
+		}, $contributions);
+
+		return $contributors;
 	}
 
 	/**

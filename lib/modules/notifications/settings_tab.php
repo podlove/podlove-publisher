@@ -7,6 +7,7 @@ use Podlove\Modules\Contributors\Settings\ContributorSettings;
 use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\ContributorRole;
 use Podlove\Modules\Contributors\Model\Contributor;
+use Podlove\Model\Episode;
 
 class SettingsTab extends Tab {
 
@@ -78,7 +79,7 @@ class SettingsTab extends Tab {
 			),
 			/* $callback */ function () {
 				?>
-				<input type="text" name="podlove_notifications[subject]" value="<?php echo \Podlove\get_setting('notifications', 'subject') ?>" class="regular-text">
+				<input type="text" name="podlove_notifications[subject]" value="<?php echo esc_attr(\Podlove\get_setting('notifications', 'subject')) ?>" class="text large-text">
 				<?php
 			},
 			/* $page     */ $hook,  
@@ -93,7 +94,7 @@ class SettingsTab extends Tab {
 			),
 			/* $callback */ function () {
 				?>
-				<textarea name="podlove_notifications[body]" class="large-text autogrow"><?php echo \Podlove\get_setting('notifications', 'body') ?></textarea>
+				<textarea name="podlove_notifications[body]" class="large-text autogrow"><?php echo esc_html(\Podlove\get_setting('notifications', 'body')) ?></textarea>
 				<?php
 			},
 			/* $page     */ $hook,  
@@ -163,7 +164,7 @@ class SettingsTab extends Tab {
 		add_settings_field(
 			/* $id       */ 'podlove_setting_notifications_group',
 			/* $title    */ sprintf(
-				'<label for="enable_episode_recording_date">%s</label>',
+				'<label>%s</label>',
 				__( 'Group', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
@@ -184,7 +185,7 @@ class SettingsTab extends Tab {
 		add_settings_field(
 			/* $id       */ 'podlove_setting_notifications_role',
 			/* $title    */ sprintf(
-				'<label for="enable_episode_recording_date">%s</label>',
+				'<label>%s</label>',
 				__( 'Role', 'podlove-podcasting-plugin-for-wordpress' )
 			),
 			/* $callback */ function () {
@@ -200,6 +201,59 @@ class SettingsTab extends Tab {
 			},
 			/* $page     */ $hook,  
 			/* $section  */ 'podlove_settings_notifications_recipients'
+		);
+
+		add_settings_section(
+			/* $id 		 */ 'podlove_settings_notifications_test',
+			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
+			/* $callback */ function () {
+				echo '<h3>' . __( 'Testing', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>';
+				?>
+				<p>
+					<span class="description">
+						<?php echo __( 'Send test emails to see if everything works as expected. Sends all emails based on contributors in selected episode but receiver is always the one configured here in the test section.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+					</span>
+				</p>
+				<?php
+			},
+			/* $page	 */ $hook
+		);
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_notifications_test_episode',
+			/* $title    */ sprintf(
+				'<label>%s</label>',
+				__( 'Episode', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				$episodes = Episode::find_all_by_time();
+				?>
+				<select name="podlove_notifications[test_episode]">
+					<option value="0"><?php _e('Select Episode', 'podlove-podcasting-plugin-for-wordpress') ?></option>
+					<?php foreach ($episodes as $episode): ?>
+						<option value="<?php echo esc_attr($episode->id); ?>"><?php echo esc_html($episode->title()); ?></option>
+					<?php endforeach ?>
+				</select>
+				<?php
+			},
+			/* $page     */ $hook,  
+			/* $section  */ 'podlove_settings_notifications_test'
+		);
+
+
+		add_settings_field(
+			/* $id       */ 'podlove_setting_notifications_test_receiver',
+			/* $title    */ sprintf(
+				'<label for="podlove_delay">%s</label>',
+				__( 'Receiver', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				?>
+				<input name="podlove_notifications[test_receiver]" type="email" value="" class="text">
+				<?php
+			},
+			/* $page     */ $hook,  
+			/* $section  */ 'podlove_settings_notifications_test'
 		);
 
 		register_setting( $hook, 'podlove_notifications' );
