@@ -111,7 +111,7 @@ function get_setting( $namespace, $name ) {
 		],
 		'notifications' => [
 			'delay' => 1,
-			'subject' => "Episode Published: {{ episode.title }}",
+			'subject' => "\"{{ podcast.title }}\" Episode Published: {{ episode.title }}",
 			'body' => 'Hi {{ contributor.name }},
 
 You get this email because you were part of "{{ podcast.title }}".
