@@ -46,6 +46,51 @@ class TwigFilter {
 	 */
 	public static function apply_to_html($html, $vars = array()) {
 
+		$twig = self::getTwigEnv();
+
+		$context = ['option' => $vars];
+
+		// add podcast to global context
+		$context = array_merge(
+			$context, ['podcast' => new Podcast(Model\Podcast::get())]
+		);
+
+		// Apply filters to twig templates
+		$context = apply_filters( 'podlove_templates_global_context', $context );
+
+		// add podcast to global context if we are in an episode
+		if ($episode = Model\Episode::find_one_by_property('post_id', get_the_ID())) {
+			$context = array_merge($context, array('episode' => new Episode($episode)));
+		}
+
+		$result = null;
+
+		try {
+			$result = $twig->render($html, $context);
+		} catch (\Twig_Error $e) {
+			$message  = $e->getRawMessage();
+			$line     = $e->getTemplateLine();
+			$template = $e->getTemplateFile();
+
+			\Podlove\Log::get()->addError($message, [
+				'type'     => 'twig',
+				'line'     => $line,
+				'template' => $template
+			]);
+		}
+
+		if (!$result) {
+			// simple Twig Env to render plain string
+			$twig     = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
+			$template = $twig->createTemplate($html);
+			$result   = $template->render($context);
+		}
+
+		return $result;
+	}
+
+	private static function getTwigLoader()
+	{
 		// file loader for internal use
 		$file_loader = new \Twig_Loader_Filesystem();
 		$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'templates')), 'core');
@@ -59,9 +104,12 @@ class TwigFilter {
 		$loaders = array($file_loader, $db_loader);
 		$loaders = apply_filters('podlove_twig_loaders', $loaders);
 
-		$loader = new \Twig_Loader_Chain($loaders);
+		return new \Twig_Loader_Chain($loaders);		
+	}
 
-		$twig = new \Twig_Environment($loader, array('autoescape' => false));
+	private static function getTwigEnv()
+	{
+		$twig = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
 		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
 		$twig->addExtension(new \Twig_Extensions_Extension_Date());
 
@@ -89,35 +137,6 @@ class TwigFilter {
 		$func = new \Twig_SimpleFunction('shortcode_exists', function($shortcode) { return \shortcode_exists($shortcode); });
 		$twig->addFunction($func);
 
-		$context = ['option' => $vars];
-
-		// add podcast to global context
-		$context = array_merge(
-			$context, ['podcast' => new Podcast(Model\Podcast::get())]
-		);
-
-		// Apply filters to twig templates
-		$context = apply_filters( 'podlove_templates_global_context', $context );
-
-		// add podcast to global context if we are in an episode
-		if ($episode = Model\Episode::find_one_by_property('post_id', get_the_ID())) {
-			$context = array_merge($context, array('episode' => new Episode($episode)));
-		}
-
-		try {
-			return $twig->render($html, $context);
-		} catch (\Twig_Error $e) {
-			$message  = $e->getRawMessage();
-			$line     = $e->getTemplateLine();
-			$template = $e->getTemplateFile();
-
-			\Podlove\Log::get()->addError($message, [
-				'type'     => 'twig',
-				'line'     => $line,
-				'template' => $template
-			]);
-		}
-
-		return "";
+		return $twig;		
 	}
 }

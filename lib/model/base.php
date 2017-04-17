@@ -297,7 +297,7 @@ abstract class Base
 			(int) $this->id
 		);
 
-		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
+		wp_cache_delete(static::cache_key($this->id), 'podlove-model');
 
 		return $wpdb->query( $sql );
 	}
@@ -350,7 +350,7 @@ abstract class Base
 			$success = $wpdb->query( $sql );
 		}
 
-		wp_cache_set(static::cache_key($this->id), $this, 'podlove-model');
+		wp_cache_delete(static::cache_key($this->id), 'podlove-model');
 
 		$this->is_new = false;
 

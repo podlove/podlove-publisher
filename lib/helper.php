@@ -84,32 +84,50 @@ function get_image_mime_type($image_type) {
 
 function get_setting( $namespace, $name ) {
 	
-	$defaults = array(
-		'website' => array(
+	$defaults = [
+		'website' => [
 			'merge_episodes'         => 'on',
 			'hide_wp_feed_discovery' => 'off',
-			'use_post_permastruct' => 'on',
+			'use_post_permastruct'   => 'on',
 			'custom_episode_slug'    => '/podcast/%podcast%/',
-			'episode_archive' => 'on',
-			'episode_archive_slug' => '/podcast/',
-			'url_template' => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
-			'ssl_verify_peer' => 'on',
-			'landing_page' => 'homepage',
-			'feeds_skip_redirect' => 'off',
-			'feeds_force_protocol' => 'default'
-		),
-		'metadata' => array(
+			'episode_archive'        => 'on',
+			'episode_archive_slug'   => '/podcast/',
+			'url_template'           => '%media_file_base_url%%episode_slug%%suffix%.%format_extension%',
+			'ssl_verify_peer'        => 'on',
+			'landing_page'           => 'homepage',
+			'feeds_skip_redirect'    => 'off',
+			'feeds_force_protocol'   => 'default'
+		],
+		'metadata' => [
 			'enable_episode_recording_date' => 0,
-			'enable_episode_explicit' => 0,
-			'enable_episode_license' => 0
-		),
-		'redirects' => array(
-			'podlove_setting_redirect' => array(),
-		),
-		'tracking' => array(
+			'enable_episode_explicit'       => 0,
+			'enable_episode_license'        => 0
+		],
+		'redirects' => [
+			'podlove_setting_redirect' => [],
+		],
+		'tracking' => [
 			'mode' => 0
-		)
-	);
+		],
+		'notifications' => [
+			'delay' => 1,
+			'subject' => "Episode Published: {{ episode.title }}",
+			'body' => 'Hi {{ contributor.name }},
+
+You get this email because you were part of "{{ podcast.title }}".
+Episode "{{ episode.title }}" was just released.
+
+URL: {{ episode.url }}
+
+{% if podcast.ownerName %}
+Regards,
+{{ podcast.ownerName }}
+{% endif %}',
+			'send_as' => null,
+			'group' => null,
+			'role'  => null
+		]
+	];
 
 	$options = get_option( 'podlove_' . $namespace );
 	$options = wp_parse_args( $options, $defaults[ $namespace ] );

@@ -25,11 +25,16 @@ class ContributorSettings {
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+
+		$tabs = apply_filters('podlove_contributor_settings_tabs', $tabs);
+
 		$this->tabs = $tabs;
 		$this->tabs->initCurrentTab();
 
 		foreach ($this->tabs->getTabs() as $tab) {
-			add_action( 'admin_init', array( $tab->getObject(), 'process_form' ) );
+			if (method_exists($tab, 'getObject')) {
+				add_action( 'admin_init', array( $tab->getObject(), 'process_form' ) );
+			}
 		}
 	}
 	
