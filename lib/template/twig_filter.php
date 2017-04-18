@@ -89,6 +89,10 @@ class TwigFilter {
 		$func = new \Twig_SimpleFunction('shortcode_exists', function($shortcode) { return \shortcode_exists($shortcode); });
 		$twig->addFunction($func);
 
+		// __() for Twig (Used for i18n)
+		$func = new \Twig_SimpleFunction('__', function($string) { return __($string, 'podlove-podcasting-plugin-for-wordpress'); });
+		$twig->addFunction($func);
+
 		$context = ['option' => $vars];
 
 		// add podcast to global context
