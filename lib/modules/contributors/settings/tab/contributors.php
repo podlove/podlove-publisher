@@ -107,7 +107,7 @@ class Contributors extends Tab {
 					'allow_gravatar' => true
 				)
 			], 
-			'slug' => [
+			'identifier' => [
 				'field_type' => 'string',
 				'field_options' => array(
 					'label'       => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
