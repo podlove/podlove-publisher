@@ -1,6 +1,7 @@
 <?php 
 namespace Podlove\Settings;
-use \Podlove\Model;
+use Podlove\Model;
+use Podlove\Cache\TemplateCache;
 
 class Templates {
 
@@ -26,7 +27,7 @@ class Templates {
 		register_setting( Templates::$pagehook, 'podlove_template_assignment', function($args) {
 
 			// when changing the assignment, clear caches
-			\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+			TemplateCache::get_instance()->purge();
 
 			return $args;
 		} );

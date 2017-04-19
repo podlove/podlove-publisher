@@ -67,10 +67,12 @@ class TemplateController {
 		$template->content = $content;
 		$template->save();
 
-		if (is_network_admin())
+		if (is_network_admin()) {
 			TemplateCache::get_instance()->setup_purge_in_all_blogs();
-		else
 			TemplateCache::get_instance()->purge();
+		} else {
+			TemplateCache::get_instance()->purge();
+		}
 
 		Ajax::respond_with_json(array("success" => true));
 	}
