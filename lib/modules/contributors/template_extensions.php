@@ -130,8 +130,15 @@ class TemplateExtensions {
 				'orderby' => 'name',
 			), $args );
 			
-			if ($args['id'])
-				return new Template\Contributor(Contributor::find_one_by_identifier($args['id']));
+			if ($args['id']) {
+				$contributor = Contributor::find_one_by_identifier($args['id']);
+
+				if ($contributor) {
+					return new Template\Contributor($contributor);
+				} else {
+					return null;
+				}
+			}
 
 			$scope = in_array($args['scope'], array('global', 'global-active', 'podcast')) ? $args['scope'] : 'global-active';
 
@@ -197,6 +204,13 @@ class TemplateExtensions {
 	 * @dynamicAccessor podcast.contributor
 	 */
 	public static function accessorPodcastContributor($return, $method_name, $podcast, $id) {
-		return new Template\Contributor(Contributor::find_one_by_identifier($id));
+		$contributor = Contributor::find_one_by_identifier($id);
+
+		if ($contributor) {
+			return new Template\Contributor($contributor);
+		} else {
+			return null;
+		}
+
 	}
 }

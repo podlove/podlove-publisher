@@ -5,6 +5,7 @@ use Podlove\Template\Wrapper;
 use Podlove\Template\Episode;
 use Podlove\Template\Image;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
+use Podlove\Modules\Contributors\Model;
 
 /**
  * Contributor Template Wrapper
@@ -18,7 +19,7 @@ class Contributor extends Wrapper {
 	private $contributor;
 	private $contribution;
 
-	public function __construct($contributor, $contribution = null) {
+	public function __construct(Model\Contributor $contributor, $contribution = null) {
 		$this->contributor = $contributor;
 		$this->contribution = $contribution;
 	}
