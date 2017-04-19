@@ -5,8 +5,7 @@ add_action( 'admin_print_styles', function () {
 
 	$screen = get_current_screen();
 
-	$is_podlove_settings_screen = stripos($screen->id, 'podlove') !== false;
-	$is_episode_edit_screen = in_array($screen->base, ['edit', 'post']) && $screen->post_type == 'podcast';
+	$is_episode_edit_screen = \Podlove\is_episode_edit_screen();
 
 	$version = \Podlove\get_plugin_header('Version');
 
@@ -15,7 +14,7 @@ add_action( 'admin_print_styles', function () {
 		wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL . '/js/dist/app.js', ['underscore', 'jquery'], $version, true );
 	}
 
-	if ($is_podlove_settings_screen || $is_episode_edit_screen) {
+	if (\Podlove\is_podlove_settings_screen() || $is_episode_edit_screen) {
 
 		wp_enqueue_style('podlove-admin',      \Podlove\PLUGIN_URL . '/css/admin.css', [], $version);
 		wp_enqueue_style('podlove-admin-font', \Podlove\PLUGIN_URL . '/css/admin-font.css', [], $version);

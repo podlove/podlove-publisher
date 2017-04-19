@@ -160,6 +160,26 @@ function is_options_save_page() {
 }
 
 /**
+ * Are we on a Podlove Settings screen?
+ * 
+ * @return boolean
+ */
+function is_podlove_settings_screen() {
+	$screen = get_current_screen();
+	return stripos($screen->id, 'podlove') !== false;
+}
+
+/**
+ * Are we on an edit screen for episodes?
+ * 
+ * @return boolean
+ */
+function is_episode_edit_screen() {
+	$screen = get_current_screen();
+	return in_array($screen->base, ['edit', 'post']) && $screen->post_type == 'podcast';
+}
+
+/**
  * Podcast Landing Page URL
  * 
  * @todo  move to Model\Podcast->get_landing_page_url()

@@ -125,6 +125,10 @@ class Related_Episodes extends \Podlove\Modules\Base {
 		}
 
 		public function admin_print_styles() {
+
+			if (!\Podlove\is_episode_edit_screen())
+				return;
+
 			wp_register_script(
 				'podlove_related_episodes',
 				$this->get_module_url() . '/js/admin.js',
