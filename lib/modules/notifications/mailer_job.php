@@ -17,6 +17,15 @@ class MailerJob {
 		return __('Sends notification emails to contributors.', 'podlove-podcasting-plugin-for-wordpress');
 	}
 
+	public static function mode($args)
+	{
+		if (isset($args['debug']) && $args['debug']) {
+			return __('Test', 'podlove-podcasting-plugin-for-wordpress');
+		}
+
+		return '';
+	}
+
 	public function get_total_steps() {
 		return count($this->job->args['contributors']);
 	}

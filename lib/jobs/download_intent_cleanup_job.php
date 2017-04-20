@@ -14,6 +14,15 @@ class DownloadIntentCleanupJob {
 		return __('Only cleaned download intents are available for analytics reports. Cleaning involves deduplication and removal of requests made by bots.', 'podlove-podcasting-plugin-for-wordpress');
 	}
 
+	public static function mode($args)
+	{
+		if ($args['delete_all'] && $args['delete_all']) {
+			return __('From Scratch', 'podlove-podcasting-plugin-for-wordpress');
+		} else {
+			return __('Partial', 'podlove-podcasting-plugin-for-wordpress');
+		}
+	}
+
 	public function setup() {
 		$this->hooks['finished'] = [__CLASS__, 'purge_cache'];
 		$this->hooks['init'] = [$this, 'init_job'];

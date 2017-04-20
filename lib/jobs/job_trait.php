@@ -26,6 +26,16 @@ trait JobTrait {
 	public static function title() { return ''; }
 
 	/**
+	 * Human readable job mode
+	 * 
+	 * Should be displayed with title to distinguish different job setups.
+	 * 
+	 * @param  array $args job arguments
+	 * @return string
+	 */
+	public static function mode($args) { return ''; }
+
+	/**
 	 * Human readable description of what the job does
 	 * @return string
 	 */

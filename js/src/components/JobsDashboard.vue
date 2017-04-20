@@ -13,7 +13,10 @@
             </thead>
             <tbody>
                 <tr v-for="job in runningJobs">
-                    <td>{{ job.title }}</td>
+                    <td>
+                        {{ job.title }}
+                        <small v-if="job.mode">({{ job.mode }})</small>
+                    </td>
                     <td>
                         {{ job.steps_progress }}/{{ job.steps_total }} ({{ job.steps_percent }}%)
                         <span v-if="job.steps_progress > 0">
@@ -39,6 +42,7 @@
                 <tr v-for="job in finishedJobs">
                     <td>
                         {{ job.title }}
+                        <small v-if="job.mode">({{ job.mode }})</small>
                     </td>
                     <td>
                         {{ job.last_progress }}

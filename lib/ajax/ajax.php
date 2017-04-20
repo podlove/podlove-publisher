@@ -92,6 +92,8 @@ class Ajax {
 
 			$job_class = $job['class'];
 			$job['title'] = $job_class::title();
+			// $job['description'] = $job_class::description();
+			$job['mode'] = $job_class::mode(maybe_unserialize($job['args']));
 
 			if ($job['steps_total'] > 0) {
 				$steps_percent = floor(100 * ($job['steps_progress'] / $job['steps_total']));

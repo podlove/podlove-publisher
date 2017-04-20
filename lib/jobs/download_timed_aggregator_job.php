@@ -17,6 +17,15 @@ class DownloadTimedAggregatorJob {
 		return __('Recalculates sums and totals for episode downloads.', 'podlove-podcasting-plugin-for-wordpress');
 	}
 
+	public static function mode($args)
+	{
+		if ($args['force'] && $args['force']) {
+			return __('From Scratch', 'podlove-podcasting-plugin-for-wordpress');
+		} else {
+			return __('Partial', 'podlove-podcasting-plugin-for-wordpress');
+		}
+	}
+	
 	public function setup() {
 		$this->hooks['init'] = [$this, 'setup_state'];
 	}

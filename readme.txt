@@ -132,6 +132,7 @@ I can haz \o/
 * contributors: services only get deleted on "Save Changes", not immediately
 * templates: immediately purge cache on updating any template
 * Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
+* job dashboard: add mode description to jobs where necessary to distinguish between different run settings
 
 = 2.5.2 =
 
