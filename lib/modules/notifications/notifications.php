@@ -95,7 +95,24 @@ class Notifications extends \Podlove\Modules\Base {
 
 	private function get_contributors_to_be_notified(Episode $episode)
 	{
+		$role_filter  = (int) \Podlove\get_setting('notifications', 'role');
+		$group_filter = (int) \Podlove\get_setting('notifications', 'group');
+
 		$contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
+
+		// filter by role
+		if ($role_filter) {
+			$contributions = array_filter($contributions, function ($c) use ($role_filter) {
+				return $c->role_id == $role_filter;
+			});
+		}
+
+		// filter by group
+		if ($group_filter) {
+			$contributions = array_filter($contributions, function ($c) use ($group_filter) {
+				return $c->group_id == $group_filter;
+			});
+		}
 
 		// map contributions to contributors
 		$contributors = array_map(function($c) {
