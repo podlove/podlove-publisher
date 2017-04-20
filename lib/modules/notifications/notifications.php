@@ -16,6 +16,7 @@ class Notifications extends \Podlove\Modules\Base {
 	public function load()
 	{
 		add_action('publish_podcast', [$this, 'maybe_send_notifications'], 10, 2);
+		add_action('podlove_module_was_activated_notifications', [$this, 'mark_existing_episodes_as_sent']);
 
 		add_filter('podlove_contributor_settings_tabs', function ($tabs) {
 			$tabs->addTab( new \Podlove\Modules\Notifications\SettingsTab( __( 'E-Mail Notifications', 'podlove-podcasting-plugin-for-wordpress' ) ) );
@@ -120,6 +121,25 @@ class Notifications extends \Podlove\Modules\Base {
 		}, $contributions);
 
 		return $contributors;
+	}
+
+	/**
+	 * Add "sent" token to all existing published episodes.
+	 */
+	public function mark_existing_episodes_as_sent()
+	{
+		$args = [
+			'post_type'      => 'podcast',
+			'post_status'    => ['publish', 'private'],
+			'posts_per_page' => -1,
+			'fields'         => 'ids'
+		];
+		
+		$post_ids = get_posts($args);
+
+		foreach ($post_ids as $post_id) {
+			$this->mark_notifications_sent($post_id);
+		}
 	}
 
 	/**
