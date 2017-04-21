@@ -24,6 +24,8 @@ class Feed_Press extends \Podlove\Modules\Base {
     protected $module_name = 'FeedPress';
     protected $module_description = 'FeedPress provides accurate and frequently updated analytics that bloggers and podcasters have come to trust. This module provides access the latest statistics.';
     protected $module_group = 'external services';
+
+    const FEEDPRESS_API_BASE_URL = "https://api.feed.press/";
 	
     public function load() {
         if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
@@ -43,17 +45,17 @@ class Feed_Press extends \Podlove\Modules\Base {
      *     - (int) direct
      *     - (int) newsletter
      * 
-     * @param  string $token    [FeedPress API Token)
-     * @param  string $feedname [Name of FeedPress Feed]
+     * @param  string $token    FeedPress API Token
+     * @param  string $feedname Name of FeedPress Feed
      * 
-     * @return array            [Array of the Feed Stats for the last 30 days]
+     * @return array            Array of the Feed Stats for the last 30 days
      */
-    public static function fetch_feed_press_feed_info($feedname=FALSE) {
+    public static function fetch_feed_press_feed_info($feedname = FALSE) {
         if ( ! $feedname || ! $token = get_option( 'podlove_module_feed_press' )['feed_press_api_key'] )
             return;
 
         $curl = new Http\Curl();
-        $curl->request( 'https://api.feed.press/feeds/subscribers.json?key=58eaa1be7018c&token=' . $token . '&feed=' . $feedname, array(
+        $curl->request( FEEDPRESS_API_BASE_URL . 'feeds/subscribers.json?key=58eaa1be7018c&token=' . $token . '&feed=' . $feedname, array(
             'headers' => array(
                 'Content-type'  => 'application/json'
             )
@@ -79,7 +81,7 @@ class Feed_Press extends \Podlove\Modules\Base {
      *     - (string)   url
      *     - (string)   original_url
      * 
-     * @return array [all Feeds (Objects) which are analyzed by FeedPress]
+     * @return array All Feeds (Objects) which are analyzed by FeedPress
      */
     public static function fetch_feeds_analyzed_by_feed_press() {
         if ( ! $token = get_option( 'podlove_module_feed_press' )['feed_press_api_key'] )
@@ -94,9 +96,7 @@ class Feed_Press extends \Podlove\Modules\Base {
         foreach ($feed_press_feeds as $feed) {
             if ( in_array($feed->url, $publisher_feeds) ) {
                 $feeds_analyzed_by_feed_press[$feed->name] = $feed;
-            } else {
-                continue;
-            } 
+            }
         }
 
         return $feeds_analyzed_by_feed_press;
@@ -132,10 +132,10 @@ class Feed_Press extends \Podlove\Modules\Base {
             return;
 
         if ( $this->get_module_option('feed_press_api_key') == "" ) {
-            $auth_url = "https://api.feed.press/login.json?key=58eaa1be7018c&callback=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
+            $auth_url = FEEDPRESS_API_BASE_URL . "login.json?key=58eaa1be7018c&callback=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
             $description = '<i class="podlove-icon-remove"></i> '
                          . __( 'You need to allow Podlove Publisher to access your FeedPress account. You will be redirected to this page once the auth process completed.', 'podlove-podcasting-plugin-for-wordpress' )
-                         . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authorize now', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>';
+                         . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authenticate now', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>';
         } else {
             $user = $this->fetch_authorized_user();
 
@@ -150,7 +150,7 @@ class Feed_Press extends \Podlove\Modules\Base {
             } else {
                 $description = '<i class="podlove-icon-remove"></i> '
                              . sprintf(
-                                __( 'Something went wrong with the FeedPress connection. Please reset the connection and authorize again. To do so click %shere%s', 'podlove-podcasting-plugin-for-wordpress' ),
+                                __( 'Something went wrong with the FeedPress connection. Please reset the connection and authenticate again. To do so click %shere%s', 'podlove-podcasting-plugin-for-wordpress' ),
                                 '<a href="' . admin_url( 'admin.php?page=podlove_settings_modules_handle&reset_feed_press_auth_code=1' ) . '">',
                                 '</a>'
                             );
@@ -158,7 +158,7 @@ class Feed_Press extends \Podlove\Modules\Base {
         }
 
         $this->register_option( 'feed_press_api_key', 'hidden', array(
-            'label'       => __( 'Authorization', 'podlove-podcasting-plugin-for-wordpress' ),
+            'label'       => __( 'Authentication', 'podlove-podcasting-plugin-for-wordpress' ),
             'description' => $description,
             'html'        => array( 'class' => 'regular-text podlove-check-input' )
         ) );
@@ -180,12 +180,12 @@ class Feed_Press extends \Podlove\Modules\Base {
         }
     }
 
-    public static function fetch_feed_press_account_info( $token=FALSE ) {
+    public static function fetch_feed_press_account_info($token = FALSE) {
         if ( ! $token )
             return FALSE;
 
         $curl = new Http\Curl();
-        $curl->request( 'https://api.feed.press/account.json?key=58eaa1be7018c&token=' . $token, array(
+        $curl->request( FEEDPRESS_API_BASE_URL . 'account.json?key=58eaa1be7018c&token=' . $token, array(
             'headers' => array(
                 'Content-type'  => 'application/json'
             )
