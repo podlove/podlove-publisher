@@ -26,6 +26,7 @@ class Feed_Press extends \Podlove\Modules\Base {
     protected $module_group = 'external services';
 
     const FEEDPRESS_API_BASE_URL = "https://api.feed.press/";
+    const FEEDPRESS_API_KEY = "58eaa1be7018c"; // This is more something like a client ID (see Auphonic module for comparison)
 	
     public function load() {
         if ( isset( $_GET["page"] ) && $_GET["page"] == "podlove_settings_modules_handle") {
@@ -55,7 +56,7 @@ class Feed_Press extends \Podlove\Modules\Base {
             return;
 
         $curl = new Http\Curl();
-        $curl->request( FEEDPRESS_API_BASE_URL . 'feeds/subscribers.json?key=58eaa1be7018c&token=' . $token . '&feed=' . $feedname, array(
+        $curl->request( self::FEEDPRESS_API_BASE_URL . 'feeds/subscribers.json?key=' . self::FEEDPRESS_API_KEY . '&token=' . $token . '&feed=' . $feedname, array(
             'headers' => array(
                 'Content-type'  => 'application/json'
             )
@@ -132,7 +133,7 @@ class Feed_Press extends \Podlove\Modules\Base {
             return;
 
         if ( $this->get_module_option('feed_press_api_key') == "" ) {
-            $auth_url = FEEDPRESS_API_BASE_URL . "login.json?key=58eaa1be7018c&callback=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
+            $auth_url = self::FEEDPRESS_API_BASE_URL . "login.json?key=" . self::FEEDPRESS_API_KEY . "&callback=" . urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle') . "&response_type=code";
             $description = '<i class="podlove-icon-remove"></i> '
                          . __( 'You need to allow Podlove Publisher to access your FeedPress account. You will be redirected to this page once the auth process completed.', 'podlove-podcasting-plugin-for-wordpress' )
                          . '<br><a href="' . $auth_url . '" class="button button-primary">' . __( 'Authenticate now', 'podlove-podcasting-plugin-for-wordpress' ) . '</a>';
@@ -185,7 +186,7 @@ class Feed_Press extends \Podlove\Modules\Base {
             return FALSE;
 
         $curl = new Http\Curl();
-        $curl->request( FEEDPRESS_API_BASE_URL . 'account.json?key=58eaa1be7018c&token=' . $token, array(
+        $curl->request( self::FEEDPRESS_API_BASE_URL . 'account.json?key=' . self::FEEDPRESS_API_KEY . '&token=' . $token, array(
             'headers' => array(
                 'Content-type'  => 'application/json'
             )
