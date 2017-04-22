@@ -107,7 +107,7 @@ function get_setting( $namespace, $name ) {
 			'podlove_setting_redirect' => [],
 		],
 		'tracking' => [
-			'mode' => 0
+			'mode' => 'ptm_analytics'
 		],
 		'notifications' => [
 			'delay' => 1,

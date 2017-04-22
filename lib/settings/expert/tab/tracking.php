@@ -33,21 +33,24 @@ class Tracking extends Tab {
 			),
 			/* $callback */ function () {
 				?>
+
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 0 ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="ptm_analytics" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm_analytics' ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'No Tracking', 'podlove-podcasting-plugin-for-wordpress' ),
-								__( 'Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress' )
+								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
+									The Publisher logs the download intent and redirects the user to the original file. 
+									That way the Publisher is able to generate download statistics. ', 'podlove' )
 							); ?>
 						</div>
 					</div>
 				</label>
-				
+
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
@@ -68,19 +71,18 @@ class Tracking extends Tab {
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" type="radio" value="ptm_analytics" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm_analytics' ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 0 ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
-								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
-									The Publisher logs the download intent and redirects the user to the original file. 
-									That way the Publisher is able to generate download statistics. ', 'podlove' )
+								__( 'No Tracking', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>
 				</label>
+				
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
@@ -224,7 +226,7 @@ class Tracking extends Tab {
 								<?php Geo_Ip::enable_tracking(); ?>
 							<?php else: ?>
 								<?php Geo_Ip::disable_tracking(); ?>
-								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: <a href="<?php echo esc_url(Geo_Ip::SOURCE_URL); ?>" download><?php echo Geo_Ip::SOURCE_URL; ?></a>
+								✘ <strong>Geolocation database invalid or outdated</strong>: Try updating it using the button above. If that doesn't work, delete it manually: <code><?php echo Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: <a href="<?php echo esc_url(Geo_Ip::SOURCE_URL); ?>" download><?php echo Geo_Ip::SOURCE_URL; ?></a>
 							<?php endif ?>
 						</li>
 					</ul>

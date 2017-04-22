@@ -115,6 +115,10 @@ I can haz \o/
 * DEPRECATED: id parameter in `podcast.contributors` to access a single contributor: `podcast.contributors({id: "jerry"})`.
 * Feeds can now be accessed the same way by their slug: `podcast.feed("mp3")`
 
+**Analytics**
+
+Download tracking is now turned on by default in new setups.
+
 **Bits & Pieces**
 
 * network dashboard statistics: fix average length and file size; remove "days between episodes"
