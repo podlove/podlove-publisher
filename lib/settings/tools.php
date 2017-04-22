@@ -62,7 +62,7 @@ class Tools {
 			<div 
 				class="podlove-job" 
 				data-job="Podlove-Jobs-UserAgentRefreshJob" 
-				data-button-text="<?php echo $job_class::title() ?>"
+				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()) ?>"
 				data-recent-job-id="<?php echo $recent_job_id ?>"
 				>
 				
@@ -85,7 +85,7 @@ class Tools {
 			<div 
 				class="podlove-job" 
 				data-job="Podlove-Jobs-DownloadIntentCleanupJob" 
-				data-button-text="<?php echo $job_class::title() ?>"
+				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()) ?>"
 				data-recent-job-id="<?php echo $recent_job_id ?>"
 				>
 				
@@ -108,7 +108,7 @@ class Tools {
 				class="podlove-job" 
 				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
 				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
-				data-button-text="<?php echo $job_class::title() ?>"
+				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()) ?>"
 				data-recent-job-id="<?php echo $recent_job_id ?>"
 				>
 				
