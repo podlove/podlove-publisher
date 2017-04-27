@@ -82,9 +82,19 @@ class TwigFilter {
 		if (!$result) {
 			try {
 				// simple Twig Env to render plain string
-				$twig     = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
-				$template = $twig->createTemplate($html);
-				$result   = $template->render($context);
+				$twig = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
+
+				// no clue yet how this is possible but it happens
+				if (method_exists($twig, 'createTemplate')) {
+					$template = $twig->createTemplate($html);
+					$result   = $template->render($context);
+				} else {
+					\Podlove\Log::get()->addError("Error when rendering Twig template from string. Missing Twig_Environment::createTemplate method.", [
+						'type'     => 'twig',
+						'template' => $html
+					]);
+				}
+
 			} catch (Exception $e) {
 				\Podlove\Log::get()->addError("Error when rendering Twig template from string: " . $e->getMessage(), [
 					'type'     => 'twig',
