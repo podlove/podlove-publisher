@@ -32,7 +32,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 	}
 
 	public function config_url() {
-		return esc_url( add_query_arg('podigee_player', $this->episode->id, get_option('siteurl')) );
+		return esc_url( add_query_arg('podigee_player', $this->episode->id, trailingslashit(get_option('siteurl')) ) );
 	}
 
 	public static function config($episode, $context) {

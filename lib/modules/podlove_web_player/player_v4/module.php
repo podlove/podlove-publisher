@@ -11,13 +11,11 @@ class Module {
 	
 	public function load() {
 
-		add_action('wp_enqueue_scripts', function() {
-			wp_enqueue_script(
-				'podlove-player4-embed',
-				plugins_url('dist/embed.js', __FILE__),
-				[], \Podlove\get_plugin_header('Version')
-			);
-		});
+		add_action('wp_enqueue_scripts', [$this, 'register_scripts']);
+
+		if (isset($_GET['podlove_tab']) && $_GET['podlove_tab'] == 'player') {
+			add_action('admin_enqueue_scripts', [$this, 'register_scripts']);
+		}
 
 		// backward compatible, but only load if no other plugin has registered this shortcode
 		if (!shortcode_exists('podlove-web-player'))
@@ -26,6 +24,15 @@ class Module {
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
 
 		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
+	}
+
+	public function register_scripts()
+	{
+		wp_enqueue_script(
+			'podlove-player4-embed',
+			plugins_url('dist/embed.js', __FILE__),
+			[], \Podlove\get_plugin_header('Version')
+		);
 	}
 
 	public static function shortcode() {

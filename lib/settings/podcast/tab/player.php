@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Settings\Podcast\Tab;
 use \Podlove\Settings\Podcast\Tab;
+use Podlove\Model\Episode;
 
 class Player extends Tab {
 
@@ -107,5 +108,22 @@ class Player extends Tab {
 				$wrapper->{$entry['type']}($entry['key'], $entry['options']);
 			}
 		});	
+
+		$this->preview_section();
+	}
+
+	public function preview_section() {
+		echo '<h3>Preview</h3>';
+		$episode = Episode::latest();
+		if ($episode) {
+			$this->preview_player($episode);
+		} else {
+			echo __('Sorry, found no episode to use as preview.', 'podlove-podcasting-plugin-for-wordpress');
+		}
+	}
+
+	public function preview_player($episode) {
+		$printer = \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::get_player_printer($episode);
+		echo $printer->render('preview');
 	}
 }

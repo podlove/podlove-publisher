@@ -46,7 +46,7 @@ class Episode extends Base implements Licensable {
 	public static function latest() {
 		global $wpdb;
 
-		// Why do we fetch 10 instead of just 1?
+		// Why do we fetch 15 instead of just 1?
 		// Because some of the newest ones might be drafts or otherwise invalid.
 		// So we grab a bunch, filter by validity and then return the first one.
 		$sql = '
@@ -55,9 +55,11 @@ class Episode extends Base implements Licensable {
 			FROM
 				`' . Episode::table_name() . '` e 
 				JOIN `' . $wpdb->posts . '` p ON e.post_id = p.ID
+			WHERE
+				p.post_type = "podcast"
 			ORDER BY
 				p.post_date DESC
-			LIMIT 0, 10';
+			LIMIT 0, 15';
 
 		$episodes = array_filter(Episode::find_all_by_sql($sql), function($e) { return $e->is_valid(); });
 

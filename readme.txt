@@ -108,6 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 I can haz \o/
 
+All web players can now be previewed on the settings screen.
+
 **Templates**
 
 * Assets now have an identifier `asset.id` to quickly access a file for an asset within an episode, for example: `episode.file("mp3")`
