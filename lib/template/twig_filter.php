@@ -80,10 +80,17 @@ class TwigFilter {
 		}
 
 		if (!$result) {
-			// simple Twig Env to render plain string
-			$twig     = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
-			$template = $twig->createTemplate($html);
-			$result   = $template->render($context);
+			try {
+				// simple Twig Env to render plain string
+				$twig     = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
+				$template = $twig->createTemplate($html);
+				$result   = $template->render($context);
+			} catch (Exception $e) {
+				\Podlove\Log::get()->addError("Error when rendering Twig template from string: " . $e->getMessage(), [
+					'type'     => 'twig',
+					'template' => $html
+				]);
+			}
 		}
 
 		return $result;
