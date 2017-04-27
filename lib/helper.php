@@ -222,7 +222,9 @@ function get_webplayer_defaults() {
 		'inject'          => 'manually',
 		'version'         => 'player_v2',
 		'playerv3theme'   => 'pwp-dark-green.min.css',
-		'podigeetheme'    => 'default'
+		'podigeetheme'    => 'default',
+		'playerv4_color_primary'   => '#2B8AC6',
+		'playerv4_color_secondary' => ''
 	];
 }
 

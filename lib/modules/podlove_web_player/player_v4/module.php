@@ -24,6 +24,8 @@ class Module {
 			add_shortcode('podlove-web-player', [__CLASS__, 'shortcode']);
 
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
+
+		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
 	}
 
 	public static function shortcode() {
@@ -48,7 +50,7 @@ class Module {
 			return;
 
 		$episode_id = (int) $_GET['podlove_player4'];
-error_log(print_r("id: " . $episode_id, true));
+
 		if (!$episode_id)
 			return;
 
@@ -56,8 +58,6 @@ error_log(print_r("id: " . $episode_id, true));
 
 		if (!$episode)
 			return;
-
-		error_log(print_r($episode, true));
 
 		// allow CORS
 		
@@ -86,5 +86,35 @@ error_log(print_r("id: " . $episode_id, true));
 		$config = Html5Printer::config($episode, "embed");
 		echo json_encode($config);
 		exit;
+	}
+
+	public function add_player_settings($form_data) {
+		
+		$form_data[] = [
+			'type' => 'string',
+			'key'  => 'playerv4_color_primary',
+			'options' => [
+				'label' => 'Primary Color',
+				'description' => __('Hex, rgb or rgba', 'podlove-podcasting-plugin-for-wordpress')
+			],
+			'position' => 500
+		];
+
+		$form_data[] = [
+			'type' => 'string',
+			'key'  => 'playerv4_color_secondary',
+			'options' => [
+				'label' => 'Secondary Color (optional)',
+				'description' => __('Hex, rgb or rgba', 'podlove-podcasting-plugin-for-wordpress')
+			],
+			'position' => 495
+		];
+
+		// remove "chapter visibility" setting
+		$form_data = array_filter($form_data, function ($entry) {
+			return $entry['key'] !== 'chaptersVisible';
+		});
+
+		return $form_data;
 	}
 }

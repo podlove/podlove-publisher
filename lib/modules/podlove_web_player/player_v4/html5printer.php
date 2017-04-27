@@ -37,6 +37,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			return $file['publicUrl'];
 		}, $media_files);
 
+		$player_settings = \Podlove\get_webplayer_settings();
+
 		$config = [
 			'show' => [
 				'title'    => $podcast->title,
@@ -59,7 +61,11 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			'chapters' => array_map(function($c) {
 				$c->title = html_entity_decode(wptexturize(convert_chars(trim($c->title))));
 				return $c;
-			}, json_decode($episode->get_chapters('json')))
+			}, json_decode($episode->get_chapters('json'))),
+			'theme' => [
+				'primary'   => $player_settings['playerv4_color_primary'],
+				'secondary' => $player_settings['playerv4_color_secondary']
+			]
 		];
 
 		return $config;
