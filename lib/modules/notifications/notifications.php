@@ -63,8 +63,12 @@ class Notifications extends \Podlove\Modules\Base {
 
 	public function maybe_send_notifications($post_id, $post)
 	{
-		if ($this->notifications_sent($post_id))
+		if ($this->notifications_sent($post_id)) {
+				Log::get()->addDebug("Did not send emails for post $post_id (" . get_the_title($post_id ) . ") because they were already sent.", [
+				'module' => 'E-Mail Notifications'
+			]);
 			return;
+		}
 
 		$this->mark_notifications_sent($post_id);
 
@@ -73,8 +77,12 @@ class Notifications extends \Podlove\Modules\Base {
 		$contributors = $this->get_contributors_to_be_notified($episode);
 
 		// stop if there is no one to be notified
-		if (!count($contributors))
+		if (!count($contributors)) {
+			Log::get()->addDebug("Did not send emails for post $post_id (" . get_the_title($post_id ) . ") because no contributors exist or match the criteria.", [
+				'module' => 'E-Mail Notifications'
+			]);
 			return;
+		}
 
 		$contributor_ids = array_map(function($c) { return $c->id; }, $contributors);
 
@@ -91,6 +99,9 @@ class Notifications extends \Podlove\Modules\Base {
 
 	public function start_mailer($args)
 	{
+		Log::get()->addDebug("Start Mailer Job", [
+			'module' => 'E-Mail Notifications'
+		]);
 		CronJobRunner::create_job('\Podlove\Modules\Notifications\MailerJob', $args);
 	}
 
