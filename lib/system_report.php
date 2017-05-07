@@ -17,12 +17,12 @@ class SystemReport {
 			'php_version' => array( 'title' => 'PHP Version',       'callback' => function() {
 				return phpversion();
 			} ),
-			'wp_version' => array( 'title' => 'WP Version', 'callback' => function() { return get_bloginfo('version'); } ),
-			'theme'      => array( 'title' => 'WP Theme',   'callback' => function() {
+			'wp_version' => array( 'title' => 'WordPress Version', 'callback' => function() { return get_bloginfo('version'); } ),
+			'theme'      => array( 'title' => 'WordPress Theme',   'callback' => function() {
 				$theme = wp_get_theme();
 				return $theme->get('Name') . ' v' . $theme->get('Version'); }
 			),
-			'db_charset' => array( 'title' => 'WP Database Charset', 'callback' => function() use ( &$notices ) {
+			'db_charset' => array( 'title' => 'WordPress Database Charset', 'callback' => function() use ( &$notices ) {
 				// Fetch Episode Database Info from "information_scheme" Table
 				$db_connection = new \wpdb(DB_USER, DB_PASSWORD, 'information_schema', DB_HOST);
 				$episode_database_info = $db_connection->get_row('SELECT * FROM `TABLES` WHERE `TABLE_SCHEMA` = \'' . DB_NAME . '\' AND `TABLE_NAME` = \'' . \Podlove\Model\Episode::table_name() . '\'', OBJECT);
@@ -32,8 +32,9 @@ class SystemReport {
 
 				$db_connection->close();
 
-				return DB_CHARSET; } ),
-			'db_collate' => array( 'title' => 'WP Database Collate', 'callback' => function() { return DB_COLLATE; } ),
+				return DB_CHARSET; 
+			} ),
+			'db_collate' => array( 'title' => 'WordPress Database Collate', 'callback' => function() { return DB_COLLATE; } ),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
 			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
 
@@ -183,7 +184,7 @@ class SystemReport {
 				}
 
 				return "\n&nbsp; - " . implode("\n&nbsp; - ", array_map(function($asset) {
-					return str_pad($asset['extension'], 7) . str_pad($asset['mime_type'], 11) . ($asset['feed'] ? $asset['feed']->get_subscribe_url() : 'no feed');
+					return str_pad($asset['extension'], 7) . str_pad($asset['mime_type'], 17) . ($asset['feed'] ? $asset['feed']->get_subscribe_url() : 'no feed');
 				}, $assets));
 			} ),
 			'cron' => [
@@ -237,7 +238,13 @@ class SystemReport {
 			return $string;
 		};
 
-		$fill_length = 1 + max( array_map( function($k) { return strlen($k); }, array_keys( $this->fields ) ) );
+		$titles = array_map(function ($entry) {
+			return isset($entry['title']) ? $entry['title'] : '';
+		}, $this->fields);
+
+		$titles = array_merge(array_keys($titles), array_values($titles));
+
+		$fill_length = 1 + max( array_map( function($k) { return strlen($k); }, $titles ) );
 
 		$out = '';
 
