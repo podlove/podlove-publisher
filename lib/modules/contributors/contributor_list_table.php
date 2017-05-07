@@ -179,7 +179,7 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		}
 
 		// look how to sort
-		if ( filter_input(INPUT_GET, 'order') === 'ASC' ) {
+		if ( strtolower( filter_input(INPUT_GET, 'order') ) === 'asc' ) {
 			$order = 'ASC';
 		} else{
 			$order = 'DESC';

@@ -133,7 +133,7 @@ class RSS {
 			$page = get_query_var( 'paged' ) ? (int) get_query_var( 'paged' ) : 1;
 
 			$max = $feed->get_post_limit_sql();
-			$start = $max * ($page - 1);
+			$start = (int)$max * ( (int)$page - 1 );
 
 			if ($max > 0) {
 				return 'LIMIT ' . $start . ', ' . $max;
