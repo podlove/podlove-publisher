@@ -13,8 +13,8 @@ class Tools {
 		
 		Tools::$pagehook = add_submenu_page(
 			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Tools',
-			/* $menu_title */ 'Tools',
+			/* $page_title */ __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $menu_title */ __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ),
 			/* $capability */ 'administrator',
 			/* $menu_slug  */ 'podlove_tools_settings_handle',
 			/* $function   */ array( $this, 'page' )
