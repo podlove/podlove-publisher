@@ -13,6 +13,8 @@ class Media extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$formKeys = array('media_file_base_uri');
 
 		$settings = get_option('podlove_podcast');
@@ -28,7 +30,8 @@ class Media extends Tab {
 		
 		$form_attributes = array(
 			'context' => 'podlove_podcast',
-			'action'  => $this->get_url()
+			'action'  => $this->get_url(),
+			'nonce_action' => 'update_podcast_media_settings'
 		);
 
 		?>

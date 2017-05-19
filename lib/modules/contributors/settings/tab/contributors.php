@@ -44,8 +44,8 @@ class Contributors extends Tab {
 		);
 
 		$this->page->enable_tabs('contributors');
-
 		$this->page->set_form(function($form_args, $contributor, $action) {
+			$form_args['nonce_action'] = 'update_contributor';
 			$this->contributor_form($form_args, $contributor, $action);
 		});
 

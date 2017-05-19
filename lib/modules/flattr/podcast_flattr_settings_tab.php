@@ -14,6 +14,8 @@ class PodcastFlattrSettingsTab extends Tab {
 		if (!isset($_POST['podlove_flattr']) || !$this->is_active())
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$settings = Flattr::get_setting();
 		$settings['account'] = $_POST['podlove_flattr']['account'];
 

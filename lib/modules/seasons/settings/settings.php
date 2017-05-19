@@ -40,6 +40,7 @@ class Settings {
 	 * Process form: save/update a format
 	 */
 	private function save() {
+		\Podlove\Form\check_nonce();
 
 		if ( ! isset( $_REQUEST['season'] ) )
 			return;
@@ -58,6 +59,8 @@ class Settings {
 	 * Process form: create a format
 	 */
 	private function create() {
+		\Podlove\Form\check_nonce();
+
 		global $wpdb;
 
 		$season = new Season;
@@ -74,6 +77,7 @@ class Settings {
 	 * Process form: delete a format
 	 */
 	private function delete() {
+		\Podlove\Form\check_nonce();
 
 		if (!isset($_REQUEST['season']))
 			return;
@@ -173,6 +177,7 @@ class Settings {
 				'action'      => $action
 			),
 			'submit_button' => false, // for custom control in form_end
+			'nonce_action' => 'update_season_settings',
 			'form_end' => function() {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );

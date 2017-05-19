@@ -55,6 +55,8 @@ class Feed {
 	 * Process form: save/update a format
 	 */
 	private function save() {
+		\Podlove\Form\check_nonce();
+
 		if ( ! isset( $_REQUEST['feed'] ) )
 			return;
 			
@@ -72,6 +74,8 @@ class Feed {
 	 * Process form: create a format
 	 */
 	private function create() {
+		\Podlove\Form\check_nonce();
+
 		global $wpdb;
 		
 		$feed = new \Podlove\Model\Feed;
@@ -88,6 +92,8 @@ class Feed {
 	 * Process form: delete a format
 	 */
 	private function delete() {
+		\Podlove\Form\check_nonce();
+
 		if ( ! isset( $_REQUEST['feed'] ) )
 			return;
 
@@ -251,8 +257,9 @@ class Feed {
 			$podcast = \Podlove\Model\Podcast::get();
 
 			$form_attributes = array(
-				'context'    => 'podlove_podcast',
-				'form'       => false
+				'context'    	=> 'podlove_podcast',
+				'form'       	=> false,
+				'nonce_action' 	=>  'update_global_feed_settings'
 			);
 
 			\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
@@ -276,7 +283,6 @@ class Feed {
 					'please_choose' => false,
 					'default' => '-1'
 				) );
-
 			});
 			?>
 		</form>
@@ -284,6 +290,8 @@ class Feed {
 	}
 
 	public function save_global_feed_setting() {
+		\Podlove\Form\check_nonce();
+
   		$podcast_settings = get_option('podlove_podcast');
   		$podcast_settings['limit_items'] = (int) $_REQUEST['podlove_podcast']['limit_items'];
   		update_option('podlove_podcast', $podcast_settings);
@@ -296,10 +304,11 @@ class Feed {
 		$form_args = array(
 			'context' => 'podlove_feed',
 			'hidden'  => array(
-				'feed' => $feed->id,
-				'action' => $action
+				'feed' 			=> $feed->id,
+				'action' 		=> $action
 			),
 			'submit_button' => false, // for custom control in form_end
+			'nonce_action' 	=> 'update_feed_setting',
 			'form_end' => function() {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );

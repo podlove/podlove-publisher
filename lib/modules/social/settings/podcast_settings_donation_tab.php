@@ -15,6 +15,8 @@ class PodcastSettingsDonationTab extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$formKeys = array('donations');
 
 		$settings = get_option('podlove_podcast');

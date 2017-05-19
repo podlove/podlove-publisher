@@ -13,6 +13,8 @@ class Directory extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$formKeys = array(
 			'author_name',
 			'publisher_name',
@@ -39,7 +41,8 @@ class Directory extends Tab {
 		
 		$form_attributes = array(
 			'context' => 'podlove_podcast',
-			'action'  => $this->get_url()
+			'action'  => $this->get_url(),
+			'nonce_action' => 'update_podcast_directory_settings'
 		);
 
 		?>

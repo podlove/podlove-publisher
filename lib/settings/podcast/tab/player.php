@@ -14,6 +14,8 @@ class Player extends Tab {
 		if (!isset($_POST['podlove_webplayer_settings']) || !$this->is_active())
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$formKeys = array_keys(\Podlove\get_webplayer_defaults());
 
 		$settings = get_option('podlove_webplayer_settings');
@@ -96,7 +98,8 @@ class Player extends Tab {
 
 		$form_attributes = array(
 			'context' => 'podlove_webplayer_settings',
-			'action'  => $this->get_url()
+			'action'  => $this->get_url(),
+			'nonce_action' => 'update_podcast_player_settings'
 		);
 
 		$form_data = self::get_form_data();

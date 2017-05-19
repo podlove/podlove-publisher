@@ -124,6 +124,8 @@ class TemplateAssignment {
 	 * Save current state to database.
 	 */
 	public function save() {
+		\Podlove\Form\check_nonce();
+		
 		update_option( 'podlove_template_assignment', $this->data );
 
 		do_action('podlove_model_save', $this);

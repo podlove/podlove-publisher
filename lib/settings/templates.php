@@ -112,8 +112,9 @@ class Templates {
 			$template_assignment = Model\TemplateAssignment::get_instance();
 
 			$form_attributes = array(
-				'context'    => 'podlove_template_assignment',
-				'form'       => false
+				'context'    	=> 'podlove_template_assignment',
+				'form'       	=> false,
+				'nonce_action'	=> 'update_template_settings'
 			);
 
 			\Podlove\Form\build_for( $template_assignment, $form_attributes, function ( $form ) {

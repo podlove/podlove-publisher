@@ -31,6 +31,7 @@ class EpisodeAsset {
 	 * Process form: save/update a format
 	 */
 	private function save() {
+		\Podlove\Form\check_nonce();
 
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
@@ -49,6 +50,8 @@ class EpisodeAsset {
 	 * Process form: create a format
 	 */
 	private function create() {
+		\Podlove\Form\check_nonce();
+
 		global $wpdb;
 		
 		$episode_asset = new \Podlove\Model\EpisodeAsset;
@@ -65,6 +68,7 @@ class EpisodeAsset {
 	 * Process form: delete a format
 	 */
 	private function delete() {
+		\Podlove\Form\check_nonce();
 
 		if ( ! isset( $_REQUEST['episode_asset'] ) )
 			return;
@@ -230,8 +234,9 @@ class EpisodeAsset {
 			$asset_assignment = Model\AssetAssignment::get_instance();
 
 			$form_attributes = array(
-				'context'    => 'podlove_asset_assignment',
-				'form'       => false
+				'context'	    => 'podlove_asset_assignment',
+				'form'       	=> false,
+				'nonce_action'	=> 'update_assets_settings'
 			);
 
 			\Podlove\Form\build_for( $asset_assignment, $form_attributes, function ( $form ) {
@@ -308,6 +313,7 @@ class EpisodeAsset {
 				'id' => 'podlove_episode_assets'
 			),
 			'submit_button' => false, // for custom control in form_end
+			'nonce_action' => 'update_asset_settings',
 			'form_end' => function() {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );

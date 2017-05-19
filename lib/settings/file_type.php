@@ -15,6 +15,8 @@ class FileType {
 	private function save() {
 		if ( ! isset( $_REQUEST['file_type'] ) )
 			return;
+
+		\Podlove\Form\check_nonce();
 			
 		$format = \Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] );
 		
@@ -41,6 +43,8 @@ class FileType {
 	 */
 	private function create() {
 		global $wpdb;
+
+		\Podlove\Form\check_nonce();
 		
 		$format = new \Podlove\Model\FileType;
 		
@@ -65,6 +69,8 @@ class FileType {
 	private function delete() {
 		if ( ! isset( $_REQUEST['file_type'] ) )
 			return;
+
+		\Podlove\Form\check_nonce();
 
 		\Podlove\Model\FileType::find_by_id( $_REQUEST['file_type'] )->delete();
 		
@@ -149,6 +155,7 @@ class FileType {
 				'podlove_tab' => filter_var($_REQUEST['podlove_tab'], FILTER_SANITIZE_STRING)
 			),
 			'submit_button' => false, // for custom control in form_end
+			'nonce_action' => 'update_file_type',
 			'form_end' => function() {
 				echo "<p>";
 				submit_button( __('Save Changes'), 'primary', 'submit', false );

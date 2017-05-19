@@ -343,6 +343,9 @@ function build_for( $object, $args, $callback ) {
 	// determine context
 	$context = isset( $args['context'] ) ? $args['context'] : '';
 
+	// determine nonce action
+	$nonce_action = isset( $args['nonce_action'] ) ? $args['nonce_action'] : 'update_settings';
+
 	// check if <form> should be printed
 	$print_form = ! isset( $args['form'] ) || $args['form'] === true;
 
@@ -365,6 +368,9 @@ function build_for( $object, $args, $callback ) {
 		</table>
 	<?php endif; ?>
 
+	<?php wp_nonce_field($nonce_action, '_podlove_nonce'); ?>
+	<input type="hidden" name="_podlove_nonce_action" value="<?php echo $nonce_action; ?>" />
+
 	<?php if ( ! isset( $args['submit_button'] ) || $args['submit_button'] === true ): ?>
 		<?php submit_button(); ?>
 	<?php endif ?>
@@ -378,6 +384,12 @@ function build_for( $object, $args, $callback ) {
 	<?php endif ?>
 	
 	<?php
+}
+
+function check_nonce() {
+	if ( ! isset( $_POST['_podlove_nonce'] ) || ! isset( $_POST['_podlove_nonce_action'] ) || ! wp_verify_nonce($_POST['_podlove_nonce'], $_POST['_podlove_nonce_action']) ) {
+		exit();
+	}
 }
 
 namespace Podlove\License;

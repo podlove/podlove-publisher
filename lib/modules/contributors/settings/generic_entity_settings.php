@@ -79,6 +79,8 @@ class GenericEntitySettings {
 		if ( ! isset( $_REQUEST[ $this->get_entity_slug() ] ) )
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$class = $this->get_entity_class();
 
 		$entity = $class::find_by_id($_REQUEST[ $this->get_entity_slug() ]);
@@ -97,6 +99,8 @@ class GenericEntitySettings {
 	 * Process form: create entity
 	 */
 	protected function create() {
+		\Podlove\Form\check_nonce();
+
 		global $wpdb;
 
 		$class = $this->get_entity_class();
@@ -117,6 +121,7 @@ class GenericEntitySettings {
 	 * Process form: delete a contributor
 	 */
 	protected function delete() {
+		\Podlove\Form\check_nonce();
 
 		if ( !isset( $_REQUEST[ $this->get_entity_slug() ] ) )
 			return;

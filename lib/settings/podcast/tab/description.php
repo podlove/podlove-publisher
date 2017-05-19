@@ -17,6 +17,8 @@ class Description extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
+		\Podlove\Form\check_nonce();
+
 		$formKeys = array('title', 'subtitle', 'summary', 'language', 'cover_image');
 
 		$settings = get_option('podlove_podcast');
@@ -32,7 +34,8 @@ class Description extends Tab {
 		
 		$form_attributes = array(
 			'context' => 'podlove_podcast',
-			'action'  => $this->get_url()
+			'action'  => $this->get_url(),
+			'nonce_action' => 'update_podcast_description_settings'
 		);
 
 		?>
