@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.5.3 =
+
+* fix broken settings tabs (introduced by German translation)
+
 = 2.5.2 =
 
 * fix episode sorting by recording date (`podcast.episodes({orderby: 'recordingDate'})`)

@@ -4,6 +4,11 @@ use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
 
 class Metadata extends Tab {
+
+	public function get_slug() {
+		return 'metadata';
+	}
+
 	public function init() {
 
 		add_settings_section(

@@ -8,6 +8,10 @@ class Contributors extends Tab {
 
 	private $page = NULL;
 
+	public function get_slug() {
+		return 'contributors';
+	}
+
 	public function init() {
 		$this->page_type = 'custom';
 		add_action( 'podlove_expert_settings_page', array( $this, 'register_page' ) );

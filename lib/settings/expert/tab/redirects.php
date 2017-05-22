@@ -4,6 +4,11 @@ use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
 
 class Redirects extends Tab {
+
+	public function get_slug() {
+		return 'redirects';
+	}
+
 	public function init() {
 		add_settings_section(
 			/* $id 		 */ 'podlove_settings_redirects',
