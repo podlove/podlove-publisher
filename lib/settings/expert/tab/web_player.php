@@ -5,6 +5,11 @@ use \Podlove\Settings\Expert\Tab;
 use \Podlove\Model;
 
 class WebPlayer extends Tab {
+
+	public function get_slug() {
+		return 'web-player';
+	}
+
 	public function init() {
 
 		add_settings_section(

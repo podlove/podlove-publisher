@@ -14,12 +14,6 @@ class Tab {
 	private $title;
 
 	/**
-	 * Tab slug used in URLs
-	 * @var string
-	 */
-	private $slug;
-
-	/**
 	 * If this is true, use it if no tab is selected.
 	 * @var bool
 	 */
@@ -43,11 +37,10 @@ class Tab {
 
 	public function set_title( $title ) {
 		$this->title = $title;
-		$this->slug = strtolower( \Podlove\slugify( $title ) );
 	}
 
 	public function get_slug() {
-		return $this->slug;
+		return '';
 	}
 
 	public function get_url() {

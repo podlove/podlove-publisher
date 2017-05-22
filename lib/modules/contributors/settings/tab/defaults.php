@@ -4,6 +4,10 @@ use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
 
 class Defaults extends Tab {
+	
+	public function get_slug() {
+		return 'defaults';
+	}
 
 	public function init() {
 		$this->page_type = 'custom';

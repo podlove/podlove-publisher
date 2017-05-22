@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.7.3
+Tested up to: 4.7.5
 Stable tag: trunk
 License: MIT
 
@@ -139,6 +139,10 @@ Download tracking is now turned on by default in new setups.
 * templates: immediately purge cache on updating any template
 * Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
 * job dashboard: add mode description to jobs where necessary to distinguish between different run settings
+
+= 2.5.3 =
+
+* fix broken settings tabs (introduced by German translation)
 
 = 2.5.2 =
 

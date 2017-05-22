@@ -50,7 +50,7 @@ class Player extends Tab {
 				'key' => 'inject',
 				'options' => [
 					'label'       => __( 'Insert player automatically', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-episode-web-player]</code> or templates.', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatively, use the shortcode <code>[podlove-episode-web-player]</code> or templates.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options'     => array(
 						'manually'  => __( 'no automatic insertion', 'podlove-podcasting-plugin-for-wordpress' ),
 						'beginning' => __( 'insert at the beginning', 'podlove-podcasting-plugin-for-wordpress' ),

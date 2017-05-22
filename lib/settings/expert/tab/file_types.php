@@ -5,6 +5,10 @@ use \Podlove\Settings\Expert\Tab;
 
 class FileTypes extends Tab {
 
+	public function get_slug() {
+		return 'file-types';
+	}	
+
 	public function init() {
 		$this->page_type = 'custom';
 		add_action( 'podlove_expert_settings_page', array( $this, 'register_page' ) );

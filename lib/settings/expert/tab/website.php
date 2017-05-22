@@ -4,6 +4,11 @@ use \Podlove\Settings\Settings;
 use \Podlove\Settings\Expert\Tab;
 
 class Website extends Tab {
+
+	public function get_slug() {
+		return 'website';
+	}
+
 	public function init() {
 		
 		// always flush rewrite rules here for custom_episode_slug setting

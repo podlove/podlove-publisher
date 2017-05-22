@@ -7,6 +7,10 @@ use \Podlove\Geo_Ip;
 
 class Tracking extends Tab {
 
+	public function get_slug() {
+		return 'tracking';
+	}	
+
 	public function init() {
 
 		add_settings_section(
