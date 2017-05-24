@@ -139,6 +139,7 @@ Download tracking is now turned on by default in new setups.
 * templates: immediately purge cache on updating any template
 * Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
 * job dashboard: add mode description to jobs where necessary to distinguish between different run settings
+* be tolerant to missing PHP iconv module
 
 = 2.5.3 =
 
