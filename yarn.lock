@@ -3289,9 +3289,9 @@ podcast-chapter-parser-audacity@^1.0.0:
   dependencies:
     normalplaytime "^1.0.6"
 
-podcast-chapter-parser-hindenburg@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-hindenburg/-/podcast-chapter-parser-hindenburg-1.0.0.tgz#6c2cdd51b8b121e09d78491fb94d0e55fc33522a"
+podcast-chapter-parser-hindenburg@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-hindenburg/-/podcast-chapter-parser-hindenburg-1.0.1.tgz#d10e2adbdd46253e50556dcfc1b4815dbdff3ebc"
   dependencies:
     mocha "^3.2.0"
     normalplaytime "^1.0.6"
