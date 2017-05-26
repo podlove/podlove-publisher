@@ -183,6 +183,14 @@ class Image {
 	 */
 	public function url() {
 
+		// In case the image cache doesn't work, it can be deactivated by 
+		// defining the PHP constant PODLOVE_DISABLE_IMAGE_CACHE = true.
+		// It's not recommended since that leads to all images being delivered full size
+		// instead of optimized resolutions.
+		if (defined('PODLOVE_DISABLE_IMAGE_CACHE') && PODLOVE_DISABLE_IMAGE_CACHE) {
+			return $this->source_url;
+		}
+
 		if (!$this->file_extension) {
 			Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
 			return apply_filters('podlove_image_url', $this->source_url);

@@ -142,6 +142,7 @@ Download tracking is now turned on by default in new setups.
 * be tolerant to missing PHP iconv module
 * fix Auphonic chapter import
 * update Hindenburg chapter parser
+* new PHP constant `PODLOVE_DISABLE_IMAGE_CACHE` to disable image caching
 
 = 2.5.3 =
 
