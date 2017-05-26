@@ -52,6 +52,7 @@
             <div :class="{'col-md-8': activeChapter, 'col-md-12': !activeChapter}">
                 <chapter 
                     v-for="chapter in sortedChapters"
+                    :key="chapter.id"
                     @activate="activateChapter(chapter)" 
                     :active="isActive(chapter)"
                     :start="chapter.start" 
