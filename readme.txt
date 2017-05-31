@@ -143,6 +143,7 @@ Download tracking is now turned on by default in new setups.
 * fix Auphonic chapter import
 * update Hindenburg chapter parser
 * new PHP constant `PODLOVE_DISABLE_IMAGE_CACHE` to disable image caching
+* fix security vulnerability (thanks to DefenseCode)
 
 = 2.5.3 =
 
