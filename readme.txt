@@ -104,11 +104,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.0 =
 
-**Podlove Web Player 4**
+**New Module: E-Mail Notifications**
 
-I can haz \o/
+This is a new module complementing the existing contributor module. Once activated, it enables you to send emails to contributors when an episode gets published.
 
-All web players can now be previewed on the settings screen.
+You can find the settings at `Contributors > E-Mail Nofitications`. The settings are:
+
+- _email subject and message_, customizable with all available template tags
+- a _time delay_ until the message is sent after the episode was published
+- who will receive the message by using _groups and roles as a filter_
+
+**Podlove Web Player 4 Alpha**
+
+After months of work we're ready to show you what we're working on: A new take on the modern Web Player. We learned from previous attempts and thought about responsiveness and embeddability from day one. Of course there's full support for chapter marks, too.
+
+Give it a try if you like. Be aware though that it's marked as _alpha_, meaning we're still working on new features and fixing bugs in existing ones when we find them. But if you're curious, head over to `Podlove > Podcast Settings > Player`, switch to Podlove Web Player 4 and [let us know what you think](https://community.podlove.org/c/podlove-web-player).
+
+And finally, all web players can now be previewed on the settings screen.
 
 **Templates**
 
