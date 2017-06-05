@@ -150,6 +150,8 @@ Download tracking is now turned on by default in new setups.
 * episode assets: new "name" attribute for reference in templates, for example `episode.file('cover').url` where "cover" is the asset name
 * support page: add Publisher icon to "Get Professional Support" callout
 * contributors: services only get deleted on "Save Changes", not immediately
+* contributors: fix sorting by contribution count in the admin interface
+* contributors: fix minor PHP issue when creating new contributors
 * templates: immediately purge cache on updating any template
 * Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
 * job dashboard: add mode description to jobs where necessary to distinguish between different run settings
