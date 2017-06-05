@@ -331,6 +331,12 @@ class Episode extends Wrapper {
 	/**
 	 * One episode file by asset name.
 	 * 
+	 * Example:
+	 * 
+	 * ```jinja
+	 * <a href="{{ episode.file("pdf").publicUrl }}">Download episode PDF</a>
+	 * ```
+	 * 
 	 * @see  file
 	 * @accessor
 	 */
