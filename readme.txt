@@ -108,7 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 This is a new module complementing the existing contributor module. Once activated, it enables you to send emails to contributors when an episode gets published.
 
-You can find the settings at `Contributors > E-Mail Nofitications`. The settings are:
+You can find the settings at `Contributors > E-Mail Notifications`. The settings are:
 
 - _email subject and message_, customizable with all available template tags
 - a _time delay_ until the message is sent after the episode was published
