@@ -120,6 +120,8 @@ After months of work we're ready to show you what we're working on: A new take o
 
 Give it a try if you like. Be aware though that it's marked as _alpha_, meaning we're still working on new features and fixing bugs in existing ones when we find them. But if you're curious, head over to `Podlove > Podcast Settings > Player`, switch to Podlove Web Player 4 and [let us know what you think](https://community.podlove.org/c/podlove-web-player).
 
+Once Podlove Web Player 4 is stable, it will be the only actively supported Podlove Player. Podlove Web Player 3 isn't being developed anymore.
+
 And finally, all web players can now be previewed on the settings screen.
 
 **Templates**
@@ -155,7 +157,7 @@ Download tracking is now turned on by default in new setups.
 * fix Auphonic chapter import
 * update Hindenburg chapter parser
 * new PHP constant `PODLOVE_DISABLE_IMAGE_CACHE` to disable image caching
-* fix security vulnerability (thanks to DefenseCode)
+* fix security vulnerability (thanks to DefenseCode, who found the vulnerability using their tool ThunderScan and kindly approached us)
 
 = 2.5.3 =
 
