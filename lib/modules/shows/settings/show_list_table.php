@@ -67,8 +67,8 @@ class ShowListTable extends \Podlove\List_Table {
 
 	public function get_columns(){
 		return array(
-			'image' => __( 'Image', 'podlove-podcasting-plugin-for-wordpress' ),
 			'title' => __( 'Show', 'podlove-podcasting-plugin-for-wordpress' ),
+			'image' => __( 'Image', 'podlove-podcasting-plugin-for-wordpress' ),
 			'episodes' => __( 'Episodes', 'podlove-podcasting-plugin-for-wordpress' ),
 			'show_feeds' => __( 'Subscribe URLs', 'podlove-podcasting-plugin-for-wordpress' )
 		);
