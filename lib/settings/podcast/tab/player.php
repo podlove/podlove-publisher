@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Settings\Podcast\Tab;
 use \Podlove\Settings\Podcast\Tab;
+use Podlove\Model\Episode;
 
 class Player extends Tab {
 
@@ -49,7 +50,7 @@ class Player extends Tab {
 				'key' => 'inject',
 				'options' => [
 					'label'       => __( 'Insert player automatically', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatvely, use the shortcode <code>[podlove-episode-web-player]</code> or templates.', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'Automatically insert web player shortcode at beginning or end of an episode. Alternatively, use the shortcode <code>[podlove-episode-web-player]</code> or templates.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'options'     => array(
 						'manually'  => __( 'no automatic insertion', 'podlove-podcasting-plugin-for-wordpress' ),
 						'beginning' => __( 'insert at the beginning', 'podlove-podcasting-plugin-for-wordpress' ),
@@ -107,5 +108,22 @@ class Player extends Tab {
 				$wrapper->{$entry['type']}($entry['key'], $entry['options']);
 			}
 		});	
+
+		$this->preview_section();
+	}
+
+	public function preview_section() {
+		echo '<h3>Preview</h3>';
+		$episode = Episode::latest();
+		if ($episode) {
+			$this->preview_player($episode);
+		} else {
+			echo __('Sorry, found no episode to use as preview.', 'podlove-podcasting-plugin-for-wordpress');
+		}
+	}
+
+	public function preview_player($episode) {
+		$printer = \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::get_player_printer($episode);
+		echo $printer->render('preview');
 	}
 }

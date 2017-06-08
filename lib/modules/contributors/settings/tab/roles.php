@@ -7,6 +7,10 @@ class Roles extends Tab {
 
 	private $page = NULL;
 
+	public function get_slug() {
+		return 'roles';
+	}
+
 	public function init() {
 		$this->page_type = 'custom';
 		add_action( 'podlove_expert_settings_page', array( $this, 'register_page' ) );

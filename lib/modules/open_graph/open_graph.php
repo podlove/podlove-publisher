@@ -60,7 +60,7 @@ class Open_Graph extends \Podlove\Modules\Base {
 			if ( ! $post_id )
 				return;
 
-			$post = get_post($episode->post_id);
+			$post = get_post($post_id);
 
 			$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
 			if ( ! $episode )

@@ -7,6 +7,10 @@ use \Podlove\Geo_Ip;
 
 class Tracking extends Tab {
 
+	public function get_slug() {
+		return 'tracking';
+	}	
+
 	public function init() {
 
 		add_settings_section(
@@ -33,21 +37,24 @@ class Tracking extends Tab {
 			),
 			/* $callback */ function () {
 				?>
+
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 0 ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="ptm_analytics" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm_analytics' ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'No Tracking', 'podlove-podcasting-plugin-for-wordpress' ),
-								__( 'Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress' )
+								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
+									The Publisher logs the download intent and redirects the user to the original file. 
+									That way the Publisher is able to generate download statistics. ', 'podlove' )
 							); ?>
 						</div>
 					</div>
 				</label>
-				
+
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
@@ -68,19 +75,18 @@ class Tracking extends Tab {
 				<label class="aligned-radio">
 					<div class="row">
 						<div>
-							<input name="podlove_tracking[mode]" type="radio" value="ptm_analytics" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 'ptm_analytics' ) ?> />
+							<input name="podlove_tracking[mode]" type="radio" value="0" <?php checked( \Podlove\get_setting( 'tracking', 'mode' ), 0 ) ?> />
 						</div>
 						<div>
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
-								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
-								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
-									The Publisher logs the download intent and redirects the user to the original file. 
-									That way the Publisher is able to generate download statistics. ', 'podlove' )
+								__( 'No Tracking', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>
 				</label>
+				
 				<?php
 			},
 			/* $page     */ Settings::$pagehook,  
@@ -129,8 +135,10 @@ class Tracking extends Tab {
 				<p>
 					<!-- This snippet must be included, as stated here: http://dev.maxmind.com/geoip/geoip2/geolite2/ -->
 					<em>
-						This product includes GeoLite2 data created by MaxMind, available from
-						<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+						<?php echo sprintf(
+							__('This product includes GeoLite2 data created by MaxMind, available from %s.', 'podlove-podcasting-plugin-for-wordpress'),
+							'<a href="http://www.maxmind.com">http://www.maxmind.com</a>'
+						) ?>
 					</em>
 				</p>
 				<?php
@@ -177,54 +185,58 @@ class Tracking extends Tab {
 				$actual_url = $media_file->get_file_url(); 
 
 				?>
-				<h4>Example Episode</h4>
+				<h4><?php __('Example Episode', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
 				<p>
 					<?php echo $episode->full_title() ?>
 				</p>
-				<h4>Media File</h4>
+				<h4><?php __('Media File', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
 				<p>
-					<h5>Actual Location</h5>
+					<h5><?php __('Actual Location', 'podlove-podcasting-plugin-for-wordpress') ?></h5>
 					<code><?php echo $actual_url ?></code>
 				</p>
 				<p>
-					<h5>Public URL</h5>
+					<h5><?php __('Public URL', 'podlove-podcasting-plugin-for-wordpress') ?></h5>
 					<code><?php echo $public_url ?></code>
 				</p>
 				<p>
-					<h5>Validations</h5>
+					<h5><?php __('Validations', 'podlove-podcasting-plugin-for-wordpress') ?></h5>
 					<ul>
 						<li>
 							<!-- check rewrite rules -->
 							<?php if ( \Podlove\Tracking\Debug::rewrites_exist() ): ?>
-								✔ Rewrite Rules Exist
+								✔ <?php _e('Rewrite Rules Exist', 'podlove-podcasting-plugin-for-wordpress') ?>
 							<?php else: ?>
-								✘ <strong>Rewrite Rules Missing</strong>
+								✘ <strong><?php _e('Rewrite Rules Missing', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
 								<!-- todo: repair button -->
 							<?php endif; ?>
 						</li>
 						<li>
 							<?php if ( \Podlove\Tracking\Debug::url_resolves_correctly($public_url, $actual_url) ): ?>
-								✔ URL resolves correctly
+								✔ <?php _e('URL resolves correctly', 'podlove-podcasting-plugin-for-wordpress') ?>
 							<?php else: ?>
-								✘ <strong>URL does not resolve correctly</strong>
+								✘ <strong><?php _e('URL does not resolve correctly', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
 							<?php endif; ?>
 						</li>
 						<li>
 							<!-- check http/https consistency -->
 							<?php if ( \Podlove\Tracking\Debug::is_consistent_https_chain($public_url, $actual_url) ): ?>
-								✔ Consistent protocol chain
+								✔ <?php _e('Consistent protocol chain', 'podlove-podcasting-plugin-for-wordpress') ?>
 							<?php else: ?>
-								✘ <strong>Protocol chain is inconsistent</strong>: Your site uses SSL but the files are not served with SSL.
-								Many clients will not allow to download episodes. To fix this, serve files via SSL or deactivate tracking.
+								✘ <strong><?php _e('Protocol chain is inconsistent', 'podlove-podcasting-plugin-for-wordpress') ?></strong>: <?php _e('Your site uses SSL but the files are not served with SSL. Many clients will not allow to download episodes. To fix this, serve files via SSL or deactivate tracking.', 'podlove-podcasting-plugin-for-wordpress') ?>
 							<?php endif; ?>
 						</li>
 						<li>
 							<?php if (Geo_Ip::is_db_valid()): ?>
-								✔ Geolocation database valid
+								✔ <?php _e('Geolocation database valid', 'podlove-podcasting-plugin-for-wordpress') ?>
 								<?php Geo_Ip::enable_tracking(); ?>
 							<?php else: ?>
 								<?php Geo_Ip::disable_tracking(); ?>
-								✘ <strong>Geolocation database invalid</strong>: Try to delete it manually: <code><?php echo Geo_Ip::get_upload_file_path() ?></code>, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: <a href="<?php echo esc_url(Geo_Ip::SOURCE_URL); ?>" download><?php echo Geo_Ip::SOURCE_URL; ?></a>
+								✘ <strong><?php _e('Geolocation database invalid or outdated', 'podlove-podcasting-plugin-for-wordpress') ?></strong>:
+								<?php echo sprintf(
+									__('Try updating it using the button above. If that doesn\'t work, delete it manually: %s, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: %s', 'podlove-podcasting-plugin-for-wordpress'),
+									'<code>' . esc_html(Geo_Ip::get_upload_file_path()) . '</code>',
+									'<a href="' . esc_url(Geo_Ip::SOURCE_URL) . '" download>' . esc_html(Geo_Ip::SOURCE_URL) . '</a>'
+								) ?>
 							<?php endif ?>
 						</li>
 					</ul>

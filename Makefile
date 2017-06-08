@@ -4,7 +4,8 @@ player_dst = lib/modules/podlove_web_player/player_v3
 update_subscribe_button:
 	rm -rf .tmppsb
 	git clone https://github.com/podlove/podlove-subscribe-button.git .tmppsb
-	mv .tmppsb/dist lib/modules/subscribe_button/
+	rm -rf lib/modules/subscribe_button/dist
+	mv .tmppsb/dist lib/modules/subscribe_button/dist
 	rm -rf .tmppsb
 
 player:

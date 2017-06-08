@@ -58,7 +58,7 @@
 - title: 'Flattr'
   name: 'flattr'
   category: 'social'
-  description: 'Flattr Account'
+  description: 'Flattr Username'
   logo: 'flattr.png'
   url_scheme: 'https://flattr.com/profile/%account-placeholder%'
 
@@ -282,7 +282,7 @@
 - title: 'Flattr'
   name: 'flattr'
   category: 'donation'
-  description: 'Flattr Account'
+  description: 'Flattr Username'
   logo: 'flattr.png'
   url_scheme: 'https://flattr.com/profile/%account-placeholder%'
 

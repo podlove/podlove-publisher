@@ -8,6 +8,10 @@ class Contributors extends Tab {
 
 	private $page = NULL;
 
+	public function get_slug() {
+		return 'contributors';
+	}
+
 	public function init() {
 		$this->page_type = 'custom';
 		add_action( 'podlove_expert_settings_page', array( $this, 'register_page' ) );
@@ -175,7 +179,8 @@ class Contributors extends Tab {
 
 		$form_sections = apply_filters('podlove_contributor_settings_sections', $form_sections);
 
-		$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $_REQUEST['contributor'] );
+		if ( $_GET["action"] !== 'new' )
+			$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id( $_REQUEST['contributor'] );
 
 		switch ( $_GET["action"] ) {
 			case 'new':   $action = 'create';  break;

@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 4.7.3
+Tested up to: 4.7.5
 Stable tag: trunk
 License: MIT
 
@@ -104,9 +104,25 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.0 =
 
-**Podlove Web Player 4**
+**New Module: E-Mail Notifications**
 
-I can haz \o/
+This is a new module complementing the existing contributor module. Once activated, it enables you to send emails to contributors when an episode gets published.
+
+You can find the settings at `Contributors > E-Mail Notifications`. The settings are:
+
+- _email subject and message_, customizable with all available template tags
+- a _time delay_ until the message is sent after the episode was published
+- who will receive the message by using _groups and roles as a filter_
+
+**Podlove Web Player 4 Alpha**
+
+After months of work we're ready to show you what we're working on: A new take on the modern Web Player. We learned from previous attempts and thought about responsiveness and embeddability from day one. Of course there's full support for chapter marks, too.
+
+Give it a try if you like. Be aware though that it's marked as _alpha_, meaning we're still working on new features and fixing bugs in existing ones when we find them. But if you're curious, head over to `Podlove > Podcast Settings > Player`, switch to Podlove Web Player 4 and [let us know what you think](https://community.podlove.org/c/podlove-web-player).
+
+Once Podlove Web Player 4 is stable, it will be the only actively supported Podlove Player. Podlove Web Player 3 isn't being developed anymore.
+
+And finally, all web players can now be previewed on the settings screen.
 
 **Templates**
 
@@ -114,6 +130,10 @@ I can haz \o/
 * Contributors already had such an id, but now there is a new accessor to get a single contributor by id, for example: `podcast.contributor("jerry")`
 * DEPRECATED: id parameter in `podcast.contributors` to access a single contributor: `podcast.contributors({id: "jerry"})`.
 * Feeds can now be accessed the same way by their slug: `podcast.feed("mp3")`
+
+**Analytics**
+
+Download tracking is now turned on by default in new setups.
 
 **Bits & Pieces**
 
@@ -130,9 +150,20 @@ I can haz \o/
 * episode assets: new "name" attribute for reference in templates, for example `episode.file('cover').url` where "cover" is the asset name
 * support page: add Publisher icon to "Get Professional Support" callout
 * contributors: services only get deleted on "Save Changes", not immediately
+* contributors: fix sorting by contribution count in the admin interface
+* contributors: fix minor PHP issue when creating new contributors
 * templates: immediately purge cache on updating any template
 * Podlove Subscribe Button: add module option to deliver locally instead of using the CDN, but continue to default to CDN
 * job dashboard: add mode description to jobs where necessary to distinguish between different run settings
+* be tolerant to missing PHP iconv module
+* fix Auphonic chapter import
+* update Hindenburg chapter parser
+* new PHP constant `PODLOVE_DISABLE_IMAGE_CACHE` to disable image caching
+* fix security vulnerability (thanks to DefenseCode, who found the vulnerability using their tool ThunderScan and kindly approached us)
+
+= 2.5.3 =
+
+* fix broken settings tabs (introduced by German translation)
 
 = 2.5.2 =
 

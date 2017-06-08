@@ -78,7 +78,7 @@ class ContributorExtension {
 			]
 		];
 
-		return \Podlove\PHP\array_insert($fields, 'slug', $field);
+		return \Podlove\PHP\array_insert($fields, 'guid', $field);
 	}
 
 	public static function adjust_contributors_shortcode_defaults($defaults) {

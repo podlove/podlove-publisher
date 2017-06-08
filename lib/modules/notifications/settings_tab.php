@@ -53,13 +53,6 @@ class SettingsTab extends Tab {
 			/* $title 	 */ __( '', 'podlove-podcasting-plugin-for-wordpress' ),	
 			/* $callback */ function () {
 				echo '<h3>' . __( 'E-Mail Notification Settings', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>';
-				?>
-				<p>
-					<span class="description">
-						<?php echo __( 'Delay in minutes after an episode is published before notification e-mails are sent. Note that it may always take a few minutes longer than specified until e-mails are sent out.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
-					</span>
-				</p>				
-				<?php
 			},
 			/* $page	 */ $hook	
 		);
@@ -73,6 +66,11 @@ class SettingsTab extends Tab {
 			/* $callback */ function () {
 				?>
 				<input name="podlove_notifications[delay]" id="podlove_delay" type="number" value="<?php echo esc_attr(\Podlove\get_setting('notifications', 'delay')) ?>" class="text"> <?php _e('minutes', 'podlove-podcasting-plugin-for-wordpress') ?>
+				<p>
+					<span class="description">
+						<?php echo __( 'Delay in minutes after an episode is published before notification e-mails are sent. Note that it may always take a few minutes longer than specified until e-mails are sent out.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+					</span>
+				</p>	
 				<?php
 			},
 			/* $page     */ $hook,  

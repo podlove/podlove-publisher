@@ -172,14 +172,17 @@ class Contributor_List_Table extends \Podlove\List_Table {
 		$this->_column_headers = $this->get_column_info();
 
 		// look for order options
-		if( isset($_GET['orderby'])  ) {
-			$orderby = 'ORDER BY ' . esc_sql($_GET['orderby']);
+
+		$orderby_whitelist = array_keys($this->get_sortable_columns());
+
+		if( isset($_GET['orderby']) && in_array($_GET['orderby'], $orderby_whitelist) ) {
+			$orderby = 'ORDER BY ' . $_GET['orderby'];
 		} else{
 			$orderby = 'ORDER BY contributioncount';
 		}
 
 		// look how to sort
-		if ( filter_input(INPUT_GET, 'order') === 'ASC' ) {
+		if ( strtolower( filter_input(INPUT_GET, 'order') ) === 'asc' ) {
 			$order = 'ASC';
 		} else{
 			$order = 'DESC';

@@ -57,7 +57,9 @@ class Image {
 		// manually remove troublemaking characters
 		// @see https://community.podlove.org/t/solved-kind-of-cover-art-disappears-caching-issue/478/
 		// @see https://sendegate.de/t/problem-mit-caching-von-grafiken/2947
-		$this->file_name = iconv('UTF-8', 'ASCII//TRANSLIT', $this->file_name);
+		if (function_exists('iconv')) {
+			$this->file_name = iconv('UTF-8', 'ASCII//TRANSLIT', $this->file_name);
+		}
 		$this->file_name = preg_replace('~[^-a-z0-9_]+~', '', $this->file_name);
 
 		$this->file_extension = $this->extract_file_extension();
@@ -180,6 +182,14 @@ class Image {
 	 * @return string image URL
 	 */
 	public function url() {
+
+		// In case the image cache doesn't work, it can be deactivated by 
+		// defining the PHP constant PODLOVE_DISABLE_IMAGE_CACHE = true.
+		// It's not recommended since that leads to all images being delivered full size
+		// instead of optimized resolutions.
+		if (defined('PODLOVE_DISABLE_IMAGE_CACHE') && PODLOVE_DISABLE_IMAGE_CACHE) {
+			return $this->source_url;
+		}
 
 		if (!$this->file_extension) {
 			Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));

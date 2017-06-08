@@ -5,7 +5,7 @@ Vue.component('chapter', require('./components/Chapter.vue'));
 Vue.component('chapter-form', require('./components/ChapterForm.vue'));
 
 if (document.getElementById('podlove-chapters-app')) {
-    const chapters = new Vue({
+    window.chaptersApp = new Vue({
         el: '#podlove-chapters-app'
     });
 }

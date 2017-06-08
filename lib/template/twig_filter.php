@@ -80,10 +80,27 @@ class TwigFilter {
 		}
 
 		if (!$result) {
-			// simple Twig Env to render plain string
-			$twig     = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
-			$template = $twig->createTemplate($html);
-			$result   = $template->render($context);
+			try {
+				// simple Twig Env to render plain string
+				$env = new \Twig_Environment(new \Twig_Loader_Array([]), ['autoescape' => false]);
+
+				// no clue yet how this is possible but it happens
+				if (method_exists($env, 'createTemplate')) {
+					$template = $env->createTemplate($html);
+					$result   = $template->render($context);
+				} else {
+					\Podlove\Log::get()->addError("Error when rendering Twig template from string. Missing Twig_Environment::createTemplate method.", [
+						'type'     => 'twig',
+						'template' => $html
+					]);
+				}
+
+			} catch (Exception $e) {
+				\Podlove\Log::get()->addError("Error when rendering Twig template from string: " . $e->getMessage(), [
+					'type'     => 'twig',
+					'template' => $html
+				]);
+			}
 		}
 
 		return $result;
@@ -93,7 +110,7 @@ class TwigFilter {
 	{
 		// file loader for internal use
 		$file_loader = new \Twig_Loader_Filesystem();
-		$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'templates')), 'core');
+		$file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'templates']), 'core');
 
 		// other modules can register their own template directories/namespaces
 		$file_loader = apply_filters('podlove_twig_file_loader', $file_loader);
@@ -109,7 +126,7 @@ class TwigFilter {
 
 	private static function getTwigEnv()
 	{
-		$twig = new \Twig_Environment(self::getTwigLoader(), array('autoescape' => false));
+		$twig = new \Twig_Environment(self::getTwigLoader(), ['autoescape' => false]);
 		$twig->addExtension(new \Twig_Extensions_Extension_I18n());
 		$twig->addExtension(new \Twig_Extensions_Extension_Date());
 

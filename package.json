@@ -8,10 +8,10 @@
     "cloc": "cloc --by-file-by-lang --exclude-dir=node_modules,vendor,player_v2,.git,jquery-ui --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" *"
   },
   "devDependencies": {
-    "laravel-mix": "^0.8.*",
+    "laravel-mix": "^0.12.1",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
-    "podcast-chapter-parser-hindenburg": "^1.0.0",
+    "podcast-chapter-parser-hindenburg": "^1.0.1",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
     "vue": "^2.2.4"
