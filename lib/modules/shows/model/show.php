@@ -1,5 +1,6 @@
 <?php 
 namespace Podlove\Modules\Shows\Model;
+
 use \Podlove\Model\Image;
 use \Podlove\Model\Episode;
 
@@ -26,7 +27,7 @@ class Show {
 		$this->language = '';
 	}
 
-	/*
+	/**
 	 * Searches all Show terms and returns all values matching $property == $value
 	 * 
 	 * @param string $property
@@ -97,7 +98,7 @@ class Show {
 		return self::find_all_terms_by_property();
 	}
 
-	/*
+	/**
 	 * Returns terms as a well-defined object including all meta data.
 	 * 
 	 * @param mixed $terms Term(s) to be formated
@@ -105,30 +106,31 @@ class Show {
 	 * @return mixed Returns an array if an array or object based on the type of $terms
 	 */
 	public static function format_terms($terms) {
-		$format_terms = function($term) {
-			$term_object = new Show;
-			$term_object->id = $term->term_id;
-			$term_object->title = $term->name;
-			$term_object->subtitle = get_term_meta( $term->term_id, 'subtitle', true );
-			$term_object->slug = $term->slug;
-			$term_object->summary = $term->description;
-			$term_object->image = get_term_meta( $term->term_id, 'image', true );
-			$term_object->language = get_term_meta( $term->term_id, 'language', true );
-
-			return $term_object;
-		};
-
-		if ( ! is_array($terms) ) {
-			return $format_terms($terms);
+		if (is_array($terms)) {
+			return array_map([__CLASS__, 'format_term'], $terms);
 		} else {
-			$formated_terms = [];
-
-			foreach ($terms as $term) {
-				$formated_terms[] = $format_terms($term);
-			}
-
-			return $formated_terms;
+			return self::format_term($terms);
 		}
+	}
+
+	/**
+	 * Convert show term to instance of this show class.
+	 * 
+	 * @param  [type] $term [description]
+	 * @return [type]       [description]
+	 */
+	public static function format_term($term)
+	{
+		$show           = new Show;
+		$show->id       = $term->term_id;
+		$show->title    = $term->name;
+		$show->subtitle = get_term_meta( $term->term_id, 'subtitle', true );
+		$show->slug     = $term->slug;
+		$show->summary  = $term->description;
+		$show->image    = get_term_meta( $term->term_id, 'image', true );
+		$show->language = get_term_meta( $term->term_id, 'language', true );
+
+		return $show;		
 	}
 
 	public function image() {
