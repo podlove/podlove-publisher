@@ -102,6 +102,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.6.1 =
+
+**Flattr**
+
+- rename "Flattr Username" to "Flattr ID"
+- insert `flattr:id` meta tag to page heads, which is required for their new system
+
 = 2.6.0 =
 
 **New Module: E-Mail Notifications**

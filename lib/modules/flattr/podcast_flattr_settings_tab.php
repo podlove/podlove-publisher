@@ -53,7 +53,12 @@ class PodcastFlattrSettingsTab extends Tab {
 			$podcast = $form->object;
 
 			$wrapper->string('account', [
-				'label' => __('Flattr Username', 'podlove-podcasting-plugin-for-wordpress'),
+				'label' => __('Flattr ID', 'podlove-podcasting-plugin-for-wordpress'),
+				'description' => sprintf(
+					__('You can find your Flattr ID %shere%s.', 'podlove-podcasting-plugin-for-wordpress'), 
+					'<a href="https://flattr.com/settings/domains" target="_blank">',
+					'</a>'
+				),
 				'html'  => ['class' => 'regular-text required podlove-check-input']
 			]);
 
