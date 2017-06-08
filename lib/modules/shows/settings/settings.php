@@ -194,6 +194,13 @@ class Settings {
 	}
 		
 	private function view_template() {
+		?>
+		<style type="text/css">
+		.wp-list-table.shows .column-image    { width: 150px; }
+		.wp-list-table.shows .column-title    { width: 250px; }
+		.wp-list-table.shows .column-episodes { width: 90px; }
+		</style>		
+		<?php
 		$this->table->prepare_items();
 		$this->table->display();
 	}
