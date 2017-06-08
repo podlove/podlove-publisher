@@ -256,7 +256,7 @@ class SystemReport {
 		$out .= "\n";
 
 		if ( $number_of_errors = count( $this->errors ) ) {
-			$out .= sprintf( _n( '%s ERROR', '%s ERRORS', $number_of_errors, 'podlove' ), $number_of_errors );
+			$out .= sprintf( _n( '%s ERROR', '%s ERRORS', $number_of_errors, 'podlove-podcasting-plugin-for-wordpress' ), $number_of_errors );
 			$out .= ": \n";
 			foreach ( $this->errors as $error ) {
 				$out .= "- $error\n";
@@ -266,7 +266,7 @@ class SystemReport {
 		}
 
 		if ( $number_of_notices = count( $this->notices ) ) {
-			$out .= sprintf( _n( '%s NOTICE', '%s NOTICES', $number_of_notices, 'podlove' ), $number_of_notices );
+			$out .= sprintf( _n( '%s NOTICE', '%s NOTICES', $number_of_notices, 'podlove-podcasting-plugin-for-wordpress' ), $number_of_notices );
 			$out .= " (no dealbreaker, but should be fixed if possible): \n";
 			foreach ( $this->notices as $error ) {
 				$out .= "- $error\n";

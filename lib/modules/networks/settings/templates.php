@@ -52,7 +52,7 @@ class Templates {
 			'Use network templates to share common templates in your podcast sites. 
 			They are available in all podcast sites.
 			If you define a local template for a template ID that also exists network-wide, the local template takes precedence.', 
-			'podlove'
+			'podlove-podcasting-plugin-for-wordpress'
 		);
 
 		$templates = Template::with_network_scope(function(){

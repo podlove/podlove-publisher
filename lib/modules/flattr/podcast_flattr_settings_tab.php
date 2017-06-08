@@ -37,7 +37,7 @@ class PodcastFlattrSettingsTab extends Tab {
 		?>
 		<p>
 			<?php echo __('This Flattr account will be associated with your Podcast. Flattr donations for e.g. new episodes
-							will be linked with this account.', 'podlove') ?>
+							will be linked with this account.', 'podlove-podcasting-plugin-for-wordpress') ?>
 		</p>
 		<style type="text/css">
 		/* add linebreak after each radio button+label */

@@ -44,7 +44,7 @@ class ContributorRepair {
 
 		Repair::add_to_repair_log(
 			sprintf(
-				_n( 'Deleted 1 duplicate contribution', 'Deleted %s duplicate contributions', count($contributions), 'podlove' ),
+				_n( 'Deleted 1 duplicate contribution', 'Deleted %s duplicate contributions', count($contributions), 'podlove-podcasting-plugin-for-wordpress' ),
 				count($contributions)
 			)
 		);
