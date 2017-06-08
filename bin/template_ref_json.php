@@ -34,6 +34,7 @@ $dynamicAccessorClasses = [
 	'\Podlove\Modules\Contributors\TemplateExtensions',
 	'\Podlove\Modules\Seasons\TemplateExtensions',
 	'\Podlove\Modules\RelatedEpisodes\TemplateExtensions',
+	'\Podlove\Modules\Shows\TemplateExtensions',
 	'\Podlove\Modules\Social\TemplateExtensions',
 	'\Podlove\Modules\SubscribeButton\TemplateExtensions',
 ];
