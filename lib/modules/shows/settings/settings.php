@@ -220,9 +220,15 @@ class Settings {
 			$show  = $form->object;
 			$generic_feed = \Podlove\Model\Feed::first();
 
+			$podcast = \Podlove\Model\Podcast::get();
+
 	 		$wrapper->string('title', [
 	 			'label'       => __('Title', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => ['class' => 'regular-text podlove-check-input']
+	 			'html'        => ['class' => 'regular-text podlove-check-input'],
+	 			'description' => sprintf(
+	 				__('Title of your show as it appears in the feed. It is probably a good idea to include the name of your main podcast. For example, instead of "Outtakes", name the show "%s | Outtakes".', 'podlove-podcasting-plugin-for-wordpress'),
+	 				$podcast->title
+	 			)
 	 		]);
 
 	 		$wrapper->string('slug', [
@@ -233,12 +239,22 @@ class Settings {
 
 	 		$wrapper->string('subtitle', [
 	 			'label'       => __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => ['class' => 'regular-text podlove-check-input']
+	 			'description' => __('Subtitle of your show as it appears in the feed. Leave blank to default to your podcast\'s subtitle.', 'podlove-podcasting-plugin-for-wordpress'),
+	 			'html'        => [
+	 				'class' => 'regular-text podlove-check-input', 
+	 				'placeholder' => $podcast->subtitle
+	 			]
 	 		]);
 
 	 		$wrapper->text('summary', [
 	 			'label'       => __('Summary', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
+	 			'description' => __('Summary of your show as it appears in the feed. Leave blank to default to your podcast\'s summary.', 'podlove-podcasting-plugin-for-wordpress'),
+	 			'html'        => [
+		 			'rows'  => 3, 
+		 			'cols'  => 40, 
+	 				'placeholder' => $podcast->summary,
+		 			'class' => 'autogrow podlove-check-input'
+	 			]
 	 		]);
 
 	 		$wrapper->upload('image', [

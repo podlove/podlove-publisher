@@ -3,12 +3,15 @@ return [
 	'podlove_help_shows' => [
 		'title'   => __('Shows', 'podlove-podcasting-plugin-for-wordpress'),
 		'content' => 
-			'<p>
-				'.__(
-					'Please find information on Podcast Networks in the <a href="http://docs.podlove.org/podlove-publisher/guides/podcast-network.html">Podlove Publisher Documentation</a>.', // @todo: Add a good description on the differences between shows and networks.
+			'<p>'
+			. sprintf(
+				__(
+					'Use shows to offer feeds to subtopics of your podcast. If your shows are unrelated, a WordPress Network is better suited than the shows module. Have a look at %sthe documentation%s for a detailed overview.', // @todo: Add a good description on the differences between shows and networks.
 					'podlove-podcasting-plugin-for-wordpress'
-				).'
-			</p>'
+				),
+				'<a href="http://docs.podlove.org/podlove-publisher/guides/podcast-network.html" target="_blank">',
+				'</a>'
+			) . '</p>'
 	],
 	'podlove_help_shows_slug' => [
 		'title'   => __('Show Slug', 'podlove-podcasting-plugin-for-wordpress'),
