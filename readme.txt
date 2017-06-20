@@ -104,6 +104,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.1 =
 
+- fix template bug (when a template returned an empty result, the template title was displayed instead)
+
 **Flattr**
 
 - rename "Flattr Username" to "Flattr ID"
