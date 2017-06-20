@@ -4,6 +4,7 @@ namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 use Podlove\Model\Episode;
 use Podlove\Model\Podcast;
 use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
+use Podlove\Modules\Social\Model\ContributorService;
 
 class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
@@ -67,6 +68,33 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'secondary' => $player_settings['playerv4_color_secondary']
 			]
 		];
+
+		$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
+		$contributors = array_map(function ($c)	{
+			$role = $c->getRole();
+			$group = $c->getGroup();
+			$contributor = $c->getContributor();
+
+			$services = ContributorService::find_by_contributor_id_and_category($contributor->id, 'social');
+
+			return [
+				'name'  => $contributor->getName(),
+				'image' => $contributor->avatar()->url(),
+				'role'  => $role  ? $role->title  : '',
+				'group' => $group ? $group->title : '',
+				'social' => array_map(function ($s) {
+					$service = $s->get_service();
+					return [
+						'service' => $service->title,
+						'type'    => $service->type,
+						'url'     => $s->get_service_url(),
+						'image'   => $service->image()->url()
+					];
+				}, $services)
+			];
+		}, $contributions);
+
+		$config['contributors'] = $contributors;
 
 		return $config;
 	}
