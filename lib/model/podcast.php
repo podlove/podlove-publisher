@@ -364,6 +364,7 @@ class Podcast implements Licensable {
 
 Podcast::property( 'title' );
 Podcast::property( 'subtitle' );
+Podcast::property( 'itunes_type' );
 Podcast::property( 'cover_image' );
 Podcast::property( 'summary' );
 Podcast::property( 'author_name' );

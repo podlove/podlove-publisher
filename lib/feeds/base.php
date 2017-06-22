@@ -132,6 +132,11 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo apply_filters( 'podlove_feed_itunes_author', $author );
 		echo PHP_EOL;
 
+		$type = in_array($podcast->itunes_type, ['episodic', 'serial']) ? $podcast->itunes_type : 'episodic';
+		$type = "\t" . sprintf( '<itunes:type>%s</itunes:type>', $type );
+		echo apply_filters( 'podlove_feed_itunes_type', $type );
+		echo PHP_EOL;
+
 		$summary = "\t" . sprintf( '<itunes:summary>%s</itunes:summary>', $podcast->summary );
 		echo apply_filters( 'podlove_feed_itunes_summary', $summary );
 		echo PHP_EOL;
