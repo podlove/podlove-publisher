@@ -31,6 +31,8 @@ class Seasons extends \Podlove\Modules\Base {
 			return $status;
 		}, 10, 3 );
 
+		add_action('podlove_append_to_feed_entry', [$this, 'add_season_number_to_feed'], 10, 4);
+
 		\Podlove\Template\Podcast::add_accessor(
 			'seasons', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'], 3
 		);
@@ -64,6 +66,18 @@ class Seasons extends \Podlove\Modules\Base {
 			['jquery'],
 			\Podlove\get_plugin_header('Version')
 		);
+	}
+
+
+	public function add_season_number_to_feed($podcast, $episode, $feed, $format) {
+		$season = Season::for_episode($episode);
+
+		if (!$season)
+			return;
+
+		$number = $season->number();
+
+		echo sprintf("\n\t\t<itunes:season>%d</itunes:season>", $number);
 	}
 
 	/**
