@@ -82,7 +82,7 @@ class Builder {
 		$this->build_input_values( $object_key, $arguments );
 		?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<input type="<?php echo $arguments['type'] ? $arguments['type'] : 'text' ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
 	}
