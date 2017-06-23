@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 128 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 129 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1323,6 +1323,12 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query($sql1);
 			$wpdb->query($sql2);
 			$wpdb->query($sql3);
+		break;
+		case 129:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `mnemonic` VARCHAR(8)',
+				\Podlove\Modules\Seasons\Model\Season::table_name()
+			) );
 		break;
 	}
 

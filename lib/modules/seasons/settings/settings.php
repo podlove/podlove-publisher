@@ -3,6 +3,7 @@ namespace Podlove\Modules\Seasons\Settings;
 
 use \Podlove\Modules\Seasons\Model\Season;
 use \Podlove\Modules\Seasons\Model\SeasonsValidator;
+use Podlove\Model\Podcast;
 
 class Settings {
 
@@ -185,20 +186,41 @@ class Settings {
 		\Podlove\Form\build_for( $season, $form_args, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$season  = $form->object;
+			$podcast = Podcast::get();
 
 	 		$wrapper->string('title', [
 	 			'label'       => __('Title', 'podlove-podcasting-plugin-for-wordpress') . \Podlove\get_help_link('podlove_help_seasons_title'),
-	 			'html'        => ['class' => 'regular-text podlove-check-input']
+	 			'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+	 			'html'        => [
+	 				'class' => 'regular-text podlove-check-input',
+	 				'placeholder' => $podcast->title
+	 			]
 	 		]);
 
 	 		$wrapper->string('subtitle', [
 	 			'label'       => __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => ['class' => 'regular-text podlove-check-input']
+	 			'html'        => [
+	 				'class' => 'regular-text podlove-check-input',
+	 				'placeholder' => $podcast->subtitle
+	 			]
 	 		]);
 
 	 		$wrapper->text('summary', [
 	 			'label'       => __('Summary', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
+	 			'html'        => [
+	 				'rows' => 3, 
+	 				'cols' => 40, 
+	 				'class' => 'autogrow podlove-check-input',
+	 				'placeholder' => $podcast->summary	 			
+	 			]
+	 		]);
+
+	 		$wrapper->string('mnemonic', [
+	 			'label'       => __('Mnemonic', 'podlove-podcasting-plugin-for-wordpress'),
+	 			'html'        => [
+	 				'class' => 'regular-text podlove-check-input',
+	 				'placeholder' => $podcast->mnemonic
+	 			]
 	 		]);
 
 	 		$wrapper->string('start_date', [

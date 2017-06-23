@@ -232,5 +232,6 @@ Season::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
 Season::property('title', 'VARCHAR(255)');
 Season::property('subtitle', 'TEXT');
 Season::property('summary', 'TEXT');
+Season::property('mnemonic', 'VARCHAR(8)');
 Season::property('image', 'TEXT');
 Season::property('start_date', 'DATE');

@@ -17,7 +17,7 @@ class Description extends Tab {
 		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
 			return;
 
-		$formKeys = ['title', 'subtitle', 'summary', 'language', 'cover_image', 'itunes_type'];
+		$formKeys = ['title', 'subtitle', 'summary', 'language', 'cover_image', 'itunes_type', 'mnemonic'];
 
 		$settings = get_option('podlove_podcast');
 		foreach ($formKeys as $key) {
@@ -70,6 +70,12 @@ class Description extends Tab {
 				'description'  => __( 'Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'html'         => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'  ),
 				'media_button_text' => __('Use for Podcast Cover Art', 'podlove-podcasting-plugin-for-wordpress')
+			) );
+
+			$wrapper->string( 'mnemonic', array(
+				'label'       => __( 'Mnemonic', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description'  => __( 'Abbreviation for your podcast. Usually 2–4 capital letters, used to reference episodes. For example, the podcast "The Lunatic Fringe" might have the mnemonic TLF and its fifth episode can be referred to via TLF005.', 'podlove-podcasting-plugin-for-wordpress' ),
+				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 
 			$wrapper->select( 'language', array(
