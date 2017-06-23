@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.6.2 =
+
+- send `HTTP 410 Gone` when accessing a download URL to a depublished episode
+
 = 2.6.1 =
 
 - fix template bug (when a template returned an empty result, the template title was displayed instead)
