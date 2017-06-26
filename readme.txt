@@ -105,6 +105,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.6.2 =
 
 - send `HTTP 410 Gone` when accessing a download URL to a depublished episode
+- fix Podlove Web Player 4 appearing on wrong positions when multiple players are embedded on the same page
 
 = 2.6.1 =
 

@@ -11,17 +11,30 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 	// Model\Episode
 	private $episode;
 
+	private $player_id;
+
 	private $attributes = [];
 
 	public function __construct(Episode $episode) {
 		$this->episode = $episode;
 	}
 
+	private function get_player_id() {
+
+		if ( ! $this->player_id ) {
+			$this->player_id = 'podlovewebplayer_' . sha1(microtime() . rand());
+		}
+
+		return $this->player_id;
+	}
+
 	public function render($context = NULL) {
 
-		$html = '<div id="player"></div>';
+		$id = $this->get_player_id();
+
+		$html = '<div id="' . $id . '"></div>';
 		$html.= '<script>';
-		$html.= 'podlovePlayer("#player", ' . json_encode(self::config($this->episode, $context)) . ')';
+		$html.= 'podlovePlayer("#' . $id . '", ' . json_encode(self::config($this->episode, $context)) . ')';
 		$html.= '</script>';
 
 		return $html;
@@ -62,7 +75,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			'chapters' => array_map(function($c) {
 				$c->title = html_entity_decode(wptexturize(convert_chars(trim($c->title))));
 				return $c;
-			}, json_decode($episode->get_chapters('json'))),
+			}, (array) json_decode($episode->get_chapters('json'))),
 			'theme' => [
 				'primary'   => $player_settings['playerv4_color_primary'],
 				'secondary' => $player_settings['playerv4_color_secondary']
