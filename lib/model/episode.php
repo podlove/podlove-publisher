@@ -83,6 +83,25 @@ class Episode extends Base implements Licensable {
 	}
 
 	public function title() {
+		return $this->title_with_fallback();
+	}
+
+	/**
+	 * Returns episode title if set, otherwise post title.
+	 * 
+	 * @return string
+	 */
+	public function title_with_fallback()
+	{
+		if ($this->title) {
+			return $this->title;
+		} else {
+			return $this->post_title();
+		}
+	}
+
+	private function post_title()
+	{
 		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
 	}
 

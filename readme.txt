@@ -114,6 +114,16 @@ Apple announced an [updated specification for feed elements](http://podcasts.app
 - Episodes have a new "number" field. If used, `<itunes:episode>42</itunes:episode>` will appear in the feed.
 - Episodes in seasons will have an `<itunes:season>2</itunes:season>` field in the feed automatically.
 
+**Template API Changes**
+
+- `episode.title` now returns the new episode title field, if it is set, but has a fallback to the post title
+- the post title of an episode can still be accessed via `episode.post.post_title`
+- new accessor: `episode.number`
+- new accessor: `episode.type`
+- new accessor: `podcast.mnemonic`
+- new accessor: `podcast.type`
+- new accessor: `season.mnemonic`
+
 = 2.6.1 =
 
 **Flattr**
