@@ -148,6 +148,23 @@ class Website extends Tab {
 		);
 
 		add_settings_field(
+			/* $id       */ 'podlove_setting_blog_post_title',
+			/* $title    */ sprintf(
+				'<label for="enable_generated_blog_post_title">%s</label>',
+				__( 'Blog Episode Titles', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+
+				$enable_generated_blog_post_title = \Podlove\get_setting( 'website', 'enable_generated_blog_post_title' );
+				$blog_title_template = \Podlove\get_setting( 'website', 'blog_title_template' );
+
+				\Podlove\load_template('expert_settings/website/blog_post_title', compact('enable_generated_blog_post_title', 'blog_title_template'));
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
+
+		add_settings_field(
 			/* $id       */ 'podlove_setting_url_template',
 			/* $title    */ sprintf(
 				'<label for="url_template">%s</label>',
