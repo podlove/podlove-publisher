@@ -63,8 +63,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				return $c;
 			}, json_decode($episode->get_chapters('json'))),
 			'theme' => [
-				'primary'   => $player_settings['playerv4_color_primary'],
-				'secondary' => $player_settings['playerv4_color_secondary']
+				'main'      => $player_settings['playerv4_color_primary'],
+				'highlight' => $player_settings['playerv4_color_secondary']
 			]
 		];
 
