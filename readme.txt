@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.0 =
+
+* analytics: show download totals for last 24 hours and last 7 days in overview
+
 = 2.6.1 =
 
 **Flattr**
