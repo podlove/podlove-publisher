@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.7.0 =
 
 * analytics: show download totals for last 24 hours and last 7 days in overview
+* Podigee Player: add support for transcripts
+    - create a Podigee Transcript asset
+    - set this asset in Expert Settings > Web Player
+    - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
 
 = 2.6.1 =
 

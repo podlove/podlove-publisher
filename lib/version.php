@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 127 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 128 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1306,6 +1306,14 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` CHANGE COLUMN `slug` `identifier` VARCHAR(255)',
 				\Podlove\Modules\Contributors\Model\Contributor::table_name()
 			) );
+		break;
+		case 128:
+			$file_type = ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text',  'extension' => 'txt'];
+			$f = new Model\FileType;
+			foreach ($file_type as $key => $value) {
+				$f->{$key} = $value;
+			}
+			$f->save();
 		break;
 	}
 
