@@ -116,6 +116,8 @@ Apple announced an [updated specification for feed elements](http://podcasts.app
 
 We decided to complement these changes by introducing a podcast mnemonic/abbreviation field. Now we can autogenerate blog episode titles, based on the episode number and title, if you like. The mnemonic can be set in podcast settings. The setting to autogenerate blog episode titles is an expert setting in the "Website" section.
 
+To help existing podcasts to conform to these new fields we made a "Title Migration" module which will greet you with a notice once you update the Publisher. It will try to extract episode numbers and titles from your existing titles, saving you time and effort updating each episode one by one.
+
 **Template API Changes**
 
 - `episode.title` now returns the new episode title field, if it is set, but has a fallback to the post title
