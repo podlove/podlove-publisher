@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
     - create a Podigee Transcript asset
     - set this asset in Expert Settings > Web Player
     - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
+* Podlove Web Player 4: support contributors
 * fix quotes in contributor fields
 
 = 2.6.1 =

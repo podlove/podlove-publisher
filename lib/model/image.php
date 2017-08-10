@@ -135,6 +135,7 @@ class Image {
 		@list($width, $height) = getimagesize($this->original_file());
 
 		if ($width * $height == 0) {
+			Log::get()->addWarning('Unable to determine image size for ' . $this->original_file());
 			return;
 		}
 
