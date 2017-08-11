@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
     - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
 * Podlove Web Player 4: support contributors
 * fix quotes in contributor fields
+* fix WordPress conditionals in episode archives
 
 = 2.6.1 =
 

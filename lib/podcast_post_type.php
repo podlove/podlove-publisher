@@ -36,8 +36,10 @@ class Podcast_Post_Type {
 			'show_in_menu'         => true,
 			'menu_position'        => 5, // below "Posts"
 			'query_var'            => true,
-			'rewrite'              => false, // we create our own permastructs
-			'has_archive'          => false, // we create our own permastructs
+			'rewrite'              => [
+				'slug' => trim( \Podlove\get_setting( 'website', 'episode_archive_slug' ), '/' )
+			],
+			'has_archive'          => 'on' == \Podlove\get_setting( 'website', 'episode_archive' ),
 			'capability_type'      => 'post',
 			'supports'             => array( 'title', 'editor', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', 'trackbacks' ),
 			'register_meta_box_cb' => '\Podlove\Podcast_Post_Meta_Box::add_meta_box',
