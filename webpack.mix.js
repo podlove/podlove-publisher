@@ -33,6 +33,7 @@ mix.js('js/src/app.js', 'js/dist/')
         'js/src/admin/media.js',
         'js/src/admin/protected_feed.js',
         'js/src/admin/feed_settings.js',
+        'js/src/admin/post_title_autogenerate.js',
         'js/src/admin.js'
     ], 
     'js/dist/podlove-admin.js'

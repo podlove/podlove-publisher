@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 128 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 130 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1308,6 +1308,29 @@ function run_migrations_for_version( $version ) {
 			) );
 		break;
 		case 128:
+			$sql1 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `title` TEXT',
+				Model\Episode::table_name()
+			);
+			$sql2 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `number` INT UNSIGNED',
+				Model\Episode::table_name()
+			);
+			$sql3 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `type` VARCHAR(10)',
+				Model\Episode::table_name()
+			);
+			$wpdb->query($sql1);
+			$wpdb->query($sql2);
+			$wpdb->query($sql3);
+		break;
+		case 129:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `mnemonic` VARCHAR(8)',
+				\Podlove\Modules\Seasons\Model\Season::table_name()
+			) );
+		break;
+		case 130:
 			$file_type = ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text',  'extension' => 'txt'];
 			$f = new Model\FileType;
 			foreach ($file_type as $key => $value) {

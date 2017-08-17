@@ -61,6 +61,15 @@ class Season extends Wrapper {
 	}
 
 	/**
+	 * Mnemonic / Abbreviation
+	 * 
+	 * @accessor
+	 */
+	public function mnemonic() {
+		return $this->season->mnemonic;	
+	}
+	
+	/**
 	 * Image
 	 *
 	 * @accessor

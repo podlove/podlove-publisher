@@ -34,10 +34,13 @@ class Episode extends Wrapper {
 	/**
 	 * Title
 	 * 
+	 * Returns the episode title, if set, otherwise the post title.
+	 * If you want to access the post title directly, use `episode.post.post_title`.
+	 * 
 	 * @accessor
 	 */
 	public function title() {
-		return $this->post->post_title;
+		return $this->episode->title();
 	}
 
 	/**
@@ -58,6 +61,26 @@ class Episode extends Wrapper {
 	public function summary() {
 		// @todo generate warning if a shortcode is used in summaries
 		return \Podlove\PHP\escape_shortcodes($this->episode->summary);
+	}
+
+	/**
+	 * Number
+	 * 
+	 * @accessor
+	 */
+	public function number() {
+		return $this->number;
+	}
+
+	/**
+	 * Type
+	 * 
+	 * One of: full, trailer, bonus
+	 * 
+	 * @accessor
+	 */
+	public function type() {
+		return $this->type;	
 	}
 
 	/**

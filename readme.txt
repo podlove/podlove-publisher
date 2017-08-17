@@ -104,6 +104,32 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.7.0 =
 
+**Updated Metadata for Podcast/Episode/Seasons according to iOS11 Specification**
+
+Apple announced an [updated specification for feed elements](http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf). These changes enable the Apple Podcasts app to present podcasts in a better way. But since these feed extensions are readable by any podcast client, we expect others to take advantage of these new fields soon. Here is how we implemented the specification:
+
+- The podcast has a new "type" field where you can select between "episodic" and "serial", which may affect the order of episodes. The field `<itunes:type>episodic</itunes:type>` appears in the feed.
+- Episodes have a new "title" field. It defaults to the episode post title but can be set separately now, allowing you to define different titles for the website and podcast clients. The field `<itunes:title>Interview with Somebody Infamous</itunes:title>` will appear in the feed.
+- Episodes have a new "type" field where you can select between "full" (default), "trailer" and "bonus". This won't have any effect in the Publisher but may be used by podcast clients. The field `<itunes:episodeType>full</itunes:episodeType>` appears in the feed.
+- Episodes have a new "number" field. If used, `<itunes:episode>42</itunes:episode>` will appear in the feed.
+- Episodes in seasons will have an `<itunes:season>2</itunes:season>` field in the feed automatically.
+
+We decided to complement these changes by introducing a podcast mnemonic/abbreviation field. Now we can autogenerate blog episode titles, based on the episode number and title, if you like. The mnemonic can be set in podcast settings. The setting to autogenerate blog episode titles is an expert setting in the "Website" section.
+
+To help existing podcasts to conform to these new fields we made a "Title Migration" module which will greet you with a notice once you update the Publisher. It will try to extract episode numbers and titles from your existing titles, saving you time and effort updating each episode one by one.
+
+**Template API Changes**
+
+- `episode.title` now returns the new episode title field, if it is set, but has a fallback to the post title
+- the post title of an episode can still be accessed via `episode.post.post_title`
+- new accessor: `episode.number`
+- new accessor: `episode.type`
+- new accessor: `podcast.mnemonic`
+- new accessor: `podcast.type`
+- new accessor: `season.mnemonic`
+
+**Other**
+
 * analytics: show download totals for last 24 hours and last 7 days in overview
 * Podigee Player: add support for transcripts
     - create a Podigee Transcript asset

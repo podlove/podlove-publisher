@@ -299,7 +299,7 @@ var PODLOVE = PODLOVE || {};
 	 			var title = $(this).val();
 
 	 			// update episode title
-	 			$("#_podlove_meta_title").val(title);
+	 			$("#_podlove_meta_title").attr("placeholder", title);
 
 	 			// maybe update episode slug
 	 			maybe_update_episode_slug(title);

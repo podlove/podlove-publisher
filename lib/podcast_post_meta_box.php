@@ -73,12 +73,22 @@ class Podcast_Post_Meta_Box {
 		$form_data = array(
 			array(
 				'type' => 'string',
+				'key'  => 'number',
+				'options' => array(
+					'label'       => __( 'Number', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'An episode number (1, 2, 3 etc.)', 'podlove-podcasting-plugin-for-wordpress' ),
+					'html'        => array(
+						'class'    => 'podlove-check-input'
+					),
+					'type' => 'number'
+				),
+				'position' => 1200
+			), array(				'type' => 'string',
 				'key'  => 'title',
 				'options' => array(
 					'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => '',
+					'description' => __( 'Clear, concise name for your episode. It is recommended to not include the podcast title, episode number, season number or date in this tag.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array(
-						'readonly' => 'readonly',
 						'class'    => 'podlove-check-input'
 					)
 				),
@@ -88,7 +98,7 @@ class Podcast_Post_Meta_Box {
 				'key'  => 'subtitle',
 				'options' => array(
 					'label'       => __( 'Subtitle', 'podlove-podcasting-plugin-for-wordpress' ),
-					'description' => '',
+					'description' => __( 'Single sentence describing the episode.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array(
 						'class' => 'large-text autogrow podlove-check-input',
 						'rows'  => 1
@@ -107,6 +117,24 @@ class Podcast_Post_Meta_Box {
 					)
 				),
 				'position' => 900
+			), array(
+				'type' => 'select',
+				'key'  => 'type',
+				'options' => array(
+					'label'       => __( 'Type', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'Episode type. May be used by podcast clients.', 'podlove-podcasting-plugin-for-wordpress' ),
+					'html'        => array(
+						'class' => 'large-text autogrow podlove-check-input',
+						'rows'  => 3
+					),
+					'default' => 'full',
+					'options' => [
+						'full'    => __('full (complete content of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
+						'trailer' => __('trailer (short, promotional piece of content that represents a preview of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
+						'bonus'   => __('bonus (extra content for an episode, for example behind the scenes information)', 'podlove-podcasting-plugin-for-wordpress')
+					]
+				),
+				'position' => 890
 			), array(
 				'type' => 'string',
 				'key'  => 'slug',
@@ -298,10 +326,12 @@ class Podcast_Post_Meta_Box {
 		$episode_data = $episode_data['_podlove_meta'];
 
 		$episode_data_filter = [
+			'number'         => FILTER_SANITIZE_NUMBER_INT,
 			'title'          => [ 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING ],
 			'subtitle'       => [ 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING ],
 			'summary'        => [ 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING ],
 			'slug'           => FILTER_SANITIZE_STRING,
+			'type'           => FILTER_SANITIZE_STRING,
 			'duration'       => FILTER_SANITIZE_STRING,
 			'episode_assets' => [ 'flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING ],
 			'guid'           => FILTER_SANITIZE_STRING,

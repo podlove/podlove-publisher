@@ -53,6 +53,26 @@ class Podcast extends Wrapper {
 	}
 
 	/**
+	 * Mnemonic / Abbreviation
+	 * 
+	 * @accessor
+	 */
+	public function mnemonic() {
+		return $this->podcast->mnemonic;	
+	}
+
+	/**
+	 * Type
+	 * 
+	 * One of: episodic, serial
+	 * 
+	 * @accessor
+	 */
+	public function type() {
+		return $this->podcast->itunes_type;
+	}
+
+	/**
 	 * Image URL
 	 *
 	 * @deprecated since 2.2.0, use `image` instead
