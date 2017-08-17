@@ -106,11 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Updated Metadata for Podcast/Episode/Seasons according to iOS11 Specification**
 
-Apple announced an [updated specification for feed elements](http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf). They enable the Apple Podcasts app to present podcasts better. But since these feed extensions are readable by any podcast client, we expect others to take advantage of these new fields soon. Here is how we implemented the specification:
+Apple announced an [updated specification for feed elements](http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf). These changes enable the Apple Podcasts app to present podcasts in a better way. But since these feed extensions are readable by any podcast client, we expect others to take advantage of these new fields soon. Here is how we implemented the specification:
 
-- The podcast has a new "Type" field where you can select between "episodic" and "serial", which may effect the order of episodes. The field `<itunes:type>episodic</itunes:type>` appears in the feed.
+- The podcast has a new "type" field where you can select between "episodic" and "serial", which may affect the order of episodes. The field `<itunes:type>episodic</itunes:type>` appears in the feed.
 - Episodes have a new "title" field. It defaults to the episode post title but can be set separately now, allowing you to define different titles for the website and podcast clients. The field `<itunes:title>Interview with Somebody Infamous</itunes:title>` will appear in the feed.
-- Episodes have a new "Type" field where you can select between "full" (default), "trailer" and "bonus". This won't have any effect in the Publisher but may be used by podcast clients. The field `<itunes:episodeType>full</itunes:episodeType>` appears in the feed.
+- Episodes have a new "type" field where you can select between "full" (default), "trailer" and "bonus". This won't have any effect in the Publisher but may be used by podcast clients. The field `<itunes:episodeType>full</itunes:episodeType>` appears in the feed.
 - Episodes have a new "number" field. If used, `<itunes:episode>42</itunes:episode>` will appear in the feed.
 - Episodes in seasons will have an `<itunes:season>2</itunes:season>` field in the feed automatically.
 

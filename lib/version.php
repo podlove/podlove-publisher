@@ -1327,7 +1327,7 @@ function run_migrations_for_version( $version ) {
 		case 129:
 			$wpdb->query( sprintf(
 				'ALTER TABLE `%s` ADD COLUMN `mnemonic` VARCHAR(8)',
-				\Podlove\Modules\ Seasons\Model\Season::table_name()
+				\Podlove\Modules\Seasons\Model\Season::table_name()
 			) );
 		break;
 		case 130:
