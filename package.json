@@ -1,14 +1,14 @@
 {
   "scripts": {
-    "webpack": "NODE_ENV=development webpack --progress --hide-modules",
-    "dev": "NODE_ENV=development webpack --watch --progress --hide-modules",
-    "hmr": "NODE_ENV=development webpack-dev-server --inline --hot",
-    "production": "NODE_ENV=production webpack --progress --hide-modules",
+    "webpack": "NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "dev": "NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hmr": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "submodules-init": "git submodule update --init --recursive",
     "cloc": "cloc --by-file-by-lang --exclude-dir=node_modules,vendor,player_v2,.git,jquery-ui --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" *"
   },
   "devDependencies": {
-    "laravel-mix": "^0.12.1",
+    "laravel-mix": "^1.0",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.1",

@@ -17,7 +17,7 @@ download() {
     fi
 }
 
-declare -a files=("embed.js" "share.html" "share.js" "window.js", "vendor.js")
+declare -a files=("embed.js" "share.html" "share.js" "window.js" "vendor.js")
 
 for file in "${files[@]}"
 do

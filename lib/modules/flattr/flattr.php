@@ -9,6 +9,7 @@ class Flattr extends \Podlove\Modules\Base {
 
 	public function load() {
 		add_action('wp_head', [__CLASS__, 'insert_script']);
+		add_action('wp_head', [__CLASS__, 'insert_meta']);
 
 		add_action('podlove_podcast_settings_tabs', [__CLASS__, 'podcast_settings_tabs']);
 		add_filter('podlove_templates_global_context', [__CLASS__, 'add_flattr_to_template_context']);
@@ -42,6 +43,18 @@ class Flattr extends \Podlove\Modules\Base {
 
 	public static function insert_script() {
 		\Podlove\load_template('lib/modules/flattr/views/flattr_script');
+	}
+
+	public static function insert_meta()
+	{
+		$id = trim(self::get_setting('account'));
+
+		if (empty($id))
+			return;
+
+		?>
+		<meta name="flattr:id" content="<?php echo esc_attr($id) ?>">	
+		<?php
 	}
 
 	public static function podcast_settings_tabs($tabs) {

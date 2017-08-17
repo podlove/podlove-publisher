@@ -102,6 +102,24 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.0 =
+
+* analytics: show download totals for last 24 hours and last 7 days in overview
+* Podigee Player: add support for transcripts
+    - create a Podigee Transcript asset
+    - set this asset in Expert Settings > Web Player
+    - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
+* Podlove Web Player 4: support contributors
+* fix quotes in contributor fields
+* fix WordPress conditionals in episode archives
+
+= 2.6.1 =
+
+**Flattr**
+
+- rename "Flattr Username" to "Flattr ID"
+- insert `flattr:id` meta tag to page heads, which is required for their new system
+
 = 2.6.0 =
 
 **New Module: E-Mail Notifications**
