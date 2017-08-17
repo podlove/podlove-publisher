@@ -22,6 +22,14 @@ function podlove_validate_image_cache() {
 	foreach ($cache_files as $cache_file) {
 		$cache = Yaml::parse(file_get_contents($cache_file));
 
+		if (!isset($cache['etag'])) {
+			$cache['etag'] = null;
+		}
+		
+		if (!isset($cache['last-modified'])) {
+			$cache['last-modified'] = null;
+		}
+
 		$validator = new HttpHeaderValidator($cache['source'], $cache['etag'], $cache['last-modified']);
 		$validator->validate();
 		if ($validator->hasChanged()) {
