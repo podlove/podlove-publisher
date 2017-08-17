@@ -10,10 +10,10 @@ add_action('admin_print_scripts', 'podlove_override_post_title_script');
 function podlove_maybe_override_post_titles($original_title, $post_id) 
 {
 	if (get_post_type($post_id) !== 'podcast')
-		return;
+		return $original_title;
 
 	if (!podlove_is_title_autogen_enabled())
-		return;
+		return $original_title;
 
 	$episode_title = podlove_generated_post_title($post_id);
 
@@ -69,4 +69,3 @@ function podlove_is_title_autogen_enabled()
 {
 	return (bool) \Podlove\get_setting( 'website', 'enable_generated_blog_post_title' );
 }
-
