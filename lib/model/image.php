@@ -192,6 +192,10 @@ class Image {
 			return $this->source_url;
 		}
 
+		if (empty($this->source_url)) {
+			return null;
+		}
+
 		if (!$this->file_extension) {
 			Log::get()->addWarning(sprintf( __( 'Unable to determine file extension for %s.' ), $this->source_url ));
 			return apply_filters('podlove_image_url', $this->source_url);
