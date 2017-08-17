@@ -104,6 +104,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.7.0 =
 
+**New Module: Shows**
+
+With shows you can offer feeds to subtopics of your podcast. Here's how it works: You create a show and define show meta, similar to a podcast: title, slug, subtitle, summary, image and language. These fields override your podcast settings. All other settings are the same as your podcast.
+
+For each episode, you decide which show it's in. Each show has its own set of feeds that listeners can subscribte to. The main feed remains unchanged, containing all episodes from all shows.
+
 **Updated Metadata for Podcast/Episode/Seasons according to iOS11 Specification**
 
 Apple announced an [updated specification for feed elements](http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf). These changes enable the Apple Podcasts app to present podcasts in a better way. But since these feed extensions are readable by any podcast client, we expect others to take advantage of these new fields soon. Here is how we implemented the specification:
