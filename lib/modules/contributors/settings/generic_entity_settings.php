@@ -76,15 +76,23 @@ class GenericEntitySettings {
 	 * Process form: save/update entity
 	 */
 	protected function save() {
-		if ( ! isset( $_REQUEST[ $this->get_entity_slug() ] ) )
+
+		$slug = $this->get_entity_slug();
+
+		if ( ! isset( $_REQUEST[ $slug ] ) )
 			return;
 
 		$class = $this->get_entity_class();
 
-		$entity = $class::find_by_id($_REQUEST[ $this->get_entity_slug() ]);
-		$entity->update_attributes( $_POST['podlove_' . $this->get_entity_slug()] );
+		$entity = $class::find_by_id($_REQUEST[ $slug ]);
 
-		do_action('podlove_update_entity_' . $this->get_entity_slug(), $entity);
+		$attributes = $_POST['podlove_' . $slug];
+		$attributes = apply_filters( 'podlove_generic_entity_attributes', $attributes );
+		$attributes = apply_filters( 'podlove_generic_entity_attributes_' . $slug, $attributes );
+
+		$entity->update_attributes( $attributes );
+
+		do_action('podlove_update_entity_' . $slug, $entity);
 		
 		if (isset($_POST['submit_and_stay'])) {
 			$this->redirect( 'edit', $entity->id );

@@ -81,6 +81,12 @@ class WebPlayer extends Tab {
 					'title'     => __( 'WebM Video', 'podlove-podcasting-plugin-for-wordpress' ),
 					'mime_types' => array('video/webm')
 				),
+			),
+			'transcript' => array(
+				'transcript' => array(
+					'title' => __('Transcript (Only Podigee Player)', 'podlove-podcasting-plugin-for-wordpress'),
+					'mime_types' => array('text/plain', 'application/x-subrip')
+				)
 			)
 		);
 	}

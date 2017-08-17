@@ -2,7 +2,7 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 3.5
+Requires at least: 4.4
 Tested up to: 4.7.5
 Stable tag: trunk
 License: MIT
@@ -127,6 +127,17 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 - new accessor: `podcast.mnemonic`
 - new accessor: `podcast.type`
 - new accessor: `season.mnemonic`
+
+**Other**
+
+* analytics: show download totals for last 24 hours and last 7 days in overview
+* Podigee Player: add support for transcripts
+    - create a Podigee Transcript asset
+    - set this asset in Expert Settings > Web Player
+    - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
+* Podlove Web Player 4: support contributors
+* fix quotes in contributor fields
+* fix WordPress conditionals in episode archives
 
 = 2.6.1 =
 

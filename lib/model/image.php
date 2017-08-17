@@ -135,6 +135,7 @@ class Image {
 		@list($width, $height) = getimagesize($this->original_file());
 
 		if ($width * $height == 0) {
+			Log::get()->addWarning('Unable to determine image size for ' . $this->original_file());
 			return;
 		}
 
@@ -189,6 +190,10 @@ class Image {
 		// instead of optimized resolutions.
 		if (defined('PODLOVE_DISABLE_IMAGE_CACHE') && PODLOVE_DISABLE_IMAGE_CACHE) {
 			return $this->source_url;
+		}
+
+		if (empty($this->source_url)) {
+			return null;
 		}
 
 		if (!$this->file_extension) {

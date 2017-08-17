@@ -4,6 +4,7 @@ namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 use Podlove\Model\Episode;
 use Podlove\Model\Podcast;
 use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
+use Podlove\Modules\Contributors\Model\EpisodeContribution;
 
 class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
@@ -63,10 +64,23 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				return $c;
 			}, json_decode($episode->get_chapters('json'))),
 			'theme' => [
-				'primary'   => $player_settings['playerv4_color_primary'],
-				'secondary' => $player_settings['playerv4_color_secondary']
+				'main'      => $player_settings['playerv4_color_primary'],
+				'highlight' => $player_settings['playerv4_color_secondary']
 			]
 		];
+
+		if (\Podlove\Modules\Base::is_active('contributors')) {
+			$config['contributors'] = array_map(function ($c) {
+				$contributor = $c->getContributor();
+				return [
+					'name'   => $contributor->getName(),
+					'avatar' => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
+					'role' => $c->hasRole() ? $c->getRole()->to_array() : null,
+					'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
+					'comment' => $c->comment
+				];
+			}, EpisodeContribution::find_all_by_episode_id($episode->id));
+		}
 
 		return $config;
 	}

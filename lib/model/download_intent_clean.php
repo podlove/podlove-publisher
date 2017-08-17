@@ -139,6 +139,24 @@ class DownloadIntentClean extends Base {
 		];
 	}
 
+	public static function last_7days_downloads()
+	{
+		global $wpdb;
+
+		$sql = 'SELECT COUNT(*) FROM ' . self::table_name() . ' d WHERE accessed_at > DATE_SUB(NOW(), INTERVAL 7 DAY)';		
+
+		return $wpdb->get_var($sql);
+	}
+
+	public static function last_24hours_downloads()
+	{
+		global $wpdb;
+
+		$sql = 'SELECT COUNT(*) FROM ' . self::table_name() . ' d WHERE accessed_at > DATE_SUB(NOW(), INTERVAL 1 DAY)';		
+
+		return $wpdb->get_var($sql);
+	}
+
 	public static function total_downloads()
 	{
 		global $wpdb;
