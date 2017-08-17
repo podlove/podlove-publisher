@@ -45,7 +45,7 @@ class Shows extends \Podlove\Modules\Base {
 			'shows',
 			'podcast',
 			array(
-				'label' => __( 'Show' ),
+				'label' => __( 'Show', 'podlove-podcasting-plugin-for-wordpress' ),
 				'rewrite' => array( 'slug' => 'show' ),
 				'show_ui' => true,
 				'show_in_menu' => false,
