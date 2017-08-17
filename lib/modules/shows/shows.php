@@ -50,7 +50,7 @@ class Shows extends \Podlove\Modules\Base {
 				'show_ui' => true,
 				'show_in_menu' => false,
 				'show_in_quick_edit' => false,
-				'hierarchical' => true,
+				'hierarchical' => false,
 				'show_admin_column' => true,
 				'meta_box_cb' => array($this, 'episode_show_meta_box')
 			)
