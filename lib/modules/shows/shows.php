@@ -1,7 +1,9 @@
 <?php
 namespace Podlove\Modules\Shows;
-use \Podlove\Model;
-use \Podlove\Modules\Shows\Model\Show;
+
+use Podlove\Model;
+use Podlove\Modules\Shows\Model\Show;
+use Podlove\Modules\SubscribeButton\Button;
 
 class Shows extends \Podlove\Modules\Base {
 
@@ -30,6 +32,8 @@ class Shows extends \Podlove\Modules\Base {
 			return $status;
 		}, 10, 3 );
 
+		add_filter('podlove_subscribe_button_data', [$this, 'override_subscribe_button'], 10, 3);
+
 		// Template accessors (Provides episode.show and podcasts.shows)
 		\Podlove\Template\Episode::add_accessor(
 			'show', array('\Podlove\Modules\Shows\TemplateExtensions', 'accessorEpisodesShow'), 5
@@ -38,6 +42,40 @@ class Shows extends \Podlove\Modules\Base {
 		\Podlove\Template\Podcast::add_accessor(
 			'shows', array('\Podlove\Modules\Shows\TemplateExtensions', 'accessorPodcastShows'), 4
 		);
+	}
+
+	public function override_subscribe_button($podcast, $data, $args)
+	{
+		if (!isset($args['show']) || !$args['show'])
+			return $data;
+
+		$show = Show::find_one_term_by_property('slug', $args['show']);
+
+		if (!$show)
+			return $data;
+
+		$feeds = Button::feeds(
+			$podcast->feeds(['only_discoverable' => true]),
+			'shows',
+			$show->id
+		);
+
+		$show_data = [
+			'title'       => $show->title,
+			'subtitle'    => $show->subtitle,
+			'description' => $show->summary,
+			'cover'       => $show->image,
+			'feeds'       => $feeds,
+		];
+
+		// only override nonempty fields
+		foreach (array_keys($show_data) as $key) {
+			if ($show_data[$key] && !empty($show_data[$key])) {
+				$data[$key] = $show_data[$key];
+			}
+		}
+		
+		return $data;
 	}
 
 	public function register_show_taxonomy() {

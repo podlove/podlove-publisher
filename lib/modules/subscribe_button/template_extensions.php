@@ -18,6 +18,7 @@ class TemplateExtensions {
 	 * 
 	 * **Parameters**
 	 * 
+	 * - **show:** If you are using the "Shows" module, you can set the show slug. The button will then be for that show instead of the main podcast.
 	 * - **format:** Choose a button format, options are 'rectangle', 'square' and 'cover' (**Note**: 'cover' has a max size of 300px) Default: 'cover'
 	 * - **style:** Choose a button style, options are 'filled', 'outline' and 'frameless'. Default: 'filled'
 	 * - **size:** Size and style of the button ('small', 'medium', 'big'). All of the sizes can be combined with 'auto' to adapt the button width to the available space like this: 'big auto'. Default: 'big'
@@ -43,6 +44,8 @@ class TemplateExtensions {
 		if ($podcast->language) {
 			$args['language'] = Button::language($podcast->language);
 		}
+
+		$data = apply_filters('podlove_subscribe_button_data', $podcast, $data, $args);
 
 		return (new Button())->render($data, $args);
 	}

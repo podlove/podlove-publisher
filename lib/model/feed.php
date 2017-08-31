@@ -32,9 +32,16 @@ class Feed extends Base {
 	 *
 	 * @return string
 	 */
-	public function get_subscribe_url() {
-		return $this->with_blog_scope(function() {
-			return apply_filters('podlove_subscribe_url', get_feed_link($this->slug));
+	public function get_subscribe_url($taxonomy = null, $term_id = null) {
+		return $this->with_blog_scope(function() use ($taxonomy, $term_id) {
+
+			if ($taxonomy && $term_id) {
+				$url = get_term_feed_link($term_id, $taxonomy, $this->slug);
+			} else {
+				$url = get_feed_link($this->slug);
+			}
+
+			return apply_filters('podlove_subscribe_url', $url);
 		});
 	}
 

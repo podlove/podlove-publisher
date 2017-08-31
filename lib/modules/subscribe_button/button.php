@@ -134,16 +134,16 @@ class Button {
 	 * 
 	 * @return array list of prepared feed data-objects
 	 */
-	public static function feeds($feeds) {
-		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() use ($feeds) {
+	public static function feeds($feeds, $taxonomy = null, $term_id = null) {
+		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() use ($feeds, $taxonomy, $term_id) {
 
-			$feeds_for_button = array_map(function($feed) {
+			$feeds_for_button = array_map(function($feed) use ($taxonomy, $term_id) {
 				$file_type = $feed->episode_asset()->file_type();
 
 				$feed_data = [
 					'type'    => $file_type->type,
 					'format'  => self::feed_format($file_type->extension),
-					'url'     => $feed->get_subscribe_url(),
+					'url'     => $feed->get_subscribe_url($taxonomy, $term_id),
 					'variant' => 'high'
 				];
 
