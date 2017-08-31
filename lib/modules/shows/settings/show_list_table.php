@@ -52,15 +52,10 @@ class ShowListTable extends \Podlove\List_Table {
 	public function column_show_feeds($show) {
 		?> <ul> <?php
 		foreach (\Podlove\Model\Feed::find_all_by_discoverable(1) as $feed) {
-			$show_feed_url = $feed->get_subscribe_url();
-
-			printf('<li><a href="%1$s">%1$s</a></li>', 
-					str_replace(
-							home_url(),
-							home_url() . '/show/' . $show->slug,
-							$show_feed_url
-						)
-				);
+			printf(
+				'<li><a href="%1$s">%1$s</a></li>', 
+				$feed->get_subscribe_url("shows", $show->id)
+			);
 		}
 		?> </ul> <?php
 	}
