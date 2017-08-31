@@ -73,7 +73,17 @@ class PodcastImportOptionsJob {
 			$option_string = preg_replace('/&([^#])(?![a-z1-4]{1,8};)/i', '&amp;$1', $option_string);
 		}
 
-		update_option($key, maybe_unserialize($option_string));
+		$skip_options = [
+			'podlove_import_file',
+			'podlove_repair_log',
+			'podlove_cron_diagnosis',
+			'podlove_cron_diagnosis_tries',
+			'podlove_global_messages'
+		];
+
+		if (!in_array($key, $skip_options)) {
+			update_option($key, maybe_unserialize($option_string));
+		}
 
 		$this->job->state++;
 

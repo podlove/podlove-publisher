@@ -146,6 +146,7 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * fix WordPress conditionals in episode archives
 * fix deleting related episodes ([#907](https://github.com/podlove/podlove-publisher/issues/907))
 * fix network admin bar now does not include broken links if Publisher is not activated network-wide ([#933](https://github.com/podlove/podlove-publisher/issues/933))
+* fix import getting stuck issue ([#910](https://github.com/podlove/podlove-publisher/issues/910))
 
 = 2.6.1 =
 
