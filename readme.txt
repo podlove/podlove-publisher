@@ -144,6 +144,7 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * Podlove Web Player 4: support contributors
 * fix quotes in contributor fields
 * fix WordPress conditionals in episode archives
+* fix deleting related episodes ([#907](https://github.com/podlove/podlove-publisher/issues/907))
 
 = 2.6.1 =
 
