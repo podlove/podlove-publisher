@@ -31,7 +31,20 @@ class TemplateExtensions {
 	 * @dynamicAccessor podcast.subscribeButton
 	 */
 	public static function accessorPodcastSubscribeButton($return, $method_name, $podcast, $args = []) {
-		return (new Button($podcast))->render($args);
+
+		$data = [
+			'title'       => $podcast->title,
+			'subtitle'    => $podcast->subtitle,
+			'description' => $podcast->summary,
+			'cover'       => $podcast->cover_art()->setWidth(400)->url(),
+			'feeds'       => Button::feeds($podcast->feeds(['only_discoverable' => true])),
+		];
+
+		if ($podcast->language) {
+			$args['language'] = Button::language($podcast->language);
+		}
+
+		return (new Button())->render($data, $args);
 	}
 
 }

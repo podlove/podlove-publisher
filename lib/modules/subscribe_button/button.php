@@ -10,8 +10,19 @@ use \Podlove\Cache\TemplateCache;
  * 
  * Usage:
  * 
- * 	$button = new Button($podcast);
- *  echo $button->render(['size' => 'medium', 'language' => 'de']);
+ *   $data = [
+ *     'title'       => $podcast->title,
+ *     'subtitle'    => $podcast->subtitle,
+ *     'description' => $podcast->summary,
+ *     'cover'       => $podcast->cover_art()->setWidth(400)->url(),
+ *     'feeds'       => Button::feeds($podcast->feeds(['only_discoverable' => true])),
+ *   ];
+ *
+ *   if ($podcast->language) {
+ *     $args['language'] = Button::language($podcast->language);
+ *   }
+ *
+ *   return (new Button())->render($data, ['size' => 'medium', 'language' => 'de']);
  */
 class Button {
 
@@ -28,16 +39,8 @@ class Button {
 
 	private $args = [];
 
-	private $podcast;
+	public function render($data, $args = []) {
 
-	public function __construct(Podcast $podcast) {
-		$this->podcast = $podcast;
-
-		if ($podcast->language)
-			$this->defaults['language'] = self::language($podcast->language);
-	}
-
-	public function render($args = []) {
 		$this->args = wp_parse_args($args, $this->defaults);
 
 		// whitelist size parameter
@@ -52,13 +55,7 @@ class Button {
 		if (!in_array($this->args['format'], array_keys(Subscribe_Button::formats())))
 			$this->args['format'] = $this->defaults['format'];
 
-		$this->args['data'] = [
-			'title'    => $this->podcast->title,
-			'subtitle' => $this->podcast->subtitle,
-			'description'  => $this->podcast->summary,
-			'cover'    => $this->podcast->cover_art()->setWidth(400)->url(),
-			'feeds'    => $this->feeds()
-		];
+		$this->args['data'] = $data;
 
 		// allow args to override data
 		$fields = ['title', 'subtitle', 'description', 'cover'];
@@ -67,8 +64,6 @@ class Button {
 				$this->args['data'][$field] = $this->args[$field];
 			}
 		}
-
-		// @todo: special treatment for feeds
 
 		return $this->html();
 	}
@@ -139,10 +134,10 @@ class Button {
 	 * 
 	 * @return array list of prepared feed data-objects
 	 */
-	private function feeds() {
-		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() {
+	public static function feeds($feeds) {
+		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() use ($feeds) {
 
-			$feeds = array_map(function($feed) {
+			$feeds_for_button = array_map(function($feed) {
 				$file_type = $feed->episode_asset()->file_type();
 
 				$feed_data = [
@@ -158,20 +153,9 @@ class Button {
 				}
 
 				return $feed_data;
-			}, $this->discoverable_feeds());
+			}, $feeds);
 
-			return $feeds;
-		});
-	}
-
-	/**
-	 * Get disoverable podcast feeds.
-	 * 
-	 * @return array list of feeds
-	 */
-	private function discoverable_feeds() {
-		return array_filter($this->podcast->feeds(), function($feed) {
-			return $feed->discoverable;
+			return $feeds_for_button;
 		});
 	}
 	
@@ -203,7 +187,7 @@ class Button {
 	 * @param  string $language language identifier
 	 * @return string
 	 */
-	private static function language($language) {
+	static function language($language) {
 		return strtolower(explode('-', $language)[0]);
 	}
 

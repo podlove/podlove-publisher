@@ -183,8 +183,13 @@ class Podcast implements Licensable {
 	 * 
 	 * @return array list of feeds
 	 */
-	public function feeds() {
-		return $this->with_blog_scope(function() {
+	public function feeds($args = []) {
+		return $this->with_blog_scope(function() use ($args) {
+
+			$discoverable_condition = "";
+			if (isset($args['only_discoverable']) && $args['only_discoverable']) {
+				$discoverable_condition = " AND f.discoverable";
+			}
 
 			$sql = "
 				SELECT
@@ -194,10 +199,11 @@ class Podcast implements Licensable {
 					JOIN " . EpisodeAsset::table_name() . " a ON a.id = f.episode_asset_id
 					JOIN " . FileType::table_name() . " ft ON ft.id = a.file_type_id
 				WHERE
-					f.slug IS NOT NULL
+					f.slug IS NOT NULL $discoverable_condition
 				ORDER BY 
 					position ASC
 			";
+
 			return Feed::find_all_by_sql($sql);
 		});
 	}

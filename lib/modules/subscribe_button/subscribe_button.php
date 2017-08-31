@@ -65,7 +65,22 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 
 	// shortcode function
 	public static function button($args) {
-		return (new Button(Model\Podcast::get()))->render($args);
+
+		$podcast = Model\Podcast::get();
+
+		$data = [
+			'title'       => $podcast->title,
+			'subtitle'    => $podcast->subtitle,
+			'description' => $podcast->summary,
+			'cover'       => $podcast->cover_art()->setWidth(400)->url(),
+			'feeds'       => Button::feeds($podcast->feeds(['only_discoverable' => true])),
+		];
+
+		if ($podcast->language) {
+			$args['language'] = Button::language($podcast->language);
+		}
+
+		return (new Button())->render($data, $args);
 	}
 
 	public static function register_shortcode() {
