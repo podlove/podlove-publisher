@@ -80,6 +80,11 @@ class AdminBarMenu {
 	}
 
 	private static function add_network_entries($wp_admin_bar) {
+
+		if (!self::is_publisher_plugin_active_for_network()) {
+			return;
+		}
+
 		// add network dashboard
 		$wp_admin_bar->add_node([
 			'id'     => self::podcast_toolbar_id('network', 'dashboard'),
@@ -95,6 +100,15 @@ class AdminBarMenu {
 			'parent' => 'network-admin',
 			'href'   => network_admin_url('admin.php?page=podlove_templates_settings_handle')
 		]);
+	}
+
+	private static function is_publisher_plugin_active_for_network() {
+
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+		
+		return is_plugin_active_for_network( basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME );
 	}
 
 	private static function add_podcast_list($wp_admin_bar) {
