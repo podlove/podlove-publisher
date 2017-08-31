@@ -44,29 +44,6 @@ class StepWelcome extends Step {
 				</a>
 			</div>
 		</div>
-		<!-- 
-		<div class="hero-unit">
-			<h1>
-				<?php echo __( 'Hi, Let\'s Migrate!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
-			</h1>
-			<p>
-				<?php echo __( 'My name is Miggy and I\'m your Migration Assistant for today. Cool, huh?
-				I\'m able to help you if you\'re currently using PodPress, PowerPress or any other podcasting setup which manages episodes as posts with enclosures.', 'podlove' ); ?>
-			</p>
-			<p>
-				<?php echo __( 'Before we start, <strong><em>please backup your database!</em></strong>
-				I won\'t edit or delete any of your existing data but, you know, nobody has ever lost any data by backing up. Play it safe.', 'podlove' ); ?>
-			</p>
-			<p>
-				<?php echo __( 'Don\'t know how to do a backup? Try ' ) . '<a href="' . admin_url( 'plugin-install.php?tab=search&s=BackWPup' ) . '" target="_blank">BackWPup</a>.' ?>
-			</p>
-			<p>
-				<a href="<?php echo self::get_page_link( 2 ) ?>" class="btn btn-primary btn-large">
-					<?php echo __( 'Let\'s do this!', 'podlove-podcasting-plugin-for-wordpress' ); ?>
-				</a>
-			</p>
-		</div>
-		-->
 		<?php
 	}
 

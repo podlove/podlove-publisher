@@ -79,7 +79,7 @@ class TwigFilter {
 			]);
 		}
 
-		if (!$result) {
+		if ($result === null) {
 			try {
 				// simple Twig Env to render plain string
 				$env = new \Twig_Environment(new \Twig_Loader_Array([]), ['autoescape' => false]);

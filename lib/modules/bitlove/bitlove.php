@@ -114,8 +114,7 @@ class Bitlove extends \Podlove\Modules\Base {
 	public function enable_bitlove_flag_for_feed( $wrapper ) {
 		$wrapper->checkbox( 'bitlove', array(
 			'label'       	=> __( 'Available via Bitlove?', 'podlove-podcasting-plugin-for-wordpress' ),
-			'description' 	=> __( 'The Bitlove feed will be added to your list of feeds.
-									  <p class="podlove-bitlove-status"></p>', 'podlove' ),
+			'description' 	=> __( 'The Bitlove feed will be added to your list of feeds.', 'podlove-podcasting-plugin-for-wordpress' ) . '<p class="podlove-bitlove-status"></p>',
 			'default'     	=> false,
 			'html' 	=> array( 'data-feed-id' => $_GET['feed'] )
 		) );

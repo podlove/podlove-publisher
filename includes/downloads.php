@@ -103,6 +103,15 @@ function podlove_handle_media_file_download() {
 		exit;
 	}
 
+	// if a file exists but no valid episode reference, 
+	// that means it has been removed
+	$episode = $media_file->episode();
+
+	if ( ! $episode || ! $episode->is_valid() ) {
+		status_header( 410, 'Gone' );
+		exit;
+	}
+
 	do_action('podlove_download_file', $media_file);
 
 	// build redirect url

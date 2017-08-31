@@ -49,7 +49,7 @@ class Tracking extends Tab {
 								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
 								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
 									The Publisher logs the download intent and redirects the user to the original file. 
-									That way the Publisher is able to generate download statistics. ', 'podlove' )
+									That way the Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>
@@ -66,7 +66,7 @@ class Tracking extends Tab {
 								__( 'Tracking URL Parameters', 'podlove-podcasting-plugin-for-wordpress' ),
 								__( 'Original file URLs are extended by tracking parameters before presenting them to users and clients. 
 									This is useful if you are using your server log files for download analytics. 
-									No download-data is tracked.', 'podlove' )
+									No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>
@@ -164,7 +164,7 @@ class Tracking extends Tab {
 							echo sprintf(
 								__('You are using the default WordPress permalink structure. 
 								This may cause problems with some podcast clients when you activate tracking.
-								Go to %s and set it to anything but default (for example "Post name") before activating Tracking.', 'podlove'),
+								Go to %s and set it to anything but default (for example "Post name") before activating Tracking.', 'podlove-podcasting-plugin-for-wordpress'),
 								'<a href="' . admin_url('options-permalink.php') . '">' . __('Permalink Settings') . '</a>'
 							);
 							?>

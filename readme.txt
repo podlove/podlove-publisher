@@ -2,8 +2,13 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
+<<<<<<< HEAD
 Requires at least: 4.4
 Tested up to: 4.7.5
+=======
+Requires at least: 3.5
+Tested up to: 4.8.0
+>>>>>>> master
 Stable tag: trunk
 License: MIT
 
@@ -150,7 +155,14 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * fix network admin bar now does not include broken links if Publisher is not activated network-wide ([#933](https://github.com/podlove/podlove-publisher/issues/933))
 * fix import getting stuck issue ([#910](https://github.com/podlove/podlove-publisher/issues/910))
 
+= 2.6.2 =
+
+- send `HTTP 410 Gone` when accessing a download URL to a depublished episode
+- fix Podlove Web Player 4 appearing on wrong positions when multiple players are embedded on the same page
+
 = 2.6.1 =
+
+- fix template bug (when a template returned an empty result, the template title was displayed instead)
 
 **Flattr**
 

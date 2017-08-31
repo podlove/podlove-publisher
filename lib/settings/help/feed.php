@@ -12,7 +12,7 @@ return [
 		'content' => 
 			'<p>'
 				. __('Every feed URL is unique. To make it unique, you must assign each feed a unique <em>slug</em>.
-					It\'s a good habit to use your asset:', 'podlove')
+					It\'s a good habit to use your asset:', 'podlove-podcasting-plugin-for-wordpress')
 				. '<ul>'
 					. '<li>' . __('"mp3" slug for your mp3 asset', 'podlove-podcasting-plugin-for-wordpress') . '</li>'
 					. '<li>' . __('"m4a" slug for your m4a asset', 'podlove-podcasting-plugin-for-wordpress') . '</li>'

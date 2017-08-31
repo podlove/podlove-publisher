@@ -154,7 +154,7 @@ class Feed {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Podcast Feeds', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php echo __( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			
 			switch ( $action ) {

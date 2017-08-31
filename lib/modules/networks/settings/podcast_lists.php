@@ -123,7 +123,7 @@ class PodcastLists {
 
 	private function view_template() {
 		echo __( 'If you have configured a <a href="http://codex.wordpress.org/Create_A_Network">
-				WordPress Network</a>, Podlove allows you to configure Podcast lists.', 'podlove' );
+				WordPress Network</a>, Podlove allows you to configure Podcast lists.', 'podlove-podcasting-plugin-for-wordpress' );
 		$table = new \Podlove\Modules\Networks\PodcastList_List_Table();
 		$table->prepare_items();
 		$table->display();
@@ -367,7 +367,7 @@ class PodcastLists {
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'podlove-podcast' ); ?>
-			<h2><?php echo __( 'Lists', 'podlove' ); ?> <a href="?page=<?php echo self::MENU_SLUG ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
+			<h2><?php echo __( 'Lists', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 				if(isset($_GET["action"])) {
 					switch ( $_GET["action"] ) {

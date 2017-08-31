@@ -206,7 +206,7 @@ class Dashboard {
 					<td class="podlove-dashboard-number-column">
 						<?php
 							$days = round($episodes_total_length / 3600 / 24, 1);
-							echo sprintf(_n('%s day', '%s days', $days, 'podlove'), $days);
+							echo sprintf(_n('%s day', '%s days', $days, 'podlove-podcasting-plugin-for-wordpress'), $days);
 						?>
 					</td>
 					<td>
@@ -231,7 +231,7 @@ class Dashboard {
 				</tr>
 				<tr>
 					<td class="podlove-dashboard-number-column">
-						<?php echo sprintf(_n('%s podcast', '%s podcasts', $number_of_podcasts, 'podlove'), $number_of_podcasts ); ?>
+						<?php echo sprintf(_n('%s podcast', '%s podcasts', $number_of_podcasts, 'podlove-podcasting-plugin-for-wordpress'), $number_of_podcasts ); ?>
 					</td>
 					<td>
 						<?php echo __( 'exist in your WordPress installation', 'podlove-podcasting-plugin-for-wordpress' ); ?>.
