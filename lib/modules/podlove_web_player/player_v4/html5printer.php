@@ -62,7 +62,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			'chapters' => array_map(function($c) {
 				$c->title = html_entity_decode(wptexturize(convert_chars(trim($c->title))));
 				return $c;
-			}, json_decode($episode->get_chapters('json'))),
+			}, (array) json_decode($episode->get_chapters('json'))),
 			'theme' => [
 				'main'      => $player_settings['playerv4_color_primary'],
 				'highlight' => $player_settings['playerv4_color_secondary']
