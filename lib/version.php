@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 131 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 135 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1307,7 +1307,7 @@ function run_migrations_for_version( $version ) {
 				\Podlove\Modules\Contributors\Model\Contributor::table_name()
 			) );
 		break;
-		case 128:
+		case 132:
 			$sql1 = sprintf(
 				'ALTER TABLE `%s` ADD COLUMN `title` TEXT',
 				Model\Episode::table_name()
@@ -1324,21 +1324,24 @@ function run_migrations_for_version( $version ) {
 			$wpdb->query($sql2);
 			$wpdb->query($sql3);
 		break;
-		case 129:
+		case 133:
 			$wpdb->query( sprintf(
 				'ALTER TABLE `%s` ADD COLUMN `mnemonic` VARCHAR(8)',
 				\Podlove\Modules\Seasons\Model\Season::table_name()
 			) );
 		break;
-		case 130:
+		case 134:
 			$file_type = ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text',  'extension' => 'txt'];
-			$f = new Model\FileType;
-			foreach ($file_type as $key => $value) {
-				$f->{$key} = $value;
+			
+			if (!Model\FileType::find_one_by_name($file_type['name'])) {
+				$f = new Model\FileType;
+				foreach ($file_type as $key => $value) {
+					$f->{$key} = $value;
+				}
+				$f->save();
 			}
-			$f->save();
 		break;
-		case 131:
+		case 135:
 			delete_option(\Podlove\Modules\TitleMigration\State::OPTION);
 			\Podlove\Modules\Base::activate('title_migration');
 			break;
