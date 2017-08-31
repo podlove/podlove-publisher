@@ -34,6 +34,9 @@ class Shows extends \Podlove\Modules\Base {
 
 		add_filter('podlove_subscribe_button_data', [$this, 'override_subscribe_button'], 10, 3);
 
+		add_action('podlove_subscribe_button_widget_settings_bottom', [$this, 'add_widget_settings'], 10, 2);
+		add_filter('podlove_subscribe_button_widget_settings_update', [$this, 'add_widget_settings_update'], 10, 3);
+
 		// Template accessors (Provides episode.show and podcasts.shows)
 		\Podlove\Template\Episode::add_accessor(
 			'show', array('\Podlove\Modules\Shows\TemplateExtensions', 'accessorEpisodesShow'), 5
@@ -42,6 +45,31 @@ class Shows extends \Podlove\Modules\Base {
 		\Podlove\Template\Podcast::add_accessor(
 			'shows', array('\Podlove\Modules\Shows\TemplateExtensions', 'accessorPodcastShows'), 4
 		);
+	}
+
+	public function add_widget_settings($widget, $instance)
+	{
+		$selected_show = isset($instance['show']) ? $instance['show'] : '';
+		?>
+		<p>
+			<label for="<?php echo $widget->get_field_id( 'show' ); ?>">
+				<?php _e( 'Show', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+			</label>
+			<select class="widefat" id="<?php echo $widget->get_field_id( 'show' ); ?>" name="<?php echo $widget->get_field_name( 'show' ); ?>">
+				<option value="0" <?php selected($selected_show, 0) ?>><?php _e( 'Podcast', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
+				<?php foreach (Show::all() as $show): ?>
+					<option value="<?php echo esc_attr($show->slug) ?>" <?php selected($selected_show, $show->slug) ?>><?php echo $show->title ?></option>
+				<?php endforeach ?>
+			</select>
+		</p>
+		<?php
+	}
+
+	public function add_widget_settings_update($instance, $new_instance, $old_instance)
+	{
+		$instance['show'] = !empty($new_instance['show']) ? strip_tags($new_instance['show']) : '';
+
+		return $instance;
 	}
 
 	public function override_subscribe_button($podcast, $data, $args)

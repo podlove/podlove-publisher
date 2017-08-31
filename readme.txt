@@ -110,7 +110,7 @@ With shows you can offer feeds to subtopics of your podcast. Here's how it works
 
 For each episode, you decide which show it's in. Each show has its own set of feeds that listeners can subscribte to. The main feed remains unchanged, containing all episodes from all shows.
 
-The Podlove Subscribe Button can be configured to subscribe to a show by referencing the show slug. Use the shortcode `[podlove-subscribe-button show="show-slug"]` or the template tag `{ podcast.subscribeButton({show: 'show-slug'}) }}` .
+The Podlove Subscribe Button can be configured to subscribe to a show by referencing the show slug. Use the shortcode `[podlove-subscribe-button show="show-slug"]` or the template tag `{ podcast.subscribeButton({show: 'show-slug'}) }}`.
 
 **Updated Metadata for Podcast/Episode/Seasons according to iOS11 Specification**
 

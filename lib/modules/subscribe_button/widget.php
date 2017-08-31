@@ -109,18 +109,22 @@ class Widget extends \WP_Widget {
 			<em>This text will be shown below the subscribe button.</em>
 		</p>
 		<?php 
+
+		do_action('podlove_subscribe_button_widget_settings_bottom', $this, $instance);
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = array();
+		$instance = [];
 		$instance['infotext']  = ( ! empty( $new_instance['infotext'] ) )  ? $new_instance['infotext']                : '';
 		$instance['title']     = ( ! empty( $new_instance['title'] ) )     ? strip_tags( $new_instance['title'] )     : '';
 		$instance['size']      = ( ! empty( $new_instance['size'] ) )      ? strip_tags( $new_instance['size'] )      : '';
 		$instance['format']    = ( ! empty( $new_instance['format'] ) )    ? strip_tags( $new_instance['format'] )    : '';
 		$instance['style']     = ( ! empty( $new_instance['style'] ) )     ? strip_tags( $new_instance['style'] )     : '';
-		$instance['autowidth'] = ( ! empty( $new_instance['autowidth'] ) ) ? strip_tags( $new_instance['autowidth'] ) : 0;
+		$instance['autowidth'] = ( ! empty( $new_instance['autowidth'] ) ) ? strip_tags( $new_instance['autowidth'] ) :  0;
 		$instance['button']    = ( ! empty( $new_instance['button'] ) )    ? strip_tags( $new_instance['button'] )    : '';
-		$instance['color']    = ( ! empty( $new_instance['color'] ) )    ? $new_instance['color']    : '';
+		$instance['color']     = ( ! empty( $new_instance['color'] ) )     ? $new_instance['color']                   : '';
+
+		$instance = apply_filters('podlove_subscribe_button_widget_settings_update', $instance, $new_instance, $old_instance);
 
 		return $instance;
 	}
