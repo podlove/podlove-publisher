@@ -2,13 +2,10 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-<<<<<<< HEAD
 Requires at least: 4.4
 Tested up to: 4.7.5
-=======
 Requires at least: 3.5
 Tested up to: 4.8.0
->>>>>>> master
 Stable tag: trunk
 License: MIT
 
@@ -154,6 +151,7 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * fix deleting related episodes ([#907](https://github.com/podlove/podlove-publisher/issues/907))
 * fix network admin bar now does not include broken links if Publisher is not activated network-wide ([#933](https://github.com/podlove/podlove-publisher/issues/933))
 * fix import getting stuck issue ([#910](https://github.com/podlove/podlove-publisher/issues/910))
+* Bitlove module: remove all frontend functionality because it has been dysfunctional for a long time 
 
 = 2.6.2 =
 
