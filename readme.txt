@@ -4,6 +4,7 @@ Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
 Tested up to: 4.7.5
+Requires PHP: 5.4
 Requires at least: 3.5
 Tested up to: 4.8.0
 Stable tag: trunk
