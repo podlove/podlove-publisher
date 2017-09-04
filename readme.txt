@@ -153,6 +153,7 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * fix network admin bar now does not include broken links if Publisher is not activated network-wide ([#933](https://github.com/podlove/podlove-publisher/issues/933))
 * fix import getting stuck issue ([#910](https://github.com/podlove/podlove-publisher/issues/910))
 * Bitlove module: remove all frontend functionality because it has been dysfunctional for a long time 
+* fix Auphonic module showing wrong status message after file upload
 
 = 2.6.2 =
 
