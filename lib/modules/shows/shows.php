@@ -72,7 +72,7 @@ class Shows extends \Podlove\Modules\Base {
 		return $instance;
 	}
 
-	public function override_subscribe_button($podcast, $data, $args)
+	public function override_subscribe_button($data, $args, $podcast)
 	{
 		if (!isset($args['show']) || !$args['show'])
 			return $data;

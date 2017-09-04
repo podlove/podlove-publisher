@@ -45,7 +45,7 @@ class TemplateExtensions {
 			$args['language'] = Button::language($podcast->language);
 		}
 
-		$data = apply_filters('podlove_subscribe_button_data', $podcast, $data, $args);
+		$data = apply_filters('podlove_subscribe_button_data', $data, $args, $podcast);
 
 		return (new Button())->render($data, $args);
 	}
