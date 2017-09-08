@@ -24,7 +24,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			$episode['id'],
 			'<span class="dashicons dashicons-chart-bar"></span> ' . $episode['title'],
 			'<span style="color:#999; font-size: smaller" title="' . esc_attr(mysql2date(get_option('date_format'), $episode['post_date'])) . '">'
-			. sprintf(__('%s ago'), human_time_diff(strtotime($episode['post_date']))) 
+			. sprintf(__('%s ago'), human_time_diff(strtotime($episode['post_date_gmt']))) 
 			. '</span>'
 		);
 	}
@@ -150,6 +150,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 				'id' => $episode->id,
 				'title' => $post->post_title,
 				'post_date' => $post->post_date,
+				'post_date_gmt' => $post->post_date_gmt,
 				'downloads' => get_post_meta($post->ID, '_podlove_downloads_total', true),
 				'3y' => get_post_meta($post->ID, '_podlove_downloads_3y', true),
 				'2y' => get_post_meta($post->ID, '_podlove_downloads_2y', true),
