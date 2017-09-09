@@ -10,51 +10,31 @@ This is the podcast publishing plugin for WordPress.
 
 [![Flattr This][2]][1]
 
-## Development Environment
+## Development Setup
 
-Any WordPress development environment with a PHP version of at least 5.4 will do. A Vagrant Virtual Machine using the [Varying-Vagrant-Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) configuration is recommended.
+PHP dependencies are managed via [Composer](http://getcomposer.org/). So you need to clone the repository and then fetch the dependencies via Composer. JavaScript packages are managed with [yarn](https://yarnpkg.com/lang/en/).
 
-## Development
-
-Code dependencies are managed via [Composer](http://getcomposer.org/). So you need to clone the repository and then fetch the dependencies via Composer.
+Clone the publisher in the `wp-content/plugins` directory.
 
 ```
 git clone --recursive https://github.com/podlove/podlove-publisher.git
 cd podlove-publisher
 curl -sS https://getcomposer.org/installer | php
 php composer.phar --dev install
-npm run submodules-init
+yarn install
 ```
 
-## Testing
+## Development
 
-You need a dedicated database for testing because _running tests wipes all data_. To setup tests, run this once:
-
-```
-# bash bin/install-wp-tests.sh <database> <user> <password> <host> <wordpress-version>
-bash bin/install-wp-tests.sh wordpress_test root root localhost latest
-```
-
-This will download the latest WordPress core and files required for testing into `/tmp`.
-
-Then run `phpunit` to run the tests.
+Use webpack when working with JS or CSS files:
 
 ```
-./vendor/bin/phpunit
-```
-
-#### Web Player
-
-To get and update the web player v3+, use bower and make:
-
-```
-bower update
-make player
+yarn run dev
 ```
 
 [1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
 [2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)
-[3]: http://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
+[3]: https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
 [4]: https://trello.com/b/zB4mKQlD/podlove-publisher
 [5]: https://github.com/podlove/podlove-publisher/issues
 [6]: http://docs.podlove.org/
