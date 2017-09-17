@@ -48,7 +48,12 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		$player_media_files = new PlayerMediaFiles($episode);
 		$media_files        = $player_media_files->get($context);
 		$media_file_urls = array_map(function($file) {
-			return $file['publicUrl'];
+			return [
+				'url'      => $file['publicUrl'],
+				'size'     => $file['size'],
+				'title'    => $file['assetTitle'],
+				'mimeType' => $file['mime_type']
+			];
 		}, $media_files);
 
 		$player_settings = \Podlove\get_webplayer_settings();
@@ -59,6 +64,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
 				'poster'   => $podcast->cover_art()->setWidth(500)->url(),
+				'link'     => \Podlove\get_landing_page_url()
 			],
 			'title'           => $post->post_title,
 			'subtitle'        => wptexturize(convert_chars(trim($episode->subtitle))),
@@ -66,6 +72,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			'publicationDate' => mysql2date("c", $post->post_date),
 			'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
 			'duration'        => $episode->get_duration('full'),
+			'link'            => get_permalink($post->id),
 			'audio' => $media_file_urls,
 			'reference' => [
 				'base'   => plugins_url('dist', __FILE__),

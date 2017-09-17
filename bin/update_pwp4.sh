@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "Does not work at the moment because release format changed."
+echo "Go to https://github.com/podlove/podlove-web-player/releases and download manually. Or fix this script."
+exit 1
+
 if [ $# -lt 1 ]; then
     echo "usage: $0 <version-string/tag>"
     echo "Get available tags from here: https://github.com/podlove/podlove-web-player/releases"
