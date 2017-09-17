@@ -72,7 +72,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			'publicationDate' => mysql2date("c", $post->post_date),
 			'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
 			'duration'        => $episode->get_duration('full'),
-			'link'            => get_permalink($post->id),
+			'link'            => get_permalink($episode->post_id),
 			'audio' => $media_file_urls,
 			'reference' => [
 				'base'   => plugins_url('dist', __FILE__),
