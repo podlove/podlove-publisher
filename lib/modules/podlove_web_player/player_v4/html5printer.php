@@ -84,8 +84,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				return $c;
 			}, (array) json_decode($episode->get_chapters('json'))),
 			'theme' => [
-				'main'      => $player_settings['playerv4_color_primary'],
-				'highlight' => $player_settings['playerv4_color_secondary']
+				'main'      => self::sanitize_color($player_settings['playerv4_color_primary']),
+				'highlight' => self::sanitize_color($player_settings['playerv4_color_secondary'])
 			]
 		];
 
@@ -107,5 +107,43 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	public static function config_url($episode) {
 		return esc_url( add_query_arg('podlove_player4', $episode->id, trailingslashit(get_option('siteurl'))) );
+	}
+
+	public static function sanitize_color($color)
+	{
+		static $patterns = array(
+			// 'cmyk'  => '/^(?:device-)?cmyk\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
+			'rgba'  => '/^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
+			'rgb'   => '/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/',
+			'hsla'  => '/^hsla\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%,\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
+			'hsl'   => '/^hsl\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%\)$/',
+			// 'hsva'  => '/^hsva\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%,\s*(\d+(?:\.\d+)?|\.\d+)\s*\)$/',
+			// 'hsv'   => '/^hsv\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%\)$/',
+			'hex6'  => '/^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/',
+			'hex3'  => '/^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/'
+		);
+
+		$color = trim($color);
+
+		# fix duplicate '#'
+		$color = preg_replace('/^[#]+/', '#', $color);
+		if (preg_match($patterns['hex6'], $color) || preg_match($patterns['hex3'], $color)) {
+			
+			# add missing '#'
+			if ($color[0] != '#') {
+				$color = '#' . $color;
+			}
+
+			return $color;
+		}
+
+		// accept any known color format
+		foreach ($patterns as $pattern) {
+			if (preg_match($pattern, $color)) {
+				return $color;
+			}
+		}
+
+		return '#000'; // default to a valid color
 	}
 }
