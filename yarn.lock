@@ -4256,8 +4256,8 @@ pngquant-bin@^3.0.0:
     logalot "^2.0.0"
 
 podcast-chapter-parser-audacity@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-audacity/-/podcast-chapter-parser-audacity-1.0.1.tgz#8e6b18b73c7193136127fd13ba040cf0a44e4f6e"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/podcast-chapter-parser-audacity/-/podcast-chapter-parser-audacity-1.0.2.tgz#02294ffcae9876892dd55138a685d52c28e79de8"
   dependencies:
     normalplaytime "^1.0.6"
 
