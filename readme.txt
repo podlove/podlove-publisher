@@ -155,6 +155,8 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * Bitlove module: remove all frontend functionality because it has been dysfunctional for a long time 
 * fix Auphonic module showing wrong status message after file upload
 * fix Audacity chapter import when times contain commas
+* fix email notification issue where not emails were sent ([#938](https://github.com/podlove/podlove-publisher/issues/938))
+* enhance email error reporting
 
 ----
 
