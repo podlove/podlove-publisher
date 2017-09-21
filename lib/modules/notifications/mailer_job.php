@@ -59,18 +59,18 @@ class MailerJob {
 	}
 
 	private static function register_log_mailer_errors() {
-		add_action('wp_mail_failed', [__CLASS__, 'log_mailer_errors'], 10, 2);
+		add_action('wp_mail_failed', [__CLASS__, 'log_mailer_errors']);
 	}
 
 	private static function deregister_log_mailer_errors() {
-		remove_action('wp_mail_failed', [__CLASS__, 'log_mailer_errors'], 10);
+		remove_action('wp_mail_failed', [__CLASS__, 'log_mailer_errors']);
 	}
 
-	public static function log_mailer_errors($message, $data)
+	public static function log_mailer_errors($wp_error)
 	{
-		Log::get()->addWarning("Sending email failed. Reason: $message", [
-			'module'     => 'E-Mail Notifications',
-			'error_data' => $data
+		Log::get()->addWarning("Sending email failed. Reason: " . $wp_error->get_error_message(), [
+			'module'   => 'E-Mail Notifications',
+			'wp_error' => $wp_error
 		]);
 	}
 
