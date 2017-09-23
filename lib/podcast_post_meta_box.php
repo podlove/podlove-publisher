@@ -128,11 +128,7 @@ class Podcast_Post_Meta_Box {
 						'rows'  => 3
 					),
 					'default' => 'full',
-					'options' => [
-						'full'    => __('full (complete content of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
-						'trailer' => __('trailer (short, promotional piece of content that represents a preview of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
-						'bonus'   => __('bonus (extra content for an episode, for example behind the scenes information)', 'podlove-podcasting-plugin-for-wordpress')
-					]
+					'options' => \Podlove\episode_types()
 				),
 				'position' => 890
 			), array(

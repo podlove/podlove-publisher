@@ -297,6 +297,15 @@ function relative_time_steps($time) {
 	}
 }
 
+function episode_types()
+{
+	return [
+		'full'    => __('full (complete content of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
+		'trailer' => __('trailer (short, promotional piece of content that represents a preview of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
+		'bonus'   => __('bonus (extra content for an episode, for example behind the scenes information)', 'podlove-podcasting-plugin-for-wordpress')
+	];
+}
+
 namespace Podlove\Form;
 
 /**

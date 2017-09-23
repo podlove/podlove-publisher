@@ -70,6 +70,18 @@ class Title_Migration extends \Podlove\Modules\Base {
 		if (!isset($_POST['migrate']) || !is_array($_POST['migrate']))
 			return;
 
+		// mnemonic setting
+		$podcast = Model\Podcast::get();
+		$podcast->mnemonic = $_POST['migrate_mnemonic'];
+		$podcast->save();
+
+		// autogen setting
+		$website_settings = get_option('podlove_website');
+		$website_settings['enable_generated_blog_post_title'] = isset($_POST['podlove_website']['enable_generated_blog_post_title']) ? $_POST['podlove_website']['enable_generated_blog_post_title'] : false;
+		$website_settings['blog_title_template'] = $_POST['podlove_website']['blog_title_template'];
+		update_option('podlove_website', $website_settings);
+
+		// episodes
 		$episodes = $_POST['migrate'];
 
 		foreach ($episodes as $episode_id => $data) {
@@ -118,9 +130,36 @@ class Title_Migration extends \Podlove\Modules\Base {
 	<p class="description">
 		<?php echo __('There are new fields in podcast feeds for episode numbers and clean titles. You can edit them one by one using the episode screen, or use this tool to update them all at once.', 'podlove-podcasting-plugin-for-wordpress') ?>
 	</p>
+
+	<h4>Mnemonic</h4>
+
+	<input type="text" name="migrate_mnemonic" id="migrate_mnemonic" value="<?php echo podlove_get_mnemonic() ?>" class="regular-text required podlove-check-input">
+
+	<p class="description">
+		<?php echo __( 'Abbreviation for your podcast. Usually 2–4 capital letters, used to reference episodes. For example, the podcast "The Lunatic Fringe" might have the mnemonic TLF and its fifth episode can be referred to via TLF005.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+	</p>
+
 	<p class="description">
 		<?php echo sprintf(
-			__('Once you are done here, you might find it useful to know that the Publisher is capable of automatically generating blog titles based on episode number and title. You can enable it in %sExpert Settings > Website > Blog Episode Titles%s.', 'podlove-podcasting-plugin-for-wordpress'), 
+			__('You can find this setting later at %sPodcast Settings%s.', 'podlove-podcasting-plugin-for-wordpress'), 
+			'<a href="' . admin_url('admin.php?page=podlove_settings_podcast_handle') . '">',
+			'</a>'
+		) ?>
+		
+	</p>
+
+	<h4><?php echo __('Always automatically generate blog episode titles?', 'podlove-podcasting-plugin-for-wordpress') ?></h4>
+
+	<?php 
+	$enable_generated_blog_post_title = \Podlove\get_setting( 'website', 'enable_generated_blog_post_title' );
+	$blog_title_template = \Podlove\get_setting( 'website', 'blog_title_template' );
+
+	\Podlove\load_template('expert_settings/website/blog_post_title', compact('enable_generated_blog_post_title', 'blog_title_template'));
+	?>
+
+	<p class="description">
+		<?php echo sprintf(
+			__('You can find this setting later at %sExpert Settings > Website > Blog Episode Titles%s.', 'podlove-podcasting-plugin-for-wordpress'), 
 			'<a href="' . admin_url('admin.php?page=podlove_settings_settings_handle') . '">',
 			'</a>'
 		) ?>
@@ -149,10 +188,10 @@ class Title_Migration extends \Podlove\Modules\Base {
 						<input type="text" value="<?php echo esc_attr($episode['title_guess']) ?>" name="migrate[<?php echo (int) $episode['episode']->id ?>][title]" class="regular-text" />
 					</td>
 					<td>
-						<select name="migrate[<?php echo (int) $episode['episode']->id ?>][type]">
-							<option value="full" selected>full</option>
-							<option value="trailer">trailer</option>
-							<option value="bonus">bonus</option>
+						<select name="migrate[<?php echo (int) $episode['episode']->id ?>][type]" style="max-width: 270px">
+							<?php foreach (\Podlove\episode_types() as $type_key => $type_title): ?>
+								<option value="<?php echo esc_attr($type_key) ?>" <?php if ($type_key == 'full'): ?>selected<?php endif ?>><?php echo esc_html($type_title) ?></option>
+							<?php endforeach ?>
 						</select>
 					</td>
 				</tr>

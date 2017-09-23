@@ -41,17 +41,7 @@ class Notices {
 				<strong><?php echo __('Podlove Module: Title Migration', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
 			</p>
 			<p>
-				<?php echo __('You are done migrating your episode titles.', 'podlove-podcasting-plugin-for-wordpress') ?>
-			</p>
-			<p>
-				<?php echo sprintf(
-					__('If you would like to take advantage of automatic blog episode title generation based on episode number and title, head over to %s. Also remember to set your podcast mnemonic in %s.', 'podlove-podcasting-plugin-for-wordpress'),
-					'<a href="' . admin_url('admin.php?page=podlove_settings_settings_handle') . '">' . __('Expert Settings', 'podlove-podcasting-plugin-for-wordpress') . '</a>',
-					'<a href="' . admin_url('admin.php?page=podlove_settings_podcast_handle') . '">' . __('Podcast Settings', 'podlove-podcasting-plugin-for-wordpress') . '</a>'
-				); ?>
-			</p>
-			<p>
-				<?php echo __('When you are done, you can deactivate the title migration module.' , 'podlove-podcasting-plugin-for-wordpress') ?>
+				<?php echo __('You are done migrating your episode titles. You can deactivate the title migration module.', 'podlove-podcasting-plugin-for-wordpress') ?>
 			</p>
 			<p>
 				<a class="button" href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle&podlove_disable_title_migration_module=1'); ?>"><?php echo __('Deactivate Title Migration Module', 'podlove-podcasting-plugin-for-wordpress') ?></a> <a href="<?php echo self::hide_message_url(State::FINISHED_HIDDEN); ?>"><?php echo __('hide this message', 'podlove-podcasting-plugin-for-wordpress') ?></a>
