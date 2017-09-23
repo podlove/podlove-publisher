@@ -174,7 +174,7 @@ class Title_Migration extends \Podlove\Modules\Base {
 			$number = (int) $matches[0][0];
 			$offset = $matches[0][1] + strlen($matches[0][0]);
 		} else {
-			$number = nil;
+			$number = null;
 			$offset = 0;
 		}
 
