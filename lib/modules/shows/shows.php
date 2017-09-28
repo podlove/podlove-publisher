@@ -202,13 +202,17 @@ class Shows extends \Podlove\Modules\Base {
 					$current = ( isset($postterms[0]) ? $postterms[0]->term_id : 0 ); // Fetch the first element of the term array. We expect that there is only one "Show" term since a show is a unique property of an episode.
 
 					foreach ($terms as $term) {
-						$id = 'shows-' . $term->term_id;
+						$id = 'shows-' . (int) $term->term_id;
 
-						echo "<li id='$id' class='fubar'><label class='selectit'>" .
-						"<input type='radio' id='in-$id' name='tax_input[shows]'" . 
-						checked( $current, $term->term_id, false ) . 
-						"value='$term->term_id' />$term->name" .
-						"</label></li>";
+						echo "
+							<li id='$id' class='fubar'>
+								<label class='selectit'>
+									<input type='radio' id='in-$id' name='tax_input[shows]'"
+									. checked( $current, $term->term_id, false )
+									. "value='" . esc_attr($term->slug) . "' />" 
+									. esc_html($term->name) .
+								"</label>
+							</li>";
 					}
 				?>
 			</ul>
