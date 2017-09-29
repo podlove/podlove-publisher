@@ -71,7 +71,7 @@ class Show {
 	public static function find_one_term_by_property($property = false, $value = false) {
 		$terms = self::find_all_terms_by_property($property, $value);
 
-		if ( is_array($terms) ) {
+		if ( is_array($terms) && !empty($terms) ) {
 			return $terms[0]; // returns first element only
 		} else {
 			return;
