@@ -18,6 +18,11 @@ class Open_Graph extends \Podlove\Modules\Base {
 		 * Register hooks on episode pages only.
 		 */
 		public function register_hooks() {
+
+			// wpseo creates its own tags
+			if (is_plugin_active('wordpress-seo/wp-seo.php')) {
+				return;
+			}
 			
 			if ( ! is_single() )
 				return;
