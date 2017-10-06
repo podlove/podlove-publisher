@@ -39,9 +39,9 @@ class Show {
 		$existing_properties =  [ 'title', 'description', 'slug', 'id' ];
 		$existing_meta_properties = ['image', 'language', 'subtitle'];
 		$search_parameters = array(
-				'taxonomy' => 'shows',
-				'hide_empty' => false
-			);
+			'taxonomy' => 'shows',
+			'hide_empty' => false
+		);
 
 		if ( in_array($property, $existing_meta_properties) ) {
 			$search_parameters['meta_key'] = $property;
@@ -51,7 +51,7 @@ class Show {
 		if ( in_array($property, $existing_properties) ) {
 			switch ($property) {
 				case 'id':
-					$search_parameters['term_id'] = $value;
+					$search_parameters['term_taxonomy_id'] = $value;
 				break;
 				case 'title':
 					$search_parameters['name'] = $value;
