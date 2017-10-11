@@ -35,13 +35,54 @@ class Module {
 		);
 	}
 
-	public static function shortcode() {
+	public static function shortcode($args = []) {
 
 		if (is_feed())
 			return '';
 
-		$episode = Episode::find_one_by_post_id(get_the_ID());
-		$printer = new Html5Printer($episode);
+		if (isset($args['post_id'])) {
+			$post_id = $args['post_id'];
+			unset($args['post_id']);
+		} else {
+			$post_id = get_the_ID();
+		}
+
+		add_filter('podlove_player4_config', function ($config) use ($args) {
+			foreach ($args as $key => $value) {
+				$path = explode('_', $key);
+
+				if (count($path) === 1) {
+					$config[$path[0]] = $value;
+				}
+
+				if (count($path) === 2) {
+					if (!isset($config[$path[0]])) {
+						$config[$path[0]] = [];
+					}
+					$config[$path[0]][$path[1]] = $value;
+				}
+
+				if (count($path) === 3) {
+					if (!isset($config[$path[0]])) {
+						$config[$path[0]] = [];
+					}
+					if (!isset($config[$path[0]][$path[1]])) {
+						$config[$path[0]][$path[1]] = [];
+					}
+					$config[$path[0]][$path[1]][$path[2]] = $value;
+				}
+			}
+
+			return $config;
+		});
+
+		if (isset($args['mode']) && $args['mode'] == 'live') {
+			// live mode has no episode to reference
+			$printer = new Html5Printer();
+		} else {
+			$episode = Episode::find_one_by_post_id($post_id);
+			$printer = new Html5Printer($episode);
+		}
 
 		return $printer->render(null);
 	}

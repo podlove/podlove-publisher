@@ -15,7 +15,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	private $attributes = [];
 
-	public function __construct(Episode $episode) {
+	public function __construct(Episode $episode = null) {
 		$this->episode = $episode;
 	}
 
@@ -42,19 +42,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	public static function config($episode, $context) {
 
-		$post = get_post($episode->post_id);
 		$podcast = Podcast::get();
-
-		$player_media_files = new PlayerMediaFiles($episode);
-		$media_files        = $player_media_files->get($context);
-		$media_file_urls = array_map(function($file) {
-			return [
-				'url'      => $file['publicUrl'],
-				'size'     => $file['size'],
-				'title'    => $file['assetTitle'],
-				'mimeType' => $file['mime_type']
-			];
-		}, $media_files);
 
 		$player_settings = \Podlove\get_webplayer_settings();
 
@@ -66,41 +54,62 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'poster'   => $podcast->cover_art()->setWidth(500)->url(),
 				'link'     => \Podlove\get_landing_page_url()
 			],
-			'title'           => $post->post_title,
-			'subtitle'        => wptexturize(convert_chars(trim($episode->subtitle))),
-			'summary'         => nl2br(wptexturize(convert_chars(trim($episode->summary)))),
-			'publicationDate' => mysql2date("c", $post->post_date),
-			'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
-			'duration'        => $episode->get_duration('full'),
-			'link'            => get_permalink($episode->post_id),
-			'audio' => $media_file_urls,
 			'reference' => [
 				'base'   => plugins_url('dist', __FILE__),
 				'share'  => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
-				'config' => self::config_url($episode)
 			],
-			'chapters' => array_map(function($c) {
-				$c->title = html_entity_decode(wptexturize(convert_chars(trim($c->title))));
-				return $c;
-			}, (array) json_decode($episode->get_chapters('json'))),
 			'theme' => [
 				'main'      => self::sanitize_color($player_settings['playerv4_color_primary']),
 				'highlight' => self::sanitize_color($player_settings['playerv4_color_secondary'])
 			]
 		];
 
-		if (\Podlove\Modules\Base::is_active('contributors')) {
-			$config['contributors'] = array_map(function ($c) {
-				$contributor = $c->getContributor();
+		if ($episode) {
+			$post = get_post($episode->post_id);
+
+			$player_media_files = new PlayerMediaFiles($episode);
+			$media_files        = $player_media_files->get($context);
+			$media_file_urls = array_map(function($file) {
 				return [
-					'name'   => $contributor->getName(),
-					'avatar' => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
-					'role' => $c->hasRole() ? $c->getRole()->to_array() : null,
-					'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
-					'comment' => $c->comment
+					'url'      => $file['publicUrl'],
+					'size'     => $file['size'],
+					'title'    => $file['assetTitle'],
+					'mimeType' => $file['mime_type']
 				];
-			}, EpisodeContribution::find_all_by_episode_id($episode->id));
+			}, $media_files);
+
+			$config = array_merge($config, [
+				'title'           => $post->post_title,
+				'subtitle'        => wptexturize(convert_chars(trim($episode->subtitle))),
+				'summary'         => nl2br(wptexturize(convert_chars(trim($episode->summary)))),
+				'publicationDate' => mysql2date("c", $post->post_date),
+				'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+				'duration'        => $episode->get_duration('full'),
+				'link'            => get_permalink($episode->post_id),
+				'audio'           => $media_file_urls,
+				'chapters' => array_map(function($c) {
+					$c->title = html_entity_decode(wptexturize(convert_chars(trim($c->title))));
+					return $c;
+				}, (array) json_decode($episode->get_chapters('json')))
+			]);
+
+			$config['reference']['config'] = self::config_url($episode);
+
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$config['contributors'] = array_map(function ($c) {
+					$contributor = $c->getContributor();
+					return [
+						'name'   => $contributor->getName(),
+						'avatar' => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
+						'role' => $c->hasRole() ? $c->getRole()->to_array() : null,
+						'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
+						'comment' => $c->comment
+					];
+				}, EpisodeContribution::find_all_by_episode_id($episode->id));
+			}
 		}
+
+		$config = apply_filters('podlove_player4_config', $config);
 
 		return $config;
 	}

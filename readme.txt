@@ -139,6 +139,16 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 - new accessor: `podcast.type`
 - new accessor: `season.mnemonic`
 
+**Podlove Web Player 4**
+
+The Shortcode `[podlove-web-player]` accepts several parameters, increasing its versatility.
+
+With `post_id` you can embed episodes on any page, for example `[podlove-web-player post_id="1234"]`.
+
+Every [config parameter available](http://docs.podlove.org/podlove-web-player/config.html) can be overridden using shortcode attributes. The only difference from the linked documentation page is the notation. For nested configs like `show.title` use underscores (`_`) instead. For example, display a green player with custom title like this: `[podlove-web-player show_title="Special Title" theme_main="#00ff00"]`
+
+You can now also display a player with _live content_ like this: `[podlove-web-player mode="live" audio_0_url="http://mp3.theradio.cc/" audio_0_mimeType="audio/mp3" title="Livestream" link="https://theradio.cc"]`
+
 **Other**
 
 * analytics: show download totals for last 24 hours and last 7 days in overview
