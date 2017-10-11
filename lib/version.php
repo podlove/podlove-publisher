@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 135 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 136 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1344,7 +1344,13 @@ function run_migrations_for_version( $version ) {
 		case 135:
 			delete_option(\Podlove\Modules\TitleMigration\State::OPTION);
 			\Podlove\Modules\Base::activate('title_migration');
-			break;
+		break;
+		case 136:
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::update_existing_services();
+				\Podlove\Modules\Social\Social::build_missing_services();
+			}
+		break;
 	}
 
 }

@@ -153,6 +153,13 @@
   logo: 'prezi.png'
   url_scheme: 'https://prezi.com/user/%account-placeholder%'
 
+- title: 'SlideShare'
+  name: 'slideshare'
+  category: 'social'
+  description: 'SlideShare Account'
+  logo: 'slideshare.png'
+  url_scheme: 'https://www.slideshare.net/%account-placeholder%'
+
 - title: 'Skype'
   name: 'skype'
   category: 'social'

@@ -158,6 +158,7 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 * fix email notification issue where not emails were sent ([#938](https://github.com/podlove/podlove-publisher/issues/938))
 * enhance email error reporting
 * enhance open graph module: detects WP SEO plugin and does not output any tags to avoid conflicts
+* social services: add SlideShare
 
 ----
 
