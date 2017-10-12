@@ -164,19 +164,29 @@ class Shows extends \Podlove\Modules\Base {
 					return $show->title;
 				break;
 				case 'subtitle':
-					return sprintf('<itunes:subtitle>%s</itunes:subtitle>', $show->subtitle);
+					if ($show->subtitle) {
+						return sprintf('<itunes:subtitle>%s</itunes:subtitle>', $show->subtitle);
+					}
 				break;
 				case 'description':
-					return $show->subtitle;
+					if ($show->subtitle) {
+						return $show->subtitle;
+					}
 				break;
 				case 'summary':
-					return sprintf('<itunes:summary>%s</itunes:summary>', $show->summary);
+					if ($show->summary) {
+						return sprintf('<itunes:summary>%s</itunes:summary>', $show->summary);
+					}
 				break;
 				case 'language':
-					return $show->language;
+					if ($show->language) {
+						return $show->language;
+					}
 				break;
 				case 'image':
-					return sprintf('<itunes:image>%s</itunes:image>', $show->image);
+					if ($show->image) {
+						return sprintf('<itunes:image>%s</itunes:image>', $show->image);
+					}
 				break;
 			}
 		}
