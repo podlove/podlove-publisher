@@ -95,7 +95,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 	add_action( $hook, function() use ( $podcast, $hook ) {
 
 		$image = [
-			'url'   => $podcast->cover_art()->url(),
+			'url'   => apply_filters('podlove_feed_itunes_image_url', $podcast->cover_art()->url()),
 			'title' => $podcast->title,
 			'link'  => apply_filters( 'podlove_feed_link', \Podlove\get_landing_page_url() )
 		];
@@ -291,7 +291,7 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			} else {
 				$cover_art = '';
 			}
-			$xml .= $tag_prefix . apply_filters( 'podlove_feed_itunes_image', $cover_art );
+			$xml .= $tag_prefix . apply_filters( 'podlove_feed_episode_itunes_image', $cover_art );
 
 			if ( $feed->embed_content_encoded ) {
 				add_filter( 'the_content_feed', function( $content, $feed_type ) {

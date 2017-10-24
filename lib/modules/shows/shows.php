@@ -23,6 +23,7 @@ class Shows extends \Podlove\Modules\Base {
 		add_filter( 'podlove_feed_itunes_summary', array($this, 'override_feed_summary'), 5 );
 		add_filter( 'podlove_rss_feed_description', array($this, 'override_feed_description'), 20 );
 		add_filter( 'podlove_feed_itunes_image', array($this, 'override_feed_image'), 5 );
+		add_filter( 'podlove_feed_itunes_image_url', array($this, 'override_feed_image_url'), 5 );
 		add_filter( 'podlove_feed_language', array($this, 'override_feed_language'), 5 );
 
 		add_filter( 'set-screen-option', function($status, $option, $value) {
@@ -143,6 +144,10 @@ class Shows extends \Podlove\Modules\Base {
 		return self::get_feed_modification($image, 'image'); 
 	}
 
+	public function override_feed_image_url($url) {
+		return self::get_feed_modification($url, 'image_url'); 
+	}
+
 	public function override_feed_language($language) {
 		return self::get_feed_modification($language, 'language'); 
 	}
@@ -187,6 +192,9 @@ class Shows extends \Podlove\Modules\Base {
 					if ($show->image) {
 						return sprintf('<itunes:image>%s</itunes:image>', $show->image);
 					}
+				break;
+				case 'image_url':
+					return $show->image;
 				break;
 			}
 		}
