@@ -49,6 +49,7 @@ class Module {
 
 		add_filter('podlove_player4_config', function ($config) use ($args) {
 			foreach ($args as $key => $value) {
+				$key = str_ireplace("mimetype", "mimeType", $key); // because shortcodes ignore case
 				$path = explode('_', $key);
 
 				if (count($path) === 1) {
