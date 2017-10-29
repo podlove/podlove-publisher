@@ -455,10 +455,6 @@ img {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.marquee {
-  transform: translateX(0);
-  animation: stop-and-scroll 15s linear infinite;
-}
 .text-left {
   text-align: left;
 }
@@ -670,10 +666,6 @@ ul, ol {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.marquee {
-  transform: translateX(0);
-  animation: stop-and-scroll 15s linear infinite;
 }
 .text-left {
   text-align: left;
@@ -889,7 +881,7 @@ to {
 }
 
 .header {
-  padding: 1em 1em 0 1em;
+  padding: 0 1em;
   overflow: hidden;
 }
 
@@ -897,6 +889,7 @@ to {
   width: 100%;
   display: flex;
   flex-direction: row;
+  padding-top: 1em;
 }
 .info .poster {
     margin: 0 1em 0 0;
@@ -961,6 +954,7 @@ to {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-top: 1em;
   height: 100px;
   text-align: center;
   overflow: hidden;
@@ -1208,6 +1202,8 @@ to {
 .tab-header {
   position: relative;
   width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1228,6 +1224,9 @@ to {
     height: 1em;
     z-index: 100;
 }
+.tab-header.overflows .tab-header-item .title {
+    display: none;
+}
 
 .tab-header-item {
   display: flex;
@@ -1237,7 +1236,6 @@ to {
   margin: 0;
   height: 35px;
   transition: all 300ms;
-  overflow: hidden;
 }
 .tab-header-item .caption {
     display: flex;
