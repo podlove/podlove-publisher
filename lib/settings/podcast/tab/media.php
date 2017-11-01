@@ -39,6 +39,24 @@ class Media extends Tab {
 		</p>
 		<?php
 
+		if (substr($podcast->media_file_base_uri, 0, 4) !== "http") { ?>
+			<div class="error">
+				<p>
+					<strong><?php echo __("URL must be fully qualified.", "podlove-podcasting-plugin-for-wordpress") ?></strong>
+				</p>
+				<p>
+					<?php echo sprintf(
+						__("The URL must start with %s or %s, not %s.", "podlove-podcasting-plugin-for-wordpress"),
+						'<code>http</code>',
+						'<code>https</code>',
+						'<code>/</code>'
+					); ?>
+					
+				</p>
+			</div>
+			<?php
+		}
+
 		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$podcast = $form->object;
