@@ -219,6 +219,17 @@ class Shows extends \Podlove\Modules\Base {
 					$postterms = get_the_terms( $post->id, 'shows' );
 					$current = ( isset($postterms[0]) ? $postterms[0]->term_id : 0 ); // Fetch the first element of the term array. We expect that there is only one "Show" term since a show is a unique property of an episode.
 
+					echo "
+						<li class='fubar'>
+							<label class='selectit'>
+								<input type='radio' name='tax_input[shows]'"
+								. checked( $current, 0, false )
+								. "value='0' />" 
+								. __("Podcast", "podlove-podcasting-plugin-for-wordpress") 
+								. " <span class='description'>(" . __("no show assignment", "podlove-podcasting-plugin-for-wordpress") . ")</span>"
+							. "</label>
+						</li>";
+
 					foreach ($terms as $term) {
 						$id = 'shows-' . (int) $term->term_id;
 
