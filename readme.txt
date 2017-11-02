@@ -170,6 +170,7 @@ You can now also display a player with _live content_ like this: `[podlove-web-p
 * enhance open graph module: detects WP SEO plugin and does not output any tags to avoid conflicts
 * social services: add SlideShare
 * show warning if upload directory is not fully qualified
+* remove download section from default template (because it is included in PWP4)
 
 ----
 

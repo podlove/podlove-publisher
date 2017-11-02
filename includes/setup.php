@@ -125,9 +125,6 @@ function podlove_setup_default_template() {
 	{# display web player for episode #}
 	{{ episode.player }}
 	
-	{# display download menu for episode #}
-	{% include "@core/shortcode/downloads-select.twig" %}
-
 	{# display contributors if module is active #}
 	{% if shortcode_exists("podlove-episode-contributor-list") %}
 		{# see http://docs.podlove.org/podlove-publisher/reference/shortcodes.html#contributors for parameters #}
