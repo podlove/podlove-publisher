@@ -222,7 +222,7 @@ function get_webplayer_defaults() {
 	return [
 		'chaptersVisible' => 'false',
 		'inject'          => 'manually',
-		'version'         => 'player_v2',
+		'version'         => 'player_v4',
 		'playerv3theme'   => 'pwp-dark-green.min.css',
 		'podigeetheme'    => 'default',
 		'playerv4_color_primary'   => '#2B8AC6',
