@@ -173,6 +173,7 @@ Podlove Web Player 4 is the new default player.
 * social services: add SlideShare
 * show warning if upload directory is not fully qualified
 * remove download section from default template (because it is included in PWP4)
+* image cache: instead of returning invalid URLs with 0 width and 0 height when something goes wrong, return the source URL instead
 
 ----
 

@@ -184,6 +184,10 @@ class Image {
 	 */
 	public function url() {
 
+		if (empty($this->source_url)) {
+			return null;
+		}
+
 		// In case the image cache doesn't work, it can be deactivated by 
 		// defining the PHP constant PODLOVE_DISABLE_IMAGE_CACHE = true.
 		// It's not recommended since that leads to all images being delivered full size
@@ -192,8 +196,10 @@ class Image {
 			return $this->source_url;
 		}
 
-		if (empty($this->source_url)) {
-			return null;
+		// if neither width nor height are available something went horribly wrong,
+		// so we better bail and return the source url instead
+		if (!$this->width && !$this->height) {
+			return $this->source_url;
 		}
 
 		if (!$this->file_extension) {
