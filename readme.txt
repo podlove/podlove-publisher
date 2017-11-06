@@ -168,6 +168,7 @@ Podlove Web Player 4 is the new default player.
 * fix Auphonic module showing wrong status message after file upload
 * fix Audacity chapter import when times contain commas
 * fix email notification issue where not emails were sent ([#938](https://github.com/podlove/podlove-publisher/issues/938))
+* fix feed redirect issue for HTTP/1.0 clients
 * enhance email error reporting
 * enhance open graph module: detects WP SEO plugin and does not output any tags to avoid conflicts
 * social services: add SlideShare
