@@ -96,8 +96,12 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			$config['reference']['config'] = self::config_url($episode);
 
 			if (\Podlove\Modules\Base::is_active('contributors')) {
-				$config['contributors'] = array_map(function ($c) {
+				$config['contributors'] = array_filter(array_map(function ($c) {
 					$contributor = $c->getContributor();
+
+					if (!$contributor)
+						return [];
+
 					return [
 						'name'   => $contributor->getName(),
 						'avatar' => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
@@ -105,7 +109,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 						'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
 						'comment' => $c->comment
 					];
-				}, EpisodeContribution::find_all_by_episode_id($episode->id));
+				}, EpisodeContribution::find_all_by_episode_id($episode->id)));
 			}
 		}
 
