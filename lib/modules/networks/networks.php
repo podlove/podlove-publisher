@@ -18,7 +18,11 @@ class Networks extends \Podlove\Modules\Base {
 	public function load() {
 
 		// skip module outsite multisite environments
-		if (!is_multisite())
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+
+		if ( ! is_plugin_active_for_network( basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME ) )
 			return;
 
 		// Actions after activation
