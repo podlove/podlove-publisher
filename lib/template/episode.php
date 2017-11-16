@@ -69,7 +69,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function number() {
-		return $this->number;
+		return $this->episode->number;
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function type() {
-		return $this->type;	
+		return $this->episode->type;	
 	}
 
 	/**
