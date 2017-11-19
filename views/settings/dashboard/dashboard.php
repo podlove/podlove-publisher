@@ -1,5 +1,4 @@
 <div class="wrap">
-	<?php screen_icon( 'podlove-podcast' ); ?>
 	<h2><?php echo __( 'Podlove Dashboard', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
 	<div id="poststuff" class="metabox-holder has-right-sidebar">

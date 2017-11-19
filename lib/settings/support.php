@@ -25,7 +25,6 @@ class Support {
 	public function page() {
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Support', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
 			<div class="notice" style="margin: 3%">

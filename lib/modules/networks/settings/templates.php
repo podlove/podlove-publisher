@@ -39,7 +39,6 @@ class Templates {
 
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Templates', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 			<?php $this->view_template(); ?>
 		</div>	
