@@ -171,6 +171,7 @@ Podlove Web Player 4 is the new default player.
 * fix feed redirect issue for HTTP/1.0 clients
 * fix network module: only activate when the plugin is activated network-wide, not when the plugin in active within a multisite
 * fix calculation of contribution counts
+* fix contributor rendering in Overcast by disabling srcsets in feeds ([#778](https://github.com/podlove/podlove-publisher/issues/778))
 * enhance email error reporting
 * enhance open graph module: detects WP SEO plugin and does not output any tags to avoid conflicts
 * social services: add SlideShare
