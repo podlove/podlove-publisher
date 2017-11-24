@@ -9,6 +9,7 @@ This is the podcast publishing plugin for WordPress.
 - Report a bug: [Use GitHub Issues][5]
 
 [![Flattr This][2]][1]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher?ref=badge_shield)
 
 ## Development Environment
 
@@ -61,3 +62,7 @@ make player
 [7]: http://podlove.org/
 [8]: https://github.com/podlove/podlove-publisher/releases
 [9]: https://community.podlove.org/
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher?ref=badge_large)
