@@ -131,7 +131,7 @@ To help existing podcasts to conform to these new fields we made a "Title Migrat
 
 **Template API Changes**
 
-- `episode.title` now returns the new episode title field, if it is set, but has a fallback to the post title
+- `episode.title` now returns the new episode title field, if it is set, but has a fallback to the post title. If you want a specific version, use `episode.title.clean` or `episode.title.blog`.
 - the post title of an episode can still be accessed via `episode.post.post_title`
 - new accessor: `episode.number`
 - new accessor: `episode.type`

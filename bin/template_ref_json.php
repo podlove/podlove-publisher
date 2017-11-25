@@ -43,6 +43,7 @@ $classes = [
 	'\Podlove\Template\Podcast',
 	'\Podlove\Template\Feed',
 	'\Podlove\Template\Episode',
+	'\Podlove\Template\EpisodeTitle',
 	'\Podlove\Template\Asset',
 	'\Podlove\Template\File',
 	'\Podlove\Template\Duration',

@@ -40,7 +40,7 @@ class Episode extends Wrapper {
 	 * @accessor
 	 */
 	public function title() {
-		return $this->episode->title();
+		return new EpisodeTitle($this->episode);
 	}
 
 	/**
