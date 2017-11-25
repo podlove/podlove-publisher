@@ -288,7 +288,7 @@ class Image {
 
 		$img->setAttribute('src', $this->url());
 
-		if (!is_feed() && $this->retina && $srcset = $this->srcset())
+		if ($this->retina && $srcset = $this->srcset())
 			$img->setAttribute('srcset', $srcset);
 
 		$dom->appendChild($img);
