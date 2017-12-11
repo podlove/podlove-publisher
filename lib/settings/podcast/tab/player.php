@@ -39,7 +39,7 @@ class Player extends Tab {
 					'options' => [
 						'player_v2' => __( 'Podlove Web Player 2', 'podlove-podcasting-plugin-for-wordpress' ),
 						'player_v3' => __( 'Podlove Web Player 3 (deprecated)', 'podlove-podcasting-plugin-for-wordpress' ),
-						'player_v4' => __( 'Podlove Web Player 4 (alpha)', 'podlove-podcasting-plugin-for-wordpress' ),
+						'player_v4' => __( 'Podlove Web Player 4', 'podlove-podcasting-plugin-for-wordpress' ),
 						'podigee'   => __( 'Podigee Podcast Player', 'podlove-podcasting-plugin-for-wordpress' )
 					]
 				],
