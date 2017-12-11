@@ -196,7 +196,15 @@ class Image {
 			return apply_filters('podlove_image_url', $this->source_url);
 		}
 
-		if (file_exists($this->resized_file())) {
+		// when PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL is set to true, the static
+		// "physical" URL is never exposed, only the dynamic URL. This can be 
+		// helpful when page caches keep serving the static URL even though it 
+		// does not exist for some reason. The dynamic URL always works.
+		// Drawback is that serving with the dynamic URL is a bit slower because
+		// it has to go through the PHP stack.
+		$force_dynamic_url = defined('PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL') && PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL;
+
+		if (!$force_dynamic_url && file_exists($this->resized_file())) {
 			$url = $this->resized_url();
 		} else {
 

@@ -4,7 +4,7 @@ namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 use Podlove\Model\Episode;
 use Podlove\Model\Podcast;
 use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
-use Podlove\Modules\Social\Model\ContributorService;
+use Podlove\Modules\Contributors\Model\EpisodeContribution;
 
 class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
@@ -15,7 +15,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	private $attributes = [];
 
-	public function __construct(Episode $episode) {
+	public function __construct(Episode $episode = null) {
 		$this->episode = $episode;
 	}
 
@@ -42,14 +42,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	public static function config($episode, $context) {
 
-		$post = get_post($episode->post_id);
 		$podcast = Podcast::get();
-
-		$player_media_files = new PlayerMediaFiles($episode);
-		$media_files        = $player_media_files->get($context);
-		$media_file_urls = array_map(function($file) {
-			return $file['publicUrl'];
-		}, $media_files);
 
 		$player_settings = \Podlove\get_webplayer_settings();
 
@@ -59,60 +52,111 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'subtitle' => $podcast->subtitle,
 				'summary'  => $podcast->summary,
 				'poster'   => $podcast->cover_art()->setWidth(500)->url(),
+				'link'     => \Podlove\get_landing_page_url()
 			],
-			'title'           => $post->post_title,
-			'subtitle'        => wptexturize(convert_chars(trim($episode->subtitle))),
-			'summary'         => nl2br(wptexturize(convert_chars(trim($episode->summary)))),
-			'publicationDate' => mysql2date("c", $post->post_date),
-			'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
-			'duration'        => $episode->get_duration('full'),
-			'audio' => $media_file_urls,
 			'reference' => [
 				'base'   => plugins_url('dist', __FILE__),
 				'share'  => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
-				'config' => self::config_url($episode)
 			],
-			'chapters' => array_map(function($c) {
-				$c->title = html_entity_decode(wptexturize(convert_chars(trim($c->title))));
-				return $c;
-			}, (array) json_decode($episode->get_chapters('json'))),
 			'theme' => [
-				'primary'   => $player_settings['playerv4_color_primary'],
-				'secondary' => $player_settings['playerv4_color_secondary']
+				'main'      => self::sanitize_color($player_settings['playerv4_color_primary']),
+				'highlight' => self::sanitize_color($player_settings['playerv4_color_secondary'])
 			]
 		];
 
-		$contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id);
-		$contributors = array_map(function ($c)	{
-			$role = $c->getRole();
-			$group = $c->getGroup();
-			$contributor = $c->getContributor();
+		if ($episode) {
+			$post = get_post($episode->post_id);
 
-			$services = ContributorService::find_by_contributor_id_and_category($contributor->id, 'social');
+			$player_media_files = new PlayerMediaFiles($episode);
+			$media_files        = $player_media_files->get($context);
+			$media_file_urls = array_map(function($file) {
+				return [
+					'url'      => $file['publicUrl'],
+					'size'     => $file['size'],
+					'title'    => $file['assetTitle'],
+					'mimeType' => $file['mime_type']
+				];
+			}, $media_files);
 
-			return [
-				'name'  => $contributor->getName(),
-				'image' => $contributor->avatar()->url(),
-				'role'  => $role  ? $role->title  : '',
-				'group' => $group ? $group->title : '',
-				'social' => array_map(function ($s) {
-					$service = $s->get_service();
+			$config = array_merge($config, [
+				'title'           => $post->post_title,
+				'subtitle'        => trim($episode->subtitle),
+				'summary'         => nl2br(trim($episode->summary)),
+				'publicationDate' => mysql2date("c", $post->post_date),
+				'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+				'duration'        => $episode->get_duration('full'),
+				'link'            => get_permalink($episode->post_id),
+				'audio'           => $media_file_urls,
+				'chapters' => array_map(function($c) {
+					$c->title = html_entity_decode(trim($c->title));
+					return $c;
+				}, (array) json_decode($episode->get_chapters('json')))
+			]);
+
+			$config['reference']['config'] = self::config_url($episode);
+
+			if (\Podlove\Modules\Base::is_active('contributors')) {
+				$config['contributors'] = array_filter(array_map(function ($c) {
+					$contributor = $c->getContributor();
+
+					if (!$contributor)
+						return [];
+
 					return [
-						'service' => $service->title,
-						'type'    => $service->type,
-						'url'     => $s->get_service_url(),
-						'image'   => $service->image()->url()
+						'name'   => $contributor->getName(),
+						'avatar' => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
+						'role' => $c->hasRole() ? $c->getRole()->to_array() : null,
+						'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
+						'comment' => $c->comment
 					];
-				}, $services)
-			];
-		}, $contributions);
+				}, EpisodeContribution::find_all_by_episode_id($episode->id)));
+			}
+		}
 
-		$config['contributors'] = $contributors;
+		$config = apply_filters('podlove_player4_config', $config);
 
 		return $config;
 	}
 
 	public static function config_url($episode) {
 		return esc_url( add_query_arg('podlove_player4', $episode->id, trailingslashit(get_option('siteurl'))) );
+	}
+
+	public static function sanitize_color($color)
+	{
+		static $patterns = array(
+			// 'cmyk'  => '/^(?:device-)?cmyk\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
+			'rgba'  => '/^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
+			'rgb'   => '/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/',
+			'hsla'  => '/^hsla\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%,\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
+			'hsl'   => '/^hsl\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%\)$/',
+			// 'hsva'  => '/^hsva\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%,\s*(\d+(?:\.\d+)?|\.\d+)\s*\)$/',
+			// 'hsv'   => '/^hsv\((\d{1,3}),\s*(\d{1,3})%,\s*(\d{1,3})%\)$/',
+			'hex6'  => '/^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/',
+			'hex3'  => '/^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/'
+		);
+
+		$color = trim($color);
+
+		# fix duplicate '#'
+		$color = preg_replace('/^[#]+/', '#', $color);
+		if (preg_match($patterns['hex6'], $color) || preg_match($patterns['hex3'], $color)) {
+			
+			# add missing '#'
+			if ($color[0] != '#') {
+				$color = '#' . $color;
+			}
+
+			return $color;
+		}
+
+		// accept any known color format
+		foreach ($patterns as $pattern) {
+			if (preg_match($pattern, $color)) {
+				return $color;
+			}
+		}
+
+		return '#000'; // default to a valid color
 	}
 }

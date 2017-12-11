@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.8.0
+Tested up to: 4.9.1
 Stable tag: trunk
 License: MIT
 
@@ -101,6 +101,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2.6.3 =
+
+- new PHP constant `PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL`: When `PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL` is set to `true`, the static "physical" URL is never exposed, only the dynamic URL. This can be helpful when page caches keep serving the static URL even though it does not exist for some reason. The dynamic URL always works. Drawback is that serving with the dynamic URL is a bit slower, so only use it if you encounter caching issues.
+- update mediaelement dependency in Podlove Web Player 2
+- update Podlove Web Player 4
 
 = 2.6.2 =
 
