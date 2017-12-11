@@ -102,6 +102,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.6.3 =
+
+- new PHP constant `PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL`: When `PODLOVE_IMAGE_CACHE_FORCE_DYNAMIC_URL` is set to `true`, the static "physical" URL is never exposed, only the dynamic URL. This can be helpful when page caches keep serving the static URL even though it does not exist for some reason. The dynamic URL always works. Drawback is that serving with the dynamic URL is a bit slower, so only use it if you encounter caching issues.
+
 = 2.6.2 =
 
 - send `HTTP 410 Gone` when accessing a download URL to a depublished episode
