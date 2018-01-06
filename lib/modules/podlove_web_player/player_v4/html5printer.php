@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 
 use Podlove\Model\Episode;
@@ -66,18 +66,26 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			$config['reference']['base'] = plugins_url('dist', __FILE__);
 		}
 
+		if ($player_settings['playerv4_use_podcast_language']) {
+			$config = array_merge($config, [
+				'runtime' => [
+					'language' => split('-', $podcast->language)[0]
+				]
+			]);
+		}
+
 		$highlight_color = self::sanitize_color($player_settings['playerv4_color_secondary'], false);
 		if ($highlight_color !== false) {
 			$config['theme']['highlight'] = $highlight_color;
 		}
-		
+
 		if ($episode) {
 			$post = get_post($episode->post_id);
 
 			$player_media_files = new PlayerMediaFiles($episode);
 
 			$episode_title = $post->post_title;
-			
+
 			if ($media_files = $player_media_files->get($context)) {
 				$media_file_urls = array_map(function($file) {
 					return [
@@ -93,7 +101,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 					'url'      => \Podlove\PLUGIN_URL . '/bin/podlove.mp3',
 					'size'     => 486839,
 					'title'    => 'Podlove Example Audio',
-					'mimeType' => 'audio/mp3'				
+					'mimeType' => 'audio/mp3'
 				];
 			} else {
 				$media_file_urls = [];
@@ -162,7 +170,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		# fix duplicate '#'
 		$color = preg_replace('/^[#]+/', '#', $color);
 		if (preg_match($patterns['hex6'], $color) || preg_match($patterns['hex3'], $color)) {
-			
+
 			# add missing '#'
 			if ($color[0] != '#') {
 				$color = '#' . $color;

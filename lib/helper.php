@@ -227,7 +227,8 @@ function get_webplayer_defaults() {
 		'playerv3theme'   => 'pwp-dark-green.min.css',
 		'podigeetheme'    => 'default',
 		'playerv4_color_primary'   => '#2B8AC6',
-		'playerv4_color_secondary' => ''
+		'playerv4_color_secondary' => '',
+		'playerv4_use_podcast_language' => false
 	];
 }
 
