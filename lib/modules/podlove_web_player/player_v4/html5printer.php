@@ -81,7 +81,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			$config = array_merge($config, [
 				'title'           => $post->post_title,
 				'subtitle'        => trim($episode->subtitle),
-				'summary'         => nl2br(trim($episode->summary)),
+				'summary'         => trim($episode->summary),
 				'publicationDate' => mysql2date("c", $post->post_date),
 				'poster'          => $episode->cover_art_with_fallback()->setWidth(500)->url(),
 				'duration'        => $episode->get_duration('full'),
