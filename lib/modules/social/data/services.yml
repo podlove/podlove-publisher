@@ -198,9 +198,9 @@
 - title: 'Strava'
   name: 'strava'
   category: 'social'
-  description: 'Strava Profile URL'
+  description: 'Strava Account'
   logo: 'strava.png'
-  url_scheme: '%account-placeholder%'
+  url_scheme: 'https://www.strava.com/athletes/%account-placeholder%'
 
 - title: 'Trakt'
   name: 'trakt'
