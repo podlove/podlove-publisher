@@ -37,7 +37,7 @@ class MediaFile extends Base {
 	 * Find one downloadable example file.
 	 * 
 	 * - JOIN episode to avoid dead media files
-	 * - ORDER BY e.id DESC, mf.id ASC: get a recent episode and the first asset, which is probably an audio file
+	 * - ORDER BY e.id DESC, mf.id ASC: get a recent episode and the first asset
 	 */
 	public static function find_example() {
 		return self::find_one_by_sql("
@@ -47,9 +47,11 @@ class MediaFile extends Base {
 				" . MediaFile::table_name() . " mf
 				JOIN " . EpisodeAsset::table_name() . " a ON a.id = mf.`episode_asset_id`
 				JOIN " . Episode::table_name() . " e ON e.id = mf.`episode_id`
+				JOIN " . FileType::table_name() .  " ft ON ft.id = a.file_type_id
 			WHERE
 				a.`downloadable` 
 				AND mf.size > 0
+				AND ft.type = 'audio'
 			ORDER BY e.id DESC, mf.id ASC
 			LIMIT 0,1
 		");
