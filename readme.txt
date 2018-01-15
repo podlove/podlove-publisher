@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-01-15 =
+
+* episode page: add option to display episode number
+
 = 2.7.0 =
 
 **New Module: Shows**

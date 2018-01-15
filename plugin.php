@@ -176,6 +176,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/cover_art.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/detect_duplicate_slugs.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/downloads.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/episode_number_column.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/explicit_content.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/extras.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';
