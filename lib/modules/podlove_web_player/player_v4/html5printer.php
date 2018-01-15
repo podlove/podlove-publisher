@@ -72,15 +72,19 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			$post = get_post($episode->post_id);
 
 			$player_media_files = new PlayerMediaFiles($episode);
-			$media_files        = $player_media_files->get($context);
-			$media_file_urls = array_map(function($file) {
-				return [
-					'url'      => $file['publicUrl'],
-					'size'     => $file['size'],
-					'title'    => $file['assetTitle'],
-					'mimeType' => $file['mime_type']
-				];
-			}, $media_files);
+			
+			if ($media_files = $player_media_files->get($context)) {
+				$media_file_urls = array_map(function($file) {
+					return [
+						'url'      => $file['publicUrl'],
+						'size'     => $file['size'],
+						'title'    => $file['assetTitle'],
+						'mimeType' => $file['mime_type']
+					];
+				}, $media_files);
+			} else {
+				$media_file_urls = [];
+			}
 
 			$config = array_merge($config, [
 				'title'           => $post->post_title,
