@@ -343,7 +343,7 @@ class Feed {
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove-podcasting-plugin-for-wordpress' ) . \Podlove\get_help_link('podlove_help_feed_slug'),
-				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove-podcasting-plugin-for-wordpress' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
+				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove-podcasting-plugin-for-wordpress' ), '<span data-url="' . esc_attr($feed->get_subscribe_url()) . '" id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 

@@ -92,11 +92,23 @@ var PODLOVE = PODLOVE || {};
 		// public
 		o.update_url_preview = function () {
 			// remove trailing slash
-			var url = $("#feed_subscribe_url_preview").html().substr(0, $("#feed_subscribe_url_preview").html().length - 1);
-			// remove slug
-			url = url.substr(0, url.lastIndexOf("/"));
+			var url = $("#feed_subscribe_url_preview").data('url').substr(0, $("#feed_subscribe_url_preview").data('url').length - 1);
+			
+			// remove slug if there is one
+			if (url.substr(-4) !== "feed") {
+				url = url.substr(0, url.lastIndexOf("/"));
+			}
 
-			$("#feed_subscribe_url_preview").html(url + "/" + slugify( $("#podlove_feed_slug").val() ) + "/");
+			var slug = slugify($("#podlove_feed_slug").val());
+			var preview = ""
+
+			if (slug == "n-a") {
+				preview = "enter slug for preview"
+			} else {
+				preview = url + "/" + slug + "/"
+			}
+
+			$("#feed_subscribe_url_preview").html(preview);
 		}
 
 		o.update_title_preview = function () {
