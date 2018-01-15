@@ -82,6 +82,13 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 						'mimeType' => $file['mime_type']
 					];
 				}, $media_files);
+			} elseif (is_admin()) {
+				$media_file_urls = [
+					'url'      => \Podlove\PLUGIN_URL . '/bin/podlove.mp3',
+					'size'     => 486839,
+					'title'    => 'Podlove Example Audio',
+					'mimeType' => 'audio/mp3'				
+				];
 			} else {
 				$media_file_urls = [];
 			}
