@@ -59,10 +59,14 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'share'  => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
 			],
 			'theme' => [
-				'main'      => self::sanitize_color($player_settings['playerv4_color_primary']),
-				'highlight' => self::sanitize_color($player_settings['playerv4_color_secondary'])
+				'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000')
 			]
 		];
+
+		$highlight_color = self::sanitize_color($player_settings['playerv4_color_secondary'], false);
+		if ($highlight_color !== false) {
+			$config['theme']['highlight'] = $highlight_color;
+		}
 
 		if ($episode) {
 			$post = get_post($episode->post_id);
@@ -122,7 +126,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		return esc_url( add_query_arg('podlove_player4', $episode->id, trailingslashit(get_option('siteurl'))) );
 	}
 
-	public static function sanitize_color($color)
+	public static function sanitize_color($color, $default = '#000')
 	{
 		static $patterns = array(
 			// 'cmyk'  => '/^(?:device-)?cmyk\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
@@ -157,6 +161,6 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			}
 		}
 
-		return '#000'; // default to a valid color
+		return $default;
 	}
 }
