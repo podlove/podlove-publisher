@@ -62,7 +62,7 @@ PODLOVE.override_post_title = <?php echo json_encode($data) ?>;
 function podlove_get_mnemonic($post_id = null)
 {
 	$podcast = Podcast::get();
-	return $podcast->mnemonic; // fimxe: handle mnemonic overrides via seasons
+	return $podcast->mnemonic;
 }
 
 function podlove_is_title_autogen_enabled()

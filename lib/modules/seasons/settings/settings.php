@@ -214,14 +214,6 @@ class Settings {
 	 			]
 	 		]);
 
-	 		$wrapper->string('mnemonic', [
-	 			'label'       => __('Mnemonic', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => [
-	 				'class' => 'regular-text podlove-check-input',
-	 				'placeholder' => $podcast->mnemonic
-	 			]
-	 		]);
-
 	 		$wrapper->string('start_date', [
 	 			'label'       => __('Start Date', 'podlove-podcasting-plugin-for-wordpress') . \Podlove\get_help_link('podlove_help_seasons_date'),
 	 			'html'        => ['class' => 'regular-text podlove-check-input', 'readonly' => 'readonly']
