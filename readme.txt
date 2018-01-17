@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 3.5
-Tested up to: 4.9.1
+Tested up to: 4.9.2
 Stable tag: trunk
 License: MIT
 
@@ -106,8 +106,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Podlove Web Player 2: 
 
-- Remove Flash and Silverlight fallbacks due to security issue
-- resolve compatibility issue with mediaelement library shipped with WordPress
+- fix: Remove Flash and Silverlight fallbacks due to security issue
+- fix: resolve compatibility issue with mediaelement library shipped with WordPress
+
+Podlove Web Player 4: 
+
+- fix: newlines in summary are not converted to HTML linebreaks
 
 = 2.6.3 =
 
