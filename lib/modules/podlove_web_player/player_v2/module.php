@@ -20,6 +20,15 @@ class Module {
 
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
 
+		// UGLY HACK, SORRY :(
+		// PWP2 is not compatible to the modern mediaelement supplied with WP core,
+		// so when PWP2 is used we must deactivate it, otherwise PWP2 does not
+		// work. This of course breaks all other audio if any is used on the site
+		// that relies on the modern mediaelement ¯\_(ツ)_/¯ 
+		add_action('wp_enqueue_scripts', function () {
+			wp_dequeue_script('wp-mediaelement');
+		}, 100);
+
 		if (!defined('PODLOVE_MEDIA_PLAYER')) {
 			if ( defined('PODLOVEWEBPLAYER_DIR')) {
 				define('PODLOVE_MEDIA_PLAYER', 'external');

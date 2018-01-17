@@ -104,7 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.6.4 =
 
-- Podlove Web Player 2: Remove Flash and Silverlight fallbacks due to security issue
+Podlove Web Player 2: 
+
+- Remove Flash and Silverlight fallbacks due to security issue
+- resolve compatibility issue with mediaelement library shipped with WordPress
 
 = 2.6.3 =
 
