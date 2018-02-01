@@ -105,6 +105,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-02-01 =
+
+Fix various issues in the download table display. Until now, new downloads were calculated hourly, which provides a good estimate but often not exact numbers. The calculation could also get stuck, leading to missing data display.
+
+From now on, the estimates are still calculated hourly but additionally _a full, precise aggregation is done once a day_, which should lead to more consistent numbers overall.
+
 = 2018-01-15 =
 
 * episode page: add option to display episode number

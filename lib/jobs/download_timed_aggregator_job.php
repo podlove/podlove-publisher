@@ -19,7 +19,7 @@ class DownloadTimedAggregatorJob {
 
 	public static function mode($args)
 	{
-		if ($args['force'] && $args['force']) {
+		if (isset($args['force']) && $args['force']) {
 			return __('From Scratch', 'podlove-podcasting-plugin-for-wordpress');
 		} else {
 			return __('Partial', 'podlove-podcasting-plugin-for-wordpress');
