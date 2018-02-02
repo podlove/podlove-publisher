@@ -111,6 +111,13 @@
   logo: 'openstreetmap.png'
   url_scheme: 'https://www.openstreetmap.org/user/%account-placeholder%'
 
+- title: 'Liberapay'
+  name: 'liberapay'
+  category: 'donation'
+  description: 'Liberapay Account'
+  logo: 'liberapay.png'
+  url_scheme: 'https://liberapay.com/%account-placeholder%'
+
 - title: 'Linkedin'
   name: 'linkedin'
   category: 'social'

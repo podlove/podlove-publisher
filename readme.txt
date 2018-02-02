@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-02-02 =
+
+* add Liberapay as donation service
+
 = 2018-02-01 =
 
 Fix various issues in the download table display. Until now, new downloads were calculated hourly, which provides a good estimate but often not exact numbers. The calculation could also get stuck, leading to missing data display.
