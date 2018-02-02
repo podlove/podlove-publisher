@@ -33,6 +33,8 @@ class Seasons extends \Podlove\Modules\Base {
 
 		add_action('podlove_append_to_feed_entry', [$this, 'add_season_number_to_feed'], 10, 4);
 
+		add_filter('podlove_episode_form_data', [$this, 'add_season_number_to_episode_form'], 10, 2);
+
 		\Podlove\Template\Podcast::add_accessor(
 			'seasons', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'], 3
 		);
@@ -49,8 +51,9 @@ class Seasons extends \Podlove\Modules\Base {
 
 	public function scripts_and_styles() {
 
-		// only on seasons settings pages
-		if (filter_input(INPUT_GET, 'page') !== 'podlove_seasons_settings')
+		$is_seasons_settings_page = filter_input(INPUT_GET, 'page') === 'podlove_seasons_settings';
+
+		if (!$is_seasons_settings_page && !\Podlove\is_episode_edit_screen())
 			return;
 
 		wp_enqueue_style(
@@ -94,5 +97,28 @@ class Seasons extends \Podlove\Modules\Base {
 	{
 		$jobs[] = '\Podlove\Modules\Seasons\PodcastImportSeasonsJob';
 		return $jobs;
+	}
+
+	public function add_season_number_to_episode_form($form_data, $episode)
+	{
+		$season = Season::for_episode($episode);
+		$title  = __('Season', 'podlove-podcasting-plugin-for-wordpress') . ' ' . $season->number();
+
+		$entry = array(
+			'type' => 'callback',
+			'key'  => 'season',
+			'options' => array(
+				'callback' => function () use ($title) {
+					?>
+					<span><?php echo $title ?></span>
+					<?php
+				}
+			),
+			'position' => 1250
+		);
+
+		$form_data[] = $entry;
+
+		return $form_data;
 	}
 }

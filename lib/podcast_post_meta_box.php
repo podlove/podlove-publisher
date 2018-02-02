@@ -83,7 +83,7 @@ class Podcast_Post_Meta_Box {
 					'type' => 'number'
 				),
 				'position' => 1200
-			), array(				'type' => 'string',
+			),array(				'type' => 'string',
 				'key'  => 'title',
 				'options' => array(
 					'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
