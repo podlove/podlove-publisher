@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * add Liberapay as donation service
 * player settings: when no episode or files are available, use a "Podlove" demo sound
+* update PWP4 to 4.0.1
 
 = 2018-02-01 =
 

@@ -8,7 +8,7 @@
     "cloc": "cloc --by-file-by-lang --exclude-dir=node_modules,vendor,player_v2,.git,jquery-ui --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" *"
   },
   "devDependencies": {
-    "@podlove/podlove-web-player": "^4.0.0",
+    "@podlove/podlove-web-player": "^4.0.1",
     "laravel-mix": "^1.0",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
