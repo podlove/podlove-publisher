@@ -108,6 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2018-02-02 =
 
 * add Liberapay as donation service
+* player settings: when no episode or files are available, use a "Podlove" demo sound
 
 = 2018-02-01 =
 

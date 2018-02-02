@@ -118,7 +118,7 @@ class Player extends Tab {
 		if ($episode) {
 			$this->preview_player($episode);
 		} else {
-			echo __('Sorry, found no episode to use as preview.', 'podlove-podcasting-plugin-for-wordpress');
+			$this->preview_player(new Episode);
 		}
 	}
 

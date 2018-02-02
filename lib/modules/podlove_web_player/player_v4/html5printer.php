@@ -72,6 +72,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			$post = get_post($episode->post_id);
 
 			$player_media_files = new PlayerMediaFiles($episode);
+
+			$episode_title = $post->post_title;
 			
 			if ($media_files = $player_media_files->get($context)) {
 				$media_file_urls = array_map(function($file) {
@@ -83,6 +85,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 					];
 				}, $media_files);
 			} elseif (is_admin()) {
+				$episode_title = __('Example Episode', 'podlove-podcasting-plugin-for-wordpress');
 				$media_file_urls = [
 					'url'      => \Podlove\PLUGIN_URL . '/bin/podlove.mp3',
 					'size'     => 486839,
@@ -94,7 +97,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			}
 
 			$config = array_merge($config, [
-				'title'           => $post->post_title,
+				'title'           => $episode_title,
 				'subtitle'        => trim($episode->subtitle),
 				'summary'         => trim($episode->summary),
 				'publicationDate' => mysql2date("c", $post->post_date),
