@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-02-09 =
+
+* add expert setting "Episode Number Padding" to configure episode number display when automatic title generation is used
+
 = 2018-02-02 =
 
 * add Liberapay as donation service

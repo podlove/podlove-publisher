@@ -165,6 +165,27 @@ class Website extends Tab {
 		);
 
 		add_settings_field(
+			/* $id       */ 'podlove_setting_episode_number_padding',
+			/* $title    */ sprintf(
+				'<label for="episode_number_padding">%s</label>',
+				__( 'Episode Number Padding', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				$episode_number_padding = \Podlove\get_setting( 'website', 'episode_number_padding' );
+				?>
+				<input type="number" name="podlove_website[episode_number_padding]" value="<?php echo $episode_number_padding ?>" id="episode_number_padding" class="large-text" style="max-width: 66px" />
+				<p>
+					<span class="description">
+						<?php echo __('Preferred episode number length. If an episode number is smaller than desired, it will be prefixed with zeroes. For example, episode number 1 with a padding of 3 will be printed as 001.', 'podlove-podcasting-plugin-for-wordpress') ?>
+					</span>
+				</p>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_general'
+		);
+
+		add_settings_field(
 			/* $id       */ 'podlove_setting_url_template',
 			/* $title    */ sprintf(
 				'<label for="url_template">%s</label>',

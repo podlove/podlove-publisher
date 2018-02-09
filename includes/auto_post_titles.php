@@ -34,7 +34,7 @@ function podlove_generated_post_title($post_id)
 
 	$title = $blog_title_template;
 	$title = str_replace('%mnemonic%', strip_tags(podlove_get_mnemonic($post_id)), $title);
-	$title = str_replace('%episode_number%', str_pad((string) $episode->number, 3, '0', STR_PAD_LEFT), $title);
+	$title = str_replace('%episode_number%', $episode->number_padded(), $title);
 	$title = str_replace('%episode_title%', trim(strip_tags($episode->title)), $title);
 
 	return trim($title);
@@ -48,6 +48,7 @@ function podlove_override_post_title_script()
 	$data = [
 		'enabled' => podlove_is_title_autogen_enabled(),
 		'template' => \Podlove\get_setting( 'website', 'blog_title_template' ),
+		'episode_padding' => \Podlove\get_setting( 'website', 'episode_number_padding' ),
 		'mnemonic' => podlove_get_mnemonic(),
 		'placeholder' => __('Fill in episode title below', 'podlove-podcasting-plugin-for-wordpress')
 	];

@@ -122,6 +122,15 @@ class Episode extends Base implements Licensable {
 		return $title;
 	}
 
+	public function number_padded() {
+		return str_pad(
+			(string) $this->number, 
+			\Podlove\get_setting( 'website', 'episode_number_padding' ), 
+			'0', 
+			STR_PAD_LEFT
+		);
+	}
+
 	public function description() {
 		
 		if ($this->summary) {

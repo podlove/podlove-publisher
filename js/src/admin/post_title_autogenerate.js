@@ -30,19 +30,21 @@ jQuery(document).ready(function($) {
         var episode_title = $itunestitleinput.val();
 
         var padLeft = function(nr, n, str){
-            return Array(n-String(nr).length+1).join(str||'0')+nr;
+            if (String(nr).length < n) {
+                return Array(n-String(nr).length+1).join(str||'0')+nr;
+            } else {
+                return nr;
+            }
         }
 
         var title = template;
         if (episode_title) {
             title = title.replace('%mnemonic%', mnemonic);
-            title = title.replace('%episode_number%', padLeft(episode_number, 3, '0'));
+            title = title.replace('%episode_number%', padLeft(episode_number, PODLOVE.override_post_title.episode_padding, '0'));
             title = title.replace('%episode_title%', episode_title);
             $titleinput.val(title);
         } else {
             $titleinput.attr('placeholder', PODLOVE.override_post_title.placeholder)
         }
-
     }
-
 });
