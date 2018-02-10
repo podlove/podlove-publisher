@@ -47,5 +47,7 @@ jQuery(document).ready(function($) {
         } else {
             $titleinput.attr('placeholder', PODLOVE.override_post_title.placeholder)
         }
+
+        $("#titlewrap input").trigger('titleHasChanged');
     }
 });

@@ -143,7 +143,7 @@ class Seasons extends \Podlove\Modules\Base {
 	}
 
 	public static function get_printable_season_number($episode) {
-		if ($season = Season::for_episode($episode)) {
+		if ($episode && ($season = Season::for_episode($episode))) {
 			return $season->number();
 		} else {
 			return '??';
