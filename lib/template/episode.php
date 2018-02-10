@@ -260,6 +260,23 @@ class Episode extends Wrapper {
 	}
 
 	/**
+	 * Total downloads
+	 * 
+	 * Please note that this value is only updated hourly.
+	 * 
+	 * Example:
+	 * 
+	 * ```html
+	 * {{ episode.total_downloads | number_format(0, ',', '.') }}
+	 * ```
+	 * 
+	 * @accessor
+	 */
+	function total_downloads() {
+		return $this->episode->meta('_podlove_downloads_total');
+	}
+
+	/**
 	 * Access a single meta value
 	 * 
 	 * @accessor

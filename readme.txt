@@ -105,9 +105,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2018-02-09 =
+= 2018-02-10 =
 
 * add expert setting "Episode Number Padding" to configure episode number display when automatic title generation is used
+* reduce Podlove Template Cache duration from 1 day to 1 hour for the following change:
+* new template accessor: `{{ episode.total_downloads }}`
 
 = 2018-02-02 =
 
