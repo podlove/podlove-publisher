@@ -41,6 +41,7 @@ jQuery(document).ready(function($) {
         if (episode_title) {
             title = title.replace('%mnemonic%', mnemonic);
             title = title.replace('%episode_number%', padLeft(episode_number, PODLOVE.override_post_title.episode_padding, '0'));
+            title = title.replace('%season_number%', PODLOVE.override_post_title.season_number);
             title = title.replace('%episode_title%', episode_title);
             $titleinput.val(title);
         } else {

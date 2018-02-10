@@ -37,6 +37,8 @@ function podlove_generated_post_title($post_id)
 	$title = str_replace('%episode_number%', $episode->number_padded(), $title);
 	$title = str_replace('%episode_title%', trim(strip_tags($episode->title)), $title);
 
+	$title = apply_filters('podlove_generated_post_title', $title, $episode);
+
 	return trim($title);
 }
 
@@ -52,6 +54,8 @@ function podlove_override_post_title_script()
 		'mnemonic' => podlove_get_mnemonic(),
 		'placeholder' => __('Fill in episode title below', 'podlove-podcasting-plugin-for-wordpress')
 	];
+
+	$data = apply_filters('podlove_js_data_for_post_title', $data, get_the_ID());
 ?>
 <script type="text/javascript">
 var PODLOVE = PODLOVE || {};

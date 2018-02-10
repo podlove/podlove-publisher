@@ -1,7 +1,8 @@
 <?php 
 namespace Podlove\Modules\Seasons;
 
-use \Podlove\Modules\Seasons\Model\Season;
+use Podlove\Model\Episode;
+use Podlove\Modules\Seasons\Model\Season;
 
 class Seasons extends \Podlove\Modules\Base {
 
@@ -34,6 +35,8 @@ class Seasons extends \Podlove\Modules\Base {
 		add_action('podlove_append_to_feed_entry', [$this, 'add_season_number_to_feed'], 10, 4);
 
 		add_filter('podlove_episode_form_data', [$this, 'add_season_number_to_episode_form'], 10, 2);
+		add_filter('podlove_generated_post_title', [$this, 'set_season_in_post_title'], 10, 2);
+		add_filter('podlove_js_data_for_post_title', [$this, 'set_season_in_post_title_js'], 10, 2);
 
 		\Podlove\Template\Podcast::add_accessor(
 			'seasons', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'], 3
@@ -120,5 +123,30 @@ class Seasons extends \Podlove\Modules\Base {
 		$form_data[] = $entry;
 
 		return $form_data;
+	}
+
+	public function set_season_in_post_title($title, $episode)
+	{
+		return str_replace(
+			'%season_number%', 
+			self::get_printable_season_number($episode), 
+			$title
+		);
+	}
+
+	function set_season_in_post_title_js($data, $post_id)
+	{
+		$episode = Episode::find_one_by_property('post_id', $post_id);
+		$data['season_number'] = self::get_printable_season_number($episode);
+
+		return $data;
+	}
+
+	public static function get_printable_season_number($episode) {
+		if ($season = Season::for_episode($episode)) {
+			return $season->number();
+		} else {
+			return '??';
+		}		
 	}
 }
