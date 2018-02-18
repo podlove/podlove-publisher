@@ -103,7 +103,9 @@ class Tracking extends Tab {
 				$file = \Podlove\Geo_Ip::get_upload_file_path();
 				\Podlove\Geo_Ip::register_updater_cron();
 				?>
-				<?php if ( file_exists($file) ): ?>
+				<?php if (!class_exists('PharData')): ?>
+					<?php echo __('Required PHP class <code>PharData</code> is missing.', 'podlove-podcasting-plugin-for-wordpress') ?>
+				<?php elseif ( file_exists($file) ): ?>
 					<p>
 						<?php echo __("Geolocation database", 'podlove-podcasting-plugin-for-wordpress'); ?>:
 						<code><?php echo $file ?></code>

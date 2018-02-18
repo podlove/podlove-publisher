@@ -49,7 +49,7 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 	// get ip, but don't store it
 	$ip_string = $_SERVER['REMOTE_ADDR'];
 	try {
-		$ip = IP\Address::factory($_SERVER['REMOTE_ADDR']);
+		$ip = IP\Address::factory($ip_string);
 		if (method_exists($ip, 'as_IPv6_address')) {
 			$ip = $ip->as_IPv6_address();
 		}

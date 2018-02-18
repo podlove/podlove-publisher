@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-02-18 =
+
+* fix Geo DB Updater: use our own Podlove CDN as download source
+
 = 2018-02-10 =
 
 * add expert setting "Episode Number Padding" to configure episode number display when automatic title generation is used
