@@ -1,4 +1,4 @@
-/*! normalize.css v6.0.0 | MIT License | github.com/necolas/normalize.css */
+/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
    ========================================================================== */
@@ -17,6 +17,14 @@ html {
 
 /* Sections
    ========================================================================== */
+
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+
+body {
+  margin: 0;
+}
 
 /**
  * Add the correct display in IE 9-.
@@ -225,7 +233,8 @@ svg:not(:root) {
    ========================================================================== */
 
 /**
- * Remove the margin in Firefox and Safari.
+ * 1. Change the font styles in all browsers (opinionated).
+ * 2. Remove the margin in Firefox and Safari.
  */
 
 button,
@@ -233,7 +242,10 @@ input,
 optgroup,
 select,
 textarea {
-  margin: 0;
+  font-family: sans-serif; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
 }
 
 /**
@@ -290,6 +302,14 @@ button:-moz-focusring,
 [type="reset"]:-moz-focusring,
 [type="submit"]:-moz-focusring {
   outline: 1px dotted ButtonText;
+}
+
+/**
+ * Correct the padding in Firefox.
+ */
+
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
 }
 
 /**
@@ -485,17 +505,17 @@ img {
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Light.eot?fa487cca520cc7f78a271cb182a29c03) format("eot"), url(fonts/FiraSans-Light.woff?620af15165ec011b7982f308eb48c34e) format("woff"), url(fonts/FiraSans-Light.woff2?315ad98e0cb4208b2a002dad0f5b92e8) format("woff2");
+  src: url(fa487cca520cc7f78a271cb182a29c03.eot) format("eot"), url(620af15165ec011b7982f308eb48c34e.woff) format("woff"), url(315ad98e0cb4208b2a002dad0f5b92e8.woff2) format("woff2");
   font-weight: 300;
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Regular.eot?bfcf38c3c6170588e22046f671c26fc9) format("eot"), url(fonts/FiraSans-Regular.woff?abbc4d42c352d94dd0a00856769ebc5a) format("woff"), url(fonts/FiraSans-Regular.woff2?26f9ff8eb3877040b5f2f0e36759192f) format("woff2");
+  src: url(bfcf38c3c6170588e22046f671c26fc9.eot) format("eot"), url(abbc4d42c352d94dd0a00856769ebc5a.woff) format("woff"), url(26f9ff8eb3877040b5f2f0e36759192f.woff2) format("woff2");
   font-weight: 500;
 }
 @font-face {
   font-family: Fira Mono;
-  src: url(fonts/FiraMono-Regular.eot?8d876c180eb01a79be6d1d8bc121919f) format("eot"), url(fonts/FiraMono-Regular.woff?f25e0dfc5b508f34f63724d7ff607384) format("woff"), url(fonts/FiraMono-Regular.woff2?fe92bd266274aa44e22e48ca0317ff98) format("woff2");
+  src: url(8d876c180eb01a79be6d1d8bc121919f.eot) format("eot"), url(f25e0dfc5b508f34f63724d7ff607384.woff) format("woff"), url(fe92bd266274aa44e22e48ca0317ff98.woff2) format("woff2");
   font-weight: 500;
 }
 .podlove {
@@ -697,17 +717,17 @@ ul, ol {
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Light.eot?fa487cca520cc7f78a271cb182a29c03) format("eot"), url(fonts/FiraSans-Light.woff?620af15165ec011b7982f308eb48c34e) format("woff"), url(fonts/FiraSans-Light.woff2?315ad98e0cb4208b2a002dad0f5b92e8) format("woff2");
+  src: url(fa487cca520cc7f78a271cb182a29c03.eot) format("eot"), url(620af15165ec011b7982f308eb48c34e.woff) format("woff"), url(315ad98e0cb4208b2a002dad0f5b92e8.woff2) format("woff2");
   font-weight: 300;
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Regular.eot?bfcf38c3c6170588e22046f671c26fc9) format("eot"), url(fonts/FiraSans-Regular.woff?abbc4d42c352d94dd0a00856769ebc5a) format("woff"), url(fonts/FiraSans-Regular.woff2?26f9ff8eb3877040b5f2f0e36759192f) format("woff2");
+  src: url(bfcf38c3c6170588e22046f671c26fc9.eot) format("eot"), url(abbc4d42c352d94dd0a00856769ebc5a.woff) format("woff"), url(26f9ff8eb3877040b5f2f0e36759192f.woff2) format("woff2");
   font-weight: 500;
 }
 @font-face {
   font-family: Fira Mono;
-  src: url(fonts/FiraMono-Regular.eot?8d876c180eb01a79be6d1d8bc121919f) format("eot"), url(fonts/FiraMono-Regular.woff?f25e0dfc5b508f34f63724d7ff607384) format("woff"), url(fonts/FiraMono-Regular.woff2?fe92bd266274aa44e22e48ca0317ff98) format("woff2");
+  src: url(8d876c180eb01a79be6d1d8bc121919f.eot) format("eot"), url(f25e0dfc5b508f34f63724d7ff607384.woff) format("woff"), url(fe92bd266274aa44e22e48ca0317ff98.woff2) format("woff2");
   font-weight: 500;
 }
 .podlove {
@@ -869,6 +889,46 @@ to {
 }
 100% {
     transform: translateX(-100%);
+}
+}
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  /* Move it (define the animation) */
+}
+.marquee-container .marquee {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    text-align: left;
+    /* Starting position */
+    transform: translateX(0%);
+    /* Apply animation to this element */
+    animation: scroll 10s linear infinite;
+}
+@keyframes scroll {
+0% {
+    opacity: 1;
+    transform: translateX(0%);
+}
+20% {
+    opacity: 1;
+    transform: translateX(0%);
+}
+40% {
+    opacity: 1;
+    transform: translateX(0%);
+}
+80% {
+    opacity: 1;
+}
+90% {
+    opacity: 0;
+    transform: translateX(-110%);
+}
+100% {
+    opacity: 0;
 }
 }
 .podlove {
@@ -1141,17 +1201,17 @@ to {
 
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Light.eot?fa487cca520cc7f78a271cb182a29c03) format("eot"), url(fonts/FiraSans-Light.woff?620af15165ec011b7982f308eb48c34e) format("woff"), url(fonts/FiraSans-Light.woff2?315ad98e0cb4208b2a002dad0f5b92e8) format("woff2");
+  src: url(fa487cca520cc7f78a271cb182a29c03.eot) format("eot"), url(620af15165ec011b7982f308eb48c34e.woff) format("woff"), url(315ad98e0cb4208b2a002dad0f5b92e8.woff2) format("woff2");
   font-weight: 300;
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Regular.eot?bfcf38c3c6170588e22046f671c26fc9) format("eot"), url(fonts/FiraSans-Regular.woff?abbc4d42c352d94dd0a00856769ebc5a) format("woff"), url(fonts/FiraSans-Regular.woff2?26f9ff8eb3877040b5f2f0e36759192f) format("woff2");
+  src: url(bfcf38c3c6170588e22046f671c26fc9.eot) format("eot"), url(abbc4d42c352d94dd0a00856769ebc5a.woff) format("woff"), url(26f9ff8eb3877040b5f2f0e36759192f.woff2) format("woff2");
   font-weight: 500;
 }
 @font-face {
   font-family: Fira Mono;
-  src: url(fonts/FiraMono-Regular.eot?8d876c180eb01a79be6d1d8bc121919f) format("eot"), url(fonts/FiraMono-Regular.woff?f25e0dfc5b508f34f63724d7ff607384) format("woff"), url(fonts/FiraMono-Regular.woff2?fe92bd266274aa44e22e48ca0317ff98) format("woff2");
+  src: url(8d876c180eb01a79be6d1d8bc121919f.eot) format("eot"), url(f25e0dfc5b508f34f63724d7ff607384.woff) format("woff"), url(fe92bd266274aa44e22e48ca0317ff98.woff2) format("woff2");
   font-weight: 500;
 }
 .podlove {
@@ -1283,17 +1343,17 @@ to {
 
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Light.eot?fa487cca520cc7f78a271cb182a29c03) format("eot"), url(fonts/FiraSans-Light.woff?620af15165ec011b7982f308eb48c34e) format("woff"), url(fonts/FiraSans-Light.woff2?315ad98e0cb4208b2a002dad0f5b92e8) format("woff2");
+  src: url(fa487cca520cc7f78a271cb182a29c03.eot) format("eot"), url(620af15165ec011b7982f308eb48c34e.woff) format("woff"), url(315ad98e0cb4208b2a002dad0f5b92e8.woff2) format("woff2");
   font-weight: 300;
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Regular.eot?bfcf38c3c6170588e22046f671c26fc9) format("eot"), url(fonts/FiraSans-Regular.woff?abbc4d42c352d94dd0a00856769ebc5a) format("woff"), url(fonts/FiraSans-Regular.woff2?26f9ff8eb3877040b5f2f0e36759192f) format("woff2");
+  src: url(bfcf38c3c6170588e22046f671c26fc9.eot) format("eot"), url(abbc4d42c352d94dd0a00856769ebc5a.woff) format("woff"), url(26f9ff8eb3877040b5f2f0e36759192f.woff2) format("woff2");
   font-weight: 500;
 }
 @font-face {
   font-family: Fira Mono;
-  src: url(fonts/FiraMono-Regular.eot?8d876c180eb01a79be6d1d8bc121919f) format("eot"), url(fonts/FiraMono-Regular.woff?f25e0dfc5b508f34f63724d7ff607384) format("woff"), url(fonts/FiraMono-Regular.woff2?fe92bd266274aa44e22e48ca0317ff98) format("woff2");
+  src: url(8d876c180eb01a79be6d1d8bc121919f.eot) format("eot"), url(f25e0dfc5b508f34f63724d7ff607384.woff) format("woff"), url(fe92bd266274aa44e22e48ca0317ff98.woff2) format("woff2");
   font-weight: 500;
 }
 .podlove {
@@ -1406,17 +1466,17 @@ to {
 
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Light.eot?fa487cca520cc7f78a271cb182a29c03) format("eot"), url(fonts/FiraSans-Light.woff?620af15165ec011b7982f308eb48c34e) format("woff"), url(fonts/FiraSans-Light.woff2?315ad98e0cb4208b2a002dad0f5b92e8) format("woff2");
+  src: url(fa487cca520cc7f78a271cb182a29c03.eot) format("eot"), url(620af15165ec011b7982f308eb48c34e.woff) format("woff"), url(315ad98e0cb4208b2a002dad0f5b92e8.woff2) format("woff2");
   font-weight: 300;
 }
 @font-face {
   font-family: Fira Sans;
-  src: url(fonts/FiraSans-Regular.eot?bfcf38c3c6170588e22046f671c26fc9) format("eot"), url(fonts/FiraSans-Regular.woff?abbc4d42c352d94dd0a00856769ebc5a) format("woff"), url(fonts/FiraSans-Regular.woff2?26f9ff8eb3877040b5f2f0e36759192f) format("woff2");
+  src: url(bfcf38c3c6170588e22046f671c26fc9.eot) format("eot"), url(abbc4d42c352d94dd0a00856769ebc5a.woff) format("woff"), url(26f9ff8eb3877040b5f2f0e36759192f.woff2) format("woff2");
   font-weight: 500;
 }
 @font-face {
   font-family: Fira Mono;
-  src: url(fonts/FiraMono-Regular.eot?8d876c180eb01a79be6d1d8bc121919f) format("eot"), url(fonts/FiraMono-Regular.woff?f25e0dfc5b508f34f63724d7ff607384) format("woff"), url(fonts/FiraMono-Regular.woff2?fe92bd266274aa44e22e48ca0317ff98) format("woff2");
+  src: url(8d876c180eb01a79be6d1d8bc121919f.eot) format("eot"), url(f25e0dfc5b508f34f63724d7ff607384.woff) format("woff"), url(fe92bd266274aa44e22e48ca0317ff98.woff2) format("woff2");
   font-weight: 500;
 }
 .podlove {
@@ -1793,13 +1853,22 @@ to {
   justify-content: space-between;
 }
 .transcripts-header > * {
-    height: 24px;
+    height: 25px;
 }
 .transcripts-container {
-  padding: relative;
+  position: relative;
   max-height: 525px;
   overflow-y: auto;
   padding: 0;
+}
+@media screen and (max-width: 375px) {
+.transcripts.has-search-results .follow-button {
+    display: none;
+}
+.transcripts.has-search-results .search-navigation {
+    justify-content: flex-end;
+    margin-right: 0;
+}
 }
 
 .entry {
@@ -1807,7 +1876,7 @@ to {
   padding: 0.25em 1.25em;
 }
 .entry.speaker {
-    padding: 0.25em 1em 0.25em 3em;
+    padding: 0.25em 1.5em 0.25em 3.5em;
 }
 .entry.chapter {
     padding: 0.25em 0;
@@ -1830,7 +1899,7 @@ to {
     display: inline-block;
     position: relative;
     margin-left: -2.25em;
-    margin-right: 0.25em;
+    margin-right: 0.4em;
 }
 .entry .speaker .speaker-background {
       position: absolute;
@@ -1853,8 +1922,10 @@ to {
 }
 .entry .text {
     border-radius: 4px;
-    padding: 0 0.1em;
-    margin-right: 0.1em;
+    padding: 0.1em;
+    margin: 0 0.1em 0 0;
+    line-height: 0;
+    border: 1px solid transparent;
 }
 .entry .text.inactive {
       opacity: 0.75;
@@ -1911,11 +1982,6 @@ to {
     margin-right: 0.5em;
     width: 100%;
 }
-@media screen and (max-width: 590px) {
-.transcripts-search .search-input {
-        width: 75%;
-}
-}
 .transcripts-search .search-input .input {
       padding: 0.2em 24px 0.2em 1em;
       font-size: 1em;
@@ -1939,7 +2005,7 @@ to {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     margin-right: 0.5em;
 }
 @media screen and (max-width: 590px) {
@@ -1967,6 +2033,6 @@ to {
 }
 }
 
-.text[data-v-ce19a208] {
+.text[data-v-05aaae8f] {
   text-transform: uppercase;
 }
