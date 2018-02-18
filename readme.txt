@@ -108,6 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2018-02-18 =
 
 * fix Geo DB Updater: use our own Podlove CDN as download source
+* PWP4: use CDN by default
 
 = 2018-02-10 =
 

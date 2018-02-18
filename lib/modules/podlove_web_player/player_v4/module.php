@@ -1,11 +1,7 @@
 <?php 
 namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 
-// use Podlove\Model;
 use Podlove\Model\Episode;
-// use Podlove\Model\Podcast;
-// use Podlove\Model\EpisodeAsset;
-// use Podlove\Model\MediaFile;
 
 class Module {
 	
@@ -26,13 +22,27 @@ class Module {
 		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
 	}
 
+	private function module() {
+		return \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::instance();
+	}
+
 	public function register_scripts()
 	{
 		wp_enqueue_script(
 			'podlove-player4-embed',
-			plugins_url('dist/embed.js', __FILE__),
-			[], \Podlove\get_plugin_header('Version')
+			self::embed_script_url($this->module()->get_module_option('use_cdn', true)),
+			[],
+			\Podlove\get_plugin_header('Version')
 		);
+	}
+
+	public static function embed_script_url($use_cdn = true)
+	{
+		if ($use_cdn) {
+			return 'https://cdn.podlove.org/web-player/embed.js';
+		} else {
+			return plugins_url('dist/embed.js', __FILE__);
+		}
 	}
 
 	public static function shortcode($args = []) {
