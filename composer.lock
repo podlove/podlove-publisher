@@ -569,16 +569,16 @@
         },
         {
             "name": "podlove/podlove-timeline",
-            "version": "v1.1.8",
+            "version": "v1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/podlove/podlove-timeline.git",
-                "reference": "1e580cc317b28e17c280b10f639ea5c6acfc667b"
+                "reference": "880933a4a3996a2929a8baf2b05fdc7bfac335bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/1e580cc317b28e17c280b10f639ea5c6acfc667b",
-                "reference": "1e580cc317b28e17c280b10f639ea5c6acfc667b",
+                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/880933a4a3996a2929a8baf2b05fdc7bfac335bb",
+                "reference": "880933a4a3996a2929a8baf2b05fdc7bfac335bb",
                 "shasum": ""
             },
             "require": {
@@ -586,7 +586,7 @@
                 "podlove/normalplaytime": "1.0.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "5.*.*"
             },
             "type": "library",
             "autoload": {
@@ -608,7 +608,7 @@
                 "psc",
                 "webvtt"
             ],
-            "time": "2013-09-13T10:00:40+00:00"
+            "time": "2018-02-18T08:51:11+00:00"
         },
         {
             "name": "psr/log",
