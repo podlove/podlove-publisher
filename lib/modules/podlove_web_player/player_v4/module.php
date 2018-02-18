@@ -22,15 +22,19 @@ class Module {
 		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
 	}
 
-	private function module() {
+	private static function module() {
 		return \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::instance();
+	}
+
+	public static function use_cdn() {
+		return self::module()->get_module_option('use_cdn', true);
 	}
 
 	public function register_scripts()
 	{
 		wp_enqueue_script(
 			'podlove-player4-embed',
-			self::embed_script_url($this->module()->get_module_option('use_cdn', true)),
+			self::embed_script_url(self::use_cdn()),
 			[],
 			\Podlove\get_plugin_header('Version')
 		);

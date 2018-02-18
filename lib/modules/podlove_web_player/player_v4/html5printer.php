@@ -55,13 +55,16 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'link'     => \Podlove\get_landing_page_url()
 			],
 			'reference' => [
-				'base'   => plugins_url('dist', __FILE__),
 				'share'  => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
 			],
 			'theme' => [
 				'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000')
 			]
 		];
+
+		if (!Module::use_cdn()) {
+			$config['reference']['base'] = plugins_url('dist', __FILE__);
+		}
 
 		$highlight_color = self::sanitize_color($player_settings['playerv4_color_secondary'], false);
 		if ($highlight_color !== false) {
