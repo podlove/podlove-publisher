@@ -105,6 +105,10 @@ class Seasons extends \Podlove\Modules\Base {
 	public function add_season_number_to_episode_form($form_data, $episode)
 	{
 		$season = Season::for_episode($episode);
+
+		if (!$season)
+			return $form_data;
+
 		$title  = __('Season', 'podlove-podcasting-plugin-for-wordpress') . ' ' . $season->number();
 
 		$entry = array(
