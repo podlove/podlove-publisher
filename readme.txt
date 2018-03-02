@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-03-02 =
+
+New in "Global Feed Settings": An option for how the episode title should be displayed. It defaults to "Blog Post Title", so that after the iOS 11 title migration, the output does not actually change -- following the principle of least surprise. However, the setting can be changed to "Episode Title", which is the new clean title, or "Custom Template", which is a title template with the same capabilities as the blog post title template.
+
 = 2018-02-18 =
 
 * fix Geo DB Updater: use our own Podlove CDN as download source
