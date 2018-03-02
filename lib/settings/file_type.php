@@ -131,7 +131,7 @@ class FileType {
 			<a href="?page=<?php echo filter_var($_REQUEST['page'], FILTER_SANITIZE_STRING); ?>&amp;podlove_tab=<?php echo filter_var($_REQUEST['podlove_tab'], FILTER_SANITIZE_STRING) ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a>
 		</h2>
 		<p>
-			<?php echo __( 'This is a list of all file types the publisher knows about. If you would like to serve assets of an unknown file type, you must add it here before you can create the asset.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+			<?php echo __( 'This is a list of all file types Podlove Publisher knows about. If you would like to serve assets of an unknown file type, you must add it here before you can create the asset.', 'podlove-podcasting-plugin-for-wordpress' ); ?>
 		</p>
 		<?php
 		$table = new \Podlove\File_Type_List_Table();

@@ -47,9 +47,9 @@ class Tracking extends Tab {
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
 								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
-								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
-									The Publisher logs the download intent and redirects the user to the original file. 
-									That way the Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress' )
+								__( 'Instead of the original file URLs, users and clients see a link that points to Podlove Publisher. 
+									Podlove Publisher logs the download intent and redirects the user to the original file. 
+									That way Podlove Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>

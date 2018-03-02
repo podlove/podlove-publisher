@@ -31,7 +31,7 @@ class Migration extends \Podlove\Modules\Base {
 				<p>
 					<?php
 					echo sprintf(
-						__( 'Do you have an existing podcast here which you\'d like to convert to the Publisher?%sPlease use the %sMigration Assistant%s.', 'podlove-podcasting-plugin-for-wordpress' ),
+						__( 'Do you have an existing podcast here which you\'d like to convert to Podlove Publisher?%sPlease use the %sMigration Assistant%s.', 'podlove-podcasting-plugin-for-wordpress' ),
 						'<br>',
 						'<a href="' . admin_url( 'admin.php' . \Podlove\Modules\Migration\Settings\Assistant::get_page_link() ) . '">',
 						'</a>'

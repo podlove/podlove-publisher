@@ -11,7 +11,7 @@ return [
 		'title'   => __('Download Analytics', 'podlove-podcasting-plugin-for-wordpress'),
 		'content' => 
 			'<p>'
-			. __('The Publisher tracks <em>Download Intents</em>: the start of a download by a client. Those numbers do not represent if a download was completed or listened to.', 'podlove-podcasting-plugin-for-wordpress')
+			. __('Podlove Publisher tracks <em>Download Intents</em>: the start of a download by a client. Those numbers do not represent if a download was completed or listened to.', 'podlove-podcasting-plugin-for-wordpress')
 			. '</p>'
 			. '<p>'
 			. sprintf(

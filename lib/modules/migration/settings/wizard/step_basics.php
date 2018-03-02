@@ -12,7 +12,7 @@ class StepBasics extends Step {
 			<div class="span6">
 				<h3>The Podlove Mindset</h3>
 				<p>
-					The Publisher assumes all your media files are in the same directory and follow
+					Podlove Publisher assumes all your media files are in the same directory and follow
 					a certain naming scheme.
 					All your files must be accessible via http and start with the same
 					<strong>Media File Base URL</strong> (e.g. <code>http://cdn.example.com/pod/</code>).
