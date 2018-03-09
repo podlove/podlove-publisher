@@ -578,7 +578,13 @@ class Image {
 		if ( ! $tmpfname )
 			return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
 
-		$response = wp_safe_remote_get( $url, array( 'timeout' => $timeout, 'stream' => true, 'filename' => $tmpfname ) );
+		$args = [
+			'timeout' => $timeout, 
+			'stream' => true, 
+			'filename' => $tmpfname, 
+			'sslverify' => \Podlove\get_setting('website', 'ssl_verify_peer') == 'on'
+		];
+		$response = wp_safe_remote_get( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
 			unlink( $tmpfname );
