@@ -98,35 +98,73 @@ class Button {
 
 		$use_cdn = $this->module()->get_module_option('use_cdn', true);
 
-		if ($use_cdn) {
-			$src = 'https://cdn.podlove.org/subscribe-button/javascripts/app.js';
-		} else {
-			$src = $this->module()->get_module_url() . '/dist/javascripts/app.js';
-		}
+		$cdn_src = 'https://cdn.podlove.org/subscribe-button/javascripts/app.js';
+		$loc_src = $this->module()->get_module_url() . '/dist/javascripts/app.js';
 
-		$script_button_tag = $dom->createElement('script');
-		$script_button_tag->setAttribute('class', 'podlove-subscribe-button');
-		$script_button_tag->setAttribute('src', $src);
-		$script_button_tag->setAttribute('data-json-data', $dataAccessor);
-		$script_button_tag->setAttribute('data-language' , self::language($this->args['language']));
-		$script_button_tag->setAttribute('data-size'     , self::size($this->args['size'], $this->args['width']));
-		$script_button_tag->setAttribute('data-format'   , $this->args['format']);
-		$script_button_tag->setAttribute('data-style'   , $this->args['style']);
-		$script_button_tag->setAttribute('data-color'   , $this->args['color']);
+		$src = $use_cdn ? $cdn_src : $loc_src;
 
-		if ($this->args['buttonid'])
-			$script_button_tag->setAttribute('data-buttonid', $this->args['buttonid']);
-
-		if ($this->args['hide'] && in_array($this->args['hide'], [1, '1', true, 'true', 'on']))
-			$script_button_tag->setAttribute('data-hide', true);
-
-		// ensure there is a closing script tag
-		$script_button_tag->appendChild($dom->createTextNode(' '));
+		$script_button_tag = $this->get_script_button_tag($dom, $src, $dataAccessor);
 
 		$dom->appendChild($script_data_tag);
 		$dom->appendChild($script_button_tag);
 
-		return (string) $dom;
+		// cdn fallback to local
+		if ($use_cdn) {
+			$dom2 = new \Podlove\DomDocumentFragment;
+			$tag2 = $this->get_script_button_tag($dom2, $loc_src, $dataAccessor);
+			$dom2->appendChild($tag2);
+
+			$script = trim((string) $dom2);
+			$script = str_replace("<script", "%3Cscript", $script);
+			$script = str_replace("</script>", "%3E%3C/script%3E", $script);
+			$script = str_replace('"', '\"', $script);
+
+			$fallback = "<script>
+if (typeof SubscribeButton == 'undefined') {
+
+    document.write(unescape(\"$script\"));
+
+    // hide uninitialized button
+    window.setTimeout(function() {
+        iframes = document.querySelectorAll('.podlove-subscribe-button-iframe')
+        for (i = 0; i < iframes.length; ++i) {
+            if (!iframes[i].style.width && !iframes[i].style.height) {
+                iframes[i].style.display = 'none';
+            }
+        }
+    }, 5000);
+
+}
+</script>";
+		} else {
+			$fallback = "";
+		}
+
+		return ((string) $dom) . $fallback;
+	}
+
+	private function get_script_button_tag($dom, $src, $accessor)
+	{
+		$tag = $dom->createElement('script');
+		$tag->setAttribute('class', 'podlove-subscribe-button');
+		$tag->setAttribute('src', $src);
+		$tag->setAttribute('data-json-data', $accessor);
+		$tag->setAttribute('data-language' , self::language($this->args['language']));
+		$tag->setAttribute('data-size'     , self::size($this->args['size'], $this->args['width']));
+		$tag->setAttribute('data-format'   , $this->args['format']);
+		$tag->setAttribute('data-style'   , $this->args['style']);
+		$tag->setAttribute('data-color'   , $this->args['color']);
+
+		if ($this->args['buttonid'])
+			$tag->setAttribute('data-buttonid', $this->args['buttonid']);
+
+		if ($this->args['hide'] && in_array($this->args['hide'], [1, '1', true, 'true', 'on']))
+			$tag->setAttribute('data-hide', true);
+
+		// ensure there is a closing script tag
+		$tag->appendChild($dom->createTextNode(' '));
+
+		return $tag;
 	}
 
 	/**
