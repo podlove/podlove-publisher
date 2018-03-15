@@ -105,44 +105,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2018-03-09 =
-
-* when using the Podlove Subscribe Button CDN and the CDN is not reachable, fall back to the locally hosted script
-
-= 2018-03-02 =
-
-New in "Global Feed Settings": An option for how the episode title should be displayed. It defaults to "Blog Post Title", so that after the iOS 11 title migration, the output does not actually change -- following the principle of least surprise. However, the setting can be changed to "Episode Title", which is the new clean title, or "Custom Template", which is a title template with the same capabilities as the blog post title template.
-
-= 2018-02-18 =
-
-* fix Geo DB Updater: use our own Podlove CDN as download source
-* PWP4: use CDN by default
-
-= 2018-02-10 =
-
-* add expert setting "Episode Number Padding" to configure episode number display when automatic title generation is used
-* support `%season_number%` in post title generation
-* fix episode slug generation when title generation is active
-* reduce Podlove Template Cache duration from 1 day to 1 hour for the following change:
-* new template accessor: `{{ episode.total_downloads }}`
-
-= 2018-02-02 =
-
-* add Liberapay as donation service
-* player settings: when no episode or files are available, use a "Podlove" demo sound
-* update PWP4 to 4.0.1
-* display current season in episode form
-
-= 2018-02-01 =
-
-Fix various issues in the download table display. Until now, new downloads were calculated hourly, which provides a good estimate but often not exact numbers. The calculation could also get stuck, leading to missing data display.
-
-From now on, the estimates are still calculated hourly but additionally _a full, precise aggregation is done once a day_, which should lead to more consistent numbers overall.
-
-= 2018-01-15 =
-
-* episode page: add option to display episode number
-
 = 2.7.0 =
 
 **New Module: Shows**
@@ -199,6 +161,12 @@ Podlove Web Player 4 is the new default player.
     - set this asset in Expert Settings > Web Player
     - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
 * Podlove Web Player 4: support contributors
+* player settings: when no episode or files are available, use a "Podlove" demo sound
+* reduce Podlove Template Cache duration from 1 day to 1 hour for the following change:
+* new template accessor: `{{ episode.total_downloads }}`
+* New in "Global Feed Settings": An option for how the episode title should be displayed. It defaults to "Blog Post Title", so that after the iOS 11 title migration, the output does not actually change -- following the principle of least surprise. However, the setting can be changed to "Episode Title", which is the new clean title, or "Custom Template", which is a title template with the same capabilities as the blog post title template.
+* when using the Podlove Subscribe Button CDN and the CDN is not reachable, fall back to the locally hosted script
+* fix Geo DB Updater: use our own Podlove CDN as download source
 * fix quotes in contributor fields
 * fix WordPress conditionals in episode archives
 * fix deleting related episodes ([#907](https://github.com/podlove/podlove-publisher/issues/907))
@@ -211,12 +179,16 @@ Podlove Web Player 4 is the new default player.
 * fix feed redirect issue for HTTP/1.0 clients
 * fix network module: only activate when the plugin is activated network-wide, not when the plugin in active within a multisite
 * fix calculation of contribution counts
+* Fix various issues in the download table display. Until now, new downloads were calculated hourly, which provides a good estimate but often not exact numbers. The calculation could also get stuck, leading to missing data display. From now on, the estimates are still calculated hourly but additionally _a full, precise aggregation is done once a day_, which should lead to more consistent numbers overall.
 * enhance email error reporting
 * enhance open graph module: detects WP SEO plugin and does not output any tags to avoid conflicts
 * social services: add SlideShare
 * show warning if upload directory is not fully qualified
 * remove download section from default template (because it is included in PWP4)
 * image cache: instead of returning invalid URLs with 0 width and 0 height when something goes wrong, return the source URL instead
+* episode list: add display option to display episode number as a column
+ add Liberapay as donation service
+* display current season in episode form
 
 ----
 
