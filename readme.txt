@@ -151,6 +151,8 @@ Every [config parameter available](http://docs.podlove.org/podlove-web-player/co
 
 You can now also display a player with _live content_ like this: `[podlove-web-player mode="live" audio_0_url="http://mp3.theradio.cc/" audio_0_mimeType="audio/mp3" title="Livestream" link="https://theradio.cc"]`
 
+You can choose to deliver Podlove Player via Podlove CDN (Content Delivery Network) or via your WordPress server. CDN is the default for new setups but if you are already using Podlove Publisher we continue delivering Podlove Player via your WordPress server unless you explicitly change it.
+
 Podlove Web Player 4 is the new default player.
 
 **Other**
