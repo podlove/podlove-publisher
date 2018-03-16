@@ -58,7 +58,7 @@ class Show extends Wrapper {
 	 * @accessor
 	 */
 	public function slug() {
-		return $this->show->summary;
+		return $this->show->slug;
 	}
 
 	/**
