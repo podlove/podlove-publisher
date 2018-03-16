@@ -3,15 +3,8 @@
 	<code><?php echo get_option('home'); ?></code>
 	<input name="podlove_website[custom_episode_slug]" id="custom_episode_slug" type="text" value="<?php echo $custom_episode_slug ?>">
 	<p><span class="description">
-<<<<<<< HEAD
 		<?php _e( 'Placeholders', 'podlove-podcasting-plugin-for-wordpress' ); ?>: %podcast% (<?php _e( 'episode slug', 'podlove-podcasting-plugin-for-wordpress' ); ?>), %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%<br>
 		<?php _e( 'Example schemes', 'podlove-podcasting-plugin-for-wordpress' ); ?>: <code>/%podcast%</code>, <code>/episode/%podcast%</code>, <code>/%year%/%monthnum%/%podcast%</code>
-=======
-		<?php echo __( '
-			Placeholders: %podcast% (post name slug), %post_id%, %year%, %monthnum%, %day%, %hour%, %minute%, %second%, %category%, %author%<br>
-			Example schemes: <code>/%podcast%</code>, <code>/episode/%podcast%</code>, <code>/%year%/%monthnum%/%podcast%</code>', 'podlove-podcasting-plugin-for-wordpress' );
-		?>
->>>>>>> master
 	</span></p>
 </div>
 
