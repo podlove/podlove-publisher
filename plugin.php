@@ -168,6 +168,7 @@ add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
 // require_once \Podlove\PLUGIN_DIR . 'includes/about.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/auto_post_titles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/capabilities.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/chapters.php';
@@ -175,6 +176,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/cover_art.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/detect_duplicate_slugs.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/downloads.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/episode_number_column.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/explicit_content.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/extras.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';

@@ -111,6 +111,13 @@
   logo: 'openstreetmap.png'
   url_scheme: 'https://www.openstreetmap.org/user/%account-placeholder%'
 
+- title: 'Liberapay'
+  name: 'liberapay'
+  category: 'donation'
+  description: 'Liberapay Account'
+  logo: 'liberapay.png'
+  url_scheme: 'https://liberapay.com/%account-placeholder%'
+
 - title: 'Linkedin'
   name: 'linkedin'
   category: 'social'
@@ -153,6 +160,13 @@
   logo: 'prezi.png'
   url_scheme: 'https://prezi.com/user/%account-placeholder%'
 
+- title: 'SlideShare'
+  name: 'slideshare'
+  category: 'social'
+  description: 'SlideShare Account'
+  logo: 'slideshare.png'
+  url_scheme: 'https://www.slideshare.net/%account-placeholder%'
+
 - title: 'Skype'
   name: 'skype'
   category: 'social'
@@ -187,6 +201,13 @@
   description: 'Steam Account'
   logo: 'steam.png'
   url_scheme: 'https://steamcommunity.com/id/%account-placeholder%'
+
+- title: 'Strava'
+  name: 'strava'
+  category: 'social'
+  description: 'Strava Account'
+  logo: 'strava.png'
+  url_scheme: 'https://www.strava.com/athletes/%account-placeholder%'
 
 - title: 'Trakt'
   name: 'trakt'

@@ -53,7 +53,7 @@ class RSS {
 
 		override_feed_title( $feed );
 		override_feed_description( $feed );
-		override_feed_language( $feed );
+		override_feed_language( $feed ); // Is this actually doing something?
 		override_feed_head( 'rss2_head', $podcast, $feed, $file_type );
 		override_feed_entry( 'rss2_item', $podcast, $feed, $file_type );
 
@@ -96,7 +96,7 @@ class RSS {
 				echo "\n\t" . sprintf( '<atom:link rel="last" href="%s" />', $feed_url_for_page($wp_query->max_num_pages) );
 
 			if ( $podcast->language )
-				echo "\n\t" . '<language>' . $podcast->language . '</language>';
+				echo "\n\t" . '<language>' . apply_filters( 'podlove_feed_language', $podcast->language ) . '</language>';
 
 			do_action( 'podlove_rss2_head', $feed );
 

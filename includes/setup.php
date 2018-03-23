@@ -52,6 +52,7 @@ function podlove_setup_file_types() {
 		['name' => 'Subrip Captions',        'type' => 'captions', 'mime_type' => 'application/x-subrip',  'extension' => 'srt'],
 		['name' => 'WebVTT Captions',        'type' => 'captions', 'mime_type' => 'text/vtt',  'extension' => 'vtt'],
 		['name' => 'Auphonic Production Description', 'type' => 'metadata', 'mime_type' => 'application/json',  'extension' => 'json'],
+		['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text',  'extension' => 'txt'],
 	];
 	
 	foreach ($default_types as $file_type) {
@@ -124,9 +125,6 @@ function podlove_setup_default_template() {
 	{# display web player for episode #}
 	{{ episode.player }}
 	
-	{# display download menu for episode #}
-	{% include "@core/shortcode/downloads-select.twig" %}
-
 	{# display contributors if module is active #}
 	{% if shortcode_exists("podlove-episode-contributor-list") %}
 		{# see http://docs.podlove.org/podlove-publisher/reference/shortcodes.html#contributors for parameters #}

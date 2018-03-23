@@ -42,7 +42,6 @@ class ContributorSettings {
 		?>
 		<div class="wrap">
 			<?php
-			screen_icon( 'podlove-podcast' );
 			echo $this->tabs->getTabsHTML();
 			echo $this->tabs->getCurrentTabPage();
 			?>

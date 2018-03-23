@@ -55,31 +55,52 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'link'     => \Podlove\get_landing_page_url()
 			],
 			'reference' => [
-				'base'   => plugins_url('dist', __FILE__),
 				'share'  => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
 			],
 			'theme' => [
-				'main'      => self::sanitize_color($player_settings['playerv4_color_primary']),
-				'highlight' => self::sanitize_color($player_settings['playerv4_color_secondary'])
+				'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000')
 			]
 		];
 
+		if (!Module::use_cdn()) {
+			$config['reference']['base'] = plugins_url('dist', __FILE__);
+		}
+
+		$highlight_color = self::sanitize_color($player_settings['playerv4_color_secondary'], false);
+		if ($highlight_color !== false) {
+			$config['theme']['highlight'] = $highlight_color;
+		}
+		
 		if ($episode) {
 			$post = get_post($episode->post_id);
 
 			$player_media_files = new PlayerMediaFiles($episode);
-			$media_files        = $player_media_files->get($context);
-			$media_file_urls = array_map(function($file) {
-				return [
-					'url'      => $file['publicUrl'],
-					'size'     => $file['size'],
-					'title'    => $file['assetTitle'],
-					'mimeType' => $file['mime_type']
+
+			$episode_title = $post->post_title;
+			
+			if ($media_files = $player_media_files->get($context)) {
+				$media_file_urls = array_map(function($file) {
+					return [
+						'url'      => $file['publicUrl'],
+						'size'     => $file['size'],
+						'title'    => $file['assetTitle'],
+						'mimeType' => $file['mime_type']
+					];
+				}, $media_files);
+			} elseif (is_admin()) {
+				$episode_title = __('Example Episode', 'podlove-podcasting-plugin-for-wordpress');
+				$media_file_urls = [
+					'url'      => \Podlove\PLUGIN_URL . '/bin/podlove.mp3',
+					'size'     => 486839,
+					'title'    => 'Podlove Example Audio',
+					'mimeType' => 'audio/mp3'				
 				];
-			}, $media_files);
+			} else {
+				$media_file_urls = [];
+			}
 
 			$config = array_merge($config, [
-				'title'           => $post->post_title,
+				'title'           => $episode_title,
 				'subtitle'        => trim($episode->subtitle),
 				'summary'         => trim($episode->summary),
 				'publicationDate' => mysql2date("c", $post->post_date),
@@ -122,7 +143,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		return esc_url( add_query_arg('podlove_player4', $episode->id, trailingslashit(get_option('siteurl'))) );
 	}
 
-	public static function sanitize_color($color)
+	public static function sanitize_color($color, $default = '#000')
 	{
 		static $patterns = array(
 			// 'cmyk'  => '/^(?:device-)?cmyk\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
@@ -157,6 +178,6 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			}
 		}
 
-		return '#000'; // default to a valid color
+		return $default;
 	}
 }

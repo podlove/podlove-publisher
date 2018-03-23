@@ -109,7 +109,6 @@ class Modules {
 	function page() {
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Podlove Publisher Modules', 'podlove-podcasting-plugin-for-wordpress' ) ?></h2>
 
 			<form method="post" action="options.php">

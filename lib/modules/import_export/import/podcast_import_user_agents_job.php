@@ -14,12 +14,12 @@ class PodcastImportUserAgentsJob {
 
 	public static function title()
 	{
-		return 'Podcast Import: Media Files';
+		return 'Podcast Import: User Agents';
 	}
 
 	public static function description()
 	{
-		return 'Imports Podcast Media Files';
+		return 'Imports Podcast User Agents';
 	}
 
 	protected static function get_import_table_class()

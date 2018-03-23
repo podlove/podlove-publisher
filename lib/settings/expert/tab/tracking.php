@@ -47,9 +47,9 @@ class Tracking extends Tab {
 							<?php echo sprintf(
 								'<div><strong>%s</strong><br>%s</div>',
 								__( 'Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress' ),
-								__( 'Instead of the original file URLs, users and clients see a link that points to the Publisher. 
-									The Publisher logs the download intent and redirects the user to the original file. 
-									That way the Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress' )
+								__( 'Instead of the original file URLs, users and clients see a link that points to Podlove Publisher. 
+									Podlove Publisher logs the download intent and redirects the user to the original file. 
+									That way Podlove Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress' )
 							); ?>
 						</div>
 					</div>
@@ -103,7 +103,9 @@ class Tracking extends Tab {
 				$file = \Podlove\Geo_Ip::get_upload_file_path();
 				\Podlove\Geo_Ip::register_updater_cron();
 				?>
-				<?php if ( file_exists($file) ): ?>
+				<?php if (!class_exists('PharData')): ?>
+					<?php echo __('Required PHP class <code>PharData</code> is missing.', 'podlove-podcasting-plugin-for-wordpress') ?>
+				<?php elseif ( file_exists($file) ): ?>
 					<p>
 						<?php echo __("Geolocation database", 'podlove-podcasting-plugin-for-wordpress'); ?>:
 						<code><?php echo $file ?></code>

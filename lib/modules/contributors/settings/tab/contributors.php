@@ -57,6 +57,22 @@ class Contributors extends Tab {
 			$this->table->prepare_items();
 			$this->table->display();
 		});
+
+		add_filter('podlove_generic_entity_attributes_contributor', function ($attributes) {
+
+			$sanitize = function ($var) {
+				return filter_var(stripslashes($var), FILTER_SANITIZE_STRING, ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES ]);
+			};
+
+			$attributes['publicname']     = $sanitize($attributes['publicname']);
+			$attributes['realname']       = $sanitize($attributes['realname']);
+			$attributes['nickname']       = $sanitize($attributes['nickname']);
+			$attributes['organisation']   = $sanitize($attributes['organisation']);
+			$attributes['department']     = $sanitize($attributes['department']);
+			$attributes['jobtitle']       = $sanitize($attributes['jobtitle']);
+
+			return $attributes;
+		});
 	}
 
 	private function contributor_form($form_args, $contributor, $action) {

@@ -83,6 +83,25 @@ class Episode extends Base implements Licensable {
 	}
 
 	public function title() {
+		return $this->title_with_fallback();
+	}
+
+	/**
+	 * Returns episode title if set, otherwise post title.
+	 * 
+	 * @return string
+	 */
+	public function title_with_fallback()
+	{
+		if ($this->title) {
+			return $this->title;
+		} else {
+			return $this->post_title();
+		}
+	}
+
+	public function post_title()
+	{
 		return $this->with_blog_scope(function() { return get_the_title($this->post_id); });
 	}
 
@@ -101,6 +120,15 @@ class Episode extends Base implements Licensable {
 			$title = $title . ' - ' . $this->subtitle;
 		
 		return $title;
+	}
+
+	public function number_padded() {
+		return str_pad(
+			(string) $this->number, 
+			\Podlove\get_setting( 'website', 'episode_number_padding' ), 
+			'0', 
+			STR_PAD_LEFT
+		);
 	}
 
 	public function description() {
@@ -357,8 +385,11 @@ class Episode extends Base implements Licensable {
 
 Episode::property( 'id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY' );
 Episode::property( 'post_id', 'INT' );
+Episode::property( 'title', 'TEXT' );
 Episode::property( 'subtitle', 'TEXT' );
 Episode::property( 'summary', 'TEXT' );
+Episode::property( 'number', 'INT UNSIGNED' );
+Episode::property( 'type', 'VARCHAR(10)' );
 Episode::property( 'enable', 'INT' ); // listed in podcast directories or not?
 Episode::property( 'slug', 'VARCHAR(255)' );
 Episode::property( 'duration', 'VARCHAR(255)' );

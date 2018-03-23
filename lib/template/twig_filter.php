@@ -65,18 +65,20 @@ class TwigFilter {
 
 		$result = null;
 
-		try {
-			$result = $twig->render($html, $context);
-		} catch (\Twig_Error $e) {
-			$message  = $e->getRawMessage();
-			$line     = $e->getTemplateLine();
-			$template = $e->getTemplateFile();
+		if ($twig->getLoader()->exists($html)) {
+			try {
+				$result = $twig->render($html, $context);
+			} catch (\Twig_Error $e) {
+				$message  = $e->getRawMessage();
+				$line     = $e->getTemplateLine();
+				$template = $e->getTemplateFile();
 
-			\Podlove\Log::get()->addError($message, [
-				'type'     => 'twig',
-				'line'     => $line,
-				'template' => $template
-			]);
+				\Podlove\Log::get()->addError($message, [
+					'type'     => 'twig',
+					'line'     => $line,
+					'template' => $template
+				]);
+			}
 		}
 
 		if ($result === null) {

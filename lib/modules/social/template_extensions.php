@@ -37,6 +37,10 @@ class TemplateExtensions {
 				$services = ContributorService::find_by_contributor_id_and_category($contributor->id, $category);
 			}
 
+			$services = array_filter($services, function ($s) use ($args) {
+				return $s->service_id > 0;
+			});
+
 			if (isset($args["type"]) && $args["type"]) {
 				$services = array_filter($services, function ($s) use ($args) {
 					return $s->get_service()->type == $args["type"];

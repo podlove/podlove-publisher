@@ -1,6 +1,7 @@
 <?php 
 namespace Podlove\Modules\PodloveWebPlayer\Podigee;
 
+use Podlove\Model\MediaFile;
 use Podlove\Model\Episode;
 use Podlove\Model\Feed;
 
@@ -80,6 +81,17 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 				'url' => get_permalink($post->ID)
 			]
 		];
+
+		$player_assignments = get_option('podlove_webplayer_formats');
+		if ($player_assignments && isset($player_assignments['transcript']) && isset($player_assignments['transcript']['transcript'])) {
+			$transcript_asset_id = (int) $player_assignments['transcript']['transcript'];
+			$transcript_media_file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $transcript_asset_id);
+
+			if ($transcript_media_file && $transcript_media_file->is_valid()) {
+				$config['extensions']['Transcript'] = [];
+				$config['episode']['Transcript'] = $transcript_media_file->get_public_file_url('webplayer');
+			}
+		}
 
 		foreach ($media_files as $file) {
 

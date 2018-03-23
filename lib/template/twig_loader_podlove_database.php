@@ -3,7 +3,7 @@ namespace Podlove\Template;
 
 use Podlove\Model\Template;
 
-class TwigLoaderPodloveDatabase implements \Twig_LoaderInterface {
+class TwigLoaderPodloveDatabase implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface {
 
 	/**
 	 * Gets the source code of a template, given its name.
@@ -15,6 +15,14 @@ class TwigLoaderPodloveDatabase implements \Twig_LoaderInterface {
 	function getSource($name) {
 		if ($template = Template::find_one_by_title_with_fallback($name)) {
 			return $template->content;
+		} else {
+			return false;
+		}
+	}
+
+	function exists($name) {
+		if (Template::find_one_by_title_with_fallback($name)) {
+			return true;
 		} else {
 			return false;
 		}

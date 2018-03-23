@@ -51,9 +51,27 @@ class MailerJob {
 
 		$this->job->update_state('contributors_todo', $contributors_todo);
 
+		self::register_log_mailer_errors();
 		$this->prepare_and_send_mail($contributor);
+		self::deregister_log_mailer_errors();
 
 		return 1;
+	}
+
+	private static function register_log_mailer_errors() {
+		add_action('wp_mail_failed', [__CLASS__, 'log_mailer_errors']);
+	}
+
+	private static function deregister_log_mailer_errors() {
+		remove_action('wp_mail_failed', [__CLASS__, 'log_mailer_errors']);
+	}
+
+	public static function log_mailer_errors($wp_error)
+	{
+		Log::get()->addWarning("Sending email failed. Reason: " . $wp_error->get_error_message(), [
+			'module'   => 'E-Mail Notifications',
+			'wp_error' => $wp_error
+		]);
 	}
 
 	private function prepare_and_send_mail(Contributor $contributor)
@@ -67,7 +85,9 @@ class MailerJob {
 			Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". Unsuccessful due to missing contact email.", [
 				'module' => 'E-Mail Notifications',
 				'contributor_id'   => $contributor->id,
-				'contributor_name' => $contributor->getName()
+				'contributor_name' => $contributor->getName(),
+				'episode_id'    => $episode->id,
+				'episode_title' => $episode->title()
 			]);
 			return;
 		}
@@ -95,7 +115,9 @@ class MailerJob {
 			Log::get()->addWarning("Tried sending email notification to " . $contributor->getName() . ". wp_mail was unable to send.", [
 				'module' => 'E-Mail Notifications',
 				'contributor_id'   => $contributor->id,
-				'contributor_name' => $contributor->getName()
+				'contributor_name' => $contributor->getName(),
+				'episode_id'    => $episode->id,
+				'episode_title' => $episode->title()
 			]);
 		}
 

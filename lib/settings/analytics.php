@@ -224,6 +224,8 @@ class Analytics {
 
 		$total      = $cache->cache_for('podlove_downloads_total', '\Podlove\Model\DownloadIntentClean::total_downloads', 5 * MINUTE_IN_SECONDS);
 		$last_month = $cache->cache_for('podlove_downloads_last_month', '\Podlove\Model\DownloadIntentClean::prev_month_downloads', DAY_IN_SECONDS);
+		$last_7_days = $cache->cache_for('podlove_downloads_last_7_days', '\Podlove\Model\DownloadIntentClean::last_7days_downloads', HOUR_IN_SECONDS);
+		$last_24_hours = $cache->cache_for('podlove_downloads_last_day', '\Podlove\Model\DownloadIntentClean::last_24hours_downloads', HOUR_IN_SECONDS);
 
 		$crunching_numbers_text = '(' . __('crunching numbers&#8230;', 'podlove-podcasting-plugin-for-wordpress') . ')';
 		?>
@@ -244,6 +246,18 @@ class Analytics {
 							<span class="analytics-description"><?php _e('Last Month', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 							<span class="analytics-value"><?php echo is_numeric($last_month['downloads']) ? number_format_i18n($last_month['downloads']) : $crunching_numbers_text; ?></span>
 							<span class="analytics-subtext"><?php echo sprintf(__('Downloads in %s', 'podlove-podcasting-plugin-for-wordpress'), $last_month['homan_readable_month']); ?></span>
+						</div>
+
+						<div class="analytics-metric-box">
+							<span class="analytics-description"><?php _e('Last 7 Days', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
+							<span class="analytics-value"><?php echo is_numeric($last_7_days) ? number_format_i18n($last_7_days) : $crunching_numbers_text; ?></span>
+							<span class="analytics-subtext"><?php echo __('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
+						</div>
+
+						<div class="analytics-metric-box">
+							<span class="analytics-description"><?php _e('Last 24 Hours', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
+							<span class="analytics-value"><?php echo is_numeric($last_24_hours) ? number_format_i18n($last_24_hours) : $crunching_numbers_text; ?></span>
+							<span class="analytics-subtext"><?php echo __('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 						</div>
 
 						<div class="clear"></div>

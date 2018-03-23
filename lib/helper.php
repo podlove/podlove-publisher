@@ -96,7 +96,10 @@ function get_setting( $namespace, $name ) {
 			'ssl_verify_peer'        => 'on',
 			'landing_page'           => 'homepage',
 			'feeds_skip_redirect'    => 'off',
-			'feeds_force_protocol'   => 'default'
+			'feeds_force_protocol'   => 'default',
+			'enable_generated_blog_post_title' => false,
+			'blog_title_template' => '%mnemonic%%episode_number% %episode_title%',
+			'episode_number_padding' => 3
 		],
 		'metadata' => [
 			'enable_episode_recording_date' => 0,
@@ -220,7 +223,7 @@ function get_webplayer_defaults() {
 	return [
 		'chaptersVisible' => 'false',
 		'inject'          => 'manually',
-		'version'         => 'player_v2',
+		'version'         => 'player_v4',
 		'playerv3theme'   => 'pwp-dark-green.min.css',
 		'podigeetheme'    => 'default',
 		'playerv4_color_primary'   => '#2B8AC6',
@@ -293,6 +296,15 @@ function relative_time_steps($time) {
 
 		return sprintf('<span title="%s">%s</span>', $formated_time_string, $time_text);
 	}
+}
+
+function episode_types()
+{
+	return [
+		'full'    => __('full (complete content of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
+		'trailer' => __('trailer (short, promotional piece of content that represents a preview of an episode)', 'podlove-podcasting-plugin-for-wordpress'),
+		'bonus'   => __('bonus (extra content for an episode, for example behind the scenes information)', 'podlove-podcasting-plugin-for-wordpress')
+	];
 }
 
 namespace Podlove\Form;

@@ -34,10 +34,13 @@ class Episode extends Wrapper {
 	/**
 	 * Title
 	 * 
+	 * Returns the episode title, if set, otherwise the post title.
+	 * If you want to access the post title directly, use `episode.post.post_title`.
+	 * 
 	 * @accessor
 	 */
 	public function title() {
-		return $this->post->post_title;
+		return new EpisodeTitle($this->episode);
 	}
 
 	/**
@@ -58,6 +61,26 @@ class Episode extends Wrapper {
 	public function summary() {
 		// @todo generate warning if a shortcode is used in summaries
 		return \Podlove\PHP\escape_shortcodes($this->episode->summary);
+	}
+
+	/**
+	 * Number
+	 * 
+	 * @accessor
+	 */
+	public function number() {
+		return $this->episode->number;
+	}
+
+	/**
+	 * Type
+	 * 
+	 * One of: full, trailer, bonus
+	 * 
+	 * @accessor
+	 */
+	public function type() {
+		return $this->episode->type;	
 	}
 
 	/**
@@ -234,6 +257,23 @@ class Episode extends Wrapper {
 	 */
 	public function imageUrlWithFallback() {
 		return new Image($this->episode->cover_art_with_fallback());
+	}
+
+	/**
+	 * Total downloads
+	 * 
+	 * Please note that this value is only updated hourly.
+	 * 
+	 * Example:
+	 * 
+	 * ```html
+	 * {{ episode.total_downloads | number_format(0, ',', '.') }}
+	 * ```
+	 * 
+	 * @accessor
+	 */
+	function total_downloads() {
+		return $this->episode->meta('_podlove_downloads_total');
 	}
 
 	/**

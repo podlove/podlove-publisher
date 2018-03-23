@@ -91,6 +91,11 @@ class Ajax {
 			$job = $j->to_array();
 
 			$job_class = $job['class'];
+
+			if (!class_exists($job_class)) {
+				$job_class = str_replace("\\\\", "\\", $job_class);
+			}
+
 			$job['title'] = $job_class::title();
 			// $job['description'] = $job_class::description();
 			$job['mode'] = $job_class::mode(maybe_unserialize($job['args']));

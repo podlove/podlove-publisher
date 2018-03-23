@@ -18,3 +18,12 @@
 	color: #82878c;
 	cursor: pointer;
 }
+
+/* episode form */
+
+.row__podlove_meta_season {
+    position: absolute;
+    right: 15px;
+    top: 0px;
+}
+.row__podlove_meta_season span { font-size: 1.2em }

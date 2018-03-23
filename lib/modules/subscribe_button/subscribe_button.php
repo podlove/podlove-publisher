@@ -50,7 +50,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 
 		$this->register_option( 'use_cdn', 'radio', [
 			'label' => __( 'Use CDN?', 'podlove-podcasting-plugin-for-wordpress' ),
-			'description' => '<p>' . __( 'Use our CDN (https://cdn.podlove.org) to always have the current version of the button on your site. Alternatively deliver the button with your own WordPress instanced with the disadvantage of not using the most recent version all the time.', 'podlove-podcasting-plugin-for-wordpress' ) . '</p>',
+			'description' => '<p>' . __( 'Use our CDN (https://cdn.podlove.org) to always have the current version of the button on your site. Alternatively deliver the button with your own WordPress instance with the disadvantage of not using the most recent version all the time.', 'podlove-podcasting-plugin-for-wordpress' ) . '</p>',
 			'default' => '1',
 			'options' => [
 				1 => __('yes, use CDN', 'podlove-podcasting-plugin-for-wordpress') . ' (' . __('recommended', 'podlove-podcasting-plugin-for-wordpress') .  ')',
@@ -65,7 +65,24 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 
 	// shortcode function
 	public static function button($args) {
-		return (new Button(Model\Podcast::get()))->render($args);
+
+		$podcast = Model\Podcast::get();
+
+		$data = [
+			'title'       => $podcast->title,
+			'subtitle'    => $podcast->subtitle,
+			'description' => $podcast->summary,
+			'cover'       => $podcast->cover_art()->setWidth(400)->url(),
+			'feeds'       => Button::feeds($podcast->feeds(['only_discoverable' => true])),
+		];
+
+		if ($podcast->language) {
+			$args['language'] = Button::language($podcast->language);
+		}
+
+		$data = apply_filters('podlove_subscribe_button_data', $data, $args, $podcast);
+
+		return (new Button())->render($data, $args);
 	}
 
 	public static function register_shortcode() {

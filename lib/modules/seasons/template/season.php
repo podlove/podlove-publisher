@@ -59,7 +59,7 @@ class Season extends Wrapper {
 	public function number() {
 		return $this->season->number();
 	}
-
+	
 	/**
 	 * Image
 	 *

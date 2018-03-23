@@ -3,6 +3,7 @@ namespace Podlove\Modules\Seasons\Settings;
 
 use \Podlove\Modules\Seasons\Model\Season;
 use \Podlove\Modules\Seasons\Model\SeasonsValidator;
+use Podlove\Model\Podcast;
 
 class Settings {
 
@@ -117,7 +118,6 @@ class Settings {
 	public function page() {
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Seasons', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
@@ -185,20 +185,33 @@ class Settings {
 		\Podlove\Form\build_for( $season, $form_args, function ( $form ) {
 			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
 			$season  = $form->object;
+			$podcast = Podcast::get();
 
 	 		$wrapper->string('title', [
 	 			'label'       => __('Title', 'podlove-podcasting-plugin-for-wordpress') . \Podlove\get_help_link('podlove_help_seasons_title'),
-	 			'html'        => ['class' => 'regular-text podlove-check-input']
+	 			'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+	 			'html'        => [
+	 				'class' => 'regular-text podlove-check-input',
+	 				'placeholder' => $podcast->title
+	 			]
 	 		]);
 
 	 		$wrapper->string('subtitle', [
 	 			'label'       => __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => ['class' => 'regular-text podlove-check-input']
+	 			'html'        => [
+	 				'class' => 'regular-text podlove-check-input',
+	 				'placeholder' => $podcast->subtitle
+	 			]
 	 		]);
 
 	 		$wrapper->text('summary', [
 	 			'label'       => __('Summary', 'podlove-podcasting-plugin-for-wordpress'),
-	 			'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow podlove-check-input' )
+	 			'html'        => [
+	 				'rows' => 3, 
+	 				'cols' => 40, 
+	 				'class' => 'autogrow podlove-check-input',
+	 				'placeholder' => $podcast->summary	 			
+	 			]
 	 		]);
 
 	 		$wrapper->string('start_date', [

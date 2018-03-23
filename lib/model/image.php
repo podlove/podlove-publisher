@@ -135,6 +135,7 @@ class Image {
 		@list($width, $height) = getimagesize($this->original_file());
 
 		if ($width * $height == 0) {
+			Log::get()->addWarning('Unable to determine image size for ' . $this->original_file());
 			return;
 		}
 
@@ -183,11 +184,21 @@ class Image {
 	 */
 	public function url() {
 
+		if (empty($this->source_url)) {
+			return null;
+		}
+
 		// In case the image cache doesn't work, it can be deactivated by 
 		// defining the PHP constant PODLOVE_DISABLE_IMAGE_CACHE = true.
 		// It's not recommended since that leads to all images being delivered full size
 		// instead of optimized resolutions.
 		if (defined('PODLOVE_DISABLE_IMAGE_CACHE') && PODLOVE_DISABLE_IMAGE_CACHE) {
+			return $this->source_url;
+		}
+
+		// if neither width nor height are available something went horribly wrong,
+		// so we better bail and return the source url instead
+		if (!$this->width && !$this->height) {
 			return $this->source_url;
 		}
 
@@ -575,7 +586,13 @@ class Image {
 		if ( ! $tmpfname )
 			return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
 
-		$response = wp_safe_remote_get( $url, array( 'timeout' => $timeout, 'stream' => true, 'filename' => $tmpfname ) );
+		$args = [
+			'timeout' => $timeout, 
+			'stream' => true, 
+			'filename' => $tmpfname, 
+			'sslverify' => \Podlove\get_setting('website', 'ssl_verify_peer') == 'on'
+		];
+		$response = wp_safe_remote_get( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
 			unlink( $tmpfname );

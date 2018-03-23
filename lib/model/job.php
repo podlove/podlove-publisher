@@ -127,6 +127,11 @@ class Job extends Base {
 		$job->state = maybe_unserialize($job->state);
 
 		$classname = $job->class;
+
+		if (!class_exists($classname)) {
+			$classname = str_replace("\\\\", "\\", $classname);
+		}
+	
 		$class = new $classname($job->args, $job);
 
 		return $class;

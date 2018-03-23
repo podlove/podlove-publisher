@@ -1,11 +1,7 @@
 <?php 
 namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 
-// use Podlove\Model;
 use Podlove\Model\Episode;
-// use Podlove\Model\Podcast;
-// use Podlove\Model\EpisodeAsset;
-// use Podlove\Model\MediaFile;
 
 class Module {
 	
@@ -26,22 +22,82 @@ class Module {
 		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
 	}
 
+	private static function module() {
+		return \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::instance();
+	}
+
+	public static function use_cdn() {
+		return self::module()->get_module_option('use_cdn', true);
+	}
+
 	public function register_scripts()
 	{
 		wp_enqueue_script(
 			'podlove-player4-embed',
-			plugins_url('dist/embed.js', __FILE__),
-			[], \Podlove\get_plugin_header('Version')
+			self::embed_script_url(self::use_cdn()),
+			[],
+			\Podlove\get_plugin_header('Version')
 		);
 	}
 
-	public static function shortcode() {
+	public static function embed_script_url($use_cdn = true)
+	{
+		if ($use_cdn) {
+			return 'https://cdn.podlove.org/web-player/embed.js';
+		} else {
+			return plugins_url('dist/embed.js', __FILE__);
+		}
+	}
+
+	public static function shortcode($args = []) {
 
 		if (is_feed())
 			return '';
 
-		$episode = Episode::find_one_by_post_id(get_the_ID());
-		$printer = new Html5Printer($episode);
+		if (isset($args['post_id'])) {
+			$post_id = $args['post_id'];
+			unset($args['post_id']);
+		} else {
+			$post_id = get_the_ID();
+		}
+
+		add_filter('podlove_player4_config', function ($config) use ($args) {
+			foreach ($args as $key => $value) {
+				$key = str_ireplace("mimetype", "mimeType", $key); // because shortcodes ignore case
+				$path = explode('_', $key);
+
+				if (count($path) === 1) {
+					$config[$path[0]] = $value;
+				}
+
+				if (count($path) === 2) {
+					if (!isset($config[$path[0]])) {
+						$config[$path[0]] = [];
+					}
+					$config[$path[0]][$path[1]] = $value;
+				}
+
+				if (count($path) === 3) {
+					if (!isset($config[$path[0]])) {
+						$config[$path[0]] = [];
+					}
+					if (!isset($config[$path[0]][$path[1]])) {
+						$config[$path[0]][$path[1]] = [];
+					}
+					$config[$path[0]][$path[1]][$path[2]] = $value;
+				}
+			}
+
+			return $config;
+		});
+
+		if (isset($args['mode']) && $args['mode'] == 'live') {
+			// live mode has no episode to reference
+			$printer = new Html5Printer();
+		} else {
+			$episode = Episode::find_one_by_post_id($post_id);
+			$printer = new Html5Printer($episode);
+		}
 
 		return $printer->render(null);
 	}

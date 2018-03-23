@@ -35,19 +35,23 @@ class Related_Episodes extends \Podlove\Modules\Base {
 		}
 
 		public function update_episode_relations($post_id) {
-			if ( !$post_id || ! isset($_POST['_podlove_meta']['related_episodes']) )
+
+			$episode = Model\Episode::find_one_by_post_id($post_id);
+
+			if (!$episode)
 				return;
 
-			$new_related_episodes = $_POST['_podlove_meta']['related_episodes'];
-			$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id);
-
-			foreach (\Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation::find_all_by_where('left_episode_id = '.$episode->id.' OR right_episode_id = '.$episode->id) as $episode_relation) {
+			$relations = EpisodeRelation::find_all_by_where('left_episode_id = ' . $episode->id . ' OR right_episode_id = ' . $episode->id);
+			foreach ($relations as $episode_relation) {
 				$episode_relation->delete();
 			}
 
-			foreach ($new_related_episodes as $episode_relation) {
-				$e = new \Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation;
-				$e->left_episode_id = $episode->id;
+			if (!isset($_POST['_podlove_meta']['related_episodes']))
+				return;
+
+			foreach ($_POST['_podlove_meta']['related_episodes'] as $episode_relation) {
+				$e = new EpisodeRelation;
+				$e->left_episode_id  = $episode->id;
 				$e->right_episode_id = $episode_relation;
 				$e->save();
 			}
@@ -69,15 +73,15 @@ class Related_Episodes extends \Podlove\Modules\Base {
 
 		public function episode_relation_form_callback($form_base_name = '_podlove_meta') {
 			$existing_episodes = array();
-			foreach (\Podlove\Model\Episode::find_all_by_time() as $episode ) {
+			foreach (Model\Episode::find_all_by_time() as $episode ) {
 				$existing_episodes[$episode->id] = get_the_title($episode->post_id);
 			}
-			$episode = \Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
+			$episode = Model\Episode::find_one_by_post_id(get_the_ID());
 
 			$existing_episode_relations = array_map( function ($episode) {
 						return $episode->to_array();
 					}, 
-					\Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation::get_related_episodes($episode->id) 
+					EpisodeRelation::get_related_episodes($episode->id) 
 				);
 			?>
 			<div id="episode-relation-form">

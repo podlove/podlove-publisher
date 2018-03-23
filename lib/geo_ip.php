@@ -6,9 +6,8 @@ use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 
 class Geo_Ip {
 
-	const GEO_FILENAME   = 'geoip.mmdb';
-	const SOURCE_URL     = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz';
-	const SOURCE_MD5_URL = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.md5';
+	const GEO_FILENAME   = 'GeoLite2-City_20180206/GeoLite2-City.mmdb';
+	const SOURCE_URL     = 'http://cdn.podlove.org/publisher/GeoLite2-City_20180206.tar.gz';
 
 	/**
 	 * Register hooks.
@@ -69,42 +68,30 @@ class Geo_Ip {
 		update_option('podlove_geo_tracking', 'on');
 	}
 
-	// @todo it technically verifies that the files is valid AND up-to-date,
-	// which may result in false-negatives. But that is fine with me, better 
-	// than false positives.
-	public static function is_db_valid($file_to_verify = null)
+	public static function is_db_valid()
 	{
-		if ($file_to_verify === null) {
-			$file_to_verify = self::get_upload_file_path();
+		try {
+			$reader = new \GeoIp2\Database\Reader(self::get_upload_file_path());
+			return true;
+		} catch (\Exception $e) {
+			return false;
 		}
-
-		$original_md5 = wp_remote_fopen(self::SOURCE_MD5_URL);
-		$our_md5      = md5_file($file_to_verify);
-
-		return $original_md5 === $our_md5;
 	}
 
 	public static function get_upload_file_path()
 	{
-		$upload_dir = wp_upload_dir();
-		return $upload_dir['basedir'] . DIRECTORY_SEPARATOR . self::GEO_FILENAME;
+		return self::get_upload_file_dir()  . DIRECTORY_SEPARATOR . self::GEO_FILENAME;
 	}
 
-	public static function get_tmp_file_path()
+	public static function get_upload_file_dir()
 	{
-		return self::get_upload_file_path() . '.tmp';
+		$upload_dir = wp_upload_dir();
+		return $upload_dir['basedir'];
 	}
 
 	public static function update_database()
 	{
 		set_time_limit(0);
-
-		// skip if database has not changed
-		if (self::is_db_valid()) {
-			return;
-		}
-
-		$tmpFilePath = self::get_tmp_file_path();
 
 		// for download_url()
 		require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -114,37 +101,14 @@ class Geo_Ip {
 		if (is_wp_error($tmpFile))
 			die($tmpFile->get_error_message());
 
-		$zh = gzopen($tmpFile, 'rb');
-		$h  = fopen($tmpFilePath, 'wb');
+		// decompress from gz
+		$p = new \PharData($tmpFile);
+		$file2 = $p->decompress(); // creates files.tar
+		 
+		// unarchive from the tar
+		$phar = new \PharData($file2->getPath());
+		$phar->extractTo(self::get_upload_file_dir()); 
 
-		if (!$zh) {
-			error_log(print_r('Downloaded file could not be opened for reading.', true));
-			exit;
-		}
-
-		if (!$h) {
-			error_log(print_r(sprintf('Database could not be written (%s).', $tmpFilePath), true));
-			exit;
-		}
-
-		while(!gzeof($zh))
-		    fwrite($h, gzread($zh, 4096));
-
-		gzclose($zh);
-		fclose($h);
-
-		unlink($tmpFile);
-
-		if (self::is_db_valid($tmpFilePath)) {
-			@rename($tmpFilePath, self::get_upload_file_path());
-			self::enable_tracking();
-		} else {
-			if (!self::is_db_valid()) {
-				self::disable_tracking();
-			}
-			wp_delete_file($tmpFilePath);
-			error_log(print_r(sprintf('Checksum does not match (%s).', $tmpFilePath), true));
-		}
+		self::enable_tracking();
 	}
-
 }

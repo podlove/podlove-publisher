@@ -253,29 +253,9 @@ class Contributor extends Base
 
 	/**
 	 * Calculates episode contributions and stores them in contributioncount attribute
-	 *
-	 * Note: Counts only one contribution per episode even if one contributor has
-	 * multiple contributions in an episode.
 	 */
 	public function calcContributioncount() {
-		global $wpdb;
-
-		$sql = "
-			SELECT COUNT(*) FROM (
-				SELECT
-					ec.contributor_id, ec.episode_id
-				FROM
-					" . EpisodeContribution::table_name() . " ec
-					JOIN " . Episode::table_name() . " e ON e.id = ec.episode_id
-					JOIN " . $wpdb->posts . " p ON p.ID = e.post_id
-				WHERE
-					ec.contributor_id = %d
-				GROUP BY
-					ec.episode_id
-			) x
-		";
-
-		$this->contributioncount = $wpdb->get_var($wpdb->prepare($sql, $this->id));
+		$this->contributioncount = $this->getPublishedContributionCount();
 		$this->save();
 	}
 

@@ -41,7 +41,7 @@ namespace Podlove;
 use \Podlove\Model;
 use \Podlove\Jobs\CronJobRunner;
 
-define( __NAMESPACE__ . '\DATABASE_VERSION', 127 );
+define( __NAMESPACE__ . '\DATABASE_VERSION', 139 );
 
 add_action( 'admin_init', '\Podlove\maybe_run_database_migrations' );
 add_action( 'admin_init', '\Podlove\run_database_migrations', 5 );
@@ -1306,6 +1306,65 @@ function run_migrations_for_version( $version ) {
 				'ALTER TABLE `%s` CHANGE COLUMN `slug` `identifier` VARCHAR(255)',
 				\Podlove\Modules\Contributors\Model\Contributor::table_name()
 			) );
+		break;
+		case 132:
+			$sql1 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `title` TEXT',
+				Model\Episode::table_name()
+			);
+			$sql2 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `number` INT UNSIGNED',
+				Model\Episode::table_name()
+			);
+			$sql3 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `type` VARCHAR(10)',
+				Model\Episode::table_name()
+			);
+			$wpdb->query($sql1);
+			$wpdb->query($sql2);
+			$wpdb->query($sql3);
+		break;
+		case 133:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `mnemonic` VARCHAR(8)',
+				\Podlove\Modules\Seasons\Model\Season::table_name()
+			) );
+		break;
+		case 134:
+			$file_type = ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text',  'extension' => 'txt'];
+			
+			if (!Model\FileType::find_one_by_name($file_type['name'])) {
+				$f = new Model\FileType;
+				foreach ($file_type as $key => $value) {
+					$f->{$key} = $value;
+				}
+				$f->save();
+			}
+		break;
+		case 135:
+			delete_option(\Podlove\Modules\TitleMigration\State::OPTION);
+			\Podlove\Modules\Base::activate('title_migration');
+		break;
+		case 136:
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::update_existing_services();
+				\Podlove\Modules\Social\Social::build_missing_services();
+			}
+		break;
+		case 137:
+			$wpdb->query( sprintf(
+				'ALTER TABLE `%s` DROP COLUMN `mnemonic`',
+				\Podlove\Modules\Seasons\Model\Season::table_name()
+			) );
+		break;
+		case 138:
+			if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+				\Podlove\Modules\Social\Social::update_existing_services();
+				\Podlove\Modules\Social\Social::build_missing_services();
+			}
+		break;
+		case 139:
+			\Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::instance()->update_module_option('use_cdn', false);
 		break;
 	}
 

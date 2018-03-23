@@ -37,17 +37,7 @@ class SystemReport {
 			'db_collate' => array( 'title' => 'WordPress Database Collate', 'callback' => function() { return DB_COLLATE; } ),
 			'podlove_version' => array( 'title' => 'Publisher Version', 'callback' => function() { return \Podlove\get_plugin_header( 'Version' ); } ),
 			'player_version'  => array( 'title' => 'Web Player Version', 'callback' => function() {
-
-				if ( ! defined( 'PODLOVEWEBPLAYER_DIR' ) )
-					return 'no web player found';
-
-				$pwp_file = PODLOVEWEBPLAYER_DIR . 'podlove-web-player.php';
-				if ( ! is_readable( $pwp_file ) )
-					return 'not readable';
-
-				$plugin_data = \get_plugin_data( $pwp_file );
-
-				return $plugin_data['Version'];
+				return \Podlove\get_webplayer_setting('version');
 			} ),
 			'twig_version' => array( 'title' => 'Twig Version', 'callback' => function() {
 				return \Twig_Environment::VERSION;

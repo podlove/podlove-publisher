@@ -103,7 +103,7 @@ function template_shortcode( $attributes ) {
 			$html = wpautop($html);
 
 		return do_shortcode($html);
-	});
+	}, HOUR_IN_SECONDS);
 }
 add_shortcode( 'podlove-template', '\Podlove\template_shortcode' );
 

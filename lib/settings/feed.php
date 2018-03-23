@@ -153,7 +153,6 @@ class Feed {
 		}
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php echo __( 'Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			
@@ -277,15 +276,45 @@ class Feed {
 					'default' => '-1'
 				) );
 
+				$wrapper->select( 'feed_episode_title_variant', array(
+					'label'       => __( 'Episode Title', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'How should the episode title appear in the feed?', 'podlove-podcasting-plugin-for-wordpress' ),
+					'options' => [
+						'blog' => __('Blog Post Title', 'podlove-podcasting-plugin-for-wordpress'),
+						'episode' => __('Episode Title', 'podlove-podcasting-plugin-for-wordpress'),
+						'template' => __('Custom Template', 'podlove-podcasting-plugin-for-wordpress')
+					],
+					'please_choose' => false,
+					'default' => 'blog'
+				) );
+
+				$wrapper->string( 'feed_episode_title_template', array(
+					'label'       => __( 'Episode Title Template', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( 'If you chose in the template option above, define the template here. Placeholders: ', 'podlove-podcasting-plugin-for-wordpress' ) . '%mnemonic%, %episode_number%, %season_number%, %episode_title%',
+					'html' => array( 'class' => 'regular-text required' ),
+					'default' => '%mnemonic%%episode_number% %episode_title%'
+				) );
+
 			});
 			?>
 		</form>
 		<?php
 	}
 
-	public function save_global_feed_setting() {
-  		$podcast_settings = get_option('podlove_podcast');
-  		$podcast_settings['limit_items'] = (int) $_REQUEST['podlove_podcast']['limit_items'];
+	public function save_global_feed_setting()
+	{
+  		$podcast_settings = get_option('podlove_podcast', []);
+
+  		$args = filter_var_array($_REQUEST['podlove_podcast'], [
+			'limit_items' => FILTER_SANITIZE_NUMBER_INT,
+			'feed_episode_title_variant' => FILTER_SANITIZE_STRING,
+			'feed_episode_title_template' => FILTER_SANITIZE_STRING
+  		]);
+
+  		$podcast_settings['limit_items'] = $args['limit_items'];
+  		$podcast_settings['feed_episode_title_variant'] = $args['feed_episode_title_variant'];
+  		$podcast_settings['feed_episode_title_template'] = $args['feed_episode_title_template'];
+
   		update_option('podlove_podcast', $podcast_settings);
   		\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
 		header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
@@ -344,7 +373,7 @@ class Feed {
 
 			$wrapper->string( 'slug', array(
 				'label'       => __( 'Slug', 'podlove-podcasting-plugin-for-wordpress' ) . \Podlove\get_help_link('podlove_help_feed_slug'),
-				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove-podcasting-plugin-for-wordpress' ), '<span id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
+				'description' => ( $feed ) ? sprintf( __( 'Feed identifier. URL Preview: %s', 'podlove-podcasting-plugin-for-wordpress' ), '<span data-url="' . esc_attr($feed->get_subscribe_url()) . '" id="feed_subscribe_url_preview">' . $feed->get_subscribe_url() . '</span>' ) : '',
 				'html'        => array( 'class' => 'regular-text required podlove-check-input' )
 			) );
 

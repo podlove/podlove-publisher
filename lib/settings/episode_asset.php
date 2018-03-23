@@ -195,7 +195,6 @@ class EpisodeAsset {
 		}
 		?>
 		<div class="wrap">
-			<?php screen_icon( 'podlove-podcast' ); ?>
 			<h2><?php _e( 'Episode Assets', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php _e( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
 			<?php
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : NULL;
