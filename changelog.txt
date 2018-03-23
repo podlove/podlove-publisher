@@ -1,3 +1,90 @@
+= 2.7.0 =
+
+**New Module: Shows**
+
+With shows you can offer feeds to subtopics of your podcast. Here's how it works: You create a show and define show meta, similar to a podcast: title, slug, subtitle, summary, image and language. These fields override your podcast settings. All other settings are the same as your podcast.
+
+For each episode, you decide which show it's in. Each show has its own set of feeds that listeners can subscribe to. The main feed remains unchanged, containing all episodes from all shows.
+
+The Podlove Subscribe Button can be configured to subscribe to a show by referencing the show slug. Use the shortcode `[podlove-subscribe-button show="show-slug"]` or the template tag `{ podcast.subscribeButton({show: 'show-slug'}) }}`.
+
+We do not recommend using Shows and Seasons at the same time.
+
+**Updated Metadata for Podcast/Episode/Seasons according to iOS11 Specification**
+
+Apple announced an [updated specification for feed elements](http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf). These changes enable the Apple Podcasts app to present podcasts in a better way. But since these feed extensions are readable by any podcast client, we expect others to take advantage of these new fields soon. Here is how we implemented the specification:
+
+- The podcast has a new "type" field where you can select between "episodic" and "serial", which may affect the order of episodes. The field `<itunes:type>episodic</itunes:type>` appears in the feed.
+- Episodes have a new "title" field. It defaults to the episode post title but can be set separately now, allowing you to define different titles for the website and podcast clients. The field `<itunes:title>Interview with Somebody Infamous</itunes:title>` will appear in the feed.
+- Episodes have a new "type" field where you can select between "full" (default), "trailer" and "bonus". This won't have any effect in the Publisher but may be used by podcast clients. The field `<itunes:episodeType>full</itunes:episodeType>` appears in the feed.
+- Episodes have a new "number" field. If used, `<itunes:episode>42</itunes:episode>` will appear in the feed.
+- Episodes in seasons will have an `<itunes:season>2</itunes:season>` field in the feed automatically.
+
+We decided to complement these changes by introducing a podcast mnemonic/abbreviation field. Now we can autogenerate blog episode titles, based on the episode number and title, if you like. The mnemonic can be set in podcast settings. The setting to autogenerate blog episode titles is an expert setting in the "Website" section.
+
+To help existing podcasts to conform to these new fields we made a "Title Migration" module which will greet you with a notice once you update the Publisher. It will try to extract episode numbers and titles from your existing titles, saving you time and effort updating each episode one by one.
+
+**Template API Changes**
+
+- `episode.title` now returns the new episode title field, if it is set, but has a fallback to the post title. If you want a specific version, use `episode.title.clean` or `episode.title.blog`.
+- the post title of an episode can still be accessed via `episode.post.post_title`
+- new accessor: `episode.number`
+- new accessor: `episode.type`
+- new accessor: `podcast.mnemonic`
+- new accessor: `podcast.type`
+- new accessor: `season.mnemonic`
+
+**Podlove Web Player 4**
+
+The Shortcode `[podlove-web-player]` accepts several parameters, increasing its versatility.
+
+With `post_id` you can embed episodes on any page, for example `[podlove-web-player post_id="1234"]`.
+
+Every [config parameter available](http://docs.podlove.org/podlove-web-player/config.html) can be overridden using shortcode attributes. The only difference from the linked documentation page is the notation. For nested configs like `show.title` use underscores (`_`) instead. For example, display a green player with custom title like this: `[podlove-web-player show_title="Special Title" theme_main="#00ff00"]`
+
+You can now also display a player with _live content_ like this: `[podlove-web-player mode="live" audio_0_url="http://mp3.theradio.cc/" audio_0_mimeType="audio/mp3" title="Livestream" link="https://theradio.cc"]`
+
+You can choose to deliver Podlove Player via Podlove CDN (Content Delivery Network) or via your WordPress server. CDN is the default for new setups but if you are already using Podlove Publisher we continue delivering Podlove Player via your WordPress server unless you explicitly change it.
+
+Podlove Web Player 4 is the new default player.
+
+**Other**
+
+* analytics: show download totals for last 24 hours and last 7 days in overview
+* Podigee Player: add support for transcripts
+    - create a Podigee Transcript asset
+    - set this asset in Expert Settings > Web Player
+    - See https://cdn.podigee.com/ppp/samples/transcript.txt for an example transcript
+* Podlove Web Player 4: support contributors
+* player settings: when no episode or files are available, use a "Podlove" demo sound
+* reduce Podlove Template Cache duration from 1 day to 1 hour for the following change:
+* new template accessor: `{{ episode.total_downloads }}`
+* New in "Global Feed Settings": An option for how the episode title should be displayed. It defaults to "Blog Post Title", so that after the iOS 11 title migration, the output does not actually change -- following the principle of least surprise. However, the setting can be changed to "Episode Title", which is the new clean title, or "Custom Template", which is a title template with the same capabilities as the blog post title template.
+* when using the Podlove Subscribe Button CDN and the CDN is not reachable, fall back to the locally hosted script
+* fix Geo DB Updater: use our own Podlove CDN as download source
+* fix quotes in contributor fields
+* fix WordPress conditionals in episode archives
+* fix deleting related episodes ([#907](https://github.com/podlove/podlove-publisher/issues/907))
+* fix network admin bar now does not include broken links if Publisher is not activated network-wide ([#933](https://github.com/podlove/podlove-publisher/issues/933))
+* fix import getting stuck issue ([#910](https://github.com/podlove/podlove-publisher/issues/910))
+* Bitlove module: remove all frontend functionality because it has been dysfunctional for a long time 
+* fix Auphonic module showing wrong status message after file upload
+* fix Audacity chapter import when times contain commas
+* fix email notification issue where not emails were sent ([#938](https://github.com/podlove/podlove-publisher/issues/938))
+* fix feed redirect issue for HTTP/1.0 clients
+* fix network module: only activate when the plugin is activated network-wide, not when the plugin in active within a multisite
+* fix calculation of contribution counts
+* Fix various issues in the download table display. Until now, new downloads were calculated hourly, which provides a good estimate but often not exact numbers. The calculation could also get stuck, leading to missing data display. From now on, the estimates are still calculated hourly but additionally _a full, precise aggregation is done once a day_, which should lead to more consistent numbers overall.
+* enhance email error reporting
+* enhance open graph module: detects WP SEO plugin and does not output any tags to avoid conflicts
+* social services: add SlideShare
+* show warning if upload directory is not fully qualified
+* remove download section from default template (because it is included in PWP4)
+* image cache: instead of returning invalid URLs with 0 width and 0 height when something goes wrong, return the source URL instead
+* episode list: add display option to display episode number as a column
+ add Liberapay as donation service
+* display current season in episode form
+
 = 2.6.4 =
 
 Podlove Web Player 2: 
