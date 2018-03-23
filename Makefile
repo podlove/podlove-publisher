@@ -21,6 +21,7 @@ player:
 	cp -r $(player_src)/js/vendor/*.min.js $(player_dst)/js/vendor
 
 build:
+	composer dumpautoload -o
 	rm -rf dist
 	mkdir dist
 	# move everything into dist
