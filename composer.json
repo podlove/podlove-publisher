@@ -1,7 +1,10 @@
 {
+    "name": "podlove/podcast-publisher",
+    "description": "Podcast Publishing Plugin for WordPress",
+    "license": "MIT",
     "require": {
         "php": ">=5.3.0 <5.5",
-        "podlove/podlove-timeline": ">=1.1.0",
+        "podlove/podlove-timeline": "1.*",
         "monolog/monolog": "1.*",
         "symfony/yaml": "2.8.*",
         "twig/twig": "1.*",
@@ -11,9 +14,7 @@
         "ramsey/array_column": "~1.1",
         "piwik/device-detector": "~3.7",
         "phpunit/php-timer": "~1.0",
-        "podlove/webvtt-parser": "^1.1"
-    },
-    "require-dev": {
+        "podlove/webvtt-parser": "^1.1",
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
         "phpunit/phpunit": "4.8.*"
