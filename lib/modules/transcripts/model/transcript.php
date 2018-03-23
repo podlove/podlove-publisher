@@ -9,6 +9,18 @@ class Transcript extends \Podlove\Model\Base
 		$this->set_blog_id();
 	}
 
+	public static function exists_for_episode($episode_id)
+	{
+		global $wpdb;
+
+		$sql = 'SELECT id FROM '
+		     . static::table_name()
+		     . ' WHERE episode_id = ' . (int) $episode_id
+		     . ' LIMIT 1';
+
+		return $wpdb->get_var($sql) > 0;
+	}
+
 	public static function delete_for_episode($episode_id)
 	{
 		global $wpdb;

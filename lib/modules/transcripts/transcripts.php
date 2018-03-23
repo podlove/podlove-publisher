@@ -35,8 +35,6 @@ class Transcripts extends \Podlove\Modules\Base {
 			$post_id = get_the_ID();
 			$episode = Model\Episode::find_one_by_post_id($post_id);
 
-			error_log(print_r($episode, true));
-
 			if (!$episode) {
 				return $data;
 			}
@@ -57,6 +55,8 @@ class Transcripts extends \Podlove\Modules\Base {
 			unset($data['transcript_voice']); 
 			return $data;
 		});
+
+		add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
 
 		add_action('wp', [$this, 'serve_transcript_file']);
 	}
@@ -199,5 +199,13 @@ class Transcripts extends \Podlove\Modules\Base {
 				exit;
 				break;
 		}
+	}
+
+	public function add_playerv4_config($config, $episode) {
+		if (Transcript::exists_for_episode($episode->id)) {
+			// todo: add parameter with add_query_arg
+			$config['transcripts'] = get_permalink($episode->post_id) . '?podlove_transcript=json';
+		}
+		return $config;
 	}
 }
