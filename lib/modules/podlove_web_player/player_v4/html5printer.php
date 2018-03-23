@@ -59,7 +59,9 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 			],
 			'theme' => [
 				'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000')
-			]
+			],
+			// todo: add parameter with add_query_arg
+			'transcripts' => get_permalink($episode->post_id) . '?podlove_transcript=json'
 		];
 
 		if (!Module::use_cdn()) {
@@ -128,7 +130,8 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 						'avatar' => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
 						'role' => $c->hasRole() ? $c->getRole()->to_array() : null,
 						'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
-						'comment' => $c->comment
+						'comment' => $c->comment,
+						'id' => $contributor->identifier
 					];
 				}, EpisodeContribution::find_all_by_episode_id($episode->id)));
 			}

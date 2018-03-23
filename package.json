@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "npm": "^5.7.1",
-    "vue-template-compiler": "^2.2.6"
+    "axios": "^0.18.0",
+    "vue-axios": "^2.0.2",
+    "vue-select": "^2.4.0"
   }
 }

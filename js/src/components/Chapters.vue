@@ -425,9 +425,11 @@ label[for=chapter_url] small {
     line-height: 24px;
     background: #f6f6f6;
 }
-a.chapters-tab {
+a.chapters-tab, a.chapters-tab:focus {
     text-decoration: none;
     color: #555;
+    outline: none;
+    box-shadow: none
 }
 .chapters-tab-active,
 .chapters-tab:hover{

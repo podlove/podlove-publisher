@@ -74,6 +74,10 @@ class Notifications extends \Podlove\Modules\Base {
 
 		$episode = Episode::find_one_by_property('post_id', (int) $post_id);
 
+		if (!$episode) {
+			return;
+		}
+
 		$contributors = $this->get_contributors_to_be_notified($episode);
 
 		// stop if there is no one to be notified

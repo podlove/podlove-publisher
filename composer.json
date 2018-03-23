@@ -10,7 +10,8 @@
         "geoip2/geoip2": "~2.0",
         "ramsey/array_column": "~1.1",
         "piwik/device-detector": "~3.7",
-        "phpunit/php-timer": "~1.0"
+        "phpunit/php-timer": "~1.0",
+        "podlove/webvtt-parser": "^1.1"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
