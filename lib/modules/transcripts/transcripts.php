@@ -59,6 +59,10 @@ class Transcripts extends \Podlove\Modules\Base {
 		add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
 
 		add_action('wp', [$this, 'serve_transcript_file']);
+
+		\Podlove\Template\Episode::add_accessor(
+			'transcript', array('\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'), 4
+		);
 	}
 
 	public function was_activated($module_name) {

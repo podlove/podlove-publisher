@@ -37,6 +37,7 @@ $dynamicAccessorClasses = [
 	'\Podlove\Modules\Shows\TemplateExtensions',
 	'\Podlove\Modules\Social\TemplateExtensions',
 	'\Podlove\Modules\SubscribeButton\TemplateExtensions',
+	'\Podlove\Modules\Transcripts\TemplateExtensions'
 ];
 
 $classes = [
@@ -61,7 +62,8 @@ $classes = [
 	'\Podlove\Modules\Shows\Template\Show',
 	'\Podlove\Modules\Social\Template\Service',
 	'\Podlove\Modules\Networks\Template\Network',
-	'\Podlove\Modules\Networks\Template\PodcastList'
+	'\Podlove\Modules\Networks\Template\PodcastList',
+	'\Podlove\Modules\Transcripts\Model\Transcript'
 ];
 
 // first, parse dynamic accessors

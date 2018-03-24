@@ -103,6 +103,29 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-03-24 =
+
+Transcripts can now be rendered using the Template API. Here's an example template to get started:
+
+```
+<style>
+.ts-line { margin-bottom: 5px; }
+.ts-line .time { font-family: monospace; }
+</style>
+
+{% for line in episode.transcript %}
+ <div class="ts-line">
+     <small>
+     <span class="time">{{ line.start }}&ndash;{{ line.end }}</span>
+     {% if line.contributor %}
+       <strong>{{ line.contributor.name }}</strong>
+     {% endif %}
+     </small>
+     <div>{{ line.content }}</div>
+ </div>
+{% endfor %}
+```
+
 = 2018-03-23 =
 
 - fix: no transcripts tab in player when there are no transcripts
