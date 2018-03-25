@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-03-25 =
+
+- when a tracking request does not work because the asset is configured as not downloadable, respond with 403 instead of 404
+
 = 2018-03-24 =
 
 Transcripts can now be rendered using the Template API. Here's an example template to get started:

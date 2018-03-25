@@ -98,8 +98,13 @@ function podlove_handle_media_file_download() {
 
 	$episode_asset = $media_file->episode_asset();
 
-	if ( ! $episode_asset || ! $episode_asset->downloadable ) {
+	if ( ! $episode_asset ) {
 		status_header( 404, 'Asset not found' );
+		exit;
+	}
+
+	if ( ! $episode_asset->downloadable ) {
+		status_header( 403, 'Asset is not configured for download' );
 		exit;
 	}
 
