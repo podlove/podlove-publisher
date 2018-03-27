@@ -9,8 +9,11 @@ add_filter('the_title', 'podlove_maybe_override_post_titles', 10, 2);
 add_filter('the_title_rss', 'podlove_maybe_override_rss_post_titles', 3);
 add_action('admin_print_scripts', 'podlove_override_post_title_script');
 
-function podlove_maybe_override_post_titles($original_title, $post_id) 
+function podlove_maybe_override_post_titles($original_title, $post_id = null) 
 {
+	if (is_null($post_id))
+		$post_id = get_the_ID();
+
 	if (get_post_type($post_id) !== 'podcast')
 		return $original_title;
 
