@@ -219,7 +219,7 @@ class Title_Migration extends \Podlove\Modules\Base {
 
 		$title = substr($post_title, $offset);
 		$title = trim($title);
-		$title = preg_replace("/^[-–~\s|]+/", "", $title);
+		$title = preg_replace("/^[-–~\s|:]+/", "", $title);
 
 		return [
 			'title'  => $title,
