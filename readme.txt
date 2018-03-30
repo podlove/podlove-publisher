@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.1 =
+
+* fix: PHP warning when the_title filter is called with only one parameter
+
 = 2.7.0 =
 
 **New Module: Shows**
