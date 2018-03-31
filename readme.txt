@@ -107,6 +107,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * fix: PHP warning when the_title filter is called with only one parameter
 * fix: handle colons in migration tool
+* fix: PWP4 warning when using shortcode
 
 = 2.7.0 =
 
