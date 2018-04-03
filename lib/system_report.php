@@ -22,6 +22,16 @@ class SystemReport {
 				$theme = wp_get_theme();
 				return $theme->get('Name') . ' v' . $theme->get('Version'); }
 			),
+			'active plugins' => array('title' => 'Active Plugins', 'callback' => function() {
+				$separator = "\n           - ";
+				return $separator . implode(
+					array_map(
+						function($plugin_path) {
+							$plugin = get_plugin_data(trailingslashit(WP_PLUGIN_DIR) . $plugin_path); 
+							return sprintf("%s v%s", $plugin["Name"], $plugin["Version"]);
+						}, get_option('active_plugins')
+					), $separator);
+			}),
 			'db_charset' => array( 'title' => 'WordPress Database Charset', 'callback' => function() use ( &$notices ) {
 				// Fetch Episode Database Info from "information_scheme" Table
 				$db_connection = new \wpdb(DB_USER, DB_PASSWORD, 'information_schema', DB_HOST);

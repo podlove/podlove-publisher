@@ -106,6 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.7.2 =
 
 * fix: `itunes:image` tag in show feeds
+* system report: include active plugins
 
 = 2.7.1 =
 
