@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.2 =
+
+* fix: `itunes:image` tag in show feeds
+
 = 2.7.1 =
 
 * fix: PHP warning when the_title filter is called with only one parameter
