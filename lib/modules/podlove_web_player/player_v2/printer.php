@@ -100,36 +100,12 @@ class Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterfac
 		}
 
 		// add all sources
-		$flash_fallback_func = function( &$xml ) {};
 		foreach ( $sorted_files as $file ) {
 			$mime_type = $file['mime_type'];
-
 			$source = $xml->addChild('source');
 			$source->addAttribute( 'src', $file['publicUrl'] );
 			$source->addAttribute( 'type', $mime_type );
-
-			if ( $mime_type == 'audio/mpeg' ) {
-				$flash_fallback_func = function( &$xml ) use ( $file ) {
-					$flash_fallback = $xml->addChild('object');
-					$flash_fallback->addAttribute( 'type', 'application/x-shockwave-flash' );
-					$flash_fallback->addAttribute( 'data', plugins_url( 'player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf' );
-
-					$params = array(
-						array( 'name' => 'movie', 'value' => plugins_url( 'player/podlove-web-player/static/', __FILE__) . 'flashmediaelement.swf' ),
-						array( 'name' => 'flashvars', 'value' => 'controls=true&file=' . $file['url'] )
-					);
-
-					foreach ( $params as $param ) {
-						$p = $flash_fallback->addChild( 'param' );
-						$p->addAttribute( 'name', $param['name'] );
-						$p->addAttribute( 'value', $param['value'] );
-					}
-					
-				};
-			}
 		}
-		// add flash fallback after all <source>s
-		$flash_fallback_func( $xml );
 
 		// prettify and prepare to render
 		$xml_string = $xml->asXML();

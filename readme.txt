@@ -106,6 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.7.3 =
 
 * fix: geo database updater
+* update Podlove Web Player 2: remove Flash Fallback
 
 = 2.7.2 =
 
