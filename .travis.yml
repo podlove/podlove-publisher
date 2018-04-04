@@ -3,20 +3,11 @@ sudo: false
 
 php:
 - 5.4
-- 5.6
-- 7.0
+- 7.2
 
 env:
 - WP_VERSION=latest WP_MULTISITE=0
-- WP_VERSION=4.0 WP_MULTISITE=0
-- WP_VERSION=3.9.2 WP_MULTISITE=0
-
-matrix:
-  exclude:
-  - php: hhvm
-    env: WP_VERSION=3.9.2 WP_MULTISITE=0
-  - php: hhvm
-    env: WP_VERSION=4.0 WP_MULTISITE=0
+- WP_VERSION=4.4 WP_MULTISITE=0
 
 before_install:
 - git submodule update --init --recursive
