@@ -107,14 +107,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Add changes from 2.7 branch:
 
-== 2.7.2 ==
+_2.7.2_
 
 * fix: `itunes:image` tag in show feeds
 * fix: "Debug Tracking" choosing wrong media files to check availability
 * enhancement: "Debug Tracking" now suggests disabling SSL-peer-verification if URL cannot be resolved and https is used
 * system report: include active plugins
 
-== 2.7.1 ==
+_2.7.1_
 
 * fix: PHP warning when the_title filter is called with only one parameter
 * fix: handle colons in migration tool
