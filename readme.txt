@@ -105,6 +105,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2018-04-04 =
 
+* update webvtt parser
+
 Add changes from 2.7 branch:
 
 _2.7.3_

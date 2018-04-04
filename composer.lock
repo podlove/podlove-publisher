@@ -1201,16 +1201,16 @@
         },
         {
             "name": "podlove/webvtt-parser",
-            "version": "v1.1.0",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/podlove/webvtt-parser.git",
-                "reference": "3dcab14f2943ff0631434339286c2b5c13aed446"
+                "reference": "b7d22afad859ad3f6137c428f01b51c818fd3a1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/podlove/webvtt-parser/zipball/3dcab14f2943ff0631434339286c2b5c13aed446",
-                "reference": "3dcab14f2943ff0631434339286c2b5c13aed446",
+                "url": "https://api.github.com/repos/podlove/webvtt-parser/zipball/b7d22afad859ad3f6137c428f01b51c818fd3a1b",
+                "reference": "b7d22afad859ad3f6137c428f01b51c818fd3a1b",
                 "shasum": ""
             },
             "require": {
@@ -1244,7 +1244,7 @@
                 "podlove",
                 "webvtt"
             ],
-            "time": "2018-03-03T06:17:30+00:00"
+            "time": "2018-04-04T12:55:37+00:00"
         },
         {
             "name": "psr/log",
