@@ -190,7 +190,7 @@ class Shows extends \Podlove\Modules\Base {
 				break;
 				case 'image':
 					if ($show->image) {
-						return sprintf('<itunes:image>%s</itunes:image>', $show->image);
+						return sprintf('<itunes:image href="%s"/>', esc_attr($show->image));
 					}
 				break;
 				case 'image_url':

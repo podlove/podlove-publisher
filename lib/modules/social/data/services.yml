@@ -411,3 +411,11 @@
   description: 'Email'
   logo: 'email.png'
   url_scheme: 'mailto:%account-placeholder%'
+
+- title: 'Letterboxd'
+  name: 'letterboxd'
+  category: 'social'
+  description: 'Letterboxd Username'
+  logo: 'letterboxd.png'
+  url_scheme: 'https://letterboxd.com/%account-placeholder%'
+  

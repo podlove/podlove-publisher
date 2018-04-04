@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 4.9.4
+Tested up to: 4.9.5
 Requires PHP: 5.4
 Stable tag: trunk
 License: MIT
@@ -102,6 +102,24 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2018-04-04 =
+
+Add changes from 2.7 branch:
+
+== 2.7.2 ==
+
+* fix: `itunes:image` tag in show feeds
+* fix: "Debug Tracking" choosing wrong media files to check availability
+* enhancement: "Debug Tracking" now suggests disabling SSL-peer-verification if URL cannot be resolved and https is used
+* system report: include active plugins
+
+== 2.7.1 ==
+
+* fix: PHP warning when the_title filter is called with only one parameter
+* fix: handle colons in migration tool
+* fix: PWP4 warning when using shortcode
+* new service: letterboxd
 
 = 2018-03-25 =
 

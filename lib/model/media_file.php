@@ -40,21 +40,30 @@ class MediaFile extends Base {
 	 * - ORDER BY e.id DESC, mf.id ASC: get a recent episode and the first asset
 	 */
 	public static function find_example() {
-		return self::find_one_by_sql("
-			SELECT
-				mf.*
-			FROM
-				" . MediaFile::table_name() . " mf
-				JOIN " . EpisodeAsset::table_name() . " a ON a.id = mf.`episode_asset_id`
-				JOIN " . Episode::table_name() . " e ON e.id = mf.`episode_id`
-				JOIN " . FileType::table_name() .  " ft ON ft.id = a.file_type_id
-			WHERE
-				a.`downloadable` 
-				AND mf.size > 0
-				AND ft.type = 'audio'
-			ORDER BY e.id DESC, mf.id ASC
-			LIMIT 0,1
-		");
+		$episode = Episode::latest();
+
+		if (!$episode) {
+			return;
+		}
+
+		$files = $episode->media_files();
+
+		$files = array_filter($files, function ($file)
+		{
+			$asset = $file->episode_asset();
+
+			if (!$asset)
+				return false;
+
+			$file_type = $asset->file_type();
+
+			if (!$file_type)
+				return false;
+
+			return $asset->downloadable && $file_type->type == 'audio';
+		});
+
+		return reset($files);
 	}
 
 	public static function find_or_create_by_episode_id_and_episode_asset_id( $episode_id, $episode_asset_id ) {
