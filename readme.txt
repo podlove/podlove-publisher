@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.4 =
+
+No changes, but the previous release is not delivered correctly by WordPress, so this is simply a re-release attempt to fix it.
+
 = 2.7.3 =
 
 * fix: geo database updater
