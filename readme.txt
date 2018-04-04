@@ -106,6 +106,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.7.2 =
 
 * fix: `itunes:image` tag in show feeds
+* fix: "Debug Tracking" choosing wrong media files to check availability
+* enhancement: "Debug Tracking" now suggests disabling SSL-peer-verification if URL cannot be resolved and https is used
 * system report: include active plugins
 
 = 2.7.1 =

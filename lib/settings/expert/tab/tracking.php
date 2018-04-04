@@ -217,6 +217,9 @@ class Tracking extends Tab {
 								✔ <?php _e('URL resolves correctly', 'podlove-podcasting-plugin-for-wordpress') ?>
 							<?php else: ?>
 								✘ <strong><?php _e('URL does not resolve correctly', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
+								<?php if (stristr($actual_url, 'https') !== false && \Podlove\get_setting('website', 'ssl_verify_peer') == 'on'): ?>
+									<em><?php echo sprintf(__('The cause might be a server specific SSL misconfiguration. To work around this, disable "Check for Assets with SSL-peer-verification" in %sExpert Settings%s or ask your admin/hoster for help.', 'podlove-podcasting-plugin-for-wordpress'), '<a href="' . admin_url('admin.php?page=podlove_settings_settings_handle') . '" target="_blank">', '</a>') ?></em>
+								<?php endif ?>
 							<?php endif; ?>
 						</li>
 						<li>
