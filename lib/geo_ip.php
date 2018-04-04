@@ -101,13 +101,19 @@ class Geo_Ip {
 		if (is_wp_error($tmpFile))
 			die($tmpFile->get_error_message());
 
-		// decompress from gz
-		$p = new \PharData($tmpFile);
-		$file2 = $p->decompress(); // creates files.tar
-		 
-		// unarchive from the tar
-		$phar = new \PharData($file2->getPath());
-		$phar->extractTo(self::get_upload_file_dir()); 
+		try {
+			// decompress from gz
+			$p = new \PharData($tmpFile);
+			$file = $p->decompress(); // creates files.tar
+
+			// unarchive from the tar
+			$phar = new \PharData($file->getPath());
+			$phar->extractTo(self::get_upload_file_dir(), null, true); 
+		} catch (Exception $e) {
+			die($e->getMessage());
+		} catch (PharException $e) {
+			die($e->getMessage());
+		}
 
 		self::enable_tracking();
 	}

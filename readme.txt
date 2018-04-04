@@ -107,6 +107,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Add changes from 2.7 branch:
 
+_2.7.3_
+
+* fix: geo database updater
+* update Podlove Web Player 2: remove Flash Fallback
+* update Podlove Web Player 4
+
 _2.7.2_
 
 * fix: `itunes:image` tag in show feeds
