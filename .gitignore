@@ -1,7 +1,7 @@
 .DS_Store
 .tags*
 .wordpress_release
-podlove.sublime-*
+*.sublime-*
 wprelease.yml
 composer.phar
 node_modules/*

@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-04-15 =
+
+* allow file access even when it's not marked as "downloadable"
+
 = 2018-04-04 =
 
 * update webvtt parser

@@ -103,11 +103,6 @@ function podlove_handle_media_file_download() {
 		exit;
 	}
 
-	if ( ! $episode_asset->downloadable ) {
-		status_header( 403, 'Asset is not configured for download' );
-		exit;
-	}
-
 	// if a file exists but no valid episode reference, 
 	// that means it has been removed
 	$episode = $media_file->episode();

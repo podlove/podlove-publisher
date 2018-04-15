@@ -364,7 +364,7 @@ class EpisodeAsset {
 
 			$f->checkbox( 'downloadable', array(
 				'label'       => __( 'Downloadable', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( 'Allow downloads for users.', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => __( 'Include in download interfaces.', 'podlove-podcasting-plugin-for-wordpress' ),
 				'default' => true
 			) );
 			?>
