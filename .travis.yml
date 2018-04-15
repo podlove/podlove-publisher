@@ -8,7 +8,7 @@ php:
 matrix:
   exclude:
   - php: 7.2
-    env: WP_VERSION=latest
+    env: WP_VERSION=latest WP_MULTISITE=0
 
 env:
 - WP_VERSION=latest WP_MULTISITE=0
