@@ -19,6 +19,9 @@ function podlove_add_episodeno_column_to_episodes_table($columns)
 function podlove_add_episodeno_column_content_to_episodes_table($column_name)
 {
 	if ($column_name === 'episode_number') {
-		echo \Podlove\get_episode()->number();
+	    //check for null to prevent fatal error
+        if(\Podlove\get_episode() != null) {
+            echo \Podlove\get_episode()->number();
+        }
 	}
 }
