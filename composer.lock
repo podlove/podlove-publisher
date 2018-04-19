@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f1a380118164e32886110fe596cd75d",
+    "content-hash": "4b42bb8ff2d985caa5bfd8ec938505af",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -61,6 +61,39 @@
                 "tls"
             ],
             "time": "2017-11-29T09:37:33+00:00"
+        },
+        {
+            "name": "dariuszp/cli-progress-bar",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dariuszp/cli-progress-bar.git",
+                "reference": "54020a8fc60bf19579bfe0317f17a2848d48991d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dariuszp/cli-progress-bar/zipball/54020a8fc60bf19579bfe0317f17a2848d48991d",
+                "reference": "54020a8fc60bf19579bfe0317f17a2848d48991d",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dariuszp\\": "src/Dariuszp"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dariusz Półtorak",
+                    "email": "poltorak.dariusz@gmail.com"
+                }
+            ],
+            "description": "Cli progress bar",
+            "time": "2015-11-02T14:38:59+00:00"
         },
         {
             "name": "geertw/ip-anonymizer",

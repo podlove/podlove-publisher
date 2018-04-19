@@ -11,7 +11,8 @@
         "ramsey/array_column": "~1.1",
         "piwik/device-detector": "~3.7",
         "phpunit/php-timer": "~1.0",
-        "geertw/ip-anonymizer": "^1.1"
+        "geertw/ip-anonymizer": "^1.1",
+        "dariuszp/cli-progress-bar": "^1.0"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
