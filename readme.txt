@@ -103,6 +103,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.5 =
+
+**Preparation for GDPR/DSGVO**
+
+If you are using Podlove Publisher Tracking/Analytics, an update to this version is highly recommended.
+
+Tracking uses a `request_id` to be able to determine when two requests came from the same user and should be counted as one unique access. This request id used to be a hash of the original IP address and the user agent. This approach however is vulnerable to a brute force attack to get the IP address back from the hash. Here's what we are doing about that:
+
+First, we anonymize the IP before generating the hash. So instead of using `171.23.11.209`, we use `171.23.11.0`.
+
+Second, you need to deal with the existing `request_id`s. There is a new "DSGVO" section under "Tools" with a button that will rehash all existing `request_id`s with a randomly generated salt. That way it will become unfeasible to determine the original IP address but your analytics will stay the same.
+
+In case you have a lot of downloads (let's say much more than 50.000), you may want to do this via command line because that will be _much_ quicker than via the tools section. You need [wp-cli](https://wp-cli.org/), then simply call `wp eval 'podlove_rehash_tracking_request_ids();'`. On a multisite, pass the blog id as a parameter: `wp eval 'podlove_rehash_tracking_request_ids(42);'`.
+
 = 2.7.4 =
 
 No changes, but the previous release is not delivered correctly by WordPress, so this is simply a re-release attempt to fix it.
