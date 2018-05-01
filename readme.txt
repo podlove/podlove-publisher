@@ -117,6 +117,10 @@ Second, you need to deal with the existing `request_id`s. There is a new "DSGVO"
 
 In case you have a lot of downloads (let's say much more than 50.000), you may want to do this via command line because that will be _much_ quicker than via the tools section. You need [wp-cli](https://wp-cli.org/), then simply call `wp eval 'podlove_rehash_tracking_request_ids();'`. On a multisite, pass the blog id as a parameter: `wp eval 'podlove_rehash_tracking_request_ids(42);'`.
 
+**Other**
+
+* fix Podlove Subscribe Button language parameter
+
 = 2.7.4 =
 
 No changes, but the previous release is not delivered correctly by WordPress, so this is simply a re-release attempt to fix it.
