@@ -104,9 +104,9 @@ class Chapter {
   }
 }
 
-export default {
+module.exports = {
 
-    data() {
+    data: function () {
         return {
             chapters: [],
             activeChapter: null,

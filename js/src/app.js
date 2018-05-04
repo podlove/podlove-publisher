@@ -1,16 +1,20 @@
-window.Vue = require('vue');
+import Vue from 'vue'
 
-Vue.component('chapters', require('./components/Chapters.vue'));
-Vue.component('chapter', require('./components/Chapter.vue'));
-Vue.component('chapter-form', require('./components/ChapterForm.vue'));
+import Chapters from './components/Chapters'
+import Chapter from './components/Chapter'
+import ChapterForm from './components/ChapterForm'
+import JobsDashboard from './components/JobsDashboard'
+
+Vue.component('chapters', Chapters);
+Vue.component('chapter', Chapter);
+Vue.component('chapter-form', ChapterForm);
+Vue.component('jobs-dashboard', JobsDashboard);
 
 if (document.getElementById('podlove-chapters-app')) {
     window.chaptersApp = new Vue({
         el: '#podlove-chapters-app'
     });
 }
-
-Vue.component('jobs-dashboard', require('./components/JobsDashboard.vue'));
 
 if (document.getElementById('podlove-tools-dashboard')) {
     const toolsDashboard = new Vue({

@@ -58,7 +58,7 @@
 
 <script>
 const $ = jQuery;
-export default {
+module.exports = {
     data() {
         return {
             jobs: []
