@@ -247,6 +247,7 @@ class Podcast implements Licensable {
 	 * - post_id: one episode matching the given post id
 	 * - post_ids: list of episodes matching the given list of post ids
 	 * - category: list of episodes matching the category slug
+	 * - show: list of episodes matching the show slug
 	 * - slug: one episode matching the given slug
 	 * - slugs: list of episodes matching the given list of slugs
 	 * - post_status: Publication status of the post. Defaults to 'publish'
@@ -315,6 +316,14 @@ class Podcast implements Licensable {
 					JOIN ' . $wpdb->term_relationships . ' tr ON p.ID = tr.object_id
 					JOIN ' . $wpdb->term_taxonomy . ' tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = "category"
 					JOIN ' . $wpdb->terms . ' t ON t.term_id = tt.term_id AND t.slug = ' . $wpdb->prepare('%s', $args['category']) . '
+				';
+			}
+
+			if (isset($args['show']) && strlen($args['show'])) {
+				$joins .= '
+					JOIN ' . $wpdb->term_relationships . ' tr_show ON p.ID = tr_show.object_id
+					JOIN ' . $wpdb->term_taxonomy . ' tt_show ON tt_show.term_taxonomy_id = tr_show.term_taxonomy_id AND tt_show.taxonomy = "shows"
+					JOIN ' . $wpdb->terms . ' t_show ON t_show.term_id = tt_show.term_id AND t_show.slug = ' . $wpdb->prepare('%s', $args['show']) . '
 				';
 			}
 

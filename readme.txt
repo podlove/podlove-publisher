@@ -122,6 +122,7 @@ In case you have a lot of downloads (let's say much more than 50.000), you may w
 * fix Podlove Subscribe Button language parameter
 * fix `rel="self"` link in show feeds
 * templates: handle episode.show access when there is no show
+* templates: allow episode filtering by show, for example: `{% for episode in podcast.episodes({show: "example"}) %}`
 
 = 2.7.4 =
 
