@@ -173,7 +173,8 @@ if (typeof SubscribeButton == 'undefined') {
 	 * @return array list of prepared feed data-objects
 	 */
 	public static function feeds($feeds, $taxonomy = null, $term_id = null) {
-		return TemplateCache::get_instance()->cache_for('podlove_subscribe_button_feeds', function() use ($feeds, $taxonomy, $term_id) {
+		$cache_key = sprintf("podlove_subscribe_button_feeds_%s_%s", $taxonomy, $term_id);
+		return TemplateCache::get_instance()->cache_for($cache_key, function() use ($feeds, $taxonomy, $term_id) {
 
 			$feeds_for_button = array_map(function($feed) use ($taxonomy, $term_id) {
 				$file_type = $feed->episode_asset()->file_type();

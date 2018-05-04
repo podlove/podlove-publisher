@@ -15,6 +15,10 @@
         "piwik/device-detector": "~3.7",
         "phpunit/php-timer": "~1.0",
         "podlove/webvtt-parser": "^1.1",
+        "geertw/ip-anonymizer": "^1.1",
+        "dariuszp/cli-progress-bar": "^1.0"
+    },
+    "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
         "phpunit/phpunit": "4.8.*"

@@ -154,7 +154,12 @@ class Feed extends Base {
 
 	public function get_self_link() {
 
-		$href = $this->get_subscribe_url();
+		if ($show_tax_slug = get_query_var('shows')) {
+			$show = get_term_by('slug', $show_tax_slug, 'shows');
+			$href = $this->get_subscribe_url("shows", $show->term_id);
+		} else {
+			$href = $this->get_subscribe_url();
+		}
 
 		$current_page = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 		if ( $current_page > 1 ) {

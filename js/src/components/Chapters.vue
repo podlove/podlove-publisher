@@ -106,7 +106,7 @@ class Chapter {
 
 export default {
 
-    data() {
+    data: function () {
         return {
             chapters: [],
             activeChapter: null,
