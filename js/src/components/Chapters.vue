@@ -104,7 +104,7 @@ class Chapter {
   }
 }
 
-module.exports = {
+export default {
 
     data: function () {
         return {

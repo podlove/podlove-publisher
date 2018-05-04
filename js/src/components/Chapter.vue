@@ -21,7 +21,7 @@
 import Timestamp from '../lib/timestamp'
 import DurationErrors from '../lib/duration_errors'
 
-module.exports = {
+export default {
     props: ['start', 'title', 'active', 'duration', 'href'],
 
     data() {

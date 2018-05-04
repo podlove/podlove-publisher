@@ -376,6 +376,13 @@ class Auphonic extends \Podlove\Modules\Base {
     	if ( $screen->base != 'post' && $screen->post_type != 'podcast' && $screen->base != 'podlove_page_podlove_settings_modules_handle' )
     		return;
 
+        wp_register_script(
+            'podlove_axios_script',
+            \Podlove\PLUGIN_URL . '/js/axios.min.js',
+            [],
+            \Podlove\get_plugin_header( 'Version' )
+        );
+
     	wp_register_style(
     		'podlove_auphonic_admin_style',
     		$this->get_module_url() . '/admin.css',
@@ -387,7 +394,7 @@ class Auphonic extends \Podlove\Modules\Base {
     	wp_register_script(
     		'podlove_auphonic_admin_script',
     		$this->get_module_url() . '/admin.js',
-    		array( 'jquery', 'jquery-ui-tabs', 'podlove_admin' ),
+    		array( 'jquery', 'jquery-ui-tabs', 'podlove_admin', 'podlove_axios_script' ),
     		\Podlove\get_plugin_header( 'Version' )
     	);
     	wp_enqueue_script('podlove_auphonic_admin_script');

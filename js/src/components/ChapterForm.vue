@@ -49,7 +49,7 @@
 <script type="text/javascript">
 import Timestamp from "../lib/timestamp"
 
-module.exports = {
+export default {
 
     data () {
         return {
