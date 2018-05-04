@@ -1,3 +1,9616 @@
-!function(){function t(t,e){"use strict";var n={version:"2.0.0-beta.4",constants:{CHART_CLASS:"dc-chart",DEBUG_GROUP_CLASS:"debug",STACK_CLASS:"stack",DESELECTED_CLASS:"deselected",SELECTED_CLASS:"selected",NODE_INDEX_NAME:"__index__",GROUP_INDEX_NAME:"__group_index__",DEFAULT_CHART_GROUP:"__default_chart_group__",EVENT_DELAY:40,NEGLIGIBLE_NUMBER:1e-10},_renderlet:null};n.chartRegistry=function(){function t(t){return t||(t=n.constants.DEFAULT_CHART_GROUP),e[t]||(e[t]=[]),t}var e={};return{has:function(t){for(var n in e)if(e[n].indexOf(t)>=0)return!0;return!1},register:function(n,r){r=t(r),e[r].push(n)},deregister:function(n,r){r=t(r);for(var i=0;i<e[r].length;i++)if(e[r][i].anchorName()===n.anchorName()){e[r].splice(i,1);break}},clear:function(t){t?delete e[t]:e={}},list:function(n){return n=t(n),e[n]}}}(),n.registerChart=function(t,e){n.chartRegistry.register(t,e)},n.deregisterChart=function(t,e){n.chartRegistry.deregister(t,e)},n.hasChart=function(t){return n.chartRegistry.has(t)},n.deregisterAllCharts=function(t){n.chartRegistry.clear(t)},n.filterAll=function(t){for(var e=n.chartRegistry.list(t),r=0;r<e.length;++r)e[r].filterAll()},n.refocusAll=function(t){for(var e=n.chartRegistry.list(t),r=0;r<e.length;++r)e[r].focus&&e[r].focus()},n.renderAll=function(t){for(var e=n.chartRegistry.list(t),r=0;r<e.length;++r)e[r].render();null!==n._renderlet&&n._renderlet(t)},n.redrawAll=function(t){for(var e=n.chartRegistry.list(t),r=0;r<e.length;++r)e[r].redraw();null!==n._renderlet&&n._renderlet(t)},n.disableTransitions=!1,n.transition=function(t,e,r){if(e<=0||void 0===e||n.disableTransitions)return t;var i=t.transition().duration(e);return"function"==typeof r&&r(i),i},n.units={},n.units.integers=function(t,e){return Math.abs(e-t)},n.units.ordinal=function(t,e,n){return n},n.units.fp={},n.units.fp.precision=function(t){var e=function(t,r){var i=Math.abs((r-t)/e.resolution);return n.utils.isNegligible(i-Math.floor(i))?Math.floor(i):Math.ceil(i)};return e.resolution=t,e},n.round={},n.round.floor=function(t){return Math.floor(t)},n.round.ceil=function(t){return Math.ceil(t)},n.round.round=function(t){return Math.round(t)},n.override=function(t,e,n){var r=t[e];t["_"+e]=r,t[e]=n},n.renderlet=function(t){return arguments.length?(n._renderlet=t,n):n._renderlet},n.instanceOfChart=function(t){return t instanceof Object&&t.__dcFlag__&&!0},n.errors={},n.errors.Exception=function(t){var e=t||"Unexpected internal error";this.message=e,this.toString=function(){return e}},n.errors.InvalidStateException=function(){n.errors.Exception.apply(this,arguments)},n.dateFormat=t.time.format("%m/%d/%Y"),n.printers={},n.printers.filters=function(t){for(var e="",r=0;r<t.length;++r)r>0&&(e+=", "),e+=n.printers.filter(t[r]);return e},n.printers.filter=function(t){var e="";return void 0!==t&&null!==t&&(t instanceof Array?t.length>=2?e="["+n.utils.printSingleValue(t[0])+" -> "+n.utils.printSingleValue(t[1])+"]":t.length>=1&&(e=n.utils.printSingleValue(t[0])):e=n.utils.printSingleValue(t)),e},n.pluck=function(t,e){return e?function(n,r){return e.call(n,n[t],r)}:function(e){return e[t]}},n.utils={},n.utils.printSingleValue=function(t){var e=""+t;return t instanceof Date?e=n.dateFormat(t):"string"==typeof t?e=t:n.utils.isFloat(t)?e=n.utils.printSingleValue.fformat(t):n.utils.isInteger(t)&&(e=Math.round(t)),e},n.utils.printSingleValue.fformat=t.format(".2f"),n.utils.add=function(t,e){if("string"==typeof e&&(e=e.replace("%","")),t instanceof Date){"string"==typeof e&&(e=+e);var n=new Date;return n.setTime(t.getTime()),n.setDate(t.getDate()+e),n}if("string"==typeof e){var r=+e/100;return t>0?t*(1+r):t*(1-r)}return t+e},n.utils.subtract=function(t,e){if("string"==typeof e&&(e=e.replace("%","")),t instanceof Date){"string"==typeof e&&(e=+e);var n=new Date;return n.setTime(t.getTime()),n.setDate(t.getDate()-e),n}if("string"==typeof e){var r=+e/100;return t<0?t*(1+r):t*(1-r)}return t-e},n.utils.isNumber=function(t){return t===+t},n.utils.isFloat=function(t){return t===+t&&t!==(0|t)},n.utils.isInteger=function(t){return t===+t&&t===(0|t)},n.utils.isNegligible=function(t){return!n.utils.isNumber(t)||t<n.constants.NEGLIGIBLE_NUMBER&&t>-n.constants.NEGLIGIBLE_NUMBER},n.utils.clamp=function(t,e,n){return t<e?e:t>n?n:t};var r=0;return n.utils.uniqueId=function(){return++r},n.utils.nameToId=function(t){return t.toLowerCase().replace(/[\s]/g,"_").replace(/[\.']/g,"")},n.utils.appendOrSelect=function(t,e,n){n=n||e;var r=t.select(e);return r.empty()&&(r=t.append(n)),r},n.utils.safeNumber=function(t){return n.utils.isNumber(+t)?+t:0},n.logger={},n.logger.enableDebugLog=!1,n.logger.warn=function(t){return console&&(console.warn?console.warn(t):console.log&&console.log(t)),n.logger},n.logger.debug=function(t){return n.logger.enableDebugLog&&console&&(console.debug?console.debug(t):console.log&&console.log(t)),n.logger},n.logger.deprecate=function(t,e){function r(){return i||(n.logger.warn(e),i=!0),t.apply(this,arguments)}var i=!1;return r},n.events={current:null},n.events.trigger=function(t,e){if(!e)return void t();n.events.current=t,setTimeout(function(){t===n.events.current&&t()},e)},n.filters={},n.filters.RangedFilter=function(t,e){var n=new Array(t,e);return n.isFiltered=function(t){return t>=this[0]&&t<this[1]},n},n.filters.TwoDimensionalFilter=function(t){if(null===t)return null;var e=t;return e.isFiltered=function(t){return t.length&&t.length===e.length&&t[0]===e[0]&&t[1]===e[1]},e},n.filters.RangedTwoDimensionalFilter=function(t){if(null===t)return null;var e,n=t;return e=n[0]instanceof Array?[[Math.min(t[0][0],t[1][0]),Math.min(t[0][1],t[1][1])],[Math.max(t[0][0],t[1][0]),Math.max(t[0][1],t[1][1])]]:[[t[0],-1/0],[t[1],1/0]],n.isFiltered=function(t){var n,r;if(t instanceof Array){if(2!==t.length)return!1;n=t[0],r=t[1]}else n=t,r=e[0][1];return n>=e[0][0]&&n<e[1][0]&&r>=e[0][1]&&r<e[1][1]},n},n.baseMixin=function(r){function i(){return d=r.root().append("svg").attr("width",r.width()).attr("height",r.height())}function a(t){if(!r[t]||!r[t]())throw new n.errors.InvalidStateException("Mandatory attribute chart."+t+" is missing on chart[#"+r.anchorName()+"]")}function o(){if(r.dimension()&&r.dimension().filter){var t=F(r.dimension(),M);M=t||M}}r.__dcFlag__=n.utils.uniqueId();var u,l,s,c,d,f,h,g=200,p=function(t){var e=t&&t.getBoundingClientRect&&t.getBoundingClientRect().width;return e&&e>g?e:g},m=p,x=200,v=function(t){var e=t&&t.getBoundingClientRect&&t.getBoundingClientRect().height;return e&&e>x?e:x},y=v,A=n.pluck("key"),b=n.pluck("value"),_=n.pluck("key"),k=n.pluck("key"),w=!1,D=function(t){return r.keyAccessor()(t)+": "+r.valueAccessor()(t)},C=!0,L=750,E=n.printers.filters,R=["dimension","group"],S=n.constants.DEFAULT_CHART_GROUP,O=t.dispatch("preRender","postRender","preRedraw","postRedraw","filtered","zoomed","renderlet"),M=[],F=function(t,e){return t.filter(null),0===e.length?t.filter(null):t.filterFunction(function(t){for(var n=0;n<e.length;n++){var r=e[n];if(r.isFiltered&&r.isFiltered(t))return!0;if(r<=t&&r>=t)return!0}return!1}),e},B=function(t){return t.all()};r.width=function(e){return arguments.length?(m=t.functor(e||p),r):m(c.node())},r.height=function(e){return arguments.length?(y=t.functor(e||v),r):y(c.node())},r.minWidth=function(t){return arguments.length?(g=t,r):g},r.minHeight=function(t){return arguments.length?(x=t,r):x},r.dimension=function(t){return arguments.length?(u=t,r.expireCache(),r):u},r.data=function(e){return arguments.length?(B=t.functor(e),r.expireCache(),r):B.call(r,l)},r.group=function(t,e){return arguments.length?(l=t,r._groupName=e,r.expireCache(),r):l},r.ordering=function(t){return arguments.length?(k=t,f=e.quicksort.by(k),r.expireCache(),r):k},r._computeOrderedGroups=function(t){var n=t.slice(0);return n.length<=1?n:(f||(f=e.quicksort.by(k)),f(n,0,n.length))},r.filterAll=function(){return r.filter(null)},r.select=function(t){return c.select(t)},r.selectAll=function(t){return c?c.selectAll(t):null},r.anchor=function(e,i){return arguments.length?(n.instanceOfChart(e)?(s=e.anchor(),c=e.root()):(s=e,c=t.select(s),c.classed(n.constants.CHART_CLASS,!0),n.registerChart(r,i)),S=i,r):s},r.anchorName=function(){var t=r.anchor();return t&&t.id?t.id:t&&t.replace?t.replace("#",""):"dc-chart"+r.chartID()},r.root=function(t){return arguments.length?(c=t,r):c},r.svg=function(t){return arguments.length?(d=t,r):d},r.resetSvg=function(){return r.select("svg").remove(),i()},r.filterPrinter=function(t){return arguments.length?(E=t,r):E},r.turnOnControls=function(){return c&&(r.selectAll(".reset").style("display",null),r.selectAll(".filter").text(E(r.filters())).style("display",null)),r},r.turnOffControls=function(){return c&&(r.selectAll(".reset").style("display","none"),r.selectAll(".filter").style("display","none").text(r.filter())),r},r.transitionDuration=function(t){return arguments.length?(L=t,r):L},r._mandatoryAttributes=function(t){return arguments.length?(R=t,r):R},r.render=function(){O.preRender(r),R&&R.forEach(a);var t=r._doRender();return h&&h.render(),r._activateRenderlets("postRender"),t},r._activateRenderlets=function(t){r.transitionDuration()>0&&d?d.transition().duration(r.transitionDuration()).each("end",function(){O.renderlet(r),t&&O[t](r)}):(O.renderlet(r),t&&O[t](r))},r.redraw=function(){O.preRedraw(r);var t=r._doRedraw();return h&&h.render(),r._activateRenderlets("postRedraw"),t},r.redrawGroup=function(){n.redrawAll(r.chartGroup())},r.renderGroup=function(){n.renderAll(r.chartGroup())},r._invokeFilteredListener=function(t){void 0!==t&&O.filtered(r,t)},r._invokeZoomedListener=function(){O.zoomed(r)};var T=function(t,e){return null===e||void 0===e?t.length>0:t.some(function(t){return e<=t&&e>=t})};r.hasFilterHandler=function(t){return arguments.length?(T=t,r):T},r.hasFilter=function(t){return T(M,t)};var N=function(t,e){for(var n=0;n<t.length;n++)if(t[n]<=e&&t[n]>=e){t.splice(n,1);break}return t};r.removeFilterHandler=function(t){return arguments.length?(N=t,r):N};var P=function(t,e){return t.push(e),t};r.addFilterHandler=function(t){return arguments.length?(P=t,r):P};var H=function(t){return[]};return r.resetFilterHandler=function(t){return arguments.length?(H=t,r):H},r.replaceFilter=function(t){M=[],r.filter(t)},r.filter=function(t){return arguments.length?(t instanceof Array&&t[0]instanceof Array&&!t.isFiltered?t[0].forEach(function(t){r.hasFilter(t)?N(M,t):P(M,t)}):null===t?M=H(M):r.hasFilter(t)?N(M,t):P(M,t),o(),r._invokeFilteredListener(t),null!==c&&r.hasFilter()?r.turnOnControls():r.turnOffControls(),r):M.length>0?M[0]:null},r.filters=function(){return M},r.highlightSelected=function(e){t.select(e).classed(n.constants.SELECTED_CLASS,!0),t.select(e).classed(n.constants.DESELECTED_CLASS,!1)},r.fadeDeselected=function(e){t.select(e).classed(n.constants.SELECTED_CLASS,!1),t.select(e).classed(n.constants.DESELECTED_CLASS,!0)},r.resetHighlight=function(e){t.select(e).classed(n.constants.SELECTED_CLASS,!1),t.select(e).classed(n.constants.DESELECTED_CLASS,!1)},r.onClick=function(t){var e=r.keyAccessor()(t);n.events.trigger(function(){r.filter(e),r.redrawGroup()})},r.filterHandler=function(t){return arguments.length?(F=t,r):F},r._doRender=function(){return r},r._doRedraw=function(){return r},r.legendables=function(){return[]},r.legendHighlight=function(){},r.legendReset=function(){},r.legendToggle=function(){},r.isLegendableHidden=function(){return!1},r.keyAccessor=function(t){return arguments.length?(A=t,r):A},r.valueAccessor=function(t){return arguments.length?(b=t,r):b},r.label=function(t){return arguments.length?(_=t,w=!0,r):_},r.renderLabel=function(t){return arguments.length?(w=t,r):w},r.title=function(t){return arguments.length?(D=t,r):D},r.renderTitle=function(t){return arguments.length?(C=t,r):C},r.renderlet=n.logger.deprecate(function(t){return r.on("renderlet."+n.utils.uniqueId(),t),r},'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)'),r.chartGroup=function(t){return arguments.length?(S=t,r):S},r.expireCache=function(){return r},r.legend=function(t){return arguments.length?(h=t,h.parent(r),r):h},r.chartID=function(){return r.__dcFlag__},r.options=function(t){for(var e in t)"function"==typeof r[e]?r[e].call(r,t[e]):n.logger.debug("Not a valid option setter name: "+e);return r},r.on=function(t,e){return O.on(t,e),r},r},n.marginMixin=function(t){var e={top:10,right:50,bottom:30,left:30};return t.margins=function(n){return arguments.length?(e=n,t):e},t.effectiveWidth=function(){return t.width()-t.margins().left-t.margins().right},t.effectiveHeight=function(){return t.height()-t.margins().top-t.margins().bottom},t},n.colorMixin=function(e){var n=t.scale.category20c(),r=!0,i=function(t){return e.keyAccessor()(t)};return e.colors=function(r){return arguments.length?(n=r instanceof Array?t.scale.quantize().range(r):t.functor(r),e):n},e.ordinalColors=function(n){return e.colors(t.scale.ordinal().range(n))},e.linearColors=function(n){return e.colors(t.scale.linear().range(n).interpolate(t.interpolateHcl))},e.colorAccessor=function(t){return arguments.length?(i=t,r=!1,e):i},e.defaultColorAccessor=function(){return r},e.colorDomain=function(t){return arguments.length?(n.domain(t),e):n.domain()},e.calculateColorDomain=function(){var r=[t.min(e.data(),e.colorAccessor()),t.max(e.data(),e.colorAccessor())];return n.domain(r),e},e.getColor=function(t,e){return n(i.call(this,t,e))},e.colorCalculator=function(t){return arguments.length?(e.getColor=t,e):e.getColor},e},n.coordinateGridMixin=function(e){function r(){U=!0,I&&(e.x().domain(d(e.x().domain(),A)),L&&e.x().domain(d(e.x().domain(),L.x().domain())));var t=e.x().domain(),r=n.filters.RangedFilter(t[0],t[1]);e.replaceFilter(r),e.rescale(),e.redraw(),L&&!f(e.filter(),L.filter())&&n.events.trigger(function(){L.replaceFilter(r),L.redraw()}),e._invokeZoomedListener(),n.events.trigger(function(){e.redrawGroup()},n.constants.EVENT_DELAY),U=!f(t,A)}function i(t){e.isOrdinal()?(e.elasticX()||0===y.domain().length)&&y.domain(e._ordinalXDomain()):e.elasticX()&&y.domain([e.xAxisMin(),e.xAxisMax()]);var n=y.domain();_&&!n.some(function(t,e){return t!==_[e]})||e.rescale(),_=n,e.isOrdinal()?y.rangeBands([0,e.xAxisLength()],Q,e._useOuterPadding()?Z:0):y.range([0,e.xAxisLength()]),R=R.scale(e.x()),a(t)}function a(t){var r=t.selectAll("g."+p);if(V){r.empty()&&(r=t.insert("g",":first-child").attr("class",g+" "+p).attr("transform","translate("+e.margins().left+","+e.margins().top+")"));var i=R.tickValues()?R.tickValues():"function"==typeof y.ticks?y.ticks(R.ticks()[0]):y.domain(),a=r.selectAll("line").data(i),o=a.enter().append("line").attr("x1",function(t){return y(t)}).attr("y1",e._xAxisY()-e.margins().top).attr("x2",function(t){return y(t)}).attr("y2",0).attr("opacity",0);n.transition(o,e.transitionDuration()).attr("opacity",1),n.transition(a,e.transitionDuration()).attr("x1",function(t){return y(t)}).attr("y1",e._xAxisY()-e.margins().top).attr("x2",function(t){return y(t)}).attr("y2",0),a.exit().remove()}else r.selectAll("line").remove()}function o(){return e._xAxisY()-e.margins().top}function u(){return e.anchorName().replace(/[ .#]/g,"-")+"-clip"}function l(){var t=n.utils.appendOrSelect(m,"defs"),r=u(),i=n.utils.appendOrSelect(t,"#"+r,"clipPath").attr("id",r),a=2*K;n.utils.appendOrSelect(i,"rect").attr("width",e.xAxisLength()+a).attr("height",e.yAxisHeight()+a).attr("transform","translate(-"+K+", -"+K+")")}function s(t){e.isOrdinal()&&(G=!1),i(e.g()),e._prepareYAxis(e.g()),e.plotData(),(e.elasticX()||U||t)&&e.renderXAxis(e.g()),(e.elasticY()||t)&&e.renderYAxis(e.g()),t?e.renderBrush(e.g()):e.redrawBrush(e.g())}function c(){W?e._enableMouseZoom():q&&e._disableMouseZoom()}function d(e,n){var r=[];return r[0]=t.max([e[0],n[0]]),r[1]=t.min([e[1],n[1]]),r}function f(t,e){return!t&&!e||!(!t||!e)&&(0===t.length&&0===e.length||t[0].valueOf()===e[0].valueOf()&&t[1].valueOf()===e[1].valueOf())}function h(t){return t instanceof Array&&t.length>1}var g="grid-line",p="vertical";e=n.colorMixin(n.marginMixin(n.baseMixin(e))),e.colors(t.scale.category10()),e._mandatoryAttributes().push("x");var m,x,v,y,A,b,_,k,w,D,C,L,E,R=t.svg.axis().orient("bottom"),S=n.units.integers,O=0,M=!1,F=0,B=t.svg.axis().orient("left"),T=0,N=!1,P=0,H=t.svg.brush(),G=!0,Y=!1,V=!1,U=!1,z=[1,1/0],I=!0,X=t.behavior.zoom().on("zoom",r),j=t.behavior.zoom().on("zoom",null),q=!1,W=!1,K=0,Z=.5,Q=0,J=!1;return e.rescale=function(){C=void 0},e.rangeChart=function(t){return arguments.length?(L=t,L.focusChart(e),e):L},e.zoomScale=function(t){return arguments.length?(z=t,e):z},e.zoomOutRestrict=function(t){return arguments.length?(z[0]=t?1:0,I=t,e):I},e._generateG=function(t){return m=void 0===t?e.svg():t,x=m.append("g"),v=x.append("g").attr("class","chart-body").attr("transform","translate("+e.margins().left+", "+e.margins().top+")").attr("clip-path","url(#"+u()+")"),x},e.g=function(t){return arguments.length?(x=t,e):x},e.mouseZoomable=function(t){return arguments.length?(W=t,e):W},e.chartBodyG=function(t){return arguments.length?(v=t,e):v},e.x=function(t){return arguments.length?(y=t,A=y.domain(),e):y},e.xOriginalDomain=function(){return A},e.xUnits=function(t){return arguments.length?(S=t,e):S},e.xAxis=function(t){return arguments.length?(R=t,e):R},e.elasticX=function(t){return arguments.length?(M=t,e):M},e.xAxisPadding=function(t){return arguments.length?(O=t,e):O},e.xUnitCount=function(){if(void 0===C){var t=e.xUnits()(e.x().domain()[0],e.x().domain()[1],e.x().domain());C=t instanceof Array?t.length:t}return C},e.useRightYAxis=function(t){return arguments.length?(J=t,e):J},e.isOrdinal=function(){return e.xUnits()===n.units.ordinal},e._useOuterPadding=function(){return!0},e._ordinalXDomain=function(){return e._computeOrderedGroups(e.data()).map(e.keyAccessor())},e.renderXAxis=function(t){var r=t.selectAll("g.x");r.empty()&&(r=t.append("g").attr("class","axis x").attr("transform","translate("+e.margins().left+","+e._xAxisY()+")"));var i=t.selectAll("text.x-axis-label");i.empty()&&e.xAxisLabel()&&(i=t.append("text").attr("transform","translate("+(e.margins().left+e.xAxisLength()/2)+","+(e.height()-F)+")").attr("class","x-axis-label").attr("text-anchor","middle").text(e.xAxisLabel())),e.xAxisLabel()&&i.text()!==e.xAxisLabel()&&i.text(e.xAxisLabel()),n.transition(r,e.transitionDuration()).call(R)},e._xAxisY=function(){return e.height()-e.margins().bottom},e.xAxisLength=function(){return e.effectiveWidth()},e.xAxisLabel=function(t,n){return arguments.length?(b=t,e.margins().bottom-=F,F=void 0===n?12:n,e.margins().bottom+=F,e):b},e._prepareYAxis=function(n){if(void 0===k||e.elasticY()){k=t.scale.linear();var r=e.yAxisMin()||0,i=e.yAxisMax()||0;k.domain([r,i]).rangeRound([e.yAxisHeight(),0])}k.range([e.yAxisHeight(),0]),B=B.scale(k),J&&B.orient("right"),e._renderHorizontalGridLinesForAxis(n,k,B)},e.renderYAxisLabel=function(t,n,r,i){i=i||P;var a=e.g().selectAll("text.y-axis-label."+t+"-label");if(a.empty()&&n){var o=e.margins().top+e.yAxisHeight()/2;a=e.g().append("text").attr("transform","translate("+i+","+o+"),rotate("+r+")").attr("class","y-axis-label "+t+"-label").attr("text-anchor","middle").text(n)}n&&a.text()!==n&&a.text(n)},e.renderYAxisAt=function(t,r,i){var a=e.g().selectAll("g."+t);a.empty()&&(a=e.g().append("g").attr("class","axis "+t).attr("transform","translate("+i+","+e.margins().top+")")),n.transition(a,e.transitionDuration()).call(r)},e.renderYAxis=function(){var t=J?e.width()-e.margins().right:e._yAxisX();e.renderYAxisAt("y",B,t);var n=J?e.width()-P:P,r=J?90:-90;e.renderYAxisLabel("y",e.yAxisLabel(),r,n)},e._renderHorizontalGridLinesForAxis=function(t,r,i){var a=t.selectAll("g.horizontal");if(Y){var o=i.tickValues()?i.tickValues():r.ticks(i.ticks()[0]);a.empty()&&(a=t.insert("g",":first-child").attr("class",g+" horizontal").attr("transform","translate("+e.margins().left+","+e.margins().top+")"));var u=a.selectAll("line").data(o),l=u.enter().append("line").attr("x1",1).attr("y1",function(t){return r(t)}).attr("x2",e.xAxisLength()).attr("y2",function(t){return r(t)}).attr("opacity",0);n.transition(l,e.transitionDuration()).attr("opacity",1),n.transition(u,e.transitionDuration()).attr("x1",1).attr("y1",function(t){return r(t)}).attr("x2",e.xAxisLength()).attr("y2",function(t){return r(t)}),u.exit().remove()}else a.selectAll("line").remove()},e._yAxisX=function(){return e.useRightYAxis()?e.width()-e.margins().right:e.margins().left},e.yAxisLabel=function(t,n){return arguments.length?(w=t,e.margins().left-=P,P=void 0===n?12:n,e.margins().left+=P,e):w},e.y=function(t){return arguments.length?(k=t,e):k},e.yAxis=function(t){return arguments.length?(B=t,e):B},e.elasticY=function(t){return arguments.length?(N=t,e):N},e.renderHorizontalGridLines=function(t){return arguments.length?(Y=t,e):Y},e.renderVerticalGridLines=function(t){return arguments.length?(V=t,e):V},e.xAxisMin=function(){var r=t.min(e.data(),function(t){return e.keyAccessor()(t)});return n.utils.subtract(r,O)},e.xAxisMax=function(){var r=t.max(e.data(),function(t){return e.keyAccessor()(t)});return n.utils.add(r,O)},e.yAxisMin=function(){var r=t.min(e.data(),function(t){return e.valueAccessor()(t)});return n.utils.subtract(r,T)},e.yAxisMax=function(){var r=t.max(e.data(),function(t){return e.valueAccessor()(t)});return n.utils.add(r,T)},e.yAxisPadding=function(t){return arguments.length?(T=t,e):T},e.yAxisHeight=function(){return e.effectiveHeight()},e.round=function(t){return arguments.length?(D=t,e):D},e._rangeBandPadding=function(t){return arguments.length?(Q=t,e):Q},e._outerRangeBandPadding=function(t){return arguments.length?(Z=t,e):Z},n.override(e,"filter",function(t){return arguments.length?(e._filter(t),t?e.brush().extent(t):e.brush().clear(),e):e._filter()}),e.brush=function(t){return arguments.length?(H=t,e):H},e.renderBrush=function(t){if(G){H.on("brush",e._brushing),H.on("brushstart",e._disableMouseZoom),H.on("brushend",c);var n=t.append("g").attr("class","brush").attr("transform","translate("+e.margins().left+","+e.margins().top+")").call(H.x(e.x()));e.setBrushY(n),e.setHandlePaths(n),e.hasFilter()&&e.redrawBrush(t)}},e.setHandlePaths=function(t){t.selectAll(".resize").append("path").attr("d",e.resizeHandlePath)},e.setBrushY=function(t){t.selectAll("rect").attr("height",o())},e.extendBrush=function(){var t=H.extent();return e.round()&&(t[0]=t.map(e.round())[0],t[1]=t.map(e.round())[1],x.select(".brush").call(H.extent(t))),t},e.brushIsEmpty=function(t){return H.empty()||!t||t[1]<=t[0]},e._brushing=function(){var t=e.extendBrush();if(e.redrawBrush(x),e.brushIsEmpty(t))n.events.trigger(function(){e.filter(null),e.redrawGroup()},n.constants.EVENT_DELAY);else{var r=n.filters.RangedFilter(t[0],t[1]);n.events.trigger(function(){e.replaceFilter(r),e.redrawGroup()},n.constants.EVENT_DELAY)}},e.redrawBrush=function(t){if(G){e.filter()&&e.brush().empty()&&e.brush().extent(e.filter());var n=t.select("g.brush");n.call(e.brush().x(e.x())),e.setBrushY(n)}e.fadeDeselectedArea()},e.fadeDeselectedArea=function(){},e.resizeHandlePath=function(t){var e=+("e"===t),n=e?1:-1,r=o()/3;return"M"+.5*n+","+r+"A6,6 0 0 "+e+" "+6.5*n+","+(r+6)+"V"+(2*r-6)+"A6,6 0 0 "+e+" "+.5*n+","+2*r+"ZM"+2.5*n+","+(r+8)+"V"+(2*r-8)+"M"+4.5*n+","+(r+8)+"V"+(2*r-8)},e.clipPadding=function(t){return arguments.length?(K=t,e):K},e._preprocessData=function(){},e._doRender=function(){return e.resetSvg(),e._preprocessData(),e._generateG(),l(),s(!0),c(),e},e._doRedraw=function(){return e._preprocessData(),s(!1),l(),e},e._enableMouseZoom=function(){q=!0,X.x(e.x()).scaleExtent(z).size([e.width(),e.height()]).duration(e.transitionDuration()),e.root().call(X)},e._disableMouseZoom=function(){e.root().call(j)},e.focus=function(t){h(t)?e.x().domain(t):e.x().domain(A),X.x(e.x()),r()},e.refocused=function(){return U},e.focusChart=function(t){return arguments.length?(E=t,e.on("filtered",function(t){t.filter()?f(t.filter(),E.filter())||n.events.trigger(function(){E.focus(t.filter())}):n.events.trigger(function(){E.x().domain(E.xOriginalDomain())})}),e):E},e.brushOn=function(t){return arguments.length?(G=t,e):G},e},n.stackMixin=function(e){function r(t,n){var r=t.accessor||e.valueAccessor();return t.name=String(t.name||n),t.values=t.group.all().map(function(n,i){return{x:e.keyAccessor()(n,i),y:t.hidden?null:r(n,i),data:n,layer:t.name,hidden:t.hidden}}),t.values=t.values.filter(i()),t.values}function i(){if(!e.x())return t.functor(!0);var n=e.x().domain();return e.isOrdinal()?function(){return!0}:e.elasticX()?function(){return!0}:function(t){return t.x>=n[0]&&t.x<=n[n.length-1]}}function a(t){var e=s.map(n.pluck("name")).indexOf(t);return s[e]}function o(){return e.data().reduce(function(t,e){return t.concat(e.values)},[])}function u(t){return!t.hidden}var l=t.layout.stack().values(r),s=[],c={},d=!1;return e.stack=function(t,n,r){if(!arguments.length)return s;arguments.length<=2&&(r=n);var i={group:t};return"string"==typeof n&&(i.name=n),"function"==typeof r&&(i.accessor=r),s.push(i),e},n.override(e,"group",function(t,n,r){return arguments.length?(s=[],c={},e.stack(t,n),r&&e.valueAccessor(r),e._group(t,n)):e._group()}),e.hidableStacks=function(t){return arguments.length?(d=t,e):d},e.hideStack=function(t){var n=a(t);return n&&(n.hidden=!0),e},e.showStack=function(t){var n=a(t);return n&&(n.hidden=!1),e},e.getValueAccessorByIndex=function(t){return s[t].accessor||e.valueAccessor()},e.yAxisMin=function(){var r=t.min(o(),function(t){return t.y+t.y0<t.y0?t.y+t.y0:t.y0});return n.utils.subtract(r,e.yAxisPadding())},e.yAxisMax=function(){var r=t.max(o(),function(t){return t.y+t.y0});return n.utils.add(r,e.yAxisPadding())},e.xAxisMin=function(){var r=t.min(o(),n.pluck("x"));return n.utils.subtract(r,e.xAxisPadding())},e.xAxisMax=function(){var r=t.max(o(),n.pluck("x"));return n.utils.add(r,e.xAxisPadding())},n.override(e,"title",function(t,n){return t?"function"==typeof t?e._title(t):t===e._groupName&&"function"==typeof n?e._title(n):"function"!=typeof n?c[t]||e._title():(c[t]=n,e):e._title()}),e.stackLayout=function(t){return arguments.length?(l=t,e):l},e.data(function(){var t=s.filter(u);return t.length?e.stackLayout()(t):[]}),e._ordinalXDomain=function(){return o().map(n.pluck("x"))},e.colorAccessor(function(t){return this.layer||this.name||t.name||t.layer}),e.legendables=function(){return s.map(function(t,n){return{chart:e,name:t.name,hidden:t.hidden||!1,color:e.getColor.call(t,t.values,n)}})},e.isLegendableHidden=function(t){var e=a(t.name);return!!e&&e.hidden},e.legendToggle=function(t){d&&(e.isLegendableHidden(t)?e.showStack(t.name):e.hideStack(t.name),e.renderGroup())},e},n.capMixin=function(e){var r=1/0,i="Others",a=function(n){var r=t.sum(n,e.valueAccessor()),a=e.group().all(),o=t.sum(a,e.valueAccessor()),u=n.map(e.keyAccessor()),l=a.map(e.keyAccessor()),s=t.set(u),c=l.filter(function(t){return!s.has(t)});return o>r?n.concat([{others:c,key:i,value:o-r}]):n};return e.cappedKeyAccessor=function(t,n){return t.others?t.key:e.keyAccessor()(t,n)},e.cappedValueAccessor=function(t,n){return t.others?t.value:e.valueAccessor()(t,n)},e.data(function(t){if(r===1/0)return e._computeOrderedGroups(t.all());var n=t.top(r);return n=e._computeOrderedGroups(n),a?a(n):n}),e.cap=function(t){return arguments.length?(r=t,e):r},e.othersLabel=function(t){return arguments.length?(i=t,e):i},e.othersGrouper=function(t){return arguments.length?(a=t,e):a},n.override(e,"onClick",function(t){t.others&&e.filter([t.others]),e._onClick(t)}),e},n.bubbleMixin=function(e){var r=.3,i=10;e.BUBBLE_NODE_CLASS="node",e.BUBBLE_CLASS="bubble",e.MIN_RADIUS=10,e=n.colorMixin(e),e.renderLabel(!0),e.data(function(t){return t.top(1/0)});var a=t.scale.linear().domain([0,100]),o=function(t){return t.r};e.r=function(t){return arguments.length?(a=t,e):a},e.radiusValueAccessor=function(t){return arguments.length?(o=t,e):o},e.rMin=function(){return t.min(e.data(),function(t){return e.radiusValueAccessor()(t)})},e.rMax=function(){return t.max(e.data(),function(t){return e.radiusValueAccessor()(t)})},e.bubbleR=function(t){var n=e.radiusValueAccessor()(t),r=e.r()(n);return(isNaN(r)||n<=0)&&(r=0),r};var u=function(t){return e.label()(t)},l=function(t){return e.bubbleR(t)>i?1:0};e._doRenderLabel=function(t){if(e.renderLabel()){var r=t.select("text");r.empty()&&(r=t.append("text").attr("text-anchor","middle").attr("dy",".3em").on("click",e.onClick)),r.attr("opacity",0).text(u),n.transition(r,e.transitionDuration()).attr("opacity",l)}},e.doUpdateLabels=function(t){if(e.renderLabel()){var r=t.selectAll("text").text(u);n.transition(r,e.transitionDuration()).attr("opacity",l)}};var s=function(t){return e.title()(t)};return e._doRenderTitles=function(t){if(e.renderTitle()){t.select("title").empty()&&t.append("title").text(s)}},e.doUpdateTitles=function(t){e.renderTitle()&&t.selectAll("title").text(s)},e.minRadiusWithLabel=function(t){return arguments.length?(i=t,e):i},e.maxBubbleRelativeSize=function(t){return arguments.length?(r=t,e):r},e.fadeDeselectedArea=function(){e.hasFilter()?e.selectAll("g."+e.BUBBLE_NODE_CLASS).each(function(t){e.isSelectedNode(t)?e.highlightSelected(this):e.fadeDeselected(this)}):e.selectAll("g."+e.BUBBLE_NODE_CLASS).each(function(){e.resetHighlight(this)})},e.isSelectedNode=function(t){return e.hasFilter(t.key)},e.onClick=function(t){var r=t.key;n.events.trigger(function(){e.filter(r),e.redrawGroup()})},e},n.pieChart=function(e,r){function i(){R=R||t.min([G.width(),G.height()])/2;var e,n=x(),r=y();if(t.sum(G.data(),G.valueAccessor())?(e=r(G.data()),S.classed(T,!1)):(e=r([{key:N,value:1,others:[N]}]),S.classed(T,!0)),S){var i=S.selectAll("g."+B).data(e);a(i,n,e),d(e,n),p(i),m()}}function a(t,e,n){var r=o(t);u(r,e),l(r),c(n,e)}function o(t){return t.enter().append("g").attr("class",function(t,e){return B+" _"+e})}function u(t,e){var r=t.append("path").attr("fill",w).on("click",D).attr("d",function(t,n){return C(t,n,e)});n.transition(r,G.transitionDuration(),function(t){t.attrTween("d",_)})}function l(t){G.renderTitle()&&t.append("title").text(function(t){return G.title()(t)})}function s(t,e){n.transition(t,G.transitionDuration()).attr("transform",function(t){return L(t,e)}).attr("text-anchor","middle").text(function(t){return!b(t.data)&&!A(t)||v(t)?G.label()(t.data):""})}function c(t,e){if(G.renderLabel()){var n=S.selectAll("text."+B).data(t);n.exit().remove();s(n.enter().append("text").attr("class",function(t,e){var n=B+" _"+e;return F&&(n+=" external"),n}).on("click",D),e)}}function d(t,e){f(t,e),h(t,e),g(t)}function f(t,e){var r=S.selectAll("g."+B).data(t).select("path").attr("d",function(t,n){return C(t,n,e)});n.transition(r,G.transitionDuration(),function(t){t.attrTween("d",_)}).attr("fill",w)}function h(t,e){if(G.renderLabel()){s(S.selectAll("text."+B).data(t),e)}}function g(t){G.renderTitle()&&S.selectAll("g."+B).data(t).select("title").text(function(t){return G.title()(t.data)})}function p(t){t.exit().remove()}function m(){G.hasFilter()?G.selectAll("g."+B).each(function(t){v(t)?G.highlightSelected(this):G.fadeDeselected(this)}):G.selectAll("g."+B).each(function(){G.resetHighlight(this)})}function x(){return t.svg.arc().outerRadius(R).innerRadius(P)}function v(t){return G.hasFilter(G.cappedKeyAccessor(t.data))}function y(){return t.layout.pie().sort(null).value(G.cappedValueAccessor)}function A(t){var e=t.endAngle-t.startAngle;return isNaN(e)||e<H}function b(t){return 0===G.cappedValueAccessor(t)}function _(e){e.innerRadius=P;var n=this._current;k(n)&&(n={startAngle:0,endAngle:0});var r=t.interpolate(n,e);return this._current=r(0),function(t){return C(r(t),0,x())}}function k(t){return!t||isNaN(t.startAngle)||isNaN(t.endAngle)}function w(t,e){return G.getColor(t.data,e)}function D(t,e){S.attr("class")!==T&&G.onClick(t.data,e)}function C(t,e,n){var r=n(t,e);return r.indexOf("NaN")>=0&&(r="M0,0"),r}function L(e,n){var r;return r=F?t.svg.arc().outerRadius(R+F).innerRadius(R+F).centroid(e):n.centroid(e),isNaN(r[0])||isNaN(r[1])?"translate(0,0)":"translate("+r+")"}function E(e,n){G.selectAll("g.pie-slice").each(function(r){e.name===r.data.key&&t.select(this).classed("highlight",n)})}
-var R,S,O,M,F,B="pie-slice",T="empty-chart",N="empty",P=0,H=.5,G=n.capMixin(n.colorMixin(n.baseMixin({})));return G.colorAccessor(G.cappedKeyAccessor),G.title(function(t){return G.cappedKeyAccessor(t)+": "+G.cappedValueAccessor(t)}),G.slicesCap=G.cap,G.label(G.cappedKeyAccessor),G.renderLabel(!0),G.transitionDuration(350),G._doRender=function(){return G.resetSvg(),S=G.svg().append("g").attr("transform","translate("+G.cx()+","+G.cy()+")"),i(),G},G.innerRadius=function(t){return arguments.length?(P=t,G):P},G.radius=function(t){return arguments.length?(R=t,G):R},G.cx=function(t){return arguments.length?(O=t,G):O||G.width()/2},G.cy=function(t){return arguments.length?(M=t,G):M||G.height()/2},G._doRedraw=function(){return i(),G},G.minAngleForLabel=function(t){return arguments.length?(H=t,G):H},G.emptyTitle=function(t){return 0===arguments.length?N:(N=t,G)},G.externalLabels=function(t){return 0===arguments.length?F:(F=t||void 0,G)},G.legendables=function(){return G.data().map(function(t,e){var n={name:t.key,data:t.value,others:t.others,chart:G};return n.color=G.getColor(t,e),n})},G.legendHighlight=function(t){E(t,!0)},G.legendReset=function(t){E(t,!1)},G.legendToggle=function(t){G.onClick({key:t.name,others:t.others})},G.anchor(e,r)},n.barChart=function(e,r){function i(t){return n.utils.safeNumber(Math.abs(c.y()(t.y+t.y0)-c.y()(t.y0)))}function a(t,e,r){var a=t.selectAll("rect.bar").data(r.values,n.pluck("x")),o=a.enter().append("rect").attr("class","bar").attr("fill",n.pluck("data",c.getColor)).attr("y",c.yAxisHeight()).attr("height",0);c.renderTitle()&&o.append("title").text(n.pluck("data",c.title(r.name))),c.isOrdinal()&&a.on("click",c.onClick),n.transition(a,c.transitionDuration()).attr("x",function(t){var e=c.x()(t.x);return f&&(e-=l/2),c.isOrdinal()&&void 0!==d&&(e+=d/2),n.utils.safeNumber(e)}).attr("y",function(t){var e=c.y()(t.y+t.y0);return t.y<0&&(e-=i(t)),n.utils.safeNumber(e)}).attr("width",l).attr("height",function(t){return i(t)}).attr("fill",n.pluck("data",c.getColor)).select("title").text(n.pluck("data",c.title(r.name))),n.transition(a.exit(),c.transitionDuration()).attr("height",0).remove()}function o(){if(void 0===l){var t=c.xUnitCount();l=c.isOrdinal()&&void 0===d?Math.floor(c.x().rangeBand()):d?Math.floor((c.xAxisLength()-(t-1)*d)/t):Math.floor(c.xAxisLength()/(1+c.barPadding())/t),(l===1/0||isNaN(l)||l<s)&&(l=s)}}function u(e,n){return function(){var r=t.select(this),i=r.attr("fill")===e;return n?!i:i}}var l,s=1,c=n.stackMixin(n.coordinateGridMixin({})),d=2,f=!1,h=!1;return n.override(c,"rescale",function(){c._rescale(),l=void 0}),n.override(c,"render",function(){c.round()&&f&&!h&&n.logger.warn("By default, brush rounding is disabled if bars are centered. See dc.js bar chart API documentation for details."),c._render()}),c.plotData=function(){var e=c.chartBodyG().selectAll("g.stack").data(c.data());o(),e.enter().append("g").attr("class",function(t,e){return"stack _"+e}),e.each(function(e,n){a(t.select(this),n,e)})},c.fadeDeselectedArea=function(){var t=c.chartBodyG().selectAll("rect.bar"),e=c.brush().extent();if(c.isOrdinal())c.hasFilter()?(t.classed(n.constants.SELECTED_CLASS,function(t){return c.hasFilter(t.x)}),t.classed(n.constants.DESELECTED_CLASS,function(t){return!c.hasFilter(t.x)})):(t.classed(n.constants.SELECTED_CLASS,!1),t.classed(n.constants.DESELECTED_CLASS,!1));else if(c.brushIsEmpty(e))t.classed(n.constants.DESELECTED_CLASS,!1);else{var r=e[0],i=e[1];t.classed(n.constants.DESELECTED_CLASS,function(t){return t.x<r||t.x>=i})}},c.centerBar=function(t){return arguments.length?(f=t,c):f},n.override(c,"onClick",function(t){c._onClick(t.data)}),c.barPadding=function(t){return arguments.length?(c._rangeBandPadding(t),d=void 0,c):c._rangeBandPadding()},c._useOuterPadding=function(){return void 0===d},c.outerPadding=c._outerRangeBandPadding,c.gap=function(t){return arguments.length?(d=t,c):d},c.extendBrush=function(){var t=c.brush().extent();return!c.round()||f&&!h||(t[0]=t.map(c.round())[0],t[1]=t.map(c.round())[1],c.chartBodyG().select(".brush").call(c.brush().extent(t))),t},c.alwaysUseRounding=function(t){return arguments.length?(h=t,c):h},c.legendHighlight=function(t){c.isLegendableHidden(t)||c.g().selectAll("rect.bar").classed("highlight",u(t.color)).classed("fadeout",u(t.color,!0))},c.legendReset=function(){c.g().selectAll("rect.bar").classed("highlight",!1).classed("fadeout",!1)},n.override(c,"xAxisMax",function(){var t=this._xAxisMax();if("resolution"in c.xUnits()){t+=c.xUnits().resolution}return t}),c.anchor(e,r)},n.lineChart=function(e,r){function i(t,e){return k.getColor.call(t,t.values,e)}function a(e,r){var a=t.svg.line().x(function(t){return k.x()(t.x)}).y(function(t){return k.y()(t.y+t.y0)}).interpolate(R).tension(S);x&&a.defined(x);var o=e.append("path").attr("class","line").attr("stroke",i);v&&o.attr("stroke-dasharray",v),n.transition(r.select("path.line"),k.transitionDuration()).attr("stroke",i).attr("d",function(t){return u(a(t.values))})}function o(e,r){if(w){var a=t.svg.area().x(function(t){return k.x()(t.x)}).y(function(t){return k.y()(t.y+t.y0)}).y0(function(t){return k.y()(t.y0)}).interpolate(R).tension(S);x&&a.defined(x),e.append("path").attr("class","area").attr("fill",i).attr("d",function(t){return u(a(t.values))}),n.transition(r.select("path.area"),k.transitionDuration()).attr("fill",i).attr("d",function(t){return u(a(t.values))})}}function u(t){return!t||t.indexOf("NaN")>=0?"M0,0":t}function l(e,r){if(!k.brushOn()){var i=y+"-list",a=e.select("g."+i);a.empty()&&(a=e.append("g").attr("class",i)),r.each(function(e,r){var i=e.values;x&&(i=i.filter(x));var o=a.select("g."+y+"._"+r);o.empty()&&(o=a.append("g").attr("class",y+" _"+r)),s(o);var u=o.selectAll("circle."+A).data(i,n.pluck("x"));u.enter().append("circle").attr("class",A).attr("r",f()).style("fill-opacity",L).style("stroke-opacity",E).on("mousemove",function(){var e=t.select(this);c(e),d(e,o)}).on("mouseout",function(){h(t.select(this)),g(o)}),u.attr("cx",function(t){return n.utils.safeNumber(k.x()(t.x))}).attr("cy",function(t){return n.utils.safeNumber(k.y()(t.y+t.y0))}).attr("fill",k.getColor).call(p,e),u.exit().remove()})}}function s(t){(t.select("path."+b).empty()?t.append("path").attr("class",b):t.select("path."+b)).style("display","none").attr("stroke-dasharray","5,5"),(t.select("path."+_).empty()?t.append("path").attr("class",_):t.select("path."+_)).style("display","none").attr("stroke-dasharray","5,5")}function c(t){return t.style("fill-opacity",.8),t.style("stroke-opacity",.8),t.attr("r",D),t}function d(t,e){var n=t.attr("cx"),r=t.attr("cy"),i=k._yAxisX()-k.margins().left,a="M"+i+" "+r+"L"+n+" "+r,o="M"+n+" "+k.yAxisHeight()+"L"+n+" "+r;e.select("path."+b).style("display","").attr("d",a),e.select("path."+_).style("display","").attr("d",o)}function f(){return C||D}function h(t){t.style("fill-opacity",L).style("stroke-opacity",E).attr("r",f())}function g(t){t.select("path."+b).style("display","none"),t.select("path."+_).style("display","none")}function p(t,e){k.renderTitle()&&(t.selectAll("title").remove(),t.append("title").text(n.pluck("data",k.title(e.name))))}function m(e,n,r){return function(){var i=t.select(this),a=i.attr("stroke")===e&&i.attr("stroke-dasharray")===(n instanceof Array?n.join(","):null)||i.attr("fill")===e;return r?!a:a}}var x,v,y="dc-tooltip",A="dot",b="yRef",_="xRef",k=n.stackMixin(n.coordinateGridMixin({})),w=!1,D=5,C=null,L=1e-6,E=1e-6,R="linear",S=.7;return k.transitionDuration(500),k._rangeBandPadding(1),k.plotData=function(){var t=k.chartBodyG(),e=t.selectAll("g.stack-list");e.empty()&&(e=t.append("g").attr("class","stack-list"));var n=e.selectAll("g.stack").data(k.data()),r=n.enter().append("g").attr("class",function(t,e){return"stack _"+e});a(r,n),o(r,n),l(t,n)},k.interpolate=function(t){return arguments.length?(R=t,k):R},k.tension=function(t){return arguments.length?(S=t,k):S},k.defined=function(t){return arguments.length?(x=t,k):x},k.dashStyle=function(t){return arguments.length?(v=t,k):v},k.renderArea=function(t){return arguments.length?(w=t,k):w},k.dotRadius=function(t){return arguments.length?(D=t,k):D},k.renderDataPoints=function(t){return arguments.length?(t?(L=t.fillOpacity||.8,E=t.strokeOpacity||.8,C=t.radius||2):(L=1e-6,E=1e-6,C=null),k):{fillOpacity:L,strokeOpacity:E,radius:C}},k.legendHighlight=function(t){k.isLegendableHidden(t)||k.g().selectAll("path.line, path.area").classed("highlight",m(t.color,t.dashstyle)).classed("fadeout",m(t.color,t.dashstyle,!0))},k.legendReset=function(){k.g().selectAll("path.line, path.area").classed("highlight",!1).classed("fadeout",!1)},n.override(k,"legendables",function(){var t=k._legendables();return v?t.map(function(t){return t.dashstyle=v,t}):t}),k.anchor(e,r)},n.dataCount=function(e,r){var i=t.format(",d"),a=n.baseMixin({}),o={some:"",all:""};return a.html=function(t){return arguments.length?(t.all&&(o.all=t.all),t.some&&(o.some=t.some),a):o},a.formatNumber=function(t){return arguments.length?(i=t,a):i},a._doRender=function(){var t=a.dimension().size(),e=a.group().value(),n=i(t),r=i(e);return t===e&&""!==o.all?a.root().html(o.all.replace("%total-count",n).replace("%filter-count",r)):""!==o.some?a.root().html(o.some.replace("%total-count",n).replace("%filter-count",r)):(a.selectAll(".total-count").text(n),a.selectAll(".filter-count").text(r)),a},a._doRedraw=function(){return a._doRender()},a.anchor(e,r)},n.dataTable=function(e,r){function i(){var t=!0;if(g.forEach(function(e){t&="function"==typeof e}),!t){f.selectAll("th").remove();f.root().selectAll("th").data(g).enter().append("th").attr("class",d).html(function(t){return f._doColumnHeaderFormat(t)})}var e=f.root().selectAll("tbody").data(a(),function(t){return f.keyAccessor()(t)}),n=e.enter().append("tbody");return n.append("tr").attr("class",c).append("td").attr("class",u).attr("colspan",g.length).html(function(t){return f.keyAccessor()(t)}),e.exit().remove(),n}function a(){var e;return e=m===t.ascending?f.dimension().bottom(h):f.dimension().top(h),t.nest().key(f.group()).sortKeys(m).entries(e.sort(function(t,e){return m(p(t),p(e))}))}function o(t){var e=t.order().selectAll("tr."+l).data(function(t){return t.values}),n=e.enter().append("tr").attr("class",l);return g.forEach(function(t,e){n.append("td").attr("class",s+" _"+e).html(function(e){return f._doColumnValueFormat(t,e)})}),e.exit().remove(),e}var u="dc-table-label",l="dc-table-row",s="dc-table-column",c="dc-table-group",d="dc-table-head",f=n.baseMixin({}),h=25,g=[],p=function(t){return t},m=t.ascending;return f._doRender=function(){return f.selectAll("tbody").remove(),o(i()),f},f._doColumnValueFormat=function(t,e){return"function"==typeof t?t(e):"string"==typeof t?e[t]:t.format(e)},f._doColumnHeaderFormat=function(t){return"function"==typeof t?f._doColumnHeaderFnToString(t):"string"==typeof t?f._doColumnHeaderCapitalize(t):String(t.label)},f._doColumnHeaderCapitalize=function(t){return t.charAt(0).toUpperCase()+t.slice(1)},f._doColumnHeaderFnToString=function(t){var e=String(t),n=e.indexOf("return ");if(n>=0){var r=e.lastIndexOf(";");if(r>=0){e=e.substring(n+7,r);e.indexOf("numberFormat")>=0&&(e=e.replace("numberFormat",""))}}return e},f._doRedraw=function(){return f._doRender()},f.size=function(t){return arguments.length?(h=t,f):h},f.columns=function(t){return arguments.length?(g=t,f):g},f.sortBy=function(t){return arguments.length?(p=t,f):p},f.order=function(t){return arguments.length?(m=t,f):m},f.anchor(e,r)},n.dataGrid=function(e,r){function i(){var t=s.root().selectAll("div."+l).data(a(),function(t){return s.keyAccessor()(t)}),e=t.enter().append("div").attr("class",l);return g&&e.html(function(t){return g(t)}),t.exit().remove(),e}function a(){var e=s.dimension().top(c);return t.nest().key(s.group()).sortKeys(h).entries(e.sort(function(t,e){return h(f(t),f(e))}))}function o(t){var e=t.order().selectAll("div."+u).data(function(t){return t.values});return e.enter().append("div").attr("class",u).html(function(t){return d(t)}),e.exit().remove(),e}var u="dc-grid-item",l="dc-grid-top",s=n.baseMixin({}),c=999,d=function(t){return"you need to provide an html() handling param:  "+JSON.stringify(t)},f=function(t){return t},h=t.ascending,g=function(t){return"<div class='dc-grid-group'><h1 class='dc-grid-label'>"+s.keyAccessor()(t)+"</h1></div>"};return s._doRender=function(){return s.selectAll("div."+l).remove(),o(i()),s},s._doRedraw=function(){return s._doRender()},s.size=function(t){return arguments.length?(c=t,s):c},s.html=function(t){return arguments.length?(d=t,s):d},s.htmlGroup=function(t){return arguments.length?(g=t,s):g},s.sortBy=function(t){return arguments.length?(f=t,s):f},s.order=function(t){return arguments.length?(h=t,s):h},s.anchor(e,r)},n.bubbleChart=function(t,e){function r(t){var e=t.enter().append("g");e.attr("class",l.BUBBLE_NODE_CLASS).attr("transform",c).append("circle").attr("class",function(t,e){return l.BUBBLE_CLASS+" _"+e}).on("click",l.onClick).attr("fill",l.getColor).attr("r",0),n.transition(t,l.transitionDuration()).selectAll("circle."+l.BUBBLE_CLASS).attr("r",function(t){return l.bubbleR(t)}).attr("opacity",function(t){return l.bubbleR(t)>0?1:0}),l._doRenderLabel(e),l._doRenderTitles(e)}function i(t){n.transition(t,l.transitionDuration()).attr("transform",c).selectAll("circle."+l.BUBBLE_CLASS).attr("fill",l.getColor).attr("r",function(t){return l.bubbleR(t)}).attr("opacity",function(t){return l.bubbleR(t)>0?1:0}),l.doUpdateLabels(t),l.doUpdateTitles(t)}function a(t){t.exit().remove()}function o(t){var e=l.x()(l.keyAccessor()(t));return isNaN(e)&&(e=0),e}function u(t){var e=l.y()(l.valueAccessor()(t));return isNaN(e)&&(e=0),e}var l=n.bubbleMixin(n.coordinateGridMixin({})),s=!1;l.transitionDuration(750);var c=function(t){return"translate("+o(t)+","+u(t)+")"};return l.elasticRadius=function(t){return arguments.length?(s=t,l):s},l.plotData=function(){s&&l.r().domain([l.rMin(),l.rMax()]),l.r().range([l.MIN_RADIUS,l.xAxisLength()*l.maxBubbleRelativeSize()]);var t=l.chartBodyG().selectAll("g."+l.BUBBLE_NODE_CLASS).data(l.data(),function(t){return t.key});r(t),i(t),a(t),l.fadeDeselectedArea()},l.renderBrush=function(){},l.redrawBrush=function(){l.fadeDeselectedArea()},l.anchor(t,e)},n.compositeChart=function(e,r){function i(){(void 0===y.rightY()||y.elasticY())&&(y.rightY(t.scale.linear()),y.rightY().domain([d(),g()]).rangeRound([y.yAxisHeight(),0])),y.rightY().range([y.yAxisHeight(),0]),y.rightYAxis(y.rightYAxis().scale(y.rightY())),y.rightYAxis().orient("right")}function a(){(void 0===y.y()||y.elasticY())&&(y.y(t.scale.linear()),y.y().domain([c(),h()]).rangeRound([y.yAxisHeight(),0])),y.y().range([y.yAxisHeight(),0]),y.yAxis(y.yAxis().scale(y.y())),y.yAxis().orient("left")}function o(t,e){t._generateG(y.g()),t.g().attr("class",v+" _"+e)}function u(){return A.filter(function(t){return!t.useRightYAxis()})}function l(){return A.filter(function(t){return t.useRightYAxis()})}function s(t){return t.map(function(t){return t.yAxisMin()})}function c(){return t.min(s(u()))}function d(){return t.min(s(l()))}function f(t){return t.map(function(t){return t.yAxisMax()})}function h(){return n.utils.add(t.max(f(u())),y.yAxisPadding())}function g(){return n.utils.add(t.max(f(l())),y.yAxisPadding())}function p(){return A.map(function(t){return t.xAxisMin()})}function m(){return A.map(function(t){return t.xAxisMax()})}var x,v="sub",y=n.coordinateGridMixin({}),A=[],b={},_=!1,k=!0,w=t.svg.axis(),D=0,C=12,L=!1;return y._mandatoryAttributes([]),y.transitionDuration(500),n.override(y,"_generateG",function(){for(var t=this.__generateG(),e=0;e<A.length;++e){var n=A[e];o(n,e),n.dimension()||n.dimension(y.dimension()),n.group()||n.group(y.group()),n.chartGroup(y.chartGroup()),n.svg(y.svg()),n.xUnits(y.xUnits()),n.transitionDuration(y.transitionDuration()),n.brushOn(y.brushOn()),n.renderTitle(y.renderTitle())}return t}),y._brushing=function(){for(var t=y.extendBrush(),e=y.brushIsEmpty(t),n=0;n<A.length;++n)A[n].filter(null),e||A[n].filter(t)},y._prepareYAxis=function(){0!==u().length&&a(),0!==l().length&&i(),u().length>0&&!L?y._renderHorizontalGridLinesForAxis(y.g(),y.y(),y.yAxis()):l().length>0&&y._renderHorizontalGridLinesForAxis(y.g(),x,w)},y.renderYAxis=function(){0!==u().length&&(y.renderYAxisAt("y",y.yAxis(),y.margins().left),y.renderYAxisLabel("y",y.yAxisLabel(),-90)),0!==l().length&&(y.renderYAxisAt("yr",y.rightYAxis(),y.width()-y.margins().right),y.renderYAxisLabel("yr",y.rightYAxisLabel(),90,y.width()-C))},y.plotData=function(){for(var t=0;t<A.length;++t){var e=A[t];e.g()||o(e,t),_&&e.colors(y.colors()),e.x(y.x()),e.xAxis(y.xAxis()),e.useRightYAxis()?(e.y(y.rightY()),e.yAxis(y.rightYAxis())):(e.y(y.y()),e.yAxis(y.yAxis())),e.plotData(),e._activateRenderlets()}},y.useRightAxisGridLines=function(t){return arguments?(L=t,y):L},y.childOptions=function(t){return arguments.length?(b=t,A.forEach(function(t){t.options(b)}),y):b},y.fadeDeselectedArea=function(){for(var t=0;t<A.length;++t){var e=A[t];e.brush(y.brush()),e.fadeDeselectedArea()}},y.rightYAxisLabel=function(t,e){return arguments.length?(D=t,y.margins().right-=C,C=void 0===e?12:e,y.margins().right+=C,y):D},y.compose=function(t){return A=t,A.forEach(function(t){t.height(y.height()),t.width(y.width()),t.margins(y.margins()),k&&t.title(y.title()),t.options(b)}),y},y.children=function(){return A},y.shareColors=function(t){return arguments.length?(_=t,y):_},y.shareTitle=function(t){return arguments.length?(k=t,y):k},y.rightY=function(t){return arguments.length?(x=t,y):x},delete y.yAxisMin,delete y.yAxisMax,n.override(y,"xAxisMin",function(){return n.utils.subtract(t.min(p()),y.xAxisPadding())}),n.override(y,"xAxisMax",function(){return n.utils.add(t.max(m()),y.xAxisPadding())}),y.legendables=function(){return A.reduce(function(t,e){return _&&e.colors(y.colors()),t.push.apply(t,e.legendables()),t},[])},y.legendHighlight=function(t){for(var e=0;e<A.length;++e){A[e].legendHighlight(t)}},y.legendReset=function(t){for(var e=0;e<A.length;++e){A[e].legendReset(t)}},y.legendToggle=function(){console.log("composite should not be getting legendToggle itself")},y.rightYAxis=function(t){return arguments.length?(w=t,y):w},y.anchor(e,r)},n.seriesChart=function(e,r){function i(e,n){return t.ascending(l.keyAccessor()(e),l.keyAccessor()(n))}function a(t){s[t].g()&&s[t].g().remove(),delete s[t]}function o(){Object.keys(s).map(a),s={}}var u,l=n.compositeChart(e,r),s={},c=n.lineChart,d=t.ascending,f=i;return l._mandatoryAttributes().push("seriesAccessor","chart"),l.shareColors(!0),l._preprocessData=function(){var e,n=[],i=t.nest().key(u);d&&i.sortKeys(d),f&&i.sortValues(f);var o=i.entries(l.data()),h=o.map(function(i,a){var o=s[i.key]||c.call(l,l,r,i.key,a);return s[i.key]||(e=!0),s[i.key]=o,n.push(i.key),o.dimension(l.dimension()).group({all:t.functor(i.values)},i.key).keyAccessor(l.keyAccessor()).valueAccessor(l.valueAccessor()).brushOn(l.brushOn())});Object.keys(s).filter(function(t){return-1===n.indexOf(t)}).forEach(function(t){a(t),e=!0}),l._compose(h),e&&l.legend()&&l.legend().render()},l.chart=function(t){return arguments.length?(c=t,o(),l):c},l.seriesAccessor=function(t){return arguments.length?(u=t,o(),l):u},l.seriesSort=function(t){return arguments.length?(d=t,o(),l):d},l.valueSort=function(t){return arguments.length?(f=t,o(),l):f},l._compose=l.compose,delete l.compose,l},n.geoChoroplethChart=function(e,r){function i(t){var e=a();if(o(t)){var n=u(t);h(n,t,e),g(n,t,e)}}function a(){for(var t={},e=p.data(),n=0;n<e.length;++n)t[p.keyAccessor()(e[n])]=p.valueAccessor()(e[n]);return t}function o(t){return f(t).keyAccessor}function u(t){return p.svg().selectAll(l(t)).classed("selected",function(e){return s(t,e)}).classed("deselected",function(e){return c(t,e)}).attr("class",function(e){var r=f(t).name,i=n.utils.nameToId(f(t).keyAccessor(e)),a=r+" "+i;return s(t,e)&&(a+=" selected"),c(t,e)&&(a+=" deselected"),a})}function l(t){return"g.layer"+t+" g."+f(t).name}function s(t,e){return p.hasFilter()&&p.hasFilter(d(t,e))}function c(t,e){return p.hasFilter()&&!p.hasFilter(d(t,e))}function d(t,e){return f(t).keyAccessor(e)}function f(t){return v[t]}function h(e,r,i){var a=e.select("path").attr("fill",function(){var e=t.select(this).attr("fill");return e||"none"}).on("click",function(t){return p.onClick(t,r)});n.transition(a,p.transitionDuration()).attr("fill",function(t,e){return p.getColor(i[f(r).keyAccessor(t)],e)})}function g(t,e,n){p.renderTitle()&&t.selectAll("title").text(function(t){var r=d(e,t),i=n[r];return p.title()({key:r,value:i})})}var p=n.colorMixin(n.baseMixin({}));p.colorAccessor(function(t){return t||0});var m,x=t.geo.path(),v=[];return p._doRender=function(){p.resetSvg();for(var t=0;t<v.length;++t){var e=p.svg().append("g").attr("class","layer"+t),n=e.selectAll("g."+f(t).name).data(f(t).data).enter().append("g").attr("class",f(t).name);n.append("path").attr("fill","white").attr("d",x),n.append("title"),i(t)}m=!1},p.onClick=function(t,e){var r=f(e).keyAccessor(t);n.events.trigger(function(){p.filter(r),p.redrawGroup()})},p._doRedraw=function(){for(var t=0;t<v.length;++t)i(t),m&&p.svg().selectAll("g."+f(t).name+" path").attr("d",x);m=!1},p.overlayGeoJson=function(t,e,n){for(var r=0;r<v.length;++r)if(v[r].name===e)return v[r].data=t,v[r].keyAccessor=n,p;return v.push({name:e,data:t,keyAccessor:n}),p},p.projection=function(t){return x.projection(t),m=!0,p},p.geoJsons=function(){return v},p.geoPath=function(){return x},p.removeGeoJson=function(t){for(var e=[],n=0;n<v.length;++n){var r=v[n];r.name!==t&&e.push(r)}return v=e,p},p.anchor(e,r)},n.bubbleOverlay=function(e,r){function i(){return s=h.select("g."+c),s.empty()&&(s=h.svg().append("g").attr("class",c)),s}function a(){var t=o();g.forEach(function(e){var r=u(e,t),i=r.select("circle."+f);i.empty()&&(i=r.append("circle").attr("class",f).attr("r",0).attr("fill",h.getColor).on("click",h.onClick)),n.transition(i,h.transitionDuration()).attr("r",function(t){return h.bubbleR(t)}),h._doRenderLabel(r),h._doRenderTitles(r)})}function o(){var t={};return h.data().forEach(function(e){t[h.keyAccessor()(e)]=e}),t}function u(t,e){var r=d+" "+n.utils.nameToId(t.name),i=s.select("g."+n.utils.nameToId(t.name));return i.empty()&&(i=s.append("g").attr("class",r).attr("transform","translate("+t.x+","+t.y+")")),i.datum(e[t.name]),i}function l(){var t=o();g.forEach(function(e){var r=u(e,t),i=r.select("circle."+f);n.transition(i,h.transitionDuration()).attr("r",function(t){return h.bubbleR(t)}).attr("fill",h.getColor),h.doUpdateLabels(r),h.doUpdateTitles(r)})}var s,c="bubble-overlay",d="node",f="bubble",h=n.bubbleMixin(n.baseMixin({})),g=[];return h.transitionDuration(750),h.radiusValueAccessor(function(t){return t.value}),h.point=function(t,e,n){return g.push({name:t,x:e,y:n}),h},h._doRender=function(){return s=i(),h.r().range([h.MIN_RADIUS,h.width()*h.maxBubbleRelativeSize()]),a(),h.fadeDeselectedArea(),h},h._doRedraw=function(){return l(),h.fadeDeselectedArea(),h},h.debug=function(e){if(e){var r=h.select("g."+n.constants.DEBUG_GROUP_CLASS);r.empty()&&(r=h.svg().append("g").attr("class",n.constants.DEBUG_GROUP_CLASS));var i=r.append("text").attr("x",10).attr("y",20);r.append("rect").attr("width",h.width()).attr("height",h.height()).on("mousemove",function(){var e=t.mouse(r.node()),n=e[0]+", "+e[1];i.text(n)})}else h.selectAll(".debug").remove();return h},h.anchor(e,r),h},n.rowChart=function(e,r){function i(){if(!y||A){var e=t.extent(b,M.cappedValueAccessor);e[0]>0&&(e[0]=0),y=t.scale.linear().domain(e).range([0,M.effectiveWidth()])}F.scale(y)}function a(){var t=v.select("g.axis");i(),t.empty()&&(t=v.append("g").attr("class","axis").attr("transform","translate(0, "+M.effectiveHeight()+")")),n.transition(t,M.transitionDuration()).call(F)}function o(){v.selectAll("g.tick").select("line.grid-line").remove(),v.selectAll("g.tick").append("line").attr("class","grid-line").attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",function(){return-M.effectiveHeight()})}function u(){b=M.data(),a(),o();var t=v.selectAll("g."+R).data(b);l(t),s(t),d(t)}function l(t){var e=t.enter().append("g").attr("class",function(t,e){return R+" _"+e});e.append("rect").attr("width",0),h(e),g(t)}function s(t){t.exit().remove()}function c(){var t=y(0);return t===-1/0||t!==t?y(1):t}function d(t){var e,r=b.length;e=E||(M.effectiveHeight()-(r+1)*L)/r,w||(k=e/2);var i=t.attr("transform",function(t,n){return"translate(0,"+((n+1)*L+n*e)+")"}).select("rect").attr("height",e).attr("fill",M.getColor).on("click",p).classed("deselected",function(t){return!!M.hasFilter()&&!x(t)}).classed("selected",function(t){return!!M.hasFilter()&&x(t)});n.transition(i,M.transitionDuration()).attr("width",function(t){return Math.abs(c()-y(M.valueAccessor()(t)))}).attr("transform",m),f(t),g(t)}function f(t){M.renderTitle()&&(t.selectAll("title").remove(),t.append("title").text(M.title()))}function h(t){M.renderLabel()&&t.append("text").on("click",p),M.renderTitleLabel()&&t.append("text").attr("class",S).on("click",p)}function g(t){if(M.renderLabel()){var e=t.select("text").attr("x",_).attr("y",k).attr("dy",D).on("click",p).attr("class",function(t,e){return R+" _"+e}).text(function(t){return M.label()(t)});n.transition(e,M.transitionDuration()).attr("transform",m)}if(M.renderTitleLabel()){var r=t.select("."+S).attr("x",M.effectiveWidth()-C).attr("y",k).attr("text-anchor","end").on("click",p).attr("class",function(t,e){return S+" _"+e}).text(function(t){return M.title()(t)});n.transition(r,M.transitionDuration()).attr("transform",m)}}function p(t){M.onClick(t)}function m(t){var e=y(M.cappedValueAccessor(t)),n=c();return"translate("+(e>n?n:e)+",0)"}function x(t){return M.hasFilter(M.cappedKeyAccessor(t))}var v,y,A,b,_=10,k=15,w=!1,D="0.35em",C=2,L=5,E=!1,R="row",S="titlerow",O=!1,M=n.capMixin(n.marginMixin(n.colorMixin(n.baseMixin({})))),F=t.svg.axis().orient("bottom");return M.rowsCap=M.cap,M._doRender=function(){return M.resetSvg(),v=M.svg().append("g").attr("transform","translate("+M.margins().left+","+M.margins().top+")"),u(),M},M.title(function(t){return M.cappedKeyAccessor(t)+": "+M.cappedValueAccessor(t)}),M.label(M.cappedKeyAccessor),M.x=function(t){return arguments.length?(y=t,M):y},M.renderTitleLabel=function(t){return arguments.length?(O=t,M):O},M._doRedraw=function(){return u(),M},M.xAxis=function(){return F},M.fixedBarHeight=function(t){return arguments.length?(E=t,M):E},M.gap=function(t){return arguments.length?(L=t,M):L},M.elasticX=function(t){return arguments.length?(A=t,M):A},M.labelOffsetX=function(t){return arguments.length?(_=t,M):_},M.labelOffsetY=function(t){return arguments.length?(k=t,w=!0,M):k},M.titleLabelOffsetX=function(t){return arguments.length?(C=t,M):C},M.anchor(e,r)},n.legend=function(){function t(){return l+u}var e,r,i={},a=0,o=0,u=12,l=5,s=!1,c=560,d=70,f=!1;return i.parent=function(t){return arguments.length?(e=t,i):e},i.render=function(){e.svg().select("g.dc-legend").remove(),r=e.svg().append("g").attr("class","dc-legend").attr("transform","translate("+a+","+o+")");var i=e.legendables(),h=r.selectAll("g.dc-legend-item").data(i).enter().append("g").attr("class","dc-legend-item").on("mouseover",function(t){e.legendHighlight(t)}).on("mouseout",function(t){e.legendReset(t)}).on("click",function(t){t.chart.legendToggle(t)});r.selectAll("g.dc-legend-item").classed("fadeout",function(t){return t.chart.isLegendableHidden(t)}),i.some(n.pluck("dashstyle"))?h.append("line").attr("x1",0).attr("y1",u/2).attr("x2",u).attr("y2",u/2).attr("stroke-width",2).attr("stroke-dasharray",n.pluck("dashstyle")).attr("stroke",n.pluck("color")):h.append("rect").attr("width",u).attr("height",u).attr("fill",function(t){return t?t.color:"blue"}),h.append("text").text(n.pluck("name")).attr("x",u+2).attr("y",function(){return u/2+(this.clientHeight?this.clientHeight:13)/2-2});var g=0,p=0;h.attr("transform",function(e,n){if(s){var r="translate("+g+","+p*t()+")",i=!0===f?this.getBBox().width+l:d;return g+i>=c?(++p,g=0):g+=i,r}return"translate(0,"+n*t()+")"})},i.x=function(t){return arguments.length?(a=t,i):a},i.y=function(t){return arguments.length?(o=t,i):o},i.gap=function(t){return arguments.length?(l=t,i):l},i.itemHeight=function(t){return arguments.length?(u=t,i):u},i.horizontal=function(t){return arguments.length?(s=t,i):s},i.legendWidth=function(t){return arguments.length?(c=t,i):c},i.itemWidth=function(t){return arguments.length?(d=t,i):d},i.autoItemWidth=function(t){return arguments.length?(f=t,i):f},i},n.scatterPlot=function(e,r){function i(e,r){var i=o.selectAll(".chart-body path.symbol").filter(function(){return e(t.select(this))}),a=u.size();u.size(Math.pow(r,2)),n.transition(i,o.transitionDuration()).attr("d",u),u.size(a)}function a(t){var e=o.selectAll(".chart-body path.symbol").each(function(e){this.filtered=t&&t.isFiltered(e.key)});n.transition(e,o.transitionDuration()).attr("d",u)}var o=n.coordinateGridMixin({}),u=t.svg.symbol(),l=function(t){return t.value},s=o.keyAccessor();o.keyAccessor(function(t){return s(t)[0]}),o.valueAccessor(function(t){return s(t)[1]}),o.colorAccessor(function(){return o._groupName});var c=function(t){return"translate("+o.x()(o.keyAccessor()(t))+","+o.y()(o.valueAccessor()(t))+")"},d=3,f=5,h=0;return u.size(function(t){return l(t)?this.filtered?Math.pow(f,2):Math.pow(d,2):h}),n.override(o,"_filter",function(t){return arguments.length?o.__filter(n.filters.RangedTwoDimensionalFilter(t)):o.__filter()}),o.plotData=function(){var t=o.chartBodyG().selectAll("path.symbol").data(o.data());t.enter().append("path").attr("class","symbol").attr("opacity",0).attr("fill",o.getColor).attr("transform",c),n.transition(t,o.transitionDuration()).attr("opacity",function(t){return l(t)?1:0}).attr("fill",o.getColor).attr("transform",c).attr("d",u),n.transition(t.exit(),o.transitionDuration()).attr("opacity",0).remove()},o.existenceAccessor=function(t){return arguments.length?(l=t,this):l},o.symbol=function(t){return arguments.length?(u.type(t),o):u.type()},o.symbolSize=function(t){return arguments.length?(d=t,o):d},o.highlightedSize=function(t){return arguments.length?(f=t,o):f},o.hiddenSize=function(t){return arguments.length?(h=t,o):h},o.legendables=function(){return[{chart:o,name:o._groupName,color:o.getColor()}]},o.legendHighlight=function(e){i(function(t){return t.attr("fill")===e.color},f),o.selectAll(".chart-body path.symbol").filter(function(){return t.select(this).attr("fill")!==e.color}).classed("fadeout",!0)},o.legendReset=function(e){i(function(t){return t.attr("fill")===e.color},d),o.selectAll(".chart-body path.symbol").filter(function(){return t.select(this).attr("fill")!==e.color}).classed("fadeout",!1)},o.setHandlePaths=function(){},o.extendBrush=function(){var t=o.brush().extent();return o.round()&&(t[0]=t[0].map(o.round()),t[1]=t[1].map(o.round()),o.g().select(".brush").call(o.brush().extent(t))),t},o.brushIsEmpty=function(t){return o.brush().empty()||!t||t[0][0]>=t[1][0]||t[0][1]>=t[1][1]},o._brushing=function(){var t=o.extendBrush();if(o.redrawBrush(o.g()),o.brushIsEmpty(t))n.events.trigger(function(){o.filter(null),o.redrawGroup()}),a(!1);else{var e=n.filters.RangedTwoDimensionalFilter(t);n.events.trigger(function(){o.filter(null),o.filter(e),o.redrawGroup()},n.constants.EVENT_DELAY),a(e)}},o.setBrushY=function(t){t.call(o.brush().y(o.y()))},o.anchor(e,r)},n.numberDisplay=function(e,r){var i=t.format(".2s"),a=n.baseMixin({}),o={one:"",some:"",none:""};return a._mandatoryAttributes(["group"]),a.html=function(t){return arguments.length?(t.none?o.none=t.none:t.one?o.none=t.one:t.some&&(o.none=t.some),t.one?o.one=t.one:t.some&&(o.one=t.some),t.some?o.some=t.some:t.one&&(o.some=t.one),a):o},a.value=function(){return a.data()},a.data(function(t){var e=t.value?t.value():t.top(1)[0];return a.valueAccessor()(e)}),a.transitionDuration(250),a._doRender=function(){var e=a.value(),n=a.selectAll(".number-display");n.empty()&&(n=n.data([0]).enter().append("span").attr("class","number-display")),n.transition().duration(a.transitionDuration()).ease("quad-out-in").tween("text",function(){var n=t.interpolateNumber(this.lastValue||0,e)
-;return this.lastValue=e,function(t){var r=null,i=a.formatNumber()(n(t));0===e&&""!==o.none?r=o.none:1===e&&""!==o.one?r=o.one:""!==o.some&&(r=o.some),this.innerHTML=r?r.replace("%number",i):i}})},a._doRedraw=function(){return a._doRender()},a.formatNumber=function(t){return arguments.length?(i=t,a):i},a.anchor(e,r)},n.heatMap=function(e,r){function i(t,e){var r=d.selectAll(".box-group").filter(function(n){return n.key[t]===e}),i=r.filter(function(t){return!d.hasFilter(t.key)});n.events.trigger(function(){i.empty()?r.each(function(t){d.filter(t.key)}):i.each(function(t){d.filter(t.key)}),d.redrawGroup()})}function a(t,e,n){return!e||n[e-1]!==t}var o,u,l,s=6.75,c=6.75,d=n.colorMixin(n.marginMixin(n.baseMixin({})));d._mandatoryAttributes(["group"]),d.title(d.colorAccessor());var f=function(t){return t},h=function(t){return t};d.colsLabel=function(t){return arguments.length?(f=t,d):f},d.rowsLabel=function(t){return arguments.length?(h=t,d):h};var g=function(t){i(0,t)},p=function(t){i(1,t)},m=function(t){var e=t.key;n.events.trigger(function(){d.filter(e),d.redrawGroup()})};return n.override(d,"filter",function(t){return arguments.length?d._filter(n.filters.TwoDimensionalFilter(t)):d._filter()}),d.rows=function(e){if(arguments.length)return l=e,d;if(l)return l;var n=d.data().map(d.valueAccessor());return n.sort(t.ascending),t.scale.ordinal().domain(n.filter(a))},d.cols=function(e){if(arguments.length)return u=e,d;if(u)return u;var n=d.data().map(d.keyAccessor());return n.sort(t.ascending),t.scale.ordinal().domain(n.filter(a))},d._doRender=function(){return d.resetSvg(),o=d.svg().append("g").attr("class","heatmap").attr("transform","translate("+d.margins().left+","+d.margins().top+")"),d._doRedraw()},d._doRedraw=function(){var t=d.rows(),e=d.cols(),r=t.domain().length,i=e.domain().length,a=Math.floor(d.effectiveWidth()/i),u=Math.floor(d.effectiveHeight()/r);e.rangeRoundBands([0,d.effectiveWidth()]),t.rangeRoundBands([d.effectiveHeight(),0]);var l=o.selectAll("g.box-group").data(d.data(),function(t,e){return d.keyAccessor()(t,e)+"\0"+d.valueAccessor()(t,e)}),f=l.enter().append("g").attr("class","box-group");f.append("rect").attr("class","heat-box").attr("fill","white").on("click",d.boxOnClick()),d.renderTitle()&&f.append("title").text(d.title()),n.transition(l.selectAll("rect"),d.transitionDuration()).attr("x",function(t,n){return e(d.keyAccessor()(t,n))}).attr("y",function(e,n){return t(d.valueAccessor()(e,n))}).attr("rx",s).attr("ry",c).attr("fill",d.getColor).attr("width",a).attr("height",u),l.exit().remove();var h=o.selectAll("g.cols");h.empty()&&(h=o.append("g").attr("class","cols axis"));var g=h.selectAll("text").data(e.domain());g.enter().append("text").attr("x",function(t){return e(t)+a/2}).style("text-anchor","middle").attr("y",d.effectiveHeight()).attr("dy",12).on("click",d.xAxisOnClick()).text(d.colsLabel()),n.transition(g,d.transitionDuration()).text(d.colsLabel()).attr("x",function(t){return e(t)+a/2}),g.exit().remove();var p=o.selectAll("g.rows");p.empty()&&(p=o.append("g").attr("class","rows axis"));var m=p.selectAll("text").data(t.domain());return m.enter().append("text").attr("dy",6).style("text-anchor","end").attr("x",0).attr("dx",-2).on("click",d.yAxisOnClick()).text(d.rowsLabel()),n.transition(m,d.transitionDuration()).text(d.rowsLabel()).attr("y",function(e){return t(e)+u/2}),m.exit().remove(),d.hasFilter()?d.selectAll("g.box-group").each(function(t){d.isSelectedNode(t)?d.highlightSelected(this):d.fadeDeselected(this)}):d.selectAll("g.box-group").each(function(){d.resetHighlight(this)}),d},d.boxOnClick=function(t){return arguments.length?(m=t,d):m},d.xAxisOnClick=function(t){return arguments.length?(g=t,d):g},d.yAxisOnClick=function(t){return arguments.length?(p=t,d):p},d.xBorderRadius=function(t){return arguments.length?(s=t,d):s},d.yBorderRadius=function(t){return arguments.length?(c=t,d):c},d.isSelectedNode=function(t){return d.hasFilter(t.key)},d.anchor(e,r)},function(){function e(t){return[0,t.length-1]}function n(e){return[t.quantile(e,.25),t.quantile(e,.5),t.quantile(e,.75)]}t.box=function(){function r(e){e.each(function(e,n){e=e.map(l).sort(t.ascending);var r=t.select(this),f=e.length,h=e[0],g=e[f-1],p=e.quartiles=c(e),m=s&&s.call(this,e,n),x=m&&m.map(function(t){return e[t]}),v=m?t.range(0,m[0]).concat(t.range(m[1]+1,f)):t.range(f),y=t.scale.linear().domain(u&&u.call(this,e,n)||[h,g]).range([a,0]),A=this.__chart__||t.scale.linear().domain([0,1/0]).range(y.range());this.__chart__=y;var b=r.selectAll("line.center").data(x?[x]:[]);b.enter().insert("line","rect").attr("class","center").attr("x1",i/2).attr("y1",function(t){return A(t[0])}).attr("x2",i/2).attr("y2",function(t){return A(t[1])}).style("opacity",1e-6).transition().duration(o).style("opacity",1).attr("y1",function(t){return y(t[0])}).attr("y2",function(t){return y(t[1])}),b.transition().duration(o).style("opacity",1).attr("y1",function(t){return y(t[0])}).attr("y2",function(t){return y(t[1])}),b.exit().transition().duration(o).style("opacity",1e-6).attr("y1",function(t){return y(t[0])}).attr("y2",function(t){return y(t[1])}).remove();var _=r.selectAll("rect.box").data([p]);_.enter().append("rect").attr("class","box").attr("x",0).attr("y",function(t){return A(t[2])}).attr("width",i).attr("height",function(t){return A(t[0])-A(t[2])}).transition().duration(o).attr("y",function(t){return y(t[2])}).attr("height",function(t){return y(t[0])-y(t[2])}),_.transition().duration(o).attr("y",function(t){return y(t[2])}).attr("height",function(t){return y(t[0])-y(t[2])});var k=r.selectAll("line.median").data([p[1]]);k.enter().append("line").attr("class","median").attr("x1",0).attr("y1",A).attr("x2",i).attr("y2",A).transition().duration(o).attr("y1",y).attr("y2",y),k.transition().duration(o).attr("y1",y).attr("y2",y);var w=r.selectAll("line.whisker").data(x||[]);w.enter().insert("line","circle, text").attr("class","whisker").attr("x1",0).attr("y1",A).attr("x2",i).attr("y2",A).style("opacity",1e-6).transition().duration(o).attr("y1",y).attr("y2",y).style("opacity",1),w.transition().duration(o).attr("y1",y).attr("y2",y).style("opacity",1),w.exit().transition().duration(o).attr("y1",y).attr("y2",y).style("opacity",1e-6).remove();var D=r.selectAll("circle.outlier").data(v,Number);D.enter().insert("circle","text").attr("class","outlier").attr("r",5).attr("cx",i/2).attr("cy",function(t){return A(e[t])}).style("opacity",1e-6).transition().duration(o).attr("cy",function(t){return y(e[t])}).style("opacity",1),D.transition().duration(o).attr("cy",function(t){return y(e[t])}).style("opacity",1),D.exit().transition().duration(o).attr("cy",function(t){return y(e[t])}).style("opacity",1e-6).remove();var C=d||y.tickFormat(8),L=r.selectAll("text.box").data(p);L.enter().append("text").attr("class","box").attr("dy",".3em").attr("dx",function(t,e){return 1&e?6:-6}).attr("x",function(t,e){return 1&e?i:0}).attr("y",A).attr("text-anchor",function(t,e){return 1&e?"start":"end"}).text(C).transition().duration(o).attr("y",y),L.transition().duration(o).text(C).attr("y",y);var E=r.selectAll("text.whisker").data(x||[]);E.enter().append("text").attr("class","whisker").attr("dy",".3em").attr("dx",6).attr("x",i).attr("y",A).text(C).style("opacity",1e-6).transition().duration(o).attr("y",y).style("opacity",1),E.transition().duration(o).text(C).attr("y",y).style("opacity",1),E.exit().transition().duration(o).attr("y",y).style("opacity",1e-6).remove()}),t.timer.flush()}var i=1,a=1,o=0,u=null,l=Number,s=e,c=n,d=null;return r.width=function(t){return arguments.length?(i=t,r):i},r.height=function(t){return arguments.length?(a=t,r):a},r.tickFormat=function(t){return arguments.length?(d=t,r):d},r.duration=function(t){return arguments.length?(o=t,r):o},r.domain=function(e){return arguments.length?(u=null===e?e:t.functor(e),r):u},r.value=function(t){return arguments.length?(l=t,r):l},r.whiskers=function(t){return arguments.length?(s=t,r):s},r.quartiles=function(t){return arguments.length?(c=t,r):c},r}}(),n.boxPlot=function(e,r){function i(t){return function(e){for(var n=e.quartiles[0],r=e.quartiles[2],i=(r-n)*t,a=-1,o=e.length;e[++a]<n-i;);for(;e[--o]>r+i;);return[a,o]}}function a(t){t.enter().append("g").attr("class","box").attr("transform",g).call(d).on("click",function(t){l.filter(t.key),l.redrawGroup()})}function o(e){n.transition(e,l.transitionDuration()).attr("transform",g).call(d).each(function(){t.select(this).select("rect.box").attr("fill",l.getColor)})}function u(t){t.exit().remove().call(d)}var l=n.coordinateGridMixin({}),s=i,c=s(1.5),d=t.box(),f=null,h=function(t,e){return l.isOrdinal()?l.x().rangeBand():t/(1+l.boxPadding())/e};l.yAxisPadding(12),l.x(t.scale.ordinal()),l.xUnits(n.units.ordinal),l.data(function(t){return t.all().map(function(t){return t.map=function(e){return e.call(t,t)},t}).filter(function(t){return 0!==l.valueAccessor()(t).length})}),l.boxPadding=l._rangeBandPadding,l.boxPadding(.8),l.outerPadding=l._outerRangeBandPadding,l.outerPadding(.5),l.boxWidth=function(e){return arguments.length?(h=t.functor(e),l):h};var g=function(t,e){return"translate("+l.x()(l.keyAccessor()(t,e))+", 0)"};return l._preprocessData=function(){l.elasticX()&&l.x().domain([])},l.plotData=function(){var t=h(l.effectiveWidth(),l.xUnitCount());d.whiskers(c).width(t).height(l.effectiveHeight()).value(l.valueAccessor()).domain(l.y().domain()).duration(l.transitionDuration()).tickFormat(f);var e=l.chartBodyG().selectAll("g.box").data(l.data(),function(t){return t.key});a(e),o(e),u(e),l.fadeDeselectedArea()},l.fadeDeselectedArea=function(){l.hasFilter()?l.g().selectAll("g.box").each(function(t){l.isSelectedNode(t)?l.highlightSelected(this):l.fadeDeselected(this)}):l.g().selectAll("g.box").each(function(){l.resetHighlight(this)})},l.isSelectedNode=function(t){return l.hasFilter(t.key)},l.yAxisMin=function(){var e=t.min(l.data(),function(e){return t.min(l.valueAccessor()(e))});return n.utils.subtract(e,l.yAxisPadding())},l.yAxisMax=function(){var e=t.max(l.data(),function(e){return t.max(l.valueAccessor()(e))});return n.utils.add(e,l.yAxisPadding())},l.tickFormat=function(t){return arguments.length?(f=t,l):f},l.anchor(e,r)},n.abstractBubbleChart=n.bubbleMixin,n.baseChart=n.baseMixin,n.capped=n.capMixin,n.colorChart=n.colorMixin,n.coordinateGridChart=n.coordinateGridMixin,n.marginable=n.marginMixin,n.stackableChart=n.stackMixin,n.d3=t,n.crossfilter=e,n}if("function"==typeof define&&define.amd)define(["d3","crossfilter"],t);else if("object"==typeof module&&module.exports){var e=require("d3"),n=require("crossfilter");"function"!=typeof n&&(n=n.crossfilter),module.exports=t(e,n)}else this.dc=t(d3,crossfilter)}();var PODLOVE=PODLOVE||{};PODLOVE.Analytics=PODLOVE.Analytics||{},PODLOVE.Analytics.decimalRound=function(t,e){var n=Math.pow(10,e);return t*=n,t=Math.round(t),t/=n},PODLOVE.Analytics.formatThousands=function(t){return t<1e3?t:PODLOVE.Analytics.decimalRound(t/1e3,1)+"k"},PODLOVE.Analytics.hourFormat=function(t){var e=0,n=0,r=[];return t>48&&(e=(t-t%24)/24,t%=24),e>13&&(n=(e-e%7)/7,e%=7),n&&r.push(PODLOVE.Analytics.decimalRound(n,1)+"w"),e&&r.push(PODLOVE.Analytics.decimalRound(e,1)+"d"),t&&r.push(PODLOVE.Analytics.decimalRound(t,1)+"h"),0===r.length&&(r=["0h"]),r.join(" ")},jQuery(document).ready(function(t){function e(e){var n=e.hours_per_unit,o=crossfilter(r),f=crossfilter(i),h=o.groupAll().reduce(s,c,d),g=function(e){var n=e.data(),r=e.filters();n.forEach(function(n,i){var a=e.select("g.row._"+i),o=e.select("g.row._"+i+" text"),u="";a.select(".subLabel").size()||a.append("text").attr("class","subLabel").attr("text-anchor","end").attr("x",-10).attr("y",o.attr("y")),r.length>0&&-1===t.inArray(n.key,r)?a.select(".subLabel").style({display:"none"}):a.select(".subLabel").style({display:"inherit"}),h.value().downloads>0&&(u=Math.round(n.value.downloads/h.value().downloads*100)+"%"),a.select(".subLabel").text(u)})},p=function(t,e){t.select(".reset").on("click",function(e,n){d3.event.preventDefault(),t.filterAll(),dc.redrawAll()})},m=function(t){return Math.floor(t.hoursSinceRelease/n)},x=o.dimension(m),v=f.dimension(m),y=o.dimension(function(t){return t.weekday}),A=o.dimension(function(t){return t.asset_id}),b=o.dimension(function(t){return t.client}),_=o.dimension(function(t){return t.system}),k=o.dimension(function(t){return t.source}),w=o.dimension(function(t){return t.context}),D=x.group().reduce(s,c,d),C=v.group().reduce(s,c,d),L=x.group().reduce(s,c,d).all().reduce(function(t,e){return e.key+=1,e.value.cum=!0,t.length&&(e.value.downloads+=t.slice(-1)[0].value.downloads),t.push(e),t},[]);L.unshift({key:0,value:{date:0,downloads:0,cum:!0}});var E={all:function(){return L}},R=y.group().reduce(s,c,d),S=A.group().reduce(s,c,d),O=b.group().reduce(s,c,d).order(function(t){return t.downloads}),M=_.group().reduce(s,c,d).order(function(t){return t.downloads}),F=k.group().reduce(s,c,d),B=w.group().reduce(s,c,d),T=dc.barChart(Y).dimension(x).group(D,"Current Episode").renderTitle(!0).valueAccessor(function(t){return t.value.downloads}).gap(1).colors("#69B3FF"),N=dc.barChart(Y).dimension(v).group(C,"Average Episode").renderTitle(!0).colors("#224BA6").valueAccessor(function(t){return t.value.downloads}).barPadding(2),P=dc.lineChart(Y).dimension(x).group(E,"Cumulative").colors("#CCC").useRightYAxis(!0).valueAccessor(function(t){return t.value.downloads}).renderDataPoints({}).renderArea(!0),H=D.all().reduce(function(t,e){return Math.max(t,e.key)},0),G=dc.barChart("#episode-range-chart").width(u).height(80).dimension(x).group(D).x(d3.scale.linear().domain([0,H])).valueAccessor(function(t){return t.value.downloads}).colors("#69B3FF").yAxisLabel(" "),Y=dc.compositeChart("#episode-performance-chart").width(u).x(d3.scale.linear().domain([0,1/0])).legend(dc.legend().x(u-160).y(20).itemHeight(13).gap(5)).elasticX(!0).elasticY(!0).brushOn(!1).transitionDuration(0).yAxisLabel("Downloads").xAxisLabel("Hours since release").rangeChart(G).title(function(t){var e=t.value.date?a(t.value.date):"Average Episode",r="";return r=t.value.cum?t.key*n+"h after release":t.key*n+"h – "+(t.key+1)*n+"h after release",[e,r,"Downloads: "+t.value.downloads].join("\n")}).compose([P,T,N]).rightYAxisLabel("Cumulative Downloads"),V=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],U=dc.rowChart("#episode-weekday-chart").margins({top:0,left:40,right:10,bottom:25}).group(R).dimension(y).elasticX(!0).label(function(t){return V[t.key]}).title(function(t){return t.value.downloads}).valueAccessor(function(t){return t.value?t.value.downloads:0}).ordering(function(t){return-t.value.downloads}).colors("#69B3FF").on("preRedraw",g).on("renderlet",p),z=dc.rowChart("#episode-asset-chart").margins({top:0,left:40,right:10,bottom:25}).elasticX(!0).dimension(A).group(S).valueAccessor(function(t){return t.value?t.value.downloads:0}).ordering(function(t){return-t.value.downloads}).label(function(t){return assetNames[t.key]}).title(function(t){return t.value.downloads}).colors("#69B3FF").on("preRedraw",g).on("renderlet",p),I=dc.rowChart("#episode-client-chart").margins({top:0,left:40,right:10,bottom:25}).elasticX(!0).dimension(b).group(O).valueAccessor(function(t){return t.value.downloads}).ordering(function(t){return-t.value.downloads}).othersGrouper(function(t){return t}).cap(10).label(function(t){return t.key}).colors("#69B3FF").on("preRedraw",g).on("renderlet",p),X=dc.rowChart("#episode-system-chart").margins({top:0,left:40,right:10,bottom:25}).elasticX(!0).dimension(_).group(M).valueAccessor(function(t){return t.value.downloads}).ordering(function(t){return-t.value.downloads}).othersGrouper(function(t){return t}).cap(10).label(function(t){return t.key}).colors("#69B3FF").on("preRedraw",g).on("renderlet",p),j=dc.rowChart("#episode-source-chart").margins({top:0,left:40,right:10,bottom:25}).elasticX(!0).dimension(k).group(F).valueAccessor(function(t){return t.value.downloads}).ordering(function(t){return-t.value.downloads}).label(function(t){return t.key}).colors("#69B3FF").on("preRedraw",g).on("renderlet",p),q=dc.rowChart("#episode-context-chart").margins({top:0,left:40,right:10,bottom:25}).elasticX(!0).dimension(w).group(B).valueAccessor(function(t){return t.value.downloads}).ordering(function(t){return-t.value.downloads}).label(function(t){return t.value.source+"/"+t.key}).colors("#69B3FF").on("preRedraw",g).on("renderlet",p);G.yAxis().ticks([2]),G.xAxis().tickFormat(function(t){return PODLOVE.Analytics.hourFormat(t*n)}),Y.xAxis().tickFormat(function(t){return PODLOVE.Analytics.hourFormat(t*n)}),G.yAxis().tickFormat(PODLOVE.Analytics.formatThousands),Y.yAxis().tickFormat(PODLOVE.Analytics.formatThousands),Y.rightYAxis().tickFormat(PODLOVE.Analytics.formatThousands),U.xAxis().tickFormat(PODLOVE.Analytics.formatThousands),z.xAxis().tickFormat(PODLOVE.Analytics.formatThousands),I.xAxis().tickFormat(PODLOVE.Analytics.formatThousands),X.xAxis().tickFormat(PODLOVE.Analytics.formatThousands),j.xAxis().tickFormat(PODLOVE.Analytics.formatThousands),q.xAxis().tickFormat(PODLOVE.Analytics.formatThousands),[Y,G,U,z,I,X,j,q].forEach(function(t){t.render()});var W=function(t,e){t.brush().extent([e.min/n,Math.min(H,e.max/n)]).event(t.select("g.brush"))};l.min||l.max||(l.min=0,l.max=168,t("#chart-zoom-selection .button:eq(1)").addClass("active")),W(G,l),G.brush().on("brushend",function(){var e=t("#chart-zoom-selection .button").map(function(){return t(this).data("hours")}),r=G.brush().extent();l.min=r[0]*n,l.max=r[1]*n,l.min<0&&(l.max-=l.min,l.min=0,W(G,l));(function(){return-1===t.inArray(Math.round(l.max-l.min),e)})()&&!function(){return 0===l.min&&l.max===G.xUnitCount()*n}()&&t("#chart-zoom-selection .button.active").removeClass("active")}),t("#chart-zoom-selection .button").on("click",function(e){var r=parseInt(t(this).data("hours"),10);e.preventDefault(),t(this).hasClass("disabled")||(t(this).siblings().removeClass("active"),t(this).addClass("active"),0===r?(l.min=0,l.max=G.xUnitCount()*n):l.max=l.min+r,W(G,l))}),e.rendered&&e.rendered instanceof Function&&e.rendered()}function n(n){r?e(n):t.when(t.ajax(ajaxurl+"?action=podlove-analytics-episode-downloads-per-hour&episode="+o),t.ajax(ajaxurl+"?action=podlove-analytics-episode-average-downloads-per-hour")).done(function(t,a){var o=function(t){var e=new Date(1e3*+t.date);return{date:e,downloads:+t.downloads,weekday:e.getDay(),hoursSinceRelease:+t.hours_since_release,asset_id:+t.asset_id,client:t.client?t.client:"Unknown",system:t.system?t.system:"Unknown",source:t.source?t.source:"Unknown",context:t.context?t.context:"Unknown"}};r=d3.csv.parse(t[0],o),i=d3.csv.parse(a[0],function(t){return{hoursSinceRelease:+t.hoursSinceRelease,downloads:+t.downloads}}),e(n)})}var r,i,a=d3.time.format("%Y-%m-%d %H:%M %Z"),o=jQuery("#episode-performance-chart").data("episode"),u=t("#episode-performance-chart").closest(".inside").width(),l={min:null,max:null},s=function(t,e){return t.downloads+=e.downloads,t.weekday=e.weekday,t.asset_id=e.asset_id,t.date=t.date&&t.date<e.date?t.date:e.date,t.client=e.client,t.system=e.system,t.source=e.source,t.context=e.context,t},c=function(t,e){return t.downloads-=e.downloads,t},d=function(){return{downloads:0,weekday:0,asset_id:0,date:0,client:"",system:""}};t("#chart-grouping-selection").on("click","a",function(e){var r=parseInt(t(this).data("hours"),10),i=parseInt(t("#chart-zoom-selection .button.active").data("hours"),10);t(this).siblings().removeClass("active"),t(this).addClass("active"),t("#chart-zoom-selection a.button").each(function(){var e=parseInt(t(this).data("hours"),10);0!==e&&e<r?t(this).addClass("disabled"):t(this).removeClass("disabled")}),n({hours_per_unit:r,rendered:function(){if(0!==i&&(NaN===i||i<r)){t("#chart-zoom-selection a.button").filter(function(){var e=parseInt(t(this).data("hours"),10);return 0===e||e>=r}).first().click()}}}),e.preventDefault()}),t("#chart-grouping-selection a:eq(3)").click(),t("input[name='podlove_analytics_tiles']").each(function(){var e=t(this).attr("checked"),n=t(this).val(),r=t(".chart-wrapper[data-tile-id='"+n+"']");e||r.hide()}).on("click",function(){var e=t(this).attr("checked"),n=t(this).val(),r=t(".chart-wrapper[data-tile-id='"+n+"']");t.ajax({url:ajaxurl,data:{action:"podlove-analytics-settings-tiles-update",tile_id:n,checked:e}}),e?r.show():r.hide()})}),jQuery(document).ready(function(t){function e(){var e=t("#total-chart").closest(".wrap").width(),o=crossfilter(n),u=o.groupAll().reduce(r,i,a),l=u.value().downloads,s=o.dimension(function(t){return d3.time.day(t.date)}),c=o.dimension(function(t){return t.episode_id}),d=c.group().reduce(function(t,e){return t.downloads+=e.downloads,t.episode_id=e.episode_id,t},null,function(){return{downloads:0,episode_id:0}}),f=d.all().reduce(function(t,e){return e.value.downloads>.05*l&&t.push(e),t},[]),h=_.pluck(f,"key"),g=s.group().reduce(function(t,e){return _.contains(h,e.episode_id)?t:r(t,e)},function(t,e){return _.contains(h,e.episode_id)?t:i(t,e)},a),p=[];for(var m in h)p[h[m]]=function(t,e){return t.group().reduce(function(t,n){return n.episode_id==e?r(t,n):t},function(t,n){return n.episode_id==e?i(t,n):t},a)}(s,h[m]);var x=d3.time.format("%Y-%m-%d"),v=dc.barChart("#total-chart").width(e).height(200).dimension(s).group(g,"Other Episodes").x(d3.time.scale().domain([function(t){return new Date((new Date).setDate((new Date).getDate()-t))}(28),new Date])).xUnits(d3.time.days).brushOn(!1).renderTitle(!0).elasticY(!0).yAxisLabel("Downloads").valueAccessor(function(t){return t.value.downloads}).title(function(t){return[x(t.key),"Downloads: "+t.value.downloads].join("\n")}).renderHorizontalGridLines(!0);if(e>650){var y=e-300;jQuery("#total-chart").height("200px"),v.height(200),v.legend(dc.legend().horizontal(!1).x(y).y(10).autoItemWidth(!0)),v.margins().bottom=30,v.margins().right=305}else{var y=e-300;jQuery("#total-chart").height("370px"),v.height(370),v.legend(dc.legend().horizontal(!1).x(30).y(170).autoItemWidth(!0)),v.margins().bottom=230}for(var m in p)v.stack(p[m],podlove_episode_names[m]);v.yAxis().tickFormat(PODLOVE.Analytics.formatThousands),v.xAxis().tickFormat(d3.time.format("%d %b")),e<550?v.xAxis().ticks(d3.time.days,5):e<635?v.xAxis().ticks(d3.time.days,4):e<780?v.xAxis().ticks(d3.time.days,3):v.xAxis().ticks(d3.time.days,2),v.render()}var n,r=(d3.time.format("%Y-%m-%d %H:%M %Z"),function(t,e){return t.downloads+=e.downloads,t.episode_id=e.episode_id,t.date=e.date,t}),i=function(t,e){return t.downloads-=e.downloads,t},a=function(){return{downloads:0,episode_id:0,date:0}};t("#total-chart").length&&function(){n?(e(),t(window).on("resize",e)):t.when(t.ajax(ajaxurl+"?action=podlove-analytics-total-downloads-per-day")).done(function(r){var i=function(t){return{date:new Date(1e3*+t.date),downloads:+t.downloads,episode_id:+t.episode_id}};n=d3.csv.parse(r,i),e(),t(window).on("resize",e)})}()});
+/*!
+ *  dc 2.0.0-beta.4
+ *  http://dc-js.github.io/dc.js/
+ *  Copyright 2012 Nick Zhu and other contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+(function() { function _dc(d3, crossfilter) {
+'use strict';
+
+/**
+#### Version 2.0.0-beta.4
+The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
+into the global name space.
+#### Function Chaining
+Most dc functions are designed to allow function chaining, meaning they return the current chart
+instance whenever it is appropriate. This way chart configuration can be written in the following
+style:
+```js
+chart.width(300)
+    .height(300)
+    .filter('sunday')
+```
+The getter forms of functions do not participate in function chaining because they necessarily
+return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
+that are chainable d3 objects.)
+
+**/
+
+/*jshint -W062*/
+/*jshint -W079*/
+var dc = {
+    version: '2.0.0-beta.4',
+    constants: {
+        CHART_CLASS: 'dc-chart',
+        DEBUG_GROUP_CLASS: 'debug',
+        STACK_CLASS: 'stack',
+        DESELECTED_CLASS: 'deselected',
+        SELECTED_CLASS: 'selected',
+        NODE_INDEX_NAME: '__index__',
+        GROUP_INDEX_NAME: '__group_index__',
+        DEFAULT_CHART_GROUP: '__default_chart_group__',
+        EVENT_DELAY: 40,
+        NEGLIGIBLE_NUMBER: 1e-10
+    },
+    _renderlet: null
+};
+
+dc.chartRegistry = function () {
+    // chartGroup:string => charts:array
+    var _chartMap = {};
+
+    function initializeChartGroup(group) {
+        if (!group) {
+            group = dc.constants.DEFAULT_CHART_GROUP;
+        }
+
+        if (!_chartMap[group]) {
+            _chartMap[group] = [];
+        }
+
+        return group;
+    }
+
+    return {
+        has: function (chart) {
+            for (var e in _chartMap) {
+                if (_chartMap[e].indexOf(chart) >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        register: function (chart, group) {
+            group = initializeChartGroup(group);
+            _chartMap[group].push(chart);
+        },
+
+        deregister: function (chart, group) {
+            group = initializeChartGroup(group);
+            for (var i = 0; i < _chartMap[group].length; i++) {
+                if (_chartMap[group][i].anchorName() === chart.anchorName()) {
+                    _chartMap[group].splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        clear: function (group) {
+            if (group) {
+                delete _chartMap[group];
+            } else {
+                _chartMap = {};
+            }
+        },
+
+        list: function (group) {
+            group = initializeChartGroup(group);
+            return _chartMap[group];
+        }
+    };
+}();
+/*jshint +W062 */
+/*jshint +W079*/
+
+dc.registerChart = function (chart, group) {
+    dc.chartRegistry.register(chart, group);
+};
+
+dc.deregisterChart = function (chart, group) {
+    dc.chartRegistry.deregister(chart, group);
+};
+
+dc.hasChart = function (chart) {
+    return dc.chartRegistry.has(chart);
+};
+
+dc.deregisterAllCharts = function (group) {
+    dc.chartRegistry.clear(group);
+};
+
+/**
+## Utilities
+**/
+
+/**
+#### dc.filterAll([chartGroup])
+Clear all filters on all charts within the given chart group. If the chart group is not given then
+only charts that belong to the default chart group will be reset.
+**/
+dc.filterAll = function (group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].filterAll();
+    }
+};
+
+/**
+#### dc.refocusAll([chartGroup])
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+not given then only charts that belong to the default chart group will be reset.
+**/
+dc.refocusAll = function (group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        if (charts[i].focus) {
+            charts[i].focus();
+        }
+    }
+};
+
+/**
+#### dc.renderAll([chartGroup])
+Re-render all charts belong to the given chart group. If the chart group is not given then only
+charts that belong to the default chart group will be re-rendered.
+**/
+dc.renderAll = function (group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].render();
+    }
+
+    if (dc._renderlet !== null) {
+        dc._renderlet(group);
+    }
+};
+
+/**
+#### dc.redrawAll([chartGroup])
+Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+from scratch.
+**/
+dc.redrawAll = function (group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].redraw();
+    }
+
+    if (dc._renderlet !== null) {
+        dc._renderlet(group);
+    }
+};
+
+/**
+#### dc.disableTransitions
+If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately.  Default: false
+**/
+dc.disableTransitions = false;
+
+dc.transition = function (selections, duration, callback) {
+    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
+        return selections;
+    }
+
+    var s = selections
+        .transition()
+        .duration(duration);
+
+    if (typeof(callback) === 'function') {
+        callback(s);
+    }
+
+    return s;
+};
+
+dc.units = {};
+
+/**
+#### dc.units.integers
+`dc.units.integers` is the default value for `xUnits` for the [Coordinate Grid
+Chart](#coordinate-grid-chart) and should be used when the x values are a sequence of integers.
+
+It is a function that counts the number of integers in the range supplied in its start and end parameters.
+
+```js
+chart.xUnits(dc.units.integers) // already the default
+```
+
+**/
+dc.units.integers = function (s, e) {
+    return Math.abs(e - s);
+};
+
+/**
+#### dc.units.ordinal
+This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
+axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+
+It just returns the domain passed to it, which for ordinal charts is an array of all values.
+
+```js
+chart.xUnits(dc.units.ordinal)
+    .x(d3.scale.ordinal())
+```
+
+**/
+dc.units.ordinal = function (s, e, domain) {
+    return domain;
+};
+
+/**
+#### dc.units.fp.precision(precision)
+This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
+`xUnits` function specifying that the x values are floating-point numbers with the given
+precision.
+
+The returned function determines how many values at the given precision will fit into the range
+supplied in its start and end parameters.
+
+```js
+// specify values (and ticks) every 0.1 units
+chart.xUnits(dc.units.fp.precision(0.1)
+// there are 500 units between 0.5 and 1 if the precision is 0.001
+var thousandths = dc.units.fp.precision(0.001);
+thousandths(0.5, 1.0) // returns 500
+```
+**/
+dc.units.fp = {};
+dc.units.fp.precision = function (precision) {
+    var _f = function (s, e) {
+        var d = Math.abs((e - s) / _f.resolution);
+        if (dc.utils.isNegligible(d - Math.floor(d))) {
+            return Math.floor(d);
+        } else {
+            return Math.ceil(d);
+        }
+    };
+    _f.resolution = precision;
+    return _f;
+};
+
+dc.round = {};
+dc.round.floor = function (n) {
+    return Math.floor(n);
+};
+dc.round.ceil = function (n) {
+    return Math.ceil(n);
+};
+dc.round.round = function (n) {
+    return Math.round(n);
+};
+
+dc.override = function (obj, functionName, newFunction) {
+    var existingFunction = obj[functionName];
+    obj['_' + functionName] = existingFunction;
+    obj[functionName] = newFunction;
+};
+
+dc.renderlet = function (_) {
+    if (!arguments.length) {
+        return dc._renderlet;
+    }
+    dc._renderlet = _;
+    return dc;
+};
+
+dc.instanceOfChart = function (o) {
+    return o instanceof Object && o.__dcFlag__ && true;
+};
+
+dc.errors = {};
+
+dc.errors.Exception = function (msg) {
+    var _msg = msg || 'Unexpected internal error';
+
+    this.message = _msg;
+
+    this.toString = function () {
+        return _msg;
+    };
+};
+
+dc.errors.InvalidStateException = function () {
+    dc.errors.Exception.apply(this, arguments);
+};
+
+dc.dateFormat = d3.time.format('%m/%d/%Y');
+
+dc.printers = {};
+
+dc.printers.filters = function (filters) {
+    var s = '';
+
+    for (var i = 0; i < filters.length; ++i) {
+        if (i > 0) {
+            s += ', ';
+        }
+        s += dc.printers.filter(filters[i]);
+    }
+
+    return s;
+};
+
+dc.printers.filter = function (filter) {
+    var s = '';
+
+    if (typeof filter !== 'undefined' && filter !== null) {
+        if (filter instanceof Array) {
+            if (filter.length >= 2) {
+                s = '[' + dc.utils.printSingleValue(filter[0]) + ' -> ' + dc.utils.printSingleValue(filter[1]) + ']';
+            } else if (filter.length >= 1) {
+                s = dc.utils.printSingleValue(filter[0]);
+            }
+        } else {
+            s = dc.utils.printSingleValue(filter);
+        }
+    }
+
+    return s;
+};
+
+dc.pluck = function (n, f) {
+    if (!f) {
+        return function (d) { return d[n]; };
+    }
+    return function (d, i) { return f.call(d, d[n], i); };
+};
+
+dc.utils = {};
+
+dc.utils.printSingleValue = function (filter) {
+    var s = '' + filter;
+
+    if (filter instanceof Date) {
+        s = dc.dateFormat(filter);
+    } else if (typeof(filter) === 'string') {
+        s = filter;
+    } else if (dc.utils.isFloat(filter)) {
+        s = dc.utils.printSingleValue.fformat(filter);
+    } else if (dc.utils.isInteger(filter)) {
+        s = Math.round(filter);
+    }
+
+    return s;
+};
+dc.utils.printSingleValue.fformat = d3.format('.2f');
+
+// FIXME: these assume than any string r is a percentage (whether or not it
+// includes %). They also generate strange results if l is a string.
+dc.utils.add = function (l, r) {
+    if (typeof r === 'string') {
+        r = r.replace('%', '');
+    }
+
+    if (l instanceof Date) {
+        if (typeof r === 'string') {
+            r = +r;
+        }
+        var d = new Date();
+        d.setTime(l.getTime());
+        d.setDate(l.getDate() + r);
+        return d;
+    } else if (typeof r === 'string') {
+        var percentage = (+r / 100);
+        return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
+    } else {
+        return l + r;
+    }
+};
+
+dc.utils.subtract = function (l, r) {
+    if (typeof r === 'string') {
+        r = r.replace('%', '');
+    }
+
+    if (l instanceof Date) {
+        if (typeof r === 'string') {
+            r = +r;
+        }
+        var d = new Date();
+        d.setTime(l.getTime());
+        d.setDate(l.getDate() - r);
+        return d;
+    } else if (typeof r === 'string') {
+        var percentage = (+r / 100);
+        return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
+    } else {
+        return l - r;
+    }
+};
+
+dc.utils.isNumber = function (n) {
+    return n === +n;
+};
+
+dc.utils.isFloat = function (n) {
+    return n === +n && n !== (n | 0);
+};
+
+dc.utils.isInteger = function (n) {
+    return n === +n && n === (n | 0);
+};
+
+dc.utils.isNegligible = function (n) {
+    return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
+};
+
+dc.utils.clamp = function (val, min, max) {
+    return val < min ? min : (val > max ? max : val);
+};
+
+var _idCounter = 0;
+dc.utils.uniqueId = function () {
+    return ++_idCounter;
+};
+
+dc.utils.nameToId = function (name) {
+    return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
+};
+
+dc.utils.appendOrSelect = function (parent, selector, tag) {
+    tag = tag || selector;
+    var element = parent.select(selector);
+    if (element.empty()) {
+        element = parent.append(tag);
+    }
+    return element;
+};
+
+dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+
+dc.logger = {};
+
+dc.logger.enableDebugLog = false;
+
+dc.logger.warn = function (msg) {
+    if (console) {
+        if (console.warn) {
+            console.warn(msg);
+        } else if (console.log) {
+            console.log(msg);
+        }
+    }
+
+    return dc.logger;
+};
+
+dc.logger.debug = function (msg) {
+    if (dc.logger.enableDebugLog && console) {
+        if (console.debug) {
+            console.debug(msg);
+        } else if (console.log) {
+            console.log(msg);
+        }
+    }
+
+    return dc.logger;
+};
+
+dc.logger.deprecate = function (fn, msg) {
+    // Allow logging of deprecation
+    var warned = false;
+    function deprecated() {
+        if (!warned) {
+            dc.logger.warn(msg);
+            warned = true;
+        }
+        return fn.apply(this, arguments);
+    }
+    return deprecated;
+};
+dc.events = {
+    current: null
+};
+
+/**
+#### dc.events.trigger(function[, delay])
+This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
+that are triggered repetitively due to user interaction such brush dragging might flood the library
+and invoke more renders than can be executed in time. Using this function to wrap your event
+function allows the library to smooth out the rendering by throttling events and only responding to
+the most recent event.
+
+```js
+    chart.renderlet(function(chart){
+        // smooth the rendering through event throttling
+        dc.events.trigger(function(){
+            // focus some other chart to the range selected by user on this chart
+            someOtherChart.focus(chart.filter());
+        });
+    })
+```
+**/
+dc.events.trigger = function (closure, delay) {
+    if (!delay) {
+        closure();
+        return;
+    }
+
+    dc.events.current = closure;
+
+    setTimeout(function () {
+        if (closure === dc.events.current) {
+            closure();
+        }
+    }, delay);
+};
+
+dc.filters = {};
+
+/**
+## Filters
+The dc.js filters are functions which are passed into crossfilter to chose which records will be
+accumulated to produce values for the charts.  In the crossfilter model, any filters applied on one
+dimension will affect all the other dimensions but not that one.  dc always applies a filter
+function to the dimension; the function combines multiple filters and if any of them accept a
+record, it is filtered in.
+
+These filter constructors are used as appropriate by the various charts to implement brushing.  We
+mention below which chart uses which filter.  In some cases, many instances of a filter will be added.
+
+**/
+
+/**
+#### dc.filters.RangedFilter(low, high)
+ RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
+ axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
+**/
+dc.filters.RangedFilter = function (low, high) {
+    var range = new Array(low, high);
+    range.isFiltered = function (value) {
+        return value >= this[0] && value < this[1];
+    };
+
+    return range;
+};
+
+/**
+#### dc.filters.TwoDimensionalFilter(array)
+ TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
+ [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
+ filtered by filtering all the cells in the row or column.)
+**/
+dc.filters.TwoDimensionalFilter = function (array) {
+    if (array === null) { return null; }
+
+    var filter = array;
+    filter.isFiltered = function (value) {
+        return value.length && value.length === filter.length &&
+               value[0] === filter[0] && value[1] === filter[1];
+    };
+
+    return filter;
+};
+
+/**
+#### dc.filters.RangedTwoDimensionalFilter(array)
+ The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
+ region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
+
+ It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
+ `x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
+ rectangular range including the lower values but excluding the higher values.
+
+ If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
+ two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
+ x2`.
+ **/
+dc.filters.RangedTwoDimensionalFilter = function (array) {
+    if (array === null) { return null; }
+
+    var filter = array;
+    var fromBottomLeft;
+
+    if (filter[0] instanceof Array) {
+        fromBottomLeft = [
+            [Math.min(array[0][0], array[1][0]), Math.min(array[0][1], array[1][1])],
+            [Math.max(array[0][0], array[1][0]), Math.max(array[0][1], array[1][1])]
+        ];
+    } else {
+        fromBottomLeft = [[array[0], -Infinity], [array[1], Infinity]];
+    }
+
+    filter.isFiltered = function (value) {
+        var x, y;
+
+        if (value instanceof Array) {
+            if (value.length !== 2) {
+                return false;
+            }
+            x = value[0];
+            y = value[1];
+        } else {
+            x = value;
+            y = fromBottomLeft[0][1];
+        }
+
+        return x >= fromBottomLeft[0][0] && x < fromBottomLeft[1][0] &&
+               y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
+    };
+
+    return filter;
+};
+
+/**
+## Base Mixin
+Base Mixin is an abstract functional object representing a basic dc chart object
+for all chart and widget implementations. Methods from the Base Mixin are inherited
+and available on all chart implementation in the DC library.
+**/
+dc.baseMixin = function (_chart) {
+    _chart.__dcFlag__ = dc.utils.uniqueId();
+
+    var _dimension;
+    var _group;
+
+    var _anchor;
+    var _root;
+    var _svg;
+
+    var _minWidth = 200;
+    var _defaultWidth = function (element) {
+        var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+        return (width && width > _minWidth) ? width : _minWidth;
+    };
+    var _width = _defaultWidth;
+
+    var _minHeight = 200;
+    var _defaultHeight = function (element) {
+        var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
+        return (height && height > _minHeight) ? height : _minHeight;
+    };
+    var _height = _defaultHeight;
+
+    var _keyAccessor = dc.pluck('key');
+    var _valueAccessor = dc.pluck('value');
+    var _label = dc.pluck('key');
+
+    var _ordering = dc.pluck('key');
+    var _orderSort;
+
+    var _renderLabel = false;
+
+    var _title = function (d) {
+        return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
+    };
+    var _renderTitle = true;
+
+    var _transitionDuration = 750;
+
+    var _filterPrinter = dc.printers.filters;
+
+    var _mandatoryAttributes = ['dimension', 'group'];
+
+    var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
+
+    var _listeners = d3.dispatch(
+        'preRender',
+        'postRender',
+        'preRedraw',
+        'postRedraw',
+        'filtered',
+        'zoomed',
+        'renderlet');
+
+    var _legend;
+
+    var _filters = [];
+    var _filterHandler = function (dimension, filters) {
+        dimension.filter(null);
+
+        if (filters.length === 0) {
+            dimension.filter(null);
+        } else {
+            dimension.filterFunction(function (d) {
+                for (var i = 0; i < filters.length; i++) {
+                    var filter = filters[i];
+                    if (filter.isFiltered && filter.isFiltered(d)) {
+                        return true;
+                    } else if (filter <= d && filter >= d) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        return filters;
+    };
+
+    var _data = function (group) {
+        return group.all();
+    };
+
+    /**
+    #### .width([value])
+    Set or get the width attribute of a chart. See `.height` below for further description of the
+    behavior.
+
+    **/
+    _chart.width = function (w) {
+        if (!arguments.length) {
+            return _width(_root.node());
+        }
+        _width = d3.functor(w || _defaultWidth);
+        return _chart;
+    };
+
+    /**
+    #### .height([value])
+    Set or get the height attribute of a chart. The height is applied to the SVG element generated by
+    the chart when rendered (or rerendered). If a value is given, then it will be used to calculate
+    the new height and the chart returned for method chaining.  The value can either be a numeric, a
+    function, or falsy. If no value is specified then the value of the current height attribute will
+    be returned.
+
+    By default, without an explicit height being given, the chart will select the width of its
+    anchor element. If that isn't possible it defaults to 200. Setting the value falsy will return
+    the chart to the default behavior
+
+    Examples:
+
+    ```js
+    chart.height(250); // Set the chart's height to 250px;
+    chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the chart's height with a function
+    chart.height(null); // reset the height to the default auto calculation
+    ```
+
+    **/
+    _chart.height = function (h) {
+        if (!arguments.length) {
+            return _height(_root.node());
+        }
+        _height = d3.functor(h || _defaultHeight);
+        return _chart;
+    };
+
+    /**
+    #### .minWidth([value])
+    Set or get the minimum width attribute of a chart. This only applicable if the width is
+    calculated by dc.
+
+    **/
+    _chart.minWidth = function (w) {
+        if (!arguments.length) {
+            return _minWidth;
+        }
+        _minWidth = w;
+        return _chart;
+    };
+
+    /**
+    #### .minHeight([value])
+    Set or get the minimum height attribute of a chart. This only applicable if the height is
+    calculated by dc.
+
+    **/
+    _chart.minHeight = function (w) {
+        if (!arguments.length) {
+            return _minHeight;
+        }
+        _minHeight = w;
+        return _chart;
+    };
+
+    /**
+    #### .dimension([value]) - **mandatory**
+    Set or get the dimension attribute of a chart. In dc a dimension can be any valid [crossfilter
+    dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension).
+
+    If a value is given, then it will be used as the new dimension. If no value is specified then
+    the current dimension will be returned.
+
+    **/
+    _chart.dimension = function (d) {
+        if (!arguments.length) {
+            return _dimension;
+        }
+        _dimension = d;
+        _chart.expireCache();
+        return _chart;
+    };
+
+    /**
+    #### .data([callback])
+    Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
+    group and by default will return `group.all()`. This behavior may be modified to, for instance,
+    return only the top 5 groups:
+    ```
+        chart.data(function(group) {
+            return group.top(5);
+        });
+    ```
+    **/
+    _chart.data = function (d) {
+        if (!arguments.length) {
+            return _data.call(_chart, _group);
+        }
+        _data = d3.functor(d);
+        _chart.expireCache();
+        return _chart;
+    };
+
+    /**
+    #### .group([value, [name]]) - **mandatory**
+    Set or get the group attribute of a chart. In dc a group is a [crossfilter
+    group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group
+    should be created from the particular dimension associated with the same chart. If a value is
+    given, then it will be used as the new group.
+
+    If no value specified then the current group will be returned.
+    If `name` is specified then it will be used to generate legend label.
+
+    **/
+    _chart.group = function (g, name) {
+        if (!arguments.length) {
+            return _group;
+        }
+        _group = g;
+        _chart._groupName = name;
+        _chart.expireCache();
+        return _chart;
+    };
+
+    /**
+    #### .ordering([orderFunction])
+    Get or set an accessor to order ordinal charts
+    **/
+    _chart.ordering = function (o) {
+        if (!arguments.length) {
+            return _ordering;
+        }
+        _ordering = o;
+        _orderSort = crossfilter.quicksort.by(_ordering);
+        _chart.expireCache();
+        return _chart;
+    };
+
+    _chart._computeOrderedGroups = function (data) {
+        var dataCopy = data.slice(0);
+
+        if (dataCopy.length <= 1) {
+            return dataCopy;
+        }
+
+        if (!_orderSort) {
+            _orderSort = crossfilter.quicksort.by(_ordering);
+        }
+
+        return _orderSort(dataCopy, 0, dataCopy.length);
+    };
+
+    /**
+    #### .filterAll()
+    Clear all filters associated with this chart.
+
+    **/
+    _chart.filterAll = function () {
+        return _chart.filter(null);
+    };
+
+    /**
+    #### .select(selector)
+    Execute d3 single selection in the chart's scope using the given selector and return the d3
+    selection. Roughly the same as:
+    ```js
+    d3.select('#chart-id').select(selector);
+    ```
+    This function is **not chainable** since it does not return a chart instance; however the d3
+    selection result can be chained to d3 function calls.
+
+    **/
+    _chart.select = function (s) {
+        return _root.select(s);
+    };
+
+    /**
+    #### .selectAll(selector)
+    Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly
+    the same as:
+    ```js
+    d3.select('#chart-id').selectAll(selector);
+    ```
+    This function is **not chainable** since it does not return a chart instance; however the d3
+    selection result can be chained to d3 function calls.
+
+    **/
+    _chart.selectAll = function (s) {
+        return _root ? _root.selectAll(s) : null;
+    };
+
+    /**
+     #### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
+     Set the svg root to either be an existing chart's root; or any valid [d3 single
+     selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+     block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+     within the chartGroup. This class is called internally on chart initialization, but be called
+     again to relocate the chart. However, it will orphan any previously created SVG elements.
+    **/
+    _chart.anchor = function (a, chartGroup) {
+        if (!arguments.length) {
+            return _anchor;
+        }
+        if (dc.instanceOfChart(a)) {
+            _anchor = a.anchor();
+            _root = a.root();
+        } else {
+            _anchor = a;
+            _root = d3.select(_anchor);
+            _root.classed(dc.constants.CHART_CLASS, true);
+            dc.registerChart(_chart, chartGroup);
+        }
+        _chartGroup = chartGroup;
+        return _chart;
+    };
+
+    /**
+    #### .anchorName()
+    Returns the dom id for the chart's anchored location.
+
+    **/
+    _chart.anchorName = function () {
+        var a = _chart.anchor();
+        if (a && a.id) {
+            return a.id;
+        }
+        if (a && a.replace) {
+            return a.replace('#', '');
+        }
+        return 'dc-chart' + _chart.chartID();
+    };
+
+    /**
+    #### .root([rootElement])
+    Returns the root element where a chart resides. Usually it will be the parent div element where
+    the svg was created. You can also pass in a new root element however this is usually handled by
+    dc internally. Resetting the root element on a chart outside of dc internals may have
+    unexpected consequences.
+
+    **/
+    _chart.root = function (r) {
+        if (!arguments.length) {
+            return _root;
+        }
+        _root = r;
+        return _chart;
+    };
+
+    /**
+    #### .svg([svgElement])
+    Returns the top svg element for this specific chart. You can also pass in a new svg element,
+    however this is usually handled by dc internally. Resetting the svg element on a chart outside
+    of dc internals may have unexpected consequences.
+
+    **/
+    _chart.svg = function (_) {
+        if (!arguments.length) {
+            return _svg;
+        }
+        _svg = _;
+        return _chart;
+    };
+
+    /**
+    #### .resetSvg()
+    Remove the chart's SVG elements from the dom and recreate the container SVG element.
+    **/
+    _chart.resetSvg = function () {
+        _chart.select('svg').remove();
+        return generateSvg();
+    };
+
+    function generateSvg() {
+        _svg = _chart.root().append('svg')
+            .attr('width', _chart.width())
+            .attr('height', _chart.height());
+        return _svg;
+    }
+
+    /**
+    #### .filterPrinter([filterPrinterFunction])
+    Set or get the filter printer function. The filter printer function is used to generate human
+    friendly text for filter value(s) associated with the chart instance. By default dc charts use a
+    default filter printer `dc.printers.filter` that provides simple printing support for both
+    single value and ranged filters.
+
+    **/
+    _chart.filterPrinter = function (_) {
+        if (!arguments.length) {
+            return _filterPrinter;
+        }
+        _filterPrinter = _;
+        return _chart;
+    };
+
+    /**
+    #### .turnOnControls() & .turnOffControls()
+    Turn on/off optional control elements within the root element. dc currently supports the
+    following html control elements.
+
+    * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
+     of control element is usually used to store a reset link to allow user to reset filter on a
+     certain chart. This element will be turned off automatically if the filter is cleared.
+    * root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
+     content of this element is then replaced with the current filter value using the filter printer
+     function. This type of element will be turned off automatically if the filter is cleared.
+
+    **/
+    _chart.turnOnControls = function () {
+        if (_root) {
+            _chart.selectAll('.reset').style('display', null);
+            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style('display', null);
+        }
+        return _chart;
+    };
+
+    _chart.turnOffControls = function () {
+        if (_root) {
+            _chart.selectAll('.reset').style('display', 'none');
+            _chart.selectAll('.filter').style('display', 'none').text(_chart.filter());
+        }
+        return _chart;
+    };
+
+    /**
+    #### .transitionDuration([duration])
+    Set or get the animation transition duration(in milliseconds) for this chart instance. Default
+    duration is 750ms.
+
+    **/
+    _chart.transitionDuration = function (d) {
+        if (!arguments.length) {
+            return _transitionDuration;
+        }
+        _transitionDuration = d;
+        return _chart;
+    };
+
+    _chart._mandatoryAttributes = function (_) {
+        if (!arguments.length) {
+            return _mandatoryAttributes;
+        }
+        _mandatoryAttributes = _;
+        return _chart;
+    };
+
+    function checkForMandatoryAttributes(a) {
+        if (!_chart[a] || !_chart[a]()) {
+            throw new dc.errors.InvalidStateException('Mandatory attribute chart.' + a +
+                                                      ' is missing on chart[#' + _chart.anchorName() + ']');
+        }
+    }
+
+    /**
+    #### .render()
+    Invoking this method will force the chart to re-render everything from scratch. Generally it
+    should only be used to render the chart for the first time on the page or if you want to make
+    sure everything is redrawn from scratch instead of relying on the default incremental redrawing
+    behaviour.
+
+    **/
+    _chart.render = function () {
+        _listeners.preRender(_chart);
+
+        if (_mandatoryAttributes) {
+            _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+        }
+
+        var result = _chart._doRender();
+
+        if (_legend) {
+            _legend.render();
+        }
+
+        _chart._activateRenderlets('postRender');
+
+        return result;
+    };
+
+    _chart._activateRenderlets = function (event) {
+        if (_chart.transitionDuration() > 0 && _svg) {
+            _svg.transition().duration(_chart.transitionDuration())
+                .each('end', function () {
+                    _listeners['renderlet'](_chart);
+                    if (event) {
+                        _listeners[event](_chart);
+                    }
+                });
+        } else {
+            _listeners['renderlet'](_chart);
+            if (event) {
+                _listeners[event](_chart);
+            }
+        }
+    };
+
+    /**
+    #### .redraw()
+    Calling redraw will cause the chart to re-render data changes incrementally. If there is no
+    change in the underlying data dimension then calling this method will have no effect on the
+    chart. Most chart interaction in dc will automatically trigger this method through internal
+    events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you only need to
+    manually invoke this function if data is manipulated outside of dc's control (for example if
+    data is loaded in the background using `crossfilter.add()`).
+
+    **/
+    _chart.redraw = function () {
+        _listeners.preRedraw(_chart);
+
+        var result = _chart._doRedraw();
+
+        if (_legend) {
+            _legend.render();
+        }
+
+        _chart._activateRenderlets('postRedraw');
+
+        return result;
+    };
+
+    _chart.redrawGroup = function () {
+        dc.redrawAll(_chart.chartGroup());
+    };
+
+    _chart.renderGroup = function () {
+        dc.renderAll(_chart.chartGroup());
+    };
+
+    _chart._invokeFilteredListener = function (f) {
+        if (f !== undefined) {
+            _listeners.filtered(_chart, f);
+        }
+    };
+
+    _chart._invokeZoomedListener = function () {
+        _listeners.zoomed(_chart);
+    };
+
+    var _hasFilterHandler = function (filters, filter) {
+        if (filter === null || typeof(filter) === 'undefined') {
+            return filters.length > 0;
+        }
+        return filters.some(function (f) {
+            return filter <= f && filter >= f;
+        });
+    };
+
+    /**
+    #### .hasFilterHandler([function])
+    Set or get the has filter handler. The has filter handler is a function that checks to see if
+    the chart's current filters include a specific filter.  Using a custom has filter handler allows
+    you to change the way filters are checked for and replaced.
+
+    ```js
+    // default has filter handler
+    function (filters, filter) {
+        if (filter === null || typeof(filter) === 'undefined') {
+            return filters.length > 0;
+        }
+        return filters.some(function (f) {
+            return filter <= f && filter >= f;
+        });
+    }
+
+    // custom filter handler (no-op)
+    chart.hasFilterHandler(function(filters, filter) {
+        return false;
+    });
+    ```
+    **/
+    _chart.hasFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _hasFilterHandler;
+        }
+        _hasFilterHandler = _;
+        return _chart;
+    };
+
+    /**
+    #### .hasFilter([filter])
+    Check whether any active filter or a specific filter is associated with particular chart instance.
+    This function is **not chainable**.
+
+    **/
+    _chart.hasFilter = function (filter) {
+        return _hasFilterHandler(_filters, filter);
+    };
+
+    var _removeFilterHandler = function (filters, filter) {
+        for (var i = 0; i < filters.length; i++) {
+            if (filters[i] <= filter && filters[i] >= filter) {
+                filters.splice(i, 1);
+                break;
+            }
+        }
+        return filters;
+    };
+
+    /**
+    #### .removeFilterHandler([function])
+    Set or get the remove filter handler. The remove filter handler is a function that removes a
+    filter from the chart's current filters. Using a custom remove filter handler allows you to
+    change how filters are removed or perform additional work when removing a filter, e.g. when
+    using a filter server other than crossfilter.
+
+    Any changes should modify the `filters` array argument and return that array.
+
+    ```js
+    // default remove filter handler
+    function (filters, filter) {
+        for (var i = 0; i < filters.length; i++) {
+            if (filters[i] <= filter && filters[i] >= filter) {
+                filters.splice(i, 1);
+                break;
+            }
+        }
+        return filters;
+    }
+
+    // custom filter handler (no-op)
+    chart.removeFilterHandler(function(filters, filter) {
+        return filters;
+    });
+    ```
+    **/
+    _chart.removeFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _removeFilterHandler;
+        }
+        _removeFilterHandler = _;
+        return _chart;
+    };
+
+    var _addFilterHandler = function (filters, filter) {
+        filters.push(filter);
+        return filters;
+    };
+
+    /**
+    #### .addFilterHandler([function])
+    Set or get the add filter handler. The add filter handler is a function that adds a filter to
+    the chart's filter list. Using a custom add filter handler allows you to change the way filters
+    are added or perform additional work when adding a filter, e.g. when using a filter server other
+    than crossfilter.
+
+    Any changes should modify the `filters` array argument and return that array.
+
+    ```js
+    // default add filter handler
+    function (filters, filter) {
+        filters.push(filter);
+        return filters;
+    }
+
+    // custom filter handler (no-op)
+    chart.addFilterHandler(function(filters, filter) {
+        return filters;
+    });
+    ```
+    **/
+    _chart.addFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _addFilterHandler;
+        }
+        _addFilterHandler = _;
+        return _chart;
+    };
+
+    var _resetFilterHandler = function (filters) {
+        return [];
+    };
+
+    /**
+    #### .resetFilterHandler([function])
+    Set or get the reset filter handler. The reset filter handler is a function that resets the
+    chart's filter list by returning a new list. Using a custom reset filter handler allows you to
+    change the way filters are reset, or perform additional work when resetting the filters,
+    e.g. when using a filter server other than crossfilter.
+
+    This function should return an array.
+
+    ```js
+    // default remove filter handler
+    function (filters) {
+        return [];
+    }
+
+    // custom filter handler (no-op)
+    chart.resetFilterHandler(function(filters) {
+        return filters;
+    });
+    ```
+    **/
+    _chart.resetFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _resetFilterHandler;
+        }
+        _resetFilterHandler = _;
+        return _chart;
+    };
+
+    function applyFilters() {
+        if (_chart.dimension() && _chart.dimension().filter) {
+            var fs = _filterHandler(_chart.dimension(), _filters);
+            _filters = fs ? fs : _filters;
+        }
+    }
+
+    _chart.replaceFilter = function (_) {
+        _filters = [];
+        _chart.filter(_);
+    };
+
+    /**
+    #### .filter([filterValue])
+    Filter the chart by the given value or return the current filter if the input parameter is missing.
+    ```js
+    // filter by a single string
+    chart.filter('Sunday');
+    // filter by a single age
+    chart.filter(18);
+    ```
+    **/
+    _chart.filter = function (_) {
+        if (!arguments.length) {
+            return _filters.length > 0 ? _filters[0] : null;
+        }
+        if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
+            _[0].forEach(function (d) {
+                if (_chart.hasFilter(d)) {
+                    _removeFilterHandler(_filters, d);
+                } else {
+                    _addFilterHandler(_filters, d);
+                }
+            });
+        } else if (_ === null) {
+            _filters = _resetFilterHandler(_filters);
+        } else {
+            if (_chart.hasFilter(_)) {
+                _removeFilterHandler(_filters, _);
+            } else {
+                _addFilterHandler(_filters, _);
+            }
+        }
+        applyFilters();
+        _chart._invokeFilteredListener(_);
+
+        if (_root !== null && _chart.hasFilter()) {
+            _chart.turnOnControls();
+        } else {
+            _chart.turnOffControls();
+        }
+
+        return _chart;
+    };
+
+    /**
+    #### .filters()
+    Returns all current filters. This method does not perform defensive cloning of the internal
+    filter array before returning, therefore any modification of the returned array will effect the
+    chart's internal filter storage.
+
+    **/
+    _chart.filters = function () {
+        return _filters;
+    };
+
+    _chart.highlightSelected = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+    };
+
+    _chart.fadeDeselected = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
+    };
+
+    _chart.resetHighlight = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+    };
+
+    /**
+    #### .onClick(datum)
+    This function is passed to d3 as the onClick handler for each chart. The default behavior is to
+    filter on the clicked datum (passed to the callback) and redraw the chart group.
+    **/
+    _chart.onClick = function (d) {
+        var filter = _chart.keyAccessor()(d);
+        dc.events.trigger(function () {
+            _chart.filter(filter);
+            _chart.redrawGroup();
+        });
+    };
+
+    /**
+    #### .filterHandler([function])
+    Set or get the filter handler. The filter handler is a function that performs the filter action
+    on a specific dimension. Using a custom filter handler allows you to perform additional logic
+    before or after filtering.
+
+    ```js
+    // default filter handler
+    function(dimension, filter){
+        dimension.filter(filter); // perform filtering
+        return filter; // return the actual filter value
+    }
+
+    // custom filter handler
+    chart.filterHandler(function(dimension, filter){
+        var newFilter = filter + 10;
+        dimension.filter(newFilter);
+        return newFilter; // set the actual filter value to the new value
+    });
+    ```
+
+    **/
+    _chart.filterHandler = function (_) {
+        if (!arguments.length) {
+            return _filterHandler;
+        }
+        _filterHandler = _;
+        return _chart;
+    };
+
+    // abstract function stub
+    _chart._doRender = function () {
+        // do nothing in base, should be overridden by sub-function
+        return _chart;
+    };
+
+    _chart._doRedraw = function () {
+        // do nothing in base, should be overridden by sub-function
+        return _chart;
+    };
+
+    _chart.legendables = function () {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
+    _chart.legendHighlight = function () {
+        // do nothing in base, should be overridden by sub-function
+    };
+
+    _chart.legendReset = function () {
+        // do nothing in base, should be overridden by sub-function
+    };
+
+    _chart.legendToggle = function () {
+        // do nothing in base, should be overriden by sub-function
+    };
+
+    _chart.isLegendableHidden = function () {
+        // do nothing in base, should be overridden by sub-function
+        return false;
+    };
+
+    /**
+    #### .keyAccessor([keyAccessorFunction])
+    Set or get the key accessor function. The key accessor function is used to retrieve the key
+    value from the crossfilter group. Key values are used differently in different charts, for
+    example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
+    ```js
+    // default key accessor
+    chart.keyAccessor(function(d) { return d.key; });
+    // custom key accessor for a multi-value crossfilter reduction
+    chart.keyAccessor(function(p) { return p.value.absGain; });
+    ```
+
+    **/
+    _chart.keyAccessor = function (_) {
+        if (!arguments.length) {
+            return _keyAccessor;
+        }
+        _keyAccessor = _;
+        return _chart;
+    };
+
+    /**
+    #### .valueAccessor([valueAccessorFunction])
+    Set or get the value accessor function. The value accessor function is used to retrieve the
+    value from the crossfilter group. Group values are used differently in different charts, for
+    example values correspond to slice sizes in a pie chart and y axis positions in a grid
+    coordinate chart.
+    ```js
+    // default value accessor
+    chart.valueAccessor(function(d) { return d.value; });
+    // custom value accessor for a multi-value crossfilter reduction
+    chart.valueAccessor(function(p) { return p.value.percentageGain; });
+    ```
+
+    **/
+    _chart.valueAccessor = function (_) {
+        if (!arguments.length) {
+            return _valueAccessor;
+        }
+        _valueAccessor = _;
+        return _chart;
+    };
+
+    /**
+    #### .label([labelFunction])
+    Set or get the label function. The chart class will use this function to render labels for each
+    child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
+    chart supports the label function for example bar chart and line chart do not use this function
+    at all.
+    ```js
+    // default label function just return the key
+    chart.label(function(d) { return d.key; });
+    // label function has access to the standard d3 data binding and can get quite complicated
+    chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
+    ```
+
+    **/
+    _chart.label = function (_) {
+        if (!arguments.length) {
+            return _label;
+        }
+        _label = _;
+        _renderLabel = true;
+        return _chart;
+    };
+
+    /**
+    #### .renderLabel(boolean)
+    Turn on/off label rendering
+
+    **/
+    _chart.renderLabel = function (_) {
+        if (!arguments.length) {
+            return _renderLabel;
+        }
+        _renderLabel = _;
+        return _chart;
+    };
+
+    /**
+    #### .title([titleFunction])
+    Set or get the title function. The chart class will use this function to render the svg title
+    (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
+    in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
+    however in grid coordinate charts you need to turn off the brush in order to see titles, because
+    otherwise the brush layer will block tooltip triggering.
+    ```js
+    // default title function just return the key
+    chart.title(function(d) { return d.key + ': ' + d.value; });
+    // title function has access to the standard d3 data binding and can get quite complicated
+    chart.title(function(p) {
+        return p.key.getFullYear()
+            + '\n'
+            + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
+            + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
+            + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
+    });
+    ```
+
+    **/
+    _chart.title = function (_) {
+        if (!arguments.length) {
+            return _title;
+        }
+        _title = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderTitle(boolean)
+    Turn on/off title rendering, or return the state of the render title flag if no arguments are
+    given.
+
+    **/
+    _chart.renderTitle = function (_) {
+        if (!arguments.length) {
+            return _renderTitle;
+        }
+        _renderTitle = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderlet(renderletFunction)
+    A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
+    to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
+    right after the chart finishes its own drawing routine, giving you a way to modify the svg
+    elements. Renderlet functions take the chart instance as the only input parameter and you can
+    use the dc API or use raw d3 to achieve pretty much any effect.
+
+    @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
+    Generates a random key for the renderlet, which makes it hard for removal.
+    ```js
+    // renderlet function
+    chart.renderlet(function(chart){
+        // mix of dc API and d3 manipulation
+        chart.select('g.y').style('display', 'none');
+        // its a closure so you can also access other chart variable available in the closure scope
+        moveChart.filter(chart.filter());
+    });
+    ```
+
+    **/
+    _chart.renderlet = dc.logger.deprecate(function (_) {
+        _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+        return _chart;
+    }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
+
+    /**
+    #### .chartGroup([group])
+    Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
+    together since it is expected they share the same underlying crossfilter data set.
+    **/
+    _chart.chartGroup = function (_) {
+        if (!arguments.length) {
+            return _chartGroup;
+        }
+        _chartGroup = _;
+        return _chart;
+    };
+
+    /**
+    #### .expireCache()
+    Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
+    speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
+    cache if you have changed state which will affect rendering.  For example if you invoke the
+    `crossfilter.add` function or reset group or dimension after rendering it is a good idea to
+    clear the cache to make sure charts are rendered properly.
+
+    **/
+    _chart.expireCache = function () {
+        // do nothing in base, should be overridden by sub-function
+        return _chart;
+    };
+
+    /**
+    #### .legend([dc.legend])
+    Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
+    based on the color setting and names associated with each group.
+
+    ```js
+    chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+    ```
+
+    **/
+    _chart.legend = function (l) {
+        if (!arguments.length) {
+            return _legend;
+        }
+        _legend = l;
+        _legend.parent(_chart);
+        return _chart;
+    };
+
+    /**
+    #### .chartID()
+    Returns the internal numeric ID of the chart.
+    **/
+    _chart.chartID = function () {
+        return _chart.__dcFlag__;
+    };
+
+    /**
+    #### .options(optionsObject)
+    Set chart options using a configuration object. Each key in the object will cause the method of
+    the same name to be called with the value to set that attribute for the chart.
+
+    Example:
+    ```
+    chart.options({dimension: myDimension, group: myGroup});
+    ```
+    **/
+    _chart.options = function (opts) {
+        for (var o in opts) {
+            if (typeof(_chart[o]) === 'function') {
+                _chart[o].call(_chart, opts[o]);
+            } else {
+                dc.logger.debug('Not a valid option setter name: ' + o);
+            }
+        }
+        return _chart;
+    };
+
+    /**
+    ## Listeners
+    All dc chart instance supports the following listeners.
+
+    #### .on('renderlet', function(chart, filter){...})
+    This listener function will be invoked after transitions after redraw and render. Replaces the
+    deprecated `.renderlet()` method.
+
+    #### .on('preRender', function(chart){...})
+    This listener function will be invoked before chart rendering.
+
+    #### .on('postRender', function(chart){...})
+    This listener function will be invoked after chart finish rendering including all renderlets' logic.
+
+    #### .on('preRedraw', function(chart){...})
+    This listener function will be invoked before chart redrawing.
+
+    #### .on('postRedraw', function(chart){...})
+    This listener function will be invoked after chart finish redrawing including all renderlets' logic.
+
+    #### .on('filtered', function(chart, filter){...})
+    This listener function will be invoked after a filter is applied, added or removed.
+
+    #### .on('zoomed', function(chart, filter){...})
+    This listener function will be invoked after a zoom is triggered.
+
+    **/
+    _chart.on = function (event, listener) {
+        _listeners.on(event, listener);
+        return _chart;
+    };
+
+    return _chart;
+};
+
+/**
+## Margin Mixin
+Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
+Charts.
+
+**/
+dc.marginMixin = function (_chart) {
+    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+
+    /**
+    #### .margins([margins])
+    Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
+    an associative Javascript array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
+
+    The margins can be accessed directly from the getter.
+    ```js
+    var leftMargin = chart.margins().left; // 30 by default
+    chart.margins().left = 50;
+    leftMargin = chart.margins().left; // now 50
+    ```
+
+    **/
+    _chart.margins = function (m) {
+        if (!arguments.length) {
+            return _margin;
+        }
+        _margin = m;
+        return _chart;
+    };
+
+    _chart.effectiveWidth = function () {
+        return _chart.width() - _chart.margins().left - _chart.margins().right;
+    };
+
+    _chart.effectiveHeight = function () {
+        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+    };
+
+    return _chart;
+};
+
+/**
+## Color Mixin
+The Color Mixin is an abstract chart functional class providing universal coloring support
+as a mix-in for any concrete chart implementation.
+
+**/
+
+dc.colorMixin = function (_chart) {
+    var _colors = d3.scale.category20c();
+    var _defaultAccessor = true;
+
+    var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
+
+    /**
+    #### .colors([colorScale])
+    Retrieve current color scale or set a new color scale. This methods accepts any function that
+    operates like a d3 scale. If not set the default is
+    `d3.scale.category20c()`.
+    ```js
+    // alternate categorical scale
+    chart.colors(d3.scale.category20b());
+
+    // ordinal scale
+    chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+    // convenience method, the same as above
+    chart.ordinalColors(['red','green','blue']);
+
+    // set a linear scale
+    chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
+    ```
+    **/
+    _chart.colors = function (_) {
+        if (!arguments.length) {
+            return _colors;
+        }
+        if (_ instanceof Array) {
+            _colors = d3.scale.quantize().range(_); // deprecated legacy support, note: this fails for ordinal domains
+        } else {
+            _colors = d3.functor(_);
+        }
+        return _chart;
+    };
+
+    /**
+    #### .ordinalColors(r)
+    Convenience method to set the color scale to d3.scale.ordinal with range `r`.
+
+    **/
+    _chart.ordinalColors = function (r) {
+        return _chart.colors(d3.scale.ordinal().range(r));
+    };
+
+    /**
+    #### .linearColors(r)
+    Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
+
+    **/
+    _chart.linearColors = function (r) {
+        return _chart.colors(d3.scale.linear()
+                             .range(r)
+                             .interpolate(d3.interpolateHcl));
+    };
+
+    /**
+    #### .colorAccessor([colorAccessorFunction])
+    Set or the get color accessor function. This function will be used to map a data point in a
+    crossfilter group to a color value on the color scale. The default function uses the key
+    accessor.
+    ```js
+    // default index based color accessor
+    .colorAccessor(function (d, i){return i;})
+    // color accessor for a multi-value crossfilter reduction
+    .colorAccessor(function (d){return d.value.absGain;})
+    ```
+    **/
+    _chart.colorAccessor = function (_) {
+        if (!arguments.length) {
+            return _colorAccessor;
+        }
+        _colorAccessor = _;
+        _defaultAccessor = false;
+        return _chart;
+    };
+
+    // what is this?
+    _chart.defaultColorAccessor = function () {
+        return _defaultAccessor;
+    };
+
+    /**
+    #### .colorDomain([domain])
+    Set or get the current domain for the color mapping function. The domain must be supplied as an
+    array.
+
+    Note: previously this method accepted a callback function. Instead you may use a custom scale
+    set by `.colors`.
+
+    **/
+    _chart.colorDomain = function (_) {
+        if (!arguments.length) {
+            return _colors.domain();
+        }
+        _colors.domain(_);
+        return _chart;
+    };
+
+    /**
+    #### .calculateColorDomain()
+    Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
+    chart's dataset.
+
+    **/
+    _chart.calculateColorDomain = function () {
+        var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
+                         d3.max(_chart.data(), _chart.colorAccessor())];
+        _colors.domain(newDomain);
+        return _chart;
+    };
+
+    /**
+    #### .getColor(d [, i])
+    Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+
+    **/
+    _chart.getColor = function (d, i) {
+        return _colors(_colorAccessor.call(this, d, i));
+    };
+
+    /**
+     #### .colorCalculator([value])
+     Gets or sets chart.getColor.
+     **/
+    _chart.colorCalculator = function (_) {
+        if (!arguments.length) {
+            return _chart.getColor;
+        }
+        _chart.getColor = _;
+        return _chart;
+    };
+
+    return _chart;
+};
+
+/**
+## Coordinate Grid Mixin
+Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
+Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
+concrete chart types, e.g. bar chart, line chart, and bubble chart.
+
+**/
+dc.coordinateGridMixin = function (_chart) {
+    var GRID_LINE_CLASS = 'grid-line';
+    var HORIZONTAL_CLASS = 'horizontal';
+    var VERTICAL_CLASS = 'vertical';
+    var Y_AXIS_LABEL_CLASS = 'y-axis-label';
+    var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var DEFAULT_AXIS_LABEL_PADDING = 12;
+
+    _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
+
+    _chart.colors(d3.scale.category10());
+    _chart._mandatoryAttributes().push('x');
+
+    function zoomHandler () {
+        _refocused = true;
+        if (_zoomOutRestrict) {
+            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
+            if (_rangeChart) {
+                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
+            }
+        }
+
+        var domain = _chart.x().domain();
+        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+
+        _chart.replaceFilter(domFilter);
+        _chart.rescale();
+        _chart.redraw();
+
+        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+            dc.events.trigger(function () {
+                _rangeChart.replaceFilter(domFilter);
+                _rangeChart.redraw();
+            });
+        }
+
+        _chart._invokeZoomedListener();
+
+        dc.events.trigger(function () {
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
+
+        _refocused = !rangesEqual(domain, _xOriginalDomain);
+    }
+
+    var _parent;
+    var _g;
+    var _chartBodyG;
+
+    var _x;
+    var _xOriginalDomain;
+    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xUnits = dc.units.integers;
+    var _xAxisPadding = 0;
+    var _xElasticity = false;
+    var _xAxisLabel;
+    var _xAxisLabelPadding = 0;
+    var _lastXDomain;
+
+    var _y;
+    var _yAxis = d3.svg.axis().orient('left');
+    var _yAxisPadding = 0;
+    var _yElasticity = false;
+    var _yAxisLabel;
+    var _yAxisLabelPadding = 0;
+
+    var _brush = d3.svg.brush();
+    var _brushOn = true;
+    var _round;
+
+    var _renderHorizontalGridLine = false;
+    var _renderVerticalGridLine = false;
+
+    var _refocused = false;
+    var _unitCount;
+
+    var _zoomScale = [1, Infinity];
+    var _zoomOutRestrict = true;
+
+    var _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
+    var _nullZoom = d3.behavior.zoom().on('zoom', null);
+    var _hasBeenMouseZoomable = false;
+
+    var _rangeChart;
+    var _focusChart;
+
+    var _mouseZoomable = false;
+    var _clipPadding = 0;
+
+    var _outerRangeBandPadding = 0.5;
+    var _rangeBandPadding = 0;
+
+    var _useRightYAxis = false;
+
+    _chart.rescale = function () {
+        _unitCount = undefined;
+    };
+
+    /**
+    #### .rangeChart([chart])
+    Get or set the range selection chart associated with this instance. Setting the range selection
+    chart using this function will automatically update its selection brush when the current chart
+    zooms in. In return the given range chart will also automatically attach this chart as its focus
+    chart hence zoom in when range brush updates. See the [Nasdaq 100
+    Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+
+    **/
+    _chart.rangeChart = function (_) {
+        if (!arguments.length) {
+            return _rangeChart;
+        }
+        _rangeChart = _;
+        _rangeChart.focusChart(_chart);
+        return _chart;
+    };
+
+    /**
+    #### .zoomScale([extent])
+    Get or set the scale extent for mouse zooms.
+
+    **/
+    _chart.zoomScale = function (_) {
+        if (!arguments.length) {
+            return _zoomScale;
+        }
+        _zoomScale = _;
+        return _chart;
+    };
+
+    /**
+    #### .zoomOutRestrict([true/false])
+    Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
+    **/
+    _chart.zoomOutRestrict = function (r) {
+        if (!arguments.length) {
+            return _zoomOutRestrict;
+        }
+        _zoomScale[0] = r ? 1 : 0;
+        _zoomOutRestrict = r;
+        return _chart;
+    };
+
+    _chart._generateG = function (parent) {
+        if (parent === undefined) {
+            _parent = _chart.svg();
+        } else {
+            _parent = parent;
+        }
+
+        _g = _parent.append('g');
+
+        _chartBodyG = _g.append('g').attr('class', 'chart-body')
+            .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
+            .attr('clip-path', 'url(#' + getClipPathId() + ')');
+
+        return _g;
+    };
+
+    /**
+    #### .g([gElement])
+    Get or set the root g element. This method is usually used to retrieve the g element in order to
+    overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
+    by dc.js internals, and resetting it might produce unpredictable result.
+
+    **/
+    _chart.g = function (_) {
+        if (!arguments.length) {
+            return _g;
+        }
+        _g = _;
+        return _chart;
+    };
+
+    /**
+    #### .mouseZoomable([boolean])
+    Set or get mouse zoom capability flag (default: false). When turned on the chart will be
+    zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
+    the range selection brush on the associated range selector chart.
+
+    **/
+    _chart.mouseZoomable = function (z) {
+        if (!arguments.length) {
+            return _mouseZoomable;
+        }
+        _mouseZoomable = z;
+        return _chart;
+    };
+
+    /**
+    #### .chartBodyG()
+    Retrieve the svg group for the chart body.
+    **/
+    _chart.chartBodyG = function (_) {
+        if (!arguments.length) {
+            return _chartBodyG;
+        }
+        _chartBodyG = _;
+        return _chart;
+    };
+
+    /**
+    #### .x([xScale]) - **mandatory**
+    Get or set the x scale. The x scale can be any d3
+    [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales) or
+    [ordinal scale](https://github.com/mbostock/d3/wiki/Ordinal-Scales).
+    ```js
+    // set x to a linear scale
+    chart.x(d3.scale.linear().domain([-2500, 2500]))
+    // set x to a time scale to generate histogram
+    chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+    ```
+
+    **/
+    _chart.x = function (_) {
+        if (!arguments.length) {
+            return _x;
+        }
+        _x = _;
+        _xOriginalDomain = _x.domain();
+        return _chart;
+    };
+
+    _chart.xOriginalDomain = function () {
+        return _xOriginalDomain;
+    };
+
+    /**
+    #### .xUnits([xUnits function])
+    Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
+    the number of data projections on x axis such as the number of bars for a bar chart or the
+    number of dots for a line chart. This function is expected to return a Javascript array of all
+    data points on x axis, or the number of points on the axis. [d3 time range functions
+    d3.time.days, d3.time.months, and
+    d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
+    function. dc.js also provides a few units function, see the [Utilities](#utilities) section for
+    a list of built-in units functions. The default xUnits function is dc.units.integers.
+    ```js
+    // set x units to count days
+    chart.xUnits(d3.time.days);
+    // set x units to count months
+    chart.xUnits(d3.time.months);
+    ```
+    A custom xUnits function can be used as long as it follows the following interface:
+    ```js
+    // units in integer
+    function(start, end, xDomain) {
+        // simply calculates how many integers in the domain
+        return Math.abs(end - start);
+    };
+
+    // fixed units
+    function(start, end, xDomain) {
+        // be aware using fixed units will disable the focus/zoom ability on the chart
+        return 1000;
+    };
+    ```
+
+    **/
+    _chart.xUnits = function (_) {
+        if (!arguments.length) {
+            return _xUnits;
+        }
+        _xUnits = _;
+        return _chart;
+    };
+
+    /**
+    #### .xAxis([xAxis])
+    Set or get the x axis used by a particular coordinate grid chart instance. This function is most
+    useful when x axis customization is required. The x axis in dc.js is an instance of a [d3
+    axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
+    valid d3 axis manipulation. **Caution**: The x axis is usually generated internally by dc;
+    resetting it may cause unexpected results.
+    ```js
+    // customize x axis tick format
+    chart.xAxis().tickFormat(function(v) {return v + '%';});
+    // customize x axis tick values
+    chart.xAxis().tickValues([0, 100, 200, 300]);
+    ```
+
+    **/
+    _chart.xAxis = function (_) {
+        if (!arguments.length) {
+            return _xAxis;
+        }
+        _xAxis = _;
+        return _chart;
+    };
+
+    /**
+    #### .elasticX([boolean])
+    Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
+    attempt to recalculate the x axis range whenever a redraw event is triggered.
+
+    **/
+    _chart.elasticX = function (_) {
+        if (!arguments.length) {
+            return _xElasticity;
+        }
+        _xElasticity = _;
+        return _chart;
+    };
+
+    /**
+    #### .xAxisPadding([padding])
+    Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
+    axis if elasticX is turned on; otherwise it is ignored.
+
+    * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+    number or date x axes.  When padding a date axis, an integer represents number of days being padded
+    and a percentage string will be treated the same as an integer.
+
+    **/
+    _chart.xAxisPadding = function (_) {
+        if (!arguments.length) {
+            return _xAxisPadding;
+        }
+        _xAxisPadding = _;
+        return _chart;
+    };
+
+    /**
+    #### .xUnitCount()
+    Returns the number of units displayed on the x axis using the unit measure configured by
+    .xUnits.
+    **/
+    _chart.xUnitCount = function () {
+        if (_unitCount === undefined) {
+            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+
+            if (units instanceof Array) {
+                _unitCount = units.length;
+            } else {
+                _unitCount = units;
+            }
+        }
+
+        return _unitCount;
+    };
+    /**
+     #### .useRightYAxis()
+     Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
+     used with a chart in a composite chart, allows both left and right Y axes to be shown on a
+     chart.
+     **/
+
+    _chart.useRightYAxis = function (_) {
+        if (!arguments.length) {
+            return _useRightYAxis;
+        }
+        _useRightYAxis = _;
+        return _chart;
+    };
+
+    /**
+    #### isOrdinal()
+    Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dcunitsordinal)), or false
+    otherwise. Most charts behave differently with ordinal data and use the result of this method to
+    trigger the appropriate logic.
+    **/
+    _chart.isOrdinal = function () {
+        return _chart.xUnits() === dc.units.ordinal;
+    };
+
+    _chart._useOuterPadding = function () {
+        return true;
+    };
+
+    _chart._ordinalXDomain = function () {
+        var groups = _chart._computeOrderedGroups(_chart.data());
+        return groups.map(_chart.keyAccessor());
+    };
+
+    function prepareXAxis(g) {
+        if (!_chart.isOrdinal()) {
+            if (_chart.elasticX()) {
+                _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
+            }
+        }
+        else { // _chart.isOrdinal()
+            if (_chart.elasticX() || _x.domain().length === 0) {
+                _x.domain(_chart._ordinalXDomain());
+            }
+        }
+
+        // has the domain changed?
+        var xdom = _x.domain();
+        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+            _chart.rescale();
+        }
+        _lastXDomain = xdom;
+
+        // please can't we always use rangeBands for bar charts?
+        if (_chart.isOrdinal()) {
+            _x.rangeBands([0, _chart.xAxisLength()], _rangeBandPadding,
+                          _chart._useOuterPadding() ? _outerRangeBandPadding : 0);
+        } else {
+            _x.range([0, _chart.xAxisLength()]);
+        }
+
+        _xAxis = _xAxis.scale(_chart.x());
+
+        renderVerticalGridLines(g);
+    }
+
+    _chart.renderXAxis = function (g) {
+        var axisXG = g.selectAll('g.x');
+
+        if (axisXG.empty()) {
+            axisXG = g.append('g')
+                .attr('class', 'axis x')
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
+        }
+
+        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        if (axisXLab.empty() && _chart.xAxisLabel()) {
+            axisXLab = g.append('text')
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                    (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.xAxisLabel());
+        }
+        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+            axisXLab.text(_chart.xAxisLabel());
+        }
+
+        dc.transition(axisXG, _chart.transitionDuration())
+            .call(_xAxis);
+    };
+
+    function renderVerticalGridLines(g) {
+        var gridLineG = g.selectAll('g.' + VERTICAL_CLASS);
+
+        if (_renderVerticalGridLine) {
+            if (gridLineG.empty()) {
+                gridLineG = g.insert('g', ':first-child')
+                    .attr('class', GRID_LINE_CLASS + ' ' + VERTICAL_CLASS)
+                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+            }
+
+            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
+                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
+
+            var lines = gridLineG.selectAll('line')
+                .data(ticks);
+
+            // enter
+            var linesGEnter = lines.enter()
+                .append('line')
+                .attr('x1', function (d) {
+                    return _x(d);
+                })
+                .attr('y1', _chart._xAxisY() - _chart.margins().top)
+                .attr('x2', function (d) {
+                    return _x(d);
+                })
+                .attr('y2', 0)
+                .attr('opacity', 0);
+            dc.transition(linesGEnter, _chart.transitionDuration())
+                .attr('opacity', 1);
+
+            // update
+            dc.transition(lines, _chart.transitionDuration())
+                .attr('x1', function (d) {
+                    return _x(d);
+                })
+                .attr('y1', _chart._xAxisY() - _chart.margins().top)
+                .attr('x2', function (d) {
+                    return _x(d);
+                })
+                .attr('y2', 0);
+
+            // exit
+            lines.exit().remove();
+        }
+        else {
+            gridLineG.selectAll('line').remove();
+        }
+    }
+
+    _chart._xAxisY = function () {
+        return (_chart.height() - _chart.margins().bottom);
+    };
+
+    _chart.xAxisLength = function () {
+        return _chart.effectiveWidth();
+    };
+
+    /**
+    #### .xAxisLabel([labelText, [, padding]])
+    Set or get the x axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+    **/
+    _chart.xAxisLabel = function (_, padding) {
+        if (!arguments.length) {
+            return _xAxisLabel;
+        }
+        _xAxisLabel = _;
+        _chart.margins().bottom -= _xAxisLabelPadding;
+        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
+        _chart.margins().bottom += _xAxisLabelPadding;
+        return _chart;
+    };
+
+    _chart._prepareYAxis = function (g) {
+        if (_y === undefined || _chart.elasticY()) {
+            _y = d3.scale.linear();
+            var min = _chart.yAxisMin() || 0,
+                max = _chart.yAxisMax() || 0;
+            _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
+        }
+
+        _y.range([_chart.yAxisHeight(), 0]);
+        _yAxis = _yAxis.scale(_y);
+
+        if (_useRightYAxis) {
+            _yAxis.orient('right');
+        }
+
+        _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
+    };
+
+    _chart.renderYAxisLabel = function (axisClass, text, rotation, labelXPosition) {
+        labelXPosition = labelXPosition || _yAxisLabelPadding;
+
+        var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        if (axisYLab.empty() && text) {
+
+            var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
+            axisYLab = _chart.g().append('text')
+                .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
+                .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
+                .attr('text-anchor', 'middle')
+                .text(text);
+        }
+        if (text && axisYLab.text() !== text) {
+            axisYLab.text(text);
+        }
+    };
+
+    _chart.renderYAxisAt = function (axisClass, axis, position) {
+        var axisYG = _chart.g().selectAll('g.' + axisClass);
+        if (axisYG.empty()) {
+            axisYG = _chart.g().append('g')
+                .attr('class', 'axis ' + axisClass)
+                .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
+        }
+
+        dc.transition(axisYG, _chart.transitionDuration()).call(axis);
+    };
+
+    _chart.renderYAxis = function () {
+        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
+        _chart.renderYAxisAt('y', _yAxis, axisPosition);
+        var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
+        var rotation = _useRightYAxis ? 90 : -90;
+        _chart.renderYAxisLabel('y', _chart.yAxisLabel(), rotation, labelPosition);
+    };
+
+    _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
+        var gridLineG = g.selectAll('g.' + HORIZONTAL_CLASS);
+
+        if (_renderHorizontalGridLine) {
+            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
+
+            if (gridLineG.empty()) {
+                gridLineG = g.insert('g', ':first-child')
+                    .attr('class', GRID_LINE_CLASS + ' ' + HORIZONTAL_CLASS)
+                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+            }
+
+            var lines = gridLineG.selectAll('line')
+                .data(ticks);
+
+            // enter
+            var linesGEnter = lines.enter()
+                .append('line')
+                .attr('x1', 1)
+                .attr('y1', function (d) {
+                    return scale(d);
+                })
+                .attr('x2', _chart.xAxisLength())
+                .attr('y2', function (d) {
+                    return scale(d);
+                })
+                .attr('opacity', 0);
+            dc.transition(linesGEnter, _chart.transitionDuration())
+                .attr('opacity', 1);
+
+            // update
+            dc.transition(lines, _chart.transitionDuration())
+                .attr('x1', 1)
+                .attr('y1', function (d) {
+                    return scale(d);
+                })
+                .attr('x2', _chart.xAxisLength())
+                .attr('y2', function (d) {
+                    return scale(d);
+                });
+
+            // exit
+            lines.exit().remove();
+        }
+        else {
+            gridLineG.selectAll('line').remove();
+        }
+    };
+
+    _chart._yAxisX = function () {
+        return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
+    };
+
+    /**
+    #### .yAxisLabel([labelText, [, padding]])
+    Set or get the y axis label. If setting the label, you may optionally include additional padding
+    to the margin to make room for the label. By default the padded is set to 12 to accomodate the
+    text height.
+    **/
+    _chart.yAxisLabel = function (_, padding) {
+        if (!arguments.length) {
+            return _yAxisLabel;
+        }
+        _yAxisLabel = _;
+        _chart.margins().left -= _yAxisLabelPadding;
+        _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
+        _chart.margins().left += _yAxisLabelPadding;
+        return _chart;
+    };
+
+    /**
+    #### .y([yScale])
+    Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
+
+    **/
+    _chart.y = function (_) {
+        if (!arguments.length) {
+            return _y;
+        }
+        _y = _;
+        return _chart;
+    };
+
+    /**
+    #### .yAxis([yAxis])
+    Set or get the y axis used by the coordinate grid chart instance. This function is most useful
+    when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
+    object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
+    valid d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
+    resetting it may cause unexpected results.
+    ```js
+    // customize y axis tick format
+    chart.yAxis().tickFormat(function(v) {return v + '%';});
+    // customize y axis tick values
+    chart.yAxis().tickValues([0, 100, 200, 300]);
+    ```
+
+    **/
+    _chart.yAxis = function (y) {
+        if (!arguments.length) {
+            return _yAxis;
+        }
+        _yAxis = y;
+        return _chart;
+    };
+
+    /**
+    #### .elasticY([boolean])
+    Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
+    attempt to recalculate the y axis range whenever a redraw event is triggered.
+
+    **/
+    _chart.elasticY = function (_) {
+        if (!arguments.length) {
+            return _yElasticity;
+        }
+        _yElasticity = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderHorizontalGridLines([boolean])
+    Turn on/off horizontal grid lines.
+
+    **/
+    _chart.renderHorizontalGridLines = function (_) {
+        if (!arguments.length) {
+            return _renderHorizontalGridLine;
+        }
+        _renderHorizontalGridLine = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderVerticalGridLines([boolean])
+    Turn on/off vertical grid lines.
+
+    **/
+    _chart.renderVerticalGridLines = function (_) {
+        if (!arguments.length) {
+            return _renderVerticalGridLine;
+        }
+        _renderVerticalGridLine = _;
+        return _chart;
+    };
+
+    /**
+    #### .xAxisMin()
+    Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
+    **/
+    _chart.xAxisMin = function () {
+        var min = d3.min(_chart.data(), function (e) {
+            return _chart.keyAccessor()(e);
+        });
+        return dc.utils.subtract(min, _xAxisPadding);
+    };
+
+    /**
+    #### .xAxisMax()
+    Calculates the maximum x value to display in the chart. Includes xAxisPadding if set.
+    **/
+    _chart.xAxisMax = function () {
+        var max = d3.max(_chart.data(), function (e) {
+            return _chart.keyAccessor()(e);
+        });
+        return dc.utils.add(max, _xAxisPadding);
+    };
+
+    /**
+    #### .yAxisMin()
+    Calculates the minimum y value to display in the chart. Includes yAxisPadding if set.
+    **/
+    _chart.yAxisMin = function () {
+        var min = d3.min(_chart.data(), function (e) {
+            return _chart.valueAccessor()(e);
+        });
+        return dc.utils.subtract(min, _yAxisPadding);
+    };
+
+    /**
+    #### .yAxisMax()
+    Calculates the maximum y value to display in the chart. Includes yAxisPadding if set.
+    **/
+    _chart.yAxisMax = function () {
+        var max = d3.max(_chart.data(), function (e) {
+            return _chart.valueAccessor()(e);
+        });
+        return dc.utils.add(max, _yAxisPadding);
+    };
+
+    /**
+    #### .yAxisPadding([padding])
+    Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
+    axis if elasticY is turned on; otherwise it is ignored.
+
+    * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+    number or date axes. When padding a date axis, an integer represents number of days being padded
+    and a percentage string will be treated the same as an integer.
+
+    **/
+    _chart.yAxisPadding = function (_) {
+        if (!arguments.length) {
+            return _yAxisPadding;
+        }
+        _yAxisPadding = _;
+        return _chart;
+    };
+
+    _chart.yAxisHeight = function () {
+        return _chart.effectiveHeight();
+    };
+
+    /**
+    #### .round([rounding function])
+    Set or get the rounding function used to quantize the selection when brushing is enabled.
+    ```js
+    // set x unit round to by month, this will make sure range selection brush will
+    // select whole months
+    chart.round(d3.time.month.round);
+    ```
+
+    **/
+    _chart.round = function (_) {
+        if (!arguments.length) {
+            return _round;
+        }
+        _round = _;
+        return _chart;
+    };
+
+    _chart._rangeBandPadding = function (_) {
+        if (!arguments.length) {
+            return _rangeBandPadding;
+        }
+        _rangeBandPadding = _;
+        return _chart;
+    };
+
+    _chart._outerRangeBandPadding = function (_) {
+        if (!arguments.length) {
+            return _outerRangeBandPadding;
+        }
+        _outerRangeBandPadding = _;
+        return _chart;
+    };
+
+    dc.override(_chart, 'filter', function (_) {
+        if (!arguments.length) {
+            return _chart._filter();
+        }
+
+        _chart._filter(_);
+
+        if (_) {
+            _chart.brush().extent(_);
+        } else {
+            _chart.brush().clear();
+        }
+
+        return _chart;
+    });
+
+    _chart.brush = function (_) {
+        if (!arguments.length) {
+            return _brush;
+        }
+        _brush = _;
+        return _chart;
+    };
+
+    function brushHeight() {
+        return _chart._xAxisY() - _chart.margins().top;
+    }
+
+    _chart.renderBrush = function (g) {
+        if (_brushOn) {
+            _brush.on('brush', _chart._brushing);
+            _brush.on('brushstart', _chart._disableMouseZoom);
+            _brush.on('brushend', configureMouseZoom);
+
+            var gBrush = g.append('g')
+                .attr('class', 'brush')
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
+                .call(_brush.x(_chart.x()));
+            _chart.setBrushY(gBrush);
+            _chart.setHandlePaths(gBrush);
+
+            if (_chart.hasFilter()) {
+                _chart.redrawBrush(g);
+            }
+        }
+    };
+
+    _chart.setHandlePaths = function (gBrush) {
+        gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
+    };
+
+    _chart.setBrushY = function (gBrush) {
+        gBrush.selectAll('rect').attr('height', brushHeight());
+    };
+
+    _chart.extendBrush = function () {
+        var extent = _brush.extent();
+        if (_chart.round()) {
+            extent[0] = extent.map(_chart.round())[0];
+            extent[1] = extent.map(_chart.round())[1];
+
+            _g.select('.brush')
+                .call(_brush.extent(extent));
+        }
+        return extent;
+    };
+
+    _chart.brushIsEmpty = function (extent) {
+        return _brush.empty() || !extent || extent[1] <= extent[0];
+    };
+
+    _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+
+        _chart.redrawBrush(_g);
+
+        if (_chart.brushIsEmpty(extent)) {
+            dc.events.trigger(function () {
+                _chart.filter(null);
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
+        } else {
+            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+
+            dc.events.trigger(function () {
+                _chart.replaceFilter(rangedFilter);
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
+        }
+    };
+
+    _chart.redrawBrush = function (g) {
+        if (_brushOn) {
+            if (_chart.filter() && _chart.brush().empty()) {
+                _chart.brush().extent(_chart.filter());
+            }
+
+            var gBrush = g.select('g.brush');
+            gBrush.call(_chart.brush().x(_chart.x()));
+            _chart.setBrushY(gBrush);
+        }
+
+        _chart.fadeDeselectedArea();
+    };
+
+    _chart.fadeDeselectedArea = function () {
+        // do nothing, sub-chart should override this function
+    };
+
+    // borrowed from Crossfilter example
+    _chart.resizeHandlePath = function (d) {
+        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
+        /*jshint -W014 */
+        return 'M' + (0.5 * x) + ',' + y
+            + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
+            + 'V' + (2 * y - 6)
+            + 'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y)
+            + 'Z'
+            + 'M' + (2.5 * x) + ',' + (y + 8)
+            + 'V' + (2 * y - 8)
+            + 'M' + (4.5 * x) + ',' + (y + 8)
+            + 'V' + (2 * y - 8);
+        /*jshint +W014 */
+    };
+
+    function getClipPathId() {
+        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
+    }
+
+    /**
+    #### .clipPadding([padding])
+    Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
+    the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
+    will be exactly the chart body area minus the margins.  Default: 5
+
+    **/
+    _chart.clipPadding = function (p) {
+        if (!arguments.length) {
+            return _clipPadding;
+        }
+        _clipPadding = p;
+        return _chart;
+    };
+
+    function generateClipPath() {
+        var defs = dc.utils.appendOrSelect(_parent, 'defs');
+        // cannot select <clippath> elements; bug in WebKit, must select by id
+        // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
+        var id = getClipPathId();
+        var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
+
+        var padding = _clipPadding * 2;
+
+        dc.utils.appendOrSelect(chartBodyClip, 'rect')
+            .attr('width', _chart.xAxisLength() + padding)
+            .attr('height', _chart.yAxisHeight() + padding)
+            .attr('transform', 'translate(-' + _clipPadding + ', -' + _clipPadding + ')');
+    }
+
+    _chart._preprocessData = function () {};
+
+    _chart._doRender = function () {
+        _chart.resetSvg();
+
+        _chart._preprocessData();
+
+        _chart._generateG();
+        generateClipPath();
+
+        drawChart(true);
+
+        configureMouseZoom();
+
+        return _chart;
+    };
+
+    _chart._doRedraw = function () {
+        _chart._preprocessData();
+
+        drawChart(false);
+        generateClipPath();
+
+        return _chart;
+    };
+
+    function drawChart (render) {
+        if (_chart.isOrdinal()) {
+            _brushOn = false;
+        }
+
+        prepareXAxis(_chart.g());
+        _chart._prepareYAxis(_chart.g());
+
+        _chart.plotData();
+
+        if (_chart.elasticX() || _refocused || render) {
+            _chart.renderXAxis(_chart.g());
+        }
+
+        if (_chart.elasticY() || render) {
+            _chart.renderYAxis(_chart.g());
+        }
+
+        if (render) {
+            _chart.renderBrush(_chart.g());
+        } else {
+            _chart.redrawBrush(_chart.g());
+        }
+    }
+
+    function configureMouseZoom () {
+        if (_mouseZoomable) {
+            _chart._enableMouseZoom();
+        }
+        else if (_hasBeenMouseZoomable) {
+            _chart._disableMouseZoom();
+        }
+    }
+
+    _chart._enableMouseZoom = function () {
+        _hasBeenMouseZoomable = true;
+        _zoom.x(_chart.x())
+            .scaleExtent(_zoomScale)
+            .size([_chart.width(), _chart.height()])
+            .duration(_chart.transitionDuration());
+        _chart.root().call(_zoom);
+    };
+
+    _chart._disableMouseZoom = function () {
+        _chart.root().call(_nullZoom);
+    };
+
+    function constrainRange(range, constraint) {
+        var constrainedRange = [];
+        constrainedRange[0] = d3.max([range[0], constraint[0]]);
+        constrainedRange[1] = d3.min([range[1], constraint[1]]);
+        return constrainedRange;
+    }
+
+    /**
+    #### .focus([range])
+    Zoom this chart to focus on the given range. The given range should be an array containing only
+    2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
+    to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
+    otherwise focus will be ignored._
+    ```js
+    chart.renderlet(function(chart){
+        // smooth the rendering through event throttling
+        dc.events.trigger(function(){
+            // focus some other chart to the range selected by user on this chart
+            someOtherChart.focus(chart.filter());
+        });
+    })
+    ```
+
+    **/
+    _chart.focus = function (range) {
+        if (hasRangeSelected(range)) {
+            _chart.x().domain(range);
+        } else {
+            _chart.x().domain(_xOriginalDomain);
+        }
+
+        _zoom.x(_chart.x());
+        zoomHandler();
+    };
+
+    _chart.refocused = function () {
+        return _refocused;
+    };
+
+    _chart.focusChart = function (c) {
+        if (!arguments.length) {
+            return _focusChart;
+        }
+        _focusChart = c;
+        _chart.on('filtered', function (chart) {
+            if (!chart.filter()) {
+                dc.events.trigger(function () {
+                    _focusChart.x().domain(_focusChart.xOriginalDomain());
+                });
+            } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
+                dc.events.trigger(function () {
+                    _focusChart.focus(chart.filter());
+                });
+            }
+        });
+        return _chart;
+    };
+
+    function rangesEqual(range1, range2) {
+        if (!range1 && !range2) {
+            return true;
+        }
+        else if (!range1 || !range2) {
+            return false;
+        }
+        else if (range1.length === 0 && range2.length === 0) {
+            return true;
+        }
+        else if (range1[0].valueOf() === range2[0].valueOf() &&
+            range1[1].valueOf() === range2[1].valueOf()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+    #### .brushOn([boolean])
+    Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
+    across a chart with a quantitative scale to perform range filtering based on the extent of the
+    brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
+    unfilter them. However turning on the brush filter will disable other interactive elements on
+    the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
+    if enabled, but only via scrolling (panning will be disabled.) Default: true
+
+    **/
+    _chart.brushOn = function (_) {
+        if (!arguments.length) {
+            return _brushOn;
+        }
+        _brushOn = _;
+        return _chart;
+    };
+
+    function hasRangeSelected(range) {
+        return range instanceof Array && range.length > 1;
+    }
+
+    return _chart;
+};
+
+/**
+## Stack Mixin
+Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
+
+**/
+dc.stackMixin = function (_chart) {
+
+    function prepareValues (layer, layerIdx) {
+        var valAccessor = layer.accessor || _chart.valueAccessor();
+        layer.name = String(layer.name || layerIdx);
+        layer.values = layer.group.all().map(function (d, i) {
+            return {
+                x: _chart.keyAccessor()(d, i),
+                y: layer.hidden ? null : valAccessor(d, i),
+                data: d,
+                layer: layer.name,
+                hidden: layer.hidden
+            };
+        });
+
+        layer.values = layer.values.filter(domainFilter());
+        return layer.values;
+    }
+
+    var _stackLayout = d3.layout.stack()
+        .values(prepareValues);
+
+    var _stack = [];
+    var _titles = {};
+
+    var _hidableStacks = false;
+
+    function domainFilter() {
+        if (!_chart.x()) {
+            return d3.functor(true);
+        }
+        var xDomain = _chart.x().domain();
+        if (_chart.isOrdinal()) {
+            // TODO #416
+            //var domainSet = d3.set(xDomain);
+            return function () {
+                return true; //domainSet.has(p.x);
+            };
+        }
+        if (_chart.elasticX()) {
+            return function () { return true; };
+        }
+        return function (p) {
+            //return true;
+            return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
+        };
+    }
+
+    /**
+    #### .stack(group[, name, accessor])
+    Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
+    in the same chart will share the same key accessor and therefore the same set of keys.
+
+    For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
+    of keys on the x axis, while stacked vertically. If name is specified then it will be used to
+    generate the legend label.
+    ```js
+    // stack group using default accessor
+    chart.stack(valueSumGroup)
+    // stack group using custom accessor
+    .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
+    ```
+
+    **/
+    _chart.stack = function (group, name, accessor) {
+        if (!arguments.length) {
+            return _stack;
+        }
+
+        if (arguments.length <= 2) {
+            accessor = name;
+        }
+
+        var layer = {group:group};
+        if (typeof name === 'string') {
+            layer.name = name;
+        }
+        if (typeof accessor === 'function') {
+            layer.accessor = accessor;
+        }
+        _stack.push(layer);
+
+        return _chart;
+    };
+
+    dc.override(_chart, 'group', function (g, n, f) {
+        if (!arguments.length) {
+            return _chart._group();
+        }
+        _stack = [];
+        _titles = {};
+        _chart.stack(g, n);
+        if (f) {
+            _chart.valueAccessor(f);
+        }
+        return _chart._group(g, n);
+    });
+
+    /**
+    #### .hidableStacks([boolean])
+    Allow named stacks to be hidden or shown by clicking on legend items.
+    This does not affect the behavior of hideStack or showStack.
+
+    **/
+    _chart.hidableStacks = function (_) {
+        if (!arguments.length) {
+            return _hidableStacks;
+        }
+        _hidableStacks = _;
+        return _chart;
+    };
+
+    function findLayerByName(n) {
+        var i = _stack.map(dc.pluck('name')).indexOf(n);
+        return _stack[i];
+    }
+
+    /**
+    #### .hideStack(name)
+    Hide all stacks on the chart with the given name.
+    The chart must be re-rendered for this change to appear.
+
+    **/
+    _chart.hideStack = function (stackName) {
+        var layer = findLayerByName(stackName);
+        if (layer) {
+            layer.hidden = true;
+        }
+        return _chart;
+    };
+
+    /**
+    #### .showStack(name)
+    Show all stacks on the chart with the given name.
+    The chart must be re-rendered for this change to appear.
+
+    **/
+    _chart.showStack = function (stackName) {
+        var layer = findLayerByName(stackName);
+        if (layer) {
+            layer.hidden = false;
+        }
+        return _chart;
+    };
+
+    _chart.getValueAccessorByIndex = function (index) {
+        return _stack[index].accessor || _chart.valueAccessor();
+    };
+
+    _chart.yAxisMin = function () {
+        var min = d3.min(flattenStack(), function (p) {
+            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+        });
+
+        return dc.utils.subtract(min, _chart.yAxisPadding());
+
+    };
+
+    _chart.yAxisMax = function () {
+        var max = d3.max(flattenStack(), function (p) {
+            return p.y + p.y0;
+        });
+
+        return dc.utils.add(max, _chart.yAxisPadding());
+    };
+
+    function flattenStack() {
+        return _chart.data().reduce(function (all, layer) {
+            return all.concat(layer.values);
+        }, []);
+    }
+
+    _chart.xAxisMin = function () {
+        var min = d3.min(flattenStack(), dc.pluck('x'));
+        return dc.utils.subtract(min, _chart.xAxisPadding());
+    };
+
+    _chart.xAxisMax = function () {
+        var max = d3.max(flattenStack(), dc.pluck('x'));
+        return dc.utils.add(max, _chart.xAxisPadding());
+    };
+
+    /**
+    #### .title([stackName], [titleFunction])
+    Set or get the title function. Chart class will use this function to render svg title (usually interpreted by
+    browser as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart.
+    Almost every chart supports title function however in grid coordinate chart you need to turn off brush in order to
+    use title otherwise the brush layer will block tooltip trigger.
+
+    If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+    is not provided, the first stack is implied.
+    ```js
+    // set a title function on 'first stack'
+    chart.title('first stack', function(d) { return d.key + ': ' + d.value; });
+    // get a title function from 'second stack'
+    var secondTitleFunction = chart.title('second stack');
+    );
+    ```
+    **/
+    dc.override(_chart, 'title', function (stackName, titleAccessor) {
+        if (!stackName) {
+            return _chart._title();
+        }
+
+        if (typeof stackName === 'function') {
+            return _chart._title(stackName);
+        }
+        if (stackName === _chart._groupName && typeof titleAccessor === 'function') {
+            return _chart._title(titleAccessor);
+        }
+
+        if (typeof titleAccessor !== 'function') {
+            return _titles[stackName] || _chart._title();
+        }
+
+        _titles[stackName] = titleAccessor;
+
+        return _chart;
+    });
+
+    /**
+     #### .stackLayout([layout])
+     Gets or sets the stack layout algorithm, which computes a baseline for each stack and
+     propagates it to the next.  The default is
+     [d3.layout.stack](https://github.com/mbostock/d3/wiki/Stack-Layout#stack).
+     **/
+    _chart.stackLayout = function (stack) {
+        if (!arguments.length) {
+            return _stackLayout;
+        }
+        _stackLayout = stack;
+        return _chart;
+    };
+
+    function visability(l) {
+        return !l.hidden;
+    }
+
+    _chart.data(function () {
+        var layers = _stack.filter(visability);
+        return layers.length ? _chart.stackLayout()(layers) : [];
+    });
+
+    _chart._ordinalXDomain = function () {
+        return flattenStack().map(dc.pluck('x'));
+    };
+
+    _chart.colorAccessor(function (d) {
+        var layer = this.layer || this.name || d.name || d.layer;
+        return layer;
+    });
+
+    _chart.legendables = function () {
+        return _stack.map(function (layer, i) {
+            return {
+                chart:_chart,
+                name:layer.name,
+                hidden: layer.hidden || false,
+                color:_chart.getColor.call(layer, layer.values, i)
+            };
+        });
+    };
+
+    _chart.isLegendableHidden = function (d) {
+        var layer = findLayerByName(d.name);
+        return layer ? layer.hidden : false;
+    };
+
+    _chart.legendToggle = function (d) {
+        if (_hidableStacks) {
+            if (_chart.isLegendableHidden(d)) {
+                _chart.showStack(d.name);
+            } else {
+                _chart.hideStack(d.name);
+            }
+            //_chart.redraw();
+            _chart.renderGroup();
+        }
+    };
+
+    return _chart;
+};
+
+/**
+## Cap Mixin
+Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
+Row and Pie Charts.
+
+The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
+will be replaced with an *others* element, with value equal to the sum of the replaced values. The
+keys of the elements below the cap limit are recorded in order to filter by those keys when the
+*others* element is clicked.
+
+**/
+dc.capMixin = function (_chart) {
+
+    var _cap = Infinity;
+
+    var _othersLabel = 'Others';
+
+    var _othersGrouper = function (topRows) {
+        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
+            allRows = _chart.group().all(),
+            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
+            topKeys = topRows.map(_chart.keyAccessor()),
+            allKeys = allRows.map(_chart.keyAccessor()),
+            topSet = d3.set(topKeys),
+            others = allKeys.filter(function (d) {return !topSet.has(d);});
+        if (allRowsSum > topRowsSum) {
+            return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+        }
+        return topRows;
+    };
+
+    _chart.cappedKeyAccessor = function (d, i) {
+        if (d.others) {
+            return d.key;
+        }
+        return _chart.keyAccessor()(d, i);
+    };
+
+    _chart.cappedValueAccessor = function (d, i) {
+        if (d.others) {
+            return d.value;
+        }
+        return _chart.valueAccessor()(d, i);
+    };
+
+    _chart.data(function (group) {
+        if (_cap === Infinity) {
+            return _chart._computeOrderedGroups(group.all());
+        } else {
+            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
+            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
+            if (_othersGrouper) {
+                return _othersGrouper(topRows);
+            }
+            return topRows;
+        }
+    });
+
+    /**
+    #### .cap([count])
+    Get or set the count of elements to that will be included in the cap.
+    **/
+    _chart.cap = function (_) {
+        if (!arguments.length) {
+            return _cap;
+        }
+        _cap = _;
+        return _chart;
+    };
+
+    /**
+    #### .othersLabel([label])
+    Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
+    **/
+    _chart.othersLabel = function (_) {
+        if (!arguments.length) {
+            return _othersLabel;
+        }
+        _othersLabel = _;
+        return _chart;
+    };
+
+    /**
+    #### .othersGrouper([grouperFunction])
+    Get or set the grouper function that will perform the insertion of data for the *Others* slice
+    if the slices cap is specified. If set to a falsy value, no others will be added. By default the
+    grouper function computes the sum of all values below the cap.
+    ```js
+    chart.othersGrouper(function (data) {
+        // compute the value for others, presumably the sum of all values below the cap
+        var othersSum  = yourComputeOthersValueLogic(data)
+
+        // the keys are needed to properly filter when the others element is clicked
+        var othersKeys = yourComputeOthersKeysArrayLogic(data);
+
+        // add the others row to the dataset
+        data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
+
+        return data;
+    });
+    ```
+    **/
+    _chart.othersGrouper = function (_) {
+        if (!arguments.length) {
+            return _othersGrouper;
+        }
+        _othersGrouper = _;
+        return _chart;
+    };
+
+    dc.override(_chart, 'onClick', function (d) {
+        if (d.others) {
+            _chart.filter([d.others]);
+        }
+        _chart._onClick(d);
+    });
+
+    return _chart;
+};
+
+/**
+## Bubble Mixin
+Includes: [Color Mixin](#color-mixin)
+
+This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
+
+**/
+dc.bubbleMixin = function (_chart) {
+    var _maxBubbleRelativeSize = 0.3;
+    var _minRadiusWithLabel = 10;
+
+    _chart.BUBBLE_NODE_CLASS = 'node';
+    _chart.BUBBLE_CLASS = 'bubble';
+    _chart.MIN_RADIUS = 10;
+
+    _chart = dc.colorMixin(_chart);
+
+    _chart.renderLabel(true);
+
+    _chart.data(function (group) {
+        return group.top(Infinity);
+    });
+
+    var _r = d3.scale.linear().domain([0, 100]);
+
+    var _rValueAccessor = function (d) {
+        return d.r;
+    };
+
+    /**
+    #### .r([bubbleRadiusScale])
+    Get or set the bubble radius scale. By default the bubble chart uses
+    `d3.scale.linear().domain([0, 100])` as its r scale .
+
+    **/
+    _chart.r = function (_) {
+        if (!arguments.length) {
+            return _r;
+        }
+        _r = _;
+        return _chart;
+    };
+
+    /**
+    #### .radiusValueAccessor([radiusValueAccessor])
+    Get or set the radius value accessor function. If set, the radius value accessor function will
+    be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
+    the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
+    size.
+
+    **/
+    _chart.radiusValueAccessor = function (_) {
+        if (!arguments.length) {
+            return _rValueAccessor;
+        }
+        _rValueAccessor = _;
+        return _chart;
+    };
+
+    _chart.rMin = function () {
+        var min = d3.min(_chart.data(), function (e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return min;
+    };
+
+    _chart.rMax = function () {
+        var max = d3.max(_chart.data(), function (e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return max;
+    };
+
+    _chart.bubbleR = function (d) {
+        var value = _chart.radiusValueAccessor()(d);
+        var r = _chart.r()(value);
+        if (isNaN(r) || value <= 0) {
+            r = 0;
+        }
+        return r;
+    };
+
+    var labelFunction = function (d) {
+        return _chart.label()(d);
+    };
+
+    var labelOpacity = function (d) {
+        return (_chart.bubbleR(d) > _minRadiusWithLabel) ? 1 : 0;
+    };
+
+    _chart._doRenderLabel = function (bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            var label = bubbleGEnter.select('text');
+
+            if (label.empty()) {
+                label = bubbleGEnter.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', '.3em')
+                    .on('click', _chart.onClick);
+            }
+
+            label
+                .attr('opacity', 0)
+                .text(labelFunction);
+            dc.transition(label, _chart.transitionDuration())
+                .attr('opacity', labelOpacity);
+        }
+    };
+
+    _chart.doUpdateLabels = function (bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            var labels = bubbleGEnter.selectAll('text')
+                .text(labelFunction);
+            dc.transition(labels, _chart.transitionDuration())
+                .attr('opacity', labelOpacity);
+        }
+    };
+
+    var titleFunction = function (d) {
+        return _chart.title()(d);
+    };
+
+    _chart._doRenderTitles = function (g) {
+        if (_chart.renderTitle()) {
+            var title = g.select('title');
+
+            if (title.empty()) {
+                g.append('title').text(titleFunction);
+            }
+        }
+    };
+
+    _chart.doUpdateTitles = function (g) {
+        if (_chart.renderTitle()) {
+            g.selectAll('title').text(titleFunction);
+        }
+    };
+
+    /**
+    #### .minRadiusWithLabel([radius])
+    Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
+    then no label will be rendered.  Default: 10
+
+    **/
+    _chart.minRadiusWithLabel = function (_) {
+        if (!arguments.length) {
+            return _minRadiusWithLabel;
+        }
+        _minRadiusWithLabel = _;
+        return _chart;
+    };
+
+    /**
+    #### .maxBubbleRelativeSize([relativeSize])
+    Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
+    when the difference in radius between bubbles is too great. Default: 0.3
+
+    **/
+    _chart.maxBubbleRelativeSize = function (_) {
+        if (!arguments.length) {
+            return _maxBubbleRelativeSize;
+        }
+        _maxBubbleRelativeSize = _;
+        return _chart;
+    };
+
+    _chart.fadeDeselectedArea = function () {
+        if (_chart.hasFilter()) {
+            _chart.selectAll('g.' + _chart.BUBBLE_NODE_CLASS).each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll('g.' + _chart.BUBBLE_NODE_CLASS).each(function () {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
+    };
+
+    _chart.onClick = function (d) {
+        var filter = d.key;
+        dc.events.trigger(function () {
+            _chart.filter(filter);
+            _chart.redrawGroup();
+        });
+    };
+
+    return _chart;
+};
+
+/**
+## Pie Chart
+Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
+chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
+by key.
+
+Examples:
+
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+#### dc.pieChart(parent[, chartGroup])
+Create a pie chart instance and attaches it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created pie chart instance
+
+```js
+// create a pie chart under #chart-container1 element using the default global chart group
+var chart1 = dc.pieChart('#chart-container1');
+// create a pie chart under #chart-container2 element using chart group A
+var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
+```
+
+**/
+dc.pieChart = function (parent, chartGroup) {
+    var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
+    var _sliceCssClass = 'pie-slice';
+    var _emptyCssClass = 'empty-chart';
+    var _emptyTitle = 'empty';
+
+    var _radius,
+        _innerRadius = 0;
+
+    var _g;
+    var _cx;
+    var _cy;
+    var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    var _externalLabelRadius;
+    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+
+    _chart.colorAccessor(_chart.cappedKeyAccessor);
+
+    _chart.title(function (d) {
+        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+    });
+
+    /**
+    #### .slicesCap([cap])
+    Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+    value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+    The resulting data will still be sorted by .ordering (default by key).
+
+    **/
+    _chart.slicesCap = _chart.cap;
+
+    _chart.label(_chart.cappedKeyAccessor);
+    _chart.renderLabel(true);
+
+    _chart.transitionDuration(350);
+
+    _chart._doRender = function () {
+        _chart.resetSvg();
+
+        _g = _chart.svg()
+            .append('g')
+            .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
+
+        drawChart();
+
+        return _chart;
+    };
+
+    function drawChart() {
+        // set radius on basis of chart dimension if missing
+        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+
+        var arc = buildArcs();
+
+        var pie = pieLayout();
+        var pieData;
+        // if we have data...
+        if (d3.sum(_chart.data(), _chart.valueAccessor())) {
+            pieData = pie(_chart.data());
+            _g.classed(_emptyCssClass, false);
+        } else {
+            // otherwise we'd be getting NaNs, so override
+            // note: abuse others for its ignoring the value accessor
+            pieData = pie([{key:_emptyTitle, value:1, others: [_emptyTitle]}]);
+            _g.classed(_emptyCssClass, true);
+        }
+
+        if (_g) {
+            var slices = _g.selectAll('g.' + _sliceCssClass)
+                .data(pieData);
+
+            createElements(slices, arc, pieData);
+
+            updateElements(pieData, arc);
+
+            removeElements(slices);
+
+            highlightFilter();
+        }
+    }
+
+    function createElements(slices, arc, pieData) {
+        var slicesEnter = createSliceNodes(slices);
+
+        createSlicePath(slicesEnter, arc);
+
+        createTitles(slicesEnter);
+
+        createLabels(pieData, arc);
+    }
+
+    function createSliceNodes(slices) {
+        var slicesEnter = slices
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return _sliceCssClass + ' _' + i;
+            });
+        return slicesEnter;
+    }
+
+    function createSlicePath(slicesEnter, arc) {
+        var slicePath = slicesEnter.append('path')
+            .attr('fill', fill)
+            .on('click', onClick)
+            .attr('d', function (d, i) {
+                return safeArc(d, i, arc);
+            });
+
+        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
+            s.attrTween('d', tweenPie);
+        });
+    }
+
+    function createTitles(slicesEnter) {
+        if (_chart.renderTitle()) {
+            slicesEnter.append('title').text(function (d) {
+                return _chart.title()(d);
+            });
+        }
+    }
+
+    function positionLabels(labelsEnter, arc) {
+        dc.transition(labelsEnter, _chart.transitionDuration())
+            .attr('transform', function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr('text-anchor', 'middle')
+            .text(function (d) {
+                var data = d.data;
+                if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
+                    return '';
+                }
+                return _chart.label()(d.data);
+            });
+    }
+
+    function createLabels(pieData, arc) {
+        if (_chart.renderLabel()) {
+            var labels = _g.selectAll('text.' + _sliceCssClass)
+                .data(pieData);
+
+            labels.exit().remove();
+
+            var labelsEnter = labels
+                .enter()
+                .append('text')
+                .attr('class', function (d, i) {
+                    var classes = _sliceCssClass + ' _' + i;
+                    if (_externalLabelRadius) {
+                        classes += ' external';
+                    }
+                    return classes;
+                })
+                .on('click', onClick);
+            positionLabels(labelsEnter, arc);
+        }
+    }
+
+    function updateElements(pieData, arc) {
+        updateSlicePaths(pieData, arc);
+        updateLabels(pieData, arc);
+        updateTitles(pieData);
+    }
+
+    function updateSlicePaths(pieData, arc) {
+        var slicePaths = _g.selectAll('g.' + _sliceCssClass)
+            .data(pieData)
+            .select('path')
+            .attr('d', function (d, i) {
+                return safeArc(d, i, arc);
+            });
+        dc.transition(slicePaths, _chart.transitionDuration(),
+            function (s) {
+                s.attrTween('d', tweenPie);
+            }).attr('fill', fill);
+    }
+
+    function updateLabels(pieData, arc) {
+        if (_chart.renderLabel()) {
+            var labels = _g.selectAll('text.' + _sliceCssClass)
+                .data(pieData);
+            positionLabels(labels, arc);
+        }
+    }
+
+    function updateTitles(pieData) {
+        if (_chart.renderTitle()) {
+            _g.selectAll('g.' + _sliceCssClass)
+                .data(pieData)
+                .select('title')
+                .text(function (d) {
+                    return _chart.title()(d.data);
+                });
+        }
+    }
+
+    function removeElements(slices) {
+        slices.exit().remove();
+    }
+
+    function highlightFilter() {
+        if (_chart.hasFilter()) {
+            _chart.selectAll('g.' + _sliceCssClass).each(function (d) {
+                if (isSelectedSlice(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll('g.' + _sliceCssClass).each(function () {
+                _chart.resetHighlight(this);
+            });
+        }
+    }
+
+    /**
+    #### .innerRadius([innerRadius])
+    Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
+    pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
+
+    **/
+    _chart.innerRadius = function (r) {
+        if (!arguments.length) {
+            return _innerRadius;
+        }
+        _innerRadius = r;
+        return _chart;
+    };
+
+    /**
+    #### .radius([radius])
+    Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+    chart width and height.
+
+    **/
+    _chart.radius = function (r) {
+        if (!arguments.length) {
+            return _radius;
+        }
+        _radius = r;
+        return _chart;
+    };
+
+    /**
+    #### .cx([cx])
+    Get or set center x coordinate position. Default is center of svg.
+
+    **/
+    _chart.cx = function (cx) {
+        if (!arguments.length) {
+            return (_cx ||  _chart.width() / 2);
+        }
+        _cx = cx;
+        return _chart;
+    };
+
+    /**
+    #### .cy([cy])
+    Get or set center y coordinate position. Default is center of svg.
+
+    **/
+    _chart.cy = function (cy) {
+        if (!arguments.length) {
+            return (_cy ||  _chart.height() / 2);
+        }
+        _cy = cy;
+        return _chart;
+    };
+
+    function buildArcs() {
+        return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
+    }
+
+    function isSelectedSlice(d) {
+        return _chart.hasFilter(_chart.cappedKeyAccessor(d.data));
+    }
+
+    _chart._doRedraw = function () {
+        drawChart();
+        return _chart;
+    };
+
+    /**
+    #### .minAngleForLabel([minAngle])
+    Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+    display a slice label.  Default min angle is 0.5.
+    **/
+    _chart.minAngleForLabel = function (_) {
+        if (!arguments.length) {
+            return _minAngleForLabel;
+        }
+        _minAngleForLabel = _;
+        return _chart;
+    };
+
+    function pieLayout() {
+        return d3.layout.pie().sort(null).value(_chart.cappedValueAccessor);
+    }
+
+    function sliceTooSmall(d) {
+        var angle = (d.endAngle - d.startAngle);
+        return isNaN(angle) || angle < _minAngleForLabel;
+    }
+
+    function sliceHasNoData(d) {
+        return _chart.cappedValueAccessor(d) === 0;
+    }
+
+    function tweenPie(b) {
+        b.innerRadius = _innerRadius;
+        var current = this._current;
+        if (isOffCanvas(current)) {
+            current = {startAngle: 0, endAngle: 0};
+        }
+        var i = d3.interpolate(current, b);
+        this._current = i(0);
+        return function (t) {
+            return safeArc(i(t), 0, buildArcs());
+        };
+    }
+
+    function isOffCanvas(current) {
+        return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
+    }
+
+    function fill(d, i) {
+        return _chart.getColor(d.data, i);
+    }
+
+    function onClick(d, i) {
+        if (_g.attr('class') !== _emptyCssClass) {
+            _chart.onClick(d.data, i);
+        }
+    }
+
+    function safeArc(d, i, arc) {
+        var path = arc(d, i);
+        if (path.indexOf('NaN') >= 0) {
+            path = 'M0,0';
+        }
+        return path;
+    }
+
+    /**
+     #### .emptyTitle([title])
+     Title to use for the only slice when there is no data
+     */
+    _chart.emptyTitle = function (title) {
+        if (arguments.length === 0) {
+            return _emptyTitle;
+        }
+        _emptyTitle = title;
+        return _chart;
+    };
+
+    /**
+     #### .externalLabels([radius])
+     Position slice labels offset from the outer edge of the chart
+
+     The given argument sets the radial offset.
+     */
+    _chart.externalLabels = function (radius) {
+        if (arguments.length === 0) {
+            return _externalLabelRadius;
+        } else if (radius) {
+            _externalLabelRadius = radius;
+        } else {
+            _externalLabelRadius = undefined;
+        }
+
+        return _chart;
+    };
+
+    function labelPosition(d, arc) {
+        var centroid;
+        if (_externalLabelRadius) {
+            centroid = d3.svg.arc()
+                .outerRadius(_radius + _externalLabelRadius)
+                .innerRadius(_radius + _externalLabelRadius)
+                .centroid(d);
+        } else {
+            centroid = arc.centroid(d);
+        }
+        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+            return 'translate(0,0)';
+        } else {
+            return 'translate(' + centroid + ')';
+        }
+    }
+
+    _chart.legendables = function () {
+        return _chart.data().map(function (d, i) {
+            var legendable = {name: d.key, data: d.value, others: d.others, chart:_chart};
+            legendable.color = _chart.getColor(d, i);
+            return legendable;
+        });
+    };
+
+    _chart.legendHighlight = function (d) {
+        highlightSliceFromLegendable(d, true);
+    };
+
+    _chart.legendReset = function (d) {
+        highlightSliceFromLegendable(d, false);
+    };
+
+    _chart.legendToggle = function (d) {
+        _chart.onClick({key: d.name, others: d.others});
+    };
+
+    function highlightSliceFromLegendable(legendable, highlighted) {
+        _chart.selectAll('g.pie-slice').each(function (d) {
+            if (legendable.name === d.data.key) {
+                d3.select(this).classed('highlight', highlighted);
+            }
+        });
+    }
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Bar Chart
+Includes: [Stack Mixin](#stack Mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+Concrete bar chart/histogram implementation.
+
+Examples:
+
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+#### dc.barChart(parent[, chartGroup])
+Create a bar chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created bar chart instance
+
+```js
+// create a bar chart under #chart-container1 element using the default global chart group
+var chart1 = dc.barChart('#chart-container1');
+// create a bar chart under #chart-container2 element using chart group A
+var chart2 = dc.barChart('#chart-container2', 'chartGroupA');
+// create a sub-chart under a composite parent chart
+var chart3 = dc.barChart(compositeChart);
+```
+
+**/
+dc.barChart = function (parent, chartGroup) {
+    var MIN_BAR_WIDTH = 1;
+    var DEFAULT_GAP_BETWEEN_BARS = 2;
+
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+
+    var _gap = DEFAULT_GAP_BETWEEN_BARS;
+    var _centerBar = false;
+    var _alwaysUseRounding = false;
+
+    var _barWidth;
+
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
+        _barWidth = undefined;
+    });
+
+    dc.override(_chart, 'render', function () {
+        if (_chart.round() && _centerBar && !_alwaysUseRounding) {
+            dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
+                         'See dc.js bar chart API documentation for details.');
+        }
+
+        _chart._render();
+    });
+
+    _chart.plotData = function () {
+        var layers = _chart.chartBodyG().selectAll('g.stack')
+            .data(_chart.data());
+
+        calculateBarWidth();
+
+        layers
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return 'stack ' + '_' + i;
+            });
+
+        layers.each(function (d, i) {
+            var layer = d3.select(this);
+
+            renderBars(layer, i, d);
+        });
+    };
+
+    function barHeight(d) {
+        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+    }
+
+    function renderBars(layer, layerIndex, d) {
+        var bars = layer.selectAll('rect.bar')
+            .data(d.values, dc.pluck('x'));
+
+        var enter = bars.enter()
+            .append('rect')
+            .attr('class', 'bar')
+            .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('y', _chart.yAxisHeight())
+            .attr('height', 0);
+
+        if (_chart.renderTitle()) {
+            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }
+
+        if (_chart.isOrdinal()) {
+            bars.on('click', _chart.onClick);
+        }
+
+        dc.transition(bars, _chart.transitionDuration())
+            .attr('x', function (d) {
+                var x = _chart.x()(d.x);
+                if (_centerBar) {
+                    x -= _barWidth / 2;
+                }
+                if (_chart.isOrdinal() && _gap !== undefined) {
+                    x += _gap / 2;
+                }
+                return dc.utils.safeNumber(x);
+            })
+            .attr('y', function (d) {
+                var y = _chart.y()(d.y + d.y0);
+
+                if (d.y < 0) {
+                    y -= barHeight(d);
+                }
+
+                return dc.utils.safeNumber(y);
+            })
+            .attr('width', _barWidth)
+            .attr('height', function (d) {
+                return barHeight(d);
+            })
+            .attr('fill', dc.pluck('data', _chart.getColor))
+            .select('title').text(dc.pluck('data', _chart.title(d.name)));
+
+        dc.transition(bars.exit(), _chart.transitionDuration())
+            .attr('height', 0)
+            .remove();
+    }
+
+    function calculateBarWidth() {
+        if (_barWidth === undefined) {
+            var numberOfBars = _chart.xUnitCount();
+
+            // please can't we always use rangeBands for bar charts?
+            if (_chart.isOrdinal() && _gap === undefined) {
+                _barWidth = Math.floor(_chart.x().rangeBand());
+            } else if (_gap) {
+                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            } else {
+                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+            }
+
+            if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
+                _barWidth = MIN_BAR_WIDTH;
+            }
+        }
+    }
+
+    _chart.fadeDeselectedArea = function () {
+        var bars = _chart.chartBodyG().selectAll('rect.bar');
+        var extent = _chart.brush().extent();
+
+        if (_chart.isOrdinal()) {
+            if (_chart.hasFilter()) {
+                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                    return _chart.hasFilter(d.x);
+                });
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                    return !_chart.hasFilter(d.x);
+                });
+            } else {
+                bars.classed(dc.constants.SELECTED_CLASS, false);
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
+            }
+        } else {
+            if (!_chart.brushIsEmpty(extent)) {
+                var start = extent[0];
+                var end = extent[1];
+
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                    return d.x < start || d.x >= end;
+                });
+            } else {
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
+            }
+        }
+    };
+
+    /**
+    #### .centerBar(boolean)
+    Whether the bar chart will render each bar centered around the data position on x axis. Default: false
+
+    **/
+    _chart.centerBar = function (_) {
+        if (!arguments.length) {
+            return _centerBar;
+        }
+        _centerBar = _;
+        return _chart;
+    };
+
+    dc.override(_chart, 'onClick', function (d) {
+        _chart._onClick(d.data);
+    });
+
+    /**
+    #### .barPadding([padding])
+    Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
+    Setting this value will also remove any previously set `gap`. See the
+    [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+    for a visual description of how the padding is applied.
+    **/
+    _chart.barPadding = function (_) {
+        if (!arguments.length) {
+            return _chart._rangeBandPadding();
+        }
+        _chart._rangeBandPadding(_);
+        _gap = undefined;
+        return _chart;
+    };
+
+    _chart._useOuterPadding = function () {
+        return _gap === undefined;
+    };
+
+    /**
+    #### .outerPadding([padding])
+    Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+    Will pad the width by `padding * barWidth` on each side of the chart.
+
+    Default: 0.5
+    **/
+    _chart.outerPadding = _chart._outerRangeBandPadding;
+
+    /**
+     #### .gap(gapBetweenBars)
+     Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
+     gap.  By default the bar chart implementation will calculate and set the gap automatically
+     based on the number of data points and the length of the x axis.
+
+    **/
+    _chart.gap = function (_) {
+        if (!arguments.length) {
+            return _gap;
+        }
+        _gap = _;
+        return _chart;
+    };
+
+    _chart.extendBrush = function () {
+        var extent = _chart.brush().extent();
+        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            extent[0] = extent.map(_chart.round())[0];
+            extent[1] = extent.map(_chart.round())[1];
+
+            _chart.chartBodyG().select('.brush')
+                .call(_chart.brush().extent(extent));
+        }
+
+        return extent;
+    };
+
+    /**
+    #### .alwaysUseRounding([boolean])
+    Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
+    rounding with centered bars will result in a warning and rounding will be ignored.  This flag
+    has no effect if bars are not centered.
+
+    When using standard d3.js rounding methods, the brush often doesn't align correctly with
+    centered bars since the bars are offset.  The rounding function must add an offset to
+    compensate, such as in the following example.
+    ```js
+    chart.round(function(n) {return Math.floor(n)+0.5});
+    ```
+    **/
+    _chart.alwaysUseRounding = function (_) {
+        if (!arguments.length) {
+            return _alwaysUseRounding;
+        }
+        _alwaysUseRounding = _;
+        return _chart;
+    };
+
+    function colorFilter(color, inv) {
+        return function () {
+            var item = d3.select(this);
+            var match = item.attr('fill') === color;
+            return inv ? !match : match;
+        };
+    }
+
+    _chart.legendHighlight = function (d) {
+        if (!_chart.isLegendableHidden(d)) {
+            _chart.g().selectAll('rect.bar')
+                .classed('highlight', colorFilter(d.color))
+                .classed('fadeout', colorFilter(d.color, true));
+        }
+    };
+
+    _chart.legendReset = function () {
+        _chart.g().selectAll('rect.bar')
+            .classed('highlight', false)
+            .classed('fadeout', false);
+    };
+
+    dc.override(_chart, 'xAxisMax', function () {
+        var max = this._xAxisMax();
+        if ('resolution' in _chart.xUnits()) {
+            var res = _chart.xUnits().resolution;
+            max += res;
+        }
+        return max;
+    });
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Line Chart
+Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+Concrete line/area chart implementation.
+
+Examples:
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+#### dc.lineChart(parent[, chartGroup])
+Create a line chart instance and attach it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created line chart instance
+
+```js
+// create a line chart under #chart-container1 element using the default global chart group
+var chart1 = dc.lineChart('#chart-container1');
+// create a line chart under #chart-container2 element using chart group A
+var chart2 = dc.lineChart('#chart-container2', 'chartGroupA');
+// create a sub-chart under a composite parent chart
+var chart3 = dc.lineChart(compositeChart);
+```
+
+**/
+dc.lineChart = function (parent, chartGroup) {
+    var DEFAULT_DOT_RADIUS = 5;
+    var TOOLTIP_G_CLASS = 'dc-tooltip';
+    var DOT_CIRCLE_CLASS = 'dot';
+    var Y_AXIS_REF_LINE_CLASS = 'yRef';
+    var X_AXIS_REF_LINE_CLASS = 'xRef';
+    var DEFAULT_DOT_OPACITY = 1e-6;
+
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _renderArea = false;
+    var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _dataPointRadius = null;
+    var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+    var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+    var _interpolate = 'linear';
+    var _tension = 0.7;
+    var _defined;
+    var _dashStyle;
+
+    _chart.transitionDuration(500);
+    _chart._rangeBandPadding(1);
+
+    _chart.plotData = function () {
+        var chartBody = _chart.chartBodyG();
+        var layersList = chartBody.selectAll('g.stack-list');
+
+        if (layersList.empty()) {
+            layersList = chartBody.append('g').attr('class', 'stack-list');
+        }
+
+        var layers = layersList.selectAll('g.stack').data(_chart.data());
+
+        var layersEnter = layers
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return 'stack ' + '_' + i;
+            });
+
+        drawLine(layersEnter, layers);
+
+        drawArea(layersEnter, layers);
+
+        drawDots(chartBody, layers);
+    };
+
+    /**
+     #### .interpolate([value])
+     Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     functions, splines, and cubic interpolation.  This is passed to
+     [d3.svg.line.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate) and
+     [d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
+     where you can find a complete list of valid arguments
+     **/
+    _chart.interpolate = function (_) {
+        if (!arguments.length) {
+            return _interpolate;
+        }
+        _interpolate = _;
+        return _chart;
+    };
+
+    /**
+     #### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+     This parameter further customizes the interpolation behavior.  It is passed to
+     [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
+     [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
+     0.7
+     **/
+    _chart.tension = function (_) {
+        if (!arguments.length) {
+            return _tension;
+        }
+        _tension = _;
+        return _chart;
+    };
+
+    /**
+     #### .defined([value])
+     Gets or sets a function that will determine discontinuities in the line which should be
+     skipped: the path will be broken into separate subpaths if some points are undefined.
+     This function is passed to
+     [d3.svg.line.defined](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined)
+
+     Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
+     custom reduce functions to get this to work, depending on your data. See
+     https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+     **/
+    _chart.defined = function (_) {
+        if (!arguments.length) {
+            return _defined;
+        }
+        _defined = _;
+        return _chart;
+    };
+
+    /**
+    #### .dashStyle([array])
+    Set the line's d3 dashstyle. This value becomes the 'stroke-dasharray' of line. Defaults to empty
+    array (solid line).
+     ```js
+     // create a Dash Dot Dot Dot
+     chart.dashStyle([3,1,1,1]);
+     ```
+    **/
+    _chart.dashStyle = function (_) {
+        if (!arguments.length) {
+            return _dashStyle;
+        }
+        _dashStyle = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderArea([boolean])
+    Get or set render area flag. If the flag is set to true then the chart will render the area
+    beneath each line and the line chart effectively becomes an area chart.
+
+    **/
+    _chart.renderArea = function (_) {
+        if (!arguments.length) {
+            return _renderArea;
+        }
+        _renderArea = _;
+        return _chart;
+    };
+
+    function colors(d, i) {
+        return _chart.getColor.call(d, d.values, i);
+    }
+
+    function drawLine(layersEnter, layers) {
+        var line = d3.svg.line()
+            .x(function (d) {
+                return _chart.x()(d.x);
+            })
+            .y(function (d) {
+                return _chart.y()(d.y + d.y0);
+            })
+            .interpolate(_interpolate)
+            .tension(_tension);
+        if (_defined) {
+            line.defined(_defined);
+        }
+
+        var path = layersEnter.append('path')
+            .attr('class', 'line')
+            .attr('stroke', colors);
+        if (_dashStyle) {
+            path.attr('stroke-dasharray', _dashStyle);
+        }
+
+        dc.transition(layers.select('path.line'), _chart.transitionDuration())
+            //.ease('linear')
+            .attr('stroke', colors)
+            .attr('d', function (d) {
+                return safeD(line(d.values));
+            });
+    }
+
+    function drawArea(layersEnter, layers) {
+        if (_renderArea) {
+            var area = d3.svg.area()
+                .x(function (d) {
+                    return _chart.x()(d.x);
+                })
+                .y(function (d) {
+                    return _chart.y()(d.y + d.y0);
+                })
+                .y0(function (d) {
+                    return _chart.y()(d.y0);
+                })
+                .interpolate(_interpolate)
+                .tension(_tension);
+            if (_defined) {
+                area.defined(_defined);
+            }
+
+            layersEnter.append('path')
+                .attr('class', 'area')
+                .attr('fill', colors)
+                .attr('d', function (d) {
+                    return safeD(area(d.values));
+                });
+
+            dc.transition(layers.select('path.area'), _chart.transitionDuration())
+                //.ease('linear')
+                .attr('fill', colors)
+                .attr('d', function (d) {
+                    return safeD(area(d.values));
+                });
+        }
+    }
+
+    function safeD (d) {
+        return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
+    }
+
+    function drawDots(chartBody, layers) {
+        if (!_chart.brushOn()) {
+            var tooltipListClass = TOOLTIP_G_CLASS + '-list';
+            var tooltips = chartBody.select('g.' + tooltipListClass);
+
+            if (tooltips.empty()) {
+                tooltips = chartBody.append('g').attr('class', tooltipListClass);
+            }
+
+            layers.each(function (d, layerIndex) {
+                var points = d.values;
+                if (_defined) {
+                    points = points.filter(_defined);
+                }
+
+                var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + layerIndex);
+                if (g.empty()) {
+                    g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + layerIndex);
+                }
+
+                createRefLines(g);
+
+                var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
+                    .data(points, dc.pluck('x'));
+
+                dots.enter()
+                    .append('circle')
+                    .attr('class', DOT_CIRCLE_CLASS)
+                    .attr('r', getDotRadius())
+                    .style('fill-opacity', _dataPointFillOpacity)
+                    .style('stroke-opacity', _dataPointStrokeOpacity)
+                    .on('mousemove', function () {
+                        var dot = d3.select(this);
+                        showDot(dot);
+                        showRefLines(dot, g);
+                    })
+                    .on('mouseout', function () {
+                        var dot = d3.select(this);
+                        hideDot(dot);
+                        hideRefLines(g);
+                    });
+
+                dots
+                    .attr('cx', function (d) {
+                        return dc.utils.safeNumber(_chart.x()(d.x));
+                    })
+                    .attr('cy', function (d) {
+                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                    })
+                    .attr('fill', _chart.getColor)
+                    .call(renderTitle, d);
+
+                dots.exit().remove();
+            });
+        }
+    }
+
+    function createRefLines(g) {
+        var yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
+            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
+        yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
+
+        var xRefLine = g.select('path.' + X_AXIS_REF_LINE_CLASS).empty() ?
+            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select('path.' + X_AXIS_REF_LINE_CLASS);
+        xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
+    }
+
+    function showDot(dot) {
+        dot.style('fill-opacity', 0.8);
+        dot.style('stroke-opacity', 0.8);
+        dot.attr('r', _dotRadius);
+        return dot;
+    }
+
+    function showRefLines(dot, g) {
+        var x = dot.attr('cx');
+        var y = dot.attr('cy');
+        var yAxisX = (_chart._yAxisX() - _chart.margins().left);
+        var yAxisRefPathD = 'M' + yAxisX + ' ' + y + 'L' + (x) + ' ' + (y);
+        var xAxisRefPathD = 'M' + x + ' ' + _chart.yAxisHeight() + 'L' + x + ' ' + y;
+        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', '').attr('d', yAxisRefPathD);
+        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', '').attr('d', xAxisRefPathD);
+    }
+
+    function getDotRadius() {
+        return _dataPointRadius || _dotRadius;
+    }
+
+    function hideDot(dot) {
+        dot.style('fill-opacity', _dataPointFillOpacity)
+            .style('stroke-opacity', _dataPointStrokeOpacity)
+            .attr('r', getDotRadius());
+    }
+
+    function hideRefLines(g) {
+        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
+        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
+    }
+
+    function renderTitle(dot, d) {
+        if (_chart.renderTitle()) {
+            dot.selectAll('title').remove();
+            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }
+    }
+
+    /**
+    #### .dotRadius([dotRadius])
+    Get or set the radius (in px) for dots displayed on the data points. Default dot radius is 5.
+    **/
+    _chart.dotRadius = function (_) {
+        if (!arguments.length) {
+            return _dotRadius;
+        }
+        _dotRadius = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderDataPoints([options])
+    Always show individual dots for each datapoint.
+
+    Options, if given, is an object that can contain the following:
+
+    * fillOpacity (default 0.8)
+    * strokeOpacity (default 0.8)
+    * radius (default 2)
+
+    If `options` is falsy, it disables data point rendering.
+
+    If no `options` are provided, the current `options` values are instead returned.
+
+    Example:
+    ```
+    chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
+    ```
+    **/
+    _chart.renderDataPoints = function (options) {
+        if (!arguments.length) {
+            return {
+                fillOpacity: _dataPointFillOpacity,
+                strokeOpacity: _dataPointStrokeOpacity,
+                radius: _dataPointRadius
+            };
+        } else if (!options) {
+            _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointRadius = null;
+        } else {
+            _dataPointFillOpacity = options.fillOpacity || 0.8;
+            _dataPointStrokeOpacity = options.strokeOpacity || 0.8;
+            _dataPointRadius = options.radius || 2;
+        }
+        return _chart;
+    };
+
+    function colorFilter(color, dashstyle, inv) {
+        return function () {
+            var item = d3.select(this);
+            var match = (item.attr('stroke') === color &&
+                item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
+                    dashstyle.join(',') : null)) || item.attr('fill') === color;
+            return inv ? !match : match;
+        };
+    }
+
+    _chart.legendHighlight = function (d) {
+        if (!_chart.isLegendableHidden(d)) {
+            _chart.g().selectAll('path.line, path.area')
+                .classed('highlight', colorFilter(d.color, d.dashstyle))
+                .classed('fadeout', colorFilter(d.color, d.dashstyle, true));
+        }
+    };
+
+    _chart.legendReset = function () {
+        _chart.g().selectAll('path.line, path.area')
+            .classed('highlight', false)
+            .classed('fadeout', false);
+    };
+
+    dc.override(_chart, 'legendables', function () {
+        var legendables = _chart._legendables();
+        if (!_dashStyle) {
+            return legendables;
+        }
+        return legendables.map(function (l) {
+            l.dashstyle = _dashStyle;
+            return l;
+        });
+    });
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Data Count Widget
+Includes: [Base Mixin](#base-mixin)
+
+The data count widget is a simple widget designed to display the number of records selected by the
+current filters out of the total number of records in the data set. Once created the data count widget
+will automatically update the text content of the following elements under the parent element.
+
+* '.total-count' - total number of records
+* '.filter-count' - number of records matched by the current filters
+
+Examples:
+
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+#### dc.dataCount(parent[, chartGroup])
+Create a data count widget and attach it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this widget should be placed in.
+ The data count widget will only react to filter changes in the chart group.
+
+Returns:
+A newly created data count widget instance
+#### .dimension(allData) - **mandatory**
+For the data count widget the only valid dimension is the entire data set.
+#### .group(groupAll) - **mandatory**
+For the data count widget the only valid group is the group returned by `dimension.groupAll()`.
+
+```js
+var ndx = crossfilter(data);
+var all = ndx.groupAll();
+
+dc.dataCount('.dc-data-count')
+    .dimension(ndx)
+    .group(all);
+```
+
+**/
+dc.dataCount = function (parent, chartGroup) {
+    var _formatNumber = d3.format(',d');
+    var _chart = dc.baseMixin({});
+    var _html = {some:'', all:''};
+
+    /**
+     #### html([object])
+     Gets or sets an optional object specifying HTML templates to use depending how many items are
+     selected. The text `%total-count` will replaced with the total number of records, and the text
+     `%filter-count` will be replaced with the number of selected records.
+     - all: HTML template to use if all items are selected
+     - some: HTML template to use if not all items are selected
+
+     ```js
+     counter.html({
+         some: '%filter-count out of %total-count records selected',
+         all: 'All records selected. Click on charts to apply filters'
+     })
+     ```
+     **/
+    _chart.html = function (s) {
+        if (!arguments.length) {
+            return _html;
+        }
+        if (s.all) {
+            _html.all = s.all;
+        }
+        if (s.some) {
+            _html.some = s.some;
+        }
+        return _chart;
+    };
+
+    /**
+    #### formatNumber([formatter])
+    Gets or sets an optional function to format the filter count and total count.
+
+    ```js
+    counter.formatNumber(d3.format('.2g'))
+    ```
+    **/
+    _chart.formatNumber = function (s) {
+        if (!arguments.length) {
+            return _formatNumber;
+        }
+        _formatNumber = s;
+        return _chart;
+    };
+
+    _chart._doRender = function () {
+        var tot = _chart.dimension().size(),
+            val = _chart.group().value();
+        var all = _formatNumber(tot);
+        var selected = _formatNumber(val);
+
+        if ((tot === val) && (_html.all !== '')) {
+            _chart.root().html(_html.all.replace('%total-count', all).replace('%filter-count', selected));
+        } else if (_html.some !== '') {
+            _chart.root().html(_html.some.replace('%total-count', all).replace('%filter-count', selected));
+        } else {
+            _chart.selectAll('.total-count').text(all);
+            _chart.selectAll('.filter-count').text(selected);
+        }
+        return _chart;
+    };
+
+    _chart._doRedraw = function () {
+        return _chart._doRender();
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Data Table Widget
+Includes: [Base Mixin](#base-mixin)
+
+The data table is a simple widget designed to list crossfilter focused data set (rows being
+filtered) in a good old tabular fashion.
+
+Examples:
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+#### dc.dataTable(parent[, chartGroup])
+Create a data table widget instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created data table widget instance
+
+**/
+dc.dataTable = function (parent, chartGroup) {
+    var LABEL_CSS_CLASS = 'dc-table-label';
+    var ROW_CSS_CLASS = 'dc-table-row';
+    var COLUMN_CSS_CLASS = 'dc-table-column';
+    var GROUP_CSS_CLASS = 'dc-table-group';
+    var HEAD_CSS_CLASS = 'dc-table-head';
+
+    var _chart = dc.baseMixin({});
+
+    var _size = 25;
+    var _columns = [];
+    var _sortBy = function (d) {
+        return d;
+    };
+    var _order = d3.ascending;
+
+    _chart._doRender = function () {
+        _chart.selectAll('tbody').remove();
+
+        renderRows(renderGroups());
+
+        return _chart;
+    };
+
+    _chart._doColumnValueFormat = function (v, d) {
+        return ((typeof v === 'function') ?
+                v(d) :                          // v as function
+                ((typeof v === 'string') ?
+                 d[v] :                         // v is field name string
+                 v.format(d)                        // v is Object, use fn (element 2)
+                )
+               );
+    };
+
+    _chart._doColumnHeaderFormat = function (d) {
+        // if 'function', convert to string representation
+        // show a string capitalized
+        // if an object then display it's label string as-is.
+        return (typeof d === 'function') ?
+                _chart._doColumnHeaderFnToString(d) :
+                ((typeof d === 'string') ?
+                 _chart._doColumnHeaderCapitalize(d) : String(d.label));
+    };
+
+    _chart._doColumnHeaderCapitalize = function (s) {
+        // capitalize
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    };
+
+    _chart._doColumnHeaderFnToString = function (f) {
+        // columnString(f) {
+        var s = String(f);
+        var i1 = s.indexOf('return ');
+        if (i1 >= 0) {
+            var i2 = s.lastIndexOf(';');
+            if (i2 >= 0) {
+                s = s.substring(i1 + 7, i2);
+                var i3 = s.indexOf('numberFormat');
+                if (i3 >= 0) {
+                    s = s.replace('numberFormat', '');
+                }
+            }
+        }
+        return s;
+    };
+
+    function renderGroups() {
+        // The 'original' example uses all 'functions'.
+    // If all 'functions' are used, then don't remove/add a header, and leave
+    // the html alone. This preserves the functionality of earlier releases.
+    // A 2nd option is a string representing a field in the data.
+    // A third option is to supply an Object such as an array of 'information', and
+    // supply your own _doColumnHeaderFormat and _doColumnValueFormat functions to
+    // create what you need.
+        var bAllFunctions = true;
+        _columns.forEach(function (f) {
+            bAllFunctions = bAllFunctions & (typeof f === 'function');
+        });
+
+        if (!bAllFunctions) {
+            _chart.selectAll('th').remove();
+            var headcols = _chart.root().selectAll('th')
+                .data(_columns);
+
+            var headGroup = headcols
+                .enter()
+                .append('th');
+
+            headGroup
+                .attr('class', HEAD_CSS_CLASS)
+                    .html(function (d) {
+                        return (_chart._doColumnHeaderFormat(d));
+
+                    });
+        }
+
+        var groups = _chart.root().selectAll('tbody')
+            .data(nestEntries(), function (d) {
+                return _chart.keyAccessor()(d);
+            });
+
+        var rowGroup = groups
+            .enter()
+            .append('tbody');
+
+        rowGroup
+            .append('tr')
+            .attr('class', GROUP_CSS_CLASS)
+                .append('td')
+                .attr('class', LABEL_CSS_CLASS)
+                .attr('colspan', _columns.length)
+                .html(function (d) {
+                    return _chart.keyAccessor()(d);
+                });
+
+        groups.exit().remove();
+
+        return rowGroup;
+    }
+
+    function nestEntries() {
+        var entries;
+        if (_order === d3.ascending) {
+            entries = _chart.dimension().bottom(_size);
+        } else {
+            entries = _chart.dimension().top(_size);
+        }
+
+        return d3.nest()
+            .key(_chart.group())
+            .sortKeys(_order)
+            .entries(entries.sort(function (a, b) {
+                return _order(_sortBy(a), _sortBy(b));
+            }));
+    }
+
+    function renderRows(groups) {
+        var rows = groups.order()
+            .selectAll('tr.' + ROW_CSS_CLASS)
+            .data(function (d) {
+                return d.values;
+            });
+
+        var rowEnter = rows.enter()
+            .append('tr')
+            .attr('class', ROW_CSS_CLASS);
+
+        _columns.forEach(function (v, i) {
+            rowEnter.append('td')
+                .attr('class', COLUMN_CSS_CLASS + ' _' + i)
+                .html(function (d) {
+                    return _chart._doColumnValueFormat(v, d);
+                });
+        });
+
+        rows.exit().remove();
+
+        return rows;
+    }
+
+    _chart._doRedraw = function () {
+        return _chart._doRender();
+    };
+
+    /**
+    #### .size([size])
+    Get or set the table size which determines the number of rows displayed by the widget.
+
+    **/
+    _chart.size = function (s) {
+        if (!arguments.length) {
+            return _size;
+        }
+        _size = s;
+        return _chart;
+    };
+
+    /**
+    #### .columns([columnFunctionArray])
+    Get or set column functions. The data table widget now supports several methods of specifying
+    the columns to display.  The original method, first shown below, uses an array of functions to
+    generate dynamic columns. Column functions are simple javascript functions with only one input
+    argument `d` which represents a row in the data set. The return value of these functions will be
+    used directly to generate table content for each cell. However, this method requires the .html
+    table entry to have a fixed set of column headers.
+
+    ```js
+        chart.columns([
+            function(d) {
+                return d.date;
+            },
+            function(d) {
+                return d.open;
+            },
+            function(d) {
+                return d.close;
+            },
+            function(d) {
+                return numberFormat(d.close - d.open);
+            },
+            function(d) {
+                return d.volume;
+            }
+        ]);
+    ```
+
+    The next example shows you can simply list the data (d) content directly without
+    specifying it as a function, except where necessary (ie, computed columns).  Note
+    the data element accessor name is capitalized when displayed in the table. You can
+    also mix in functions as desired or necessary, but you must use the
+        Object = [Label, Fn] method as shown below.
+    You may wish to override the following two functions, which are internally used to
+    translate the column information or function into a displayed header. The first one
+    is used on the simple "string" column specifier, the second is used to transform the
+    String(fn) into something displayable. For the Stock example, the function for Change
+    becomes a header of 'd.close - d.open'.
+        _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
+    You may use your own Object definition, however you must then override
+        _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+    Be aware that fields without numberFormat specification will be displayed just as
+    they are stored in the data, unformatted.
+    ```js
+        chart.columns([
+                "date",    // d["date"], ie, a field accessor; capitalized automatically
+                "open",    // ...
+                "close",   // ...
+                ["Change", // Specify an Object = [Label, Fn]
+                      function (d) {
+                          return numberFormat(d.close - d.open);
+                      }],
+                "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+        ]);
+    ```
+
+    A third example, where all fields are specified using the Object = [Label, Fn] method.
+
+    ```js
+        chart.columns([
+            ["Date",   // Specify an Object = [Label, Fn]
+             function (d) {
+                 return d.date;
+             }],
+            ["Open",
+             function (d) {
+                 return numberFormat(d.open);
+             }],
+            ["Close",
+             function (d) {
+                 return numberFormat(d.close);
+             }],
+            ["Change",
+             function (d) {
+                 return numberFormat(d.close - d.open);
+             }],
+            ["Volume",
+             function (d) {
+                 return d.volume;
+             }]
+        ]);
+    ```
+
+    **/
+    _chart.columns = function (_) {
+        if (!arguments.length) {
+            return _columns;
+        }
+        _columns = _;
+        return _chart;
+    };
+
+    /**
+    #### .sortBy([sortByFunction])
+    Get or set sort-by function. This function works as a value accessor at row level and returns a
+    particular field to be sorted by. Default value: identity function
+
+    ```js
+       chart.sortBy(function(d) {
+            return d.date;
+        });
+    ```
+
+    **/
+    _chart.sortBy = function (_) {
+        if (!arguments.length) {
+            return _sortBy;
+        }
+        _sortBy = _;
+        return _chart;
+    };
+
+    /**
+    #### .order([order])
+    Get or set sort order. Default value: ``` d3.ascending ```
+
+    ```js
+        chart.order(d3.descending);
+    ```
+
+    **/
+    _chart.order = function (_) {
+        if (!arguments.length) {
+            return _order;
+        }
+        _order = _;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+ ## Data Grid Widget
+
+ Includes: [Base Mixin](#base-mixin)
+
+ Data grid is a simple widget designed to list the filtered records, providing
+ a simple way to define how the items are displayed.
+
+ Examples:
+ * [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
+
+ #### dc.dataGrid(parent[, chartGroup])
+ Create a data grid widget instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created data grid widget instance
+
+ **/
+dc.dataGrid = function (parent, chartGroup) {
+    var LABEL_CSS_CLASS = 'dc-grid-label';
+    var ITEM_CSS_CLASS = 'dc-grid-item';
+    var GROUP_CSS_CLASS = 'dc-grid-group';
+    var GRID_CSS_CLASS = 'dc-grid-top';
+
+    var _chart = dc.baseMixin({});
+
+    var _size = 999; // shouldn't be needed, but you might
+    var _html = function (d) { return 'you need to provide an html() handling param:  ' + JSON.stringify(d); };
+    var _sortBy = function (d) {
+        return d;
+    };
+    var _order = d3.ascending;
+
+    var _htmlGroup = function (d) {
+        return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
+            _chart.keyAccessor()(d) + '</h1></div>';
+    };
+
+    _chart._doRender = function () {
+        _chart.selectAll('div.' + GRID_CSS_CLASS).remove();
+
+        renderItems(renderGroups());
+
+        return _chart;
+    };
+
+    function renderGroups() {
+        var groups = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
+                .data(nestEntries(), function (d) {
+                    return _chart.keyAccessor()(d);
+                });
+
+        var itemGroup = groups
+                .enter()
+                .append('div')
+                .attr('class', GRID_CSS_CLASS);
+
+        if (_htmlGroup) {
+            itemGroup
+                .html(function (d) {
+                    return _htmlGroup(d);
+                });
+        }
+
+        groups.exit().remove();
+        return itemGroup;
+    }
+
+    function nestEntries() {
+        var entries = _chart.dimension().top(_size);
+
+        return d3.nest()
+            .key(_chart.group())
+            .sortKeys(_order)
+            .entries(entries.sort(function (a, b) {
+                return _order(_sortBy(a), _sortBy(b));
+            }));
+    }
+
+    function renderItems(groups) {
+        var items = groups.order()
+                .selectAll('div.' + ITEM_CSS_CLASS)
+                .data(function (d) {
+                    return d.values;
+                });
+
+        items.enter()
+            .append('div')
+            .attr('class', ITEM_CSS_CLASS)
+            .html(function (d) {
+                return _html(d);
+            });
+
+        items.exit().remove();
+
+        return items;
+    }
+
+    _chart._doRedraw = function () {
+        return _chart._doRender();
+    };
+
+    /**
+     #### .size([size])
+     Get or set the grid size which determines the number of items displayed by the widget.
+
+     **/
+    _chart.size = function (s) {
+        if (!arguments.length) {
+            return _size;
+        }
+        _size = s;
+        return _chart;
+    };
+
+    /**
+     #### .html( function (data) { return '<html>'; })
+     Get or set the function that formats an item. The data grid widget uses a
+     function to generate dynamic html. Use your favourite templating engine or
+     generate the string directly.
+     ```js
+     chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
+     ```
+
+     **/
+    _chart.html = function (_) {
+        if (!arguments.length) {
+            return _html;
+        }
+        _html = _;
+        return _chart;
+    };
+
+    /**
+     #### .htmlGroup( function (data) { return '<html>'; })
+     Get or set the function that formats a group label.
+     ```js
+     chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
+     ```
+
+     **/
+    _chart.htmlGroup = function (_) {
+        if (!arguments.length) {
+            return _htmlGroup;
+        }
+        _htmlGroup = _;
+        return _chart;
+    };
+
+    /**
+     #### .sortBy([sortByFunction])
+     Get or set sort-by function. This function works as a value accessor at the item
+     level and returns a particular field to be sorted.
+     by. Default: identity function
+
+     ```js
+     chart.sortBy(function(d) {
+         return d.date;
+     });
+     ```
+
+     **/
+    _chart.sortBy = function (_) {
+        if (!arguments.length) {
+            return _sortBy;
+        }
+        _sortBy = _;
+        return _chart;
+    };
+
+    /**
+     #### .order([order])
+     Get or set sort order function. Default value: ``` d3.ascending ```
+
+     ```js
+     chart.order(d3.descending);
+     ```
+
+     **/
+    _chart.order = function (_) {
+        if (!arguments.length) {
+            return _order;
+        }
+        _order = _;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Bubble Chart
+Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+A concrete implementation of a general purpose bubble chart that allows data visualization using the
+following dimensions:
+
+* x axis position
+* y axis position
+* bubble radius
+* color
+
+Examples:
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+#### dc.bubbleChart(parent[, chartGroup])
+Create a bubble chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created bubble chart instance
+
+```js
+// create a bubble chart under #chart-container1 element using the default global chart group
+var bubbleChart1 = dc.bubbleChart('#chart-container1');
+// create a bubble chart under #chart-container2 element using chart group A
+var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
+```
+
+**/
+dc.bubbleChart = function (parent, chartGroup) {
+    var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
+
+    var _elasticRadius = false;
+
+    _chart.transitionDuration(750);
+
+    var bubbleLocator = function (d) {
+        return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
+    };
+
+    /**
+    #### .elasticRadius([boolean])
+    Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+    feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+
+    **/
+    _chart.elasticRadius = function (_) {
+        if (!arguments.length) {
+            return _elasticRadius;
+        }
+        _elasticRadius = _;
+        return _chart;
+    };
+
+    _chart.plotData = function () {
+        if (_elasticRadius) {
+            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
+        }
+
+        _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
+
+        var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
+            .data(_chart.data(), function (d) { return d.key; });
+
+        renderNodes(bubbleG);
+
+        updateNodes(bubbleG);
+
+        removeNodes(bubbleG);
+
+        _chart.fadeDeselectedArea();
+    };
+
+    function renderNodes(bubbleG) {
+        var bubbleGEnter = bubbleG.enter().append('g');
+
+        bubbleGEnter
+            .attr('class', _chart.BUBBLE_NODE_CLASS)
+            .attr('transform', bubbleLocator)
+            .append('circle').attr('class', function (d, i) {
+                return _chart.BUBBLE_CLASS + ' _' + i;
+            })
+            .on('click', _chart.onClick)
+            .attr('fill', _chart.getColor)
+            .attr('r', 0);
+        dc.transition(bubbleG, _chart.transitionDuration())
+            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .attr('r', function (d) {
+                return _chart.bubbleR(d);
+            })
+            .attr('opacity', function (d) {
+                return (_chart.bubbleR(d) > 0) ? 1 : 0;
+            });
+
+        _chart._doRenderLabel(bubbleGEnter);
+
+        _chart._doRenderTitles(bubbleGEnter);
+    }
+
+    function updateNodes(bubbleG) {
+        dc.transition(bubbleG, _chart.transitionDuration())
+            .attr('transform', bubbleLocator)
+            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .attr('fill', _chart.getColor)
+            .attr('r', function (d) {
+                return _chart.bubbleR(d);
+            })
+            .attr('opacity', function (d) {
+                return (_chart.bubbleR(d) > 0) ? 1 : 0;
+            });
+
+        _chart.doUpdateLabels(bubbleG);
+        _chart.doUpdateTitles(bubbleG);
+    }
+
+    function removeNodes(bubbleG) {
+        bubbleG.exit().remove();
+    }
+
+    function bubbleX(d) {
+        var x = _chart.x()(_chart.keyAccessor()(d));
+        if (isNaN(x)) {
+            x = 0;
+        }
+        return x;
+    }
+
+    function bubbleY(d) {
+        var y = _chart.y()(_chart.valueAccessor()(d));
+        if (isNaN(y)) {
+            y = 0;
+        }
+        return y;
+    }
+
+    _chart.renderBrush = function () {
+        // override default x axis brush from parent chart
+    };
+
+    _chart.redrawBrush = function () {
+        // override default x axis brush from parent chart
+        _chart.fadeDeselectedArea();
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Composite Chart
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+Composite charts are a special kind of chart that render multiple charts on the same Coordinate
+Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
+achieve some quite flexible charting effects.
+#### dc.compositeChart(parent[, chartGroup])
+Create a composite chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created composite chart instance
+
+```js
+// create a composite chart under #chart-container1 element using the default global chart group
+var compositeChart1 = dc.compositeChart('#chart-container1');
+// create a composite chart under #chart-container2 element using chart group A
+var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
+```
+
+**/
+dc.compositeChart = function (parent, chartGroup) {
+
+    var SUB_CHART_CLASS = 'sub';
+    var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
+
+    var _chart = dc.coordinateGridMixin({});
+    var _children = [];
+
+    var _childOptions = {};
+
+    var _shareColors = false,
+        _shareTitle = true;
+
+    var _rightYAxis = d3.svg.axis(),
+        _rightYAxisLabel = 0,
+        _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
+        _rightY,
+        _rightAxisGridLines = false;
+
+    _chart._mandatoryAttributes([]);
+    _chart.transitionDuration(500);
+
+    dc.override(_chart, '_generateG', function () {
+        var g = this.__generateG();
+
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+
+            generateChildG(child, i);
+
+            if (!child.dimension()) {
+                child.dimension(_chart.dimension());
+            }
+            if (!child.group()) {
+                child.group(_chart.group());
+            }
+
+            child.chartGroup(_chart.chartGroup());
+            child.svg(_chart.svg());
+            child.xUnits(_chart.xUnits());
+            child.transitionDuration(_chart.transitionDuration());
+            child.brushOn(_chart.brushOn());
+            child.renderTitle(_chart.renderTitle());
+        }
+
+        return g;
+    });
+
+    _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+        var brushIsEmpty = _chart.brushIsEmpty(extent);
+
+        for (var i = 0; i < _children.length; ++i) {
+            _children[i].filter(null);
+            if (!brushIsEmpty) {
+                _children[i].filter(extent);
+            }
+        }
+    };
+
+    _chart._prepareYAxis = function () {
+        if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
+        if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
+
+        if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
+        }
+        else if (rightYAxisChildren().length > 0) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
+        }
+    };
+
+    _chart.renderYAxis = function () {
+        if (leftYAxisChildren().length !== 0) {
+            _chart.renderYAxisAt('y', _chart.yAxis(), _chart.margins().left);
+            _chart.renderYAxisLabel('y', _chart.yAxisLabel(), -90);
+        }
+
+        if (rightYAxisChildren().length !== 0) {
+            _chart.renderYAxisAt('yr', _chart.rightYAxis(), _chart.width() - _chart.margins().right);
+            _chart.renderYAxisLabel('yr', _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
+        }
+    };
+
+    function prepareRightYAxis() {
+        if (_chart.rightY() === undefined || _chart.elasticY()) {
+            _chart.rightY(d3.scale.linear());
+            _chart.rightY().domain([rightYAxisMin(), rightYAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
+        }
+
+        _chart.rightY().range([_chart.yAxisHeight(), 0]);
+        _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
+
+        _chart.rightYAxis().orient('right');
+    }
+
+    function prepareLeftYAxis() {
+        if (_chart.y() === undefined || _chart.elasticY()) {
+            _chart.y(d3.scale.linear());
+            _chart.y().domain([yAxisMin(), yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
+        }
+
+        _chart.y().range([_chart.yAxisHeight(), 0]);
+        _chart.yAxis(_chart.yAxis().scale(_chart.y()));
+
+        _chart.yAxis().orient('left');
+    }
+
+    function generateChildG(child, i) {
+        child._generateG(_chart.g());
+        child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
+    }
+
+    _chart.plotData = function () {
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+
+            if (!child.g()) {
+                generateChildG(child, i);
+            }
+
+            if (_shareColors) {
+                child.colors(_chart.colors());
+            }
+
+            child.x(_chart.x());
+
+            child.xAxis(_chart.xAxis());
+
+            if (child.useRightYAxis()) {
+                child.y(_chart.rightY());
+                child.yAxis(_chart.rightYAxis());
+            }
+            else {
+                child.y(_chart.y());
+                child.yAxis(_chart.yAxis());
+            }
+
+            child.plotData();
+
+            child._activateRenderlets();
+        }
+    };
+
+    /**
+    #### .useRightAxisGridLines(bool)
+    Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
+    default behavior. This option is only respected when subcharts with both left and right y-axes
+    are present.
+    **/
+    _chart.useRightAxisGridLines = function (_) {
+        if (!arguments) {
+            return _rightAxisGridLines;
+        }
+
+        _rightAxisGridLines = _;
+        return _chart;
+    };
+
+    /**
+    #### .childOptions({object})
+    Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
+    on each child chart.
+    **/
+    _chart.childOptions = function (_) {
+        if (!arguments.length) {
+            return _childOptions;
+        }
+        _childOptions = _;
+        _children.forEach(function (child) {
+            child.options(_childOptions);
+        });
+        return _chart;
+    };
+
+    _chart.fadeDeselectedArea = function () {
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+            child.brush(_chart.brush());
+            child.fadeDeselectedArea();
+        }
+    };
+
+    /**
+    #### .rightYAxisLabel([labelText])
+    Set or get the right y axis label.
+    **/
+    _chart.rightYAxisLabel = function (_, padding) {
+        if (!arguments.length) {
+            return _rightYAxisLabel;
+        }
+        _rightYAxisLabel = _;
+        _chart.margins().right -= _rightYAxisLabelPadding;
+        _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
+        _chart.margins().right += _rightYAxisLabelPadding;
+        return _chart;
+    };
+
+    /**
+    #### .compose(subChartArray)
+    Combine the given charts into one single composite coordinate grid chart.
+
+    ```js
+    // compose the given charts in the array into one single composite chart
+    moveChart.compose([
+        // when creating sub-chart you need to pass in the parent chart
+        dc.lineChart(moveChart)
+            .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
+            .valueAccessor(function (d){return d.value.avg;})
+            // most of the normal functions will continue to work in a composed chart
+            .renderArea(true)
+            .stack(monthlyMoveGroup, function (d){return d.value;})
+            .title(function (d){
+                var value = d.value.avg?d.value.avg:d.value;
+                if(isNaN(value)) value = 0;
+                return dateFormat(d.key) + '\n' + numberFormat(value);
+            }),
+        dc.barChart(moveChart)
+            .group(volumeByMonthGroup)
+            .centerBar(true)
+    ]);
+    ```
+
+    **/
+    _chart.compose = function (charts) {
+        _children = charts;
+        _children.forEach(function (child) {
+            child.height(_chart.height());
+            child.width(_chart.width());
+            child.margins(_chart.margins());
+
+            if (_shareTitle) {
+                child.title(_chart.title());
+            }
+
+            child.options(_childOptions);
+        });
+        return _chart;
+    };
+
+    /**
+     #### .children()
+     Returns the child charts which are composed into the composite chart.
+     **/
+
+    _chart.children = function () {
+        return _children;
+    };
+
+    /**
+    #### .shareColors([boolean])
+    Get or set color sharing for the chart. If set, the `.colors()` value from this chart
+    will be shared with composed children. Additionally if the child chart implements
+    Stackable and has not set a custom .colorAccessor, then it will generate a color
+    specific to its order in the composition.
+    **/
+    _chart.shareColors = function (_) {
+        if (!arguments.length) {
+            return _shareColors;
+        }
+        _shareColors = _;
+        return _chart;
+    };
+
+    /**
+    #### .shareTitle([[boolean])
+    Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
+    shared with composed children. Default value is true.
+    **/
+    _chart.shareTitle = function (_) {
+        if (!arguments.length) {
+            return _shareTitle;
+        }
+        _shareTitle = _;
+        return _chart;
+    };
+
+    /**
+    #### .rightY([yScale])
+    Get or set the y scale for the right axis. The right y scale is typically automatically
+    generated by the chart implementation.
+
+    **/
+    _chart.rightY = function (_) {
+        if (!arguments.length) {
+            return _rightY;
+        }
+        _rightY = _;
+        return _chart;
+    };
+
+    function leftYAxisChildren() {
+        return _children.filter(function (child) {
+            return !child.useRightYAxis();
+        });
+    }
+
+    function rightYAxisChildren() {
+        return _children.filter(function (child) {
+            return child.useRightYAxis();
+        });
+    }
+
+    function getYAxisMin(charts) {
+        return charts.map(function (c) {
+            return c.yAxisMin();
+        });
+    }
+
+    delete _chart.yAxisMin;
+    function yAxisMin() {
+        return d3.min(getYAxisMin(leftYAxisChildren()));
+    }
+
+    function rightYAxisMin() {
+        return d3.min(getYAxisMin(rightYAxisChildren()));
+    }
+
+    function getYAxisMax(charts) {
+        return charts.map(function (c) {
+            return c.yAxisMax();
+        });
+    }
+
+    delete _chart.yAxisMax;
+    function yAxisMax() {
+        return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
+    }
+
+    function rightYAxisMax() {
+        return dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
+    }
+
+    function getAllXAxisMinFromChildCharts() {
+        return _children.map(function (c) {
+            return c.xAxisMin();
+        });
+    }
+
+    dc.override(_chart, 'xAxisMin', function () {
+        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
+    });
+
+    function getAllXAxisMaxFromChildCharts() {
+        return _children.map(function (c) {
+            return c.xAxisMax();
+        });
+    }
+
+    dc.override(_chart, 'xAxisMax', function () {
+        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+    });
+
+    _chart.legendables = function () {
+        return _children.reduce(function (items, child) {
+            if (_shareColors) {
+                child.colors(_chart.colors());
+            }
+            items.push.apply(items, child.legendables());
+            return items;
+        }, []);
+    };
+
+    _chart.legendHighlight = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            child.legendHighlight(d);
+        }
+    };
+
+    _chart.legendReset = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            child.legendReset(d);
+        }
+    };
+
+    _chart.legendToggle = function () {
+        console.log('composite should not be getting legendToggle itself');
+    };
+
+    /**
+    #### .rightYAxis([yAxis])
+    Set or get the right y axis used by the composite chart. This function is most useful when y
+    axis customization is required. The y axis in dc.js is an instance of a [d3 axis
+    object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
+    d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
+    resetting it may cause unexpected results.
+    ```jså
+    // customize y axis tick format
+    chart.rightYAxis().tickFormat(function (v) {return v + '%';});
+    // customize y axis tick values
+    chart.rightYAxis().tickValues([0, 100, 200, 300]);
+    ```
+
+    **/
+    _chart.rightYAxis = function (rightYAxis) {
+        if (!arguments.length) {
+            return _rightYAxis;
+        }
+        _rightYAxis = rightYAxis;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+ ## Series Chart
+
+ Includes: [Composite Chart](#composite chart)
+
+ A series chart is a chart that shows multiple series of data overlaid on one chart, where the
+ series is specified in the data. It is a specialization of Composite Chart and inherits all
+ composite features other than recomposing the chart.
+
+ #### dc.seriesChart(parent[, chartGroup])
+ Create a series chart instance and attach it to the given parent element.
+
+ Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+ Returns:
+ A newly created series chart instance
+
+ ```js
+ // create a series chart under #chart-container1 element using the default global chart group
+ var seriesChart1 = dc.seriesChart("#chart-container1");
+ // create a series chart under #chart-container2 element using chart group A
+ var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
+ ```
+
+ **/
+dc.seriesChart = function (parent, chartGroup) {
+    var _chart = dc.compositeChart(parent, chartGroup);
+
+    function keySort(a, b) {
+        return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
+    }
+
+    var _charts = {};
+    var _chartFunction = dc.lineChart;
+    var _seriesAccessor;
+    var _seriesSort = d3.ascending;
+    var _valueSort = keySort;
+
+    _chart._mandatoryAttributes().push('seriesAccessor', 'chart');
+    _chart.shareColors(true);
+
+    _chart._preprocessData = function () {
+        var keep = [];
+        var childrenChanged;
+        var nester = d3.nest().key(_seriesAccessor);
+        if (_seriesSort) {
+            nester.sortKeys(_seriesSort);
+        }
+        if (_valueSort) {
+            nester.sortValues(_valueSort);
+        }
+        var nesting = nester.entries(_chart.data());
+        var children =
+            nesting.map(function (sub, i) {
+                var subChart = _charts[sub.key] || _chartFunction.call(_chart, _chart, chartGroup, sub.key, i);
+                if (!_charts[sub.key]) {
+                    childrenChanged = true;
+                }
+                _charts[sub.key] = subChart;
+                keep.push(sub.key);
+                return subChart
+                    .dimension(_chart.dimension())
+                    .group({all:d3.functor(sub.values)}, sub.key)
+                    .keyAccessor(_chart.keyAccessor())
+                    .valueAccessor(_chart.valueAccessor())
+                    .brushOn(_chart.brushOn());
+            });
+        // this works around the fact compositeChart doesn't really
+        // have a removal interface
+        Object.keys(_charts)
+            .filter(function (c) {return keep.indexOf(c) === -1;})
+            .forEach(function (c) {
+                clearChart(c);
+                childrenChanged = true;
+            });
+        _chart._compose(children);
+        if (childrenChanged && _chart.legend()) {
+            _chart.legend().render();
+        }
+    };
+
+    function clearChart(c) {
+        if (_charts[c].g()) {
+            _charts[c].g().remove();
+        }
+        delete _charts[c];
+    }
+
+    function resetChildren() {
+        Object.keys(_charts).map(clearChart);
+        _charts = {};
+    }
+
+    /**
+     #### .chart([function])
+     Get or set the chart function, which generates the child charts.  Default: dc.lineChart
+
+     ```
+     // put interpolation on the line charts used for the series
+     chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     // do a scatter series chart
+     chart.chart(dc.scatterPlot)
+     ```
+
+     **/
+    _chart.chart = function (_) {
+        if (!arguments.length) {
+            return _chartFunction;
+        }
+        _chartFunction = _;
+        resetChildren();
+        return _chart;
+    };
+
+    /**
+     #### .seriesAccessor([accessor])
+     Get or set accessor function for the displayed series. Given a datum, this function
+     should return the series that datum belongs to.
+     **/
+    _chart.seriesAccessor = function (_) {
+        if (!arguments.length) {
+            return _seriesAccessor;
+        }
+        _seriesAccessor = _;
+        resetChildren();
+        return _chart;
+    };
+
+    /**
+     #### .seriesSort([sortFunction])
+     Get or set a function to sort the list of series by, given series values.
+
+     Example:
+     ```
+     chart.seriesSort(d3.descending);
+     ```
+     **/
+    _chart.seriesSort = function (_) {
+        if (!arguments.length) {
+            return _seriesSort;
+        }
+        _seriesSort = _;
+        resetChildren();
+        return _chart;
+    };
+
+    /**
+     #### .valueSort([sortFunction])
+     Get or set a function to sort each series values by. By default this is the key accessor which,
+     for example, will ensure a lineChart series connects its points in increasing key/x order,
+     rather than haphazardly.
+    **/
+    _chart.valueSort = function (_) {
+        if (!arguments.length) {
+            return _valueSort;
+        }
+        _valueSort = _;
+        resetChildren();
+        return _chart;
+    };
+
+    // make compose private
+    _chart._compose = _chart.compose;
+    delete _chart.compose;
+
+    return _chart;
+};
+
+/**
+## Geo Choropleth Chart
+Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
+from GeoJson data. This chart implementation was inspired by [the great d3 choropleth
+example](http://bl.ocks.org/4060606).
+
+Examples:
+* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+#### dc.geoChoroplethChart(parent[, chartGroup])
+Create a choropleth chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created choropleth chart instance
+
+```js
+// create a choropleth chart under '#us-chart' element using the default global chart group
+var chart1 = dc.geoChoroplethChart('#us-chart');
+// create a choropleth chart under '#us-chart2' element using chart group A
+var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
+```
+
+**/
+dc.geoChoroplethChart = function (parent, chartGroup) {
+    var _chart = dc.colorMixin(dc.baseMixin({}));
+
+    _chart.colorAccessor(function (d) {
+        return d || 0;
+    });
+
+    var _geoPath = d3.geo.path();
+    var _projectionFlag;
+
+    var _geoJsons = [];
+
+    _chart._doRender = function () {
+        _chart.resetSvg();
+        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+            var states = _chart.svg().append('g')
+                .attr('class', 'layer' + layerIndex);
+
+            var regionG = states.selectAll('g.' + geoJson(layerIndex).name)
+                .data(geoJson(layerIndex).data)
+                .enter()
+                .append('g')
+                .attr('class', geoJson(layerIndex).name);
+
+            regionG
+                .append('path')
+                .attr('fill', 'white')
+                .attr('d', _geoPath);
+
+            regionG.append('title');
+
+            plotData(layerIndex);
+        }
+        _projectionFlag = false;
+    };
+
+    function plotData(layerIndex) {
+        var data = generateLayeredData();
+
+        if (isDataLayer(layerIndex)) {
+            var regionG = renderRegionG(layerIndex);
+
+            renderPaths(regionG, layerIndex, data);
+
+            renderTitle(regionG, layerIndex, data);
+        }
+    }
+
+    function generateLayeredData() {
+        var data = {};
+        var groupAll = _chart.data();
+        for (var i = 0; i < groupAll.length; ++i) {
+            data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
+        }
+        return data;
+    }
+
+    function isDataLayer(layerIndex) {
+        return geoJson(layerIndex).keyAccessor;
+    }
+
+    function renderRegionG(layerIndex) {
+        var regionG = _chart.svg()
+            .selectAll(layerSelector(layerIndex))
+            .classed('selected', function (d) {
+                return isSelected(layerIndex, d);
+            })
+            .classed('deselected', function (d) {
+                return isDeselected(layerIndex, d);
+            })
+            .attr('class', function (d) {
+                var layerNameClass = geoJson(layerIndex).name;
+                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
+                var baseClasses = layerNameClass + ' ' + regionClass;
+                if (isSelected(layerIndex, d)) {
+                    baseClasses += ' selected';
+                }
+                if (isDeselected(layerIndex, d)) {
+                    baseClasses += ' deselected';
+                }
+                return baseClasses;
+            });
+        return regionG;
+    }
+
+    function layerSelector(layerIndex) {
+        return 'g.layer' + layerIndex + ' g.' + geoJson(layerIndex).name;
+    }
+
+    function isSelected(layerIndex, d) {
+        return _chart.hasFilter() && _chart.hasFilter(getKey(layerIndex, d));
+    }
+
+    function isDeselected(layerIndex, d) {
+        return _chart.hasFilter() && !_chart.hasFilter(getKey(layerIndex, d));
+    }
+
+    function getKey(layerIndex, d) {
+        return geoJson(layerIndex).keyAccessor(d);
+    }
+
+    function geoJson(index) {
+        return _geoJsons[index];
+    }
+
+    function renderPaths(regionG, layerIndex, data) {
+        var paths = regionG
+            .select('path')
+            .attr('fill', function () {
+                var currentFill = d3.select(this).attr('fill');
+                if (currentFill) {
+                    return currentFill;
+                }
+                return 'none';
+            })
+            .on('click', function (d) {
+                return _chart.onClick(d, layerIndex);
+            });
+
+        dc.transition(paths, _chart.transitionDuration()).attr('fill', function (d, i) {
+            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
+        });
+    }
+
+    _chart.onClick = function (d, layerIndex) {
+        var selectedRegion = geoJson(layerIndex).keyAccessor(d);
+        dc.events.trigger(function () {
+            _chart.filter(selectedRegion);
+            _chart.redrawGroup();
+        });
+    };
+
+    function renderTitle(regionG, layerIndex, data) {
+        if (_chart.renderTitle()) {
+            regionG.selectAll('title').text(function (d) {
+                var key = getKey(layerIndex, d);
+                var value = data[key];
+                return _chart.title()({key: key, value: value});
+            });
+        }
+    }
+
+    _chart._doRedraw = function () {
+        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+            plotData(layerIndex);
+            if (_projectionFlag) {
+                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+            }
+        }
+        _projectionFlag = false;
+    };
+
+    /**
+    #### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
+    Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
+    if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
+    layers with the same name the new overlay will override the existing one.
+
+    Parameters:
+    * json - GeoJson feed
+    * name - name of the layer
+    * keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
+    this function should match the keys returned by the crossfilter groups.
+
+    ```js
+    // insert a layer for rendering US states
+    chart.overlayGeoJson(statesJson.features, 'state', function(d) {
+        return d.properties.name;
+    });
+    ```
+
+    **/
+    _chart.overlayGeoJson = function (json, name, keyAccessor) {
+        for (var i = 0; i < _geoJsons.length; ++i) {
+            if (_geoJsons[i].name === name) {
+                _geoJsons[i].data = json;
+                _geoJsons[i].keyAccessor = keyAccessor;
+                return _chart;
+            }
+        }
+        _geoJsons.push({name: name, data: json, keyAccessor: keyAccessor});
+        return _chart;
+    };
+
+    /**
+    #### .projection(projection)
+    Set custom geo projection function. See the available [d3 geo projection
+    functions](https://github.com/mbostock/d3/wiki/Geo-Projections).  Default value: albersUsa.
+
+    **/
+    _chart.projection = function (projection) {
+        _geoPath.projection(projection);
+        _projectionFlag = true;
+        return _chart;
+    };
+
+    /**
+    #### .geoJsons()
+    Returns all GeoJson layers currently registered with this chart. The returned array is a
+    reference to this chart's internal data structure, so any modification to this array will also
+    modify this chart's internal registration.
+
+    Returns an array of objects containing fields {name, data, accessor}
+
+    **/
+    _chart.geoJsons = function () {
+        return _geoJsons;
+    };
+
+    /**
+    #### .geoPath()
+    Returns the [d3.geo.path](https://github.com/mbostock/d3/wiki/Geo-Paths#path) object used to
+    render the projection and features.  Can be useful for figuring out the bounding box of the
+    feature set and thus a way to calculate scale and translation for the projection.
+
+    **/
+    _chart.geoPath = function () {
+        return _geoPath;
+    };
+
+    /**
+    #### .removeGeoJson(name)
+    Remove a GeoJson layer from this chart by name
+
+    **/
+    _chart.removeGeoJson = function (name) {
+        var geoJsons = [];
+
+        for (var i = 0; i < _geoJsons.length; ++i) {
+            var layer = _geoJsons[i];
+            if (layer.name !== name) {
+                geoJsons.push(layer);
+            }
+        }
+
+        _geoJsons = geoJsons;
+
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Bubble Overlay Chart
+Includes: [Bubble Mixin](#bubble-mixin), [Base Mixin](#base-mixin)
+
+The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
+chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
+typical x and y positioning while retaining the capability to visualize data using bubble radius
+and coloring.
+
+Examples:
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+#### dc.bubbleOverlay(parent[, chartGroup])
+Create a bubble overlay chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ off-screen. Typically this element should also be the parent of the underlying image.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created bubble overlay chart instance
+
+```js
+// create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
+var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
+// create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
+var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
+```
+#### .svg(imageElement) - **mandatory**
+Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
+element; therefore the bubble overlay chart will not work if this function is not invoked. If the
+underlying image is a bitmap, then an empty svg will need to be created on top of the image.
+
+```js
+// set up underlying svg element
+chart.svg(d3.select('#chart svg'));
+```
+
+**/
+dc.bubbleOverlay = function (root, chartGroup) {
+    var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
+    var BUBBLE_NODE_CLASS = 'node';
+    var BUBBLE_CLASS = 'bubble';
+
+    var _chart = dc.bubbleMixin(dc.baseMixin({}));
+    var _g;
+    var _points = [];
+
+    _chart.transitionDuration(750);
+
+    _chart.radiusValueAccessor(function (d) {
+        return d.value;
+    });
+
+    /**
+    #### .point(name, x, y) - **mandatory**
+    Set up a data point on the overlay. The name of a data point should match a specific 'key' among
+    data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+    then a bubble will be generated at the position specified by the function. x and y
+    value specified here are relative to the underlying svg.
+
+    **/
+    _chart.point = function (name, x, y) {
+        _points.push({name: name, x: x, y: y});
+        return _chart;
+    };
+
+    _chart._doRender = function () {
+        _g = initOverlayG();
+
+        _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+
+        initializeBubbles();
+
+        _chart.fadeDeselectedArea();
+
+        return _chart;
+    };
+
+    function initOverlayG() {
+        _g = _chart.select('g.' + BUBBLE_OVERLAY_CLASS);
+        if (_g.empty()) {
+            _g = _chart.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
+        }
+        return _g;
+    }
+
+    function initializeBubbles() {
+        var data = mapData();
+
+        _points.forEach(function (point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
+
+            if (circle.empty()) {
+                circle = nodeG.append('circle')
+                    .attr('class', BUBBLE_CLASS)
+                    .attr('r', 0)
+                    .attr('fill', _chart.getColor)
+                    .on('click', _chart.onClick);
+            }
+
+            dc.transition(circle, _chart.transitionDuration())
+                .attr('r', function (d) {
+                    return _chart.bubbleR(d);
+                });
+
+            _chart._doRenderLabel(nodeG);
+
+            _chart._doRenderTitles(nodeG);
+        });
+    }
+
+    function mapData() {
+        var data = {};
+        _chart.data().forEach(function (datum) {
+            data[_chart.keyAccessor()(datum)] = datum;
+        });
+        return data;
+    }
+
+    function getNodeG(point, data) {
+        var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + dc.utils.nameToId(point.name);
+
+        var nodeG = _g.select('g.' + dc.utils.nameToId(point.name));
+
+        if (nodeG.empty()) {
+            nodeG = _g.append('g')
+                .attr('class', bubbleNodeClass)
+                .attr('transform', 'translate(' + point.x + ',' + point.y + ')');
+        }
+
+        nodeG.datum(data[point.name]);
+
+        return nodeG;
+    }
+
+    _chart._doRedraw = function () {
+        updateBubbles();
+
+        _chart.fadeDeselectedArea();
+
+        return _chart;
+    };
+
+    function updateBubbles() {
+        var data = mapData();
+
+        _points.forEach(function (point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
+
+            dc.transition(circle, _chart.transitionDuration())
+                .attr('r', function (d) {
+                    return _chart.bubbleR(d);
+                })
+                .attr('fill', _chart.getColor);
+
+            _chart.doUpdateLabels(nodeG);
+
+            _chart.doUpdateTitles(nodeG);
+        });
+    }
+
+    _chart.debug = function (flag) {
+        if (flag) {
+            var debugG = _chart.select('g.' + dc.constants.DEBUG_GROUP_CLASS);
+
+            if (debugG.empty()) {
+                debugG = _chart.svg()
+                    .append('g')
+                    .attr('class', dc.constants.DEBUG_GROUP_CLASS);
+            }
+
+            var debugText = debugG.append('text')
+                .attr('x', 10)
+                .attr('y', 20);
+
+            debugG
+                .append('rect')
+                .attr('width', _chart.width())
+                .attr('height', _chart.height())
+                .on('mousemove', function () {
+                    var position = d3.mouse(debugG.node());
+                    var msg = position[0] + ', ' + position[1];
+                    debugText.text(msg);
+                });
+        } else {
+            _chart.selectAll('.debug').remove();
+        }
+
+        return _chart;
+    };
+
+    _chart.anchor(root, chartGroup);
+
+    return _chart;
+};
+
+/**
+## Row Chart
+Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+Concrete row chart implementation.
+#### dc.rowChart(parent[, chartGroup])
+Create a row chart instance and attach it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created row chart instance
+
+```js
+// create a row chart under #chart-container1 element using the default global chart group
+var chart1 = dc.rowChart('#chart-container1');
+// create a row chart under #chart-container2 element using chart group A
+var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
+```
+
+**/
+dc.rowChart = function (parent, chartGroup) {
+
+    var _g;
+
+    var _labelOffsetX = 10;
+    var _labelOffsetY = 15;
+    var _hasLabelOffsetY = false;
+    var _dyOffset = '0.35em';  // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
+    var _titleLabelOffsetX = 2;
+
+    var _gap = 5;
+
+    var _fixedBarHeight = false;
+    var _rowCssClass = 'row';
+    var _titleRowCssClass = 'titlerow';
+    var _renderTitleLabel = false;
+
+    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
+
+    var _x;
+
+    var _elasticX;
+
+    var _xAxis = d3.svg.axis().orient('bottom');
+
+    var _rowData;
+
+    _chart.rowsCap = _chart.cap;
+
+    function calculateAxisScale() {
+        if (!_x || _elasticX) {
+            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
+            if (extent[0] > 0) {
+                extent[0] = 0;
+            }
+            _x = d3.scale.linear().domain(extent)
+                .range([0, _chart.effectiveWidth()]);
+        }
+        _xAxis.scale(_x);
+    }
+
+    function drawAxis() {
+        var axisG = _g.select('g.axis');
+
+        calculateAxisScale();
+
+        if (axisG.empty()) {
+            axisG = _g.append('g').attr('class', 'axis')
+                .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+        }
+
+        dc.transition(axisG, _chart.transitionDuration())
+            .call(_xAxis);
+    }
+
+    _chart._doRender = function () {
+        _chart.resetSvg();
+
+        _g = _chart.svg()
+            .append('g')
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+
+        drawChart();
+
+        return _chart;
+    };
+
+    _chart.title(function (d) {
+        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+    });
+
+    _chart.label(_chart.cappedKeyAccessor);
+
+    /**
+     #### .x([scale])
+     Gets or sets the x scale. The x scale can be any d3
+     [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales)
+     **/
+    _chart.x = function (x) {
+        if (!arguments.length) {
+            return _x;
+        }
+        _x = x;
+        return _chart;
+    };
+
+    function drawGridLines() {
+        _g.selectAll('g.tick')
+            .select('line.grid-line')
+            .remove();
+
+        _g.selectAll('g.tick')
+            .append('line')
+            .attr('class', 'grid-line')
+            .attr('x1', 0)
+            .attr('y1', 0)
+            .attr('x2', 0)
+            .attr('y2', function () {
+                return -_chart.effectiveHeight();
+            });
+    }
+
+    function drawChart() {
+        _rowData = _chart.data();
+
+        drawAxis();
+        drawGridLines();
+
+        var rows = _g.selectAll('g.' + _rowCssClass)
+            .data(_rowData);
+
+        createElements(rows);
+        removeElements(rows);
+        updateElements(rows);
+    }
+
+    function createElements(rows) {
+        var rowEnter = rows.enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return _rowCssClass + ' _' + i;
+            });
+
+        rowEnter.append('rect').attr('width', 0);
+
+        createLabels(rowEnter);
+        updateLabels(rows);
+    }
+
+    function removeElements(rows) {
+        rows.exit().remove();
+    }
+
+    function rootValue() {
+        var root = _x(0);
+        return (root === -Infinity || root !== root) ? _x(1) : root;
+    }
+
+    function updateElements(rows) {
+        var n = _rowData.length;
+
+        var height;
+        if (!_fixedBarHeight) {
+            height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
+        } else {
+            height = _fixedBarHeight;
+        }
+
+        // vertically align label in center unless they override the value via property setter
+        if (!_hasLabelOffsetY) {
+            _labelOffsetY = height / 2;
+        }
+
+        var rect = rows.attr('transform', function (d, i) {
+                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
+            }).select('rect')
+            .attr('height', height)
+            .attr('fill', _chart.getColor)
+            .on('click', onClick)
+            .classed('deselected', function (d) {
+                return (_chart.hasFilter()) ? !isSelectedRow(d) : false;
+            })
+            .classed('selected', function (d) {
+                return (_chart.hasFilter()) ? isSelectedRow(d) : false;
+            });
+
+        dc.transition(rect, _chart.transitionDuration())
+            .attr('width', function (d) {
+                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
+            })
+            .attr('transform', translateX);
+
+        createTitles(rows);
+        updateLabels(rows);
+    }
+
+    function createTitles(rows) {
+        if (_chart.renderTitle()) {
+            rows.selectAll('title').remove();
+            rows.append('title').text(_chart.title());
+        }
+    }
+
+    function createLabels(rowEnter) {
+        if (_chart.renderLabel()) {
+            rowEnter.append('text')
+                .on('click', onClick);
+        }
+        if (_chart.renderTitleLabel()) {
+            rowEnter.append('text')
+                .attr('class', _titleRowCssClass)
+                .on('click', onClick);
+        }
+    }
+
+    function updateLabels(rows) {
+        if (_chart.renderLabel()) {
+            var lab = rows.select('text')
+                .attr('x', _labelOffsetX)
+                .attr('y', _labelOffsetY)
+                .attr('dy', _dyOffset)
+                .on('click', onClick)
+                .attr('class', function (d, i) {
+                    return _rowCssClass + ' _' + i;
+                })
+                .text(function (d) {
+                    return _chart.label()(d);
+                });
+            dc.transition(lab, _chart.transitionDuration())
+                .attr('transform', translateX);
+        }
+        if (_chart.renderTitleLabel()) {
+            var titlelab = rows.select('.' + _titleRowCssClass)
+                    .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
+                    .attr('y', _labelOffsetY)
+                    .attr('text-anchor', 'end')
+                    .on('click', onClick)
+                    .attr('class', function (d, i) {
+                        return _titleRowCssClass + ' _' + i ;
+                    })
+                    .text(function (d) {
+                        return _chart.title()(d);
+                    });
+            dc.transition(titlelab, _chart.transitionDuration())
+                .attr('transform', translateX);
+        }
+    }
+
+    /**
+    #### .renderTitleLabel(boolean)
+    Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+
+    **/
+    _chart.renderTitleLabel = function (_) {
+        if (!arguments.length) {
+            return _renderTitleLabel;
+        }
+        _renderTitleLabel = _;
+        return _chart;
+    };
+
+    function onClick(d) {
+        _chart.onClick(d);
+    }
+
+    function translateX(d) {
+        var x = _x(_chart.cappedValueAccessor(d)),
+            x0 = rootValue(),
+            s = x > x0 ? x0 : x;
+        return 'translate(' + s + ',0)';
+    }
+
+    _chart._doRedraw = function () {
+        drawChart();
+        return _chart;
+    };
+
+    /**
+    #### .xAxis()
+    Get the x axis for the row chart instance.  Note: not settable for row charts.
+    See the [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis) documention for more information.
+    ```js
+    // customize x axis tick format
+    chart.xAxis().tickFormat(function (v) {return v + '%';});
+    // customize x axis tick values
+    chart.xAxis().tickValues([0, 100, 200, 300]);
+    ```
+
+    **/
+    _chart.xAxis = function () {
+        return _xAxis;
+    };
+
+    /**
+    #### .fixedBarHeight([height])
+    Get or set the fixed bar height. Default is [false] which will auto-scale bars.
+    For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+    you could fix height as follows (where count = total number of bars in your TopN and gap is
+    your vertical gap space).
+    ```js
+     chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
+    ```
+    **/
+    _chart.fixedBarHeight = function (g) {
+        if (!arguments.length) {
+            return _fixedBarHeight;
+        }
+        _fixedBarHeight = g;
+        return _chart;
+    };
+
+    /**
+    #### .gap([gap])
+    Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
+
+    **/
+    _chart.gap = function (g) {
+        if (!arguments.length) {
+            return _gap;
+        }
+        _gap = g;
+        return _chart;
+    };
+
+    /**
+    #### .elasticX([boolean])
+    Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
+    data range when filtered.
+
+    **/
+    _chart.elasticX = function (_) {
+        if (!arguments.length) {
+            return _elasticX;
+        }
+        _elasticX = _;
+        return _chart;
+    };
+
+    /**
+    #### .labelOffsetX([x])
+    Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
+    Default x offset is 10px;
+
+    **/
+    _chart.labelOffsetX = function (o) {
+        if (!arguments.length) {
+            return _labelOffsetX;
+        }
+        _labelOffsetX = o;
+        return _chart;
+    };
+
+    /**
+    #### .labelOffsetY([y])
+    Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
+    Default y offset is 15px;
+
+    **/
+    _chart.labelOffsetY = function (o) {
+        if (!arguments.length) {
+            return _labelOffsetY;
+        }
+        _labelOffsetY = o;
+        _hasLabelOffsetY = true;
+        return _chart;
+    };
+
+    /**
+    #### .titleLabelOffsetx([x])
+    Get of set the x offset (horizontal space between right edge of row and right edge or text.
+    Default x offset is 2px;
+
+    **/
+    _chart.titleLabelOffsetX = function (o) {
+        if (!arguments.length) {
+            return _titleLabelOffsetX;
+        }
+        _titleLabelOffsetX = o;
+        return _chart;
+    };
+
+    function isSelectedRow (d) {
+        return _chart.hasFilter(_chart.cappedKeyAccessor(d));
+    }
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Legend
+Legend is a attachable widget that can be added to other dc charts to render horizontal legend
+labels.
+
+```js
+chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+```
+
+Examples:
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+
+**/
+dc.legend = function () {
+    var LABEL_GAP = 2;
+
+    var _legend = {},
+        _parent,
+        _x = 0,
+        _y = 0,
+        _itemHeight = 12,
+        _gap = 5,
+        _horizontal = false,
+        _legendWidth = 560,
+        _itemWidth = 70,
+        _autoItemWidth = false;
+
+    var _g;
+
+    _legend.parent = function (p) {
+        if (!arguments.length) {
+            return _parent;
+        }
+        _parent = p;
+        return _legend;
+    };
+
+    _legend.render = function () {
+        _parent.svg().select('g.dc-legend').remove();
+        _g = _parent.svg().append('g')
+            .attr('class', 'dc-legend')
+            .attr('transform', 'translate(' + _x + ',' + _y + ')');
+        var legendables = _parent.legendables();
+
+        var itemEnter = _g.selectAll('g.dc-legend-item')
+            .data(legendables)
+            .enter()
+            .append('g')
+            .attr('class', 'dc-legend-item')
+            .on('mouseover', function (d) {
+                _parent.legendHighlight(d);
+            })
+            .on('mouseout', function (d) {
+                _parent.legendReset(d);
+            })
+            .on('click', function (d) {
+                d.chart.legendToggle(d);
+            });
+
+        _g.selectAll('g.dc-legend-item')
+            .classed('fadeout', function (d) {
+                return d.chart.isLegendableHidden(d);
+            });
+
+        if (legendables.some(dc.pluck('dashstyle'))) {
+            itemEnter
+                .append('line')
+                .attr('x1', 0)
+                .attr('y1', _itemHeight / 2)
+                .attr('x2', _itemHeight)
+                .attr('y2', _itemHeight / 2)
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', dc.pluck('dashstyle'))
+                .attr('stroke', dc.pluck('color'));
+        } else {
+            itemEnter
+                .append('rect')
+                .attr('width', _itemHeight)
+                .attr('height', _itemHeight)
+                .attr('fill', function (d) {return d ? d.color : 'blue';});
+        }
+
+        itemEnter.append('text')
+                .text(dc.pluck('name'))
+                .attr('x', _itemHeight + LABEL_GAP)
+                .attr('y', function () {
+                    return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
+                });
+
+        var _cumulativeLegendTextWidth = 0;
+        var row = 0;
+        itemEnter.attr('transform', function (d, i) {
+            if (_horizontal) {
+                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
+
+                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
+                    ++row ;
+                    _cumulativeLegendTextWidth = 0 ;
+                } else {
+                    _cumulativeLegendTextWidth += itemWidth;
+                }
+                return translateBy;
+            }
+            else {
+                return 'translate(0,' + i * legendItemHeight() + ')';
+            }
+        });
+    };
+
+    function legendItemHeight() {
+        return _gap + _itemHeight;
+    }
+
+    /**
+    #### .x([value])
+    Set or get x coordinate for legend widget. Default: 0.
+    **/
+    _legend.x = function (x) {
+        if (!arguments.length) {
+            return _x;
+        }
+        _x = x;
+        return _legend;
+    };
+
+    /**
+    #### .y([value])
+    Set or get y coordinate for legend widget. Default: 0.
+    **/
+    _legend.y = function (y) {
+        if (!arguments.length) {
+            return _y;
+        }
+        _y = y;
+        return _legend;
+    };
+
+    /**
+    #### .gap([value])
+    Set or get gap between legend items. Default: 5.
+    **/
+    _legend.gap = function (gap) {
+        if (!arguments.length) {
+            return _gap;
+        }
+        _gap = gap;
+        return _legend;
+    };
+
+    /**
+    #### .itemHeight([value])
+    Set or get legend item height. Default: 12.
+    **/
+    _legend.itemHeight = function (h) {
+        if (!arguments.length) {
+            return _itemHeight;
+        }
+        _itemHeight = h;
+        return _legend;
+    };
+
+    /**
+    #### .horizontal([boolean])
+    Position legend horizontally instead of vertically
+    **/
+    _legend.horizontal = function (_) {
+        if (!arguments.length) {
+            return _horizontal;
+        }
+        _horizontal = _;
+        return _legend;
+    };
+
+    /**
+    #### .legendWidth([value])
+    Maximum width for horizontal legend. Default: 560.
+    **/
+    _legend.legendWidth = function (_) {
+        if (!arguments.length) {
+            return _legendWidth;
+        }
+        _legendWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .itemWidth([value])
+    legendItem width for horizontal legend. Default: 70.
+    **/
+    _legend.itemWidth = function (_) {
+        if (!arguments.length) {
+            return _itemWidth;
+        }
+        _itemWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .autoItemWidth([value])
+    Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
+    This setting takes into account gap(). Default: false.
+    **/
+    _legend.autoItemWidth = function (_) {
+        if (!arguments.length) {
+            return _autoItemWidth;
+        }
+        _autoItemWidth = _;
+        return _legend;
+    };
+
+    return _legend;
+};
+
+/**
+## Scatter Plot
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+A scatter plot chart
+#### dc.scatterPlot(parent[, chartGroup])
+Create a scatter plot instance and attach it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created scatter plot instance
+
+```js
+// create a scatter plot under #chart-container1 element using the default global chart group
+var chart1 = dc.scatterPlot('#chart-container1');
+// create a scatter plot under #chart-container2 element using chart group A
+var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
+// create a sub-chart under a composite parent chart
+var chart3 = dc.scatterPlot(compositeChart);
+```
+
+ **/
+dc.scatterPlot = function (parent, chartGroup) {
+    var _chart = dc.coordinateGridMixin({});
+    var _symbol = d3.svg.symbol();
+
+    var _existenceAccessor = function (d) { return d.value; };
+
+    var originalKeyAccessor = _chart.keyAccessor();
+    _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
+    _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
+    _chart.colorAccessor(function () { return _chart._groupName; });
+
+    var _locator = function (d) {
+        return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
+                              _chart.y()(_chart.valueAccessor()(d)) + ')';
+    };
+
+    var _symbolSize = 3;
+    var _highlightedSize = 5;
+    var _hiddenSize = 0;
+
+    _symbol.size(function (d) {
+        if (!_existenceAccessor(d)) {
+            return _hiddenSize;
+        } else if (this.filtered) {
+            return Math.pow(_highlightedSize, 2);
+        } else {
+            return Math.pow(_symbolSize, 2);
+        }
+    });
+
+    dc.override(_chart, '_filter', function (filter) {
+        if (!arguments.length) {
+            return _chart.__filter();
+        }
+
+        return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
+    });
+
+    _chart.plotData = function () {
+        var symbols = _chart.chartBodyG().selectAll('path.symbol')
+            .data(_chart.data());
+
+        symbols
+            .enter()
+        .append('path')
+            .attr('class', 'symbol')
+            .attr('opacity', 0)
+            .attr('fill', _chart.getColor)
+            .attr('transform', _locator);
+
+        dc.transition(symbols, _chart.transitionDuration())
+            .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
+            .attr('fill', _chart.getColor)
+            .attr('transform', _locator)
+            .attr('d', _symbol);
+
+        dc.transition(symbols.exit(), _chart.transitionDuration())
+            .attr('opacity', 0).remove();
+    };
+
+    /**
+    #### .existenceAccessor([accessor])
+    Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
+    opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
+    the existence accessor checks if the reduced value is truthy.
+    **/
+
+    _chart.existenceAccessor = function (acc) {
+        if (!arguments.length) {
+            return _existenceAccessor;
+        }
+        _existenceAccessor = acc;
+        return this;
+    };
+
+    /**
+    #### .symbol([type])
+    Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
+    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
+    Type can be a constant or an accessor.
+
+    **/
+    _chart.symbol = function (type) {
+        if (!arguments.length) {
+            return _symbol.type();
+        }
+        _symbol.type(type);
+        return _chart;
+    };
+
+    /**
+    #### .symbolSize([radius])
+    Set or get radius for symbols. Default: 3.
+
+    **/
+    _chart.symbolSize = function (s) {
+        if (!arguments.length) {
+            return _symbolSize;
+        }
+        _symbolSize = s;
+        return _chart;
+    };
+
+    /**
+    #### .highlightedSize([radius])
+    Set or get radius for highlighted symbols. Default: 4.
+
+    **/
+    _chart.highlightedSize = function (s) {
+        if (!arguments.length) {
+            return _highlightedSize;
+        }
+        _highlightedSize = s;
+        return _chart;
+    };
+
+    /**
+    #### .hiddenSize([radius])
+    Set or get radius for symbols when the group is empty. Default: 0.
+
+    **/
+    _chart.hiddenSize = function (s) {
+        if (!arguments.length) {
+            return _hiddenSize;
+        }
+        _hiddenSize = s;
+        return _chart;
+    };
+
+    _chart.legendables = function () {
+        return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
+    };
+
+    _chart.legendHighlight = function (d) {
+        resizeSymbolsWhere(function (symbol) {
+            return symbol.attr('fill') === d.color;
+        }, _highlightedSize);
+        _chart.selectAll('.chart-body path.symbol').filter(function () {
+            return d3.select(this).attr('fill') !== d.color;
+        }).classed('fadeout', true);
+    };
+
+    _chart.legendReset = function (d) {
+        resizeSymbolsWhere(function (symbol) {
+            return symbol.attr('fill') === d.color;
+        }, _symbolSize);
+        _chart.selectAll('.chart-body path.symbol').filter(function () {
+            return d3.select(this).attr('fill') !== d.color;
+        }).classed('fadeout', false);
+    };
+
+    function resizeSymbolsWhere(condition, size) {
+        var symbols = _chart.selectAll('.chart-body path.symbol').filter(function () {
+            return condition(d3.select(this));
+        });
+        var oldSize = _symbol.size();
+        _symbol.size(Math.pow(size, 2));
+        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+        _symbol.size(oldSize);
+    }
+
+    _chart.setHandlePaths = function () {
+        // no handle paths for poly-brushes
+    };
+
+    _chart.extendBrush = function () {
+        var extent = _chart.brush().extent();
+        if (_chart.round()) {
+            extent[0] = extent[0].map(_chart.round());
+            extent[1] = extent[1].map(_chart.round());
+
+            _chart.g().select('.brush')
+                .call(_chart.brush().extent(extent));
+        }
+        return extent;
+    };
+
+    _chart.brushIsEmpty = function (extent) {
+        return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
+    };
+
+    function resizeFiltered(filter) {
+        var symbols = _chart.selectAll('.chart-body path.symbol').each(function (d) {
+            this.filtered = filter && filter.isFiltered(d.key);
+        });
+
+        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+    }
+
+    _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+
+        _chart.redrawBrush(_chart.g());
+
+        if (_chart.brushIsEmpty(extent)) {
+            dc.events.trigger(function () {
+                _chart.filter(null);
+                _chart.redrawGroup();
+            });
+
+            resizeFiltered(false);
+
+        } else {
+            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
+            dc.events.trigger(function () {
+                _chart.filter(null);
+                _chart.filter(ranged2DFilter);
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
+
+            resizeFiltered(ranged2DFilter);
+        }
+    };
+
+    _chart.setBrushY = function (gBrush) {
+        gBrush.call(_chart.brush().y(_chart.y()));
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Number Display Widget
+Includes: [Base Mixin](#base-mixin)
+
+A display of a single numeric value.
+
+Examples:
+
+* [Test Example](http://dc-js.github.io/dc.js/examples/number.html)
+#### dc.numberDisplay(parent[, chartGroup])
+Create a Number Display instance and attach it to the given parent element.
+
+Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
+a valueAccessor that returns a single value.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ The number display widget will only react to filter changes in the chart group.
+
+Returns:
+A newly created number display instance
+
+```js
+// create a number display under #chart-container1 element using the default global chart group
+var display1 = dc.numberDisplay('#chart-container1');
+```
+
+**/
+dc.numberDisplay = function (parent, chartGroup) {
+    var SPAN_CLASS = 'number-display';
+    var _formatNumber = d3.format('.2s');
+    var _chart = dc.baseMixin({});
+    var _html = {one:'', some:'', none:''};
+
+    // dimension not required
+    _chart._mandatoryAttributes(['group']);
+
+    /**
+    #### .html([object])
+     Gets or sets an optional object specifying HTML templates to use depending on the number
+     displayed.  The text `%number` will be replaced with the current value.
+     - one: HTML template to use if the number is 1
+     - zero: HTML template to use if the number is 0
+     - some: HTML template to use otherwise
+
+     ```js
+     numberWidget.html({
+         one:'%number record',
+         some:'%number records',
+         none:'no records'})
+     ```
+    **/
+
+    _chart.html = function (s) {
+        if (!arguments.length) {
+            return _html;
+        }
+        if (s.none) {
+            _html.none = s.none;//if none available
+        } else if (s.one) {
+            _html.none = s.one;//if none not available use one
+        } else if (s.some) {
+            _html.none = s.some;//if none and one not available use some
+        }
+        if (s.one) {
+            _html.one = s.one;//if one available
+        } else if (s.some) {
+            _html.one = s.some;//if one not available use some
+        }
+        if (s.some) {
+            _html.some = s.some;//if some available
+        } else if (s.one) {
+            _html.some = s.one;//if some not available use one
+        }
+        return _chart;
+    };
+
+    /**
+    #### .value()
+    Calculate and return the underlying value of the display
+    **/
+
+    _chart.value = function () {
+        return _chart.data();
+    };
+
+    _chart.data(function (group) {
+        var valObj = group.value ? group.value() : group.top(1)[0];
+        return _chart.valueAccessor()(valObj);
+    });
+
+    _chart.transitionDuration(250); // good default
+
+    _chart._doRender = function () {
+        var newValue = _chart.value(),
+            span = _chart.selectAll('.' + SPAN_CLASS);
+
+        if (span.empty()) {
+            span = span.data([0])
+                .enter()
+                .append('span')
+                .attr('class', SPAN_CLASS);
+        }
+
+        span.transition()
+            .duration(_chart.transitionDuration())
+            .ease('quad-out-in')
+            .tween('text', function () {
+                var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
+                this.lastValue = newValue;
+                return function (t) {
+                    var html = null, num = _chart.formatNumber()(interp(t));
+                    if (newValue === 0 && (_html.none !== '')) {
+                        html = _html.none;
+                    } else if (newValue === 1 && (_html.one !== '')) {
+                        html = _html.one;
+                    } else if (_html.some !== '') {
+                        html = _html.some;
+                    }
+                    this.innerHTML = html ? html.replace('%number', num) : num;
+                };
+            });
+    };
+
+    _chart._doRedraw = function () {
+        return _chart._doRender();
+    };
+
+    /**
+    #### .formatNumber([formatter])
+    Get or set a function to format the value for the display. By default `d3.format('.2s');` is used.
+
+    **/
+    _chart.formatNumber = function (_) {
+        if (!arguments.length) {
+            return _formatNumber;
+        }
+        _formatNumber = _;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+ ## Heat Map
+
+ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
+ A heat map is matrix that represents the values of two dimensions of data using colors.
+
+ #### dc.heatMap(parent[, chartGroup])
+ Create a heat map instance and attach it to the given parent element.
+
+ Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+ Returns:
+ A newly created heat map instance
+
+ ```js
+ // create a heat map under #chart-container1 element using the default global chart group
+ var heatMap1 = dc.heatMap('#chart-container1');
+ // create a heat map under #chart-container2 element using chart group A
+ var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
+ ```
+
+ **/
+dc.heatMap = function (parent, chartGroup) {
+
+    var DEFAULT_BORDER_RADIUS = 6.75;
+
+    var _chartBody;
+
+    var _cols;
+    var _rows;
+    var _xBorderRadius = DEFAULT_BORDER_RADIUS;
+    var _yBorderRadius = DEFAULT_BORDER_RADIUS;
+
+    var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
+    _chart._mandatoryAttributes(['group']);
+    _chart.title(_chart.colorAccessor());
+
+    var _colsLabel = function (d) {
+        return d;
+    };
+    var _rowsLabel = function (d) {
+        return d;
+    };
+
+   /**
+    #### .colsLabel([labelFunction])
+    Set or get the column label function. The chart class uses this function to render
+    column labels on the X axis. It is passed the column name.
+    ```js
+    // the default label function just returns the name
+    chart.colsLabel(function(d) { return d; });
+    ```
+    **/
+    _chart.colsLabel = function (_) {
+        if (!arguments.length) {
+            return _colsLabel;
+        }
+        _colsLabel = _;
+        return _chart;
+    };
+
+   /**
+    #### .rowsLabel([labelFunction])
+    Set or get the row label function. The chart class uses this function to render
+    row labels on the Y axis. It is passed the row name.
+    ```js
+    // the default label function just returns the name
+    chart.rowsLabel(function(d) { return d; });
+    ```
+    **/
+    _chart.rowsLabel = function (_) {
+        if (!arguments.length) {
+            return _rowsLabel;
+        }
+        _rowsLabel = _;
+        return _chart;
+    };
+
+    var _xAxisOnClick = function (d) { filterAxis(0, d); };
+    var _yAxisOnClick = function (d) { filterAxis(1, d); };
+    var _boxOnClick = function (d) {
+        var filter = d.key;
+        dc.events.trigger(function () {
+            _chart.filter(filter);
+            _chart.redrawGroup();
+        });
+    };
+
+    function filterAxis(axis, value) {
+        var cellsOnAxis = _chart.selectAll('.box-group').filter(function (d) {
+            return d.key[axis] === value;
+        });
+        var unfilteredCellsOnAxis = cellsOnAxis.filter(function (d) {
+            return !_chart.hasFilter(d.key);
+        });
+        dc.events.trigger(function () {
+            if (unfilteredCellsOnAxis.empty()) {
+                cellsOnAxis.each(function (d) {
+                    _chart.filter(d.key);
+                });
+            } else {
+                unfilteredCellsOnAxis.each(function (d) {
+                    _chart.filter(d.key);
+                });
+            }
+            _chart.redrawGroup();
+        });
+    }
+
+    dc.override(_chart, 'filter', function (filter) {
+        if (!arguments.length) {
+            return _chart._filter();
+        }
+
+        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+    });
+
+    function uniq(d, i, a) {
+        return !i || a[i - 1] !== d;
+    }
+
+    /**
+     #### .rows([values])
+     Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
+     the values will be fetched from the data using the value accessor, and they will be sorted in
+     ascending order.
+     **/
+
+    _chart.rows = function (_) {
+        if (arguments.length) {
+            _rows = _;
+            return _chart;
+        }
+        if (_rows) {
+            return _rows;
+        }
+        var rowValues = _chart.data().map(_chart.valueAccessor());
+        rowValues.sort(d3.ascending);
+        return d3.scale.ordinal().domain(rowValues.filter(uniq));
+    };
+
+    /**
+     #### .cols([keys])
+     Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
+     the values will be fetched from the data using the key accessor, and they will be sorted in
+     ascending order.
+     **/
+    _chart.cols = function (_) {
+        if (arguments.length) {
+            _cols = _;
+            return _chart;
+        }
+        if (_cols) {
+            return _cols;
+        }
+        var colValues = _chart.data().map(_chart.keyAccessor());
+        colValues.sort(d3.ascending);
+        return d3.scale.ordinal().domain(colValues.filter(uniq));
+    };
+
+    _chart._doRender = function () {
+        _chart.resetSvg();
+
+        _chartBody = _chart.svg()
+            .append('g')
+            .attr('class', 'heatmap')
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+
+        return _chart._doRedraw();
+    };
+
+    _chart._doRedraw = function () {
+        var rows = _chart.rows(),
+            cols = _chart.cols(),
+            rowCount = rows.domain().length,
+            colCount = cols.domain().length,
+            boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
+            boxHeight = Math.floor(_chart.effectiveHeight() / rowCount);
+
+        cols.rangeRoundBands([0, _chart.effectiveWidth()]);
+        rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
+
+        var boxes = _chartBody.selectAll('g.box-group').data(_chart.data(), function (d, i) {
+            return _chart.keyAccessor()(d, i) + '\0' + _chart.valueAccessor()(d, i);
+        });
+        var gEnter = boxes.enter().append('g')
+            .attr('class', 'box-group');
+
+        gEnter.append('rect')
+            .attr('class', 'heat-box')
+            .attr('fill', 'white')
+            .on('click', _chart.boxOnClick());
+
+        if (_chart.renderTitle()) {
+            gEnter.append('title')
+                .text(_chart.title());
+        }
+
+        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
+            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
+            .attr('rx', _xBorderRadius)
+            .attr('ry', _yBorderRadius)
+            .attr('fill', _chart.getColor)
+            .attr('width', boxWidth)
+            .attr('height', boxHeight);
+
+        boxes.exit().remove();
+
+        var gCols = _chartBody.selectAll('g.cols');
+        if (gCols.empty()) {
+            gCols = _chartBody.append('g').attr('class', 'cols axis');
+        }
+        var gColsText = gCols.selectAll('text').data(cols.domain());
+        gColsText.enter().append('text')
+              .attr('x', function (d) { return cols(d) + boxWidth / 2; })
+              .style('text-anchor', 'middle')
+              .attr('y', _chart.effectiveHeight())
+              .attr('dy', 12)
+              .on('click', _chart.xAxisOnClick())
+              .text(_chart.colsLabel());
+        dc.transition(gColsText, _chart.transitionDuration())
+               .text(_chart.colsLabel())
+               .attr('x', function (d) { return cols(d) + boxWidth / 2; });
+        gColsText.exit().remove();
+        var gRows = _chartBody.selectAll('g.rows');
+        if (gRows.empty()) {
+            gRows = _chartBody.append('g').attr('class', 'rows axis');
+        }
+        var gRowsText = gRows.selectAll('text').data(rows.domain());
+        gRowsText.enter().append('text')
+              .attr('dy', 6)
+              .style('text-anchor', 'end')
+              .attr('x', 0)
+              .attr('dx', -2)
+              .on('click', _chart.yAxisOnClick())
+              .text(_chart.rowsLabel());
+        dc.transition(gRowsText, _chart.transitionDuration())
+              .text(_chart.rowsLabel())
+              .attr('y', function (d) { return rows(d) + boxHeight / 2; });
+        gRowsText.exit().remove();
+
+        if (_chart.hasFilter()) {
+            _chart.selectAll('g.box-group').each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll('g.box-group').each(function () {
+                _chart.resetHighlight(this);
+            });
+        }
+        return _chart;
+    };
+    /**
+     #### .boxOnClick([handler])
+     Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
+     By default, filtering of the cell will be toggled.
+     **/
+    _chart.boxOnClick = function (f) {
+        if (!arguments.length) {
+            return _boxOnClick;
+        }
+        _boxOnClick = f;
+        return _chart;
+    };
+
+    /**
+     #### .xAxisOnClick([handler])
+     Gets or sets the handler that fires when a column tick is clicked in the x axis.
+     By default, if any cells in the column are unselected, the whole column will be selected,
+     otherwise the whole column will be unselected.
+     **/
+    _chart.xAxisOnClick = function (f) {
+        if (!arguments.length) {
+            return _xAxisOnClick;
+        }
+        _xAxisOnClick = f;
+        return _chart;
+    };
+
+    /**
+     #### .yAxisOnClick([handler])
+     Gets or sets the handler that fires when a row tick is clicked in the y axis.
+     By default, if any cells in the row are unselected, the whole row will be selected,
+     otherwise the whole row will be unselected.
+     **/
+    _chart.yAxisOnClick = function (f) {
+        if (!arguments.length) {
+            return _yAxisOnClick;
+        }
+        _yAxisOnClick = f;
+        return _chart;
+    };
+
+    /**
+     #### .xBorderRadius([value])
+     Gets or sets the X border radius.  Set to 0 to get full rectangles.  Default: 6.75
+     */
+    _chart.xBorderRadius = function (d) {
+        if (!arguments.length) {
+            return _xBorderRadius;
+        }
+        _xBorderRadius = d;
+        return _chart;
+    };
+
+    /**
+     #### .xBorderRadius([value])
+     Gets or sets the Y border radius.  Set to 0 to get full rectangles.  Default: 6.75
+     */
+    _chart.yBorderRadius = function (d) {
+        if (!arguments.length) {
+            return _yBorderRadius;
+        }
+        _yBorderRadius = d;
+        return _chart;
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+// https://github.com/d3/d3-plugins/blob/master/box/box.js
+(function () {
+
+    // Inspired by http://informationandvisualization.de/blog/box-plot
+    d3.box = function () {
+        var width = 1,
+            height = 1,
+            duration = 0,
+            domain = null,
+            value = Number,
+            whiskers = boxWhiskers,
+            quartiles = boxQuartiles,
+            tickFormat = null;
+
+        // For each small multiple…
+        function box(g) {
+            g.each(function (d, i) {
+                d = d.map(value).sort(d3.ascending);
+                var g = d3.select(this),
+                    n = d.length,
+                    min = d[0],
+                    max = d[n - 1];
+
+                // Compute quartiles. Must return exactly 3 elements.
+                var quartileData = d.quartiles = quartiles(d);
+
+                // Compute whiskers. Must return exactly 2 elements, or null.
+                var whiskerIndices = whiskers && whiskers.call(this, d, i),
+                    whiskerData = whiskerIndices && whiskerIndices.map(function (i) { return d[i]; });
+
+                // Compute outliers. If no whiskers are specified, all data are 'outliers'.
+                // We compute the outliers as indices, so that we can join across transitions!
+                var outlierIndices = whiskerIndices ?
+                    d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n)) : d3.range(n);
+
+                // Compute the new x-scale.
+                var x1 = d3.scale.linear()
+                    .domain(domain && domain.call(this, d, i) || [min, max])
+                    .range([height, 0]);
+
+                // Retrieve the old x-scale, if this is an update.
+                var x0 = this.__chart__ || d3.scale.linear()
+                    .domain([0, Infinity])
+                    .range(x1.range());
+
+                // Stash the new scale.
+                this.__chart__ = x1;
+
+                // Note: the box, median, and box tick elements are fixed in number,
+                // so we only have to handle enter and update. In contrast, the outliers
+                // and other elements are variable, so we need to exit them! Variable
+                // elements also fade in and out.
+
+                // Update center line: the vertical line spanning the whiskers.
+                var center = g.selectAll('line.center')
+                    .data(whiskerData ? [whiskerData] : []);
+
+                center.enter().insert('line', 'rect')
+                    .attr('class', 'center')
+                    .attr('x1', width / 2)
+                    .attr('y1', function (d) { return x0(d[0]); })
+                    .attr('x2', width / 2)
+                    .attr('y2', function (d) { return x0(d[1]); })
+                    .style('opacity', 1e-6)
+                  .transition()
+                    .duration(duration)
+                    .style('opacity', 1)
+                    .attr('y1', function (d) { return x1(d[0]); })
+                    .attr('y2', function (d) { return x1(d[1]); });
+
+                center.transition()
+                    .duration(duration)
+                    .style('opacity', 1)
+                    .attr('y1', function (d) { return x1(d[0]); })
+                    .attr('y2', function (d) { return x1(d[1]); });
+
+                center.exit().transition()
+                    .duration(duration)
+                    .style('opacity', 1e-6)
+                    .attr('y1', function (d) { return x1(d[0]); })
+                    .attr('y2', function (d) { return x1(d[1]); })
+                    .remove();
+
+                // Update innerquartile box.
+                var box = g.selectAll('rect.box')
+                    .data([quartileData]);
+
+                box.enter().append('rect')
+                    .attr('class', 'box')
+                    .attr('x', 0)
+                    .attr('y', function (d) { return x0(d[2]); })
+                    .attr('width', width)
+                    .attr('height', function (d) { return x0(d[0]) - x0(d[2]); })
+                  .transition()
+                    .duration(duration)
+                    .attr('y', function (d) { return x1(d[2]); })
+                    .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
+
+                box.transition()
+                    .duration(duration)
+                    .attr('y', function (d) { return x1(d[2]); })
+                    .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
+
+                // Update median line.
+                var medianLine = g.selectAll('line.median')
+                    .data([quartileData[1]]);
+
+                medianLine.enter().append('line')
+                    .attr('class', 'median')
+                    .attr('x1', 0)
+                    .attr('y1', x0)
+                    .attr('x2', width)
+                    .attr('y2', x0)
+                    .transition()
+                    .duration(duration)
+                    .attr('y1', x1)
+                    .attr('y2', x1);
+
+                medianLine.transition()
+                    .duration(duration)
+                    .attr('y1', x1)
+                    .attr('y2', x1);
+
+                // Update whiskers.
+                var whisker = g.selectAll('line.whisker')
+                    .data(whiskerData || []);
+
+                whisker.enter().insert('line', 'circle, text')
+                    .attr('class', 'whisker')
+                    .attr('x1', 0)
+                    .attr('y1', x0)
+                    .attr('x2', width)
+                    .attr('y2', x0)
+                    .style('opacity', 1e-6)
+                  .transition()
+                    .duration(duration)
+                    .attr('y1', x1)
+                    .attr('y2', x1)
+                    .style('opacity', 1);
+
+                whisker.transition()
+                    .duration(duration)
+                    .attr('y1', x1)
+                    .attr('y2', x1)
+                    .style('opacity', 1);
+
+                whisker.exit().transition()
+                    .duration(duration)
+                    .attr('y1', x1)
+                    .attr('y2', x1)
+                    .style('opacity', 1e-6)
+                    .remove();
+
+                // Update outliers.
+                var outlier = g.selectAll('circle.outlier')
+                    .data(outlierIndices, Number);
+
+                outlier.enter().insert('circle', 'text')
+                    .attr('class', 'outlier')
+                    .attr('r', 5)
+                    .attr('cx', width / 2)
+                    .attr('cy', function (i) { return x0(d[i]); })
+                    .style('opacity', 1e-6)
+                    .transition()
+                    .duration(duration)
+                    .attr('cy', function (i) { return x1(d[i]); })
+                    .style('opacity', 1);
+
+                outlier.transition()
+                    .duration(duration)
+                    .attr('cy', function (i) { return x1(d[i]); })
+                    .style('opacity', 1);
+
+                outlier.exit().transition()
+                    .duration(duration)
+                    .attr('cy', function (i) { return x1(d[i]); })
+                    .style('opacity', 1e-6)
+                    .remove();
+
+                // Compute the tick format.
+                var format = tickFormat || x1.tickFormat(8);
+
+                // Update box ticks.
+                var boxTick = g.selectAll('text.box')
+                    .data(quartileData);
+
+                boxTick.enter().append('text')
+                    .attr('class', 'box')
+                    .attr('dy', '.3em')
+                    .attr('dx', function (d, i) { return i & 1 ? 6 : -6; })
+                    .attr('x', function (d, i) { return i & 1 ? width : 0; })
+                    .attr('y', x0)
+                    .attr('text-anchor', function (d, i) { return i & 1 ? 'start' : 'end'; })
+                    .text(format)
+                    .transition()
+                    .duration(duration)
+                    .attr('y', x1);
+
+                boxTick.transition()
+                    .duration(duration)
+                    .text(format)
+                    .attr('y', x1);
+
+                // Update whisker ticks. These are handled separately from the box
+                // ticks because they may or may not exist, and we want don't want
+                // to join box ticks pre-transition with whisker ticks post-.
+                var whiskerTick = g.selectAll('text.whisker')
+                    .data(whiskerData || []);
+
+                whiskerTick.enter().append('text')
+                    .attr('class', 'whisker')
+                    .attr('dy', '.3em')
+                    .attr('dx', 6)
+                    .attr('x', width)
+                    .attr('y', x0)
+                    .text(format)
+                    .style('opacity', 1e-6)
+                    .transition()
+                    .duration(duration)
+                    .attr('y', x1)
+                    .style('opacity', 1);
+
+                whiskerTick.transition()
+                    .duration(duration)
+                    .text(format)
+                    .attr('y', x1)
+                    .style('opacity', 1);
+
+                whiskerTick.exit().transition()
+                    .duration(duration)
+                    .attr('y', x1)
+                    .style('opacity', 1e-6)
+                    .remove();
+            });
+            d3.timer.flush();
+        }
+
+        box.width = function (x) {
+            if (!arguments.length) {
+                return width;
+            }
+            width = x;
+            return box;
+        };
+
+        box.height = function (x) {
+            if (!arguments.length) {
+                return height;
+            }
+            height = x;
+            return box;
+        };
+
+        box.tickFormat = function (x) {
+            if (!arguments.length) {
+                return tickFormat;
+            }
+            tickFormat = x;
+            return box;
+        };
+
+        box.duration = function (x) {
+            if (!arguments.length) {
+                return duration;
+            }
+            duration = x;
+            return box;
+        };
+
+        box.domain = function (x) {
+            if (!arguments.length) {
+                return domain;
+            }
+            domain = x === null ? x : d3.functor(x);
+            return box;
+        };
+
+        box.value = function (x) {
+            if (!arguments.length) {
+                return value;
+            }
+            value = x;
+            return box;
+        };
+
+        box.whiskers = function (x) {
+            if (!arguments.length) {
+                return whiskers;
+            }
+            whiskers = x;
+            return box;
+        };
+
+        box.quartiles = function (x) {
+            if (!arguments.length) {
+                return quartiles;
+            }
+            quartiles = x;
+            return box;
+        };
+
+        return box;
+    };
+
+    function boxWhiskers(d) {
+        return [0, d.length - 1];
+    }
+
+    function boxQuartiles(d) {
+        return [
+            d3.quantile(d, 0.25),
+            d3.quantile(d, 0.5),
+            d3.quantile(d, 0.75)
+        ];
+    }
+
+})();
+
+/**
+ ## Box Plot
+
+ Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+ A box plot is a chart that depicts numerical data via their quartile ranges.
+
+ #### dc.boxPlot(parent[, chartGroup])
+ Create a box plot instance and attach it to the given parent element.
+
+ Parameters:
+ * parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) representing
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+ Returns:
+ A newly created box plot instance
+
+ ```js
+ // create a box plot under #chart-container1 element using the default global chart group
+ var boxPlot1 = dc.boxPlot('#chart-container1');
+ // create a box plot under #chart-container2 element using chart group A
+ var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
+ ```
+
+ **/
+dc.boxPlot = function (parent, chartGroup) {
+    var _chart = dc.coordinateGridMixin({});
+
+    // Returns a function to compute the interquartile range.
+    function DEFAULT_WHISKERS_IQR (k) {
+        return function (d) {
+            var q1 = d.quartiles[0],
+                q3 = d.quartiles[2],
+                iqr = (q3 - q1) * k,
+                i = -1,
+                j = d.length;
+            /*jshint -W116*/
+            /*jshint -W035*/
+            while (d[++i] < q1 - iqr) {}
+            while (d[--j] > q3 + iqr) {}
+            /*jshint +W116*/
+            return [i, j];
+            /*jshint +W035*/
+        };
+    }
+
+    var _whiskerIqrFactor = 1.5;
+    var _whiskersIqr = DEFAULT_WHISKERS_IQR;
+    var _whiskers = _whiskersIqr(_whiskerIqrFactor);
+
+    var _box = d3.box();
+    var _tickFormat = null;
+
+    var _boxWidth = function (innerChartWidth, xUnits) {
+        if (_chart.isOrdinal()) {
+            return _chart.x().rangeBand();
+        } else {
+            return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
+        }
+    };
+
+    // default padding to handle min/max whisker text
+    _chart.yAxisPadding(12);
+
+    // default to ordinal
+    _chart.x(d3.scale.ordinal());
+    _chart.xUnits(dc.units.ordinal);
+
+    // valueAccessor should return an array of values that can be coerced into numbers
+    // or if data is overloaded for a static array of arrays, it should be `Number`.
+    // Empty arrays are not included.
+    _chart.data(function (group) {
+        return group.all().map(function (d) {
+            d.map = function (accessor) { return accessor.call(d, d); };
+            return d;
+        }).filter(function (d) {
+            var values = _chart.valueAccessor()(d);
+            return values.length !== 0;
+        });
+    });
+
+    /**
+    #### .boxPadding([padding])
+    Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
+    See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+    for a visual description of how the padding is applied.
+
+    Default: 0.8
+    **/
+    _chart.boxPadding = _chart._rangeBandPadding;
+    _chart.boxPadding(0.8);
+
+    /**
+    #### .outerPadding([padding])
+    Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+    or on charts with a custom `.boxWidth`. Will pad the width by `padding * barWidth` on each side of the chart.
+
+    Default: 0.5
+    **/
+    _chart.outerPadding = _chart._outerRangeBandPadding;
+    _chart.outerPadding(0.5);
+
+    /**
+     #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
+     Get or set the numerical width of the boxplot box. The width may also be a function taking as
+     parameters the chart width excluding the right and left margins, as well as the number of x
+     units.
+     **/
+    _chart.boxWidth = function (_) {
+        if (!arguments.length) {
+            return _boxWidth;
+        }
+        _boxWidth = d3.functor(_);
+        return _chart;
+    };
+
+    var boxTransform = function (d, i) {
+        var xOffset = _chart.x()(_chart.keyAccessor()(d, i));
+        return 'translate(' + xOffset + ', 0)';
+    };
+
+    _chart._preprocessData = function () {
+        if (_chart.elasticX()) {
+            _chart.x().domain([]);
+        }
+    };
+
+    _chart.plotData = function () {
+        var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
+
+        _box.whiskers(_whiskers)
+            .width(_calculatedBoxWidth)
+            .height(_chart.effectiveHeight())
+            .value(_chart.valueAccessor())
+            .domain(_chart.y().domain())
+            .duration(_chart.transitionDuration())
+            .tickFormat(_tickFormat);
+
+        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), function (d) { return d.key; });
+
+        renderBoxes(boxesG);
+        updateBoxes(boxesG);
+        removeBoxes(boxesG);
+
+        _chart.fadeDeselectedArea();
+    };
+
+    function renderBoxes(boxesG) {
+        var boxesGEnter = boxesG.enter().append('g');
+
+        boxesGEnter
+            .attr('class', 'box')
+            .attr('transform', boxTransform)
+            .call(_box)
+            .on('click', function (d) {
+                _chart.filter(d.key);
+                _chart.redrawGroup();
+            });
+    }
+
+    function updateBoxes(boxesG) {
+        dc.transition(boxesG, _chart.transitionDuration())
+            .attr('transform', boxTransform)
+            .call(_box)
+            .each(function () {
+                d3.select(this).select('rect.box').attr('fill', _chart.getColor);
+            });
+    }
+
+    function removeBoxes(boxesG) {
+        boxesG.exit().remove().call(_box);
+    }
+
+    _chart.fadeDeselectedArea = function () {
+        if (_chart.hasFilter()) {
+            _chart.g().selectAll('g.box').each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.g().selectAll('g.box').each(function () {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
+    };
+
+    _chart.yAxisMin = function () {
+        var min = d3.min(_chart.data(), function (e) {
+            return d3.min(_chart.valueAccessor()(e));
+        });
+        return dc.utils.subtract(min, _chart.yAxisPadding());
+    };
+
+    _chart.yAxisMax = function () {
+        var max = d3.max(_chart.data(), function (e) {
+            return d3.max(_chart.valueAccessor()(e));
+        });
+        return dc.utils.add(max, _chart.yAxisPadding());
+    };
+
+    /**
+     #### .tickFormat()
+     Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
+     integer formatting.
+     ```js
+     // format ticks to 2 decimal places
+     chart.tickFormat(d3.format('.2f'));
+     ```
+     **/
+    _chart.tickFormat = function (x) {
+        if (!arguments.length) {
+            return _tickFormat;
+        }
+        _tickFormat = x;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+// Renamed functions
+
+dc.abstractBubbleChart = dc.bubbleMixin;
+dc.baseChart = dc.baseMixin;
+dc.capped = dc.capMixin;
+dc.colorChart = dc.colorMixin;
+dc.coordinateGridChart = dc.coordinateGridMixin;
+dc.marginable = dc.marginMixin;
+dc.stackableChart = dc.stackMixin;
+
+// Expose d3 and crossfilter, so that clients in browserify
+// case can obtain them if they need them.
+dc.d3 = d3;
+dc.crossfilter = crossfilter;
+
+return dc;}
+    if(typeof define === "function" && define.amd) {
+        define(["d3", "crossfilter"], _dc);
+    } else if(typeof module === "object" && module.exports) {
+        var _d3 = require('d3');
+        var _crossfilter = require('crossfilter');
+        // When using npm + browserify, 'crossfilter' is a function,
+        // since package.json specifies index.js as main function, and it
+        // does special handling. When using bower + browserify,
+        // there's no main in bower.json (in fact, there's no bower.json),
+        // so we need to fix it.
+        if (typeof _crossfilter !== "function") {
+            _crossfilter = _crossfilter.crossfilter;
+        }
+        module.exports = _dc(_d3, _crossfilter);
+    } else {
+        this.dc = _dc(d3, crossfilter);
+    }
+}
+)();
+
+var PODLOVE = PODLOVE || {};
+PODLOVE.Analytics = PODLOVE.Analytics || {};
+
+/**
+ * round to <digits> digits after comma.
+ *
+ * decimalRound(5.123,1) // => 5.1
+ * decimalRound(5.678,2) // => 5.68
+ */
+PODLOVE.Analytics.decimalRound = function(number, digits) {
+	var exp = Math.pow(10, digits);
+
+	number *= exp;
+	number = Math.round(number);
+	number /= exp;
+
+	return number;
+};
+
+PODLOVE.Analytics.formatThousands = function(num) {
+	if (num < 1000)
+		return num;
+	else
+		return PODLOVE.Analytics.decimalRound(num/1000, 1) + "k";
+};
+
+PODLOVE.Analytics.hourFormat = function(hours) {
+	var days = 0, weeks = 0, label = [];
+
+	if (hours > 48) {
+		days  = (hours - hours % 24) / 24;
+		hours = hours % 24;
+	}
+
+	if (days > 13) {
+		weeks = (days - days % 7) / 7;
+		days  = days % 7;
+	};
+
+	if (weeks)
+		label.push(PODLOVE.Analytics.decimalRound(weeks,1) + "w");
+
+	if (days)
+		label.push(PODLOVE.Analytics.decimalRound(days,1) + "d");
+
+	if (hours)
+		label.push(PODLOVE.Analytics.decimalRound(hours,1) + "h")
+
+	if (label.length === 0)
+		label = ["0h"];
+
+	return label.join(" ");
+};
+/* global PODLOVE, assetNames, d3, dc, jQuery, crossfilter, ajaxurl */
+
+'use strict';
+
+jQuery(document).ready(function($) {
+
+	var csvCurEpisodeRawData, csvAvgEpisodeRawData;
+
+	var titleDateFormat = d3.time.format('%Y-%m-%d %H:%M %Z');
+
+	var episode_id = jQuery('#episode-performance-chart').data('episode');
+	var chart_width = $('#episode-performance-chart').closest('.inside').width();
+	var brush = { min: null, max: null };
+
+	var reduceAddFun = function (p, v) {
+		
+		p.downloads += v.downloads;
+
+		p.weekday  = v.weekday;
+		p.asset_id = v.asset_id;
+		p.date     = p.date && p.date < v.date ? p.date : v.date; // take first date in reduced set
+		p.client   = v.client;
+		p.system   = v.system;
+		p.source   = v.source;
+		p.context  = v.context;
+
+		return p;
+	};
+	var reduceSubFun = function (p, v) { 
+		p.downloads -= v.downloads;
+		return p;
+	};
+	var reduceBaseFun = function () {
+		return {
+			downloads: 0,
+			weekday: 0,
+			asset_id: 0,
+			date: 0,
+			client: '',
+			system: ''
+		};
+	};
+
+	function render_episode_performance_chart(options) {
+		var hours_per_unit = options.hours_per_unit;
+
+		var xfilter    = crossfilter(csvCurEpisodeRawData);
+		var xfilterAvg = crossfilter(csvAvgEpisodeRawData);
+		var all = xfilter.groupAll().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		var addPercentageLabels = function(chart) {
+			var data = chart.data();
+			var filters = chart.filters();
+
+			data.forEach(function(d, index) {
+				var row = chart.select('g.row._' + index);
+				var label = chart.select('g.row._' + index + ' text');
+				var text = '';
+				
+				if (!row.select('.subLabel').size()) {
+					row.append('text')
+						.attr('class', 'subLabel')
+						.attr('text-anchor', 'end')
+						.attr('x', -10)
+						.attr('y', label.attr('y'))
+					;
+				}
+
+				// when a filter is set, only show active rows
+				if (filters.length > 0 && $.inArray(d.key, filters) === -1) {
+					row.select('.subLabel').style({'display': 'none'});
+				} else {
+					row.select('.subLabel').style({'display': 'inherit'});
+				};
+
+				if (all.value().downloads > 0) {
+					text = Math.round(d.value.downloads / all.value().downloads * 100) + '%';
+				}
+
+				row.select('.subLabel').text(text);
+			});
+	    };
+
+	    var addResetFilter = function(chart, filter) {
+			chart.select(".reset").on("click", function(data, index) {
+				d3.event.preventDefault();
+				chart.filterAll();
+				dc.redrawAll();
+			});
+		};
+
+		/**
+		 * Dimensions & Groups
+		 */
+		var dimRelativeHoursSinceRelease = function(d) {
+			return Math.floor(d.hoursSinceRelease / hours_per_unit);
+		};
+
+		// dimension: "hours since release"
+		var hoursDimension = xfilter.dimension(dimRelativeHoursSinceRelease);
+
+		// dimension: "hours since release"
+		var avgEpisodeHoursDimension = xfilterAvg.dimension(dimRelativeHoursSinceRelease);
+
+		// dimension: day of week
+		var dayOfWeekDimension = xfilter.dimension(function (d) { return d.weekday; });
+
+		// dimension: asset id
+		var assetDimension = xfilter.dimension(function (d) {
+			return d.asset_id;
+		});
+
+		// dimension: client
+		var clientDimension = xfilter.dimension(function (d) {
+			return d.client;
+		});
+
+		// dimension: operating system
+		var systemDimension = xfilter.dimension(function (d) {
+			return d.system;
+		});
+		
+		// dimension: download source
+		var sourceDimension = xfilter.dimension(function (d) {
+			return d.source;
+		});
+
+		// dimension: download context
+		var contextDimension = xfilter.dimension(function (d) {
+			return d.context;
+		});
+
+		// group: downloads
+		var downloadsGroup = hoursDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		// group: downloads
+		var avgDownloadsGroup = avgEpisodeHoursDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		// group: cumulative downloads
+		var _cumulativeDownloadsGroup = hoursDimension.group()
+			.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+			.all()
+			.reduce(function (acc, cur) {
+				cur.key += 1;   // shift all keys to make space for a zero-entry
+				cur.value.cum = true; // set flag to identify cumulative data set
+				if (acc.length) {
+					cur.value.downloads += acc.slice(-1)[0].value.downloads;
+				}
+				acc.push(cur);
+				return acc;
+			}, [])
+		;
+
+		// add zero-entry
+		_cumulativeDownloadsGroup.unshift({
+		    key: 0,
+		    value: {
+		        date: 0,
+		        downloads: 0,
+		        cum: true
+		    }
+		});
+
+		var cumulativeDownloadsGroup = {
+		    all: function () { return _cumulativeDownloadsGroup; }
+		};
+
+		// group: downloads per weekday
+		var dayOfWeekGroup = dayOfWeekDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		// group: downloads per asset
+		var assetsGroup = assetDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		// group: downloads per client
+		var clientsGroup = clientDimension.group()
+			.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+			.order(function(v) { return v.downloads; })
+		;
+
+		// group: downloads per operating system
+		var systemsGroup = systemDimension.group()
+			.reduce(reduceAddFun, reduceSubFun, reduceBaseFun)
+			.order(function(v) { return v.downloads; })
+		;
+
+		// group: downloads by source
+		var sourceGroup = sourceDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+		
+		// group: downloads by context
+		var contextGroup = contextDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		/**
+		 * Charts
+		 */
+		var chartColor = '#69B3FF';
+
+		var downloadsChart = dc.barChart(compChart)
+			.dimension(hoursDimension)
+			.group(downloadsGroup, 'Current Episode')
+			.renderTitle(true)
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.gap(1)
+			.colors(chartColor)
+		;
+
+		var avgEpisodeDownloadsChart = dc.barChart(compChart)
+			.dimension(avgEpisodeHoursDimension)
+			.group(avgDownloadsGroup, 'Average Episode')
+			.renderTitle(true)
+			.colors('#224BA6')
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.barPadding(2)
+		;
+
+		var cumulativeEpisodeChart = dc.lineChart(compChart)
+			.dimension(hoursDimension)
+			.group(cumulativeDownloadsGroup, 'Cumulative')
+			.colors('#CCC')
+			.useRightYAxis(true)
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.renderDataPoints({})
+			.renderArea(true)
+		;
+
+		var rangeChartXAxisLength = downloadsGroup.all().reduce(function(prev, cur) {
+			return Math.max(prev, cur.key);
+		}, 0);
+
+		var rangeChart = dc.barChart('#episode-range-chart')
+			.width(chart_width)
+			.height(80)
+			.dimension(hoursDimension)
+			.group(downloadsGroup)
+			.x(d3.scale.linear().domain([0, rangeChartXAxisLength]))
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.colors(chartColor)
+			.yAxisLabel(' ') // to align yaxis with main chart
+		;
+
+		var compChart = dc.compositeChart('#episode-performance-chart')
+			.width(chart_width)
+			.x(d3.scale.linear().domain([0, Infinity]))
+			.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
+			.elasticX(true)
+			.elasticY(true)
+			.brushOn(false)
+			.transitionDuration(0) // turn off transitions
+			.yAxisLabel('Downloads')
+			.xAxisLabel('Hours since release')
+			.rangeChart(rangeChart)
+			.title(function(d) {
+				
+				var title = d.value.date ? titleDateFormat(d.value.date) : 'Average Episode',
+					time  = ''
+				;
+
+				if (d.value.cum) {
+					time = (d.key * hours_per_unit) + 'h after release';
+				} else {
+					time = (d.key * hours_per_unit) + 'h – ' + ((d.key + 1) * hours_per_unit) + 'h after release';
+				}
+
+				return [
+					title,
+					time,
+					'Downloads: ' + d.value.downloads
+				].join('\n');
+			})
+			.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
+			.rightYAxisLabel('Cumulative Downloads')
+		;
+
+		var weekdayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+		var weekdayChart = dc.rowChart('#episode-weekday-chart')
+		    .margins({top: 0, left: 40, right: 10, bottom: 25})
+		    .group(dayOfWeekGroup)
+		    .dimension(dayOfWeekDimension)
+		    .elasticX(true)
+		    .label(function(d) {
+		    	return weekdayNames[d.key];
+		    })
+		    .title(function (d) {
+		        return d.value.downloads;
+		    })
+		    .valueAccessor(function (v) {
+		    	if (v.value) {
+		    		return v.value.downloads;
+		    	} else {
+		    		return 0;
+		    	}
+		    })
+			.ordering(function (v) {
+				return -v.value.downloads;
+			})
+		    .colors(chartColor)
+		    .on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
+		;
+
+		var assetChart = dc.rowChart('#episode-asset-chart')
+			.margins({top: 0, left: 40, right: 10, bottom: 25})
+			.elasticX(true)
+			.dimension(assetDimension) // set dimension
+			.group(assetsGroup) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value.downloads;
+				} else {
+					return 0;
+				}
+			})
+			.ordering(function (v) {
+				return -v.value.downloads;
+			})
+			.label(function(d) {
+				return assetNames[d.key];
+			})
+			.title(function (d) {
+				return d.value.downloads;
+			})
+			.colors(chartColor)
+			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
+		;
+
+		var clientChart = dc.rowChart('#episode-client-chart')
+			.margins({top: 0, left: 40, right: 10, bottom: 25})
+			.elasticX(true)
+			.dimension(clientDimension)
+			.group(clientsGroup)
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.ordering(function (v) {
+				return -v.value.downloads;
+			})
+			.othersGrouper(function(data) {
+				return data; // no 'others' group
+			})
+			.cap(10)
+			.label(function(d) {
+				return d.key;
+			})
+			.colors(chartColor)
+			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
+		;
+
+		var systemChart = dc.rowChart('#episode-system-chart')
+			.margins({top: 0, left: 40, right: 10, bottom: 25})
+			.elasticX(true)
+			.dimension(systemDimension)
+			.group(systemsGroup)
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.ordering(function (v) {
+				return -v.value.downloads;
+			})
+			.othersGrouper(function(data) {
+				return data; // no 'others' group
+			})
+			.cap(10)
+			.label(function(d) {
+				return d.key;
+			})
+			.colors(chartColor)
+			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
+		;
+
+		var sourceChart = dc.rowChart('#episode-source-chart')
+			.margins({top: 0, left: 40, right: 10, bottom: 25})
+			.elasticX(true)
+			.dimension(sourceDimension)
+			.group(sourceGroup)
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.ordering(function (v) {
+				return -v.value.downloads;
+			})
+			.label(function(d) {
+				return d.key;
+			})
+			.colors(chartColor)
+			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
+		;
+
+		var contextChart = dc.rowChart('#episode-context-chart')
+			.margins({top: 0, left: 40, right: 10, bottom: 25})
+			.elasticX(true)
+			.dimension(contextDimension)
+			.group(contextGroup)
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.ordering(function (v) {
+				return -v.value.downloads;
+			})
+			.label(function(d) {
+				return d.value.source + '/' + d.key;
+			})
+			.colors(chartColor)
+			.on('preRedraw', addPercentageLabels)
+			.on('renderlet', addResetFilter);
+		;
+
+		// set tickFormats for all charts
+		rangeChart.yAxis().ticks([2]);
+		rangeChart.xAxis().tickFormat(function(v) {
+			return PODLOVE.Analytics.hourFormat(v * hours_per_unit);
+		});
+			
+		compChart.xAxis().tickFormat(function(v) {
+			return PODLOVE.Analytics.hourFormat(v * hours_per_unit);
+		});
+
+		rangeChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		compChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		compChart.rightYAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		weekdayChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		assetChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		clientChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		systemChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		sourceChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		contextChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+
+		[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart, sourceChart, contextChart].forEach(function(chart) {
+			chart.render();
+		});
+
+		var renderBrush = function(chart, brush) {
+			chart.brush()
+				// set new brush range
+				.extent([
+					brush.min / hours_per_unit,
+					Math.min(
+						rangeChartXAxisLength,
+						brush.max / hours_per_unit
+					)
+				])
+				// send brush event to trigger redraw
+				.event(chart.select('g.brush'));
+		};
+		
+		// set range from 0 to 'one week' or 'everything' if the episode is younger than a week
+		if (!brush.min && !brush.max) {
+			brush.min = 0;
+			brush.max = 7*24;
+			$('#chart-zoom-selection .button:eq(1)').addClass('active');
+		}
+
+		renderBrush(rangeChart, brush);
+
+		// handle the user changing the brush manually
+		rangeChart.brush().on('brushend', function() {
+			var presetRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
+
+			var extent = rangeChart.brush().extent();
+			brush.min = extent[0] * hours_per_unit;
+			brush.max = extent[1] * hours_per_unit;
+
+			// if startpoint is < 0, automatically shift brush to the right
+			if (brush.min < 0) {
+				brush.max -= brush.min;
+				brush.min = 0;
+
+				renderBrush(rangeChart, brush);
+			}
+
+			var brushMatchesPresetRange = function() {
+				return -1 === $.inArray(Math.round(brush.max - brush.min), presetRanges);
+			};
+
+			var everythingIsSelected = function() {
+				return brush.min === 0 && brush.max === rangeChart.xUnitCount() * hours_per_unit;
+			};
+
+			// clear selection if the user modifies selection
+			if (brushMatchesPresetRange() && !everythingIsSelected()) {
+				$('#chart-zoom-selection .button.active').removeClass('active');
+			}
+		});
+
+		$('#chart-zoom-selection .button').on('click', function(e) {
+			var hours = parseInt($(this).data('hours'), 10);
+
+			e.preventDefault();
+
+			if ($(this).hasClass("disabled")) {
+				return;
+			}
+
+			$(this).siblings().removeClass('active');
+			$(this).addClass('active');
+
+			if (hours === 0) {
+				// set to full range
+				brush.min = 0;
+				brush.max = rangeChart.xUnitCount() * hours_per_unit;
+			} else {
+				// extend to set range
+				brush.max = brush.min + hours;
+			}
+
+			renderBrush(rangeChart, brush);
+		});
+
+		if (options.rendered && options.rendered instanceof Function) {
+			options.rendered();
+		}
+	}
+
+	function load_episode_performance_chart(options) {
+
+		if (csvCurEpisodeRawData) {
+			render_episode_performance_chart(options);
+		} else {
+			$.when(
+				$.ajax(ajaxurl + '?action=podlove-analytics-episode-downloads-per-hour&episode=' + episode_id),
+				$.ajax(ajaxurl + '?action=podlove-analytics-episode-average-downloads-per-hour')
+			).done(function(csvCurEpisode, csvAvgEpisode) {
+
+				var csvMapper = function(d) {
+					var parsed_date = new Date(+d.date * 1000);
+
+					return {
+						date: parsed_date,
+						downloads: +d.downloads,
+						weekday: parsed_date.getDay(),
+						hoursSinceRelease: +d.hours_since_release,
+						asset_id: +d.asset_id,
+						client: d.client ? d.client : 'Unknown',
+						system: d.system ? d.system : 'Unknown',
+						source: d.source ? d.source : 'Unknown',
+						context: d.context ? d.context : 'Unknown'
+					};
+				};
+
+				csvCurEpisodeRawData = d3.csv.parse(csvCurEpisode[0], csvMapper);
+				csvAvgEpisodeRawData = d3.csv.parse(csvAvgEpisode[0], function(d) {
+					return {
+						hoursSinceRelease: +d.hoursSinceRelease,
+						downloads: +d.downloads
+					};
+				});
+
+				render_episode_performance_chart(options);
+			});
+		}
+	}
+
+	$('#chart-grouping-selection').on('click', 'a', function(e) {
+		var unit_hours = parseInt($(this).data('hours'), 10),
+		    zoom_hours = parseInt($('#chart-zoom-selection .button.active').data("hours"), 10);
+
+		$(this).siblings().removeClass('active');
+		$(this).addClass('active');
+
+		// deactivate all zoom buttons smaller than unit selection
+		$("#chart-zoom-selection a.button").each(function() {
+			var h = parseInt($(this).data('hours'), 10);
+
+			if (h !== 0 && h < unit_hours) {
+				$(this).addClass("disabled");
+			} else {
+				$(this).removeClass("disabled");
+			}
+		});
+
+		load_episode_performance_chart({
+			hours_per_unit: unit_hours,
+			rendered: function() {
+				// check if zoom setting makes sense
+				if (zoom_hours !== 0 && (NaN === zoom_hours || zoom_hours < unit_hours)) {
+					var fitting_zoom = $("#chart-zoom-selection a.button").filter(function() {
+						var h = parseInt($(this).data('hours'), 10);
+						return h === 0 || h >= unit_hours;
+					}).first().click();
+				};
+			}
+		});
+
+		e.preventDefault();
+	});
+
+	$('#chart-grouping-selection a:eq(3)').click();
+
+	/**
+	 * Analytics Tiles can be hidden via Screen Options
+	 */
+	$('input[name=\'podlove_analytics_tiles\']').each(function () {
+		var checked = $(this).attr('checked'),
+		    tile_id = $(this).val(),
+		    chart   = $('.chart-wrapper[data-tile-id=\'' + tile_id + '\']')
+		;
+
+		if (!checked) {
+			chart.hide();
+		}
+	}).on('click', function () {
+		var checked = $(this).attr('checked'),
+		    tile_id = $(this).val(),
+		    chart   = $('.chart-wrapper[data-tile-id=\'' + tile_id + '\']')
+		;
+
+		// save
+		$.ajax({ url: ajaxurl, data: {
+			action: 'podlove-analytics-settings-tiles-update',
+			tile_id: tile_id,
+			checked: checked
+		} });
+
+		// update UI
+		if (checked) {
+			chart.show();
+		} else {
+			chart.hide();
+		}
+	});
+
+});
+jQuery(document).ready(function($) {
+	var totalsRawData;
+
+	var titleDateFormat = d3.time.format("%Y-%m-%d %H:%M %Z");
+
+	var brush = { min: null, max: null };
+
+	var reduceAddFun = function (p, v) {
+		
+		p.downloads += v.downloads;
+
+		p.episode_id = v.episode_id;
+		p.date     = v.date;
+
+		return p;
+	};
+	var reduceSubFun = function (p, v) { 
+		p.downloads -= v.downloads;
+		return p;
+	};
+	var reduceBaseFun = function () {
+		return {
+			downloads: 0,
+			episode_id: 0,
+			date: 0,
+		};
+	};
+
+	function render_episode_performance_chart() {
+		var chart_width = $("#total-chart").closest(".wrap").width();
+		var xfilter = crossfilter(totalsRawData);
+		var all = xfilter.groupAll().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+		var total_downloads = all.value().downloads;
+
+		// dimension: "hours since release"
+		var dateDimension = xfilter.dimension(function(d) {
+			// return d.date;
+			return d3.time.day(d.date);
+		});
+
+		var episodeDimension = xfilter.dimension(function(d) {
+			return d.episode_id;
+		});
+		var episodeGroup = episodeDimension.group().reduce(function(p, v) {
+			p.downloads += v.downloads;
+			p.episode_id = v.episode_id;
+			return p;
+		}, null, function() {
+			return {
+				downloads: 0,
+				episode_id: 0,
+			};
+		})
+
+		// threshold to make it to top episodes: more than 5% of total downloads in time segment
+		var top_episodes = episodeGroup.all().reduce(function (acc, cur) {
+
+			if (cur.value.downloads > total_downloads * 0.05) {
+				acc.push(cur);
+			}
+
+			return acc;
+		}, []);
+
+		var top_episode_ids = _.pluck(top_episodes, "key");
+
+		// group: downloads
+		// var downloadsGroup = dateDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
+
+		var downloadsWithoutTopGroup = dateDimension.group().reduce(function (p, v) {
+			if (!_.contains(top_episode_ids, v.episode_id)) {
+				return reduceAddFun(p, v);
+			} else {
+				return p;
+			}
+		}, function (p, v) {
+			if (!_.contains(top_episode_ids, v.episode_id)) {
+				return reduceSubFun(p, v);
+			} else {
+				return p;
+			}
+		}, reduceBaseFun);
+
+		var filter_dimension_by_episode_id = function(dim, episode_id) {
+			return dim.group().reduce(function (p, v) {
+				if (v.episode_id == episode_id) {
+					return reduceAddFun(p, v);
+				} else {
+					return p;
+				}
+			}, function (p, v) {
+				if (v.episode_id == episode_id) {
+					return reduceSubFun(p, v);
+				} else {
+					return p;
+				}
+			}, reduceBaseFun);
+		}
+
+		var top_episode_groups = [];
+
+		for (var index in top_episode_ids) {
+			top_episode_groups[top_episode_ids[index]] = (filter_dimension_by_episode_id(dateDimension, top_episode_ids[index]));
+		}
+
+		/**
+		 * Charts
+		 */
+		// var chartColor = '#69B3FF';
+		
+		var daysAgo = function(days) {
+			return new Date(new Date().setDate(new Date().getDate()-days));
+		};
+
+		var titleDateFormat = d3.time.format("%Y-%m-%d");
+
+		var downloadsChart = dc.barChart("#total-chart")
+			.width(chart_width)
+			.height(200)
+			.dimension(dateDimension)
+			.group(downloadsWithoutTopGroup, "Other Episodes")
+			.x(d3.time.scale().domain([daysAgo(28), new Date()]))
+			.xUnits(d3.time.days)
+			.brushOn(false)
+			.renderTitle(true)
+			.elasticY(true)
+			.yAxisLabel("Downloads")
+			// .xAxisLabel("Last 28 days")
+			.valueAccessor(function (v) {
+				return v.value.downloads;
+			})
+			.title(function(d) {
+				return [
+					titleDateFormat(d.key),
+					"Downloads: " + d.value.downloads
+				].join("\n");
+			})
+			// .colors(chartColor)
+			.renderHorizontalGridLines(true)
+		;
+
+		// responsive legend position
+		var legendWidth = 300;
+		if (chart_width > 650) {
+			var legendX = chart_width - legendWidth;
+
+			jQuery("#total-chart").height("200px")
+			downloadsChart.height(200);
+			downloadsChart.legend(dc.legend().horizontal(false).x(legendX).y(10).autoItemWidth(true));
+			downloadsChart.margins().bottom = 30;
+			downloadsChart.margins().right = legendWidth + 5;
+		} else {
+			var legendX = chart_width - legendWidth;
+
+			jQuery("#total-chart").height("370px")
+			downloadsChart.height(370);
+			downloadsChart.legend(dc.legend().horizontal(false).x(30).y(170).autoItemWidth(true));
+			downloadsChart.margins().bottom = 30 + 200;
+		}
+
+		for (var index in top_episode_groups) {
+			downloadsChart.stack(top_episode_groups[index], podlove_episode_names[index]);
+		}
+
+		downloadsChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		downloadsChart.xAxis().tickFormat(d3.time.format("%d %b"));
+
+		// responsive tick label amounts
+		if (chart_width < 550) {
+			downloadsChart.xAxis().ticks(d3.time.days, 5);
+		} else if (chart_width < 635) {
+			downloadsChart.xAxis().ticks(d3.time.days, 4);
+		} else if (chart_width < 780) {
+			downloadsChart.xAxis().ticks(d3.time.days, 3);
+		} else {
+			downloadsChart.xAxis().ticks(d3.time.days, 2);
+		}
+
+		downloadsChart.render();
+	}
+
+	function load_episode_performance_chart() {
+
+		if (totalsRawData) {
+			render_episode_performance_chart();
+			$(window).on('resize', render_episode_performance_chart);
+		} else {
+			$.when(
+				$.ajax(ajaxurl + "?action=podlove-analytics-total-downloads-per-day")
+			).done(function(csvTotals) {
+
+				var csvMapper = function(d) {
+					var parsed_date = new Date(+d.date * 1000);
+
+					return {
+						date: parsed_date,
+						downloads: +d.downloads,
+						episode_id: +d.episode_id
+					};
+				};
+
+				totalsRawData = d3.csv.parse(csvTotals, csvMapper);
+
+				render_episode_performance_chart();
+				$(window).on('resize', render_episode_performance_chart);
+			});
+		}
+
+	}
+
+	if ($("#total-chart").length) {
+		load_episode_performance_chart();
+	}
+});
