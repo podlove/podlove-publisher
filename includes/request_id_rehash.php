@@ -58,6 +58,11 @@ class PodloveSilentProgressBar
 function podlove_rehash_tracking_request_ids($blog_id = null)
 {
 	if ($blog_id) {
+		
+		if (!function_exists('switch_to_blog')) {
+			die("You set a blog_id but this does not appear to be a multisite setup.\n");
+		}
+
 		switch_to_blog($blog_id);
 	}
 
