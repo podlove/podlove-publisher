@@ -193,6 +193,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/no_enclosure_autodiscovery.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/permalinks.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/recording_date.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/redirects.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/request_id_rehash.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/require_curl.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/setup.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/screen_options.php';

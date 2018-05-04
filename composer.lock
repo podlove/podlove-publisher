@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff9ef1c365b136afe2e36a555957efe3",
+    "content-hash": "4b42bb8ff2d985caa5bfd8ec938505af",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -61,6 +61,72 @@
                 "tls"
             ],
             "time": "2017-11-29T09:37:33+00:00"
+        },
+        {
+            "name": "dariuszp/cli-progress-bar",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dariuszp/cli-progress-bar.git",
+                "reference": "54020a8fc60bf19579bfe0317f17a2848d48991d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dariuszp/cli-progress-bar/zipball/54020a8fc60bf19579bfe0317f17a2848d48991d",
+                "reference": "54020a8fc60bf19579bfe0317f17a2848d48991d",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dariuszp\\": "src/Dariuszp"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dariusz Półtorak",
+                    "email": "poltorak.dariusz@gmail.com"
+                }
+            ],
+            "description": "Cli progress bar",
+            "time": "2015-11-02T14:38:59+00:00"
+        },
+        {
+            "name": "geertw/ip-anonymizer",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geertw/php-ip-anonymizer.git",
+                "reference": "6610b85b119de3bb505fd9a484bac67066e4a62f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geertw/php-ip-anonymizer/zipball/6610b85b119de3bb505fd9a484bac67066e4a62f",
+                "reference": "6610b85b119de3bb505fd9a484bac67066e4a62f",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "geertw\\IpAnonymizer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Geert Wirken",
+                    "email": "geert@gwirken.nl"
+                }
+            ],
+            "description": "IPv4 and IPv6 address anonymizer",
+            "time": "2017-06-24T13:15:14+00:00"
         },
         {
             "name": "geoip2/geoip2",

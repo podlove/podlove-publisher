@@ -45,7 +45,11 @@ class TemplateExtensions {
 	 */
 	public static function accessorEpisodesShow($return, $method_name, $episode) {
 		return $episode->with_blog_scope(function() use ($return, $method_name, $episode) {
-			return new Template\Show(Model\Show::find_one_by_episode_id($episode->id));
+			if ($show = Model\Show::find_one_by_episode_id($episode->id)) {
+				return new Template\Show($show);
+			} else {
+				return null;
+			}
 		});
 	}
 }

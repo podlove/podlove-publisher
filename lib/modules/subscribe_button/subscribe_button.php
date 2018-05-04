@@ -64,7 +64,10 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 	}
 
 	// shortcode function
-	public static function button($args) {
+	public static function button($args = array()) {
+
+		if (!is_array($args))
+			$args = [];
 
 		$podcast = Model\Podcast::get();
 
