@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.6 =
+
+No changes.
+
 = 2.7.5 =
 
 **Preparation for GDPR/DSGVO**
