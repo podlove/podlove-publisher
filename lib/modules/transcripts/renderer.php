@@ -56,7 +56,7 @@ class Renderer {
 			);
 		}, $transcript);
 
-		return "WEBVTT\n\n" . implode("\n\n", $transcript);
+		return "WEBVTT\n\n" . implode("\n\n", $transcript) . "\n";
 	}
 
 	private static function format_time($time_ms)
