@@ -37,6 +37,7 @@ class Ajax {
 			'admin-news',
 			'job-create',
 			'job-get',
+			'job-delete',
 			'jobs-get'
 		);
 
@@ -76,13 +77,24 @@ class Ajax {
 
 	public function job_get() {
 		$job_id = filter_input(INPUT_GET, 'job_id');
-
 		$job = \Podlove\Model\Job::find_by_id($job_id);
 
 		if (!$job)
 			self::respond_with_json(['error' => 'no job with id "' . $job_id . '"']);
 
 		self::respond_with_json($job->to_array());
+	}
+
+	public function job_delete() {
+		$job_id = filter_input(INPUT_GET, 'job_id');
+		$job = \Podlove\Model\Job::find_by_id($job_id);
+
+		if (!$job)
+			self::respond_with_json(['error' => 'no job with id "' . $job_id . '"']);
+
+		$job->delete();
+
+		self::respond_with_json(["status" => "ok"]);
 	}
 
 	public function jobs_get() {

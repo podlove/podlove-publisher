@@ -9,6 +9,7 @@
                     <th style="width: 175px">Progress</th>
                     <th>Created</th>
                     <th>Last Progress</th>
+                    <th style="width: 60px"></th>
                 </tr>
             </thead>
             <tbody>
@@ -19,12 +20,18 @@
                     </td>
                     <td>
                         {{ job.steps_progress }}/{{ job.steps_total }} ({{ job.steps_percent }}%)
-                        <span v-if="job.steps_progress > 0">
-                            <i class="podlove-icon-spinner rotate"></i>
-                        </span>
+
                     </td>
                     <td>{{ job.created_relative }}</td>
                     <td>{{ job.last_progress }}</td>
+                    <td>
+                        <div v-if="isAborting(job)">
+                            <i class="podlove-icon-spinner rotate"></i>
+                        </div>
+                        <div v-else>
+                            <button class="button" @click="abortJob(job)">abort</button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -61,7 +68,8 @@ const $ = jQuery;
 export default {
     data() {
         return {
-            jobs: []
+            jobs: [],
+            aborting: []
         }
     },
 
@@ -83,6 +91,16 @@ export default {
             }).always(() => {
                 window.setTimeout(this.fetchJobData, 3000);
             });
+        },
+        abortJob(job) {
+            this.aborting.push(job.id)
+            $.getJSON(ajaxurl, {
+                action: 'podlove-job-delete',
+                job_id: job.id
+            })
+        },
+        isAborting(job) {
+            return this.aborting.includes(job.id)
         }
     },
 

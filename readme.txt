@@ -103,6 +103,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-05-23 =
+
+* jobs dashboard: add button to abort running jobs
+
 = 2018-05-04 =
 
 _2.7.5_
