@@ -60,7 +60,8 @@
         <div class="row export" v-show="mode == 'export'">
             <p>
                 <a class="button button-secondary" :href="webvttDownloadHref" download="transcript.webvtt">Export webvtt</a>
-                <a class="button button-secondary" :href="jsonDownloadHref" download="transcript.json">Export json</a> 
+                <a class="button button-secondary" :href="jsonDownloadHref" download="transcript.json">Export json (flat)</a> 
+                <a class="button button-secondary" :href="jsonGroupedDownloadHref" download="transcript.json">Export json (grouped)</a> 
             </p>
         </div>
 
@@ -105,6 +106,12 @@ export default {
             const host = window.location.hostname;
 
             return "//" + host + "?p=" + post_id + "&podlove_transcript=json"
+        },
+        jsonGroupedDownloadHref: function() {
+            const post_id = document.querySelector('#post_ID').value
+            const host = window.location.hostname;
+
+            return "//" + host + "?p=" + post_id + "&podlove_transcript=json_grouped"
         }
     },
 

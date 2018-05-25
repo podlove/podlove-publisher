@@ -26,7 +26,18 @@ class Renderer {
 		$this->episode = $episode;
 	}
 
-	public function as_json()
+	/**
+	 * Render transcript as JSON.
+	 * 
+	 * Supports two modes:
+	 * 
+	 *   - flat: same structure as webvtt, just as json
+	 *   - grouped: all subsequent items with the same speaker are grouped
+	 * 
+	 * @param  string $mode 'flat' or 'grouped'
+	 * @return string
+	 */
+	public function as_json($mode = 'flat')
 	{
 		$transcript = Transcript::get_transcript($this->episode->id);
 		$transcript = array_map(function ($t) {
@@ -37,6 +48,34 @@ class Renderer {
 				'text' => $t->content,
 			];
 		}, $transcript);
+
+		if ($mode != 'flat') {
+			$transcript = array_reduce($transcript, function ($agg, $item) {
+
+				if (empty($agg)) {
+					$agg['items'] = [];
+					$agg['prev_speaker'] = null;
+				}
+
+				$speaker = $item['speaker'];
+				unset($item['speaker']);
+
+				if ($agg['prev_speaker'] == $speaker) {
+					$agg['items'][count($agg['items'])-1]['items'][] = $item;
+				} else {
+					$agg['items'][] = [
+						'speaker' => $speaker,
+						'items' => [$item]
+					];
+				}
+				
+				$agg['prev_speaker'] = $speaker;
+
+				return $agg;
+			}, []);
+			$transcript = $transcript['items'];
+		}
+
 		return json_encode($transcript);			
 	}
 

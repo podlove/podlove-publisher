@@ -176,7 +176,7 @@ class Transcripts extends \Podlove\Modules\Base {
 			return;
 
 		$format = filter_input(INPUT_GET, 'podlove_transcript', FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => "/^(json|webvtt)$/"]
+			'options' => ['regexp' => "/^(json_grouped|json|webvtt)$/"]
 		]);
 
 		if ( ! $format )
@@ -196,10 +196,12 @@ class Transcripts extends \Podlove\Modules\Base {
 				exit;
 				break;
 			case 'json':
+			case 'json_grouped':
 				header('Cache-Control: no-cache, must-revalidate');
 				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 				header('Content-type: application/json');
-				echo $renderer->as_json();
+				$mode = ($format == 'json' ? 'flat' : 'grouped');
+				echo $renderer->as_json($mode);
 				exit;
 				break;
 		}
