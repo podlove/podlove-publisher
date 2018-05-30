@@ -69,7 +69,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		if ($player_settings['playerv4_use_podcast_language']) {
 			$config = array_merge($config, [
 				'runtime' => [
-					'language' => split('-', $podcast->language)[0]
+					'language' => explode('-', $podcast->language)[0]
 				]
 			]);
 		}
