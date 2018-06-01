@@ -77,44 +77,10 @@ class Renderer {
 
 	private function get_data($mode = 'flat')
 	{
-		$transcript = Transcript::get_transcript($this->episode->id);
-		$transcript = array_map(function ($t) {
-			return [
-				'start' => self::format_time($t->start),
-				'end' => self::format_time($t->end),
-				'speaker' => $t->identifier,
-				'text' => $t->content,
-			];
-		}, $transcript);
-
-		if ($mode != 'flat') {
-			$transcript = array_reduce($transcript, function ($agg, $item) {
-
-				if (empty($agg)) {
-					$agg['items'] = [];
-					$agg['prev_speaker'] = null;
-				}
-
-				$speaker = $item['speaker'];
-				unset($item['speaker']);
-
-				if ($agg['prev_speaker'] == $speaker) {
-					$agg['items'][count($agg['items'])-1]['items'][] = $item;
-				} else {
-					$agg['items'][] = [
-						'speaker' => $speaker,
-						'items' => [$item]
-					];
-				}
-				
-				$agg['prev_speaker'] = $speaker;
-
-				return $agg;
-			}, []);
-			$transcript = $transcript['items'];
-		}
-
-		return $transcript;
+		return Transcript::prepare_transcript(
+			Transcript::get_transcript($this->episode->id), 
+			$mode
+		);
 	}
 
 	public function as_webvtt()
@@ -136,7 +102,7 @@ class Renderer {
 		return "WEBVTT\n\n" . implode("\n\n", $transcript) . "\n";
 	}
 
-	private static function format_time($time_ms)
+	public static function format_time($time_ms)
 	{
 		$ms = $time_ms % 1000;
 		$seconds = floor($time_ms / 1000) % 60;

@@ -61,6 +61,58 @@ class Transcript extends \Podlove\Model\Base
 
 		return $wpdb->get_results($sql);
 	}
+
+	/**
+	 * Prepares transcript from database for further processing or viewing.
+	 * 
+	 * Example
+	 * 
+	 *   $transcript = Transcript::get_transcript($episode_id);
+	 *   $transcript = Transcript::prepare_transcript($transcript, 'grouped');
+	 * 
+	 */
+	public static function prepare_transcript($transcript, $mode = 'flat')
+	{
+		$transcript = array_map(function ($t) {
+			return [
+				'start' => \Podlove\Modules\Transcripts\Renderer::format_time($t->start),
+				'start_ms' => (int) $t->start,
+				'end' => \Podlove\Modules\Transcripts\Renderer::format_time($t->end),
+				'end_ms' => (int) $t->end,
+				'speaker' => $t->identifier,
+				'text' => $t->content,
+			];
+		}, $transcript);
+
+		if ($mode != 'flat') {
+			$transcript = array_reduce($transcript, function ($agg, $item) {
+
+				if (empty($agg)) {
+					$agg['items'] = [];
+					$agg['prev_speaker'] = null;
+				}
+
+				$speaker = $item['speaker'];
+				unset($item['speaker']);
+
+				if ($agg['prev_speaker'] == $speaker) {
+					$agg['items'][count($agg['items'])-1]['items'][] = $item;
+				} else {
+					$agg['items'][] = [
+						'speaker' => $speaker,
+						'items' => [$item]
+					];
+				}
+				
+				$agg['prev_speaker'] = $speaker;
+
+				return $agg;
+			}, []);
+			$transcript = $transcript['items'];
+		}
+
+		return $transcript;
+	}
 }
 
 Transcript::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');

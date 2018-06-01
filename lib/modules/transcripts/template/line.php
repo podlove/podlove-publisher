@@ -31,7 +31,7 @@ class Line extends Wrapper {
 	 * @accessor
 	 */
 	public function content() {
-		return $this->line->content;
+		return $this->line['text'];
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Line extends Wrapper {
 	{
 		// fixme: this is silly, Duration should take ms as parameter, not a whole episode object
 		$episode = new \Podlove\Model\Episode;
-		$episode->duration = $this->line->start / 1000;
+		$episode->duration = $this->line['start_ms'] / 1000;
 
 		return new \Podlove\Template\Duration($episode);
 	}
@@ -56,40 +56,8 @@ class Line extends Wrapper {
 	public function end()
 	{
 		$episode = new \Podlove\Model\Episode;
-		$episode->duration = $this->line->end / 1000;
+		$episode->duration = $this->line['end_ms'] / 1000;
 
 		return new \Podlove\Template\Duration($episode);
-	}
-
-	/**
-	 * Raw "voice" identifier from transcript
-	 *
-	 * @accessor
-	 */
-	public function voice()
-	{
-		return $this->line->voice;
-	}
-
-	/**
-	 * Voice / Contributor
-	 *
-	 * @accessor
-	 */
-	public function contributor()
-	{
-		if (!$this->line->contributor_id) {
-			return null;
-		}
-
-		$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id($this->line->contributor_id);
-
-		if (!$contributor) {
-			return null;
-		}
-
-		return new \Podlove\Modules\Contributors\Template\Contributor(
-			$contributor
-		);
 	}
 }
