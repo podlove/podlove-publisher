@@ -103,6 +103,35 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-06-01 =
+
+* transcripts can now be exported as JSON grouped by speaker and a preliminary/inofficial XML format
+* Template API groups by speaker as well. Use this example template as base:
+
+```
+<style type="text/css">
+.ts-speaker { font-weight: bold; }
+.ts-items { margin-left: 20px; }
+.ts-time { font-size: small; color: #999; }
+</style>
+
+{% for group in episode.transcript %}
+  <div class="ts-group">
+
+    {% if group.contributor %}
+      <div class="ts-speaker">{{ group.contributor.name }}</div>
+    {% endif %}
+
+    <div class="ts-items">
+    {% for line in group.items %}
+      <span class="ts-time">{{ line.start }}&ndash;{{ line.end }}</span>
+      <div class="ts-content">{{ line.content }}</div>
+    {% endfor %}
+    </div>
+  </div>
+{% endfor %}
+```
+
 = 2018-05-23 =
 
 * jobs dashboard: add button to abort running jobs
