@@ -39,6 +39,44 @@ class Renderer {
 	 */
 	public function as_json($mode = 'flat')
 	{
+		return json_encode($this->get_data($mode));		
+	}
+
+	public function as_xml()
+	{
+		$xml = new \SimpleXMLElement(
+			'<?xml version="1.0" encoding="UTF-8"?>' 
+			. '<pst:transcripts version="1.0" xmlns:pst="http://podlove.org/simple-transcripts" />'
+		);
+
+		$data = $this->get_data('grouped');
+
+		foreach ($data as $group) {
+			$groupXML = $xml->addChild('pst:speech');
+			$groupXML->addChild('pst:speaker', $group['speaker']);
+			foreach ($group['items'] as $item) {
+				$child = $groupXML->addChild('pst:item', $item['text']);
+				$child->addAttribute('start', $item['start']);
+				$child->addAttribute('end', $item['end']);
+			}
+		}
+
+		$xml_string = $xml->asXML();
+		$xml_string = $this->format_xml($xml_string);
+
+		return $xml_string;		
+	}
+
+	private function format_xml( $xml ) {
+		$dom = new \DOMDocument('1.0', 'utf-8');
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = true;
+		$dom->loadXML( $xml );
+		return $dom->saveXML();
+	}
+
+	private function get_data($mode = 'flat')
+	{
 		$transcript = Transcript::get_transcript($this->episode->id);
 		$transcript = array_map(function ($t) {
 			return [
@@ -76,7 +114,7 @@ class Renderer {
 			$transcript = $transcript['items'];
 		}
 
-		return json_encode($transcript);			
+		return $transcript;
 	}
 
 	public function as_webvtt()

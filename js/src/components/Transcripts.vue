@@ -62,6 +62,7 @@
                 <a class="button button-secondary" :href="webvttDownloadHref" download="transcript.webvtt">Export webvtt</a>
                 <a class="button button-secondary" :href="jsonDownloadHref" download="transcript.json">Export json (flat)</a> 
                 <a class="button button-secondary" :href="jsonGroupedDownloadHref" download="transcript.json">Export json (grouped)</a> 
+                <a class="button button-secondary" :href="xmlDownloadHref" download="transcript.xml">Export xml</a> 
             </p>
         </div>
 
@@ -106,6 +107,12 @@ export default {
             const host = window.location.hostname;
 
             return "//" + host + "?p=" + post_id + "&podlove_transcript=json"
+        },
+        xmlDownloadHref: function() {
+            const post_id = document.querySelector('#post_ID').value
+            const host = window.location.hostname;
+
+            return "//" + host + "?p=" + post_id + "&podlove_transcript=xml"
         },
         jsonGroupedDownloadHref: function() {
             const post_id = document.querySelector('#post_ID').value

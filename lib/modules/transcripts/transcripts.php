@@ -176,7 +176,7 @@ class Transcripts extends \Podlove\Modules\Base {
 			return;
 
 		$format = filter_input(INPUT_GET, 'podlove_transcript', FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => "/^(json_grouped|json|webvtt)$/"]
+			'options' => ['regexp' => "/^(json_grouped|json|webvtt|xml)$/"]
 		]);
 
 		if ( ! $format )
@@ -188,6 +188,13 @@ class Transcripts extends \Podlove\Modules\Base {
 		$renderer = new Renderer($episode);
 
 		switch ($format) {
+			case 'xml':
+				header('Cache-Control: no-cache, must-revalidate');
+				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+				header("Content-Type: application/xml; charset=utf-8");
+				echo $renderer->as_xml();
+				exit;			
+			break;
 			case 'webvtt':
 				header('Cache-Control: no-cache, must-revalidate');
 				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
