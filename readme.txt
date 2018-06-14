@@ -65,6 +65,10 @@ Yes! The core features of Podlove Podcast Publisher are and always will be free.
 
 Yes! Podcast Downloads can be tracked and analyzed. You can easily see how many people downloaded you podcast episodes, which clients they used, if they prefer to subscribe to the feed or listen on your website using the web player—and much more.
 
+### Are there Privacy / GDPR considerations?
+
+Podlove Publisher is GDPR compliant and provides prewritten text snippets for your privacy page. See https://docs.podlove.org/podlove-publisher/guides/dsgvo-gdpr.html
+
 ### Where can I host my podcast files?
 
 Any storage where you have control over the file naming is compatible with Podlove Podcast Publisher. You can manage files using a simple FTP/sFTP or use services like Amazon S3.
