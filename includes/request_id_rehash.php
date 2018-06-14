@@ -116,10 +116,11 @@ function podlove_rehash_replace_request_id($table, $request_id)
 	$rehash = podlove_rehash_func($request_id, $salt);
 
 	$prepared = $wpdb->prepare(
-		"UPDATE $table SET request_id = %s WHERE request_id = %s",
+		"UPDATE $table SET request_id = %s WHERE request_id = %s AND accessed_at < \"%s\"",
 		[
 			$rehash,
-			$request_id
+			$request_id,
+			podlove_rehash_unsalted_time()
 		]
 	);
 	
@@ -139,14 +140,29 @@ function podlove_rehash_fetch_some_request_ids($table, $limit = null)
 	$sql = sprintf(
 		'SELECT DISTINCT request_id 
 		FROM `%s` 
-		WHERE request_id NOT LIKE "%s" 
+		WHERE 
+		  request_id NOT LIKE "%s" 
+		  AND accessed_at < "%s"
 		%s', 
 		$table, 
 		podlove_rehash_prefix() . "%",
+		podlove_rehash_unsalted_time(),
 		$limit_component
 	);
 
 	return $wpdb->get_col($sql);	
+}
+
+/**
+ * Returns upper time point for salting download intents.
+ * 
+ * @return string DateTime in mysql format
+ */
+function podlove_rehash_unsalted_time() {
+	$duration = strtotime("-1 day");
+	$duration = apply_filters("podlove_rehash_unsalted_duration", $duration);
+
+	return date("Y-m-d H:i:s", $duration);
 }
 
 function podlove_rehash_total_remaining($table)

@@ -103,6 +103,18 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.7 =
+
+Update 2.7.5 changed the way download tracking works to comply with GDPR. We tried the radical approach and anonymized IPs. As it turns out, this is not viable. Download numbers are skewed by this change and often much lower than they realistically should be. If you saw a drop in downloads since updating to 2.7.5 or 2.7.6, this is the reason.
+
+The good news is that this update changes download tracking again and new download numbers should get back to normal. The bad news is that the data since the GDPR update cannot be fixed/restored because it's missing data granularity -- which was the point of the change; just not anitcipating the effect on the actual download numbers.
+
+So what's the new tracking approach?
+
+Podlove Publisher now stores the `request_id` again just like before the update: a hash based on the actual IP address and the user agent. What's new is that now once a day, all `request_id`s older than 24 hours are salted again, making it impossible to restore IPs from them. This 24 hour window is enough to determine download numbers exactly as before the GDPR update.
+
+To be clear, IPs are never stored in plain text. But since IPs could be restored by brute force attack from the temporary unsalted `request_id` hashes, they have to be treated like plain IPs. The text snippet for your privacy page has been updated in the docs and you should update it on your site: https://docs.podlove.org/podlove-publisher/guides/dsgvo-gdpr.html
+
 = 2.7.6 =
 
 No changes.
