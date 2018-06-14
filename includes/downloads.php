@@ -2,7 +2,6 @@
 use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 use Podlove\Model;
 use Podlove\Geo_Ip;
-use geertw\IpAnonymizer\IpAnonymizer;
 
 add_action( 'wp', 'podlove_handle_media_file_download' );
 add_action( 'podlove_download_file', 'podlove_handle_media_file_tracking' );
@@ -59,13 +58,10 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 		\Podlove\Log::get()->addWarning( 'Could not use IP "' . $_SERVER['REMOTE_ADDR'] . '"' . $e->getMessage() );
 	}
 
-	// Generate a hash from IP address and UserAgent so we can identify
-	// identical requests without storing an IP address.
-	$truncated_ip = IpAnonymizer::anonymizeIp($ip_string);
 	if (function_exists('openssl_digest')) {
-		$intent->request_id = openssl_digest($truncated_ip . $ua_string, 'sha256');
+		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
 	} else {
-		$intent->request_id = sha1($truncated_ip . $ua_string);
+		$intent->request_id = sha1($ip_string . $ua_string);
 	}
 	
 	if (Geo_Ip::is_enabled()) {
