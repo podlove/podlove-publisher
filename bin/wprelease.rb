@@ -58,8 +58,8 @@ class Wprelease
 		die("Found no version number") unless @version.present?
 		die("Didn't find expected svn directory: #{@svn_dir}") unless File.directory?(@svn_dir)
 
-		puts "package composer for production"
-		system "composer install --no-dev"
+		# puts "package composer for production"
+		# system "composer install --no-dev"
 
 		puts "creating git tag ..."
 		system "git tag -a #{@version} -m 'version #{@version}'"
@@ -152,9 +152,9 @@ class Wprelease
 
 		system "svn commit -m 'release'"
 
-		puts "package composer again for development"
-		Dir.chdir @absolute_plugin_dir
-		system "composer install"
+		# puts "package composer again for development"
+		# Dir.chdir @absolute_plugin_dir
+		# system "composer install"
 	end
 
 	def determine_plugin_file
