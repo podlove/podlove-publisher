@@ -153,6 +153,7 @@ class Wprelease
 		system "svn commit -m 'release'"
 
 		puts "package composer again for development"
+		Dir.chdir @absolute_plugin_dir
 		system "composer install"
 	end
 
