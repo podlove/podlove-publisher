@@ -58,8 +58,8 @@ class Wprelease
 		die("Found no version number") unless @version.present?
 		die("Didn't find expected svn directory: #{@svn_dir}") unless File.directory?(@svn_dir)
 
-		# puts "package composer for production"
-		# system "composer install --no-dev"
+		puts "package composer for production"
+		system "composer install --no-dev -o"
 
 		puts "creating git tag ..."
 		system "git tag -a #{@version} -m 'version #{@version}'"
