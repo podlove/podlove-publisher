@@ -132,12 +132,10 @@ class Wprelease
 			system("svn commit -m 'remove deleted files' " + deleted_files.join(" ") )
 		end
 
-		if system("svn commit -m 'release'")
-			puts "create svn tag ..."
-			system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
-		else
-			puts "abort"
-		end
+		puts "create svn tag ..."
+		system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
+
+		system "svn commit -m 'release'"
 	end
 
 	def determine_plugin_file
