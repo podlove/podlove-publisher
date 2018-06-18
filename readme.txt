@@ -109,7 +109,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.7.8 =
 
-...
+* fix release workflow
+* slim down plugin size by removing unnecessary files from release
+* update Podlove Web Player 4
 
 = 2.7.7 =
 
