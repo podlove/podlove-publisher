@@ -3,9 +3,9 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 4.9.5
+Tested up to: 4.9.6
 Requires PHP: 5.4
-Stable tag: trunk
+Stable tag: 2.7.9
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -65,6 +65,10 @@ Yes! The core features of Podlove Podcast Publisher are and always will be free.
 
 Yes! Podcast Downloads can be tracked and analyzed. You can easily see how many people downloaded you podcast episodes, which clients they used, if they prefer to subscribe to the feed or listen on your website using the web player—and much more.
 
+### Are there Privacy / GDPR considerations?
+
+Podlove Publisher is GDPR compliant and provides prewritten text snippets for your privacy page. See https://docs.podlove.org/podlove-publisher/guides/dsgvo-gdpr.html
+
 ### Where can I host my podcast files?
 
 Any storage where you have control over the file naming is compatible with Podlove Podcast Publisher. You can manage files using a simple FTP/sFTP or use services like Amazon S3.
@@ -103,8 +107,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2018-06-01 =
+= 2018-06-28 =
 
+* included all changes from the 2.7.x branch
 * transcripts can now be exported as JSON grouped by speaker and a preliminary/inofficial XML format
 * Template API groups by speaker as well. Use this example template as base:
 
@@ -137,8 +142,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * jobs dashboard: add button to abort running jobs
 
 = 2018-05-04 =
-
-_2.7.5_
 
 **Preparation for GDPR/DSGVO**
 

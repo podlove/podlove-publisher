@@ -58,6 +58,9 @@ class Wprelease
 		die("Found no version number") unless @version.present?
 		die("Didn't find expected svn directory: #{@svn_dir}") unless File.directory?(@svn_dir)
 
+		puts "package composer for production"
+		system "composer install --no-dev -o"
+
 		puts "creating git tag ..."
 		system "git tag -a #{@version} -m 'version #{@version}'"
 		system "git push --tags"
@@ -72,14 +75,22 @@ class Wprelease
 			 @svn_dir,
 			 '.gitmodules',
 			 '.gitignore',
+			 '.github',
 			 '.tags',
+			 '.travis.yml',
 			 'tags',
 			 '.ctags',
 			 '.tags_sorted_by_file',
 			 'wprelease.yml',
 			 'podlove.sublime-workspace',
 			 'podlove.sublime-project',
+			 'publisher.sublime-workspace',
+			 'publisher.sublime-project',
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs',
+			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/samples',
+			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-1544x500.png',
+			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-772x250.png',
+			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/bigplay.psd',
 			 'vendor/bin',
 			 'vendor/vendor/guzzle/guzzle/tests',
 			 'vendor/phpunit/php-code-coverage',
@@ -104,7 +115,11 @@ class Wprelease
 			 'CONTRIBUTING.md',
 			 'composer.lock',
 			 'composer.json',
-			 'bower.json'
+			 'bower.json',
+			 'webpack.mix.js',
+			 'mix-manifest.json',
+			 'package-lock.json',
+			 'yarn.lock'
 		]
 
 		system "rsync ./ #{@svn_dir}/trunk --recursive " + excludes.map{|p| "--exclude=" + p}.join(" ") + " --delete --delete-excluded"
@@ -132,12 +147,14 @@ class Wprelease
 			system("svn commit -m 'remove deleted files' " + deleted_files.join(" ") )
 		end
 
-		if system("svn commit -m 'release'")
-			puts "create svn tag ..."
-			system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
-		else
-			puts "abort"
-		end
+		puts "create svn tag ..."
+		system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
+
+		system "svn commit -m 'release'"
+
+		# puts "package composer again for development"
+		# Dir.chdir @absolute_plugin_dir
+		# system "composer install"
 	end
 
 	def determine_plugin_file
