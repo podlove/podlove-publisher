@@ -3,6 +3,7 @@ namespace Podlove\Modules\Transcripts;
 
 use Podlove\Modules\Transcripts\Model\Transcript;
 use Podlove\Modules\Transcripts\Model\VoiceAssignment;
+use Podlove\Model\Episode;
 use Podlove\Model;
 
 use Podlove\Webvtt\Parser;
@@ -30,36 +31,15 @@ class Transcripts extends \Podlove\Modules\Base {
 			]);
 		});
 
-		add_filter('podlove_episode_data_before_save', function ($data) {
-
-			$post_id = get_the_ID();
-			$episode = Model\Episode::find_one_by_post_id($post_id);
-
-			if (!$episode) {
-				return $data;
-			}
-
-			VoiceAssignment::delete_for_episode($episode->id);
-
-			foreach ($data['transcript_voice'] as $voice => $id) {
-				if ($id > 0) {
-					$voice_assignment = new VoiceAssignment;
-					$voice_assignment->episode_id = $episode->id;
-					$voice_assignment->voice = $voice;
-					$voice_assignment->contributor_id = $id;
-					$voice_assignment->save();
-				}
-			}
-
-			// not saved in traditional way
-			unset($data['transcript_voice']); 
-			return $data;
-		});
+		add_filter('podlove_episode_data_before_save', [$this, 'save_episode_voice_assignments']);
 
 		add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
 
 		add_action('wp', [$this, 'serve_transcript_file']);
+
+		# external assets
 		add_action('podlove_asset_assignment_form', [$this, 'add_asset_assignment_form'], 10, 2);
+		add_action('podlove_media_file_content_has_changed', [$this, 'handle_changed_media_file']);
 
 		\Podlove\Template\Episode::add_accessor(
 			'transcript', array('\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'), 4
@@ -69,6 +49,34 @@ class Transcripts extends \Podlove\Modules\Base {
 	public function was_activated($module_name) {
 		Transcript::build();
 		VoiceAssignment::build();
+	}
+
+	public function save_episode_voice_assignments($data)
+	{
+		if (!$data['transcript_voice'])
+			return $data;
+
+		$post_id = get_the_ID();
+		$episode = Model\Episode::find_one_by_post_id($post_id);
+
+		if (!$episode)
+			return $data;
+
+		VoiceAssignment::delete_for_episode($episode->id);
+
+		foreach ($data['transcript_voice'] as $voice => $id) {
+			if ($id > 0) {
+				$voice_assignment = new VoiceAssignment;
+				$voice_assignment->episode_id = $episode->id;
+				$voice_assignment->voice = $voice;
+				$voice_assignment->contributor_id = $id;
+				$voice_assignment->save();
+			}
+		}
+
+		// not saved in traditional way
+		unset($data['transcript_voice']); 
+		return $data;		
 	}
 
 	public function extend_episode_form($form_data, $episode)
@@ -123,6 +131,33 @@ class Transcripts extends \Podlove\Modules\Base {
 
 		$content = file_get_contents($file['file']);
 
+		self::parse_and_import_webvtt($episode, $content);
+
+		wp_die();
+	}
+
+	/**
+	 * Import transcript from remote file
+	 */
+	public function transcript_import_from_asset(Episode $episode) {
+		$asset_assignment = Model\AssetAssignment::get_instance();
+
+		if (!$transcript_asset = Model\EpisodeAsset::find_one_by_id($asset_assignment->transcript))
+			return;
+
+		if (!$transcript_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $transcript_asset->id))
+			return;
+
+		$transcript = wp_remote_get($transcript_file->get_file_url());
+
+		if (is_wp_error($transcript))
+			return;
+
+		self::parse_and_import_webvtt($episode, $transcript['body']);
+	}
+
+	public static function parse_and_import_webvtt(Episode $episode, $content)
+	{
 		$parser = new Parser();
 
 		try {
@@ -144,8 +179,6 @@ class Transcripts extends \Podlove\Modules\Base {
 			$line->content    = $cue['text'];
 			$line->save();
 		}
-
-		wp_die();
 	}
 
 	public function ajax_transcript_get_contributors()
@@ -242,5 +275,31 @@ class Transcripts extends \Podlove\Modules\Base {
 			'label'   => __('Episode Transcript', 'podlove-podcasting-plugin-for-wordpress'),
 			'options' => $transcript_options
 		]);	
+	}
+
+	/**
+	 * When vtt media file changes, reimport transcripts.
+	 */
+	public function handle_changed_media_file($media_file_id)
+	{
+		$media_file = Model\MediaFile::find_by_id($media_file_id);
+
+		if (!$media_file)
+			return;
+
+		$asset = $media_file->episode_asset();
+
+		if (!$asset)
+			return;
+
+		$file_type = $asset->file_type();
+
+		if (!$file_type)
+			return;
+
+		if ($file_type->extension !== 'vtt')
+			return;
+
+		$this->transcript_import_from_asset($media_file->episode());
 	}
 }
