@@ -59,6 +59,7 @@ class Transcripts extends \Podlove\Modules\Base {
 		add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
 
 		add_action('wp', [$this, 'serve_transcript_file']);
+		add_action('podlove_asset_assignment_form', [$this, 'add_asset_assignment_form'], 10, 2);
 
 		\Podlove\Template\Episode::add_accessor(
 			'transcript', array('\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'), 4
@@ -220,5 +221,26 @@ class Transcripts extends \Podlove\Modules\Base {
 			$config['transcripts'] = get_permalink($episode->post_id) . '?podlove_transcript=json';
 		}
 		return $config;
+	}
+
+	public function add_asset_assignment_form($wrapper, $asset_assignment)
+	{
+		$transcript_options = [
+			'manual' => __('Manual Upload', 'podlove-podcasting-plugin-for-wordpress')
+		];
+
+		$episode_assets = Model\EpisodeAsset::all();
+		foreach ($episode_assets as $episode_asset) {
+			$file_type = $episode_asset->file_type();
+			if ($file_type && $file_type->extension === 'vtt') {
+				$transcript_options[$episode_asset->id]
+				  = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $episode_asset->title);
+			}
+		}
+
+		$wrapper->select('transcript', [
+			'label'   => __('Episode Transcript', 'podlove-podcasting-plugin-for-wordpress'),
+			'options' => $transcript_options
+		]);	
 	}
 }

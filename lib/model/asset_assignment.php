@@ -137,3 +137,4 @@ class AssetAssignment {
 
 AssetAssignment::property( 'image' );
 AssetAssignment::property( 'chapters' );
+AssetAssignment::property( 'transcript' );
