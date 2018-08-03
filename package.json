@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@podlove/podlove-web-player": "^4.1.2",
-    "laravel-mix": "^1.0",
+    "laravel-mix": "^2.1",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.1",
