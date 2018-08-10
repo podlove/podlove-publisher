@@ -23,7 +23,6 @@ jQuery(document).ready(function ($) {
 
 		p.downloads += v.downloads;
 
-		p.weekday = v.weekday;
 		p.asset_id = v.asset_id;
 		p.date = p.date && p.date < v.date ? p.date : v.date; // take first date in reduced set
 		p.client = v.client;
@@ -41,7 +40,6 @@ jQuery(document).ready(function ($) {
 	var reduceBaseFun = function () {
 		return {
 			downloads: 0,
-			weekday: 0,
 			asset_id: 0,
 			date: 0,
 			client: '',
@@ -114,11 +112,6 @@ jQuery(document).ready(function ($) {
 		// dimension: "hours since release"
 		var avgEpisodeHoursDimension = xfilterAvg.dimension(dimRelativeHoursSinceRelease);
 
-		// dimension: day of week
-		var dayOfWeekDimension = xfilter.dimension(function (d) {
-			return d.weekday;
-		});
-
 		// dimension: asset id
 		var assetDimension = xfilter.dimension(function (d) {
 			return d.asset_id;
@@ -183,9 +176,6 @@ jQuery(document).ready(function ($) {
 				return _cumulativeDownloadsGroup;
 			}
 		};
-
-		// group: downloads per weekday
-		var dayOfWeekGroup = dayOfWeekDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 
 		// group: downloads per asset
 		var assetsGroup = assetDimension.group().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
@@ -298,38 +288,6 @@ jQuery(document).ready(function ($) {
 			})
 			.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
 			.rightYAxisLabel('Cumulative Downloads');
-
-
-		var weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-		var weekdayChart = dc.rowChart('#episode-weekday-chart')
-			.margins({
-				top: 0,
-				left: 40,
-				right: 10,
-				bottom: 25
-			})
-			.group(dayOfWeekGroup)
-			.dimension(dayOfWeekDimension)
-			.elasticX(true)
-			.label(function (d) {
-				return weekdayNames[d.key];
-			})
-			.title(function (d) {
-				return d.value.downloads;
-			})
-			.valueAccessor(function (v) {
-				if (v.value) {
-					return v.value.downloads;
-				} else {
-					return 0;
-				}
-			})
-			.ordering(function (v) {
-				return -v.value.downloads;
-			})
-			.colors(chartColor)
-			.on('preRedraw', addPercentageLabels)
-			.on('renderlet', addResetFilter);;
 
 		var assetChart = dc.rowChart('#episode-asset-chart')
 			.margins({
@@ -498,7 +456,6 @@ jQuery(document).ready(function ($) {
 		rangeChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		compChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		compChart.rightYAxis().tickFormat(PODLOVE.Analytics.formatThousands);
-		weekdayChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		assetChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		clientChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		systemChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
@@ -506,7 +463,7 @@ jQuery(document).ready(function ($) {
 		contextChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		geoChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 
-		[compChart, rangeChart, weekdayChart, assetChart, clientChart, systemChart, sourceChart, contextChart, geoChart].forEach(function (chart) {
+		[compChart, rangeChart, assetChart, clientChart, systemChart, sourceChart, contextChart, geoChart].forEach(function (chart) {
 			chart.render();
 		});
 
@@ -620,7 +577,6 @@ jQuery(document).ready(function ($) {
 					return {
 						date: parsed_date,
 						downloads: +d.downloads,
-						weekday: parsed_date.getDay(),
 						hoursSinceRelease: +d.hours_since_release,
 						asset_id: +d.asset_id,
 						client: d.client ? d.client : 'Unknown',
