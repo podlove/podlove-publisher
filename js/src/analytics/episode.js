@@ -2,11 +2,15 @@
 
 'use strict';
 
+Number.isNaN = Number.isNaN || function(value) {     
+    return value !== value;
+}
+
 jQuery(document).ready(function($) {
 
 	var csvCurEpisodeRawData, csvAvgEpisodeRawData;
 
-	var titleDateFormat = d3.time.format('%Y-%m-%d %H:%M %Z');
+	var titleDateFormat = d3.timeFormat('%Y-%m-%d %H:%M %Z');
 
 	var episode_id = jQuery('#episode-performance-chart').data('episode');
 	var chart_width = $('#episode-performance-chart').closest('.inside').width();
@@ -98,7 +102,7 @@ jQuery(document).ready(function($) {
 
 		// dimension: "hours since release"
 		var hoursDimension = xfilter.dimension(dimRelativeHoursSinceRelease);
-
+		
 		// dimension: "hours since release"
 		var avgEpisodeHoursDimension = xfilterAvg.dimension(dimRelativeHoursSinceRelease);
 
@@ -193,6 +197,7 @@ jQuery(document).ready(function($) {
 		 * Charts
 		 */
 		var chartColor = '#69B3FF';
+		var compChart = dc.compositeChart('#episode-performance-chart')
 
 		var downloadsChart = dc.barChart(compChart)
 			.dimension(hoursDimension)
@@ -206,7 +211,7 @@ jQuery(document).ready(function($) {
 		;
 
 		var avgEpisodeDownloadsChart = dc.barChart(compChart)
-			.dimension(avgEpisodeHoursDimension)
+			.dimension(hoursDimension)
 			.group(avgDownloadsGroup, 'Average Episode')
 			.renderTitle(true)
 			.colors('#224BA6')
@@ -237,7 +242,7 @@ jQuery(document).ready(function($) {
 			.height(80)
 			.dimension(hoursDimension)
 			.group(downloadsGroup)
-			.x(d3.scale.linear().domain([0, rangeChartXAxisLength]))
+			.x(d3.scaleLinear().domain([0, rangeChartXAxisLength]))
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
@@ -245,12 +250,14 @@ jQuery(document).ready(function($) {
 			.yAxisLabel(' ') // to align yaxis with main chart
 		;
 
-		var compChart = dc.compositeChart('#episode-performance-chart')
+		window.rangeChart = rangeChart;
+
+		compChart
 			.width(chart_width)
-			.x(d3.scale.linear().domain([0, Infinity]))
+			.x(d3.scaleLinear().domain([0, Infinity]))
 			.legend(dc.legend().x(chart_width - 160).y(20).itemHeight(13).gap(5))
-			.elasticX(true)
-			.elasticY(true)
+			.elasticX(false)
+			// .elasticY(true)
 			.brushOn(false)
 			.transitionDuration(0) // turn off transitions
 			.yAxisLabel('Downloads')
@@ -274,9 +281,10 @@ jQuery(document).ready(function($) {
 					'Downloads: ' + d.value.downloads
 				].join('\n');
 			})
-			.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
+			.compose([cumulativeEpisodeChart, downloadsChart ,avgEpisodeDownloadsChart])
 			.rightYAxisLabel('Cumulative Downloads')
 		;
+
 
 		var weekdayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 		var weekdayChart = dc.rowChart('#episode-weekday-chart')
@@ -439,18 +447,30 @@ jQuery(document).ready(function($) {
 			chart.render();
 		});
 
+		var filterHours = function(min, max) {
+			dc.filterAll();
+			rangeChart.filter(dc.filters.RangedFilter(min / hours_per_unit, max / hours_per_unit))
+			dc.redrawAll();
+		}
+
+		window.filterHours = filterHours;
+
 		var renderBrush = function(chart, brush) {
 			chart.brush()
 				// set new brush range
-				.extent([
-					brush.min / hours_per_unit,
-					Math.min(
-						rangeChartXAxisLength,
-						brush.max / hours_per_unit
-					)
+				.extent(
+				[
+					[0,0], 
+					[
+						brush.min / hours_per_unit,
+						Math.min(
+							rangeChartXAxisLength,
+							brush.max / hours_per_unit
+						)
+					]
 				])
 				// send brush event to trigger redraw
-				.event(chart.select('g.brush'));
+				// .event(chart.select('g.brush'));
 		};
 		
 		// set range from 0 to 'one week' or 'everything' if the episode is younger than a week
@@ -460,37 +480,37 @@ jQuery(document).ready(function($) {
 			$('#chart-zoom-selection .button:eq(1)').addClass('active');
 		}
 
-		renderBrush(rangeChart, brush);
+		// renderBrush(rangeChart, brush);
 
 		// handle the user changing the brush manually
-		rangeChart.brush().on('brushend', function() {
-			var presetRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
+		// rangeChart.brush().on('brushend', function() {
+		// 	var presetRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
 
-			var extent = rangeChart.brush().extent();
-			brush.min = extent[0] * hours_per_unit;
-			brush.max = extent[1] * hours_per_unit;
+		// 	var extent = rangeChart.brush().extent();
+		// 	brush.min = extent[0] * hours_per_unit;
+		// 	brush.max = extent[1] * hours_per_unit;
 
-			// if startpoint is < 0, automatically shift brush to the right
-			if (brush.min < 0) {
-				brush.max -= brush.min;
-				brush.min = 0;
+		// 	// if startpoint is < 0, automatically shift brush to the right
+		// 	if (brush.min < 0) {
+		// 		brush.max -= brush.min;
+		// 		brush.min = 0;
 
-				renderBrush(rangeChart, brush);
-			}
+		// 		// renderBrush(rangeChart, brush);
+		// 	}
 
-			var brushMatchesPresetRange = function() {
-				return -1 === $.inArray(Math.round(brush.max - brush.min), presetRanges);
-			};
+		// 	var brushMatchesPresetRange = function() {
+		// 		return -1 === $.inArray(Math.round(brush.max - brush.min), presetRanges);
+		// 	};
 
-			var everythingIsSelected = function() {
-				return brush.min === 0 && brush.max === rangeChart.xUnitCount() * hours_per_unit;
-			};
+		// 	var everythingIsSelected = function() {
+		// 		return brush.min === 0 && brush.max === rangeChart.xUnitCount() * hours_per_unit;
+		// 	};
 
-			// clear selection if the user modifies selection
-			if (brushMatchesPresetRange() && !everythingIsSelected()) {
-				$('#chart-zoom-selection .button.active').removeClass('active');
-			}
-		});
+		// 	// clear selection if the user modifies selection
+		// 	if (brushMatchesPresetRange() && !everythingIsSelected()) {
+		// 		$('#chart-zoom-selection .button.active').removeClass('active');
+		// 	}
+		// });
 
 		$('#chart-zoom-selection .button').on('click', function(e) {
 			var hours = parseInt($(this).data('hours'), 10);
@@ -513,7 +533,7 @@ jQuery(document).ready(function($) {
 				brush.max = brush.min + hours;
 			}
 
-			renderBrush(rangeChart, brush);
+			filterHours(brush.min, brush.max)
 		});
 
 		if (options.rendered && options.rendered instanceof Function) {
@@ -547,8 +567,8 @@ jQuery(document).ready(function($) {
 					};
 				};
 
-				csvCurEpisodeRawData = d3.csv.parse(csvCurEpisode[0], csvMapper);
-				csvAvgEpisodeRawData = d3.csv.parse(csvAvgEpisode[0], function(d) {
+				csvCurEpisodeRawData = d3.csvParse(csvCurEpisode[0], csvMapper);
+				csvAvgEpisodeRawData = d3.csvParse(csvAvgEpisode[0], function(d) {
 					return {
 						hoursSinceRelease: +d.hoursSinceRelease,
 						downloads: +d.downloads
@@ -582,12 +602,14 @@ jQuery(document).ready(function($) {
 			hours_per_unit: unit_hours,
 			rendered: function() {
 				// check if zoom setting makes sense
-				if (zoom_hours !== 0 && (NaN === zoom_hours || zoom_hours < unit_hours)) {
+				if (zoom_hours !== 0 && (Number.isNaN(zoom_hours) || zoom_hours < unit_hours)) {
 					var fitting_zoom = $("#chart-zoom-selection a.button").filter(function() {
 						var h = parseInt($(this).data('hours'), 10);
 						return h === 0 || h >= unit_hours;
 					}).first().click();
-				};
+				} else {
+					$("#chart-zoom-selection a.button.active:first").click();
+				}
 			}
 		});
 

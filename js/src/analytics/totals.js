@@ -1,20 +1,16 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	var totalsRawData;
 
-	var titleDateFormat = d3.time.format("%Y-%m-%d %H:%M %Z");
-
-	var brush = { min: null, max: null };
-
 	var reduceAddFun = function (p, v) {
-		
+
 		p.downloads += v.downloads;
 
 		p.episode_id = v.episode_id;
-		p.date     = v.date;
+		p.date = v.date;
 
 		return p;
 	};
-	var reduceSubFun = function (p, v) { 
+	var reduceSubFun = function (p, v) {
 		p.downloads -= v.downloads;
 		return p;
 	};
@@ -33,19 +29,19 @@ jQuery(document).ready(function($) {
 		var total_downloads = all.value().downloads;
 
 		// dimension: "hours since release"
-		var dateDimension = xfilter.dimension(function(d) {
+		var dateDimension = xfilter.dimension(function (d) {
 			// return d.date;
-			return d3.time.day(d.date);
+			return d3.timeDay(d.date);
 		});
 
-		var episodeDimension = xfilter.dimension(function(d) {
+		var episodeDimension = xfilter.dimension(function (d) {
 			return d.episode_id;
 		});
-		var episodeGroup = episodeDimension.group().reduce(function(p, v) {
+		var episodeGroup = episodeDimension.group().reduce(function (p, v) {
 			p.downloads += v.downloads;
 			p.episode_id = v.episode_id;
 			return p;
-		}, null, function() {
+		}, null, function () {
 			return {
 				downloads: 0,
 				episode_id: 0,
@@ -81,7 +77,7 @@ jQuery(document).ready(function($) {
 			}
 		}, reduceBaseFun);
 
-		var filter_dimension_by_episode_id = function(dim, episode_id) {
+		var filter_dimension_by_episode_id = function (dim, episode_id) {
 			return dim.group().reduce(function (p, v) {
 				if (v.episode_id == episode_id) {
 					return reduceAddFun(p, v);
@@ -106,38 +102,33 @@ jQuery(document).ready(function($) {
 		/**
 		 * Charts
 		 */
-		// var chartColor = '#69B3FF';
-		
-		var daysAgo = function(days) {
-			return new Date(new Date().setDate(new Date().getDate()-days));
+		var daysAgo = function (days) {
+			return new Date(new Date().setDate(new Date().getDate() - days));
 		};
 
-		var titleDateFormat = d3.time.format("%Y-%m-%d");
+		var titleDateFormat = d3.timeFormat("%Y-%m-%d");
 
 		var downloadsChart = dc.barChart("#total-chart")
 			.width(chart_width)
 			.height(200)
 			.dimension(dateDimension)
 			.group(downloadsWithoutTopGroup, "Other Episodes")
-			.x(d3.time.scale().domain([daysAgo(28), new Date()]))
-			.xUnits(d3.time.days)
+			.x(d3.scaleTime().domain([daysAgo(28), new Date()]))
+			.xUnits(d3.timeDays)
 			.brushOn(false)
 			.renderTitle(true)
 			.elasticY(true)
 			.yAxisLabel("Downloads")
-			// .xAxisLabel("Last 28 days")
 			.valueAccessor(function (v) {
 				return v.value.downloads;
 			})
-			.title(function(d) {
+			.title(function (d) {
 				return [
 					titleDateFormat(d.key),
 					"Downloads: " + d.value.downloads
 				].join("\n");
 			})
-			// .colors(chartColor)
-			.renderHorizontalGridLines(true)
-		;
+			.renderHorizontalGridLines(true);
 
 		// responsive legend position
 		var legendWidth = 300;
@@ -163,17 +154,17 @@ jQuery(document).ready(function($) {
 		}
 
 		downloadsChart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
-		downloadsChart.xAxis().tickFormat(d3.time.format("%d %b"));
+		downloadsChart.xAxis().tickFormat(d3.timeFormat("%d %b"));
 
 		// responsive tick label amounts
 		if (chart_width < 550) {
-			downloadsChart.xAxis().ticks(d3.time.days, 5);
+			downloadsChart.xAxis().ticks(d3.timeDay, 5);
 		} else if (chart_width < 635) {
-			downloadsChart.xAxis().ticks(d3.time.days, 4);
+			downloadsChart.xAxis().ticks(d3.timeDay, 4);
 		} else if (chart_width < 780) {
-			downloadsChart.xAxis().ticks(d3.time.days, 3);
+			downloadsChart.xAxis().ticks(d3.timeDay, 3);
 		} else {
-			downloadsChart.xAxis().ticks(d3.time.days, 2);
+			downloadsChart.xAxis().ticks(d3.timeDay, 2);
 		}
 
 		downloadsChart.render();
@@ -187,9 +178,9 @@ jQuery(document).ready(function($) {
 		} else {
 			$.when(
 				$.ajax(ajaxurl + "?action=podlove-analytics-total-downloads-per-day")
-			).done(function(csvTotals) {
+			).done(function (csvTotals) {
 
-				var csvMapper = function(d) {
+				var csvMapper = function (d) {
 					var parsed_date = new Date(+d.date * 1000);
 
 					return {
@@ -199,7 +190,7 @@ jQuery(document).ready(function($) {
 					};
 				};
 
-				totalsRawData = d3.csv.parse(csvTotals, csvMapper);
+				totalsRawData = d3.csvParse(csvTotals, csvMapper);
 
 				render_episode_performance_chart();
 				$(window).on('resize', render_episode_performance_chart);
