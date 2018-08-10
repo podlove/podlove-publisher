@@ -156,7 +156,7 @@ class Enclosure {
 		$enclosure->file_type = Model\FileType::find_one_by_extension( $enclosure->extension );
 
 		if ( filter_var( $enclosure->url, FILTER_VALIDATE_URL ) === false  ) {
-			$this->errors[] = sprintf(
+			$enclosure->errors[] = sprintf(
 				'Invalid URL for enclosure in %s',
 				sprintf( '<a href="%s" target="_blank">%s</a>', get_edit_post_link( $enclosure->post_id ), get_the_title( $enclosure->post_id ) )
 			);
@@ -164,7 +164,7 @@ class Enclosure {
 		}
 
 		if ( ! $enclosure->file_type ) {
-			$errors[] = sprintf(
+			$enclosure->$errors[] = sprintf(
 				__( '<strong>Unknown extension "%s"</strong> in post %s If you want to migrate files with this extension, you need to create your own %sfile type%s', 'podlove-podcasting-plugin-for-wordpress' ),
 				$enclosure->extension,
 				sprintf( '<a href="%s" target="_blank">%s</a>', get_edit_post_link( $enclosure->post_id ), get_the_title( $enclosure->post_id ) ),

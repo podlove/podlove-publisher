@@ -74,10 +74,10 @@ class Analytics {
 		$tiles = [
 			'download_source'  => __("Download Source", 'podlove-podcasting-plugin-for-wordpress'),
 			'download_context' => __("Download Context", 'podlove-podcasting-plugin-for-wordpress'),
-			'day_of_week'      => __("Day of Week", 'podlove-podcasting-plugin-for-wordpress'),
 			'asset'            => __("Asset", 'podlove-podcasting-plugin-for-wordpress'),
 			'podcast_client'   => __("Podcast Client", 'podlove-podcasting-plugin-for-wordpress'),
-			'operating_system' => __("Operating System", 'podlove-podcasting-plugin-for-wordpress')
+			'operating_system' => __("Operating System", 'podlove-podcasting-plugin-for-wordpress'),
+			'geo_location'     => __("Client Location", 'podlove-podcasting-plugin-for-wordpress')
 		];
 
 		$option = get_option('podlove_analytics_tiles', array());
@@ -470,9 +470,9 @@ class Analytics {
 			</div>
 		</section>
 
-		<section id="episode-weekday-chart-wrapper" class="chart-wrapper" data-tile-id="day_of_week">
-			<div id="episode-weekday-chart">
-				<h1><?php _e('Day of Week', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
+		<section id="episode-geo-chart-wrapper" class="chart-wrapper" data-tile-id="geo_location">
+			<div id="episode-geo-chart">
+				<h1><?php _e('Client Location', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
 			</div>
 		</section>
 
@@ -534,9 +534,9 @@ class Analytics {
 
 		#episode-source-chart g.row text,
 		#episode-context-chart g.row text,
-		#episode-weekday-chart g.row text,
 		#episode-client-chart g.row text,
 		#episode-system-chart g.row text,
+		#episode-geo-chart g.row text,
 		#episode-asset-chart g.row text {
 			fill: black;
 		}

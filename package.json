@@ -9,13 +9,13 @@
   },
   "devDependencies": {
     "@podlove/podlove-web-player": "^4.1.2",
-    "laravel-mix": "^1.0",
+    "laravel-mix": "^2.1",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.1",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
-    "vue": "^2.5.13"
+    "vue": "^2.5.17"
   },
   "dependencies": {
     "npm": "^5.7.1",

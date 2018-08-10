@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 15);
@@ -1634,7 +1634,7 @@ if (document.getElementById('podlove-tools-dashboard')) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.5.16
+ * Vue.js v2.5.17
  * (c) 2014-2018 Evan You
  * Released under the MIT License.
  */
@@ -6723,7 +6723,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.5.16';
+Vue.version = '2.5.17';
 
 /*  */
 
@@ -15442,7 +15442,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -15511,12 +15511,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 var $ = jQuery;
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            jobs: []
+            jobs: [],
+            aborting: []
         };
     },
 
@@ -15541,6 +15549,16 @@ var $ = jQuery;
             }).always(function () {
                 window.setTimeout(_this.fetchJobData, 3000);
             });
+        },
+        abortJob: function abortJob(job) {
+            this.aborting.push(job.id);
+            $.getJSON(ajaxurl, {
+                action: 'podlove-job-delete',
+                job_id: job.id
+            });
+        },
+        isAborting: function isAborting(job) {
+            return this.aborting.includes(job.id);
         }
     },
 
@@ -15603,18 +15621,34 @@ var render = function() {
                   _vm._s(job.steps_total) +
                   " (" +
                   _vm._s(job.steps_percent) +
-                  "%)\n                    "
-              ),
-              job.steps_progress > 0
-                ? _c("span", [
-                    _c("i", { staticClass: "podlove-icon-spinner rotate" })
-                  ])
-                : _vm._e()
+                  "%)\n\n                "
+              )
             ]),
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(job.created_relative))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(job.last_progress))])
+            _c("td", [_vm._v(_vm._s(job.last_progress))]),
+            _vm._v(" "),
+            _c("td", [
+              _vm.isAborting(job)
+                ? _c("div", [
+                    _c("i", { staticClass: "podlove-icon-spinner rotate" })
+                  ])
+                : _c("div", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        on: {
+                          click: function($event) {
+                            _vm.abortJob(job)
+                          }
+                        }
+                      },
+                      [_vm._v("abort")]
+                    )
+                  ])
+            ])
           ])
         })
       )
@@ -15674,7 +15708,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Created")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Last Progress")])
+        _c("th", [_vm._v("Last Progress")]),
+        _vm._v(" "),
+        _c("th", { staticStyle: { width: "60px" } })
       ])
     ])
   },
@@ -15868,6 +15904,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -15907,6 +15945,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var host = window.location.hostname;
 
             return "//" + host + "?p=" + post_id + "&podlove_transcript=json";
+        },
+        xmlDownloadHref: function xmlDownloadHref() {
+            var post_id = document.querySelector('#post_ID').value;
+            var host = window.location.hostname;
+
+            return "//" + host + "?p=" + post_id + "&podlove_transcript=xml";
+        },
+        jsonGroupedDownloadHref: function jsonGroupedDownloadHref() {
+            var post_id = document.querySelector('#post_ID').value;
+            var host = window.location.hostname;
+
+            return "//" + host + "?p=" + post_id + "&podlove_transcript=json_grouped";
         }
     },
 
@@ -16222,7 +16272,28 @@ var render = function() {
               staticClass: "button button-secondary",
               attrs: { href: _vm.jsonDownloadHref, download: "transcript.json" }
             },
-            [_vm._v("Export json")]
+            [_vm._v("Export json (flat)")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "button button-secondary",
+              attrs: {
+                href: _vm.jsonGroupedDownloadHref,
+                download: "transcript.json"
+              }
+            },
+            [_vm._v("Export json (grouped)")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "button button-secondary",
+              attrs: { href: _vm.xmlDownloadHref, download: "transcript.xml" }
+            },
+            [_vm._v("Export xml")]
           )
         ])
       ]

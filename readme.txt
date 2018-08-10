@@ -107,11 +107,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2018-06-28 =
+= 2018-08-10 =
 
 * included all changes from the 2.7.x branch
 * transcripts can now be exported as JSON grouped by speaker and a preliminary/inofficial XML format
 * Template API groups by speaker as well. Use this example template as base:
+* Analytics:
+  * UI crash fix (Chrome)
+  * add client location chart
+  * remove weekday chart 
 
 ```
 <style type="text/css">

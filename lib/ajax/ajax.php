@@ -272,8 +272,19 @@ class Ajax {
 		$episode_id = isset($_GET['episode']) ? (int) $_GET['episode'] : 0;
 		$cache_key = 'podlove_analytics_dphx_' . $episode_id;
 
+		$locale = get_locale();
+		$known_langs = ['de', 'en', 'es', 'fr', 'ja', 'pt-BR', 'ru', 'zh-CN'];
+
+		$lang = "en";
+		foreach ($known_langs as $l) {
+			if (stristr($locale, $l) !== false) {
+				$lang = $l;
+				break;
+			}
+		}
+
 		$cache = \Podlove\Cache\TemplateCache::get_instance();
-		$content = $cache->cache_for($cache_key, function() use ($episode_id) {
+		$content = $cache->cache_for($cache_key, function() use ($episode_id, $lang) {
 			global $wpdb;
 
 			$sql = "SELECT
@@ -284,20 +295,54 @@ class Ajax {
 						client_name,
 						os_name AS system,
 						source,
-						context
+						context,
+						geo.type as t1,
+						geoname.name as tn1,
+						geo_p.type as t2,
+						geoname_p.name as tn2,
+						geo_pp.type as t3,
+						geoname_pp.name as tn3
 					FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						LEFT JOIN " . Model\UserAgent::table_name() . " ua ON ua.id = di.user_agent_id
+
+						LEFT JOIN " . Model\GeoArea::table_name() . " geo ON geo.id = di.`geo_area_id`
+						LEFT JOIN " . Model\GeoArea::table_name() . " geo_p ON geo_p.id = geo.parent_id
+						LEFT JOIN " . Model\GeoArea::table_name() . " geo_pp ON geo_pp.id = geo_p.parent_id
+						LEFT JOIN " . Model\GeoAreaName::table_name() . " geoname ON geoname.area_id = geo.`id` and geoname.language = \"$lang\"
+						LEFT JOIN " . Model\GeoAreaName::table_name() . " geoname_p ON geoname_p.area_id = geo_p.`id` and geoname_p.language = \"$lang\"
+						LEFT JOIN " . Model\GeoAreaName::table_name() . " geoname_pp ON geoname_pp.area_id = geo_pp.`id` and geoname_pp.language = \"$lang\"
+		
 						WHERE episode_id = $episode_id
 						GROUP BY hours_since_release, asset_id, client_name, system, source, context";
 
 			$results = $wpdb->get_results($sql, ARRAY_N);
 
-			$csv = '"downloads","date","hours_since_release","asset_id","client","system","source","context"' . "\n";
+			$csv = '"downloads","date","hours_since_release","asset_id","client","system","source","context","geo"' . "\n";
 			foreach ($results as $row) {
+
+				$geos = [
+					['type' => $row[8], 'name' => $row[9]],
+					['type' => $row[10], 'name' => $row[11]],
+					['type' => $row[12], 'name' => $row[13]]
+				];
+
+				unset($row[8], $row[9], $row[10], $row[11], $row[12], $row[13]);
+
+				$geo = array_filter($geos, function($g) {
+					return $g['type'] == 'country';
+				});
+				
+				if (count($geo)) {
+					$row[8] = reset($geo)['name'];
+				} else {
+					$row[8] = "";
+				}
+
 				$row[4] = '"' . $row[4] . '"';
 				$row[5] = '"' . $row[5] . '"';
+				$row[8] = '"' . $row[8] . '"';
 				$csv .= implode(",", $row) . "\n";
 			}
 
