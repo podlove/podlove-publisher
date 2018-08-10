@@ -476,6 +476,12 @@ class Analytics {
 			</div>
 		</section>
 
+		<section id="episode-geo-chart-wrapper" class="chart-wrapper" data-tile-id="download_geo">
+			<div id="episode-geo-chart">
+				<h1><?php _e('Download Location', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="#" class="reset" style="display: none"><small><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></small></a></h1>
+			</div>
+		</section>
+
 		<div style="clear: both"></div>
 
 		<script type="text/javascript">
@@ -537,6 +543,7 @@ class Analytics {
 		#episode-weekday-chart g.row text,
 		#episode-client-chart g.row text,
 		#episode-system-chart g.row text,
+		#episode-geo-chart g.row text,
 		#episode-asset-chart g.row text {
 			fill: black;
 		}
