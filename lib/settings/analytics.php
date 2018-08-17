@@ -81,6 +81,7 @@ class Analytics {
 		];
 
 		$option = get_option('podlove_analytics_tiles', array());
+		$option_compare_avg = get_option('podlove_analytics_compare_avg', true);
 
 		$status .= "
 		<h5>" . __('Show Analytics Tiles', 'podlove-podcasting-plugin-for-wordpress') . "</h5>
@@ -92,6 +93,18 @@ class Analytics {
 				$title
 			</label>";
 		}
+
+		$status .= "</div>";
+
+		$status .= "
+		<h5>" . __('Compare with Average Episode', 'podlove-podcasting-plugin-for-wordpress') . "</h5>
+		<div class='metabox-prefs'>";
+
+		$id = 'average-episode';
+		$status .= "<label for='$id'>
+			<input " . checked($option_compare_avg, true, false) . " type='checkbox' value='$id' name='podlove_analytics_compare_avg' id='$id' /> 
+			" . __("Display average episode data", 'podlove-podcasting-plugin-for-wordpress') . "
+		</label>";
 
 		$status .= "</div>";
 

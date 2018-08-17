@@ -13,3 +13,4 @@ doc
 Mix.json
 mix-manifest.json
 *.log
+.vscode

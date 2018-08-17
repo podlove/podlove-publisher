@@ -237,7 +237,13 @@ jQuery("#adv-settings input[type=checkbox]").on('change', function() {
 
 		$get_cron_info = function($cron_name) {
 			$next_cron = wp_next_scheduled($cron_name);
-			$interval  = wp_get_schedules()[wp_get_schedule($cron_name)]['interval'];
+			$schedules = wp_get_schedules();
+			$offset = wp_get_schedule($cron_name);
+			if (isset($schedules[$offset])) {
+				$interval  = $schedules[$offset]['interval'];
+			} else {
+				$interval = 0;
+			}
 			$prev_cron = $next_cron - $interval;
 
 			return [
