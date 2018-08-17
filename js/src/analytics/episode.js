@@ -19,6 +19,8 @@ jQuery(document).ready(function ($) {
 		max: null
 	};
 
+	let enableAvgEpisodeChart, disableAvgEpisodeChart;
+
 	var reduceAddFun = function (p, v) {
 
 		p.downloads += v.downloads;
@@ -463,6 +465,16 @@ jQuery(document).ready(function ($) {
 		contextChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 		geoChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 
+		enableAvgEpisodeChart = function () {
+			compChart.elasticY(true).compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
+			compChart.render()
+		};
+
+		disableAvgEpisodeChart = function () {
+			compChart.elasticY(true).compose([cumulativeEpisodeChart, downloadsChart])
+			compChart.render()
+		};
+
 		[compChart, rangeChart, assetChart, clientChart, systemChart, sourceChart, contextChart, geoChart].forEach(function (chart) {
 			chart.render();
 		});
@@ -475,62 +487,12 @@ jQuery(document).ready(function ($) {
 
 		window.filterHours = filterHours;
 
-		var renderBrush = function (chart, brush) {
-			chart.brush()
-				// set new brush range
-				.extent(
-					[
-						[0, 0],
-						[
-							brush.min / hours_per_unit,
-							Math.min(
-								rangeChartXAxisLength,
-								brush.max / hours_per_unit
-							)
-						]
-					])
-			// send brush event to trigger redraw
-			// .event(chart.select('g.brush'));
-		};
-
 		// set range from 0 to 'one week' or 'everything' if the episode is younger than a week
 		if (!brush.min && !brush.max) {
 			brush.min = 0;
 			brush.max = 7 * 24;
 			$('#chart-zoom-selection .button:eq(1)').addClass('active');
 		}
-
-		// renderBrush(rangeChart, brush);
-
-		// handle the user changing the brush manually
-		// rangeChart.brush().on('brushend', function() {
-		// 	var presetRanges = $('#chart-zoom-selection .button').map(function() { return $(this).data('hours'); });
-
-		// 	var extent = rangeChart.brush().extent();
-		// 	brush.min = extent[0] * hours_per_unit;
-		// 	brush.max = extent[1] * hours_per_unit;
-
-		// 	// if startpoint is < 0, automatically shift brush to the right
-		// 	if (brush.min < 0) {
-		// 		brush.max -= brush.min;
-		// 		brush.min = 0;
-
-		// 		// renderBrush(rangeChart, brush);
-		// 	}
-
-		// 	var brushMatchesPresetRange = function() {
-		// 		return -1 === $.inArray(Math.round(brush.max - brush.min), presetRanges);
-		// 	};
-
-		// 	var everythingIsSelected = function() {
-		// 		return brush.min === 0 && brush.max === rangeChart.xUnitCount() * hours_per_unit;
-		// 	};
-
-		// 	// clear selection if the user modifies selection
-		// 	if (brushMatchesPresetRange() && !everythingIsSelected()) {
-		// 		$('#chart-zoom-selection .button.active').removeClass('active');
-		// 	}
-		// });
 
 		$('#chart-zoom-selection .button').on('click', function (e) {
 			var hours = parseInt($(this).data('hours'), 10);
@@ -623,7 +585,7 @@ jQuery(document).ready(function ($) {
 			rendered: function () {
 				// check if zoom setting makes sense
 				if (zoom_hours !== 0 && (Number.isNaN(zoom_hours) || zoom_hours < unit_hours)) {
-					var fitting_zoom = $("#chart-zoom-selection a.button").filter(function () {
+					$("#chart-zoom-selection a.button").filter(function () {
 						var h = parseInt($(this).data('hours'), 10);
 						return h === 0 || h >= unit_hours;
 					}).first().click();
@@ -671,5 +633,36 @@ jQuery(document).ready(function ($) {
 			chart.hide();
 		}
 	});
+
+	const setAverageEpisodeSetting = function () {
+		if (typeof disableAvgEpisodeChart == "undefined") {
+			window.setTimeout(setAverageEpisodeSetting, 500);
+		} else {
+			const checked = $('#average-episode').attr('checked')
+
+			if (checked) {
+				enableAvgEpisodeChart()
+			} else {
+				disableAvgEpisodeChart()
+			}
+		}
+	}
+
+	const saveAverageEpisodeSetting = function () {
+		$.ajax({
+			url: ajaxurl,
+			data: {
+				action: 'podlove-analytics-settings-avg-update',
+				checked: $(this).attr('checked')
+			}
+		});
+	}
+
+	$('#average-episode')
+		.each(setAverageEpisodeSetting)
+		.on('click', function () {
+			saveAverageEpisodeSetting();
+			setAverageEpisodeSetting();
+		})
 
 });
