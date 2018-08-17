@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-08-17 =
+
+* merge changes from master / stable release
+
 = 2018-08-10 =
 
 * included all changes from the 2.7.x branch
