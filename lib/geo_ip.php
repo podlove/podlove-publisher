@@ -102,8 +102,8 @@ class Geo_Ip {
 		if (is_wp_error($tmpFile))
 			die($tmpFile->get_error_message());
 
-		if (file_exists(TAR_NAME)) {
-			unlink(TAR_NAME);
+		if (file_exists(self::TAR_NAME)) {
+			unlink(self::TAR_NAME);
 		}
 
 		try {
