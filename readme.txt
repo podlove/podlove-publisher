@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2018-08-17 =
 
 * merge changes from master / stable release
+* add template tag `contributor.avatar.html`; accepts same arguments as `image.html`
 
 = 2018-08-10 =
 
