@@ -8,6 +8,7 @@ class Geo_Ip {
 
 	const GEO_FILENAME   = 'GeoLite2-City_20180206/GeoLite2-City.mmdb';
 	const SOURCE_URL     = 'http://cdn.podlove.org/publisher/GeoLite2-City_20180206.tar.gz';
+	const TAR_NAME       = '/tmp/GeoLite2-City_20180206.tar';
 
 	/**
 	 * Register hooks.
@@ -100,6 +101,10 @@ class Geo_Ip {
 
 		if (is_wp_error($tmpFile))
 			die($tmpFile->get_error_message());
+
+		if (file_exists(TAR_NAME)) {
+			unlink(TAR_NAME);
+		}
 
 		try {
 			// decompress from gz
