@@ -72,6 +72,7 @@ class Wprelease
 		
 		excludes = [
 			'.git',
+			'.vscode',
 			 @svn_dir,
 			 '.gitmodules',
 			 '.gitignore',
