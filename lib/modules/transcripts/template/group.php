@@ -34,6 +34,28 @@ class Group extends Wrapper {
 	}
 
 	/**
+	 * Start time in ms
+	 *
+	 * @accessor
+	 */
+	public function start()
+	{
+		$first_line = reset($this->lines);
+		return $first_line->start();
+	}
+
+	/**
+	 * End time in ms
+	 *
+	 * @accessor
+	 */
+	public function end()
+	{
+		$last_line = end($this->lines);
+		return $last_line->end();
+	}
+
+	/**
 	 * Voice / Contributor
 	 *
 	 * @accessor
