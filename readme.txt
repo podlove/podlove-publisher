@@ -107,6 +107,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-08-19 =
+
+* add group.start, group.end template accessors
+* fix transcripts: don't rely on contributor identifier internally
+
 = 2018-08-17 =
 
 * merge changes from master / stable release
