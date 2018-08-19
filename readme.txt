@@ -109,7 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2018-08-19 =
 
-* add group.start, group.end template accessors
+* add `group.start`, `group.end` template accessors
 * fix transcripts: don't rely on contributor identifier internally
 
 = 2018-08-17 =
@@ -127,29 +127,27 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * add client location chart
   * remove weekday chart 
 
-```
-<style type="text/css">
-.ts-speaker { font-weight: bold; }
-.ts-items { margin-left: 20px; }
-.ts-time { font-size: small; color: #999; }
-</style>
-
-{% for group in episode.transcript %}
-  <div class="ts-group">
-
-    {% if group.contributor %}
-      <div class="ts-speaker">{{ group.contributor.name }}</div>
-    {% endif %}
-
-    <div class="ts-items">
-    {% for line in group.items %}
-      <span class="ts-time">{{ line.start }}&ndash;{{ line.end }}</span>
-      <div class="ts-content">{{ line.content }}</div>
+    <style type="text/css">
+    .ts-speaker { font-weight: bold; }
+    .ts-items { margin-left: 20px; }
+    .ts-time { font-size: small; color: #999; }
+    </style>
+    
+    {% for group in episode.transcript %}
+      <div class="ts-group">
+    
+        {% if group.contributor %}
+          <div class="ts-speaker">{{ group.contributor.name }}</div>
+        {% endif %}
+    
+        <div class="ts-items">
+        {% for line in group.items %}
+          <span class="ts-time">{{ line.start }}&ndash;{{ line.end }}</span>
+          <div class="ts-content">{{ line.content }}</div>
+        {% endfor %}
+        </div>
+      </div>
     {% endfor %}
-    </div>
-  </div>
-{% endfor %}
-```
 
 = 2018-05-23 =
 
@@ -219,24 +217,22 @@ _2.7.1_
 
 Transcripts can now be rendered using the Template API. Here's an example template to get started:
 
-```
-<style>
-.ts-line { margin-bottom: 5px; }
-.ts-line .time { font-family: monospace; }
-</style>
-
-{% for line in episode.transcript %}
- <div class="ts-line">
-     <small>
-     <span class="time">{{ line.start }}&ndash;{{ line.end }}</span>
-     {% if line.contributor %}
-       <strong>{{ line.contributor.name }}</strong>
-     {% endif %}
-     </small>
-     <div>{{ line.content }}</div>
- </div>
-{% endfor %}
-```
+    <style>
+    .ts-line { margin-bottom: 5px; }
+    .ts-line .time { font-family: monospace; }
+    </style>
+    
+    {% for line in episode.transcript %}
+     <div class="ts-line">
+         <small>
+         <span class="time">{{ line.start }}&ndash;{{ line.end }}</span>
+         {% if line.contributor %}
+           <strong>{{ line.contributor.name }}</strong>
+         {% endif %}
+         </small>
+         <div>{{ line.content }}</div>
+     </div>
+    {% endfor %}
 
 = 2018-03-23 =
 
