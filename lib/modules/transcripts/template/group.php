@@ -2,6 +2,7 @@
 namespace Podlove\Modules\Transcripts\Template;
 
 use Podlove\Template\Wrapper;
+use \Podlove\Modules\Contributors;
 
 /**
  * Transcript Group Template Wrapper
@@ -11,12 +12,12 @@ use Podlove\Template\Wrapper;
 class Group extends Wrapper {
 
 	private $lines;
-	private $contributor_identifier;
+	private $contributor_id;
 
-	public function __construct($lines, $contributor_identifier)
+	public function __construct($lines, $contributor_id)
 	{
 		$this->lines = $lines;
-		$this->contributor_identifier = $contributor_identifier;
+		$this->contributor_id = $contributor_id;
 	}
 
 	protected function getExtraFilterArgs() {
@@ -62,18 +63,14 @@ class Group extends Wrapper {
 	 */
 	public function contributor()
 	{
-		if (!$this->contributor_identifier) {
+		if (!$this->contributor_id)
 			return null;
-		}
 
-		$contributor = \Podlove\Modules\Contributors\Model\Contributor::find_one_by_property("identifier", $this->contributor_identifier);
+		$contributor = Contributors\Model\Contributor::find_by_id($this->contributor_id);
 
-		if (!$contributor) {
+		if (!$contributor)
 			return null;
-		}
 
-		return new \Podlove\Modules\Contributors\Template\Contributor(
-			$contributor
-		);
+		return new Contributors\Template\Contributor($contributor);
 	}
 }
