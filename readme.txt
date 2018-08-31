@@ -107,6 +107,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-08-31 =
+
+* merge changes from master / stable release
+* show some global charts over all time in analytics dashboard
+
 = 2018-08-19 =
 
 * add `group.start`, `group.end` template accessors
