@@ -237,6 +237,41 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
+	const renderSourcesChart = function (data) {
+		let xf = crossfilter(data)
+		var dimension = xf.dimension((d) => d.source);
+		var group = dimension.group().reduceSum((d) => d.downloads);
+		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
+
+		let chart = dc.rowChart('#analytics-chart-global-sources')
+			.margins({
+				top: 0,
+				left: 40,
+				right: 10,
+				bottom: 25
+			})
+			.elasticX(true)
+			.dimension(dimension) // set dimension
+			.group(group) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value;
+				} else {
+					return 0;
+				}
+			})
+			.ordering((v) => -v.value)
+			.othersGrouper(function (data) {
+				return data; // no 'others' group
+			})
+			.colors(chartColor)
+			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
+		// .on('renderlet', addResetFilter);
+
+		chart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		chart.render();
+	}
+
 	const renderClientsChart = function (data) {
 		let xf = crossfilter(data)
 		var dimension = xf.dimension((d) => d.client_name);
@@ -360,6 +395,24 @@ jQuery(document).ready(function ($) {
 			let assetData = d3.csvParse(csv, csvMapper);
 
 			renderSystemsChart(assetData);
+		});
+	}
+
+	if ($("#analytics-chart-global-sources").length) {
+		$.when(
+			$.ajax(ajaxurl + '?action=podlove-analytics-global-sources')
+		).done(function (csv) {
+
+			const csvMapper = function (d) {
+				return {
+					downloads: +d.downloads,
+					source: d.source ? d.source : 'Unknown'
+				}
+			}
+
+			let assetData = d3.csvParse(csv, csvMapper);
+
+			renderSourcesChart(assetData);
 		});
 	}
 });
