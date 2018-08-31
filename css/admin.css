@@ -1,5 +1,4 @@
 /* generic */
-
 input[type='color'] {
 	padding: 1px 2px;
 }
@@ -28,6 +27,7 @@ i.rotate {
 	from {
 		-o-transform: rotate(0deg);
 	}
+
 	to {
 		-o-transform: rotate(360deg);
 	}
@@ -37,6 +37,7 @@ i.rotate {
 	from {
 		-moz-transform: rotate(0deg);
 	}
+
 	to {
 		-moz-transform: rotate(360deg);
 	}
@@ -46,6 +47,7 @@ i.rotate {
 	from {
 		-ms-transform: rotate(0deg);
 	}
+
 	to {
 		-ms-transform: rotate(360deg);
 	}
@@ -55,6 +57,7 @@ i.rotate {
 	from {
 		-webkit-transform: rotate(0deg);
 	}
+
 	to {
 		-webkit-transform: rotate(360deg);
 	}
@@ -64,6 +67,7 @@ i.rotate {
 	from {
 		transform: rotate(0deg);
 	}
+
 	to {
 		transform: rotate(360deg);
 	}
@@ -111,7 +115,6 @@ a[data-podlove-help] {
 }
 
 /* Dashboard */
-
 div.podlove-dashboard-statistics-wrapper {
 	width: 49%;
 	display: inline-block;
@@ -144,14 +147,12 @@ table.podlove-dashboard-statistics td {
 }
 
 /* Dashboard in Sidebar */
-
 .inner-sidebar div.podlove-dashboard-statistics-wrapper {
 	width: 100%;
 	display: block;
 }
 
 /* Settings: Assets */
-
 .episode_assets.wp-list-table .column-move {
 	width: 50px;
 }
@@ -177,14 +178,12 @@ table#dashboard_feed_info td.center {
 }
 
 /* Support */
-
 .podlove_system_report {
 	font-family: monospace;
 	resize: none;
 }
 
 /* Media files */
-
 table.podlove_alternating th {
 	font-weight: bold;
 	padding: 1px;
@@ -245,7 +244,6 @@ table.podlove_alternating tr:nth-child(even) {
 }
 
 /* Episode */
-
 .row__podlove_meta_cover_art .podlove-media-upload-wrap>span {
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -288,7 +286,6 @@ table.podlove_alternating tr:nth-child(even) {
 }
 
 /* Contributors */
-
 #add_new_contributor_selector {
 	width: 250px;
 }
@@ -329,7 +326,6 @@ input.podlove-contributor-field {
 }
 
 /* Podlove Podcast License */
-
 #podlove_podcast_license_name,
 #podlove_podcast_license_url {
 	width: 400px;
@@ -383,7 +379,6 @@ label.podlove_cc_license_selector_label {
 }
 
 /* Podlove input field validation */
-
 .podlove-invalid-input {
 	border: 2px solid #c72a00 !important;
 }
@@ -403,7 +398,6 @@ label.podlove_cc_license_selector_label {
 }
 
 /* podcast post meta box */
-
 .media_file_table {
 	width: 100%;
 	border-bottom: 1px solid #999;
@@ -620,7 +614,6 @@ label.podlove_cc_license_selector_label {
 }
 
 /* podlove media upload */
-
 .podlove_preview_pic {
 	margin: 1px;
 	position: relative;
@@ -741,6 +734,7 @@ section.chart-wrapper div {
 #episode-system-chart g.row text,
 #episode-geo-chart g.row text,
 #episode-asset-chart g.row text,
+#analytics-chart-global-clients g.row text,
 #analytics-chart-global-assets g.row text {
 	fill: black;
 }

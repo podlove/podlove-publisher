@@ -56,7 +56,7 @@ PODLOVE.Analytics.hourFormat = function (hours) {
 	return label.join(" ");
 };
 
-PODLOVE.Analytics.addPercentageLabels = function (chart) {
+PODLOVE.Analytics.addPercentageLabels = function (chart, total) {
 	var data = chart.data();
 	var filters = chart.filters();
 
@@ -84,8 +84,8 @@ PODLOVE.Analytics.addPercentageLabels = function (chart) {
 			});
 		};
 
-		if (all.value().downloads > 0) {
-			text = Math.round(d.value.downloads / all.value().downloads * 100) + '%';
+		if (total > 0) {
+			text = Math.round(d.value / total * 100) + '%';
 		}
 
 		row.select('.subLabel').text(text);

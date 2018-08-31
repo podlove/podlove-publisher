@@ -295,6 +295,14 @@ class Analytics {
 							</div>
 						</section>
 
+						<section id="analytics-chart-global-clients-wrapper" class="chart-wrapper">
+							<div id="analytics-chart-global-clients">
+								<h1>
+									<?php _e('Download Clients', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</h1>
+							</div>
+						</section>
+
 						<div style="clear: both"></div>
 
 				</div>

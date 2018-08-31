@@ -209,6 +209,7 @@ jQuery(document).ready(function ($) {
 		let xf = crossfilter(data)
 		var assetDimension = xf.dimension((d) => d.asset);
 		var assetsGroup = assetDimension.group().reduceSum((d) => d.downloads);
+		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
 
 		let assetChart = dc.rowChart('#analytics-chart-global-assets')
 			.margins({
@@ -229,12 +230,49 @@ jQuery(document).ready(function ($) {
 			})
 			.ordering((v) => -v.value)
 			.colors(chartColor)
-			.on('renderlet', PODLOVE.Analytics.addPercentageLabels)
+			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
 		// .on('renderlet', addResetFilter);
 
 		assetChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
 
 		assetChart.render();
+	}
+
+	const renderClientsChart = function (data) {
+		let xf = crossfilter(data)
+		var clientDimension = xf.dimension((d) => d.client_name);
+		var clientsGroup = clientDimension.group().reduceSum((d) => d.downloads);
+		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
+
+		let clientChart = dc.rowChart('#analytics-chart-global-clients')
+			.margins({
+				top: 0,
+				left: 40,
+				right: 10,
+				bottom: 25
+			})
+			.elasticX(true)
+			.dimension(clientDimension) // set dimension
+			.group(clientsGroup) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value;
+				} else {
+					return 0;
+				}
+			})
+			.ordering((v) => -v.value)
+			.othersGrouper(function (data) {
+				return data; // no 'others' group
+			})
+			.colors(chartColor)
+			.cap(10)
+			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
+		// .on('renderlet', addResetFilter);
+
+		clientChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+
+		clientChart.render();
 	}
 
 	if ($("#analytics-chart-global-assets").length) {
@@ -252,6 +290,24 @@ jQuery(document).ready(function ($) {
 			let assetData = d3.csvParse(csvAssets, csvMapper);
 
 			renderAssetsChart(assetData);
+		});
+	}
+
+	if ($("#analytics-chart-global-clients").length) {
+		$.when(
+			$.ajax(ajaxurl + '?action=podlove-analytics-global-clients')
+		).done(function (csv) {
+
+			const csvMapper = function (d) {
+				return {
+					downloads: +d.downloads,
+					client_name: d.client_name ? d.client_name : 'Unknown'
+				}
+			}
+
+			let assetData = d3.csvParse(csv, csvMapper);
+
+			renderClientsChart(assetData);
 		});
 	}
 });

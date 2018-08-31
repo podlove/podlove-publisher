@@ -36,6 +36,7 @@ class Ajax {
 			'analytics-settings-tiles-update',
 			'analytics-settings-avg-update',
 			'analytics-global-assets',
+			'analytics-global-clients',
 			'episode-slug',
 			'admin-news',
 			'job-create',
@@ -534,6 +535,37 @@ class Ajax {
 
 		$csv = Writer::createFromFileObject(new \SplTempFileObject());
 		$csv->insertOne(['downloads', 'asset']);
+		$csv->insertAll($downloads);
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+		echo $csv;
+		ob_end_flush();
+		exit;
+	}
+
+	public static function analytics_global_clients()
+	{
+		global $wpdb;
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
+		$downloads = $wpdb->get_results("
+			SELECT
+			    count(di.id) downloads,
+			    ua.client_name
+			FROM
+			    " . Model\DownloadIntentClean::table_name() . " di
+			    JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
+			GROUP BY
+			    ua.client_name
+			ORDER BY
+			    downloads DESC;
+		", ARRAY_N);
+
+		$csv = Writer::createFromFileObject(new \SplTempFileObject());
+		$csv->insertOne(['downloads', 'client_name']);
 		$csv->insertAll($downloads);
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
