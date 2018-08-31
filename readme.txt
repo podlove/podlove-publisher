@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.4
 Tested up to: 4.9.8
 Requires PHP: 5.4
-Stable tag: 2.7.10
+Stable tag: 2.7.11
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.

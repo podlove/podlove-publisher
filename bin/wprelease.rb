@@ -87,6 +87,7 @@ class Wprelease
 			 'podlove.sublime-project',
 			 'publisher.sublime-workspace',
 			 'publisher.sublime-project',
+			 'js/admin/dc.js', # it's packaged in dist
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs',
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/samples',
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-1544x500.png',
