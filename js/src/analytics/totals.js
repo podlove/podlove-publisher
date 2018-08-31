@@ -202,4 +202,56 @@ jQuery(document).ready(function ($) {
 	if ($("#total-chart").length) {
 		load_episode_performance_chart();
 	}
+
+	var chartColor = '#69B3FF';
+
+	const renderAssetsChart = function (data) {
+		let xf = crossfilter(data)
+		var assetDimension = xf.dimension((d) => d.asset);
+		var assetsGroup = assetDimension.group().reduceSum((d) => d.downloads);
+
+		let assetChart = dc.rowChart('#analytics-chart-global-assets')
+			.margins({
+				top: 0,
+				left: 40,
+				right: 10,
+				bottom: 25
+			})
+			.elasticX(true)
+			.dimension(assetDimension) // set dimension
+			.group(assetsGroup) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value;
+				} else {
+					return 0;
+				}
+			})
+			.ordering((v) => -v.value)
+			.colors(chartColor)
+			.on('renderlet', PODLOVE.Analytics.addPercentageLabels)
+		// .on('renderlet', addResetFilter);
+
+		assetChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+
+		assetChart.render();
+	}
+
+	if ($("#analytics-chart-global-assets").length) {
+		$.when(
+			$.ajax(ajaxurl + '?action=podlove-analytics-global-assets')
+		).done(function (csvAssets) {
+
+			const csvMapper = function (d) {
+				return {
+					downloads: +d.downloads,
+					asset: d.asset ? d.asset : 'Unknown'
+				}
+			}
+
+			let assetData = d3.csvParse(csvAssets, csvMapper);
+
+			renderAssetsChart(assetData);
+		});
+	}
 });

@@ -49,7 +49,6 @@ mix.js('js/src/app.js', 'js/dist/')
         'js/dist/analytics.js'
     );
 
-
 // Full API
 // mix.js(src, output);
 // mix.react(src, output); <-- Identical to mix.js(), but registers React Babel compilation.

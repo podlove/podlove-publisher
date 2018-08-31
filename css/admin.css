@@ -1,4 +1,5 @@
 /* generic */
+
 input[type='color'] {
 	padding: 1px 2px;
 }
@@ -22,25 +23,50 @@ i.rotate {
 	-o-animation: Rotate 500ms infinite linear;
 	animation: Rotate 500ms infinite linear;
 }
+
 @-o-keyframes Rotate {
-  from {-o-transform:rotate(0deg);}
-  to {-o-transform:rotate(360deg);}
+	from {
+		-o-transform: rotate(0deg);
+	}
+	to {
+		-o-transform: rotate(360deg);
+	}
 }
+
 @-moz-keyframes Rotate {
- from {-moz-transform:rotate(0deg);}
- to {-moz-transform:rotate(360deg);}
+	from {
+		-moz-transform: rotate(0deg);
+	}
+	to {
+		-moz-transform: rotate(360deg);
+	}
 }
+
 @-ms-keyframes Rotate {
-  from {-ms-transform:rotate(0deg);}
-  to {-ms-transform:rotate(360deg);}
+	from {
+		-ms-transform: rotate(0deg);
+	}
+	to {
+		-ms-transform: rotate(360deg);
+	}
 }
+
 @-webkit-keyframes Rotate {
-  from {-webkit-transform:rotate(0deg);}
-  to {-webkit-transform:rotate(360deg);}
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
 }
+
 @-keyframes Rotate {
-  from { transform:rotate(0deg);}
-  to { transform:rotate(360deg);}
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 ul.podlove-disc-list {
@@ -53,17 +79,36 @@ ul.podlove-disc-list {
 	padding-left: 15px;
 }
 
-.clickable { cursor: pointer; }
+.clickable {
+	cursor: pointer;
+}
 
-.podlove-icon-ok     { color: green; }
-.podlove-icon-remove { color: red; }
-.podlove-icon-minus  { color: #999; }
-.podlove-contributor-edit, 
-.podlove-contributor-create { text-decoration: none; margin-left: 6px; vertical-align: middle; }
+.podlove-icon-ok {
+	color: green;
+}
 
-.podlove-contributor-edit { display: none; }
+.podlove-icon-remove {
+	color: red;
+}
 
-a[data-podlove-help] { text-decoration: none; }
+.podlove-icon-minus {
+	color: #999;
+}
+
+.podlove-contributor-edit,
+.podlove-contributor-create {
+	text-decoration: none;
+	margin-left: 6px;
+	vertical-align: middle;
+}
+
+.podlove-contributor-edit {
+	display: none;
+}
+
+a[data-podlove-help] {
+	text-decoration: none;
+}
 
 /* Dashboard */
 
@@ -78,7 +123,8 @@ td.podlove-dashboard-number-column {
 	padding-right: 10px;
 }
 
-td.podlove-dashboard-number-column a, td.podlove-dashboard-number-column a:visited {
+td.podlove-dashboard-number-column a,
+td.podlove-dashboard-number-column a:visited {
 	text-decoration: none;
 }
 
@@ -105,9 +151,11 @@ table.podlove-dashboard-statistics td {
 }
 
 /* Settings: Assets */
+
 .episode_assets.wp-list-table .column-move {
 	width: 50px;
 }
+
 .episode_assets.wp-list-table .column-downloadable {
 	width: 100px;
 }
@@ -115,6 +163,7 @@ table.podlove-dashboard-statistics td {
 .feeds.wp-list-table .column-move {
 	width: 50px;
 }
+
 .feeds.wp-list-table .column-discoverable {
 	width: 100px;
 }
@@ -128,12 +177,14 @@ table#dashboard_feed_info td.center {
 }
 
 /* Support */
+
 .podlove_system_report {
 	font-family: monospace;
 	resize: none;
 }
 
 /* Media files */
+
 table.podlove_alternating th {
 	font-weight: bold;
 	padding: 1px;
@@ -143,36 +194,51 @@ table.podlove_alternating {
 	width: 100%;
 	border-bottom: 1px solid #999;
 }
+
 table.podlove_alternating th {
 	text-align: left;
 	border-bottom: 1px solid #999;
 }
+
 table.podlove_alternating td {
 	padding: 5px;
 	height: 24px;
 }
+
 table.podlove_alternating tr:nth-child(even) {
 	background: #EAEAEA;
 }
+
 .base_url {
 	color: #777;
 	font-size: 0.9em;
 }
+
 .media_file_row .enable {
 	text-align: center;
 }
+
 .subtitle_warning {
 	float: left;
 	font-weight: bold;
 	padding-right: 10px;
 }
+
 .subtitle_warning .close {
 	cursor: pointer;
 }
 
-.media_file_row .enable { width: 45px; }
-.media_file_row .size   { width: 130px; }
-.media_file_row .update { width: 90px; }
+.media_file_row .enable {
+	width: 45px;
+}
+
+.media_file_row .size {
+	width: 130px;
+}
+
+.media_file_row .update {
+	width: 90px;
+}
 
 .row__podlove_meta_episode_assets label[for=_podlove_meta_episode_assets] {
 	padding-bottom: 0;
@@ -180,39 +246,39 @@ table.podlove_alternating tr:nth-child(even) {
 
 /* Episode */
 
-.row__podlove_meta_cover_art .podlove-media-upload-wrap > span {
+.row__podlove_meta_cover_art .podlove-media-upload-wrap>span {
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
 }
 
-.row__podlove_meta_cover_art .podlove-media-upload-wrap > span input {
+.row__podlove_meta_cover_art .podlove-media-upload-wrap>span input {
 	-webkit-flex: initial;
-	    -ms-flex: initial;
-	        flex: initial;
+	-ms-flex: initial;
+	flex: initial;
 	width: 100%;
 	min-width: 100px;
 }
 
-.row__podlove_meta_cover_art .podlove-media-upload-wrap > span a {
+.row__podlove_meta_cover_art .podlove-media-upload-wrap>span a {
 	margin-left: 10px;
 }
 
-.row__podlove_meta_duration > div > div {
+.row__podlove_meta_duration>div>div {
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
 }
 
-.row__podlove_meta_duration > div > div input {
+.row__podlove_meta_duration>div>div input {
 	-webkit-flex: initial;
-	    -ms-flex: initial;
-	        flex: initial;
+	-ms-flex: initial;
+	flex: initial;
 	width: 100%;
 	min-width: 100px;
 }
 
-.row__podlove_meta_duration > div > div a.button {
+.row__podlove_meta_duration>div>div a.button {
 	margin-left: 10px;
 }
 
@@ -222,6 +288,7 @@ table.podlove_alternating tr:nth-child(even) {
 }
 
 /* Contributors */
+
 #add_new_contributor_selector {
 	width: 250px;
 }
@@ -234,7 +301,7 @@ table.podlove_alternating tr:nth-child(even) {
 
 #contributors_table_body select {
 	width: 180px;
-}	
+}
 
 #contributors_table_body td {
 	height: 40px !important;
@@ -243,7 +310,7 @@ table.podlove_alternating tr:nth-child(even) {
 span.contributor_remove,
 span.episode_relation_remove {
 	font-size: 1.6em;
-}	
+}
 
 tr.row_podlove_feed_protection_password,
 tr.row_podlove_feed_protection_user,
@@ -268,7 +335,9 @@ input.podlove-contributor-field {
 	width: 400px;
 }
 
-div.podlove_cc_license, div.podlove_license, .podlove_podcast_license_image {
+div.podlove_cc_license,
+div.podlove_license,
+.podlove_podcast_license_image {
 	display: block;
 	width: 300px;
 	text-align: center;
@@ -339,6 +408,7 @@ label.podlove_cc_license_selector_label {
 	width: 100%;
 	border-bottom: 1px solid #999;
 }
+
 .media_file_table th {
 	text-align: left;
 	border-bottom: 1px solid #999;
@@ -357,19 +427,24 @@ label.podlove_cc_license_selector_label {
 	padding: 5px;
 	height: 24px;
 }
+
 .media_file_table tr:nth-child(even) {
 	background: #EAEAEA;
 }
 
-.podlove-div-wrapper-form > div > span > label {
+.podlove-div-wrapper-form>div>span>label {
 	display: inline-block;
 	padding: 15px 0 6px 0;
 	font-size: 1.2em;
 }
-.podlove-div-wrapper-form textarea, .podlove-div-wrapper-form input[type=text], .podlove-div-wrapper-form select {
+
+.podlove-div-wrapper-form textarea,
+.podlove-div-wrapper-form input[type=text],
+.podlove-div-wrapper-form select {
 	margin: 0px;
 	width: 100%;
 }
+
 .podlove-div-wrapper-form .character_counter {
 	text-align: right;
 	float: right;
@@ -387,7 +462,8 @@ label.podlove_cc_license_selector_label {
 	text-decoration: none;
 }
 
-#template-editor a:focus, #template-editor a:active {
+#template-editor a:focus,
+#template-editor a:active {
 	outline: 0;
 }
 
@@ -545,13 +621,17 @@ label.podlove_cc_license_selector_label {
 
 /* podlove media upload */
 
-.podlove_preview_pic { 
+.podlove_preview_pic {
 	margin: 1px;
 	position: relative;
 	min-height: 40px;
 	display: none;
 }
-.podlove_preview_pic img { border: 1px solid #ddd; }
+
+.podlove_preview_pic img {
+	border: 1px solid #ddd;
+}
+
 .podlove_preview_pic .podlove_reset_image {
 	position: absolute;
 	bottom: 5px;
@@ -560,7 +640,7 @@ label.podlove_cc_license_selector_label {
 
 .analytics-metric-container {
 	display: flex;
-    justify-content: center;
+	justify-content: center;
 	flex-wrap: wrap;
 	align-items: center;
 }
@@ -570,7 +650,8 @@ label.podlove_cc_license_selector_label {
 	margin: 10px 20px;
 	min-width: 120px;
 }
-.analytics-metric-box > span {
+
+.analytics-metric-box>span {
 	font-size: 23px;
 	line-height: 23px;
 	display: block;
@@ -598,10 +679,68 @@ label.podlove_cc_license_selector_label {
 }
 
 .downloads .dashicons {
-    font-size: 13px;
-    line-height: 1.5em;
+	font-size: 13px;
+	line-height: 1.5em;
 }
 
 .wp-list-table .column-episode_number {
-    width: 30px;
+	width: 30px;
+}
+
+section.chart-wrapper {
+	float: left;
+	height: 320px;
+}
+
+section.chart-wrapper h1 {
+	font-size: 14px;
+	margin-left: 10px;
+}
+
+section.chart-wrapper div {
+	width: 285px;
+	height: 285px;
+}
+
+.chart-wrapper h1,
+.chart-wrapper h1 small {
+	line-height: 19px;
+	height: 19px;
+}
+
+.chart-wrapper h1 a {
+	text-decoration: none;
+}
+
+.chart-menubar:first-child {
+	float: right;
+}
+
+.chart-menubar:last-child {
+	float: left;
+}
+
+.chart-menubar span {
+	line-height: 26px;
+}
+
+#episode-performance-chart {
+	float: none;
+	height: 250px
+}
+
+#episode-range-chart {
+	float: none;
+	height: 80px;
+	margin-top: -15px;
+}
+
+#episode-source-chart g.row text,
+#episode-context-chart g.row text,
+#episode-client-chart g.row text,
+#episode-system-chart g.row text,
+#episode-geo-chart g.row text,
+#episode-asset-chart g.row text,
+#analytics-chart-global-assets g.row text {
+	fill: black;
 }

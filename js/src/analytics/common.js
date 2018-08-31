@@ -55,3 +55,39 @@ PODLOVE.Analytics.hourFormat = function (hours) {
 
 	return label.join(" ");
 };
+
+PODLOVE.Analytics.addPercentageLabels = function (chart) {
+	var data = chart.data();
+	var filters = chart.filters();
+
+	data.forEach(function (d, index) {
+		var row = chart.select('g.row._' + index);
+		var label = chart.select('g.row._' + index + ' text');
+		var text = '';
+
+		if (!row.select('.subLabel').size()) {
+			row.append('text')
+				.attr('class', 'subLabel')
+				.attr('text-anchor', 'end')
+				.attr('x', -10)
+				.attr('y', label.attr('y'));
+		}
+
+		// when a filter is set, only show active rows
+		if (filters.length > 0 && $.inArray(d.key, filters) === -1) {
+			row.select('.subLabel').style({
+				'display': 'none'
+			});
+		} else {
+			row.select('.subLabel').style({
+				'display': 'inherit'
+			});
+		};
+
+		if (all.value().downloads > 0) {
+			text = Math.round(d.value.downloads / all.value().downloads * 100) + '%';
+		}
+
+		row.select('.subLabel').text(text);
+	});
+};

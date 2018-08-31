@@ -2,6 +2,7 @@
 namespace Podlove\AJAX;
 
 use \Podlove\Model;
+use League\Csv\Writer;
 
 class Ajax {
 
@@ -34,6 +35,7 @@ class Ajax {
 			'analytics-episode-average-downloads-per-hour',
 			'analytics-settings-tiles-update',
 			'analytics-settings-avg-update',
+			'analytics-global-assets',
 			'episode-slug',
 			'admin-news',
 			'job-create',
@@ -450,6 +452,94 @@ class Ajax {
 		header( 'Content-type: application/json' );
 		echo json_encode( $result );
 		die();
+	}
+
+// SELECT
+//     count(id) downloads,
+//     source
+// FROM
+//     wp_podlove_downloadintentclean
+// GROUP BY
+//     source
+// ORDER BY
+//     downloads DESC;
+
+// SELECT
+//     count(id) downloads,
+//     CONCAT(source, "/", context)
+// FROM
+//     wp_podlove_downloadintentclean
+// GROUP BY
+//     source,
+//     context
+// ORDER BY
+//     downloads DESC;
+
+// SELECT
+//     count(di.id) downloads,
+//     t.name
+// FROM
+//     wp_podlove_downloadintentclean di
+//     JOIN `wp_podlove_mediafile` f ON f.id = di.`media_file_id`
+//     JOIN `wp_podlove_episodeasset` a ON a.id = f.`episode_asset_id`
+//     JOIN `wp_podlove_filetype` t ON t.id = a.`file_type_id`
+// GROUP BY
+//     t.id
+// ORDER BY
+//     downloads DESC;
+
+// SELECT
+//     count(di.id) downloads,
+//     ua.client_name
+// FROM
+//     wp_podlove_downloadintentclean di
+//     JOIN `wp_podlove_useragent` ua ON ua.id = di.`user_agent_id`
+// GROUP BY
+//     ua.client_name
+// ORDER BY
+//     downloads DESC;
+    
+// SELECT
+//     count(di.id) downloads,
+//     ua.os_name
+// FROM
+//     wp_podlove_downloadintentclean di
+//     JOIN `wp_podlove_useragent` ua ON ua.id = di.`user_agent_id`
+// GROUP BY
+//     ua.`os_name`
+// ORDER BY
+//     downloads DESC;
+
+	public static function analytics_global_assets()
+	{
+		global $wpdb;
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
+		$downloads = $wpdb->get_results("
+			SELECT
+				count(di.id) downloads, t.name
+			FROM
+				" . Model\DownloadIntentClean::table_name() . " di
+				JOIN `" . Model\MediaFile::table_name() . "` f ON f.id = di.`media_file_id`
+				JOIN `" . Model\EpisodeAsset::table_name() . "` a ON a.id = f.`episode_asset_id`
+				JOIN `" . Model\FileType::table_name() . "` t ON t.id = a.`file_type_id`
+			GROUP BY
+				t.id
+			ORDER BY
+				downloads DESC;
+		", ARRAY_N);
+
+		$csv = Writer::createFromFileObject(new \SplTempFileObject());
+		$csv->insertOne(['downloads', 'asset']);
+		$csv->insertAll($downloads);
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+		echo $csv;
+		ob_end_flush();
+		exit;
 	}
 
 	public function podcast() {

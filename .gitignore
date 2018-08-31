@@ -2,6 +2,7 @@
 .tags*
 .wordpress_release
 *.sublime-*
+*.code-workspace
 wprelease.yml
 composer.phar
 node_modules/*

@@ -16,7 +16,8 @@
         "phpunit/php-timer": "~1.0",
         "podlove/webvtt-parser": "^1.1",
         "geertw/ip-anonymizer": "^1.1",
-        "dariuszp/cli-progress-bar": "^1.0"
+        "dariuszp/cli-progress-bar": "^1.0",
+        "league/csv": "^7.2"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",

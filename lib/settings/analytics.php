@@ -279,6 +279,27 @@ class Analytics {
 				</div>
 			</div>
 		</div>
+
+		<div class="metabox-holder">
+			<div class="postbox">
+				<h2 class="hndle" style="cursor: inherit;"><?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
+				<div class="inside">
+
+						<div style="float: none"></div>
+
+						<section id="analytics-chart-global-assets-wrapper" class="chart-wrapper">
+							<div id="analytics-chart-global-assets">
+								<h1>
+									<?php _e('Download Asset', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</h1>
+							</div>
+						</section>
+
+						<div style="clear: both"></div>
+
+				</div>
+			</div>
+		</div>
 		
 		<?php
 		$this->table->prepare_items();
@@ -502,59 +523,6 @@ class Analytics {
 			);
 		?>;
 		</script>
-
-		<style type="text/css">
-		section.chart-wrapper {
-			float: left;
-			height: 320px;
-		}
-
-		section.chart-wrapper h1 {
-			font-size: 14px;
-			margin-left: 10px;
-		}
-
-		section.chart-wrapper div {
-			width: 285px;
-			height: 285px;
-		}
-
-		.chart-wrapper h1, 
-		.chart-wrapper h1 small {
-			line-height: 19px;
-			height: 19px;
-		}
-
-		.chart-wrapper h1 a {
-			text-decoration: none;
-		}
-
-		.chart-menubar:first-child { float: right; }
-		.chart-menubar:last-child  { float: left; }
-
-		.chart-menubar span { line-height: 26px; }
-
-		#episode-performance-chart {
-			float: none;
-			height: 250px
-		}
-
-		#episode-range-chart {
-			float: none;
-			height: 80px;
-			margin-top: -15px;
-		}
-
-		#episode-source-chart g.row text,
-		#episode-context-chart g.row text,
-		#episode-client-chart g.row text,
-		#episode-system-chart g.row text,
-		#episode-geo-chart g.row text,
-		#episode-asset-chart g.row text {
-			fill: black;
-		}
-		</style>
-
 		<?php
 	}
 
