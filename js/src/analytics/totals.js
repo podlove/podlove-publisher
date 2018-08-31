@@ -344,10 +344,10 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
-	if ($("#analytics-chart-global-assets").length) {
+	$("#analytics-chart-global-assets").each(function () {
 		$.when(
 			$.ajax(ajaxurl + '?action=podlove-analytics-global-assets')
-		).done(function (csvAssets) {
+		).done((csvAssets) => {
 
 			const csvMapper = function (d) {
 				return {
@@ -358,14 +358,16 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csvAssets, csvMapper);
 
+			$(".chart-loading", this).remove();
+
 			renderAssetsChart(assetData);
 		});
-	}
+	})
 
-	if ($("#analytics-chart-global-clients").length) {
+	$("#analytics-chart-global-clients").each(function () {
 		$.when(
 			$.ajax(ajaxurl + '?action=podlove-analytics-global-clients')
-		).done(function (csv) {
+		).done((csv) => {
 
 			const csvMapper = function (d) {
 				return {
@@ -376,14 +378,16 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
+			$(".chart-loading", this).remove();
+
 			renderClientsChart(assetData);
 		});
-	}
+	})
 
-	if ($("#analytics-chart-global-systems").length) {
+	$("#analytics-chart-global-systems").each(function () {
 		$.when(
 			$.ajax(ajaxurl + '?action=podlove-analytics-global-systems')
-		).done(function (csv) {
+		).done((csv) => {
 
 			const csvMapper = function (d) {
 				return {
@@ -394,14 +398,16 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
+			$(".chart-loading", this).remove();
+
 			renderSystemsChart(assetData);
 		});
-	}
+	})
 
-	if ($("#analytics-chart-global-sources").length) {
+	$("#analytics-chart-global-sources").each(function () {
 		$.when(
 			$.ajax(ajaxurl + '?action=podlove-analytics-global-sources')
-		).done(function (csv) {
+		).done((csv) => {
 
 			const csvMapper = function (d) {
 				return {
@@ -412,7 +418,10 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
+			$(".chart-loading", this).remove();
+
 			renderSourcesChart(assetData);
 		});
-	}
+	})
+
 });

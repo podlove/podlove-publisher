@@ -292,6 +292,10 @@ class Analytics {
 								<h1>
 									<?php _e('Episode Asset', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
+
+								<div class="chart-loading">
+									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+								</div>
 							</div>
 						</section>
 
@@ -300,6 +304,10 @@ class Analytics {
 								<h1>
 									<?php _e('Podcast Client', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
+
+								<div class="chart-loading">
+									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+								</div>
 							</div>
 						</section>
 
@@ -308,6 +316,10 @@ class Analytics {
 								<h1>
 									<?php _e('Operating System', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
+
+								<div class="chart-loading">
+									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+								</div>
 							</div>
 						</section>
 
@@ -316,6 +328,10 @@ class Analytics {
 								<h1>
 									<?php _e('Download Source', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
+
+								<div class="chart-loading">
+									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+								</div>
 							</div>
 						</section>
 
