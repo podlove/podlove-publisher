@@ -282,7 +282,10 @@ class Analytics {
 
 		<div class="metabox-holder">
 			<div class="postbox">
-				<h2 class="hndle" style="cursor: inherit;"><?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
+				<h2 class="hndle" style="cursor: inherit;">
+					<?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?>
+					<small style="color: #666;font-weight: normal;"><?php _e('over all time', 'podlove-podcasting-plugin-for-wordpress'); ?></small>
+			  </h2>
 				<div class="inside">
 
 						<div style="float: none"></div>
