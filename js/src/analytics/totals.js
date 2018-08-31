@@ -207,11 +207,11 @@ jQuery(document).ready(function ($) {
 
 	const renderAssetsChart = function (data) {
 		let xf = crossfilter(data)
-		var assetDimension = xf.dimension((d) => d.asset);
-		var assetsGroup = assetDimension.group().reduceSum((d) => d.downloads);
+		var dimension = xf.dimension((d) => d.asset);
+		var group = dimension.group().reduceSum((d) => d.downloads);
 		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
 
-		let assetChart = dc.rowChart('#analytics-chart-global-assets')
+		let chart = dc.rowChart('#analytics-chart-global-assets')
 			.margins({
 				top: 0,
 				left: 40,
@@ -219,8 +219,8 @@ jQuery(document).ready(function ($) {
 				bottom: 25
 			})
 			.elasticX(true)
-			.dimension(assetDimension) // set dimension
-			.group(assetsGroup) // set group
+			.dimension(dimension) // set dimension
+			.group(group) // set group
 			.valueAccessor(function (v) {
 				if (v.value) {
 					return v.value;
@@ -233,18 +233,17 @@ jQuery(document).ready(function ($) {
 			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
 		// .on('renderlet', addResetFilter);
 
-		assetChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
-
-		assetChart.render();
+		chart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		chart.render();
 	}
 
 	const renderClientsChart = function (data) {
 		let xf = crossfilter(data)
-		var clientDimension = xf.dimension((d) => d.client_name);
-		var clientsGroup = clientDimension.group().reduceSum((d) => d.downloads);
+		var dimension = xf.dimension((d) => d.client_name);
+		var group = dimension.group().reduceSum((d) => d.downloads);
 		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
 
-		let clientChart = dc.rowChart('#analytics-chart-global-clients')
+		let chart = dc.rowChart('#analytics-chart-global-clients')
 			.margins({
 				top: 0,
 				left: 40,
@@ -252,8 +251,8 @@ jQuery(document).ready(function ($) {
 				bottom: 25
 			})
 			.elasticX(true)
-			.dimension(clientDimension) // set dimension
-			.group(clientsGroup) // set group
+			.dimension(dimension) // set dimension
+			.group(group) // set group
 			.valueAccessor(function (v) {
 				if (v.value) {
 					return v.value;
@@ -270,9 +269,44 @@ jQuery(document).ready(function ($) {
 			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
 		// .on('renderlet', addResetFilter);
 
-		clientChart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		chart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		chart.render();
+	}
 
-		clientChart.render();
+	const renderSystemsChart = function (data) {
+		let xf = crossfilter(data)
+		var dimension = xf.dimension((d) => d.os_name);
+		var group = dimension.group().reduceSum((d) => d.downloads);
+		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
+
+		let chart = dc.rowChart('#analytics-chart-global-systems')
+			.margins({
+				top: 0,
+				left: 40,
+				right: 10,
+				bottom: 25
+			})
+			.elasticX(true)
+			.dimension(dimension) // set dimension
+			.group(group) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value;
+				} else {
+					return 0;
+				}
+			})
+			.ordering((v) => -v.value)
+			.othersGrouper(function (data) {
+				return data; // no 'others' group
+			})
+			.colors(chartColor)
+			.cap(10)
+			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
+		// .on('renderlet', addResetFilter);
+
+		chart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		chart.render();
 	}
 
 	if ($("#analytics-chart-global-assets").length) {
@@ -308,6 +342,24 @@ jQuery(document).ready(function ($) {
 			let assetData = d3.csvParse(csv, csvMapper);
 
 			renderClientsChart(assetData);
+		});
+	}
+
+	if ($("#analytics-chart-global-systems").length) {
+		$.when(
+			$.ajax(ajaxurl + '?action=podlove-analytics-global-systems')
+		).done(function (csv) {
+
+			const csvMapper = function (d) {
+				return {
+					downloads: +d.downloads,
+					os_name: d.os_name ? d.os_name : 'Unknown'
+				}
+			}
+
+			let assetData = d3.csvParse(csv, csvMapper);
+
+			renderSystemsChart(assetData);
 		});
 	}
 });

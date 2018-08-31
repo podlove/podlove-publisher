@@ -290,7 +290,7 @@ class Analytics {
 						<section id="analytics-chart-global-assets-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-assets">
 								<h1>
-									<?php _e('Download Asset', 'podlove-podcasting-plugin-for-wordpress'); ?>
+									<?php _e('Episode Asset', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
 							</div>
 						</section>
@@ -298,7 +298,15 @@ class Analytics {
 						<section id="analytics-chart-global-clients-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-clients">
 								<h1>
-									<?php _e('Download Clients', 'podlove-podcasting-plugin-for-wordpress'); ?>
+									<?php _e('Podcast Client', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</h1>
+							</div>
+						</section>
+
+						<section id="analytics-chart-global-systems-wrapper" class="chart-wrapper">
+							<div id="analytics-chart-global-systems">
+								<h1>
+									<?php _e('Operating System', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
 							</div>
 						</section>

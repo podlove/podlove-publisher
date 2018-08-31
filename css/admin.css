@@ -735,6 +735,7 @@ section.chart-wrapper div {
 #episode-geo-chart g.row text,
 #episode-asset-chart g.row text,
 #analytics-chart-global-clients g.row text,
+#analytics-chart-global-systems g.row text,
 #analytics-chart-global-assets g.row text {
 	fill: black;
 }

@@ -37,6 +37,7 @@ class Ajax {
 			'analytics-settings-avg-update',
 			'analytics-global-assets',
 			'analytics-global-clients',
+			'analytics-global-systems',
 			'episode-slug',
 			'admin-news',
 			'job-create',
@@ -488,17 +489,6 @@ class Ajax {
 //     t.id
 // ORDER BY
 //     downloads DESC;
-
-// SELECT
-//     count(di.id) downloads,
-//     ua.client_name
-// FROM
-//     wp_podlove_downloadintentclean di
-//     JOIN `wp_podlove_useragent` ua ON ua.id = di.`user_agent_id`
-// GROUP BY
-//     ua.client_name
-// ORDER BY
-//     downloads DESC;
     
 // SELECT
 //     count(di.id) downloads,
@@ -566,6 +556,38 @@ class Ajax {
 
 		$csv = Writer::createFromFileObject(new \SplTempFileObject());
 		$csv->insertOne(['downloads', 'client_name']);
+		$csv->insertAll($downloads);
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+		echo $csv;
+		ob_end_flush();
+		exit;
+	}
+
+	public static function analytics_global_systems()
+	{
+		global $wpdb;
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
+		$downloads = $wpdb->get_results("
+
+			SELECT
+			    count(di.id) downloads,
+			    ua.os_name
+			FROM
+			    " . Model\DownloadIntentClean::table_name() . " di
+			    JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
+			GROUP BY
+			    ua.`os_name`
+			ORDER BY
+			    downloads DESC;
+		", ARRAY_N);
+
+		$csv = Writer::createFromFileObject(new \SplTempFileObject());
+		$csv->insertOne(['downloads', 'os_name']);
 		$csv->insertAll($downloads);
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
