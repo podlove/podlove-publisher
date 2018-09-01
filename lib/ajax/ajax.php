@@ -495,126 +495,142 @@ class Ajax {
 
 	public static function analytics_global_assets()
 	{
-		global $wpdb;
-
 		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
 			exit;
 		}
 
-		$downloads = $wpdb->get_results("
-			SELECT
-				count(di.id) downloads, t.name
-			FROM
-				" . Model\DownloadIntentClean::table_name() . " di
-				JOIN `" . Model\MediaFile::table_name() . "` f ON f.id = di.`media_file_id`
-				JOIN `" . Model\EpisodeAsset::table_name() . "` a ON a.id = f.`episode_asset_id`
-				JOIN `" . Model\FileType::table_name() . "` t ON t.id = a.`file_type_id`
-			GROUP BY
-				t.id
-			ORDER BY
-				downloads DESC;
-		", ARRAY_N);
-
-		$csv = Writer::createFromFileObject(new \SplTempFileObject());
-		$csv->insertOne(['downloads', 'asset']);
-		$csv->insertAll($downloads);
-
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
-		echo $csv;
+
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_assets', function() {
+			global $wpdb;
+
+			$downloads = $wpdb->get_results("
+				SELECT
+					count(di.id) downloads, t.name
+				FROM
+					" . Model\DownloadIntentClean::table_name() . " di
+					JOIN `" . Model\MediaFile::table_name() . "` f ON f.id = di.`media_file_id`
+					JOIN `" . Model\EpisodeAsset::table_name() . "` a ON a.id = f.`episode_asset_id`
+					JOIN `" . Model\FileType::table_name() . "` t ON t.id = a.`file_type_id`
+				GROUP BY
+					t.id
+				ORDER BY
+					downloads DESC;
+			", ARRAY_N);
+
+			$csv = Writer::createFromFileObject(new \SplTempFileObject());
+			$csv->insertOne(['downloads', 'asset']);
+			$csv->insertAll($downloads);
+
+			return (string) $csv;
+		});
+
 		ob_end_flush();
 		exit;
 	}
 
 	public static function analytics_global_clients()
 	{
-		global $wpdb;
-
 		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
 			exit;
 		}
 
-		$downloads = $wpdb->get_results("
-			SELECT
-			    count(di.id) downloads,
-			    ua.client_name
-			FROM
-			    " . Model\DownloadIntentClean::table_name() . " di
-			    JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
-			GROUP BY
-			    ua.client_name
-			ORDER BY
-			    downloads DESC;
-		", ARRAY_N);
-
-		$csv = Writer::createFromFileObject(new \SplTempFileObject());
-		$csv->insertOne(['downloads', 'client_name']);
-		$csv->insertAll($downloads);
-
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
-		echo $csv;
+
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_clients', function() {
+			global $wpdb;
+
+			$downloads = $wpdb->get_results("
+				SELECT
+						count(di.id) downloads,
+						ua.client_name
+				FROM
+						" . Model\DownloadIntentClean::table_name() . " di
+						JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
+				GROUP BY
+						ua.client_name
+				ORDER BY
+						downloads DESC;
+			", ARRAY_N);
+
+			$csv = Writer::createFromFileObject(new \SplTempFileObject());
+			$csv->insertOne(['downloads', 'client_name']);
+			$csv->insertAll($downloads);
+
+			return (string) $csv;
+		});
+
 		ob_end_flush();
 		exit;
 	}
 
 	public static function analytics_global_sources()
 	{
-		global $wpdb;
-
 		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
 			exit;
 		}
 
-		$downloads = $wpdb->get_results("
-			SELECT
-			    count(id) downloads,
-			    source
-			FROM
-					" . Model\DownloadIntentClean::table_name() . "
-			WHERE source IN ('feed', 'webplayer', 'download', 'opengraph')
-			GROUP BY
-			    source
-			ORDER BY
-			    downloads DESC
-		", ARRAY_N);
-
-		$csv = Writer::createFromFileObject(new \SplTempFileObject());
-		$csv->insertOne(['downloads', 'source']);
-		$csv->insertAll($downloads);
-
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
-		echo $csv;
+
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_sources', function() {
+			global $wpdb;
+
+			$downloads = $wpdb->get_results("
+				SELECT
+						count(id) downloads,
+						source
+				FROM
+						" . Model\DownloadIntentClean::table_name() . "
+				WHERE source IN ('feed', 'webplayer', 'download', 'opengraph')
+				GROUP BY
+						source
+				ORDER BY
+						downloads DESC
+			", ARRAY_N);
+
+			$csv = Writer::createFromFileObject(new \SplTempFileObject());
+			$csv->insertOne(['downloads', 'source']);
+			$csv->insertAll($downloads);
+
+			return (string) $csv;
+		});
+
 		ob_end_flush();
 		exit;
 	}
 
 	public static function analytics_global_systems()
 	{
-		global $wpdb;
-
 		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
 			exit;
 		}
 
-		$downloads = $wpdb->get_results("
-
-			SELECT
-			    count(di.id) downloads,
-			    ua.os_name
-			FROM
-			    " . Model\DownloadIntentClean::table_name() . " di
-			    JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
-			GROUP BY
-			    ua.`os_name`
-			ORDER BY
-			    downloads DESC;
-		", ARRAY_N);
-
-		$csv = Writer::createFromFileObject(new \SplTempFileObject());
-		$csv->insertOne(['downloads', 'os_name']);
-		$csv->insertAll($downloads);
-
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
-		echo $csv;
+
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_systems', function() {
+			global $wpdb;
+
+			$downloads = $wpdb->get_results("
+
+				SELECT
+						count(di.id) downloads,
+						ua.os_name
+				FROM
+						" . Model\DownloadIntentClean::table_name() . " di
+						JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
+				GROUP BY
+						ua.`os_name`
+				ORDER BY
+						downloads DESC;
+			", ARRAY_N);
+
+			$csv = Writer::createFromFileObject(new \SplTempFileObject());
+			$csv->insertOne(['downloads', 'os_name']);
+			$csv->insertAll($downloads);
+
+			return (string) $csv;
+		});
+
 		ob_end_flush();
 		exit;
 	}

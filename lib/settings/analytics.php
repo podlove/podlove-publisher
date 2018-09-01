@@ -293,7 +293,7 @@ class Analytics {
 						<section id="analytics-chart-global-downloads-per-month-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-downloads-per-month" style="width: 570px">
 								<h1>
-									<?php _e('Downloads pro Monat', 'podlove-podcasting-plugin-for-wordpress'); ?>
+									<?php _e('Downloads per Month', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								</h1>
 
 								<div class="chart-loading">
@@ -301,7 +301,7 @@ class Analytics {
 								</div>
 							</div>
 						</section>
-						
+
 						<section id="analytics-chart-global-assets-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-assets">
 								<h1>
