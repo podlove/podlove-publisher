@@ -344,6 +344,58 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
+	const renderPerMonthChart = function (data) {
+		let xf = crossfilter(data)
+		var dimension = xf.dimension((d) => {
+			[y, m] = d.date_month.split(" ").map((x) => parseInt(x, 10));
+			return new Date(y, m - 1)
+		});
+		var group = dimension.group().reduceSum((d) => d.downloads);
+		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
+
+		let chart = dc.lineChart('#analytics-chart-global-downloads-per-month')
+			.margins({
+				top: 0,
+				left: 40,
+				right: 10,
+				bottom: 25
+			})
+			.elasticX(true)
+			.dimension(dimension) // set dimension
+			.group(group) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value;
+				} else {
+					return 0;
+				}
+			})
+			.ordering((v) => -v.value)
+			.colors(chartColor)
+			.xyTipsOn(true)
+			.renderDataPoints({
+				radius: 3,
+				fillOpacity: 0.8,
+				strokeOpacity: 0.0
+			})
+			.brushOn(false)
+			.title((v) => {
+				return v.key.getFullYear() + ' / ' + (v.key.getMonth() + 1) + '\nDownloads: ' + v.value
+			})
+
+		var domain = dimension.group().all().map((x) => x.key);
+		chart.x(d3.scaleTime().domain(domain))
+		const spacer = parseInt(domain.length / 5, 10);
+		var ticks = domain.filter(function (v, i) {
+			return i % spacer === 0;
+		});
+		chart.xAxis().tickValues(ticks);
+		chart.xAxis().tickFormat(d3.timeFormat("%b %Y"));
+		chart.yAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+
+		chart.render();
+	}
+
 	$("#analytics-chart-global-assets").each(function () {
 		$.when(
 			$.ajax(ajaxurl + '?action=podlove-analytics-global-assets')
@@ -421,6 +473,26 @@ jQuery(document).ready(function ($) {
 			$(".chart-loading", this).remove();
 
 			renderSourcesChart(assetData);
+		});
+	})
+
+	$("#analytics-chart-global-downloads-per-month").each(function () {
+		$.when(
+			$.ajax(ajaxurl + '?action=podlove-analytics-global-downloads-per-month')
+		).done((csv) => {
+
+			const csvMapper = function (d) {
+				return {
+					downloads: +d.downloads,
+					date_month: d.date_month ? d.date_month : 'Unknown'
+				}
+			}
+
+			let assetData = d3.csvParse(csv, csvMapper);
+
+			$(".chart-loading", this).remove();
+
+			renderPerMonthChart(assetData);
 		});
 	})
 

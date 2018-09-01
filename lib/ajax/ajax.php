@@ -39,6 +39,7 @@ class Ajax {
 			'analytics-global-clients',
 			'analytics-global-systems',
 			'analytics-global-sources',
+			'analytics-global-downloads-per-month',
 			'episode-slug',
 			'admin-news',
 			'job-create',
@@ -614,6 +615,39 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 		echo $csv;
+		ob_end_flush();
+		exit;
+	}
+
+	public static function analytics_global_downloads_per_month()
+	{
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+		
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_downloads_per_month', function() {
+			global $wpdb;
+
+			$downloads = $wpdb->get_results("
+				SELECT
+						count(id),
+						DATE_format(accessed_at, '%Y %m') date_month
+				FROM
+						" . Model\DownloadIntentClean::table_name() . " di
+				GROUP BY
+						date_month
+				ORDER BY
+						date_month ASC
+			", ARRAY_N);
+
+			$csv = Writer::createFromFileObject(new \SplTempFileObject());
+			$csv->insertOne(['downloads', 'date_month']);
+			$csv->insertAll($downloads);
+			return (string) $csv;
+		});
+		
 		ob_end_flush();
 		exit;
 	}

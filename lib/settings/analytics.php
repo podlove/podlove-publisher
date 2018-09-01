@@ -290,6 +290,18 @@ class Analytics {
 
 						<div style="float: none"></div>
 
+						<section id="analytics-chart-global-downloads-per-month-wrapper" class="chart-wrapper">
+							<div id="analytics-chart-global-downloads-per-month" style="width: 570px">
+								<h1>
+									<?php _e('Downloads pro Monat', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</h1>
+
+								<div class="chart-loading">
+									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+								</div>
+							</div>
+						</section>
+						
 						<section id="analytics-chart-global-assets-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-assets">
 								<h1>
