@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-09-02 =
+
+* new global chart: downloads per month
+
 = 2018-08-31 =
 
 * merge changes from master / stable release
