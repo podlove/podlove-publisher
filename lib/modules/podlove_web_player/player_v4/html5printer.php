@@ -5,6 +5,7 @@ use Podlove\Model\Episode;
 use Podlove\Model\Podcast;
 use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
+use Podlove\Modules\PodloveWebPlayer\PlayerV4\Module;
 
 class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
@@ -31,13 +32,12 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 	public function render($context = NULL) {
 
 		$id = $this->get_player_id();
+		$src = Module::module()->get_module_url() . '/player_v4/pwp4.js';
 
-		$html = '<div id="' . $id . '"></div>';
-		$html.= '<script>';
-		$html.= 'podlovePlayer("#' . $id . '", ' . json_encode(self::config($this->episode, $context)) . ')';
-		$html.= '</script>';
+		wp_enqueue_script("podlove-pwp4-player", $src, ['jquery'], \Podlove\get_plugin_header('Version'));
+		wp_localize_script("podlove-pwp4-player", $id, self::config($this->episode, $context));
 
-		return $html;
+		return '<div class="pwp4-wrapper" id="' . $id . '"></div>';
 	}
 
 	public static function config($episode, $context) {

@@ -22,7 +22,7 @@ class Module {
 		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
 	}
 
-	private static function module() {
+	public static function module() {
 		return \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::instance();
 	}
 
