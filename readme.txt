@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.7.12 =
 
 * use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins
+* uninstall: be more specific which options are deleted
 
 = 2.7.10/11 =
 
