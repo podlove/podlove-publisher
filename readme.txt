@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * uninstall: be more specific which options are deleted ([#997](https://github.com/podlove/podlove-publisher/issues/997))
 * new filter `podlove_network_module_activate` to force-enable network module ([#995](https://github.com/podlove/podlove-publisher/issues/995))
 * new social services: Mastodon, Fediverse ([#987](https://github.com/podlove/podlove-publisher/issues/987))
+* fix related episodes disappearing when using post scheduling ([#980](https://github.com/podlove/podlove-publisher/issues/980))
 
 = 2.7.10/11 =
 

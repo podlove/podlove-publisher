@@ -36,6 +36,10 @@ class Related_Episodes extends \Podlove\Modules\Base {
 
 		public function update_episode_relations($post_id) {
 
+			// skip if the save does not come from the episode form
+			if (!isset($_POST['_podlove_meta']))
+				return;
+
 			$episode = Model\Episode::find_one_by_post_id($post_id);
 
 			if (!$episode)
