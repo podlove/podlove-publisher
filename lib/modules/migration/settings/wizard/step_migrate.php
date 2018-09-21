@@ -64,7 +64,7 @@ EOT;
 
 		$template_assignment = Model\TemplateAssignment::get_instance();
 		if ( $template_assignment->has_property( $migration_settings['cleanup']['template'] ) ) {
-			$template_assignment->$migration_settings['cleanup']['template'] = $template->id;
+			$template_assignment->{$migration_settings['cleanup']['template']} = $template->id;
 			$template_assignment->save();
 		}
 
