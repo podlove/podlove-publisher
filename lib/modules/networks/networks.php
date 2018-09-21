@@ -22,8 +22,12 @@ class Networks extends \Podlove\Modules\Base {
 		    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 		}
 
-		if ( ! is_plugin_active_for_network( basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME ) )
+		// filter allows force-enabling network module
+		// @see https://github.com/podlove/podlove-publisher/issues/995
+		$active = is_plugin_active_for_network( basename(\Podlove\PLUGIN_DIR) . '/' . \Podlove\PLUGIN_FILE_NAME );
+		if ( ! apply_filters('podlove_network_module_activate', $active ) ) {
 			return;
+		}			
 
 		// Actions after activation
 		add_action( 'podlove_module_was_activated_networks', array( $this, 'was_activated' ) );

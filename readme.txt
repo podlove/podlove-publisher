@@ -109,8 +109,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.7.12 =
 
-* use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins
-* uninstall: be more specific which options are deleted
+* use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
+* uninstall: be more specific which options are deleted ([#997](https://github.com/podlove/podlove-publisher/issues/997))
+* new filter `podlove_network_module_activate` to force-enable network module ([#995](https://github.com/podlove/podlove-publisher/issues/995))
 
 = 2.7.10/11 =
 
