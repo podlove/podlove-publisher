@@ -76,6 +76,13 @@
   logo: 'flickr.png'
   url_scheme: 'https://secure.flickr.com/photos/%account-placeholder%'
 
+- title: 'Friendica'
+  name: 'friendica'
+  category: 'social'
+  description: 'Friendica Account (URL)'
+  logo: 'friendica.png'
+  url_scheme: '%account-placeholder%'
+
 - title: 'GitHub'
   name: 'github'
   category: 'social'

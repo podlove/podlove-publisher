@@ -112,7 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
 * uninstall: be more specific which options are deleted ([#997](https://github.com/podlove/podlove-publisher/issues/997))
 * new filter `podlove_network_module_activate` to force-enable network module ([#995](https://github.com/podlove/podlove-publisher/issues/995))
-* new social services: Mastodon, Fediverse ([#987](https://github.com/podlove/podlove-publisher/issues/987))
+* new social services: Mastodon, Fediverse, Friendica ([#987](https://github.com/podlove/podlove-publisher/issues/987), [#968](https://github.com/podlove/podlove-publisher/issues/968))
 * fix related episodes disappearing when using post scheduling ([#980](https://github.com/podlove/podlove-publisher/issues/980))
 
 = 2.7.10/11 =
