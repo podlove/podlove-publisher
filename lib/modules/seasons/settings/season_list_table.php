@@ -59,6 +59,10 @@ class SeasonListTable extends \Podlove\List_Table {
 		$first = reset($episodes);
 		$last  = end($episodes);
 
+		if (!$count) {
+			return "-";
+		}
+
 		$totals = function($count) {
 			return '<br><span style="font-size: 1.6em; vertical-align: middle; padding: 5px 10px; display: inline-block;">&#x2193;</span> <small>' . __('total', 'podlove-podcasting-plugin-for-wordpress') . ': ' . $count . ' episodes</small><br>';
 		};
