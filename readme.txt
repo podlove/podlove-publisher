@@ -115,6 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * new social services: Mastodon, Fediverse, Friendica ([#987](https://github.com/podlove/podlove-publisher/issues/987), [#968](https://github.com/podlove/podlove-publisher/issues/968))
 * fix related episodes disappearing when using post scheduling ([#980](https://github.com/podlove/podlove-publisher/issues/980))
 * fix seasons error when there are no episodes ([#963](https://github.com/podlove/podlove-publisher/issues/963))
+* related episodes: order by post date ([#947](https://github.com/podlove/podlove-publisher/issues/947))
 
 = 2.7.10/11 =
 
