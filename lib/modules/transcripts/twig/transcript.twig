@@ -1,0 +1,34 @@
+<style type="text/css">
+.ts-group { clear: both; margin-top: 15px; }
+.ts-speaker-avatar { margin-top: 5px; float: left; }
+.ts-speaker-avatar img { border-radius: 10%; }
+.ts-speaker { font-weight: bold; font-size: 90%; }
+.ts-items { margin-left: 20px; }
+.ts-time { font-size: small; color: #999; }
+.ts-text { margin-left: 60px; }
+.ts-line:hover { background-color: #f9f9f9; }
+</style>
+
+<hr style="clear: both;" />
+
+{% for group in episode.transcript %}
+    <div class="ts-group">
+
+        <div class="ts-speaker-avatar">
+            {{ group.contributor.image.html({width: 50}) }}
+        </div>
+
+        <div class="ts-text">
+            <div class="ts-speaker">
+                {{ group.contributor.name }}
+            </div>
+
+            <div class="ts-content">
+                {% for line in group.items %}
+                <span class="ts-line">{{ line.content }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+    </div>
+{% endfor %}

@@ -41,9 +41,31 @@ class Transcripts extends \Podlove\Modules\Base {
 		add_action('podlove_asset_assignment_form', [$this, 'add_asset_assignment_form'], 10, 2);
 		add_action('podlove_media_file_content_has_changed', [$this, 'handle_changed_media_file']);
 
+		add_filter('podlove_twig_file_loader', function($file_loader) {
+			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'transcripts', 'twig')), 'transcripts');
+			return $file_loader;
+		});
+
+		add_shortcode('podlove-transcript', [$this, 'transcript_shortcode']);
+
 		\Podlove\Template\Episode::add_accessor(
 			'transcript', array('\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'), 4
 		);
+	}
+
+	public function transcript_shortcode($args = [])
+	{
+		if (isset($args['post_id'])) {
+			$post_id = $args['post_id'];
+			unset($args['post_id']);
+		} else {
+			$post_id = get_the_ID();
+		}
+
+		$episode = Model\Episode::find_one_by_post_id($post_id);
+		$episode = new \Podlove\Template\Episode($episode);
+
+		return \Podlove\Template\TwigFilter::apply_to_html('@transcripts/transcript.twig', ['episode' => $episode]);
 	}
 
 	public function was_activated($module_name) {

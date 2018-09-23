@@ -109,6 +109,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2018-09-23 =
 
+* new shortcode `[podlove-transcript]` that displays the transcript of the current episode. `[podlove-transcript post_id="123"]` to display transcript of the given post.
+
 merge 2.7.12 changes:
 
 * use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
