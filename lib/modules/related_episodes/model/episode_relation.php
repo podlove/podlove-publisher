@@ -23,21 +23,22 @@ class EpisodeRelation extends Base {
 		if (!$episode_id)
 			return [];
 
-		$join = '';
+		$filter_post_status = '';
 		if ($args['only_published']) {
-			$join = 'INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id AND p.post_status IN (\'publish\', \'private\')';
+			$filter_post_status = 'AND p.post_status IN (\'publish\', \'private\')';
 		}
 
 		$sql = sprintf( 'SELECT
 			e.*
 			FROM
 			' . Episode::table_name() . ' e
-			' . $join . '
+			INNER JOIN ' . $wpdb->posts . ' p ON p.ID = e.post_id
 			WHERE e.id IN (
-				SELECT right_episode_id FROM '.self::table_name().' WHERE left_episode_id = %1$d
+				SELECT right_episode_id FROM ' . self::table_name() . ' WHERE left_episode_id = %1$d
 				UNION
-				SELECT left_episode_id FROM '.self::table_name().' WHERE right_episode_id = %1$d
-			)', $episode_id );
+				SELECT left_episode_id FROM ' . self::table_name() . ' WHERE right_episode_id = %1$d
+			) ' . $filter_post_status . '
+			ORDER BY p.post_date_gmt ASC', $episode_id );
 
 		return Episode::find_all_by_sql($sql);
 	}

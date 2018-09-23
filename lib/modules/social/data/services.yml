@@ -55,6 +55,13 @@
   logo: 'facebook.png'
   url_scheme: 'https://facebook.com/%account-placeholder%'
 
+- title: 'Fediverse'
+  name: 'fediverse'
+  category: 'social'
+  description: 'Fediverse Account (URL)'
+  logo: 'fediverse.png'
+  url_scheme: '%account-placeholder%'
+
 - title: 'Flattr'
   name: 'flattr'
   category: 'social'
@@ -68,6 +75,13 @@
   description: 'Flickr Account'
   logo: 'flickr.png'
   url_scheme: 'https://secure.flickr.com/photos/%account-placeholder%'
+
+- title: 'Friendica'
+  name: 'friendica'
+  category: 'social'
+  description: 'Friendica Account (URL)'
+  logo: 'friendica.png'
+  url_scheme: '%account-placeholder%'
 
 - title: 'GitHub'
   name: 'github'
@@ -103,6 +117,13 @@
   description: 'Last.fm Account'
   logo: 'lastfm.png'
   url_scheme: 'https://www.last.fm/user/%account-placeholder%'
+
+- title: 'Mastodon'
+  name: 'mastodon'
+  category: 'social'
+  description: 'Mastodon Account (URL)'
+  logo: 'mastodon.png'
+  url_scheme: '%account-placeholder%'
 
 - title: 'OpenStreetMap'
   name: 'openstreetmap'

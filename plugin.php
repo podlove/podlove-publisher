@@ -109,6 +109,8 @@ function uninstall() {
 function uninstall_for_current_blog() {
 	global $wpdb;
 
+	\Podlove\Cache\TemplateCache::get_instance()->purge();
+
 	Model\Feed::destroy();
 	Model\FileType::destroy();
 	Model\EpisodeAsset::destroy();
@@ -135,8 +137,36 @@ function uninstall_for_current_blog() {
 
 	wp_reset_postdata();
 
-	// delete everything from wp_options
-	$wpdb->query('DELETE FROM `' . $wpdb->options . '` WHERE option_name LIKE "%podlove%"');
+	// clean up options
+	$options = [
+		'podlove_feed%',
+		'%podlove_chapters_string_%',
+		'podlove_podcast',
+		'podlove_active_modules',
+		'podlove_template_assignment',
+		'podlove_webplayer_formats',
+		'podlove_asset_assignment',
+		'podlove_global_messages',
+		'podlove_database_version',
+		'podlove_repair_log',
+		'podlove_import_file',
+		'podlove_import_tracking_file',
+		'_podlove_added_bitlove_to_feed_model',
+		'podlove_contributors',
+		'podlove_flattr',
+		'podlove_geo_tracking',
+		'podlove_metadata',
+		'podlove_module%',
+		'podlove_redirects',
+		'podlove_title_migration_state',
+		'podlove_tracking',
+		'podlove_website',
+		'podlove_analytics_tiles'
+	];
+
+	foreach ($options as $option) {
+	  $wpdb->query('DELETE FROM ' . $wpdb->options . ' WHERE option_name LIKE "' . $option . '"');
+	}
 }
 
 // prepare for translation

@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.4
 Tested up to: 4.9.8
 Requires PHP: 5.4
-Stable tag: 2.7.11
+Stable tag: 2.7.12
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,6 +106,18 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2018-09-23 =
+
+merge 2.7.12 changes:
+
+* use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
+* uninstall: be more specific which options are deleted ([#997](https://github.com/podlove/podlove-publisher/issues/997))
+* new filter `podlove_network_module_activate` to force-enable network module ([#995](https://github.com/podlove/podlove-publisher/issues/995))
+* new social services: Mastodon, Fediverse, Friendica ([#987](https://github.com/podlove/podlove-publisher/issues/987), [#968](https://github.com/podlove/podlove-publisher/issues/968))
+* fix related episodes disappearing when using post scheduling ([#980](https://github.com/podlove/podlove-publisher/issues/980))
+* fix seasons error when there are no episodes ([#963](https://github.com/podlove/podlove-publisher/issues/963))
+* related episodes: order by post date ([#947](https://github.com/podlove/podlove-publisher/issues/947))
 
 = 2018-09-02 =
 
