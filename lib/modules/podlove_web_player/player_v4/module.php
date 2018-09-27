@@ -20,6 +20,17 @@ class Module {
 		add_shortcode('podlove-episode-web-player', [__CLASS__, 'shortcode']);
 
 		add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
+
+		add_action('wp', function () {
+			if (get_post_type() == "podcast" && isset($_GET['podlove_action']) && $_GET['podlove_action'] == "pwp4_config") {
+				$episode = Episode::find_or_create_by_post_id(get_the_ID());
+				$context = isset($_GET['podlove_context']) ? $_GET['podlove_context'] : null;
+				$config = Html5Printer::config($episode, $context);
+
+				\Podlove\AJAX\Ajax::respond_with_json($config);
+				exit;
+			}
+		});
 	}
 
 	public static function module() {
@@ -32,12 +43,18 @@ class Module {
 
 	public function register_scripts()
 	{
+		$version = \Podlove\get_plugin_header('Version');
+
 		wp_enqueue_script(
 			'podlove-player4-embed',
 			self::embed_script_url(self::use_cdn()),
 			[],
-			\Podlove\get_plugin_header('Version')
+			$version
 		);
+
+		$src = self::module()->get_module_url() . '/player_v4/pwp4.js';
+
+		wp_enqueue_script("podlove-pwp4-player", $src, ['jquery'], $version);
 	}
 
 	public static function embed_script_url($use_cdn = true)

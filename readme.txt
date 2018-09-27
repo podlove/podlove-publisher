@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-09-27 =
+
+* player rendering fix
+
 = 2018-09-23 =
 
 * new shortcode `[podlove-transcript]` that displays the transcript of the current episode. `[podlove-transcript post_id="123"]` to display transcript of the given post.

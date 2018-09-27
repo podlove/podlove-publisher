@@ -32,12 +32,11 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 	public function render($context = NULL) {
 
 		$id = $this->get_player_id();
-		$src = Module::module()->get_module_url() . '/player_v4/pwp4.js';
+		$url = get_permalink($this->episode->post_id);
+		$url = add_query_arg('podlove_action', 'pwp4_config', $url);
+		$url = add_query_arg('podlove_context', $context, $url);
 
-		wp_enqueue_script("podlove-pwp4-player", $src, ['jquery'], \Podlove\get_plugin_header('Version'));
-		wp_localize_script("podlove-pwp4-player", $id, self::config($this->episode, $context));
-
-		return '<div class="pwp4-wrapper" id="' . $id . '"></div>';
+		return '<div class="pwp4-wrapper" id="' . $id . '" data-episode="' . $url . '"></div>';
 	}
 
 	public static function config($episode, $context) {
