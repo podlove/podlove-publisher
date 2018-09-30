@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.14 =
+
+* update Podlove Web Player 4
+
 = 2.7.12/13 =
 
 * use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
