@@ -6,6 +6,7 @@ use Podlove\Model\Podcast;
 use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use Podlove\Modules\PodloveWebPlayer\PlayerV4\Module;
+use Podlove\Modules\PodloveWebPlayer\MediaTagRenderer;
 
 class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInterface {
 
@@ -36,7 +37,35 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 		$url = add_query_arg('podlove_action', 'pwp4_config', $url);
 		$url = add_query_arg('podlove_context', $context, $url);
 
-		return '<div class="pwp4-wrapper" id="' . $id . '" data-episode="' . $url . '"></div>';
+		$media_xml = (new MediaTagRenderer($this->episode))->render($context);
+
+		return '<div class="pwp4-wrapper" id="' . $id . '" data-episode="' . $url . '">' . $media_xml . '</div>';
+	}
+
+	public static function media_files($episode, $context) {
+			$player_media_files = new PlayerMediaFiles($episode);
+
+			if ($media_files = $player_media_files->get($context)) {
+				$media_file_urls = array_map(function($file) {
+					return [
+						'url'      => $file['publicUrl'],
+						'size'     => $file['size'],
+						'title'    => $file['assetTitle'],
+						'mimeType' => $file['mime_type']
+					];
+				}, $media_files);
+			} elseif (is_admin()) {
+				$media_file_urls = [
+					'url'      => \Podlove\PLUGIN_URL . '/bin/podlove.mp3',
+					'size'     => 486839,
+					'title'    => 'Podlove Example Audio',
+					'mimeType' => 'audio/mp3'				
+				];
+			} else {
+				$media_file_urls = [];
+			}
+
+			return $media_file_urls;
 	}
 
 	public static function config($episode, $context) {
@@ -77,26 +106,11 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 			$episode_title = $post->post_title;
 			
-			if ($media_files = $player_media_files->get($context)) {
-				$media_file_urls = array_map(function($file) {
-					return [
-						'url'      => $file['publicUrl'],
-						'size'     => $file['size'],
-						'title'    => $file['assetTitle'],
-						'mimeType' => $file['mime_type']
-					];
-				}, $media_files);
-			} elseif (is_admin()) {
-				$episode_title = __('Example Episode', 'podlove-podcasting-plugin-for-wordpress');
-				$media_file_urls = [
-					'url'      => \Podlove\PLUGIN_URL . '/bin/podlove.mp3',
-					'size'     => 486839,
-					'title'    => 'Podlove Example Audio',
-					'mimeType' => 'audio/mp3'				
-				];
-			} else {
-				$media_file_urls = [];
+			if (!$player_media_files->get($context) && is_admin()) {
+        $episode_title = __('Example Episode', 'podlove-podcasting-plugin-for-wordpress');
 			}
+
+			$media_file_urls = self::media_files($episode, $context);
 
 			$config = array_merge($config, [
 				'title'           => $episode_title,
