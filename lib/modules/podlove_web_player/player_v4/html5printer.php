@@ -128,7 +128,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 						'role' => $c->hasRole() ? $c->getRole()->to_array() : null,
 						'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
 						'comment' => $c->comment,
-						'id' => $contributor->identifier
+						'id' => $contributor->id
 					];
 				}, EpisodeContribution::find_all_by_episode_id($episode->id)));
 			}
