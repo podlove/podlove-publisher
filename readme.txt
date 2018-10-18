@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= WIP =
+
+* automatically abort stuck background jobs
+
 = 2.7.14 =
 
 * update Podlove Web Player 4
