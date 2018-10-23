@@ -34,6 +34,7 @@ class Shows extends \Podlove\Modules\Base {
 		}, 10, 3 );
 
 		add_filter('podlove_subscribe_button_data', [$this, 'override_subscribe_button'], 10, 3);
+		add_filter('podlove_subscribe_button_args', [$this, 'override_subscribe_button_args'], 10, 2);
 
 		add_action('podlove_subscribe_button_widget_settings_bottom', [$this, 'add_widget_settings'], 10, 2);
 		add_filter('podlove_subscribe_button_widget_settings_update', [$this, 'add_widget_settings_update'], 10, 3);
@@ -103,8 +104,25 @@ class Shows extends \Podlove\Modules\Base {
 				$data[$key] = $show_data[$key];
 			}
 		}
-		
+
 		return $data;
+	}
+
+	public function override_subscribe_button_args($args, $podcast)
+	{
+		if (!isset($args['show']) || !$args['show'])
+			return $args;
+
+		$show = Show::find_one_term_by_property('slug', $args['show']);
+
+		if (!$show)
+			return $args;
+
+		if ($show->language) {
+			$args['language'] = \Podlove\Modules\SubscribeButton\Button::language($show->language);
+		}
+
+		return $args;
 	}
 
 	public function register_show_taxonomy() {

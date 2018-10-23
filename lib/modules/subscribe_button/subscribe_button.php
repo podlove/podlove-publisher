@@ -83,6 +83,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 			$args['language'] = Button::language($podcast->language);
 		}
 
+		$args = apply_filters('podlove_subscribe_button_args', $args, $podcast);
 		$data = apply_filters('podlove_subscribe_button_data', $data, $args, $podcast);
 
 		return (new Button())->render($data, $args);

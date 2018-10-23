@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * automatically abort stuck background jobs
 * contributors now appear in feeds even if they don't have a URI [#939](https://github.com/podlove/podlove-publisher/issues/939#issuecomment-430248520)
+* Shows: custom language is now used for Podlove Subscribe Button
 
 = 2.7.14 =
 
