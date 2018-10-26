@@ -344,6 +344,42 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
+	const renderTopEpisodesChart = function (data) {
+		let xf = crossfilter(data)
+		var dimension = xf.dimension((d) => d.title);
+		var group = dimension.group().reduceSum((d) => d.downloads);
+		const total = xf.groupAll().reduceSum((d) => d.downloads).value();
+
+		let chart = dc.rowChart('#analytics-global-top-episodes')
+			.margins({
+				top: 0,
+				left: 40,
+				right: 10,
+				bottom: 25
+			})
+			.elasticX(true)
+			.dimension(dimension) // set dimension
+			.group(group) // set group
+			.valueAccessor(function (v) {
+				if (v.value) {
+					return v.value;
+				} else {
+					return 0;
+				}
+			})
+			.ordering((v) => -v.value)
+			.othersGrouper(function (data) {
+				return data; // no 'others' group
+			})
+			.colors(chartColor)
+			.cap(10)
+			.on('renderlet', (chart) => PODLOVE.Analytics.addPercentageLabels(chart, total))
+		// .on('renderlet', addResetFilter);
+
+		chart.xAxis().tickFormat(PODLOVE.Analytics.formatThousands);
+		chart.render();
+	}
+
 	const renderPerMonthChart = function (data) {
 		let xf = crossfilter(data)
 		var dimension = xf.dimension((d) => {
@@ -449,6 +485,16 @@ jQuery(document).ready(function ($) {
 			}
 		},
 		renderer: renderPerMonthChart
+	}, {
+		id: '#analytics-global-top-episodes',
+		action: 'podlove-analytics-global-top-episodes',
+		mapper: function (d) {
+			return {
+				downloads: +d.downloads,
+				title: d.title ? d.title : 'Unknown'
+			}
+		},
+		renderer: renderTopEpisodesChart
 	}]
 
 	globalCharts.forEach(chart => {

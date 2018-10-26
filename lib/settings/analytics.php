@@ -302,6 +302,18 @@ class Analytics {
 							</div>
 						</section>
 
+						<section id="analytics-global-top-episodes-wrapper" class="chart-wrapper">
+							<div id="analytics-global-top-episodes">
+								<h1>
+									<?php _e('Top Episodes', 'podlove-podcasting-plugin-for-wordpress'); ?>
+								</h1>
+
+								<div class="chart-loading">
+									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+								</div>
+							</div>
+						</section>
+
 						<section id="analytics-chart-global-assets-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-assets">
 								<h1>

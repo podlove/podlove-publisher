@@ -40,6 +40,7 @@ class Ajax {
 			'analytics-global-systems',
 			'analytics-global-sources',
 			'analytics-global-downloads-per-month',
+			'analytics-global-top-episodes',
 			'episode-slug',
 			'admin-news',
 			'job-create',
@@ -664,6 +665,46 @@ class Ajax {
 			return (string) $csv;
 		});
 		
+		ob_end_flush();
+		exit;
+	}
+
+	public static function analytics_global_top_episodes()
+	{
+		global $wpdb;
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
+		\Podlove\Feeds\check_for_and_do_compression('text/plain');
+	
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_top_episodes', function() {
+			global $wpdb;
+
+			$sql = "
+				SELECT
+						count(di.id) downloads,
+						e.post_id,
+						p.post_title
+				FROM
+						" . Model\DownloadIntentClean::table_name() . " di
+						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
+						INNER JOIN " . Model\Episode::table_name() . " e ON e.id = mf.`episode_id`
+						INNER JOIN " . $wpdb->posts . " p ON p.`ID` = e.post_id
+				GROUP BY p.id
+				ORDER BY downloads DESC
+				LIMIT 10		
+			";
+
+			$downloads = $wpdb->get_results($sql, ARRAY_N);
+
+			$csv = Writer::createFromFileObject(new \SplTempFileObject());
+			$csv->insertOne(['downloads', 'post_id', 'title']);
+			$csv->insertAll($downloads);
+			return (string) $csv;
+	  });
+
 		ob_end_flush();
 		exit;
 	}
