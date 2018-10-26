@@ -10,7 +10,7 @@ add_action( 'admin_print_styles', function () {
 	$version = \Podlove\get_plugin_header('Version');
 
 	// vue job dashboard
-	if ($is_episode_edit_screen || $screen->base === 'podlove_page_podlove_tools_settings_handle') {
+	if ($is_episode_edit_screen || $screen->base === 'podlove_page_podlove_tools_settings_handle' || $screen->base === 'podlove_page_podlove_analytics') {
 		wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL . '/js/dist/app.js', ['underscore', 'jquery'], $version, true );
 	}
 

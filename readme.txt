@@ -107,6 +107,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-10-26 =
+
+Improvements in global analytics:
+
+There's a "top episodes" widget now.
+
+I am not sure if it works out but added a date picker as well. Still rough around the edges but you can pick a custom date range now for global analytics widgets.
+
 = 2018-09-27 =
 
 * player rendering fix

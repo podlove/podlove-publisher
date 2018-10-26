@@ -22,6 +22,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "npm": "^6.4.0",
+    "v2-datepicker": "^3.1.1",
     "vue-axios": "^2.0.2",
     "vue-select": "^2.4.0"
   }

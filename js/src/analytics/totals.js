@@ -497,29 +497,45 @@ jQuery(document).ready(function ($) {
 		renderer: renderTopEpisodesChart
 	}]
 
-	globalCharts.forEach(chart => {
-		let chartLoading = $(".chart-loading", this)
+	const loadGlobalCharts = function (date_range) {
 
-		$(chart.id).each(function () {
-			$.when(
-				$.ajax(ajaxurl + '?action=' + chart.action)
-			).done((csvAssets) => {
+		let from, to;
 
-				let assetData = d3.csvParse(csvAssets, chart.mapper);
+		if (date_range && date_range.length) {
+			from = date_range[0]
+			to = date_range[1]
+		} else {
+			from = new Date(0)
+			to = new Date()
+		}
 
-				if (assetData.length) {
-					chartLoading.remove();
-				} {
-					chartLoading.replaceWith(chartNoDataHtml);
-				}
+		globalCharts.forEach(chart => {
+			let chartLoading = $(chart.id + " .chart-loading")
 
-				let cb = chart.renderer
+			$(chart.id).each(function () {
+				$.when(
+					$.ajax(ajaxurl + '?action=' + chart.action + '&date_from=' + from.toISOString() + '&date_to=' + to.toISOString())
+				).done((csvAssets) => {
 
-				cb(assetData);
-			}).fail(() => {
-				chartLoading.replaceWith(chartFailedHtml);
-			});
-		})
-	});
+					let assetData = d3.csvParse(csvAssets, chart.mapper);
 
+					if (assetData.length) {
+						chartLoading.remove();
+					} {
+						chartLoading.replaceWith(chartNoDataHtml);
+					}
+
+					let cb = chart.renderer
+
+					cb(assetData);
+				}).fail(() => {
+					chartLoading.replaceWith(chartFailedHtml);
+				});
+			})
+		});
+	}
+
+	window.analyticsApp.$on("setChartRange", function (range) {
+		loadGlobalCharts(range)
+	})
 });

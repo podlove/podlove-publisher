@@ -284,9 +284,12 @@ class Analytics {
 			<div class="postbox">
 				<h2 class="hndle" style="cursor: inherit;">
 					<?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?>
-					<small style="color: #666;font-weight: normal;"><?php _e('over all time', 'podlove-podcasting-plugin-for-wordpress'); ?></small>
 			  </h2>
 				<div class="inside">
+
+					<div id="podlove-analytics-app">
+						<analytics-date-picker></analytics-date-picker>
+					</div>
 
 						<div style="float: none"></div>
 

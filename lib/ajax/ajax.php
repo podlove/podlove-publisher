@@ -513,6 +513,7 @@ class Ajax {
 					JOIN `" . Model\MediaFile::table_name() . "` f ON f.id = di.`media_file_id`
 					JOIN `" . Model\EpisodeAsset::table_name() . "` a ON a.id = f.`episode_asset_id`
 					JOIN `" . Model\FileType::table_name() . "` t ON t.id = a.`file_type_id`
+				WHERE 1 = 1 AND " . self::analytics_date_condition() . "
 				GROUP BY
 					t.id
 				ORDER BY
@@ -548,6 +549,7 @@ class Ajax {
 				FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
+				WHERE 1 = 1 AND " . self::analytics_date_condition() . "
 				GROUP BY
 						ua.client_name
 				ORDER BY
@@ -582,7 +584,7 @@ class Ajax {
 						source
 				FROM
 						" . Model\DownloadIntentClean::table_name() . "
-				WHERE source IN ('feed', 'webplayer', 'download', 'opengraph')
+				WHERE source IN ('feed', 'webplayer', 'download', 'opengraph') AND " . self::analytics_date_condition() . "
 				GROUP BY
 						source
 				ORDER BY
@@ -619,6 +621,7 @@ class Ajax {
 				FROM
 						" . Model\DownloadIntentClean::table_name() . " di
 						JOIN `" . Model\UserAgent::table_name() . "` ua ON ua.id = di.`user_agent_id`
+				WHERE 1 = 1 AND " . self::analytics_date_condition() . "
 				GROUP BY
 						ua.`os_name`
 				ORDER BY
@@ -643,7 +646,7 @@ class Ajax {
 		}
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
-		
+
 		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_downloads_per_month', function() {
 			global $wpdb;
 
@@ -653,6 +656,7 @@ class Ajax {
 						DATE_format(accessed_at, '%Y %m') date_month
 				FROM
 						" . Model\DownloadIntentClean::table_name() . " di
+				WHERE 1 = 1 AND " . self::analytics_date_condition() . "
 				GROUP BY
 						date_month
 				ORDER BY
@@ -667,6 +671,22 @@ class Ajax {
 		
 		ob_end_flush();
 		exit;
+	}
+
+	private static function analytics_date_condition() {
+		$from = filter_input(INPUT_GET, 'date_from');
+		$to = filter_input(INPUT_GET, 'date_to');
+
+		if (!$from || !$to)
+			return "1 = 1";
+
+		$from = new \DateTime($from);
+		$to = new \DateTime($to);
+
+		if (!$from || !$to)
+			return "1 = 1";
+
+		return "(accessed_at >= \"{$from->format('Y-m-d H:i:s')}\" AND accessed_at <= \"{$to->format('Y-m-d H:i:s')}\")";
 	}
 
 	public static function analytics_global_top_episodes()
@@ -692,6 +712,7 @@ class Ajax {
 						INNER JOIN " . Model\MediaFile::table_name() . " mf ON mf.id = di.media_file_id
 						INNER JOIN " . Model\Episode::table_name() . " e ON e.id = mf.`episode_id`
 						INNER JOIN " . $wpdb->posts . " p ON p.`ID` = e.post_id
+				WHERE 1 = 1 AND " . self::analytics_date_condition() . "
 				GROUP BY p.id
 				ORDER BY downloads DESC
 				LIMIT 10		
