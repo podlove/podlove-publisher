@@ -399,134 +399,81 @@ jQuery(document).ready(function ($) {
 	const chartFailedHtml = '<div class="chart-failed">Loading Chart failed :(</div>';
 	const chartNoDataHtml = '<div class="chart-nodata">No Chart Data</div>';
 
-	$("#analytics-chart-global-assets").each(function () {
-		$.when(
-			$.ajax(ajaxurl + '?action=podlove-analytics-global-assets')
-		).done((csvAssets) => {
+	const globalCharts = [{
+		id: "#analytics-chart-global-assets",
+		action: 'podlove-analytics-global-assets',
+		mapper: function (d) {
+			return {
+				downloads: +d.downloads,
+				asset: d.asset ? d.asset : 'Unknown'
+			}
+		},
+		renderer: renderAssetsChart
+	}, {
+		id: '#analytics-chart-global-clients',
+		action: 'podlove-analytics-global-clients',
+		mapper: function (d) {
+			return {
+				downloads: +d.downloads,
+				client_name: d.client_name ? d.client_name : 'Unknown'
+			}
+		},
+		renderer: renderClientsChart
+	}, {
+		id: '#analytics-chart-global-systems',
+		action: 'podlove-analytics-global-systems',
+		mapper: function (d) {
+			return {
+				downloads: +d.downloads,
+				os_name: d.os_name ? d.os_name : 'Unknown'
+			}
+		},
+		renderer: renderSystemsChart
+	}, {
+		id: '#analytics-chart-global-sources',
+		action: 'podlove-analytics-global-sources',
+		mapper: function (d) {
+			return {
+				downloads: +d.downloads,
+				source: d.source ? d.source : 'Unknown'
+			}
+		},
+		renderer: renderSourcesChart
+	}, {
+		id: '#analytics-chart-global-downloads-per-month',
+		action: 'podlove-analytics-global-downloads-per-month',
+		mapper: function (d) {
+			return {
+				downloads: +d.downloads,
+				date_month: d.date_month ? d.date_month : 'Unknown'
+			}
+		},
+		renderer: renderPerMonthChart
+	}]
 
-			const csvMapper = function (d) {
-				return {
-					downloads: +d.downloads,
-					asset: d.asset ? d.asset : 'Unknown'
+	globalCharts.forEach(chart => {
+		let chartLoading = $(".chart-loading", this)
+
+		$(chart.id).each(function () {
+			$.when(
+				$.ajax(ajaxurl + '?action=' + chart.action)
+			).done((csvAssets) => {
+
+				let assetData = d3.csvParse(csvAssets, chart.mapper);
+
+				if (assetData.length) {
+					chartLoading.remove();
+				} {
+					chartLoading.replaceWith(chartNoDataHtml);
 				}
-			}
 
-			let assetData = d3.csvParse(csvAssets, csvMapper);
+				let cb = chart.renderer
 
-			if (assetData.length) {
-				$(".chart-loading", this).remove();
-			} {
-				$(".chart-loading", this).replaceWith(chartNoDataHtml);
-			}
-
-			renderAssetsChart(assetData);
-		}).fail(() => {
-			$(".chart-loading", this).replaceWith(chartFailedHtml);
-		});
-	})
-
-	$("#analytics-chart-global-clients").each(function () {
-		$.when(
-			$.ajax(ajaxurl + '?action=podlove-analytics-global-clients')
-		).done((csv) => {
-
-			const csvMapper = function (d) {
-				return {
-					downloads: +d.downloads,
-					client_name: d.client_name ? d.client_name : 'Unknown'
-				}
-			}
-
-			let assetData = d3.csvParse(csv, csvMapper);
-
-			if (assetData.length) {
-				$(".chart-loading", this).remove();
-			} {
-				$(".chart-loading", this).replaceWith(chartNoDataHtml);
-			}
-
-			renderClientsChart(assetData);
-		}).fail(() => {
-			$(".chart-loading", this).replaceWith(chartFailedHtml);
-		});
-	})
-
-	$("#analytics-chart-global-systems").each(function () {
-		$.when(
-			$.ajax(ajaxurl + '?action=podlove-analytics-global-systems')
-		).done((csv) => {
-
-			const csvMapper = function (d) {
-				return {
-					downloads: +d.downloads,
-					os_name: d.os_name ? d.os_name : 'Unknown'
-				}
-			}
-
-			let assetData = d3.csvParse(csv, csvMapper);
-
-			if (assetData.length) {
-				$(".chart-loading", this).remove();
-			} {
-				$(".chart-loading", this).replaceWith(chartNoDataHtml);
-			}
-
-			renderSystemsChart(assetData);
-		}).fail(() => {
-			$(".chart-loading", this).replaceWith(chartFailedHtml);
-		});
-	})
-
-	$("#analytics-chart-global-sources").each(function () {
-		$.when(
-			$.ajax(ajaxurl + '?action=podlove-analytics-global-sources')
-		).done((csv) => {
-
-			const csvMapper = function (d) {
-				return {
-					downloads: +d.downloads,
-					source: d.source ? d.source : 'Unknown'
-				}
-			}
-
-			let assetData = d3.csvParse(csv, csvMapper);
-
-			if (assetData.length) {
-				$(".chart-loading", this).remove();
-			} {
-				$(".chart-loading", this).replaceWith(chartNoDataHtml);
-			}
-
-			renderSourcesChart(assetData);
-		}).fail(() => {
-			$(".chart-loading", this).replaceWith(chartFailedHtml);
-		});
-	})
-
-	$("#analytics-chart-global-downloads-per-month").each(function () {
-		$.when(
-			$.ajax(ajaxurl + '?action=podlove-analytics-global-downloads-per-month')
-		).done((csv) => {
-
-			const csvMapper = function (d) {
-				return {
-					downloads: +d.downloads,
-					date_month: d.date_month ? d.date_month : 'Unknown'
-				}
-			}
-
-			let assetData = d3.csvParse(csv, csvMapper);
-
-			if (assetData.length) {
-				$(".chart-loading", this).remove();
-			} {
-				$(".chart-loading", this).replaceWith(chartNoDataHtml);
-			}
-
-			renderPerMonthChart(assetData);
-		}).fail(() => {
-			$(".chart-loading", this).replaceWith(chartFailedHtml);
-		});
-	})
+				cb(assetData);
+			}).fail(() => {
+				chartLoading.replaceWith(chartFailedHtml);
+			});
+		})
+	});
 
 });
