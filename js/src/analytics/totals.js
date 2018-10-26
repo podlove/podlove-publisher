@@ -396,6 +396,9 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
+	const chartFailedHtml = '<div class="chart-failed">Loading Chart failed :(</div>';
+	const chartNoDataHtml = '<div class="chart-nodata">No Chart Data</div>';
+
 	$("#analytics-chart-global-assets").each(function () {
 		$.when(
 			$.ajax(ajaxurl + '?action=podlove-analytics-global-assets')
@@ -410,9 +413,15 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csvAssets, csvMapper);
 
-			$(".chart-loading", this).remove();
+			if (assetData.length) {
+				$(".chart-loading", this).remove();
+			} {
+				$(".chart-loading", this).replaceWith(chartNoDataHtml);
+			}
 
 			renderAssetsChart(assetData);
+		}).fail(() => {
+			$(".chart-loading", this).replaceWith(chartFailedHtml);
 		});
 	})
 
@@ -430,9 +439,15 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
-			$(".chart-loading", this).remove();
+			if (assetData.length) {
+				$(".chart-loading", this).remove();
+			} {
+				$(".chart-loading", this).replaceWith(chartNoDataHtml);
+			}
 
 			renderClientsChart(assetData);
+		}).fail(() => {
+			$(".chart-loading", this).replaceWith(chartFailedHtml);
 		});
 	})
 
@@ -450,9 +465,15 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
-			$(".chart-loading", this).remove();
+			if (assetData.length) {
+				$(".chart-loading", this).remove();
+			} {
+				$(".chart-loading", this).replaceWith(chartNoDataHtml);
+			}
 
 			renderSystemsChart(assetData);
+		}).fail(() => {
+			$(".chart-loading", this).replaceWith(chartFailedHtml);
 		});
 	})
 
@@ -470,9 +491,15 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
-			$(".chart-loading", this).remove();
+			if (assetData.length) {
+				$(".chart-loading", this).remove();
+			} {
+				$(".chart-loading", this).replaceWith(chartNoDataHtml);
+			}
 
 			renderSourcesChart(assetData);
+		}).fail(() => {
+			$(".chart-loading", this).replaceWith(chartFailedHtml);
 		});
 	})
 
@@ -490,9 +517,15 @@ jQuery(document).ready(function ($) {
 
 			let assetData = d3.csvParse(csv, csvMapper);
 
-			$(".chart-loading", this).remove();
+			if (assetData.length) {
+				$(".chart-loading", this).remove();
+			} {
+				$(".chart-loading", this).replaceWith(chartNoDataHtml);
+			}
 
 			renderPerMonthChart(assetData);
+		}).fail(() => {
+			$(".chart-loading", this).replaceWith(chartFailedHtml);
 		});
 	})
 

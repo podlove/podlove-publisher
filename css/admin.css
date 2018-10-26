@@ -746,3 +746,20 @@ section.chart-wrapper div {
 	text-align: center;
 	margin-top: 100px;
 }
+
+.chart-failed,
+.chart-nodata {
+	font-size: 1rem;
+	font-weight: bold;
+	text-align: center;
+	width: 100% !important;
+	margin-top: 50px;
+}
+
+.chart-failed {
+	color: rgb(212, 61, 4);
+}
+
+.chart-nodata {
+	color: #666;
+}
