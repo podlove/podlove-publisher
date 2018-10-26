@@ -502,7 +502,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
-		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_assets', function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_assets' . self::analytics_date_cache_key(), function() {
 			global $wpdb;
 
 			$downloads = $wpdb->get_results("
@@ -539,7 +539,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
-		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_clients', function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_clients' . self::analytics_date_cache_key(), function() {
 			global $wpdb;
 
 			$downloads = $wpdb->get_results("
@@ -575,7 +575,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
-		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_sources', function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_sources' . self::analytics_date_cache_key(), function() {
 			global $wpdb;
 
 			$downloads = $wpdb->get_results("
@@ -610,7 +610,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
-		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_systems', function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_systems' . self::analytics_date_cache_key(), function() {
 			global $wpdb;
 
 			$downloads = $wpdb->get_results("
@@ -647,7 +647,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 
-		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_downloads_per_month', function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_downloads_per_month' . self::analytics_date_cache_key(), function() {
 			global $wpdb;
 
 			$downloads = $wpdb->get_results("
@@ -689,6 +689,11 @@ class Ajax {
 		return "(accessed_at >= \"{$from->format('Y-m-d H:i:s')}\" AND accessed_at <= \"{$to->format('Y-m-d H:i:s')}\")";
 	}
 
+  private static function analytics_date_cache_key() {
+		$condition = self::analytics_date_condition();
+		return sha1($condition);
+	}
+
 	public static function analytics_global_top_episodes()
 	{
 		global $wpdb;
@@ -699,7 +704,7 @@ class Ajax {
 
 		\Podlove\Feeds\check_for_and_do_compression('text/plain');
 	
-		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_top_episodes', function() {
+		echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_top_episodes' . self::analytics_date_cache_key(), function() {
 			global $wpdb;
 
 			$sql = "
