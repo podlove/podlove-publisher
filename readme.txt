@@ -135,6 +135,10 @@ Analytics endpoints require the `podlove_read_analytics` permission, the same as
 
 Please read https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/ if you want to use these endpoints.
 
+**Other**
+
+* Fix deprecation warning when using multiple categories ([#1009](https://github.com/podlove/podlove-publisher/pull/1009))
+
 = 2.7.16 =
 
 * update Podlove Web Player 4
