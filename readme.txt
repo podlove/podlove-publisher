@@ -107,6 +107,34 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.17 =
+
+**Downloads Data Export**
+
+Download data per episode can now be exported as JSON and CSV. 
+On the Analytics page you will now find a simple export interface. 
+Select the episodes you want in the export or don't select any to export them all at once.
+
+**WP REST API Support**
+
+Backbone for the data export is an implementation of the WP REST API.
+
+Endpoint for the episode custom post type:
+
+- /wp-json/wp/v2/episodes
+
+Custom endpoints for episode analytics:
+
+- /wp-json/podlove/v1/analytics/episodes/
+- /wp-json/podlove/v1/analytics/episodes/123
+- /wp-json/podlove/v1/analytics/episodes/123,82
+
+All analytics are available as CSV by adding `?format=csv` as parameter, for example `/wp-json/podlove/v1/analytics/episodes/?format=csv`
+
+Analytics endpoints require the `podlove_read_analytics` permission, the same as viewing analytics in the admin.
+
+Please read https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/ if you want to use these endpoints.
+
 = 2.7.16 =
 
 * update Podlove Web Player 4

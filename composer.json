@@ -11,7 +11,8 @@
         "ramsey/array_column": "~1.1",
         "piwik/device-detector": "~3.7",
         "phpunit/php-timer": "~1.0",
-        "dariuszp/cli-progress-bar": "^1.0"
+        "dariuszp/cli-progress-bar": "^1.0",
+        "league/csv": "^7.2"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",

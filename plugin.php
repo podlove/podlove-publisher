@@ -199,6 +199,7 @@ add_action( 'admin_init', array( '\Podlove\PhpDeprecationWarning', 'init' ) );
 add_action( 'init', array( '\Podlove\Cache\TemplateCache', 'get_instance' ) );
 
 // require_once \Podlove\PLUGIN_DIR . 'includes/about.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/api.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/auto_post_titles.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/capabilities.php';
