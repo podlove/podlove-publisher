@@ -172,8 +172,12 @@ function podlove_generate_custom_post_link( $post_link, $id, $leavename = false,
 		$cats = get_the_category( $post->ID );
 
 		if ( $cats ) {
-			usort( $cats, '_usort_terms_by_ID' ); // order by ID
-			
+            if( function_exists( 'wp_list_sort' ) ) {
+                $cats = wp_list_sort( $cats, 'term_id', 'ASC' );
+            } else {
+                usort( $cats, '_usort_terms_by_ID' );
+            }
+
 			$category_object = apply_filters( 'post_link_category', $cats[0], $cats, $post );
 			$category_object = get_term( $category_object, 'category' );
 			$category = $category_object->slug;
