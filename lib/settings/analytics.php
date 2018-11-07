@@ -43,7 +43,45 @@ class Analytics {
 			} );
 		}
 
+		if (isset($_GET['action']) && in_array($_GET['action'], ['export-csv', 'export-json'])) {
+			$this->handle_export($_GET['action']);
+		}
+
 		add_filter('screen_settings', [$this, 'screen_settings'], 10, 2 );
+	}
+
+	public function handle_export($action)
+	{
+		$posts = isset($_GET['post']) ? $_GET['post'] : [];
+		$ids = count($posts) ? implode(",", $posts) : "";
+		$format = $action == 'export-csv' ? 'csv' : 'json';
+		$route_base = '/podlove/v1/analytics/episodes';
+		$route = $ids ? $route_base . '/' . $ids : $route_base;
+
+		self::rest_api_call($route, ['format' => $format]);
+	}
+
+	/**
+	 * API Call against WP REST API
+	 *
+	 * @param string $url
+	 * @param array $params
+	 * @return void
+	 */
+	public static function rest_api_call($url, $params)
+	{
+		$request = new \WP_REST_Request('GET', $url);
+		$request->set_query_params($params);
+		$response = rest_do_request($request);
+		
+		$server = rest_get_server();
+		$data = $server->response_to_data($response, false);
+		
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		header('Content-type: application/json');
+		echo wp_json_encode($data);
+		die();
 	}
 
 	// needs to be initialized here so columns become configurable
@@ -371,9 +409,13 @@ class Analytics {
 			</div>
 		</div>
 		
+		<form id="podlove-analytics-export" method="get">
 		<?php
 		$this->table->prepare_items();
 		$this->table->display();
+		?>
+		</form>
+		<?php
 	}
 
 	public static function numbers() {

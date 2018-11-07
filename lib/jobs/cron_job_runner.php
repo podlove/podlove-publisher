@@ -171,6 +171,17 @@ class CronJobRunner {
 
 		$job = Job::load($job_id);
 
+		// abort jobs that cannot finish
+		$created = strtotime($job->get_job()->created_at);
+		$diff = time() - $created;
+
+		if ($diff > HOUR_IN_SECONDS * 4) {
+			$job->get_job()->delete();
+			\Podlove\Log::get()->addWarning('[job] [id ' . $job_id . '] "' . $job->title() . '" aborted because it ran too long');
+			self::unlock_process();
+			return;
+		}
+
 		if (!$job) {
 			\Podlove\Log::get()->addDebug('[job] [id ' . $job_id . '] runner tried to run job but it does not exist');
 			self::unlock_process();

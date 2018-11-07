@@ -5,7 +5,7 @@ use Podlove\Model;
 class Subscribe_Button extends \Podlove\Modules\Base {
 
 	protected $module_name = 'Subscribe Button';
-	protected $module_description = 'Use <code title="Shortcode for the Subscribe Button">[podlove-subscribe-button]</code> to display a button which allows users to easily subscribe to your podcast.';
+	protected $module_description = 'Use <code title="Shortcode for the Subscribe Button">[podlove-podcast-subscribe-button]</code> to display a button which allows users to easily subscribe to your podcast. <a href="https://docs.podlove.org/podlove-publisher/reference/shortcodes.html#subscribe-button">Documentation</a>';
 	protected $module_group = 'web publishing';
 
 	public static function styles() {
@@ -83,6 +83,7 @@ class Subscribe_Button extends \Podlove\Modules\Base {
 			$args['language'] = Button::language($podcast->language);
 		}
 
+		$args = apply_filters('podlove_subscribe_button_args', $args, $podcast);
 		$data = apply_filters('podlove_subscribe_button_data', $data, $args, $podcast);
 
 		return (new Button())->render($data, $args);

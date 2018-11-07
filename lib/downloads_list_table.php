@@ -32,6 +32,17 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	public function column_downloads( $episode ) {
 		return self::get_number_or_dash($episode['downloads']);
 	}
+	
+	public function column_cb( $item ) {
+		$post_id = $item['post_id'];
+		$title = $item['title'];
+		?>
+		<label class="screen-reader-text" for="cb-select-<?php echo $post_id; ?>"><?php
+			printf( __( 'Select %s' ), $title );
+		?></label>
+		<input id="cb-select-<?php echo $post_id; ?>" type="checkbox" name="post[]" value="<?php echo $post_id; ?>" />
+		<?php
+	}
 
 	public function column_default($item, $column_name)
 	{
@@ -65,6 +76,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 
 	public function get_columns() {
 		return array(
+			'cb' => '<input type="checkbox" />',
 			// 'episode'   => __('Episode', 'podlove-podcasting-plugin-for-wordpress'),
 			'downloads' => __('Total', 'podlove-podcasting-plugin-for-wordpress'),
 			'3y' => __('3y', 'podlove-podcasting-plugin-for-wordpress'),
@@ -140,59 +152,9 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		// define column headers
 		$this->_column_headers = $this->get_column_info();
 
-		$data = [];
-		foreach (Model\Podcast::get()->episodes() as $episode) {
-			$post = $episode->post();
-
-			$data[] = [
-				'days_since_release' => $episode->days_since_release(),
-				'hours_since_release' => $episode->hours_since_release(),
-				'id' => $episode->id,
-				'title' => $post->post_title,
-				'post_date' => $post->post_date,
-				'post_date_gmt' => $post->post_date_gmt,
-				'downloads' => get_post_meta($post->ID, '_podlove_downloads_total', true),
-				'3y' => get_post_meta($post->ID, '_podlove_downloads_3y', true),
-				'2y' => get_post_meta($post->ID, '_podlove_downloads_2y', true),
-				'1y' => get_post_meta($post->ID, '_podlove_downloads_1y', true),
-				'3q' => get_post_meta($post->ID, '_podlove_downloads_3q', true),
-				'2q' => get_post_meta($post->ID, '_podlove_downloads_2q', true),
-				'1q' => get_post_meta($post->ID, '_podlove_downloads_1q', true),
-				'4w' => get_post_meta($post->ID, '_podlove_downloads_4w', true),
-				'3w' => get_post_meta($post->ID, '_podlove_downloads_3w', true),
-				'2w' => get_post_meta($post->ID, '_podlove_downloads_2w', true),
-				'1w' => get_post_meta($post->ID, '_podlove_downloads_1w', true),
-				'6d' => get_post_meta($post->ID, '_podlove_downloads_6d', true),
-				'5d' => get_post_meta($post->ID, '_podlove_downloads_5d', true),
-				'4d' => get_post_meta($post->ID, '_podlove_downloads_4d', true),
-				'3d' => get_post_meta($post->ID, '_podlove_downloads_3d', true),
-				'2d' => get_post_meta($post->ID, '_podlove_downloads_2d', true),
-				'1d' => get_post_meta($post->ID, '_podlove_downloads_1d', true) 
-			];
-		}
-
-		$valid_order_keys = array(
-			'post_date',
-			'downloads'
-		);
-
-		// look for order options
-		if ( isset($_GET['orderby']) && in_array($_GET['orderby'], $valid_order_keys) ) {
-			$orderby = $_GET['orderby'];
-		} else {
-			$orderby = 'post_date';
-		}
-
-		// look how to sort
-		if( isset($_GET['order'])  ) {
-			$order = strtoupper($_GET['order']) == 'ASC' ? SORT_ASC : SORT_DESC;
-		} else{
-			$order = SORT_DESC;
-		}
-
-		array_multisort(
-			\array_column($data, $orderby), $order,
-			$data
+		$data = Downloads_List_Data::get_data(
+			filter_input(INPUT_GET, 'orderby'),
+			filter_input(INPUT_GET, 'order')
 		);
 
 		// get current page
@@ -215,21 +177,31 @@ class Downloads_List_Table extends \Podlove\List_Table {
 	protected function extra_tablenav( $which ) {
 		global $wpdb;
 
-		if ($which !== 'bottom')
-			return;
+		if ($which == 'bottom') { ?>
+			<div class="alignleft actions">
+				<em><?php echo $this->data_age() ?></em>
+				<a href="">CSV EXPORT</a>
+			</div>
 
-		?>
-		<div class="alignleft actions">
-			<em><?php echo $this->data_age() ?></em>
-		</div>
-
-<script type="text/javascript">
-jQuery("#adv-settings input[type=checkbox]").on('change', function() {
-	var visibleCols = jQuery("#adv-settings input[type=checkbox]:checked").length;
-	jQuery("table.downloads td[colspan]").attr('colspan', visibleCols);
-});
-</script>
+			<script type="text/javascript">
+			jQuery("#adv-settings input[type=checkbox]").on('change', function() {
+				var visibleCols = jQuery("#adv-settings input[type=checkbox]:checked").length;
+				jQuery("table.downloads td[colspan]").attr('colspan', visibleCols);
+			});
+			</script>
 		<?php
+		}
+
+		if ($which == 'top') { ?>
+		  <div class="alignleft actions bulkactions">
+				<select name="action" id="analytics-export-selector-top">
+					<option value="export-csv">Export as CSV</option>
+					<option value="export-json">Export as JSON</option>
+				</select>
+				<input type="submit" class="button action" value="Export">
+			</div>
+		<?php
+		}
 	}
 
 	private function data_age() {

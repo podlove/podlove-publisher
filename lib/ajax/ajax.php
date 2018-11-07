@@ -41,6 +41,7 @@ class Ajax {
 			'analytics-global-sources',
 			'analytics-global-downloads-per-month',
 			'analytics-global-top-episodes',
+			'analytics-csv-episodes-table',
 			'episode-slug',
 			'admin-news',
 			'job-create',
@@ -449,6 +450,29 @@ class Ajax {
 
 		$checked = isset($_GET['checked']) && $_GET['checked'] === 'checked';
 		update_option('podlove_analytics_compare_avg', $checked);
+	}
+
+	public static function analytics_csv_episodes_table() {
+
+		if ( ! current_user_can( 'podlove_read_analytics' ) ) {
+			exit;
+		}
+
+    $data = \Podlove\Downloads_List_Data::get_data('post_date', 'asc');
+
+		$writer = Writer::createFromFileObject(new \SplTempFileObject()); //the CSV file will be created into a temporary File
+		$writer->setEncodingFrom("utf-8");
+
+		$headers = array_keys($data[0]);
+		$writer->insertOne($headers);
+
+		$writer->insertAll($data);
+
+		\Podlove\Feeds\check_for_and_do_compression('text/csv');
+		header("Content-Disposition: attachment; filename=podlove-episode-downloads.csv");
+		echo $writer;
+		ob_end_flush();
+		exit;
 	}
 
 	public static function respond_with_json( $result ) {
