@@ -201,6 +201,21 @@ class Transcripts extends \Podlove\Modules\Base {
 			$line->content    = $cue['text'];
 			$line->save();
 		}
+
+		$voices = array_unique(array_map(function($cue) {
+			return $cue['voice'];
+		}, $result['cues']));
+
+		foreach ($voices as $voice) {
+			$contributor = Contributor::find_one_by_property("identifier", $voice);
+			if ($contributor) {
+				$voice_assignment = new VoiceAssignment;
+				$voice_assignment->episode_id = $episode->id;
+				$voice_assignment->voice = $voice;
+				$voice_assignment->contributor_id = $contributor->id;
+				$voice_assignment->save();
+			}
+		}
 	}
 
 	public function ajax_transcript_get_contributors()

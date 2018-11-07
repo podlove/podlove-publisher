@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-11-07 =
+
+* automatically assign transcript voices if their webvtt identifier matches a contributor identifier
+
 = 2018-10-26 =
 
 Improvements in global analytics:
