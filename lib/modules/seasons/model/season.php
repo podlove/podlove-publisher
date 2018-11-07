@@ -14,7 +14,7 @@ class Season extends Base
 	}
 
 	public static function for_episode(Episode $episode) {
-		return self::by_date(strtotime(get_post($episode->post_id)->post_date));
+		return SeasonMap::get()->get_season_for_episode_id($episode->id);
 	}
 
 	public static function by_date($timestamp) {
