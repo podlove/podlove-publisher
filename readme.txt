@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.7.18 =
 
+* improve feed generation time when seasons are used ([#1010](https://github.com/podlove/podlove-publisher/issues/1010))
 * title migration module: 
   * remove "episode type" selector, always use "full"
   * add warning when there might be too many form fields
