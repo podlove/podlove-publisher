@@ -85,13 +85,10 @@ class Title_Migration extends \Podlove\Modules\Base {
 		$episodes = $_POST['migrate'];
 
 		foreach ($episodes as $episode_id => $data) {
-
-			$type = in_array($data['type'], ['full', 'trailer', 'bonus']) ? $data['type'] : 'full';
-
 			$episode = Model\Episode::find_by_id($episode_id);
 			$episode->number = (int) $data['number'];
 			$episode->title = trim($data['title']);
-			$episode->type  = $type;
+			$episode->type  = 'full';
 			$episode->save();
 		}
 
@@ -172,7 +169,6 @@ class Title_Migration extends \Podlove\Modules\Base {
 				<th><?php echo __('Current Post Title', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 				<th><?php echo __('Episode Number', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 				<th><?php echo __('Episode Title', 'podlove-podcasting-plugin-for-wordpress') ?></th>
-				<th><?php echo __('Type', 'podlove-podcasting-plugin-for-wordpress') ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -187,17 +183,38 @@ class Title_Migration extends \Podlove\Modules\Base {
 					<td>
 						<input type="text" value="<?php echo esc_attr($episode['title_guess']) ?>" name="migrate[<?php echo (int) $episode['episode']->id ?>][title]" class="regular-text" />
 					</td>
-					<td>
-						<select name="migrate[<?php echo (int) $episode['episode']->id ?>][type]" style="max-width: 270px">
-							<?php foreach (\Podlove\episode_types() as $type_key => $type_title): ?>
-								<option value="<?php echo esc_attr($type_key) ?>" <?php if ($type_key == 'full'): ?>selected<?php endif ?>><?php echo esc_html($type_title) ?></option>
-							<?php endforeach ?>
-						</select>
-					</td>
 				</tr>
 			<?php endforeach ?>
 		</tbody>
 	</table>
+
+	<?php
+	$input_count = count($episodes) * 2 + 4;
+	$buffer = 10;
+	if (ini_get('max_input_vars') < $input_count) {
+	?>
+		<div class="podlove-warning" style="border-left: 5px solid rgba(212, 61, 4, 1.000); padding-left: 5px;">
+			<strong>Lots of episodes! This might not work.</strong>
+
+			PHP has a limit fow how many form fields can be sent at once.
+			It looks like this needs more than is allowed here.
+			You should increase it in your php.ini.
+			Ask your hoster if you are not sure about this.
+
+<pre>
+# currently
+ini_get('max_input_vars') = <?php echo ini_get('max_input_vars'); ?>
+
+# required
+<?php echo $input_count + $buffer; ?>
+
+# php.ini recommendation
+max_input_vars = <?php echo $input_count + $buffer; ?>
+</pre>
+		</div>
+	<?php
+	}
+	?>
 
 	<button class="button button-primary">
 		<?php echo __('Migrate Post Titles', 'podlove-podcasting-plugin-for-wordpress') ?>

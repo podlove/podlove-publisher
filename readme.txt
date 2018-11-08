@@ -107,6 +107,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.18 =
+
+* title migration module: 
+  * remove "episode type" selector, always use "full"
+  * add warning when there might be too many form fields
+
 = 2.7.17 =
 
 **Downloads Data Export**
