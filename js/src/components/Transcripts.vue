@@ -7,6 +7,13 @@
                 
                 <a href="#" 
                    class="transcripts-tab" 
+                   :class="{'transcripts-tab-active': mode === 'transcript'}" 
+                   @click.prevent="mode = 'transcript'">
+                   Transcript
+                </a>
+                
+                <a href="#" 
+                   class="transcripts-tab" 
                    :class="{'transcripts-tab-active': mode === 'voices'}" 
                    @click.prevent="mode = 'voices'">
                    Voices
@@ -30,40 +37,69 @@
 
         </div>
 
-        <div class="row voices" v-show="mode == 'voices'">
-            <div class="voice col-md-12" v-for="(voice, index) in voices">
-                <div class="voice-label">
-                    {{ voice.label }}
+        <div class="row tab-body transcript" v-show="mode == 'transcript'">
+            <div v-if="transcript != null">
+                <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
+
+                    <div class="ts-speaker-avatar">
+                        <img :src="getVoice(group.speaker).option.avatar" width="50" height="50" />
+                    </div>
+
+                    <div class="ts-text">
+                        <div class="ts-speaker">
+                            {{ getVoice(group.speaker).option.label }}
+                        </div>
+
+                        <div class="ts-content">
+                            <span class="ts-line" v-for="(line, index) in group.items" :key="index">{{ line.text }}</span>
+                        </div>
+                    </div>                
                 </div>
-                <div class="voice-assignment">
-                    <v-select :options="contributorsOptions" v-model="voice.option" style="width: 300px">
-                        <template slot="option" slot-scope="option">
-                            <img :src="option.avatar" width="16" height="16" />
-                            {{ option.label }}
-                        </template>                          
-                    </v-select>
-                    <input type="hidden" :name="'_podlove_meta[transcript_voice][' + voice.label + ']'" :value="voice.option.value" v-if="voice.option">
+            </div>
+            <div v-else>
+                <div class="empty-state">
+                    No transcript available yet. You need to <a href="#" @click.prevent="mode = 'import'">import</a> one.
                 </div>
             </div>
         </div>  
 
-        <div class="row import" v-show="mode == 'import'">
-            <p>
-                <form>
-                    <button class="button button-primary" @click.prevent="initImportTranscript">Import Transcript</button>
-                    <input type="file" name="transcriptimport" id="transcriptimport" @change="importTranscript" style="display: none" :disabled="importing"> 
-                    <div class="description">{{ description }}</div>
-                </form>
-            </p>
+        <div class="row tab-body voices" v-show="mode == 'voices'">
+            <div v-if="voices != null && voices.length">
+                <div class="voice col-md-12" v-for="(voice, index) in voices" :key="index">
+                    <div class="voice-label">
+                        {{ voice.label }}
+                    </div>
+                    <div class="voice-assignment">
+                        <v-select :options="contributorsOptions" v-model="voice.option" style="width: 300px">
+                            <template slot="option" slot-scope="option">
+                                <img :src="option.avatar" width="16" height="16" />
+                                {{ option.label }}
+                            </template>                          
+                        </v-select>
+                        <input type="hidden" :name="'_podlove_meta[transcript_voice][' + voice.label + ']'" :value="voice.option.value" v-if="voice.option">
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <div class="empty-state">
+                    No voices available yet. You need to <a href="#" @click.prevent="mode = 'import'">import</a> a transcript with voice tags.
+                </div>
+            </div>
         </div>  
 
-        <div class="row export" v-show="mode == 'export'">
-            <p>
-                <a class="button button-secondary" :href="webvttDownloadHref" download="transcript.webvtt">Export webvtt</a>
-                <a class="button button-secondary" :href="jsonDownloadHref" download="transcript.json">Export json (flat)</a> 
-                <a class="button button-secondary" :href="jsonGroupedDownloadHref" download="transcript.json">Export json (grouped)</a> 
-                <a class="button button-secondary" :href="xmlDownloadHref" download="transcript.xml">Export xml</a> 
-            </p>
+        <div class="row tab-body import" v-show="mode == 'import'">
+            <form>
+                <button class="button button-primary" @click.prevent="initImportTranscript">Import Transcript</button>
+                <input type="file" name="transcriptimport" id="transcriptimport" @change="importTranscript" style="display: none" :disabled="importing"> 
+                <div class="description">{{ description }}</div>
+            </form>
+        </div>  
+
+        <div class="row tab-body export" v-show="mode == 'export'">
+            <a class="button button-secondary" :href="webvttDownloadHref" download="transcript.webvtt">Export webvtt</a>
+            <a class="button button-secondary" :href="jsonDownloadHref" download="transcript.json">Export json (flat)</a> 
+            <a class="button button-secondary" :href="jsonGroupedDownloadHref" download="transcript.json">Export json (grouped)</a> 
+            <a class="button button-secondary" :href="xmlDownloadHref" download="transcript.xml">Export xml</a> 
         </div>
 
     </div>
@@ -73,11 +109,12 @@
 export default {
     data() {
         return {
-            mode: 'voices',
+            mode: 'import',
             importing: false,
             lastError: '',
             voices: null,
-            contributors: null
+            contributors: null,
+            transcript: null
         }
     },
 
@@ -146,8 +183,7 @@ export default {
                 if (data.error) {
                     this.lastError = data.error
                 } else {
-                    this.fetchVoices()
-                    this.mode = 'voices';
+                    this.refetchAll()
                 }
                 this.importing = false;
                 fileInput.parentElement.reset();
@@ -155,9 +191,6 @@ export default {
                 this.importing = false;
                 fileInput.parentElement.reset();
             })
-        },
-        doImportTranscript(text) {
-            console.log("import", text);
         },
         fetchContributors(done) {
             this.axios.get(ajaxurl, {params: {action: 'podlove_transcript_get_contributors'}}).then(({data}) => {
@@ -171,7 +204,7 @@ export default {
                 }
             })
         },
-        fetchVoices() {
+        fetchVoices(done) {
             this.axios.get(ajaxurl, {
                 params: {
                     action: 'podlove_transcript_get_voices',
@@ -189,86 +222,158 @@ export default {
 
                         return {label: k.voice, value: k.contributor_id, option: option}
                     })
+                    if (done) {
+                        done()
+                    }
                 }
+            })
+        },
+        getVoice(id) {
+            return this.voices.find((v) => v.value == id)
+        },
+        fetchTranscript(done) {
+            this.axios.get(this.jsonGroupedDownloadHref).then(({data}) => {
+                this.transcript = data
+                if (done) {
+                    done()
+                }
+            }) 
+        },
+        refetchAll() {
+            this.fetchContributors(() => {
+                this.fetchVoices(() => {
+                    this.fetchTranscript(() => {
+                        if (this.transcript && this.voices) {
+                            this.mode = 'transcript'
+                        } else if (!this.voices) {
+                            this.mode = 'voices'
+                        }
+                    })
+                })
             })
         }
     },
 
     mounted() {
-        this.fetchContributors(() => {
-            this.fetchVoices()
-        })
+        this.refetchAll()
     }
 }
 </script>
 
 <style type="text/css">
 .row {
-    position: relative;
+  position: relative;
+}
+.tab-body {
+  border: 1px solid rgb(204, 204, 204);
+  min-height: 20px;
+  padding: 10px;
 }
 .row.voices {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 .row.voices .voice {
-    display: flex;
-    padding: 2px;
+  display: flex;
+  padding: 2px;
 }
 .row.voices .voice:nth-child(odd) {
-    background: #F6F6F6;
+  background: #f6f6f6;
 }
 .voice-label {
-    width: 105px;
-    line-height: 38px;
-    padding-left: 2px;
+  width: 105px;
+  line-height: 38px;
+  padding-left: 2px;
 }
 .col-md-12 {
-    width: 100%;
+  width: 100%;
 }
 .col-md-8 {
-    flex-grow: 3;
+  flex-grow: 3;
 }
 .col-md-4 {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 .transcripts-tab-wrapper {
-    width: 100%;
-    height:28px;
-    display: block;
+  width: 100%;
+  height: 28px;
+  display: block;
 }
 .transcripts-tab-wrapper::after {
-    clear: both;
+  clear: both;
 }
 .transcripts-tab {
-    float: left;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    margin-right: 0.5em;
-    padding: 1px 10px;
-    font-size: 1em;
-    line-height: 24px;
-    background: #f6f6f6;
+  float: left;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  margin-right: 0.5em;
+  padding: 1px 10px;
+  font-size: 1em;
+  line-height: 24px;
+  background: #f6f6f6;
 }
-a.transcripts-tab, a.transcripts-tab:focus {
-    text-decoration: none;
-    color: #555;
-    outline: none;
-    box-shadow: none
+a.transcripts-tab,
+a.transcripts-tab:focus {
+  text-decoration: none;
+  color: #555;
+  outline: none;
+  box-shadow: none;
 }
 .transcripts-tab-active,
-.transcripts-tab:hover{
-    background: white;
+.transcripts-tab:hover {
+  background: white;
+  border-bottom: 1px solid white;
+  position: relative;
+  top: 1px;
+  z-index: 10;
 }
 .import form {
-    border: 2px dashed #999;
-    padding: 20px 20px;
-    margin-bottom: 10px;
-    text-align: center;
+  border: 2px dashed #999;
+  padding: 20px 20px;
+  text-align: center;
 }
 
 .import .description {
-    margin-top: 10px;
-    color: #666;
+  margin-top: 10px;
+  color: #666;
+}
+
+.empty-state {
+  padding: 10px 0px;
+}
+
+.row.transcript {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.ts-group {
+  clear: both;
+  margin-top: 15px;
+}
+.ts-speaker-avatar {
+  margin-top: 5px;
+  float: left;
+}
+.ts-speaker-avatar img {
+  border-radius: 10%;
+}
+.ts-speaker {
+  font-weight: bold;
+  font-size: 90%;
+}
+.ts-items {
+  margin-left: 20px;
+}
+.ts-time {
+  font-size: small;
+  color: #999;
+}
+.ts-text {
+  margin-left: 60px;
+}
+.ts-line:hover {
+  background-color: #f9f9f9;
 }
 </style>

@@ -243,9 +243,6 @@ class Transcripts extends \Podlove\Modules\Base {
 
 	public function serve_transcript_file()
 	{
-		if ( ! is_single() )
-			return;
-
 		$format = filter_input(INPUT_GET, 'podlove_transcript', FILTER_VALIDATE_REGEXP, [
 			'options' => ['regexp' => "/^(json_grouped|json|webvtt|xml)$/"]
 		]);
@@ -253,10 +250,21 @@ class Transcripts extends \Podlove\Modules\Base {
 		if ( ! $format )
 			return;
 
-		if ( ! $episode = Model\Episode::find_one_by_post_id( get_the_ID() ) )
+		$post_id = get_the_ID();
+		if (!$post_id) {
+			$post_id = intval($_GET['p'], 10);
+		}
+
+		if (!$post_id) {
+			return;
+		}
+
+		if ( ! $episode = Model\Episode::find_or_create_by_post_id( $post_id ) )
 			return;
 
 		$renderer = new Renderer($episode);
+
+		http_response_code(200);
 
 		switch ($format) {
 			case 'xml':
