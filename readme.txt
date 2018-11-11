@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2018-11-11 =
 
+* apply new tab style from transcripts section to chapter marks section
 * internal: when batch-enabling an asset, trigger podlove_media_file_content_has_changed action for all affected media file objects
 
 = 2018-11-09 =

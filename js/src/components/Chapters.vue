@@ -30,24 +30,20 @@
 
         </div>
 
-        <div class="row import" v-show="mode == 'import'">
-            <p>
-                <form>
-                    <button class="button button-primary" @click.prevent="initImportChapters">Import Chapters</button>
-                    <input type="file" name="chapterimport" id="chapterimport" @change="importChapters" style="display: none"> 
-                    <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), <a href="http://www.audacityteam.org" target="_blank">Audacity</a> Track Labels, <a href="https://hindenburg.com" target="_blank">Hindenburg</a> project files and MP4Chaps (<code>.txt</code>)</div>
-                </form>
-            </p>
+        <div class="row tab-body import" v-show="mode == 'import'">
+            <form>
+                <button class="button button-primary" @click.prevent="initImportChapters">Import Chapters</button>
+                <input type="file" name="chapterimport" id="chapterimport" @change="importChapters" style="display: none"> 
+                <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), <a href="http://www.audacityteam.org" target="_blank">Audacity</a> Track Labels, <a href="https://hindenburg.com" target="_blank">Hindenburg</a> project files and MP4Chaps (<code>.txt</code>)</div>
+            </form>
         </div>    
         
-        <div class="row export" v-show="mode == 'export'">
-            <p>
-                <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">Podlove Simple Chapters (psc)</a>
-                <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">MP4Chaps (txt)</a> 
-            </p>
+        <div class="row tab-body export" v-show="mode == 'export'">
+            <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">Podlove Simple Chapters (psc)</a>
+            <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">MP4Chaps (txt)</a> 
         </div>
 
-        <div class="row chapters" v-show="mode == 'chapters'">
+        <div class="row tab-body chapters" v-show="mode == 'chapters'">
 
             <div :class="{'col-md-8': activeChapter, 'col-md-12': !activeChapter}">
                 <chapter 
@@ -369,82 +365,88 @@ export default {
 
 <style type="text/css">
 .row {
-    position: relative;
+  position: relative;
 }
 .row.chapters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.tab-body {
+  border: 1px solid rgb(204, 204, 204);
+  min-height: 20px;
+  padding: 10px;
 }
 .col-md-12 {
-    width: 100%;
+  width: 100%;
 }
 .col-md-8 {
-    flex-grow: 3;
+  flex-grow: 3;
 }
 .col-md-4 {
-    flex-grow: 1;
+  flex-grow: 1;
 }
-.chapter-edit {
-    /*padding-left: 20px*/
+.chapter-edit input[type="text"] {
+  width: 100%;
 }
-.chapter-edit input[type=text] {
-    width: 100%;
+label[for="chapter_title"],
+label[for="chapter_url"],
+label[for="chapter_start"] {
+  display: block;
+  font-weight: bold;
 }
-label[for=chapter_title],
-label[for=chapter_url],
-label[for=chapter_start] {
-    display: block;
-    font-weight: bold;
-}
-label[for=chapter_start],
-label[for=chapter_url],
+label[for="chapter_start"],
+label[for="chapter_url"],
 button.button.delete-chapter {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
-label[for=chapter_url] small {
-    font-weight: normal;
+label[for="chapter_url"] small {
+  font-weight: normal;
 }
 
 .chapters-tab-wrapper {
-    width: 100%;
-    height:28px;
-    display: block;
+  width: 100%;
+  height: 28px;
+  display: block;
 }
 .chapters-tab-wrapper::after {
-    clear: both;
+  clear: both;
 }
 .chapters-tab {
-    float: left;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    margin-right: 0.5em;
-    padding: 1px 10px;
-    font-size: 1em;
-    line-height: 24px;
-    background: #f6f6f6;
+  float: left;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  margin-right: 0.5em;
+  padding: 1px 10px;
+  font-size: 1em;
+  line-height: 24px;
+  background: #f6f6f6;
 }
-a.chapters-tab, a.chapters-tab:focus {
-    text-decoration: none;
-    color: #555;
-    outline: none;
-    box-shadow: none
+a.chapters-tab,
+a.chapters-tab:focus {
+  text-decoration: none;
+  color: #555;
+  outline: none;
+  box-shadow: none;
 }
 .chapters-tab-active,
-.chapters-tab:hover{
-    background: white;
+.chapters-tab:hover {
+  background: white;
+  border-bottom: 1px solid white;
+  position: relative;
+  top: 1px;
+  z-index: 10;
 }
 
 .import form {
-    border: 2px dashed #999;
-    padding: 20px 20px;
-    margin-bottom: 10px;
-    text-align: center;
+  border: 2px dashed #999;
+  padding: 20px 20px;
+  text-align: center;
 }
 
 .import .description {
-    margin-top: 10px;
-    color: #666;
+  margin-top: 10px;
+  color: #666;
 }
 </style>
