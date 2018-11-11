@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * apply new tab style from transcripts section to chapter marks section
 * internal: when batch-enabling an asset, trigger podlove_media_file_content_has_changed action for all affected media file objects
+* migration assistant: remove "lighter" font weights
 
 = 2018-11-09 =
 

@@ -15,7 +15,6 @@
 	padding-right: 10px;
 	padding-left: 185px;
 	box-sizing: border-box;
-	font-weight: lighter;
 
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -41,7 +40,6 @@
 #podlove_welcome h3 {
 	line-height: 22px;
 	font-size: 1.6em;
-	font-weight: lighter;
 	margin: 10px 0px;
 	text-rendering: optimizelegibility;
 }
