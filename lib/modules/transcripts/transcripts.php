@@ -187,7 +187,10 @@ class Transcripts extends \Podlove\Modules\Base {
 		} catch (ParserException $e) {
 			$error = 'Error parsing webvtt file: ' . $e->getMessage();
 			\Podlove\Log::get()->addError($error);
-			\Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
+			if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'podlove_transcript_import') {
+				\Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
+			}
+			return;
 		}
 
 		Transcript::delete_for_episode($episode->id);
