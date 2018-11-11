@@ -110,9 +110,9 @@ class EpisodeAsset {
 				$file->episode_id = $episode->id;
 				$file->episode_asset_id = $asset->id;
 				$file->save();
-
-				do_action( 'podlove_media_file_content_has_changed', $file->id );
 			}
+			
+			do_action( 'podlove_media_file_content_has_changed', $file->id );
 		}
 
 		$this->redirect( 'index', NULL, array( 'message' => 'media_file_batch_enabled_notice' ) );
