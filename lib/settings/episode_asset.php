@@ -110,6 +110,8 @@ class EpisodeAsset {
 				$file->episode_id = $episode->id;
 				$file->episode_asset_id = $asset->id;
 				$file->save();
+
+				do_action( 'podlove_media_file_content_has_changed', $file->id );
 			}
 		}
 

@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-11-11 =
+
+* internal: when batch-enabling an asset, trigger podlove_media_file_content_has_changed action for all affected media file objects
+
 = 2018-11-09 =
 
 improve transcripts module
