@@ -352,6 +352,9 @@ a.transcripts-tab:focus {
   clear: both;
   margin-top: 15px;
 }
+.ts-group:first-child {
+  margin-top: 0px;
+}
 .ts-speaker-avatar {
   margin-top: 5px;
   float: left;
@@ -361,7 +364,7 @@ a.transcripts-tab:focus {
 }
 .ts-speaker {
   font-weight: bold;
-  font-size: 90%;
+  /* font-size: 90%; */
 }
 .ts-items {
   margin-left: 20px;
