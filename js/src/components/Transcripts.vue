@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="ts-content">
-                            <span class="ts-line" v-for="(line, index) in group.items" :key="index">{{ line.text }}</span>
+                            <span class="ts-line" v-for="(line, index) in group.items" :key="index">{{ line.text }} </span>
                         </div>
                     </div>                
                 </div>
