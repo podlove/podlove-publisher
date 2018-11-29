@@ -110,6 +110,11 @@ class Podcast_Post_Type {
 	 */
 	public function enable_tag_and_category_search( $query ) {
 
+		// @see https://github.com/podlove/podlove-publisher/issues/1017
+		if (defined('PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH') && PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH) {
+			return $query;
+		}
+
 		if ( ( is_category() || is_tag() ) && empty( $query->query_vars['suppress_filters'] ) ) {
 			$post_type = get_query_var( 'post_type' );
 

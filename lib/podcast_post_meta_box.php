@@ -21,7 +21,10 @@ class Podcast_Post_Meta_Box {
 			/* $callback */ '\Podlove\Podcast_Post_Meta_Box::post_type_meta_box_callback',
 			/* $page     */ 'podcast',
 			/* $context  */ 'normal',
-			/* $priority */ 'high'
+			/* $priority */ 'high',
+			[
+				'__block_editor_compatible_meta_box' => false,
+			]
 		);
 	}
 
