@@ -216,6 +216,33 @@ class Contributor extends Wrapper {
 	}
 
 	/**
+	 * Affiliation: organisation
+	 * 
+	 * @accessor
+	 */
+	public function organisation() {
+		return $this->contributor->organisation;
+	}
+
+	/**
+	 * Affiliation: department
+	 * 
+	 * @accessor
+	 */
+	public function department() {
+		return $this->contributor->department;
+	}
+
+	/**
+	 * Affiliation: jobtitle
+	 * 
+	 * @accessor
+	 */
+	public function jobtitle() {
+		return $this->contributor->jobtitle;
+	}
+
+	/**
 	 * Episodes with this contributor
 	 * 
 	 * Filter and order episodes with parameters:
