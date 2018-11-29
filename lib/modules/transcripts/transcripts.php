@@ -194,6 +194,7 @@ class Transcripts extends \Podlove\Modules\Base {
 		}
 
 		Transcript::delete_for_episode($episode->id);
+		VoiceAssignment::delete_for_episode($episode->id);
 		
 		foreach ($result['cues'] as $cue) {
 			$line = new Transcript;
