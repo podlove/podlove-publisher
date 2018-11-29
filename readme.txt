@@ -116,6 +116,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * new PHP constant `PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH` ([#1017](https://github.com/podlove/podlove-publisher/issues/1017))
 * feed item limit: "1" is now an option
 * add missing contributor template accessors: organisation, department, jobtitle
+* ensure Gutenberg editor is not used for episodes
 
 = 2.7.17 =
 
