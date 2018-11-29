@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * remove "episode type" selector, always use "full"
   * add warning when there might be too many form fields
 * new PHP constant `PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH` ([#1017](https://github.com/podlove/podlove-publisher/issues/1017))
+* feed item limit: "1" is now an option
 
 = 2.7.17 =
 

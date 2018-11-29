@@ -262,11 +262,14 @@ class Feed {
 
 				$limit_options = array(
 					'-1' => __( "No limit. Include all items.", 'podlove-podcasting-plugin-for-wordpress' ),
-					'0'  => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+					'0'  => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ) . ' (' . get_option( 'posts_per_rss' ) . ')',
+					'1' => 1
 				);
 				for( $i = 1; $i*5 <= 100; $i++ ) {
 					$limit_options[ $i*5 ] = $i*5;
 				}
+
+				$limit_options = apply_filters('podlove_feed_limit_options', $limit_options);
 
 				$wrapper->select( 'limit_items', array(
 					'label'       => __( 'Limit Items', 'podlove-podcasting-plugin-for-wordpress' ),
@@ -398,11 +401,14 @@ class Feed {
 			$limit_options = array(
 				'-2' => __( "Use Podlove default (".$limit_default.")", 'podlove-podcasting-plugin-for-wordpress' ),
 				'-1' => __( "No limit. Include all items.", 'podlove-podcasting-plugin-for-wordpress' ),
-				'0'  => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ) . ' (' . get_option( 'posts_per_rss' ) . ')'
+				'0'  => __( 'Use WordPress Default', 'podlove-podcasting-plugin-for-wordpress' ) . ' (' . get_option( 'posts_per_rss' ) . ')',
+				1 => 1
 			);
 			for( $i = 1; $i*5 <= 100; $i++ ) {
 				$limit_options[ $i*5 ] = $i*5;
 			}
+
+			$limit_options = apply_filters('podlove_feed_limit_options', $limit_options);
 
 			$wrapper->select( 'limit_items', array(
 				'label'       => __( 'Limit Items', 'podlove-podcasting-plugin-for-wordpress' ),
