@@ -123,7 +123,7 @@ class SettingsTab extends Tab {
 			),
 			/* $callback */ function () {
 				?>
-				<textarea name="podlove_notifications[body]" class="large-text autogrow"><?php echo esc_html(\Podlove\get_setting('notifications', 'body')) ?></textarea>
+				<textarea name="podlove_notifications[body]" class="large-text"><?php echo esc_html(\Podlove\get_setting('notifications', 'body')) ?></textarea>
 				<?php
 			},
 			/* $page     */ $hook,  

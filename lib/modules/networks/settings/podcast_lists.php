@@ -181,7 +181,7 @@ class PodcastLists {
 			$wrapper->text( 'description', array(
 				'label'       => __( 'Summary', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html'        => array( 'rows' => 3, 'cols' => 40, 'class' => 'autogrow' )
+				'html'        => array( 'rows' => 3, 'cols' => 40 )
 			) );
 
 			$wrapper->image( 'logo', array(

@@ -2,23 +2,23 @@ var PODLOVE = PODLOVE || {};
 
 // jQuery Tiny Pub/Sub
 // https://github.com/cowboy/jquery-tiny-pubsub
-(function($) {
+(function ($) {
 	var o = $({});
-	$.subscribe = function() {
+	$.subscribe = function () {
 		o.on.apply(o, arguments);
 	};
 
-	$.unsubscribe = function() {
+	$.unsubscribe = function () {
 		o.off.apply(o, arguments);
 	};
 
-	$.publish = function() {
+	$.publish = function () {
 		o.trigger.apply(o, arguments);
 	};
 }(jQuery));
 
 PODLOVE.rtrim = function (string, thechar) {
-	var re = new RegExp(thechar + "+$","g");
+	var re = new RegExp(thechar + "+$", "g");
 	return string.replace(re, '');
 }
 
@@ -32,15 +32,21 @@ PODLOVE.trailingslashit = function (url) {
 
 PODLOVE.toDurationFormat = function (float_seconds) {
 	var sec_num = parseInt(float_seconds, 10);
-	var hours   = Math.floor(sec_num / 3600);
+	var hours = Math.floor(sec_num / 3600);
 	var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
 	var seconds = sec_num - (hours * 3600) - (minutes * 60);
 	var milliseconds = Math.round((float_seconds % 1) * 1000);
 
-	if (hours   < 10) {hours   = "0"+hours;}
-	if (minutes < 10) {minutes = "0"+minutes;}
-	if (seconds < 10) {seconds = "0"+seconds;}
-	var time = hours+':'+minutes+':'+seconds;
+	if (hours < 10) {
+		hours = "0" + hours;
+	}
+	if (minutes < 10) {
+		minutes = "0" + minutes;
+	}
+	if (seconds < 10) {
+		seconds = "0" + seconds;
+	}
+	var time = hours + ':' + minutes + ':' + seconds;
 
 	if (milliseconds) {
 		time += '.' + milliseconds;
@@ -77,30 +83,30 @@ function convert_to_slug(string) {
 }
 
 function auto_fill_form(id, title_id) {
-	(function($) {
-		switch( id ) {
+	(function ($) {
+		switch (id) {
 			case 'contributor':
-				if( $("#podlove_contributor_publicname").val() == "" ) {
-					if( $("#podlove_contributor_realname").val() == "" ) {
-						$("#podlove_contributor_publicname").attr( 'placeholder', $("#podlove_contributor_nickname").val() );
+				if ($("#podlove_contributor_publicname").val() == "") {
+					if ($("#podlove_contributor_realname").val() == "") {
+						$("#podlove_contributor_publicname").attr('placeholder', $("#podlove_contributor_nickname").val());
 					} else {
-						$("#podlove_contributor_publicname").attr( 'placeholder', $("#podlove_contributor_realname").val() );
-					}											
+						$("#podlove_contributor_publicname").attr('placeholder', $("#podlove_contributor_realname").val());
+					}
 				}
-			break;
+				break;
 			case 'contributor_group':
-				if( $("#podlove_contributor_group_slug").val() == "" ) {
-					$("#podlove_contributor_group_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
+				if ($("#podlove_contributor_group_slug").val() == "") {
+					$("#podlove_contributor_group_slug").val(convert_to_slug($("#podlove_contributor_" + title_id).val()));
 				}
-			break;
+				break;
 			case 'contributor_role':
-				if( $("#podlove_contributor_role_slug").val() == "" ) {
-					$("#podlove_contributor_role_slug").val( convert_to_slug( $("#podlove_contributor_" + title_id).val() ) );
+				if ($("#podlove_contributor_role_slug").val() == "") {
+					$("#podlove_contributor_role_slug").val(convert_to_slug($("#podlove_contributor_" + title_id).val()));
 				}
-			break;
+				break;
 		}
 
-		
+
 	}(jQuery));
 }
 
@@ -126,8 +132,8 @@ function auto_fill_form(id, title_id) {
  * ```
  */
 function clean_up_input() {
-	(function($) {
-		$(".podlove-check-input").on('change', function() {
+	(function ($) {
+		$(".podlove-check-input").on('change', function () {
 			var textfield = $(this);
 			var textfieldid = textfield.attr("id");
 			var $status = $(".podlove-input-status[data-podlove-input-status-for=" + textfieldid + "]");
@@ -143,51 +149,51 @@ function clean_up_input() {
 			}
 
 			// trim whitespace
-			textfield.val( textfield.val().trim() );
+			textfield.val(textfield.val().trim());
 
 			// remove blacklisted characters
-			if ( inputType = $(this).data("podlove-input-remove") ) {
+			if (inputType = $(this).data("podlove-input-remove")) {
 				characters = $(this).data("podlove-input-remove").split(' ');
-				$.each( characters, function(index, character) {
-					textfield.val( textfield.val().replace(character, '') );
-				} );
+				$.each(characters, function (index, character) {
+					textfield.val(textfield.val().replace(character, ''));
+				});
 			}
-			
+
 			// handle special input types
-			if ( inputType = $(this).data("podlove-input-type") ) {
+			if (inputType = $(this).data("podlove-input-type")) {
 				$status.text('');
 
-				if ( $(this).val() == '' )
+				if ($(this).val() == '')
 					return;
 
-				switch(inputType) {
+				switch (inputType) {
 					case "url":
 						valid_url_regexp = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
-						if ( ! textfield.val().match(valid_url_regexp) ) {
+						if (!textfield.val().match(valid_url_regexp)) {
 							// Encode URL only if it is not already encoded
-							if ( ! encodeURI( textfield.val() ).match(valid_url_regexp) ) {
+							if (!encodeURI(textfield.val()).match(valid_url_regexp)) {
 								ShowInputError('Please enter a valid URL');
 							} else {
-								textfield.val( encodeURI( textfield.val() ) );
-							}							
-						}		 				
-					break;
+								textfield.val(encodeURI(textfield.val()));
+							}
+						}
+						break;
 					case "avatar":
-						if ( ! textfield.val().match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i) ) {
+						if (!textfield.val().match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i)) {
 							// textfield.val( encodeURI( textfield.val() ) );
 
-							if ( ! textfield.val().match(/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i) ) {
+							if (!textfield.val().match(/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i)) {
 								ShowInputError('Please enter a valid email adress or a valid URL');
 							}
 						}
-					break;
+						break;
 					case "email":
-						if ( ! textfield.val().match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i) )
+						if (!textfield.val().match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i))
 							ShowInputError('Please enter a valid email adress.');
-					break;
+						break;
 				}
-			}	
+			}
 		});
 	}(jQuery));
 }
@@ -206,13 +212,13 @@ function init_contextual_help_links() {
 		e.preventDefault();
 
 		// Remove 'active' class from all link tabs
-		jQuery('li[id^="tab-link-"]').each(function(){
-		    jQuery(this).removeClass('active');
+		jQuery('li[id^="tab-link-"]').each(function () {
+			jQuery(this).removeClass('active');
 		});
 
 		// Hide all panels
-		jQuery('div[id^="tab-panel-"]').each(function(){
-		    jQuery(this).css('display', 'none');
+		jQuery('div[id^="tab-panel-"]').each(function () {
+			jQuery(this).css('display', 'none');
 		});
 
 		// Set our desired link/panel
@@ -229,61 +235,60 @@ function init_contextual_help_links() {
 	});
 }
 
-jQuery(function($) {
+jQuery(function ($) {
 
-	$( "#_podlove_meta_recording_date" ).datepicker({ dateFormat: 'yy-mm-dd'});
+	$("#_podlove_meta_recording_date").datepicker({
+		dateFormat: 'yy-mm-dd'
+	});
 
-	$("#dashboard_feed_info").each(function() {
+	$("#dashboard_feed_info").each(function () {
 		PODLOVE.DashboardFeedValidation($(this));
 	});
-	
-	$("#asset_validation").each(function() {
+
+	$("#asset_validation").each(function () {
 		PODLOVE.DashboardAssetValidation($(this));
 	});
 
-	$("#podlove_podcast").each(function() {
+	$("#podlove_podcast").each(function () {
 		PODLOVE.Episode($(this));
 	});
 
-	$("#podlove_episode_assets, table.episode_assets").each(function() {
+	$("#podlove_episode_assets, table.episode_assets").each(function () {
 		PODLOVE.EpisodeAssetSettings($(this));
 	});
 
-	$(".wrap").each(function() {
+	$(".wrap").each(function () {
 		PODLOVE.FeedSettings($(this));
 	});
 
-	$(".row_podlove_feed_protected").each(function() {
+	$(".row_podlove_feed_protected").each(function () {
 		PODLOVE.ProtectFeed();
 	});
 
-	$(".autogrow").autogrow();
-
-	$("#podlove_contributor_publicname").change(function() {
+	$("#podlove_contributor_publicname").change(function () {
 		auto_fill_form('contributor', 'realname');
 	});
 
-	$("#podlove_contributor_realname").change(function() {
+	$("#podlove_contributor_realname").change(function () {
 		auto_fill_form('contributor', 'realname');
 	});
 
-	$("#podlove_contributor_nickname").change(function() {
+	$("#podlove_contributor_nickname").change(function () {
 		auto_fill_form('contributor', 'realname');
 	});
 
-	$("#podlove_contributor_group_title").change(function() {
+	$("#podlove_contributor_group_title").change(function () {
 		auto_fill_form('contributor_group', 'group_title');
 	});
 
-	$("#podlove_contributor_role_title").change(function() {
+	$("#podlove_contributor_role_title").change(function () {
 		auto_fill_form('contributor_role', 'role_title');
 	});
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 		auto_fill_form('contributor', 'realname');
 		clean_up_input();
 		init_contextual_help_links();
 	});
-	
-});
 
+});

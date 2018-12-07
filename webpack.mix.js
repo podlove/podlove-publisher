@@ -19,7 +19,6 @@ mix.js('js/src/app.js', 'js/dist/')
             'js/admin/chosen/chosenImage.jquery.js',
             'js/src/admin/md5.js',
             'js/src/admin/timeago.jquery.js',
-            'js/src/admin/jquery.autogrow.js',
             'js/src/admin/jquery.count_characters.js',
             'js/src/admin/podlove_data_table.js',
             'js/src/admin/episode.js',
