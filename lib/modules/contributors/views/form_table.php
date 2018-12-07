@@ -220,7 +220,6 @@ use \Podlove\Modules\Contributors\Contributors;
 				if (is_form_ready()) {
 					callback();
 				} else {
-					console.log("retry");
 					window.setTimeout(() => {
 						when_form_is_ready(callback);
 					}, 50);
