@@ -141,7 +141,7 @@ use \Podlove\Modules\Contributors\Contributors;
 				});
 			}
 
-			$(document).ready(function() {
+			function contributors_init() {
 				var i = 0;
 
 				contributor_dropdown_handler();
@@ -182,7 +182,7 @@ use \Podlove\Modules\Contributors\Contributors;
 					},
 					onRowDelete: function(tr) {
 						var object_id = tr.data("object-id"),
-						    ajax_action = "podlove-contributors-delete-";
+								ajax_action = "podlove-contributors-delete-";
 
 						switch (form_base_name) {
 							case "podlove_podcast[contributor]":
@@ -209,7 +209,26 @@ use \Podlove\Modules\Contributors\Contributors;
 							dataType: 'json'
 						});
 					}
-				});
+				});				
+			}
+
+			function is_form_ready() {
+				return $("#contributors-form table:visible").length === 1;
+			}
+
+			function when_form_is_ready(callback) {
+				if (is_form_ready()) {
+					callback();
+				} else {
+					console.log("retry");
+					window.setTimeout(() => {
+						when_form_is_ready(callback);
+					}, 50);
+				}
+			}
+
+			$(document).ready(function() {
+				when_form_is_ready(contributors_init)
 			});
 		}(jQuery));
 
