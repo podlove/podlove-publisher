@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.19 = 
+
+* feed: do not include `<itunes:summary>` tag if it is empty (Apple Podcast requirement)
+
 = 2.7.18 =
 
 * improve feed generation time when seasons are used ([#1010](https://github.com/podlove/podlove-publisher/issues/1010))
