@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 4.9.8
+Tested up to: 5.0.0
 Requires PHP: 5.4
 Stable tag: 2.7.18
 License: MIT
@@ -109,7 +109,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.7.19 = 
 
+We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
+You can choose to use the new editor or stay with the classic editor for now by installing the classic editor plugin by WordPress.
+
 * feed: do not include `<itunes:summary>` tag if it is empty (Apple Podcast requirement)
+* adjustments for Gutenberg compatibility:
+  * Shows metabox moved from sidebar to main area
+  * remove broken form field autogrow behavior
+  * fix contributors UI initialization
 
 = 2.7.18 =
 
