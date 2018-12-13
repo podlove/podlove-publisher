@@ -1,108 +1,140 @@
 <template>
-    <div class="container">
-       
-        <div class="row">
-
-            <div class="transcripts-tab-wrapper">
-                
-                <a href="#" 
-                   class="transcripts-tab" 
-                   :class="{'transcripts-tab-active': mode === 'transcript'}" 
-                   @click.prevent="mode = 'transcript'">
-                   Transcript
-                </a>
-                
-                <a href="#" 
-                   class="transcripts-tab" 
-                   :class="{'transcripts-tab-active': mode === 'voices'}" 
-                   @click.prevent="mode = 'voices'">
-                   Voices
-                </a>
-
-                <a href="#" 
-                   class="transcripts-tab" 
-                   :class="{'transcripts-tab-active': mode === 'import'}" 
-                   @click.prevent="mode = 'import'">
-                   Import
-                </a>
-
-                <a href="#" 
-                   class="transcripts-tab" 
-                   :class="{'transcripts-tab-active': mode === 'export'}" 
-                   @click.prevent="mode = 'export'">
-                   Export
-                </a>
-
-            </div>
-
-        </div>
-
-        <div class="row tab-body transcript" v-show="mode == 'transcript'">
-            <div v-if="transcript != null">
-                <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
-
-                    <div class="ts-speaker-avatar">
-                        <img :src="getVoice(group.speaker).option.avatar" width="50" height="50" />
-                    </div>
-
-                    <div class="ts-text">
-                        <div class="ts-speaker">
-                            {{ getVoice(group.speaker).option.label }}
-                        </div>
-
-                        <div class="ts-content">
-                            <span class="ts-line" v-for="(line, index) in group.items" :key="index">{{ line.text }} </span>
-                        </div>
-                    </div>                
-                </div>
-            </div>
-            <div v-else>
-                <div class="empty-state">
-                    No transcript available yet. You need to <a href="#" @click.prevent="mode = 'import'">import</a> one.
-                </div>
-            </div>
-        </div>  
-
-        <div class="row tab-body voices" v-show="mode == 'voices'">
-            <div v-if="voices != null && voices.length">
-                <div class="voice col-md-12" v-for="(voice, index) in voices" :key="index">
-                    <div class="voice-label">
-                        {{ voice.label }}
-                    </div>
-                    <div class="voice-assignment">
-                        <v-select :options="contributorsOptions" v-model="voice.option" style="width: 300px">
-                            <template slot="option" slot-scope="option">
-                                <img :src="option.avatar" width="16" height="16" />
-                                {{ option.label }}
-                            </template>                          
-                        </v-select>
-                        <input type="hidden" :name="'_podlove_meta[transcript_voice][' + voice.label + ']'" :value="voice.option.value" v-if="voice.option">
-                    </div>
-                </div>
-            </div>
-            <div v-else>
-                <div class="empty-state">
-                    No voices available yet. You need to <a href="#" @click.prevent="mode = 'import'">import</a> a transcript with voice tags.
-                </div>
-            </div>
-        </div>  
-
-        <div class="row tab-body import" v-show="mode == 'import'">
-            <form>
-                <button class="button button-primary" @click.prevent="initImportTranscript">Import Transcript</button>
-                <input type="file" name="transcriptimport" id="transcriptimport" @change="importTranscript" style="display: none" :disabled="importing"> 
-                <div class="description">{{ description }}</div>
-            </form>
-        </div>  
-
-        <div class="row tab-body export" v-show="mode == 'export'">
-            <a class="button button-secondary" :href="webvttDownloadHref" download="transcript.webvtt">Export webvtt</a>
-            <a class="button button-secondary" :href="jsonDownloadHref" download="transcript.json">Export json (flat)</a> 
-            <a class="button button-secondary" :href="jsonGroupedDownloadHref" download="transcript.json">Export json (grouped)</a> 
-            <a class="button button-secondary" :href="xmlDownloadHref" download="transcript.xml">Export xml</a> 
-        </div>
-
+  <div class="container">
+    <div class="row">
+      <div class="transcripts-tab-wrapper">
+        <a
+          href="#"
+          class="transcripts-tab"
+          :class="{'transcripts-tab-active': mode === 'transcript'}"
+          @click.prevent="mode = 'transcript'"
+        >Transcript</a>
+        
+        <a
+          href="#"
+          class="transcripts-tab"
+          :class="{'transcripts-tab-active': mode === 'voices'}"
+          @click.prevent="mode = 'voices'"
+        >Voices</a>
+        
+        <a
+          href="#"
+          class="transcripts-tab"
+          :class="{'transcripts-tab-active': mode === 'import'}"
+          @click.prevent="mode = 'import'"
+        >Import</a>
+        
+        <a
+          href="#"
+          class="transcripts-tab"
+          :class="{'transcripts-tab-active': mode === 'export'}"
+          @click.prevent="mode = 'export'"
+        >Export</a>
+      </div>
     </div>
+
+    <div class="row tab-body transcript" v-show="mode == 'transcript'">
+      <div v-if="transcript != null">
+        <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
+          <div class="ts-speaker-avatar" v-if="hasVoice(group.speaker)">
+            <img :src="getVoice(group.speaker).option.avatar" width="50" height="50">
+          </div>
+
+          <div class="ts-text">
+            <div
+              class="ts-speaker"
+              v-if="hasVoice(group.speaker)"
+            >{{ getVoice(group.speaker).option.label }}</div>
+
+            <div class="ts-content">
+              <span
+                class="ts-line"
+                v-for="(line, index) in group.items"
+                :key="index"
+              >{{ line.text }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="empty-state">
+          No transcript available yet. You need to
+          <a
+            href="#"
+            @click.prevent="mode = 'import'"
+          >import</a> one.
+        </div>
+      </div>
+    </div>
+
+    <div class="row tab-body voices" v-show="mode == 'voices'">
+      <div v-if="voices != null && voices.length">
+        <div class="voice col-md-12" v-for="(voice, index) in voices" :key="index">
+          <div class="voice-label">{{ voice.label }}</div>
+          <div class="voice-assignment">
+            <v-select :options="contributorsOptions" v-model="voice.option" style="width: 300px">
+              <template slot="option" slot-scope="option">
+                <img :src="option.avatar" width="16" height="16">
+                {{ option.label }}
+              </template>
+            </v-select>
+            <input
+              type="hidden"
+              :name="'_podlove_meta[transcript_voice][' + voice.label + ']'"
+              :value="voice.option.value"
+              v-if="voice.option"
+            >
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="empty-state">
+          No voices available yet. You need to
+          <a href="#" @click.prevent="mode = 'import'">import</a> a transcript with voice tags.
+        </div>
+      </div>
+    </div>
+
+    <div class="row tab-body import" v-show="mode == 'import'">
+      <form>
+        <button
+          class="button button-primary"
+          @click.prevent="initImportTranscript"
+        >Import Transcript</button>
+        <input
+          type="file"
+          name="transcriptimport"
+          id="transcriptimport"
+          @change="importTranscript"
+          style="display: none"
+          :disabled="importing"
+        >
+        <div class="description">{{ description }}</div>
+      </form>
+    </div>
+
+    <div class="row tab-body export" v-show="mode == 'export'">
+      <a
+        class="button button-secondary"
+        :href="webvttDownloadHref"
+        download="transcript.webvtt"
+      >Export webvtt</a>
+      <a
+        class="button button-secondary"
+        :href="jsonDownloadHref"
+        download="transcript.json"
+      >Export json (flat)</a>
+      <a
+        class="button button-secondary"
+        :href="jsonGroupedDownloadHref"
+        download="transcript.json"
+      >Export json (grouped)</a>
+      <a
+        class="button button-secondary"
+        :href="xmlDownloadHref"
+        download="transcript.xml"
+      >Export xml</a>
+    </div>
+  </div>
 </template>
 
 <script type="text/javascript">
@@ -230,6 +262,9 @@ export default {
         },
         getVoice(id) {
             return this.voices.find((v) => v.value == id)
+        },
+        hasVoice(id) {
+            return this.getVoice() !== undefined && this.getVoice().option !== undefined
         },
         fetchTranscript(done) {
             this.axios.get(this.jsonGroupedDownloadHref).then(({data}) => {
