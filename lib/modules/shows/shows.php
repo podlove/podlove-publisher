@@ -13,6 +13,8 @@ class Shows extends \Podlove\Modules\Base {
 
 	public function load() {
 		add_action( 'init', array($this, 'register_show_taxonomy') );
+		add_action( 'add_meta_boxes', array($this, 'add_meta_box') );
+
 		add_action( 'podlove_register_settings_pages', function($handle) {
 			new \Podlove\Modules\Shows\Settings\Settings($handle);
 		} );
@@ -125,6 +127,17 @@ class Shows extends \Podlove\Modules\Base {
 		return $args;
 	}
 
+	public function add_meta_box() {
+		add_meta_box(
+			/* $id       */ 'podlove_podcast_show',
+			/* $title    */ __( 'Show', 'podlove-podcasting-plugin-for-wordpress' ),
+			/* $callback */ array($this, 'episode_show_meta_box'),
+			/* $page     */ 'podcast',
+			/* $context  */ 'normal',
+			/* $priority */ 'low'
+		);
+	}
+
 	public function register_show_taxonomy() {
 		register_taxonomy(
 			'shows',
@@ -132,12 +145,12 @@ class Shows extends \Podlove\Modules\Base {
 			array(
 				'label' => __( 'Show', 'podlove-podcasting-plugin-for-wordpress' ),
 				'rewrite' => array( 'slug' => 'show' ),
-				'show_ui' => true,
+				'show_ui' => false,
 				'show_in_menu' => false,
 				'show_in_quick_edit' => false,
+				'show_in_rest' => false,
 				'hierarchical' => false,
-				'show_admin_column' => true,
-				'meta_box_cb' => array($this, 'episode_show_meta_box')
+				'show_admin_column' => false
 			)
 		);
 	}

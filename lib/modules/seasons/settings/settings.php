@@ -209,7 +209,7 @@ class Settings {
 	 			'html'        => [
 	 				'rows' => 3, 
 	 				'cols' => 40, 
-	 				'class' => 'autogrow podlove-check-input',
+	 				'class' => 'podlove-check-input',
 	 				'placeholder' => $podcast->summary	 			
 	 			]
 	 		]);

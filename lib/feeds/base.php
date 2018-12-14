@@ -277,7 +277,9 @@ function override_feed_entry( $hook, $podcast, $feed, $format ) {
 			$xml .= $tag_prefix . apply_filters( 'podlove_feed_itunes_type_xml', $type );
 
 			$summary = apply_filters( 'podlove_feed_content', \Podlove\PHP\escape_shortcodes(strip_tags($episode->summary)) );
-			$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
+			if (strlen($summary)) {
+				$summary = sprintf( '<itunes:summary>%s</itunes:summary>', $summary );
+			}
 			$xml .= $tag_prefix . apply_filters( 'podlove_feed_itunes_summary', $summary );
 
 			if (\Podlove\get_setting('metadata', 'enable_episode_explicit')) {

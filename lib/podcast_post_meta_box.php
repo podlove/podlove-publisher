@@ -21,10 +21,7 @@ class Podcast_Post_Meta_Box {
 			/* $callback */ '\Podlove\Podcast_Post_Meta_Box::post_type_meta_box_callback',
 			/* $page     */ 'podcast',
 			/* $context  */ 'normal',
-			/* $priority */ 'high',
-			[
-				'__block_editor_compatible_meta_box' => false,
-			]
+			/* $priority */ 'high'
 		);
 	}
 
@@ -103,8 +100,8 @@ class Podcast_Post_Meta_Box {
 					'label'       => __( 'Subtitle', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => __( 'Single sentence describing the episode.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array(
-						'class' => 'large-text autogrow podlove-check-input',
-						'rows'  => 1
+						'class' => 'large-text podlove-check-input',
+						'rows'  => 2
 					)
 				),
 				'position' => 1000
@@ -115,7 +112,7 @@ class Podcast_Post_Meta_Box {
 					'label'       => __( 'Summary', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => '',
 					'html'        => array(
-						'class' => 'large-text autogrow podlove-check-input',
+						'class' => 'large-text podlove-check-input',
 						'rows'  => 3
 					)
 				),
@@ -127,7 +124,7 @@ class Podcast_Post_Meta_Box {
 					'label'       => __( 'Type', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => __( 'Episode type. May be used by podcast clients.', 'podlove-podcasting-plugin-for-wordpress' ),
 					'html'        => array(
-						'class' => 'large-text autogrow podlove-check-input',
+						'class' => 'large-text podlove-check-input',
 						'rows'  => 3
 					),
 					'default' => 'full',

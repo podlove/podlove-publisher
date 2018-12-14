@@ -3,9 +3,9 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 4.9.8
+Tested up to: 5.0.0
 Requires PHP: 5.4
-Stable tag: 2.7.18
+Stable tag: 2.7.19
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,6 +106,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2018-12-14 =
+
+== merge changes from public releases ==
+
+We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
+You can choose to use the new editor or stay with the classic editor for now by installing the classic editor plugin by WordPress.
+
+* feed: do not include `<itunes:summary>` tag if it is empty (Apple Podcast requirement)
+* adjustments for Gutenberg compatibility:
+  * Shows metabox moved from sidebar to main area
+  * remove broken form field autogrow behavior
+  * fix contributors UI initialization
 
 = 2018-11-29 =
 
