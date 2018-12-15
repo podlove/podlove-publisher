@@ -1,35 +1,42 @@
 language: php
 sudo: false
-
 php:
 - 5.4
 - 7.2
-
 matrix:
   exclude:
   - php: 7.2
     env: WP_VERSION=latest WP_MULTISITE=0
-
 env:
 - WP_VERSION=latest WP_MULTISITE=0
 - WP_VERSION=4.4 WP_MULTISITE=0
-
 before_install:
 - git submodule update --init --recursive
-
 install:
 - composer install
-
 before_script:
 - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-
 script:
 - phpunit
-
-after_success:
-- if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
-  ]]; then bash bin/travis-deploy.sh; fi
 
 notifications:
   slack:
     secure: HJRRU0ow1EpHxGxkVtT2WvG4Bbw+eeiJy4gACDOp1HmxXvWEH8BMziB8lP5l6Iv6MFcgExrMPFgsJI3PJgO8iTtrSyjebxahv4LFaU7uvoBwklIpeIcNyhg5DEoKenrsmmfwneArhn/1pQZOCrwSAxKqelp/G74AvFB7D/pcc3s=
+
+before_deploy:
+- bash bin/travis-prepare-deploy.sh
+
+deploy:
+  provider: s3
+  access_key_id: AKIAJFB247V7VHI2ADUA
+  secret_access_key:
+    secure: A82qoISYK/hD8jTgZ6wE3ydYDsDlKSHClhYp36pdzesUNMhaJTz84fhb96t+nu9Q5JDbfrxrGpon9JUzSmhJGwdrsE/aKfzt+1wOyTaUQSZ6aAcOd/5GcrLe+2qxe3FcUZ470Wi3aB2Pz4LVov7bwKF/ml2nBdpuPsw35Xq8b6c=
+  bucket: podlove-publisher-beta
+  local-dir: dist
+  upload-dir: beta
+  acl: public_read, bucket_owner_full_control
+  skip_cleanup: true
+  on:
+    repo: podlove/podlove-publisher
+    branch: release-2-8-0
+    condition: "$WP_VERSION = latest"
