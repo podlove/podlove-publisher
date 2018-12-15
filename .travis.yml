@@ -35,7 +35,7 @@ deploy:
   region: eu-central-1
   local-dir: dist
   upload-dir: "beta/$TRAVIS_BRANCH"
-  acl: public_read, bucket_owner_full_control
+  acl: public_read
   skip_cleanup: true
   on:
     repo: podlove/podlove-publisher
