@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2018-12-15 =
+
+* reimport transcript every time file is verified
+
 = 2018-12-14 =
 
 == merge changes from public releases ==

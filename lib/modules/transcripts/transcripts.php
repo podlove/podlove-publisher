@@ -40,6 +40,7 @@ class Transcripts extends \Podlove\Modules\Base {
 		# external assets
 		add_action('podlove_asset_assignment_form', [$this, 'add_asset_assignment_form'], 10, 2);
 		add_action('podlove_media_file_content_has_changed', [$this, 'handle_changed_media_file']);
+		add_action('podlove_media_file_content_verified', [$this, 'handle_changed_media_file']);
 
 		add_filter('podlove_twig_file_loader', function($file_loader) {
 			$file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'transcripts', 'twig')), 'transcripts');

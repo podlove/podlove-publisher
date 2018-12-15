@@ -40,6 +40,10 @@ class TemplateExtensions {
 			$transcript = Model\Transcript::get_transcript($episode->id);
 			$transcript = Model\Transcript::prepare_transcript($transcript, 'grouped');
 
+			if (!is_array($transcript)) {
+				return [];
+			}
+
 			return array_map(function($group) {
 				$lines = array_map(function ($line) {
 					return new Template\Line($line);

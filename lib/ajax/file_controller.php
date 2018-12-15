@@ -41,6 +41,8 @@ class FileController {
 			$info['curl_exec'] = function_exists( 'curl_exec' );
 
 			\Podlove\Log::get()->addError("Can't reach {$file->get_file_url()}", $info);
+		} else {
+			do_action( 'podlove_media_file_content_verified', $file->id );
 		}
 
 		Ajax::respond_with_json( $result );
