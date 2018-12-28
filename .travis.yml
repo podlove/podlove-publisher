@@ -26,6 +26,10 @@ notifications:
 before_deploy:
 - bash bin/travis-prepare-deploy.sh
 
+after_success:
+- if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
+  ]]; then bash bin/travis-deploy.sh; fi
+
 deploy:
   provider: s3
   access_key_id: AKIAJFB247V7VHI2ADUA
