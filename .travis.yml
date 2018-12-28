@@ -11,6 +11,8 @@ env:
 - WP_VERSION=latest WP_MULTISITE=0
 - WP_VERSION=4.4 WP_MULTISITE=0
 before_install:
+- openssl aes-256-cbc -K $encrypted_30816da072e0_key -iv $encrypted_30816da072e0_iv
+  -in deploy_key.enc -out ./deploy_key -d
 - git submodule update --init --recursive
 install:
 - composer install
@@ -18,14 +20,11 @@ before_script:
 - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 script:
 - phpunit
-
 notifications:
   slack:
     secure: HJRRU0ow1EpHxGxkVtT2WvG4Bbw+eeiJy4gACDOp1HmxXvWEH8BMziB8lP5l6Iv6MFcgExrMPFgsJI3PJgO8iTtrSyjebxahv4LFaU7uvoBwklIpeIcNyhg5DEoKenrsmmfwneArhn/1pQZOCrwSAxKqelp/G74AvFB7D/pcc3s=
-
 before_deploy:
 - bash bin/travis-prepare-deploy.sh
-
 after_success:
 - if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
   ]]; then bash bin/travis-deploy.sh; fi
