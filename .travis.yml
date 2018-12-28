@@ -29,18 +29,3 @@ before_deploy:
 after_success:
 - if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
   ]]; then bash bin/travis-deploy.sh; fi
-
-deploy:
-  provider: s3
-  access_key_id: AKIAJFB247V7VHI2ADUA
-  secret_access_key:
-    secure: A82qoISYK/hD8jTgZ6wE3ydYDsDlKSHClhYp36pdzesUNMhaJTz84fhb96t+nu9Q5JDbfrxrGpon9JUzSmhJGwdrsE/aKfzt+1wOyTaUQSZ6aAcOd/5GcrLe+2qxe3FcUZ470Wi3aB2Pz4LVov7bwKF/ml2nBdpuPsw35Xq8b6c=
-  bucket: podlove-publisher-beta
-  region: eu-central-1
-  local-dir: dist
-  upload-dir: "beta/$TRAVIS_BRANCH"
-  skip_cleanup: true
-  on:
-    repo: podlove/podlove-publisher
-    branch: release-2-8-0
-    condition: "$WP_VERSION = latest"
