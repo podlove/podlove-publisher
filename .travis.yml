@@ -28,3 +28,5 @@ before_deploy:
 after_success:
 - if [[ $TRAVIS_PHP_VERSION = '5.4' && $WP_VERSION = 'latest' && $WP_MULTISITE = '0'
   ]]; then bash bin/travis-deploy.sh; fi
+addons:
+  ssh_known_hosts: eric.co.de
