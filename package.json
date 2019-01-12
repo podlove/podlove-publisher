@@ -5,11 +5,12 @@
     "hmr": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "submodules-init": "git submodule update --init --recursive",
-    "cloc": "cloc --by-file-by-lang --exclude-dir=node_modules,vendor,player_v2,.git,jquery-ui --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" *"
+    "cloc": "cloc --by-file-by-lang --exclude-dir=node_modules,vendor,player_v2,.git,jquery-ui --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" *",
+    "test": "./vendor/bin/phpunit"
   },
   "devDependencies": {
     "@podlove/podlove-web-player": "^4.1.6",
-    "laravel-mix": "^2.1",
+    "laravel-mix": "^4.0.13",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.2",
@@ -18,7 +19,9 @@
     "vue": "^2.5.17"
   },
   "dependencies": {
+    "clipboard": "^2.0.4",
     "npm": "^6.4.0",
+    "v2-datepicker": "^3.1.1",
     "vue-template-compiler": "^2.5.17"
   }
 }
