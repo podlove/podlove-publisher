@@ -107,6 +107,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.20 =
+
+**Slacknotes**
+
+This release is sponsored by [Lage der Nation](https://lagedernation.org).
+
+The new "Slacknotes" module extracts links and their metadata from a Slack channel and generates HTML that can be used as show notes.
+A short demo video is available [in the documentation](https://docs.podlove.org/podlove-publisher/guides/slacknotes.html).
+
+**Other**
+
+* the "Modules" screen has been redesigned
+* updated JavaScript and CSS processing library and other dependencies
+
 = 2.7.19 = 
 
 We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
