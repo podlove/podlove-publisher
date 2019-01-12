@@ -3,9 +3,15 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
+<<<<<<< HEAD
 Tested up to: 5.0.1
 Requires PHP: 5.4
 Stable tag: 2.8.0
+=======
+Tested up to: 5.0.3
+Requires PHP: 5.4
+Stable tag: 2.7.20
+>>>>>>> master
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,6 +112,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2019-01-12 =
+
+**Slacknotes**
+
+This release is sponsored by [Lage der Nation](https://lagedernation.org).
+
+The new "Slacknotes" module extracts links and their metadata from a Slack channel and generates HTML that can be used as show notes.
+A short demo video is available [in the documentation](https://docs.podlove.org/podlove-publisher/guides/slacknotes.html).
+
+**Other**
+
+* the "Modules" screen has been redesigned
+* updated JavaScript and CSS processing library and other dependencies
 
 = 2018-12-15 =
 

@@ -105,6 +105,15 @@ class Builder {
 		<?php
 	}
 
+	public function password( $object_key, $arguments ) {
+		$this->build_input_values( $object_key, $arguments );
+		?>
+		<div>
+			<input type="password" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr( $this->field_value ); ?>" <?php echo $this->html_attributes; ?>>
+		</div>
+		<?php
+	}
+
 	public function text( $object_key, $arguments ) {
 		$this->build_input_values( $object_key, $arguments );
 		?>
