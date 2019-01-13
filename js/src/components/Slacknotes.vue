@@ -17,7 +17,7 @@
 
           <v2-datepicker-range
             v-model="dates"
-            @change="onChange"
+            @change="onDatepickerChange"
             lang="en"
             :default-value="defaultRange"
             :picker-options="options"
@@ -234,15 +234,15 @@ export default {
     },
 
     methods: {
-      onChange: function (range) {
-        
-        if (range.length == 2 && range[0].getTime() == range[1].getTime()) {
+      onDatepickerChange: function (range) {
+
+        if (range.length == 2) {
           this.dates = [
             startOfDay(range[0]),
             endOfDay(range[1])
           ]
         }
-        
+
         this.fetchLinks();
       },
       setOrder: function (order) {
