@@ -4,23 +4,40 @@
       <div class="p-card-header">
         <strong>Select Slack Channel</strong>
       </div>
-      <div class="p-card-body">
-        <select v-model="currentChannel" @change="fetchLinks">
-          <option value="0">Select Slack Channel</option>
-          <option
-            v-for="channel in channels"
-            :value="channel.id"
-            :key="channel.id"
-          >#{{ channel.name }}</option>
-        </select>
+      <div class="p-card-body slacknotes-toolbar">
+        <div>
+          <select v-model="currentChannel" @change="fetchLinks">
+            <option value="0">Select Slack Channel</option>
+            <option
+              v-for="channel in channels"
+              :value="channel.id"
+              :key="channel.id"
+            >#{{ channel.name }}</option>
+          </select>
 
-        <v2-datepicker-range
-          v-model="dates"
-          @change="onChange"
-          lang="en"
-          :default-value="defaultRange"
-          :picker-options="options"
-        ></v2-datepicker-range>
+          <v2-datepicker-range
+            v-model="dates"
+            @change="onChange"
+            lang="en"
+            :default-value="defaultRange"
+            :picker-options="options"
+          ></v2-datepicker-range>
+        </div>
+
+        <div class="button-group">
+          <button
+            @click="setOrder('desc')"
+            type="button"
+            :class="{'button-active': order == 'desc'}"
+            class="button"
+          >Newest First</button>
+          <button
+            @click="setOrder('asc')"
+            type="button"
+            :class="{'button-active': order == 'asc'}"
+            class="button"
+          >Oldest First</button>
+        </div>
       </div>
     </div>
 
@@ -32,7 +49,7 @@
       <div
         class="p-card slack-link"
         v-bind:class="{ excluded: link.excluded }"
-        v-for="link in links"
+        v-for="link in sortedLinks"
         :key="link.link"
       >
         <div class="p-card-body" style="display: flex; justify-content: space-between">
@@ -81,11 +98,6 @@
 </template>
 
 <script>
-// todo: 
-// - remember selected channel
-// - check responsiveness
-// - bonus: syntax highlighting for HTML area (I think there's already a tool in the Publisher dependencies for that)
-
 const $ = jQuery;
 
 import ClipboardJS from "clipboard";
@@ -111,6 +123,7 @@ export default {
             showCopySuccess: false,
             dates: [],
             fetching: [],
+            order: 'desc',
             options: {
               disabledDate (time) {
                   return time.getTime() > Date.now();
@@ -189,7 +202,7 @@ export default {
       renderedHTML: function () {
         let html = "<ul>\n";
 
-        for (let j = 0; j < this.links.length; j++) {
+        for (let j = 0; j < this.sortedLinks.length; j++) {
           const link = this.links[j];
           const title = link.title ? link.title : link.link
 
@@ -204,6 +217,15 @@ export default {
       },
       linksReady: function () {
         return !this.initializing && this.links != [] && !this.linksLoading
+      },
+      sortedLinks: function () {
+        return this.links.sort((a, b) => {
+          if (this.order == 'asc') {
+            return a.unix_date - b.unix_date;
+          } else {
+            return b.unix_date - a.unix_date;
+          }
+        })
       }
     },
 
@@ -218,6 +240,13 @@ export default {
         }
         
         this.fetchLinks();
+      },
+      setOrder: function (order) {
+        this.order = order;
+
+        if (localStorage) {
+          localStorage.setItem("podlove-slacknotes-order", this.order)
+        }
       },
       fetchLinks: function () {
         if (this.currentChannel) {
@@ -245,9 +274,11 @@ export default {
 
             const reduceMessagesToLinks = function (links, message) { 
                 for (let i = 0; i < message.links.length; i++) {
-                  const datetime = new Date(parseInt(message.raw_slack_message.ts, 10) * 1000);
+                  const unix_date = parseInt(message.raw_slack_message.ts, 10) * 1000
+                  const datetime = new Date(unix_date);
                   const link = message.links[i];
 
+                  link.unix_date = unix_date;
                   link.datetime = datetime;
 
                   links.push(link);
@@ -316,13 +347,19 @@ export default {
         this.channels = channelData;
 
         let savedChannel = null;
+        let savedOrder = null;
 
         if (localStorage) {
           savedChannel = localStorage.getItem("podlove-slacknotes-channel");
+          savedOrder = localStorage.getItem("podlove-slacknotes-order");
         }
 
         if (savedChannel) {
           this.currentChannel = savedChannel;
+        }
+
+        if (savedOrder) {
+          this.order = savedOrder;
         }
 
         this.fetchLinks()
@@ -430,5 +467,17 @@ export default {
   100% {
     background: #ccc;
   }
+}
+
+.button-group .button.button-active {
+  background: #eee;
+  border-color: #999;
+  box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, 0.5);
+  transform: translateY(1px);
+}
+
+.slacknotes-toolbar {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
