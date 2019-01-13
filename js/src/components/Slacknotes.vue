@@ -73,7 +73,11 @@
               <a :href="link.link" target="_blank">{{ link.link }}</a>
             </span>
           </div>
-          <div class="slack-link-date">{{ linkDate(link) }}</div>
+          <div class="slack-link-date">
+            {{ linkDate(link) }}
+            <br>
+            {{ linkTime(link) }}
+          </div>
         </div>
       </div>
     </div>
@@ -337,6 +341,17 @@ export default {
         const d = date.getUTCDate();
 
         return d + "." + m + "." + y; 
+      },
+      linkTime: function (link) {
+        const date = link.datetime
+        const h = date.getHours()
+        let m = date.getMinutes()
+
+        if (m < 10) {
+          m = "0" + m
+        }
+
+        return h + ":" + m
       }
     },
 
@@ -437,6 +452,7 @@ export default {
 
 .slack-link-date {
   padding-left: 6px;
+  text-align: right;
 }
 
 .fade-enter-active,
