@@ -25,6 +25,11 @@ Vue.component('analytics-date-picker', AnalyticsDatePicker);
 Vue.component('jobs-dashboard', JobsDashboard);
 Vue.component('slacknotes', Slacknotes);
 
+import 'v2-datepicker/lib/index.css'
+import V2Datepicker from 'v2-datepicker'
+
+Vue.use(V2Datepicker)
+
 if (document.getElementById('podlove-chapters-app')) {
     window.chaptersApp = new Vue({
         el: '#podlove-chapters-app'
@@ -55,11 +60,6 @@ if (document.getElementById('slacknotes-app')) {
         el: '#slacknotes-app'
     });
 }
-
-import 'v2-datepicker/lib/index.css'
-import V2Datepicker from 'v2-datepicker'
-
-Vue.use(V2Datepicker)
 
 if (document.getElementById('podlove-analytics-app')) {
 

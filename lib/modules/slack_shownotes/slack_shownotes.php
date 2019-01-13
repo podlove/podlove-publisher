@@ -3,7 +3,6 @@ namespace Podlove\Modules\SlackShownotes;
 
 class Slack_Shownotes extends \Podlove\Modules\Base
 {
-
     protected $module_name        = 'Slacknotes';
     protected $module_description = 'Extract link lists from a Slack channel to be used in show notes.';
     protected $module_group       = 'web publishing';
@@ -51,8 +50,8 @@ class Slack_Shownotes extends \Podlove\Modules\Base
             return new \WP_REST_Response(["success" => false]);
         }
 
-        $title = self::fetch_title_for_url($url);
-        return new \WP_REST_Response(["title" => $title]);
+        $response = self::fetch_url_meta($url);
+        return new \WP_REST_Response($response);
     }
 
     public function api_get_messages(\WP_REST_Request $request)
@@ -160,14 +159,14 @@ class Slack_Shownotes extends \Podlove\Modules\Base
     }
 
     /**
-     * Fetches title for URL.
+     * Fetches title and effective URL for URL.
      *
      * Prefers "og:title", falls back to "title".
      *
      * @param string $url
      * @return string
      */
-    public static function fetch_title_for_url($url)
+    public static function fetch_url_meta($url)
     {
         $curl = curl_init();
 
@@ -175,8 +174,9 @@ class Slack_Shownotes extends \Podlove\Modules\Base
             CURLOPT_URL            => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING       => "",
+            CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_TIMEOUT        => 10,
             CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST  => "GET",
             CURLOPT_POSTFIELDS     => "",
@@ -188,27 +188,37 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         $html = curl_exec($curl);
         $err  = curl_error($curl);
 
+        $effective_url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
+
         curl_close($curl);
+
+        $response = [
+            "url"   => $effective_url,
+            "title" => "",
+        ];
 
         if (!$err) {
             $dom    = new \DOMDocument;
             $loaded = $dom->loadHTML($html, LIBXML_NOERROR);
 
             if (!$loaded) {
-                return "";
+                return $response;
             }
 
             foreach ($dom->getElementsByTagName('meta') as $node) {
                 if ($node->getAttribute("property") == "og:title") {
-                    return $node->getAttribute("content");
+                    $response["title"] = $node->getAttribute("content");
+                    return $response;
                 }
             }
 
             foreach ($dom->getElementsByTagName('title') as $node) {
-                return $node->nodeValue;
+                $response["title"] = $node->nodeValue;
+                return $response;
             }
+
         }
 
-        return "";
+        return $response;
     }
 }
