@@ -50,7 +50,7 @@
         class="p-card slack-link"
         v-bind:class="{ excluded: link.excluded }"
         v-for="link in sortedLinks"
-        :key="link.link"
+        :key="link.id"
       >
         <div class="p-card-body" style="display: flex; justify-content: space-between">
           <div class="slack-link-select">
@@ -284,6 +284,7 @@ export default {
 
                   link.unix_date = unix_date;
                   link.datetime = datetime;
+                  link.id = unix_date + link.link;
 
                   links.push(link);
                 }
