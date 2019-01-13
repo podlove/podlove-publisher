@@ -8,10 +8,13 @@ class Message
         preg_match_all("/<(http[^>]*)>/", $message["text"], $links);
 
         return array_reduce($links[1], function ($agg, $url) use ($message) {
+            $url_segments  = explode("|", $url);
+            $canonical_url = $url_segments[0];
+
             $agg[] = [
-                "link"   => $url,
-                "title"  => self::get_url_title_via_attachment($url, $message),
-                "source" => self::get_source_via_attachment($url, $message),
+                "link"   => $canonical_url,
+                "title"  => self::get_url_title_via_attachment($canonical_url, $message),
+                "source" => self::get_source_via_attachment($canonical_url, $message),
             ];
             return $agg;
         }, []);
