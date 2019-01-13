@@ -312,7 +312,6 @@ export default {
                 const element = list[i];
                 element.click();
               }
-              
             }, 200);
 
           })
@@ -326,14 +325,22 @@ export default {
       },
       fetchLinkTitle: function (link) {
         const url = link.link;
+        
         this.fetching.push(url);
-        $.ajax(podlove_vue.rest_url + 'podlove/v1/slacknotes/resolve_url?url=' + encodeURIComponent(url)).done(function(data) {
+        
+        $.ajax(podlove_vue.rest_url + 'podlove/v1/slacknotes/resolve_url?url=' + encodeURIComponent(url)).done((data) => {
+          
           if (data.title) {
             link.title = data.title;
           }
+          
           if (data.url) {
             link.link = data.url;
           }
+
+          // delete from fetching
+          var index = this.fetching.indexOf(url);
+          if (index !== -1) this.fetching.splice(index, 1);
         })
       },
       toggleExclusion: function(link) {
