@@ -331,6 +331,9 @@ export default {
           if (data.title) {
             link.title = data.title;
           }
+          if (data.url) {
+            link.link = data.url;
+          }
         })
       },
       toggleExclusion: function(link) {
