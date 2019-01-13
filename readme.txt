@@ -113,6 +113,24 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= (2019-01-13) =
+
+**Bug Fixes**
+
+* **slacknotes:** avoid duplicate vue for-loop keys ([7578cdf](https://github.com/podlove/podlove-publisher/commit/7578cdf))
+* **slacknotes:** date range filter ([2982f2b](https://github.com/podlove/podlove-publisher/commit/2982f2b))
+* **slacknotes:** fix loading of datepicker component ([13ca12b](https://github.com/podlove/podlove-publisher/commit/13ca12b))
+* **slacknotes:** follow redirects when resolving URLs ([5b39746](https://github.com/podlove/podlove-publisher/commit/5b39746))
+* **slacknotes:** handle slack-resolved URLs in pipes format ([b08ec53](https://github.com/podlove/podlove-publisher/commit/b08ec53))
+* **slacknotes:** hide link-fetch prompt while fetching ([f4e78e3](https://github.com/podlove/podlove-publisher/commit/f4e78e3))
+
+
+**Features**
+
+* **slacknotes:** add setting for link ordering ([c4c824e](https://github.com/podlove/podlove-publisher/commit/c4c824e))
+* **slacknotes:** show link time ([53077b1](https://github.com/podlove/podlove-publisher/commit/53077b1))
+* **slacknotes:** when resolving URLs, use effective URL ([974c7f8](https://github.com/podlove/podlove-publisher/commit/974c7f8))
+
 = 2019-01-12 =
 
 **Slacknotes**
