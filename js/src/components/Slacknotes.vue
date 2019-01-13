@@ -65,6 +65,7 @@
                   href="#"
                   class="unknown-title"
                   @click.prevent="fetchLinkTitle(link)"
+                  v-if="!isFetching(link)"
                 >try to fetch title from website</a>
               </span>
               <span class="link-source" v-if="link.source">{{ link.source }}</span>
