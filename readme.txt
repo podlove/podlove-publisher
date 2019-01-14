@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.4
 Tested up to: 5.0.3
 Requires PHP: 5.4
-Stable tag: 2.7.20
+Stable tag: 2.7.21
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,6 +106,25 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2.7.21 =
+
+**Bug Fixes**
+
+* **slacknotes:** avoid duplicate vue for-loop keys ([7578cdf](https://github.com/podlove/podlove-publisher/commit/7578cdf))
+* **slacknotes:** date range filter ([2982f2b](https://github.com/podlove/podlove-publisher/commit/2982f2b))
+* **slacknotes:** fix loading of datepicker component ([13ca12b](https://github.com/podlove/podlove-publisher/commit/13ca12b))
+* **slacknotes:** follow redirects when resolving URLs ([5b39746](https://github.com/podlove/podlove-publisher/commit/5b39746))
+* **slacknotes:** handle slack-resolved URLs in pipes format ([b08ec53](https://github.com/podlove/podlove-publisher/commit/b08ec53))
+* **slacknotes:** hide link-fetch prompt while fetching ([f4e78e3](https://github.com/podlove/podlove-publisher/commit/f4e78e3))
+* **slacknotes:** url re-fetching when changing dates ([344456d](https://github.com/podlove/podlove-publisher/commit/344456d))
+
+
+**Features**
+
+* **slacknotes:** add setting for link ordering ([c4c824e](https://github.com/podlove/podlove-publisher/commit/c4c824e))
+* **slacknotes:** show link time ([53077b1](https://github.com/podlove/podlove-publisher/commit/53077b1))
+* **slacknotes:** when resolving URLs, use effective URL ([974c7f8](https://github.com/podlove/podlove-publisher/commit/974c7f8))
 
 = 2.7.20 =
 
