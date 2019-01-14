@@ -113,6 +113,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= (2019-01-14) =
+
+**Bug Fixes**
+
+* **slacknotes:** url re-fetching when changing dates ([dc8fa7c](https://github.com/podlove/podlove-publisher/commit/dc8fa7c))
+
 = (2019-01-13) =
 
 **Bug Fixes**
