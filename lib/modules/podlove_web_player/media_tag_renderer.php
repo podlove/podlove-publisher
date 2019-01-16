@@ -4,67 +4,75 @@ namespace Podlove\Modules\PodloveWebPlayer;
 use Podlove\Model\Episode;
 use \Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
 
-class MediaTagRenderer {
+class MediaTagRenderer
+{
 
-  public function __construct(Episode $episode)
-  {
-    $this->episode = $episode;
-  }
+    public function __construct(Episode $episode)
+    {
+        $this->episode = $episode;
+    }
 
-  public function render($context, $attributes = [])
-  {
-		$player_media_files = new PlayerMediaFiles($this->episode);
-		$media_files = $player_media_files->get($context);
+    public function render($context, $attributes = [])
+    {
+        $player_media_files = new PlayerMediaFiles($this->episode);
+        $media_files        = $player_media_files->get($context);
 
-		// build main audio/video tag
-		$xml = new \SimpleXMLElement('<' . $player_media_files->media_xml_tag . '/>');
-		$xml->addAttribute('controls', 'controls');
-		$xml->addAttribute('preload', 'none');
+        if (!$media_files) {
+            return "";
+        }
 
-		if (count($attributes) > 0) {
-			foreach ($attributes as $key => $value) {
-				$xml->addAttribute($key, $value);
-			}
-		}
+        // build main audio/video tag
+        $xml = new \SimpleXMLElement('<' . $player_media_files->media_xml_tag . '/>');
+        $xml->addAttribute('controls', 'controls');
+        $xml->addAttribute('preload', 'none');
 
-		// add all sources
-		$xml = $this->add_sources($xml, $media_files);
+        if (count($attributes) > 0) {
+            foreach ($attributes as $key => $value) {
+                $xml->addAttribute($key, $value);
+            }
+        }
 
-		// prettify and prepare to render
-		$xml_string = $xml->asXML();
-		// TODO: use DomDocumentFragment
-		$xml_string = $this->format_xml($xml_string);
-		$xml_string = $this->remove_xml_header($xml_string);
+        // add all sources
+        $xml = $this->add_sources($xml, $media_files);
 
-		return $xml_string;
-  }
+        // prettify and prepare to render
+        $xml_string = $xml->asXML();
+        // TODO: use DomDocumentFragment
+        $xml_string = $this->format_xml($xml_string);
+        $xml_string = $this->remove_xml_header($xml_string);
 
-  	public function add_sources($xml, $files) {
+        return $xml_string;
+    }
 
-		$flash_fallback_func = function(&$xml) {};
+    public function add_sources($xml, $files)
+    {
 
-		foreach ($files as $file) {
-			$mime_type = $file['mime_type'];
+        $flash_fallback_func = function (&$xml) {};
 
-			$source = $xml->addChild('source');
-			$source->addAttribute('src', $file['publicUrl']);
-			$source->addAttribute('type', $mime_type);
-		}
+        foreach ($files as $file) {
+            $mime_type = $file['mime_type'];
 
-		return $xml;
-	}
+            $source = $xml->addChild('source');
+            $source->addAttribute('src', $file['publicUrl']);
+            $source->addAttribute('type', $mime_type);
+        }
 
-	private function format_xml( $xml ) {
+        return $xml;
+    }
 
-		$dom = new \DOMDocument('1.0');
-		$dom->preserveWhiteSpace = false;
-		$dom->formatOutput = true;
-		$dom->loadXML( $xml );
+    private function format_xml($xml)
+    {
 
-		return $dom->saveXML();
-	}
+        $dom                     = new \DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput       = true;
+        $dom->loadXML($xml);
 
-	private function remove_xml_header( $xml ) {
-		return trim( str_replace( '<?xml version="1.0"?>', '', $xml ) );
-	}
+        return $dom->saveXML();
+    }
+
+    private function remove_xml_header($xml)
+    {
+        return trim(str_replace('<?xml version="1.0"?>', '', $xml));
+    }
 }

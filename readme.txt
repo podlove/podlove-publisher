@@ -113,13 +113,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= (2019-01-14) =
+= 2019-01-16 =
+
+* (maybe) fix Gutenberg issues when creating a new episode
+
+= 2019-01-14 =
 
 **Bug Fixes**
 
 * **slacknotes:** url re-fetching when changing dates ([dc8fa7c](https://github.com/podlove/podlove-publisher/commit/dc8fa7c))
 
-= (2019-01-13) =
+= 2019-01-13 =
+
+= 2.7.21 =
 
 **Bug Fixes**
 
