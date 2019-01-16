@@ -27,7 +27,7 @@ build:
 	rm -rf dist
 	mkdir dist
 	# move everything into dist
-	rsync -r --exclude=.git --exclude=./dist . dist
+	rsync -r --exclude=.git --exclude=node_modules --exclude=./dist . dist
 	# cleanup
 	find dist -name "*.git*" | xargs rm -rf
 	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs

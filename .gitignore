@@ -15,3 +15,4 @@ Mix.json
 mix-manifest.json
 *.log
 .vscode
+js/dist
