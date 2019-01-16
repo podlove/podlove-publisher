@@ -22,6 +22,7 @@ player:
 
 build:
 	composer install --no-dev -o
+	npm install
 	npm run production
 	rm -rf dist
 	mkdir dist
