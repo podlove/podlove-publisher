@@ -1,122 +1,135 @@
-<?php 
+<?php
 namespace Podlove\Modules\oembed;
 
-use \Podlove\Modules\Base;
 use Podlove\DomDocumentFragment;
+use \Podlove\Modules\Base;
 
-class oembed extends \Podlove\Modules\Base {
+class oembed extends \Podlove\Modules\Base
+{
 
-	protected $module_name = 'oEmbed Support';
-	protected $module_description = 'Allows an embedded representation of a URL on third party sites.';
-	protected $module_group = 'metadata';
+    protected $module_name        = 'oEmbed Support';
+    protected $module_description = 'Allows an embedded representation of a URL on third party sites.';
+    protected $module_group       = 'metadata';
 
-	public function load() {
-		add_action( 'wp', array( $this, 'load_oembed' ) );
-		add_action( 'wp_head', array( $this, 'register_oembed_discovery' ) );
-	}
+    public function load()
+    {
+        add_action('wp', array($this, 'load_oembed'));
+        add_action('wp_head', array($this, 'register_oembed_discovery'));
+    }
 
-	public function load_oembed() {
+    public function load_oembed()
+    {
 
-		if (!is_single())
-			return;
+        if (!is_single()) {
+            return;
+        }
 
-		if (!isset($_GET['service']) || strtoupper($_GET['service']) != "PODLOVE-OEMBED" || !isset($_GET['format']))
-			return;
+        if (!isset($_GET['service']) || strtoupper($_GET['service']) != "PODLOVE-OEMBED" || !isset($_GET['format'])) {
+            return;
+        }
 
-		switch ( strtoupper( $_GET['format'] ) ) {
-			case 'JSON' :
-				header('Content-Type: application/json; charset=utf-8');
-				print_r( json_encode( $this->get_current_episode( get_the_ID() ) ) );
-				exit;
-			break;
-			case 'XML' :
-				header('Content-Type: application/xml; charset=utf-8');
-				$xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ' . 'standalone="yes"?><oembed/>');
-				$episode = array_flip( $this->get_current_episode( get_the_ID() ) );
-				array_walk_recursive( 
-								$episode,
-								array( $xml_source, 'addChild' ) );
-				print $xml_source->asXML();
-				exit;
-			break;
-			default :
-				status_header( 404 );
-			break;
-		}
-		
-		exit;
-	}
+        $episode = $this->get_current_episode(get_the_ID());
 
-	public function get_current_episode( $post_id ) {
-		if ( get_post_status( $post_id ) !== 'publish' || get_post_type( $post_id ) !== 'podcast' ) {
-			status_header( 404 );
-			exit;
-		}
+        if (!$episode) {
+            return;
+        }
 
-		$episode = \Podlove\Model\Episode::find_one_by_post_id( $post_id );
-		$podcast = \Podlove\Model\Podcast::get();
-		$permalink = get_permalink( $post_id );
+        switch (strtoupper($_GET['format'])) {
+            case 'JSON':
+                header('Content-Type: application/json; charset=utf-8');
+                print_r(json_encode($episode));
+                exit;
+                break;
+            case 'XML':
+                header('Content-Type: application/xml; charset=utf-8');
+                $xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ' . 'standalone="yes"?><oembed/>');
+                $episode    = array_flip($episode);
+                array_walk_recursive($episode, [$xml_source, 'addChild']);
+                print $xml_source->asXML();
+                exit;
+                break;
+            default:
+                status_header(404);
+                break;
+        }
 
-		$player_width = "560px";
-		$player_height =  "140px";
+        exit;
+    }
 
-		$src = $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&amp;" );
+    public function get_current_episode($post_id)
+    {
+        if (get_post_status($post_id) !== 'publish' || get_post_type($post_id) !== 'podcast') {
+            status_header(404);
+            exit;
+        }
 
-		// fixme: the iframe implementation with "standalonePlayer" parameter only works for PWP2
-		return [		
-			'version'		=> '1.0',
-			'type'			=> 'rich',
-			'width'			=> $player_width,
-			'height'		=> $player_height,
-			'title'			=> $episode->full_title(),
-			'url'			=> get_permalink( $post_id ),
-			'author_name'	=> $podcast->full_title(),
-			'author_url'	=> site_url(),
-			'thumbnail_url'	=> $episode->cover_art_with_fallback()->url(),
-			'html'			=> '<iframe width="' . $player_width .'" height="' . $player_height . '" src="' . $src .'standalonePlayer"></iframe>'
-		];
-	}
+        $episode   = \Podlove\Model\Episode::find_one_by_post_id($post_id);
+        $podcast   = \Podlove\Model\Podcast::get();
+        $permalink = get_permalink($post_id);
 
-	public function register_oembed_discovery() { // WordPress does not allow registering custom <link> elements.
+        $player_width  = "560px";
+        $player_height = "140px";
 
-		if (!is_single())
-			return;
+        $src = $permalink . (strpos($permalink, '?') === false ? "?" : "&amp;");
 
-		$post_id = get_the_ID();
+        // fixme: the iframe implementation with "standalonePlayer" parameter only works for PWP2
+        return [
+            'version'       => '1.0',
+            'type'          => 'rich',
+            'width'         => $player_width,
+            'height'        => $player_height,
+            'title'         => $episode->full_title(),
+            'url'           => get_permalink($post_id),
+            'author_name'   => $podcast->full_title(),
+            'author_url'    => site_url(),
+            'thumbnail_url' => $episode->cover_art_with_fallback()->url(),
+            'html'          => '<iframe width="' . $player_width . '" height="' . $player_height . '" src="' . $src . 'standalonePlayer"></iframe>',
+        ];
+    }
 
-		if (get_post_type( $post_id ) !== 'podcast')
-			return;
+    public function register_oembed_discovery()
+    { // WordPress does not allow registering custom <link> elements.
 
-		$permalink = get_permalink( $post_id );
-		$permalink_template = $permalink . ( strpos( $permalink, '?' ) === FALSE ? "?" : "&" );
-		$title =  get_the_title( $post_id );
+        if (!is_single()) {
+            return;
+        }
 
-		$embed_elements = array(
-			array(
-					'rel'	=> 'alternate',
-					'type'	=> 'application/json+oembed',
-					'href'	=> $permalink_template . "service=podlove-oembed&format=json",
-					'title'	=> $title . " oEmbed Profile"
-			),
-			array(
-					'rel'	=> 'alternate',
-					'type'	=> 'application/xml+oembed',
-					'href'	=> $permalink_template . "service=podlove-oembed&format=xml",
-					'title'	=> $title . " oEmbed Profile"
-			),
-		);
+        $post_id = get_the_ID();
 
-		$dom = new DomDocumentFragment;
+        if (get_post_type($post_id) !== 'podcast') {
+            return;
+        }
 
-		foreach ($embed_elements as $link_element) {
-			$element = $dom->createElement('link');
-			foreach ($link_element as $attribute => $value) {
-				$element->setAttribute($attribute,$value);
-			}
-			$dom->appendChild($element);
-		}
+        $permalink          = get_permalink($post_id);
+        $permalink_template = $permalink . (strpos($permalink, '?') === false ? "?" : "&");
+        $title              = get_the_title($post_id);
 
-		echo $dom;
-	}
+        $embed_elements = array(
+            array(
+                'rel'   => 'alternate',
+                'type'  => 'application/json+oembed',
+                'href'  => $permalink_template . "service=podlove-oembed&format=json",
+                'title' => $title . " oEmbed Profile",
+            ),
+            array(
+                'rel'   => 'alternate',
+                'type'  => 'application/xml+oembed',
+                'href'  => $permalink_template . "service=podlove-oembed&format=xml",
+                'title' => $title . " oEmbed Profile",
+            ),
+        );
+
+        $dom = new DomDocumentFragment;
+
+        foreach ($embed_elements as $link_element) {
+            $element = $dom->createElement('link');
+            foreach ($link_element as $attribute => $value) {
+                $element->setAttribute($attribute, $value);
+            }
+            $dom->appendChild($element);
+        }
+
+        echo $dom;
+    }
 
 }

@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.22 =
+
+* (maybe) fix Gutenberg issues when creating a new episode
+
 = 2.7.21 =
 
 **Bug Fixes**
