@@ -107,6 +107,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.7.23 =
+
+**Features**
+
+* **slacknotes:** is now accessible to authors and editors
+
 = 2.7.22 =
 
 * (maybe) fix Gutenberg issues when creating a new episode
