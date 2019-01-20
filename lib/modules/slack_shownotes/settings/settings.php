@@ -12,7 +12,7 @@ class Settings
             /* $parent_slug*/$handle,
             /* $page_title */__('Slacknotes', 'podlove-podcasting-plugin-for-wordpress'),
             /* $menu_title */__('Slacknotes', 'podlove-podcasting-plugin-for-wordpress'),
-            /* $capability */'author',
+            /* $capability */'edit_posts',
             /* $menu_slug  */self::MENU_SLUG,
             /* $function   */[$this, 'page']
         );
