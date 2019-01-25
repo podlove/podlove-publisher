@@ -226,8 +226,23 @@ function get_webplayer_defaults() {
 		'version'         => 'player_v4',
 		'playerv3theme'   => 'pwp-dark-green.min.css',
 		'podigeetheme'    => 'default',
-		'playerv4_color_primary'   => '#2B8AC6',
-		'playerv4_color_secondary' => ''
+		'playerv4_color_primary'   => get_background_color(),
+		'playerv4_color_secondary' => get_header_textcolor(),
+		'playerv4_visible_components' => [
+			'controlChapters' => "on",
+			'controlSteppers' => "on",
+			'episodeTitle' => "on",
+			'poster' => "on",
+			'progressbar' => "on",
+			'showTitle' => "on",
+			'subtitle' => "on",
+			'tabAudio' => "on",
+			'tabChapters' => "on",
+			'tabFiles' => "on",
+			'tabShare' => "on",
+			'tabInfo' => "on",
+			'tabTranscripts' => "on"
+		]
 	];
 }
 

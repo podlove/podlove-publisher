@@ -96,6 +96,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
             'theme'     => [
                 'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000'),
             ],
+			'visibleComponents' => array_keys($player_settings['playerv4_visible_components'], "on")
         ];
 
         if (!Module::use_cdn()) {
