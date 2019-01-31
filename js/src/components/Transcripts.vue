@@ -303,12 +303,10 @@ export default {
         });
     },
     getVoice(id) {
-      return this.voices.find(v => v.value == id);
+      return this.voices.find(v => (v.option ? v.option.value == id : false));
     },
     hasVoice(id) {
-      return (
-        this.getVoice() !== undefined && this.getVoice().option !== undefined
-      );
+      return id !== null && this.getVoice(id) !== undefined;
     },
     fetchTranscript(done) {
       this.axios.get(this.jsonGroupedDownloadHref).then(({ data }) => {
