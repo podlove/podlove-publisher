@@ -113,6 +113,21 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2019-01-31 =
+
+### Bug Fixes
+
+* **player:** missing config filter parameter ([0fa377f](https://github.com/podlove/podlove-publisher/commit/0fa377f))
+* **transcripts:** don't break when contributors are missing ([d6cf132](https://github.com/podlove/podlove-publisher/commit/d6cf132))
+* **transcripts:** ensure vtt is allowed to upload ([f1f021e](https://github.com/podlove/podlove-publisher/commit/f1f021e))
+* **transcripts:** speaker-voice assignment ([4f48c99](https://github.com/podlove/podlove-publisher/commit/4f48c99))
+
+### Features
+
+* **transcripts:** add "import from asset" button ([6cf3b39](https://github.com/podlove/podlove-publisher/commit/6cf3b39))
+* **transcripts:** add whitespace after full stop in preview ([70a62f6](https://github.com/podlove/podlove-publisher/commit/70a62f6))
+* **transcripts:** show voice default if contributor is not available ([fb40fc5](https://github.com/podlove/podlove-publisher/commit/fb40fc5))
+
 = 2019-01-16 =
 
 * (maybe) fix Gutenberg issues when creating a new episode
