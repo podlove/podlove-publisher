@@ -44,6 +44,7 @@
               class="ts-speaker"
               v-if="hasVoice(group.speaker)"
             >{{ getVoice(group.speaker).option.label }}</div>
+            <div v-else class="ts-speaker">{{ group.voice }}</div>
 
             <div class="ts-content">
               <span
