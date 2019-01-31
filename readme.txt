@@ -178,8 +178,6 @@ A short demo video is available [in the documentation](https://docs.podlove.org/
 
 = 2018-12-14 =
 
-== merge changes from public releases ==
-
 We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
 You can choose to use the new editor or stay with the classic editor for now by installing the classic editor plugin by WordPress.
 
