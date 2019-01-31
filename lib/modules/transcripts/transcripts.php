@@ -21,6 +21,7 @@ class Transcripts extends \Podlove\Modules\Base
         add_action('podlove_module_was_activated_transcripts', [$this, 'was_activated']);
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
         add_action('wp_ajax_podlove_transcript_import', [$this, 'ajax_transcript_import']);
+        add_action('wp_ajax_podlove_transcript_asset_import', [$this, 'ajax_transcript_asset_import']);
         add_action('wp_ajax_podlove_transcript_get_contributors', [$this, 'ajax_transcript_get_contributors']);
         add_action('wp_ajax_podlove_transcript_get_voices', [$this, 'ajax_transcript_get_voices']);
 
@@ -171,6 +172,27 @@ class Transcripts extends \Podlove\Modules\Base
         wp_die();
     }
 
+    public function ajax_transcript_asset_import()
+    {
+        $post_id = intval($_GET['post_id'], 10);
+        $episode = Model\Episode::find_one_by_post_id($post_id);
+
+        if (!$episode) {
+            $error = 'Could not find episode for this post object.';
+            \Podlove\Log::get()->addError($error);
+            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
+        }
+
+        if (($return = $this->transcript_import_from_asset($episode)) !== true) {
+            if (is_array($return) && isset($return['error'])) {
+                \Podlove\Log::get()->addError($return['error']);
+                \Podlove\AJAX\Ajax::respond_with_json($return);
+            }
+        }
+
+        wp_die();
+    }
+
     /**
      * Import transcript from remote file
      */
@@ -179,20 +201,32 @@ class Transcripts extends \Podlove\Modules\Base
         $asset_assignment = Model\AssetAssignment::get_instance();
 
         if (!$transcript_asset = Model\EpisodeAsset::find_one_by_id($asset_assignment->transcript)) {
-            return;
+            return [
+                'error' => sprintf(
+                    __('No asset is assigned for transcripts yet. Fix this in %s', 'podlove-podcasting-plugin-for-wordpress'),
+                    sprintf(
+                        '%s%s%s',
+                        '<a href="' . admin_url('admin.php?page=podlove_episode_assets_settings_handle') . '" target="_blank">',
+                        __('Episode Assets', 'podlove-podcasting-plugin-for-wordpress'),
+                        '</a>'
+                    )
+                ),
+            ];
         }
 
         if (!$transcript_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $transcript_asset->id)) {
-            return;
+            return ['error' => __('No transcript file is available for this episode.', 'podlove-podcasting-plugin-for-wordpress')];
         }
 
         $transcript = wp_remote_get($transcript_file->get_file_url());
 
         if (is_wp_error($transcript)) {
-            return;
+            return ['error' => $transcript->get_error_message()];
         }
 
         self::parse_and_import_webvtt($episode, $transcript['body']);
+
+        return true;
     }
 
     public static function parse_and_import_webvtt(Episode $episode, $content)

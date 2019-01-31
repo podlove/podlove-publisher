@@ -96,10 +96,15 @@
 
     <div class="row tab-body import" v-show="mode == 'import'">
       <form>
-        <button
-          class="button button-primary"
-          @click.prevent="initImportTranscript"
-        >Import Transcript</button>
+        <div style="display: flex;justify-content: center; align-items: baseline;">
+          <button
+            class="button button-primary"
+            @click.prevent="initImportTranscript"
+          >Import Transcript</button>
+          <span style="padding: 0px 15px;">or</span>
+          <button class="button" @click.prevent="importTranscriptFromAsset">Get from Asset</button>
+        </div>
+
         <input
           type="file"
           name="transcriptimport"
@@ -108,7 +113,7 @@
           style="display: none"
           :disabled="importing"
         >
-        <div class="description">{{ description }}</div>
+        <div class="description" v-html="description"></div>
       </form>
     </div>
 
@@ -139,160 +144,198 @@
 
 <script type="text/javascript">
 export default {
-    data() {
-        return {
-            mode: 'import',
-            importing: false,
-            lastError: '',
-            voices: null,
-            contributors: null,
-            transcript: null
-        }
+  data() {
+    return {
+      mode: "import",
+      importing: false,
+      lastError: "",
+      voices: null,
+      contributors: null,
+      transcript: null
+    };
+  },
+
+  computed: {
+    description: function() {
+      if (this.importing) {
+        return "importing ...";
+      } else if (this.lastError) {
+        return this.lastError;
+      } else {
+        return "Accepts: WebVTT";
+      }
     },
-
-    computed: {
-        description: function() {
-            if (this.importing) {
-                return "importing ..."
-            } else if (this.lastError) {
-                return this.lastError
-            } else {
-                return "Accepts: WebVTT"
-            }
-        },
-        contributorsOptions: function() {
-            return this.contributors.map((c) => {
-                return {label: c.name, value: c.id, avatar: c.avatar}
-            })
-        },
-        webvttDownloadHref: function() {
-            const post_id = document.querySelector('#post_ID').value
-            const host = window.location.hostname;
-
-            return "//" + host + "?p=" + post_id + "&podlove_transcript=webvtt"
-        },
-        jsonDownloadHref: function() {
-            const post_id = document.querySelector('#post_ID').value
-            const host = window.location.hostname;
-
-            return "//" + host + "?p=" + post_id + "&podlove_transcript=json"
-        },
-        xmlDownloadHref: function() {
-            const post_id = document.querySelector('#post_ID').value
-            const host = window.location.hostname;
-
-            return "//" + host + "?p=" + post_id + "&podlove_transcript=xml"
-        },
-        jsonGroupedDownloadHref: function() {
-            const post_id = document.querySelector('#post_ID').value
-            const host = window.location.hostname;
-
-            return "//" + host + "?p=" + post_id + "&podlove_transcript=json_grouped"
-        }
+    contributorsOptions: function() {
+      return this.contributors.map(c => {
+        return { label: c.name, value: c.id, avatar: c.avatar };
+      });
     },
+    webvttDownloadHref: function() {
+      const post_id = document.querySelector("#post_ID").value;
+      const host = window.location.hostname;
 
-    methods: {
-        initImportTranscript () {
-            const fileInput = document.getElementById("transcriptimport");
-            fileInput.click();
-        },
-        importTranscript() {
-            const fileInput = document.getElementById("transcriptimport");
-            const file = fileInput.files[0];
-
-            this.importing = true;
-            
-            let form = new FormData()
-            form.append('transcript', file)
-            form.append('action', 'podlove_transcript_import')
-            form.append('post_id', document.querySelector('#post_ID').value)
-
-            this.axios.post(ajaxurl, form, {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-            }).then(({data}) => {
-                if (data.error) {
-                    this.lastError = data.error
-                } else {
-                    this.refetchAll()
-                }
-                this.importing = false;
-                fileInput.parentElement.reset();
-            }).catch((error) => {
-                this.importing = false;
-                fileInput.parentElement.reset();
-            })
-        },
-        fetchContributors(done) {
-            this.axios.get(ajaxurl, {params: {action: 'podlove_transcript_get_contributors'}}).then(({data}) => {
-                if (data.error) {
-                    // this.lastError = data.error
-                } else {
-                    this.contributors = data.contributors
-                    if (done) {
-                        done()
-                    }
-                }
-            })
-        },
-        fetchVoices(done) {
-            this.axios.get(ajaxurl, {
-                params: {
-                    action: 'podlove_transcript_get_voices',
-                    post_id: document.querySelector('#post_ID').value
-                }
-            }).then(({data}) => {
-                if (data.error) {
-                    // this.lastError = data.error
-                } else {
-                    this.voices = data.voices.map((k) => {
-                        
-                        let option = this.contributorsOptions.find((co) => {
-                            return co.value == k.contributor_id
-                        })
-
-                        return {label: k.voice, value: k.contributor_id, option: option}
-                    })
-                    if (done) {
-                        done()
-                    }
-                }
-            })
-        },
-        getVoice(id) {
-            return this.voices.find((v) => v.value == id)
-        },
-        hasVoice(id) {
-            return this.getVoice() !== undefined && this.getVoice().option !== undefined
-        },
-        fetchTranscript(done) {
-            this.axios.get(this.jsonGroupedDownloadHref).then(({data}) => {
-                this.transcript = data
-                if (done) {
-                    done()
-                }
-            }) 
-        },
-        refetchAll() {
-            this.fetchContributors(() => {
-                this.fetchVoices(() => {
-                    this.fetchTranscript(() => {
-                        if (this.transcript && this.voices) {
-                            this.mode = 'transcript'
-                        } else if (!this.voices) {
-                            this.mode = 'voices'
-                        }
-                    })
-                })
-            })
-        }
+      return "//" + host + "?p=" + post_id + "&podlove_transcript=webvtt";
     },
+    jsonDownloadHref: function() {
+      const post_id = document.querySelector("#post_ID").value;
+      const host = window.location.hostname;
 
-    mounted() {
-        this.refetchAll()
+      return "//" + host + "?p=" + post_id + "&podlove_transcript=json";
+    },
+    xmlDownloadHref: function() {
+      const post_id = document.querySelector("#post_ID").value;
+      const host = window.location.hostname;
+
+      return "//" + host + "?p=" + post_id + "&podlove_transcript=xml";
+    },
+    jsonGroupedDownloadHref: function() {
+      const post_id = document.querySelector("#post_ID").value;
+      const host = window.location.hostname;
+
+      return "//" + host + "?p=" + post_id + "&podlove_transcript=json_grouped";
     }
-}
+  },
+
+  methods: {
+    initImportTranscript() {
+      const fileInput = document.getElementById("transcriptimport");
+      fileInput.click();
+    },
+    importTranscript() {
+      const fileInput = document.getElementById("transcriptimport");
+      const file = fileInput.files[0];
+
+      this.importing = true;
+
+      let form = new FormData();
+      form.append("transcript", file);
+      form.append("action", "podlove_transcript_import");
+      form.append("post_id", document.querySelector("#post_ID").value);
+
+      this.axios
+        .post(ajaxurl, form, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(({ data }) => {
+          if (data.error) {
+            this.lastError = data.error;
+          } else {
+            this.refetchAll();
+          }
+          this.importing = false;
+          fileInput.parentElement.reset();
+        })
+        .catch(error => {
+          this.importing = false;
+          fileInput.parentElement.reset();
+        });
+    },
+    importTranscriptFromAsset() {
+      console.log("importTranscriptFromAsset");
+
+      this.importing = true;
+
+      this.axios
+        .get(ajaxurl, {
+          params: {
+            action: "podlove_transcript_asset_import",
+            post_id: document.querySelector("#post_ID").value
+          }
+        })
+        .then(({ data }) => {
+          if (data.error) {
+            this.lastError = data.error;
+          } else {
+            this.refetchAll();
+          }
+          this.importing = false;
+        })
+        .catch(error => {
+          this.importing = false;
+        });
+    },
+    fetchContributors(done) {
+      this.axios
+        .get(ajaxurl, {
+          params: { action: "podlove_transcript_get_contributors" }
+        })
+        .then(({ data }) => {
+          if (data.error) {
+            // this.lastError = data.error
+          } else {
+            this.contributors = data.contributors;
+            if (done) {
+              done();
+            }
+          }
+        });
+    },
+    fetchVoices(done) {
+      this.axios
+        .get(ajaxurl, {
+          params: {
+            action: "podlove_transcript_get_voices",
+            post_id: document.querySelector("#post_ID").value
+          }
+        })
+        .then(({ data }) => {
+          if (data.error) {
+            // this.lastError = data.error
+          } else {
+            this.voices = data.voices.map(k => {
+              let option = this.contributorsOptions.find(co => {
+                return co.value == k.contributor_id;
+              });
+
+              return {
+                label: k.voice,
+                value: k.contributor_id,
+                option: option
+              };
+            });
+            if (done) {
+              done();
+            }
+          }
+        });
+    },
+    getVoice(id) {
+      return this.voices.find(v => v.value == id);
+    },
+    hasVoice(id) {
+      return (
+        this.getVoice() !== undefined && this.getVoice().option !== undefined
+      );
+    },
+    fetchTranscript(done) {
+      this.axios.get(this.jsonGroupedDownloadHref).then(({ data }) => {
+        this.transcript = data;
+        if (done) {
+          done();
+        }
+      });
+    },
+    refetchAll() {
+      this.fetchContributors(() => {
+        this.fetchVoices(() => {
+          this.fetchTranscript(() => {
+            if (this.transcript && this.voices) {
+              this.mode = "transcript";
+            } else if (!this.voices) {
+              this.mode = "voices";
+            }
+          });
+        });
+      });
+    }
+  },
+
+  mounted() {
+    this.refetchAll();
+  }
+};
 </script>
 
 <style type="text/css">
