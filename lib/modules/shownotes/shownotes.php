@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Modules\Shownotes;
 
+use \Podlove\Modules\Shownotes\Model\Entry;
+
 class Shownotes extends \Podlove\Modules\Base
 {
     protected $module_name        = 'Shownotes';
@@ -10,6 +12,12 @@ class Shownotes extends \Podlove\Modules\Base
     public function load()
     {
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
+        add_action('podlove_module_was_activated_shownotes', [$this, 'was_activated']);
+    }
+
+    public function was_activated()
+    {
+        Entry::build();
     }
 
     public function extend_episode_form($form_data, $episode)
