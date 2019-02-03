@@ -7,6 +7,8 @@
         <span class="link-title" v-if="entry.title">{{ entry.title }}</span>
       </div>
     </div>
+
+    <button type="button" class="button create-button">Add Entry</button>
   </div>
 </template>
 
@@ -33,6 +35,10 @@ export default {
 .link-title {
   font-weight: bold;
   font-size: 15px;
+}
+
+.create-button {
+  margin-top: 1em;
 }
 </style>
 

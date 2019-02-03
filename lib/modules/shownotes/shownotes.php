@@ -13,6 +13,8 @@ class Shownotes extends \Podlove\Modules\Base
     {
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
         add_action('podlove_module_was_activated_shownotes', [$this, 'was_activated']);
+        add_action('rest_api_init', [$this, 'api_init']);
+
     }
 
     public function was_activated()
@@ -36,5 +38,11 @@ class Shownotes extends \Podlove\Modules\Base
             'position' => 415,
         );
         return $form_data;
+    }
+
+    public function api_init()
+    {
+        $api = new REST_API();
+        $api->register_routes();
     }
 }
