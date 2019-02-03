@@ -764,3 +764,20 @@ section.chart-wrapper div {
 .chart-nodata {
 	color: #666;
 }
+
+/**	slacknotes / shownotes **/
+
+.p-card {
+	background: white;
+	border: 1px solid #ddd;
+}
+
+.p-card-body {
+	padding: 12px;
+}
+
+.p-card-header,
+.p-card-footer {
+	background: #e9e9e9;
+	padding: 12px;
+}

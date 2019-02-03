@@ -1,12 +1,21 @@
 <template>
-  <div>Hello Shownotes</div>
+  <div>
+    <h1>Hello Shownotes</h1>
+
+    <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
+      <div class="p-card-body">
+        <span class="link-title" v-if="entry.title">{{ entry.title }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      shownotes: []
+      shownotes: [{ id: 1, title: "Hello World" }],
+      ready: true
     };
   },
   mounted: function() {
@@ -21,6 +30,10 @@ export default {
 </script>
 
 <style>
+.link-title {
+  font-weight: bold;
+  font-size: 15px;
+}
 </style>
 
 
