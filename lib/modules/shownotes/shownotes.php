@@ -9,6 +9,24 @@ class Shownotes extends \Podlove\Modules\Base
 
     public function load()
     {
+        add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
+    }
 
+    public function extend_episode_form($form_data, $episode)
+    {
+        $form_data[] = array(
+            'type'     => 'callback',
+            'key'      => 'shownotes',
+            'options'  => array(
+                'callback' => function () use ($episode) {
+                    ?>
+                    <div id="podlove-shownotes-app"><shownotes></shownotes></div>
+                    <?php
+},
+                'label'    => __('Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
+            ),
+            'position' => 415,
+        );
+        return $form_data;
     }
 }
