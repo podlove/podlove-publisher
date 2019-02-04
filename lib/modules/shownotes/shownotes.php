@@ -30,7 +30,7 @@ class Shownotes extends \Podlove\Modules\Base
             'options'  => array(
                 'callback' => function () use ($episode) {
                     ?>
-                    <div id="podlove-shownotes-app"><shownotes></shownotes></div>
+                    <div id="podlove-shownotes-app"><shownotes episodeid="<?php echo esc_attr($episode->id); ?>"></shownotes></div>
                     <?php
 },
                 'label'    => __('Shownotes', 'podlove-podcasting-plugin-for-wordpress'),

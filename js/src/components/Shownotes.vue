@@ -13,15 +13,27 @@
 </template>
 
 <script>
+const $ = jQuery;
+
 export default {
+  props: ["episodeid"],
   data() {
     return {
-      shownotes: [{ id: 1, title: "Hello World" }],
-      ready: true
+      shownotes: [],
+      ready: false
     };
   },
   mounted: function() {
-    console.log("mounted");
+    $.getJSON(
+      podlove_vue.rest_url + "podlove/v1/shownotes?episode_id=" + this.episodeid
+    )
+      .done(shownotes => {
+        this.shownotes = shownotes;
+        this.ready = true;
+      })
+      .fail(({ responseJSON }) => {
+        console.error("could not load shownotes:", responseJSON.message);
+      });
 
     window.setTimeout(() => {
       // for development

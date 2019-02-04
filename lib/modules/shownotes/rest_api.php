@@ -9,8 +9,8 @@ class REST_API
     const api_namespace = 'podlove/v1';
     const api_base      = 'shownotes';
 
-    // todo: update
     // todo: delete
+    // todo: update -- not sure I even need this except "save unfurl data"
 
     public function register_routes()
     {
