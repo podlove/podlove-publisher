@@ -1,14 +1,40 @@
 <template>
   <div>
-    <h1>Hello Shownotes</h1>
-
     <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
       <div class="p-card-body">
         <span class="link-title" v-if="entry.title">{{ entry.title }}</span>
+        <span class="link-url" v-if="entry.original_url">
+          <a :href="entry.original_url" target="_blank">{{ entry.original_url }}</a>
+        </span>
       </div>
     </div>
 
-    <button type="button" class="button create-button">Add Entry</button>
+    <div class="p-card create-card" v-if="mode == 'create'">
+      <div class="p-card-body">
+        <input
+          @keyup.enter="createEntry"
+          v-model="newUrl"
+          type="text"
+          name="new_entry"
+          id="new_entry"
+          placeholder="https://example.com"
+          :disabled="mode == 'create-waiting'"
+        >
+        <button
+          type="button"
+          class="button button-primary"
+          @click.prevent="createEntry"
+          :disabled="mode == 'create-waiting'"
+        >Add</button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="button create-button"
+      @click.prevent="mode = 'create'"
+      v-if="mode != 'create'"
+    >Add Entry</button>
   </div>
 </template>
 
@@ -20,8 +46,31 @@ export default {
   data() {
     return {
       shownotes: [],
-      ready: false
+      ready: false,
+      mode: "idle",
+      newUrl: ""
     };
+  },
+  methods: {
+    createEntry: function() {
+      if (!this.newUrl) return;
+
+      this.mode = "create-waiting";
+
+      $.post(podlove_vue.rest_url + "podlove/v1/shownotes", {
+        original_url: this.newUrl,
+        episode_id: this.episodeid
+      })
+        .done(result => {
+          this.shownotes.push(result);
+          this.newUrl = "";
+          this.mode = "idle";
+        })
+        .fail(({ responseJSON }) => {
+          console.error("could not create entry:", responseJSON.message);
+          this.mode = "idle";
+        });
+    }
   },
   mounted: function() {
     $.getJSON(
@@ -44,13 +93,26 @@ export default {
 </script>
 
 <style>
+.p-card {
+  margin-bottom: 6px;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);
+  border-color: rgb(204, 204, 204);
+}
 .link-title {
   font-weight: bold;
   font-size: 15px;
 }
 
+.link-url a {
+  text-decoration: none;
+}
+
 .create-button {
   margin-top: 1em;
+}
+
+.create-card .p-card-body {
+  display: flex;
 }
 </style>
 

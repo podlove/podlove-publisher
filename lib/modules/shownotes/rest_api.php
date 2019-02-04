@@ -102,7 +102,7 @@ class REST_API
             );
         }
 
-        $response = rest_ensure_response($entry);
+        $response = rest_ensure_response($entry->to_array());
         $response->set_status(201);
 
         $url = sprintf('%s/%s/%d', self::api_namespace, self::api_base, $entry->id);
