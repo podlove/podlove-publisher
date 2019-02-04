@@ -15,6 +15,7 @@ class Entry extends Base
 
 Entry::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
 Entry::property('episode_id', 'INT');
+Entry::property('state', 'VARCHAR(255)');
 Entry::property('unfurl_data', 'TEXT');
 Entry::property('original_url', 'TEXT');
 Entry::property('url', 'TEXT');

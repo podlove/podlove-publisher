@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
-      <div class="p-card-body">
-        <div class="site">
+      <div class="p-card-body" v-if="entry.url">
+        <div class="site" v-if="entry.site_url && entry.site_name">
           <img v-if="entry.icon" :src="entry.icon" alt="Site Icon" width="16" height="16">
           <div v-else class="default-icon"></div>
           <span class="site-name">
@@ -10,15 +10,24 @@
           </span>
         </div>
         <span class="link">
-          <a :href="entry.original_url" target="_blank">{{ entry.title }}</a>
+          <a :href="entry.url" target="_blank">{{ entry.title }}</a>
         </span>
       </div>
+      <div class="p-card-body failed" v-else-if="entry.state == 'failed'">
+        Unable to access URL: {{ entry.original_url }}
+        <a
+          href="#"
+          class="retry-btn"
+          @click.prevent="unfurl(entry)"
+        >Retry?</a>
+      </div>
+      <div class="p-card-body" v-else>Preparing {{ entry.original_url }} ...</div>
     </div>
 
     <div class="p-card create-card" v-if="mode == 'create'">
       <div class="p-card-body">
         <input
-          @keyup.enter="createEntry"
+          @keyup.enter.prevent="createEntry"
           v-model="newUrl"
           type="text"
           name="new_entry"
@@ -69,12 +78,32 @@ export default {
       })
         .done(result => {
           this.shownotes.push(result);
+          this.unfurl(result);
           this.newUrl = "";
           this.mode = "idle";
         })
         .fail(({ responseJSON }) => {
           console.error("could not create entry:", responseJSON.message);
           this.mode = "idle";
+        });
+    },
+    unfurl: function(entry) {
+      entry.state = "unfurling";
+
+      $.post(
+        podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id + "/unfurl"
+      )
+        .done(result => {
+          const start = this.shownotes.findIndex(e => {
+            return e.id == result.id;
+          });
+          console.log("start", start);
+
+          this.shownotes.splice(start, 1, result);
+        })
+        .fail(({ responseJSON }) => {
+          entry.state = "failed";
+          console.error("could not unfurl entry:", responseJSON.message);
         });
     }
   },
@@ -106,6 +135,9 @@ export default {
 }
 .p-card-body {
   padding: 9px;
+}
+.failed {
+  border-left: 3px solid #dc3232;
 }
 .link-title {
   font-weight: bold;

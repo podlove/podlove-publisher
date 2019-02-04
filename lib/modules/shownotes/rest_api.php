@@ -154,6 +154,12 @@ class REST_API
         $response = $curl->get_response();
 
         if (!$curl->isSuccessful()) {
+
+            $entry->state = 'failed';
+            $entry->save();
+
+            error_log(print_r($response, true));
+
             return new \WP_Error(
                 'podlove_rest_unfurl_failed',
                 'error when unfurling entry',
@@ -164,6 +170,7 @@ class REST_API
         $data = json_decode($response['body'], true);
 
         $entry->unfurl_data = $data;
+        $entry->state       = 'fetched';
         $entry->url         = $data['url'];
         $entry->title       = $data['title'];
         $entry->description = $data['description'];
