@@ -1,6 +1,7 @@
 <?php
 namespace Podlove\Modules\Shownotes;
 
+use Podlove\Http\Curl;
 use Podlove\Model\Episode;
 use Podlove\Modules\Shownotes\Model\Entry;
 
@@ -40,6 +41,18 @@ class REST_API
             [
                 'methods'  => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
+            ],
+        ]);
+        register_rest_route(self::api_namespace, self::api_base . '/(?P<id>[\d]+)/unfurl', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the object.'),
+                    'type'        => 'integer',
+                ],
+            ],
+            [
+                'methods'  => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'unfurl_item'],
             ],
         ]);
     }
@@ -120,5 +133,48 @@ class REST_API
         $response = rest_ensure_response($entry->to_array());
 
         return $response;
+    }
+
+    public function unfurl_item($request)
+    {
+        $entry = Entry::find_by_id($request['id']);
+        if (is_wp_error($entry)) {
+            return $entry;
+        }
+
+        $url = $entry->original_url;
+
+        $unfurl_endpoint = "http://unfurl.eric.co.de/unfurl?&url=https%3A%2F%2Fde.wikipedia.org%2Fwiki%2FDivisor";
+        $curl            = new Curl;
+        $curl->request(add_query_arg("url", $url, $unfurl_endpoint), [
+            'headers' => ['Content-type' => 'application/json'],
+            'timeout' => 20,
+        ]);
+
+        $response = $curl->get_response();
+
+        if (!$curl->isSuccessful()) {
+            return new \WP_Error(
+                'podlove_rest_unfurl_failed',
+                'error when unfurling entry',
+                ['status' => 404]
+            );
+        }
+
+        $data = json_decode($response['body'], true);
+
+        $entry->unfurl_data = $data;
+        $entry->url         = $data['url'];
+        $entry->title       = $data['title'];
+        $entry->description = $data['description'];
+        $entry->site_name   = $data['site_name'];
+        $entry->site_url    = $data['site_url'];
+        $entry->icon        = $data['icon']['url'];
+        $entry->save();
+
+        $response = rest_ensure_response($entry->to_array());
+
+        return $response;
+
     }
 }
