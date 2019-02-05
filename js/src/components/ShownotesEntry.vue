@@ -39,7 +39,6 @@
             <icon-cheveron-up></icon-cheveron-up>
           </span>
         </span>
-        <!-- TODO: disclosure triangle, off by default -->
         <div class="description" v-show="descriptionVisible">{{ entry.description }}</div>
       </div>
       <div class="actions">
