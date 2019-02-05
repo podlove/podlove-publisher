@@ -42,6 +42,7 @@
           id="new_entry"
           placeholder="https://example.com"
           :disabled="mode == 'create-waiting'"
+          v-focus
         >
         <button
           type="button"
@@ -137,6 +138,13 @@ export default {
         return entry.site_url + entry.icon;
       } else {
         return entry.icon;
+      }
+    }
+  },
+  directives: {
+    focus: {
+      inserted: function(el) {
+        el.focus();
       }
     }
   },
