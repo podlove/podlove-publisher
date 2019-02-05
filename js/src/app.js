@@ -17,6 +17,7 @@ import JobsDashboard from './components/JobsDashboard'
 import AnalyticsDatePicker from './components/AnalyticsDatePicker'
 import Slacknotes from './components/Slacknotes'
 import Shownotes from './components/Shownotes'
+import ShownotesEntry from './components/ShownotesEntry'
 import Transcripts from './components/Transcripts'
 
 Vue.component('chapters', Chapters);
@@ -27,6 +28,7 @@ Vue.component('analytics-date-picker', AnalyticsDatePicker);
 Vue.component('jobs-dashboard', JobsDashboard);
 Vue.component('slacknotes', Slacknotes);
 Vue.component('shownotes', Shownotes);
+Vue.component('shownotes-entry', ShownotesEntry);
 Vue.component('transcripts', Transcripts);
 
 import 'v2-datepicker/lib/index.css'

@@ -1,45 +1,13 @@
 <template>
   <div>
-    <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
-      <div class="p-card-body" v-if="entry.state == 'unfurling'">
-        <div class="main">
-          <div class="site">
-            <div class="loading-sitename"></div>
-          </div>
-          <span class="link">
-            <div class="loading-link"></div>
-          </span>
-        </div>
-        <div class="actions">
-          <i class="podlove-icon-spinner rotate"></i>
-        </div>
-      </div>
-      <div class="p-card-body" v-else-if="entry.url">
-        <div class="main">
-          <div class="site" v-if="entry.site_url && entry.site_name">
-            <img v-if="entry.icon" :src="icon(entry)" alt="Site Icon" width="16" height="16">
-            <div v-else class="default-icon"></div>
-            <span class="site-name">
-              <a :href="entry.site_url" target="_blank">{{ entry.site_name }}</a>
-            </span>
-          </div>
-          <span class="link">
-            <a :href="entry.url" target="_blank">{{ entry.title }}</a>
-          </span>
-        </div>
-        <div class="actions">
-          <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">refresh</a>
-          <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
-        </div>
-      </div>
-      <div class="p-card-body failed" v-else-if="entry.state == 'failed'">
-        <div class="main">Unable to access URL: {{ entry.original_url }}</div>
-        <div class="actions">
-          <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">retry?</a>
-          <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
-        </div>
-      </div>
-    </div>
+    <shownotes-entry
+      :entry="entry"
+      v-on:update:entry="onUpdateEntry"
+      v-on:delete:entry="onDeleteEntry"
+      v-show="ready"
+      v-for="entry in shownotes"
+      :key="entry.id"
+    ></shownotes-entry>
 
     <div class="p-card create-card" v-if="mode == 'create'">
       <div class="p-card-body">
@@ -97,7 +65,6 @@ export default {
       })
         .done(result => {
           this.shownotes.push(result);
-          this.unfurl(result);
           this.newUrl = "";
           this.mode = "idle";
         })
@@ -106,49 +73,17 @@ export default {
           this.mode = "idle";
         });
     },
-    unfurl: function(entry) {
-      entry.state = "unfurling";
-
-      $.post(
-        podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id + "/unfurl"
-      )
-        .done(result => {
-          const start = this.shownotes.findIndex(e => {
-            return e.id == result.id;
-          });
-          console.log("unfurl start index", start);
-
-          this.shownotes.splice(start, 1, result);
-        })
-        .fail(({ responseJSON }) => {
-          entry.state = "failed";
-          console.error("could not unfurl entry:", responseJSON.message);
-        });
-    },
-    deleteEntry: function(entry) {
+    onUpdateEntry: function(entry) {
       const start = this.shownotes.findIndex(e => {
         return e.id == entry.id;
       });
-      console.log("delete start index", start);
-
-      this.shownotes.splice(start, 1);
-
-      $.ajax({
-        url: podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id,
-        method: "DELETE",
-        dataType: "json"
-      })
-        .done(result => {})
-        .fail(({ responseJSON }) => {
-          console.error("could not delete entry:", responseJSON.message);
-        });
+      this.shownotes.splice(start, 1, entry);
     },
-    icon: function(entry) {
-      if (entry.icon[0] == "/") {
-        return entry.site_url + entry.icon;
-      } else {
-        return entry.icon;
-      }
+    onDeleteEntry: function(entry) {
+      const start = this.shownotes.findIndex(e => {
+        return e.id == entry.id;
+      });
+      this.shownotes.splice(start, 1);
     }
   },
   directives: {
@@ -175,7 +110,8 @@ export default {
       window.scroll(
         0,
         document.getElementById("podlove-shownotes-app").offsetTop +
-          document.body.clientHeight / 2
+          document.body.clientHeight +
+          500
       );
     }, 2500);
   }
@@ -250,6 +186,10 @@ export default {
   background-color: #0074af;
   border-radius: 3px;
   opacity: 0.67;
+}
+.description {
+  color: #666;
+  font-style: italic;
 }
 </style>
 
