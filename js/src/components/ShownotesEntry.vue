@@ -16,7 +16,7 @@
     <div class="p-card-body" v-else-if="entry.url">
       <div class="main">
         <div class="site" v-if="entry.site_url && entry.site_name">
-          <img v-if="entry.icon" :src="icon" alt="Site Icon" width="16" height="16">
+          <img v-if="entry.icon" :src="icon" alt="Icon" width="16" height="16">
           <div v-else class="default-icon"></div>
           <span class="site-name">
             <a :href="entry.site_url" target="_blank">{{ entry.site_name }}</a>
@@ -29,26 +29,14 @@
             v-show="entry.description && !descriptionVisible"
             @click="descriptionVisible = !descriptionVisible"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-cheveron-down">
-              <path
-                class="secondary"
-                fill-rule="evenodd"
-                d="M15.3 10.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"
-              ></path>
-            </svg>
+            <icon-cheveron-down></icon-cheveron-down>
           </span>
           <span
             class="disclose"
             v-show="entry.description && descriptionVisible"
             @click="descriptionVisible = !descriptionVisible"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-cheveron-up">
-              <path
-                class="secondary"
-                fill-rule="evenodd"
-                d="M8.7 13.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1-1.4 1.4L12 10.42l-3.3 3.3z"
-              ></path>
-            </svg>
+            <icon-cheveron-up></icon-cheveron-up>
           </span>
         </span>
         <!-- TODO: disclosure triangle, off by default -->
@@ -70,12 +58,19 @@
 </template>
 
 <script>
+import CheveronDown from "./icons/CheveronDown";
+import CheveronUp from "./icons/CheveronUp";
+
 export default {
   props: ["entry"],
   data() {
     return {
       descriptionVisible: false
     };
+  },
+  components: {
+    "icon-cheveron-down": CheveronDown,
+    "icon-cheveron-up": CheveronUp
   },
   computed: {
     icon: function() {
