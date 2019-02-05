@@ -2,38 +2,40 @@
   <div>
     <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
       <div class="p-card-body" v-if="entry.url">
-        <div class="site" v-if="entry.site_url && entry.site_name">
-          <img v-if="entry.icon" :src="icon(entry)" alt="Site Icon" width="16" height="16">
-          <div v-else class="default-icon"></div>
-          <span class="site-name">
-            <a :href="entry.site_url" target="_blank">{{ entry.site_name }}</a>
+        <div class="main">
+          <div class="site" v-if="entry.site_url && entry.site_name">
+            <img v-if="entry.icon" :src="icon(entry)" alt="Site Icon" width="16" height="16">
+            <div v-else class="default-icon"></div>
+            <span class="site-name">
+              <a :href="entry.site_url" target="_blank">{{ entry.site_name }}</a>
+            </span>
+          </div>
+          <span class="link">
+            <a :href="entry.url" target="_blank">{{ entry.title }}</a>
           </span>
         </div>
-        <span class="link">
-          <a :href="entry.url" target="_blank">{{ entry.title }}</a>
-        </span>
         <div class="actions">
-          <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">Refresh</a>
+          <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">refresh</a>
           <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
         </div>
       </div>
       <div class="p-card-body failed" v-else-if="entry.state == 'failed'">
-        Unable to access URL: {{ entry.original_url }}
-        <a
-          href="#"
-          class="retry-btn"
-          @click.prevent="unfurl(entry)"
-        >Retry?</a>
-        <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
+        <div class="main">Unable to access URL: {{ entry.original_url }}</div>
+        <div class="actions">
+          <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">retry?</a>
+          <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
+        </div>
       </div>
-      <div class="p-card-body" v-else>Preparing {{ entry.original_url }} ...</div>
+      <div class="p-card-body" v-else>
+        <div class="main">Preparing {{ entry.original_url }} ...</div>
+      </div>
     </div>
 
     <div class="p-card create-card" v-if="mode == 'create'">
       <div class="p-card-body">
         <input
-          @keyup.enter.prevent="createEntry"
-          @keyup.esc="mode = 'idle'"
+          @keydown.enter.prevent="createEntry"
+          @keydown.esc="mode = 'idle'"
           v-model="newUrl"
           type="text"
           name="new_entry"
@@ -166,6 +168,8 @@ export default {
 }
 .p-card-body {
   padding: 9px;
+  display: flex;
+  justify-content: space-between;
 }
 .failed {
   border-left: 3px solid #dc3232;
@@ -205,6 +209,11 @@ export default {
 }
 .link {
   font-weight: bold;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 </style>
 
