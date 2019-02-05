@@ -42,6 +42,10 @@ class REST_API
                 'methods'  => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
             ],
+            [
+                'methods'  => \WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item'],
+            ],
         ]);
         register_rest_route(self::api_namespace, self::api_base . '/(?P<id>[\d]+)/unfurl', [
             'args' => [
@@ -131,6 +135,27 @@ class REST_API
             return $entry;
         }
         $response = rest_ensure_response($entry->to_array());
+
+        return $response;
+    }
+
+    public function delete_item($request)
+    {
+        $entry = Entry::find_by_id($request['id']);
+        if (is_wp_error($entry)) {
+            return $entry;
+        }
+        $response = rest_ensure_response(['deleted' => true]);
+
+        if (!$entry) {
+            return new \WP_Error('podlove_rest_already_deleted', 'The entry has already been deleted.', ['status' => 410]);
+        }
+
+        $success = $entry->delete();
+
+        if (!$success) {
+            return new \WP_Error('podlove_rest_cannot_delete', 'The entry cannot be deleted.', ['status' => 500]);
+        }
 
         return $response;
     }

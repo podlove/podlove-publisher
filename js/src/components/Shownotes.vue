@@ -3,7 +3,7 @@
     <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
       <div class="p-card-body" v-if="entry.url">
         <div class="site" v-if="entry.site_url && entry.site_name">
-          <img v-if="entry.icon" :src="entry.icon" alt="Site Icon" width="16" height="16">
+          <img v-if="entry.icon" :src="icon(entry)" alt="Site Icon" width="16" height="16">
           <div v-else class="default-icon"></div>
           <span class="site-name">
             <a :href="entry.site_url" target="_blank">{{ entry.site_name }}</a>
@@ -12,6 +12,10 @@
         <span class="link">
           <a :href="entry.url" target="_blank">{{ entry.title }}</a>
         </span>
+        <div class="actions">
+          <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">Refresh</a>
+          <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
+        </div>
       </div>
       <div class="p-card-body failed" v-else-if="entry.state == 'failed'">
         Unable to access URL: {{ entry.original_url }}
@@ -20,6 +24,7 @@
           class="retry-btn"
           @click.prevent="unfurl(entry)"
         >Retry?</a>
+        <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
       </div>
       <div class="p-card-body" v-else>Preparing {{ entry.original_url }} ...</div>
     </div>
@@ -28,6 +33,7 @@
       <div class="p-card-body">
         <input
           @keyup.enter.prevent="createEntry"
+          @keyup.esc="mode = 'idle'"
           v-model="newUrl"
           type="text"
           name="new_entry"
@@ -97,7 +103,7 @@ export default {
           const start = this.shownotes.findIndex(e => {
             return e.id == result.id;
           });
-          console.log("start", start);
+          console.log("unfurl start index", start);
 
           this.shownotes.splice(start, 1, result);
         })
@@ -105,6 +111,31 @@ export default {
           entry.state = "failed";
           console.error("could not unfurl entry:", responseJSON.message);
         });
+    },
+    deleteEntry: function(entry) {
+      const start = this.shownotes.findIndex(e => {
+        return e.id == entry.id;
+      });
+      console.log("delete start index", start);
+
+      this.shownotes.splice(start, 1);
+
+      $.ajax({
+        url: podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id,
+        method: "DELETE",
+        dataType: "json"
+      })
+        .done(result => {})
+        .fail(({ responseJSON }) => {
+          console.error("could not delete entry:", responseJSON.message);
+        });
+    },
+    icon: function(entry) {
+      if (entry.icon[0] == "/") {
+        return entry.site_url + entry.icon;
+      } else {
+        return entry.icon;
+      }
     }
   },
   mounted: function() {
