@@ -1,7 +1,20 @@
 <template>
   <div>
     <div class="p-card" v-show="ready" v-for="entry in shownotes" :key="entry.id">
-      <div class="p-card-body" v-if="entry.url">
+      <div class="p-card-body" v-if="entry.state == 'unfurling'">
+        <div class="main">
+          <div class="site">
+            <div class="loading-sitename"></div>
+          </div>
+          <span class="link">
+            <div class="loading-link"></div>
+          </span>
+        </div>
+        <div class="actions">
+          <i class="podlove-icon-spinner rotate"></i>
+        </div>
+      </div>
+      <div class="p-card-body" v-else-if="entry.url">
         <div class="main">
           <div class="site" v-if="entry.site_url && entry.site_name">
             <img v-if="entry.icon" :src="icon(entry)" alt="Site Icon" width="16" height="16">
@@ -25,9 +38,6 @@
           <a href="#" class="retry-btn" @click.prevent="unfurl(entry)">retry?</a>
           <a href="#" class="delete-btn" @click.prevent="deleteEntry(entry)">delete</a>
         </div>
-      </div>
-      <div class="p-card-body" v-else>
-        <div class="main">Preparing {{ entry.original_url }} ...</div>
       </div>
     </div>
 
@@ -162,8 +172,12 @@ export default {
 
     window.setTimeout(() => {
       // for development
-      window.scroll(0, 3200);
-    }, 1750);
+      window.scroll(
+        0,
+        document.getElementById("podlove-shownotes-app").offsetTop +
+          document.body.clientHeight / 2
+      );
+    }, 2500);
   }
 };
 </script>
@@ -222,6 +236,20 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+}
+.loading-sitename {
+  height: 16px;
+  width: 150px;
+  background-color: #999;
+  border-radius: 3px;
+  opacity: 0.67;
+}
+.loading-link {
+  height: 16px;
+  width: 250px;
+  background-color: #0074af;
+  border-radius: 3px;
+  opacity: 0.67;
 }
 </style>
 
