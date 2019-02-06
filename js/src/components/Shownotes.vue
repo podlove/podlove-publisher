@@ -17,14 +17,20 @@
       <div class="shownotes-modal-backdrop"></div>
     </div>
     <div v-else>
-      <shownotes-entry
-        :entry="entry"
-        v-on:update:entry="onUpdateEntry"
-        v-on:delete:entry="onDeleteEntry"
-        v-show="ready"
-        v-for="entry in shownotes"
-        :key="entry.id"
-      ></shownotes-entry>
+      <draggable
+        v-model="shownotes"
+        @end="onDragEnd"
+        :options="{ghostClass: 'ghost', handle: '.drag-handle'}"
+      >
+        <shownotes-entry
+          :entry="entry"
+          v-on:update:entry="onUpdateEntry"
+          v-on:delete:entry="onDeleteEntry"
+          v-show="ready"
+          v-for="entry in shownotes"
+          :key="entry.id"
+        ></shownotes-entry>
+      </draggable>
 
       <div class="p-card create-card" v-if="mode == 'create'">
         <div class="p-card-body">
@@ -131,6 +137,37 @@ export default {
 
       // console.log("import", entries);
       entries.forEach(url => this.createEntry(url));
+    },
+    onDragEnd: function(e) {
+      let newOrder = null;
+
+      if (e.oldIndex == e.newIndex) {
+        return;
+      }
+
+      if (e.newIndex == 0) {
+        newOrder = this.shownotes[0].order - 1;
+        console.log("moved to beginning of list");
+      } else if (e.newIndex == this.shownotes.length - 1) {
+        newOrder = this.shownotes[this.shownotes.length - 1].order + 1;
+        console.log("moved to end of list");
+      } else {
+        let prevEl = this.shownotes[e.newIndex - 1];
+        let nextEl = this.shownotes[e.newIndex + 1];
+        newOrder = (prevEl.order + nextEl.order) / 2;
+        console.log("moved somewhere");
+      }
+
+      console.log("new order", this.shownotes[e.newIndex], newOrder);
+
+      // TODO: update element order
+
+      // var itemEl = evt.item;  // dragged HTMLElement
+      // evt.to;    // target list
+      // evt.from;  // previous list
+      // evt.oldIndex;  // element's old index within old parent
+      // evt.newIndex;  // element's new index within new parent
+      // console.log("dragEnd", e.oldIndex, e.newIndex, this.shownotes.length);
     }
   },
   directives: {
@@ -301,6 +338,9 @@ export default {
   font-size: 22px;
   line-height: 50px;
   margin: 0;
+}
+.ghost {
+  opacity: 1;
 }
 </style>
 

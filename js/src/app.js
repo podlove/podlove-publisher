@@ -19,6 +19,7 @@ import Slacknotes from './components/Slacknotes'
 import Shownotes from './components/Shownotes'
 import ShownotesEntry from './components/ShownotesEntry'
 import Transcripts from './components/Transcripts'
+import Draggable from 'vuedraggable'
 
 Vue.component('chapters', Chapters);
 Vue.component('chapter', Chapter);
@@ -30,6 +31,7 @@ Vue.component('slacknotes', Slacknotes);
 Vue.component('shownotes', Shownotes);
 Vue.component('shownotes-entry', ShownotesEntry);
 Vue.component('transcripts', Transcripts);
+Vue.component('draggable', Draggable);
 
 import 'v2-datepicker/lib/index.css'
 import V2Datepicker from 'v2-datepicker'
