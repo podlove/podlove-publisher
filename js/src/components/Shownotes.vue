@@ -76,7 +76,7 @@ export default {
         episode_id: this.episodeid
       })
         .done(result => {
-          this.shownotes.push(result);
+          this.addIfNew(result);
           this.newUrl = "";
           this.mode = "idle";
         })
@@ -84,6 +84,13 @@ export default {
           console.error("could not create entry:", responseJSON.message);
           this.mode = "idle";
         });
+    },
+    addIfNew: function(entry) {
+      const isNew =
+        this.shownotes.find(e => e.original_url == entry.original_url) ===
+        undefined;
+
+      if (isNew) this.shownotes.push(entry);
     },
     onCreateEntry: function() {
       if (!this.newUrl) return;
