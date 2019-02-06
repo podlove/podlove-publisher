@@ -1,42 +1,56 @@
 <template>
   <div>
-    <shownotes-entry
-      :entry="entry"
-      v-on:update:entry="onUpdateEntry"
-      v-on:delete:entry="onDeleteEntry"
-      v-show="ready"
-      v-for="entry in shownotes"
-      :key="entry.id"
-    ></shownotes-entry>
+    <div v-if="mode == 'import-slacknotes'">
+      <slacknotes mode="import" v-on:import:entries="onImportEntries"></slacknotes>
+    </div>
+    <div v-else>
+      <shownotes-entry
+        :entry="entry"
+        v-on:update:entry="onUpdateEntry"
+        v-on:delete:entry="onDeleteEntry"
+        v-show="ready"
+        v-for="entry in shownotes"
+        :key="entry.id"
+      ></shownotes-entry>
 
-    <div class="p-card create-card" v-if="mode == 'create'">
-      <div class="p-card-body">
-        <input
-          @keydown.enter.prevent="createEntry"
-          @keydown.esc="mode = 'idle'"
-          v-model="newUrl"
-          type="text"
-          name="new_entry"
-          id="new_entry"
-          placeholder="https://example.com"
-          :disabled="mode == 'create-waiting'"
-          v-focus
-        >
+      <div class="p-card create-card" v-if="mode == 'create'">
+        <div class="p-card-body">
+          <input
+            @keydown.enter.prevent="onCreateEntry"
+            @keydown.esc="mode = 'idle'"
+            v-model="newUrl"
+            type="text"
+            name="new_entry"
+            id="new_entry"
+            placeholder="https://example.com"
+            :disabled="mode == 'create-waiting'"
+            v-focus
+          >
+          <button
+            type="button"
+            class="button button-primary"
+            @click.prevent="onCreateEntry"
+            :disabled="mode == 'create-waiting'"
+          >Add</button>
+        </div>
+      </div>
+
+      <div class="footer">
         <button
           type="button"
-          class="button button-primary"
-          @click.prevent="createEntry"
-          :disabled="mode == 'create-waiting'"
-        >Add</button>
+          class="button create-button"
+          @click.prevent="mode = 'create'"
+          v-if="mode != 'create'"
+        >Add Entry</button>
+        
+        <button
+          type="button"
+          class="button create-button"
+          @click.prevent="mode = 'import-slacknotes'"
+          v-if="mode != 'create'"
+        >Import from Slacknotes</button>
       </div>
     </div>
-
-    <button
-      type="button"
-      class="button create-button"
-      @click.prevent="mode = 'create'"
-      v-if="mode != 'create'"
-    >Add Entry</button>
   </div>
 </template>
 
@@ -54,13 +68,11 @@ export default {
     };
   },
   methods: {
-    createEntry: function() {
-      if (!this.newUrl) return;
-
+    createEntry: function(url) {
       this.mode = "create-waiting";
 
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes", {
-        original_url: this.newUrl,
+        original_url: url,
         episode_id: this.episodeid
       })
         .done(result => {
@@ -73,6 +85,11 @@ export default {
           this.mode = "idle";
         });
     },
+    onCreateEntry: function() {
+      if (!this.newUrl) return;
+
+      this.createEntry(this.newUrl);
+    },
     onUpdateEntry: function(entry) {
       const start = this.shownotes.findIndex(e => {
         return e.id == entry.id;
@@ -84,6 +101,12 @@ export default {
         return e.id == entry.id;
       });
       this.shownotes.splice(start, 1);
+    },
+    onImportEntries: function(entries) {
+      this.mode = "idle";
+
+      // console.log("import", entries);
+      entries.forEach(url => this.createEntry(url));
     }
   },
   directives: {
@@ -190,6 +213,10 @@ export default {
 .description {
   color: #666;
   font-style: italic;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
 

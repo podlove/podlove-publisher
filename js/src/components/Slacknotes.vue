@@ -83,7 +83,7 @@
       </div>
     </div>
 
-    <div class="output-container p-card" v-show="linksReady">
+    <div class="output-container p-card" v-if="mode != 'import'" v-show="linksReady">
       <div class="output-header p-card-header">
         <strong>Shownotes HTML</strong>
       </div>
@@ -99,6 +99,16 @@
         </transition>
       </div>
     </div>
+
+    <div class="output-container p-card" v-if="mode == 'import'">
+      <div class="output-header p-card-header">
+        <strong>Import to Episode</strong>
+      </div>
+      <pre class="output p-card-body">Import {{ this.entriesForImport.length }} entries</pre>
+    </div>
+    <div class="output-footer p-card-header" style="vertical-align: baseline; line-height: 28px;">
+      <span class="button" @click="importToEpisode()">Import to Episode</span>
+    </div>
   </div>
 </template>
 
@@ -107,300 +117,331 @@ const $ = jQuery;
 
 import ClipboardJS from "clipboard";
 
-const TIME_DAY = 3600 * 1000 * 24
-const startOfDay = (date) => { 
-  date.setHours(0, 0, 0, 0)
-  return date
-}
-const endOfDay = (date) => { 
-  date.setHours(23, 59, 59, 999)
-  return date
-}
+const TIME_DAY = 3600 * 1000 * 24;
+const startOfDay = date => {
+  date.setHours(0, 0, 0, 0);
+  return date;
+};
+const endOfDay = date => {
+  date.setHours(23, 59, 59, 999);
+  return date;
+};
 
 export default {
-    data() {
-        return {
-            channels: [],
-            links: [],
-            linksLoading: false,
-            initializing: true,
-            currentChannel: null,
-            showCopySuccess: false,
-            dates: [],
-            fetching: [],
-            order: 'desc',
-            options: {
-              disabledDate (time) {
-                  return time.getTime() > Date.now();
-              },
-              shortcuts: [{
-                text: 'Today',
-                onClick (picker) {
-                    const end = startOfDay(new Date())
-                    const start = endOfDay(new Date())
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-              },{
-                text: 'Yesterday',
-                onClick (picker) {
-                    const end = new Date()
-                    const start = new Date()
-                    end.setTime(end.getTime() - TIME_DAY)
-                    start.setTime(start.getTime() - TIME_DAY)
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-              },{
-                text: 'Last week',
-                onClick (picker) {
-                    const end = new Date()
-                    const start = new Date()
-                    start.setTime(start.getTime() - TIME_DAY * 7)
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-              }, {
-                text: 'Last month',
-                onClick (picker) {
-                    const end = new Date()
-                    const start = new Date()
-                    start.setTime(start.getTime() - TIME_DAY * 30)
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-              }, {
-                text: 'Last 3 months',
-                onClick (picker) {
-                    const end = new Date()
-                    const start = new Date()
-                    start.setTime(start.getTime() - TIME_DAY * 90)
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-              }, {
-                text: 'Last Year',
-                onClick (picker) {
-                    const end = new Date()
-                    const start = new Date()
-                    start.setTime(start.getTime() - TIME_DAY * 365)
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-              }, {
-                text: 'Last 10 Years',
-                onClick (picker) {
-                    const end = new Date()
-                    const start = new Date()
-                    start.setTime(start.getTime() - TIME_DAY * 365 * 10)
-                    picker.$emit('pick', [startOfDay(start), endOfDay(end)])
-                }
-            }]
+  props: ["mode"],
+  data() {
+    return {
+      channels: [],
+      links: [],
+      linksLoading: false,
+      initializing: true,
+      currentChannel: null,
+      showCopySuccess: false,
+      dates: [],
+      fetching: [],
+      order: "desc",
+      options: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [
+          {
+            text: "Today",
+            onClick(picker) {
+              const end = startOfDay(new Date());
+              const start = endOfDay(new Date());
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
+          },
+          {
+            text: "Yesterday",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(end.getTime() - TIME_DAY);
+              start.setTime(start.getTime() - TIME_DAY);
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
+          },
+          {
+            text: "Last week",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - TIME_DAY * 7);
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
+          },
+          {
+            text: "Last month",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - TIME_DAY * 30);
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
+          },
+          {
+            text: "Last 3 months",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - TIME_DAY * 90);
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
+          },
+          {
+            text: "Last Year",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - TIME_DAY * 365);
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
+          },
+          {
+            text: "Last 10 Years",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - TIME_DAY * 365 * 10);
+              picker.$emit("pick", [startOfDay(start), endOfDay(end)]);
+            }
           }
-        }
-    },
-
-    computed: {
-      defaultRange () {
-        const end = new Date()
-        const start = new Date()
-        start.setTime(start.getTime() - TIME_DAY * 30)
-        return [startOfDay(start), endOfDay(end)]
-      },
-      apiUrlMessages: function () {
-        return podlove_vue.rest_url + 'podlove/v1/slacknotes/' + this.currentChannel + '/messages';
-      },
-      renderedHTML: function () {
-        let html = "<ul>\n";
-
-        for (let j = 0; j < this.sortedLinks.length; j++) {
-          const link = this.links[j];
-          const title = link.title ? link.title : link.link
-
-          if (!link.excluded) {
-            html += "    <li><a href=\"" + link.link + "\">" + title + "</a> (" + link.source + ")</li>\n"
-          }
-        }
-
-        html += "</ul>\n";
-
-        return html;
-      },
-      linksReady: function () {
-        return !this.initializing && this.links != [] && !this.linksLoading
-      },
-      sortedLinks: function () {
-        return this.links.sort((a, b) => {
-          if (this.order == 'asc') {
-            return a.unix_date - b.unix_date;
-          } else {
-            return b.unix_date - a.unix_date;
-          }
-        })
+        ]
       }
+    };
+  },
+
+  computed: {
+    defaultRange() {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - TIME_DAY * 30);
+      return [startOfDay(start), endOfDay(end)];
     },
+    apiUrlMessages: function() {
+      return (
+        podlove_vue.rest_url +
+        "podlove/v1/slacknotes/" +
+        this.currentChannel +
+        "/messages"
+      );
+    },
+    renderedHTML: function() {
+      let html = "<ul>\n";
 
-    methods: {
-      onDatepickerChange: function (range) {
+      for (let j = 0; j < this.sortedLinks.length; j++) {
+        const link = this.links[j];
+        const title = link.title ? link.title : link.link;
 
-        if (range.length == 2) {
-          this.dates = [
-            startOfDay(range[0]),
-            endOfDay(range[1])
-          ]
+        if (!link.excluded) {
+          html +=
+            '    <li><a href="' +
+            link.link +
+            '">' +
+            title +
+            "</a> (" +
+            link.source +
+            ")</li>\n";
         }
+      }
 
-        this.fetchLinks();
-      },
-      setOrder: function (order) {
-        this.order = order;
+      html += "</ul>\n";
 
-        if (localStorage) {
-          localStorage.setItem("podlove-slacknotes-order", this.order)
-        }
-      },
-      fetchLinks: function () {
-        if (this.currentChannel) {
-          this.linksLoading = true;
-
-          if (localStorage) {
-            localStorage.setItem("podlove-slacknotes-channel", this.currentChannel)
-          }
-
-          let date_from = 0;
-          let date_to = 0;
-          
-          if (this.dates.length === 2) {
-            date_from = this.dates[0].getTime()/1000;
-            date_to = this.dates[1].getTime()/1000;
-          }
-
-          $.ajax({
-            url: this.apiUrlMessages,
-            data: {
-              date_from: date_from,
-              date_to: date_to,
-            }
-          }).done((data) => {
-
-            const reduceMessagesToLinks = function (links, message) { 
-                for (let i = 0; i < message.links.length; i++) {
-                  const unix_date = parseInt(message.raw_slack_message.ts, 10) * 1000
-                  const datetime = new Date(unix_date);
-                  const link = message.links[i];
-
-                  link.unix_date = unix_date;
-                  link.datetime = datetime;
-                  link.id = unix_date + link.link;
-
-                  links.push(link);
-                }
-
-                return links;
-            };
-
-            const addExcludedField = function (link) {
-              link.excluded = false;
-              return link
-            }
-
-            const links = data.reduce(reduceMessagesToLinks, []).map(addExcludedField)
-
-            this.links = links
-            this.linksLoading = false
-            this.initializing = false
-
-            // fetch missing titles
-            window.setTimeout(() => {
-              let list = document.getElementsByClassName("unknown-title")
-
-              for (let i = 0; i < list.length; i++) {
-                const element = list[i];
-                element.click();
-              }
-            }, 200);
-
-          })
+      return html;
+    },
+    entriesForImport: function() {
+      return this.sortedLinks.filter(l => !l.excluded).map(l => l.link);
+    },
+    linksReady: function() {
+      return !this.initializing && this.links != [] && !this.linksLoading;
+    },
+    sortedLinks: function() {
+      return this.links.sort((a, b) => {
+        if (this.order == "asc") {
+          return a.unix_date - b.unix_date;
         } else {
-          this.messages = []
+          return b.unix_date - a.unix_date;
         }
-      },
-      isFetching: function (link) {
-        const url = link.link;
-        return this.fetching.includes(url);
-      },
-      fetchLinkTitle: function (link) {
-        const url = link.link;
-        
-        this.fetching.push(url);
-        
-        $.ajax(podlove_vue.rest_url + 'podlove/v1/slacknotes/resolve_url?url=' + encodeURIComponent(url)).done((data) => {
-          
-          if (data.title) {
-            link.title = data.title;
-          }
-          
-          if (data.url) {
-            link.link = data.url;
-          }
+      });
+    }
+  },
 
-          // delete from fetching
-          var index = this.fetching.indexOf(url);
-          if (index !== -1) this.fetching.splice(index, 1);
-        })
-      },
-      toggleExclusion: function(link) {
-        link.excluded = !link.excluded
-      },
-      linkDate: function (link) {
-        const date = link.datetime;
-        const y = date.getFullYear();
-        const m = date.getMonth() + 1;
-        const d = date.getUTCDate();
+  methods: {
+    importToEpisode: function() {
+      let entries = this.entriesForImport;
+      this.$emit("import:entries", entries);
+    },
+    onDatepickerChange: function(range) {
+      if (range.length == 2) {
+        this.dates = [startOfDay(range[0]), endOfDay(range[1])];
+      }
 
-        return d + "." + m + "." + y; 
-      },
-      linkTime: function (link) {
-        const date = link.datetime
-        const h = date.getHours()
-        let m = date.getMinutes()
+      this.fetchLinks();
+    },
+    setOrder: function(order) {
+      this.order = order;
 
-        if (m < 10) {
-          m = "0" + m
-        }
-
-        return h + ":" + m
+      if (localStorage) {
+        localStorage.setItem("podlove-slacknotes-order", this.order);
       }
     },
-
-    mounted() {
-      $.when(
-        $.ajax(podlove_vue.rest_url + 'podlove/v1/slacknotes/channels')
-      ).done((channelData) => {
-        this.channels = channelData;
-
-        let savedChannel = null;
-        let savedOrder = null;
+    fetchLinks: function() {
+      if (this.currentChannel) {
+        this.linksLoading = true;
 
         if (localStorage) {
-          savedChannel = localStorage.getItem("podlove-slacknotes-channel");
-          savedOrder = localStorage.getItem("podlove-slacknotes-order");
+          localStorage.setItem(
+            "podlove-slacknotes-channel",
+            this.currentChannel
+          );
         }
 
-        if (savedChannel) {
-          this.currentChannel = savedChannel;
+        let date_from = 0;
+        let date_to = 0;
+
+        if (this.dates.length === 2) {
+          date_from = this.dates[0].getTime() / 1000;
+          date_to = this.dates[1].getTime() / 1000;
         }
 
-        if (savedOrder) {
-          this.order = savedOrder;
+        $.ajax({
+          url: this.apiUrlMessages,
+          data: {
+            date_from: date_from,
+            date_to: date_to
+          }
+        }).done(data => {
+          const reduceMessagesToLinks = function(links, message) {
+            for (let i = 0; i < message.links.length; i++) {
+              const unix_date =
+                parseInt(message.raw_slack_message.ts, 10) * 1000;
+              const datetime = new Date(unix_date);
+              const link = message.links[i];
+
+              link.unix_date = unix_date;
+              link.datetime = datetime;
+              link.id = unix_date + link.link;
+
+              links.push(link);
+            }
+
+            return links;
+          };
+
+          const addExcludedField = function(link) {
+            link.excluded = false;
+            return link;
+          };
+
+          const links = data
+            .reduce(reduceMessagesToLinks, [])
+            .map(addExcludedField);
+
+          this.links = links;
+          this.linksLoading = false;
+          this.initializing = false;
+
+          // fetch missing titles
+          window.setTimeout(() => {
+            let list = document.getElementsByClassName("unknown-title");
+
+            for (let i = 0; i < list.length; i++) {
+              const element = list[i];
+              element.click();
+            }
+          }, 200);
+        });
+      } else {
+        this.messages = [];
+      }
+    },
+    isFetching: function(link) {
+      const url = link.link;
+      return this.fetching.includes(url);
+    },
+    fetchLinkTitle: function(link) {
+      const url = link.link;
+
+      this.fetching.push(url);
+
+      $.ajax(
+        podlove_vue.rest_url +
+          "podlove/v1/slacknotes/resolve_url?url=" +
+          encodeURIComponent(url)
+      ).done(data => {
+        if (data.title) {
+          link.title = data.title;
         }
 
-        this.fetchLinks()
-      })
+        if (data.url) {
+          link.link = data.url;
+        }
 
-      let clip = new ClipboardJS('.clipboard-btn');
-      clip.on('success', (e) => {
-        this.showCopySuccess = true;
-        window.setTimeout(() => {
-          this.showCopySuccess = false
-        }, 3000)
-      })
+        // delete from fetching
+        var index = this.fetching.indexOf(url);
+        if (index !== -1) this.fetching.splice(index, 1);
+      });
+    },
+    toggleExclusion: function(link) {
+      link.excluded = !link.excluded;
+    },
+    linkDate: function(link) {
+      const date = link.datetime;
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getUTCDate();
+
+      return d + "." + m + "." + y;
+    },
+    linkTime: function(link) {
+      const date = link.datetime;
+      const h = date.getHours();
+      let m = date.getMinutes();
+
+      if (m < 10) {
+        m = "0" + m;
+      }
+
+      return h + ":" + m;
     }
-}
+  },
+
+  mounted() {
+    $.when(
+      $.ajax(podlove_vue.rest_url + "podlove/v1/slacknotes/channels")
+    ).done(channelData => {
+      this.channels = channelData;
+
+      let savedChannel = null;
+      let savedOrder = null;
+
+      if (localStorage) {
+        savedChannel = localStorage.getItem("podlove-slacknotes-channel");
+        savedOrder = localStorage.getItem("podlove-slacknotes-order");
+      }
+
+      if (savedChannel) {
+        this.currentChannel = savedChannel;
+      }
+
+      if (savedOrder) {
+        this.order = savedOrder;
+      }
+
+      this.fetchLinks();
+    });
+
+    let clip = new ClipboardJS(".clipboard-btn");
+    clip.on("success", e => {
+      this.showCopySuccess = true;
+      window.setTimeout(() => {
+        this.showCopySuccess = false;
+      }, 3000);
+    });
+  }
+};
 </script>
 
 <style scoped>

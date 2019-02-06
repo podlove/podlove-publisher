@@ -202,7 +202,7 @@ class REST_API
         $entry->site_name   = $data['site_name'];
         $entry->site_url    = $data['site_url'];
         $entry->icon        = $data['icon']['url'];
-        $entry->save();
+        $success            = $entry->save();
 
         $response = rest_ensure_response($entry->to_array());
 
