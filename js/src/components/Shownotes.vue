@@ -1,7 +1,20 @@
 <template>
   <div>
     <div v-if="mode == 'import-slacknotes'">
-      <slacknotes mode="import" v-on:import:entries="onImportEntries"></slacknotes>
+      <div class="shownotes-modal">
+        <div class="shownotes-modal-content">
+          <div class="header">
+            <h1>Import from Slacknotes</h1>
+            <div class="close" @click.prevent="mode = 'idle'">
+              <icon-close></icon-close>
+            </div>
+          </div>
+          <div class="content">
+            <slacknotes mode="import" v-on:import:entries="onImportEntries"></slacknotes>
+          </div>
+        </div>
+      </div>
+      <div class="shownotes-modal-backdrop"></div>
     </div>
     <div v-else>
       <shownotes-entry
@@ -56,6 +69,7 @@
 
 <script>
 const $ = jQuery;
+import Close from "./icons/Close";
 
 export default {
   props: ["episodeid"],
@@ -66,6 +80,9 @@ export default {
       mode: "idle",
       newUrl: ""
     };
+  },
+  components: {
+    "icon-close": Close
   },
   methods: {
     createEntry: function(url) {
@@ -187,6 +204,7 @@ export default {
 .site img,
 .site .default-icon {
   margin-right: 6px;
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
 .default-icon {
   width: 16px;
@@ -224,6 +242,65 @@ export default {
 .footer {
   display: flex;
   justify-content: space-between;
+}
+
+.shownotes-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 360px;
+  background: #000;
+  opacity: 0.7;
+  z-index: 159900;
+}
+
+.shownotes-modal {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  right: 30px;
+  bottom: 30px;
+  z-index: 160000;
+}
+
+.shownotes-modal * {
+  box-sizing: content-box;
+}
+
+.shownotes-modal-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  min-height: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+  background: #fcfcfc;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.shownotes-modal-content {
+  padding: 0 12px 12px 12px;
+}
+.shownotes-modal-content .header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.shownotes-modal-content .header .close {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.shownotes-modal .shownotes-modal-content h1 {
+  padding: 0 16px;
+  font-size: 22px;
+  line-height: 50px;
+  margin: 0;
 }
 </style>
 

@@ -100,14 +100,11 @@
       </div>
     </div>
 
-    <div class="output-container p-card" v-if="mode == 'import'">
-      <div class="output-header p-card-header">
-        <strong>Import to Episode</strong>
-      </div>
-      <pre class="output p-card-body">Import {{ this.entriesForImport.length }} entries</pre>
-    </div>
-    <div class="output-footer p-card-header" style="vertical-align: baseline; line-height: 28px;">
-      <span class="button" @click="importToEpisode()">Import to Episode</span>
+    <div class="output-footer p-card-header" style="margin-bottom: 12px;">
+      <span
+        class="button button-primary"
+        @click="importToEpisode()"
+      >Import {{ this.entriesForImport.length }} Entries</span>
     </div>
   </div>
 </template>
