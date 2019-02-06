@@ -253,7 +253,7 @@ export default {
   min-height: 360px;
   background: #000;
   opacity: 0.7;
-  z-index: 159900;
+  z-index: 119900;
 }
 
 .shownotes-modal {
@@ -262,7 +262,7 @@ export default {
   left: 30px;
   right: 30px;
   bottom: 30px;
-  z-index: 160000;
+  z-index: 120000;
 }
 
 .shownotes-modal * {

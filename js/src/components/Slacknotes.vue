@@ -29,7 +29,7 @@
         <strong>Select Slack Channel</strong>
       </div>
       <div class="p-card-body slacknotes-toolbar">
-        <div>
+        <div style="display: flex">
           <select v-model="currentChannel" @change="fetchLinks">
             <option value="0">Select Slack Channel</option>
             <option
@@ -492,6 +492,12 @@ export default {
   }
 };
 </script>
+
+<style>
+.v2-picker-panel-wrap {
+  z-index: 150000 !important;
+}
+</style>
 
 <style scoped>
 .slack-links,
