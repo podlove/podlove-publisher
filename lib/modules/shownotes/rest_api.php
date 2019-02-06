@@ -194,6 +194,19 @@ class REST_API
 
         $data = json_decode($response['body'], true);
 
+        // remove "data:..." images because they are too huge to store in database
+        $url_size_threshold = 1000;
+
+        if (strlen($data['icon']['url']) > $url_size_threshold) {
+            unset($data['icon']);
+        }
+
+        foreach ($data['providers']['misc']['icons'] as $index => $icon) {
+            if (strlen($icon['url']) > $url_size_threshold) {
+                unset($data['providers']['misc']['icons'][$index]);
+            }
+        }
+
         $entry->unfurl_data = $data;
         $entry->state       = 'fetched';
         $entry->url         = $data['url'];
