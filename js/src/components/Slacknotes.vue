@@ -1,6 +1,22 @@
 <template>
   <div>
-    <div class="p-card" v-if="channelsLoading">
+    <div class="p-card" v-if="!module_active">
+      <div class="p-card-header">
+        <strong>Slacknotes module inactive</strong>
+      </div>
+      <div
+        class="p-card-body"
+      >You need to activate and setup the Slacknotes Publisher Module before you can use this import function.</div>
+    </div>
+    <div class="p-card" v-if="!module_token_set">
+      <div class="p-card-header">
+        <strong>Slack OAuth Access Token missing</strong>
+      </div>
+      <div
+        class="p-card-body"
+      >You need to set the Slack OAuth Access Token in the Slacknotes Publisher Module settings before you can use this import function.</div>
+    </div>
+    <div class="p-card" v-if="channelsLoading && module_active && module_token_set">
       <div class="p-card-header">
         <strong>Loading channels ...</strong>
       </div>
@@ -8,7 +24,7 @@
         <i class="podlove-icon-spinner rotate" style="margin: 35px 0;"></i>
       </div>
     </div>
-    <div class="p-card" v-else>
+    <div class="p-card" v-else-if="module_active && module_token_set">
       <div class="p-card-header">
         <strong>Select Slack Channel</strong>
       </div>
@@ -156,6 +172,8 @@ export default {
       initializing: true,
       currentChannel: null,
       showCopySuccess: false,
+      module_active: true,
+      module_token_set: true,
       dates: [],
       fetching: [],
       order: "desc",
@@ -453,7 +471,16 @@ export default {
 
         this.fetchLinks();
       })
-      .fail(e => console.error("Slacknotes failed fetching channels", e));
+      .fail(e => {
+        console.error("Slacknotes failed fetching channels", e);
+
+        if (e.responseJSON.code == "rest_no_route") {
+          this.module_active = false;
+        }
+        if (e.responseJSON.code == "podlove_slacknotes_no_token") {
+          this.module_token_set = false;
+        }
+      });
 
     let clip = new ClipboardJS(".clipboard-btn");
     clip.on("success", e => {

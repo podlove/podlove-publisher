@@ -38,6 +38,14 @@ class Slack_Shownotes extends \Podlove\Modules\Base
 
     public function api_get_channels(\WP_REST_Request $request)
     {
+        if (!$this->get_api_token()) {
+            return new \WP_Error(
+                'podlove_slacknotes_no_token',
+                'Slack api token is missing',
+                ['status' => 404]
+            );
+        }
+
         $data = $this->get_channels();
         return new \WP_REST_Response($data);
     }
