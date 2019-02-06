@@ -117,7 +117,11 @@
       </div>
     </div>
 
-    <div class="output-footer p-card-header" style="margin-bottom: 12px;" v-show="linksReady">
+    <div
+      class="output-footer p-card-header"
+      style="margin-bottom: 12px;"
+      v-show="mode == 'import' && linksReady"
+    >
       <span
         class="button button-primary"
         @click="importToEpisode()"
