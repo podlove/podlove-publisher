@@ -1,6 +1,14 @@
 <template>
   <div>
-    <div class="p-card">
+    <div class="p-card" v-if="channelsLoading">
+      <div class="p-card-header">
+        <strong>Loading channels ...</strong>
+      </div>
+      <div class="p-card-body" style="display: flex; justify-content: center;">
+        <i class="podlove-icon-spinner rotate" style="margin: 35px 0;"></i>
+      </div>
+    </div>
+    <div class="p-card" v-else>
       <div class="p-card-header">
         <strong>Select Slack Channel</strong>
       </div>
@@ -38,6 +46,15 @@
             class="button"
           >Oldest First</button>
         </div>
+      </div>
+    </div>
+
+    <div class="p-card slack-links-empty" v-if="!channelsLoading && !linksReady">
+      <div class="p-card-header">
+        <strong>Loading links ...</strong>
+      </div>
+      <div class="p-card-body" style="display: flex; justify-content: center;">
+        <i class="podlove-icon-spinner rotate" style="margin: 35px 0;"></i>
       </div>
     </div>
 
@@ -100,7 +117,7 @@
       </div>
     </div>
 
-    <div class="output-footer p-card-header" style="margin-bottom: 12px;">
+    <div class="output-footer p-card-header" style="margin-bottom: 12px;" v-show="linksReady">
       <span
         class="button button-primary"
         @click="importToEpisode()"
@@ -129,6 +146,7 @@ export default {
   data() {
     return {
       channels: [],
+      channelsLoading: true,
       links: [],
       linksLoading: false,
       initializing: true,
@@ -309,47 +327,49 @@ export default {
             date_from: date_from,
             date_to: date_to
           }
-        }).done(data => {
-          const reduceMessagesToLinks = function(links, message) {
-            for (let i = 0; i < message.links.length; i++) {
-              const unix_date =
-                parseInt(message.raw_slack_message.ts, 10) * 1000;
-              const datetime = new Date(unix_date);
-              const link = message.links[i];
+        })
+          .done(data => {
+            const reduceMessagesToLinks = function(links, message) {
+              for (let i = 0; i < message.links.length; i++) {
+                const unix_date =
+                  parseInt(message.raw_slack_message.ts, 10) * 1000;
+                const datetime = new Date(unix_date);
+                const link = message.links[i];
 
-              link.unix_date = unix_date;
-              link.datetime = datetime;
-              link.id = unix_date + link.link;
+                link.unix_date = unix_date;
+                link.datetime = datetime;
+                link.id = unix_date + link.link;
 
-              links.push(link);
-            }
+                links.push(link);
+              }
 
-            return links;
-          };
+              return links;
+            };
 
-          const addExcludedField = function(link) {
-            link.excluded = false;
-            return link;
-          };
+            const addExcludedField = function(link) {
+              link.excluded = false;
+              return link;
+            };
 
-          const links = data
-            .reduce(reduceMessagesToLinks, [])
-            .map(addExcludedField);
+            const links = data
+              .reduce(reduceMessagesToLinks, [])
+              .map(addExcludedField);
 
-          this.links = links;
-          this.linksLoading = false;
-          this.initializing = false;
+            this.links = links;
+            this.linksLoading = false;
+            this.initializing = false;
 
-          // fetch missing titles
-          window.setTimeout(() => {
-            let list = document.getElementsByClassName("unknown-title");
+            // fetch missing titles
+            window.setTimeout(() => {
+              let list = document.getElementsByClassName("unknown-title");
 
-            for (let i = 0; i < list.length; i++) {
-              const element = list[i];
-              element.click();
-            }
-          }, 200);
-        });
+              for (let i = 0; i < list.length; i++) {
+                const element = list[i];
+                element.click();
+              }
+            }, 200);
+          })
+          .fail(e => console.error("Slacknotes failed fetching messages", e));
       } else {
         this.messages = [];
       }
@@ -406,29 +426,30 @@ export default {
   },
 
   mounted() {
-    $.when(
-      $.ajax(podlove_vue.rest_url + "podlove/v1/slacknotes/channels")
-    ).done(channelData => {
-      this.channels = channelData;
+    $.when($.ajax(podlove_vue.rest_url + "podlove/v1/slacknotes/channels"))
+      .done(channelData => {
+        this.channels = channelData;
+        this.channelsLoading = false;
 
-      let savedChannel = null;
-      let savedOrder = null;
+        let savedChannel = null;
+        let savedOrder = null;
 
-      if (localStorage) {
-        savedChannel = localStorage.getItem("podlove-slacknotes-channel");
-        savedOrder = localStorage.getItem("podlove-slacknotes-order");
-      }
+        if (localStorage) {
+          savedChannel = localStorage.getItem("podlove-slacknotes-channel");
+          savedOrder = localStorage.getItem("podlove-slacknotes-order");
+        }
 
-      if (savedChannel) {
-        this.currentChannel = savedChannel;
-      }
+        if (savedChannel) {
+          this.currentChannel = savedChannel;
+        }
 
-      if (savedOrder) {
-        this.order = savedOrder;
-      }
+        if (savedOrder) {
+          this.order = savedOrder;
+        }
 
-      this.fetchLinks();
-    });
+        this.fetchLinks();
+      })
+      .fail(e => console.error("Slacknotes failed fetching channels", e));
 
     let clip = new ClipboardJS(".clipboard-btn");
     clip.on("success", e => {
