@@ -25,13 +25,7 @@ class Transcripts extends \Podlove\Modules\Base
         add_action('wp_ajax_podlove_transcript_get_contributors', [$this, 'ajax_transcript_get_contributors']);
         add_action('wp_ajax_podlove_transcript_get_voices', [$this, 'ajax_transcript_get_voices']);
 
-        add_filter('podlove_episode_data_filter', function ($filter) {
-            return array_merge($filter, [
-                'transcript_voice' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_NUMBER_INT],
-            ]);
-        });
-
-        add_filter('podlove_episode_data_before_save', [$this, 'save_episode_voice_assignments']);
+        // add_filter('podlove_episode_data_before_save', [$this, 'save_episode_voice_assignments']);
         add_filter('mime_types', [$this, 'ensure_vtt_mime_type_is_known'], 20);
 
         add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
@@ -53,6 +47,15 @@ class Transcripts extends \Podlove\Modules\Base
         \Podlove\Template\Episode::add_accessor(
             'transcript', array('\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'), 4
         );
+
+        add_action('rest_api_init', [$this, 'api_init']);
+
+    }
+
+    public function api_init()
+    {
+        $api = new REST_API();
+        $api->register_routes();
     }
 
     public function ensure_vtt_mime_type_is_known($mime_types)
@@ -83,36 +86,6 @@ class Transcripts extends \Podlove\Modules\Base
     {
         Transcript::build();
         VoiceAssignment::build();
-    }
-
-    public function save_episode_voice_assignments($data)
-    {
-        if (!$data['transcript_voice']) {
-            return $data;
-        }
-
-        $post_id = get_the_ID();
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-
-        if (!$episode) {
-            return $data;
-        }
-
-        VoiceAssignment::delete_for_episode($episode->id);
-
-        foreach ($data['transcript_voice'] as $voice => $id) {
-            if ($id > 0) {
-                $voice_assignment                 = new VoiceAssignment;
-                $voice_assignment->episode_id     = $episode->id;
-                $voice_assignment->voice          = $voice;
-                $voice_assignment->contributor_id = $id;
-                $voice_assignment->save();
-            }
-        }
-
-        // not saved in traditional way
-        unset($data['transcript_voice']);
-        return $data;
     }
 
     public function extend_episode_form($form_data, $episode)

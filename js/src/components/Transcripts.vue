@@ -78,12 +78,6 @@
                 {{ option.label }}
               </template>
             </v-select>
-            <input
-              type="hidden"
-              :name="'_podlove_meta[transcript_voice][' + voice.label + ']'"
-              :value="voice.option.value"
-              v-if="voice.option"
-            >
           </div>
         </div>
       </div>
@@ -156,6 +150,38 @@ export default {
     };
   },
 
+  watch: {
+    voiceData: function(val, oldVal) {
+      if (oldVal == null) {
+        return;
+      }
+
+      $.ajax({
+        url:
+          podlove_vue.rest_url +
+          "podlove/v1/transcripts/" +
+          podlove_vue.post_id +
+          "/voices",
+        method: "POST",
+        dataType: "json",
+        data: {
+          transcript_voice: val
+        }
+      })
+        .done(result => {
+          // console.log("saved transcript voices", result);
+        })
+        .fail(({ responseJSON }) => {
+          console.error(
+            "error saving transcript voices:",
+            responseJSON.message
+          );
+        });
+
+      // TODO: use voiceData to dynamically determine voices in transcript preview
+    }
+  },
+
   computed: {
     description: function() {
       if (this.importing) {
@@ -165,6 +191,16 @@ export default {
       } else {
         return "Accepts: WebVTT";
       }
+    },
+    voiceData: function() {
+      if (!this.voices) {
+        return null;
+      }
+
+      return this.voices.reduce((agg, voice) => {
+        agg[voice.label] = voice.option ? voice.option.value : voice.value;
+        return agg;
+      }, new Object());
     },
     contributorsOptions: function() {
       return this.contributors.map(c => {

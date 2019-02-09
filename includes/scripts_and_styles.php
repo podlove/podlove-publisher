@@ -18,6 +18,7 @@ add_action('admin_print_styles', function () {
         wp_localize_script('podlove-episode-vue-apps', 'podlove_vue', array(
             'rest_url' => esc_url_raw(rest_url()),
             'nonce'    => wp_create_nonce('wp_rest'),
+            'post_id'  => get_the_ID(),
         )
         );
     }
