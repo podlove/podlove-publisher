@@ -35,15 +35,12 @@
     <div class="row tab-body transcript" v-show="mode == 'transcript'">
       <div v-if="transcript != null">
         <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
-          <div class="ts-speaker-avatar" v-if="hasVoice(group.speaker)">
-            <img :src="getVoice(group.speaker).option.avatar" width="50" height="50">
+          <div class="ts-speaker-avatar" v-if="hasVoice(group)">
+            <img :src="getVoice(group).option.avatar" width="50" height="50">
           </div>
 
           <div class="ts-text">
-            <div
-              class="ts-speaker"
-              v-if="hasVoice(group.speaker)"
-            >{{ getVoice(group.speaker).option.label }}</div>
+            <div class="ts-speaker" v-if="hasVoice(group)">{{ getVoice(group).option.label }}</div>
             <div v-else class="ts-speaker">{{ group.voice }}</div>
 
             <div class="ts-content">
@@ -178,7 +175,7 @@ export default {
           );
         });
 
-      // TODO: use voiceData to dynamically determine voices in transcript preview
+      // TODO: clearing/deleting assignments
     }
   },
 
@@ -338,11 +335,12 @@ export default {
           }
         });
     },
-    getVoice(id) {
+    getVoice(group) {
+      let id = this.voiceData[group.voice];
       return this.voices.find(v => (v.option ? v.option.value == id : false));
     },
-    hasVoice(id) {
-      return id !== null && this.getVoice(id) !== undefined;
+    hasVoice(group) {
+      return group && group.voice && this.voiceData[group.voice];
     },
     fetchTranscript(done) {
       this.axios.get(this.jsonGroupedDownloadHref).then(({ data }) => {
