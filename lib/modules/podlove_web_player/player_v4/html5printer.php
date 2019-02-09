@@ -146,6 +146,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
                     }
 
                     return [
+                        'id'      => $contributor->id,
                         'name'    => $contributor->getName(),
                         'avatar'  => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
                         'role'    => $c->hasRole() ? $c->getRole()->to_array() : null,
