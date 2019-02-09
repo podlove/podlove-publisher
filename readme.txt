@@ -3,15 +3,9 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-<<<<<<< HEAD
 Tested up to: 5.0.1
 Requires PHP: 5.4
 Stable tag: 2.8.0
-=======
-Tested up to: 5.0.3
-Requires PHP: 5.4
-Stable tag: 2.7.20
->>>>>>> master
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -112,6 +106,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2019-02-09 =
+
+* transcripts: 
+  * fix speaker avatars not appearing
+  * various fixes and enhancements
 
 = 2019-01-31 =
 
