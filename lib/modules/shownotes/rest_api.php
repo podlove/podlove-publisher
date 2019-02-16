@@ -103,6 +103,17 @@ class REST_API
             );
         }
 
+        $original_url = esc_sql($request['original_url']);
+        $episode_id   = (int) $episode->id;
+
+        if (Entry::find_one_by_where("episode_id = $episode_id AND original_url = '$original_url'")) {
+            return new \WP_Error(
+                'podlove_rest_duplicate_entry',
+                'a shownotes entry for this URL exists already',
+                ['status' => 400]
+            );
+        }
+
         $entry = new Entry;
         foreach (Entry::property_names() as $property) {
             if (isset($request[$property]) && $request[$property]) {
