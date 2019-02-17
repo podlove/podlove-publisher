@@ -138,6 +138,10 @@ class REST_API
         $entry->position   = Entry::get_new_position_for_episode($episode->id);
         $entry->episode_id = $episode->id;
 
+        if (!$entry->type) {
+            $entry->type = "link";
+        }
+
         if (!$entry->save()) {
             return new \WP_Error(
                 'podlove_rest_create_failed',

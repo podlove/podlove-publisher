@@ -96,6 +96,7 @@ export default {
 
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes", {
         original_url: url,
+        type: "link",
         data: data,
         episode_id: this.episodeid
       })

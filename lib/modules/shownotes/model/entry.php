@@ -38,6 +38,7 @@ SQL;
 
 Entry::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
 Entry::property('episode_id', 'INT');
+Entry::property('type', 'VARCHAR(255)');
 Entry::property('state', 'VARCHAR(255)');
 Entry::property('position', 'FLOAT');
 Entry::property('unfurl_data', 'TEXT');
