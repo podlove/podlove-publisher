@@ -6,13 +6,6 @@
   logo: '500px.png'
   url_scheme: 'https://500px.com/%account-placeholder%'
 
-- title: 'App.net'
-  name: 'app.net'
-  category: 'social'
-  description: 'App.net Account'
-  logo: 'adn.png'
-  url_scheme: 'https://alpha.app.net/%account-placeholder%'
-
 - title: 'Bandcamp'
   name: 'bandcamp'
   category: 'social'
