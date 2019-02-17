@@ -196,9 +196,12 @@ class Image
      */
     public function url()
     {
-
         if (empty($this->source_url)) {
             return null;
+        }
+
+        if ($this->extract_file_extension() == "svg") {
+            return $this->source_url;
         }
 
         // In case the image cache doesn't work, it can be deactivated by
