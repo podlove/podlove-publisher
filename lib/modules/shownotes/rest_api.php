@@ -46,6 +46,10 @@ class REST_API
                 'methods'  => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
             ],
+            [
+                'methods'  => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item'],
+            ],
         ]);
         register_rest_route(self::api_namespace, self::api_base . '/(?P<id>[\d]+)/unfurl', [
             'args' => [
@@ -120,6 +124,8 @@ class REST_API
                 $entry->$property = $request[$property];
             }
         }
+        // fixme: there is probably a race condition here when adding multiple episodes at once
+        $entry->position   = Entry::get_new_position_for_episode($episode->id);
         $entry->episode_id = $episode->id;
 
         if (!$entry->save()) {
@@ -231,6 +237,20 @@ class REST_API
         $response = rest_ensure_response($entry->to_array());
 
         return $response;
+    }
 
+    public function update_item($request)
+    {
+        $entry = Entry::find_by_id($request['id']);
+        if (is_wp_error($entry)) {
+            return $entry;
+        }
+
+        $entry->position = $request['position'];
+        $entry->save();
+
+        $response = rest_ensure_response($entry->to_array());
+
+        return $response;
     }
 }

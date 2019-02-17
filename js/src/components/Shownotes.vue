@@ -19,7 +19,7 @@
     <div v-else>
       <draggable
         v-model="shownotes"
-        @end="onDragEnd"
+        @update="onDragEnd"
         :options="{ghostClass: 'ghost', handle: '.drag-handle'}"
       >
         <shownotes-entry
@@ -27,7 +27,7 @@
           v-on:update:entry="onUpdateEntry"
           v-on:delete:entry="onDeleteEntry"
           v-show="ready"
-          v-for="entry in shownotes"
+          v-for="entry in sortedShownotes"
           :key="entry.id"
         ></shownotes-entry>
       </draggable>
@@ -139,35 +139,49 @@ export default {
       entries.forEach(url => this.createEntry(url));
     },
     onDragEnd: function(e) {
-      let newOrder = null;
+      let newPosition = null;
+      let prevEl = null;
+      let nextEl = null;
 
       if (e.oldIndex == e.newIndex) {
         return;
       }
 
       if (e.newIndex == 0) {
-        newOrder = this.shownotes[0].order - 1;
-        console.log("moved to beginning of list");
+        newPosition = this.shownotes[0].position - 1;
       } else if (e.newIndex == this.shownotes.length - 1) {
-        newOrder = this.shownotes[this.shownotes.length - 1].order + 1;
-        console.log("moved to end of list");
+        newPosition =
+          parseFloat(this.shownotes[this.shownotes.length - 1].position) + 1;
       } else {
-        let prevEl = this.shownotes[e.newIndex - 1];
-        let nextEl = this.shownotes[e.newIndex + 1];
-        newOrder = (prevEl.order + nextEl.order) / 2;
-        console.log("moved somewhere");
+        if (e.newIndex > e.oldIndex) {
+          prevEl = this.shownotes[e.newIndex];
+          nextEl = this.shownotes[e.newIndex + 1];
+        } else {
+          prevEl = this.shownotes[e.newIndex - 1];
+          nextEl = this.shownotes[e.newIndex];
+        }
+
+        newPosition =
+          (parseFloat(prevEl.position) + parseFloat(nextEl.position)) / 2.0;
       }
 
-      console.log("new order", this.shownotes[e.newIndex], newOrder);
+      newPosition = parseFloat(newPosition);
+      this.shownotes[e.oldIndex].position = newPosition;
 
-      // TODO: update element order
-
-      // var itemEl = evt.item;  // dragged HTMLElement
-      // evt.to;    // target list
-      // evt.from;  // previous list
-      // evt.oldIndex;  // element's old index within old parent
-      // evt.newIndex;  // element's new index within new parent
-      // console.log("dragEnd", e.oldIndex, e.newIndex, this.shownotes.length);
+      const entry_id = this.shownotes[e.oldIndex].id;
+      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/" + entry_id, {
+        id: entry_id,
+        position: newPosition
+      }).fail(({ responseJSON }) => {
+        console.error("could not update entry:", responseJSON.message);
+      });
+    }
+  },
+  computed: {
+    sortedShownotes: function() {
+      return this.shownotes.sort((a, b) => {
+        return a.position - b.position;
+      });
     }
   },
   directives: {
@@ -339,7 +353,8 @@ export default {
   line-height: 50px;
   margin: 0;
 }
-.ghost {
+.ghost,
+.sortable-ghost {
   opacity: 1;
 }
 </style>
