@@ -300,6 +300,30 @@
   logo: 'amazonwishlist.png'
   url_scheme: '%account-placeholder%'
 
+- title: 'Amazon'
+  name: 'amazon'
+  category: 'internal'
+  logo: 'amazon.svg'
+  url_scheme: 'https://www.amazon.de'
+
+- title: 'Amazon'
+  name: 'amazon'
+  category: 'internal'
+  logo: 'amazon.svg'
+  url_scheme: 'https://www.amazon.com'
+
+- title: 'Wikipedia'
+  name: 'wikipedia'
+  category: 'internal'
+  logo: 'wikipedia.svg'
+  url_scheme: 'https://de.wikipedia.org'
+
+- title: 'Wikipedia'
+  name: 'wikipedia'
+  category: 'internal'
+  logo: 'wikipedia.svg'
+  url_scheme: 'https://en.wikipedia.org'
+
 - title: 'Bitcoin'
   name: 'bitcoin'
   category: 'donation'
