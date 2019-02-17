@@ -12,6 +12,34 @@ class Entry extends Base
         $this->set_blog_id();
     }
 
+    /**
+     * Prepare Icon
+     *
+     * If possible, serve icon locally.
+     *
+     * @return void
+     */
+    public function prepare_icon()
+    {
+        $services = \Podlove\Modules\Social\Social::services_config();
+        $host     = parse_url($this->site_url, PHP_URL_HOST);
+        $icons    = array_filter($services, function ($service) use ($host) {
+            return stristr($service['url_scheme'], $host) !== false;
+        });
+
+        if (!$icons) {
+            return;
+        }
+
+        $icon    = reset($icons);
+        $service = \Podlove\Modules\Social\Model\Service::from_data($icon);
+        $url     = $service->image()->url();
+
+        if ($url) {
+            $this->icon = $url;
+        }
+    }
+
     public static function get_new_position_for_episode($episode_id)
     {
         global $wpdb;

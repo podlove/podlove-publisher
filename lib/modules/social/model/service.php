@@ -15,6 +15,17 @@ class Service extends Base
 		$this->set_blog_id();
 	}
 
+	public static function from_data($data)
+	{
+		$service = new self();
+
+		foreach ($data as $key => $value) {
+			$service->$key = $value;
+		}
+
+		return $service;
+	}
+
 	/**
 	 * @deprecated since 2.2.0, use ::image() instead
 	 */

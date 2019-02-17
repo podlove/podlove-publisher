@@ -70,7 +70,7 @@ class Social extends \Podlove\Modules\Base {
 		self::build_missing_services();
 	}
 
-	private static function services_config() {
+	public static function services_config() {
 		$file = implode(
 			DIRECTORY_SEPARATOR,
 			array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'social', 'data', 'services.yml')
