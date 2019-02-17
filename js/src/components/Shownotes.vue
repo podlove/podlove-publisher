@@ -91,11 +91,12 @@ export default {
     "icon-close": Close
   },
   methods: {
-    createEntry: function(url) {
+    createEntry: function(url, data) {
       this.mode = "create-waiting";
 
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes", {
         original_url: url,
+        data: data,
         episode_id: this.episodeid
       })
         .done(result => {
@@ -135,8 +136,12 @@ export default {
     onImportEntries: function(entries) {
       this.mode = "idle";
 
+      console.log("slack import", entries);
+
       // console.log("import", entries);
-      entries.forEach(url => this.createEntry(url));
+      entries.forEach(({ url: url, data: data }) =>
+        this.createEntry(url, data)
+      );
     },
     onDragEnd: function(e) {
       let newPosition = null;

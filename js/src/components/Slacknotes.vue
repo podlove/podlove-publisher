@@ -289,7 +289,11 @@ export default {
       return html;
     },
     entriesForImport: function() {
-      return this.sortedLinks.filter(l => !l.excluded).map(l => l.link);
+      return this.sortedLinks
+        .filter(l => !l.excluded)
+        .map(l => {
+          return { url: l.link, data: l };
+        });
     },
     linksReady: function() {
       return !this.initializing && this.links != [] && !this.linksLoading;

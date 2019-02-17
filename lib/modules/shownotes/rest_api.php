@@ -119,6 +119,16 @@ class REST_API
         }
 
         $entry = new Entry;
+
+        if (isset($request["data"]) && is_array($request["data"])) {
+            // additional data from Slacknotes Import
+            // lower precedence than the other data
+
+            $entry->title      = $request["data"]["title"];
+            $entry->site_name  = $request["data"]["source"];
+            $entry->created_at = intval($request["data"]["unix_date"]) / 1000;
+        }
+
         foreach (Entry::property_names() as $property) {
             if (isset($request[$property]) && $request[$property]) {
                 $entry->$property = $request[$property];
