@@ -226,6 +226,7 @@ export default {
   padding: 9px;
   display: flex;
   justify-content: space-between;
+  min-height: 40px;
 }
 .failed {
   border-left: 3px solid #dc3232;
