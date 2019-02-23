@@ -42,7 +42,11 @@ class PodcastImportEpisodesJob {
 		$new_episode = new Model\Episode;
 
 		foreach ($episode->children('wpe', true) as $attribute) {
-			$new_episode->{$attribute->getName()} = self::escape((string) $attribute);
+			if ($attribute->getName() == 'chapters') {
+				$new_episode->chapters = str_replace('&#xD;', "\r\n", $attribute);
+			} else {
+				$new_episode->{$attribute->getName()} = self::escape((string) $attribute);
+			}
 		}
 
 		if ($new_post_id = $this->getNewPostId($new_episode->post_id)) {
