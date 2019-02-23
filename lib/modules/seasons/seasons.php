@@ -96,7 +96,7 @@ class Seasons extends \Podlove\Modules\Base {
 	/**
 	 * Expands "Import/Export" module: import logic
 	 */
-	public function expandImport($xml)
+	public function expandImport($jobs)
 	{
 		$jobs[] = '\Podlove\Modules\Seasons\PodcastImportSeasonsJob';
 		return $jobs;
