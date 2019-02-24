@@ -124,9 +124,17 @@ class REST_API
             // additional data from Slacknotes Import
             // lower precedence than the other data
 
-            $entry->title      = $request["data"]["title"];
-            $entry->site_name  = $request["data"]["source"];
-            $entry->created_at = intval($request["data"]["unix_date"]) / 1000;
+            if (isset($request["data"]["title"])) {
+                $entry->title = $request["data"]["title"];
+            }
+
+            if (isset($request["data"]["source"])) {
+                $entry->site_name = $request["data"]["source"];
+            }
+
+            if (isset($request["data"]["unix_date"])) {
+                $entry->created_at = intval($request["data"]["unix_date"]) / 1000;
+            }
         }
 
         foreach (Entry::property_names() as $property) {
