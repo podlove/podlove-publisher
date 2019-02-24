@@ -16,8 +16,10 @@ add_action('admin_print_styles', function () {
         wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL . '/js/dist/app.js', ['underscore', 'jquery'], $version, true);
 
         wp_localize_script('podlove-episode-vue-apps', 'podlove_vue', array(
-            'rest_url' => esc_url_raw(rest_url()),
-            'nonce'    => wp_create_nonce('wp_rest'),
+            'rest_url'   => esc_url_raw(rest_url()),
+            'nonce'      => wp_create_nonce('wp_rest'),
+            'post_id'    => get_the_ID(),
+            'osf_active' => is_plugin_active('shownotes/shownotes.php'),
         )
         );
     }

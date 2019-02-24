@@ -63,6 +63,86 @@ class REST_API
                 'callback' => [$this, 'unfurl_item'],
             ],
         ]);
+        register_rest_route(self::api_namespace, self::api_base . '/osf', [
+            [
+                'methods'  => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'import_osf'],
+            ],
+        ]);
+
+    }
+
+    public function import_osf($request)
+    {
+        $post_id = $request['post_id'];
+
+        if (!function_exists('osf_parser')) {
+            return new \WP_Error(
+                'podlove_rest_osf_no_function',
+                'function "osf_parser" is not available',
+                ['status' => 400]
+            );
+        }
+
+        $shownotes = get_post_meta($post_id, "_shownotes", true);
+
+        $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
+        $data = [
+            'amazon'       => '',
+            'thomann'      => '',
+            'tradedoubler' => '',
+            'fullmode'     => 'true', // sic
+            'tagsmode'     => 1,
+            'tags'         => $tags,
+        ];
+        $parsed = osf_parser($shownotes, $data);
+
+        $links = $parsed['export'][0]['subitems'];
+
+        if (!is_array($links)) {
+            return new \WP_Error(
+                'podlove_rest_osf_no_links',
+                'there are no osf shownotes or links in them',
+                ['status' => 400]
+            );
+        }
+
+        $links = array_map(function ($link) {
+            if (!$link['orig'] || !$link['urls'] || !count($link['urls'])) {
+                return null;
+            }
+
+            return [
+                'title' => $link['orig'],
+                'url'   => $link['urls'][0],
+            ];
+        }, $links);
+        $links = array_filter($links);
+
+        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+            return new \WP_Error(
+                'podlove_rest_osf_no_episode',
+                'episode cannot be found',
+                ['status' => 400]
+            );
+        }
+
+        foreach ($links as $link) {
+            $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
+            $request->set_query_params([
+                'episode_id'   => $episode->id,
+                'original_url' => $link['url'],
+                'data'         => [
+                    'title' => $link['title'],
+                ],
+            ]);
+            rest_do_request($request);
+        }
+
+        $response = rest_ensure_response(["message" => "ok"]);
+
+        return $response;
+
     }
 
     public function get_items($request)

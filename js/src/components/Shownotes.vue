@@ -61,13 +61,22 @@
           @click.prevent="mode = 'create'"
           v-if="mode != 'create'"
         >Add Entry</button>
-        
-        <button
-          type="button"
-          class="button create-button"
-          @click.prevent="mode = 'import-slacknotes'"
-          v-if="mode != 'create'"
-        >Import from Slacknotes</button>
+
+        <div>
+          <button
+            type="button"
+            class="button create-button"
+            @click.prevent="mode = 'import-slacknotes'"
+            v-if="mode != 'create'"
+          >Import from Slacknotes</button>
+          
+          <button
+            type="button"
+            class="button create-button"
+            @click.prevent="importOsfShownotes"
+            v-if="osf_active && mode != 'create'"
+          >Import OSF Shownotes</button>
+        </div>
       </div>
     </div>
   </div>
@@ -181,6 +190,32 @@ export default {
       }).fail(({ responseJSON }) => {
         console.error("could not update entry:", responseJSON.message);
       });
+    },
+    importOsfShownotes: function() {
+      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/osf", {
+        post_id: podlove_vue.post_id
+      })
+        .done(result => {
+          console.log("done?");
+          this.init();
+        })
+        .fail(({ responseJSON }) => {
+          console.error("could not import osf:", responseJSON.message);
+        });
+    },
+    init: function() {
+      $.getJSON(
+        podlove_vue.rest_url +
+          "podlove/v1/shownotes?episode_id=" +
+          this.episodeid
+      )
+        .done(shownotes => {
+          this.shownotes = shownotes;
+          this.ready = true;
+        })
+        .fail(({ responseJSON }) => {
+          console.error("could not load shownotes:", responseJSON.message);
+        });
     }
   },
   computed: {
@@ -188,6 +223,9 @@ export default {
       return this.shownotes.sort((a, b) => {
         return a.position - b.position;
       });
+    },
+    osf_active: function() {
+      return podlove_vue.osf_active;
     }
   },
   directives: {
@@ -198,26 +236,7 @@ export default {
     }
   },
   mounted: function() {
-    $.getJSON(
-      podlove_vue.rest_url + "podlove/v1/shownotes?episode_id=" + this.episodeid
-    )
-      .done(shownotes => {
-        this.shownotes = shownotes;
-        this.ready = true;
-      })
-      .fail(({ responseJSON }) => {
-        console.error("could not load shownotes:", responseJSON.message);
-      });
-
-    window.setTimeout(() => {
-      // for development
-      window.scroll(
-        0,
-        document.getElementById("podlove-shownotes-app").offsetTop +
-          document.body.clientHeight +
-          500
-      );
-    }, 2500);
+    this.init();
   }
 };
 </script>
