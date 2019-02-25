@@ -49,11 +49,17 @@ class Entry extends Wrapper
     /**
      * Canonical URL
      *
+     * Defaults to `original_url` if no canonical URL is available.
+     *
      * @accessor
      */
     public function url()
     {
-        return $this->entry->url;
+        if ($this->entry->url) {
+            return $this->entry->url;
+        } else {
+            return $this->entry->original_url;
+        }
     }
 
     /**
