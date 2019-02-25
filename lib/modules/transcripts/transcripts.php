@@ -218,7 +218,6 @@ class Transcripts extends \Podlove\Modules\Base
         }
 
         Transcript::delete_for_episode($episode->id);
-        VoiceAssignment::delete_for_episode($episode->id);
 
         foreach ($result['cues'] as $cue) {
             $line             = new Transcript;
@@ -236,7 +235,8 @@ class Transcripts extends \Podlove\Modules\Base
 
         foreach ($voices as $voice) {
             $contributor = Contributor::find_one_by_property("identifier", $voice);
-            if ($contributor) {
+
+            if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
                 $voice_assignment                 = new VoiceAssignment;
                 $voice_assignment->episode_id     = $episode->id;
                 $voice_assignment->voice          = $voice;

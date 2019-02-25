@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2019-02-25 =
+
+* fix: keep existing voice assignments when reparsing transcripts
+
 = 2019-02-09 =
 
 * transcripts: 
