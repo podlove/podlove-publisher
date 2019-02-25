@@ -225,7 +225,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 			];
 		};
 
-		$totals_cron = $get_cron_info("podlove_calc_download_sums");
+		$totals_cron = $get_cron_info("podlove_calc_hourly_download_sums");
 		$prev_totals_job = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTimedAggregatorJob');
 
 		echo sprintf(
