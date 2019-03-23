@@ -240,10 +240,20 @@ class Module
             'position' => 490,
         ];
 
-        // remove "chapter visibility" setting
-        $form_data = array_filter($form_data, function ($entry) {
-            return $entry['key'] !== 'chaptersVisible';
-        });
+		$form_data[] = [
+			'type' => 'checkbox',
+			'key'  => 'playerv4_use_podcast_language',
+			'options' => [
+				'label' => 'Use podcast language for player UI',
+				'description' => __('If false, the web player\'s user interface will be determined by the browser locale. If true the langauage of the podcast is chosen', 'podlove-podcasting-plugin-for-wordpress'),
+			],
+			'position' => 490
+		];
+
+		// remove "chapter visibility" setting
+		$form_data = array_filter($form_data, function ($entry) {
+			return $entry['key'] !== 'chaptersVisible';
+		});
 
         return $form_data;
     }
