@@ -206,6 +206,10 @@ class Transcripts extends \Podlove\Modules\Base
     {
         $parser = new Parser();
 
+        if (function_exists('mb_check_encoding') && !mb_check_encoding($content, 'UTF-8')) {
+            \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file: must be UTF-8 encoded']);
+        }
+
         try {
             $result = $parser->parse($content);
         } catch (ParserException $e) {
