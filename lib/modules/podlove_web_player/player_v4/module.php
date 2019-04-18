@@ -214,6 +214,32 @@ class Module
             'position' => 495,
         ];
 
+        $form_data[] = [
+            'type'     => 'multiselect',
+            'key'      => 'playerv4_visible_components',
+            'options'  => [
+                'label'        => 'Select Visible Components',
+                'description'  => __('Select which player components you would like to display', 'podlove-podcasting-plugin-for-wordpress'),
+                'multi_values' => \Podlove\get_webplayer_settings()['playerv4_visible_components'],
+                'options'      => [
+                    'controlChapters' => 'Chapters Control',
+                    'controlSteppers' => 'Playback Steppers',
+                    'episodeTitle'    => 'Episode Title',
+                    'poster'          => 'Episode Image',
+                    'progressbar'     => 'Progress Bar',
+                    'showTitle'       => 'Podcast Title',
+                    'subtitle'        => 'Episode Subtitle',
+                    'tabAudio'        => 'Audio Controls Tab',
+                    'tabChapters'     => 'Chapters Tab',
+                    'tabFiles'        => 'Download Tab',
+                    'tabInfo'         => 'Info Tab',
+                    'tabShare'        => 'Sharing Tab',
+                    'tabTranscripts'  => "Transcripts Tab",
+                ],
+            ],
+            'position' => 490,
+        ];
+
         // remove "chapter visibility" setting
         $form_data = array_filter($form_data, function ($entry) {
             return $entry['key'] !== 'chaptersVisible';

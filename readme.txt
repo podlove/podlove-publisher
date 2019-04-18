@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 5.0.1
+Tested up to: 5.1.1
 Requires PHP: 5.4
 Stable tag: 2.8.0
 License: MIT
@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2019-04-18 =
 
 * fix(transcripts): detect if import file is not utf8
+* merge changes from 2.7.x (stable)
 
 = 2019-02-25 =
 
@@ -158,7 +159,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * **slacknotes:** follow redirects when resolving URLs ([5b39746](https://github.com/podlove/podlove-publisher/commit/5b39746))
 * **slacknotes:** handle slack-resolved URLs in pipes format ([b08ec53](https://github.com/podlove/podlove-publisher/commit/b08ec53))
 * **slacknotes:** hide link-fetch prompt while fetching ([f4e78e3](https://github.com/podlove/podlove-publisher/commit/f4e78e3))
-
+* **slacknotes:** url re-fetching when changing dates ([344456d](https://github.com/podlove/podlove-publisher/commit/344456d))
 
 **Features**
 
