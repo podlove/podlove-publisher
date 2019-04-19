@@ -88,7 +88,7 @@ class Module
             $post_id = get_the_ID();
         }
 
-        add_filter('podlove_player4_config', function ($config) use ($args) {
+        add_filter('podlove_player4_config', function ($config, $episode) use ($args) {
             if (!is_array($args)) {
                 return $config;
             }
@@ -126,12 +126,6 @@ class Module
             // live mode has no episode to reference
             $printer = new Html5Printer();
         } else {
-            $episode = Episode::find_one_by_post_id($post_id);
-
-            if (!$episode) {
-                return "";
-            }
-
             $printer = new Html5Printer($episode);
         }
 

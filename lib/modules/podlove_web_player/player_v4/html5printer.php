@@ -158,7 +158,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
             }
         }
 
-        $config = apply_filters('podlove_player4_config', $config);
+        $config = apply_filters('podlove_player4_config', $config, $episode);
 
         return $config;
     }

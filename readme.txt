@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2019-04-19 =
+
+* fix: web player 4 config issue
+
 = 2019-04-18 =
 
 * fix(transcripts): detect if import file is not utf8
