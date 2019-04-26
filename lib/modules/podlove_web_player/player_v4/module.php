@@ -126,6 +126,12 @@ class Module
             // live mode has no episode to reference
             $printer = new Html5Printer();
         } else {
+            $episode = Episode::find_one_by_post_id($post_id);
+
+            if (!$episode) {
+                return "";
+            }
+
             $printer = new Html5Printer($episode);
         }
 
