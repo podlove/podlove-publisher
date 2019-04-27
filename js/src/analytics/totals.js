@@ -51,7 +51,7 @@ jQuery(document).ready(function ($) {
 		// threshold to make it to top episodes: more than 5% of total downloads in time segment
 		var top_episodes = episodeGroup.all().reduce(function (acc, cur) {
 
-			if (cur.value.downloads > total_downloads * 0.05) {
+			if (cur.value.downloads > total_downloads * 0.04) {
 				acc.push(cur);
 			}
 
