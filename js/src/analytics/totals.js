@@ -472,17 +472,19 @@ jQuery(document).ready(function ($) {
 			}
 		},
 		renderer: renderSourcesChart
-	}, {
-		id: '#analytics-chart-global-downloads-per-month',
-		action: 'podlove-analytics-global-downloads-per-month',
-		mapper: function (d) {
-			return {
-				downloads: +d.downloads,
-				date_month: d.date_month ? d.date_month : 'Unknown'
-			}
-		},
-		renderer: renderPerMonthChart
-	}, {
+	}, 
+	// {
+	// 	id: '#analytics-chart-global-downloads-per-month',
+	// 	action: 'podlove-analytics-global-downloads-per-month',
+	// 	mapper: function (d) {
+	// 		return {
+	// 			downloads: +d.downloads,
+	// 			date_month: d.date_month ? d.date_month : 'Unknown'
+	// 		}
+	// 	},
+	// 	renderer: renderPerMonthChart
+	// }, 
+	{
 		id: '#analytics-global-top-episodes',
 		action: 'podlove-analytics-global-top-episodes',
 		mapper: function (d) {
@@ -529,7 +531,6 @@ jQuery(document).ready(function ($) {
 					}
 
 					let cb = chart.renderer
-
 					cb(assetData);
 				}).fail(() => {
 					chartLoading.hide();

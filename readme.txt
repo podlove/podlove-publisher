@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * performance: add index to downloads table
 * performance: improve calculation of last months downloads
 * fix: loading states in global analytics
+* fix: restrict global analytics to last 30 days (instead of dynamic selector) because I can't guarantee acceptable performance with a dynamic date selector
 
 = 2019-04-26 =
 

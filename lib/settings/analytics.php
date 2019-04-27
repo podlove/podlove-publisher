@@ -342,7 +342,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 		<div class="metabox-holder">
 			<div class="postbox">
 				<h2 class="hndle" style="cursor: inherit;">
-					<?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress');?>
+					<?php _e('Global Analytics for last 30 Days', 'podlove-podcasting-plugin-for-wordpress');?>
 			  </h2>
 				<div class="inside">
 
@@ -352,6 +352,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 
 						<div style="float: none"></div>
 
+						<!--
 						<section id="analytics-chart-global-downloads-per-month-wrapper" class="chart-wrapper">
 							<div id="analytics-chart-global-downloads-per-month" style="width: 570px">
 								<h1>
@@ -361,6 +362,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 								<?php echo $status_html; ?>
 							</div>
 						</section>
+						-->
 
 						<section id="analytics-global-top-episodes-wrapper" class="chart-wrapper">
 							<div id="analytics-global-top-episodes">
