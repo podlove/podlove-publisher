@@ -45,7 +45,7 @@ mix.js('js/src/app.js', 'js/dist/')
             'js/src/analytics/episode.js',
             'js/src/analytics/totals.js',
         ],
-        'js/dist/analytics.js'
+        'js/dist/podcast-stats.js'
     );
 
 // Full API
