@@ -432,9 +432,6 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
-	const chartFailedHtml = '<div class="chart-failed">Loading Chart failed :(</div>';
-	const chartNoDataHtml = '<div class="chart-nodata">No Chart Data</div>';
-
 	const globalCharts = [{
 		id: "#analytics-chart-global-assets",
 		action: 'podlove-analytics-global-assets',
@@ -511,25 +508,32 @@ jQuery(document).ready(function ($) {
 
 		globalCharts.forEach(chart => {
 			let chartLoading = $(chart.id + " .chart-loading")
+			let chartFailed = $(chart.id + " .chart-failed")
+			let chartNoData = $(chart.id + " .chart-nodata")
 
 			$(chart.id).each(function () {
+
+				chartLoading.show();
+				chartFailed.hide();
+				chartNoData.hide();
+
 				$.when(
 					$.ajax(ajaxurl + '?action=' + chart.action + '&date_from=' + from.toISOString() + '&date_to=' + to.toISOString())
 				).done((csvAssets) => {
 
 					let assetData = d3.csvParse(csvAssets, chart.mapper);
 
-					if (assetData.length) {
-						chartLoading.remove();
-					} {
-						chartLoading.replaceWith(chartNoDataHtml);
+					chartLoading.hide();
+					if (!assetData.length) {
+						chartNoData.show();
 					}
 
 					let cb = chart.renderer
 
 					cb(assetData);
 				}).fail(() => {
-					chartLoading.replaceWith(chartFailedHtml);
+					chartLoading.hide();
+					chartFailed.show()
 				});
 			})
 		});

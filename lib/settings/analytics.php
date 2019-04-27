@@ -292,6 +292,14 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
         $last_24_hours = $cache->cache_for('podlove_downloads_last_day', '\Podlove\Model\DownloadIntentClean::last_24hours_downloads', HOUR_IN_SECONDS);
 
         $crunching_numbers_text = '(' . __('crunching numbers&#8230;', 'podlove-podcasting-plugin-for-wordpress') . ')';
+
+        $status_html = '
+			<div class="chart-loading" style="display: block;">
+				<img src="' . admin_url('images/wpspin_light-2x.gif') . '" alt="Loading" width="16" height="16" />
+			</div>
+			<div class="chart-failed" style="display: none;">Loading Chart failed :(</div>
+			<div class="chart-nodata" style="display: none;">No Chart Data</div>
+		';
         ?>
 
 		<div class="metabox-holder">
@@ -350,9 +358,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 									<?php _e('Downloads per Month', 'podlove-podcasting-plugin-for-wordpress');?>
 								</h1>
 
-								<div class="chart-loading">
-									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
-								</div>
+								<?php echo $status_html; ?>
 							</div>
 						</section>
 
@@ -362,9 +368,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 									<?php _e('Top Episodes', 'podlove-podcasting-plugin-for-wordpress');?>
 								</h1>
 
-								<div class="chart-loading">
-									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
-								</div>
+								<?php echo $status_html; ?>
 							</div>
 						</section>
 
@@ -374,9 +378,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 									<?php _e('Episode Asset', 'podlove-podcasting-plugin-for-wordpress');?>
 								</h1>
 
-								<div class="chart-loading">
-									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
-								</div>
+								<?php echo $status_html; ?>
 							</div>
 						</section>
 
@@ -386,9 +388,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 									<?php _e('Podcast Client', 'podlove-podcasting-plugin-for-wordpress');?>
 								</h1>
 
-								<div class="chart-loading">
-									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
-								</div>
+								<?php echo $status_html; ?>
 							</div>
 						</section>
 
@@ -398,9 +398,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 									<?php _e('Operating System', 'podlove-podcasting-plugin-for-wordpress');?>
 								</h1>
 
-								<div class="chart-loading">
-									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
-								</div>
+								<?php echo $status_html; ?>
 							</div>
 						</section>
 
@@ -410,9 +408,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 									<?php _e('Download Source', 'podlove-podcasting-plugin-for-wordpress');?>
 								</h1>
 
-								<div class="chart-loading">
-									<img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
-								</div>
+								<?php echo $status_html; ?>
 							</div>
 						</section>
 
