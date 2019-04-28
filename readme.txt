@@ -107,7 +107,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2019-04-27 =
+= 2019-04-28 =
 
 * rename backend js file to not be accidentally caught by content blockers
 * performance: add index to downloads table
