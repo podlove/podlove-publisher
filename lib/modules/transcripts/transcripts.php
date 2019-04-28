@@ -330,8 +330,8 @@ class Transcripts extends \Podlove\Modules\Base
     public function add_playerv4_config($config, $episode)
     {
         if (Transcript::exists_for_episode($episode->id)) {
-            // todo: add parameter with add_query_arg
-            $config['transcripts'] = get_permalink($episode->post_id) . '?podlove_transcript=json';
+            $url                   = add_query_arg('podlove_transcript', 'json', get_permalink($episode->post_id));
+            $config['transcripts'] = $url;
         }
         return $config;
     }
