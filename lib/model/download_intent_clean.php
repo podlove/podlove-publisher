@@ -6,6 +6,16 @@ namespace Podlove\Model;
  */
 class DownloadIntentClean extends Base
 {
+    public static function build()
+    {
+        global $wpdb;
+
+        parent::build();
+
+        // note: this will silently fail if it already exists
+        $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
+        $wpdb->query(sprintf($sql, \Podlove\Model\DownloadIntentClean::table_name()));
+    }
 
     public static function episode_age_in_hours($episode_id)
     {
