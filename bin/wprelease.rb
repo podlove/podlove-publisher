@@ -121,6 +121,7 @@ class Wprelease
 			 'webpack.mix.js',
 			 'mix-manifest.json',
 			 'package-lock.json',
+			 'yarn-error.log',
 			 'yarn.lock'
 		]
 
@@ -168,7 +169,7 @@ class Wprelease
 
 		Dir.chdir "#{@svn_dir}"
 
-		system "cp -R #{@svn_dir}/trunk #{@svn_dir}/tags/#{@version}"
+		system "cp -R #{@svn_dir}/trunk/* #{@svn_dir}/tags/#{@version}"
 		system "svn add tags/#{@version}"
 		system "svn commit -m 'release'"
 
