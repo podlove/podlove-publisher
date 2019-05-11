@@ -166,7 +166,7 @@ class Wprelease
 
 		# new try: do all changes locally, then commit exactly once with both trunk changes and tag
 
-		Dir.chdir "#{@svn_dir}/trunk"
+		Dir.chdir "#{@svn_dir}"
 
 		system "cp -R #{@svn_dir}/trunk #{@svn_dir}/tags/#{@version}"
 		system "svn add tags/#{@version}"
