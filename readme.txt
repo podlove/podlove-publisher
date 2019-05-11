@@ -107,311 +107,89 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2019-05-11 =
+= 2.8.0 =
 
-* reenable PWP4 fallback for no JS/old browsers
+**Transcripts**
 
-= 2019-04-28 =
+“Transcripts” is the new module to manage transcripts, show them on your site and in the web player. You can import them from webvtt files. If you are already using the Podlove Publisher contributors, you can assign people to the voices inside the webvtt. Then you even get avatars automatically in your transcripts.
 
-* rename backend js file to not be accidentally caught by content blockers
-* performance: add index to downloads table
-* performance: improve calculation of last months downloads
-* fix: loading states in global analytics
-* fix: restrict global analytics to last 30 days (instead of dynamic selector) because I can't guarantee acceptable performance with a dynamic date selector
-* fix: transcripts in episode preview
+See [https://forschergeist.de/podcast/fg066-klimaneutralitaet/](https://forschergeist.de/podcast/fg066-klimaneutralitaet/) for an example episode with transcripts in the web player.
 
-= 2019-04-26 =
+**Transcripts: Shortcode**
 
-* fix: web player 4 when rendered as shortcode
+The shortcode `[podlove-transcript]` displays a pretty html version of the transcript for your website. 
 
-= 2019-04-19 =
+**Transcripts: Twig Template Support**
 
-* fix: web player 4 config issue
+Of course there is a fully featured template API for transcripts as well. For example:
 
-= 2019-04-18 =
+{% for group in episode.transcript %}
+    <div class="ts-group">
 
-* fix(transcripts): detect if import file is not utf8
-* merge changes from 2.7.x (stable)
-
-= 2019-02-25 =
-
-* fix: keep existing voice assignments when reparsing transcripts
-
-= 2019-02-09 =
-
-* transcripts: 
-  * fix speaker avatars not appearing
-  * various fixes and enhancements
-
-= 2019-01-31 =
-
-### Bug Fixes
-
-* **player:** missing config filter parameter ([0fa377f](https://github.com/podlove/podlove-publisher/commit/0fa377f))
-* **transcripts:** don't break when contributors are missing ([d6cf132](https://github.com/podlove/podlove-publisher/commit/d6cf132))
-* **transcripts:** ensure vtt is allowed to upload ([f1f021e](https://github.com/podlove/podlove-publisher/commit/f1f021e))
-* **transcripts:** speaker-voice assignment ([4f48c99](https://github.com/podlove/podlove-publisher/commit/4f48c99))
-
-### Features
-
-* **transcripts:** add "import from asset" button ([6cf3b39](https://github.com/podlove/podlove-publisher/commit/6cf3b39))
-* **transcripts:** add whitespace after full stop in preview ([70a62f6](https://github.com/podlove/podlove-publisher/commit/70a62f6))
-* **transcripts:** show voice default if contributor is not available ([fb40fc5](https://github.com/podlove/podlove-publisher/commit/fb40fc5))
-
-= 2019-01-16 =
-
-* (maybe) fix Gutenberg issues when creating a new episode
-
-= 2019-01-14 =
-
-**Bug Fixes**
-
-* **slacknotes:** url re-fetching when changing dates ([dc8fa7c](https://github.com/podlove/podlove-publisher/commit/dc8fa7c))
-
-= 2019-01-13 =
-
-= 2.7.21 =
-
-**Bug Fixes**
-
-* **slacknotes:** avoid duplicate vue for-loop keys ([7578cdf](https://github.com/podlove/podlove-publisher/commit/7578cdf))
-* **slacknotes:** date range filter ([2982f2b](https://github.com/podlove/podlove-publisher/commit/2982f2b))
-* **slacknotes:** fix loading of datepicker component ([13ca12b](https://github.com/podlove/podlove-publisher/commit/13ca12b))
-* **slacknotes:** follow redirects when resolving URLs ([5b39746](https://github.com/podlove/podlove-publisher/commit/5b39746))
-* **slacknotes:** handle slack-resolved URLs in pipes format ([b08ec53](https://github.com/podlove/podlove-publisher/commit/b08ec53))
-* **slacknotes:** hide link-fetch prompt while fetching ([f4e78e3](https://github.com/podlove/podlove-publisher/commit/f4e78e3))
-* **slacknotes:** url re-fetching when changing dates ([344456d](https://github.com/podlove/podlove-publisher/commit/344456d))
-
-**Features**
-
-* **slacknotes:** add setting for link ordering ([c4c824e](https://github.com/podlove/podlove-publisher/commit/c4c824e))
-* **slacknotes:** show link time ([53077b1](https://github.com/podlove/podlove-publisher/commit/53077b1))
-* **slacknotes:** when resolving URLs, use effective URL ([974c7f8](https://github.com/podlove/podlove-publisher/commit/974c7f8))
-
-= 2019-01-12 =
-
-**Slacknotes**
-
-This release is sponsored by [Lage der Nation](https://lagedernation.org).
-
-The new "Slacknotes" module extracts links and their metadata from a Slack channel and generates HTML that can be used as show notes.
-A short demo video is available [in the documentation](https://docs.podlove.org/podlove-publisher/guides/slacknotes.html).
-
-**Other**
-
-* the "Modules" screen has been redesigned
-* updated JavaScript and CSS processing library and other dependencies
-
-= 2018-12-15 =
-
-* reimport transcript every time file is verified
-
-= 2018-12-14 =
-
-We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
-You can choose to use the new editor or stay with the classic editor for now by installing the classic editor plugin by WordPress.
-
-* feed: do not include `<itunes:summary>` tag if it is empty (Apple Podcast requirement)
-* adjustments for Gutenberg compatibility:
-  * Shows metabox moved from sidebar to main area
-  * remove broken form field autogrow behavior
-  * fix contributors UI initialization
-
-= 2018-11-29 =
-
-* merge changes from public releases
-* fix issue when importing a transcript more than once
-
-= 2018-11-11 =
-
-* apply new tab style from transcripts section to chapter marks section
-* internal: when batch-enabling an asset, trigger podlove_media_file_content_has_changed action for all affected media file objects
-* migration assistant: remove "lighter" font weights
-
-= 2018-11-09 =
-
-improve transcripts module
-
-- show rendered transcript in episode screen
-- improve "empty state"
-- give the tab contents some border
-
-= 2018-11-07 =
-
-* automatically assign transcript voices if their webvtt identifier matches a contributor identifier
-* merge changes from public releases
-
-= 2018-10-26 =
-
-Improvements in global analytics:
-
-There's a "top episodes" widget now.
-
-I am not sure if it works out but added a date picker as well. Still rough around the edges but you can pick a custom date range now for global analytics widgets.
-
-= 2018-09-27 =
-
-* player rendering fix
-
-= 2018-09-23 =
-
-* new shortcode `[podlove-transcript]` that displays the transcript of the current episode. `[podlove-transcript post_id="123"]` to display transcript of the given post.
-
-merge 2.7.12 changes:
-
-* use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
-* uninstall: be more specific which options are deleted ([#997](https://github.com/podlove/podlove-publisher/issues/997))
-* new filter `podlove_network_module_activate` to force-enable network module ([#995](https://github.com/podlove/podlove-publisher/issues/995))
-* new social services: Mastodon, Fediverse, Friendica ([#987](https://github.com/podlove/podlove-publisher/issues/987), [#968](https://github.com/podlove/podlove-publisher/issues/968))
-* fix related episodes disappearing when using post scheduling ([#980](https://github.com/podlove/podlove-publisher/issues/980))
-* fix seasons error when there are no episodes ([#963](https://github.com/podlove/podlove-publisher/issues/963))
-* related episodes: order by post date ([#947](https://github.com/podlove/podlove-publisher/issues/947))
-
-= 2018-09-02 =
-
-* new global chart: downloads per month
-
-= 2018-08-31 =
-
-* merge changes from master / stable release
-* show some global charts over all time in analytics dashboard
-
-= 2018-08-19 =
-
-* add `group.start`, `group.end` template accessors
-* fix transcripts: don't rely on contributor identifier internally
-
-= 2018-08-17 =
-
-* merge changes from master / stable release
-* add template tag `contributor.avatar.html`; accepts same arguments as `image.html`
-
-= 2018-08-10 =
-
-* included all changes from the 2.7.x branch
-* transcripts can now be exported as JSON grouped by speaker and a preliminary/inofficial XML format
-* Template API groups by speaker as well. Use this example template as base:
-* Analytics:
-  * UI crash fix (Chrome)
-  * add client location chart
-  * remove weekday chart 
-
-    <style type="text/css">
-    .ts-speaker { font-weight: bold; }
-    .ts-items { margin-left: 20px; }
-    .ts-time { font-size: small; color: #999; }
-    </style>
-    
-    {% for group in episode.transcript %}
-      <div class="ts-group">
-    
-        {% if group.contributor %}
-          <div class="ts-speaker">{{ group.contributor.name }}</div>
-        {% endif %}
-    
-        <div class="ts-items">
-        {% for line in group.items %}
-          <span class="ts-time">{{ line.start }}&ndash;{{ line.end }}</span>
-          <div class="ts-content">{{ line.content }}</div>
-        {% endfor %}
+        <div class="ts-speaker-avatar">
+            {{ group.contributor.image.html({width: 50}) }}
         </div>
-      </div>
-    {% endfor %}
 
-= 2018-05-23 =
+        <div class="ts-text">
+            <div class="ts-speaker">
+                {{ group.contributor.name }}
+            </div>
 
-* jobs dashboard: add button to abort running jobs
+            <div class="ts-content">
+                {% for line in group.items %}
+                <span class="ts-line">{{ line.content }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+    </div>
+{% endfor %}
 
-= 2018-05-04 =
+See [https://docs.podlove.org/podlove-publisher/reference/template-tags.html](https://docs.podlove.org/podlove-publisher/reference/template-tags.html "documentation") for all details.
 
-**Preparation for GDPR/DSGVO**
+**Global Podcast Analytics**
 
-If you are using Podlove Publisher Tracking/Analytics, an update to this version is highly recommended.
+The following metrics are now available for the whole podcast:
 
-Tracking uses a `request_id` to be able to determine when two requests came from the same user and should be counted as one unique access. This request id used to be a hash of the original IP address and the user agent. This approach however is vulnerable to a brute force attack to get the IP address back from the hash. Here's what we are doing about that:
+- downloads per month
+- top episodes
+- episode asset
+- podcast client
+- operating system
+- download source
 
-First, we anonymize the IP before generating the hash. So instead of using `171.23.11.209`, we use `171.23.11.0`.
+**Raw Analytics**
 
-Second, you need to deal with the existing `request_id`s. There is a new "DSGVO" section under "Tools" with a button that will rehash all existing `request_id`s with a randomly generated salt. That way it will become unfeasible to determine the original IP address but your analytics will stay the same.
+I wouldn’t call this an Analytics API but since it exists to power the analytics screen, I might as well document it. The following endpoints return results in CSV format for easy processing or import to spreadsheets.
 
-In case you have a lot of downloads (let's say much more than 50.000), you may want to do this via command line because that will be _much_ quicker than via the tools section. You need [wp-cli](https://wp-cli.org/), then simply call `wp eval 'podlove_rehash_tracking_request_ids();'`. On a multisite, pass the blog id as a parameter: `wp eval 'podlove_rehash_tracking_request_ids(42);'`.
+Here is an example call that returns the number of downloads in March 2019:
+
+	https://your.domain/wp-admin/admin-ajax.php?action=podlove-analytics-global-downloads-per-month&date_from=2019-03-01T00:00:00.000Z&date_to=2019-03-31T23:59:59.999Z
+
+All requests take the same three parameters:
+
+- `action` defines what data you want
+- `date_from` is the start date in ISO 8601
+- `date_end` is the end date in ISO 8601
+
+Available actions are:
+
+- podlove-analytics-global-downloads-per-month
+- podlove-analytics-global-top-episodes
+- podlove-analytics-global-assets
+- podlove-analytics-global-clients
+- podlove-analytics-global-systems
+- podlove-analytics-global-sources
+
+You need to be logged in with admin permissions for the requests to work.
+
+Disclaimer: Depending on the popularity of your podcast and chosen date range, the requests may take a long time to respond, or even fail if the calculation takes longer than the timeout defined in your web server.
 
 **Other**
 
-* fix Podlove Subscribe Button language parameter
-* fix `rel="self"` link in show feeds
-* fix Podlove Subscribe Button not delivering show feeds
-* templates: handle episode.show access when there is no show
-* templates: allow episode filtering by show, for example: `{% for episode in podcast.episodes({show: "example"}) %}`
-
-_2.7.4_
-
-No changes, but the previous release is not delivered correctly by WordPress, so this is simply a re-release attempt to fix it.
-
-= 2018-04-15 =
-
-* allow file access even when it's not marked as "downloadable"
-
-= 2018-04-04 =
-
-* update webvtt parser
-
-Add changes from 2.7 branch:
-
-_2.7.3_
-
-* fix: geo database updater
-* update Podlove Web Player 2: remove Flash Fallback
-* update Podlove Web Player 4
-
-_2.7.2_
-
-* fix: `itunes:image` tag in show feeds
-* fix: "Debug Tracking" choosing wrong media files to check availability
-* enhancement: "Debug Tracking" now suggests disabling SSL-peer-verification if URL cannot be resolved and https is used
-* system report: include active plugins
-
-_2.7.1_
-
-* fix: PHP warning when the_title filter is called with only one parameter
-* fix: handle colons in migration tool
-* fix: PWP4 warning when using shortcode
-* new service: letterboxd
-
-= 2018-03-25 =
-
-- when a tracking request does not work because the asset is configured as not downloadable, respond with 403 instead of 404
-
-= 2018-03-24 =
-
-Transcripts can now be rendered using the Template API. Here's an example template to get started:
-
-    <style>
-    .ts-line { margin-bottom: 5px; }
-    .ts-line .time { font-family: monospace; }
-    </style>
-    
-    {% for line in episode.transcript %}
-     <div class="ts-line">
-         <small>
-         <span class="time">{{ line.start }}&ndash;{{ line.end }}</span>
-         {% if line.contributor %}
-           <strong>{{ line.contributor.name }}</strong>
-         {% endif %}
-         </small>
-         <div>{{ line.content }}</div>
-     </div>
-    {% endfor %}
-
-= 2018-03-23 =
-
-- fix: no transcripts tab in player when there are no transcripts
-
-= 2.8.0 prototype =
-
-2.8.0 adds the "Transcripts" module. If you are using Podlove Web Player 4 and are have transcripts (or are willing to create them), give it a go. Currently webvtt is the only supported transcript format.
-
-Once you enable the module, you can import transcripts in the episode screen below the chapter marks UI. You should also have the "Contributors" module enabled so you can assign "voices" in the transcript. 
+- background jobs: add button to abort job
+- new tab style for chapter marks section
+- Podlove Web Player 4 fallback for old browsers and disabled JavaScript
 
 ----
 
