@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Podlove\Modules\Transcripts\Template;
 
 use Podlove\Template\Wrapper;
@@ -6,58 +6,61 @@ use Podlove\Template\Wrapper;
 /**
  * Transcript Line Template Wrapper
  *
- * @templatetag show
+ * @templatetag line
  */
-class Line extends Wrapper {
+class Line extends Wrapper
+{
 
-	private $line;
+    private $line;
 
-	public function __construct($line)
-	{
-		$this->line = $line;
-	}
+    public function __construct($line)
+    {
+        $this->line = $line;
+    }
 
-	protected function getExtraFilterArgs() {
-		return array($this->line);
-	}
+    protected function getExtraFilterArgs()
+    {
+        return array($this->line);
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    // /////////
+    // Accessors
+    // /////////
 
-	/**
-	 * Content
-	 *
-	 * @accessor
-	 */
-	public function content() {
-		return $this->line['text'];
-	}
+    /**
+     * Content
+     *
+     * @accessor
+     */
+    public function content()
+    {
+        return $this->line['text'];
+    }
 
-	/**
-	 * Start time in ms
-	 *
-	 * @accessor
-	 */
-	public function start()
-	{
-		// fixme: this is silly, Duration should take ms as parameter, not a whole episode object
-		$episode = new \Podlove\Model\Episode;
-		$episode->duration = $this->line['start_ms'] / 1000;
+    /**
+     * Start time in ms
+     *
+     * @accessor
+     */
+    public function start()
+    {
+        // fixme: this is silly, Duration should take ms as parameter, not a whole episode object
+        $episode           = new \Podlove\Model\Episode;
+        $episode->duration = $this->line['start_ms'] / 1000;
 
-		return new \Podlove\Template\Duration($episode);
-	}
+        return new \Podlove\Template\Duration($episode);
+    }
 
-	/**
-	 * End time in ms
-	 *
-	 * @accessor
-	 */
-	public function end()
-	{
-		$episode = new \Podlove\Model\Episode;
-		$episode->duration = $this->line['end_ms'] / 1000;
+    /**
+     * End time in ms
+     *
+     * @accessor
+     */
+    public function end()
+    {
+        $episode           = new \Podlove\Model\Episode;
+        $episode->duration = $this->line['end_ms'] / 1000;
 
-		return new \Podlove\Template\Duration($episode);
-	}
+        return new \Podlove\Template\Duration($episode);
+    }
 }

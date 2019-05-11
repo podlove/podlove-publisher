@@ -149,20 +149,25 @@ class Wprelease
 			system("svn commit -m 'remove deleted files' " + deleted_files.join(" ") )
 		end
 
-		# I am pretty sure that the commit has to come _before_ the tagging.
-		# Otherwise the tag contains the previous version, right?
-		# They are doing it like this as well: https://github.com/toolstack/git-to-wp-plugin-dir-release-script/blob/master/class.release.php#L435
-		# @see https://developer.wordpress.org/plugins/wordpress-org/how-to-use-subversion/#tagging-new-versions
-		# ... what they say is 
-		#   1) create tag, 
-		#   2) commit, 
-		#   3) "After tagging a new version, remember to update the Stable Tag field in trunk/readme.txt!" 
-		# ... which seems weird? Why would I not already bump the stable tag when creating the tag?
+##		# I am pretty sure that the commit has to come _before_ the tagging.
+##		# Otherwise the tag contains the previous version, right?
+##		# They are doing it like this as well: https://github.com/toolstack/git-to-wp-plugin-dir-release-script/blob/master/class.release.php#L435
+##		# @see https://developer.wordpress.org/plugins/wordpress-org/how-to-use-subversion/#tagging-new-versions
+##		# ... what they say is 
+##		#   1) create tag, 
+##		#   2) commit, 
+##		#   3) "After tagging a new version, remember to update the Stable Tag field in trunk/readme.txt!" 
+##		# ... which seems weird? Why would I not already bump the stable tag when creating the tag?
+##
+##		system "svn commit -m 'release'"
+##
+##		puts "create svn tag ..."
+##		system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
 
+		# new try: do all changes locally, then commit exactly once with both trunk changes and tag
+
+		system "cp -R #{@svn_dir}/trunk #{@svn_dir}/tags/#{@version}"
 		system "svn commit -m 'release'"
-
-		puts "create svn tag ..."
-		system "svn copy -m \"version #{@version}\" http://plugins.svn.wordpress.org/#{@repo_slug}/trunk http://plugins.svn.wordpress.org/#{@repo_slug}/tags/#{@version}"
 
 		# puts "package composer again for development"
 		# Dir.chdir @absolute_plugin_dir
