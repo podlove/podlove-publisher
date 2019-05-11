@@ -44,8 +44,6 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
         $media_xml = (new MediaTagRenderer($this->episode))->render($context);
 
-        $media_xml = ""; // until PWP4 handles fallback better
-
         return '<div class="pwp4-wrapper" id="' . $id . '" data-episode="' . $url . '">' . $media_xml . '</div>';
     }
 

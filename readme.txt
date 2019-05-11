@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2019-05-11 =
+
+* reenable PWP4 fallback for no JS/old browsers
+
 = 2019-04-28 =
 
 * rename backend js file to not be accidentally caught by content blockers
