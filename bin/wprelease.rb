@@ -169,7 +169,7 @@ class Wprelease
 
 		Dir.chdir "#{@svn_dir}"
 
-		system "cp -R #{@svn_dir}/trunk/* #{@svn_dir}/tags/#{@version}"
+		system "rsync #{@svn_dir}/trunk/ #{@svn_dir}/tags/#{@version} --recursive"
 		system "svn add tags/#{@version}"
 		system "svn commit -m 'release'"
 
