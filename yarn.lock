@@ -7280,10 +7280,10 @@ socks@~2.2.0:
     ip "^1.1.5"
     smart-buffer "^4.0.1"
 
-sortablejs@^1.7.0:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.8.1.tgz#d19b66cf10aab9521a565b79766f2f3291c18278"
-  integrity sha512-r0bKxZYGUFgv/6DQSWW8TVJBBtupUn6TPnDABd4rlqNq+u94ct5+barZmYauPAQNCKwy56C1kg9Y9msAN7UPag==
+sortablejs@^1.8.4:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.9.0.tgz#2d1e74ae6bac2cb4ad0622908f340848969eb88d"
+  integrity sha512-Ot6bYJ6PoqPmpsqQYXjn1+RKrY2NWQvQt/o4jfd/UYwVWndyO5EPO8YHbnm5HIykf8ENsm4JUrdAvolPT86yYA==
 
 sorted-object@~2.0.1:
   version "2.0.1"
@@ -8224,12 +8224,12 @@ vue@^2.5.16, vue@^2.5.17:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.22.tgz#3bf88041af08b8539c37b268b70ca79245e9cc30"
   integrity sha512-pxY3ZHlXNJMFQbkjEgGVMaMMkSV1ONpz+4qB55kZuJzyJOhn6MSy/YZdzhdnumegNzVTL/Dn3Pp4UrVBYt1j/g==
 
-vuedraggable@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.17.0.tgz#489c16c9bcb9eb06f441944d3c52e5f2bb7060f9"
-  integrity sha512-TAC5tJTSbHSINQCSB59qHnuzT0Ad+E3IgvSWuA1e9UaebD8DxKaY1tCdvL3XvuLoaM3wc1dhpP/NbjpdxYsrng==
+vuedraggable@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.20.0.tgz#82eac1f9a32c116ef4cf5215fe18dfb152afa9dd"
+  integrity sha512-mrSWGkzY40nkgLDuuoxrs6/0u+A7VwXtQRruLQYOVjwd8HcT3BZatRvzw4qVCwJczsAYPbaMubkGOEtzDOzhsQ==
   dependencies:
-    sortablejs "^1.7.0"
+    sortablejs "^1.8.4"
 
 vuepress-theme-millidocs@^0.5.1:
   version "0.5.2"

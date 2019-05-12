@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="podlove-analytics-datepicker">
     <v2-datepicker-range
       @change="onChange"
       lang="en"
@@ -140,7 +140,7 @@ export default {
 
 <style>
 /** disable for now because I can't guarantee acceptable performance for popular podcasts **/
-.v2-date-wrap {
+.podlove-analytics-datepicker .v2-date-wrap {
   display: none !important;
 }
 </style>
