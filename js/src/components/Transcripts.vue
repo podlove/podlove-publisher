@@ -35,15 +35,12 @@
     <div class="row tab-body transcript" v-show="mode == 'transcript'">
       <div v-if="transcript != null">
         <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
-          <div class="ts-speaker-avatar" v-if="hasVoice(group.speaker)">
-            <img :src="getVoice(group.speaker).option.avatar" width="50" height="50">
+          <div class="ts-speaker-avatar" v-if="hasVoice(group)">
+            <img :src="getVoice(group).option.avatar" width="50" height="50">
           </div>
 
           <div class="ts-text">
-            <div
-              class="ts-speaker"
-              v-if="hasVoice(group.speaker)"
-            >{{ getVoice(group.speaker).option.label }}</div>
+            <div class="ts-speaker" v-if="hasVoice(group)">{{ getVoice(group).option.label }}</div>
             <div v-else class="ts-speaker">{{ group.voice }}</div>
 
             <div class="ts-content">
@@ -78,12 +75,6 @@
                 {{ option.label }}
               </template>
             </v-select>
-            <input
-              type="hidden"
-              :name="'_podlove_meta[transcript_voice][' + voice.label + ']'"
-              :value="voice.option.value"
-              v-if="voice.option"
-            >
           </div>
         </div>
       </div>
@@ -156,6 +147,38 @@ export default {
     };
   },
 
+  watch: {
+    voiceData: function(val, oldVal) {
+      if (oldVal == null) {
+        return;
+      }
+
+      $.ajax({
+        url:
+          podlove_vue.rest_url +
+          "podlove/v1/transcripts/" +
+          podlove_vue.post_id +
+          "/voices",
+        method: "POST",
+        dataType: "json",
+        data: {
+          transcript_voice: val
+        }
+      })
+        .done(result => {
+          // console.log("saved transcript voices", result);
+        })
+        .fail(({ responseJSON }) => {
+          console.error(
+            "error saving transcript voices:",
+            responseJSON.message
+          );
+        });
+
+      // TODO: clearing/deleting assignments
+    }
+  },
+
   computed: {
     description: function() {
       if (this.importing) {
@@ -165,6 +188,16 @@ export default {
       } else {
         return "Accepts: WebVTT";
       }
+    },
+    voiceData: function() {
+      if (!this.voices) {
+        return null;
+      }
+
+      return this.voices.reduce((agg, voice) => {
+        agg[voice.label] = voice.option ? voice.option.value : voice.value;
+        return agg;
+      }, new Object());
     },
     contributorsOptions: function() {
       return this.contributors.map(c => {
@@ -302,11 +335,12 @@ export default {
           }
         });
     },
-    getVoice(id) {
+    getVoice(group) {
+      let id = this.voiceData[group.voice];
       return this.voices.find(v => (v.option ? v.option.value == id : false));
     },
-    hasVoice(id) {
-      return id !== null && this.getVoice(id) !== undefined;
+    hasVoice(group) {
+      return group && group.voice && this.voiceData[group.voice];
     },
     fetchTranscript(done) {
       this.axios.get(this.jsonGroupedDownloadHref).then(({ data }) => {

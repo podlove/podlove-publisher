@@ -2,7 +2,7 @@ require "erb"
 require "json"
 
 def templateRefClasses
-	classes = %w{podcast episode network list chapter feed asset file image tag category duration file_type contributor contributor_group season service show license flattr datetime}
+	classes = %w{podcast episode network list chapter feed asset file image tag category duration file_type contributor contributor_group season service show license flattr datetime line group}
 	classes.map { |klass| JSON.parse(IO.read("doc/data/template/#{klass}.json")) }
 end
 

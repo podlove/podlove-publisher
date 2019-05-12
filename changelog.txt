@@ -1,3 +1,207 @@
+= 2.7.24 =
+
+* update Podlove Web Player 4
+
+= 2.7.23 =
+
+* **slacknotes:** is now accessible to authors and editors
+* update some PHP dependencies (including Twig)
+* add ability to specify visible components in Podlove Web Player V4 ([#1032](https://github.com/podlove/podlove-publisher/pull/1032))
+
+= 2.7.22 =
+
+* (maybe) fix Gutenberg issues when creating a new episode
+
+= 2.7.21 =
+
+**Bug Fixes**
+
+* **slacknotes:** avoid duplicate vue for-loop keys ([7578cdf](https://github.com/podlove/podlove-publisher/commit/7578cdf))
+* **slacknotes:** date range filter ([2982f2b](https://github.com/podlove/podlove-publisher/commit/2982f2b))
+* **slacknotes:** fix loading of datepicker component ([13ca12b](https://github.com/podlove/podlove-publisher/commit/13ca12b))
+* **slacknotes:** follow redirects when resolving URLs ([5b39746](https://github.com/podlove/podlove-publisher/commit/5b39746))
+* **slacknotes:** handle slack-resolved URLs in pipes format ([b08ec53](https://github.com/podlove/podlove-publisher/commit/b08ec53))
+* **slacknotes:** hide link-fetch prompt while fetching ([f4e78e3](https://github.com/podlove/podlove-publisher/commit/f4e78e3))
+* **slacknotes:** url re-fetching when changing dates ([344456d](https://github.com/podlove/podlove-publisher/commit/344456d))
+
+
+**Features**
+
+* **slacknotes:** add setting for link ordering ([c4c824e](https://github.com/podlove/podlove-publisher/commit/c4c824e))
+* **slacknotes:** show link time ([53077b1](https://github.com/podlove/podlove-publisher/commit/53077b1))
+* **slacknotes:** when resolving URLs, use effective URL ([974c7f8](https://github.com/podlove/podlove-publisher/commit/974c7f8))
+
+= 2.7.20 =
+
+**Slacknotes**
+
+This release is sponsored by [Lage der Nation](https://lagedernation.org).
+
+The new "Slacknotes" module extracts links and their metadata from a Slack channel and generates HTML that can be used as show notes.
+A short demo video is available [in the documentation](https://docs.podlove.org/podlove-publisher/guides/slacknotes.html).
+
+**Other**
+
+* the "Modules" screen has been redesigned
+* updated JavaScript and CSS processing library and other dependencies
+
+= 2.7.19 = 
+
+We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
+You can choose to use the new editor or stay with the classic editor for now by installing the classic editor plugin by WordPress.
+
+* feed: do not include `<itunes:summary>` tag if it is empty (Apple Podcast requirement)
+* adjustments for Gutenberg compatibility:
+  * Shows metabox moved from sidebar to main area
+  * remove broken form field autogrow behavior
+  * fix contributors UI initialization
+
+= 2.7.18 =
+
+* improve feed generation time when seasons are used ([#1010](https://github.com/podlove/podlove-publisher/issues/1010))
+* title migration module: 
+  * remove "episode type" selector, always use "full"
+  * add warning when there might be too many form fields
+* new PHP constant `PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH` ([#1017](https://github.com/podlove/podlove-publisher/issues/1017))
+* feed item limit: "1" is now an option
+* add missing contributor template accessors: organisation, department, jobtitle
+* ensure Gutenberg editor is not used for episodes
+
+= 2.7.17 =
+
+**Downloads Data Export**
+
+Download data per episode can now be exported as JSON and CSV. 
+On the Analytics page you will now find a simple export interface. 
+Select the episodes you want in the export or don't select any to export them all at once.
+
+**WP REST API Support**
+
+Backbone for the data export is an implementation of the WP REST API.
+
+Endpoint for the episode custom post type:
+
+- /wp-json/wp/v2/episodes
+
+Custom endpoints for episode analytics:
+
+- /wp-json/podlove/v1/analytics/episodes/
+- /wp-json/podlove/v1/analytics/episodes/123
+- /wp-json/podlove/v1/analytics/episodes/123,82
+
+All analytics are available as CSV by adding `?format=csv` as parameter, for example `/wp-json/podlove/v1/analytics/episodes/?format=csv`
+
+Analytics endpoints require the `podlove_read_analytics` permission, the same as viewing analytics in the admin.
+
+Please read https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/ if you want to use these endpoints.
+
+**Other**
+
+* Fix deprecation warning when using multiple categories ([#1009](https://github.com/podlove/podlove-publisher/pull/1009))
+
+= 2.7.16 =
+
+* update Podlove Web Player 4
+
+= 2.7.15 =
+
+* automatically abort stuck background jobs
+* contributors now appear in feeds even if they don't have a URI [#939](https://github.com/podlove/podlove-publisher/issues/939#issuecomment-430248520)
+* Shows: custom language is now used for Podlove Subscribe Button
+
+= 2.7.14 =
+
+* update Podlove Web Player 4
+
+= 2.7.12/13 =
+
+* use wp_enqueue_script instead of inline JS when calling PWP4, improving compatibility to other plugins ([#1000](https://github.com/podlove/podlove-publisher/issues/1000))
+* uninstall: be more specific which options are deleted ([#997](https://github.com/podlove/podlove-publisher/issues/997))
+* new filter `podlove_network_module_activate` to force-enable network module ([#995](https://github.com/podlove/podlove-publisher/issues/995))
+* new social services: Mastodon, Fediverse, Friendica ([#987](https://github.com/podlove/podlove-publisher/issues/987), [#968](https://github.com/podlove/podlove-publisher/issues/968))
+* fix related episodes disappearing when using post scheduling ([#980](https://github.com/podlove/podlove-publisher/issues/980))
+* fix seasons error when there are no episodes ([#963](https://github.com/podlove/podlove-publisher/issues/963))
+* related episodes: order by post date ([#947](https://github.com/podlove/podlove-publisher/issues/947))
+
+= 2.7.10/11 =
+
+* update Analytics JS frameworks, fixing [#982](https://github.com/podlove/podlove-publisher/issues/982)
+* add download location analytics chart
+* remove weekday chart
+* add option to disable average episode display
+
+= 2.7.9 =
+
+Too much slimming in 2.7.8. Undo.
+
+= 2.7.8 =
+
+* fix release workflow
+* slim down plugin size by removing unnecessary files from release
+* update Podlove Web Player 4
+
+= 2.7.7 =
+
+Update 2.7.5 changed the way download tracking works to comply with GDPR. We tried the radical approach and anonymized IPs. As it turns out, this is not viable. Download numbers are skewed by this change and often much lower than they realistically should be. If you saw a drop in downloads since updating to 2.7.5 or 2.7.6, this is the reason.
+
+The good news is that this update changes download tracking again and new download numbers should get back to normal. The bad news is that the data since the GDPR update cannot be fixed/restored because it's missing data granularity -- which was the point of the change; just not anitcipating the effect on the actual download numbers.
+
+So what's the new tracking approach?
+
+Podlove Publisher now stores the `request_id` again just like before the update: a hash based on the actual IP address and the user agent. What's new is that now once a day, all `request_id`s older than 24 hours are salted again, making it impossible to restore IPs from them. This 24 hour window is enough to determine download numbers exactly as before the GDPR update.
+
+To be clear, IPs are never stored in plain text. But since IPs could be restored by brute force attack from the temporary unsalted `request_id` hashes, they have to be treated like plain IPs. The text snippet for your privacy page has been updated in the docs and you should update it on your site: https://docs.podlove.org/podlove-publisher/guides/dsgvo-gdpr.html
+
+= 2.7.6 =
+
+No changes.
+
+= 2.7.5 =
+
+**Preparation for GDPR/DSGVO**
+
+If you are using Podlove Publisher Tracking/Analytics, an update to this version is highly recommended.
+
+Tracking uses a `request_id` to be able to determine when two requests came from the same user and should be counted as one unique access. This request id used to be a hash of the original IP address and the user agent. This approach however is vulnerable to a brute force attack to get the IP address back from the hash. Here's what we are doing about that:
+
+First, we anonymize the IP before generating the hash. So instead of using `171.23.11.209`, we use `171.23.11.0`.
+
+Second, you need to deal with the existing `request_id`s. There is a new "DSGVO" section under "Tools" with a button that will rehash all existing `request_id`s with a randomly generated salt. That way it will become unfeasible to determine the original IP address but your analytics will stay the same.
+
+In case you have a lot of downloads (let's say much more than 50.000), you may want to do this via command line because that will be _much_ quicker than via the tools section. You need [wp-cli](https://wp-cli.org/), then simply call `wp eval 'podlove_rehash_tracking_request_ids();'`. On a multisite, pass the blog id as a parameter: `wp eval 'podlove_rehash_tracking_request_ids(42);'`.
+
+**Other**
+
+* fix Podlove Subscribe Button language parameter
+* fix `rel="self"` link in show feeds
+* fix Podlove Subscribe Button not delivering show feeds
+* templates: handle episode.show access when there is no show
+* templates: allow episode filtering by show, for example: `{% for episode in podcast.episodes({show: "example"}) %}`
+
+= 2.7.4 =
+
+No changes, but the previous release is not delivered correctly by WordPress, so this is simply a re-release attempt to fix it.
+
+= 2.7.3 =
+
+* fix: geo database updater
+* update Podlove Web Player 2: remove Flash Fallback
+* update Podlove Web Player 4
+
+= 2.7.2 =
+
+* fix: `itunes:image` tag in show feeds
+* fix: "Debug Tracking" choosing wrong media files to check availability
+* enhancement: "Debug Tracking" now suggests disabling SSL-peer-verification if URL cannot be resolved and https is used
+* system report: include active plugins
+
+= 2.7.1 =
+
+* fix: PHP warning when the_title filter is called with only one parameter
+* fix: handle colons in migration tool
+* fix: PWP4 warning when using shortcode
+* new service: letterboxd
+
 = 2.7.0 =
 
 **New Module: Shows**

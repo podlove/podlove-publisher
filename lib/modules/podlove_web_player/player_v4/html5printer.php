@@ -44,8 +44,6 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
         $media_xml = (new MediaTagRenderer($this->episode))->render($context);
 
-        $media_xml = ""; // until PWP4 handles fallback better
-
         return '<div class="pwp4-wrapper" id="' . $id . '" data-episode="' . $url . '">' . $media_xml . '</div>';
     }
 
@@ -83,19 +81,20 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
         $player_settings = \Podlove\get_webplayer_settings();
 
         $config = [
-            'show'      => [
+            'show'              => [
                 'title'    => $podcast->title,
                 'subtitle' => $podcast->subtitle,
                 'summary'  => $podcast->summary,
                 'poster'   => $podcast->cover_art()->setWidth(500)->url(),
                 'link'     => \Podlove\get_landing_page_url(),
             ],
-            'reference' => [
+            'reference'         => [
                 'share' => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
             ],
-            'theme'     => [
+            'theme'             => [
                 'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000'),
             ],
+            'visibleComponents' => array_keys($player_settings['playerv4_visible_components'], "on"),
         ];
 
         if (!Module::use_cdn()) {
@@ -146,6 +145,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
                     }
 
                     return [
+                        'id'      => $contributor->id,
                         'name'    => $contributor->getName(),
                         'avatar'  => $contributor->avatar()->setWidth(150)->setHeight(150)->url(),
                         'role'    => $c->hasRole() ? $c->getRole()->to_array() : null,

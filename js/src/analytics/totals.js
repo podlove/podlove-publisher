@@ -51,7 +51,7 @@ jQuery(document).ready(function ($) {
 		// threshold to make it to top episodes: more than 5% of total downloads in time segment
 		var top_episodes = episodeGroup.all().reduce(function (acc, cur) {
 
-			if (cur.value.downloads > total_downloads * 0.05) {
+			if (cur.value.downloads > total_downloads * 0.04) {
 				acc.push(cur);
 			}
 
@@ -432,9 +432,6 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
-	const chartFailedHtml = '<div class="chart-failed">Loading Chart failed :(</div>';
-	const chartNoDataHtml = '<div class="chart-nodata">No Chart Data</div>';
-
 	const globalCharts = [{
 		id: "#analytics-chart-global-assets",
 		action: 'podlove-analytics-global-assets',
@@ -475,17 +472,19 @@ jQuery(document).ready(function ($) {
 			}
 		},
 		renderer: renderSourcesChart
-	}, {
-		id: '#analytics-chart-global-downloads-per-month',
-		action: 'podlove-analytics-global-downloads-per-month',
-		mapper: function (d) {
-			return {
-				downloads: +d.downloads,
-				date_month: d.date_month ? d.date_month : 'Unknown'
-			}
-		},
-		renderer: renderPerMonthChart
-	}, {
+	}, 
+	// {
+	// 	id: '#analytics-chart-global-downloads-per-month',
+	// 	action: 'podlove-analytics-global-downloads-per-month',
+	// 	mapper: function (d) {
+	// 		return {
+	// 			downloads: +d.downloads,
+	// 			date_month: d.date_month ? d.date_month : 'Unknown'
+	// 		}
+	// 	},
+	// 	renderer: renderPerMonthChart
+	// }, 
+	{
 		id: '#analytics-global-top-episodes',
 		action: 'podlove-analytics-global-top-episodes',
 		mapper: function (d) {
@@ -511,25 +510,31 @@ jQuery(document).ready(function ($) {
 
 		globalCharts.forEach(chart => {
 			let chartLoading = $(chart.id + " .chart-loading")
+			let chartFailed = $(chart.id + " .chart-failed")
+			let chartNoData = $(chart.id + " .chart-nodata")
 
 			$(chart.id).each(function () {
+
+				chartLoading.show();
+				chartFailed.hide();
+				chartNoData.hide();
+
 				$.when(
 					$.ajax(ajaxurl + '?action=' + chart.action + '&date_from=' + from.toISOString() + '&date_to=' + to.toISOString())
 				).done((csvAssets) => {
 
 					let assetData = d3.csvParse(csvAssets, chart.mapper);
 
-					if (assetData.length) {
-						chartLoading.remove();
-					} {
-						chartLoading.replaceWith(chartNoDataHtml);
+					chartLoading.hide();
+					if (!assetData.length) {
+						chartNoData.show();
 					}
 
 					let cb = chart.renderer
-
 					cb(assetData);
 				}).fail(() => {
-					chartLoading.replaceWith(chartFailedHtml);
+					chartLoading.hide();
+					chartFailed.show()
 				});
 			})
 		});

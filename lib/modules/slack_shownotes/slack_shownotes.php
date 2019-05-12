@@ -131,6 +131,9 @@ class Slack_Shownotes extends \Podlove\Modules\Base
             $api_args['latest'] = (int) $date_to;
         }
 
+        # todo: use has_more field for paging
+        $api_args['count'] = 1000;
+
         $url = add_query_arg($api_args, $api_url);
 
         $curl = new \Podlove\HTTP\Curl;
