@@ -14,6 +14,16 @@ function podlove_get_query_var($var_name) {
 	}	
 }
 
+function podlove_get_remote_addr() {
+	if ($_SERVER['HTTP_X_REAL_IP']) {
+		return $_SERVER['HTTP_X_REAL_IP'];
+	}
+	if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
+		return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+	}
+	return $_SERVER['REMOTE_ADDR'];
+}
+
 function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file) {
 
 	if (\Podlove\get_setting('tracking', 'mode') !== "ptm_analytics")
@@ -47,7 +57,7 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 		$intent->httprange = $_SERVER['HTTP_RANGE'];
 
 	// get ip, but don't store it
-	$ip_string = $_SERVER['REMOTE_ADDR'];
+	$ip_string = podlove_get_remote_addr();
 	try {
 		$ip = IP\Address::factory($ip_string);
 		if (method_exists($ip, 'as_IPv6_address')) {
@@ -55,7 +65,7 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 		}
 		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
 	} catch (\InvalidArgumentException $e) {
-		\Podlove\Log::get()->addWarning( 'Could not use IP "' . $_SERVER['REMOTE_ADDR'] . '"' . $e->getMessage() );
+		\Podlove\Log::get()->addWarning( 'Could not use IP "' . podlove_get_remote_addr() . '"' . $e->getMessage() );
 	}
 
 	if (function_exists('openssl_digest')) {
