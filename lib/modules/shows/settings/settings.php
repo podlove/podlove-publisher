@@ -8,7 +8,6 @@ class Settings {
 	use \Podlove\HasPageDocumentationTrait;
 
 	const MENU_SLUG = 'podlove_shows_settings';
-	const SHOW_META_DATA = [ 'subtitle', 'language', 'image' ];
 
 	public function __construct($handle) {
 		$pagehook = add_submenu_page(
@@ -24,6 +23,11 @@ class Settings {
 
 		add_action( 'admin_init', array( $this, 'process_form' ) );
 		add_action( "load-" . $pagehook, [$this, 'add_screen_options'] );
+	}
+
+	public static function show_meta_data_fields()
+	{
+		return [ 'subtitle', 'language', 'image' ];
 	}
 
 	public function add_screen_options() {
@@ -87,7 +91,7 @@ class Settings {
 		if ( is_wp_error($updated_term) )
 			return;
 
-		foreach (self::SHOW_META_DATA as $meta_data) {
+		foreach (self::show_meta_data_fields() as $meta_data) {
 			update_term_meta($_REQUEST['show'], $meta_data, $_POST['podlove_show'][$meta_data]);
 		}
 		
@@ -123,7 +127,7 @@ class Settings {
 		if ( is_wp_error($new_term) )
 			return;
 
-		foreach (self::SHOW_META_DATA as $meta_data) {
+		foreach (self::show_meta_data_fields() as $meta_data) {
 			add_term_meta($new_term['term_id'], $meta_data, $_POST['podlove_show'][$meta_data]);
 		}
 
@@ -141,7 +145,7 @@ class Settings {
 		if (!isset($_REQUEST['show']))
 			return;
 
-		foreach (self::SHOW_META_DATA as $meta_data) {
+		foreach (self::show_meta_data_fields() as $meta_data) {
 			delete_term_meta($_REQUEST['show'], $meta_data);
 		}
 
