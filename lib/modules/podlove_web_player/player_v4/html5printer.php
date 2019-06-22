@@ -101,6 +101,14 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
             $config['reference']['base'] = trailingslashit(plugins_url('dist', __FILE__));
         }
 
+        if ($player_settings['playerv4_use_podcast_language']) {
+            $config = array_merge($config, [
+                'runtime' => [
+                    'language' => explode('-', $podcast->language)[0]
+                ]
+            ]);
+        }
+
         $highlight_color = self::sanitize_color($player_settings['playerv4_color_secondary'], false);
         if ($highlight_color !== false) {
             $config['theme']['highlight'] = $highlight_color;

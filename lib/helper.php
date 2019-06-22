@@ -242,7 +242,8 @@ function get_webplayer_defaults() {
 			'tabShare' => "on",
 			'tabInfo' => "on",
 			'tabTranscripts' => "on"
-		]
+		],
+		'playerv4_use_podcast_language' => false
 	];
 }
 
