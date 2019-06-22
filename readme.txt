@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.8.1 =
+
+* update Podlove Web Player 4 to latest version
+
 = 2.8.0 =
 
 **Transcripts**

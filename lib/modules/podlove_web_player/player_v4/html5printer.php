@@ -98,7 +98,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
         ];
 
         if (!Module::use_cdn()) {
-            $config['reference']['base'] = plugins_url('dist', __FILE__);
+            $config['reference']['base'] = trailingslashit(plugins_url('dist', __FILE__));
         }
 
         $highlight_color = self::sanitize_color($player_settings['playerv4_color_secondary'], false);
