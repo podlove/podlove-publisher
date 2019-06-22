@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.8.1 =
 
 * update Podlove Web Player 4 to latest version
+* add player setting to either use the podcast language or user's browser language for web player interface ([#1008](https://github.com/podlove/podlove-publisher/pull/1008))
 
 = 2.8.0 =
 
