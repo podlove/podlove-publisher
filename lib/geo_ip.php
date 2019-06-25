@@ -2,7 +2,6 @@
 namespace Podlove;
 
 use GeoIp2\Database\Reader;
-use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 
 class Geo_Ip {
 

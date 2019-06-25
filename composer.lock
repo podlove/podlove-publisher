@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f82e1d1919bf7817c96ddd1552d91836",
+    "content-hash": "cb22d51cd49f284d262ba4f4338f18a1",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -246,36 +246,6 @@
             "time": "2015-11-02T07:36:25+00:00"
         },
         {
-            "name": "leth/ip-address",
-            "version": "1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/leth/PHP-IPAddress.git",
-                "reference": "00d9feb30d73e78fbae522ba21139ab6ea9db09b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/leth/PHP-IPAddress/zipball/00d9feb30d73e78fbae522ba21139ab6ea9db09b",
-                "reference": "00d9feb30d73e78fbae522ba21139ab6ea9db09b",
-                "shasum": ""
-            },
-            "require": {
-                "pear/math_biginteger": "1.0.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Leth\\IPAddress": "classes/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0"
-            ],
-            "description": "IPv4 and IPv6 address and subnet classes with awesome utility functions.",
-            "time": "2016-04-12T19:59:07+00:00"
-        },
-        {
             "name": "maxmind-db/reader",
             "version": "v1.4.1",
             "source": {
@@ -506,55 +476,6 @@
             "time": "2017-02-24T16:06:33+00:00"
         },
         {
-            "name": "pear/math_biginteger",
-            "version": "v1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pear/Math_BigInteger.git",
-                "reference": "33d4357543037a458fad3e8c837a01b93104e592"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pear/Math_BigInteger/zipball/33d4357543037a458fad3e8c837a01b93104e592",
-                "reference": "33d4357543037a458fad3e8c837a01b93104e592",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pcre": "*",
-                "php": ">=4.2.0"
-            },
-            "suggest": {
-                "ext-bcmath": "Allows using the BCMath extension internally for computation. Faster than native implementation.",
-                "ext-gmp": "Allows using the GNU Multiple Precision extension internally for computation. If you are doing a lot of computation this is the recommended extension."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Math_": "./"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jim Wigginton",
-                    "email": "terrafrost@php.net"
-                }
-            ],
-            "description": "Pure-PHP arbitrary precission integer arithmetic library. If GMP or BCMath are available they are used.",
-            "homepage": "https://github.com/pear/Math_BigInteger",
-            "keywords": [
-                "arbitrary",
-                "bcmath",
-                "gmp",
-                "integer",
-                "precision"
-            ],
-            "time": "2016-04-12T05:46:52+00:00"
-        },
-        {
             "name": "phpunit/php-timer",
             "version": "1.0.9",
             "source": {
@@ -605,16 +526,16 @@
         },
         {
             "name": "piwik/device-detector",
-            "version": "3.11.5",
+            "version": "3.11.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "cce3213e9b42deaacd21d33c02811c59b6e54099"
+                "reference": "8bfdbafc07ef6ba1c3cfff3bbb0554a860828a39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/cce3213e9b42deaacd21d33c02811c59b6e54099",
-                "reference": "cce3213e9b42deaacd21d33c02811c59b6e54099",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/8bfdbafc07ef6ba1c3cfff3bbb0554a860828a39",
+                "reference": "8bfdbafc07ef6ba1c3cfff3bbb0554a860828a39",
                 "shasum": ""
             },
             "require": {
@@ -656,7 +577,7 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2019-02-10T21:21:01+00:00"
+            "time": "2019-06-20T21:32:44+00:00"
         },
         {
             "name": "podlove/normalplaytime",
@@ -884,16 +805,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.10.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
+                "reference": "82ebae02209c21113908c229e9883c419720738a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
-                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/82ebae02209c21113908c229e9883c419720738a",
+                "reference": "82ebae02209c21113908c229e9883c419720738a",
                 "shasum": ""
             },
             "require": {
@@ -905,7 +826,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                    "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -938,11 +859,11 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2018-08-06T14:22:27+00:00"
+            "time": "2019-02-06T07:57:58+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.49",
+            "version": "v2.8.50",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -1044,16 +965,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.38.3",
+            "version": "v1.42.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "5df0ef0ca2d08a6f087384c7f31530fb84889f28"
+                "reference": "21707d6ebd05476854805e4f91b836531941bcd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/5df0ef0ca2d08a6f087384c7f31530fb84889f28",
-                "reference": "5df0ef0ca2d08a6f087384c7f31530fb84889f28",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/21707d6ebd05476854805e4f91b836531941bcd4",
+                "reference": "21707d6ebd05476854805e4f91b836531941bcd4",
                 "shasum": ""
             },
             "require": {
@@ -1063,12 +984,12 @@
             "require-dev": {
                 "psr/container": "^1.0",
                 "symfony/debug": "^2.7",
-                "symfony/phpunit-bridge": "^3.4.19|^4.1.8"
+                "symfony/phpunit-bridge": "^3.4.19|^4.1.8|^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.38-dev"
+                    "dev-master": "1.42-dev"
                 }
             },
             "autoload": {
@@ -1106,7 +1027,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-03-21T14:50:13+00:00"
+            "time": "2019-06-18T15:35:16+00:00"
         }
     ],
     "packages-dev": [
@@ -1270,16 +1191,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06"
+                "reference": "1927e75f4ed19131ec9bcc3b002e07fb1173ee76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
-                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/1927e75f4ed19131ec9bcc3b002e07fb1173ee76",
+                "reference": "1927e75f4ed19131ec9bcc3b002e07fb1173ee76",
                 "shasum": ""
             },
             "require": {
@@ -1300,8 +1221,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Prophecy\\": "src/"
+                "psr-4": {
+                    "Prophecy\\": "src/Prophecy"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1329,7 +1250,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-08-05T17:53:17+00:00"
+            "time": "2019-06-13T12:50:23+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

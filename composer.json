@@ -9,7 +9,6 @@
         "symfony/yaml": "2.8.*",
         "twig/twig": "1.*",
         "twig/extensions": "1.4.*",
-        "leth/ip-address": "1.1.*",
         "geoip2/geoip2": "~2.0",
         "ramsey/array_column": "~1.1",
         "piwik/device-detector": "~3.7",

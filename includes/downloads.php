@@ -1,5 +1,4 @@
 <?php
-use Leth\IPAddress\IP, Leth\IPAddress\IPv4, Leth\IPAddress\IPv6;
 use Podlove\Model;
 use Podlove\Geo_Ip;
 
@@ -56,17 +55,7 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 	if (isset($_SERVER['HTTP_RANGE']))
 		$intent->httprange = $_SERVER['HTTP_RANGE'];
 
-	// get ip, but don't store it
 	$ip_string = podlove_get_remote_addr();
-	try {
-		$ip = IP\Address::factory($ip_string);
-		if (method_exists($ip, 'as_IPv6_address')) {
-			$ip = $ip->as_IPv6_address();
-		}
-		$ip_string = $ip->format(IP\Address::FORMAT_COMPACT);
-	} catch (\InvalidArgumentException $e) {
-		\Podlove\Log::get()->addWarning( 'Could not use IP "' . podlove_get_remote_addr() . '"' . $e->getMessage() );
-	}
 
 	if (function_exists('openssl_digest')) {
 		$intent->request_id = openssl_digest($ip_string . $ua_string, 'sha256');
