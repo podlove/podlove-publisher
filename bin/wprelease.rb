@@ -170,8 +170,8 @@ class Wprelease
 		Dir.chdir "#{@svn_dir}"
 
 		# system "rsync #{@svn_dir}/trunk/ #{@svn_dir}/tags/#{@version} --recursive"
-		system "svn cp trunk tags/#{@version}"
-		system "svn add tags/#{@version}"
+		system "svn copy trunk tags/#{@version}"
+		# system "svn add tags/#{@version}"
 		system "svn commit -m 'release'"
 
 		# puts "package composer again for development"
