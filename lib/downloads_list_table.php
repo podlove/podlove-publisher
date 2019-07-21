@@ -133,7 +133,7 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		$columns = count($this->get_columns()) - $hidden_columns;
 
 		echo '<tr>';
-		echo "<td colspan=\"{$columns}\">";
+		echo "<td class=\"downloads-description\" colspan=\"{$columns}\">";
 		echo $this->column_episode($item);
 		echo "</td>";
 		echo '</tr>';
