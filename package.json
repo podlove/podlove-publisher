@@ -18,7 +18,7 @@
         "vue": "^2.5.17"
     },
     "dependencies": {
-        "@podlove/web-player": "^4.5.8",
+        "@podlove/web-player": "^4.5.9",
         "axios": "^0.18.1",
         "clipboard": "^2.0.4",
         "npm": "^6.4.0",

@@ -1,28 +1,28 @@
 {
-  "_from": "@podlove/web-player@4.5.8",
-  "_id": "@podlove/web-player@4.5.8",
+  "_from": "@podlove/web-player@4.5.9",
+  "_id": "@podlove/web-player@4.5.9",
   "_inBundle": false,
-  "_integrity": "sha512-NHj7rluVfDMRVYTGwGZD2qHSWZYbzj9dgc1VemPLUULlwrKDGyWD/EnXmxHygmzyj7ePKvx5biSIbJ838+xjIQ==",
+  "_integrity": "sha512-f5OtU9KTKzZYVxEYt/hc9kWVBLDC2vNsrho95QZ1h9fMAx12uNzdHM0yIOZcsTZgDeUuz2wYEXTwA7VJEoYezg==",
   "_location": "/@podlove/web-player",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "@podlove/web-player@4.5.8",
+    "raw": "@podlove/web-player@4.5.9",
     "name": "@podlove/web-player",
     "escapedName": "@podlove%2fweb-player",
     "scope": "@podlove",
-    "rawSpec": "4.5.8",
+    "rawSpec": "4.5.9",
     "saveSpec": null,
-    "fetchSpec": "4.5.8"
+    "fetchSpec": "4.5.9"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@podlove/web-player/-/web-player-4.5.8.tgz",
-  "_shasum": "dcf6c71f9ca6fefbc6c8d1e11aef1080d82b916f",
-  "_spec": "@podlove/web-player@4.5.8",
+  "_resolved": "https://registry.npmjs.org/@podlove/web-player/-/web-player-4.5.9.tgz",
+  "_shasum": "ac97b4de436fce4520f65b2b18ac2b122324363c",
+  "_spec": "@podlove/web-player@4.5.9",
   "_where": "/Users/ericteubert/code/publisher/wp-content/plugins/podlove-publisher",
   "author": {
     "name": "Alexander Heimbuch",
@@ -30,10 +30,10 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "@podlove/player": "^4.5.8",
-    "@podlove/player-actions": "^4.5.8",
-    "@podlove/player-state": "^4.5.8",
-    "@podlove/utils": "^4.5.8",
+    "@podlove/player": "^4.5.9",
+    "@podlove/player-actions": "^4.5.9",
+    "@podlove/player-state": "^4.5.9",
+    "@podlove/utils": "^4.5.9",
     "color": "3.1.0",
     "hashcode": "1.0.3",
     "iframe-resizer": "4.0.4",
@@ -43,7 +43,7 @@
   "deprecated": false,
   "description": "Embedded version of Podlove Player",
   "devDependencies": {
-    "@podlove/build": "^4.5.8",
+    "@podlove/build": "^4.5.9",
     "cypress": "3.2.0",
     "http-server": "0.11.1",
     "webpack": "4.26.0",
@@ -53,5 +53,5 @@
   "keywords": [],
   "license": "MIT",
   "name": "@podlove/web-player",
-  "version": "4.5.8"
+  "version": "4.5.9"
 }
