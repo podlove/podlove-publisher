@@ -23,6 +23,78 @@ function podlove_get_remote_addr() {
 	return $_SERVER['REMOTE_ADDR'];
 }
 
+function ga_track_download($request_id, $media_file, $ua_string, $ip_string, $ptm_context, $ptm_source) {	
+	// GA Tracking
+	$debug_ga = false;
+	$ga_collect_endpoint = 'https://www.google-analytics.com/' . ($debug_ga ? 'debug/' : '') . 'collect';
+	
+	$ga_tracking_id = trim(\Podlove\get_setting('tracking', 'ga'));
+	if (!$ga_tracking_id || $ga_tracking_id === '') {
+		return;
+	}
+	
+	$ga_params = array(
+		// Basics
+		'v' => '1', // version
+		'tid' => $ga_tracking_id, // tracking id
+		'cid' => $request_id, // client id
+		'ua' => $ua_string, // user agent override
+		// We do not use $ip_string here, because Google Measurement protocol does not seem to like
+		// the IPv6 representation that $ip_string stores.
+		'uip' => podlove_get_remote_addr(), // IP override
+		'ds' => 'podlove', // data source
+		
+		// We highjack the campaign fields for context/source data.
+		// Source / Medium maps to Podlove context / Podlove source.
+		// This way all Podlove sources can be easily grouped into GA Channels.
+		'cs' => $ptm_context, // campaign source
+		'cm' => $ptm_source, // campaign medium
+		'ci' => $media_file->episode()->number, // campaign id
+		'cn' => $media_file->episode()->title(), // campaign name
+		
+		// Pageview params
+		't' => 'pageview', // hit type
+		'dh' => $_SERVER[HTTP_HOST], // document host
+		'dp' => $_SERVER[REQUEST_URI], // document path
+		'dt' => $media_file->episode()->title(), // document title
+	);
+	
+	$ga_param_fragments = array();
+	array_walk($ga_params, function($item, $key) use(&$ga_param_fragments) {
+		array_push($ga_param_fragments, sprintf('%s=%s', $key, rawurlencode($item)));
+	});
+	
+	$body = implode('&', $ga_param_fragments);
+	$curl = new \Podlove\Http\Curl();
+	$curl->request( $ga_collect_endpoint, array(
+		'method'  => 'POST',
+		'body'    => $body,
+	));
+	
+	if (!$curl->isSuccessful()) {
+		if ($debug_ga) {
+			header('x-ga-debug: http error');
+		}
+		\Podlove\Log::get()->addError('GA Measurement Protocol request failed.');
+	} else {
+		\Podlove\Log::get()->addInfo('GA Measurement Protocol request successful: ' . $body);
+		if (!$debug_ga) {
+			return;
+		}
+		
+		$response = json_decode($curl->get_response()['body'], true);
+		$hit_paring_result = $response['hitParsingResult'][0];
+		if ($hit_paring_result['valid']) {
+			header('x-ga-debug: valid');
+			\Podlove\Log::get()->addInfo('GA Measurement Protocol hit valid.');
+		} else {
+			$debug_message = sprintf('%s(%s): %s', $hit_paring_result['parserMessage'][0]['messageType'], $response['hitParsingResult'][0]['parserMessage'][0]['parameter'], $response['hitParsingResult'][0]['parserMessage'][0]['description']); 
+			header(sprintf('x-ga-debug: ' . $debug_message ));
+			\Podlove\Log::get()->addError('GA Measurement Protocol hit invalid.', $hit_paring_result['parserMessage'][0]);
+		}
+	}
+}
+
 function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file) {
 
 	if (\Podlove\get_setting('tracking', 'mode') !== "ptm_analytics")
@@ -68,6 +140,8 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 	}
 
 	$intent->save();
+	
+	ga_track_download($intent->request_id, $media_file, $ua_string, $ip_string, $ptm_context, $ptm_source);
 }
 
 function podlove_handle_media_file_download() {
