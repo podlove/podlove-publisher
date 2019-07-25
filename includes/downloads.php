@@ -23,7 +23,7 @@ function podlove_get_remote_addr() {
 	return $_SERVER['REMOTE_ADDR'];
 }
 
-function ga_track_download($request_id, $media_file, $ua_string, $ip_string, $ptm_context, $ptm_source) {	
+function ga_track_download($request_id, $media_file, $ua_string, $ptm_context, $ptm_source) {	
 	// GA Tracking
 	$debug_ga = false;
 	$ga_collect_endpoint = 'https://www.google-analytics.com/' . ($debug_ga ? 'debug/' : '') . 'collect';
@@ -39,8 +39,6 @@ function ga_track_download($request_id, $media_file, $ua_string, $ip_string, $pt
 		'tid' => $ga_tracking_id, // tracking id
 		'cid' => $request_id, // client id
 		'ua' => $ua_string, // user agent override
-		// We do not use $ip_string here, because Google Measurement protocol does not seem to like
-		// the IPv6 representation that $ip_string stores.
 		'uip' => podlove_get_remote_addr(), // IP override
 		'ds' => 'podlove', // data source
 		
@@ -141,7 +139,7 @@ function podlove_handle_media_file_tracking(\Podlove\Model\MediaFile $media_file
 
 	$intent->save();
 	
-	ga_track_download($intent->request_id, $media_file, $ua_string, $ip_string, $ptm_context, $ptm_source);
+	ga_track_download($intent->request_id, $media_file, $ua_string, $ptm_context, $ptm_source);
 }
 
 function podlove_handle_media_file_download() {
