@@ -89,21 +89,6 @@ class Directory extends Tab {
 				'options'  => \Podlove\Itunes\categories()
 			) );
 
-			$wrapper->select( 'category_2', array(
-				'label'       => '',
-				'description' => '',
-				'type'     => 'select',
-				'options'  => \Podlove\Itunes\categories()
-			) );
-
-			$wrapper->select( 'category_3', array(
-				'label'       => '',
-				'description' => '<br>'
-				                 . __( 'For placement within the older, text-based browse system, podcast feeds may list up to 3 category/subcategory pairs. (For example, "Music" counts as 1, as does "Business > Careers.") For placement within the newer browse system based on Category links, however, and for placement within the Top Podcasts and Top Episodes lists that appear in the right column of most podcast pages, only the first category listed in the feed is used.', 'podlove-podcasting-plugin-for-wordpress' )
-				                 . ' (<a href="http://www.apple.com/itunes/podcasts/specs.html#category" target="_blank">http://www.apple.com/itunes/podcasts/specs.html#category</a>)',
-				'options'  => \Podlove\Itunes\categories()
-			) );
-
 			$wrapper->select( 'explicit', array(
 				'label'       => __( 'Explicit Content?', 'podlove-podcasting-plugin-for-wordpress' ),
 				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
