@@ -139,7 +139,11 @@ Regards,
 	$options = get_option( 'podlove_' . $namespace );
 	$options = wp_parse_args( $options, $defaults[ $namespace ] );
 
-	return $options[ $name ];
+	if (isset($options[ $name ])) {
+		return $options[ $name ];
+	} else {
+		return null;
+	}
 }
 
 function save_setting( $namespace, $name, $values ) {

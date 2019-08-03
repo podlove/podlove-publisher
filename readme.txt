@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.4
 Tested up to: 5.2.2
 Requires PHP: 5.4
-Stable tag: 2.8.10
+Stable tag: 2.9.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -107,13 +107,26 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2.8.11 =
+= 2.9.0 =
+
+**New Apple iTunes Categories**
 
 Apple updated their list of available iTunes categories. 
 Please check in `Podlove > Podcast Settings > Directory > iTunes Category` if you need or want to update your category.
 In case your previously selected category does not exist any more, a warning is shown.
 
 Only one category is selectable now (instead of previously 3) to conform with iTunes specifications.
+
+**Download tracking with Google Analytics**
+
+Set your Google Analytics Tracking ID in Podlove > Expert Settings > Tracking. 
+Then every download intent will be forwarded to Google Analytics.
+
+[#1058](https://github.com/podlove/podlove-publisher/pull/1058)
+
+**Other**
+
+* fix: check if podlovePlayer function is available before calling it [#1060](https://github.com/podlove/podlove-publisher/pull/1060)
 
 = 2.8.10 =
 

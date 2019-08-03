@@ -102,12 +102,13 @@ class Tracking extends Tab {
 			/* $callback */ function () {
 				?>
 
-				<div><input type="text" name="podlove_tracking[ga]" value="<?php echo(\Podlove\get_setting( 'tracking', 'ga' )) ?> " /></div>
+				<div>
+				  <input class="large-text" type="text" name="podlove_tracking[ga]" value="<?php echo(\Podlove\get_setting( 'tracking', 'ga' )) ?> " />
+				</div>
 				<div> 
-				<?php echo sprintf(
-								'<div>%s</div>',
-								__( 'Google Analytics Tracking ID. If entered, Podlove Publisher will log download intents to GA. Leave blank to deactivate GA reporting.', 'podlove-podcasting-plugin-for-wordpress' )
-							); ?>
+				<?php 
+				echo __( 'Google Analytics Tracking ID. If entered, Podlove Publisher will log download intents to GA. Leave blank to deactivate GA reporting.', 'podlove-podcasting-plugin-for-wordpress' );
+				?>
 				</div>
 				<?php
 			},
