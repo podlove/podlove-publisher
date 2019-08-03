@@ -107,6 +107,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.8.11 =
+
+Apple updated their list of available iTunes categories. 
+Please check in `Podlove > Podcast Settings > Directory > iTunes Category` if you need or want to update your category.
+In case your previously selected category does not exist any more, a warning is shown.
+
+Only one category is selectable now (instead of previously 3) to conform with iTunes specifications.
+
 = 2.8.10 =
 
 * update Podlove Web Player 4 to latest version
