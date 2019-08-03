@@ -20,8 +20,6 @@ class Directory extends Tab {
 			'owner_name',
 			'owner_email',
 			'category_1',
-			'category_2',
-			'category_3',
 			'explicit',
 			'complete',
 		);

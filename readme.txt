@@ -111,10 +111,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Apple updated their list of available iTunes categories. 
 Please check in `Podlove > Podcast Settings > Directory > iTunes Category` if you need or want to update your category.
+In case your previously selected category does not exist any more, a warning is shown.
 
-* todo?: check if current category exists and if not, show warning
-* add support for new iTunes podcast categories
-* remove second and third podcast categories as they are not used
+Only one category is selectable now (instead of previously 3) to conform with iTunes specifications.
 
 = 2.8.10 =
 
