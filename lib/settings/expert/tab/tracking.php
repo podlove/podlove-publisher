@@ -94,6 +94,28 @@ class Tracking extends Tab {
 		);
 
 		add_settings_field(
+			/* $id       */ 'podlove_setting_tracking_google_analytics',
+			/* $title    */ sprintf(
+				'<label for="mode">%s</label>',
+				__( 'Google Analytics Tracking ID', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				?>
+
+				<div><input type="text" name="podlove_tracking[ga]" value="<?php echo(\Podlove\get_setting( 'tracking', 'ga' )) ?> " /></div>
+				<div> 
+				<?php echo sprintf(
+								'<div>%s</div>',
+								__( 'Google Analytics Tracking ID. If entered, Podlove Publisher will log download intents to GA. Leave blank to deactivate GA reporting.', 'podlove-podcasting-plugin-for-wordpress' )
+							); ?>
+				</div>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);
+		
+		add_settings_field(
 			/* $id       */ 'podlove_status_location_database',
 			/* $title    */ sprintf(
 				'<label for="mode">%s</label>',
