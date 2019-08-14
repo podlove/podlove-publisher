@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.9.1 =
+
+* fix web player sharing when using CDN player
+
 = 2.9.0 =
 
 **New Apple iTunes Categories**

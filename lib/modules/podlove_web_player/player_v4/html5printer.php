@@ -88,24 +88,27 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
                 'poster'   => $podcast->cover_art()->setWidth(500)->url(),
                 'link'     => \Podlove\get_landing_page_url(),
             ],
-            'reference'         => [
-                'share' => trailingslashit(plugins_url('dist', __FILE__)) . 'share.html',
-            ],
+            'reference'         => [],
             'theme'             => [
                 'main' => self::sanitize_color($player_settings['playerv4_color_primary'], '#000'),
             ],
             'visibleComponents' => array_keys($player_settings['playerv4_visible_components'], "on"),
         ];
 
-        if (!Module::use_cdn()) {
-            $config['reference']['base'] = trailingslashit(plugins_url('dist', __FILE__));
+        if (Module::use_cdn()) {
+            $base = 'https://cdn.podlove.org/web-player/';
+        } else {
+            $base = trailingslashit(plugins_url('dist', __FILE__));
         }
+
+        $config['reference']['base']  = $base;
+        $config['reference']['share'] = $base . 'share.html';
 
         if ($player_settings['playerv4_use_podcast_language']) {
             $config = array_merge($config, [
                 'runtime' => [
-                    'language' => explode('-', $podcast->language)[0]
-                ]
+                    'language' => explode('-', $podcast->language)[0],
+                ],
             ]);
         }
 
