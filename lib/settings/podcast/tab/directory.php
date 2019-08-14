@@ -26,8 +26,13 @@ class Directory extends Tab {
 
 		$settings = get_option('podlove_podcast');
 		foreach ($formKeys as $key) {
-			$settings[$key] = stripslashes($_POST['podlove_podcast'][$key]);
+			if (isset($_POST['podlove_podcast'][$key])) {
+				$settings[$key] = stripslashes($_POST['podlove_podcast'][$key]);
+			} else {
+				$settings[$key] = null;
+			}
 		}
+
 		update_option('podlove_podcast', $settings);
 		header('Location: ' . $this->get_url());
 	}
