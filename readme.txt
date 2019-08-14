@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.9.1 =
 
 * fix web player sharing when using CDN player
+* fix duplicating posts: create new guid; do not copy analytics [#1048](https://github.com/podlove/podlove-publisher/issues/1048)
 
 = 2.9.0 =
 
