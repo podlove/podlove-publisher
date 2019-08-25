@@ -13,15 +13,17 @@ function podlove_get_query_var($var_name) {
 	}
 }
 
-function podlove_get_remote_addr() {
-	if ($_SERVER['HTTP_X_REAL_IP']) {
-		return $_SERVER['HTTP_X_REAL_IP'];
-	}
-	if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
-		return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-	}
-	return $_SERVER['REMOTE_ADDR'];
+function podlove_get_remote_addr()
+{
+    if (getenv('HTTP_X_REAL_IP')) {
+        return getenv('HTTP_X_REAL_IP');
+    }
+    if (getenv('HTTP_X_FORWARDED_FOR')) {
+        return explode(',', getenv('HTTP_X_FORWARDED_FOR'))[0];
+    }
+    return getenv('REMOTE_ADDR');
 }
+
 
 function ga_track_download($request_id, $media_file, $ua_string, $ptm_context, $ptm_source) {
 	// GA Tracking
