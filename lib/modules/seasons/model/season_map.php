@@ -69,13 +69,18 @@ class SeasonMap {
       $is_running = $season->is_running();
 			$groups[$id] = [];
 
-			$start = strtotime(get_post($season->first_episode()->post_id)->post_date);
-			$end   = strtotime(get_post($season->last_episode()->post_id)->post_date);
+			$first_episode = $season->first_episode();
+			$last_episode = $season->last_episode();
 
-			foreach ($episodes as $episode) {
-				$timestamp = strtotime($episode->post_date);
-				if ($start <= $timestamp && ($end >= $timestamp || $is_running)) {
-					$groups[$id][] = (int) $episode->id;
+			if ($first_episode && $last_episode) {
+				$start = strtotime(get_post($first_episode->post_id)->post_date);
+				$end   = strtotime(get_post($last_episode->post_id)->post_date);
+
+				foreach ($episodes as $episode) {
+						$timestamp = strtotime($episode->post_date);
+						if ($start <= $timestamp && ($end >= $timestamp || $is_running)) {
+								$groups[$id][] = (int) $episode->id;
+						}
 				}
 			}
 		}

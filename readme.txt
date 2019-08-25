@@ -109,7 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.9.2 =
 
-* fix PHP notices [#1066](https://github.com/podlove/podlove-publisher/issues/1066)
+* fix PHP notices [#1066](https://github.com/podlove/podlove-publisher/issues/1066) [#1064](https://github.com/podlove/podlove-publisher/issues/1064)
 
 = 2.9.1 =
 
