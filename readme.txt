@@ -107,6 +107,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+* fix settings tab issues when using a language in WordPress other than english
+
 = 2.9.2 =
 
 * update Podlove Web Player (fixes issue when sharing/embedding the player)

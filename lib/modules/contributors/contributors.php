@@ -583,7 +583,7 @@ class Contributors extends \Podlove\Modules\Base {
 	 */
 	public function podcast_settings_tab($tabs)
 	{
-		$tabs->addTab( new Settings\PodcastContributorsSettingsTab( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Settings\PodcastContributorsSettingsTab('Contributors', __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		return $tabs;
 	}
 
