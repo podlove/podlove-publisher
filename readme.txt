@@ -107,7 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-* fix settings tab issues when using a language in WordPress other than english
+= 2.9.3 =
+
+* add quick edit for episode number [#1096](https://github.com/podlove/podlove-publisher/pull/1069)
+* fix settings tab issues when using a language in WordPress other than english ([e613e99](https://github.com/podlove/podlove-publisher/commit/e613e99bb4f07bb88234146567e76d21ce06f5ff))
 
 = 2.9.2 =
 
