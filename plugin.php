@@ -21,7 +21,7 @@ function activate_for_current_blog() {
 
 /**
  * Hook: Create a new blog in a multisite environment.
- * 
+ *
  * When a new blog is created, we have to trigger the activation function
  * for in the scope of that blog.
  */
@@ -51,7 +51,7 @@ function delete_blog($blog_id, $drop) {
 
 /**
  * Hook: Activate the plugin.
- * 
+ *
  * In a single blog install, just call activate_for_current_blog().
  * However, in a multisite install, iterate over all blogs and call the activate
  * function for each of them.
@@ -81,14 +81,14 @@ function deactivate() {
 
 /**
  * Hook: Uninstall the plugin.
- * 
+ *
  * In a single blog install, just call uninstall_for_current_blog().
- * However, in a multisite install, iterate over all blogs and call the 
+ * However, in a multisite install, iterate over all blogs and call the
  * uninstall function for each of them.
  */
 function uninstall() {
 	global $wpdb;
-	
+
 	if ( is_multisite() ) {
 		if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
 			$current_blog = $wpdb->blogid;
@@ -209,6 +209,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/detect_duplicate_slugs.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/downloads.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/episode_number_column.php';
+require_once \Podlove\PLUGIN_DIR . 'includes/episode_number_quick_edit_form.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/explicit_content.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/extras.php';
 require_once \Podlove\PLUGIN_DIR . 'includes/feed_discovery.php';
@@ -241,7 +242,7 @@ require_once \Podlove\PLUGIN_DIR . 'includes/wp_rocket.php';
 require_once \Podlove\PLUGIN_DIR . 'lib/tools.php';
 
 // @todo: change to internal module
-new \Podlove\AJAX\Ajax(); 
+new \Podlove\AJAX\Ajax();
 new \Podlove\Settings\Tools\UserAgentRefresh;
 
 \Podlove\Jobs\CronJobRunner::init();
