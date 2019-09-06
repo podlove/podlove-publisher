@@ -54,6 +54,20 @@ function podlove_add_podcast_rewrite_rules() {
 		// Add for WP_Query
 		$wp_rewrite->use_verbose_page_rules = true;
 	}
+
+	// Add archive pages
+	// 
+	// set the constant `define('PODLOVE_ARCHIVE_PAGES', true)` to enable this.
+	// I removed this once because it broke stuff, see https://github.com/podlove/podlove-publisher/commit/b4d9f148ecb5fc82520a775cc38a77ec505aeb3a#diff-0533ec9c53ef1127dfc1a79fa5c24199
+	// However it's a feature still in use, so I at least want to give the choice to enable it via constant
+	// see https: //github.com/podlove/podlove-publisher/issues/978
+	if ('on' == \Podlove\get_setting('website', 'episode_archive') && defined('PODLOVE_ARCHIVE_PAGES') && PODLOVE_ARCHIVE_PAGES) {
+			$archive_slug = trim(\Podlove\get_setting('website', 'episode_archive_slug'), '/');
+			$blog_prefix  = \Podlove\get_blog_prefix();
+			$blog_prefix  = $blog_prefix ? trim($blog_prefix, '/') . '/' : '';
+			$wp_rewrite->add_rule("{$blog_prefix}{$archive_slug}/?$", "index.php?post_type=podcast", 'top');
+			$wp_rewrite->add_rule("{$blog_prefix}{$archive_slug}/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", 'index.php?post_type=podcast&paged=$matches[1]', 'top');
+	}
 }
 
 /**
