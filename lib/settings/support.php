@@ -27,6 +27,7 @@ class Support {
 		<div class="wrap">
 			<h2><?php echo __( 'Support', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
 
+      <!--
 			<div class="notice" style="margin: 3%">
 				<a href="https://publisher.podlove.org/support/" target="_blank">
 					<img src="<?php echo \Podlove\PLUGIN_URL ?>/images/logo/podlove-publisher-icon-500.png" style="float: left; margin: 12px 12px 12px 0" width="100" height="100" />
@@ -46,6 +47,7 @@ class Support {
 				</p>
 				<div style="clear: both"></div>
 			</div>
+			-->
 
 			<h3><?php echo __('Bug Reports, Feature Requests & Help', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
 

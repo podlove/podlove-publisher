@@ -104,6 +104,7 @@ function podlove_about_page($_) {
 
 		<hr />
 
+    <!--
 		<div class="feature-section">
 			<div class="col">
 				<h3>
@@ -137,6 +138,7 @@ function podlove_about_page($_) {
 	</div>
 
 	<hr />
+	-->
 
 	<div class="feature-section col two-col">
 		<h2>Upgrade Notices</h2>
