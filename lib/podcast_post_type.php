@@ -116,7 +116,7 @@ class Podcast_Post_Type {
 		}
 
 		if ( ( is_category() || is_tag() ) && empty( $query->query_vars['suppress_filters'] ) ) {
-			$post_type = get_query_var( 'post_type' );
+			$post_type = $query->get('post_type');
 
 			$query->set( 'post_type', $post_type ? $post_type : get_post_types() );
 
