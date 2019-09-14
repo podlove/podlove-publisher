@@ -110,7 +110,8 @@ function get_setting( $namespace, $name ) {
 			'podlove_setting_redirect' => [],
 		],
 		'tracking' => [
-			'mode' => 'ptm_analytics'
+			'mode' => 'ptm_analytics',
+			'window' => 'hourly'
 		],
 		'notifications' => [
 			'delay' => 1,

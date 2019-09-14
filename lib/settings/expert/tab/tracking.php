@@ -94,6 +94,60 @@ class Tracking extends Tab {
 		);
 
 		add_settings_field(
+			/* $id       */ 'podlove_setting_tracking_window',
+			/* $title    */ sprintf(
+				'<label for="mode">%s</label>',
+				__( 'Deduplication Window', 'podlove-podcasting-plugin-for-wordpress' )
+			),
+			/* $callback */ function () {
+				?>
+
+				<p class="description" style="margin-bottom: 15px;">
+				  <?php echo sprintf(
+						__('A requests counts as identical when the same IP and user agent are used to access the same file in a certain time window.
+					Podlove Publisher has traditionally used an hourly time window but IAB recommends daily. Beware: Once changed you need to 
+					do a full Download Intent Cleanup and Download Aggregation for the change to take effect. Do this at the %stools page%s.'),
+						'<a href="' . admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section') . '">',
+						'</a>'
+					); ?>
+				</p>
+
+				<label class="aligned-radio">
+					<div class="row">
+						<div>
+							<input name="podlove_tracking[window]" type="radio" value="hourly" <?php checked( \Podlove\get_setting( 'tracking', 'window' ), 'hourly' ) ?> />
+						</div>
+						<div>
+							<?php echo sprintf(
+								'<div><strong>%s</strong><br>%s</div>',
+								__( 'Hour', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Identical requests during the same hour are counted once.', 'podlove-podcasting-plugin-for-wordpress' )
+							); ?>
+						</div>
+					</div>
+				</label>
+
+				<label class="aligned-radio">
+					<div class="row">
+						<div>
+							<input name="podlove_tracking[window]" type="radio" value="daily" <?php checked( \Podlove\get_setting( 'tracking', 'window' ), 'daily' ) ?> />
+						</div>
+						<div>
+							<?php echo sprintf(
+								'<div><strong>%s</strong><br>%s</div>',
+								__( 'Day', 'podlove-podcasting-plugin-for-wordpress' ),
+								__( 'Identical requests during the same day are counted once.', 'podlove-podcasting-plugin-for-wordpress' )
+							); ?>
+						</div>
+					</div>
+				</label>
+				<?php
+			},
+			/* $page     */ Settings::$pagehook,  
+			/* $section  */ 'podlove_settings_episode'
+		);		
+
+		add_settings_field(
 			/* $id       */ 'podlove_setting_tracking_google_analytics',
 			/* $title    */ sprintf(
 				'<label for="mode">%s</label>',
