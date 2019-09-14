@@ -109,6 +109,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.9.4 =
 
+* fix: error on "file types" settings page
+
 **IAB Conformity**
 
 When it comes to tracking download intents, Podlove Publisher was always close to IAB recommendations, with one exception: the time window in which two requests count as two. Podlove Publisher deduplicates by hour, IAB recommends a day.
@@ -117,7 +119,7 @@ There is a new setting in `Podlove > Expert Settings > Tracking`: "Deduplication
 
 See also: [docs.podlove.org: IAB Conformity](https://docs.podlove.org/podlove-publisher/guides/download-analytics.html#iab-conformity)
 
-This release is sponsored by [Lage der Nation](https://lagedernation.org).
+This feature is sponsored by [Lage der Nation](https://lagedernation.org).
 
 = 2.9.3 =
 
