@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.9.5 =
+
+* Slacknotes: reactivate date picker
+
 = 2.9.4 =
 
 * fix: error on "file types" settings page
