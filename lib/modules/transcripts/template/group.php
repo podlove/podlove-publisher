@@ -13,12 +13,14 @@ class Group extends Wrapper
 {
 
     private $lines;
+    private $voice;
     private $contributor_id;
 
-    public function __construct($lines, $contributor_id)
+    public function __construct($lines, $contributor_id, $voice)
     {
         $this->lines          = $lines;
         $this->contributor_id = $contributor_id;
+        $this->voice          = $voice;
     }
 
     protected function getExtraFilterArgs()
@@ -76,5 +78,14 @@ class Group extends Wrapper
         }
 
         return new Contributors\Template\Contributor($contributor);
+    }
+
+    public function voice()
+    {
+        if (!$this->voice) {
+            return "Can't find the voice";
+        }
+
+        return $this->voice;
     }
 }
