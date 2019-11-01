@@ -188,7 +188,7 @@ if (typeof SubscribeButton == 'undefined') {
 
 				$itunes_feed_id = (int) $feed->itunes_feed_id;
 				if ($itunes_feed_id > 0) {
-					$feed_data['directory-url-itunes'] = 'https://itunes.apple.com/podcast/id' . $itunes_feed_id;
+					$feed_data['directory-url-itunes'] = 'https://podcasts.apple.com/podcast/id' . $itunes_feed_id;
 				}
 
 				return $feed_data;
