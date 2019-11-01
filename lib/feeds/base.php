@@ -198,12 +198,17 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo "\t" . apply_filters( 'podlove_feed_itunes_block', $block );
 		echo PHP_EOL;
 
-        $explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $podcast->explicit == 2) ? 'clean' : ( ( $podcast->explicit ) ? 'yes' : 'no' ) );
+		$explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $podcast->explicit == 2) ? 'clean' : ( ( $podcast->explicit ) ? 'yes' : 'no' ) );
 		echo "\t" . apply_filters( 'podlove_feed_itunes_explicit', $explicit );
 		echo PHP_EOL;
 
 		$complete = sprintf( '<itunes:complete>%s</itunes:complete>', ( $podcast->complete ) ? 'yes' : 'no' );
-		echo apply_filters( 'podlove_feed_itunes_complete', ( $podcast->complete ? "\t$complete"  : '' ) );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_complete', ( $podcast->complete ? "\t$complete"  : '' ) );
+		echo PHP_EOL;
+		
+		$itunes_feed_id = (int) $feed->itunes_feed_id;
+		$link_apple = ( $itunes_feed_id > 0 ) ? sprintf( '<atom:link rel="me" href="https://podcasts.apple.com/podcast/id%s" />', $itunes_feed_id ) : '';
+		echo "\t" . apply_filters( 'podlove_feed_link_apple', $link_apple );
 		echo PHP_EOL;
 
 		do_action('podlove_append_to_feed_head', $podcast, $feed, $format);
