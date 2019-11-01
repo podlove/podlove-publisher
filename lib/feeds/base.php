@@ -207,9 +207,11 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo PHP_EOL;
 		
 		$itunes_feed_id = (int) $feed->itunes_feed_id;
-		$link_apple = ( $itunes_feed_id > 0 ) ? sprintf( '<atom:link rel="me" href="https://podcasts.apple.com/podcast/id%s" />', $itunes_feed_id ) : '';
-		echo "\t" . apply_filters( 'podlove_feed_link_apple', $link_apple );
-		echo PHP_EOL;
+		if ( $itunes_feed_id > 0 ) {
+			$link_apple = sprintf( '<atom:link rel="me" href="https://podcasts.apple.com/podcast/id%s" />', $itunes_feed_id );
+			echo "\t" . apply_filters( 'podlove_feed_link_apple', $link_apple );
+			echo PHP_EOL;
+		}
 
 		do_action('podlove_append_to_feed_head', $podcast, $feed, $format);
 	} );
