@@ -490,13 +490,16 @@ class Contributors extends \Podlove\Modules\Base {
 					continue;
 
 				$c = new \Podlove\Modules\Contributors\Model\EpisodeContribution;
-				if( !empty( $contributor['role'] ) )
+				
+				if ( !empty( $contributor['role'] ) )
 					$c->role_id = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_slug($contributor['role'])->id;
-				if( !empty( $contributor['group'] ) )
+
+				if ( !empty( $contributor['group'] ) )
 					$c->group_id = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_slug($contributor['group'])->id;
+
 				$c->episode_id = $episode->id;
 				$c->contributor_id = $contributor_id;
-				$c->comment = $contributor['comment'];
+				$c->comment = stripslashes($contributor['comment']);
 				$c->position = $position++;
 				$c->save();		
 			}
