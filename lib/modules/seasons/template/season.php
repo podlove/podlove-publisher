@@ -120,6 +120,10 @@ class Season extends Wrapper {
 	/**
 	 * Season Episodes
 	 * 
+	 * Parameters:
+	 *
+	 * - **order:** (optional) "DESC" or "ASC". Default: "ASC"
+	 * 
 	 * @accessor
 	 */
 	public function episodes($args = []) {

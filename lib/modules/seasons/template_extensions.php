@@ -9,6 +9,10 @@ class TemplateExtensions
     /**
      * List of podcast seasons
      *
+     * Parameters:
+     *
+     * - **order:** (optional) "DESC" or "ASC". Default: "ASC"
+     *
      * @accessor
      * @dynamicAccessor podcast.seasons
      */
