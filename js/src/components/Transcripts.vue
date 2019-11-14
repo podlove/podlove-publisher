@@ -153,7 +153,7 @@ export default {
         return;
       }
 
-      $.ajax({
+      jQuery.ajax({
         url:
           podlove_vue.rest_url +
           "podlove/v1/transcripts/" +

@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * update PHP dependencies (including User Agent library for download analytics)
 * fix: download list description in analytics on mobile ([#1056](https://github.com/podlove/podlove-publisher/issues/1056))
+* fix: JS issue when selecting transcript voices
 * add: expose voice attribute to transcript templates ([#1062](https://github.com/podlove/podlove-publisher/pull/1062))
 
 = 2.9.5 =
