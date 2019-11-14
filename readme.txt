@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.9.7 =
+
+* update JavaScript dependencies
+
 = 2.9.6 =
 
 * update PHP dependencies (including User Agent library for download analytics)

@@ -69,11 +69,13 @@
         <div class="voice col-md-12" v-for="(voice, index) in voices" :key="index">
           <div class="voice-label">{{ voice.label }}</div>
           <div class="voice-assignment">
-            <v-select :options="contributorsOptions" v-model="voice.option" style="width: 300px">
-              <template slot="option" slot-scope="option">
-                <img :src="option.avatar" width="16" height="16">
-                {{ option.label }}
-              </template>
+            <v-select :options="contributorsOptions" label="label" v-model="voice.option" style="width: 300px">
+
+              <template v-slot:option="option">
+                  <img :src="option.avatar" width="16" height="16">
+                  {{ option.label }}
+              </template>              
+              
             </v-select>
           </div>
         </div>
@@ -153,18 +155,19 @@ export default {
         return;
       }
 
-      jQuery.ajax({
-        url:
-          podlove_vue.rest_url +
-          "podlove/v1/transcripts/" +
-          podlove_vue.post_id +
-          "/voices",
-        method: "POST",
-        dataType: "json",
-        data: {
-          transcript_voice: val
-        }
-      })
+      jQuery
+        .ajax({
+          url:
+            podlove_vue.rest_url +
+            "podlove/v1/transcripts/" +
+            podlove_vue.post_id +
+            "/voices",
+          method: "POST",
+          dataType: "json",
+          data: {
+            transcript_voice: val
+          }
+        })
         .done(result => {
           // console.log("saved transcript voices", result);
         })
