@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.4
-Tested up to: 5.2.2
+Tested up to: 5.3
 Requires PHP: 5.4
 Stable tag: 2.9.5
 License: MIT
@@ -110,6 +110,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.9.6 =
 
 * update PHP dependencies (including User Agent library for download analytics)
+* fix: download list description in analytics on mobile ([#1056](https://github.com/podlove/podlove-publisher/issues/1056))
+* add: expose voice attribute to transcript templates ([#1062](https://github.com/podlove/podlove-publisher/pull/1062))
 
 = 2.9.5 =
 
