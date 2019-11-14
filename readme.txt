@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.9.6 =
+
+* update PHP dependencies (including User Agent library for download analytics)
+
 = 2.9.5 =
 
 * Slacknotes: reactivate date picker

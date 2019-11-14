@@ -11,7 +11,7 @@
         "twig/extensions": "1.4.*",
         "geoip2/geoip2": "~2.0",
         "ramsey/array_column": "~1.1",
-        "piwik/device-detector": "~3.7",
+        "piwik/device-detector": "~3.11",
         "phpunit/php-timer": "~1.0",
         "podlove/webvtt-parser": "^1.1",
         "geertw/ip-anonymizer": "^1.1",
