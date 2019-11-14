@@ -122,9 +122,9 @@ class Season extends Wrapper {
 	 * 
 	 * @accessor
 	 */
-	public function episodes() {
+	public function episodes($args = []) {
 		return array_map(function($episode) {
 			return new \Podlove\Template\Episode($episode);
-		}, $this->season->episodes());
+		}, $this->season->episodes($args));
 	}
 }

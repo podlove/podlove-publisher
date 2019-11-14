@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * update PHP dependencies (including User Agent library for download analytics)
 * add: expose voice attribute to transcript templates ([#1062](https://github.com/podlove/podlove-publisher/pull/1062))
+* add(templating): add sort direction in seasons and season episodes, enabling `podcast.seasons({order: 'DESC'})` and `season.episode({order: 'DESC'})` ([#1080](https://github.com/podlove/podlove-publisher/issues/1080))
 * fix: download list description in analytics on mobile ([#1056](https://github.com/podlove/podlove-publisher/issues/1056))
 * fix: JS issue when selecting transcript voices
 * fix: escaping error in contributor comments ([#1081](https://github.com/podlove/podlove-publisher/issues/1081))
