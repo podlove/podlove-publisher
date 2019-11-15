@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * require PHP 5.6.20 or higher
 * require WordPress 5.2 or higher
 * update dependencies
+* fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
 
 = 2.9.7 =
 
