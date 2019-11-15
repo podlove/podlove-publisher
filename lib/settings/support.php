@@ -67,12 +67,6 @@ class Support {
 					</li>
 					<li>
 						<?php echo sprintf(
-							__('%sTrello%s shows our roadmap.', 'podlove-podcasting-plugin-for-wordpress'),
-							'<a target="_blank" href="//trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">', '</a>'
-						); ?>
-					</li>
-					<li>
-						<?php echo sprintf(
 							__('For quick remarks and feedback, you can reach us at %sTwitter (@podlove_org)%s', 'podlove-podcasting-plugin-for-wordpress'),
 							'<a target="_blank" href="//twitter.com/podlove_org">', '</a>'
 						); ?>
