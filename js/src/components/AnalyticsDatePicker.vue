@@ -138,9 +138,3 @@ export default {
 };
 </script>
 
-<style>
-/** disable for now because I can't guarantee acceptable performance for popular podcasts **/
-.podlove-analytics-datepicker .v2-date-wrap {
-  display: none !important;
-}
-</style>

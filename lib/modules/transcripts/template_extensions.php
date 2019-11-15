@@ -50,7 +50,7 @@ class TemplateExtensions
                 $lines = array_map(function ($line) {
                     return new Template\Line($line);
                 }, $group['items']);
-                return new Template\Group($lines, $group['speaker']);
+                return new Template\Group($lines, $group['speaker'], $group['voice']);
             }, $transcript);
         });
     }

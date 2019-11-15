@@ -240,6 +240,16 @@ class Module
             'position' => 490,
         ];
 
+        $form_data[] = [
+            'type'     => 'checkbox',
+            'key'      => 'playerv4_use_podcast_language',
+            'options'  => [
+                'label'       => __('Use podcast language for interface', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('Tick to use the podcast language. Otherwise use the user\'s browser language.', 'podlove-podcasting-plugin-for-wordpress'),
+            ],
+            'position' => 490,
+        ];
+
         // remove "chapter visibility" setting
         $form_data = array_filter($form_data, function ($entry) {
             return $entry['key'] !== 'chaptersVisible';

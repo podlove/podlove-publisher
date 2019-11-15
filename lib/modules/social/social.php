@@ -188,13 +188,13 @@ class Social extends \Podlove\Modules\Base {
 
 	public function podcast_settings_social_tab($tabs)
 	{
-		$tabs->addTab( new Settings\PodcastSettingsSocialTab( __( 'Social', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Settings\PodcastSettingsSocialTab( 'social', __( 'Social', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		return $tabs;
 	}
 
 	public function podcast_settings_donation_tab($tabs)
 	{
-		$tabs->addTab( new Settings\PodcastSettingsDonationTab( __( 'Donations', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		$tabs->addTab( new Settings\PodcastSettingsDonationTab( 'donations', __( 'Donations', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 		return $tabs;
 	}
 

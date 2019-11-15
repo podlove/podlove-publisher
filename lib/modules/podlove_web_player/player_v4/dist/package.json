@@ -1,0 +1,57 @@
+{
+  "_from": "@podlove/web-player@4.5.10",
+  "_id": "@podlove/web-player@4.5.10",
+  "_inBundle": false,
+  "_integrity": "sha512-H5HHk68UCl+Vhb96qr1Hn6eadBNPi3UoeLe4jqZPQ/ME9LUJEo5iN9AmnaHWVuS1y2e2MDDloc/Y6wPEW91bwg==",
+  "_location": "/@podlove/web-player",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@podlove/web-player@4.5.10",
+    "name": "@podlove/web-player",
+    "escapedName": "@podlove%2fweb-player",
+    "scope": "@podlove",
+    "rawSpec": "4.5.10",
+    "saveSpec": null,
+    "fetchSpec": "4.5.10"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@podlove/web-player/-/web-player-4.5.10.tgz",
+  "_shasum": "2214fe0227baaae6b5bd3a6ce16df179563c0d44",
+  "_spec": "@podlove/web-player@4.5.10",
+  "_where": "/Users/ericteubert/code/publisher/wp-content/plugins/podlove-publisher",
+  "author": {
+    "name": "Alexander Heimbuch",
+    "email": "github@heimbu.ch"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@podlove/player": "^4.5.10",
+    "@podlove/player-actions": "^4.5.10",
+    "@podlove/player-state": "^4.5.10",
+    "@podlove/utils": "^4.5.10",
+    "color": "3.1.0",
+    "hashcode": "1.0.3",
+    "iframe-resizer": "4.0.4",
+    "localstorage": "1.0.1",
+    "ramda": "0.26.1"
+  },
+  "deprecated": false,
+  "description": "Embedded version of Podlove Player",
+  "devDependencies": {
+    "@podlove/build": "^4.5.10",
+    "cypress": "3.2.0",
+    "http-server": "0.11.1",
+    "webpack": "4.26.0",
+    "webpack-dev-server": "3.1.11"
+  },
+  "homepage": "https://github.com/podlove/ui/tree/development/apps/web-player",
+  "keywords": [],
+  "license": "MIT",
+  "name": "@podlove/web-player",
+  "version": "4.5.10"
+}

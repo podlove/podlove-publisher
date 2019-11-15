@@ -181,7 +181,7 @@ class Season extends Base
 		return get_the_date($format, $episode->post_id);
 	}
 
-	public function episodes() {
+	public function episodes($args = []) {
 		global $wpdb;
 
 		$prev = $this->previous_season();
@@ -197,6 +197,8 @@ class Season extends Base
 			$date_range = "DATE(p.post_date) >= '" . $this->start_date('Y-m-d') . "' AND DATE(p.post_date) <= '" . $this->end_date('Y-m-d') . "'";
 		}
 
+		$order = isset($args['order']) && strtoupper($args['order']) == 'DESC' ? 'DESC' : 'ASC';
+
 		$sql = "SELECT
 				e.*
 			FROM
@@ -207,7 +209,7 @@ class Season extends Base
 				p.post_status = 'publish' AND
 				$date_range
 			ORDER BY
-				p.post_date ASC
+				p.post_date $order
 		";
 
 		return Episode::find_all_by_sql($sql);

@@ -143,25 +143,29 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 
 		$categories = \Podlove\Itunes\categories( false );	
 		$category_html = '';
-		for ( $i = 1; $i <= 3; $i++ ) { 
-			$category_id = $podcast->{'category_' . $i};
+		$category_id = $podcast->category_1;
 
-			if ( ! $category_id )
-				continue;
-
+		if ( $category_id ) {
 			list( $cat, $subcat ) = explode( '-', $category_id );
 
 			if ( $subcat == '00' ) {
 				$category_html .= sprintf(
-					'<itunes:category text="%s"></itunes:category>',
+					'<itunes:category text="%s" />',
 					htmlspecialchars( $categories[ $category_id ] )
 				);
 			} else {
-				$category_html .= sprintf(
-					'<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>',
-					htmlspecialchars( $categories[ $cat . '-00' ] ),
-					htmlspecialchars( $categories[ $category_id ] )
-				);
+				if ($categories[ $category_id ]) {
+					$category_html .= sprintf(
+							'<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>',
+							htmlspecialchars($categories[$cat . '-00']),
+							htmlspecialchars($categories[$category_id])
+					);
+				} else {
+					$category_html .= sprintf(
+							'<itunes:category text="%s" />',
+							htmlspecialchars($categories[$cat . '-00'])
+					);
+				}
 			}
 		}
 		echo apply_filters( 'podlove_feed_itunes_categories', $category_html );
@@ -194,13 +198,20 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		echo "\t" . apply_filters( 'podlove_feed_itunes_block', $block );
 		echo PHP_EOL;
 
-        $explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $podcast->explicit == 2) ? 'clean' : ( ( $podcast->explicit ) ? 'yes' : 'no' ) );
+		$explicit = sprintf( '<itunes:explicit>%s</itunes:explicit>', ( $podcast->explicit == 2) ? 'clean' : ( ( $podcast->explicit ) ? 'yes' : 'no' ) );
 		echo "\t" . apply_filters( 'podlove_feed_itunes_explicit', $explicit );
 		echo PHP_EOL;
 
 		$complete = sprintf( '<itunes:complete>%s</itunes:complete>', ( $podcast->complete ) ? 'yes' : 'no' );
-		echo apply_filters( 'podlove_feed_itunes_complete', ( $podcast->complete ? "\t$complete"  : '' ) );
+		echo "\t" . apply_filters( 'podlove_feed_itunes_complete', ( $podcast->complete ? "\t$complete"  : '' ) );
 		echo PHP_EOL;
+		
+		$itunes_feed_id = (int) $feed->itunes_feed_id;
+		if ( $itunes_feed_id > 0 ) {
+			$link_apple = sprintf( '<atom:link rel="me" href="https://podcasts.apple.com/podcast/id%s" />', $itunes_feed_id );
+			echo "\t" . apply_filters( 'podlove_feed_link_apple', $link_apple );
+			echo PHP_EOL;
+		}
 
 		do_action('podlove_append_to_feed_head', $podcast, $feed, $format);
 	} );

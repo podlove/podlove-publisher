@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Podlove\Modules\Shows\Template;
 
 use Podlove\Template\Wrapper;
@@ -8,74 +8,81 @@ use Podlove\Template\Wrapper;
  *
  * @templatetag show
  */
-class Show extends Wrapper {
+class Show extends Wrapper
+{
+    private $show;
 
-	private $show;
+    public function __construct(\Podlove\Modules\Shows\Model\Show $show)
+    {
+        $this->show = $show;
+    }
 
-	public function __construct(\Podlove\Modules\Shows\Model\Show $show)
-	{
-		$this->show = $show;
-	}
+    protected function getExtraFilterArgs()
+    {
+        return array($this->show);
+    }
 
-	protected function getExtraFilterArgs() {
-		return array($this->show);
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Title
+     *
+     * @accessor
+     */
+    public function title()
+    {
+        return $this->show->title;
+    }
 
-	/**
-	 * Title
-	 *
-	 * @accessor
-	 */
-	public function title() {
-		return $this->show->title;
-	}
+    /**
+     * Subtitle
+     *
+     * @accessor
+     */
+    public function subtitle()
+    {
+        return $this->show->subtitle;
+    }
 
-	/**
-	 * Subtitle
-	 *
-	 * @accessor
-	 */
-	public function subtitle() {
-		return $this->show->subtitle;
-	}
+    /**
+     * Summary
+     *
+     * @accessor
+     */
+    public function summary()
+    {
+        return $this->show->summary;
+    }
 
-	/**
-	 * Summary
-	 *
-	 * @accessor
-	 */
-	public function summary() {
-		return $this->show->summary;
-	}
+    /**
+     * Slug
+     *
+     * @accessor
+     */
+    public function slug()
+    {
+        return $this->show->slug;
+    }
 
-	/**
-	 * Slug
-	 *
-	 * @accessor
-	 */
-	public function slug() {
-		return $this->show->slug;
-	}
+    /**
+     * Language
+     *
+     * @accessor
+     */
+    public function language()
+    {
+        return $this->show->language;
+    }
 
-	/**
-	 * Language
-	 *
-	 * @accessor
-	 */
-	public function language() {
-		return $this->show->language;
-	}
-
-	/**
-	 * Image
-	 *
-	 * @accessor
-	 */
-	public function image() {
-		return new \Podlove\Template\Image($this->show->image());
-	}
+    /**
+     * Image
+     *
+     * @accessor
+     */
+    public function image()
+    {
+        return new \Podlove\Template\Image($this->show->image());
+    }
 }

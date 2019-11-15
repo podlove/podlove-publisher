@@ -3,6 +3,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
 
 Vue.use(VueAxios, axios)
 

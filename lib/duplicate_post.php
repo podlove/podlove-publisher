@@ -7,10 +7,23 @@ use Podlove\Modules\Contributors\Model\EpisodeContribution;
 class DuplicatePost {
 
 	public static function init() {
-		add_action('dp_duplicate_post', array(__CLASS__, 'regenerate_guid'), 10, 2);
+		add_action('dp_duplicate_post', array(__CLASS__, 'regenerate_guid'), 100, 2);
+		add_filter('duplicate_post_meta_keys_filter' , array(__CLASS__, 'meta_keys_filter'));
 
 		if (\Podlove\Modules\Base::is_active('contributors'))
 			add_action('dp_duplicate_post', array(__CLASS__, 'clone_contributors'), 10, 2);			
+	}
+
+	public static function meta_keys_filter($keys)
+	{
+		$keys = array_filter($keys, function($key) {
+			return stripos($key, '_podlove_downloads') === false 
+			&& stripos($key, '_podlove_notifications_sent') === false
+			&& stripos($key, '_podlove_guid') === false
+			&& stripos($key, '_podlove_eda_downloads') === false;
+		});
+
+		return $keys;
 	}
 
 	public static function regenerate_guid($new_post_id, $old_post_object) {

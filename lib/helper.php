@@ -110,7 +110,8 @@ function get_setting( $namespace, $name ) {
 			'podlove_setting_redirect' => [],
 		],
 		'tracking' => [
-			'mode' => 'ptm_analytics'
+			'mode' => 'ptm_analytics',
+			'window' => 'hourly'
 		],
 		'notifications' => [
 			'delay' => 1,
@@ -139,7 +140,11 @@ Regards,
 	$options = get_option( 'podlove_' . $namespace );
 	$options = wp_parse_args( $options, $defaults[ $namespace ] );
 
-	return $options[ $name ];
+	if (isset($options[ $name ])) {
+		return $options[ $name ];
+	} else {
+		return null;
+	}
 }
 
 function save_setting( $namespace, $name, $values ) {
@@ -242,7 +247,8 @@ function get_webplayer_defaults() {
 			'tabShare' => "on",
 			'tabInfo' => "on",
 			'tabTranscripts' => "on"
-		]
+		],
+		'playerv4_use_podcast_language' => false
 	];
 }
 
@@ -770,50 +776,77 @@ function categories( $prefix_subcategories = true ) {
 		$temp['01-01'] = 'Design';
 		$temp['01-02'] = 'Fashion & Beauty';
 		$temp['01-03'] = 'Food';
-		$temp['01-04'] = 'Literature';
+		$temp['01-04'] = 'Books';
 		$temp['01-05'] = 'Performing Arts';
 		$temp['01-06'] = 'Visual Arts';
 
 	$temp['02-00'] = 'Business';
-		$temp['02-01'] = 'Business News';
 		$temp['02-02'] = 'Careers';
 		$temp['02-03'] = 'Investing';
-		$temp['02-04'] = 'Management & Marketing';
-		$temp['02-05'] = 'Shopping';
+		$temp['02-04'] = 'Management';
+		$temp['02-06'] = 'Entrepreneurship';
+		$temp['02-07'] = 'Marketing';
+		$temp['02-08'] = 'Non-Profit';
 
 	$temp['03-00'] = 'Comedy';
+	  $temp['03-01'] = 'Comedy Interviews';
+	  $temp['03-02'] = 'Improv';
+	  $temp['03-03'] = 'Stand-Up';
 
 	$temp['04-00'] = 'Education';
-		$temp['04-01'] = 'Education Technology';
-		$temp['04-02'] = 'Higher Education';
-		$temp['04-03'] = 'K-12';
-		$temp['04-04'] = 'Language Courses';
-		$temp['04-05'] = 'Training';
-		 
-	$temp['05-00'] = 'Games & Hobbies';
-		$temp['05-01'] = 'Automotive';
-		$temp['05-02'] = 'Aviation';
-		$temp['05-03'] = 'Hobbies';
-		$temp['05-04'] = 'Other Games';
-		$temp['05-05'] = 'Video Games';
+		$temp['04-04'] = 'Language Learning';
+		$temp['04-05'] = 'Courses';
+		$temp['04-06'] = 'How To';
+		$temp['04-07'] = 'Self-Improvement';
 
-	$temp['06-00'] = 'Government & Organizations';
-		$temp['06-01'] = 'Local';
-		$temp['06-02'] = 'National';
-		$temp['06-03'] = 'Non-Profit';
-		$temp['06-04'] = 'Regional';
+	$temp['20-00'] = 'Fiction';
+		$temp['20-01'] = 'Comedy Fiction';
+		$temp['20-02'] = 'LDrama';
+		$temp['20-03'] = 'Science Fiction';
 
-	$temp['07-00'] = 'Health';
+	$temp['06-00'] = 'Government';
+
+	$temp['30-00'] = 'History';
+
+	$temp['07-00'] = 'Health & Fitness';
 		$temp['07-01'] = 'Alternative Health';
-		$temp['07-02'] = 'Fitness & Nutrition';
-		$temp['07-03'] = 'Self-Help';
+		$temp['07-02'] = 'Fitness';
+		// $temp['07-03'] = 'Self-Help';
 		$temp['07-04'] = 'Sexuality';
+		$temp['07-05'] = 'Medicine';
+		$temp['07-06'] = 'Mental Health';
+		$temp['07-07'] = 'Nutrition';
 
 	$temp['08-00'] = 'Kids & Family';
+	  $temp['08-01'] = 'Education for Kids';
+	  $temp['08-02'] = 'Parenting';
+	  $temp['08-03'] = 'Pets & Animals';
+		$temp['08-04'] = 'Stories for Kids';
+		
+	$temp['40-00'] = 'Leisure';
+  	$temp['40-01'] = 'Animation & Manga';
+  	$temp['40-02'] = 'Automotive';
+  	$temp['40-03'] = 'Aviation';
+  	$temp['40-04'] = 'Crafts';
+  	$temp['40-05'] = 'Games';
+  	$temp['40-06'] = 'Hobbies';
+  	$temp['40-07'] = 'Home & Garden';
+  	$temp['40-08'] = 'Video Games';
+
  
 	$temp['09-00'] = 'Music';
+  	$temp['09-01'] = 'Music Commentary';
+  	$temp['09-02'] = 'Music History';
+  	$temp['09-03'] = 'Music Interviews';
  
-	$temp['10-00'] = 'News & Politics';
+	$temp['10-00'] = 'News';
+  	$temp['10-01'] = 'Business News';
+  	$temp['10-02'] = 'Daily News';
+  	$temp['10-03'] = 'Entertainment News';
+  	$temp['10-04'] = 'News Commentary';
+  	$temp['10-05'] = 'Politics';
+  	$temp['10-06'] = 'Sports News';
+  	$temp['10-07'] = 'Tech News';
  
 	$temp['11-00'] = 'Religion & Spirituality';
 		$temp['11-01'] = 'Buddhism';
@@ -821,44 +854,66 @@ function categories( $prefix_subcategories = true ) {
 		$temp['11-03'] = 'Hinduism';
 		$temp['11-04'] = 'Islam';
 		$temp['11-05'] = 'Judaism';
-		$temp['11-06'] = 'Other';
+		$temp['11-06'] = 'Religion';
 		$temp['11-07'] = 'Spirituality';
 	 
-	$temp['12-00'] = 'Science & Medicine';
+	$temp['12-00'] = 'Science';
 		$temp['12-01'] = 'Medicine';
 		$temp['12-02'] = 'Natural Sciences';
 		$temp['12-03'] = 'Social Sciences';
+		$temp['12-04'] = 'Astronomy';
+		$temp['12-05'] = 'Chemistry';
+		$temp['12-06'] = 'Earth Sciences';
+		$temp['12-07'] = 'Life Sciences';
+		$temp['12-08'] = 'Mathematics';
+		$temp['12-09'] = 'Nature';
+		$temp['12-10'] = 'Physics';
 	 
 	$temp['13-00'] = 'Society & Culture';
-		$temp['13-01'] = 'History';
+		// $temp['13-01'] = 'History';
 		$temp['13-02'] = 'Personal Journals';
 		$temp['13-03'] = 'Philosophy';
 		$temp['13-04'] = 'Places & Travel';
+		$temp['13-05'] = 'Relationships';
+		$temp['13-06'] = 'Documentary';
 
-	$temp['14-00'] = 'Sports & Recreation';
-		$temp['14-01'] = 'Amateur';
-		$temp['14-02'] = 'College & High School';
-		$temp['14-03'] = 'Outdoor';
-		$temp['14-04'] = 'Professional';
+	$temp['14-00'] = 'Sports';
+		$temp['14-05'] = 'Baseball';
+    $temp['14-06'] = 'Basketball';
+    $temp['14-07'] = 'Cricket';
+    $temp['14-08'] = 'Fantasy Sports';
+    $temp['14-09'] = 'Football';
+    $temp['14-10'] = 'Golf';
+    $temp['14-11'] = 'Hockey';
+    $temp['14-12'] = 'Rugby';
+    $temp['14-13'] = 'Running';
+    $temp['14-14'] = 'Soccer';
+    $temp['14-15'] = 'Swimming';
+    $temp['14-16'] = 'Tennis';
+    $temp['14-17'] = 'Volleyball';
+    $temp['14-18'] = 'Wilderness';
+    $temp['14-19'] = 'Wrestling';
 		 
 	$temp['15-00'] = 'Technology';
-		$temp['15-01'] = 'Gadgets';
-		$temp['15-02'] = 'Tech News';
-		$temp['15-03'] = 'Podcasting';
-		$temp['15-04'] = 'Software How-To';
+
+	$temp['50-00'] = 'True Crime';
 
 	$temp['16-00'] = 'TV & Film';
+  	$temp['16-01'] = 'After Shows';
+  	$temp['16-02'] = 'Film History';
+  	$temp['16-03'] = 'Film Interviews';
+  	$temp['16-04'] = 'Film Reviews';
+  	$temp['16-05'] = 'TV Reviews';
 
 	if ( $prefix_subcategories ) {
-		while ( list( $key, $val ) = each( $temp ) ) {
+		foreach ($temp as $key => $val) {
 			$parts  = explode( '-', $key );
 			$cat    = $parts[ 0 ];
 			$subcat = $parts[ 1 ];
 		 
-			if( $subcat != '00' )
+			if ( $subcat != '00' )
 				$temp[ $key ] = $temp[ $cat . '-00' ] . ' > ' . $val;
 		}
-		reset( $temp );
 	}
  
 	return $temp;

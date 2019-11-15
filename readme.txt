@@ -2,10 +2,10 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 4.4
-Tested up to: 5.2
-Requires PHP: 5.4
-Stable tag: 2.8.6
+Requires at least: 5.2
+Tested up to: 5.3
+Requires PHP: 5.6.20
+Stable tag: 2.9.6
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,6 +106,103 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.0.0 =
+
+* require PHP 5.6.20 or higher
+* require WordPress 5.2 or higher
+* update dependencies
+* fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
+* fix: etch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
+
+= 2.9.7 =
+
+* update JavaScript dependencies
+
+= 2.9.6 =
+
+* update PHP dependencies (including User Agent library for download analytics)
+* add: expose voice attribute to transcript templates ([#1062](https://github.com/podlove/podlove-publisher/pull/1062))
+* add(templating): add sort direction in seasons and season episodes, enabling `podcast.seasons({order: 'DESC'})` and `season.episode({order: 'DESC'})` ([#1080](https://github.com/podlove/podlove-publisher/issues/1080))
+* fix: download list description in analytics on mobile ([#1056](https://github.com/podlove/podlove-publisher/issues/1056))
+* fix: JS issue when selecting transcript voices
+* fix: escaping error in contributor comments ([#1081](https://github.com/podlove/podlove-publisher/issues/1081))
+
+= 2.9.5 =
+
+* Slacknotes: reactivate date picker
+
+= 2.9.4 =
+
+* fix: error on "file types" settings page
+
+**IAB Conformity**
+
+When it comes to tracking download intents, Podlove Publisher was always close to IAB recommendations, with one exception: the time window in which two requests count as two. Podlove Publisher deduplicates by hour, IAB recommends a day.
+
+There is a new setting in `Podlove > Expert Settings > Tracking`: "Deduplication Window". It enables you to change the window to "day". This is an opt-in setting, the default will continue to be hourly.
+
+See also: [docs.podlove.org: IAB Conformity](https://docs.podlove.org/podlove-publisher/guides/download-analytics.html#iab-conformity)
+
+This feature is sponsored by [Lage der Nation](https://lagedernation.org).
+
+= 2.9.3 =
+
+* add quick edit for episode number [#1096](https://github.com/podlove/podlove-publisher/pull/1069)
+* fix settings tab issues when using a language in WordPress other than english ([e613e99](https://github.com/podlove/podlove-publisher/commit/e613e99bb4f07bb88234146567e76d21ce06f5ff))
+* fix issue with category search / pages
+* fix auphonic module issue in Gutenberg editor
+
+= 2.9.2 =
+
+* update Podlove Web Player (fixes issue when sharing/embedding the player)
+* fix PHP notices [#1066](https://github.com/podlove/podlove-publisher/issues/1066) [#1064](https://github.com/podlove/podlove-publisher/issues/1064)
+
+= 2.9.1 =
+
+* fix web player sharing when using CDN player
+* fix duplicating posts: create new guid; do not copy analytics [#1048](https://github.com/podlove/podlove-publisher/issues/1048)
+
+= 2.9.0 =
+
+**New Apple iTunes Categories**
+
+Apple updated their list of available iTunes categories. 
+Please check in `Podlove > Podcast Settings > Directory > iTunes Category` if you need or want to update your category.
+In case your previously selected category does not exist any more, a warning is shown.
+
+Only one category is selectable now (instead of previously 3) to conform with iTunes specifications.
+
+**Download tracking with Google Analytics**
+
+Set your Google Analytics Tracking ID in Podlove > Expert Settings > Tracking. 
+Then every download intent will be forwarded to Google Analytics.
+
+[#1058](https://github.com/podlove/podlove-publisher/pull/1058)
+
+**Other**
+
+* fix: check if podlovePlayer function is available before calling it [#1060](https://github.com/podlove/podlove-publisher/pull/1060)
+
+= 2.8.10 =
+
+* update Podlove Web Player 4 to latest version
+
+= 2.8.9 =
+
+* update Podlove Web Player 4 to latest version
+* remove PHP dependency leth/ip-address
+
+= 2.8.8 =
+
+* update Podlove Web Player 4 to latest version
+
+= 2.8.7 =
+
+* update Podlove Web Player 4 to latest version
+* add player setting to either use the podcast language or user's browser language for web player interface ([#1008](https://github.com/podlove/podlove-publisher/pull/1008))
+* fix [#1047 Use of PHP 5.6 feature in Shows module](https://github.com/podlove/podlove-publisher/issues/1047)
+* report duplicate guids in system report
 
 = 2.8.0 =
 

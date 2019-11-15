@@ -20,20 +20,22 @@ class ContributorSettings {
 			/* $function   */ array( $this, 'page' )
 		);
 
-		$tabs = new Tabs( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove-podcasting-plugin-for-wordpress' ) ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove-podcasting-plugin-for-wordpress' ) ) );
-		$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+		if (filter_input(INPUT_GET, 'page') == 'podlove_contributor_settings') {
+			$tabs = new Tabs( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ) );
+			$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Contributors( __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ), true ) );
+			$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Groups( __( 'Groups', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+			$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Roles( __( 'Roles', 'podlove-podcasting-plugin-for-wordpress' ) ) );
+			$tabs->addTab( new \Podlove\Modules\Contributors\Settings\Tab\Defaults( __( 'Defaults', 'podlove-podcasting-plugin-for-wordpress' ) ) );
 
-		$tabs = apply_filters('podlove_contributor_settings_tabs', $tabs);
+			$tabs = apply_filters('podlove_contributor_settings_tabs', $tabs);
 
-		$this->tabs = $tabs;
-		$this->tabs->initCurrentTab();
+			$this->tabs = $tabs;
+			$this->tabs->initCurrentTab();
 
-		foreach ($this->tabs->getTabs() as $tab) {
-			if (method_exists($tab, 'getObject')) {
-				add_action( 'admin_init', array( $tab->getObject(), 'process_form' ) );
+			foreach ($this->tabs->getTabs() as $tab) {
+				if (method_exists($tab, 'getObject')) {
+					add_action( 'admin_init', array( $tab->getObject(), 'process_form' ) );
+				}
 			}
 		}
 	}

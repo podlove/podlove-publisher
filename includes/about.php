@@ -104,6 +104,7 @@ function podlove_about_page($_) {
 
 		<hr />
 
+    <!--
 		<div class="feature-section">
 			<div class="col">
 				<h3>
@@ -125,7 +126,6 @@ function podlove_about_page($_) {
 					<ul class="ul-disc">
 						<li><a target="_blank" href="//github.com/podlove/podlove-publisher/issues">GitHub</a> will continue to be the bug tracker.</li>
 						<li><a target="_blank" href="//community.podlove.org">Podlove Community</a> is the best place to find answers, ask the community for help and discuss features.</li>
-						<li><a target="_blank" href="//trello.com/board/podlove-publisher/508293f65573fa3f62004e0a">Trello</a> shows our roadmap.</li>
 						<li>Finally, <a target="_blank" href="//publisher.podlove.org/support/">Professional Support</a> is the new place to get quick help, privately.</li>
 					</ul>
 				</p>
@@ -137,6 +137,7 @@ function podlove_about_page($_) {
 	</div>
 
 	<hr />
+	-->
 
 	<div class="feature-section col two-col">
 		<h2>Upgrade Notices</h2>

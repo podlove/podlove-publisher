@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 add_filter('manage_edit-podcast_columns', 'podlove_add_episodeno_column_to_episodes_table' );
 add_action('manage_podcast_posts_custom_column', 'podlove_add_episodeno_column_content_to_episodes_table' );
