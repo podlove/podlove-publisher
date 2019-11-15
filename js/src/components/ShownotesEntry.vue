@@ -88,12 +88,13 @@ export default {
     unfurl: function() {
       this.entry.state = "unfurling";
 
-      $.post(
-        podlove_vue.rest_url +
-          "podlove/v1/shownotes/" +
-          this.entry.id +
-          "/unfurl"
-      )
+      jQuery
+        .post(
+          podlove_vue.rest_url +
+            "podlove/v1/shownotes/" +
+            this.entry.id +
+            "/unfurl"
+        )
         .done(result => {
           this.$emit("update:entry", result);
         })
@@ -105,11 +106,12 @@ export default {
     deleteEntry: function() {
       this.$emit("delete:entry", this.entry);
 
-      $.ajax({
-        url: podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
-        method: "DELETE",
-        dataType: "json"
-      })
+      jQuery
+        .ajax({
+          url: podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
+          method: "DELETE",
+          dataType: "json"
+        })
         .done(result => {})
         .fail(({ responseJSON }) => {
           console.error("could not delete entry:", responseJSON.message);
