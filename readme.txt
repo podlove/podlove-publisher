@@ -2,9 +2,9 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 4.4
+Requires at least: 5.2
 Tested up to: 5.3
-Requires PHP: 5.4
+Requires PHP: 5.6.20
 Stable tag: 2.9.6
 License: MIT
 
