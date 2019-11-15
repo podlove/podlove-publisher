@@ -107,6 +107,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.0.0 =
+
+* require PHP 5.6.20 or higher
+* require WordPress 5.2 or higher
+* update dependencies
+
 = 2.9.7 =
 
 * update JavaScript dependencies
