@@ -11,7 +11,7 @@
 *
 * @auther Bernhard R. Fischer, <bf@abenteuerland.at>
 * @date 2019/11/30
-* @version 1.1
+* @version 1.2
  */
 
 namespace Podlove\Settings;
@@ -72,11 +72,11 @@ class Regression
 
       for ($i = 0; $i < $this->cnt_; $i++)
       {
-         $this->dat_['xx'][$i] = $this->dat_['xix'][$i] = $i - $avg_ep;
-         $this->dat_['xx'][$i] *= $this->dat_['xix'][$i];
-         $this->dat_['yy'][$i] = $this->dat_['xy'][$i] = $this->dat_['yiy'][$i] = $this->dat_['val'][$i] - $avg_dn;
-         $this->dat_['xy'][$i] *= $this->dat_['xix'][$i];
-         $this->dat_['yy'][$i] *= $this->dat_['yiy'][$i];
+         $this->dat_['xx'][$i] = $i - $avg_ep;
+         $this->dat_['yy'][$i] = $this->dat_['xy'][$i] = $this->dat_['val'][$i] - $avg_dn;
+         $this->dat_['xy'][$i] *= $this->dat_['xx'][$i];
+         $this->dat_['xx'][$i] *= $this->dat_['xx'][$i];
+         $this->dat_['yy'][$i] *= $this->dat_['yy'][$i];
       }
 
       $xy_sum = array_sum($this->dat_['xy']);
@@ -318,23 +318,38 @@ class JSCanvas
  */
 class DrawRegression
 {
+   const MAX_GRID_LINES = 12;
+
    protected $reg_;
    protected $can_;
 
    protected $width_;
    protected $height_;
 
-   protected $border_ = 20;
+   protected $start_ = 0;
+   protected $cnt_;
+
+   protected $border_ = 40;
    protected $bars_ = 5;
    protected $xmul_ = 1;
    protected $ymul_ = 1;
 
 
-   function __construct($reg, $width = 800, $height = 200)
+   function __construct($reg, $width = 800, $height = 200, $vis = 0)
    {
       $this->reg_ = $reg;
       $this->width_ = $width;
       $this->height_ = $height;
+
+      if ($vis <= 0)
+      {
+         $this->cnt_ = $this->reg_->count();
+      }
+      else
+      {
+         $this->cnt_ = $vis;
+         $this->start_ = $this->reg_->count() - $vis;
+      }
 
       $this->can_ = new JSCanvas("reg_can", $width, $height);
       $this->set_scale_factors();
@@ -349,8 +364,8 @@ class DrawRegression
 
    protected function set_scale_factors()
    {
-      if ($this->reg_->count())
-         $this->xmul_ = ($this->width_ - 2 * $this->border_) / $this->reg_->count();
+      if ($this->cnt_)
+         $this->xmul_ = ($this->width_ - 2 * $this->border_) / $this->cnt_;
       if ($this->reg_->max())
          $this->ymul_ = ($this->height_ - 2 * $this->border_) / $this->reg_->max();
    }
@@ -366,8 +381,8 @@ class DrawRegression
    function draw_regline()
    {
       $this->can_->beginPath();
-      $this->can_->moveTo(round($this->border_ + $this->xmul_), round($this->height_ - $this->border_ - ($this->reg_->rval()[0] * $this->ymul_)));
-      $this->can_->lineTo(round($this->width_ - $this->border_), round($this->height_ - $this->border_ - ($this->reg_->rval()[$this->reg_->count() - 1] * $this->ymul_)));
+      $this->can_->moveTo(round($this->border_ + $this->xmul_), round($this->height_ - $this->border_ - ($this->reg_->rval()[$this->start_] * $this->ymul_)));
+      $this->can_->lineTo(round($this->width_ - $this->border_), round($this->height_ - $this->border_ - ($this->reg_->rval()[$this->start_ + $this->cnt_ - 1] * $this->ymul_)));
       $this->can_->strokeStyle("#ffd700b0");
       $this->can_->lineWidth($this->bars_);
       $this->can_->stroke();
@@ -378,11 +393,11 @@ class DrawRegression
    {
       $this->can_->fillStyle("#6a5acde0");
       $bars = $this->xmul_ * 0.5;
-      for ($i = 0; $i < $this->reg_->count(); $i++)
+      for ($i = 0; $i < $this->cnt_; $i++)
       {
          $this->can_->rect(round($this->border_ + ($i + 1) * $this->xmul_ - $bars / 2),
-            round($this->height_ - $this->border_ - $this->reg_->val()[$i] * $this->ymul_),
-            round($bars), round($this->reg_->val()[$i] * $this->ymul_));
+            round($this->height_ - $this->border_ - $this->reg_->val()[$i + $this->start_] * $this->ymul_),
+            round($bars), round($this->reg_->val()[$i + $this->start_] * $this->ymul_));
          $this->can_->fill();
       }
    }
@@ -392,14 +407,13 @@ class DrawRegression
    {
       $this->can_->fillStyle("#6a5acda0");
       $bars = $this->xmul_ * 0.2;
-      for ($i = 0; $i < $this->reg_->count(); $i++)
+      for ($i = 0; $i < $this->cnt_; $i++)
       {
-         $this->can_->fillStyle($this->reg_->dev()[$i] >= 0 ? "#98fb98" : "#fa8072a0");
+         $this->can_->fillStyle($this->reg_->dev()[$i + $this->start_] >= 0 ? "#98fb98" : "#fa8072a0");
          $this->can_->rect(round($this->border_ + ($i + 1) * $this->xmul_ - $bars / 2),
-            round($this->height_ - $this->border_ - $this->reg_->dev()[$i] * $this->ymul_),
-            round($bars), round($this->reg_->dev()[$i] * $this->ymul_));
+            round($this->height_ - $this->border_ - $this->reg_->dev()[$i + $this->start_] * $this->ymul_),
+            round($bars), round($this->reg_->dev()[$i + $this->start_] * $this->ymul_));
          $this->can_->fill();
-
       }
    }
 
@@ -407,16 +421,16 @@ class DrawRegression
    function draw_ptext()
    {
       $this->can_->fillStyle("#202020");
-      for ($i = 0; $i < $this->reg_->count(); $i++)
+      for ($i = 0; $i < $this->cnt_; $i++)
       {
-         $p = round($this->reg_->p()[$i] * 100, 1);
+         $p = round($this->reg_->p()[$i + $this->start_] * 100, 1);
          if (abs($p) >= 9.5)
             $p = round($p);
 
          $s = $p >= 0 ? "+$p%" : "$p%";
          $this->can_->fillText($s,
             round($this->border_ + ($i + 1) * $this->xmul_) . "-context.measureText('$s').width/2",
-            round($this->height_ - $this->border_ - $this->reg_->val()[$i] * $this->ymul_));
+            round($this->height_ - $this->border_ - $this->reg_->val()[$i + $this->start_] * $this->ymul_));
       }
    }
 
@@ -436,7 +450,7 @@ class DrawRegression
    {
       $ys = 5;
 
-      for ($m = $this->reg_->max(); $m / $ys > 15; $ys *= 2);
+      for ($m = $this->reg_->max(); $m / $ys > DrawRegression::MAX_GRID_LINES; $ys *= 2);
 
       return $ys;
    }
@@ -457,9 +471,9 @@ class DrawRegression
       $this->can_->lineTo(round($this->border_), $this->border_);
       $this->can_->stroke();
 
-      for ($i = 0; $i < $this->reg_->count(); $i++)
+      for ($i = 0; $i < $this->cnt_; $i++)
       {
-         $ii = $i + 1;
+         $ii = $i + 1 + $this->start_;
          $this->can_->fillText($ii, round($this->border_ + ($i + 1) * $this->xmul_) . "-context.measureText('$ii').width/2", round($this->height_ - $this->border_ * 0.5 ));
       }
 
@@ -473,7 +487,12 @@ class DrawRegression
          $this->can_->lineTo(round($this->width_ - $this->border_ + $this->xmul_ * .5), round($this->height_ - $this->border_ - $i * $this->ymul_));
          $this->can_->stroke();
 
-         $this->can_->fillText($i, $this->border_ . "-context.measureText('$i ').width", round($this->height_ - $this->border_ - $i * $this->ymul_));
+         if ($i < 1000)
+            $s = $i;
+         else
+            $s = round($i / 1000, 1) . "k";
+
+         $this->can_->fillText($s, $this->border_ . "-context.measureText('$s ').width", round($this->height_ - $this->border_ - $i * $this->ymul_));
       }
       $this->can_->setLineDash(array());
    }
@@ -539,13 +558,11 @@ class PodloveRegression
          if ($post->post_type != 'podcast')
             continue;
 
-         $releaseDate = new \DateTime($post->post_date);
-         $releaseDate->setTime(0, 0, 0);
+         // break loop if there is no data
+         if (!($d = get_post_meta($post->ID, '_podlove_downloads_2w', true)))
+            break;
 
-         $d2 = new \DateTime($post->post_date);
-         $d2->add(new \DateInterval("P14D"));
-
-         $this->data_[] = Model\DownloadIntentClean::total_by_episode_id($episode->id, $releaseDate->format("Y-m-d"), $d2->format("Y-m-d"));
+         $this->data_[] = $d;
       }
    }
 
@@ -567,7 +584,7 @@ class PodloveRegression
       $reg->reg_calc();
 
       // generate regression HTML/JS code
-      $dctx = new DrawRegression($reg, 1024, 256);
+      $dctx = new DrawRegression($reg, 1024, 256, 25);
       $dctx->draw();
       // output code
       $dctx->output();
@@ -598,7 +615,7 @@ class TestRegression
       $reg->reg_calc();
 
       // generate regression HTML/JS code
-      $dctx = new DrawRegression($reg, 1024, 256);
+      $dctx = new DrawRegression($reg, 1024, 256, 25);
       $dctx->draw();
 
       ?><!DOCTYPE html>
