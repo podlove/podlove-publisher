@@ -9,8 +9,9 @@
 * downloads chart, approx. at line number 305:
 * <?php require("regression.php"); new PodloveRegression(array()); ?>
 *
-* @auther Bernhard R. Fischer
+* @auther Bernhard R. Fischer, <bf@abenteuerland.at>
 * @date 2019/11/30
+* @version 1.1
  */
 
 namespace Podlove\Settings;
@@ -42,6 +43,8 @@ class Regression
    protected $b0_ = 0;
    //! regression parameter b1
    protected $b1_ = 0;
+   //! determination
+   protected $r2_ = 0;
    //! max regression value
    protected $max_reg_ = 0;
 
@@ -67,15 +70,17 @@ class Regression
       $avg_ep = $xsum / $this->cnt_;
       $avg_dn = $sum / $this->cnt_;
 
-      $xy_sum = 0;
-      $xx_sq = 0;
       for ($i = 0; $i < $this->cnt_; $i++)
       {
-         $xix = $i - $avg_ep;
-         $yiy = $this->dat_['val'][$i] - $avg_dn;
-         $xy_sum += $xix * $yiy;
-         $xx_sq += $xix * $xix;
+         $this->dat_['xx'][$i] = $this->dat_['xix'][$i] = $i - $avg_ep;
+         $this->dat_['xx'][$i] *= $this->dat_['xix'][$i];
+         $this->dat_['yy'][$i] = $this->dat_['xy'][$i] = $this->dat_['yiy'][$i] = $this->dat_['val'][$i] - $avg_dn;
+         $this->dat_['xy'][$i] *= $this->dat_['xix'][$i];
+         $this->dat_['yy'][$i] *= $this->dat_['yiy'][$i];
       }
+
+      $xy_sum = array_sum($this->dat_['xy']);
+      $xx_sq = array_sum($this->dat_['xx']);
 
       $this->b1_ = $xy_sum / $xx_sq;
       $this->b0_ = $avg_dn - $this->b1_ * $avg_ep;
@@ -98,10 +103,16 @@ class Regression
       for ($i = 0; $i < $this->cnt_; $i++)
       {
          $this->dat_['rval'][$i] = $this->b0_ + $this->b1_ * $i;
-         $this->dat_['dev'][$i] = $this->dat_['val'][$i] - $this->dat_['rval'][$i];
+         $this->dat_['dy2'][$i] = $this->dat_['dev'][$i] = $this->dat_['val'][$i] - $this->dat_['rval'][$i];
+         $this->dat_['dy2'][$i] *= $this->dat_['dy2'][$i];
          if ($this->dat_['rval'][$i])
             $this->dat_['p'][$i] = $this->dat_['dev'][$i] / $this->dat_['rval'][$i];
       }
+
+      $yy_sum = array_sum($this->dat_['yy']);
+      $dy2_sum = array_sum($this->dat_['dy2']);
+      if ($yy_sum > 0)
+         $this->r2_ = 1 - $dy2_sum / $yy_sum;
 
       $this->max_reg_ = max($this->dat_['rval']);
       $this->calc_state = Regression::REG_CALC;
@@ -168,6 +179,16 @@ class Regression
    function max()
    {
       return max($this->max_dn_, $this->max_reg_);
+   }
+
+
+   /*! This function returns the regression parameters as an array.
+      * yi = b0 + b1 * xi
+      * @return Associative array with elements 'b0', 'b1', and 'r2'.
+    */
+   function rparam()
+   {
+      return array('b0' => $this->b0_, 'b1' => $this->b1_, 'r2' => $this->r2_);
    }
 }
 
@@ -392,10 +413,22 @@ class DrawRegression
          if (abs($p) >= 9.5)
             $p = round($p);
 
-         $this->can_->fillText($p >= 0 ? "+$p%" : "$p%",
-            round($this->border_ + ($i + .5) * $this->xmul_),
+         $s = $p >= 0 ? "+$p%" : "$p%";
+         $this->can_->fillText($s,
+            round($this->border_ + ($i + 1) * $this->xmul_) . "-context.measureText('$s').width/2",
             round($this->height_ - $this->border_ - $this->reg_->val()[$i] * $this->ymul_));
       }
+   }
+
+
+   function draw_rtext()
+   {
+      $fk = sprintf("y = %.1f + %.1f x", round($this->reg_->rparam()['b0'], 1), round($this->reg_->rparam()['b1'], 1));
+      $r2 = sprintf("r² = %.2f", round($this->reg_->rparam()['r2'], 2));
+
+      $this->can_->fillStyle("#202020");
+      $this->can_->fillText($fk, round($this->border_ + 5), round($this->border_));
+      $this->can_->fillText($r2, round($this->border_ + 5), round($this->border_ + 12));
    }
 
 
@@ -456,6 +489,7 @@ class DrawRegression
       $this->draw_regline();
       $this->draw_trend();
       $this->draw_ptext();
+      $this->draw_rtext();
 
       $this->can_->end_script();
    }
@@ -544,6 +578,41 @@ class PodloveRegression
       </div>
       </div>
       <?php
+   }
+}
+
+
+class TestRegression
+{
+/*   protected $data_ = array(52, 88, 90, 94, 146, 190, 174, 130, 230, 270, 136,
+      116, 714, 406, 224, 260, 376, 366, 258, 374, 328, 492, 508, 528, 870,
+      576, 716, 494, 528, 446, 406, 518, 494, 584, 484, 612);
+ */
+   protected $data_ = array(3, 5, 7, 9, 11, 13, 15, 19);
+
+
+   function __construct()
+   {
+      // calculate regression
+      $reg = new Regression($this->data_);
+      $reg->reg_calc();
+
+      // generate regression HTML/JS code
+      $dctx = new DrawRegression($reg, 1024, 256);
+      $dctx->draw();
+
+      ?><!DOCTYPE html>
+      <html>
+      <head> <meta charset=utf-8 /> </head>
+      <body>
+      <?php $dctx->output(); ?>
+      <pre>
+      <?php print_r($reg); ?>
+      </pre>
+      </body>
+      </html>
+      <?php
+
    }
 }
 
