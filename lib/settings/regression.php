@@ -315,26 +315,49 @@ class JSCanvas
 
 /*! This class creates the HTML canvas and the necessary JS code to generate a
    * regression diagram.
+   * To use it, first instantiate an object and pass at least a Regression
+   * object to the constructur. Then call the method draw() which will
+   * internally generate all necessary HTML5 code. Finally call the method
+   * output() which will print the full HTML5 code.
  */
 class DrawRegression
 {
+   //! maximum number of dynamic y-axis grid
    const MAX_GRID_LINES = 12;
 
+   //! internal Regression object
    protected $reg_;
+   //! JSCanvas object
    protected $can_;
 
+   //! diagram width
    protected $width_;
+   //! diagram height
    protected $height_;
 
+   //! first episode (array index) to display on diagram
    protected $start_ = 0;
+   //! number of episodes to display
    protected $cnt_;
 
+   //! border pixels (border around diagram within width and height)
    protected $border_ = 40;
+   //! width of regression line
    protected $bars_ = 5;
+   //! x-scaling factor for bars
    protected $xmul_ = 1;
+   //! y-scaling factor for episode downloads
    protected $ymul_ = 1;
 
 
+   /*! Construct (initialize) DrawRegression object.
+      * @param $reg Regression object.
+      * @param $width Optional diagram width in pixels.
+      * @param $height Optional diagram height in pixels.
+      * @param $vis Number of episodes (elements within regression array) to
+      *        display. If $vis is 0, all elements are display, otherwise it
+      *        displays the last $vis elements.
+    */
    function __construct($reg, $width = 800, $height = 200, $vis = 0)
    {
       $this->reg_ = $reg;
@@ -362,6 +385,7 @@ class DrawRegression
    }
 
 
+   //! Calculate scaling factor xmul_ and ymul_.
    protected function set_scale_factors()
    {
       if ($this->cnt_)
@@ -371,6 +395,7 @@ class DrawRegression
    }
 
 
+   //! Set the diagram border.
    function set_border($border)
    {
       $this->border_ = $border;
@@ -378,6 +403,7 @@ class DrawRegression
    }
 
 
+   //! Generate regression line.
    function draw_regline()
    {
       $this->can_->beginPath();
@@ -389,6 +415,7 @@ class DrawRegression
    }
 
 
+   //! Generate episode bars.
    function draw_bars()
    {
       $this->can_->fillStyle("#6a5acde0");
@@ -403,6 +430,7 @@ class DrawRegression
    }
 
 
+   //! Generate trend bars of episode.
    function draw_trend()
    {
       $this->can_->fillStyle("#6a5acda0");
@@ -418,6 +446,7 @@ class DrawRegression
    }
 
 
+   //! Generate text of percentage plus/minus of each episode.
    function draw_ptext()
    {
       $this->can_->fillStyle("#202020");
@@ -435,6 +464,7 @@ class DrawRegression
    }
 
 
+   //! Generate text of regression parameters and quality.
    function draw_rtext()
    {
       $fk = sprintf("y = %.1f + %.1f x", round($this->reg_->rparam()['b0'], 1), round($this->reg_->rparam()['b1'], 1));
@@ -446,6 +476,7 @@ class DrawRegression
    }
 
 
+   //! Calculate y-scaling, i.e. dynamic grid. FIXME: should be imroved!
    private function yscale()
    {
       $ys = 5;
@@ -456,6 +487,7 @@ class DrawRegression
    }
 
 
+   //! Generate diagram axis, grid, and text.
    function draw_axis()
    {
       $this->can_->strokeStyle("#303030");
@@ -498,6 +530,7 @@ class DrawRegression
    }
 
 
+   //! Generate complete diagram.
    function draw()
    {
 
@@ -514,6 +547,7 @@ class DrawRegression
    }
 
 
+   //! Output diagram.
    function output()
    {
       $this->can_->output_canvas_tag();
