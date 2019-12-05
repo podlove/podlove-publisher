@@ -10,8 +10,8 @@
 * <?php require("regression.php"); new PodloveRegression(array()); ?>
 *
 * @auther Bernhard R. Fischer, <bf@abenteuerland.at>
-* @date 2019/11/30
-* @version 1.2
+* @date 2019/12/05
+* @version 1.3
  */
 
 namespace Podlove\Settings;
@@ -214,7 +214,10 @@ class JSCanvas
 
    function output_canvas_tag()
    {
+      echo("<div style=\"position:relative;width:$this->width_;height:$this->height_;\">\n");
       echo("<canvas id=\"$this->id_\" width=\"$this->width_\" height=\"$this->height_\"></canvas>\n");
+      echo("<canvas id=\"{$this->id_}_tip\" width=\"100\" height=\"25\" style=\"background-color:white;border:1px solid blue;position:absolute;left:-200px;top:100px;\"></canvas>\n");
+      echo("</div>");
    }
 
 
@@ -227,14 +230,67 @@ class JSCanvas
    function start_script()
    {
       $this->script_ .= "<script>\n";
+   }
+
+   function start_draw()
+   {
       $this->script_ .= "$this->id_();\nfunction $this->id_()\n{\nvar canvas = document.getElementById('$this->id_');\nif (canvas.getContext)\n{\nvar context = canvas.getContext('2d');\n";
+   }
+
+
+   function end_draw()
+   {
+      $this->script_ .= "}\n}\n";
    }
 
 
    function end_script()
    {
-      $this->script_ .= "}\n}\n";
       $this->script_ .= "</script>\n";
+   }
+
+
+   function add_tooltip($a)
+   {
+      $this->script_ .= "tips.push({x1: {$a['x1']}, y1: {$a['y1']}, x2: {$a['x2']}, y2: {$a['y2']}, t: \"{$a['t']}\"});\n";
+   }
+
+
+   function tooltip_code()
+   {
+      $this->script_ .=
+      "
+      var canvas = document.getElementById('$this->id_');
+      var tip = document.getElementById('{$this->id_}_tip');
+      var tips = [];
+      var canvasCtx = canvas.getContext('2d');
+      var tipCtx = tip.getContext('2d');
+
+      canvas.addEventListener('mousemove', function(e){handleMouseMove(e);});
+
+      function handleMouseMove(e)
+      {
+         var rect = canvas.getBoundingClientRect();
+         mouseX = e.clientX - rect.left;
+         mouseY = e.clientY - rect.top;
+         var hit = false;
+         for (var i = 0; i < tips.length; i++)
+         {
+            var dot = tips[i];
+            if (mouseX >= dot.x1 && mouseY >= dot.y1 && mouseX <= dot.x2 && mouseY <= dot.y2)
+            {
+               var tx = dot.t;
+               tip.style.left = dot.x1 + 10 + 'px';
+               tip.style.top = dot.y1 + 10 + 'px';
+               tip.width = tipCtx.measureText(tx).width + 10;
+               tipCtx.clearRect(0, 0, tip.width, tip.height);
+               tipCtx.fillText(tx, 5, 15);
+               hit = true;
+            }
+         }
+         if (!hit) { tip.style.left = '-400px'; }
+       }
+      ";
    }
 
 
@@ -327,6 +383,8 @@ class DrawRegression
 
    //! internal Regression object
    protected $reg_;
+   //! descriptional data of elements
+   protected $desc_;
    //! JSCanvas object
    protected $can_;
 
@@ -385,6 +443,13 @@ class DrawRegression
    }
 
 
+   //! Set description array.
+   function set_description($a)
+   {
+      $this->desc_ = $a;
+   }
+
+
    //! Calculate scaling factor xmul_ and ymul_.
    protected function set_scale_factors()
    {
@@ -415,16 +480,43 @@ class DrawRegression
    }
 
 
+   //! Calculate coordinates of an episode bar.
+   private function bar_coords($i)
+   {
+      $c = array();
+
+      $bars = $this->xmul_ * 0.5;
+      $c['x1'] = round($this->border_ + ($i + 1) * $this->xmul_ - $bars / 2);
+      $c['y1'] = round($this->height_ - $this->border_ - $this->reg_->val()[$i + $this->start_] * $this->ymul_);
+      $c['w'] = round($bars);
+      $c['h'] = round($this->reg_->val()[$i + $this->start_] * $this->ymul_);
+      $c['x2'] = $c['x1'] + $c['w'];
+      $c['y2'] = $c['y1'] + $c['h'];
+
+      return $c;
+   }
+
+
+   //! Add data for all tooltips to JS.
+   function tooltip_data()
+   {
+      for ($i = 0; $i < $this->cnt_; $i++)
+      {
+         $c = $this->bar_coords($i);
+         $c['t'] = isset($this->desc_[$i + $this->start_]['title']) ? $this->desc_[$i + $this->start_]['title'] : $i + $this->start_ + 1;
+         $this->can_->add_tooltip($c);
+      }
+   }
+
+
    //! Generate episode bars.
    function draw_bars()
    {
       $this->can_->fillStyle("#6a5acde0");
-      $bars = $this->xmul_ * 0.5;
       for ($i = 0; $i < $this->cnt_; $i++)
       {
-         $this->can_->rect(round($this->border_ + ($i + 1) * $this->xmul_ - $bars / 2),
-            round($this->height_ - $this->border_ - $this->reg_->val()[$i + $this->start_] * $this->ymul_),
-            round($bars), round($this->reg_->val()[$i + $this->start_] * $this->ymul_));
+         $c = $this->bar_coords($i);
+         $this->can_->rect($c['x1'], $c['y1'], $c['w'], $c['h']);
          $this->can_->fill();
       }
    }
@@ -536,12 +628,17 @@ class DrawRegression
 
       $this->can_->start_script();
 
+      $this->can_->start_draw();
       $this->draw_axis();
       $this->draw_bars();
       $this->draw_regline();
       $this->draw_trend();
       $this->draw_ptext();
       $this->draw_rtext();
+      $this->can_->end_draw();
+
+      $this->can_->tooltip_code();
+      $this->tooltip_data();
 
       $this->can_->end_script();
    }
@@ -564,6 +661,8 @@ class PodloveRegression
 {
    //! internal array to keep the downloads of all episodes
    protected $data_ = array();
+   //! internal array to keep descriptional data of episodes
+   protected $desc_ = array();
 
 
    function __construct()
@@ -597,6 +696,7 @@ class PodloveRegression
             break;
 
          $this->data_[] = $d;
+         $this->desc_[] = array('title' => $post->post_title);
       }
    }
 
@@ -619,6 +719,7 @@ class PodloveRegression
 
       // generate regression HTML/JS code
       $dctx = new DrawRegression($reg, 1024, 256, 25);
+      $dctx->set_description($this->desc_);
       $dctx->draw();
       // output code
       $dctx->output();
