@@ -428,6 +428,8 @@ class DrawRegression
       }
       else
       {
+         if ($vis > $this->reg_->count())
+            $vis = $this->reg_->count();
          $this->cnt_ = $vis;
          $this->start_ = $this->reg_->count() - $vis;
       }
