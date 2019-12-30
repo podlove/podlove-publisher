@@ -53,13 +53,21 @@
             <textarea rows="3" placeholder="Description" name="description" v-model="entry.description"/>
           </label>
         </div>
+
+        <div class="edit-section edit-actions">
+          <div>
+            <a href="#" class="button button-primary" @click.prevent="save()">Save Changes</a>
+            <a href="#" class="button" @click.prevent="edit = false">Cancel</a>
+          </div>
+          <div>
+            <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">Delete Entry</a>
+          </div>
+        </div>
       </div>
       <div :class="{'supplementary': true, 'edit': edit}">
         <div class="actions">
           <a href="#" class="retry-btn" v-if="!edit" @click.prevent="edit = true">edit</a>
           <a href="#" class="retry-btn" v-if="!edit" @click.prevent="unfurl()">refresh</a>
-          <a href="#" class="retry-btn" v-if="edit" @click.prevent="save()">save</a>
-          <a href="#" class="delete-btn destructive" v-if="edit" @click.prevent="deleteEntry()">delete</a>
         </div>
         <div style="margin-left: 12px">
           <div class="drag-handle">
@@ -237,7 +245,7 @@ export default {
   color: #666;
 }
 
-.actions a.destructive {
+a.destructive {
   color: #ef7885;
 }
 
@@ -265,8 +273,18 @@ export default {
   margin-top: 12px;
 }
 
+.edit-section:first {
+  margin-top: 0px;
+}
+
 .edit-section label span {
   display: block;
   margin-bottom: 4px;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
