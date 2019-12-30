@@ -87,7 +87,7 @@ class PlayerConfig {
          	$config["activeTab"] = "chapters";
          }
 
-         return $config;
+         return apply_filters('podlove_web_player_3_config', $config);
 	}
 
 }
