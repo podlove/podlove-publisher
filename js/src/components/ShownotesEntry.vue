@@ -1,5 +1,6 @@
 <template>
   <div class="p-card p-entry" :class="{'compact': compact}" @click="compact = !compact">
+    
     <div class="p-card-body" v-if="entry.state == 'unfurling'">
       <div class="main">
         <div class="site">
@@ -13,8 +14,9 @@
         <i class="podlove-icon-spinner rotate"></i>
       </div>
     </div>
+
     <div class="p-card-body" v-else-if="entry.url">
-      <div class="main">
+      <div class="main" v-if="!edit">
         <div class="site" v-if="entry.site_url && entry.site_name">
           <img v-if="entry.icon" :src="icon" width="16" height="16">
           <div v-else class="default-icon"></div>
@@ -29,10 +31,35 @@
         </div>
         <div class="description">{{ entry.description }}</div>
       </div>
-      <div class="supplementary">
+      <div class="main" v-else>
+
+        <div class="edit-section">
+          <label>
+          <span>URL</span>
+            <input type="text" placeholder="URL" name="url" v-model="entry.url"/>
+          </label>
+        </div>
+
+        <div class="edit-section">
+          <label>
+            <span>Title</span>
+            <input type="text" placeholder="Title" name="title" v-model="entry.title"/>
+          </label>
+        </div>
+
+        <div class="edit-section">
+          <label>
+            <span>Description</span>
+            <textarea rows="3" placeholder="Description" name="description" v-model="entry.description"/>
+          </label>
+        </div>
+      </div>
+      <div :class="{'supplementary': true, 'edit': edit}">
         <div class="actions">
-          <a href="#" class="retry-btn" @click.prevent="unfurl()">refresh</a>
-          <a href="#" class="delete-btn" @click.prevent="deleteEntry()">delete</a>
+          <a href="#" class="retry-btn" v-if="!edit" @click.prevent="edit = true">edit</a>
+          <a href="#" class="retry-btn" v-if="!edit" @click.prevent="unfurl()">refresh</a>
+          <a href="#" class="retry-btn" v-if="edit" @click.prevent="save()">save</a>
+          <a href="#" class="delete-btn destructive" v-if="edit" @click.prevent="deleteEntry()">delete</a>
         </div>
         <div style="margin-left: 12px">
           <div class="drag-handle">
@@ -46,7 +73,7 @@
       <div class="supplementary" style="display: flex; margin-left: 12px">
         <div class="actions">
           <a href="#" class="retry-btn" @click.prevent="unfurl()">retry?</a>
-          <a href="#" class="delete-btn" @click.prevent="deleteEntry()">delete</a>
+          <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">delete</a>
         </div>
         <div style="margin-left: 12px">
           <div class="drag-handle">
@@ -55,6 +82,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -67,7 +95,8 @@ export default {
   props: ["entry"],
   data() {
     return {
-      compact: true
+      compact: true,
+      edit: false
     };
   },
   components: {
@@ -103,6 +132,22 @@ export default {
           console.error("could not unfurl entry:", responseJSON.message);
         });
     },
+    save: function() {
+      this.edit = false;
+
+      this.$emit("update:entry", this.entry);
+
+      jQuery
+        .post(podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id, {
+          url: this.entry.url,
+          title: this.entry.title,
+          description: this.entry.description
+        })
+        .done(result => {})
+        .fail(({ responseJSON }) => {
+          console.error("could not delete entry:", responseJSON.message);
+        });
+    },
     deleteEntry: function() {
       this.$emit("delete:entry", this.entry);
 
@@ -133,10 +178,6 @@ export default {
 
 .compact .description {
   display: none;
-}
-
-.p-entry {
-  /* cursor: pointer; */
 }
 
 .p-entry:hover {
@@ -196,7 +237,7 @@ export default {
   color: #666;
 }
 
-.actions a:last-of-type {
+.actions a.destructive {
   color: #ef7885;
 }
 
@@ -211,7 +252,21 @@ export default {
   visibility: hidden;
 }
 
-.p-card:hover .supplementary {
+.p-card:hover .supplementary,
+.supplementary.edit {
   visibility: visible;
+}
+
+.main {
+  width: 100%;
+}
+
+.edit-section {
+  margin-top: 12px;
+}
+
+.edit-section label span {
+  display: block;
+  margin-bottom: 4px;
 }
 </style>

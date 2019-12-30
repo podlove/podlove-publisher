@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Shownotes;
 
 use Podlove\Http\Curl;
@@ -69,7 +70,6 @@ class REST_API
                 'callback' => [$this, 'import_osf'],
             ],
         ]);
-
     }
 
     public function import_osf($request)
@@ -142,7 +142,6 @@ class REST_API
         $response = rest_ensure_response(["message" => "ok"]);
 
         return $response;
-
     }
 
     public function get_items($request)
@@ -349,7 +348,22 @@ class REST_API
             return $entry;
         }
 
-        $entry->position = $request['position'];
+        if (isset($request['title'])) {
+            $entry->title = $request['title'];
+        }
+
+        if (isset($request['url'])) {
+            $entry->url = $request['url'];
+        }
+
+        if (isset($request['description'])) {
+            $entry->description = $request['description'];
+        }
+
+        if (isset($request['position'])) {
+            $entry->position = $request['position'];
+        }
+
         $entry->save();
 
         $response = rest_ensure_response($entry->to_array());
