@@ -7,13 +7,14 @@ env:
 before_install:
   - openssl aes-256-cbc -K $encrypted_30816da072e0_key -iv $encrypted_30816da072e0_iv
     -in deploy_key.enc -out ./deploy_key -d
+  - phpenv config-rm xdebug.ini || return 0
   - git submodule update --init --recursive
 install:
-  - composer install
-before_script:
+  - composer install --prefer-dist --no-interaction
+  # Install the WordPress core test suite
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 script:
-  - phpunit
+  - ./vendor/bin/phpunit
 notifications:
   slack:
     secure: HJRRU0ow1EpHxGxkVtT2WvG4Bbw+eeiJy4gACDOp1HmxXvWEH8BMziB8lP5l6Iv6MFcgExrMPFgsJI3PJgO8iTtrSyjebxahv4LFaU7uvoBwklIpeIcNyhg5DEoKenrsmmfwneArhn/1pQZOCrwSAxKqelp/G74AvFB7D/pcc3s=
@@ -26,3 +27,6 @@ addons:
   ssh_known_hosts: eric.co.de
 services:
   - mysql
+cache:
+  directories:
+    - $HOME/.composer/cache
