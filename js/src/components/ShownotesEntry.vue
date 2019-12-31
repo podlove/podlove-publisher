@@ -17,22 +17,37 @@
 
     <div class="p-card-body" v-else-if="entry.url">
       <div class="main" v-if="!edit">
-        <div class="site" v-if="entry.site_url && entry.site_name">
-          <img v-if="entry.icon" :src="icon" width="16" height="16">
-          <div v-else class="default-icon"></div>
-          <span class="site-name">
-            <a :href="entry.site_url" target="_blank">{{ entry.site_name }}</a>
-          </span>
+        <div class="p-entry-container">
+          <div class="p-entry-favicon">
+            <img v-if="entry.icon" :src="icon" width="16" height="16">
+            <div v-else class="default-icon"></div>
+          </div>
+          <div class="p-entry-content">
+            <div class="p-entry-site">{{ entry.site_name }}</div>
+            <span class="link p-entry-title-url">
+              <a :href="entry.url" target="_blank">{{ entry.title }}</a>
+            </span>
+            <br>
+            <span class="p-entry-url-url">
+              <a :href="entry.url" target="_blank">{{ entry.url }}</a>
+            </span>
+            <div class="p-entry-description" v-if="entry.description">{{ entry.description }}</div>
+          </div>
+          <div class="p-entry-actions">
+            <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
+              <icon-edit></icon-edit>
+            </span>
+            <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
+              <icon-refresh></icon-refresh>
+            </span>            
+            <div class="drag-handle">
+              <icon-menu></icon-menu>
+            </div>
+          </div>
         </div>
-        <div style="display: flex">
-          <span class="link">
-            <a :href="entry.url" target="_blank">{{ entry.title }}</a>
-          </span>
-        </div>
-        <div class="description">{{ entry.description }}</div>
       </div>
       <div class="main" v-else>
-
+        
         <div class="edit-section">
           <label>
           <span>URL</span>
@@ -62,20 +77,11 @@
           <div>
             <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">Delete Entry</a>
           </div>
-        </div>
-      </div>
-      <div :class="{'supplementary': true, 'edit': edit}">
-        <div class="actions">
-          <a href="#" class="retry-btn" v-if="!edit" @click.prevent="edit = true">edit</a>
-          <a href="#" class="retry-btn" v-if="!edit" @click.prevent="unfurl()">refresh</a>
-        </div>
-        <div style="margin-left: 12px">
-          <div class="drag-handle">
-            <icon-menu></icon-menu>
-          </div>
-        </div>
+        </div>        
+
       </div>
     </div>
+
     <div class="p-card-body failed" v-else-if="entry.state == 'failed'">
       <div class="main">Unable to access URL: {{ entry.original_url }}</div>
       <div class="supplementary" style="display: flex; margin-left: 12px">
@@ -98,6 +104,8 @@
 import CheveronDown from "./icons/CheveronDown";
 import CheveronUp from "./icons/CheveronUp";
 import Menu from "./icons/Menu";
+import Refresh from "./icons/Refresh";
+import Edit from "./icons/Edit";
 
 export default {
   props: ["entry"],
@@ -110,7 +118,9 @@ export default {
   components: {
     "icon-cheveron-down": CheveronDown,
     "icon-cheveron-up": CheveronUp,
-    "icon-menu": Menu
+    "icon-menu": Menu,
+    "icon-refresh": Refresh,
+    "icon-edit": Edit
   },
   computed: {
     icon: function() {
@@ -192,11 +202,11 @@ export default {
   background: hsl(197, 90%, 97%);
 }
 
-.link {
+/* .link {
   display: flex;
   align-items: flex-start;
   overflow: hidden;
-}
+} */
 
 .link a {
   color: #333;
@@ -215,14 +225,13 @@ export default {
   height: 22px;
 }
 .drag-handle {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
   cursor: grab;
 }
 .drag-handle:active {
   cursor: grabbing;
-}
-.drag-handle {
-  width: 16px;
-  height: 16px;
 }
 
 .drag-handle .secondary {
@@ -247,6 +256,11 @@ export default {
 
 a.destructive {
   color: #ef7885;
+}
+
+.p-entry-favicon div,
+.p-entry-favicon img {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .supplementary {
@@ -286,5 +300,52 @@ a.destructive {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.retry-btn {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  color: #999;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.p-entry-container {
+  display: flex;
+  align-items: start;
+}
+
+.p-entry-content {
+  flex-grow: 2;
+  padding-right: 12px;
+}
+
+.p-entry-actions {
+  min-width: 68px;
+}
+
+.p-entry-favicon {
+  padding-right: 12px;
+}
+
+.p-entry-url-url a {
+  color: #999;
+}
+
+.p-entry-site {
+  font-size: 11px;
+  margin-bottom: 9px;
+}
+
+.p-entry-description {
+  font-size: 11px;
+  margin-top: 9px;
+}
+
+.p-entry-url,
+.p-entry-site,
+.p-entry-description {
+  color: #999;
 }
 </style>
