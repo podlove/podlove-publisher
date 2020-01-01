@@ -186,6 +186,15 @@ class REST_API
             );
         }
 
+        if ($request["type"] == "link") {
+            return $this->create_link_item($request, $episode);
+        } elseif ($request["type"] == "topic") {
+            return $this->create_topic_item($request, $episode);
+        }
+    }
+
+    private function create_link_item($request, $episode)
+    {
         $original_url = esc_sql($request['original_url']);
         $episode_id   = (int) $episode->id;
 
@@ -227,6 +236,48 @@ class REST_API
 
         if (!$entry->type) {
             $entry->type = "link";
+        }
+
+        if (!$entry->save()) {
+            return new \WP_Error(
+                'podlove_rest_create_failed',
+                'error when creating entry',
+                ['status' => 400]
+            );
+        }
+
+        $response = rest_ensure_response($entry->to_array());
+        $response->set_status(201);
+
+        $url = sprintf('%s/%s/%d', self::api_namespace, self::api_base, $entry->id);
+        $response->header('Location', rest_url($url));
+
+        return $response;
+    }
+
+    private function create_topic_item($request, $episode)
+    {
+        if (!$request["title"]) {
+            return new \WP_Error(
+                'podlove_rest_missing_title',
+                'title is required for type "topic"',
+                ['status' => 400]
+            );
+        }
+
+        $entry = new Entry;
+
+        foreach (Entry::property_names() as $property) {
+            if (isset($request[$property]) && $request[$property]) {
+                $entry->$property = $request[$property];
+            }
+        }
+        // fixme: there is probably a race condition here when adding multiple episodes at once
+        $entry->position   = Entry::get_new_position_for_episode($episode->id);
+        $entry->episode_id = $episode->id;
+
+        if (!$entry->type) {
+            $entry->type = "topic";
         }
 
         if (!$entry->save()) {

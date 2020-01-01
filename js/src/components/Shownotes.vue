@@ -38,23 +38,58 @@
 
       <div class="p-card create-card" v-if="mode == 'create'">
         <div class="p-card-body">
-          <input
-            @keydown.enter.prevent="onCreateEntry"
-            @keydown.esc="mode = 'idle'"
-            v-model="newUrl"
-            type="text"
-            name="new_entry"
-            id="new_entry"
-            placeholder="https://example.com"
-            :disabled="mode == 'create-waiting'"
-            v-focus
-          >
-          <button
-            type="button"
-            class="button button-primary"
-            @click.prevent="onCreateEntry"
-            :disabled="mode == 'create-waiting'"
-          >Add</button>
+          <div class="p-new-entry">
+            <h3>Add new Entry</h3>
+            <div class="p-entry-type-selector">
+              <span>
+                <input type="radio" id="entry-type-url" value="link" v-model="newEntryType">
+                <label for="entry-type-url">Link</label>
+              </span>
+              <span>
+                <input type="radio" id="entry-type-topic" value="topic" v-model="newEntryType">
+                <label for="entry-type-topic">Topic</label>
+              </span>
+            </div>
+
+            <div v-if="newEntryType == 'link'" class="p-new-entry-form">
+              <input
+                @keydown.enter.prevent="onCreateEntry"
+                @keydown.esc="mode = 'idle'"
+                v-model="newUrl"
+                type="text"
+                name="new_entry"
+                id="new_entry"
+                placeholder="https://example.com"
+                :disabled="mode == 'create-waiting'"
+                v-focus
+              >
+              <button
+                type="button"
+                class="button button-primary"
+                @click.prevent="onCreateEntry"
+                :disabled="mode == 'create-waiting'"
+              >Add</button>
+            </div>
+            <div v-else-if="newEntryType == 'topic'"  class="p-new-entry-form">
+              <input
+                @keydown.enter.prevent="onCreateEntry"
+                @keydown.esc="mode = 'idle'"
+                v-model="newTopic"
+                type="text"
+                name="new_entry"
+                id="new_entry"
+                placeholder="Topic, Subheading"
+                :disabled="mode == 'create-waiting'"
+                v-focus
+              >
+              <button
+                type="button"
+                class="button button-primary"
+                @click.prevent="onCreateEntry"
+                :disabled="mode == 'create-waiting'"
+              >Add</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -62,7 +97,7 @@
         <button
           type="button"
           class="button create-button"
-          @click.prevent="mode = 'create'"
+          @click.prevent="isTruncatedView = false, mode = 'create'"
           v-if="mode != 'create'"
         >Add Entry</button>
 
@@ -98,23 +133,29 @@ export default {
       ready: false,
       mode: "idle",
       newUrl: "",
+      newTopic: "",
       isTruncatedView: true,
-      truncatedThreshold: 5
+      truncatedThreshold: 5,
+      newEntryType: "link"
     };
   },
   components: {
     "icon-close": Close
   },
   methods: {
-    createEntry: function(url, data) {
+    createEntry: function(url, type, data) {
+      let payload = { type: type, data: data, episode_id: this.episodeid };
       this.mode = "create-waiting";
 
-      $.post(podlove_vue.rest_url + "podlove/v1/shownotes", {
-        original_url: url,
-        type: "link",
-        data: data,
-        episode_id: this.episodeid
-      })
+      if (type == "link") {
+        payload.original_url = url;
+      }
+
+      if (type == "topic") {
+        payload.title = url;
+      }
+
+      $.post(podlove_vue.rest_url + "podlove/v1/shownotes", payload)
         .done(result => {
           this.addIfNew(result);
           this.newUrl = "";
@@ -126,16 +167,26 @@ export default {
         });
     },
     addIfNew: function(entry) {
-      const isNew =
+      const isNewLink =
+        entry.type == "link" &&
         this.shownotes.find(e => e.original_url == entry.original_url) ===
-        undefined;
+          undefined;
+      const isTopic = entry.type == "topic";
 
-      if (isNew) this.shownotes.push(entry);
+      if (isNewLink || isTopic) this.shownotes.push(entry);
     },
     onCreateEntry: function() {
-      if (!this.newUrl) return;
+      if (this.newEntryType == "link") {
+        if (!this.newUrl) return;
 
-      this.createEntry(this.newUrl);
+        this.createEntry(this.newUrl, "link");
+      }
+
+      if (this.newEntryType == "topic") {
+        if (!this.newTopic) return;
+
+        this.createEntry(this.newTopic, "topic");
+      }
     },
     onUpdateEntry: function(entry) {
       const start = this.shownotes.findIndex(e => {
@@ -156,7 +207,7 @@ export default {
 
       // console.log("import", entries);
       entries.forEach(({ url: url, data: data }) =>
-        this.createEntry(url, data)
+        this.createEntry(url, "link", data)
       );
     },
     onDragEnd: function(e) {
