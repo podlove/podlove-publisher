@@ -348,4 +348,11 @@ a.destructive {
 .p-entry-description {
   color: #999;
 }
+
+.p-expand {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin: 36px 0;
+}
 </style>

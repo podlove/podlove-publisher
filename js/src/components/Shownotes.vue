@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="shownotes-wrapper">
     <div v-if="mode == 'import-slacknotes'">
       <div class="shownotes-modal">
         <div class="shownotes-modal-content">
@@ -27,10 +27,14 @@
           v-on:update:entry="onUpdateEntry"
           v-on:delete:entry="onDeleteEntry"
           v-show="ready"
-          v-for="entry in sortedShownotes"
+          v-for="entry in visibleShownotes"
           :key="entry.id"
         ></shownotes-entry>
       </draggable>
+
+      <div class="p-expand" v-if="isTruncatedView">
+          <a href="#" class="button" @click.prevent="isTruncatedView = false">Expand to view all Shownotes</a>
+      </div>
 
       <div class="p-card create-card" v-if="mode == 'create'">
         <div class="p-card-body">
@@ -93,7 +97,9 @@ export default {
       shownotes: [],
       ready: false,
       mode: "idle",
-      newUrl: ""
+      newUrl: "",
+      isTruncatedView: true,
+      truncatedThreshold: 5
     };
   },
   components: {
@@ -212,6 +218,8 @@ export default {
         .done(shownotes => {
           this.shownotes = shownotes;
           this.ready = true;
+          this.isTruncatedView =
+            this.shownotes.length > this.truncatedThreshold;
         })
         .fail(({ responseJSON }) => {
           console.error("could not load shownotes:", responseJSON.message);
@@ -219,6 +227,15 @@ export default {
     }
   },
   computed: {
+    visibleShownotes: function() {
+      let shownotes = this.sortedShownotes;
+
+      if (this.isTruncatedView) {
+        shownotes = shownotes.slice(0, this.truncatedThreshold);
+      }
+
+      return shownotes;
+    },
     sortedShownotes: function() {
       return this.shownotes.sort((a, b) => {
         return a.position - b.position;
@@ -242,6 +259,10 @@ export default {
 </script>
 
 <style>
+.shownotes-wrapper {
+  background: #f6f6f6;
+  padding: 9px;
+}
 .p-card {
   margin-bottom: 6px;
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.1);
