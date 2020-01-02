@@ -56,14 +56,20 @@
         <div class="edit-section">
           <label>
           <span>URL</span>
-            <input type="text" placeholder="URL" name="url" v-model="entry.url"/>
+            <input type="text" placeholder="URL" name="url" 
+                @keydown.enter.prevent="save()" 
+                @keydown.esc="edit = false"
+                v-model="entry.url"/>
           </label>
         </div>
 
         <div class="edit-section">
           <label>
             <span>Title</span>
-            <input type="text" placeholder="Title" name="title" v-model="entry.title"/>
+            <input type="text" placeholder="Title" name="title" 
+                @keydown.enter.prevent="save()" 
+                @keydown.esc="edit = false"
+                v-model="entry.title"/>
           </label>
         </div>
 
@@ -106,7 +112,7 @@
     <div v-if="entry.type == 'topic'">
       
       <div class="p-card-body p-card-type-topic">
-        <div class="main">
+        <div class="main" v-if="!edit">
           <div class="p-entry-container">
             <div class="p-entry-favicon">
               <icon-type class="p-entry-icon"></icon-type>
@@ -123,6 +129,29 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="main" v-else>
+
+          <div class="edit-section">
+            <label>
+              <span>Title</span>
+              <input type="text" placeholder="Title" name="title" 
+                @keydown.enter.prevent="save()" 
+                @keydown.esc="edit = false" 
+                v-model="entry.title"/>
+            </label>
+          </div>
+
+          <div class="edit-section edit-actions">
+            <div>
+              <a href="#" class="button button-primary" @click.prevent="save()">Save Changes</a>
+              <a href="#" class="button" @click.prevent="edit = false">Cancel</a>
+            </div>
+            <div>
+              <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">Delete Entry</a>
+            </div>
+          </div>  
+
         </div>
       </div>
 
@@ -192,12 +221,23 @@ export default {
 
       this.$emit("update:entry", this.entry);
 
+      let payload = {};
+
+      if (this.entry.type == "link") {
+        payload.url = this.entry.url;
+        payload.title = this.entry.title;
+        payload.description = this.entry.description;
+      }
+
+      if (this.entry.type == "topic") {
+        payload.title = this.entry.title;
+      }
+
       jQuery
-        .post(podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id, {
-          url: this.entry.url,
-          title: this.entry.title,
-          description: this.entry.description
-        })
+        .post(
+          podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
+          payload
+        )
         .done(result => {})
         .fail(({ responseJSON }) => {
           console.error("could not delete entry:", responseJSON.message);
