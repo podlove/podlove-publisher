@@ -109,11 +109,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 3.0.0 =
 
+* Shownotes Module (work in progress)
+
 * require PHP 5.6.20 or higher
 * require WordPress 5.2 or higher
 * update dependencies
 * fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
-* fix: etch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
+* fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
 
 = 2.9.7 =
 
