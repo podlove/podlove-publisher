@@ -135,6 +135,7 @@ class REST_API
                 'data'         => [
                     'title' => $link['title'],
                 ],
+                'type' => 'link'
             ]);
             rest_do_request($request);
         }
