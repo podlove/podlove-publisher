@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Shownotes;
 
 use \Podlove\Modules\Shownotes\Model;
@@ -10,6 +11,8 @@ class TemplateExtensions
      * Episode Shownotes (Beta Release only)
      *
      * **Examples**
+     * 
+     * Display all shownotes in a list.
      *
      * ```
      * <ul>
@@ -20,20 +23,46 @@ class TemplateExtensions
      *         <img class="psn-icon" src="{{ entry.icon }}" />
      *       {% endif %}
      *       <a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
-     *     {% elseif entry.type == "text" %}
+     *     {% elseif entry.type == "topic" %}
      *       {{ entry.title }}
      *     {% endif %}
      *   </li>
      * {% endfor %}
      * </ul>
      * ```
+     * 
+     * Group shownotes by topic.
+     * 
+     * ```
+     * {% for topic in episode.shownotes({groupby: "topic"}) %}
+     *   <h3>{{ topic.title }}</h3>
+     * 
+     *   <ul>
+     *     {% for entry in topic.entries %}
+     *       <li class="psn-entry">
+     *         {% if entry.type == "link" %}
+     *           {% if entry.icon %}
+     *             <img class="psn-icon" src="{{ entry.icon }}"/>
+     *           {% endif %}
+     *           <a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+     *         {% endif %}
+     *       </li>
+     *     {% endfor %}
+     *   </ul>
+     * {% endfor %}
+     * ```
      *
      * @accessor
      * @dynamicAccessor episode.shownotes
      */
-    public static function accessorEpisodeShownotes($return, $method_name, \Podlove\Model\Episode $episode)
+    public static function accessorEpisodeShownotes($return, $method_name, \Podlove\Model\Episode $episode, $args = [])
     {
-        return $episode->with_blog_scope(function () use ($return, $method_name, $episode) {
+        return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $args) {
+
+            $defaults = [
+                "groupby" => "topic"
+            ];
+            $args = wp_parse_args($args, $defaults);
 
             $entries = Model\Entry::find_all_by_property('episode_id', $episode->id);
 
@@ -41,9 +70,46 @@ class TemplateExtensions
                 return [];
             }
 
-            return array_map(function ($entry) {
-                return new Template\Entry($entry);
-            }, $entries);
+            usort($entries, function ($a, $b) {
+                if ($a->position == $b->position)
+                    return 0;
+                return ($a->position < $b->position) ? -1 : 1;
+            });
+
+            if ($args["groupby"] == "topic") {
+                $tmp = array_reduce($entries, function ($agg, $item) {
+                    if ($item->type == "topic") {
+
+                        $agg['result'][] = [
+                            'title' => $item->title,
+                            'entries' => []
+                        ];
+
+                        $agg['topic_index'] = count($agg['result']) - 1;
+                    } else {
+
+                        if ($agg['topic_index'] == null) {
+                            $agg['result'][] = [
+                                'title' => '',
+                                'entries' => []
+                            ];
+                            $agg['topic_index'] = count($agg['result']) - 1;
+                        }
+
+                        $agg['result'][$agg['topic_index']]['entries'][] = new Template\Entry($item);
+                    }
+
+                    return $agg;
+                }, ['result' => [], 'topic_index' => null]);
+
+                error_log(print_r($tmp, true));
+
+                return $tmp['result'];
+            } else {
+                return array_map(function ($entry) {
+                    return new Template\Entry($entry);
+                }, $entries);
+            }
         });
     }
 }

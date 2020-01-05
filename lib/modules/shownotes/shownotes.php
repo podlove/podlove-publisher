@@ -16,7 +16,7 @@ class Shownotes extends \Podlove\Modules\Base
         add_action('rest_api_init', [$this, 'api_init']);
 
         \Podlove\Template\Episode::add_accessor(
-            'shownotes', ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'], 4
+            'shownotes', ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'], 5
         );
     }
 
