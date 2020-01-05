@@ -70,6 +70,69 @@ class REST_API
                 'callback' => [$this, 'import_osf'],
             ],
         ]);
+        register_rest_route(self::api_namespace, self::api_base . '/html', [
+            [
+                'methods'  => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'import_html'],
+            ],
+        ]);
+    }
+
+    public function import_html($request)
+    {
+        $post_id = $request['post_id'];
+
+        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+            return new \WP_Error(
+                'podlove_rest_html_no_episode',
+                'episode cannot be found',
+                ['status' => 400]
+            );
+        }
+
+        $dom                     = new \DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $valid = $dom->loadHTML($request['html']);
+
+        if (!$valid) {
+            return new \WP_Error(
+                'podlove_rest_html_unreadable',
+                'html could not be parsed',
+                ['status' => 400]
+            );
+        }
+
+        $xpath = new \DOMXPath($dom);
+
+        foreach ($xpath->query("//a | //h1 | //h2 | //h3 | //h4 | //h5 | //h6") as $element) {
+            if ($element->tagName == "a") {
+                $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
+                $request->set_query_params([
+                    'episode_id'   => $episode->id,
+                    'original_url' => $element->getAttribute("href"),
+                    'data'         => [
+                        'title' => $element->textContent,
+                    ],
+                    'type' => 'link'
+                ]);
+                rest_do_request($request);
+            } else {
+                $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
+                $request->set_query_params([
+                    'episode_id'   => $episode->id,
+                    'data'         => [
+                        'title' => $element->textContent,
+                    ],
+                    'title' => $element->textContent,
+                    'type' => 'topic'
+                ]);
+                rest_do_request($request);
+            }
+        }
+
+        $response = rest_ensure_response(["message" => "ok"]);
+
+        return $response;
     }
 
     public function import_osf($request)
