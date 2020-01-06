@@ -111,36 +111,32 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Check for existence of shownotes:
 
-```
-{% if episode.hasShownotes %}
-  Here are some shownotes
-{% else %}
-  ¯\_(ツ)_/¯ 
-{% endif %}
-```
+    {% if episode.hasShownotes %}
+      Here are some shownotes
+    {% else %}
+      :(
+    {% endif %}
 
 = 2020-01-05 =
 
 Group shownotes by topic:
 
-```
-{% for topic in episode.shownotes({groupby: "topic"}) %}
-  <h3>{{ topic.title }}</h3>
-
-  <ul>
-    {% for entry in topic.entries %}
-      <li class="psn-entry">
-        {% if entry.type == "link" %}
-          {% if entry.icon %}
-            <img class="psn-icon" src="{{ entry.icon }}"/>
-          {% endif %}
-          <a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
-        {% endif %}
-      </li>
+    {% for topic in episode.shownotes({groupby: "topic"}) %}
+      <h3>{{ topic.title }}</h3>
+    
+      <ul>
+        {% for entry in topic.entries %}
+          <li class="psn-entry">
+            {% if entry.type == "link" %}
+              {% if entry.icon %}
+                <img class="psn-icon" src="{{ entry.icon }}"/>
+              {% endif %}
+              <a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
     {% endfor %}
-  </ul>
-{% endfor %}
-```
 
 = 3.0.0 =
 
