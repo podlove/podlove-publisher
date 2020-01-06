@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Shownotes\Model;
 
 use \Podlove\Model\Base;
@@ -61,6 +62,23 @@ SQL;
         } else {
             return 0;
         }
+    }
+
+    public function has_shownotes($episode_id)
+    {
+        global $wpdb;
+        $sql = <<<SQL
+            SELECT
+                COUNT(e.id)
+            FROM
+                wp_podlove_modules_shownotes_entry e
+            WHERE
+                e.episode_id = %d
+SQL;
+
+        $count = $wpdb->get_var($wpdb->prepare($sql, $episode_id));
+
+        return $count > 0;
     }
 }
 

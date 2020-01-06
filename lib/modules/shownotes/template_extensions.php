@@ -102,14 +102,35 @@ class TemplateExtensions
                     return $agg;
                 }, ['result' => [], 'topic_index' => null]);
 
-                error_log(print_r($tmp, true));
-
                 return $tmp['result'];
             } else {
                 return array_map(function ($entry) {
                     return new Template\Entry($entry);
                 }, $entries);
             }
+        });
+    }
+
+    /**
+     * Check if an episode has shownotes.
+     *
+     * **Examples**
+     *
+     * ```
+     * {% if episode.hasShownotes %}
+     *   Here are some shownotes
+     * {% else %}
+     *   ¯\_(ツ)_/¯ 
+     * {% endif %}
+     * ```
+     *
+     * @accessor
+     * @dynamicAccessor episode.hasShownotes
+     */
+    public static function accessorEpisodeHasShownotes($return, $method_name, \Podlove\Model\Episode $episode)
+    {
+        return $episode->with_blog_scope(function () use ($return, $method_name, $episode) {
+            return Model\Entry::has_shownotes($episode->id);
         });
     }
 }

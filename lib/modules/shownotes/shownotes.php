@@ -18,6 +18,12 @@ class Shownotes extends \Podlove\Modules\Base
         \Podlove\Template\Episode::add_accessor(
             'shownotes', ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'], 5
         );
+
+        \Podlove\Template\Episode::add_accessor(
+            'hasShownotes',
+            ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeHasShownotes'],
+            4
+        );
     }
 
     public function was_activated()

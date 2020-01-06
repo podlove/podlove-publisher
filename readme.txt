@@ -107,6 +107,18 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-01-06 =
+
+Check for existence of shownotes:
+
+```
+{% if episode.hasShownotes %}
+  Here are some shownotes
+{% else %}
+  ¯\_(ツ)_/¯ 
+{% endif %}
+```
+
 = 2020-01-05 =
 
 Group shownotes by topic:
