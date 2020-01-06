@@ -89,6 +89,7 @@ Entry::property('state', 'VARCHAR(255)');
 Entry::property('position', 'FLOAT');
 Entry::property('unfurl_data', 'TEXT');
 Entry::property('original_url', 'TEXT');
+Entry::property('affiliate_url', 'TEXT'); // virtual?
 Entry::property('url', 'TEXT');
 Entry::property('title', 'TEXT');
 Entry::property('description', 'TEXT');

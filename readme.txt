@@ -109,6 +109,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2020-01-06 =
 
+**Affiliates**
+
+- setup affiliates in Podlove > Podcast Settings > Affiliate tab
+- amazon.de and thomann.de affiliate URLs are applied, visible in the shownotes editor
+- check if a link is affiliate in templates with `entry.hasAffiliateUrl`
+
+**Other**
+
 Check for existence of shownotes:
 
     {% if episode.hasShownotes %}

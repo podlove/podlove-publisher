@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Shownotes\Template;
 
 use Podlove\Template\Wrapper;
@@ -55,11 +56,19 @@ class Entry extends Wrapper
      */
     public function url()
     {
-        if ($this->entry->url) {
-            return $this->entry->url;
-        } else {
-            return $this->entry->original_url;
-        }
+        return $this->entry->affiliate_url
+            ?? $this->entry->url
+            ?? $this->entry->original_url;
+    }
+
+    /**
+     * Does this entry have an affiliate URL?
+     *
+     * @accessor
+     */
+    public function has_affiliate_url()
+    {
+        return (bool) $this->entry->affiliate_url;
     }
 
     /**
@@ -127,5 +136,4 @@ class Entry extends Wrapper
     {
         return $this->entry->position;
     }
-
 }

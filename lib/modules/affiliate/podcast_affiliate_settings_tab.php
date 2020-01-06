@@ -54,9 +54,9 @@ class PodcastAffiliateSettingsTab extends Tab
         'html'  => ['class' => 'regular-text podlove-check-input']
       ]);
 
-      $wrapper->string('thomann', [
-        'label' => __('Thomann', 'podlove-podcasting-plugin-for-wordpress'),
-        'description' => __('Your thomann tracking id.', 'podlove-podcasting-plugin-for-wordpress'),
+      $wrapper->string('thomann_de', [
+        'label' => __('thomann.de', 'podlove-podcasting-plugin-for-wordpress'),
+        'description' => __('Your thomann.de partner id.', 'podlove-podcasting-plugin-for-wordpress'),
         'html'  => ['class' => 'regular-text podlove-check-input']
       ]);
     });

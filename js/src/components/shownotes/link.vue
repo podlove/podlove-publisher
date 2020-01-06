@@ -28,7 +28,10 @@
           <a :href="entry.url" target="_blank">{{ entry.title }}</a>
         </span>
         <br>
-        <span class="p-entry-url-url">
+        <span v-if="entry.affiliate_url" class="p-entry-url-url">
+          <a :href="entry.affiliate_url" target="_blank">{{ entry.affiliate_url }}</a> (Affiliate)
+        </span>
+        <span v-else class="p-entry-url-url">
           <a :href="entry.url" target="_blank">{{ entry.url }}</a>
         </span>
         <div class="p-entry-description" v-if="entry.description">{{ entry.description }}</div>

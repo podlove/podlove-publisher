@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Version management for database migrations.
  *
@@ -42,7 +43,7 @@ namespace Podlove;
 use \Podlove\Jobs\CronJobRunner;
 use \Podlove\Model;
 
-define(__NAMESPACE__ . '\DATABASE_VERSION', 141);
+define(__NAMESPACE__ . '\DATABASE_VERSION', 143);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -74,7 +75,9 @@ function run_database_migrations()
 
     if (is_multisite()) {
         set_time_limit(0); // may take a while, depending on network size
-        \Podlove\for_every_podcast_blog(function () {migrate_for_current_blog();});
+        \Podlove\for_every_podcast_blog(function () {
+            migrate_for_current_blog();
+        });
     } else {
         migrate_for_current_blog();
     }
@@ -587,7 +590,6 @@ function run_migrations_for_version($version)
                 if ($post->post_status == 'publish') {
                     update_post_meta($episode->post_id, '_podlove_episode_was_published', true);
                 }
-
             }
             break;
         case 54:
@@ -747,7 +749,6 @@ function run_migrations_for_version($version)
                         }
 
                         $contributor_flattr_donations_account->delete();
-
                     }
 
                     $flattr_service->delete();
@@ -765,8 +766,10 @@ function run_migrations_for_version($version)
             $episodes = \Podlove\Model\Episode::all();
 
             // Migration for Podcast
-            if ($podcast->license_type == 'cc' && $podcast->license_cc_allow_commercial_use !== '' &&
-                $podcast->license_cc_allow_modifications !== '' && $podcast->license_cc_license_jurisdiction !== '') {
+            if (
+                $podcast->license_type == 'cc' && $podcast->license_cc_allow_commercial_use !== '' &&
+                $podcast->license_cc_allow_modifications !== '' && $podcast->license_cc_license_jurisdiction !== ''
+            ) {
                 $license = array(
                     'version'        => '3.0',
                     'commercial_use' => $podcast->license_cc_allow_commercial_use,
@@ -782,8 +785,10 @@ function run_migrations_for_version($version)
 
             // Migration for Episodes
             foreach ($episodes as $episode) {
-                if ($episode->license_type == 'other' || $episode->license_cc_allow_commercial_use == '' ||
-                    $episode->license_cc_allow_modifications == '' || $episode->license_cc_license_jurisdiction == '') {
+                if (
+                    $episode->license_type == 'other' || $episode->license_cc_allow_commercial_use == '' ||
+                    $episode->license_cc_allow_modifications == '' || $episode->license_cc_license_jurisdiction == ''
+                ) {
                     continue;
                 }
 
@@ -816,7 +821,6 @@ function run_migrations_for_version($version)
                 if ($post->post_status == 'publish' && !get_post_meta($episode->post_id, '_podlove_episode_was_published', true)) {
                     update_post_meta($episode->post_id, '_podlove_episode_was_published', true);
                 }
-
             }
             break;
         case 69:
@@ -825,7 +829,6 @@ function run_migrations_for_version($version)
                 if ($adn->get_module_option('adn_auth_key')) {
                     $adn->update_module_option('adn_automatic_announcement', 'on');
                 }
-
             }
             break;
         case 70:
@@ -1054,7 +1057,6 @@ function run_migrations_for_version($version)
                 if ($adn->get_module_option('adn_auth_key')) {
                     $adn->update_module_option('adn_poster_image_fallback', 'on');
                 }
-
             }
             break;
         case 88:
@@ -1413,6 +1415,15 @@ function run_migrations_for_version($version)
             $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
             $wpdb->query(sprintf($sql, \Podlove\Model\DownloadIntentClean::table_name()));
             break;
+        case 142:
+            \Podlove\Modules\Affiliate\Affiliate::instance()->was_activated();
+            break;
+        case 143:
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `affiliate_url` TEXT',
+                \Podlove\Modules\Shownotes\Model\Entry::table_name()
+            );
+            $wpdb->query($sql);
+            break;
     }
-
 }

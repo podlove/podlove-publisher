@@ -14,6 +14,12 @@ class Affiliate extends \Podlove\Modules\Base
     return true;
   }
 
+  /*
+	 *	Was activated
+	 */
+  public function was_activated($module_name = 'affiliate')
+  { }
+
   public function load()
   {
     add_action('podlove_podcast_settings_tabs', [__CLASS__, 'podcast_settings_tabs']);
@@ -28,5 +34,27 @@ class Affiliate extends \Podlove\Modules\Base
   public static function get_tracking_id($site)
   {
     return get_option('podlove_affiliate', [])[$site] ?? null;
+  }
+
+  public static function apply_amazon_de_affiliate($url)
+  {
+    $tracking_id = self::get_tracking_id('amazon_de');
+
+    if (!$tracking_id) {
+      return;
+    }
+
+    return add_query_arg('tag', $tracking_id, $url);
+  }
+
+  public static function apply_thomann_de_affiliate($url)
+  {
+    $tracking_id = self::get_tracking_id('thomann_de');
+
+    if (!$tracking_id) {
+      return;
+    }
+
+    return add_query_arg('partner_id', $tracking_id, $url);
   }
 }

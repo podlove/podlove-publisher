@@ -161,6 +161,7 @@ a.destructive {
   flex-direction: column;
 }
 
+.p-entry-url-url,
 .p-entry-url-url a {
   color: #999;
 }

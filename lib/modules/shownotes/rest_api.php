@@ -222,6 +222,7 @@ class REST_API
 
         $entries = Entry::find_all_by_property('episode_id', $episode_id);
         $entries = array_map(function ($entry) {
+            $entry = apply_filters('podlove_shownotes_entry', $entry);
             return $entry->to_array();
         }, $entries);
 
@@ -310,6 +311,8 @@ class REST_API
             );
         }
 
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
+
         $response = rest_ensure_response($entry->to_array());
         $response->set_status(201);
 
@@ -352,6 +355,8 @@ class REST_API
             );
         }
 
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
+
         $response = rest_ensure_response($entry->to_array());
         $response->set_status(201);
 
@@ -364,9 +369,13 @@ class REST_API
     public function get_item($request)
     {
         $entry = Entry::find_by_id($request['id']);
+
         if (is_wp_error($entry)) {
             return $entry;
         }
+
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
+
         $response = rest_ensure_response($entry->to_array());
 
         return $response;
@@ -396,6 +405,7 @@ class REST_API
     public function unfurl_item($request)
     {
         $entry = Entry::find_by_id($request['id']);
+
         if (is_wp_error($entry)) {
             return $entry;
         }
@@ -415,8 +425,6 @@ class REST_API
 
             $entry->state = 'failed';
             $entry->save();
-
-            error_log(print_r($response, true));
 
             return new \WP_Error(
                 'podlove_rest_unfurl_failed',
@@ -451,6 +459,8 @@ class REST_API
         $entry->prepare_icon();
         $success = $entry->save();
 
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
+
         $response = rest_ensure_response($entry->to_array());
 
         return $response;
@@ -480,6 +490,8 @@ class REST_API
         }
 
         $entry->save();
+
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
 
         $response = rest_ensure_response($entry->to_array());
 

@@ -78,6 +78,8 @@ class TemplateExtensions
 
             if ($args["groupby"] == "topic") {
                 $tmp = array_reduce($entries, function ($agg, $item) {
+                    $item = apply_filters('podlove_shownotes_entry', $item);
+
                     if ($item->type == "topic") {
 
                         $agg['result'][] = [
@@ -105,6 +107,7 @@ class TemplateExtensions
                 return $tmp['result'];
             } else {
                 return array_map(function ($entry) {
+                    $entry = apply_filters('podlove_shownotes_entry', $entry);
                     return new Template\Entry($entry);
                 }, $entries);
             }
