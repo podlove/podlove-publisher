@@ -193,6 +193,9 @@ class Regression
 }
 
 
+/*! The class JSRegression creates the regression dataset as JS object and
+   * includes the JS code which draws the diagram based on the dataset.
+ */
 class JSRegression
 {
    //! maximum number of dynamic y-axis grid
@@ -212,6 +215,10 @@ class JSRegression
    protected $desc_ = array();
  
 
+   /*! Object constructor.
+    * @param $reg object of type Regression.
+    * @param $vis Optional parameter for max number of visible elements.
+    */
    function __construct($reg, $vis = 0)
    {
       $this->reg_ = $reg;
@@ -228,21 +235,31 @@ class JSRegression
          $this->start_ = $this->reg_->count() - $vis;
       }
 
+      // calculate distance grid lines along the y-axis
       $this->ystep_ = round($this->reg_->max() / JSRegression::MAX_GRID_LINES / JSRegression::MUL_OF + 1) * JSRegression::MUL_OF;
    }
 
 
    //! Set description array.
+   /*! This method sets the array which contains the description (e.g. title) of the dataset.
+    * Each entry shall contain an associative array with at least the element 'title'.
+    * @param $a Array with descriptive entries.
+    */
    function set_description($a)
    {
       $this->desc_ = $a;
    }
 
 
+   //! Method to make percentage string.
+   /*! This method creates a percentage string based on the parameter.
+    * @param $i Value to format, -1 <= $i <= 1.
+    * @return Returns a string of format [+-]N.F% where N is $i*100.
+    */
    protected function px($i)
    {
       $p = $this->reg_->p()[$i] * 100;
-      if ($p >= 10)
+      if (abs($p) >= 10)
         $p = round($p);
       else
         $p = round($p, 1);
@@ -254,6 +271,7 @@ class JSRegression
    }
 
 
+   //! Output HTML code.
    function html()
    {
       ?>
@@ -265,6 +283,9 @@ class JSRegression
    }
  
 
+   //! Output data array.
+   /*! This method outputs the data as a JS-formatted array.
+    */
    function data()
    {
       print "var reg_data0_ = [\n";
@@ -284,6 +305,9 @@ class JSRegression
    }
 
 
+   //! Output JS code.
+   /*! This function reads the JS code from the source file and outputs it.
+    */
    function code()
    {
       if (($jsc = file_get_contents(dirname(__FILE__) . '/regression.js')) === FALSE)
@@ -294,6 +318,9 @@ class JSRegression
    }
 
 
+   //! Output full HTML code.
+   /*! This method outputs all necessary HTML and JS code.
+    */
    function output()
    {
       $this->html();
