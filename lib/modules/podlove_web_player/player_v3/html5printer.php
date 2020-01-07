@@ -21,6 +21,6 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 	public function render($context = NULL) {
 		$media_xml = (new MediaTagRenderer($this->episode))->render($context, $this->attributes);
-		return '<div class="podlove-player-wrapper">' . $media_xml . '</div>';
+		return apply_filters('podlove_web_player_3_rendered', '<div class="podlove-player-wrapper">' . $media_xml . '</div>');
 	}
 }
