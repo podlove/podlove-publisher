@@ -64,7 +64,7 @@ SQL;
         }
     }
 
-    public function has_shownotes($episode_id)
+    public static function has_shownotes($episode_id)
     {
         global $wpdb;
         $sql = <<<SQL
