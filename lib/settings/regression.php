@@ -412,6 +412,9 @@ class PodloveRegression
 }
 
 
+/*! This is a test class and is only used for development. If instantiated, it
+   * generates a full HTML document containing some test data.
+ */
 class TestRegression
 {
 /*   protected $data_ = array(52, 88, 90, 94, 146, 190, 174, 130, 230, 270, 136,
