@@ -459,6 +459,14 @@ class REST_API
         $entry->prepare_icon();
         $success = $entry->save();
 
+        if (!$success) {
+            return new \WP_Error(
+                'podlove_rest_unfurl_save_failed',
+                'error when saving unfurled entry',
+                ['status' => 404]
+            );
+        }
+
         $entry = apply_filters('podlove_shownotes_entry', $entry);
 
         $response = rest_ensure_response($entry->to_array());
