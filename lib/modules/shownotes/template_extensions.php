@@ -70,6 +70,11 @@ class TemplateExtensions
                 return [];
             }
 
+            // discard entries with failed state
+            $entries = array_filter($entries, function ($e) {
+                return $e->state != 'failed';
+            });
+
             usort($entries, function ($a, $b) {
                 if ($a->position == $b->position)
                     return 0;
