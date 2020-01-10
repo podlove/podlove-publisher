@@ -55,12 +55,12 @@ class TemplateExtensions
      * @accessor
      * @dynamicAccessor episode.shownotes
      */
-    public static function accessorEpisodeShownotes($return, $method_name, \Podlove\Model\Episode $episode, $args = [])
+    public static function accessorEpisodeShownotes($return, $method_name, \Podlove\Model\Episode $episode, $post, $args = [])
     {
-        return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $args) {
+        return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $post, $args) {
 
             $defaults = [
-                "groupby" => "topic"
+                "groupby" => false
             ];
             $args = wp_parse_args($args, $defaults);
 
