@@ -423,8 +423,6 @@ class REST_API
 
         if (!$curl->isSuccessful()) {
 
-            error_log(print_r($curl, true));
-
             $entry->state = 'failed';
             $entry->save();
 
