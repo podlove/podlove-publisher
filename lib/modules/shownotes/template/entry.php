@@ -66,7 +66,7 @@ class Entry extends Wrapper
      *
      * @accessor
      */
-    public function has_affiliate_url()
+    public function hasAffiliateUrl()
     {
         return (bool) $this->entry->affiliate_url;
     }
@@ -76,7 +76,7 @@ class Entry extends Wrapper
      *
      * @accessor
      */
-    public function original_url()
+    public function originalUrl()
     {
         return $this->entry->original_url;
     }
@@ -86,7 +86,7 @@ class Entry extends Wrapper
      *
      * @accessor
      */
-    public function site_name()
+    public function siteName()
     {
         return $this->entry->site_name;
     }
@@ -98,7 +98,7 @@ class Entry extends Wrapper
      *
      * @accessor
      */
-    public function site_url()
+    public function siteUrl()
     {
         return $this->entry->site_url;
     }
