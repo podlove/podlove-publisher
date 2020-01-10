@@ -124,16 +124,4 @@ class Entry extends Wrapper
     {
         return $this->entry->type;
     }
-
-    /**
-     * Position
-     *
-     * Float value used for sorting.
-     *
-     * @accessor
-     */
-    public function position()
-    {
-        return $this->entry->position;
-    }
 }
