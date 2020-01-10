@@ -412,9 +412,9 @@ class REST_API
 
         $url = $entry->original_url;
 
-        $unfurl_endpoint = "http://unfurl.eric.co.de/unfurl?&url=https%3A%2F%2Fde.wikipedia.org%2Fwiki%2FDivisor";
+        $unfurl_endpoint = "http://unfurl.eric.co.de/unfurl";
         $curl            = new Curl;
-        $curl->request(add_query_arg("url", $url, $unfurl_endpoint), [
+        $curl->request(add_query_arg("url", urlencode($url), $unfurl_endpoint), [
             'headers' => ['Content-type' => 'application/json'],
             'timeout' => 20,
         ]);
@@ -422,6 +422,8 @@ class REST_API
         $response = $curl->get_response();
 
         if (!$curl->isSuccessful()) {
+
+            error_log(print_r($curl, true));
 
             $entry->state = 'failed';
             $entry->save();
