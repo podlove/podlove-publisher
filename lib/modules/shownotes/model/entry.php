@@ -44,11 +44,13 @@ class Entry extends Base
     public static function get_new_position_for_episode($episode_id)
     {
         global $wpdb;
+        $table_name = static::table_name();
+
         $sql = <<<SQL
             SELECT
                 MAX(e.position)
             FROM
-                {static::table_name()} e
+                $table_name e
             WHERE
                 e.episode_id = %d
             GROUP BY
@@ -67,11 +69,13 @@ SQL;
     public static function has_shownotes($episode_id)
     {
         global $wpdb;
+        $table_name = static::table_name();
+
         $sql = <<<SQL
             SELECT
                 COUNT(e.id)
             FROM
-                {static::table_name()} e
+                $table_name e
             WHERE
                 e.episode_id = %d
 SQL;
