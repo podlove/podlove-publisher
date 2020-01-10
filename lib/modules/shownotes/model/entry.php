@@ -48,14 +48,14 @@ class Entry extends Base
             SELECT
                 MAX(e.position)
             FROM
-                wp_podlove_modules_shownotes_entry e
+                %s e
             WHERE
                 e.episode_id = %d
             GROUP BY
                 e.episode_id
 SQL;
 
-        $position = $wpdb->get_var($wpdb->prepare($sql, $episode_id));
+        $position = $wpdb->get_var($wpdb->prepare($sql, static::table_name(), $episode_id));
 
         if (is_numeric($position)) {
             return $position + 1;
@@ -71,12 +71,12 @@ SQL;
             SELECT
                 COUNT(e.id)
             FROM
-                wp_podlove_modules_shownotes_entry e
+                %s e
             WHERE
                 e.episode_id = %d
 SQL;
 
-        $count = $wpdb->get_var($wpdb->prepare($sql, $episode_id));
+        $count = $wpdb->get_var($wpdb->prepare($sql, static::table_name(), $episode_id));
 
         return $count > 0;
     }
