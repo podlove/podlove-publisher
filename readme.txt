@@ -107,6 +107,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-01-11 =
+
+Shownotes Changes:
+
+- twig: `entry.typeIcon` or with size `entry.typeIcon(16)` returns an SVG
+- fix: handle emojis in unfurl response
+- improve: much more detailed / helpful entry error view
+- improve: pretty (decoded) URLs in backend
+
+= 2020-01-10 =
+
+- various shownotes bugfixes & changes
+
 = 2020-01-06 =
 
 **Affiliates**
