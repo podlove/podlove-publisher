@@ -92,7 +92,7 @@ class REST_API
 
         $dom                     = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
-        $valid = $dom->loadHTML($request['html']);
+        $valid                   = $dom->loadHTML($request['html']);
 
         if (!$valid) {
             return new \WP_Error(
@@ -113,18 +113,18 @@ class REST_API
                     'data'         => [
                         'title' => $element->textContent,
                     ],
-                    'type' => 'link'
+                    'type'         => 'link',
                 ]);
                 rest_do_request($request);
             } else {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
-                    'episode_id'   => $episode->id,
-                    'data'         => [
+                    'episode_id' => $episode->id,
+                    'data'       => [
                         'title' => $element->textContent,
                     ],
-                    'title' => $element->textContent,
-                    'type' => 'topic'
+                    'title'      => $element->textContent,
+                    'type'       => 'topic',
                 ]);
                 rest_do_request($request);
             }
@@ -198,7 +198,7 @@ class REST_API
                 'data'         => [
                     'title' => $link['title'],
                 ],
-                'type' => 'link'
+                'type'         => 'link',
             ]);
             rest_do_request($request);
         }
@@ -463,7 +463,10 @@ class REST_API
             return new \WP_Error(
                 'podlove_rest_unfurl_save_failed',
                 'error when saving unfurled entry',
-                ['status' => 404]
+                [
+                    'status'    => 404,
+                    'locations' => $data['locations'],
+                ]
             );
         }
 

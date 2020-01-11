@@ -87,7 +87,19 @@
   </div>
 </div>
 <div class="p-card-body failed" v-else-if="entry.state == 'failed'">
-  <div class="main">Unable to access URL: {{ entry.original_url }}</div>
+  <div class="main">
+    <div class="unfurl-error-title">
+      Unable to access URL: <a :href="entry.original_url" target="_blank">{{ entry.original_url }}</a>
+    </div>
+    <div class="unfurl-error-message" v-if="error_message">{{ error_message }}</div>
+    <div class="unfurl-error-location-trace" v-if="trace_locations && trace_locations.length > 0">
+      <strong>Location Trace:</strong>
+      <ul>
+        <li v-for="(location, index) in trace_locations" :key="location">{{ index }}: {{ location }}</li>
+      </ul>
+    </div>
+    <div class="p-entry-description">Unresolved entries are not publicly displayed by shortcode or template API.</div>
+  </div>
   <div class="supplementary" style="display: flex; margin-left: 12px">
     <div class="actions">
       <a href="#" class="retry-btn" @click.prevent="unfurl()">retry?</a>
@@ -116,7 +128,9 @@ export default {
   props: ["entry"],
   data() {
     return {
-      edit: false
+      edit: false,
+      error_message: "",
+      trace_locations: []
     };
   },
   components: {
@@ -141,6 +155,8 @@ export default {
   methods: {
     unfurl: function() {
       this.entry.state = "unfurling";
+      this.error_message = "";
+      this.trace_locations = [];
 
       jQuery
         .post(
@@ -154,6 +170,14 @@ export default {
         })
         .fail(({ responseJSON }) => {
           this.entry.state = "failed";
+          this.error_message =
+            "[HTTP " +
+            responseJSON.data.status +
+            "] " +
+            responseJSON.code +
+            ": " +
+            responseJSON.message;
+          this.trace_locations = responseJSON.data.locations;
           console.error("could not unfurl entry:", responseJSON.message);
         });
     },
@@ -200,3 +224,30 @@ export default {
   }
 };
 </script>
+
+<style lang="css">
+.unfurl-error-title,
+.unfurl-error-message {
+  margin-bottom: 9px;
+}
+
+.unfurl-error-title {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.unfurl-error-message {
+  color: #dc3232;
+}
+
+.unfurl-error-location-trace li,
+.unfurl-error-message {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
+}
+
+.unfurl-error-location-trace ul,
+.unfurl-error-location-trace li {
+  margin: 0;
+}
+</style>
