@@ -433,7 +433,7 @@ class REST_API
             );
         }
 
-        $data = json_decode($response['body'], true);
+        $data = json_decode(\Podlove\maybe_encode_emoji($response['body']), true);
 
         // remove "data:..." images because they are too huge to store in database
         $url_size_threshold = 1000;

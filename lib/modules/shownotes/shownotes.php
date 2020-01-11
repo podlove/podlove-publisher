@@ -2,8 +2,8 @@
 
 namespace Podlove\Modules\Shownotes;
 
-use \Podlove\Modules\Shownotes\Model\Entry;
 use \Podlove\Modules\Affiliate\Affiliate;
+use \Podlove\Modules\Shownotes\Model\Entry;
 
 class Shownotes extends \Podlove\Modules\Base
 {
@@ -17,6 +17,7 @@ class Shownotes extends \Podlove\Modules\Base
         add_action('podlove_module_was_activated_shownotes', [$this, 'was_activated']);
         add_action('rest_api_init', [$this, 'api_init']);
         add_filter('podlove_shownotes_entry', [__CLASS__, 'apply_affiliate_to_shownotes_entry']);
+        add_filter('podlove_shownotes_entry', [__CLASS__, 'encode_html']);
 
         \Podlove\Template\Episode::add_accessor(
             'shownotes', ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'], 5
@@ -70,5 +71,12 @@ class Shownotes extends \Podlove\Modules\Base
 
         return $entry;
     }
-    
+
+    public static function encode_html(Entry $entry)
+    {
+        $entry->description = html_entity_decode($entry->description);
+
+        return $entry;
+    }
+
 }

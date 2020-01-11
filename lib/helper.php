@@ -22,9 +22,9 @@ function load_template($path, $vars = []) {
 
 function maybe_encode_emoji($string)
 {
-	if (function_exists('wp_encode_emoji'))
-		return \wp_encode_emoji($string);
-
+	if (function_exists('wp_encode_emoji') && function_exists('mb_convert_encoding')) {
+			$string = \wp_encode_emoji($string);
+	}
 	return $string;
 }
 
