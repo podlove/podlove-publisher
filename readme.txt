@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-01-13 =
+
+- fix: emojis in titles
+
 = 2020-01-11 =
 
 Shownotes Changes:

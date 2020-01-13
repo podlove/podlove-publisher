@@ -74,6 +74,7 @@ class Shownotes extends \Podlove\Modules\Base
 
     public static function encode_html(Entry $entry)
     {
+        $entry->title       = html_entity_decode($entry->title);
         $entry->description = html_entity_decode($entry->description);
 
         return $entry;
