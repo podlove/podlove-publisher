@@ -107,6 +107,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-01-16 #2 =
+
+- fix metabox related css
+- remove original_url edit section
+
 = 2020-01-16 =
 
 - include unfurl error reason in unfurl_failed response
