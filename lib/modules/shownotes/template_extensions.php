@@ -70,9 +70,9 @@ class TemplateExtensions
                 return [];
             }
 
-            // discard entries with failed state
+            // discard entries with failed state, unless a url was entered manually
             $entries = array_filter($entries, function ($e) {
-                return $e->state != 'failed';
+                return $e->state != 'failed' || strlen($e->url) > 0;
             });
 
             usort($entries, function ($a, $b) {

@@ -107,6 +107,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-01-16 =
+
+- include unfurl error reason in unfurl_failed response
+- entries can be edited when unfurl failed
+- uniform icons in all states
+- entering a URL manually makes an entry valid
+- original URL and Site Name can be edited
+
 = 2020-01-13 =
 
 - fix: emojis in titles

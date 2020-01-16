@@ -12,7 +12,7 @@
     <i class="podlove-icon-spinner rotate"></i>
   </div>
 </div>
-<div class="p-card-body" v-else-if="entry.url">
+<div class="p-card-body" v-else-if="entry.url || edit">
   <div class="main" v-if="!edit">
     <div class="p-entry-container">
       <div class="p-entry-favicon">
@@ -53,13 +53,36 @@
     
     <div class="edit-section">
       <label>
+      <span>Original URL</span>
+        <input type="text" placeholder="Original URL" name="original_url" 
+            @keydown.enter.prevent="save()" 
+            @keydown.esc="edit = false"
+            v-model="entry.original_url"/>
+      </label>
+      <div class="p-entry-description">Original URL used to lookup the website.</div>
+    </div>
+
+    <div class="edit-section">
+      <label>
       <span>URL</span>
         <input type="text" placeholder="URL" name="url" 
             @keydown.enter.prevent="save()" 
             @keydown.esc="edit = false"
             v-model="entry.url"/>
       </label>
+      <div class="p-entry-description">Canonical URL. This is used for displaying shownotes.</div>
     </div>
+
+    <div class="edit-section">
+      <label>
+        <span>Site Name</span>
+        <input type="text" placeholder="Site Name" name="site_name" 
+            @keydown.enter.prevent="save()" 
+            @keydown.esc="edit = false"
+            v-model="entry.site_name"/>
+      </label>
+    </div>
+
     <div class="edit-section">
       <label>
         <span>Title</span>
@@ -69,6 +92,7 @@
             v-model="entry.title"/>
       </label>
     </div>
+
     <div class="edit-section">
       <label>
         <span>Description</span>
@@ -98,17 +122,17 @@
         <li v-for="(location, index) in trace_locations" :key="location">{{ index }}: {{ location }}</li>
       </ul>
     </div>
-    <div class="p-entry-description">Unresolved entries are not publicly displayed by shortcode or template API.</div>
+    <div class="p-entry-description">Unresolved entries are not publicly displayed by shortcode or template API. You can <span class="e-inline-edit" @click.prevent="edit = true">edit</span> the entry manually.</div>
   </div>
-  <div class="supplementary" style="display: flex; margin-left: 12px">
-    <div class="actions">
-      <a href="#" class="retry-btn" @click.prevent="unfurl()">retry?</a>
-      <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">delete</a>
-    </div>
-    <div style="margin-left: 12px">
-      <div class="drag-handle">
-        <icon-menu></icon-menu>
-      </div>
+  <div class="p-entry-actions">
+    <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
+      <icon-refresh></icon-refresh>
+    </span>            
+    <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
+      <icon-edit></icon-edit>
+    </span>
+    <div class="drag-handle">
+      <icon-menu></icon-menu>
     </div>
   </div>
 </div>
@@ -249,5 +273,10 @@ export default {
 .unfurl-error-location-trace ul,
 .unfurl-error-location-trace li {
   margin: 0;
+}
+
+.e-inline-edit {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

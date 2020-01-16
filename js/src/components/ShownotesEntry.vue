@@ -176,6 +176,10 @@ a.destructive {
   margin-top: 9px;
 }
 
+.edit-section .p-entry-description {
+  margin-top: 0;
+}
+
 .p-entry-url,
 .p-entry-site,
 .p-entry-description {
