@@ -327,9 +327,16 @@ export default {
 </script>
 
 <style>
+#podlove_podcast_shownotes .inside {
+  background: #f9f9f9;
+  margin-top: 0;
+  padding-top: 6px;
+}
+
 .shownotes-wrapper {
-  background: #f6f6f6;
-  padding: 9px;
+  /* background: #f6f6f6; 
+  padding: 9px;*/
+  padding-top: 6px;
 }
 .p-card {
   margin-bottom: 6px;

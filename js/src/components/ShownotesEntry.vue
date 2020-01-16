@@ -223,4 +223,9 @@ a.destructive {
   color: #333;
   font-weight: bold;
 }
+
+.p-entry input,
+.p-entry textarea {
+  width: 100%;
+}
 </style>
