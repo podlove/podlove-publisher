@@ -90,9 +90,11 @@ class REST_API
             );
         }
 
+        $html = $request['html'] ?? get_the_content(null, false, $post_id);
+
         $dom                     = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
-        $valid                   = $dom->loadHTML($request['html']);
+        $valid                   = $dom->loadHTML($html);
 
         if (!$valid) {
             return new \WP_Error(

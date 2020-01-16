@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - uniform icons in all states
 - entering a URL manually makes an entry valid
 - original URL and Site Name can be edited
+- add: import from episode HTML
 
 = 2020-01-13 =
 

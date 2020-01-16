@@ -115,6 +115,13 @@
             @click.prevent="importOsfShownotes"
             v-if="osf_active && mode != 'create'"
           >Import OSF Shownotes</button>
+          
+          <button
+            type="button"
+            class="button create-button"
+            @click.prevent="importHTML"
+            v-if="mode != 'create'"
+          >Import from Episode HTML</button>
         </div>
       </div>
     </div>
@@ -253,11 +260,21 @@ export default {
         post_id: podlove_vue.post_id
       })
         .done(result => {
-          console.log("done?");
           this.init();
         })
         .fail(({ responseJSON }) => {
           console.error("could not import osf:", responseJSON.message);
+        });
+    },
+    importHTML: function() {
+      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/html", {
+        post_id: podlove_vue.post_id
+      })
+        .done(result => {
+          this.init();
+        })
+        .fail(({ responseJSON }) => {
+          console.error("could not import html:", responseJSON.message);
         });
     },
     init: function() {
