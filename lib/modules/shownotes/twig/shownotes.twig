@@ -1,33 +1,51 @@
-<style>
-	.psn-entry {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-align: center;
-		-ms-flex-align: center;
-		align-items: center;
-	}
-	.psn-icon {
-		width: 16px;
-		height: 16px;
-		margin-right: 5px;
-	}
-	a.psn-link {
-		text-decoration: none !important;
-	}
-</style>
+{% if is_feed() %}
 
-<ul>
-	{% for entry in episode.shownotes %}
-		<li class="psn-entry">
-			{% if entry.type == "link" %}
-				{% if entry.icon %}
-					<img class="psn-icon" src="{{ entry.icon }}"/>
+	<ul>
+		{% for entry in episode.shownotes %}
+			<li class="psn-entry">
+				{% if entry.type == "link" %}
+					<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+				{% elseif entry.type == "topic" %}
+					<strong>{{ entry.title }}</strong>
 				{% endif %}
-				<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
-			{% elseif entry.type == "topic" %}
-				<strong>{{ entry.title }}</strong>
-			{% endif %}
-		</li>
-	{% endfor %}
-</ul>
+			</li>
+		{% endfor %}
+	</ul>
+
+{% else %}
+
+	<style>
+		.psn-entry {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
+		}
+		.psn-icon {
+			width: 16px;
+			height: 16px;
+			margin-right: 5px;
+		}
+		a.psn-link {
+			text-decoration: none !important;
+		}
+	</style>
+
+	<ul>
+		{% for entry in episode.shownotes %}
+			<li class="psn-entry">
+				{% if entry.type == "link" %}
+					{% if entry.icon %}
+						<img class="psn-icon" src="{{ entry.icon }}"/>
+					{% endif %}
+					<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+				{% elseif entry.type == "topic" %}
+					<strong>{{ entry.title }}</strong>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+
+{% endif %}
