@@ -42,7 +42,7 @@ class Shownotes extends \Podlove\Modules\Base
 
         add_meta_box(
             /* $id       */'podlove_podcast_shownotes',
-            /* $title    */__('Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
+            /* $title    */__('Podlove Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
             /* $callback */function () use ($episode) {
                 $id = esc_attr($episode->id);
                 echo <<<HTML
