@@ -53,24 +53,12 @@
     
     <div class="edit-section">
       <label>
-      <span>Original URL</span>
-        <input type="text" placeholder="Original URL" name="original_url" 
-            @keydown.enter.prevent="save()" 
-            @keydown.esc="edit = false"
-            v-model="entry.original_url"/>
-      </label>
-      <div class="p-entry-description">Original URL used to lookup the website.</div>
-    </div>
-
-    <div class="edit-section">
-      <label>
       <span>URL</span>
         <input type="text" placeholder="URL" name="url" 
             @keydown.enter.prevent="save()" 
             @keydown.esc="edit = false"
             v-model="entry.url"/>
       </label>
-      <div class="p-entry-description">Canonical URL. This is used for displaying shownotes.</div>
     </div>
 
     <div class="edit-section">
