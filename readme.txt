@@ -115,6 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - entering a URL manually makes an entry valid
 - original URL and Site Name can be edited
 - add: import from episode HTML
+- move shownotes into a separate metabox 
 
 = 2020-01-13 =
 

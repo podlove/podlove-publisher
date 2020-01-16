@@ -13,7 +13,7 @@ class Shownotes extends \Podlove\Modules\Base
 
     public function load()
     {
-        add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
+        add_action('add_meta_boxes', [$this, 'add_meta_box']);
         add_action('podlove_module_was_activated_shownotes', [$this, 'was_activated']);
         add_action('rest_api_init', [$this, 'api_init']);
         add_filter('podlove_shownotes_entry', [__CLASS__, 'apply_affiliate_to_shownotes_entry']);
@@ -35,22 +35,26 @@ class Shownotes extends \Podlove\Modules\Base
         Entry::build();
     }
 
-    public function extend_episode_form($form_data, $episode)
+    public function add_meta_box()
     {
-        $form_data[] = array(
-            'type'     => 'callback',
-            'key'      => 'shownotes',
-            'options'  => array(
-                'callback' => function () use ($episode) {
-                    ?>
-                    <div id="podlove-shownotes-app"><shownotes episodeid="<?php echo esc_attr($episode->id); ?>"></shownotes></div>
-                    <?php
-},
-                'label'    => __('Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
-            ),
-            'position' => 415,
+        $post_id = get_the_ID();
+        $episode = \Podlove\Model\Episode::find_one_by_where('post_id = ' . intval($post_id));
+
+        add_meta_box(
+            /* $id       */'podlove_podcast_shownotes',
+            /* $title    */__('Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
+            /* $callback */function () use ($episode) {
+                $id = esc_attr($episode->id);
+                echo <<<HTML
+                    <div id="podlove-shownotes-app">
+                        <shownotes episodeid="$id"></shownotes>
+                    </div>
+HTML;
+            },
+            /* $page     */'podcast',
+            /* $context  */'normal',
+            /* $priority */'high'
         );
-        return $form_data;
     }
 
     public function api_init()
