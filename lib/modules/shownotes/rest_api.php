@@ -426,9 +426,12 @@ class REST_API
             $entry->state = 'failed';
             $entry->save();
 
+            $body   = json_decode($response['body'], true);
+            $reason = $body['error']['reason'] ?? 'unknown reason';
+
             return new \WP_Error(
                 'podlove_rest_unfurl_failed',
-                'error when unfurling entry',
+                "error when unfurling entry (" . print_r($reason, true) . ")",
                 ['status' => 404]
             );
         }
