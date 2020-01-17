@@ -34,7 +34,8 @@
         <span v-else class="p-entry-url-url">
           <a :href="entry.url" target="_blank">{{ decodeURI(entry.url) }}</a>
         </span>
-        <div class="p-entry-description" v-if="entry.description">{{ entry.description }}</div>
+        <div class="p-entry-description" v-if="entry.hidden">Hidden entries are excluded from public display.</div>
+        <div class="p-entry-description" v-else-if="entry.description">{{ entry.description }}</div>
       </div>
       <div class="p-entry-actions">
         <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
@@ -43,6 +44,12 @@
         <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
           <icon-edit></icon-edit>
         </span>
+        <span class="retry-btn" title="unhide" v-if="entry.hidden" @click.prevent="toggleHide()">
+          <icon-eye-off></icon-eye-off>
+        </span>
+        <span class="retry-btn" title="hide" v-if="!entry.hidden" @click.prevent="toggleHide()">
+          <icon-eye></icon-eye>
+        </span>        
         <div class="drag-handle">
           <icon-menu></icon-menu>
         </div>
@@ -119,6 +126,12 @@
     <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
       <icon-edit></icon-edit>
     </span>
+    <span class="retry-btn" title="unhide" v-if="entry.hidden" @click.prevent="toggleHide()">
+      <icon-eye-off></icon-eye-off>
+    </span>
+    <span class="retry-btn" title="hide" v-if="!entry.hidden" @click.prevent="toggleHide()">
+      <icon-eye></icon-eye>
+    </span>      
     <div class="drag-handle">
       <icon-menu></icon-menu>
     </div>
@@ -135,6 +148,8 @@ import Edit from "../icons/Edit";
 import Image from "../icons/Image";
 import Link from "../icons/Link";
 import Type from "../icons/Type";
+import Eye from "../icons/Eye";
+import EyeOff from "../icons/EyeOff";
 
 export default {
   props: ["entry"],
@@ -153,7 +168,9 @@ export default {
     "icon-edit": Edit,
     "icon-image": Image,
     "icon-type": Type,
-    "icon-link": Link
+    "icon-link": Link,
+    "icon-eye": Eye,
+    "icon-eye-off": EyeOff
   },
   computed: {
     icon: function() {
@@ -211,7 +228,24 @@ export default {
         )
         .done(result => {})
         .fail(({ responseJSON }) => {
-          console.error("could not delete entry:", responseJSON.message);
+          console.error("could not save entry:", responseJSON.message);
+        });
+    },
+    toggleHide: function() {
+      this.$parent.$emit("update:entry", this.entry);
+
+      this.entry.hidden = !this.entry.hidden;
+
+      let payload = { hidden: this.entry.hidden };
+
+      jQuery
+        .post(
+          podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
+          payload
+        )
+        .done(result => {})
+        .fail(({ responseJSON }) => {
+          console.error("could not save entry:", responseJSON.message);
         });
     },
     deleteEntry: function() {

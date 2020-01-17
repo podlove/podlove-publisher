@@ -11,7 +11,7 @@ class TemplateExtensions
      * Episode Shownotes (Beta Release only)
      *
      * **Examples**
-     * 
+     *
      * Display all shownotes in a list.
      *
      * ```
@@ -30,13 +30,13 @@ class TemplateExtensions
      * {% endfor %}
      * </ul>
      * ```
-     * 
+     *
      * Group shownotes by topic.
-     * 
+     *
      * ```
      * {% for topic in episode.shownotes({groupby: "topic"}) %}
      *   <h3>{{ topic.title }}</h3>
-     * 
+     *
      *   <ul>
      *     {% for entry in topic.entries %}
      *       <li class="psn-entry">
@@ -60,7 +60,7 @@ class TemplateExtensions
         return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $post, $args) {
 
             $defaults = [
-                "groupby" => false
+                "groupby" => false,
             ];
             $args = wp_parse_args($args, $defaults);
 
@@ -71,13 +71,20 @@ class TemplateExtensions
             }
 
             // discard entries with failed state, unless a url was entered manually
+            // ensure it's not hidden
             $entries = array_filter($entries, function ($e) {
-                return $e->state != 'failed' || strlen($e->url) > 0;
+                $unfurl_failed  = $e->state == 'failed';
+                $has_manual_url = strlen($e->url) > 0;
+                $is_hidden      = $e->hidden;
+
+                return !$e->hidden && (!$unfurl_failed || $has_manual_url);
             });
 
             usort($entries, function ($a, $b) {
-                if ($a->position == $b->position)
+                if ($a->position == $b->position) {
                     return 0;
+                }
+
                 return ($a->position < $b->position) ? -1 : 1;
             });
 
@@ -88,8 +95,8 @@ class TemplateExtensions
                     if ($item->type == "topic") {
 
                         $agg['result'][] = [
-                            'title' => $item->title,
-                            'entries' => []
+                            'title'   => $item->title,
+                            'entries' => [],
                         ];
 
                         $agg['topic_index'] = count($agg['result']) - 1;
@@ -97,8 +104,8 @@ class TemplateExtensions
 
                         if ($agg['topic_index'] == null) {
                             $agg['result'][] = [
-                                'title' => '',
-                                'entries' => []
+                                'title'   => '',
+                                'entries' => [],
                             ];
                             $agg['topic_index'] = count($agg['result']) - 1;
                         }
@@ -128,7 +135,7 @@ class TemplateExtensions
      * {% if episode.hasShownotes %}
      *   Here are some shownotes
      * {% else %}
-     *   ¯\_(ツ)_/¯ 
+     *   ¯\_(ツ)_/¯
      * {% endif %}
      * ```
      *

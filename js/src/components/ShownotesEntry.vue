@@ -1,5 +1,5 @@
 <template>
-<div class="p-card p-entry">
+<div :class="{'p-card': true, 'p-entry': true, 'p-hidden': entry.hidden}">
   <div v-if="entry.type == 'link'">
     <shownotes-link v-bind:entry="entry"></shownotes-link>
   </div>
@@ -26,6 +26,21 @@ export default {
 </script>
 
 <style>
+.p-hidden {
+  opacity: 0.7;
+  background: #f9f9f9;
+}
+
+.p-hidden .p-card-body {
+  border-left: 3px solid #999;
+}
+
+.p-hidden .p-entry-description,
+.failed .p-entry-description {
+  border-top: 1px solid #999;
+  padding-top: 9px;
+}
+
 .p-entry:hover {
   background: hsl(197, 90%, 97%);
 }
@@ -151,7 +166,7 @@ a.destructive {
 }
 
 .p-entry-actions {
-  min-width: 68px;
+  min-width: 96px;
   text-align: right;
 }
 

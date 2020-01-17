@@ -505,6 +505,10 @@ class REST_API
             $entry->position = $request['position'];
         }
 
+        if (isset($request['hidden'])) {
+            $entry->hidden = (bool) $request['hidden'];
+        }
+
         $entry->save();
 
         $entry = apply_filters('podlove_shownotes_entry', $entry);

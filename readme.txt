@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-01-17 =
+
+- manually hide entries
+
 = 2020-01-16 #3 =
 
 - rename Shownotes metabox

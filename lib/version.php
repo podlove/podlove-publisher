@@ -43,7 +43,7 @@ namespace Podlove;
 use \Podlove\Jobs\CronJobRunner;
 use \Podlove\Model;
 
-define(__NAMESPACE__ . '\DATABASE_VERSION', 143);
+define(__NAMESPACE__ . '\DATABASE_VERSION', 144);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1421,6 +1421,13 @@ function run_migrations_for_version($version)
         case 143:
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `affiliate_url` TEXT',
+                \Podlove\Modules\Shownotes\Model\Entry::table_name()
+            );
+            $wpdb->query($sql);
+            break;
+        case 144:
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `hidden` INT',
                 \Podlove\Modules\Shownotes\Model\Entry::table_name()
             );
             $wpdb->query($sql);
