@@ -1,18 +1,5 @@
 <template>
-<div class="p-card-body" v-if="entry.state == 'unfurling'">
-  <div class="main">
-    <div class="site">
-      <div class="loading-sitename"></div>
-    </div>
-    <span class="link">
-      <div class="loading-link"></div>
-    </span>
-  </div>
-  <div class="actions">
-    <i class="podlove-icon-spinner rotate"></i>
-  </div>
-</div>
-<div class="p-card-body" v-else-if="entry.url || edit">
+<div class="p-card-body">
   <div class="main" v-if="!edit">
     <div class="p-entry-container">
       <div class="p-entry-favicon">
@@ -34,20 +21,20 @@
         <span v-else class="p-entry-url-url">
           <a :href="entry.url" target="_blank">{{ decodeURI(entry.url) }}</a>
         </span>
-        <div class="p-entry-description" v-if="entry.hidden">Hidden entries are excluded from public display.</div>
+        <div class="p-entry-description" v-if="isHidden">Hidden entries are excluded from public display.</div>
         <div class="p-entry-description" v-else-if="entry.description">{{ entry.description }}</div>
       </div>
       <div class="p-entry-actions">
-        <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
+        <!-- <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
           <icon-refresh></icon-refresh>
-        </span>            
+        </span>             -->
         <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
           <icon-edit></icon-edit>
         </span>
-        <span class="retry-btn" title="unhide" v-if="entry.hidden" @click.prevent="toggleHide()">
+        <span class="retry-btn" title="unhide" v-if="isHidden" @click.prevent="toggleHide()">
           <icon-eye-off></icon-eye-off>
         </span>
-        <span class="retry-btn" title="hide" v-if="!entry.hidden" @click.prevent="toggleHide()">
+        <span class="retry-btn" title="hide" v-if="!isHidden" @click.prevent="toggleHide()">
           <icon-eye></icon-eye>
         </span>        
         <div class="drag-handle">
@@ -97,43 +84,29 @@
     <div class="edit-section edit-actions">
       <div>
         <a href="#" class="button button-primary" @click.prevent="save()">Save Changes</a>
+        <a href="#" class="button" @click.prevent="unfurl()">Unfurl</a>
         <a href="#" class="button" @click.prevent="edit = false">Cancel</a>
       </div>
       <div>
         <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">Delete Entry</a>
       </div>
-    </div>        
-  </div>
-</div>
-<div class="p-card-body failed" v-else-if="entry.state == 'failed'">
-  <div class="main">
-    <div class="unfurl-error-title">
-      Unable to access URL: <a :href="entry.original_url" target="_blank">{{ entry.original_url }}</a>
     </div>
-    <div class="unfurl-error-message" v-if="error_message">{{ error_message }}</div>
-    <div class="unfurl-error-location-trace" v-if="trace_locations && trace_locations.length > 0">
-      <strong>Location Trace:</strong>
-      <ul>
-        <li v-for="(location, index) in trace_locations" :key="location">{{ index }}: {{ location }}</li>
-      </ul>
+    <div class="edit-section-footer" v-if="entry.state == 'unfurling'">
+      <i class="podlove-icon-spinner rotate"></i> Unfurling
     </div>
-    <div class="p-entry-description">Unresolved entries are not publicly displayed by shortcode or template API. You can <span class="e-inline-edit" @click.prevent="edit = true">edit</span> the entry manually.</div>
-  </div>
-  <div class="p-entry-actions">
-    <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
-      <icon-refresh></icon-refresh>
-    </span>            
-    <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
-      <icon-edit></icon-edit>
-    </span>
-    <span class="retry-btn" title="unhide" v-if="entry.hidden" @click.prevent="toggleHide()">
-      <icon-eye-off></icon-eye-off>
-    </span>
-    <span class="retry-btn" title="hide" v-if="!entry.hidden" @click.prevent="toggleHide()">
-      <icon-eye></icon-eye>
-    </span>      
-    <div class="drag-handle">
-      <icon-menu></icon-menu>
+    <div class="edit-section-footer p-card-body failed" v-else-if="entry.state == 'failed'">
+      <div class="main">
+        <div class="unfurl-error-title">
+          Unable to access URL: <a :href="entry.original_url" target="_blank">{{ entry.original_url }}</a>
+        </div>
+        <div class="unfurl-error-message" v-if="error_message">{{ error_message }}</div>
+        <div class="unfurl-error-location-trace" v-if="trace_locations && trace_locations.length > 0">
+          <strong>Location Trace:</strong>
+          <ul>
+            <li v-for="(location, index) in trace_locations" :key="location">{{ index }}: {{ location }}</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -179,10 +152,14 @@ export default {
       } else {
         return this.entry.icon;
       }
+    },
+    isHidden: function() {
+      return this.entry.hidden === "1";
     }
   },
   methods: {
     unfurl: function() {
+      this.edit = true;
       this.entry.state = "unfurling";
       this.error_message = "";
       this.trace_locations = [];
@@ -198,6 +175,10 @@ export default {
           this.$parent.$emit("update:entry", result);
         })
         .fail(({ responseJSON }) => {
+          if (!this.entry.url) {
+            this.entry.url = this.entry.original_url;
+          }
+
           this.entry.state = "failed";
           this.error_message =
             "[HTTP " +
@@ -234,7 +215,7 @@ export default {
     toggleHide: function() {
       this.$parent.$emit("update:entry", this.entry);
 
-      this.entry.hidden = !this.entry.hidden;
+      this.entry.hidden = this.isHidden ? "0" : "1";
 
       let payload = { hidden: this.entry.hidden };
 
@@ -300,5 +281,11 @@ export default {
 .e-inline-edit {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.edit-section-footer {
+  border-top: 1px solid #999;
+  padding-top: 9px;
+  margin-top: 12px;
 }
 </style>

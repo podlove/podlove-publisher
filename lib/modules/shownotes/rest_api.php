@@ -506,7 +506,7 @@ class REST_API
         }
 
         if (isset($request['hidden'])) {
-            $entry->hidden = (bool) $request['hidden'];
+            $entry->hidden = (int) $request['hidden'];
         }
 
         $entry->save();

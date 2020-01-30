@@ -1,5 +1,5 @@
 <template>
-<div :class="{'p-card': true, 'p-entry': true, 'p-hidden': entry.hidden}">
+<div :class="{'p-card': true, 'p-entry': true, 'p-hidden': isHidden}">
   <div v-if="entry.type == 'link'">
     <shownotes-link v-bind:entry="entry"></shownotes-link>
   </div>
@@ -17,6 +17,11 @@ export default {
   props: ["entry"],
   data() {
     return {};
+  },
+  computed: {
+    isHidden: function() {
+      return this.entry.hidden === "1";
+    }
   },
   components: {
     "shownotes-topic": ShownotesTopic,
