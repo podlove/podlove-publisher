@@ -572,7 +572,7 @@ abstract class Base
 		return array_combine(
 			static::property_names(),
 			array_map( function($property) {
-				return $this->$property;
+				return \maybe_unserialize($this->$property);
 			}, static::property_names()
 			)
 		);

@@ -73,6 +73,23 @@
             @keydown.esc="edit = false"
             v-model="entry.title"/>
       </label>
+
+      <div class="e-suggestion" v-if="entry.unfurl_data.title != entry.title">
+        <div class="e-suggestion-wrapper">
+          <div class="e-suggestion-content">
+            <span>Suggestion:</span>
+            <span>{{ entry.unfurl_data.title }}</span>            
+          </div>
+          <div class="e-suggestion-action">
+            <div class="e-suggestion-action-wrapper" @click.prevent="entry.title = entry.unfurl_data.title">
+              <span>ok</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
     <div class="edit-section">
@@ -287,5 +304,29 @@ export default {
   border-top: 1px solid #999;
   padding-top: 9px;
   margin-top: 12px;
+}
+
+.e-suggestion-wrapper {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fffff0;
+  border: 1px solid #faf089;
+  color: #744210;
+  padding: 8px;
+  margin-top: 2px;
+}
+
+.e-suggestion-content span:last-child {
+  font-weight: bold;
+}
+
+.e-suggestion-action-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.e-suggestion-action-wrapper span {
+  margin-right: 4px;
 }
 </style>
