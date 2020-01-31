@@ -57,8 +57,6 @@
                 @keydown.esc="mode = 'idle'"
                 v-model="newUrl"
                 type="text"
-                name="new_entry"
-                id="new_entry"
                 placeholder="https://example.com"
                 :disabled="mode == 'create-waiting'"
                 v-focus
@@ -76,8 +74,6 @@
                 @keydown.esc="mode = 'idle'"
                 v-model="newTopic"
                 type="text"
-                name="new_entry"
-                id="new_entry"
                 placeholder="Topic, Subheading"
                 :disabled="mode == 'create-waiting'"
                 v-focus
@@ -187,12 +183,14 @@ export default {
         if (!this.newUrl) return;
 
         this.createEntry(this.newUrl, "link");
+        this.newUrl = "";
       }
 
       if (this.newEntryType == "topic") {
         if (!this.newTopic) return;
 
         this.createEntry(this.newTopic, "topic");
+        this.newTopic = "";
       }
     },
     onUpdateEntry: function(entry) {
