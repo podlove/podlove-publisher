@@ -109,10 +109,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2020-01-31 =
 
-Unfurling now is not mandatory.
+Unfurling is not mandatory any more.
 It fills empty fields and provides suggestions.
 It does not override manually set fields any more.
 Since unfurling is optional, a failed unfurl doesn't make an entry invalid.
+
+* Template accessor: `entry.image` for open graph or twitter image
 
 = 2020-01-17 =
 

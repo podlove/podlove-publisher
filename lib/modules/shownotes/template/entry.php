@@ -112,6 +112,24 @@ class Entry extends Wrapper
     }
 
     /**
+     * Image URL
+     *
+     * Open Graph or Twitter image.
+     *
+     * @accessor
+     */
+    public function image()
+    {
+        $data = \maybe_unserialize($this->entry->unfurl_data);
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data['providers']['open_graph']['image'] ?? $data['providers']['twitter']['image:src'] ?? false;
+    }
+
+    /**
      * SVG Icon for entry type
      *
      * @accessor
