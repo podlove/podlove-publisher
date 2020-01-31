@@ -477,7 +477,7 @@ class REST_API
         $entry->prepare_icon();
         $success = $entry->save();
 
-        if (!$success) {
+        if ($success === false) {
             return new \WP_Error(
                 'podlove_rest_unfurl_save_failed',
                 'error when saving unfurled entry',
