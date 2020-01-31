@@ -9,7 +9,7 @@
           <icon-image class="p-entry-icon"></icon-image>
         </div>
       </div>
-      <div class="p-entry-content">
+      <div class="p-entry-content" v-if="entry.state != 'unfurling'">
         <div class="p-entry-site">{{ entry.site_name }}</div>
         <span class="link p-entry-title-url">
           <a :href="entry.url" target="_blank">{{ entry.title }}</a>
@@ -23,6 +23,14 @@
         </span>
         <div class="p-entry-description" v-if="isHidden">Hidden entries are excluded from public display.</div>
         <div class="p-entry-description" v-else-if="entry.description">{{ entry.description }}</div>
+      </div>
+      <div class="p-entry-content" v-else>
+        <div class="p-entry-site">
+          <i class="podlove-icon-spinner rotate"></i>
+        </div>
+        <span class="link p-entry-title-url">
+          <div class="loading-link"></div>
+        </span>
       </div>
       <div class="p-entry-actions">
         <!-- <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
@@ -190,7 +198,6 @@ export default {
   },
   methods: {
     unfurl: function() {
-      this.edit = true;
       this.entry.state = "unfurling";
       this.error_message = "";
       this.trace_locations = [];

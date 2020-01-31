@@ -395,16 +395,16 @@ export default {
   align-items: flex-end;
 }
 .loading-sitename {
-  height: 16px;
+  height: 14px;
   width: 150px;
   background-color: #999;
   border-radius: 3px;
   opacity: 0.67;
 }
 .loading-link {
-  height: 16px;
+  height: 14px;
   width: 250px;
-  background-color: #0074af;
+  background-color: #999;
   border-radius: 3px;
   opacity: 0.67;
 }
