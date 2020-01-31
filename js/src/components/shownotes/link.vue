@@ -53,6 +53,12 @@
             @keydown.esc="edit = false"
             v-model="entry.url"/>
       </label>
+
+      <suggestion 
+        v-if="entry.unfurl_data && entry.unfurl_data.url && entry.unfurl_data.url != entry.url"
+        :title="entry.unfurl_data.url"  
+        @accept="entry.url = entry.unfurl_data.url"
+      ></suggestion>
     </div>
 
     <div class="edit-section">
@@ -63,6 +69,13 @@
             @keydown.esc="edit = false"
             v-model="entry.site_name"/>
       </label>
+
+      <suggestion 
+        v-if="entry.unfurl_data && entry.unfurl_data.site_name && entry.unfurl_data.site_name != entry.site_name"
+        :title="entry.unfurl_data.site_name"  
+        @accept="entry.site_name = entry.unfurl_data.site_name"
+      ></suggestion>
+
     </div>
 
     <div class="edit-section">
@@ -74,21 +87,11 @@
             v-model="entry.title"/>
       </label>
 
-      <div class="e-suggestion" v-if="entry.unfurl_data.title != entry.title">
-        <div class="e-suggestion-wrapper">
-          <div class="e-suggestion-content">
-            <span>Suggestion:</span>
-            <span>{{ entry.unfurl_data.title }}</span>            
-          </div>
-          <div class="e-suggestion-action">
-            <div class="e-suggestion-action-wrapper" @click.prevent="entry.title = entry.unfurl_data.title">
-              <span>ok</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <suggestion 
+        v-if="entry.unfurl_data && entry.unfurl_data.title && entry.unfurl_data.title != entry.title"
+        :title="entry.unfurl_data.title"  
+        @accept="entry.title = entry.unfurl_data.title"
+      ></suggestion>
 
     </div>
 
@@ -97,6 +100,14 @@
         <span>Description</span>
         <textarea rows="3" placeholder="Description" name="description" v-model="entry.description"/>
       </label>
+
+
+      <suggestion 
+        v-if="entry.unfurl_data && entry.unfurl_data.description && entry.unfurl_data.description != entry.description"
+        :title="entry.unfurl_data.description"  
+        @accept="entry.description = entry.unfurl_data.description"
+      ></suggestion>
+
     </div>
     <div class="edit-section edit-actions">
       <div>
@@ -141,6 +152,8 @@ import Type from "../icons/Type";
 import Eye from "../icons/Eye";
 import EyeOff from "../icons/EyeOff";
 
+import suggestion from "./suggestion";
+
 export default {
   props: ["entry"],
   data() {
@@ -160,7 +173,8 @@ export default {
     "icon-type": Type,
     "icon-link": Link,
     "icon-eye": Eye,
-    "icon-eye-off": EyeOff
+    "icon-eye-off": EyeOff,
+    suggestion: suggestion
   },
   computed: {
     icon: function() {
@@ -304,29 +318,5 @@ export default {
   border-top: 1px solid #999;
   padding-top: 9px;
   margin-top: 12px;
-}
-
-.e-suggestion-wrapper {
-  display: flex;
-  justify-content: space-between;
-  background-color: #fffff0;
-  border: 1px solid #faf089;
-  color: #744210;
-  padding: 8px;
-  margin-top: 2px;
-}
-
-.e-suggestion-content span:last-child {
-  font-weight: bold;
-}
-
-.e-suggestion-action-wrapper {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.e-suggestion-action-wrapper span {
-  margin-right: 4px;
 }
 </style>

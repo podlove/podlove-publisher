@@ -456,11 +456,24 @@ class REST_API
         $entry->unfurl_data = $data;
         $entry->state       = 'fetched';
         $entry->url         = $data['url'];
-        $entry->title       = $data['title'];
-        $entry->description = $data['description'];
-        $entry->site_name   = $data['site_name'];
-        $entry->site_url    = $data['site_url'];
         $entry->icon        = $data['icon']['url'];
+
+        if (!$entry->title) {
+            $entry->title = $data['title'];
+        }
+
+        if (!$entry->description) {
+            $entry->description = $data['description'];
+        }
+
+        if (!$entry->site_name) {
+            $entry->site_name = $data['site_name'];
+        }
+
+        if (!$entry->site_url) {
+            $entry->site_url = $data['site_url'];
+        }
+
         $entry->prepare_icon();
         $success = $entry->save();
 

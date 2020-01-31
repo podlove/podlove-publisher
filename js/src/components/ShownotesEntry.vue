@@ -46,9 +46,9 @@ export default {
   padding-top: 9px;
 }
 
-.p-entry:hover {
+/* .p-entry:hover {
   background: hsl(197, 90%, 97%);
-}
+} */
 
 .p-card-body.p-card-type-topic {
   min-height: inherit;
