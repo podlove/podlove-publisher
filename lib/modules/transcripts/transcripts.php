@@ -28,7 +28,8 @@ class Transcripts extends \Podlove\Modules\Base
         // add_filter('podlove_episode_data_before_save', [$this, 'save_episode_voice_assignments']);
         add_filter('mime_types', [$this, 'ensure_vtt_mime_type_is_known'], 20);
 
-        add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
+        add_filter('podlove_player4_config', [$this, 'add_player_config'], 10, 2);
+        add_filter('podlove_player5_config', [$this, 'add_player_config'], 10, 2);
 
         add_action('wp', [$this, 'serve_transcript_file']);
 
@@ -327,7 +328,7 @@ class Transcripts extends \Podlove\Modules\Base
         }
     }
 
-    public function add_playerv4_config($config, $episode)
+    public function add_player_config($config, $episode)
     {
         if (Transcript::exists_for_episode($episode->id)) {
             $url                   = add_query_arg('podlove_transcript', 'json', get_permalink($episode->post_id));

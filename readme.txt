@@ -107,6 +107,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-02-08 =
+
+* add support for Podlove Web Player 5 plugin
+
+TODO: Currently you need to install the PWP5 standalone plugin _and_ deactivate the Publisher "Web Player" module.
+This needs to be communicated smoothly. Possibly deprecate the whole Web Player module and
+show a prompt to install the PWP5 standalone plugin instead.
+
 = 2020-01-31 =
 
 Unfurling is not mandatory any more.

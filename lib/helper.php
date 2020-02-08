@@ -174,7 +174,7 @@ function is_options_save_page() {
  */
 function is_podlove_settings_screen() {
 	$screen = get_current_screen();
-	return stripos($screen->id, 'podlove') !== false;
+	return stripos($screen->id, 'podlove') !== false && $screen->id != 'settings_page_podlove-web-player-settings';
 }
 
 /**
