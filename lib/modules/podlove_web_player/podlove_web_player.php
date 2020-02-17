@@ -6,6 +6,8 @@ use Podlove\Model\Episode;
 class Podlove_Web_Player extends \Podlove\Modules\Base
 {
 
+		// TODO/FIXME: does PWP5 work with shortcode podlove-episode-web-player?
+
     protected $module_name        = 'Podlove Web Player';
     protected $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
     protected $module_group       = 'web publishing';
