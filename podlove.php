@@ -68,7 +68,7 @@ function podlove_deactivate_plugin()
     });
 }
 
-$correct_php_version = version_compare(phpversion(), "5.4", ">=");
+$correct_php_version = version_compare(phpversion(), "7.0", ">=");
 
 if (!$correct_php_version) {
     // Let the plugin update/setup succeed and constantly show the error
