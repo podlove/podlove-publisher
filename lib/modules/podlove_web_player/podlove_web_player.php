@@ -7,6 +7,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base
 {
 
 		// TODO/FIXME: does PWP5 work with shortcode podlove-episode-web-player?
+		// TODO: since this is Publisher 3.0, drop support for PWP2/3
 
     protected $module_name        = 'Podlove Web Player';
     protected $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
@@ -18,12 +19,6 @@ class Podlove_Web_Player extends \Podlove\Modules\Base
         switch (\Podlove\get_webplayer_setting('version')) {
             case 'player_v4':
                 (new PlayerV4\Module)->load();
-                break;
-            case 'player_v3':
-                (new PlayerV3\Module)->load();
-                break;
-            case 'player_v2':
-                (new PlayerV2\Module)->load();
                 break;
             case 'podigee':
                 (new Podigee\Module)->load();
@@ -51,16 +46,6 @@ class Podlove_Web_Player extends \Podlove\Modules\Base
             case 'player_v4':
                 $printer = new PlayerV4\Html5Printer($episode);
                 return $printer;
-                break;
-            case 'player_v3':
-                $printer = new PlayerV3\Html5Printer($episode);
-                $printer->setAttributes([
-                    'data-podlove-web-player-source' => add_query_arg(['podloveEmbed' => true], get_permalink($episode->post_id)),
-                ]);
-                return $printer;
-                break;
-            case 'player_v2':
-                return new PlayerV2\Printer($episode);
                 break;
             case 'podigee':
                 return new Podigee\Html5Printer($episode);

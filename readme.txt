@@ -107,6 +107,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-02-17 =
+
+BREAKING
+
+Remove PWP2 and PWP3
+
 = 2020-02-08 =
 
 * add support for Podlove Web Player 5 plugin
