@@ -152,6 +152,9 @@ class TwigFilter {
 			$twig->addFunction($func);
 		}
 
+		$func = new \Twig_SimpleFunction('get_the_post_thumbnail_url', function ($post = null, $size = 'post-thumbnail') {return get_the_post_thumbnail_url($post, $size);});
+		$twig->addFunction($func);
+
 		// shortcode_exists
 		$func = new \Twig_SimpleFunction('shortcode_exists', function($shortcode) { return \shortcode_exists($shortcode); });
 		$twig->addFunction($func);

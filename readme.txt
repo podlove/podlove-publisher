@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.9.8 =
+
+* add Twig function `get_the_post_thumbnail_url` identical to the native WordPress function
+
 = 2.9.7 =
 
 * update JavaScript dependencies
