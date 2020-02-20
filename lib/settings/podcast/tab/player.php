@@ -123,6 +123,8 @@ class Player extends Tab {
 
 	public function preview_player($episode) {
 		$printer = \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::get_player_printer($episode);
-		echo $printer->render('preview');
+		if ($printer && method_exists($printer, 'render')) {
+			echo $printer->render('preview');
+		}
 	}
 }

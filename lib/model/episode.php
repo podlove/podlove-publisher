@@ -178,12 +178,6 @@ class Episode extends Base implements Licensable {
 		});
 	}
 
-	public function player($context = NULL) {
-		return $this->with_blog_scope(function() use ($context) {
-			return \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::get_player_printer($this)->render($context);
-		});
-	}
-
 	public function explicit_text() {
 
 		if ($this->explicit == 2)
