@@ -150,7 +150,11 @@ class Episode extends Wrapper
      */
     public function player($args = [])
     {
-        $allowed_keys   = ["template", "theme", "post_id"];
+        // fixme: "publisher" key is for pwp plugin, figure out what to do with post_id
+        $allowed_keys = ["template", "config", "theme", "post_id", "publisher"];
+
+        $args["publisher"] = get_the_ID();
+
         $shortcode_args = array_reduce(array_keys($args), function ($agg, $key) use ($args, $allowed_keys) {
             if (in_array($key, $allowed_keys)) {
                 $agg[] = "$key=\"" . esc_attr($args[$key]) . "\"";
