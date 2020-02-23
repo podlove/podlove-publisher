@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 2.9.6
+Stable tag: 2.9.8
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -110,6 +110,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2.9.8 =
 
 * add Twig function `get_the_post_thumbnail_url` identical to the native WordPress function
+* fix Podlove Web Player 4 issue in twentytwenty theme
+* shows module: itunes category can be set per show
 
 = 2.9.7 =
 
