@@ -801,7 +801,7 @@ function categories( $prefix_subcategories = true ) {
 
 	$temp['20-00'] = 'Fiction';
 		$temp['20-01'] = 'Comedy Fiction';
-		$temp['20-02'] = 'LDrama';
+		$temp['20-02'] = 'Drama';
 		$temp['20-03'] = 'Science Fiction';
 
 	$temp['06-00'] = 'Government';
