@@ -109,8 +109,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2.9.8 =
 
+TODO: PWP2 & PWP3 are currently missing
+
 * add Twig function `get_the_post_thumbnail_url` identical to the native WordPress function
 * fix Podlove Web Player 4 issue in twentytwenty theme
+* fix some importer issues
 * shows module: itunes category can be set per show
 
 = 2.9.7 =
