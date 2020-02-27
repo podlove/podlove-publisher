@@ -38,7 +38,7 @@ class Shownotes extends \Podlove\Modules\Base
     public function add_meta_box()
     {
         $post_id = get_the_ID();
-        $episode = \Podlove\Model\Episode::find_one_by_where('post_id = ' . intval($post_id));
+        $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
 
         add_meta_box(
             /* $id       */'podlove_podcast_shownotes',
