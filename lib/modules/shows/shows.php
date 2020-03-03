@@ -27,6 +27,7 @@ class Shows extends \Podlove\Modules\Base
         add_filter('podlove_feed_itunes_image', array($this, 'override_feed_image'), 5);
         add_filter('podlove_feed_itunes_image_url', array($this, 'override_feed_image_url'), 5);
         add_filter('podlove_feed_language', array($this, 'override_feed_language'), 5);
+        add_filter('podlove_feed_itunes_category_id', array($this, 'override_feed_category'), 5);
 
         add_filter('set-screen-option', function ($status, $option, $value) {
             if ($option == 'podlove_shows_per_page') {
@@ -197,6 +198,11 @@ class Shows extends \Podlove\Modules\Base
         return self::get_feed_modification($language, 'language');
     }
 
+    public function override_feed_category($category_id)
+    {
+        return self::get_feed_modification($category_id, 'category');
+    }
+
     /*
      * Handles the feed modifications
      *
@@ -241,6 +247,9 @@ class Shows extends \Podlove\Modules\Base
                     break;
                 case 'image_url':
                     return $show->image;
+                    break;
+                case 'category':
+                    return $show->category;
                     break;
             }
         }

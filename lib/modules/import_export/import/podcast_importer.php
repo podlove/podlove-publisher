@@ -59,7 +59,7 @@ class PodcastImporter {
 
 	public static function get_import_job_classes()
 	{
-		return [
+		$jobs = [
 			'\Podlove\Modules\ImportExport\Import\PodcastImportEpisodesJob',
 			'\Podlove\Modules\ImportExport\Import\PodcastImportOptionsJob',
 			'\Podlove\Modules\ImportExport\Import\PodcastImportAssetsJob',
@@ -71,6 +71,8 @@ class PodcastImporter {
 			'\Podlove\Modules\ImportExport\Import\PodcastImportUserAgentsJob',
 			'\Podlove\Modules\ImportExport\Import\PodcastImportTemplatesJob'
 		];
+
+		return apply_filters('podlove_import_jobs', $jobs);
 	}
 
 	public static function ajax_render_status()
@@ -82,7 +84,6 @@ class PodcastImporter {
 	public static function render_import_progress()
 	{
 		$jobs = self::get_import_job_classes();
-		$jobs = apply_filters('podlove_import_jobs', $jobs);
 
 		$unfinished = array_reduce($jobs, function($jobs, $job) {
 
@@ -110,7 +111,6 @@ class PodcastImporter {
 	public static function render_import_progress_jobs()
 	{
 		$jobs = self::get_import_job_classes();
-		$jobs = apply_filters('podlove_import_jobs', $jobs);
 
 		$finished = array_reduce($jobs, function($jobs, $job) {
 
