@@ -1,5 +1,6 @@
 jQuery(document).ready(function ($) {
 	var totalsRawData;
+	var aboTotalsRawData;
 
 	var reduceAddFun = function (p, v) {
 
@@ -209,6 +210,99 @@ jQuery(document).ready(function ($) {
 	if ($("#total-chart").length) {
 		load_episode_performance_chart();
 	}
+
+	function getLineChart(chart, dimension, group, caption) {
+		return dc.lineChart(chart)
+			.dimension(dimension)
+			.group(group, caption)
+	}
+
+	function render_abo_total() {
+		var chart_width = $("#total-abo-chart").closest(".wrap").width();
+		let xf = crossfilter(aboTotalsRawData)
+		var episodeDimension = xf.dimension((d) => {
+			return d.title.substring(0, 5); // TODO Besser
+		});
+
+		var totalDimension = episodeDimension.group().reduceSum((d) => d.downloads);
+		// TODO Hanlde null values
+		var q1Dimension = episodeDimension.group().reduceSum((d) => d.q1);
+		var d1Dimension = episodeDimension.group().reduceSum((d) => d.d1);
+		var d2Dimension = episodeDimension.group().reduceSum((d) => d.d2);
+		var w1Dimension = episodeDimension.group().reduceSum((d) => d.w1);
+
+		let chart = dc.compositeChart('#total-abo-chart'); // lineChart('#total-abo-chart')
+		let totalChart = getLineChart(chart, episodeDimension, totalDimension, "Total");
+		let q1Chart = getLineChart(chart, episodeDimension, q1Dimension, "1q");
+		let w1Chart = getLineChart(chart, episodeDimension, w1Dimension, "1w");
+		let d2Chart = getLineChart(chart, episodeDimension, d2Dimension, "2d");
+		let d1Chart = getLineChart(chart, episodeDimension, d1Dimension, "1d");
+
+		chart
+			.width(chart_width)
+			.x(d3.scaleBand().domain(episodeDimension))
+			.xUnits(dc.units.ordinal)
+			.elasticX(true)
+			.brushOn(false)
+			.yAxisLabel('Downloads')
+			.group(totalDimension)
+			._rangeBandPadding(1) // Fix to allign x-axis with points
+			.shareColors(true)
+			.renderHorizontalGridLines(true)
+			.compose([totalChart, q1Chart, w1Chart, d2Chart, d1Chart]);
+
+		// responsive legend position
+		var legendWidth = 300;
+		if (chart_width > 650) {
+			var legendX = chart_width - legendWidth;
+			jQuery("#total-abo-chart").height("200px")
+			chart.height(200);
+			chart.legend(dc.legend().horizontal(false).x(legendX).y(10).autoItemWidth(true));
+			chart.margins().bottom = 30;
+			chart.margins().right = legendWidth + 5;
+		} else {
+			var legendX = chart_width - legendWidth;
+			jQuery("#total-abo-chart").height("370px")
+			chart.height(370);
+			chart.legend(dc.legend().horizontal(false).x(30).y(170).autoItemWidth(true));
+			chart.margins().bottom = 30 + 200;
+		}
+
+		chart.render();
+	}
+
+	function load_abo_total() {
+		if (aboTotalsRawData) {
+			render_abo_total();
+			$(window).on('resize', render_abo_total);
+		} else {
+			$.when(
+				$.ajax(ajaxurl + "?action=podlove-analytics-csv-episodes-table")
+			).done(function (csvTotals) {
+				// var i = 0;
+				var csvMapper = function (d) {
+					return {
+						title: d.title,
+						downloads: +d.downloads,
+						d1: +d["1d"],
+						d2: +d["2d"],
+						w1: +d["1w"],
+						q1: +d["q1"]
+					};
+				};
+
+				aboTotalsRawData = d3.csvParse(csvTotals, csvMapper);
+				console.log(aboTotalsRawData);
+				render_abo_total();
+				$(window).on('resize', render_abo_total);
+			});
+		}
+	}
+
+	if ($("#total-abo-chart").length) {
+		load_abo_total();
+	}
+
 
 	var chartColor = '#69B3FF';
 
