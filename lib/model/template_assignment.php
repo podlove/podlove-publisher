@@ -157,5 +157,8 @@ class TemplateAssignment {
 $template_assignment = TemplateAssignment::get_instance();
 $template_assignment->property( 'top' );
 $template_assignment->property( 'bottom' );
+$template_assignment->property( 'head' );
+$template_assignment->property( 'header' );
+$template_assignment->property( 'footer' );
 
 $template_assignment = apply_filters( 'podlove_model_template_assignment_schema', $template_assignment );
