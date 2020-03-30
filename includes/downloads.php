@@ -62,6 +62,8 @@ function ga_track_download($request_id, $media_file, $ua_string, $ptm_context, $
 		'dt' => $title, // document title
 	);
 
+	$ga_params = apply_filters('podlove_ga_track_params', $ga_params, $episode);
+	
 	$ga_param_fragments = array();
 	array_walk($ga_params, function($item, $key) use(&$ga_param_fragments) {
 		array_push($ga_param_fragments, sprintf('%s=%s', $key, rawurlencode($item)));

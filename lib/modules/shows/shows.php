@@ -43,6 +43,8 @@ class Shows extends \Podlove\Modules\Base
         add_action('podlove_subscribe_button_widget_settings_bottom', [$this, 'add_widget_settings'], 10, 2);
         add_filter('podlove_subscribe_button_widget_settings_update', [$this, 'add_widget_settings_update'], 10, 3);
 
+        add_filter('podlove_ga_track_params', [$this, 'ga_track_params'], 10, 2);
+
         // Template accessors (Provides episode.show and podcasts.shows)
         \Podlove\Template\Episode::add_accessor(
             'show', array('\Podlove\Modules\Shows\TemplateExtensions', 'accessorEpisodesShow'), 5
@@ -131,6 +133,17 @@ class Shows extends \Podlove\Modules\Base
         }
 
         return $args;
+    }
+
+    public function ga_track_params($params, $episode)
+    {
+        $show = Show::find_one_by_episode_id($episode->id);
+
+        if ($show) {
+            $params['cg1'] = $show->title;
+        }
+
+        return $params;
     }
 
     public function add_meta_box()
