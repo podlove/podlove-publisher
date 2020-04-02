@@ -46,6 +46,10 @@ class Plus extends \Podlove\Modules\Base
 
     public static function base_url()
     {
-        return apply_filters('podlove_plus_base_url', 'http://localhost:4000');
+        if (defined('PODLOVE_PLUS_BASE_URL')) {
+            return PODLOVE_PLUS_BASE_URL;
+        } else {
+            return apply_filters('podlove_plus_base_url', 'https://plus.podlove.org');
+        }
     }
 }
