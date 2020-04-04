@@ -17,12 +17,7 @@ class API
     public function get_me()
     {
         $curl = new Http\Curl();
-        $curl->request($this->module::base_url() . '/api/rest/v1/me', array(
-            'headers' => array(
-                'Content-type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $this->token,
-            ),
-        ));
+        $curl->request($this->module::base_url() . '/api/rest/v1/me', $this->params());
         $response = $curl->get_response();
 
         if ($curl->isSuccessful()) {
@@ -31,6 +26,27 @@ class API
         } else {
             return false;
         }
+    }
 
+    public function push_feeds($feeds)
+    {
+        $payload = json_encode(["feeds" => $feeds]);
+
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url() . '/api/rest/v1/feeds', $this->params([
+            'method' => 'POST',
+            'body'   => $payload,
+        ]));
+        return $curl->get_response();
+    }
+
+    private function params($params = [])
+    {
+        return array_merge([
+            'headers' => [
+                'Content-type'  => 'application/json',
+                'Authorization' => 'Bearer ' . $this->token,
+            ],
+        ], $params);
     }
 }

@@ -29,6 +29,8 @@ class GlobalFeedSettings
 
         update_option('podlove_podcast', $podcast_settings);
 
+        do_action('podlove_plus_enable_proxy_changed', $podcast_settings['plus_enable_proxy']);
+
         header('Location: ' . get_site_url() . '/wp-admin/admin.php?page=podlove_feeds_settings_handle');
     }
 
