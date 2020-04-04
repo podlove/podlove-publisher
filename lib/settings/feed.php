@@ -243,6 +243,7 @@ class Feed {
 
 	private function global_feed_settings_form() {
 		?>
+		<div class="podlove-form-card">
 		<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_settings=true">
 			<?php settings_fields( Podcast::$pagehook ); ?>
 
@@ -301,6 +302,7 @@ class Feed {
 			});
 			?>
 		</form>
+		</div>
 		<?php
 	}
 
