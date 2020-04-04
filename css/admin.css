@@ -795,8 +795,8 @@ section.chart-wrapper div {
 		0px 0px 4px rgba(0, 0, 0, 0.05);
 }
 
-.podlove-form-card tr th,
-.podlove-form-card tr h3 {
+.podlove-form-card tr:first-child th,
+.podlove-form-card tr:first-child h3 {
 	margin-top: 0;
 	padding-top: 0;
 }

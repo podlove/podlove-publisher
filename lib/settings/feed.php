@@ -181,7 +181,11 @@ class Feed {
 		$this->table->prepare_items();
 		$this->table->display();
 
+		do_action('podlove_before_feed_global_settings');
+		
 		$this->global_feed_settings_form();
+
+		do_action('podlove_after_feed_global_settings');
 	}
 
 	/**
