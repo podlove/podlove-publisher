@@ -38,6 +38,7 @@ function ga_track_download($request_id, $media_file, $ua_string, $ptm_context, $
 	$episode = $media_file->episode();
 	$title = $episode->title();
 
+	// see https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 	$ga_params = array(
 		// Basics
 		'v' => '1', // version
