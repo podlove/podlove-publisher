@@ -21,6 +21,7 @@ class GlobalFeedSettings
     {
         add_action('podlove_before_feed_global_settings', [$this, 'global_feed_setting']);
         add_action('podlove_feed_settings_proxy', [$this, 'single_feed_proxy_setting'], 10, 2);
+        add_filter('podlove_feed_table_url', [$this, 'podlove_feed_table_url'], 10, 2);
 
         if (isset($_REQUEST["page"]) && $_REQUEST["page"] == "podlove_feeds_settings_handle" && isset($_REQUEST["update_plus_settings"]) && $_REQUEST["update_plus_settings"] == "true") {
             add_action('admin_bar_init', array($this, 'save_global_plus_feed_setting'));
@@ -42,6 +43,13 @@ class GlobalFeedSettings
         do_action('podlove_plus_enable_proxy_changed', $podcast_settings['plus_enable_proxy']);
 
         header('Location: ' . get_site_url() . '/wp-admin/admin.php?page=podlove_feeds_settings_handle');
+    }
+
+    public function podlove_feed_table_url($link, $feed)
+    {
+        $proxy_url = $this->api->get_proxy_url($feed->get_subscribe_url());
+        $link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;<a target=\"_blank\" href=\"{$proxy_url}\">{$proxy_url}</a>";
+        return $link;
     }
 
     public function single_feed_proxy_setting($wrapper, $feed)
