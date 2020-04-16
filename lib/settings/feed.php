@@ -441,18 +441,22 @@ class Feed {
 			) );
 
 			$wrapper->subheader( __( 'Feed Proxy', 'podlove-podcasting-plugin-for-wordpress' ) );
-
-			$wrapper->select( 'redirect_http_status', array(
-				'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '"Temporary Redirect" is recommended.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'options' => array(
-					'0'   => __('Don\'t redirect', 'podlove-podcasting-plugin-for-wordpress'),
-					'307' => __('Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress'),
-					'301' => __('Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress')
-				),
-				'default' => 0,
-				'please_choose' => false
-			) );
+			
+			if (!$podcast->plus_enable_proxy) {
+				$wrapper->select( 'redirect_http_status', array(
+					'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
+					'description' => __( '"Temporary Redirect" is recommended.', 'podlove-podcasting-plugin-for-wordpress' ),
+					'options' => array(
+						'0'   => __('Don\'t redirect', 'podlove-podcasting-plugin-for-wordpress'),
+						'307' => __('Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress'),
+						'301' => __('Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress')
+					),
+					'default' => 0,
+					'please_choose' => false
+				) );
+			} else {
+				do_action('podlove_feed_settings_proxy', $wrapper, $feed);
+			}
 			
 			$wrapper->string( 'redirect_url', array(
 				'label'       => __( 'Redirect Url', 'podlove-podcasting-plugin-for-wordpress' ),

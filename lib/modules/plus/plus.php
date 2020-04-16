@@ -14,7 +14,7 @@ class Plus extends \Podlove\Modules\Base
         $this->api = new API($this, $this->get_module_option('plus_api_token'));
 
         (new ModuleSettings($this, $this->api))->init();
-        (new GlobalFeedSettings)->init();
+        (new GlobalFeedSettings($this, $this->api))->init();
         (new FeedPusher($this, $this->api))->init();
     }
 

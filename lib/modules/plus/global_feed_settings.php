@@ -8,9 +8,19 @@ namespace Podlove\Modules\Plus;
  */
 class GlobalFeedSettings
 {
+    private $module;
+    private $api;
+
+    public function __construct($module, $api)
+    {
+        $this->module = $module;
+        $this->api    = $api;
+    }
+
     public function init()
     {
         add_action('podlove_before_feed_global_settings', [$this, 'global_feed_setting']);
+        add_action('podlove_feed_settings_proxy', [$this, 'single_feed_proxy_setting'], 10, 2);
 
         if (isset($_REQUEST["page"]) && $_REQUEST["page"] == "podlove_feeds_settings_handle" && isset($_REQUEST["update_plus_settings"]) && $_REQUEST["update_plus_settings"] == "true") {
             add_action('admin_bar_init', array($this, 'save_global_plus_feed_setting'));
@@ -32,6 +42,24 @@ class GlobalFeedSettings
         do_action('podlove_plus_enable_proxy_changed', $podcast_settings['plus_enable_proxy']);
 
         header('Location: ' . get_site_url() . '/wp-admin/admin.php?page=podlove_feeds_settings_handle');
+    }
+
+    public function single_feed_proxy_setting($wrapper, $feed)
+    {
+        // todo: async or at least cache
+        $proxy_url = $this->api->get_proxy_url($feed->get_subscribe_url());
+
+        $wrapper->callback('plus_redirect_info', [
+            'label'    => __('PLUS Proxy', 'podlove-podcasting-plugin-for-wordpress'),
+            'callback' => function () use ($proxy_url) {
+                echo '<p>';
+                echo '<a target="_blank" href="' . esc_attr($proxy_url) . '">' . $proxy_url . '</a>';
+                echo '</p>';
+                echo '<p class="description">';
+                echo __('You are using Publisher PLUS, which automatically configures the proxy settings for you.', 'podlove-podcasting-plugin-for-wordpress');
+                echo '</p>';
+            },
+        ]);
     }
 
     public function global_feed_setting()

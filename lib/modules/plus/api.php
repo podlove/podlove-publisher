@@ -22,7 +22,7 @@ class API
 
         if ($curl->isSuccessful()) {
             $decoded_user = json_decode($response['body']);
-            return $decoded_user ? $decoded_user : false;
+            return $decoded_user ?? false;
         } else {
             return false;
         }
@@ -38,6 +38,20 @@ class API
             'body'   => $payload,
         ]));
         return $curl->get_response();
+    }
+
+    public function get_proxy_url($origin_url)
+    {
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url() . '/api/rest/v1/feeds/proxy_url?url=' . urlencode($origin_url), $this->params());
+        $response = $curl->get_response();
+
+        if ($curl->isSuccessful()) {
+            $decoded_response = json_decode($response['body']);
+            return $decoded_response->url ?? false;
+        } else {
+            return false;
+        }
     }
 
     private function params($params = [])
