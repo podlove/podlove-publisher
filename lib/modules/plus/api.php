@@ -28,6 +28,19 @@ class API
         }
     }
 
+    public function list_feeds()
+    {
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url() . '/api/rest/v1/feeds', $this->params());
+        $response = $curl->get_response();
+
+        if ($curl->isSuccessful()) {
+            return json_decode($response['body']) ?? false;
+        } else {
+            return false;
+        }
+    }
+
     public function push_feeds($feeds)
     {
         $payload = json_encode(["feeds" => $feeds]);
@@ -37,6 +50,9 @@ class API
             'method' => 'POST',
             'body'   => $payload,
         ]));
+
+        do_action('podlove_plus_api_push_feeds');
+
         return $curl->get_response();
     }
 

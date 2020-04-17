@@ -47,15 +47,14 @@ class GlobalFeedSettings
 
     public function podlove_feed_table_url($link, $feed)
     {
-        $proxy_url = $this->api->get_proxy_url($feed->get_subscribe_url());
+        $proxy_url = FeedProxy::get_proxy_url($feed->get_subscribe_url());
         $link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;<a target=\"_blank\" href=\"{$proxy_url}\">{$proxy_url}</a>";
         return $link;
     }
 
     public function single_feed_proxy_setting($wrapper, $feed)
     {
-        // todo: async or at least cache
-        $proxy_url = $this->api->get_proxy_url($feed->get_subscribe_url());
+        $proxy_url = FeedProxy::get_proxy_url($feed->get_subscribe_url());
 
         $wrapper->callback('plus_redirect_info', [
             'label'    => __('PLUS Proxy', 'podlove-podcasting-plugin-for-wordpress'),

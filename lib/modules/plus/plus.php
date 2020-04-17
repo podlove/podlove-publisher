@@ -16,6 +16,7 @@ class Plus extends \Podlove\Modules\Base
         (new ModuleSettings($this, $this->api))->init();
         (new GlobalFeedSettings($this, $this->api))->init();
         (new FeedPusher($this, $this->api))->init();
+        (new FeedProxy($this, $this->api))->init();
     }
 
     public static function base_url()

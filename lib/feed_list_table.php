@@ -1,6 +1,8 @@
 <?php
 namespace Podlove;
 
+use Podlove\Modules\Plus\FeedProxy;
+
 class Feed_List_Table extends \Podlove\List_Table {
 	
 	function __construct(){
@@ -59,7 +61,7 @@ class Feed_List_Table extends \Podlove\List_Table {
 		$link = $feed->get_subscribe_link();
 		$podcast = \Podlove\Model\Podcast::get();
 
-		if (!$podcast->plus_enable_proxy) {
+		if (!FeedProxy::is_enabled()) {
 			if ($feed->redirect_http_status > 0 && strlen($feed->redirect_url)) {
 				$link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;<a target=\"_blank\" href=\"{$feed->redirect_url}\">{$feed->redirect_url}</a>"; 
 			}

@@ -39,12 +39,9 @@ function handle_feed_proxy_redirects() {
 
 	maybe_redirect_to_forced_protocol();
 	maybe_redirect_to_canonical_url();
-
-	// most HTTP/1.0 client's don't understand 307, so we fall back to 302
-	$http_status_code = $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" && $feed->redirect_http_status == 307 ? 302 : $feed->redirect_http_status;
-
-	if ( !is_page_in_feed() && strlen( $feed->redirect_url ) > 0 && should_redirect_to_proxy() && $http_status_code > 0 ) {
-		header( sprintf( "Location: %s", $feed->redirect_url ), TRUE, $http_status_code );
+	
+	if ($feed->is_redirect_enabled() && !is_page_in_feed()  && should_redirect_to_proxy()) {
+		header(sprintf("Location: %s", $feed->get_redirect_url()), TRUE, $feed->get_redirect_http_status_code());
 		exit;
 	} else { // don't redirect; prepare feed
 		status_header(200);

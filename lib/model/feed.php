@@ -1,6 +1,8 @@
 <?php
 namespace Podlove\Model;
 
+use \Podlove\Modules\Plus\FeedProxy;
+
 class Feed extends Base {
 
 	use KeepsBlogReferenceTrait;
@@ -53,6 +55,30 @@ class Feed extends Base {
 	public function get_subscribe_link() {
 		$url = $this->get_subscribe_url();
 		return sprintf( '<a href="%s">%s</a>', $url, $url );
+	}
+
+	public function get_redirect_url()
+	{
+		if (FeedProxy::is_enabled()) {
+			return FeedProxy::get_proxy_url($this->get_subscribe_url());
+		} else {
+			return $this->redirect_url;
+		}
+	}
+
+	public function get_redirect_http_status_code()
+	{
+		// most HTTP/1.0 client's don't understand 307, so we fall back to 302
+		if (FeedProxy::is_enabled()) {
+			return $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" ? 302 : 307;
+		} else {
+			return $_SERVER['SERVER_PROTOCOL'] == "HTTP/1.0" && $this->redirect_http_status == 307 ? 302 : $this->redirect_http_status;
+		}
+	}
+
+	public function is_redirect_enabled()
+	{
+		return FeedProxy::is_enabled() || (strlen($this->redirect_url) > 0 && $this->get_redirect_http_status_code() > 0);
 	}
 
 	/**

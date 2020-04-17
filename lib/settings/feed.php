@@ -2,6 +2,7 @@
 namespace Podlove\Settings;
 
 use Podlove\Model;
+use Podlove\Modules\Plus\FeedProxy;
 
 class Feed {
 
@@ -442,7 +443,7 @@ class Feed {
 
 			$wrapper->subheader( __( 'Feed Proxy', 'podlove-podcasting-plugin-for-wordpress' ) );
 			
-			if (!$podcast->plus_enable_proxy) {
+			if (!FeedProxy::is_enabled()) {
 				$wrapper->select( 'redirect_http_status', array(
 					'label'       => __( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ),
 					'description' => __( '"Temporary Redirect" is recommended.', 'podlove-podcasting-plugin-for-wordpress' ),
