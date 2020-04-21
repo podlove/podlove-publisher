@@ -14,6 +14,9 @@ class Podlove_Web_Player extends \Podlove\Modules\Base {
 	public function load() {
 
 		switch (\Podlove\get_webplayer_setting('version')) {
+			case 'player_v5':
+				(new PlayerV5\Module)->load();
+				break;
 			case 'player_v4':
 				(new PlayerV4\Module)->load();
 				break;
