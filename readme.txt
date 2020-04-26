@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.4
 Tested up to: 5.4
 Requires PHP: 5.4
-Stable tag: 2.9.10
+Stable tag: 2.10.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,6 +106,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2.10.0 =
+
+Add support for Podlove Web Player 5
+
+Podlove Web Player 5 is the latest overhaul of our podcast web player. 
+It comes with its own configuration interface giving you full control over its appearance. 
+
+Activate it in `Podlove > Podcast Settings > Player`. 
+You are then prompted to install the "Podlove Web Player" plugin if you don't have it installed already.
+
+Configure the web player appearance in `Settings > Podlove Web Player`. 
+Existing web player shortcodes and template accessors continue to work as expected. 
+For detailed shortcode options, please refer to https://wordpress.org/plugins/podlove-web-player/
 
 = 2.9.10 =
 
