@@ -41,6 +41,7 @@ function podlove_pwp5_attributes($attributes)
         'link'            => get_permalink($episode->post_id),
         'chapters'        => $chapters ? $chapters : [],
         'audio'           => $media_file_urls,
+        // todo: all downloadable files
         'files'           => $media_file_urls,
     ];
 
