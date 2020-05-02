@@ -5,6 +5,7 @@
 		var $editor     = $("#template-editor");
 		var $title      = $(".editor .title input", $editor);
 		var $toolbar    = $(".toolbar", $editor);
+		var $footer    =  $("footer", $editor);
 		var $navigation = $(".navigation", $editor);
 
 		var editor = ace.edit("ace-editor");
@@ -211,8 +212,8 @@
 
 		$navigation.on("click", "a[data-id]", activate_template);
 		$navigation.on("click", ".add a", add_template);
-		$toolbar.on("click", "a.save", save_template);
-		$toolbar.on("click", ".delete", delete_template);
+		$footer.on("click", "a.save", save_template);
+		$footer.on("click", ".delete", delete_template);
 
 		// select first template on page load
 		$("li:first a", $navigation).click();
