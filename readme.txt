@@ -107,6 +107,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.11.0 =
+
+* add global network bar [#1101](https://github.com/podlove/podlove-publisher/pull/1101) by [@gglnx](https://github.com/gglnx)
+* improve template editing UI [#1109](https://github.com/podlove/podlove-publisher/pull/1109)
+
 = 2.10.0 =
 
 Add support for Podlove Web Player 5
