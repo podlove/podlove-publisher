@@ -71,7 +71,12 @@ class PodcastList extends Wrapper {
 	 * @accessor
 	 */
 	public function logo() {
-		return $this->list->logo;
+		if ( $this->list->logo ) {
+			$logo = new \Podlove\Model\Image( $this->list->logo );
+			return new \Podlove\Template\Image( $logo );
+		}
+		
+		return null;
 	}
 
 	/**
