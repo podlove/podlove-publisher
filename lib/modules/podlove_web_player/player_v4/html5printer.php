@@ -44,7 +44,9 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
         $media_xml = (new MediaTagRenderer($this->episode))->render($context);
 
-        return '<div class="pwp4-wrapper" id="' . $id . '" data-episode="' . $url . '">' . $media_xml . '</div>';
+        # class "intrinsic-ignore" to avoid a twentytwenty issue:
+        # @see https: //community.podlove.org/t/podcast-player-4-klappt-auf-smartphone-immer-ein/2018/9
+        return '<div class="pwp4-wrapper intrinsic-ignore" id="' . $id . '" data-episode="' . $url . '">' . $media_xml . '</div>';
     }
 
     public static function media_files($episode, $context)

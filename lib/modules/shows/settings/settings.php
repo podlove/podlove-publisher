@@ -28,7 +28,7 @@ class Settings
 
     public static function show_meta_data_fields()
     {
-        return ['subtitle', 'language', 'image'];
+        return ['subtitle', 'language', 'image', 'category'];
     }
 
     public function add_screen_options()
@@ -299,6 +299,13 @@ $this->table->prepare_items();
                 'default'     => get_bloginfo('language'),
                 'options'     => \Podlove\Locale\locales(),
             ));
+
+			$wrapper->select( 'category', array(
+				'label'       => __( 'iTunes Category', 'podlove-podcasting-plugin-for-wordpress' ),
+				'description' => '',
+				'type'     => 'select',
+				'options'  => \Podlove\Itunes\categories()
+			) );
 
         });
     }

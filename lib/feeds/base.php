@@ -144,6 +144,7 @@ function override_feed_head( $hook, $podcast, $feed, $format ) {
 		$categories = \Podlove\Itunes\categories( false );	
 		$category_html = '';
 		$category_id = $podcast->category_1;
+		$category_id = apply_filters( 'podlove_feed_itunes_category_id', $category_id );
 
 		if ( $category_id ) {
 			list( $cat, $subcat ) = explode( '-', $category_id );

@@ -112,7 +112,7 @@ class Player extends Tab {
 	}
 
 	public function preview_section() {
-		echo '<h3>Preview</h3>';
+		
 		$episode = Episode::latest();
 		if ($episode) {
 			$this->preview_player($episode);
@@ -124,6 +124,7 @@ class Player extends Tab {
 	public function preview_player($episode) {
 		$printer = \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::get_player_printer($episode);
 		if ($printer && method_exists($printer, 'render')) {
+			echo '<h3>Preview</h3>';
 			echo $printer->render('preview');
 		}
 	}

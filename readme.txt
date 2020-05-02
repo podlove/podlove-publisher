@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-05-02 =
+
+* merge changes from master branch
+
 = 2020-02-17 =
 
 BREAKING

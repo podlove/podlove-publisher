@@ -88,10 +88,6 @@ class Templates {
 			</div>
 			<div class="editor">
 				<div class="toolbar">
-					<div class="actions">
-						<a href="#" class="delete"><?php _e('delete', 'podlove-podcasting-plugin-for-wordpress') ?></a>
-						<a href="#" class="save button button-primary"><?php _e('Save', 'podlove-podcasting-plugin-for-wordpress') ?></a>
-					</div>
 					<div class="title">
 						<input type="text">
 					</div>
@@ -103,9 +99,18 @@ class Templates {
 				</div>
 			</div>
 			<div class="clear"></div>
+			<footer>
+			  <div class="actions">
+					<a href="#" class="save button button-primary"><?php _e('Save Template', 'podlove-podcasting-plugin-for-wordpress') ?></a>
+			  	<a href="#" class="delete"><?php _e('Delete Template', 'podlove-podcasting-plugin-for-wordpress') ?></a>
+			  </div>
+			</footer>
+			<div class="clear"></div>
 		</div>
 
+		<div class="podlove-form-card" style="margin-top: 40px">
 		<h3><?php _e( 'Insert templates to content automatically', 'podlove-podcasting-plugin-for-wordpress' ) ?></h3>
+		
 		<form method="post" action="options.php">
 			<?php settings_fields( Templates::$pagehook );
 			$template_assignment = Model\TemplateAssignment::get_instance();
@@ -135,9 +140,28 @@ class Templates {
 					'please_choose' => false
 				) );
 
+				$wrapper->select( 'head', array(
+					'label'   => __( 'Insert in document head', 'podlove-podcasting-plugin-for-wordpress' ),
+					'options' => $templates,
+					'please_choose' => false
+				) );
+
+				$wrapper->select( 'header', array(
+					'label'   => __( 'Insert before header', 'podlove-podcasting-plugin-for-wordpress' ),
+					'options' => $templates,
+					'please_choose' => false
+				) );
+
+				$wrapper->select( 'footer', array(
+					'label'   => __( 'Insert after footer', 'podlove-podcasting-plugin-for-wordpress' ),
+					'options' => $templates,
+					'please_choose' => false
+				) );
+
 			});
 		?>
 		</form>
+		</div>
 		<?php
 	}
 

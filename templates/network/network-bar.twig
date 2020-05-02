@@ -1,0 +1,224 @@
+{% set barNetwork = id is defined ? network.lists({ id: id }) %}
+{% set allPodcastsLabel = allPodcastsLabel | default(__('All podcasts', 'podlove-podcasting-plugin-for-wordpress')) %}
+{% set linkLabel = linkLabel | default(__('More information', 'podlove-podcasting-plugin-for-wordpress')) %}
+{% set backgroundColor = backgroundColor | default('#bbbabb') %}
+{% set textColor = textColor | default('#000') %}
+
+{% if barNetwork %}
+    <div class="podlove-network-bar" id="podlove-network-bar-{{ id }}">
+        <button class="podlove-network-bar__toggle" aria-expanded="false">
+            <div class="podlove-network-bar__toggle-inner">
+                {{ barNetwork.logo.html({ height: 44, class: 'podlove-network-bar__toggle-image' }) }}
+                <span class="podlove-network-bar__toggle-title">{{ barNetwork.title }}</span>
+                <span class="podlove-network-bar__toggle-expend">
+                    <span class="podlove-network-bar__toggle-expend-inner">{{ allPodcastsLabel }}</span>
+                    <svg aria-hidden="true" focusable="false" role="img" viewBox="0 0 320 512" class="podlove-network-bar__toggle-expend-icon">
+                        <path fill="currentColor" d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path>
+                    </svg>
+                </span>
+            </div>
+        </button>
+        
+        <div class="podlove-network-bar__bar" tabindex="0" hidden="hidden">
+            <div class="podlove-network-bar__bar-content">
+                {{ barNetwork.summary | wpautop }}
+                {% if barNetwork.url %}
+                    <p><a href="{{ barNetwork.url }}" class="podlove-network-bar__bar-button">{{ linkLabel }}</a></p>
+                {% endif %}
+            </div>
+            
+            <ul class="podlove-network-bar__bar-podcasts">
+                {% for podcast in barNetwork.podcasts %}
+                    <li class="podlove-network-bar__bar-podcast">
+                        <a href="{{ podcast.landingPageUrl }}" title="{{ podcast.title }}" class="podlove-network-bar__bar-podcast-link">
+                            {{ podcast.image.html({ width: 100, class: 'podlove-network-bar__bar-podcast-cover' }) }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <style>
+        .podlove-network-bar {
+            position: sticky;
+            top: 0;
+            background-color: {{ backgroundColor }};
+            font-size: 20px;
+            font-weight: normal;
+            font-style: normal;
+            color: {{ textColor }};
+            z-index: 99999;
+        }
+        
+        body.admin-bar .podlove-network-bar {
+            top: 32px;
+        }
+        
+    	@media screen and ( max-width: 782px ) {
+    	    body.admin-bar .podlove-network-bar {
+                top: 0px;
+            }
+    	}
+        
+        .podlove-network-bar__toggle {
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+            width: 100%;
+            display: block;
+            text-align: left;
+            font-weight: normal;
+            color: {{ textColor }};
+            line-height: 1;
+            font-size: 14px;
+        }
+        
+        .podlove-network-bar__toggle:hover,
+        .podlove-network-bar__toggle:focus {
+            font-weight: normal;
+            background-color: transparent;
+            color: {{ textColor }};
+        }
+        
+        .podlove-network-bar__toggle-inner {
+            display: flex;
+            height: 44px;
+            align-items: center;
+        }
+        
+        .podlove-network-bar__toggle-image {
+            height: 44px;
+            width: auto;
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
+        
+        .podlove-network-bar__toggle-title {
+            flex-grow: 2;
+            font-weight: bold;
+        }
+        
+        .podlove-network-bar__toggle-expend {
+            margin-left: auto;
+            padding-right: 15px;
+            padding-left: 15px;
+            height: 44px;
+            line-height: 44px;
+        }
+        
+        .podlove-network-bar__toggle:hover .podlove-network-bar__toggle-expend,
+        .podlove-network-bar__toggle:focus .podlove-network-bar__toggle-expend {
+            background-color: {{ textColor }};
+            color: {{ backgroundColor }};
+        }
+        
+        .podlove-network-bar__toggle-expend-icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -2px;
+            fill: currentColor;
+        }
+        
+        .podlove-network-bar__bar {
+            display: block;
+            padding: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        
+        .podlove-network-bar__bar:focus {
+            outline: 0;
+        }
+        
+        .podlove-network-bar__bar[hidden] {
+            display: none;
+        }
+        
+        .podlove-network-bar__bar-content {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            margin-right: 15px;
+        }
+        
+        .podlove-network-bar__bar-content p {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .podlove-network-bar__bar-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .podlove-network-bar__bar-button {
+            background-color: {{ textColor }};
+            padding: 5px 15px;
+            color: {{ backgroundColor }};
+            display: inline-block;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .podlove-network-bar__bar-button:hover,
+        .podlove-network-bar__bar-button:focus {
+            text-decoration: underline;
+            color: {{ backgroundColor }};
+        }
+        
+        .podlove-network-bar__bar-podcasts {
+            list-style: none;
+            display: flex;
+            margin: -5px;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+        
+        .podlove-network-bar__bar-podcast {
+            padding: 5px;
+            width: 33.33%;
+            max-width: 100px;
+        }
+        
+        .podlove-network-bar__bar-podcast-link {
+            display: block;
+            line-height: 0;
+        }
+        
+        @media screen and ( min-width: 580px ) {
+            .podlove-network-bar__bar {
+                display: flex;
+            }
+            
+            .podlove-network-bar__bar-content {
+                max-width: 300px;
+                width: 50%;
+                margin-bottom: 0px;
+            }
+        }
+        
+        @media screen and ( min-width: 768px ) {
+            .podlove-network-bar__toggle {
+                font-size: 16px;
+            }
+        }
+    </style>
+    
+    <script>
+        var $networkBar = document.querySelector('#podlove-network-bar-{{ id }}');
+        var $networkBarToggle = $networkBar.querySelector('.podlove-network-bar__toggle');
+        var $networkBarContent = $networkBar.querySelector('.podlove-network-bar__bar');
+        
+        $networkBarToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            var isOpen = $networkBarToggle.getAttribute('aria-expanded') === 'true';
+            $networkBarToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            $networkBarContent.hidden = isOpen;
+            if (!isOpen) {
+                $networkBarContent.focus();
+            } else {
+                $networkBarToggle.focus();
+            }
+        });
+    </script>
+{% endif %}

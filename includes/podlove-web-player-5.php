@@ -11,7 +11,7 @@ function podlove_pwp5_init()
 
 function podlove_pwp5_attributes($attributes)
 {
-    $post_id = $attributes['post_id'] ?? get_the_ID();
+    $post_id = (isset($attributes['post_id']) && $attributes['post_id']) ? $attributes['post_id'] : get_the_ID();
     $episode = Episode::find_one_by_post_id($post_id);
     $post    = get_post($episode->post_id);
     $podcast = Podcast::get();
@@ -41,6 +41,7 @@ function podlove_pwp5_attributes($attributes)
         'link'            => get_permalink($episode->post_id),
         'chapters'        => $chapters ? $chapters : [],
         'audio'           => $media_file_urls,
+        // todo: all downloadable files
         'files'           => $media_file_urls,
     ];
 

@@ -8,7 +8,6 @@ This is the podcast publishing plugin for WordPress.
 - [Podlove Project & Blog][7]
 - Report a bug: [Use GitHub Issues][5]
 
-[![Flattr This][2]][1]
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher?ref=badge_shield)
 
 ## Development Setup
@@ -33,8 +32,6 @@ Use webpack when working with JS or CSS files:
 yarn run dev
 ```
 
-[1]: http://flattr.com/thing/728463/Podlove-Podcasting-Plugin-for-WordPress
-[2]: http://api.flattr.com/button/flattr-badge-large.png (Flattr This)
 [3]: https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
 [4]: https://trello.com/b/zB4mKQlD/podlove-publisher
 [5]: https://github.com/podlove/podlove-publisher/issues

@@ -14,6 +14,7 @@ class Show
      *     - Description
      *     - Image*
      *     - Language*
+     *     - Category*
      *
      * Properties marked with * are meta
      */
@@ -26,6 +27,7 @@ class Show
         $this->summary  = '';
         $this->image    = '';
         $this->language = '';
+        $this->category = '';
     }
 
     /**
@@ -39,7 +41,7 @@ class Show
     public static function find_all_terms_by_property($property = false, $value = false)
     {
         $existing_properties      = ['title', 'description', 'slug', 'id'];
-        $existing_meta_properties = ['image', 'language', 'subtitle'];
+        $existing_meta_properties = ['image', 'language', 'subtitle', 'category'];
         $search_parameters        = array(
             'taxonomy'   => 'shows',
             'hide_empty' => false,
@@ -137,6 +139,7 @@ class Show
         $show->summary  = $term->description;
         $show->image    = get_term_meta($term->term_id, 'image', true);
         $show->language = get_term_meta($term->term_id, 'language', true);
+        $show->category = get_term_meta($term->term_id, 'category', true);
 
         return $show;
     }

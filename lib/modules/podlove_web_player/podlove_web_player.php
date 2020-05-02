@@ -6,17 +6,16 @@ use Podlove\Model\Episode;
 class Podlove_Web_Player extends \Podlove\Modules\Base
 {
 
-		// TODO/FIXME: does PWP5 work with shortcode podlove-episode-web-player?
-		// TODO: since this is Publisher 3.0, drop support for PWP2/3
-
     protected $module_name        = 'Podlove Web Player';
     protected $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
     protected $module_group       = 'web publishing';
 
     public function load()
     {
-
         switch (\Podlove\get_webplayer_setting('version')) {
+            case 'player_v5':
+                (new PlayerV5\Module)->load();
+                break;
             case 'player_v4':
                 (new PlayerV4\Module)->load();
                 break;
