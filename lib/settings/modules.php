@@ -116,8 +116,6 @@ class Modules
                         <script>
                         (function($){
                             $(document).ready(function() {
-                                console.log($("input#<?php echo $module_name; ?>").closest("tr"));
-                                
                                 $("input#<?php echo $module_name; ?>").closest("tr").hide();
                             });                        
                         }(jQuery));
