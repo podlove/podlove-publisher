@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * add global network bar [#1101](https://github.com/podlove/podlove-publisher/pull/1101) by [@gglnx](https://github.com/gglnx)
 * improve template editing UI [#1109](https://github.com/podlove/podlove-publisher/pull/1109)
+* fix: template tag `episode.player` uses correct shortcode internally
 
 = 2.10.0 =
 

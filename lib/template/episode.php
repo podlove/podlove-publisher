@@ -169,7 +169,7 @@ class Episode extends Wrapper
         }, []);
         $args_string = implode(" ", $shortcode_args);
 
-        return do_shortcode("[podlove-web-player $args_string]");
+        return do_shortcode("[podlove-episode-web-player $args_string]");
     }
 
     /**
