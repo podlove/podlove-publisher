@@ -121,6 +121,17 @@ abstract class Base {
 		return false;
 	}
 
+	/**
+	 * Is this module visible in the modules list?
+	 * 
+	 * Use this method to hide a module even if it's not a core module.
+	 * 
+	 * @return boolean
+	 */
+	public static function is_visible() {
+		return true;
+	}
+
 	public function get_module_url() {
 		return \Podlove\PLUGIN_URL . '/lib/modules/' . $this->get_module_directory_name();
 	}
