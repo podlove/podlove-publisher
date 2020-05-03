@@ -30,13 +30,14 @@ class Shownotes extends \Podlove\Modules\Base
         );
     }
 
-	public static function is_visible() {
+    public static function is_visible()
+    {
         if (defined('PODLOVE_MODULE_SHOWNOTES_VISBLE')) {
             return (bool) PODLOVE_MODULE_SHOWNOTES_VISBLE;
         }
-        
-		return false;
-	}
+
+        return false;
+    }
 
     public function was_activated()
     {
