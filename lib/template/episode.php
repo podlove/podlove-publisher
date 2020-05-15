@@ -153,6 +153,7 @@ class Episode extends Wrapper
         // fixme: "publisher" key is for pwp plugin, figure out what to do with post_id
         $allowed_keys = ["template", "config", "theme", "post_id", "publisher"];
 
+        // bug: should use $this->episode->post_id ?
         $default_post_id = get_the_ID();
 
         if (!$default_post_id || get_post_type($default_post_id) != 'podcast') {
