@@ -13,13 +13,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build project # This would actually build your project, using zip for an example artifact
+      - name: Build project
         run: |
           make build
           sed -i.bak "s/\(Version:.*\)/\1.build$GITHUB_RUN_NUMBER/" dist/podlove.php
           rm -f dist/podlove.php.bak
           mv dist podlove-podcasting-plugin-for-wordpress
-          zip --junk-paths -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress -x yarn.lock package-lock.json mix-manifest.json \*.publisher.code-workspace
+          zip -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress -x yarn.lock package-lock.json mix-manifest.json \*.publisher.code-workspace
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
