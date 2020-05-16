@@ -15,7 +15,9 @@ jobs:
         run: |
           make build
           sed -i.bak "s/\(Version:.*\)/\1.build$GITHUB_RUN_NUMBER/" dist/podlove.php
-          zip --junk-paths dist
+          rm -f dist/podlove.php.bak
+          mv dist podlove-podcasting-plugin-for-wordpress
+          zip -r dist.zip podlove-podcasting-plugin-for-wordpress
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
