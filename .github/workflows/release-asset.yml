@@ -19,7 +19,7 @@ jobs:
           sed -i.bak "s/\(Version:.*\)/\1.build$GITHUB_RUN_NUMBER/" dist/podlove.php
           rm -f dist/podlove.php.bak
           mv dist podlove-podcasting-plugin-for-wordpress
-          zip -r dist.zip podlove-podcasting-plugin-for-wordpress
+          zip -r dist.zip podlove-podcasting-plugin-for-wordpress -x yarn.lock package-lock.json mix-manifest.json \*.publisher.code-workspace
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
