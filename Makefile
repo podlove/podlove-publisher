@@ -21,7 +21,7 @@ player:
 	cp -r $(player_src)/js/vendor/*.min.js $(player_dst)/js/vendor
 
 build:
-	composer install --no-dev -o
+	composer install --no-progress --no-dev -o
 	npm install
 	npm run production
 	rm -rf dist
