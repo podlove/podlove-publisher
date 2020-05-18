@@ -16,7 +16,7 @@ jobs:
       - name: Build project
         run: |
           make build
-          sed -i.bak "s/\(Version:\).*/\1${{ github.ref }}/" dist/podlove.php
+          sed -i.bak "s/\(Version:.*\)/\1.build$GITHUB_RUN_NUMBER/" dist/podlove.php
           rm -f dist/podlove.php.bak
           mv dist podlove-podcasting-plugin-for-wordpress
           zip -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress
