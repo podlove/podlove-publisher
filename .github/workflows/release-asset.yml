@@ -15,9 +15,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Build project
         env:
-          TAG_NAME: ${{ github.ref }}
+          TAG_NAME: ${{ github.ref }} | rev | cut -d/ -f1 | rev
         run: |
-          #!/bin/bash -x
           make build
           sed -i.bak "s/\(Version:\).*/\1 $TAG_NAME/" dist/podlove.php
           rm -f dist/podlove.php.bak
