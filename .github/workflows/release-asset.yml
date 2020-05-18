@@ -15,10 +15,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Build project
         env:
-          TAG_NAME: ${{ github.ref }} | rev | cut -d/ -f1 | rev
+          TAG_NAME: ${{ github.ref }}
         run: |
           make build
-          sed -i.bak "s/\(Version:\).*/\1 $TAG_NAME/" dist/podlove.php
+          sed -i.bak "s/\(Version:\).*/\1 `echo $TAG_NAME | rev | cut -d/ -f1 | rev`/" dist/podlove.php
           rm -f dist/podlove.php.bak
           mv dist podlove-podcasting-plugin-for-wordpress
           zip -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress
