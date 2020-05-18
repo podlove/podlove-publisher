@@ -17,6 +17,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.ref }}
         run: |
+          #!/bin/bash -x
           make build
           sed -i.bak "s/\(Version:\).*/\1 $TAG_NAME/" dist/podlove.php
           rm -f dist/podlove.php.bak
