@@ -151,7 +151,7 @@ class Episode extends Wrapper
     public function player($args = [])
     {
         // fixme: "publisher" key is for pwp plugin, figure out what to do with post_id
-        $allowed_keys = ["template", "config", "theme", "post_id", "publisher"];
+        $allowed_keys = ["template", "config", "theme", "post_id", "publisher", "show"];
 
         $args["publisher"] = $this->episode->post_id;
 
