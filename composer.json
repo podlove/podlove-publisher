@@ -5,6 +5,7 @@
     "require": {
         "php": ">=5.4 <5.5",
         "podlove/podlove-timeline": "1.*",
+        "monolog/monolog": "1.*",
         "symfony/yaml": "2.8.*",
         "twig/twig": "1.*",
         "twig/extensions": "1.4.*",
