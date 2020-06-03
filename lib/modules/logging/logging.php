@@ -46,6 +46,13 @@ class Logging extends \Podlove\Modules\Base {
 	public function register_database_logger() {
 		global $wpdb;
 
+		if (Logger::API > 1) {
+			// WPDBHandler is not compatible to monolog 2.x so we need to bail here
+			// I can't upgrade to monolog 2.x because it raises minimum PHP to 7.2
+			// long term solution, maybe https: //packagist.org/packages/humbug/php-scoper
+			return;
+		}
+
 		$log = Log::get();
 		// write logs to database
 		$log->pushHandler( new WPDBHandler( $wpdb, $log->get_log_level() ) );

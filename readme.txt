@@ -107,6 +107,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2.11.2 =
+
+* fix: ensure that logging library Monolog is available at version 1.x, otherwise disable the database logger
+
 = 2.11.1 =
 
 * Podlove Web Player 5: support "show" parameter `episode.player({show: 'my-show-slug'})`
