@@ -36,9 +36,10 @@ class Analytics extends \Podlove\Modules\Base {
             //$ext            = pathinfo($original_url, PATHINFO_EXTENSION);
             $schemeless_url = preg_replace('/^https?:\/\//', '', $original_url);
             //$podtrac_prefix = "https://dts.podtrac.com/redirect.$ext/";
+            $podtrac_prefix = "https://dts.podtrac.com/redirect.mp1/";
             //$podtrac_prefix = $analytics_prefix;
-            //return $podtrac_prefix . $schemeless_url;
-            return $analytics_prefix . $schemeless_url;
+            return $podtrac_prefix . $schemeless_url;
+            //return $analytics_prefix . $schemeless_url;
         });
     }
 
