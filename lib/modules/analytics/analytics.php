@@ -22,9 +22,9 @@ class Analytics extends \Podlove\Modules\Base {
 
 
     public function register_hooks() {
-// 	$analytics_prefix = $this->get_module_option( 'analytics_prefix' );
-// 	if ( ! $analytics_prefix )
-//             return;
+	$analytics_prefix = $this->get_module_option( 'analytics_prefix' );
+	if ( ! $analytics_prefix )
+            return;
         
 //         add_filter('podlove_enclosure_url', function ($original_url) {
 //             $ext            = pathinfo($original_url, PATHINFO_EXTENSION);
