@@ -201,23 +201,32 @@ class Feed extends Base {
 		) );
 	}
 
-	public function get_alternate_links() {
+    public function get_alternate_links()
+    {
+        if ($show_tax_slug = get_query_var('shows')) {
+            $show     = get_term_by('slug', $show_tax_slug, 'shows');
+            $taxonomy = "shows";
+            $term_id  = $show->term_id;
+        } else {
+            $taxonomy = null;
+            $term_id  = null;
+        }
 
-		$html = '';
-		foreach ( self::find_all_by_discoverable(1) as $feed ) {
-			if ( $feed->id !== $this->id ) {
-				$html .= "\n\t" . self::get_link_tag( array(
-					'prefix' => 'atom',
-					'rel'    => 'alternate',
-					'type'   => $feed->get_content_type(),
-					'title'  => \Podlove\Feeds\prepare_for_feed( $feed->title_for_discovery() ),
-					'href'   => $feed->get_subscribe_url()
-				) );
-			}
-		}
+        $html = '';
+        foreach (self::find_all_by_discoverable(1) as $feed) {
+            if ($feed->id !== $this->id) {
+                $html .= "\n\t" . self::get_link_tag(array(
+                    'prefix' => 'atom',
+                    'rel'    => 'alternate',
+                    'type'   => $feed->get_content_type(),
+                    'title'  => \Podlove\Feeds\prepare_for_feed($feed->title_for_discovery()),
+                    'href'   => $feed->get_subscribe_url($taxonomy, $term_id),
+                ));
+            }
+        }
 
-		return apply_filters( 'podlove_feed_alternate_links', $html );
-	}
+        return apply_filters('podlove_feed_alternate_links', $html);
+    }
 
 	public static function get_link_tag( $args = array() ) {
 		
