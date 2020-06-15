@@ -48,6 +48,25 @@ class Feed extends Base {
 	}
 
 	/**
+	 * Get subscribe URL for feed or show feed based on query vars.
+	 * 
+	 * @return string
+	 **/
+	public function get_contextual_subscribe_url()
+	{
+    if ($show_tax_slug = get_query_var('shows')) {
+        $show     = get_term_by('slug', $show_tax_slug, 'shows');
+        $taxonomy = "shows";
+        $term_id  = $show->term_id;
+    } else {
+        $taxonomy = null;
+        $term_id  = null;
+		}
+		
+		return $this->get_subscribe_url($taxonomy, $term_id);
+	}
+
+	/**
 	 * Build html link to subscribe.
 	 * 
 	 * @return string
@@ -60,7 +79,7 @@ class Feed extends Base {
 	public function get_redirect_url()
 	{
 		if (FeedProxy::is_enabled()) {
-			return FeedProxy::get_proxy_url($this->get_subscribe_url());
+			return FeedProxy::get_proxy_url($this->get_contextual_subscribe_url());
 		} else {
 			return $this->redirect_url;
 		}
@@ -180,12 +199,7 @@ class Feed extends Base {
 
 	public function get_self_link() {
 
-		if ($show_tax_slug = get_query_var('shows')) {
-			$show = get_term_by('slug', $show_tax_slug, 'shows');
-			$href = $this->get_subscribe_url("shows", $show->term_id);
-		} else {
-			$href = $this->get_subscribe_url();
-		}
+		$href = $this->get_contextual_subscribe_url();
 
 		$current_page = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 		if ( $current_page > 1 ) {
@@ -203,15 +217,6 @@ class Feed extends Base {
 
     public function get_alternate_links()
     {
-        if ($show_tax_slug = get_query_var('shows')) {
-            $show     = get_term_by('slug', $show_tax_slug, 'shows');
-            $taxonomy = "shows";
-            $term_id  = $show->term_id;
-        } else {
-            $taxonomy = null;
-            $term_id  = null;
-        }
-
         $html = '';
         foreach (self::find_all_by_discoverable(1) as $feed) {
             if ($feed->id !== $this->id) {
@@ -220,7 +225,7 @@ class Feed extends Base {
                     'rel'    => 'alternate',
                     'type'   => $feed->get_content_type(),
                     'title'  => \Podlove\Feeds\prepare_for_feed($feed->title_for_discovery()),
-                    'href'   => $feed->get_subscribe_url($taxonomy, $term_id),
+                    'href'   => $feed->get_contextual_subscribe_url(),
                 ));
             }
         }
