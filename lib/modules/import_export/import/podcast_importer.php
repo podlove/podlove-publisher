@@ -29,17 +29,27 @@ class PodcastImporter {
 			return;
 
 		// allow xml+gz uploads
-		add_filter('upload_mimes', function ($mimes) {
-		    return array_merge($mimes, array(
-		    	'xml' => 'application/xml',
-		    	'gz|gzip' => 'application/x-gzip'
-		    ));
+		add_filter('mime_types', function ($mimes) {
+      $mimes['xml'] = 'application/xml';
+      $mimes['gz'] = 'application/gzip';
+			return $mimes;
 		});
 
 		require_once ABSPATH . '/wp-admin/includes/file.php';
 		 
-		$file = wp_handle_upload($_FILES['podlove_import'], array('test_form' => false));
-		
+		$file = wp_handle_upload($_FILES['podlove_import'], [
+			'test_form' => false, 
+			'mimes' => [
+				'xml' => 'application/xml',
+				'gz' => 'application/gzip'
+			]
+		]);
+
+		if (isset($file['error'])) {
+			print_r($file['error']);
+			exit;
+		}
+
 		update_option('podlove_import_file', $file['file']);
 		if (!($file = get_option('podlove_import_file')))
 			return;
