@@ -26,13 +26,13 @@ class SystemReport
             ),
             'active plugins'      => array('title' => 'Active Plugins', 'callback' => function () {
                 $separator = "\n           - ";
-                return $separator . implode(
+                return $separator . implode($separator,
                     array_map(
                         function ($plugin_path) {
                             $plugin = get_plugin_data(trailingslashit(WP_PLUGIN_DIR) . $plugin_path);
                             return sprintf("%s v%s", $plugin["Name"], $plugin["Version"]);
                         }, get_option('active_plugins')
-                    ), $separator);
+                    ));
             }),
             'db_charset'          => array('title' => 'WordPress Database Charset', 'callback' => function () use (&$notices) {
                 // Fetch Episode Database Info from "information_scheme" Table
