@@ -40,8 +40,10 @@ function handle_feed_proxy_redirects() {
 	maybe_redirect_to_forced_protocol();
 	maybe_redirect_to_canonical_url();
 	
-	if ($feed->is_redirect_enabled() && !is_page_in_feed()  && should_redirect_to_proxy()) {
-		header(sprintf("Location: %s", $feed->get_redirect_url()), TRUE, $feed->get_redirect_http_status_code());
+  $redirect_url = $feed->get_redirect_url();
+
+	if ($redirect_url && $feed->is_redirect_enabled() && !is_page_in_feed()  && should_redirect_to_proxy()) {
+		header(sprintf("Location: %s", $redirect_url), TRUE, $feed->get_redirect_http_status_code());
 		exit;
 	} else { // don't redirect; prepare feed
 		status_header(200);
