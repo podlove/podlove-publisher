@@ -77,7 +77,7 @@ class Modules
 
                             /**
                             ?><h4><?php echo __('Settings', 'podlove-podcasting-plugin-for-wordpress') ?></h4><?php
-                            **/
+                             **/
 
                             // prepare settings object because form framework expects an object
                             $settings_object = new \stdClass();
@@ -117,14 +117,14 @@ class Modules
                         (function($){
                             $(document).ready(function() {
                                 $("input#<?php echo $module_name; ?>").closest("tr").hide();
-                            });                        
+                            });
                         }(jQuery));
                         </script>
                         <?php
-                    },
+},
                     /* $page     */Modules::$pagehook,
                     /* $section  */$group ? 'podlove_setting_module_group_' . $group : 'podlove_settings_modules'
-                );                
+                );
             }
         }
 
@@ -184,6 +184,25 @@ form > .form-table h4 {
 .form-table .form-table th {
     width: 150px;
 }
+
+form > h2 {
+    margin-top: 3em;
+    color: #32373c;
+    font-size: 2em;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+@media (min-width:1280px) {
+    form > .form-table > tbody {
+        display: grid;
+        grid-gap: 1.5rem;
+        gap: 1.5rem;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        max-width: 1350px;
+    }
+}
+
 </style>
 		<?php
 }
