@@ -25,6 +25,10 @@ class ModuleSettings
 
         $api_key = $this->module->get_module_option('plus_api_token');
 
+        if (!$api_key) {
+            add_action('admin_notices', [$this, 'show_missing_token_notice']);
+        }
+
         if ($api_key && ($user = $this->api->get_me())) {
             $description = '<i class="podlove-icon-ok"></i> ' . sprintf(
                 __('You are logged in as %s.', 'podlove-podcasting-plugin-for-wordpress'),
@@ -47,4 +51,18 @@ class ModuleSettings
         ));
 
     }
+
+    public function show_missing_token_notice()
+    {
+        ?>
+        <div class="notice notice-success">
+            <p>
+              <strong><?php echo __('Publisher PLUS needs an API token', 'podlove-podcasting-plugin-for-wordpress') ?></strong>
+            </p>
+            <p>
+              <a href="#plus"><?php echo __('go to API Token setting', 'podlove-podcasting-plugin-for-wordpress') ?></a>
+            </p>
+        </div>
+        <?php
+}
 }
