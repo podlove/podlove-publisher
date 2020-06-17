@@ -15,8 +15,9 @@ class FeedPusher
     public function init()
     {
         # push all feeds to PLUS whenever any feed changes
+        # fixme: podcast change is not triggered here because the settings page just sets an option
         add_action('podlove_model_change', function ($model) {
-            if ($model::name() === "podlove_feed") {
+            if (in_array($model::name(), ["podlove_feed"])) {
                 $this->push_all_feeds();
             }
         });
@@ -31,10 +32,23 @@ class FeedPusher
 
     public function push_all_feeds()
     {
+        // podcasts
         $feeds = array_map(function ($feed) {
             return $feed->get_subscribe_url();
         }, \Podlove\Model\Feed::all());
 
         $this->api->push_feeds($feeds);
+
+        // shows
+        // fixme: only when show module is on
+        // fimxe(unrelated): trigger feed refresh after push
+        // $shows = \Podlove\Modules\Shows\Model\Show::all();
+        // foreach ($shows as $show) {
+        //     $feeds = array_map(function ($feed) use ($show) {
+        //         return $feed->get_subscribe_url("shows", $show->id);
+        //     }, \Podlove\Model\Feed::all());
+
+        //     $this->api->push_feeds($feeds);
+        // }
     }
 }
