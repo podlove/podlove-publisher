@@ -5,21 +5,29 @@ use \Podlove\Model;
 class External_Analytics extends \Podlove\Modules\Base {
 
     protected $module_name = 'External Analytics';
-    protected $module_description = 'Add Analytics for an external site, e.g. podtrac, blubrry etc.';
+    protected $module_description = 'Add an external analytics service, e.g. Podtrac, Blubrry, etc.';
     protected $module_group = 'external services';
     public function load() {
         $this->register_option( 'analytics_prefix', 'string', array(
-                'label'       => __( 'Analytics Prefix', 'podlove-podcasting-plugin-for-wordpress' ),
-                'description' => __( 'dont forget the trailing /', 'podlove-podcasting-plugin-for-wordpress' ),
-                'html'        => array(
-                        'class' => 'regular-text podlove-check-input',
-                        'data-podlove-input-type' => 'text',
-                        'placeholder' => 'https://dts.podtrac.com/redirect.mp3/'
-                )
+            'label'       => __( 'Analytics Prefix', 'podlove-podcasting-plugin-for-wordpress' ),
+            'description' => '
+	            ' . '<p>' . __( 'Don\'t forget the trailing slash \'/\'', 'podlove-podcasting-plugin-for-wordpress' ) . '</p>
+				' . '<p><b>' . __( 'Examples:', 'podlove-podcasting-plugin-for-wordpress' ) . '</b></p>
+				' . '<ul>
+				' . '<li><a href="https://publisher.podtrac.com" target="_blank">Podtrac</a>: https://dts.podtrac.com/redirect.mp3/</li>
+				' . '<li><a href="https://stats.blubrry.com" target="_blank">Blubrry</a>: http://media.blubrry.com/{blubrry_id}/</li>
+				' . '<li><a href="https://chartable.com/publishers" target="_blank">Chartable</a>: https://chtbl.com/track/{chtbl_id}/</li>
+				' . '<li>' . __( 'etc.', 'podlove-podcasting-plugin-for-wordpress' ) . '</li>
+				' . '</ul>
+                ',
+            'html'        => array(
+                'class' => 'regular-text podlove-check-input',
+                'data-podlove-input-type' => 'text',
+                'placeholder' => 'https://dts.podtrac.com/redirect.mp3/'
+            )
         ) );
         add_action( 'init', array( $this, 'register_hooks' ) );
     }
-
 
     public function register_hooks() {
 	    $analytics_prefix = $this->get_module_option( 'analytics_prefix' );
