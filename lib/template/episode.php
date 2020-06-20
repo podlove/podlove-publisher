@@ -153,7 +153,10 @@ class Episode extends Wrapper
         // fixme: "publisher" key is for pwp plugin, figure out what to do with post_id
         $allowed_keys = ["template", "config", "theme", "post_id", "publisher", "show"];
 
+        // pwp5
         $args["publisher"] = $this->episode->post_id;
+        // other players
+        $args["post_id"] = $this->episode->post_id;
 
         $shortcode_args = array_reduce(array_keys($args), function ($agg, $key) use ($args, $allowed_keys) {
             if (in_array($key, $allowed_keys)) {
