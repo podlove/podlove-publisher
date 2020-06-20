@@ -32,7 +32,7 @@ class External_Analytics extends \Podlove\Modules\Base {
     public function register_hooks() {
 	    $analytics_prefix = $this->get_module_option( 'analytics_prefix' );
 	    if ( ! $analytics_prefix )
-            return "" . $original_url;
+            return;
         
         add_filter('podlove_enclosure_url', function ($original_url) use ( $analytics_prefix ){
             $schemeless_url = preg_replace('/^https?:\/\//', '', $original_url);
