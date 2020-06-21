@@ -11,7 +11,6 @@ class External_Analytics extends \Podlove\Modules\Base {
         $this->register_option( 'analytics_prefix', 'string', array(
             'label'       => __( 'Analytics Prefix', 'podlove-podcasting-plugin-for-wordpress' ),
             'description' => '
-	            ' . '<p>' . __( 'Don\'t forget the trailing slash \'/\'', 'podlove-podcasting-plugin-for-wordpress' ) . '</p>
 				' . '<p><b>' . __( 'Examples:', 'podlove-podcasting-plugin-for-wordpress' ) . '</b></p>
 				' . '<ul>
 				' . '<li><a href="https://publisher.podtrac.com" target="_blank">Podtrac</a>: https://dts.podtrac.com/redirect.mp3/</li>
