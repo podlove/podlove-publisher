@@ -104,7 +104,7 @@ class Tracking extends Tab {
 
 				<p class="description" style="margin-bottom: 15px;">
 				  <?php echo sprintf(
-						__('A requests counts as identical when the same IP and user agent are used to access the same file in a certain time window.
+						__('A request counts as identical when the same IP and user agent are used to access the same file in a certain time window.
 					Podlove Publisher has traditionally used an hourly time window but IAB recommends daily. Beware: Once changed you need to 
 					do a full Download Intent Cleanup and Download Aggregation for the change to take effect. Do this at the %stools page%s.'),
 						'<a href="' . admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section') . '">',
