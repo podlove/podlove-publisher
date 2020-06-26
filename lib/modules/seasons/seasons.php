@@ -39,7 +39,7 @@ class Seasons extends \Podlove\Modules\Base {
 		add_filter('podlove_js_data_for_post_title', [$this, 'set_season_in_post_title_js'], 10, 2);
 
 		\Podlove\Template\Podcast::add_accessor(
-			'seasons', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'], 3
+			'seasons', ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'], 4
 		);
 
 		\Podlove\Template\Episode::add_accessor(
