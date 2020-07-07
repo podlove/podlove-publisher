@@ -32,7 +32,7 @@ function override_feed_title( $feed ) {
 function override_feed_description($feed) {
 	add_filter('podlove_rss_feed_description', function($description) use ($feed) {
 		$podcast = Model\Podcast::get();
-		$desc = $podcast->subtitle ? $podcast->subtitle : $description;
+		$desc = $podcast->summary ?: $podcast->subtitle ?: $description;
 		return htmlspecialchars($desc);
 	});
 }
