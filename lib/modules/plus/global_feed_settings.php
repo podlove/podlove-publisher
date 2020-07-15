@@ -48,7 +48,12 @@ class GlobalFeedSettings
     public function podlove_feed_table_url($link, $feed)
     {
         $proxy_url = FeedProxy::get_proxy_url($feed->get_subscribe_url());
-        $link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;<a target=\"_blank\" href=\"{$proxy_url}\">{$proxy_url}</a>";
+        $link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;";
+        if ($proxy_url) {
+            $link .= "<a target=\"_blank\" href=\"{$proxy_url}\">{$proxy_url}</a>";
+        } else {
+            $link .= "error: unknown redirect URL";
+        }
         return $link;
     }
 

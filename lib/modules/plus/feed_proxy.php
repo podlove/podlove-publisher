@@ -41,9 +41,17 @@ class FeedProxy
                 return $agg;
             }
 
-            if ($item->origin_url == $origin_url) {
+            if (self::normalize_url($item->origin_url) == self::normalize_url($origin_url)) {
                 return $item->proxy_url;
             }
         }, null);
+    }
+
+    private static function normalize_url($url)
+    {
+        $url = trim($url);
+        $url = preg_replace('/^https?:\/\//', '', $url);
+
+        return $url;
     }
 }
