@@ -180,7 +180,6 @@ class Downloads_List_Table extends \Podlove\List_Table {
 		if ($which == 'bottom') { ?>
 			<div class="alignleft actions">
 				<em><?php echo $this->data_age() ?></em>
-				<a href="">CSV EXPORT</a>
 			</div>
 
 			<script type="text/javascript">
