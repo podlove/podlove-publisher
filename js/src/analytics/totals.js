@@ -143,10 +143,17 @@ jQuery(document).ready(function ($) {
 		} else {
 			var legendX = chart_width - legendWidth;
 
-			jQuery("#total-chart").height("370px")
-			downloadsChart.height(370);
-			downloadsChart.legend(dc.legend().horizontal(false).x(30).y(170).autoItemWidth(true));
-			downloadsChart.margins().bottom = 30 + 200;
+			var chartHeight = 240;
+			var legendHeight = 50 + 13 * top_episodes.length;
+			var padding = 30;
+			var totalHeight = chartHeight + legendHeight + padding
+
+			console.log({chartHeight, legendHeight, padding, totalHeight});
+
+			jQuery("#total-chart").height(totalHeight)
+			downloadsChart.height(totalHeight);
+			downloadsChart.legend(dc.legend().horizontal(false).x(30).y(chartHeight + padding).autoItemWidth(true));
+			downloadsChart.margins().bottom = legendHeight + padding;
 		}
 
 		for (var index in top_episode_groups) {
