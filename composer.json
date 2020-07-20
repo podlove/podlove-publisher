@@ -3,11 +3,11 @@
     "description": "Podcast Publishing Plugin for WordPress",
     "license": "MIT",
     "require": {
-        "php": "^5.6.20||^7.0",
+        "php": "^7.0",
         "podlove/podlove-timeline": "1.*",
         "monolog/monolog": "1.*",
         "symfony/yaml": "3.4.*",
-        "twig/twig": "1.*",
+        "twig/twig": "2.12.5",
         "twig/extensions": "1.5.*",
         "geoip2/geoip2": "~2.0",
         "piwik/device-detector": "~3.12",
