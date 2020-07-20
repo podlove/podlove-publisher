@@ -9,7 +9,7 @@
     "test": "./vendor/bin/phpunit"
   },
   "devDependencies": {
-    "laravel-mix": "^4.1.4",
+    "laravel-mix": "^5.0.0",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.2",
