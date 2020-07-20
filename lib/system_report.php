@@ -26,7 +26,11 @@ class SystemReport
             ),
             'active plugins'      => array('title' => 'Active Plugins', 'callback' => function () {
                 $separator = "\n           - ";
+<<<<<<< HEAD
                 return $separator . implode($separator,
+=======
+                return $separator . implode( $separator,
+>>>>>>> master
                     array_map(
                         function ($plugin_path) {
                             $plugin = get_plugin_data(trailingslashit(WP_PLUGIN_DIR) . $plugin_path);
@@ -54,6 +58,15 @@ class SystemReport
             }),
             'twig_version'        => array('title' => 'Twig Version', 'callback' => function () {
                 return \Twig_Environment::VERSION;
+            }),
+            'monolog_version'        => array('title' => 'Monolog Version', 'callback' => function () use (&$notices) {
+                if (\Monolog\Logger::API > 1) {
+                    $notices[] = sprintf(
+                        'Monolog version is %s (required by another plugin) but Podlove Publisher requires 1.x. That means no logs can be written to the database.',
+                        \Monolog\Logger::API
+                    );
+                }
+                return \Monolog\Logger::API;
             }),
             'open_basedir'        => array('callback' => function () use (&$notices) {
                 $open_basedir = trim(ini_get('open_basedir'));
