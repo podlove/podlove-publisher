@@ -33,17 +33,6 @@ function get_podcast($blog_id = null) {
 }
 
 /**
- * Get Podlove Flattr template object.
- * 
- * Requires "Flattr" module.
- * 
- * @return \Podlove\Modules\Flattr\Template\Flattr
- */
-function get_flattr() {
-	return new \Podlove\Modules\Flattr\Template\Flattr;
-}
-
-/**
  * Get Podlove network template object.
  * 
  * Only available in WordPress Multisite environments.

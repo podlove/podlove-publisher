@@ -189,33 +189,6 @@ class Contributor extends Wrapper {
 	}
 
 	/**
-	 * Flattr username
-	 * 
-	 * @accessor
-	 */
-	public function flattr() {
-		return $this->contributor->flattr;
-	}
-
-	/**
-	 * Flattr URL.
-	 *
-	 * When on a WordPress page, it returns the URL for the person. Otherwise a
-	 * URL for that person _in this specific episode_ is generated.
-	 * 
-	 * @accessor
-	 */
-	public function flattr_url() {
-		return $this->contributor->with_blog_scope(function() {
-			if (is_page()) {
-				return "https://flattr.com/profile/" . $this->flattr();
-			} else {
-				return get_permalink( get_the_ID() ) . "#" . md5( $this->contributor->id . '-' . $this->flattr() );
-			}
-		});
-	}
-
-	/**
 	 * Affiliation: organisation
 	 * 
 	 * @accessor

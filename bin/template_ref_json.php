@@ -57,7 +57,6 @@ $classes = [
     '\Podlove\Template\Image',
     '\Podlove\Modules\Contributors\Template\Contributor',
     '\Podlove\Modules\Contributors\Template\ContributorGroup',
-    '\Podlove\Modules\Flattr\Template\Flattr',
     '\Podlove\Modules\Seasons\Template\Season',
     '\Podlove\Modules\Shows\Template\Show',
     '\Podlove\Modules\Social\Template\Service',
