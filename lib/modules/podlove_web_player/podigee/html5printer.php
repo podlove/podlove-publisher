@@ -55,8 +55,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
 		$config = [
 			'options' => [
-				'theme' => \Podlove\get_webplayer_setting('podigeetheme'),
-				'startPanel' => in_array(\Podlove\get_webplayer_setting("chaptersVisible"), [true, 'true', 'on', 1, "1"], true) ? "ChapterMarks" : 'false'
+				'theme' => \Podlove\get_webplayer_setting('podigeetheme')
 			],
 			'extensions' => [
 				'EpisodeInfo' => [

@@ -226,8 +226,6 @@ function get_landing_page_url() {
 
 function get_webplayer_defaults() {
 	return [
-		'chaptersVisible' => 'false',
-		'inject'          => 'manually',
 		'version'         => 'player_v5',
 		'playerv3theme'   => 'pwp-dark-green.min.css',
 		'podigeetheme'    => 'default',

@@ -113,8 +113,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * requires PHP 7.0 (or newer)
 * requires WordPress 5.2 (or newer)
-* removes Podlove Web Player 2
-* removes Podlove Web Player 3
+* Web Player:
+  * removes Podlove Web Player 2
+  * removes Podlove Web Player 3
+  * removes "insert player automatically" option (probably does not affect anyone as the web player is by default inserted via template)
+  * removes "Chapters Visibility" option (use dedicated Web Player settings instead)
 
 **New Publisher PLUS**
 

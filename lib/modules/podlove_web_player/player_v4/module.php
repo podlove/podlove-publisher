@@ -250,11 +250,6 @@ class Module
             'position' => 490,
         ];
 
-        // remove "chapter visibility" setting
-        $form_data = array_filter($form_data, function ($entry) {
-            return $entry['key'] !== 'chaptersVisible';
-        });
-
         return $form_data;
     }
 }
