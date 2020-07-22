@@ -35,6 +35,22 @@ class PodcastImporter {
 			return $mimes;
 		});
 
+		add_filter( 'upload_mimes', function ( $mimes_types ) {
+				$mimes_types['gz'] = 'application/x-gzip';
+				return $mimes_types;
+		}, 99 );
+
+		add_filter( 'wp_check_filetype_and_ext', function ( $types, $file, $filename, $mimes ) {
+				$wp_filetype = wp_check_filetype( $filename, $mimes );
+				$ext         = $wp_filetype['ext'];
+				$type        = $wp_filetype['type'];
+				if ( in_array( $ext, array( 'gz' ) ) ) {
+						$types['ext'] = $ext;
+						$types['type'] = $type;
+				}
+				return $types;
+		}, 99, 4 );
+
 		require_once ABSPATH . '/wp-admin/includes/file.php';
 		 
 		$file = wp_handle_upload($_FILES['podlove_import'], [
