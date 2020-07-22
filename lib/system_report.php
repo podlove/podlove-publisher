@@ -26,11 +26,7 @@ class SystemReport
             ),
             'active plugins'      => array('title' => 'Active Plugins', 'callback' => function () {
                 $separator = "\n           - ";
-<<<<<<< HEAD
-                return $separator . implode($separator,
-=======
                 return $separator . implode( $separator,
->>>>>>> master
                     array_map(
                         function ($plugin_path) {
                             $plugin = get_plugin_data(trailingslashit(WP_PLUGIN_DIR) . $plugin_path);
