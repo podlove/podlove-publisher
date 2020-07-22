@@ -141,6 +141,8 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * `podlove-episode-contributor-list`
   * new design
   * renders text-only in RSS feed
+* `podlove-episode-downloads`
+  * the text link variant is now the default style
 
 **Miscellaneous**
 
