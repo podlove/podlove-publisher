@@ -122,16 +122,17 @@ function podlove_setup_default_template() {
 	$template->content = <<<EOT
 {% if not is_feed() %}
 
-	{# display web player for episode #}
-	{{ episode.player }}
-	
-	{# display contributors if module is active #}
-	{% if shortcode_exists("podlove-episode-contributor-list") %}
-		{# see http://docs.podlove.org/podlove-publisher/reference/shortcodes.html#contributors for parameters #}
-		[podlove-episode-contributor-list]
-	{% endif %}
+  {# display web player for episode #}
+  {{ episode.player }}
 
 {% endif %}
+
+{# display contributors if module is active #}
+{% if shortcode_exists("podlove-episode-contributor-list") %}
+  {# see http://docs.podlove.org/podlove-publisher/reference/shortcodes.html#contributors for parameters #}
+  [podlove-episode-contributor-list]
+{% endif %}
+
 EOT;
 	$template->save();
 
