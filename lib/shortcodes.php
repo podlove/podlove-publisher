@@ -1,7 +1,6 @@
 <?php
-namespace Podlove;
 
-use \Podlove\Model;
+namespace Podlove;
 
 /**
  * Provides a shortcode to display all available download links.
@@ -13,7 +12,8 @@ use \Podlove\Model;
  *    style  "buttons" (default) - list of buttons
  *           "select" - html select list
  *
- * @param  array $options
+ * @param array $options
+ *
  * @return string
  */
 function episode_downloads_shortcode($options)
@@ -22,14 +22,14 @@ function episode_downloads_shortcode($options)
         return '';
     }
 
-    $defaults   = array('style' => 'buttons');
+    $defaults = ['style' => 'buttons'];
     $attributes = shortcode_atts($defaults, $options);
 
     if ($attributes['style'] === 'buttons') {
         return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/downloads-buttons.twig');
-    } else {
-        return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/downloads-select.twig');
     }
+
+    return \Podlove\Template\TwigFilter::apply_to_html('@core/shortcode/downloads-select.twig');
 }
 add_shortcode('podlove-episode-downloads', '\Podlove\episode_downloads_shortcode');
 
@@ -44,18 +44,18 @@ add_shortcode('podlove-episode-downloads', '\Podlove\episode_downloads_shortcode
  *         template: (required) Title of template to render.
  *         autop:    (optional) Wraps blocks of text in p tags. 'yes' or 'no'. Default: 'yes'
  *
- * @param  array $attributes
+ * @param array $attributes
+ *
  * @return string
  */
 function template_shortcode($attributes)
 {
-
-    $defaults = array(
-        'title'    => '', // deprecated
-        'id'       => '', // deprecated
+    $defaults = [
+        'title' => '', // deprecated
+        'id' => '', // deprecated
         'template' => '',
-        'autop'    => false,
-    );
+        'autop' => false,
+    ];
 
     $attributes = array_merge($defaults, $attributes);
 
@@ -83,20 +83,22 @@ function template_shortcode($attributes)
      * Meaning: If there are context based conditionals, the key must reflect them.
      */
     $tag_permutation = implode('', array_map(function ($tag) {
-        return $tag() ? "1" : "0";
+        return $tag() ? '1' : '0';
     }, \Podlove\Template\TwigFilter::$template_tags));
 
     /**
      * Cache key must change for any custom parameters.
      */
-    $attr_permutation = implode('', array_map(function ($a) {return (string) $a;}, array_values($attributes)));
+    $attr_permutation = implode('', array_map(function ($a) {
+        return (string) $a;
+    }, array_values($attributes)));
 
-    $cache_key = $template_id . $permalink . $tag_permutation . $attr_permutation;
+    $cache_key = $template_id.$permalink.$tag_permutation.$attr_permutation;
     $cache_key = apply_filters('podlove_template_shortcode_cache_key', $cache_key, $template_id);
 
     $cache = \Podlove\Cache\TemplateCache::get_instance();
-    return $cache->cache_for($cache_key, function () use ($template_id, $attributes) {
 
+    return $cache->cache_for($cache_key, function () use ($template_id, $attributes) {
         if (!$template = Model\Template::find_one_by_title_with_fallback($template_id)) {
             return sprintf(__('Podlove Error: Whoops, there is no template with id "%s"', 'podlove-podcasting-plugin-for-wordpress'), $template_id);
         }
@@ -104,7 +106,7 @@ function template_shortcode($attributes)
         $html = apply_filters('podlove_template_raw', $template->title, $attributes);
 
         // apply autop and shortcodes
-        if (in_array($attributes['autop'], array('yes', 1, 'true'))) {
+        if (in_array($attributes['autop'], ['yes', 1, 'true'])) {
             $html = wpautop($html);
         }
 
@@ -113,7 +115,7 @@ function template_shortcode($attributes)
 }
 add_shortcode('podlove-template', '\Podlove\template_shortcode');
 
-add_filter('podlove_template_raw', array('\Podlove\Template\TwigFilter', 'apply_to_html'), 10, 2);
+add_filter('podlove_template_raw', ['\Podlove\Template\TwigFilter', 'apply_to_html'], 10, 2);
 
 function feed_list()
 {

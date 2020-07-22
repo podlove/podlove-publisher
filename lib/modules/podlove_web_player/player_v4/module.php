@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\PodloveWebPlayer\PlayerV4;
 
 use Podlove\Model\Episode;
@@ -23,7 +24,7 @@ class Module
         add_filter('podlove_player_form_data', [$this, 'add_player_settings']);
 
         add_action('wp', function () {
-            if (get_post_type() == "podcast" && isset($_GET['podlove_action']) && $_GET['podlove_action'] == "pwp4_config") {
+            if (get_post_type() == 'podcast' && isset($_GET['podlove_action']) && $_GET['podlove_action'] == 'pwp4_config') {
                 $episode = Episode::find_or_create_by_post_id(get_the_ID());
 
                 if (!$episode) {
@@ -32,7 +33,7 @@ class Module
                 }
 
                 $context = isset($_GET['podlove_context']) ? $_GET['podlove_context'] : null;
-                $config  = Html5Printer::config($episode, $context);
+                $config = Html5Printer::config($episode, $context);
 
                 \Podlove\AJAX\Ajax::respond_with_json($config);
                 exit;
@@ -61,18 +62,18 @@ class Module
             $version
         );
 
-        $src = self::module()->get_module_url() . '/player_v4/pwp4.js';
+        $src = self::module()->get_module_url().'/player_v4/pwp4.js';
 
-        wp_enqueue_script("podlove-pwp4-player", $src, ['jquery'], $version);
+        wp_enqueue_script('podlove-pwp4-player', $src, ['jquery'], $version);
     }
 
     public static function embed_script_url($use_cdn = true)
     {
         if ($use_cdn) {
             return 'https://cdn.podlove.org/web-player/embed.js';
-        } else {
-            return plugins_url('dist/embed.js', __FILE__);
         }
+
+        return plugins_url('dist/embed.js', __FILE__);
     }
 
     public static function shortcode($args = [])
@@ -94,7 +95,7 @@ class Module
             }
 
             foreach ($args as $key => $value) {
-                $key  = str_ireplace("mimetype", "mimeType", $key); // because shortcodes ignore case
+                $key = str_ireplace('mimetype', 'mimeType', $key); // because shortcodes ignore case
                 $path = explode('_', $key);
 
                 if (count($path) === 1) {
@@ -129,7 +130,7 @@ class Module
             $episode = Episode::find_one_by_post_id($post_id);
 
             if (!$episode) {
-                return "";
+                return '';
             }
 
             $printer = new Html5Printer($episode);
@@ -172,9 +173,8 @@ class Module
 
         // Access-Control headers are received during OPTIONS requests
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-
             if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-                header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+                header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
             }
 
             if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
@@ -187,7 +187,7 @@ class Module
         // other headers
         header('Content-type: application/json');
 
-        $config = Html5Printer::config($episode, "embed");
+        $config = Html5Printer::config($episode, 'embed');
         echo json_encode($config);
         exit;
     }
@@ -195,56 +195,56 @@ class Module
     public function add_player_settings($form_data)
     {
         $form_data[] = [
-            'type'     => 'string',
-            'key'      => 'playerv4_color_primary',
-            'options'  => [
-                'label'       => 'Primary Color',
+            'type' => 'string',
+            'key' => 'playerv4_color_primary',
+            'options' => [
+                'label' => 'Primary Color',
                 'description' => __('Hex, rgb or rgba', 'podlove-podcasting-plugin-for-wordpress'),
             ],
             'position' => 500,
         ];
 
         $form_data[] = [
-            'type'     => 'string',
-            'key'      => 'playerv4_color_secondary',
-            'options'  => [
-                'label'       => 'Secondary Color (optional)',
+            'type' => 'string',
+            'key' => 'playerv4_color_secondary',
+            'options' => [
+                'label' => 'Secondary Color (optional)',
                 'description' => __('Hex, rgb or rgba', 'podlove-podcasting-plugin-for-wordpress'),
             ],
             'position' => 495,
         ];
 
         $form_data[] = [
-            'type'     => 'multiselect',
-            'key'      => 'playerv4_visible_components',
-            'options'  => [
-                'label'        => 'Select Visible Components',
-                'description'  => __('Select which player components you would like to display', 'podlove-podcasting-plugin-for-wordpress'),
+            'type' => 'multiselect',
+            'key' => 'playerv4_visible_components',
+            'options' => [
+                'label' => 'Select Visible Components',
+                'description' => __('Select which player components you would like to display', 'podlove-podcasting-plugin-for-wordpress'),
                 'multi_values' => \Podlove\get_webplayer_settings()['playerv4_visible_components'],
-                'options'      => [
+                'options' => [
                     'controlChapters' => 'Chapters Control',
                     'controlSteppers' => 'Playback Steppers',
-                    'episodeTitle'    => 'Episode Title',
-                    'poster'          => 'Episode Image',
-                    'progressbar'     => 'Progress Bar',
-                    'showTitle'       => 'Podcast Title',
-                    'subtitle'        => 'Episode Subtitle',
-                    'tabAudio'        => 'Audio Controls Tab',
-                    'tabChapters'     => 'Chapters Tab',
-                    'tabFiles'        => 'Download Tab',
-                    'tabInfo'         => 'Info Tab',
-                    'tabShare'        => 'Sharing Tab',
-                    'tabTranscripts'  => "Transcripts Tab",
+                    'episodeTitle' => 'Episode Title',
+                    'poster' => 'Episode Image',
+                    'progressbar' => 'Progress Bar',
+                    'showTitle' => 'Podcast Title',
+                    'subtitle' => 'Episode Subtitle',
+                    'tabAudio' => 'Audio Controls Tab',
+                    'tabChapters' => 'Chapters Tab',
+                    'tabFiles' => 'Download Tab',
+                    'tabInfo' => 'Info Tab',
+                    'tabShare' => 'Sharing Tab',
+                    'tabTranscripts' => 'Transcripts Tab',
                 ],
             ],
             'position' => 490,
         ];
 
         $form_data[] = [
-            'type'     => 'checkbox',
-            'key'      => 'playerv4_use_podcast_language',
-            'options'  => [
-                'label'       => __('Use podcast language for interface', 'podlove-podcasting-plugin-for-wordpress'),
+            'type' => 'checkbox',
+            'key' => 'playerv4_use_podcast_language',
+            'options' => [
+                'label' => __('Use podcast language for interface', 'podlove-podcasting-plugin-for-wordpress'),
                 'description' => __('Tick to use the podcast language. Otherwise use the user\'s browser language.', 'podlove-podcasting-plugin-for-wordpress'),
             ],
             'position' => 490,

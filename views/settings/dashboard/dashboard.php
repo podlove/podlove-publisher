@@ -1,22 +1,22 @@
 <div class="wrap">
-	<h2><?php echo __( 'Podlove Dashboard', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
+	<h2><?php echo __('Podlove Dashboard', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
 	<div id="poststuff" class="metabox-holder has-right-sidebar">
 		
 		<!-- sidebar -->
 		<div id="side-info-column" class="inner-sidebar">
-			<?php do_action( 'podlove_settings_before_sidebar_boxes' ); ?>
-			<?php do_meta_boxes( \Podlove\Settings\Dashboard::$pagehook, 'side', NULL ); ?>
-			<?php do_action( 'podlove_settings_after_sidebar_boxes' ); ?>
+			<?php do_action('podlove_settings_before_sidebar_boxes'); ?>
+			<?php do_meta_boxes(\Podlove\Settings\Dashboard::$pagehook, 'side', null); ?>
+			<?php do_action('podlove_settings_after_sidebar_boxes'); ?>
 		</div>
 
 		<!-- main -->
 		<div id="post-body" class="has-sidebar">
 			<div id="post-body-content" class="has-sidebar-content">
-				<?php do_action( 'podlove_settings_before_main_boxes' ); ?>
-				<?php do_meta_boxes( \Podlove\Settings\Dashboard::$pagehook, 'normal', NULL ); ?>
-				<?php do_meta_boxes( \Podlove\Settings\Dashboard::$pagehook, 'additional', NULL ); ?>
-				<?php do_action( 'podlove_settings_after_main_boxes' ); ?>						
+				<?php do_action('podlove_settings_before_main_boxes'); ?>
+				<?php do_meta_boxes(\Podlove\Settings\Dashboard::$pagehook, 'normal', null); ?>
+				<?php do_meta_boxes(\Podlove\Settings\Dashboard::$pagehook, 'additional', null); ?>
+				<?php do_action('podlove_settings_after_main_boxes'); ?>						
 			</div>
 		</div>
 
@@ -36,9 +36,9 @@
 
 	<form style='display: none' method='get' action=''>
 		<?php
-		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
-		?>
+        wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
+        wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
+        ?>
 	</form>
 
 </div>

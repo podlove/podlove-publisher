@@ -9,7 +9,7 @@ use Podlove\Modules\Shownotes\Model\Entry;
 class REST_API
 {
     const api_namespace = 'podlove/v1';
-    const api_base      = 'shownotes';
+    const api_base = 'shownotes';
 
     // todo: delete
     // todo: update -- not sure I even need this except "save unfurl data"
@@ -18,61 +18,61 @@ class REST_API
     {
         register_rest_route(self::api_namespace, self::api_base, [
             [
-                'methods'  => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
-                'args'     => [
+                'args' => [
                     'episode_id' => [
                         'description' => 'Limit result set by episode.',
-                        'type'        => 'integer',
+                        'type' => 'integer',
                     ],
                 ],
             ],
             [
-                'methods'  => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
             ],
         ]);
-        register_rest_route(self::api_namespace, self::api_base . '/(?P<id>[\d]+)', [
+        register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
                     'description' => __('Unique identifier for the object.'),
-                    'type'        => 'integer',
+                    'type' => 'integer',
                 ],
             ],
             [
-                'methods'  => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
             ],
             [
-                'methods'  => \WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
             ],
             [
-                'methods'  => \WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
             ],
         ]);
-        register_rest_route(self::api_namespace, self::api_base . '/(?P<id>[\d]+)/unfurl', [
+        register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
             'args' => [
                 'id' => [
                     'description' => __('Unique identifier for the object.'),
-                    'type'        => 'integer',
+                    'type' => 'integer',
                 ],
             ],
             [
-                'methods'  => \WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'unfurl_item'],
             ],
         ]);
-        register_rest_route(self::api_namespace, self::api_base . '/osf', [
+        register_rest_route(self::api_namespace, self::api_base.'/osf', [
             [
-                'methods'  => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_osf'],
             ],
         ]);
-        register_rest_route(self::api_namespace, self::api_base . '/html', [
+        register_rest_route(self::api_namespace, self::api_base.'/html', [
             [
-                'methods'  => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_html'],
             ],
         ]);
@@ -92,9 +92,9 @@ class REST_API
 
         $html = $request['html'] ?? get_the_content(null, false, $post_id);
 
-        $dom                     = new \DOMDocument('1.0');
+        $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
-        $valid                   = $dom->loadHTML($html);
+        $valid = $dom->loadHTML($html);
 
         if (!$valid) {
             return new \WP_Error(
@@ -106,35 +106,33 @@ class REST_API
 
         $xpath = new \DOMXPath($dom);
 
-        foreach ($xpath->query("//a | //h1 | //h2 | //h3 | //h4 | //h5 | //h6") as $element) {
-            if ($element->tagName == "a") {
+        foreach ($xpath->query('//a | //h1 | //h2 | //h3 | //h4 | //h5 | //h6') as $element) {
+            if ($element->tagName == 'a') {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
-                    'episode_id'   => $episode->id,
-                    'original_url' => $element->getAttribute("href"),
-                    'data'         => [
+                    'episode_id' => $episode->id,
+                    'original_url' => $element->getAttribute('href'),
+                    'data' => [
                         'title' => $element->textContent,
                     ],
-                    'type'         => 'link',
+                    'type' => 'link',
                 ]);
                 rest_do_request($request);
             } else {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
                     'episode_id' => $episode->id,
-                    'data'       => [
+                    'data' => [
                         'title' => $element->textContent,
                     ],
-                    'title'      => $element->textContent,
-                    'type'       => 'topic',
+                    'title' => $element->textContent,
+                    'type' => 'topic',
                 ]);
                 rest_do_request($request);
             }
         }
 
-        $response = rest_ensure_response(["message" => "ok"]);
-
-        return $response;
+        return rest_ensure_response(['message' => 'ok']);
     }
 
     public function import_osf($request)
@@ -149,16 +147,16 @@ class REST_API
             );
         }
 
-        $shownotes = get_post_meta($post_id, "_shownotes", true);
+        $shownotes = get_post_meta($post_id, '_shownotes', true);
 
         $tags = explode(' ', 'chapter section spoiler topic embed video audio image shopping glossary source app title quote link podcast news');
         $data = [
-            'amazon'       => '',
-            'thomann'      => '',
+            'amazon' => '',
+            'thomann' => '',
             'tradedoubler' => '',
-            'fullmode'     => 'true', // sic
-            'tagsmode'     => 1,
-            'tags'         => $tags,
+            'fullmode' => 'true', // sic
+            'tagsmode' => 1,
+            'tags' => $tags,
         ];
         $parsed = osf_parser($shownotes, $data);
 
@@ -179,7 +177,7 @@ class REST_API
 
             return [
                 'title' => $link['orig'],
-                'url'   => $link['urls'][0],
+                'url' => $link['urls'][0],
             ];
         }, $links);
         $links = array_filter($links);
@@ -195,19 +193,17 @@ class REST_API
         foreach ($links as $link) {
             $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
             $request->set_query_params([
-                'episode_id'   => $episode->id,
+                'episode_id' => $episode->id,
                 'original_url' => $link['url'],
-                'data'         => [
+                'data' => [
                     'title' => $link['title'],
                 ],
-                'type'         => 'link',
+                'type' => 'link',
             ]);
             rest_do_request($request);
         }
 
-        $response = rest_ensure_response(["message" => "ok"]);
-
-        return $response;
+        return rest_ensure_response(['message' => 'ok']);
     }
 
     public function get_items($request)
@@ -225,17 +221,16 @@ class REST_API
         $entries = Entry::find_all_by_property('episode_id', $episode_id);
         $entries = array_map(function ($entry) {
             $entry = apply_filters('podlove_shownotes_entry', $entry);
+
             return $entry->to_array();
         }, $entries);
 
-        $response = rest_ensure_response($entries);
-
-        return $response;
+        return rest_ensure_response($entries);
     }
 
     public function create_item($request)
     {
-        if (!$request["episode_id"]) {
+        if (!$request['episode_id']) {
             return new \WP_Error(
                 'podlove_rest_missing_episode_id',
                 'episode_id is required',
@@ -243,7 +238,7 @@ class REST_API
             );
         }
 
-        $episode = Episode::find_by_id($request["episode_id"]);
+        $episode = Episode::find_by_id($request['episode_id']);
 
         if (!$episode) {
             return new \WP_Error(
@@ -253,119 +248,12 @@ class REST_API
             );
         }
 
-        if ($request["type"] == "link") {
+        if ($request['type'] == 'link') {
             return $this->create_link_item($request, $episode);
-        } elseif ($request["type"] == "topic") {
+        }
+        if ($request['type'] == 'topic') {
             return $this->create_topic_item($request, $episode);
         }
-    }
-
-    private function create_link_item($request, $episode)
-    {
-        $original_url = esc_sql($request['original_url']);
-        $episode_id   = (int) $episode->id;
-
-        if (Entry::find_one_by_where("episode_id = $episode_id AND original_url = '$original_url'")) {
-            return new \WP_Error(
-                'podlove_rest_duplicate_entry',
-                'a shownotes entry for this URL exists already',
-                ['status' => 400]
-            );
-        }
-
-        $entry = new Entry;
-
-        if (isset($request["data"]) && is_array($request["data"])) {
-            // additional data from Slacknotes Import
-            // lower precedence than the other data
-
-            if (isset($request["data"]["title"])) {
-                $entry->title = $request["data"]["title"];
-            }
-
-            if (isset($request["data"]["source"])) {
-                $entry->site_name = $request["data"]["source"];
-            }
-
-            if (isset($request["data"]["unix_date"])) {
-                $entry->created_at = intval($request["data"]["unix_date"]) / 1000;
-            }
-        }
-
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->$property = $request[$property];
-            }
-        }
-        // fixme: there is probably a race condition here when adding multiple episodes at once
-        $entry->position   = Entry::get_new_position_for_episode($episode->id);
-        $entry->episode_id = $episode->id;
-
-        if (!$entry->type) {
-            $entry->type = "link";
-        }
-
-        if (!$entry->save()) {
-            return new \WP_Error(
-                'podlove_rest_create_failed',
-                'error when creating entry',
-                ['status' => 400]
-            );
-        }
-
-        $entry = apply_filters('podlove_shownotes_entry', $entry);
-
-        $response = rest_ensure_response($entry->to_array());
-        $response->set_status(201);
-
-        $url = sprintf('%s/%s/%d', self::api_namespace, self::api_base, $entry->id);
-        $response->header('Location', rest_url($url));
-
-        return $response;
-    }
-
-    private function create_topic_item($request, $episode)
-    {
-        if (!$request["title"]) {
-            return new \WP_Error(
-                'podlove_rest_missing_title',
-                'title is required for type "topic"',
-                ['status' => 400]
-            );
-        }
-
-        $entry = new Entry;
-
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->$property = $request[$property];
-            }
-        }
-        // fixme: there is probably a race condition here when adding multiple episodes at once
-        $entry->position   = Entry::get_new_position_for_episode($episode->id);
-        $entry->episode_id = $episode->id;
-
-        if (!$entry->type) {
-            $entry->type = "topic";
-        }
-
-        if (!$entry->save()) {
-            return new \WP_Error(
-                'podlove_rest_create_failed',
-                'error when creating entry',
-                ['status' => 400]
-            );
-        }
-
-        $entry = apply_filters('podlove_shownotes_entry', $entry);
-
-        $response = rest_ensure_response($entry->to_array());
-        $response->set_status(201);
-
-        $url = sprintf('%s/%s/%d', self::api_namespace, self::api_base, $entry->id);
-        $response->header('Location', rest_url($url));
-
-        return $response;
     }
 
     public function get_item($request)
@@ -378,9 +266,7 @@ class REST_API
 
         $entry = apply_filters('podlove_shownotes_entry', $entry);
 
-        $response = rest_ensure_response($entry->to_array());
-
-        return $response;
+        return rest_ensure_response($entry->to_array());
     }
 
     public function delete_item($request)
@@ -414,9 +300,9 @@ class REST_API
 
         $url = $entry->original_url;
 
-        $unfurl_endpoint = "http://unfurl.eric.co.de/unfurl";
-        $curl            = new Curl;
-        $curl->request(add_query_arg("url", urlencode($url), $unfurl_endpoint), [
+        $unfurl_endpoint = 'http://unfurl.eric.co.de/unfurl';
+        $curl = new Curl();
+        $curl->request(add_query_arg('url', urlencode($url), $unfurl_endpoint), [
             'headers' => ['Content-type' => 'application/json'],
             'timeout' => 20,
         ]);
@@ -424,16 +310,15 @@ class REST_API
         $response = $curl->get_response();
 
         if (!$curl->isSuccessful()) {
-
             $entry->state = 'failed';
             $entry->save();
 
-            $body   = json_decode($response['body'], true);
+            $body = json_decode($response['body'], true);
             $reason = $body['error']['reason'] ?? 'unknown reason';
 
             return new \WP_Error(
                 'podlove_rest_unfurl_failed',
-                "error when unfurling entry (" . print_r($reason, true) . ")",
+                'error when unfurling entry ('.print_r($reason, true).')',
                 ['status' => 404]
             );
         }
@@ -454,9 +339,9 @@ class REST_API
         }
 
         $entry->unfurl_data = $data;
-        $entry->state       = 'fetched';
-        $entry->url         = $data['url'];
-        $entry->icon        = $data['icon']['url'];
+        $entry->state = 'fetched';
+        $entry->url = $data['url'];
+        $entry->icon = $data['icon']['url'];
 
         if (!$entry->title) {
             $entry->title = $data['title'];
@@ -482,7 +367,7 @@ class REST_API
                 'podlove_rest_unfurl_save_failed',
                 'error when saving unfurled entry',
                 [
-                    'status'    => 404,
+                    'status' => 404,
                     'locations' => $data['locations'],
                 ]
             );
@@ -490,9 +375,7 @@ class REST_API
 
         $entry = apply_filters('podlove_shownotes_entry', $entry);
 
-        $response = rest_ensure_response($entry->to_array());
-
-        return $response;
+        return rest_ensure_response($entry->to_array());
     }
 
     public function update_item($request)
@@ -526,7 +409,113 @@ class REST_API
 
         $entry = apply_filters('podlove_shownotes_entry', $entry);
 
+        return rest_ensure_response($entry->to_array());
+    }
+
+    private function create_link_item($request, $episode)
+    {
+        $original_url = esc_sql($request['original_url']);
+        $episode_id = (int) $episode->id;
+
+        if (Entry::find_one_by_where("episode_id = {$episode_id} AND original_url = '{$original_url}'")) {
+            return new \WP_Error(
+                'podlove_rest_duplicate_entry',
+                'a shownotes entry for this URL exists already',
+                ['status' => 400]
+            );
+        }
+
+        $entry = new Entry();
+
+        if (isset($request['data']) && is_array($request['data'])) {
+            // additional data from Slacknotes Import
+            // lower precedence than the other data
+
+            if (isset($request['data']['title'])) {
+                $entry->title = $request['data']['title'];
+            }
+
+            if (isset($request['data']['source'])) {
+                $entry->site_name = $request['data']['source'];
+            }
+
+            if (isset($request['data']['unix_date'])) {
+                $entry->created_at = intval($request['data']['unix_date']) / 1000;
+            }
+        }
+
+        foreach (Entry::property_names() as $property) {
+            if (isset($request[$property]) && $request[$property]) {
+                $entry->{$property} = $request[$property];
+            }
+        }
+        // fixme: there is probably a race condition here when adding multiple episodes at once
+        $entry->position = Entry::get_new_position_for_episode($episode->id);
+        $entry->episode_id = $episode->id;
+
+        if (!$entry->type) {
+            $entry->type = 'link';
+        }
+
+        if (!$entry->save()) {
+            return new \WP_Error(
+                'podlove_rest_create_failed',
+                'error when creating entry',
+                ['status' => 400]
+            );
+        }
+
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
+
         $response = rest_ensure_response($entry->to_array());
+        $response->set_status(201);
+
+        $url = sprintf('%s/%s/%d', self::api_namespace, self::api_base, $entry->id);
+        $response->header('Location', rest_url($url));
+
+        return $response;
+    }
+
+    private function create_topic_item($request, $episode)
+    {
+        if (!$request['title']) {
+            return new \WP_Error(
+                'podlove_rest_missing_title',
+                'title is required for type "topic"',
+                ['status' => 400]
+            );
+        }
+
+        $entry = new Entry();
+
+        foreach (Entry::property_names() as $property) {
+            if (isset($request[$property]) && $request[$property]) {
+                $entry->{$property} = $request[$property];
+            }
+        }
+        // fixme: there is probably a race condition here when adding multiple episodes at once
+        $entry->position = Entry::get_new_position_for_episode($episode->id);
+        $entry->episode_id = $episode->id;
+
+        if (!$entry->type) {
+            $entry->type = 'topic';
+        }
+
+        if (!$entry->save()) {
+            return new \WP_Error(
+                'podlove_rest_create_failed',
+                'error when creating entry',
+                ['status' => 400]
+            );
+        }
+
+        $entry = apply_filters('podlove_shownotes_entry', $entry);
+
+        $response = rest_ensure_response($entry->to_array());
+        $response->set_status(201);
+
+        $url = sprintf('%s/%s/%d', self::api_namespace, self::api_base, $entry->id);
+        $response->header('Location', rest_url($url));
 
         return $response;
     }

@@ -2,14 +2,14 @@
 
 namespace Podlove\Modules\Shownotes;
 
-use \Podlove\Modules\Affiliate\Affiliate;
-use \Podlove\Modules\Shownotes\Model\Entry;
+use Podlove\Modules\Affiliate\Affiliate;
+use Podlove\Modules\Shownotes\Model\Entry;
 
 class Shownotes extends \Podlove\Modules\Base
 {
-    protected $module_name        = 'Shownotes';
+    protected $module_name = 'Shownotes';
     protected $module_description = 'Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates.';
-    protected $module_group       = 'web publishing';
+    protected $module_group = 'web publishing';
 
     public function load()
     {
@@ -20,7 +20,9 @@ class Shownotes extends \Podlove\Modules\Base
         add_filter('podlove_shownotes_entry', [__CLASS__, 'encode_html']);
 
         \Podlove\Template\Episode::add_accessor(
-            'shownotes', ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'], 5
+            'shownotes',
+            ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'],
+            5
         );
 
         \Podlove\Template\Episode::add_accessor(
@@ -50,19 +52,25 @@ class Shownotes extends \Podlove\Modules\Base
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
 
         add_meta_box(
-            /* $id       */'podlove_podcast_shownotes',
-            /* $title    */__('Podlove Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
-            /* $callback */function () use ($episode) {
+            // $id
+            'podlove_podcast_shownotes',
+            // $title
+            __('Podlove Shownotes', 'podlove-podcasting-plugin-for-wordpress'),
+            // $callback
+            function () use ($episode) {
                 $id = esc_attr($episode->id);
                 echo <<<HTML
                     <div id="podlove-shownotes-app">
-                        <shownotes episodeid="$id"></shownotes>
+                        <shownotes episodeid="{$id}"></shownotes>
                     </div>
 HTML;
             },
-            /* $page     */'podcast',
-            /* $context  */'normal',
-            /* $priority */'high'
+            // $page
+            'podcast',
+            // $context
+            'normal',
+            // $priority
+            'high'
         );
     }
 
@@ -87,10 +95,9 @@ HTML;
 
     public static function encode_html(Entry $entry)
     {
-        $entry->title       = html_entity_decode($entry->title);
+        $entry->title = html_entity_decode($entry->title);
         $entry->description = html_entity_decode($entry->description);
 
         return $entry;
     }
-
 }

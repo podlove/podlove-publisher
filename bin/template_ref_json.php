@@ -10,7 +10,6 @@
  * 1. $> WPBASE=/path/to/wordpress php -d "opcache.enable=off" bin/template_ref_json.php
  * 2. $> ruby bin/template_ref.rb > doc/template_ref.md
  */
-
 require_once 'vendor/autoload.php';
 
 use Podlove\Comment\Comment;
@@ -21,12 +20,12 @@ if (!getenv('WPBASE')) {
     die("You need to set the environment variable WPBASE to your WordPress root\n");
 }
 
-require_once dirname(__FILE__) . '/../lib/helper.php';
-require_once getenv('WPBASE') . '/wp-load.php';
-require_once dirname(__FILE__) . '/../bootstrap/bootstrap.php';
+require_once dirname(__FILE__).'/../lib/helper.php';
+require_once getenv('WPBASE').'/wp-load.php';
+require_once dirname(__FILE__).'/../bootstrap/bootstrap.php';
 
 // $output_dir = '/tmp/podlove/doc';
-$output_dir = dirname(__FILE__) . '/../doc/data/template';
+$output_dir = dirname(__FILE__).'/../doc/data/template';
 @mkdir($output_dir, 0777, true);
 
 // classes containing dynamic accessors
@@ -70,15 +69,15 @@ $classes = [
 $dynamicAccessors = [];
 foreach ($dynamicAccessorClasses as $class) {
     $reflectionClass = new ReflectionClass($class);
-    $methods         = $reflectionClass->getMethods();
+    $methods = $reflectionClass->getMethods();
 
     $accessors = array_filter($methods, function ($method) {
         $comment = $method->getDocComment();
+
         return stripos($comment, '@accessor') !== false && stripos($comment, '@dynamicAccessor') !== false;
     });
 
     $parsedMethods = array_map(function ($method) {
-
         assert_options(ASSERT_CALLBACK, function () use ($method) {
             print_r("!!! Assertion failed in {$method->class}::{$method->name}\n");
         });
@@ -87,14 +86,14 @@ foreach ($dynamicAccessorClasses as $class) {
         $c->parse();
 
         $dynamicAccessor = $c->getTag('dynamicAccessor');
-        $callData        = explode(".", $dynamicAccessor['description']);
+        $callData = explode('.', $dynamicAccessor['description']);
 
         return [
-            'methodname'  => $callData[1],
-            'title'       => $c->getTitle(),
+            'methodname' => $callData[1],
+            'title' => $c->getTitle(),
             'description' => $c->getDescription(),
-            'tags'        => $c->getTags(),
-            'class'       => $callData[0],
+            'tags' => $c->getTags(),
+            'class' => $callData[0],
         ];
     }, $accessors);
 
@@ -109,11 +108,12 @@ foreach ($dynamicAccessorClasses as $class) {
 
 foreach ($classes as $class) {
     $reflectionClass = new ReflectionClass($class);
-    $className       = $reflectionClass->getShortName();
-    $methods         = $reflectionClass->getMethods();
+    $className = $reflectionClass->getShortName();
+    $methods = $reflectionClass->getMethods();
 
     $accessors = array_filter($methods, function ($method) {
         $comment = $method->getDocComment();
+
         return stripos($comment, '@accessor') !== false;
     });
 
@@ -122,10 +122,10 @@ foreach ($classes as $class) {
         $c->parse();
 
         return [
-            'methodname'  => $method->name,
-            'title'       => $c->getTitle(),
+            'methodname' => $method->name,
+            'title' => $c->getTitle(),
             'description' => $c->getDescription(),
-            'tags'        => $c->getTags(),
+            'tags' => $c->getTags(),
         ];
     }, $accessors);
 
@@ -142,13 +142,13 @@ foreach ($classes as $class) {
     assert(strlen($templatetag) > 0, 'templatetag must not be empty');
 
     $classdoc = [
-        'class'   => [
-            'classname'   => $className,
+        'class' => [
+            'classname' => $className,
             'templatetag' => $templatetag,
             'description' => $classComment->getDescription(),
         ],
         'methods' => array_values($parsedMethods),
     ];
 
-    file_put_contents($output_dir . '/' . $templatetag . '.json', json_encode($classdoc), LOCK_EX);
+    file_put_contents($output_dir.'/'.$templatetag.'.json', json_encode($classdoc), LOCK_EX);
 }

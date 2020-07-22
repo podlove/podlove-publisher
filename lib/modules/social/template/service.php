@@ -1,101 +1,109 @@
 <?php
+
 namespace Podlove\Modules\Social\Template;
 
-use Podlove\Template\Wrapper;
 use Podlove\Template\Image;
+use Podlove\Template\Wrapper;
 
 /**
- * Service Template Wrapper
+ * Service Template Wrapper.
  *
  * Requires the "Social" module.
  *
  * @templatetag service
  */
-class Service extends Wrapper {
+class Service extends Wrapper
+{
+    /**
+     * @var \Podlove\Modules\Social\Model\ContributorService
+     */
+    private $contributor_service;
 
-	/**
-	 * @var \Podlove\Modules\Social\Model\ContributorService
-	 */
-	private $contributor_service;
+    /**
+     * @var \Podlove\Modules\Social\Model\Service
+     */
+    private $service;
 
-	/**
-	 * @var \Podlove\Modules\Social\Model\Service
-	 */
-	private $service;
+    public function __construct($contributor_service, $service = null)
+    {
+        $this->contributor_service = $contributor_service;
+        $this->service = $service;
+    }
 
-	public function __construct($contributor_service, $service = null) {
-		$this->contributor_service = $contributor_service;
-		$this->service = $service;
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->contributor_service, $this->service);
-	}
+    /**
+     * Service title.
+     *
+     * @accessor
+     */
+    public function title()
+    {
+        if ($this->contributor_service && $this->contributor_service->title) {
+            return $this->contributor_service->title;
+        }
 
+        return $this->service->title;
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Service description.
+     *
+     * @accessor
+     */
+    public function description()
+    {
+        return $this->service->description;
+    }
 
-	/**
-	 * Service title
-	 * 
-	 * @accessor
-	 */
-	public function title() {
-		if ($this->contributor_service && $this->contributor_service->title) {
-			return $this->contributor_service->title;
-		} else {
-			return $this->service->title;
-		}
-	}
+    /**
+     * Service profile URL.
+     *
+     * @accessor
+     */
+    public function profileUrl()
+    {
+        return $this->contributor_service->get_service_url();
+    }
 
-	/**
-	 * Service description
-	 * 
-	 * @accessor
-	 */
-	public function description() {
-		return $this->service->description;
-	}
+    /**
+     * Service value.
+     *
+     * Normally, you want to access the generates url via `profileUrl()`.
+     * But in case you need the raw user value, use this method.
+     *
+     * @accessor
+     */
+    public function rawValue()
+    {
+        return $this->contributor_service->value;
+    }
 
-	/**
-	 * Service profile URL
-	 * 
-	 * @accessor
-	 */
-	public function profileUrl() {
-		return $this->contributor_service->get_service_url();
-	}
+    /**
+     * Logo URL.
+     *
+     * @deprecated since 2.2.0, use ::image instead
+     */
+    public function logoUrl()
+    {
+        return $this->service->get_logo();
+    }
 
-	/**
-	 * Service value
-	 *
-	 * Normally, you want to access the generates url via `profileUrl()`.
-	 * But in case you need the raw user value, use this method.
-	 * 
-	 * @accessor
-	 */
-	public function rawValue() {
-		return $this->contributor_service->value;
-	}
+    /**
+     * Image.
+     *
+     * @see  image
+     * @accessor
+     */
+    public function image()
+    {
+        return new Image($this->service->image());
+    }
 
-	/**
-	 * Logo URL
-	 * 
-	 * @deprecated since 2.2.0, use ::image instead
-	 */
-	public function logoUrl() {
-		return $this->service->get_logo();
-	}
-
-	/**
-	 * Image
-	 *
-	 * @see  image
-	 * @accessor
-	 */
-	public function image() {
-		return new Image($this->service->image());
-	}
+    protected function getExtraFilterArgs()
+    {
+        return [$this->contributor_service, $this->service];
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Plus;
 
 class FeedPusher
@@ -9,7 +10,7 @@ class FeedPusher
     public function __construct($module, $api)
     {
         $this->module = $module;
-        $this->api    = $api;
+        $this->api = $api;
     }
 
     public function init()
@@ -20,20 +21,19 @@ class FeedPusher
             }
         });
 
-        # push all feeds to PLUS whenever any feed changes
+        // push all feeds to PLUS whenever any feed changes
         add_action('podlove_model_change', function ($model) {
-            if (in_array($model::name(), ["podlove_feed"])) {
+            if (in_array($model::name(), ['podlove_feed'])) {
                 update_option('podlove_plus_push_feeds', true);
             }
         });
 
-        # push feeds when podcast changes
+        // push feeds when podcast changes
         add_action('update_option_podlove_podcast', function () {
             update_option('podlove_plus_push_feeds', true);
-
         });
 
-        # push all feeds to PLUS when the feature is enabled
+        // push all feeds to PLUS when the feature is enabled
         add_action('podlove_plus_enable_proxy_changed', function ($new_value) {
             if ($new_value) {
                 update_option('podlove_plus_push_feeds', true);
@@ -57,7 +57,7 @@ class FeedPusher
             $shows = \Podlove\Modules\Shows\Model\Show::all();
             foreach ($shows as $show) {
                 $feeds = array_map(function ($feed) use ($show) {
-                    return $feed->get_subscribe_url("shows", $show->id);
+                    return $feed->get_subscribe_url('shows', $show->id);
                 }, \Podlove\Model\Feed::all());
 
                 $this->api->push_feeds($feeds);

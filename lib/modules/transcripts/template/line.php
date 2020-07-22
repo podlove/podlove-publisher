@@ -1,16 +1,16 @@
 <?php
+
 namespace Podlove\Modules\Transcripts\Template;
 
 use Podlove\Template\Wrapper;
 
 /**
- * Transcript Line Template Wrapper
+ * Transcript Line Template Wrapper.
  *
  * @templatetag line
  */
 class Line extends Wrapper
 {
-
     private $line;
 
     public function __construct($line)
@@ -18,17 +18,12 @@ class Line extends Wrapper
         $this->line = $line;
     }
 
-    protected function getExtraFilterArgs()
-    {
-        return array($this->line);
-    }
-
     // /////////
     // Accessors
     // /////////
 
     /**
-     * Content
+     * Content.
      *
      * @accessor
      */
@@ -38,29 +33,34 @@ class Line extends Wrapper
     }
 
     /**
-     * Start time in ms
+     * Start time in ms.
      *
      * @accessor
      */
     public function start()
     {
         // fixme: this is silly, Duration should take ms as parameter, not a whole episode object
-        $episode           = new \Podlove\Model\Episode;
+        $episode = new \Podlove\Model\Episode();
         $episode->duration = $this->line['start_ms'] / 1000;
 
         return new \Podlove\Template\Duration($episode);
     }
 
     /**
-     * End time in ms
+     * End time in ms.
      *
      * @accessor
      */
     public function end()
     {
-        $episode           = new \Podlove\Model\Episode;
+        $episode = new \Podlove\Model\Episode();
         $episode->duration = $this->line['end_ms'] / 1000;
 
         return new \Podlove\Template\Duration($episode);
+    }
+
+    protected function getExtraFilterArgs()
+    {
+        return [$this->line];
     }
 }

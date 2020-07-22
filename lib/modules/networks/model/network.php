@@ -1,59 +1,67 @@
 <?php
+
 namespace Podlove\Modules\Networks\Model;
 
-use \Podlove\Model\Podcast;
+use Podlove\Model\Podcast;
 
-class Network {
+class Network
+{
+    public static function blog_ids()
+    {
+        global $wpdb;
 
-	public static function blog_ids() {
-		global $wpdb;
+        if ($wpdb->blogs) {
+            $blogs = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs} WHERE NOT archived");
+        } else {
+            $blogs = [];
+        }
 
-		if ($wpdb->blogs) {
-			$blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs WHERE NOT archived");
-		} else {
-			$blogs = [];
-		}
+        return $blogs;
+    }
 
-		return $blogs;
-	}
+    /**
+     * Fetch all blog IDs for Publisher blogs.
+     */
+    public static function podcast_blog_ids()
+    {
+        return array_filter(Network::blog_ids(), function ($blog_id) {
+            return \Podlove\with_blog_scope($blog_id, function () {
+                return is_plugin_active(plugin_basename(\Podlove\PLUGIN_FILE));
+            });
+        });
+    }
 
-	/**
-	 * Fetch all blog IDs for Publisher blogs 
-	 */
-	public static function podcast_blog_ids() {
-		return array_filter( Network::blog_ids(), function($blog_id) {
-			return \Podlove\with_blog_scope($blog_id, function() {
-				return is_plugin_active(plugin_basename(\Podlove\PLUGIN_FILE));
-			});
-		} );
-	}
+    /**
+     * Fetch all podcasts for Publisher blogs, ordered.
+     *
+     * @param mixed $sortby
+     * @param mixed $sort
+     */
+    public static function podcasts($sortby = 'title', $sort = 'ASC')
+    {
+        $podcast_blog_ids = Network::podcast_blog_ids();
 
-	/**
-	 * Fetch all podcasts for Publisher blogs, ordered
-	 */
-	public static function podcasts( $sortby = "title", $sort = 'ASC' ) {
+        if (empty($podcast_blog_ids)) {
+            return [];
+        }
 
-		$podcast_blog_ids = Network::podcast_blog_ids();
+        foreach ($podcast_blog_ids as $blog_id) {
+            $podcasts[$blog_id] = Podcast::get($blog_id);
+        }
 
-		if (empty($podcast_blog_ids))
-			return [];
+        // if it doesn't have a title, it's not a podcast
+        $podcasts = array_filter($podcasts, function ($podcast) {
+            return strlen(trim($podcast->title)) > 0;
+        });
 
-		foreach ($podcast_blog_ids as $blog_id) {
-			$podcasts[$blog_id] = Podcast::get($blog_id);
-		}
+        uasort($podcasts, function ($a, $b) use ($sortby, $sort) {
+            return strnatcmp($a->{$sortby}, $b->{$sortby});
+        });
 
-		// if it doesn't have a title, it's not a podcast
-		$podcasts = array_filter($podcasts, function ($podcast) {
-			return strlen(trim($podcast->title)) > 0;
-		});
+        if ($sort == 'DESC') {
+            krsort($podcasts);
+        }
 
-		uasort( $podcasts, function ( $a, $b ) use ( $sortby, $sort ) {
-			return strnatcmp( $a->$sortby, $b->$sortby );
-		});
-
-		if ( $sort == 'DESC' )
-			krsort( $podcasts );
-
-		return $podcasts;	
-	}
+        return $podcasts;
+    }
 }

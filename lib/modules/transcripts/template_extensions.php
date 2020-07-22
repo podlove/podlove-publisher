@@ -1,13 +1,11 @@
 <?php
-namespace Podlove\Modules\Transcripts;
 
-use \Podlove\Modules\Transcripts\Model;
-use \Podlove\Modules\Transcripts\Template;
+namespace Podlove\Modules\Transcripts;
 
 class TemplateExtensions
 {
     /**
-     * Transcript, grouped by speaker
+     * Transcript, grouped by speaker.
      *
      * **Examples**
      *
@@ -34,11 +32,13 @@ class TemplateExtensions
      *
      * @accessor
      * @dynamicAccessor episode.transcriptGrouped
+     *
+     * @param mixed $return
+     * @param mixed $method_name
      */
     public static function accessorEpisodeTranscript($return, $method_name, \Podlove\Model\Episode $episode)
     {
         return $episode->with_blog_scope(function () use ($return, $method_name, $episode) {
-
             $transcript = Model\Transcript::get_transcript($episode->id);
             $transcript = Model\Transcript::prepare_transcript($transcript, 'grouped');
 
@@ -50,6 +50,7 @@ class TemplateExtensions
                 $lines = array_map(function ($line) {
                     return new Template\Line($line);
                 }, $group['items']);
+
                 return new Template\Group($lines, $group['speaker'], $group['voice']);
             }, $transcript);
         });

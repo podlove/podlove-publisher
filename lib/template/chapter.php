@@ -1,63 +1,70 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * Chapter Template Wrapper
- * 
+ * Chapter Template Wrapper.
+ *
  * @templatetag chapter
  */
-class Chapter extends Wrapper {
+class Chapter extends Wrapper
+{
+    /**
+     * @var \Podlove\Chapters\Chapter
+     */
+    private $chapter;
 
-	/**
-	 * @var \Podlove\Chapters\Chapter
-	 */
-	private $chapter;
+    public function __construct(\Podlove\Chapters\Chapter $chapter)
+    {
+        $this->chapter = $chapter;
+    }
 
-	public function __construct(\Podlove\Chapters\Chapter $chapter) {
-		$this->chapter = $chapter;
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->chapter);
-	}
-	
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Title.
+     *
+     * @accessor
+     */
+    public function title()
+    {
+        return $this->chapter->get_title();
+    }
 
-	/**
-	 * Title
-	 * 
-	 * @accessor
-	 */
-	public function title() {
-		return $this->chapter->get_title();
-	}
+    /**
+     * Link.
+     *
+     * @accessor
+     */
+    public function link()
+    {
+        return $this->chapter->get_link();
+    }
 
-	/**
-	 * Link
-	 * 
-	 * @accessor
-	 */
-	public function link() {
-		return $this->chapter->get_link();
-	}
+    /**
+     * Image.
+     *
+     * @accessor
+     */
+    public function image()
+    {
+        return $this->chapter->get_image();
+    }
 
-	/**
-	 * Image
-	 * 
-	 * @accessor
-	 */
-	public function image() {
-		return $this->chapter->get_image();
-	}
+    /**
+     * Time.
+     *
+     * @accessor
+     */
+    public function time()
+    {
+        return $this->chapter->get_time();
+    }
 
-	/**
-	 * Time
-	 * 
-	 * @accessor
-	 */
-	public function time() {
-		return $this->chapter->get_time();
-	}
+    protected function getExtraFilterArgs()
+    {
+        return [$this->chapter];
+    }
 }

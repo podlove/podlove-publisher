@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\PodloveWebPlayer\PlayerV3;
 
 use Podlove\Model\Episode;
@@ -7,6 +8,7 @@ use Podlove\Model\MediaFile;
 
 class PlayerMediaFiles
 {
+    public $media_xml_tag = '';
     private $episode;
 
     private $audio_formats = ['mp3', 'mp4', 'ogg', 'opus'];
@@ -14,8 +16,6 @@ class PlayerMediaFiles
 
     // List of Model\MediaFile
     private $files = [];
-
-    public $media_xml_tag = '';
 
     public function __construct(Episode $episode)
     {
@@ -36,21 +36,20 @@ class PlayerMediaFiles
 
     private function media_files($context)
     {
-
         $context = is_null($context) ? $this->get_tracking_context() : $context;
 
         $media_files = [];
         foreach ($this->files as $file) {
-            $asset              = $file->episode_asset();
-            $mime               = $asset->file_type()->mime_type;
+            $asset = $file->episode_asset();
+            $mime = $asset->file_type()->mime_type;
             $media_files[$mime] = [
-                'file'       => $file,
-                'mime_type'  => $mime,
-                'url'        => $file->get_file_url(),
-                'publicUrl'  => $file->get_public_file_url("webplayer", $context),
+                'file' => $file,
+                'mime_type' => $mime,
+                'url' => $file->get_file_url(),
+                'publicUrl' => $file->get_public_file_url('webplayer', $context),
                 'assetTitle' => $asset->title(),
-                'size'       => $file->size,
-                'extension'  => $asset->file_type()->extension,
+                'size' => $file->size,
+                'extension' => $asset->file_type()->extension,
             ];
         }
 
@@ -59,11 +58,12 @@ class PlayerMediaFiles
 
     /**
      * Sort files bases on mime type so preferred get output first.
+     *
+     * @param mixed $media_files
      */
     private function sort_files($media_files)
     {
-
-        $sorted_files    = [];
+        $sorted_files = [];
         $preferred_order = ['audio/mp4', 'audio/aac', 'audio/opus', 'audio/ogg', 'audio/vorbis'];
 
         foreach ($preferred_order as $order_key) {
@@ -82,12 +82,11 @@ class PlayerMediaFiles
 
     private function get_files()
     {
-
-        $files               = $this->get_playable_video_files();
+        $files = $this->get_playable_video_files();
         $this->media_xml_tag = 'video';
 
         if (count($files) == 0) {
-            $files               = $this->get_playable_audio_files();
+            $files = $this->get_playable_audio_files();
             $this->media_xml_tag = 'audio';
         }
 
@@ -107,23 +106,23 @@ class PlayerMediaFiles
     /**
      * Get playable files for player, based on episode and player assignments.
      *
-     * @param  array  $formats      array of formats like mp3, mp3, ogg, opus, webm
-     * @param  string $media_type   audio or video
+     * @param array  $formats    array of formats like mp3, mp3, ogg, opus, webm
+     * @param string $media_type audio or video
+     *
      * @return array of \Podlove\Model\MediaFile
      */
     private function get_playable_files($formats, $media_type)
     {
-
-        $playable_files            = [];
+        $playable_files = [];
         $player_format_assignments = get_option('podlove_webplayer_formats');
 
         if (empty($player_format_assignments)) {
-            error_log(print_r("Podlove Web Player: No assets are assigned.", true));
+            error_log(print_r('Podlove Web Player: No assets are assigned.', true));
+
             return [];
         }
 
         foreach ($formats as $format) {
-
             if (!isset($player_format_assignments[$media_type][$format])) {
                 continue;
             }
@@ -137,7 +136,6 @@ class PlayerMediaFiles
             if ($media_file && $media_file->is_valid()) {
                 $playable_files[] = $media_file;
             }
-
         }
 
         return $playable_files;
@@ -146,13 +144,13 @@ class PlayerMediaFiles
     private function get_tracking_context()
     {
         if (is_home()) {
-            return "home";
+            return 'home';
         }
 
         if (is_single()) {
-            return "episode";
+            return 'episode';
         }
 
-        return "website";
+        return 'website';
     }
 }

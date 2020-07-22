@@ -1,67 +1,74 @@
-<?php 
+<?php
+
 namespace Podlove\Modules\Logging;
 
 use Monolog\Logger;
-
-use Podlove\Model;
 use Podlove\Log;
-use Podlove\Settings\Dashboard;
+use Podlove\Model;
 
-class Logging extends \Podlove\Modules\Base {
+class Logging extends \Podlove\Modules\Base
+{
+    protected $module_name = 'Logging';
+    protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
+    protected $module_group = 'system';
 
-	protected $module_name = 'Logging';
-	protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
-	protected $module_group = 'system';
+    public function load()
+    {
+        add_action('podlove_uninstall_plugin', [$this, 'uninstall']);
+        add_action('podlove_module_was_activated_logging', [$this, 'was_activated']);
+        add_action('init', [$this, 'register_database_logger']);
 
-	public function load() {
-		add_action( 'podlove_uninstall_plugin', [$this, 'uninstall'] );
-		add_action( 'podlove_module_was_activated_logging', array( $this, 'was_activated' ) );
-		add_action( 'init', array( $this, 'register_database_logger' ));
+        if (current_user_can('administrator')) {
+            add_action('podlove_support_page_footer', [$this, 'dashoard_template']);
+        }
 
-		if (current_user_can('administrator')) {
-			add_action('podlove_support_page_footer', [$this, 'dashoard_template']);
-		}
+        self::schedule_crons();
+        add_action('podlove_cleanup_logging_table', [__CLASS__, 'cleanup_logging_table']);
+    }
 
-		self::schedule_crons();
-		add_action('podlove_cleanup_logging_table', array(__CLASS__, 'cleanup_logging_table'));
-	}
+    public function uninstall()
+    {
+        LogTable::destroy();
+    }
 
-	public function uninstall() {
-		LogTable::destroy();
-	}
+    public static function schedule_crons()
+    {
+        if (!wp_next_scheduled('podlove_cleanup_logging_table')) {
+            wp_schedule_event(time(), 'daily', 'podlove_cleanup_logging_table');
+        }
+    }
 
-	public static function schedule_crons() {
-		if (!wp_next_scheduled('podlove_cleanup_logging_table'))
-			wp_schedule_event(time(), 'daily', 'podlove_cleanup_logging_table');
-	}
+    public static function cleanup_logging_table()
+    {
+        LogTable::cleanup();
+    }
 
-	public static function cleanup_logging_table() {
-		LogTable::cleanup();
-	}
+    public function was_activated($module_name)
+    {
+        LogTable::build();
+    }
 
-	public function was_activated( $module_name ) {
-		LogTable::build();
-	}
+    public function register_database_logger()
+    {
+        global $wpdb;
 
-	public function register_database_logger() {
-		global $wpdb;
+        if (Logger::API > 1) {
+            // WPDBHandler is not compatible to monolog 2.x so we need to bail here
+            // I can't upgrade to monolog 2.x because it raises minimum PHP to 7.2
+            // long term solution, maybe https: //packagist.org/packages/humbug/php-scoper
+            return;
+        }
 
-		if (Logger::API > 1) {
-			// WPDBHandler is not compatible to monolog 2.x so we need to bail here
-			// I can't upgrade to monolog 2.x because it raises minimum PHP to 7.2
-			// long term solution, maybe https: //packagist.org/packages/humbug/php-scoper
-			return;
-		}
+        $log = Log::get();
+        // write logs to database
+        $log->pushHandler(new WPDBHandler($wpdb, $log->get_log_level()));
+        // send critical logs via email
+        // $log->pushHandler( new WPMailHandler( get_option( 'admin_email' ), "Podlove | Critical notice for " . get_option( 'blogname' ), Logger::CRITICAL ) );
+    }
 
-		$log = Log::get();
-		// write logs to database
-		$log->pushHandler( new WPDBHandler( $wpdb, $log->get_log_level() ) );
-		// send critical logs via email
-		// $log->pushHandler( new WPMailHandler( get_option( 'admin_email' ), "Podlove | Critical notice for " . get_option( 'blogname' ), Logger::CRITICAL ) );
-	}
-
-	public function dashoard_template() {
-		?>
+    public function dashoard_template()
+    {
+        ?>
 <style type="text/css">
 
 #podlove-log-wrapper {
@@ -162,11 +169,11 @@ $(document).ready(function() {
 </script>
 
 		<?php
-		if ( $timezone = get_option( 'timezone_string' ) )
-			date_default_timezone_set( $timezone );
-		?>
+        if ($timezone = get_option('timezone_string')) {
+            date_default_timezone_set($timezone);
+        } ?>
 
-		<h3><?php echo __('Debug Logging', 'podlove-podcasting-plugin-for-wordpress') ?></h3>
+		<h3><?php echo __('Debug Logging', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
 
 		<div id="podlove-debug-log" class="card">
 
@@ -201,10 +208,10 @@ $(document).ready(function() {
 		<div id="podlove-log-wrapper">
 		<table id="podlove-log" cellspacing="0" border="0">
 			<tbody>
-			<?php foreach ( LogTable::find_all_by_where( "time > " . strtotime("-2 weeks") ) as $log_entry ): ?>
-				<tr class="log-entry log-level-<?php echo $log_entry->level ?>">
+			<?php foreach (LogTable::find_all_by_where('time > '.strtotime('-2 weeks')) as $log_entry) { ?>
+				<tr class="log-entry log-level-<?php echo $log_entry->level; ?>">
 					<td class="log-date">
-						<?php echo date('Y-m-d H:i:s', $log_entry->time) ?>
+						<?php echo date('Y-m-d H:i:s', $log_entry->time); ?>
 					</td>
 					<td class="log-content">
 						<span class="log-message">
@@ -212,72 +219,69 @@ $(document).ready(function() {
 						</span>
 						<span class="log-extra">
 							<?php
-							$data = json_decode( $log_entry->context );
-							if ( isset( $data->media_file_id ) ) {
-								if ( $media_file = Model\MediaFile::find_by_id( $data->media_file_id ) ) {
-									if ( $episode = $media_file->episode() ) {
-										if ( $asset = $media_file->episode_asset() ) {
-											echo sprintf( '<a href="%s">%s/%s</a>', get_edit_post_link( $episode->post_id ), $episode->slug, $asset->title );
-										}
-									}
-								}
-							}
-							if ( isset( $data->error ) ) {
-								echo sprintf(' "%s"', $data->error);
-							}
-							if ( isset( $data->episode_id ) ) {
-								if ( $episode = Model\Episode::find_by_id( $data->episode_id ) )
-									echo sprintf( ' <a href="%s">%s</a>', get_edit_post_link( $episode->post_id ), get_the_title( $episode->post_id ) );
-							}
-							if ( isset( $data->http_code ) ) {
-								echo " HTTP Status: " . $data->http_code;
-							}
-							if ( isset( $data->mime_type ) && isset( $data->expected_mime_type ) ) {
-								echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
-							}
-							if (isset($data->type) && $data->type == 'twig') {
-								echo sprintf('in template "%s" line %d', $data->template, $data->line);
-							}
+                            $data = json_decode($log_entry->context);
+        if (isset($data->media_file_id)) {
+            if ($media_file = Model\MediaFile::find_by_id($data->media_file_id)) {
+                if ($episode = $media_file->episode()) {
+                    if ($asset = $media_file->episode_asset()) {
+                        echo sprintf('<a href="%s">%s/%s</a>', get_edit_post_link($episode->post_id), $episode->slug, $asset->title);
+                    }
+                }
+            }
+        }
+        if (isset($data->error)) {
+            echo sprintf(' "%s"', $data->error);
+        }
+        if (isset($data->episode_id)) {
+            if ($episode = Model\Episode::find_by_id($data->episode_id)) {
+                echo sprintf(' <a href="%s">%s</a>', get_edit_post_link($episode->post_id), get_the_title($episode->post_id));
+            }
+        }
+        if (isset($data->http_code)) {
+            echo ' HTTP Status: '.$data->http_code;
+        }
+        if (isset($data->mime_type, $data->expected_mime_type)) {
+            echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+        }
+        if (isset($data->type) && $data->type == 'twig') {
+            echo sprintf('in template "%s" line %d', $data->template, $data->line);
+        }
 
-							$data = (array) $data;
-							$remove_keys = ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id'];
-							$extra = $data;
+        $data = (array) $data;
+        $remove_keys = ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id'];
+        $extra = $data;
 
-							foreach ($remove_keys as $key) {
-								if (isset($extra[$key])) {
-									unset($extra[$key]);
-								}
-							}
+        foreach ($remove_keys as $key) {
+            if (isset($extra[$key])) {
+                unset($extra[$key]);
+            }
+        }
 
-							if (count($extra) > 0) {
-								?>
+        if (count($extra) > 0) {
+            ?>
 								<span class="log-details">
-									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
+									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
 									<code class="details" style="display: none"><pre><?php
-									print_r((new \Spyc)->dump($extra, true));
-									?></pre></code>
+                                    print_r((new \Spyc())->dump($extra, true)); ?></pre></code>
 								</span>
 								<?php
-							} elseif (!$data && !empty($log_entry->context)) {
-								?>
+        } elseif (!$data && !empty($log_entry->context)) {
+            ?>
 								<span class="log-details">
-									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress') ?></a></span>
+									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
 									<code class="details" style="display: none"><pre><?php
-									echo str_replace(',"', ',' . "\n" . '"', $log_entry->context);
-									?></pre></code>
+                                    echo str_replace(',"', ','."\n".'"', $log_entry->context); ?></pre></code>
 								</span>
 								<?php
-							}
-							?>
+        } ?>
 						</span>
 					</td>
 				</tr>
-			<?php endforeach; ?>
+			<?php } ?>
 			</tbody>
 		</table>
 		</div>
 		</div>
 		<?php
-	}
-
+    }
 }

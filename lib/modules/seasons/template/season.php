@@ -1,134 +1,149 @@
-<?php 
+<?php
+
 namespace Podlove\Modules\Seasons\Template;
 
 use Podlove\Template\Wrapper;
 
 /**
- * Season Template Wrapper
+ * Season Template Wrapper.
  *
  * @templatetag season
  */
-class Season extends Wrapper {
+class Season extends Wrapper
+{
+    private $season;
 
-	private $season;
+    public function __construct(\Podlove\Modules\Seasons\Model\Season $season)
+    {
+        $this->season = $season;
+    }
 
-	public function __construct(\Podlove\Modules\Seasons\Model\Season $season) {
-		$this->season = $season;
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->season);
-	}
+    /**
+     * Title.
+     *
+     * @accessor
+     */
+    public function title()
+    {
+        return $this->season->title();
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Subtitle.
+     *
+     * @accessor
+     */
+    public function subtitle()
+    {
+        return $this->season->subtitle;
+    }
 
-	/**
-	 * Title
-	 *
-	 * @accessor
-	 */
-	public function title() {
-		return $this->season->title();
-	}
+    /**
+     * Summary.
+     *
+     * @accessor
+     */
+    public function summary()
+    {
+        return $this->season->summary;
+    }
 
-	/**
-	 * Subtitle
-	 *
-	 * @accessor
-	 */
-	public function subtitle() {
-		return $this->season->subtitle;
-	}
+    /**
+     * Automatically assigned season number, starting at 1.
+     *
+     * @accessor
+     */
+    public function number()
+    {
+        return $this->season->number();
+    }
 
-	/**
-	 * Summary
-	 *
-	 * @accessor
-	 */
-	public function summary() {
-		return $this->season->summary;
-	}
+    /**
+     * Image.
+     *
+     * @accessor
+     */
+    public function image()
+    {
+        return new \Podlove\Template\Image($this->season->image());
+    }
 
-	/**
-	 * Automatically assigned season number, starting at 1.
-	 * 
-	 * @accessor
-	 */
-	public function number() {
-		return $this->season->number();
-	}
-	
-	/**
-	 * Image
-	 *
-	 * @accessor
-	 */
-	public function image() {
-		return new \Podlove\Template\Image($this->season->image());
-	}
+    /**
+     * Start Date.
+     *
+     * This is the configured start date, not the date of the first episode of the season.
+     * If you were looking for that, use `season.firstEpisode.publicationDate`.
+     *
+     * @see  datetime
+     * @accessor
+     */
+    public function startDate()
+    {
+        return new \Podlove\Template\DateTime(strtotime($this->season->start_date));
+    }
 
-	/**
-	 * Start Date
-	 * 
-	 * This is the configured start date, not the date of the first episode of the season.
-	 * If you were looking for that, use `season.firstEpisode.publicationDate`.
-	 *
-	 * @see  datetime
-	 * @accessor
-	 */
-	public function startDate() {
-		return new \Podlove\Template\DateTime(strtotime($this->season->start_date));
-	}
+    /**
+     * First episode of the season.
+     *
+     * @see  episode
+     * @accessor
+     */
+    public function firstEpisode()
+    {
+        return new \Podlove\Template\Episode($this->season->first_episode());
+    }
 
-	/**
-	 * First episode of the season.
-	 * 
-	 * @see  episode
-	 * @accessor
-	 */
-	public function firstEpisode() {
-		return new \Podlove\Template\Episode($this->season->first_episode());
-	}
+    /**
+     * Last episode of the season.
+     *
+     * @see  episode
+     * @accessor
+     */
+    public function lastEpisode()
+    {
+        return new \Podlove\Template\Episode($this->season->last_episode());
+    }
 
-	/**
-	 * Last episode of the season.
-	 * 
-	 * @see  episode
-	 * @accessor
-	 */
-	public function lastEpisode() {
-		return new \Podlove\Template\Episode($this->season->last_episode());
-	}
+    /**
+     * Is this season currently running?
+     *
+     * ```jinja
+     * {% if season.running %}
+     *     This season is currently running.
+     * {% endif %}
+     * ```
+     *
+     * @accessor
+     */
+    public function running()
+    {
+        return $this->season->is_running();
+    }
 
-	/**
-	 * Is this season currently running?
-	 * 
-	 * ```jinja
-	 * {% if season.running %}
-	 *     This season is currently running.
-	 * {% endif %}
-	 * ```
-	 * 
-	 * @accessor
-	 */
-	public function running() {
-		return $this->season->is_running();
-	}
+    /**
+     * Season Episodes.
+     *
+     * Parameters:
+     *
+     * - **order:** (optional) "DESC" or "ASC". Default: "ASC"
+     *
+     * @accessor
+     *
+     * @param mixed $args
+     */
+    public function episodes($args = [])
+    {
+        return array_map(function ($episode) {
+            return new \Podlove\Template\Episode($episode);
+        }, $this->season->episodes($args));
+    }
 
-	/**
-	 * Season Episodes
-	 * 
-	 * Parameters:
-	 *
-	 * - **order:** (optional) "DESC" or "ASC". Default: "ASC"
-	 * 
-	 * @accessor
-	 */
-	public function episodes($args = []) {
-		return array_map(function($episode) {
-			return new \Podlove\Template\Episode($episode);
-		}, $this->season->episodes($args));
-	}
+    protected function getExtraFilterArgs()
+    {
+        return [$this->season];
+    }
 }

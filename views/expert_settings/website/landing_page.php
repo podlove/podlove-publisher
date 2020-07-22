@@ -1,15 +1,15 @@
 <select name="podlove_website[landing_page]" id="landing_page">
-	<?php foreach ( $landing_page_options as $option ): ?>
+	<?php foreach ($landing_page_options as $option) { ?>
 		<option
-			<?php if ( isset($option['value']) ): ?>
-				value="<?php echo $option['value'] ?>"
-				<?php if ( $landing_page == $option['value'] ): ?> selected<?php endif; ?>
-			<?php endif; ?>
-			<?php if ( isset($option['disabled']) && $option['disabled'] ): ?> disabled<?php endif; ?>
+			<?php if (isset($option['value'])) { ?>
+				value="<?php echo $option['value']; ?>"
+				<?php if ($landing_page == $option['value']) { ?> selected<?php } ?>
+			<?php } ?>
+			<?php if (isset($option['disabled']) && $option['disabled']) { ?> disabled<?php } ?>
 		>
-			<?php echo $option['text'] ?>
+			<?php echo $option['text']; ?>
 		</option>
-	<?php endforeach; ?>
+	<?php } ?>
 </select>
 
 <script type="text/javascript">
@@ -41,5 +41,5 @@ jQuery(function($) {
 	});
 });
 </script>
-<?php 
+<?php
 echo __('This defines the landing page to your podcast. It is the site that your podcast feeds link to.', 'podlove-podcasting-plugin-for-wordpress');

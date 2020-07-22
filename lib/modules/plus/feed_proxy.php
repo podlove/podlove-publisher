@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Plus;
 
 class FeedProxy
@@ -9,7 +10,7 @@ class FeedProxy
     public function __construct($module, $api)
     {
         $this->module = $module;
-        $this->api    = $api;
+        $this->api = $api;
     }
 
     public static function is_enabled()
@@ -50,8 +51,7 @@ class FeedProxy
     private static function normalize_url($url)
     {
         $url = trim($url);
-        $url = preg_replace('/^https?:\/\//', '', $url);
 
-        return $url;
+        return preg_replace('/^https?:\/\//', '', $url);
     }
 }

@@ -4,6 +4,12 @@ player_dst = lib/modules/podlove_web_player/player_v3
 release:
 	bin/release.sh
 
+format:
+  php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style"
+
+validateFormat:
+  php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style" -v --dry-run --stop-on-violation --using-cache=no
+
 update_subscribe_button:
 	rm -rf .tmppsb
 	git clone https://github.com/podlove/podlove-subscribe-button.git .tmppsb

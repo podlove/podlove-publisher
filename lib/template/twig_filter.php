@@ -1,10 +1,11 @@
 <?php
+
 namespace Podlove\Template;
 
-use \Podlove\Model;
+use Podlove\Model;
 
 /**
- * Apply Twig functionality and podcast/episode accessors to strings/templates
+ * Apply Twig functionality and podcast/episode accessors to strings/templates.
  *
  * Example:
  *     add_filter('some_filter_for_a_string', array('\Podlove\Template\TwigFilter', 'apply_to_html'));
@@ -39,11 +40,12 @@ class TwigFilter
     ];
 
     /**
-     * Apply Twig to given template
+     * Apply Twig to given template.
      *
-     * @param  string $html File path or HTML string.
-     * @param  array  $vars optional variables for Twig context
-     * @return string       rendered template string
+     * @param string $html file path or HTML string
+     * @param array  $vars optional variables for Twig context
+     *
+     * @return string rendered template string
      */
     public static function apply_to_html($html, $vars = [])
     {
@@ -53,7 +55,8 @@ class TwigFilter
 
         // add podcast to global context
         $context = array_merge(
-            $context, ['podcast' => new Podcast(Model\Podcast::get())]
+            $context,
+            ['podcast' => new Podcast(Model\Podcast::get())]
         );
 
         // Apply filters to twig templates
@@ -70,13 +73,13 @@ class TwigFilter
             try {
                 $result = $twig->render($html, $context);
             } catch (\Twig\Error\Error $e) {
-                $message  = $e->getRawMessage();
-                $line     = $e->getTemplateLine();
+                $message = $e->getRawMessage();
+                $line = $e->getTemplateLine();
                 $template = $e->getSourceContext();
 
                 \Podlove\Log::get()->addError($message, [
-                    'type'     => 'twig',
-                    'line'     => $line,
+                    'type' => 'twig',
+                    'line' => $line,
                     'template' => $template,
                 ]);
             }
@@ -90,17 +93,16 @@ class TwigFilter
                 // no clue yet how this is possible but it happens
                 if (method_exists($env, 'createTemplate')) {
                     $template = $env->createTemplate($html);
-                    $result   = $template->render($context);
+                    $result = $template->render($context);
                 } else {
-                    \Podlove\Log::get()->addError("Error when rendering Twig template from string. Missing Twig_Environment::createTemplate method.", [
-                        'type'     => 'twig',
+                    \Podlove\Log::get()->addError('Error when rendering Twig template from string. Missing Twig_Environment::createTemplate method.', [
+                        'type' => 'twig',
                         'template' => $html,
                     ]);
                 }
-
             } catch (\Exception $e) {
-                \Podlove\Log::get()->addError("Error when rendering Twig template from string: " . $e->getMessage(), [
-                    'type'     => 'twig',
+                \Podlove\Log::get()->addError('Error when rendering Twig template from string: '.$e->getMessage(), [
+                    'type' => 'twig',
                     'template' => $html,
                 ]);
             }
@@ -119,7 +121,7 @@ class TwigFilter
         $file_loader = apply_filters('podlove_twig_file_loader', $file_loader);
 
         // database loader for user templates
-        $db_loader = new TwigLoaderPodloveDatabase;
+        $db_loader = new TwigLoaderPodloveDatabase();
 
         $loaders = [$file_loader, $db_loader];
         $loaders = apply_filters('podlove_twig_loaders', $loaders);
@@ -139,8 +141,9 @@ class TwigFilter
 
         $padLeftFilter = new \Twig\TwigFilter('padLeft', function ($string, $padChar, $length) {
             while (strlen($string) < $length) {
-                $string = $padChar . $string;
+                $string = $padChar.$string;
             }
+
             return $string;
         });
 
@@ -154,15 +157,21 @@ class TwigFilter
 
         // add functions
         foreach (self::$template_tags as $tag) {
-            $func = new \Twig\TwigFunction($tag, function () use ($tag) {return $tag();});
+            $func = new \Twig\TwigFunction($tag, function () use ($tag) {
+                return $tag();
+            });
             $twig->addFunction($func);
         }
 
-        $func = new \Twig\TwigFunction('get_the_post_thumbnail_url', function ($post = null, $size = 'post-thumbnail') {return get_the_post_thumbnail_url($post, $size);});
+        $func = new \Twig\TwigFunction('get_the_post_thumbnail_url', function ($post = null, $size = 'post-thumbnail') {
+            return get_the_post_thumbnail_url($post, $size);
+        });
         $twig->addFunction($func);
 
         // shortcode_exists
-        $func = new \Twig\TwigFunction('shortcode_exists', function ($shortcode) {return \shortcode_exists($shortcode);});
+        $func = new \Twig\TwigFunction('shortcode_exists', function ($shortcode) {
+            return \shortcode_exists($shortcode);
+        });
         $twig->addFunction($func);
 
         // Translation functions

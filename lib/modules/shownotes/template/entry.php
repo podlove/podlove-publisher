@@ -5,7 +5,7 @@ namespace Podlove\Modules\Shownotes\Template;
 use Podlove\Template\Wrapper;
 
 /**
- * Shownotes entry Template Wrapper
+ * Shownotes entry Template Wrapper.
  *
  * @templatetag entry
  */
@@ -18,17 +18,12 @@ class Entry extends Wrapper
         $this->entry = $entry;
     }
 
-    protected function getExtraFilterArgs()
-    {
-        return array($this->entry);
-    }
-
     // /////////
     // Accessors
     // /////////
 
     /**
-     * Title
+     * Title.
      *
      * @accessor
      */
@@ -38,7 +33,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * Description
+     * Description.
      *
      * @accessor
      */
@@ -48,7 +43,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * Canonical URL
+     * Canonical URL.
      *
      * Defaults to `original_url` if no canonical URL is available.
      *
@@ -70,7 +65,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * User provided URL
+     * User provided URL.
      *
      * @accessor
      */
@@ -80,7 +75,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * Website name
+     * Website name.
      *
      * @accessor
      */
@@ -90,7 +85,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * Website URL
+     * Website URL.
      *
      * Example: The site url of https://example.com/page?param=42 is https://example.com.
      *
@@ -102,7 +97,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * Icon URL
+     * Icon URL.
      *
      * @accessor
      */
@@ -112,7 +107,7 @@ class Entry extends Wrapper
     }
 
     /**
-     * Image URL
+     * Image URL.
      *
      * Open Graph or Twitter image.
      *
@@ -130,29 +125,32 @@ class Entry extends Wrapper
     }
 
     /**
-     * SVG Icon for entry type
+     * SVG Icon for entry type.
      *
      * @accessor
+     *
+     * @param mixed $size
      */
     public function typeIcon($size = 0)
     {
         if ($size && $size > 0) {
             $size_style = "width: {$size}px; height: {$size}px;";
         } else {
-            $size_style = "";
+            $size_style = '';
         }
 
         switch ($this->entry->type) {
             case 'link':
                 return <<<SVG
-<svg xmlns="http://www.w3.org/2000/svg" style="fill: none !important; $size_style" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="fill: none !important; {$size_style}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
 SVG;
-                break;
 
+                break;
             case 'topic':
                 return <<<SVG
-  <svg xmlns="http://www.w3.org/2000/svg" style="fill: none !important; $size_style" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" style="fill: none !important; {$size_style}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
 SVG;
+
                 break;
         }
 
@@ -160,7 +158,7 @@ SVG;
     }
 
     /**
-     * Type
+     * Type.
      *
      * Either "text" or "link".
      *
@@ -169,5 +167,10 @@ SVG;
     public function type()
     {
         return $this->entry->type;
+    }
+
+    protected function getExtraFilterArgs()
+    {
+        return [$this->entry];
     }
 }

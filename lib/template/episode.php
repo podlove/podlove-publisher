@@ -1,14 +1,14 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * Episode Template Wrapper
+ * Episode Template Wrapper.
  *
  * @templatetag episode
  */
 class Episode extends Wrapper
 {
-
     /**
      * @var Podlove\Model\Episode
      */
@@ -22,12 +22,7 @@ class Episode extends Wrapper
     public function __construct(\Podlove\Model\Episode $episode)
     {
         $this->episode = $episode;
-        $this->post    = $episode->post();
-    }
-
-    protected function getExtraFilterArgs()
-    {
-        return array($this->episode, $this->post);
+        $this->post = $episode->post();
     }
 
     // /////////
@@ -35,7 +30,7 @@ class Episode extends Wrapper
     // /////////
 
     /**
-     * Title
+     * Title.
      *
      * Returns the episode title, if set, otherwise the post title.
      * If you want to access the post title directly, use `episode.post.post_title`.
@@ -48,7 +43,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Subtitle
+     * Subtitle.
      *
      * @accessor
      */
@@ -59,7 +54,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Summary
+     * Summary.
      *
      * @accessor
      */
@@ -70,7 +65,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Number
+     * Number.
      *
      * @accessor
      */
@@ -80,7 +75,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Type
+     * Type.
      *
      * One of: full, trailer, bonus
      *
@@ -92,7 +87,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Slug
+     * Slug.
      *
      * @accessor
      */
@@ -102,7 +97,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Post content
+     * Post content.
      *
      * @accessor
      */
@@ -112,7 +107,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Podcast
+     * Podcast.
      *
      * @accessor
      */
@@ -124,7 +119,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Web Player for the current episode
+     * Web Player for the current episode.
      *
      * The player should not appear in feeds, so embed it like this:
      *
@@ -147,35 +142,40 @@ class Episode extends Wrapper
      * ```
      *
      * @accessor
+     *
+     * @param mixed $args
      */
     public function player($args = [])
     {
         // fixme: "publisher" key is for pwp plugin, figure out what to do with post_id
-        $allowed_keys = ["template", "config", "theme", "post_id", "publisher", "show"];
+        $allowed_keys = ['template', 'config', 'theme', 'post_id', 'publisher', 'show'];
 
         // pwp5
-        $args["publisher"] = $this->episode->post_id;
+        $args['publisher'] = $this->episode->post_id;
         // other players
-        $args["post_id"] = $this->episode->post_id;
+        $args['post_id'] = $this->episode->post_id;
 
         $shortcode_args = array_reduce(array_keys($args), function ($agg, $key) use ($args, $allowed_keys) {
             if (in_array($key, $allowed_keys)) {
-                $agg[] = "$key=\"" . esc_attr($args[$key]) . "\"";
+                $agg[] = "{$key}=\"".esc_attr($args[$key]).'"';
             }
+
             return $agg;
         }, []);
-        $args_string = implode(" ", $shortcode_args);
+        $args_string = implode(' ', $shortcode_args);
 
-        return do_shortcode("[podlove-episode-web-player $args_string]");
+        return do_shortcode("[podlove-episode-web-player {$args_string}]");
     }
 
     /**
-     * Post publication date
+     * Post publication date.
      *
      * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate.format('Y-m-d') }}`
      *
      * @see  datetime
      * @accessor
+     *
+     * @param mixed $format
      */
     public function publicationDate($format = '')
     {
@@ -183,12 +183,14 @@ class Episode extends Wrapper
     }
 
     /**
-     * Post recording date
+     * Post recording date.
      *
      * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate.format('Y-m-d') }}`
      *
      * @see  datetime
      * @accessor
+     *
+     * @param mixed $format
      */
     public function recordingDate($format = '')
     {
@@ -196,7 +198,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Explicit status
+     * Explicit status.
      *
      * "yes", "no" or "clean"
      *
@@ -208,7 +210,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * URL
+     * URL.
      *
      * @accessor
      */
@@ -218,7 +220,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Duration Object
+     * Duration Object.
      *
      * Use `duration` to display formatted hours, minutes and seconds.
      * Alternatively, use the duration accessors for custom rendering.
@@ -232,7 +234,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * WordPress WP_Post object
+     * WordPress WP_Post object.
      *
      * @accessor
      */
@@ -242,7 +244,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Image
+     * Image.
      *
      * - fallback: `true` or `false`. Should the podcast image be used if no episode image is available? Default: `false`
      *
@@ -254,34 +256,17 @@ class Episode extends Wrapper
      *
      * @see  image
      * @accessor
+     *
+     * @param mixed $args
      */
     public function image($args = [])
     {
-
         $defaults = ['fallback' => false];
-        $args     = wp_parse_args($args, $defaults);
+        $args = wp_parse_args($args, $defaults);
 
         if ($args['fallback']) {
             return new Image($this->episode->cover_art_with_fallback());
-        } else {
-            if ($cover_art = $this->episode->cover_art()) {
-                return new Image($cover_art);
-            } else {
-                return '';
-            }
-
         }
-    }
-
-    /**
-     * Image URL
-     *
-     * @deprecated since 2.2.0, use `episode.image.url` instead
-     * @accessor
-     */
-    public function imageUrl()
-    {
-
         if ($cover_art = $this->episode->cover_art()) {
             return new Image($cover_art);
         }
@@ -290,7 +275,22 @@ class Episode extends Wrapper
     }
 
     /**
-     * Image URL with fallback
+     * Image URL.
+     *
+     * @deprecated since 2.2.0, use `episode.image.url` instead
+     * @accessor
+     */
+    public function imageUrl()
+    {
+        if ($cover_art = $this->episode->cover_art()) {
+            return new Image($cover_art);
+        }
+
+        return '';
+    }
+
+    /**
+     * Image URL with fallback.
      *
      * @deprecated since 2.2.0, use `episode.image({fallback: true}).url` instead
      * @accessor
@@ -301,7 +301,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Total downloads
+     * Total downloads.
      *
      * Please note that this value is only updated hourly.
      *
@@ -319,9 +319,11 @@ class Episode extends Wrapper
     }
 
     /**
-     * Access a single meta value
+     * Access a single meta value.
      *
      * @accessor
+     *
+     * @param mixed $meta_key
      */
     public function meta($meta_key)
     {
@@ -329,7 +331,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * Access a list of meta values
+     * Access a list of meta values.
      *
      * Example:
      *
@@ -346,6 +348,8 @@ class Episode extends Wrapper
      * ```
      *
      * @accessor
+     *
+     * @param mixed $meta_key
      */
     public function metas($meta_key)
     {
@@ -368,6 +372,8 @@ class Episode extends Wrapper
      *
      * @see  tag
      * @accessor
+     *
+     * @param mixed $args
      */
     public function tags($args = [])
     {
@@ -394,6 +400,8 @@ class Episode extends Wrapper
      *
      * @see  category
      * @accessor
+     *
+     * @param mixed $args
      */
     public function categories($args = [])
     {
@@ -403,7 +411,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * List of episode files
+     * List of episode files.
      *
      * @see  file
      * @accessor
@@ -426,6 +434,8 @@ class Episode extends Wrapper
      *
      * @see  file
      * @accessor
+     *
+     * @param mixed $asset_name
      */
     public function file($asset_name)
     {
@@ -435,13 +445,13 @@ class Episode extends Wrapper
 
         if ($files) {
             return reset($files);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
-     * List of episode chapters
+     * List of episode chapters.
      *
      * @see  chapter
      * @accessor
@@ -460,7 +470,7 @@ class Episode extends Wrapper
     }
 
     /**
-     * License
+     * License.
      *
      * To render an HTML license, use `{% include '@core/license.twig' %}` for
      * a license with fallback to the podcast license or
@@ -474,17 +484,21 @@ class Episode extends Wrapper
     {
         return new License(
             new \Podlove\Model\License(
-                "episode",
-                array(
-                    'type'                 => $this->episode->license_type,
-                    'license_name'         => $this->episode->license_name,
-                    'license_url'          => $this->episode->license_url,
-                    'allow_modifications'  => $this->episode->license_cc_allow_modifications,
+                'episode',
+                [
+                    'type' => $this->episode->license_type,
+                    'license_name' => $this->episode->license_name,
+                    'license_url' => $this->episode->license_url,
+                    'allow_modifications' => $this->episode->license_cc_allow_modifications,
                     'allow_commercial_use' => $this->episode->license_cc_allow_commercial_use,
-                    'jurisdiction'         => $this->episode->license_cc_license_jurisdiction,
-                )
+                    'jurisdiction' => $this->episode->license_cc_license_jurisdiction,
+                ]
             )
         );
     }
 
+    protected function getExtraFilterArgs()
+    {
+        return [$this->episode, $this->post];
+    }
 }

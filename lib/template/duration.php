@@ -1,106 +1,116 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * Duration Template Wrapper
+ * Duration Template Wrapper.
  *
  * @templatetag duration
  */
-class Duration extends Wrapper {
+class Duration extends Wrapper
+{
+    private $episode;
 
-	private $episode;
-	
-	public function __construct(\Podlove\Model\Episode $episode) {
-		$this->episode = $episode;
-	}
+    public function __construct(\Podlove\Model\Episode $episode)
+    {
+        $this->episode = $episode;
+    }
 
-	protected function getExtraFilterArgs() {
-		return array($this->episode);
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	// /////////
-	// Accessors
-	// /////////
+    public function __toString()
+    {
+        if (!$this->totalMilliseconds()) {
+            return '00:00';
+        }
 
-	public function __toString() {
+        return $this->hours()
+             .':'.self::lfill($this->minutes(), 2, 0)
+             .':'.self::lfill($this->seconds(), 2, 0);
+    }
 
-		if (!$this->totalMilliseconds()) {
-			return '00:00';
-		}
+    /**
+     * Hours.
+     *
+     * 0,1,2,…
+     *
+     * @accessor
+     */
+    public function hours()
+    {
+        return $this->episode->get_duration('hours');
+    }
 
-		return $this->hours()
-		     . ":" . self::lfill( $this->minutes(), 2, 0 )
-		     . ":" . self::lfill( $this->seconds(), 2, 0 );
-	}
+    /**
+     * Minutes.
+     *
+     * 0,1,2,…,59
+     *
+     * @accessor
+     */
+    public function minutes()
+    {
+        return $this->episode->get_duration('minutes');
+    }
 
-	/**
-	 * Append characters to the left of the given string until a length is reached.
-	 * 
-	 * @param  string $string  
-	 * @param  int    $length  
-	 * @param  string $fillchar
-	 * @return string
-	 */
-	private static function lfill( $string, $length, $fillchar = ' ' ) {
-		while ( strlen( $string ) < $length ) {
-			$string = $fillchar . $string;
-		}
-		return $string;
-	}
+    /**
+     * Seconds.
+     *
+     * 0,1,2,…,59
+     *
+     * @accessor
+     */
+    public function seconds()
+    {
+        return $this->episode->get_duration('seconds');
+    }
 
-	/**
-	 * Hours
-	 *
-	 * 0,1,2,…
-	 * 
-	 * @accessor
-	 */
-	public function hours() {
-		return $this->episode->get_duration('hours');
-	}
+    /**
+     * Milliseconds.
+     *
+     * 0,1,2,…,999
+     *
+     * @accessor
+     */
+    public function milliseconds()
+    {
+        return $this->episode->get_duration('milliseconds');
+    }
 
-	/**
-	 * Minutes
-	 *
-	 * 0,1,2,…,59
-	 * 
-	 * @accessor
-	 */
-	public function minutes() {
-		return $this->episode->get_duration('minutes');
-	}
+    /**
+     * The total duration in milliseconds.
+     *
+     * 0,1,2,…
+     *
+     * @accessor
+     */
+    public function totalMilliseconds()
+    {
+        return \Podlove\NormalPlayTime\Parser::parse($this->episode->duration, 'ms');
+    }
 
-	/**
-	 * Seconds
-	 *
-	 * 0,1,2,…,59
-	 * 
-	 * @accessor
-	 */
-	public function seconds() {
-		return $this->episode->get_duration('seconds');
-	}
+    protected function getExtraFilterArgs()
+    {
+        return [$this->episode];
+    }
 
-	/**
-	 * Milliseconds
-	 *
-	 * 0,1,2,…,999
-	 * 
-	 * @accessor
-	 */
-	public function milliseconds() {
-		return $this->episode->get_duration('milliseconds');
-	}
+    /**
+     * Append characters to the left of the given string until a length is reached.
+     *
+     * @param string $string
+     * @param int    $length
+     * @param string $fillchar
+     *
+     * @return string
+     */
+    private static function lfill($string, $length, $fillchar = ' ')
+    {
+        while (strlen($string) < $length) {
+            $string = $fillchar.$string;
+        }
 
-	/**
-	 * The total duration in milliseconds
-	 *
-	 * 0,1,2,…
-	 * 
-	 * @accessor
-	 */
-	public function totalMilliseconds() {
-		return \Podlove\NormalPlayTime\Parser::parse( $this->episode->duration, 'ms' );
-	}
-
+        return $string;
+    }
 }

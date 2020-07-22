@@ -1,290 +1,317 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * Podcast Template Wrapper
+ * Podcast Template Wrapper.
  *
  * @templatetag podcast
  */
-class Podcast extends Wrapper {
+class Podcast extends Wrapper
+{
+    /**
+     * @var Podlove\Model\Podcast
+     */
+    private $podcast;
 
-	/**
-	 * @var Podlove\Model\Podcast
-	 */
-	private $podcast;
+    public function __construct(\Podlove\Model\Podcast $podcast)
+    {
+        $this->podcast = $podcast;
+    }
 
-	public function __construct(\Podlove\Model\Podcast $podcast) {
-		$this->podcast = $podcast;
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->podcast);
-	}
+    /**
+     * Title.
+     *
+     * @accessor
+     */
+    public function title()
+    {
+        return $this->podcast->title;
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Subtitle.
+     *
+     * @accessor
+     */
+    public function subtitle()
+    {
+        return $this->podcast->subtitle;
+    }
 
-	/**
-	 * Title
-	 *
-	 * @accessor
-	 */
-	public function title() {
-		return $this->podcast->title;
-	}
+    /**
+     * Summary.
+     *
+     * @accessor
+     */
+    public function summary()
+    {
+        return $this->podcast->summary;
+    }
 
-	/**
-	 * Subtitle
-	 *
-	 * @accessor
-	 */
-	public function subtitle() {
-		return $this->podcast->subtitle;
-	}
+    /**
+     * Mnemonic / Abbreviation.
+     *
+     * @accessor
+     */
+    public function mnemonic()
+    {
+        return $this->podcast->mnemonic;
+    }
 
-	/**
-	 * Summary
-	 *
-	 * @accessor
-	 */
-	public function summary() {
-		return $this->podcast->summary;
-	}
+    /**
+     * Type.
+     *
+     * One of: episodic, serial
+     *
+     * @accessor
+     */
+    public function type()
+    {
+        return $this->podcast->itunes_type;
+    }
 
-	/**
-	 * Mnemonic / Abbreviation
-	 * 
-	 * @accessor
-	 */
-	public function mnemonic() {
-		return $this->podcast->mnemonic;	
-	}
+    /**
+     * Image URL.
+     *
+     * @deprecated since 2.2.0, use `image` instead
+     * @accessor
+     */
+    public function imageUrl()
+    {
+        return new Image($this->podcast->cover_art());
+    }
 
-	/**
-	 * Type
-	 * 
-	 * One of: episodic, serial
-	 * 
-	 * @accessor
-	 */
-	public function type() {
-		return $this->podcast->itunes_type;
-	}
+    /**
+     * Image.
+     *
+     * @see  image
+     * @accessor
+     */
+    public function image()
+    {
+        return new Image($this->podcast->cover_art());
+    }
 
-	/**
-	 * Image URL
-	 *
-	 * @deprecated since 2.2.0, use `image` instead
-	 * @accessor
-	 */
-	public function imageUrl() {
-		return new Image($this->podcast->cover_art());
-	}
+    /**
+     * Author name.
+     *
+     * @accessor
+     */
+    public function authorName()
+    {
+        return $this->podcast->author_name;
+    }
 
-	/**
-	 * Image
-	 *
-	 * @see  image
-	 * @accessor
-	 */
-	public function image() {
-		return new Image($this->podcast->cover_art());
-	}
+    /**
+     * Owner name.
+     *
+     * @accessor
+     */
+    public function ownerName()
+    {
+        return $this->podcast->owner_name;
+    }
 
-	/**
-	 * Author name
-	 *
-	 * @accessor
-	 */
-	public function authorName() {
-		return $this->podcast->author_name;
-	}
+    /**
+     * Owner email.
+     *
+     * @accessor
+     */
+    public function ownerEmail()
+    {
+        return $this->podcast->owner_email;
+    }
 
-	/**
-	 * Owner name
-	 *
-	 * @accessor
-	 */
-	public function ownerName() {
-		return $this->podcast->owner_name;
-	}
+    /**
+     * Publisher name.
+     *
+     * @accessor
+     */
+    public function publisherName()
+    {
+        return $this->podcast->publisher_name;
+    }
 
-	/**
-	 * Owner email
-	 *
-	 * @accessor
-	 */
-	public function ownerEmail() {
-		return $this->podcast->owner_email;
-	}
+    /**
+     * Publisher URL.
+     *
+     * @accessor
+     */
+    public function publisherUrl()
+    {
+        return $this->podcast->publisher_url;
+    }
 
-	/**
-	 * Publisher name
-	 *
-	 * @accessor
-	 */
-	public function publisherName() {
-		return $this->podcast->publisher_name;
-	}
+    /**
+     * Podcast Home URL.
+     *
+     * @accessor
+     */
+    public function landingPageUrl()
+    {
+        return $this->podcast->landing_page_url();
+    }
 
-	/**
-	 * Publisher URL
-	 *
-	 * @accessor
-	 */
-	public function publisherUrl() {
-		return $this->podcast->publisher_url;
-	}
+    /**
+     * Episodes.
+     *
+     * Filter and order episodes with parameters:
+     *
+     * - post_id: one episode matching the given post id
+     * - post_ids: list of episodes matching the given list of post ids
+     * - category: list of episodes matching the category slug
+     * - slug: one episode matching the given slug
+     * - slugs: list of episodes matching the given list of slugs
+     * - post_status: Publication status of the post. Defaults to 'publish'
+     * - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
+     *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
+     *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
+     * - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
+     *   - 'publicationDate' - Order by publication date.
+     *   - 'recordingDate' - Order by recording date.
+     *   - 'title' - Order by title.
+     *   - 'slug' - Order by episode slug.
+     *	 - 'limit' - Limit the number of returned episodes.
+     *
+     * **Examples**
+     *
+     * Iterate over all published episodes, ordered by publication date.
+     *
+     * ```
+     * {% for e in podcast.episodes %}
+     *   {{ e.title }}
+     * {% endfor %}
+     * ```
+     *
+     * Order by title in ascending order.
+     *
+     * ```
+     * {% for e in podcast.episodes({orderby: 'title', 'order': 'ASC'}) %}
+     *   {{ e.title }}
+     * {% endfor %}
+     * ```
+     *
+     * Fetch one episode by slug.
+     *
+     * ```
+     * {{ podcast.episodes({slug: 'pod001'}).title }}
+     * ```
+     *
+     * @see episode
+     * @accessor
+     *
+     * @param mixed $args
+     */
+    public function episodes($args = [])
+    {
+        $episodes = $this->podcast->episodes($args);
 
-	/**
-	 * Podcast Home URL
-	 * 
-	 * @accessor
-	 */
-	public function landingPageUrl() {
-		return $this->podcast->landing_page_url();
-	}
+        if (is_array($episodes)) {
+            return array_map(function ($episode) {
+                return new Episode($episode);
+            }, $episodes);
+        } else {
+            return new Episode($episodes);
+        }
+    }
 
-	/**
-	 * Episodes
-	 *
-	 * Filter and order episodes with parameters:
-	 * 
-	 * - post_id: one episode matching the given post id
-	 * - post_ids: list of episodes matching the given list of post ids
-	 * - category: list of episodes matching the category slug
-	 * - slug: one episode matching the given slug
-	 * - slugs: list of episodes matching the given list of slugs
-	 * - post_status: Publication status of the post. Defaults to 'publish'
-	 * - order: Designates the ascending or descending order of the 'orderby' parameter. Defaults to 'DESC'.
-	 *   - 'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
-	 *   - 'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
-	 * - orderby: Sort retrieved episodes by parameter. Defaults to 'publicationDate'.
-	 *   - 'publicationDate' - Order by publication date.
-	 *   - 'recordingDate' - Order by recording date.
-	 *   - 'title' - Order by title.
-	 *   - 'slug' - Order by episode slug.
-	 *	 - 'limit' - Limit the number of returned episodes.
-	 *
-	 * **Examples**
-	 *
-	 * Iterate over all published episodes, ordered by publication date.
-	 *
-	 * ```
-	 * {% for e in podcast.episodes %}
-	 *   {{ e.title }}
-	 * {% endfor %}
-	 * ```
-	 *
-	 * Order by title in ascending order.
-	 * 
-	 * ```
-	 * {% for e in podcast.episodes({orderby: 'title', 'order': 'ASC'}) %}
-	 *   {{ e.title }}
-	 * {% endfor %}
-	 * ```
-	 *
-	 * Fetch one episode by slug.
-	 * 
-	 * ```
-	 * {{ podcast.episodes({slug: 'pod001'}).title }}
-	 * ```
-	 * 
-	 * @see episode
-	 * @accessor
-	 */
-	public function episodes($args = []) {
-		$episodes = $this->podcast->episodes($args);
+    /**
+     * Feeds.
+     *
+     * @see  feed
+     * @accessor
+     */
+    public function feeds()
+    {
+        return array_map(function ($feed) {
+            return new Feed($feed);
+        }, $this->podcast->feeds());
+    }
 
-		if (is_array($episodes)) {
-			return array_map(function ($episode) {
-				return new Episode($episode);
-			}, $episodes);
-		} else {
-			return new Episode($episodes);
-		}
-	}
+    /**
+     * Single Feed by Slug/ID.
+     *
+     * **Example**
+     *
+     * ```
+     * {% set feed = podcast.feed("mp3") %}
+     * The Feed: <a href="{{ feed.url }}">{{ feed.title }}</a>
+     * ```
+     *
+     * @see  feed
+     * @accessor
+     *
+     * @param mixed $id
+     */
+    public function feed($id)
+    {
+        return new Feed(\Podlove\Model\Feed::find_one_by_slug($id));
+    }
 
-	/**
-	 * Feeds
-	 *
-	 * @see  feed
-	 * @accessor
-	 */
-	public function feeds() {
-		return array_map(function ($feed) {
-			return new Feed($feed);
-		}, $this->podcast->feeds());
-	}
+    /**
+     * License.
+     *
+     * To render an HTML license, use
+     * `{% include '@core/license.twig' with {'license': podcast.license} %}`
+     *
+     * @see  license
+     * @accessor
+     */
+    public function license()
+    {
+        return new License(
+            new \Podlove\Model\License(
+                'podcast',
+                [
+                    'license_name' => $this->podcast->license_name,
+                    'license_url' => $this->podcast->license_url,
+                ]
+            )
+        );
+    }
 
-	/**
-	 * Single Feed by Slug/ID
-	 * 
-	 * **Example**
-	 * 
-	 * ```
-	 * {% set feed = podcast.feed("mp3") %}
-	 * The Feed: <a href="{{ feed.url }}">{{ feed.title }}</a>
-	 * ```
-	 *
-	 * @see  feed
-	 * @accessor
-	 */
-	public function feed($id) {
-		return new Feed(\Podlove\Model\Feed::find_one_by_slug($id));
-	}
+    /**
+     * Get a podcast setting.
+     *
+     * Valid namespaces / names:
+     *
+     *  ```
+     *  website
+     *  	merge_episodes
+     *  	hide_wp_feed_discovery
+     *  	use_post_permastruct
+     *  	custom_episode_slug
+     *  	episode_archive
+     *  	episode_archive_slug
+     *  	url_template
+     *  	ssl_verify_peer
+     *  metadata
+     *  	enable_episode_recording_date
+     *  	enable_episode_explicit
+     *  	enable_episode_license
+     *  redirects
+     *  	podlove_setting_redirect
+     *  tracking
+     *  	mode
+     *  ```
+     *
+     * @accessor
+     *
+     * @param mixed $namespace
+     * @param mixed $name
+     */
+    public function setting($namespace, $name)
+    {
+        return \Podlove\get_setting($namespace, $name);
+    }
 
-	/**
-	 * License
-	 *
-	 * To render an HTML license, use 
-	 * `{% include '@core/license.twig' with {'license': podcast.license} %}`
-	 *
-	 * @see  license
-	 * @accessor
-	 */
-	public function license() {
-		return new License(
-			new \Podlove\Model\License(
-				"podcast",
-				array(
-					'license_name'         => $this->podcast->license_name,
-					'license_url'          => $this->podcast->license_url
-				)
-			)
-		);
-	}
-
-	/**
-	 * Get a podcast setting.
-	 *
-	 * Valid namespaces / names:
-	 *
-	 *  ```
-	 *  website
-	 *  	merge_episodes
-	 *  	hide_wp_feed_discovery
-	 *  	use_post_permastruct
-	 *  	custom_episode_slug
-	 *  	episode_archive
-	 *  	episode_archive_slug
-	 *  	url_template
-	 *  	ssl_verify_peer
-	 *  metadata
-	 *  	enable_episode_recording_date
-	 *  	enable_episode_explicit
-	 *  	enable_episode_license
-	 *  redirects
-	 *  	podlove_setting_redirect
-	 *  tracking
-	 *  	mode
-	 *  ```
-	 *
-	 * @accessor
-	 */
-	public function setting($namespace, $name) {
-		return \Podlove\get_setting($namespace, $name);
-	}
-
+    protected function getExtraFilterArgs()
+    {
+        return [$this->podcast];
+    }
 }

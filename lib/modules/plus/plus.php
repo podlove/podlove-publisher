@@ -1,11 +1,12 @@
 <?php
+
 namespace Podlove\Modules\Plus;
 
 class Plus extends \Podlove\Modules\Base
 {
-    protected $module_name        = 'Publisher PLUS';
+    protected $module_name = 'Publisher PLUS';
     protected $module_description = 'A Feed Proxy service for subscriber statistics and performance.';
-    protected $module_group       = 'external services';
+    protected $module_group = 'external services';
 
     private $api;
 
@@ -23,8 +24,8 @@ class Plus extends \Podlove\Modules\Base
     {
         if (defined('PODLOVE_PLUS_BASE_URL')) {
             return PODLOVE_PLUS_BASE_URL;
-        } else {
-            return apply_filters('podlove_plus_base_url', 'https://plus.podlove.org');
         }
+
+        return apply_filters('podlove_plus_base_url', 'https://plus.podlove.org');
     }
 }

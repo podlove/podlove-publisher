@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Settings;
 
 use Podlove\Cache\TemplateCache;
@@ -6,29 +7,32 @@ use Podlove\Model;
 
 class Templates
 {
-
     use \Podlove\HasPageDocumentationTrait;
 
-    static $pagehook;
+    public static $pagehook;
 
     public function __construct($handle)
     {
-
         self::$pagehook = add_submenu_page(
-            /* $parent_slug*/$handle,
-            /* $page_title */__('Templates', 'podlove-podcasting-plugin-for-wordpress'),
-            /* $menu_title */__('Templates', 'podlove-podcasting-plugin-for-wordpress'),
-            /* $capability */'administrator',
-            /* $menu_slug  */'podlove_templates_settings_handle',
-            /* $function   */array($this, 'page')
+            // $parent_slug
+            $handle,
+            // $page_title
+            __('Templates', 'podlove-podcasting-plugin-for-wordpress'),
+            // $menu_title
+            __('Templates', 'podlove-podcasting-plugin-for-wordpress'),
+            // $capability
+            'administrator',
+            // $menu_slug
+            'podlove_templates_settings_handle',
+            // $function
+            [$this, 'page']
         );
 
         $this->init_page_documentation(self::$pagehook);
 
-        add_action('admin_init', array($this, 'scripts_and_styles'));
+        add_action('admin_init', [$this, 'scripts_and_styles']);
 
         register_setting(Templates::$pagehook, 'podlove_template_assignment', function ($args) {
-
             // when changing the assignment, clear caches
             TemplateCache::get_instance()->purge();
 
@@ -38,7 +42,6 @@ class Templates
 
     public function scripts_and_styles()
     {
-
         if (!isset($_REQUEST['page'])) {
             return;
         }
@@ -47,9 +50,9 @@ class Templates
             return;
         }
 
-        wp_register_script('podlove-ace-js', \Podlove\PLUGIN_URL . '/js/admin/ace/ace.js');
+        wp_register_script('podlove-ace-js', \Podlove\PLUGIN_URL.'/js/admin/ace/ace.js');
 
-        wp_register_script('podlove-template-js', \Podlove\PLUGIN_URL . '/js/admin/template.js', array('jquery', 'podlove-ace-js'));
+        wp_register_script('podlove-template-js', \Podlove\PLUGIN_URL.'/js/admin/template.js', ['jquery', 'podlove-ace-js']);
         wp_enqueue_script('podlove-template-js');
     }
 
@@ -59,39 +62,38 @@ class Templates
 		<div class="wrap">
 			<h2><?php echo __('Templates', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 			<?php
-$this->view_template();
-        ?>
+$this->view_template(); ?>
 		</div>
 		<?php
-}
+    }
 
     private function view_template()
     {
-
         echo sprintf(
             __('Episode Templates are an easy way to keep the same structure in all your episodes.
 				You can use %sShortcodes%s as well as %sPublisher Template Tags%s to customize your episodes.<br>
 				Please read the %sTemplating Guide%s to get started.
 				', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="http://docs.podlove.org/ref/shortcodes.html" target="_blank">', '</a>',
-            '<a href="http://docs.podlove.org/reference/template-tags/" target="_blank">', '</a>',
-            '<a href="http://docs.podlove.org/guides/understanding-templates/" target="_blank">', '</a>'
-        );
-
-        ?>
+            '<a href="http://docs.podlove.org/ref/shortcodes.html" target="_blank">',
+            '</a>',
+            '<a href="http://docs.podlove.org/reference/template-tags/" target="_blank">',
+            '</a>',
+            '<a href="http://docs.podlove.org/guides/understanding-templates/" target="_blank">',
+            '</a>'
+        ); ?>
 		<div id="template-editor">
 			<div class="navigation">
 				<ul>
-					<?php foreach (Model\Template::all() as $template): ?>
+					<?php foreach (Model\Template::all() as $template) { ?>
 						<li>
-							<a href="#" data-id="<?php echo $template->id ?>">
+							<a href="#" data-id="<?php echo $template->id; ?>">
 								<span class="filename"><?php echo $template->title; ?></span>&nbsp;
 							</a>
 						</li>
-					<?php endforeach;?>
+					<?php } ?>
 				</ul>
 				<div class="add">
-					<a href="#">+ <?php _e('add new template', 'podlove-podcasting-plugin-for-wordpress')?></a>
+					<a href="#">+ <?php _e('add new template', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 				</div>
 			</div>
 			<div class="editor">
@@ -109,8 +111,8 @@ $this->view_template();
 			<div class="clear"></div>
 			<footer>
 			  <div class="actions">
-					<a href="#" class="save button button-primary"><?php _e('Save Template', 'podlove-podcasting-plugin-for-wordpress')?></a>
-			  	<a href="#" class="delete"><?php _e('Delete Template', 'podlove-podcasting-plugin-for-wordpress')?></a>
+					<a href="#" class="save button button-primary"><?php _e('Save Template', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			  	<a href="#" class="delete"><?php _e('Delete Template', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 			  </div>
 			</footer>
 			<div class="clear"></div>
@@ -118,7 +120,7 @@ $this->view_template();
 
 		<div class="podlove-template-shortcode" style="margin-top: 8px">
 		  <div>
-	  		<strong><?php _e('Embed with Shortcode', 'podlove-podcasting-plugin-for-wordpress')?></strong>
+	  		<strong><?php _e('Embed with Shortcode', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 			</div>
 		  <div style="margin-top: 4px; display: flex">
 				<input id="podlove_template_shortcode_preview" class="regular-text code" value="" style="margin-right: 8px">
@@ -130,60 +132,57 @@ $this->view_template();
 		</div>
 
 		<div class="podlove-form-card" style="margin-top: 40px">
-		<h3><?php _e('Insert templates to content automatically', 'podlove-podcasting-plugin-for-wordpress')?></h3>
+		<h3><?php _e('Insert templates to content automatically', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
 
 		<form method="post" action="options.php">
 			<?php settings_fields(Templates::$pagehook);
         $template_assignment = Model\TemplateAssignment::get_instance();
 
-        $form_attributes = array(
+        $form_attributes = [
             'context' => 'podlove_template_assignment',
-            'form'    => false,
-        );
+            'form' => false,
+        ];
 
         \Podlove\Form\build_for($template_assignment, $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
 
-            $templates = array(0 => __('Don\'t insert automatically', 'podlove-podcasting-plugin-for-wordpress'));
+            $templates = [0 => __('Don\'t insert automatically', 'podlove-podcasting-plugin-for-wordpress')];
             foreach (Model\Template::all_globally() as $template) {
                 $templates[$template->title] = $template->title;
             }
 
-            $wrapper->select('top', array(
-                'label'         => __('Insert at top', 'podlove-podcasting-plugin-for-wordpress'),
-                'options'       => $templates,
+            $wrapper->select('top', [
+                'label' => __('Insert at top', 'podlove-podcasting-plugin-for-wordpress'),
+                'options' => $templates,
                 'please_choose' => false,
-            ));
+            ]);
 
-            $wrapper->select('bottom', array(
-                'label'         => __('Insert at bottom', 'podlove-podcasting-plugin-for-wordpress'),
-                'options'       => $templates,
+            $wrapper->select('bottom', [
+                'label' => __('Insert at bottom', 'podlove-podcasting-plugin-for-wordpress'),
+                'options' => $templates,
                 'please_choose' => false,
-            ));
+            ]);
 
-            $wrapper->select('head', array(
-                'label'         => __('Insert in document head', 'podlove-podcasting-plugin-for-wordpress'),
-                'options'       => $templates,
+            $wrapper->select('head', [
+                'label' => __('Insert in document head', 'podlove-podcasting-plugin-for-wordpress'),
+                'options' => $templates,
                 'please_choose' => false,
-            ));
+            ]);
 
-            $wrapper->select('header', array(
-                'label'         => __('Insert before header', 'podlove-podcasting-plugin-for-wordpress'),
-                'options'       => $templates,
+            $wrapper->select('header', [
+                'label' => __('Insert before header', 'podlove-podcasting-plugin-for-wordpress'),
+                'options' => $templates,
                 'please_choose' => false,
-            ));
+            ]);
 
-            $wrapper->select('footer', array(
-                'label'         => __('Insert after footer', 'podlove-podcasting-plugin-for-wordpress'),
-                'options'       => $templates,
+            $wrapper->select('footer', [
+                'label' => __('Insert after footer', 'podlove-podcasting-plugin-for-wordpress'),
+                'options' => $templates,
                 'please_choose' => false,
-            ));
-
-        });
-        ?>
+            ]);
+        }); ?>
 		</form>
 		</div>
 		<?php
-}
-
+    }
 }

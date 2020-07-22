@@ -1,22 +1,23 @@
 <?php
-use \Podlove\Modules\Contributors\Contributors;
+use Podlove\Modules\Contributors\Contributors;
+
 ?>
 <div id="contributors-form">
 	<table class="podlove_alternating" border="0" cellspacing="0">
 		<thead>
 			<tr>
-				<th class="podlove-avatar-column" colspand="2"><?php echo __('Contributor', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+				<th class="podlove-avatar-column" colspand="2"><?php echo __('Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 				<th></th>
-				<?php echo $has_groups       ? '<th>' . __('Group', 'podlove-podcasting-plugin-for-wordpress') . '</th>'           : ''; ?>
-				<?php echo $has_roles        ? '<th>' . __('Role', 'podlove-podcasting-plugin-for-wordpress') . '</th>'            : ''; ?>
-				<?php echo $can_be_commented ? '<th>' . __('Pub&shy;lic Com&shy;ment', 'podlove-podcasting-plugin-for-wordpress') . '</th>'  : ''; ?>
-				<th style="width: 60px"><?php echo __('Re&shy;move', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+				<?php echo $has_groups ? '<th>'.__('Group', 'podlove-podcasting-plugin-for-wordpress').'</th>' : ''; ?>
+				<?php echo $has_roles ? '<th>'.__('Role', 'podlove-podcasting-plugin-for-wordpress').'</th>' : ''; ?>
+				<?php echo $can_be_commented ? '<th>'.__('Pub&shy;lic Com&shy;ment', 'podlove-podcasting-plugin-for-wordpress').'</th>' : ''; ?>
+				<th style="width: 60px"><?php echo __('Re&shy;move', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 				<th style="width: 30px"></th>
 			</tr>
 		</thead>
 		<tbody id="contributors_table_body" style="min-height: 50px;">
 			<tr class="contributors_table_body_placeholder" style="display: none;">
-				<td><em><?php echo __('No contributors were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
+				<td><em><?php echo __('No contributors were added yet.', 'podlove-podcasting-plugin-for-wordpress'); ?></em></td>
 			</tr>
 		</tbody>
 	</table>
@@ -30,42 +31,42 @@ use \Podlove\Modules\Contributors\Contributors;
 		<td class="podlove-avatar-column"></td>
 		<td class="podlove-contributor-column">
 			<div style="min-width: 205px">
-			<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
-				<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress') ?></option>
-				<option value="create"><?php echo __('Add New Contributor', 'podlove-podcasting-plugin-for-wordpress') ?></option>
-				<?php foreach ( $contributors as $contributor ): ?>
-					<option value="<?php echo $contributor->id ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url() ?>" data-contributordefaultrole="<?php echo $contributor->role ?>"><?php echo $contributor->getName(); ?></option>
-				<?php endforeach; ?>
+			<select name="<?php echo $form_base_name; ?>[{{id}}][{{contributor-id}}][id]" class="chosen-image podlove-contributor-dropdown">
+				<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
+				<option value="create"><?php echo __('Add New Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
+				<?php foreach ($contributors as $contributor) { ?>
+					<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url(); ?>" data-contributordefaultrole="<?php echo $contributor->role; ?>"><?php echo $contributor->getName(); ?></option>
+				<?php } ?>
 			</select>
-			<a class="clickable podlove-icon-edit podlove-contributor-edit"   href="<?php echo Contributors::get_edit_contributor_url("{{contributor-id}}"); ?>"></a>
-			<a class="clickable podlove-icon-plus podlove-contributor-create" href="<?php echo Contributors::get_create_contributor_url() ?>"></a>
+			<a class="clickable podlove-icon-edit podlove-contributor-edit"   href="<?php echo Contributors::get_edit_contributor_url('{{contributor-id}}'); ?>"></a>
+			<a class="clickable podlove-icon-plus podlove-contributor-create" href="<?php echo Contributors::get_create_contributor_url(); ?>"></a>
 			</div>
 		</td>
-		<?php if ($has_groups) : ?>
+		<?php if ($has_groups) { ?>
 		<td style="min-width: 90px">
-			<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
+			<select name="<?php echo $form_base_name; ?>[{{id}}][{{contributor-id}}][group]" class="chosen podlove-group">
 				<option value="">&nbsp;</option>
-				<?php foreach ( $contributors_groups as $group_slug => $group_title ): ?>
-					<option value="<?php echo $group_slug ?>"><?php echo $group_title ?></option>
-				<?php endforeach; ?>
+				<?php foreach ($contributors_groups as $group_slug => $group_title) { ?>
+					<option value="<?php echo $group_slug; ?>"><?php echo $group_title; ?></option>
+				<?php } ?>
 			</select>
 		</td>
-		<?php endif; ?>
-		<?php if ($has_roles) : ?>
+		<?php } ?>
+		<?php if ($has_roles) { ?>
 		<td style="min-width: 90px">
-			<select name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
+			<select name="<?php echo $form_base_name; ?>[{{id}}][{{contributor-id}}][role]" class="chosen podlove-role">
 				<option value="">&nbsp;</option>
-				<?php foreach ( $contributors_roles as $role_slug => $role_title ): ?>
-					<option value="<?php echo $role_slug ?>"><?php echo $role_title ?></option>
-				<?php endforeach; ?>
+				<?php foreach ($contributors_roles as $role_slug => $role_title) { ?>
+					<option value="<?php echo $role_slug; ?>"><?php echo $role_title; ?></option>
+				<?php } ?>
 			</select>
 		</td>
-		<?php endif; ?>
-		<?php if ($can_be_commented) : ?>
+		<?php } ?>
+		<?php if ($can_be_commented) { ?>
 		<td>
-			<input type="text" name="<?php echo $form_base_name ?>[{{id}}][{{contributor-id}}][comment]" class="podlove-comment" />
+			<input type="text" name="<?php echo $form_base_name; ?>[{{id}}][{{contributor-id}}][comment]" class="podlove-comment" />
 		</td>
-		<?php endif; ?>
+		<?php } ?>
 		<td>
 			<span class="contributor_remove">
 				<i class="clickable podlove-icon-remove"></i>
@@ -81,10 +82,10 @@ use \Podlove\Modules\Contributors\Contributors;
 		var existing_contributions = <?php echo json_encode($existing_contributions); ?>;
 
 		PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
-		PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name ?>";
+		PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name; ?>";
 
 		(function($) {
-			var form_base_name = "<?php echo $form_base_name ?>";
+			var form_base_name = "<?php echo $form_base_name; ?>";
 
 			function update_chosen() {
 				$(".chosen").chosen({ width: '100%' });

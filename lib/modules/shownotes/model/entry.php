@@ -2,7 +2,7 @@
 
 namespace Podlove\Modules\Shownotes\Model;
 
-use \Podlove\Model\Base;
+use Podlove\Model\Base;
 
 class Entry extends Base
 {
@@ -14,17 +14,15 @@ class Entry extends Base
     }
 
     /**
-     * Prepare Icon
+     * Prepare Icon.
      *
      * If possible, serve icon locally.
-     *
-     * @return void
      */
     public function prepare_icon()
     {
         $services = \Podlove\Modules\Social\Social::services_config();
-        $host     = parse_url($this->site_url, PHP_URL_HOST);
-        $icons    = array_filter($services, function ($service) use ($host) {
+        $host = parse_url($this->site_url, PHP_URL_HOST);
+        $icons = array_filter($services, function ($service) use ($host) {
             return stristr($service['url_scheme'], $host) !== false;
         });
 
@@ -32,9 +30,9 @@ class Entry extends Base
             return;
         }
 
-        $icon    = reset($icons);
+        $icon = reset($icons);
         $service = \Podlove\Modules\Social\Model\Service::from_data($icon);
-        $url     = $service->image()->url();
+        $url = $service->image()->url();
 
         if ($url) {
             $this->icon = $url;
@@ -50,7 +48,7 @@ class Entry extends Base
             SELECT
                 MAX(e.position)
             FROM
-                $table_name e
+                {$table_name} e
             WHERE
                 e.episode_id = %d
             GROUP BY
@@ -61,9 +59,9 @@ SQL;
 
         if (is_numeric($position)) {
             return $position + 1;
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     public static function has_shownotes($episode_id)
@@ -75,7 +73,7 @@ SQL;
             SELECT
                 COUNT(e.id)
             FROM
-                $table_name e
+                {$table_name} e
             WHERE
                 e.episode_id = %d
 SQL;

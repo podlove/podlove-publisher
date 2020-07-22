@@ -1,7 +1,8 @@
 <?php
+
 namespace Podlove\Modules\Plus;
 
-use \Podlove\Http;
+use Podlove\Http;
 
 class API
 {
@@ -11,44 +12,45 @@ class API
     public function __construct($module, $token)
     {
         $this->module = $module;
-        $this->token  = $token;
+        $this->token = $token;
     }
 
     public function get_me()
     {
         $curl = new Http\Curl();
-        $curl->request($this->module::base_url() . '/api/rest/v1/me', $this->params());
+        $curl->request($this->module::base_url().'/api/rest/v1/me', $this->params());
         $response = $curl->get_response();
 
         if ($curl->isSuccessful()) {
             $decoded_user = json_decode($response['body']);
+
             return $decoded_user ?? false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function list_feeds()
     {
         $curl = new Http\Curl();
-        $curl->request($this->module::base_url() . '/api/rest/v1/feeds', $this->params());
+        $curl->request($this->module::base_url().'/api/rest/v1/feeds', $this->params());
         $response = $curl->get_response();
 
         if ($curl->isSuccessful()) {
             return json_decode($response['body']) ?? false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function push_feeds($feeds)
     {
-        $payload = json_encode(["feeds" => $feeds]);
+        $payload = json_encode(['feeds' => $feeds]);
 
         $curl = new Http\Curl();
-        $curl->request($this->module::base_url() . '/api/rest/v1/feeds', $this->params([
+        $curl->request($this->module::base_url().'/api/rest/v1/feeds', $this->params([
             'method' => 'POST',
-            'body'   => $payload,
+            'body' => $payload,
         ]));
 
         do_action('podlove_plus_api_push_feeds');
@@ -59,23 +61,24 @@ class API
     public function get_proxy_url($origin_url)
     {
         $curl = new Http\Curl();
-        $curl->request($this->module::base_url() . '/api/rest/v1/feeds/proxy_url?url=' . urlencode($origin_url), $this->params());
+        $curl->request($this->module::base_url().'/api/rest/v1/feeds/proxy_url?url='.urlencode($origin_url), $this->params());
         $response = $curl->get_response();
 
         if ($curl->isSuccessful()) {
             $decoded_response = json_decode($response['body']);
+
             return $decoded_response->url ?? false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     private function params($params = [])
     {
         return array_merge([
             'headers' => [
-                'Content-type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $this->token,
+                'Content-type' => 'application/json',
+                'Authorization' => 'Bearer '.$this->token,
             ],
         ], $params);
     }

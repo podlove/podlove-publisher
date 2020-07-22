@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Model;
 
 /**
@@ -6,25 +7,21 @@ namespace Podlove\Model;
  */
 class Podcast implements Licensable
 {
-
     use KeepsBlogReferenceTrait;
 
     /**
-     * Contains property values.
-     * @var  array
-     */
-    private $data = [];
-
-    /**
      * Contains property names.
+     *
      * @var array
      */
     protected static $properties = [];
 
-    public static function get($blog_id = null)
-    {
-        return new self($blog_id);
-    }
+    /**
+     * Contains property values.
+     *
+     * @var array
+     */
+    private $data = [];
 
     protected function __construct($blog_id)
     {
@@ -33,15 +30,30 @@ class Podcast implements Licensable
     }
 
     final private function __clone()
-    {}
+    {
+    }
 
     public function __set($name, $value)
     {
         if ($this->has_property($name)) {
             $this->set_property($name, $value);
         } else {
-            $this->$name = $value;
+            $this->{$name} = $value;
         }
+    }
+
+    public function __get($name)
+    {
+        if ($this->has_property($name)) {
+            return $this->get_property($name);
+        }
+
+        return $this->{$name};
+    }
+
+    public static function get($blog_id = null)
+    {
+        return new self($blog_id);
     }
 
     public static function name()
@@ -49,49 +61,12 @@ class Podcast implements Licensable
         return 'podcast';
     }
 
-    private function set_property($name, $value)
-    {
-        $this->data[$name] = $value;
-    }
-
-    public function __get($name)
-    {
-        if ($this->has_property($name)) {
-            return $this->get_property($name);
-        } else {
-            return $this->$name;
-        }
-    }
-
-    private function get_property($name)
-    {
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Return a list of property dictionaries.
-     *
-     * @return array property list
-     */
-    private function properties()
-    {
-
-        if (!isset(self::$properties)) {
-            self::$properties = [];
-        }
-
-        return self::$properties;
-    }
-
     /**
      * Does the given property exist?
      *
      * @param string $name name of the property to test
-     * @return bool True if the property exists, else false.
+     *
+     * @return bool true if the property exists, else false
      */
     public function has_property($name)
     {
@@ -105,7 +80,9 @@ class Podcast implements Licensable
      */
     public function property_names()
     {
-        return array_map(function ($p) {return $p['name'];}, self::$properties);
+        return array_map(function ($p) {
+            return $p['name'];
+        }, self::$properties);
     }
 
     /**
@@ -115,7 +92,6 @@ class Podcast implements Licensable
      */
     public static function property($name)
     {
-
         if (!isset(self::$properties)) {
             self::$properties = [];
         }
@@ -131,21 +107,10 @@ class Podcast implements Licensable
         $this->set_property('media_file_base_uri', trailingslashit($this->media_file_base_uri));
 
         $this->with_blog_scope(function () {
-
             update_option('podlove_podcast', $this->data);
 
             do_action('podlove_model_save', $this);
             do_action('podlove_model_change', $this);
-        });
-    }
-
-    /**
-     * Load podcast data.
-     */
-    private function fetch()
-    {
-        $this->data = $this->with_blog_scope(function () {
-            return get_option('podlove_podcast', []);
         });
     }
 
@@ -161,7 +126,7 @@ class Podcast implements Licensable
         $t = $this->title;
 
         if ($this->subtitle) {
-            $t = $t . ' - ' . $this->subtitle;
+            $t = $t.' - '.$this->subtitle;
         }
 
         return $t;
@@ -169,12 +134,10 @@ class Podcast implements Licensable
 
     public function get_license()
     {
-        $license = new License('podcast', [
+        return new License('podcast', [
             'license_name' => $this->license_name,
-            'license_url'  => $this->license_url,
+            'license_url' => $this->license_url,
         ]);
-
-        return $license;
     }
 
     public function get_license_picture_url()
@@ -198,18 +161,18 @@ class Podcast implements Licensable
     {
         if ($this->feed_episode_title_variant) {
             return $this->feed_episode_title_variant;
-        } else {
-            return 'blog';
         }
+
+        return 'blog';
     }
 
     public function get_feed_episode_title_template()
     {
         if ($this->feed_episode_title_template) {
             return $this->feed_episode_title_template;
-        } else {
-            return '%mnemonic%%episode_number% %episode_title%';
         }
+
+        return '%mnemonic%%episode_number% %episode_title%';
     }
 
     /**
@@ -220,26 +183,27 @@ class Podcast implements Licensable
      * - it has an asset assigned (and the asset has a filetype assigned)
      * - the slug in not empty
      *
+     * @param mixed $args
+     *
      * @return array list of feeds
      */
     public function feeds($args = [])
     {
         return $this->with_blog_scope(function () use ($args) {
-
-            $discoverable_condition = "";
+            $discoverable_condition = '';
             if (isset($args['only_discoverable']) && $args['only_discoverable']) {
-                $discoverable_condition = " AND f.discoverable";
+                $discoverable_condition = ' AND f.discoverable';
             }
 
-            $sql = "
+            $sql = '
 				SELECT
 					f.*
 				FROM
-					" . Feed::table_name() . " f
-					JOIN " . EpisodeAsset::table_name() . " a ON a.id = f.episode_asset_id
-					JOIN " . FileType::table_name() . " ft ON ft.id = a.file_type_id
+					'.Feed::table_name().' f
+					JOIN '.EpisodeAsset::table_name().' a ON a.id = f.episode_asset_id
+					JOIN '.FileType::table_name()." ft ON ft.id = a.file_type_id
 				WHERE
-					f.slug IS NOT NULL $discoverable_condition
+					f.slug IS NOT NULL {$discoverable_condition}
 				ORDER BY
 					position ASC
 			";
@@ -266,7 +230,7 @@ class Podcast implements Licensable
     }
 
     /**
-     * Episodes
+     * Episodes.
      *
      * Filter and order episodes with parameters:
      *
@@ -286,6 +250,8 @@ class Podcast implements Licensable
      *   - 'title' - Order by title.
      *   - 'slug' - Order by episode slug.
      *     - 'limit' - Limit the number of returned episodes.
+     *
+     * @param mixed $args
      */
     public function episodes($args = [])
     {
@@ -303,72 +269,74 @@ class Podcast implements Licensable
 
             // eager load posts, which fills WP object cache, avoiding n+1 performance issues
             $posts = get_posts([
-                'post_type'      => 'podcast',
+                'post_type' => 'podcast',
                 'posts_per_page' => '-1',
             ]);
 
             // build conditions
-            $where = "1 = 1";
-            $joins = "";
+            $where = '1 = 1';
+            $joins = '';
             if (isset($args['post_ids'])) {
                 $ids = array_filter( // remove "0"-IDs
                     array_map( // convert elements to integers
-                        function ($n) {return (int) trim($n);},
+                        function ($n) {
+                            return (int) trim($n);
+                        },
                         $args['post_ids']
                     )
                 );
 
                 if (count($ids)) {
-                    $where .= " AND p.ID IN (" . implode(",", $ids) . ")";
+                    $where .= ' AND p.ID IN ('.implode(',', $ids).')';
                 }
-
             }
 
             if (isset($args['slugs'])) {
                 $slugs = array_filter( // remove empty slugs
                     array_map( // trim
-                        function ($n) {return "'" . trim($n) . "'";},
+                        function ($n) {
+                            return "'".trim($n)."'";
+                        },
                         $args['slugs']
                     )
                 );
 
                 if (count($slugs)) {
-                    $where .= " AND e.slug IN (" . implode(",", $slugs) . ")";
+                    $where .= ' AND e.slug IN ('.implode(',', $slugs).')';
                 }
-
             }
 
             if (isset($args['post_status']) && in_array($args['post_status'], get_post_stati())) {
-                $where .= " AND p.post_status = '" . $args['post_status'] . "'";
+                $where .= " AND p.post_status = '".$args['post_status']."'";
             } else {
                 $where .= " AND p.post_status = 'publish'";
             }
 
             if (isset($args['category']) && strlen($args['category'])) {
                 $joins .= '
-					JOIN ' . $wpdb->term_relationships . ' tr ON p.ID = tr.object_id
-					JOIN ' . $wpdb->term_taxonomy . ' tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = "category"
-					JOIN ' . $wpdb->terms . ' t ON t.term_id = tt.term_id AND t.slug = ' . $wpdb->prepare('%s', $args['category']) . '
+					JOIN '.$wpdb->term_relationships.' tr ON p.ID = tr.object_id
+					JOIN '.$wpdb->term_taxonomy.' tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = "category"
+					JOIN '.$wpdb->terms.' t ON t.term_id = tt.term_id AND t.slug = '.$wpdb->prepare('%s', $args['category']).'
 				';
             }
 
             if (isset($args['show']) && strlen($args['show'])) {
                 $joins .= '
-					JOIN ' . $wpdb->term_relationships . ' tr_show ON p.ID = tr_show.object_id
-					JOIN ' . $wpdb->term_taxonomy . ' tt_show ON tt_show.term_taxonomy_id = tr_show.term_taxonomy_id AND tt_show.taxonomy = "shows"
-					JOIN ' . $wpdb->terms . ' t_show ON t_show.term_id = tt_show.term_id AND t_show.slug = ' . $wpdb->prepare('%s', $args['show']) . '
+					JOIN '.$wpdb->term_relationships.' tr_show ON p.ID = tr_show.object_id
+					JOIN '.$wpdb->term_taxonomy.' tt_show ON tt_show.term_taxonomy_id = tr_show.term_taxonomy_id AND tt_show.taxonomy = "shows"
+					JOIN '.$wpdb->terms.' t_show ON t_show.term_id = tt_show.term_id AND t_show.slug = '.$wpdb->prepare('%s', $args['show']).'
 				';
             }
 
             // order
-            $order_map = array(
+            $order_map = [
                 'publicationDate' => 'p.post_date',
-                'recordingDate'   => 'e.recording_date',
-                'slug'            => 'e.slug',
-                'title'           => 'p.post_title',
-            );
+                'recordingDate' => 'e.recording_date',
+                'slug' => 'e.slug',
+                'title' => 'p.post_title',
+            ];
 
-            if (isset($args['orderby']) && isset($order_map[$args['orderby']])) {
+            if (isset($args['orderby'], $order_map[$args['orderby']])) {
                 $orderby = $order_map[$args['orderby']];
             } else {
                 $orderby = $order_map['publicationDate'];
@@ -376,7 +344,7 @@ class Podcast implements Licensable
 
             if (isset($args['order'])) {
                 $args['order'] = strtoupper($args['order']);
-                if (in_array($args['order'], array('ASC', 'DESC'))) {
+                if (in_array($args['order'], ['ASC', 'DESC'])) {
                     $order = $args['order'];
                 } else {
                     $order = 'DESC';
@@ -386,7 +354,7 @@ class Podcast implements Licensable
             }
 
             if (isset($args['limit'])) {
-                $limit = ' LIMIT ' . (int) $args['limit'];
+                $limit = ' LIMIT '.(int) $args['limit'];
             } else {
                 $limit = '';
             }
@@ -395,27 +363,27 @@ class Podcast implements Licensable
 				SELECT
 					e.*
 				FROM
-					' . Episode::table_name() . ' e
-					INNER JOIN ' . $wpdb->posts . ' p ON e.post_id = p.ID
-					' . $joins . '
+					'.Episode::table_name().' e
+					INNER JOIN '.$wpdb->posts.' p ON e.post_id = p.ID
+					'.$joins.'
 				WHERE
-					' . $where . '
+					'.$where.'
 					AND p.post_type = "podcast"
-				ORDER BY ' . $orderby . ' ' . $order .
+				ORDER BY '.$orderby.' '.$order.
                 $limit;
 
             $rows = $wpdb->get_results($sql);
 
             if (!$rows) {
-                return array();
+                return [];
             }
 
-            $episodes = array();
+            $episodes = [];
             foreach ($rows as $row) {
                 $episode = new Episode();
                 $episode->flag_as_not_new();
                 foreach ($row as $property => $value) {
-                    $episode->$property = $value;
+                    $episode->{$property} = $value;
                 }
                 $episodes[] = $episode;
             }
@@ -424,6 +392,44 @@ class Podcast implements Licensable
             return array_filter($episodes, function ($e) {
                 return $e->is_valid();
             });
+        });
+    }
+
+    private function set_property($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
+
+    private function get_property($name)
+    {
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    /**
+     * Return a list of property dictionaries.
+     *
+     * @return array property list
+     */
+    private function properties()
+    {
+        if (!isset(self::$properties)) {
+            self::$properties = [];
+        }
+
+        return self::$properties;
+    }
+
+    /**
+     * Load podcast data.
+     */
+    private function fetch()
+    {
+        $this->data = $this->with_blog_scope(function () {
+            return get_option('podlove_podcast', []);
         });
     }
 }

@@ -5,57 +5,65 @@ add_action('admin_init', 'podlove_maybe_redirect_to_about_page', 20); // run aft
 
 /**
  * Redirects to about page once.
- * 
- * To reset before a major/minor release, 
+ *
+ * To reset before a major/minor release,
  * add `delete_site_option("podlove_seen_about")` as a migration.
  */
-function podlove_maybe_redirect_to_about_page() {
-	
-	if (!podlove_should_see_about_page())
-		return;
+function podlove_maybe_redirect_to_about_page()
+{
+    if (!podlove_should_see_about_page()) {
+        return;
+    }
 
-	// show only once per upgrade and network
-	update_site_option('podlove_seen_about', true);
+    // show only once per upgrade and network
+    update_site_option('podlove_seen_about', true);
 
-	wp_safe_redirect( admin_url( 'admin.php?page=podlove_settings_handle&about' ) );
+    wp_safe_redirect(admin_url('admin.php?page=podlove_settings_handle&about'));
 }
 
-function podlove_should_see_about_page() {
-	global $pagenow;
+function podlove_should_see_about_page()
+{
+    global $pagenow;
 
-	if (!current_user_can('manage_options'))
-		return false;
+    if (!current_user_can('manage_options')) {
+        return false;
+    }
 
-	if (in_array($pagenow, ['update.php', 'update-core.php', 'plugins.php', 'plugin-install.php']))
-		return false;
+    if (in_array($pagenow, ['update.php', 'update-core.php', 'plugins.php', 'plugin-install.php'])) {
+        return false;
+    }
 
-	if (get_site_option('podlove_seen_about'))
-		return false;
+    if (get_site_option('podlove_seen_about')) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
-function podlove_about_page_init() {
+function podlove_about_page_init()
+{
+    if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_handle') {
+        return;
+    }
 
-	if (filter_input(INPUT_GET, 'page') !== 'podlove_settings_handle')
-		return;
+    if (!isset($_GET['about'])) {
+        return;
+    }
 
-	if (!isset($_GET['about']))
-		return;
+    // hide all admin notices
+    add_action('admin_notices', function () {
+        remove_all_actions('admin_notices');
+    }, -1);
 
-	// hide all admin notices
-	add_action('admin_notices', function() {
-		remove_all_actions('admin_notices');
-	}, -1);
+    add_filter('podlove_dashboard_page', 'podlove_about_page');
 
-	add_filter('podlove_dashboard_page', 'podlove_about_page');
-
-	wp_register_style('podlove-about', \Podlove\PLUGIN_URL . '/css/about.css', [], \Podlove\get_plugin_header('Version'));
+    wp_register_style('podlove-about', \Podlove\PLUGIN_URL.'/css/about.css', [], \Podlove\get_plugin_header('Version'));
     wp_enqueue_style('podlove-about');
 }
 
-function podlove_about_page($_) {
-	?>
+function podlove_about_page($_)
+{
+    ?>
 
 <div class="wrap podlove-about-wrap">
 	
@@ -64,19 +72,19 @@ function podlove_about_page($_) {
 	</h1>
 
 	<div class="about-text">
-		<?php printf( __( 'Thank you for updating! This version focuses on podcasting in WordPress Multisite environments.', 'podlove-podcasting-plugin-for-wordpress' ) ); ?>
+		<?php printf(__('Thank you for updating! This version focuses on podcasting in WordPress Multisite environments.', 'podlove-podcasting-plugin-for-wordpress')); ?>
 	</div>
 
 	<div class="podlove-badge"></div>
 
 	<h2 class="nav-tab-wrapper">
 		<a href="#" class="nav-tab nav-tab-active">
-			<?php _e( 'What&#8217;s New', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+			<?php _e('What&#8217;s New', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		</a>
 	</h2>
 
 	<div class="changelog headline-feature">
-		<h2><?php _e( 'Networks: WordPress Multisite Support is Here', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
+		<h2><?php _e('Networks: WordPress Multisite Support is Here', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 		
 		<!-- <div class="featured-image">
 			<img src="//s.w.org/images/core/4.1/theme.png?0" />
@@ -84,7 +92,7 @@ function podlove_about_page($_) {
 
 		<div class="feature-section top-feature">
 
-			<img src="<?php echo \Podlove\PLUGIN_URL . '/images/about/network.png' ?>" style="width: 50%; margin-left: 25%; margin-top: 1em" />
+			<img src="<?php echo \Podlove\PLUGIN_URL.'/images/about/network.png'; ?>" style="width: 50%; margin-left: 25%; margin-top: 1em" />
 
 			<h3>
 				Podlove Publisher joins the networks section.<br>
@@ -131,7 +139,7 @@ function podlove_about_page($_) {
 				</p>
 			</div>
 			<div class="col">
-				<img style="padding-top: 60px;" src="<?php echo \Podlove\PLUGIN_URL . '/images/about/home.png' ?>" />
+				<img style="padding-top: 60px;" src="<?php echo \Podlove\PLUGIN_URL.'/images/about/home.png'; ?>" />
 			</div>
 		</div>
 	</div>
@@ -178,9 +186,8 @@ function podlove_about_page($_) {
 
 	<div class="return-to-dashboard">
 	
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=podlove_settings_handle' ) ); ?>"><?php
-			_e( 'Go to Podlove Dashboard &rarr;' );
-		?></a>
+		<a href="<?php echo esc_url(admin_url('admin.php?page=podlove_settings_handle')); ?>"><?php
+            _e('Go to Podlove Dashboard &rarr;'); ?></a>
 	</div>
 
 </div>
@@ -190,5 +197,5 @@ function podlove_about_page($_) {
 </style>
 
 	<?php
-	return true;
+    return true;
 }

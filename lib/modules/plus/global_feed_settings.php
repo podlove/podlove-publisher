@@ -1,8 +1,9 @@
 <?php
+
 namespace Podlove\Modules\Plus;
 
 /**
- * Global Feed Settings
+ * Global Feed Settings.
  *
  * Render and manage settings card on global feeds page.
  */
@@ -14,7 +15,7 @@ class GlobalFeedSettings
     public function __construct($module, $api)
     {
         $this->module = $module;
-        $this->api    = $api;
+        $this->api = $api;
     }
 
     public function init()
@@ -23,8 +24,8 @@ class GlobalFeedSettings
         add_action('podlove_feed_settings_proxy', [$this, 'single_feed_proxy_setting'], 10, 2);
         add_filter('podlove_feed_table_url', [$this, 'podlove_feed_table_url'], 10, 2);
 
-        if (isset($_REQUEST["page"]) && $_REQUEST["page"] == "podlove_feeds_settings_handle" && isset($_REQUEST["update_plus_settings"]) && $_REQUEST["update_plus_settings"] == "true") {
-            add_action('admin_bar_init', array($this, 'save_global_plus_feed_setting'));
+        if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_feeds_settings_handle' && isset($_REQUEST['update_plus_settings']) && $_REQUEST['update_plus_settings'] == 'true') {
+            add_action('admin_bar_init', [$this, 'save_global_plus_feed_setting']);
         }
     }
 
@@ -33,7 +34,7 @@ class GlobalFeedSettings
         $podcast_settings = get_option('podlove_podcast', []);
 
         if (isset($_REQUEST['podlove_podcast'])) {
-            $podcast_settings['plus_enable_proxy'] = $_REQUEST['podlove_podcast']['plus_enable_proxy'] == "on";
+            $podcast_settings['plus_enable_proxy'] = $_REQUEST['podlove_podcast']['plus_enable_proxy'] == 'on';
         } else {
             $podcast_settings['plus_enable_proxy'] = false;
         }
@@ -42,18 +43,19 @@ class GlobalFeedSettings
 
         do_action('podlove_plus_enable_proxy_changed', $podcast_settings['plus_enable_proxy']);
 
-        header('Location: ' . get_site_url() . '/wp-admin/admin.php?page=podlove_feeds_settings_handle');
+        header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_feeds_settings_handle');
     }
 
     public function podlove_feed_table_url($link, $feed)
     {
         $proxy_url = FeedProxy::get_proxy_url($feed->get_subscribe_url());
-        $link .= "<br><span title=\"redirects to\">&#8618;</span>&nbsp;";
+        $link .= '<br><span title="redirects to">&#8618;</span>&nbsp;';
         if ($proxy_url) {
             $link .= "<a target=\"_blank\" href=\"{$proxy_url}\">{$proxy_url}</a>";
         } else {
-            $link .= "error: unknown redirect URL";
+            $link .= 'error: unknown redirect URL';
         }
+
         return $link;
     }
 
@@ -62,10 +64,10 @@ class GlobalFeedSettings
         $proxy_url = FeedProxy::get_proxy_url($feed->get_subscribe_url());
 
         $wrapper->callback('plus_redirect_info', [
-            'label'    => __('PLUS Proxy', 'podlove-podcasting-plugin-for-wordpress'),
+            'label' => __('PLUS Proxy', 'podlove-podcasting-plugin-for-wordpress'),
             'callback' => function () use ($proxy_url) {
                 echo '<p>';
-                echo '<a target="_blank" href="' . esc_attr($proxy_url) . '">' . $proxy_url . '</a>';
+                echo '<a target="_blank" href="'.esc_attr($proxy_url).'">'.$proxy_url.'</a>';
                 echo '</p>';
                 echo '<p class="description">';
                 echo __('You are using Publisher PLUS, which automatically configures the proxy settings for you.', 'podlove-podcasting-plugin-for-wordpress');
@@ -85,10 +87,10 @@ class GlobalFeedSettings
 
         $podcast = \Podlove\Model\Podcast::get();
 
-        $form_attributes = array(
+        $form_attributes = [
             'context' => 'podlove_podcast',
-            'form'    => false,
-        );
+            'form' => false,
+        ];
 
         \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
@@ -97,15 +99,13 @@ class GlobalFeedSettings
             $wrapper->subheader(__('Feed Proxy | Publisher Plus', 'podlove-podcasting-plugin-for-wordpress'));
 
             $wrapper->checkbox('plus_enable_proxy', [
-                'label'       => __('Enable Feed Proxy', 'podlove-podcasting-plugin-for-wordpress'),
+                'label' => __('Enable Feed Proxy', 'podlove-podcasting-plugin-for-wordpress'),
                 'description' => __('When Feed Proxy is enabled, all feed requests are automatically redirected to the corresponding proxy feed URL. It can be disabled at any time without risk of losing subscribers because a temporary redirect (HTTP 307) is used.', 'podlove-podcasting-plugin-for-wordpress'),
-                'default'     => false,
+                'default' => false,
             ]);
-        });
-        ?>
+        }); ?>
 		</form>
 		</div>
     <?php
-
     }
 }

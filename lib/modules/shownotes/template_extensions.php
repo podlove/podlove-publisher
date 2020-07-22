@@ -2,13 +2,10 @@
 
 namespace Podlove\Modules\Shownotes;
 
-use \Podlove\Modules\Shownotes\Model;
-use \Podlove\Modules\Shownotes\Template;
-
 class TemplateExtensions
 {
     /**
-     * Episode Shownotes (Beta Release only)
+     * Episode Shownotes (Beta Release only).
      *
      * **Examples**
      *
@@ -54,13 +51,17 @@ class TemplateExtensions
      *
      * @accessor
      * @dynamicAccessor episode.shownotes
+     *
+     * @param mixed $return
+     * @param mixed $method_name
+     * @param mixed $post
+     * @param mixed $args
      */
     public static function accessorEpisodeShownotes($return, $method_name, \Podlove\Model\Episode $episode, $post, $args = [])
     {
         return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $post, $args) {
-
             $defaults = [
-                "groupby" => false,
+                'groupby' => false,
             ];
             $args = wp_parse_args($args, $defaults);
 
@@ -73,9 +74,9 @@ class TemplateExtensions
             // discard entries with failed state, unless a url was entered manually
             // ensure it's not hidden
             $entries = array_filter($entries, function ($e) {
-                $unfurl_failed  = $e->state == 'failed';
+                $unfurl_failed = $e->state == 'failed';
                 $has_manual_url = strlen($e->url) > 0;
-                $is_hidden      = $e->hidden;
+                $is_hidden = $e->hidden;
 
                 return !$e->hidden && (!$unfurl_failed || $has_manual_url);
             });
@@ -88,23 +89,21 @@ class TemplateExtensions
                 return ($a->position < $b->position) ? -1 : 1;
             });
 
-            if ($args["groupby"] == "topic") {
+            if ($args['groupby'] == 'topic') {
                 $tmp = array_reduce($entries, function ($agg, $item) {
                     $item = apply_filters('podlove_shownotes_entry', $item);
 
-                    if ($item->type == "topic") {
-
+                    if ($item->type == 'topic') {
                         $agg['result'][] = [
-                            'title'   => $item->title,
+                            'title' => $item->title,
                             'entries' => [],
                         ];
 
                         $agg['topic_index'] = count($agg['result']) - 1;
                     } else {
-
                         if ($agg['topic_index'] == null) {
                             $agg['result'][] = [
-                                'title'   => '',
+                                'title' => '',
                                 'entries' => [],
                             ];
                             $agg['topic_index'] = count($agg['result']) - 1;
@@ -117,12 +116,13 @@ class TemplateExtensions
                 }, ['result' => [], 'topic_index' => null]);
 
                 return $tmp['result'];
-            } else {
-                return array_map(function ($entry) {
-                    $entry = apply_filters('podlove_shownotes_entry', $entry);
-                    return new Template\Entry($entry);
-                }, $entries);
             }
+
+            return array_map(function ($entry) {
+                $entry = apply_filters('podlove_shownotes_entry', $entry);
+
+                return new Template\Entry($entry);
+            }, $entries);
         });
     }
 
@@ -141,6 +141,9 @@ class TemplateExtensions
      *
      * @accessor
      * @dynamicAccessor episode.hasShownotes
+     *
+     * @param mixed $return
+     * @param mixed $method_name
      */
     public static function accessorEpisodeHasShownotes($return, $method_name, \Podlove\Model\Episode $episode)
     {

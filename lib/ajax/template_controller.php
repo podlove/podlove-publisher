@@ -1,109 +1,111 @@
 <?php
+
 namespace Podlove\AJAX;
 
-use Podlove\Model\Template;
 use Podlove\Cache\TemplateCache;
+use Podlove\Model\Template;
 
-class TemplateController {
+class TemplateController
+{
+    public static function init()
+    {
+        $actions = [
+            'get', 'update', 'create', 'delete',
+        ];
 
-	public static function init() {
+        foreach ($actions as $action) {
+            if (is_network_admin()) {
+                // No need to deactivate the scope because the script dies
+                // after the main action anyway.
+                add_action('wp_ajax_podlove-template-'.$action, [__CLASS__, 'activate_network_scope'], 9);
+            }
 
-		$actions = array(
-			'get', 'update', 'create', 'delete'
-		);
+            add_action('wp_ajax_podlove-template-'.$action, [__CLASS__, str_replace('-', '_', $action)]);
+        }
+    }
 
-		foreach ( $actions as $action ) {
-			
-			if (is_network_admin()) {
-				// No need to deactivate the scope because the script dies
-				// after the main action anyway.
-				add_action( 'wp_ajax_podlove-template-' . $action, [ __CLASS__, 'activate_network_scope'], 9 );
-			}
+    public static function activate_network_scope()
+    {
+        Template::activate_network_scope();
+    }
 
-			add_action( 'wp_ajax_podlove-template-' . $action, array( __CLASS__, str_replace( '-', '_', $action ) ) );
-		}
-	}
+    public static function get()
+    {
+        if (!current_user_can('administrator')) {
+            Ajax::respond_with_json(['success' => false]);
+        }
 
-	public static function activate_network_scope() {
-		Template::activate_network_scope();
-	}
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-	public static function get() {
+        if ($template = Template::find_by_id($id)) {
+            $response = [
+                'id' => $template->id,
+                'title' => $template->title,
+                'content' => $template->content,
+            ];
+        } else {
+            $response = [];
+        }
 
-		if ( ! current_user_can( 'administrator' ) ) {
-			Ajax::respond_with_json(array("success" => false));
-		}
+        Ajax::respond_with_json($response);
+    }
 
-		$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    public static function update()
+    {
+        if (!current_user_can('administrator')) {
+            Ajax::respond_with_json(['success' => false]);
+        }
 
-		if ($template = Template::find_by_id($id)) {
-			$response = [
-				'id'      => $template->id,
-				'title'   => $template->title,
-				'content' => $template->content,
-			];
-		} else {
-			$response = [];
-		}
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $title = filter_input(INPUT_POST, 'title');
+        $content = filter_input(INPUT_POST, 'content');
 
-		Ajax::respond_with_json($response);
-	}
+        if (!$id || !$title) {
+            Ajax::respond_with_json(['success' => false]);
+        }
 
-	public static function update() {
+        $template = Template::find_by_id($id);
+        $template->title = $title;
+        $template->content = $content;
+        $template->save();
 
-		if ( ! current_user_can( 'administrator' ) ) {
-			Ajax::respond_with_json(array("success" => false));
-		}
+        if (is_network_admin()) {
+            TemplateCache::get_instance()->setup_purge_in_all_blogs();
+            TemplateCache::get_instance()->purge();
+        } else {
+            TemplateCache::get_instance()->purge();
+        }
 
-		$id      = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-		$title   = filter_input(INPUT_POST, 'title');
-		$content = filter_input(INPUT_POST, 'content');
+        Ajax::respond_with_json(['success' => true]);
+    }
 
-		if (!$id || !$title)
-			Ajax::respond_with_json(array("success" => false));
+    public static function create()
+    {
+        if (!current_user_can('administrator')) {
+            Ajax::respond_with_json(['success' => false]);
+        }
 
-		$template = Template::find_by_id($id);
-		$template->title = $title;
-		$template->content = $content;
-		$template->save();
+        $template = new Template();
+        $template->title = 'new template';
+        $template->save();
 
-		if (is_network_admin()) {
-			TemplateCache::get_instance()->setup_purge_in_all_blogs();
-			TemplateCache::get_instance()->purge();
-		} else {
-			TemplateCache::get_instance()->purge();
-		}
+        Ajax::respond_with_json(['id' => $template->id]);
+    }
 
-		Ajax::respond_with_json(array("success" => true));
-	}
+    public static function delete()
+    {
+        if (!current_user_can('administrator')) {
+            Ajax::respond_with_json(['success' => false]);
+        }
 
-	public static function create() {
-		
-		if ( ! current_user_can( 'administrator' ) ) {
-			Ajax::respond_with_json(array("success" => false));
-		}
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $template = Template::find_by_id($id);
 
-		$template = new Template;
-		$template->title = "new template";
-		$template->save();
-
-		Ajax::respond_with_json(array("id" => $template->id));
-	}
-
-	public static function delete() {
-		
-		if ( ! current_user_can( 'administrator' ) ) {
-			Ajax::respond_with_json(array("success" => false));
-		}
-
-		$id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-		$template = Template::find_by_id($id);
-
-		if (!$id || !$template) {
-			Ajax::respond_with_json(array("success" => false));
-		} else {
-			$template->delete();
-			Ajax::respond_with_json(array("success" => true));
-		}
-	}
+        if (!$id || !$template) {
+            Ajax::respond_with_json(['success' => false]);
+        } else {
+            $template->delete();
+            Ajax::respond_with_json(['success' => true]);
+        }
+    }
 }
