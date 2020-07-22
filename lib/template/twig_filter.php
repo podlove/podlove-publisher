@@ -68,10 +68,10 @@ class TwigFilter {
 		if ($twig->getLoader()->exists($html)) {
 			try {
 				$result = $twig->render($html, $context);
-			} catch (\Twig_Error $e) {
+			} catch (\Twig\Error\Error $e) {
 				$message  = $e->getRawMessage();
 				$line     = $e->getTemplateLine();
-				$template = $e->getTemplateFile();
+				$template = $e->getSourceContext();
 
 				\Podlove\Log::get()->addError($message, [
 					'type'     => 'twig',
