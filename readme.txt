@@ -136,6 +136,12 @@ The module is currently hidden. Make it visible by setting a PHP constant, for e
 
 Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52372dc2da2f1734a5f54c7918
 
+**Shortcodes**
+
+* `podlove-episode-contributor-list`
+  * new design
+  * renders text-only in RSS feed
+
 **Miscellaneous**
 
 * expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
