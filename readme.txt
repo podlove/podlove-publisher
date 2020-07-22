@@ -158,6 +158,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
 * fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
 * fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
+* fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
 * update dependencies
 * build releases with GitHub Actions (in favor of TravisCI)
 

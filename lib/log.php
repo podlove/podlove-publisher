@@ -54,7 +54,7 @@ class Log {
 	}
 
 	public function is_debug_enabled() {
-		return defined('WP_DEBUG') && WP_DEBUG || defined('PODLOVE_LOGGER_DEBUG') && PODLOVE_LOGGER_DEBUG;
+		return defined('PODLOVE_LOGGER_DEBUG') && PODLOVE_LOGGER_DEBUG;
 	}
 
 	/**
