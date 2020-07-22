@@ -169,6 +169,7 @@ function podlove_setup_default_asset_assignments() {
 
 	if (!$assignment->image) {
 		$assignment->image = 'post-thumbnail';
+		$assignment->chapters = 'manual';
 		$assignment->save();
 	}
 
