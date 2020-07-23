@@ -53,6 +53,14 @@ class Transcripts extends \Podlove\Modules\Base
         );
 
         add_action('rest_api_init', [$this, 'api_init']);
+        add_action('admin_notices', [$this, 'check_contributors_active']);
+    }
+
+    public function check_contributors_active()
+    {
+        if (!\Podlove\Modules\Base::is_active('contributors')) {
+            $this->print_admin_notice();
+        }
     }
 
     public function api_init()
@@ -422,5 +430,17 @@ class Transcripts extends \Podlove\Modules\Base
         }
 
         $this->transcript_import_from_asset($media_file->episode());
+    }
+
+    private function print_admin_notice()
+    {
+        ?>
+      <div class="update-message notice notice-warning notice-alt">
+        <p>
+          <?php echo __('You need to activate the "Contributors" module to use transcripts.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+           <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle#contributors'); ?>"><?php echo __('Activate Now', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+        </p>
+      </div>
+      <?php
     }
 }

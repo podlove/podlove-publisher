@@ -161,6 +161,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
 * fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
 * fix: ensure uploads for webvtt (transcripts) and gz (exports) are allowed
+* fix: ensure contributors module is active when transcripts are used
 * update dependencies
 * build releases with GitHub Actions (in favor of TravisCI)
 
