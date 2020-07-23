@@ -38,6 +38,7 @@
 				if (isMarked) {
 					isMarked = false;
 					$navigationItem.find(".unsaved").remove();
+					$preview.val('[podlove-template template="' + this.title + '"]');
 				}
 			};
 
