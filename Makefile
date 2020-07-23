@@ -1,6 +1,12 @@
 player_src = bower_components/podlove-web-player/dist
 player_dst = lib/modules/podlove_web_player/player_v3
 
+prepareTest:
+	bash bin/install-wp-tests.sh wordpress_test root '' localhost latest
+
+test:
+	./vendor/bin/phpunit -c phpunit.xml
+
 release:
 	bin/release.sh
 
