@@ -165,7 +165,7 @@ function podlove_setup_default_media()
     $feed->slug = 'mp3';
     $feed->enable = 1;
     $feed->discoverable = 1;
-    $feed->limit_items = Model\Feed::ITEMS_WP_LIMIT;
+    $feed->limit_items = Model\Feed::ITEMS_GLOBAL_LIMIT;
     $feed->embed_content_encoded = 1;
     $feed->save();
 }
