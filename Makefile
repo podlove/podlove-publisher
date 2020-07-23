@@ -11,10 +11,10 @@ release:
 	bin/release.sh
 
 format:
-  php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style"
+	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style"
 
 validateFormat:
-  php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style" -v --dry-run --stop-on-violation --using-cache=no
+	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style" -v --dry-run --stop-on-violation --using-cache=no
 
 update_subscribe_button:
 	rm -rf .tmppsb
