@@ -123,7 +123,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 => [plus.podlove.org](https://plus.podlove.org/)
 
-Publisher PLUS is a new service prividing Feed Proxy and Podcast Subscriber statistics for Podlove Publisher.
+Publisher PLUS is a new service providing Feed Proxy and Podcast Subscriber statistics for Podlove Publisher.
 
 To use it, enable the *Publisher PLUS* module, then visit [plus.podlove.org](https://plus.podlove.org/) to create an account.
 
@@ -163,7 +163,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * fix: ensure uploads for webvtt (transcripts) and gz (exports) are allowed
 * fix: ensure contributors module is active when transcripts are used
 * update dependencies
-* build releases with GitHub Actions (in favor of TravisCI)
+* build releases with GitHub Actions (in favour of TravisCI)
 
 ----
 
