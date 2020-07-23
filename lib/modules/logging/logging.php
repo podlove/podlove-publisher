@@ -244,7 +244,7 @@ $(document).ready(function() {
             echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
         }
         if (isset($data->type) && $data->type == 'twig') {
-            echo sprintf('in template "%s" line %d', $data->template, $data->line);
+            echo sprintf('in template "%s" line %d', print_r($data->template, true), $data->line);
         }
 
         $data = (array) $data;
