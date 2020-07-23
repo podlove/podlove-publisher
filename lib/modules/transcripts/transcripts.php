@@ -117,6 +117,33 @@ class Transcripts extends \Podlove\Modules\Base
             wp_die();
         }
 
+        // allow vtt uploads
+        add_filter('mime_types', function ($mimes) {
+            $mimes['vtt'] = 'text/vtt';
+            $mimes['webvtt'] = 'text/vtt';
+
+            return $mimes;
+        });
+
+        add_filter('upload_mimes', function ($mimes_types) {
+            $mimes_types['vtt'] = 'text/vtt';
+            $mimes_types['webvtt'] = 'text/vtt';
+
+            return $mimes_types;
+        }, 99);
+
+        add_filter('wp_check_filetype_and_ext', function ($types, $file, $filename, $mimes) {
+            $wp_filetype = wp_check_filetype($filename, $mimes);
+            $ext = $wp_filetype['ext'];
+            $type = $wp_filetype['type'];
+            if (in_array($ext, ['vtt', 'webvtt'])) {
+                $types['ext'] = $ext;
+                $types['type'] = $type;
+            }
+
+            return $types;
+        }, 99, 4);
+
         // todo: I don't really want it permanently uploaded, so ... delete when done
         $file = wp_handle_upload($_FILES['transcript'], ['test_form' => false]);
 
