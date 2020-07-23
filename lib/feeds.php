@@ -41,7 +41,6 @@ function handle_feed_proxy_redirects()
 
     header('Content-Type: application/rss+xml; charset='.get_option('blog_charset'), true);
 
-    maybe_redirect_to_forced_protocol();
     maybe_redirect_to_canonical_url();
 
     $redirect_url = $feed->get_redirect_url();
@@ -132,30 +131,6 @@ function get_feed()
     }
 
     return Model\Feed::find_one_by_slug($feed_slug);
-}
-
-/**
- * Maybe redirect to forced protocol.
- *
- * If protocol enforcement is configured and protocols don't match, redirect.
- */
-function maybe_redirect_to_forced_protocol()
-{
-    if (!$feed = get_feed()) {
-        return;
-    }
-
-    if (feed_should_be_http() && is_ssl()) {
-        wp_redirect(get_canonical_feed_url(), 301);
-        exit;
-    }
-}
-
-function feed_should_be_http()
-{
-    $force_protocol = \Podlove\get_setting('website', 'feeds_force_protocol');
-
-    return in_array($force_protocol, ['http_feeds', 'http']);
 }
 
 /**

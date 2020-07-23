@@ -303,22 +303,6 @@ class Website extends Tab
             'podlove_settings_feeds'
         );
 
-        add_settings_field(
-            // $id
-            'podlove_setting_feeds_force_protocol',
-            // $title
-            sprintf(
-                '<label for="feeds_force_protocol">%s</label>',
-                __('Website Protocol', 'podlove-podcasting-plugin-for-wordpress')
-            ),
-            // $callback
-            [$this, 'feeds_force_protocol'],
-            // $page
-            Settings::$pagehook,
-            // $section
-            'podlove_settings_feeds'
-        );
-
         register_setting(Settings::$pagehook, 'podlove_website', function ($options) {
             /**
              * handle checkboxes.
@@ -375,53 +359,5 @@ class Website extends Tab
 
             return $options;
         });
-    }
-
-    public function feeds_force_protocol()
-    {
-        $this->feeds_force_protocol_setting();
-        $this->feeds_force_protocol_issues();
-    }
-
-    private function feeds_force_protocol_setting()
-    {
-        $options = [
-            'default' => __('Hands Off (leave everything as configured by WordPress)', 'podlove-podcasting-plugin-for-wordpress'),
-            'http' => __('1 - Website is delivered via http (including podcast feeds)', 'podlove-podcasting-plugin-for-wordpress'),
-            'https' => __('2 - Website is delivered via https (including podcast feeds)', 'podlove-podcasting-plugin-for-wordpress'),
-            'http_feeds' => __('3 - Website is delivered via https (excluding podcast feeds which will be delivered via http)', 'podlove-podcasting-plugin-for-wordpress'),
-        ];
-
-        \Podlove\load_template('expert_settings/website/feeds_force_protocol', compact('options'));
-    }
-
-    private function feeds_force_protocol_issues()
-    {
-        $force = \Podlove\get_setting('website', 'feeds_force_protocol');
-
-        $home_url = parse_url(\get_option('home'));
-        $site_url = parse_url(\get_option('siteurl'));
-
-        $issues = [];
-
-        if ($force == 'http') {
-            // todo: explain where home/site url are set
-            if ($home_url['scheme'] !== 'http') {
-                $issues[] = sprintf(__('You claim your website is all http but your WordPress Address (home url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
-            }
-            if ($site_url['scheme'] !== 'http') {
-                $issues[] = sprintf(__('You claim your website is all http but your Site Address (site url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
-            }
-        } elseif ($force == 'https' || $force == 'http_feeds') {
-            // todo: explain where home/site url are set
-            if ($home_url['scheme'] !== 'https') {
-                $issues[] = sprintf(__('You claim your website is all https but your WordPress Address (home url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
-            }
-            if ($site_url['scheme'] !== 'https') {
-                $issues[] = sprintf(__('You claim your website is all https but your Site Address (site url) scheme is %s', 'podlove-podcasting-plugin-for-wordpress'), $home_url['scheme']);
-            }
-        }
-
-        \Podlove\load_template('expert_settings/website/feeds_force_protocol_issues', compact('issues'));
     }
 }

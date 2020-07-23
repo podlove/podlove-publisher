@@ -114,7 +114,6 @@ function get_setting($namespace, $name)
             'ssl_verify_peer' => 'on',
             'landing_page' => 'homepage',
             'feeds_skip_redirect' => 'off',
-            'feeds_force_protocol' => 'default',
             'enable_generated_blog_post_title' => false,
             'blog_title_template' => '%mnemonic%%episode_number% %episode_title%',
             'episode_number_padding' => 3,

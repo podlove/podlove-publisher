@@ -153,6 +153,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 
 * remove Bitlove module (service does not exist any more)
 * remove Flattr module
+* remove "Website Protocol" setting (not necessary any more as Let's Encrypt is widely supported)
 * enable episode chapters by default
 * convenience: "Copy to Clipboard" function for Podlove Template shortcodes
 * expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
