@@ -71,3 +71,15 @@ build:
 	# player v2 / mediaelement
 	find dist -iname "echo-hereweare.*" | xargs rm -rf
 	find dist -iname "*.jar" | xargs rm -rf
+
+install:
+	rm -rf node_modules
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn
+	docker run --rm --interactive --tty --volume ${PWD}:/app composer install
+
+dev:
+	docker-compose -f .build/docker-compose.yaml up -d
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn dev 
+
+stop:
+	docker-compose -f .build/docker-compose.yaml down
