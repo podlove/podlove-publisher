@@ -22,6 +22,7 @@ class Transcripts extends \Podlove\Modules\Base
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
         add_action('wp_ajax_podlove_transcript_import', [$this, 'ajax_transcript_import']);
         add_action('wp_ajax_podlove_transcript_asset_import', [$this, 'ajax_transcript_asset_import']);
+        add_action('wp_ajax_podlove_transcript_delete', [$this, 'ajax_transcript_delete']);
         add_action('wp_ajax_podlove_transcript_get_contributors', [$this, 'ajax_transcript_get_contributors']);
         add_action('wp_ajax_podlove_transcript_get_voices', [$this, 'ajax_transcript_get_voices']);
 
@@ -201,6 +202,23 @@ class Transcripts extends \Podlove\Modules\Base
             }
         }
 
+        wp_die();
+    }
+
+    public function ajax_transcript_delete()
+    {
+        $post_id = intval($_GET['post_id'], 10);
+        $episode = Model\Episode::find_one_by_post_id($post_id);
+
+        if (!$episode) {
+            $error = 'Could not find episode for this post object.';
+            \Podlove\Log::get()->addError($error);
+            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
+        }
+
+        Transcript::delete_for_episode($episode->id);
+
+        echo 'ok';
         wp_die();
     }
 

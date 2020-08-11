@@ -158,6 +158,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * convenience: "Copy to Clipboard" function for Podlove Template shortcodes
 * expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
 * improve feed rendering: use XML generator for all tags with user input to guarantee valid feeds for all inputs 
+* add function to remove a transcript from an episode ([#1131](https://github.com/podlove/podlove-publisher/issues/1131))
 * fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
 * fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
 * fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
