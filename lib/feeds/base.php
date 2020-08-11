@@ -4,7 +4,7 @@ namespace Podlove\Feeds;
 
 use Podlove\Model;
 
-function the_description()
+function get_description()
 {
     global $post;
 
@@ -24,7 +24,7 @@ function the_description()
         $description = $title;
     }
 
-    echo apply_filters('podlove_feed_item_description', $description);
+    return apply_filters('podlove_feed_item_description', $description);
 }
 
 function override_feed_title($feed)
@@ -40,7 +40,7 @@ function override_feed_description($feed)
         $podcast = Model\Podcast::get();
         $desc = $podcast->subtitle ? $podcast->subtitle : $description;
 
-        return htmlspecialchars($desc);
+        return get_xml_cdata_text($desc);
     });
 }
 
@@ -68,16 +68,38 @@ function prepare_for_feed($content)
     return trim(htmlspecialchars($content));
 }
 
+function get_xml_text_node($tag_name, $content)
+{
+    $doc = new \DOMDocument();
+    $node = $doc->createElement($tag_name);
+    $text = $doc->createTextNode($content);
+    $node->appendChild($text);
+
+    return $doc->saveXML($node);
+}
+
+function get_xml_cdata_node($tag_name, $content)
+{
+    $doc = new \DOMDocument();
+    $node = $doc->createElement($tag_name);
+    $text = $doc->createCDATASection($content);
+    $node->appendChild($text);
+
+    return $doc->saveXML($node);
+}
+
+function get_xml_cdata_text($content)
+{
+    $doc = new \DOMDocument();
+    $text = $doc->createCDATASection($content);
+
+    return $doc->saveXML($text);
+}
+
 function override_feed_head($hook, $podcast, $feed, $format)
 {
     $filter_hooks = [
-        'podlove_feed_itunes_author',
         'podlove_feed_itunes_owner',
-        'podlove_feed_itunes_title',
-        'podlove_feed_itunes_subtitle',
-        'podlove_feed_itunes_summary',
-        'podlove_feed_itunes_complete',
-        'podlove_feed_itunes_explicit',
     ];
     foreach ($filter_hooks as $filter) {
         add_filter($filter, 'convert_chars');
@@ -146,11 +168,11 @@ function override_feed_head($hook, $podcast, $feed, $format)
         echo PHP_EOL;
 
         $type = in_array($podcast->itunes_type, ['episodic', 'serial']) ? $podcast->itunes_type : 'episodic';
-        $type = "\t".sprintf('<itunes:type>%s</itunes:type>', $type);
+        $type = "\t".get_xml_text_node('itunes:type', $type);
         echo apply_filters('podlove_feed_itunes_type', $type);
         echo PHP_EOL;
 
-        $summary = "\t".sprintf('<itunes:summary>%s</itunes:summary>', $podcast->summary);
+        $summary = "\t".get_xml_cdata_node('itunes:summary', $podcast->summary);
         echo apply_filters('podlove_feed_itunes_summary', $summary);
         echo PHP_EOL;
 
@@ -205,7 +227,7 @@ function override_feed_head($hook, $podcast, $feed, $format)
         echo "\t".apply_filters('podlove_feed_itunes_image', $coverimage);
         echo PHP_EOL;
 
-        $subtitle = sprintf('<itunes:subtitle>%s</itunes:subtitle>', $podcast->subtitle);
+        $subtitle = get_xml_text_node('itunes:subtitle', $podcast->subtitle);
         echo "\t".apply_filters('podlove_feed_itunes_subtitle', $subtitle);
         echo PHP_EOL;
 
@@ -280,16 +302,16 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_duration', $duration);
 
             $author = apply_filters('podlove_feed_content', $podcast->author_name);
-            $author = sprintf('<itunes:author>%s</itunes:author>', $author);
+            $author = get_xml_text_node('itunes:author', $author);
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_author', $author);
 
-            $subtitle = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes(strip_tags($episode->subtitle)));
-            $subtitle = sprintf('<itunes:subtitle>%s</itunes:subtitle>', $subtitle);
+            $subtitle = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes($episode->subtitle));
+            $subtitle = get_xml_text_node('itunes:subtitle', $subtitle);
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_subtitle', $subtitle);
 
             if ($episode->title) {
-                $title = apply_filters('podlove_feed_itunes_title', strip_tags($episode->title));
-                $title = sprintf('<itunes:title>%s</itunes:title>', $title);
+                $title = apply_filters('podlove_feed_itunes_title', $episode->title);
+                $title = get_xml_text_node('itunes:title', $title);
                 $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_title_xml', $title);
             }
 
@@ -304,9 +326,9 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             $type = sprintf('<itunes:episodeType>%s</itunes:episodeType>', $type);
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_type_xml', $type);
 
-            $summary = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes(strip_tags($episode->summary)));
+            $summary = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes($episode->summary));
             if (strlen($summary)) {
-                $summary = sprintf('<itunes:summary>%s</itunes:summary>', $summary);
+                $summary = get_xml_cdata_node('itunes:summary', $summary);
             }
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_summary', $summary);
 
@@ -327,7 +349,7 @@ function override_feed_entry($hook, $podcast, $feed, $format)
                 add_filter('the_content_feed', function ($content, $feed_type) {
                     return preg_replace('#<style(.*?)>(.*?)</style>#is', '', $content);
                 }, 10, 2);
-                $content_encoded = '<content:encoded><![CDATA['.get_the_content_feed('rss2').']]></content:encoded>';
+                $content_encoded = get_xml_cdata_node('content:encoded', get_the_content_feed('rss2'));
                 $xml .= $tag_prefix.apply_filters('podlove_feed_content_encoded', $content_encoded);
             }
 

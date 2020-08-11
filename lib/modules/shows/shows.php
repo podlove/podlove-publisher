@@ -306,11 +306,15 @@ $terms = get_terms('shows', ['hide_empty' => false]);
                     break;
                 case 'subtitle':
                     if ($show->subtitle) {
-                        return sprintf('<itunes:subtitle>%s</itunes:subtitle>', $show->subtitle);
+                        return \Podlove\Feeds\get_xml_text_node('itunes:subtitle', $show->subtitle);
                     }
 
                     break;
                 case 'description':
+                    if ($show->summary) {
+                        return $show->summary;
+                    }
+
                     if ($show->subtitle) {
                         return $show->subtitle;
                     }
@@ -318,7 +322,7 @@ $terms = get_terms('shows', ['hide_empty' => false]);
                     break;
                 case 'summary':
                     if ($show->summary) {
-                        return sprintf('<itunes:summary>%s</itunes:summary>', $show->summary);
+                        return \Podlove\Feeds\get_xml_text_node('itunes:summary', $show->summary);
                     }
 
                     break;

@@ -64,9 +64,7 @@ class RSS
 
         add_action('rss2_item', function () {
             if (apply_filters('podlove_feed_show_summary', true)) {
-                echo '<description><![CDATA[';
-                \Podlove\Feeds\the_description();
-                echo ']]></description>';
+                echo \Podlove\Feeds\get_xml_cdata_node('description', \Podlove\Feeds\get_description());
             }
         }, 9);
 

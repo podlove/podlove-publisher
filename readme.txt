@@ -133,7 +133,7 @@ Subscriber Statistics are only the beginning. Expect more features soon!
 
 Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates. 
 
-This module is still a work-in-progress. But it's usable, so feel free to give it a try, especially if your shownotes are link-heavy and you're comfortable writing Podlove (Twig) templates.
+This module is a work-in-progress. But it's usable, so feel free to give it a try, especially if your shownotes are link-heavy and you're comfortable writing Podlove (Twig) templates.
 
 The module is currently hidden. Make it visible by setting a PHP constant, for example in your `wp-config.php`: `define('PODLOVE_MODULE_SHOWNOTES_VISBLE', true);`.
 
@@ -157,6 +157,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * enable episode chapters by default
 * convenience: "Copy to Clipboard" function for Podlove Template shortcodes
 * expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
+* improve feed rendering: use XML generator for all tags with user input to guarantee valid feeds for all inputs 
 * fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
 * fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
 * fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
