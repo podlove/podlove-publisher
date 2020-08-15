@@ -22,6 +22,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_voices'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
     }
@@ -48,5 +49,14 @@ class REST_API
         }
 
         return rest_ensure_response(['status' => 'ok']);
+    }
+
+    public function permission_check()
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \WP_Error('rest_forbidden', 'sorry, you do not have permissions to use this REST API endpoint', ['status' => 401]);
+        }
+
+        return true;
     }
 }

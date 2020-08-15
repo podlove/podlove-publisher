@@ -128,6 +128,12 @@
 const $ = jQuery;
 import Close from "./icons/Close";
 
+$.ajaxSetup({
+  beforeSend: function (xhr) {
+    xhr.setRequestHeader("X-WP-Nonce", podlove_vue.nonce);
+  },
+});
+
 export default {
   props: ["episodeid"],
   data() {
@@ -139,14 +145,14 @@ export default {
       newTopic: "",
       isTruncatedView: true,
       truncatedThreshold: 5,
-      newEntryType: "link"
+      newEntryType: "link",
     };
   },
   components: {
-    "icon-close": Close
+    "icon-close": Close,
   },
   methods: {
-    createEntry: function(url, type, data) {
+    createEntry: function (url, type, data) {
       let payload = { type: type, data: data, episode_id: this.episodeid };
       this.mode = "create-waiting";
 
@@ -159,7 +165,7 @@ export default {
       }
 
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes", payload)
-        .done(result => {
+        .done((result) => {
           this.addIfNew(result);
           this.newUrl = "";
           this.mode = "idle";
@@ -169,16 +175,16 @@ export default {
           this.mode = "idle";
         });
     },
-    addIfNew: function(entry) {
+    addIfNew: function (entry) {
       const isNewLink =
         entry.type == "link" &&
-        this.shownotes.find(e => e.original_url == entry.original_url) ===
+        this.shownotes.find((e) => e.original_url == entry.original_url) ===
           undefined;
       const isTopic = entry.type == "topic";
 
       if (isNewLink || isTopic) this.shownotes.push(entry);
     },
-    onCreateEntry: function() {
+    onCreateEntry: function () {
       if (this.newEntryType == "link") {
         if (!this.newUrl) return;
 
@@ -193,19 +199,19 @@ export default {
         this.newTopic = "";
       }
     },
-    onUpdateEntry: function(entry) {
-      const start = this.shownotes.findIndex(e => {
+    onUpdateEntry: function (entry) {
+      const start = this.shownotes.findIndex((e) => {
         return e.id == entry.id;
       });
       this.shownotes.splice(start, 1, entry);
     },
-    onDeleteEntry: function(entry) {
-      const start = this.shownotes.findIndex(e => {
+    onDeleteEntry: function (entry) {
+      const start = this.shownotes.findIndex((e) => {
         return e.id == entry.id;
       });
       this.shownotes.splice(start, 1);
     },
-    onImportEntries: function(entries) {
+    onImportEntries: function (entries) {
       this.mode = "idle";
 
       console.log("slack import", entries);
@@ -215,7 +221,7 @@ export default {
         this.createEntry(url, "link", data)
       );
     },
-    onDragEnd: function(e) {
+    onDragEnd: function (e) {
       let newPosition = null;
       let prevEl = null;
       let nextEl = null;
@@ -248,40 +254,40 @@ export default {
       const entry_id = this.shownotes[e.oldIndex].id;
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes/" + entry_id, {
         id: entry_id,
-        position: newPosition
+        position: newPosition,
       }).fail(({ responseJSON }) => {
         console.error("could not update entry:", responseJSON.message);
       });
     },
-    importOsfShownotes: function() {
+    importOsfShownotes: function () {
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes/osf", {
-        post_id: podlove_vue.post_id
+        post_id: podlove_vue.post_id,
       })
-        .done(result => {
+        .done((result) => {
           this.init();
         })
         .fail(({ responseJSON }) => {
           console.error("could not import osf:", responseJSON.message);
         });
     },
-    importHTML: function() {
+    importHTML: function () {
       $.post(podlove_vue.rest_url + "podlove/v1/shownotes/html", {
-        post_id: podlove_vue.post_id
+        post_id: podlove_vue.post_id,
       })
-        .done(result => {
+        .done((result) => {
           this.init();
         })
         .fail(({ responseJSON }) => {
           console.error("could not import html:", responseJSON.message);
         });
     },
-    init: function() {
+    init: function () {
       $.getJSON(
         podlove_vue.rest_url +
           "podlove/v1/shownotes?episode_id=" +
           this.episodeid
       )
-        .done(shownotes => {
+        .done((shownotes) => {
           this.shownotes = shownotes;
           this.ready = true;
           this.isTruncatedView =
@@ -290,10 +296,10 @@ export default {
         .fail(({ responseJSON }) => {
           console.error("could not load shownotes:", responseJSON.message);
         });
-    }
+    },
   },
   computed: {
-    visibleShownotes: function() {
+    visibleShownotes: function () {
       let shownotes = this.sortedShownotes;
 
       if (this.isTruncatedView) {
@@ -302,25 +308,25 @@ export default {
 
       return shownotes;
     },
-    sortedShownotes: function() {
+    sortedShownotes: function () {
       return this.shownotes.sort((a, b) => {
         return a.position - b.position;
       });
     },
-    osf_active: function() {
+    osf_active: function () {
       return podlove_vue.osf_active;
-    }
+    },
   },
   directives: {
     focus: {
-      inserted: function(el) {
+      inserted: function (el) {
         el.focus();
-      }
-    }
+      },
+    },
   },
-  mounted: function() {
+  mounted: function () {
     this.init();
-  }
+  },
 };
 </script>
 

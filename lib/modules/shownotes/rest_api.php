@@ -11,15 +11,13 @@ class REST_API
     const api_namespace = 'podlove/v1';
     const api_base = 'shownotes';
 
-    // todo: delete
-    // todo: update -- not sure I even need this except "save unfurl data"
-
     public function register_routes()
     {
         register_rest_route(self::api_namespace, self::api_base, [
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
+                'permission_callback' => [$this, 'permission_check'],
                 'args' => [
                     'episode_id' => [
                         'description' => 'Limit result set by episode.',
@@ -30,6 +28,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -42,14 +41,17 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -62,18 +64,21 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'unfurl_item'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/osf', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_osf'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/html', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_html'],
+                'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
     }
@@ -410,6 +415,15 @@ class REST_API
         $entry = apply_filters('podlove_shownotes_entry', $entry);
 
         return rest_ensure_response($entry->to_array());
+    }
+
+    public function permission_check()
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \WP_Error('rest_forbidden', 'sorry, you do not have permissions to use this REST API endpoint', ['status' => 401]);
+        }
+
+        return true;
     }
 
     private function create_link_item($request, $episode)
