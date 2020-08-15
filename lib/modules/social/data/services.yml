@@ -436,6 +436,13 @@
   logo: 'patreon.png'
   url_scheme: 'https://www.patreon.com/%account-placeholder%'
 
+- title: 'Steady'
+  name: 'steady'
+  category: 'donation'
+  description: 'Steady'
+  logo: 'steady.png'
+  url_scheme: 'https://steadyhq.com/%account-placeholder%'
+
 - title: 'Scopus'
   name: 'scopus'
   category: 'social'

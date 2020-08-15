@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define(__NAMESPACE__.'\DATABASE_VERSION', 144);
+define(__NAMESPACE__.'\DATABASE_VERSION', 145);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1546,6 +1546,13 @@ function run_migrations_for_version($version)
                 \Podlove\Modules\Shownotes\Model\Entry::table_name()
             );
             $wpdb->query($sql);
+
+            break;
+        case 145:
+            // add steady
+            if (\Podlove\Modules\Social\Model\Service::table_exists()) {
+                \Podlove\Modules\Social\RepairSocial::fix_missing_services();
+            }
 
             break;
     }
