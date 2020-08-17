@@ -83,3 +83,6 @@ dev:
 
 stop:
 	docker-compose -f .build/docker-compose.yaml down
+
+format:
+	docker run --rm --user $(id -u):$(id -g) --volume ${PWD}:/data cytopia/php-cs-fixer fix .

@@ -2,9 +2,9 @@
 
 use League\Csv\Writer;
 
-add_action('rest_api_init', 'podlove_api_init');
+add_action('rest_api_init', 'podlove_analytics_api_init');
 
-function podlove_api_init()
+function podlove_analytics_api_init()
 {
     $args = [
         'format' => [
@@ -41,22 +41,13 @@ function podlove_api_analytics_permission_callback($request)
         return new WP_Error(
             'rest_forbidden',
             esc_html__('You cannot view the analytics resource.'),
-            ['status' => podlove_api_authorization_status_code()]
+            ['status' => \Podlove\Api_Permissons::authorization_status_code()]
         );
     }
 
     return true;
 }
-function podlove_api_authorization_status_code()
-{
-    $status = 401;
 
-    if (is_user_logged_in()) {
-        $status = 403;
-    }
-
-    return $status;
-}
 function podlove_api_csv_response($data)
 {
     header('Content-Type: text/csv');

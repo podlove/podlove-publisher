@@ -25,6 +25,7 @@ class Contributors extends \Podlove\Modules\Base
         add_action('save_post', [$this, 'update_contributors'], 10, 2);
         add_action('podlove_podcast_settings_tabs', [$this, 'podcast_settings_tab']);
         add_action('update_option_podlove_podcast', [$this, 'save_setting'], 10, 2);
+        add_action('rest_api_init', [$this, 'api_init']);
         add_filter('parse_query', [$this, 'filter_by_contributor']);
 
         add_filter('manage_edit-podcast_columns', [$this, 'add_new_podcast_columns']);
@@ -855,6 +856,12 @@ class Contributors extends \Podlove\Modules\Base
         $option_name = 'podlove_feed_'.$feed_id.'_contributor_filter';
 
         update_option($option_name, ['group' => $group, 'role' => $role]);
+    }
+
+    public function api_init()
+    {
+        $api = new REST_API();
+        $api->register_routes();
     }
 
     /**
