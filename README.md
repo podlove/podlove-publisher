@@ -32,6 +32,12 @@ Use webpack when working with JS or CSS files:
 yarn run dev
 ```
 
+## Formatting Code
+
+Use [PHP-CS-Fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) to format code before committing.
+
+You can do so manually via command line (`php-cs-fixer fix`) or configure your editor to format the file on save. For VS Code, use the "php cs fixer" extension by junstyle.
+
 [3]: https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
 [4]: https://trello.com/b/zB4mKQlD/podlove-publisher
 [5]: https://github.com/podlove/podlove-publisher/issues
