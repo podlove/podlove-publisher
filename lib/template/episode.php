@@ -33,13 +33,26 @@ class Episode extends Wrapper
      * Title.
      *
      * Returns the episode title, if set, otherwise the post title.
-     * If you want to access the post title directly, use `episode.post.post_title`.
+     * If you want to access the post title directly, use `episode.post_title`.
      *
      * @accessor
      */
     public function title()
     {
         return new EpisodeTitle($this->episode);
+    }
+
+    /**
+     * Post Title.
+     *
+     * Returns the episode post title. If automatic generation of post titles is enabled,
+     * the generated title is returned here.
+     *
+     * @accessor
+     */
+    public function post_title()
+    {
+        return $this->episode->post_title();
     }
 
     /**

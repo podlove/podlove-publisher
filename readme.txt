@@ -75,7 +75,7 @@ Any storage where you have control over the file naming is compatible with Podlo
 
 ### Where can I ask questions and get support?
 
-Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/). [Professional Support](http://publisher.podlove.org/support) by the plugin developer is also available.
+Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/).
 
 ### How can I help the project?
 
@@ -83,7 +83,6 @@ The continued success of Open Source project relies on the community. There are 
 
 - If you enjoy the plugin, please [leave a review](https://wordpress.org/support/plugin/podlove-podcasting-plugin-for-wordpress/reviews/#new-post).
 - You can answer questions of other fellow podcasters in the [Podlove Community](https://community.podlove.org/).
-- You can buy [Support](https://publisher.podlove.org/support/) to financially support the project.
 
 ---
 
@@ -131,7 +130,7 @@ Subscriber Statistics are only the beginning. Expect more features soon!
 
 **Experimental: Shownotes**
 
-Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates. 
+Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates.
 
 This module is a work-in-progress. But it's usable, so feel free to give it a try, especially if your shownotes are link-heavy and you're comfortable writing Podlove (Twig) templates.
 
@@ -157,9 +156,10 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * enable episode chapters by default
 * convenience: "Copy to Clipboard" function for Podlove Template shortcodes
 * expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
-* improve feed rendering: use XML generator for all tags with user input to guarantee valid feeds for all inputs 
+* improve feed rendering: use XML generator for all tags with user input to guarantee valid feeds for all inputs
 * add function to remove a transcript from an episode ([#1131](https://github.com/podlove/podlove-publisher/issues/1131))
 * add Steady as donation service
+* add template tag: `episode.post_title` ([#1136](https://github.com/podlove/podlove-publisher/issues/1136))
 * fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
 * fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
 * fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
