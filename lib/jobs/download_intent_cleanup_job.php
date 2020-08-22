@@ -110,7 +110,7 @@ class DownloadIntentCleanupJob
 			di.accessed_at > p.post_date_gmt -- ignore pre-release intents
 			AND user_agent_id NOT IN (SELECT id FROM `".Model\UserAgent::table_name()."` WHERE bot) -- filter out bots
 			AND di.id > %d AND di.id <= %d
-			AND (di.httprange != 'bytes=0-1' OR httprange IS NULL) -- filter out 1 byte requests; allow requests with empty httprange
+			AND (di.httprange != 'bytes=0-0' OR di.httprange != 'bytes=0-1' OR httprange IS NULL) -- filter out 1 byte requests; allow requests with empty httprange
 		GROUP BY media_file_id, request_id, DATE_FORMAT(accessed_at, '{$grouping}') -- deduplication
 		";
 

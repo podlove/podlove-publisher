@@ -166,6 +166,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * fix: ensure uploads for webvtt (transcripts) and gz (exports) are allowed
 * fix: ensure contributors module is active when transcripts are used
 * fix: ensure permissions in shownotes and transcripts APIs
+* fix: don't count download requests with http range header of `bytes=0-0` ([#1135](https://github.com/podlove/podlove-publisher/issues/1135))
 * update dependencies
 * build releases with GitHub Actions (in favour of TravisCI)
 
