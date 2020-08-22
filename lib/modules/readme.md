@@ -2,6 +2,12 @@
 
 Modules can be compared to WordPress plugins. We use modules to keep the code base clean and decoupled. Furthermore, this system allows for easy activation/deactivation of modules without the risk to break stuff.
 
+## Formatting Code
+
+Use [PHP-CS-Fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) to format code before committing.
+
+You can do so manually via command line (`php-cs-fixer fix`) or configure your editor to format the file on save. For VS Code, use the "php cs fixer" extension by junstyle.
+
 ## Creating A Module
 
 - each module lives in a separate directory in `/lib/modules`
@@ -27,7 +33,7 @@ Namespace:   \Podlove\Modules\PodloveWebPlayer
 ### Example Module File
 
 ```php
-<?php 
+<?php
 namespace Podlove\Modules\PodloveWebPlayer;
 
 class Podlove_Web_Player extends \Podlove\Modules\Base {
