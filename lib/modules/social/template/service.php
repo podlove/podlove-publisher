@@ -49,6 +49,16 @@ class Service extends Wrapper
     }
 
     /**
+     * Service type.
+     *
+     * @accessor
+     */
+    public function type()
+    {
+        return $this->service->type;
+    }
+
+    /**
      * Service description.
      *
      * @accessor

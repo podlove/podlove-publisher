@@ -160,6 +160,7 @@ Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52
 * add function to remove a transcript from an episode ([#1131](https://github.com/podlove/podlove-publisher/issues/1131))
 * add Steady as donation service
 * add template tag: `episode.post_title` ([#1136](https://github.com/podlove/podlove-publisher/issues/1136))
+* add template tag: `service.type` (https://community.podlove.org/t/replacing-social-icons/2321)
 * fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
 * fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
 * fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
