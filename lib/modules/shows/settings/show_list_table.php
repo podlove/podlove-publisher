@@ -1,25 +1,25 @@
 <?php
+
 namespace Podlove\Modules\Shows\Settings;
 
-use \Podlove\Modules\Shows\Model\Show;
+use Podlove\Modules\Shows\Model\Show;
 
 class ShowListTable extends \Podlove\List_Table
 {
     public function __construct()
     {
-        parent::__construct(array(
+        parent::__construct([
             'singular' => 'show', // singular name of the listed records
-            'plural'   => 'shows', // plural name of the listed records
-            'ajax'     => false, // does this table support ajax?
-        ));
+            'plural' => 'shows', // plural name of the listed records
+            'ajax' => false, // does this table support ajax?
+        ]);
     }
 
     public function column_title($show)
     {
-
         $link = function ($title, $action = 'edit') use ($show) {
             return sprintf(
-                '<a href="?page=%s&action=%s&show=%s">' . $title . '</a>',
+                '<a href="?page=%s&action=%s&show=%s">'.$title.'</a>',
                 Settings::MENU_SLUG,
                 $action,
                 $show->id
@@ -27,7 +27,7 @@ class ShowListTable extends \Podlove\List_Table
         };
 
         $actions = [
-            'edit'   => $link(__('Edit', 'podlove-podcasting-plugin-for-wordpress')),
+            'edit' => $link(__('Edit', 'podlove-podcasting-plugin-for-wordpress')),
             'delete' => $link(__('Delete', 'podlove-podcasting-plugin-for-wordpress'), 'confirm_delete'),
         ];
 
@@ -42,9 +42,9 @@ class ShowListTable extends \Podlove\List_Table
     {
         if ($show->image) {
             return $show->image()->setWidth(64)->setHeight(64)->image();
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     public function column_episodes($show)
@@ -52,7 +52,6 @@ class ShowListTable extends \Podlove\List_Table
         if ($term = get_term($show->id)) {
             return $term->count;
         }
-
     }
 
     public function column_show_feeds($show)
@@ -61,20 +60,19 @@ class ShowListTable extends \Podlove\List_Table
 foreach (\Podlove\Model\Feed::find_all_by_discoverable(1) as $feed) {
             printf(
                 '<li><a href="%1$s">%1$s</a></li>',
-                $feed->get_subscribe_url("shows", $show->id)
+                $feed->get_subscribe_url('shows', $show->id)
             );
-        }
-        ?> </ul> <?php
-}
+        } ?> </ul> <?php
+    }
 
     public function get_columns()
     {
-        return array(
-            'title'      => __('Show', 'podlove-podcasting-plugin-for-wordpress'),
-            'image'      => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
-            'episodes'   => __('Episodes', 'podlove-podcasting-plugin-for-wordpress'),
+        return [
+            'title' => __('Show', 'podlove-podcasting-plugin-for-wordpress'),
+            'image' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
+            'episodes' => __('Episodes', 'podlove-podcasting-plugin-for-wordpress'),
             'show_feeds' => __('Subscribe URLs', 'podlove-podcasting-plugin-for-wordpress'),
-        );
+        ];
     }
 
     public function prepare_items()
@@ -86,10 +84,10 @@ foreach (\Podlove\Model\Feed::find_all_by_discoverable(1) as $feed) {
         }
 
         // define column headers
-        $columns               = $this->get_columns();
-        $hidden                = array();
-        $sortable              = $this->get_sortable_columns();
-        $this->_column_headers = array($columns, $hidden, $sortable);
+        $columns = $this->get_columns();
+        $hidden = [];
+        $sortable = $this->get_sortable_columns();
+        $this->_column_headers = [$columns, $hidden, $sortable];
 
         // retrieve data
         $data = Show::all();
@@ -104,11 +102,10 @@ foreach (\Podlove\Model\Feed::find_all_by_discoverable(1) as $feed) {
         $this->items = $data;
 
         // register pagination options & calculations
-        $this->set_pagination_args(array(
+        $this->set_pagination_args([
             'total_items' => $total_items,
-            'per_page'    => $per_page,
+            'per_page' => $per_page,
             'total_pages' => ceil($total_items / $per_page),
-        ));
+        ]);
     }
-
 }

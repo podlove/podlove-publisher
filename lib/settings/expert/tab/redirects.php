@@ -1,46 +1,57 @@
-<?php 
+<?php
+
 namespace Podlove\Settings\Expert\Tab;
-use \Podlove\Settings\Settings;
-use \Podlove\Settings\Expert\Tab;
 
-class Redirects extends Tab {
+use Podlove\Settings\Expert\Tab;
+use Podlove\Settings\Settings;
 
-	public function get_slug() {
-		return 'redirects';
-	}
+class Redirects extends Tab
+{
+    public function get_slug()
+    {
+        return 'redirects';
+    }
 
-	public function init() {
-		add_settings_section(
-			/* $id 		 */ 'podlove_settings_redirects',
-			/* $title    */ '',	
-			/* $callback */ function () { echo '<h3>' . __( 'Redirects', 'podlove-podcasting-plugin-for-wordpress' ) . '</h3>'; },
-			/* $page	 */ Settings::$pagehook	
-		);
+    public function init()
+    {
+        add_settings_section(
+            // $id
+            'podlove_settings_redirects',
+            // $title
+            '',
+            // $callback
+            function () {
+                echo '<h3>'.__('Redirects', 'podlove-podcasting-plugin-for-wordpress').'</h3>';
+            },
+            // $page
+            Settings::$pagehook
+        );
 
-		add_settings_field(
-			/* $id       */ 'podlove_setting_redirect',
-			/* $title    */ '',
-			/* $callback */ function () {
-				$redirect_settings = \Podlove\get_setting( 'redirects', 'podlove_setting_redirect' );
+        add_settings_field(
+            // $id
+            'podlove_setting_redirect',
+            // $title
+            '',
+            // $callback
+            function () {
+                $redirect_settings = \Podlove\get_setting('redirects', 'podlove_setting_redirect');
 
-				if ( ! is_array( $redirect_settings ) ) {
-					$redirect_settings = array();
-				} else {
-					// avoids array-index-based glitches
-					$redirect_settings = array_values($redirect_settings);
-				}
-
-				?>
+                if (!is_array($redirect_settings)) {
+                    $redirect_settings = [];
+                } else {
+                    // avoids array-index-based glitches
+                    $redirect_settings = array_values($redirect_settings);
+                } ?>
 
 				<table id="podlove-redirects" class="podlove_alternating" border="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th style="width: 55px"><?php _e( 'Active', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
-							<th><?php _e( 'From URL', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
-							<th><?php _e( 'To URL', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
-							<th><?php _e( 'Redirect Method', 'podlove-podcasting-plugin-for-wordpress' ) ?></th>
+							<th style="width: 55px"><?php _e('Active', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+							<th><?php _e('From URL', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+							<th><?php _e('To URL', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+							<th><?php _e('Redirect Method', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 							<th class="count">
-								<?php _e( 'Redirects', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+								<?php _e('Redirects', 'podlove-podcasting-plugin-for-wordpress'); ?>
 							</th>
 							<th class="delete"></th>
 							<th class="move"></th>
@@ -48,7 +59,7 @@ class Redirects extends Tab {
 					</thead>
 					<tbody id="podlove-redirects-table-body" style="min-height: 50px;">
 						<tr style="display: none;">
-							<td><em><?php _e('No redirects were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
+							<td><em><?php _e('No redirects were added yet.', 'podlove-podcasting-plugin-for-wordpress'); ?></em></td>
 						</tr>
 					</tbody>
 				</table>
@@ -66,17 +77,17 @@ class Redirects extends Tab {
 					</td>
 					<td>
 						<select name="podlove_redirects[podlove_setting_redirect][{{index}}][code]">
-							<option value="307"><?php _e('Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress') ?></option>
-							<option value="301"><?php _e('Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress') ?></option>
+							<option value="307"><?php _e('Temporary Redirect (HTTP Status 307)', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
+							<option value="301"><?php _e('Permanent Redirect (HTTP Status 301)', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 						</select>
 					</td>
 					<td class="count">
 						<span data-podlove-input-status-for="podlove_redirects_podlove_setting_redirect_{{index}}_count">{{count}}</span>
-						<button class="button reset"><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress') ?></button>
+						<button class="button reset"><?php _e('reset', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
 						<input type="hidden" name="podlove_redirects[podlove_setting_redirect][{{index}}][count]" value="{{count}}">
 					</td>
 					<td class="delete">
-						<button class="button delete"><?php _e( 'delete', 'podlove-podcasting-plugin-for-wordpress' ) ?></button>
+						<button class="button delete"><?php _e('delete', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
 					</td>
 					<td class="move column-move"><i class="reorder-handle podlove-icon-reorder"></i></td>
 				</tr>
@@ -155,10 +166,10 @@ class Redirects extends Tab {
 				</script>
 
 				<p>
-					<a href="#" id="podlove_add_new_rule" class="button"><?php _e( 'Add new rule', 'podlove-podcasting-plugin-for-wordpress' ); ?></a>
+					<a href="#" id="podlove_add_new_rule" class="button"><?php _e('Add new rule', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 				</p>
 				<p class="description">
-					<?php _e( 'Create custom permanent redirects. URLs can be absolute like <code>http://example.com/feed</code> or relative to the website like <code>/feed</code>.', 'podlove-podcasting-plugin-for-wordpress' ) ?>
+					<?php _e('Create custom permanent redirects. URLs can be absolute like <code>http://example.com/feed</code> or relative to the website like <code>/feed</code>.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</p>
 
 				<style type="text/css">
@@ -200,11 +211,13 @@ class Redirects extends Tab {
 				}
 				</style>
 				<?php
-			},
-			/* $page     */ Settings::$pagehook,  
-			/* $section  */ 'podlove_settings_redirects'
-		);
+            },
+            // $page
+            Settings::$pagehook,
+            // $section
+            'podlove_settings_redirects'
+        );
 
-		register_setting( Settings::$pagehook, 'podlove_redirects' );
-	}
+        register_setting(Settings::$pagehook, 'podlove_redirects');
+    }
 }

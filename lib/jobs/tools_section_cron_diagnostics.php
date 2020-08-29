@@ -1,51 +1,50 @@
-<?php 
+<?php
+
 namespace Podlove\Jobs;
 
-class ToolsSectionCronDiagnostics {
+class ToolsSectionCronDiagnostics
+{
+    public static function init()
+    {
+        add_action('podlove_jobs_tools_end', [__CLASS__, 'view']);
 
-	public static function init()
-	{
-		add_action('podlove_jobs_tools_end', [__CLASS__, 'view']);
+        add_action('wp_ajax_podlove-cron-diag-start', [__CLASS__, 'diagnosis_start']);
+        add_action('wp_ajax_podlove-cron-diag-check', [__CLASS__, 'diagnosis_check']);
+        add_action('podlove_cron_diagnosis_cron', [__CLASS__, 'register_cron_executed']);
+    }
 
-		add_action('wp_ajax_podlove-cron-diag-start', [__CLASS__, 'diagnosis_start']);
-		add_action('wp_ajax_podlove-cron-diag-check', [__CLASS__, 'diagnosis_check']);
-		add_action('podlove_cron_diagnosis_cron', [__CLASS__, 'register_cron_executed']);
-	}
+    public static function diagnosis_start()
+    {
+        update_option('podlove_cron_diagnosis', 'started');
+        update_option('podlove_cron_diagnosis_tries', 0);
+        wp_schedule_single_event(time(), 'podlove_cron_diagnosis_cron');
+        \Podlove\AJAX\Ajax::respond_with_json(['success' => true]);
+    }
 
-	public static function diagnosis_start()
-	{
-		update_option('podlove_cron_diagnosis', 'started');
-		update_option('podlove_cron_diagnosis_tries', 0);
-		wp_schedule_single_event(time(), 'podlove_cron_diagnosis_cron');
-		\Podlove\AJAX\Ajax::respond_with_json(['success' => true]);
-	}
+    public static function diagnosis_check()
+    {
+        $tries = get_option('podlove_cron_diagnosis_tries', 0);
+        update_option('podlove_cron_diagnosis_tries', $tries + 1);
+        \Podlove\AJAX\Ajax::respond_with_json([
+            'tries' => $tries + 1,
+            'success' => get_option('podlove_cron_diagnosis') == 'executed',
+        ]);
+    }
 
-	public static function diagnosis_check()
-	{
-		$tries = get_option('podlove_cron_diagnosis_tries', 0);
-		update_option('podlove_cron_diagnosis_tries', $tries + 1);
-		\Podlove\AJAX\Ajax::respond_with_json([
-			'tries'   => $tries + 1,
-			'success' => get_option('podlove_cron_diagnosis') == 'executed'
-		]);
-	}
+    public static function register_cron_executed()
+    {
+        update_option('podlove_cron_diagnosis', 'executed');
+    }
 
-	public static function register_cron_executed()
-	{
-		update_option('podlove_cron_diagnosis', 'executed');
-	}
-
-	public static function view()
-	{
-		$cron_constants = [
-			'ALTERNATE_WP_CRON',
-			'DISABLE_WP_CRON'
-		];
-		$cron_constants = array_map(function ($constant) {
-			return $constant . ': ' . (defined($constant) ? (constant($constant) ? 'on' : 'off') : 'not defined');
-		}, $cron_constants);
-
-		?>
+    public static function view()
+    {
+        $cron_constants = [
+            'ALTERNATE_WP_CRON',
+            'DISABLE_WP_CRON',
+        ];
+        $cron_constants = array_map(function ($constant) {
+            return $constant.': '.(defined($constant) ? (constant($constant) ? 'on' : 'off') : 'not defined');
+        }, $cron_constants); ?>
 		
 		<div id="podlove-cron-diagnosis-teaser">
 			Jobs not working properly? <button class="button" id="podlove-cron-diagnosis">Run WP Cron Diagnosis</button>
@@ -57,7 +56,7 @@ class ToolsSectionCronDiagnostics {
 			<p>
 				<strong>PHP Constants</strong>
 				<code style="display: block">
-					<?php echo implode("<br>", $cron_constants); ?>
+					<?php echo implode('<br>', $cron_constants); ?>
 				</code>
 			</p>
 
@@ -167,5 +166,5 @@ li span.result { font-style: italic; }
 #podlove-cron-diagnosis-wrapper { display: none; }
 </style>
 	<?php
-	}
+    }
 }

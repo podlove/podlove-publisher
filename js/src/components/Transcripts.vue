@@ -29,6 +29,13 @@
           :class="{'transcripts-tab-active': mode === 'export'}"
           @click.prevent="mode = 'export'"
         >Export</a>
+        
+        <a
+          href="#"
+          class="transcripts-tab"
+          :class="{'transcripts-tab-active': mode === 'delete'}"
+          @click.prevent="mode = 'delete'"
+        >Delete</a>
       </div>
     </div>
 
@@ -133,6 +140,13 @@
         download="transcript.xml"
       >Export xml</a>
     </div>
+
+    <div class="row tab-body delete" v-show="mode == 'delete'">
+      <button
+        class="button button-secondary"
+        @click.prevent="deleteTranscript"
+      >Delete webvtt</button>
+    </div>
   </div>
 </template>
 
@@ -145,12 +159,12 @@ export default {
       lastError: "",
       voices: null,
       contributors: null,
-      transcript: null
+      transcript: null,
     };
   },
 
   watch: {
-    voiceData: function(val, oldVal) {
+    voiceData: function (val, oldVal) {
       if (oldVal == null) {
         return;
       }
@@ -165,10 +179,10 @@ export default {
           method: "POST",
           dataType: "json",
           data: {
-            transcript_voice: val
-          }
+            transcript_voice: val,
+          },
         })
-        .done(result => {
+        .done((result) => {
           // console.log("saved transcript voices", result);
         })
         .fail(({ responseJSON }) => {
@@ -179,11 +193,11 @@ export default {
         });
 
       // TODO: clearing/deleting assignments
-    }
+    },
   },
 
   computed: {
-    description: function() {
+    description: function () {
       if (this.importing) {
         return "importing ...";
       } else if (this.lastError) {
@@ -192,7 +206,7 @@ export default {
         return "Accepts: WebVTT";
       }
     },
-    voiceData: function() {
+    voiceData: function () {
       if (!this.voices) {
         return null;
       }
@@ -202,41 +216,71 @@ export default {
         return agg;
       }, new Object());
     },
-    contributorsOptions: function() {
-      return this.contributors.map(c => {
+    contributorsOptions: function () {
+      return this.contributors.map((c) => {
         return { label: c.name, value: c.id, avatar: c.avatar };
       });
     },
-    webvttDownloadHref: function() {
+    webvttDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
 
       return "//" + host + "?p=" + post_id + "&podlove_transcript=webvtt";
     },
-    jsonDownloadHref: function() {
+    jsonDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
 
       return "//" + host + "?p=" + post_id + "&podlove_transcript=json";
     },
-    xmlDownloadHref: function() {
+    xmlDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
 
       return "//" + host + "?p=" + post_id + "&podlove_transcript=xml";
     },
-    jsonGroupedDownloadHref: function() {
+    jsonGroupedDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
+      const port = parseInt(window.location.port, 10);
+      let fullhost = host;
 
-      return "//" + host + "?p=" + post_id + "&podlove_transcript=json_grouped";
-    }
+      if (port && port > 0) {
+        fullhost = fullhost + ":" + port;
+      }
+
+      return (
+        "//" + fullhost + "?p=" + post_id + "&podlove_transcript=json_grouped"
+      );
+    },
   },
 
   methods: {
     initImportTranscript() {
       const fileInput = document.getElementById("transcriptimport");
       fileInput.click();
+    },
+    deleteTranscript() {
+      if (window.confirm("Delete transcript from this episode?")) {
+        this.axios
+          .get(ajaxurl, {
+            params: {
+              action: "podlove_transcript_delete",
+              post_id: document.querySelector("#post_ID").value,
+            },
+          })
+          .then(({ data }) => {
+            if (data.error) {
+              this.lastError = data.error;
+            } else {
+              this.refetchAll();
+              window.setTimeout(() => {
+                this.mode = "transcript";
+              }, 1000);
+            }
+          })
+          .catch((error) => {});
+      }
     },
     importTranscript() {
       const fileInput = document.getElementById("transcriptimport");
@@ -252,8 +296,8 @@ export default {
       this.axios
         .post(ajaxurl, form, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then(({ data }) => {
           if (data.error) {
@@ -264,7 +308,7 @@ export default {
           this.importing = false;
           fileInput.parentElement.reset();
         })
-        .catch(error => {
+        .catch((error) => {
           this.importing = false;
           fileInput.parentElement.reset();
         });
@@ -278,8 +322,8 @@ export default {
         .get(ajaxurl, {
           params: {
             action: "podlove_transcript_asset_import",
-            post_id: document.querySelector("#post_ID").value
-          }
+            post_id: document.querySelector("#post_ID").value,
+          },
         })
         .then(({ data }) => {
           if (data.error) {
@@ -289,14 +333,14 @@ export default {
           }
           this.importing = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.importing = false;
         });
     },
     fetchContributors(done) {
       this.axios
         .get(ajaxurl, {
-          params: { action: "podlove_transcript_get_contributors" }
+          params: { action: "podlove_transcript_get_contributors" },
         })
         .then(({ data }) => {
           if (data.error) {
@@ -314,22 +358,22 @@ export default {
         .get(ajaxurl, {
           params: {
             action: "podlove_transcript_get_voices",
-            post_id: document.querySelector("#post_ID").value
-          }
+            post_id: document.querySelector("#post_ID").value,
+          },
         })
         .then(({ data }) => {
           if (data.error) {
             // this.lastError = data.error
           } else {
-            this.voices = data.voices.map(k => {
-              let option = this.contributorsOptions.find(co => {
+            this.voices = data.voices.map((k) => {
+              let option = this.contributorsOptions.find((co) => {
                 return co.value == k.contributor_id;
               });
 
               return {
                 label: k.voice,
                 value: k.contributor_id,
-                option: option
+                option: option,
               };
             });
             if (done) {
@@ -340,7 +384,7 @@ export default {
     },
     getVoice(group) {
       let id = this.voiceData[group.voice];
-      return this.voices.find(v => (v.option ? v.option.value == id : false));
+      return this.voices.find((v) => (v.option ? v.option.value == id : false));
     },
     hasVoice(group) {
       return group && group.voice && this.voiceData[group.voice];
@@ -365,12 +409,12 @@ export default {
           });
         });
       });
-    }
+    },
   },
 
   mounted() {
     this.refetchAll();
-  }
+  },
 };
 </script>
 

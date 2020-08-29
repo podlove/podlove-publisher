@@ -1,57 +1,61 @@
 <?php
+
 namespace Podlove\Settings\Podcast\Tab;
-use \Podlove\Settings\Podcast\Tab;
 
-class License extends Tab {
+use Podlove\Settings\Podcast\Tab;
 
-	public function init() {
-		add_action( $this->page_hook, array( $this, 'register_page' ) );
-		add_action( 'admin_init', array( $this, 'process_form' ) );
-	}
+class License extends Tab
+{
+    public function init()
+    {
+        add_action($this->page_hook, [$this, 'register_page']);
+        add_action('admin_init', [$this, 'process_form']);
+    }
 
-	public function process_form() {
-		if (!isset($_POST['podlove_podcast']) || !$this->is_active())
-			return;
+    public function process_form()
+    {
+        if (!isset($_POST['podlove_podcast']) || !$this->is_active()) {
+            return;
+        }
 
-		$formKeys = array(
-			'license_name',
-			'license_url'
-		);
+        $formKeys = [
+            'license_name',
+            'license_url',
+        ];
 
-		$settings = get_option('podlove_podcast');
-		foreach ($formKeys as $key) {
-			$settings[$key] = $_POST['podlove_podcast'][$key];
-		}
-		update_option('podlove_podcast', $settings);
-		header('Location: ' . $this->get_url());
-	}
+        $settings = get_option('podlove_podcast');
+        foreach ($formKeys as $key) {
+            $settings[$key] = $_POST['podlove_podcast'][$key];
+        }
+        update_option('podlove_podcast', $settings);
+        header('Location: '.$this->get_url());
+    }
 
-	public function register_page() {
-		$podcast = \Podlove\Model\Podcast::get();
-		
-		$form_attributes = array(
-			'context' => 'podlove_podcast',
-			'action'  => $this->get_url()
-		);
+    public function register_page()
+    {
+        $podcast = \Podlove\Model\Podcast::get();
 
-		\Podlove\Form\build_for( $podcast, $form_attributes, function ( $form ) {
+        $form_attributes = [
+            'context' => 'podlove_podcast',
+            'action' => $this->get_url(),
+        ];
 
-			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
-			$podcast = $form->object;
-			
-			$podcast = \Podlove\Model\Podcast::get();
+        \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
+            $wrapper = new \Podlove\Form\Input\TableWrapper($form);
+            $podcast = $form->object;
 
-			$wrapper->string( 'license_name', array(
-				'label'       => __( 'License Name', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html' => array( 'class' => 'regular-text podlove-check-input' )
-			) );
+            $podcast = \Podlove\Model\Podcast::get();
 
-			$wrapper->string( 'license_url', array(
-				'label'       => __( 'License URL', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html' => array( 'class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url' ),
-				'description' => __( 'Example: http://creativecommons.org/licenses/by/3.0/', 'podlove-podcasting-plugin-for-wordpress' )
-			) );
-			?>
+            $wrapper->string('license_name', [
+                'label' => __('License Name', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text podlove-check-input'],
+            ]);
+
+            $wrapper->string('license_url', [
+                'label' => __('License URL', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'],
+                'description' => __('Example: http://creativecommons.org/licenses/by/3.0/', 'podlove-podcasting-plugin-for-wordpress'),
+            ]); ?>
 				
 				<tr class="row_podlove_cc_license_selector_toggle">
 					<th></th>
@@ -94,10 +98,9 @@ class License extends Tab {
 							<label for="license_cc_license_jurisdiction" class="podlove_cc_license_selector_label"><?php _e('License Jurisdiction', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 							<select id="license_cc_license_jurisdiction">
 								<?php
-									foreach ( \Podlove\License\locales_cc() as $locale_key => $locale_description) {
-										echo "<option value='" . $locale_key . "' " . ( $locale_key == 'international' ? "selected='selected'" : '' ) . ">" . $locale_description . "</option>\n";
-									}
-								?>			
+                                    foreach (\Podlove\License\locales_cc() as $locale_key => $locale_description) {
+                                        echo "<option value='".$locale_key."' ".($locale_key == 'international' ? "selected='selected'" : '').'>'.$locale_description."</option>\n";
+                                    } ?>			
 							</select>
 						</div>
 					</td>
@@ -117,8 +120,7 @@ class License extends Tab {
 					</td>
 				</tr>
 			<?php
-		});
-		?>
+        }); ?>
 		<script type="text/javascript">
 		PODLOVE.License({
 			plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
@@ -134,5 +136,5 @@ class License extends Tab {
 
 		</script>
 		<?php
-	}
+    }
 }

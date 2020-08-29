@@ -1,12 +1,12 @@
 <?php
-require_once(ABSPATH . 'wp-admin/includes/dashboard.php');
+require_once ABSPATH.'wp-admin/includes/dashboard.php';
 $success = \wp_dashboard_cached_rss_widget(
-	'podlove_dashboard_news',
-	'wp_dashboard_primary_output',
-	$feeds
+    'podlove_dashboard_news',
+    'wp_dashboard_primary_output',
+    $feeds
 );
 
-if (!$success): ?>
+if (!$success) { ?>
 <script type="text/javascript">
 jQuery.ajax(ajaxurl, {
 	dataType: 'html',
@@ -17,4 +17,4 @@ jQuery.ajax(ajaxurl, {
 	}
 });
 </script>
-<?php endif;
+<?php }

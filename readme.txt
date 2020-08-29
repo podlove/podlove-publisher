@@ -2,10 +2,10 @@
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 4.4
+Requires at least: 5.2
 Tested up to: 5.4.1
-Requires PHP: 5.4
-Stable tag: 2.11.4
+Requires PHP: 7.0
+Stable tag: 3.0-beta19
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -75,7 +75,7 @@ Any storage where you have control over the file naming is compatible with Podlo
 
 ### Where can I ask questions and get support?
 
-Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/). [Professional Support](http://publisher.podlove.org/support) by the plugin developer is also available.
+Free support where questions are answered by the community is available in the [Podlove Community Forum](http://community.podlove.org/). There is a German community in the [Sendegate](https://sendegate.de/).
 
 ### How can I help the project?
 
@@ -83,7 +83,6 @@ The continued success of Open Source project relies on the community. There are 
 
 - If you enjoy the plugin, please [leave a review](https://wordpress.org/support/plugin/podlove-podcasting-plugin-for-wordpress/reviews/#new-post).
 - You can answer questions of other fellow podcasters in the [Podlove Community](https://community.podlove.org/).
-- You can buy [Support](https://publisher.podlove.org/support/) to financially support the project.
 
 ---
 
@@ -107,226 +106,70 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2.11.4 =
+= 3.0.0 =
 
-* fix: missing monolog dependency
+**Breaking Changes**
 
-= 2.11.2 =
+* requires PHP 7.0 (or newer)
+* requires WordPress 5.2 (or newer)
+* Web Player:
+  * removes Podlove Web Player 2
+  * removes Podlove Web Player 3
+  * removes "insert player automatically" option (probably does not affect anyone as the web player is by default inserted via template)
+  * removes "Chapters Visibility" option (use dedicated Web Player settings instead)
 
-* fix: ensure that logging library Monolog is available at version 1.x, otherwise disable the database logger
+**New Publisher PLUS**
 
-= 2.11.1 =
+=> [plus.podlove.org](https://plus.podlove.org/)
 
-* Podlove Web Player 5: support "show" parameter `episode.player({show: 'my-show-slug'})`
+Publisher PLUS is a new service providing Feed Proxy and Podcast Subscriber statistics for Podlove Publisher.
 
-= 2.11.0 =
+To use it, enable the *Publisher PLUS* module, then visit [plus.podlove.org](https://plus.podlove.org/) to create an account.
 
-* add global network bar [#1101](https://github.com/podlove/podlove-publisher/pull/1101) by [@gglnx](https://github.com/gglnx)
-* improve template editing UI [#1109](https://github.com/podlove/podlove-publisher/pull/1109)
-* fix: template tag `episode.player` uses correct shortcode internally
-* fix: template tag `episode.player` uses correct episode on pages that are not its own episode-page
+Subscriber Statistics are only the beginning. Expect more features soon!
 
-= 2.10.0 =
+**Experimental: Shownotes**
 
-Add support for Podlove Web Player 5
+Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates.
 
-Podlove Web Player 5 is the latest overhaul of our podcast web player. 
-It comes with its own configuration interface giving you full control over its appearance. 
+This module is a work-in-progress. But it's usable, so feel free to give it a try, especially if your shownotes are link-heavy and you're comfortable writing Podlove (Twig) templates.
 
-Activate it in `Podlove > Podcast Settings > Player`. 
-You are then prompted to install the "Podlove Web Player" plugin if you don't have it installed already.
+The module is currently hidden. Make it visible by setting a PHP constant, for example in your `wp-config.php`: `define('PODLOVE_MODULE_SHOWNOTES_VISBLE', true);`.
 
-Configure the web player appearance in `Settings > Podlove Web Player`. 
-Existing web player shortcodes and template accessors continue to work as expected. 
-For detailed shortcode options, please refer to https://wordpress.org/plugins/podlove-web-player/
+Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52372dc2da2f1734a5f54c7918
 
-= 2.9.10 =
+**Shortcodes**
 
-* when using Google Analytics tracking, the show title is sent as content group
+* `podlove-episode-contributor-list`
+  * new design
+  * renders text-only in RSS feed
+* `podlove-podcast-contributor-list`
+  * new design
+* `podlove-episode-downloads`
+  * the text link variant is now the default style
 
-= 2.9.9 =
+**Miscellaneous**
 
-Re-Release of 2.9.8
-
-= 2.9.8 =
-
-* add Twig function `get_the_post_thumbnail_url` identical to the native WordPress function
-* fix Podlove Web Player 4 issue in twentytwenty theme
-* fix some importer issues
-* shows module: itunes category can be set per show
-
-= 2.9.7 =
-
-* update JavaScript dependencies
-
-= 2.9.6 =
-
-* update PHP dependencies (including User Agent library for download analytics)
-* add: expose voice attribute to transcript templates ([#1062](https://github.com/podlove/podlove-publisher/pull/1062))
-* add(templating): add sort direction in seasons and season episodes, enabling `podcast.seasons({order: 'DESC'})` and `season.episode({order: 'DESC'})` ([#1080](https://github.com/podlove/podlove-publisher/issues/1080))
-* fix: download list description in analytics on mobile ([#1056](https://github.com/podlove/podlove-publisher/issues/1056))
-* fix: JS issue when selecting transcript voices
-* fix: escaping error in contributor comments ([#1081](https://github.com/podlove/podlove-publisher/issues/1081))
-
-= 2.9.5 =
-
-* Slacknotes: reactivate date picker
-
-= 2.9.4 =
-
-* fix: error on "file types" settings page
-
-**IAB Conformity**
-
-When it comes to tracking download intents, Podlove Publisher was always close to IAB recommendations, with one exception: the time window in which two requests count as two. Podlove Publisher deduplicates by hour, IAB recommends a day.
-
-There is a new setting in `Podlove > Expert Settings > Tracking`: "Deduplication Window". It enables you to change the window to "day". This is an opt-in setting, the default will continue to be hourly.
-
-See also: [docs.podlove.org: IAB Conformity](https://docs.podlove.org/podlove-publisher/guides/download-analytics.html#iab-conformity)
-
-This feature is sponsored by [Lage der Nation](https://lagedernation.org).
-
-= 2.9.3 =
-
-* add quick edit for episode number [#1096](https://github.com/podlove/podlove-publisher/pull/1069)
-* fix settings tab issues when using a language in WordPress other than english ([e613e99](https://github.com/podlove/podlove-publisher/commit/e613e99bb4f07bb88234146567e76d21ce06f5ff))
-* fix issue with category search / pages
-* fix auphonic module issue in Gutenberg editor
-
-= 2.9.2 =
-
-* update Podlove Web Player (fixes issue when sharing/embedding the player)
-* fix PHP notices [#1066](https://github.com/podlove/podlove-publisher/issues/1066) [#1064](https://github.com/podlove/podlove-publisher/issues/1064)
-
-= 2.9.1 =
-
-* fix web player sharing when using CDN player
-* fix duplicating posts: create new guid; do not copy analytics [#1048](https://github.com/podlove/podlove-publisher/issues/1048)
-
-= 2.9.0 =
-
-**New Apple iTunes Categories**
-
-Apple updated their list of available iTunes categories. 
-Please check in `Podlove > Podcast Settings > Directory > iTunes Category` if you need or want to update your category.
-In case your previously selected category does not exist any more, a warning is shown.
-
-Only one category is selectable now (instead of previously 3) to conform with iTunes specifications.
-
-**Download tracking with Google Analytics**
-
-Set your Google Analytics Tracking ID in Podlove > Expert Settings > Tracking. 
-Then every download intent will be forwarded to Google Analytics.
-
-[#1058](https://github.com/podlove/podlove-publisher/pull/1058)
-
-**Other**
-
-* fix: check if podlovePlayer function is available before calling it [#1060](https://github.com/podlove/podlove-publisher/pull/1060)
-
-= 2.8.10 =
-
-* update Podlove Web Player 4 to latest version
-
-= 2.8.9 =
-
-* update Podlove Web Player 4 to latest version
-* remove PHP dependency leth/ip-address
-
-= 2.8.8 =
-
-* update Podlove Web Player 4 to latest version
-
-= 2.8.7 =
-
-* update Podlove Web Player 4 to latest version
-* add player setting to either use the podcast language or user's browser language for web player interface ([#1008](https://github.com/podlove/podlove-publisher/pull/1008))
-* fix [#1047 Use of PHP 5.6 feature in Shows module](https://github.com/podlove/podlove-publisher/issues/1047)
-* report duplicate guids in system report
-
-= 2.8.0 =
-
-**Transcripts**
-
-“Transcripts” is the new module to manage transcripts, show them on your site and in the web player. You can import them from webvtt files. If you are already using the Podlove Publisher contributors, you can assign people to the voices inside the webvtt. Then you even get avatars automatically in your transcripts.
-
-See [https://forschergeist.de/podcast/fg066-klimaneutralitaet/](https://forschergeist.de/podcast/fg066-klimaneutralitaet/) for an example episode with transcripts in the web player.
-
-**Transcripts: Shortcode**
-
-The shortcode `[podlove-transcript]` displays a pretty html version of the transcript for your website. 
-
-**Transcripts: Twig Template Support**
-
-Of course there is a fully featured template API for transcripts as well. For example:
-
-{% for group in episode.transcript %}
-    <div class="ts-group">
-
-        <div class="ts-speaker-avatar">
-            {{ group.contributor.image.html({width: 50}) }}
-        </div>
-
-        <div class="ts-text">
-            <div class="ts-speaker">
-                {{ group.contributor.name }}
-            </div>
-
-            <div class="ts-content">
-                {% for line in group.items %}
-                <span class="ts-line">{{ line.content }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        
-    </div>
-{% endfor %}
-
-See [https://docs.podlove.org/podlove-publisher/reference/template-tags.html](https://docs.podlove.org/podlove-publisher/reference/template-tags.html "documentation") for all details.
-
-**Global Podcast Analytics**
-
-The following metrics are now available for the whole podcast:
-
-- downloads per month
-- top episodes
-- episode asset
-- podcast client
-- operating system
-- download source
-
-**Raw Analytics**
-
-I wouldn’t call this an Analytics API but since it exists to power the analytics screen, I might as well document it. The following endpoints return results in CSV format for easy processing or import to spreadsheets.
-
-Here is an example call that returns the number of downloads in March 2019:
-
-	https://your.domain/wp-admin/admin-ajax.php?action=podlove-analytics-global-downloads-per-month&date_from=2019-03-01T00:00:00.000Z&date_to=2019-03-31T23:59:59.999Z
-
-All requests take the same three parameters:
-
-- `action` defines what data you want
-- `date_from` is the start date in ISO 8601
-- `date_end` is the end date in ISO 8601
-
-Available actions are:
-
-- podlove-analytics-global-downloads-per-month
-- podlove-analytics-global-top-episodes
-- podlove-analytics-global-assets
-- podlove-analytics-global-clients
-- podlove-analytics-global-systems
-- podlove-analytics-global-sources
-
-You need to be logged in with admin permissions for the requests to work.
-
-Disclaimer: Depending on the popularity of your podcast and chosen date range, the requests may take a long time to respond, or even fail if the calculation takes longer than the timeout defined in your web server.
-
-**Other**
-
-- background jobs: add button to abort job
-- new tab style for chapter marks section
-- Podlove Web Player 4 fallback for old browsers and disabled JavaScript
+* remove Bitlove module (service does not exist any more)
+* remove Flattr module
+* remove "Website Protocol" setting (not necessary any more as Let's Encrypt is widely supported)
+* enable episode chapters by default
+* convenience: "Copy to Clipboard" function for Podlove Template shortcodes
+* expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
+* improve feed rendering: use XML generator for all tags with user input to guarantee valid feeds for all inputs
+* add function to remove a transcript from an episode ([#1131](https://github.com/podlove/podlove-publisher/issues/1131))
+* add Steady as donation service
+* add template tag: `episode.post_title` ([#1136](https://github.com/podlove/podlove-publisher/issues/1136))
+* add template tag: `service.type` (https://community.podlove.org/t/replacing-social-icons/2321)
+* fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
+* fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
+* fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
+* fix: ensure uploads for webvtt (transcripts) and gz (exports) are allowed
+* fix: ensure contributors module is active when transcripts are used
+* fix: ensure permissions in shownotes and transcripts APIs
+* fix: don't count download requests with http range header of `bytes=0-0` ([#1135](https://github.com/podlove/podlove-publisher/issues/1135))
+* update dependencies
+* build releases with GitHub Actions (in favour of TravisCI)
 
 ----
 

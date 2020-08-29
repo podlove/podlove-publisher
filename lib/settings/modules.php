@@ -1,34 +1,46 @@
 <?php
+
 namespace Podlove\Settings;
 
 class Modules
 {
     use \Podlove\HasPageDocumentationTrait;
 
-    static $pagehook;
+    public static $pagehook;
 
     public function __construct($handle)
     {
         Modules::$pagehook = add_submenu_page(
-            /* $parent_slug*/$handle,
-            /* $page_title */__('Modules', 'podlove-podcasting-plugin-for-wordpress'),
-            /* $menu_title */__('Modules', 'podlove-podcasting-plugin-for-wordpress'),
-            /* $capability */'administrator',
-            /* $menu_slug  */'podlove_settings_modules_handle',
-            /* $function   */array($this, 'page')
+            // $parent_slug
+            $handle,
+            // $page_title
+            __('Modules', 'podlove-podcasting-plugin-for-wordpress'),
+            // $menu_title
+            __('Modules', 'podlove-podcasting-plugin-for-wordpress'),
+            // $capability
+            'administrator',
+            // $menu_slug
+            'podlove_settings_modules_handle',
+            // $function
+            [$this, 'page']
         );
 
         $this->init_page_documentation(self::$pagehook);
 
         add_settings_section(
-            /* $id          */'podlove_settings_modules',
-            /* $title      */'',
-            /* $callback */function () { /* section head html */},
-            /* $page     */Modules::$pagehook
+            // $id
+            'podlove_settings_modules',
+            // $title
+            '',
+            // $callback
+            function () { // section head html
+            },
+            // $page
+            Modules::$pagehook
         );
 
-        $grouped_modules = array();
-        $modules         = \Podlove\Modules\Base::get_all_module_names();
+        $grouped_modules = [];
+        $modules = \Podlove\Modules\Base::get_all_module_names();
         foreach ($modules as $module_name) {
             $class = \Podlove\Modules\Base::get_class_by_module_name($module_name);
 
@@ -40,71 +52,100 @@ class Modules
                 continue;
             }
 
-            $module         = $class::instance();
+            $module = $class::instance();
             $module_options = $module->get_registered_options();
 
             if ($group = $module->get_module_group()) {
                 add_settings_section(
-                    'podlove_setting_module_group_' . $group,
+                    'podlove_setting_module_group_'.$group,
                     ucwords($group),
-                    function () {},
-                    Modules::$pagehook);
+                    function () {
+                    },
+                    Modules::$pagehook
+                );
             }
 
             if ($module_options) {
                 register_setting(Modules::$pagehook, $module->get_module_options_name());
             }
 
-            add_settings_field(
-                /* $id       */'podlove_setting_module_' . $module_name,
-                /* $title    */
-                '<input name="podlove_active_modules[' . $module_name . ']" id="' . $module_name . '" type="checkbox" ' . checked(\Podlove\Modules\Base::is_active($module_name), true, false) . '>' .
-                sprintf(
-                    '<label for="' . $module_name . '">%s</label><a name="' . $module_name . '"></a>',
-                    $module->get_module_name()
-                ),
-                /* $callback */function () use ($module, $module_name, $module_options) {
-                    ?>
-					<label for="<?php echo $module_name ?>">
-						<?php echo $module->get_module_description() ?>
-					</label>
-					<?php
+            if ($class::is_visible()) {
+                add_settings_field(
+                    // $id
+                    'podlove_setting_module_'.$module_name,
+                    // $title
+                    '<input name="podlove_active_modules['.$module_name.']" id="'.$module_name.'" type="checkbox" '.checked(\Podlove\Modules\Base::is_active($module_name), true, false).'>'.
+                    sprintf(
+                        '<label for="'.$module_name.'">%s</label><a name="'.$module_name.'"></a>',
+                        $module->get_module_name()
+                    ),
+                    // $callback
+                    function () use ($module, $module_name, $module_options) {
+                        ?>
+                        <label for="<?php echo $module_name; ?>">
+                            <?php echo $module->get_module_description(); ?>
+                        </label>
+                        <?php
 
-                    do_action('podlove_module_before_settings_' . $module_name);
+                        do_action('podlove_module_before_settings_'.$module_name);
 
-                    if ($module_options) {
+                        if ($module_options) {
+                            /**
+                             * ?><h4><?php echo __('Settings', 'podlove-podcasting-plugin-for-wordpress') ?></h4><?php.
+                             */
 
-                        /**
-                        ?><h4><?php echo __('Settings', 'podlove-podcasting-plugin-for-wordpress') ?></h4><?php
-                         **/
-
-                        // prepare settings object because form framework expects an object
-                        $settings_object = new \stdClass();
-                        foreach ($module_options as $key => $value) {
-                            $settings_object->$key = $module->get_module_option($key);
-                        }
-
-                        \Podlove\Form\build_for($settings_object, array('context' => $module->get_module_options_name(), 'submit_button' => false, 'form' => false), function ($form) use ($module_options) {
-                            $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-
-                            foreach ($module_options as $module_option_name => $args) {
-                                call_user_func_array(
-                                    array($wrapper, $args['input_type']),
-                                    array(
-                                        $module_option_name,
-                                        $args['args'],
-                                    )
-                                );
+                            // prepare settings object because form framework expects an object
+                            $settings_object = new \stdClass();
+                            foreach ($module_options as $key => $value) {
+                                $settings_object->{$key} = $module->get_module_option($key);
                             }
 
-                        });
-                    }
+                            \Podlove\Form\build_for($settings_object, ['context' => $module->get_module_options_name(), 'submit_button' => false, 'form' => false], function ($form) use ($module_options) {
+                                $wrapper = new \Podlove\Form\Input\TableWrapper($form);
 
-                    do_action('podlove_module_after_settings_' . $module_name);
-                },
-                /* $page     */Modules::$pagehook,
-                /* $section  */$group ? 'podlove_setting_module_group_' . $group : 'podlove_settings_modules'
-            );
+                                foreach ($module_options as $module_option_name => $args) {
+                                    call_user_func_array(
+                                        [$wrapper, $args['input_type']],
+                                        [
+                                            $module_option_name,
+                                            $args['args'],
+                                        ]
+                                    );
+                                }
+                            });
+                        }
+
+                        do_action('podlove_module_after_settings_'.$module_name);
+                    },
+                    // $page
+                    Modules::$pagehook,
+                    // $section
+                    $group ? 'podlove_setting_module_group_'.$group : 'podlove_settings_modules'
+                );
+            } else {
+                add_settings_field(
+                    // $id
+                    'podlove_setting_module_'.$module_name,
+                    // $title
+                    '',
+                    // $callback
+                    function () use ($module, $module_name, $module_options) {
+                        echo '<input name="podlove_active_modules['.$module_name.']" id="'.$module_name.'" type="hidden" '.checked(\Podlove\Modules\Base::is_active($module_name), true, false).'>'; ?>
+                        <script>
+                        (function($){
+                            $(document).ready(function() {
+                                $("input#<?php echo $module_name; ?>").closest("tr").hide();
+                            });
+                        }(jQuery));
+                        </script>
+                        <?php
+                    },
+                    // $page
+                    Modules::$pagehook,
+                    // $section
+                    $group ? 'podlove_setting_module_group_'.$group : 'podlove_settings_modules'
+                );
+            }
         }
 
         register_setting(Modules::$pagehook, 'podlove_active_modules');
@@ -114,13 +155,13 @@ class Modules
     {
         ?>
 		<div class="wrap">
-			<h2><?php echo __('Podlove Publisher Modules', 'podlove-podcasting-plugin-for-wordpress') ?></h2>
+			<h2><?php echo __('Podlove Publisher Modules', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
 			<form method="post" action="options.php">
-				<?php settings_fields(Modules::$pagehook);?>
-				<?php do_settings_sections(Modules::$pagehook);?>
+				<?php settings_fields(Modules::$pagehook); ?>
+				<?php do_settings_sections(Modules::$pagehook); ?>
 
-				<?php submit_button(__('Save Changes', 'podlove-podcasting-plugin-for-wordpress'), 'button-primary', 'submit', true);?>
+				<?php submit_button(__('Save Changes', 'podlove-podcasting-plugin-for-wordpress'), 'button-primary', 'submit', true); ?>
 			</form>
 		</div>
 
@@ -163,8 +204,26 @@ form > .form-table h4 {
 .form-table .form-table th {
     width: 150px;
 }
-</style>
-		<?php
+
+form > h2 {
+    margin-top: 3em;
+    color: #32373c;
+    font-size: 2em;
+    font-weight: 600;
+    letter-spacing: 0.025em;
 }
 
+@media (min-width:1280px) {
+    form > .form-table > tbody {
+        display: grid;
+        grid-gap: 1.5rem;
+        gap: 1.5rem;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        max-width: 1350px;
+    }
+}
+
+</style>
+		<?php
+    }
 }

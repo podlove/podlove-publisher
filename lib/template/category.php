@@ -1,84 +1,92 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * Category Template Wrapper
+ * Category Template Wrapper.
  *
  * @templatetag category
  */
-class Category extends Wrapper {
+class Category extends Wrapper
+{
+    use \Podlove\Model\KeepsBlogReferenceTrait;
 
-	use \Podlove\Model\KeepsBlogReferenceTrait;
+    private $category;
 
-	private $category;
+    public function __construct($category, $blog_id = null)
+    {
+        $this->category = $category;
+        $this->set_blog_id($blog_id);
+    }
 
-	public function __construct($category, $blog_id = null) {
-		$this->category = $category;
-		$this->set_blog_id($blog_id);
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->category);
-	}
+    /**
+     * Term id.
+     *
+     * @accessor
+     */
+    public function id()
+    {
+        return $this->category->term_id;
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Term Name.
+     *
+     * @accessor
+     */
+    public function name()
+    {
+        return $this->category->name;
+    }
 
-	/**
-	 * Term id
-	 * 
-	 * @accessor
-	 */
-	public function id() {
-		return $this->category->term_id;
-	}
+    /**
+     * Term Slug.
+     *
+     * @accessor
+     */
+    public function slug()
+    {
+        return $this->category->slug;
+    }
 
-	/**
-	 * Term Name
-	 * 
-	 * @accessor
-	 */
-	public function name() {
-		return $this->category->name;
-	}
+    /**
+     * Term Description.
+     *
+     * @accessor
+     */
+    public function description()
+    {
+        return $this->category->description;
+    }
 
-	/**
-	 * Term Slug
-	 * 
-	 * @accessor
-	 */
-	public function slug() {
-		return $this->category->slug;
-	}
+    /**
+     * Term Count.
+     *
+     * @accessor
+     */
+    public function count()
+    {
+        return $this->category->count;
+    }
 
-	/**
-	 * Term Description
-	 * 
-	 * @accessor
-	 */
-	public function description() {
-		return $this->category->description;
-	}
+    /**
+     * Term URL.
+     *
+     * @accessor
+     */
+    public function url()
+    {
+        return $this->with_blog_scope(function () {
+            return get_category_link($this->category->term_id);
+        });
+    }
 
-	/**
-	 * Term Count
-	 * 
-	 * @accessor
-	 */
-	public function count() {
-		return $this->category->count;
-	}
-
-	/**
-	 * Term URL
-	 * 
-	 * @accessor
-	 */
-	public function url() {
-		return $this->with_blog_scope(function() {
-			return get_category_link($this->category->term_id);
-		});
-	}
-
+    protected function getExtraFilterArgs()
+    {
+        return [$this->category];
+    }
 }

@@ -1,65 +1,66 @@
 <?php
+
 namespace Podlove\Modules\Widgets\Widgets;
 
-use \Podlove\Model\Podcast;
-use \Podlove\Model\Template;
+class RenderTemplate extends \WP_Widget
+{
+    public function __construct()
+    {
+        parent::__construct(
+            'podlove_render_template_widget',
+            __('Podlove Template', 'podlove-podcasting-plugin-for-wordpress'),
+            ['description' => __('Renders a Podlove template.', 'podlove-podcasting-plugin-for-wordpress')]
+        );
+    }
 
-class RenderTemplate extends \WP_Widget {
+    public function widget($args, $instance)
+    {
+        $podcast = \Podlove\Model\Podcast::get();
 
-	public function __construct() {
-		parent::__construct(
-			'podlove_render_template_widget',
-			__('Podlove Template', 'podlove-podcasting-plugin-for-wordpress'),
-			array( 'description' => __( 'Renders a Podlove template.', 'podlove-podcasting-plugin-for-wordpress' ) )
-		);
-	}
+        echo $args['before_widget'];
 
-	public function widget( $args, $instance ) {
-		$podcast = \Podlove\Model\Podcast::get();
+        if (!empty($instance['title'])) {
+            echo $args['before_title'].apply_filters('widget_title', $instance['title']).$args['after_title'];
+        }
 
-		echo $args['before_widget'];
+        echo do_shortcode('[podlove-template template="'.$instance['template'].'" autop="'.($instance['autop'] ? 'yes' : 'no').'"]');
 
-		if ( ! empty($instance['title']) )
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
+        echo $args['after_widget'];
+    }
 
-		echo do_shortcode( '[podlove-template template="' . $instance[ 'template' ] . '" autop="' . ( $instance[ 'autop' ] ? 'yes' : 'no' ) . '"]' );
-
-		echo $args['after_widget'];
-	}
-
-	public function form( $instance ) {
-		$templates = \Podlove\Model\Template::all_globally();
-		$title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : '';
-		$selected_template = isset( $instance[ 'template' ] ) ? $instance[ 'template' ] : '';
-		$autop = isset( $instance[ 'autop' ] ) ? $instance[ 'autop' ] : '';
-		?>
+    public function form($instance)
+    {
+        $templates = \Podlove\Model\Template::all_globally();
+        $title = isset($instance['title']) ? $instance['title'] : '';
+        $selected_template = isset($instance['template']) ? $instance['template'] : '';
+        $autop = isset($instance['autop']) ? $instance['autop'] : ''; ?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $title; ?>" />
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" />
 
-			<label for="<?php echo $this->get_field_id( 'template' ); ?>"><?php _e( 'Template', 'podlove-podcasting-plugin-for-wordpress' ); ?></label> 
-			<select class="widefat" id="<?php echo $this->get_field_id( 'template' ); ?>" name="<?php echo $this->get_field_name( 'template' ); ?>">
+			<label for="<?php echo $this->get_field_id('template'); ?>"><?php _e('Template', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<select class="widefat" id="<?php echo $this->get_field_id('template'); ?>" name="<?php echo $this->get_field_name('template'); ?>">
 				<?php
-					foreach ($templates as $template) {
-						?>
-						<option value="<?php echo $template->title; ?>" <?php echo ( $selected_template == $template->title ? 'selected=\"selected\"' : '' ); ?>><?php echo $template->title; ?></option>
+                    foreach ($templates as $template) {
+                        ?>
+						<option value="<?php echo $template->title; ?>" <?php echo $selected_template == $template->title ? 'selected=\"selected\"' : ''; ?>><?php echo $template->title; ?></option>
 						<?php
-					}
-				?>
+                    } ?>
 			</select>
 
-			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id( 'autop' ); ?>" name="<?php echo $this->get_field_name( 'autop' ); ?>" <?php echo ( $autop ? 'checked="checked"' : '' ); ?> />
-			<label for="<?php echo $this->get_field_id( 'autop' ); ?>"><?php _e( 'Autowrap blocks of text?', 'podlove-podcasting-plugin-for-wordpress' ); ?></label><br />
+			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id('autop'); ?>" name="<?php echo $this->get_field_name('autop'); ?>" <?php echo $autop ? 'checked="checked"' : ''; ?> />
+			<label for="<?php echo $this->get_field_id('autop'); ?>"><?php _e('Autowrap blocks of text?', 'podlove-podcasting-plugin-for-wordpress'); ?></label><br />
 		</p>
 		<?php
-	}
+    }
 
-	public function update( $new_instance, $old_instance ) {
-		$instance = array();
-		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-		$instance['template'] = ( ! empty( $new_instance['template'] ) ) ? strip_tags( $new_instance['template'] ) : '';
-		$instance['autop'] = ( ! empty( $new_instance['autop'] ) ) ? strip_tags( $new_instance['autop'] ) : '';
+    public function update($new_instance, $old_instance)
+    {
+        $instance = [];
+        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+        $instance['template'] = (!empty($new_instance['template'])) ? strip_tags($new_instance['template']) : '';
+        $instance['autop'] = (!empty($new_instance['autop'])) ? strip_tags($new_instance['autop']) : '';
 
-		return $instance;
-	}
+        return $instance;
+    }
 }

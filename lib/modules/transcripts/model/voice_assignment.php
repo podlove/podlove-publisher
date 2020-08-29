@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Transcripts\Model;
 
 class VoiceAssignment extends \Podlove\Model\Base
@@ -15,8 +16,8 @@ class VoiceAssignment extends \Podlove\Model\Base
         global $wpdb;
 
         $sql = 'DELETE FROM '
-        . static::table_name()
-        . ' WHERE episode_id = ' . (int) $episode_id;
+        .static::table_name()
+        .' WHERE episode_id = '.(int) $episode_id;
 
         return $wpdb->query($sql);
     }

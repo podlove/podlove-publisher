@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="podlove-analytics-datepicker">
     <v2-datepicker-range
       @change="onChange"
       lang="en"
@@ -137,5 +137,4 @@ export default {
   }
 };
 </script>
-
 

@@ -1,15 +1,15 @@
 <?php
+
 namespace Podlove\Modules\SubscribeButton;
 
-use \Podlove\Model\Podcast;
-use \Podlove\Model\Feed;
-use \Podlove\Cache\TemplateCache;
+use Podlove\Cache\TemplateCache;
+use Podlove\Model\Feed;
 
 /**
- * Podlove Subscribe Button
- * 
+ * Podlove Subscribe Button.
+ *
  * Usage:
- * 
+ *
  *   $data = [
  *     'title'       => $podcast->title,
  *     'subtitle'    => $podcast->subtitle,
@@ -24,105 +24,163 @@ use \Podlove\Cache\TemplateCache;
  *
  *   return (new Button())->render($data, ['size' => 'medium', 'language' => 'de']);
  */
-class Button {
+class Button
+{
+    private $defaults = [
+        'size' => 'big',
+        'format' => 'cover',
+        'width' => '',
+        'style' => 'filled',
+        'language' => 'en',
+        'color' => '#75ad91',
+        'buttonid' => null,
+        'hide' => false,
+    ];
 
-	private $defaults = [
-		'size'     => 'big',
-		'format'   => 'cover',
-		'width'    => '',
-		'style'    => 'filled',
-		'language' => 'en',
-		'color'    => '#75ad91',
-		'buttonid' => NULL,
-		'hide'     => false
-	];
+    private $args = [];
 
-	private $args = [];
+    public function render($data, $args = [])
+    {
+        $this->args = wp_parse_args($args, $this->defaults);
 
-	public function render($data, $args = []) {
+        // whitelist size parameter
+        if (!in_array($this->args['size'], array_keys(Subscribe_Button::sizes()))) {
+            $this->args['size'] = $this->defaults['size'];
+        }
 
-		$this->args = wp_parse_args($args, $this->defaults);
+        // whitelist style parameter
+        if (!in_array($this->args['style'], array_keys(Subscribe_Button::styles()))) {
+            $this->args['style'] = $this->defaults['style'];
+        }
 
-		// whitelist size parameter
-		if (!in_array($this->args['size'], array_keys(Subscribe_Button::sizes())))
-			$this->args['size'] = $this->defaults['size'];
+        // whitelist format parameter
+        if (!in_array($this->args['format'], array_keys(Subscribe_Button::formats()))) {
+            $this->args['format'] = $this->defaults['format'];
+        }
 
-		// whitelist style parameter
-		if (!in_array($this->args['style'], array_keys(Subscribe_Button::styles())))
-			$this->args['style'] = $this->defaults['style'];
+        $this->args['data'] = $data;
 
-		// whitelist format parameter
-		if (!in_array($this->args['format'], array_keys(Subscribe_Button::formats())))
-			$this->args['format'] = $this->defaults['format'];
+        // allow args to override data
+        $fields = ['title', 'subtitle', 'description', 'cover'];
+        foreach ($fields as $field) {
+            if (isset($this->args[$field]) && $this->args[$field]) {
+                $this->args['data'][$field] = $this->args[$field];
+            }
+        }
 
-		$this->args['data'] = $data;
+        return $this->html();
+    }
 
-		// allow args to override data
-		$fields = ['title', 'subtitle', 'description', 'cover'];
-		foreach ($fields as $field) {
-			if (isset($this->args[$field]) && $this->args[$field]) {
-				$this->args['data'][$field] = $this->args[$field];
-			}
-		}
+    public static function get_random_string()
+    {
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return bin2hex(openssl_random_pseudo_bytes(7));
+        }
 
-		return $this->html();
-	}
+        return dechex(mt_rand());
+    }
 
-	public static function get_random_string() {
-		if (function_exists('openssl_random_pseudo_bytes')) {
-			return bin2hex(openssl_random_pseudo_bytes(7));
-		} else {
-			return dechex(mt_rand());
-		}
-	}
+    /**
+     * Feed list, ready for subscribe button.
+     *
+     * @param mixed      $feeds
+     * @param null|mixed $taxonomy
+     * @param null|mixed $term_id
+     *
+     * @return array list of prepared feed data-objects
+     */
+    public static function feeds($feeds, $taxonomy = null, $term_id = null)
+    {
+        $cache_key = sprintf('podlove_subscribe_button_feeds_%s_%s', $taxonomy, $term_id);
 
-	private function module() {
-		return Subscribe_Button::instance();
-	}
+        return TemplateCache::get_instance()->cache_for($cache_key, function () use ($feeds, $taxonomy, $term_id) {
+            return array_map(function ($feed) use ($taxonomy, $term_id) {
+                $file_type = $feed->episode_asset()->file_type();
 
-	private function html() {
+                $feed_data = [
+                    'type' => $file_type->type,
+                    'format' => self::feed_format($file_type->extension),
+                    'url' => $feed->get_subscribe_url($taxonomy, $term_id),
+                    'variant' => 'high',
+                ];
 
-		if (!count($this->args['data']['feeds']))
-			return '';
+                $itunes_feed_id = (int) $feed->itunes_feed_id;
+                if ($itunes_feed_id > 0) {
+                    $feed_data['directory-url-itunes'] = 'https://podcasts.apple.com/podcast/id'.$itunes_feed_id;
+                }
 
-		$dataAccessor = 'podcastData' . self::get_random_string();
+                return $feed_data;
+            }, $feeds);
+        });
+    }
 
-		$dom = new \Podlove\DomDocumentFragment;
-		
-		$script_data_tag = $dom->createElement('script');
-		$script_data_tag->appendChild(
-			$dom->createTextNode(
-				sprintf("window.$dataAccessor = %s;", json_encode($this->args['data']))
-			)
-		);
+    /**
+     * Get button compatible language string.
+     *
+     * Examples:
+     *
+     * 	language('de');    // => 'de'
+     *  language('de-DE'); // => 'de'
+     *  language('en-GB'); // => 'en'
+     *
+     * @param string $language language identifier
+     *
+     * @return string
+     */
+    public static function language($language)
+    {
+        return strtolower(explode('-', $language)[0]);
+    }
 
-		$use_cdn = $this->module()->get_module_option('use_cdn', true);
+    private function module()
+    {
+        return Subscribe_Button::instance();
+    }
 
-		$cdn_src = 'https://cdn.podlove.org/subscribe-button/javascripts/app.js';
-		$loc_src = $this->module()->get_module_url() . '/dist/javascripts/app.js';
+    private function html()
+    {
+        if (!count($this->args['data']['feeds'])) {
+            return '';
+        }
 
-		$src = $use_cdn ? $cdn_src : $loc_src;
+        $dataAccessor = 'podcastData'.self::get_random_string();
 
-		$script_button_tag = $this->get_script_button_tag($dom, $src, $dataAccessor);
+        $dom = new \Podlove\DomDocumentFragment();
 
-		$dom->appendChild($script_data_tag);
-		$dom->appendChild($script_button_tag);
+        $script_data_tag = $dom->createElement('script');
+        $script_data_tag->appendChild(
+            $dom->createTextNode(
+                sprintf("window.{$dataAccessor} = %s;", json_encode($this->args['data']))
+            )
+        );
 
-		// cdn fallback to local
-		if ($use_cdn) {
-			$dom2 = new \Podlove\DomDocumentFragment;
-			$tag2 = $this->get_script_button_tag($dom2, $loc_src, $dataAccessor);
-			$dom2->appendChild($tag2);
+        $use_cdn = $this->module()->get_module_option('use_cdn', true);
 
-			$script = trim((string) $dom2);
-			$script = str_replace("<script", "%3Cscript", $script);
-			$script = str_replace("</script>", "%3E%3C/script%3E", $script);
-			$script = str_replace('"', '\"', $script);
+        $cdn_src = 'https://cdn.podlove.org/subscribe-button/javascripts/app.js';
+        $loc_src = $this->module()->get_module_url().'/dist/javascripts/app.js';
 
-			$fallback = "<script>
+        $src = $use_cdn ? $cdn_src : $loc_src;
+
+        $script_button_tag = $this->get_script_button_tag($dom, $src, $dataAccessor);
+
+        $dom->appendChild($script_data_tag);
+        $dom->appendChild($script_button_tag);
+
+        // cdn fallback to local
+        if ($use_cdn) {
+            $dom2 = new \Podlove\DomDocumentFragment();
+            $tag2 = $this->get_script_button_tag($dom2, $loc_src, $dataAccessor);
+            $dom2->appendChild($tag2);
+
+            $script = trim((string) $dom2);
+            $script = str_replace('<script', '%3Cscript', $script);
+            $script = str_replace('</script>', '%3E%3C/script%3E', $script);
+            $script = str_replace('"', '\"', $script);
+
+            $fallback = "<script>
 if (typeof SubscribeButton == 'undefined') {
 
-    document.write(unescape(\"$script\"));
+    document.write(unescape(\"{$script}\"));
 
     // hide uninitialized button
     window.setTimeout(function() {
@@ -136,112 +194,76 @@ if (typeof SubscribeButton == 'undefined') {
 
 }
 </script>";
-		} else {
-			$fallback = "";
-		}
+        } else {
+            $fallback = '';
+        }
 
-		return ((string) $dom) . $fallback;
-	}
+        return ((string) $dom).$fallback;
+    }
 
-	private function get_script_button_tag($dom, $src, $accessor)
-	{
-		$tag = $dom->createElement('script');
-		$tag->setAttribute('class', 'podlove-subscribe-button');
-		$tag->setAttribute('src', $src);
-		$tag->setAttribute('data-json-data', $accessor);
-		$tag->setAttribute('data-language' , self::language($this->args['language']));
-		$tag->setAttribute('data-size'     , self::size($this->args['size'], $this->args['width']));
-		$tag->setAttribute('data-format'   , $this->args['format']);
-		$tag->setAttribute('data-style'   , $this->args['style']);
-		$tag->setAttribute('data-color'   , $this->args['color']);
+    private function get_script_button_tag($dom, $src, $accessor)
+    {
+        $tag = $dom->createElement('script');
+        $tag->setAttribute('class', 'podlove-subscribe-button');
+        $tag->setAttribute('src', $src);
+        $tag->setAttribute('data-json-data', $accessor);
+        $tag->setAttribute('data-language', self::language($this->args['language']));
+        $tag->setAttribute('data-size', self::size($this->args['size'], $this->args['width']));
+        $tag->setAttribute('data-format', $this->args['format']);
+        $tag->setAttribute('data-style', $this->args['style']);
+        $tag->setAttribute('data-color', $this->args['color']);
 
-		if ($this->args['buttonid'])
-			$tag->setAttribute('data-buttonid', $this->args['buttonid']);
+        if ($this->args['buttonid']) {
+            $tag->setAttribute('data-buttonid', $this->args['buttonid']);
+        }
 
-		if ($this->args['hide'] && in_array($this->args['hide'], [1, '1', true, 'true', 'on']))
-			$tag->setAttribute('data-hide', true);
+        if ($this->args['hide'] && in_array($this->args['hide'], [1, '1', true, 'true', 'on'])) {
+            $tag->setAttribute('data-hide', true);
+        }
 
-		// ensure there is a closing script tag
-		$tag->appendChild($dom->createTextNode(' '));
+        // ensure there is a closing script tag
+        $tag->appendChild($dom->createTextNode(' '));
 
-		return $tag;
-	}
+        return $tag;
+    }
 
-	/**
-	 * Feed list, ready for subscribe button.
-	 * 
-	 * @return array list of prepared feed data-objects
-	 */
-	public static function feeds($feeds, $taxonomy = null, $term_id = null) {
-		$cache_key = sprintf("podlove_subscribe_button_feeds_%s_%s", $taxonomy, $term_id);
-		return TemplateCache::get_instance()->cache_for($cache_key, function() use ($feeds, $taxonomy, $term_id) {
+    /**
+     * Format string, ready for subscribe button.
+     *
+     * @param string $extension File extension of feed enclosures
+     *
+     * @return string
+     */
+    private static function feed_format($extension)
+    {
+        switch ($extension) {
+            case 'm4a': return 'aac';
 
-			$feeds_for_button = array_map(function($feed) use ($taxonomy, $term_id) {
-				$file_type = $feed->episode_asset()->file_type();
+break;
+            case 'oga': return 'ogg';
 
-				$feed_data = [
-					'type'    => $file_type->type,
-					'format'  => self::feed_format($file_type->extension),
-					'url'     => $feed->get_subscribe_url($taxonomy, $term_id),
-					'variant' => 'high'
-				];
+break;
+            default:
+                return $extension;
 
-				$itunes_feed_id = (int) $feed->itunes_feed_id;
-				if ($itunes_feed_id > 0) {
-					$feed_data['directory-url-itunes'] = 'https://itunes.apple.com/podcast/id' . $itunes_feed_id;
-				}
+            break;
+        }
+    }
 
-				return $feed_data;
-			}, $feeds);
+    /**
+     * Size string, ready for subscribe button.
+     *
+     * @param string $size  button size identifier ('small', 'medium', 'big', 'big-logo')
+     * @param string $width 'auto' for auto-width
+     *
+     * @return string
+     */
+    private static function size($size, $width)
+    {
+        if ($width == 'auto') {
+            $size .= ' auto';
+        }
 
-			return $feeds_for_button;
-		});
-	}
-	
-	/**
-	 * Format string, ready for subscribe button.
-	 * 
-	 * @param  string $extension File extension of feed enclosures
-	 * @return string
-	 */
-	private static function feed_format($extension) {
-		switch ($extension) {
-			case 'm4a': return 'aac'; break;
-			case 'oga': return 'ogg'; break;
-			default:
-				return $extension;
-			break;
-		};
-	}
-
-	/**
-	 * Get button compatible language string.
-	 * 
-	 * Examples:
-	 * 
-	 * 	language('de');    // => 'de'
-	 *  language('de-DE'); // => 'de'
-	 *  language('en-GB'); // => 'en'
-	 * 
-	 * @param  string $language language identifier
-	 * @return string
-	 */
-	static function language($language) {
-		return strtolower(explode('-', $language)[0]);
-	}
-
-	/**
-	 * Size string, ready for subscribe button.
-	 * 
-	 * @param  string $size  button size identifier ('small', 'medium', 'big', 'big-logo')
-	 * @param  string $width 'auto' for auto-width
-	 * @return string
-	 */
-	private static function size($size, $width) {
-		if ($width == 'auto')
-			$size .= ' auto';
-
-		return $size;
-	}
-
+        return $size;
+    }
 }

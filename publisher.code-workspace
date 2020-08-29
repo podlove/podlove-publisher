@@ -1,10 +1,10 @@
 {
-	"folders": [
-		{
-			"path": "."
+	"folders": [{
+			"path": ".",
+			"name": "Podlove Publisher"
 		},
 		{
-			"path": "/Users/ericteubert/code/publisher",
+			"path": "../../..",
 			"name": "WordPress"
 		}
 	],

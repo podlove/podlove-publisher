@@ -289,6 +289,7 @@ jQuery(function ($) {
 		auto_fill_form('contributor', 'realname');
 		clean_up_input();
 		init_contextual_help_links();
+		new ClipboardJS('.clipboard-btn');
 	});
 
 });

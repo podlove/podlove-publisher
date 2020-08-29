@@ -1,84 +1,92 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * Tag Template Wrapper
+ * Tag Template Wrapper.
  *
  * @templatetag tag
  */
-class Tag extends Wrapper {
+class Tag extends Wrapper
+{
+    use \Podlove\Model\KeepsBlogReferenceTrait;
 
-	use \Podlove\Model\KeepsBlogReferenceTrait;
+    private $tag;
 
-	private $tag;
+    public function __construct($tag, $blog_id = null)
+    {
+        $this->tag = $tag;
+        $this->set_blog_id($blog_id);
+    }
 
-	public function __construct($tag, $blog_id = null) {
-		$this->tag = $tag;
-		$this->set_blog_id($blog_id);
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->tag);
-	}
+    /**
+     * Term id.
+     *
+     * @accessor
+     */
+    public function id()
+    {
+        return $this->tag->term_id;
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Term Name.
+     *
+     * @accessor
+     */
+    public function name()
+    {
+        return $this->tag->name;
+    }
 
-	/**
-	 * Term id
-	 * 
-	 * @accessor
-	 */
-	public function id() {
-		return $this->tag->term_id;
-	}
+    /**
+     * Term Slug.
+     *
+     * @accessor
+     */
+    public function slug()
+    {
+        return $this->tag->slug;
+    }
 
-	/**
-	 * Term Name
-	 * 
-	 * @accessor
-	 */
-	public function name() {
-		return $this->tag->name;
-	}
+    /**
+     * Term Description.
+     *
+     * @accessor
+     */
+    public function description()
+    {
+        return $this->tag->description;
+    }
 
-	/**
-	 * Term Slug
-	 * 
-	 * @accessor
-	 */
-	public function slug() {
-		return $this->tag->slug;
-	}
+    /**
+     * Term Count.
+     *
+     * @accessor
+     */
+    public function count()
+    {
+        return $this->tag->count;
+    }
 
-	/**
-	 * Term Description
-	 * 
-	 * @accessor
-	 */
-	public function description() {
-		return $this->tag->description;
-	}
+    /**
+     * Term URL.
+     *
+     * @accessor
+     */
+    public function url()
+    {
+        return $this->with_blog_scope(function () {
+            return get_tag_link($this->tag->term_id);
+        });
+    }
 
-	/**
-	 * Term Count
-	 * 
-	 * @accessor
-	 */
-	public function count() {
-		return $this->tag->count;
-	}
-
-	/**
-	 * Term URL
-	 * 
-	 * @accessor
-	 */
-	public function url() {
-		return $this->with_blog_scope(function() {
-			return get_tag_link($this->tag->term_id);
-		});
-	}
-
+    protected function getExtraFilterArgs()
+    {
+        return [$this->tag];
+    }
 }

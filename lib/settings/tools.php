@@ -1,69 +1,72 @@
 <?php
+
 namespace Podlove\Settings;
 
 use Podlove\Model\Job;
 
-class Tools {
+class Tools
+{
+    use \Podlove\HasPageDocumentationTrait;
 
-	use \Podlove\HasPageDocumentationTrait;
+    public static $pagehook;
 
-	static $pagehook;
-	
-	public function __construct( $handle ) {
-		
-		Tools::$pagehook = add_submenu_page(
-			/* $parent_slug*/ $handle,
-			/* $page_title */ __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ),
-			/* $menu_title */ __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ),
-			/* $capability */ 'administrator',
-			/* $menu_slug  */ 'podlove_tools_settings_handle',
-			/* $function   */ array( $this, 'page' )
-		);
+    public function __construct($handle)
+    {
+        Tools::$pagehook = add_submenu_page(
+            // $parent_slug
+            $handle,
+            // $page_title
+            __('Tools', 'podlove-podcasting-plugin-for-wordpress'),
+            // $menu_title
+            __('Tools', 'podlove-podcasting-plugin-for-wordpress'),
+            // $capability
+            'administrator',
+            // $menu_slug
+            'podlove_tools_settings_handle',
+            // $function
+            [$this, 'page']
+        );
 
-		$this->init_page_documentation(self::$pagehook);
+        $this->init_page_documentation(self::$pagehook);
 
-		add_action( 'admin_init', array( $this, 'process_actions' ) );
+        add_action('admin_init', [$this, 'process_actions']);
 
-		add_action('admin_print_styles', function() {
-			wp_enqueue_script('podlove_admin_jobs');
-		}, 20);
+        add_action('admin_print_styles', function () {
+            wp_enqueue_script('podlove_admin_jobs');
+        }, 20);
 
-		\Podlove\add_tools_section('general-maintenance', __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'));
-		\Podlove\add_tools_section('tracking-analytics', __('Tracking & Analytics', 'podlove-podcasting-plugin-for-wordpress'));
-	
-		/**
-		 * Fields for section "General Maintenance"
-		 */
-		\Podlove\add_tools_field('gm-clear-caches', __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'), function() {
-			?>
-			<a href="<?php echo admin_url('admin.php?page=' . $_REQUEST['page'] . '&action=clear_caches') ?>" class="button">
-				<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress') ?>
+        \Podlove\add_tools_section('general-maintenance', __('General Maintenance', 'podlove-podcasting-plugin-for-wordpress'));
+        \Podlove\add_tools_section('tracking-analytics', __('Tracking & Analytics', 'podlove-podcasting-plugin-for-wordpress'));
+
+        // Fields for section "General Maintenance"
+        \Podlove\add_tools_field('gm-clear-caches', __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'), function () {
+            ?>
+			<a href="<?php echo admin_url('admin.php?page='.$_REQUEST['page'].'&action=clear_caches'); ?>" class="button">
+				<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</a>
 			<p class="description">
 				<?php echo __('Sometimes an issue is already fixed but you still see the faulty output. Clearing the cache avoids this. However, if you use a third party caching plugin, you should clear that cache, too.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
-		}, 'general-maintenance');
+        }, 'general-maintenance');
 
-		\Podlove\add_tools_field('gm-repair', __('Repair', 'podlove-podcasting-plugin-for-wordpress'), function() {
-			\Podlove\Repair::page();
-		}, 'general-maintenance');
+        \Podlove\add_tools_field('gm-repair', __('Repair', 'podlove-podcasting-plugin-for-wordpress'), function () {
+            \Podlove\Repair::page();
+        }, 'general-maintenance');
 
-
-		/**
-		 * Fields for section "Tracking & Analytics"
-		 */
-		$job_class = 'Podlove\Jobs\UserAgentRefreshJob';
-		\Podlove\add_tools_field('ta-recals-agents', $job_class::title(), function() use ($job_class) {
-				$recent_job = Job::find_one_recent_job($job_class);
-				$recent_job_id = $recent_job ? $recent_job->id : '';
-			?>
+        /**
+         * Fields for section "Tracking & Analytics".
+         */
+        $job_class = 'Podlove\Jobs\UserAgentRefreshJob';
+        \Podlove\add_tools_field('ta-recals-agents', $job_class::title(), function () use ($job_class) {
+            $recent_job = Job::find_one_recent_job($job_class);
+            $recent_job_id = $recent_job ? $recent_job->id : ''; ?>
 
 			<div 
 				class="podlove-job" 
 				data-job="Podlove-Jobs-UserAgentRefreshJob" 
-				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()) ?>"
-				data-recent-job-id="<?php echo $recent_job_id ?>"
+				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
+				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>
 				
 			</div>
@@ -74,19 +77,18 @@ class Tools {
 				<?php echo __('Runs automatically on plugin updates. Update user agent metadata based on <code>device-detector</code> library.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
-		}, 'tracking-analytics');
+        }, 'tracking-analytics');
 
-		$job_class = 'Podlove\Jobs\DownloadIntentCleanupJob';
-		\Podlove\add_tools_field('ta-recalc-analytics', $job_class::title(), function() use ($job_class) {
-				$recent_job = Job::find_one_recent_job($job_class);
-				$recent_job_id = $recent_job ? $recent_job->id : '';
-			?>
+        $job_class = 'Podlove\Jobs\DownloadIntentCleanupJob';
+        \Podlove\add_tools_field('ta-recalc-analytics', $job_class::title(), function () use ($job_class) {
+            $recent_job = Job::find_one_recent_job($job_class);
+            $recent_job_id = $recent_job ? $recent_job->id : ''; ?>
 
 			<div 
 				class="podlove-job" 
 				data-job="Podlove-Jobs-DownloadIntentCleanupJob" 
-				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()) ?>"
-				data-recent-job-id="<?php echo $recent_job_id ?>"
+				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
+				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>
 				
 			</div>
@@ -97,19 +99,18 @@ class Tools {
 				<?php echo __('Runs automatically once per hour. Recalculates contents of <code>podlove_download_intent_clean</code> table based on <code>podlove_download_intent</code> table. Clears cache. This is useful if you don\'t get updated analytics or you played with data in <code>podlove_download_intent_clean</code> and messed up.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
-		}, 'tracking-analytics');
+        }, 'tracking-analytics');
 
-		$job_class = 'Podlove\Jobs\DownloadTimedAggregatorJob';
-		\Podlove\add_tools_field('ta-recalc-downloads-table', $job_class::title(), function() use ($job_class) {
-				$recent_job = Job::find_one_recent_job($job_class);
-				$recent_job_id = $recent_job ? $recent_job->id : '';
-			?>
+        $job_class = 'Podlove\Jobs\DownloadTimedAggregatorJob';
+        \Podlove\add_tools_field('ta-recalc-downloads-table', $job_class::title(), function () use ($job_class) {
+            $recent_job = Job::find_one_recent_job($job_class);
+            $recent_job_id = $recent_job ? $recent_job->id : ''; ?>
 			<div 
 				class="podlove-job" 
 				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
 				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
-				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()) ?>"
-				data-recent-job-id="<?php echo $recent_job_id ?>"
+				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
+				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>
 				
 			</div>
@@ -118,34 +119,33 @@ class Tools {
 				<?php echo __('Runs automatically once per hour. Calculates total downloads per episode and downloads per episode in time segments (first day, first two days, ... first year) for the Analytics Dashboard.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<?php
-		}, 'tracking-analytics');
-	}
+        }, 'tracking-analytics');
+    }
 
-	function process_actions() {
+    public function process_actions()
+    {
+        if (filter_input(INPUT_GET, 'page') != 'podlove_tools_settings_handle') {
+            return;
+        }
 
-		if (filter_input(INPUT_GET, 'page') != 'podlove_tools_settings_handle')
-			return;
+        switch (filter_input(INPUT_GET, 'action')) {
+            case 'clear_caches':
+                \Podlove\Repair::clear_podlove_cache();
+                \Podlove\Repair::clear_podlove_image_cache();
+                wp_redirect(admin_url('admin.php?page='.$_REQUEST['page']));
 
-		switch (filter_input(INPUT_GET, 'action')) {
-			case 'clear_caches':
-				\Podlove\Repair::clear_podlove_cache();
-				\Podlove\Repair::clear_podlove_image_cache();
-				wp_redirect(admin_url('admin.php?page=' . $_REQUEST['page']));
-				break;
-			default:
-				# code...
-				break;
-		}
+                break;
+            default:
+                // code...
+                break;
+        }
+    }
 
-	}
+    public function page()
+    {
+        wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL.'/js/admin/tools/useragent.js', ['jquery'], \Podlove\get_plugin_header('Version'));
 
-	public function page() {
-
-		wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL . '/js/admin/tools/useragent.js', ['jquery'], \Podlove\get_plugin_header('Version'));
-
-		wp_enqueue_script('jquery-ui-progressbar');
-
-		?>
+        wp_enqueue_script('jquery-ui-progressbar'); ?>
 
   <style>
   .ui-progressbar {
@@ -193,49 +193,45 @@ class Tools {
   </style>
 
 		<div class="wrap">
-			<h2><?php echo __( 'Tools', 'podlove-podcasting-plugin-for-wordpress' ); ?></h2>
+			<h2><?php echo __('Tools', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
-			<?php 
-			$sections = \Podlove\get_tools_sections();
-			$fields   = \Podlove\get_tools_fields();
-			?>
+			<?php
+            $sections = \Podlove\get_tools_sections();
+        $fields = \Podlove\get_tools_fields(); ?>
 
-			<?php foreach ($sections as $section_id => $section): ?>
+			<?php foreach ($sections as $section_id => $section) { ?>
 				<div class="card" style="max-width: 100%">
 
-					<h3><?php echo $section['title'] ?></h3>
+					<h3><?php echo $section['title']; ?></h3>
 
 					<?php
-					if (is_callable($section['callback'])) {
-						call_user_func($section['callback']);
-					}
-					?>
+                    if (is_callable($section['callback'])) {
+                        call_user_func($section['callback']);
+                    } ?>
 
 					<table class="form-table">
 						<tbody>
-						<?php if (isset($fields[$section_id]) && is_array($fields[$section_id])): ?>
-						<?php foreach ($fields[$section_id] as $field_id => $field): ?>
+						<?php if (isset($fields[$section_id]) && is_array($fields[$section_id])) { ?>
+						<?php foreach ($fields[$section_id] as $field_id => $field) { ?>
 							<tr>
 								<th>
-									<?php echo $field['title'] ?>
+									<?php echo $field['title']; ?>
 								</th>
 								<td>
 									<?php
-									if (is_callable($field['callback'])) {
-										call_user_func($field['callback']);
-									}
-									?>
+                                    if (is_callable($field['callback'])) {
+                                        call_user_func($field['callback']);
+                                    } ?>
 								</td>
 							</tr>
-						<?php endforeach ?>
-						<?php endif ?>
+						<?php } ?>
+						<?php } ?>
 						</tbody>
 					</table>
 				</div>
-			<?php endforeach ?>
+			<?php } ?>
 
 		</div>	
 		<?php
-	}
-
+    }
 }

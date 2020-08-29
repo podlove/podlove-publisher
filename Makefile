@@ -1,6 +1,21 @@
 player_src = bower_components/podlove-web-player/dist
 player_dst = lib/modules/podlove_web_player/player_v3
 
+prepareTest:
+	bash bin/install-wp-tests.sh wordpress_test root '' localhost latest
+
+test:
+	./vendor/bin/phpunit -c phpunit.xml
+
+release:
+	bin/release.sh
+
+format:
+	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style"
+
+validateFormat:
+	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style" -v --dry-run --stop-on-violation --using-cache=no
+
 update_subscribe_button:
 	rm -rf .tmppsb
 	git clone https://github.com/podlove/podlove-subscribe-button.git .tmppsb
@@ -21,7 +36,7 @@ player:
 	cp -r $(player_src)/js/vendor/*.min.js $(player_dst)/js/vendor
 
 build:
-	composer install --no-dev -o
+	composer install --no-progress --no-dev -o
 	npm install
 	npm run production
 	rm -rf dist
@@ -56,3 +71,18 @@ build:
 	# player v2 / mediaelement
 	find dist -iname "echo-hereweare.*" | xargs rm -rf
 	find dist -iname "*.jar" | xargs rm -rf
+
+install:
+	rm -rf node_modules
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn
+	docker run --rm --interactive --tty --volume ${PWD}:/app composer install
+
+dev:
+	docker-compose -f .build/docker-compose.yaml up -d
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn dev 
+
+stop:
+	docker-compose -f .build/docker-compose.yaml down
+
+format:
+	docker run --rm --user $(id -u):$(id -g) --volume ${PWD}:/data cytopia/php-cs-fixer fix .

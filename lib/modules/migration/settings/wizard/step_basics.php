@@ -1,13 +1,16 @@
 <?php
+
 namespace Podlove\Modules\Migration\Settings\Wizard;
+
 use Podlove\Modules\Migration\Enclosure;
 
-class StepBasics extends Step {
+class StepBasics extends Step
+{
+    public $title = 'Basic Settings';
 
-	public $title = 'Basic Settings';
-	
-	public function template() {
-		?>
+    public function template()
+    {
+        ?>
 		<div class="row-fluid">
 			<div class="span6">
 				<h3>The Podlove Mindset</h3>
@@ -44,74 +47,73 @@ class StepBasics extends Step {
 			</div>
 		</div>
 
-		<?php 
-		$base_urls = array();
-		$args = array( 'posts_per_page' => -1 );
-		$query = new \WP_Query( $args );
-		while( $query->have_posts() ) {
-			$query->next_post();
-			$enclosures = Enclosure::all_for_post( $query->post->ID );
-			foreach ( $enclosures as $enclosure ) {
-				$base_url = substr( $enclosure->url , 0, strrpos( $enclosure->url , "/" ) + 1 );
-				if ( isset( $base_urls[ $base_url ] ) ) {
-					$base_urls[ $base_url ]++;
-				} else {
-					$base_urls[ $base_url ] = 1;
-				}
-			}
-		}
+		<?php
+        $base_urls = [];
+        $args = ['posts_per_page' => -1];
+        $query = new \WP_Query($args);
+        while ($query->have_posts()) {
+            $query->next_post();
+            $enclosures = Enclosure::all_for_post($query->post->ID);
+            foreach ($enclosures as $enclosure) {
+                $base_url = substr($enclosure->url, 0, strrpos($enclosure->url, '/') + 1);
+                if (isset($base_urls[$base_url])) {
+                    ++$base_urls[$base_url];
+                } else {
+                    $base_urls[$base_url] = 1;
+                }
+            }
+        }
 
-		arsort( $base_urls );
+        arsort($base_urls);
 
-		$podcast = \Podlove\Modules\Migration\get_podcast_settings();
-		?>
+        $podcast = \Podlove\Modules\Migration\get_podcast_settings(); ?>
 
 		<div class="row-fluid">
 			<div class="span12">
 				<h3>Basic Settings</h3>
 				<form action="" class="form-horizontal">
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Podcast Title', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
+						<label for="" class="control-label"><?php echo __('Podcast Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][title]" value="<?php echo $podcast['title'] ?>">
+							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][title]" value="<?php echo $podcast['title']; ?>">
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Podcast Subtitle', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
+						<label for="" class="control-label"><?php echo __('Podcast Subtitle', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 						<div class="controls">
-							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][subtitle]" value="<?php echo $podcast['subtitle'] ?>">
+							<input type="text" class="input-xxlarge" name="podlove_migration[podcast][subtitle]" value="<?php echo $podcast['subtitle']; ?>">
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Podcast Summary', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
+						<label for="" class="control-label"><?php echo __('Podcast Summary', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 						<div class="controls">
-							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xxlarge" placeholder="<?php echo __( 'A couple of sentences describing the podcast.', 'podlove-podcasting-plugin-for-wordpress' ); ?>"><?php echo $podcast['summary'] ?></textarea>
+							<textarea name="podlove_migration[podcast][summary]" rows="3" class="input-xxlarge" placeholder="<?php echo __('A couple of sentences describing the podcast.', 'podlove-podcasting-plugin-for-wordpress'); ?>"><?php echo $podcast['summary']; ?></textarea>
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="" class="control-label"><?php echo __( 'Media File Base URL', 'podlove-podcasting-plugin-for-wordpress' ); ?></label>
+						<label for="" class="control-label"><?php echo __('Media File Base URL', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 						<div class="controls">
 							<div class="radio">
-								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="preset" <?php checked( $podcast['media_file_base_url_option'], 'preset' ) ?>> 
+								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="preset" <?php checked($podcast['media_file_base_url_option'], 'preset'); ?>> 
 								<select class="input-xxlarge" name="podlove_migration[podcast][media_file_base_url_preset]">
-									<?php foreach ( $base_urls as $base_url => $count ): ?>
-										<option value="<?php echo $base_url ?>" <?php echo selected( $podcast['media_file_base_url_preset'], $base_url ) ?>>
-											<?php echo $base_url ?> (used in <?php echo $count ?> enclosures)
+									<?php foreach ($base_urls as $base_url => $count) { ?>
+										<option value="<?php echo $base_url; ?>" <?php echo selected($podcast['media_file_base_url_preset'], $base_url); ?>>
+											<?php echo $base_url; ?> (used in <?php echo $count; ?> enclosures)
 										</option>
-									<?php endforeach; ?>
+									<?php } ?>
 								</select>
 							</div>
 							<div class="radio">
-								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="custom" <?php checked( $podcast['media_file_base_url_option'], 'custom' ) ?>>
-								<input type="text"  name="podlove_migration[podcast][media_file_base_url_custom]" value="<?php echo ( isset( $podcast['media_file_base_url_custom'] ) ? $podcast['media_file_base_url_custom'] : '' ) ?>" class="input-xxlarge" placeholder="http://cdn.example.com/pod/">
+								<input type="radio" name="podlove_migration[podcast][media_file_base_url_option]" value="custom" <?php checked($podcast['media_file_base_url_option'], 'custom'); ?>>
+								<input type="text"  name="podlove_migration[podcast][media_file_base_url_custom]" value="<?php echo isset($podcast['media_file_base_url_custom']) ? $podcast['media_file_base_url_custom'] : ''; ?>" class="input-xxlarge" placeholder="http://cdn.example.com/pod/">
 							</div>
 						</div>
 
 					</div>
 					<div class="control-group">
 						<div class="controls">
-							<input type="submit" name="prev" class="btn" value="<?php echo __( 'Back', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
-							<input type="submit" class="btn btn-primary" value="<?php echo __( 'Continue', 'podlove-podcasting-plugin-for-wordpress' ) ?>">
+							<input type="submit" name="prev" class="btn" value="<?php echo __('Back', 'podlove-podcasting-plugin-for-wordpress'); ?>">
+							<input type="submit" class="btn btn-primary" value="<?php echo __('Continue', 'podlove-podcasting-plugin-for-wordpress'); ?>">
 						</div>
 					</div>
 
@@ -122,6 +124,5 @@ class StepBasics extends Step {
 			</div>
 		</div>
 		<?php
-	}
-
+    }
 }

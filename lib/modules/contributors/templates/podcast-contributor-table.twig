@@ -1,15 +1,102 @@
-<table class="podlove-contributors-table">
-	<tbody>
-		{% for contributor in podcast.contributors({group: option.group, role: option.role, scope: 'podcast'}) %}
-			{% if contributor.visible %}
-				{% include '@contributors/_contributor-table-row.twig' %}
-			{% endif %}
-		{% endfor %}
-	</tbody>
-</table>
+<div class="podlove-contributors-cards">
+	{% for contributor in podcast.contributors({group: option.group, role: option.role}) %}
+		{% if contributor.visible %}
 
-{% if option.flattr == "yes" %}
-	{% include '@contributors/_contributor-table-flattr.twig' %}
-{% endif %}
+			<div class="podlove-contributors-card">
+				<div class="podlove-contributors-card-inner">
+					<div class="podlove-contributors-card-avatar">
+						{{ contributor.image.html({width: size|default(50), height: size|default(50), class: "", alt: "avatar" }) }}
+					</div>
+					<div class="podlove-contributors-card-person">
+						<div style="align-self: center">
+							<div style="font-weight: 400;">{{ contributor.name }}</div>
+							{% if contributor.comment %}
+								<div class="podlove-contributors-card-person-details">
+									<span>{{ contributor.comment }}</span>
+								</div>
+							{% endif %}
+						</div>
+						<div class="podlove-contributors-card-services">
+							{% for service in contributor.services({category: "social"}) %}
+								<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+									{{
+												service.image.html({
+													width: 20, 
+													class: "",
+													alt: service.title ~ " Icon"
+												}) 
+											}}
+								</a>
+							{% endfor %}
+							{% for service in contributor.services({category: "donation"}) %}
+								<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+									{{
+													service.image.html({
+														width: 20, 
+														class: "",
+														alt: service.title ~ " Icon"
+													}) 
+												}}
+								</a>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
 
-{% include '@contributors/_contributor-table-css.twig' %}
+		{% endif %}
+	{% endfor %}
+</div>
+
+<style>
+	.podlove-contributors-cards {
+		margin-bottom: 1rem;
+		background: white;
+		overflow: hidden;
+		border-radius: 0.375rem;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	}
+	.podlove-contributors-card {
+		display: flex;
+		align-items: center;
+		padding: 1rem 1.5rem
+	}
+	.podlove-contributors-card-inner {
+		display: flex;
+		align-items: center;
+		flex: 1 1 0;
+		min-width: 0;
+	}
+	.podlove-contributors-card-avatar {
+		width: 50px;
+		height: 50px;
+		border-radius: 0.25rem;
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+	.podlove-contributors-card-person {
+		flex: 1 1 0;
+		min-width: 0;
+		padding: 0 1rem;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+	}
+	.podlove-contributors-card-person-details {
+		color: #999
+	}
+	.podlove-contributors-card-services {
+		flex-wrap: wrap;
+		display: flex;
+		align-items: center;
+		align-content: center;
+		justify-content: flex-end;
+	}
+	.podlove-contributors-card-services-service {
+		display: inline-block;
+		flex-shrink: 0;
+		padding-left: 0.5rem;
+		text-decoration: none;
+		box-shadow: none;
+	}
+</style>

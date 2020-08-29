@@ -1,10 +1,11 @@
 <?php
+
 namespace Podlove\Modules\Shows\Template;
 
 use Podlove\Template\Wrapper;
 
 /**
- * Show Template Wrapper
+ * Show Template Wrapper.
  *
  * @templatetag show
  */
@@ -17,17 +18,12 @@ class Show extends Wrapper
         $this->show = $show;
     }
 
-    protected function getExtraFilterArgs()
-    {
-        return array($this->show);
-    }
-
     // /////////
     // Accessors
     // /////////
 
     /**
-     * Title
+     * Title.
      *
      * @accessor
      */
@@ -37,7 +33,7 @@ class Show extends Wrapper
     }
 
     /**
-     * Subtitle
+     * Subtitle.
      *
      * @accessor
      */
@@ -47,7 +43,7 @@ class Show extends Wrapper
     }
 
     /**
-     * Summary
+     * Summary.
      *
      * @accessor
      */
@@ -57,7 +53,7 @@ class Show extends Wrapper
     }
 
     /**
-     * Slug
+     * Slug.
      *
      * @accessor
      */
@@ -67,7 +63,7 @@ class Show extends Wrapper
     }
 
     /**
-     * Language
+     * Language.
      *
      * @accessor
      */
@@ -77,12 +73,17 @@ class Show extends Wrapper
     }
 
     /**
-     * Image
+     * Image.
      *
      * @accessor
      */
     public function image()
     {
         return new \Podlove\Template\Image($this->show->image());
+    }
+
+    protected function getExtraFilterArgs()
+    {
+        return [$this->show];
     }
 }

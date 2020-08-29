@@ -1,177 +1,205 @@
-<?php 
+<?php
+
 namespace Podlove\Jobs;
 
 use Podlove\Model\Job;
 
-trait JobTrait {
+trait JobTrait
+{
+    protected $hooks = [];
 
-	protected $hooks = [];
+    /**
+     * @var Podlove\Model\Job
+     */
+    protected $job;
 
-	/**
-	 * @var Podlove\Model\Job
-	 */
-	protected $job;
+    public function __construct($args = [], $job = null)
+    {
+        $this->job = is_null($job) ? new Job() : $job;
+        $this->job->args = wp_parse_args($args, self::defaults());
+        $this->setup();
+    }
 
-	public function __construct($args = [], $job = NULL)
-	{
-		$this->job = is_null($job) ? new Job : $job;
-		$this->job->args = wp_parse_args($args, self::defaults());
-		$this->setup();
-	}
+    /**
+     * Called once on class construction.
+     *
+     * Does nothing by default. Override for custom setup behaviour.
+     */
+    public function setup()
+    {
+    }
 
-	/**
-	 * Human readable title
-	 * @return string
-	 */
-	public static function title() { return ''; }
+    /**
+     * Human readable title.
+     *
+     * @return string
+     */
+    public static function title()
+    {
+        return '';
+    }
 
-	/**
-	 * Human readable job mode
-	 * 
-	 * Should be displayed with title to distinguish different job setups.
-	 * 
-	 * @param  array $args job arguments
-	 * @return string
-	 */
-	public static function mode($args) { return ''; }
+    /**
+     * Human readable job mode.
+     *
+     * Should be displayed with title to distinguish different job setups.
+     *
+     * @param array $args job arguments
+     *
+     * @return string
+     */
+    public static function mode($args)
+    {
+        return '';
+    }
 
-	/**
-	 * Human readable description of what the job does
-	 * @return string
-	 */
-	public static function description() { return ''; }
+    /**
+     * Human readable description of what the job does.
+     *
+     * @return string
+     */
+    public static function description()
+    {
+        return '';
+    }
 
-	/**
-	 * Called once on class construction.
-	 * 
-	 * Does nothing by default. Override for custom setup behaviour.
-	 */
-	public function setup() {}
+    /**
+     * Return default job arguments.
+     *
+     * @return array
+     */
+    public static function defaults()
+    {
+        return [];
+    }
 
-	/**
-	 * Return default job arguments
-	 * 
-	 * @return array
-	 */
-	public static function defaults() { return []; }
+    /**
+     * If a job is unique, only one can be active at any point in time.
+     *
+     * @todo  needs to be checked by job runner
+     *
+     * @return bool
+     */
+    public static function is_unique()
+    {
+        return true;
+    }
 
-	/**
-	 * If a job is unique, only one can be active at any point in time.
-	 * 
-	 * @todo  needs to be checked by job runner
-	 * @return boolean
-	 */
-	public static function is_unique() {
-		return true;
-	}
+    /**
+     * Initialize job.
+     *
+     * - find out and persist how many steps there are
+     *
+     * @trait
+     */
+    public function init()
+    {
+        if (isset($this->hooks['init'])) {
+            call_user_func($this->hooks['init']);
+        }
 
-	/**
-	 * Initialize job
-	 * 
-	 * - find out and persist how many steps there are
-	 * 
-	 * @trait
-	 */
-	public function init() {
+        $this->job->steps_total = $this->get_total_steps();
 
-		if (isset($this->hooks['init'])) {
-			call_user_func($this->hooks['init']);
-		}
-		
-		$this->job->steps_total = $this->get_total_steps();
+        if (!$this->job->steps_progress) {
+            $this->job->steps_progress = 0;
+        }
 
-		if (!$this->job->steps_progress) {
-			$this->job->steps_progress = 0;
-		}
+        if (!$this->job->active_run_time) {
+            $this->job->active_run_time = 0;
+        }
 
-		if (!$this->job->active_run_time) {
-			$this->job->active_run_time = 0;
-		}
+        $this->job->wakeups = $this->job->wakeups ? $this->job->wakeups : 0;
+        $this->job->sleeps = $this->job->sleeps ? $this->job->sleeps : 0;
 
-		$this->job->wakeups = $this->job->wakeups ? $this->job->wakeups : 0;
-		$this->job->sleeps  = $this->job->sleeps ? $this->job->sleeps   : 0;
+        $this->save_job();
 
-		$this->save_job();
+        return $this;
+    }
 
-		return $this;
-	}
+    public function get_job_id()
+    {
+        return $this->job->id;
+    }
 
-	public function get_job_id() {
-		return $this->job->id;
-	}
+    public function is_finished()
+    {
+        return $this->job->is_finished();
+    }
 
-	public function is_finished() {
-		return $this->job->is_finished();
-	}
+    public function save_job()
+    {
+        $current_time = current_time('mysql', true);
 
-	public function save_job() {
+        if ($this->job->is_new()) {
+            $this->job->class = str_replace('\\', '\\\\', get_called_class());
+            $this->job->created_at = $current_time;
+        }
 
-		$current_time = current_time('mysql', true);
+        $this->job->updated_at = $current_time;
 
-		if ($this->job->is_new()) {
-			$this->job->class = str_replace('\\', '\\\\', get_called_class());
-			$this->job->created_at = $current_time;
-		}
+        $this->job->save();
+    }
 
-		$this->job->updated_at = $current_time;
+    public function get_job()
+    {
+        return $this->job;
+    }
 
-		$this->job->save();
-	}
+    /**
+     * How many steps does it take to complete the job?
+     *
+     * @return int
+     */
+    abstract public function get_total_steps();
 
-	private function log_active_run_time($time_ms) {
-		$this->job->active_run_time += $time_ms;
-	}
+    /**
+     * Do one step, and record the progress.
+     */
+    public function step()
+    {
+        $start = microtime(true);
+        $progress = $this->do_step();
+        $end = microtime(true);
+        $this->log_active_run_time($end - $start);
 
-	public function get_job() {
-		return $this->job;
-	}
+        $this->job->steps_progress += ($progress > 0) ? $progress : 1;
+        $this->save_job();
 
-	protected function get_status_percent() {
-		if (!$this->status['total'])
-			return null;
+        if ($this->is_finished() && isset($this->hooks['finished'])) {
+            call_user_func($this->hooks['finished']);
+        }
+    }
 
-		return round($this->status['progress'] / $this->status['total'] * 100, 2);
-	}
+    protected function get_status_percent()
+    {
+        if (!$this->status['total']) {
+            return null;
+        }
 
-	protected function get_status_text() {
-		if ($this->status['progress'] === 0) {
-			return 'not_started';
-		} elseif (!$this->is_finished()) {
-			return 'running';
-		} else {
-			return 'done';
-		}
-	}
+        return round($this->status['progress'] / $this->status['total'] * 100, 2);
+    }
 
-	/**
-	 * How many steps does it take to complete the job?
-	 * 
-	 * @return int
-	 */
-	abstract public function get_total_steps();
-	
-	/**
-	 * Implement one step of the job
-	 * 
-	 * @return  int How much progress did the step make?
-	 */
-	abstract protected function do_step();
+    protected function get_status_text()
+    {
+        if ($this->status['progress'] === 0) {
+            return 'not_started';
+        }
+        if (!$this->is_finished()) {
+            return 'running';
+        }
 
-	/**
-	 * Do one step, and record the progress.
-	 */
-	public function step()
-	{
-		$start = microtime(true);
-		$progress = $this->do_step();
-		$end = microtime(true);
-		$this->log_active_run_time($end - $start);
+        return 'done';
+    }
 
-		$this->job->steps_progress += ($progress > 0) ? $progress : 1;
-		$this->save_job();
+    /**
+     * Implement one step of the job.
+     *
+     * @return int How much progress did the step make?
+     */
+    abstract protected function do_step();
 
-		if ($this->is_finished() && isset($this->hooks['finished'])) {
-			call_user_func($this->hooks['finished']);
-		}
-	}
+    private function log_active_run_time($time_ms)
+    {
+        $this->job->active_run_time += $time_ms;
+    }
 }
