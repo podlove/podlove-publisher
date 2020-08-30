@@ -215,6 +215,29 @@ jQuery(document).ready(function ($) {
 		return dc.lineChart(chart)
 			.dimension(dimension)
 			.group(group, caption)
+			// https://github.com/dc-js/dc.js/issues/615#issuecomment-47771394
+			.defined(function(d) { return d.y != null; });
+	}
+
+	// https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+	function aboReduceAdd(key) {
+		return function(p, v){
+			if(v[key] === null && p === null){ return null; }
+			p += v[key];
+			return p;
+		}
+	}
+
+	function aboReduceRemove(key) {
+		return function(p, v){
+			if(v[key] === null && p === null){ return null; }
+			p -= v[key];
+			return p;
+		}
+	}
+
+	function aboReduceInit(key) {
+		return null;
 	}
 
 	function render_abo_total() {
@@ -225,13 +248,12 @@ jQuery(document).ready(function ($) {
 		});
 
 		var totalDimension = episodeDimension.group().reduceSum((d) => d.downloads);
-		// TODO Hanlde null values
-		var q1Dimension = episodeDimension.group().reduceSum((d) => d.q1);
-		var d1Dimension = episodeDimension.group().reduceSum((d) => d.d1);
-		var d2Dimension = episodeDimension.group().reduceSum((d) => d.d2);
-		var w1Dimension = episodeDimension.group().reduceSum((d) => d.w1);
+		var q1Dimension = episodeDimension.group().reduce(aboReduceAdd('q1'),  aboReduceRemove('q1'),  aboReduceInit);
+		var d1Dimension = episodeDimension.group().reduce(aboReduceAdd('d1'),  aboReduceRemove('d1'),  aboReduceInit);
+		var d2Dimension = episodeDimension.group().reduce(aboReduceAdd('d2'),  aboReduceRemove('d2'),  aboReduceInit);
+		var w1Dimension = episodeDimension.group().reduce(aboReduceAdd('w1'),  aboReduceRemove('w1'),  aboReduceInit);
 
-		let chart = dc.compositeChart('#total-abo-chart'); // lineChart('#total-abo-chart')
+		let chart = dc.compositeChart('#total-abo-chart');
 		let totalChart = getLineChart(chart, episodeDimension, totalDimension, "Total");
 		let q1Chart = getLineChart(chart, episodeDimension, q1Dimension, "1q");
 		let w1Chart = getLineChart(chart, episodeDimension, w1Dimension, "1w");
@@ -246,7 +268,7 @@ jQuery(document).ready(function ($) {
 			.brushOn(false)
 			.yAxisLabel('Downloads')
 			.group(totalDimension)
-			._rangeBandPadding(1) // Fix to allign x-axis with points
+			._rangeBandPadding(1) // Fix to align x-axis with points
 			.shareColors(true)
 			.renderHorizontalGridLines(true)
 			.compose([totalChart, q1Chart, w1Chart, d2Chart, d1Chart]);
@@ -271,6 +293,10 @@ jQuery(document).ready(function ($) {
 		chart.render();
 	}
 
+	function emptyToNull(value) {
+		return value ? +value : null;
+	}
+
 	function load_abo_total() {
 		if (aboTotalsRawData) {
 			render_abo_total();
@@ -284,15 +310,15 @@ jQuery(document).ready(function ($) {
 					return {
 						title: d.title,
 						downloads: +d.downloads,
-						d1: +d["1d"],
-						d2: +d["2d"],
-						w1: +d["1w"],
-						q1: +d["q1"]
+						d1: emptyToNull(d["1d"]),
+						d2: emptyToNull(d["2d"]),
+						w1: emptyToNull(d["1w"]),
+						q1: emptyToNull(d["1q"])
 					};
 				};
 
 				aboTotalsRawData = d3.csvParse(csvTotals, csvMapper);
-				console.log(aboTotalsRawData);
+				console.log(aboTotalsRawData); // TODO remove
 				render_abo_total();
 				$(window).on('resize', render_abo_total);
 			});
