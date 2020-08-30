@@ -244,7 +244,8 @@ jQuery(document).ready(function ($) {
 		var chart_width = $("#total-abo-chart").closest(".wrap").width();
 		let xf = crossfilter(aboTotalsRawData)
 		var episodeDimension = xf.dimension((d) => {
-			return d.title.substring(0, 5); // TODO Besser
+			return d.number;
+			// return d.title.substring(0, 5); // TODO Besser
 		});
 
 		var totalDimension = episodeDimension.group().reduceSum((d) => d.downloads);
@@ -305,9 +306,10 @@ jQuery(document).ready(function ($) {
 			$.when(
 				$.ajax(ajaxurl + "?action=podlove-analytics-csv-episodes-table")
 			).done(function (csvTotals) {
-				// var i = 0;
+				var i = 0;
 				var csvMapper = function (d) {
 					return {
+						number: i++,
 						title: d.title,
 						downloads: +d.downloads,
 						d1: emptyToNull(d["1d"]),
