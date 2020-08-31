@@ -8,28 +8,28 @@
           :class="{'transcripts-tab-active': mode === 'transcript'}"
           @click.prevent="mode = 'transcript'"
         >Transcript</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
           :class="{'transcripts-tab-active': mode === 'voices'}"
           @click.prevent="mode = 'voices'"
         >Voices</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
           :class="{'transcripts-tab-active': mode === 'import'}"
           @click.prevent="mode = 'import'"
         >Import</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
           :class="{'transcripts-tab-active': mode === 'export'}"
           @click.prevent="mode = 'export'"
         >Export</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
@@ -43,7 +43,20 @@
       <div v-if="transcript != null">
         <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
           <div class="ts-speaker-avatar" v-if="hasVoice(group)">
-            <img :src="getVoice(group).option.avatar" width="50" height="50">
+            <img :src="getVoice(group).option.avatar" width="50" height="50" />
+          </div>
+          <div
+            v-else
+            class="ts-speaker-avatar"
+            style="width: 50px; height: 50px; margin-top: 0px; color: rgba(183, 188, 193, 1.000)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </div>
 
           <div class="ts-text">
@@ -76,13 +89,16 @@
         <div class="voice col-md-12" v-for="(voice, index) in voices" :key="index">
           <div class="voice-label">{{ voice.label }}</div>
           <div class="voice-assignment">
-            <v-select :options="contributorsOptions" label="label" v-model="voice.option" style="width: 300px">
-
+            <v-select
+              :options="contributorsOptions"
+              label="label"
+              v-model="voice.option"
+              style="width: 300px"
+            >
               <template v-slot:option="option">
-                  <img :src="option.avatar" width="16" height="16">
-                  {{ option.label }}
-              </template>              
-              
+                <img :src="option.avatar" width="16" height="16" />
+                {{ option.label }}
+              </template>
             </v-select>
           </div>
         </div>
@@ -113,7 +129,7 @@
           @change="importTranscript"
           style="display: none"
           :disabled="importing"
-        >
+        />
         <div class="description" v-html="description"></div>
       </form>
     </div>
@@ -142,10 +158,7 @@
     </div>
 
     <div class="row tab-body delete" v-show="mode == 'delete'">
-      <button
-        class="button button-secondary"
-        @click.prevent="deleteTranscript"
-      >Delete webvtt</button>
+      <button class="button button-secondary" @click.prevent="deleteTranscript">Delete webvtt</button>
     </div>
   </div>
 </template>
