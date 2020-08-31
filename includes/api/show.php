@@ -11,6 +11,7 @@ function api_init()
     register_rest_route('podlove/v1', 'show', [
         'methods' => 'GET',
         'callback' => 'show_api',
+        'permission_callback' => '__return_true',
     ]);
 }
 
