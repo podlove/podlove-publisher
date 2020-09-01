@@ -271,6 +271,12 @@ jQuery(document).ready(function ($) {
 			.group(totalDimension)
 			._rangeBandPadding(1) // Fix to align x-axis with points
 			.shareColors(true)
+			.title(function (d) {
+				return [
+					aboTotalsRawData[d.key].title,
+					"Downloads: " + d.value
+				].join("\n");
+			})
 			.renderHorizontalGridLines(true)
 			.compose([totalChart, q1Chart, w1Chart, d2Chart, d1Chart]);
 
