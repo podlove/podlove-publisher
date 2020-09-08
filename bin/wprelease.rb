@@ -22,7 +22,7 @@ end
 
 # TODO: write all commit messages since last release in svn message
 class Wprelease
-	
+
 	attr_accessor :config
 	attr_accessor :plugin_file, :plugin_dir, :svn_dir, :repo_slug
 	attr_accessor :version
@@ -32,7 +32,7 @@ class Wprelease
 		begin
 			@config = YAML.load_file("wprelease.yml")
 		rescue Exception => e
-			@config = {}			
+			@config = {}
 		end
 
 		self.determine_plugin_file
@@ -69,7 +69,7 @@ class Wprelease
 		system "npm run production"
 
 		puts "rsync files ..."
-		
+
 		excludes = [
 			'.git',
 			'.vscode',
@@ -81,12 +81,16 @@ class Wprelease
 			 '.travis.yml',
 			 'tags',
 			 '.ctags',
-			 '.tags_sorted_by_file',
+             '.tags_sorted_by_file',
+             '.php_cs.dist',
+             '.build',
+             'deploy_key.enc',
 			 'wprelease.yml',
 			 'podlove.sublime-workspace',
 			 'podlove.sublime-project',
 			 'publisher.sublime-workspace',
-			 'publisher.sublime-project',
+             'publisher.sublime-project',
+             'publisher.code-workspace',
 			 'js/admin/dc.js', # it's packaged in dist
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs',
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/samples',
@@ -130,7 +134,7 @@ class Wprelease
 		puts "committing changes to svn ..."
 
 		system "git log --pretty=oneline --abbrev-commit `git describe --abbrev=0 --tags`..HEAD > /tmp/svn_msg"
-		
+
 		Dir.chdir "#{@svn_dir}/trunk"
 
 		`svn status | grep '?'`.each_line do |line|
@@ -154,10 +158,10 @@ class Wprelease
 ##		# Otherwise the tag contains the previous version, right?
 ##		# They are doing it like this as well: https://github.com/toolstack/git-to-wp-plugin-dir-release-script/blob/master/class.release.php#L435
 ##		# @see https://developer.wordpress.org/plugins/wordpress-org/how-to-use-subversion/#tagging-new-versions
-##		# ... what they say is 
-##		#   1) create tag, 
-##		#   2) commit, 
-##		#   3) "After tagging a new version, remember to update the Stable Tag field in trunk/readme.txt!" 
+##		# ... what they say is
+##		#   1) create tag,
+##		#   2) commit,
+##		#   3) "After tagging a new version, remember to update the Stable Tag field in trunk/readme.txt!"
 ##		# ... which seems weird? Why would I not already bump the stable tag when creating the tag?
 ##
 ##		system "svn commit -m 'release'"
