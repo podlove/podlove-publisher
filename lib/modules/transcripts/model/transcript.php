@@ -118,7 +118,7 @@ class Transcript extends \Podlove\Model\Base
 
                 return $agg;
             }, []);
-            $transcript = $transcript['items'];
+            $transcript = $transcript['items'] ?? [];
         }
 
         return $transcript;
