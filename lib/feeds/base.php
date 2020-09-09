@@ -98,12 +98,6 @@ function get_xml_cdata_text($content)
 
 function override_feed_head($hook, $podcast, $feed, $format)
 {
-    $filter_hooks = [
-        'podlove_feed_itunes_owner',
-    ];
-    foreach ($filter_hooks as $filter) {
-        add_filter($filter, 'convert_chars');
-    }
     add_filter('podlove_feed_content', '\Podlove\Feeds\prepare_for_feed');
 
     remove_action($hook, 'the_generator');
@@ -163,7 +157,7 @@ function override_feed_head($hook, $podcast, $feed, $format)
     add_action($hook, function () use ($podcast, $feed, $format) {
         echo PHP_EOL;
 
-        $author = "\t".sprintf('<itunes:author>%s</itunes:author>', $podcast->author_name);
+        $author = "\t".get_xml_text_node('itunes:author', $podcast->author_name);
         echo apply_filters('podlove_feed_itunes_author', $author);
         echo PHP_EOL;
 
@@ -207,15 +201,11 @@ function override_feed_head($hook, $podcast, $feed, $format)
         echo apply_filters('podlove_feed_itunes_categories', $category_html);
         echo PHP_EOL;
 
-        $owner = sprintf(
-            '
+        $owner = '
 	<itunes:owner>
-		<itunes:name>%s</itunes:name>
-		<itunes:email>%s</itunes:email>
-	</itunes:owner>',
-            $podcast->owner_name,
-            $podcast->owner_email
-        );
+		'.get_xml_text_node('itunes:name', $podcast->owner_name).'
+		'.get_xml_text_node('itunes:email', $podcast->owner_email).'
+	</itunes:owner>';
         echo "\t".apply_filters('podlove_feed_itunes_owner', $owner);
         echo PHP_EOL;
 
