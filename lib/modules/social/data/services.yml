@@ -463,4 +463,10 @@
   description: 'Letterboxd Username'
   logo: 'letterboxd.png'
   url_scheme: 'https://letterboxd.com/%account-placeholder%'
-  
+
+- title: 'Untappd'
+  name: 'untappd'
+  category: 'social'
+  description: 'Untappd Username'
+  logo: 'untappd.png'
+  url_scheme: 'https://untappd.com/user/%account-placeholder%'

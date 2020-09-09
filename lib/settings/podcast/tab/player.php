@@ -23,7 +23,7 @@ class Player extends Tab
 
         $settings = get_option('podlove_webplayer_settings');
         foreach ($formKeys as $key) {
-            $settings[$key] = $_POST['podlove_webplayer_settings'][$key];
+            $settings[$key] = $_POST['podlove_webplayer_settings'][$key] ?? null;
         }
 
         update_option('podlove_webplayer_settings', $settings);

@@ -9,23 +9,24 @@
     "test": "./vendor/bin/phpunit"
   },
   "devDependencies": {
-    "laravel-mix": "^5.0.0",
+    "laravel-mix": "^5.0.5",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.2",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
-    "vue": "^2.6.10"
+    "vue": "^2.6.12",
+    "dompurify": ">=2.0.7"
   },
   "dependencies": {
     "@podlove/web-player": "^4.5.10",
-    "axios": "^0.19",
+    "axios": "^0.19.2",
     "clipboard": "^2.0.6",
-    "npm": "^6.13.4",
+    "npm": "^6.14.8",
     "v2-datepicker": "^3.1.1",
     "vue-axios": "^2.0.2",
-    "vue-select": "^3.2",
-    "vue-template-compiler": "^2.6.10",
-    "vuedraggable": "^2.20.0"
+    "vue-select": "^3.10.8",
+    "vue-template-compiler": "^2.6.12",
+    "vuedraggable": "^2.24.1"
   }
 }
