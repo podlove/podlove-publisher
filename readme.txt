@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.0.2 =
+
+* fix: Auphonic module (wrong HTTP API headers)
+
 = 3.0.1 =
 
 * fix: escaping issue in RSS feed (itunes:author and itunes:owner)

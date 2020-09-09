@@ -128,12 +128,6 @@
 const $ = jQuery;
 import Close from "./icons/Close";
 
-$.ajaxSetup({
-  beforeSend: function (xhr) {
-    xhr.setRequestHeader("X-WP-Nonce", podlove_vue.nonce);
-  },
-});
-
 export default {
   props: ["episodeid"],
   data() {

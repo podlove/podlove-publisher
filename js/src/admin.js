@@ -17,6 +17,15 @@ var PODLOVE = PODLOVE || {};
 	};
 }(jQuery));
 
+
+jQuery.ajaxSetup({
+    beforeSend: function (xhr, settings) {
+        if (settings.url.includes("wp-json")) {
+            xhr.setRequestHeader("X-WP-Nonce", podlove_vue.nonce);
+        }
+    },
+});
+
 PODLOVE.rtrim = function (string, thechar) {
 	var re = new RegExp(thechar + "+$", "g");
 	return string.replace(re, '');
@@ -112,7 +121,7 @@ function auto_fill_form(id, title_id) {
 
 /**
  * HTML-based input behavior for text fields.
- * 
+ *
  * To activate behavior, add class `podlove-check-input`.
  *
  * - trims whitespace from beginning and end
