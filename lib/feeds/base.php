@@ -53,6 +53,14 @@ function override_feed_language($feed)
     });
 }
 
+function get_episode_title($post = 0)
+{
+    $post = get_post($post);
+    $title = $post->post_title ?? '';
+
+    return apply_filters('podlove_get_episode_title', $title);
+}
+
 /**
  * Prepare content for display in feed.
  *

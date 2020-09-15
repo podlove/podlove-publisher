@@ -22,7 +22,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
     the_post(); ?>
 
 	<item>
-		<title><?php the_title_rss(); ?></title>
+        <?php echo \Podlove\Feeds\get_xml_text_node('title', \Podlove\Feeds\get_episode_title())."\n"; ?>
 		<link><?php the_permalink(); ?></link>
 		<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
 		<guid isPermaLink="false"><?php echo htmlspecialchars(get_the_guid()); ?></guid>
