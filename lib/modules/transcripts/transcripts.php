@@ -391,6 +391,7 @@ class Transcripts extends \Podlove\Modules\Base
     {
         if (Transcript::exists_for_episode($episode->id)) {
             $url = add_query_arg('podlove_transcript', 'json', get_permalink($episode->post_id));
+            $url = str_replace(home_url(), site_url(), $url);
             $config['transcripts'] = $url;
         }
 
