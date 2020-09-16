@@ -38,7 +38,14 @@ function override_feed_description($feed)
 {
     add_filter('podlove_rss_feed_description', function ($description) use ($feed) {
         $podcast = Model\Podcast::get();
-        $desc = $podcast->subtitle ? $podcast->subtitle : $description;
+
+        if ($podcast->subtitle) {
+            $desc = $podcast->subtitle;
+        } elseif ($podcast->summary) {
+            $desc = $podcast->summary;
+        } else {
+            $desc = $description;
+        }
 
         return get_xml_cdata_text($desc);
     });

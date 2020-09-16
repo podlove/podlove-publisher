@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: contributor notifications settings can be saved again
 * fix: do not include invisible contributors in Web Player 5 API
 * fix: detect Yoast SEO, wpSEO: disables Open Graph module
+* fix: use podcast summary as RSS Feed `<description>` if subtitle is not set
 
 = 3.0.3 =
 
