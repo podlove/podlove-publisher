@@ -108,10 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 3.0.4 =
 
-* fix: contributor notifications settings can be saved again
-* fix: do not include invisible contributors in Web Player 5 API
-* fix: detect Yoast SEO, wpSEO: disables Open Graph module
-* fix: use podcast summary as RSS Feed `<description>` if subtitle is not set
+* fix: contributor notifications settings can be saved again ([#1144](https://github.com/podlove/podlove-publisher/issues/1144))
+* fix: do not include invisible contributors in Web Player 5 API ([#1142](https://github.com/podlove/podlove-publisher/issues/1142))
+* fix: detect Yoast SEO, wpSEO: disables Open Graph module ([#1132](https://github.com/podlove/podlove-publisher/issues/1132))
+* fix: use podcast summary as RSS Feed `<description>` if subtitle is not set ([#1092](https://github.com/podlove/podlove-publisher/issues/1092))
 
 = 3.0.3 =
 
