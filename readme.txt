@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 3.0.4 =
 
 * fix: contributor notifications settings can be saved again
+* fix: do not include invisible contributors in Web Player 5 API
 
 = 3.0.3 =
 

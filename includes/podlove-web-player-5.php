@@ -51,7 +51,7 @@ function podlove_pwp5_attributes($attributes)
         $config['contributors'] = array_filter(array_map(function ($c) {
             $contributor = $c->getContributor();
 
-            if (!$contributor) {
+            if (!$contributor || !$contributor->visibility) {
                 return [];
             }
 
