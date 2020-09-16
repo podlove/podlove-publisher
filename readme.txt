@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.0.4 =
+
+* fix: contributor notifications settings can be saved again
+
 = 3.0.3 =
 
 * fix: title escaping in RSS feed when using native (not auto-generated) titles

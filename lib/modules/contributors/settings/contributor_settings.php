@@ -25,7 +25,10 @@ class ContributorSettings
             [$this, 'page']
         );
 
-        if (filter_input(INPUT_GET, 'page') == 'podlove_contributor_settings') {
+        $is_settings_page = filter_input(INPUT_GET, 'page') == 'podlove_contributor_settings';
+        $is_settings_update_request = filter_input(INPUT_POST, 'option_page') == ContributorSettings::$pagehook;
+
+        if ($is_settings_page || $is_settings_update_request) {
             $tabs = new Tabs(__('Contributors', 'podlove-podcasting-plugin-for-wordpress'));
             $tabs->addTab(new \Podlove\Modules\Contributors\Settings\Tab\Contributors(__('Contributors', 'podlove-podcasting-plugin-for-wordpress'), true));
             $tabs->addTab(new \Podlove\Modules\Contributors\Settings\Tab\Groups(__('Groups', 'podlove-podcasting-plugin-for-wordpress')));
@@ -52,7 +55,7 @@ class ContributorSettings
 			<?php
             echo $this->tabs->getTabsHTML();
         echo $this->tabs->getCurrentTabPage(); ?>
-		</div>	
+		</div>
 		<?php
     }
 }
