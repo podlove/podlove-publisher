@@ -26,6 +26,16 @@ class Open_Graph extends \Podlove\Modules\Base
             return;
         }
 
+        // all in one seo creates its own tags
+        if (is_plugin_active('all-in-one-seo-pack/all_in_one_seo_pack.php')) {
+            return;
+        }
+
+        // wpseo creates its own tags
+        if (defined('WPSEODE_BASE')) {
+            return;
+        }
+
         if (!is_single()) {
             return;
         }
