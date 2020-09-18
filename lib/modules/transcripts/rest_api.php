@@ -68,9 +68,13 @@ class REST_API
 
     public function get_transcript($request) {
         $episode_id = $request->get_param('id');
-        $transcript = Transcript::get_transcript($episode_id);
+        $mode = $request->get_param('mode') ?? 'flat';
 
-        return $transcript;
+        if ($mode != 'flat' && $mode != 'grouped') {
+            return new \WP_Error('podlove_rest_episode_invalid_parameter', 'paramenter mode only allows flat or grouped', ['status' => 400]);
+        }
+
+        return Transcript::prepare_transcript(Transcript::get_transcript($episode_id));
     }
 
     public function permission_check()

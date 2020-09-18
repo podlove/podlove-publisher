@@ -13,7 +13,7 @@ class REST_API
 
     public function register_routes()
     {
-        register_rest_route(self::api_namespace, self::api_base.'/(?P<episode_id>[\d]+)', [
+        register_rest_route(self::api_namespace, self::api_base, [
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
@@ -30,19 +30,6 @@ class REST_API
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'permission_check'],
             ],
-        ]);
-        register_rest_route(self::api_namespace, self::api_base.'/episode/(?P<episode_id>[\d]+)', [
-            'args' => [
-                'episode_id' => [
-                    'description' => 'Limit result set by episode.',
-                    'type' => 'integer',
-                ],
-            ],
-            [
-                'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_items'],
-                'permission_callback' => '__return true'
-            ]
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
             'args' => [
