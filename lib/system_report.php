@@ -255,6 +255,29 @@ class SystemReport
                     return 'ok';
                 },
             ],
+            'twig_versions' => [
+                'callback' => function () use (&$errors) {
+                    if (class_exists('Twig_Filter_Function')) {
+                        $path = (new \ReflectionClass('Twig_Filter_Function'))->getFileName();
+
+                        list($_, $rel_path) = explode(WP_PLUGIN_DIR, $path);
+                        list($_, $problem_plugin) = explode('/', $rel_path);
+
+                        $plugin_string = $problem_plugin ?? $path;
+
+                        $message = sprintf(
+                            'Podlove Publisher uses Twig to display templates. The plugin "%s" uses Twig in an older and incompatible version. You need to disable that plugin or ask the plugin author to upgrade Twig to at least v2.12.x. Otherwise, Podlove Publisher templates cannot be displayed.',
+                            $plugin_string
+                        );
+
+                        $errors[] = $message;
+
+                        return "incompatible plugin: {$plugin_string}";
+                    }
+
+                    return 'ok';
+                },
+            ],
         ];
 
         $this->fields = apply_filters('podlove_system_report_fields', $this->fields);

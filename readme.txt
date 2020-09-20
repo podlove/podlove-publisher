@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.0.5 =
+
+* improve: detect plugins using older/incompatible versions of Twig. Display a warning on the site (instead of an error) and a detailed explanation on "Podlove > Support" screen.
+
 = 3.0.4 =
 
 * fix: contributor notifications settings can be saved again ([#1144](https://github.com/podlove/podlove-publisher/issues/1144))
