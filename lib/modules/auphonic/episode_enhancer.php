@@ -76,7 +76,10 @@ class EpisodeEnhancer
 
 			<em id="auphonic-credits-status"><?php _e('Available processing time:', 'podlove-podcasting-plugin-for-wordpress'); ?>  <span id="auphonic-credits"></span></em>
 
+            <div style="clear: both;"></div>
+
 			<div id="auphonic-production-status" class="auphonic-status status-info"></div>
+            <div id="auphonic-production-warning"></div>
 
 			<fieldset>
 				<legend><?php _e('Create Production', 'podlove-podcasting-plugin-for-wordpress'); ?></legend>
@@ -90,7 +93,7 @@ class EpisodeEnhancer
 						<option><?php _e('Loading sources ...'); ?></option>
 					</select>
 				</div>
-				
+
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_production_files">
