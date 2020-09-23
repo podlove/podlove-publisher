@@ -51,6 +51,8 @@ function episodes_api($request)
 
     return new \WP_REST_Response([
         '_version' => 'v1',
+        'id' => $id,
+        'slug' => $post->post_name,
         'title' => $post->post_title,
         'subtitle' => trim($episode->subtitle),
         'summary' => trim($episode->summary),

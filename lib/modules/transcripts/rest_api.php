@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Transcripts;
 
 use Podlove\Model\Episode;
+use Podlove\Modules\Transcripts\Model\Transcript;
 use Podlove\Modules\Transcripts\Model\VoiceAssignment;
 
 class REST_API
@@ -24,6 +25,20 @@ class REST_API
                 'callback' => [$this, 'update_voices'],
                 'permission_callback' => [$this, 'permission_check'],
             ],
+        ]);
+
+        register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
+            'args' => [
+                'id' => [
+                    'description' => __('episode id'),
+                    'type' => 'integer',
+                ]
+            ],
+            [
+                'methods' => 'GET',
+                'callback' => [$this, 'get_transcript'],
+                'permission_callback' => '__return_true'
+            ]
         ]);
     }
 
@@ -49,6 +64,17 @@ class REST_API
         }
 
         return rest_ensure_response(['status' => 'ok']);
+    }
+
+    public function get_transcript($request) {
+        $episode_id = $request->get_param('id');
+        $mode = $request->get_param('mode') ?? 'flat';
+
+        if ($mode != 'flat' && $mode != 'grouped') {
+            return new \WP_Error('podlove_rest_episode_invalid_parameter', 'paramenter mode only allows flat or grouped', ['status' => 400]);
+        }
+
+        return Transcript::prepare_transcript(Transcript::get_transcript($episode_id));
     }
 
     public function permission_check()
