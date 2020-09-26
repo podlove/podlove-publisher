@@ -16,7 +16,8 @@
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
     "vue": "^2.6.12",
-    "dompurify": ">=2.0.7"
+    "dompurify": ">=2.0.7",
+    "node-forge": ">=0.10.0"
   },
   "dependencies": {
     "@podlove/web-player": "^4.5.10",
