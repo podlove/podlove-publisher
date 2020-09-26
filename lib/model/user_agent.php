@@ -20,6 +20,71 @@ class UserAgent extends Base
      */
     public function parse()
     {
+        // parse with opawg
+        $data_file = \Podlove\PLUGIN_DIR.'data/opawg.json';
+        $data_raw = file_get_contents($data_file);
+        $user_agent_data = json_decode($data_raw);
+
+        if (!$user_agent_data) {
+            error_log('[Podlove Publisher] OPAWG data file is invalid JSON');
+
+            // fallback to DeviceDetector parser
+            return $this->parse_by_device_detector();
+        }
+
+        $user_agent_string = $this->user_agent;
+
+        $user_agent_match = array_reduce($user_agent_data, function ($agg, $item) use ($user_agent_string) {
+            if ($agg != null) {
+                return $agg;
+            }
+
+            foreach ($item->user_agents as $regex) {
+                $compiled_regex = str_replace('/', '\/', $regex);
+                if (preg_match("/{$compiled_regex}/", $user_agent_string) === 1) {
+                    return $item;
+                }
+            }
+
+            return $agg;
+        }, null);
+
+        if ($user_agent_match) {
+            $this->client_name = $user_agent_match->app;
+            $this->os_name = $user_agent_match->os;
+
+            if ($user_agent_match->bot) {
+                $this->bot = 1;
+            }
+
+            return $this;
+        }
+
+        // fallback to DeviceDetector parser
+        return $this->parse_by_device_detector();
+    }
+
+    public static function find_or_create_by_uastring($ua_string)
+    {
+        $ua_string = trim($ua_string);
+
+        if (!strlen($ua_string)) {
+            return null;
+        }
+
+        $agent = self::find_one_by_user_agent($ua_string);
+
+        if (!$agent) {
+            $agent = new self();
+            $agent->user_agent = $ua_string;
+            $agent->parse()->save();
+        }
+
+        return $agent;
+    }
+
+    private function parse_by_device_detector()
+    {
         $dd = new DeviceDetector($this->user_agent);
 
         // only return true if a bot was detected (speeds up detection a bit)
@@ -65,25 +130,6 @@ class UserAgent extends Base
         }
 
         return $this;
-    }
-
-    public static function find_or_create_by_uastring($ua_string)
-    {
-        $ua_string = trim($ua_string);
-
-        if (!strlen($ua_string)) {
-            return null;
-        }
-
-        $agent = self::find_one_by_user_agent($ua_string);
-
-        if (!$agent) {
-            $agent = new self();
-            $agent->user_agent = $ua_string;
-            $agent->parse()->save();
-        }
-
-        return $agent;
     }
 
     /**

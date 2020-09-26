@@ -1,0 +1,1958 @@
+[{
+        "user_agents": [
+            "^Acast.+[Aa]ndroid"
+        ],
+        "app": "Acast",
+        "device": "phone",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Acast.+iOS"
+        ],
+        "app": "Acast",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^AdsBot-Google"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "AhrefsBot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^AlexaMediaPlayer/1\\.",
+            "^AlexaMediaPlayer/16\\.",
+            "^AlexaMediaPlayer/2\\."
+        ],
+        "app": "Alexa-enabled device",
+        "device": "speaker",
+        "os": "alexa",
+        "svg": "amazon.svg"
+    },
+    {
+        "user_agents": [
+            "^AmazonNewsContentService"
+        ],
+        "app": "Amazon Alexa Flash Briefing caching service",
+        "description": "A service which downloads, caches and normalises audio for the Flash Briefing service on Alexa-enabled devices",
+        "os": "alexa",
+        "info_url": "https://developer.amazon.com/docs/flashbriefing/flash-briefing-skill-api-feed-reference.html#performance-requirements",
+        "developer_notes": "Stats are available within the Alexa skills dashboard",
+        "svg": "amazon.svg",
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^AmazonMusic/\\..*iPhone"
+        ],
+        "examples": [
+            "AmazonMusic/9.15.2 iPhone7,2 CFNetwork/978.0.7 Darwin/18.7.0"
+        ],
+        "app": "Amazon Music Podcasts",
+        "description": "A music and podcasts streaming app",
+        "os": "ios",
+        "device": "phone",
+        "svg": "amazon.svg"
+    },
+    {
+        "user_agents": [
+            "^AmazonMusic$"
+        ],
+        "examples": [
+            "AmazonMusic"
+        ],
+        "app": "Amazon Music Podcasts",
+        "description": "A music and podcasts streaming app",
+        "os": "android",
+        "developer_notes": "This appears to be the Android UA, by testing",
+        "svg": "amazon.svg"
+    },
+    {
+        "user_agents": [
+            "^Amazon Music Podcast"
+        ],
+        "app": "Amazon Music Podcasts",
+        "description": "A music and podcasts streaming app",
+        "developer_notes": "Seeing these once per episode, from an Oregon-based IP. Could be a bot or caching service?",
+        "svg": "amazon.svg"
+    },
+    {
+        "user_agents": [
+            "^AlexaMediaPlayer/5\\."
+        ],
+        "app": "Amazon Echo Dot",
+        "device": "speaker",
+        "os": "alexa",
+        "svg": "amazon.svg"
+    },
+    {
+        "user_agents": [
+            "Android 5.*ford/"
+        ],
+        "app": "Amazon Kindle Fire",
+        "device": "tablet",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^AndroidDownloadManager"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^AntennaPod/",
+            "^de.danoeh.antennapod/"
+        ],
+        "app": "AntennaPod",
+        "examples": [
+            "de.danoeh.antennapod/1.7.3b (Linux;Android 8.0.0) ExoPlayerLib/2.9.3"
+        ],
+        "info_url": "https://github.com/AntennaPod/AntennaPod",
+        "os": "android",
+        "developer_notes": "The de.danoeh version was used when streaming only, and will been phased out as of v2"
+    },
+    {
+        "user_agents": [
+            "Apache-HttpClient"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*iPod"
+        ],
+        "device": "mp3_player",
+        "examples": [
+            "AppleCoreMedia/1.0.0.16G114 (iPod touch; U; CPU OS 12_4_2 like Mac OS X; en_us)"
+        ],
+        "os": "ios",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*Macintosh"
+        ],
+        "examples": [
+            "AppleCoreMedia/1.0.0.19A583 (Macintosh; U; Intel Mac OS X 10_15; en_us)"
+        ],
+        "device": "pc",
+        "os": "macos",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*iPhone"
+        ],
+        "device": "phone",
+        "examples": [
+            "AppleCoreMedia/1.0.0.15G77 (iPhone; U; CPU OS 11_4_1 like Mac OS X; en_us)"
+        ],
+        "os": "ios",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*iPad"
+        ],
+        "device": "tablet",
+        "examples": [
+            "AppleCoreMedia/1.0.0.17A860 (iPad; U; CPU OS 13_1_2 like Mac OS X; en_us)"
+        ],
+        "os": "ios",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*HomePod"
+        ],
+        "device": "speaker",
+        "examples": [
+            "AppleCoreMedia/1.0.0.16G78 (HomePod; U; CPU OS 12_4 like Mac OS X; en_us)"
+        ],
+        "os": "homepod_os",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*Apple TV"
+        ],
+        "device": "tv",
+        "examples": [
+            "AppleCoreMedia/1.0.0.17J586 (Apple TV; U; CPU OS 13_0 like Mac OS X; en_us)"
+        ],
+        "os": "tvos",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^AppleCoreMedia/1\\..*Apple Watch"
+        ],
+        "device": "watch",
+        "os": "watchos",
+        "description": "AppleCoreMedia library",
+        "developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
+    },
+    {
+        "user_agents": [
+            "^Podcasts/.*\\(.*\\)",
+            "^Balados/.*\\(.*\\)",
+            "^Podcasti/.*\\(.*\\)",
+            "^Podcastit/.*\\(.*\\)",
+            "^Podcasturi/.*\\(.*\\)",
+            "^Podcasty/.*\\(.*\\)",
+            "^Podcast’ler/.*\\(.*\\)",
+            "^Podkaster/.*\\(.*\\)",
+            "^Podcaster/.*\\(.*\\)",
+            "^Podcastok/.*\\(.*\\)",
+            "^Подкасти/.*\\(.*\\)",
+            "^Подкасты/.*\\(.*\\)",
+            "^פודקאסטים/.*\\(.*\\)",
+            "^البودكاست/.*\\(.*\\)",
+            "^पॉडकास्ट/.*\\(.*\\)",
+            "^พ็อดคาสท์/.*\\(.*\\)",
+            "^播客/.*\\(.*\\)",
+            "^팟캐스트/.*\\(.*\\)"
+        ],
+        "examples": [
+            "Podcasts/1410.53 CFNetwork/1111 Darwin/19.0.0 (x86_64)",
+            "Podcaster/1410.53 CFNetwork/1111 Darwin/19.0.0 (x86_64)"
+        ],
+        "app": "Apple Podcasts",
+        "device": "pc",
+        "os": "macos",
+        "description": "The Apple Podcasts app on MacOS Catalina and above",
+        "developer_notes": "Used when downloading podcasts (not progressive downloads), with support for the following languages: Arabic, Chinese, Finnish, French, English, Hebrew, Hindi, Hungarian, Korean, Polish, Romanian, Russian, Serbian, Slovenian, Swedish, Thai, Turkish."
+    },
+    {
+        "user_agents": [
+            "^Podcasts/.*\\d$",
+            "^Balados/.*\\d$",
+            "^Podcasti/.*\\d$",
+            "^Podcastit/.*\\d$",
+            "^Podcasturi/.*\\d$",
+            "^Podcasty/.*\\d$",
+            "^Podcast’ler/.*\\d$",
+            "^Podkaster/.*\\d$",
+            "^Podcaster/.*\\d$",
+            "^Podcastok/.*\\d$",
+            "^Подкасти/.*\\d$",
+            "^Подкасты/.*\\d$",
+            "^פודקאסטים/.*\\d$",
+            "^البودكاست/.*\\d$",
+            "^पॉडकास्ट/.*\\d$",
+            "^พ็อดคาสท์/.*\\d$",
+            "^播客/.*\\d$",
+            "^팟캐스트/.*\\d$"
+        ],
+        "app": "Apple Podcasts",
+        "os": "ios",
+        "description": "The Apple Podcasts app on devices other than MacOS Catalina and above",
+        "developer_notes": "Used when downloading podcasts (not progressive downloads), with support for the following languages: Arabic, Chinese, Finnish, French, English, Hebrew, Hindi, Hungarian, Korean, Polish, Romanian, Russian, Serbian, Slovenian, Swedish, Thai, Turkish",
+        "examples": [
+            "Podcasts/2.6"
+        ]
+    },
+    {
+        "user_agents": [
+            "^BashPodder"
+        ],
+        "app": "BashPodder",
+        "device": "pc",
+        "info_url": "http://lincgeek.org/bashpodder/"
+    },
+    {
+        "user_agents": [
+            "BBC%20Sounds/"
+        ],
+        "app": "BBC Sounds",
+        "device": "phone",
+        "examples": [
+            "BBC%20Sounds/1.13.1.7716 CFNetwork/1107.1 Darwin/19.0.0"
+        ],
+        "info_url": "https://www.bbc.co.uk/sounds/help/questions/getting-started-with-bbc-sounds/sounds-intro"
+    },
+    {
+        "user_agents": [
+            "BBCiPlayerRadio/"
+        ],
+        "app": "BBC iPlayer Radio",
+        "device": "phone",
+        "examples": [
+            "BBCiPlayerRadio/2.16.0.8764 CFNetwork/1107.1 Darwin/19.0.0"
+        ],
+        "info_url": "https://www.bbc.co.uk/programmes/p00zh17p"
+    },
+    {
+        "user_agents": [
+            "; BeyondPod"
+        ],
+        "app": "BeyondPod",
+        "device": "phone",
+        "examples": [
+            "Mozilla/5.0 (Linux; U; en-us; BeyondPod 4)"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Bose/"
+        ],
+        "app": "Bose SoundTouch",
+        "device": "speaker"
+    },
+    {
+        "user_agents": [
+            "^Breaker/"
+        ],
+        "app": "Breaker",
+        "device": "phone"
+    },
+    {
+        "user_agents": [
+            "Android.+(?:B|b)rave"
+        ],
+        "app": "Brave",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "Linux.+(?:B|b)rave"
+        ],
+        "app": "Brave",
+        "device": "pc",
+        "os": "linux"
+    },
+    {
+        "user_agents": [
+            "Mac OS X.+(?:B|b)rave"
+        ],
+        "app": "Brave",
+        "device": "pc",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "Windows.+(?:B|b)rave"
+        ],
+        "app": "Brave",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "BroadwayPodcastNetwork/iOS"
+        ],
+        "app": "Broadway Podcast Network",
+        "description": "The Broadway Podcast Network iOS App",
+        "device": "phone",
+        "examples": [
+            "BroadwayPodcastNetwork/iOS"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Cast(?:b|B)ox/.+Android"
+        ],
+        "app": "CastBox",
+        "device": "phone",
+        "examples": [
+            "CastBox/8.2.6-191015245 (Linux;Android 10) ExoPlayerLib/2.10.4"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Cast(?:b|B)ox/.+iOS"
+        ],
+        "app": "CastBox",
+        "device": "phone",
+        "examples": [
+            "CastBox/8.5.1 (fm.castbox.audiobook.radio.podcast; build:11; iOS 13.1.2)"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Cast(?:b|B)ox"
+        ],
+        "app": "CastBox",
+        "developer_notes": "There are CastBox compatible User Agents that come without Android/iOS platform marker",
+        "examples": [
+            "CastBox/5.7.5-190508115.r1a805d3"
+        ]
+    },
+    {
+        "user_agents": [
+            "^castget "
+        ],
+        "app": "castget",
+        "examples": [
+            "castget 1.2.4 (castget rss enclosure downloader)"
+        ],
+        "info_url": "https://castget.johndal.com/",
+        "device": "pc"
+    },
+    {
+        "user_agents": [
+            "Castro "
+        ],
+        "app": "Castro",
+        "device": "phone",
+        "examples": [
+            "Castro 2019.13/1167"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "\\ CrKey/"
+        ],
+        "app": "Chromecast device",
+        "device": "speaker",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Clementine "
+        ],
+        "app": "Clementine Music Player",
+        "device": "pc",
+        "info_url": "https://www.clementine-player.org/"
+    },
+    {
+        "user_agents": [
+            "^curl"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Dalvik/"
+        ],
+        "examples": [
+            "Dalvik/2.1.0 (Linux; U; Android 9; SM-N950U Build/PPR1.180610.011)"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^datagnionbot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "Deezer/.*Android;"
+        ],
+        "app": "Deezer",
+        "device": "phone",
+        "os": "android",
+        "examples": [
+            "Deezer/6.2.2.80 (Android; 9; Mobile; fr) samsung SM-G950F",
+            "Deezer/6.2.3.96 (Android; 10; Mobile; fr) samsung SM-A405FN"
+        ],
+        "info_url": "https://play.google.com/store/apps/details?id=deezer.android.app"
+    },
+    {
+        "user_agents": [
+            "^Deezer/.*CFNetwork/"
+        ],
+        "app": "Deezer",
+        "os": "ios",
+        "examples": [
+            "Deezer/8.13.0.4 CFNetwork/1125.2 Darwin/19.4.0"
+        ],
+        "info_url": "https://apps.apple.com/us/app/deezer-music-podcast-player/id292738169"
+    },
+    {
+        "user_agents": [
+            "^Deezer"
+        ],
+        "app": "Deezer",
+        "examples": [
+            "Deezer/4.20.0 (Electron; windows/10.0.18362; Desktop; fr)",
+            "Deezer/4.20.0 (Electron; osx/10.14.6; Desktop; fr)"
+        ]
+    },
+    {
+        "user_agents": [
+            "DoggCatcher"
+        ],
+        "app": "DoggCatcher",
+        "device": "phone",
+        "examples": [
+            "Mozilla/5.0 (Linux; U; Windows NT 6.1; en-us; dream) DoggCatcher"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "DotBot/1"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^doubleTwist CloudPlayer"
+        ],
+        "examples": [
+            "doubleTwist CloudPlayer"
+        ],
+        "app": "doubleTwitch CloudPlayer",
+        "device": "phone",
+        "info_url": "https://www.doubletwist.com/cloudplayer",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "Downcast/"
+        ],
+        "app": "Downcast",
+        "device": "phone",
+        "examples": [
+            "Downcast/2.9.42 (iPhone; iOS 12.4.1; Scale/3.00)"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "Xbox.+Edge/"
+        ],
+        "app": "Edge",
+        "device": "games_console",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "Windows Phone.+Edge/"
+        ],
+        "app": "Edge",
+        "device": "phone",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "Windows.+Edge/"
+        ],
+        "app": "Edge",
+        "device": "pc",
+        "examples": [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299"
+        ],
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^Echo/1\\."
+        ],
+        "device": "speaker",
+        "os": "alexa",
+        "svg": "amazon.svg"
+    },
+    {
+        "user_agents": [
+            "FacebookBot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "Linux.*Firefox/"
+        ],
+        "app": "Firefox",
+        "device": "pc",
+        "os": "linux"
+    },
+    {
+        "user_agents": [
+            "Mac OS X.*Firefox/"
+        ],
+        "app": "Firefox",
+        "device": "pc",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "Windows.*Firefox/"
+        ],
+        "app": "Firefox",
+        "device": "pc",
+        "examples": [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0"
+        ],
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "Android.*(Focus|Firefox)/"
+        ],
+        "app": "Firefox",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "iPhone.*Focus/"
+        ],
+        "app": "Firefox",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "iPad.*Focus/"
+        ],
+        "app": "Firefox",
+        "device": "tablet",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Lavf/"
+        ],
+        "app": "ffmpeg",
+        "developer_notes": "This is a library used within TuneIn, VLC, ffmpeg and other programs. This is the default useragent for the ffmpeg library."
+    },
+    {
+        "user_agents": [
+            "^MAC "
+        ],
+        "app": "Flash",
+        "device": "pc",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "^WIN\\ "
+        ],
+        "app": "Flash",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^foobar2000/"
+        ],
+        "app": "foobar2000",
+        "examples": [
+            "foobar2000/1.x"
+        ],
+        "info_url": "https://www.foobar2000.org/"
+    },
+    {
+        "user_agents": [
+            "^fyyd-poll"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Go-http-client"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Googlebot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "Google-Podcast"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Google-Speech-Actions"
+        ],
+        "app": "Google Home",
+        "device": "speaker",
+        "description": "Google Podcasts on smart speakers",
+        "os": "google_assistant"
+    },
+    {
+        "user_agents": [
+            "GoogleChirp"
+        ],
+        "app": "Google Podcasts",
+        "device": "speaker",
+        "description": "Google Podcasts on smart speakers",
+        "os": "google_assistant"
+    },
+    {
+        "user_agents": [
+            "(?:(?:iPhone|iPad|iPod touch);.+)?GSA/",
+            "^Podcasts$",
+            "^GooglePodcasts/"
+        ],
+        "app": "Google Podcasts",
+        "description": "Google Podcasts on iOS",
+        "examples": [
+            "GooglePodcasts/2.0.2%20iPod_touch/13.4.1%20hw/iPod9_1",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 13_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GSA/107.0.310639584 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (iPod touch; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GSA/107.0.310639584 Mobile/15E148 Safari/601.1"
+        ],
+        "developer_notes": "'GooglePodcasts' is the iOS app, while (?:(?:iPhone|iPad|iPod touch);.+)?GSA/ is used in the Google app when searching and playing podcasts. The first useragent was simply 'Podcasts'.",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "(?:Android;.+)?GSA/"
+        ],
+        "app": "Google Podcasts",
+        "os": "android",
+        "description": "Google Podcasts on Android (the app or player)",
+        "examples": [
+            "Mozilla/5.0 (Linux; Android 10; Pixel 3a Build/QQ2A.200305.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.149 Mobile Safari/537.36 GSA/11.2.7.21.arm64"
+        ],
+        "developer_notes": "*GSA/ is used in the Google app when searching and playing podcasts, and in the Google Podcasts app"
+    },
+    {
+        "user_agents": [
+            "Linux; Android.*SM-T350"
+        ],
+        "device": "tablet",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "Android.*Chrome/"
+        ],
+        "app": "Google Chrome",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "CrOS.*Chrome/"
+        ],
+        "app": "Google Chrome",
+        "device": "pc",
+        "os": "chromeos"
+    },
+    {
+        "user_agents": [
+            "Linux.*Chrome/"
+        ],
+        "app": "Google Chrome",
+        "device": "pc",
+        "os": "linux"
+    },
+    {
+        "user_agents": [
+            "Mac OS X.*Chrome/"
+        ],
+        "app": "Google Chrome",
+        "device": "pc",
+        "examples": [
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36"
+        ],
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "Windows.*Chrome/"
+        ],
+        "app": "Google Chrome",
+        "device": "pc",
+        "examples": [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36"
+        ],
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "iPad.*CriOS/"
+        ],
+        "app": "Google Chrome",
+        "device": "tablet",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "iPhone.*CriOS/"
+        ],
+        "app": "Google Chrome",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^gPodder/",
+            "^gpodder\\.net"
+        ],
+        "app": "gPodder",
+        "examples": [
+            "gPodder/3.10.8 (+http://gpodder.org/) Windows/10"
+        ]
+    },
+    {
+        "user_agents": [
+            "^GStreamer"
+        ],
+        "device": "radio"
+    },
+    {
+        "user_agents": [
+            "^Guardian-iOSLive/"
+        ],
+        "app": "Guardian",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "GuardianAndroidApp/"
+        ],
+        "app": "Guardian",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^gvfs"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^\\+hermespod\\.com/"
+        ],
+        "app": "HermesPod",
+        "device": "pc",
+        "examples": [
+            "+hermespod.com/v1.5.x"
+        ],
+        "info_url": "http://hermespod.com/",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^Himalaya/"
+        ],
+        "app": "Himalaya"
+    },
+    {
+        "user_agents": [
+            "^iCatcher"
+        ],
+        "app": "iCatcher",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^iHeartRadio/.*Android"
+        ],
+        "app": "iHeartRadio",
+        "os": "android",
+        "examples": [
+            "iHeartRadio/9.19.0 (Android 10; SM-G960U Build/QP1A.190711.020)",
+            "iHeartRadio/9.19.0 (Android 9; SM-G950U Build/PPR1.180610.011)"
+        ],
+        "info_url": "https://play.google.com/store/apps/details?id=com.clearchannel.iheartradio.controller"
+    },
+    {
+        "user_agents": [
+            "^iHeartRadio/.* CFNetwork/",
+            "^iHeartRadio/.* iOS"
+        ],
+        "app": "iHeartRadio",
+        "os": "ios",
+        "examples": [
+            "iHeartRadio/2020052002 CFNetwork/1125.2 Darwin/19.4.0",
+            "iHeartRadio/9.20.0 (iPhone; iOS 13.4.1; iPhone11,8)",
+            "iHeartRadio/9.20.0 (iPad; iOS 13.4.1; iPad6,12)",
+            "iHeartRadio/9.7.0 (iPod touch; iOS 12.4.5; iPod7,1)"
+        ],
+        "info_url": "https://apps.apple.com/us/app/iheart-radio-music-podcasts/id290638154"
+    },
+    {
+        "user_agents": [
+            "MSIE "
+        ],
+        "app": "Internet Explorer",
+        "device": "pc",
+        "examples": [
+            "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)"
+        ],
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "iTMS",
+            "itunesstored"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^iTunes/.+Mac OS"
+        ],
+        "examples": [
+            "iTunes/10.6.3 (Macintosh; Intel Mac OS X 10.5.8) AppleWebKit/534.50.2"
+        ],
+        "app": "iTunes",
+        "device": "pc",
+        "info_url": "https://www.apple.com/itunes/",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "^iTunes/1[12]\\."
+        ],
+        "examples": [
+            "iTunes/11.4 (Windows; Microsoft Windows 7 x64 Home Premium Edition (Build 7600)) AppleWebKit/7600.1017.0.24"
+        ],
+        "app": "iTunes",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^iTunes/4"
+        ],
+        "device": "speaker"
+    },
+    {
+        "user_agents": [
+            "J. River Internet Reader"
+        ],
+        "examples": [
+            "Microsoft-Windows-XP/2002, UPnP/1.1, J. River Internet Reader/2.0 (compatible; Windows-Media-Player/10)"
+        ],
+        "app": "JRiver Media Center",
+        "device": "pc",
+        "info_url": "https://www.jriver.com/",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            ".*KAIOS/"
+        ],
+        "app": "KAIOS podcast app",
+        "device": "phone",
+        "os": "kaios",
+        "info_url": "https://kaiostech.com",
+        "examples": [
+            "Mozilla/5.0 (Mobile; LYF/F271i/LYF_F271i-000-01-20-101019; Android; rv:48.0) Gecko/48.0 Firefox/48.0 KAIOS/2.5"
+        ],
+        "developer_notes": "This is a standard useragent for KaiOS, the cut-down operating system for mobile phones in developing countries. Watch out - it may also contain Android."
+    },
+    {
+        "user_agents": [
+            ".*PodLP/"
+        ],
+        "app": "PodLP podcast app for KaiOS",
+        "device": "phone",
+        "os": "kaios",
+        "info_url": "https://podlp.com",
+        "examples": [
+            "Mozilla/5.0 (Mobile; LYF/F271i/LYF_F271i-000-01-20-101019; Android; rv:48.0) Gecko/48.0 Firefox/48.0 KAIOS/2.5 PodLP/1.3.2.0"
+        ],
+        "description": "PodLP is the first podcast app available for KaiOS smart feature phones on the KaiStore.",
+        "developer_notes": "Introduced in version v1.2.0.0 for limited content (downloads); available for all content after v1.3.0.0"
+    },
+    {
+        "user_agents": [
+            "^Laughable.+iOS"
+        ],
+        "app": "Laughable",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^com.jio.media.jiobeats.jiosaavn",
+            "^com.jio.media.jiobeats",
+            "^com.saavn.android",
+            "^saavn"
+        ],
+        "app": "JioSaavn",
+        "device": "phone",
+        "info_url": "https://www.jiosaavn.com/",
+        "description": "A music streaming and podcast app from India. Earn Your Happy!",
+        "developer_notes": "The user-agent will start with one of the above strings followed by the app version and player version."
+    },
+    {
+        "user_agents": [
+            "^lamarr-iOS",
+            "^TheEconomist-Lamarr-ios"
+        ],
+        "app": "The Economist",
+        "device": "phone",
+        "os": "ios",
+        "examples": [
+            "lamarr-iOS-2.20.3-116",
+            "TheEconomist-Lamarr-ios-2.22.2-12002"
+        ]
+    },
+    {
+        "user_agents": [
+            "^lamarr-android",
+            "^TheEconomist-Lamarr-android"
+        ],
+        "app": "The Economist",
+        "device": "phone",
+        "os": "android",
+        "examples": [
+            "lamarr-android-2.18.1-21810",
+            "TheEconomist-Lamarr-android-2.22.2-12002"
+        ]
+    },
+    {
+        "user_agents": [
+            "LG Player"
+        ],
+        "device": "phone",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^libwww-perl"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "Listen5"
+        ],
+        "app": "Listen5",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "LivelapBot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Luminary/.+Android"
+        ],
+        "app": "Luminary",
+        "device": "phone",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Luminary/.+iOS"
+        ],
+        "app": "Luminary",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^MajelanApp"
+        ],
+        "app": "Majelan"
+    },
+    {
+        "user_agents": [
+            "^Mechanize"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^MediaMonkey"
+        ],
+        "app": "MediaMonkey",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^Miro/.+Windows"
+        ],
+        "app": "Miro",
+        "device": "pc",
+        "examples": [
+            "Miro/6.0 (http://www.getmiro.com/; Windows post2008Server x86)"
+        ],
+        "info_url": "http://www.getmiro.com/",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "MJ12bot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^mpv 0\\."
+        ],
+        "app": "mpv",
+        "info_url": "https://mpv.io/"
+    },
+    {
+        "user_agents": [
+            "^MusicBee"
+        ],
+        "app": "MusicBee",
+        "device": "pc",
+        "examples": [
+            "MusicBee"
+        ],
+        "info_url": "https://getmusicbee.com/",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^OkDownload/"
+        ]
+    },
+    {
+        "user_agents": [
+            "okhttp"
+        ],
+        "examples": [
+            "okhttp/3.11.0"
+        ]
+    },
+    {
+        "user_agents": [
+            "Opera/.*Android;"
+        ],
+        "app": "Opera",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "Opera/.*\\(Linux"
+        ],
+        "app": "Opera",
+        "device": "pc",
+        "os": "linux"
+    },
+    {
+        "user_agents": [
+            "Opera/.*\\(Macintosh"
+        ],
+        "app": "Opera",
+        "device": "pc",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "Opera/.*\\(Windows"
+        ],
+        "app": "Opera",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "Opera[/ ]"
+        ],
+        "app": "Opera"
+    },
+    {
+        "user_agents": [
+            "^Overcast/"
+        ],
+        "app": "Overcast",
+        "examples": [
+            "Overcast/3.0 (+http://overcast.fm/; iOS podcast app)"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^PandoraRSSCrawler"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Pandora.+Android"
+        ],
+        "app": "Pandora",
+        "device": "phone",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Player FM"
+        ],
+        "app": "Player FM"
+    },
+    {
+        "user_agents": [
+            "^Pingdom"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Pocket Casts",
+            "^PocketCasts/"
+        ],
+        "app": "Pocket Casts",
+        "device": "phone",
+        "examples": [
+            "Pocket Casts"
+        ],
+        "info_url": "https://www.pocketcasts.com/",
+        "description": "A podcast app and web player",
+        "developer_notes": "'PocketCasts' is a feed parser; 'Pocket Casts' is the app. There is also a web player.",
+        "svg": "pocketcasts.svg"
+    },
+    {
+        "user_agents": [
+            "^Podcast.*Addict/"
+        ],
+        "app": "PodcastAddict",
+        "device": "phone",
+        "examples": [
+            "PodcastAddict/v2 - Dalvik/2.1.0 (Linux; U; Android 9; SM-N950U Build/PPR1.180610.011)"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "iOS.*The Podcast App/",
+            "com.evolve.podcast/"
+        ],
+        "app": "The Podcast App",
+        "os": "ios",
+        "examples": [
+            "podcast/2358 iOS/Version 13.5.1 (Build 017F80) The Podcast App/3.22.1",
+            "com.evolve.podcast/3.22.1 (iPhone; ) (build 2358, iOS 13.5.1)"
+        ],
+        "developer_notes": "The com.evolve version of the useragent is an error, and has been reported to the developers as a bug. Caution: the beginning of their main useragent is similar to Google Podcasts."
+    },
+    {
+        "user_agents": [
+            "^PodcastRepublic.+Android"
+        ],
+        "app": "PodcastRepublic",
+        "device": "phone",
+        "examples": [
+            "PodcastRepublic/18.0 (Linux; U; Android 10;blueline/QP1A.190711.020.C3)"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "podCloud"
+        ],
+        "app": "PodCloud",
+        "description": "Le podcast, simplement. A French-language web-based podcast player.",
+        "bot": true,
+        "developer_notes": "This useragent is a bot, doing feed updates and downloading media files. It was observed every six hours. User plays will have a standard browser useragent with a referer of https://podcloud.fr/ ",
+        "info_url": "https://podcloud.fr"
+    },
+    {
+        "user_agents": [
+            "^Podcoin"
+        ],
+        "app": "Podcoin"
+    },
+    {
+        "user_agents": [
+            "^PodCruncher/.* CFNetwork/"
+        ],
+        "app": "PodCruncher",
+        "os": "ios",
+        "examples": [
+            "PodCruncher/3.7.1 CFNetwork/1125.2 Darwin/19.4.0",
+            "PodCruncher/3.7.1 CFNetwork/978.0.7 Darwin/18.7.0"
+        ],
+        "info_url": "https://apps.apple.com/us/app/podcruncher-podcast-player/id421894356"
+    },
+    {
+        "user_agents": [
+            "^Podbean/Android App",
+            "^Podbean/Android generic"
+        ],
+        "app": "Podbean",
+        "os": "android",
+        "examples": [
+            "Podbean/Android App 7.6.4 (http://podbean.com),1927526fe23b5acf535b3e91b64cee95",
+            "Podbean/Android generic 1.1.2 (http://podbean.com),9376c517335ded9a716022cc1f15c884"
+        ],
+        "info_url": "https://play.google.com/store/apps/details?id=com.podbean.app.podcast"
+    },
+    {
+        "user_agents": [
+            "^Podbean/iOS"
+        ],
+        "app": "Podbean",
+        "os": "ios",
+        "examples": [
+            "Podbean/iOS (http://podbean.com) 5.2.0 - 19c4ff292bd09cd2ccbad22cc6755a45"
+        ],
+        "info_url": "https://apps.apple.com/us/app/podbean-podcast-app-player/id973361050"
+    },
+    {
+        "user_agents": [
+            "^Podhero/"
+        ],
+        "app": "Podhero",
+        "bot": true,
+        "info_url": "https://podhero.com",
+        "description": "Podhero feed crawler. Supports websub."
+    },
+    {
+        "user_agents": [
+            "^Podhero/"
+        ],
+        "app": "Podhero",
+        "info_url": "https://podhero.com",
+        "description": "Podhero app on iOS and Android."
+    },
+    {
+        "user_agents": [
+            "^Podkicker"
+        ],
+        "app": "Podkicker Pro",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "PodLink"
+        ],
+        "app": "PodLink",
+        "info_url": "https://pod.link/faq/crawler"
+    },
+    {
+        "user_agents": [
+            "^PodMN/Android"
+        ],
+        "description": "Minnesota Podcasts Live Here",
+        "examples": [
+            "PodMN/Android 1.2.6 (Android 7.1.1; SM-J510FN Build/NMF26X)"
+        ],
+        "info_url": "https://play.google.com/store/apps/details?id=com.podmn.app",
+        "app": "PodMN",
+        "device": "phone",
+        "os": "android",
+        "svg": "podmn.svg"
+    },
+    {
+        "user_agents": [
+            "^PodMN/iOS"
+        ],
+        "description": "Minnesota Podcasts Live Here",
+        "examples": [
+            "PodMN/iOS 1.2.6 (iPhone XR/13.6.1)"
+        ],
+        "info_url": "https://apps.apple.com/us/app/podmn/id1464935818",
+        "app": "PodMN",
+        "device": "phone",
+        "os": "ios",
+        "svg": "podmn.svg"
+    },
+    {
+        "user_agents": [
+            "PodnewsBot"
+        ],
+        "app": "Podnews",
+        "bot": true,
+        "description": "Podnews runs a number of bots to read and test RSS and audio files",
+        "info_url": "http://podnews.net"
+    },
+    {
+        "user_agents": [
+            "Podyssey App"
+        ],
+        "app": "Podyssey",
+        "description": "Podyssey is a community for people that love podcasts. It's like Goodreads, but for podcasts.",
+        "info_url": "https://podyssey.fm"
+    },
+    {
+        "user_agents": [
+            "com.toysinboxes.Echo"
+        ],
+        "app": "Podyssey",
+        "description": "Podyssey is a community for people that love podcasts. It's like Goodreads, but for podcasts.",
+        "info_url": "https://podyssey.fm",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "fm.podyssey.podcasts"
+        ],
+        "app": "Podyssey",
+        "description": "Podyssey is a community for people that love podcasts. It's like Goodreads, but for podcasts.",
+        "info_url": "https://podyssey.fm",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "python-requests"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Radioplayer Android app"
+        ],
+        "app": "RadioPlayer",
+        "os": "android",
+        "description": "Radioplayer is a radio and podcast app, with country-specific versions available in selected countries.",
+        "info_url": "http://radioplayer.org"
+    },
+    {
+        "user_agents": [
+            "^Radioplayer iOS app"
+        ],
+        "app": "RadioPlayer",
+        "os": "ios",
+        "description": "Radioplayer is a radio and podcast app, with country-specific versions available in selected countries.",
+        "info_url": "http://radioplayer.org"
+    },
+    {
+        "user_agents": [
+            "^RadioPublic/android-",
+            "^RadioPublic Android"
+        ],
+        "app": "RadioPublic",
+        "description": "RadioPublic’s free, easy to use podcast player makes listening to podcasts simple, enjoyable, and fun.",
+        "examples": [
+            "RadioPublic/android-2.2"
+        ],
+        "info_url": "https://radiopublic.com/",
+        "svg": "radiopublic.svg",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "RadioPublic iOS",
+            "RadioPublic.+CFNetwork",
+            "^RadioPublic/iOS"
+        ],
+        "app": "RadioPublic",
+        "description": "RadioPublic’s free, easy to use podcast player makes listening to podcasts simple, enjoyable, and fun.",
+        "examples": [
+            "RadioPublic/iOS-2.0"
+        ],
+        "info_url": "https://radiopublic.com/",
+        "svg": "radiopublic.svg",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "request\\.js"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Roku/DVP-8.*\\(04"
+        ],
+        "device": "tv",
+        "os": "roku"
+    },
+    {
+        "user_agents": [
+            "^RSSRadio \\("
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^RSSRadio7?/"
+        ],
+        "app": "RSS Radio",
+        "device": "phone",
+        "examples": [
+            "RSSRadio7/9252 CFNetwork/1107.1 Darwin/19.0.0"
+        ],
+        "info_url": "http://rssrad.io",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Ruby"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^SEMrushBot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Spotify/.+Linux"
+        ],
+        "app": "Spotify",
+        "device": "pc",
+        "os": "linux"
+    },
+    {
+        "user_agents": [
+            "Macintosh.+Spotify/",
+            "^Spotify/.+OSX"
+        ],
+        "app": "Spotify",
+        "device": "pc",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "Windows.+Spotify/",
+            "^Spotify/.+Win32"
+        ],
+        "app": "Spotify",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^Spotify/.+Android"
+        ],
+        "app": "Spotify",
+        "device": "phone",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^Spotify/.*iOS"
+        ],
+        "app": "Spotify",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Spotify/1.0$"
+        ],
+        "bot": true,
+        "developer_notes": "This useragent, currently simply Spotify/1.0, is used when retrieving the RSS and audio for Spotify's catalogue. It isn't used for passthru."
+    },
+    {
+        "user_agents": [
+            "Macintosh.*AppleWebKit.*Safari/"
+        ],
+        "app": "Safari",
+        "device": "pc",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "Windows.*AppleWebKit.*Safari/"
+        ],
+        "app": "Safari",
+        "device": "pc",
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "iPhone.*AppleWebKit.*Safari/"
+        ],
+        "app": "Safari",
+        "device": "phone",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "iPad.*AppleWebKit.*Safari/"
+        ],
+        "app": "Safari",
+        "device": "tablet",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Subcast"
+        ],
+        "app": "Subcast"
+    },
+    {
+        "user_agents": [
+            "Sonnet"
+        ],
+        "app": "Sonnet",
+        "description": "Sonnet is a simple, easy to use podcast app aimed at new listeners",
+        "os": "android",
+        "info_url": "https://sonnet.fm",
+        "svg": "sonnet.svg"
+    },
+    {
+        "user_agents": [
+            "Sonos"
+        ],
+        "app": "Sonos",
+        "device": "speaker",
+        "os": "sonos"
+    },
+    {
+        "user_agents": [
+            "^Spreaker"
+        ],
+        "app": "Spreaker"
+    },
+    {
+        "user_agents": [
+            "support@dorada.co.uk"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Stitcher/Android"
+        ],
+        "app": "Stitcher",
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^AlexaMediaPlayer/Stitcher"
+        ],
+        "app": "Stitcher",
+        "device": "speaker",
+        "os": "alexa"
+    },
+    {
+        "user_agents": [
+            "^Stitcher/iOS"
+        ],
+        "app": "Stitcher",
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "StitcherBot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Storiyoh/"
+        ],
+        "app": "Storiyoh"
+    },
+    {
+        "user_agents": [
+            "^Swinsian/"
+        ],
+        "app": "Swinsian",
+        "device": "pc",
+        "examples": [
+            "Swinsian/472 CFNetwork/978.0.7 Darwin/18.7.0 (x86_64)"
+        ],
+        "info_url": "https://swinsian.com/",
+        "os": "macos"
+    },
+    {
+        "user_agents": [
+            "^Swoot/"
+        ],
+        "app": "Swoot",
+        "description": "Renamed to Podhero in June 2020"
+    },
+    {
+        "user_agents": [
+            "^Trackable/"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^TuneIn Radio/.*;Android"
+        ],
+        "examples": [
+            "TuneIn Radio/24.2 (Linux;Android 10) ExoPlayerLib/2.11.4"
+        ],
+        "app": "TuneIn Radio",
+        "os": "android",
+        "info_url": "https://play.google.com/store/apps/details?id=tunein.player"
+    },
+    {
+        "user_agents": [
+            "^TuneIn Radio Pro/.*;Android"
+        ],
+        "examples": [
+            "TuneIn Radio Pro/23.3.2 (Linux;Android 5.1.1) ExoPlayerLib/2.10.7"
+        ],
+        "app": "TuneIn Pro",
+        "os": "android",
+        "info_url": "https://play.google.com/store/apps/details?id=radiotime.player"
+    },
+    {
+        "user_agents": [
+            "^TuneIn(%20| )Radio/.*(CFNetwork/|iPhone)"
+        ],
+        "examples": [
+            "TuneIn Radio/1366 CFNetwork/1121.2.2 Darwin/19.3.0",
+            "TuneIn Radio/18.1; iPhone12,8; iOS/13.4.1",
+            "TuneIn%20Radio/1383 CFNetwork/1125.2 Darwin/19.4.0"
+        ],
+        "app": "TuneIn Radio",
+        "os": "ios",
+        "info_url": "https://apps.apple.com/us/app/tunein-radio-live-news-music/id418987775"
+    },
+    {
+        "user_agents": [
+            "^TuneIn(%20| )Radio(%20| )Pro/.*CFNetwork/"
+        ],
+        "examples": [
+            "TuneIn Radio Pro/1361 CFNetwork/1121.2.2 Darwin/19.3.0",
+            "TuneIn%20Radio%20Pro/1383 CFNetwork/1125.2 Darwin/19.4.0"
+        ],
+        "app": "TuneIn Pro",
+        "os": "ios",
+        "info_url": "https://apps.apple.com/us/app/tunein-pro-radio-sports/id319295332"
+    },
+    {
+        "user_agents": [
+            "^TuneIn"
+        ],
+        "examples": [
+            "TuneIn Radio"
+        ],
+        "app": "TuneIn Radio",
+        "info_url": "https://tunein.com/",
+        "developer_notes": "Other versions of this app use many other user agents."
+    },
+    {
+        "user_agents": [
+            "^Twitterbot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Typhoeus"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^VictorReader Stream"
+        ],
+        "app": "VictorReader",
+        "device": "speaker",
+        "os": "victorreader"
+    },
+    {
+        "user_agents": [
+            "^VLC/\\d"
+        ],
+        "app": "VLC media player",
+        "device": "pc",
+        "examples": [
+            "VLC/3.0.8 LibVLC/3.0.8"
+        ],
+        "info_url": "https://www.videolan.org/vlc/"
+    },
+    {
+        "user_agents": [
+            "Wget"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Winamp"
+        ],
+        "app": "Winamp",
+        "device": "pc",
+        "examples": [
+            "WinampMPEG/2.7"
+        ],
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^NSPlayer",
+            "^WMPlayer/"
+        ],
+        "app": "Windows Media Player",
+        "device": "pc",
+        "examples": [
+            "NSPlayer/12.00.18362.0418 WMFSDK/12.00.18362.0418"
+        ],
+        "os": "windows"
+    },
+    {
+        "user_agents": [
+            "^WordPress"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "YandexBot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^yapa/"
+        ],
+        "app": "Yapa"
+    },
+    {
+        "user_agents": [
+            "stagefright/"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^^com\\.evolve\\.podcast/"
+        ],
+        "app": "The Podcast App",
+        "device": "phone",
+        "examples": [
+            "com.evolve.podcast/3.10.1 (iPhone; ) (build 951, iOS 13.3)"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^Podimo/.*iOS"
+        ],
+        "app": "Podimo",
+        "device": "phone",
+        "os": "ios",
+        "examples": [
+            "Podimo/1.11.3 build 121/iOS 13.3"
+        ],
+        "info_url": "https://apps.apple.com/dk/app/podimo-a-world-of-podcasts/id1476538730"
+    },
+    {
+        "user_agents": [
+            "^Podimo/.*Android"
+        ],
+        "app": "Podimo",
+        "device": "phone",
+        "os": "android",
+        "examples": [
+            "Podimo/1.11.3 build 91/Android 28"
+        ],
+        "info_url": "https://play.google.com/store/apps/details?id=com.podimo&hl=en_US"
+    },
+    {
+        "user_agents": [
+            "BingPreview/"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^msnbot/"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Deezer Podcasters\/1\\.0"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^got/"
+        ],
+        "bot": true,
+        "info_url": "https://play.google.com/store/apps/details?id=com.podimo&hl=en_US",
+        "developer_notes": "Got is a HTTP library for NodeJs"
+    },
+    {
+        "user_agents": [
+            "INA dlweb"
+        ],
+        "bot": true,
+        "developer_notes": "Institut National de l'Audiovisuel is a repository of all French radio and television audiovisual archives."
+    },
+    {
+        "user_agents": [
+            "^SoundOn/[\\d\\.]+\\s+\\(Linux;Android",
+            "^SoundOn\/[^12]\\.\\d+\\.\\d+$",
+            "^SoundOn\/1\\.[^1][^0-2]?\\.\\d+$"
+        ],
+        "app": "SoundOn",
+        "device": "phone",
+        "examples": [
+            "SoundOn/1.9.17 (Linux;Android 10) ExoPlayerLib/2.9.4"
+        ],
+        "os": "android"
+    },
+    {
+        "user_agents": [
+            "^SoundOn/1\\.1[0-2]\\.\\d+$",
+            "^SoundOn/2\\.\\d+\\.\\d+$",
+            "^SoundOn/[\\d\\.]+\\s+\\(iOS"
+        ],
+        "app": "SoundOn",
+        "device": "phone",
+        "examples": [
+            "SoundOn/1.10.1",
+            "SoundOn/2.2.0",
+            "SoundOn/2.2.2 (iOS)"
+        ],
+        "os": "ios"
+    },
+    {
+        "user_agents": [
+            "^SoundOn/[\\d\\.]+\\s+\\(bot"
+        ],
+        "bot": true
+    },
+    {
+        "user_agents": [
+            "^Podverse/Android Mobile App/"
+        ],
+        "app": "Podverse Android Mobile App",
+        "device": "phone",
+        "os": "android",
+        "info_url": "https://play.google.com/store/apps/details?id=com.podverse&hl=en_US",
+        "description": "Open source podcast catcher for Android, with clip-sharing, playlists, device syncing and more.",
+        "developer_notes": "The standard device user agent is concatenated to the end of the Podverse/Android Mobile App/ user agent."
+    },
+    {
+        "user_agents": [
+            "^Podverse/iOS Mobile App/"
+        ],
+        "app": "Podverse iOS Mobile App",
+        "device": "phone",
+        "os": "ios",
+        "examples": [
+            "Podverse/iOS Mobile App/Mozilla/5.0 (iPhone; CPU iPhone OS 13_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/1234"
+        ],
+        "description": "Open source podcast catcher for iOS, with clip-sharing, playlists, device syncing and more.",
+        "info_url": "https://apps.apple.com/us/app/podverse/id1390888454",
+        "developer_notes": "The standard device user agent is concatenated to the end of the Podverse/iOS Mobile App/ user agent."
+    },
+    {
+        "user_agents": [
+            "^Podverse/Feed Parser"
+        ],
+        "bot": true,
+        "app": "Podverse Server-Side Feed Parser",
+        "info_url": "https://podverse.fm",
+        "description": "The Podverse feed parser.",
+        "developer_notes": "This service parses publicly-accessible RSS feeds on a timer, then stores parsed data in the Podverse database."
+    },
+    {
+        "user_agents": [
+            "^Podcast/1."
+        ],
+        "app": "小宇宙",
+        "info_url": "https://www.coolapk.com/apk/app.podcast.cosmos",
+        "description": "Cosmos, a chinese podcast app"
+    }
+]

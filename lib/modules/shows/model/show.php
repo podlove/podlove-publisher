@@ -88,7 +88,7 @@ class Show
 
     public static function find_by_id($id)
     {
-        return self::find_one_term_by_property('id', $id);
+        return self::format_term(get_term($id, 'shows'));
     }
 
     public static function find_one_by_episode_id($episode_id)

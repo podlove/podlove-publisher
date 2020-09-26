@@ -49,6 +49,10 @@ class TwigFilter
      */
     public static function apply_to_html($html, $vars = [])
     {
+        if (class_exists('Twig_Filter_Function')) {
+            return '<p>Podlove Template cannot be displayed due to plugin conflict.</p>';
+        }
+
         $twig = self::getTwigEnv();
 
         $context = ['option' => $vars];

@@ -106,6 +106,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.1.0 =
+
+* Auphonic: show production warnings in module (https://twitter.com/auphonic/status/1305849345762185217)
+* download tracking: use OPAWG podcast user agent database in addition to Matomo database
+* stability: detect plugins using older/incompatible versions of Twig. Display a warning on the site (instead of an error) and a detailed explanation on "Podlove > Support" screen.
+* fix: editing/deleting shows ([#1077](https://github.com/podlove/podlove-publisher/issues/1077))
+
 = 3.0.4 =
 
 * fix: contributor notifications settings can be saved again ([#1144](https://github.com/podlove/podlove-publisher/issues/1144))
