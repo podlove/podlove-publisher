@@ -106,100 +106,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 3.1.0 =
+= 2020-09-26 =
 
+* api: add public endpoint for transcripts
+* api: add public endpoint for shownotes
 * Auphonic: show production warnings in module (https://twitter.com/auphonic/status/1305849345762185217)
 * download tracking: use OPAWG podcast user agent database in addition to Matomo database
 * stability: detect plugins using older/incompatible versions of Twig. Display a warning on the site (instead of an error) and a detailed explanation on "Podlove > Support" screen.
 * fix: editing/deleting shows ([#1077](https://github.com/podlove/podlove-publisher/issues/1077))
-
-= 3.0.4 =
-
-* fix: contributor notifications settings can be saved again ([#1144](https://github.com/podlove/podlove-publisher/issues/1144))
-* fix: do not include invisible contributors in Web Player 5 API ([#1142](https://github.com/podlove/podlove-publisher/issues/1142))
-* fix: detect Yoast SEO, wpSEO: disables Open Graph module ([#1132](https://github.com/podlove/podlove-publisher/issues/1132))
-* fix: use podcast summary as RSS Feed `<description>` if subtitle is not set ([#1092](https://github.com/podlove/podlove-publisher/issues/1092))
-
-= 3.0.3 =
-
-* fix: title escaping in RSS feed when using native (not auto-generated) titles
-
-= 3.0.2 =
-
-* add: Untappd social service
-* fix: Auphonic module (wrong HTTP API headers)
-* chore: update npm dependencies
-
-= 3.0.1 =
-
-* fix: escaping issue in RSS feed (itunes:author and itunes:owner)
-* fix: remove (rare) accidental double enclosure tag in RSS feed when "enclosure" post meta is present
-
-= 3.0.0 =
-
-**Breaking Changes**
-
-* requires PHP 7.0 (or newer)
-* requires WordPress 5.2 (or newer)
-* Web Player:
-  * removes Podlove Web Player 2
-  * removes Podlove Web Player 3
-  * removes "insert player automatically" option (probably does not affect anyone as the web player is by default inserted via template)
-  * removes "Chapters Visibility" option (use dedicated Web Player settings instead)
-
-**New Publisher PLUS**
-
-=> [plus.podlove.org](https://plus.podlove.org/)
-
-Publisher PLUS is a new service providing Feed Proxy and Podcast Subscriber statistics for Podlove Publisher.
-
-To use it, enable the *Publisher PLUS* module, then visit [plus.podlove.org](https://plus.podlove.org/) to create an account.
-
-Subscriber Statistics are only the beginning. Expect more features soon!
-
-**Experimental: Shownotes**
-
-Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates.
-
-This module is a work-in-progress. But it's usable, so feel free to give it a try, especially if your shownotes are link-heavy and you're comfortable writing Podlove (Twig) templates.
-
-The module is currently hidden. Make it visible by setting a PHP constant, for example in your `wp-config.php`: `define('PODLOVE_MODULE_SHOWNOTES_VISBLE', true);`.
-
-Use this template as a starting point: https://gist.github.com/eteubert/d6c51c52372dc2da2f1734a5f54c7918
-
-**Shortcodes**
-
-* `podlove-episode-contributor-list`
-  * new design
-  * renders text-only in RSS feed
-* `podlove-podcast-contributor-list`
-  * new design
-* `podlove-episode-downloads`
-  * the text link variant is now the default style
-
-**Miscellaneous**
-
-* remove Bitlove module (service does not exist any more)
-* remove Flattr module
-* remove "Website Protocol" setting (not necessary any more as Let's Encrypt is widely supported)
-* enable episode chapters by default
-* convenience: "Copy to Clipboard" function for Podlove Template shortcodes
-* expose iTunes id/URL in podcast feed ([#1078](https://github.com/podlove/podlove-publisher/pull/1078))
-* improve feed rendering: use XML generator for all tags with user input to guarantee valid feeds for all inputs
-* add function to remove a transcript from an episode ([#1131](https://github.com/podlove/podlove-publisher/issues/1131))
-* add Steady as donation service
-* add template tag: `episode.post_title` ([#1136](https://github.com/podlove/podlove-publisher/issues/1136))
-* add template tag: `service.type` (https://community.podlove.org/t/replacing-social-icons/2321)
-* add default avatar to transcript preview
-* fix: search logic ([#1072](https://github.com/podlove/podlove-publisher/issues/1072))
-* fix: fetch Podlove News via https ([#1037](https://github.com/podlove/podlove-publisher/issues/1037))
-* fix: don't send Publisher logs to system log when WP_DEBUG is on ([#1065](https://github.com/podlove/podlove-publisher/issues/1065))
-* fix: ensure uploads for webvtt (transcripts) and gz (exports) are allowed
-* fix: ensure contributors module is active when transcripts are used
-* fix: ensure permissions in shownotes and transcripts APIs
-* fix: don't count download requests with http range header of `bytes=0-0` ([#1135](https://github.com/podlove/podlove-publisher/issues/1135))
-* update dependencies
-* build releases with GitHub Actions (in favour of TravisCI)
+* fix: episodes and shows API
 
 ----
 
