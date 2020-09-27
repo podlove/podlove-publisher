@@ -211,12 +211,21 @@ jQuery(document).ready(function ($) {
 		load_episode_performance_chart();
 	}
 
-	function getLineChart(chart, dimension, group, caption) {
+	function getLineChart(chart, dimension, group, caption, color) {
 		return dc.lineChart(chart)
 			.dimension(dimension)
 			.group(group, caption)
+			.colors(color)
 			// https://github.com/dc-js/dc.js/issues/615#issuecomment-47771394
 			.defined(function(d) { return d.y != null; });
+	}
+
+	function getBarChart(chart, dimension, group, caption) {
+		return dc.barChart(chart)
+			.dimension(dimension)
+			.colors('#cccccc')
+			.centerBar(true)
+			.group(group, caption);
 	}
 
 	// https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
@@ -245,7 +254,6 @@ jQuery(document).ready(function ($) {
 		let xf = crossfilter(aboTotalsRawData)
 		var episodeDimension = xf.dimension((d) => {
 			return d.number;
-			// return d.title.substring(0, 5); // TODO Besser
 		});
 
 		var totalDimension = episodeDimension.group().reduceSum((d) => d.downloads);
@@ -255,11 +263,10 @@ jQuery(document).ready(function ($) {
 		var w1Dimension = episodeDimension.group().reduce(aboReduceAdd('w1'),  aboReduceRemove('w1'),  aboReduceInit);
 
 		let chart = dc.compositeChart('#total-abo-chart');
-		let totalChart = getLineChart(chart, episodeDimension, totalDimension, "Total");
-		let q1Chart = getLineChart(chart, episodeDimension, q1Dimension, "1q");
-		let w1Chart = getLineChart(chart, episodeDimension, w1Dimension, "1w");
-		let d2Chart = getLineChart(chart, episodeDimension, d2Dimension, "2d");
-		let d1Chart = getLineChart(chart, episodeDimension, d1Dimension, "1d");
+		let totalChart = getBarChart(chart, episodeDimension, totalDimension, "Total");
+		let q1Chart = getLineChart(chart, episodeDimension, q1Dimension, "1q", '#aa0000');
+		let w1Chart = getLineChart(chart, episodeDimension, w1Dimension, "1w", '#8b008b');
+		let d1Chart = getLineChart(chart, episodeDimension, d1Dimension, "1d", '#3a539b');
 
 		chart
 			.width(chart_width)
@@ -270,7 +277,6 @@ jQuery(document).ready(function ($) {
 			.yAxisLabel('Downloads')
 			.group(totalDimension)
 			._rangeBandPadding(1) // Fix to align x-axis with points
-			.shareColors(true)
 			.title(function (d) {
 				return [
 					aboTotalsRawData[d.key].title,
@@ -278,7 +284,7 @@ jQuery(document).ready(function ($) {
 				].join("\n");
 			})
 			.renderHorizontalGridLines(true)
-			.compose([totalChart, q1Chart, w1Chart, d2Chart, d1Chart]);
+			.compose([totalChart, d1Chart, w1Chart, q1Chart]);
 
 		// responsive legend position
 		var legendWidth = 300;
@@ -326,7 +332,6 @@ jQuery(document).ready(function ($) {
 				};
 
 				aboTotalsRawData = d3.csvParse(csvTotals, csvMapper);
-				console.log(aboTotalsRawData); // TODO remove
 				render_abo_total();
 				$(window).on('resize', render_abo_total);
 			});
