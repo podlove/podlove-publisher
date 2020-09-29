@@ -276,13 +276,45 @@ if (Model\DownloadIntentClean::first() === null) {
 
     public function view_template()
     {
-        ?>
+        $published_episodes = Model\Episode::count_published(); ?>
 
 		<h2><?php _e('Podcast Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 
-		<div style="width: 100%">
-			<div id="total-chart" style="height: 200px"></div>
-			<div id="total-abo-chart" style="height: 200px"></div>
+        <div style="width: 100%">
+            <?php if ($published_episodes > 0) { ?>
+
+                <div class="metabox-holder">
+                    <div class="postbox">
+                        <h2 class="hndle" style="cursor: inherit;">
+                          <?php _e('Recent Episode Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                        </h2>
+                        <div class="inside">
+
+                          <div id="total-chart" style="height: 200px"></div>
+                          <div class="clear"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <?php } ?>
+                <?php if ($published_episodes > 3) { ?>
+
+                        <div class="metabox-holder">
+                            <div class="postbox">
+                                <h2 class="hndle" style="cursor: inherit;">
+                                  <?php _e('Episode Performance / Podcast Growth', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                                </h2>
+                                <div class="inside">
+
+                                  <div id="total-abo-chart" style="height: 200px"></div>
+                                  <div class="clear"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+            <?php } ?>
 		</div>
 
 		<div class="clear"></div>

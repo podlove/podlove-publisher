@@ -259,7 +259,6 @@ jQuery(document).ready(function ($) {
 		var totalDimension = episodeDimension.group().reduceSum((d) => d.downloads);
 		var q1Dimension = episodeDimension.group().reduce(aboReduceAdd('q1'),  aboReduceRemove('q1'),  aboReduceInit);
 		var d1Dimension = episodeDimension.group().reduce(aboReduceAdd('d1'),  aboReduceRemove('d1'),  aboReduceInit);
-		var d2Dimension = episodeDimension.group().reduce(aboReduceAdd('d2'),  aboReduceRemove('d2'),  aboReduceInit);
 		var w1Dimension = episodeDimension.group().reduce(aboReduceAdd('w1'),  aboReduceRemove('w1'),  aboReduceInit);
 
 		let chart = dc.compositeChart('#total-abo-chart');
@@ -612,7 +611,7 @@ jQuery(document).ready(function ($) {
 			}
 		},
 		renderer: renderSourcesChart
-	}, 
+	},
 	// {
 	// 	id: '#analytics-chart-global-downloads-per-month',
 	// 	action: 'podlove-analytics-global-downloads-per-month',
@@ -623,7 +622,7 @@ jQuery(document).ready(function ($) {
 	// 		}
 	// 	},
 	// 	renderer: renderPerMonthChart
-	// }, 
+	// },
 	{
 		id: '#analytics-global-top-episodes',
 		action: 'podlove-analytics-global-top-episodes',

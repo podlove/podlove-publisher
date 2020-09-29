@@ -34,7 +34,7 @@ class Episode extends Base implements Licensable
 			SELECT
 				e.*
 			FROM
-				`'.Episode::table_name().'` e 
+				`'.Episode::table_name().'` e
 				JOIN `'.$wpdb->posts.'` p ON e.post_id = p.ID
 			WHERE
 				p.post_status IN ('.implode(', ', array_map(function ($s) {
@@ -48,6 +48,29 @@ class Episode extends Base implements Licensable
         return Episode::find_all_by_sql($sql);
     }
 
+    /**
+     * Return number of rows in the table.
+     *
+     * @return int number of rows
+     */
+    public static function count_published()
+    {
+        global $wpdb;
+
+        $sql = '
+        SELECT
+            COUNT(*)
+        FROM
+            `'.Episode::table_name().'` e
+            JOIN `'.$wpdb->posts.'` p ON e.post_id = p.ID
+        WHERE
+            p.post_status IN ("publish")
+            AND
+            p.post_type = "podcast"';
+
+        return (int) $wpdb->get_var($sql);
+    }
+
     public static function latest()
     {
         global $wpdb;
@@ -59,7 +82,7 @@ class Episode extends Base implements Licensable
 			SELECT
 				*
 			FROM
-				`'.Episode::table_name().'` e 
+				`'.Episode::table_name().'` e
 				JOIN `'.$wpdb->posts.'` p ON e.post_id = p.ID
 			WHERE
 				p.post_type = "podcast"
