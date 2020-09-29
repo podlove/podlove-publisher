@@ -282,6 +282,7 @@ if (Model\DownloadIntentClean::first() === null) {
 
 		<div style="width: 100%">
 			<div id="total-chart" style="height: 200px"></div>
+			<div id="total-abo-chart" style="height: 200px"></div>
 		</div>
 
 		<div class="clear"></div>
