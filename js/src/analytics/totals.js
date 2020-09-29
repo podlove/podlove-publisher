@@ -1,5 +1,6 @@
 jQuery(document).ready(function ($) {
 	var totalsRawData;
+	var aboTotalsRawData;
 
 	var reduceAddFun = function (p, v) {
 
@@ -209,6 +210,138 @@ jQuery(document).ready(function ($) {
 	if ($("#total-chart").length) {
 		load_episode_performance_chart();
 	}
+
+	function getLineChart(chart, dimension, group, caption, color) {
+		return dc.lineChart(chart)
+			.dimension(dimension)
+			.group(group, caption)
+			.colors(color)
+			// https://github.com/dc-js/dc.js/issues/615#issuecomment-47771394
+			.defined(function(d) { return d.y != null; });
+	}
+
+	function getBarChart(chart, dimension, group, caption) {
+		return dc.barChart(chart)
+			.dimension(dimension)
+			.colors('#cccccc')
+			.centerBar(true)
+			.group(group, caption);
+	}
+
+	// https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+	function aboReduceAdd(key) {
+		return function(p, v){
+			if(v[key] === null && p === null){ return null; }
+			p += v[key];
+			return p;
+		}
+	}
+
+	function aboReduceRemove(key) {
+		return function(p, v){
+			if(v[key] === null && p === null){ return null; }
+			p -= v[key];
+			return p;
+		}
+	}
+
+	function aboReduceInit(key) {
+		return null;
+	}
+
+	function render_abo_total() {
+		var chart_width = $("#total-abo-chart").closest(".wrap").width();
+		let xf = crossfilter(aboTotalsRawData)
+		var episodeDimension = xf.dimension((d) => {
+			return d.number;
+		});
+
+		var totalDimension = episodeDimension.group().reduceSum((d) => d.downloads);
+		var q1Dimension = episodeDimension.group().reduce(aboReduceAdd('q1'),  aboReduceRemove('q1'),  aboReduceInit);
+		var d1Dimension = episodeDimension.group().reduce(aboReduceAdd('d1'),  aboReduceRemove('d1'),  aboReduceInit);
+		var d2Dimension = episodeDimension.group().reduce(aboReduceAdd('d2'),  aboReduceRemove('d2'),  aboReduceInit);
+		var w1Dimension = episodeDimension.group().reduce(aboReduceAdd('w1'),  aboReduceRemove('w1'),  aboReduceInit);
+
+		let chart = dc.compositeChart('#total-abo-chart');
+		let totalChart = getBarChart(chart, episodeDimension, totalDimension, "Total");
+		let q1Chart = getLineChart(chart, episodeDimension, q1Dimension, "1q", '#aa0000');
+		let w1Chart = getLineChart(chart, episodeDimension, w1Dimension, "1w", '#8b008b');
+		let d1Chart = getLineChart(chart, episodeDimension, d1Dimension, "1d", '#3a539b');
+
+		chart
+			.width(chart_width)
+			.x(d3.scaleBand().domain(episodeDimension))
+			.xUnits(dc.units.ordinal)
+			.elasticX(true)
+			.brushOn(false)
+			.yAxisLabel('Downloads')
+			.group(totalDimension)
+			._rangeBandPadding(1) // Fix to align x-axis with points
+			.title(function (d) {
+				return [
+					aboTotalsRawData[d.key].title,
+					"Downloads: " + d.value
+				].join("\n");
+			})
+			.renderHorizontalGridLines(true)
+			.compose([totalChart, d1Chart, w1Chart, q1Chart]);
+
+		// responsive legend position
+		var legendWidth = 300;
+		if (chart_width > 650) {
+			var legendX = chart_width - legendWidth;
+			jQuery("#total-abo-chart").height("200px")
+			chart.height(200);
+			chart.legend(dc.legend().horizontal(false).x(legendX).y(10).autoItemWidth(true));
+			chart.margins().bottom = 30;
+			chart.margins().right = legendWidth + 5;
+		} else {
+			var legendX = chart_width - legendWidth;
+			jQuery("#total-abo-chart").height("370px")
+			chart.height(370);
+			chart.legend(dc.legend().horizontal(false).x(30).y(170).autoItemWidth(true));
+			chart.margins().bottom = 30 + 200;
+		}
+
+		chart.render();
+	}
+
+	function emptyToNull(value) {
+		return value ? +value : null;
+	}
+
+	function load_abo_total() {
+		if (aboTotalsRawData) {
+			render_abo_total();
+			$(window).on('resize', render_abo_total);
+		} else {
+			$.when(
+				$.ajax(ajaxurl + "?action=podlove-analytics-csv-episodes-table")
+			).done(function (csvTotals) {
+				var i = 0;
+				var csvMapper = function (d) {
+					return {
+						number: i++,
+						title: d.title,
+						downloads: +d.downloads,
+						d1: emptyToNull(d["1d"]),
+						d2: emptyToNull(d["2d"]),
+						w1: emptyToNull(d["1w"]),
+						q1: emptyToNull(d["1q"])
+					};
+				};
+
+				aboTotalsRawData = d3.csvParse(csvTotals, csvMapper);
+				render_abo_total();
+				$(window).on('resize', render_abo_total);
+			});
+		}
+	}
+
+	if ($("#total-abo-chart").length) {
+		load_abo_total();
+	}
+
 
 	var chartColor = '#69B3FF';
 
