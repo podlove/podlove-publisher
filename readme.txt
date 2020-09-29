@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-09-29 =
+
+* analytics: new chart showing download development from episode to episode [#1100](https://github.com/podlove/podlove-publisher/pull/1100/files) thanks [@poschi3](https://github.com/poschi3)!
+* fix: transcript API URL [#1145](https://github.com/podlove/podlove-publisher/pull/1145) thanks [gibso](https://github.com/gibso)!
+
 = 2020-09-26 =
 
 * api: add public endpoint for transcripts
