@@ -13,7 +13,7 @@ function podlove_episodeno_quickedit_form($column_name)
 				<div class="inline-edit-col">
 					<label class="alignleft">
 						<span class="title"><?php _e('Episode number', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
-						<input type="number" name="_podlove_meta[number]" class="podlove_meta_quickedit_episode_number" />
+						<input type="number" min="0" name="_podlove_meta[number]" class="podlove_meta_quickedit_episode_number" />
 					</label>
 					<?php wp_nonce_field('_podlove_meta_quickedit_episode_number', '_podlove_meta_quickedit_episode_number_nonce_field'); ?>
 			</div>
