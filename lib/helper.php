@@ -252,6 +252,23 @@ function get_landing_page_url()
     return home_url();
 }
 
+/**
+ * Podcast Publisher URL.
+ *
+ * @return string
+ */
+function get_publisher_url()
+{
+    $publisher_url = \Podlove\get_setting( 'podcast', 'publisher_url' );
+
+    if ( ! empty( $publisher_url ) ) {
+        return $publisher_url;
+    }
+
+    // always default to home page
+    return home_url();
+}
+
 function get_webplayer_defaults()
 {
     return [
@@ -419,7 +436,7 @@ function build_for($object, $args, $callback)
 
 	<?php if (isset($args['hidden']) && $args['hidden']) { ?>
 		<?php foreach ($args['hidden'] as $name => $value) { ?>
-			<input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" />		
+			<input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" />
 		<?php } ?>
 	<?php } ?>
 
@@ -442,7 +459,7 @@ function build_for($object, $args, $callback)
 	<?php if ($print_form) { ?>
 		</form>
 	<?php } ?>
-	
+
 	<?php
 }
 
