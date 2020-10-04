@@ -41,7 +41,7 @@ class FileValidation
         }
 
         $podcast = Model\Podcast::get();
-        $episodes = $podcast->episodes();
+        $episodes = $podcast->episodes(['post_status' => ['private', 'draft', 'publish', 'pending', 'future']]);
         $assets = Model\EpisodeAsset::all();
 
         $header = [__('Episode', 'podlove-podcasting-plugin-for-wordpress')];
