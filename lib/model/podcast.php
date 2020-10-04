@@ -306,7 +306,13 @@ class Podcast implements Licensable
                 }
             }
 
-            if (isset($args['post_status']) && in_array($args['post_status'], get_post_stati())) {
+            if (isset($args['post_status']) && is_array($args['post_status'])) {
+                $ins = [];
+                foreach ($args['post_status'] as $status) {
+                    $ins[] = '"'.$status.'"';
+                }
+                $where .= ' AND p.post_status IN ('.implode(',', $ins).')';
+            } elseif (isset($args['post_status']) && in_array($args['post_status'], get_post_stati())) {
                 $where .= " AND p.post_status = '".$args['post_status']."'";
             } else {
                 $where .= " AND p.post_status = 'publish'";
@@ -361,7 +367,8 @@ class Podcast implements Licensable
 
             $sql = '
 				SELECT
-					e.*
+                	e.*,
+                    p.post_status
 				FROM
 					'.Episode::table_name().' e
 					INNER JOIN '.$wpdb->posts.' p ON e.post_id = p.ID
