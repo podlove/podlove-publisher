@@ -1,6 +1,9 @@
 <?php
 
 use Podlove\Model\Episode;
+use Podlove\Model\EpisodeAsset;
+use Podlove\Model\FileType;
+use Podlove\Model\MediaFile;
 use Podlove\Model\Podcast;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
@@ -42,9 +45,8 @@ function podlove_pwp5_attributes($attributes)
         'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
         'link' => get_permalink($episode->post_id),
         'chapters' => $chapters ? $chapters : [],
-        'audio' => $media_file_urls,
-        // todo: all downloadable files
-        'files' => $media_file_urls,
+        'audio' => podlove_pwp5_audio_files($episode, null),
+        'files' => podlove_pwp5_files($episode, null),
     ];
 
     if (\Podlove\Modules\Base::is_active('contributors')) {
@@ -68,8 +70,7 @@ function podlove_pwp5_attributes($attributes)
 
     return apply_filters('podlove_player5_config', $config, $episode);
 }
-
-function podlove_pwp5_files($episode, $context)
+function podlove_pwp5_audio_files($episode, $context)
 {
     $player_media_files = new PlayerMediaFiles($episode);
 
@@ -94,6 +95,37 @@ function podlove_pwp5_files($episode, $context)
     }
 
     return $media_file_urls;
+}
+
+function podlove_pwp5_files($episode, $context)
+{
+    global $wpdb;
+
+    $sql = 'SELECT
+    mf.id media_file_id, mf.size file_size, a.title asset_tile, a.downloadable, a.`position`, ft.mime_type, ft.`extension`
+FROM
+    '.Episode::table_name().' e
+    LEFT JOIN '.MediaFile::table_name().' mf ON mf.episode_id = e.id
+    LEFT JOIN '.EpisodeAsset::table_name().' a ON a.id = mf.episode_asset_id
+    LEFT JOIN '.FileType::table_name().' ft ON ft.id = a.file_type_id
+WHERE
+    e.id = %d AND a.downloadable
+ORDER BY
+    position ASC
+    ';
+
+    $files = $wpdb->get_results($wpdb->prepare($sql, $episode->id), ARRAY_A);
+
+    return array_map(function ($row) use ($context) {
+        $media_file = MediaFile::find_by_id($row['media_file_id']);
+
+        return [
+            'url' => $media_file->get_public_file_url('webplayer', $context),
+            'size' => $row['file_size'],
+            'title' => $row['asset_tile'],
+            'mimeType' => $row['mime_type'],
+        ];
+    }, $files);
 }
 
 podlove_pwp5_init();

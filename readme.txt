@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-10-04 =
+
+* fix: Podlove Web Player 5 includes all downloadable assets in download section
+
 = 2020-09-29 =
 
 * analytics: new chart showing download development from episode to episode [#1100](https://github.com/podlove/podlove-publisher/pull/1100/files) thanks [@poschi3](https://github.com/poschi3)!
