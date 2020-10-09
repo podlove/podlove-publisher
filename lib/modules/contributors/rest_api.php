@@ -141,7 +141,7 @@ class REST_API
         return [
             'id' => $contributor->id,
             'slug' => $contributor->identifier,
-            'avatar' => $contributor->avatar()->setWidth(300)->image(),
+            'avatar' => $contributor->avatar,
             'name' => $contributor->getName(),
             'mail' => $contributor->publicemail,
             'department' => $contributor->department,
