@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-10-15 =
+
+* fix: migration for Shownotes only when the database table exists
+
 = 2020-10-04 =
 
 * fix: Podlove Web Player 5 includes all downloadable assets in download section

@@ -1533,19 +1533,23 @@ function run_migrations_for_version($version)
 
             break;
         case 143:
-            $sql = sprintf(
-                'ALTER TABLE `%s` ADD COLUMN `affiliate_url` TEXT',
-                \Podlove\Modules\Shownotes\Model\Entry::table_name()
-            );
-            $wpdb->query($sql);
+            if (\Podlove\Modules\Shownotes\Model\Entry::table_exists()) {
+                $sql = sprintf(
+                    'ALTER TABLE `%s` ADD COLUMN `affiliate_url` TEXT',
+                    \Podlove\Modules\Shownotes\Model\Entry::table_name()
+                );
+                $wpdb->query($sql);
+            }
 
             break;
         case 144:
-            $sql = sprintf(
-                'ALTER TABLE `%s` ADD COLUMN `hidden` INT',
-                \Podlove\Modules\Shownotes\Model\Entry::table_name()
-            );
-            $wpdb->query($sql);
+            if (\Podlove\Modules\Shownotes\Model\Entry::table_exists()) {
+                $sql = sprintf(
+                    'ALTER TABLE `%s` ADD COLUMN `hidden` INT',
+                    \Podlove\Modules\Shownotes\Model\Entry::table_name()
+                );
+                $wpdb->query($sql);
+            }
 
             break;
         case 145:
