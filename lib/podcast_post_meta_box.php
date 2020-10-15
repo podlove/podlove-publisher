@@ -336,6 +336,7 @@ class Podcast_Post_Meta_Box
                         'class' => 'podlove-check-input',
                     ],
                     'type' => 'number',
+                    'positive_number' => 1
                 ],
                 'position' => 1200,
             ], ['type' => 'string',

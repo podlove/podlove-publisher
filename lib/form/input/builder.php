@@ -64,7 +64,7 @@ class Builder
     {
         $this->build_input_values($object_key, $arguments); ?>
 		<div>
-			<input type="<?php echo (isset($arguments['type']) && $arguments['type']) ? $arguments['type'] : 'text'; ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<input type="<?php echo (isset($arguments['type']) && $arguments['type']) ? $arguments['type'] : 'text'; ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?><?php echo ( ! empty( $arguments['type'] ) && 'number' == $arguments['type'] && ! empty( $arguments['positive_number'] ) ? ' onkeypress="return event.charCode >= 48" min="0"' : '' ); ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
     }
@@ -236,16 +236,16 @@ class Builder
         $arguments = wp_parse_args($arguments, $defaults); ?>
 		<div class="podlove-media-upload-wrap">
 			<span>
-				<input type="text" <?php echo $this->html_attributes; ?> value="<?php echo esc_attr($this->field_value); ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>"> 
-				<a href="#" class="podlove-media-upload button" 
-					data-target="<?php echo $this->field_id; ?>" 
-					data-title="<?php echo $arguments['media_title']; ?>" 
-					data-type="image" 
-					data-button="<?php echo $arguments['media_button_text']; ?>" 
-					data-class="media-frame" 
-					data-frame="select" 
-					data-size="full" 
-					data-state="podlove_select_single_image" 
+				<input type="text" <?php echo $this->html_attributes; ?> value="<?php echo esc_attr($this->field_value); ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>">
+				<a href="#" class="podlove-media-upload button"
+					data-target="<?php echo $this->field_id; ?>"
+					data-title="<?php echo $arguments['media_title']; ?>"
+					data-type="image"
+					data-button="<?php echo $arguments['media_button_text']; ?>"
+					data-class="media-frame"
+					data-frame="select"
+					data-size="full"
+					data-state="podlove_select_single_image"
 					data-preview=".podlove_preview_pic"
 					data-allow-gravatar="<?php echo $arguments['allow_gravatar']; ?>"
 					data-fetch="url"><?php echo $arguments['form_button_text']; ?></a>
