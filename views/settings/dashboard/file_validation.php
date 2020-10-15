@@ -19,7 +19,17 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
 			<?php foreach ($episodes as $episode) { ?>
 				<tr>
 					<td>
-						<a href="<?php echo admin_url('post.php?post='.$episode->post_id.'&amp;action=edit'); ?>"><?php echo $episode->slug; ?></a>
+						<a href="<?php echo admin_url('post.php?post='.$episode->post_id.'&amp;action=edit'); ?>">
+							<?php
+                            if (is_null($episode->slug)) {
+                                echo ASSET_STATUS_INACTIVE;
+                                echo ' ';
+                                echo __('Slug is missing', 'podlove-podcasting-plugin-for-wordpress');
+                            } else {
+                                echo $episode->slug;
+                            }
+                            ?>
+						</a>
 					</td>
 					<?php foreach ($assets as $asset) { ?>
 						<?php
@@ -42,7 +52,7 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
 						</td>
 					<?php } ?>
 					<td>
-						<?php echo $media_files[$episode->id]['post_status']; ?>
+						<?php echo $episode->post_status; ?>
 					</td>
 				</tr>
 			<?php } ?>

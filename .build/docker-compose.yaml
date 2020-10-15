@@ -7,6 +7,7 @@ services:
     ports:
       - 8080:80
     volumes:
+      - ./wp-content:/var/www/html/wp-content
       - ..:/var/www/html/wp-content/plugins/podlove-podcasting-plugin-for-wordpress
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
