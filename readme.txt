@@ -109,7 +109,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2020-10-15 =
 
 * fix: migration for Shownotes only when the database table exists
-* enhance: podcast file validation in dashboard includes all post stati and checks for missing slug ([#1161](https://github.com/podlove/podlove-publisher/pull/1161))
+* enhance: podcast file validation in dashboard includes all post stati and checks for missing slug [#1161](https://github.com/podlove/podlove-publisher/pull/1161)
+* enhance: only allow episode numbers of 0 and higher in form input [#1158](https://github.com/podlove/podlove-publisher/pull/1158)
 
 = 2020-10-04 =
 
