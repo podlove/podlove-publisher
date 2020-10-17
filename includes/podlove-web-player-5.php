@@ -20,8 +20,6 @@ function podlove_pwp5_attributes($attributes)
     $post = get_post($episode->post_id);
     $podcast = Podcast::get();
 
-    $media_file_urls = podlove_pwp5_files($episode, null);
-
     $chapters = array_map(function ($c) {
         $c->title = html_entity_decode(trim($c->title));
 
