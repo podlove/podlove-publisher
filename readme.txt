@@ -108,7 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2020-10-17 =
 
-tbd
+* chore: add content and files to episodes api (#1165)
 
 ----
 
