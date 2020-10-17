@@ -61,7 +61,9 @@ function episodes_api($request)
         'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
         'link' => get_permalink($episode->post_id),
         'chapters' => chapters($episode),
-        'audio' => media_files($episode),
+        'audio' => \podlove_pwp5_audio_files($episode, null),
+        'files' => \podlove_pwp5_files($episode, null),
+        'content' => apply_filters('the_content', $post->post_content)
         // @todo: all media files
     ]);
 }
@@ -73,22 +75,4 @@ function chapters($episode = null)
 
         return $c;
     }, (array) json_decode($episode->get_chapters('json')));
-}
-
-function media_files($episode = null)
-{
-    $player_media_files = new PlayerMediaFiles($episode);
-
-    if ($media_files = $player_media_files->get()) {
-        return array_map(function ($file) {
-            return [
-                'url' => $file['publicUrl'],
-                'size' => $file['size'],
-                'title' => $file['assetTitle'],
-                'mimeType' => $file['mime_type'],
-            ];
-        }, $media_files);
-    }
-
-    return [];
 }
