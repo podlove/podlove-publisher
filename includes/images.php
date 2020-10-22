@@ -2,7 +2,7 @@
 
 use Podlove\Cache\HttpHeaderValidator;
 use Podlove\Model\Image;
-use Symfony\Component\Yaml\Yaml;
+use Podlove\Publisher\Vendor\Symfony\Component\Yaml\Yaml;
 
 // WP Cron: Image cache validation
 add_action('wp', function () {

@@ -2,8 +2,8 @@
 
 namespace Podlove\Modules\Logging;
 
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
+use Podlove\Publisher\Vendor\Monolog\Handler\AbstractProcessingHandler;
+use Podlove\Publisher\Vendor\Monolog\Logger;
 
 class WPDBHandler extends AbstractProcessingHandler
 {

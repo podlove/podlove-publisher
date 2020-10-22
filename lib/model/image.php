@@ -4,7 +4,7 @@ namespace Podlove\Model;
 
 use Podlove\Cache\TemplateCache;
 use Podlove\Log;
-use Symfony\Component\Yaml\Yaml;
+use Podlove\Publisher\Vendor\Symfony\Component\Yaml\Yaml;
 
 /**
  * Image Object.
