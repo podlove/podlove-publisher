@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-10-22 =
+
+* chore: prefix all composer packages (solves Twig related incompatibilities & crashes)
+
 = 2020-10-17 =
 
 * chore: add content and files to episodes api (#1165)
