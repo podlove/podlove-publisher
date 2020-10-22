@@ -2,8 +2,8 @@
 
 namespace Podlove;
 
-use Monolog\Handler\ErrorLogHandler;
-use Monolog\Logger;
+use Podlove\Publisher\Vendor\Monolog\Handler\ErrorLogHandler;
+use Podlove\Publisher\Vendor\Monolog\Logger;
 
 /**
  * Podlove Logger class.

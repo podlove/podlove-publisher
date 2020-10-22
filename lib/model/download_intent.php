@@ -2,6 +2,8 @@
 
 namespace Podlove\Model;
 
+use Podlove\Publisher\Vendor\GeoIp2;
+
 /**
  * Raw download intent data.
  *
@@ -15,7 +17,7 @@ class DownloadIntent extends Base
         $geoip_file = \Podlove\Geo_Ip::get_upload_file_path();
 
         try {
-            $reader = new \GeoIp2\Database\Reader($geoip_file);
+            $reader = new GeoIp2\Database\Reader($geoip_file);
         } catch (\Exception $e) {
             return $this;
         }

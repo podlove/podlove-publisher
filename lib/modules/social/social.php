@@ -5,7 +5,7 @@ namespace Podlove\Modules\Social;
 use Podlove\Modules\Social\Model\ContributorService;
 use Podlove\Modules\Social\Model\Service;
 use Podlove\Modules\Social\Model\ShowService;
-use Symfony\Component\Yaml\Yaml;
+use Podlove\Publisher\Vendor\Symfony\Component\Yaml\Yaml;
 
 class Social extends \Podlove\Modules\Base
 {
@@ -299,7 +299,7 @@ class Social extends \Podlove\Modules\Base
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
-						
+
 						<th><?php _e('Service', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 						<th><?php _e('Account/URL', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 						<th><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
@@ -320,7 +320,7 @@ class Social extends \Podlove\Modules\Base
 
 			<script type="text/template" id="service-row-template-<?php echo $category; ?>">
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
-				
+
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name; ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove-podcasting-plugin-for-wordpress'); ?></option>

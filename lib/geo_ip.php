@@ -2,6 +2,8 @@
 
 namespace Podlove;
 
+use Podlove\Publisher\Vendor\GeoIp2;
+
 class Geo_Ip
 {
     const GEO_FILENAME = 'GeoLite2-City_20180206/GeoLite2-City.mmdb';
@@ -71,7 +73,7 @@ class Geo_Ip
     public static function is_db_valid()
     {
         try {
-            $reader = new \GeoIp2\Database\Reader(self::get_upload_file_path());
+            $reader = new GeoIp2\Database\Reader(self::get_upload_file_path());
 
             return true;
         } catch (\Exception $e) {

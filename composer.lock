@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f66869769879d8e502372e87e292a6fa",
+    "content-hash": "9f1454cd45ec3c5697ce288ef2b475f0",
     "packages": [
         {
             "name": "composer/ca-bundle",
-            "version": "1.2.7",
+            "version": "1.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "95c63ab2117a72f48f5a55da9740a3273d45b7fd"
+                "reference": "8a7ecad675253e4654ea05505233285377405215"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/95c63ab2117a72f48f5a55da9740a3273d45b7fd",
-                "reference": "95c63ab2117a72f48f5a55da9740a3273d45b7fd",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/8a7ecad675253e4654ea05505233285377405215",
+                "reference": "8a7ecad675253e4654ea05505233285377405215",
                 "shasum": ""
             },
             "require": {
@@ -66,11 +66,15 @@
                     "type": "custom"
                 },
                 {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/composer/composer",
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-04-08T08:27:21+00:00"
+            "time": "2020-08-23T12:54:47+00:00"
         },
         {
             "name": "dariuszp/cli-progress-bar",
@@ -114,61 +118,28 @@
             "time": "2018-11-24T20:35:59+00:00"
         },
         {
-            "name": "geertw/ip-anonymizer",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/geertw/php-ip-anonymizer.git",
-                "reference": "6610b85b119de3bb505fd9a484bac67066e4a62f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/geertw/php-ip-anonymizer/zipball/6610b85b119de3bb505fd9a484bac67066e4a62f",
-                "reference": "6610b85b119de3bb505fd9a484bac67066e4a62f",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "geertw\\IpAnonymizer\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Geert Wirken",
-                    "email": "geert@gwirken.nl"
-                }
-            ],
-            "description": "IPv4 and IPv6 address anonymizer",
-            "time": "2017-06-24T13:15:14+00:00"
-        },
-        {
             "name": "geoip2/geoip2",
-            "version": "v2.10.0",
+            "version": "v2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "419557cd21d9fe039721a83490701a58c8ce784a"
+                "reference": "d01be5894a5c1a3381c58c9b1795cd07f96c30f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/419557cd21d9fe039721a83490701a58c8ce784a",
-                "reference": "419557cd21d9fe039721a83490701a58c8ce784a",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/d01be5894a5c1a3381c58c9b1795cd07f96c30f7",
+                "reference": "d01be5894a5c1a3381c58c9b1795cd07f96c30f7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "maxmind-db/reader": "~1.5",
-                "maxmind/web-service-common": "~0.6",
-                "php": ">=5.6"
+                "maxmind-db/reader": "~1.8",
+                "maxmind/web-service-common": "~0.8",
+                "php": ">=7.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.*",
-                "phpunit/phpunit": "5.*",
+                "phpunit/phpunit": "^8.0 || ^9.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
@@ -197,7 +168,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2019-12-12T18:48:39+00:00"
+            "time": "2020-10-01T18:48:34+00:00"
         },
         {
             "name": "league/csv",
@@ -258,29 +229,29 @@
         },
         {
             "name": "maxmind-db/reader",
-            "version": "v1.6.0",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/MaxMind-DB-Reader-php.git",
-                "reference": "febd4920bf17c1da84cef58e56a8227dfb37fbe4"
+                "reference": "b566d429ac9aec10594b0935be8ff38302f8d5c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/febd4920bf17c1da84cef58e56a8227dfb37fbe4",
-                "reference": "febd4920bf17c1da84cef58e56a8227dfb37fbe4",
+                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/b566d429ac9aec10594b0935be8ff38302f8d5c8",
+                "reference": "b566d429ac9aec10594b0935be8ff38302f8d5c8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6"
+                "php": ">=7.2"
             },
             "conflict": {
-                "ext-maxminddb": "<1.6.0,>=2.0.0"
+                "ext-maxminddb": "<1.8.0,>=2.0.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.*",
                 "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpcov": "^3.0",
-                "phpunit/phpunit": "5.*",
+                "phpunit/phpcov": ">=6.0.0",
+                "phpunit/phpunit": ">=8.0.0,<10.0.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "suggest": {
@@ -314,31 +285,31 @@
                 "geolocation",
                 "maxmind"
             ],
-            "time": "2019-12-19T22:59:03+00:00"
+            "time": "2020-10-01T17:30:21+00:00"
         },
         {
             "name": "maxmind/web-service-common",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/web-service-common-php.git",
-                "reference": "74c996c218ada5c639c8c2f076756e059f5552fc"
+                "reference": "ba67d9532cfaf499bd71774b8170d05df4f75fb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/74c996c218ada5c639c8c2f076756e059f5552fc",
-                "reference": "74c996c218ada5c639c8c2f076756e059f5552fc",
+                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/ba67d9532cfaf499bd71774b8170d05df4f75fb7",
+                "reference": "ba67d9532cfaf499bd71774b8170d05df4f75fb7",
                 "shasum": ""
             },
             "require": {
                 "composer/ca-bundle": "^1.0.3",
                 "ext-curl": "*",
                 "ext-json": "*",
-                "php": ">=5.6"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.*",
-                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7.0",
+                "phpunit/phpunit": "^8.0 || ^9.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
@@ -360,20 +331,20 @@
             ],
             "description": "Internal MaxMind Web Service API",
             "homepage": "https://github.com/maxmind/web-service-common-php",
-            "time": "2020-05-06T14:07:26+00:00"
+            "time": "2020-10-01T15:28:36+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.25.4",
+            "version": "1.25.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "3022efff205e2448b560c833c6fbbf91c3139168"
+                "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/3022efff205e2448b560c833c6fbbf91c3139168",
-                "reference": "3022efff205e2448b560c833c6fbbf91c3139168",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1817faadd1846cd08be9a49e905dc68823bc38c0",
+                "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0",
                 "shasum": ""
             },
             "require": {
@@ -447,7 +418,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-22T07:31:27+00:00"
+            "time": "2020-07-23T08:35:51+00:00"
         },
         {
             "name": "mustangostang/spyc",
@@ -500,66 +471,17 @@
             "time": "2019-09-10T13:16:29+00:00"
         },
         {
-            "name": "phpunit/php-timer",
-            "version": "1.0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
-                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.3.3 || ^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sb@sebastian-bergmann.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Utility class for timing",
-            "homepage": "https://github.com/sebastianbergmann/php-timer/",
-            "keywords": [
-                "timer"
-            ],
-            "time": "2017-02-26T11:10:40+00:00"
-        },
-        {
             "name": "piwik/device-detector",
-            "version": "3.12.6",
+            "version": "3.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "4eb7b6d4d1a2ac1e8fee64fc73698fcb869d60f3"
+                "reference": "75ca5b690e38c40d199ade93e677bc5d7c3bc498"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/4eb7b6d4d1a2ac1e8fee64fc73698fcb869d60f3",
-                "reference": "4eb7b6d4d1a2ac1e8fee64fc73698fcb869d60f3",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/75ca5b690e38c40d199ade93e677bc5d7c3bc498",
+                "reference": "75ca5b690e38c40d199ade93e677bc5d7c3bc498",
                 "shasum": ""
             },
             "require": {
@@ -601,7 +523,7 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2020-06-16T12:10:46+00:00"
+            "time": "2020-08-17T07:37:33+00:00"
         },
         {
             "name": "podlove/normalplaytime",
@@ -783,7 +705,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -859,7 +781,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -936,16 +858,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.42",
+            "version": "v3.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "7233ac2bfdde24d672f5305f2b3f6b5d741ef8eb"
+                "reference": "ec3c2ac4d881a4684c1f0317d2107f1a4152bad9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/7233ac2bfdde24d672f5305f2b3f6b5d741ef8eb",
-                "reference": "7233ac2bfdde24d672f5305f2b3f6b5d741ef8eb",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/ec3c2ac4d881a4684c1f0317d2107f1a4152bad9",
+                "reference": "ec3c2ac4d881a4684c1f0317d2107f1a4152bad9",
                 "shasum": ""
             },
             "require": {
@@ -1005,7 +927,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-11T07:51:54+00:00"
+            "time": "2020-09-18T15:58:55+00:00"
         },
         {
             "name": "twig/extensions",
@@ -1060,6 +982,7 @@
                 "i18n",
                 "text"
             ],
+            "abandoned": true,
             "time": "2018-12-05T18:34:18+00:00"
         },
         {
@@ -1126,6 +1049,170 @@
                 "templating"
             ],
             "time": "2020-02-11T15:31:23+00:00"
+        },
+        {
+            "name": "typisttech/imposter",
+            "version": "0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TypistTech/imposter.git",
+                "reference": "d124d428c967551be815fb4602c73025da2b2893"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TypistTech/imposter/zipball/d124d428c967551be815fb4602c73025da2b2893",
+                "reference": "d124d428c967551be815fb4602c73025da2b2893",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "codeception/codeception": "^4.1",
+                "codeception/mockery-module": "^0.4.0",
+                "codeception/module-asserts": "^1.1",
+                "codeception/module-filesystem": "^1.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "typisttech/imposter-plugin": "Composer plugin to integrate composer and imposter"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TypistTech\\Imposter\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Typist Tech",
+                    "email": "imposter@typist.tech",
+                    "homepage": "https://typist.tech"
+                },
+                {
+                    "name": "Tang Rufus",
+                    "email": "tangrufus@gmail.com",
+                    "homepage": "https://typist.tech",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Wrapping all composer vendor packages inside your own namespace. Intended for WordPress plugins",
+            "homepage": "https://typist.tech/projects/imposter",
+            "keywords": [
+                "composer",
+                "dependency",
+                "monkey-patching",
+                "namespace",
+                "wordpress"
+            ],
+            "funding": [
+                {
+                    "url": "https://typist.tech/donation/",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.paypal.me/iAmTangRufus/30usd",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/tangrufus",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-04-15T19:55:54+00:00"
+        },
+        {
+            "name": "typisttech/imposter-plugin",
+            "version": "0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TypistTech/imposter-plugin.git",
+                "reference": "8dc39d4d22f0a8a09ecc4d198402f07591d57ae3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TypistTech/imposter-plugin/zipball/8dc39d4d22f0a8a09ecc4d198402f07591d57ae3",
+                "reference": "8dc39d4d22f0a8a09ecc4d198402f07591d57ae3",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1",
+                "php": "^7.2",
+                "typisttech/imposter": "^0.5.0"
+            },
+            "require-dev": {
+                "codeception/codeception": "^4.1",
+                "codeception/module-asserts": "^1.1",
+                "codeception/module-cli": "^1.0",
+                "codeception/module-filesystem": "^1.0",
+                "composer/composer": "^1.9",
+                "squizlabs/php_codesniffer": "^3.5",
+                "typisttech/codeception-composer-project-module": "^0.1.1"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5.x-dev"
+                },
+                "class": "TypistTech\\Imposter\\Plugin\\ImposterPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "TypistTech\\Imposter\\Plugin\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Typist Tech",
+                    "email": "imposter-plugin@typist.tech",
+                    "homepage": "https://www.typist.tech"
+                },
+                {
+                    "name": "Tang Rufus",
+                    "email": "tangrufus@gmail.com",
+                    "homepage": "https://www.typist.tech",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Composer plugin that wraps all composer vendor packages inside your own namespace. Intended for WordPress plugins",
+            "homepage": "https://www.typist.tech/projects/imposter-plugin",
+            "keywords": [
+                "composer",
+                "composer-plugin",
+                "dependency",
+                "monkey-patching",
+                "namespace",
+                "wordpress"
+            ],
+            "funding": [
+                {
+                    "url": "https://typist.tech/donation/",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.paypal.me/iAmTangRufus/30usd",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/tangrufus",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-04-15T20:23:11+00:00"
         }
     ],
     "packages-dev": [
@@ -1461,16 +1548,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.2.0",
+            "version": "5.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "3170448f5769fe19f456173d833734e0ff1b84df"
+                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/3170448f5769fe19f456173d833734e0ff1b84df",
-                "reference": "3170448f5769fe19f456173d833734e0ff1b84df",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/069a785b2141f5bcf49f3e353548dc1cce6df556",
+                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556",
                 "shasum": ""
             },
             "require": {
@@ -1509,20 +1596,20 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2020-07-20T20:05:34+00:00"
+            "time": "2020-09-03T19:13:55+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "e878a14a65245fbe78f8080eba03b47c3b705651"
+                "reference": "6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/e878a14a65245fbe78f8080eba03b47c3b705651",
-                "reference": "e878a14a65245fbe78f8080eba03b47c3b705651",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0",
+                "reference": "6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0",
                 "shasum": ""
             },
             "require": {
@@ -1554,7 +1641,7 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "time": "2020-06-27T10:12:23+00:00"
+            "time": "2020-09-17T18:55:26+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -1771,6 +1858,55 @@
             "time": "2015-06-21T13:50:34+00:00"
         },
         {
+            "name": "phpunit/php-timer",
+            "version": "1.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/php-timer.git",
+                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
+                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "lead"
+                }
+            ],
+            "description": "Utility class for timing",
+            "homepage": "https://github.com/sebastianbergmann/php-timer/",
+            "keywords": [
+                "timer"
+            ],
+            "time": "2017-02-26T11:10:40+00:00"
+        },
+        {
             "name": "phpunit/php-token-stream",
             "version": "2.0.2",
             "source": {
@@ -1817,6 +1953,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-11-27T05:48:46+00:00"
         },
         {

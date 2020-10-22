@@ -1,6 +1,6 @@
 <?php
 
-use League\Csv\Writer;
+use Podlove\Publisher\Vendor\League\Csv\Writer;
 
 add_action('rest_api_init', 'podlove_analytics_api_init');
 
