@@ -59,7 +59,7 @@ class Wprelease
 		die("Didn't find expected svn directory: #{@svn_dir}") unless File.directory?(@svn_dir)
 
 		puts "package composer for production"
-		system "composer install --no-dev -o"
+		system "make composer_with_prefixing"
 
 		puts "creating git tag ..."
 		system "git tag -a #{@version} -m 'version #{@version}'"

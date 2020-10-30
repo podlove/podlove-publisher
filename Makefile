@@ -35,8 +35,17 @@ player:
 	cp -r $(player_src)/js/*.min.js $(player_dst)/js
 	cp -r $(player_src)/js/vendor/*.min.js $(player_dst)/js/vendor
 
+composer_with_prefixing:
+	mkdir -p vendor-prefixed
+	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
+	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
+	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
+
 build:
-	composer install --no-progress --no-dev -o
+	mkdir -p vendor-prefixed
+	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
+	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
+	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	npm install
 	npm run production
 	rm -rf dist
@@ -79,7 +88,7 @@ install:
 
 dev:
 	docker-compose -f .build/docker-compose.yaml up -d
-	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn dev 
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn dev
 
 stop:
 	docker-compose -f .build/docker-compose.yaml down

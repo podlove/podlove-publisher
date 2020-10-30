@@ -3,6 +3,9 @@
 namespace Podlove\Template;
 
 use Podlove\Model;
+use PodlovePublisher_Vendor\Twig;
+use PodlovePublisher_Vendor\Twig_Extensions_Extension_Date;
+use PodlovePublisher_Vendor\Twig_Extensions_Extension_I18n;
 
 /**
  * Apply Twig functionality and podcast/episode accessors to strings/templates.
@@ -49,10 +52,6 @@ class TwigFilter
      */
     public static function apply_to_html($html, $vars = [])
     {
-        if (class_exists('Twig_Filter_Function')) {
-            return '<p>Podlove Template cannot be displayed due to plugin conflict.</p>';
-        }
-
         $twig = self::getTwigEnv();
 
         $context = ['option' => $vars];
@@ -76,7 +75,7 @@ class TwigFilter
         if ($twig->getLoader()->exists($html)) {
             try {
                 $result = $twig->render($html, $context);
-            } catch (\Twig\Error\Error $e) {
+            } catch (Twig\Error\Error $e) {
                 $message = $e->getRawMessage();
                 $line = $e->getTemplateLine();
                 $template = $e->getSourceContext();
@@ -92,7 +91,7 @@ class TwigFilter
         if ($result === null) {
             try {
                 // simple Twig Env to render plain string
-                $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([]), ['autoescape' => false]);
+                $env = new Twig\Environment(new Twig\Loader\ArrayLoader([]), ['autoescape' => false]);
 
                 // no clue yet how this is possible but it happens
                 if (method_exists($env, 'createTemplate')) {
@@ -118,7 +117,7 @@ class TwigFilter
     private static function getTwigLoader()
     {
         // file loader for internal use
-        $file_loader = new \Twig\Loader\FilesystemLoader();
+        $file_loader = new Twig\Loader\FilesystemLoader();
         $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'templates']), 'core');
 
         // other modules can register their own template directories/namespaces
@@ -130,20 +129,20 @@ class TwigFilter
         $loaders = [$file_loader, $db_loader];
         $loaders = apply_filters('podlove_twig_loaders', $loaders);
 
-        return new \Twig\Loader\ChainLoader($loaders);
+        return new Twig\Loader\ChainLoader($loaders);
     }
 
     private static function getTwigEnv()
     {
-        $twig = new \Twig\Environment(self::getTwigLoader(), ['autoescape' => false]);
-        $twig->addExtension(new \Twig_Extensions_Extension_I18n());
-        $twig->addExtension(new \Twig_Extensions_Extension_Date());
+        $twig = new Twig\Environment(self::getTwigLoader(), ['autoescape' => false]);
+        $twig->addExtension(new Twig_Extensions_Extension_I18n());
+        $twig->addExtension(new Twig_Extensions_Extension_Date());
 
-        $formatBytesFilter = new \Twig\TwigFilter('formatBytes', function ($string) {
+        $formatBytesFilter = new Twig\TwigFilter('formatBytes', function ($string) {
             return \Podlove\format_bytes($string, 0);
         });
 
-        $padLeftFilter = new \Twig\TwigFilter('padLeft', function ($string, $padChar, $length) {
+        $padLeftFilter = new Twig\TwigFilter('padLeft', function ($string, $padChar, $length) {
             while (strlen($string) < $length) {
                 $string = $padChar.$string;
             }
@@ -151,7 +150,7 @@ class TwigFilter
             return $string;
         });
 
-        $wpautopFilter = new \Twig\TwigFilter('wpautop', function ($content) {
+        $wpautopFilter = new Twig\TwigFilter('wpautop', function ($content) {
             return \wpautop($content);
         });
 
@@ -161,37 +160,37 @@ class TwigFilter
 
         // add functions
         foreach (self::$template_tags as $tag) {
-            $func = new \Twig\TwigFunction($tag, function () use ($tag) {
+            $func = new Twig\TwigFunction($tag, function () use ($tag) {
                 return $tag();
             });
             $twig->addFunction($func);
         }
 
-        $func = new \Twig\TwigFunction('get_the_post_thumbnail_url', function ($post = null, $size = 'post-thumbnail') {
+        $func = new Twig\TwigFunction('get_the_post_thumbnail_url', function ($post = null, $size = 'post-thumbnail') {
             return get_the_post_thumbnail_url($post, $size);
         });
         $twig->addFunction($func);
 
         // shortcode_exists
-        $func = new \Twig\TwigFunction('shortcode_exists', function ($shortcode) {
+        $func = new Twig\TwigFunction('shortcode_exists', function ($shortcode) {
             return \shortcode_exists($shortcode);
         });
         $twig->addFunction($func);
 
         // Translation functions
-        $twig->addFunction(new \Twig\TwigFunction('__', function ($text, $domain = 'default') {
+        $twig->addFunction(new Twig\TwigFunction('__', function ($text, $domain = 'default') {
             return \__($text, $domain);
         }));
 
-        $twig->addFunction(new \Twig\TwigFunction('_x', function ($text, $context, $domain = 'default') {
+        $twig->addFunction(new Twig\TwigFunction('_x', function ($text, $context, $domain = 'default') {
             return \_x($text, $context, $domain);
         }));
 
-        $twig->addFunction(new \Twig\TwigFunction('_n', function ($single, $plural, $number, $domain = 'default') {
+        $twig->addFunction(new Twig\TwigFunction('_n', function ($single, $plural, $number, $domain = 'default') {
             return \_n($single, $plural, $number, $domain);
         }));
 
-        $twig->addFunction(new \Twig\TwigFunction('_nx', function ($single, $plural, $number, $context, $domain = 'default') {
+        $twig->addFunction(new Twig\TwigFunction('_nx', function ($single, $plural, $number, $context, $domain = 'default') {
             return \_x($single, $plural, $number, $context, $domain);
         }));
 
