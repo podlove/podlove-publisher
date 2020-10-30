@@ -11,24 +11,15 @@
         "twig/extensions": "1.5.*",
         "geoip2/geoip2": "~2.0",
         "piwik/device-detector": "~3.12",
+        "phpunit/php-timer": "~1.0",
         "podlove/webvtt-parser": "^1.1",
+        "geertw/ip-anonymizer": "^1.1",
         "dariuszp/cli-progress-bar": "^1.0",
-        "league/csv": "^8.2",
-        "typisttech/imposter-plugin": "^0.6.0"
+        "league/csv": "^8.2"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
         "phpunit/phpunit": "^6.5.14"
-    },
-    "extra": {
-        "imposter": {
-            "namespace": "Podlove\\Publisher\\Vendor",
-            "excludes": [
-                "podlove/webvtt-parser",
-                "podlove/podlove-timeline",
-                "dariuszp/cli-progress-bar"
-            ]
-        }
     }
 }

@@ -2,8 +2,6 @@
 
 namespace Podlove;
 
-use Podlove\Publisher\Vendor\Monolog\Logger;
-
 class SystemReport
 {
     private $fields = [];
@@ -68,15 +66,18 @@ class SystemReport
             'player_version' => ['title' => 'Web Player Version', 'callback' => function () {
                 return \Podlove\get_webplayer_setting('version');
             }],
+            'twig_version' => ['title' => 'Twig Version', 'callback' => function () {
+                return \Twig_Environment::VERSION;
+            }],
             'monolog_version' => ['title' => 'Monolog Version', 'callback' => function () use (&$notices) {
-                if (Logger::API > 1) {
+                if (\Monolog\Logger::API > 1) {
                     $notices[] = sprintf(
                         'Monolog version is %s (required by another plugin) but Podlove Publisher requires 1.x. That means no logs can be written to the database.',
-                        Logger::API
+                        \Monolog\Logger::API
                     );
                 }
 
-                return Logger::API;
+                return \Monolog\Logger::API;
             }],
             'open_basedir' => ['callback' => function () use (&$notices) {
                 $open_basedir = trim(ini_get('open_basedir'));
@@ -249,6 +250,29 @@ class SystemReport
                         $errors[] = $message_base.' '.implode('; ', $message_dups);
 
                         return 'duplicate guids: '.count($duplicates);
+                    }
+
+                    return 'ok';
+                },
+            ],
+            'twig_versions' => [
+                'callback' => function () use (&$errors) {
+                    if (class_exists('Twig_Filter_Function')) {
+                        $path = (new \ReflectionClass('Twig_Filter_Function'))->getFileName();
+
+                        list($_, $rel_path) = explode(WP_PLUGIN_DIR, $path);
+                        list($_, $problem_plugin) = explode('/', $rel_path);
+
+                        $plugin_string = $problem_plugin ?? $path;
+
+                        $message = sprintf(
+                            'Podlove Publisher uses Twig to display templates. The plugin "%s" uses Twig in an older and incompatible version. You need to disable that plugin or ask the plugin author to upgrade Twig to at least v2.12.x. Otherwise, Podlove Publisher templates cannot be displayed.',
+                            $plugin_string
+                        );
+
+                        $errors[] = $message;
+
+                        return "incompatible plugin: {$plugin_string}";
                     }
 
                     return 'ok';

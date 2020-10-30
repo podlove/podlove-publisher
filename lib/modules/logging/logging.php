@@ -2,9 +2,9 @@
 
 namespace Podlove\Modules\Logging;
 
+use Monolog\Logger;
 use Podlove\Log;
 use Podlove\Model;
-use Podlove\Publisher\Vendor\Monolog\Logger;
 
 class Logging extends \Podlove\Modules\Base
 {
@@ -145,7 +145,7 @@ function filter_log() {
 		error   = filterWrapper.find(".log-level.log-level-400 input[type=checkbox]:checked").length,
 		log = $("#podlove-log")
 	;
-
+	
 	log.find(".log-entry.log-level-100").toggle(!!debug);
 	log.find(".log-entry.log-level-200").toggle(!!info);
 	log.find(".log-entry.log-level-300").toggle(!!warning);
