@@ -41,6 +41,12 @@ composer_with_prefixing:
 	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 
+install_php_scoper:
+	composer require --dev bamarni/composer-bin-plugin
+	composer bin php-scoper config minimum-stability dev
+	composer bin php-scoper config prefer-stable true
+	composer bin php-scoper require --dev humbug/php-scoper
+
 build:
 	mkdir -p vendor-prefixed
 	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev

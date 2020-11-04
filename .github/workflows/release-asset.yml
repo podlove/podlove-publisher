@@ -17,6 +17,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.ref }}
         run: |
+          make install_php_scoper
           make build
           mv dist podlove-podcasting-plugin-for-wordpress
           zip -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress
