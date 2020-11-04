@@ -42,7 +42,7 @@ composer_with_prefixing:
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 
 install_php_scoper:
-    mkdir -p vendor-prefixed
+	mkdir -p vendor-prefixed
 	composer require --dev bamarni/composer-bin-plugin
 	composer bin php-scoper config minimum-stability dev
 	composer bin php-scoper config prefer-stable true
