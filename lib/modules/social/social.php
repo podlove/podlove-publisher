@@ -21,6 +21,7 @@ class Social extends \Podlove\Modules\Base
 
         add_action('update_option_podlove_podcast', [$this, 'save_social_setting'], 10, 2);
         add_action('update_option_podlove_podcast', [$this, 'save_donation_setting'], 10, 2);
+        add_action('rest_api_init', [$this, 'api_init']);
         add_action('podlove_update_entity_contributor', [$this, 'save_contributor'], 10, 2);
         add_action('podlove_create_entity_contributor', [$this, 'save_contributor'], 10, 2);
 
@@ -401,5 +402,11 @@ class Social extends \Podlove\Modules\Base
         $jobs[] = '\Podlove\Modules\Social\Jobs\PodcastImportShowServicesJob';
 
         return $jobs;
+    }
+
+    public function api_init()
+    {
+        $api = new REST_API();
+        $api->register_routes();
     }
 }
