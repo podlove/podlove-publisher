@@ -3,7 +3,7 @@
 namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
-use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
+use Podlove\Model\Podcast;
 
 add_action('rest_api_init', __NAMESPACE__.'\\api_init');
 
@@ -47,6 +47,7 @@ function episodes_api($request)
 {
     $id = $request->get_param('id');
     $episode = Episode::find_by_id($id);
+    $podcast = Podcast::get();
     $post = get_post($episode->post_id);
 
     return new \WP_REST_Response([
@@ -63,7 +64,9 @@ function episodes_api($request)
         'chapters' => chapters($episode),
         'audio' => \podlove_pwp5_audio_files($episode, null),
         'files' => \podlove_pwp5_files($episode, null),
-        'content' => apply_filters('the_content', $post->post_content)
+        'content' => apply_filters('the_content', $post->post_content),
+        'number' => $episode->number,
+        'mnemonic' => $podcast->mnemonic.$episode->number
         // @todo: all media files
     ]);
 }
