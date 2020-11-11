@@ -51,7 +51,7 @@ class UserAgent extends Base
 
         if ($user_agent_match) {
             $this->client_name = $user_agent_match->app;
-            $this->os_name = $user_agent_match->os;
+            $this->os_name = self::normalizeOS($user_agent_match->os);
 
             if ($user_agent_match->bot) {
                 $this->bot = 1;
@@ -81,6 +81,23 @@ class UserAgent extends Base
         }
 
         return $agent;
+    }
+
+    public static function normalizeOS($os_name)
+    {
+        $map = [
+            'ios' => 'iOS',
+            'android' => 'Android',
+            'mac' => 'macOS',
+            'macos' => 'macOS',
+            'watchos' => 'watchOS',
+            'windows' => 'Windows',
+            'linux' => 'Linux',
+            'sonos' => 'Sonos',
+            'homepod_os' => 'HomepodOS',
+        ];
+
+        return $map[trim(strtolower($os_name))] ?? $os_name;
     }
 
     private function parse_by_device_detector()
@@ -118,7 +135,7 @@ class UserAgent extends Base
             $os = $dd->getOs();
 
             if (isset($os['name'])) {
-                $this->os_name = $os['name'];
+                $this->os_name = self::normalizeOS($os['name']);
             }
 
             if (isset($os['version'])) {

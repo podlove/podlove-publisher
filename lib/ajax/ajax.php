@@ -254,7 +254,7 @@ class Ajax
 						SELECT
 							media_file_id, accessed_at, DATE(accessed_at) access_date, episode_id
 						FROM
-							'.Model\DownloadIntent::table_name().' di 
+							'.Model\DownloadIntent::table_name().' di
 							INNER JOIN '.Model\MediaFile::table_name()." mf ON mf.id = di.media_file_id
 						WHERE 1 = 1 {$episode_cond}
 						GROUP BY media_file_id, request_id, access_date
@@ -312,7 +312,7 @@ class Ajax
 						hours_since_release,
 						mf.episode_asset_id asset_id,
 						client_name,
-						os_name AS system,
+						os_name,
 						source,
 						context,
 						geo.type as t1,
@@ -332,9 +332,9 @@ class Ajax
 						LEFT JOIN '.Model\GeoAreaName::table_name()." geoname ON geoname.area_id = geo.`id` and geoname.language = \"{$lang}\"
 						LEFT JOIN ".Model\GeoAreaName::table_name()." geoname_p ON geoname_p.area_id = geo_p.`id` and geoname_p.language = \"{$lang}\"
 						LEFT JOIN ".Model\GeoAreaName::table_name()." geoname_pp ON geoname_pp.area_id = geo_pp.`id` and geoname_pp.language = \"{$lang}\"
-		
+
 						WHERE episode_id = {$episode_id}
-						GROUP BY hours_since_release, asset_id, client_name, system, source, context";
+						GROUP BY hours_since_release, asset_id, client_name, os_name, source, context";
 
             $results = $wpdb->get_results($sql, ARRAY_N);
 
@@ -733,7 +733,7 @@ class Ajax
 				WHERE 1 = 1 AND '.self::analytics_date_condition().'
 				GROUP BY p.id
 				ORDER BY downloads DESC
-				LIMIT 10		
+				LIMIT 10
 			';
 
             $downloads = $wpdb->get_results($sql, ARRAY_N);
