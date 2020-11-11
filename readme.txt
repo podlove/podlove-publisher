@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 5.2
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 3.0.4
+Stable tag: 3.1.1-beta
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,29 +106,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2020-10-15 =
+= 2020-10-22 =
 
-* fix: migration for Shownotes only when the database table exists
-* enhance: podcast file validation in dashboard includes all post stati and checks for missing slug ([#1161](https://github.com/podlove/podlove-publisher/pull/1161))
+* chore: prefix all composer packages (solves Twig related incompatibilities & crashes)
 
-= 2020-10-04 =
+= 2020-10-17 =
 
-* fix: Podlove Web Player 5 includes all downloadable assets in download section
-
-= 2020-09-29 =
-
-* analytics: new chart showing download development from episode to episode [#1100](https://github.com/podlove/podlove-publisher/pull/1100/files) thanks [@poschi3](https://github.com/poschi3)!
-* fix: transcript API URL [#1145](https://github.com/podlove/podlove-publisher/pull/1145) thanks [gibso](https://github.com/gibso)!
-
-= 2020-09-26 =
-
-* api: add public endpoint for transcripts
-* api: add public endpoint for shownotes
-* Auphonic: show production warnings in module (https://twitter.com/auphonic/status/1305849345762185217)
-* download tracking: use OPAWG podcast user agent database in addition to Matomo database
-* stability: detect plugins using older/incompatible versions of Twig. Display a warning on the site (instead of an error) and a detailed explanation on "Podlove > Support" screen.
-* fix: editing/deleting shows ([#1077](https://github.com/podlove/podlove-publisher/issues/1077))
-* fix: episodes and shows API
+* chore: add content and files to episodes api (#1165)
 
 ----
 

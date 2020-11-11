@@ -43,7 +43,7 @@ class Seasons extends \Podlove\Modules\Base
         \Podlove\Template\Podcast::add_accessor(
             'seasons',
             ['\Podlove\Modules\Seasons\TemplateExtensions', 'accessorPodcastSeasons'],
-            3
+            4
         );
 
         \Podlove\Template\Episode::add_accessor(

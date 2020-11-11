@@ -20,6 +20,15 @@
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
-        "phpunit/phpunit": "^6.5.14"
-    }
+        "phpunit/phpunit": "^6.5.14",
+        "bamarni/composer-bin-plugin": "^1.4"
+    },
+    "autoload": {
+		"classmap": [
+			"lib/",
+			"includes/",
+			"vendor-prefixed/"
+        ],
+        "exclude-from-classmap": ["/vendor/twig"]
+	}
 }

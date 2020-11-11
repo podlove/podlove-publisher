@@ -3,22 +3,23 @@
 namespace Podlove\Template;
 
 use Podlove\Model;
+use PodlovePublisher_Vendor\Twig;
 
-class TwigLoaderPodloveDatabase implements \Twig\Loader\LoaderInterface, \Twig\Loader\ExistsLoaderInterface
+class TwigLoaderPodloveDatabase implements Twig\Loader\LoaderInterface
 {
     /**
      * Returns the source context for a given template logical name.
      *
      * @param string $name The template logical name
      *
-     * @throws \Twig\Error\LoaderError When $name is not found
+     * @throws Twig\Error\LoaderError When $name is not found
      *
-     * @return \Twig\Source
+     * @return Twig\Source
      */
     public function getSourceContext($name)
     {
         if ($template = Model\Template::find_one_by_title_with_fallback($name)) {
-            return new \Twig\Source($template->content, $name, '');
+            return new Twig\Source($template->content, $name, '');
         }
 
         return false;
