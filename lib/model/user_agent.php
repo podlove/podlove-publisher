@@ -95,6 +95,7 @@ class UserAgent extends Base
             'linux' => 'Linux',
             'sonos' => 'Sonos',
             'homepod_os' => 'HomepodOS',
+            'tvos' => 'tvOS',
         ];
 
         return $map[trim(strtolower($os_name))] ?? $os_name;
