@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.1.2 =
+
+* remove unused vendor-bin directory from releases
+
 = 3.1.1 =
 
 * tracking: fix operating systems appearing twice in different spellings

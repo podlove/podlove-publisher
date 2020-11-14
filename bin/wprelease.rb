@@ -98,6 +98,7 @@ class Wprelease
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-772x250.png',
 			 'lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/bigplay.psd',
 			 'vendor/bin',
+			 'vendor-bin',
 			 'vendor/vendor/guzzle/guzzle/tests',
 			 'vendor/phpunit/php-code-coverage',
 			 'vendor/phpunit/php-text-template',
