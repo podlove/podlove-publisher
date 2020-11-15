@@ -23,9 +23,17 @@ return [
                 $pattern = '/TwigFilter\((\'[^\']+\'),\s+\'([^\']+)\'/';
                 $content = preg_replace_callback(
                     $pattern,
-                    function ($matches) {
-                        return 'TwigFilter('.$matches[1].', \'\PodlovePublisher_Vendor\\'.$matches[2].'\'';
+                    function ($matches) use ($prefix) {
+                        return 'TwigFilter('.$matches[1].', \''.$prefix.'\\'.$matches[2].'\'';
                     },
+                    $content
+                );
+            }
+
+            if (stristr($filePath, 'ForNode.php')) {
+                $content = str_replace(
+                    ' = twig_ensure_traversable',
+                    ' = '.$prefix.'\\\\twig_ensure_traversable',
                     $content
                 );
             }
