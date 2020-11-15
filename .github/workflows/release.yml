@@ -1,10 +1,9 @@
 name: Release to WordPress.org
 on:
   push:
-    branches:
-      - "master"
     tags:
       - "*"
+      - "!*-beta"
 jobs:
   tag:
     name: New tag
