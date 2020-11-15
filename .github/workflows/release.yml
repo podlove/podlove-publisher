@@ -14,10 +14,10 @@ jobs:
       run: |
           make install_php_scoper
           make build
+          npm run publish:workspace
     - name: WordPress Plugin Deploy
-      uses: Lewiscowles1986/action-wordpress-plugin-deploy@feat/add-custom-workspace
+      uses: 10up/action-wordpress-plugin-deploy@master
       env:
-        WORKSPACE_DIR: dist
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SLUG: podlove-podcasting-plugin-for-wordpress
