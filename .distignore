@@ -5,3 +5,13 @@
 
 .distignore
 .gitignore
+
+/.build
+.php_cs.dist
+deploy_key.enc
+mix-manifest.json
+package-lock.json
+package.json
+*.code-workspace
+webpack.mix.js
+/vendor/twig/twig
