@@ -19,7 +19,16 @@ return [
             // suppress warnings for class_alias
             $content = preg_replace('/(\\\\class_alias)/', '@${1}', $content);
 
-            $content = str_replace('twig_array_merge($context', 'array_merge($context', $content);
+            if (stristr($filePath, 'CoreExtension.php')) {
+                $pattern = '/TwigFilter\((\'[^\']+\'),\s+\'([^\']+)\'/';
+                $content = preg_replace_callback(
+                    $pattern,
+                    function ($matches) {
+                        return 'TwigFilter('.$matches[1].', \'\PodlovePublisher_Vendor\\'.$matches[2].'\'';
+                    },
+                    $content
+                );
+            }
 
             if (stristr($filePath, 'ModuleNode.php')) {
                 $content = str_replace(
