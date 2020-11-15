@@ -19,6 +19,8 @@ return [
             // suppress warnings for class_alias
             $content = preg_replace('/(\\\\class_alias)/', '@${1}', $content);
 
+            $content = str_replace('twig_array_merge($context', 'array_merge($context', $content);
+
             if (stristr($filePath, 'ModuleNode.php')) {
                 $content = str_replace(
                     'use Twig\\',
