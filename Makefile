@@ -65,6 +65,7 @@ build:
 	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-772x250.png
 	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-1544x500.png
 	rm -rf dist/tests
+	rm -rf dist/vendor-bin
 	rm -rf dist/vendor/bin
 	rm -rf dist/vendor/phpunit/php-code-coverage
 	rm -rf dist/vendor/phpunit/phpunit
