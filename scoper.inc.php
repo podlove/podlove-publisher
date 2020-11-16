@@ -19,12 +19,30 @@ return [
             // suppress warnings for class_alias
             $content = preg_replace('/(\\\\class_alias)/', '@${1}', $content);
 
-            if (stristr($filePath, 'CoreExtension.php')) {
+            if (stristr($filePath, 'CoreExtension.php') || stristr($filePath, 'EscaperExtension.php') || stristr($filePath, 'DebugExtension.php')) {
                 $pattern = '/TwigFilter\((\'[^\']+\'),\s+\'([^\']+)\'/';
                 $content = preg_replace_callback(
                     $pattern,
                     function ($matches) use ($prefix) {
                         return 'TwigFilter('.$matches[1].', \''.$prefix.'\\'.$matches[2].'\'';
+                    },
+                    $content
+                );
+
+                $pattern = '/TwigFunction\((\'[^\']+\'),\s+\'(twig[^\']+)\'/';
+                $content = preg_replace_callback(
+                    $pattern,
+                    function ($matches) use ($prefix) {
+                        return 'TwigFunction('.$matches[1].', \''.$prefix.'\\'.$matches[2].'\'';
+                    },
+                    $content
+                );
+
+                $pattern = '/TwigTest\((\'[^\']+\'),\s+\'(twig[^\']+)\'/';
+                $content = preg_replace_callback(
+                    $pattern,
+                    function ($matches) use ($prefix) {
+                        return 'TwigTest('.$matches[1].', \''.$prefix.'\\'.$matches[2].'\'';
                     },
                     $content
                 );
@@ -34,6 +52,40 @@ return [
                 $content = str_replace(
                     ' = twig_ensure_traversable',
                     ' = '.$prefix.'\\\\twig_ensure_traversable',
+                    $content
+                );
+            }
+
+            if (stristr($filePath, 'IncludeNode.php') || stristr($filePath, 'WithNode.php')) {
+                $content = str_replace(
+                    'twig_array_merge(',
+                    $prefix.'\\\\twig_array_merge(',
+                    $content
+                );
+                $content = str_replace(
+                    'twig_to_array(',
+                    $prefix.'\\\\twig_to_array(',
+                    $content
+                );
+                $content = str_replace(
+                    'twig_test_iterable(',
+                    $prefix.'\\\\twig_test_iterable(',
+                    $content
+                );
+            }
+
+            if (stristr($filePath, 'InBinary.php')) {
+                $content = str_replace(
+                    'twig_in_filter(',
+                    $prefix.'\\\\twig_in_filter(',
+                    $content
+                );
+            }
+
+            if (stristr($filePath, 'MethodCallExpression.php')) {
+                $content = str_replace(
+                    'twig_call_macro(',
+                    $prefix.'\\\\twig_call_macro(',
                     $content
                 );
             }
