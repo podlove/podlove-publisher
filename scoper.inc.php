@@ -20,7 +20,7 @@ return [
             $content = preg_replace('/(\\\\class_alias)/', '@${1}', $content);
 
             if (stristr($filePath, 'CoreExtension.php') || stristr($filePath, 'EscaperExtension.php') || stristr($filePath, 'DebugExtension.php')) {
-                $pattern = '/TwigFilter\((\'[^\']+\'),\s+\'([^\']+)\'/';
+                $pattern = '/TwigFilter\((\'[^\']+\'),\s+\'(_?twig[^\']+)\'/';
                 $content = preg_replace_callback(
                     $pattern,
                     function ($matches) use ($prefix) {
