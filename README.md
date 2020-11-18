@@ -38,6 +38,24 @@ Use [PHP-CS-Fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) to format code 
 
 You can do so manually via command line (`make format`) or configure your editor to format the file on save. For VS Code, use the "php cs fixer" extension by junstyle.
 
+## Releases
+
+Both beta and stable releases are creates with GitHub Actions.
+
+To release a new stable version:
+
+1. _manually_ update the following fields in `readme.txt`:
+  - Tested up to
+  - Stable tag
+  - check that changelog has an entry
+2. `bash bin/release.sh`, which does:
+  - updates version in `podlove.php`
+  - creates release commit
+  - tags commit
+3. git push
+
+The GitHub action detects the release via the tag, builds it and submits it to the wordpress.org plugin directory.
+
 [3]: https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/
 [4]: https://trello.com/b/zB4mKQlD/podlove-publisher
 [5]: https://github.com/podlove/podlove-publisher/issues
