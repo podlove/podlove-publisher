@@ -17,21 +17,21 @@ class REST_API
             'args' => [
                 'id' => [
                     'description' => __('post id'),
-                    'type' => 'integer',
-                ],
+                    'type' => 'integer'
+                ]
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_voices'],
-                'permission_callback' => [$this, 'permission_check'],
-            ],
+                'permission_callback' => [$this, 'permission_check']
+            ]
         ]);
 
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
                     'description' => __('episode id'),
-                    'type' => 'integer',
+                    'type' => 'integer'
                 ]
             ],
             [
@@ -53,20 +53,23 @@ class REST_API
 
         VoiceAssignment::delete_for_episode($episode->id);
 
-        foreach ($request['transcript_voice'] as $voice => $id) {
-            if ($id > 0) {
-                $voice_assignment = new VoiceAssignment();
-                $voice_assignment->episode_id = $episode->id;
-                $voice_assignment->voice = $voice;
-                $voice_assignment->contributor_id = $id;
-                $voice_assignment->save();
+        if (is_array($request['transcript_voice'])) {
+            foreach ($request['transcript_voice'] as $voice => $id) {
+                if ($id > 0) {
+                    $voice_assignment = new VoiceAssignment();
+                    $voice_assignment->episode_id = $episode->id;
+                    $voice_assignment->voice = $voice;
+                    $voice_assignment->contributor_id = $id;
+                    $voice_assignment->save();
+                }
             }
         }
 
         return rest_ensure_response(['status' => 'ok']);
     }
 
-    public function get_transcript($request) {
+    public function get_transcript($request)
+    {
         $episode_id = $request->get_param('id');
         $mode = $request->get_param('mode') ?? 'flat';
 
