@@ -3,7 +3,7 @@ on:
   push:
     tags:
       - "*"
-      - "!*-beta"
+      - "!*-beta*"
 jobs:
   tag:
     name: New tag
