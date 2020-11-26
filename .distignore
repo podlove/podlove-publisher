@@ -15,3 +15,5 @@ package.json
 *.code-workspace
 webpack.mix.js
 /vendor/twig/twig
+
+*.swp
