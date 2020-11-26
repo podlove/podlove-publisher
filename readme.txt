@@ -108,7 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2020-11-26 =
 
-* fix: webvtt-parser autoloading issues
+* fix: webvtt-parser autoloading issues [#1175](https://github.com/podlove/podlove-publisher/issues/1175)
+* fix: escape ampersands in itunes:image hrefs in the feed [#1176](https://github.com/podlove/podlove-publisher/issues/1176)
 
 = 2020-11-21 =
 

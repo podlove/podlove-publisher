@@ -111,6 +111,21 @@ function get_xml_cdata_text($content)
     return $doc->saveXML($text);
 }
 
+function get_xml_itunesimage_node($url)
+{
+    $doc = new \DOMDocument();
+    $node = $doc->createElement('itunes:image');
+
+    $attr = $doc->createAttribute('href');
+
+    // unexpected but true: ampersands are not escaped automatically here
+    $attr->value = htmlentities($url);
+
+    $node->appendChild($attr);
+
+    return $doc->saveXML($node);
+}
+
 function override_feed_head($hook, $podcast, $feed, $format)
 {
     add_filter('podlove_feed_content', '\Podlove\Feeds\prepare_for_feed');
@@ -224,8 +239,8 @@ function override_feed_head($hook, $podcast, $feed, $format)
         echo "\t".apply_filters('podlove_feed_itunes_owner', $owner);
         echo PHP_EOL;
 
-        if ($podcast->cover_art()->url()) {
-            $coverimage = sprintf('<itunes:image href="%s" />', $podcast->cover_art()->url());
+        if ($cover_art_url = $podcast->cover_art()->url()) {
+            $coverimage = get_xml_itunesimage_node($cover_art_url);
         } else {
             $coverimage = '';
         }
@@ -344,7 +359,7 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             }
 
             if ($cover_art_url) {
-                $cover_art = sprintf('<itunes:image href="%s" />', $cover_art_url);
+                $cover_art = get_xml_itunesimage_node($cover_art_url);
             } else {
                 $cover_art = '';
             }
