@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "849d03552dd94dd616bfd4a67e8b9cca",
+    "content-hash": "88760c9507363451c5feb5baa2692140",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -689,16 +689,16 @@
         },
         {
             "name": "podlove/webvtt-parser",
-            "version": "v1.1.3",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/podlove/webvtt-parser.git",
-                "reference": "5f4b85cc2f8fe309f3c596867310664a1585160d"
+                "reference": "529cc4b856ebb3508cf012734c900c8cb09e285a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/podlove/webvtt-parser/zipball/5f4b85cc2f8fe309f3c596867310664a1585160d",
-                "reference": "5f4b85cc2f8fe309f3c596867310664a1585160d",
+                "url": "https://api.github.com/repos/podlove/webvtt-parser/zipball/529cc4b856ebb3508cf012734c900c8cb09e285a",
+                "reference": "529cc4b856ebb3508cf012734c900c8cb09e285a",
                 "shasum": ""
             },
             "require": {
@@ -709,8 +709,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Podlove\\Webvtt": "src/"
+                "psr-4": {
+                    "Podlove\\Webvtt\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -732,7 +732,11 @@
                 "podlove",
                 "webvtt"
             ],
-            "time": "2018-06-28T20:37:47+00:00"
+            "support": {
+                "issues": "https://github.com/podlove/webvtt-parser/issues",
+                "source": "https://github.com/podlove/webvtt-parser/tree/v1.1.4"
+            },
+            "time": "2020-11-26T20:05:06+00:00"
         },
         {
             "name": "psr/log",

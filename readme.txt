@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-11-26 =
+
+* fix: webvtt-parser autoloading issues
+
 = 2020-11-21 =
 
 * merge upstream changes
