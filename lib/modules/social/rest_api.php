@@ -55,9 +55,12 @@ class REST_API
         $services = Service::all();
         $result = [];
 
-        foreach($services as $entry) {
-            if (isset($category) == false || $category == $entry->category) {
-                array_push($result, $entry->to_array());
+        foreach ($services as $service) {
+            if (isset($category) == false || $category == $service->category) {
+                $item = $service->to_array();
+                $item['logo_url'] = $service->image()->url();
+
+                array_push($result, $item);
             }
         }
 
