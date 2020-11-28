@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.9.6
 Tested up to: 5.8.0
 Requires PHP: 7.0
-Stable tag: 3.2.0-beta1
+Stable tag: 3.2.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,34 +106,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2021-08-22 =
-
-* fix(security): sql injection in "Social & Donations" module
-
-= 2021-05-02 =
-
-* fix: transcript API returns list again
-
-= 2021-05-01 =
-
-* fix: PLUS open graph images (use new API)
-
-= 2021-04-27 =
-
-* fix: handle webvtt voice, missing Contributors
-* transcript voices / contributors:
-  * you can now select "none" in the voice assignment
-  * only voices with an assigned contributor (and not "none") appear in public transcripts
-
-
-= 2021-04-26 =
-
-* webvtt transcripts use public contributor name
-
-= 2021-04-24 =
-
-* generate default copyright claim if it is not explcitly set
-* fix(related episodes): remove whitespace in shortcode HTML to fix rendering in Spotify
 
 ----
 
