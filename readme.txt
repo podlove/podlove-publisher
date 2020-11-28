@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-11-28 =
+
+* when automatically generated episode titles are used, use the blogpost title as fallback for the episode title
+
 = 2020-11-26 =
 
 * fix: webvtt-parser autoloading issues [#1175](https://github.com/podlove/podlove-publisher/issues/1175)
