@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 5.2
 Tested up to: 5.5.3
 Requires PHP: 7.0
-Stable tag: 3.2.0-beta1
+Stable tag: 3.2.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,22 +106,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2020-11-28 =
+= 3.2.0 =
 
 * when automatically generated episode titles are used, use the blogpost title as fallback for the episode title
 * fix: disable slug auto-updating after importing from Auphonic
-
-= 2020-11-26 =
-
 * fix: webvtt-parser autoloading issues [#1175](https://github.com/podlove/podlove-publisher/issues/1175)
-* fix: escape ampersands in itunes:image hrefs in the feed [#1176](https://github.com/podlove/podlove-publisher/issues/1176)
-
-= 2020-11-21 =
-
-* merge upstream changes
+* fix: escape ampersands in itunes:image hrefs in the feed [#1176](https://github.com/podlove/podlove-publisher/issues/1176) (fixes incompatibilities with Jetpack image CDN)
 
 = 3.1.* =
 
+* fix twig namespace prefixing related issues
 * remove unused vendor-bin directory from releases
 
 = 3.1.1 =
