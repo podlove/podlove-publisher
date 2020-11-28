@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2020-11-28 =
 
 * when automatically generated episode titles are used, use the blogpost title as fallback for the episode title
+* fix: disable slug auto-updating after importing from Auphonic
 
 = 2020-11-26 =
 
