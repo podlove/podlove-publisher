@@ -70,7 +70,7 @@ HTML;
             // $context
             'normal',
             // $priority
-            'high'
+            'low'
         );
     }
 
