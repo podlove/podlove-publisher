@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2020-12-05 =
+
+* fix: coverart url encoding [#1181](https://github.com/podlove/podlove-publisher/pull/1181)
+
 = 2020-11-28 =
 
 * when automatically generated episode titles are used, use the blogpost title as fallback for the episode title
