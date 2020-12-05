@@ -5,6 +5,7 @@ use Podlove\Model\Podcast;
 
 add_filter('the_title', 'podlove_maybe_override_post_titles', 10, 2);
 add_filter('podlove_get_episode_title', 'podlove_maybe_override_post_titles', 10, 2);
+add_filter('podlove_get_episode_title_rss', 'podlove_maybe_override_rss_post_titles', 10, 2);
 add_action('admin_print_scripts', 'podlove_override_post_title_script');
 
 function podlove_maybe_override_post_titles($original_title, $post_id = null)

@@ -65,7 +65,7 @@ function get_episode_title($post = 0)
     $post = get_post($post);
     $title = $post->post_title ?? '';
 
-    return apply_filters('podlove_get_episode_title', $title);
+    return apply_filters('podlove_get_episode_title_rss', $title);
 }
 
 /**
@@ -119,7 +119,7 @@ function get_xml_itunesimage_node($url)
     $attr = $doc->createAttribute('href');
 
     // unexpected but true: ampersands are not escaped automatically here
-    $attr->value = htmlentities($url);
+    $attr->value = esc_attr($url);
 
     $node->appendChild($attr);
 

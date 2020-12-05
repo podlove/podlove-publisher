@@ -334,7 +334,7 @@ $terms = get_terms('shows', ['hide_empty' => false]);
                     break;
                 case 'image':
                     if ($show->image) {
-                        return sprintf('<itunes:image href="%s"/>', esc_attr($show->image));
+                        return \Podlove\Feeds\get_xml_itunesimage_node($show->image);
                     }
 
                     break;

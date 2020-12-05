@@ -47,6 +47,12 @@ class TemplateExtensions
      */
     public static function accessorEpisodeSeason($return, $method_name, $episode, $post, $args = [])
     {
-        return new Template\Season(Model\Season::for_episode($episode));
+        $season = Model\Season::for_episode($episode);
+
+        if ($season === null) {
+            return new \stdClass();
+        }
+
+        return new Template\Season($season);
     }
 }

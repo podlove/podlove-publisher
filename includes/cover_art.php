@@ -26,6 +26,6 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
 
 add_filter('podlove_episode_data_filter', function ($filter) {
     return array_merge($filter, [
-        'cover_art' => FILTER_SANITIZE_URL,
+        'cover_art' => FILTER_SANITIZE_STRING,
     ]);
 });
