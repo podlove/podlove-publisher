@@ -17,6 +17,11 @@ function podlove_pwp5_attributes($attributes)
 {
     $post_id = (isset($attributes['post_id']) && $attributes['post_id']) ? $attributes['post_id'] : get_the_ID();
     $episode = Episode::find_one_by_post_id($post_id);
+
+    if (!$episode) {
+        return [];
+    }
+
     $post = get_post($episode->post_id);
     $podcast = Podcast::get();
 
@@ -68,6 +73,7 @@ function podlove_pwp5_attributes($attributes)
 
     return apply_filters('podlove_player5_config', $config, $episode);
 }
+
 function podlove_pwp5_audio_files($episode, $context)
 {
     $player_media_files = new PlayerMediaFiles($episode);
