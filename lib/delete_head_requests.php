@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove;
 
 /**
@@ -6,88 +7,89 @@ namespace Podlove;
  *
  * Cannot be done through a normal migration since it takes too long.
  */
-class DeleteHeadRequests {
+class DeleteHeadRequests
+{
+    public static function init()
+    {
+        if (!get_option('podlove_tracking_delete_head_requests')) {
+            return;
+        }
 
-	public static function init()
-	{
-		if (!get_option('podlove_tracking_delete_head_requests'))
-			return;
+        add_action('admin_notices', [__CLASS__, 'show_admin_notice']);
+        add_action('wp_ajax_podlove-tracking-delete-head-requests', [__CLASS__, 'ajax_delete']);
+    }
 
-		add_action('admin_notices', array(__CLASS__, 'show_admin_notice'));
-		add_action( 'wp_ajax_podlove-tracking-delete-head-requests', array(__CLASS__, 'ajax_delete') );
-	}
+    public static function ajax_delete()
+    {
+        global $wpdb;
 
-	public static function ajax_delete() {
-		global $wpdb;
+        $send_response = function ($todo) use ($wpdb) {
+            if (!$todo) {
+                // free disk space
+                $wpdb->query('OPTIMIZE TABLE '.\Podlove\Model\DownloadIntent::table_name());
+                // clear caches
+                \Podlove\Cache\TemplateCache::get_instance()->setup_purge();
+                // mark migration as done
+                delete_option('podlove_tracking_delete_head_requests');
+            }
 
-		$send_response = function ($todo) use ($wpdb) {
+            \Podlove\AJAX\Ajax::respond_with_json(['todo' => $todo]);
+        };
 
-			if (!$todo) {
-				// free disk space
-				$wpdb->query('OPTIMIZE TABLE ' . \Podlove\Model\DownloadIntent::table_name());
-				// clear caches
-				\Podlove\Cache\TemplateCache::get_instance()->setup_purge();
-				// mark migration as done
-				delete_option('podlove_tracking_delete_head_requests');
-			}
-
-			\Podlove\AJAX\Ajax::respond_with_json(array('todo' => $todo));
-		};
-
-		// get user agent IDs to delete
-		$sql = "
+        // get user agent IDs to delete
+        $sql = '
 			SELECT
 				id 
 			FROM
-				" . \Podlove\Model\UserAgent::table_name() . " ua
+				'.\Podlove\Model\UserAgent::table_name().' ua
 			WHERE
-				user_agent LIKE \"libwww-perl/%\" 
-				OR user_agent LIKE \"curl/%\" 
-				OR user_agent LIKE \"PritTorrent/%\"
-		";
-		$user_agent_ids = $wpdb->get_col($sql);
+				user_agent LIKE "libwww-perl/%" 
+				OR user_agent LIKE "curl/%" 
+				OR user_agent LIKE "PritTorrent/%"
+		';
+        $user_agent_ids = $wpdb->get_col($sql);
 
-		if (!count($user_agent_ids))
-			$send_response(0);
+        if (!count($user_agent_ids)) {
+            $send_response(0);
+        }
 
-		// delete
-		$sql = "
+        // delete
+        $sql = '
 		DELETE
-			FROM " . \Podlove\Model\DownloadIntent::table_name() . "
-			WHERE user_agent_id IN (" . implode(",", $user_agent_ids) . ")
+			FROM '.\Podlove\Model\DownloadIntent::table_name().'
+			WHERE user_agent_id IN ('.implode(',', $user_agent_ids).')
 			LIMIT 25000
-		";
-		$wpdb->query($sql);
+		';
+        $wpdb->query($sql);
 
-		$sql = "
+        $sql = '
 		DELETE
-			FROM " . \Podlove\Model\DownloadIntentClean::table_name() . "
-			WHERE user_agent_id IN (" . implode(",", $user_agent_ids) . ")
+			FROM '.\Podlove\Model\DownloadIntentClean::table_name().'
+			WHERE user_agent_id IN ('.implode(',', $user_agent_ids).')
 			LIMIT 25000
-		";
-		$wpdb->query($sql);
+		';
+        $wpdb->query($sql);
 
-		// see how much is left to delete
-		$sql = "
+        // see how much is left to delete
+        $sql = '
 		SELECT
 			COUNT(*) 
 		FROM
-			" . \Podlove\Model\DownloadIntent::table_name() . " 
+			'.\Podlove\Model\DownloadIntent::table_name().' 
 		WHERE
-			user_agent_id IN (" . implode(",", $user_agent_ids) . ")
-		";
+			user_agent_id IN ('.implode(',', $user_agent_ids).')
+		';
 
-		$send_response($wpdb->get_var($sql));
-	}
+        $send_response($wpdb->get_var($sql));
+    }
 
-	public static function show_admin_notice() {
-		
-		?>
+    public static function show_admin_notice()
+    {
+        ?>
 		<div class="update-nag">
 			<?php
-			echo __('To prepare for the Podlove Analytics release, your tracking database needs an update.', 'podlove-podcasting-plugin-for-wordpress');
-			?>
-			<a id="podlove-start-tracking-migration" href="#"><?php echo __('Please update now') ?></a>.
+            echo __('To prepare for the Podlove Analytics release, your tracking database needs an update.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+			<a id="podlove-start-tracking-migration" href="#"><?php echo __('Please update now'); ?></a>.
 			<span id="podlove-migration-status"></span>
 		</div>
 
@@ -123,6 +125,5 @@ class DeleteHeadRequests {
 		});
 		</script>
 		<?php
-	}
-
+    }
 }

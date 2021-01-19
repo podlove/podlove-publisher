@@ -1,92 +1,109 @@
 <?php
+
 namespace Podlove\Template;
 
 /**
- * File Template Wrapper
+ * File Template Wrapper.
  *
  * @templatetag file
  */
-class File extends Wrapper {
+class File extends Wrapper
+{
+    /**
+     * @var Podlove\Model\MediaFile
+     */
+    private $file;
 
-	/**
-	 * @var Podlove\Model\MediaFile
-	 */
-	private $file;
+    public function __construct(\Podlove\Model\MediaFile $file)
+    {
+        $this->file = $file;
+    }
 
-	public function __construct(\Podlove\Model\MediaFile $file) {
-		$this->file = $file;
-	}
+    // /////////
+    // Accessors
+    // /////////
 
-	protected function getExtraFilterArgs() {
-		return array($this->file);
-	}
+    /**
+     * File id.
+     *
+     * @accessor
+     */
+    public function id()
+    {
+        return $this->file->id;
+    }
 
-	// /////////
-	// Accessors
-	// /////////
+    /**
+     * Episode related to this file.
+     *
+     * @see  episode
+     * @accessor
+     */
+    public function episode()
+    {
+        return new Episode($this->file->episode());
+    }
 
-	/**
-	 * File id
-	 * 
-	 * @accessor
-	 */
-	public function id() {
-		return $this->file->id;
-	}
+    /**
+     * Asset related to this file.
+     *
+     * @see  asset
+     * @accessor
+     */
+    public function asset()
+    {
+        return new Asset($this->file->episode_asset());
+    }
 
-	/**
-	 * Episode related to this file
-	 *
-	 * @see  episode
-	 * @accessor
-	 */
-	public function episode() {
-		return new Episode($this->file->episode());
-	}
+    /**
+     * Size in bytes.
+     *
+     * @accessor
+     */
+    public function size()
+    {
+        return $this->file->size;
+    }
 
-	/**
-	 * Asset related to this file
-	 *
-	 * @see  asset
-	 * @accessor
-	 */
-	public function asset() {
-		return new Asset($this->file->episode_asset());
-	}
+    /**
+     * URL.
+     *
+     * The real file URL. For public facing URLs, use `.publicUrl`.
+     *
+     * @accessor
+     */
+    public function url()
+    {
+        return $this->file->get_file_url();
+    }
 
-	/**
-	 * Size in bytes
-	 *
-	 * @accessor
-	 */
-	public function size() {
-		return $this->file->size;
-	}
+    /**
+     * Public URL.
+     *
+     * If tracking is active, this generates the tracking URL.
+     * Otherwise, it's identical to `.url`.
+     *
+     * - source: download source for tracking, for example "webplayer", "download" or "feed"
+     * - context: (optional) download context for tracking, for example "home"/"episode"/"archive" for player source or feed slug for feed source
+     *
+     * **Examples**
+     *
+     * ```jinja
+     * {{ file.publicUrl('download', 'episode') }}
+     * ```
+     *
+     * @accessor
+     *
+     * @param mixed      $source
+     * @param null|mixed $context
+     */
+    public function publicUrl($source, $context = null)
+    {
+        return $this->file->get_public_file_url($source, $context);
+    }
 
-	/**
-	 * URL
-	 * 
-	 * The real file URL. For public facing URLs, use `.publicUrl`.
-	 *
-	 * @accessor
-	 */
-	public function url() {
-		return $this->file->get_file_url();
-	}
-
-	/**
-	 * Public URL
-	 * 
-	 * If tracking is active, this generates the tracking URL.
-	 * Otherwise, it's identical to `.url`.
-	 * 
-	 * - source: download source for tracking, for example "webplayer", "download" or "feed"
-	 * - context: (optional) download context for tracking, for example "home"/"episode"/"archive" for player source or feed slug for feed source
-	 * 
-	 * @accessor
-	 */
-	public function publicUrl($source, $context = null) {
-		return $this->file->get_public_file_url($source, $context);
-	}
-
+    protected function getExtraFilterArgs()
+    {
+        return [$this->file];
+    }
 }

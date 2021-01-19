@@ -27,7 +27,7 @@ Namespace:   \Podlove\Modules\PodloveWebPlayer
 ### Example Module File
 
 ```php
-<?php 
+<?php
 namespace Podlove\Modules\PodloveWebPlayer;
 
 class Podlove_Web_Player extends \Podlove\Modules\Base {

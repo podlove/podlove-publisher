@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\PHP;
 
 /**
@@ -8,14 +9,14 @@ namespace Podlove\PHP;
  */
 function array_insert($array, $position, $insert)
 {
-	if (is_int($position)) {
-		return array_splice($array, $position, 0, $insert);
-    } else {
-		$pos = array_search($position, array_keys($array));
-		return array_merge(
-			array_slice($array, 0, $pos),
-			$insert,
-			array_slice($array, $pos)
-        );
+    if (is_int($position)) {
+        return array_splice($array, $position, 0, $insert);
     }
+    $pos = array_search($position, array_keys($array));
+
+    return array_merge(
+        array_slice($array, 0, $pos),
+        $insert,
+        array_slice($array, $pos)
+    );
 }

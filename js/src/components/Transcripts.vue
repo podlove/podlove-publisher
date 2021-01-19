@@ -8,27 +8,34 @@
           :class="{'transcripts-tab-active': mode === 'transcript'}"
           @click.prevent="mode = 'transcript'"
         >Transcript</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
           :class="{'transcripts-tab-active': mode === 'voices'}"
           @click.prevent="mode = 'voices'"
         >Voices</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
           :class="{'transcripts-tab-active': mode === 'import'}"
           @click.prevent="mode = 'import'"
         >Import</a>
-        
+
         <a
           href="#"
           class="transcripts-tab"
           :class="{'transcripts-tab-active': mode === 'export'}"
           @click.prevent="mode = 'export'"
         >Export</a>
+
+        <a
+          href="#"
+          class="transcripts-tab"
+          :class="{'transcripts-tab-active': mode === 'delete'}"
+          @click.prevent="mode = 'delete'"
+        >Delete</a>
       </div>
     </div>
 
@@ -36,7 +43,20 @@
       <div v-if="transcript != null">
         <div class="ts-group col-md-12" v-for="(group, index) in transcript" :key="index">
           <div class="ts-speaker-avatar" v-if="hasVoice(group)">
-            <img :src="getVoice(group).option.avatar" width="50" height="50">
+            <img :src="getVoice(group).option.avatar" width="50" height="50" />
+          </div>
+          <div
+            v-else
+            class="ts-speaker-avatar"
+            style="width: 50px; height: 50px; margin-top: 0px; color: rgba(183, 188, 193, 1.000)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </div>
 
           <div class="ts-text">
@@ -69,13 +89,16 @@
         <div class="voice col-md-12" v-for="(voice, index) in voices" :key="index">
           <div class="voice-label">{{ voice.label }}</div>
           <div class="voice-assignment">
-            <v-select :options="contributorsOptions" label="label" v-model="voice.option" style="width: 300px">
-
+            <v-select
+              :options="contributorsOptions"
+              label="label"
+              v-model="voice.option"
+              style="width: 300px"
+            >
               <template v-slot:option="option">
-                  <img :src="option.avatar" width="16" height="16">
-                  {{ option.label }}
-              </template>              
-              
+                <img :src="option.avatar" width="16" height="16" />
+                {{ option.label }}
+              </template>
             </v-select>
           </div>
         </div>
@@ -106,7 +129,7 @@
           @change="importTranscript"
           style="display: none"
           :disabled="importing"
-        >
+        />
         <div class="description" v-html="description"></div>
       </form>
     </div>
@@ -133,6 +156,10 @@
         download="transcript.xml"
       >Export xml</a>
     </div>
+
+    <div class="row tab-body delete" v-show="mode == 'delete'">
+      <button class="button button-secondary" @click.prevent="deleteTranscript">Delete webvtt</button>
+    </div>
   </div>
 </template>
 
@@ -145,12 +172,12 @@ export default {
       lastError: "",
       voices: null,
       contributors: null,
-      transcript: null
+      transcript: null,
     };
   },
 
   watch: {
-    voiceData: function(val, oldVal) {
+    voiceData: function (val, oldVal) {
       if (oldVal == null) {
         return;
       }
@@ -165,10 +192,10 @@ export default {
           method: "POST",
           dataType: "json",
           data: {
-            transcript_voice: val
-          }
+            transcript_voice: val,
+          },
         })
-        .done(result => {
+        .done((result) => {
           // console.log("saved transcript voices", result);
         })
         .fail(({ responseJSON }) => {
@@ -179,11 +206,11 @@ export default {
         });
 
       // TODO: clearing/deleting assignments
-    }
+    },
   },
 
   computed: {
-    description: function() {
+    description: function () {
       if (this.importing) {
         return "importing ...";
       } else if (this.lastError) {
@@ -192,7 +219,7 @@ export default {
         return "Accepts: WebVTT";
       }
     },
-    voiceData: function() {
+    voiceData: function () {
       if (!this.voices) {
         return null;
       }
@@ -202,41 +229,71 @@ export default {
         return agg;
       }, new Object());
     },
-    contributorsOptions: function() {
-      return this.contributors.map(c => {
+    contributorsOptions: function () {
+      return this.contributors.map((c) => {
         return { label: c.name, value: c.id, avatar: c.avatar };
       });
     },
-    webvttDownloadHref: function() {
+    webvttDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
 
       return "//" + host + "?p=" + post_id + "&podlove_transcript=webvtt";
     },
-    jsonDownloadHref: function() {
+    jsonDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
 
       return "//" + host + "?p=" + post_id + "&podlove_transcript=json";
     },
-    xmlDownloadHref: function() {
+    xmlDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
 
       return "//" + host + "?p=" + post_id + "&podlove_transcript=xml";
     },
-    jsonGroupedDownloadHref: function() {
+    jsonGroupedDownloadHref: function () {
       const post_id = document.querySelector("#post_ID").value;
       const host = window.location.hostname;
+      const port = parseInt(window.location.port, 10);
+      let fullhost = host;
 
-      return "//" + host + "?p=" + post_id + "&podlove_transcript=json_grouped";
-    }
+      if (port && port > 0) {
+        fullhost = fullhost + ":" + port;
+      }
+
+      return (
+        "//" + fullhost + "?p=" + post_id + "&podlove_transcript=json_grouped"
+      );
+    },
   },
 
   methods: {
     initImportTranscript() {
       const fileInput = document.getElementById("transcriptimport");
       fileInput.click();
+    },
+    deleteTranscript() {
+      if (window.confirm("Delete transcript from this episode?")) {
+        this.axios
+          .get(ajaxurl, {
+            params: {
+              action: "podlove_transcript_delete",
+              post_id: document.querySelector("#post_ID").value,
+            },
+          })
+          .then(({ data }) => {
+            if (data.error) {
+              this.lastError = data.error;
+            } else {
+              this.refetchAll();
+              window.setTimeout(() => {
+                this.mode = "transcript";
+              }, 1000);
+            }
+          })
+          .catch((error) => {});
+      }
     },
     importTranscript() {
       const fileInput = document.getElementById("transcriptimport");
@@ -252,8 +309,8 @@ export default {
       this.axios
         .post(ajaxurl, form, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then(({ data }) => {
           if (data.error) {
@@ -264,7 +321,7 @@ export default {
           this.importing = false;
           fileInput.parentElement.reset();
         })
-        .catch(error => {
+        .catch((error) => {
           this.importing = false;
           fileInput.parentElement.reset();
         });
@@ -278,8 +335,8 @@ export default {
         .get(ajaxurl, {
           params: {
             action: "podlove_transcript_asset_import",
-            post_id: document.querySelector("#post_ID").value
-          }
+            post_id: document.querySelector("#post_ID").value,
+          },
         })
         .then(({ data }) => {
           if (data.error) {
@@ -289,14 +346,14 @@ export default {
           }
           this.importing = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.importing = false;
         });
     },
     fetchContributors(done) {
       this.axios
         .get(ajaxurl, {
-          params: { action: "podlove_transcript_get_contributors" }
+          params: { action: "podlove_transcript_get_contributors" },
         })
         .then(({ data }) => {
           if (data.error) {
@@ -314,22 +371,22 @@ export default {
         .get(ajaxurl, {
           params: {
             action: "podlove_transcript_get_voices",
-            post_id: document.querySelector("#post_ID").value
-          }
+            post_id: document.querySelector("#post_ID").value,
+          },
         })
         .then(({ data }) => {
           if (data.error) {
             // this.lastError = data.error
           } else {
-            this.voices = data.voices.map(k => {
-              let option = this.contributorsOptions.find(co => {
+            this.voices = data.voices.map((k) => {
+              let option = this.contributorsOptions.find((co) => {
                 return co.value == k.contributor_id;
               });
 
               return {
                 label: k.voice,
                 value: k.contributor_id,
-                option: option
+                option: option,
               };
             });
             if (done) {
@@ -340,7 +397,7 @@ export default {
     },
     getVoice(group) {
       let id = this.voiceData[group.voice];
-      return this.voices.find(v => (v.option ? v.option.value == id : false));
+      return this.voices.find((v) => (v.option ? v.option.value == id : false));
     },
     hasVoice(group) {
       return group && group.voice && this.voiceData[group.voice];
@@ -365,12 +422,12 @@ export default {
           });
         });
       });
-    }
+    },
   },
 
   mounted() {
     this.refetchAll();
-  }
+  },
 };
 </script>
 

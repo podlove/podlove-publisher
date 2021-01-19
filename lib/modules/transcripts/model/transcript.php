@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Transcripts\Model;
 
 class Transcript extends \Podlove\Model\Base
@@ -15,9 +16,9 @@ class Transcript extends \Podlove\Model\Base
         global $wpdb;
 
         $sql = 'SELECT id FROM '
-        . static::table_name()
-        . ' WHERE episode_id = ' . (int) $episode_id
-            . ' LIMIT 1';
+        .static::table_name()
+        .' WHERE episode_id = '.(int) $episode_id
+            .' LIMIT 1';
 
         return $wpdb->get_var($sql) > 0;
     }
@@ -27,8 +28,8 @@ class Transcript extends \Podlove\Model\Base
         global $wpdb;
 
         $sql = 'DELETE FROM '
-        . static::table_name()
-        . ' WHERE episode_id = ' . (int) $episode_id;
+        .static::table_name()
+        .' WHERE episode_id = '.(int) $episode_id;
 
         return $wpdb->query($sql);
     }
@@ -39,11 +40,11 @@ class Transcript extends \Podlove\Model\Base
 
         $sql = '
 			SELECT DISTINCT t.voice, va.`contributor_id`
-			FROM ' . static::table_name() . ' t
-			LEFT JOIN ' . VoiceAssignment::table_name() . ' va
+			FROM '.static::table_name().' t
+			LEFT JOIN '.VoiceAssignment::table_name().' va
 			  ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
 			WHERE t.voice IS NOT NULL
-			  AND t.episode_id = ' . (int) $episode_id;
+			  AND t.episode_id = '.(int) $episode_id;
 
         return $wpdb->get_results($sql);
     }
@@ -54,10 +55,10 @@ class Transcript extends \Podlove\Model\Base
 
         $sql = '
 			SELECT t.start, t.end, t.content, t.voice, va.contributor_id
-			FROM ' . static::table_name() . ' t
-			LEFT JOIN ' . VoiceAssignment::table_name() . ' va ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
-			LEFT JOIN ' . \Podlove\Modules\Contributors\Model\Contributor::table_name() . ' c ON c.id = va.contributor_id
-			WHERE t.episode_id = ' . (int) $episode_id . '
+			FROM '.static::table_name().' t
+			LEFT JOIN '.VoiceAssignment::table_name().' va ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
+			LEFT JOIN '.\Podlove\Modules\Contributors\Model\Contributor::table_name().' c ON c.id = va.contributor_id
+			WHERE t.episode_id = '.(int) $episode_id.'
 			ORDER BY t.start ASC';
 
         return $wpdb->get_results($sql);
@@ -71,28 +72,29 @@ class Transcript extends \Podlove\Model\Base
      *   $transcript = Transcript::get_transcript($episode_id);
      *   $transcript = Transcript::prepare_transcript($transcript, 'grouped');
      *
+     * @param mixed $transcript
+     * @param mixed $mode
      */
     public static function prepare_transcript($transcript, $mode = 'flat')
     {
         $transcript = array_map(function ($t) {
             return [
-                'start'    => \Podlove\Modules\Transcripts\Renderer::format_time($t->start),
+                'start' => \Podlove\Modules\Transcripts\Renderer::format_time($t->start),
                 'start_ms' => (int) $t->start,
-                'end'      => \Podlove\Modules\Transcripts\Renderer::format_time($t->end),
-                'end_ms'   => (int) $t->end,
-                'speaker'  => $t->contributor_id,
-                'voice'    => $t->voice,
-                'text'     => $t->content,
+                'end' => \Podlove\Modules\Transcripts\Renderer::format_time($t->end),
+                'end_ms' => (int) $t->end,
+                'speaker' => $t->contributor_id,
+                'voice' => $t->voice,
+                'text' => $t->content,
             ];
         }, $transcript);
 
         if ($mode != 'flat') {
             $transcript = array_reduce($transcript, function ($agg, $item) {
-
                 if (empty($agg)) {
-                    $agg['items']        = [];
+                    $agg['items'] = [];
                     $agg['prev_speaker'] = null;
-                    $agg['prev_voice']   = null;
+                    $agg['prev_voice'] = null;
                 }
 
                 $speaker = $item['speaker'];
@@ -106,17 +108,17 @@ class Transcript extends \Podlove\Model\Base
                 } else {
                     $agg['items'][] = [
                         'speaker' => $speaker,
-                        'voice'   => $voice,
-                        'items'   => [$item],
+                        'voice' => $voice,
+                        'items' => [$item],
                     ];
                 }
 
                 $agg['prev_speaker'] = $speaker;
-                $agg['prev_voice']   = $voice;
+                $agg['prev_voice'] = $voice;
 
                 return $agg;
             }, []);
-            $transcript = $transcript['items'];
+            $transcript = $transcript['items'] ?? [];
         }
 
         return $transcript;

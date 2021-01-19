@@ -5,7 +5,9 @@
 		var $editor     = $("#template-editor");
 		var $title      = $(".editor .title input", $editor);
 		var $toolbar    = $(".toolbar", $editor);
+		var $footer    =  $("footer", $editor);
 		var $navigation = $(".navigation", $editor);
+		var $preview    = $("#podlove_template_shortcode_preview");
 
 		var editor = ace.edit("ace-editor");
 
@@ -36,11 +38,13 @@
 				if (isMarked) {
 					isMarked = false;
 					$navigationItem.find(".unsaved").remove();
+					$preview.val('[podlove-template template="' + this.title + '"]');
 				}
 			};
 
 			var activate = function () {
 				$title.val(this.title);
+				$preview.val('[podlove-template template="' + this.title + '"]');
 				editor.getSession().setValue(this.content);
 			};
 
@@ -211,8 +215,8 @@
 
 		$navigation.on("click", "a[data-id]", activate_template);
 		$navigation.on("click", ".add a", add_template);
-		$toolbar.on("click", "a.save", save_template);
-		$toolbar.on("click", ".delete", delete_template);
+		$footer.on("click", "a.save", save_template);
+		$footer.on("click", ".delete", delete_template);
 
 		// select first template on page load
 		$("li:first a", $navigation).click();

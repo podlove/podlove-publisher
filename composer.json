@@ -3,29 +3,32 @@
     "description": "Podcast Publishing Plugin for WordPress",
     "license": "MIT",
     "require": {
-        "php": ">=5.4 <5.5",
+        "php": "^7.0",
         "podlove/podlove-timeline": "1.*",
         "monolog/monolog": "1.*",
-        "symfony/yaml": "2.8.*",
-        "twig/twig": "1.*",
-        "twig/extensions": "1.4.*",
+        "symfony/yaml": "3.4.*",
+        "twig/twig": "2.12.5",
+        "twig/extensions": "1.5.*",
         "geoip2/geoip2": "~2.0",
-        "ramsey/array_column": "~1.1",
-        "piwik/device-detector": "~3.11",
+        "piwik/device-detector": "~3.12",
         "phpunit/php-timer": "~1.0",
-        "podlove/webvtt-parser": "^1.1",
+        "podlove/webvtt-parser": "^1.1.4",
         "geertw/ip-anonymizer": "^1.1",
         "dariuszp/cli-progress-bar": "^1.0",
-        "league/csv": "^7.2"
+        "league/csv": "^8.2"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
-        "phpunit/phpunit": "4.8.*"
+        "phpunit/phpunit": "^6.5.14",
+        "bamarni/composer-bin-plugin": "^1.4"
     },
-    "config": {
-        "platform": {
-            "php": "5.4"
-        }
-    }
+    "autoload": {
+		"classmap": [
+			"lib/",
+			"includes/",
+			"vendor-prefixed/"
+        ],
+        "exclude-from-classmap": ["/vendor/twig"]
+	}
 }

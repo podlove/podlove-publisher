@@ -1,13 +1,11 @@
 <?php
-namespace Podlove\Modules\Shows;
 
-use \Podlove\Modules\Shows\Model;
-use \Podlove\Modules\Shows\Template;
+namespace Podlove\Modules\Shows;
 
 class TemplateExtensions
 {
     /**
-     * List of all Podcast shows
+     * List of all Podcast shows.
      *
      * **Examples**
      *
@@ -22,6 +20,10 @@ class TemplateExtensions
      *
      * @accessor
      * @dynamicAccessor podcast.shows
+     *
+     * @param mixed $return
+     * @param mixed $method_name
+     * @param mixed $episode
      */
     public static function accessorPodcastShows($return, $method_name, $episode)
     {
@@ -33,7 +35,7 @@ class TemplateExtensions
     }
 
     /**
-     * Episode Show
+     * Episode Show.
      *
      * **Examples**
      *
@@ -44,15 +46,19 @@ class TemplateExtensions
      *
      * @accessor
      * @dynamicAccessor episode.show
+     *
+     * @param mixed $return
+     * @param mixed $method_name
+     * @param mixed $episode
      */
     public static function accessorEpisodesShow($return, $method_name, $episode)
     {
         return $episode->with_blog_scope(function () use ($return, $method_name, $episode) {
             if ($show = Model\Show::find_one_by_episode_id($episode->id)) {
                 return new Template\Show($show);
-            } else {
-                return null;
             }
+
+            return null;
         });
     }
 }

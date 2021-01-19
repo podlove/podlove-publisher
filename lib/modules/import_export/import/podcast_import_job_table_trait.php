@@ -1,32 +1,9 @@
 <?php
+
 namespace Podlove\Modules\ImportExport\Import;
 
 trait PodcastImportJobTableTrait
 {
-
-    /**
-     * Fully qualified name of the model class
-     *
-     * Example: '\Podlove\Model\EpisodeAsset'
-     *
-     * @return string
-     */
-    abstract protected static function get_import_table_class();
-
-    /**
-     * Name of the group in export file
-     *
-     * Example: 'asset'
-     *
-     * @return string
-     */
-    abstract protected static function get_import_item_name();
-
-    protected function get_xml_group()
-    {
-        return $this->xml->xpath('//wpe:' . self::get_import_item_name());
-    }
-
     public function setup()
     {
         $this->setupXml();
@@ -46,21 +23,43 @@ trait PodcastImportJobTableTrait
         return count($this->get_xml_group());
     }
 
+    /**
+     * Fully qualified name of the model class.
+     *
+     * Example: '\Podlove\Model\EpisodeAsset'
+     *
+     * @return string
+     */
+    abstract protected static function get_import_table_class();
+
+    /**
+     * Name of the group in export file.
+     *
+     * Example: 'asset'
+     *
+     * @return string
+     */
+    abstract protected static function get_import_item_name();
+
+    protected function get_xml_group()
+    {
+        return $this->xml->xpath('//wpe:'.self::get_import_item_name());
+    }
+
     protected function do_step()
     {
         $group = $this->get_xml_group();
-        $item  = $group[$this->job->state];
+        $item = $group[$this->job->state];
 
-        $table    = self::get_import_table_class();
-        $new_item = new $table;
+        $table = self::get_import_table_class();
+        $new_item = new $table();
         foreach ($item->children('wpe', true) as $attribute) {
             $new_item->{$attribute->getName()} = (string) $attribute;
         }
         $new_item->save();
 
-        $this->job->state++;
+        ++$this->job->state;
 
         return 1;
     }
-
 }

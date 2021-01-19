@@ -1,13 +1,11 @@
-<?php 
+<?php
+
 namespace Podlove\Modules\AnalyticsHeartbeat\Model;
 
-use \Podlove\Model\Base;
-use \Podlove\Model\Episode;
-use \Podlove\Model\Image;
+use Podlove\Model\Base;
 
 class Heartbeat extends Base
-{	
-
+{
 }
 
 Heartbeat::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');

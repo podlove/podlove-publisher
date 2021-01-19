@@ -1,4 +1,5 @@
 <?php
+
 namespace Podlove\Modules\Transcripts;
 
 use Podlove\Model;
@@ -11,10 +12,9 @@ use Podlove\Webvtt\ParserException;
 
 class Transcripts extends \Podlove\Modules\Base
 {
-
-    protected $module_name        = 'Transcripts';
+    protected $module_name = 'Transcripts';
     protected $module_description = 'Manage transcripts, show them on your site and in the web player.';
-    protected $module_group       = 'metadata';
+    protected $module_group = 'metadata';
 
     public function load()
     {
@@ -22,34 +22,46 @@ class Transcripts extends \Podlove\Modules\Base
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
         add_action('wp_ajax_podlove_transcript_import', [$this, 'ajax_transcript_import']);
         add_action('wp_ajax_podlove_transcript_asset_import', [$this, 'ajax_transcript_asset_import']);
+        add_action('wp_ajax_podlove_transcript_delete', [$this, 'ajax_transcript_delete']);
         add_action('wp_ajax_podlove_transcript_get_contributors', [$this, 'ajax_transcript_get_contributors']);
         add_action('wp_ajax_podlove_transcript_get_voices', [$this, 'ajax_transcript_get_voices']);
 
         // add_filter('podlove_episode_data_before_save', [$this, 'save_episode_voice_assignments']);
         add_filter('mime_types', [$this, 'ensure_vtt_mime_type_is_known'], 20);
 
-        add_filter('podlove_player4_config', [$this, 'add_playerv4_config'], 10, 2);
+        add_filter('podlove_player4_config', [$this, 'add_player_config'], 10, 2);
+        add_filter('podlove_player5_config', [$this, 'add_player_config'], 10, 2);
 
         add_action('wp', [$this, 'serve_transcript_file']);
 
-        # external assets
+        // external assets
         add_action('podlove_asset_assignment_form', [$this, 'add_asset_assignment_form'], 10, 2);
         add_action('podlove_media_file_content_has_changed', [$this, 'handle_changed_media_file']);
         add_action('podlove_media_file_content_verified', [$this, 'handle_changed_media_file']);
 
         add_filter('podlove_twig_file_loader', function ($file_loader) {
-            $file_loader->addPath(implode(DIRECTORY_SEPARATOR, array(\Podlove\PLUGIN_DIR, 'lib', 'modules', 'transcripts', 'twig')), 'transcripts');
+            $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'transcripts', 'twig']), 'transcripts');
+
             return $file_loader;
         });
 
         add_shortcode('podlove-transcript', [$this, 'transcript_shortcode']);
 
         \Podlove\Template\Episode::add_accessor(
-            'transcript', array('\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'), 4
+            'transcript',
+            ['\Podlove\Modules\Transcripts\TemplateExtensions', 'accessorEpisodeTranscript'],
+            4
         );
 
         add_action('rest_api_init', [$this, 'api_init']);
+        add_action('admin_notices', [$this, 'check_contributors_active']);
+    }
 
+    public function check_contributors_active()
+    {
+        if (!\Podlove\Modules\Base::is_active('contributors')) {
+            $this->print_admin_notice();
+        }
     }
 
     public function api_init()
@@ -90,21 +102,21 @@ class Transcripts extends \Podlove\Modules\Base
 
     public function extend_episode_form($form_data, $episode)
     {
-        $form_data[] = array(
-            'type'     => 'callback',
-            'key'      => 'transcripts',
-            'options'  => array(
+        $form_data[] = [
+            'type' => 'callback',
+            'key' => 'transcripts',
+            'options' => [
                 'callback' => function () use ($episode) {
-                    $data = '';
-                    ?>
-<div id="podlove-transcripts-app-data" style="display: none"><?php echo $data ?></div>
+                    $data = ''; ?>
+<div id="podlove-transcripts-app-data" style="display: none"><?php echo $data; ?></div>
 <div id="podlove-transcripts-app"><transcripts></transcripts></div>
 <?php
-},
-                'label'    => __('Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
-            ),
+                },
+                'label' => __('Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
+            ],
             'position' => 425,
-        );
+        ];
+
         return $form_data;
     }
 
@@ -114,17 +126,44 @@ class Transcripts extends \Podlove\Modules\Base
             wp_die();
         }
 
+        // allow vtt uploads
+        add_filter('mime_types', function ($mimes) {
+            $mimes['vtt'] = 'text/vtt';
+            $mimes['webvtt'] = 'text/vtt';
+
+            return $mimes;
+        });
+
+        add_filter('upload_mimes', function ($mimes_types) {
+            $mimes_types['vtt'] = 'text/vtt';
+            $mimes_types['webvtt'] = 'text/vtt';
+
+            return $mimes_types;
+        }, 99);
+
+        add_filter('wp_check_filetype_and_ext', function ($types, $file, $filename, $mimes) {
+            $wp_filetype = wp_check_filetype($filename, $mimes);
+            $ext = $wp_filetype['ext'];
+            $type = $wp_filetype['type'];
+            if (in_array($ext, ['vtt', 'webvtt'])) {
+                $types['ext'] = $ext;
+                $types['type'] = $type;
+            }
+
+            return $types;
+        }, 99, 4);
+
         // todo: I don't really want it permanently uploaded, so ... delete when done
-        $file = wp_handle_upload($_FILES['transcript'], array('test_form' => false));
+        $file = wp_handle_upload($_FILES['transcript'], ['test_form' => false]);
 
         if (!$file || isset($file['error'])) {
-            $error = 'Could not upload transcript file. Reason: ' . $file['error'];
+            $error = 'Could not upload transcript file. Reason: '.$file['error'];
             \Podlove\Log::get()->addError($error);
             \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
         }
 
         if (stripos($file['type'], 'vtt') === false) {
-            $error = 'Transcript file must be webvtt. Is: ' . $file['type'];
+            $error = 'Transcript file must be webvtt. Is: '.$file['type'];
             \Podlove\Log::get()->addError($error);
             \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
         }
@@ -166,8 +205,25 @@ class Transcripts extends \Podlove\Modules\Base
         wp_die();
     }
 
+    public function ajax_transcript_delete()
+    {
+        $post_id = intval($_GET['post_id'], 10);
+        $episode = Model\Episode::find_one_by_post_id($post_id);
+
+        if (!$episode) {
+            $error = 'Could not find episode for this post object.';
+            \Podlove\Log::get()->addError($error);
+            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
+        }
+
+        Transcript::delete_for_episode($episode->id);
+
+        echo 'ok';
+        wp_die();
+    }
+
     /**
-     * Import transcript from remote file
+     * Import transcript from remote file.
      */
     public function transcript_import_from_asset(Episode $episode)
     {
@@ -179,7 +235,7 @@ class Transcripts extends \Podlove\Modules\Base
                     __('No asset is assigned for transcripts yet. Fix this in %s', 'podlove-podcasting-plugin-for-wordpress'),
                     sprintf(
                         '%s%s%s',
-                        '<a href="' . admin_url('admin.php?page=podlove_episode_assets_settings_handle') . '" target="_blank">',
+                        '<a href="'.admin_url('admin.php?page=podlove_episode_assets_settings_handle').'" target="_blank">',
                         __('Episode Assets', 'podlove-podcasting-plugin-for-wordpress'),
                         '</a>'
                     )
@@ -213,23 +269,24 @@ class Transcripts extends \Podlove\Modules\Base
         try {
             $result = $parser->parse($content);
         } catch (ParserException $e) {
-            $error = 'Error parsing webvtt file: ' . $e->getMessage();
+            $error = 'Error parsing webvtt file: '.$e->getMessage();
             \Podlove\Log::get()->addError($error);
             if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'podlove_transcript_import') {
                 \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
             }
+
             return;
         }
 
         Transcript::delete_for_episode($episode->id);
 
         foreach ($result['cues'] as $cue) {
-            $line             = new Transcript;
+            $line = new Transcript();
             $line->episode_id = $episode->id;
-            $line->start      = $cue['start'] * 1000;
-            $line->end        = $cue['end'] * 1000;
-            $line->voice      = $cue['voice'];
-            $line->content    = $cue['text'];
+            $line->start = $cue['start'] * 1000;
+            $line->end = $cue['end'] * 1000;
+            $line->voice = $cue['voice'];
+            $line->content = $cue['text'];
             $line->save();
         }
 
@@ -238,12 +295,12 @@ class Transcripts extends \Podlove\Modules\Base
         }, $result['cues']));
 
         foreach ($voices as $voice) {
-            $contributor = Contributor::find_one_by_property("identifier", $voice);
+            $contributor = Contributor::find_one_by_property('identifier', $voice);
 
             if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
-                $voice_assignment                 = new VoiceAssignment;
-                $voice_assignment->episode_id     = $episode->id;
-                $voice_assignment->voice          = $voice;
+                $voice_assignment = new VoiceAssignment();
+                $voice_assignment->episode_id = $episode->id;
+                $voice_assignment->voice = $voice;
                 $voice_assignment->contributor_id = $contributor->id;
                 $voice_assignment->save();
             }
@@ -255,10 +312,10 @@ class Transcripts extends \Podlove\Modules\Base
         $contributors = Contributor::all();
         $contributors = array_map(function ($c) {
             return [
-                'id'         => $c->id,
-                'name'       => $c->getName(),
+                'id' => $c->id,
+                'name' => $c->getName(),
                 'identifier' => $c->identifier,
-                'avatar'     => $c->avatar()->url(),
+                'avatar' => $c->avatar()->url(),
             ];
         }, $contributors);
 
@@ -269,14 +326,14 @@ class Transcripts extends \Podlove\Modules\Base
     {
         $post_id = intval($_GET['post_id'], 10);
         $episode = Model\Episode::find_one_by_post_id($post_id);
-        $voices  = Transcript::get_voices_for_episode_id($episode->id);
+        $voices = Transcript::get_voices_for_episode_id($episode->id);
         \Podlove\AJAX\Ajax::respond_with_json(['voices' => $voices]);
     }
 
     public function serve_transcript_file()
     {
         $format = filter_input(INPUT_GET, 'podlove_transcript', FILTER_VALIDATE_REGEXP, [
-            'options' => ['regexp' => "/^(json_grouped|json|webvtt|xml)$/"],
+            'options' => ['regexp' => '/^(json_grouped|json|webvtt|xml)$/'],
         ]);
 
         if (!$format) {
@@ -304,16 +361,18 @@ class Transcripts extends \Podlove\Modules\Base
             case 'xml':
                 header('Cache-Control: no-cache, must-revalidate');
                 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-                header("Content-Type: application/xml; charset=utf-8");
+                header('Content-Type: application/xml; charset=utf-8');
                 echo $renderer->as_xml();
                 exit;
+
                 break;
             case 'webvtt':
                 header('Cache-Control: no-cache, must-revalidate');
                 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-                header("Content-Type: text/vtt");
+                header('Content-Type: text/vtt');
                 echo $renderer->as_webvtt();
                 exit;
+
                 break;
             case 'json':
             case 'json_grouped':
@@ -323,16 +382,19 @@ class Transcripts extends \Podlove\Modules\Base
                 $mode = ($format == 'json' ? 'flat' : 'grouped');
                 echo $renderer->as_json($mode);
                 exit;
+
                 break;
         }
     }
 
-    public function add_playerv4_config($config, $episode)
+    public function add_player_config($config, $episode)
     {
         if (Transcript::exists_for_episode($episode->id)) {
-            $url                   = add_query_arg('podlove_transcript', 'json', get_permalink($episode->post_id));
+            $url = add_query_arg('podlove_transcript', 'json', get_permalink($episode->post_id));
+            $url = str_replace(home_url(), site_url(), $url);
             $config['transcripts'] = $url;
         }
+
         return $config;
     }
 
@@ -352,13 +414,15 @@ class Transcripts extends \Podlove\Modules\Base
         }
 
         $wrapper->select('transcript', [
-            'label'   => __('Episode Transcript', 'podlove-podcasting-plugin-for-wordpress'),
+            'label' => __('Episode Transcript', 'podlove-podcasting-plugin-for-wordpress'),
             'options' => $transcript_options,
         ]);
     }
 
     /**
      * When vtt media file changes, reimport transcripts.
+     *
+     * @param mixed $media_file_id
      */
     public function handle_changed_media_file($media_file_id)
     {
@@ -385,5 +449,17 @@ class Transcripts extends \Podlove\Modules\Base
         }
 
         $this->transcript_import_from_asset($media_file->episode());
+    }
+
+    private function print_admin_notice()
+    {
+        ?>
+      <div class="update-message notice notice-warning notice-alt">
+        <p>
+          <?php echo __('You need to activate the "Contributors" module to use transcripts.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+           <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle#contributors'); ?>"><?php echo __('Activate Now', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+        </p>
+      </div>
+      <?php
     }
 }

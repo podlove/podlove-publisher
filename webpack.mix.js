@@ -15,6 +15,7 @@ mix.js('js/src/app.js', 'js/dist/')
 
     .combine(
         [
+            'node_modules/clipboard/dist/clipboard.min.js',
             'js/admin/chosen/chosen.jquery.min.js',
             'js/admin/chosen/chosenImage.jquery.js',
             'js/src/admin/md5.js',

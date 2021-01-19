@@ -1,18 +1,19 @@
 <?php
+
 namespace Podlove\Modules\Categories;
-use \Podlove\Model;
 
-class Categories extends \Podlove\Modules\Base {
+class Categories extends \Podlove\Modules\Base
+{
+    protected $module_name = 'Categories';
+    protected $module_description = 'Enable categories for episodes.';
+    protected $module_group = 'metadata';
 
-	protected $module_name = 'Categories';
-	protected $module_description = 'Enable categories for episodes.';
-	protected $module_group = 'metadata';
+    public function load()
+    {
+        add_filter('podlove_post_type_args', function ($args) {
+            $args['taxonomies'][] = 'category';
 
-	public function load() {
-		add_filter( 'podlove_post_type_args', function ( $args ) {
-			$args['taxonomies'][] = 'category';
-			return $args;		
-		} );
-	}
-
+            return $args;
+        });
+    }
 }

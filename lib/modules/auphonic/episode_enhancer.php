@@ -1,78 +1,85 @@
-<?php 
+<?php
+
 namespace Podlove\Modules\Auphonic;
 
-use \Podlove\Model;
+use Podlove\Model;
 
 /**
- * Auphonic Episode Enhancer
+ * Auphonic Episode Enhancer.
  *
  * Adds an Auphonic interface to the episode management forms.
  */
-class EpisodeEnhancer {
+class EpisodeEnhancer
+{
+    private $module;
 
-	private $module;
+    public function __construct(Auphonic $module)
+    {
+        $this->module = $module;
 
-	public function __construct(\Podlove\Modules\Auphonic\Auphonic $module)
-	{
-		$this->module = $module;
+        add_action('save_post', [$this, 'save_post']);
 
-		add_action('save_post', array($this, 'save_post'));
+        if ($this->module->get_module_option('auphonic_api_key') != '') {
+            add_filter('podlove_episode_form_data', [$this, 'auphonic_episodes'], 10, 2);
+        }
+    }
 
-		if ($this->module->get_module_option('auphonic_api_key') != "") {
-			add_filter('podlove_episode_form_data', array($this, 'auphonic_episodes'), 10, 2);
-		}
-	}
+    public function auphonic_episodes($form_data, $episode)
+    {
+        $form_data[] = [
+            'type' => 'callback',
+            'key' => 'import_from_auphonic_form',
+            'options' => [
+                'label' => __('Auphonic', 'podlove-podcasting-plugin-for-wordpress'),
+                'callback' => [$this, 'auphonic_episodes_form'],
+            ],
+            'position' => 500,
+        ];
 
-	public function auphonic_episodes($form_data, $episode)
-	{
-		$form_data[] = array(
-			'type' => 'callback',
-			'key'  => 'import_from_auphonic_form',
-			'options' => array(
-				'label'    => __('Auphonic', 'podlove-podcasting-plugin-for-wordpress'),
-				'callback' => array($this, 'auphonic_episodes_form')
-			),
-			'position' => 500
-		);
+        return $form_data;
+    }
 
-		return $form_data;
-	}
+    public function save_post($post_id)
+    {
+        if (get_post_type($post_id) !== 'podcast') {
+            return;
+        }
 
-	public function save_post($post_id)
-	{
-		if (get_post_type($post_id) !== 'podcast')
-			return;
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
 
-		if (!current_user_can('edit_post', $post_id))
-			return;
+        if (isset($_REQUEST['_auphonic_production'])) {
+            update_post_meta($post_id, '_auphonic_production', $_REQUEST['_auphonic_production']);
+        }
+    }
 
-		if (isset($_REQUEST['_auphonic_production']))
-			update_post_meta( $post_id, '_auphonic_production', $_REQUEST['_auphonic_production']);
-	}
+    public function auphonic_episodes_form()
+    {
+        $asset_assignments = Model\AssetAssignment::get_instance();
+        $podcast = Model\Podcast::get();
+        $episode = Model\Episode::find_or_create_by_post_id(get_the_ID()); ?>
 
-	public function auphonic_episodes_form() {
-		$asset_assignments = Model\AssetAssignment::get_instance();
-		$podcast = Model\Podcast::get();
-		$episode = Model\Episode::find_or_create_by_post_id(get_the_ID());
-		?>
-
-		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta( get_the_ID(), '_auphonic_production', true ) ?>" />
+		<input type="hidden" id="_auphonic_production" name="_auphonic_production" value="<?php echo get_post_meta(get_the_ID(), '_auphonic_production', true); ?>" />
 		<input type="hidden" id="auphonic" value="1"
-			data-api-key="<?php echo $this->module->get_module_option('auphonic_api_key') ?>"
-			data-presetuuid="<?php echo $this->module->get_module_option('auphonic_production_preset') ?>"
-			data-assignment-chapter="<?php echo $asset_assignments->chapters ?>"
-			data-assignment-image="<?php echo $asset_assignments->image ?>"
-			data-module-url="<?php echo $this->module->get_module_url() ?>"
+			data-api-key="<?php echo $this->module->get_module_option('auphonic_api_key'); ?>"
+			data-presetuuid="<?php echo $this->module->get_module_option('auphonic_production_preset'); ?>"
+			data-assignment-chapter="<?php echo $asset_assignments->chapters; ?>"
+			data-assignment-image="<?php echo $asset_assignments->image; ?>"
+			data-module-url="<?php echo $this->module->get_module_url(); ?>"
 			data-site-url="<?php echo get_home_url(); ?>"
-			data-podcast-image="<?php echo $podcast->cover_art()->url() ?>"
-			data-episode-image="<?php echo $episode->cover_art() ? $episode->cover_art()->url() : '' ?>"
+			data-podcast-image="<?php echo $podcast->cover_art()->url(); ?>"
+			data-episode-image="<?php echo $episode->cover_art() ? $episode->cover_art()->url() : ''; ?>"
 			/>
 
 		<div id="auphonic-box">
 
 			<em id="auphonic-credits-status"><?php _e('Available processing time:', 'podlove-podcasting-plugin-for-wordpress'); ?>  <span id="auphonic-credits"></span></em>
 
+            <div style="clear: both;"></div>
+
 			<div id="auphonic-production-status" class="auphonic-status status-info"></div>
+            <div id="auphonic-production-warning"></div>
 
 			<fieldset>
 				<legend><?php _e('Create Production', 'podlove-podcasting-plugin-for-wordpress'); ?></legend>
@@ -83,16 +90,16 @@ class EpisodeEnhancer {
 						</label>
 					</div>
 					<select id="auphonic_services">
-						<option><?php _e( 'Loading sources ...' ); ?></option>
+						<option><?php _e('Loading sources ...'); ?></option>
 					</select>
 				</div>
-				
+
 				<div class="auphonic-segment">
 					<div class="auphonic_production_head">
 						<label for="auphonic_production_files">
 							<?php _e('Master Audio File', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</label>
-						<span id="fetch_auphonic_production_files" title="<?php _e( 'Fetch available audio files.', 'podlove-podcasting-plugin-for-wordpress' ); ?>">
+						<span id="fetch_auphonic_production_files" title="<?php _e('Fetch available audio files.', 'podlove-podcasting-plugin-for-wordpress'); ?>">
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
@@ -108,7 +115,7 @@ class EpisodeEnhancer {
 
 				<div class="auphonic-row">
 
-					<button class="button button-primary" id="create_auphonic_production_button" title="<?php _e( 'Create a production for the selected file.', 'podlove-podcasting-plugin-for-wordpress' ); ?>">
+					<button class="button button-primary" id="create_auphonic_production_button" title="<?php _e('Create a production for the selected file.', 'podlove-podcasting-plugin-for-wordpress'); ?>">
 						<span class="indicating_button_wrapper">
 							<span class="state_idle"><i class="podlove-icon-plus"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
@@ -119,7 +126,7 @@ class EpisodeEnhancer {
 					</button>
 
 					<label>
-						<input type="checkbox" id="auphonic_start_after_creation"> <?php _e( 'Start after creation', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+						<input type="checkbox" id="auphonic_start_after_creation"> <?php _e('Start after creation', 'podlove-podcasting-plugin-for-wordpress'); ?>
 					</label>
 				</div>
 			</fieldset>
@@ -128,9 +135,9 @@ class EpisodeEnhancer {
 				<legend><?php _e('Manage Production', 'podlove-podcasting-plugin-for-wordpress'); ?></legend>
 				<div class="auphonic-row">
 						<select name="import_from_auphonic" id="auphonic_productions">
-							<option><?php _e( 'Loading productions ...', 'podlove-podcasting-plugin-for-wordpress' ); ?></option>
+							<option><?php _e('Loading productions ...', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 						</select>
-						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->module->get_module_option('auphonic_api_key') ?>'>
+						<span title="fetch available productions" id="reload_productions_button" data-token='<?php echo $this->module->get_module_option('auphonic_api_key'); ?>'>
 							<span class="state_idle"><i class="podlove-icon-repeat"></i></span>
 							<span class="state_working"><i class="podlove-icon-spinner rotate"></i></span>
 							<span class="state_success"><i class="podlove-icon-ok"></i></span>
@@ -172,7 +179,7 @@ class EpisodeEnhancer {
 						</button>
 
 						<label>
-							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php _e( 'Publish episode when done', 'podlove-podcasting-plugin-for-wordpress' ); ?>
+							<input type="checkbox" id="auphonic_publish_after_finishing"> <?php _e('Publish episode when done', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</label>
 					</div>
 
@@ -201,5 +208,5 @@ class EpisodeEnhancer {
 
 		</div>
 		<?php
-	}
+    }
 }

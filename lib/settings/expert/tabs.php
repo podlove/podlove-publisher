@@ -1,23 +1,25 @@
 <?php
+
 namespace Podlove\Settings\Expert;
 
 /**
- * Manages Expert Settings Tabs
+ * Manages Expert Settings Tabs.
  */
 class Tabs
 {
-
     /**
-     * Tab Bar Title
+     * Tab Bar Title.
+     *
      * @var string
      */
     private $title = '';
 
     /**
-     * List of tab objects
+     * List of tab objects.
+     *
      * @var array
      */
-    private $tabs = array();
+    private $tabs = [];
 
     public function __construct($title)
     {
@@ -31,9 +33,8 @@ class Tabs
 
     public function getTabsHTML()
     {
-
         $html = '<h2 class="nav-tab-wrapper">';
-        $html .= '<span class="nav-tab-title">' . $this->title . "</span>\n";
+        $html .= '<span class="nav-tab-title">'.$this->title."</span>\n";
         foreach ($this->tabs as $tab) {
             $html .= sprintf(
                 '<a href="%s" class="nav-tab%s">%s</a>',
@@ -68,6 +69,11 @@ class Tabs
         }
     }
 
+    public function getTabs()
+    {
+        return $this->tabs;
+    }
+
     private function getCurrentTab()
     {
         foreach ($this->tabs as $tab) {
@@ -78,10 +84,4 @@ class Tabs
 
         return $this->tabs[0];
     }
-
-    public function getTabs()
-    {
-        return $this->tabs;
-    }
-
 }

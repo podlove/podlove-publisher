@@ -1,221 +1,280 @@
 <?php
+
 namespace Podlove\Modules\Networks\Settings;
 
-use \Podlove\Modules\Networks\Model\Network;
-use \Podlove\Modules\Networks\Model\PodcastList;
+use Podlove\Modules\Networks\Model\Network;
+use Podlove\Modules\Networks\Model\PodcastList;
 
-class PodcastLists {
+class PodcastLists
+{
+    const MENU_SLUG = 'podlove_settings_list_handle';
+    public static $pagehook;
 
-	static $pagehook;
+    public function __construct($handle)
+    {
+        PodcastLists::$pagehook = add_submenu_page(
+            // $parent_slug
+            $handle,
+            // $page_title
+            'Lists',
+            // $menu_title
+            'Lists',
+            // $capability
+            'administrator',
+            // $menu_slug
+            self::MENU_SLUG,
+            // $function
+            [$this, 'page']
+        );
 
-	const MENU_SLUG = 'podlove_settings_list_handle';
-	
-	public function __construct( $handle ) {
-		
-		PodcastLists::$pagehook = add_submenu_page(
-			/* $parent_slug*/ $handle,
-			/* $page_title */ 'Lists',
-			/* $menu_title */ 'Lists',
-			/* $capability */ 'administrator',
-			/* $menu_slug  */ self::MENU_SLUG,
-			/* $function   */ array( $this, 'page' )
-		);
+        add_action('admin_init', [$this, 'process_form']);
+    }
 
-		add_action( 'admin_init', array( $this, 'process_form' ) );
-	}
+    public function process_form()
+    {
+        if (!isset($_REQUEST['list'])) {
+            return;
+        }
 
-	public function process_form() {
+        $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
-		if ( ! isset( $_REQUEST['list'] ) )
-			return;
+        set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
-		$action = ( isset( $_REQUEST['action'] ) ) ? $_REQUEST['action'] : NULL;
+        if ($action === 'save') {
+            $this->save();
+        } elseif ($action === 'create') {
+            $this->create();
+        } elseif ($action === 'delete') {
+            $this->delete();
+        }
+    }
 
-		set_transient( 'podlove_needs_to_flush_rewrite_rules', true );
-		
-		if ( $action === 'save' ) {
-			$this->save();
-		} elseif ( $action === 'create' ) {
-			$this->create();
-		} elseif ( $action === 'delete' ) {
-			$this->delete();
-		}
-	}
+    public static function get_action_link($list, $title, $action = 'edit', $class = 'link')
+    {
+        return sprintf(
+            '<a href="?page=%s&amp;action=%s&amp;list=%s" class="%s">'.$title.'</a>',
+            self::MENU_SLUG,
+            $action,
+            $list->id,
+            $class
+        );
+    }
 
-	/**
-	 * Process form: save/update a list
-	 */
-	private function save() {
-		if ( ! isset( $_REQUEST['list'] ) )
-			return;
+    public function page()
+    {
+        if (isset($_GET['action']) and $_GET['action'] == 'confirm_delete' and isset($_REQUEST['list'])) {
+            PodcastList::activate_network_scope();
+            $list = PodcastList::find_by_id($_REQUEST['list']);
+            PodcastList::deactivate_network_scope(); ?>
+			<div class="updated">
+				<p>
+					<strong>
+						<?php echo sprintf(__('You selected to delete the list "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress'), $list->title); ?>
+					</strong>
+				</p>
+				<p>
+					<?php echo self::get_action_link($list, __('Delete list permanently', 'podlove-podcasting-plugin-for-wordpress'), 'delete', 'button'); ?>
+					<?php echo self::get_action_link($list, __('Don\'t change anything', 'podlove-podcasting-plugin-for-wordpress'), 'keep', 'button-primary'); ?>
+				</p>
+			</div>
+			<?php
+        } ?>
+		<div class="wrap">
+			<h2><?php echo __('Lists', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php echo __('Add New', 'podlove-podcasting-plugin-for-wordpress'); ?></a></h2>
+			<?php
+                if (isset($_GET['action'])) {
+                    switch ($_GET['action']) {
+                        case 'new':   $this->new_template();
 
-		$podcasts = array();
-		foreach ($_POST['podlove_list']['podcasts'] as $podcast) {
-			$podcasts[] = $podcast;
-		}
+break;
+                        case 'edit':  $this->edit_template();
 
-		$_POST['podlove_list']['podcasts'] = json_encode( $podcasts );
+break;
+                        default:      $this->view_template();
 
-		PodcastList::activate_network_scope();
-		$list = PodcastList::find_by_id( $_REQUEST['list'] );
-		$list->update_attributes( $_POST['podlove_list'] );
-		PodcastList::deactivate_network_scope();
-		
-		$this->redirect( 'index', $list->id );
-	}
-	
-	/**
-	 * Process form: create a list
-	 */
-	private function create() {
-		global $wpdb;
-
-		$podcasts = array();
-		foreach ($_POST['podlove_list']['podcasts'] as $podcast) {
-			$podcasts[] = $podcast;
-		}
-
-		$_POST['podlove_list']['podcasts'] = json_encode( $podcasts );
-		
-		PodcastList::activate_network_scope();
-		$list = new PodcastList;
-		$list->update_attributes( $_POST['podlove_list'] );
-		PodcastList::deactivate_network_scope();
-
-		$this->redirect( 'index' );
-	}
-	
-	/**
-	 * Process form: delete a list
-	 */
-	private function delete() {
-		if ( ! isset( $_REQUEST['list'] ) )
-			return;
-
-		PodcastList::activate_network_scope();
-		PodcastList::find_by_id( $_REQUEST['list'] )->delete();
-		PodcastList::deactivate_network_scope();
-		
-		$this->redirect( 'index' );
-	}
-
-	/**
-	 * Helper method: redirect to a certain page.
-	 */
-	private function redirect( $action, $list_id = NULL ) {
-		$page   = 'network/admin.php?page=' . self::MENU_SLUG;
-		$show   = ( $list_id ) ? '&list=' . $list_id : '';
-		$action = '&action=' . $action;
-		
-		wp_redirect( admin_url( $page . $show . $action ) );
-		exit;
-	}
-
-	public static function get_action_link( $list, $title, $action = 'edit', $class = 'link' ) {
-		return sprintf(
-			'<a href="?page=%s&amp;action=%s&amp;list=%s" class="%s">' . $title . '</a>',
-			self::MENU_SLUG,
-			$action,
-			$list->id,
-			$class
-		);
-	}
-
-	private function view_template() {
-		echo __( 'If you have configured a <a href="http://codex.wordpress.org/Create_A_Network">
-				WordPress Network</a>, Podlove allows you to configure Podcast lists.', 'podlove-podcasting-plugin-for-wordpress' );
-		$table = new \Podlove\Modules\Networks\PodcastList_List_Table();
-		$table->prepare_items();
-		$table->display();
-	}
-
-	private function new_template() {
-		PodcastList::activate_network_scope();
-		$list = new PodcastList;
-		?>
-		<h3><?php echo __( 'Add New list', 'podlove-podcasting-plugin-for-wordpress' ); ?></h3>
+break;
+                    }
+                } else {
+                    $this->view_template();
+                } ?>
+		</div>	
 		<?php
-		$this->form_template( $list, 'create', __( 'Add New list', 'podlove-podcasting-plugin-for-wordpress' ) );
-		PodcastList::deactivate_network_scope();
-	}
-	
-	private function edit_template() {
-		PodcastList::activate_network_scope();
-		$list = PodcastList::find_by_id( $_REQUEST['list'] );
-		echo '<h3>' . sprintf( __( 'Edit list: %s', 'podlove-podcasting-plugin-for-wordpress' ), $list->title ) . '</h3>';
-		$this->form_template( $list, 'save' );
-		PodcastList::deactivate_network_scope();
-	}
+    }
 
-	private function form_template( $list, $action, $button_text = NULL ) {
+    /**
+     * Process form: save/update a list.
+     */
+    private function save()
+    {
+        if (!isset($_REQUEST['list'])) {
+            return;
+        }
 
-		$form_args = array(
-			'context' => 'podlove_list',
-			'hidden'  => array(
-				'list' => $list->id,
-				'action' => $action
-			)
-		);
+        $podcasts = [];
+        foreach ($_POST['podlove_list']['podcasts'] as $podcast) {
+            $podcasts[] = $podcast;
+        }
 
-		\Podlove\Form\build_for( $list, $form_args, function ( $form ) {
-			$wrapper = new \Podlove\Form\Input\TableWrapper( $form );
+        $_POST['podlove_list']['podcasts'] = json_encode($podcasts);
 
-			$list = $form->object;
+        PodcastList::activate_network_scope();
+        $list = PodcastList::find_by_id($_REQUEST['list']);
+        $list->update_attributes($_POST['podlove_list']);
+        PodcastList::deactivate_network_scope();
 
-			$wrapper->string( 'slug', array(
-				'label'       => __( 'ID', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html'        => array( 'class' => 'regular-text required' ),
-				'description' => sprintf(__('For referencing in templates: %s', 'podlove-podcasting-plugin-for-wordpress'), '<code>{{ network.lists({id: "example"}).title }}</code>')
-			) );
+        $this->redirect('index', $list->id);
+    }
 
-			$wrapper->string( 'title', array(
-				'label'       => __( 'Title', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html'        => array( 'class' => 'regular-text required' )
-			) );
+    /**
+     * Process form: create a list.
+     */
+    private function create()
+    {
+        global $wpdb;
 
-			$wrapper->string( 'subtitle', array(
-				'label'       => __( 'Subtitle', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html' => array( 'class' => 'regular-text' )
-			) );
+        $podcasts = [];
+        foreach ($_POST['podlove_list']['podcasts'] as $podcast) {
+            $podcasts[] = $podcast;
+        }
 
-			$wrapper->text( 'description', array(
-				'label'       => __( 'Summary', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html'        => array( 'rows' => 3, 'cols' => 40 )
-			) );
+        $_POST['podlove_list']['podcasts'] = json_encode($podcasts);
 
-			$wrapper->image( 'logo', array(
-				'label'        => __( 'Logo', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description'  => __( 'JPEG or PNG.', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html'         => array( 'class' => 'regular-text' ),
-				'image_width'  => 300,
-				'image_height' => 300
-			) );
+        PodcastList::activate_network_scope();
+        $list = new PodcastList();
+        $list->update_attributes($_POST['podlove_list']);
+        PodcastList::deactivate_network_scope();
 
-			$wrapper->string( 'url', array(
-				'label'       => __( 'List URL', 'podlove-podcasting-plugin-for-wordpress' ),
-				'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' ),
-				'html' => array( 'class' => 'regular-text' )
-			) );
+        $this->redirect('index');
+    }
 
-			$wrapper->callback( 'podcasts', array(
-				'label'       => __( 'Podcasts', 'podlove-podcasting-plugin-for-wordpress' ),
-				'callback'	  => function() use ( $list ) {
-					$form_base_name = "podlove_list";
-					?>
+    /**
+     * Process form: delete a list.
+     */
+    private function delete()
+    {
+        if (!isset($_REQUEST['list'])) {
+            return;
+        }
+
+        PodcastList::activate_network_scope();
+        PodcastList::find_by_id($_REQUEST['list'])->delete();
+        PodcastList::deactivate_network_scope();
+
+        $this->redirect('index');
+    }
+
+    /**
+     * Helper method: redirect to a certain page.
+     *
+     * @param mixed      $action
+     * @param null|mixed $list_id
+     */
+    private function redirect($action, $list_id = null)
+    {
+        $page = 'network/admin.php?page='.self::MENU_SLUG;
+        $show = ($list_id) ? '&list='.$list_id : '';
+        $action = '&action='.$action;
+
+        wp_redirect(admin_url($page.$show.$action));
+        exit;
+    }
+
+    private function view_template()
+    {
+        echo __('If you have configured a <a href="http://codex.wordpress.org/Create_A_Network">
+				WordPress Network</a>, Podlove allows you to configure Podcast lists.', 'podlove-podcasting-plugin-for-wordpress');
+        $table = new \Podlove\Modules\Networks\PodcastList_List_Table();
+        $table->prepare_items();
+        $table->display();
+    }
+
+    private function new_template()
+    {
+        PodcastList::activate_network_scope();
+        $list = new PodcastList(); ?>
+		<h3><?php echo __('Add New list', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
+		<?php
+        $this->form_template($list, 'create', __('Add New list', 'podlove-podcasting-plugin-for-wordpress'));
+        PodcastList::deactivate_network_scope();
+    }
+
+    private function edit_template()
+    {
+        PodcastList::activate_network_scope();
+        $list = PodcastList::find_by_id($_REQUEST['list']);
+        echo '<h3>'.sprintf(__('Edit list: %s', 'podlove-podcasting-plugin-for-wordpress'), $list->title).'</h3>';
+        $this->form_template($list, 'save');
+        PodcastList::deactivate_network_scope();
+    }
+
+    private function form_template($list, $action, $button_text = null)
+    {
+        $form_args = [
+            'context' => 'podlove_list',
+            'hidden' => [
+                'list' => $list->id,
+                'action' => $action,
+            ],
+        ];
+
+        \Podlove\Form\build_for($list, $form_args, function ($form) {
+            $wrapper = new \Podlove\Form\Input\TableWrapper($form);
+
+            $list = $form->object;
+
+            $wrapper->string('slug', [
+                'label' => __('ID', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text required'],
+                'description' => sprintf(__('For referencing in templates: %s', 'podlove-podcasting-plugin-for-wordpress'), '<code>{{ network.lists({id: "example"}).title }}</code>'),
+            ]);
+
+            $wrapper->string('title', [
+                'label' => __('Title', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text required'],
+            ]);
+
+            $wrapper->string('subtitle', [
+                'label' => __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text'],
+            ]);
+
+            $wrapper->text('description', [
+                'label' => __('Summary', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['rows' => 3, 'cols' => 40],
+            ]);
+
+            $wrapper->image('logo', [
+                'label' => __('Logo', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('JPEG or PNG.', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text'],
+                'image_width' => 300,
+                'image_height' => 300,
+            ]);
+
+            $wrapper->string('url', [
+                'label' => __('List URL', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text'],
+            ]);
+
+            $wrapper->callback('podcasts', [
+                'label' => __('Podcasts', 'podlove-podcasting-plugin-for-wordpress'),
+                'callback' => function () use ($list) {
+                    $form_base_name = 'podlove_list'; ?>
 					<div id="podcast_lists">
 						<table class="podlove_alternating" border="0" cellspacing="0">
 							<thead>
 								<tr>
-									<th><?php echo __('Source', 'podlove-podcasting-plugin-for-wordpress') ?></th>
-									<th><?php echo __('Podcast/URL', 'podlove-podcasting-plugin-for-wordpress') ?></th>
-									<th style="width: 60px"><?php echo __('Remove', 'podlove-podcasting-plugin-for-wordpress') ?></th>
+									<th><?php echo __('Source', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+									<th><?php echo __('Podcast/URL', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
+									<th style="width: 60px"><?php echo __('Remove', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 									<th style="width: 30px"></th>
 								</tr>
 							</thead>
 							<tbody class="podcasts_table_body" style="min-height: 50px;">
 								<tr class="podcasts_table_body_placeholder" style="display: none;">
-									<td><em><?php echo __('No Podcasts were added yet.', 'podlove-podcasting-plugin-for-wordpress') ?></em></td>
+									<td><em><?php echo __('No Podcasts were added yet.', 'podlove-podcasting-plugin-for-wordpress'); ?></em></td>
 								</tr>
 							</tbody>
 						</table>
@@ -227,8 +286,8 @@ class PodcastLists {
 						<script type="text/template" id="podcast-row-template">
 						<tr class="media_file_row podlove-podcast-table" data-id="{{id}}">
 							<td class="podlove-podcast-column">
-								<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
-									<option value="wplist" selected><?php echo __('WordPress Network', 'podlove-podcasting-plugin-for-wordpress') ?></option>
+								<select name="<?php echo $form_base_name; ?>[podcasts][{{id}}][type]" class="podlove-podcast-dropdown">
+									<option value="wplist" selected><?php echo __('WordPress Network', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 								</select>
 							</td>
 							<td class="podlove-podcast-value"></td>
@@ -241,14 +300,14 @@ class PodcastLists {
 						</tr>
 						</script>
 						<script type="text/template" id="podcast-select-type-wplist">
-						<select name="<?php echo $form_base_name ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
-							<option>— <?php echo __('Select Podcast', 'podlove-podcasting-plugin-for-wordpress') ?> —</option>
+						<select name="<?php echo $form_base_name; ?>[podcasts][{{id}}][podcast]" class="podlove-podcast chosen-image">
+							<option>— <?php echo __('Select Podcast', 'podlove-podcasting-plugin-for-wordpress'); ?> —</option>
 							<?php
-								foreach ( Network::podcasts() as $blog_id => $podcast ) {
-									if ( $podcast->title )
-										printf( "<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_art()->setWidth(45)->url() ,$podcast->title );
-								}
-							?>
+                                foreach (Network::podcasts() as $blog_id => $podcast) {
+                                    if ($podcast->title) {
+                                        printf("<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_art()->setWidth(45)->url(), $podcast->title);
+                                    }
+                                } ?>
 						</select>
 						</script>
 					</div>
@@ -259,7 +318,7 @@ class PodcastLists {
 
 						(function($) {
 							var i = 0;
-							var existing_podcasts = <?php echo ( is_null( $list->podcasts ) ? "[]" : $list->podcasts ); ?>;
+							var existing_podcasts = <?php echo is_null($list->podcasts) ? '[]' : $list->podcasts; ?>;
 							var podcasts = [];
 
 							function update_chosen() {
@@ -338,47 +397,9 @@ class PodcastLists {
 						}(jQuery));
 
 					</script>
-					<?php	
-				}
-			) );
-
-		} );
-	}
-
-	function page() {
-		if ( isset($_GET["action"]) AND $_GET["action"] == 'confirm_delete' AND isset( $_REQUEST['list'] ) ) {
-			 PodcastList::activate_network_scope();
-			 $list = PodcastList::find_by_id( $_REQUEST['list'] );
-			 PodcastList::deactivate_network_scope();
-			?>
-			<div class="updated">
-				<p>
-					<strong>
-						<?php echo sprintf( __( 'You selected to delete the list "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress' ), $list->title ) ?>
-					</strong>
-				</p>
-				<p>
-					<?php echo self::get_action_link( $list, __( 'Delete list permanently', 'podlove-podcasting-plugin-for-wordpress' ), 'delete', 'button' ) ?>
-					<?php echo self::get_action_link( $list, __( 'Don\'t change anything', 'podlove-podcasting-plugin-for-wordpress' ), 'keep', 'button-primary' ) ?>
-				</p>
-			</div>
-			<?php
-		}
-		?>
-		<div class="wrap">
-			<h2><?php echo __( 'Lists', 'podlove-podcasting-plugin-for-wordpress' ); ?> <a href="?page=<?php echo self::MENU_SLUG ?>&amp;action=new" class="add-new-h2"><?php echo __( 'Add New', 'podlove-podcasting-plugin-for-wordpress' ); ?></a></h2>
-			<?php
-				if(isset($_GET["action"])) {
-					switch ( $_GET["action"] ) {
-						case 'new':   $this->new_template();  break;
-						case 'edit':  $this->edit_template(); break;
-						default:      $this->view_template(); break;
-					}
-				} else {
-					$this->view_template();
-				}
-			?>
-		</div>	
-		<?php
-	}
+					<?php
+                },
+            ]);
+        });
+    }
 }

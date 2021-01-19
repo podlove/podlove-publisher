@@ -6,13 +6,6 @@
   logo: '500px.png'
   url_scheme: 'https://500px.com/%account-placeholder%'
 
-- title: 'App.net'
-  name: 'app.net'
-  category: 'social'
-  description: 'App.net Account'
-  logo: 'adn.png'
-  url_scheme: 'https://alpha.app.net/%account-placeholder%'
-
 - title: 'Bandcamp'
   name: 'bandcamp'
   category: 'social'
@@ -307,6 +300,30 @@
   logo: 'amazonwishlist.png'
   url_scheme: '%account-placeholder%'
 
+- title: 'Amazon'
+  name: 'amazon'
+  category: 'internal'
+  logo: 'amazon.svg'
+  url_scheme: 'https://www.amazon.de'
+
+- title: 'Amazon'
+  name: 'amazon'
+  category: 'internal'
+  logo: 'amazon.svg'
+  url_scheme: 'https://www.amazon.com'
+
+- title: 'Wikipedia'
+  name: 'wikipedia'
+  category: 'internal'
+  logo: 'wikipedia.svg'
+  url_scheme: 'https://de.wikipedia.org'
+
+- title: 'Wikipedia'
+  name: 'wikipedia'
+  category: 'internal'
+  logo: 'wikipedia.svg'
+  url_scheme: 'https://en.wikipedia.org'
+
 - title: 'Bitcoin'
   name: 'bitcoin'
   category: 'donation'
@@ -419,6 +436,13 @@
   logo: 'patreon.png'
   url_scheme: 'https://www.patreon.com/%account-placeholder%'
 
+- title: 'Steady'
+  name: 'steady'
+  category: 'donation'
+  description: 'Steady'
+  logo: 'steady.png'
+  url_scheme: 'https://steadyhq.com/%account-placeholder%'
+
 - title: 'Scopus'
   name: 'scopus'
   category: 'social'
@@ -439,4 +463,10 @@
   description: 'Letterboxd Username'
   logo: 'letterboxd.png'
   url_scheme: 'https://letterboxd.com/%account-placeholder%'
-  
+
+- title: 'Untappd'
+  name: 'untappd'
+  category: 'social'
+  description: 'Untappd Username'
+  logo: 'untappd.png'
+  url_scheme: 'https://untappd.com/user/%account-placeholder%'

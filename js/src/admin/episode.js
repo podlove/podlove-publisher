@@ -126,9 +126,9 @@ var PODLOVE = PODLOVE || {};
 	 					$row.find(".status").html('<i class="podlove-icon-remove"></i>');
 	 				} else {
 	 					if (isNumber(size)) {
-		 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + (size_bytes_human ? size_bytes_human : size) + ' Bytes</span>';	
+		 					size_html = '<span style="color:#0a0b0b" title="' + readable_size + '">' + (size_bytes_human ? size_bytes_human : size) + ' Bytes</span>';
 	 					} else {
-	 						size_html = '<span>' + size + '</span>';	
+	 						size_html = '<span>' + size + '</span>';
 	 					}
 	 					$row.find(".status").html('<i class="podlove-icon-ok"></i>');
 	 				}
@@ -278,7 +278,7 @@ var PODLOVE = PODLOVE || {};
 		})();
 
 		$.subscribe("/auphonic/production/status/results_imported", function(e, production) {
-			o.slug_field.trigger('slugHasChanged');
+			o.slug_field.trigger('slugHasChanged').data("auto-update", false);
 		});
 
 		var title_input = $("#titlewrap input");
@@ -322,4 +322,3 @@ var PODLOVE = PODLOVE || {};
 
 	}
 }(jQuery));
-

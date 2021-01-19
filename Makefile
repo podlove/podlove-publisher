@@ -1,6 +1,21 @@
 player_src = bower_components/podlove-web-player/dist
 player_dst = lib/modules/podlove_web_player/player_v3
 
+prepareTest:
+	bash bin/install-wp-tests.sh wordpress_test root '' localhost latest
+
+test:
+	./vendor/bin/phpunit -c phpunit.xml
+
+release:
+	bin/release.sh
+
+format:
+	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style"
+
+validateFormat:
+	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style" -v --dry-run --stop-on-violation --using-cache=no
+
 update_subscribe_button:
 	rm -rf .tmppsb
 	git clone https://github.com/podlove/podlove-subscribe-button.git .tmppsb
@@ -20,8 +35,24 @@ player:
 	cp -r $(player_src)/js/*.min.js $(player_dst)/js
 	cp -r $(player_src)/js/vendor/*.min.js $(player_dst)/js/vendor
 
+composer_with_prefixing:
+	mkdir -p vendor-prefixed
+	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
+	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
+	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
+
+install_php_scoper:
+	mkdir -p vendor-prefixed
+	composer require --dev bamarni/composer-bin-plugin
+	composer bin php-scoper config minimum-stability dev
+	composer bin php-scoper config prefer-stable true
+	composer bin php-scoper require --dev humbug/php-scoper
+
 build:
-	composer install --no-dev -o
+	mkdir -p vendor-prefixed
+	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
+	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
+	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	npm install
 	npm run production
 	rm -rf dist
@@ -34,6 +65,7 @@ build:
 	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-772x250.png
 	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-1544x500.png
 	rm -rf dist/tests
+	rm -rf dist/vendor-bin
 	rm -rf dist/vendor/bin
 	rm -rf dist/vendor/phpunit/php-code-coverage
 	rm -rf dist/vendor/phpunit/phpunit
@@ -51,8 +83,24 @@ build:
 	rm -f dist/README.md
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
+	find dist -name "*.swp" | xargs rm -rf
 	# find dist/vendor -type d -iname "test" | xargs rm -rf
 	# find dist/vendor -type d -iname "tests" | xargs rm -rf
 	# player v2 / mediaelement
 	find dist -iname "echo-hereweare.*" | xargs rm -rf
 	find dist -iname "*.jar" | xargs rm -rf
+
+install:
+	rm -rf node_modules
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn
+	docker run --rm --interactive --tty --volume ${PWD}:/app composer install
+
+dev:
+	docker-compose -f .build/docker-compose.yaml up -d
+	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn dev
+
+stop:
+	docker-compose -f .build/docker-compose.yaml down
+
+format:
+	docker run --rm --user $(id -u):$(id -g) --volume ${PWD}:/data cytopia/php-cs-fixer fix .

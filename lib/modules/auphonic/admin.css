@@ -44,7 +44,16 @@
 }
 
 #auphonic-production-status {
-	display: none;
+    display: none;
+}
+
+#auphonic-production-warning {
+    /* display:none; */
+    display: flex;
+    max-width: 450px;
+    margin: 14px auto;
+    text-align: center;
+    color: #c0392b;
 }
 
 .status-error { color: #c0392b; }

@@ -7,6 +7,7 @@ wprelease.yml
 composer.phar
 node_modules/*
 vendor/*
+vendor-*/*
 test/config.yml
 bower_components
 doc
@@ -16,3 +17,6 @@ mix-manifest.json
 *.log
 .vscode
 js/dist
+lib/modules/podlove_web_player/player_v2/
+.php_cs.cache
+.build/wp*
