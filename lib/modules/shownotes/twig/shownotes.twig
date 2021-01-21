@@ -1,16 +1,6 @@
 {% if is_feed() %}
 
-	<ul>
-		{% for entry in episode.shownotes %}
-			<li class="psn-entry">
-				{% if entry.type == "link" %}
-					<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
-				{% elseif entry.type == "topic" %}
-					<strong>{{ entry.title }}</strong>
-				{% endif %}
-			</li>
-		{% endfor %}
-	</ul>
+	{% include '@shownotes/plain-html-list.twig' %}
 
 {% else %}
 
@@ -40,7 +30,7 @@
 					{% if entry.icon %}
 						<img class="psn-icon" src="{{ entry.icon }}"/>
 					{% endif %}
-					<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+					<a class="psn-link" href="{{ entry.url }}">{{ entry.title ? entry.title : entry.url }}</a>
 				{% elseif entry.type == "topic" %}
 					<strong>{{ entry.title }}</strong>
 				{% endif %}

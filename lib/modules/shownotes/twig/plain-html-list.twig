@@ -1,0 +1,11 @@
+<ul>
+	{% for entry in episode.shownotes %}
+		<li>
+			{% if entry.type == "link" %}
+				<a href="{{ entry.url }}">{{ entry.title ? entry.title : entry.url }}</a>
+			{% elseif entry.type == "topic" %}
+				<strong>{{ entry.title }}</strong>
+			{% endif %}
+		</li>
+	{% endfor %}
+</ul>
