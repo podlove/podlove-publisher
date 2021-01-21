@@ -305,7 +305,7 @@ class REST_API
 
         $url = $entry->original_url;
 
-        $unfurl_endpoint = 'http://unfurl.eric.co.de/unfurl';
+        $unfurl_endpoint = 'https://plus.podlove.org/api/unfurl';
         $curl = new Curl();
         $curl->request(add_query_arg('url', urlencode($url), $unfurl_endpoint), [
             'headers' => ['Content-type' => 'application/json'],
