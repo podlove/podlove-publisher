@@ -19,10 +19,12 @@ class TwigLoaderPodloveDatabase implements Twig\Loader\LoaderInterface
     public function getSourceContext($name)
     {
         if ($template = Model\Template::find_one_by_title_with_fallback($name)) {
-            return new Twig\Source($template->content, $name, '');
+            if ($template->content) {
+                return new Twig\Source($template->content, $name, '');
+            }
         }
 
-        return false;
+        throw new \PodlovePublisher_Vendor\Twig\Error\LoaderError(\sprintf('Unable to find the following template: "%s".', $name));
     }
 
     public function exists($name)
