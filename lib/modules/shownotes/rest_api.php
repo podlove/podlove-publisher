@@ -390,6 +390,10 @@ class REST_API
             return $entry;
         }
 
+        if (isset($request['original_url'])) {
+            $entry->original_url = $request['original_url'];
+        }
+
         if (isset($request['title'])) {
             $entry->title = $request['title'];
         }

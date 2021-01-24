@@ -133,9 +133,11 @@
     </div>
     <div class="edit-section-footer p-card-body failed" v-else-if="entry.state == 'failed'">
       <div class="main">
+
         <div class="unfurl-error-title">
           Unable to access URL: <a :href="entry.original_url" target="_blank">{{ entry.original_url }}</a>
         </div>
+
         <div class="unfurl-error-message" v-if="error_message">{{ error_message }}</div>
         <div class="unfurl-error-location-trace" v-if="trace_locations && trace_locations.length > 0">
           <strong>Location Trace:</strong>
@@ -143,6 +145,23 @@
             <li v-for="(location, index) in trace_locations" :key="location">{{ index }}: {{ location }}</li>
           </ul>
         </div>
+
+        <div class="edit-section">
+            <label>
+                <span>Original URL</span>
+                <input type="text" placeholder="Original URL" name="original_url"
+                    @keydown.enter.prevent="saveOriginalUrl()"
+                    @keydown.esc="edit = false"
+                    v-model="entry.original_url"/>
+            </label>
+        </div>
+
+        <div class="edit-section edit-actions">
+        <div>
+            <a href="#" class="button" @click.prevent="saveOriginalUrl()">Save and Unfurl</a>
+        </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -247,6 +266,28 @@ export default {
           payload
         )
         .done(result => {})
+        .fail(({ responseJSON }) => {
+          console.error("could not save entry:", responseJSON.message);
+        });
+    },
+    saveOriginalUrl: function() {
+      this.$parent.$emit("update:entry", this.entry);
+
+      let payload = {};
+
+      payload.original_url = this.entry.original_url;
+      payload.url = this.entry.url;
+      payload.title = this.entry.title;
+      payload.description = this.entry.description;
+
+      jQuery
+        .post(
+          podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
+          payload
+        )
+        .done(result => {
+            this.unfurl()
+        })
         .fail(({ responseJSON }) => {
           console.error("could not save entry:", responseJSON.message);
         });
