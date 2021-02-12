@@ -460,6 +460,10 @@ class REST_API
             if (isset($request['data']['unix_date'])) {
                 $entry->created_at = intval($request['data']['unix_date']) / 1000;
             }
+
+            if (isset($request['data']['orderNumber'])) {
+                $entry->position = intval($request['data']['orderNumber']) / 1000;
+            }
         }
 
         foreach (Entry::property_names() as $property) {
@@ -467,8 +471,11 @@ class REST_API
                 $entry->{$property} = $request[$property];
             }
         }
+
         // fixme: there is probably a race condition here when adding multiple episodes at once
-        $entry->position = Entry::get_new_position_for_episode($episode->id);
+        if (!$entry->position) {
+            $entry->position = Entry::get_new_position_for_episode($episode->id);
+        }
         $entry->episode_id = $episode->id;
 
         if (!$entry->type) {
