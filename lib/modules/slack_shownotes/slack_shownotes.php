@@ -24,16 +24,19 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         register_rest_route('podlove/v1', 'slacknotes/channels', [
             'methods' => 'GET',
             'callback' => [$this, 'api_get_channels'],
+            'permission_callback' => [$this, 'permission_check'],
         ]);
 
         register_rest_route('podlove/v1', 'slacknotes/resolve_url', [
             'methods' => 'GET',
             'callback' => [$this, 'api_resolve_url'],
+            'permission_callback' => [$this, 'permission_check'],
         ]);
 
         register_rest_route('podlove/v1', 'slacknotes/(?P<channel>[a-zA-Z0-9]+)/messages', [
             'methods' => 'GET',
             'callback' => [$this, 'api_get_messages'],
+            'permission_callback' => [$this, 'permission_check'],
         ]);
     }
 
@@ -240,5 +243,14 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         }
 
         return $response;
+    }
+
+    public function permission_check()
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \WP_Error('rest_forbidden', 'sorry, you do not have permissions to use this REST API endpoint', ['status' => 401]);
+        }
+
+        return true;
     }
 }
