@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * API: add missing permission callbacks
   * fix: keep order when importing via slacknotes
 * slacknotes: update to new API
+* change donation URL to https://opencollective.com/podlove
 
 = 2020-12-05 =
 

@@ -15,7 +15,7 @@
 		<a href="<?php echo admin_url('admin.php?page=podlove_Support_settings_handle'); ?>"><?php _e('Report Bugs', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
-		<a href="//podlove.org/donations/" target="_blank"><?php _e('Donate', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+		<a href="https://opencollective.com/podlove" target="_blank"><?php _e('Donate', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
 		<a href="http://www.cornify.com" onclick="cornify_add();return false;" style="text-decoration: none; color: #A7A7A7; font-size: 20px; line-height: 20px;"><i class="podlove-icon-heart"></i></a>
