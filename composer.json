@@ -15,7 +15,7 @@
         "podlove/webvtt-parser": "^1.1.4",
         "geertw/ip-anonymizer": "^1.1",
         "dariuszp/cli-progress-bar": "^1.0",
-        "league/csv": "^8.2"
+        "league/csv": "9.5.0"
     },
     "require-dev": {
         "pear/pear_exception": "1.0.*@dev",

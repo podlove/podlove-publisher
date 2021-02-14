@@ -470,7 +470,6 @@ class Ajax
         $data = \Podlove\Downloads_List_Data::get_data('post_date', 'asc');
 
         $writer = Writer::createFromFileObject(new \SplTempFileObject()); //the CSV file will be created into a temporary File
-        $writer->setEncodingFrom('utf-8');
 
         $headers = array_keys($data[0]);
         $writer->insertOne($headers);
