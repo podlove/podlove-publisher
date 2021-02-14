@@ -17,6 +17,7 @@ class RSS
             echo 'xmlns:psc="http://podlove.org/simple-chapters" ';
             echo 'xmlns:content="http://purl.org/rss/1.0/modules/content/" ';
             echo 'xmlns:fh="http://purl.org/syndication/history/1.0" ';
+            echo 'xmlns:podcast="https://podcastindex.org/namespace/1.0" ';
         });
 
         $podcast = Model\Podcast::get();
@@ -164,6 +165,7 @@ class RSS
         if ($template = get_404_template()) {
             include $template;
         }
+
         exit;
     }
 

@@ -108,8 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2021-02-14 =
 
+* add support for feed tag [`podcast:funding`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) (see Podcast Settings -> Directory)
 * unfurl uses https://plus.podlove.org/api/unfurl as API endpoint
-* fix: handle missing templates in TwigLoaderPodloveDatabase
 * shownotes:
   * add shortcode `[podlove-episode-shownotes]`
   * display links even if unfurling failed
@@ -120,6 +120,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * fix: keep order when importing via slacknotes
 * slacknotes: update to new API
 * change donation URL to https://opencollective.com/podlove
+* fix: handle missing templates in TwigLoaderPodloveDatabase
 
 = 2020-12-05 =
 
