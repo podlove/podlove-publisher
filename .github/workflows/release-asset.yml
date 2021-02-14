@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build project
         with:
           php-version: '7.0'
+      - name: Build project
         env:
           TAG_NAME: ${{ github.ref }}
         run: |
