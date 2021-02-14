@@ -106,6 +106,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-02-14 =
+
+* unfurl uses https://plus.podlove.org/api/unfurl as API endpoint
+* fix: handle missing templates in TwigLoaderPodloveDatabase
+* shownotes:
+  * add shortcode `[podlove-episode-shownotes]`
+  * display links even if unfurling failed
+  * template improvements
+  * add "delete all" button
+  * polished failure section UI and allow editing original URL
+  * API: add missing permission callbacks
+  * fix: keep order when importing via slacknotes
+* slacknotes: update to new API
+
 = 2020-12-05 =
 
 * fix: coverart url encoding [#1181](https://github.com/podlove/podlove-publisher/pull/1181)
