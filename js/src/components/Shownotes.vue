@@ -145,6 +145,15 @@
           >
             Import from Episode HTML
           </button>
+
+          <button
+            type="button"
+            class="button delete-button"
+            @click.prevent="deleteAllEntries"
+            v-if="mode != 'create'"
+          >
+            Delete all
+          </button>
         </div>
       </div>
     </div>
@@ -303,6 +312,18 @@ export default {
         .fail(({ responseJSON }) => {
           console.error("could not import html:", responseJSON.message);
         });
+    },
+    deleteAllEntries: function () {
+        if (window.confirm("Permanently delete all shownotes entries?")) {
+      this.shownotes.forEach((entry) =>
+        jQuery.ajax({
+          url: podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id,
+          method: "DELETE",
+          dataType: "json",
+        })
+      );
+      this.shownotes = [];
+        }
     },
     init: function () {
       $.getJSON(
