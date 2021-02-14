@@ -3,7 +3,7 @@
  * Plugin Name: Podlove Podcast Publisher
  * Plugin URI:  http://publisher.podlove.org
  * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
- * Version: 3.2.2-beta9
+ * Version: 3.2.2-beta10
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT
