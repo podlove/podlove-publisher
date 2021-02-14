@@ -129,7 +129,7 @@ class Slack_Shownotes extends \Podlove\Modules\Base
 
     public function get_messages($channel_id, $date_from, $date_to)
     {
-        $api_url = 'https://slack.com/api/channels.history';
+        $api_url = 'https://slack.com/api/conversations.history';
 
         $api_args = ['channel' => $channel_id];
 
@@ -139,7 +139,7 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         }
 
         // todo: use has_more field for paging
-        $api_args['count'] = 1000;
+        $api_args['limit'] = 1000;
 
         $url = add_query_arg($api_args, $api_url);
 
