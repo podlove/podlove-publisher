@@ -25,7 +25,7 @@ class Migration extends \Podlove\Modules\Base
             return;
         } ?>
 			<div id="podlove_welcome">
-				<h3>
+                <h3 style="color: white">
 					<?php echo __('This is the Podlove Publisher. Welcome!', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</h3>
 				<p>
