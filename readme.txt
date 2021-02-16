@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * add support for feed tag [`podcast:funding`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) (see Podcast Settings -> Directory)
 * unfurl uses https://plus.podlove.org/api/unfurl as API endpoint
+* add banner linking to donations page (can be dismissed)
 * shownotes:
   * add shortcode `[podlove-episode-shownotes]`
   * display links even if unfurling failed
