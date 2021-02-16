@@ -24,7 +24,7 @@ function podlove_donation_banner()
         return;
     }
 
-    include 'donation_banner.html';
+    include 'donation_banner.html.php';
 }
 
 function podlove_donation_banner_hide()
