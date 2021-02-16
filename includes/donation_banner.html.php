@@ -23,6 +23,10 @@
             padding-left: 1.5rem;
             padding-right: 1.5rem;
         }
+
+        .sm\:h-72 {
+            height: 18rem;
+        }
     }
 
     @media (min-width: 768px) {
@@ -73,7 +77,8 @@
     });
 </script>
 
-<div id="podlove_donation" class="relative bg-gray-800" style="position: relative; background-color: rgba(31, 41, 55, 1); margin-top: 2.5rem; max-width: 1330px;">
+<div style="position:relative; margin-top: 60px; margin-right: 10px; box-sizing: border-box;">
+<div id="podlove_donation" class="relative bg-gray-800" style="position: relative; background-color: rgba(31, 41, 55, 1); max-width: 1330px;">
     <div class="h-56 bg-indigo-600 sm:h-72 md:absolute md:left-0 md:h-full md:w-1/2" style="background-color: rgba(37, 99, 235, 1);">
         <img class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover;" src="https://images.unsplash.com/photo-1585143790814-b40d4b829e4a?ixlib=rb-1.2.1&ixqx=59kQ8nWMu5&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1920&q=60&blend=6366F1&sat=-100&blend-mode=multiply" alt="">
     </div>
@@ -112,4 +117,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>
