@@ -80,7 +80,7 @@
 <div style="position:relative; margin-top: 60px; margin-right: 10px; box-sizing: border-box;">
 <div id="podlove_donation" class="relative bg-gray-800" style="position: relative; background-color: rgba(31, 41, 55, 1); max-width: 1330px;">
     <div class="h-56 bg-indigo-600 sm:h-72 md:absolute md:left-0 md:h-full md:w-1/2" style="background-color: rgba(37, 99, 235, 1);">
-        <img class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover;" src="https://images.unsplash.com/photo-1585143790814-b40d4b829e4a?ixlib=rb-1.2.1&ixqx=59kQ8nWMu5&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1920&q=60&blend=6366F1&sat=-100&blend-mode=multiply" alt="">
+        <img class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover;" src="<?php include 'donation_banner.img.src'; ?>" alt="">
     </div>
     <div class="relative max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16" style="position: relative; 	box-sizing: border-box;">
         <div class="md:ml-auto md:w-1/2 md:pl-10" style="box-sizing: border-box;">
