@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 5.2
 Tested up to: 5.6.1
 Requires PHP: 7.0
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,7 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 3.3.0 =
+= 3.3.0 / 3.3.1 =
 
 * add support for feed tag [`podcast:funding`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) (see Podcast Settings -> Directory)
 * unfurl uses https://plus.podlove.org/api/unfurl as API endpoint
