@@ -24,16 +24,19 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         register_rest_route('podlove/v1', 'slacknotes/channels', [
             'methods' => 'GET',
             'callback' => [$this, 'api_get_channels'],
+            'permission_callback' => [$this, 'permission_check'],
         ]);
 
         register_rest_route('podlove/v1', 'slacknotes/resolve_url', [
             'methods' => 'GET',
             'callback' => [$this, 'api_resolve_url'],
+            'permission_callback' => [$this, 'permission_check'],
         ]);
 
         register_rest_route('podlove/v1', 'slacknotes/(?P<channel>[a-zA-Z0-9]+)/messages', [
             'methods' => 'GET',
             'callback' => [$this, 'api_get_messages'],
+            'permission_callback' => [$this, 'permission_check'],
         ]);
     }
 
@@ -126,7 +129,7 @@ class Slack_Shownotes extends \Podlove\Modules\Base
 
     public function get_messages($channel_id, $date_from, $date_to)
     {
-        $api_url = 'https://slack.com/api/channels.history';
+        $api_url = 'https://slack.com/api/conversations.history';
 
         $api_args = ['channel' => $channel_id];
 
@@ -136,7 +139,7 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         }
 
         // todo: use has_more field for paging
-        $api_args['count'] = 1000;
+        $api_args['limit'] = 1000;
 
         $url = add_query_arg($api_args, $api_url);
 
@@ -240,5 +243,14 @@ class Slack_Shownotes extends \Podlove\Modules\Base
         }
 
         return $response;
+    }
+
+    public function permission_check()
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \WP_Error('rest_forbidden', 'sorry, you do not have permissions to use this REST API endpoint', ['status' => 401]);
+        }
+
+        return true;
     }
 }

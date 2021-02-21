@@ -3,9 +3,9 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 5.2
-Tested up to: 5.6.0
+Tested up to: 5.6.1
 Requires PHP: 7.0
-Stable tag: 3.2.2
+Stable tag: 3.3.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -105,6 +105,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.3.0 =
+
+* add support for feed tag [`podcast:funding`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) (see Podcast Settings -> Directory)
+* unfurl uses https://plus.podlove.org/api/unfurl as API endpoint
+* add banner linking to donations page (can be dismissed)
+* shownotes:
+  * add shortcode `[podlove-episode-shownotes]`
+  * display links even if unfurling failed
+  * template improvements
+  * add "delete all" button
+  * polished failure section UI and allow editing original URL
+  * API: add missing permission callbacks
+  * fix: keep order when importing via slacknotes
+* slacknotes: update to new API
+* change donation URL to https://opencollective.com/podlove
+* fix: handle missing templates in TwigLoaderPodloveDatabase
 
 = 3.2.2 =
 

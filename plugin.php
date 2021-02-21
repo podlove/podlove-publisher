@@ -224,6 +224,7 @@ require_once \Podlove\PLUGIN_DIR.'includes/chapters.php';
 require_once \Podlove\PLUGIN_DIR.'includes/cover_art.php';
 require_once \Podlove\PLUGIN_DIR.'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR.'includes/detect_duplicate_slugs.php';
+require_once \Podlove\PLUGIN_DIR.'includes/donation_banner.php';
 require_once \Podlove\PLUGIN_DIR.'includes/downloads.php';
 require_once \Podlove\PLUGIN_DIR.'includes/episode_number_column.php';
 require_once \Podlove\PLUGIN_DIR.'includes/episode_number_quick_edit_form.php';

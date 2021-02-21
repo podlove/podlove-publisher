@@ -19,6 +19,14 @@ class Shownotes extends \Podlove\Modules\Base
         add_filter('podlove_shownotes_entry', [__CLASS__, 'apply_affiliate_to_shownotes_entry']);
         add_filter('podlove_shownotes_entry', [__CLASS__, 'encode_html']);
 
+        add_filter('podlove_twig_file_loader', function ($file_loader) {
+            $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'shownotes', 'twig']), 'shownotes');
+
+            return $file_loader;
+        });
+
+        add_shortcode('podlove-episode-shownotes', [$this, 'shownotes_shortcode']);
+
         \Podlove\Template\Episode::add_accessor(
             'shownotes',
             ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeShownotes'],
@@ -99,5 +107,14 @@ HTML;
         $entry->description = html_entity_decode($entry->description);
 
         return $entry;
+    }
+
+    public function shownotes_shortcode($attributes)
+    {
+        if (!is_array($attributes)) {
+            $attributes = [];
+        }
+
+        return \Podlove\Template\TwigFilter::apply_to_html('@shownotes/shownotes.twig', $attributes);
     }
 }

@@ -9,8 +9,12 @@ name: Beta Release
 jobs:
   build:
     name: Upload Release Asset
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build project

@@ -22,12 +22,12 @@ echo "----------"
 while true; do
     read -p "Correct & Continue?" yn
     case $yn in
-        [Yy]* ) 
+        [Yy]* )
           sed -i.bak "s/\(Version:\).*/\1 `echo $version | rev | cut -d/ -f1 | rev`/" $PLUGIN_FILE
           rm $PLUGIN_FILE.bak
           git add $PLUGIN_FILE
           git commit -m "release $version"
-          git tag -f -s $version -m $version
+          git tag -f $version -m $version
           break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;

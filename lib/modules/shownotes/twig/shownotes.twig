@@ -1,35 +1,29 @@
 {% if is_feed() %}
 
-	<ul>
-		{% for entry in episode.shownotes %}
-			<li class="psn-entry">
-				{% if entry.type == "link" %}
-					<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
-				{% elseif entry.type == "topic" %}
-					<strong>{{ entry.title }}</strong>
-				{% endif %}
-			</li>
-		{% endfor %}
-	</ul>
+	{% include '@shownotes/plain-html-list.twig' %}
 
 {% else %}
 
 	<style>
 		.psn-entry {
-			display: -webkit-box;
-			display: -ms-flexbox;
 			display: flex;
-			-webkit-box-align: center;
-			-ms-flex-align: center;
-			align-items: center;
+			align-items: start;
+			margin-bottom: 8px;
 		}
 		.psn-icon {
 			width: 16px;
 			height: 16px;
 			margin-right: 5px;
+			margin-top: 5px;
+			flex-shrink: 0;
+		}
+		.psn-icon-default {
+			background: rgb(209, 213, 219);
 		}
 		a.psn-link {
 			text-decoration: none !important;
+			font-size: 16px;
+			line-height: 24px;
 		}
 	</style>
 
@@ -39,8 +33,10 @@
 				{% if entry.type == "link" %}
 					{% if entry.icon %}
 						<img class="psn-icon" src="{{ entry.icon }}"/>
+					{% else %}
+						<div class="psn-icon psn-icon-default">&nbsp;</div>
 					{% endif %}
-					<a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+					<a class="psn-link" href="{{ entry.url }}">{{ entry.title ? entry.title : entry.url }}</a>
 				{% elseif entry.type == "topic" %}
 					<strong>{{ entry.title }}</strong>
 				{% endif %}

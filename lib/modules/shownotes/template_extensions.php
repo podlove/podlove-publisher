@@ -59,7 +59,7 @@ class TemplateExtensions
      */
     public static function accessorEpisodeShownotes($return, $method_name, \Podlove\Model\Episode $episode, $post, $args = [])
     {
-        return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $post, $args) {
+        return $episode->with_blog_scope(function () use ($episode, $args) {
             $defaults = [
                 'groupby' => false,
             ];
@@ -78,7 +78,8 @@ class TemplateExtensions
                 $has_manual_url = strlen($e->url) > 0;
                 $is_hidden = $e->hidden;
 
-                return !$e->hidden && (!$unfurl_failed || $has_manual_url);
+                // return !$e->hidden && (!$unfurl_failed || $has_manual_url);
+                return !$is_hidden;
             });
 
             usort($entries, function ($a, $b) {
@@ -147,7 +148,7 @@ class TemplateExtensions
      */
     public static function accessorEpisodeHasShownotes($return, $method_name, \Podlove\Model\Episode $episode)
     {
-        return $episode->with_blog_scope(function () use ($return, $method_name, $episode) {
+        return $episode->with_blog_scope(function () use ($episode) {
             return Model\Entry::has_shownotes($episode->id);
         });
     }

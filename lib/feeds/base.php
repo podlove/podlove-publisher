@@ -36,7 +36,7 @@ function override_feed_title($feed)
 
 function override_feed_description($feed)
 {
-    add_filter('podlove_rss_feed_description', function ($description) use ($feed) {
+    add_filter('podlove_rss_feed_description', function ($description) {
         $podcast = Model\Podcast::get();
 
         if ($podcast->subtitle) {
@@ -53,7 +53,7 @@ function override_feed_description($feed)
 
 function override_feed_language($feed)
 {
-    add_filter('pre_option_rss_language', function ($language) use ($feed) {
+    add_filter('pre_option_rss_language', function ($language) {
         $podcast = Model\Podcast::get();
 
         return apply_filters('podlove_feed_language', ($podcast->language) ? $podcast->language : $language);
@@ -126,6 +126,23 @@ function get_xml_itunesimage_node($url)
     return $doc->saveXML($node);
 }
 
+function get_xml_podcast_funding_node($url, $label)
+{
+    $doc = new \DOMDocument();
+    $node = $doc->createElement('podcast:funding');
+    $text = $doc->createTextNode($label);
+    $node->appendChild($text);
+
+    $attr = $doc->createAttribute('url');
+
+    // unexpected but true: ampersands are not escaped automatically here
+    $attr->value = esc_attr($url);
+
+    $node->appendChild($attr);
+
+    return $doc->saveXML($node);
+}
+
 function override_feed_head($hook, $podcast, $feed, $format)
 {
     add_filter('podlove_feed_content', '\Podlove\Feeds\prepare_for_feed');
@@ -137,6 +154,7 @@ function override_feed_head($hook, $podcast, $feed, $format)
                 $gen = '<generator>'.\Podlove\get_plugin_header('Name').' v'.\Podlove\get_plugin_header('Version').'</generator>';
 
                 break;
+
             case 'atom_head':
                 $gen = '<generator uri="'.\Podlove\get_plugin_header('PluginURI').'" version="'.\Podlove\get_plugin_header('Version').'">'.\Podlove\get_plugin_header('Name').'</generator>';
 
@@ -267,6 +285,11 @@ function override_feed_head($hook, $podcast, $feed, $format)
         if ($itunes_feed_id > 0) {
             $link_apple = sprintf('<atom:link rel="me" href="https://podcasts.apple.com/podcast/id%s" />', $itunes_feed_id);
             echo "\t".apply_filters('podlove_feed_link_apple', $link_apple);
+            echo PHP_EOL;
+        }
+
+        if ($podcast->funding_url) {
+            echo "\t".get_xml_podcast_funding_node($podcast->funding_url, $podcast->funding_label);
             echo PHP_EOL;
         }
 

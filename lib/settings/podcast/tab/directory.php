@@ -27,6 +27,8 @@ class Directory extends Tab
             'category_1',
             'explicit',
             'complete',
+            'funding_url',
+            'funding_label',
         ];
 
         $settings = get_option('podlove_podcast');
@@ -107,6 +109,18 @@ class Directory extends Tab
                 'label' => __('Podcast complete?', 'podlove-podcasting-plugin-for-wordpress'),
                 'description' => __('Shows that this Podcast is finished and no further episodes will be added.', 'podlove-podcasting-plugin-for-wordpress'),
                 'default' => false,
+            ]);
+
+            $wrapper->string('funding_url', [
+                'label' => __('Funding URL', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('Can be used by podcatchers show funding/donation links for the podcast.', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'],
+            ]);
+
+            $wrapper->string('funding_label', [
+                'label' => __('Funding Label', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('Label for funding/donation URL.', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text'],
             ]);
         });
     }
