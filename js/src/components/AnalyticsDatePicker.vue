@@ -132,9 +132,12 @@ export default {
 
     // because chart stuff is rendered 'on load'
     window.onload = () => {
-      this.broadcastRange(this.defaultRange);
+        // apparently too early, so give it a little time
+        window.setTimeout(
+            () => { this.broadcastRange(this.defaultRange); },
+            250
+        )
     };
   }
 };
 </script>
-

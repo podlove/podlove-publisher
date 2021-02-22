@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * fix: in analytics, the "Export as CSV" section is now clickable when global statistics are loading or have no data
 * fix: "Export as CSV" works again
+* fix: "global statistics" charts idling indefinitely until a custom date range is chosen
 
 = 2021-02-14 =
 
