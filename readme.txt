@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2021-02-22 =
 
 * fix: in analytics, the "Export as CSV" section is now clickable when global statistics are loading or have no data
+* fix: "Export as CSV" works again
 
 = 2021-02-14 =
 
