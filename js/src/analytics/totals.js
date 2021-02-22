@@ -649,8 +649,8 @@ jQuery(document).ready(function ($) {
 
         $.when(
             $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads' + '&date_from=' + from.toISOString() + '&date_to=' + to.toISOString())
-        ).done((downloads) => {
-            console.log({downloads});
+        ).done((downloadsCount) => {
+            console.log({downloadsCount});
         })
 
 		globalCharts.forEach(chart => {
