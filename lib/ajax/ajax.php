@@ -732,7 +732,7 @@ class Ajax
 				SELECT count(id)
 				FROM   '.Model\DownloadIntentClean::table_name().' di
 				WHERE  '.self::analytics_date_condition().'
-			', ARRAY_N);
+			');
 
             return (int) $downloads;
         });
