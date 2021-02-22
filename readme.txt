@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-02-22 =
+
+* fix: in analytics, the "Export as CSV" section is now clickable when global statistics are loading or have no data
+
 = 2021-02-14 =
 
 * add support for feed tag [`podcast:funding`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) (see Podcast Settings -> Directory)
