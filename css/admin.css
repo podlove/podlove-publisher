@@ -782,7 +782,7 @@ section.chart-wrapper div.chart-loading {
 	color: #666;
 }
 
-.chart-nodata ~ svg {
+.chart-nodata:visible ~ svg {
 	display: none;
 }
 
