@@ -54,7 +54,7 @@ function podlove_api_csv_response($data)
     header('Content-Disposition: attachment; filename=podlove-episode-downloads.csv');
 
     $csv = Writer::createFromFileObject(new \SplTempFileObject());
-    $csv->setEncodingFrom('utf-8');
+    // $csv->setEncodingFrom('utf-8');
 
     $headers = array_keys($data[0]);
     $csv->insertOne($headers);

@@ -647,6 +647,13 @@ jQuery(document).ready(function ($) {
 			to = new Date()
 		}
 
+        // disable until used
+        // $.when(
+        //     $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads' + '&date_from=' + from.toISOString() + '&date_to=' + to.toISOString())
+        // ).done((downloadsCount) => {
+        //     console.log({downloadsCount});
+        // })
+
 		globalCharts.forEach(chart => {
 			let chartLoading = $(chart.id + " .chart-loading")
 			let chartFailed = $(chart.id + " .chart-failed")

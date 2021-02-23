@@ -106,6 +106,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.3.2 =
+
+* fix: in analytics, the "Export as CSV" section is now clickable when global statistics are loading or have no data
+* fix: "Export as CSV" works again
+* fix: "global statistics" charts idling indefinitely until a custom date range is chosen
+
 = 3.3.0 / 3.3.1 =
 
 * add support for feed tag [`podcast:funding`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding) (see Podcast Settings -> Directory)
