@@ -639,20 +639,21 @@ jQuery(document).ready(function ($) {
 
 		let from, to;
 
+
 		if (date_range && date_range.length) {
-			from = date_range[0]
+            from = date_range[0]
 			to = date_range[1]
 		} else {
-			from = new Date(0)
+            from = new Date(0)
 			to = new Date()
 		}
 
-        // disable until used
-        // $.when(
-        //     $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads' + '&date_from=' + from.toISOString() + '&date_to=' + to.toISOString())
-        // ).done((downloadsCount) => {
-        //     console.log({downloadsCount});
-        // })
+        $.when(
+            $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads' + '&date_from=' + from.toDateString() + '&date_to=' + to.toDateString())
+        ).done((downloadsCount) => {
+            $("#analytics-global-downloads-value").html(downloadsCount);
+            $("#analytics-global-downloads").show();
+        })
 
 		globalCharts.forEach(chart => {
 			let chartLoading = $(chart.id + " .chart-loading")

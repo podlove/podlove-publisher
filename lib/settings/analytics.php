@@ -88,7 +88,8 @@ class Analytics
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Content-type: application/json');
         echo wp_json_encode($data);
-        die();
+
+        exit();
     }
 
     // needs to be initialized here so columns become configurable
@@ -214,11 +215,13 @@ if (Model\DownloadIntentClean::first() === null) {
             $this->blank_template();
         } else {
             $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+
             switch ($action) {
                 case 'show':
                     $this->show_template();
 
                     break;
+
                 case 'index':
                 default:
                     $this->view_template();
@@ -381,9 +384,20 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 			  </h2>
 				<div class="inside">
 
-					<div id="podlove-analytics-app">
+					<div id="podlove-analytics-app" style="display: flex; align-items: center;">
 						<analytics-date-picker></analytics-date-picker>
+
+                        <section id="analytics-global-downloads" style="display: none; display: flex; align-items: center; margin-left: 10px; ">
+                          <h1 class="analytics-description" style="padding: 0; order: 2">
+							<?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                        </h1>
+                        <div id="analytics-global-downloads-value" class="analytics-value" style="line-height: 27px; margin-right: 5px; order: 1">
+
+                        </div>
+                        </section>
+
 					</div>
+
 
 						<div style="float: none"></div>
 

@@ -734,7 +734,7 @@ class Ajax
 				WHERE  '.self::analytics_date_condition().'
 			');
 
-            return (int) $downloads;
+            return number_format_i18n($downloads);
         });
 
         exit;
@@ -901,8 +901,8 @@ class Ajax
             return '1 = 1';
         }
 
-        $from = new \DateTime($from);
-        $to = new \DateTime($to);
+        $from = (new \DateTime($from))->setTime(0, 0, 0);
+        $to = (new \DateTime($to))->setTime(23, 59, 59);
 
         if (!$from || !$to) {
             return '1 = 1';
