@@ -44,6 +44,27 @@ class Renderer
         return json_encode($this->get_data($mode));
     }
 
+    /**
+     * Render transcript as JSON according to podcastindex spec.
+     *
+     * @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/transcripts/transcripts.md#json
+     *
+     * @return string
+     */
+    public function as_podcastindex_json()
+    {
+        $data = array_map(function ($entry) {
+            return [
+                'speaker' => $entry['voice'],
+                'startTime' => $entry['start_ms'] / 1000,
+                'endTime' => $entry['end_ms'] / 1000,
+                'body' => $entry['text']
+            ];
+        }, $this->get_data());
+
+        return json_encode(['version' => '1.0.0', 'segments' => $data]);
+    }
+
     public function as_xml()
     {
         $xml = new \SimpleXMLElement(

@@ -55,6 +55,8 @@ class Transcripts extends \Podlove\Modules\Base
 
         add_action('rest_api_init', [$this, 'api_init']);
         add_action('admin_notices', [$this, 'check_contributors_active']);
+
+        $this->add_transcript_to_feed();
     }
 
     public function check_contributors_active()
@@ -106,7 +108,7 @@ class Transcripts extends \Podlove\Modules\Base
             'type' => 'callback',
             'key' => 'transcripts',
             'options' => [
-                'callback' => function () use ($episode) {
+                'callback' => function () {
                     $data = ''; ?>
 <div id="podlove-transcripts-app-data" style="display: none"><?php echo $data; ?></div>
 <div id="podlove-transcripts-app"><transcripts></transcripts></div>
@@ -333,7 +335,7 @@ class Transcripts extends \Podlove\Modules\Base
     public function serve_transcript_file()
     {
         $format = filter_input(INPUT_GET, 'podlove_transcript', FILTER_VALIDATE_REGEXP, [
-            'options' => ['regexp' => '/^(json_grouped|json|webvtt|xml)$/'],
+            'options' => ['regexp' => '/^(json_podcastindex|json_grouped|json|webvtt|xml)$/'],
         ]);
 
         if (!$format) {
@@ -363,17 +365,29 @@ class Transcripts extends \Podlove\Modules\Base
                 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
                 header('Content-Type: application/xml; charset=utf-8');
                 echo $renderer->as_xml();
+
                 exit;
 
                 break;
+
             case 'webvtt':
                 header('Cache-Control: no-cache, must-revalidate');
                 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
                 header('Content-Type: text/vtt');
                 echo $renderer->as_webvtt();
+
                 exit;
 
                 break;
+
+            case 'json_podcastindex':
+                header('Cache-Control: no-cache, must-revalidate');
+                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+                header('Content-type: application/json');
+                echo $renderer->as_podcastindex_json();
+
+                exit;
+
             case 'json':
             case 'json_grouped':
                 header('Cache-Control: no-cache, must-revalidate');
@@ -381,10 +395,30 @@ class Transcripts extends \Podlove\Modules\Base
                 header('Content-type: application/json');
                 $mode = ($format == 'json' ? 'flat' : 'grouped');
                 echo $renderer->as_json($mode);
+
                 exit;
 
                 break;
         }
+    }
+
+    public function add_transcript_to_feed()
+    {
+        add_action('podlove_append_to_feed_entry', function ($podcast, $episode, $feed, $format) {
+            if (Transcript::exists_for_episode($episode->id)) {
+                $url = add_query_arg('podlove_transcript', 'webvtt', get_permalink($episode->post_id));
+                $url = str_replace(home_url(), site_url(), $url);
+                echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="text/vtt" />';
+
+                $url = add_query_arg('podlove_transcript', 'json_podcastindex', get_permalink($episode->post_id));
+                $url = str_replace(home_url(), site_url(), $url);
+                echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/json" />';
+
+                $url = add_query_arg('podlove_transcript', 'xml', get_permalink($episode->post_id));
+                $url = str_replace(home_url(), site_url(), $url);
+                echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/xml" />';
+            }
+        }, 10, 4);
     }
 
     public function add_player_config($config, $episode)
