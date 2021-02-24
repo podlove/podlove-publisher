@@ -182,7 +182,12 @@ class DownloadIntentClean extends Base
     {
         global $wpdb;
 
-        $sql = 'SELECT SUM(meta_value) total FROM `'.$wpdb->postmeta.'` WHERE `meta_key` = "_podlove_downloads_total"';
+        $sql =
+       'SELECT SUM(meta_value) total
+          FROM `'.$wpdb->postmeta.'`
+         WHERE `meta_key` = "_podlove_downloads_total"
+           AND post_id IN (select id from `'.$wpdb->posts.'` where post_type = "podcast" and post_status IN (\'private\', \'draft\', \'publish\', \'pending\', \'future\'))
+        ';
 
         return $wpdb->get_var($sql);
     }
