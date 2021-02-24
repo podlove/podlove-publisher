@@ -182,11 +182,13 @@ class Contributors extends \Podlove\Modules\Base
         // Order by via attribute comperator
         if (isset($args['orderby'])) {
             $comperareFunc = null;
+
             switch (strtoupper($args['orderby'])) {
                 case 'COMMENT':
                     $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment';
 
                     break;
+
                 case 'POSITION':
                     $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition';
 
@@ -888,8 +890,13 @@ class Contributors extends \Podlove\Modules\Base
         $contributions = apply_filters('podlove_feed_contributions', $contributions, $feed);
 
         $contributor_xml = '';
+        // atom:contributor
         foreach ($contributions as $contribution) {
             $contributor_xml .= $this->getContributorXML($contribution['contributor']);
+        }
+        // podcast:person
+        foreach ($contributions as $contribution) {
+            $contributor_xml .= $this->getPodcastindexContributorXML($contribution['contributor'], $contribution['contribution']);
         }
 
         return $contributor_xml;
@@ -917,6 +924,68 @@ class Contributors extends \Podlove\Modules\Base
             }
 
             $dom->appendChild($xml);
+
+            $contributor_xml .= (string) $dom;
+        }
+
+        return $contributor_xml;
+    }
+
+    /**
+     * get contributor xml in podcastindex "person" format.
+     *
+     * @todo take first social URL and add it as href attribute
+     *
+     * @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person
+     *
+     * @param mixed $contributor
+     * @param mixed $contribution
+     */
+    private function getPodcastindexContributorXML($contributor, $contribution)
+    {
+        $contributor_xml = '';
+
+        if ($contributor->visibility == 1) {
+            $dom = new \Podlove\DomDocumentFragment();
+
+            $xml = $dom->createElement('podcast:person');
+
+            $name_text = $dom->createTextNode($contributor->getName());
+            $xml->appendChild($name_text);
+
+            $dom->appendChild($xml);
+
+            $xml->setAttribute('img', $contributor->avatar()->url());
+
+            // proof of concept for roles/groups
+            // next implementation should fully support all options
+            // @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/taxonomy.json
+            if ($role = $contribution->getRole()) {
+                $role_title = strtolower($role->title);
+
+                switch ($role_title) {
+                    case 'guest':
+                    case 'gast':
+                        $matching_role = 'guest';
+
+                        break;
+
+                    case 'host':
+                    case 'team':
+                        $matching_role = 'host';
+
+                        break;
+
+                    default:
+                        $matching_role = null;
+
+                        break;
+                }
+
+                if ($matching_role) {
+                    $xml->setAttribute('role', $matching_role);
+                }
+            }
 
             $contributor_xml .= (string) $dom;
         }
