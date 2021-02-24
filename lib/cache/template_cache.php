@@ -54,7 +54,7 @@ class TemplateCache
     /**
      * Singleton.
      *
-     * @return \Podlove\Model\AssetAssignment
+     * @return TemplateCache
      */
     public static function get_instance()
     {
