@@ -43,6 +43,7 @@ class Ajax
             'analytics-global-downloads-per-month',
             'analytics-global-top-episodes',
             'analytics-global-total-downloads',
+            'analytics-global-total-downloads-by-show',
             'analytics-csv-episodes-table',
             'episode-slug',
             'admin-news',
@@ -734,7 +735,26 @@ class Ajax
 				WHERE  '.self::analytics_date_condition().'
 			');
 
-            return (int) $downloads;
+            return number_format_i18n($downloads);
+        });
+
+        exit;
+    }
+
+    public static function analytics_global_total_downloads_by_show()
+    {
+        if (!current_user_can('podlove_read_analytics')) {
+            exit;
+        }
+
+        echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_show_downloads'.self::analytics_date_cache_key(), function () {
+            $downloads = \Podlove\Model\DownloadIntentClean::total_downloads_by_show(self::analytics_date_condition());
+
+            ob_start();
+
+            include 'ajax.analytics_global_total_downloads_by_show.html.php';
+
+            return ob_get_clean();
         });
 
         exit;
@@ -742,8 +762,6 @@ class Ajax
 
     public static function analytics_global_top_episodes()
     {
-        global $wpdb;
-
         if (!current_user_can('podlove_read_analytics')) {
             exit;
         }
@@ -901,8 +919,8 @@ class Ajax
             return '1 = 1';
         }
 
-        $from = new \DateTime($from);
-        $to = new \DateTime($to);
+        $from = (new \DateTime($from))->setTime(0, 0, 0);
+        $to = (new \DateTime($to))->setTime(23, 59, 59);
 
         if (!$from || !$to) {
             return '1 = 1';

@@ -656,19 +656,22 @@ label.podlove_cc_license_selector_label {
 	min-width: 120px;
 }
 
-.analytics-metric-box>span {
+.analytics-metric-box>span,
+#analytics-global-downloads>div {
 	font-size: 23px;
 	line-height: 23px;
 	display: block;
 }
 
-.analytics-metric-box .analytics-value {
+.analytics-metric-box .analytics-value,
+#analytics-global-downloads .analytics-value {
 	font-weight: bold;
 	line-height: 40px;
 }
 
 .analytics-metric-box .analytics-description,
-.analytics-metric-box .analytics-subtext {
+.analytics-metric-box .analytics-subtext,
+#analytics-global-downloads .analytics-description {
 	font-size: 14px;
 	line-height: 16px;
 	color: #666;
