@@ -380,24 +380,29 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 		<div class="metabox-holder">
 			<div class="postbox">
 				<h2 class="hndle" style="cursor: inherit;">
-					<?php _e('Global Analytics for last 30 Days', 'podlove-podcasting-plugin-for-wordpress'); ?>
+					<?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			  </h2>
 				<div class="inside">
 
 					<div id="podlove-analytics-app" style="display: flex; align-items: center;">
 						<analytics-date-picker></analytics-date-picker>
 
-                        <section id="analytics-global-downloads" style="display: none; display: flex; align-items: center; margin-left: 10px; ">
-                          <h1 class="analytics-description" style="padding: 0; order: 2">
-							<?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?>
-                        </h1>
-                        <div id="analytics-global-downloads-value" class="analytics-value" style="line-height: 27px; margin-right: 5px; order: 1">
-
-                        </div>
-                        </section>
 
 					</div>
 
+                    <div style="margin-top: 12px; display: flex;align-items: center;align-content: center;justify-content: space-around;">
+                    <section id="analytics-global-downloads" style="display: none; display: flex; align-items: center; margin-left: 10px; ">
+                      <h1 class="analytics-description" style="padding: 0; order: 2; font-size: 18px;">
+                        <?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                      </h1>
+                      <div class="chart-loading" style="display: block; margin-right: 10px;">
+                          <img src="<?php echo admin_url('images/wpspin_light-2x.gif'); ?>" alt="Loading" width="16" height="16" />
+                      </div>
+                      <div id="analytics-global-downloads-value" class="analytics-value" style="font-size:32px; line-height: 42px; margin-right: 10px; order: 1">
+
+                      </div>
+                    </section>
+                    </div>
 
 						<div style="float: none"></div>
 
@@ -463,7 +468,21 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 							</div>
 						</section>
 
-						<div style="clear: both"></div>
+
+                        <?php if (\Podlove\Modules\Base::is_active('shows')) { ?>
+                            <section id="analytics-global-shows-wrapper" class="chart-wrapper" style="height: auto;">
+                                <div id="analytics-global-shows" style="height: auto;">
+                                    <h1>
+                                        <?php _e('Downloads by Show', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                                    </h1>
+
+                                    <?php echo $status_html; ?>
+                                    <div class="chart-content" style="height: auto;"></div>
+                                </div>
+                            </section>
+                        <?php } ?>
+
+                        <div style="clear: both"></div>
 
 				</div>
 			</div>

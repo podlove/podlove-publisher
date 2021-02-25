@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-02-25 =
+
+* analytics: display downloads per show for selected date range
+
 = 2021-02-24 =
 
 * podcastindex namespace: add support for feed tag [`podcast:transcript`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript), linking to the transcript in various formats (json, webvtt, xml)

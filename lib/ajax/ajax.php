@@ -43,6 +43,7 @@ class Ajax
             'analytics-global-downloads-per-month',
             'analytics-global-top-episodes',
             'analytics-global-total-downloads',
+            'analytics-global-total-downloads-by-show',
             'analytics-csv-episodes-table',
             'episode-slug',
             'admin-news',
@@ -740,10 +741,27 @@ class Ajax
         exit;
     }
 
+    public static function analytics_global_total_downloads_by_show()
+    {
+        if (!current_user_can('podlove_read_analytics')) {
+            exit;
+        }
+
+        echo \Podlove\Cache\TemplateCache::get_instance()->cache_for('analytics_global_show_downloads'.self::analytics_date_cache_key(), function () {
+            $downloads = \Podlove\Model\DownloadIntentClean::total_downloads_by_show(self::analytics_date_condition());
+
+            ob_start();
+
+            include 'ajax.analytics_global_total_downloads_by_show.html.php';
+
+            return ob_get_clean();
+        });
+
+        exit;
+    }
+
     public static function analytics_global_top_episodes()
     {
-        global $wpdb;
-
         if (!current_user_can('podlove_read_analytics')) {
             exit;
         }

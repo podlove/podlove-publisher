@@ -635,10 +635,58 @@ jQuery(document).ready(function ($) {
 		renderer: renderTopEpisodesChart
 	}]
 
+    const loadDownloadsCount = (from, to) => {
+        const wrapper  = $("#analytics-global-downloads");
+        const valueDiv = $("#analytics-global-downloads-value");
+        const loading  = $(".chart-loading", wrapper);
+
+        loading.show();
+        valueDiv.hide();
+
+        $.when(
+            $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads' + '&date_from=' + from.toDateString() + '&date_to=' + to.toDateString())
+        ).done((downloadsCount) => {
+            loading.hide();
+            valueDiv.html(downloadsCount);
+            valueDiv.show();
+            wrapper.show();
+        }).fail(() => {
+            loading.hide()
+        });
+    }
+
+    const loadShowsTable = (from, to) => {
+
+        const showsWrapper = $("#analytics-global-shows");
+        let showsChartLoading = $(".chart-loading", showsWrapper);
+        let showsChartFailed = $(".chart-failed", showsWrapper);
+        let showsChartNoData = $(".chart-nodata", showsWrapper);
+        let showsChartContent = $(".chart-content", showsWrapper);
+
+        if (showsWrapper.length) {
+
+            showsChartLoading.show();
+            showsChartFailed.hide();
+            showsChartNoData.hide();
+            showsChartContent.hide();
+
+            $.when(
+                $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads-by-show' + '&date_from=' + from.toDateString() + '&date_to=' + to.toDateString())
+            ).done((showsDownloadsHtml) => {
+                showsChartLoading.hide();
+                console.log(showsDownloadsHtml)
+                showsChartContent.html(showsDownloadsHtml);
+                showsChartContent.show();
+            }).fail(() => {
+                showsChartLoading.hide();
+                showsChartFailed.show()
+            });
+        }
+    }
+
 	const loadGlobalCharts = function (date_range) {
 
 		let from, to;
-
 
 		if (date_range && date_range.length) {
             from = date_range[0]
@@ -648,12 +696,8 @@ jQuery(document).ready(function ($) {
 			to = new Date()
 		}
 
-        $.when(
-            $.ajax(ajaxurl + '?action=podlove-analytics-global-total-downloads' + '&date_from=' + from.toDateString() + '&date_to=' + to.toDateString())
-        ).done((downloadsCount) => {
-            $("#analytics-global-downloads-value").html(downloadsCount);
-            $("#analytics-global-downloads").show();
-        })
+        loadDownloadsCount(from, to)
+        loadShowsTable(from,to)
 
 		globalCharts.forEach(chart => {
 			let chartLoading = $(chart.id + " .chart-loading")

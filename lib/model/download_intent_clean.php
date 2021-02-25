@@ -192,6 +192,28 @@ class DownloadIntentClean extends Base
         return $wpdb->get_var($sql);
     }
 
+    public static function total_downloads_by_show($where)
+    {
+        global $wpdb;
+
+        $sql =
+        'SELECT
+             count(di.id) as downloads,
+             term_taxonomy_id AS show_id,
+             t. `name` AS show_name
+         FROM
+             `'.self::table_name().'` di
+             JOIN `'.MediaFile::table_name().'` mf ON mf.id = di.media_file_id
+             JOIN `'.Episode::table_name().'` e ON e.id = mf.episode_id
+             LEFT JOIN `'.$wpdb->term_relationships.'` tr ON tr.object_id = e.post_id
+             LEFT JOIN `'.$wpdb->terms.'` t ON t.term_id = tr.term_taxonomy_id
+         WHERE '.$where.'
+         GROUP BY
+             term_taxonomy_id';
+
+        return $wpdb->get_results($sql, ARRAY_A);
+    }
+
     /**
      * Generate WHERE clause to a certain time range or day.
      *
