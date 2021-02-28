@@ -934,8 +934,6 @@ class Contributors extends \Podlove\Modules\Base
     /**
      * get contributor xml in podcastindex "person" format.
      *
-     * @todo take first social URL and add it as href attribute
-     *
      * @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person
      *
      * @param mixed $contributor
@@ -954,6 +952,10 @@ class Contributors extends \Podlove\Modules\Base
             $xml->appendChild($name_text);
 
             $dom->appendChild($xml);
+
+            if ($contributor->guid) {
+                $xml->appendChild($xml->setAttribute('href', $contributor->guid));
+            }
 
             $xml->setAttribute('img', $contributor->avatar()->url());
 
