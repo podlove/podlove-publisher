@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 5.2
 Tested up to: 5.6.0
 Requires PHP: 7.0
-Stable tag: 3.3.2
+Stable tag: 3.4.1
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -105,6 +105,31 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.4.1 =
+
+* fix: analytics shows section now does not include other taxonomies
+* analytics shows section is now ordered by downloads
+
+= 3.4.0 =
+
+**podcastindex namespace**
+
+Both additions add metadata to the feed automatically if the data is present. No new user interfaces or data entry is necessary.
+
+* add support for feed tag [`podcast:transcript`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript), linking to the transcript in various formats (json, webvtt, xml)
+* add support for feed tag [`podcast:person`](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person) on episode level
+
+**analytics**
+
+* for selected date range, total downloads are shown
+* for selected date range, display downloads per show (only visible when shows module is enabled)
+
+= 3.3.2 =
+
+* fix: in analytics, the "Export as CSV" section is now clickable when global statistics are loading or have no data
+* fix: "Export as CSV" works again
+* fix: "global statistics" charts idling indefinitely until a custom date range is chosen
 
 = 3.3.0 / 3.3.1 =
 
