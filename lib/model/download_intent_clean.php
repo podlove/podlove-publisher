@@ -211,6 +211,8 @@ class DownloadIntentClean extends Base
          WHERE '.$where.' AND tt.taxonomy = \'shows\'
          GROUP BY
              tr.term_taxonomy_id
+         ORDER BY
+             downloads DESC
          ';
 
         error_log(print_r($sql, true));
