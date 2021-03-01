@@ -199,7 +199,7 @@ class DownloadIntentClean extends Base
         $sql =
         'SELECT
              count(di.id) as downloads,
-             term_taxonomy_id AS show_id,
+             tr.term_taxonomy_id AS show_id,
              t. `name` AS show_name
          FROM
              `'.self::table_name().'` di
@@ -207,9 +207,15 @@ class DownloadIntentClean extends Base
              JOIN `'.Episode::table_name().'` e ON e.id = mf.episode_id
              LEFT JOIN `'.$wpdb->term_relationships.'` tr ON tr.object_id = e.post_id
              LEFT JOIN `'.$wpdb->terms.'` t ON t.term_id = tr.term_taxonomy_id
-         WHERE '.$where.'
+             LEFT JOIN `'.$wpdb->term_taxonomy.'` tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+         WHERE '.$where.' AND tt.taxonomy = \'shows\'
          GROUP BY
-             term_taxonomy_id';
+             tr.term_taxonomy_id
+         ORDER BY
+             downloads DESC
+         ';
+
+        error_log(print_r($sql, true));
 
         return $wpdb->get_results($sql, ARRAY_A);
     }

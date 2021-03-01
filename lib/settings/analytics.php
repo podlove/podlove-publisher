@@ -382,7 +382,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 				<h2 class="hndle" style="cursor: inherit;">
 					<?php _e('Global Analytics', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			  </h2>
-				<div class="inside">
+				<div class="inside" class="overflow: hidden">
 
 					<div id="podlove-analytics-app" style="display: flex; align-items: center;">
 						<analytics-date-picker></analytics-date-picker>
