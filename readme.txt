@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 3.4.1 =
 
 * fix: analytics shows section now does not include other taxonomies
+* use image caching for shownotes images
 * analytics shows section is now ordered by downloads
 
 = 3.4.0 =

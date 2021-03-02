@@ -187,6 +187,7 @@ class Contributor extends Wrapper
      * Avatar Image.
      *
      * @see image
+     * @accessor
      */
     public function image()
     {
