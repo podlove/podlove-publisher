@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-03-02 =
+
+* fix(shownotes): encoding issue when importing from HTML
+
 = 3.4.1 =
 
 * fix: analytics shows section now does not include other taxonomies
