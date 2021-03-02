@@ -99,7 +99,18 @@ class REST_API
 
         $dom = new \DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
-        $valid = $dom->loadHTML($html);
+
+        // load html and ensure utf-8
+        // @see php DOMDocument::loadHTML doc comments
+        $valid = $dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+
+        foreach ($dom->childNodes as $item) {
+            if ($item->nodeType == XML_PI_NODE) {
+                $dom->removeChild($item);
+            }
+        }
+
+        $dom->encoding = 'UTF-8';
 
         if (!$valid) {
             return new \WP_Error(
