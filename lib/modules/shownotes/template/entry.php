@@ -111,11 +111,12 @@ class Entry extends Wrapper
      *
      * Open Graph or Twitter image.
      *
+     * @see image
      * @accessor
      */
     public function image()
     {
-        $data = \maybe_unserialize($this->entry->unfurl_data);
+        $data = \unserialize($this->entry->unfurl_data);
 
         if (!$data) {
             return false;
