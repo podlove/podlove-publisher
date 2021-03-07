@@ -925,7 +925,7 @@ class Contributors extends \Podlove\Modules\Base
 
             $dom->appendChild($xml);
 
-            $contributor_xml .= (string) $dom;
+            $contributor_xml .= "\n\t\t" . trim((string) $dom);
         }
 
         return $contributor_xml;
@@ -989,7 +989,7 @@ class Contributors extends \Podlove\Modules\Base
                 }
             }
 
-            $contributor_xml .= (string) $dom;
+            $contributor_xml .= "\n\t\t" . trim((string) $dom);
         }
 
         return $contributor_xml;
