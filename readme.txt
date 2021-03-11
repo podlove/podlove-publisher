@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-03-11 =
+
+* analytics: add hook `podlove_useragent_opawg_data` to add custom user agent detection
+
 = 2021-02-25 =
 
 * analytics: display downloads per show for selected date range
