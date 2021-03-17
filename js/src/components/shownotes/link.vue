@@ -11,18 +11,28 @@
       </div>
       <div class="p-entry-content" v-if="entry.state != 'unfurling'">
         <div class="p-entry-site">{{ entry.site_name }}</div>
-        <span class="link p-entry-title-url">
-          <a :href="entry.url" target="_blank">{{ entry.title }}</a>
-        </span>
-        <br>
-        <span v-if="entry.affiliate_url" class="p-entry-url-url">
-          <a :href="entry.affiliate_url" target="_blank">{{ decodeURI(entry.affiliate_url) }}</a> (Affiliate)
-        </span>
-        <span v-else class="p-entry-url-url">
-          <a :href="entry.url" target="_blank">{{ decodeURI(entry.url) }}</a>
-        </span>
-        <div class="p-entry-description" v-if="isHidden">Hidden entries are excluded from public display.</div>
-        <div class="p-entry-description" v-else-if="entry.description">{{ entry.description }}</div>
+
+        <div style="display: flex; justify-content: space-between;">
+          <div>
+            <span class="link p-entry-title-url">
+              <a :href="entry.url" target="_blank">{{ entry.title }}</a>
+            </span>
+            <br>
+            <span v-if="entry.affiliate_url" class="p-entry-url-url">
+              <a :href="entry.affiliate_url" target="_blank">{{ decodeURI(entry.affiliate_url) }}</a> (Affiliate)
+            </span>
+            <span v-else class="p-entry-url-url">
+              <a :href="entry.url" target="_blank">{{ decodeURI(entry.url) }}</a>
+            </span>
+            <div class="p-entry-description" v-if="isHidden">Hidden entries are excluded from public display.</div>
+            <div class="p-entry-description" v-else-if="entry.description">{{ entry.description }}</div>
+          </div>
+          <div style="max-width: 200px;" v-if="entry.image">
+              <img :src="entry.image" alt="" />
+          </div>
+        </div>
+
+
       </div>
       <div class="p-entry-content" v-else>
         <div class="p-entry-site">

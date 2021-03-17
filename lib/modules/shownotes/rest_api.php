@@ -347,6 +347,91 @@ class REST_API
         $entry->state = 'fetched';
         $entry->url = $data['url'];
         $entry->icon = $data['icon']['url'];
+        $entry->image = $data['image'];
+
+        // BEGIN sideload
+
+        /*
+         * Build the $file_array with
+         * $url = the url of the image
+         * $temp = storing the image in wordpress
+         */
+
+        $url = $data['image'];
+
+        if (!function_exists('\download_url')) {
+            require_once ABSPATH.'wp-admin/includes/file.php';
+        }
+
+        if (!function_exists('\media_handle_sideload')) {
+            require_once ABSPATH.'wp-admin/includes/media.php';
+        }
+
+        if (!function_exists('\wp_read_image_metadata')) {
+            require_once ABSPATH.'wp-admin/includes/image.php';
+        }
+
+        if ($url) {
+            $r = \Podlove\Model\Image::download_url($url);
+
+            if (is_wp_error($r)) {
+                error_log(print_r('::download_url failed', true));
+                error_log(print_r($r, true));
+            } else {
+                [$tmp, $resp] = $r;
+            }
+
+            $file_array = [
+                'name' => explode('?', basename($url))[0],
+                'tmp_name' => $tmp
+            ];
+
+            /*
+             * Check for download errors
+             * if there are error unlink the temp file name
+             */
+            if (\is_wp_error($tmp)) {
+                @unlink($file_array['tmp_name']);
+
+                return $tmp;
+            }
+
+            /**
+             * now we can actually use media_handle_sideload
+             * we pass it the file array of the file to handle
+             * and the post id of the post to attach it to
+             * $post_id can be set to '0' to not attach it to any particular post.
+             */
+            $post_id = '0';
+
+            $id = \media_handle_sideload($file_array, $post_id);
+
+            /**
+             * We don't want to pass something to $id
+             * if there were upload errors.
+             * So this checks for errors.
+             */
+            if (\is_wp_error($id)) {
+                @unlink($file_array['tmp_name']);
+
+                error_log(print_r($id, true));
+
+                return $id;
+            }
+
+            /**
+             * No we can get the url of the sideloaded file
+             * $value now contains the file url in WordPress
+             * $id is the attachment id.
+             */
+            $attachment_url = \wp_get_attachment_url($id);
+
+            $entry->image = $attachment_url;
+        }
+
+        // Now you can do something with $value (or $id)
+
+        // END sideload
 
         if (!$entry->title) {
             $entry->title = $data['title'];
