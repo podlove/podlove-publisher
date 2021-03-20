@@ -252,6 +252,7 @@ require_once \Podlove\PLUGIN_DIR.'includes/scripts_and_styles.php';
 require_once \Podlove\PLUGIN_DIR.'includes/search.php';
 require_once \Podlove\PLUGIN_DIR.'includes/system_report.php';
 require_once \Podlove\PLUGIN_DIR.'includes/templates.php';
+require_once \Podlove\PLUGIN_DIR.'includes/template_pages.php';
 require_once \Podlove\PLUGIN_DIR.'includes/theme_helper.php';
 require_once \Podlove\PLUGIN_DIR.'includes/trash.php';
 require_once \Podlove\PLUGIN_DIR.'includes/verify_itunes_category.php';

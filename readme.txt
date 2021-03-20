@@ -115,6 +115,39 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - shownotes: show import progress when unfurling
 - #1194 fix calling wptexturize too early
 
+**experimental: full-page Podlove Templates**
+
+If you want to create a 100% custom page based on an episode but without all the WordPress theme around, this is for you. Possible use case: A dedicated page to print the episode transcript.
+
+1. create a new Podlove Template, for example `page-episode-transcipt`
+2. Write that transcript as a _full HTML page_. That means it starts with `<!doctype html><html>` and ends with `</html>`!
+3. Append `?podlove_template_page=page-episode-transcipt` to your public episode URL. For example if your episode is `https://example.com/ep001/`, then open `https://example.com/ep001/?podlove_template_page=page-episode-transcipt`
+
+Very simple example template:
+
+    <!doctype html>
+    <html>
+
+    <head>
+      <meta charset="utf-8">
+      <title>Transcript | {{ episode.title }} | {{ podcast.title }}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+
+      <p>
+        Here's the transcript for podcast <strong>{{ podcast.title }}</strong> episode <>{{ episode.title }}</    strong>:
+      </p>
+
+      [podlove-transcript]
+
+    </body>
+
+    </html>
+
+Enjoy!
+
 = 2021-03-11 =
 
 * analytics: add hook `podlove_useragent_opawg_data` to add custom user agent detection
