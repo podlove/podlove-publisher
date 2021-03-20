@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - shownotes: when importing, show all entries
 - shownotes: show import progress when unfurling
 - #1194 fix calling wptexturize too early
+- transcript: add some basic info about podcast and episode into webvtt as a note
 
 **experimental: full-page Podlove Templates**
 
@@ -137,7 +138,7 @@ Very simple example template:
     <body>
 
       <p>
-        Here's the transcript for podcast <strong>{{ podcast.title }}</strong> episode <>{{ episode.title }}</    strong>:
+        Here's the transcript for podcast <strong>{{ podcast.title }}</strong> episode <strong>{{ episode.title }}</strong>:
       </p>
 
       [podlove-transcript]
