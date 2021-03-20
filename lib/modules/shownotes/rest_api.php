@@ -168,7 +168,14 @@ class REST_API
         $links = [];
 
         foreach ($parsed['export'] as $group) {
+            if ($group['chapter']) {
+                $links[] = [
+                    'type' => 'topic',
+                    'title' => $group['orig']
+                ];
+            }
             foreach ($group['subitems'] as $link) {
+                $link['type'] = 'link';
                 $links[] = $link;
             }
         }
@@ -182,14 +189,19 @@ class REST_API
         }
 
         $links = array_map(function ($link) {
-            if (!$link['orig'] || !$link['urls'] || !count($link['urls'])) {
-                return null;
+            if ($link['type'] == 'link') {
+                if (!$link['orig'] || !$link['urls'] || !count($link['urls'])) {
+                    return null;
+                }
+
+                return [
+                    'type' => 'link',
+                    'title' => $link['orig'],
+                    'url' => $link['urls'][0],
+                ];
             }
 
-            return [
-                'title' => $link['orig'],
-                'url' => $link['urls'][0],
-            ];
+            return $link;
         }, $links);
         $links = array_filter($links);
 
@@ -203,14 +215,25 @@ class REST_API
 
         foreach ($links as $link) {
             $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
-            $request->set_query_params([
-                'episode_id' => $episode->id,
-                'original_url' => $link['url'],
-                'data' => [
+            if ($link['type'] == 'link') {
+                $request->set_query_params([
+                    'episode_id' => $episode->id,
+                    'original_url' => $link['url'],
+                    'data' => [
+                        'title' => $link['title'],
+                    ],
+                    'type' => 'link',
+                ]);
+            } else {
+                $request->set_query_params([
+                    'episode_id' => $episode->id,
+                    'data' => [
+                        'title' => $link['title'],
+                    ],
                     'title' => $link['title'],
-                ],
-                'type' => 'link',
-            ]);
+                    'type' => 'topic',
+                ]);
+            }
             rest_do_request($request);
         }
 
