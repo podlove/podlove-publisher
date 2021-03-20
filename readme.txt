@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - shownotes: show images
 - shownotes: fix osf importer
+- shownotes: when importing, show all entries
 - #1194 fix calling wptexturize too early
 
 = 2021-03-11 =

@@ -296,7 +296,7 @@ export default {
         post_id: podlove_vue.post_id,
       })
         .done((result) => {
-          this.init();
+          this.init(true);
         })
         .fail(({ responseJSON }) => {
           console.error("could not import osf:", responseJSON.message);
@@ -325,7 +325,7 @@ export default {
       this.shownotes = [];
         }
     },
-    init: function () {
+    init: function (forceExpand = false) {
       $.getJSON(
         podlove_vue.rest_url +
           "podlove/v1/shownotes?episode_id=" +
@@ -335,7 +335,7 @@ export default {
           this.shownotes = shownotes;
           this.ready = true;
           this.isTruncatedView =
-            this.shownotes.length > this.truncatedThreshold;
+            this.shownotes.length > this.truncatedThreshold && !forceExpand;
         })
         .fail(({ responseJSON }) => {
           console.error("could not load shownotes:", responseJSON.message);
