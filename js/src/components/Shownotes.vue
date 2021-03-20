@@ -20,6 +20,10 @@
       <div class="shownotes-modal-backdrop"></div>
     </div>
     <div v-else>
+      <div v-if="unfurlingProgress != 100" style="margin-bottom: 12px">
+        Importing: {{ unfurlingProgress }}%
+      </div>
+
       <draggable
         v-model="shownotes"
         @update="onDragEnd"
@@ -314,16 +318,16 @@ export default {
         });
     },
     deleteAllEntries: function () {
-        if (window.confirm("Permanently delete all shownotes entries?")) {
-      this.shownotes.forEach((entry) =>
-        jQuery.ajax({
-          url: podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id,
-          method: "DELETE",
-          dataType: "json",
-        })
-      );
-      this.shownotes = [];
-        }
+      if (window.confirm("Permanently delete all shownotes entries?")) {
+        this.shownotes.forEach((entry) =>
+          jQuery.ajax({
+            url: podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id,
+            method: "DELETE",
+            dataType: "json",
+          })
+        );
+        this.shownotes = [];
+      }
     },
     init: function (forceExpand = false) {
       $.getJSON(
@@ -351,6 +355,25 @@ export default {
       }
 
       return shownotes;
+    },
+    unfurlingProgress: function () {
+      const linkEntries = this.shownotes.filter(
+        (entry) => entry.type == "link"
+      );
+      const linkCount = linkEntries.length;
+
+      if (!linkCount) {
+        return 100;
+      }
+
+      const unfurlingCount = linkEntries.filter(
+        (entry) => entry.state == "unfurling"
+      ).length;
+      const progressPercent = Math.floor(
+        (100 * (linkCount - unfurlingCount)) / linkCount
+      );
+
+      return progressPercent;
     },
     sortedShownotes: function () {
       return this.shownotes.sort((a, b) => {
