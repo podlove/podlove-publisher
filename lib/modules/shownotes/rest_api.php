@@ -165,7 +165,13 @@ class REST_API
         ];
         $parsed = osf_parser($shownotes, $data);
 
-        $links = $parsed['export'][0]['subitems'];
+        $links = [];
+
+        foreach ($parsed['export'] as $group) {
+            foreach ($group['subitems'] as $link) {
+                $links[] = $link;
+            }
+        }
 
         if (!is_array($links)) {
             return new \WP_Error(
