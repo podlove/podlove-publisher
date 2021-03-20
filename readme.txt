@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-03-20 =
+
+- shownotes: show images
+- #1194 fix calling wptexturize too early
+
 = 2021-03-11 =
 
 * analytics: add hook `podlove_useragent_opawg_data` to add custom user agent detection
