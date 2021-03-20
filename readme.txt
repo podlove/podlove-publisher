@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2021-03-20 =
 
 - shownotes: show images
+- shownotes: show image in edit view
 - shownotes: fix osf importer
 - shownotes: when importing, show all entries
 - shownotes: show import progress when unfurling
