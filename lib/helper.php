@@ -366,7 +366,7 @@ function episode_types()
     ];
 }
 
-function download_external_image_to_media($url)
+function download_external_image_to_media($url, $name, $curl_args = [])
 {
     if (!$url) {
         return;
@@ -384,7 +384,7 @@ function download_external_image_to_media($url)
         require_once ABSPATH.'wp-admin/includes/image.php';
     }
 
-    $r = \Podlove\Model\Image::download_url($url);
+    $r = \Podlove\Model\Image::download_url($url, 300, $curl_args);
 
     if (\is_wp_error($r)) {
         return $r;
@@ -393,7 +393,7 @@ function download_external_image_to_media($url)
     [$tmp, $resp] = $r;
 
     $file_array = [
-        'name' => explode('?', basename($url))[0],
+        'name' => $name,
         'tmp_name' => $tmp
     ];
 

@@ -477,14 +477,15 @@ class Image
      * I copied it because I need to look into the header of the response but
      * unfortunately the original implementation does not expose it.
      *
-     * @param string $url     the URL of the file to download
-     * @param int    $timeout The timeout for the request to download the file default 300 seconds
+     * @param string $url        the URL of the file to download
+     * @param int    $timeout    The timeout for the request to download the file default 300 seconds
+     * @param mixed  $extra_args
      *
      * @return mixed WP_Error on failure, array with Filename & http response on success
      */
-    public static function download_url($url, $timeout = 300)
+    public static function download_url($url, $timeout = 300, $extra_args = [])
     {
-        //WARNING: The file is not automatically deleted, The script must unlink() the file.
+        // WARNING: The file is not automatically deleted, The script must unlink() the file.
         if (!$url) {
             return new \WP_Error('http_no_url', __('Invalid URL Provided.'));
         }
@@ -494,12 +495,14 @@ class Image
             return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
         }
 
-        $args = [
+        $default_args = [
             'timeout' => $timeout,
             'stream' => true,
             'filename' => $tmpfname,
             'sslverify' => \Podlove\get_setting('website', 'ssl_verify_peer') == 'on',
         ];
+        $args = array_merge($default_args, $extra_args);
+
         $response = wp_safe_remote_get($url, $args);
 
         if (is_wp_error($response)) {

@@ -379,9 +379,25 @@ class REST_API
         $entry->image = $data['image'];
 
         // todo: should probably do this in an async job
-        $attachment_id = \Podlove\download_external_image_to_media($data['image']);
+        $attachment_id = 0;
 
-        if (!\is_wp_error($attachment_id)) {
+        if ($data['image']) {
+            $attachment_id = \Podlove\download_external_image_to_media($data['image'], explode('?', basename($data['image']))[0]);
+        }
+
+        if (!$attachment_id && $data['screenshot_url']) {
+            if (\Podlove\Modules\Base::is_active('plus')) {
+                $plus = \Podlove\Modules\Plus\Plus::instance();
+                $curl_args = [
+                    'headers' => [
+                        'Authorization' => 'Bearer '.$plus->get_module_option('plus_api_token')
+                    ]
+                ];
+                $attachment_id = \Podlove\download_external_image_to_media($data['screenshot_url'], 'screenshot.jpg', $curl_args);
+            }
+        }
+
+        if ($attachment_id && !\is_wp_error($attachment_id)) {
             $attachment_url = \wp_get_attachment_url($attachment_id);
             $entry->image = $attachment_url;
         }
