@@ -219,23 +219,29 @@ class MediaFile extends Base
             $episode = $this->episode();
             $episode_asset = EpisodeAsset::find_by_id($this->episode_asset_id);
             $file_type = FileType::find_by_id($episode_asset->file_type_id);
-			
 
             if (!$episode_asset || !$file_type || !$episode) {
                 return '';
             }
 
-            $field = $episode->slug;
-            if (strpos($field, '://') !== false) {
-	        $template = $field;
-	    } else {
-	        $template = $podcast->get_url_template();
-                $template = apply_filters('podlove_file_url_template', $template);
+            //$slug = '%episode_slug%';
+            $slug = apply_filters('podlove_file_url_template', '%episode_slug%');
+            if ($slug === '%episode_slug%') {
+                $slug = $episode->slug;
+            }
+            
+            //$slug = $episode->slug;
+
+            if (strpos($slug, '://') !== false) {
+                $template = $slug;
+            } else {
+                $template = $podcast->get_url_template();
                 $template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
-                $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($field), $template);
+                $template = str_replace('%episode_slug%', $slug, $template);
                 $template = str_replace('%suffix%', $episode_asset->suffix, $template);
                 $template = str_replace('%format_extension%', $file_type->extension, $template);
-            }		
+            }
+
 
             return trim($template);
         });
@@ -255,7 +261,7 @@ class MediaFile extends Base
      */
     public function get_download_file_name()
     {
-	$field = $this->episode()->slug;
+        $field = $this->episode()->slug;
         if (strpos($field, '://') !== false) {
             $file_name = preg_replace('/^.+:\/\//', '', $field);
         } else {
