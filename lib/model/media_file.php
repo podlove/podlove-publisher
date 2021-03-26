@@ -161,7 +161,6 @@ class MediaFile extends Base
 
                     break;
             }
-			
 
             return apply_filters('podlove_enclosure_url', $url);
         });
@@ -203,7 +202,7 @@ class MediaFile extends Base
 
         return $path;
     }
-
+    
     /**
      * Return real file URL.
      *
@@ -224,20 +223,17 @@ class MediaFile extends Base
                 return '';
             }
 
-            //$slug = '%episode_slug%';
-            $slug = apply_filters('podlove_file_url_template', '%episode_slug%');
-            if ($slug === '%episode_slug%') {
+            $slug = apply_filters('podlove_file_url_template', '');
+            if ($slug === '') {
                 $slug = $episode->slug;
             }
-            
-            //$slug = $episode->slug;
 
-            if (strpos($slug, '://') !== false) {
+            if (is_absolute_url($slug)) {
                 $template = $slug;
             } else {
                 $template = $podcast->get_url_template();
                 $template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
-                $template = str_replace('%episode_slug%', $slug, $template);
+                $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($slug), $template);
                 $template = str_replace('%suffix%', $episode_asset->suffix, $template);
                 $template = str_replace('%format_extension%', $file_type->extension, $template);
             }
