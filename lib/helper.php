@@ -314,6 +314,11 @@ function prepare_episode_slug_for_url($slug)
     return str_replace('%2F', '/', $slug);
 }
 
+// Test to if entry for slug is a absolute url path
+function is_absolute_url($slug) {
+    return strpos($slug, '://') !== false;
+}
+
 function with_blog_scope($blog_id, $callback)
 {
     $result = null;
