@@ -228,7 +228,7 @@ class MediaFile extends Base
                 $slug = $episode->slug;
             }
 
-            if (is_absolute_url($slug)) {
+            if (\Podlove\is_absolute_url($slug)) {
                 $template = $slug;
             } else {
                 $template = $podcast->get_url_template();
@@ -257,11 +257,11 @@ class MediaFile extends Base
      */
     public function get_download_file_name()
     {
-        $field = $this->episode()->slug;
-        if (strpos($field, '://') !== false) {
-            $file_name = preg_replace('/^.+:\/\//', '', $field);
+        $slug = $this->episode()->slug;
+        if (\Podlove\is_absolute_url($slug)) {
+            $file_name = preg_replace('/^.+:\/\//', '', $slug);
         } else {
-            $file_name = $field
+            $file_name = $slug
                        .'.'
                        .$this->episode_asset()->file_type()->extension;
         }
