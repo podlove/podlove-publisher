@@ -20,8 +20,13 @@ Clone the publisher in the `wp-content/plugins` directory.
 git clone --recursive https://github.com/podlove/podlove-publisher.git
 cd podlove-publisher
 curl -sS https://getcomposer.org/installer | php
-php composer.phar install
-yarn install
+make install
+```
+
+If you have a docker environment handy you can simply run:
+
+```
+make docker-install
 ```
 
 ## Development
