@@ -66,7 +66,7 @@ function episodes_api($request)
         'files' => \podlove_pwp5_files($episode, null),
         'content' => apply_filters('the_content', $post->post_content),
         'number' => $episode->number,
-        'mnemonic' => $podcast->mnemonic.$episode->number
+        'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number
         // @todo: all media files
     ]);
 }
