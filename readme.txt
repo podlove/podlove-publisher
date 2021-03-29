@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-03-29 =
+
+- PLUS: /experimental/ generated social media image for `og:image` and REST API
+
 = 2021-03-21 =
 
 - shownotes: provide website screenshot as fallback when no sharing image is available (requires PLUS token)

@@ -136,18 +136,13 @@ class Open_Graph extends \Podlove\Modules\Base
             ];
         }
 
-        if ($cover_art_url) {
-            $data[] = [
-                'property' => 'og:image',
-                'content' => $cover_art_url,
-            ];
-        }
+        $image_url = $cover_art_url ?? $thumbnail;
 
-        if (isset($thumbnail)) {
-            $data[] = [
+        if ($image_url) {
+            $data[] = apply_filters('podlove_ogp_image_data', [
                 'property' => 'og:image',
-                'content' => $thumbnail,
-            ];
+                'content' => $image_url,
+            ]);
         }
 
         foreach ($episode->media_files() as $media_file) {

@@ -30,6 +30,21 @@ class API
         return false;
     }
 
+    public function get_account_id()
+    {
+        $cache = \Podlove\Cache\TemplateCache::get_instance();
+
+        return $cache->cache_for('plus_account_id', function () {
+            $user = $this->get_me();
+
+            if (!$user) {
+                return;
+            }
+
+            return $user->account_id;
+        }, 60);
+    }
+
     public function list_feeds()
     {
         $curl = new Http\Curl();
