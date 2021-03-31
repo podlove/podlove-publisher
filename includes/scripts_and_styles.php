@@ -8,7 +8,12 @@ add_action('admin_print_styles', function () {
 
     $version = \Podlove\get_plugin_header('Version');
 
-    $vue_screens = ['podlove_page_podlove_slackshownotes_settings', 'podlove_page_podlove_tools_settings_handle', 'podlove_page_podlove_analytics'];
+    $vue_screens = [
+        'podlove_page_podlove_slackshownotes_settings',
+        'podlove_page_podlove_tools_settings_handle',
+        'podlove_page_podlove_analytics',
+        'podlove-setup-wizard'
+    ];
 
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
