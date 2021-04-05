@@ -108,6 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2021-04-05 =
 
+* chore: update database for podcast user agents -- notably includes classification of Apple Watch downloads as bot [#1203](https://github.com/podlove/podlove-publisher/issues/1203)
+
 BREAKING CHANGE (for few people) -- removes two expert settings:
 
 * "Permalink structure for episodes" and
