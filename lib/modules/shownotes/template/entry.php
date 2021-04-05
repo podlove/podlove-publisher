@@ -121,7 +121,7 @@ class Entry extends Wrapper
             return false;
         }
 
-        return $data['providers']['open_graph']['image'] ?? $data['providers']['twitter']['image:src'] ?? false;
+        return $this->entry->image ?? $data['providers']['open_graph']['image'] ?? $data['providers']['twitter']['image:src'] ?? false;
     }
 
     /**

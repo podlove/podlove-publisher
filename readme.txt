@@ -106,7 +106,88 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2021-03-02 =
+= 2021-04-05 =
+
+* chore: update database for podcast user agents -- notably includes classification of Apple Watch downloads as bot [#1203](https://github.com/podlove/podlove-publisher/issues/1203)
+* fix: don't count contributors multiple times if they have multiple contributions in an episode ([#1200](https://github.com/podlove/podlove-publisher/issues/1200))
+
+BREAKING CHANGE (for few people) -- removes two expert settings:
+
+* "Permalink structure for episodes" and
+* "Episode pages"
+
+These settings allowed to define custom URL structures for episodes and the episode archive.
+However they have caused trouble for a long time (see [#1038](https://github.com/podlove/podlove-publisher/issues/1038))
+and the only viable way out seems to remove them.
+
+How does that affect you?
+
+If you have never touched these settings, feel free to shrug, smile and move on.
+
+If you _are_ using these settings, I encourage you to consider not using them as they are mostly of cosmetic nature.
+Should you however prefer to keep everything as is (including the known bugs of erratically broken permalinks), you can
+enable the settings back with a single line of code in your wp-config.php:
+
+```
+define('PODLOVE_ENABLE_PERMALINK_MAGIC', true);
+```
+
+= 2021-03-29 =
+
+- PLUS: /experimental/ generated social media image for `og:image` and REST API
+
+= 2021-03-21 =
+
+- shownotes: provide website screenshot as fallback when no sharing image is available (requires PLUS token)
+
+= 2021-03-20 =
+
+- shownotes: show images
+- shownotes: show image in edit view
+- shownotes: fix osf importer
+- shownotes: when importing, show all entries
+- shownotes: show import progress when unfurling
+- #1194 fix calling wptexturize too early
+- transcript: add some basic info about podcast and episode into webvtt as a note
+
+**experimental: full-page Podlove Templates**
+
+If you want to create a 100% custom page based on an episode but without all the WordPress theme around, this is for you. Possible use case: A dedicated page to print the episode transcript.
+
+1. create a new Podlove Template, for example `page-episode-transcipt`
+2. Write that transcript as a _full HTML page_. That means it starts with `<!doctype html><html>` and ends with `</html>`!
+3. Append `?podlove_template_page=page-episode-transcipt` to your public episode URL. For example if your episode is `https://example.com/ep001/`, then open `https://example.com/ep001/?podlove_template_page=page-episode-transcipt`
+
+Very simple example template:
+
+    <!doctype html>
+    <html>
+
+    <head>
+      <meta charset="utf-8">
+      <title>Transcript | {{ episode.title }} | {{ podcast.title }}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+
+      <p>
+        Here's the transcript for podcast <strong>{{ podcast.title }}</strong> episode <strong>{{ episode.title }}</strong>:
+      </p>
+
+      [podlove-transcript]
+
+    </body>
+
+    </html>
+
+Enjoy!
+
+= 2021-03-11 =
+
+* analytics: add hook `podlove_useragent_opawg_data` to add custom user agent detection
+
+= 2021-02-25 =
 
 * fix(shownotes): encoding issue when importing from HTML
 

@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Transcripts;
 
 use Podlove\Model\Episode;
+use Podlove\Model\Podcast;
 use Podlove\Modules\Transcripts\Model\Transcript;
 
 /**
@@ -104,7 +105,15 @@ class Renderer
             );
         }, $transcript);
 
-        return "WEBVTT\n\n".implode("\n\n", $transcript)."\n";
+        $note = "NOTE\n";
+        $note .= 'Podcast: '.Podcast::get()->title."\n";
+        $note .= 'Episode: '.$this->episode->title()."\n";
+        $note .= 'Publishing Date: '.get_the_date('c', $this->episode->post_id)."\n";
+        $note .= 'Podcast URL: '.Podcast::get()->landing_page_url()."\n";
+        $note .= 'Episode URL: '.get_permalink($this->episode->post_id)."\n";
+        $note .= "\n";
+
+        return "WEBVTT\n\n".$note.implode("\n\n", $transcript)."\n";
     }
 
     public static function format_time($time_ms)

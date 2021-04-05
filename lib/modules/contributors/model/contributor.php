@@ -240,8 +240,9 @@ class Contributor extends Base
         global $wpdb;
 
         $sql = '
-			SELECT
-				COUNT(*)
+        SELECT count(*) FROM (
+            SELECT
+				e.id
 			FROM
 				'.EpisodeContribution::table_name().' ec
 				JOIN '.Episode::table_name().' e ON ec.episode_id = e.id
@@ -249,6 +250,8 @@ class Contributor extends Base
 			WHERE
 				ec.contributor_id = %d
 				AND p.post_status = 'publish'
+            GROUP BY
+                e.id) tmp
 		";
 
         $contributionCount = $wpdb->get_var(

@@ -100,7 +100,8 @@ class Website extends Tab
             'podlove_settings_general'
         );
 
-        add_settings_field(
+        if (PODLOVE_ENABLE_PERMALINK_MAGIC) {
+            add_settings_field(
             // $id
             'podlove_setting_custom_episode_slug',
             // $title
@@ -123,9 +124,9 @@ class Website extends Tab
             Settings::$pagehook,
             // $section
             'podlove_settings_general'
-        );
+            );
 
-        add_settings_field(
+            add_settings_field(
             // $id
             'podlove_setting_episode_archive',
             // $title
@@ -148,7 +149,8 @@ class Website extends Tab
             Settings::$pagehook,
             // $section
             'podlove_settings_general'
-        );
+            );
+        }
 
         add_settings_field(
             // $id

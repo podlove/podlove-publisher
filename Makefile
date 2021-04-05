@@ -84,23 +84,15 @@ build:
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
 	find dist -name "*.swp" | xargs rm -rf
-	# find dist/vendor -type d -iname "test" | xargs rm -rf
+	# find dist/vendor -type d -iname "test" | xargs rm -rf	
 	# find dist/vendor -type d -iname "tests" | xargs rm -rf
 	# player v2 / mediaelement
 	find dist -iname "echo-hereweare.*" | xargs rm -rf
 	find dist -iname "*.jar" | xargs rm -rf
 
-install:
-	rm -rf node_modules
-	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn
-	docker run --rm --interactive --tty --volume ${PWD}:/app composer install
+install: install_php_scoper composer_with_prefixing
+	npm install
 
-dev:
-	docker-compose -f .build/docker-compose.yaml up -d
-	docker run --rm --interactive --tty -w="/app" --volume ${PWD}:/app node:12 yarn dev
-
-stop:
-	docker-compose -f .build/docker-compose.yaml down
-
-format:
-	docker run --rm --user $(id -u):$(id -g) --volume ${PWD}:/data cytopia/php-cs-fixer fix .
+docker-install:
+	docker image build -t podlove-publisher-build  - < ./.build/build.dockerfile
+	docker run --rm --interactive --tty --volume ${PWD}:/usr/src/myapp -w /usr/src/myapp podlove-publisher-build make install

@@ -24,6 +24,7 @@ class UserAgent extends Base
         $data_file = \Podlove\PLUGIN_DIR.'data/opawg.json';
         $data_raw = file_get_contents($data_file);
         $user_agent_data = json_decode($data_raw);
+        $user_agent_data = apply_filters('podlove_useragent_opawg_data', $user_agent_data);
 
         if (!$user_agent_data) {
             error_log('[Podlove Publisher] OPAWG data file is invalid JSON');
