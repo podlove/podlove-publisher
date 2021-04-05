@@ -106,6 +106,29 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-04-05 =
+
+BREAKING CHANGE (for few people) -- removes two expert settings:
+
+* "Permalink structure for episodes" and
+* "Episode pages"
+
+These settings allowed to define custom URL structures for episodes and the episode archive.
+However they have caused trouble for a long time (see [#1038](https://github.com/podlove/podlove-publisher/issues/1038))
+and the only viable way out seems to remove them.
+
+How does that affect you?
+
+If you have never touched these settings, feel free to shrug, smile and move on.
+
+If you _are_ using these settings, I encourage you to consider not using them as they are mostly of cosmetic nature.
+Should you however prefer to keep everything as is (including the known bugs of erratically broken permalinks), you can
+enable the settings back with a single line of code in your wp-config.php:
+
+```
+define('PODLOVE_ENABLE_PERMALINK_MAGIC', true);
+```
+
 = 2021-03-29 =
 
 - PLUS: /experimental/ generated social media image for `og:image` and REST API
