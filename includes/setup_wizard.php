@@ -42,6 +42,10 @@ function maybe_redirect_to_wizard_page()
 
 function wizard_page()
 {
+    if (!isset($_GET['page'])) {
+        return;
+    }
+
     if ($_GET['page'] != PODLOVE_WIZARD_URL_KEY) {
         return;
     }
