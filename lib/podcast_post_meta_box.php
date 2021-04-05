@@ -391,7 +391,7 @@ class Podcast_Post_Meta_Box
                 'type' => 'string',
                 'key' => 'slug',
                 'options' => [
-                    'label' => __('Episode Media File Slug', 'podlove-podcasting-plugin-for-wordpress'),
+                    'label' => __('Episode Media File Slug or Full Path URL', 'podlove-podcasting-plugin-for-wordpress'),
                     'description' => '',
                     'html' => ['class' => 'regular-text podlove-check-input'],
                 ],
