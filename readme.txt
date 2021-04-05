@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2021-04-05 =
 
 * chore: update database for podcast user agents -- notably includes classification of Apple Watch downloads as bot [#1203](https://github.com/podlove/podlove-publisher/issues/1203)
+* fix: don't count contributors multiple times if they have multiple contributions in an episode ([#1200](https://github.com/podlove/podlove-publisher/issues/1200))
 
 BREAKING CHANGE (for few people) -- removes two expert settings:
 
