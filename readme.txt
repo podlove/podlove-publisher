@@ -136,9 +136,7 @@ If you _are_ using these settings, I encourage you to consider not using them as
 Should you however prefer to keep everything as is (including the known bugs of erratically broken permalinks), you can
 enable the settings back with a single line of code in your wp-config.php:
 
-```
-define('PODLOVE_ENABLE_PERMALINK_MAGIC', true);
-```
+    `define('PODLOVE_ENABLE_PERMALINK_MAGIC', true);`
 
 = 2021-03-29 =
 
