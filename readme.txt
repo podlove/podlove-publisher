@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-04-08 =
+
+* add(templates): add `dataUri` method to images. Takes same arguments as `url` but returns a data uri. Useful if you want to generate a self-contained HTML page. If you're not sure, better use `url`.
+
 = 2021-04-07 =
 
 * fix: transcripts with trailing newlines don't confuse the importer
