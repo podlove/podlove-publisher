@@ -3,9 +3,9 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 5.2
-Tested up to: 5.6.0
+Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 3.4.1
+Stable tag: 3.5.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
