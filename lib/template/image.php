@@ -29,6 +29,66 @@ class Image extends Wrapper
     }
 
     /**
+     * Get data-uri for resized image.
+     *
+     * **Parameters**
+     *
+     * see `url`
+     *
+     * **Examples**
+     *
+     * ```jinja
+     * {{ image.dataUri }}               {# returns the unresized image data URI #}
+     * {{ image.dataUri({width: 100}) }} {# returns resized image data URI #}
+     * <img src="{{ image.dataUri }}" /> {# use it as img source #}
+     * ```
+     *
+     * **Return**
+     *
+     * The return value is a complete data uri like `data:image/png;base64,iVB...ggg==`.
+     *
+     * @accessor
+     *
+     * @param mixed $args
+     */
+    public function dataUri($args = [])
+    {
+        $defaults = [
+            'width' => null,
+            'height' => null,
+            'crop' => false,
+        ];
+        $args = wp_parse_args($args, $defaults);
+
+        $file = $this->image
+            ->setCrop((bool) $args['crop'])
+            ->setWidth($args['width'])
+            ->setHeight($args['height'])
+            ->resized_file()
+        ;
+
+        if (!file_exists($file)) {
+            $this->image->download_source();
+            if ($args['width'] || $args['height']) {
+                $this->image->generate_resized_copy();
+            }
+        }
+
+        // fallback
+        if (!file_exists($file)) {
+            return $this->url($args);
+        }
+
+        $data = file_get_contents($file);
+        $data64 = base64_encode($data);
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->buffer($data);
+
+        return 'data:'.$mime.';base64,'.$data64;
+    }
+
+    /**
      * Get URL for resized image.
      *
      * **Parameters**

@@ -122,7 +122,7 @@ class Entry extends Wrapper
             return false;
         }
 
-        $image_url = $data['providers']['open_graph']['image'] ?? $data['providers']['twitter']['image:src'] ?? false;
+        $image_url = $this->entry->image ?? $data['providers']['open_graph']['image'] ?? $data['providers']['twitter']['image:src'] ?? false;
 
         if ($image_url) {
             return new \Podlove\Template\Image((new \Podlove\Model\Image($image_url, $this->entry->title))->setWidth(1024));

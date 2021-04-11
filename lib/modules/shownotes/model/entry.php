@@ -98,5 +98,6 @@ Entry::property('description', 'TEXT');
 Entry::property('site_name', 'TEXT');
 Entry::property('site_url', 'TEXT');
 Entry::property('icon', 'TEXT');
+Entry::property('image', 'TEXT');
 Entry::property('created_at', 'INT');
 Entry::property('hidden', 'INT');

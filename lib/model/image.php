@@ -387,7 +387,7 @@ class Image
         // for download_url()
         require_once ABSPATH.'wp-admin/includes/file.php';
 
-        $result = $this->download_url($this->source_url);
+        $result = self::download_url($this->source_url);
 
         // TODO idea:
         // - whenever an image fetch fails, blacklist that URL from image caching
@@ -467,6 +467,57 @@ class Image
                 )
             );
         }
+    }
+
+    /**
+     * Downloads a url to a local temporary file using the WordPress HTTP Class.
+     * Please note, That the calling function must unlink() the file.
+     *
+     * This is a modified copy of WP Core download_url().
+     * I copied it because I need to look into the header of the response but
+     * unfortunately the original implementation does not expose it.
+     *
+     * @param string $url        the URL of the file to download
+     * @param int    $timeout    The timeout for the request to download the file default 300 seconds
+     * @param mixed  $extra_args
+     *
+     * @return mixed WP_Error on failure, array with Filename & http response on success
+     */
+    public static function download_url($url, $timeout = 300, $extra_args = [])
+    {
+        // WARNING: The file is not automatically deleted, The script must unlink() the file.
+        if (!$url) {
+            return new \WP_Error('http_no_url', __('Invalid URL Provided.'));
+        }
+
+        $tmpfname = wp_tempnam($url);
+        if (!$tmpfname) {
+            return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
+        }
+
+        $default_args = [
+            'timeout' => $timeout,
+            'stream' => true,
+            'filename' => $tmpfname,
+            'sslverify' => \Podlove\get_setting('website', 'ssl_verify_peer') == 'on',
+        ];
+        $args = array_merge($default_args, $extra_args);
+
+        $response = wp_safe_remote_get($url, $args);
+
+        if (is_wp_error($response)) {
+            unlink($tmpfname);
+
+            return $response;
+        }
+
+        if (200 != wp_remote_retrieve_response_code($response)) {
+            unlink($tmpfname);
+
+            return new \WP_Error('http_404', trim(wp_remote_retrieve_response_message($response)));
+        }
+
+        return [$tmpfname, $response];
     }
 
     /**
@@ -571,54 +622,6 @@ class Image
         }
 
         file_put_contents($this->cache_file(), Yaml::dump($cache_info));
-    }
-
-    /**
-     * Downloads a url to a local temporary file using the WordPress HTTP Class.
-     * Please note, That the calling function must unlink() the file.
-     *
-     * This is a modified copy of WP Core download_url().
-     * I copied it because I need to look into the header of the response but
-     * unfortunately the original implementation does not expose it.
-     *
-     * @param string $url     the URL of the file to download
-     * @param int    $timeout The timeout for the request to download the file default 300 seconds
-     *
-     * @return mixed WP_Error on failure, array with Filename & http response on success
-     */
-    private function download_url($url, $timeout = 300)
-    {
-        //WARNING: The file is not automatically deleted, The script must unlink() the file.
-        if (!$url) {
-            return new \WP_Error('http_no_url', __('Invalid URL Provided.'));
-        }
-
-        $tmpfname = wp_tempnam($url);
-        if (!$tmpfname) {
-            return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
-        }
-
-        $args = [
-            'timeout' => $timeout,
-            'stream' => true,
-            'filename' => $tmpfname,
-            'sslverify' => \Podlove\get_setting('website', 'ssl_verify_peer') == 'on',
-        ];
-        $response = wp_safe_remote_get($url, $args);
-
-        if (is_wp_error($response)) {
-            unlink($tmpfname);
-
-            return $response;
-        }
-
-        if (200 != wp_remote_retrieve_response_code($response)) {
-            unlink($tmpfname);
-
-            return new \WP_Error('http_404', trim(wp_remote_retrieve_response_message($response)));
-        }
-
-        return [$tmpfname, $response];
     }
 
     private function extract_file_extension()

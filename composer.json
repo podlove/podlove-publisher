@@ -12,7 +12,7 @@
         "geoip2/geoip2": "~2.0",
         "piwik/device-detector": "~3.12",
         "phpunit/php-timer": "~1.0",
-        "podlove/webvtt-parser": "^1.1.4",
+        "podlove/webvtt-parser": "^1.1.5",
         "geertw/ip-anonymizer": "^1.1",
         "dariuszp/cli-progress-bar": "^1.0",
         "league/csv": "9.5.0"

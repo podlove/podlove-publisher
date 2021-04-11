@@ -176,7 +176,20 @@ class REST_API
         ];
         $parsed = osf_parser($shownotes, $data);
 
-        $links = $parsed['export'][0]['subitems'];
+        $links = [];
+
+        foreach ($parsed['export'] as $group) {
+            if ($group['chapter']) {
+                $links[] = [
+                    'type' => 'topic',
+                    'title' => $group['orig']
+                ];
+            }
+            foreach ($group['subitems'] as $link) {
+                $link['type'] = 'link';
+                $links[] = $link;
+            }
+        }
 
         if (!is_array($links)) {
             return new \WP_Error(
@@ -187,14 +200,19 @@ class REST_API
         }
 
         $links = array_map(function ($link) {
-            if (!$link['orig'] || !$link['urls'] || !count($link['urls'])) {
-                return null;
+            if ($link['type'] == 'link') {
+                if (!$link['orig'] || !$link['urls'] || !count($link['urls'])) {
+                    return null;
+                }
+
+                return [
+                    'type' => 'link',
+                    'title' => $link['orig'],
+                    'url' => $link['urls'][0],
+                ];
             }
 
-            return [
-                'title' => $link['orig'],
-                'url' => $link['urls'][0],
-            ];
+            return $link;
         }, $links);
         $links = array_filter($links);
 
@@ -208,14 +226,25 @@ class REST_API
 
         foreach ($links as $link) {
             $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
-            $request->set_query_params([
-                'episode_id' => $episode->id,
-                'original_url' => $link['url'],
-                'data' => [
+            if ($link['type'] == 'link') {
+                $request->set_query_params([
+                    'episode_id' => $episode->id,
+                    'original_url' => $link['url'],
+                    'data' => [
+                        'title' => $link['title'],
+                    ],
+                    'type' => 'link',
+                ]);
+            } else {
+                $request->set_query_params([
+                    'episode_id' => $episode->id,
+                    'data' => [
+                        'title' => $link['title'],
+                    ],
                     'title' => $link['title'],
-                ],
-                'type' => 'link',
-            ]);
+                    'type' => 'topic',
+                ]);
+            }
             rest_do_request($request);
         }
 
@@ -358,6 +387,31 @@ class REST_API
         $entry->state = 'fetched';
         $entry->url = $data['url'];
         $entry->icon = $data['icon']['url'];
+        $entry->image = $data['image'];
+
+        // todo: should probably do this in an async job
+        $attachment_id = 0;
+
+        if ($data['image']) {
+            $attachment_id = \Podlove\download_external_image_to_media($data['image'], explode('?', basename($data['image']))[0]);
+        }
+
+        if (!$attachment_id && $data['screenshot_url']) {
+            if (\Podlove\Modules\Base::is_active('plus')) {
+                $plus = \Podlove\Modules\Plus\Plus::instance();
+                $curl_args = [
+                    'headers' => [
+                        'Authorization' => 'Bearer '.$plus->get_module_option('plus_api_token')
+                    ]
+                ];
+                $attachment_id = \Podlove\download_external_image_to_media($data['screenshot_url'], 'screenshot.jpg', $curl_args);
+            }
+        }
+
+        if ($attachment_id && !\is_wp_error($attachment_id)) {
+            $attachment_url = \wp_get_attachment_url($attachment_id);
+            $entry->image = $attachment_url;
+        }
 
         if (!$entry->title) {
             $entry->title = $data['title'];

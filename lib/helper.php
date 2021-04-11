@@ -20,6 +20,7 @@ function load_template($path, $vars = [])
     }
 
     extract($vars);
+
     require $template;
 }
 
@@ -227,6 +228,7 @@ function get_landing_page_url()
             return home_url();
 
             break;
+
         case 'archive':
             if ('on' == \Podlove\get_setting('website', 'episode_archive')) {
                 $archive_slug = trim(\Podlove\get_setting('website', 'episode_archive_slug'), '/');
@@ -238,6 +240,7 @@ function get_landing_page_url()
             }
 
             break;
+
         default:
             if (is_numeric($landing_page)) {
                 if ($link = get_permalink($landing_page)) {
@@ -363,6 +366,58 @@ function episode_types()
     ];
 }
 
+function download_external_image_to_media($url, $name, $curl_args = [])
+{
+    if (!$url) {
+        return;
+    }
+
+    if (!function_exists('\download_url')) {
+        require_once ABSPATH.'wp-admin/includes/file.php';
+    }
+
+    if (!function_exists('\media_handle_sideload')) {
+        require_once ABSPATH.'wp-admin/includes/media.php';
+    }
+
+    if (!function_exists('\wp_read_image_metadata')) {
+        require_once ABSPATH.'wp-admin/includes/image.php';
+    }
+
+    $r = \Podlove\Model\Image::download_url($url, 300, $curl_args);
+
+    if (\is_wp_error($r)) {
+        return $r;
+    }
+
+    [$tmp, $resp] = $r;
+
+    $file_array = [
+        'name' => $name,
+        'tmp_name' => $tmp
+    ];
+
+    // unlink file if there were download errors
+    if (\is_wp_error($tmp)) {
+        @unlink($file_array['tmp_name']);
+
+        return $tmp;
+    }
+
+    // set post_id to 0 so it is not attached to any post
+    $post_id = '0';
+
+    $id = \media_handle_sideload($file_array, $post_id);
+
+    if (\is_wp_error($id)) {
+        @unlink($file_array['tmp_name']);
+
+        return $id;
+    }
+
+    return $id;
+}
+
 namespace Podlove\Form;
 
 /**
@@ -419,7 +474,7 @@ function build_for($object, $args, $callback)
 
 	<?php if (isset($args['hidden']) && $args['hidden']) { ?>
 		<?php foreach ($args['hidden'] as $name => $value) { ?>
-			<input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" />		
+			<input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" />
 		<?php } ?>
 	<?php } ?>
 
@@ -442,7 +497,7 @@ function build_for($object, $args, $callback)
 	<?php if ($print_form) { ?>
 		</form>
 	<?php } ?>
-	
+
 	<?php
 }
 

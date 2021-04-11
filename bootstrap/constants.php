@@ -30,7 +30,7 @@ function get_plugin_header($tag_name)
         require_once ABSPATH.'/wp-admin/includes/plugin.php';
     }
 
-    $plugin_data = get_plugin_data(PLUGIN_FILE);
+    $plugin_data = get_plugin_data(PLUGIN_FILE, false, false);
 
     return $plugin_data[$tag_name];
 }

@@ -140,7 +140,7 @@ class Custom_Guid
      *
      * @return string
      */
-    public static function override_wordpress_guid($guid, $post_id)
+    public static function override_wordpress_guid($guid, $post_id = null)
     {
         if ($podlove_guid = get_post_meta($post_id, '_podlove_guid', true)) {
             return $podlove_guid;
