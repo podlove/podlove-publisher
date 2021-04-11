@@ -74,8 +74,9 @@ class Image extends Wrapper
             }
         }
 
+        // fallback
         if (!file_exists($file)) {
-            return 'still nope';
+            return $this->url($args);
         }
 
         $data = file_get_contents($file);
