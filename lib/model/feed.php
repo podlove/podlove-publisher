@@ -211,7 +211,7 @@ class Feed extends Base
         return 'application/rss+xml';
     }
 
-    public function get_self_link()
+    public function get_feed_self_link()
     {
         $href = $this->get_contextual_subscribe_url();
 
