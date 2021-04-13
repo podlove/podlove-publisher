@@ -164,7 +164,7 @@ function override_feed_head($hook, $podcast, $feed, $format)
     });
 
     add_action($hook, function () use ($feed) {
-        echo $feed->get_self_link();
+        echo $feed->get_feed_self_link();
         echo $feed->get_alternate_links();
     }, 9);
 
