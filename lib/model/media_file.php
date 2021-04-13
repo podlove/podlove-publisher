@@ -202,7 +202,7 @@ class MediaFile extends Base
 
         return $path;
     }
-
+    
     /**
      * Return real file URL.
      *
@@ -223,12 +223,21 @@ class MediaFile extends Base
                 return '';
             }
 
-            $template = $podcast->get_url_template();
-            $template = apply_filters('podlove_file_url_template', $template);
-            $template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
-            $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($episode->slug), $template);
-            $template = str_replace('%suffix%', $episode_asset->suffix, $template);
-            $template = str_replace('%format_extension%', $file_type->extension, $template);
+            $slug = apply_filters('podlove_file_url_template', '');
+            if ($slug === '') {
+                $slug = $episode->slug;
+            }
+
+            if (\Podlove\is_absolute_url($slug)) {
+                $template = $slug;
+            } else {
+                $template = $podcast->get_url_template();
+                $template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
+                $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($slug), $template);
+                $template = str_replace('%suffix%', $episode_asset->suffix, $template);
+                $template = str_replace('%format_extension%', $file_type->extension, $template);
+            }
+
 
             return trim($template);
         });
@@ -248,10 +257,14 @@ class MediaFile extends Base
      */
     public function get_download_file_name()
     {
-        $file_name = $this->episode()->slug
-                   .'.'
-                   .$this->episode_asset()->file_type()->extension;
-
+        $slug = $this->episode()->slug;
+        if (\Podlove\is_absolute_url($slug)) {
+            $file_name = preg_replace('/^.+:\/\//', '', $slug);
+        } else {
+            $file_name = $slug
+                       .'.'
+                       .$this->episode_asset()->file_type()->extension;
+        }
         return apply_filters('podlove_download_file_name', $file_name, $this);
     }
 
