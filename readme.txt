@@ -109,7 +109,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 3.5.1 =
 
 * add: expert setting to make episode permalinks `/%postname%/`
-* include Publisher Database Version in system report
+* add: include Publisher Database Version in system report
+* drop WordPress version requirement to 4.9.6
 
 = 3.5.0 =
 
