@@ -63,6 +63,9 @@ class SystemReport
             'podlove_version' => ['title' => 'Publisher Version', 'callback' => function () {
                 return \Podlove\get_plugin_header('Version');
             }],
+            'podlove_database_version' => ['title' => 'Publisher Database Version', 'callback' => function () {
+                return get_option('podlove_database_version');
+            }],
             'player_version' => ['title' => 'Web Player Version', 'callback' => function () {
                 return \Podlove\get_webplayer_setting('version');
             }],

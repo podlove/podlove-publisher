@@ -1,11 +1,11 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
-Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 5.2
-Tested up to: 5.7
+Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio, ClassicPress
+Requires at least: 4.9.6
+Tested up to: 5.5.3
 Requires PHP: 7.0
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -105,6 +105,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.5.1 =
+
+* add: expert setting to make episode permalinks `/%postname%/`
+* include Publisher Database Version in system report
 
 = 3.5.0 =
 
