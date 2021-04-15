@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2021-04-15 =
 
 * revert permalink changes from releases 3.5.0 and 3.5.1
+* fix: remove usage of PHP 7.1 syntax in one file
 
 = 2021-04-14 =
 
