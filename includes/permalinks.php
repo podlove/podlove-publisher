@@ -1,23 +1,6 @@
 <?php
 
-if (!defined('PODLOVE_ENABLE_PERMALINK_MAGIC')) {
-    define('PODLOVE_ENABLE_PERMALINK_MAGIC', false);
-}
-
-/*
- * Permalink magic.
- *
- * This is now off by default as it causes bugs (permalinks disappear erratically)
- * and I don't know how to fix it except disabling this chunk of code.
- *
- * For backward compatibility it can be re-enabled by a single line of code in the wp-config.php:
- *
- * define('PODLOVE_ENABLE_PERMALINK_MAGIC', true);
- *
- * @see https://github.com/podlove/podlove-publisher/issues/1038
- *
- */
-if (PODLOVE_ENABLE_PERMALINK_MAGIC && get_option('permalink_structure') != '') {
+if (get_option('permalink_structure') != '') {
     add_action('after_setup_theme', 'podlove_add_podcast_rewrite_rules', 99);
     add_action('permalink_structure_changed', 'podlove_add_podcast_rewrite_rules');
     add_action('wp', 'podlove_no_verbose_page_rules');
