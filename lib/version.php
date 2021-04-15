@@ -1712,7 +1712,7 @@ function run_migrations_for_version($version)
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
             break;
-        
+
         case 152:
 
 			$sql1 = sprintf(
