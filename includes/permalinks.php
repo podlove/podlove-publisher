@@ -1,50 +1,6 @@
 <?php
 
-// BEGIN attempt at simple permalink logic
-
-if ('on' === \Podlove\get_setting('website', 'episode_simple_permalink')) {
-    add_action('init', 'podlove_simple_episode_urls_custom_rewrite');
-    add_filter('post_type_link', 'podlove_simple_episode_urls_custom_permalinks', 10, 2);
-}
-
-function podlove_simple_episode_urls_custom_rewrite()
-{
-    add_permastruct('podcast', '/%custom_episode_name%/', false);
-}
-
-function podlove_simple_episode_urls_custom_permalinks($permalink, $post, $leavename = false, $sample = false)
-{
-    if (!$post) {
-        return $permalink;
-    }
-
-    if ('podcast' != $post->post_type || $sample || $leavename) {
-        return $permalink;
-    }
-
-    return str_replace('%custom_episode_name%/', $post->post_name, $permalink);
-}
-
-// END attempt at simple permalink logic
-
-if (!defined('PODLOVE_ENABLE_PERMALINK_MAGIC')) {
-    define('PODLOVE_ENABLE_PERMALINK_MAGIC', false);
-}
-
-/*
- * Permalink magic.
- *
- * This is now off by default as it causes bugs (permalinks disappear erratically)
- * and I don't know how to fix it except disabling this chunk of code.
- *
- * For backward compatibility it can be re-enabled by a single line of code in the wp-config.php:
- *
- * define('PODLOVE_ENABLE_PERMALINK_MAGIC', true);
- *
- * @see https://github.com/podlove/podlove-publisher/issues/1038
- *
- */
-if (PODLOVE_ENABLE_PERMALINK_MAGIC && get_option('permalink_structure') != '') {
+if (get_option('permalink_structure') != '') {
     add_action('after_setup_theme', 'podlove_add_podcast_rewrite_rules', 99);
     add_action('permalink_structure_changed', 'podlove_add_podcast_rewrite_rules');
     add_action('wp', 'podlove_no_verbose_page_rules');

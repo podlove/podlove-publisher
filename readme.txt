@@ -106,7 +106,28 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.5.2 =
+
+This releases reverses all changes to Permalinks in releases 3.5.0 and 3.5.1.
+
+I severely underestimated the effect these changes would have and revert all changes until I find a better solution. It’s simply not acceptable to change episode URLs, especially without an option for automatic redirects.
+
+Please verify your episode URLs and the two expert settings “Permalink structure for episodes” and “Episode Pages”.
+
+What to do if you have used the “PODLOVE_ENABLE_PERMALINK_MAGIC” constant? It has no effect any more and you can safely remove it from your config file.
+
+What happened to the “Simple Episode Permalink” setting from release 3.5.1? It has been removed, too.
+
+Sorry for the trouble.
+Happy podcasting :)
+
+**Other**
+
+* fix: remove usage of PHP 7.1 syntax in one file
+
 = 3.5.1 =
+
+= 2021-04-14 =
 
 * add: expert setting to make episode permalinks `/%postname%/`
 * add: include Publisher Database Version in system report

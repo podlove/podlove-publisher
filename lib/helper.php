@@ -390,7 +390,7 @@ function download_external_image_to_media($url, $name, $curl_args = [])
         return $r;
     }
 
-    [$tmp, $resp] = $r;
+    list($tmp, $resp) = $r;
 
     $file_array = [
         'name' => $name,
