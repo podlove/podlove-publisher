@@ -1,32 +1,5 @@
 <?php
 
-// BEGIN attempt at simple permalink logic
-
-if ('on' === \Podlove\get_setting('website', 'episode_simple_permalink')) {
-    add_action('init', 'podlove_simple_episode_urls_custom_rewrite');
-    add_filter('post_type_link', 'podlove_simple_episode_urls_custom_permalinks', 10, 2);
-}
-
-function podlove_simple_episode_urls_custom_rewrite()
-{
-    add_permastruct('podcast', '/%custom_episode_name%/', false);
-}
-
-function podlove_simple_episode_urls_custom_permalinks($permalink, $post, $leavename = false, $sample = false)
-{
-    if (!$post) {
-        return $permalink;
-    }
-
-    if ('podcast' != $post->post_type || $sample || $leavename) {
-        return $permalink;
-    }
-
-    return str_replace('%custom_episode_name%/', $post->post_name, $permalink);
-}
-
-// END attempt at simple permalink logic
-
 if (!defined('PODLOVE_ENABLE_PERMALINK_MAGIC')) {
     define('PODLOVE_ENABLE_PERMALINK_MAGIC', false);
 }

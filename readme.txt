@@ -106,10 +106,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2021-04-14 =
-
-* add: expert setting to make episode permalinks `/%postname%/`
-
 = 2021-04-12 =
 
 * include Publisher Database Version in system report

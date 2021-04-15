@@ -150,27 +150,6 @@ class Website extends Tab
             // $section
             'podlove_settings_general'
             );
-        } else {
-            add_settings_field(
-                // $id
-                'podlove_setting_episode_simple_permalink',
-                // $title
-                sprintf(
-                    '<label for="episode_simple_permalink">%s</label>',
-                    __('Simple Episode Permalink', 'podlove-podcasting-plugin-for-wordpress')
-                ),
-                // $callback
-                function () {
-                    ?>
-				    <input name="podlove_website[episode_simple_permalink]" id="episode_simple_permalink" type="checkbox" <?php checked(\Podlove\get_setting('website', 'episode_simple_permalink'), 'on'); ?>>
-                    <?php
-                echo __('Episode Permalinks are <code>/%postname%/</code> without any prefixes.', 'podlove-podcasting-plugin-for-wordpress');
-                },
-                // $page
-                Settings::$pagehook,
-                // $section
-                'podlove_settings_general'
-            );
         }
 
         add_settings_field(
@@ -337,7 +316,6 @@ class Website extends Tab
                 'episode_archive',
                 'ssl_verify_peer',
                 'feeds_skip_redirect',
-                'episode_simple_permalink'
             ];
             foreach ($checkboxes as $checkbox_key) {
                 if (!isset($options[$checkbox_key])) {
@@ -380,8 +358,6 @@ class Website extends Tab
                     $options['episode_archive_slug'] = $blog_prefix.$options['episode_archive_slug'];
                 }
             }
-
-            set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
             return $options;
         });
