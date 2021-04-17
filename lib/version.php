@@ -1424,7 +1424,7 @@ function run_migrations_for_version($version)
             $should_activate_protection_module = false;
             foreach (Model\Feed::all() as $feed) {
                 if ($feed->protected) {
-                    $should_activate_protection_module = treu;
+                    $should_activate_protection_module = true;
                 }
             }
 
