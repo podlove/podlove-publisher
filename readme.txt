@@ -106,18 +106,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2021-04-15 =
+= 2021-04-18 =
 
-* revert permalink changes from releases 3.5.0 and 3.5.1
-* fix: remove usage of PHP 7.1 syntax in one file
-
-= 2021-04-14 =
-
-* add: expert setting to make episode permalinks `/%postname%/`
-
-= 2021-04-12 =
-
-* include Publisher Database Version in system report
+* perf: remove frontend.js (inline logic to download button HTML)
 
 ----
 

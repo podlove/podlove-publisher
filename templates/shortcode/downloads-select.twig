@@ -17,4 +17,28 @@
     <button class="podlove-download-secondary">Show URL</button>
  </div>
 </form>
+
+<script>
+function podlove_document_ready(fn) {
+  if (document.readyState != 'loading'){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
+podlove_document_ready(function() {
+	document.querySelectorAll(".episode_downloads").forEach(function(item) {
+        var selectEl = item.querySelector("select");
+
+        item.querySelector("button.podlove-download-secondary").addEventListener("click", function(e) {
+			e.preventDefault();
+            var optionEl = selectEl.querySelector("option[value='"+ selectEl.value +"']")
+            let url = optionEl.dataset.rawUrl;
+			prompt("Feel free to copy and paste this URL", url);
+			return false;
+		})
+	});
+});
+</script>
 {% endspaceless %}
