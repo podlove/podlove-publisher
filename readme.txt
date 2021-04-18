@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2021-04-18 =
 
 * perf: remove frontend.js (inline logic to download button HTML)
+* feat: episode slug field may contain an absolute URL
 
 ----
 
