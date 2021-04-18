@@ -143,6 +143,7 @@ class MediaFile extends Base
                     );
 
                     break;
+
                 case 'ptm_analytics':
                     // we track, so we need to generate a shadow URL
                     if (get_option('permalink_structure')) {
@@ -155,6 +156,7 @@ class MediaFile extends Base
                     $url = home_url($path);
 
                     break;
+
                 default:
                     // tracking is off, return raw URL
                     $url = $this->get_file_url();
@@ -202,7 +204,7 @@ class MediaFile extends Base
 
         return $path;
     }
-    
+
     /**
      * Return real file URL.
      *
@@ -238,7 +240,6 @@ class MediaFile extends Base
                 $template = str_replace('%format_extension%', $file_type->extension, $template);
             }
 
-
             return trim($template);
         });
     }
@@ -258,13 +259,13 @@ class MediaFile extends Base
     public function get_download_file_name()
     {
         $slug = $this->episode()->slug;
+
         if (\Podlove\is_absolute_url($slug)) {
-            $file_name = preg_replace('/^.+:\/\//', '', $slug);
+            $file_name = ltrim(parse_url($slug)['path'], '/');
         } else {
-            $file_name = $slug
-                       .'.'
-                       .$this->episode_asset()->file_type()->extension;
+            $file_name = $slug.'.'.$this->episode_asset()->file_type()->extension;
         }
+
         return apply_filters('podlove_download_file_name', $file_name, $this);
     }
 
