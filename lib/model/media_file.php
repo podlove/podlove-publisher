@@ -143,7 +143,6 @@ class MediaFile extends Base
                     );
 
                     break;
-
                 case 'ptm_analytics':
                     // we track, so we need to generate a shadow URL
                     if (get_option('permalink_structure')) {
@@ -156,7 +155,6 @@ class MediaFile extends Base
                     $url = home_url($path);
 
                     break;
-
                 default:
                     // tracking is off, return raw URL
                     $url = $this->get_file_url();
@@ -225,20 +223,12 @@ class MediaFile extends Base
                 return '';
             }
 
-            $slug = apply_filters('podlove_file_url_template', '');
-            if ($slug === '') {
-                $slug = $episode->slug;
-            }
-
-            if (\Podlove\is_absolute_url($slug)) {
-                $template = $slug;
-            } else {
-                $template = $podcast->get_url_template();
-                $template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
-                $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($slug), $template);
-                $template = str_replace('%suffix%', $episode_asset->suffix, $template);
-                $template = str_replace('%format_extension%', $file_type->extension, $template);
-            }
+            $template = $podcast->get_url_template();
+            $template = apply_filters('podlove_file_url_template', $template);
+            $template = str_replace('%media_file_base_url%', trailingslashit($podcast->media_file_base_uri), $template);
+            $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($episode->slug), $template);
+            $template = str_replace('%suffix%', $episode_asset->suffix, $template);
+            $template = str_replace('%format_extension%', $file_type->extension, $template);
 
             return trim($template);
         });
@@ -258,13 +248,9 @@ class MediaFile extends Base
      */
     public function get_download_file_name()
     {
-        $slug = $this->episode()->slug;
-
-        if (\Podlove\is_absolute_url($slug)) {
-            $file_name = ltrim(parse_url($slug)['path'], '/');
-        } else {
-            $file_name = $slug.'.'.$this->episode_asset()->file_type()->extension;
-        }
+        $file_name = $this->episode()->slug
+                   .'.'
+                   .$this->episode_asset()->file_type()->extension;
 
         return apply_filters('podlove_download_file_name', $file_name, $this);
     }

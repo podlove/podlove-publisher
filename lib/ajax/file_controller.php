@@ -57,7 +57,7 @@ class FileController
         $episode_asset_id = (int) $_REQUEST['episode_asset_id'];
 
         if (!$episode_id || !$episode_asset_id) {
-            exit();
+            die();
         }
 
         if (isset($_REQUEST['slug'])) {
@@ -75,6 +75,8 @@ class FileController
 
     private static function simulate_temporary_episode_slug($slug)
     {
-        add_filter('podlove_file_url_template', $slug);
+        add_filter('podlove_file_url_template', function ($template) use ($slug) {
+            return str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($slug), $template);
+        });
     }
 }
