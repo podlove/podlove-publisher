@@ -29,6 +29,7 @@ class Directory extends Tab
             'complete',
             'funding_url',
             'funding_label',
+            'copyright',
         ];
 
         $settings = get_option('podlove_podcast');
@@ -120,6 +121,12 @@ class Directory extends Tab
             $wrapper->string('funding_label', [
                 'label' => __('Funding Label', 'podlove-podcasting-plugin-for-wordpress'),
                 'description' => __('Label for funding/donation URL.', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text'],
+            ]);
+
+            $wrapper->string('copyright', [
+                'label' => __('Copyright', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('Copyright notice for content in the channel.', 'podlove-podcasting-plugin-for-wordpress'),
                 'html' => ['class' => 'regular-text'],
             ]);
         });

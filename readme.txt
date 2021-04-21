@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-04-21 =
+
+* adds copyright field in "Podcast Settings - Directory", which is apparently required by the Apple Podcast Directory since yesterday.
+
 = 2021-04-18 =
 
 * perf: remove frontend.js (inline logic to download button HTML)
