@@ -3,9 +3,9 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio, ClassicPress
 Requires at least: 4.9.6
-Tested up to: 5.5.3
+Tested up to: 5.7.1
 Requires PHP: 7.0
-Stable tag: 3.5.3
+Stable tag: 3.5.4
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -105,6 +105,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.5.4 =
+
+* adds copyright field in "Podcast Settings - Directory", which is apparently required by the Apple Podcast Directory since yesterday.
+* perf: remove frontend.js (inline logic to download button HTML)
 
 = 3.5.2 / 3.5.3 =
 

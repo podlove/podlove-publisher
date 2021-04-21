@@ -475,3 +475,4 @@ Podcast::property('flattr'); // @deprecated since 2.3.0 (now: wp_option "podlove
 Podcast::property('plus_enable_proxy');
 Podcast::property('funding_url');
 Podcast::property('funding_label');
+Podcast::property('copyright');

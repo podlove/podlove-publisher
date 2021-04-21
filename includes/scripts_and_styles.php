@@ -46,10 +46,3 @@ add_action('admin_print_styles', function () {
         wp_enqueue_style('jquery-ui-style', \Podlove\PLUGIN_URL.'/js/admin/jquery-ui/css/smoothness/jquery-ui.css');
     }
 });
-
-// frontend styles & scripts
-add_action('wp_enqueue_scripts', function () {
-    $version = \Podlove\get_plugin_header('Version');
-
-    wp_enqueue_script('podlove_frontend', \Podlove\PLUGIN_URL.'/js/frontend.js', ['jquery'], $version);
-});
