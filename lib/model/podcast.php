@@ -229,6 +229,11 @@ class Podcast implements Licensable
         return strlen(trim($this->cover_image)) > 0;
     }
 
+    public function default_copyright_claim()
+    {
+        return '© '.date('Y').' '.($this->author_name ?? $this->title);
+    }
+
     /**
      * Episodes.
      *
