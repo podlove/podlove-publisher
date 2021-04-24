@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2021-04-24 =
 
 * generate default copyright claim if it is not explcitly set
+* fix(related episodes): remove whitespace in shortcode HTML to fix rendering in Spotify
 
 ----
 
