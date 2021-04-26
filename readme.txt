@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-04-26 =
+
+* webvtt transcripts use public contributor name
+
 = 2021-04-24 =
 
 * generate default copyright claim if it is not explcitly set

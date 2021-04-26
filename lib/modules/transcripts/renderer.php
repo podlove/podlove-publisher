@@ -4,6 +4,7 @@ namespace Podlove\Modules\Transcripts;
 
 use Podlove\Model\Episode;
 use Podlove\Model\Podcast;
+use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Transcripts\Model\Transcript;
 
 /**
@@ -92,9 +93,17 @@ class Renderer
 
     public function as_webvtt()
     {
+        $voices = Transcript::get_voices_for_episode_id($this->episode->id);
+        $contributors_map = [];
+
+        foreach ($voices as $voice) {
+            $contributors_map[$voice->voice] = Contributor::find_by_id($voice->contributor_id);
+        }
+
         $transcript = Transcript::get_transcript($this->episode->id);
-        $transcript = array_map(function ($t) {
-            $voice = $t->voice ? "<v {$t->voice}>" : '';
+        $transcript = array_map(function ($t) use ($contributors_map) {
+            $voice_title = $contributors_map[$t->voice]->getName() ?? $t->voice;
+            $voice = $t->voice ? "<v {$voice_title}>" : '';
 
             return sprintf(
                 "%s --> %s\n%s%s",
