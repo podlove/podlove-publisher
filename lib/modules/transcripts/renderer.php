@@ -102,7 +102,8 @@ class Renderer
 
         $transcript = Transcript::get_transcript($this->episode->id);
         $transcript = array_map(function ($t) use ($contributors_map) {
-            $voice_title = $contributors_map[$t->voice]->getName() ?? $t->voice;
+            $contributor = $contributors_map[$t->voice];
+            $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $t->voice;
             $voice = $t->voice ? "<v {$voice_title}>" : '';
 
             return sprintf(
