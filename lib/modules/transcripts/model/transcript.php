@@ -78,6 +78,10 @@ class Transcript extends \Podlove\Model\Base
     public static function prepare_transcript($transcript, $mode = 'flat')
     {
         $transcript = array_map(function ($t) {
+            if (!$t->contributor_id) {
+                return null;
+            }
+
             return [
                 'start' => \Podlove\Modules\Transcripts\Renderer::format_time($t->start),
                 'start_ms' => (int) $t->start,
@@ -88,6 +92,8 @@ class Transcript extends \Podlove\Model\Base
                 'text' => $t->content,
             ];
         }, $transcript);
+
+        $transcript = array_filter($transcript);
 
         if ($mode != 'flat') {
             $transcript = array_reduce($transcript, function ($agg, $item) {

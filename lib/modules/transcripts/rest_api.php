@@ -55,13 +55,11 @@ class REST_API
 
         if (is_array($request['transcript_voice'])) {
             foreach ($request['transcript_voice'] as $voice => $id) {
-                if ($id > 0) {
-                    $voice_assignment = new VoiceAssignment();
-                    $voice_assignment->episode_id = $episode->id;
-                    $voice_assignment->voice = $voice;
-                    $voice_assignment->contributor_id = $id;
-                    $voice_assignment->save();
-                }
+                $voice_assignment = new VoiceAssignment();
+                $voice_assignment->episode_id = $episode->id;
+                $voice_assignment->voice = $voice;
+                $voice_assignment->contributor_id = (int) $id;
+                $voice_assignment->save();
             }
         }
 

@@ -108,7 +108,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2021-04-27 =
 
-* fix: handle webvtt voice, missing contributori
+* fix: handle webvtt voice, missing Contributors
+* transcript voices / contributors:
+  * you can now select "none" in the voice assignment
+  * only voices with an assigned contributor (and not "none") appear in public transcripts
+
 
 = 2021-04-26 =
 

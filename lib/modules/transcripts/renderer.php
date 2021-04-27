@@ -103,6 +103,11 @@ class Renderer
         $transcript = Transcript::get_transcript($this->episode->id);
         $transcript = array_map(function ($t) use ($contributors_map) {
             $contributor = $contributors_map[$t->voice];
+
+            if (!$contributor) {
+                return null;
+            }
+
             $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $t->voice;
             $voice = $t->voice ? "<v {$voice_title}>" : '';
 
@@ -114,6 +119,8 @@ class Renderer
                 $t->content
             );
         }, $transcript);
+
+        $transcript = array_filter($transcript);
 
         $note = "NOTE\n";
         $note .= 'Podcast: '.Podcast::get()->title."\n";
