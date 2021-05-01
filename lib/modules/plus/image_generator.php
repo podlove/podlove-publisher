@@ -12,7 +12,7 @@ class ImageGenerator
     {
         $this->module = $module;
         $this->api = $api;
-        $this->token = $module->get_module_option('plus_api_token');
+        $this->token = $api->getToken();
     }
 
     public static function is_enabled()
@@ -57,12 +57,11 @@ class ImageGenerator
 
     public function get_open_graph_image_url($square_image_url, $background_color)
     {
-        $base = Plus::base_url().'/api/public/v1/image/dynamic/';
-        $account_id = $this->api->get_account_id();
+        $preset_id = $this->get_or_create_preset_id('podcast_simple');
+
+        $base = Plus::base_url().'/media/image/';
 
         $payload = [
-            'account_id' => $account_id,
-            'template' => 'cover_simple',
             'modifications' => [
                 [
                     'name' => 'url',
@@ -78,8 +77,26 @@ class ImageGenerator
         $payload_encoded = base64_encode(json_encode($payload));
         $payload_encoded = rtrim($payload_encoded, '='); // trim padding
 
-        $signature = hash_hmac('sha256', $payload_encoded, $this->token);
+        $signature = hash_hmac('sha256', $preset_id.$payload_encoded, $this->token);
 
-        return $base.$payload_encoded.'/'.$signature.'/image.jpg';
+        return $base.$preset_id.'/'.$payload_encoded.'/'.$signature.'/image.jpg';
+    }
+
+    public function get_or_create_preset_id($template_name)
+    {
+        $presets = get_option('podlove_plus_image_presets');
+
+        if (!$presets) {
+            $presets = [];
+        }
+
+        if (!isset($presets[$template_name])) {
+            $response = $this->api->create_image_preset($template_name);
+            $preset = json_decode($response['body']);
+            $presets[$template_name] = $preset->id;
+            update_option('podlove_plus_image_presets', $presets);
+        }
+
+        return $presets[$template_name];
     }
 }

@@ -15,6 +15,11 @@ class API
         $this->token = $token;
     }
 
+    public function getToken()
+    {
+        return $this->token;
+    }
+
     public function get_me()
     {
         $curl = new Http\Curl();
@@ -86,6 +91,21 @@ class API
         }
 
         return false;
+    }
+
+    public function create_image_preset($template_name, $modifications = [])
+    {
+        $payload = json_encode(['template' => $template_name, 'modifications' => $modifications]);
+
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url().'/api/rest/v1/image/preset', $this->params([
+            'method' => 'POST',
+            'body' => $payload,
+        ]));
+
+        do_action('podlove_plus_api_create_image_preset');
+
+        return $curl->get_response();
     }
 
     private function params($params = [])

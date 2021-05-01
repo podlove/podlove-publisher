@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-05-01 =
+
+* fix: PLUS open graph images (use new API)
+
 = 2021-04-27 =
 
 * fix: handle webvtt voice, missing Contributors
