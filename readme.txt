@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-05-02 =
+
+* fix: transcript API returns list again
+
 = 2021-05-01 =
 
 * fix: PLUS open graph images (use new API)

@@ -94,6 +94,7 @@ class Transcript extends \Podlove\Model\Base
         }, $transcript);
 
         $transcript = array_filter($transcript);
+        $transcript = array_values($transcript);
 
         if ($mode != 'flat') {
             $transcript = array_reduce($transcript, function ($agg, $item) {
