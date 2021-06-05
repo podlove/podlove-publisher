@@ -1,20 +1,19 @@
 (function($) {
 
-	$(document).ready(function() {
+	var initTemplateComponent = function() {
 
-		var $editor     = $("#template-editor");
-		var $title      = $(".editor .title input", $editor);
-		var $toolbar    = $(".toolbar", $editor);
-		var $footer    =  $("footer", $editor);
-		var $navigation = $(".navigation", $editor);
-		var $preview    = $("#podlove_template_shortcode_preview");
+		var $editor     = document.querySelector("#template-editor");
+		var $title      = $editor.querySelector(".editor .title input");
+		var $footer    =  $editor.querySelector("footer");
+		var $navigation = $editor.querySelector(".navigation");
+		var $preview    = document.querySelector("#podlove_template_shortcode_preview");
 
 		var editor = ace.edit("ace-editor");
 
-		$("#fullscreen").on( 'click', function () {
-			$(document.body).toggleClass("fullScreen");
-			$("#ace-editor").toggleClass("fullScreen-editor");
-			$(this).toggleClass("fullscreen-on").toggleClass("fullscreen-off");
+		document.querySelector("#fullscreen").addEventListener( 'click', function () {
+			document.querySelector("body").classList.toggle("fullScreen");
+			document.querySelector("#ace-editor").classList.toggle("fullScreen-editor");
+			this.classList.toggle("fullscreen-on").classList.toggle("fullscreen-off");
 			editor.resize();
 			window.scroll(0,0); // reset window scrolling to avoid fullscreen-button positioning issues
 		} );
@@ -23,29 +22,31 @@
 		var templates   = [];
 
 		var template = function (id, title, content) {
-			
-			var $navigationItem = $("li a[data-id=" + id + "]", $navigation);
+
+			var $navigationItem = $navigation.querySelector("li a[data-id='" + id + "']");
 			var isMarked = false;
 
 			var markAsUnsaved = function () {
 				if (!isMarked) {
 					isMarked = true;
-					$navigationItem.html($navigationItem.html() + '<span class="unsaved" title="unsaved changes"> ● </span>');
+					$navigationItem.insertAdjacentHTML('beforeend', '<span class="unsaved" title="unsaved changes"> ● </span>');
 				}
 			};
 
 			var markAsSaved = function () {
 				if (isMarked) {
 					isMarked = false;
-					$navigationItem.find(".unsaved").remove();
-					$preview.val('[podlove-template template="' + this.title + '"]');
+
+                    $navigationItem.querySelector(".unsaved").remove();
+
+                    $preview.value = '[podlove-template template="' + this.title + '"]'
 				}
 			};
 
 			var activate = function () {
-				$title.val(this.title);
-				$preview.val('[podlove-template template="' + this.title + '"]');
-				editor.getSession().setValue(this.content);
+				$title.value = this.title;
+				$preview.value = '[podlove-template template="' + this.title + '"]';
+				editor.getSession().setValue(this.content || "");
 			};
 
 			return {
@@ -63,13 +64,11 @@
 		editor.getSession().setUseWrapMode(true);
 
 		var activate_template = function(e) {
-			var $this = $(this);
-			var template_id = $this.data('id');
+			var $this = this;
+			var template_id = $this.dataset['id'];
 
-			$this.closest("li")
-				.addClass("active")
-				.siblings().removeClass("active")
-			;
+            $navigation.querySelectorAll("li").forEach(e => e.classList.remove("active"));
+			$this.closest("li").classList.add("active");
 
 			if (templates[template_id]) {
 				templates[template_id].activate();
@@ -91,13 +90,13 @@
 		};
 
 		var save_template = function(e) {
-			var save_button = $(this);
-			var template_id = $("li.active a", $navigation).data("id");
-			var template_title = $title.val();
+			var save_button = this;
+			var template_id = $navigation.querySelector("li.active a").dataset["id"];
+			var template_title = $title.value;
 			var template_content = editor.getSession().getValue();
-			var saving_icon = '<i class="podlove-icon-spinner rotate"></i>';
+			var saving_icon = `<i class="podlove-icon-spinner rotate"></i>`;
 
-			$("li.active a", $navigation).append(saving_icon);
+			$navigation.querySelector("li.active a").insertAdjacentHTML('beforeend', saving_icon);
 
 			$.ajax(ajaxurl, {
 				dataType: 'json',
@@ -110,7 +109,7 @@
 				},
 				success: function(data, status, xhr) {
 					save_button.blur();
-					$("li.active a i", $navigation).remove();
+					$navigation.querySelector("li.active a i").remove();
 					if (!data.success) {
 						console.log("Error: Could not save template.");
 					} else {
@@ -123,21 +122,21 @@
 		};
 
 		var update_title = function(e) {
-			var $active_item = $("li.active a", $navigation);
-			var template_id  = $active_item.data("id");
-			var new_title    = $(this).val();
+			var $active_item = $navigation.querySelector("li.active a");
+			var template_id  = $active_item.dataset["id"];
+			var new_title    = this.value;
 
 			// update cache
 			templates[template_id].title = new_title;
 			templates[template_id].markAsUnsaved();
 
 			// update navigation element
-			$(".filename", $active_item).html(new_title);
+			$active_item.querySelector(".filename").innerHTML = new_title;
 		};
 
 		var update_editor_cache = function () {
-			var $active_item = $("li.active a", $navigation);
-			var template_id  = $active_item.data("id");
+			var $active_item = $navigation.querySelector("li.active a");
+			var template_id  = $active_item.dataset["id"];
 			var new_content  = editor.getSession().getValue();
 
 			// update cache
@@ -150,7 +149,7 @@
 		var handle_editor_change = function () {
 			// only track user input, *not* programmatical change
 			// @see https://github.com/ajaxorg/ace/issues/503#issuecomment-44525640
-			if (editor.curOp && editor.curOp.command.name) { 
+			if (editor.curOp && editor.curOp.command.name) {
 				update_editor_cache();
 			}
 		};
@@ -162,10 +161,9 @@
 				type: 'POST',
 				data: { action: 'podlove-template-create' },
 				success: function(data, status, xhr) {
-					$("ul", $navigation)
-						.append("<li><a href=\"#\" data-id=\"" + data.id + "\"><span class='filename'>new template</span>&nbsp;</a></li>");
+					$navigation.querySelector("ul").insertAdjacentHTML('beforeend', "<li><a href=\"#\" data-id=\"" + data.id + "\"><span class='filename'>new template</span>&nbsp;</a></li>");
 
-					$.proxy(activate_template, $("ul li:last a", $navigation))();
+                    activate_template.bind($navigation.querySelector("ul li:last-child a"))()
 
 					$title.focus();
 				}
@@ -175,7 +173,7 @@
 		};
 
 		var delete_template = function(e) {
-			var template_id = $("li.active a", $navigation).data('id');
+			var template_id = $navigation.querySelector("li.active a").dataset['id'];
 
 			if (window.confirm("Delete template?")) {
 
@@ -189,16 +187,17 @@
 					success: function(data, status, xhr) {
 						if (data.success) {
 							// delete navigation entry
-							$("li a[data-id=" + template_id + "]", $navigation)
-								.closest("li")
-								.remove();
+							$navigation
+                              .querySelector("li a[data-id='" + template_id + "']")
+							  .closest("li")
+                              .remove()
 
 							// clear out editor
-							$title.val("");
+							$title.value = "";
 							editor.getSession().setValue("");
 
 							// select other template, if available
-							$("li:first a", $navigation).click();
+							$navigation.querySelector("li:first-child a").click();
 						} else {
 							console.log("Error: Could not delete template.");
 						}
@@ -209,18 +208,24 @@
 			e.preventDefault();
 		};
 
-		$title.keyup(update_title);
-		editor.on("change", handle_editor_change);
-		editor.on("paste", update_editor_cache);
+		$title.addEventListener('keyup', update_title);
+		editor.addEventListener("change", handle_editor_change);
+		editor.addEventListener("paste", update_editor_cache);
 
-		$navigation.on("click", "a[data-id]", activate_template);
-		$navigation.on("click", ".add a", add_template);
-		$footer.on("click", "a.save", save_template);
-		$footer.on("click", ".delete", delete_template);
+		$navigation.querySelectorAll("a[data-id]").forEach(el => el.addEventListener("click", activate_template));
+		$navigation.querySelectorAll(".add a").forEach(el => el.addEventListener("click", add_template));
+		$footer.querySelectorAll("a.save").forEach(el => el.addEventListener("click", save_template));
+		$footer.querySelectorAll(".delete").forEach(el => el.addEventListener("click", delete_template));
 
 		// select first template on page load
-		$("li:first a", $navigation).click();
+		$navigation.querySelector("li:first-child a").click();
 
-	});
+	};
+
+    if (document.readyState !== 'loading') {
+        initTemplateComponent();
+    } else {
+        document.addEventListener('DOMContentLoaded', initTemplateComponent);
+    }
 
 }(jQuery));
