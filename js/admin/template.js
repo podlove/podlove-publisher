@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
 	var initTemplateComponent = function() {
 
@@ -73,13 +73,19 @@
 			if (templates[template_id]) {
 				templates[template_id].activate();
 			} else {
-				$.getJSON(ajaxurl, {
-					id: template_id,
-					action: 'podlove-template-get'
-				}, function(data) {
+
+                const params = new URLSearchParams({
+                    id: template_id,
+                    action: 'podlove-template-get'
+                });
+
+                fetch(ajaxurl + '?' + params.toString())
+                .then((response) => response.json())
+                .then((data) => {
 					templates[template_id] = template(template_id, data.title, data.content);
 					templates[template_id].activate();
-				});
+                })
+
 			}
 
 			$this.blur(); // removes link outline
@@ -98,25 +104,25 @@
 
 			$navigation.querySelector("li.active a").insertAdjacentHTML('beforeend', saving_icon);
 
-			$.ajax(ajaxurl, {
-				dataType: 'json',
-				type: 'POST',
-				data: {
-					id: template_id,
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    id: template_id,
 					title: template_title,
 					content: template_content,
-					action: 'podlove-template-update'
-				},
-				success: function(data, status, xhr) {
-					save_button.blur();
-					$navigation.querySelector("li.active a i").remove();
-					if (!data.success) {
-						console.log("Error: Could not save template.");
-					} else {
-						templates[template_id].markAsSaved();
-					}
-				}
-			});
+                    action: 'podlove-template-update'
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                save_button.blur();
+                $navigation.querySelector("li.active a i").remove();
+                if (!data.success) {
+                    console.log("Error: Could not save template.");
+                } else {
+                    templates[template_id].markAsSaved();
+                }
+            })
 
 			e.preventDefault();
 		};
@@ -156,18 +162,20 @@
 
 		var add_template = function(e) {
 
-			$.ajax(ajaxurl, {
-				dataType: 'json',
-				type: 'POST',
-				data: { action: 'podlove-template-create' },
-				success: function(data, status, xhr) {
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: new URLSearchParams({action: 'podlove-template-create'})
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data) {
 					$navigation.querySelector("ul").insertAdjacentHTML('beforeend', "<li><a href=\"#\" data-id=\"" + data.id + "\"><span class='filename'>new template</span>&nbsp;</a></li>");
 
                     activate_template.bind($navigation.querySelector("ul li:last-child a"))()
 
 					$title.focus();
-				}
-			});
+                }
+            })
 
 			e.preventDefault();
 		};
@@ -177,32 +185,30 @@
 
 			if (window.confirm("Delete template?")) {
 
-				$.ajax(ajaxurl, {
-					dataType: 'json',
-					type: 'POST',
-					data: {
-						id: template_id,
-						action: 'podlove-template-delete'
-					},
-					success: function(data, status, xhr) {
-						if (data.success) {
-							// delete navigation entry
-							$navigation
-                              .querySelector("li a[data-id='" + template_id + "']")
-							  .closest("li")
-                              .remove()
+                fetch(ajaxurl, {
+                    method: 'POST',
+                    body: new URLSearchParams({action: 'podlove-template-delete', id: template_id})
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // delete navigation entry
+                        $navigation
+                          .querySelector("li a[data-id='" + template_id + "']")
+                          .closest("li")
+                          .remove()
 
-							// clear out editor
-							$title.value = "";
-							editor.getSession().setValue("");
+                        // clear out editor
+                        $title.value = "";
+                        editor.getSession().setValue("");
 
-							// select other template, if available
-							$navigation.querySelector("li:first-child a").click();
-						} else {
-							console.log("Error: Could not delete template.");
-						}
-					}
-				});
+                        // select other template, if available
+                        $navigation.querySelector("li:first-child a").click();
+                    } else {
+                        console.log("Error: Could not delete template.");
+                    }
+                })
+
 			}
 
 			e.preventDefault();
@@ -219,7 +225,6 @@
 
 		// select first template on page load
 		$navigation.querySelector("li:first-child a").click();
-
 	};
 
     if (document.readyState !== 'loading') {
@@ -228,4 +233,4 @@
         document.addEventListener('DOMContentLoaded', initTemplateComponent);
     }
 
-}(jQuery));
+}());
