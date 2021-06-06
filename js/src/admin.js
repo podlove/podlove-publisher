@@ -91,6 +91,19 @@ function convert_to_slug(string) {
 	return string;
 }
 
+function fix_url(string) {
+	if (!string) {
+		return null;
+	}
+	var url = string;
+	try   { url = new URL(string) } 
+	catch { url = new URL((string.indexOf("@") != -1 ? 'acct:' : 'https://') + string) };
+	if ( url.protocol === 'http:' ) {
+		url.protocol = 'https:'
+	}
+	return PODLOVE.untrailingslashit(url.toString());
+}
+
 
 function lookup_identifier(service, id) {
 	try {
@@ -105,7 +118,7 @@ function auto_fill_form(id, title_id) {
 	(function ($) {
 		function find_profile(identifier, type) {
 			// identier is probably an URI
-			if ( type !== 'email' && identifier.indexOf("@") == -1 ) {
+			if ( type !== 'email' && identifier.indexOf(":") !== -1 ) {
 				lookup_identifier('webfinger', identifier).done(function(webfinger) {
 					console.debug("webfinger lookup response", webfinger);
 					fill_if_empty('#podlove_contributor_guid', webfinger.subject);
@@ -121,13 +134,14 @@ function auto_fill_form(id, title_id) {
 				lookup_identifier('webfinger', 'acct:' + identifier).done((webfinger) => {
 					console.debug("webfinger lookup response", webfinger);
 					if (webfinger) {
-						fill_if_empty('#podlove_contributor_guid', webfinger.subject);
+						// allways overwrite URI with subject from response
+						$('#podlove_contributor_guid').val(webfinger.subject);
 						// TODO: Add social media accounts from webfinger.aliases to datatable
 						fill_person_from_links(webfinger.links);
 					}
 				}).fail(() => lookup_identifier('gravatar.com', identifier).done((gravatar) => {
 					console.debug("gravatar lookup response", gravatar);
-					fill_if_empty('#podlove_contributor_guid', gravatar.urls?.[0]?.value || gravatar.accounts?.[0]?.url || 'https://' + identifier.split('@')[1]);
+					fill_if_empty('#podlove_contributor_guid', fix_url(gravatar.urls?.[0]?.value || gravatar.accounts?.pop()?.url || 'https://' + identifier.split('@')[1]));
 					fill_if_empty('#podlove_contributor_identifier', gravatar.preferredUsername);
 					fill_if_empty('#podlove_contributor_realname', gravatar.name.formatted 
 						|| [gravatar.name.givenName, gravatar.name.familyName].join(' ') 
@@ -385,10 +399,6 @@ jQuery(function ($) {
 		auto_fill_form('contributor_email', 'email');
 	});
 
-	$("#podlove_contributor_guid").change(function () {
-		auto_fill_form('contributor_guid', 'guid');
-	});
-
 	$("#podlove_contributor_group_title").change(function () {
 		auto_fill_form('contributor_group', 'group_title');
 	});
@@ -403,6 +413,12 @@ jQuery(function ($) {
 		clean_up_input();
 		init_contextual_help_links();
 		new ClipboardJS('.clipboard-btn');
+	});
+
+	const guid = $("#podlove_contributor_guid");
+	guid.change(function () {
+		guid.val(fix_url(guid.val()));
+		auto_fill_form('contributor_guid', 'guid');
 	});
 
 });
