@@ -111,32 +111,39 @@ class REST_API
         switch ( $service ) {
             case 'gravatar.com':
                 // $contributor needs to be either hash of email address or gravatar.com username
-                // if email, than create md5 hash
+                // if email, then create md5 hash
                 if (strpos($contributor, '@')) {
                     $contributor = md5($contributor);
                 }
                 $url = "https://$service/$contributor.json";
                 $clean = function ($x) { return $x->entry[0]; };
-            break;
+                break;
             case 'json':
                 $host = parse_url($contributor, PHP_URL_HOST) ?: parse_url('//' . $contributor, PHP_URL_HOST);
                 $path = parse_url($contributor, PHP_URL_PATH);
                 $url = "https://${host}${path}";
-            break;
+                break;
             // TODO: OpenGraph? via library (e.g. https://github.com/shweshi/OpenGraph) or manual?
             default:
                 $host = parse_url($contributor, PHP_URL_HOST) ?: parse_url('//' . $contributor, PHP_URL_HOST);
                 $url = "https://$host/.well-known/webfinger?resource=" . urlencode($contributor);
-            break;
+                break;
         }
 
         try {
             $response = wp_remote_get($url, ['headers' => ['Accept' => 'application/json']]);
+            if (is_wp_error($response)) {
+                return new \WP_Error(
+                    'podlove_rest_contributor_lookup_error',
+                    $response->get_error_message(),
+                    ['status' => 400, 'url' => $url]
+                );
+            }
             $result = $clean(json_decode($response['body']));
-            if (is_wp_error($response) || $response['response']['code'] !== 200 || !$result) {
+            if ($response['response']['code'] !== 200 || !$result) {
                 return new \WP_Error(
                     'podlove_rest_contributor_lookup_not_found',
-                    $response['response']['message'] ?: $response->get_error_message(),
+                    $response['response']['message'],
                     ['status' => 404, 'url' => $url]
                 );
             }

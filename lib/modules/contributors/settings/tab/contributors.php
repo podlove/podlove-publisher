@@ -97,7 +97,7 @@ class Contributors extends Tab
                 'field_options' => [
                     'label' => __('URI', 'podlove-podcasting-plugin-for-wordpress'),
                     'description' => __('A globally unique identifier to match contributors across podcasts on the internet, <br/> e.g. URL of contributor’s personal home page or social media profile.', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => ['class' => 'podlove-check-input podlove-contributor-field'],
+                    'html' => ['class' => 'podlove-check-input podlove-contributor-field', 'data-podlove-input-type' => 'url'],
                 ],
             ],
             'realname' => [
