@@ -143,6 +143,22 @@ function get_xml_podcast_funding_node($url, $label)
     return $doc->saveXML($node);
 }
 
+function get_xml_podcast_soundbite_node($start, $duration, $title)
+{
+    $doc = new \DOMDocument();
+    $node = $doc->createElement('podcast:soundbite');
+    $text = $doc->createTextNode($title);
+    $node->appendChild($text);
+    $attr = $doc->createAttribute('startTime');
+    $attr->value = $start;
+    $node->appendChild($attr);
+    $attr = $doc->createAttribute('duration');
+    $attr->value = $duration;
+    $node->appendChild($attr);
+
+    return $doc->saveXML($node);
+}
+
 function override_feed_head($hook, $podcast, $feed, $format)
 {
     add_filter('podlove_feed_content', '\Podlove\Feeds\prepare_for_feed');
@@ -344,6 +360,11 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             $xml .= $tag_prefix.apply_filters('podlove_deep_link', $deep_link, $feed);
 
             $xml .= $tag_prefix.apply_filters('podlove_feed_enclosure', '', $enclosure_url, $enclosure_file_size, $format->mime_type, $file);
+
+            if ($episode->title && $episode->get_soundbite_duration() && $episode->get_soundbite_start()) {
+                $soundbite = get_xml_podcast_soundbite_node($episode->get_soundbite_start(), $episode->get_soundbite_duration(), $episode->title);
+                $xml .= $tag_prefix.apply_filters('podlove_feed_soundbite', $soundbite);
+            }
 
             $duration = sprintf('<itunes:duration>%s</itunes:duration>', $episode->get_duration('HH:MM:SS'));
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_duration', $duration);

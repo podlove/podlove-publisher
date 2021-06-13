@@ -436,6 +436,17 @@ class Episode extends Base implements Licensable
     {
         return $this->get_license()->getHtml();
     }
+
+    public function get_soundbite_start($format = 'HH:MM:SS')
+    {
+        return (new \Podlove\Duration($this->soundbite_start))->get($format);
+    }
+
+    public function get_soundbite_duration($format = 'HH:MM:SS')
+    {
+        return (new \Podlove\Duration($this->soundbite_duration))->get($format);
+    }
+
 }
 
 Episode::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
@@ -454,3 +465,5 @@ Episode::property('recording_date', 'DATETIME');
 Episode::property('explicit', 'TINYINT');
 Episode::property('license_name', 'TEXT');
 Episode::property('license_url', 'TEXT');
+Episode::property('soundbite_start', 'VARCHAR(255');
+Episode::property('soundbite_duration', 'VARCHAR(255)');

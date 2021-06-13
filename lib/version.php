@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define(__NAMESPACE__.'\DATABASE_VERSION', 151);
+define(__NAMESPACE__.'\DATABASE_VERSION', 152);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1710,6 +1710,21 @@ function run_migrations_for_version($version)
 
         case 151:
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
+
+            break;
+        
+        case 152:
+
+			$sql1 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `soundbite_start` VARCHAR(255)',
+				Model\Episode::table_name()
+			);
+			$sql2 = sprintf(
+				'ALTER TABLE `%s` ADD COLUMN `soundbite_duration` VARCHAR(255)',
+				Model\Episode::table_name()
+			);
+			$wpdb->query($sql1);
+			$wpdb->query($sql2);
 
             break;
     }
