@@ -247,6 +247,8 @@ class Podcast_Post_Meta_Box
             'subtitle' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
             'summary' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
             'slug' => FILTER_SANITIZE_STRING,
+            'soundbite_start' => FILTER_SANITIZE_STRING,
+            'soundbite_duration' => FILTER_SANITIZE_STRING,
             'type' => FILTER_SANITIZE_STRING,
             'duration' => FILTER_SANITIZE_STRING,
             'episode_assets' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING],
@@ -396,6 +398,24 @@ class Podcast_Post_Meta_Box
                     'html' => ['class' => 'regular-text podlove-check-input'],
                 ],
                 'position' => 510,
+            ], [
+                'type' => 'string',
+                'key' => 'soundbite_start',
+                'options' => [
+                    'label' => __('Soundbite Start:', 'podlove-podcasting-plugin-for-wordpress'),
+                    'description' => '',
+                    'html' => ['class' => 'regular-text podlove-check-input'],
+                ],
+                'position' => 450,
+            ], [
+                'type' => 'string',
+                'key' => 'soundbite_duration',
+                'options' => [
+                    'label' => __('Soundbite Duration:', 'podlove-podcasting-plugin-for-wordpress'),
+                    'description' => '',
+                    'html' => ['class' => 'regular-text podlove-check-input'],
+                ],
+                'position' => 450,
             ], [
                 'type' => 'string',
                 'key' => 'duration',
