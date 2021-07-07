@@ -340,6 +340,7 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 			<div class="chart-nodata" style="display: none;">No Chart Data</div>
 		'; ?>
 
+<?php require("regression.php"); new PodloveRegression(array()); ?>
 		<div class="metabox-holder">
 			<div class="postbox">
 				<h2 class="hndle" style="cursor: inherit;"><?php _e('Downloads', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
