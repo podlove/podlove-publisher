@@ -20,6 +20,7 @@ import Slacknotes from './components/Slacknotes'
 import Shownotes from './components/Shownotes'
 import ShownotesEntry from './components/ShownotesEntry'
 import Transcripts from './components/Transcripts'
+import Soundbite from './components/Soundbite'
 import Draggable from 'vuedraggable'
 
 Vue.component('chapters', Chapters);
@@ -32,6 +33,7 @@ Vue.component('slacknotes', Slacknotes);
 Vue.component('shownotes', Shownotes);
 Vue.component('shownotes-entry', ShownotesEntry);
 Vue.component('transcripts', Transcripts);
+Vue.component('soundbite', Soundbite);
 Vue.component('draggable', Draggable);
 
 import 'v2-datepicker/lib/index.css'
@@ -73,5 +75,11 @@ if (document.getElementById('podlove-analytics-app')) {
 
     window.analyticsApp = new Vue({
         el: '#podlove-analytics-app'
+    });
+}
+
+if (document.getElementById('podlove-soundbite-app')) {
+    window.transcriptsApp = new Vue({
+        el: '#podlove-soundbite-app'
     });
 }
