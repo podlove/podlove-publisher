@@ -28,8 +28,7 @@ function api_init()
     register_rest_route('podlove/v1', 'episodes/(?P<id>[\d]+)', [
         'methods' => WP_REST_Server::EDITABLE,
         'callback' => __NAMESPACE__.'\\episodes_update_api',
-        //'permission_callback' => __NAMESPACE__.'\\update_episode_permission_check',
-        'permission_callback' => '__return_true',
+        'permission_callback' => __NAMESPACE__.'\\update_episode_permission_check',
     ]);
 
 }
@@ -88,7 +87,7 @@ function episodes_api($request)
 /**
  * Check permission for change
  */
-function update_episode_permissions_check($request)
+function update_episode_permission_check($request)
 {
     if (!current_user_can( 'edit_posts')) {
         return new WP_Error('rest_forbidden', 
