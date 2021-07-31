@@ -20,7 +20,7 @@
 export default {
   computed: {
       isStartValid: function() {
-            if (/^\d\d:\d\d:\d\d$/.test(this.start)) {
+            if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.start)) {
                 this.startValid = true;
                 this.sendDataToPodlove();
                 return false;
@@ -31,7 +31,7 @@ export default {
             }
       },
       isDurationValid: function() {
-            if (/^\d\d:\d\d:\d\d$/.test(this.duration)) {
+            if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.duration)) {
                 this.durationValid = true;
                 this.sendDataToPodlove();
                 return false;

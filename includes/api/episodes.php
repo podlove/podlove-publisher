@@ -107,12 +107,18 @@ function episodes_update_api($request)
 
     if ( isset($request['soundbite_start'])) {
         $start = $request['soundbite_start'];
-        $episode->__set('soundbite_start', $start);
+        if (preg_match('/\d\d:[0-5]\d:[0-5]\d', $start))
+            $episode->soundbite_start = $start;
+        else
+            return;
     }
 
     if ( isset($request['soundbite_duration'])) {
         $duration = $request['soundbite_duration'];
-        $episode->__set('soundbite_duration', $duration);
+        if (preg_match('/\d\d:[0-5]\d:[0-5]\d', $duration))
+            $episode->soundbite_duration = $duration;
+        else
+            return;
     }
 
     $episode->save();

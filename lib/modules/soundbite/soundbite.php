@@ -11,6 +11,8 @@ class Soundbite extends \Podlove\Modules\Base
     public function load()
     {
         add_filter('podlove_episode_form_data', [$this, 'extend_epsiode_form'], 10, 2);
+
+        $this->add_soundbite_to_feed();
     }
 
     public function extend_epsiode_form($form_data, $epsiode)
@@ -33,5 +35,22 @@ class Soundbite extends \Podlove\Modules\Base
         ?>
             <div id="podlove-soundbite-app"><soundbite></soundbite></div>
         <?php
+    }
+
+    public function add_soundbite_to_feed()
+    {              
+        add_action('podlove_append_to_feed_entry', [$this, 'add_soundbite_to_episode_feed'], 10, 4);
+    }
+
+    public function add_soundbite_to_episode_feed($podcast, $epsiode, $feed, $format)
+    {
+        if ($epsiode->get_soundbite_start() && $epsiode->get_soundbite_duration()) {
+            $title = $epsiode->title;
+            $start = $epsiode->soundbite_start;
+            $duration = $epsiode->soundbite_duration;
+
+            echo "\n\t\t".'<podcast:soundbite start="'.$start.'" duration="'.$duration.'">'.$title.'</podcast:soundbite>'."\n";
+
+        }
     }
 }
