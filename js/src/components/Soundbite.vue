@@ -2,14 +2,14 @@
     <div class="container">
         <div class="soundbite-input">
             <div>
-                <label> Start: </label>
+                <label>Start</label>
                 <input v-model="start" class="form-input" type="text" placeholder="00:00:00"/>
-                <p v-if="isStartValid"> The start timepoint hasn't the correct format. Please use HH:MM:SS </p>
+                <p v-if="isStartValid">The start timepoint has not the correct format. Please use HH:MM:SS</p>
             </div>
             <div class="soundbite-space">
-                <label> Duration: </label>
+                <label>Duration</label>
                 <input v-model="duration" class="form-input" type="text"  placeholder="00:00:00"/>
-                <p v-if="isDurationValid"> The duration hasn't the correct format. Please use HH:MM:SS </p>
+                <p v-if="isDurationValid">The duration has not the correct format. Please use HH:MM:SS</p>
             </div>
         </div>
     </div>
@@ -46,8 +46,10 @@ export default {
     sendDataToPodlove: function() {
         if (this.dataReadFinish === false)
             return;
+
         if (this.durationValid === false || this.startValid === false)
             return;
+            
         let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id; 
         this.axios
             .patch(url,
@@ -98,8 +100,6 @@ export default {
 
 
 <style scoped>
-
-
 .soundbite-input {
     display: flex;
 }

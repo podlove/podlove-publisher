@@ -2,12 +2,10 @@
 
 namespace Podlove\Modules\Soundbite;
 
-use Podlove\Model\Episode;
-
 class Soundbite extends \Podlove\Modules\Base
 {
     protected $module_name = 'Soundbite';
-    protected $module_description = 'Manage a podcast::soundbite tag.';
+    protected $module_description = 'Points to a soundbite within a podcast episode. The intended use includes episodes previews, discoverability, audiogram generation, episode highlights, etc. (adds podcast::soundbite tag to RSS feed)';
     protected $module_group = 'metadata';
 
     public function load()
@@ -21,7 +19,7 @@ class Soundbite extends \Podlove\Modules\Base
             'type' => 'callback',
             'key' => 'soundbite',
             'options' => [
-                'label' => __('podcast::soundbite', 'podlove-podcasting-plugin-for-wordpress'),
+                'label' => __('Soundbite', 'podlove-podcasting-plugin-for-wordpress'),
                 'callback' => [$this, 'soundbite_form'],
             ],
             'position' => 456,
@@ -30,11 +28,10 @@ class Soundbite extends \Podlove\Modules\Base
         return $form_data;
     }
 
-    public function soundbite_form() 
+    public function soundbite_form()
     {
         ?>
             <div id="podlove-soundbite-app"><soundbite></soundbite></div>
         <?php
     }
-
 }
