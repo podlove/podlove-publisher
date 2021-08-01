@@ -8,28 +8,6 @@ use WP_REST_Controller;
 use WP_REST_Server;
 use WP_REST_Response;
 
-add_action('rest_api_init', __NAMESPACE__.'\\api_init');
-
-function api_init()
-{
-    register_rest_route('podlove/v1', 'podcast', [
-        'methods' => 'GET',
-        'callback' => __NAMESPACE__.'\\postcast_api',
-        'permission_callback' => '__return_true',
-    ]);
-}
-
-function postcast_api()
-{
-    $podcast = Podcast::get();
-
-    return new \WP_REST_Response([
-        'version' => 'v1',
-        'title' => $podcast->title,
-        'subtitle' => $podcast->subtitle,
-    ]);
-}
-
 add_action( 'rest_api_init', function() {
         $controller = new WP_REST_Podlove_Controller();
         $controller->register_routes();
@@ -78,6 +56,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller {
      */
     public function update_item_permissions_check($request)
     {
+        if (!current_user_can( 'edit_posts')) {
+            return new WP_Error('rest_forbidden', 
+                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
+                array('status' => 401));
+        }
         return true;
     }
 
@@ -86,10 +69,17 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller {
         $podcast = Podcast::get();
 
         $res = [];
+        $res['_version'] = 'v1';
         $res['title'] = $podcast->title;
         $res['subtitle'] = $podcast->subtitle;
         $res['summary'] = $podcast->summary;
         $res['mnemonic'] = $podcast->mnemonic;
+        $res['itunes_type'] = $podcast->itunes_type;
+        $res['author_name'] = $podcast->author_name;
+        $res['poster'] = $podcast->cover_art()->setWidth(500)->url();
+        $res['link'] = \Podlove\get_landing_page_url();
+
+        $res = apply_filters('podlove_api_podcast_response', $res);
 
         return rest_ensure_response($res);
     }
@@ -98,18 +88,21 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller {
     {
         $podcast = Podcast::get();
         if ( isset($request['title'])) {
-            $podcast->__set('title', $request['title']);
+            $title = $request['title'];
+            $podcast->title = $title;
         }
         if ( isset($request['subtitle'])) {
-            $podcast->__set('subtitle', $request['subtitle']);
+            $subtitle = $request['subtitle'];
+            $podcast->subtitle = $subtitle;
         }
         if ( isset($request['summary'])) {
-            $podcast->__set('summary', $request['summary']);
+            $summary = $request['summary'];
+            $podcast->summary = $summary;
         }
         if ( isset($request['mnemonic'])) {
-            $podcast->__set('mnemonic', $request['mnemonic']);
+            $mnemonic = $request['mnemonic'];
+            $podcast->mnemonic = $mnemonic;
         }
-
 
         $podcast->save();
 
