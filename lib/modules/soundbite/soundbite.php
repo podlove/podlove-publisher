@@ -49,8 +49,20 @@ class Soundbite extends \Podlove\Modules\Base
             $start = $epsiode->soundbite_start;
             $duration = $epsiode->soundbite_duration;
 
-            echo "\n\t\t".'<podcast:soundbite start="'.$start.'" duration="'.$duration.'">'.$title.'</podcast:soundbite>'."\n";
+            $doc = new \DOMDocument();
+            $node = $doc->createElement('podcast:soundbite');
+            $text = $doc->createTextNode($title);
+            $node->appendChild($text);
+            $attr = $doc->createAttribute('startTime');
+            $attr->value = $start;
+            $node->appendChild($attr);
+            $attr = $doc->createAttribute('duration');
+            $attr->value = $duration;
+            $node->appendChild($attr);
 
+            $xml = $doc->saveXML($node);
+
+            echo "\n\t\t".$xml."\n";
         }
     }
 }
