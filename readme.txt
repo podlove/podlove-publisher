@@ -1,9 +1,9 @@
 === Podlove Podcast Publisher ===
-Contributors: eteubert, chemiker
+Contributors: eteubert
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 5.2
-Tested up to: 5.7
+Requires at least: 4.9.6
+Tested up to: 5.8
 Requires PHP: 7.0
 Stable tag: 3.5.6
 License: MIT
@@ -105,6 +105,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2021-08-22 =
+
+- feat(rss): add support for podcast:soundbite (#1224)
+- feat(api): implement podcast rest api controller (#1232)
 
 ----
 
