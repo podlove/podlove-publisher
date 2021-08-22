@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-08-22 =
+
+* fix(security): sql injection in "Social & Donations" module
+
 = 2021-05-02 =
 
 * fix: transcript API returns list again

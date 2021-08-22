@@ -51,6 +51,9 @@ class ContributorService extends Base
 
     public static function find_by_contributor_id_and_category($contributor_id, $category = 'social')
     {
+        $contributor_id = (int) $contributor_id;
+        $category = $category == 'social' ? 'social' : 'donation';
+
         return self::all('WHERE service_id IN (SELECT id FROM '.Service::table_name()." WHERE `category` = '".$category."' ) AND `contributor_id` = ".$contributor_id);
     }
 }
