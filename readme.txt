@@ -3,7 +3,7 @@ Contributors: eteubert, chemiker
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio, ClassicPress
 Requires at least: 4.9.6
-Tested up to: 5.7.1
+Tested up to: 5.8.0
 Requires PHP: 7.0
 Stable tag: 3.5.4
 License: MIT
@@ -105,6 +105,24 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.5.5 =
+
+**Fixes**
+
+* SECURITY: sql injection in "Social & Donations" module
+* transcript API returns list again
+* PLUS open graph images (use new API)
+* handle webvtt voice, missing Contributors
+* (related episodes): remove whitespace in shortcode HTML to fix rendering in Spotify
+
+**Changes**
+
+* webvtt transcripts use public contributor name
+* transcript voices / contributors:
+  * you can now select "none" in the voice assignment
+  * only voices with an assigned contributor (and not "none") appear in public transcripts
+* generate default copyright claim if it is not explcitly set
 
 = 3.5.4 =
 

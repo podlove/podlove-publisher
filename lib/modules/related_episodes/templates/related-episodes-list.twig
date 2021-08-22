@@ -4,14 +4,16 @@
 
 	{% if option.before %}
 		{{ option.before }}
-	{% endif %}	
+	{% endif %}
 
-	<ul>
-	{% for related_episode in related_episodes %}
-		<li>
-			<a href="{{ related_episode.url }}">{{ related_episode.title }}</a>
-		</li>
-	{% endfor %}
-	</ul>
+	{% spaceless %}
+		<ul>
+			{% for related_episode in related_episodes %}
+				<li>
+					<a href="{{ related_episode.url }}">{{ related_episode.title }}</a>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endspaceless %}
 
 {% endif %}

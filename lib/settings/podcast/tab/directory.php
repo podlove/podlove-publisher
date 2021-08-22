@@ -126,8 +126,8 @@ class Directory extends Tab
 
             $wrapper->string('copyright', [
                 'label' => __('Copyright', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => __('Copyright notice for content in the channel.', 'podlove-podcasting-plugin-for-wordpress'),
-                'html' => ['class' => 'regular-text'],
+                'description' => __('Copyright notice for content in the channel. If you leave this blank, a default copyright notice will appear in the feed because it is required by the Apple Podcasts Connect.', 'podlove-podcasting-plugin-for-wordpress'),
+                'html' => ['class' => 'regular-text', 'placeholder' => $podcast->default_copyright_claim()],
             ]);
         });
     }

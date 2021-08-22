@@ -12,7 +12,9 @@ class Plus extends \Podlove\Modules\Base
 
     public function load()
     {
-        $this->api = new API($this, $this->get_module_option('plus_api_token'));
+        // fixme: refactor all uses of 'plus_api_token' except here
+        $token = defined('PODLOVE_PLUS_TOKEN') ? PODLOVE_PLUS_TOKEN : $this->get_module_option('plus_api_token');
+        $this->api = new API($this, $token);
 
         (new ModuleSettings($this, $this->api))->init();
         (new GlobalFeedSettings($this, $this->api))->init();

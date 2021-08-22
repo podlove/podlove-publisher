@@ -205,11 +205,9 @@ function override_feed_head($hook, $podcast, $feed, $format)
     add_action($hook, function () use ($podcast, $feed, $format) {
         echo PHP_EOL;
 
-        if ($podcast->copyright) {
-            $copyright = "\t".get_xml_text_node('copyright', $podcast->copyright);
-            echo apply_filters('podlove_feed_itunes_author', $copyright);
-            echo PHP_EOL;
-        }
+        $copyright = "\t".get_xml_text_node('copyright', $podcast->copyright ?? $podcast->default_copyright_claim());
+        echo apply_filters('podlove_feed_itunes_author', $copyright);
+        echo PHP_EOL;
 
         $author = "\t".get_xml_text_node('itunes:author', $podcast->author_name);
         echo apply_filters('podlove_feed_itunes_author', $author);
