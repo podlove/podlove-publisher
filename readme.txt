@@ -106,6 +106,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+Beta updates for v3.6
+
 = 2021-08-22 =
 
 - feat(rss): add support for podcast:soundbite (#1224)
