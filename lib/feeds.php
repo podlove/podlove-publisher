@@ -161,8 +161,7 @@ function maybe_redirect_to_canonical_url()
 
     if (
         !\Podlove\PHP\ends_with($url['path'], '/') && \Podlove\PHP\ends_with($feed_url, '/')
-        ||
-        \Podlove\PHP\ends_with($url['path'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
+        || \Podlove\PHP\ends_with($url['path'], '/') && !\Podlove\PHP\ends_with($feed_url, '/')
     ) {
         wp_redirect(get_canonical_feed_url(), 301);
         exit;

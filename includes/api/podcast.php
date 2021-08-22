@@ -5,16 +5,17 @@ namespace Podlove\Api\Podcast;
 use Podlove\Model\Podcast;
 use WP_Error;
 use WP_REST_Controller;
-use WP_REST_Server;
 use WP_REST_Response;
+use WP_REST_Server;
 
-add_action( 'rest_api_init', function() {
-        $controller = new WP_REST_Podlove_Controller();
-        $controller->register_routes();
+add_action('rest_api_init', function () {
+    $controller = new WP_REST_Podlove_Controller();
+    $controller->register_routes();
 });
 
-class WP_REST_Podlove_Controller extends WP_REST_Controller {
-    /** 
+class WP_REST_Podlove_Controller extends WP_REST_Controller
+{
+    /**
      * Constructor.
      */
     public function __construct()
@@ -24,27 +25,29 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller {
     }
 
     /**
-     * Register the component routes
+     * Register the component routes.
      */
     public function register_routes()
     {
-        register_rest_route( $this->namespace, '/'.$this->rest_base, array(
-            array(
+        register_rest_route($this->namespace, '/'.$this->rest_base, [
+            [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_item'),
-                'permission_callback' => array( $this, 'get_item_permissions_check'),
-            ),
-            array(
+                'callback' => [$this, 'get_item'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
                 'methods' => WP_REST_Server::EDITABLE,
-                'callback' => array( $this, 'update_item'),
-                'permission_callback' => array( $this, 'update_item_permissions_check'),
+                'callback' => [$this, 'update_item'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
                 'args' => $this->get_endpoint_args_for_item_schema(false),
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
-     * Check permission for read
+     * Check permission for read.
+     *
+     * @param mixed $request
      */
     public function get_item_permissions_check($request)
     {
@@ -52,15 +55,20 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller {
     }
 
     /**
-     * Check permission for change
+     * Check permission for change.
+     *
+     * @param mixed $request
      */
     public function update_item_permissions_check($request)
     {
-        if (!current_user_can( 'edit_posts')) {
-            return new WP_Error('rest_forbidden', 
+        if (!current_user_can('edit_posts')) {
+            return new WP_Error(
+                'rest_forbidden',
                 esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                array('status' => 401));
+                ['status' => 401]
+            );
         }
+
         return true;
     }
 
@@ -87,19 +95,19 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller {
     public function update_item($request)
     {
         $podcast = Podcast::get();
-        if ( isset($request['title'])) {
+        if (isset($request['title'])) {
             $title = $request['title'];
             $podcast->title = $title;
         }
-        if ( isset($request['subtitle'])) {
+        if (isset($request['subtitle'])) {
             $subtitle = $request['subtitle'];
             $podcast->subtitle = $subtitle;
         }
-        if ( isset($request['summary'])) {
+        if (isset($request['summary'])) {
             $summary = $request['summary'];
             $podcast->summary = $summary;
         }
-        if ( isset($request['mnemonic'])) {
+        if (isset($request['mnemonic'])) {
             $mnemonic = $request['mnemonic'];
             $podcast->mnemonic = $mnemonic;
         }

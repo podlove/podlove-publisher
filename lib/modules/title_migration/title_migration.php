@@ -31,7 +31,7 @@ class Title_Migration extends \Podlove\Modules\Base
         if (isset($_REQUEST['podlove_disable_title_migration_module']) && $_REQUEST['podlove_disable_title_migration_module']) {
             $this->state->set_current_state(State::FINISHED_HIDDEN);
             self::deactivate('title_migration');
-            add_action('admin_notices', function () use ($module_name) {
+            add_action('admin_notices', function () {
                 ?>
 				<div id="message" class="notice notice-success">
 					<p>

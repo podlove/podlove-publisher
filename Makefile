@@ -11,10 +11,10 @@ release:
 	bin/release.sh
 
 format:
-	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style"
+	php-cs-fixer fix . --config .php-cs-fixer.dist.php
 
 validateFormat:
-	php-cs-fixer fix . --rules="@PSR2, @PhpCsFixer, -yoda_style" -v --dry-run --stop-on-violation --using-cache=no
+	php-cs-fixer fix . --config .php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no
 
 update_subscribe_button:
 	rm -rf .tmppsb
@@ -84,7 +84,7 @@ build:
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
 	find dist -name "*.swp" | xargs rm -rf
-	# find dist/vendor -type d -iname "test" | xargs rm -rf	
+	# find dist/vendor -type d -iname "test" | xargs rm -rf
 	# find dist/vendor -type d -iname "tests" | xargs rm -rf
 	# player v2 / mediaelement
 	find dist -iname "echo-hereweare.*" | xargs rm -rf

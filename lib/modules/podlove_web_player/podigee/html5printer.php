@@ -108,6 +108,7 @@ break;
                 case 'audio/mpeg': $ext = 'mp3';
 
 break;
+
                 default: $ext = false;
 
 break;

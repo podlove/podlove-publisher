@@ -54,7 +54,7 @@ class Network
             return strlen(trim($podcast->title)) > 0;
         });
 
-        uasort($podcasts, function ($a, $b) use ($sortby, $sort) {
+        uasort($podcasts, function ($a, $b) use ($sortby) {
             return strnatcmp($a->{$sortby}, $b->{$sortby});
         });
 

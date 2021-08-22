@@ -446,7 +446,6 @@ class Episode extends Base implements Licensable
     {
         return (new \Podlove\Duration($this->soundbite_duration))->get($format);
     }
-
 }
 
 Episode::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');

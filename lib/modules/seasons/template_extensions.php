@@ -23,7 +23,7 @@ class TemplateExtensions
      */
     public static function accessorPodcastSeasons($return, $method_name, $podcast, $args = [])
     {
-        return $podcast->with_blog_scope(function () use ($return, $method_name, $podcast, $args) {
+        return $podcast->with_blog_scope(function () use ($args) {
             $order = isset($args['order']) && strtoupper($args['order']) == 'DESC' ? 'DESC' : 'ASC';
             $seasons = Season::find_all_by_where("1 = 1 ORDER BY start_date {$order}");
 

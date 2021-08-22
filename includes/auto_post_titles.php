@@ -64,6 +64,7 @@ function podlove_maybe_override_rss_post_titles($original_title)
                 return $original_title;
 
             break;
+
         default:
             return $original_title;
     }

@@ -114,6 +114,7 @@ class Shortcodes
                 $file = '@contributors/contributor-table.twig';
 
                 break;
+
             default:
                 $file = '@contributors/contributor-table.twig';
 

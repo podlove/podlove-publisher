@@ -62,7 +62,7 @@ class TemplateExtensions
      */
     public static function accessorEpisodeContributors($return, $method_name, $episode, $post, $args = [])
     {
-        return $episode->with_blog_scope(function () use ($return, $method_name, $episode, $post, $args) {
+        return $episode->with_blog_scope(function () use ($episode, $args) {
             $defaults = [
                 'order' => 'ASC',
                 'orderby' => 'position',
@@ -132,7 +132,7 @@ class TemplateExtensions
      */
     public static function accessorPodcastContributors($return, $method_name, $podcast, $args = [])
     {
-        return $podcast->with_blog_scope(function () use ($podcast, $args) {
+        return $podcast->with_blog_scope(function () use ($args) {
             $args = shortcode_atts([
                 'id' => null,
                 'scope' => 'global-active',

@@ -188,7 +188,6 @@ class Contributors extends \Podlove\Modules\Base
                     $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment';
 
                     break;
-
                 case 'POSITION':
                     $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition';
 
@@ -969,7 +968,6 @@ class Contributors extends \Podlove\Modules\Base
                         $matching_role = 'guest';
 
                         break;
-
                     case 'host':
                     case 'team':
                         $matching_role = 'host';

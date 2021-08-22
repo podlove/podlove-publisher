@@ -50,6 +50,7 @@ class Feed_List_Table extends \Podlove\List_Table
                        .' (global default)';
 
                 break;
+
             default:
                 return $feed->limit_items;
 

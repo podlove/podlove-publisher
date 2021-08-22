@@ -19,4 +19,5 @@ mix-manifest.json
 js/dist
 lib/modules/podlove_web_player/player_v2/
 .php_cs.cache
+.php-cs-fixer.cache
 .build/wp*

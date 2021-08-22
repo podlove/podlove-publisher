@@ -64,7 +64,7 @@ class Builder
     {
         $this->build_input_values($object_key, $arguments); ?>
 		<div>
-			<input type="<?php echo (isset($arguments['type']) && $arguments['type']) ? $arguments['type'] : 'text'; ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?><?php echo ( ! empty( $arguments['type'] ) && 'number' == $arguments['type'] && ! empty( $arguments['positive_number'] ) ? ' onkeypress="return event.charCode >= 48" min="0"' : '' ); ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<input type="<?php echo (isset($arguments['type']) && $arguments['type']) ? $arguments['type'] : 'text'; ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?><?php echo !empty($arguments['type']) && 'number' == $arguments['type'] && !empty($arguments['positive_number']) ? ' onkeypress="return event.charCode >= 48" min="0"' : ''; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
     }

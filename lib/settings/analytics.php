@@ -221,7 +221,6 @@ if (Model\DownloadIntentClean::first() === null) {
                     $this->show_template();
 
                     break;
-
                 case 'index':
                 default:
                     $this->view_template();

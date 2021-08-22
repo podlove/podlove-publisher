@@ -48,6 +48,7 @@ class oembed extends \Podlove\Modules\Base
                 exit;
 
                 break;
+
             default:
                 status_header(404);
 

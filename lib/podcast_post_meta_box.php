@@ -63,7 +63,7 @@ class Podcast_Post_Meta_Box
 
         $form_data = self::get_form_data($episode);
 
-        \Podlove\Form\build_for($episode, $form_args, function ($form) use ($podcast, $form_data) {
+        \Podlove\Form\build_for($episode, $form_args, function ($form) use ($form_data) {
             $wrapper = new \Podlove\Form\Input\DivWrapper($form);
             $episode = $form->object;
 
