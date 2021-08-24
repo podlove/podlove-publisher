@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Beta updates for v3.6
 
+= 2021-08-24 =
+
+- fix: show transcripts that have no assigned contributors (A previous change enabled "unassigning" contributors to hide them from the transcript. If your transcript however does not use contributors at all, that then resulted in an empty transcript. Now if _all_ contributors are unset or unassigned, the whole transcript is shown.)
+
 = 2021-08-22 =
 
 - feat(rss): add support for podcast:soundbite (#1224)
