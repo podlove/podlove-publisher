@@ -51,7 +51,7 @@ PODLOVE.media = PODLOVE.media || {};
 				toolbar:    'select',
 				filterable: 'uploaded',
 				// library:    wp.media.query( file_frame.options.library ),
-				multiple:   false,
+				multiple:   args.multiple,
 				editable:   true,
 				displaySettings: true,
 				allowLocalEdits: true

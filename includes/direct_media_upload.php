@@ -13,6 +13,7 @@ function podlove_add_upload_button_to_form($form_data, $episode)
             'media_title' => __('Media File', 'podlove-podcasting-plugin-for-wordpress'),
             'media_button_text' => __('Use Media File', 'podlove-podcasting-plugin-for-wordpress'),
             'form_button_text' => __('Upload Media File', 'podlove-podcasting-plugin-for-wordpress'),
+            'allow_multi_upload' => true
         ],
         'position' => 512,
     ];
@@ -69,7 +70,6 @@ function podlove_custom_media_upload_dir($upload)
     return $upload;
 }
 
-// TODO: try multi-file-upload
 // TODO: make subdir configurable
 // TODO: try empty subdir, does it upload to `/uploads`?
 // TODO: extract into module
