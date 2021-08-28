@@ -120,7 +120,7 @@ class DownloadTimedAggregatorJob
 
     public static function groupings()
     {
-        return  [
+        return [
             'total' => null,
             '3y' => 24 * 7 * 52 * 3,
             '2y' => 24 * 7 * 52 * 2,

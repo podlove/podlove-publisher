@@ -152,6 +152,7 @@ break;
                 case 'index': $this->view_template();
 
 break;
+
                 default:      $this->view_template();
 
 break;

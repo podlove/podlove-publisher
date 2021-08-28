@@ -75,10 +75,12 @@ class Transcript extends \Podlove\Model\Base
      * @param mixed $transcript
      * @param mixed $mode
      */
-    public static function prepare_transcript($transcript, $mode = 'flat')
+    public static function prepare_transcript($transcript, $mode = 'flat', $allow_empty_contributors = false)
     {
-        $transcript = array_map(function ($t) {
-            if (!$t->contributor_id) {
+        $original_transcript = $transcript;
+
+        $transcript = array_map(function ($t) use ($allow_empty_contributors) {
+            if (!$t->contributor_id && !$allow_empty_contributors) {
                 return null;
             }
 
@@ -95,6 +97,11 @@ class Transcript extends \Podlove\Model\Base
 
         $transcript = array_filter($transcript);
         $transcript = array_values($transcript);
+
+        // if the processed transcript is empty, maybe there are no assigned contributors, so try again without requiring contributors
+        if (empty($transcript) && !$allow_empty_contributors) {
+            return self::prepare_transcript($original_transcript, $mode, true);
+        }
 
         if ($mode != 'flat') {
             $transcript = array_reduce($transcript, function ($agg, $item) {

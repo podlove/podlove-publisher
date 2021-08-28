@@ -135,6 +135,7 @@ class Tools
                 wp_redirect(admin_url('admin.php?page='.$_REQUEST['page']));
 
                 break;
+
             default:
                 // code...
                 break;

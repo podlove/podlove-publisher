@@ -57,7 +57,7 @@ class FileController
         $episode_asset_id = (int) $_REQUEST['episode_asset_id'];
 
         if (!$episode_id || !$episode_asset_id) {
-            die();
+            exit();
         }
 
         if (isset($_REQUEST['slug'])) {

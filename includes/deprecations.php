@@ -113,6 +113,7 @@ function podlove_get_deprecation_context($context)
             );
 
             break;
+
         default:
             return '!!unknown context type '.$context['type'].'!!';
 

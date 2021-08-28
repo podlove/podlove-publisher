@@ -228,7 +228,6 @@ function get_landing_page_url()
             return home_url();
 
             break;
-
         case 'archive':
             if ('on' == \Podlove\get_setting('website', 'episode_archive')) {
                 $archive_slug = trim(\Podlove\get_setting('website', 'episode_archive_slug'), '/');

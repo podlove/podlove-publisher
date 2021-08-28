@@ -38,7 +38,7 @@ class Soundbite extends \Podlove\Modules\Base
     }
 
     public function add_soundbite_to_feed()
-    {              
+    {
         add_action('podlove_append_to_feed_entry', [$this, 'add_soundbite_to_episode_feed'], 10, 4);
     }
 
@@ -49,7 +49,7 @@ class Soundbite extends \Podlove\Modules\Base
             $start = $epsiode->soundbite_start;
             $duration = $epsiode->soundbite_duration;
 
-            $start_sec = \Podlove\NormalPlayTime\Parser::parse($start,'s');
+            $start_sec = \Podlove\NormalPlayTime\Parser::parse($start, 's');
             $duration_sec = \Podlove\NormalPlayTime\Parser::parse($duration, 's');
 
             $doc = new \DOMDocument();

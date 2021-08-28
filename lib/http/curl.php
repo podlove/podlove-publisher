@@ -59,9 +59,9 @@ class Curl
     public function isSuccessful()
     {
         return
-            $this->response &&               // request has been made
-            !is_wp_error($this->response) && // there was no error
-            substr($this->response['response']['code'], 0, 1) < 4; // 1xx 2xx or 3xx
+            $this->response               // request has been made
+            && !is_wp_error($this->response) // there was no error
+            && substr($this->response['response']['code'], 0, 1) < 4; // 1xx 2xx or 3xx
     }
 
     public function get_response()

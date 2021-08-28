@@ -33,8 +33,7 @@ add_action('admin_print_styles', function () {
                     'osf_active' => is_plugin_active('shownotes/shownotes.php'),
                 ]
             );
-        }
-        else {
+        } else {
             wp_localize_script(
                 'podlove-episode-vue-apps',
                 'podlove_vue',

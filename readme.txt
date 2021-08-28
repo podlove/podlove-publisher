@@ -1,11 +1,11 @@
 === Podlove Podcast Publisher ===
-Contributors: eteubert, chemiker
+Contributors: eteubert
 Donate link: http://podlove.org/donations/
-Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio, ClassicPress
+Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
-Tested up to: 5.7.1
+Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 3.2.0-beta1
+Stable tag: 3.5.6
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,30 +106,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2021-05-02 =
+Beta updates for v3.6
 
-* fix: transcript API returns list again
+= 2021-08-24 =
 
-= 2021-05-01 =
+- fix: show transcripts that have no assigned contributors (A previous change enabled "unassigning" contributors to hide them from the transcript. If your transcript however does not use contributors at all, that then resulted in an empty transcript. Now if _all_ contributors are unset or unassigned, the whole transcript is shown.)
 
-* fix: PLUS open graph images (use new API)
+= 2021-08-22 =
 
-= 2021-04-27 =
-
-* fix: handle webvtt voice, missing Contributors
-* transcript voices / contributors:
-  * you can now select "none" in the voice assignment
-  * only voices with an assigned contributor (and not "none") appear in public transcripts
-
-
-= 2021-04-26 =
-
-* webvtt transcripts use public contributor name
-
-= 2021-04-24 =
-
-* generate default copyright claim if it is not explcitly set
-* fix(related episodes): remove whitespace in shortcode HTML to fix rendering in Spotify
+- feat(rss): add support for podcast:soundbite (#1224)
+- feat(api): implement podcast rest api controller (#1232)
 
 ----
 

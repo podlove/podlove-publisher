@@ -155,6 +155,7 @@ class MediaFile extends Base
                     $url = home_url($path);
 
                     break;
+
                 default:
                     // tracking is off, return raw URL
                     $url = $this->get_file_url();

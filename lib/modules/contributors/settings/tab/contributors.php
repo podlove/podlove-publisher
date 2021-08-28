@@ -212,6 +212,7 @@ break;
             case 'edit':  $action = 'save';
 
 break;
+
             default:      $action = 'delete';
 
 break;

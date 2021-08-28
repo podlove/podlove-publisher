@@ -90,6 +90,7 @@ break;
                         case 'edit':  $this->edit_template();
 
 break;
+
                         default:      $this->view_template();
 
 break;

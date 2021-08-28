@@ -2,8 +2,8 @@
 
 namespace Podlove\Modules\Social;
 
-use Podlove\Modules\Social\Model\Service;
 use Podlove\Modules\Social\Model\ContributorService;
+use Podlove\Modules\Social\Model\Service;
 
 class REST_API
 {

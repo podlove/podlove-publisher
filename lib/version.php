@@ -125,7 +125,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 11:
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `downloadable` INT',
@@ -134,7 +133,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 12:
             $sql = sprintf(
                 'UPDATE `%s` SET `downloadable` = 1',
@@ -143,7 +141,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 13:
             $opus = ['name' => 'Opus Audio', 'type' => 'audio', 'mime_type' => 'audio/opus', 'extension' => 'opus'];
             $f = new \Podlove\Model\FileType();
@@ -153,7 +150,6 @@ function run_migrations_for_version($version)
             $f->save();
 
             break;
-
         case 14:
             $sql = sprintf(
                 'ALTER TABLE `%s` RENAME TO `%s`',
@@ -163,7 +159,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 15:
             $sql = sprintf(
                 'ALTER TABLE `%s` CHANGE `media_location_id` `episode_asset_id` INT',
@@ -172,7 +167,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 16:
             $sql = sprintf(
                 'ALTER TABLE `%s` CHANGE `media_location_id` `episode_asset_id` INT',
@@ -181,7 +175,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 17:
             $sql = sprintf(
                 'ALTER TABLE `%s` RENAME TO `%s`',
@@ -191,7 +184,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 18:
             $sql = sprintf(
                 'ALTER TABLE `%s` CHANGE `media_format_id` `file_type_id` INT',
@@ -200,12 +192,10 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 19:
             \Podlove\Model\Template::build();
 
             break;
-
         case 20:
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `suffix` VARCHAR(255)',
@@ -219,14 +209,12 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 21:
             $podcast = Model\Podcast::get();
             $podcast->url_template = '%media_file_base_url%%episode_slug%%suffix%.%format_extension%';
             $podcast->save();
 
             break;
-
         case 22:
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `redirect_http_status` INT AFTER `redirect_url`',
@@ -235,7 +223,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 23:
             $sql = sprintf(
                 'ALTER TABLE `%s` DROP COLUMN `show_description`',
@@ -244,7 +231,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 24:
             $podcast = Model\Podcast::get();
             update_option('podlove_asset_assignment', [
@@ -253,7 +239,6 @@ function run_migrations_for_version($version)
             ]);
 
             break;
-
         case 25:
             // rename meta podlove_guid to _podlove_guid
             $episodes = Model\Episode::all();
@@ -276,7 +261,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 26:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` MODIFY COLUMN `subtitle` TEXT',
@@ -284,7 +268,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 27:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `record_date` DATETIME AFTER `chapters`',
@@ -296,7 +279,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 28:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `position` FLOAT AFTER `downloadable`',
@@ -308,7 +290,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 29:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `embed_content_encoded` INT AFTER `limit_items`',
@@ -316,7 +297,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 30:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` MODIFY `autoinsert` VARCHAR(255)',
@@ -324,12 +304,10 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 32:
             flush_rewrite_rules();
 
             break;
-
         case 33:
             $apd = ['name' => 'Auphonic Production Description', 'type' => 'metadata', 'mime_type' => 'application/json', 'extension' => 'json'];
             $f = new \Podlove\Model\FileType();
@@ -339,7 +317,6 @@ function run_migrations_for_version($version)
             $f->save();
 
             break;
-
         case 34:
             $options = get_option('podlove', []);
             if (!array_key_exists('episode_archive', $options)) {
@@ -363,7 +340,6 @@ function run_migrations_for_version($version)
             update_option('podlove', $options);
 
             break;
-
         case 35:
             Model\Feed::build_indices();
             Model\FileType::build_indices();
@@ -373,7 +349,6 @@ function run_migrations_for_version($version)
             Model\Template::build_indices();
 
             break;
-
         case 36:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `etag` VARCHAR(255)',
@@ -381,17 +356,14 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 37:
             \Podlove\Modules\Base::activate('asset_validation');
 
             break;
-
         case 38:
             \Podlove\Modules\Base::activate('logging');
 
             break;
-
         case 39:
             // migrate previous template autoinsert settings
             $assignments = Model\TemplateAssignment::get_instance();
@@ -417,7 +389,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 40:
             $wpdb->query(sprintf(
                 'UPDATE `%s` SET position = id WHERE position IS NULL',
@@ -425,7 +396,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 41:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `position` FLOAT AFTER `slug`',
@@ -437,14 +407,12 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 42:
             $wpdb->query(
                 'DELETE FROM `'.$wpdb->options.'` WHERE option_name LIKE "%podlove_chapters_string_%"'
             );
 
             break;
-
         case 43:
             $podlove_options = get_option('podlove', []);
 
@@ -470,20 +438,17 @@ function run_migrations_for_version($version)
             add_option('podlove_redirects', $podlove_redirects);
 
             break;
-
         case 44:
             $wpdb->query(
                 'DELETE FROM `'.$wpdb->postmeta.'` WHERE meta_key = "last_validated_at"'
             );
 
             break;
-
         case 45:
             delete_transient('podlove_auphonic_user');
             delete_transient('podlove_auphonic_presets');
 
             break;
-
         case 46:
             if (\Podlove\Modules\Base::is_active('contributors')) {
                 // manually trigger activation if the old module was active
@@ -548,7 +513,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 47:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `protected` TINYINT(1) NULL',
@@ -568,14 +532,12 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 48:
             $podcast = Model\Podcast::get();
             $podcast->limit_items = '-1';
             $podcast->save();
 
             break;
-
         case 49:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `explicit` TINYINT',
@@ -583,7 +545,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 50:
             $podcast = Model\Podcast::get();
             $podcast->license_type = 'other';
@@ -615,7 +576,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 51:
             if (\Podlove\Modules\Base::is_active('contributors')) {
                 \Podlove\Modules\Contributors\Model\ContributorGroup::build();
@@ -651,7 +611,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 52:
             if (\Podlove\Modules\Base::is_active('contributors')) {
                 $wpdb->query(sprintf(
@@ -661,7 +620,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 53:
             // set all Episode as published (fix for ADN Module)
             $episodes = Model\Episode::all();
@@ -673,7 +631,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 54:
             if (\Podlove\Modules\Base::is_active('contributors')) {
                 $wpdb->query(sprintf(
@@ -687,7 +644,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 55:
             if (\Podlove\Modules\Base::is_active('contributors')) {
                 \Podlove\Modules\Contributors\Model\DefaultContribution::build();
@@ -703,7 +659,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 56:
             // migrate Podcast Contributors to Default Contributors
             if (\Podlove\Modules\Base::is_active('contributors')) {
@@ -719,7 +674,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 57:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `append_name_to_podcast_title` TINYINT(1) NULL AFTER `embed_content_encoded`',
@@ -727,7 +681,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 58:
             // if contributors module is active, activate social module
             if (\Podlove\Modules\Base::is_active('contributors')) {
@@ -735,7 +688,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 59:
             if (\Podlove\Modules\Base::is_active('bitlove')) {
                 $wpdb->query(sprintf(
@@ -745,13 +697,11 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 60:
             \Podlove\Modules\Base::activate('oembed');
             \Podlove\Modules\Base::activate('feed_validation');
 
             break;
-
         case 61:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` DROP COLUMN `publication_date`',
@@ -759,7 +709,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 62:
             // rename column
             $wpdb->query(sprintf(
@@ -782,7 +731,6 @@ function run_migrations_for_version($version)
             update_option('podlove_metadata', $meta);
 
             break;
-
         case 63:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $tumblr_service = \Podlove\Modules\Social\Model\Service::find_one_by_property('title', 'Tumblr');
@@ -791,7 +739,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 64:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $services = [
@@ -837,7 +784,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 65:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $flattr_service = \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Flattr' AND `type` = 'donation'");
@@ -860,7 +806,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 66:
             // Temporary add license_type and CC license fields to episode model
             \Podlove\Model\Episode::property('license_type', 'VARCHAR(255)');
@@ -912,7 +857,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 67:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $instagram_service = \Podlove\Modules\Social\Model\Service::find_one_by_where("`title` = 'Instagram' AND `type` = 'social'");
@@ -923,7 +867,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 68: // Do that ADN module fix again, as we forgot to mark all episodes as published if the ADN module is activated
             $episodes = Model\Episode::all();
             foreach ($episodes as $episode) {
@@ -934,7 +877,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 69:
             if (\Podlove\Modules\Base::is_active('app_dot_net')) {
                 $adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
@@ -944,13 +886,11 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 70:
             \Podlove\Model\DownloadIntent::build();
             \Podlove\Model\UserAgent::build();
 
             break;
-
         case 71:
             // update for everyone, so even those with inactive service tables get updated
             $wpdb->query(sprintf(
@@ -970,7 +910,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 72:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $services = [
@@ -1013,7 +952,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 73:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $jabber_service = \Podlove\Modules\Social\Model\Service::find_one_by_where("`type` = 'jabber' AND `category` = 'social'");
@@ -1024,26 +962,22 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 74:
             Model\GeoArea::build();
             Model\GeoAreaName::build();
             \Podlove\Geo_Ip::register_updater_cron();
 
             break;
-
         case 75:
             $tracking = get_option('podlove_tracking');
             $tracking['mode'] = 0;
             update_option('podlove_tracking', $tracking);
 
             break;
-
         case 76:
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
             break;
-
         case 77:
             // delete empty user agents
             $userAgentTable = Model\UserAgent::table_name();
@@ -1067,7 +1001,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 78:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $c = new \Podlove\Modules\Social\Model\Service();
@@ -1081,14 +1014,12 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 79:
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
             $cache = \Podlove\Cache\TemplateCache::get_instance();
             $cache->setup_purge();
 
             break;
-
         case 80:
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `httprange` VARCHAR(255)',
@@ -1097,13 +1028,11 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 81:
             // remove all caches with old namespace
             $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE \"_transient_podlove_cache%\"");
 
             break;
-
         case 82:
             // set all redirect entries to active
             $redirect_settings = \Podlove\get_setting('redirects', 'podlove_setting_redirect');
@@ -1113,7 +1042,6 @@ function run_migrations_for_version($version)
             update_option('podlove_redirects', ['podlove_setting_redirect' => $redirect_settings]);
 
             break;
-
         case 83:
             \Podlove\Model\DownloadIntentClean::build();
 
@@ -1135,17 +1063,14 @@ function run_migrations_for_version($version)
             Model\UserAgent::reparse_all();
 
             break;
-
         case 84:
             delete_option('podlove_tpl_cache_keys');
 
             break;
-
         case 85:
             add_option('podlove_tracking_delete_head_requests', 1);
 
             break;
-
         case 86:
             if (\Podlove\Modules\Base::is_active('social')) {
                 $c = new \Podlove\Modules\Social\Model\Service();
@@ -1197,7 +1122,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 87:
             if (\Podlove\Modules\Base::is_active('app_dot_net')) {
                 $adn = \Podlove\Modules\AppDotNet\App_Dot_Net::instance();
@@ -1207,7 +1131,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 88:
             $service = new \Podlove\Modules\Social\Model\Service();
             $service->title = 'Email';
@@ -1219,7 +1142,6 @@ function run_migrations_for_version($version)
             $service->save();
 
             break;
-
         case 89:
             $email_service = \Podlove\Modules\Social\Model\Service::find_one_by_type('email');
 
@@ -1236,12 +1158,10 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 90:
             \Podlove\Modules\Base::activate('subscribe_button');
 
             break;
-
         case 91:
             $c = new \Podlove\Modules\Social\Model\Service();
             $c->title = 'Miiverse';
@@ -1253,7 +1173,6 @@ function run_migrations_for_version($version)
             $c->save();
 
             break;
-
         case 92:
             $c = new \Podlove\Modules\Social\Model\Service();
             $c->title = 'Prezi';
@@ -1265,12 +1184,10 @@ function run_migrations_for_version($version)
             $c->save();
 
             break;
-
         case 93:
             // podlove_init_user_agent_refresh();
             // do nothing instead, because see 94 below
             break;
-
         case 94:
             // this is a duplicate of migration 83 but it looks like that didn't work.
             Model\DownloadIntentClean::build();
@@ -1299,7 +1216,6 @@ function run_migrations_for_version($version)
             wp_schedule_single_event(time() + 240, 'recalculate_episode_download_average', ['really' => true]);
 
             break;
-
         case 95:
             // add missing flattr column
             $wpdb->query(sprintf(
@@ -1308,12 +1224,10 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 96:
             \Podlove\DeleteHeadRequests::init();
 
             break;
-
         case 97:
             // recalculate all downloads average data
             $wpdb->query(sprintf(
@@ -1322,12 +1236,10 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 98:
             delete_transient('podlove_dashboard_stats_contributors');
 
             break;
-
         case 99:
             // Activate network module for migrating users.
             // Core modules are automatically activated for _new_ setups and
@@ -1336,7 +1248,6 @@ function run_migrations_for_version($version)
             \Podlove\Modules\Networks\Networks::instance()->was_activated();
 
             break;
-
         case 101:
             // add patreon
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
@@ -1344,7 +1255,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 102:
             // update logos
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
@@ -1352,7 +1262,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 103:
             $assignment = get_option('podlove_template_assignment', []);
 
@@ -1367,12 +1276,10 @@ function run_migrations_for_version($version)
             update_option('podlove_template_assignment', $assignment);
 
             break;
-
         case 104:
             \Podlove\unschedule_events(\Podlove\Cache\TemplateCache::CRON_PURGE_HOOK);
 
             break;
-
         case 105:
             // activate flattr plugin
             \Podlove\Modules\Base::activate('flattr');
@@ -1385,24 +1292,19 @@ function run_migrations_for_version($version)
             update_option('podlove_flattr', $settings);
 
             break;
-
         case 106:
             // podlove_init_user_agent_refresh();
             break;
-
         case 107:
             // skipped
             break;
-
         case 108:
             // podlove_init_user_agent_refresh();
             break;
-
         case 109:
             \podlove_init_capabilities();
 
             break;
-
         case 110:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
@@ -1410,7 +1312,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 111:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
@@ -1418,7 +1319,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 112:
             // if any feed is protected, activate protection module
             $should_activate_protection_module = false;
@@ -1433,13 +1333,11 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 113:
             delete_option('podlove_jobs');
             Model\Job::build();
 
             break;
-
         case 114:
             $alterations = [
                 'ALTER TABLE `%s` ADD COLUMN `wakeups` INT',
@@ -1451,12 +1349,10 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 115:
             Model\Job::delete_all();
 
             break;
-
         case 116:
             // "clean slate" analytics calculation
 
@@ -1475,13 +1371,11 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 117:
             $sql = 'DELETE FROM `'.Model\Job::table_name().'` WHERE `class` LIKE "%DownloadTotalsAggregatorJob"';
             $wpdb->query($sql);
 
             break;
-
         case 118:
             // unschedule podlove_calc_download_sums cron because the interval changed from twicedaily to hourly
             if (wp_next_scheduled('podlove_calc_download_sums')) {
@@ -1489,14 +1383,12 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 119:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
             }
 
             break;
-
         case 120:
             // "clean slate" analytics calculation
 
@@ -1515,23 +1407,19 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 121:
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
             break;
-
         case 122:
             \Podlove\Cache\TemplateCache::get_instance()->delete_cache_for('podlove_downloads_last_month');
 
             break;
-
         case 123:
             \Podlove\Cache\TemplateCache::get_instance()->purge();
             \Podlove\Model\Image::flush_cache();
 
             break;
-
         case 124:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
@@ -1539,7 +1427,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 125:
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `name` VARCHAR(255)',
@@ -1548,7 +1435,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql);
 
             break;
-
         case 126:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` CHANGE COLUMN `name` `identifier` VARCHAR(255)',
@@ -1556,7 +1442,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 127:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` CHANGE COLUMN `slug` `identifier` VARCHAR(255)',
@@ -1564,7 +1449,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 132:
             $sql1 = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `title` TEXT',
@@ -1583,7 +1467,6 @@ function run_migrations_for_version($version)
             $wpdb->query($sql3);
 
             break;
-
         case 133:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `mnemonic` VARCHAR(8)',
@@ -1591,7 +1474,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 134:
             $file_type = ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text', 'extension' => 'txt'];
 
@@ -1604,13 +1486,11 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 135:
             delete_option(\Podlove\Modules\TitleMigration\State::OPTION);
             \Podlove\Modules\Base::activate('title_migration');
 
             break;
-
         case 136:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
@@ -1618,7 +1498,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 137:
             $wpdb->query(sprintf(
                 'ALTER TABLE `%s` DROP COLUMN `mnemonic`',
@@ -1626,7 +1505,6 @@ function run_migrations_for_version($version)
             ));
 
             break;
-
         case 138:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
@@ -1634,12 +1512,10 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 139:
             \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::instance()->update_module_option('use_cdn', false);
 
             break;
-
         case 140:
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
                 \Podlove\Modules\Social\Social::update_existing_services();
@@ -1647,18 +1523,15 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 141:
             $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
             $wpdb->query(sprintf($sql, \Podlove\Model\DownloadIntentClean::table_name()));
 
             break;
-
         case 142:
             \Podlove\Modules\Affiliate\Affiliate::instance()->was_activated();
 
             break;
-
         case 143:
             if (\Podlove\Modules\Shownotes\Model\Entry::table_exists()) {
                 $sql = sprintf(
@@ -1669,7 +1542,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 144:
             if (\Podlove\Modules\Shownotes\Model\Entry::table_exists()) {
                 $sql = sprintf(
@@ -1680,7 +1552,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 145:
             // add steady
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
@@ -1688,7 +1559,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 146:
             // add untappd
             if (\Podlove\Modules\Social\Model\Service::table_exists()) {
@@ -1696,7 +1566,6 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 150:
             if (\Podlove\Modules\Shownotes\Model\Entry::table_exists()) {
                 $sql = sprintf(
@@ -1707,24 +1576,21 @@ function run_migrations_for_version($version)
             }
 
             break;
-
         case 151:
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
             break;
-        
         case 152:
-
-			$sql1 = sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `soundbite_start` VARCHAR(255)',
-				Model\Episode::table_name()
-			);
-			$sql2 = sprintf(
-				'ALTER TABLE `%s` ADD COLUMN `soundbite_duration` VARCHAR(255)',
-				Model\Episode::table_name()
-			);
-			$wpdb->query($sql1);
-			$wpdb->query($sql2);
+            $sql1 = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `soundbite_start` VARCHAR(255)',
+                Model\Episode::table_name()
+            );
+            $sql2 = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `soundbite_duration` VARCHAR(255)',
+                Model\Episode::table_name()
+            );
+            $wpdb->query($sql1);
+            $wpdb->query($sql2);
 
             break;
     }

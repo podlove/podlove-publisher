@@ -101,7 +101,7 @@ class Geo_Ip
         $tmpFile = \download_url(self::SOURCE_URL);
 
         if (is_wp_error($tmpFile)) {
-            die($tmpFile->get_error_message());
+            exit($tmpFile->get_error_message());
         }
 
         if (file_exists(self::TAR_NAME)) {
@@ -117,9 +117,9 @@ class Geo_Ip
             $phar = new \PharData($file->getPath());
             $phar->extractTo(self::get_upload_file_dir(), null, true);
         } catch (Exception $e) {
-            die($e->getMessage());
+            exit($e->getMessage());
         } catch (PharException $e) {
-            die($e->getMessage());
+            exit($e->getMessage());
         }
 
         self::enable_tracking();

@@ -7,6 +7,7 @@
         "podlove/podlove-timeline": "1.*",
         "monolog/monolog": "1.*",
         "symfony/yaml": "3.4.*",
+        "symfony/polyfill-mbstring": "1.20.0",
         "twig/twig": "2.12.5",
         "twig/extensions": "1.5.*",
         "geoip2/geoip2": "~2.0",

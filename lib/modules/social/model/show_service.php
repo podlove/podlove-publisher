@@ -32,6 +32,8 @@ class ShowService extends Base
 
     public static function find_by_category($category = 'social')
     {
+        $category = $category == 'social' ? 'social' : 'donation';
+
         return self::all('WHERE service_id IN (SELECT id FROM '.Service::table_name()." WHERE `category` = '".$category."' ) ORDER BY position ASC");
     }
 }

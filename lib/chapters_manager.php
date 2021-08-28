@@ -134,6 +134,7 @@ class ChaptersManager
                         $chapters = Parser\PSC::parse($this->chapters_raw);
 
                         break;
+
                     default:
                         $chapters = Parser\Mp4chaps::parse($this->chapters_raw);
 

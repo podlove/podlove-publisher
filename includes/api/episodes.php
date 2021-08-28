@@ -4,7 +4,6 @@ namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
 use Podlove\Model\Podcast;
-
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -30,7 +29,6 @@ function api_init()
         'callback' => __NAMESPACE__.'\\episodes_update_api',
         'permission_callback' => __NAMESPACE__.'\\update_episode_permission_check',
     ]);
-
 }
 
 function list_api()
@@ -85,15 +83,20 @@ function episodes_api($request)
 }
 
 /**
- * Check permission for change
+ * Check permission for change.
+ *
+ * @param mixed $request
  */
 function update_episode_permission_check($request)
 {
-    if (!current_user_can( 'edit_posts')) {
-        return new WP_Error('rest_forbidden', 
+    if (!current_user_can('edit_posts')) {
+        return new WP_Error(
+            'rest_forbidden',
             esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-            array('status' => 401));
+            ['status' => 401]
+        );
     }
+
     return true;
 }
 
@@ -102,23 +105,26 @@ function episodes_update_api($request)
     $id = $request->get_param('id');
     $episode = Episode::find_by_id($id);
 
-    if (!$episode)
+    if (!$episode) {
         return;
-
-    if ( isset($request['soundbite_start'])) {
-        $start = $request['soundbite_start'];
-        if (preg_match('/\d\d:[0-5]\d:[0-5]\d/', $start))
-            $episode->soundbite_start = $start;
-        else
-            return;
     }
 
-    if ( isset($request['soundbite_duration'])) {
-        $duration = $request['soundbite_duration'];
-        if (preg_match('/\d\d:[0-5]\d:[0-5]\d/', $duration))
-            $episode->soundbite_duration = $duration;
-        else
+    if (isset($request['soundbite_start'])) {
+        $start = $request['soundbite_start'];
+        if (preg_match('/\d\d:[0-5]\d:[0-5]\d/', $start)) {
+            $episode->soundbite_start = $start;
+        } else {
             return;
+        }
+    }
+
+    if (isset($request['soundbite_duration'])) {
+        $duration = $request['soundbite_duration'];
+        if (preg_match('/\d\d:[0-5]\d:[0-5]\d/', $duration)) {
+            $episode->soundbite_duration = $duration;
+        } else {
+            return;
+        }
     }
 
     $episode->save();

@@ -274,7 +274,7 @@ function ajax_migrate_post()
     header('Content-type: application/json');
     echo json_encode(['url' => get_edit_post_link($new_post_id)]);
 
-    die();
+    exit();
 }
 add_action('wp_ajax_podlove-migrate-post', '\Podlove\Modules\Migration\ajax_migrate_post');
 
@@ -313,6 +313,6 @@ function update_migration_settings()
     }
 
     update_option('podlove_migration', $migration_settings);
-    die();
+    exit();
 }
 add_action('wp_ajax_podlove-update-migration-settings', '\Podlove\Modules\Migration\update_migration_settings');
