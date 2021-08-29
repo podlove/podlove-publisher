@@ -10,6 +10,7 @@
                 <label>End</label>
                 <input v-model="end" class="form-input" type="text"  placeholder="00:00:00"/>
                 <p v-if="isEndValid">The end timepoint has not the correct format. Please use HH:MM:SS</p>
+                <p v-if="isEndGreater"> The end timepoint must greater than the start timepoint</p>
             </div>
             <div class="soundbite-space">
                 <label>Duration</label>
@@ -42,6 +43,18 @@ export default {
                 this.startValid = false;
                 return true;
             }
+      },
+      isEndGreater: function() {
+            if (this.startValid === false || this.endValid === false)
+                return false;
+
+            let startSec = this.getTimeAsSec(this.start);
+            let endSec = this.getTimeAsSec(this.end);
+            if (startSec >= endSec) 
+                return true;
+
+            this.endValid = false;
+            return false;
       },
       isEndValid: function() {
             // Hat sich der Wert nicht geaendert, so ist kein Pruefung noetig
@@ -146,13 +159,19 @@ export default {
         let startSec = this.getTimeAsSec(this.start);
         let durationSec = this.getTimeAsSec(this.duration);
         let endSec = startSec + durationSec;
-        this.end = this.getTimeAsString(endSec);
+        if (endSec < 0 || isNaN(endSec))
+            this.end = this.start;
+        else
+            this.end = this.getTimeAsString(endSec);
     },
     calculateDuration: function() {
         let startSec = this.getTimeAsSec(this.start);
         let endSec = this.getTimeAsSec(this.end);
         let durationSec = endSec - startSec;
-        this.duration = this.getTimeAsString(durationSec);
+        if (durationSec < 0 || isNaN(durationSec))
+            this.duration = '00:00:00';
+        else 
+            this.duration = this.getTimeAsString(durationSec);
     },
     getDataFromPodlove: async function() {
         let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id;
