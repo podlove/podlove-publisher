@@ -180,7 +180,7 @@ class SystemReport
                     $out .= $error;
                 }
 
-                if (!$podcast->media_file_base_uri) {
+                if (!$podcast->get_media_file_base_uri()) {
                     $error = __('Your podcast needs an upload location for file storage.', 'podlove-podcasting-plugin-for-wordpress');
                     $errors[] = $error;
                     $out .= $error;
