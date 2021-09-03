@@ -1,8 +1,5 @@
 <?php
-// todo: override podcast "upload location" and add a note to that form field that it's ignored
-//   - nope, must be writable to allow CDN URLs
-//   - instead, maybe assume identical if location is empty, otherwise use location
-// todo: replace all uses of $podcast->media_file_base_uri with a method call with a filter, so this module can hook into it
+// TODO: replace all uses of $podcast->media_file_base_uri with a method call with a filter, so this module can hook into it
 
 namespace Podlove\Modules\WordpressFileUpload;
 
@@ -57,6 +54,17 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         add_filter('upload_dir', [$this, 'custom_media_upload_dir']);
         add_filter('podlove_episode_form_data', [$this, 'add_upload_button_to_form']);
         add_action('podlove_episode_meta_box_end', [$this, 'add_upload_button_styles_and_scripts']);
+        add_filter('podlove_media_file_base_uri_form', [$this, 'set_form_placeholder']);
+    }
+
+    public function set_form_placeholder($config)
+    {
+        $upload_dir = wp_upload_dir();
+        $upload_dir = $this->custom_media_upload_dir($upload_dir, true);
+
+        $config['html']['placeholder'] = $upload_dir['url'];
+
+        return $config;
     }
 
     public function add_upload_button_to_form($form_data)
@@ -81,23 +89,16 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
      * Override upload_dir so it ignores date subdirectories etc.
      *
      * @param mixed $upload
+     * @param mixed $force_override
      */
-    public function custom_media_upload_dir($upload)
+    public function custom_media_upload_dir($upload, $force_override = false)
     {
-        $podlove_subdir = trim($this->get_module_option('upload_subdir'));
-
-        if (empty($podlove_subdir)) {
-            $podlove_subdir = self::DEFAULT_DIR;
-        }
-
-        if ($podlove_subdir[0] !== '/') {
-            $podlove_subdir = '/'.$podlove_subdir;
-        }
+        $podlove_subdir = $this->get_subdir();
 
         $id = (int) $_REQUEST['post_id'];
         $parent = get_post($id)->post_parent;
 
-        if ('podcast' == get_post_type($id) || 'podcast' == get_post_type($parent)) {
+        if ($force_override || 'podcast' == get_post_type($id) || 'podcast' == get_post_type($parent)) {
             $upload['subdir'] = $podlove_subdir;
         }
 
@@ -130,5 +131,20 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         });
         </script>
     <?php
+    }
+
+    private function get_subdir()
+    {
+        $dir = trim($this->get_module_option('upload_subdir'));
+
+        if (empty($dir)) {
+            $dir = self::DEFAULT_DIR;
+        }
+
+        if ($dir[0] !== '/') {
+            $dir = '/'.$dir;
+        }
+
+        return $dir;
     }
 }
