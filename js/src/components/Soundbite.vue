@@ -1,18 +1,20 @@
 <template>
     <div class="container">
         <div class="soundbite-input">
-            <div>
+            <div class="soudbite-formitem">
                 <label>Start</label>
                 <input v-model="start" class="form-input" type="text" placeholder="00:00:00"/>
                 <p v-if="isStartValid">The start timepoint has not the correct format. Please use HH:MM:SS</p>
             </div>
-            <div class="soundbite-space">
+            <div class="soundbite-space"></div>
+            <div class="soudbite-formitem">
                 <label>End</label>
                 <input v-model="end" class="form-input" type="text"  placeholder="00:00:00"/>
                 <p v-if="isEndValid">The end timepoint has not the correct format. Please use HH:MM:SS</p>
                 <p v-if="isEndGreater"> The end timepoint must greater than the start timepoint</p>
             </div>
-            <div class="soundbite-space">
+            <div class="soundbite-space"></div>
+            <div class="soudbite-formitem">
                 <label>Duration</label>
                 <input v-model="duration" class="form-input" type="text"  placeholder="00:00:00"/>
                 <p v-if="isDurationValid">The duration has not the correct format. Please use HH:MM:SS</p>
@@ -30,7 +32,7 @@ export default {
             if (this.oldStart === this.start) {
                 this.startValid = true;
                 return false;
-            }       
+            }
 
             if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.start)) {
                 this.startValid = true;
@@ -50,7 +52,7 @@ export default {
 
             let startSec = this.getTimeAsSec(this.start);
             let endSec = this.getTimeAsSec(this.end);
-            if (startSec >= endSec) 
+            if (startSec >= endSec)
                 return true;
 
             this.endValid = false;
@@ -81,7 +83,7 @@ export default {
                 this.durationValid = true;
                 return false;
             }
-            
+
             if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.duration)) {
                 this.calculateEndTime();
                 this.durationValid = true;
@@ -103,14 +105,14 @@ export default {
 
         if (this.durationValid === false || this.startValid === false || this.endValid === false)
             return;
-            
-        let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id; 
+
+        let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id;
         this.axios
             .patch(url,
             {
                 soundbite_start: this.start,
                 soundbite_duration: this.duration
-            }, 
+            },
             {
             headers: {
                 'X-WP-Nonce': podlove_vue.nonce
@@ -170,7 +172,7 @@ export default {
         let durationSec = endSec - startSec;
         if (durationSec < 0 || isNaN(durationSec))
             this.duration = '00:00:00';
-        else 
+        else
             this.duration = this.getTimeAsString(durationSec);
     },
     getDataFromPodlove: async function() {
@@ -211,10 +213,14 @@ export default {
 <style scoped>
 .soundbite-input {
     display: flex;
+    max-width: 800px;
+}
+
+.soudbite-formitem {
+    flex: 1 1 0%;
 }
 
 .soundbite-space {
-    margin-left: 20px;
+    width: 20px;
 }
-
 </style>
