@@ -110,6 +110,13 @@ Beta updates for v3.6
 
 = 2021-09-03 =
 
+**New Module: Soundbite**
+
+Adds support for the `<podcast:soundbite>` RSS feed tag.
+The intended use includes episodes previews, discoverability, audiogram generation, episode highlights, etc.
+
+Using this module you can specify an audio segment for each episode that can be read by for example audiogram generation services.
+
 **New Module: WordPress File Upload**
 
 If you are using WordPress Media as storage for your Podlove assets, this new
