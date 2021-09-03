@@ -105,7 +105,7 @@ class Auphonic extends \Podlove\Modules\Base
                             <strong>Auphonic Preset "<?php echo $preset; ?>" does not exist.</strong>
                         </p>
                         <p>
-                            The Auphonic preset does not exist any more. Please choose a valid one. <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle'); ?>">Go to module settings.</a>
+                            The Auphonic preset does not exist any more. Please choose a valid one. <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle'); ?>"><?php echo __('Go to module settings', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
                         </p>
                     </div>
                     <?php

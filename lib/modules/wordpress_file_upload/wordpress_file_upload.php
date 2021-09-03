@@ -1,4 +1,8 @@
 <?php
+// todo: override podcast "upload location" and add a note to that form field that it's ignored
+//   - nope, must be writable to allow CDN URLs
+//   - instead, maybe assume identical if location is empty, otherwise use location
+// todo: replace all uses of $podcast->media_file_base_uri with a method call with a filter, so this module can hook into it
 
 namespace Podlove\Modules\WordpressFileUpload;
 
@@ -22,6 +26,30 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
                 'placeholder' => self::DEFAULT_DIR
             ],
         ]);
+
+        $podlove_subdir = trim($this->get_module_option('upload_subdir'));
+        if (!$podlove_subdir) {
+            add_action('admin_notices', function () {
+                ?>
+                <div id="message" class="notice notice-success">
+                    <p>
+                        <strong><?php echo sprintf(
+                    __('Module "%s" is active.', 'podlove-podcasting-plugin-for-wordpress'),
+                    $this->module_name
+                ); ?></strong>
+                    </p>
+                    <p>
+                        <?php echo __('You need to configure the subdirectory in the WordPress upload directory where your media files should be stored.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                    </p>
+                    <p>
+                        <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle#wordpress_file_upload'); ?>">
+                          <?php echo __('Go to module settings', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                        </a>
+                    </p>
+                </div>
+                <?php
+            });
+        }
     }
 
     public function register_hooks()
@@ -69,9 +97,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         $id = (int) $_REQUEST['post_id'];
         $parent = get_post($id)->post_parent;
 
-        // Check the post-type of the current post
         if ('podcast' == get_post_type($id) || 'podcast' == get_post_type($parent)) {
-            // override subdir, removing date directories if they are configured
             $upload['subdir'] = $podlove_subdir;
         }
 
@@ -84,25 +110,25 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
     public function add_upload_button_styles_and_scripts()
     {
         ?>
-<style>
-#_podlove_meta_file_upload,
-.podlove-media-upload-wrap .podlove_preview_pic,
-.podlove-media-upload-wrap p
-{
-  display: none !important;
-}
-</style>
-<script>
-const uploadUrlInput = document.getElementById('_podlove_meta_file_upload')
-const slugInput = document.getElementById('_podlove_meta_slug');
+        <style>
+        #_podlove_meta_file_upload,
+        .podlove-media-upload-wrap .podlove_preview_pic,
+        .podlove-media-upload-wrap p
+        {
+        display: none !important;
+        }
+        </style>
+        <script>
+        const uploadUrlInput = document.getElementById('_podlove_meta_file_upload')
+        const slugInput = document.getElementById('_podlove_meta_slug');
 
-uploadUrlInput.addEventListener('change', function (e) {
-    const value = e.target.value;
-    const slug = value.split('\\').pop().split('/').pop().split('.').shift()
-    console.log({slug: slug});
-    slugInput.value = slug;
-});
-</script>
+        uploadUrlInput.addEventListener('change', function (e) {
+            const value = e.target.value;
+            const slug = value.split('\\').pop().split('/').pop().split('.').shift()
+            console.log({slug: slug});
+            slugInput.value = slug;
+        });
+        </script>
     <?php
     }
 }
