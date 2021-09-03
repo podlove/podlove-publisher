@@ -1,5 +1,4 @@
 <?php
-// TODO: replace all uses of $podcast->media_file_base_uri with a method call with a filter, so this module can hook into it
 
 namespace Podlove\Modules\WordpressFileUpload;
 
@@ -55,6 +54,19 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         add_filter('podlove_episode_form_data', [$this, 'add_upload_button_to_form']);
         add_action('podlove_episode_meta_box_end', [$this, 'add_upload_button_styles_and_scripts']);
         add_filter('podlove_media_file_base_uri_form', [$this, 'set_form_placeholder']);
+        add_filter('podlove_media_file_base_uri', [$this, 'set_media_file_base_uri']);
+    }
+
+    public function set_media_file_base_uri($uri)
+    {
+        if (trim($uri) === '') {
+            $upload_dir = wp_upload_dir();
+            $upload_dir = $this->custom_media_upload_dir($upload_dir, true);
+
+            return $upload_dir['url'];
+        }
+
+        return $uri;
     }
 
     public function set_form_placeholder($config)
@@ -95,8 +107,8 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
     {
         $podlove_subdir = $this->get_subdir();
 
-        $id = (int) $_REQUEST['post_id'];
-        $parent = get_post($id)->post_parent;
+        $id = isset($_REQUEST['post_id']) ? (int) $_REQUEST['post_id'] : 0;
+        $parent = $id ? get_post($id)->post_parent : 0;
 
         if ($force_override || 'podcast' == get_post_type($id) || 'podcast' == get_post_type($parent)) {
             $upload['subdir'] = $podlove_subdir;
