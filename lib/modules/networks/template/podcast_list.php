@@ -14,7 +14,7 @@ use Podlove\Template\Wrapper;
 class PodcastList extends Wrapper
 {
     /**
-     * @var \Podlove\Modules\Networks\Model\Network
+     * @var \Podlove\Modules\Networks\Model\PodcastList
      */
     private $list;
 

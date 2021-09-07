@@ -5,7 +5,7 @@ PODLOVE.media = PODLOVE.media || {};
 	"use strict";
 
 	var args;
-	
+
 	PODLOVE.media.init =  function() {
 		$(".podlove-media-upload-wrap").each(function() {
 			PODLOVE.media.init_field($(this));
@@ -15,7 +15,7 @@ PODLOVE.media = PODLOVE.media || {};
 	PODLOVE.media.init_field = function(container) {
 		var $upload_link = $(".podlove-media-upload", container),
 		    options = $upload_link.data(),
-			params  = {	
+			params  = {
 				frame:   options.frame,
 				library: { type: options.type },
 				button:  { text: options.button },
@@ -23,9 +23,9 @@ PODLOVE.media = PODLOVE.media || {};
 				title: options.title
 			}
 		;
-		
+
 		if (typeof options.state != "undefined" ) params.state = options.state;
-		
+
 		options.input_target = $('#'+options.target);
 		options.container = container;
 
@@ -43,21 +43,21 @@ PODLOVE.media = PODLOVE.media || {};
 		args = options;
 
 		var file_frame = wp.media(params);
-		
+
 		file_frame.states.add([
 			new wp.media.controller.Library({
 				id:         'podlove_select_single_image',
 				priority:   20,
 				toolbar:    'select',
 				filterable: 'uploaded',
-				library:    wp.media.query( file_frame.options.library ),
-				multiple:   false,
+				// library:    wp.media.query( file_frame.options.library ),
+				multiple:   args.multiple,
 				editable:   true,
 				displaySettings: true,
 				allowLocalEdits: true
 			}),
 		]);
-		
+
 		file_frame.on('select update insert', function() { PODLOVE.media.insert(file_frame, options); });
 
 		$upload_link.on('click', function() {
@@ -82,7 +82,7 @@ PODLOVE.media = PODLOVE.media || {};
 		} else {
 			return 'https://www.gravatar.com/avatar/' + CryptoJS.MD5( email ) + '&s=400';
 
-		}	
+		}
 	}
 
 	PODLOVE.media.render_preview = function(wrapper) {
@@ -112,21 +112,21 @@ PODLOVE.media = PODLOVE.media || {};
 		preview.appendChild(remove);
 		preview.style.display = "block";
 	};
-	
+
 	PODLOVE.media.insert = function(file_frame , options) {
-		var state		= file_frame.state(), 
+		var state		= file_frame.state(),
 			selection	= state.get('selection').first().toJSON(),
 			value		= selection.id,
 			fetch_val   = typeof options.fetch != 'undefined' ? fetch_val = options.fetch : false
-		
+
 		/*fetch custom val like url*/
 		if (fetch_val) {
 			value = state.get('selection').map( function( attachment ) {
 				var element = attachment.toJSON();
-				
+
 				if (fetch_val == 'url') {
 					var display = state.display( attachment ).toJSON();
-					
+
 					if (element.sizes && element.sizes[display.size] && element.sizes[display.size].url) {
 						return element.sizes[display.size].url;
 					} else if (element.url) {
@@ -134,11 +134,13 @@ PODLOVE.media = PODLOVE.media || {};
 					}
 				}
 			});
-		}	
-		
+		}
+
 		// change the target input value
 		options.input_target.val(value).trigger('change')
-		
+
+        document.getElementById(options.target).dispatchEvent(new Event('change', { 'bubbles': true }))
+
 		// trigger event in case it is necessary (uploads)
 		if (typeof options.trigger != "undefined") {
 			$("body").trigger(options.trigger, [selection, options]);
@@ -149,4 +151,4 @@ PODLOVE.media = PODLOVE.media || {};
 		PODLOVE.media.init();
 	});
 
-})(jQuery);	 
+})(jQuery);

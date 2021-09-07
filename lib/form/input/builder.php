@@ -232,6 +232,7 @@ class Builder
             'media_button_text' => __('Use Image', 'podlove-podcasting-plugin-for-wordpress'),
             'media_title' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
             'allow_gravatar' => false,
+            'allow_multi_upload' => false
         ];
         $arguments = wp_parse_args($arguments, $defaults); ?>
 		<div class="podlove-media-upload-wrap">
@@ -248,6 +249,7 @@ class Builder
 					data-state="podlove_select_single_image"
 					data-preview=".podlove_preview_pic"
 					data-allow-gravatar="<?php echo $arguments['allow_gravatar']; ?>"
+                    data-multiple="<?php echo $arguments['allow_multi_upload']; ?>"
 					data-fetch="url"><?php echo $arguments['form_button_text']; ?></a>
 			</span>
 			<?php if (!isset($arguments['description']) || !$arguments['description']) { ?>

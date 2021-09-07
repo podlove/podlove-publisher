@@ -51,7 +51,7 @@ class Podcast_Post_Meta_Box
 
 		<?php do_action('podlove_episode_meta_box_start'); ?>
 
-		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
+		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->get_media_file_base_uri(); ?>" />
 		<div class="podlove-div-wrapper-form">
 			<?php
             $form_args = [
