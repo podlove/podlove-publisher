@@ -49,23 +49,27 @@ class Soundbite extends \Podlove\Modules\Base
             $start = $epsiode->soundbite_start;
             $duration = $epsiode->soundbite_duration;
 
-            $start_sec = \Podlove\NormalPlayTime\Parser::parse($start, 's');
-            $duration_sec = \Podlove\NormalPlayTime\Parser::parse($duration, 's');
+            $start_sec = \Podlove\NormalPlayTime\Parser::parse($start, 'ms');
+            $start_sec = $start_sec / 1000.;
+            $duration_sec = \Podlove\NormalPlayTime\Parser::parse($duration, 'ms');
+            $duration_sec = $duration_sec / 1000.;
 
-            $doc = new \DOMDocument();
-            $node = $doc->createElement('podcast:soundbite');
-            $text = $doc->createTextNode($title);
-            $node->appendChild($text);
-            $attr = $doc->createAttribute('startTime');
-            $attr->value = number_format($start_sec, 2);
-            $node->appendChild($attr);
-            $attr = $doc->createAttribute('duration');
-            $attr->value = number_format($duration_sec, 2);
-            $node->appendChild($attr);
+            if ($start_sec > 0 && $duration_sec > 0) {
+                $doc = new \DOMDocument();
+                $node = $doc->createElement('podcast:soundbite');
+                $text = $doc->createTextNode($title);
+                $node->appendChild($text);
+                $attr = $doc->createAttribute('startTime');
+                $attr->value = number_format($start_sec, 2);
+                $node->appendChild($attr);
+                $attr = $doc->createAttribute('duration');
+                $attr->value = number_format($duration_sec, 2);
+                $node->appendChild($attr);
 
-            $xml = $doc->saveXML($node);
+                $xml = $doc->saveXML($node);
 
-            echo "\n\t\t".$xml."\n";
+                echo "\n\t\t" . $xml . "\n";
+            }
         }
     }
 }

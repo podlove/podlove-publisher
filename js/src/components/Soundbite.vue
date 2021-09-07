@@ -4,20 +4,20 @@
             <div class="soudbite-formitem">
                 <label>Start</label>
                 <input v-model="start" class="form-input" type="text" placeholder="00:00:00"/>
-                <p v-if="isStartValid">The start timepoint has not the correct format. Please use HH:MM:SS</p>
+                <p v-if="isStartNotValid">The start timepoint has not the correct format. Please use HH:MM:SS</p>
             </div>
             <div class="soundbite-space"></div>
             <div class="soudbite-formitem">
                 <label>End</label>
                 <input v-model="end" class="form-input" type="text"  placeholder="00:00:00"/>
-                <p v-if="isEndValid">The end timepoint has not the correct format. Please use HH:MM:SS</p>
-                <p v-if="isEndGreater"> The end timepoint must greater than the start timepoint</p>
+                <p v-if="isEndNotValid">The end timepoint has not the correct format. Please use HH:MM:SS</p>
+                <p v-if="isEndNotGreater"> The end timepoint must greater than the start timepoint</p>
             </div>
             <div class="soundbite-space"></div>
             <div class="soudbite-formitem">
                 <label>Duration</label>
                 <input v-model="duration" class="form-input" type="text"  placeholder="00:00:00"/>
-                <p v-if="isDurationValid">The duration has not the correct format. Please use HH:MM:SS</p>
+                <p v-if="isDurationNotValid">The duration has not the correct format. Please use HH:MM:SS</p>
             </div>
         </div>
     </div>
@@ -27,14 +27,20 @@
 <script>
 export default {
   computed: {
-      isStartValid: function() {
+      isStartNotValid: function() {
             // Hat sich der Wert nicht geaendert, so ist kein Pruefung noetig
             if (this.oldStart === this.start) {
                 this.startValid = true;
                 return false;
             }
 
-            if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.start)) {
+            // keine Eingabe erfolgt
+            if (this.start === null) {
+                this.startValid = false;
+                return false;
+            }
+
+            if (this.isNormalTimeFieldValid(this.start)) {
                 this.startValid = true;
                 this.calculateEndTime();
                 this.calculateDuration();
@@ -46,26 +52,40 @@ export default {
                 return true;
             }
       },
-      isEndGreater: function() {
+      isEndNotGreater: function() {
             if (this.startValid === false || this.endValid === false)
                 return false;
 
-            let startSec = this.getTimeAsSec(this.start);
-            let endSec = this.getTimeAsSec(this.end);
+            // keine Eingabe erfolgt
+            if (this.start === null || this.duration === null)
+                return false;
+
+            let startSec = this.getTimeAsMilliSec(this.start);
+            let endSec = this.getTimeAsMilliSec(this.end);
+
+            if (startSec === 0 && endSec === 0)
+                return false;
+
             if (startSec >= endSec)
                 return true;
 
             this.endValid = false;
             return false;
       },
-      isEndValid: function() {
+      isEndNotValid: function() {
             // Hat sich der Wert nicht geaendert, so ist kein Pruefung noetig
             if (this.end === this.oldEnd) {
                 this.endValid = true;
                 return false;
             }
 
-            if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.end)) {
+            // Default-Wert ist okay
+            if (this.end === null || this.end === '00:00:00') {
+                this.endValid = true;
+                return false;
+            }
+
+            if (this.isNormalTimeFieldValid(this.end)) {
                 this.calculateDuration();
                 this.endValid = true;
                 this.sendDataToPodlove();
@@ -77,14 +97,19 @@ export default {
                 return true;
             }
       },
-      isDurationValid: function() {
+      isDurationNotValid: function() {
             // Hat sich der Wert nicht geaendert, so ist kein Pruefung noetig
             if (this.duration === this.oldDuration) {
                 this.durationValid = true;
                 return false;
             }
 
-            if (/^\d\d:[0-5]\d:[0-5]\d$/.test(this.duration)) {
+            // keine Eingabe erfolgt
+            if (this.duration === null) {
+                return false;
+            }
+
+            if (this.isNormalTimeFieldValid(this.duration)) {
                 this.calculateEndTime();
                 this.durationValid = true;
                 this.sendDataToPodlove();
@@ -130,45 +155,53 @@ export default {
         this.oldEnd = this.end;
         this.oldDuration = this.duration;
     },
-    getTimeAsSec: function(text) {
-        // text should a string in the format HH:MM:SS
+    getTimeAsMilliSec: function(text) {
+        // text should a string in the format HH:MM:SS.mmm
         if (typeof text === 'string') {
-            let hour = text.substr(0,2);
-            let min = text.substr(3,2);
-            let sec = text.substr(6,2);
-            let hourVal = parseInt(hour);
-            let minVal = parseInt(min);
-            let secVal = parseInt(sec);
-            return hourVal*3600 + minVal*60 + secVal;
+            let npt = require('normalplaytime');
+            let ms = npt.parse(text);
+            if (ms === null)
+                return 0;
+            return ms;
         }
         return 0;
     },
     getTimeAsString: function(val) {
         // val should an integer
         if (typeof val === 'number') {
-            let hourVal = Math.trunc(val / 3600);
-            val = val - hourVal * 3600;
-            let minVal = Math.trunc(val / 60);
-            let secVal = val - minVal * 60;
+            let hourVal = Math.trunc(val / 3600000);
+            val = val - hourVal * 3600000;
+            let minVal = Math.trunc(val / 60000);
+            val = val - minVal * 60000;
+            let secVal = Math.trunc(val / 1000);
+            let msVal = val - secVal*1000;
             let hour = hourVal.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
             let min = minVal.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
             let sec = secVal.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+            if (msVal > 0) {
+                if (msVal % 100 === 0)
+                    msVal = msVal / 100;
+                else if (msVal % 10 === 0)
+                    msVal = msVal / 10;
+                let ms = msVal.toLocaleString('en-US', {minimumIntegerDigits: 1, useGrouping: false});
+                return  hour.concat(':', min, ':' , sec, '.', ms);
+            }
             return  hour.concat(':', min, ':' , sec);
         }
         return '00:00:00';
     },
     calculateEndTime: function() {
-        let startSec = this.getTimeAsSec(this.start);
-        let durationSec = this.getTimeAsSec(this.duration);
+        let startSec = this.getTimeAsMilliSec(this.start);
+        let durationSec = this.getTimeAsMilliSec(this.duration);
         let endSec = startSec + durationSec;
-        if (endSec < 0 || isNaN(endSec))
+        if (endSec <= 0 || isNaN(endSec))
             this.end = this.start;
         else
             this.end = this.getTimeAsString(endSec);
     },
     calculateDuration: function() {
-        let startSec = this.getTimeAsSec(this.start);
-        let endSec = this.getTimeAsSec(this.end);
+        let startSec = this.getTimeAsMilliSec(this.start);
+        let endSec = this.getTimeAsMilliSec(this.end);
         let durationSec = endSec - startSec;
         if (durationSec < 0 || isNaN(durationSec))
             this.duration = '00:00:00';
@@ -187,6 +220,16 @@ export default {
         catch (error) {
             alert(error);
         }
+    },
+    isNormalTimeFieldValid: function(text) {
+        if (typeof text === 'string') {
+            let npt = require('normalplaytime');
+            let ms = npt.parse(text);
+            if (ms === null)
+                return false;
+            return true;
+        }
+        return false;
     }
   },
   data () {
