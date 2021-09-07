@@ -60,10 +60,10 @@ class Soundbite extends \Podlove\Modules\Base
                 $text = $doc->createTextNode($title);
                 $node->appendChild($text);
                 $attr = $doc->createAttribute('startTime');
-                $attr->value = number_format($start_sec, 2);
+                $attr->value = number_format($start_sec, 3);
                 $node->appendChild($attr);
                 $attr = $doc->createAttribute('duration');
-                $attr->value = number_format($duration_sec, 2);
+                $attr->value = number_format($duration_sec, 3);
                 $node->appendChild($attr);
 
                 $xml = $doc->saveXML($node);
