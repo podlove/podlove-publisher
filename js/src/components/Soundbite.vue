@@ -19,6 +19,12 @@
                 <input v-model="duration" class="form-input" type="text"  placeholder="00:00:00"/>
                 <p v-if="isDurationNotValid">The duration has not the correct format. Please use HH:MM:SS</p>
             </div>
+            <div class="soundbite-space"></div>
+            <div class="soundbite-button">
+                <button class="button" type="button" @click="clearData">
+                    Clear
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -155,6 +161,36 @@ export default {
         this.oldEnd = this.end;
         this.oldDuration = this.duration;
     },
+    clearData: function() {
+        this.start = '00:00:00';
+        this.end = '00:00:00';
+        this.duration = '00:00:00';
+
+        let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id;
+        this.axios
+            .patch(url,
+            {
+                soundbite_start: this.start,
+                soundbite_duration: this.duration
+            },
+            {
+            headers: {
+                'X-WP-Nonce': podlove_vue.nonce
+            }
+            })
+            .then(({$data}) => {
+
+            })
+            .catch((error) => {
+                alert("Daten konnten nicht eingetragen werden");
+                console.log(error);
+        });
+
+        this.oldStart = this.start;
+        this.oldDuration = this.duration;
+        this.oldEnd = this.end;
+
+    },
     getTimeAsMilliSec: function(text) {
         // text should a string in the format HH:MM:SS.mmm
         if (typeof text === 'string') {
@@ -265,5 +301,10 @@ export default {
 
 .soundbite-space {
     width: 20px;
+}
+
+.soundbite-button {
+    display: grid;
+    align-content: end;
 }
 </style>

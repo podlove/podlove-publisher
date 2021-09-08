@@ -54,7 +54,7 @@ class Soundbite extends \Podlove\Modules\Base
             $duration_sec = \Podlove\NormalPlayTime\Parser::parse($duration, 'ms');
             $duration_sec = $duration_sec / 1000.;
 
-            if ($start_sec > 0 && $duration_sec > 0) {
+            if ($duration_sec > 0) {
                 $doc = new \DOMDocument();
                 $node = $doc->createElement('podcast:soundbite');
                 $text = $doc->createTextNode($title);
