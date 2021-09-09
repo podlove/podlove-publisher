@@ -110,6 +110,11 @@ Beta updates for v3.6
 
 = 2021-09-09 =
 
+- Soundbite module:
+  - time format accepts milliseconds
+  - adds button to clear all inputs
+  - soundbite now does not appear in feed when duration is 0 seconds
+
 - WordPress File Upload module:
   - automatically run media file validations after selecting the file (same as in the usual workflow when the slug is set or changed)
 
