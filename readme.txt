@@ -108,6 +108,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Beta updates for v3.6
 
+= 2021-09-09 =
+
+- WordPress File Upload module:
+  - automatically run media file validations after selecting the file (same as in the usual workflow when the slug is set or changed)
+
 = 2021-09-03 =
 
 **New Module: Soundbite**
