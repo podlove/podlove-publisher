@@ -17,7 +17,7 @@ use Podlove\Comment\Comment;
 define('MULTISITE', false);
 
 if (!getenv('WPBASE')) {
-    die("You need to set the environment variable WPBASE to your WordPress root\n");
+    exit("You need to set the environment variable WPBASE to your WordPress root\n");
 }
 
 require_once dirname(__FILE__).'/../lib/helper.php';

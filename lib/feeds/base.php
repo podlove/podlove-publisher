@@ -154,7 +154,6 @@ function override_feed_head($hook, $podcast, $feed, $format)
                 $gen = '<generator>'.\Podlove\get_plugin_header('Name').' v'.\Podlove\get_plugin_header('Version').'</generator>';
 
                 break;
-
             case 'atom_head':
                 $gen = '<generator uri="'.\Podlove\get_plugin_header('PluginURI').'" version="'.\Podlove\get_plugin_header('Version').'">'.\Podlove\get_plugin_header('Name').'</generator>';
 

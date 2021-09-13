@@ -64,7 +64,7 @@ class Builder
     {
         $this->build_input_values($object_key, $arguments); ?>
 		<div>
-			<input type="<?php echo (isset($arguments['type']) && $arguments['type']) ? $arguments['type'] : 'text'; ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?><?php echo ( ! empty( $arguments['type'] ) && 'number' == $arguments['type'] && ! empty( $arguments['positive_number'] ) ? ' onkeypress="return event.charCode >= 48" min="0"' : '' ); ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<input type="<?php echo (isset($arguments['type']) && $arguments['type']) ? $arguments['type'] : 'text'; ?>" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?><?php echo !empty($arguments['type']) && 'number' == $arguments['type'] && !empty($arguments['positive_number']) ? ' onkeypress="return event.charCode >= 48" min="0"' : ''; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
     }
@@ -232,6 +232,7 @@ class Builder
             'media_button_text' => __('Use Image', 'podlove-podcasting-plugin-for-wordpress'),
             'media_title' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
             'allow_gravatar' => false,
+            'allow_multi_upload' => false
         ];
         $arguments = wp_parse_args($arguments, $defaults); ?>
 		<div class="podlove-media-upload-wrap">
@@ -248,6 +249,7 @@ class Builder
 					data-state="podlove_select_single_image"
 					data-preview=".podlove_preview_pic"
 					data-allow-gravatar="<?php echo $arguments['allow_gravatar']; ?>"
+                    data-multiple="<?php echo $arguments['allow_multi_upload']; ?>"
 					data-fetch="url"><?php echo $arguments['form_button_text']; ?></a>
 			</span>
 			<?php if (!isset($arguments['description']) || !$arguments['description']) { ?>

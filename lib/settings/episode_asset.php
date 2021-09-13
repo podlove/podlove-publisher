@@ -152,11 +152,12 @@ break;
                 case 'index': $this->view_template();
 
 break;
+
                 default:      $this->view_template();
 
 break;
             } ?>
-		</div>	
+		</div>
 		<?php
     }
 
@@ -357,7 +358,7 @@ break;
 					<select name="podlove_episode_asset_type" id="podlove_episode_asset_type">
 						<option><?php _e('Please choose ...', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 						<?php foreach (Model\FileType::get_types() as $type) { ?>
-							<option value="<?php echo $type; ?>" <?php selected($type, $current_file_type); ?>><?php echo $type; ?></option>	
+							<option value="<?php echo $type; ?>" <?php selected($type, $current_file_type); ?>><?php echo $type; ?></option>
 						<?php } ?>
 					</select>
 					<div id="option_storage" style="display:none"></div>
@@ -415,7 +416,7 @@ break;
         });
 
         // hidden fields for JavaScript?>
-		<input type="hidden" id="podlove_show_media_file_base_uri" value="<?php echo Model\Podcast::get()->media_file_base_uri; ?>">
+		<input type="hidden" id="podlove_show_media_file_base_uri" value="<?php echo Model\Podcast::get()->get_media_file_base_uri(); ?>">
 		<?php
     }
 

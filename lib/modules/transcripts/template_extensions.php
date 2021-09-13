@@ -38,7 +38,7 @@ class TemplateExtensions
      */
     public static function accessorEpisodeTranscript($return, $method_name, \Podlove\Model\Episode $episode)
     {
-        return $episode->with_blog_scope(function () use ($return, $method_name, $episode) {
+        return $episode->with_blog_scope(function () use ($episode) {
             $transcript = Model\Transcript::get_transcript($episode->id);
             $transcript = Model\Transcript::prepare_transcript($transcript, 'grouped');
 

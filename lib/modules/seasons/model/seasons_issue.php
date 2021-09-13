@@ -17,6 +17,7 @@ class SeasonsIssue
                 return __('Some of your seasons have the same start date.', 'podlove-podcasting-plugin-for-wordpress');
 
                 break;
+
             default:
                 return __('Unknown seasons issue.', 'podlove-podcasting-plugin-for-wordpress');
 

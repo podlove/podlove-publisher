@@ -51,7 +51,7 @@ class Podcast_Post_Meta_Box
 
 		<?php do_action('podlove_episode_meta_box_start'); ?>
 
-		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->media_file_base_uri; ?>" />
+		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->get_media_file_base_uri(); ?>" />
 		<div class="podlove-div-wrapper-form">
 			<?php
             $form_args = [
@@ -63,7 +63,7 @@ class Podcast_Post_Meta_Box
 
         $form_data = self::get_form_data($episode);
 
-        \Podlove\Form\build_for($episode, $form_args, function ($form) use ($podcast, $form_data) {
+        \Podlove\Form\build_for($episode, $form_args, function ($form) use ($form_data) {
             $wrapper = new \Podlove\Form\Input\DivWrapper($form);
             $episode = $form->object;
 

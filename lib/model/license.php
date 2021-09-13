@@ -247,6 +247,7 @@ class License
                 return 0;
 
             break;
+
             default:
                 return 1;
 

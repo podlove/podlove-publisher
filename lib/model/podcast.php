@@ -175,6 +175,11 @@ class Podcast implements Licensable
         return '%mnemonic%%episode_number% %episode_title%';
     }
 
+    public function get_media_file_base_uri()
+    {
+        return apply_filters('podlove_media_file_base_uri', $this->media_file_base_uri);
+    }
+
     /**
      * Fetch all valid feeds.
      *

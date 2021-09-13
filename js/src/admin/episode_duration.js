@@ -30,15 +30,15 @@
 					setStatusError("Could not determine duration (Error Code: #2)");
 					return;
 				}
-				
+
 				$("#_podlove_meta_duration").val(duration);
-				status.html('<i class="podlove-icon-ok"></i>');
+				setStatusSuccess();
 			},
 			error: function() {
 				setStatusError("Could not determine duration (Error Code: #3)");
 			}
 		});
-		
+
 		if (url) {
 			loader.load(url);
 		} else {

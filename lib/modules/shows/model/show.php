@@ -67,6 +67,7 @@ class Show
                     $search_parameters['description__like'] = $value;
 
                     break;
+
                 default:
                     $search_parameters[$property] = $value;
 

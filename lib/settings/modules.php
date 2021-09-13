@@ -129,7 +129,7 @@ class Modules
                     // $title
                     '',
                     // $callback
-                    function () use ($module, $module_name, $module_options) {
+                    function () use ($module_name) {
                         echo '<input name="podlove_active_modules['.$module_name.']" id="'.$module_name.'" type="hidden" '.checked(\Podlove\Modules\Base::is_active($module_name), true, false).'>'; ?>
                         <script>
                         (function($){

@@ -243,6 +243,7 @@ break;
             case 'oga': return 'ogg';
 
 break;
+
             default:
                 return $extension;
 

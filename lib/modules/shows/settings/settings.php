@@ -100,6 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'confirm_delete') {
             case 'index':$this->view_template();
 
                 break;
+
             default:$this->view_template();
 
                 break;

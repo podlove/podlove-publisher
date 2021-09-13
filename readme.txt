@@ -1,9 +1,9 @@
 === Podlove Podcast Publisher ===
-Contributors: eteubert, chemiker
+Contributors: eteubert
 Donate link: http://podlove.org/donations/
-Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio, ClassicPress
+Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
-Tested up to: 5.8.0
+Tested up to: 5.8
 Requires PHP: 7.0
 Stable tag: 3.5.6
 License: MIT
@@ -105,6 +105,33 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.6.0 =
+
+**New Module: Soundbite**
+
+Adds support for the `<podcast:soundbite>` RSS feed tag.
+The intended use includes episodes previews, discoverability, audiogram generation, episode highlights, etc.
+
+Using this module you can specify an audio segment for each episode that can be read by for example audiogram generation services.
+
+**New Module: WordPress File Upload**
+
+If you are using WordPress Media as storage for your Podlove assets, this new
+module adds conveniences.
+
+First, you define a `Upload subdirectory` for your Podlove assets. This overrides
+any WordPress settings, so for example you can safely enable the typical date/month
+structure for WordPress attachments and it will not affect your Podlove Uploads.
+
+Then you can update your "Podlove - Media - Upload Location" setting. You can keep
+it empty to let Podlove Publisher take care of it, or set it yourself if you have
+a custom file hostname.
+
+Now there is an "Upload Media File" button in your episode form above
+the "Episode Media File Slug" where you can directly upload your files.
+If you are using multiple assets, you can upload them all there. Just make sure
+they all have the same filename (except the file extension) before you upload.
 
 = 3.5.5, 3.5.6 =
 

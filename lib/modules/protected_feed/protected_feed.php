@@ -56,6 +56,7 @@ class Protected_Feed extends \Podlove\Modules\Base
                         }
 
                     break;
+
                     default:
                         exit; // If the feed is protected and no auth method is selected exit the script
 
