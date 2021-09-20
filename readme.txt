@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.9.6
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 3.5.6
+Stable tag: 3.6.1
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,53 +106,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-Beta updates for v3.6
+= 2021-09-20 =
 
-= 2021-09-09 =
-
-- Soundbite module:
-  - time format accepts milliseconds
-  - adds button to clear all inputs
-  - soundbite now does not appear in feed when duration is 0 seconds
-
-- WordPress File Upload module:
-  - automatically run media file validations after selecting the file (same as in the usual workflow when the slug is set or changed)
-
-= 2021-09-03 =
-
-**New Module: Soundbite**
-
-Adds support for the `<podcast:soundbite>` RSS feed tag.
-The intended use includes episodes previews, discoverability, audiogram generation, episode highlights, etc.
-
-Using this module you can specify an audio segment for each episode that can be read by for example audiogram generation services.
-
-**New Module: WordPress File Upload**
-
-If you are using WordPress Media as storage for your Podlove assets, this new
-module adds conveniences.
-
-First, you define a `Upload subdirectory` for your Podlove assets. This overrides
-any WordPress settings, so for example you can safely enable the typical date/month
-structure for WordPress attachments and it will not affect your Podlove Uploads.
-
-Then you can update your "Podlove - Media - Upload Location" setting. You can keep
-it empty to let Podlove Publisher take care of it, or set it yourself if you have
-a custom file hostname.
-
-Now there is an "Upload Media File" button in your episode form above
-the "Episode Media File Slug" where you can directly upload your files.
-If you are using multiple assets, you can upload them all there. Just make sure
-they all have the same filename (except the file extension) before you upload.
-
-= 2021-08-24 =
-
-- fix: show transcripts that have no assigned contributors (A previous change enabled "unassigning" contributors to hide them from the transcript. If your transcript however does not use contributors at all, that then resulted in an empty transcript. Now if _all_ contributors are unset or unassigned, the whole transcript is shown.)
-
-= 2021-08-22 =
-
-- feat(rss): add support for podcast:soundbite (#1224)
-- feat(api): implement podcast rest api controller (#1232)
+* fix: sql issue when creating the episode database tables
 
 ----
 
