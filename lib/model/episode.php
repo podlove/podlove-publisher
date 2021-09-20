@@ -464,5 +464,5 @@ Episode::property('recording_date', 'DATETIME');
 Episode::property('explicit', 'TINYINT');
 Episode::property('license_name', 'TEXT');
 Episode::property('license_url', 'TEXT');
-Episode::property('soundbite_start', 'VARCHAR(255');
+Episode::property('soundbite_start', 'VARCHAR(255)');
 Episode::property('soundbite_duration', 'VARCHAR(255)');
