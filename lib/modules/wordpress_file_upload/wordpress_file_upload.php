@@ -138,8 +138,9 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         uploadUrlInput.addEventListener('change', function (e) {
             const value = e.target.value;
             const slug = value.split('\\').pop().split('/').pop().split('.').shift()
-            console.log({slug: slug});
+
             slugInput.value = slug;
+            slugInput.dispatchEvent(new Event('slugHasChanged', { 'bubbles': true }))
         });
         </script>
     <?php
