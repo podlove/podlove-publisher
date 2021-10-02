@@ -217,7 +217,6 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 ['status' => 401]
             );
         }
-
         return true;
     }
 
@@ -268,9 +267,27 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     
     }
 
-    public function create_episode()
+    public function create_episode($request)
     {
-
+        // create a post (only as draft)
+        $new_post = array(
+            'post_title' => 'API created Podcast-Post',
+            'post_type' => 'podcast',
+            'post_status' => 'draft'
+        );
+        $post_id = wp_insert_post( $new_post );
+        if ( $post_id ) {
+            // create an episode with the created post
+            $episode = Episode::find_or_create_by_post_id($post_id);
+            $url = sprintf('%s/%s/%d', $this->namespace, $this->rest_base, $episode->id);
+            $response = new WP_REST_Response(null, 201);
+            $response->header('Location', rest_url($url));
+            return $response;
+        }
+        else {
+            return new WP_REST_Response(null, 500);
+        }
+        
     }
 
     public function get_episode($request)
