@@ -160,13 +160,13 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_episodes'],
-                'permission_callback' => [$this, 'get_episodes_permission_check'],
+                'callback' => [$this, 'get_items'],
+                'permission_callback' => [$this, 'get_items_permissions_check'],
             ],
             [
                 'methods' => WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'create_episode'],
-                'permission_callback' => [$this, 'create_episode_permission_check'],
+                'callback' => [$this, 'create_item'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
 
             ]
         ]);
@@ -179,73 +179,31 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_episode'],
-                'permission_callback' => [$this, 'get_episode_permission_check'],
+                'callback' => [$this, 'get_item'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
                 'methods' => WP_REST_Server::EDITABLE,
-                'callback' => [$this, 'update_episode'],
-                'permission_callback' => [$this, 'update_episode_permission_check'],
+                'callback' => [$this, 'update_item'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
 
             ],
             [
                 'methods' => WP_REST_Server::DELETABLE,
-                'callback' => [$this, 'delete_episode'],
-                'permission_callback' => [$this, 'delete_episode_permission_check'],
+                'callback' => [$this, 'delete_item'],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
 
             ]
         ]);
 
     }
 
-    public function get_episodes_permission_check()
+    public function get_items_permissions_check( $request )
     {
         return true;
     }
 
-    public function get_episode_permission_check()
-    {
-        return true;
-    }
-
-    public function create_episode_permission_check()
-    {
-        if (!current_user_can('edit_posts')) {
-            return new WP_Error(
-                'rest_forbidden',
-                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                ['status' => 401]
-            );
-        }
-        return true;
-    }
-
-    public function update_episode_permission_check()
-    {
-        if (!current_user_can('edit_posts')) {
-            return new WP_Error(
-                'rest_forbidden',
-                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                ['status' => 401]
-            );
-        }
-
-        return true;
-    }
-    public function delete_episode_permission_check()
-    {
-        if (!current_user_can('edit_posts')) {
-            return new WP_Error(
-                'rest_forbidden',
-                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                ['status' => 401]
-            );
-        }
-
-        return true;
-    }
-
-    public function get_episodes()
+    public function get_items( $request )
     {
         $episodes = Episode::find_all_by_time([
             'post_status' => 'publish',
@@ -267,30 +225,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     
     }
 
-    public function create_episode($request)
+    public function get_item_permissions_check( $request )
     {
-        // create a post (only as draft)
-        $new_post = array(
-            'post_title' => 'API created Podcast-Post',
-            'post_type' => 'podcast',
-            'post_status' => 'draft'
-        );
-        $post_id = wp_insert_post( $new_post );
-        if ( $post_id ) {
-            // create an episode with the created post
-            $episode = Episode::find_or_create_by_post_id($post_id);
-            $url = sprintf('%s/%s/%d', $this->namespace, $this->rest_base, $episode->id);
-            $response = new WP_REST_Response(null, 201);
-            $response->header('Location', rest_url($url));
-            return $response;
-        }
-        else {
-            return new WP_REST_Response(null, 500);
-        }
-        
+        return true;
     }
 
-    public function get_episode($request)
+    public function get_item( $request )
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
@@ -321,7 +261,55 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     
     }
 
-    public function update_episode($request)
+    public function create_item_permissions_check( $request )
+    {
+        if (!current_user_can('edit_posts')) {
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
+                ['status' => 401]
+            );
+        }
+        return true;
+    }
+
+    public function create_item( $request )
+    {
+        // create a post (only as draft)
+        $new_post = array(
+            'post_title' => 'API created Podcast-Post',
+            'post_type' => 'podcast',
+            'post_status' => 'draft'
+        );
+        $post_id = wp_insert_post( $new_post );
+        if ( $post_id ) {
+            // create an episode with the created post
+            $episode = Episode::find_or_create_by_post_id($post_id);
+            $url = sprintf('%s/%s/%d', $this->namespace, $this->rest_base, $episode->id);
+            $response = new WP_REST_Response(null, 201);
+            $response->header('Location', rest_url($url));
+            return $response;
+        }
+        else {
+            return new WP_REST_Response(null, 500);
+        }
+        
+    }
+
+    public function update_item_permissions_check( $request )
+    {
+        if (!current_user_can('edit_posts')) {
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
+                ['status' => 401]
+            );
+        }
+
+        return true;
+    }
+
+    public function update_item( $request )
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
@@ -353,7 +341,20 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         return new WP_REST_Response(null, 200);
     }
 
-    public function delete_episode($request)
+    public function delete_item_permissions_check( $request )
+    {
+        if (!current_user_can('edit_posts')) {
+            return new WP_Error(
+                'rest_forbidden',
+                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
+                ['status' => 401]
+            );
+        }
+
+        return true;
+    }
+
+    public function delete_item( $request )
     {
 
     }
