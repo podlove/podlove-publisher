@@ -151,7 +151,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 {
     public function __construct()
     {
-        $this->namespace = 'podlove/v1';
+        $this->namespace = 'podlove/v2';
         $this->rest_base = 'episode';
     }
 
@@ -312,6 +312,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     public function update_item( $request )
     {
         $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
         $episode = Episode::find_by_id($id);
     
         if (!$episode) {
@@ -356,6 +360,15 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
     public function delete_item( $request )
     {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
 
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return;
+        }
+        wp_trash_post($episode->post_id);
     }
 }

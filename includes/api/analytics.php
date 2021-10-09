@@ -33,6 +33,26 @@ function podlove_analytics_api_init()
         'permission_callback' => 'podlove_api_analytics_permission_callback',
         'args' => $args,
     ]);
+
+    register_rest_route('podlove/v2', 'analytics/episodes', [
+        'methods' => 'GET',
+        'callback' => 'podlove_api_analytics_episodes',
+        'permission_callback' => 'podlove_api_analytics_permission_callback',
+        'args' => $args,
+    ]);
+    register_rest_route('podlove/v2', 'analytics/episodes/(?P<id>[\d]+)', [
+        'methods' => 'GET',
+        'callback' => 'podlove_api_analytics_episode',
+        'permission_callback' => 'podlove_api_analytics_permission_callback',
+        'args' => $args,
+    ]);
+    register_rest_route('podlove/v2', 'analytics/episodes/(?P<ids>[\d]+,[\d,]+)', [
+        'methods' => 'GET',
+        'callback' => 'podlove_api_analytics_episodes_selected',
+        'permission_callback' => 'podlove_api_analytics_permission_callback',
+        'args' => $args,
+    ]);
+
 }
 
 function podlove_api_analytics_permission_callback($request)
