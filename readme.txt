@@ -106,6 +106,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-10-09 =
+
+Enhancements for creating Auphonic productions (thanks [lumaxis](https://github.com/lumaxis)!):
+
+- when the episode title is set, send this instead of the post title ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
+- send the episode number as track number ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
+- when the post thumbnail is configured as cover image, use it as direct fallback  ([#1241](https://github.com/podlove/podlove-publisher/pull/1241))
+
 = 2021-09-20 =
 
 * fix: sql issue when creating the episode database tables
