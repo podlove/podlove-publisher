@@ -108,11 +108,28 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2021-10-09 =
 
-Enhancements for creating Auphonic productions (thanks [lumaxis](https://github.com/lumaxis)!):
+**Enhancements for creating Auphonic productions** (thanks [lumaxis](https://github.com/lumaxis)!):
 
 - when the episode title is set, send this instead of the post title ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
 - send the episode number as track number ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
 - when the post thumbnail is configured as cover image, use it as direct fallback  ([#1241](https://github.com/podlove/podlove-publisher/pull/1241))
+
+**Webhooks**
+
+Define a webhook that gets triggered every time an episode updates.
+
+The webhook is a `POST` request with an `event` parameter and a `payload`.
+`event` is the webhook name ("episode_updated"), `payload` is a serialized
+JSON object of the current episode.
+
+Configuration:
+
+```
+# wp-config.php
+define('PODLOVE_WEBHOOKS', [
+    'episode_updated' => 'https://example.com/webhook-endpoint'
+]);
+```
 
 = 2021-09-20 =
 
