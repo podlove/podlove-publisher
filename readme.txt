@@ -124,12 +124,10 @@ JSON object of the current episode.
 
 Configuration:
 
-```
-# wp-config.php
-define('PODLOVE_WEBHOOKS', [
-    'episode_updated' => 'https://example.com/webhook-endpoint'
-]);
-```
+    # wp-config.php
+    define('PODLOVE_WEBHOOKS', [
+        'episode_updated' => 'https://example.com/webhook-endpoint'
+    ]);
 
 = 2021-09-20 =
 
