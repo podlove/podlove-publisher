@@ -69,7 +69,7 @@ add_filter('pre_update_option_podlove_asset_assignment', function ($new, $old) {
     set_time_limit(max(30, count($episodes) * 10));
 
     foreach ($episodes as $episode) {
-        if ($chapters = $episode->get_chapters('mp4chaps')) {
+        if ($chapters = $episode->get_chapters('json')) {
             $episode->update_attribute('chapters', $chapters);
         }
     }

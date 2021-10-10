@@ -4,24 +4,24 @@
         <div class="row">
 
             <div class="chapters-tab-wrapper">
-                
-                <a href="#" 
-                   class="chapters-tab" 
-                   :class="{'chapters-tab-active': mode === 'chapters'}" 
+
+                <a href="#"
+                   class="chapters-tab"
+                   :class="{'chapters-tab-active': mode === 'chapters'}"
                    @click.prevent="mode = 'chapters'">
                    Chapters
                 </a>
 
-                <a href="#" 
-                   class="chapters-tab" 
-                   :class="{'chapters-tab-active': mode === 'import'}" 
+                <a href="#"
+                   class="chapters-tab"
+                   :class="{'chapters-tab-active': mode === 'import'}"
                    @click.prevent="mode = 'import'">
                    Import
                 </a>
 
-                <a href="#" 
-                   class="chapters-tab" 
-                   :class="{'chapters-tab-active': mode === 'export'}" 
+                <a href="#"
+                   class="chapters-tab"
+                   :class="{'chapters-tab-active': mode === 'export'}"
                    @click.prevent="mode = 'export'">
                    Export
                 </a>
@@ -33,25 +33,25 @@
         <div class="row tab-body import" v-show="mode == 'import'">
             <form>
                 <button class="button button-primary" @click.prevent="initImportChapters">Import Chapters</button>
-                <input type="file" name="chapterimport" id="chapterimport" @change="importChapters" style="display: none"> 
+                <input type="file" name="chapterimport" id="chapterimport" @change="importChapters" style="display: none">
                 <div class="description">Accepts: <a href="https://podlove.org/simple-chapters/" target="_blank">Podlove Simple Chapters</a> (<code>.psc</code>), <a href="http://www.audacityteam.org" target="_blank">Audacity</a> Track Labels, <a href="https://hindenburg.com" target="_blank">Hindenburg</a> project files and MP4Chaps (<code>.txt</code>)</div>
             </form>
-        </div>    
-        
+        </div>
+
         <div class="row tab-body export" v-show="mode == 'export'">
             <a class="button button-secondary" :href="pscDownloadHref" download="chapters.psc">Podlove Simple Chapters (psc)</a>
-            <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">MP4Chaps (txt)</a> 
+            <a class="button button-secondary" :href="mp4chapsDownloadHref" download="chapters.txt">MP4Chaps (txt)</a>
         </div>
 
         <div class="row tab-body chapters" v-show="mode == 'chapters'">
 
             <div :class="{'col-md-8': activeChapter, 'col-md-12': !activeChapter}">
-                <chapter 
+                <chapter
                     v-for="chapter in sortedChapters"
                     :key="chapter.id"
-                    @activate="activateChapter(chapter)" 
+                    @activate="activateChapter(chapter)"
                     :active="isActive(chapter)"
-                    :start="chapter.start" 
+                    :start="chapter.start"
                     :title="chapter.title"
                     :href="chapter.href"
                     :duration="durationForChapter(chapter)"
@@ -65,8 +65,8 @@
 
             <div style="height: 1px; width: 20px;"></div>
 
-            <chapter-form 
-                :chapter="activeChapter" 
+            <chapter-form
+                :chapter="activeChapter"
                 @deleteChapter="onDeleteChapter"
                 @unselectChapter="activeChapter = null"
                 @selectPrevChapter="onSelectPrevChapter"
@@ -76,7 +76,7 @@
         </div>
 
         <!-- invisible textarea used for persisting -->
-        <textarea name="_podlove_meta[chapters]" id="_podlove_meta_chapters" v-model="chaptersAsMp4chaps" style="display: none"></textarea>
+        <textarea name="_podlove_meta[chapters]" id="_podlove_meta_chapters" v-model="chaptersAsJSON" style="display: none"></textarea>
 
     </div>
 </template>
@@ -181,7 +181,7 @@ export default {
                 const duration = this.episodeDuration - chapter.start.totalMs;
 
                 if (duration < 0)
-                    return DurationErrors.LONGER_THAN_TOTAL;                            
+                    return DurationErrors.LONGER_THAN_TOTAL;
 
                 return duration;
 
@@ -235,8 +235,8 @@ export default {
                 } catch (e) {
                     chapters = null;
                 }
-            }            
-            
+            }
+
             // try PSC
             if (!chapters || !chapters.length) {
                 try {
@@ -270,6 +270,18 @@ export default {
         sortedChapters () {
             return this.chapters.sort((a, b) => a.start.totalMs - b.start.totalMs);
         },
+        chaptersAsJSON () {
+            const data = this.sortedChapters.reduce((agg, chapter) => {
+                agg.push({
+                    title: chapter.title,
+                    href: chapter.href,
+                    timestamp: chapter.start.pretty
+                })
+                return agg;
+            }, [])
+
+            return JSON.stringify(data)
+        },
         chaptersAsMp4chaps () {
             return this.sortedChapters.reduce((agg, chapter) => {
                 var line = chapter.start.pretty + " " + chapter.title;
@@ -290,7 +302,7 @@ export default {
             let parser = new DOMParser();
             let xmlDoc = parser.parseFromString(psc, "text/xml");
 
-            // need both tries for Chrome/Firefox compatibility            
+            // need both tries for Chrome/Firefox compatibility
             let pscDoc = xmlDoc.getElementsByTagName("chapters");
             if (!pscDoc.length) {
                 pscDoc = xmlDoc.getElementsByTagName("psc:chapters");
@@ -329,7 +341,7 @@ export default {
     },
 
     mounted() {
-        
+
         function htmlDecode(input) {
             if (window.DOMParser) {
                 var doc = new DOMParser().parseFromString(input, "text/html");
@@ -352,7 +364,7 @@ export default {
 
         // monitor changes of episode duration
         this.readEpisodeDuration();
-        
+
         const episodeDuration = document.getElementById('_podlove_meta_duration');
         const refresh = (e) => { this.readEpisodeDuration(); };
 
