@@ -1,65 +1,105 @@
 <template>
-<div class="p-card-body p-card-type-topic">
-  <div class="main" v-if="!edit">
-    <div class="p-entry-container">
-      <div class="p-entry-favicon">
-        <icon-type class="p-entry-icon"></icon-type>
+  <div>
+    <div
+      v-if="!edit"
+      class="flex items-center px-3 py-2.5 mx-5 mt-8 mb-0 max-w-3xl gap-3"
+    >
+      <div class="text-gray-500 cursor-move">
+        <icon-menu htmlClass="w-5 h-5 drag-handle" />
       </div>
-      <div class="p-entry-content">
-        <span class="topic-content">{{ entry.title }}</span>
+      <div class="flex-grow font-bold text-base border-b-2 border-gray-800">
+        {{ entry.title }}
       </div>
-      <div class="p-entry-actions">
-        <span class="retry-btn" title="edit" v-if="!edit" @click.prevent="edit = true">
-          <icon-edit></icon-edit>
-        </span>            
-        <div class="drag-handle">
-          <icon-menu></icon-menu>
+      <div class="text-gray-500 cursor-pointer" @click.prevent="edit = true">
+        <icon-edit htmlClass="w-5 h-5" />
+      </div>
+    </div>
+    <!-- Topic edit -->
+    <sn-card v-else>
+      <div class="flex items-center justify-between">
+        <div class="w-full">
+          <label
+            for="topic_title"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Title
+          </label>
+          <div class="mt-1">
+            <input
+              @keydown.enter.prevent="save()"
+              @keydown.esc="edit = false"
+              v-model="entry.title"
+              type="text"
+              name="topic_title"
+              id="topic_title"
+              class="
+                shadow-sm
+                focus:ring-blue-500 focus:border-blue-500
+                block
+                w-full
+                sm:text-sm
+                border-gray-300
+                rounded-md
+              "
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="main" v-else>
-    <div class="edit-section">
-      <label>
-        <span>Title</span>
-        <input type="text" placeholder="Title" name="title" 
-          @keydown.enter.prevent="save()" 
-          @keydown.esc="edit = false" 
-          v-model="entry.title"/>
-      </label>
-    </div>
-    <div class="edit-section edit-actions">
-      <div>
-        <a href="#" class="button button-primary" @click.prevent="save()">Save Changes</a>
-        <a href="#" class="button" @click.prevent="edit = false">Cancel</a>
+
+      <div class="h-8 w-full border-b border-gray-300"></div>
+
+      <div class="pt-5">
+        <div class="flex justify-between">
+          <div>
+            <sn-button type="danger" :onClick="deleteEntry"
+              >Delete Topic</sn-button
+            >
+          </div>
+          <div>
+            <div class="flex justify-end">
+              <sn-button
+                :onClick="
+                  () => {
+                    edit = false;
+                  }
+                "
+                >Cancel</sn-button
+              >
+
+              <sn-button type="primary" :onClick="save" htmlClass="ml-3"
+                >Save</sn-button
+              >
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <a href="#" class="delete-btn destructive" @click.prevent="deleteEntry()">Delete Entry</a>
-      </div>
-    </div>  
+    </sn-card>
   </div>
-</div>
 </template>
 
 <script>
 import Menu from "../icons/Menu";
 import Edit from "../icons/Edit";
 import Type from "../icons/Type";
+import SNButton from "./sn-button.vue";
+import SNCard from "./sn-card.vue";
 
 export default {
   props: ["entry"],
   data() {
     return {
-      edit: false
+      edit: false,
     };
   },
   components: {
     "icon-menu": Menu,
     "icon-edit": Edit,
-    "icon-type": Type
+    "icon-type": Type,
+    "sn-button": SNButton,
+    "sn-card": SNCard,
   },
   methods: {
-    save: function() {
+    save: function () {
       this.edit = false;
 
       this.$parent.$emit("update:entry", this.entry);
@@ -71,25 +111,25 @@ export default {
           podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
           payload
         )
-        .done(result => {})
+        .done((result) => {})
         .fail(({ responseJSON }) => {
           console.error("could not delete entry:", responseJSON.message);
         });
     },
-    deleteEntry: function() {
+    deleteEntry: function () {
       this.$parent.$emit("delete:entry", this.entry);
 
       jQuery
         .ajax({
           url: podlove_vue.rest_url + "podlove/v1/shownotes/" + this.entry.id,
           method: "DELETE",
-          dataType: "json"
+          dataType: "json",
         })
-        .done(result => {})
+        .done((result) => {})
         .fail(({ responseJSON }) => {
           console.error("could not delete entry:", responseJSON.message);
         });
-    }
-  }
+    },
+  },
 };
 </script>

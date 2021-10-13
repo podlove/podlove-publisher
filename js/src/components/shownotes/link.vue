@@ -1,266 +1,287 @@
 <template>
-  <div class="p-card-body">
-    <div class="main" v-if="!edit">
-      <div class="p-entry-container">
-        <div class="p-entry-favicon">
-          <icon-link
-            class="p-entry-icon"
-            style="margin-bottom: 9px"
-          ></icon-link>
-          <img v-if="entry.icon" :src="icon" width="16" height="16" />
-          <div v-else class="default-icon">
-            <icon-image class="p-entry-icon"></icon-image>
-          </div>
+  <div>
+    <link-unfurling v-if="entry.state == 'unfurling'" />
+    <link-compact
+      v-else-if="!edit"
+      v-bind:entry="entry"
+      :icon="icon"
+      :is-hidden="isHidden"
+      v-on:toggleHidden="toggleHide()"
+      v-on:enableEdit="edit = true"
+    />
+    <!-- form -->
+    <sn-card v-else>
+      <div v-if="entry.image">
+        <label class="block text-sm font-medium text-gray-700">
+          Thumbnail
+        </label>
+        <div class="mt-1 flex">
+          <img class="max-h-48 rounded" :src="entry.image" />
         </div>
-        <div class="p-entry-content" v-if="entry.state != 'unfurling'">
-          <div class="p-entry-site">{{ entry.site_name }}</div>
 
-          <div style="display: flex; justify-content: space-between">
-            <div>
-              <span class="link p-entry-title-url">
-                <a :href="entry.url" target="_blank">{{ entry.title }}</a>
-              </span>
-              <br />
-              <span v-if="entry.affiliate_url" class="p-entry-url-url">
-                <a :href="entry.affiliate_url" target="_blank">{{
-                  decodeURI(entry.affiliate_url)
-                }}</a>
-                (Affiliate)
-              </span>
-              <span v-else class="p-entry-url-url">
-                <a :href="entry.url" target="_blank">{{
-                  decodeURI(entry.url)
-                }}</a>
-              </span>
-              <div class="p-entry-description" v-if="isHidden">
-                Hidden entries are excluded from public display.
-              </div>
-              <div class="p-entry-description" v-else-if="entry.description">
-                {{ entry.description }}
-              </div>
-            </div>
-            <div style="max-width: 200px" v-if="entry.image">
-              <img :src="entry.image" alt="" />
-            </div>
-          </div>
-        </div>
-        <div class="p-entry-content" v-else>
-          <div class="p-entry-site">
-            <i class="podlove-icon-spinner rotate"></i>
-          </div>
-          <span class="link p-entry-title-url">
-            <div class="loading-link"></div>
-          </span>
-        </div>
-        <div class="p-entry-actions">
-          <!-- <span class="retry-btn" title="refresh" v-if="!edit" @click.prevent="unfurl()">
-          <icon-refresh></icon-refresh>
-        </span>             -->
-          <span
-            class="retry-btn"
-            title="edit"
-            v-if="!edit"
-            @click.prevent="edit = true"
-          >
-            <icon-edit></icon-edit>
-          </span>
-          <span
-            class="retry-btn"
-            title="unhide"
-            v-if="isHidden"
-            @click.prevent="toggleHide()"
-          >
-            <icon-eye-off></icon-eye-off>
-          </span>
-          <span
-            class="retry-btn"
-            title="hide"
-            v-if="!isHidden"
-            @click.prevent="toggleHide()"
-          >
-            <icon-eye></icon-eye>
-          </span>
-          <div class="drag-handle">
-            <icon-menu></icon-menu>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="main" v-else>
-      <div class="edit-section">
-        <div v-if="entry.image">
-          <img :src="entry.image" style="height: 100px" />
-        </div>
+        <div class="h-6"></div>
       </div>
 
-      <div class="edit-section">
-        <label>
-          <span>URL</span>
+      <div class="">
+        <label for="url" class="block text-sm font-medium text-gray-700">
+          URL
+        </label>
+        <div class="mt-1">
           <input
-            type="text"
-            placeholder="URL"
-            name="url"
             @keydown.enter.prevent="save()"
             @keydown.esc="edit = false"
             v-model="entry.url"
+            type="text"
+            name="url"
+            id="url"
+            placeholder="URL"
+            class="
+              shadow-sm
+              focus:ring-blue-500 focus:border-blue-500
+              block
+              w-full
+              sm:text-sm
+              border-gray-300
+              rounded-md
+            "
           />
-        </label>
 
-        <suggestion
-          v-if="
-            entry.unfurl_data &&
-            entry.unfurl_data.url &&
-            entry.unfurl_data.url != entry.url
-          "
-          :title="entry.unfurl_data.url"
-          @accept="entry.url = entry.unfurl_data.url"
-        ></suggestion>
+          <suggestion
+            v-if="
+              entry.unfurl_data &&
+              entry.unfurl_data.url &&
+              entry.unfurl_data.url != entry.url
+            "
+            :title="entry.unfurl_data.url"
+            @accept="entry.url = entry.unfurl_data.url"
+          ></suggestion>
+        </div>
       </div>
 
-      <div class="edit-section">
-        <label>
-          <span>Site Name</span>
+      <div class="mt-6">
+        <label for="sitename" class="block text-sm font-medium text-gray-700">
+          Site Name
+        </label>
+        <div class="mt-1">
           <input
-            type="text"
-            placeholder="Site Name"
-            name="site_name"
             @keydown.enter.prevent="save()"
             @keydown.esc="edit = false"
             v-model="entry.site_name"
+            type="text"
+            name="sitename"
+            id="sitename"
+            class="
+              shadow-sm
+              focus:ring-blue-500 focus:border-blue-500
+              block
+              w-full
+              sm:text-sm
+              border-gray-300
+              rounded-md
+            "
           />
-        </label>
 
-        <suggestion
-          v-if="
-            entry.unfurl_data &&
-            entry.unfurl_data.site_name &&
-            entry.unfurl_data.site_name != entry.site_name
-          "
-          :title="entry.unfurl_data.site_name"
-          @accept="entry.site_name = entry.unfurl_data.site_name"
-        ></suggestion>
+          <suggestion
+            v-if="
+              entry.unfurl_data &&
+              entry.unfurl_data.site_name &&
+              entry.unfurl_data.site_name != entry.site_name
+            "
+            :title="entry.unfurl_data.site_name"
+            @accept="entry.site_name = entry.unfurl_data.site_name"
+          ></suggestion>
+        </div>
       </div>
 
-      <div class="edit-section">
-        <label>
-          <span>Title</span>
+      <div class="mt-6">
+        <label for="title" class="block text-sm font-medium text-gray-700">
+          Title
+        </label>
+        <div class="mt-1">
           <input
-            type="text"
-            placeholder="Title"
-            name="title"
             @keydown.enter.prevent="save()"
             @keydown.esc="edit = false"
             v-model="entry.title"
+            type="text"
+            name="title"
+            id="title"
+            class="
+              shadow-sm
+              focus:ring-blue-500 focus:border-blue-500
+              block
+              w-full
+              sm:text-sm
+              border-gray-300
+              rounded-md
+            "
           />
-        </label>
 
-        <suggestion
-          v-if="
-            entry.unfurl_data &&
-            entry.unfurl_data.title &&
-            entry.unfurl_data.title != entry.title
-          "
-          :title="entry.unfurl_data.title"
-          @accept="entry.title = entry.unfurl_data.title"
-        ></suggestion>
+          <suggestion
+            v-if="
+              entry.unfurl_data &&
+              entry.unfurl_data.title &&
+              entry.unfurl_data.title != entry.title
+            "
+            :title="entry.unfurl_data.title"
+            @accept="entry.title = entry.unfurl_data.title"
+          ></suggestion>
+        </div>
       </div>
 
-      <div class="edit-section">
-        <label>
-          <span>Description</span>
+      <div class="mt-6">
+        <label
+          for="description"
+          class="block text-sm font-medium text-gray-700"
+        >
+          Description
+        </label>
+        <div class="mt-1">
           <textarea
-            rows="3"
-            placeholder="Description"
-            name="description"
             v-model="entry.description"
+            id="description"
+            name="description"
+            rows="3"
+            class="
+              shadow-sm
+              focus:ring-blue-500 focus:border-blue-500
+              block
+              w-full
+              sm:text-sm
+              border border-gray-300
+              rounded-md
+            "
           />
-        </label>
 
-        <suggestion
-          v-if="
-            entry.unfurl_data &&
-            entry.unfurl_data.description &&
-            entry.unfurl_data.description != entry.description
-          "
-          :title="entry.unfurl_data.description"
-          @accept="entry.description = entry.unfurl_data.description"
-        ></suggestion>
-      </div>
-      <div class="edit-section edit-actions">
-        <div>
-          <a href="#" class="button button-primary" @click.prevent="save()"
-            >Save Changes</a
-          >
-          <a href="#" class="button" @click.prevent="unfurl()">Unfurl</a>
-          <a href="#" class="button" @click.prevent="edit = false">Cancel</a>
-        </div>
-        <div>
-          <a
-            href="#"
-            class="delete-btn destructive"
-            @click.prevent="deleteEntry()"
-            >Delete Entry</a
-          >
+          <suggestion
+            v-if="
+              entry.unfurl_data &&
+              entry.unfurl_data.description &&
+              entry.unfurl_data.description != entry.description
+            "
+            :title="entry.unfurl_data.description"
+            @accept="entry.description = entry.unfurl_data.description"
+          ></suggestion>
         </div>
       </div>
-      <div
-        class="footer-separator"
-        v-if="entry.state == 'unfurling' || entry.state == 'failed'"
-      ></div>
-      <div class="edit-section-footer" v-if="entry.state == 'unfurling'">
-        <i class="podlove-icon-spinner rotate"></i> Unfurling
-      </div>
-      <div
-        class="edit-section-footer p-card-body failed"
-        v-else-if="entry.state == 'failed'"
-      >
-        <div class="main">
-          <div class="unfurl-error-title">
-            Unable to access URL:
-            <a :href="entry.original_url" target="_blank">{{
-              entry.original_url
-            }}</a>
-          </div>
 
-          <div class="unfurl-error-message" v-if="error_message">
-            {{ error_message }}
-          </div>
-          <div
-            class="unfurl-error-location-trace"
-            v-if="trace_locations && trace_locations.length > 0"
-          >
-            <strong>Location Trace:</strong>
-            <ul>
-              <li v-for="(location, index) in trace_locations" :key="location">
-                {{ index }}: {{ location }}
-              </li>
-            </ul>
-          </div>
+      <div class="h-8 w-full border-b border-gray-300"></div>
 
-          <div class="edit-section">
-            <label>
-              <span>Original URL</span>
-              <input
-                type="text"
-                placeholder="Original URL"
-                name="original_url"
-                @keydown.enter.prevent="saveOriginalUrl()"
-                @keydown.esc="edit = false"
-                v-model="entry.original_url"
-              />
-            </label>
+      <div class="pt-5">
+        <div class="flex justify-between">
+          <div>
+            <sn-button type="danger" :onClick="deleteEntry"
+              >Delete Entry</sn-button
+            >
           </div>
-
-          <div class="edit-section edit-actions">
-            <div>
-              <a href="#" class="button" @click.prevent="saveOriginalUrl()"
-                >Save and Unfurl</a
+          <div>
+            <div class="flex justify-end">
+              <sn-button
+                :onClick="
+                  () => {
+                    edit = false;
+                  }
+                "
+                >Cancel</sn-button
+              >
+              <sn-button :onClick="unfurl" htmlClass="ml-3"
+                >Autofill Metadata</sn-button
+              >
+              <sn-button :onClick="save" type="primary" htmlClass="ml-3"
+                >Save</sn-button
               >
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div
+        v-if="entry.state == 'failed'"
+        class="h-6 w-full border-b border-gray-300"
+      ></div>
+
+      <div
+        v-if="entry.state == 'failed'"
+        class="mt-6 bg-red-50 border-l-4 border-red-400 p-4"
+      >
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-red-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <div class="text-sm text-red-700">
+              <p class="font-bold">
+                Unable to access URL:
+                <a :href="entry.original_url" target="_blank">{{
+                  entry.original_url
+                }}</a>
+              </p>
+
+              <p v-if="error_message">
+                {{ error_message }}
+              </p>
+
+              <div v-if="trace_locations && trace_locations.length > 0">
+                <strong>Location Trace:</strong>
+
+                <ul>
+                  <li
+                    v-for="(location, index) in trace_locations"
+                    :key="location"
+                  >
+                    {{ index }}: {{ location }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <label
+                for="original_url"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Original URL
+              </label>
+              <div class="mt-1">
+                <input
+                  @keydown.enter.prevent="saveOriginalUrl()"
+                  @keydown.esc="edit = false"
+                  v-model="entry.original_url"
+                  type="text"
+                  name="original_url"
+                  id="original_url"
+                  class="
+                    shadow-sm
+                    focus:ring-blue-500 focus:border-blue-500
+                    block
+                    w-full
+                    sm:text-sm
+                    border-gray-300
+                    rounded-md
+                  "
+                />
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <sn-button :onClick="saveOriginalUrl">
+                Save and Unfurl
+              </sn-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sn-card>
   </div>
 </template>
 
@@ -277,6 +298,11 @@ import Eye from "../icons/Eye";
 import EyeOff from "../icons/EyeOff";
 
 import suggestion from "./suggestion";
+
+import SNButton from "./sn-button.vue";
+import SNCard from "./sn-card.vue";
+import LinkCompact from "./link-compact.vue";
+import LinkUnfurling from "./link-unfurling.vue";
 
 export default {
   props: ["entry"],
@@ -299,10 +325,14 @@ export default {
     "icon-eye": Eye,
     "icon-eye-off": EyeOff,
     suggestion: suggestion,
+    "sn-button": SNButton,
+    "sn-card": SNCard,
+    "link-compact": LinkCompact,
+    "link-unfurling": LinkUnfurling,
   },
   computed: {
     icon: function () {
-      if (this.entry.icon[0] == "/") {
+      if (this.entry.icon && this.entry.icon[0] == "/") {
         return this.entry.site_url + this.entry.icon;
       } else {
         return this.entry.icon;
@@ -429,11 +459,6 @@ export default {
 </script>
 
 <style lang="css">
-.unfurl-error-title,
-.unfurl-error-message {
-  /* margin-bottom: 9px; */
-}
-
 .unfurl-error-title {
   font-weight: bold;
   font-size: 13px;
@@ -472,5 +497,16 @@ export default {
 .edit-section-footer.failed {
   background-color: rgb(254, 242, 242);
   min-height: initial;
+}
+
+.sortable-chosen.p-card {
+  background: #dde1ec;
+  border-color: black;
+}
+
+.sortable-chosen .p-entry-content .p-entry-thumbnail,
+.sortable-chosen .p-entry-content .p-entry-description,
+.sortable-chosen .p-entry-content .p-entry-url-url {
+  display: none !important;
 }
 </style>
