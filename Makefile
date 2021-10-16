@@ -54,7 +54,7 @@ build:
 	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	npm install
-	npm run production
+	NODE_ENV=production npm run build
 	rm -rf dist
 	mkdir dist
 	# move everything into dist

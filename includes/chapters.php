@@ -92,16 +92,15 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
         'options' => [
             'callback' => function () use ($episode) {
                 ?>
-<div id="podlove-chapters-app-data" style="display: none"><?php echo $episode->get_chapters('json'); ?></div>
-<div id="podlove-chapters-app"><chapters></chapters></div>
-
-<noscript>
-	<textarea name="_podlove_meta[chapters]"><?php echo $episode->chapters; ?></textarea>
-</noscript>
+  <div data-client="podlove">
+    <podlove-chapters></podlove-chapters>
+  </div>
+  <script>
+    window.PODLOVE_DATA = window.PODLOVE_DATA || {};
+    window.PODLOVE_DATA.chapters = JSON.parse('<?php echo $episode->get_chapters('json'); ?>');
+  </script>
 <?php
-            },
-            'label' => __('Chapter Marks', 'podlove-podcasting-plugin-for-wordpress'),
-            // 'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' )
+            }
         ],
         'position' => 450,
     ];

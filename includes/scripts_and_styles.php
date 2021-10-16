@@ -17,7 +17,8 @@ add_action('admin_print_styles', function () {
 
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
-        wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL.'/js/dist/app.js', ['underscore', 'jquery'], $version, true);
+        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/js/dist/client.js', [], $version, true);
+        wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/js/dist/style.css', [], $version);
 
         $episode = Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
 
