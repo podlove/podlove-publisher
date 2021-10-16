@@ -1,0 +1,5 @@
+*[data-client="podlove"]{
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+}
