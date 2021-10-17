@@ -86,19 +86,21 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
         return $form_data;
     }
 
+    add_filter('podlove_data_js', function ($data) use ($episode) {
+        $data['chapters'] = $episode->get_chapters('json');
+
+        return $data;
+    });
+
     $form_data[] = [
         'type' => 'callback',
         'key' => 'chapters',
         'options' => [
-            'callback' => function () use ($episode) {
+            'callback' => function () {
                 ?>
   <div data-client="podlove">
     <podlove-chapters></podlove-chapters>
   </div>
-  <script>
-    window.PODLOVE_DATA = window.PODLOVE_DATA || {};
-    window.PODLOVE_DATA.chapters = JSON.parse('<?php echo $episode->get_chapters('json'); ?>');
-  </script>
 <?php
             }
         ],
