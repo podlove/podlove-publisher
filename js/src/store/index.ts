@@ -9,13 +9,17 @@ import createSagaMiddleware from 'redux-saga'
 
 import selectors from './selectors'
 import reducers from './reducers'
+
 import { State as LifecycleState } from './lifecycle.store'
 import { State as ChaptersState } from './chapters.store'
+import { State as episodeState } from './episode.store'
+
 import chaptersSaga from '../sagas/chapters.sagas'
 
 export interface State {
   lifecycle: LifecycleState,
-  chapters: ChaptersState
+  chapters: ChaptersState,
+  episode: episodeState
 }
 
 const sagaMiddleware = createSagaMiddleware()
