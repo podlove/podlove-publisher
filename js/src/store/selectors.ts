@@ -2,10 +2,12 @@ import { createSelector } from 'reselect'
 import { State } from './index'
 import * as lifecycleStore from './lifecycle.store'
 import * as chaptersStore from './chapters.store'
+import * as episodeStore from './episode.store'
 
 const root = {
   bootstrapped: (state: State) => state.lifecycle,
-  chapters: (state: State) => state.chapters
+  chapters: (state: State) => state.chapters,
+  episode: (state: State) => state.episode,
 }
 
 const lifecycle = {
@@ -13,7 +15,12 @@ const lifecycle = {
 }
 
 const chapters = {
-  list: createSelector(root.chapters, chaptersStore.selectors.chapters)
+  list: createSelector(root.chapters, chaptersStore.selectors.chapters),
+  selected: createSelector(root.chapters, chaptersStore.selectors.selected)
 }
 
-export default { lifecycle, chapters }
+const episode = {
+  duration: createSelector(root.episode, episodeStore.selectors.duration)
+}
+
+export default { lifecycle, chapters, episode }

@@ -1,5 +1,5 @@
-const npt = require('normalplaytime');
-
+import npt from 'normalplaytime';
+console.log(npt)
 export default class Timestamp {
     constructor(totalMs) {
         this.totalMs = totalMs;
@@ -12,23 +12,23 @@ export default class Timestamp {
     get totalMinutes() {
         return Math.floor(this.totalSeconds / 60);
     }
-    
+
     get totalHours() {
         return Math.floor(this.totalMinutes / 60);
     }
-    
+
     get milliseconds() {
         return this.totalMs % 1000;
     }
-    
+
     get seconds() {
         return this.totalSeconds % 60;
     }
-    
+
     get minutes() {
         return this.totalMinutes % 60;
     }
-    
+
     get hours() {
         return this.totalHours % 60;
     }
@@ -41,10 +41,10 @@ export default class Timestamp {
         if (this.totalHours) {
             return this.pad(this.totalHours) + ":" + this.pad(this.minutes) + ":" + this.pad(this.seconds);
         } else {
-            return this.pad(this.minutes) + ":" + this.pad(this.seconds);            
+            return this.pad(this.minutes) + ":" + this.pad(this.seconds);
         }
     }
-    
+
     pad(num, pad = "00") {
         let str = "" + num;
 
@@ -64,6 +64,6 @@ export default class Timestamp {
             ms = npt.parse(t);
         }
 
-        return new Timestamp(ms);            
+        return new Timestamp(ms);
     }
 }
