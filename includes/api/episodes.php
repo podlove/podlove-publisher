@@ -159,6 +159,13 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     {
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
+                'args' => [
+                    'filter' => [
+                        'description' => __('The filter parameter is used to filter the collection of episodes'),
+                        'type' => 'string',
+                        'enum' => array('publish', 'draft')
+                    ]
+                    ],
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
@@ -200,27 +207,50 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
     public function get_items_permissions_check( $request )
     {
-        return true;
+        $filter = $request->get_param('filter');
+        if ($filter) {
+            if ($filter == 'draft') {
+                if (!current_user_can('edit_posts')) {
+                    return new WP_Error(
+                        'rest_forbidden',
+                        esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
+                        ['status' => 401]
+                    );
+                }
+                return true;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
     }
 
     public function get_items( $request )
     {
+        $filter = $request->get_param('filter');
+        if (!$filter || $filter != 'draft') {
+            $filter = 'publish';
+        }
+
         $episodes = Episode::find_all_by_time([
-            'post_status' => 'publish',
+            'post_status' => $filter,
         ]);
-    
+
         $results = [];
-    
+
         foreach ($episodes as $episode) {
             array_push($results, [
                 'id' => $episode->id,
                 'title' => $episode->title,
             ]);
         }
-    
+
         return new \WP_REST_Response([
             'results' => $results,
-            '_version' => 'v1',
+            '_version' => 'v2',
         ]);
     
     }
@@ -235,28 +265,27 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
         $podcast = Podcast::get();
-        $post = get_post($episode->post_id);
-    
+        $explicit = false;
+        if ($episode->explicit != 0)
+            $explicit = true;
+        
         return new \WP_REST_Response([
-            '_version' => 'v1',
+            '_version' => 'v2',
             'id' => $id,
-            'slug' => $post->post_name,
-            'title' => $post->post_title,
+            'post_id' => $episode->post_id,
+            'title' => $episode->title,
             'subtitle' => trim($episode->subtitle),
             'summary' => trim($episode->summary),
-            'publicationDate' => mysql2date('c', $post->post_date),
             'duration' => $episode->get_duration('full'),
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
             'link' => get_permalink($episode->post_id),
-            'chapters' => chapters($episode),
             'audio' => \podlove_pwp5_audio_files($episode, null),
             'files' => \podlove_pwp5_files($episode, null),
-            'content' => apply_filters('the_content', $post->post_content),
             'number' => $episode->number,
             'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
             'soundbite_start' => $episode->soundbite_start,
-            'soundbite_duration' => $episode->soundbite_duration
-            // @todo: all media files
+            'soundbite_duration' => $episode->soundbite_duration,
+            'explicit' => $explicit
         ]);
     
     }
@@ -286,8 +315,13 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             // create an episode with the created post
             $episode = Episode::find_or_create_by_post_id($post_id);
             $url = sprintf('%s/%s/%d', $this->namespace, $this->rest_base, $episode->id);
-            $response = new WP_REST_Response(null, 201);
-            $response->header('Location', rest_url($url));
+            $message = sprintf('Episode successfully created with id %d', $episode->id);
+            $response = new WP_REST_Response(
+                array(
+                    'message' => $message,
+                    'status' => 'ok'
+                ), 
+            200);
             return $response;
         }
         else {
@@ -342,7 +376,11 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     
         $episode->save();
     
-        return new WP_REST_Response(null, 200);
+        return new WP_REST_Response(
+            array(
+                'status' => 'ok'
+            ), 
+            200);
     }
 
     public function delete_item_permissions_check( $request )
@@ -370,5 +408,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             return;
         }
         wp_trash_post($episode->post_id);
+
+        return new WP_REST_Response(
+            array(
+                'status' => 'ok'
+            ), 
+            200);
+
     }
 }

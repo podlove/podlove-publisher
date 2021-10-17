@@ -111,6 +111,10 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $mnemonic = $request['mnemonic'];
             $podcast->mnemonic = $mnemonic;
         }
+        if (isset($request['author_name'])) {
+            $author = $request['author_name'];
+            $podcast->author_name = $author;
+        }
 
         $podcast->save();
 
