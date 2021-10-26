@@ -190,10 +190,23 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
+                'args' => [
+                    'slug' => [
+                        'description' => __('Media slug.'),
+                        'type' => 'string',    
+                    ],
+                    'soundbite_start' => [
+                        'description' => __('Start value of podcast:soundbite tag'),
+                        'type' => 'string',    
+                    ],
+                    'soundbite_duration' => [
+                        'description' => __('Duration value of podcast::soundbite tag'),
+                        'type' => 'string',    
+                    ]
+                ],
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'update_item_permissions_check'],
-
+                'permission_callback' => [$this, 'update_item_permissions_check']
             ],
             [
                 'methods' => WP_REST_Server::DELETABLE,
@@ -248,7 +261,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             ]);
         }
 
-        return new \WP_REST_Response([
+        return new \Podlove\Response\OkResponse([
             'results' => $results,
             '_version' => 'v2',
         ]);
@@ -269,7 +282,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if ($episode->explicit != 0)
             $explicit = true;
         
-        return new \WP_REST_Response([
+        $data = [
             '_version' => 'v2',
             'id' => $id,
             'post_id' => $episode->post_id,
@@ -286,7 +299,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'soundbite_start' => $episode->soundbite_start,
             'soundbite_duration' => $episode->soundbite_duration,
             'explicit' => $explicit
-        ]);
+        ];
+
+        return new \Podlove\Response\OkResponse($data);
     
     }
 
@@ -316,13 +331,13 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $episode = Episode::find_or_create_by_post_id($post_id);
             $url = sprintf('%s/%s/%d', $this->namespace, $this->rest_base, $episode->id);
             $message = sprintf('Episode successfully created with id %d', $episode->id);
-            $response = new WP_REST_Response(
-                array(
-                    'message' => $message,
-                    'status' => 'ok'
-                ), 
-            200);
-            return $response;
+            $data = [ 
+                'message' => $message
+            ];
+            $headers = [
+                'location' => $url
+            ];
+            return new \Podlove\Response\CreateResponse($data, $headers);
         }
         else {
             return new WP_REST_Response(null, 500);
@@ -373,14 +388,17 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 return;
             }
         }
+
+        if (isset($request['slug'])) {
+            $slug = $request['slug'];
+            $episode->slug = $slug;
+        }
     
         $episode->save();
     
-        return new WP_REST_Response(
-            array(
-                'status' => 'ok'
-            ), 
-            200);
+        return new \Podlove\Response\OkResponse([
+            'status' => 'ok' 
+        ]);
     }
 
     public function delete_item_permissions_check( $request )
@@ -409,11 +427,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
         wp_trash_post($episode->post_id);
 
-        return new WP_REST_Response(
-            array(
-                'status' => 'ok'
-            ), 
-            200);
+        return new \Podlove\Response\OkResponse([
+            'status' => 'ok' 
+        ]);
 
     }
 }
