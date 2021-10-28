@@ -11,7 +11,6 @@
         rounded-md
         p-2
       "
-      style="position: fixed; top: 160px; left: 1070px"
       :sort="false"
       :group="{ name: 'foo', pull: false }"
     >
@@ -52,16 +51,11 @@
       </div>
       <div class="shownotes-modal-backdrop"></div>
     </div>
-    <div v-else>
-      <div v-if="unfurlingProgress != 100" style="margin-bottom: 12px">
-        Importing: {{ unfurlingProgress }}%
-      </div>
-
+    <div v-else id="shownotes-main">
       <draggable
         v-model="shownotes"
         @update="onDragEnd"
         @end="onDragEnded"
-        @start="moveModalVisible = true"
         @clone="onClone"
         :group="{ name: 'foo', pull: 'clone' }"
         ghost-class="ghost"
@@ -216,6 +210,7 @@
 const $ = jQuery;
 import Close from "./icons/Close";
 import { saveAs } from "file-saver";
+import { createPopper } from "@popperjs/core";
 
 export default {
   props: ["episodeid"],
@@ -311,8 +306,33 @@ export default {
     //   console.log("onTopicDragEnd", e);
     // },
     onClone: function (e) {
-      //   console.log("onClone", { e });
-      //   console.log("onClone", e.clone);
+      if (document.getElementById("podlove-shownotes-app").offsetWidth < 1100) {
+        // hide quicksort UI on small screens
+        return;
+      }
+
+      this.moveModalVisible = true;
+
+      window.setTimeout(() => {
+        // init popper thing
+        const tooltip = document.getElementById(
+          "podlove-shownotes-topic-modal"
+        );
+
+        createPopper(e.item.querySelector(".drag-handle"), tooltip, {
+          placement: "right",
+          modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [0, 750],
+              },
+            },
+          ],
+        });
+        // console.log("onClone", { e });
+        // console.log("onClone", e.clone);
+      });
     },
     onDragEnded: function (e) {
       const findTopicIndex = (topic) => {

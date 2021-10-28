@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="max-w-3xl">
     <div v-if="entry.type == 'link'">
       <shownotes-link v-bind:entry="entry"></shownotes-link>
     </div>
