@@ -73,8 +73,13 @@
       </draggable>
 
       <div class="p-expand" v-if="isTruncatedView">
-        <a href="#" class="button" @click.prevent="isTruncatedView = false"
-          >Expand to view all Shownotes</a
+        <sn-button
+          :onClick="
+            () => {
+              isTruncatedView = false;
+            }
+          "
+          >Expand to view all Shownotes</sn-button
         >
       </div>
 
@@ -146,14 +151,17 @@
       </div>
 
       <div class="footer">
-        <button
-          type="button"
-          class="button create-button"
-          @click.prevent="(isTruncatedView = false), (mode = 'create')"
+        <sn-button
+          :onClick="
+            () => {
+              isTruncatedView = false;
+              mode = 'create';
+            }
+          "
           v-if="mode != 'create'"
         >
           Add Entry
-        </button>
+        </sn-button>
 
         <div>
           <button
@@ -211,6 +219,7 @@ const $ = jQuery;
 import Close from "./icons/Close";
 import { saveAs } from "file-saver";
 import { createPopper } from "@popperjs/core";
+import SNButton from "./shownotes/sn-button.vue";
 
 export default {
   props: ["episodeid"],
@@ -229,6 +238,7 @@ export default {
   },
   components: {
     "icon-close": Close,
+    "sn-button": SNButton,
   },
   methods: {
     createEntry: function (url, type, data) {
@@ -571,28 +581,24 @@ export default {
 }
 
 /* BEGIN temporary rules until converted to Tailwind */
-.p-expand {
+#podlove_podcast_shownotes .p-expand {
   margin: 40px 24px;
 }
 
-.footer {
+#podlove_podcast_shownotes .footer {
   display: flex;
   justify-content: space-between;
   margin: 0px 24px;
 }
 /* END temporary rules */
 
-*,
-:before,
-:after {
+#podlove_podcast_shownotes *,
+#podlove_podcast_shownotes :before,
+#podlove_podcast_shownotes :after {
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
   border-color: currentColor;
-}
-
-.fixed {
-  position: fixed;
 }
 
 .left-\[1070px\] {
@@ -818,37 +824,37 @@ export default {
   border-radius: 0.25rem;
 }
 
-.border {
+#podlove_podcast_shownotes .border {
   border-width: 1px;
 }
 
-.border-b-2 {
+#podlove_podcast_shownotes .border-b-2 {
   border-bottom-width: 2px;
 }
 
-.border-b {
+#podlove_podcast_shownotes .border-b {
   border-bottom-width: 1px;
 }
 
-.border-l-4 {
+#podlove_podcast_shownotes .border-l-4 {
   border-left-width: 4px;
 }
 
-.border-gray-800 {
+#podlove_podcast_shownotes .border-gray-800 {
   --tw-border-opacity: 1;
   border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 
-.border-gray-300 {
+#podlove_podcast_shownotes .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
-.border-transparent {
+#podlove_podcast_shownotes .border-transparent {
   border-color: transparent;
 }
 
-.border-red-400 {
+#podlove_podcast_shownotes .border-red-400 {
   --tw-border-opacity: 1;
   border-color: rgb(248 113 113 / var(--tw-border-opacity));
 }
