@@ -1,5 +1,6 @@
 import { get } from 'lodash';
 import { handleActions } from 'redux-actions'
+import Timestamp from '@lib/timestamp'
 import { init, INIT } from './lifecycle.store';
 
 export type State = {
@@ -12,7 +13,7 @@ export const initialState: State = {
 export const reducer = handleActions({
   [INIT]: (state: State, action: typeof init): State => ({
     ...state,
-    duration: get(action, ['episode', 'duration'], null)
+    duration: Timestamp.fromString(get(action, ['payload', 'episode', 'duration'], null)).totalMs
   })
 }, initialState);
 

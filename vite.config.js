@@ -7,6 +7,7 @@ const root = path.resolve(__dirname)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  root: path.resolve(__dirname, 'js'),
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm-bundler.js',
@@ -18,13 +19,6 @@ export default defineConfig({
     }
   },
   build: {
-    lib: {
-      entry: path.resolve(root, 'js', 'src', 'client.ts'),
-      name: 'PodloveClient',
-      formats: ['iife'],
-      fileName: () => `client.js`
-    },
-
     outDir: path.resolve(root, 'js', 'dist')
   }
 })

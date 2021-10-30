@@ -46,6 +46,13 @@ class Podcast_Post_Meta_Box
 
         $podcast = Model\Podcast::get();
         $episode = Model\Episode::find_or_create_by_post_id($post_id);
+        add_filter('podlove_data_js', function ($data) use ($episode) {
+          $data['episode'] = json_encode(array(
+            'duration' => $episode->duration
+          ));
+
+          return $data;
+        });
 
         wp_nonce_field(\Podlove\PLUGIN_FILE, 'podlove_noncename'); ?>
 

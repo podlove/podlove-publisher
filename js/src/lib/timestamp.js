@@ -1,5 +1,5 @@
 import npt from 'normalplaytime';
-console.log(npt)
+
 export default class Timestamp {
     constructor(totalMs) {
         this.totalMs = totalMs;

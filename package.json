@@ -9,7 +9,8 @@
     "build:client": "vue-tsc --noEmit && vite build",
     "serve:client": "vite build --watch",
     "serve": "run-p serve:client serve:legacy",
-    "build": "run-p build:client build:legacy"
+    "build": "run-p build:client build:legacy",
+    "dev:client": "vite"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
@@ -36,6 +37,7 @@
   "dependencies": {
     "@podlove/web-player": "^4.5.13",
     "@popperjs/core": "^2.10.2",
+    "@podlove/utils": "5.7.3",
     "axios": ">=0.21.1",
     "clipboard": "^2.0.6",
     "elliptic": ">=6.5.4",

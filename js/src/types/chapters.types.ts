@@ -1,5 +1,5 @@
 export interface PodloveChapter {
-  start: string;
+  start: number;
   title: string;
   href?: string;
   image?: string;

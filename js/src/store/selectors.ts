@@ -16,7 +16,8 @@ const lifecycle = {
 
 const chapters = {
   list: createSelector(root.chapters, chaptersStore.selectors.chapters),
-  selected: createSelector(root.chapters, chaptersStore.selectors.selected)
+  selected: createSelector(root.chapters, chaptersStore.selectors.selected),
+  selectedIndex: createSelector(root.chapters, chaptersStore.selectors.selectedIndex),
 }
 
 const episode = {

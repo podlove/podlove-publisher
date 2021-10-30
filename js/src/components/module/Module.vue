@@ -1,5 +1,5 @@
 <template>
-  <section class="my-4">
+  <section class="my-4 font-sans">
     <label class="block text-lg mb-2" :for="`podlove-module-${name}`">{{ title }}</label>
     <div :id="`podlove-module-${name}`" class="rounded-sm"><slot></slot></div>
   </section>
