@@ -19,6 +19,13 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: path.resolve(root, 'js', 'dist')
+    outDir: path.resolve(root, 'js', 'dist'),
+    rollupOptions: {
+      output: {
+        entryFileNames: `client.js`,
+        chunkFileNames: `chunk-[name].js`,
+        assetFileNames: `style.[ext]`
+      }
+    }
   }
 })

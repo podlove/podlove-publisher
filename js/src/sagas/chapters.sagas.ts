@@ -73,22 +73,23 @@ function generatePscDownload(chapters: PodloveChapter[]): string {
 }
 
 function generateMp4Download(chapters: PodloveChapter[]): string {
-  return chapters.reduce((result: string[], chapter) => {
-    let line = new Timestamp(chapter.start).pretty + " " + chapter.title;
+  return (
+    chapters
+      .reduce((result: string[], chapter) => {
+        let line = new Timestamp(chapter.start).pretty + ' ' + chapter.title
 
-    if (chapter.href) {
-      line = line + " <" + chapter.href + ">";
-    }
+        if (chapter.href) {
+          line = line + ' <' + chapter.href + '>'
+        }
 
-    return [
-      ...result,
-      line
-    ]
-}, []).join("\n") + "\n";
+        return [...result, line]
+      }, [])
+      .join('\n') + '\n'
+  )
 }
 
 function download(name: string, data: any) {
-  var blob = new Blob([data], {type: 'text/plain'});
+  var blob = new Blob([data], { type: 'text/plain' })
   const a = document.createElement('a')
   a.href = window.URL.createObjectURL(blob)
   a.download = name
@@ -103,10 +104,10 @@ function* handleDownload(action: typeof chapters.download) {
   switch (action.payload) {
     case 'psc':
       download('chapters.psc', generatePscDownload(chapters))
-      break;
+      break
     case 'mp4':
       download('chapters.txt', generateMp4Download(chapters))
-      break;
+      break
   }
 }
 

@@ -2,14 +2,17 @@ import { provideStore } from 'redux-vuex'
 import { createApp } from 'vue'
 
 import { store } from '@store'
-import episode from './modules'
+import modules from './modules'
 import { init } from './store/lifecycle.store'
 import './tailwind.css';
 
-document.querySelectorAll('[data-client="podlove"]').forEach(elem => {
+
+document.querySelectorAll('[data-client="podlove"]:not([data-loaded="true"])').forEach(elem => {
+  elem.setAttribute('data-loaded', 'true');
+
   const app = createApp({
     components: {
-      ...episode
+      ...modules
     }
   })
 

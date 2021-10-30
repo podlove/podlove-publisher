@@ -5,7 +5,7 @@ function add_type_attribute($tag, $handle, $src) {
       return $tag;
   }
   // change the script tag by adding type="module" and return it.
-  $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+  $tag = '<script crossorigin type="module" src="' . esc_url( $src ) . '"></script>';
   return $tag;
 }
 
