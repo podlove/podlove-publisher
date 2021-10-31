@@ -152,7 +152,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     public function __construct()
     {
         $this->namespace = 'podlove/v2';
-        $this->rest_base = 'episode';
+        $this->rest_base = 'episodes';
     }
 
     public function register_routes()
@@ -191,17 +191,38 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             ],
             [
                 'args' => [
+                    'title' => [
+                        'description' => __('Clear, concise name for your episode.'),
+                        'type' => 'string',
+                    ],
+                    'subtitle' => [
+                        'description' => __('Single sentence describing the episode..'),
+                        'type' => 'string',
+                    ],
+                    'summary' => [
+                        'description' => __('A summary of the episode.'),
+                        'type' => 'string',
+                    ],
+                    'number' => [
+                        'description' => __('An epsiode number.'),
+                        'type' => 'integer',
+                    ],
                     'slug' => [
-                        'description' => __('Media slug.'),
-                        'type' => 'string',    
+                        'description' => __('Episode media file slug.'),
+                        'type' => 'string',
+                    ],
+                    'explicit' => [
+                        'description' => __('explicit content?'),
+                        'type' => 'string',
+                        'enum' => array('yes', 'no')
                     ],
                     'soundbite_start' => [
                         'description' => __('Start value of podcast:soundbite tag'),
-                        'type' => 'string',    
+                        'type' => 'string',
                     ],
                     'soundbite_duration' => [
                         'description' => __('Duration value of podcast::soundbite tag'),
-                        'type' => 'string',    
+                        'type' => 'string',
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -224,11 +245,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if ($filter) {
             if ($filter == 'draft') {
                 if (!current_user_can('edit_posts')) {
-                    return new WP_Error(
-                        'rest_forbidden',
-                        esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                        ['status' => 401]
-                    );
+                    return new \Podlove\API\Error\ForbiddenAccess();
                 }
                 return true;
             }
@@ -261,7 +278,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             ]);
         }
 
-        return new \Podlove\Response\OkResponse([
+        return new \Podlove\API\Response\OkResponse([
             'results' => $results,
             '_version' => 'v2',
         ]);
@@ -301,18 +318,14 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'explicit' => $explicit
         ];
 
-        return new \Podlove\Response\OkResponse($data);
+        return new \Podlove\API\Response\OkResponse($data);
     
     }
 
     public function create_item_permissions_check( $request )
     {
         if (!current_user_can('edit_posts')) {
-            return new WP_Error(
-                'rest_forbidden',
-                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                ['status' => 401]
-            );
+            return new \Podlove\API\Error\ForbiddenAccess();
         }
         return true;
     }
@@ -348,11 +361,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     public function update_item_permissions_check( $request )
     {
         if (!current_user_can('edit_posts')) {
-            return new WP_Error(
-                'rest_forbidden',
-                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                ['status' => 401]
-            );
+            return new \Podlove\API\Error\ForbiddenAccess();
         }
 
         return true;
@@ -366,37 +375,62 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
 
         $episode = Episode::find_by_id($id);
-    
+
         if (!$episode) {
             return;
         }
-    
-        if (isset($request['soundbite_start'])) {
-            $start = $request['soundbite_start'];
-            if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $start)) {
-                $episode->soundbite_start = $start;
-            } else {
-                return;
-            }
+
+        if (isset($request['title'])) {
+            $title = $request['title'];
+            $episode->title = $title;
         }
-    
-        if (isset($request['soundbite_duration'])) {
-            $duration = $request['soundbite_duration'];
-            if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $duration)) {
-                $episode->soundbite_duration = $duration;
-            } else {
-                return;
-            }
+
+        if (isset($request['subtitle'])) {
+            $subtitle = $request['subtitle'];
+            $episode->subtitle = $subtitle;
+        }
+
+        if (isset($request['summary'])) {
+            $summary = $request['summary'];
+            $episode->summary = $summary;
+        }
+
+        if (isset($request['number'])) {
+            $number = $request['number'];
+            $episode->number = $number;
+        }
+
+        if (isset($request['explicit'])) {
+            $explicit = $request['explicit'];
+            $explicit_lowercase = strtolower($explicit);
+            if ($explicit_lowercase == 'no')
+                $episode->explicit = 0;
+            else if ($explicit_lowercase == 'yes')
+                $episode->explicit = 1;
         }
 
         if (isset($request['slug'])) {
             $slug = $request['slug'];
             $episode->slug = $slug;
         }
-    
+
+        if (isset($request['soundbite_start'])) {
+            $start = $request['soundbite_start'];
+            if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $start)) {
+                $episode->soundbite_start = $start;
+            }
+        }
+
+        if (isset($request['soundbite_duration'])) {
+            $duration = $request['soundbite_duration'];
+            if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $duration)) {
+                $episode->soundbite_duration = $duration;
+            }
+        }
+
         $episode->save();
-    
-        return new \Podlove\Response\OkResponse([
+
+        return new \Podlove\API\Response\OkResponse([
             'status' => 'ok' 
         ]);
     }
@@ -404,11 +438,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     public function delete_item_permissions_check( $request )
     {
         if (!current_user_can('edit_posts')) {
-            return new WP_Error(
-                'rest_forbidden',
-                esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
-                ['status' => 401]
-            );
+            return new \Podlove\API\Error\ForbiddenAccess();
         }
 
         return true;
@@ -427,7 +457,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
         wp_trash_post($episode->post_id);
 
-        return new \Podlove\Response\OkResponse([
+        return new \Podlove\API\Response\OkResponse([
             'status' => 'ok' 
         ]);
 

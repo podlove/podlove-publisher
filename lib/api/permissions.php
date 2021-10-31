@@ -1,8 +1,8 @@
 <?php
 
-namespace Podlove;
+namespace Podlove\API;
 
-class Api_Permissons
+class Permissons
 {
     public static function authorization_status_code()
     {

@@ -61,7 +61,7 @@ function podlove_api_analytics_permission_callback($request)
         return new WP_Error(
             'rest_forbidden',
             esc_html__('You cannot view the analytics resource.'),
-            ['status' => \Podlove\Api_Permissons::authorization_status_code()]
+            ['status' => \Podlove\API\Permissons::authorization_status_code()]
         );
     }
 
