@@ -219,15 +219,18 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'soundbite_start' => [
                         'description' => __('Start value of podcast:soundbite tag'),
                         'type' => 'string',
+                        'validate_callback' => [$this, 'update_item_validation_check_time']
+
                     ],
                     'soundbite_duration' => [
                         'description' => __('Duration value of podcast::soundbite tag'),
                         'type' => 'string',
+                        'validate_callback' => [$this, 'update_item_validation_check_time']
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'update_item_permissions_check']
+                'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
                 'methods' => WP_REST_Server::DELETABLE,
@@ -365,6 +368,15 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
 
         return true;
+    }
+
+    public function update_item_validation_check_time( $param, $request, $key )
+    {
+        if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $param)) {
+            return true;
+        }
+        
+        return false;
     }
 
     public function update_item( $request )
