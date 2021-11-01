@@ -1,0 +1,88 @@
+<!-- Topic -->
+<div class="flex items-center px-3 py-2.5 mx-5 mt-8 mb-0 max-w-3xl gap-3">
+    <div class="text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+        </svg>
+    </div>
+    <div class="flex-grow font-bold text-md border-b-2 border-gray-800">Verbesserungen bei Podlove</div>
+    <div class="text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- compact -->
+<div class="shadow border border-1 border-gray-300 px-3 py-2.5 mx-5 my-3 max-w-3xl rounded bg-white">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div>
+                <div class="flex items-center gap-1">
+                    <div>
+                        <img src="https://sendegate.de/uploads/default/optimized/2X/5/564ebd6511a3ba0ede755d80be348e540190132c_2_32x32.png" width="16" height="16" />
+                    </div>
+                    <span class="text-sm text-gray-800 font-bold">
+                        <a href="https://sendegate.de/t/rode-podcaster-usb-an-xlr-interface/12333" target="_blank">Rode Podcaster (USB) an XLR interface?</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2.5 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- extended -->
+<div class="shadow border border-1 border-gray-300 px-3 py-2.5 mx-5 my-3 max-w-3xl rounded bg-white">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div>
+                <div class="flex items-center gap-1">
+                    <div>
+                        <img src="https://sendegate.de/uploads/default/optimized/2X/5/564ebd6511a3ba0ede755d80be348e540190132c_2_32x32.png" width="16" height="16" />
+                    </div>
+                    <span class="text-sm text-gray-800 font-bold">
+                        <a href="https://sendegate.de/t/rode-podcaster-usb-an-xlr-interface/12333" target="_blank">Rode Podcaster (USB) an XLR interface?</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2.5 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="text-sm mx-[3.125rem] text-gray-400">
+        <div class="">https://sendegate.de/t/rode-podcaster-usb-an-xlr-interface/12333</div>
+        <div class="mt-2.5 flex gap-2.5">
+            <div class="w-36 flex-shrink-0">
+                <img class="rounded" src="http://localhost:10022/wp-content/uploads/2021/10/maxresdefault-3.jpg" alt="" />
+            </div>
+            <p class="line-clamp-4">Ahoi, Ich habe gerade, ganz klassisch, das HMC-660 am Xenyx 302 im Einsatz. Aber auch noch ein Rode Podcaster rumliegen. Jetzt frage ich mich, ob und wie ich den Rode Podcaster an das Interface bekomme. Gibt es da Adapter/Kabel? Warum nicht das Rode ohne Interface? Ich möchte es nicht mehr missen, Monitor und Audio der Anderen getrennt regeln zu können. Außerdem finde ich die Kabelei unangenehm, wenn die Monitor-Kopfhörer direkt im Rode stecken müssen. Danke euch 🙂</p>
+        </div>
+    </div>
+</div>

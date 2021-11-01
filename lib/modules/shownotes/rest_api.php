@@ -81,6 +81,41 @@ class REST_API
                 'permission_callback' => [$this, 'permission_check'],
             ],
         ]);
+        register_rest_route(self::api_namespace, self::api_base.'/render/html', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'render_html'],
+                'permission_callback' => [$this, 'permission_check'],
+            ],
+        ]);
+    }
+
+    public function render_html($request)
+    {
+        global $post;
+
+        $post_id = $request['post_id'];
+
+        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+            return new \WP_Error(
+                'podlove_rest_html_no_episode',
+                'episode cannot be found',
+                ['status' => 400]
+            );
+        }
+
+        $post = get_post($episode->post_id);
+        \setup_postdata($post);
+        $html = \Podlove\Template\TwigFilter::apply_to_html('@shownotes/plain-html-list-grouped.twig');
+        wp_reset_postdata();
+
+        $prettify = function ($html) {
+            $indenter = new \Gajus\Dindent\Indenter();
+
+            return $indenter->indent($html);
+        };
+
+        return rest_ensure_response($prettify($html));
     }
 
     public function import_html($request)
@@ -450,37 +485,38 @@ class REST_API
 
     public function update_item($request)
     {
-        $entry = Entry::find_by_id($request['id']);
+        $params = $request->get_params();
+        $entry = Entry::find_by_id($params['id']);
+
         if (is_wp_error($entry)) {
             return $entry;
         }
 
-        if (isset($request['original_url'])) {
-            $entry->original_url = $request['original_url'];
+        if (isset($params['original_url'])) {
+            $entry->original_url = $params['original_url'];
         }
 
-        if (isset($request['title'])) {
-            $entry->title = $request['title'];
+        if (isset($params['title'])) {
+            $entry->title = $params['title'];
         }
 
-        if (isset($request['url'])) {
-            $entry->url = $request['url'];
+        if (isset($params['url'])) {
+            $entry->url = $params['url'];
         }
 
-        if (isset($request['description'])) {
-            $entry->description = $request['description'];
+        if (isset($params['description'])) {
+            $entry->description = $params['description'];
         }
 
-        if (isset($request['position'])) {
-            $entry->position = $request['position'];
+        if (isset($params['position'])) {
+            $entry->position = $params['position'];
         }
 
-        if (isset($request['hidden'])) {
-            $entry->hidden = (int) $request['hidden'];
+        if (isset($params['hidden'])) {
+            $entry->hidden = (int) $params['hidden'];
         }
 
         $entry->save();
-
         $entry = apply_filters('podlove_shownotes_entry', $entry);
 
         return rest_ensure_response($entry->to_array());

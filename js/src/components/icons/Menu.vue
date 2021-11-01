@@ -1,9 +1,25 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-menu">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    :class="htmlClass"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+  >
     <path
-      class="secondary"
       fill-rule="evenodd"
-      d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
-    ></path>
+      d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+      clip-rule="evenodd"
+    />
   </svg>
 </template>
+
+<script>
+export default {
+  props: {
+    htmlClass: {
+      type: String,
+      required: false,
+    },
+  },
+};
+</script>

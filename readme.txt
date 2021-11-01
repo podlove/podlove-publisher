@@ -106,6 +106,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-10-28 =
+
+First draft of Shownotes rework with focus on quickly sorting a large amount of
+links into topics. Not all of the previous functionality is working yet, but
+most. The new sorting mechanism still needs some work, but it's a
+proof-of-concept.
+
 = 2021-10-09 =
 
 **Enhancements for creating Auphonic productions** (thanks [lumaxis](https://github.com/lumaxis)!):
