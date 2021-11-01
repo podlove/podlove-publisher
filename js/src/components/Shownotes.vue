@@ -1,7 +1,7 @@
 <template>
   <div class="shownotes-wrapper">
     <draggable
-      v-if="moveModalVisible && topics.length > 1"
+      v-if="moveModalVisible && topics.length > 0"
       id="podlove-shownotes-topic-modal"
       class="
         move-modal
