@@ -41,7 +41,7 @@
               block
               w-full
               sm:text-sm
-              border-gray-300
+              border border-gray-300
               rounded-md
             "
           />
@@ -76,7 +76,7 @@
               block
               w-full
               sm:text-sm
-              border-gray-300
+              border border-gray-300
               rounded-md
             "
           />
@@ -111,7 +111,7 @@
               block
               w-full
               sm:text-sm
-              border-gray-300
+              border border-gray-300
               rounded-md
             "
           />

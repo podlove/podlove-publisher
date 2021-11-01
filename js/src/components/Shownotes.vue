@@ -83,10 +83,10 @@
         >
       </div>
 
-      <div class="p-card create-card" v-if="mode == 'create'">
-        <div class="p-card-body">
+      <sn-card v-if="mode == 'create'">
+        <div>
           <div class="p-new-entry">
-            <h3>Add new Entry</h3>
+            <h3 style="margin-top: 0px">Add new Entry</h3>
             <div class="p-entry-type-selector">
               <span>
                 <input
@@ -108,7 +108,7 @@
               </span>
             </div>
 
-            <div v-if="newEntryType == 'link'" class="p-new-entry-form">
+            <div v-if="newEntryType == 'link'" class="flex">
               <input
                 @keydown.enter.prevent="onCreateEntry"
                 @keydown.esc="mode = 'idle'"
@@ -117,6 +117,15 @@
                 placeholder="https://example.com"
                 :disabled="mode == 'create-waiting'"
                 v-focus
+                class="
+                    w-full
+                    shadow-sm
+                    focus:ring-blue-500 focus:border-blue-500
+                    block
+                    sm:text-sm
+                    border border-gray-300
+                    rounded-md
+                "
               />
               <button
                 type="button"
@@ -127,7 +136,7 @@
                 Add
               </button>
             </div>
-            <div v-else-if="newEntryType == 'topic'" class="p-new-entry-form">
+            <div v-else-if="newEntryType == 'topic'" class="flex">
               <input
                 @keydown.enter.prevent="onCreateEntry"
                 @keydown.esc="mode = 'idle'"
@@ -136,6 +145,15 @@
                 placeholder="Topic, Subheading"
                 :disabled="mode == 'create-waiting'"
                 v-focus
+                class="
+                    w-full
+                    shadow-sm
+                    focus:ring-blue-500 focus:border-blue-500
+                    block
+                    sm:text-sm
+                    border border-gray-300
+                    rounded-md
+              "
               />
               <button
                 type="button"
@@ -148,7 +166,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </sn-card>
 
       <div class="footer">
         <sn-button
@@ -159,6 +177,7 @@
             }
           "
           v-if="mode != 'create'"
+          htmlClass="max-w-3xl"
         >
           Add Entry
         </sn-button>
@@ -220,6 +239,7 @@ import Close from "./icons/Close";
 import { saveAs } from "file-saver";
 import { createPopper } from "@popperjs/core";
 import SNButton from "./shownotes/sn-button.vue";
+import SNCard from "./shownotes/sn-card.vue";
 
 export default {
   props: ["episodeid"],
@@ -239,6 +259,7 @@ export default {
   components: {
     "icon-close": Close,
     "sn-button": SNButton,
+    "sn-card": SNCard,
   },
   methods: {
     createEntry: function (url, type, data) {
@@ -580,6 +601,66 @@ export default {
   visibility: hidden;
 }
 
+/* BEGIN shownotes modal */
+.shownotes-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 360px;
+  background: #000;
+  opacity: 0.7;
+  z-index: 119900;
+}
+.shownotes-modal {
+  position: fixed;
+  top: 100px;
+  left: 30px;
+  right: 30px;
+  bottom: 30px;
+  z-index: 120000;
+}
+.shownotes-modal * {
+  box-sizing: content-box;
+}
+.shownotes-modal-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  min-height: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+  background: #fcfcfc;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+.shownotes-modal-content {
+  padding: 0 12px 12px 12px;
+}
+@media screen and (min-width: 960px) {
+  .shownotes-modal-content {
+    padding: 0 12px 12px 150px;
+  }
+}
+.shownotes-modal-content .header {
+  display: flex;
+  justify-content: space-between;
+}
+.shownotes-modal-content .header .close {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+.shownotes-modal .shownotes-modal-content h1 {
+  padding: 0 16px;
+  font-size: 22px;
+  line-height: 50px;
+  margin: 0;
+}
+/* END shownotes modal */
+
 /* BEGIN temporary rules until converted to Tailwind */
 #podlove_podcast_shownotes .p-expand {
   margin: 40px 24px;
@@ -587,9 +668,11 @@ export default {
 
 #podlove_podcast_shownotes .footer {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin: 0px 24px;
 }
+
 /* END temporary rules */
 
 #podlove_podcast_shownotes *,
@@ -982,13 +1065,13 @@ export default {
   opacity: 0.6;
 }
 
-.shadow {
+#podlove_podcast_shownotes .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px 0 rgb(0 0 0 / 0.06);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.shadow-sm {
+#podlove_podcast_shownotes .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
