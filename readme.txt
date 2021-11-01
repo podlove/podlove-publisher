@@ -113,6 +113,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - Notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
 - Avatars: default avatar is now a static svg instead of Gravatar (can be customized using the WordPress Filter `podlove_default_contributor_avatar_url`)
 
+**Shownotes**
+
+- adjust export file format
+- fix various css issues
+- show quicksort menu as soon as one topic exists (instead of requiring two)
+
 **Other**
 
 - fix(image cache): redirect to source URL if image can't be downloaded into the cache
