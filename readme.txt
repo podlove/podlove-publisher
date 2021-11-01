@@ -108,7 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2021-11-01 =
 
-- contributor notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
+**Contributors**
+
+- Notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
+- Avatars: default avatar is now a static svg instead of Gravatar (can be customized using the WordPress Filter `podlove_default_contributor_avatar_url`)
 
 = 2021-10-28 =
 
