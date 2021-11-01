@@ -25,9 +25,9 @@ class SettingsTab extends Tab
 
 			<?php settings_fields($debug_hook); ?>
 			<?php do_settings_sections($debug_hook); ?>
-			
+
 			<?php submit_button(__('Send Test Emails', 'podlove-podcasting-plugin-for-wordpress'), 'button', 'submit', true); ?>
-		</form>		
+		</form>
 		<?php
     }
 
@@ -45,6 +45,7 @@ class SettingsTab extends Tab
     {
         $hook = self::settings_hook();
         $debug_hook = self::debug_hook();
+        $contributors = Contributor::all();
 
         add_settings_section(
             // $id
@@ -75,7 +76,7 @@ class SettingsTab extends Tab
 					<span class="description">
 						<?php echo __('Delay in minutes after an episode is published before notification e-mails are sent. Note that it may always take a few minutes longer than specified until e-mails are sent out.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 					</span>
-				</p>	
+				</p>
 				<?php
             },
             // $page
@@ -102,7 +103,7 @@ class SettingsTab extends Tab
                     '</a>'
                 ); ?>
 					</span>
-						
+
 				</p>
 				<?php
             },
@@ -178,27 +179,119 @@ class SettingsTab extends Tab
                 __('Send as', 'podlove-podcasting-plugin-for-wordpress')
             ),
             // $callback
-            function () {
-                $contributors = Contributor::all(); ?>
+            function () use ($contributors) {
+                ?>
 				<select name="podlove_notifications[send_as]" class="chosen-image podlove-contributor-dropdown" style="width: 220px;">
 					<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 					<?php foreach ($contributors as $contributor) { ?>
 						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url(); ?>" <?php selected(\Podlove\get_setting('notifications', 'send_as'), $contributor->id); ?>><?php echo $contributor->getName(); ?></option>
 					<?php } ?>
 				</select>
-
-				<script type="text/javascript">
-				(function($) {
-					$(".chosen").chosen({ width: '100%' });
-					$(".chosen-image").chosenImage();
-				}(jQuery));
-				</script>
 				<?php
             },
             // $page
             $hook,
             // $section
             'podlove_settings_notifications_sender'
+        );
+
+        add_settings_section(
+            // $id
+            'podlove_settings_notifications_always_send_to',
+            // $title
+            __('', 'podlove-podcasting-plugin-for-wordpress'),
+            // $callback
+            function () {
+                echo '<h3>'.__('Always send to...', 'podlove-podcasting-plugin-for-wordpress').'</h3>'; ?>
+				<p>
+					<span class="description">
+						<?php echo __('These contributors will always receive e-mails.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+					</span>
+				</p>
+				<?php
+            },
+            // $page
+            $hook
+        );
+
+        add_settings_field(
+            // $id
+            'podlove_settings_notifications_send_as',
+            // $title
+            sprintf(
+                '<label for="podlove_delay">%s</label>',
+                __('Contributors', 'podlove-podcasting-plugin-for-wordpress')
+            ),
+            // $callback
+            function () use ($contributors) {
+                $values = \Podlove\get_setting('notifications', 'always_send_to');
+                if (!is_array($values)) {
+                    $values = [];
+                }
+                $values = array_filter($values); ?>
+                <div id="always_send_to_list_wrapper">
+                <?php foreach ($values as $selected_contributor_id) { ?>
+				<select name="podlove_notifications[always_send_to][]" class="chosen-image podlove-contributor-dropdown" style="width: 220px;">
+					<option value=""><?php echo __('Clear', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
+					<?php foreach ($contributors as $contributor) { ?>
+                        <?php
+                        $selected = selected($selected_contributor_id, $contributor->id);
+                        $avatar = $contributor->avatar()->setWidth(10)->url();
+                        $name = $contributor->getName();
+                        ?>
+						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $avatar; ?>" <?php echo $selected; ?>><?php echo $name; ?></option>
+					<?php } ?>
+				</select>
+                <?php } ?>
+                </div>
+
+                <p>
+                    <input type="button" name="add_always_send_to" id="add_always_send_to" class="button" value="Add another Contributor">
+                </p>
+
+                <template id="contributor_selector">
+				<select name="podlove_notifications[always_send_to][]" class="chosen-image podlove-contributor-dropdown" style="width: 220px;">
+					<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
+					<?php foreach ($contributors as $contributor) { ?>
+                        <?php
+                        $avatar = $contributor->avatar()->setWidth(10)->url();
+                        $name = $contributor->getName();
+                        ?>
+						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $avatar; ?>"><?php echo $name; ?></option>
+					<?php } ?>
+				</select>
+                </template>
+
+				<script type="text/javascript">
+				(function($) {
+					$(".chosen").chosen({ width: '100%' });
+					$(".chosen-image").chosenImage();
+
+                    const add_btn = document.getElementById('add_always_send_to');
+                    const container = document.getElementById('always_send_to_list_wrapper')
+                    const template = document.getElementById('contributor_selector')
+                    add_btn.addEventListener('click', () => {
+                        const newNode = template.content.cloneNode(true);
+                        container.appendChild(newNode)
+                        $("#always_send_to_list_wrapper .chosen").chosen({ width: '100%' });
+					    $("#always_send_to_list_wrapper .chosen-image").chosenImage();
+                    })
+				}(jQuery));
+				</script>
+                <style>
+                #always_send_to_list_wrapper {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.75rem;
+                  margin-bottom: 0.75rem;
+                }
+                </style>
+				<?php
+            },
+            // $page
+            $hook,
+            // $section
+            'podlove_settings_notifications_always_send_to'
         );
 
         add_settings_section(
@@ -337,14 +430,4 @@ class SettingsTab extends Tab
         register_setting($hook, 'podlove_notifications');
         register_setting($debug_hook, 'podlove_notifications_test');
     }
-
-    /*
-    public function render_page() {
-        ?>
-        <div class="wrap">
-            Hello World?
-        </div>
-        <?php
-    }
-    */
 }

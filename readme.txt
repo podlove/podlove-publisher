@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2021-11-01 =
+
+- contributor notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
+
 = 2021-10-28 =
 
 First draft of Shownotes rework with focus on quickly sorting a large amount of

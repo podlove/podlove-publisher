@@ -165,6 +165,8 @@ class Notifications extends \Podlove\Modules\Base
     {
         $role_filter = (int) \Podlove\get_setting('notifications', 'role');
         $group_filter = (int) \Podlove\get_setting('notifications', 'group');
+        $always_send_to = (array) \Podlove\get_setting('notifications', 'always_send_to');
+        $always_send_to = array_filter($always_send_to);
 
         $contributions = EpisodeContribution::find_all_by_episode_id($episode->id);
 
@@ -182,9 +184,21 @@ class Notifications extends \Podlove\Modules\Base
             });
         }
 
-        // map contributions to contributors
-        return array_map(function ($c) {
-            return Contributor::find_by_id($c->contributor_id);
+        // map contributions to contributor ids
+        $contributor_ids = array_map(function ($c) {
+            return $c->contributor_id;
         }, $contributions);
+
+        // add permanent contributor ids
+        foreach ($always_send_to as $always_contributor_id) {
+            if (!in_array($always_contributor_id, $contributor_ids)) {
+                $contributor_ids[] = $always_contributor_id;
+            }
+        }
+
+        // map contributor ids to contributors
+        return array_map(function ($id) {
+            return Contributor::find_by_id($id);
+        }, $contributor_ids);
     }
 }
