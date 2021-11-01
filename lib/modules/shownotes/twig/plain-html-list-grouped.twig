@@ -1,5 +1,6 @@
 {% for topic in episode.shownotes({groupby: "topic"}) %}
 	{% if topic.title %}
+		<br>
 		<h5>{{ topic.title }}</h5>
 	{% endif %}
 
