@@ -403,12 +403,14 @@ export default {
 }
 label[for="chapter_title"],
 label[for="chapter_url"],
-label[for="chapter_start"] {
+label[for="chapter_start"],
+label[for="chapter_image"] {
   display: block;
   font-weight: bold;
 }
 label[for="chapter_start"],
 label[for="chapter_url"],
+label[for="chapter_image"],
 button.button.delete-chapter {
   margin-top: 10px;
 }

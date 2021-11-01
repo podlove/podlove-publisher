@@ -22,7 +22,7 @@ import Timestamp from '../lib/timestamp'
 import DurationErrors from '../lib/duration_errors'
 
 export default {
-    props: ['start', 'title', 'active', 'duration', 'href'],
+    props: ['start', 'title', 'active', 'duration', 'href', 'image'],
 
     data() {
         return {

@@ -2,11 +2,11 @@
     <div class="col-md-4 chapter-edit" v-if="chapter">
         <div class="form-group">
             <label for="chapter_title">Title</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="chapter_title" 
-                v-model="chapter.title" 
+            <input
+                type="text"
+                class="form-control"
+                id="chapter_title"
+                v-model="chapter.title"
                 @keyup.esc="unselectChapter"
                 @keyup.up="selectPrevChapter"
                 @keyup.down="selectNextChapter"
@@ -15,11 +15,11 @@
         <div class="form-group">
             <label for="chapter_url">URL <small>(optional)</small></label>
 
-            <input 
-                type="text" 
-                class="form-control" 
-                id="chapter_url" 
-                v-model="chapter.href" 
+            <input
+                type="text"
+                class="form-control"
+                id="chapter_url"
+                v-model="chapter.href"
                 @keyup.esc="unselectChapter"
                 @keyup.up="selectPrevChapter"
                 @keyup.down="selectNextChapter"
@@ -28,16 +28,49 @@
         <div class="form-group">
             <label for="chapter_start">Start Time</label>
 
-            <input 
-                type="text" 
-                class="form-control" 
-                id="chapter_start" 
-                :value="formatTime(chapter.start.totalMs)" 
-                v-on:input="handleTimeInput" 
+            <input
+                type="text"
+                class="form-control"
+                id="chapter_start"
+                :value="formatTime(chapter.start.totalMs)"
+                v-on:input="handleTimeInput"
                 @keyup.esc="unselectChapter"
                 @keyup.up="selectPrevChapter"
                 @keyup.down="selectNextChapter"
                 >
+        </div>
+        <div class="form-group">
+            <label for="chapter_image">Image</label>
+
+            <input
+                type="text"
+                class="form-control"
+                id="chapter_image"
+                :value="chapter.image"
+                @keyup.esc="unselectChapter"
+                @keyup.up="selectPrevChapter"
+                @keyup.down="selectNextChapter"
+                >
+
+            <!-- how do I make this vue compatible? init on display? rewrite? let's rewrite without jQuery, mh? -->
+            <div class="podlove-media-upload-wrap">
+			<span>
+				<a href="#" class="podlove-media-upload button"
+					data-target="chapter_image"
+					data-title="Chapter Image"
+					data-type="image"
+					data-button="Select"
+					data-class="media-frame"
+					data-frame="select"
+					data-size="full"
+					data-state="podlove_select_single_image"
+					data-preview=".podlove_preview_pic"
+					data-allow-gravatar="0"
+                    data-multiple="0"
+					data-fetch="url">Select</a>
+			</span>
+			<div class="podlove_preview_pic"></div>
+		</div>
         </div>
 
         <div class="form-group">
@@ -86,6 +119,9 @@ export default {
         handleTimeInput: _.debounce(function (e) {
             this.chapter.start.totalMs = this.unformatTime(e.target.value);
         }, 1500)
-    }
+    },
+    mounted() {
+        console.log("form mounted");
+    },
 }
 </script>
