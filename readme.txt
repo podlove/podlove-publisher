@@ -106,7 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2021-11-01 =
+= 2021-11-02 =
 
 **Contributors**
 
