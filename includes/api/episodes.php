@@ -248,7 +248,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if ($filter) {
             if ($filter == 'draft') {
                 if (!current_user_can('edit_posts')) {
-                    return new \Podlove\API\Error\ForbiddenAccess();
+                    return new \Podlove\Api\Error\ForbiddenAccess();
                 }
                 return true;
             }
@@ -281,7 +281,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             ]);
         }
 
-        return new \Podlove\API\Response\OkResponse([
+        return new \Podlove\Api\Response\OkResponse([
             'results' => $results,
             '_version' => 'v2',
         ]);
@@ -321,14 +321,14 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'explicit' => $explicit
         ];
 
-        return new \Podlove\API\Response\OkResponse($data);
+        return new \Podlove\Api\Response\OkResponse($data);
     
     }
 
     public function create_item_permissions_check( $request )
     {
         if (!current_user_can('edit_posts')) {
-            return new \Podlove\API\Error\ForbiddenAccess();
+            return new \Podlove\Api\Error\ForbiddenAccess();
         }
         return true;
     }
@@ -364,7 +364,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     public function update_item_permissions_check( $request )
     {
         if (!current_user_can('edit_posts')) {
-            return new \Podlove\API\Error\ForbiddenAccess();
+            return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
         return true;
@@ -442,7 +442,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         $episode->save();
 
-        return new \Podlove\API\Response\OkResponse([
+        return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok' 
         ]);
     }
@@ -450,7 +450,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     public function delete_item_permissions_check( $request )
     {
         if (!current_user_can('edit_posts')) {
-            return new \Podlove\API\Error\ForbiddenAccess();
+            return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
         return true;
@@ -469,7 +469,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
         wp_trash_post($episode->post_id);
 
-        return new \Podlove\API\Response\OkResponse([
+        return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok' 
         ]);
 

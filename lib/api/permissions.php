@@ -1,6 +1,6 @@
 <?php
 
-namespace Podlove\API;
+namespace Podlove\Api;
 
 class Permissons
 {
