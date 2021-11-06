@@ -1,6 +1,6 @@
 <?php
 
-namespace Podlove\API\Response;
+namespace Podlove\Api\Response;
 
 use WP_REST_Response;
 
