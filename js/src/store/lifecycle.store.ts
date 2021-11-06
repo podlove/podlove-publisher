@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import { handleActions, createAction } from 'redux-actions'
 import { PodloveChapter } from '@types/chapters.types';
 
@@ -7,11 +8,18 @@ export type State = {
   bootstrapped: boolean;
 }
 
-export const INIT = 'podlove/publisher/INIT';
+export const INIT = 'podlove/publisher/INIT'
+export const SAVE = 'podlove/publisher/SAVE'
 
 export const init = createAction<{
-  chapters?: PodloveChapter[]
+  chapters?: PodloveChapter[];
+  api?: {
+    base: string;
+    nonce: string;
+  }
 }>(INIT);
+
+export const save = createAction<void>(SAVE)
 
 export const initialState: State = {
   saved: false,

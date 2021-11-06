@@ -6,8 +6,21 @@
   </head>
   <body>
     <script>
+      const nonce = '8944c463a3'
+
+      window.ajaxurl = '/wp-admin/admin-ajax.php';
+      window.apiPrefix = '/api'
+
       window.PODLOVE_DATA = {
+        api: {
+          base: 'http://podlove.local/wp-json/',
+          nonce
+        },
+        post: {
+          id: '60'
+        },
         episode: {
+          id: '3',
           duration: '01:40:02.577',
         },
         chapters: [
@@ -111,8 +124,10 @@
       }
     </script>
 
+    <button type="button" class="editor-post-publish-button">Save</button>
+
     <div data-client="podlove">
-      <podlove-chapters></podlove-chapters>
+      <podlove-transcripts></podlove-transcripts>
     </div>
 
     <form class="metabox-location-normal"></form>

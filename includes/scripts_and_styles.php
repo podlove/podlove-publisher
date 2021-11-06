@@ -32,31 +32,23 @@ add_action('admin_print_styles', function () {
 
         $episode = Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
 
-        if (!$episode) {
-            wp_localize_script(
-                'podlove-episode-vue-apps',
-                'podlove_vue',
-                [
-                    'rest_url' => esc_url_raw(rest_url()),
-                    'nonce' => wp_create_nonce('wp_rest'),
-                    'post_id' => get_the_ID(),
-                    'episode_id' => 0,
-                    'osf_active' => is_plugin_active('shownotes/shownotes.php'),
-                ]
-            );
-        } else {
-            wp_localize_script(
-                'podlove-episode-vue-apps',
-                'podlove_vue',
-                [
-                    'rest_url' => esc_url_raw(rest_url()),
-                    'nonce' => wp_create_nonce('wp_rest'),
-                    'post_id' => get_the_ID(),
-                    'episode_id' => $episode->id,
-                    'osf_active' => is_plugin_active('shownotes/shownotes.php'),
-                ]
-            );
-        }
+        add_filter('podlove_data_js', function ($data) use ($episode) {
+          $data['episode'] = json_encode(array(
+            'duration' => $episode->duration,
+            'id' => $episode->id
+          ));
+
+          $data['post'] = json_encode(array(
+            'id' => get_the_ID()
+          ));
+
+          $data['api'] = json_encode(array(
+            'base' => esc_url_raw(rest_url()),
+            'nonce' => wp_create_nonce('wp_rest'),
+          ));
+
+          return $data;
+        });
     }
 
     if (\Podlove\is_podlove_settings_screen() || $is_episode_edit_screen) {

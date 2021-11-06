@@ -1,37 +1,53 @@
 import { TakeableChannel } from '@redux-saga/core'
 import { select, takeEvery, call, put } from 'redux-saga/effects'
 import keyboard from '@podlove/utils/keyboard'
-import { selectors } from '@store'
+import { selectors, sagas } from '@store'
 import * as lifecycle from '@store/lifecycle.store'
 import * as chapters from '@store/chapters.store'
 import { PodloveChapter } from '@types/chapters.types'
 import Timestamp from '@lib/timestamp'
 
-import { channel } from './helper'
+import { channel } from '../../sagas/helper'
 
 import MP4Chaps from 'podcast-chapter-parser-mp4chaps'
 import Audacity from 'podcast-chapter-parser-audacity'
 import Hindenburg from 'podcast-chapter-parser-hindenburg'
 import Psc from 'podcast-chapter-parser-psc'
 
-function chaptersSaga(episodeForm: HTMLElement) {
+function chaptersSaga() {
+  const episodeForm = document.querySelector('form.metabox-location-normal') as HTMLElement
   const chaptersForm = <HTMLTextAreaElement>document.createElement('textarea')
   chaptersForm.setAttribute('name', '_podlove_meta[chapters]')
   chaptersForm.style.display = 'none'
   episodeForm.append(chaptersForm)
 
   return function* () {
-    yield takeEvery([lifecycle.INIT, chapters.UPDATE, chapters.REMOVE], syncForm, chaptersForm)
-    yield takeEvery([chapters.PARSE], parseChapters)
-    yield takeEvery(chapters.DOWNLOAD, handleDownload)
+    yield takeEvery([lifecycle.INIT, chapters.UPDATE, chapters.REMOVE], save, chaptersForm)
+    yield takeEvery([chapters.PARSE], handleImport)
+    yield takeEvery(chapters.DOWNLOAD, handleExport)
     const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
+
     yield takeEvery(onKeyDown, handleKeydown)
   }
 }
 
-function* syncForm(form: HTMLTextAreaElement) {
+function* save(form: HTMLTextAreaElement) {
   const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
   form.value = chapters.map(({ start, title }) => `${start} ${title}`).join(' ')
+}
+
+// Export handling
+function* handleExport(action: typeof chapters.download) {
+  const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
+
+  switch (action.payload) {
+    case 'psc':
+      download('chapters.psc', generatePscDownload(chapters))
+      break
+    case 'mp4':
+      download('chapters.txt', generateMp4Download(chapters))
+      break
+  }
 }
 
 function generatePscDownload(chapters: PodloveChapter[]): string {
@@ -98,19 +114,38 @@ function download(name: string, data: any) {
   document.body.removeChild(a)
 }
 
-function* handleDownload(action: typeof chapters.download) {
-  const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
+// Import handling
+function* handleImport(action: typeof chapters.parse) {
+  const parser: ((text: string) => PodloveChapter[])[] = [
+    MP4Chaps.parse,
+    Audacity.parse,
+    Hindenburg.parser(window.DOMParser).parse,
+    Psc.parser(window.DOMParser).parse,
+  ]
 
-  switch (action.payload) {
-    case 'psc':
-      download('chapters.psc', generatePscDownload(chapters))
-      break
-    case 'mp4':
-      download('chapters.txt', generateMp4Download(chapters))
-      break
+  let parsedChapters: PodloveChapter[] | null = []
+
+  parser.forEach((parseFn) => {
+    if (parsedChapters !== null && parsedChapters.length > 0) {
+      return
+    }
+
+    try {
+      parsedChapters = parseFn(action.payload)
+    } catch (err) {
+      parsedChapters = null
+    }
+  })
+
+  if (parsedChapters === null) {
+    console.log('Unable to parse PSC chapters.')
+    return
   }
+
+  yield put(chapters.set(parsedChapters))
 }
 
+// Key event handling
 function* handleKeydown(input: {
   key: string
   ctrl: boolean
@@ -147,34 +182,4 @@ function* handleKeydown(input: {
   }
 }
 
-function* parseChapters(action: typeof chapters.parse) {
-  const parser: ((text: string) => PodloveChapter[])[] = [
-    MP4Chaps.parse,
-    Audacity.parse,
-    Hindenburg.parser(window.DOMParser).parse,
-    Psc.parser(window.DOMParser).parse,
-  ]
-
-  let parsedChapters: PodloveChapter[] | null = []
-
-  parser.forEach((parseFn) => {
-    if (parsedChapters !== null && parsedChapters.length > 0) {
-      return
-    }
-
-    try {
-      parsedChapters = parseFn(action.payload)
-    } catch (err) {
-      parsedChapters = null
-    }
-  })
-
-  if (parsedChapters === null) {
-    console.log('Unable to parse PSC chapters.')
-    return
-  }
-
-  yield put(chapters.set(parsedChapters))
-}
-
-export default chaptersSaga
+sagas.run(chaptersSaga())

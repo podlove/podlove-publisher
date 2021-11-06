@@ -106,14 +106,20 @@ class Transcripts extends \Podlove\Modules\Base
 
     public function extend_episode_form($form_data, $episode)
     {
+        add_filter('podlove_data_js', function ($data) {
+          $data['transcripts'] = json_encode($episode);
+          return $data;
+        });
+
         $form_data[] = [
             'type' => 'callback',
             'key' => 'transcripts',
             'options' => [
                 'callback' => function () {
-                    $data = ''; ?>
-<div id="podlove-transcripts-app-data" style="display: none"><?php echo $data; ?></div>
-<div id="podlove-transcripts-app"><transcripts></transcripts></div>
+                                 ?>
+<div data-client="podlove">
+  <podlove-transcripts></podlove-transcripts>
+</div>
 <?php
                 },
                 'label' => __('Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
