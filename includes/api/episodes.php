@@ -219,13 +219,13 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'soundbite_start' => [
                         'description' => __('Start value of podcast:soundbite tag'),
                         'type' => 'string',
-                        'validate_callback' => [$this, 'update_item_validation_check_time']
+                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
 
                     ],
                     'soundbite_duration' => [
                         'description' => __('Duration value of podcast::soundbite tag'),
                         'type' => 'string',
-                        'validate_callback' => [$this, 'update_item_validation_check_time']
+                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -370,15 +370,6 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function update_item_validation_check_time( $param, $request, $key )
-    {
-        if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $param)) {
-            return true;
-        }
-        
-        return false;
-    }
-
     public function update_item( $request )
     {
         $id = $request->get_param('id');
@@ -389,7 +380,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         $episode = Episode::find_by_id($id);
 
         if (!$episode) {
-            return;
+            return new \Podlove\Api\Error\NotFound();
         }
 
         if (isset($request['title'])) {
@@ -428,16 +419,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         if (isset($request['soundbite_start'])) {
             $start = $request['soundbite_start'];
-            if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $start)) {
-                $episode->soundbite_start = $start;
-            }
+            $episode->soundbite_start = $start;
         }
 
         if (isset($request['soundbite_duration'])) {
             $duration = $request['soundbite_duration'];
-            if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $duration)) {
-                $episode->soundbite_duration = $duration;
-            }
+            $episode->soundbite_duration = $duration;
         }
 
         $episode->save();
@@ -465,7 +452,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         $episode = Episode::find_by_id($id);
         if (!$episode) {
-            return;
+            return new \Podlove\Api\Error\NotFound();
         }
         wp_trash_post($episode->post_id);
 

@@ -11,6 +11,10 @@ add_action('rest_api_init', function () {
     $controller->register_routes();
 });
 
+function cb2($a, $b) {
+    return [$a, $b];
+}
+
 class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
 {
     public function __construct()
@@ -34,11 +38,26 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
+                'args' => [
+                    'chapters' => [
+                        'description' => __('List of chapters, please use mp4chpat format.'),
+                        'type' => 'array',
+                        'validate_callback' => '\Podlove\Api\Validation::chapters'
+                    ]
+                ],
                 'methods' => WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
             [
+                'args' => [
+                    'chapters' => [
+                        'description' => __('List of chapters, please use mp4chpat format.'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::chapters'
+                    ]
+                ],
+                'description' => __('Edit the chapters list to an epsiode, old chapter list will be deleted.'),
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
@@ -87,7 +106,47 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
     }
 
     public function create_item( $request )
-    {        
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $data = '';
+        if (isset($request['chapters']) && is_array($request['chapters'])) {
+            for ($i = 0; $i < count($request['chapters']); ++$i ) {
+                $timestamp = '';
+                if (isset($request['chapters'][$i]['timestamp'])) {
+                    $timestamp = $request['chapters'][$i]['timestamp'];
+                }
+                $title = '';
+                if (isset($request['chapters'][$i]['title'])) {
+                    $title = $request['chapters'][$i]['title'];
+                }
+                $url = '';
+                if (isset($request['chapters'][$i]['url'])) {
+                    $url = $request['chapters'][$i]['url'];
+                }
+                if (strlen($url) == 0)
+                    $data = $data . $timestamp . ' ' . $title . '\n';
+                else
+                    $data = $data . $timestamp . ' ' . $title . '<' . $url . '>\n';
+            }
+        }
+
+        $episode_data['chapters'] = $data;
+        $episode->update_attributes($episode_data);
+
+
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok'
+        ]); 
     }
 
     public function update_item_permissions_check( $request )
@@ -108,6 +167,35 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
 
         $episode = Episode::find_by_id($id);
 
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $data = '';
+        if (isset($request['chapters']) && is_array($request['chapters'])) {
+            for ($i = 0; $i < count($request['chapters']); ++$i ) {
+                $timestamp = '';
+                if (isset($request['chapters'][$i]['timestamp'])) {
+                    $timestamp = $request['chapters'][$i]['timestamp'];
+                }
+                $title = '';
+                if (isset($request['chapters'][$i]['title'])) {
+                    $title = $request['chapters'][$i]['title'];
+                }
+                $url = '';
+                if (isset($request['chapters'][$i]['url'])) {
+                    $url = $request['chapters'][$i]['url'];
+                }
+                if (strlen($url) == 0)
+                    $data = $data . $timestamp . ' ' . $title . '\n';
+                else
+                    $data = $data . $timestamp . ' ' . $title . '<' . $url . '>\n';
+            }
+        }
+
+        $episode_data['chapters'] = $data;
+        $episode->update_attributes($episode_data);
+
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok' 
         ]);
@@ -124,6 +212,20 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
 
     public function delete_item( $request )
     {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $episode_data['chapters'] = '';
+        $episode->update_attributes($episode_data);
+
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok' 
         ]);
