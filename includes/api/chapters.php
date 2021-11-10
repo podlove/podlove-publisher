@@ -2,18 +2,21 @@
 
 namespace Podlove\Api\Chapters;
 
+use Podlove\Chapters\Parser\Mp4chaps;
+use Podlove\Chapters\Chapters;
+use Podlove\Chapters\Chapter;
+use Podlove\Chapters\Printer;
+use Podlove\NormalPlayTime;
 use Podlove\Model\Episode;
 use WP_REST_Controller;
 use WP_REST_Server;
+
+use function Podlove\Api\Episodes\chapters;
 
 add_action('rest_api_init', function () {
     $controller = new WP_REST_PodloveChapters_Controller();
     $controller->register_routes();
 });
-
-function cb2($a, $b) {
-    return [$a, $b];
-}
 
 class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
 {
@@ -30,6 +33,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 'id' => [
                     'description' => __('Unique identifier for the episode.'),
                     'type' => 'integer',
+                    'required' => 'true'
                 ],
             ],
             [
@@ -42,6 +46,27 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                     'chapters' => [
                         'description' => __('List of chapters, please use mp4chpat format.'),
                         'type' => 'array',
+                        'items' => array (
+                            'type' => 'object',
+                            'properties' => array(
+                                'start' => array(
+                                    'description' => __('Chapter begin timestamp'),
+                                    'type' => 'string',
+                                    'required' => 'true'
+                                ),
+                                'title' => array(
+                                    'description' => __('Chapter title'),
+                                    'type' => 'string',
+                                    'required' => 'true'
+
+                                ),
+                                'href' => array(
+                                    'description' => __('Chapter url'),
+                                    'type' => 'string'
+                                )
+                            )
+                        ),
+                        'required' => 'true',
                         'validate_callback' => '\Podlove\Api\Validation::chapters'
                     ]
                 ],
@@ -53,7 +78,28 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 'args' => [
                     'chapters' => [
                         'description' => __('List of chapters, please use mp4chpat format.'),
-                        'type' => 'string',
+                        'type' => 'array',
+                        'items' => array (
+                            'type' => 'object',
+                            'properties' => array(
+                                'start' => array(
+                                    'description' => __('Chapter begin timestamp'),
+                                    'type' => 'string',
+                                    'required' => 'true'
+                                ),
+                                'title' => array(
+                                    'description' => __('Chapter title'),
+                                    'type' => 'string',
+                                    'required' => 'true'
+
+                                ),
+                                'href' => array(
+                                    'description' => __('Chapter url'),
+                                    'type' => 'string'
+                                )
+                            )
+                        ),
+                        'required' => 'true',
                         'validate_callback' => '\Podlove\Api\Validation::chapters'
                     ]
                 ],
@@ -118,31 +164,36 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        $data = '';
+        $chapters = new Chapters();
+        $npt = 0;
+
         if (isset($request['chapters']) && is_array($request['chapters'])) {
             for ($i = 0; $i < count($request['chapters']); ++$i ) {
                 $timestamp = '';
-                if (isset($request['chapters'][$i]['timestamp'])) {
-                    $timestamp = $request['chapters'][$i]['timestamp'];
+                if (isset($request['chapters'][$i]['start'])) {
+                    $timestamp = $request['chapters'][$i]['start'];
+                    $npt = NormalPlayTime\Parser::parse($timestamp, 'ms');
                 }
                 $title = '';
                 if (isset($request['chapters'][$i]['title'])) {
                     $title = $request['chapters'][$i]['title'];
                 }
                 $url = '';
-                if (isset($request['chapters'][$i]['url'])) {
-                    $url = $request['chapters'][$i]['url'];
+                if (isset($request['chapters'][$i]['href'])) {
+                    $url = $request['chapters'][$i]['href'];
                 }
-                if (strlen($url) == 0)
-                    $data = $data . $timestamp . ' ' . $title . '\n';
-                else
-                    $data = $data . $timestamp . ' ' . $title . '<' . $url . '>\n';
+                if (strlen($url) == 0) {
+                    $chapters->addChapter(new Chapter($npt, $title));
+                }
+                else {
+                    $chapters->addChapter(new Chapter($npt, $title, $url));
+                }
             }
         }
 
-        $episode_data['chapters'] = $data;
+        $chapters->setPrinter( new Printer\Mp4chaps() );
+        $episode_data['chapters'] = (string) $chapters;
         $episode->update_attributes($episode_data);
-
 
         return new \Podlove\Api\Response\CreateResponse([
             'status' => 'ok'
@@ -171,29 +222,35 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        $data = '';
+        $chapters = new Chapters();
+        $npt = 0;
+
         if (isset($request['chapters']) && is_array($request['chapters'])) {
             for ($i = 0; $i < count($request['chapters']); ++$i ) {
                 $timestamp = '';
-                if (isset($request['chapters'][$i]['timestamp'])) {
-                    $timestamp = $request['chapters'][$i]['timestamp'];
+                if (isset($request['chapters'][$i]['start'])) {
+                    $timestamp = $request['chapters'][$i]['start'];
+                    $npt = NormalPlayTime\Parser::parse($timestamp, 'ms');
                 }
                 $title = '';
                 if (isset($request['chapters'][$i]['title'])) {
                     $title = $request['chapters'][$i]['title'];
                 }
                 $url = '';
-                if (isset($request['chapters'][$i]['url'])) {
-                    $url = $request['chapters'][$i]['url'];
+                if (isset($request['chapters'][$i]['href'])) {
+                    $url = $request['chapters'][$i]['href'];
                 }
-                if (strlen($url) == 0)
-                    $data = $data . $timestamp . ' ' . $title . '\n';
-                else
-                    $data = $data . $timestamp . ' ' . $title . '<' . $url . '>\n';
+                if (strlen($url) == 0) {
+                    $chapters->addChapter(new Chapter($npt, $title));
+                }
+                else {
+                    $chapters->addChapter(new Chapter($npt, $title, $url));
+                }
             }
         }
 
-        $episode_data['chapters'] = $data;
+        $chapters->setPrinter( new Printer\Mp4chaps() );
+        $episode_data['chapters'] = (string) $chapters;
         $episode->update_attributes($episode_data);
 
         return new \Podlove\Api\Response\OkResponse([
