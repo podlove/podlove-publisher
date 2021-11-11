@@ -8,7 +8,7 @@
 		{% for entry in topic.entries %}
 			<li>
 				{% if entry.type == "link" %}
-					<a href="{{ entry.url }}">{{ entry.title }}</a>
+					<a href="{{ entry.url }}" target="_blank">{{ entry.title }}</a>
 				{% endif %}
 			</li>
 		{% endfor %}
