@@ -54,7 +54,7 @@
 				return $(this).attr("href");
 			})
 			.filter(function() {
-				return this.match(/\.(mp3|m4a|ogg|oga|opus)$/);
+				return this.match(/\.(mp3|mp4|m4a|ogg|oga|opus)$/);
 			});
 
 		return urls[0];
