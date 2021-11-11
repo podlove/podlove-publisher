@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - shownotes: set target=_blank on exported html links
 - allow detection of episode duration on mp4
+- fix contributor notification test email
 
 = 2021-11-02 =
 
