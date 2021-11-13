@@ -43,7 +43,7 @@ add_action('admin_print_styles', function () {
           ));
 
           $data['api'] = json_encode(array(
-            'base' => esc_url_raw(rest_url()),
+            'base' => esc_url_raw(rest_url('podlove')),
             'nonce' => wp_create_nonce('wp_rest'),
           ));
 

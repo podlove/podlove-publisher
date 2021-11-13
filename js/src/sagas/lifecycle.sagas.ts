@@ -3,10 +3,10 @@ import { call, takeEvery, put } from 'redux-saga/effects'
 
 import * as lifecycle from '@store/lifecycle.store'
 
-function episodeSaga() {
+function lifecycleSaga() {
   return function* () {
-    const saveChannel = yield call(clickListener, 'button.editor-post-publish-button')
-    takeEvery(saveChannel, save)
+    const saveChannel = yield call(clickListener, 'click', 'button.editor-post-publish-button')
+    yield takeEvery(saveChannel, save)
   }
 }
 
@@ -14,7 +14,7 @@ function* save() {
   yield put(lifecycle.save())
 }
 
-function clickListener(selector: string) {
+function clickListener(eventName: string, selector: string) {
   return eventChannel(emitter => {
     let target
 
@@ -24,14 +24,14 @@ function clickListener(selector: string) {
 
     window.addEventListener('load', () => {
       target = document.querySelector(selector);
-      target.addEventListener('click', eventListener);
+      target.addEventListener(eventName, eventListener);
     })
 
     return () => {
-      target?.removeEventListener('click', eventListener)
+      target?.removeEventListener(eventName, eventListener)
       emitter(END)
     }
   })
 }
 
-export default episodeSaga
+export default lifecycleSaga

@@ -6,127 +6,28 @@
   </head>
   <body>
     <script>
-      const nonce = '8944c463a3'
-
       window.ajaxurl = '/wp-admin/admin-ajax.php';
       window.apiPrefix = '/api'
 
       window.PODLOVE_DATA = {
         api: {
-          base: 'http://podlove.local/wp-json/',
-          nonce
+          base: 'http://localhost:3000/wp-json/podlove',
+          auth: btoa('root:root')
         },
         post: {
           id: '60'
         },
         episode: {
-          id: '3',
+          id: '8',
           duration: '01:40:02.577',
-        },
-        chapters: [
-          {
-            start: '00:00:00.000',
-            title: 'Begrüssung',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:00:43.802',
-            title: 'Vorstellung Jörn',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:04:12.759',
-            title: 'Dank',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:08:39.794',
-            title: 'Feedback',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:17:28.221',
-            title: 'Was haben wir bei Podlove verbessert?',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:28:43.022',
-            title: 'Unsere kleine Technikecke',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:35:22.948',
-            title: 'Podcast News',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:36:53.930',
-            title: 'Gästin: Jörns Mitschuld am Podlovers Podcast',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:41:25.745',
-            title: 'Gästin: Jörns Weg zu Podlove',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:47:29.208',
-            title: 'Gästin: Podlove Workshops',
-            href: '',
-            image: '',
-          },
-          {
-            start: '00:51:47.951',
-            title: 'Gästin: Podlove Herausforderungen',
-            href: '',
-            image: '',
-          },
-          {
-            start: '01:04:38.424',
-            title: 'Gästin: Erfahrungen Podlove Consulting',
-            href: '',
-            image: '',
-          },
-          {
-            start: '01:12:58.897',
-            title: 'Gästin: Podlove Retrospektiv',
-            href: '',
-            image: '',
-          },
-          {
-            start: '01:22:02.910',
-            title: 'Gästin: Wünsche an Podlove',
-            href: '',
-            image: '',
-          },
-          {
-            start: '01:27:37.837',
-            title: 'Gästin: Podlove Hosting',
-            href: '',
-            image: '',
-          },
-          {
-            start: '01:39:19.621',
-            title: 'Verabschiedung',
-            href: '',
-            image: '',
-          },
-        ],
+        }
       }
     </script>
 
     <button type="button" class="editor-post-publish-button">Save</button>
 
     <div data-client="podlove">
+      <podlove-chapters></podlove-chapters>
       <podlove-transcripts></podlove-transcripts>
     </div>
 

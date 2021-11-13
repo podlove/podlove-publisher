@@ -9,8 +9,7 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      '/wp-admin/admin-ajax.php': 'http://podlove.local/wp-admin/admin-ajax.php',
-      '/api/': 'http://podlove.local/'
+      '/wp-json': 'http://podlove.local'
     }
   },
   root: path.resolve(__dirname, 'js'),

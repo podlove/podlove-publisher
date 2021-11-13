@@ -4,19 +4,24 @@ import Timestamp from '@lib/timestamp'
 import { init, INIT } from './lifecycle.store';
 
 export type State = {
-  duration: string | null
+  id: string | null;
+  duration: string | null;
 }
+
 export const initialState: State = {
+  id: null,
   duration: null
 };
 
 export const reducer = handleActions({
   [INIT]: (state: State, action: typeof init): State => ({
     ...state,
+    id: get(action, ['payload', 'episode', 'id'], null),
     duration: Timestamp.fromString(get(action, ['payload', 'episode', 'duration'], null)).totalMs
   })
 }, initialState);
 
 export const selectors = {
-  duration: (state: State) => state.duration
+  id: (state: State) => state.id,
+  duration: (state: State) => state.duration,
 }

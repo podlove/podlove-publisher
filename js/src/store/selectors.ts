@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect'
+
 import { State } from './index'
 import * as lifecycleStore from './lifecycle.store'
 import * as chaptersStore from './chapters.store'
@@ -6,6 +7,7 @@ import * as episodeStore from './episode.store'
 import * as runtimeStore from './runtime.store'
 import * as postStore from './post.store'
 import * as transcriptsStore from './transcripts.store'
+import * as contributorsStore from './contributors.store'
 
 const root = {
   bootstrapped: (state: State) => state.lifecycle,
@@ -14,6 +16,7 @@ const root = {
   runtime: (state: State) => state.runtime,
   post: (state: State) => state.post,
   transcripts: (state: State) => state.transcripts,
+  contributors: (state: State) => state.contributors
 }
 
 const lifecycle = {
@@ -27,12 +30,14 @@ const chapters = {
 }
 
 const episode = {
+  id: createSelector(root.episode, episodeStore.selectors.id),
   duration: createSelector(root.episode, episodeStore.selectors.duration)
 }
 
 const runtime = {
   nonce: createSelector(root.runtime, runtimeStore.selectors.nonce),
   base: createSelector(root.runtime, runtimeStore.selectors.base),
+  auth: createSelector(root.runtime, runtimeStore.selectors.auth),
 }
 
 const post = {
@@ -43,4 +48,8 @@ const transcripts = {
   list: createSelector(root.transcripts, transcriptsStore.selectors.transcripts)
 }
 
-export default { lifecycle, chapters, episode, runtime, post, transcripts }
+const contributors = {
+  list: createSelector(root.contributors, contributorsStore.selectors.list)
+}
+
+export default { lifecycle, chapters, episode, runtime, post, transcripts, contributors }

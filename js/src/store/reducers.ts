@@ -5,6 +5,7 @@ import * as episodeStore from './episode.store'
 import * as runtimeStore from './runtime.store'
 import * as postStore from './post.store'
 import * as transcriptsStore from './transcripts.store'
+import * as contributorsStore from './contributors.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   episode: episodeStore.reducer,
   runtime: runtimeStore.reducer,
   post: postStore.reducer,
-  transcripts: transcriptsStore.reducer
+  transcripts: transcriptsStore.reducer,
+  contributors: contributorsStore.reducer
 })

@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import { handleActions, createAction } from 'redux-actions'
 import { PodloveChapter } from '@types/chapters.types';
 

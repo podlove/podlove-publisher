@@ -1,39 +1,49 @@
 import { TakeableChannel } from '@redux-saga/core'
-import { select, takeEvery, call, put } from 'redux-saga/effects'
-import keyboard from '@podlove/utils/keyboard'
-import { selectors, sagas } from '@store'
-import * as lifecycle from '@store/lifecycle.store'
-import * as chapters from '@store/chapters.store'
-import { PodloveChapter } from '@types/chapters.types'
-import Timestamp from '@lib/timestamp'
-
-import { channel } from '../../sagas/helper'
+import { select, takeEvery, call, put, fork } from 'redux-saga/effects'
 
 import MP4Chaps from 'podcast-chapter-parser-mp4chaps'
 import Audacity from 'podcast-chapter-parser-audacity'
 import Hindenburg from 'podcast-chapter-parser-hindenburg'
 import Psc from 'podcast-chapter-parser-psc'
 
-function chaptersSaga() {
-  const episodeForm = document.querySelector('form.metabox-location-normal') as HTMLElement
-  const chaptersForm = <HTMLTextAreaElement>document.createElement('textarea')
-  chaptersForm.setAttribute('name', '_podlove_meta[chapters]')
-  chaptersForm.style.display = 'none'
-  episodeForm.append(chaptersForm)
+import keyboard from '@podlove/utils/keyboard'
+import { selectors, sagas } from '@store'
+import * as chapters from '@store/chapters.store'
+import * as lifecycle from '@store/lifecycle.store'
+import { PodloveChapter } from '@types/chapters.types'
+import Timestamp from '@lib/timestamp'
 
-  return function* () {
-    yield takeEvery([lifecycle.INIT, chapters.UPDATE, chapters.REMOVE], save, chaptersForm)
-    yield takeEvery([chapters.PARSE], handleImport)
-    yield takeEvery(chapters.DOWNLOAD, handleExport)
-    const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
+import { channel } from '../../sagas/helper'
+import { createApi } from '../../sagas/api'
 
-    yield takeEvery(onKeyDown, handleKeydown)
-  }
+function* chaptersSaga() {
+  const apiClient = yield createApi()
+  yield fork(initialize, apiClient)
+
+  yield takeEvery([chapters.PARSE], handleImport)
+  yield takeEvery(chapters.DOWNLOAD, handleExport)
+  yield takeEvery(lifecycle.SAVE, save)
+  const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
+
+  yield takeEvery(onKeyDown, handleKeydown)
 }
 
-function* save(form: HTMLTextAreaElement) {
-  const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
-  form.value = chapters.map(({ start, title }) => `${start} ${title}`).join(' ')
+function* initialize(api) {
+  const episodeId = yield select(selectors.episode.id)
+  const result: { chapters: PodloveChapter[] } = yield api.get(`chapters/${episodeId}`)
+
+  yield put(
+    chapters.set(
+      result.chapters.map((chapter) => ({
+        ...chapter,
+        start: chapter.start ? Timestamp.fromString(chapter.start).totalMs : null,
+      }))
+    )
+  )
+}
+
+function* save() {
+  console.log('save chapters!')
 }
 
 // Export handling
@@ -182,4 +192,4 @@ function* handleKeydown(input: {
   }
 }
 
-sagas.run(chaptersSaga())
+sagas.run(chaptersSaga)

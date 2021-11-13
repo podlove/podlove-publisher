@@ -1,7 +1,6 @@
 import { get } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
 import { PodloveChapter } from '@types/chapters.types'
-import Timestamp from '@lib/timestamp'
 import { INIT, init } from './lifecycle.store'
 
 export type State = {
@@ -32,15 +31,6 @@ export const download = createAction<'psc' | 'mp4'>(DOWNLOAD)
 
 export const reducer = handleActions(
   {
-    [INIT]: (state: State, action: typeof init): State => ({
-      ...state,
-      chapters: get(action, ['payload', 'chapters'], []).map(
-        (chapter: Partial<PodloveChapter>) => ({
-          ...chapter,
-          start: chapter.start ? Timestamp.fromString(chapter.start).totalMs : null,
-        })
-      ),
-    }),
     [SET]: (state: State, action: typeof init): State => ({
       ...state,
       selected: null,

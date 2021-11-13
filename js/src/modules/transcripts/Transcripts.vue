@@ -2,7 +2,7 @@
   <module name="transcript" title="Transcripts">
     <tabs-container>
       <tab name="transcript" title="Transcript Content">
-        <div>Transcript Content</div>
+        <transcripts-list />
       </tab>
       <tab name="voices" title="Voices">
         <div>Voices Tab</div>
@@ -25,8 +25,10 @@ import { defineComponent } from 'vue'
 import { TabsContainer, Tab } from '@components/tabs'
 import Module from '@components/module'
 
+import TranscriptsList from './components/List.vue'
+
 export default defineComponent({
-  components: { Module, TabsContainer, Tab }
+  components: { Module, TabsContainer, Tab, TranscriptsList }
 })
 </script>
 
