@@ -70,7 +70,7 @@ class Transcripts extends \Podlove\Modules\Base
     {
         $api = new REST_API();
         $api->register_routes();
-        $api_v2 = new REST_API_V2();
+        $api_v2 = new WP_REST_PodloveTranscripts_Controller();
         $api_v2->register_routes();
     }
 
