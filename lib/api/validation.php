@@ -2,17 +2,17 @@
 
 namespace Podlove\Api;
 
-use function Podlove\Api\Episodes\chapters;
+use Podlove\NormalPlayTime;
+
 
 class Validation
 {
     public static function timestamp( $param, $request, $key )
     {
-        if (preg_match('/\d\d:[0-5]\d:[0-5]\d?.?\d?\d?\d/', $param)) {
-            return true;
-        }
-        
-        return false;
+        $npt = NormalPlayTime\Parser::parse($param, 'ms');
+        if (is_bool($npt) === true && $npt === false)
+            return false;
+        return true;
     }
 
     public static function url( $param, $request, $key )
