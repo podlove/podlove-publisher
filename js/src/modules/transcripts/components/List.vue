@@ -1,9 +1,9 @@
 <template>
   <div class="max-h-96 overflow-x-auto">
     <div class="flex mb-2" v-for="(transcript, sindex) in transcripts" :key="`transcript-${sindex}`">
-      <div class="mr-2 w-12"><img class="w-12 h-12 rounded" :src="transcript.speaker.avatar"></div>
+      <div class="mr-2 w-12"><img class="w-12 h-12 rounded" :src="transcript?.speaker?.avatar"></div>
       <div class="w-full font-light text-sm mr-2">
-        <span class="block font-bold">{{ transcript.speaker.name }}</span>
+        <span class="block font-bold">{{ transcript?.speaker?.name }}</span>
         <span>
           <span v-for="(content, cindex) in transcript.content" :key="`transcript-${sindex}-content-${cindex}`">
             {{ content.text }}
@@ -94,10 +94,6 @@ export default {
           speaker: get(contributors, [transcript.speaker]),
         }))
     },
-  },
-
-  mounted() {
-    console.log(this.transcripts)
   },
 }
 </script>

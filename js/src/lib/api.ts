@@ -9,11 +9,12 @@ const addQuery = (url: string, query: { [key: string]: any } = {}) => {
 }
 
 const defaultHeaders = (
-  { nonce, auth }: { nonce: string; auth: string },
+  { nonce, auth, bearer }: { nonce: string; auth: string, bearer: string },
   headers: { [key: string]: string } = {}
 ) => ({
   'Content-Type': 'application/json',
   Accept: 'application/json',
+  ...(bearer ? { Authorization: `Bearer ${bearer}` } : {} ),
   ...(auth ? { Authorization: `Basic ${auth}` } : {}),
   ...(nonce ? { 'X-WP-Nonce': nonce } : {}),
   ...headers,
@@ -23,13 +24,15 @@ const readApi =
   ({
     nonce,
     auth,
+    bearer,
     method,
     urlProcessor,
   }: {
-    nonce?: string
-    auth?: string
-    method: 'GET' | 'DELETE'
-    urlProcessor?: (url: string) => string
+    nonce?: string;
+    auth?: string;
+    bearer?: string;
+    method: 'GET' | 'DELETE';
+    urlProcessor?: (url: string) => string;
   }) =>
   (
     url: string,
@@ -37,7 +40,7 @@ const readApi =
   ) =>
     fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
-      headers: defaultHeaders({ nonce, auth }, headers),
+      headers: defaultHeaders({ nonce, auth, bearer }, headers),
     }).then((response) => response.json())
 
 const createApi =
@@ -45,13 +48,15 @@ const createApi =
     {
       nonce,
       auth,
+      bearer,
       method,
       urlProcessor,
     }: {
-      nonce?: string
-      auth?: string
-      method: 'POST' | 'PUT'
-      urlProcessor?: (url: string) => string
+      nonce?: string;
+      auth?: string;
+      bearer?: string;
+      method: 'POST' | 'PUT';
+      urlProcessor?: (url: string) => string;
     }) => (
     url: string,
     data: any,
@@ -59,7 +64,7 @@ const createApi =
   ) =>
     fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
-      headers: defaultHeaders({ nonce, auth }, headers),
+      headers: defaultHeaders({ nonce, auth, bearer }, headers),
       body: JSON.stringify(data),
     }).then((response) => response.json())
 
@@ -69,15 +74,18 @@ export const podlove = curry(
     version,
     nonce,
     auth,
+    bearer
   }: {
     base: string
     version: string
     nonce?: string
     auth?: string
+    bearer?: string
   }) => ({
     get: readApi({
       nonce,
       auth,
+      bearer,
       method: 'GET',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
@@ -85,6 +93,7 @@ export const podlove = curry(
     delete: readApi({
       nonce,
       auth,
+      bearer,
       method: 'DELETE',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
@@ -92,6 +101,7 @@ export const podlove = curry(
     post: createApi({
       nonce,
       auth,
+      bearer,
       method: 'POST',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
@@ -99,16 +109,18 @@ export const podlove = curry(
     put: createApi({
       nonce,
       auth,
+      bearer,
       method: 'PUT',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
   })
 )
 
-export const restClient = curry(({ nonce, auth }: { nonce?: string; auth?: string }) => ({
+export const restClient = curry(({ nonce, auth, bearer }: { nonce?: string; auth?: string; bearer?: string }) => ({
   get: readApi({
     nonce,
     auth,
+    bearer,
     method: 'GET',
     urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
   }),
@@ -116,6 +128,7 @@ export const restClient = curry(({ nonce, auth }: { nonce?: string; auth?: strin
   delete: readApi({
     nonce,
     auth,
+    bearer,
     method: 'DELETE',
     urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
   }),
@@ -123,6 +136,7 @@ export const restClient = curry(({ nonce, auth }: { nonce?: string; auth?: strin
   post: createApi({
     nonce,
     auth,
+    bearer,
     method: 'POST',
     urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
   }),
@@ -130,6 +144,7 @@ export const restClient = curry(({ nonce, auth }: { nonce?: string; auth?: strin
   put: createApi({
     nonce,
     auth,
+    bearer,
     method: 'PUT',
     urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
   }),

@@ -22,7 +22,7 @@ function* chaptersSaga() {
 
   yield takeEvery([chapters.PARSE], handleImport)
   yield takeEvery(chapters.DOWNLOAD, handleExport)
-  yield takeEvery(lifecycle.SAVE, save)
+  yield takeEvery(lifecycle.SAVE, save, apiClient)
   const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
 
   yield takeEvery(onKeyDown, handleKeydown)
@@ -42,8 +42,11 @@ function* initialize(api) {
   )
 }
 
-function* save() {
-  console.log('save chapters!')
+function* save(api) {
+  const episodeId = yield select(selectors.episode.id)
+  const chapters = yield select(selectors.chapters.list)
+
+  yield api.post(`chapters/${episodeId}`, { chapters: chapters.map(chapter => ({ ...chapter, start: new Timestamp(chapter.start).pretty })) })
 }
 
 // Export handling

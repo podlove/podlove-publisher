@@ -7,3 +7,7 @@ export interface PodloveTranscript {
   end_ms: number;
   text: string;
 }
+
+export interface PodloveTranscriptVoice {
+
+}

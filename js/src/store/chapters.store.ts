@@ -57,7 +57,7 @@ export const reducer = handleActions(
       chapters: [
         ...state.chapters,
         {
-          start: state.chapters[state.chapters.length - 1].start,
+          start: get(state, ['chapters', state.chapters.length - 1, 'start'], 0),
           title: '',
           href: '',
           image: '',

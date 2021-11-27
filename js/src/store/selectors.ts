@@ -38,6 +38,7 @@ const runtime = {
   nonce: createSelector(root.runtime, runtimeStore.selectors.nonce),
   base: createSelector(root.runtime, runtimeStore.selectors.base),
   auth: createSelector(root.runtime, runtimeStore.selectors.auth),
+  bearer: createSelector(root.runtime, runtimeStore.selectors.bearer),
 }
 
 const post = {
