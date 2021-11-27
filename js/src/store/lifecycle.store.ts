@@ -7,6 +7,7 @@ export type State = {
   bootstrapped: boolean;
 }
 
+<<<<<<< HEAD
 export const INIT = 'podlove/publisher/INIT'
 export const SAVE = 'podlove/publisher/SAVE'
 
@@ -20,6 +21,14 @@ export const init = createAction<{
 
 export const save = createAction<void>(SAVE)
 
+=======
+export const INIT = 'podlove/publisher/INIT';
+
+export const init = createAction<{
+  chapters?: PodloveChapter[]
+}>(INIT);
+
+>>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
 export const initialState: State = {
   saved: false,
   changes: false,

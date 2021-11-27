@@ -1,15 +1,24 @@
 import { get } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
 import { PodloveChapter } from '@types/chapters.types'
+<<<<<<< HEAD
 import { INIT, init } from './lifecycle.store'
 
 export type State = {
   chapters: PodloveChapter[]
   selected: number | null
+=======
+import { INIT, init } from './lifecycle.store';
+
+export type State = {
+  chapters: PodloveChapter[];
+  selected: number | null;
+>>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
 }
 
 export const initialState: State = {
   chapters: [],
+<<<<<<< HEAD
   selected: null,
 }
 
@@ -78,4 +87,37 @@ export const selectors = {
   selectedIndex: (state: State) => state.selected,
   selected: (state: State) =>
     state.selected !== null ? get(state, ['chapters', state.selected], null) : null,
+=======
+  selected: null
+};
+
+export const UPDATE = 'podlove/publisher/chapter/UPDATE';
+export const SELECT = 'podlove/publisher/chapter/SELECT';
+
+export const update = createAction<{ chapter: PodloveChapter; index: number; }>(UPDATE);
+export const select = createAction<number>(SELECT);
+
+export const reducer = handleActions({
+  [INIT]: (state: State, action: typeof init): State => ({
+    ...state,
+    chapters: get(action, ['payload', 'chapters'], [])
+  }),
+  [UPDATE]: (state: State, action: typeof update): State => ({
+    ...state,
+    chapters: state.chapters.reduce((result: PodloveChapter[], chapter, chapterIndex) => [
+      ...result,
+      (chapterIndex === action.index ? action.chapter : chapter)
+    ], [])
+  }),
+  [SELECT]: (state: State, action: typeof select): State => ({
+    ...state,
+    selected: action.payload
+  }),
+
+}, initialState);
+
+export const selectors = {
+  chapters: (state: State) => state.chapters,
+  selected: (state: State) => state.selected !== null ? get(state, ['chapters', state.selected], null) : null
+>>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
 }

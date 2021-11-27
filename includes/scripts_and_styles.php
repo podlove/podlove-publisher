@@ -27,7 +27,10 @@ add_action('admin_print_styles', function () {
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
         wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/js/dist/client.js', [], $version, true);
+<<<<<<< HEAD
         add_filter('script_loader_tag', 'add_type_attribute' , 10, 3);
+=======
+>>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
         wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/js/dist/style.css', [], $version);
 
         $episode = Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
