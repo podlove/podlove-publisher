@@ -5,6 +5,7 @@ namespace Podlove\Modules\Transcripts;
 use Podlove\Model\Episode;
 use Podlove\Modules\Transcripts\Model\Transcript;
 use Podlove\Modules\Transcripts\Model\VoiceAssignment;
+use Podlove\Modules\Contributors\Model\Contributor;
 
 use WP_REST_Controller;
 use WP_REST_Server;
@@ -144,24 +145,65 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
             [
+                'args' => [
+                    'type' => [
+                        'description' => __('Type of transcript file'),
+                        'type' => 'string',
+                        'required' => 'true'
+                    ],
+                    'file' => [
+                        'description' => __('Transcription file'),
+                        'type' => 'string',
+                        'required' => 'true'
+                    ]
+                ],
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ],
+            [
                 'methods' => WP_REST_Server::DELETABLE,
-                'callback' => [$this, 'delete_transcript'],
+                'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
 
             ]
         ]);
-        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/chaptions/(?P<chaption_id>[\d]+)', [
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/voices/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
                     'description' => __('Unique identifier for the episode.'),
                     'type' => 'integer',
                     'required' => 'true'
                 ],
-                'chaption_id' => [
+            ],
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_voices'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'args' => [
+                    'voice' => [
+                        'description' => __('Voice'),
+                        'type' => 'string',
+                    ],
+                    'contributor_id' => [
+                        'description' => __('Contributor Id assigned to the voice.'),
+                        'type' => 'integer',
+                    ]
+                ],
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_voices'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ]
+        ]);
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/paragraphs/(?P<id>[\d]+)', [
+            'args' => [
+                'id' => [
                     'description' => __('Unique identifier for the part of the transcription (called chaption).'),
                     'type' => 'integer',
                     'required' => 'true'
-                ],
+                ]
             ],
             [
                 'args' => [
@@ -183,43 +225,35 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                     ]
                 ],
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_item'],
+                'callback' => [$this, 'get_item_transcripts'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
-            ],
-            [
-                'description' => __('Add a chaption to the transcript'),
-                'methods' => WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'create_item'],
-                'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
             [
                 'args' => [
                     'start' => [
-                        'description' => __('Timestamp begin of the chaption'),
+                        'description' => __('Timestamp begin of the paragraph'),
                         'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
                     ],
                     'end' => [
-                        'description' => __('Timestamp end of the chaption'),
+                        'description' => __('Timestamp end of the paragraph'),
                         'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
                     ],
-                    'voices' => [
-                        'description' => __('Name of the speaker'),
-                        'type' => 'string',
-                    ],
-                    'content' => [
+                    'text' => [
                         'description' => __('Content'),
                         'type' => 'string',
                     ]
                 ],
                 'description' => __('Edit a chaption of the transcript'),
                 'methods' => WP_REST_Server::EDITABLE,
-                'callback' => [$this, 'update_item'],
+                'callback' => [$this, 'update_item_transcripts'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
                 'description' => __('Delete a chaption of the transcript'),
                 'methods' => WP_REST_Server::DELETABLE,
-                'callback' => [$this, 'delete_item'],
+                'callback' => [$this, 'delete_item_transcripts'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
 
             ]
@@ -242,7 +276,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
         $limit = 0;
         $offset = 0;
-        $count = 0;
+        $items = 0;
 
         if (isset($request['limit']))
             $limit = $request['limit'];
@@ -250,17 +284,114 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             $offset = $request['offset'];
 
         $count = Transcript::get_transcript_count($id);
+        if (is_array($count)) {
+            if (count($count) > 0) {
+                foreach($count[0] as $key => $value)
+                    $items = $value;
+            }
+        }
 
         if ($offset === 0 && $limit === 0) {
             return new \Podlove\Api\Response\OkResponse([
                 '_version' => 'v2',
-                'count' => $count
+                'count' => $items
             ]);
         }
         else {
-            return Transcript::prepare_transcript(Transcript::get_transcript_offset_limit($id, $offset, $limit));
+            $transcript = Transcript::get_transcript_offset_limit($id, $offset, $limit);
+            $transcript = array_map(function ($t) {
+                return [
+                    'id' => (int) $t->id,
+                    'start' => \Podlove\Modules\Transcripts\Renderer::format_time($t->start),
+                    'start_ms' => (int) $t->start,
+                    'end' => \Podlove\Modules\Transcripts\Renderer::format_time($t->end),
+                    'end_ms' => (int) $t->end,
+                    'voice' => $t->voice,
+                    'text' => $t->content,
+                ];
+            }, $transcript);
+
+            $transcript = array_filter($transcript);
+            $transcript = array_values($transcript);
+  
+            $next_url = '';
+            $prev_url = '';
+
+            $next = $offset + $limit;
+            if ($next < $count) {
+                $next_url = $this->namespace . '/' . $this->rest_base . '/' . $id . '?offset=' . $next . '?limit=' . $limit;
+            }
+
+            $prev = $offset - $limit;
+            if ($prev > 0) {
+                $prev_url = $this->namespace . '/' . $this->rest_base . '/' . $id . '?offset=' . $prev . '?limit=' . $limit;
+            }
+
+            if ($prev_url && $next_url) {
+                return new \Podlove\Api\Response\OkResponse( [
+                    '_version' => 'v2',
+                    'prev' => $prev_url,
+                    'next' => $next_url,
+                    'transcript' => $transcript,
+                ]);
+            }
+            else {
+                if ($prev_url) {
+                    return new \Podlove\Api\Response\OkResponse( [
+                        '_version' => 'v2',
+                        'prev' => $prev_url,
+                        'transcript' => $transcript,
+                    ]);    
+                }
+                else if ($next_url) {
+                    return new \Podlove\Api\Response\OkResponse( [
+                        '_version' => 'v2',
+                        'next' => $next_url,
+                        'transcript' => $transcript,
+                    ]);
+                }
+            }
         }
 
+    }
+
+    public function get_item_transcripts( $request ) 
+    {
+        $id = $request->get_param('id');
+        $transcript = Transcript::find_by_id($id);
+
+        if (!$transcript)
+            return new \Podlove\Api\Error\NotFound();
+
+        $data = [
+            '_version' => 'v2',
+            'id' => $id,
+            'episode' => $transcript->episode_id,
+            'start' => \Podlove\Modules\Transcripts\Renderer::format_time($transcript->start),
+            'start_ms' => $transcript->start,
+            'end' => \Podlove\Modules\Transcripts\Renderer::format_time($transcript->end),
+            'end_ms' => $transcript->end,
+            'voice' => $transcript->voice,
+            'text' => $transcript->content
+        ];
+
+        return new \Podlove\Api\Response\OkResponse($data);
+    }
+
+    public function get_item_voices( $request )
+    {
+        $id = $request->get_param('id');
+        $episode = Episode::find_by_id($id);
+
+        if (!$episode)
+            return new \Podlove\Api\Error\NotFound();
+
+        $data = Transcript::get_voices_for_episode_id($id);
+
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'voices' => $data
+        ]);
     }
 
     public function create_item_permissions_check( $request )
@@ -284,7 +415,15 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
+        $transcript_type = '';
+        $transcript = '';
+        if (isset($request['type']))
+            $transcript_type = $request['type'];
+        if (isset($request['transcript']))
+            $transcript = $request['transcript'];
+
         return new \Podlove\Api\Response\CreateResponse([
+            'transcript' => $transcript,
             'status' => 'ok'
         ]); 
     }
@@ -300,16 +439,72 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
     public function update_item( $request )
     {
+    }
+
+    public function update_item_voices( $request )
+    {
+        $id = $request->get_param('id');
+        $episode = Episode::find_by_id($id);
+
+        if (!$episode)
+            return new \Podlove\Api\Error\NotFound('not_found', 'Episode not found');
+    
+        $voice_assignment = null;
+
+        if (isset($request['voice'])) {
+            $voice = $request['voice'];
+            $voice_assignment = VoiceAssignment::find_one_by_where(
+                sprintf('`episode_id` = "%d" AND `voice` = "%s"', (int) $id, esc_sql($voice))
+            );
+            if (!$voice_assignment)
+                return new \Podlove\Api\Error\NotFound('not_found', 'Voiceassignment not found');
+        }
+
+        $cid = 0;
+
+        if (isset($request['contributor_id'])) {
+            $cid = $request['contributor_id'];
+            $contributor = Contributor::find_by_id($cid);
+            if (!$contributor)
+                return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
+        }
+
+        $voice_assignment->contributor_id = $id;
+        $voice_assignment->save();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function update_item_transcripts( $request )
+    {
         $id = $request->get_param('id');
         if (!$id) {
             return;
         }
+        $transcript = Transcript::find_by_id($id);
 
-        $episode = Episode::find_by_id($id);
-
-        if (!$episode) {
+        if (!$transcript) {
             return new \Podlove\Api\Error\NotFound();
         }
+
+        if (isset($request['start'])) {
+            $start = $request['start'];
+            $transcript->start = $start;
+        }
+
+        if (isset($request['end'])) {
+            $end = $request['end'];
+            $transcript->start = $end;
+        }
+
+        if (isset($request['text'])) {
+            $content = $request['text'];
+            $transcript->content = $content;
+        }
+
+        $transcript->save();
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok' 
@@ -325,7 +520,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function delete_transcript( $request )
+    public function delete_item( $request )
     {
         $id = $request->get_param('id');
         if (!$id) {
@@ -346,7 +541,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
     }
 
-    public function delete_item( $request )
+    public function delete_item_transcripts( $request )
     {
         $id = $request->get_param('id');
         if (!$id) {
