@@ -17,7 +17,7 @@ function* initialize(api) {
 
   const [transcripts]: [{ result: PodloveTranscript[] }] = yield Promise.all([
     api.get(`transcripts/${episodeId}`),
-    api.get(`transcripts/${episodeId}/voices`),
+    api.get(`transcripts/voices/${episodeId}`),
   ])
 
   if (transcripts.result) {
