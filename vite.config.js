@@ -7,15 +7,12 @@ const root = path.resolve(__dirname)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-<<<<<<< HEAD
   server: {
     proxy: {
       '/wp-json': 'http://podlove.local'
     }
   },
   root: path.resolve(__dirname, 'js'),
-=======
->>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm-bundler.js',
@@ -27,7 +24,6 @@ export default defineConfig({
     }
   },
   build: {
-<<<<<<< HEAD
     outDir: path.resolve(root, 'js', 'dist'),
     rollupOptions: {
       output: {
@@ -36,15 +32,5 @@ export default defineConfig({
         assetFileNames: `style.[ext]`
       }
     }
-=======
-    lib: {
-      entry: path.resolve(root, 'js', 'src', 'client.ts'),
-      name: 'PodloveClient',
-      formats: ['iife'],
-      fileName: () => `client.js`
-    },
-
-    outDir: path.resolve(root, 'js', 'dist')
->>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
   }
 })

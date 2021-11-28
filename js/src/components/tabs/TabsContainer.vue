@@ -4,11 +4,7 @@
       <li v-for="tab in tabs" :key="`trigger-tab-${tab.name}`" class="m-0">
         <button
           @click="toggleTab(tab.name)"
-<<<<<<< HEAD
           class="relative font-sans  py-2 px-4 rounded-t border-gray-300 border border-b-0 mr-2"
-=======
-          class="relative py-2 px-4 rounded-t border-gray-300 border border-b-0 mr-2"
->>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3
           :style="[tab.name === activeTab ? { top: '1px' } : {}]"
           :class="{
             'bg-gray-100 font-bold z-10': tab.name === activeTab,

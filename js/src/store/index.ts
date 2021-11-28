@@ -13,7 +13,6 @@ import reducers from './reducers'
 import { State as LifecycleState } from './lifecycle.store'
 import { State as ChaptersState } from './chapters.store'
 import { State as episodeState } from './episode.store'
-<<<<<<< HEAD
 import { State as runtimeState } from './runtime.store'
 import { State as postState } from './post.store'
 import { State as transcriptsState } from './transcripts.store'
@@ -41,24 +40,3 @@ sagas.run(lifecycleSaga());
 sagas.run(contributorsSaga());
 
 export { selectors, sagas }
-=======
-
-import chaptersSaga from '../sagas/chapters.sagas'
-
-export interface State {
-  lifecycle: LifecycleState,
-  chapters: ChaptersState,
-  episode: episodeState
-}
-
-const sagaMiddleware = createSagaMiddleware()
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-export const store: Store<State> = createStore(reducers, composeEnhancers(applyMiddleware(sagaMiddleware)))
-
-const episodeForm = document.querySelector('form.metabox-location-normal') as HTMLElement;
-
-sagaMiddleware.run(chaptersSaga(episodeForm));
-
-export { selectors }
->>>>>>> 6ca060a4744249c97d016dd3c3b420a4285881e3

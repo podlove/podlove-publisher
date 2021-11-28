@@ -15,9 +15,11 @@ function contributorsSaga() {
 function* initialize() {
   const apiClient = yield createApi();
 
-  const result = yield apiClient.get('contributors')
+  const { result, error } = yield apiClient.get('contributors')
 
-  yield put(contributors.set(result))
+  if (result) {
+    yield put(contributors.set(result))
+  }
 }
 
 export default contributorsSaga

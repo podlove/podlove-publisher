@@ -8,6 +8,20 @@ const addQuery = (url: string, query: { [key: string]: any } = {}) => {
   return (url += (url.indexOf('?') === -1 ? '?' : '&') + params)
 }
 
+const responseParser = async (response: Response) => {
+  const result = await response.json();
+
+  if (response.status >= 300) {
+    return {
+      error: result
+    }
+  }
+
+  return {
+    result
+  }
+}
+
 const defaultHeaders = (
   { nonce, auth, bearer }: { nonce: string; auth: string, bearer: string },
   headers: { [key: string]: string } = {}
@@ -41,7 +55,7 @@ const readApi =
     fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
-    }).then((response) => response.json())
+    }).then(responseParser)
 
 const createApi =
   (
@@ -66,7 +80,7 @@ const createApi =
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
       body: JSON.stringify(data),
-    }).then((response) => response.json())
+    }).then((response) => response.json()).then((result) => ({ result })).catch(error => ({ error }))
 
 export const podlove = curry(
   ({

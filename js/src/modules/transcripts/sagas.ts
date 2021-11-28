@@ -14,10 +14,15 @@ function* transcriptsSaga() {
 
 function* initialize(api) {
   const episodeId = yield select(selectors.episode.id)
-  const postId = yield select(selectors.post.id)
-  const [transcripts]: [PodloveTranscript[]] = yield Promise.all([api.get(`transcripts/${episodeId}`), api.get(`transcripts/${episodeId}/voices`)])
 
-  yield put(transcriptsStore.setTranscripts(transcripts))
+  const [transcripts]: [{ result: PodloveTranscript[] }] = yield Promise.all([
+    api.get(`transcripts/${episodeId}`),
+    api.get(`transcripts/${episodeId}/voices`),
+  ])
+
+  if (transcripts.result) {
+    yield put(transcriptsStore.setTranscripts(transcripts.result))
+  }
 }
 
 sagas.run(transcriptsSaga)
