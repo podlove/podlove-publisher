@@ -348,12 +348,14 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $url = sprintf('%s/%s/%d', $this->namespace, $this->rest_base, $episode->id);
             $message = sprintf('Episode successfully created with id %d', $episode->id);
             $data = [ 
-                'message' => $message
+                'message' => $message,
+                'location' => $url,
+                'id' => $episode->id
             ];
             $headers = [
                 'location' => $url
             ];
-            return new \Podlove\Response\CreateResponse($data, $headers);
+            return new \Podlove\Api\Response\CreateResponse($data, $headers);
         }
         else {
             return new WP_REST_Response(null, 500);
@@ -430,7 +432,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         $episode->save();
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' => 'ok' 
+            'status' => 'ok'
         ]);
     }
 
