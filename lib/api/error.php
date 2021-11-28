@@ -39,3 +39,39 @@ class NotFound extends WP_Error
         parent::__construct($code, $message, ['status' => 404]);
     }
 }
+
+class NotSupported extends WP_Error
+{
+    /**
+     * Constructor
+     * 
+     * @param $code
+     * @param $message
+     */
+    public function __construct($code = '', $message = '')
+    {
+        if (strlen($code) == 0)
+            $code = 'not_supported';
+        if (strlen($message) == 0)
+            $message = esc_html__('sorry, we do not support your request');
+        parent::__construct($code, $message, ['status' => 415]);
+    }
+}
+
+class InternalServerError extends WP_Error
+{
+    /**
+     * Constructor
+     * 
+     * @param $code
+     * @param $message
+     */
+    public function __construct($code = '', $message = '')
+    {
+        if (strlen($code) == 0)
+            $code = 'internal_server_error';
+        if (strlen($message) == 0)
+            $message = esc_html__('sorry, we have an internal error');
+        parent::__construct($code, $message, ['status' => 500]);
+    }
+}
