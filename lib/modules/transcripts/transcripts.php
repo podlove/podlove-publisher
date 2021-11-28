@@ -268,19 +268,31 @@ class Transcripts extends \Podlove\Modules\Base
         return true;
     }
 
-    public static function parse_and_import_webvtt(Episode $episode, $content)
+    public static function parse_webvtt($content) 
     {
         $parser = new Parser();
-
-        if (function_exists('mb_check_encoding') && !mb_check_encoding($content, 'UTF-8')) {
-            \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file: must be UTF-8 encoded']);
-        }
 
         try {
             $result = $parser->parse($content);
         } catch (ParserException $e) {
             $error = 'Error parsing webvtt file: '.$e->getMessage();
             \Podlove\Log::get()->addError($error);
+
+            return false;
+        }
+
+        return $result;
+    }
+
+    public static function parse_and_import_webvtt(Episode $episode, $content)
+    {
+        if (function_exists('mb_check_encoding') && !mb_check_encoding($content, 'UTF-8')) {
+            \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file: must be UTF-8 encoded']);
+        }
+
+        $result = parse_webvtt($content);
+
+        if ($result === false) {
             if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'podlove_transcript_import') {
                 \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
             }
