@@ -45,7 +45,8 @@ const post = {
 }
 
 const transcripts = {
-  list: createSelector(root.transcripts, transcriptsStore.selectors.transcripts)
+  list: createSelector(root.transcripts, transcriptsStore.selectors.transcripts),
+  voices: createSelector(root.transcripts, transcriptsStore.selectors.voices)
 }
 
 const contributors = {

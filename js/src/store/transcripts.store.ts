@@ -24,7 +24,7 @@ export const reducer = handleActions({
   }),
   [SET_VOICES]: (state: State, action: typeof setVoices): State => ({
     ...state,
-    voices: action.payload
+    voices: action.payload.map((elem: { voice: string, contributor_id: string }) => ({ voice: elem.voice, contributor: elem.contributor_id }))
   }),
 }, initialState);
 

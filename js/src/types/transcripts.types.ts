@@ -1,5 +1,4 @@
 export interface PodloveTranscript {
-  speaker: string;
   voice: string;
   start: string,
   start_ms: number;
@@ -9,5 +8,6 @@ export interface PodloveTranscript {
 }
 
 export interface PodloveTranscriptVoice {
-
+  voice: string,
+  contributor: string
 }
