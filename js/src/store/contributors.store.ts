@@ -1,7 +1,5 @@
 import { handleActions, createAction } from 'redux-actions'
-
 import { PodloveContributor } from '@types/contributors.types';
-
 
 export type State = PodloveContributor[]
 

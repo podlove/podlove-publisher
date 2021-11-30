@@ -13,6 +13,7 @@
         <span class="block font-bold">{{ transcript?.voice?.name }}</span>
         <span>
           <span
+            class="mr-1"
             v-for="(content, cindex) in transcript.content"
             :key="`transcript-${sindex}-content-${cindex}`"
           >

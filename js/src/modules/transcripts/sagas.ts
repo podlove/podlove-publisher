@@ -12,6 +12,7 @@ function* transcriptsSaga() {
 
   yield fork(initialize, apiClient)
   yield takeEvery(transcriptsStore.IMPORT_TRANSCRIPTS, importTranscripts, apiClient)
+  yield takeEvery(transcriptsStore.UPDATE_VOICE, updateVoice, apiClient)
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -34,10 +35,17 @@ function* importTranscripts(
   action: typeof transcriptsStore.importTranscripts
 ) {
   const episodeId: string = yield select(selectors.episode.id)
-  console.log(api)
-  const { error, result } = yield api.put(`transcripts/${episodeId}`, { file: action.payload })
+  const { result } = yield api.put(`transcripts/${episodeId}`, { content: action.payload })
 
-  console.log({ error, result })
+  if (result) {
+    yield fork(initialize, api)
+  }
+}
+
+function* updateVoice(api: PodloveApiClient, action: typeof transcriptsStore.updateVoice) {
+  const episodeId: string = yield select(selectors.episode.id)
+
+  yield api.post(`transcripts/voices/${episodeId}`, { voice: action.payload.voice, contributor_id: action.payload.contributor })
 }
 
 sagas.run(transcriptsSaga)

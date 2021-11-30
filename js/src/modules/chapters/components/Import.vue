@@ -14,7 +14,7 @@
     >
       <button
         class="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-300 mb-5"
-        @click="simulateImportClick"
+        type="button"
       >
         Import Chapters
       </button>
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <input ref="import" type="file" name="import" @change="importChapters" class="hidden" />
+    <input ref="import" type="file" @change="importChapters" class="hidden" />
   </form>
 </template>
 

@@ -23,7 +23,7 @@ function* chaptersSaga() {
 
   yield takeEvery([chapters.PARSE], handleImport)
   yield takeEvery(chapters.DOWNLOAD, handleExport)
-  yield takeEvery(lifecycle.SAVE, save)
+  yield takeEvery(lifecycle.SAVE, save, apiClient)
   const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
 
   yield takeEvery(onKeyDown, handleKeydown)
@@ -34,8 +34,6 @@ function* initialize(api: PodloveApiClient) {
   const { result }: { result: { chapters: PodloveChapter[] } } = yield api.get(
     `chapters/${episodeId}`
   )
-
-  console.log(result)
 
   if (result) {
     yield put(
@@ -49,8 +47,11 @@ function* initialize(api: PodloveApiClient) {
   }
 }
 
-function* save() {
-  console.log('save chapters!')
+function* save(api: PodloveApiClient) {
+  const episodeId: string = yield select(selectors.episode.id)
+  const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
+
+  yield api.put(`chapters/${episodeId}`, { chapters: chapters.map(chapter => ({ ...chapter, start: new Timestamp(chapter.start).pretty })) })
 }
 
 // Export handling

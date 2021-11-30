@@ -8,7 +8,7 @@ const addQuery = (url: string, query: { [key: string]: any } = {}) => {
   return (url += (url.indexOf('?') === -1 ? '?' : '&') + params)
 }
 
-const responseParser = async (response: Response) => {
+const responseParser = (errorHandler: Function = console.error) => async (response: Response) => {
   let result
 
   try {
@@ -18,6 +18,7 @@ const responseParser = async (response: Response) => {
   }
 
   if (response.status >= 300) {
+    errorHandler(result)
     return {
       error: result,
     }
@@ -47,12 +48,14 @@ const defaultHeaders = (
 
 const readApi =
   ({
+    errorHandler,
     nonce,
     auth,
     bearer,
     method,
     urlProcessor,
   }: {
+    errorHandler?: Function
     nonce?: string
     auth?: string
     bearer?: string
@@ -63,16 +66,18 @@ const readApi =
     fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
-    }).then(responseParser)
+    }).then(responseParser(errorHandler))
 
 const createApi =
   ({
+    errorHandler,
     nonce,
     auth,
     bearer,
     method,
     urlProcessor,
   }: {
+    errorHandler?: Function
     nonce?: string
     auth?: string
     bearer?: string
@@ -84,7 +89,7 @@ const createApi =
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
       body: JSON.stringify(data),
-    }).then(responseParser)
+    }).then(responseParser(errorHandler))
   }
 
 export interface PodloveApiClient {
@@ -101,7 +106,9 @@ export const podlove = curry(
     nonce,
     auth,
     bearer,
+    errorHandler,
   }: {
+    errorHandler: Function,
     base: string
     version: string
     nonce?: string
@@ -113,6 +120,7 @@ export const podlove = curry(
       auth,
       bearer,
       method: 'GET',
+      errorHandler,
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
 
@@ -120,6 +128,7 @@ export const podlove = curry(
       nonce,
       auth,
       bearer,
+      errorHandler,
       method: 'DELETE',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
@@ -128,6 +137,7 @@ export const podlove = curry(
       nonce,
       auth,
       bearer,
+      errorHandler,
       method: 'POST',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
@@ -136,6 +146,7 @@ export const podlove = curry(
       nonce,
       auth,
       bearer,
+      errorHandler,
       method: 'PUT',
       urlProcessor: (endpoint) => `${base}/${version}/${endpoint}`,
     }),
