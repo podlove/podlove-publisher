@@ -145,7 +145,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             ],
             [
                 'args' => [
-                    'file' => [
+                    'content' => [
                         'description' => __('Transcription file'),
                         'type' => 'string',
                         'required' => 'true'
@@ -520,8 +520,11 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             $voice_assignment = VoiceAssignment::find_one_by_where(
                 sprintf('`episode_id` = "%d" AND `voice` = "%s"', (int) $id, esc_sql($voice))
             );
-            if (!$voice_assignment)
-                return new \Podlove\Api\Error\NotFound('not_found', 'Voiceassignment not found');
+            if (!$voice_assignment) {
+                $voice_assignment = new VoiceAssignment();
+                $voice_assignment->episode_id = $episode->id;
+                $voice_assignment->voice = $voice;
+            }
         }
 
         $cid = 0;
