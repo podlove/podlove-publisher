@@ -5,8 +5,9 @@
       v-for="(transcript, sindex) in transcripts"
       :key="`transcript-${sindex}`"
     >
-      <div class="mr-2 w-12">
-        <img class="w-12 h-12 rounded" :src="transcript?.voice?.avatar" />
+      <div class="mr-2 w-12 text-gray-400">
+        <img class="w-12 h-12 rounded" v-if="transcript?.voice?.avatar" :src="transcript?.voice?.avatar" />
+        <avatar v-else />
       </div>
       <div class="w-full font-light text-sm mr-2">
         <span class="block font-bold">{{ transcript?.voice?.name }}</span>
@@ -29,6 +30,7 @@ import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
 import { PodloveTranscript, PodloveTranscriptVoice } from '@types/transcripts.types'
 import { PodloveContributor } from '@types/contributors.types'
+import Avatar from '@components/icons/Avatar.vue'
 
 interface Transcript {
   voice: string
@@ -40,6 +42,10 @@ interface Transcript {
 }
 
 export default {
+  components: {
+    Avatar
+  },
+
   setup() {
     return {
       state: mapState({
@@ -109,7 +115,7 @@ export default {
         }, [])
         .map((transcript: Transcript) => ({
           ...transcript,
-          voice: get(this.voices, [transcript.voice]),
+          voice: get(this.voices, [transcript.voice], { name: transcript.voice }),
         }))
     },
   },

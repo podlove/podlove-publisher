@@ -15,9 +15,10 @@ import Timestamp from '@lib/timestamp'
 
 import { channel } from '../../sagas/helper'
 import { createApi } from '../../sagas/api'
+import { PodloveApiClient } from '@lib/api'
 
 function* chaptersSaga() {
-  const apiClient = yield createApi()
+  const apiClient: PodloveApiClient = yield createApi()
   yield fork(initialize, apiClient)
 
   yield takeEvery([chapters.PARSE], handleImport)
@@ -28,11 +29,13 @@ function* chaptersSaga() {
   yield takeEvery(onKeyDown, handleKeydown)
 }
 
-function* initialize(api) {
-  const episodeId = yield select(selectors.episode.id)
+function* initialize(api: PodloveApiClient) {
+  const episodeId: string = yield select(selectors.episode.id)
   const { result }: { result: { chapters: PodloveChapter[] } } = yield api.get(
     `chapters/${episodeId}`
   )
+
+  console.log(result)
 
   if (result) {
     yield put(

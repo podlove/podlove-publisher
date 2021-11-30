@@ -5,10 +5,10 @@
         <transcripts-list />
       </tab>
       <tab name="voices" title="Voices">
-        <div>Voices Tab</div>
+        <transcripts-voices />
       </tab>
       <tab name="import" title="Import">
-        <div>Import Tab</div>
+        <transcripts-import />
       </tab>
       <tab name="export" title="Export">
         <div>Export Tab</div>
@@ -26,9 +26,11 @@ import { TabsContainer, Tab } from '@components/tabs'
 import Module from '@components/module'
 
 import TranscriptsList from './components/List.vue'
+import TranscriptsVoices from './components/Voices.vue'
+import TranscriptsImport from './components/Import.vue'
 
 export default defineComponent({
-  components: { Module, TabsContainer, Tab, TranscriptsList }
+  components: { Module, TabsContainer, Tab, TranscriptsList, TranscriptsVoices, TranscriptsImport }
 })
 </script>
 

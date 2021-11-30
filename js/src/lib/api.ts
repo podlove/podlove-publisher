@@ -9,26 +9,37 @@ const addQuery = (url: string, query: { [key: string]: any } = {}) => {
 }
 
 const responseParser = async (response: Response) => {
-  const result = await response.json();
+  let result
+
+  try {
+    result = await response.json()
+  } catch (err) {
+    result = {}
+  }
 
   if (response.status >= 300) {
     return {
-      error: result
+      error: result,
     }
   }
 
   return {
-    result
+    result,
   }
 }
 
+interface ApiOptions {
+  headers?: { [key: string]: string }
+  query?: { [key: string]: string }
+}
+
 const defaultHeaders = (
-  { nonce, auth, bearer }: { nonce: string; auth: string, bearer: string },
+  { nonce, auth, bearer }: { nonce: string; auth: string; bearer: string },
   headers: { [key: string]: string } = {}
 ) => ({
   'Content-Type': 'application/json',
   Accept: 'application/json',
-  ...(bearer ? { Authorization: `Bearer ${bearer}` } : {} ),
+  ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}),
   ...(auth ? { Authorization: `Basic ${auth}` } : {}),
   ...(nonce ? { 'X-WP-Nonce': nonce } : {}),
   ...headers,
@@ -42,45 +53,46 @@ const readApi =
     method,
     urlProcessor,
   }: {
-    nonce?: string;
-    auth?: string;
-    bearer?: string;
-    method: 'GET' | 'DELETE';
-    urlProcessor?: (url: string) => string;
+    nonce?: string
+    auth?: string
+    bearer?: string
+    method: 'GET' | 'DELETE'
+    urlProcessor?: (url: string) => string
   }) =>
-  (
-    url: string,
-    { headers, query }: { headers?: { [key: string]: string }; query?: { [key: string]: string } } = {}
-  ) =>
+  (url: string, { headers, query }: ApiOptions = {}) =>
     fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
     }).then(responseParser)
 
 const createApi =
-  (
-    {
-      nonce,
-      auth,
-      bearer,
-      method,
-      urlProcessor,
-    }: {
-      nonce?: string;
-      auth?: string;
-      bearer?: string;
-      method: 'POST' | 'PUT';
-      urlProcessor?: (url: string) => string;
-    }) => (
-    url: string,
-    data: any,
-    { headers, query }: { headers?: { [key: string]: string }; query?: { [key: string]: string } } = {}
-  ) =>
-    fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
+  ({
+    nonce,
+    auth,
+    bearer,
+    method,
+    urlProcessor,
+  }: {
+    nonce?: string
+    auth?: string
+    bearer?: string
+    method: 'POST' | 'PUT'
+    urlProcessor?: (url: string) => string
+  }) =>
+  (url: string, data: any, { headers, query }: ApiOptions = {}) => {
+    return fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
       method,
       headers: defaultHeaders({ nonce, auth, bearer }, headers),
       body: JSON.stringify(data),
-    }).then((response) => response.json()).then((result) => ({ result })).catch(error => ({ error }))
+    }).then(responseParser)
+  }
+
+export interface PodloveApiClient {
+  get: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  delete: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  post: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  put: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
+}
 
 export const podlove = curry(
   ({
@@ -88,7 +100,7 @@ export const podlove = curry(
     version,
     nonce,
     auth,
-    bearer
+    bearer,
   }: {
     base: string
     version: string
@@ -129,37 +141,3 @@ export const podlove = curry(
     }),
   })
 )
-
-export const restClient = curry(({ nonce, auth, bearer }: { nonce?: string; auth?: string; bearer?: string }) => ({
-  get: readApi({
-    nonce,
-    auth,
-    bearer,
-    method: 'GET',
-    urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
-  }),
-
-  delete: readApi({
-    nonce,
-    auth,
-    bearer,
-    method: 'DELETE',
-    urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
-  }),
-
-  post: createApi({
-    nonce,
-    auth,
-    bearer,
-    method: 'POST',
-    urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
-  }),
-
-  put: createApi({
-    nonce,
-    auth,
-    bearer,
-    method: 'PUT',
-    urlProcessor: (endpoint) => `${globalThis.apiPrefix}${endpoint}`,
-  }),
-}))
