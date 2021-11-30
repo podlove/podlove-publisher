@@ -468,6 +468,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 return new \Podlove\Api\Error\InternalServerError('internal_server_error', 'Sorry, we can not parse your vtt content.');
 
             Transcript::delete_for_episode($episode->id);
+            VoiceAssignment::delete_for_episode($episode->id);
 
             foreach ($result['cues'] as $cue) {
                 $line = new Transcript();
@@ -495,10 +496,21 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 }
             }
 
+            $transcript = Transcript::get_transcript($episode->id);
+            $transcript = array_map(function ($t) {
+                return [
+                    'start' => \Podlove\Modules\Transcripts\Renderer::format_time($t->start),
+                    'start_ms' => (int) $t->start,
+                    'end' => \Podlove\Modules\Transcripts\Renderer::format_time($t->end),
+                    'end_ms' => (int) $t->end,
+                    'voice' => $t->voice,
+                    'text' => $t->content,
+                ];
+            }, $transcript);
+
             return new \Podlove\Api\Response\OkResponse([
                 'status' => 'ok',
-                'file_content' => $file_content,
-                'transcript_parse_result' => $result
+                'transcript' => $transcript
             ]);
         }
 
@@ -524,6 +536,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 $voice_assignment = new VoiceAssignment();
                 $voice_assignment->episode_id = $episode->id;
                 $voice_assignment->voice = $voice;
+                $voice_assignment->contributer_id = 0;
             }
         }
 
@@ -536,7 +549,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
         }
 
-        $voice_assignment->contributor_id = $id;
+        $voice_assignment->contributor_id = $cid;
         $voice_assignment->save();
 
         return new \Podlove\Api\Response\OkResponse([
