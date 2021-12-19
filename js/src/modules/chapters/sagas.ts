@@ -9,9 +9,9 @@ import Psc from 'podcast-chapter-parser-psc'
 import keyboard from '@podlove/utils/keyboard'
 import { selectors, sagas } from '@store'
 import * as chapters from '@store/chapters.store'
-import * as lifecycle from '@store/lifecycle.store'
 import { PodloveChapter } from '@types/chapters.types'
 import Timestamp from '@lib/timestamp'
+import { notify } from '@store/notification.store'
 
 import { channel } from '../../sagas/helper'
 import { createApi } from '../../sagas/api'
@@ -23,7 +23,7 @@ function* chaptersSaga() {
 
   yield takeEvery([chapters.PARSE], handleImport)
   yield takeEvery(chapters.DOWNLOAD, handleExport)
-  yield takeEvery(lifecycle.SAVE, save, apiClient)
+  yield takeEvery([chapters.UPDATE, chapters.PARSED, chapters.ADD, chapters.REMOVE], save, apiClient)
   const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
 
   yield takeEvery(onKeyDown, handleKeydown)
@@ -51,7 +51,11 @@ function* save(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
   const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
 
-  yield api.put(`chapters/${episodeId}`, { chapters: chapters.map(chapter => ({ ...chapter, start: new Timestamp(chapter.start).pretty })) })
+  const { result } = yield api.put(`chapters/${episodeId}`, { chapters: chapters.map(chapter => ({ ...chapter, start: new Timestamp(chapter.start).pretty })) })
+
+  if (result) {
+    yield put(notify({ type: 'success', message: 'Chapters updated' }))
+  }
 }
 
 // Export handling
@@ -160,7 +164,7 @@ function* handleImport(action: typeof chapters.parse) {
     return
   }
 
-  yield put(chapters.set(parsedChapters))
+  yield put(chapters.parsed(parsedChapters))
 }
 
 // Key event handling

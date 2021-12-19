@@ -1,12 +1,16 @@
 <template>
-  <div class="max-h-96 overflow-x-auto">
+  <div class="max-h-96 overflow-x-auto" v-if="transcripts.length > 0">
     <div
       class="flex mb-2"
       v-for="(transcript, sindex) in transcripts"
       :key="`transcript-${sindex}`"
     >
       <div class="mr-2 w-12 text-gray-400">
-        <img class="w-12 h-12 rounded" v-if="transcript?.voice?.avatar" :src="transcript?.voice?.avatar" />
+        <img
+          class="w-12 h-12 rounded"
+          v-if="transcript?.voice?.avatar"
+          :src="transcript?.voice?.avatar"
+        />
         <avatar v-else />
       </div>
       <div class="w-full font-light text-sm mr-2">
@@ -22,6 +26,9 @@
         </span>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <p class="font-light">No transcripts available yet. You need to import a transcript.</p>
   </div>
 </template>
 
@@ -44,7 +51,7 @@ interface Transcript {
 
 export default {
   components: {
-    Avatar
+    Avatar,
   },
 
   setup() {

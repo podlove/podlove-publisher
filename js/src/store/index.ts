@@ -20,7 +20,7 @@ import { State as contributorsState } from './contributors.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import contributorsSaga from '../sagas/contributors.sagas'
-import errorSaga from '../sagas/error.saga'
+import notificationSaga from '../sagas/notification.saga'
 
 export interface State {
   lifecycle: LifecycleState;
@@ -39,6 +39,6 @@ export const store: Store<State> = createStore(reducers, composeEnhancers(applyM
 
 sagas.run(lifecycleSaga());
 sagas.run(contributorsSaga());
-sagas.run(errorSaga());
+sagas.run(notificationSaga());
 
 export { selectors, sagas }

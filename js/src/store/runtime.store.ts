@@ -3,6 +3,7 @@ import { handleActions, } from 'redux-actions'
 import { INIT, init } from './lifecycle.store';
 
 export type State = {
+  baseUrl: string;
   api: {
     nonce: string;
     base: string;
@@ -12,6 +13,7 @@ export type State = {
 }
 
 export const initialState: State = {
+  baseUrl: null,
   api: {
     nonce: null,
     base: null,
@@ -23,6 +25,7 @@ export const initialState: State = {
 export const reducer = handleActions({
   [INIT]: (state: State, action: typeof init): State => ({
     ...state,
+    baseUrl: get(action, ['payload', 'baseUrl'], null),
     api: {
       base: get(action, ['payload', 'api', 'base'], null),
       nonce: get(action, ['payload', 'api', 'nonce'], null),
@@ -33,6 +36,7 @@ export const reducer = handleActions({
 }, initialState);
 
 export const selectors = {
+  baseUrl: (state: State) => state.baseUrl,
   nonce: (state: State) => state.api.nonce,
   base: (state: State) => state.api.base,
   auth: (state: State) => state.api.auth,

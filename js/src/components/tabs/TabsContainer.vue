@@ -4,10 +4,18 @@
       <li v-for="tab in tabs" :key="`trigger-tab-${tab.name}`" class="m-0">
         <button
           @click="toggleTab(tab.name)"
-          class="relative font-sans  py-2 px-4 rounded-t border-gray-300 border border-b-0 mr-2"
+          class="
+            relative
+            font-sans font-light
+            py-2
+            px-4
+            rounded-t
+            border-gray-300 border border-b-0
+            mr-2
+          "
           :style="[tab.name === activeTab ? { top: '1px' } : {}]"
           :class="{
-            'bg-gray-100 font-bold z-10': tab.name === activeTab,
+            'bg-gray-100 tab-active z-10': tab.name === activeTab,
             'bg-white': tab.name !== activeTab,
           }"
         >
@@ -48,7 +56,7 @@ export default defineComponent({
   created() {
     this.tabs = this.$slots.default().map((elem) => ({
       name: get(elem, ['props', 'name']),
-      title: get(elem, ['props', 'title'])
+      title: get(elem, ['props', 'title']),
     }))
   },
 
@@ -62,7 +70,7 @@ export default defineComponent({
 
   methods: {
     toggleTab(name: string) {
-      this.activeTab = name;
+      this.activeTab = name
       Array.from(this.$refs.tabs.children).forEach((tab: HTMLElement) => {
         if (tab.dataset.tab === name) {
           tab.classList.remove('hidden')
@@ -75,4 +83,8 @@ export default defineComponent({
 })
 </script>
 
-<style></style>
+<style>
+.tab-active {
+  text-shadow:0px 0px 1px currentColor;
+}
+</style>

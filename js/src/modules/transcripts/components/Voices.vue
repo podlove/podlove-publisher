@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="state.voices.length > 0">
     <div v-for="(voice, vindex) in state.voices" :key="`voice-${vindex}`" class="w-full flex py-2 px-4" :class="{ 'bg-white': vindex % 2 }">
       <div class="font-mono w-36 py-2">{{ voice.voice }}</div>
       <div>
@@ -9,6 +9,9 @@
         </select>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <p class="font-light">No voices available yet. You need to import a transcript with voice tags.</p>
   </div>
 </template>
 

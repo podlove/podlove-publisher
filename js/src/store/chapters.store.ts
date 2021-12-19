@@ -18,6 +18,7 @@ export const SELECT = 'podlove/publisher/chapter/SELECT'
 export const REMOVE = 'podlove/publisher/chapter/REMOVE'
 export const ADD = 'podlove/publisher/chapter/ADD'
 export const PARSE = 'podlove/publisher/chapter/PARSE'
+export const PARSED = 'podlove/publisher/chapter/PARSED'
 export const SET = 'podlove/publisher/chapter/SET'
 export const DOWNLOAD = 'podlove/publisher/chapter/DOWNLOAD'
 
@@ -26,11 +27,17 @@ export const select = createAction<number>(SELECT)
 export const remove = createAction<number>(REMOVE)
 export const add = createAction<void>(ADD)
 export const parse = createAction<string>(PARSE)
+export const parsed = createAction<PodloveChapter[]>(PARSED)
 export const set = createAction<PodloveChapter[]>(SET)
 export const download = createAction<'psc' | 'mp4'>(DOWNLOAD)
 
 export const reducer = handleActions(
   {
+    [PARSED]: (state: State, action: typeof init): State => ({
+      ...state,
+      selected: null,
+      chapters: get(action, ['payload'], []),
+    }),
     [SET]: (state: State, action: typeof init): State => ({
       ...state,
       selected: null,

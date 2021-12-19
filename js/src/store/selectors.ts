@@ -34,6 +34,7 @@ const episode = {
 }
 
 const runtime = {
+  baseUrl: createSelector(root.runtime, runtimeStore.selectors.baseUrl),
   nonce: createSelector(root.runtime, runtimeStore.selectors.nonce),
   base: createSelector(root.runtime, runtimeStore.selectors.base),
   auth: createSelector(root.runtime, runtimeStore.selectors.auth),

@@ -33,7 +33,7 @@
           ><span class="font-bold">Title</span></label
         >
         <input
-          @input="updateChapter('title', $event.target.value)"
+          @change="updateChapter('title', $event.target.value)"
           name="chapter-title"
           type="text"
           class="h-8 p-2 rounded border border-gray-200 w-full text-sm"
@@ -46,7 +46,7 @@
           ><span class="text-xs">(optional)</span></label
         >
         <input
-          @input="updateChapter('url', $event.target.value)"
+          @change="updateChapter('url', $event.target.value)"
           name="chapter-url"
           type="text"
           class="h-8 p-2 rounded border border-gray-200 w-full text-sm"

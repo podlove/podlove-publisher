@@ -11,14 +11,13 @@
         <transcripts-import />
       </tab>
       <tab name="export" title="Export">
-        <div>Export Tab</div>
+        <transcripts-export />
       </tab>
       <tab name="delete" title="Delete">
-        <div>Delete Tab</div>
+        <transcripts-delete />
       </tab>
     </tabs-container>
   </module>
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -28,9 +27,20 @@ import Module from '@components/module'
 import TranscriptsList from './components/List.vue'
 import TranscriptsVoices from './components/Voices.vue'
 import TranscriptsImport from './components/Import.vue'
+import TranscriptsExport from './components/Export.vue'
+import TranscriptsDelete from './components/Delete.vue'
 
 export default defineComponent({
-  components: { Module, TabsContainer, Tab, TranscriptsList, TranscriptsVoices, TranscriptsImport }
+  components: {
+    Module,
+    TabsContainer,
+    Tab,
+    TranscriptsList,
+    TranscriptsVoices,
+    TranscriptsImport,
+    TranscriptsExport,
+    TranscriptsDelete,
+  },
 })
 </script>
 

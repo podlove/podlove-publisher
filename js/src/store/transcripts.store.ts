@@ -6,11 +6,13 @@ export const SET_TRANSCRIPTS = 'podlove/publisher/transcript/SET_TRANSCRIPTS'
 export const SET_VOICES = 'podlove/publisher/transcript/SET_VOICES'
 export const UPDATE_VOICE = 'podlove/publisher/transcript/UPDATE_VOICE'
 export const IMPORT_TRANSCRIPTS = 'podlove/publisher/transcript/IMPORT_TRANSCRIPTS'
+export const DELETE_TRANSCRIPTS = 'podlove/publisher/transcript/DELETE_TRANSCRIPTS'
 
 export const setTranscripts = createAction<PodloveTranscript[]>(SET_TRANSCRIPTS)
 export const setVoices = createAction<PodloveTranscriptVoice[]>(SET_VOICES)
 export const updateVoice = createAction<{ voice: string, contributor: string }>(UPDATE_VOICE)
 export const importTranscripts = createAction<string>(IMPORT_TRANSCRIPTS)
+export const deleteTranscripts = createAction<void>(DELETE_TRANSCRIPTS)
 
 export type State = {
   transcripts: PodloveTranscript[];
