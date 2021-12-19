@@ -284,7 +284,7 @@ class Transcripts extends \Podlove\Modules\Base
             \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file: must be UTF-8 encoded']);
         }
 
-        $result = parse_webvtt($content);
+        $result = self::parse_webvtt($content);
 
         if ($result === false) {
             if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'podlove_transcript_import') {
