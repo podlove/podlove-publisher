@@ -1,7 +1,7 @@
 import { get } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
-import { PodloveChapter } from '@types/chapters.types'
-import { INIT, init } from './lifecycle.store'
+import { PodloveChapter } from '../types/chapters.types'
+import { init } from './lifecycle.store'
 
 export type State = {
   chapters: PodloveChapter[]
@@ -23,7 +23,7 @@ export const SET = 'podlove/publisher/chapter/SET'
 export const DOWNLOAD = 'podlove/publisher/chapter/DOWNLOAD'
 
 export const update = createAction<{ chapter: Partial<PodloveChapter>; index: number }>(UPDATE)
-export const select = createAction<number>(SELECT)
+export const select = createAction<number | null>(SELECT)
 export const remove = createAction<number>(REMOVE)
 export const add = createAction<void>(ADD)
 export const parse = createAction<string>(PARSE)
@@ -36,14 +36,17 @@ export const reducer = handleActions(
     [PARSED]: (state: State, action: typeof init): State => ({
       ...state,
       selected: null,
-      chapters: get(action, ['payload'], []),
+      chapters: get(action, ['payload'], []) as PodloveChapter[],
     }),
     [SET]: (state: State, action: typeof init): State => ({
       ...state,
       selected: null,
-      chapters: get(action, ['payload'], []),
+      chapters: get(action, ['payload'], []) as PodloveChapter[],
     }),
-    [UPDATE]: (state: State, action: typeof update): State => ({
+    [UPDATE]: (
+      state: State,
+      action: { type: string; payload: { chapter: Partial<PodloveChapter>; index: number } }
+    ): State => ({
       ...state,
       chapters: state.chapters.reduce(
         (result: PodloveChapter[], chapter, chapterIndex) => [
@@ -55,7 +58,7 @@ export const reducer = handleActions(
         []
       ),
     }),
-    [SELECT]: (state: State, action: typeof select): State => ({
+    [SELECT]: (state: State, action: { type: string; payload: number }): State => ({
       ...state,
       selected: action.payload,
     }),
@@ -71,7 +74,7 @@ export const reducer = handleActions(
         },
       ],
     }),
-    [REMOVE]: (state: State, action: typeof remove): State => ({
+    [REMOVE]: (state: State, action: { type: string; payload: number }): State => ({
       ...state,
       selected: null,
       chapters: state.chapters.filter((chapter, index) => index !== action.payload),

@@ -9,5 +9,5 @@ export interface PodloveTranscript {
 
 export interface PodloveTranscriptVoice {
   voice: string,
-  contributor: string
+  contributor_id: string
 }

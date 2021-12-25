@@ -33,15 +33,21 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
 import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
-import { PodloveTranscript, PodloveTranscriptVoice } from '@types/transcripts.types'
-import { PodloveContributor } from '@types/contributors.types'
 import Avatar from '@components/icons/Avatar.vue'
 
+import { PodloveTranscript } from '../../../types/transcripts.types'
+import { PodloveContributor } from '../../../types/contributors.types'
+
 interface Transcript {
-  voice: string
+  voiceId: string
+  voice: {
+    avatar: string
+    name: string
+  }
   content: {
     text: string
     start: number
@@ -49,7 +55,7 @@ interface Transcript {
   }[]
 }
 
-export default {
+export default defineComponent({
   components: {
     Avatar,
   },
@@ -65,11 +71,11 @@ export default {
   },
 
   computed: {
-    voices() {
+    voices(): { [key: string]: { id: string; name: string; avatar: string } }[] {
       return this.state.contributors.reduce(
         (result: { name: string; avatar: string }[], contributor: PodloveContributor) => {
           const voice = this.state.voices.find(
-            (voice: PodloveTranscriptVoice) => voice.contributor === contributor.id
+            (voice: { voice: string; contributor: string }) => voice.contributor === contributor.id
           )?.voice
 
           return {
@@ -85,16 +91,17 @@ export default {
       )
     },
 
-    transcripts() {
+    transcripts(): Transcript[] {
       return this.state.transcripts
         .reduce((result: Transcript[], transcript: PodloveTranscript) => {
           const lastTranscript = last(result)
 
-          if (lastTranscript && lastTranscript.voice === transcript.voice) {
+          if (lastTranscript && lastTranscript.voiceId === transcript.voice) {
             return [
               ...dropRight(result),
               {
                 ...lastTranscript,
+                voiceId: transcript.voice,
                 content: [
                   ...lastTranscript.content,
                   {
@@ -123,11 +130,11 @@ export default {
         }, [])
         .map((transcript: Transcript) => ({
           ...transcript,
-          voice: get(this.voices, [transcript.voice], { name: transcript.voice }),
+          voice: get(this.voices, [transcript.voiceId], { name: transcript.voiceId }),
         }))
     },
   },
-}
+})
 </script>
 
 <style>

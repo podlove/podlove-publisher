@@ -24,7 +24,20 @@
         </li>
       </ol>
       <div class="ml-1">
-        <button @click="addChapter()" class="rounded border border-blue-600 px-2 py-1 bg-gray-200 font-light text-sm text-blue-600">+ Add Chapter</button>
+        <button
+          @click="addChapter()"
+          class="
+            rounded
+            border border-blue-600
+            px-2
+            py-1
+            bg-gray-200
+            font-light
+            text-sm text-blue-600
+          "
+        >
+          + Add Chapter
+        </button>
       </div>
     </div>
     <div v-if="state.selected" class="w-4/12 mx-4 my-2 mt-0">
@@ -33,7 +46,7 @@
           ><span class="font-bold">Title</span></label
         >
         <input
-          @change="updateChapter('title', $event.target.value)"
+          @change="updateChapter('title', $event)"
           name="chapter-title"
           type="text"
           class="h-8 p-2 rounded border border-gray-200 w-full text-sm"
@@ -46,7 +59,7 @@
           ><span class="text-xs">(optional)</span></label
         >
         <input
-          @change="updateChapter('url', $event.target.value)"
+          @change="updateChapter('url', $event)"
           name="chapter-url"
           type="text"
           class="h-8 p-2 rounded border border-gray-200 w-full text-sm"
@@ -55,11 +68,10 @@
       </div>
       <div class="mb-5">
         <label for="chapter-start" class="block ml-1 mb-2"
-          ><span class="font-bold mr-1">Start</span
-          ></label
+          ><span class="font-bold mr-1">Start</span></label
         >
         <input
-          @change="updateChapter('start', $event.target.value)"
+          @change="updateChapter('start', $event)"
           name="chapter-start"
           type="text"
           class="h-8 p-2 rounded border border-gray-200 w-full text-sm"
@@ -67,7 +79,20 @@
         />
       </div>
       <div class="mb-5 ml-1">
-        <button @click="removeChapter()" class="rounded border border-blue-600 px-2 py-1 bg-gray-200 font-light text-sm text-blue-600">Delete Chapter</button>
+        <button
+          @click="removeChapter()"
+          class="
+            rounded
+            border border-blue-600
+            px-2
+            py-1
+            bg-gray-200
+            font-light
+            text-sm text-blue-600
+          "
+        >
+          Delete Chapter
+        </button>
       </div>
     </div>
   </div>
@@ -77,10 +102,16 @@
 import { defineComponent } from 'vue'
 import { mapState, injectStore } from 'redux-vuex'
 import Timestamp from '@lib/timestamp'
-import { PodloveChapter } from '@types/chapters.types'
 import { get } from 'lodash'
 import { selectors } from '@store'
-import { select as selectChapter, update as updateChapter, remove as removeChapter, add as addChapter } from '@store/chapters.store'
+import {
+  select as selectChapter,
+  update as updateChapter,
+  remove as removeChapter,
+  add as addChapter,
+} from '@store/chapters.store'
+
+import { PodloveChapter } from '../../../types/chapters.types'
 
 interface Chapter {
   index: number
@@ -106,7 +137,7 @@ export default defineComponent({
     episodeDuration(): number {
       return this.state.episodeDuration
         ? Timestamp.fromString(this.state.episodeDuration).totalMs
-        : null
+        : 0
     },
     chapters(): Chapter[] {
       return this.state.chapters.reduce(
@@ -120,9 +151,9 @@ export default defineComponent({
           let durationMs: number
 
           if (!next) {
-            durationMs = this.episodeDuration ? this.episodeDuration - chapter.start : -1
+            durationMs = this.episodeDuration ? this.episodeDuration - (chapter.start || 0) : -1
           } else {
-            durationMs = next.start - chapter.start
+            durationMs = (next.start || 0) - (chapter.start || 0)
           }
 
           let duration: string
@@ -146,7 +177,7 @@ export default defineComponent({
             {
               index: chapterIndex,
               title: chapter.title,
-              start: new Timestamp(chapter.start).pretty,
+              start: chapter.start ? new Timestamp(chapter.start).pretty : null,
               duration,
             },
           ]
@@ -165,7 +196,9 @@ export default defineComponent({
         this.dispatch(selectChapter(index))
       }
     },
-    updateChapter(prop: 'title' | 'url' | 'start', raw: any) {
+    updateChapter(prop: 'title' | 'url' | 'start', event: Event) {
+      const raw = (event.target as HTMLInputElement).value
+
       if (this.state.selectedIndex === null) {
         return
       }
@@ -175,7 +208,7 @@ export default defineComponent({
       switch (prop) {
         case 'start':
           value = Timestamp.fromString(raw).totalMs
-        break;
+          break
         default:
           value = raw
       }
@@ -199,8 +232,7 @@ export default defineComponent({
     // Formatters
     formatTime(value: number): string {
       return new Timestamp(value).pretty
-    }
-
+    },
   },
 })
 </script>

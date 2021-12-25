@@ -6,13 +6,14 @@
     "cloc": "cloc --by-file-by-lang --exclude-dir=dist,data,node_modules,vendor,player_v2,.git,jquery-ui  --not-match-f=\".*.min.(js|css)|cornify.js|dc.js|spectrum.js\" --exclude-ext=json *",
     "test": "./vendor/bin/phpunit",
     "publish:workspace": "node bin/workspace.js",
-    "build:client": "vue-tsc --noEmit && vite build --base=/wp-content/plugins/podlove-publisher/js/dist/",
+    "build:client": "vue-tsc --noEmit -p ./tsconfig.json && vite build --base=/wp-content/plugins/podlove-publisher/js/dist/",
     "serve:client": "vite build --watch --base=/wp-content/plugins/podlove-publisher/js/dist/",
     "serve": "run-p serve:client serve:legacy",
     "build": "run-p build:client build:legacy",
     "dev:client": "vite"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.175",
     "@vitejs/plugin-vue": "^1.9.3",
     "autoprefixer": "^10.3.7",
     "dompurify": "^2.1.1",
@@ -26,13 +27,12 @@
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
     "postcss": "^8.3.9",
+    "postcss-nested": "5.0.6",
     "prettier": "2.4.1",
     "tailwindcss": "3.0.7",
     "typescript": "^4.4.3",
     "vite": "^2.6.4",
-    "vue-tsc": "^0.3.0",
-    "postcss-nested": "5.0.6",
-    "@types/lodash": "4.14.175"
+    "vue-tsc": "^0.3.0"
   },
   "dependencies": {
     "@podlove/web-player": "^4.5.13",

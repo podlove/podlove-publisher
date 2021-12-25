@@ -5,7 +5,7 @@ import { init, INIT } from './lifecycle.store';
 
 export type State = {
   id: string | null;
-  duration: string | null;
+  duration: number | null;
 }
 
 export const initialState: State = {

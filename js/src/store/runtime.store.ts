@@ -3,12 +3,12 @@ import { handleActions, } from 'redux-actions'
 import { INIT, init } from './lifecycle.store';
 
 export type State = {
-  baseUrl: string;
+  baseUrl: string | null;
   api: {
-    nonce: string;
-    base: string;
-    auth: string;
-    bearer: string;
+    nonce: string | null;
+    base: string | null;
+    auth: string | null;
+    bearer: string | null;
   }
 }
 

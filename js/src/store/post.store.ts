@@ -3,7 +3,7 @@ import { handleActions, } from 'redux-actions'
 import { INIT, init } from './lifecycle.store';
 
 export type State = {
-  id: string;
+  id: string | null;
 }
 
 export const initialState: State = {

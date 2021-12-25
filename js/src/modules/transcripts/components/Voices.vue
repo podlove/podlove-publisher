@@ -3,7 +3,7 @@
     <div v-for="(voice, vindex) in state.voices" :key="`voice-${vindex}`" class="w-full flex py-2 px-4" :class="{ 'bg-white': vindex % 2 }">
       <div class="font-mono w-36 py-2">{{ voice.voice }}</div>
       <div>
-        <select :value="voice.contributor" class="font-normal bg-transparent px-1 py-2" @change="updateContributor(voice.voice, $event.target.value)">
+        <select :value="voice.contributor" class="font-normal bg-transparent px-1 py-2" @change="updateContributor(voice.voice, $event)">
           <option value="0"></option>
           <option v-for="(contributor, kindex) in state.contributors" :key="`voice-${vindex}-contributor-${kindex}`" :value="contributor.id">{{ contributor.name }}</option>
         </select>
@@ -16,11 +16,12 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from '@vue/runtime-core';
 import { injectStore, mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
 import { updateVoice } from '@store/transcripts.store'
 
-export default {
+export default defineComponent({
   setup() {
     return {
       state: mapState({
@@ -32,9 +33,10 @@ export default {
   },
 
   methods: {
-    updateContributor(voice: string, contributor: string) {
+    updateContributor(voice: string, event: Event) {
+      const contributor = (event.target as HTMLInputElement).value;
       this.dispatch(updateVoice({ voice, contributor }))
     }
   }
-}
+});
 </script>

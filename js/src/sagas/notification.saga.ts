@@ -1,7 +1,7 @@
 import { takeEvery } from 'redux-saga/effects'
 
 import { get } from 'lodash'
-import { notify, NOTIFY } from '@store/notification.store'
+import { NOTIFY } from '@store/notification.store'
 
 function errorSaga() {
   return function* () {
@@ -9,7 +9,7 @@ function errorSaga() {
   }
 }
 
-function* showNotification(action: typeof notify) {
+function* showNotification(action: { type: string, payload: { type: 'success' | 'info' | 'error' | 'warning', message: string } }) {
   const dispatch = get(globalThis, ['wp', 'data', 'dispatch'])
 
   if (dispatch) {

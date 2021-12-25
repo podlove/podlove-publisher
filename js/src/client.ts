@@ -20,4 +20,4 @@ document.querySelectorAll('[data-client="podlove"]:not([data-loaded="true"])').f
   app.mount(elem)
 })
 
-store.dispatch(init(globalThis.PODLOVE_DATA))
+store.dispatch(init((globalThis as any).PODLOVE_DATA))

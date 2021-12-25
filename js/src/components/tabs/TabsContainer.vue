@@ -34,12 +34,12 @@ import { get } from 'lodash'
 import { defineComponent } from 'vue'
 
 export interface Tab {
-  title: string
-  name: string
+  title: string;
+  name: string;
 }
 
 export default defineComponent({
-  data() {
+  data(): { activeTab: string; tabs: Tab[] } {
     return {
       activeTab: '',
       tabs: [],
@@ -54,10 +54,10 @@ export default defineComponent({
   },
 
   created() {
-    this.tabs = this.$slots.default().map((elem) => ({
+    this.tabs = this.$slots.default?.().map((elem) => ({
       name: get(elem, ['props', 'name']),
       title: get(elem, ['props', 'title']),
-    }))
+    })) || [];
   },
 
   mounted() {
@@ -71,13 +71,15 @@ export default defineComponent({
   methods: {
     toggleTab(name: string) {
       this.activeTab = name
-      Array.from(this.$refs.tabs.children).forEach((tab: HTMLElement) => {
-        if (tab.dataset.tab === name) {
-          tab.classList.remove('hidden')
-        } else {
-          tab.classList.add('hidden')
+      ;(Array.from((this.$refs.tabs as HTMLElement).children) as HTMLElement[]).forEach(
+        (tab: HTMLElement) => {
+          if (tab.dataset.tab === name) {
+            tab.classList.remove('hidden')
+          } else {
+            tab.classList.add('hidden')
+          }
         }
-      })
+      )
     },
   },
 })
@@ -85,6 +87,6 @@ export default defineComponent({
 
 <style>
 .tab-active {
-  text-shadow:0px 0px 1px currentColor;
+  text-shadow: 0px 0px 1px currentColor;
 }
 </style>

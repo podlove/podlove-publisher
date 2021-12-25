@@ -9,9 +9,12 @@
 <script lang="ts">
 import { injectStore } from 'redux-vuex'
 import { deleteTranscripts } from '@store/transcripts.store'
+import { defineComponent } from '@vue/runtime-core'
 
-export default {
-  setup() {
+export default defineComponent({
+  setup(): {
+    dispatch: Function
+  } {
     return {
       dispatch: injectStore().dispatch,
     }
@@ -22,7 +25,7 @@ export default {
       this.dispatch(deleteTranscripts())
     },
   },
-}
+})
 </script>
 
 <style>
