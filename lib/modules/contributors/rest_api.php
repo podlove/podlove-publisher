@@ -180,20 +180,6 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ]
         ]);
-        register_rest_route($this->namespace, $this->rest_base.'/groups', [
-            [
-                'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_items_group'],
-                'permission_callback' => [$this, 'get_item_permissions_check'],
-            ],
-        ]);
-        register_rest_route($this->namespace, $this->rest_base.'/roles', [
-            [
-                'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_items_role'],
-                'permission_callback' => [$this, 'get_item_permissions_check'],
-            ],
-        ]);
         register_rest_route($this->namespace, $this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
@@ -262,6 +248,76 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
         ]);
+        register_rest_route($this->namespace, $this->rest_base.'/groups', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_items_group'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'create_item_group'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ],
+        ]);
+        register_rest_route($this->namespace, $this->rest_base.'/groups/(?P<id>[\d]+)', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for contributor group.'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_group'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_group'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item_group'],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
+            ],
+        ]);
+        register_rest_route($this->namespace, $this->rest_base.'/roles', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_items_role'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'create_item_role'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ],
+        ]);
+        register_rest_route($this->namespace, $this->rest_base.'/roles/(?P<id>[\d]+)', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for contributor role.'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_role'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_role'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item_role'],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
+            ],
+        ]);
         register_rest_route($this->namespace, $this->rest_base.'/episode/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
@@ -310,6 +366,23 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         ]);
     }
 
+    public function get_item_group($request)
+    {
+        $id = $request->get_param('id');
+        $group = ContributorGroup::find_by_id($id);
+
+        if (!isset($group)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'id' => $group->id,
+            'title' => $group->title,
+            'slug' => $group->slug
+        ]);
+    }
+
     public function get_items_role($request)
     {
         $roles = ContributorRole::all();
@@ -321,6 +394,23 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
             'roles' => $entries
+        ]);
+    }
+
+    public function get_item_role($request)
+    {
+        $id = $request->get_param('id');
+        $role = ContributorRole::find_by_id($id);
+
+        if (!isset($role)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'id' => $role->id,
+            'title' => $role->title,
+            'slug' => $role->slug
         ]);
     }
 
@@ -354,6 +444,28 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         ]);
     }
 
+    public function create_item_group($request)
+    {
+        $group = new ContributorGroup();
+        $group->save();
+
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok',
+            'id' => $group->id
+        ]);
+    }
+
+    public function create_item_role($request)
+    {
+        $role = new ContributorRole();
+        $role->save();
+
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok',
+            'id' => $role->id
+        ]);
+    }
+
     public function create_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
@@ -373,7 +485,10 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
         if (isset($request['gender'])) {
             $gender = $request['gender'];
-            $contributor->gender = $gender;
+            if ($gender === 'Not attributed') 
+                $contributor->gender = 'none';
+            else
+                $contributor->gender = $gender;
         }
 
         if (isset($request['organisation'])) {
@@ -413,9 +528,9 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
         if (isset($request['visibilty'])) {
             $visibilty = $request['visibilty'];
-            if ($visibilty === 'no')
+            if ($visibilty == 'no')
                 $contributor->visibility = 0;
-            if ($visibilty === 'yes')
+            if ($visibilty == 'yes')
                 $contributor->visibility = 1;
         }
 
@@ -428,6 +543,54 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
+        ]);
+    }
+
+    public function update_item_group($request)
+    {
+        $id = $request->get_param('id');
+        $group = ContributorGroup::find_by_id($id);
+
+        if (!isset($group)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['title'])) {
+            $title = $request['title'];
+            $group->title = $title;
+        }
+
+        if (isset($request['slug'])) {
+            $slug = $request['slug'];
+            $group->slug = $slug;
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function update_item_role($request)
+    {
+        $id = $request->get_param('id');
+        $role = ContributorRole::find_by_id($id);
+
+        if (!isset($role)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['title'])) {
+            $title = $request['title'];
+            $role->title = $title;
+        }
+
+        if (isset($request['slug'])) {
+            $slug = $request['slug'];
+            $role->slug = $slug;
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' =>  'ok'
         ]);
     }
 
@@ -454,6 +617,30 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             'status' => 'ok'
         ]);
 
+    }
+
+    public function delete_item_group($request)
+    {
+        $id = $request->get_param('id');
+        $group = ContributorGroup::find_by_id($id);
+
+        if (!isset($group)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $group->delete();
+    }
+
+    public function delete_item_role($request)
+    {
+        $id = $request->get_param('id');
+        $role = ContributorRole::find_by_id($id);
+
+        if (!isset($role)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $role->delete();
     }
 
     public function delete_item_permissions_check($request)
