@@ -236,6 +236,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                     'email' => [
                         'description' => __('e-mail of the contributor Do not use external.'),
                         'type' => 'string',
+                        'format' => 'email',
                     ],
                 ],
                 'methods' => \WP_REST_Server::EDITABLE,
@@ -276,6 +277,20 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_group'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
+                'args' => [
+                    'title' => [
+                        'description' => __('Title of the contributor group'),
+                        'type' => 'string',
+                        'required' => 'true',
+                        'validate_callback' => '\Podlove\Api\Validation::maxLength255'
+                    ],
+                    'slug' => [
+                        'description' => __('Slug of the contributor group'),
+                        'type' => 'string',
+                        'required' => 'true',
+                        'validate_callback' => '\Podlove\Api\Validation::maxLength255'
+                    ],
+                ],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
@@ -311,6 +326,20 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_role'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
+                'args' => [
+                    'title' => [
+                        'description' => __('Title of the contributor role'),
+                        'type' => 'string',
+                        'required' => 'true',
+                        'validate_callback' => '\Podlove\Api\Validation::maxLength255'
+                    ],
+                    'slug' => [
+                        'description' => __('Slug of the contributor role'),
+                        'type' => 'string',
+                        'required' => 'true',
+                        'validate_callback' => '\Podlove\Api\Validation::maxLength255'
+                    ],
+                ],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
@@ -565,6 +594,8 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             $group->slug = $slug;
         }
 
+        $group->save();
+
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
@@ -588,6 +619,8 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             $slug = $request['slug'];
             $role->slug = $slug;
         }
+
+        $role->save();
 
         return new \Podlove\Api\Response\OkResponse([
             'status' =>  'ok'
@@ -629,6 +662,11 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         }
 
         $group->delete();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' =>  'ok'
+        ]);
+
     }
 
     public function delete_item_role($request)
@@ -641,6 +679,11 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         }
 
         $role->delete();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' =>  'ok'
+        ]);
+
     }
 
     public function delete_item_permissions_check($request)
