@@ -45,8 +45,8 @@ class Validation
         if (isset($param) && is_array($param)) {
             for ($i = 0; $i < count($param); ++$i ) {
                 $timestamp = '';
-                if (isset($param[$i]['timestamp'])) {
-                    $timestamp = $param[$i]['timestamp'];
+                if (isset($param[$i]['start'])) {
+                    $timestamp = $param[$i]['start'];
                     if (!Validation::timestamp($timestamp, $request, $key))
                         return false;
                 }

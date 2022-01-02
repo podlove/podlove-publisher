@@ -2,6 +2,7 @@
 
 namespace Podlove\Modules\Contributors;
 
+use Podlove\Api\Episodes\WP_REST_PodloveEpisodeContributor_Controller;
 use Podlove\Model\Episode;
 use Podlove\Modules;
 use Podlove\Modules\Contributors\Model\Contributor;
@@ -865,6 +866,8 @@ class Contributors extends \Podlove\Modules\Base
         $api_v1->register_routes();
         $api_v2 = new WP_REST_PodloveContributors_Controller();
         $api_v2->register_routes();
+        $api_episode_contributor = new WP_REST_PodloveEpisodeContributor_Controller();
+        $api_episode_contributor->register_routes();
     }
 
     /**

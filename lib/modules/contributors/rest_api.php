@@ -204,6 +204,10 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                         'type' => 'string',
                         'enum' => array('yes', 'no')
                     ],
+                    'identifier' => [
+                        'description' => __('identifier'),
+                        'type' => 'string',
+                    ],
                     'organisation' => [
                         'description' => __('Organisation'),
                         'type' => 'string',
@@ -347,16 +351,16 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ],
         ]);
-        register_rest_route($this->namespace, $this->rest_base.'/episode/(?P<id>[\d]+)', [
+        register_rest_route($this->namespace, $this->rest_base.'/(?P<id>[\d]+)/episodes', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for episode.'),
+                    'description' => __('Unique identifier for contributor.'),
                     'type' => 'integer',
                 ],
             ],
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_episode'],
+                'callback' => [$this, 'get_episodes'],
                 'permission_callback' => '__return_true',
             ],
         ]);
@@ -370,7 +374,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 return $result;
             }
 
-            array_push($result, $this->filter_contributor($contributor));
+            array_push($result, $this->get_contributor_data($contributor));
 
             return $result;
         }, []);
@@ -452,7 +456,10 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        return new \WP_REST_Response($this->filter_contributor($contributor));
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'contributor' => $result
+        ]);
     }
 
     public function get_item_permissions_check($request)
@@ -518,6 +525,11 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 $contributor->gender = 'none';
             else
                 $contributor->gender = $gender;
+        }
+
+        if (isset($request['identifier'])) {
+            $identifier = $request['identifier'];
+            $contributor->identifier = $identifier;
         }
 
         if (isset($request['organisation'])) {
@@ -694,26 +706,27 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function get_episode($request)
+    public function get_episodes($request)
     {
         $id = $request->get_param('id');
 
         $results = array_map(function ($contributor) {
             return [
-                'id' => $contributor->contributor_id,
-                'role' => $contributor->role_id,
-                'group' => $contributor->group_id,
+                'epsiode_id' => $contributor->episode_id
             ];
-        }, EpisodeContribution::find_all_by_episode_id($id));
+        }, EpisodeContribution::find_all_by_contributor_id($id));
 
-        return new \WP_REST_Response($results);
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'episodes' => $results
+        ]);
     }
 
-    private function filter_contributor($contributor)
+    private function get_contributor_data($contributor)
     {
         return [
             'id' => $contributor->id,
-            'slug' => $contributor->identifier,
+            'identifier' => $contributor->identifier,
             'avatar' => $contributor->avatar,
             'name' => $contributor->getName(),
             'mail' => $contributor->publicemail,
