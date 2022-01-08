@@ -45,7 +45,7 @@ class Soundbite extends \Podlove\Modules\Base
     public function add_soundbite_to_episode_feed($podcast, $epsiode, $feed, $format)
     {
         if ($epsiode->get_soundbite_start() && $epsiode->get_soundbite_duration()) {
-            $title = $epsiode->title;
+            $title = $epsiode->soundbite_title;
             $start = $epsiode->soundbite_start;
             $duration = $epsiode->soundbite_duration;
 
@@ -57,8 +57,14 @@ class Soundbite extends \Podlove\Modules\Base
             if ($duration_sec > 0) {
                 $doc = new \DOMDocument();
                 $node = $doc->createElement('podcast:soundbite');
-                $text = $doc->createTextNode($title);
-                $node->appendChild($text);
+                if ($title && strlen($title) > 0) {
+                    $text = $doc->createTextNode($title);
+                    $node->appendChild($text);
+                }
+                else {
+                    $text = $doc->createTextNode('');
+                    $node->appendChild($text);
+                }
                 $attr = $doc->createAttribute('startTime');
                 $attr->value = number_format($start_sec, 3);
                 $node->appendChild($attr);
