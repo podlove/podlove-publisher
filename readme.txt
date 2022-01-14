@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-01-14 =
+
+* soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
+* fix PHP 8 warnings ([#1258](https://github.com/podlove/podlove-publisher/issues/1258))
+
 = 2021-11-11 =
 
 - shownotes: set target=_blank on exported html links
