@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define(__NAMESPACE__.'\DATABASE_VERSION', 152);
+define(__NAMESPACE__.'\DATABASE_VERSION', 153);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1592,6 +1592,14 @@ function run_migrations_for_version($version)
             $wpdb->query($sql1);
             $wpdb->query($sql2);
 
+            break;
+        case 153:
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `soundbite_title` VARCHAR(255)',
+                Model\Episode::table_name()
+            );
+
+            $wpdb->query($sql);
             break;
     }
 }
