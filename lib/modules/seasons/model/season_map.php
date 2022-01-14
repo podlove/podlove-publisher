@@ -27,7 +27,7 @@ class SeasonMap
         $this->init();
     }
 
-    final private function __clone()
+    private function __clone()
     {
     }
 
@@ -63,7 +63,7 @@ class SeasonMap
 			SELECT
 				e.id, p.post_date
 			FROM
-				`'.Episode::table_name().'` e 
+				`'.Episode::table_name().'` e
 				JOIN `'.$wpdb->posts.'` p ON e.post_id = p.ID
 			WHERE
 				p.post_type = "podcast"
