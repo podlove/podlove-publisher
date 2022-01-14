@@ -18,6 +18,7 @@ class Transcripts extends \Podlove\Modules\Base
 
     public function load()
     {
+        add_action('podlove_delete_episode', [$this, 'on_delete_episode']);
         add_action('podlove_module_was_activated_transcripts', [$this, 'was_activated']);
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
         add_action('wp_ajax_podlove_transcript_import', [$this, 'ajax_transcript_import']);
@@ -100,6 +101,11 @@ class Transcripts extends \Podlove\Modules\Base
     {
         Transcript::build();
         VoiceAssignment::build();
+    }
+
+    public function on_delete_episode(Episode $episode)
+    {
+        Transcript::delete_for_episode($episode->id);
     }
 
     public function extend_episode_form($form_data, $episode)

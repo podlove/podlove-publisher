@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
 * fix PHP 8 warnings ([#1258](https://github.com/podlove/podlove-publisher/issues/1258))
+* fix: deleting an episode deletes its transcript from the database ([#1252](https://github.com/podlove/podlove-publisher/issues/1252))
 
 = 2021-11-11 =
 
