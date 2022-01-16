@@ -4,9 +4,11 @@
 
 			<div class="podlove-contributors-card">
 				<div class="podlove-contributors-card-inner">
-					<div class="podlove-contributors-card-avatar">
-						{{ contributor.image.html({width: size|default(50), height: size|default(50), class: "", alt: "avatar" }) }}
-					</div>
+				    {% if option.avatars == "yes" %}
+						<div class="podlove-contributors-card-avatar">
+							{{ contributor.image.html({width: size|default(50), height: size|default(50), class: "", alt: "avatar" }) }}
+						</div>
+					{% endif %}
 					<div class="podlove-contributors-card-person">
 						<div style="align-self: center">
 							<div style="font-weight: 400;">{{ contributor.name }}</div>
@@ -28,17 +30,19 @@
 											}}
 								</a>
 							{% endfor %}
-							{% for service in contributor.services({category: "donation"}) %}
-								<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-									{{
+							{% if option.donations == "yes" %}
+								{% for service in contributor.services({category: "donation"}) %}
+									<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+										{{
 													service.image.html({
 														width: 20, 
 														class: "",
 														alt: service.title ~ " Icon"
 													}) 
 												}}
-								</a>
-							{% endfor %}
+									</a>
+								{% endfor %}
+							{% endif %}
 						</div>
 					</div>
 				</div>
