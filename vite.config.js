@@ -20,7 +20,7 @@ export default defineConfig({
       '@components': path.resolve(root, 'js', 'src', 'components'),
       '@types': path.resolve(root, 'js', 'src', 'types'),
       '@sagas': path.resolve(root, 'js', 'src', 'sagas'),
-      '@lib': path.resolve(root, 'js', 'src', 'lib'),
+      '@lib': path.resolve(root, 'js', 'src', 'lib')
     }
   },
   build: {

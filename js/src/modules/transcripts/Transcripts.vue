@@ -1,11 +1,16 @@
 <template>
   <module name="transcript" title="Transcripts">
-    <tabs-container>
+     <template v-slot:actions>
+       <transcripts-voices />
+     </template>
+    <transcripts-list />
+
+    <!-- <tabs-container>
       <tab name="transcript" title="Transcript Content">
         <transcripts-list />
       </tab>
       <tab name="voices" title="Voices">
-        <transcripts-voices />
+
       </tab>
       <tab name="import" title="Import">
         <transcripts-import />
@@ -16,13 +21,14 @@
       <tab name="delete" title="Delete">
         <transcripts-delete />
       </tab>
-    </tabs-container>
+    </tabs-container> -->
   </module>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { TabsContainer, Tab } from '@components/tabs'
 import Module from '@components/module'
+
 
 import TranscriptsList from './components/List.vue'
 import TranscriptsVoices from './components/Voices.vue'

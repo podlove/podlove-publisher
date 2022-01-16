@@ -1,7 +1,20 @@
 <template>
-  <section class="my-4 font-sans">
-    <label class="block text-lg mb-2" :for="`podlove-module-${name}`">{{ title }}</label>
-    <div :id="`podlove-module-${name}`" class="rounded-sm"><slot></slot></div>
+  <section class="bg-white overflow-hidden sm:rounded-lg sm:shadow">
+    <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
+      <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
+        <div class="ml-4 mt-2">
+          <h3 class="text-lg leading-6 font-medium text-gray-900" :for="`podlove-module-${name}`">
+            {{ title }}
+          </h3>
+        </div>
+        <div class="ml-4 mt-2 flex flex-shrink-0">
+          <slot name="actions"></slot>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <slot></slot>
+    </div>
   </section>
 </template>
 
@@ -12,13 +25,13 @@ export default defineComponent({
   props: {
     name: {
       type: String,
-      default: null
+      default: null,
     },
     title: {
       type: String,
-      default: null
-    }
-  }
+      default: null,
+    },
+  },
 })
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-96 overflow-x-auto" v-if="transcripts.length > 0">
+  <div class="max-h-96 p-2 overflow-x-auto" v-if="transcripts.length > 0">
     <div
       class="flex mb-2"
       v-for="(transcript, sindex) in transcripts"

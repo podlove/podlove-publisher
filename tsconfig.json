@@ -17,7 +17,7 @@
       "@store/*": ["js/src/store/*"],
       "@types/*": ["js/src/types/*"],
       "@sagas/*": ["js/src/sagas/*"],
-      "@lib/*": ["js/src/lib/*"],
+      "@lib/*": ["js/src/lib/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "typings/*.d.ts", "js/src/**/*.ts", "js/src/**/*.d.ts", "js/src/**/*.tsx", "js/src/**/*.vue"]

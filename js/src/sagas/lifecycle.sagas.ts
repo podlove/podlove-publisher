@@ -24,7 +24,7 @@ function clickListener(eventName: string, selector: string) {
 
     window.addEventListener('load', () => {
       target = document.querySelector(selector) as HTMLElement;
-      target.addEventListener(eventName, eventListener as EventListener);
+      target?.addEventListener(eventName, eventListener as EventListener);
     })
 
     return () => {

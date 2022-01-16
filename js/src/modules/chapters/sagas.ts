@@ -44,7 +44,7 @@ function* initialize(api: PodloveApiClient) {
       chapters.set(
         result.chapters.map((chapter) => ({
           ...chapter,
-          start: chapter.start ? Timestamp.fromString(chapter.start).totalMs : null,
+          start: Timestamp.fromString(chapter.start).totalMs,
         }))
       )
     )
@@ -58,7 +58,7 @@ function* save(api: PodloveApiClient) {
   const { result } = yield api.put(`chapters/${episodeId}`, {
     chapters: chapters.map((chapter) => ({
       ...chapter,
-      start: chapter.start ? new Timestamp(chapter.start).pretty : null,
+      start: new Timestamp(chapter.start).pretty,
     })),
   })
 
