@@ -23,3 +23,6 @@ trim_trailing_whitespace = false
 
 [*.html]
 indent_size = 2
+
+[Makefile]
+indent_style = tab

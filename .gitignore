@@ -5,7 +5,8 @@
 *.code-workspace
 wprelease.yml
 composer.phar
-node_modules/*
+js/node_modules
+client/node_modules
 vendor/*
 vendor-*/*
 test/config.yml
@@ -16,6 +17,7 @@ Mix.json
 mix-manifest.json
 *.log
 .vscode
+dist
 js/dist
 lib/modules/podlove_web_player/player_v2/
 .php_cs.cache

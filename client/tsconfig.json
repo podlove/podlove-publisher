@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "js/",
+    "baseUrl": "",
     "target": "esnext",
     "useDefineForClassFields": true,
     "module": "esnext",
