@@ -16,11 +16,11 @@ export default defineConfig({
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm-bundler.js',
-      '@store': path.resolve(root, 'js', 'src', 'store'),
-      '@components': path.resolve(root, 'js', 'src', 'components'),
-      '@types': path.resolve(root, 'js', 'src', 'types'),
-      '@sagas': path.resolve(root, 'js', 'src', 'sagas'),
-      '@lib': path.resolve(root, 'js', 'src', 'lib'),
+      '@store': path.resolve(root, 'src', 'store'),
+      '@components': path.resolve(root, 'src', 'components'),
+      '@types': path.resolve(root, 'src', 'types'),
+      '@sagas': path.resolve(root, 'src', 'sagas'),
+      '@lib': path.resolve(root, 'src', 'lib'),
     }
   },
   build: {

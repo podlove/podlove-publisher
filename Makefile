@@ -50,6 +50,10 @@ client_legacy:
 	mkdir -p dist/js
 	cp -r js/dist/* dist/js
 
+client_next:
+	cd client && npm install
+	cd client && NODE_ENV=production npm run build
+
 client: client_legacy
 
 build:
