@@ -8,7 +8,7 @@ use Podlove\Modules\Shownotes\Model\Entry;
 class Shownotes extends \Podlove\Modules\Base
 {
     protected $module_name = 'Shownotes';
-    protected $module_description = 'Generate and manage episode show notes. Helps you provide rich metadata for URLs. Full support for Publisher Templates.';
+    protected $module_description = 'Manage link based episode show notes to display on your website and podcatchers. Helps you provide rich metadata for URLs. Full support for Publisher Templates.';
     protected $module_group = 'web publishing';
 
     public function load()
@@ -38,15 +38,6 @@ class Shownotes extends \Podlove\Modules\Base
             ['\Podlove\Modules\Shownotes\TemplateExtensions', 'accessorEpisodeHasShownotes'],
             4
         );
-    }
-
-    public static function is_visible()
-    {
-        if (defined('PODLOVE_MODULE_SHOWNOTES_VISBLE')) {
-            return (bool) PODLOVE_MODULE_SHOWNOTES_VISBLE;
-        }
-
-        return false;
     }
 
     public function was_activated()
