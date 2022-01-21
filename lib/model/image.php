@@ -527,7 +527,13 @@ class Image
      */
     private function srcset()
     {
-        @list($max_width, $max_height) = getimagesize($this->original_file());
+        $file = $this->original_file();
+
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        @list($max_width, $max_height) = getimagesize($file);
 
         if ($this->width * 2 > $max_width) {
             return null;
