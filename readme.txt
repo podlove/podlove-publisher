@@ -106,6 +106,72 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.7.0 =
+
+= 2022-01-18 =
+
+* shownotes module is now always visible
+
+= 2022-01-14 =
+
+* soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
+* fix PHP 8 warnings ([#1258](https://github.com/podlove/podlove-publisher/issues/1258))
+* fix: deleting an episode deletes its transcript from the database ([#1252](https://github.com/podlove/podlove-publisher/issues/1252))
+
+= 2021-11-11 =
+
+- shownotes: set target=_blank on exported html links
+- allow detection of episode duration on mp4 ([#1249](https://github.com/podlove/podlove-publisher/pull/1249))
+- fix(contributors): notification test email ([#1247](https://github.com/podlove/podlove-publisher/issues/1247))
+- fix(analytics): filtering of httprange requests with one or two bytes ([#1243](https://github.com/podlove/podlove-publisher/issues/1243))
+
+= 2021-11-02 =
+
+**Contributors**
+
+- Notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
+- Avatars: default avatar is now a static svg instead of Gravatar (can be customized using the WordPress Filter `podlove_default_contributor_avatar_url`)
+
+**Shownotes**
+
+- adjust export file format
+- fix various css issues
+- show quicksort menu as soon as one topic exists (instead of requiring two)
+
+**Other**
+
+- fix(image cache): redirect to source URL if image can't be downloaded into the cache
+
+= 2021-10-28 =
+
+First draft of Shownotes rework with focus on quickly sorting a large amount of
+links into topics. Not all of the previous functionality is working yet, but
+most. The new sorting mechanism still needs some work, but it's a
+proof-of-concept.
+
+= 2021-10-09 =
+
+**Enhancements for creating Auphonic productions** (thanks [lumaxis](https://github.com/lumaxis)!):
+
+- when the episode title is set, send this instead of the post title ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
+- send the episode number as track number ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
+- when the post thumbnail is configured as cover image, use it as direct fallback  ([#1241](https://github.com/podlove/podlove-publisher/pull/1241))
+
+**Webhooks**
+
+Define a webhook that gets triggered every time an episode updates.
+
+The webhook is a `POST` request with an `event` parameter and a `payload`.
+`event` is the webhook name ("episode_updated"), `payload` is a serialized
+JSON object of the current episode.
+
+Configuration:
+
+    # wp-config.php
+    define('PODLOVE_WEBHOOKS', [
+        'episode_updated' => 'https://example.com/webhook-endpoint'
+    ]);
+
 = 3.6.1 =
 
 * fix: sql issue when creating the episode database tables

@@ -12,7 +12,7 @@ class TemplateAssignment
      *
      * @var null|\Podlove\Model\AssetAssignment
      */
-    private static $instance = null;
+    private static $instance;
 
     /**
      * Contains property values.
@@ -33,7 +33,7 @@ class TemplateAssignment
         $this->fetch();
     }
 
-    final private function __clone()
+    private function __clone()
     {
     }
 

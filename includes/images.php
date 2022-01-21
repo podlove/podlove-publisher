@@ -93,7 +93,8 @@ function podlove_handle_cache_files()
 
     // bail if download fails
     if (!$image->source_exists()) {
-        status_header(404);
+        status_header(307);
+        header('Location: '.$source_url);
         exit;
     }
 

@@ -257,6 +257,7 @@ require_once \Podlove\PLUGIN_DIR.'includes/template_pages.php';
 require_once \Podlove\PLUGIN_DIR.'includes/theme_helper.php';
 require_once \Podlove\PLUGIN_DIR.'includes/trash.php';
 require_once \Podlove\PLUGIN_DIR.'includes/verify_itunes_category.php';
+require_once \Podlove\PLUGIN_DIR.'includes/webhooks.php';
 require_once \Podlove\PLUGIN_DIR.'includes/wp_rocket.php';
 
 require_once \Podlove\PLUGIN_DIR.'lib/tools.php';

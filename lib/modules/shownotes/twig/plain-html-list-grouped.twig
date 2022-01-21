@@ -1,0 +1,16 @@
+{% for topic in episode.shownotes({groupby: "topic"}) %}
+	{% if topic.title %}
+		<br>
+		<h5>{{ topic.title }}</h5>
+	{% endif %}
+
+	<ul>
+		{% for entry in topic.entries %}
+			<li>
+				{% if entry.type == "link" %}
+					<a href="{{ entry.url }}" target="_blank">{{ entry.title }}</a>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endfor %}

@@ -794,6 +794,7 @@ section.chart-wrapper div.chart-loading {
 .p-card {
 	background: white;
 	border: 1px solid #ddd;
+	max-width: 1024px;
 }
 
 .p-card-body {

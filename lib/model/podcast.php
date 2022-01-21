@@ -29,7 +29,7 @@ class Podcast implements Licensable
         $this->fetch();
     }
 
-    final private function __clone()
+    public function __clone()
     {
     }
 
