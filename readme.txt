@@ -151,6 +151,7 @@ Configuration:
 
 * soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
 * allow detection of episode duration on mp4 ([#1249](https://github.com/podlove/podlove-publisher/pull/1249))
+* update OPAWG data (for download analytics / user agent detection)
 
 **Fixes**
 
