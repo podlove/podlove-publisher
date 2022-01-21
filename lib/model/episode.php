@@ -446,6 +446,29 @@ class Episode extends Base implements Licensable
     {
         return (new \Podlove\Duration($this->soundbite_duration))->get($format);
     }
+
+    public function get_next_episode_number($show_slug = null)
+    {
+        global $wpdb;
+
+        $sql_fragment = '';
+        if ($show_slug) {
+            $show_term = get_term_by('slug', $show_slug, 'shows');
+            $sql_fragment = ' AND p.id in (select object_id from wp_term_relationships where term_taxonomy_id = '.(int) $show_term->term_taxonomy_id.') ';
+        }
+
+        $sql = 'SELECT
+            MAX(e.number) + 1 AS new_number
+        FROM
+        `'.Episode::table_name().'` e
+            JOIN `'.$wpdb->posts.'` p ON e.post_id = p.id
+        WHERE
+            p.post_status IN (\'draft\', \'publish\', \'private\', \'pending\', \'future\')
+            '.$sql_fragment.'
+        ';
+
+        return (int) $wpdb->get_var($sql);
+    }
 }
 
 Episode::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
