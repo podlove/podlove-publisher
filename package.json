@@ -10,29 +10,29 @@
     "publish:workspace": "node bin/workspace.js"
   },
   "devDependencies": {
-    "dompurify": "^2.1.1",
+    "dompurify": "2.3.4",
     "elliptic": ">=6.5.4",
     "laravel-mix": "^5.0.5",
-    "node-forge": ">=1.0.0",
+    "node-forge": "1.2.1",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
     "podcast-chapter-parser-hindenburg": "^1.0.2",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
-    "vue": "^2.6.12"
+    "vue": "2.6.14"
   },
   "dependencies": {
     "@podlove/web-player": "^4.5.13",
-    "@popperjs/core": "^2.10.2",
+    "@popperjs/core": "2.11.2",
     "axios": ">=0.21.2",
-    "clipboard": "^2.0.6",
+    "clipboard": "2.0.8",
     "elliptic": ">=6.5.4",
     "file-saver": "^2.0.5",
-    "npm": "^6.14.8",
+    "npm": "8.3.2",
     "v2-datepicker": "^3.1.1",
     "vue-axios": "^2.1.5",
-    "vue-select": "^3.10.8",
-    "vue-template-compiler": "^2.6.12",
+    "vue-select": "3.16.0",
+    "vue-template-compiler": "2.6.14",
     "vuedraggable": "^2.24.1"
   }
 }
