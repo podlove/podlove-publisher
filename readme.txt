@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: http://podlove.org/donations/
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
-Tested up to: 5.8.1
+Tested up to: 5.8.3
 Requires PHP: 7.0
 Stable tag: 3.6.1
 License: MIT
@@ -108,54 +108,29 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 3.7.0 =
 
-= 2022-01-18 =
+**Shownotes**
 
-* shownotes module is now always visible
+The Shownotes module helps you manage link based show notes to display on your website and podcatchers.
 
-= 2022-01-14 =
+The module UI has been rewritten and streamlined for efficient workflows.
+A new UI element was added to allow for quickly sorting long lists of links into topics:
+Whenever a link is dragged, a floating list of all topics appears next to the cursor.
+The link can then be dropped under the desired topic there instead of scrolling through the whole list of shownotes.
 
-* soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
-* fix PHP 8 warnings ([#1258](https://github.com/podlove/podlove-publisher/issues/1258))
-* fix: deleting an episode deletes its transcript from the database ([#1252](https://github.com/podlove/podlove-publisher/issues/1252))
+Disclaimer: URL metadata detection uses a service hosted at [plus.podlove.org](https://plus.podlove.org). It is currently available for all users of Podlove Publisher. In the future, metadata detection may only be availabe to Publisher PLUS users as it requires infrastructure to run. The rest of the Shownotes functionality will stay available to all Podlove users as usual.
 
-= 2021-11-11 =
-
-- shownotes: set target=_blank on exported html links
-- allow detection of episode duration on mp4 ([#1249](https://github.com/podlove/podlove-publisher/pull/1249))
-- fix(contributors): notification test email ([#1247](https://github.com/podlove/podlove-publisher/issues/1247))
-- fix(analytics): filtering of httprange requests with one or two bytes ([#1243](https://github.com/podlove/podlove-publisher/issues/1243))
-
-= 2021-11-02 =
+Documentation: https://docs.podlove.org/podlove-publisher/modules/shownotes
 
 **Contributors**
 
-- Notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
-- Avatars: default avatar is now a static svg instead of Gravatar (can be customized using the WordPress Filter `podlove_default_contributor_avatar_url`)
-
-**Shownotes**
-
-- adjust export file format
-- fix various css issues
-- show quicksort menu as soon as one topic exists (instead of requiring two)
-
-**Other**
-
-- fix(image cache): redirect to source URL if image can't be downloaded into the cache
-
-= 2021-10-28 =
-
-First draft of Shownotes rework with focus on quickly sorting a large amount of
-links into topics. Not all of the previous functionality is working yet, but
-most. The new sorting mechanism still needs some work, but it's a
-proof-of-concept.
-
-= 2021-10-09 =
+* Notifications: add "always send to..." section. Contributors selected there will always receive update notifications.
+* Avatars: default avatar is now a static svg instead of Gravatar (can be customized using the WordPress Filter `podlove_default_contributor_avatar_url`)
 
 **Enhancements for creating Auphonic productions** (thanks [lumaxis](https://github.com/lumaxis)!):
 
-- when the episode title is set, send this instead of the post title ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
-- send the episode number as track number ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
-- when the post thumbnail is configured as cover image, use it as direct fallback  ([#1241](https://github.com/podlove/podlove-publisher/pull/1241))
+* when the episode title is set, send this instead of the post title ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
+* send the episode number as track number ([#1240](https://github.com/podlove/podlove-publisher/pull/1240))
+* when the post thumbnail is configured as cover image, use it as direct fallback  ([#1241](https://github.com/podlove/podlove-publisher/pull/1241))
 
 **Webhooks**
 
@@ -171,6 +146,20 @@ Configuration:
     define('PODLOVE_WEBHOOKS', [
         'episode_updated' => 'https://example.com/webhook-endpoint'
     ]);
+
+**Other Changes**
+
+* soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
+* allow detection of episode duration on mp4 ([#1249](https://github.com/podlove/podlove-publisher/pull/1249))
+
+**Fixes**
+
+* fix: parameters for shortcode `[podlove-episode-contributor-list]` ([#1233](https://github.com/podlove/podlove-publisher/issues/1233))
+* fix: PHP 8 warnings ([#1258](https://github.com/podlove/podlove-publisher/issues/1258))
+* fix: deleting an episode deletes its transcript from the database ([#1252](https://github.com/podlove/podlove-publisher/issues/1252))
+* fix(contributors): notification test email ([#1247](https://github.com/podlove/podlove-publisher/issues/1247))
+* fix(analytics): filtering of httprange requests with one or two bytes ([#1243](https://github.com/podlove/podlove-publisher/issues/1243))
+* fix(image cache): redirect to source URL if image can't be downloaded into the cache
 
 = 3.6.1 =
 
