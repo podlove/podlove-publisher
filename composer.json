@@ -32,5 +32,10 @@
 			"vendor-prefixed/"
         ],
         "exclude-from-classmap": ["/vendor/twig"]
-	}
+	},
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
+    }
 }

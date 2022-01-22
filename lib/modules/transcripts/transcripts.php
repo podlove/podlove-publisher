@@ -116,10 +116,9 @@ class Transcripts extends \Podlove\Modules\Base
             'key' => 'transcripts',
             'options' => [
                 'callback' => function () {
-                                 ?>
-<div data-client="podlove">
-  <podlove-transcripts></podlove-transcripts>
-</div>
+                  $data = ''; ?>
+<div id="podlove-transcripts-app-data" style="display: none"><?php echo $data; ?></div>
+<div id="podlove-transcripts-app"><transcripts></transcripts></div>
 <?php
                 },
                 'label' => __('Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
@@ -268,7 +267,7 @@ class Transcripts extends \Podlove\Modules\Base
         return true;
     }
 
-    public static function parse_webvtt($content) 
+    public static function parse_webvtt($content)
     {
         $parser = new Parser();
 

@@ -41,28 +41,28 @@ install_php_scoper:
 	composer require --dev bamarni/composer-bin-plugin
 	composer bin php-scoper config minimum-stability dev
 	composer bin php-scoper config prefer-stable true
-	composer bin php-scoper require --dev humbug/php-scoper@0.14
+	composer bin php-scoper require --dev humbug/php-scoper:0.14.1
 
 client_legacy:
 	cd js && npm install
 	cd js && NODE_ENV=production npm run build
-	rm -rf dist/js
-	mkdir -p dist/js
-	cp -r js/dist/* dist/js
 
 client_next:
 	cd client && npm install
 	cd client && NODE_ENV=production npm run build
 
-client: client_legacy
+client: client_legacy client_next
 
 build:
 	mkdir -p vendor-prefixed
 	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
 	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
-	rm -rf dist
-	mkdir dist
+	# client
+	make client
+
+	rm -rf dist/*
+	mkdir -p dist
 	# move everything into dist
 	rsync -r --exclude=.git --exclude=node_modules --exclude=./dist . dist
 	# cleanup
@@ -95,7 +95,5 @@ build:
 	find dist -iname "echo-hereweare.*" | xargs rm -rf
 	find dist -iname "*.jar" | xargs rm -rf
 
-	# client
-	client
 
 install: install_php_scoper composer_with_prefixing

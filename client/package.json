@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build --base=/wp-content/plugins/podlove-publisher/js/dist/",
-    "serve": "vite build --watch --base=/wp-content/plugins/podlove-publisher/js/dist/",
+    "build": "vue-tsc --noEmit && vite build --base=/wp-content/plugins/podlove-publisher/client/dist/",
+    "serve": "vite build --watch --base=/wp-content/plugins/podlove-publisher/client/dist/",
     "dev": "vite"
   },
   "devDependencies": {
