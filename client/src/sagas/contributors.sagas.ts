@@ -2,6 +2,7 @@ import { put } from 'redux-saga/effects'
 
 import * as lifecycle from '@store/lifecycle.store'
 import * as contributors from '@store/contributors.store'
+import { PodloveApiClient } from '@lib/api'
 
 import { takeFirst } from './helper'
 import { createApi } from './api'
@@ -13,9 +14,9 @@ function contributorsSaga() {
 }
 
 function* initialize() {
-  const apiClient = yield createApi();
+  const apiClient: PodloveApiClient = yield createApi();
 
-  const { result, error } = yield apiClient.get('contributors')
+  const { result } = yield apiClient.get('contributors')
 
   if (result) {
     yield put(contributors.set(result))

@@ -35,7 +35,7 @@ interface ApiOptions {
 }
 
 const defaultHeaders = (
-  { nonce, auth, bearer }: { nonce: string; auth: string; bearer: string },
+  { nonce, auth, bearer }: { nonce?: string; auth?: string; bearer?: string },
   headers: { [key: string]: string } = {}
 ) => ({
   'Content-Type': 'application/json',

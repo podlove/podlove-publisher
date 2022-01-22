@@ -1,53 +1,57 @@
 <template>
-  <form ref="importForm" class="cursor-pointer" @click="simulateImportClick">
-    <div
-      class="
-        flex
-        justify-center
-        items-center
-        p-4
-        flex-col
-        bg-white
-        rounded
-        border-gray-400 border-2 border-dashed
-      "
-    >
-      <button
-        class="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-300 mb-5"
-        type="button"
+  <tooltip>
+    <template v-slot:trigger>
+      <podlove-button variant="secondary" size="small" @click="simulateImportClick()"
+        >Import</podlove-button
       >
-        Import Chapters
-      </button>
-      <div class="text-xs text-gray-500 italic">
-        Accepts:
-        <a
-          class="text-blue-500 underline"
-          href="https://podlove.org/simple-chapters/"
-          target="_blank"
-          >Podlove Simple Chapters</a
-        >
-        (<code>.psc</code>),
-        <a class="text-blue-500 underline" href="http://www.audacityteam.org" target="_blank"
-          >Audacity</a
-        >
-        Track Labels,
-        <a class="text-blue-500 underline" href="https://hindenburg.com" target="_blank"
-          >Hindenburg</a
-        >
-        project files and MP4Chaps (<code>.txt</code>)
+      <input ref="import" type="file" @change="importChapters" class="hidden" />
+    </template>
+    <template v-slot:content>
+      <div class="text-xs">
+        <p class="text-gray-600 leading-3 font-semibold mb-2">Accepts:</p>
+        <ul class="text-gray-500 ml-1">
+          <li class="mb-1">
+            <a
+              class="text-blue-500 underline"
+              href="https://podlove.org/simple-chapters/"
+              target="_blank"
+              >Podlove Simple Chapters</a
+            >
+            (<code>.psc</code>),
+          </li>
+          <li class="mb-1">
+            <a class="text-blue-500 underline" href="http://www.audacityteam.org" target="_blank"
+              >Audacity</a
+            >
+            Track Labels,
+          </li>
+          <li class="mb-1">
+            <a class="text-blue-500 underline" href="https://hindenburg.com" target="_blank"
+              >Hindenburg</a
+            >
+            project files and MP4Chaps (<code>.txt</code>)
+          </li>
+        </ul>
       </div>
-    </div>
-
-    <input ref="import" type="file" @change="importChapters" class="hidden" />
-  </form>
+    </template>
+  </tooltip>
 </template>
 
 <script lang="ts">
 import { get } from 'lodash'
 import { injectStore } from 'redux-vuex'
 import { parse as parseChapters } from '@store/chapters.store'
+import { defineComponent } from '@vue/runtime-core'
 
-export default {
+import PodloveButton from '@components/button/Button.vue'
+import Tooltip from '@components/tooltip/Tooltip.vue'
+
+export default defineComponent({
+  components: {
+    PodloveButton,
+    Tooltip,
+  },
+
   setup() {
     return {
       dispatch: injectStore().dispatch,
@@ -73,8 +77,7 @@ export default {
         }
 
         reader
-          .readAsText(get(fileInput, ['files', 0], ''))
-          (
+          .readAsText(get(fileInput, ['files', 0], ''))(
             // reset import element
             this.$refs.importForm as HTMLFormElement
           )
@@ -82,7 +85,7 @@ export default {
       } catch (err) {}
     },
   },
-}
+})
 </script>
 
 <style>

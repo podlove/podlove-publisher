@@ -1,30 +1,31 @@
 <template>
   <module name="chapters" title="Chapter Marks">
-    <tabs-container>
-      <tab name="chapters" title="Chapters">
-        <chapters-form></chapters-form>
-      </tab>
-      <tab name="import" title="Import">
-        <chapters-import></chapters-import>
-      </tab>
-      <tab name="export" title="Export">
-        <chapters-export></chapters-export>
-      </tab>
-    </tabs-container>
+    <template v-slot:actions>
+      <chapters-import class="mr-1"></chapters-import>
+      <chapters-export></chapters-export>
+    </template>
+    <chapters-form></chapters-form>
   </module>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { TabsContainer, Tab } from '@components/tabs'
-import Module from '@components/module'
+import Module from '@components/module/Module.vue'
 
-import ChaptersForm from './components/Form.vue';
-import ChaptersImport from './components/Import.vue';
-import ChaptersExport from './components/Export.vue';
+import ChaptersForm from './components/Form.vue'
+import ChaptersImport from './components/Import.vue'
+import ChaptersExport from './components/Export.vue'
 
 export default defineComponent({
-  components: { Module, TabsContainer, Tab, ChaptersForm, ChaptersImport, ChaptersExport }
+  components: {
+    Module,
+    TabsContainer,
+    Tab,
+    ChaptersForm,
+    ChaptersImport,
+    ChaptersExport
+  },
 })
 </script>
 

@@ -28,8 +28,9 @@
 import { get } from 'lodash'
 import { injectStore } from 'redux-vuex'
 import { importTranscripts } from '@store/transcripts.store'
+import { defineComponent } from '@vue/runtime-core'
 
-export default {
+export default defineComponent({
   setup() {
     return {
       dispatch: injectStore().dispatch,
@@ -64,7 +65,7 @@ export default {
       } catch (err) {}
     },
   },
-}
+})
 </script>
 
 <style>

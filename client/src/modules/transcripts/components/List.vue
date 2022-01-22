@@ -1,12 +1,16 @@
 <template>
-  <div class="max-h-96 overflow-x-auto">
+  <div class="max-h-96 p-2 overflow-x-auto" v-if="transcripts.length > 0">
     <div
       class="flex mb-2"
       v-for="(transcript, sindex) in transcripts"
       :key="`transcript-${sindex}`"
     >
       <div class="mr-2 w-12 text-gray-400">
-        <img class="w-12 h-12 rounded" v-if="transcript?.voice?.avatar" :src="transcript?.voice?.avatar" />
+        <img
+          class="w-12 h-12 rounded"
+          v-if="transcript?.voice?.avatar"
+          :src="transcript?.voice?.avatar"
+        />
         <avatar v-else />
       </div>
       <div class="w-full font-light text-sm mr-2">
@@ -23,18 +27,27 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <p class="font-light">No transcripts available yet. You need to import a transcript.</p>
+  </div>
 </template>
 
 <script lang="ts">
+import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
 import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
-import { PodloveTranscript, PodloveTranscriptVoice } from '@types/transcripts.types'
-import { PodloveContributor } from '@types/contributors.types'
 import Avatar from '@components/icons/Avatar.vue'
 
+import { PodloveTranscript } from '../../../types/transcripts.types'
+import { PodloveContributor } from '../../../types/contributors.types'
+
 interface Transcript {
-  voice: string
+  voiceId: string
+  voice: {
+    avatar: string
+    name: string
+  }
   content: {
     text: string
     start: number
@@ -42,9 +55,9 @@ interface Transcript {
   }[]
 }
 
-export default {
+export default defineComponent({
   components: {
-    Avatar
+    Avatar,
   },
 
   setup() {
@@ -58,11 +71,11 @@ export default {
   },
 
   computed: {
-    voices() {
+    voices(): { [key: string]: { id: string; name: string; avatar: string } }[] {
       return this.state.contributors.reduce(
         (result: { name: string; avatar: string }[], contributor: PodloveContributor) => {
           const voice = this.state.voices.find(
-            (voice: PodloveTranscriptVoice) => voice.contributor === contributor.id
+            (voice: { voice: string; contributor: string }) => voice.contributor === contributor.id
           )?.voice
 
           return {
@@ -78,16 +91,17 @@ export default {
       )
     },
 
-    transcripts() {
+    transcripts(): Transcript[] {
       return this.state.transcripts
         .reduce((result: Transcript[], transcript: PodloveTranscript) => {
           const lastTranscript = last(result)
 
-          if (lastTranscript && lastTranscript.voice === transcript.voice) {
+          if (lastTranscript && lastTranscript.voiceId === transcript.voice) {
             return [
               ...dropRight(result),
               {
                 ...lastTranscript,
+                voiceId: transcript.voice,
                 content: [
                   ...lastTranscript.content,
                   {
@@ -116,11 +130,11 @@ export default {
         }, [])
         .map((transcript: Transcript) => ({
           ...transcript,
-          voice: get(this.voices, [transcript.voice], { name: transcript.voice }),
+          voice: get(this.voices, [transcript.voiceId], { name: transcript.voiceId }),
         }))
     },
   },
-}
+})
 </script>
 
 <style>

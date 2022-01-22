@@ -12,7 +12,7 @@ export default defineConfig({
       '/wp-json': 'http://podlove.local'
     }
   },
-  root: path.resolve(__dirname, 'js'),
+  root: path.resolve(__dirname),
   resolve: {
     alias: {
       vue: 'vue/dist/vue.esm-bundler.js',
@@ -24,7 +24,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: path.resolve(root, 'js', 'dist'),
+    outDir: path.resolve(root, 'dist'),
     rollupOptions: {
       output: {
         entryFileNames: `client.js`,

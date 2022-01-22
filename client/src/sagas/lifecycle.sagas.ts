@@ -1,11 +1,11 @@
-import { eventChannel, END } from 'redux-saga'
+import { eventChannel, END, EventChannel } from 'redux-saga'
 import { call, takeEvery, put } from 'redux-saga/effects'
 
 import * as lifecycle from '@store/lifecycle.store'
 
-function lifecycleSaga() {
+function lifecycleSaga(): () => any {
   return function* () {
-    const saveChannel = yield call(clickListener, 'click', 'button.editor-post-publish-button')
+    const saveChannel: EventChannel<any> = yield call(clickListener, 'click', 'button.editor-post-publish-button')
     yield takeEvery(saveChannel, save)
   }
 }
@@ -16,19 +16,19 @@ function* save() {
 
 function clickListener(eventName: string, selector: string) {
   return eventChannel(emitter => {
-    let target
+    let target: HTMLElement
 
     const eventListener = (event: MouseEvent) => {
       emitter(event)
-    }
+    };
 
     window.addEventListener('load', () => {
-      target = document.querySelector(selector);
-      target.addEventListener(eventName, eventListener);
+      target = document.querySelector(selector) as HTMLElement;
+      target?.addEventListener(eventName, eventListener as EventListener);
     })
 
     return () => {
-      target?.removeEventListener(eventName, eventListener)
+      target?.removeEventListener(eventName, eventListener as EventListener)
       emitter(END)
     }
   })

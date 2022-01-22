@@ -1,5 +1,5 @@
 import { handleActions, createAction } from 'redux-actions'
-import { PodloveChapter } from '@types/chapters.types';
+import { PodloveChapter } from '../types/chapters.types';
 
 export type State = {
   saved: boolean;
