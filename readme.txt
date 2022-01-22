@@ -1,6 +1,6 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert
-Donate link: http://podlove.org/donations/
+Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
 Tested up to: 5.8.3
