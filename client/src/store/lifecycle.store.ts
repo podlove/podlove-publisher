@@ -8,6 +8,7 @@ export type State = {
 }
 
 export const INIT = 'podlove/publisher/INIT'
+export const READY = 'podlove/publisher/READY'
 export const SAVE = 'podlove/publisher/SAVE'
 export const ERROR = 'podlove/publisher/ERROR'
 
@@ -21,6 +22,7 @@ export const init = createAction<{
 
 export const save = createAction<void>(SAVE)
 export const error = createAction<any>(ERROR)
+export const ready = createAction<void>(READY)
 
 export const initialState: State = {
   saved: false,

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build --base=/wp-content/plugins/podlove-publisher/client/dist/",
+    "build": "vue-tsc --noEmit && NODE_ENV=production vite build --base=/wp-content/plugins/podlove-publisher/client/dist/",
     "serve": "vite build --watch --base=/wp-content/plugins/podlove-publisher/client/dist/",
     "dev": "vite"
   },
@@ -12,9 +12,11 @@
     "typescript": "4.4.3",
     "vite": "2.6.4",
     "vue-tsc": "0.30.5",
-    "postcss-nested": "5.0.6",
+    "postcss-import": "14.0.2",
     "@types/lodash": "4.14.175",
-    "@types/redux-actions": "2.6.2"
+    "@types/redux-actions": "2.6.2",
+    "postcss-prefix-selector": "1.14.0",
+    "cssnano": "5.0.15"
   },
   "dependencies": {
     "@podlove/web-player": "4.5.13",
@@ -30,7 +32,6 @@
     "@heroicons/vue": "1.0.5",
     "@headlessui/vue": "1.4.3",
     "autoprefixer": "10.3.7",
-    "normalplaytime": "1.0.4",
     "podcast-chapter-parser-audacity": "1.0.0",
     "podcast-chapter-parser-hindenburg": "1.0.2",
     "podcast-chapter-parser-mp4chaps": "1.0.2",

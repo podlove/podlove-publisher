@@ -11,9 +11,6 @@ Vue.component('v-select', vSelect)
 
 // chapters
 
-import Chapters from './components/Chapters'
-import Chapter from './components/Chapter'
-import ChapterForm from './components/ChapterForm'
 import JobsDashboard from './components/JobsDashboard'
 import AnalyticsDatePicker from './components/AnalyticsDatePicker'
 import Slacknotes from './components/Slacknotes'
@@ -23,9 +20,6 @@ import Transcripts from './components/Transcripts'
 import Soundbite from './components/Soundbite'
 import Draggable from 'vuedraggable'
 
-Vue.component('chapters', Chapters);
-Vue.component('chapter', Chapter);
-Vue.component('chapter-form', ChapterForm);
 Vue.component('jobs-dashboard', JobsDashboard);
 Vue.component('analytics-date-picker', AnalyticsDatePicker);
 Vue.component('jobs-dashboard', JobsDashboard);

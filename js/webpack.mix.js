@@ -11,7 +11,7 @@ let mix = require("laravel-mix");
  |
  */
 
-mix
+mix.js('src/app.js', 'dist/').vue()
   .combine(
     [
       "node_modules/clipboard/dist/clipboard.min.js",

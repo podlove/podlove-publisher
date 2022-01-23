@@ -20,6 +20,11 @@
                 <p v-if="isDurationNotValid">The duration has not the correct format. Please use HH:MM:SS</p>
             </div>
             <div class="soundbite-space"></div>
+            <div class="soudbite-formitem">
+                <label>Soundbite title</label>
+                <input v-model="title" class="form-input" type="text"  placeholder="optional" @focusout="sendTitleToPodlove"/>
+            </div>
+            <div class="soundbite-space"></div>
             <div class="soundbite-button">
                 <button class="button" type="button" @click="clearData">
                     Clear
@@ -142,7 +147,7 @@ export default {
             .patch(url,
             {
                 soundbite_start: this.start,
-                soundbite_duration: this.duration
+                soundbite_duration: this.duration,
             },
             {
             headers: {
@@ -161,17 +166,40 @@ export default {
         this.oldEnd = this.end;
         this.oldDuration = this.duration;
     },
+    sendTitleToPodlove: function() {
+        let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id;
+        this.axios
+            .patch(url,
+            {
+                soundbite_title: this.title
+            },
+            {
+            headers: {
+            'X-WP-Nonce': podlove_vue.nonce
+            }
+            })
+            .then(({$data}) => {
+
+            })
+            .catch((error) => {
+                alert("Daten konnten nicht eingetragen werden");
+                console.log(error);
+        });
+
+    },
     clearData: function() {
         this.start = '00:00:00';
         this.end = '00:00:00';
         this.duration = '00:00:00';
+        this.title = '';
 
         let url = podlove_vue.rest_url + 'podlove/v1/episodes/' + podlove_vue.episode_id;
         this.axios
             .patch(url,
             {
                 soundbite_start: this.start,
-                soundbite_duration: this.duration
+                soundbite_duration: this.duration,
+                soundbite_title: this.title
             },
             {
             headers: {
@@ -189,6 +217,7 @@ export default {
         this.oldStart = this.start;
         this.oldDuration = this.duration;
         this.oldEnd = this.end;
+        this.oldTitle = this.title;
 
     },
     getTimeAsMilliSec: function(text) {
@@ -250,6 +279,7 @@ export default {
             const response = await this.$http.get(url);
             this.start = response.data.soundbite_start;
             this.duration = response.data.soundbite_duration;
+            this.title = response.data.soundbite_title;
             this.calculateEndTime();
             this.dataReadFinish = true;
         }
@@ -276,6 +306,8 @@ export default {
         oldStart: '00:00:00',
         oldEnd: '00:00:00',
         oldDuration: '00:00:00',
+        title: '',
+        oldTitle: '',
         startValid: false,
         durationValid: false,
         endValid: false,

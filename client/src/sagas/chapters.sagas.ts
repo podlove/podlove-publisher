@@ -7,15 +7,15 @@ import Hindenburg from 'podcast-chapter-parser-hindenburg'
 import Psc from 'podcast-chapter-parser-psc'
 
 import keyboard from '@podlove/utils/keyboard'
-import { selectors, sagas } from '@store'
-import * as chapters from '@store/chapters.store'
-import { PodloveChapter } from '../../types/chapters.types'
+import { selectors } from '@store'
 import Timestamp from '@lib/timestamp'
-import { notify } from '@store/notification.store'
-
-import { channel } from '../../sagas/helper'
-import { createApi } from '../../sagas/api'
 import { PodloveApiClient } from '@lib/api'
+import { notify } from '@store/notification.store'
+import * as chapters from '@store/chapters.store'
+
+import { PodloveChapter } from '../types/chapters.types'
+import { channel } from '../sagas/helper'
+import { createApi } from '../sagas/api'
 
 function* chaptersSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -146,7 +146,7 @@ function download(name: string, data: any) {
 }
 
 // Import handling
-function* handleImport(action: { type: string, payload: string }) {
+function* handleImport(action: { type: string; payload: string }) {
   const parser: ((text: string) => PodloveChapter[])[] = [
     MP4Chaps.parse,
     Audacity.parse,
@@ -213,4 +213,8 @@ function* handleKeydown(input: {
   }
 }
 
-sagas.run(chaptersSaga)
+export default function () {
+  return function* () {
+    yield takeEvery(chapters.INIT, chaptersSaga)
+  }
+}

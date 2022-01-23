@@ -1,7 +1,10 @@
 module.exports = {
   plugins: [
-    require('postcss-nested'),
+    require('postcss-import'),
+    require('tailwindcss/nesting'),
+    require('tailwindcss'),
     require('autoprefixer'),
-    require('tailwindcss')
+    ...(process.env.NODE_ENV === 'production' ? [ require('cssnano') ] : []),
+    require('postcss-prefix-selector')({ prefix: '*[data-client="podlove"]' }),
   ]
 }

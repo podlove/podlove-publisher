@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      '/wp-json': 'http://podlove.local'
+      '/wp-json': process.env.WORDPRESS_URL || 'http://podlove.local'
     }
   },
   root: path.resolve(__dirname),
@@ -25,6 +25,7 @@ export default defineConfig({
   },
   build: {
     outDir: path.resolve(root, 'dist'),
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
         entryFileNames: `client.js`,

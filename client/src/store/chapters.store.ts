@@ -1,7 +1,6 @@
 import { get } from 'lodash'
 import { handleActions, createAction } from 'redux-actions'
 import { PodloveChapter } from '../types/chapters.types'
-import { init } from './lifecycle.store'
 
 export type State = {
   chapters: PodloveChapter[]
@@ -13,6 +12,7 @@ export const initialState: State = {
   selected: null,
 }
 
+export const INIT = 'podlove/publisher/chapter/INIT'
 export const UPDATE = 'podlove/publisher/chapter/UPDATE'
 export const SELECT = 'podlove/publisher/chapter/SELECT'
 export const REMOVE = 'podlove/publisher/chapter/REMOVE'
@@ -22,6 +22,7 @@ export const PARSED = 'podlove/publisher/chapter/PARSED'
 export const SET = 'podlove/publisher/chapter/SET'
 export const DOWNLOAD = 'podlove/publisher/chapter/DOWNLOAD'
 
+export const init = createAction<void>(INIT);
 export const update = createAction<{ chapter: Partial<PodloveChapter>; index: number }>(UPDATE)
 export const select = createAction<number | null>(SELECT)
 export const remove = createAction<number>(REMOVE)
@@ -33,12 +34,12 @@ export const download = createAction<'psc' | 'mp4'>(DOWNLOAD)
 
 export const reducer = handleActions(
   {
-    [PARSED]: (state: State, action: typeof init): State => ({
+    [PARSED]: (state: State, action: typeof parsed): State => ({
       ...state,
       selected: null,
       chapters: get(action, ['payload'], []) as PodloveChapter[],
     }),
-    [SET]: (state: State, action: typeof init): State => ({
+    [SET]: (state: State, action: typeof set): State => ({
       ...state,
       selected: null,
       chapters: get(action, ['payload'], []) as PodloveChapter[],

@@ -2,16 +2,22 @@ import { eventChannel, END, EventChannel } from 'redux-saga'
 import { call, takeEvery, put } from 'redux-saga/effects'
 
 import * as lifecycle from '@store/lifecycle.store'
+import { sleep } from './helper'
 
 function lifecycleSaga(): () => any {
   return function* () {
     const saveChannel: EventChannel<any> = yield call(clickListener, 'click', 'button.editor-post-publish-button')
     yield takeEvery(saveChannel, save)
+    yield takeEvery(lifecycle.INIT, ready)
   }
 }
 
 function* save() {
   yield put(lifecycle.save())
+}
+
+function* ready() {
+  yield put(lifecycle.ready());
 }
 
 function clickListener(eventName: string, selector: string) {

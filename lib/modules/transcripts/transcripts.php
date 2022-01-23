@@ -106,11 +106,6 @@ class Transcripts extends \Podlove\Modules\Base
 
     public function extend_episode_form($form_data, $episode)
     {
-        add_filter('podlove_data_js', function ($data) {
-          $data['transcripts'] = json_encode($episode);
-          return $data;
-        });
-
         $form_data[] = [
             'type' => 'callback',
             'key' => 'transcripts',

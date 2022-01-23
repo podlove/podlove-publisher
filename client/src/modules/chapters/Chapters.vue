@@ -13,6 +13,10 @@ import { defineComponent } from 'vue'
 import { TabsContainer, Tab } from '@components/tabs'
 import Module from '@components/module/Module.vue'
 
+import { injectStore } from 'redux-vuex'
+
+import * as chapters from '@store/chapters.store'
+
 import ChaptersForm from './components/Form.vue'
 import ChaptersImport from './components/Import.vue'
 import ChaptersExport from './components/Export.vue'
@@ -26,6 +30,16 @@ export default defineComponent({
     ChaptersImport,
     ChaptersExport
   },
+
+  setup(): { dispatch: Function } {
+    return {
+      dispatch: injectStore().dispatch,
+    }
+  },
+
+  created() {
+    this.dispatch(chapters.init())
+  }
 })
 </script>
 

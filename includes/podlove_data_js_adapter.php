@@ -20,6 +20,12 @@ function podlove_init_js_adapter()
       <?php foreach ($data as $key => $value) { ?>
           window.PODLOVE_DATA['<?php echo $key; ?>'] = JSON.parse('<?php echo $value; ?>');
       <?php } ?>
+
+      window.addEventListener('load', function () {
+        if (window.initPodloveUI) {
+          window.initPodloveUI(window.PODLOVE_DATA);
+        }
+      })
     </script>
 <?php
 }

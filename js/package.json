@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "serve": "mix watch --mix-config=webpack.legacy.js",
-    "build": "mix --mix-config=webpack.legacy.js --production"
+    "serve": "mix watch --mix-config=webpack.mix.js",
+    "build": "mix --mix-config=webpack.mix.js --production"
   },
   "devDependencies": {
     "dompurify": "^2.1.1",
@@ -13,7 +13,8 @@
     "podcast-chapter-parser-hindenburg": "^1.0.2",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
-    "vue": "^2.6.12"
+    "vue": "^2.6.12",
+    "vue-loader": "^15.9.8"
   },
   "dependencies": {
     "@podlove/web-player": "^4.5.13",

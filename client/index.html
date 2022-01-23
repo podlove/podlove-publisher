@@ -4,33 +4,45 @@
     <title>Podlove Publisher Client Development Environment</title>
     <link rel="shortcut icon" href="#" />
   </head>
-  <body>
+  <body class="bg-gray-100 p-2">
     <script>
-      window.PODLOVE_DATA = {
-        api: {
-          base: 'http://localhost:3000/wp-json/podlove',
-          bearer: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9wb2Rsb3ZlLmxvY2FsIiwiaWF0IjoxNjM4MDg4NTAzLCJuYmYiOjE2MzgwODg1MDMsImV4cCI6MTYzODY5MzMwMywiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiNSJ9fX0.5YQavqfOMYpzwRJSz4lUCx4XUzcgkl4l_Gj96NH0JsU'
-        },
-        post: {
-          id: '60'
-        },
-        episode: {
-          id: '8',
-          duration: '01:40:02.577',
-        }
-      }
+      window.ajaxurl = '/wp-admin/admin-ajax.php'
+      window.apiPrefix = '/api'
     </script>
-
-    <button type="button" class="editor-post-publish-button">Save</button>
 
     <div data-client="podlove">
       <podlove-chapters></podlove-chapters>
+      <div class="h-5"></div>
       <podlove-transcripts></podlove-transcripts>
     </div>
 
-    <form class="metabox-location-normal"></form>
-
     <script type="module" src="./src/client.ts"></script>
-    <link rel="stylesheet" href="./src/tailwind.css" />
+
+    <script>
+      fetch('http://localhost:3000/wp-json/jwt-auth/v1/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: 'api', password: 'api' }),
+      })
+        .then((res) => res.json())
+        .then(({ token }) => {
+          window.initPodloveUI({
+            baseUrl: 'http://podlove.local',
+            api: {
+              base: 'http://localhost:3000/wp-json/podlove',
+              bearer: token,
+            },
+            post: {
+              id: '60',
+            },
+            episode: {
+              id: '8',
+              duration: '01:40:02.577',
+            },
+          })
+        })
+    </script>
   </body>
 </html>

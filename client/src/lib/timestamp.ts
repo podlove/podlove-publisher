@@ -1,5 +1,4 @@
-// @ts-ignore
-import npt from 'normalplaytime'
+import * as npt from './normalplaytime'
 
 export default class Timestamp {
   constructor(public totalMs: number) {}
@@ -68,7 +67,7 @@ export default class Timestamp {
     if (t == parseInt(t as string, 10)) {
       ms = parseInt(t as string, 10)
     } else {
-      ms = npt.parse(t)
+      ms = npt.parse(t as string) || 0
     }
 
     return new Timestamp(ms)

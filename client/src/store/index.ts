@@ -19,7 +19,7 @@ import { State as transcriptsState } from './transcripts.store'
 import { State as contributorsState } from './contributors.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
-import contributorsSaga from '../sagas/contributors.sagas'
+import chaptersSaga from '../sagas/chapters.sagas'
 import notificationSaga from '../sagas/notification.saga'
 
 export interface State {
@@ -38,7 +38,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 export const store: Store<State> = createStore(reducers, composeEnhancers(applyMiddleware(sagas)))
 
 sagas.run(lifecycleSaga());
-sagas.run(contributorsSaga());
 sagas.run(notificationSaga());
+sagas.run(chaptersSaga());
 
 export { selectors, sagas }
