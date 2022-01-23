@@ -15,7 +15,7 @@ class Soundbite extends \Podlove\Modules\Base
         $this->add_soundbite_to_feed();
     }
 
-    public function extend_epsiode_form($form_data, $epsiode)
+    public function extend_epsiode_form($form_data, $episode)
     {
         $form_data[] = [
             'type' => 'callback',
@@ -42,12 +42,12 @@ class Soundbite extends \Podlove\Modules\Base
         add_action('podlove_append_to_feed_entry', [$this, 'add_soundbite_to_episode_feed'], 10, 4);
     }
 
-    public function add_soundbite_to_episode_feed($podcast, $epsiode, $feed, $format)
+    public function add_soundbite_to_episode_feed($podcast, $episode, $feed, $format)
     {
-        if ($epsiode->get_soundbite_start() && $epsiode->get_soundbite_duration()) {
-            $title = $epsiode->title;
-            $start = $epsiode->soundbite_start;
-            $duration = $epsiode->soundbite_duration;
+        if ($episode->get_soundbite_start() && $episode->get_soundbite_duration()) {
+            $title = $episode->soundbite_title;
+            $start = $episode->soundbite_start;
+            $duration = $episode->soundbite_duration;
 
             $start_sec = \Podlove\NormalPlayTime\Parser::parse($start, 'ms');
             $start_sec = $start_sec / 1000.;
@@ -57,8 +57,13 @@ class Soundbite extends \Podlove\Modules\Base
             if ($duration_sec > 0) {
                 $doc = new \DOMDocument();
                 $node = $doc->createElement('podcast:soundbite');
-                $text = $doc->createTextNode($title);
-                $node->appendChild($text);
+                if ($title && strlen($title) > 0) {
+                    $text = $doc->createTextNode($title);
+                    $node->appendChild($text);
+                } else {
+                    $text = $doc->createTextNode('');
+                    $node->appendChild($text);
+                }
                 $attr = $doc->createAttribute('startTime');
                 $attr->value = number_format($start_sec, 3);
                 $node->appendChild($attr);
@@ -68,7 +73,7 @@ class Soundbite extends \Podlove\Modules\Base
 
                 $xml = $doc->saveXML($node);
 
-                echo "\n\t\t" . $xml . "\n";
+                echo "\n\t\t".$xml."\n";
             }
         }
     }

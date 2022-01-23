@@ -165,13 +165,10 @@ class Podcast_Post_Meta_Box
                 $format = $asset->file_type();
                 $file = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
                 $size = is_object($file) ? (int) $file->size : 0;
-                if ($size === 1) {
-                    $size = 'unknown';
-                }
 
                 $attributes = [
                     'data-template' => \Podlove\Model\Podcast::get()->get_url_template(),
-                    'data-size' => number_format_i18n($size),
+                    'data-size' => $size === 1 ? 'unknown' : number_format_i18n($size),
                     'data-episode-asset-id' => $asset->id,
                     'data-episode-id' => $episode->id,
                     'data-file-url' => (is_object($file)) ? $file->get_file_url() : '',

@@ -466,3 +466,4 @@ Episode::property('license_name', 'TEXT');
 Episode::property('license_url', 'TEXT');
 Episode::property('soundbite_start', 'VARCHAR(255)');
 Episode::property('soundbite_duration', 'VARCHAR(255)');
+Episode::property('soundbite_title', 'VARCHAR(255)');

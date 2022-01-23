@@ -78,7 +78,8 @@ function episodes_api($request)
         'number' => $episode->number,
         'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
         'soundbite_start' => $episode->soundbite_start,
-        'soundbite_duration' => $episode->soundbite_duration
+        'soundbite_duration' => $episode->soundbite_duration,
+        'soundbite_title' => $episode->soundbite_title
         // @todo: all media files
     ]);
 }
@@ -126,6 +127,11 @@ function episodes_update_api($request)
         } else {
             return;
         }
+    }
+
+    if (isset($request['soundbite_title'])) {
+        $title = $request['soundbite_title'];
+        $episode->soundbite_title = $title;
     }
 
     $episode->save();

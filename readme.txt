@@ -106,6 +106,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-01-14 =
+
+* soundbites: add title field ([#1257](https://github.com/podlove/podlove-publisher/pull/1257), [#1237](https://github.com/podlove/podlove-publisher/issues/1237))
+* fix PHP 8 warnings ([#1258](https://github.com/podlove/podlove-publisher/issues/1258))
+* fix: deleting an episode deletes its transcript from the database ([#1252](https://github.com/podlove/podlove-publisher/issues/1252))
+
+= 2021-11-11 =
+
+- shownotes: set target=_blank on exported html links
+- allow detection of episode duration on mp4 ([#1249](https://github.com/podlove/podlove-publisher/pull/1249))
+- fix(contributors): notification test email ([#1247](https://github.com/podlove/podlove-publisher/issues/1247))
+- fix(analytics): filtering of httprange requests with one or two bytes ([#1243](https://github.com/podlove/podlove-publisher/issues/1243))
+
 = 2021-11-02 =
 
 **Contributors**
