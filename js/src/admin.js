@@ -21,7 +21,7 @@ var PODLOVE = PODLOVE || {};
 jQuery.ajaxSetup({
     beforeSend: function (xhr, settings) {
         if (settings.url.includes("wp-json")) {
-            xhr.setRequestHeader("X-WP-Nonce", podlove_vue.nonce);
+            xhr.setRequestHeader("X-WP-Nonce", podlove_admin_global.nonce);
         }
     },
 });

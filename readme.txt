@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.7.1 =
+
+* fix: JavaScript loading issue on episode page
+
 = 3.7.0 =
 
 **Shownotes**
