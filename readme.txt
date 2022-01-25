@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.7.2 =
+
+* fix: fatal error when trying to display erroneous show notes thumbnail
+
 = 3.7.1 =
 
 * fix: JavaScript loading issue on episode page
