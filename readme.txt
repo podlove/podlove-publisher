@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2022-01-28 =
 
 - episode: after file revalidation, auto-detect duration
+- contributors: assign a `Sponsor` role and it will appear as `<podcast:person ... role="sponsor">...` in the RSS feed
 
 = 2022-01-21 =
 

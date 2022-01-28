@@ -973,6 +973,10 @@ class Contributors extends \Podlove\Modules\Base
                         $matching_role = 'host';
 
                         break;
+                    case 'sponsor':
+                        $matching_role = 'sponsor';
+
+                        break;
 
                     default:
                         $matching_role = null;
