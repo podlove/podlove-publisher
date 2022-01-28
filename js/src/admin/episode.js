@@ -244,6 +244,13 @@ var PODLOVE = PODLOVE || {};
  				complete: function(xhr, status) {
  					ajax_requests.pop();
  					o.update_preview_row(container);
+
+                    // after revalidating, auto-detect duration
+                    if (ajax_requests.length === 0) {
+                        window.setTimeout(() => {
+                            document.querySelector("#podlove_detect_duration").click();
+                        }, 250);
+                    }
  				}
  			});
  			ajax_requests.push(request);

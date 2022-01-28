@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-01-28 =
+
+- episode: after file revalidation, auto-detect duration
+
 = 2022-01-21 =
 
 - New module: Automatic Numbering. Automatically increase the Episode number when creating episodes. When using the "Shows" module, each show has its own numbering.
