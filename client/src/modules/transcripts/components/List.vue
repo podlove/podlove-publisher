@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-96 p-2 overflow-x-auto" v-if="transcripts.length > 0">
+  <div class="h-96 p-2 overflow-x-auto" v-if="transcripts.length > 0">
     <div
       class="flex mb-2"
       v-for="(transcript, sindex) in transcripts"
@@ -27,8 +27,16 @@
       </div>
     </div>
   </div>
-  <div v-else>
-    <p class="font-light">No transcripts available yet. You need to import a transcript.</p>
+  <div v-else class="text-center h-96 flex items-center justify-center flex-col">
+    <document-text-icon class="mx-auto h-12 w-12 text-gray-400" />
+
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No transcripts</h3>
+    <p class="mt-1 text-sm text-gray-500">Get started by importing a transcript.</p>
+    <div class="mt-6">
+      <podlove-button variant="primary" @click="console.log('import!')" class="ml-1">
+        <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Import Transcript
+      </podlove-button>
+    </div>
   </div>
 </template>
 
@@ -36,8 +44,10 @@
 import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
 import { mapState } from 'redux-vuex'
+import { UploadIcon, DocumentTextIcon } from '@heroicons/vue/outline'
 import selectors from '@store/selectors'
 import Avatar from '@components/icons/Avatar.vue'
+import PodloveButton from '@components/button/Button.vue'
 
 import { PodloveTranscript } from '../../../types/transcripts.types'
 import { PodloveContributor } from '../../../types/contributors.types'
@@ -57,7 +67,7 @@ interface Transcript {
 
 export default defineComponent({
   components: {
-    Avatar,
+    Avatar, DocumentTextIcon, UploadIcon, PodloveButton
   },
 
   setup() {
@@ -92,10 +102,10 @@ export default defineComponent({
     },
 
     transcripts(): Transcript[] {
+      console.log(this.voices)
       return this.state.transcripts
         .reduce((result: Transcript[], transcript: PodloveTranscript) => {
           const lastTranscript = last(result)
-
           if (lastTranscript && lastTranscript.voiceId === transcript.voice) {
             return [
               ...dropRight(result),
@@ -117,7 +127,7 @@ export default defineComponent({
           return [
             ...result,
             {
-              voice: transcript.voice,
+              voiceId: transcript.voice,
               content: [
                 {
                   text: transcript.text,

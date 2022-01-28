@@ -19,8 +19,10 @@ import { State as transcriptsState } from './transcripts.store'
 import { State as contributorsState } from './contributors.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
-import chaptersSaga from '../sagas/chapters.sagas'
 import notificationSaga from '../sagas/notification.saga'
+import chaptersSaga from '../sagas/chapters.sagas'
+import transcriptsSaga from '../sagas/transcripts.sagas'
+import contributorsSaga from '../sagas/contributors.sagas'
 
 export interface State {
   lifecycle: LifecycleState;
@@ -40,5 +42,7 @@ export const store: Store<State> = createStore(reducers, composeEnhancers(applyM
 sagas.run(lifecycleSaga());
 sagas.run(notificationSaga());
 sagas.run(chaptersSaga());
+sagas.run(transcriptsSaga());
+sagas.run(contributorsSaga());
 
 export { selectors, sagas }

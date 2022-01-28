@@ -14,7 +14,7 @@ import { notify } from '@store/notification.store'
 import * as chapters from '@store/chapters.store'
 
 import { PodloveChapter } from '../types/chapters.types'
-import { channel } from '../sagas/helper'
+import { channel, takeFirst } from '../sagas/helper'
 import { createApi } from '../sagas/api'
 
 function* chaptersSaga(): any {
@@ -215,6 +215,6 @@ function* handleKeydown(input: {
 
 export default function () {
   return function* () {
-    yield takeEvery(chapters.INIT, chaptersSaga)
+    yield takeFirst(chapters.INIT, chaptersSaga)
   }
 }

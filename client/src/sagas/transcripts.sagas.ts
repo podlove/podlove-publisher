@@ -1,12 +1,13 @@
 import { fork } from '@redux-saga/core/effects'
 import { takeEvery, select, put } from 'redux-saga/effects'
 import { get } from 'lodash'
-import { selectors, sagas } from '@store'
-import { PodloveTranscript, PodloveTranscriptVoice } from '../../types/transcripts.types'
+import { selectors } from '@store'
+import { PodloveTranscript, PodloveTranscriptVoice } from '../types/transcripts.types'
 import * as transcriptsStore from '@store/transcripts.store'
-import { createApi } from '../../sagas/api'
+import { createApi } from './api'
 import { PodloveApiClient } from '@lib/api'
 import { notify } from '@store/notification.store'
+import { takeFirst } from './helper'
 
 function* transcriptsSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -72,4 +73,9 @@ function* deleteTranscripts(api: PodloveApiClient) {
   }
 }
 
-sagas.run(transcriptsSaga)
+export default function () {
+  return function* () {
+    yield takeFirst(transcriptsStore.INIT, transcriptsSaga)
+  }
+}
+

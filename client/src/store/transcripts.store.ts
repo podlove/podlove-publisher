@@ -2,12 +2,14 @@ import { handleActions, createAction } from 'redux-actions'
 
 import { PodloveTranscript, PodloveTranscriptVoice } from '../types/transcripts.types'
 
+export const INIT = 'podlove/publisher/transcript/INIT'
 export const SET_TRANSCRIPTS = 'podlove/publisher/transcript/SET_TRANSCRIPTS'
 export const SET_VOICES = 'podlove/publisher/transcript/SET_VOICES'
 export const UPDATE_VOICE = 'podlove/publisher/transcript/UPDATE_VOICE'
 export const IMPORT_TRANSCRIPTS = 'podlove/publisher/transcript/IMPORT_TRANSCRIPTS'
 export const DELETE_TRANSCRIPTS = 'podlove/publisher/transcript/DELETE_TRANSCRIPTS'
 
+export const init = createAction<void>(INIT)
 export const setTranscripts = createAction<PodloveTranscript[]>(SET_TRANSCRIPTS)
 export const setVoices = createAction<PodloveTranscriptVoice[]>(SET_VOICES)
 export const updateVoice = createAction<{ voice: string; contributor: string }>(UPDATE_VOICE)
