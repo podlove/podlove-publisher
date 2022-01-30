@@ -63,13 +63,11 @@ import { defineComponent } from '@vue/runtime-core'
 import { download } from '@store/chapters.store'
 import Popover from '@components/popover/Popover.vue'
 import PodloveButton from '@components/Button/Button.vue'
-import SaveAsIcon from '@heroicons/vue/outline/SaveAsIcon'
 
 export default defineComponent({
   components: {
     Popover,
-    PodloveButton,
-    SaveAsIcon,
+    PodloveButton
   },
   setup(): { dispatch: Function } {
     return {

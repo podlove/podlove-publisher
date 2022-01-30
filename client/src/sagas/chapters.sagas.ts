@@ -55,16 +55,12 @@ function* save(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
   const chapters: PodloveChapter[] = yield select(selectors.chapters.list)
 
-  const { result } = yield api.put(`chapters/${episodeId}`, {
+  yield api.put(`chapters/${episodeId}`, {
     chapters: chapters.map((chapter) => ({
       ...chapter,
       start: new Timestamp(chapter.start).pretty,
     })),
   })
-
-  if (result) {
-    yield put(notify({ type: 'success', message: 'Chapters updated' }))
-  }
 }
 
 // Export handling
@@ -169,7 +165,7 @@ function* handleImport(action: { type: string; payload: string }) {
   })
 
   if (parsedChapters === null) {
-    console.log('Unable to parse PSC chapters.')
+    yield put(notify({ type: 'error', message: 'Unable to parse PSC chapters.' }))
     return
   }
 

@@ -41,7 +41,6 @@ function* importTranscripts(
   const { result } = yield api.put(`transcripts/${episodeId}`, { content: action.payload })
 
   if (result) {
-    yield put(notify({ type: 'success', message: 'Transcripts imported' }))
     yield fork(initialize, api)
   }
 }
@@ -49,28 +48,15 @@ function* importTranscripts(
 function* updateVoice(api: PodloveApiClient, action: { type: string, payload: { voice: string; contributor: string } }) {
   const episodeId: string = yield select(selectors.episode.id)
 
-  const { result } = yield api.post(`transcripts/voices/${episodeId}`, {
+  yield api.post(`transcripts/voices/${episodeId}`, {
     voice: action.payload.voice,
     contributor_id: action.payload.contributor,
   })
-
-  if (result) {
-    yield put(notify({ type: 'success', message: 'Transcript voices updated' }))
-  }
 }
 
 function* deleteTranscripts(api: PodloveApiClient) {
-  if (confirm('Delete transcript from this episode?') === false) {
-    return
-  }
-
   const episodeId: string = yield select(selectors.episode.id)
-  const { result } = yield api.delete(`transcripts/${episodeId}`)
-
-  if (result) {
-    yield fork(initialize, api)
-    yield put(notify({ type: 'success', message: 'Transcripts deleted' }))
-  }
+  yield api.delete(`transcripts/${episodeId}`)
 }
 
 export default function () {

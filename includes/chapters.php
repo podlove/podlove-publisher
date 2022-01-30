@@ -92,8 +92,8 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
         'options' => [
             'callback' => function () {
                 ?>
-  <div data-client="podlove">
-    <podlove-chapters class="my-5"></podlove-chapters>
+  <div data-client="podlove" style="margin: 15px 0;">
+    <podlove-chapters></podlove-chapters>
   </div>
 <?php
             }

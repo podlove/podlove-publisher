@@ -9,8 +9,6 @@ export function* createApi() {
   const auth: string = yield select(selectors.runtime.auth)
   const bearer: string = yield select(selectors.runtime.bearer)
 
-  console.log({ base })
-
   const errorHandler = function (message: string) {
     store.dispatch(notify({ type: 'error', message }))
   }

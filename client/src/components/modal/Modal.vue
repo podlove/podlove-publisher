@@ -71,7 +71,6 @@
 import {
   Dialog,
   DialogOverlay,
-  DialogTitle,
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue'
@@ -81,7 +80,6 @@ export default defineComponent({
   components: {
     Dialog,
     DialogOverlay,
-    DialogTitle,
     TransitionChild,
     TransitionRoot,
   },

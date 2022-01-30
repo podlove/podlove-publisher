@@ -1,25 +1,8 @@
 <template>
-  <form ref="importForm" class="cursor-pointer" @click="simulateImportClick">
-    <div
-      class="
-        flex
-        justify-center
-        items-center
-        p-4
-        flex-col
-        bg-white
-        rounded
-        border-gray-400 border-2 border-dashed
-      "
-    >
-      <button
-        class="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-300"
-        type="button"
-      >
-        Import Transcripts
-      </button>
-    </div>
-
+  <form ref="importForm" class="cursor-pointer">
+    <podlove-button variant="primary" @click="simulateImportClick" class="ml-1">
+      <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Import Transcript
+    </podlove-button>
     <input ref="import" accept="text/vtt" type="file" @change="handleImport" class="hidden" />
   </form>
 </template>
@@ -27,10 +10,24 @@
 <script lang="ts">
 import { get } from 'lodash'
 import { injectStore } from 'redux-vuex'
-import { importTranscripts } from '@store/transcripts.store'
 import { defineComponent } from '@vue/runtime-core'
+import { UploadIcon, DocumentTextIcon } from '@heroicons/vue/outline'
+
+import PodloveButton from '@components/button/Button.vue'
+import { importTranscripts } from '@store/transcripts.store'
 
 export default defineComponent({
+  props: {
+    outlet: {
+      type: String,
+      default: 'header'
+    }
+  },
+
+  components: {
+    PodloveButton, UploadIcon, DocumentTextIcon
+  },
+
   setup() {
     return {
       dispatch: injectStore().dispatch,
@@ -56,8 +53,7 @@ export default defineComponent({
         }
 
         reader
-          .readAsText(get(fileInput, ['files', 0], ''))
-          (
+          .readAsText(get(fileInput, ['files', 0], ''))(
             // reset import element
             this.$refs.importForm as HTMLFormElement
           )

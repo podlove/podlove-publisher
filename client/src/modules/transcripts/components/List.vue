@@ -33,9 +33,7 @@
     <h3 class="mt-2 text-sm font-medium text-gray-900">No transcripts</h3>
     <p class="mt-1 text-sm text-gray-500">Get started by importing a transcript.</p>
     <div class="mt-6">
-      <podlove-button variant="primary" @click="console.log('import!')" class="ml-1">
-        <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Import Transcript
-      </podlove-button>
+      <transcripts-import outlet="content" class="mr-1" />
     </div>
   </div>
 </template>
@@ -44,13 +42,15 @@
 import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
 import { mapState } from 'redux-vuex'
-import { UploadIcon, DocumentTextIcon } from '@heroicons/vue/outline'
 import selectors from '@store/selectors'
+import { DocumentTextIcon } from '@heroicons/vue/outline'
+
 import Avatar from '@components/icons/Avatar.vue'
-import PodloveButton from '@components/button/Button.vue'
 
 import { PodloveTranscript } from '../../../types/transcripts.types'
 import { PodloveContributor } from '../../../types/contributors.types'
+
+import TranscriptsImport from './Import.vue'
 
 interface Transcript {
   voiceId: string
@@ -67,7 +67,7 @@ interface Transcript {
 
 export default defineComponent({
   components: {
-    Avatar, DocumentTextIcon, UploadIcon, PodloveButton
+    Avatar, TranscriptsImport, DocumentTextIcon
   },
 
   setup() {
@@ -102,7 +102,6 @@ export default defineComponent({
     },
 
     transcripts(): Transcript[] {
-      console.log(this.voices)
       return this.state.transcripts
         .reduce((result: Transcript[], transcript: PodloveTranscript) => {
           const lastTranscript = last(result)
