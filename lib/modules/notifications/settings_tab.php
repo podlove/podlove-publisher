@@ -11,14 +11,17 @@ use Podlove\Settings\Expert\Tab;
 
 class SettingsTab extends Tab
 {
-    private $page;
+    public function get_slug()
+    {
+        return 'notifications';
+    }
 
     public function page()
     {
         parent::page();
 
         $debug_hook = self::debug_hook(); ?>
-		<form method="post" action="options.php">
+		<form method="post" action="<?php echo admin_url('admin.php?page=podlove_contributor_settings&podlove_tab='.$this->get_slug()); ?>">
 			<?php if (isset($_REQUEST['podlove_tab'])) { ?>
 				<input type="hidden" name="podlove_tab" value="<?php echo esc_attr($_REQUEST['podlove_tab']); ?>" />
 			<?php } ?>

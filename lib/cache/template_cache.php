@@ -31,7 +31,7 @@ class TemplateCache
 {
     const CACHE_NAMESPACE = 'podlove_cachev2_';
     const CRON_PURGE_HOOK = 'podlove_purge_template_cache';
-    private static $instance = null;
+    private static $instance;
 
     /**
      * If the cache is tainted, it has to be purged.
@@ -47,7 +47,7 @@ class TemplateCache
         add_action('podlove_model_change', [$this, 'handle_model_change']);
     }
 
-    final private function __clone()
+    private function __clone()
     {
     }
 

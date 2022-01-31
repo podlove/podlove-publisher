@@ -15,7 +15,7 @@ abstract class Base
     {
     }
 
-    final private function __clone()
+    private function __clone()
     {
     }
 

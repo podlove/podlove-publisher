@@ -51,6 +51,7 @@ class Ajax
             'job-get',
             'job-delete',
             'jobs-get',
+            'episode-next-number'
         ];
 
         // kickoff generic ajax methods
@@ -61,6 +62,18 @@ class Ajax
         // kickof specialized ajax controllers
         TemplateController::init();
         FileController::init();
+    }
+
+    public function episode_next_number()
+    {
+        $show_slug = filter_input(INPUT_GET, 'showSlug');
+        $episode_id = filter_input(INPUT_GET, 'episodeId');
+
+        $episode = Model\Episode::find_one_by_id($episode_id);
+
+        self::respond_with_json([
+            'number' => $episode->get_next_episode_number($show_slug)
+        ]);
     }
 
     public function job_create()

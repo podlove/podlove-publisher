@@ -213,6 +213,8 @@ class Podcast_Post_Type
             }
         }
 
+        do_action('podlove_delete_episode', $episode);
+
         $episode->delete();
     }
 }

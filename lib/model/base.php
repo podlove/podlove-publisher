@@ -607,6 +607,7 @@ abstract class Base
     private function set_defaults()
     {
         $defaults = $this->default_values();
+        $defaults = apply_filters('podlove_model_defaults', $defaults, $this);
 
         if (!is_array($defaults) || empty($defaults)) {
             return;

@@ -7,7 +7,7 @@
         "podlove/podlove-timeline": "1.*",
         "monolog/monolog": "1.*",
         "symfony/yaml": "3.4.*",
-        "symfony/polyfill-mbstring": "1.20.0",
+        "symfony/polyfill-mbstring": "1.19.0",
         "twig/twig": "2.12.5",
         "twig/extensions": "1.5.*",
         "geoip2/geoip2": "~2.0",
@@ -23,7 +23,7 @@
         "pear/pear_exception": "1.0.*@dev",
         "podlove/comment-introspection": "dev-master",
         "phpunit/phpunit": "^6.5.14",
-        "bamarni/composer-bin-plugin": "^1.4"
+        "bamarni/composer-bin-plugin": "1.4.1"
     },
     "autoload": {
 		"classmap": [
@@ -32,5 +32,10 @@
 			"vendor-prefixed/"
         ],
         "exclude-from-classmap": ["/vendor/twig"]
-	}
+	},
+    "config": {
+        "platform": {
+            "php": "7.0.33"
+        }
+    }
 }
