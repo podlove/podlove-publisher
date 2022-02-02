@@ -107,7 +107,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for the episode.'),
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                     'required' => 'true'
                 ],
@@ -115,26 +115,26 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'limit' => [
-                        'description' => __('How many entries should be delivered?'),
+                        'description' => __('How many entries should be delivered?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'integer',
                     ],
                     'offset' => [
-                        'description' => __('From which entry should the data be delivered?'),
+                        'description' => __('From which entry should the data be delivered?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'integer',
                     ],
                     'count' => [
-                        'description' => __('How many entries are there? Ignored limit and offset.'),
+                        'description' => __('How many entries are there? Ignored limit and offset.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ]
                 ],
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_item'],
+                'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
                 'args' => [
                     'content' => [
-                        'description' => __('Transcription file as plain text utf-8 encoded'),
+                        'description' => __('Transcription file as plain text utf-8 encoded', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'required' => 'true'
                     ]
@@ -146,7 +146,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'content' => [
-                        'description' => __('Transcription file'),
+                        'description' => __('Transcription file', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'required' => 'true'
                     ]
@@ -165,7 +165,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, '/'.$this->rest_base.'/voices/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for the episode.'),
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                     'required' => 'true'
                 ],
@@ -178,11 +178,11 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'voice' => [
-                        'description' => __('Voice'),
+                        'description' => __('Voice', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'contributor_id' => [
-                        'description' => __('Contributor Id assigned to the voice.'),
+                        'description' => __('Contributor Id assigned to the voice.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'integer',
                     ]
                 ],
@@ -194,7 +194,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, '/'.$this->rest_base.'/paragraphs/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for the part of the transcription (called chaption).'),
+                    'description' => __('Unique identifier for the part of the transcription (called chaption).', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                     'required' => 'true'
                 ]
@@ -202,19 +202,19 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'start' => [
-                        'description' => __('Timestamp begin of the chaption'),
+                        'description' => __('Timestamp begin of the chaption', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'end' => [
-                        'description' => __('Timestamp end of the chaption'),
+                        'description' => __('Timestamp end of the chaption', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'voices' => [
-                        'description' => __('Name of the speaker'),
+                        'description' => __('Name of the speaker', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'content' => [
-                        'description' => __('Content'),
+                        'description' => __('Content', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ]
                 ],
@@ -225,27 +225,27 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'start' => [
-                        'description' => __('Timestamp begin of the paragraph'),
+                        'description' => __('Timestamp begin of the paragraph', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'validate_callback' => '\Podlove\Api\Validation::timestamp'
                     ],
                     'end' => [
-                        'description' => __('Timestamp end of the paragraph'),
+                        'description' => __('Timestamp end of the paragraph', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'validate_callback' => '\Podlove\Api\Validation::timestamp'
                     ],
                     'text' => [
-                        'description' => __('Content'),
+                        'description' => __('Content', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ]
                 ],
-                'description' => __('Edit a chaption of the transcript'),
+                'description' => __('Edit a chaption of the transcript', 'podlove-podcasting-plugin-for-wordpress'),
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_transcripts'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
-                'description' => __('Delete a chaption of the transcript'),
+                'description' => __('Delete a chaption of the transcript', 'podlove-podcasting-plugin-for-wordpress'),
                 'methods' => WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item_transcripts'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
@@ -260,7 +260,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function get_item( $request )
+    public function get_items( $request )
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
@@ -274,8 +274,10 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
         if (isset($request['limit']))
             $limit = $request['limit'];
+
         if (isset($request['offset']))
             $offset = $request['offset'];
+            
         if (isset($request['count'])) {
 
             $count = Transcript::get_transcript_count($id);

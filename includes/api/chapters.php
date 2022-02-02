@@ -31,7 +31,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for the episode.'),
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                     'required' => 'true'
                 ],
@@ -44,24 +44,24 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'chapters' => [
-                        'description' => __('List of chapters, please use mp4chpat format.'),
+                        'description' => __('List of chapters, please use mp4chpat format.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'array',
                         'items' => array (
                             'type' => 'object',
                             'properties' => array(
                                 'start' => array(
-                                    'description' => __('Chapter begin timestamp'),
+                                    'description' => __('Chapter begin timestamp', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string',
                                     'required' => 'true'
                                 ),
                                 'title' => array(
-                                    'description' => __('Chapter title'),
+                                    'description' => __('Chapter title', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string',
                                     'required' => 'true'
 
                                 ),
                                 'href' => array(
-                                    'description' => __('Chapter url'),
+                                    'description' => __('Chapter url', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string'
                                 )
                             )
@@ -77,24 +77,24 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'chapters' => [
-                        'description' => __('List of chapters, please use mp4chpat format.'),
+                        'description' => __('List of chapters, please use mp4chaps format.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'array',
                         'items' => array (
                             'type' => 'object',
                             'properties' => array(
                                 'start' => array(
-                                    'description' => __('Chapter begin timestamp'),
+                                    'description' => __('Chapter begin timestamp', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string',
                                     'required' => 'true'
                                 ),
                                 'title' => array(
-                                    'description' => __('Chapter title'),
+                                    'description' => __('Chapter title', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string',
                                     'required' => 'true'
 
                                 ),
                                 'href' => array(
-                                    'description' => __('Chapter url'),
+                                    'description' => __('Chapter url', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string'
                                 )
                             )
@@ -103,7 +103,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                         'validate_callback' => '\Podlove\Api\Validation::chapters'
                     ]
                 ],
-                'description' => __('Edit the chapters list to an epsiode, old chapter list will be deleted.'),
+                'description' => __('Edit the chapters list to an epsiode, old chapter list will be deleted.', 'podlove-podcasting-plugin-for-wordpress'),
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],

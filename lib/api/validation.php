@@ -13,14 +13,14 @@ class Validation
             return false;
         
         $npt = NormalPlayTime\Parser::parse($param, 'ms');
-        if (is_bool($npt) === true && $npt === false)
+        if ($npt === false)
             return false;
         return true;
     }
 
     public static function url( $param, $request, $key )
     {
-        if (!isset($param))
+        if (empty($param))
             return false;
 
         if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$param)) {
@@ -33,7 +33,7 @@ class Validation
     public static function maxLength255( $param, $request, $key )
     {
         if (isset($param) && gettype($param) == 'string') {
-            if (strlen($param) < 255)
+            if (strlen($param) <= 255)
                 return true;
         }
 

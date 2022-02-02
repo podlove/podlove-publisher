@@ -170,6 +170,13 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     {
         register_rest_route($this->namespace, $this->rest_base, [
             [
+                'args' => [
+                    'filter' => [
+                        'description' => __('The filter parameter is used to filter the collection of contributors.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => array('all', 'visible')
+                    ]
+                    ],
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
@@ -183,7 +190,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for contributor.'),
+                    'description' => __('Unique identifier for contributor.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                 ],
             ],
@@ -195,50 +202,50 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'gender' => [
-                        'description' => __('Gender of the contributor'),
+                        'description' => __('Gender of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'enum' => array('female', 'male', 'Not attributed')
                     ],
                     'visibility' => [
-                        'description' => __('Should the participation of the contributor be publicily visible?'),
+                        'description' => __('Should the participation of the contributor be publicily visible?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'enum' => array('yes', 'no')
                     ],
                     'identifier' => [
-                        'description' => __('identifier'),
+                        'description' => __('identifier', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'organisation' => [
-                        'description' => __('Organisation'),
+                        'description' => __('Organisation', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'department' => [
-                        'description' => __('Department'),
+                        'description' => __('Department', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'jobtitle' => [
-                        'description' => __('Jobtitle of the contributor'),
+                        'description' => __('Jobtitle of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'realname' => [
-                        'description' => __('Name of the contributor'),
+                        'description' => __('Name of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'nickname' => [
-                        'description' => __('Nickname of the contributor'),
+                        'description' => __('Nickname of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'publicname' => [
-                        'description' => __('Used name in the blog'),
+                        'description' => __('Used name in the blog', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'avatar' => [
-                        'description' => __('Avatar of the contrbutor'),
+                        'description' => __('Avatar of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'validate_callback' => '\Podlove\Api\Validation::url'
                     ],
                     'email' => [
-                        'description' => __('e-mail of the contributor Do not use external.'),
+                        'description' => __('e-mail of the contributor Do not use external.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'format' => 'email',
                     ],
@@ -268,7 +275,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/groups/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for contributor group.'),
+                    'description' => __('Unique identifier for contributor group.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                 ],
             ],
@@ -283,13 +290,13 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'update_item_permissions_check'],
                 'args' => [
                     'title' => [
-                        'description' => __('Title of the contributor group'),
+                        'description' => __('Title of the contributor group', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'required' => 'true',
                         'validate_callback' => '\Podlove\Api\Validation::maxLength255'
                     ],
                     'slug' => [
-                        'description' => __('Slug of the contributor group'),
+                        'description' => __('Slug of the contributor group', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'required' => 'true',
                         'validate_callback' => '\Podlove\Api\Validation::maxLength255'
@@ -317,7 +324,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/roles/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for contributor role.'),
+                    'description' => __('Unique identifier for contributor role.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                 ],
             ],
@@ -332,13 +339,13 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'update_item_permissions_check'],
                 'args' => [
                     'title' => [
-                        'description' => __('Title of the contributor role'),
+                        'description' => __('Title of the contributor role', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'required' => 'true',
                         'validate_callback' => '\Podlove\Api\Validation::maxLength255'
                     ],
                     'slug' => [
-                        'description' => __('Slug of the contributor role'),
+                        'description' => __('Slug of the contributor role', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'required' => 'true',
                         'validate_callback' => '\Podlove\Api\Validation::maxLength255'
@@ -354,7 +361,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/(?P<id>[\d]+)/episodes', [
             'args' => [
                 'id' => [
-                    'description' => __('Unique identifier for contributor.'),
+                    'description' => __('Unique identifier for contributor.', 'podlove-podcasting-plugin-for-wordpress'),
                     'type' => 'integer',
                 ],
             ],
@@ -368,20 +375,30 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
     public function get_items($request)
     {
+        $filter = $request->get_param('filter');
+        if (!$filter || $filter != 'all') {
+            $filter = 'visible';
+        }
+
         $entries = Contributor::all();
-        $entries = array_reduce($entries, function ($result = [], $contributor) {
-            if ($contributor->visibility != 1) {
-                return $result;
+
+        $result = [];
+        for ($i = 0; $i < count($entries); ++$i ) {
+            if ($filter == 'visible') {
+                if ($entries[$i]->visibility == 1) {
+                    array_push($result, $this->get_contributor_data($entries[$i]));
+                }
             }
-
-            array_push($result, $this->get_contributor_data($contributor));
-
-            return $result;
-        }, []);
+            else {
+                if ($filter == 'all') {
+                    array_push($result, $this->get_contributor_data($entries[$i]));
+                }
+            }
+        }
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
-            'contributors' => $entries
+            'contributors' => $result
         ]);
     }
 
@@ -449,12 +466,25 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
     public function get_item($request)
     {
+        $filter = $request->get_param('filter');
+        if (!$filter || $filter != 'all') {
+            $filter = 'visible';
+        }
+
         $id = $request->get_param('id');
         $contributor = Contributor::find_by_id($id);
 
         if (!isset($contributor)) {
             return new \Podlove\Api\Error\NotFound();
         }
+
+        if ($filter == 'visible') {
+            if ($contributor->visibility != 1) {
+                return new \Podlove\Api\Error\ForbiddenAccess();
+            }
+        }
+
+        $result = $this->get_contributor_data($contributor);
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
@@ -464,7 +494,21 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        return true;
+        $filter = $request->get_param('filter');
+        if ($filter) {
+            if ($filter == 'all') {
+                if (!current_user_can('edit_posts')) {
+                    return new \Podlove\Api\Error\ForbiddenAccess();
+                }
+                return true;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
     }
 
     public function create_item($request)
