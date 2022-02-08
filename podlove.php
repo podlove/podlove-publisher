@@ -47,7 +47,7 @@ function podlove_admin_error_ancient_php()
 			<strong>Podlove Podcast Publisher could not be activated</strong>
 		</p>
 		<p>
-			Podlove Podcasting Plugin requires <code>PHP 5.4</code> or higher.<br>
+			Podlove Podcasting Plugin requires <code>PHP 7.0</code> or higher.<br>
 			You are running <code>PHP <?php echo phpversion(); ?></code>.<br>
 			Please ask your hoster how to upgrade to an up-to-date PHP version.
 		</p>
