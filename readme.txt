@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - REST API V2! (https://github.com/podlove/podlove-publisher/pull/1248)
 - fix: automatic numbering, fix db table name
+- fix: correct PHP version number in message (https://github.com/podlove/podlove-publisher/pull/1272)
 
 = 2022-01-28 =
 
