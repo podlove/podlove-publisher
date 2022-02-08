@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-02-08 =
+
+- REST API V2! (https://github.com/podlove/podlove-publisher/pull/1248)
+- fix: automatic numbering, fix db table name
+
 = 2022-01-28 =
 
 - episode: after file revalidation, auto-detect duration
