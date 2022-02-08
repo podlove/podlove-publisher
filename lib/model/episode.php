@@ -454,7 +454,7 @@ class Episode extends Base implements Licensable
         $sql_fragment = '';
         if ($show_slug) {
             $show_term = get_term_by('slug', $show_slug, 'shows');
-            $sql_fragment = ' AND p.id in (select object_id from wp_term_relationships where term_taxonomy_id = '.(int) $show_term->term_taxonomy_id.') ';
+            $sql_fragment = ' AND p.id in (select object_id from `'.$wpdb->term_relationships.'` where term_taxonomy_id = '.(int) $show_term->term_taxonomy_id.') ';
         }
 
         $sql = 'SELECT
@@ -467,7 +467,13 @@ class Episode extends Base implements Licensable
             '.$sql_fragment.'
         ';
 
-        return (int) $wpdb->get_var($sql);
+        $number = (int) $wpdb->get_var($sql);
+
+        if ($number > 0) {
+            return $number;
+        } else {
+            return 1;
+        }
     }
 }
 
