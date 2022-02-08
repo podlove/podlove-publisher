@@ -38,6 +38,24 @@ class Slack_Shownotes extends \Podlove\Modules\Base
             'callback' => [$this, 'api_get_messages'],
             'permission_callback' => [$this, 'permission_check'],
         ]);
+
+        register_rest_route('podlove/v2', 'slacknotes/channels', [
+            'methods' => 'GET',
+            'callback' => [$this, 'api_get_channels'],
+            'permission_callback' => [$this, 'permission_check'],
+        ]);
+
+        register_rest_route('podlove/v2', 'slacknotes/resolve_url', [
+            'methods' => 'GET',
+            'callback' => [$this, 'api_resolve_url'],
+            'permission_callback' => [$this, 'permission_check'],
+        ]);
+
+        register_rest_route('podlove/v2', 'slacknotes/(?P<channel>[a-zA-Z0-9]+)/messages', [
+            'methods' => 'GET',
+            'callback' => [$this, 'api_get_messages'],
+            'permission_callback' => [$this, 'permission_check'],
+        ]);
     }
 
     public function api_get_channels(\WP_REST_Request $request)

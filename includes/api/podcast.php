@@ -20,8 +20,8 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
      */
     public function __construct()
     {
-        $this->namespace = 'podlove/v1';
-        $this->rest_base = 'podlove';
+        $this->namespace = 'podlove/v2';
+        $this->rest_base = 'podcast';
     }
 
     /**
@@ -77,7 +77,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         $podcast = Podcast::get();
 
         $res = [];
-        $res['_version'] = 'v1';
+        $res['_version'] = 'v2';
         $res['title'] = $podcast->title;
         $res['subtitle'] = $podcast->subtitle;
         $res['summary'] = $podcast->summary;
@@ -110,6 +110,10 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         if (isset($request['mnemonic'])) {
             $mnemonic = $request['mnemonic'];
             $podcast->mnemonic = $mnemonic;
+        }
+        if (isset($request['author_name'])) {
+            $author = $request['author_name'];
+            $podcast->author_name = $author;
         }
 
         $podcast->save();

@@ -75,8 +75,10 @@ HTML;
 
     public function api_init()
     {
-        $api = new REST_API();
-        $api->register_routes();
+        $api_v1 = new REST_API();
+        $api_v1->register_routes();
+        $api_v2 = new REST_API_V2();
+        $api_v2->register_routes();
     }
 
     public static function apply_affiliate_to_shownotes_entry(Entry $entry)
