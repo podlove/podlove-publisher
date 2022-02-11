@@ -471,9 +471,9 @@ class Episode extends Base implements Licensable
 
         if ($number > 0) {
             return $number;
-        } else {
-            return 1;
         }
+
+        return 1;
     }
 }
 

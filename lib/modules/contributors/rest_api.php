@@ -6,9 +6,7 @@ use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\ContributorRole;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
-
 use WP_REST_Controller;
-use WP_REST_Server;
 
 class REST_API
 {
@@ -159,7 +157,6 @@ class REST_API
 
 class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 {
-
     public function __construct()
     {
         $this->namespace = 'podlove/v2';
@@ -174,9 +171,9 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                     'filter' => [
                         'description' => __('The filter parameter is used to filter the collection of contributors.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
-                        'enum' => array('all', 'visible')
+                        'enum' => ['all', 'visible']
                     ]
-                    ],
+                ],
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
@@ -204,12 +201,12 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                     'gender' => [
                         'description' => __('Gender of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
-                        'enum' => array('female', 'male', 'Not attributed')
+                        'enum' => ['female', 'male', 'Not attributed']
                     ],
                     'visibility' => [
                         'description' => __('Should the participation of the contributor be publicily visible?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
-                        'enum' => array('yes', 'no')
+                        'enum' => ['yes', 'no']
                     ],
                     'identifier' => [
                         'description' => __('identifier', 'podlove-podcasting-plugin-for-wordpress'),
@@ -383,13 +380,12 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         $entries = Contributor::all();
 
         $result = [];
-        for ($i = 0; $i < count($entries); ++$i ) {
+        for ($i = 0; $i < count($entries); ++$i) {
             if ($filter == 'visible') {
                 if ($entries[$i]->visibility == 1) {
                     array_push($result, $this->get_contributor_data($entries[$i]));
                 }
-            }
-            else {
+            } else {
                 if ($filter == 'all') {
                     array_push($result, $this->get_contributor_data($entries[$i]));
                 }
@@ -500,15 +496,14 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 if (!current_user_can('edit_posts')) {
                     return new \Podlove\Api\Error\ForbiddenAccess();
                 }
+
                 return true;
             }
-            else {
-                return true;
-            }
-        }
-        else {
+
             return true;
         }
+
+        return true;
     }
 
     public function create_item($request)
@@ -551,6 +546,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
+
         return true;
     }
 
@@ -565,10 +561,11 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
         if (isset($request['gender'])) {
             $gender = $request['gender'];
-            if ($gender === 'Not attributed') 
+            if ($gender === 'Not attributed') {
                 $contributor->gender = 'none';
-            else
+            } else {
                 $contributor->gender = $gender;
+            }
         }
 
         if (isset($request['identifier'])) {
@@ -613,10 +610,12 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
         if (isset($request['visibilty'])) {
             $visibilty = $request['visibilty'];
-            if ($visibilty == 'no')
+            if ($visibilty == 'no') {
                 $contributor->visibility = 0;
-            if ($visibilty == 'yes')
+            }
+            if ($visibilty == 'yes') {
                 $contributor->visibility = 1;
+            }
         }
 
         if (isset($request['email'])) {
@@ -679,7 +678,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         $role->save();
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' =>  'ok'
+            'status' => 'ok'
         ]);
     }
 
@@ -688,6 +687,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
+
         return true;
     }
 
@@ -705,7 +705,6 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
-
     }
 
     public function delete_item_group($request)
@@ -720,9 +719,8 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         $group->delete();
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' =>  'ok'
+            'status' => 'ok'
         ]);
-
     }
 
     public function delete_item_role($request)
@@ -737,9 +735,8 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         $role->delete();
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' =>  'ok'
+            'status' => 'ok'
         ]);
-
     }
 
     public function delete_item_permissions_check($request)
@@ -747,6 +744,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
+
         return true;
     }
 

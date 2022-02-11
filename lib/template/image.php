@@ -27,7 +27,7 @@ class Image extends Wrapper
     {
         $url = $this->image->url();
 
-        return is_string($url) ? $url : "";
+        return is_string($url) ? $url : '';
     }
 
     /**

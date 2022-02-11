@@ -1600,6 +1600,7 @@ function run_migrations_for_version($version)
             );
 
             $wpdb->query($sql);
+
             break;
     }
 }

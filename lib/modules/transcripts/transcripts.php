@@ -268,7 +268,7 @@ class Transcripts extends \Podlove\Modules\Base
         return true;
     }
 
-    public static function parse_webvtt($content) 
+    public static function parse_webvtt($content)
     {
         $parser = new Parser();
 

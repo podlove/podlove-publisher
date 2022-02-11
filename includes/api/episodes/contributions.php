@@ -17,7 +17,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
 
     public function register_routes()
     {
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/contributions', [
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/contributions', [
             'args' => [
                 'id' => [
                     'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
@@ -34,30 +34,28 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                     'contributors' => [
                         'description' => __('List of contributors of the episode', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'array',
-                        'items' => array(
+                        'items' => [
                             'type' => 'object',
-                            'properties' => array(
-                                'contributor_id' => array(
+                            'properties' => [
+                                'contributor_id' => [
                                     'description' => __('Id of a contributor'),
                                     'type' => 'integer',
                                     'required' => 'true'
-                                ),
-                                'group_id' => array(
+                                ],
+                                'group_id' => [
                                     'description' => __('Id of group of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'integer',
-
-                                ),
-                                'role_id' => array(
+                                ],
+                                'role_id' => [
                                     'description' => __('Id of role of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'integer',
-
-                                ),
-                                'comment' => array(
+                                ],
+                                'comment' => [
                                     'description' => __('Comment to the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string'
-                                )
-                            )
-                        )
+                                ]
+                            ]
+                        ]
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -68,7 +66,6 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                 'methods' => WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
-
             ]
         ]);
     }
@@ -111,10 +108,10 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         }
 
         if (isset($request['contributors']) && is_array($request['contributors'])) {
-            for ($i = 0; $i < count($request['contributors']); ++$i ) {
+            for ($i = 0; $i < count($request['contributors']); ++$i) {
                 $contrib = new EpisodeContribution();
                 $contrib->episode_id = $id;
-                    if (isset($request['contributors'][$i]['contributor_id'])) {
+                if (isset($request['contributors'][$i]['contributor_id'])) {
                     $contrib->contributor_id = $request['contributors'][$i]['contributor_id'];
                 }
                 if (isset($request['contributors'][$i]['group_id'])) {
@@ -140,6 +137,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
+
         return true;
     }
 
@@ -172,7 +170,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
+
         return true;
     }
-
 }

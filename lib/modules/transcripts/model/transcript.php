@@ -74,11 +74,10 @@ class Transcript extends \Podlove\Model\Base
 			LEFT JOIN '.VoiceAssignment::table_name().' va ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
 			LEFT JOIN '.\Podlove\Modules\Contributors\Model\Contributor::table_name().' c ON c.id = va.contributor_id
 			WHERE t.episode_id = '.(int) $episode_id.'
-            ORDER BY t.start ASC LIMIT '.(int)$limit.' OFFSET '.(int)$offset;
+            ORDER BY t.start ASC LIMIT '.(int) $limit.' OFFSET '.(int) $offset;
 
         return $wpdb->get_results($sql);
     }
-
 
     public static function get_transcript_count($episode_id)
     {
@@ -104,6 +103,7 @@ class Transcript extends \Podlove\Model\Base
      *
      * @param mixed $transcript
      * @param mixed $mode
+     * @param mixed $allow_empty_contributors
      */
     public static function prepare_transcript($transcript, $mode = 'flat', $allow_empty_contributors = false)
     {

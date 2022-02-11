@@ -327,16 +327,16 @@ class Image
             return;
         }
 
-		$orig_sizes = $image->get_size();
-		$original = $orig_sizes['width'] . 'x' . $orig_sizes['height'];
+        $orig_sizes = $image->get_size();
+        $original = $orig_sizes['width'].'x'.$orig_sizes['height'];
 
-		if (!$this->height) {
-			$this->height = $orig_sizes['height'];
-		}
+        if (!$this->height) {
+            $this->height = $orig_sizes['height'];
+        }
 
-		if (!$this->width) {
-			$this->width = $orig_sizes['width'];
-		}
+        if (!$this->width) {
+            $this->width = $orig_sizes['width'];
+        }
 
         $result = $image->resize($this->width, $this->height, $this->crop);
 
