@@ -35,7 +35,7 @@ class Settings
 
     public static function show_meta_data_fields()
     {
-        return ['subtitle', 'language', 'image', 'category'];
+        return ['subtitle', 'language', 'image', 'category', 'auphonic_preset'];
     }
 
     public function add_screen_options()
@@ -322,6 +322,8 @@ $this->table->prepare_items();
                 'type' => 'select',
                 'options' => \Podlove\Itunes\categories(),
             ]);
+
+            do_action('podlove_show_form_end', $wrapper);
         });
     }
 

@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-02-11 =
+
+- new: each show can define its own Auphonic production preset
+
 = 2022-02-10 =
 
 - fix: feed cache issue when using the "Shows" module

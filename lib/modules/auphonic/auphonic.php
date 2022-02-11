@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Auphonic;
 
 use Podlove\Http;
+use Podlove\Modules\Shows\Model\Show;
 
 class Auphonic extends \Podlove\Modules\Base
 {
@@ -28,6 +29,9 @@ class Auphonic extends \Podlove\Modules\Base
 
         add_action('admin_print_styles', [$this, 'admin_print_styles']);
         add_action('wp_ajax_podlove-refresh-auphonic-presets', [$this, 'ajax_refresh_presets']);
+        add_action('wp_ajax_podlove-get-auphonic-preset', [$this, 'ajax_get_preset']);
+
+        add_action('podlove_show_form_end', [$this, 'shows_module_append_preset_option']);
 
         if (isset($_GET['page']) && $_GET['page'] == 'podlove_settings_modules_handle') {
             add_action('admin_bar_init', [$this, 'check_code']);
@@ -77,16 +81,7 @@ class Auphonic extends \Podlove\Modules\Base
                 'html' => ['class' => 'regular-text'],
             ]);
 
-            // Fetch Auphonic presets
-            $presets = $this->api->fetch_presets();
-            if ($presets && is_array($presets->data)) {
-                $preset_list = [];
-                foreach ($presets->data as $preset_id => $preset) {
-                    $preset_list[$preset->uuid] = $preset->preset_name;
-                }
-            } else {
-                $preset_list[] = __('Presets could not be loaded', 'podlove-podcasting-plugin-for-wordpress');
-            }
+            $preset_list = $this->get_presets_list();
 
             $this->register_option('auphonic_production_preset', 'select', [
                 'label' => __('Auphonic production preset', 'podlove-podcasting-plugin-for-wordpress'),
@@ -112,6 +107,18 @@ class Auphonic extends \Podlove\Modules\Base
                 });
             }
         }
+    }
+
+    public function shows_module_append_preset_option($wrapper)
+    {
+        $preset_list = $this->get_presets_list();
+
+        $wrapper->select('auphonic_preset', [
+            'label' => __('Auphonic Preset', 'podlove-podcasting-plugin-for-wordpress'),
+            'description' => __('Define a Auphonic Preset for this show. If none is set, the global module preset is used.', 'podlove-podcasting-plugin-for-wordpress'),
+            'type' => 'select',
+            'options' => $preset_list,
+        ]);
     }
 
     /**
@@ -255,6 +262,48 @@ class Auphonic extends \Podlove\Modules\Base
         $result = $this->api->fetch_presets();
 
         return \Podlove\AJAX\AJAX::respond_with_json($result);
+    }
+
+    public function get_presets_list()
+    {
+        $presets = $this->api->fetch_presets();
+        if ($presets && is_array($presets->data)) {
+            $preset_list = [];
+            foreach ($presets->data as $preset_id => $preset) {
+                $preset_list[$preset->uuid] = $preset->preset_name;
+            }
+        } else {
+            $preset_list[] = __('Presets could not be loaded', 'podlove-podcasting-plugin-for-wordpress');
+        }
+
+        return $preset_list;
+    }
+
+    public function ajax_get_preset()
+    {
+        $show_slug = filter_input(INPUT_GET, 'showSlug');
+
+        $default = $this->get_module_option('auphonic_production_preset');
+
+        $preset_list = $this->get_presets_list();
+
+        $show = Show::find_one_term_by_property('slug', $show_slug);
+        if ($show && $show->auphonic_preset && $preset_list[$show->auphonic_preset]) {
+            $show_preset_key = $show->auphonic_preset;
+            $show_preset_name = $preset_list[$show->auphonic_preset];
+        } else {
+            $show_preset_key = null;
+            $show_preset_name = null;
+        }
+
+        return \Podlove\AJAX\AJAX::respond_with_json([
+            'preset_key' => $show_preset_key ?? $default,
+            'preset_name' => $show_preset_name ?? $preset_list[$default],
+            'default_preset_key' => $default,
+            'default_preset_name' => $preset_list[$default],
+            'show_preset_key' => $show_preset_key,
+            'show_preset_name' => $show_preset_name,
+        ]);
     }
 
     /**
