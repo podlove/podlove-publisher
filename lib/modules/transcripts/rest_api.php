@@ -270,27 +270,17 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
         $limit = 0;
         $offset = 0;
-        $items = 0;
 
         if (isset($request['limit']))
             $limit = $request['limit'];
 
         if (isset($request['offset']))
             $offset = $request['offset'];
-            
+
         if (isset($request['count'])) {
-
-            $count = Transcript::get_transcript_count($id);
-            if (is_array($count)) {
-                if (count($count) > 0) {
-                    foreach($count[0] as $key => $value)
-                        $items = $value;
-                }
-            }
-
             return new \Podlove\Api\Response\OkResponse([
                 '_version' => 'v2',
-                'count' => $items,
+                'count' => Transcript::get_transcript_count($id),
             ]);
         }
 
@@ -319,12 +309,6 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         else {
 
             $count = Transcript::get_transcript_count($id);
-            if (is_array($count)) {
-                if (count($count) > 0) {
-                    foreach($count[0] as $key => $value)
-                        $items = $value;
-                }
-            }
 
             $transcript = Transcript::get_transcript_offset_limit($id, $offset, $limit);
             $transcript = array_map(function ($t) {
@@ -341,7 +325,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
             $transcript = array_filter($transcript);
             $transcript = array_values($transcript);
-  
+
             $next_url = '';
             $prev_url = '';
 
@@ -369,7 +353,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                         '_version' => 'v2',
                         'prev' => $prev_url,
                         'transcript' => $transcript,
-                    ]);    
+                    ]);
                 }
                 else if ($next_url) {
                     return new \Podlove\Api\Response\OkResponse( [
@@ -383,7 +367,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
     }
 
-    public function get_item_transcripts( $request ) 
+    public function get_item_transcripts( $request )
     {
         $id = $request->get_param('id');
         $transcript = Transcript::find_by_id($id);
@@ -463,7 +447,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
             if (function_exists('mb_check_encoding') && !mb_check_encoding($file_content, 'UTF-8')) {
                 \Podlove\Api\Error\NotSupported('not_supported', 'Error parsing webvtt file: must be UTF-8 encoded.');
             }
-    
+
             $result = Transcripts::parse_webvtt($file_content);
 
             if ($result === false)
@@ -481,14 +465,14 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 $line->content = $cue['text'];
                 $line->save();
             }
-    
+
             $voices = array_unique(array_map(function ($cue) {
                 return $cue['voice'];
             }, $result['cues']));
-    
+
             foreach ($voices as $voice) {
                 $contributor = Contributor::find_one_by_property('identifier', $voice);
-    
+
                 if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
                     $voice_assignment = new VoiceAssignment();
                     $voice_assignment->episode_id = $episode->id;
@@ -526,7 +510,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
 
         if (!$episode)
             return new \Podlove\Api\Error\NotFound('not_found', 'Episode not found');
-    
+
         $voice_assignment = null;
 
         if (isset($request['voice'])) {
@@ -591,7 +575,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         $transcript->save();
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' => 'ok' 
+            'status' => 'ok'
         ]);
     }
 
@@ -620,7 +604,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         Transcript::delete_for_episode($id);
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' => 'ok' 
+            'status' => 'ok'
         ]);
 
     }
@@ -642,7 +626,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         $transcript->delete();
 
         return new \Podlove\Api\Response\OkResponse([
-            'status' => 'ok' 
+            'status' => 'ok'
         ]);
     }
 }

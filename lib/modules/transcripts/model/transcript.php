@@ -91,7 +91,7 @@ class Transcript extends \Podlove\Model\Base
 			LEFT JOIN '.\Podlove\Modules\Contributors\Model\Contributor::table_name().' c ON c.id = va.contributor_id
 			WHERE t.episode_id = '.(int) $episode_id;
 
-        return $wpdb->get_results($sql);
+        return $wpdb->get_var($sql);
     }
 
     /**
