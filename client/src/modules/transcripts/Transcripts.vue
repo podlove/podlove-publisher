@@ -6,21 +6,6 @@
       <transcripts-delete />
     </template>
     <transcripts-list />
-
-    <!-- <tabs-container>
-      <tab name="transcript" title="Transcript Content">
-        <transcripts-list />
-      </tab>
-      <tab name="voices" title="Voices">
-
-      </tab>
-      <tab name="import" title="Import">
-      </tab>
-      <tab name="export" title="Export">
-      </tab>
-      <tab name="delete" title="Delete">
-      </tab>
-    </tabs-container> -->
   </module>
 </template>
 <script lang="ts">

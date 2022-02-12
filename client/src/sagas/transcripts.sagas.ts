@@ -6,7 +6,6 @@ import { PodloveTranscript, PodloveTranscriptVoice } from '../types/transcripts.
 import * as transcriptsStore from '@store/transcripts.store'
 import { createApi } from './api'
 import { PodloveApiClient } from '@lib/api'
-import { notify } from '@store/notification.store'
 import { takeFirst } from './helper'
 
 function* transcriptsSaga(): any {
@@ -56,7 +55,11 @@ function* updateVoice(api: PodloveApiClient, action: { type: string, payload: { 
 
 function* deleteTranscripts(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
-  yield api.delete(`transcripts/${episodeId}`)
+  const { result } = yield api.delete(`transcripts/${episodeId}`)
+
+  if (result) {
+    yield fork(initialize, api)
+  }
 }
 
 export default function () {

@@ -1,4 +1,5 @@
 import { put } from 'redux-saga/effects'
+import { get } from 'lodash'
 
 import * as contributors from '@store/contributors.store'
 import { PodloveApiClient } from '@lib/api'
@@ -11,7 +12,7 @@ function* contributorsSaga() {
   const { result } = yield apiClient.get('contributors')
 
   if (result) {
-    yield put(contributors.set(result))
+    yield put(contributors.set(get(result, 'contributors', [])))
   }
 }
 
