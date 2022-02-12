@@ -38,10 +38,10 @@ composer_with_prefixing:
 
 install_php_scoper:
 	mkdir -p vendor-prefixed
-	composer require --dev bamarni/composer-bin-plugin
+	composer require --dev bamarni/composer-bin-plugin:1.4.1
 	composer bin php-scoper config minimum-stability dev
 	composer bin php-scoper config prefer-stable true
-	composer bin php-scoper require --dev humbug/php-scoper:0.14.1
+	composer bin php-scoper require --dev humbug/php-scoper::0.15.0
 
 client_legacy:
 	cd js && npm install

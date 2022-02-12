@@ -25,7 +25,9 @@ class Image extends Wrapper
 
     public function __toString()
     {
-        return $this->image->url();
+        $url = $this->image->url();
+
+        return is_string($url) ? $url : '';
     }
 
     /**

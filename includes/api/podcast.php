@@ -77,7 +77,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         $podcast = Podcast::get();
 
         $res = [];
-        $res['_version'] = 'v1';
+        $res['_version'] = 'v2';
         $res['title'] = $podcast->title;
         $res['subtitle'] = $podcast->subtitle;
         $res['summary'] = $podcast->summary;

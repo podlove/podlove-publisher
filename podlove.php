@@ -3,7 +3,7 @@
  * Plugin Name: Podlove Podcast Publisher
  * Plugin URI:  http://publisher.podlove.org
  * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
- * Version: 3.7.0-beta7
+ * Version: 3.8.0-beta5
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT
@@ -47,7 +47,7 @@ function podlove_admin_error_ancient_php()
 			<strong>Podlove Podcast Publisher could not be activated</strong>
 		</p>
 		<p>
-			Podlove Podcasting Plugin requires <code>PHP 5.4</code> or higher.<br>
+			Podlove Podcasting Plugin requires <code>PHP 7.0</code> or higher.<br>
 			You are running <code>PHP <?php echo phpversion(); ?></code>.<br>
 			Please ask your hoster how to upgrade to an up-to-date PHP version.
 		</p>

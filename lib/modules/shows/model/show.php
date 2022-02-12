@@ -29,6 +29,7 @@ class Show
         $this->image = '';
         $this->language = '';
         $this->category = '';
+        $this->auphonic_preset = '';
     }
 
     /**
@@ -145,6 +146,7 @@ class Show
         $show->image = get_term_meta($term->term_id, 'image', true);
         $show->language = get_term_meta($term->term_id, 'language', true);
         $show->category = get_term_meta($term->term_id, 'category', true);
+        $show->auphonic_preset = get_term_meta($term->term_id, 'auphonic_preset', true);
 
         return $show;
     }

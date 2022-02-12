@@ -304,9 +304,24 @@ function override_feed_entry($hook, $podcast, $feed, $format)
 {
     add_action($hook, function () use ($podcast, $feed, $format) {
         global $post;
+        global $wp_query;
+
+        $cache_key = 'feed_item_'.$feed->slug.'_'.$post->ID;
+
+        // if this is a show feed, add the show slug to the cache key
+        if ($wp_query->tax_query->queries) {
+            $q = $wp_query->tax_query->queries[0];
+            if ($q['taxonomy'] == 'shows') {
+                $terms = $q['terms'];
+                $slug = $terms[0];
+                if ($slug) {
+                    $cache_key .= '_'.$slug;
+                }
+            }
+        }
 
         $cache = \Podlove\Cache\TemplateCache::get_instance();
-        echo $cache->cache_for('feed_item_'.$feed->slug.'_'.$post->ID, function () use ($podcast, $feed, $format, $post) {
+        echo $cache->cache_for($cache_key, function () use ($podcast, $feed, $format, $post) {
             $xml = '';
 
             $episode = Model\Episode::find_one_by_post_id($post->ID);

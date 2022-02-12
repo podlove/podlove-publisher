@@ -52,7 +52,6 @@ function podlove_analytics_api_init()
         'permission_callback' => 'podlove_api_analytics_permission_callback',
         'args' => $args,
     ]);
-
 }
 
 function podlove_api_analytics_permission_callback($request)

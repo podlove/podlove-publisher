@@ -322,15 +322,26 @@ class Image
         $image = wp_get_image_editor($this->original_file(), $editor_args);
 
         if (is_wp_error($image)) {
-            Log::get()->addWarning('Podlove Image Cache: Unable to resize. '.$image->get_error_message());
+            Log::get()->addWarning('Podlove Image Cache: Unable to resize (1). '.$image->get_error_message());
 
             return;
+        }
+
+        $orig_sizes = $image->get_size();
+        $original = $orig_sizes['width'].'x'.$orig_sizes['height'];
+
+        if (!$this->height) {
+            $this->height = $orig_sizes['height'];
+        }
+
+        if (!$this->width) {
+            $this->width = $orig_sizes['width'];
         }
 
         $result = $image->resize($this->width, $this->height, $this->crop);
 
         if (is_wp_error($result)) {
-            Log::get()->addWarning('Podlove Image Cache: Unable to resize. '.$result->get_error_message());
+            Log::get()->addWarning('Podlove Image Cache: Unable to resize (2, w '.$this->width.' h '.$this->height.' ... original: '.$original.'). '.$result->get_error_message());
 
             return;
         }
@@ -338,12 +349,12 @@ class Image
         $result = $image->save($this->resized_file());
 
         if (is_wp_error($result)) {
-            Log::get()->addWarning('Podlove Image Cache: Unable to resize. '.$result->get_error_message());
+            Log::get()->addWarning('Podlove Image Cache: Unable to resize (3). '.$result->get_error_message());
 
             return;
         }
 
-        // when a new image size is created, Templace Cache must be cleared
+        // when a new image size is created, Template Cache must be cleared
         TemplateCache::get_instance()->setup_global_purge();
     }
 
@@ -527,7 +538,13 @@ class Image
      */
     private function srcset()
     {
-        @list($max_width, $max_height) = getimagesize($this->original_file());
+        $file = $this->original_file();
+
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        @list($max_width, $max_height) = getimagesize($file);
 
         if ($this->width * 2 > $max_width) {
             return null;

@@ -117,12 +117,12 @@ class Transcripts extends \Podlove\Modules\Base
             'key' => 'transcripts',
             'options' => [
                 'callback' => function () {
-                  ?>
-  <div data-client="podlove" style="margin: 15px 0;">
-    <podlove-transcripts></podlove-transcripts>
-  </div>
+                    $data = ''; ?>
+<div id="podlove-transcripts-app-data" style="display: none"><?php echo $data; ?></div>
+<div id="podlove-transcripts-app"><transcripts></transcripts></div>
 <?php
-                }
+                },
+                'label' => __('Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
             ],
             'position' => 425,
         ];
@@ -290,7 +290,7 @@ class Transcripts extends \Podlove\Modules\Base
             \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file: must be UTF-8 encoded']);
         }
 
-        $result = parse_webvtt($content);
+        $result = self::parse_webvtt($content);
 
         if ($result === false) {
             if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'podlove_transcript_import') {
