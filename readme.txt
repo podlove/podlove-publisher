@@ -3,9 +3,9 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
-Tested up to: 5.8.3
+Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 3.7.2
+Stable tag: 3.8.0
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,28 +106,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2022-02-11 =
+= 3.8.0 =
 
-- new: each show can define its own Auphonic production preset
+**New module: Automatic Numbering**
 
-= 2022-02-10 =
+Automatically increase the Episode number when creating episodes.
+When using the "Shows" module, each show has its own numbering.
 
-- fix: feed cache issue when using the "Shows" module
+This module is active by default for new setups.
+To use it in your current setup, go to `Podlove > Modules`, search for "Automatic Numbering" and activate it.
 
-= 2022-02-08 =
+**Other Changes:**
 
-- REST API V2! (https://github.com/podlove/podlove-publisher/pull/1248)
-- fix: automatic numbering, fix db table name
-- fix: correct PHP version number in message (https://github.com/podlove/podlove-publisher/pull/1272)
-
-= 2022-01-28 =
-
+- Shows Module: each show can define its own Auphonic production preset
 - episode: after file revalidation, auto-detect duration
 - contributors: assign a `Sponsor` role and it will appear as `<podcast:person ... role="sponsor">...` in the RSS feed
-
-= 2022-01-21 =
-
-- New module: Automatic Numbering. Automatically increase the Episode number when creating episodes. When using the "Shows" module, each show has its own numbering.
+- fix: correct PHP version number in message (https://github.com/podlove/podlove-publisher/pull/1272)
+- fix: feed cache issue when using the "Shows" module
 
 = 3.7.0 =
 
