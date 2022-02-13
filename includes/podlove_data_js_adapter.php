@@ -10,7 +10,7 @@
  *         return $data;
  *     });
  */
-add_action('admin_footer', 'podlove_init_js_adapter', 3);
+add_action('admin_head', 'podlove_init_js_adapter', 3);
 
 function podlove_init_js_adapter()
 {
