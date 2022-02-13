@@ -90,6 +90,7 @@ function podlove_setup_modules()
         // 'feed_validation',
         'import_export',
         'subscribe_button',
+        'automatic_numbering'
     ];
 
     foreach ($default_modules as $module) {
