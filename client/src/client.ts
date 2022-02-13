@@ -6,17 +6,19 @@ import modules from './modules'
 import { init } from './store/lifecycle.store'
 import './style.css'
 
-document.querySelectorAll('[data-client="podlove"]:not([data-loaded="true"])').forEach((elem) => {
-  elem.setAttribute('data-loaded', 'true')
+window.addEventListener('load', () => {
+  document.querySelectorAll('[data-client="podlove"]:not([data-loaded="true"])').forEach((elem) => {
+    elem.setAttribute('data-loaded', 'true')
 
-  const app = createApp({
-    components: {
-      ...modules,
-    },
-  })
+    const app = createApp({
+      components: {
+        ...modules,
+      },
+    })
 
-  provideStore({ store, app })
-  app.mount(elem)
+    provideStore({ store, app })
+    app.mount(elem)
+  });
 });
 
 (globalThis as any).initPodloveUI = (data: any) => {
