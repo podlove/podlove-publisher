@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-02-15 =
+
+* fix: auphonic preset for show applies after saving the episode
+* fix: remove debug error log for a shows analytics query
+
 = 3.8.0 =
 
 **New module: Automatic Numbering**

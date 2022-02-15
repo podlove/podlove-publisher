@@ -215,8 +215,6 @@ class DownloadIntentClean extends Base
              downloads DESC
          ';
 
-        error_log(print_r($sql, true));
-
         return $wpdb->get_results($sql, ARRAY_A);
     }
 
