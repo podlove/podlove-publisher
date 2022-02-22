@@ -43,7 +43,7 @@ function list_api()
     foreach ($episodes as $episode) {
         array_push($results, [
             'id' => $episode->id,
-            'title' => $episode->title,
+            'title' => get_the_title($episode->post_id),
         ]);
     }
 
@@ -64,7 +64,8 @@ function episodes_api($request)
         '_version' => 'v1',
         'id' => $id,
         'slug' => $post->post_name,
-        'title' => $post->post_title,
+        'title' => get_the_title($episode->post_id),
+        'title_clean' => $episode->title,
         'subtitle' => trim($episode->subtitle),
         'summary' => trim($episode->summary),
         'publicationDate' => mysql2date('c', $post->post_date),
@@ -283,7 +284,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         foreach ($episodes as $episode) {
             array_push($results, [
                 'id' => $episode->id,
-                'title' => $episode->title,
+                'title' => get_the_title($episode->post_id),
             ]);
         }
 
@@ -327,7 +328,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             '_version' => 'v2',
             'id' => $id,
             'post_id' => $episode->post_id,
-            'title' => $episode->title,
+            'title' => get_the_title($episode->post_id),
+            'title_clean' => $episode->title,
             'subtitle' => trim($episode->subtitle),
             'summary' => trim($episode->summary),
             'duration' => $episode->get_duration('full'),
