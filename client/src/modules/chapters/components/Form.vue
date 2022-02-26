@@ -1,108 +1,112 @@
 <template>
-  <div v-if="chapters.length > 0" class="flex p-2">
-    <div class="w-full">
-      <div class="h-96 overflow-x-auto" ref="chaptersContainer">
-        <table class="min-w-full divide-y divide-gray-200 mb-2">
-          <tbody ref="chapters">
-            <tr
-              @click="selectChapter(index)"
-              v-for="(chapter, index) in chapters"
-              :key="`chapter-${index}`"
-              class="cursor-pointer"
-              :class="{
-                'bg-indigo-100': selectedIndex === index,
-                active: selectedIndex === index,
-                'bg-white': index % 2 === 0 && selectedIndex !== index,
-                'bg-gray-50': index % 2 !== 0 && selectedIndex !== index,
-              }"
-            >
-              <td
-                class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 tabular-nums"
+  <div v-if="chapters.length > 0">
+    <div class="md:flex p-2 sm:block">
+      <div class="w-full">
+        <div class="h-96 overflow-x-auto" ref="chaptersContainer">
+          <table class="min-w-full divide-y divide-gray-200 mb-2">
+            <tbody ref="chapters">
+              <tr
+                @click="selectChapter(index)"
+                v-for="(chapter, index) in chapters"
+                :key="`chapter-${index}`"
+                class="cursor-pointer"
+                :class="{
+                  'bg-indigo-100': selectedIndex === index,
+                  active: selectedIndex === index,
+                  'bg-white': index % 2 === 0 && selectedIndex !== index,
+                  'bg-gray-50': index % 2 !== 0 && selectedIndex !== index,
+                }"
               >
-                {{ chapter.start }}
-              </td>
-              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                {{ chapter.title }}
-              </td>
-              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600 text-right tabular-nums">
-                {{ chapter.duration }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <td
+                  class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 tabular-nums"
+                >
+                  {{ chapter.start }}
+                </td>
+                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                  {{ chapter.title }}
+                </td>
+                <td
+                  class="px-3 py-2 whitespace-nowrap text-sm text-gray-600 text-right tabular-nums"
+                >
+                  {{ chapter.duration }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="m-1">
-        <podlove-button variant="primary" @click="addChapter()">
-          <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Add Chapter
-        </podlove-button>
+      <div v-if="state.selected" class="md:w-4/12 sm:w-full md:mx-4 md:my-2 mt-0">
+        <div class="mb-5 mt-2">
+          <label for="chapter-title" class="block text-sm font-medium text-gray-700">Title</label>
+          <div class="mt-1">
+            <input
+              name="chapter-title"
+              type="text"
+              class="
+                shadow-sm
+                focus:ring-indigo-500 focus:border-indigo-500
+                block
+                w-full
+                sm:text-sm
+                border-gray-300
+                rounded-md
+              "
+              @change="updateChapter('title', $event)"
+              :value="state.selected.title"
+            />
+          </div>
+        </div>
+        <div class="mb-5">
+          <label for="chapter-url" class="block text-sm font-medium text-gray-700"
+            >Url <span class="text-xs">(optional)</span></label
+          >
+          <div class="mt-1">
+            <input
+              name="chapter-url"
+              type="text"
+              class="
+                shadow-sm
+                focus:ring-indigo-500 focus:border-indigo-500
+                block
+                w-full
+                sm:text-sm
+                border-gray-300
+                rounded-md
+              "
+              @change="updateChapter('url', $event)"
+              :value="state.selected.url"
+            />
+          </div>
+        </div>
+        <div class="mb-5">
+          <label for="chapter-start" class="block text-sm font-medium text-gray-700">Start</label>
+          <div class="mt-1">
+            <input
+              name="chapter-title"
+              type="text"
+              class="
+                shadow-sm
+                focus:ring-indigo-500 focus:border-indigo-500
+                block
+                w-full
+                sm:text-sm
+                border-gray-300
+                rounded-md
+              "
+              @change="updateChapter('start', $event)"
+              :value="formatTime(state.selected.start)"
+            />
+          </div>
+        </div>
+        <div class="mb-5 ml-1">
+          <podlove-button variant="danger" @click="removeChapter()">Delete Chapter</podlove-button>
+        </div>
       </div>
     </div>
-    <div v-if="state.selected" class="w-4/12 mx-4 my-2 mt-0">
-      <div class="mb-5 mt-2">
-        <label for="chapter-title" class="block text-sm font-medium text-gray-700">Title</label>
-        <div class="mt-1">
-          <input
-            name="chapter-title"
-            type="text"
-            class="
-              shadow-sm
-              focus:ring-indigo-500 focus:border-indigo-500
-              block
-              w-full
-              sm:text-sm
-              border-gray-300
-              rounded-md
-            "
-            @change="updateChapter('title', $event)"
-            :value="state.selected.title"
-          />
-        </div>
-      </div>
-      <div class="mb-5">
-        <label for="chapter-url" class="block text-sm font-medium text-gray-700"
-          >Url <span class="text-xs">(optional)</span></label
-        >
-        <div class="mt-1">
-          <input
-            name="chapter-url"
-            type="text"
-            class="
-              shadow-sm
-              focus:ring-indigo-500 focus:border-indigo-500
-              block
-              w-full
-              sm:text-sm
-              border-gray-300
-              rounded-md
-            "
-            @change="updateChapter('url', $event)"
-            :value="state.selected.url"
-          />
-        </div>
-      </div>
-      <div class="mb-5">
-        <label for="chapter-start" class="block text-sm font-medium text-gray-700">Start</label>
-        <div class="mt-1">
-          <input
-            name="chapter-title"
-            type="text"
-            class="
-              shadow-sm
-              focus:ring-indigo-500 focus:border-indigo-500
-              block
-              w-full
-              sm:text-sm
-              border-gray-300
-              rounded-md
-            "
-            @change="updateChapter('start', $event)"
-            :value="formatTime(state.selected.start)"
-          />
-        </div>
-      </div>
-      <div class="mb-5 ml-1">
-        <podlove-button variant="danger" @click="removeChapter()">Delete Chapter</podlove-button>
-      </div>
+    <div class="m-3">
+      <podlove-button variant="primary" @click="addChapter()">
+        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Add Chapter
+      </podlove-button>
     </div>
   </div>
   <div v-else class="text-center h-96 flex items-center justify-center flex-col">

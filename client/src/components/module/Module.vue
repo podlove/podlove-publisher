@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-white overflow-auto shadow rounded-lg">
       <slot></slot>
     </div>
   </section>

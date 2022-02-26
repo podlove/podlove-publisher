@@ -82,7 +82,6 @@ export default defineComponent({
 
   computed: {
     voices(): { [key: string]: { id: string; name: string; avatar: string } }[] {
-      console.log(this.state.contributors)
       return this.state.contributors.reduce(
         (result: { name: string; avatar: string }[], contributor: PodloveContributor) => {
           const voice = this.state.voices.find(
