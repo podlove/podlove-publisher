@@ -104,18 +104,6 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
     return $form_data;
 }, 10, 2);
 
-add_filter('podlove_episode_data_filter', function ($filter) {
-    return array_merge($filter, [
-        'chapters' => FILTER_UNSAFE_RAW,
-    ]);
-});
-
-add_filter('podlove_episode_data_before_save', function ($data) {
-    $data['chapters'] = \Podlove\maybe_encode_emoji($data['chapters']);
-
-    return $data;
-});
-
 // add PSC to rss feed
 add_action('podlove_append_to_feed_entry', function ($podcast, $episode, $feed, $format) {
     $chapters = new \Podlove\Feeds\Chapters($episode);
