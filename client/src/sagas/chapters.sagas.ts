@@ -119,7 +119,8 @@ function generateMp4Download(chapters: PodloveChapter[]): string {
   return (
     chapters
       .reduce((result: string[], chapter) => {
-        let line = chapter.start ? new Timestamp(chapter.start).pretty : '' + ' ' + chapter.title
+        let line = chapter.start ? new Timestamp(chapter.start).pretty + ' ' : ''
+        line += chapter.title
 
         if (chapter.href) {
           line = line + ' <' + chapter.href + '>'
