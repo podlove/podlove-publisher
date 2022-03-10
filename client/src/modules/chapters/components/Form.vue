@@ -57,12 +57,12 @@
           </div>
         </div>
         <div class="mb-5">
-          <label for="chapter-url" class="block text-sm font-medium text-gray-700"
+          <label for="chapter-href" class="block text-sm font-medium text-gray-700"
             >Url <span class="text-xs">(optional)</span></label
           >
           <div class="mt-1">
             <input
-              name="chapter-url"
+              name="chapter-href"
               type="text"
               class="
                 shadow-sm
@@ -73,8 +73,8 @@
                 border-gray-300
                 rounded-md
               "
-              @change="updateChapter('url', $event)"
-              :value="state.selected.url"
+              @change="updateChapter('href', $event)"
+              :value="state.selected.href"
             />
           </div>
         </div>
@@ -227,7 +227,7 @@ export default defineComponent({
         this.dispatch(selectChapter(index))
       }
     },
-    updateChapter(prop: 'title' | 'url' | 'start', event: Event) {
+    updateChapter(prop: 'title' | 'href' | 'start', event: Event) {
       const raw = (event.target as HTMLInputElement).value
 
       if (this.state.selectedIndex === null) {
