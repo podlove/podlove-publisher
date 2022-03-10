@@ -116,18 +116,24 @@ function generatePscDownload(chapters: PodloveChapter[]): string {
 }
 
 function generateMp4Download(chapters: PodloveChapter[]): string {
+  const timestamp = (chapter: PodloveChapter): string => {
+    if (isNaN(chapter.start)) {
+      return ''
+    }
+
+    return new Timestamp(chapter.start).pretty
+  }
+
+  const href = (chapter: PodloveChapter): string => {
+    return chapter.href ? '<' + chapter.href + '>' : ''
+  }
+
   return (
     chapters
       .reduce((result: string[], chapter) => {
-        let line =
-          chapter.start || chapter.start === 0 ? new Timestamp(chapter.start).pretty + ' ' : ''
-        line += chapter.title
+        let line = timestamp(chapter) + ' ' + chapter.title + ' ' + href(chapter)
 
-        if (chapter.href) {
-          line = line + ' <' + chapter.href + '>'
-        }
-
-        return [...result, line]
+        return [...result, line.trim()]
       }, [])
       .join('\n') + '\n'
   )
