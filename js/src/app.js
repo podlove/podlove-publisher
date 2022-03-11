@@ -9,8 +9,6 @@ Vue.use(VueAxios, axios)
 
 Vue.component('v-select', vSelect)
 
-// chapters
-
 import JobsDashboard from './components/JobsDashboard'
 import AnalyticsDatePicker from './components/AnalyticsDatePicker'
 import Slacknotes from './components/Slacknotes'
@@ -26,7 +24,6 @@ Vue.component('jobs-dashboard', JobsDashboard);
 Vue.component('slacknotes', Slacknotes);
 Vue.component('shownotes', Shownotes);
 Vue.component('shownotes-entry', ShownotesEntry);
-Vue.component('transcripts', Transcripts);
 Vue.component('soundbite', Soundbite);
 Vue.component('draggable', Draggable);
 
@@ -34,18 +31,6 @@ import 'v2-datepicker/lib/index.css'
 import V2Datepicker from 'v2-datepicker'
 
 Vue.use(V2Datepicker)
-
-if (document.getElementById('podlove-chapters-app')) {
-    window.chaptersApp = new Vue({
-        el: '#podlove-chapters-app'
-    });
-}
-
-if (document.getElementById('podlove-transcripts-app')) {
-    window.transcriptsApp = new Vue({
-        el: '#podlove-transcripts-app'
-    });
-}
 
 if (document.getElementById('podlove-tools-dashboard')) {
     const toolsDashboard = new Vue({
