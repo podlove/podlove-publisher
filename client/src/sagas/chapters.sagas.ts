@@ -1,11 +1,6 @@
 import { TakeableChannel } from '@redux-saga/core'
 import { select, takeEvery, call, put, fork } from 'redux-saga/effects'
 
-import MP4Chaps from 'podcast-chapter-parser-mp4chaps'
-import Audacity from 'podcast-chapter-parser-audacity'
-import Hindenburg from 'podcast-chapter-parser-hindenburg'
-import Psc from 'podcast-chapter-parser-psc'
-
 import keyboard from '@podlove/utils/keyboard'
 import { selectors } from '@store'
 import Timestamp from '@lib/timestamp'
@@ -16,6 +11,7 @@ import * as chapters from '@store/chapters.store'
 import { PodloveChapter } from '../types/chapters.types'
 import { channel, takeFirst } from '../sagas/helper'
 import { createApi } from '../sagas/api'
+import { parseAudacityChapters, parseMp4Chapters, parseHindeburgChapters, parsePodloveChapters } from '@lib/chapters'
 
 function* chaptersSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -152,10 +148,10 @@ function download(name: string, data: any) {
 // Import handling
 function* handleImport(action: { type: string; payload: string }) {
   const parser: ((text: string) => PodloveChapter[])[] = [
-    MP4Chaps.parse,
-    Audacity.parse,
-    Hindenburg.parser(window.DOMParser).parse,
-    Psc.parser(window.DOMParser).parse,
+    parseMp4Chapters,
+    parseAudacityChapters,
+    parseHindeburgChapters,
+    parsePodloveChapters
   ]
 
   let parsedChapters: PodloveChapter[] | null = []
