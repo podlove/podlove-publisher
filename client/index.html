@@ -28,6 +28,22 @@
       })
         .then((res) => res.json())
         .then(({ token }) => {
+          /**
+           *  Accepts init action
+            {
+              api?: {
+                base: string;
+                nonce: string;
+              },
+              post?: {
+                id: string;
+              },
+              episode?: {
+                id: string;
+                duration?: string;
+              }
+            }
+           */
           window.initPodloveUI({
             baseUrl: 'http://podlove.local',
             api: {

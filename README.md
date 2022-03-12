@@ -41,7 +41,7 @@ make docker-install
 ### Client Development
 
 1. Install the in your local development environment [JWT Authentication for WP-API](https://wordpress.org/plugins/jwt-authentication-for-wp-rest-api/) Plugin
-2. (Optional) create an API user
+2. Create a user with username `api` and password `api`
 3. Change your working directory to `client/`
 4. Run `npm install`
 5. For isolated development run `WORDPRESS_URL=http://podlove.local npm run dev` with your Wordpress environment

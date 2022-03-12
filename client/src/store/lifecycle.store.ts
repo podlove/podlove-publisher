@@ -1,5 +1,4 @@
 import { handleActions, createAction } from 'redux-actions'
-import { PodloveChapter } from '../types/chapters.types';
 
 export type State = {
   saved: boolean;
@@ -13,11 +12,18 @@ export const SAVE = 'podlove/publisher/SAVE'
 export const ERROR = 'podlove/publisher/ERROR'
 
 export const init = createAction<{
-  chapters?: PodloveChapter[];
   api?: {
     base: string;
     nonce: string;
+  },
+  post?: {
+    id: string;
+  },
+  episode?: {
+    id: string;
+    duration?: string;
   }
+
 }>(INIT);
 
 export const save = createAction<void>(SAVE)
