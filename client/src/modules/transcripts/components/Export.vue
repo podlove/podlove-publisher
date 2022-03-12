@@ -2,7 +2,7 @@
   <div v-if="state.transcripts.length > 0">
     <popover>
       <template v-slot:trigger>
-        <podlove-button variant="secondary" size="small">Export</podlove-button>
+        <podlove-button variant="secondary" size="small" tabindex="-1">Export</podlove-button>
       </template>
       <template v-slot:content>
         <div class="bg-white p-7 pb-1 -translate-x-full z-10 mt-3 transform ml-16 rounded-lg shadow-lg">

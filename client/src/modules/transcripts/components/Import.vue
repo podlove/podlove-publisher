@@ -3,7 +3,7 @@
     <podlove-button variant="primary" @click="simulateImportClick" class="ml-1">
       <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Import Transcript
     </podlove-button>
-    <input ref="import" accept="text/vtt" type="file" @change="handleImport" class="hidden" />
+    <input ref="import" accept="text/vtt" type="file" @change="handleImport" class="hidden" key=""/>
   </form>
 </template>
 

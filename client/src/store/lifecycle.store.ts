@@ -23,7 +23,6 @@ export const init = createAction<{
     id: string;
     duration?: string;
   }
-
 }>(INIT);
 
 export const save = createAction<void>(SAVE)
