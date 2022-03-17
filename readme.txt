@@ -3,9 +3,9 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
-Tested up to: 5.9
+Tested up to: 5.9.2
 Requires PHP: 7.0
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -106,12 +106,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2022-02-22 =
+= 3.8.1 =
 
 * fix(api): episode title -- Episode title in API now follows the same rules as in RSS feed. There's a new field 'title_clean' for accessing the specifically set plain episode title, but that might be null in some cases, so it's better to default the 'title' attribute to the usual rules.
-
-= 2022-02-15 =
-
 * fix: auphonic preset for show applies after saving the episode
 * fix: remove debug error log for a shows analytics query
 
