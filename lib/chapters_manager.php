@@ -104,7 +104,19 @@ class ChaptersManager
         $asset_assignment = Model\AssetAssignment::get_instance();
 
         if ($asset_assignment->chapters == 'manual') {
-            return Parser\Mp4chaps::parse($this->chapters_raw);
+            switch ($this->chapters_raw[0]) {
+                case '[':
+                case '{':
+                    return Parser\JSON::parse($this->chapters_raw);
+
+                    break;
+
+                default:
+                    // for backwards compatibility
+                    return Parser\Mp4chaps::parse($this->chapters_raw);
+
+                    break;
+            }
         }
 
         if (!$chapters_asset = Model\EpisodeAsset::find_one_by_id($asset_assignment->chapters)) {

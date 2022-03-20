@@ -25,6 +25,9 @@
                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                   {{ chapter.title }}
                 </td>
+                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
+                  {{ chapter.image }}
+                </td>
                 <td
                   class="px-3 py-2 whitespace-nowrap text-sm text-gray-600 text-right tabular-nums"
                 >
@@ -96,6 +99,33 @@
               @change="updateChapter('start', $event)"
               :value="formatTime(state.selected.start)"
             />
+          </div>
+        </div>
+        <div class="mb-5 flow-root">
+          <div class = "float-left">
+            <label for="chapter-image" class="block text-sm font-medium text-gray-700"
+              >Image <span class="text-xs">(optional)</span></label
+            >
+            <div class="mt-1">
+              <input
+                name="chapter-image"
+                type="text"
+                class="
+                  shadow-sm
+                  focus:ring-indigo-500 focus:border-indigo-500
+                  block
+                  w-full
+                  sm:text-sm
+                  border-gray-300
+                  rounded-md
+                "
+                @change="updateChapter('image', $event)"
+                :value="state.selected.image"
+              />
+            </div>
+          </div>
+          <div class="float-right content-end mb-5">
+            <podlove-button variant="secondary" @click="selectImage()">Select</podlove-button>
           </div>
         </div>
         <div class="mb-5 ml-1">
@@ -209,6 +239,7 @@ export default defineComponent({
               index: chapterIndex,
               title: chapter.title,
               start: chapter.start ? new Timestamp(chapter.start).pretty : new Timestamp(0).pretty,
+              image: chapter.image,
               duration,
             },
           ]
@@ -227,7 +258,7 @@ export default defineComponent({
         this.dispatch(selectChapter(index))
       }
     },
-    updateChapter(prop: 'title' | 'href' | 'start', event: Event) {
+    updateChapter(prop: 'title' | 'href' | 'start' | 'image', event: Event) {
       const raw = (event.target as HTMLInputElement).value
 
       if (this.state.selectedIndex === null) {
@@ -273,6 +304,9 @@ export default defineComponent({
     // Formatters
     formatTime(value: number): string {
       return new Timestamp(value).pretty
+    },
+
+    selectImage() {
     },
   },
 })
