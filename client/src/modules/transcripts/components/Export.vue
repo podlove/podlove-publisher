@@ -5,7 +5,9 @@
         <podlove-button variant="secondary" size="small" tabindex="-1">Export</podlove-button>
       </template>
       <template v-slot:content>
-        <div class="bg-white p-7 pb-1 -translate-x-full z-10 mt-3 transform ml-16 rounded-lg shadow-lg">
+        <div
+          class="bg-white p-7 pb-1 -translate-x-full z-10 mt-3 transform ml-16 rounded-lg shadow-lg"
+        >
           <a
             v-for="(exportType, index) in exportTypes"
             :key="`type-${index}`"
@@ -45,7 +47,7 @@ import selectors from '@store/selectors'
 import { defineComponent } from '@vue/runtime-core'
 
 import Popover from '@components/popover/Popover.vue'
-import PodloveButton from '@components/Button/Button.vue'
+import PodloveButton from '@components/button/Button.vue'
 
 const exportTypes = [
   {
@@ -98,5 +100,4 @@ export default defineComponent({
 })
 </script>
 
-<style>
-</style>
+<style></style>

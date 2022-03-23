@@ -62,12 +62,12 @@ import { injectStore } from 'redux-vuex'
 import { defineComponent } from '@vue/runtime-core'
 import { download } from '@store/chapters.store'
 import Popover from '@components/popover/Popover.vue'
-import PodloveButton from '@components/Button/Button.vue'
+import PodloveButton from '@components/button/Button.vue'
 
 export default defineComponent({
   components: {
     Popover,
-    PodloveButton
+    PodloveButton,
   },
   setup(): { dispatch: Function } {
     return {
@@ -82,5 +82,4 @@ export default defineComponent({
 })
 </script>
 
-<style>
-</style>
+<style></style>
