@@ -22,7 +22,7 @@ export const PARSED = 'podlove/publisher/chapter/PARSED'
 export const SET = 'podlove/publisher/chapter/SET'
 export const DOWNLOAD = 'podlove/publisher/chapter/DOWNLOAD'
 
-export const init = createAction<void>(INIT);
+export const init = createAction<void>(INIT)
 export const update = createAction<{ chapter: Partial<PodloveChapter>; index: number }>(UPDATE)
 export const select = createAction<number | null>(SELECT)
 export const remove = createAction<number>(REMOVE)
@@ -47,9 +47,12 @@ export const reducer = handleActions(
     [UPDATE]: (
       state: State,
       action: { type: string; payload: { chapter: Partial<PodloveChapter>; index: number } }
-    ): State => ({
-      ...state,
-      chapters: state.chapters.reduce(
+    ): State => {
+      let selectedChapterIndex = selectedIndex(state)
+      const selectedChapter = selected(state)
+
+      // update chapter
+      const chapters = state.chapters.reduce(
         (result: PodloveChapter[], chapter, chapterIndex) => [
           ...result,
           chapterIndex === action.payload.index
@@ -57,8 +60,22 @@ export const reducer = handleActions(
             : chapter,
         ],
         []
-      ),
-    }),
+      )
+
+      // sort chapters by time
+      const sortedChapters = chapters.sort((a, b) => a.start - b.start)
+
+      // update selected index
+      const newSelectedIndex = sortedChapters.findIndex(
+        (chapter) => selectedChapter && chapter.title == selectedChapter.title
+      )
+
+      return {
+        ...state,
+        chapters: sortedChapters,
+        selected: newSelectedIndex >= 0 ? newSelectedIndex : selectedChapterIndex,
+      }
+    },
     [SELECT]: (state: State, action: { type: string; payload: number }): State => ({
       ...state,
       selected: action.payload,
@@ -84,9 +101,15 @@ export const reducer = handleActions(
   initialState
 )
 
+const chapters = (state: State) => state.chapters
+
+const selectedIndex = (state: State) => state.selected
+
+const selected = (state: State) =>
+  state.selected !== null ? get(state, ['chapters', state.selected], null) : null
+
 export const selectors = {
-  chapters: (state: State) => state.chapters,
-  selectedIndex: (state: State) => state.selected,
-  selected: (state: State) =>
-    state.selected !== null ? get(state, ['chapters', state.selected], null) : null,
+  chapters,
+  selectedIndex,
+  selected,
 }
