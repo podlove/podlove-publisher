@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Podlove Publisher Client Development Environment</title>
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <body class="bg-gray-100 p-2">
+    <script>
+      window.ajaxurl = '/wp-admin/admin-ajax.php'
+      window.apiPrefix = '/api'
+    </script>
+
+    <div data-client="podlove">
+      <podlove-chapters></podlove-chapters>
+      <div class="h-5"></div>
+      <podlove-transcripts></podlove-transcripts>
+    </div>
+
+    <script type="module" src="./src/client.ts"></script>
+
+    <script>
+      fetch('http://localhost:3000/wp-json/jwt-auth/v1/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: 'api', password: 'api' }),
+      })
+        .then((res) => res.json())
+        .then(({ token }) => {
+          /**
+           *  Accepts init action
+            {
+              api?: {
+                base: string;
+                nonce: string;
+              },
+              post?: {
+                id: string;
+              },
+              episode?: {
+                id: string;
+                duration?: string;
+              }
+            }
+           */
+          window.initPodloveUI({
+            baseUrl: 'http://podlove.local',
+            api: {
+              base: 'http://localhost:3000/wp-json/podlove',
+              bearer: token,
+            },
+            post: {
+              id: '60',
+            },
+            episode: {
+              id: '8',
+              duration: '01:40:02.577',
+            },
+          })
+        })
+    </script>
+  </body>
+</html>

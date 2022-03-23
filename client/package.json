@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "build": "vue-tsc --noEmit && NODE_ENV=production vite build --base=/wp-content/plugins/podlove-publisher/client/dist/",
+    "serve": "vite build --watch --base=/wp-content/plugins/podlove-publisher/client/dist/",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "1.9.3",
+    "postcss": "8.3.9",
+    "prettier": "2.4.1",
+    "tailwindcss": "2.2.17",
+    "typescript": "4.4.3",
+    "vite": "2.6.4",
+    "vue-tsc": "0.30.5",
+    "postcss-import": "14.0.2",
+    "@types/lodash": "4.14.175",
+    "@types/redux-actions": "2.6.2",
+    "postcss-prefix-selector": "1.14.0",
+    "cssnano": "5.0.15"
+  },
+  "dependencies": {
+    "@headlessui/vue": "1.4.3",
+    "@heroicons/vue": "1.0.5",
+    "@podlove/utils": "5.7.3",
+    "@podlove/web-player": "4.5.13",
+    "@popperjs/core": "2.10.2",
+    "@tailwindcss/forms": "0.4.0",
+    "autoprefixer": "10.3.7",
+    "lodash": "4.17.21",
+    "redux": "4.1.1",
+    "redux-actions": "2.6.5",
+    "redux-saga": "1.1.3",
+    "redux-vuex": "3.0.0-beta.6",
+    "reselect": "4.0.0",
+    "vue": "3.2.20",
+    "vue3-popper": "1.4.1"
+  }
+}

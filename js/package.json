@@ -1,0 +1,33 @@
+{
+  "scripts": {
+    "serve": "mix watch --mix-config=webpack.mix.js",
+    "build": "mix --mix-config=webpack.mix.js --production"
+  },
+  "devDependencies": {
+    "dompurify": "^2.1.1",
+    "elliptic": ">=6.5.4",
+    "laravel-mix": "^6.0.31",
+    "node-forge": ">=0.10.0",
+    "normalplaytime": "^1.0.4",
+    "podcast-chapter-parser-audacity": "^1.0.0",
+    "podcast-chapter-parser-hindenburg": "^1.0.2",
+    "podcast-chapter-parser-mp4chaps": "^1.0.2",
+    "podcast-chapter-parser-psc": "^1.1.1",
+    "vue": "^2.6.12",
+    "vue-loader": "^15.9.8"
+  },
+  "dependencies": {
+    "@podlove/web-player": "^4.5.13",
+    "@popperjs/core": "^2.10.2",
+    "axios": ">=0.21.1",
+    "clipboard": "^2.0.6",
+    "elliptic": ">=6.5.4",
+    "file-saver": "^2.0.5",
+    "npm": "^6.14.8",
+    "v2-datepicker": "^3.1.1",
+    "vue-axios": "^2.1.5",
+    "vue-select": "^3.10.8",
+    "vue-template-compiler": "^2.6.12",
+    "vuedraggable": "^2.24.1"
+  }
+}

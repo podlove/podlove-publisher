@@ -31,11 +31,21 @@ make docker-install
 
 ## Development
 
-Use webpack when working with JS or CSS files:
+### Legacy JS Development
 
-```
-yarn run dev
-```
+1. Change your working direcetory to `js/`
+2. Run `npm install`
+3. Run `npm run serve` to start the development build
+4. Go to your local Wordpress environment and see your changes
+
+### Client Development
+
+1. Install the in your local development environment [JWT Authentication for WP-API](https://wordpress.org/plugins/jwt-authentication-for-wp-rest-api/) Plugin
+2. Create a user with username `api` and password `api`
+3. Change your working directory to `client/`
+4. Run `npm install`
+5. For isolated development run `WORDPRESS_URL=http://podlove.local npm run dev` with your Wordpress environment
+6. For integrated development run `npm run serve` and go to your local Wordpress environment and see your changes
 
 ## Formatting Code
 
