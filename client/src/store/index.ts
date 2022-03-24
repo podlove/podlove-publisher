@@ -19,6 +19,7 @@ import { State as transcriptsState } from './transcripts.store'
 import { State as contributorsState } from './contributors.store'
 import { State as settingsState } from './settings.store'
 import { State as podcastState } from './podcast.store'
+import { State as auphonicState } from './auphonic.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import podcastSaga from '../sagas/podcast.sagas'
@@ -30,15 +31,16 @@ import wordpressSaga from '../sagas/wordpress.sagas'
 import episodeSaga from '../sagas/episode.sagas'
 
 export interface State {
-  lifecycle: LifecycleState;
-  chapters: ChaptersState;
-  episode: episodeState;
-  runtime: runtimeState;
-  post: postState;
-  transcripts: transcriptsState;
-  contributors: contributorsState;
-  settings: settingsState;
-  podcast: podcastState;
+  lifecycle: LifecycleState
+  chapters: ChaptersState
+  episode: episodeState
+  runtime: runtimeState
+  post: postState
+  transcripts: transcriptsState
+  contributors: contributorsState
+  settings: settingsState
+  podcast: podcastState
+  auphonic: auphonicState
 }
 
 const sagas = createSagaMiddleware()
@@ -46,13 +48,13 @@ const sagas = createSagaMiddleware()
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 export const store: Store<State> = createStore(reducers, composeEnhancers(applyMiddleware(sagas)))
 
-sagas.run(lifecycleSaga());
-sagas.run(notificationSaga());
-sagas.run(chaptersSaga());
-sagas.run(transcriptsSaga());
-sagas.run(contributorsSaga());
-sagas.run(wordpressSaga());
-sagas.run(episodeSaga());
-sagas.run(podcastSaga());
+sagas.run(lifecycleSaga())
+sagas.run(notificationSaga())
+sagas.run(chaptersSaga())
+sagas.run(transcriptsSaga())
+sagas.run(contributorsSaga())
+sagas.run(wordpressSaga())
+sagas.run(episodeSaga())
+sagas.run(podcastSaga())
 
 export { selectors, sagas }

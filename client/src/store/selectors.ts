@@ -9,6 +9,7 @@ import * as transcriptsStore from './transcripts.store'
 import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
+import * as auphonicStore from './auphonic.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -19,11 +20,16 @@ const root = {
   post: (state: State) => state.post,
   transcripts: (state: State) => state.transcripts,
   contributors: (state: State) => state.contributors,
+  auphonic: (state: State) => state.auphonic,
   settings: (state: State) => state.settings,
 }
 
 const lifecycle = {
   bootstrapped: createSelector(root.lifecycle, lifecycleStore.selectors.bootstrapped),
+}
+
+const auphonic = {
+  productionId: createSelector(root.auphonic, auphonicStore.selectors.productionId),
 }
 
 const podcast = {
@@ -34,9 +40,8 @@ const podcast = {
   itunesType: createSelector(root.podcast, podcastStore.selectors.itunesType),
   author: createSelector(root.podcast, podcastStore.selectors.author),
   poster: createSelector(root.podcast, podcastStore.selectors.poster),
-  link: createSelector(root.podcast, podcastStore.selectors.link)
+  link: createSelector(root.podcast, podcastStore.selectors.link),
 }
-
 
 const chapters = {
   list: createSelector(root.chapters, chaptersStore.selectors.chapters),
@@ -85,16 +90,24 @@ const settings = {
     root.settings,
     settingsStore.selectors.autoGenerateEpisodeTitle
   ),
-  blogTitleTemplate: createSelector(
-    root.settings,
-    settingsStore.selectors.blogTitleTemplate
-  ),
-  episodeNumberPadding: createSelector(
-    root.settings,
-    settingsStore.selectors.episodeNumberPadding
-  ),
+  blogTitleTemplate: createSelector(root.settings, settingsStore.selectors.blogTitleTemplate),
+  episodeNumberPadding: createSelector(root.settings, settingsStore.selectors.episodeNumberPadding),
   imageAsset: createSelector(root.settings, settingsStore.selectors.imageAsset),
-  enableEpisodeExplicit: createSelector(root.settings, settingsStore.selectors.enableEpisodeExplicit)
+  enableEpisodeExplicit: createSelector(
+    root.settings,
+    settingsStore.selectors.enableEpisodeExplicit
+  ),
 }
 
-export default { lifecycle, podcast, chapters, episode, runtime, post, transcripts, contributors, settings }
+export default {
+  lifecycle,
+  podcast,
+  chapters,
+  episode,
+  runtime,
+  post,
+  transcripts,
+  contributors,
+  settings,
+  auphonic,
+}
