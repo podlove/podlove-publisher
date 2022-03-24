@@ -174,6 +174,7 @@ interface Chapter {
   title: string
   duration: string
   start: string
+  image: string
 }
 
 export default defineComponent({
