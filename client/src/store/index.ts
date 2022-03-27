@@ -29,6 +29,7 @@ import transcriptsSaga from '../sagas/transcripts.sagas'
 import contributorsSaga from '../sagas/contributors.sagas'
 import wordpressSaga from '../sagas/wordpress.sagas'
 import episodeSaga from '../sagas/episode.sagas'
+import auphonicSaga from '../sagas/auphonic.sagas'
 
 export interface State {
   lifecycle: LifecycleState
@@ -56,5 +57,6 @@ sagas.run(contributorsSaga())
 sagas.run(wordpressSaga())
 sagas.run(episodeSaga())
 sagas.run(podcastSaga())
+sagas.run(auphonicSaga())
 
 export { selectors, sagas }
