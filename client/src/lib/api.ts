@@ -1,6 +1,6 @@
 import { curry } from 'lodash'
 
-const addQuery = (url: string, query: { [key: string]: any } = {}) => {
+export const addQuery = (url: string, query: { [key: string]: any } = {}) => {
   const params = Object.keys(query)
     .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(query[k]))
     .join('&')
@@ -8,28 +8,30 @@ const addQuery = (url: string, query: { [key: string]: any } = {}) => {
   return (url += (url.indexOf('?') === -1 ? '?' : '&') + params)
 }
 
-const responseParser = (errorHandler: Function = console.error) => async (response: Response) => {
-  let result
+export const responseParser =
+  (errorHandler: Function = console.error) =>
+  async (response: Response) => {
+    let result
 
-  try {
-    result = await response.json()
-  } catch (err) {
-    result = {}
-  }
+    try {
+      result = await response.json()
+    } catch (err) {
+      result = {}
+    }
 
-  if (response.status >= 300) {
-    errorHandler(result)
+    if (response.status >= 300) {
+      errorHandler(result)
+      return {
+        error: result,
+      }
+    }
+
     return {
-      error: result,
+      result,
     }
   }
 
-  return {
-    result,
-  }
-}
-
-interface ApiOptions {
+export interface ApiOptions {
   headers?: { [key: string]: string }
   query?: { [key: string]: string }
 }
@@ -108,7 +110,7 @@ export const podlove = curry(
     bearer,
     errorHandler,
   }: {
-    errorHandler: Function,
+    errorHandler: Function
     base: string
     version: string
     nonce?: string
