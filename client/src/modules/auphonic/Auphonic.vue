@@ -1,6 +1,7 @@
 <template>
   <module name="auphonic" title="Auphonic">
     <div class="m-3 flex flex-col gap-3">
+      <div>token: {{ token }}</div>
       <div>production id: {{ productionId }}</div>
       <div>
         <podlove-button variant="primary"
@@ -43,6 +44,7 @@ export default defineComponent({
   setup() {
     return {
       state: mapState({
+        token: selectors.auphonic.token,
         productionId: selectors.auphonic.productionId,
       }),
       dispatch: injectStore().dispatch,
@@ -50,13 +52,17 @@ export default defineComponent({
   },
 
   computed: {
+    token(): string {
+      return this.state.token || ''
+    },
     productionId(): string {
       return this.state.productionId || ''
     },
   },
 
   created() {
-    this.dispatch(auphonic.setProduction('proof of concept, not a real production id'))
+    this.dispatch(auphonic.init())
+    // this.dispatch(auphonic.setProduction('proof of concept, not a real production id'))
   },
 })
 </script>
