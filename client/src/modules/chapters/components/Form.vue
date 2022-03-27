@@ -26,7 +26,11 @@
                   {{ chapter.title }}
                 </td>
                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                  {{ chapter.image }}
+                  <img
+                    class="w-12 h-12 rounded"
+                    v-if="chapter?.image"
+                    :src="chapter?.image"
+                  />
                 </td>
                 <td
                   class="px-3 py-2 whitespace-nowrap text-sm text-gray-600 text-right tabular-nums"
