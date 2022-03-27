@@ -27,6 +27,8 @@ class Auphonic extends \Podlove\Modules\Base
         add_action('wp_ajax_podlove-add-production-for-auphonic-webhook', [$this, 'ajax_add_episode_for_auphonic_webhook']);
         add_action('wp', [$this, 'auphonic_webhook']);
 
+        add_action('rest_api_init', [$this, 'api_init']);
+
         add_action('admin_print_styles', [$this, 'admin_print_styles']);
         add_action('wp_ajax_podlove-refresh-auphonic-presets', [$this, 'ajax_refresh_presets']);
         add_action('wp_ajax_podlove-get-auphonic-preset', [$this, 'ajax_get_preset']);
@@ -38,6 +40,12 @@ class Auphonic extends \Podlove\Modules\Base
         }
 
         $this->register_settings();
+    }
+
+    public function api_init()
+    {
+        $api_v2 = new REST_API($this);
+        $api_v2->register_routes();
     }
 
     public function register_settings()

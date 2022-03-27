@@ -29,6 +29,7 @@ const lifecycle = {
 }
 
 const auphonic = {
+  token: createSelector(root.auphonic, auphonicStore.selectors.token),
   productionId: createSelector(root.auphonic, auphonicStore.selectors.productionId),
 }
 
