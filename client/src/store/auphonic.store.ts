@@ -14,11 +14,14 @@ export const INIT = 'podlove/publisher/auphonic/INIT'
 export const SET_TOKEN = 'podlove/publisher/auphonic/SET_TOKEN'
 export const SET_PRODUCTION = 'podlove/publisher/auphonic/SET_PRODUCTION'
 export const CREATE_PRODUCTION = 'podlove/publisher/auphonic/CREATE_PRODUCTION'
+export const CREATE_MULTITRACK_PRODUCTION =
+  'podlove/publisher/auphonic/CREATE_MULTITRACK_PRODUCTION'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
 export const setProduction = createAction<string>(SET_PRODUCTION)
 export const createProduction = createAction<string>(CREATE_PRODUCTION)
+export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
 
 export const reducer = handleActions(
   {
