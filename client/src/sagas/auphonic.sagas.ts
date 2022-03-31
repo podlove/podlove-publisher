@@ -31,10 +31,22 @@ function* initializeAuphonicApi() {
   console.log('auphonic', { presets, productions })
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
+  yield takeEvery(
+    auphonic.CREATE_MULTITRACK_PRODUCTION,
+    handleCreateMultitrackProduction,
+    auphonicApi
+  )
 }
 
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
   const { result } = yield auphonicApi.post(`productions.json`, {})
+  const production = result.data
+
+  yield put(auphonic.setProduction(production))
+}
+
+function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
+  const { result } = yield auphonicApi.post(`productions.json`, { is_multitrack: true })
   const production = result.data
 
   yield put(auphonic.setProduction(production))
