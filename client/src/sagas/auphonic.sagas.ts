@@ -1,6 +1,6 @@
 import * as auphonic from '@store/auphonic.store'
 import { takeFirst } from '../sagas/helper'
-import { put, fork } from 'redux-saga/effects'
+import { put, fork, takeEvery } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
@@ -29,6 +29,15 @@ function* initializeAuphonicApi() {
     result: { data: productions },
   } = yield auphonicApi.get(`productions.json`)
   console.log('auphonic', { presets, productions })
+
+  yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
+}
+
+function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
+  const { result } = yield auphonicApi.post(`productions.json`, {})
+  const production = result.data
+
+  yield put(auphonic.setProduction(production))
 }
 
 export default function () {
