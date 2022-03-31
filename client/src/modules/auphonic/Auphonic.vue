@@ -11,7 +11,7 @@
       </div>
       <div>or</div>
       <div>
-        <podlove-button variant="primary"
+        <podlove-button variant="primary" @click="createMultitrackProduction"
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create Multitrack
           Production</podlove-button
         >
@@ -54,6 +54,9 @@ export default defineComponent({
   methods: {
     createProduction() {
       this.dispatch(auphonic.createProduction())
+    },
+    createMultitrackProduction() {
+      this.dispatch(auphonic.createMultitrackProduction())
     },
   },
 
