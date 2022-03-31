@@ -27,7 +27,7 @@ function* initializeAuphonicApi() {
   } = yield auphonicApi.get(`presets.json`)
   const {
     result: { data: productions },
-  } = yield auphonicApi.get(`productions.json`)
+  } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
   console.log('auphonic', { presets, productions })
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
@@ -38,15 +38,24 @@ function* initializeAuphonicApi() {
   )
 }
 
+function defaultTitle() {
+  return `Audio Production ${new Date().toLocaleString()}`
+}
+
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
-  const { result } = yield auphonicApi.post(`productions.json`, {})
+  const { result } = yield auphonicApi.post(`productions.json`, {
+    metadata: { title: defaultTitle() },
+  })
   const production = result.data
 
   yield put(auphonic.setProduction(production))
 }
 
 function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
-  const { result } = yield auphonicApi.post(`productions.json`, { is_multitrack: true })
+  const { result } = yield auphonicApi.post(`productions.json`, {
+    metadata: { title: defaultTitle() },
+    is_multitrack: true,
+  })
   const production = result.data
 
   yield put(auphonic.setProduction(production))
