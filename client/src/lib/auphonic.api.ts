@@ -29,8 +29,29 @@ const readApi =
       headers: defaultHeaders({ bearer }, headers),
     }).then(responseParser(errorHandler))
 
+const createApi =
+  ({
+    errorHandler,
+    bearer,
+    method,
+    urlProcessor,
+  }: {
+    errorHandler?: Function
+    bearer?: string
+    method: 'POST' | 'PUT'
+    urlProcessor?: (url: string) => string
+  }) =>
+  (url: string, data: any, { headers, query }: ApiOptions = {}) => {
+    return fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
+      method,
+      headers: defaultHeaders({ bearer }, headers),
+      body: JSON.stringify(data),
+    }).then(responseParser(errorHandler))
+  }
+
 export interface AuphonicApiClient {
   get: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  post: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
 }
 
 export const auphonic = curry(
@@ -39,6 +60,12 @@ export const auphonic = curry(
       bearer,
       method: 'GET',
       errorHandler,
+      urlProcessor: (endpoint) => `${base}/${endpoint}`,
+    }),
+    post: createApi({
+      bearer,
+      errorHandler,
+      method: 'POST',
       urlProcessor: (endpoint) => `${base}/${endpoint}`,
     }),
   })

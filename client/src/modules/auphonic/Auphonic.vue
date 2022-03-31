@@ -4,7 +4,7 @@
       <div>token: {{ token }}</div>
       <div>production id: {{ productionId }}</div>
       <div>
-        <podlove-button variant="primary"
+        <podlove-button variant="primary" @click="createProduction"
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create
           Production</podlove-button
         >
@@ -51,6 +51,12 @@ export default defineComponent({
     }
   },
 
+  methods: {
+    createProduction() {
+      this.dispatch(auphonic.createProduction())
+    },
+  },
+
   computed: {
     token(): string {
       return this.state.token || ''
@@ -62,7 +68,6 @@ export default defineComponent({
 
   created() {
     this.dispatch(auphonic.init())
-    // this.dispatch(auphonic.setProduction('proof of concept, not a real production id'))
   },
 })
 </script>
