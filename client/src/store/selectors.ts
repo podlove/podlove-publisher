@@ -31,6 +31,7 @@ const lifecycle = {
 const auphonic = {
   token: createSelector(root.auphonic, auphonicStore.selectors.token),
   productionId: createSelector(root.auphonic, auphonicStore.selectors.productionId),
+  productions: createSelector(root.auphonic, auphonicStore.selectors.productions),
 }
 
 const podcast = {

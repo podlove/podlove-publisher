@@ -30,6 +30,8 @@ function* initializeAuphonicApi() {
   } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
   console.log('auphonic', { presets, productions })
 
+  yield put(auphonic.setProductions(productions))
+
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
   yield takeEvery(
     auphonic.CREATE_MULTITRACK_PRODUCTION,
