@@ -1,8 +1,11 @@
 <template>
   <module name="auphonic" title="Auphonic">
-    <div class="m-3 flex flex-col gap-3">
-      <div>token: {{ token }}</div>
+    <div class="m-7 flex flex-col gap-7">
       <div>production id: {{ productionId }}</div>
+      <div class="max-w-md">
+        <SelectProduction />
+      </div>
+      <div>or</div>
       <div>
         <podlove-button variant="primary" @click="createProduction"
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create
@@ -15,10 +18,6 @@
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create Multitrack
           Production</podlove-button
         >
-      </div>
-      <div>or</div>
-      <div>
-        <em>select existing production</em>
       </div>
     </div>
   </module>
@@ -33,12 +32,14 @@ import { selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
+import SelectProduction from './components/SelectProduction.vue'
 
 export default defineComponent({
   components: {
     Module,
     PodloveButton,
     PlusSmIcon,
+    SelectProduction,
   },
 
   setup() {
