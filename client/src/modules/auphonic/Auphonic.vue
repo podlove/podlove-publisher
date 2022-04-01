@@ -1,19 +1,20 @@
 <template>
   <module name="auphonic" title="Auphonic">
-    <div class="m-7 flex flex-col gap-7">
-      <div>production id: {{ productionId }}</div>
-      <div class="max-w-md">
-        <SelectProduction />
+    <div class="m-12 mb-24 text-center">
+      <AuphonicLogo className="mx-auto h-16 w-16 text-gray-400" />
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No production connected yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Manage your audio post production with Auphonic.</p>
+      <div class="mt-8 flex justify-center align-middle content-center items-center gap-3">
+        <div class="w-full max-w-md">
+          <SelectProduction />
+        </div>
       </div>
-      <div>or</div>
-      <div>
+      <div class="mt-10 flex justify-center align-middle content-center items-center gap-3">
         <podlove-button variant="primary" @click="createProduction"
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create
           Production</podlove-button
         >
-      </div>
-      <div>or</div>
-      <div>
+        <div class="text-gray-400">or</div>
         <podlove-button variant="primary" @click="createMultitrackProduction"
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create Multitrack
           Production</podlove-button
@@ -33,6 +34,16 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import SelectProduction from './components/SelectProduction.vue'
+import AuphonicLogo from './components/Logo.vue'
+
+// NEXT: start "manage production" screen
+
+// - look through twui empty state patterns, pretty up the first screen:
+//   https://tailwindui.com/components/application-ui/feedback/empty-states
+
+// - once pid is selected, show "manage" screen
+// - add button to return to create/select screen ("choose other production")
+// - build file selection component (flexible, so it can be used for single and multi track)
 
 export default defineComponent({
   components: {
@@ -40,6 +51,7 @@ export default defineComponent({
     PodloveButton,
     PlusSmIcon,
     SelectProduction,
+    AuphonicLogo,
   },
 
   setup() {
