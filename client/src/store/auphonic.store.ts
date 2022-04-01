@@ -1,5 +1,22 @@
 import { createAction, handleActions } from 'redux-actions'
 
+export type Metadata = {
+  album: string
+  append_chapters: boolean
+  artist: string
+  genre: string
+  license: string
+  license_url: string
+  publisher: string
+  subtitle: string
+  summary: string
+  tags: string[]
+  title: string
+  track: string
+  url: string
+  year: string
+}
+
 export type Production = {
   uuid: string
   status: number
@@ -12,7 +29,7 @@ export type Production = {
   status_page: string
   waveform_image: string
   image: string | null
-  metadata: object
+  metadata: Metadata
   creation_time: string
   is_multitrack: boolean
 }
