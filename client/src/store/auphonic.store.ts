@@ -48,6 +48,7 @@ export type State = {
   production: Production | null
   productions: Production[] | null
   services: Service[]
+  service_files: object
 }
 
 export const initialState: State = {
@@ -55,6 +56,7 @@ export const initialState: State = {
   production: null,
   productions: [],
   services: [],
+  service_files: {},
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -65,17 +67,33 @@ export const SET_SERVICES = 'podlove/publisher/auphonic/SET_SERVICES'
 export const CREATE_PRODUCTION = 'podlove/publisher/auphonic/CREATE_PRODUCTION'
 export const CREATE_MULTITRACK_PRODUCTION =
   'podlove/publisher/auphonic/CREATE_MULTITRACK_PRODUCTION'
+export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
+export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
 export const setProduction = createAction<string>(SET_PRODUCTION)
 export const setProductions = createAction<string>(SET_PRODUCTIONS)
 export const setServices = createAction<string>(SET_SERVICES)
+export const setServiceFiles =
+  createAction<{ uuid: string; files: string[] | null }>(SET_SERVICE_FILES)
 export const createProduction = createAction<string>(CREATE_PRODUCTION)
 export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
+export const selectService = createAction<string>(SELECT_SERVICE)
 
 export const reducer = handleActions(
   {
+    [SET_SERVICE_FILES]: (
+      state: State,
+      action: { payload: { uuid: string; files: string[] | null } }
+    ): State => {
+      const { uuid, files } = action.payload
+
+      return {
+        ...state,
+        service_files: { ...state.service_files, [uuid]: files },
+      }
+    },
     [SET_SERVICES]: (state: State, action: { payload: Service[] }): State => ({
       ...state,
       services: action.payload,
@@ -104,4 +122,5 @@ export const selectors = {
   services: (state: State) => state.services,
   incomingServices: (state: State) => state.services.filter((s: Service) => s.incoming),
   outgoingServices: (state: State) => state.services.filter((s: Service) => s.outgoing),
+  serviceFiles: (state: State) => state.service_files,
 }
