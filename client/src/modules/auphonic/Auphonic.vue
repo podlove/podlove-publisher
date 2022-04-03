@@ -21,6 +21,12 @@
         >
       </div>
     </div>
+
+    <hr />
+
+    <div class="m-7">
+      <ManageProductionForm />
+    </div>
   </module>
 </template>
 
@@ -34,6 +40,7 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import SelectProduction from './components/SelectProduction.vue'
+import ManageProductionForm from './components/ManageProductionForm.vue'
 import AuphonicLogo from './components/Logo.vue'
 
 // NEXT: start "manage production" screen
@@ -51,6 +58,7 @@ export default defineComponent({
     PodloveButton,
     PlusSmIcon,
     SelectProduction,
+    ManageProductionForm,
     AuphonicLogo,
   },
 
