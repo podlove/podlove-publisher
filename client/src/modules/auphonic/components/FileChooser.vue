@@ -1,8 +1,6 @@
 <template>
   <div>
-    <label for="location" class="block text-sm font-medium text-gray-700"
-      >Select Upload Method</label
-    >
+    <label for="location" class="block text-sm font-medium text-gray-700">Upload Method</label>
 
     <!-- step one -->
     <select
@@ -39,7 +37,24 @@
           />
         </div>
       </div>
-      <div v-else>todo: external service picker</div>
+      <div v-else>
+        <div v-if="serviceFiles !== null">
+          <label for="audio_external_file" class="block text-sm font-medium text-gray-700"
+            >File</label
+          >
+          <select
+            v-model="fileSelection"
+            name="audio_external_file"
+            id="audio_external_file"
+            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option v-for="file in serviceFiles" :key="file" :value="file">
+              {{ file }}
+            </option>
+          </select>
+        </div>
+        <div v-else>...</div>
+      </div>
     </div>
   </div>
 </template>
@@ -81,12 +96,14 @@ export default defineComponent({
   data() {
     return {
       currentServiceSelection: null,
+      fileSelection: null,
     }
   },
 
   setup() {
     const state = mapState({
       services: selectors.auphonic.incomingServices,
+      serviceFiles: selectors.auphonic.serviceFiles,
     })
 
     return {
@@ -99,6 +116,9 @@ export default defineComponent({
     ready() {
       this.currentServiceSelection = this.state.services[0]?.uuid
     },
+    currentServiceSelection(uuid) {
+      this.dispatch(auphonic.selectService(uuid))
+    },
   },
 
   computed: {
@@ -110,6 +130,11 @@ export default defineComponent({
     },
     currentService(): Service {
       return this.state.services.find((s) => s.uuid === this.currentServiceSelection)
+    },
+    serviceFiles(): string[] | null {
+      return this.currentServiceSelection && this.state.serviceFiles
+        ? this.state.serviceFiles[this.currentServiceSelection]
+        : null
     },
   },
 })

@@ -64,6 +64,22 @@ function* initializeAuphonicApi() {
     handleCreateMultitrackProduction,
     auphonicApi
   )
+  yield takeEvery(auphonic.selectService, fetchServiceFiles, auphonicApi)
+}
+
+function* fetchServiceFiles(
+  auphonicApi: AuphonicApiClient,
+  action: { type: string; payload: string }
+) {
+  const uuid = action.payload
+
+  if (uuid == 'file' || uuid == 'url') {
+    return
+  }
+
+  const { result } = yield auphonicApi.get(`service/${uuid}/ls.json`)
+
+  yield put(auphonic.setServiceFiles({ uuid, files: result.data }))
 }
 
 function defaultTitle() {
