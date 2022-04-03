@@ -105,11 +105,11 @@
             />
           </div>
         </div>
-        <div class="mb-5 flow-root">
-          <div class = "float-left">
+        <div class="mb-5 flex items-end">
+          <div class = "w-5/6">
             <label for="chapter-image" class="block text-sm font-medium text-gray-700"
               >Image <span class="text-xs">(optional)</span></label
-            >
+            >            
             <div class="mt-1">
               <input
                 name="chapter-image"
@@ -128,7 +128,7 @@
               />
             </div>
           </div>
-          <div class="float-right content-end mb-5">
+          <div class="w-1/6 ml-1">
             <podlove-button variant="secondary" @click="selectImage()">Select</podlove-button>
           </div>
         </div>
@@ -167,6 +167,7 @@ import {
   update as updateChapter,
   remove as removeChapter,
   add as addChapter,
+  selectImage
 } from '@store/chapters.store'
 import { PlusSmIcon, BookmarkAltIcon } from '@heroicons/vue/outline'
 
@@ -312,6 +313,7 @@ export default defineComponent({
     },
 
     selectImage() {
+      this.dispatch(selectImage())
     },
   },
 })

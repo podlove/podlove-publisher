@@ -21,6 +21,8 @@ export const PARSE = 'podlove/publisher/chapter/PARSE'
 export const PARSED = 'podlove/publisher/chapter/PARSED'
 export const SET = 'podlove/publisher/chapter/SET'
 export const DOWNLOAD = 'podlove/publisher/chapter/DOWNLOAD'
+export const SELECT_IMAGE = 'podlove/publisher/chapter/SELECT_IMAGE'
+export const SET_IMAGE = 'podlove/publisher/chapter/SET_IMAGE'
 
 export const init = createAction<void>(INIT)
 export const update = createAction<{ chapter: Partial<PodloveChapter>; index: number }>(UPDATE)
@@ -31,6 +33,8 @@ export const parse = createAction<string>(PARSE)
 export const parsed = createAction<PodloveChapter[]>(PARSED)
 export const set = createAction<PodloveChapter[]>(SET)
 export const download = createAction<'psc' | 'mp4'>(DOWNLOAD)
+export const selectImage = createAction<void>(SELECT_IMAGE)
+export const setImage = createAction<string>(SET_IMAGE)
 
 export const reducer = handleActions(
   {
@@ -97,6 +101,19 @@ export const reducer = handleActions(
       selected: null,
       chapters: state.chapters.filter((chapter, index) => index !== action.payload),
     }),
+    [SET_IMAGE]: (state: State, action: { type: string; payload: string }): State => ({
+      ...state,
+      chapters: state.chapters.map((chapter, index) => {
+        if (index !== state.selected) {
+          return chapter
+        }
+
+        return {
+          ...chapter,
+          image: action.payload
+        }
+      })
+    })
   },
   initialState
 )
