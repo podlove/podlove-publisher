@@ -32,6 +32,9 @@ const auphonic = {
   token: createSelector(root.auphonic, auphonicStore.selectors.token),
   productionId: createSelector(root.auphonic, auphonicStore.selectors.productionId),
   productions: createSelector(root.auphonic, auphonicStore.selectors.productions),
+  production: createSelector(root.auphonic, auphonicStore.selectors.production),
+  incomingServices: createSelector(root.auphonic, auphonicStore.selectors.incomingServices),
+  outgoingServices: createSelector(root.auphonic, auphonicStore.selectors.outgoingServices),
 }
 
 const podcast = {
