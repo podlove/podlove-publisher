@@ -22,15 +22,41 @@ function* initialize(api: PodloveApiClient) {
 
 function* initializeAuphonicApi() {
   const auphonicApi: AuphonicApiClient = yield createAuphonicApi()
+
   const {
     result: { data: presets },
   } = yield auphonicApi.get(`presets.json`)
+
   const {
     result: { data: productions },
   } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
-  console.log('auphonic', { presets, productions })
+
+  let {
+    result: { data: services },
+  } = yield auphonicApi.get(`services.json`)
+
+  services.unshift({
+    uuid: 'url',
+    display_name: 'From URL',
+    email: '',
+    incoming: true,
+    outgoing: false,
+    type: 'url',
+  })
+
+  services.unshift({
+    uuid: 'file',
+    display_name: 'Upload from computer',
+    email: '',
+    incoming: true,
+    outgoing: false,
+    type: 'file',
+  })
+
+  //   console.log('auphonic', { presets, productions, services })
 
   yield put(auphonic.setProductions(productions))
+  yield put(auphonic.setServices(services))
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
   yield takeEvery(
