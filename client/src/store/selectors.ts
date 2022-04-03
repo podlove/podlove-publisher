@@ -35,6 +35,7 @@ const auphonic = {
   production: createSelector(root.auphonic, auphonicStore.selectors.production),
   incomingServices: createSelector(root.auphonic, auphonicStore.selectors.incomingServices),
   outgoingServices: createSelector(root.auphonic, auphonicStore.selectors.outgoingServices),
+  serviceFiles: createSelector(root.auphonic, auphonicStore.selectors.serviceFiles),
 }
 
 const podcast = {
