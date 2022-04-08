@@ -114,7 +114,7 @@ export const reducer = handleActions(
         tracks: [
           ...state.tracks,
           {
-            identifier: 'foo',
+            identifier: `Track ${state.tracks.length + 1}`,
             fileSelection: null,
             filtering: true,
             noise_and_hum_reduction: false,
