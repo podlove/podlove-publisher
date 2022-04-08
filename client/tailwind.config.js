@@ -2,13 +2,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  purge: {
-    enabled: process.env.NODE_ENV === 'production',
-    content: [
-      "./index.html",
-      "./src/**/*.{vue,js,ts,jsx,tsx}",
-    ],
-  },
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -16,7 +10,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms')
-  ]
-};
+  plugins: [require('@tailwindcss/forms')],
+}

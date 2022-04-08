@@ -5,18 +5,20 @@
     "dev": "vite"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "0.5.0",
+    "@types/lodash": "4.14.180",
+    "@types/redux-actions": "2.6.2",
     "@vitejs/plugin-vue": "2.2.4",
+    "autoprefixer": "10.4.4",
+    "cssnano": "5.1.5",
     "postcss": "8.4.12",
     "postcss-import": "14.1.0",
     "postcss-prefix-selector": "1.15.0",
     "prettier": "2.6.0",
-    "tailwindcss": "2.2.17",
+    "tailwindcss": "3.0.23",
     "typescript": "4.6.2",
     "vite": "2.8.6",
-    "vue-tsc": "0.33.7",
-    "@types/lodash": "4.14.180",
-    "@types/redux-actions": "2.6.2",
-    "cssnano": "5.1.5"
+    "vue-tsc": "0.33.7"
   },
   "dependencies": {
     "@headlessui/vue": "1.5.0",
@@ -24,8 +26,6 @@
     "@podlove/utils": "5.7.4",
     "@podlove/web-player": "5.7.4",
     "@popperjs/core": "2.11.4",
-    "@tailwindcss/forms": "0.4.0",
-    "autoprefixer": "10.4.4",
     "lodash": "4.17.21",
     "redux": "4.1.2",
     "redux-actions": "2.6.5",
