@@ -10,6 +10,8 @@ use Podlove\NormalPlayTime;
 use WP_REST_Controller;
 use WP_REST_Server;
 
+use function Podlove\Api\Episodes\chapters;
+
 add_action('rest_api_init', function () {
     $controller = new WP_REST_PodloveChapters_Controller();
     $controller->register_routes();
@@ -59,6 +61,10 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                                 'href' => [
                                     'description' => __('Chapter url', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string'
+                                ],
+                                'image' => [
+                                    'description' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
+                                    'type' => 'string'
                                 ]
                             ]
                         ],
@@ -90,6 +96,10 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                                 ],
                                 'href' => [
                                     'description' => __('Chapter url', 'podlove-podcasting-plugin-for-wordpress'),
+                                    'type' => 'string'
+                                ],
+                                'image' => [
+                                    'description' => __('Image', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string'
                                 ]
                             ]
@@ -175,10 +185,19 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 if (isset($request['chapters'][$i]['href'])) {
                     $url = $request['chapters'][$i]['href'];
                 }
-                if (strlen($url) == 0) {
+                $image = '';
+                if (isset($request['chapters'][$i]['image'])) {
+                    $image = $request['chapters'][$i]['image'];
+                }
+                if (strlen($url) == 0 && strlen($image) == 0) {
                     $chapters->addChapter(new Chapter($npt, $title));
                 } else {
-                    $chapters->addChapter(new Chapter($npt, $title, $url));
+                    if (strlen($image) == 0) {
+                        $chapters->addChapter(new Chapter($npt, $title, $url));
+                    }
+                    else {
+                        $chapters->addChapter(new Chapter($npt, $title, $url, $image));
+                    }
                 }
             }
         }
@@ -232,15 +251,24 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 if (isset($request['chapters'][$i]['href'])) {
                     $url = $request['chapters'][$i]['href'];
                 }
-                if (strlen($url) == 0) {
+                $image = '';
+                if (isset($request['chapters'][$i]['image'])) {
+                    $image = $request['chapters'][$i]['image'];
+                }
+                if (strlen($url) == 0 && strlen($image) == 0) {
                     $chapters->addChapter(new Chapter($npt, $title));
                 } else {
-                    $chapters->addChapter(new Chapter($npt, $title, $url));
+                    if (strlen($image) == 0) {
+                        $chapters->addChapter(new Chapter($npt, $title, $url));
+                    }
+                    else {
+                        $chapters->addChapter(new Chapter($npt, $title, $url, $image));
+                    }
                 }
             }
         }
 
-        $chapters->setPrinter(new Printer\Mp4chaps());
+        $chapters->setPrinter(new Printer\JSON());
         $episode_data['chapters'] = (string) $chapters;
         $episode->update_attributes($episode_data);
 

@@ -1,5 +1,6 @@
 import { TakeableChannel } from '@redux-saga/core'
 import { select, takeEvery, call, put, fork } from 'redux-saga/effects'
+import { get } from 'lodash'
 
 import keyboard from '@podlove/utils/keyboard'
 import { selectors } from '@store'
@@ -20,13 +21,14 @@ function* chaptersSaga(): any {
   yield takeEvery([chapters.PARSE], handleImport)
   yield takeEvery(chapters.DOWNLOAD, handleExport)
   yield takeEvery(
-    [chapters.UPDATE, chapters.PARSED, chapters.ADD, chapters.REMOVE],
+    [chapters.UPDATE, chapters.PARSED, chapters.ADD, chapters.REMOVE, chapters.SET_IMAGE],
     save,
     apiClient
   )
   const onKeyDown: TakeableChannel<any> = yield call(channel, keyboard.utils.keydown)
 
   yield takeEvery(onKeyDown, handleKeydown)
+  yield takeEvery(chapters.SELECT_IMAGE, selectImageFromLibrary)
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -211,6 +213,42 @@ function* handleKeydown(input: {
       yield put(chapters.select(null))
       break
   }
+}
+
+function* selectImageFromLibrary() {
+  const mediaSelector = get(window, ['wp', 'media'], null)
+
+  if (!mediaSelector) {
+    console.warn('media selector not available')
+    return
+  }
+
+  const mediaLibrary = mediaSelector({
+    title: 'Select or Upload Media Of Your Chosen Persuasion',
+    button: {
+      text: 'Use this media'
+    },
+    multiple: false  // Set to true to allow multiple files to be selected
+  });
+
+  const mediaSelectionDialogue: Promise<string> = new Promise((resolve) => {
+    mediaLibrary.on( 'select', () => {
+      const { url } = mediaLibrary.state().get('selection').first().toJSON()
+      resolve(url);
+    });
+  });
+  
+  mediaLibrary.open();
+
+  try {
+    const url: string = yield mediaSelectionDialogue;
+    yield put(chapters.setImage(url))
+  } finally {}
+
+}
+
+function* setChapterImage(url: string) {
+  
 }
 
 export default function () {
