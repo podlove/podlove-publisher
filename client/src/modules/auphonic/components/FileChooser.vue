@@ -1,66 +1,85 @@
 <template>
   <div>
-    <label for="location" class="block text-sm font-medium text-gray-700">Upload Method</label>
-
-    <!-- step one -->
-    <select
-      v-model="currentServiceSelection"
-      class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-    >
-      <option v-for="service in services" :key="service.uuid" :value="service.uuid">
-        {{ service.type }}: {{ service.display_name }}
-      </option>
-    </select>
-
-    <!-- step two -->
-    <div v-if="currentService" class="mt-1 py-2">
-      <div v-if="currentService.type === 'file'">
-        <label
-          for="file-upload"
-          class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+    <div class="flex flex-col sm:flex-row gap-3">
+      <!-- step one -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Upload Method</label>
+        <select
+          v-model="currentServiceSelection"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
-          <span>Upload a file</span>
-          <input id="file-upload" name="file-upload" type="file" class="sr-only" />
-        </label>
+          <option v-for="service in services" :key="service.uuid" :value="service.uuid">
+            {{ service.type }}: {{ service.display_name }}
+          </option>
+        </select>
       </div>
-      <div v-else-if="currentService.type === 'url'">
-        <label for="audio_source_url" class="block text-sm font-medium text-gray-700"
-          >File URL</label
-        >
-        <div class="mt-1">
-          <input
-            type="url"
-            name="audio_source_url"
-            id="audio_source_url"
-            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            placeholder="https://example.com/audio.flac"
-          />
-        </div>
-      </div>
-      <div v-else>
-        <div v-if="serviceFiles !== null">
-          <label for="audio_external_file" class="block text-sm font-medium text-gray-700"
-            >File</label
+
+      <!-- step two -->
+      <div v-if="currentService">
+        <div v-if="currentService.type === 'file'">
+          <label
+            for="file-upload"
+            class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
           >
-          <select
-            v-model="fileSelection"
-            name="audio_external_file"
-            id="audio_external_file"
-            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          >
-            <option v-for="file in serviceFiles" :key="file" :value="file">
-              {{ file }}
-            </option>
-          </select>
+            <div class="invisible">&nbsp;</div>
+            <span>Upload a file</span>
+            <input
+              id="file-upload"
+              name="file-upload"
+              type="file"
+              class="sr-only"
+              @input="
+                (event) => {
+                  this.fileValue = event.target.value
+                  this.emitValue()
+                }
+              "
+            />
+          </label>
         </div>
-        <div v-else>...</div>
+        <div v-else-if="currentService.type === 'url'">
+          <label for="audio_source_url" class="block text-sm font-medium text-gray-700"
+            >File URL</label
+          >
+          <div class="mt-1">
+            <input
+              type="url"
+              name="audio_source_url"
+              id="audio_source_url"
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              placeholder="https://example.com/audio.flac"
+              v-model="urlValue"
+              @input="emitValue"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <div v-if="serviceFiles !== null">
+            <label for="audio_external_file" class="block text-sm font-medium text-gray-700"
+              >File</label
+            >
+            <select
+              v-model="fileSelection"
+              name="audio_external_file"
+              id="audio_external_file"
+              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              @input="handleExternalFileSelection"
+            >
+              <option v-for="file in serviceFiles" :key="file" :value="file">
+                {{ file }}
+              </option>
+            </select>
+          </div>
+          <div v-else>...</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+// NEXT UP: returning picked values from FileChooser to parent component so it can be converted into API params
+import { ref, defineComponent, nextTick } from 'vue'
 import Module from '@components/module/Module.vue'
 import PodloveButton from '@components/button/Button.vue'
 import { PlusSmIcon } from '@heroicons/vue/outline'
@@ -83,6 +102,8 @@ import {
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 
 export default defineComponent({
+  emits: ['update:modelValue'],
+
   components: {
     Listbox,
     ListboxButton,
@@ -97,6 +118,8 @@ export default defineComponent({
     return {
       currentServiceSelection: null,
       fileSelection: null,
+      urlValue: null,
+      fileValue: null,
     }
   },
 
@@ -112,12 +135,42 @@ export default defineComponent({
     }
   },
 
+  methods: {
+    async handleExternalFileSelection() {
+      await nextTick()
+      this.emitValue()
+    },
+    emitValue() {
+      const service = this.currentService
+      let value = null
+
+      switch (service.type) {
+        case 'url':
+          value = this.urlValue
+          break
+        case 'file':
+          value = this.fileValue
+          break
+
+        default:
+          value = this.fileSelection
+          break
+      }
+
+      this.$emit('update:modelValue', { service, value })
+    },
+  },
+
   watch: {
     ready() {
       this.currentServiceSelection = this.state.services[0]?.uuid
     },
-    currentServiceSelection(uuid) {
+    async currentServiceSelection(uuid) {
       this.dispatch(auphonic.selectService(uuid))
+
+      await nextTick()
+
+      this.emitValue()
     },
   },
 
