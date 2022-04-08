@@ -7,8 +7,12 @@ const defaultHeaders = (
 ) => ({
   'Content-Type': 'application/json',
   Accept: 'application/json',
-  ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}),
+  ...authHeaders({ bearer }),
   ...headers,
+})
+
+const authHeaders = ({ bearer }: { bearer?: string }) => ({
+  ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}),
 })
 
 const readApi =
@@ -49,9 +53,34 @@ const createApi =
     }).then(responseParser(errorHandler))
   }
 
+const uploadApi =
+  ({
+    errorHandler,
+    bearer,
+    urlProcessor,
+  }: {
+    errorHandler?: Function
+    bearer?: string
+    urlProcessor?: (url: string) => string
+  }) =>
+  (url: string, data: any, { query }: ApiOptions = {}) => {
+    // TODO: this works but without progress reporting, apparently not possible with fetch
+    // maybe change back to XMLHttpRequest
+    const formData = new FormData()
+    formData.append('input_file', data)
+
+    return fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
+      mode: 'cors',
+      method: 'POST',
+      headers: authHeaders({ bearer }),
+      body: formData,
+    }).then(responseParser(errorHandler))
+  }
+
 export interface AuphonicApiClient {
   get: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
   post: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  upload: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
 }
 
 export const auphonic = curry(
@@ -63,6 +92,12 @@ export const auphonic = curry(
       urlProcessor: (endpoint) => `${base}/${endpoint}`,
     }),
     post: createApi({
+      bearer,
+      errorHandler,
+      method: 'POST',
+      urlProcessor: (endpoint) => `${base}/${endpoint}`,
+    }),
+    upload: uploadApi({
       bearer,
       errorHandler,
       method: 'POST',
