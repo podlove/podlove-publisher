@@ -17,20 +17,16 @@
                   'bg-gray-50': index % 2 !== 0 && selectedIndex !== index,
                 }"
               >
+                <td class="px-2 py-2 w-16" v-if="hasChapterImages">
+                  <img class="w-12 h-12 rounded" v-if="chapter?.image" :src="chapter?.image" />
+                </td>
                 <td
-                  class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 tabular-nums"
+                  class="px-3 py-2 w-32 whitespace-nowrap text-sm font-medium text-gray-900 tabular-nums"
                 >
                   {{ chapter.start }}
                 </td>
                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
                   {{ chapter.title }}
-                </td>
-                <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">
-                  <img
-                    class="w-12 h-12 rounded"
-                    v-if="chapter?.image"
-                    :src="chapter?.image"
-                  />
                 </td>
                 <td
                   class="px-3 py-2 whitespace-nowrap text-sm text-gray-600 text-right tabular-nums"
@@ -49,15 +45,7 @@
             <input
               name="chapter-title"
               type="text"
-              class="
-                shadow-sm
-                focus:ring-indigo-500 focus:border-indigo-500
-                block
-                w-full
-                sm:text-sm
-                border-gray-300
-                rounded-md
-              "
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               @change="updateChapter('title', $event)"
               :value="state.selected.title"
             />
@@ -71,15 +59,7 @@
             <input
               name="chapter-href"
               type="text"
-              class="
-                shadow-sm
-                focus:ring-indigo-500 focus:border-indigo-500
-                block
-                w-full
-                sm:text-sm
-                border-gray-300
-                rounded-md
-              "
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               @change="updateChapter('href', $event)"
               :value="state.selected.href"
             />
@@ -91,38 +71,22 @@
             <input
               name="chapter-title"
               type="text"
-              class="
-                shadow-sm
-                focus:ring-indigo-500 focus:border-indigo-500
-                block
-                w-full
-                sm:text-sm
-                border-gray-300
-                rounded-md
-              "
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               @change="updateChapter('start', $event)"
               :value="formatTime(state.selected.start)"
             />
           </div>
         </div>
         <div class="mb-5 flex items-end">
-          <div class = "w-5/6">
+          <div class="w-5/6">
             <label for="chapter-image" class="block text-sm font-medium text-gray-700"
               >Image <span class="text-xs">(optional)</span></label
-            >            
+            >
             <div class="mt-1">
               <input
                 name="chapter-image"
                 type="text"
-                class="
-                  shadow-sm
-                  focus:ring-indigo-500 focus:border-indigo-500
-                  block
-                  w-full
-                  sm:text-sm
-                  border-gray-300
-                  rounded-md
-                "
+                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 @change="updateChapter('image', $event)"
                 :value="state.selected.image"
               />
@@ -167,7 +131,7 @@ import {
   update as updateChapter,
   remove as removeChapter,
   add as addChapter,
-  selectImage
+  selectImage,
 } from '@store/chapters.store'
 import { PlusSmIcon, BookmarkAltIcon } from '@heroicons/vue/outline'
 
@@ -252,6 +216,9 @@ export default defineComponent({
         },
         []
       )
+    },
+    hasChapterImages(): boolean {
+      return this.chapters.reduce((agg: boolean, chapter: Chapter) => agg || !!chapter.image, false)
     },
   },
 
