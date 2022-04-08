@@ -30,6 +30,9 @@
 
     <div class="pt-5">
       <div class="flex justify-end gap-3">
+        <podlove-button variant="secondary" @click="handleUpload"
+          >Upload (debug only)</podlove-button
+        >
         <podlove-button variant="secondary">Cancel</podlove-button>
         <podlove-button variant="primary">Start Production</podlove-button>
       </div>
@@ -67,6 +70,12 @@ export default defineComponent({
       }),
       dispatch: injectStore().dispatch,
     }
+  },
+
+  methods: {
+    handleUpload() {
+      this.dispatch(auphonic.uploadFile(this.fileSelection.value))
+    },
   },
 
   computed: {

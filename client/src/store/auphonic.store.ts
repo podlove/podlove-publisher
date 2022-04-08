@@ -69,6 +69,7 @@ export const CREATE_MULTITRACK_PRODUCTION =
   'podlove/publisher/auphonic/CREATE_MULTITRACK_PRODUCTION'
 export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
 export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
+export const UPLOAD_FILE = 'podlove/publisher/auphonic/UPLOAD_FILE'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
@@ -80,6 +81,7 @@ export const setServiceFiles =
 export const createProduction = createAction<string>(CREATE_PRODUCTION)
 export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
 export const selectService = createAction<string>(SELECT_SERVICE)
+export const uploadFile = createAction<File>(UPLOAD_FILE)
 
 export const reducer = handleActions(
   {

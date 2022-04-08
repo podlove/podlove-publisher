@@ -1,10 +1,11 @@
 import * as auphonic from '@store/auphonic.store'
 import { takeFirst } from '../sagas/helper'
-import { put, fork, takeEvery } from 'redux-saga/effects'
+import { put, fork, takeEvery, select } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
 import { AuphonicApiClient } from '@lib/auphonic.api'
+import { selectors } from '@store'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -53,8 +54,6 @@ function* initializeAuphonicApi() {
     type: 'file',
   })
 
-  //   console.log('auphonic', { presets, productions, services })
-
   yield put(auphonic.setProductions(productions))
   yield put(auphonic.setServices(services))
 
@@ -65,6 +64,12 @@ function* initializeAuphonicApi() {
     auphonicApi
   )
   yield takeEvery(auphonic.selectService, fetchServiceFiles, auphonicApi)
+  yield takeEvery(auphonic.uploadFile, uploadFile, auphonicApi)
+}
+
+function* uploadFile(auphonicApi: AuphonicApiClient, action: { type: string; payload: File }) {
+  const uuid: string = yield select(selectors.auphonic.productionId)
+  yield auphonicApi.upload(`production/${uuid}/upload.json`, action.payload)
 }
 
 function* fetchServiceFiles(

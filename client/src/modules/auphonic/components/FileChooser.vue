@@ -30,7 +30,7 @@
               class="sr-only"
               @input="
                 (event) => {
-                  this.fileValue = event.target.value
+                  this.fileValue = event.target.files[0]
                   this.emitValue()
                 }
               "
