@@ -15,13 +15,15 @@
           </p>
         </div>
 
-        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div class="sm:col-span-4">
-            <label class="block text-sm font-medium text-gray-700"> Audio Source </label>
-            <div class="mt-1 flex">
-              <FileChooser />
+        <div class="h-6"></div>
+
+        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <fieldset class="sm:col-span-4">
+            <legend class="text-base font-medium text-gray-900">Audio Source</legend>
+            <div class="mt-2 flex">
+              <FileChooser @update:modelValue="(newValue) => (fileSelection = newValue)" />
             </div>
-          </div>
+          </fieldset>
         </div>
       </div>
     </div>
@@ -50,6 +52,12 @@ export default defineComponent({
   components: {
     PodloveButton,
     FileChooser,
+  },
+
+  data() {
+    return {
+      fileSelection: {},
+    }
   },
 
   setup() {
