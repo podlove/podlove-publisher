@@ -43,12 +43,22 @@ export type Production = {
   is_multitrack: boolean
 }
 
+export type AudioTrack = {
+  identifier: string
+  fileSelection: any
+  filtering: boolean
+  noise_and_hum_reduction: boolean
+  fore_background: string
+  track_gain: string
+}
+
 export type State = {
   token: string | null
   production: Production | null
   productions: Production[] | null
   services: Service[]
   service_files: object
+  tracks: AudioTrack[]
 }
 
 export const initialState: State = {
@@ -57,6 +67,7 @@ export const initialState: State = {
   productions: [],
   services: [],
   service_files: {},
+  tracks: [],
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -70,21 +81,63 @@ export const CREATE_MULTITRACK_PRODUCTION =
 export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
 export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
 export const UPLOAD_FILE = 'podlove/publisher/auphonic/UPLOAD_FILE'
+export const SELECT_TRACKS = 'podlove/publisher/auphonic/SELECT_TRACKS'
+export const ADD_TRACK = 'podlove/publisher/auphonic/ADD_TRACK'
+export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
+
+// Productions
 export const setProduction = createAction<string>(SET_PRODUCTION)
 export const setProductions = createAction<string>(SET_PRODUCTIONS)
+export const createProduction = createAction<string>(CREATE_PRODUCTION)
+export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
+
+// Files & File Services
 export const setServices = createAction<string>(SET_SERVICES)
 export const setServiceFiles =
   createAction<{ uuid: string; files: string[] | null }>(SET_SERVICE_FILES)
-export const createProduction = createAction<string>(CREATE_PRODUCTION)
-export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
 export const selectService = createAction<string>(SELECT_SERVICE)
 export const uploadFile = createAction<File>(UPLOAD_FILE)
 
+// Tracks
+export const selectTracks = createAction<string>(SELECT_TRACKS)
+export const addTrack = createAction<void>(ADD_TRACK)
+export const updateTrack = createAction<{ track: AudioTrack; index: number }>(UPDATE_TRACK)
+
 export const reducer = handleActions(
   {
+    [ADD_TRACK]: (state: State, action): State => {
+      return {
+        ...state,
+        tracks: [
+          ...state.tracks,
+          {
+            identifier: 'foo',
+            fileSelection: null,
+            filtering: true,
+            noise_and_hum_reduction: false,
+            fore_background: '0',
+            track_gain: '0',
+          },
+        ],
+      }
+    },
+    [UPDATE_TRACK]: (
+      state: State,
+      action: { type: string; payload: { track: Partial<AudioTrack>; index: number } }
+    ): State => {
+      const tracks = state.tracks.reduce(
+        (result: AudioTrack[], track, trackIndex) => [
+          ...result,
+          trackIndex === action.payload.index ? { ...track, ...action.payload.track } : track,
+        ],
+        []
+      )
+
+      return { ...state, tracks }
+    },
     [SET_SERVICE_FILES]: (
       state: State,
       action: { payload: { uuid: string; files: string[] | null } }
@@ -125,4 +178,5 @@ export const selectors = {
   incomingServices: (state: State) => state.services.filter((s: Service) => s.incoming),
   outgoingServices: (state: State) => state.services.filter((s: Service) => s.outgoing),
   serviceFiles: (state: State) => state.service_files,
+  tracks: (state: State) => state.tracks,
 }
