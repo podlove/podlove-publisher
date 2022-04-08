@@ -23,23 +23,111 @@
           <div class="bg-white shadow overflow-hidden rounded-md">
             <ul role="list" class="divide-y divide-gray-200">
               <li v-for="(track, index) in tracks" :key="`track-${index}`" class="px-6 py-4">
-                <div class="flex flex-col sm:flex-row gap-3">
-                  <label>
-                    <span class="block text-sm font-medium text-gray-700">Track Identifier</span>
+                <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+                  <label
+                    for="first-name"
+                    class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
+                  >
+                    Track Identifier
+                  </label>
+                  <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <input
                       type="text"
                       v-model="track.identifier"
-                      class="mt-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                      class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                     />
-                  </label>
+                  </div>
+                </div>
 
-                  <FileChooser
-                    @update:modelValue="
-                      (value) => {
-                        updateTrack('fileSelection', value, index)
-                      }
-                    "
-                  />
+                <div role="group" class="pt-6">
+                  <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
+                    <div>
+                      <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">
+                        File
+                      </div>
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:col-span-2">
+                      <div class="flex flex-col sm:flex-row gap-3">
+                        <FileChooser
+                          @update:modelValue="
+                            (value) => {
+                              updateTrack('fileSelection', value, index)
+                            }
+                          "
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="group" class="pt-6">
+                  <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
+                    <div>
+                      <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">
+                        Algorithm
+                      </div>
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:col-span-2">
+                      <div class="max-w-lg space-y-4">
+                        <div class="relative flex items-start">
+                          <div class="flex items-center h-5">
+                            <input
+                              :id="`track_${index}_filtering`"
+                              type="checkbox"
+                              class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                              v-model="track.filtering"
+                            />
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label
+                              :for="`track_${index}_filtering`"
+                              class="font-medium text-gray-700"
+                              >Filtering</label
+                            >
+                          </div>
+                        </div>
+                        <div>
+                          <div class="relative flex items-start">
+                            <div class="flex items-center h-5">
+                              <input
+                                :id="`track_${index}_noisehum`"
+                                type="checkbox"
+                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                v-model="track.noise_and_hum_reduction"
+                              />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label
+                                :for="`track_${index}_noisehum`"
+                                class="font-medium text-gray-700"
+                                >Noise and Hum Reduction</label
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div class="relative flex justify-start align-middle items-center gap-3">
+                            <div class="text-sm">
+                              <label :for="`track_${index}_fgbg`" class="font-medium text-gray-700"
+                                >Fore/Background</label
+                              >
+                            </div>
+
+                            <select
+                              v-model="track.fore_background"
+                              :id="`track_${index}_fgbg`"
+                              class="mt-1 block w-[168px] pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            >
+                              <option value="0">Auto</option>
+                              <option value="1">Foreground Track</option>
+                              <option value="2">Background Track</option>
+                              <option value="3">Duck this Track</option>
+                              <option value="4">Unchanged (Foreground)</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </li>
             </ul>
