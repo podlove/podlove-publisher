@@ -63,7 +63,7 @@
               name="audio_external_file"
               id="audio_external_file"
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              @input="handleExternalFileSelection"
+              @change="handleExternalFileSelection"
             >
               <option v-for="file in serviceFiles" :key="file" :value="file">
                 {{ file }}
