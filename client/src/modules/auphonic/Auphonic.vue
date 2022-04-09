@@ -43,15 +43,6 @@ import SelectProduction from './components/SelectProduction.vue'
 import ManageProductionForm from './components/ManageProductionForm.vue'
 import AuphonicLogo from './components/Logo.vue'
 
-// NEXT: start "manage production" screen
-
-// - look through twui empty state patterns, pretty up the first screen:
-//   https://tailwindui.com/components/application-ui/feedback/empty-states
-
-// - once pid is selected, show "manage" screen
-// - add button to return to create/select screen ("choose other production")
-// - build file selection component (flexible, so it can be used for single and multi track)
-
 export default defineComponent({
   components: {
     Module,
