@@ -37,6 +37,7 @@ function* initializeAuphonicApi() {
   } = yield auphonicApi.get(`services.json`)
 
   yield put(auphonic.setProductions(productions))
+  yield put(auphonic.setPresets(presets))
   yield put(
     auphonic.setServices([
       {
