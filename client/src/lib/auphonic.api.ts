@@ -1,4 +1,5 @@
 import { curry } from 'lodash'
+import axios from 'axios'
 import { addQuery, responseParser, ApiOptions } from './api'
 
 const defaultHeaders = (
@@ -64,17 +65,17 @@ const uploadApi =
     urlProcessor?: (url: string) => string
   }) =>
   (url: string, data: any, { query }: ApiOptions = {}) => {
-    // TODO: this works but without progress reporting, apparently not possible with fetch
-    // maybe change back to XMLHttpRequest
     const formData = new FormData()
     formData.append('input_file', data)
 
-    return fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
-      mode: 'cors',
-      method: 'POST',
-      headers: authHeaders({ bearer }),
-      body: formData,
-    }).then(responseParser(errorHandler))
+    return axios.post(
+      addQuery(urlProcessor ? urlProcessor(url) : url, query),
+      { data: formData },
+      {
+        headers: authHeaders({ bearer }),
+        onUploadProgress: (e) => console.log('progress', e),
+      }
+    )
   }
 
 export interface AuphonicApiClient {
