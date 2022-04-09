@@ -43,6 +43,10 @@ export type Production = {
   is_multitrack: boolean
 }
 
+export type Preset = Production & {
+  preset_name: string
+}
+
 export type AudioTrack = {
   identifier: string
   fileSelection: any
@@ -56,6 +60,7 @@ export type State = {
   token: string | null
   production: Production | null
   productions: Production[] | null
+  presets: Preset[] | null
   services: Service[]
   service_files: object
   tracks: AudioTrack[]
@@ -65,6 +70,7 @@ export const initialState: State = {
   token: null,
   production: null,
   productions: [],
+  presets: [],
   services: [],
   service_files: {},
   tracks: [],
@@ -84,15 +90,19 @@ export const UPLOAD_FILE = 'podlove/publisher/auphonic/UPLOAD_FILE'
 export const SELECT_TRACKS = 'podlove/publisher/auphonic/SELECT_TRACKS'
 export const ADD_TRACK = 'podlove/publisher/auphonic/ADD_TRACK'
 export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
+export const SET_PRESETS = 'podlove/publisher/auphonic/SET_PRESETS'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
 
 // Productions
-export const setProduction = createAction<string>(SET_PRODUCTION)
-export const setProductions = createAction<string>(SET_PRODUCTIONS)
+export const setProduction = createAction<Production>(SET_PRODUCTION)
+export const setProductions = createAction<Production[]>(SET_PRODUCTIONS)
 export const createProduction = createAction<string>(CREATE_PRODUCTION)
 export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
+
+// Presets
+export const setPresets = createAction<Preset[]>(SET_PRESETS)
 
 // Files & File Services
 export const setServices = createAction<Service[]>(SET_SERVICES)
@@ -152,6 +162,10 @@ export const reducer = handleActions(
     [SET_SERVICES]: (state: State, action: { payload: Service[] }): State => ({
       ...state,
       services: action.payload,
+    }),
+    [SET_PRESETS]: (state: State, action: { payload: Preset[] | null }): State => ({
+      ...state,
+      presets: action.payload,
     }),
     [SET_PRODUCTIONS]: (state: State, action: { payload: Production[] | null }): State => ({
       ...state,
