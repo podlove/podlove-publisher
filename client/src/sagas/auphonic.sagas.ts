@@ -36,26 +36,28 @@ function* initializeAuphonicApi() {
     result: { data: services },
   } = yield auphonicApi.get(`services.json`)
 
-  services.unshift({
-    uuid: 'url',
-    display_name: 'From URL',
-    email: '',
-    incoming: true,
-    outgoing: false,
-    type: 'url',
-  })
-
-  services.unshift({
-    uuid: 'file',
-    display_name: 'Upload from computer',
-    email: '',
-    incoming: true,
-    outgoing: false,
-    type: 'file',
-  })
-
   yield put(auphonic.setProductions(productions))
-  yield put(auphonic.setServices(services))
+  yield put(
+    auphonic.setServices([
+      {
+        uuid: 'url',
+        display_name: 'From URL',
+        email: '',
+        incoming: true,
+        outgoing: false,
+        type: 'url',
+      },
+      {
+        uuid: 'file',
+        display_name: 'Upload from computer',
+        email: '',
+        incoming: true,
+        outgoing: false,
+        type: 'file',
+      },
+      ...services,
+    ])
+  )
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
   yield takeEvery(
