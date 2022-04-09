@@ -1,5 +1,5 @@
 <template>
-  <Listbox as="div" v-model="selected">
+  <Listbox as="div" @update:modelValue="setProduction">
     <ListboxLabel class="block text-sm font-medium text-gray-600 sr-only">
       Select Existing Production
     </ListboxLabel>
@@ -80,12 +80,6 @@ export default defineComponent({
     SelectorIcon,
   },
 
-  data() {
-    return {
-      selected: null,
-    }
-  },
-
   setup() {
     return {
       state: mapState({
@@ -95,9 +89,9 @@ export default defineComponent({
     }
   },
 
-  watch: {
-    selected(newProduction) {
-      this.dispatch(auphonic.setProduction(newProduction))
+  methods: {
+    setProduction(production) {
+      this.dispatch(auphonic.setProduction(production))
     },
   },
 
