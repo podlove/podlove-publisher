@@ -95,7 +95,7 @@ export const createProduction = createAction<string>(CREATE_PRODUCTION)
 export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
 
 // Files & File Services
-export const setServices = createAction<string>(SET_SERVICES)
+export const setServices = createAction<Service[]>(SET_SERVICES)
 export const setServiceFiles =
   createAction<{ uuid: string; files: string[] | null }>(SET_SERVICE_FILES)
 export const selectService = createAction<string>(SELECT_SERVICE)
