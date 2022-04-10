@@ -94,10 +94,14 @@ function generatePscDownload(chapters: PodloveChapter[]): string {
   chapters.forEach((chapter: PodloveChapter) => {
     let node = xmlDoc.createElement('psc:chapter')
     node.setAttribute('title', chapter.title || '')
-    node.setAttribute('start', chapter.start ? new Timestamp(chapter.start).pretty : '')
+    node.setAttribute('start', chapter.start ? new Timestamp(chapter.start).pretty : '00:00:00')
 
     if (chapter.href) {
       node.setAttribute('href', chapter.href)
+    }
+
+    if (chapter.image) {
+      node.setAttribute('image', chapter.image)
     }
 
     pscDoc.appendChild(node)
