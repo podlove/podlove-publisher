@@ -37,6 +37,8 @@ const auphonic = {
   outgoingServices: createSelector(root.auphonic, auphonicStore.selectors.outgoingServices),
   serviceFiles: createSelector(root.auphonic, auphonicStore.selectors.serviceFiles),
   tracks: createSelector(root.auphonic, auphonicStore.selectors.tracks),
+  fileSelections: createSelector(root.auphonic, auphonicStore.selectors.fileSelections),
+  currentFileSelection: createSelector(root.auphonic, auphonicStore.selectors.currentFileSelection),
 }
 
 const podcast = {

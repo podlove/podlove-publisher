@@ -56,6 +56,13 @@ export type AudioTrack = {
   track_gain: string
 }
 
+export type FileSelection = {
+  urlValue: string | null
+  fileValue: string | null
+  currentServiceSelection: string | null
+  fileSelection: string | null
+}
+
 export type State = {
   token: string | null
   production: Production | null
@@ -64,6 +71,8 @@ export type State = {
   services: Service[]
   service_files: object
   tracks: AudioTrack[]
+  file_selections: object
+  current_file_selection: string | null
 }
 
 export const initialState: State = {
@@ -74,6 +83,7 @@ export const initialState: State = {
   services: [],
   service_files: {},
   tracks: [],
+  file_selections: {},
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -91,6 +101,7 @@ export const SELECT_TRACKS = 'podlove/publisher/auphonic/SELECT_TRACKS'
 export const ADD_TRACK = 'podlove/publisher/auphonic/ADD_TRACK'
 export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
 export const SET_PRESETS = 'podlove/publisher/auphonic/SET_PRESETS'
+export const UPDATE_FILE_SELECTION = 'podlove/publisher/auphonic/UPDATE_FILE_SELECTION'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
@@ -110,6 +121,8 @@ export const setServiceFiles =
   createAction<{ uuid: string; files: string[] | null }>(SET_SERVICE_FILES)
 export const selectService = createAction<string>(SELECT_SERVICE)
 export const uploadFile = createAction<File>(UPLOAD_FILE)
+export const updateFileSelection =
+  createAction<{ key: string; prop: string; value: string | null }>(UPDATE_FILE_SELECTION)
 
 // Tracks
 export const selectTracks = createAction<string>(SELECT_TRACKS)
@@ -118,6 +131,22 @@ export const updateTrack = createAction<{ track: AudioTrack; index: number }>(UP
 
 export const reducer = handleActions(
   {
+    [UPDATE_FILE_SELECTION]: (
+      state: State,
+      action: { type: string; payload: { key: string; prop: string; value: string | null } }
+    ): State => {
+      return {
+        ...state,
+        current_file_selection: action.payload.key,
+        file_selections: {
+          ...state.file_selections,
+          [action.payload.key]: {
+            ...state.file_selections[action.payload.key],
+            [action.payload.prop]: action.payload.value,
+          },
+        },
+      }
+    },
     [ADD_TRACK]: (state: State, action): State => {
       return {
         ...state,
@@ -193,4 +222,6 @@ export const selectors = {
   outgoingServices: (state: State) => state.services.filter((s: Service) => s.outgoing),
   serviceFiles: (state: State) => state.service_files,
   tracks: (state: State) => state.tracks,
+  fileSelections: (state: State) => state.file_selections,
+  currentFileSelection: (state: State) => state.current_file_selection,
 }
