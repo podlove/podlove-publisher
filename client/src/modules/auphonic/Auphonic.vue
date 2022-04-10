@@ -24,7 +24,7 @@
 
     <hr />
 
-    <div class="m-7">
+    <div class="m-7" v-if="productionId">
       <ManageProductionForm />
     </div>
   </module>
